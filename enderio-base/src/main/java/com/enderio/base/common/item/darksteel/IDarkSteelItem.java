@@ -6,15 +6,19 @@ import com.enderio.base.common.capability.darksteel.EnergyDelegator;
 import com.enderio.base.common.capability.darksteel.IDarkSteelUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.core.client.tooltip.IAdvancedTooltipProvider;
 import com.enderio.core.common.capability.IMultiCapabilityItem;
 import com.enderio.core.common.capability.INamedNBTSerializable;
 import com.enderio.core.common.capability.MultiCapabilityProvider;
+import com.enderio.core.common.lang.EnderCoreLang;
 import com.enderio.core.common.util.EnergyUtil;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.LazyOptional;
@@ -23,7 +27,7 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public interface IDarkSteelItem extends IMultiCapabilityItem {
+public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipProvider {
 
     default Optional<EmpoweredUpgrade> getEmpoweredUpgrade(ItemStack stack) {
         return DarkSteelUpgradeable.getUpgradeAs(stack, EmpoweredUpgrade.NAME, EmpoweredUpgrade.class);
@@ -59,27 +63,49 @@ public interface IDarkSteelItem extends IMultiCapabilityItem {
         pItems.add(is.copy());
     }
 
-    default void addUpgradeHoverTest(ItemStack pStack, List<Component> pTooltipComponents) {
-        if (DarkSteelUpgradeable.hasUpgrade(pStack, EmpoweredUpgrade.NAME)) {
-            String energy = EnergyUtil.getEnergyStored(pStack) + "/" + EnergyUtil.getMaxEnergyStored(pStack);
-            pTooltipComponents.add(new TextComponent(energy));
+    default void addCommonTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
+    }
+
+    default void addBasicTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
+        addCurrentUpgradeTooltips(itemStack, tooltips);
+    }
+
+    default void addDetailedTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
+        addDurabilityTooltips(itemStack, tooltips);
+        addCurrentUpgradeTooltips(itemStack, tooltips);
+        addAvailableUpgradesTooltips(itemStack, tooltips);
+    }
+
+    default void addDurabilityTooltips(ItemStack itemStack,  List<Component> tooltips) {
+        if(itemStack.getDamageValue() > 0) {
+            String durability = (itemStack.getMaxDamage() - itemStack.getDamageValue()) + "/" + itemStack.getMaxDamage();
+            tooltips.add(new TextComponent(EnderCoreLang.DURABILITY.getString() + " " + durability).withStyle(ChatFormatting.GRAY));
         }
-
-        var upgrades = DarkSteelUpgradeable.getUpgrades(pStack);
-        upgrades
-            .stream()
-            .sorted(Comparator.comparing(INamedNBTSerializable::getSerializedName))
-            .forEach(upgrade -> pTooltipComponents.add(upgrade.getDisplayName()));
-
-        var availUpgrades = DarkSteelUpgradeable.getUpgradesThatCanBeAppliedAtTheMoment(pStack);
-        if(!availUpgrades.isEmpty()) {
-            pTooltipComponents.add(TextComponent.EMPTY);
-            pTooltipComponents.add(EIOLang.DS_UPGRADE_AVAILABLE);
-            availUpgrades
-                .stream()
-                .sorted(Comparator.comparing(INamedNBTSerializable::getSerializedName))
-                .forEach(upgrade -> pTooltipComponents.add(upgrade.getDisplayName()));
+        if (DarkSteelUpgradeable.hasUpgrade(itemStack, EmpoweredUpgrade.NAME)) {
+            String energy = EnergyUtil.getEnergyStored(itemStack) + "/" + EnergyUtil.getMaxEnergyStored(itemStack) + " " + EnderCoreLang.ENERGY_ABBREVIATION.getString();
+            tooltips.add(new TextComponent(energy).withStyle(ChatFormatting.GRAY));
         }
     }
 
+    default  void addCurrentUpgradeTooltips(ItemStack itemStack, List<Component> tooltips) {
+        var upgrades = DarkSteelUpgradeable.getUpgrades(itemStack);
+        upgrades
+            .stream()
+            .sorted(Comparator.comparing(INamedNBTSerializable::getSerializedName))
+            .forEach(upgrade -> tooltips.add(upgrade.getDisplayName().copy().withStyle(ChatFormatting.DARK_AQUA)));
+    }
+
+    default void addAvailableUpgradesTooltips(ItemStack itemStack, List<Component> tooltips) {
+        var availUpgrades = DarkSteelUpgradeable.getUpgradesThatCanBeAppliedAtTheMoment(itemStack);
+        EIOLang.DS_UPGRADE_AVAILABLE.copy().withStyle(ChatFormatting.YELLOW);
+        if(!availUpgrades.isEmpty()) {
+            tooltips.add(TextComponent.EMPTY);
+            tooltips.add(EIOLang.DS_UPGRADE_AVAILABLE.copy().withStyle(ChatFormatting.YELLOW));
+            availUpgrades
+                .stream()
+                .sorted(Comparator.comparing(INamedNBTSerializable::getSerializedName))
+                .forEach(upgrade -> tooltips.add(
+                    new TextComponent(" " + upgrade.getDisplayName().getString()).withStyle(ChatFormatting.DARK_AQUA, ChatFormatting.ITALIC)));
+        }
+    }
 }

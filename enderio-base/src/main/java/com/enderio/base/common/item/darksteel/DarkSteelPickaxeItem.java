@@ -4,14 +4,17 @@ import com.enderio.base.common.capability.darksteel.DarkSteelUpgradeable;
 import com.enderio.base.common.item.EIOItems;
 import com.enderio.base.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.SpoonUpgrade;
+import com.enderio.core.client.tooltip.IAdvancedTooltipProvider;
 import com.enderio.core.common.util.EnergyUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -20,11 +23,9 @@ import net.minecraftforge.common.TierSortingRegistry;
 import net.minecraftforge.common.ToolActions;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.List;
 
 //TODO: Use dual duration / energy bar
-public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem {
+public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem, IAdvancedTooltipProvider {
 
     //TODO: Config
     private int obsianBreakPowerUse = 50;
@@ -112,13 +113,5 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem 
         }
     }
 
-    @Override
-    public void appendHoverText(@Nonnull ItemStack pStack, @Nullable Level pLevel, @Nonnull List<Component> pTooltipComponents,
-        @Nonnull TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        addUpgradeHoverTest(pStack, pTooltipComponents);
-    }
-
     // endregion
-
 }
