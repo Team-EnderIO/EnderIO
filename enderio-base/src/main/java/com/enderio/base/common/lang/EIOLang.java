@@ -2,34 +2,34 @@ package com.enderio.base.common.lang;
 
 import com.enderio.base.EnderIO;
 import com.enderio.base.common.capability.capacitors.ICapacitorData;
+import com.enderio.core.common.util.TooltipUtil;
 import com.tterrag.registrate.Registrate;
-import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public class EIOLang {
     private static Registrate REGISTRATE = EnderIO.registrate();
 
-    // TODO: HOUSEKEEPING: Once #29 is merged, use TooltipUtil
-    public static final Component BLOCK_BLAST_RESISTANT = REGISTRATE.addLang("tooltip", EnderIO.loc("block.blast_resistant"), "Blast resistant");
+    public static final Component BLOCK_BLAST_RESISTANT = TooltipUtil.style(REGISTRATE.addLang("tooltip", EnderIO.loc("block.blast_resistant"), "Blast resistant"));
 
     // region Fused Quartz
 
-    public static final Component FUSED_QUARTZ_EMITS_LIGHT = REGISTRATE.addLang("tooltip", EnderIO.loc("fused_quartz.emits_light"), "Emits light");
-    public static final Component FUSED_QUARTZ_BLOCKS_LIGHT = REGISTRATE.addLang("tooltip", EnderIO.loc("fused_quartz.blocks_light"), "Blocks light");
+    public static final Component FUSED_QUARTZ_EMITS_LIGHT = TooltipUtil.style(REGISTRATE.addLang("tooltip", EnderIO.loc("fused_quartz.emits_light"), "Emits light"));
+    public static final Component FUSED_QUARTZ_BLOCKS_LIGHT = TooltipUtil.style(REGISTRATE.addLang("tooltip", EnderIO.loc("fused_quartz.blocks_light"), "Blocks light"));
 
-    public static final Component GLASS_COLLISION_PLAYERS_PASS = REGISTRATE.addLang("tooltip", EnderIO.loc("collision.players_pass"), "Not solid to players");
-    public static final Component GLASS_COLLISION_PLAYERS_BLOCK = REGISTRATE.addLang("tooltip", EnderIO.loc("collision.players_block"), "Only solid to players");
-    public static final Component GLASS_COLLISION_MOBS_PASS = REGISTRATE.addLang("tooltip", EnderIO.loc("collision.mobs_pass"), "Not solid to monsters");
-    public static final Component GLASS_COLLISION_MOBS_BLOCK = REGISTRATE.addLang("tooltip", EnderIO.loc("collision.mobs_block"), "Only solid to monsters");
-    public static final Component GLASS_COLLISION_ANIMALS_PASS = REGISTRATE.addLang("tooltip", EnderIO.loc("collision.animals_pass"), "Not solid to animals");
-    public static final Component GLASS_COLLISION_ANIMALS_BLOCK = REGISTRATE.addLang("tooltip", EnderIO.loc("collision.animals_block"), "Only solid to animals");
+    public static final Component GLASS_COLLISION_PLAYERS_PASS = TooltipUtil.style(REGISTRATE.addLang("tooltip", EnderIO.loc("collision.players_pass"), "Not solid to players"));
+    public static final Component GLASS_COLLISION_PLAYERS_BLOCK = TooltipUtil.style(REGISTRATE.addLang("tooltip", EnderIO.loc("collision.players_block"), "Only solid to players"));
+    public static final Component GLASS_COLLISION_MOBS_PASS = TooltipUtil.style(REGISTRATE.addLang("tooltip", EnderIO.loc("collision.mobs_pass"), "Not solid to monsters"));
+    public static final Component GLASS_COLLISION_MOBS_BLOCK = TooltipUtil.style(REGISTRATE.addLang("tooltip", EnderIO.loc("collision.mobs_block"), "Only solid to monsters"));
+    public static final Component GLASS_COLLISION_ANIMALS_PASS = TooltipUtil.style(REGISTRATE.addLang("tooltip", EnderIO.loc("collision.animals_pass"), "Not solid to animals"));
+    public static final Component GLASS_COLLISION_ANIMALS_BLOCK = TooltipUtil.style(REGISTRATE.addLang("tooltip", EnderIO.loc("collision.animals_block"), "Only solid to animals"));
 
     // endregion
 
     // region Items
 
-    public static final Component DARK_STEEL_LADDER_FASTER = REGISTRATE.addLang("tooltip", EnderIO.loc("dark_steel_ladder.faster"), "Faster than regular ladders");
+    public static final Component DARK_STEEL_LADDER_FASTER = TooltipUtil.style(REGISTRATE.addLang("tooltip", EnderIO.loc("dark_steel_ladder.faster"), "Faster than regular ladders"));
 
     public static final Component SOUL_VIAL_ERROR_PLAYER = REGISTRATE.addLang("message", EnderIO.loc("soul_vial.error_player"), "You cannot put player in a bottle!");
     public static final Component SOUL_VIAL_ERROR_FAILED = REGISTRATE.addLang("message", EnderIO.loc("soul_vial.error_failed"), "This entity cannot be captured.");
@@ -47,10 +47,16 @@ public class EIOLang {
     // region Upgrades
 
     public static final Component DS_UPGRADE_ITEM_NO_XP = REGISTRATE.addLang("info", EnderIO.loc("darksteel.upgrade.no_xp"), "Not enough XP");
-    public static final Component DS_UPGRADE_AVAILABLE = REGISTRATE.addLang("info", EnderIO.loc("darksteel.upgrade.available"), "Available Upgrades");
-    public static final Component DS_UPGRADE_EMPOWERED = REGISTRATE.addLang("info", EnderIO.loc("darksteel.upgrade.empowered"), "Empowered");
-    public static final Component DS_UPGRADE_SPOON = REGISTRATE.addLang("info", EnderIO.loc("darksteel.upgrade.spoon"), "Spoon");
-    public static final Component DS_UPGRADE_FORK = REGISTRATE.addLang("info", EnderIO.loc("darksteel.upgrade.fork"), "Fork");
+    public static final Component DS_UPGRADE_AVAILABLE = REGISTRATE.addLang("info", EnderIO.loc("darksteel.upgrade.available"), "Available Upgrades").withStyle(
+        ChatFormatting.YELLOW);
+
+    public static final Component DS_UPGRADE_EMPOWERED = upgradeNameBuilder("empowered", "Empowered");
+    public static final Component DS_UPGRADE_SPOON = upgradeNameBuilder("spoon", "Spoon");
+    public static final Component DS_UPGRADE_FORK =upgradeNameBuilder("fork", "Fork");
+
+    private static Component upgradeNameBuilder(String upgrade, String name) {
+        return REGISTRATE.addLang("info", EnderIO.loc("darksteel.upgrade." + upgrade), name).withStyle(ChatFormatting.DARK_AQUA);
+    }
 
     // endregion
 

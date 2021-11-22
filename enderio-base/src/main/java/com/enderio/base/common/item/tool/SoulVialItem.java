@@ -16,7 +16,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -60,7 +59,7 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem {
 
         // Add entity information
         getEntityType(pStack).ifPresent(entityType -> {
-            pTooltipComponents.add(new TranslatableComponent(EntityUtil.getEntityDescriptionId(entityType)));
+            pTooltipComponents.add(TooltipUtil.style(new TranslatableComponent(EntityUtil.getEntityDescriptionId(entityType))));
             // TODO: HOUSEKEEPING?: Also add health data
         });
     }
