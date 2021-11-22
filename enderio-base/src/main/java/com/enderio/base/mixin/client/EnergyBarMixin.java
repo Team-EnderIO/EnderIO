@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.Mixin;
  *
  * Overrides three methods in {@link IForgeItem} to display a purple durability bar, and uses an attached {@link net.minecraftforge.energy.IEnergyStorage} capability.
  *
- * Future TODO: Add tooltips for energy here too? Rename IEnergyBar to IEnergyDisplay in doing so?
+ * Future TODO: HOUSEKEEPING: Add tooltips for energy here too? Rename IEnergyBar to IEnergyDisplay in doing so?
  */
 @Mixin(IEnergyBar.class)
 public interface EnergyBarMixin extends IForgeItem {

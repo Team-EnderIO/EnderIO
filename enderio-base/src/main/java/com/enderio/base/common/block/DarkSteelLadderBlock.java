@@ -1,5 +1,6 @@
 package com.enderio.base.common.block;
 
+import com.enderio.base.common.lang.EIOLang;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
@@ -19,7 +20,6 @@ public class DarkSteelLadderBlock extends LadderBlock {
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
         super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
-        // TODO: Translation
-        pTooltip.add(new TextComponent("Faster than regular ladders."));
+        pTooltip.add(EIOLang.DARK_STEEL_LADDER_FASTER);
     }
 }
