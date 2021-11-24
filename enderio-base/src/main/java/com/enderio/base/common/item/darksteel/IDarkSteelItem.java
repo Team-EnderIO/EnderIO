@@ -1,11 +1,13 @@
 package com.enderio.base.common.item.darksteel;
 
+import com.enderio.base.client.renderer.DarkSteelDurabilityRenderer;
 import com.enderio.base.common.capability.EIOCapabilities;
 import com.enderio.base.common.capability.darksteel.DarkSteelUpgradeable;
 import com.enderio.base.common.capability.darksteel.EnergyDelegator;
 import com.enderio.base.common.capability.darksteel.IDarkSteelUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.core.client.render.IItemOverlayRender;
 import com.enderio.core.client.tooltip.IAdvancedTooltipProvider;
 import com.enderio.core.common.capability.IMultiCapabilityItem;
 import com.enderio.core.common.capability.INamedNBTSerializable;
@@ -17,6 +19,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -27,7 +30,7 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipProvider {
+public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipProvider, IItemOverlayRender {
 
     default Optional<EmpoweredUpgrade> getEmpoweredUpgrade(ItemStack stack) {
         return DarkSteelUpgradeable.getUpgradeAs(stack, EmpoweredUpgrade.NAME, EmpoweredUpgrade.class);
@@ -85,22 +88,17 @@ public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipPr
             String energy = EnergyUtil.getEnergyStored(itemStack) + "/" + EnergyUtil.getMaxEnergyStored(itemStack) + " " + EnderCoreLang.ENERGY_ABBREVIATION.getString();
             tooltips.add(new TextComponent(energy).withStyle(ChatFormatting.GRAY));
         }
-    }
 
-    default  void addCurrentUpgradeTooltips(ItemStack itemStack, List<Component> tooltips) {
-        var upgrades = DarkSteelUpgradeable.getUpgrades(itemStack);
+        var upgrades = DarkSteelUpgradeable.getUpgrades(pStack);
         upgrades
             .stream()
             .sorted(Comparator.comparing(INamedNBTSerializable::getSerializedName))
-            .forEach(upgrade -> tooltips.add(upgrade.getDisplayName().copy().withStyle(ChatFormatting.DARK_AQUA)));
-    }
+            .forEach(upgrade -> pTooltipComponents.add(upgrade.getDisplayName()));
 
-    default void addAvailableUpgradesTooltips(ItemStack itemStack, List<Component> tooltips) {
-        var availUpgrades = DarkSteelUpgradeable.getUpgradesThatCanBeAppliedAtTheMoment(itemStack);
-        EIOLang.DS_UPGRADE_AVAILABLE.copy().withStyle(ChatFormatting.YELLOW);
+        var availUpgrades = DarkSteelUpgradeable.getUpgradesThatCanBeAppliedAtTheMoment(pStack);
         if(!availUpgrades.isEmpty()) {
-            tooltips.add(TextComponent.EMPTY);
-            tooltips.add(EIOLang.DS_UPGRADE_AVAILABLE.copy().withStyle(ChatFormatting.YELLOW));
+            pTooltipComponents.add(TextComponent.EMPTY);
+            pTooltipComponents.add(EIOLang.DS_UPGRADE_AVAILABLE);
             availUpgrades
                 .stream()
                 .sorted(Comparator.comparing(INamedNBTSerializable::getSerializedName))
@@ -108,4 +106,14 @@ public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipPr
                     new TextComponent(" " + upgrade.getDisplayName().getString()).withStyle(ChatFormatting.DARK_AQUA, ChatFormatting.ITALIC)));
         }
     }
+
+    default void renderOverlay(ItemStack pStack, int pXPosition, int pYPosition) {
+        DarkSteelDurabilityRenderer.renderOverlay(pStack, pXPosition, pYPosition);
+    }
+
+    @Override
+    default boolean showDurabilityBar(ItemStack stack) {
+        return stack.getDamageValue() > 0 || EnergyUtil.getMaxEnergyStored(stack) > 0;
+    }
+
 }
