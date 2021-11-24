@@ -809,6 +809,7 @@
   "info.enderio.darksteel.upgrade.fork": "Fork",
   "info.enderio.darksteel.upgrade.no_xp": "Not enough XP",
   "info.enderio.darksteel.upgrade.spoon": "Spoon",
+  "info.enderio.durability.amount": "Durability %s",
   "info.enderio.energy.amount": "%s \u00B5I",
   "item.enderio.animal_token": "Animal Token",
   "item.enderio.ardite_powder": "Ardite Powder",

@@ -7,12 +7,14 @@ import com.enderio.base.common.item.darksteel.upgrades.ForkUpgrade;
 import com.enderio.core.common.util.EnergyUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.AxeItem;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -23,7 +25,6 @@ import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.event.world.BlockEvent;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.*;
 
 public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem {
@@ -176,13 +177,6 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem {
         if (allowdedIn(pCategory)) {
             addCreativeItems(pItems, this);
         }
-    }
-
-    @Override
-    public void appendHoverText(@Nonnull ItemStack pStack, @Nullable Level pLevel, @Nonnull List<Component> pTooltipComponents,
-        @Nonnull TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        addUpgradeHoverTest(pStack, pTooltipComponents);
     }
 
     // endregion
