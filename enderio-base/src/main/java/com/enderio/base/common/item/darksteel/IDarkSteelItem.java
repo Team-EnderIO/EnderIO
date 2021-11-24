@@ -68,8 +68,11 @@ public interface IDarkSteelItem extends IMultiCapabilityItem {
             pTooltipComponents.add(new TextComponent(energy));
         }
 
-        // Display installed upgrades
+        // Get installed and available upgrades
         var upgrades = DarkSteelUpgradeable.getUpgrades(pStack);
+        var availUpgrades = DarkSteelUpgradeable.getUpgradesThatCanBeAppliedAtTheMoment(pStack);
+
+        // Display installed upgrades
         upgrades
             .stream()
             .sorted(Comparator.comparing(INamedNBTSerializable::getSerializedName))
@@ -77,13 +80,15 @@ public interface IDarkSteelItem extends IMultiCapabilityItem {
                 pTooltipComponents.add(upgrade.getDisplayName());
                 if (TooltipUtil.showExtended()) {
                     // TODO: Upgrade descriptions
+                    pTooltipComponents.add(TooltipUtil.style(new TextComponent("Template for upgrade desc.")));
                 }
             });
 
         // Show shift hint
-        TooltipUtil.showShiftHint(pTooltipComponents);
+        if (!upgrades.isEmpty() || !availUpgrades.isEmpty()) {
+            TooltipUtil.showShiftHint(pTooltipComponents);
+        }
 
-        var availUpgrades = DarkSteelUpgradeable.getUpgradesThatCanBeAppliedAtTheMoment(pStack);
         if(!availUpgrades.isEmpty() && TooltipUtil.showExtended()) {
             pTooltipComponents.add(EIOLang.DS_UPGRADE_AVAILABLE);
             availUpgrades
