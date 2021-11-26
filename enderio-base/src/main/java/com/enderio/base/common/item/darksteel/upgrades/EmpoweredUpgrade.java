@@ -2,10 +2,12 @@ package com.enderio.base.common.item.darksteel.upgrades;
 
 import com.enderio.base.common.capability.darksteel.IDarkSteelUpgrade;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.base.config.base.BaseConfig;
 import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.energy.EnergyStorage;
 
 import java.util.*;
@@ -14,68 +16,81 @@ import java.util.function.Supplier;
 public class EmpoweredUpgrade implements IDarkSteelUpgrade {
 
     public static final String NAME = DarkSteelUpgradeRegistry.UPGRADE_PREFIX + "empowered";
+    public static final String TIER_KEY = "tier";
+    public static final String STORAGE_KEY = "storage";
 
-    private static final Map<Integer,Supplier<EmpoweredUpgrade>> UPGRADES = new HashMap<>();
+    public enum Tier {
 
-    //TODO: Config All the things
-    public static final Supplier<EmpoweredUpgrade> TIER_0_FACTORY = () -> new EmpoweredUpgrade(0,100000, 0.5f);
-    public static final Supplier<EmpoweredUpgrade> TIER_1_FACTORY = () -> new EmpoweredUpgrade(1,150000, 0.6f);
-    public static final Supplier<EmpoweredUpgrade> TIER_2_FACTORY = () -> new EmpoweredUpgrade(2,250000, 0.7f);
-    public static final Supplier<EmpoweredUpgrade> TIER_3_FACTORY = () -> new EmpoweredUpgrade(3,1000000,0.85f);
+        ONE(BaseConfig.COMMON.ITEMS.EMPOWERED_MAX_ENERGY_I, BaseConfig.COMMON.ITEMS.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_I),
+        TWO(BaseConfig.COMMON.ITEMS.EMPOWERED_MAX_ENERGY_II, BaseConfig.COMMON.ITEMS.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_II),
+        THREE(BaseConfig.COMMON.ITEMS.EMPOWERED_MAX_ENERGY_III, BaseConfig.COMMON.ITEMS.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_III),
+        FOUR(BaseConfig.COMMON.ITEMS.EMPOWERED_MAX_ENERGY_IV, BaseConfig.COMMON.ITEMS.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_IV);
 
-    static {
-        UPGRADES.put(0, TIER_0_FACTORY);
-        UPGRADES.put(1, TIER_1_FACTORY);
-        UPGRADES.put(2, TIER_2_FACTORY);
-        UPGRADES.put(3, TIER_3_FACTORY);
+        private final Supplier<EmpoweredUpgrade> factory;
+        private final ForgeConfigSpec.ConfigValue<Integer> maxStorage;
+        private final ForgeConfigSpec.ConfigValue<Float> damageAbsorptionChance;
+
+        Tier(ForgeConfigSpec.ConfigValue<Integer> maxStorage, ForgeConfigSpec.ConfigValue<Float> damageAbsorptionChance) {
+            this.maxStorage = maxStorage;
+            this.damageAbsorptionChance = damageAbsorptionChance;
+            factory = () -> new EmpoweredUpgrade(this);
+        }
+
+        public int getMaxStorage() {
+            return maxStorage.get();
+        }
+
+        public float getDamageAbsorptionChance() {
+            return damageAbsorptionChance.get();
+        }
+
+        public Supplier<EmpoweredUpgrade> getFactory() {
+            return factory;
+        }
     }
 
     private static Optional<EmpoweredUpgrade> getUpgradeForTier(int tier) {
-        if(!UPGRADES.containsKey(tier)) {
+        return getConfigForTier(tier).map(config -> config.getFactory().get());
+    }
+
+    private static Optional<Tier> getConfigForTier(int tier) {
+        if (tier >= Tier.values().length || tier < 0) {
             return Optional.empty();
         }
-        return Optional.of(UPGRADES.get(tier).get());
+        return Optional.of(Tier.values()[tier]);
     }
+
 
     private static final Random RANDOM = new Random();
 
-    //TODO: Config
-    private int speedBoostWhenPowered = 2;
+    private final ForgeConfigSpec.ConfigValue<Integer> speedBoostWhenPowered = BaseConfig.COMMON.ITEMS.EMPOWERED_EFFICIENCY_BOOST;
 
-    //TODO: Config
-    private int powerUsePerDamagePoint = 750;
+    private final ForgeConfigSpec.ConfigValue<Integer> powerUsePerDamagePoint = BaseConfig.COMMON.ITEMS.EMPOWERED_ENERGY_PER_DAMAGE;
 
-    private int level;
-
-    private int maxStorage;
-
-    private float damageAbsorptionChance;
+    private Tier tier;
 
     private EnergyStorage storage;
 
-
     public EmpoweredUpgrade() {
-        this(1,100000,0.5f);
+        this(Tier.ONE);
     }
 
-    public EmpoweredUpgrade(int level, int  maxStorage, float damageAbsorptionChance) {
-        this.level = level;
-        this.maxStorage = maxStorage;
-        this.damageAbsorptionChance = damageAbsorptionChance;
-        storage = new EnergyStorage(maxStorage);
+    public EmpoweredUpgrade(Tier tier) {
+        this.tier = tier;
+        storage = new EnergyStorage(tier.getMaxStorage());
     }
 
     public float adjustDestroySpeed(float speed) {
         if (storage.getEnergyStored() > 0) {
-            speed += speedBoostWhenPowered;
+            speed += speedBoostWhenPowered.get();
         }
         return speed;
     }
 
     public int adjustDamage(int oldDamage, int newDamage) {
         int damageTaken = newDamage - oldDamage;
-        if (damageTaken > 0 && storage.getEnergyStored() > 0 && RANDOM.nextDouble() < damageAbsorptionChance) {
-            storage.extractEnergy(damageTaken * powerUsePerDamagePoint, false);
+        if (damageTaken > 0 && storage.getEnergyStored() > 0 && RANDOM.nextDouble() < tier.getDamageAbsorptionChance()) {
+            storage.extractEnergy(damageTaken * powerUsePerDamagePoint.get(), false);
             return oldDamage;
         }
         return newDamage;
@@ -83,18 +98,18 @@ public class EmpoweredUpgrade implements IDarkSteelUpgrade {
 
     @Override
     public boolean isBaseTier() {
-        return level == 0;
+        return tier.ordinal() == 0;
     }
 
     @Override
     public Optional<? extends IDarkSteelUpgrade> getNextTier() {
-        return getUpgradeForTier(level + 1);
+        return getUpgradeForTier(tier.ordinal() + 1);
     }
 
     @Override
     public boolean isValidUpgrade(IDarkSteelUpgrade upgrade) {
-        if(upgrade instanceof EmpoweredUpgrade eu) {
-            return eu.level == level + 1;
+        if (upgrade instanceof EmpoweredUpgrade eu) {
+            return eu.tier.ordinal() == tier.ordinal() + 1;
         }
         return false;
     }
@@ -110,36 +125,33 @@ public class EmpoweredUpgrade implements IDarkSteelUpgrade {
 
     @Override
     public Component getDisplayName() {
-        return EIOLang.DS_UPGRADE_EMPOWERED.copy().append(" " + (level + 1));
+        return EIOLang.DS_UPGRADE_EMPOWERED.copy().append(" " + (tier.ordinal() + 1));
     }
 
     @Override
     public Collection<Component> getDescription() {
         List<Component> result = new ArrayList<>();
         result.add(EIOLang.DS_UPGRADE_EMPOWERED_DESCRIPTION);
-        result.add(TooltipUtil.withArgs(EIOLang.DS_UPGRADE_EMPOWERED_STORAGE, String.format("%,d", maxStorage)));
-        result.add(TooltipUtil.withArgs(EIOLang.DS_UPGRADE_EMPOWERED_DAMAGE_ABSORPTION, (int)(damageAbsorptionChance * 100)));
+        result.add(TooltipUtil.withArgs(EIOLang.DS_UPGRADE_EMPOWERED_STORAGE, String.format("%,d", tier.getMaxStorage())));
+        result.add(TooltipUtil.withArgs(EIOLang.DS_UPGRADE_EMPOWERED_DAMAGE_ABSORPTION, (int)(tier.getDamageAbsorptionChance() * 100)));
         return result;
     }
 
     @Override
     public Tag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
-        nbt.putInt("level", level);
-        nbt.put("storage", storage.serializeNBT());
-        nbt.putInt("maxStorage", maxStorage);
-        nbt.putFloat("damageAbsorptionChance", damageAbsorptionChance);
+        nbt.putInt(TIER_KEY, tier.ordinal());
+        nbt.put(STORAGE_KEY, storage.serializeNBT());
         return nbt;
     }
 
     @Override
     public void deserializeNBT(Tag tag) {
-        if(tag instanceof CompoundTag nbt) {
-            level = nbt.getInt("level");
-            maxStorage = nbt.getInt("maxStorage");
-            storage = new EnergyStorage(maxStorage);
-            storage.deserializeNBT(nbt.get("storage"));
-            damageAbsorptionChance = nbt.getFloat("damageAbsorptionChance");
+        if (tag instanceof CompoundTag nbt) {
+            int level = nbt.getInt(TIER_KEY);
+            tier = getConfigForTier(level).orElse(Tier.ONE);
+            storage = new EnergyStorage(tier.getMaxStorage());
+            storage.deserializeNBT(nbt.get(STORAGE_KEY));
         }
     }
 }

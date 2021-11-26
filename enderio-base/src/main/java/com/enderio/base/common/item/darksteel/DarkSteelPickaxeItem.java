@@ -4,6 +4,7 @@ import com.enderio.base.common.capability.darksteel.DarkSteelUpgradeable;
 import com.enderio.base.common.item.EIOItems;
 import com.enderio.base.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.SpoonUpgrade;
+import com.enderio.base.config.base.BaseConfig;
 import com.enderio.core.client.tooltip.IAdvancedTooltipProvider;
 import com.enderio.core.common.util.EnergyUtil;
 import net.minecraft.core.BlockPos;
@@ -19,22 +20,19 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.TierSortingRegistry;
 import net.minecraftforge.common.ToolActions;
 
 import javax.annotation.Nonnull;
 
-//TODO: Use dual duration / energy bar
 public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem, IAdvancedTooltipProvider {
 
-    //TODO: Config
-    private int obsianBreakPowerUse = 50;
+    private final ForgeConfigSpec.ConfigValue<Integer> obsidianBreakPowerUse = BaseConfig.COMMON.ITEMS.DARK_STEEL_PICKAXE_OBSIDIAN_ENERGY_COST;
 
-    //TODO: Config
-    private int speedBoostWhenObsidian = 50;
+    private final ForgeConfigSpec.ConfigValue<Integer> speedBoostWhenObsidian = BaseConfig.COMMON.ITEMS.DARK_STEEL_PICKAXE_OBSIDIAN_SPEED;
 
-    //TODO: Config
-    private int useObsidianBreakSpeedAtHardness = 50;
+    private final ForgeConfigSpec.ConfigValue<Integer> useObsidianBreakSpeedAtHardness = BaseConfig.COMMON.ITEMS.DARK_STEEL_PICKAXE_AS_OBSIDIAN_AT_HARDNESS;
 
     public DarkSteelPickaxeItem(Properties pProperties) {
         super(EIOItems.DARK_STEEL_TIER, 1, -2.8F, pProperties);
@@ -51,7 +49,7 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem,
         final float baseSpeed = canHarvest(pStack, pState) ? speed : 1.0f;
         float adjustedSpeed = getEmpoweredUpgrade(pStack).map(empoweredUpgrade -> empoweredUpgrade.adjustDestroySpeed(baseSpeed)).orElse(baseSpeed);
         if (useObsidianMining(pState, pStack)) {
-            adjustedSpeed += speedBoostWhenObsidian;
+            adjustedSpeed += speedBoostWhenObsidian.get();
         }
         return adjustedSpeed;
     }
@@ -59,7 +57,7 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem,
     @Override
     public boolean mineBlock(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving) {
         if (useObsidianMining(pState, pStack)) {
-            EnergyUtil.extractEnergy(pStack, obsianBreakPowerUse, false);
+            EnergyUtil.extractEnergy(pStack, obsidianBreakPowerUse.get(), false);
         }
         return super.mineBlock(pStack, pLevel, pState, pPos, pEntityLiving);
     }
@@ -91,12 +89,12 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem,
     }
 
     private boolean useObsidianMining(BlockState pState, ItemStack stack) {
-        return EnergyUtil.getEnergyStored(stack) >= obsianBreakPowerUse && treatBlockAsObsidian(pState);
+        return EnergyUtil.getEnergyStored(stack) >= obsidianBreakPowerUse.get() && treatBlockAsObsidian(pState);
     }
 
     private boolean treatBlockAsObsidian(BlockState pState) {
-        return pState.getBlock() == Blocks.OBSIDIAN || (useObsidianBreakSpeedAtHardness > 0
-            && pState.getBlock().defaultDestroyTime() >= useObsidianBreakSpeedAtHardness);
+        return pState.getBlock() == Blocks.OBSIDIAN || (useObsidianBreakSpeedAtHardness.get() > 0
+            && pState.getBlock().defaultDestroyTime() >= useObsidianBreakSpeedAtHardness.get());
     }
 
     // region Common for all tools

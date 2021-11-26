@@ -4,6 +4,7 @@ import com.enderio.base.common.capability.darksteel.DarkSteelUpgradeable;
 import com.enderio.base.common.item.EIOItems;
 import com.enderio.base.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.ForkUpgrade;
+import com.enderio.base.config.base.BaseConfig;
 import com.enderio.core.common.util.EnergyUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -56,7 +57,7 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem {
                 collectTreeBlocks(pLevel, pPos, new HashSet<>(), chopCandidates, maxSearchSize, pState.getBlock());
                 chopCandidates.remove(pPos); // don't double harvest this guy
 
-                int energyPerBlock = 1500; //TODO: Config "powerUsePerDamagePointMultiHarvest", 1500
+                int energyPerBlock = BaseConfig.COMMON.ITEMS.DARK_STEEL_AXE_ENERGY_PER_FELLED_LOG.get();
                 int maxBlocks = EnergyUtil.getEnergyStored(pStack)/energyPerBlock;
 
                 Collection<BlockPos> toChop = chopCandidates;
