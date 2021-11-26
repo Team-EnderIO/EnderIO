@@ -419,17 +419,17 @@ public class EIOItems {
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_2 = REGISTRATE
         .item("dark_steel_upgrade_empowered_2", properties -> new DarkSteelUpgradeItem(properties, 8, EmpoweredUpgrade.TIER_1_FACTORY))
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR)).lang("Empowered 2" + UPGRADE_TEXT)
+        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR)).lang("Empowered II" + UPGRADE_TEXT)
         .register();
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_3 = REGISTRATE
         .item("dark_steel_upgrade_empowered_3", properties -> new DarkSteelUpgradeItem(properties, 12, EmpoweredUpgrade.TIER_2_FACTORY))
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR)).lang("Empowered 3" + UPGRADE_TEXT)
+        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR)).lang("Empowered III" + UPGRADE_TEXT)
         .register();
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_4 = REGISTRATE
         .item("dark_steel_upgrade_empowered_4", properties -> new DarkSteelUpgradeItem(properties, 16, EmpoweredUpgrade.TIER_3_FACTORY))
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR)).lang("Empowered 4" + UPGRADE_TEXT)
+        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR)).lang("Empowered IV" + UPGRADE_TEXT)
         .register();
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_SPOON = REGISTRATE

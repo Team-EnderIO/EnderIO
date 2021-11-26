@@ -2,16 +2,13 @@ package com.enderio.base.common.item.darksteel.upgrades;
 
 import com.enderio.base.common.capability.darksteel.IDarkSteelUpgrade;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.energy.EnergyStorage;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class EmpoweredUpgrade implements IDarkSteelUpgrade {
@@ -68,7 +65,7 @@ public class EmpoweredUpgrade implements IDarkSteelUpgrade {
         storage = new EnergyStorage(maxStorage);
     }
 
-    public float adjustDestroySpeed(float speed, BlockState pState) {
+    public float adjustDestroySpeed(float speed) {
         if (storage.getEnergyStored() > 0) {
             speed += speedBoostWhenPowered;
         }
@@ -114,6 +111,15 @@ public class EmpoweredUpgrade implements IDarkSteelUpgrade {
     @Override
     public Component getDisplayName() {
         return EIOLang.DS_UPGRADE_EMPOWERED.copy().append(" " + (level + 1));
+    }
+
+    @Override
+    public Collection<Component> getDescription() {
+        List<Component> result = new ArrayList<>();
+        result.add(EIOLang.DS_UPGRADE_EMPOWERED_DESCRIPTION);
+        result.add(TooltipUtil.withArgs(EIOLang.DS_UPGRADE_EMPOWERED_STORAGE, String.format("%,d", maxStorage)));
+        result.add(TooltipUtil.withArgs(EIOLang.DS_UPGRADE_EMPOWERED_DAMAGE_ABSORPTION, (int)(damageAbsorptionChance * 100)));
+        return result;
     }
 
     @Override

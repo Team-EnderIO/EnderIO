@@ -7,6 +7,7 @@ import com.enderio.base.common.item.darksteel.upgrades.ForkUpgrade;
 import com.enderio.core.common.util.EnergyUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -42,15 +43,13 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem {
     @Override
     public float getDestroySpeed(ItemStack pStack, BlockState pState) {
         final float baseSpeed = canHarvest(pStack, pState) ? speed : 1.0f;
-        return getEmpoweredUpgrade(pStack).map(empoweredUpgrade -> empoweredUpgrade.adjustDestroySpeed(baseSpeed, pState)).orElse(baseSpeed);
+        return getEmpoweredUpgrade(pStack).map(empoweredUpgrade -> empoweredUpgrade.adjustDestroySpeed(baseSpeed)).orElse(baseSpeed);
     }
 
     @Override
     public boolean mineBlock(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving) {
         if (pEntityLiving instanceof Player player) {
             if (pEntityLiving.isCrouching() && pState.is(BlockTags.LOGS) && EnergyUtil.getEnergyStored(pStack) > 0) {
-
-                System.out.println("DarkSteelAxeItem.removeBlock: isClientSide=" + pLevel.isClientSide);
 
                 int maxSearchSize = 400; //put an upper limit on search size
                 Set<BlockPos> chopCandidates = new HashSet<>();
@@ -161,6 +160,9 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem {
         if (removed) {
             state.getBlock().destroy(level, pos, state);
             state.getBlock().playerDestroy(level, player, pos, state, null, tool);
+            if(event.getExpToDrop() > 0 && level instanceof ServerLevel serverLevel) {
+                state.getBlock().popExperience(serverLevel, pos, event.getExpToDrop());
+            }
         }
         return removed;
     }
