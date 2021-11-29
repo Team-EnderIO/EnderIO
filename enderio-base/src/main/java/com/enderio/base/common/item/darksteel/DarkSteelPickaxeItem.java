@@ -4,11 +4,13 @@ import com.enderio.base.common.capability.darksteel.DarkSteelUpgradeable;
 import com.enderio.base.common.item.EIOItems;
 import com.enderio.base.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.SpoonUpgrade;
+import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.config.base.BaseConfig;
-import com.enderio.core.client.tooltip.IAdvancedTooltipProvider;
 import com.enderio.core.common.util.EnergyUtil;
+import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -25,8 +27,9 @@ import net.minecraftforge.common.TierSortingRegistry;
 import net.minecraftforge.common.ToolActions;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
-public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem, IAdvancedTooltipProvider {
+public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem {
 
     private final ForgeConfigSpec.ConfigValue<Integer> obsidianBreakPowerUse = BaseConfig.COMMON.ITEMS.DARK_STEEL_PICKAXE_OBSIDIAN_ENERGY_COST;
 
@@ -95,6 +98,15 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem,
     private boolean treatBlockAsObsidian(BlockState pState) {
         return pState.getBlock() == Blocks.OBSIDIAN || (useObsidianBreakSpeedAtHardness.get() > 0
             && pState.getBlock().defaultDestroyTime() >= useObsidianBreakSpeedAtHardness.get());
+    }
+
+    @Override
+    public void addCurrentUpgradeTooltips(ItemStack itemStack, List<Component> tooltips, boolean isDetailed) {
+        if(isDetailed && getEmpoweredUpgrade(itemStack).isPresent()) {
+            tooltips.add(TooltipUtil.withArgs(EIOLang.DS_UPGRADE_EMPOWERED_EFFICIENCY, BaseConfig.COMMON.ITEMS.EMPOWERED_EFFICIENCY_BOOST.get()));
+            tooltips.add(TooltipUtil.withArgs(EIOLang.DS_UPGRADE_EMPOWERED_OBSIDIAM_EFFICIENCY, speedBoostWhenObsidian.get()));
+        }
+        IDarkSteelItem.super.addCurrentUpgradeTooltips(itemStack, tooltips, isDetailed);
     }
 
     // region Common for all tools

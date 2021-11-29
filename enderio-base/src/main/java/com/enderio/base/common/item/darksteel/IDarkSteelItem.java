@@ -69,12 +69,12 @@ public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipPr
     }
 
     default void addBasicTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
-        addCurrentUpgradeTooltips(itemStack, tooltips);
+        addCurrentUpgradeTooltips(itemStack, tooltips, false);
     }
 
     default void addDetailedTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
         addDurabilityTooltips(itemStack, tooltips);
-        addCurrentUpgradeTooltips(itemStack, tooltips);
+        addCurrentUpgradeTooltips(itemStack, tooltips, true);
         addAvailableUpgradesTooltips(itemStack, tooltips);
     }
 
@@ -87,7 +87,7 @@ public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipPr
         }
     }
 
-    default  void addCurrentUpgradeTooltips(ItemStack itemStack, List<Component> tooltips) {
+    default  void addCurrentUpgradeTooltips(ItemStack itemStack, List<Component> tooltips, boolean isDetailed) {
         var upgrades = DarkSteelUpgradeable.getUpgrades(itemStack);
         upgrades
             .stream()

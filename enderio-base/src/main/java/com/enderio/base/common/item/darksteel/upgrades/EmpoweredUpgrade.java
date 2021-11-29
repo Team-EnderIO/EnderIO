@@ -60,7 +60,6 @@ public class EmpoweredUpgrade implements IDarkSteelUpgrade {
         return Optional.of(Tier.values()[tier]);
     }
 
-
     private static final Random RANDOM = new Random();
 
     private final ForgeConfigSpec.ConfigValue<Integer> speedBoostWhenPowered = BaseConfig.COMMON.ITEMS.EMPOWERED_EFFICIENCY_BOOST;

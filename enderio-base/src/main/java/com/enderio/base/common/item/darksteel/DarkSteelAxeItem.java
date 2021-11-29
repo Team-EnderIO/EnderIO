@@ -4,10 +4,13 @@ import com.enderio.base.common.capability.darksteel.DarkSteelUpgradeable;
 import com.enderio.base.common.item.EIOItems;
 import com.enderio.base.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.ForkUpgrade;
+import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.config.base.BaseConfig;
 import com.enderio.core.common.util.EnergyUtil;
+import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
@@ -27,6 +30,7 @@ import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.event.world.BlockEvent;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.*;
 
 public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem {
@@ -166,6 +170,14 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem {
             }
         }
         return removed;
+    }
+
+    @Override
+    public void addCurrentUpgradeTooltips(ItemStack itemStack, List<Component> tooltips, boolean isDetailed) {
+        if(isDetailed && getEmpoweredUpgrade(itemStack).isPresent()) {
+            tooltips.add(TooltipUtil.withArgs(EIOLang.DS_UPGRADE_EMPOWERED_EFFICIENCY, BaseConfig.COMMON.ITEMS.EMPOWERED_EFFICIENCY_BOOST.get()));
+        }
+        IDarkSteelItem.super.addCurrentUpgradeTooltips(itemStack, tooltips, isDetailed);
     }
 
     // region Common for all tools

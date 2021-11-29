@@ -809,6 +809,8 @@
   "info.enderio.darksteel.upgrade.empowered": "Empowered",
   "info.enderio.darksteel.upgrade.empowered.absorption": "%s%% damage absorbed by \u00B5I",
   "info.enderio.darksteel.upgrade.empowered.description": "Infuse the steel with the power of Micro Infinity",
+  "info.enderio.darksteel.upgrade.empowered.efficiency": "Efficiency +%s when powered",
+  "info.enderio.darksteel.upgrade.empowered.obsidian.efficiency": "Efficiency +%s when breaking obsidian",
   "info.enderio.darksteel.upgrade.empowered.storage": "Holds up to %s \u00B5I",
   "info.enderio.darksteel.upgrade.fork": "Fork",
   "info.enderio.darksteel.upgrade.fork.description": "Who needs a hoe when you have a fork?",
