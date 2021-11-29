@@ -16,6 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -25,11 +26,11 @@ import java.util.function.Supplier;
 
 public class DarkSteelUpgradeItem extends Item implements IAdvancedTooltipProvider {
 
-    private final int levelsRequired;
+    private final ForgeConfigSpec.ConfigValue<Integer> levelsRequired;
 
     private final Supplier<? extends IDarkSteelUpgrade> upgrade;
 
-    public DarkSteelUpgradeItem(Properties pProperties, int levelsRequired, Supplier<? extends IDarkSteelUpgrade> upgrade) {
+    public DarkSteelUpgradeItem(Properties pProperties, ForgeConfigSpec.ConfigValue<Integer> levelsRequired, Supplier<? extends IDarkSteelUpgrade> upgrade) {
         super(pProperties.stacksTo(1));
         this.levelsRequired = levelsRequired;
         this.upgrade = upgrade;
@@ -44,9 +45,9 @@ public class DarkSteelUpgradeItem extends Item implements IAdvancedTooltipProvid
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         ItemStack stack = pPlayer.getItemInHand(pUsedHand);
         if (!DarkSteelUpgradeRegistry.instance().hasUpgrade(stack)) {
-            if (pPlayer.experienceLevel >= levelsRequired || pPlayer.isCreative()) {
+            if (pPlayer.experienceLevel >= levelsRequired.get() || pPlayer.isCreative()) {
                 if (!pPlayer.isCreative()) {
-                    pPlayer.giveExperienceLevels(-levelsRequired);
+                    pPlayer.giveExperienceLevels(-levelsRequired.get());
                 }
                 DarkSteelUpgradeRegistry.instance().writeUpgradeToItemStack(stack, upgrade.get());
                 pLevel.playSound(pPlayer, pPlayer.getOnPos(), SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 1.0F, new Random().nextFloat() * 0.1F + 0.9F);

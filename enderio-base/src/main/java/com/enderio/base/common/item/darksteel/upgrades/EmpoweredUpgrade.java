@@ -21,18 +21,21 @@ public class EmpoweredUpgrade implements IDarkSteelUpgrade {
 
     public enum Tier {
 
-        ONE(BaseConfig.COMMON.ITEMS.EMPOWERED_MAX_ENERGY_I, BaseConfig.COMMON.ITEMS.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_I),
-        TWO(BaseConfig.COMMON.ITEMS.EMPOWERED_MAX_ENERGY_II, BaseConfig.COMMON.ITEMS.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_II),
-        THREE(BaseConfig.COMMON.ITEMS.EMPOWERED_MAX_ENERGY_III, BaseConfig.COMMON.ITEMS.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_III),
-        FOUR(BaseConfig.COMMON.ITEMS.EMPOWERED_MAX_ENERGY_IV, BaseConfig.COMMON.ITEMS.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_IV);
+        ONE(BaseConfig.COMMON.ITEMS.EMPOWERED_MAX_ENERGY_I, BaseConfig.COMMON.ITEMS.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_I, BaseConfig.COMMON.ITEMS.EMPOWERED_ACTIVATION_COST_I),
+        TWO(BaseConfig.COMMON.ITEMS.EMPOWERED_MAX_ENERGY_II, BaseConfig.COMMON.ITEMS.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_II, BaseConfig.COMMON.ITEMS.EMPOWERED_ACTIVATION_COST_II),
+        THREE(BaseConfig.COMMON.ITEMS.EMPOWERED_MAX_ENERGY_III, BaseConfig.COMMON.ITEMS.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_III, BaseConfig.COMMON.ITEMS.EMPOWERED_ACTIVATION_COST_III),
+        FOUR(BaseConfig.COMMON.ITEMS.EMPOWERED_MAX_ENERGY_IV, BaseConfig.COMMON.ITEMS.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_IV, BaseConfig.COMMON.ITEMS.EMPOWERED_ACTIVATION_COST_IV);
 
         private final Supplier<EmpoweredUpgrade> factory;
         private final ForgeConfigSpec.ConfigValue<Integer> maxStorage;
         private final ForgeConfigSpec.ConfigValue<Float> damageAbsorptionChance;
+        private final ForgeConfigSpec.ConfigValue<Integer> activationCost;
 
-        Tier(ForgeConfigSpec.ConfigValue<Integer> maxStorage, ForgeConfigSpec.ConfigValue<Float> damageAbsorptionChance) {
+        Tier(ForgeConfigSpec.ConfigValue<Integer> maxStorage, ForgeConfigSpec.ConfigValue<Float> damageAbsorptionChance,
+            ForgeConfigSpec.ConfigValue<Integer> activationCost) {
             this.maxStorage = maxStorage;
             this.damageAbsorptionChance = damageAbsorptionChance;
+            this.activationCost = activationCost;
             factory = () -> new EmpoweredUpgrade(this);
         }
 
@@ -46,6 +49,10 @@ public class EmpoweredUpgrade implements IDarkSteelUpgrade {
 
         public Supplier<EmpoweredUpgrade> getFactory() {
             return factory;
+        }
+
+        public ForgeConfigSpec.ConfigValue<Integer> getActivationCost() {
+            return activationCost;
         }
     }
 
