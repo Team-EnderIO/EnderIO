@@ -92,7 +92,7 @@ public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipPr
         upgrades
             .stream()
             .sorted(Comparator.comparing(INamedNBTSerializable::getSerializedName))
-            .forEach(upgrade -> tooltips.add(upgrade.getDisplayName().copy().withStyle(ChatFormatting.DARK_AQUA)));
+            .forEach(upgrade -> tooltips.add(1, upgrade.getDisplayName().copy().withStyle(ChatFormatting.DARK_AQUA)));
     }
 
     default void addAvailableUpgradesTooltips(ItemStack itemStack, List<Component> tooltips) {

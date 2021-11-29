@@ -21,21 +21,35 @@ public class EmpoweredUpgrade implements IDarkSteelUpgrade {
 
     public enum Tier {
 
-        ONE(BaseConfig.COMMON.ITEMS.EMPOWERED_MAX_ENERGY_I, BaseConfig.COMMON.ITEMS.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_I, BaseConfig.COMMON.ITEMS.EMPOWERED_ACTIVATION_COST_I),
-        TWO(BaseConfig.COMMON.ITEMS.EMPOWERED_MAX_ENERGY_II, BaseConfig.COMMON.ITEMS.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_II, BaseConfig.COMMON.ITEMS.EMPOWERED_ACTIVATION_COST_II),
-        THREE(BaseConfig.COMMON.ITEMS.EMPOWERED_MAX_ENERGY_III, BaseConfig.COMMON.ITEMS.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_III, BaseConfig.COMMON.ITEMS.EMPOWERED_ACTIVATION_COST_III),
-        FOUR(BaseConfig.COMMON.ITEMS.EMPOWERED_MAX_ENERGY_IV, BaseConfig.COMMON.ITEMS.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_IV, BaseConfig.COMMON.ITEMS.EMPOWERED_ACTIVATION_COST_IV);
+        ONE(BaseConfig.COMMON.ITEMS.EMPOWERED_MAX_ENERGY_I,
+            BaseConfig.COMMON.ITEMS.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_I,
+            BaseConfig.COMMON.ITEMS.EMPOWERED_ACTIVATION_COST_I,
+            EIOLang.DS_UPGRADE_EMPOWERED_I),
+        TWO(BaseConfig.COMMON.ITEMS.EMPOWERED_MAX_ENERGY_II,
+            BaseConfig.COMMON.ITEMS.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_II,
+            BaseConfig.COMMON.ITEMS.EMPOWERED_ACTIVATION_COST_II,
+            EIOLang.DS_UPGRADE_EMPOWERED_II),
+        THREE(BaseConfig.COMMON.ITEMS.EMPOWERED_MAX_ENERGY_III,
+            BaseConfig.COMMON.ITEMS.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_III,
+            BaseConfig.COMMON.ITEMS.EMPOWERED_ACTIVATION_COST_III,
+            EIOLang.DS_UPGRADE_EMPOWERED_III),
+        FOUR(BaseConfig.COMMON.ITEMS.EMPOWERED_MAX_ENERGY_IV,
+            BaseConfig.COMMON.ITEMS.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_IV,
+            BaseConfig.COMMON.ITEMS.EMPOWERED_ACTIVATION_COST_IV,
+            EIOLang.DS_UPGRADE_EMPOWERED_IV);
 
         private final Supplier<EmpoweredUpgrade> factory;
         private final ForgeConfigSpec.ConfigValue<Integer> maxStorage;
         private final ForgeConfigSpec.ConfigValue<Float> damageAbsorptionChance;
         private final ForgeConfigSpec.ConfigValue<Integer> activationCost;
+        private final Component displayName;
 
         Tier(ForgeConfigSpec.ConfigValue<Integer> maxStorage, ForgeConfigSpec.ConfigValue<Float> damageAbsorptionChance,
-            ForgeConfigSpec.ConfigValue<Integer> activationCost) {
+            ForgeConfigSpec.ConfigValue<Integer> activationCost, Component displayName) {
             this.maxStorage = maxStorage;
             this.damageAbsorptionChance = damageAbsorptionChance;
             this.activationCost = activationCost;
+            this.displayName = displayName;
             factory = () -> new EmpoweredUpgrade(this);
         }
 
@@ -51,9 +65,9 @@ public class EmpoweredUpgrade implements IDarkSteelUpgrade {
             return factory;
         }
 
-        public ForgeConfigSpec.ConfigValue<Integer> getActivationCost() {
-            return activationCost;
-        }
+        public ForgeConfigSpec.ConfigValue<Integer> getActivationCost() { return activationCost; }
+
+        public Component getDisplayName() { return displayName; }
     }
 
     private static Optional<EmpoweredUpgrade> getUpgradeForTier(int tier) {
@@ -131,7 +145,7 @@ public class EmpoweredUpgrade implements IDarkSteelUpgrade {
 
     @Override
     public Component getDisplayName() {
-        return EIOLang.DS_UPGRADE_EMPOWERED.copy().append(" " + (tier.ordinal() + 1));
+        return tier.getDisplayName();
     }
 
     @Override
