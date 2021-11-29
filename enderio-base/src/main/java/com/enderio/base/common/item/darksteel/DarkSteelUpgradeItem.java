@@ -66,7 +66,7 @@ public class DarkSteelUpgradeItem extends Item implements IAdvancedTooltipProvid
             tooltips.add(component.copy().withStyle(ChatFormatting.GRAY));
         }
         if (!DarkSteelUpgradeRegistry.instance().hasUpgrade(itemStack)) {
-            tooltips.add(TooltipUtil.withArgs(EIOLang.DS_UPGRADE_XP_COST, levelsRequired).withStyle(ChatFormatting.DARK_PURPLE));
+            tooltips.add(TooltipUtil.withArgs(EIOLang.DS_UPGRADE_XP_COST, levelsRequired.get()).withStyle(ChatFormatting.DARK_PURPLE));
             tooltips.add(EIOLang.DS_UPGRADE_ACTIVATE.copy().withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
         }
     }

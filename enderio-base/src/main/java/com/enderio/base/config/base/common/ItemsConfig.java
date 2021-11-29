@@ -69,7 +69,7 @@ public class ItemsConfig {
         DARK_STEEL_PICKAXE_AS_OBSIDIAN_AT_HARDNESS = builder.define("useObsidianBreakSpeedAtHardness", 50);
         builder.pop();
 
-        builder.push("darksteelupgrades");
+        builder.push("darksteel.upgrades");
         builder.push("empowered");
         EMPOWERED_EFFICIENCY_BOOST = builder.define("efficiencyBoost", 2);
         EMPOWERED_ENERGY_PER_DAMAGE = builder.define("energyUsePerDamagePoint", 750);
