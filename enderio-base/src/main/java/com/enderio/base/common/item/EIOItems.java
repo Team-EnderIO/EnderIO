@@ -412,7 +412,6 @@ public class EIOItems {
         .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR)).lang("Blank" + UPGRADE_TEXT)
         .register();
 
-    //TODO: use Config for required levels
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_1 = REGISTRATE
         .item("dark_steel_upgrade_empowered_1",
             properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgrade.Tier.ONE.getActivationCost(), EmpoweredUpgrade.Tier.ONE.getFactory()))
