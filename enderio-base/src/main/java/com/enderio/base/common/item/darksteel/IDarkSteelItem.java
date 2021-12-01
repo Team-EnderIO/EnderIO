@@ -70,7 +70,7 @@ public interface IDarkSteelItem extends IMultiCapabilityItem {
 
         // Get installed and available upgrades
         var upgrades = DarkSteelUpgradeable.getUpgrades(pStack);
-        var availUpgrades = DarkSteelUpgradeable.getUpgradesThatCanBeAppliedAtTheMoment(pStack);
+        var availUpgrades = DarkSteelUpgradeable.getUpgradesApplicable(pStack);
 
         // Display installed upgrades
         upgrades
