@@ -1,7 +1,6 @@
-package com.enderio.base.common.item.darksteel.upgrades;
+package com.enderio.base.common.item.darksteel.upgrades.explosive;
 
 import com.enderio.base.common.capability.darksteel.DarkSteelUpgradeable;
-import com.enderio.base.common.capability.darksteel.IDarkSteelUpgrade;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3d;
@@ -13,10 +12,9 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -28,14 +26,11 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-import static com.enderio.base.common.lang.EIOLang.DS_UPGRADE_EXPLOSIVE_DESCRIPTION;
-import static com.enderio.base.common.lang.EIOLang.DS_UPGRADE_EXPLOSIVE_I;
-
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
-public class ExplosiveUpgrade implements IDarkSteelUpgrade {
+public class ExplosiveUpgradeHandler {
+
 
     @SubscribeEvent
     public static void showAreaOfEffectHighlight(DrawSelectionEvent.HighlightBlock event) {
@@ -44,18 +39,13 @@ public class ExplosiveUpgrade implements IDarkSteelUpgrade {
         if(player == null || player.isCrouching()) {
             return;
         }
-        DarkSteelUpgradeable
-            .getUpgradeAs(player.getItemInHand(InteractionHand.MAIN_HAND), NAME, ExplosiveUpgrade.class)
-            .ifPresent(explosiveUpgrade -> explosiveUpgrade.drawHighlight(event));
+        ItemStack held = player.getItemInHand(InteractionHand.MAIN_HAND);
+        if(DarkSteelUpgradeable.hasUpgrade(held, ExplosiveRadiusUpgrade.NAME)) {
+            drawHighlight(event, held);
+        }
     }
 
-    public static final String NAME = DarkSteelUpgradeRegistry.UPGRADE_PREFIX + "explosive";
-
-    private int aoeSize = 1;
-
-    public ExplosiveUpgrade() {}
-
-    private void drawHighlight(DrawSelectionEvent.HighlightBlock event) {
+    private static void drawHighlight(DrawSelectionEvent.HighlightBlock event, ItemStack held) {
         ClientLevel level = Minecraft.getInstance().level;
         if(level == null) {
             return;
@@ -67,13 +57,18 @@ public class ExplosiveUpgrade implements IDarkSteelUpgrade {
             return;
         }
 
-        AABB miningBounds = new AABB(-aoeSize,-aoeSize,-aoeSize,1 + aoeSize,1 + aoeSize,1 + aoeSize);
+        double radius = DarkSteelUpgradeable
+            .getUpgradeAs(held, ExplosiveRadiusUpgrade.NAME, ExplosiveRadiusUpgrade.class)
+            .map(ExplosiveRadiusUpgrade::getMagnitude)
+            .orElse(1);
+
+        AABB miningBounds = new AABB(-radius,-radius,-radius,1 + radius,1 + radius,1 + radius);
 
         //TODO: Do we want to use the 'Depth' upgrade for this?
         Direction targetDir = event.getTarget().getDirection();
         Vec3i shiftDir = targetDir.getNormal();
         shiftDir = shiftDir.multiply(-1);
-        miningBounds = miningBounds.move(aoeSize * shiftDir.getX(), aoeSize * shiftDir.getY(),aoeSize * shiftDir.getZ());
+        miningBounds = miningBounds.move(radius * shiftDir.getX(), radius * shiftDir.getY(),radius * shiftDir.getZ());
 
         VoxelShape outlineShape = Shapes.create(miningBounds);
 
@@ -91,7 +86,7 @@ public class ExplosiveUpgrade implements IDarkSteelUpgrade {
         renderJoiningLines(poseStack, vertexConsumer, refBounds, miningBounds, origin, color);
     }
 
-    private void renderJoiningLines(PoseStack poseStack, VertexConsumer vertexConsumer, AABB refBounds, AABB miningBounds, Vector3d origin, Vector4f color) {
+    private static void renderJoiningLines(PoseStack poseStack, VertexConsumer vertexConsumer, AABB refBounds, AABB miningBounds, Vector3d origin, Vector4f color) {
         var fromCorners = getCorners(refBounds);
         var toCorners = getCorners(miningBounds);
         for(int i=0;i<fromCorners.size();i++) {
@@ -101,7 +96,7 @@ public class ExplosiveUpgrade implements IDarkSteelUpgrade {
         }
     }
 
-    private List<Vector3d> getCorners(AABB aabb) {
+    private static List<Vector3d> getCorners(AABB aabb) {
         List<Vector3d> res = new ArrayList<>(8);
         res.add(new Vector3d(aabb.minX, aabb.minY, aabb.minZ));
         res.add(new Vector3d(aabb.minX, aabb.maxY, aabb.minZ));
@@ -150,18 +145,4 @@ public class ExplosiveUpgrade implements IDarkSteelUpgrade {
             .endVertex();
     }
 
-    @Override
-    public String getSerializedName() {
-        return NAME;
-    }
-
-    @Override
-    public Component getDisplayName() {
-        return DS_UPGRADE_EXPLOSIVE_I;
-    }
-
-    @Override
-    public Collection<Component> getDescription() {
-        return List.of(DS_UPGRADE_EXPLOSIVE_DESCRIPTION);
-    }
 }
