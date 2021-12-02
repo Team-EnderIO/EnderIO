@@ -62,6 +62,10 @@ public class EIOLang {
     public static final Component DS_UPGRADE_DIRECT_DESCRIPTION = REGISTRATE.addLang("info", EnderIO.loc("darksteel.upgrade.direct.description"),
         "Teleports harvested items directly into your inventory");
 
+    public static final Component DS_UPGRADE_EXPLOSIVE_I = REGISTRATE.addLang("info", EnderIO.loc("darksteel.upgrade.explosive"), "Explosive I");
+    public static final Component DS_UPGRADE_EXPLOSIVE_DESCRIPTION = REGISTRATE.addLang("info", EnderIO.loc("darksteel.upgrade.explosive.description"),
+        "Makes surrounding dirt and rock go splodey");
+
     // endregion
 
     public static void register() {}

@@ -4,6 +4,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 public class DarkSteelConfig {
 
+
     public final ForgeConfigSpec.ConfigValue<Integer> DARK_STEEL_AXE_ENERGY_PER_FELLED_LOG;
     public final ForgeConfigSpec.ConfigValue<Integer> DARK_STEEL_PICKAXE_OBSIDIAN_ENERGY_COST;
     public final ForgeConfigSpec.ConfigValue<Integer> DARK_STEEL_PICKAXE_OBSIDIAN_SPEED;
@@ -25,6 +26,7 @@ public class DarkSteelConfig {
     public final ForgeConfigSpec.ConfigValue<Integer> SPOON_ACTIVATION_COST;
     public final ForgeConfigSpec.ConfigValue<Integer> FORK_ACTIVATION_COST;
     public final ForgeConfigSpec.ConfigValue<Integer> DIRECT_ACTIVATION_COST;
+    public final ForgeConfigSpec.ConfigValue<Integer> EXPLOSIVE_1_ACTIVATION_COST;
 
     public DarkSteelConfig(ForgeConfigSpec.Builder builder) {
         builder.push("darksteel");
@@ -59,6 +61,7 @@ public class DarkSteelConfig {
         SPOON_ACTIVATION_COST = builder.define("spoonActivationCost", 4);
         FORK_ACTIVATION_COST = builder.define("forkActivationCost", 4);
         DIRECT_ACTIVATION_COST = builder.define("directActivationCost", 4);
+        EXPLOSIVE_1_ACTIVATION_COST = builder.define("directActivationCost", 4);
         builder.pop();
     }
 }

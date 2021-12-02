@@ -462,7 +462,7 @@ public class EIOItems {
         .register();
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_1 = REGISTRATE
-        .item("dark_steel_upgrade_tnt", properties -> new DarkSteelUpgradeItem(properties,4, ExplosiveUpgrade::new))
+        .item("dark_steel_upgrade_tnt", properties -> new DarkSteelUpgradeItem(properties,BaseConfig.COMMON.DARK_STEEL.EXPLOSIVE_1_ACTIVATION_COST, ExplosiveUpgrade::new))
         .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR)).lang("Explosive I" + UPGRADE_TEXT)
         .register();
 

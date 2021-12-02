@@ -28,7 +28,11 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+
+import static com.enderio.base.common.lang.EIOLang.DS_UPGRADE_EXPLOSIVE_DESCRIPTION;
+import static com.enderio.base.common.lang.EIOLang.DS_UPGRADE_EXPLOSIVE_I;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ExplosiveUpgrade implements IDarkSteelUpgrade {
@@ -153,7 +157,11 @@ public class ExplosiveUpgrade implements IDarkSteelUpgrade {
 
     @Override
     public Component getDisplayName() {
-        //TODO:
-        return new TextComponent(NAME);
+        return DS_UPGRADE_EXPLOSIVE_I;
+    }
+
+    @Override
+    public Collection<Component> getDescription() {
+        return List.of(DS_UPGRADE_EXPLOSIVE_DESCRIPTION);
     }
 }

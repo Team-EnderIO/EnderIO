@@ -815,6 +815,8 @@
   "info.enderio.darksteel.upgrade.empowered_l2": "Empowered II",
   "info.enderio.darksteel.upgrade.empowered_l3": "Empowered III",
   "info.enderio.darksteel.upgrade.empowered_l4": "Empowered IV",
+  "info.enderio.darksteel.upgrade.explosive": "Explosive I",
+  "info.enderio.darksteel.upgrade.explosive.description": "Makes surrounding dirt and rock go splodey",
   "info.enderio.darksteel.upgrade.fork": "Fork",
   "info.enderio.darksteel.upgrade.fork.description": "Who needs a hoe when you have a fork?",
   "info.enderio.darksteel.upgrade.no_xp": "Not enough XP",
