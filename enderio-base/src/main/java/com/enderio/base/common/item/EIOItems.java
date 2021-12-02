@@ -25,6 +25,7 @@ import com.enderio.base.common.item.tool.LevitationStaffItem;
 import com.enderio.base.common.item.tool.SoulVialItem;
 import com.enderio.base.common.item.tool.YetaWrenchItem;
 import com.enderio.base.common.tag.EIOTags;
+import com.enderio.base.config.base.BaseConfig;
 import com.enderio.base.data.model.item.ItemModelUtils;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.ItemBuilder;
@@ -416,40 +417,51 @@ public class EIOItems {
         .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR)).lang("Blank" + UPGRADE_TEXT)
         .register();
 
-    //TODO: use Config for required levels
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_1 = REGISTRATE
-        .item("dark_steel_upgrade_empowered_1", properties -> new DarkSteelUpgradeItem(properties, 4, EmpoweredUpgrade.TIER_0_FACTORY))
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR)).lang("Empowered" + UPGRADE_TEXT)
+        .item("dark_steel_upgrade_empowered_1",
+            properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgrade.Tier.ONE.getActivationCost(), EmpoweredUpgrade.Tier.ONE.getFactory()))
+        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
+        .lang("Empowered" + UPGRADE_TEXT)
         .register();
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_2 = REGISTRATE
-        .item("dark_steel_upgrade_empowered_2", properties -> new DarkSteelUpgradeItem(properties, 8, EmpoweredUpgrade.TIER_1_FACTORY))
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR)).lang("Empowered 2" + UPGRADE_TEXT)
+        .item("dark_steel_upgrade_empowered_2",
+            properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgrade.Tier.TWO.getActivationCost(), EmpoweredUpgrade.Tier.TWO.getFactory()))
+        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
+        .lang("Empowered II" + UPGRADE_TEXT)
         .register();
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_3 = REGISTRATE
-        .item("dark_steel_upgrade_empowered_3", properties -> new DarkSteelUpgradeItem(properties, 12, EmpoweredUpgrade.TIER_2_FACTORY))
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR)).lang("Empowered 3" + UPGRADE_TEXT)
+        .item("dark_steel_upgrade_empowered_3",
+            properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgrade.Tier.THREE.getActivationCost(), EmpoweredUpgrade.Tier.THREE.getFactory()))
+        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
+        .lang("Empowered III" + UPGRADE_TEXT)
         .register();
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_4 = REGISTRATE
-        .item("dark_steel_upgrade_empowered_4", properties -> new DarkSteelUpgradeItem(properties, 16, EmpoweredUpgrade.TIER_3_FACTORY))
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR)).lang("Empowered 4" + UPGRADE_TEXT)
+        .item("dark_steel_upgrade_empowered_4",
+            properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgrade.Tier.FOUR.getActivationCost(), EmpoweredUpgrade.Tier.FOUR.getFactory()))
+        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
+        .lang("Empowered IV" + UPGRADE_TEXT)
         .register();
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_SPOON = REGISTRATE
-        .item("dark_steel_upgrade_spoon", properties -> new DarkSteelUpgradeItem(properties, 4, SpoonUpgrade::new))
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR)).lang("Spoon" + UPGRADE_TEXT)
+        .item("dark_steel_upgrade_spoon", properties -> new DarkSteelUpgradeItem(properties, BaseConfig.COMMON.DARK_STEEL.SPOON_ACTIVATION_COST, SpoonUpgrade::new))
+        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
+        .lang("Spoon" + UPGRADE_TEXT)
         .register();
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_FORK = REGISTRATE
-        .item("dark_steel_upgrade_fork", properties -> new DarkSteelUpgradeItem(properties, 4, ForkUpgrade::new))
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR)).lang("Fork" + UPGRADE_TEXT)
+        .item("dark_steel_upgrade_fork", properties -> new DarkSteelUpgradeItem(properties, BaseConfig.COMMON.DARK_STEEL.FORK_ACTIVATION_COST, ForkUpgrade::new))
+        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
+        .lang("Fork" + UPGRADE_TEXT)
         .register();
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_DIRECT = REGISTRATE
-        .item("dark_steel_upgrade_direct", properties -> new DarkSteelUpgradeItem(properties,4, DirectUpgrade::new))
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR)).lang("Direct" + UPGRADE_TEXT)
+        .item("dark_steel_upgrade_direct",
+            properties -> new DarkSteelUpgradeItem(properties, BaseConfig.COMMON.DARK_STEEL.DIRECT_ACTIVATION_COST, DirectUpgrade::new))
+        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
+        .lang("Direct" + UPGRADE_TEXT)
         .register();
 
     // endregion

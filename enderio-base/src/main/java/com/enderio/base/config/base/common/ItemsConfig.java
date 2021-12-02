@@ -3,6 +3,7 @@ package com.enderio.base.config.base.common;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class ItemsConfig {
+
     public final ForgeConfigSpec.ConfigValue<Float> ENDERIOS_CHANCE;
     public final ForgeConfigSpec.ConfigValue<Float> ENDERIOS_RANGE;
 

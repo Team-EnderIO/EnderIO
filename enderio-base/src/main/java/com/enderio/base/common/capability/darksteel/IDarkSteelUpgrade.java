@@ -5,11 +5,14 @@ import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 
+import java.util.Collection;
 import java.util.Optional;
 
 public interface IDarkSteelUpgrade extends INamedNBTSerializable<Tag> {
 
     Component getDisplayName();
+
+    Collection<Component> getDescription();
 
     /**
      * Only one upgrade can be added for a slot. For example, if you had a jetpack and glider upgrade, both upgrades returning the same
