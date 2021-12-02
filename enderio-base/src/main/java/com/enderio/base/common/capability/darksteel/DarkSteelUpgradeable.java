@@ -83,15 +83,15 @@ public class DarkSteelUpgradeable implements IDarkSteelUpgradable {
 
     @Override
     public boolean canApplyUpgrade(IDarkSteelUpgrade upgrade) {
-        if(upgrades.isEmpty()) {
+        if (upgrades.isEmpty()) {
             return EmpoweredUpgrade.NAME.equals(upgrade.getSerializedName()) && upgrade.isBaseTier();
         }
 
         Optional<IDarkSteelUpgrade> existing = getUpgrade(upgrade.getSerializedName());
-        if(existing.isPresent()) {
+        if (existing.isPresent()) {
             return existing.get().isValidUpgrade(upgrade);
         }
-        if(!upgrade.isBaseTier()) {
+        if (!upgrade.isBaseTier()) {
             return false;
         }
         return DarkSteelUpgradeRegistry.instance().getUpgradesForItem(onItem).contains(upgrade.getSerializedName());
@@ -114,8 +114,8 @@ public class DarkSteelUpgradeable implements IDarkSteelUpgradable {
 
     @Override
     public Collection<IDarkSteelUpgrade> getUpgradesThatCanBeAppliedAtTheMoment() {
-        if(upgrades.isEmpty()) {
-            return List.of(EmpoweredUpgrade.TIER_0_FACTORY.get());
+        if (upgrades.isEmpty()) {
+            return List.of(EmpoweredUpgrade.Tier.ONE.getFactory().get());
         }
         final List<IDarkSteelUpgrade> result = new ArrayList<>();
         upgrades.values().forEach(upgrade -> upgrade.getNextTier().ifPresent(result::add));
@@ -149,7 +149,7 @@ public class DarkSteelUpgradeable implements IDarkSteelUpgradable {
     @Override
     public void deserializeNBT(Tag tag) {
         upgrades.clear();
-        if(tag instanceof CompoundTag nbt) {
+        if (tag instanceof CompoundTag nbt) {
             for (String key : nbt.getAllKeys()) {
                 DarkSteelUpgradeRegistry.instance().createUpgrade(key).ifPresent(upgrade -> {
                     upgrade.deserializeNBT(Objects.requireNonNull(nbt.get(key)));
