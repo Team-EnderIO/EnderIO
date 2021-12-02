@@ -441,20 +441,20 @@ public class EIOItems {
         .register();
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_SPOON = REGISTRATE
-        .item("dark_steel_upgrade_spoon", properties -> new DarkSteelUpgradeItem(properties, BaseConfig.COMMON.ITEMS.SPOON_ACTIVATION_COST, SpoonUpgrade::new))
+        .item("dark_steel_upgrade_spoon", properties -> new DarkSteelUpgradeItem(properties, BaseConfig.COMMON.DARK_STEEL.SPOON_ACTIVATION_COST, SpoonUpgrade::new))
         .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
         .lang("Spoon" + UPGRADE_TEXT)
         .register();
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_FORK = REGISTRATE
-        .item("dark_steel_upgrade_fork", properties -> new DarkSteelUpgradeItem(properties, BaseConfig.COMMON.ITEMS.FORK_ACTIVATION_COST, ForkUpgrade::new))
+        .item("dark_steel_upgrade_fork", properties -> new DarkSteelUpgradeItem(properties, BaseConfig.COMMON.DARK_STEEL.FORK_ACTIVATION_COST, ForkUpgrade::new))
         .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
         .lang("Fork" + UPGRADE_TEXT)
         .register();
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_DIRECT = REGISTRATE
         .item("dark_steel_upgrade_direct",
-            properties -> new DarkSteelUpgradeItem(properties, BaseConfig.COMMON.ITEMS.DIRECT_ACTIVATION_COST, DirectUpgrade::new))
+            properties -> new DarkSteelUpgradeItem(properties, BaseConfig.COMMON.DARK_STEEL.DIRECT_ACTIVATION_COST, DirectUpgrade::new))
         .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
         .lang("Direct" + UPGRADE_TEXT)
         .register();

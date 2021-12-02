@@ -30,7 +30,6 @@ import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.event.world.BlockEvent;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.*;
 
 public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem {
@@ -61,7 +60,7 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem {
                 collectTreeBlocks(pLevel, pPos, new HashSet<>(), chopCandidates, maxSearchSize, pState.getBlock());
                 chopCandidates.remove(pPos); // don't double harvest this guy
 
-                int energyPerBlock = BaseConfig.COMMON.ITEMS.DARK_STEEL_AXE_ENERGY_PER_FELLED_LOG.get();
+                int energyPerBlock = BaseConfig.COMMON.DARK_STEEL.DARK_STEEL_AXE_ENERGY_PER_FELLED_LOG.get();
                 int maxBlocks = EnergyUtil.getEnergyStored(pStack)/energyPerBlock;
 
                 Collection<BlockPos> toChop = chopCandidates;
@@ -175,7 +174,7 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem {
     @Override
     public void addCurrentUpgradeTooltips(ItemStack itemStack, List<Component> tooltips, boolean isDetailed) {
         if(isDetailed && getEmpoweredUpgrade(itemStack).isPresent()) {
-            tooltips.add(TooltipUtil.withArgs(EIOLang.DS_UPGRADE_EMPOWERED_EFFICIENCY, BaseConfig.COMMON.ITEMS.EMPOWERED_EFFICIENCY_BOOST.get()));
+            tooltips.add(TooltipUtil.withArgs(EIOLang.DS_UPGRADE_EMPOWERED_EFFICIENCY, BaseConfig.COMMON.DARK_STEEL.EMPOWERED_EFFICIENCY_BOOST.get()));
         }
         IDarkSteelItem.super.addCurrentUpgradeTooltips(itemStack, tooltips, isDetailed);
     }

@@ -21,21 +21,21 @@ public class EmpoweredUpgrade implements IDarkSteelUpgrade {
 
     public enum Tier {
 
-        ONE(BaseConfig.COMMON.ITEMS.EMPOWERED_MAX_ENERGY_I,
-            BaseConfig.COMMON.ITEMS.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_I,
-            BaseConfig.COMMON.ITEMS.EMPOWERED_ACTIVATION_COST_I,
+        ONE(BaseConfig.COMMON.DARK_STEEL.EMPOWERED_MAX_ENERGY_I,
+            BaseConfig.COMMON.DARK_STEEL.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_I,
+            BaseConfig.COMMON.DARK_STEEL.EMPOWERED_ACTIVATION_COST_I,
             EIOLang.DS_UPGRADE_EMPOWERED_I),
-        TWO(BaseConfig.COMMON.ITEMS.EMPOWERED_MAX_ENERGY_II,
-            BaseConfig.COMMON.ITEMS.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_II,
-            BaseConfig.COMMON.ITEMS.EMPOWERED_ACTIVATION_COST_II,
+        TWO(BaseConfig.COMMON.DARK_STEEL.EMPOWERED_MAX_ENERGY_II,
+            BaseConfig.COMMON.DARK_STEEL.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_II,
+            BaseConfig.COMMON.DARK_STEEL.EMPOWERED_ACTIVATION_COST_II,
             EIOLang.DS_UPGRADE_EMPOWERED_II),
-        THREE(BaseConfig.COMMON.ITEMS.EMPOWERED_MAX_ENERGY_III,
-            BaseConfig.COMMON.ITEMS.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_III,
-            BaseConfig.COMMON.ITEMS.EMPOWERED_ACTIVATION_COST_III,
+        THREE(BaseConfig.COMMON.DARK_STEEL.EMPOWERED_MAX_ENERGY_III,
+            BaseConfig.COMMON.DARK_STEEL.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_III,
+            BaseConfig.COMMON.DARK_STEEL.EMPOWERED_ACTIVATION_COST_III,
             EIOLang.DS_UPGRADE_EMPOWERED_III),
-        FOUR(BaseConfig.COMMON.ITEMS.EMPOWERED_MAX_ENERGY_IV,
-            BaseConfig.COMMON.ITEMS.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_IV,
-            BaseConfig.COMMON.ITEMS.EMPOWERED_ACTIVATION_COST_IV,
+        FOUR(BaseConfig.COMMON.DARK_STEEL.EMPOWERED_MAX_ENERGY_IV,
+            BaseConfig.COMMON.DARK_STEEL.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_IV,
+            BaseConfig.COMMON.DARK_STEEL.EMPOWERED_ACTIVATION_COST_IV,
             EIOLang.DS_UPGRADE_EMPOWERED_IV);
 
         private final Supplier<EmpoweredUpgrade> factory;
@@ -83,9 +83,9 @@ public class EmpoweredUpgrade implements IDarkSteelUpgrade {
 
     private static final Random RANDOM = new Random();
 
-    private final ForgeConfigSpec.ConfigValue<Integer> speedBoostWhenPowered = BaseConfig.COMMON.ITEMS.EMPOWERED_EFFICIENCY_BOOST;
+    private final ForgeConfigSpec.ConfigValue<Integer> speedBoostWhenPowered = BaseConfig.COMMON.DARK_STEEL.EMPOWERED_EFFICIENCY_BOOST;
 
-    private final ForgeConfigSpec.ConfigValue<Integer> powerUsePerDamagePoint = BaseConfig.COMMON.ITEMS.EMPOWERED_ENERGY_PER_DAMAGE;
+    private final ForgeConfigSpec.ConfigValue<Integer> powerUsePerDamagePoint = BaseConfig.COMMON.DARK_STEEL.EMPOWERED_ENERGY_PER_DAMAGE;
 
     private Tier tier;
 
