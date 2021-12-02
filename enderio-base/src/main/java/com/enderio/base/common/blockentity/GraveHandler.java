@@ -25,7 +25,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 @EventBusSubscriber
 public class GraveHandler {
 
-    //TODO implementation with other mods and config?
+    // TODO implementation with other mods and config?
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void GraveDeath(LivingDropsEvent event) {
         if (event.getEntityLiving() == null || event.getEntityLiving() instanceof FakePlayer || event.isCanceled()) {
@@ -35,7 +35,7 @@ public class GraveHandler {
             return;
         }
         if (event.getEntityLiving() instanceof Player player) {
-            if (player.isCreative()) {return;}
+            if (player.isCreative()) return;
             MutableBlockPos pos = new MutableBlockPos(player.getBlockX(), player.getBlockY(), player.getBlockZ());
             BlockPlaceContext pUseContext = new BlockPlaceContext(player, InteractionHand.MAIN_HAND, new ItemStack(EIOBlocks.GRAVE.get()),
                 new BlockHitResult(Vec3.atCenterOf(pos), Direction.NORTH, pos, true));

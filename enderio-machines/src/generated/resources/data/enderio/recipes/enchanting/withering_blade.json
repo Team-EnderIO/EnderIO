@@ -3,7 +3,7 @@
   "ingredient": {
     "item": "enderio:withering_powder"
   },
-  "enchantment": "enderio:wither_weapon",
+  "enchantment": "enderio:withering_blade",
   "amount": 4,
   "level": 1
 }

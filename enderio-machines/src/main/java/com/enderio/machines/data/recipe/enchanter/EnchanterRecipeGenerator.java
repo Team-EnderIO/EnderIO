@@ -66,8 +66,9 @@ public class EnchanterRecipeGenerator extends RecipeProvider {
         
         //enderio
         build(EIOEnchantments.SOULBOUND.get(), EIOItems.ENDER_CRYSTAL.get(), 1, 1, pFinishedRecipeConsumer);
-        //build(EIOEnchantments.WITHER_ARROW.get(), witherpotion, 1, 1, pFinishedRecipeConsumer); //TODO Potion:"enderio:withering"
-        build(EIOEnchantments.WITHER_WEAPON.get(), EIOItems.WITHERING_POWDER.get(), 4, 1, pFinishedRecipeConsumer);
+        //build(EIOEnchantments.WITHERING_ARROW.get(), witherpotion, 1, 1, pFinishedRecipeConsumer); //TODO Potion:"enderio:withering"
+        //build(EIOEnchantments.WITHERING_BOLT.get(), witherpotion, 1, 1, pFinishedRecipeConsumer); //TODO Another recipe for bolts
+        build(EIOEnchantments.WITHERING_BLADE.get(), EIOItems.WITHERING_POWDER.get(), 4, 1, pFinishedRecipeConsumer);
         build(EIOEnchantments.REPELLENT.get(), Items.ENDER_PEARL, 4, 2, pFinishedRecipeConsumer);
     }
     

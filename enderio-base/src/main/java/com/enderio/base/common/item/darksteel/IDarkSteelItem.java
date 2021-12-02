@@ -96,7 +96,7 @@ public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipPr
     }
 
     default void addAvailableUpgradesTooltips(ItemStack itemStack, List<Component> tooltips) {
-        var availUpgrades = DarkSteelUpgradeable.getUpgradesThatCanBeAppliedAtTheMoment(itemStack);
+        var availUpgrades = DarkSteelUpgradeable.getUpgradesApplicable(itemStack);
         if(!availUpgrades.isEmpty()) {
             tooltips.add(EIOLang.DS_UPGRADE_AVAILABLE.copy().withStyle(ChatFormatting.YELLOW));
             availUpgrades

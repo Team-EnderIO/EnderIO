@@ -18,26 +18,19 @@ public interface IEntityStorage extends INamedNBTSerializable<Tag> {
         return "EntityStorage";
     }
 
-    /**
-     * Get the stored entity type.
-     */
-    @Nonnull
-    Optional<ResourceLocation> getEntityType();
+    default boolean hasStoredEntity() {
+        return getStoredEntityData().getEntityType().isPresent();
+    }
 
     /**
      * Get the entity NBT tag.
      * Generally used for creating the entity.
      */
     @Nonnull
-    Optional<CompoundTag> getEntityNBT();
-
-    /**
-     * Set the stored entity type.
-     */
-    void setEntityType(ResourceLocation entityType);
+    StoredEntityData getStoredEntityData();
 
     /**
      * Set the entity NBT.
      */
-    void setEntityNBT(CompoundTag nbt);
+    void setStoredEntityData(StoredEntityData entity);
 }

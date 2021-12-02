@@ -34,8 +34,8 @@ public class DarkSteelUpgradeable implements IDarkSteelUpgradable {
         return cap.flatMap(upgradeCap -> upgradeCap.getUpgradeAs(upgrade, as));
     }
 
-    public static Collection<IDarkSteelUpgrade> getUpgradesThatCanBeAppliedAtTheMoment(ItemStack itemStack) {
-        return itemStack.getCapability(EIOCapabilities.DARK_STEEL_UPGRADABLE).map(IDarkSteelUpgradable::getUpgradesThatCanBeAppliedAtTheMoment).orElse(Collections.emptyList());
+    public static Collection<IDarkSteelUpgrade> getUpgradesApplicable(ItemStack itemStack) {
+        return itemStack.getCapability(EIOCapabilities.DARK_STEEL_UPGRADABLE).map(IDarkSteelUpgradable::getUpgradesApplicable).orElse(Collections.emptyList());
     }
 
     public static Collection<IDarkSteelUpgrade> getAllPossibleUpgrades(ItemStack itemStack) {
@@ -50,7 +50,9 @@ public class DarkSteelUpgradeable implements IDarkSteelUpgradable {
 
     private final Map<String, IDarkSteelUpgrade> upgrades = new HashMap<>();
 
-    /** The type of item that is upgradable, used to determine valid upgrades.*/
+    /**
+     * The type of item that is upgradable, used to determine valid upgrades.
+     */
     private ResourceLocation onItem;
 
     public DarkSteelUpgradeable() {
@@ -113,7 +115,7 @@ public class DarkSteelUpgradeable implements IDarkSteelUpgradable {
     }
 
     @Override
-    public Collection<IDarkSteelUpgrade> getUpgradesThatCanBeAppliedAtTheMoment() {
+    public Collection<IDarkSteelUpgrade> getUpgradesApplicable() {
         if (upgrades.isEmpty()) {
             return List.of(EmpoweredUpgrade.Tier.ONE.getFactory().get());
         }
@@ -121,7 +123,7 @@ public class DarkSteelUpgradeable implements IDarkSteelUpgradable {
         upgrades.values().forEach(upgrade -> upgrade.getNextTier().ifPresent(result::add));
 
         getAllPossibleUpgrades().forEach(upgrade -> {
-            if(!hasUpgrade(upgrade.getSerializedName())) {
+            if (!hasUpgrade(upgrade.getSerializedName())) {
                 result.add(upgrade);
             }
         });
