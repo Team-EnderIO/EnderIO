@@ -9,10 +9,7 @@ import com.enderio.base.common.item.capacitors.LootCapacitorItem;
 import com.enderio.base.common.item.darksteel.DarkSteelAxeItem;
 import com.enderio.base.common.item.darksteel.DarkSteelPickaxeItem;
 import com.enderio.base.common.item.darksteel.DarkSteelUpgradeItem;
-import com.enderio.base.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
-import com.enderio.base.common.item.darksteel.upgrades.EmpoweredUpgrade;
-import com.enderio.base.common.item.darksteel.upgrades.ForkUpgrade;
-import com.enderio.base.common.item.darksteel.upgrades.SpoonUpgrade;
+import com.enderio.base.common.item.darksteel.upgrades.*;
 import com.enderio.base.common.item.darksteel.upgrades.direct.DirectUpgrade;
 import com.enderio.base.common.item.food.EnderiosItem;
 import com.enderio.base.common.item.misc.EnderfaceItem;
@@ -397,7 +394,7 @@ public class EIOItems {
         .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
         .onRegister(item -> DarkSteelUpgradeRegistry
             .instance()
-            .addUpgradesForItem(Objects.requireNonNull(item.getRegistryName()), EmpoweredUpgrade.NAME, SpoonUpgrade.NAME, DirectUpgrade.NAME))
+            .addUpgradesForItem(Objects.requireNonNull(item.getRegistryName()), EmpoweredUpgrade.NAME, SpoonUpgrade.NAME, DirectUpgrade.NAME, ExplosiveUpgrade.NAME))
         .register();
 
     public static ItemEntry<DarkSteelAxeItem> DARK_STEEL_AXE = REGISTRATE
@@ -450,6 +447,11 @@ public class EIOItems {
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_DIRECT = REGISTRATE
         .item("dark_steel_upgrade_direct", properties -> new DarkSteelUpgradeItem(properties,4, DirectUpgrade::new))
         .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR)).lang("Direct" + UPGRADE_TEXT)
+        .register();
+
+    public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_1 = REGISTRATE
+        .item("dark_steel_upgrade_tnt", properties -> new DarkSteelUpgradeItem(properties,4, ExplosiveUpgrade::new))
+        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR)).lang("Explosive I" + UPGRADE_TEXT)
         .register();
 
     // endregion

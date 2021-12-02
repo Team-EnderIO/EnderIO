@@ -23,6 +23,7 @@ public final class DarkSteelUpgradeRegistry {
         INST.registerUpgrade(SpoonUpgrade::new);
         INST.registerUpgrade(ForkUpgrade::new);
         INST.registerUpgrade(DirectUpgrade::new);
+        INST.registerUpgrade(ExplosiveUpgrade::new);
     }
 
     public static DarkSteelUpgradeRegistry instance() {return INST; }
