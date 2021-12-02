@@ -2,6 +2,9 @@ package com.enderio.base.config.base.common;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ItemsConfig {
     public final ForgeConfigSpec.ConfigValue<Float> ENDERIOS_CHANCE;
     public final ForgeConfigSpec.ConfigValue<Float> ENDERIOS_RANGE;
@@ -13,6 +16,8 @@ public class ItemsConfig {
 
     public final ForgeConfigSpec.ConfigValue<Integer> LEVITATION_STAFF_ENERGY_USE;
     public final ForgeConfigSpec.ConfigValue<Integer> LEVITATION_STAFF_MAX_ENERGY;
+
+    public final ForgeConfigSpec.ConfigValue<List<String>> SOUL_VIAL_BLACKLIST;
 
     public ItemsConfig(ForgeConfigSpec.Builder builder) {
         builder.push("items");
@@ -32,6 +37,10 @@ public class ItemsConfig {
         builder.push("levitationstaff");
         LEVITATION_STAFF_ENERGY_USE = builder.define("energyUse", 1);
         LEVITATION_STAFF_MAX_ENERGY = builder.define("maxEnergy", 1000);
+        builder.pop();
+
+        builder.push("soulvial");
+        SOUL_VIAL_BLACKLIST = builder.comment("A list of entities that cannot be captured in the soul vial.").define("blacklist", new ArrayList<>());
         builder.pop();
 
         builder.pop();

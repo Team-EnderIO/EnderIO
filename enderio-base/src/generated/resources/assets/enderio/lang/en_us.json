@@ -962,6 +962,8 @@
   "itemGroup.enderio.main": "EnderIO",
   "itemGroup.enderio.souls": "EnderIO Souls",
   "message.enderio.grave.wrong_owner": "This grave is not yours! You cannot open it.",
+  "message.enderio.soul_vial.error_blacklisted": "This entity has been blacklisted.",
+  "message.enderio.soul_vial.error_boss": "Nice try. Bosses don't like bottles.",
   "message.enderio.soul_vial.error_dead": "Cannot capture a dead mob!",
   "message.enderio.soul_vial.error_failed": "This entity cannot be captured.",
   "message.enderio.soul_vial.error_player": "You cannot put player in a bottle!",
@@ -974,5 +976,6 @@
   "tooltip.enderio.collision.players_pass": "Not solid to players",
   "tooltip.enderio.dark_steel_ladder.faster": "Faster than regular ladders",
   "tooltip.enderio.fused_quartz.blocks_light": "Blocks light",
-  "tooltip.enderio.fused_quartz.emits_light": "Emits light"
+  "tooltip.enderio.fused_quartz.emits_light": "Emits light",
+  "tooltip.enderio.soul_vial.health": "Health: %s/%s"
 }

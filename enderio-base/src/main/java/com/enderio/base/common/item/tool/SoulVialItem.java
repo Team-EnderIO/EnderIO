@@ -3,10 +3,12 @@ package com.enderio.base.common.item.tool;
 import com.enderio.base.common.capability.EIOCapabilities;
 import com.enderio.base.common.capability.entity.EntityStorage;
 import com.enderio.base.common.capability.entity.IEntityStorage;
+import com.enderio.base.common.capability.entity.StoredEntityData;
 import com.enderio.base.common.item.EIOCreativeTabs;
 import com.enderio.base.common.item.EIOItems;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.util.EntityCaptureUtils;
+import com.enderio.core.client.tooltip.IAdvancedTooltipProvider;
 import com.enderio.core.common.capability.IMultiCapabilityItem;
 import com.enderio.core.common.capability.MultiCapabilityProvider;
 import com.enderio.core.common.util.EntityUtil;
@@ -29,20 +31,17 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.tools.Tool;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-public class SoulVialItem extends Item implements IMultiCapabilityItem {
+public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvancedTooltipProvider {
     public SoulVialItem(Properties pProperties) {
         super(pProperties);
     }
@@ -51,21 +50,24 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem {
 
     @Override
     public boolean isFoil(@Nonnull ItemStack pStack) {
-        return getEntityType(pStack).isPresent();
+        return pStack.getCapability(EIOCapabilities.ENTITY_STORAGE).map(IEntityStorage::hasStoredEntity).orElse(false);
     }
 
     @Override
-    public void appendHoverText(@Nonnull ItemStack pStack, @Nullable Level pLevel, @Nonnull List<Component> pTooltipComponents,
-        @Nonnull TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
+    public void addCommonTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
+        itemStack.getCapability(EIOCapabilities.ENTITY_STORAGE).ifPresent(entityStorage -> {
+            entityStorage.getStoredEntityData().getEntityType().ifPresent(entityType -> {
+                tooltips.add(TooltipUtil.style(new TranslatableComponent(EntityUtil.getEntityDescriptionId(entityType))));
+            });
+        });
+    }
 
-        // Add entity information
-
-        getEntityType(pStack).ifPresent(entityType -> {
-
-            pTooltipComponents.add(TooltipUtil.style(new TranslatableComponent(EntityUtil.getEntityDescriptionId(entityType))));
-
-            // TODO: HOUSEKEEPING?: Also add health data
+    @Override
+    public void addDetailedTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
+        itemStack.getCapability(EIOCapabilities.ENTITY_STORAGE).ifPresent(entityStorage -> {
+            entityStorage.getStoredEntityData().getHealthState().ifPresent(health -> {
+                tooltips.add(TooltipUtil.styledWithArgs(EIOLang.SOUL_VIAL_TOOLTIP_HEALTH, health.getA(), health.getB()));
+            });
         });
     }
 
@@ -82,48 +84,59 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem {
             return InteractionResult.FAIL;
         }
 
-        if (getEntityType(pStack).isEmpty()) {
-            // Don't allow bottled player.
-            if (pInteractionTarget instanceof Player) {
-                pPlayer.displayClientMessage(EIOLang.SOUL_VIAL_ERROR_PLAYER, true);
-                return InteractionResult.FAIL;
-            }
-
-            // Get the entity type and verify it isn't blacklisted
-            // TODO: maybe make the method give a rejection reason so we can give accurate status messages?
-            if (!EntityCaptureUtils.canCapture(pInteractionTarget)) {
-                pPlayer.displayClientMessage(EIOLang.SOUL_VIAL_ERROR_FAILED, true);
-                return InteractionResult.FAIL;
-            }
-
-            // No dead mobs.
-            if (!pInteractionTarget.isAlive()) {
-                pPlayer.displayClientMessage(EIOLang.SOUL_VIAL_ERROR_DEAD, true);
-                return InteractionResult.FAIL;
-            }
-
-            // Create a filled vial and put the entity's NBT inside.
-            ItemStack filledVial = new ItemStack(EIOItems.FILLED_SOUL_VIAL.get());
-            setEntityData(filledVial, pInteractionTarget);
-
-            // Consume a soul vial
-            ItemStack hand = pPlayer.getItemInHand(pUsedHand);
-            hand.shrink(1);
-
-            // Give the player the filled vial
-            if (hand.isEmpty()) {
-                pPlayer.setItemInHand(pUsedHand, filledVial);
-            } else {
-                if (!pPlayer.addItem(filledVial)) {
-                    pPlayer.drop(filledVial, false);
+        return pStack.getCapability(EIOCapabilities.ENTITY_STORAGE).map(entityStorage -> {
+            if (!entityStorage.hasStoredEntity()) {
+                // Don't allow bottled player.
+                if (pInteractionTarget instanceof Player) {
+                    pPlayer.displayClientMessage(EIOLang.SOUL_VIAL_ERROR_PLAYER, true);
+                    return InteractionResult.FAIL;
                 }
+
+                // Get the entity type and verify it isn't blacklisted
+                switch (EntityCaptureUtils.getCapturableStatus(pInteractionTarget)) {
+                case Boss -> {
+                    pPlayer.displayClientMessage(EIOLang.SOUL_VIAL_ERROR_BOSS, true);
+                    return InteractionResult.FAIL;
+                }
+                case Blacklisted -> {
+                    pPlayer.displayClientMessage(EIOLang.SOUL_VIAL_ERROR_BLACKLISTED, true);
+                    return InteractionResult.FAIL;
+                }
+                case Incompatible -> {
+                    pPlayer.displayClientMessage(EIOLang.SOUL_VIAL_ERROR_FAILED, true);
+                    return InteractionResult.FAIL;
+                }
+                }
+
+                // No dead mobs.
+                if (!pInteractionTarget.isAlive()) {
+                    pPlayer.displayClientMessage(EIOLang.SOUL_VIAL_ERROR_DEAD, true);
+                    return InteractionResult.FAIL;
+                }
+
+                // Create a filled vial and put the entity's NBT inside.
+                ItemStack filledVial = new ItemStack(EIOItems.FILLED_SOUL_VIAL.get());
+                setEntityData(filledVial, pInteractionTarget);
+
+                // Consume a soul vial
+                ItemStack hand = pPlayer.getItemInHand(pUsedHand);
+                hand.shrink(1);
+
+                // Give the player the filled vial
+                if (hand.isEmpty()) {
+                    pPlayer.setItemInHand(pUsedHand, filledVial);
+                } else {
+                    if (!pPlayer.addItem(filledVial)) {
+                        pPlayer.drop(filledVial, false);
+                    }
+                }
+
+                // Remove the captured mob.
+                pInteractionTarget.discard();
             }
 
-            // Remove the captured mob.
-            pInteractionTarget.discard();
-        }
-
-        return InteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
+        }).orElse(InteractionResult.SUCCESS);
     }
 
     // Release logic
@@ -142,40 +155,42 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem {
             return InteractionResult.FAIL;
         }
 
-        // Try to get the entity type from the item stack.
-        getEntityType(itemStack).ifPresent(entityType -> {
-            // Get the face of the block we clicked and its position.
-            Direction face = pContext.getClickedFace();
-            BlockPos spawnPos = pContext.getClickedPos();
+        itemStack.getCapability(EIOCapabilities.ENTITY_STORAGE).ifPresent(entityStorage -> {
+            if (entityStorage.hasStoredEntity()) {
+                StoredEntityData entityData = entityStorage.getStoredEntityData();
 
-            // Get the spawn location for the mob.
-            double spawnX = spawnPos.getX() + face.getStepX() + 0.5;
-            double spawnY = spawnPos.getY() + face.getStepY();
-            double spawnZ = spawnPos.getZ() + face.getStepZ() + 0.5;
+                // Get the face of the block we clicked and its position.
+                Direction face = pContext.getClickedFace();
+                BlockPos spawnPos = pContext.getClickedPos();
 
-            // Get a random rotation for the entity.
-            float rotation = Mth.wrapDegrees(pContext
-                .getLevel()
-                .getRandom()
-                .nextFloat() * 360.0f);
+                // Get the spawn location for the mob.
+                double spawnX = spawnPos.getX() + face.getStepX() + 0.5;
+                double spawnY = spawnPos.getY() + face.getStepY();
+                double spawnZ = spawnPos.getZ() + face.getStepZ() + 0.5;
 
-            // Try to get the entity NBT from the item.
-            getEntityNBT(itemStack).ifPresent(entityTag -> {
-                Optional<Entity> entity = EntityType.create(entityTag, pContext.getLevel());
+                // Get a random rotation for the entity.
+                float rotation = Mth.wrapDegrees(pContext
+                    .getLevel()
+                    .getRandom()
+                    .nextFloat() * 360.0f);
 
-                // Position the entity and add it.
-                entity.ifPresent(ent -> {
-                    ent.setPos(spawnX, spawnY, spawnZ);
-                    ent.setYRot(rotation);
-                    pContext
-                        .getLevel()
-                        .addFreshEntity(ent);
+                // Try to get the entity NBT from the item.
+                entityData.getEntityTag().ifPresent(entityTag -> {
+                    Optional<Entity> entity = EntityType.create(entityTag, pContext.getLevel());
+
+                    // Position the entity and add it.
+                    entity.ifPresent(ent -> {
+                        ent.setPos(spawnX, spawnY, spawnZ);
+                        ent.setYRot(rotation);
+                        pContext
+                            .getLevel()
+                            .addFreshEntity(ent);
+                    });
                 });
-            });
 
-            // Empty the soul vial.
-            player.setItemInHand(pContext.getHand(), new ItemStack(EIOItems.EMPTY_SOUL_VIAL.get()));
-
+                // Empty the soul vial.
+                player.setItemInHand(pContext.getHand(), new ItemStack(EIOItems.EMPTY_SOUL_VIAL.get()));
+            }
         });
 
         return InteractionResult.SUCCESS;
@@ -208,25 +223,11 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem {
 
     // region Entity Storage
 
-    public static Optional<ResourceLocation> getEntityType(ItemStack stack) {
-        return stack
-            .getCapability(EIOCapabilities.ENTITY_STORAGE)
-            .map(IEntityStorage::getEntityType)
-            .orElse(Optional.empty());
-    }
-
-    public static Optional<CompoundTag> getEntityNBT(ItemStack stack) {
-        return stack
-            .getCapability(EIOCapabilities.ENTITY_STORAGE)
-            .map(IEntityStorage::getEntityNBT)
-            .orElse(Optional.empty());
-    }
-
     private static void setEntityType(ItemStack stack, ResourceLocation entityType) {
         stack
             .getCapability(EIOCapabilities.ENTITY_STORAGE)
             .ifPresent(storage -> {
-                storage.setEntityType(entityType);
+                storage.setStoredEntityData(StoredEntityData.of(entityType));
             });
     }
 
@@ -234,8 +235,7 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem {
         stack
             .getCapability(EIOCapabilities.ENTITY_STORAGE)
             .ifPresent(storage -> {
-                storage.setEntityNBT(entity.serializeNBT());
-                storage.setEntityMaxHealth(entity.getMaxHealth());
+                storage.setStoredEntityData(StoredEntityData.of(entity));
             });
     }
 
