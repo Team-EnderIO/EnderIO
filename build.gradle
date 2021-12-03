@@ -24,12 +24,14 @@ subprojects {
     apply plugin: 'com.github.johnrengelman.shadow'
 
     def enableMixin = false
-    if (project.hasProperty("enable_mixin"))
+    if (project.hasProperty("enable_mixin")) {
         enableMixin = project.enable_mixin
+    }
 
     // MixinGradle:
-    if (enableMixin)
+    if (enableMixin) {
         apply plugin: 'org.spongepowered.mixin'
+    }
 
     version = getVersionString(project)
     group = 'com.enderio'
@@ -41,15 +43,7 @@ subprojects {
 
     println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
     minecraft {
-        if (project.hasProperty("transformer")) {
-//            mappings channel: 'parchment', version: "${mappings_version}-${minecraft_version}"
-            mappings channel: 'official', version: "${minecraft_version}"
-            println("Found accessTransformer for ${project.name}: ${project.transformer}")
-            accessTransformer = file(project.transformer)
-        } else {
-//            mappings channel: 'parchment', version: "${mappings_version}-${minecraft_version}"
-            mappings channel: 'official', version: "${minecraft_version}"
-        }
+        mappings channel: "${mappings_channel}", version: "${mappings_version}"
 
         // Default run configurations.
         runs {
@@ -64,8 +58,7 @@ subprojects {
                 property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
 
                 mods {
-                    // TODO: Dynamic names??
-                    examplemod {
+                    "${project.name}" {
                         source sourceSets.main
                     }
                 }
@@ -81,8 +74,7 @@ subprojects {
                 property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
 
                 mods {
-                    // TODO: Dynamic names??
-                    examplemod {
+                    "${project.name}" {
                         source sourceSets.main
                     }
                 }
@@ -99,11 +91,10 @@ subprojects {
                 property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
 
                 // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-                args '--mod', modId, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+                args '--mod', "${modId}", '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
                 mods {
-                    // TODO: Dynamic names??
-                    examplemod {
+                    "${project.name}" {
                         source sourceSets.main
                     }
                 }
@@ -123,14 +114,6 @@ subprojects {
         maven {
             url "https://maven.tterrag.com/"
         }
-
-        // Rover's temp maven.
-        maven {
-            url "https://maven.nerdthings.dev/snapshots"
-        }
-
-        // Cloth config.
-        maven { url "https://maven.shedaniel.me/" }
     }
 
     dependencies {
@@ -158,12 +141,12 @@ subprojects {
         destinationDirectory.set(file("$rootDir/build/libs"))
         manifest {
             attributes([
-                    "Specification-Title"     : "examplemod",
-                    "Specification-Vendor"    : "examplemodsareus",
-                    "Specification-Version"   : "1", // We are version 1 of ourselves
+                    "Specification-Title"     : "${modId}",
+                    "Specification-Vendor"    : "EnderIO",
+                    "Specification-Version"   : "${project.version}",
                     "Implementation-Title"    : project.name,
-                    "Implementation-Version"  : project.jar.archiveVersion,
-                    "Implementation-Vendor"   : "examplemodsareus",
+                    "Implementation-Version"  : "${project.version}",
+                    "Implementation-Vendor"   : "EnderIO",
                     "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
             ])
         }
@@ -284,8 +267,10 @@ String getArchiveBaseName(Project proj) {
 }
 
 String getModId(Project proj) {
-    // Replaces enderiobase with enderio for the purposes of the dummy. TODO: Review the dummy...
-    return proj.name.replaceAll('-', '').replaceAll('enderiobase', 'enderio');
+    // Force enderio-base -> enderio.
+    if (proj.hasProperty("modid"))
+        return proj.modid;
+    return proj.name.replaceAll('-', '');
 }
 
 // endregion

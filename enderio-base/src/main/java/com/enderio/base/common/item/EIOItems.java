@@ -290,7 +290,7 @@ public class EIOItems {
     private static ItemBuilder<GearItem, Registrate> gearItem(String name, float tpr) {
         return REGISTRATE
             .item(name, props -> new GearItem(props, tpr))
-            .model(RotatingItemModel::create)
+            .model((ctx, cons) -> RotatingItemModel.create(ctx.get(), cons))
             .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.MAIN));
     }
 
