@@ -123,7 +123,7 @@ public class EnchanterRecipe extends MachineRecipe<EnchanterRecipe, Container> {
     }
 
     @Override
-    public DependencyAwareDataGenSerializer<EnchanterRecipe, Container> getSerializer() {
+    public DataGenSerializer<EnchanterRecipe, Container> getSerializer() {
         return MachineRecipes.Serializer.ENCHANTING.get();
     }
 
@@ -144,7 +144,7 @@ public class EnchanterRecipe extends MachineRecipe<EnchanterRecipe, Container> {
         return Stream.of(enchantment.getRegistryName());
     }
 
-    public static class Serializer extends DependencyAwareDataGenSerializer<EnchanterRecipe, Container> {
+    public static class Serializer extends DataGenSerializer<EnchanterRecipe, Container> {
 
         @Override
         public EnchanterRecipe fromJson(ResourceLocation pRecipeId, JsonObject pSerializedRecipe) {
@@ -177,7 +177,6 @@ public class EnchanterRecipe extends MachineRecipe<EnchanterRecipe, Container> {
 
         @Override
         public void toJson(EnchanterRecipe recipe, JsonObject json) {
-            super.toJson(recipe, json);
             json.add("ingredient", recipe.ingredient.toJson());
             json.addProperty("enchantment", recipe.enchantment.getRegistryName().toString());
             json.addProperty("amount", recipe.amountPerLevel);

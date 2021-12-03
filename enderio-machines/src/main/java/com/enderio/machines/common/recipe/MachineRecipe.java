@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 public abstract class MachineRecipe<T extends MachineRecipe<T, C>, C extends Container> implements Recipe<C> {
 
     @Override
-    public abstract DependencyAwareDataGenSerializer<T, C> getSerializer();
+    public abstract DataGenSerializer<T, C> getSerializer();
 
     protected Stream<ItemStack> getItemsInRecipe() {
         return Stream.empty();
@@ -42,20 +42,5 @@ public abstract class MachineRecipe<T extends MachineRecipe<T, C>, C extends Con
             .filter(string -> !string.equals("forge"))
             .filter(string -> !string.equals(EnderIO.DOMAIN))
             .distinct().toList();
-    }
-
-    public abstract static class DependencyAwareDataGenSerializer<T extends MachineRecipe<T, C>, C extends Container> extends DataGenSerializer<T, C> {
-
-        @Override
-        public void toJson(T recipe, JsonObject json) {
-            List<String> modDependencies = recipe.getModDependencies();
-            if (!modDependencies.isEmpty()) {
-                JsonArray conditions = new JsonArray();
-                for (String modDependency : modDependencies) {
-                    conditions.add(CraftingHelper.serialize(new ModLoadedCondition(modDependency)));
-                }
-                json.add("conditions", conditions);
-            }
-        }
     }
 }

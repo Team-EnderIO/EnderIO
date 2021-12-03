@@ -3,10 +3,8 @@ package com.enderio.machines.data.recipe.enchanter;
 import javax.annotation.Nullable;
 
 import com.enderio.machines.EIOMachines;
-import com.enderio.machines.common.recipe.EnchanterRecipe;
 import com.enderio.machines.common.recipe.MachineRecipe;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import net.minecraft.data.recipes.FinishedRecipe;
@@ -41,14 +39,15 @@ public class RecipeResult<T extends MachineRecipe<T, ?>> implements FinishedReci
     @Override
     public void serializeRecipeData(JsonObject pJson) {
         recipe.getSerializer().toJson(recipe, pJson);
-        JsonArray jsonConditions = new JsonArray();
+
+        List<String> modDependencies = recipe.getModDependencies();
+
+        for (String modDependency : modDependencies) {
+            conditions.add(new ModLoadedCondition(modDependency));
+        }
+
         if (!conditions.isEmpty()) {
-            if (pJson.has("conditions")) {
-                JsonElement potentialConditions = pJson.get("conditions");
-                if (potentialConditions.isJsonArray()) {
-                    jsonConditions = potentialConditions.getAsJsonArray();
-                }
-            }
+            JsonArray jsonConditions = new JsonArray();
             for (ICondition condition : conditions) {
                 jsonConditions.add(CraftingHelper.serialize(condition));
             }
