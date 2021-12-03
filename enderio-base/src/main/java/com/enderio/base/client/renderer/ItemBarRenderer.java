@@ -8,12 +8,12 @@ import net.minecraft.util.FastColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.energy.CapabilityEnergy;
 
-public class DarkSteelDurabilityRenderer {
+public class ItemBarRenderer {
 
     public static final int ENERGY_BAR_RGB = 0x00B168E4;
 
     public static void renderOverlay(ItemStack pStack, int pXPosition, int pYPosition) {
-        if(EnergyUtil.getMaxEnergyStored(pStack) <= 0) {
+        if (EnergyUtil.getMaxEnergyStored(pStack) <= 0) {
             return;
         }
         RenderSystem.disableDepthTest();
@@ -23,10 +23,10 @@ public class DarkSteelDurabilityRenderer {
         BufferBuilder bufferbuilder = tesselator.getBuilder();
 
         int offset = 12;
-        int barWidth = Math.round(13.0F - (float)getFilledRatio(pStack) * 13.0F);
+        int barWidth = Math.round(13.0F - (float) getFilledRatio(pStack) * 13.0F);
         fillRect(bufferbuilder, pXPosition + 2, pYPosition + offset, 13, 1, 0, 0, 0);
-        fillRect(bufferbuilder, pXPosition + 2, pYPosition + offset, barWidth, 1,
-            FastColor.ARGB32.red(ENERGY_BAR_RGB), FastColor.ARGB32.green(ENERGY_BAR_RGB), FastColor.ARGB32.blue(ENERGY_BAR_RGB));
+        fillRect(bufferbuilder, pXPosition + 2, pYPosition + offset, barWidth, 1, FastColor.ARGB32.red(ENERGY_BAR_RGB), FastColor.ARGB32.green(ENERGY_BAR_RGB),
+            FastColor.ARGB32.blue(ENERGY_BAR_RGB));
 
         RenderSystem.enableBlend();
         RenderSystem.enableTexture();

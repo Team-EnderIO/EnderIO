@@ -1,13 +1,18 @@
 package com.enderio.base.common.item.tool;
 
+import com.enderio.base.client.renderer.ItemBarRenderer;
 import com.enderio.base.common.capability.EIOCapabilities;
 import com.enderio.base.common.capability.toggled.Toggled;
 import com.enderio.base.common.item.util.IEnergyBar;
+import com.enderio.base.common.lang.EIOLang;
+import com.enderio.core.client.tooltip.IAdvancedTooltipProvider;
 import com.enderio.core.common.capability.IMultiCapabilityItem;
 import com.enderio.core.common.capability.MultiCapabilityProvider;
 import com.enderio.core.common.util.EnergyUtil;
+import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -22,8 +27,9 @@ import net.minecraftforge.energy.EnergyStorage;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
-public abstract class PoweredToggledItem extends Item implements IEnergyBar, IMultiCapabilityItem {
+public abstract class PoweredToggledItem extends Item implements IEnergyBar, IMultiCapabilityItem, IAdvancedTooltipProvider {
 
     public PoweredToggledItem(Properties pProperties) {
         super(pProperties.stacksTo(1));
@@ -112,4 +118,27 @@ public abstract class PoweredToggledItem extends Item implements IEnergyBar, IMu
         return oldStack.getItem() != newStack.getItem() || Toggled.isEnabled(oldStack) != Toggled.isEnabled(newStack);
     }
 
+    @Override
+    public boolean isBarVisible(ItemStack pStack) {
+        return true;
+    }
+
+    @Override
+    public int getBarWidth(ItemStack pStack) {
+        return pStack
+            .getCapability(CapabilityEnergy.ENERGY)
+            .map(energyStorage -> Math.round((float)energyStorage.getEnergyStored() * 13.0F / (float)energyStorage.getMaxEnergyStored()))
+            .orElse(0);
+    }
+
+    @Override
+    public int getBarColor(ItemStack pStack) {
+        return ItemBarRenderer.ENERGY_BAR_RGB;
+    }
+
+    @Override
+    public void addCommonTooltips(ItemStack itemStack, @org.jetbrains.annotations.Nullable Player player, List<Component> tooltips) {
+        String energy = String.format("%,d",EnergyUtil.getEnergyStored(itemStack)) + "/" +  String.format("%,d",EnergyUtil.getMaxEnergyStored(itemStack));
+        tooltips.add(TooltipUtil.styledWithArgs(EIOLang.ENERGY_AMOUNT, energy));
+    }
 }

@@ -194,4 +194,9 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem {
     }
 
     // endregion
+
+    @Override
+    public boolean isBarVisible(ItemStack pStack) {
+        return isDurabilityBarVisible(pStack);
+    }
 }

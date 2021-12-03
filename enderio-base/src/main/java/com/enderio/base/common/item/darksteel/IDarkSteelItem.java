@@ -1,6 +1,6 @@
 package com.enderio.base.common.item.darksteel;
 
-import com.enderio.base.client.renderer.DarkSteelDurabilityRenderer;
+import com.enderio.base.client.renderer.ItemBarRenderer;
 import com.enderio.base.common.capability.EIOCapabilities;
 import com.enderio.base.common.capability.darksteel.DarkSteelUpgradeable;
 import com.enderio.base.common.capability.darksteel.EnergyDelegator;
@@ -108,13 +108,11 @@ public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipPr
     }
 
     default void renderOverlay(ItemStack pStack, int pXPosition, int pYPosition) {
-        DarkSteelDurabilityRenderer.renderOverlay(pStack, pXPosition, pYPosition);
+        ItemBarRenderer.renderOverlay(pStack, pXPosition, pYPosition);
     }
 
-    // TODO: 1.18: DURABILITY BARS
-//    @Override
-//    default boolean showDurabilityBar(ItemStack stack) {
-//        return stack.getDamageValue() > 0 || EnergyUtil.getMaxEnergyStored(stack) > 0;
-//    }
+    default boolean isDurabilityBarVisible(ItemStack stack) {
+        return stack.getDamageValue() > 0 || EnergyUtil.getMaxEnergyStored(stack) > 0;
+    }
 
 }
