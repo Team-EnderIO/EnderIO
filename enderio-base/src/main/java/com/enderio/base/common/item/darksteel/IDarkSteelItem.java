@@ -49,7 +49,7 @@ public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipPr
         ItemStack is = new ItemStack(item);
         pItems.add(is.copy());
 
-        //All the upgrades
+        // All the upgrades
         is = new ItemStack(item);
         Collection<? extends IDarkSteelUpgrade> ups = DarkSteelUpgradeable.getAllPossibleUpgrades(is);
         for(IDarkSteelUpgrade upgrade : ups) {

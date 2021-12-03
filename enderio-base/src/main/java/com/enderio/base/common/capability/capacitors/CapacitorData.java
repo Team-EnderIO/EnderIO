@@ -1,12 +1,12 @@
 package com.enderio.base.common.capability.capacitors;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 public class CapacitorData implements ICapacitorData {
     private float base = 0;

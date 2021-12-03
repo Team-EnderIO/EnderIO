@@ -1,14 +1,10 @@
 package com.enderio.machines.common.blockentity;
 
-import java.util.List;
-import java.util.Optional;
-
 import com.enderio.base.common.blockentity.RedstoneControl;
 import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemHandlerMaster;
 import com.enderio.machines.common.menu.EnchanterMenu;
 import com.enderio.machines.common.recipe.IEnchanterRecipe;
 import com.enderio.machines.common.recipe.MachineRecipes;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
@@ -18,6 +14,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
+
+import java.util.List;
+import java.util.Optional;
 
 public class EnchanterBlockEntity extends AbstractMachineBlockEntity{
 

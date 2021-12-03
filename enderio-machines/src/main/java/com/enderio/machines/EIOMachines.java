@@ -7,7 +7,6 @@ import com.enderio.machines.common.recipe.MachineRecipes;
 import com.enderio.machines.data.recipe.MachineRecipeGenerator;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.NonNullLazyValue;
-
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;

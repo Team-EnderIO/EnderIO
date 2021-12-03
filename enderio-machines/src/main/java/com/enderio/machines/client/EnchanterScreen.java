@@ -6,7 +6,6 @@ import com.enderio.core.client.screen.EnumIconWidget;
 import com.enderio.core.common.util.Vector2i;
 import com.enderio.machines.common.menu.EnchanterMenu;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;

@@ -1,11 +1,8 @@
 package com.enderio.machines.data.recipe.enchanter;
 
-import java.util.function.Consumer;
-
 import com.enderio.base.common.enchantment.EIOEnchantments;
 import com.enderio.base.common.item.EIOItems;
 import com.enderio.machines.common.recipe.EnchanterRecipe;
-
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
@@ -16,6 +13,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
+
+import java.util.function.Consumer;
 
 public class EnchanterRecipeGenerator extends RecipeProvider {
     public EnchanterRecipeGenerator(DataGenerator dataGenerator) {

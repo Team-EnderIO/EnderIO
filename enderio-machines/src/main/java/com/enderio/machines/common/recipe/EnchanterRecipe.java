@@ -1,10 +1,7 @@
 package com.enderio.machines.common.recipe;
 
-import java.util.Optional;
-
 import com.enderio.base.common.recipe.DataGenSerializer;
 import com.google.gson.JsonObject;
-
 import net.minecraft.ResourceLocationException;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
@@ -17,6 +14,8 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
+
+import java.util.Optional;
 
 public class EnchanterRecipe implements IEnchanterRecipe{
     private ResourceLocation id;

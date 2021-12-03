@@ -1,15 +1,8 @@
 package com.enderio.machines.common.menu;
 
-import java.util.Optional;
-
-import javax.annotation.Nullable;
-
-import org.apache.logging.log4j.LogManager;
-
 import com.enderio.machines.common.blockentity.EnchanterBlockEntity;
 import com.enderio.machines.common.recipe.IEnchanterRecipe;
 import com.enderio.machines.common.recipe.MachineRecipes;
-
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -18,6 +11,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
+import org.apache.logging.log4j.LogManager;
+
+import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity>{
     private Level level;

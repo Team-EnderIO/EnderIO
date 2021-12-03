@@ -4,7 +4,6 @@ import com.enderio.base.common.capability.darksteel.IDarkSteelUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.tooltip.IAdvancedTooltipProvider;
-import com.enderio.core.common.util.EnergyUtil;
 import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
