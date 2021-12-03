@@ -1,6 +1,5 @@
 package com.enderio.core.data;
 
-import com.tterrag.registrate.providers.DataGenContext;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
@@ -8,10 +7,11 @@ import net.minecraftforge.client.model.generators.ModelBuilder;
 import net.minecraftforge.client.model.generators.ModelFile;
 
 public class RotatingItemModel {
-    public static void create(DataGenContext<Item, ? extends Item> ctx, ItemModelProvider prov) {
+    // No longer using registrate as once we move EnderCore away, we're not going to have it.
+    public static void create(Item item, ItemModelProvider prov) {
         // json so the BEWLR is used + perspectives
 
-        ResourceLocation registryName = ctx.get().getRegistryName();
+        ResourceLocation registryName = item.getRegistryName();
 
         // @formatter:off
         prov
