@@ -81,6 +81,6 @@ public class EnchanterRecipeGenerator extends RecipeProvider {
     }
     
     protected void build(EnchanterRecipe recipe, String name, Consumer<FinishedRecipe> recipeConsumer) {
-        recipeConsumer.accept(new EnchanterRecipeResult(recipe, name));
+        recipeConsumer.accept(new RecipeResult(recipe, name));
     }
 }

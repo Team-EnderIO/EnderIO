@@ -32,7 +32,7 @@ public class MachineRecipes {
     public static class Types {
         private Types() {}
 
-        public static RecipeType<IEnchanterRecipe> ENCHANTING = RecipeType.register(EnderIO.DOMAIN + ":enchanting");
+        public static RecipeType<EnchanterRecipe> ENCHANTING = RecipeType.register(EnderIO.DOMAIN + ":enchanting");
 
         public static void register() {}
     }

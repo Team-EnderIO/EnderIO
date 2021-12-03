@@ -1,6 +1,7 @@
 package com.enderio.machines.common.recipe;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import com.enderio.base.common.recipe.DataGenSerializer;
 import com.google.gson.JsonObject;
@@ -18,7 +19,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
 
-public class EnchanterRecipe implements IEnchanterRecipe{
+public class EnchanterRecipe extends MachineRecipe<EnchanterRecipe, Container> {
     private ResourceLocation id;
     private Enchantment enchantment;
     private int levelmodifier;
@@ -33,12 +34,10 @@ public class EnchanterRecipe implements IEnchanterRecipe{
         this.levelmodifier = levelModifier;
     }
 
-    @Override
     public Enchantment getEnchantment() {
         return this.enchantment;
     }
-    
-    @Override
+
     public int getLevelModifier() {
         return levelmodifier;
     }
@@ -58,7 +57,7 @@ public class EnchanterRecipe implements IEnchanterRecipe{
     
     public int getLapisForLevel(int level) {
         int res = enchantment.getMaxLevel() == 1 ? 5 : level;
-        return (int) Math.max(1, Math.round(res * 1)); //TODO config
+        return Math.max(1, Math.round(res * 1)); //TODO config
     }
     
     public int getAmount(Container container) {
@@ -124,7 +123,7 @@ public class EnchanterRecipe implements IEnchanterRecipe{
     }
 
     @Override
-    public DataGenSerializer<EnchanterRecipe, Container> getSerializer() {
+    public DependencyAwareDataGenSerializer<EnchanterRecipe, Container> getSerializer() {
         return MachineRecipes.Serializer.ENCHANTING.get();
     }
 
@@ -139,8 +138,13 @@ public class EnchanterRecipe implements IEnchanterRecipe{
         ingredients.add(ingredient);
         return ingredients;
     }
-    
-    public static class Serializer extends DataGenSerializer<EnchanterRecipe, Container> {
+
+    @Override
+    protected Stream<ResourceLocation> getOtherResourceLocations() {
+        return Stream.of(enchantment.getRegistryName());
+    }
+
+    public static class Serializer extends DependencyAwareDataGenSerializer<EnchanterRecipe, Container> {
 
         @Override
         public EnchanterRecipe fromJson(ResourceLocation pRecipeId, JsonObject pSerializedRecipe) {
@@ -173,6 +177,7 @@ public class EnchanterRecipe implements IEnchanterRecipe{
 
         @Override
         public void toJson(EnchanterRecipe recipe, JsonObject json) {
+            super.toJson(recipe, json);
             json.add("ingredient", recipe.ingredient.toJson());
             json.addProperty("enchantment", recipe.enchantment.getRegistryName().toString());
             json.addProperty("amount", recipe.amountPerLevel);
