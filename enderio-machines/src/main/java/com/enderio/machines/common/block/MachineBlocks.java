@@ -16,23 +16,26 @@ public class MachineBlocks {
     public static final BlockEntry<MachineBlock> SIMPLE_POWERED_FURNACE = REGISTRATE
         .block("simple_powered_furnace", props -> new MachineBlock(props, MachineBlockEntities.SMELTER))
         .item()
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.MACHINES))
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.MACHINES))
         .build()
         .register();
+
     public static final BlockEntry<MachineBlock> FLUID_TANK = REGISTRATE
         .block("fluid_tank", props -> new MachineBlock(props, MachineBlockEntities.FLUID_TANK))
         .properties(props -> props.strength(2.5f,8))
         .loot(LootTableUtils::copyNBT)
         .item()
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.MACHINES))
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.MACHINES))
         .build()
         .register();
+
     public static final BlockEntry<MachineBlock> ENCHANTER = REGISTRATE
         .block("enchanter", props -> new MachineBlock(props, MachineBlockEntities.ENCHANTER))
         .properties(props -> props.strength(2.5f,8))
         .item()
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.MACHINES))
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.MACHINES))
         .build()
         .register();
+
     public static void register() {}
 }

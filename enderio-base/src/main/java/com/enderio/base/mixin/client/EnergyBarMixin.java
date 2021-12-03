@@ -17,22 +17,23 @@ import static com.enderio.base.client.renderer.DarkSteelDurabilityRenderer.ENERG
  */
 @Mixin(IEnergyBar.class)
 public interface EnergyBarMixin extends IForgeItem {
-    @Override
-    default boolean showDurabilityBar(ItemStack stack) {
-        // We always display a durability bar so that players know the tool is empty or full all the time.
-        return true;
-    }
-
-    @Override
-    default double getDurabilityForDisplay(ItemStack stack) {
-        return stack
-            .getCapability(CapabilityEnergy.ENERGY)
-            .map(energyStorage -> 1.0d - (double) energyStorage.getEnergyStored() / (double) energyStorage.getMaxEnergyStored())
-            .orElse(0d);
-    }
-
-    @Override
-    default int getRGBDurabilityForDisplay(ItemStack stack) {
-        return ENERGY_BAR_RGB; // A nice purple
-    }
+    // TODO: 1.18 Energy Bars.
+//    @Override
+//    default boolean showDurabilityBar(ItemStack stack) {
+//        // We always display a durability bar so that players know the tool is empty or full all the time.
+//        return true;
+//    }
+//
+//    @Override
+//    default double getDurabilityForDisplay(ItemStack stack) {
+//        return stack
+//            .getCapability(CapabilityEnergy.ENERGY)
+//            .map(energyStorage -> 1.0d - (double) energyStorage.getEnergyStored() / (double) energyStorage.getMaxEnergyStored())
+//            .orElse(0d);
+//    }
+//
+//    @Override
+//    default int getRGBDurabilityForDisplay(ItemStack stack) {
+//        return ENERGY_BAR_RGB; // A nice purple
+//    }
 }

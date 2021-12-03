@@ -118,19 +118,19 @@ public class EIOItems {
     public static final ItemEntry<Item> BASIC_CAPACITOR = REGISTRATE
         .item("basic_capacitor", Item::new)
         .properties(p -> p.stacksTo(1))
-        .group(() -> EIOCreativeTabs.MAIN)
+        .tab(() -> EIOCreativeTabs.MAIN)
         .register();
 
     public static final ItemEntry<Item> DOUBLE_LAYER_CAPACITOR = REGISTRATE
         .item("double_layer_capacitor", Item::new)
         .properties(p -> p.stacksTo(1))
-        .group(() -> EIOCreativeTabs.MAIN)
+        .tab(() -> EIOCreativeTabs.MAIN)
         .register();
 
     public static final ItemEntry<Item> OCTADIC_CAPACITOR = REGISTRATE
         .item("octadic_capacitor", Item::new)
         .properties(p -> p.stacksTo(1))
-        .group(() -> EIOCreativeTabs.MAIN)
+        .tab(() -> EIOCreativeTabs.MAIN)
         .register();
 
     public static final ItemEntry<LootCapacitorItem> LOOT_CAPACITOR = REGISTRATE
@@ -258,7 +258,7 @@ public class EIOItems {
     public static final ItemEntry<BrokenSpawnerItem> BROKEN_SPAWNER = REGISTRATE
         .item("broken_spawner", BrokenSpawnerItem::new)
         .model(ItemModelUtils::fakeBlockModel)
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.MAIN))
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.MAIN))
         .register();
 
     // endregion
@@ -290,14 +290,14 @@ public class EIOItems {
     // region Builders
 
     private static ItemBuilder<MaterialItem, Registrate> materialItem(String name) {
-        return REGISTRATE.item(name, props -> new MaterialItem(props, false)).group(new NonNullLazyValue<>(() -> EIOCreativeTabs.MAIN));
+        return REGISTRATE.item(name, props -> new MaterialItem(props, false)).tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.MAIN));
     }
 
     private static ItemBuilder<GearItem, Registrate> gearItem(String name, float tpr) {
         return REGISTRATE
             .item(name, props -> new GearItem(props, tpr))
             .model(RotatingItemModel::create)
-            .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.MAIN));
+            .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.MAIN));
     }
 
     //  private static ItemBuilder<MaterialItem, Registrate> dependMaterialItem(String name, Tag<Item> dependency) {
@@ -306,7 +306,7 @@ public class EIOItems {
     //  }
 
     private static ItemBuilder<MaterialItem, Registrate> materialItemGlinted(String name) {
-        return REGISTRATE.item(name, props -> new MaterialItem(props, true)).group(new NonNullLazyValue<>(() -> EIOCreativeTabs.MAIN));
+        return REGISTRATE.item(name, props -> new MaterialItem(props, true)).tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.MAIN));
     }
 
     // endregion
@@ -324,7 +324,7 @@ public class EIOItems {
 
     public static ItemEntry<EnderiosItem> ENDERIOS = REGISTRATE
         .item("enderios", EnderiosItem::new)
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.MAIN))
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.MAIN))
         .lang("\"Enderios\"")
         .properties(props -> props.stacksTo(1))
         .register();
@@ -334,31 +334,31 @@ public class EIOItems {
     // region Tools
     public static ItemEntry<YetaWrenchItem> YETA_WRENCH = REGISTRATE
         .item("yeta_wrench", YetaWrenchItem::new)
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
         .properties(props -> props.stacksTo(1))
         .tag(EIOTags.Items.WRENCH)
         .register();
 
     public static ItemEntry<LocationPrintoutItem> LOCATION_PRINTOUT = REGISTRATE
         .item("location_printout", LocationPrintoutItem::new)
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
         .properties(props -> props.stacksTo(1))
         .register();
 
     public static ItemEntry<CoordinateSelectorItem> COORDINATE_SELECTOR = REGISTRATE
         .item("coordinate_selector", CoordinateSelectorItem::new)
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
         .properties(props -> props.stacksTo(1))
         .register();
 
     public static ItemEntry<LevitationStaffItem> LEVITATION_STAFF = REGISTRATE
         .item("staff_of_levity", LevitationStaffItem::new)
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
         .register();
 
     public static ItemEntry<ElectromagnetItem> ELECTROMAGNET = REGISTRATE
         .item("electromagnet", ElectromagnetItem::new)
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
         .register();
 
     // endregion
@@ -371,7 +371,7 @@ public class EIOItems {
 
     public static ItemEntry<DarkSteelPickaxeItem> DARK_STEEL_PICKAXE = REGISTRATE
         .item("dark_steel_pickaxe", DarkSteelPickaxeItem::new)
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
         .onRegister(item -> DarkSteelUpgradeRegistry
             .instance()
             .addUpgradesForItem(Objects.requireNonNull(item.getRegistryName()), EmpoweredUpgrade.NAME, SpoonUpgrade.NAME, DirectUpgrade.NAME))
@@ -379,7 +379,7 @@ public class EIOItems {
 
     public static ItemEntry<DarkSteelAxeItem> DARK_STEEL_AXE = REGISTRATE
         .item("dark_steel_axe", DarkSteelAxeItem::new)
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
         .onRegister(item -> DarkSteelUpgradeRegistry
             .instance()
             .addUpgradesForItem(Objects.requireNonNull(item.getRegistryName()), EmpoweredUpgrade.NAME, ForkUpgrade.NAME, DirectUpgrade.NAME))
@@ -390,53 +390,53 @@ public class EIOItems {
 
     public static ItemEntry<MaterialItem> DARK_STEEL_UPGRADE_BLANK = REGISTRATE
         .item("dark_steel_upgrade_blank", props -> new MaterialItem(props, false))
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR)).lang("Blank" + UPGRADE_TEXT)
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR)).lang("Blank" + UPGRADE_TEXT)
         .register();
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_1 = REGISTRATE
         .item("dark_steel_upgrade_empowered_1",
             properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgrade.Tier.ONE.getActivationCost(), EmpoweredUpgrade.Tier.ONE.getFactory()))
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
         .lang("Empowered" + UPGRADE_TEXT)
         .register();
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_2 = REGISTRATE
         .item("dark_steel_upgrade_empowered_2",
             properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgrade.Tier.TWO.getActivationCost(), EmpoweredUpgrade.Tier.TWO.getFactory()))
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
         .lang("Empowered II" + UPGRADE_TEXT)
         .register();
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_3 = REGISTRATE
         .item("dark_steel_upgrade_empowered_3",
             properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgrade.Tier.THREE.getActivationCost(), EmpoweredUpgrade.Tier.THREE.getFactory()))
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
         .lang("Empowered III" + UPGRADE_TEXT)
         .register();
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_4 = REGISTRATE
         .item("dark_steel_upgrade_empowered_4",
             properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgrade.Tier.FOUR.getActivationCost(), EmpoweredUpgrade.Tier.FOUR.getFactory()))
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
         .lang("Empowered IV" + UPGRADE_TEXT)
         .register();
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_SPOON = REGISTRATE
         .item("dark_steel_upgrade_spoon", properties -> new DarkSteelUpgradeItem(properties, BaseConfig.COMMON.DARK_STEEL.SPOON_ACTIVATION_COST, SpoonUpgrade::new))
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
         .lang("Spoon" + UPGRADE_TEXT)
         .register();
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_FORK = REGISTRATE
         .item("dark_steel_upgrade_fork", properties -> new DarkSteelUpgradeItem(properties, BaseConfig.COMMON.DARK_STEEL.FORK_ACTIVATION_COST, ForkUpgrade::new))
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
         .lang("Fork" + UPGRADE_TEXT)
         .register();
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_DIRECT = REGISTRATE
         .item("dark_steel_upgrade_direct",
             properties -> new DarkSteelUpgradeItem(properties, BaseConfig.COMMON.DARK_STEEL.DIRECT_ACTIVATION_COST, DirectUpgrade::new))
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
         .lang("Direct" + UPGRADE_TEXT)
         .register();
 
@@ -469,7 +469,7 @@ public class EIOItems {
     }
 
     public static <T extends Item> ItemEntry<T> groupedItem(String name, NonNullFunction<Item.Properties, T> factory, NonNullSupplier<CreativeModeTab> tab) {
-        return REGISTRATE.item(name, factory).group(tab).register();
+        return REGISTRATE.item(name, factory).tab(tab).register();
     }
 
     // endregion

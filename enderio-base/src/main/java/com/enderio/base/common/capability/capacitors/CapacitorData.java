@@ -7,7 +7,6 @@ import java.util.Random;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraftforge.common.util.Constants;
 
 public class CapacitorData implements ICapacitorData {
     private float base = 0;
@@ -43,7 +42,7 @@ public class CapacitorData implements ICapacitorData {
         if (nbt instanceof CompoundTag tag) {
             this.specializations.clear();
             this.base = tag.getFloat("base");
-            ListTag list = tag.getList("specializations", Constants.NBT.TAG_COMPOUND);
+            ListTag list = tag.getList("specializations", CompoundTag.TAG_COMPOUND);
             for (int i = 0; i < list.size(); i++) {
                 CompoundTag listElement = list.getCompound(i);
                 addSpecialization(listElement.getString("type"), listElement.getFloat("value"));

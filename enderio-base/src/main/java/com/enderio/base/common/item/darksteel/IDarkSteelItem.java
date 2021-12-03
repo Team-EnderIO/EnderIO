@@ -111,9 +111,10 @@ public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipPr
         DarkSteelDurabilityRenderer.renderOverlay(pStack, pXPosition, pYPosition);
     }
 
-    @Override
-    default boolean showDurabilityBar(ItemStack stack) {
-        return stack.getDamageValue() > 0 || EnergyUtil.getMaxEnergyStored(stack) > 0;
-    }
+    // TODO: 1.18: DURABILITY BARS
+//    @Override
+//    default boolean showDurabilityBar(ItemStack stack) {
+//        return stack.getDamageValue() > 0 || EnergyUtil.getMaxEnergyStored(stack) > 0;
+//    }
 
 }

@@ -36,19 +36,19 @@ subprojects {
     archivesBaseName = getArchiveBaseName(project)
     def modId = getModId(project)
 
-    // Mojang ships Java 16 to end users in 1.17+ instead of Java 8 in 1.16 or lower, so your mod should target Java 16.
-    java.toolchain.languageVersion = JavaLanguageVersion.of(16)
+    // Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
+    java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
     println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
     minecraft {
-//        mappings channel: 'official', version: "${minecraft_version}"
-
         if (project.hasProperty("transformer")) {
-            mappings channel: 'parchment', version: "${mappings_version}-${minecraft_version}"
+//            mappings channel: 'parchment', version: "${mappings_version}-${minecraft_version}"
+            mappings channel: 'official', version: "${minecraft_version}"
             println("Found accessTransformer for ${project.name}: ${project.transformer}")
             accessTransformer = file(project.transformer)
         } else {
-            mappings channel: 'parchment', version: "${mappings_version}-${minecraft_version}"
+//            mappings channel: 'parchment', version: "${mappings_version}-${minecraft_version}"
+            mappings channel: 'official', version: "${minecraft_version}"
         }
 
         // Default run configurations.

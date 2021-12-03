@@ -38,8 +38,6 @@ import net.minecraftforge.client.model.geometry.IModelGeometry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.resource.IResourceType;
-import net.minecraftforge.resource.VanillaResourceType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -141,12 +139,6 @@ public class ClientSetup {
 
         @Override
         public void onResourceManagerReload(@Nonnull ResourceManager pResourceManager) {}
-
-        @Nullable
-        @Override
-        public IResourceType getResourceType() {
-            return VanillaResourceType.MODELS;
-        }
     }
 
     private static class Geometry implements IModelGeometry<Geometry> {

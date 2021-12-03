@@ -1,7 +1,7 @@
 package com.enderio.machines.common.block;
 
 import com.enderio.machines.common.blockentity.AbstractMachineBlockEntity;
-import com.tterrag.registrate.util.entry.TileEntityEntry;
+import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -18,14 +18,14 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.fmllegacy.network.NetworkHooks;
+import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
 public class MachineBlock extends BaseEntityBlock {
-    private TileEntityEntry<? extends AbstractMachineBlockEntity> blockEntityType;
+    private BlockEntityEntry<? extends AbstractMachineBlockEntity> blockEntityType;
 
-    public MachineBlock(Properties p_49795_, TileEntityEntry<? extends AbstractMachineBlockEntity> blockEntityType) {
+    public MachineBlock(Properties p_49795_, BlockEntityEntry<? extends AbstractMachineBlockEntity> blockEntityType) {
         super(p_49795_);
         this.blockEntityType = blockEntityType;
     }

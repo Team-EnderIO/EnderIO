@@ -37,7 +37,6 @@ public class FluidTankBlockEntity extends AbstractMachineBlockEntity {
     private FluidTankMaster fluidTank = new FluidTankMaster(16 * FluidAttributes.BUCKET_VOLUME, getConfig());
     private ItemHandlerMaster itemHandlerMaster = new ItemHandlerMaster(getConfig(), 4, List.of(0,2), List.of(1,3));
 
-
     public FluidTankBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);
         addDataSlot(new FluidStackDataSlot(() -> fluidTank.getFluidInTank(0), fluidTank::setFluid, SyncMode.RENDER));
@@ -50,10 +49,10 @@ public class FluidTankBlockEntity extends AbstractMachineBlockEntity {
     }
 
     @Override
-    public CompoundTag save(CompoundTag pTag) {
+    public void saveAdditional(CompoundTag pTag) {
+        super.saveAdditional(pTag);
         pTag.put("Items", itemHandlerMaster.serializeNBT());
         pTag.put("Fluids", fluidTank.writeToNBT(new CompoundTag()));
-        return super.save(pTag);
     }
 
     @Override

@@ -164,10 +164,10 @@ public abstract class AbstractMachineBlockEntity extends SyncedBlockEntity imple
     }
 
     @Override
-    public CompoundTag save(CompoundTag pTag) {
+    public void saveAdditional(CompoundTag pTag) {
+        super.saveAdditional(pTag);
         pTag.put("io_config", config.serializeNBT());
         pTag.putInt("redstone", redstoneControl.ordinal());
-        return super.save(pTag);
     }
 
     @Override

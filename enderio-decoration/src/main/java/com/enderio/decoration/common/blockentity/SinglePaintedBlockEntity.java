@@ -13,7 +13,6 @@ import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
-import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -42,9 +41,7 @@ public class SinglePaintedBlockEntity extends BlockEntity implements IPaintableB
     @Nullable
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        CompoundTag tag = new CompoundTag();
-        writePaint(tag);
-        return new ClientboundBlockEntityDataPacket(worldPosition, -1, tag);
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
@@ -82,7 +79,7 @@ public class SinglePaintedBlockEntity extends BlockEntity implements IPaintableB
                 if (level.isClientSide) {
                     ModelDataManager.requestModelDataRefresh(this);
                     level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(),
-                        Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+                        Block.UPDATE_NEIGHBORS + Block.UPDATE_CLIENTS);
                 }
             }
         }
@@ -90,9 +87,9 @@ public class SinglePaintedBlockEntity extends BlockEntity implements IPaintableB
 
     @Nonnull
     @Override
-    public CompoundTag save(@Nonnull CompoundTag tag) {
+    public void saveAdditional(@Nonnull CompoundTag tag) {
+        super.saveAdditional(tag);
         writePaint(tag);
-        return super.save(tag);
     }
 
     protected void writePaint(CompoundTag tag) {

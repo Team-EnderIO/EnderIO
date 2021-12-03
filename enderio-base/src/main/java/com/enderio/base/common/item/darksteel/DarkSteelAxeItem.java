@@ -160,7 +160,7 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem {
         if (event.isCanceled()) {
             return false;
         }
-        boolean removed = state.removedByPlayer(level, pos, player, true, level.getFluidState(pos));
+        boolean removed = state.onDestroyedByPlayer(level, pos, player, true, level.getFluidState(pos));
         if (removed) {
             state.getBlock().destroy(level, pos, state);
             state.getBlock().playerDestroy(level, player, pos, state, null, tool);

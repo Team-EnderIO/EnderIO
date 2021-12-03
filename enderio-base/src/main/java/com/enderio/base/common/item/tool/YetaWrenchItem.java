@@ -9,11 +9,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -36,7 +36,7 @@ public class YetaWrenchItem extends Item {
             pContext.getLevel().setBlock(
                 pContext.getClickedPos(),
                 state,
-                Constants.BlockFlags.NOTIFY_NEIGHBORS + Constants.BlockFlags.BLOCK_UPDATE);
+                Block.UPDATE_NEIGHBORS + Block.UPDATE_CLIENTS);
             return InteractionResult.CONSUME;
         }
         return super.useOn(pContext);

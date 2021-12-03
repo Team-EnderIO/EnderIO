@@ -11,6 +11,7 @@ import com.enderio.base.config.base.BaseConfig;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonObject;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BaseSpawner;
@@ -41,11 +42,16 @@ public class BrokenSpawnerLootModifier extends LootModifier {
     protected List<ItemStack> doApply(List<ItemStack> generatedLoot, LootContext context) {
         BlockEntity entity = context.getParam(LootContextParams.BLOCK_ENTITY);
         if (entity instanceof SpawnerBlockEntity spawnerBlockEntity) {
-            if (context.getParam(LootContextParams.TOOL).is(EIOTags.Items.BROKEN_SPAWNER_BLACKLIST)) {
+            if (!context.getParam(LootContextParams.TOOL).is(EIOTags.Items.BROKEN_SPAWNER_BLACKLIST)) {
                 if (context.getRandom().nextFloat() < BaseConfig.COMMON.BLOCKS.BROKEN_SPAWNER_DROP_CHANCE.get()) {
                     BaseSpawner spawner = spawnerBlockEntity.getSpawner();
-                    ItemStack brokenSpawner = BrokenSpawnerItem.forType(spawner.getEntityId(context.getLevel(), entity.getBlockPos()));
-                    return Lists.newArrayList(brokenSpawner);
+                    CompoundTag entityTag = spawner.nextSpawnData.getEntityToSpawn();
+
+                    if (entityTag.contains("id")) {
+                        ResourceLocation type = new ResourceLocation(entityTag.getString("id"));
+                        ItemStack brokenSpawner = BrokenSpawnerItem.forType(type);
+                        return Lists.newArrayList(brokenSpawner);
+                    }
                 }
             }
         }

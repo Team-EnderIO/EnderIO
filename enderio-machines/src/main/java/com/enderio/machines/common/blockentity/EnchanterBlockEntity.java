@@ -48,9 +48,9 @@ public class EnchanterBlockEntity extends AbstractMachineBlockEntity{
     }
     
     @Override
-    public CompoundTag save(CompoundTag pTag) {
+    public void saveAdditional(CompoundTag pTag) {
+        super.saveAdditional(pTag);
         pTag.put("Items", itemHandlerMaster.serializeNBT());
-        return super.save(pTag);
     }
     
     @Override

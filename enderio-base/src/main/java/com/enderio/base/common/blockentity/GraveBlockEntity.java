@@ -80,10 +80,10 @@ public class GraveBlockEntity extends BlockEntity {
 
     @Nonnull
     @Override
-    public CompoundTag save(CompoundTag pTag) {
+    public void saveAdditional(CompoundTag pTag) {
+        super.saveAdditional(pTag);
         pTag.put(owner.getSerializedName(), owner.serializeNBT());
         pTag.put("Items", itemHandler.serializeNBT());
-        return super.save(pTag);
     }
 
     // endregion
@@ -93,7 +93,7 @@ public class GraveBlockEntity extends BlockEntity {
     @Override
     @Nullable
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, this.getUpdateTag());
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
