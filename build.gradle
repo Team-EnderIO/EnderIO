@@ -64,8 +64,7 @@ subprojects {
                 property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
 
                 mods {
-                    // TODO: Dynamic names??
-                    examplemod {
+                    "${project.name}" {
                         source sourceSets.main
                     }
                 }
@@ -81,8 +80,7 @@ subprojects {
                 property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
 
                 mods {
-                    // TODO: Dynamic names??
-                    examplemod {
+                    "${project.name}" {
                         source sourceSets.main
                     }
                 }
@@ -99,11 +97,10 @@ subprojects {
                 property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
 
                 // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-                args '--mod', modId, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+                args '--mod', "${project.name}", '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
                 mods {
-                    // TODO: Dynamic names??
-                    examplemod {
+                    "${project.name}" {
                         source sourceSets.main
                     }
                 }
@@ -284,8 +281,10 @@ String getArchiveBaseName(Project proj) {
 }
 
 String getModId(Project proj) {
-    // Replaces enderiobase with enderio for the purposes of the dummy. TODO: Review the dummy...
-    return proj.name.replaceAll('-', '').replaceAll('enderiobase', 'enderio');
+    // Force enderio-base -> enderio.
+    if (proj.hasProperty("modid"))
+        return proj.modid;
+    return proj.name.replaceAll('-', '');
 }
 
 // endregion
