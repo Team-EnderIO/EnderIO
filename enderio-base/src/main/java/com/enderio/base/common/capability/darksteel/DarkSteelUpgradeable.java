@@ -21,6 +21,10 @@ public class DarkSteelUpgradeable implements IDarkSteelUpgradable {
         return itemStack;
     }
 
+    public static void removeUpgrade(ItemStack itemStack, String upgrade) {
+        itemStack.getCapability(EIOCapabilities.DARK_STEEL_UPGRADABLE).ifPresent(upgradable -> upgradable.removeUpgrade(upgrade));
+    }
+
     public static Collection<IDarkSteelUpgrade> getUpgrades(ItemStack itemStack) {
         return itemStack.getCapability(EIOCapabilities.DARK_STEEL_UPGRADABLE).map(IDarkSteelUpgradable::getUpgrades).orElse(Collections.emptyList());
     }

@@ -67,6 +67,13 @@ public class EIOLang {
     public static final Component DS_UPGRADE_EXPLOSIVE_DESCRIPTION = REGISTRATE.addLang("info", EnderIO.loc("darksteel.upgrade.explosive.description"),
         "Makes surrounding dirt and rock go splodey");
 
+    public static final Component DS_UPGRADE_EXPLOSIVE_PENETRATION_I = REGISTRATE.addLang("info", EnderIO.loc("darksteel.upgrade.explosive_penetration_l1"),
+        "Explosive Penetration I");
+    public static final Component DS_UPGRADE_EXPLOSIVE_PENETRATION_II = REGISTRATE.addLang("info", EnderIO.loc("darksteel.upgrade.explosive_penetration_l2"),
+        "Explosive Penetration II");
+    public static final Component DS_UPGRADE_EXPLOSIVE_PENETRATION_DESCRIPTION = REGISTRATE.addLang("info",
+        EnderIO.loc("darksteel.upgrade.explosive_penetration.description"), "Makes dirt and rock behind the mined block go splodey");
+
     // endregion
 
     public static void register() {}

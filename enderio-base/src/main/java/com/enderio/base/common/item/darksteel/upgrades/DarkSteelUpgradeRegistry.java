@@ -3,7 +3,8 @@ package com.enderio.base.common.item.darksteel.upgrades;
 import com.enderio.base.EnderIO;
 import com.enderio.base.common.capability.darksteel.IDarkSteelUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.direct.DirectUpgrade;
-import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosiveRadiusUpgrade;
+import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosivePenetrationUpgrade;
+import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosiveUpgrade;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
@@ -24,7 +25,8 @@ public final class DarkSteelUpgradeRegistry {
         INST.registerUpgrade(SpoonUpgrade::new);
         INST.registerUpgrade(ForkUpgrade::new);
         INST.registerUpgrade(DirectUpgrade::new);
-        INST.registerUpgrade(ExplosiveRadiusUpgrade::new);
+        INST.registerUpgrade(ExplosiveUpgrade::new);
+        INST.registerUpgrade(ExplosivePenetrationUpgrade::new);
     }
 
     public static DarkSteelUpgradeRegistry instance() {return INST; }

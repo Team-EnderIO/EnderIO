@@ -2,7 +2,6 @@ package com.enderio.base.common.item.darksteel.upgrades.explosive;
 
 import com.enderio.base.common.capability.darksteel.IDarkSteelUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
-import com.enderio.base.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.base.config.base.BaseConfig;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -16,22 +15,22 @@ import java.util.function.Supplier;
 
 import static com.enderio.base.common.lang.EIOLang.*;
 
-public class ExplosiveRadiusUpgrade implements IDarkSteelUpgrade {
+public class ExplosiveUpgrade implements IDarkSteelUpgrade {
 
-    public static final String NAME = DarkSteelUpgradeRegistry.UPGRADE_PREFIX + "explosive_radius";
+    public static final String NAME = DarkSteelUpgradeRegistry.UPGRADE_PREFIX + "explosive";
 
     public static final String TIER_KEY = "tier";
 
     public enum Tier {
-        ONE(BaseConfig.COMMON.DARK_STEEL.EXPLOSIVE_RADIUS_I,
+        ONE(BaseConfig.COMMON.DARK_STEEL.EXPLOSIVE_I,
             BaseConfig.COMMON.DARK_STEEL.EXPLOSIVE_RADIUS_ACTIVATION_COST_I,
             DS_UPGRADE_EXPLOSIVE_I),
-        TWO(BaseConfig.COMMON.DARK_STEEL.EXPLOSIVE_RADIUS_II,
-            BaseConfig.COMMON.DARK_STEEL.EXPLOSIVE_RADIUS_ACTIVATION_COST_II,
+        TWO(BaseConfig.COMMON.DARK_STEEL.EXPLOSIVE_II,
+            BaseConfig.COMMON.DARK_STEEL.EXPLOSIVE_ACTIVATION_COST_II,
             DS_UPGRADE_EXPLOSIVE_II)
         ;
 
-        private final Supplier<ExplosiveRadiusUpgrade> factory;
+        private final Supplier<ExplosiveUpgrade> factory;
         private final ForgeConfigSpec.ConfigValue<Integer> magnitude;
         private final ForgeConfigSpec.ConfigValue<Integer> activationCost;
         private final Component displayName;
@@ -41,12 +40,12 @@ public class ExplosiveRadiusUpgrade implements IDarkSteelUpgrade {
             this.magnitude = magnitude;
             this.activationCost = activationCost;
             this.displayName = displayName;
-            factory = () -> new ExplosiveRadiusUpgrade(this);
+            factory = () -> new ExplosiveUpgrade(this);
         }
 
         public ForgeConfigSpec.ConfigValue<Integer> getMagnitude() { return magnitude;}
 
-        public Supplier<ExplosiveRadiusUpgrade> getFactory() {
+        public Supplier<ExplosiveUpgrade> getFactory() {
             return factory;
         }
 
@@ -57,11 +56,11 @@ public class ExplosiveRadiusUpgrade implements IDarkSteelUpgrade {
 
     private Tier tier;
 
-    public ExplosiveRadiusUpgrade() {
+    public ExplosiveUpgrade() {
         this(Tier.ONE);
     }
 
-    public ExplosiveRadiusUpgrade(Tier tier) {
+    public ExplosiveUpgrade(Tier tier) {
         this.tier = tier;
     }
 
@@ -81,7 +80,7 @@ public class ExplosiveRadiusUpgrade implements IDarkSteelUpgrade {
 
     @Override
     public boolean isValidUpgrade(IDarkSteelUpgrade upgrade) {
-        if (upgrade instanceof ExplosiveRadiusUpgrade up) {
+        if (upgrade instanceof ExplosiveUpgrade up) {
             return up.tier.ordinal() == tier.ordinal() + 1;
         }
         return false;
@@ -123,7 +122,7 @@ public class ExplosiveRadiusUpgrade implements IDarkSteelUpgrade {
         }
         return Optional.of(Tier.values()[tier]);
     }
-    private static Optional<ExplosiveRadiusUpgrade> getUpgradeForTier(int tier) {
+    private static Optional<ExplosiveUpgrade> getUpgradeForTier(int tier) {
         return getConfigForTier(tier).map(config -> config.getFactory().get());
     }
 }

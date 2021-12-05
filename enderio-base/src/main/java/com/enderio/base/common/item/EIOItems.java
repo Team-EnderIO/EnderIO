@@ -11,7 +11,8 @@ import com.enderio.base.common.item.darksteel.DarkSteelPickaxeItem;
 import com.enderio.base.common.item.darksteel.DarkSteelUpgradeItem;
 import com.enderio.base.common.item.darksteel.upgrades.*;
 import com.enderio.base.common.item.darksteel.upgrades.direct.DirectUpgrade;
-import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosiveRadiusUpgrade;
+import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosivePenetrationUpgrade;
+import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosiveUpgrade;
 import com.enderio.base.common.item.food.EnderiosItem;
 import com.enderio.base.common.item.misc.EnderfaceItem;
 import com.enderio.base.common.item.misc.GearItem;
@@ -396,7 +397,8 @@ public class EIOItems {
         .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
         .onRegister(item -> DarkSteelUpgradeRegistry
             .instance()
-            .addUpgradesForItem(Objects.requireNonNull(item.getRegistryName()), EmpoweredUpgrade.NAME, SpoonUpgrade.NAME, DirectUpgrade.NAME, ExplosiveRadiusUpgrade.NAME))
+            .addUpgradesForItem(Objects.requireNonNull(item.getRegistryName()), EmpoweredUpgrade.NAME, SpoonUpgrade.NAME, DirectUpgrade.NAME,
+                ExplosiveUpgrade.NAME, ExplosivePenetrationUpgrade.NAME))
         .register();
 
     public static ItemEntry<DarkSteelAxeItem> DARK_STEEL_AXE = REGISTRATE
@@ -463,15 +465,27 @@ public class EIOItems {
         .register();
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_1 = REGISTRATE
-        .item("dark_steel_upgrade_tnt", properties -> new DarkSteelUpgradeItem(properties,ExplosiveRadiusUpgrade.Tier.ONE.getActivationCost(),
-            ExplosiveRadiusUpgrade.Tier.ONE.getFactory()))
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR)).lang("Explosive Radius I" + UPGRADE_TEXT)
+        .item("dark_steel_upgrade_tnt", properties -> new DarkSteelUpgradeItem(properties, ExplosiveUpgrade.Tier.ONE.getActivationCost(),
+            ExplosiveUpgrade.Tier.ONE.getFactory()))
+        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR)).lang("Explosive I" + UPGRADE_TEXT)
         .register();
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_2 = REGISTRATE
-        .item("dark_steel_upgrade_tnt1", properties -> new DarkSteelUpgradeItem(properties,ExplosiveRadiusUpgrade.Tier.TWO.getActivationCost(),
-            ExplosiveRadiusUpgrade.Tier.TWO.getFactory()))
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR)).lang("Explosive Radius II" + UPGRADE_TEXT)
+        .item("dark_steel_upgrade_tnt1", properties -> new DarkSteelUpgradeItem(properties, ExplosiveUpgrade.Tier.TWO.getActivationCost(),
+            ExplosiveUpgrade.Tier.TWO.getFactory()))
+        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR)).lang("Explosive II" + UPGRADE_TEXT)
+        .register();
+
+    public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_1 = REGISTRATE
+        .item("dark_steel_upgrade_penetration_1", properties -> new DarkSteelUpgradeItem(properties, ExplosivePenetrationUpgrade.Tier.ONE.getActivationCost(),
+            ExplosivePenetrationUpgrade.Tier.ONE.getFactory()))
+        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR)).lang("Explosive Penetration I" + UPGRADE_TEXT)
+        .register();
+
+    public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_2 = REGISTRATE
+        .item("dark_steel_upgrade_penetration_2", properties -> new DarkSteelUpgradeItem(properties, ExplosivePenetrationUpgrade.Tier.TWO.getActivationCost(),
+            ExplosivePenetrationUpgrade.Tier.TWO.getFactory()))
+        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR)).lang("Explosive Penetration II" + UPGRADE_TEXT)
         .register();
 
     // endregion

@@ -4,6 +4,8 @@ import com.enderio.base.common.capability.darksteel.DarkSteelUpgradeable;
 import com.enderio.base.common.item.EIOItems;
 import com.enderio.base.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.SpoonUpgrade;
+import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosivePenetrationUpgrade;
+import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosiveUpgrade;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.config.base.BaseConfig;
 import com.enderio.core.common.util.EnergyUtil;
@@ -14,10 +16,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.PickaxeItem;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -83,6 +82,24 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem 
         return super.canPerformAction(stack, toolAction) || (hasSpoon(stack) && ToolActions.DEFAULT_SHOVEL_ACTIONS.contains(toolAction));
     }
 
+    @Override
+    public void addCurrentUpgradeTooltips(ItemStack itemStack, List<Component> tooltips, boolean isDetailed) {
+        if(isDetailed && getEmpoweredUpgrade(itemStack).isPresent()) {
+            tooltips.add(TooltipUtil.withArgs(EIOLang.DS_UPGRADE_EMPOWERED_EFFICIENCY, BaseConfig.COMMON.DARK_STEEL.EMPOWERED_EFFICIENCY_BOOST.get()));
+            tooltips.add(TooltipUtil.withArgs(EIOLang.DS_UPGRADE_EMPOWERED_OBSIDIAM_EFFICIENCY, speedBoostWhenObsidian.get()));
+        }
+        IDarkSteelItem.super.addCurrentUpgradeTooltips(itemStack, tooltips, isDetailed);
+    }
+
+    @Override
+    public void addCreativeItems(NonNullList<ItemStack> pItems, Item item) {
+        IDarkSteelItem.super.addCreativeItems(pItems, item);
+        ItemStack itemStack = createFullyUpgradedStack(item);
+        DarkSteelUpgradeable.removeUpgrade(itemStack, ExplosiveUpgrade.NAME);
+        DarkSteelUpgradeable.removeUpgrade(itemStack, ExplosivePenetrationUpgrade.NAME);
+        pItems.add(itemStack);
+    }
+
     private boolean canHarvest(ItemStack stack, BlockState state) {
         return BlockTags.MINEABLE_WITH_PICKAXE.contains(state.getBlock()) || (state.is(BlockTags.MINEABLE_WITH_SHOVEL) && hasSpoon(stack));
     }
@@ -98,15 +115,6 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem 
     private boolean treatBlockAsObsidian(BlockState pState) {
         return pState.getBlock() == Blocks.OBSIDIAN || (useObsidianBreakSpeedAtHardness.get() > 0
             && pState.getBlock().defaultDestroyTime() >= useObsidianBreakSpeedAtHardness.get());
-    }
-
-    @Override
-    public void addCurrentUpgradeTooltips(ItemStack itemStack, List<Component> tooltips, boolean isDetailed) {
-        if(isDetailed && getEmpoweredUpgrade(itemStack).isPresent()) {
-            tooltips.add(TooltipUtil.withArgs(EIOLang.DS_UPGRADE_EMPOWERED_EFFICIENCY, BaseConfig.COMMON.DARK_STEEL.EMPOWERED_EFFICIENCY_BOOST.get()));
-            tooltips.add(TooltipUtil.withArgs(EIOLang.DS_UPGRADE_EMPOWERED_OBSIDIAM_EFFICIENCY, speedBoostWhenObsidian.get()));
-        }
-        IDarkSteelItem.super.addCurrentUpgradeTooltips(itemStack, tooltips, isDetailed);
     }
 
     // region Common for all tools

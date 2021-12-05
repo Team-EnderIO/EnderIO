@@ -25,13 +25,19 @@ public class DarkSteelConfig {
     public final ForgeConfigSpec.ConfigValue<Float> EMPOWERED_DAMAGE_ABSORPTION_CHANCE_IV;
     public final ForgeConfigSpec.ConfigValue<Integer> EMPOWERED_MAX_ENERGY_IV;
 
+    public final ForgeConfigSpec.ConfigValue<Integer> EXPLOSIVE_RADIUS_ACTIVATION_COST_I;
+    public final ForgeConfigSpec.ConfigValue<Integer> EXPLOSIVE_I;
+    public final ForgeConfigSpec.ConfigValue<Integer> EXPLOSIVE_ACTIVATION_COST_II;
+    public final ForgeConfigSpec.ConfigValue<Integer> EXPLOSIVE_II;
+    public final ForgeConfigSpec.ConfigValue<Integer> EXPLOSIVE_PENETRATION_ACTIVATION_COST_I;
+    public final ForgeConfigSpec.ConfigValue<Integer> EXPLOSIVE_PENETRATION_I;
+    public final ForgeConfigSpec.ConfigValue<Integer> EXPLOSIVE_PENETRATION_ACTIVATION_COST_II;
+    public final ForgeConfigSpec.ConfigValue<Integer> EXPLOSIVE_PENETRATION_II;
+
     public final ForgeConfigSpec.ConfigValue<Integer> SPOON_ACTIVATION_COST;
     public final ForgeConfigSpec.ConfigValue<Integer> FORK_ACTIVATION_COST;
     public final ForgeConfigSpec.ConfigValue<Integer> DIRECT_ACTIVATION_COST;
-    public final ForgeConfigSpec.ConfigValue<Integer> EXPLOSIVE_RADIUS_ACTIVATION_COST_I;
-    public final ForgeConfigSpec.ConfigValue<Integer> EXPLOSIVE_RADIUS_I;
-    public final ForgeConfigSpec.ConfigValue<Integer> EXPLOSIVE_RADIUS_ACTIVATION_COST_II;
-    public final ForgeConfigSpec.ConfigValue<Integer> EXPLOSIVE_RADIUS_II;
+
 
     public DarkSteelConfig(ForgeConfigSpec.Builder builder) {
         builder.push("darksteel");
@@ -65,11 +71,15 @@ public class DarkSteelConfig {
         builder.pop();
 
         builder.push("explosive");
-        EXPLOSIVE_RADIUS_ACTIVATION_COST_I = builder.define("explosiveRadiusActivationCostI", 8);
-        EXPLOSIVE_RADIUS_I = builder.define("explosiveRadiusI", 1);
-        EXPLOSIVE_RADIUS_ACTIVATION_COST_II = builder.define("explosiveRadiusActivationCostII", 12);
-        EXPLOSIVE_RADIUS_II = builder.define("explosiveRadiusII", 2);
+        EXPLOSIVE_RADIUS_ACTIVATION_COST_I = builder.define("explosiveActivationCostI", 8);
+        EXPLOSIVE_I = builder.define("explosiveI", 1);
+        EXPLOSIVE_ACTIVATION_COST_II = builder.define("explosiveActivationCostII", 12);
+        EXPLOSIVE_II = builder.define("explosiveII", 2);
 
+        EXPLOSIVE_PENETRATION_ACTIVATION_COST_I = builder.define("explosivePenetrationActivationCostI", 8);
+        EXPLOSIVE_PENETRATION_I = builder.define("explosivePenetrationI", 1);
+        EXPLOSIVE_PENETRATION_ACTIVATION_COST_II = builder.define("explosivePenetrationActivationCostII", 12);
+        EXPLOSIVE_PENETRATION_II = builder.define("explosivePenetrationII", 2);
         builder.pop();
 
         SPOON_ACTIVATION_COST = builder.define("spoonActivationCost", 4);

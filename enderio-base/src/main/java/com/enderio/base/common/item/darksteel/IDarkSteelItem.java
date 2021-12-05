@@ -48,9 +48,12 @@ public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipPr
     default void addCreativeItems(NonNullList<ItemStack> pItems, Item item) {
         ItemStack is = new ItemStack(item);
         pItems.add(is.copy());
-
         //All the upgrades
-        is = new ItemStack(item);
+        pItems.add(createFullyUpgradedStack(item));
+    }
+
+    default ItemStack createFullyUpgradedStack(Item item) {
+        ItemStack is = new ItemStack(item);
         Collection<? extends IDarkSteelUpgrade> ups = DarkSteelUpgradeable.getAllPossibleUpgrades(is);
         for(IDarkSteelUpgrade upgrade : ups) {
             IDarkSteelUpgrade maxTier = upgrade;
@@ -62,7 +65,7 @@ public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipPr
             DarkSteelUpgradeable.addUpgrade(is,maxTier);
         }
         EnergyUtil.setFull(is);
-        pItems.add(is.copy());
+        return is;
     }
 
     default void addCommonTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {

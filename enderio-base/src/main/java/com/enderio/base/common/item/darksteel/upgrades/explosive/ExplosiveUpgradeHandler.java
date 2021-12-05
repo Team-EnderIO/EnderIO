@@ -34,13 +34,12 @@ public class ExplosiveUpgradeHandler {
 
     @SubscribeEvent
     public static void showAreaOfEffectHighlight(DrawSelectionEvent.HighlightBlock event) {
-
         LocalPlayer player = Minecraft.getInstance().player;
         if(player == null || player.isCrouching()) {
             return;
         }
         ItemStack held = player.getItemInHand(InteractionHand.MAIN_HAND);
-        if(DarkSteelUpgradeable.hasUpgrade(held, ExplosiveRadiusUpgrade.NAME)) {
+        if(DarkSteelUpgradeable.hasUpgrade(held, ExplosiveUpgrade.NAME) || DarkSteelUpgradeable.hasUpgrade(held, ExplosivePenetrationUpgrade.NAME) ) {
             drawHighlight(event, held);
         }
     }
@@ -57,18 +56,7 @@ public class ExplosiveUpgradeHandler {
             return;
         }
 
-        double radius = DarkSteelUpgradeable
-            .getUpgradeAs(held, ExplosiveRadiusUpgrade.NAME, ExplosiveRadiusUpgrade.class)
-            .map(ExplosiveRadiusUpgrade::getMagnitude)
-            .orElse(1);
-
-        AABB miningBounds = new AABB(-radius,-radius,-radius,1 + radius,1 + radius,1 + radius);
-
-        //TODO: Do we want to use the 'Depth' upgrade for this?
-        Direction targetDir = event.getTarget().getDirection();
-        Vec3i shiftDir = targetDir.getNormal();
-        shiftDir = shiftDir.multiply(-1);
-        miningBounds = miningBounds.move(radius * shiftDir.getX(), radius * shiftDir.getY(),radius * shiftDir.getZ());
+        AABB miningBounds = calculateMiningBounds(held, event.getTarget().getDirection());
 
         VoxelShape outlineShape = Shapes.create(miningBounds);
 
@@ -84,6 +72,36 @@ public class ExplosiveUpgradeHandler {
         AABB refBounds = new AABB(0,0,0,1,1,1);
         color = new Vector4f(0,0,0,0.2f);
         renderJoiningLines(poseStack, vertexConsumer, refBounds, miningBounds, origin, color);
+    }
+
+    private static AABB calculateMiningBounds(ItemStack tool, Direction targetDir) {
+        AABB miningBounds = new AABB(0,0,0,1,1,1);
+
+        double radius = DarkSteelUpgradeable
+            .getUpgradeAs(tool, ExplosiveUpgrade.NAME, ExplosiveUpgrade.class)
+            .map(ExplosiveUpgrade::getMagnitude)
+            .orElse(0);
+
+        if (radius > 0) {
+            Vector3d mask = new Vector3d(
+                targetDir.getStepX() == 0 ? radius : 0,
+                targetDir.getStepY() == 0 ? radius : 0,
+                targetDir.getStepZ() == 0 ? radius : 0);
+            miningBounds = miningBounds.expandTowards(mask.x, mask.y, mask.z);
+            miningBounds = miningBounds.expandTowards(-mask.x, -mask.y, -mask.z);
+        }
+
+        double penetration = DarkSteelUpgradeable
+            .getUpgradeAs(tool, ExplosivePenetrationUpgrade.NAME, ExplosivePenetrationUpgrade.class)
+            .map(ExplosivePenetrationUpgrade::getMagnitude)
+            .orElse(0);
+
+        if (penetration > 0) {
+            Vec3i shiftDir = targetDir.getNormal();
+            shiftDir = shiftDir.multiply(-1);
+            miningBounds = miningBounds.expandTowards(penetration * shiftDir.getX(), penetration * shiftDir.getY(), penetration * shiftDir.getZ());
+        }
+        return miningBounds;
     }
 
     private static void renderJoiningLines(PoseStack poseStack, VertexConsumer vertexConsumer, AABB refBounds, AABB miningBounds, Vector3d origin, Vector4f color) {
