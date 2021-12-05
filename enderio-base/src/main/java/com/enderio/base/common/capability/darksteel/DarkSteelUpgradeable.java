@@ -4,6 +4,7 @@ import com.enderio.base.EnderIO;
 import com.enderio.base.common.capability.EIOCapabilities;
 import com.enderio.base.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
 import com.enderio.base.common.item.darksteel.upgrades.EmpoweredUpgrade;
+import com.enderio.base.common.item.darksteel.upgrades.EmpoweredUpgradeTier;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
@@ -119,7 +120,7 @@ public class DarkSteelUpgradeable implements IDarkSteelUpgradable {
     @Override
     public Collection<IDarkSteelUpgrade> getUpgradesThatCanBeAppliedAtTheMoment() {
         if (upgrades.isEmpty()) {
-            return List.of(EmpoweredUpgrade.Tier.ONE.getFactory().get());
+            return List.of(EmpoweredUpgradeTier.ONE.getFactory().get());
         }
         final List<IDarkSteelUpgrade> result = new ArrayList<>();
         upgrades.values().forEach(upgrade -> upgrade.getNextTier().ifPresent(result::add));
