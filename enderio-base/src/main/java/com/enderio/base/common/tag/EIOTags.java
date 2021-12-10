@@ -55,6 +55,7 @@ public class EIOTags {
         public static final IOptionalNamedTag<Block> FUSED_QUARTZ = BlockTags.createOptional(new ResourceLocation(EnderIO.MODID, "fused_quartz"));
         public static final IOptionalNamedTag<Block> CLEAR_GLASS = BlockTags.createOptional(new ResourceLocation(EnderIO.MODID, "clear_glass"));
         public static final IOptionalNamedTag<Block> DARK_STEEL_TIER = BlockTags.createOptional(EnderIO.loc("needs_dark_steel"));
+        public static final IOptionalNamedTag<Block> DARK_STEEL_EXPLODABLE = BlockTags.createOptional(EnderIO.loc("dark_steel_explodable"));
 
     }
 }

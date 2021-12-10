@@ -31,50 +31,7 @@ import java.util.List;
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ExplosiveUpgradeHandler {
 
-
-    @SubscribeEvent
-    public static void showAreaOfEffectHighlight(DrawSelectionEvent.HighlightBlock event) {
-        LocalPlayer player = Minecraft.getInstance().player;
-        if(player == null || player.isCrouching()) {
-            return;
-        }
-        ItemStack held = player.getItemInHand(InteractionHand.MAIN_HAND);
-        if(DarkSteelUpgradeable.hasUpgrade(held, ExplosiveUpgrade.NAME) || DarkSteelUpgradeable.hasUpgrade(held, ExplosivePenetrationUpgrade.NAME) ) {
-            drawHighlight(event, held);
-        }
-    }
-
-    private static void drawHighlight(DrawSelectionEvent.HighlightBlock event, ItemStack held) {
-        ClientLevel level = Minecraft.getInstance().level;
-        if(level == null) {
-            return;
-        }
-        BlockPos blockPos = event.getTarget().getBlockPos();
-        BlockState blockState = level.getBlockState(blockPos);
-
-        if (blockState.isAir() || !level.getWorldBorder().isWithinBounds(blockPos)) {
-            return;
-        }
-
-        AABB miningBounds = calculateMiningBounds(held, event.getTarget().getDirection());
-
-        VoxelShape outlineShape = Shapes.create(miningBounds);
-
-        VertexConsumer vertexConsumer = event.getBuffers().getBuffer(RenderType.lines());
-        PoseStack poseStack = event.getMatrix();
-
-        Vec3 camPos = event.getInfo().getPosition();
-        Vector3d origin = new Vector3d(blockPos.getX() - camPos.x(), blockPos.getY() - camPos.y(), blockPos.getZ() - camPos.z());
-        Vector4f color = new Vector4f(1,0,0,0.2f);
-
-        renderShape(poseStack, vertexConsumer, outlineShape, origin, color);
-
-        AABB refBounds = new AABB(0,0,0,1,1,1);
-        color = new Vector4f(0,0,0,0.2f);
-        renderJoiningLines(poseStack, vertexConsumer, refBounds, miningBounds, origin, color);
-    }
-
-    private static AABB calculateMiningBounds(ItemStack tool, Direction targetDir) {
+    public static AABB calculateMiningArea(ItemStack tool, Direction targetDir) {
         AABB miningBounds = new AABB(0,0,0,1,1,1);
 
         double radius = DarkSteelUpgradeable
@@ -102,6 +59,50 @@ public class ExplosiveUpgradeHandler {
             miningBounds = miningBounds.expandTowards(penetration * shiftDir.getX(), penetration * shiftDir.getY(), penetration * shiftDir.getZ());
         }
         return miningBounds;
+    }
+
+    public static boolean hasExplosiveUpgrades(ItemStack stack) {
+        return DarkSteelUpgradeable.hasUpgrade(stack, ExplosiveUpgrade.NAME) || DarkSteelUpgradeable.hasUpgrade(stack, ExplosivePenetrationUpgrade.NAME);
+    }
+
+    // region area highlight
+
+    @SubscribeEvent
+    public static void showAreaOfEffectHighlight(DrawSelectionEvent.HighlightBlock event) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if(player != null && !player.isCrouching() && hasExplosiveUpgrades(player.getItemInHand(InteractionHand.MAIN_HAND))) {
+            drawHighlight(event, player.getItemInHand(InteractionHand.MAIN_HAND));
+        }
+    }
+
+    private static void drawHighlight(DrawSelectionEvent.HighlightBlock event, ItemStack held) {
+        ClientLevel level = Minecraft.getInstance().level;
+        if(level == null) {
+            return;
+        }
+        BlockPos blockPos = event.getTarget().getBlockPos();
+        BlockState blockState = level.getBlockState(blockPos);
+
+        if (blockState.isAir() || !level.getWorldBorder().isWithinBounds(blockPos)) {
+            return;
+        }
+
+        AABB miningBounds = calculateMiningArea(held, event.getTarget().getDirection());
+
+        VoxelShape outlineShape = Shapes.create(miningBounds);
+
+        VertexConsumer vertexConsumer = event.getBuffers().getBuffer(RenderType.lines());
+        PoseStack poseStack = event.getMatrix();
+
+        Vec3 camPos = event.getInfo().getPosition();
+        Vector3d origin = new Vector3d(blockPos.getX() - camPos.x(), blockPos.getY() - camPos.y(), blockPos.getZ() - camPos.z());
+        Vector4f color = new Vector4f(1,0,0,0.2f);
+
+        renderShape(poseStack, vertexConsumer, outlineShape, origin, color);
+
+        AABB refBounds = new AABB(0,0,0,1,1,1);
+        color = new Vector4f(0,0,0,0.2f);
+        renderJoiningLines(poseStack, vertexConsumer, refBounds, miningBounds, origin, color);
     }
 
     private static void renderJoiningLines(PoseStack poseStack, VertexConsumer vertexConsumer, AABB refBounds, AABB miningBounds, Vector3d origin, Vector4f color) {
@@ -162,5 +163,7 @@ public class ExplosiveUpgradeHandler {
             .normal(pose.normal(), normalX, normalY, normalZ)
             .endVertex();
     }
+
+    // endregion
 
 }

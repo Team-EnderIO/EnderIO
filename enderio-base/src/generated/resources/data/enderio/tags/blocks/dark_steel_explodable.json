@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "#forge:stone",
+    "#forge:netherrack",
+    "#forge:end_stones",
+    "#forge:sandstone",
+    "#forge:cobblestone",
+    "#minecraft:stone_bricks",
+    "#minecraft:base_stone_nether",
+    "minecraft:nether_bricks"
+  ]
+}

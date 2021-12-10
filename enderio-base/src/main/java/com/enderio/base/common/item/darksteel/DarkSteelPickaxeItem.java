@@ -6,22 +6,32 @@ import com.enderio.base.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.SpoonUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosivePenetrationUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosiveUpgrade;
+import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosiveUpgradeHandler;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.base.common.tag.EIOTags;
+import com.enderio.base.common.util.BlockUtil;
 import com.enderio.base.config.base.BaseConfig;
 import com.enderio.core.common.util.EnergyUtil;
 import com.enderio.core.common.util.TooltipUtil;
+import com.enderio.core.common.util.blockiterators.CubicBlockIterator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.TierSortingRegistry;
 import net.minecraftforge.common.ToolActions;
 
@@ -61,7 +71,48 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem 
         if (useObsidianMining(pState, pStack)) {
             EnergyUtil.extractEnergy(pStack, obsidianBreakPowerUse.get(), false);
         }
+
+        //TODO: Debug only as I can't charge items yet
+        EnergyUtil.setFull(pStack);
+
+        if (pEntityLiving instanceof Player player && ExplosiveUpgradeHandler.hasExplosiveUpgrades(pStack) && !pEntityLiving.isCrouching()
+            && EnergyUtil.getEnergyStored(pStack) > 0) {
+            BlockHitResult hit = getPlayerPOVHitResult(pLevel, player, ClipContext.Fluid.NONE);
+            if(pPos.equals(hit.getBlockPos())) {
+                AABB miningArea = ExplosiveUpgradeHandler.calculateMiningArea(pStack, hit.getDirection());
+                miningArea = miningArea.move(pPos);
+                CubicBlockIterator it = new CubicBlockIterator(miningArea);
+                while (it.hasNext()) {
+                    BlockPos minePos = it.next();
+                    if(!pPos.equals(minePos)) {
+                      explodeBlock(pStack, pLevel, minePos, player);
+                    }
+                }
+            }
+        }
         return super.mineBlock(pStack, pLevel, pState, pPos, pEntityLiving);
+    }
+
+    private void explodeBlock(ItemStack itemStack, Level level, BlockPos minePos, Player player) {
+        if(!level.isInWorldBounds(minePos) || EnergyUtil.getEnergyStored(itemStack) <= 0) {
+            return;
+        }
+        BlockState blockState = level.getBlockState(minePos);
+        if(!canExplode(itemStack, blockState.getBlock())) {
+            return;
+        }
+        if(BlockUtil.removeBlock(level, player, itemStack, minePos)) {
+            //TODO: Use energy, particle effect
+        }
+    }
+
+    private boolean canExplode(ItemStack itemStack, Block block) {
+        boolean result = BlockTags.MINEABLE_WITH_PICKAXE.contains(block) && EIOTags.Blocks.DARK_STEEL_EXPLODABLE.contains(block);
+        if(!result && DarkSteelUpgradeable.hasUpgrade(itemStack, SpoonUpgrade.NAME)) {
+            //TODO: Create a tag for this
+            result = Tags.Blocks.DIRT.contains(block) || Tags.Blocks.SAND.contains(block) || Tags.Blocks.GRAVEL.contains(block);
+        }
+        return result;
     }
 
     @Override
