@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "#forge:dirt",
+    "#forge:sand",
+    "#forge:gravel",
+    "minecraft:dirt_path",
+    "minecraft:rooted_dirt",
+    "minecraft:crimson_nylium",
+    "minecraft:warped_nylium"
+  ]
+}

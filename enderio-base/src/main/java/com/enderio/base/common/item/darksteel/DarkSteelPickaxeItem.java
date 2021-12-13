@@ -46,6 +46,8 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem 
 
     private final ForgeConfigSpec.ConfigValue<Integer> useObsidianBreakSpeedAtHardness = BaseConfig.COMMON.DARK_STEEL.DARK_STEEL_PICKAXE_AS_OBSIDIAN_AT_HARDNESS;
 
+    private final ForgeConfigSpec.ConfigValue<Integer> explosiveBreakPowerUse = BaseConfig.COMMON.DARK_STEEL.EXPLOSIVE_ENERGY_PER_EXPLODED_BLOCK;
+
     public DarkSteelPickaxeItem(Properties pProperties) {
         super(EIOItems.DARK_STEEL_TIER, 1, -2.8F, pProperties);
     }
@@ -73,7 +75,8 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem 
         }
 
         //TODO: Debug only as I can't charge items yet
-        EnergyUtil.setFull(pStack);
+        //EnergyUtil.setFull(pStack);
+        //System.out.println("DarkSteelPickaxeItem.mineBlock canExpode = " + canExplode(pStack, pState) + " block=" + pState.getBlock());
 
         if (pEntityLiving instanceof Player player && ExplosiveUpgradeHandler.hasExplosiveUpgrades(pStack) && !pEntityLiving.isCrouching()
             && EnergyUtil.getEnergyStored(pStack) > 0) {
@@ -98,21 +101,21 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem 
             return;
         }
         BlockState blockState = level.getBlockState(minePos);
-        if(!canExplode(itemStack, blockState.getBlock())) {
+        if(!canExplode(itemStack, blockState)) {
             return;
         }
         if(BlockUtil.removeBlock(level, player, itemStack, minePos)) {
-            //TODO: Use energy, particle effect
+            EnergyUtil.extractEnergy(itemStack,explosiveBreakPowerUse.get(),false);
+            //TODO: particle effect
         }
     }
 
-    private boolean canExplode(ItemStack itemStack, Block block) {
-        boolean result = BlockTags.MINEABLE_WITH_PICKAXE.contains(block) && EIOTags.Blocks.DARK_STEEL_EXPLODABLE.contains(block);
-        if(!result && DarkSteelUpgradeable.hasUpgrade(itemStack, SpoonUpgrade.NAME)) {
-            //TODO: Create a tag for this
-            result = Tags.Blocks.DIRT.contains(block) || Tags.Blocks.SAND.contains(block) || Tags.Blocks.GRAVEL.contains(block);
+    private boolean canExplode(ItemStack itemStack, BlockState blockState) {
+        if(!isCorrectToolForDrops(itemStack, blockState)) {
+            return false;
         }
-        return result;
+        return EIOTags.Blocks.DARK_STEEL_EXPLODABLE_STONE.contains(blockState.getBlock()) ||
+            (DarkSteelUpgradeable.hasUpgrade(itemStack, SpoonUpgrade.NAME) && EIOTags.Blocks.DARK_STEEL_EXPLODABLE_DIRT.contains(blockState.getBlock()));
     }
 
     @Override
