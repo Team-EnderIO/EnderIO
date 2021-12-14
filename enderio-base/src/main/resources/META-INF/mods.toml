@@ -1,12 +1,13 @@
-modLoader="javafml" #mandatory
-loaderVersion="[37,)" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
+modLoader="javafml"
+loaderVersion="[39,)"
+issueTrackerURL="https://github.com/SleepyTrousers/EnderIO-Rewrite/issues"
 license="CC0"
 
 [[mods]]
 modId="enderio"
 version="${file.jarVersion}"
 displayName="Ender IO"
-authors="CrazyPants, tterrag, HenryLoenwind, MatthiasM, CyanideX, EpicSquid, Rover656, HypherionSA, agnor99, Ferri Arnus"
+authors="CrazyPants, tterrag, HenryLoenwind, MatthiasM, CyanideX, EpicSquid, Rover656, HypherionSA, agnor99, Ferri_Arnus"
 description="Compact conduits, painted things and all sorts of stuff and bling."
 displayURL="http://enderio.com/"
 logoFile="logo.png"
@@ -14,6 +15,18 @@ logoFile="logo.png"
 [[dependencies.enderio]]
 modId="endercore"
 mandatory=true
-versionRange="[5.9,)"
+versionRange="[1.0,)"
 ordering="AFTER"
+side="BOTH"
+
+[[dependencies.enderio]]
+modId="minecraft"
+mandatory=true
+versionRange="1.18.1"
+side="BOTH"
+
+[[dependencies.enderio]]
+modId="forge"
+mandatory=true
+versionRange="39.0.5"
 side="BOTH"

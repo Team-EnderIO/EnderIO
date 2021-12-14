@@ -9,8 +9,7 @@ import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fmllegacy.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 
@@ -40,7 +39,7 @@ public class SyncClientToServerMenuPacket extends ClientToServerMenuPacket<Synce
 
     @Override
     public void handle(NetworkEvent.Context context) {
-        ListTag list = data.getList("list", Constants.NBT.TAG_COMPOUND);
+        ListTag list = data.getList("list", Tag.TAG_COMPOUND);
         List<EnderDataSlot<?>> clientToServerSlots = getMenu(context).getClientToServerSlots();
         List<Pair<Integer, CompoundTag>> dataSlots = new ArrayList<>();
         boolean encounteredError = false;

@@ -6,7 +6,6 @@ import com.enderio.base.common.tag.EIOTags;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.NonNullLazyValue;
 import com.tterrag.registrate.util.entry.BlockEntry;
-
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
@@ -89,7 +88,7 @@ public class GlassBlocks {
                 .isSuffocating(GlassBlocks::never)
                 .isViewBlocking(GlassBlocks::never))
             .item(FusedQuartzItem::new)
-            .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.BLOCKS))
+            .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.BLOCKS))
             .tag(name.contains("clear_glass")? EIOTags.Items.CLEAR_GLASS : EIOTags.Items.FUSED_QUARTZ)
             .build()
             .register();
@@ -116,7 +115,7 @@ public class GlassBlocks {
                 .isViewBlocking(GlassBlocks::never)
                 .color(color.getMaterialColor()))
             .item(FusedQuartzItem::new)
-            .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.BLOCKS))
+            .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.BLOCKS))
             .color(new NonNullLazyValue<>(() -> () -> (ItemColor) (p_92672_, p_92673_) -> color.getMaterialColor().col))
             .build()
             .register();

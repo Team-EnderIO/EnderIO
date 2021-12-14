@@ -1,6 +1,6 @@
 package com.enderio.base.common.item.darksteel;
 
-import com.enderio.base.client.renderer.DarkSteelDurabilityRenderer;
+import com.enderio.base.client.renderer.ItemBarRenderer;
 import com.enderio.base.common.capability.EIOCapabilities;
 import com.enderio.base.common.capability.darksteel.DarkSteelUpgradeable;
 import com.enderio.base.common.capability.darksteel.EnergyDelegator;
@@ -49,7 +49,7 @@ public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipPr
         ItemStack is = new ItemStack(item);
         pItems.add(is.copy());
 
-        //All the upgrades
+        // All the upgrades
         is = new ItemStack(item);
         Collection<? extends IDarkSteelUpgrade> ups = DarkSteelUpgradeable.getAllPossibleUpgrades(is);
         for(IDarkSteelUpgrade upgrade : ups) {
@@ -108,11 +108,10 @@ public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipPr
     }
 
     default void renderOverlay(ItemStack pStack, int pXPosition, int pYPosition) {
-        DarkSteelDurabilityRenderer.renderOverlay(pStack, pXPosition, pYPosition);
+        ItemBarRenderer.renderOverlay(pStack, pXPosition, pYPosition);
     }
 
-    @Override
-    default boolean showDurabilityBar(ItemStack stack) {
+    default boolean isDurabilityBarVisible(ItemStack stack) {
         return stack.getDamageValue() > 0 || EnergyUtil.getMaxEnergyStored(stack) > 0;
     }
 

@@ -1,15 +1,7 @@
 package com.enderio.machines.common.menu;
 
-import java.util.Optional;
-
-import javax.annotation.Nullable;
-
-import com.enderio.machines.common.recipe.EnchanterRecipe;
-import org.apache.logging.log4j.LogManager;
-
 import com.enderio.machines.common.blockentity.EnchanterBlockEntity;
 import com.enderio.machines.common.recipe.MachineRecipes;
-
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -18,6 +10,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
+import org.apache.logging.log4j.LogManager;
+
+import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity>{
     private Level level;
@@ -43,7 +39,7 @@ public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity>{
                     }
                     super.onTake(pPlayer, pStack);
                 }
-                
+
                 @Override
                 public boolean mayPickup(Player playerIn) {
                     Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.Types.ENCHANTING, new RecipeWrapper(blockEntity.getItemHandlerMaster()), level);
@@ -64,7 +60,7 @@ public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity>{
         LogManager.getLogger().warn("couldn't find BlockEntity");
         return new EnchanterMenu(null, inventory, pContainerId);
     }
-    
+
     public int getCurrentCost() {
         if (level != null) {
             Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.Types.ENCHANTING, new RecipeWrapper(this.getBlockEntity().getItemHandlerMaster()), level);

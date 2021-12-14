@@ -18,17 +18,17 @@ import java.util.function.Predicate;
 public enum GlassCollisionPredicate {
     NONE(ctx -> false, null),
 
-    PLAYERS_PASS(ctx -> ctx.getEntity().map(ent -> ent instanceof Player).orElse(false), EIOLang.GLASS_COLLISION_PLAYERS_PASS),
+    PLAYERS_PASS(ctx -> ctx.getEntity() instanceof Player, EIOLang.GLASS_COLLISION_PLAYERS_PASS),
 
-    PLAYERS_BLOCK(ctx -> ctx.getEntity().map(ent -> !(ent instanceof Player)).orElse(true), EIOLang.GLASS_COLLISION_PLAYERS_BLOCK),
+    PLAYERS_BLOCK(ctx -> !(ctx.getEntity() instanceof Player), EIOLang.GLASS_COLLISION_PLAYERS_BLOCK),
 
-    MOBS_PASS(ctx -> ctx.getEntity().map(ent -> ent instanceof Mob).orElse(false), EIOLang.GLASS_COLLISION_MOBS_PASS),
+    MOBS_PASS(ctx -> ctx.getEntity() instanceof Mob, EIOLang.GLASS_COLLISION_MOBS_PASS),
 
-    MOBS_BLOCK(ctx -> ctx.getEntity().map(ent -> !(ent instanceof Mob)).orElse(true), EIOLang.GLASS_COLLISION_MOBS_BLOCK),
+    MOBS_BLOCK(ctx -> !(ctx.getEntity() instanceof Mob), EIOLang.GLASS_COLLISION_MOBS_BLOCK),
 
-    ANIMALS_PASS(ctx -> ctx.getEntity().map(ent -> ent instanceof Animal).orElse(false), EIOLang.GLASS_COLLISION_ANIMALS_PASS),
+    ANIMALS_PASS(ctx -> ctx.getEntity() instanceof Animal, EIOLang.GLASS_COLLISION_ANIMALS_PASS),
 
-    ANIMALS_BLOCK(ctx -> ctx.getEntity().map(ent -> !(ent instanceof Animal)).orElse(true), EIOLang.GLASS_COLLISION_ANIMALS_BLOCK);
+    ANIMALS_BLOCK(ctx -> !(ctx.getEntity() instanceof Animal), EIOLang.GLASS_COLLISION_ANIMALS_BLOCK);
 
     private final Predicate<EntityCollisionContext> predicate;
     private final @Nullable Component description;

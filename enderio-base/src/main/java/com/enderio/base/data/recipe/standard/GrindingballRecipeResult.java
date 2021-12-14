@@ -3,7 +3,6 @@ package com.enderio.base.data.recipe.standard;
 import com.enderio.base.EnderIO;
 import com.enderio.base.common.recipe.grindingball.GrindingballRecipe;
 import com.google.gson.JsonObject;
-
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -13,7 +12,7 @@ public class GrindingballRecipeResult implements FinishedRecipe{
     private ResourceLocation id;
 
     public GrindingballRecipeResult(GrindingballRecipe recipe, String name) {
-       this(recipe, new ResourceLocation(EnderIO.DOMAIN, "grindingballs/" + name));
+       this(recipe, EnderIO.loc("grindingballs/" + name));
     }
     
     public GrindingballRecipeResult(GrindingballRecipe recipe, ResourceLocation id) {

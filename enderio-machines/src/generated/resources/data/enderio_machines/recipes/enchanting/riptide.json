@@ -1,0 +1,9 @@
+{
+  "type": "enderio_machines:enchanting",
+  "ingredient": {
+    "item": "minecraft:iron_ingot"
+  },
+  "enchantment": "minecraft:riptide",
+  "amount": 8,
+  "level": 1
+}

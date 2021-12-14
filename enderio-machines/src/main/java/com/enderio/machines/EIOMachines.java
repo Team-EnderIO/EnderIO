@@ -7,8 +7,8 @@ import com.enderio.machines.common.recipe.MachineRecipes;
 import com.enderio.machines.data.recipe.MachineRecipeGenerator;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.NonNullLazyValue;
-
 import net.minecraft.data.DataGenerator;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -17,10 +17,9 @@ import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 
 @Mod(EIOMachines.MODID)
 public class EIOMachines {
-    public static final String MODID = "enderiomachines";
-    public static final String DOMAIN = "enderio";
+    public static final String MODID = "enderio_machines";
 
-    private static final NonNullLazyValue<Registrate> REGISTRATE = new NonNullLazyValue<>(() -> Registrate.create(DOMAIN));
+    private static final NonNullLazyValue<Registrate> REGISTRATE = new NonNullLazyValue<>(() -> Registrate.create(MODID));
 
     public EIOMachines() {
         MachineBlocks.register();
@@ -32,6 +31,10 @@ public class EIOMachines {
         MachineRecipes.register(modEventBus);
         
         modEventBus.addListener(EventPriority.LOWEST, this::gatherData);
+    }
+
+    public static ResourceLocation loc(String path) {
+        return new ResourceLocation(MODID, path);
     }
     
     public void gatherData(GatherDataEvent event) {

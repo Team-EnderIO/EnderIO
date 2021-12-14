@@ -16,7 +16,6 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.LogicalSide;
 
 import javax.annotation.Nullable;
@@ -24,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 public abstract class SyncedBlockEntity extends BlockEntity {
 
@@ -46,7 +44,7 @@ public abstract class SyncedBlockEntity extends BlockEntity {
      * call this ticker method to sync all renderData to the Client
      */
     public void tick() {
-        if (!level.isClientSide) {
+        if (level != null && !level.isClientSide) {
             sync();
         }
         setChanged();
@@ -55,7 +53,7 @@ public abstract class SyncedBlockEntity extends BlockEntity {
     @Nullable
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return createUpdatePacket(false, SyncMode.RENDER);
+        return createUpdatePacket(false, SyncMode.WORLD);
     }
 
     /**
@@ -67,8 +65,8 @@ public abstract class SyncedBlockEntity extends BlockEntity {
     public ClientboundBlockEntityDataPacket createUpdatePacket(boolean fullUpdate, SyncMode mode) {
         CompoundTag nbt = new CompoundTag();
         ListTag listNBT = new ListTag();
-        for (int i = 0; i < dataSlots.size(); i++) {
-            EnderDataSlot<?> dataSlot = dataSlots.get(i);
+        for (int i = 0; i < this.dataSlots.size(); i++) {
+            EnderDataSlot<?> dataSlot = this.dataSlots.get(i);
             if (dataSlot.getSyncMode() == mode) {
                 Optional<CompoundTag> optionalNBT = fullUpdate ? Optional.of(dataSlot.toFullNBT()) : dataSlot.toOptionalNBT();
 
@@ -79,21 +77,24 @@ public abstract class SyncedBlockEntity extends BlockEntity {
                 }
             }
         }
+
         if (listNBT.isEmpty())
             return null;
+
         nbt.put("data", listNBT);
-        return new ClientboundBlockEntityDataPacket(this.getBlockPos(), -1, nbt);
+        return new ClientboundBlockEntityDataPacket(getBlockPos(), getType(), nbt);
     }
 
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         CompoundTag nbt = pkt.getTag();
-
-        ListTag listNBT = nbt.getList("data", Constants.NBT.TAG_COMPOUND);
-        for (Tag tag : listNBT) {
-            CompoundTag elementNBT = (CompoundTag) tag;
-            int dataSlotIndex = elementNBT.getInt("dataSlotIndex");
-            dataSlots.get(dataSlotIndex).handleNBT(elementNBT);
+        if (nbt != null && nbt.contains("data", Tag.TAG_LIST)) {
+            ListTag listNBT = nbt.getList("data", Tag.TAG_COMPOUND);
+            for (Tag tag : listNBT) {
+                CompoundTag elementNBT = (CompoundTag) tag;
+                int dataSlotIndex = elementNBT.getInt("dataSlotIndex");
+                dataSlots.get(dataSlotIndex).handleNBT(elementNBT);
+            }
         }
     }
 
@@ -115,7 +116,7 @@ public abstract class SyncedBlockEntity extends BlockEntity {
      */
     @CallOnly(LogicalSide.SERVER)
     private void sync() {
-        ClientboundBlockEntityDataPacket fullUpdate = createUpdatePacket(true, SyncMode.RENDER);
+        ClientboundBlockEntityDataPacket fullUpdate = createUpdatePacket(true, SyncMode.WORLD);
         ClientboundBlockEntityDataPacket partialUpdate = getUpdatePacket();
 
         List<UUID> currentlyTracking = new ArrayList<>();
@@ -142,7 +143,7 @@ public abstract class SyncedBlockEntity extends BlockEntity {
      * @return all ServerPlayers tracking this BlockEntity
      */
     @CallOnly(LogicalSide.SERVER)
-    private Stream<ServerPlayer> getTrackingPlayers() {
+    private List<ServerPlayer> getTrackingPlayers() {
         return ((ServerChunkCache)level.getChunkSource()).chunkMap.getPlayers(new ChunkPos(worldPosition), false);
     }
 

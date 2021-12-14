@@ -3,7 +3,6 @@ package com.enderio.base.common.capability.entity;
 import net.minecraft.nbt.Tag;
 
 import javax.annotation.Nonnull;
-import java.util.Optional;
 
 public class EntityStorage implements IEntityStorage {
     private StoredEntityData entity = new StoredEntityData();

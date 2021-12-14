@@ -1,17 +1,30 @@
-modLoader="javafml" #mandatory
-loaderVersion="[37,)" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
+modLoader="javafml"
+loaderVersion="[39,)"
+issueTrackerURL="https://github.com/SleepyTrousers/EnderIO-Rewrite/issues"
 license="CC0"
 
 [[mods]]
-modId="enderiomachines"
+modId="enderio_machines"
 version="${file.jarVersion}"
 displayName="Ender IO Machines"
-authors="CrazyPants, tterrag, HenryLoenwind, MatthiasM, CyanideX, EpicSquid, Rover656, HypherionSA, agnor99, Ferri Arnus"
+authors="CrazyPants, tterrag, HenryLoenwind, MatthiasM, CyanideX, EpicSquid, Rover656, HypherionSA, agnor99, Ferri_Arnus"
 description="todo"
 displayURL="http://enderio.com/"
 logoFile="logo.png"
 
-[[dependencies.enderiomachines]]
+[[dependencies.enderio_machines]]
+modId="minecraft"
+mandatory=true
+versionRange="1.18.1"
+side="BOTH"
+
+[[dependencies.enderio_machines]]
+modId="forge"
+mandatory=true
+versionRange="39.0.5"
+side="BOTH"
+
+[[dependencies.enderio_machines]]
 modId="enderio"
 mandatory=true
 versionRange="[5.0,)"

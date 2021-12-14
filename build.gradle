@@ -24,32 +24,26 @@ subprojects {
     apply plugin: 'com.github.johnrengelman.shadow'
 
     def enableMixin = false
-    if (project.hasProperty("enable_mixin"))
+    if (project.hasProperty("enable_mixin")) {
         enableMixin = project.enable_mixin
+    }
 
     // MixinGradle:
-    if (enableMixin)
+    if (enableMixin) {
         apply plugin: 'org.spongepowered.mixin'
+    }
 
     version = getVersionString(project)
     group = 'com.enderio'
     archivesBaseName = getArchiveBaseName(project)
     def modId = getModId(project)
 
-    // Mojang ships Java 16 to end users in 1.17+ instead of Java 8 in 1.16 or lower, so your mod should target Java 16.
-    java.toolchain.languageVersion = JavaLanguageVersion.of(16)
+    // Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
+    java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
     println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
     minecraft {
-//        mappings channel: 'official', version: "${minecraft_version}"
-
-        if (project.hasProperty("transformer")) {
-            mappings channel: 'parchment', version: "${mappings_version}-${minecraft_version}"
-            println("Found accessTransformer for ${project.name}: ${project.transformer}")
-            accessTransformer = file(project.transformer)
-        } else {
-            mappings channel: 'parchment', version: "${mappings_version}-${minecraft_version}"
-        }
+        mappings channel: "${mappings_channel}", version: "${mappings_version}"
 
         // Default run configurations.
         runs {
@@ -64,8 +58,7 @@ subprojects {
                 property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
 
                 mods {
-                    // TODO: Dynamic names??
-                    examplemod {
+                    "${project.name}" {
                         source sourceSets.main
                     }
                 }
@@ -81,8 +74,7 @@ subprojects {
                 property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
 
                 mods {
-                    // TODO: Dynamic names??
-                    examplemod {
+                    "${project.name}" {
                         source sourceSets.main
                     }
                 }
@@ -102,8 +94,7 @@ subprojects {
                 args '--mod', modId, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
                 mods {
-                    // TODO: Dynamic names??
-                    examplemod {
+                    "${project.name}" {
                         source sourceSets.main
                     }
                 }
@@ -120,23 +111,38 @@ subprojects {
 
     repositories {
         // Registrate
+        maven { url "https://maven.tterrag.com/" }
+
         maven {
-            url "https://maven.tterrag.com/"
+            // location of the maven that hosts JEI files
+            name = "Progwml6 maven"
+            url = "https://dvs1.progwml6.com/files/maven/"
+        }
+        maven {
+            // location of a maven mirror for JEI files, as a fallback
+            name = "ModMaven"
+            url = "https://modmaven.dev"
         }
 
-        // Rover's temp maven.
+        // Temp for TOP, https://github.com/McJtyMods/TheOneProbe/issues/506
         maven {
-            url "https://maven.nerdthings.dev/snapshots"
+            url "https://cursemaven.com"
+            content {
+                includeGroup "curse.maven"
+            }
         }
-
-        // Cloth config.
-        maven { url "https://maven.shedaniel.me/" }
     }
 
     dependencies {
         minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-        def registrate = "com.tterrag.registrate:Registrate:MC${minecraft_version}-${registrate_version}"
+        compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}:api")
+        runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")
+
+//        implementation fg.deobf("mcjty.theoneprobe:TheOneProbe:${minecraft_version}-${top_version}")
+        implementation fg.deobf("curse.maven:the-one-probe-245211:${top_version}")
+
+        def registrate = "com.tterrag.registrate:Registrate:${registrate_version}"
         implementation fg.deobf(registrate)
         shade registrate
 
@@ -158,12 +164,12 @@ subprojects {
         destinationDirectory.set(file("$rootDir/build/libs"))
         manifest {
             attributes([
-                    "Specification-Title"     : "examplemod",
-                    "Specification-Vendor"    : "examplemodsareus",
-                    "Specification-Version"   : "1", // We are version 1 of ourselves
+                    "Specification-Title"     : "${modId}",
+                    "Specification-Vendor"    : "EnderIO",
+                    "Specification-Version"   : "${project.version}",
                     "Implementation-Title"    : project.name,
-                    "Implementation-Version"  : project.jar.archiveVersion,
-                    "Implementation-Vendor"   : "examplemodsareus",
+                    "Implementation-Version"  : "${project.version}",
+                    "Implementation-Vendor"   : "EnderIO",
                     "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
             ])
         }
@@ -284,8 +290,10 @@ String getArchiveBaseName(Project proj) {
 }
 
 String getModId(Project proj) {
-    // Replaces enderiobase with enderio for the purposes of the dummy. TODO: Review the dummy...
-    return proj.name.replaceAll('-', '').replaceAll('enderiobase', 'enderio');
+    // Force enderio-base -> enderio.
+    if (proj.hasProperty("modid"))
+        return proj.modid;
+    return proj.name.replaceAll('-', '_');
 }
 
 // endregion

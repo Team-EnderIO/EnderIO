@@ -10,13 +10,13 @@ import net.minecraftforge.common.util.INBTSerializable;
 import java.util.Optional;
 
 public class StoredEntityData implements INBTSerializable<Tag> {
-    private Optional<CompoundTag> entityTag = Optional.empty();
-    private Optional<Float> maxHealth = Optional.empty();
+    private CompoundTag entityTag = new CompoundTag();
+    private float maxHealth = 0.0f;
 
     public static StoredEntityData of(LivingEntity entity) {
         StoredEntityData data = new StoredEntityData();
-        data.entityTag = Optional.of(entity.serializeNBT());
-        data.maxHealth = Optional.of(entity.getMaxHealth());
+        data.entityTag = entity.serializeNBT();
+        data.maxHealth = entity.getMaxHealth();
         return data;
     }
 
@@ -25,39 +25,35 @@ public class StoredEntityData implements INBTSerializable<Tag> {
         tag.putString("id", entityType.toString());
 
         StoredEntityData data = new StoredEntityData();
-        data.entityTag = Optional.of(tag);
-        data.maxHealth = Optional.empty();
+        data.entityTag = tag;
+        data.maxHealth = 0.0f;
         return data;
     }
 
     public static StoredEntityData empty() {
         StoredEntityData data = new StoredEntityData();
-        data.entityTag = Optional.empty();
-        data.maxHealth = Optional.empty();
+        data.maxHealth = 0.0f;
         return data;
     }
 
     public Optional<ResourceLocation> getEntityType() {
-        if (entityTag.isPresent()) {
-            CompoundTag tag = entityTag.get();
-            if (tag.contains("id")) {
-                return Optional.of(new ResourceLocation(tag.getString("id")));
-            }
+        CompoundTag tag = entityTag;
+        if (tag.contains("id")) {
+            return Optional.of(new ResourceLocation(tag.getString("id")));
         }
 
         return Optional.empty();
     }
 
-    public Optional<CompoundTag> getEntityTag() {
+    public CompoundTag getEntityTag() {
         return entityTag;
     }
 
     public Optional<Tuple<Float, Float>> getHealthState() {
-        if (entityTag.isPresent() && maxHealth.isPresent()) {
-            CompoundTag tag = entityTag.get();
-            float maxH = maxHealth.get();
+        if (maxHealth > 0.0f) {
+            CompoundTag tag = entityTag;
             if (tag.contains("Health")) {
-                return Optional.of(new Tuple<>(tag.getFloat("Health"), maxH));
+                return Optional.of(new Tuple<>(tag.getFloat("Health"), maxHealth));
             }
         }
 
@@ -67,20 +63,19 @@ public class StoredEntityData implements INBTSerializable<Tag> {
     @Override
     public Tag serializeNBT() {
         var compound = new CompoundTag();
-        entityTag.ifPresent(tag -> compound.put("Entity", tag));
-        maxHealth.ifPresent(maxH -> compound.putFloat("MaxHealth", maxH));
+        compound.put("Entity", entityTag);
+        if (maxHealth > 0.0f) {
+            compound.putFloat("MaxHealth", maxHealth);
+        }
         return compound;
     }
 
     @Override
     public void deserializeNBT(Tag tag) {
         if (tag instanceof CompoundTag compoundTag) {
-            if (compoundTag.contains("Entity")) {
-                entityTag = Optional.of(compoundTag.getCompound("Entity"));
-            }
-
+            entityTag = compoundTag.getCompound("Entity");
             if (compoundTag.contains("MaxHealth")) {
-                maxHealth = Optional.of(compoundTag.getFloat("MaxHealth"));
+                maxHealth = compoundTag.getFloat("MaxHealth");
             }
         }
     }

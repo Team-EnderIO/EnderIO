@@ -4,7 +4,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.EnumMap;
@@ -40,7 +39,7 @@ public class IOConfig implements INBTSerializable<CompoundTag> {
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        ListTag listNbt = nbt.getList("data", Constants.NBT.TAG_COMPOUND);
+        ListTag listNbt = nbt.getList("data", Tag.TAG_COMPOUND);
         for (Tag tag : listNbt) {
             CompoundTag entryNbt = (CompoundTag) tag;
             config.put(Direction.values()[entryNbt.getInt("direction")],

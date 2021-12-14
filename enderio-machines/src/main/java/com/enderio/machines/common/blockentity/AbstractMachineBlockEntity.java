@@ -1,10 +1,10 @@
 package com.enderio.machines.common.blockentity;
 
+import com.enderio.base.common.blockentity.RedstoneControl;
 import com.enderio.core.common.blockentity.SyncedBlockEntity;
 import com.enderio.core.common.blockentity.sync.EnumDataSlot;
 import com.enderio.core.common.blockentity.sync.NBTSerializableDataSlot;
 import com.enderio.core.common.blockentity.sync.SyncMode;
-import com.enderio.base.common.blockentity.RedstoneControl;
 import com.enderio.machines.common.blockentity.data.sidecontrol.IOConfig;
 import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemHandlerMaster;
 import net.minecraft.core.BlockPos;
@@ -25,10 +25,10 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-
 import java.util.EnumMap;
 import java.util.Optional;
+
+import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public abstract class AbstractMachineBlockEntity extends SyncedBlockEntity implements MenuProvider {
 
@@ -43,7 +43,7 @@ public abstract class AbstractMachineBlockEntity extends SyncedBlockEntity imple
     public AbstractMachineBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);
         add2WayDataSlot(new EnumDataSlot<>(this::getRedstoneControl, this::setRedstoneControl, SyncMode.GUI));
-        add2WayDataSlot(new NBTSerializableDataSlot<>(() -> config, SyncMode.RENDER));
+        add2WayDataSlot(new NBTSerializableDataSlot<>(() -> config, SyncMode.WORLD));
     }
 
     public final IOConfig getConfig() {
@@ -164,10 +164,10 @@ public abstract class AbstractMachineBlockEntity extends SyncedBlockEntity imple
     }
 
     @Override
-    public CompoundTag save(CompoundTag pTag) {
+    public void saveAdditional(CompoundTag pTag) {
+        super.saveAdditional(pTag);
         pTag.put("io_config", config.serializeNBT());
         pTag.putInt("redstone", redstoneControl.ordinal());
-        return super.save(pTag);
     }
 
     @Override

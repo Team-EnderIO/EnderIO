@@ -1,17 +1,10 @@
 package com.enderio.core.common.menu;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import javax.annotation.Nullable;
-
 import com.enderio.core.common.blockentity.SyncedBlockEntity;
 import com.enderio.core.common.blockentity.sync.EnderDataSlot;
 import com.enderio.core.common.blockentity.sync.SyncMode;
 import com.enderio.core.common.network.EnderNetwork;
 import com.enderio.core.common.network.packet.SyncClientToServerMenuPacket;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.server.level.ServerPlayer;
@@ -19,6 +12,11 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public abstract class SyncedMenu<T extends SyncedBlockEntity> extends AbstractContainerMenu {
 
