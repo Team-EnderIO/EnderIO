@@ -1,4 +1,4 @@
-package com.enderio.machines.data.recipe.enchanter;
+package com.enderio.machines.data.recipe;
 
 import javax.annotation.Nullable;
 
@@ -24,7 +24,7 @@ public class RecipeResult<T extends MachineRecipe<T, ?>> implements FinishedReci
     private final List<ICondition> conditions = new ArrayList<>();
 
     public RecipeResult(T recipe, String name) {
-        this(recipe, new ResourceLocation(EIOMachines.DOMAIN, recipe.getSerializer().getRegistryName().getPath() + "/" +name));
+        this(recipe, new ResourceLocation(EIOMachines.MODID, recipe.getSerializer().getRegistryName().getPath() + "/" +name));
     }
     
     public RecipeResult(T recipe, ResourceLocation id) {

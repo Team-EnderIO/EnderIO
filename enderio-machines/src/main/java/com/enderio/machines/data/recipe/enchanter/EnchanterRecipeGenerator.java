@@ -3,6 +3,7 @@ package com.enderio.machines.data.recipe.enchanter;
 import com.enderio.base.common.enchantment.EIOEnchantments;
 import com.enderio.base.common.item.EIOItems;
 import com.enderio.machines.common.recipe.EnchanterRecipe;
+import com.enderio.machines.data.recipe.RecipeResult;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
