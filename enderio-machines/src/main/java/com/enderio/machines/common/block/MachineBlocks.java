@@ -9,8 +9,6 @@ import com.tterrag.registrate.util.NonNullLazyValue;
 import com.tterrag.registrate.util.entry.BlockEntry;
 
 public class MachineBlocks {
-    private MachineBlocks() {}
-
     private static final Registrate REGISTRATE = EIOMachines.registrate();
 
     public static final BlockEntry<MachineBlock> SIMPLE_POWERED_FURNACE = REGISTRATE

@@ -111,15 +111,38 @@ subprojects {
 
     repositories {
         // Registrate
+        maven { url "https://maven.tterrag.com/" }
+
         maven {
-            url "https://maven.tterrag.com/"
+            // location of the maven that hosts JEI files
+            name = "Progwml6 maven"
+            url = "https://dvs1.progwml6.com/files/maven/"
+        }
+        maven {
+            // location of a maven mirror for JEI files, as a fallback
+            name = "ModMaven"
+            url = "https://modmaven.dev"
+        }
+
+        // Temp for TOP, https://github.com/McJtyMods/TheOneProbe/issues/506
+        maven {
+            url "https://cursemaven.com"
+            content {
+                includeGroup "curse.maven"
+            }
         }
     }
 
     dependencies {
         minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-        def registrate = "com.tterrag.registrate:Registrate:MC${minecraft_version}-${registrate_version}"
+        compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}:api")
+        runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")
+
+//        implementation fg.deobf("mcjty.theoneprobe:TheOneProbe:${minecraft_version}-${top_version}")
+        implementation fg.deobf("curse.maven:the-one-probe-245211:${top_version}")
+
+        def registrate = "com.tterrag.registrate:Registrate:${registrate_version}"
         implementation fg.deobf(registrate)
         shade registrate
 

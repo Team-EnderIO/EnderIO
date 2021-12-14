@@ -1,5 +1,6 @@
-modLoader="javafml" #mandatory
-loaderVersion="[38,)" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
+modLoader="javafml"
+loaderVersion="[39,)"
+issueTrackerURL="https://github.com/SleepyTrousers/EnderIO-Rewrite/issues"
 license="CC0"
 
 [[mods]]
@@ -16,4 +17,16 @@ modId="endercore"
 mandatory=true
 versionRange="[1.0,)"
 ordering="AFTER"
+side="BOTH"
+
+[[dependencies.enderio]]
+modId="minecraft"
+mandatory=true
+versionRange="1.18.1"
+side="BOTH"
+
+[[dependencies.enderio]]
+modId="forge"
+mandatory=true
+versionRange="39.0.5"
 side="BOTH"

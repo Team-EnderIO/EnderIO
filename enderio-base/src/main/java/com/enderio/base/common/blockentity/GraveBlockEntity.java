@@ -97,7 +97,9 @@ public class GraveBlockEntity extends BlockEntity {
     @Override
     @Nonnull
     public CompoundTag getUpdateTag() {
-        return this.save(new CompoundTag());
+        var tag = new CompoundTag();
+        saveAdditional(tag);
+        return tag;
     }
 
     @Override

@@ -48,7 +48,7 @@ public class BrokenSpawnerLootModifier extends LootModifier {
                     if (entityTag.contains("id")) {
                         ResourceLocation type = new ResourceLocation(entityTag.getString("id"));
                         ItemStack brokenSpawner = BrokenSpawnerItem.forType(type);
-                        return Lists.newArrayList(brokenSpawner);
+                        generatedLoot.add(brokenSpawner);
                     }
                 }
             }

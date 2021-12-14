@@ -39,7 +39,7 @@ public class IOConfig implements INBTSerializable<CompoundTag> {
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        ListTag listNbt = nbt.getList("data", CompoundTag.TAG_COMPOUND);
+        ListTag listNbt = nbt.getList("data", Tag.TAG_COMPOUND);
         for (Tag tag : listNbt) {
             CompoundTag entryNbt = (CompoundTag) tag;
             config.put(Direction.values()[entryNbt.getInt("direction")],

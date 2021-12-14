@@ -63,33 +63,32 @@ public abstract class SyncedBlockEntity extends BlockEntity {
      */
     @Nullable
     public ClientboundBlockEntityDataPacket createUpdatePacket(boolean fullUpdate, SyncMode mode) {
-        return ClientboundBlockEntityDataPacket.create(this, (be) -> {
-            CompoundTag nbt = new CompoundTag();
-            if (be instanceof SyncedBlockEntity syncedBlockEntity) {
-                ListTag listNBT = new ListTag();
-                for (int i = 0; i < syncedBlockEntity.dataSlots.size(); i++) {
-                    EnderDataSlot<?> dataSlot = syncedBlockEntity.dataSlots.get(i);
-                    if (dataSlot.getSyncMode() == mode) {
-                        Optional<CompoundTag> optionalNBT = fullUpdate ? Optional.of(dataSlot.toFullNBT()) : dataSlot.toOptionalNBT();
+        CompoundTag nbt = new CompoundTag();
+        ListTag listNBT = new ListTag();
+        for (int i = 0; i < this.dataSlots.size(); i++) {
+            EnderDataSlot<?> dataSlot = this.dataSlots.get(i);
+            if (dataSlot.getSyncMode() == mode) {
+                Optional<CompoundTag> optionalNBT = fullUpdate ? Optional.of(dataSlot.toFullNBT()) : dataSlot.toOptionalNBT();
 
-                        if (optionalNBT.isPresent()) {
-                            CompoundTag elementNBT = optionalNBT.get();
-                            elementNBT.putInt("dataSlotIndex", i);
-                            listNBT.add(elementNBT);
-                        }
-                    }
+                if (optionalNBT.isPresent()) {
+                    CompoundTag elementNBT = optionalNBT.get();
+                    elementNBT.putInt("dataSlotIndex", i);
+                    listNBT.add(elementNBT);
                 }
-                if (!listNBT.isEmpty())
-                    nbt.put("data", listNBT);
             }
-            return nbt;
-        });
+        }
+
+        if (listNBT.isEmpty())
+            return null;
+
+        nbt.put("data", listNBT);
+        return new ClientboundBlockEntityDataPacket(getBlockPos(), getType(), nbt);
     }
 
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         CompoundTag nbt = pkt.getTag();
-        if (nbt != null && nbt.contains("data")) {
+        if (nbt != null && nbt.contains("data", Tag.TAG_LIST)) {
             ListTag listNBT = nbt.getList("data", Tag.TAG_COMPOUND);
             for (Tag tag : listNBT) {
                 CompoundTag elementNBT = (CompoundTag) tag;

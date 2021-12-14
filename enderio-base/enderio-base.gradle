@@ -6,6 +6,9 @@ minecraft {
         clientMonolith {
             parent minecraft.runs.client
 
+            args '--username', 'Rover656'
+            args '--uuid', 'af833fadd32d446d835e3b86ca35b0a0'
+
             mods {
                 "enderio-decoration" {
                     source project(':enderio-decoration').sourceSets.main

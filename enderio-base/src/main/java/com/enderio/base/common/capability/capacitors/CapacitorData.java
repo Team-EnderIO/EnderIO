@@ -42,7 +42,7 @@ public class CapacitorData implements ICapacitorData {
         if (nbt instanceof CompoundTag tag) {
             this.specializations.clear();
             this.base = tag.getFloat("base");
-            ListTag list = tag.getList("specializations", CompoundTag.TAG_COMPOUND);
+            ListTag list = tag.getList("specializations", Tag.TAG_COMPOUND);
             for (int i = 0; i < list.size(); i++) {
                 CompoundTag listElement = list.getCompound(i);
                 addSpecialization(listElement.getString("type"), listElement.getFloat("value"));
