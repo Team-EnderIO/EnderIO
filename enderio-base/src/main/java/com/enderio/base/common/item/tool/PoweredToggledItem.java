@@ -29,7 +29,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public abstract class PoweredToggledItem extends Item implements IEnergyBar, IMultiCapabilityItem, IAdvancedTooltipProvider {
+public abstract class PoweredToggledItem extends Item implements IMultiCapabilityItem, IAdvancedTooltipProvider {
 
     public PoweredToggledItem(Properties pProperties) {
         super(pProperties.stacksTo(1));
