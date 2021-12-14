@@ -77,7 +77,7 @@ public class CapacitorLootModifier extends LootModifier {
 
     @SubscribeEvent
     public static void register(@Nonnull RegistryEvent.Register<GlobalLootModifierSerializer<?>> event) {
-        event.getRegistry().register(new Serializer().setRegistryName(new ResourceLocation(EnderIO.DOMAIN, "capacitor_loot")));
+        event.getRegistry().register(new Serializer().setRegistryName(EnderIO.loc("capacitor_loot")));
     }
 
 }

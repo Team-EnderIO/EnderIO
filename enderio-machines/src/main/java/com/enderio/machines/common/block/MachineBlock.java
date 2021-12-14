@@ -23,7 +23,7 @@ import net.minecraftforge.network.NetworkHooks;
 import javax.annotation.Nullable;
 
 public class MachineBlock extends BaseEntityBlock {
-    private BlockEntityEntry<? extends AbstractMachineBlockEntity> blockEntityType;
+    private final BlockEntityEntry<? extends AbstractMachineBlockEntity> blockEntityType;
 
     public MachineBlock(Properties p_49795_, BlockEntityEntry<? extends AbstractMachineBlockEntity> blockEntityType) {
         super(p_49795_);

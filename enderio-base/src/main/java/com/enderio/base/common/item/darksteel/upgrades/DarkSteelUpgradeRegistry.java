@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 
 public final class DarkSteelUpgradeRegistry {
 
-    public static final String UPGRADE_PREFIX = EnderIO.DOMAIN + ".darksteel.upgrade.";
+    public static final String UPGRADE_PREFIX = EnderIO.MODID + ".darksteel.upgrade.";
 
     private static final DarkSteelUpgradeRegistry INST = new DarkSteelUpgradeRegistry();
     private static final String UPGRADE_IN_STACK_KEY = "dark_steel_upgrade";

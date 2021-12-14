@@ -18,7 +18,7 @@ import net.minecraft.world.entity.player.Inventory;
 public class CoordinateMenuScreen extends EIOScreen<CoordinateMenu> {
 
     private static final Vector2i BG_SIZE = new Vector2i(176,116);
-    private static final ResourceLocation BG_TEXTURE = new ResourceLocation(EnderIO.DOMAIN, "textures/gui/40/location_printout.png");
+    private static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/40/location_printout.png");
 
     public CoordinateMenuScreen(CoordinateMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);

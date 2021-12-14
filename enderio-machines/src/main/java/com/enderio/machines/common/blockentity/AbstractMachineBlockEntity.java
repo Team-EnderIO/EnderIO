@@ -43,7 +43,7 @@ public abstract class AbstractMachineBlockEntity extends SyncedBlockEntity imple
     public AbstractMachineBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);
         add2WayDataSlot(new EnumDataSlot<>(this::getRedstoneControl, this::setRedstoneControl, SyncMode.GUI));
-        add2WayDataSlot(new NBTSerializableDataSlot<>(() -> config, SyncMode.RENDER));
+        add2WayDataSlot(new NBTSerializableDataSlot<>(() -> config, SyncMode.WORLD));
     }
 
     public final IOConfig getConfig() {

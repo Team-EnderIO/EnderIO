@@ -439,7 +439,7 @@ public class EIOItems {
     // region description
 
     public static TranslatableComponent capacitorDescriptionBuilder(String type, String value, String description) {
-        return REGISTRATE.addLang("description", new ResourceLocation(EnderIO.DOMAIN, "capacitor." + type + "." + value), description);
+        return REGISTRATE.addLang("description", EnderIO.loc("capacitor." + type + "." + value), description);
     }
 
     // endregion

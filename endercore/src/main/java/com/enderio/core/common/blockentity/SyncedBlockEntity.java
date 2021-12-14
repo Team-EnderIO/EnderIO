@@ -53,7 +53,7 @@ public abstract class SyncedBlockEntity extends BlockEntity {
     @Nullable
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return createUpdatePacket(false, SyncMode.RENDER);
+        return createUpdatePacket(false, SyncMode.WORLD);
     }
 
     /**
@@ -116,7 +116,7 @@ public abstract class SyncedBlockEntity extends BlockEntity {
      */
     @CallOnly(LogicalSide.SERVER)
     private void sync() {
-        ClientboundBlockEntityDataPacket fullUpdate = createUpdatePacket(true, SyncMode.RENDER);
+        ClientboundBlockEntityDataPacket fullUpdate = createUpdatePacket(true, SyncMode.WORLD);
         ClientboundBlockEntityDataPacket partialUpdate = getUpdatePacket();
 
         List<UUID> currentlyTracking = new ArrayList<>();

@@ -23,7 +23,7 @@ public class EIORecipes {
         private Serializer() {}
 
         public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZER_REGISTRY = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS,
-            EnderIO.DOMAIN);
+            EnderIO.MODID);
 
         public static final RegistryObject<CapacitorDataRecipe.Serializer> CAPACITOR_DATA = RECIPE_SERIALIZER_REGISTRY.register("capacitor_data",
             CapacitorDataRecipe.Serializer::new);
@@ -38,8 +38,8 @@ public class EIORecipes {
     public static class Types {
         private Types() {}
 
-        public static RecipeType<CapacitorDataRecipe> CAPACITOR_DATA = RecipeType.register(EnderIO.DOMAIN + ":capacitor_data");
-        public static RecipeType<GrindingballRecipe> GRINDINGBALL = RecipeType.register(EnderIO.DOMAIN + ":grindingball");
+        public static RecipeType<CapacitorDataRecipe> CAPACITOR_DATA = RecipeType.register(EnderIO.MODID + ":capacitor_data");
+        public static RecipeType<GrindingballRecipe> GRINDINGBALL = RecipeType.register(EnderIO.MODID + ":grindingball");
 
         public static void register() {}
     }

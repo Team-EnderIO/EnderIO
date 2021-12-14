@@ -35,9 +35,8 @@ import java.nio.file.Files;
 @Mod(EnderIO.MODID)
 public class EnderIO {
     public static final @Nonnull String MODID = "enderio";
-    public static final @Nonnull String DOMAIN = "enderio";
 
-    private static final NonNullLazyValue<Registrate> REGISTRATE = new NonNullLazyValue<>(() -> Registrate.create(DOMAIN));
+    private static final NonNullLazyValue<Registrate> REGISTRATE = new NonNullLazyValue<>(() -> Registrate.create(MODID));
 
     public EnderIO() {
         // Create configs subdirectory
@@ -76,7 +75,7 @@ public class EnderIO {
     }
 
     public static ResourceLocation loc(String path) {
-        return new ResourceLocation(DOMAIN, path);
+        return new ResourceLocation(MODID, path);
     }
 
     public void gatherData(GatherDataEvent event) {

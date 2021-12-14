@@ -12,7 +12,7 @@ public class GrindingballRecipeResult implements FinishedRecipe{
     private ResourceLocation id;
 
     public GrindingballRecipeResult(GrindingballRecipe recipe, String name) {
-       this(recipe, new ResourceLocation(EnderIO.DOMAIN, "grindingballs/" + name));
+       this(recipe, EnderIO.loc("grindingballs/" + name));
     }
     
     public GrindingballRecipeResult(GrindingballRecipe recipe, ResourceLocation id) {

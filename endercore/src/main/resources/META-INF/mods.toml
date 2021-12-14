@@ -11,7 +11,7 @@ displayName="EnderCore"
 displayURL="http://enderio.com"
 logoFile="examplemod.png"
 credits=""
-authors="tterrag, CrazyPants, HenryLoenwind, Rover656, HypherionSA"
+authors="tterrag, CrazyPants, HenryLoenwind, Rover656, HypherionSA, Ferri_Arnus"
 description="Library mod used by EnderIO, EnderZoo, and others"
 
 [[dependencies.endercore]]
