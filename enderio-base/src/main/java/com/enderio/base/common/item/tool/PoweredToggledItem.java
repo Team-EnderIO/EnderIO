@@ -3,7 +3,6 @@ package com.enderio.base.common.item.tool;
 import com.enderio.base.client.renderer.ItemBarRenderer;
 import com.enderio.base.common.capability.EIOCapabilities;
 import com.enderio.base.common.capability.toggled.Toggled;
-import com.enderio.base.common.item.util.IEnergyBar;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.tooltip.IAdvancedTooltipProvider;
 import com.enderio.core.common.capability.IMultiCapabilityItem;
