@@ -110,7 +110,7 @@ public class EIOLang {
     public static final Component CAPACITOR_UNSTABLE = capacitorDescriptionBuilder("grade", "5", "Unstable");
 
     public static Component capacitorDescriptionBuilder(String type, String value, String description) {
-        return REGISTRATE.addLang("description", new ResourceLocation(EnderIO.DOMAIN, "capacitor." + type + "." + value), description);
+        return REGISTRATE.addLang("description", EnderIO.loc("capacitor." + type + "." + value), description);
     }
 
     // endregion
@@ -133,7 +133,7 @@ public class EIOLang {
     public static final Component XP_BOOST_DESC = enchantmentDescription("xp_boost", "Extra XP from mobs and blocks");
 
     private static Component enchantmentDescription(String enchantmentname, String description) {
-        return TooltipUtil.style(REGISTRATE.addLang("description", new ResourceLocation(EnderIO.DOMAIN, "enchantment." + enchantmentname), description));
+        return TooltipUtil.style(REGISTRATE.addLang("description", EnderIO.loc("enchantment." + enchantmentname), description));
     }
 
     // endregion

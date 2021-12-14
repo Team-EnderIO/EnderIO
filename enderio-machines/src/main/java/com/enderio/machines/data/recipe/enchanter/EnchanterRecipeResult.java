@@ -1,21 +1,20 @@
 package com.enderio.machines.data.recipe.enchanter;
 
-import javax.annotation.Nullable;
-
 import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.recipe.EnchanterRecipe;
 import com.google.gson.JsonObject;
-
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+
+import javax.annotation.Nullable;
 
 public class EnchanterRecipeResult implements FinishedRecipe{
     private EnchanterRecipe recipe;
     private ResourceLocation id;
 
     public EnchanterRecipeResult(EnchanterRecipe recipe, String name) {
-        this(recipe, new ResourceLocation(EIOMachines.DOMAIN, "enchanting/"+name));
+        this(recipe, new ResourceLocation(EIOMachines.MODID, "enchanting/" + name));
     }
     
     public EnchanterRecipeResult(EnchanterRecipe recipe, ResourceLocation id) {

@@ -1,0 +1,9 @@
+{
+  "type": "enderio_machines:enchanting",
+  "ingredient": {
+    "item": "minecraft:feather"
+  },
+  "enchantment": "minecraft:feather_falling",
+  "amount": 1,
+  "level": 1
+}

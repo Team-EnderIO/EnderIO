@@ -22,7 +22,7 @@ public class EIOCreativeTabs extends CreativeModeTab {
     public EIOCreativeTabs(String name, Supplier<Item> itemIcon) {
         super("enderio." + name);
         this.itemIcon = itemIcon;
-        EnderIO.registrate().addLang("itemGroup", new ResourceLocation(EnderIO.DOMAIN, name), getEnglish(name));
+        EnderIO.registrate().addLang("itemGroup", EnderIO.loc(name), getEnglish(name));
     }
 
     protected String getEnglish(String name) {

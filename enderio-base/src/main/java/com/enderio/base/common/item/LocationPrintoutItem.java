@@ -1,10 +1,10 @@
 package com.enderio.base.common.item;
 
 import com.enderio.base.common.capability.EIOCapabilities;
+import com.enderio.base.common.capability.location.CoordinateSelection;
 import com.enderio.base.common.capability.location.CoordinateSelectionHolder;
 import com.enderio.base.common.capability.location.ICoordinateSelectionHolder;
 import com.enderio.base.common.menu.CoordinateMenu;
-import com.enderio.base.common.capability.location.CoordinateSelection;
 import com.enderio.core.common.capability.IMultiCapabilityItem;
 import com.enderio.core.common.capability.MultiCapabilityProvider;
 import net.minecraft.ChatFormatting;
@@ -26,7 +26,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fmllegacy.network.NetworkHooks;
+import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 import java.util.List;

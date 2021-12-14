@@ -32,9 +32,7 @@ public class ResettingLeverBlock extends LeverBlock {
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (!pState.getValue(POWERED)) {
-            pLevel
-                .getBlockTicks()
-                .scheduleTick(pPos, this, delay);
+            pLevel.scheduleTick(pPos, this, delay);
         }
         return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
     }

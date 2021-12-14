@@ -18,7 +18,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -175,17 +174,15 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
                     .nextFloat() * 360.0f);
 
                 // Try to get the entity NBT from the item.
-                entityData.getEntityTag().ifPresent(entityTag -> {
-                    Optional<Entity> entity = EntityType.create(entityTag, pContext.getLevel());
+                Optional<Entity> entity = EntityType.create(entityData.getEntityTag(), pContext.getLevel());
 
-                    // Position the entity and add it.
-                    entity.ifPresent(ent -> {
-                        ent.setPos(spawnX, spawnY, spawnZ);
-                        ent.setYRot(rotation);
-                        pContext
-                            .getLevel()
-                            .addFreshEntity(ent);
-                    });
+                // Position the entity and add it.
+                entity.ifPresent(ent -> {
+                    ent.setPos(spawnX, spawnY, spawnZ);
+                    ent.setYRot(rotation);
+                    pContext
+                        .getLevel()
+                        .addFreshEntity(ent);
                 });
 
                 // Empty the soul vial.

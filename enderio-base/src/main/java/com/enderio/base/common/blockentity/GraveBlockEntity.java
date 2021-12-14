@@ -1,11 +1,8 @@
 package com.enderio.base.common.blockentity;
 
-import java.util.Collection;
-
 import com.enderio.base.common.capability.EIOCapabilities;
 import com.enderio.base.common.capability.owner.IOwner;
 import com.enderio.base.common.capability.owner.Owner;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -25,6 +22,7 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collection;
 
 public class GraveBlockEntity extends BlockEntity {
     private final Owner owner = new Owner();
@@ -80,10 +78,10 @@ public class GraveBlockEntity extends BlockEntity {
 
     @Nonnull
     @Override
-    public CompoundTag save(CompoundTag pTag) {
+    public void saveAdditional(CompoundTag pTag) {
+        super.saveAdditional(pTag);
         pTag.put(owner.getSerializedName(), owner.serializeNBT());
         pTag.put("Items", itemHandler.serializeNBT());
-        return super.save(pTag);
     }
 
     // endregion
@@ -93,13 +91,15 @@ public class GraveBlockEntity extends BlockEntity {
     @Override
     @Nullable
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, this.getUpdateTag());
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
     @Nonnull
     public CompoundTag getUpdateTag() {
-        return this.save(new CompoundTag());
+        var tag = new CompoundTag();
+        saveAdditional(tag);
+        return tag;
     }
 
     @Override

@@ -16,7 +16,6 @@ import java.util.List;
 
 public class ElectromagnetItem extends PoweredToggledItem {
 
-
     private static final double COLLISION_DISTANCE_SQ = 1.25 * 1.25;
     private static final double SPEED = 0.035;
     private static final double SPEED_4 = SPEED * 4;
@@ -55,11 +54,12 @@ public class ElectromagnetItem extends PoweredToggledItem {
     }
 
     @Override
-    protected void onTickWhenActive(Player player, @Nonnull ItemStack pStack, @Nonnull Level pLevel, @Nonnull Entity pEntity, int pSlotId, boolean pIsSelected) {
+    protected void onTickWhenActive(Player player, @Nonnull ItemStack pStack, @Nonnull Level pLevel, @Nonnull Entity pEntity, int pSlotId,
+        boolean pIsSelected) {
 
         int range = getRange();
-        AABB bounds = new AABB(player.getX() - range, player.getY() - range, player.getZ() - range,
-            player.getX() + range, player.getY() + range,player.getZ() + range);
+        AABB bounds = new AABB(player.getX() - range, player.getY() - range, player.getZ() - range, player.getX() + range, player.getY() + range,
+            player.getZ() + range);
 
         List<Entity> toMove = pLevel.getEntities(player, bounds, this::isMagnetable);
 

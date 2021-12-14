@@ -7,17 +7,20 @@ import com.enderio.core.client.tooltip.IAdvancedTooltipProvider;
 import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
+import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeConfigSpec;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
@@ -39,6 +42,17 @@ public class DarkSteelUpgradeItem extends Item implements IAdvancedTooltipProvid
     @Override
     public boolean isFoil(ItemStack pStack) {
         return DarkSteelUpgradeRegistry.instance().hasUpgrade(pStack);
+    }
+
+    @Override
+    public void fillItemCategory(@Nonnull CreativeModeTab pCategory, @Nonnull NonNullList<ItemStack> pItems) {
+        if (allowdedIn(pCategory)) {
+            ItemStack is = new ItemStack(this);
+            pItems.add(is.copy());
+
+            DarkSteelUpgradeRegistry.instance().writeUpgradeToItemStack(is, upgrade.get());
+            pItems.add(is);
+        }
     }
 
     @Override

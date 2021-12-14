@@ -37,14 +37,14 @@ public class PaintedSandRenderer extends FallingBlockRenderer {
                 BlockRenderDispatcher blockrenderdispatcher = Minecraft.getInstance().getBlockRenderer();
                 for (net.minecraft.client.renderer.RenderType type : net.minecraft.client.renderer.RenderType.chunkBufferLayers()) {
                     if (ItemBlockRenderTypes.canRenderInLayer(blockstate, type)) {
-                        net.minecraftforge.client.ForgeHooksClient.setRenderLayer(type);
+                        net.minecraftforge.client.ForgeHooksClient.setRenderType(type);
                         blockrenderdispatcher
                             .getModelRenderer()
                             .tesselateBlock(level, blockrenderdispatcher.getBlockModel(blockstate), blockstate, blockpos, pMatrixStack, pBuffer.getBuffer(type),
                                 false, new Random(), blockstate.getSeed(pEntity.getStartPos()), OverlayTexture.NO_OVERLAY);
                     }
                 }
-                net.minecraftforge.client.ForgeHooksClient.setRenderLayer(null);
+                net.minecraftforge.client.ForgeHooksClient.setRenderType(null);
                 pMatrixStack.popPose();
                 //Super.super.render
                 net.minecraftforge.client.event.RenderNameplateEvent renderNameplateEvent = new net.minecraftforge.client.event.RenderNameplateEvent(pEntity,
