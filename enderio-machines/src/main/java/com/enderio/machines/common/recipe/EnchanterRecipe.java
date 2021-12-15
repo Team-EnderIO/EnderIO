@@ -16,8 +16,8 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
 
 import java.util.Optional;
-
-public class EnchanterRecipe implements IEnchanterRecipe{
+import java.util.stream.Stream;
+public class EnchanterRecipe extends MachineRecipe<EnchanterRecipe, Container> {
     private ResourceLocation id;
     private Enchantment enchantment;
     private int levelmodifier;
@@ -32,41 +32,39 @@ public class EnchanterRecipe implements IEnchanterRecipe{
         this.levelmodifier = levelModifier;
     }
 
-    @Override
     public Enchantment getEnchantment() {
         return this.enchantment;
     }
-    
-    @Override
+
     public int getLevelModifier() {
         return levelmodifier;
     }
-    
+
     public int getLevelCost(Container container) {
         int level = getEnchantmentLevel(container.getItem(1).getCount());
         return getEnchantCost(level);
     }
-    
+
     public int getAmountPerLevel() {
         return amountPerLevel;
     }
-    
+
     public int getEnchantmentLevel(int amount) {
         return Math.min(amount / amountPerLevel, enchantment.getMaxLevel());
     }
-    
+
     public int getLapisForLevel(int level) {
         int res = enchantment.getMaxLevel() == 1 ? 5 : level;
-        return (int) Math.max(1, Math.round(res * 1)); //TODO config
+        return Math.max(1, Math.round(res * 1)); //TODO config
     }
-    
+
     public int getAmount(Container container) {
         if (matches(container, null)) {
             return getEnchantmentLevel(container.getItem(1).getCount()) * this.amountPerLevel;
         }
         return 0;
     }
-    
+
     public int getEnchantCost(int level) {
         level = Math.min(level, enchantment.getMaxLevel());
         int cost = getRawXPCostForLevel(level);
@@ -77,7 +75,7 @@ public class EnchanterRecipe implements IEnchanterRecipe{
         }
         return Math.max(1, cost);
     }
-    
+
     private int getRawXPCostForLevel(int level) {
         double min = Math.max(1, enchantment.getMinCost(level));
         min *= levelmodifier;
@@ -92,7 +90,7 @@ public class EnchanterRecipe implements IEnchanterRecipe{
             return false;
         }
         if (!ingredient.test(pContainer.getItem(1)) || pContainer.getItem(1).getCount() < amountPerLevel) {
-           return false; 
+           return false;
         }
         if (!pContainer.getItem(2).is(Items.LAPIS_LAZULI) || pContainer.getItem(2).getCount() < getLapisForLevel(getEnchantmentLevel(pContainer.getItem(1).getCount()))) {
             return false;
@@ -131,14 +129,19 @@ public class EnchanterRecipe implements IEnchanterRecipe{
     public RecipeType<?> getType() {
         return MachineRecipes.Types.ENCHANTING;
     }
-    
+
     @Override
     public NonNullList<Ingredient> getIngredients() {
         NonNullList<Ingredient> ingredients = NonNullList.create();
         ingredients.add(ingredient);
         return ingredients;
     }
-    
+
+    @Override
+    protected Stream<ResourceLocation> getOtherResourceLocations() {
+        return Stream.of(enchantment.getRegistryName());
+    }
+
     public static class Serializer extends DataGenSerializer<EnchanterRecipe, Container> {
 
         @Override
@@ -176,6 +179,6 @@ public class EnchanterRecipe implements IEnchanterRecipe{
             json.addProperty("enchantment", recipe.enchantment.getRegistryName().toString());
             json.addProperty("amount", recipe.amountPerLevel);
             json.addProperty("level", recipe.levelmodifier);
-        }    
+        }
     }
 }

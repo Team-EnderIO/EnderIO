@@ -3,6 +3,7 @@ package com.enderio.machines.data.recipe.enchanter;
 import com.enderio.base.common.enchantment.EIOEnchantments;
 import com.enderio.base.common.item.EIOItems;
 import com.enderio.machines.common.recipe.EnchanterRecipe;
+import com.enderio.machines.data.recipe.RecipeResult;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
@@ -80,6 +81,6 @@ public class EnchanterRecipeGenerator extends RecipeProvider {
     }
     
     protected void build(EnchanterRecipe recipe, String name, Consumer<FinishedRecipe> recipeConsumer) {
-        recipeConsumer.accept(new EnchanterRecipeResult(recipe, name));
+        recipeConsumer.accept(new RecipeResult(recipe, name));
     }
 }
