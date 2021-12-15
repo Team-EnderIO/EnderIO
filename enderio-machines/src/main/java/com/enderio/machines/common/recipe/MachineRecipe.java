@@ -2,6 +2,7 @@ package com.enderio.machines.common.recipe;
 
 import com.enderio.base.EnderIO;
 import com.enderio.base.common.recipe.DataGenSerializer;
+import com.enderio.machines.EIOMachines;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.resources.ResourceLocation;
@@ -12,6 +13,7 @@ import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.conditions.ICondition;
 import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 import net.minecraftforge.fluids.FluidStack;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -38,9 +40,7 @@ public abstract class MachineRecipe<T extends MachineRecipe<T, C>, C extends Con
             getFluidsInRecipe().map(fluidStack -> fluidStack.getFluid().getRegistryName())),
             getOtherResourceLocations()) //merge all resourcelocations for this recipe
             .map(ResourceLocation::getNamespace) //get their origin
-            .filter(string -> !string.equals("minecraft")) //remove minecraft, forge and enderio
-            .filter(string -> !string.equals("forge"))
-            .filter(string -> !string.equals(EnderIO.DOMAIN))
+            .filter(string -> !StringUtils.equalsAny(string, "minecraft", "forge", EnderIO.MODID, EIOMachines.MODID)) //remove minecraft, forge and enderio
             .distinct().toList();
     }
 }
