@@ -142,9 +142,11 @@ subprojects {
 //        implementation fg.deobf("mcjty.theoneprobe:TheOneProbe:${minecraft_version}-${top_version}")
         implementation fg.deobf("curse.maven:the-one-probe-245211:${top_version}")
 
-        def registrate = "com.tterrag.registrate:Registrate:${registrate_version}"
-        implementation fg.deobf(registrate)
-        shade registrate
+        if (project.name.equals("enderio-base")) {
+            def registrate = "com.tterrag.registrate:Registrate:${registrate_version}"
+            implementation fg.deobf(registrate)
+            shade registrate
+        }
 
         // Apply Mixin AP
         if (enableMixin)
@@ -191,10 +193,10 @@ subprojects {
         shadowJar {}
     }
 
-    if (project.hasProperty("releaseBuild") && project.releaseBuild == true) {
-        jar.finalizedBy('reobfJar')
-    }
-    publish.dependsOn('reobfJar')
+//    if (project.hasProperty("releaseBuild") && project.releaseBuild == true) {
+//        jar.finalizedBy('reobfJar')
+//    }
+//    publish.dependsOn('reobfJar')
 
     publishing {
         publications {
