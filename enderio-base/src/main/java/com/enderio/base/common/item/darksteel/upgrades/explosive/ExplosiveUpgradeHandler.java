@@ -91,10 +91,10 @@ public class ExplosiveUpgradeHandler {
 
         VoxelShape outlineShape = Shapes.create(miningBounds);
 
-        VertexConsumer vertexConsumer = event.getBuffers().getBuffer(RenderType.lines());
-        PoseStack poseStack = event.getMatrix();
+        VertexConsumer vertexConsumer = event.getMultiBufferSource().getBuffer(RenderType.lines());
+        PoseStack poseStack = event.getPoseStack();
 
-        Vec3 camPos = event.getInfo().getPosition();
+        Vec3 camPos = event.getCamera().getPosition();
         Vector3d origin = new Vector3d(blockPos.getX() - camPos.x(), blockPos.getY() - camPos.y(), blockPos.getZ() - camPos.z());
         Vector4f color = new Vector4f(1,0,0,0.2f);
 

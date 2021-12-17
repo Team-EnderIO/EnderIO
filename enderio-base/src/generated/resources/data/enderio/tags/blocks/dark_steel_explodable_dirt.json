@@ -6,7 +6,13 @@
     "#forge:gravel",
     "minecraft:dirt_path",
     "minecraft:rooted_dirt",
+    "minecraft:farmland",
     "minecraft:crimson_nylium",
-    "minecraft:warped_nylium"
+    "minecraft:warped_nylium",
+    "minecraft:soul_sand",
+    "minecraft:soul_soil",
+    "minecraft:snow_block",
+    "minecraft:powder_snow",
+    "minecraft:clay"
   ]
 }
