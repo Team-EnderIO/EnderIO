@@ -1,10 +1,10 @@
 package com.enderio.base.common.item.spawner;
 
 import com.enderio.base.common.capability.EIOCapabilities;
+import com.enderio.base.common.capability.entity.EntityStorage;
+import com.enderio.base.common.capability.entity.StoredEntityData;
 import com.enderio.base.common.item.EIOCreativeTabs;
 import com.enderio.base.common.item.EIOItems;
-import com.enderio.base.common.capability.entity.EntityStorage;
-import com.enderio.base.common.capability.entity.IEntityStorage;
 import com.enderio.base.common.util.EntityCaptureUtils;
 import com.enderio.core.common.capability.IMultiCapabilityItem;
 import com.enderio.core.common.capability.MultiCapabilityProvider;
@@ -67,11 +67,11 @@ public class BrokenSpawnerItem extends Item implements IMultiCapabilityItem {
     // region Entity Storage
 
     public static Optional<ResourceLocation> getEntityType(ItemStack stack) {
-        return stack.getCapability(EIOCapabilities.ENTITY_STORAGE).map(IEntityStorage::getEntityType).orElse(Optional.empty());
+        return stack.getCapability(EIOCapabilities.ENTITY_STORAGE).map(storage -> storage.getStoredEntityData().getEntityType()).orElse(Optional.empty());
     }
 
     private static void setEntityType(ItemStack stack, ResourceLocation entityType) {
-        stack.getCapability(EIOCapabilities.ENTITY_STORAGE).ifPresent(storage -> storage.setEntityType(entityType));
+        stack.getCapability(EIOCapabilities.ENTITY_STORAGE).ifPresent(storage -> storage.setStoredEntityData(StoredEntityData.of(entityType)));
     }
 
     @Nullable

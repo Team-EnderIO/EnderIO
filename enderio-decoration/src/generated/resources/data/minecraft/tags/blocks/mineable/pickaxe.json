@@ -1,6 +1,6 @@
 {
   "replace": false,
   "values": [
-    "enderio:painted_redstone_block"
+    "enderio_decoration:painted_redstone_block"
   ]
 }

@@ -1,15 +1,10 @@
 package com.enderio.base.common.loot;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import com.enderio.base.EnderIO;
 import com.enderio.base.common.capability.EIOCapabilities;
 import com.enderio.base.common.item.EIOItems;
 import com.enderio.base.common.util.CapacitorUtil;
 import com.google.gson.JsonObject;
-
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
@@ -22,16 +17,19 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import javax.annotation.Nonnull;
+import java.util.List;
+
 @Mod.EventBusSubscriber(modid = EnderIO.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class CapacitorLootModifier extends LootModifier {
     /**
      * The minimum base value
      */
-    private float min;
+    private final float min;
     /**
      * The maximum base value
      */
-    private float max;
+    private final float max;
 
     /**
      * Constructs a LootModifier.
@@ -79,7 +77,7 @@ public class CapacitorLootModifier extends LootModifier {
 
     @SubscribeEvent
     public static void register(@Nonnull RegistryEvent.Register<GlobalLootModifierSerializer<?>> event) {
-        event.getRegistry().register(new Serializer().setRegistryName(new ResourceLocation(EnderIO.DOMAIN, "capacitor_loot")));
+        event.getRegistry().register(new Serializer().setRegistryName(EnderIO.loc("capacitor_loot")));
     }
 
 }

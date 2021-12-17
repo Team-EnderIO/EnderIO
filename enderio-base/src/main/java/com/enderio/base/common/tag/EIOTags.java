@@ -1,11 +1,9 @@
 package com.enderio.base.common.tag;
 
 import com.enderio.base.EnderIO;
-
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.Tags.IOptionalNamedTag;
@@ -45,6 +43,9 @@ public class EIOTags {
 
         public static final IOptionalNamedTag<Item> FUSED_QUARTZ = ItemTags.createOptional(new ResourceLocation(EnderIO.MODID, "fused_quartz"));
         public static final IOptionalNamedTag<Item> CLEAR_GLASS = ItemTags.createOptional(new ResourceLocation(EnderIO.MODID, "clear_glass"));
+
+        public static final IOptionalNamedTag<Item> BROKEN_SPAWNER_BLACKLIST = ItemTags.createOptional(new ResourceLocation(EnderIO.MODID, "blacklists/broken_spawner"));
+        public static final IOptionalNamedTag<Item> ELECTROMAGNET_BLACKLIST = ItemTags.createOptional(new ResourceLocation(EnderIO.MODID, "blacklists/electromagnet"));
 
     }
 

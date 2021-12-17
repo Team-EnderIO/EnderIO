@@ -186,4 +186,9 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem 
     }
 
     // endregion
+
+    @Override
+    public boolean isBarVisible(ItemStack pStack) {
+        return isDurabilityBarVisible(pStack);
+    }
 }

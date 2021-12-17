@@ -1,13 +1,9 @@
 package com.enderio.base.common.block.glass;
 
-import com.enderio.core.common.util.TooltipUtil;
+import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.config.base.BaseConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
@@ -43,14 +39,13 @@ public class FusedQuartzBlock extends AbstractGlassBlock {
     public void appendHoverText(@Nonnull ItemStack pStack, @Nullable BlockGetter pLevel, @Nonnull List<Component> pTooltip, @Nonnull TooltipFlag pFlag) {
         super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
 
-        // TODO: Translations
         if (explosionResistant)
-            pTooltip.add(TooltipUtil.style(new TextComponent("Blast resistant")));
+            pTooltip.add(EIOLang.BLOCK_BLAST_RESISTANT);
         if (emitsLight)
-            pTooltip.add(TooltipUtil.style(new TextComponent("Emits light")));
+            pTooltip.add(EIOLang.FUSED_QUARTZ_EMITS_LIGHT);
         if (blocksLight)
-            pTooltip.add(TooltipUtil.style(new TextComponent("Blocks light")));
-        collisionPredicate.getDescription().ifPresent(desc -> pTooltip.add(TooltipUtil.style(new TextComponent(desc))));
+            pTooltip.add(EIOLang.FUSED_QUARTZ_BLOCKS_LIGHT);
+        collisionPredicate.getDescription().ifPresent(pTooltip::add);
     }
 
     @Override

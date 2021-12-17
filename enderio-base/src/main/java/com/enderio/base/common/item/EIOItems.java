@@ -1,10 +1,6 @@
 package com.enderio.base.common.item;
 
-import java.util.List;
-import java.util.Objects;
-
 import com.enderio.base.EnderIO;
-import com.enderio.base.common.capability.capacitors.ICapacitorData;
 import com.enderio.base.common.item.capacitors.LootCapacitorItem;
 import com.enderio.base.common.item.darksteel.DarkSteelAxeItem;
 import com.enderio.base.common.item.darksteel.DarkSteelPickaxeItem;
@@ -20,21 +16,17 @@ import com.enderio.base.common.item.misc.EnderfaceItem;
 import com.enderio.base.common.item.misc.GearItem;
 import com.enderio.base.common.item.misc.MaterialItem;
 import com.enderio.base.common.item.spawner.BrokenSpawnerItem;
-import com.enderio.base.common.item.tool.CoordinateSelectorItem;
-import com.enderio.base.common.item.tool.ElectromagnetItem;
-import com.enderio.base.common.item.tool.LevitationStaffItem;
-import com.enderio.base.common.item.tool.SoulVialItem;
-import com.enderio.base.common.item.tool.YetaWrenchItem;
+import com.enderio.base.common.item.tool.*;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.config.base.BaseConfig;
 import com.enderio.base.data.model.item.ItemModelUtils;
+import com.enderio.core.data.RotatingItemModel;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.util.NonNullLazyValue;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
-
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
@@ -45,6 +37,9 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.ForgeTier;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.TierSortingRegistry;
+
+import java.util.List;
+import java.util.Objects;
 
 @SuppressWarnings("unused")
 public class EIOItems {
@@ -118,50 +113,25 @@ public class EIOItems {
     public static final ItemEntry<Item> BASIC_CAPACITOR = REGISTRATE
         .item("basic_capacitor", Item::new)
         .properties(p -> p.stacksTo(1))
-        .group(() -> EIOCreativeTabs.MAIN)
+        .tab(() -> EIOCreativeTabs.MAIN)
         .register();
 
     public static final ItemEntry<Item> DOUBLE_LAYER_CAPACITOR = REGISTRATE
         .item("double_layer_capacitor", Item::new)
         .properties(p -> p.stacksTo(1))
-        .group(() -> EIOCreativeTabs.MAIN)
+        .tab(() -> EIOCreativeTabs.MAIN)
         .register();
 
     public static final ItemEntry<Item> OCTADIC_CAPACITOR = REGISTRATE
         .item("octadic_capacitor", Item::new)
         .properties(p -> p.stacksTo(1))
-        .group(() -> EIOCreativeTabs.MAIN)
+        .tab(() -> EIOCreativeTabs.MAIN)
         .register();
 
     public static final ItemEntry<LootCapacitorItem> LOOT_CAPACITOR = REGISTRATE
         .item("loot_capacitor", LootCapacitorItem::new)
         .properties(p -> p.stacksTo(1))
         .register();
-
-    // endregion
-
-    // region capacitor text
-
-    // TODO: Move language related things to a dedicated location, like EIOLang
-
-    public static final TranslatableComponent ALL_ENERGY_CONSUMPSTION = capacitorDescriptionBuilder("type", ICapacitorData.ALL_ENERGY_CONSUMPSTION, "Leaky");
-    public static final TranslatableComponent ALL_PRODUCTION_SPEED = capacitorDescriptionBuilder("type", ICapacitorData.ALL_PRODUCTION_SPEED, "Fast");
-    public static final TranslatableComponent ALLOY_ENERGY_CONSUMPSTION = capacitorDescriptionBuilder("type", ICapacitorData.ALLOY_ENERGY_CONSUMPSTION,
-        "Melted");
-    public static final TranslatableComponent ALLOY_PRODUCTION_SPEED = capacitorDescriptionBuilder("type", ICapacitorData.ALLOY_PRODUCTION_SPEED, "Smelting");
-
-    public static final TranslatableComponent DUD = capacitorDescriptionBuilder("base", "0", "Capacitor Dud");
-    public static final TranslatableComponent GOOD = capacitorDescriptionBuilder("base", "1", "Good Capacitor");
-    public static final TranslatableComponent ENHANCED = capacitorDescriptionBuilder("base", "2", "Enhanced Capacitor");
-    public static final TranslatableComponent WONDER = capacitorDescriptionBuilder("base", "3", "Wonder Capacitor");
-
-    public static final TranslatableComponent FLAVOR0 = capacitorDescriptionBuilder("flavor", "0", "An attached note describes this as \"%1$s %2$s %3$s\"");
-    public static final TranslatableComponent FLAVOR1 = capacitorDescriptionBuilder("flavor", "1",
-        "You can decipher ancient runes that translate roughly as \"%1$s %2$s %3$s\". Odd...");
-
-    public static final TranslatableComponent FAILED = capacitorDescriptionBuilder("grade", "0", "Failed");
-    public static final TranslatableComponent INCREDIBLY = capacitorDescriptionBuilder("grade", "4", "Incredibly");
-    public static final TranslatableComponent UNSTABLE = capacitorDescriptionBuilder("grade", "5", "Unstable");
 
     // endregion
 
@@ -222,17 +192,17 @@ public class EIOItems {
 
     // region Gears
 
-    public static final ItemEntry<GearItem> GEAR_WOOD = gearItem("wood_gear").lang("Wooden Gear").tag(EIOTags.Items.GEARS_WOOD).register();
+    public static final ItemEntry<GearItem> GEAR_WOOD = gearItem("wood_gear", 360).lang("Wooden Gear").tag(EIOTags.Items.GEARS_WOOD).register();
 
-    public static final ItemEntry<GearItem> GEAR_STONE = gearItem("stone_gear").lang("Stone Compound Gear").tag(EIOTags.Items.GEARS_STONE).register();
+    public static final ItemEntry<GearItem> GEAR_STONE = gearItem("stone_gear", 300).lang("Stone Compound Gear").tag(EIOTags.Items.GEARS_STONE).register();
 
-    public static final ItemEntry<GearItem> GEAR_IRON = gearItem("iron_gear").lang("Infinity Bimetal Gear").tag(EIOTags.Items.GEARS_IRON).register();
+    public static final ItemEntry<GearItem> GEAR_IRON = gearItem("iron_gear", 240).lang("Infinity Bimetal Gear").tag(EIOTags.Items.GEARS_IRON).register();
 
-    public static final ItemEntry<GearItem> GEAR_ENERGIZED = gearItem("energized_gear").lang("Energized Bimetal Gear").tag(EIOTags.Items.GEARS_ENERGIZED).register();
+    public static final ItemEntry<GearItem> GEAR_ENERGIZED = gearItem("energized_gear", 180).lang("Energized Bimetal Gear").tag(EIOTags.Items.GEARS_ENERGIZED).register();
 
-    public static final ItemEntry<GearItem> GEAR_VIBRANT = gearItem("vibrant_gear").lang("Vibrant Bimetal Gear").tag(EIOTags.Items.GEARS_VIBRANT).register();
+    public static final ItemEntry<GearItem> GEAR_VIBRANT = gearItem("vibrant_gear", 120).lang("Vibrant Bimetal Gear").tag(EIOTags.Items.GEARS_VIBRANT).register();
 
-    public static final ItemEntry<GearItem> GEAR_DARK_STEEL = gearItem("dark_bimetal_gear").lang("Dark Bimetal Gear").tag(EIOTags.Items.GEARS_DARK_STEEL).register();
+    public static final ItemEntry<GearItem> GEAR_DARK_STEEL = gearItem("dark_bimetal_gear", 60).lang("Dark Bimetal Gear").tag(EIOTags.Items.GEARS_DARK_STEEL).register();
 
     // endregion
 
@@ -283,7 +253,7 @@ public class EIOItems {
     public static final ItemEntry<BrokenSpawnerItem> BROKEN_SPAWNER = REGISTRATE
         .item("broken_spawner", BrokenSpawnerItem::new)
         .model(ItemModelUtils::fakeBlockModel)
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.MAIN))
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.MAIN))
         .register();
 
     // endregion
@@ -315,14 +285,14 @@ public class EIOItems {
     // region Builders
 
     private static ItemBuilder<MaterialItem, Registrate> materialItem(String name) {
-        return REGISTRATE.item(name, props -> new MaterialItem(props, false)).group(new NonNullLazyValue<>(() -> EIOCreativeTabs.MAIN));
+        return REGISTRATE.item(name, props -> new MaterialItem(props, false)).tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.MAIN));
     }
 
-    private static ItemBuilder<GearItem, Registrate> gearItem(String name) {
+    private static ItemBuilder<GearItem, Registrate> gearItem(String name, float tpr) {
         return REGISTRATE
-            .item(name, props -> new GearItem(props, false))
-            .model(ItemModelUtils::gearItem)
-            .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.MAIN));
+            .item(name, props -> new GearItem(props, tpr))
+            .model((ctx, cons) -> RotatingItemModel.create(ctx.get(), cons))
+            .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.MAIN));
     }
 
     //  private static ItemBuilder<MaterialItem, Registrate> dependMaterialItem(String name, Tag<Item> dependency) {
@@ -331,7 +301,7 @@ public class EIOItems {
     //  }
 
     private static ItemBuilder<MaterialItem, Registrate> materialItemGlinted(String name) {
-        return REGISTRATE.item(name, props -> new MaterialItem(props, true)).group(new NonNullLazyValue<>(() -> EIOCreativeTabs.MAIN));
+        return REGISTRATE.item(name, props -> new MaterialItem(props, true)).tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.MAIN));
     }
 
     // endregion
@@ -349,7 +319,7 @@ public class EIOItems {
 
     public static ItemEntry<EnderiosItem> ENDERIOS = REGISTRATE
         .item("enderios", EnderiosItem::new)
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.MAIN))
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.MAIN))
         .lang("\"Enderios\"")
         .properties(props -> props.stacksTo(1))
         .register();
@@ -359,31 +329,31 @@ public class EIOItems {
     // region Tools
     public static ItemEntry<YetaWrenchItem> YETA_WRENCH = REGISTRATE
         .item("yeta_wrench", YetaWrenchItem::new)
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
         .properties(props -> props.stacksTo(1))
         .tag(EIOTags.Items.WRENCH)
         .register();
 
     public static ItemEntry<LocationPrintoutItem> LOCATION_PRINTOUT = REGISTRATE
         .item("location_printout", LocationPrintoutItem::new)
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
         .properties(props -> props.stacksTo(1))
         .register();
 
     public static ItemEntry<CoordinateSelectorItem> COORDINATE_SELECTOR = REGISTRATE
         .item("coordinate_selector", CoordinateSelectorItem::new)
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
         .properties(props -> props.stacksTo(1))
         .register();
 
     public static ItemEntry<LevitationStaffItem> LEVITATION_STAFF = REGISTRATE
         .item("staff_of_levity", LevitationStaffItem::new)
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
         .register();
 
     public static ItemEntry<ElectromagnetItem> ELECTROMAGNET = REGISTRATE
         .item("electromagnet", ElectromagnetItem::new)
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
         .register();
 
     // endregion
@@ -396,7 +366,7 @@ public class EIOItems {
 
     public static ItemEntry<DarkSteelPickaxeItem> DARK_STEEL_PICKAXE = REGISTRATE
         .item("dark_steel_pickaxe", DarkSteelPickaxeItem::new)
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
         .onRegister(item -> DarkSteelUpgradeRegistry
             .instance()
             .addUpgradesForItem(Objects.requireNonNull(item.getRegistryName()), EmpoweredUpgrade.NAME, SpoonUpgrade.NAME, DirectUpgrade.NAME,
@@ -405,7 +375,7 @@ public class EIOItems {
 
     public static ItemEntry<DarkSteelAxeItem> DARK_STEEL_AXE = REGISTRATE
         .item("dark_steel_axe", DarkSteelAxeItem::new)
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
         .onRegister(item -> DarkSteelUpgradeRegistry
             .instance()
             .addUpgradesForItem(Objects.requireNonNull(item.getRegistryName()), EmpoweredUpgrade.NAME, ForkUpgrade.NAME, DirectUpgrade.NAME))
@@ -416,78 +386,78 @@ public class EIOItems {
 
     public static ItemEntry<MaterialItem> DARK_STEEL_UPGRADE_BLANK = REGISTRATE
         .item("dark_steel_upgrade_blank", props -> new MaterialItem(props, false))
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR)).lang("Blank" + UPGRADE_TEXT)
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR)).lang("Blank" + UPGRADE_TEXT)
         .register();
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_1 = REGISTRATE
         .item("dark_steel_upgrade_empowered_1",
             properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgradeTier.ONE.getActivationCost(), EmpoweredUpgradeTier.ONE.getFactory()))
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
         .lang("Empowered" + UPGRADE_TEXT)
         .register();
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_2 = REGISTRATE
         .item("dark_steel_upgrade_empowered_2",
             properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgradeTier.TWO.getActivationCost(), EmpoweredUpgradeTier.TWO.getFactory()))
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
         .lang("Empowered II" + UPGRADE_TEXT)
         .register();
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_3 = REGISTRATE
         .item("dark_steel_upgrade_empowered_3",
             properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgradeTier.THREE.getActivationCost(), EmpoweredUpgradeTier.THREE.getFactory()))
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
         .lang("Empowered III" + UPGRADE_TEXT)
         .register();
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_4 = REGISTRATE
         .item("dark_steel_upgrade_empowered_4",
             properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgradeTier.FOUR.getActivationCost(), EmpoweredUpgradeTier.FOUR.getFactory()))
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
         .lang("Empowered IV" + UPGRADE_TEXT)
         .register();
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_SPOON = REGISTRATE
         .item("dark_steel_upgrade_spoon", properties -> new DarkSteelUpgradeItem(properties, BaseConfig.COMMON.DARK_STEEL.SPOON_ACTIVATION_COST, SpoonUpgrade::new))
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
         .lang("Spoon" + UPGRADE_TEXT)
         .register();
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_FORK = REGISTRATE
         .item("dark_steel_upgrade_fork", properties -> new DarkSteelUpgradeItem(properties, BaseConfig.COMMON.DARK_STEEL.FORK_ACTIVATION_COST, ForkUpgrade::new))
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
         .lang("Fork" + UPGRADE_TEXT)
         .register();
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_DIRECT = REGISTRATE
         .item("dark_steel_upgrade_direct",
             properties -> new DarkSteelUpgradeItem(properties, BaseConfig.COMMON.DARK_STEEL.DIRECT_ACTIVATION_COST, DirectUpgrade::new))
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
         .lang("Direct" + UPGRADE_TEXT)
         .register();
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_1 = REGISTRATE
         .item("dark_steel_upgrade_tnt", properties -> new DarkSteelUpgradeItem(properties, ExplosiveUpgradeTier.ONE.getActivationCost(),
             ExplosiveUpgradeTier.ONE.getFactory()))
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR)).lang("Explosive I" + UPGRADE_TEXT)
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR)).lang("Explosive I" + UPGRADE_TEXT)
         .register();
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_2 = REGISTRATE
         .item("dark_steel_upgrade_tnt1", properties -> new DarkSteelUpgradeItem(properties, ExplosiveUpgradeTier.TWO.getActivationCost(),
             ExplosiveUpgradeTier.TWO.getFactory()))
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR)).lang("Explosive II" + UPGRADE_TEXT)
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR)).lang("Explosive II" + UPGRADE_TEXT)
         .register();
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_1 = REGISTRATE
         .item("dark_steel_upgrade_penetration_1", properties -> new DarkSteelUpgradeItem(properties, ExplosivePenetrationUpgradeTier.ONE.getActivationCost(),
             ExplosivePenetrationUpgradeTier.ONE.getFactory()))
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR)).lang("Explosive Penetration I" + UPGRADE_TEXT)
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR)).lang("Explosive Penetration I" + UPGRADE_TEXT)
         .register();
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_2 = REGISTRATE
         .item("dark_steel_upgrade_penetration_2", properties -> new DarkSteelUpgradeItem(properties, ExplosivePenetrationUpgradeTier.TWO.getActivationCost(),
             ExplosivePenetrationUpgradeTier.TWO.getFactory()))
-        .group(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR)).lang("Explosive Penetration II" + UPGRADE_TEXT)
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR)).lang("Explosive Penetration II" + UPGRADE_TEXT)
         .register();
 
     // endregion
@@ -495,7 +465,7 @@ public class EIOItems {
     // region description
 
     public static TranslatableComponent capacitorDescriptionBuilder(String type, String value, String description) {
-        return REGISTRATE.addLang("description", new ResourceLocation(EnderIO.DOMAIN, "capacitor." + type + "." + value), description);
+        return REGISTRATE.addLang("description", EnderIO.loc("capacitor." + type + "." + value), description);
     }
 
     // endregion
@@ -519,7 +489,7 @@ public class EIOItems {
     }
 
     public static <T extends Item> ItemEntry<T> groupedItem(String name, NonNullFunction<Item.Properties, T> factory, NonNullSupplier<CreativeModeTab> tab) {
-        return REGISTRATE.item(name, factory).group(tab).register();
+        return REGISTRATE.item(name, factory).tab(tab).register();
     }
 
     // endregion

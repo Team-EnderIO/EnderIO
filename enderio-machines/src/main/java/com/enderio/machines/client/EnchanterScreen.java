@@ -4,17 +4,17 @@ import com.enderio.base.EnderIO;
 import com.enderio.core.client.screen.EIOScreen;
 import com.enderio.core.client.screen.EnumIconWidget;
 import com.enderio.core.common.util.Vector2i;
+import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.menu.EnchanterMenu;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class EnchanterScreen extends EIOScreen<EnchanterMenu>{
-    private static final ResourceLocation BG_TEXTURE = new ResourceLocation(EnderIO.DOMAIN, "textures/gui/enchanter.png");
+public class EnchanterScreen extends EIOScreen<EnchanterMenu> {
+    private static final ResourceLocation BG_TEXTURE = EIOMachines.loc("textures/gui/enchanter.png");
 
     public EnchanterScreen(EnchanterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);

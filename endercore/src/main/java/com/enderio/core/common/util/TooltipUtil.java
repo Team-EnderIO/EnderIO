@@ -13,4 +13,8 @@ public class TooltipUtil {
     public static TranslatableComponent withArgs(TranslatableComponent component, Object... args) {
         return new TranslatableComponent(component.getKey(), args);
     }
+
+    public static Component styledWithArgs(TranslatableComponent component, Object... args) {
+        return style(new TranslatableComponent(component.getKey(), args));
+    }
 }

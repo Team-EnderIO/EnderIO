@@ -16,7 +16,7 @@ public class CapacitorDataRecipeResult implements FinishedRecipe {
     private final ResourceLocation id;
 
     public CapacitorDataRecipeResult(CapacitorDataRecipe recipe, String name) {
-        this(recipe, new ResourceLocation(EnderIO.DOMAIN, "capacitor_data/" + name));
+        this(recipe, EnderIO.loc("capacitor_data/" + name));
     }
 
     public CapacitorDataRecipeResult(CapacitorDataRecipe recipe, ResourceLocation id) {

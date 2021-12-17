@@ -48,8 +48,8 @@ public class CapacitorBankBlockEntity extends BlockEntity {
     }
 
     @Override
-    public CompoundTag save(CompoundTag pTag) {
+    public void saveAdditional(CompoundTag pTag) {
+        super.saveAdditional(pTag);
         pTag.put("Energy", energyStorage.serializeNBT());
-        return super.save(pTag);
     }
 }

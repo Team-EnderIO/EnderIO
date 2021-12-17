@@ -1,5 +1,6 @@
 package com.enderio.base.common.util;
 
+import com.enderio.base.config.base.BaseConfig;
 import com.enderio.core.common.util.EntityUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -27,9 +28,26 @@ public class EntityCaptureUtils {
         return entities;
     }
 
-    public static boolean canCapture(Entity entity) {
-        // TODO: Config for capture blacklist.
-        return !isBlacklistedBoss(entity);
+    public enum CapturableStatus {
+        Capturable,
+        Boss,
+        Blacklisted,
+        Incompatible,
+    }
+
+    public static CapturableStatus getCapturableStatus(Entity entity) {
+        EntityType<?> type = entity.getType();
+
+        if (isBlacklistedBoss(entity))
+            return CapturableStatus.Boss;
+
+        if (!type.canSerialize())
+            return CapturableStatus.Incompatible;
+
+        if (BaseConfig.COMMON.ITEMS.SOUL_VIAL_BLACKLIST.get().contains(type.getRegistryName().toString()))
+            return CapturableStatus.Blacklisted;
+
+        return CapturableStatus.Capturable;
     }
 
     public static boolean isBlacklistedBoss(Entity entity) {

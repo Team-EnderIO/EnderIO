@@ -151,6 +151,24 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem {
         res.remove(pos);
     }
 
+    private boolean removeBlock(Level level, Player player, ItemStack tool, BlockPos pos) {
+        BlockState state = level.getBlockState(pos);
+        BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, pos, state, player);
+        MinecraftForge.EVENT_BUS.post(event);
+        if (event.isCanceled()) {
+            return false;
+        }
+        boolean removed = state.onDestroyedByPlayer(level, pos, player, true, level.getFluidState(pos));
+        if (removed) {
+            state.getBlock().destroy(level, pos, state);
+            state.getBlock().playerDestroy(level, player, pos, state, null, tool);
+            if(event.getExpToDrop() > 0 && level instanceof ServerLevel serverLevel) {
+                state.getBlock().popExperience(serverLevel, pos, event.getExpToDrop());
+            }
+        }
+        return removed;
+    }
+
     @Override
     public void addCurrentUpgradeTooltips(ItemStack itemStack, List<Component> tooltips, boolean isDetailed) {
         if(isDetailed && getEmpoweredUpgrade(itemStack).isPresent()) {
@@ -174,4 +192,9 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem {
     }
 
     // endregion
+
+    @Override
+    public boolean isBarVisible(ItemStack pStack) {
+        return isDurabilityBarVisible(pStack);
+    }
 }

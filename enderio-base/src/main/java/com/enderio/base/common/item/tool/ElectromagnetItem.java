@@ -1,5 +1,6 @@
 package com.enderio.base.common.item.tool;
 
+import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.config.base.BaseConfig;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ExperienceOrb;
@@ -14,7 +15,6 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ElectromagnetItem extends PoweredToggledItem {
-
 
     private static final double COLLISION_DISTANCE_SQ = 1.25 * 1.25;
     private static final double SPEED = 0.035;
@@ -42,24 +42,24 @@ public class ElectromagnetItem extends PoweredToggledItem {
         return BaseConfig.COMMON.ITEMS.ELECTROMAGNET_MAX_ITEMS.get();
     }
 
-    private boolean isBlackListed(ItemEntity entity) {
-        //TODO: Config
-        return false;
+    private boolean isBlacklisted(ItemEntity entity) {
+        return entity.getItem().is(EIOTags.Items.ELECTROMAGNET_BLACKLIST);
     }
 
     private boolean isMagnetable(Entity entity) {
         if (entity instanceof ItemEntity itemEntity) {
-            return !isBlackListed(itemEntity);
+            return !isBlacklisted(itemEntity);
         }
         return entity instanceof ExperienceOrb;
     }
 
     @Override
-    protected void onTickWhenActive(Player player, @Nonnull ItemStack pStack, @Nonnull Level pLevel, @Nonnull Entity pEntity, int pSlotId, boolean pIsSelected) {
+    protected void onTickWhenActive(Player player, @Nonnull ItemStack pStack, @Nonnull Level pLevel, @Nonnull Entity pEntity, int pSlotId,
+        boolean pIsSelected) {
 
         int range = getRange();
-        AABB bounds = new AABB(player.getX() - range, player.getY() - range, player.getZ() - range,
-            player.getX() + range, player.getY() + range,player.getZ() + range);
+        AABB bounds = new AABB(player.getX() - range, player.getY() - range, player.getZ() - range, player.getX() + range, player.getY() + range,
+            player.getZ() + range);
 
         List<Entity> toMove = pLevel.getEntities(player, bounds, this::isMagnetable);
 

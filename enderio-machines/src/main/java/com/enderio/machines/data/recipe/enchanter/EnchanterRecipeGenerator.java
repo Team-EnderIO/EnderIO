@@ -1,11 +1,9 @@
 package com.enderio.machines.data.recipe.enchanter;
 
-import java.util.function.Consumer;
-
 import com.enderio.base.common.enchantment.EIOEnchantments;
 import com.enderio.base.common.item.EIOItems;
 import com.enderio.machines.common.recipe.EnchanterRecipe;
-
+import com.enderio.machines.data.recipe.RecipeResult;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
@@ -16,6 +14,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
+
+import java.util.function.Consumer;
 
 public class EnchanterRecipeGenerator extends RecipeProvider {
     public EnchanterRecipeGenerator(DataGenerator dataGenerator) {
@@ -66,8 +66,9 @@ public class EnchanterRecipeGenerator extends RecipeProvider {
         
         //enderio
         build(EIOEnchantments.SOULBOUND.get(), EIOItems.ENDER_CRYSTAL.get(), 1, 1, pFinishedRecipeConsumer);
-        //build(EIOEnchantments.WITHER_ARROW.get(), witherpotion, 1, 1, pFinishedRecipeConsumer); //TODO Potion:"enderio:withering"
-        build(EIOEnchantments.WITHER_WEAPON.get(), EIOItems.WITHERING_POWDER.get(), 4, 1, pFinishedRecipeConsumer);
+        //build(EIOEnchantments.WITHERING_ARROW.get(), witherpotion, 1, 1, pFinishedRecipeConsumer); //TODO Potion:"enderio:withering"
+        //build(EIOEnchantments.WITHERING_BOLT.get(), witherpotion, 1, 1, pFinishedRecipeConsumer); //TODO Another recipe for bolts
+        build(EIOEnchantments.WITHERING_BLADE.get(), EIOItems.WITHERING_POWDER.get(), 4, 1, pFinishedRecipeConsumer);
         build(EIOEnchantments.REPELLENT.get(), Items.ENDER_PEARL, 4, 2, pFinishedRecipeConsumer);
     }
     
@@ -80,6 +81,6 @@ public class EnchanterRecipeGenerator extends RecipeProvider {
     }
     
     protected void build(EnchanterRecipe recipe, String name, Consumer<FinishedRecipe> recipeConsumer) {
-        recipeConsumer.accept(new EnchanterRecipeResult(recipe, name));
+        recipeConsumer.accept(new RecipeResult(recipe, name));
     }
 }
