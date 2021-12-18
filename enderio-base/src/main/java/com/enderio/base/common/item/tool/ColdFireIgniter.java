@@ -35,10 +35,11 @@ import java.util.Optional;
 
 public class ColdFireIgniter extends Item implements IMultiCapabilityItem {
 
-    public ColdFireIgniter(Properties p_41295_) {
-        super(p_41295_);
+    public ColdFireIgniter(Properties properties) {
+        super(properties);
     }
 
+    @Override
     public InteractionResult useOn(UseOnContext context) {
         ItemStack itemstack = context.getItemInHand();
         Optional<IFluidHandlerItem> fluidCap = getTankCap(itemstack);

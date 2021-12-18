@@ -14,12 +14,12 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class ColdFireBlock extends FireBlock {
-    public ColdFireBlock(Properties props) {
-        super(props);
+    public ColdFireBlock(Properties properties) {
+        super(properties);
     }
 
     @Override
-    public void tick(BlockState p_53449_, ServerLevel p_53450_, BlockPos p_53451_, Random p_53452_) {
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, Random random) {
         //don't spread
     }
 
@@ -29,12 +29,13 @@ public class ColdFireBlock extends FireBlock {
     }
 
     @Override
-    public BlockState getStateWithAge(LevelAccessor p_53438_, BlockPos p_53439_, int p_53440_) {
-        return coldFireStateFromFireState(super.getStateWithAge(p_53438_, p_53439_, p_53440_));
+    public BlockState getStateWithAge(LevelAccessor level, BlockPos pos, int age) {
+        return coldFireStateFromFireState(super.getStateWithAge(level, pos, age));
     }
 
-    public BlockState getStateForPlacement(BlockPlaceContext p_49244_) {
-        return coldFireStateFromFireState(getState(p_49244_.getLevel(), p_49244_.getClickedPos()));
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        return coldFireStateFromFireState(getState(ctx.getLevel(), ctx.getClickedPos()));
     }
 
     private BlockState coldFireStateFromFireState(BlockState fireBlockState) {
@@ -44,7 +45,7 @@ public class ColdFireBlock extends FireBlock {
     }
 
     @Override
-    public void entityInside(BlockState p_49260_, Level p_49261_, BlockPos p_49262_, Entity p_49263_) {
+    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         //Don't deal fire damage
     }
 
