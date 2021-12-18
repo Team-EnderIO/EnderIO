@@ -17,8 +17,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
@@ -425,6 +427,17 @@ public class EIOBlocks {
     public static final BlockEntry<ResettingLeverBlock> RESETTING_LEVER_THREE_HUNDRED_INV = resettingLeverBlock("resetting_lever_three_hundred_inv", 300, true);
 
     // endregion
+
+
+    public static final BlockEntry<ColdFireBlock> COLD_FIRE = REGISTRATE
+        .block("cold_fire", ColdFireBlock::new)
+        .properties(props -> BlockBehaviour.Properties.copy(Blocks.FIRE).noDrops())
+        //.blockstate(BlockStateUtils::fireModel)
+        .blockstate((ctx, prov) -> {})
+        .addLayer(() -> RenderType::cutout)
+        .register();
+
+
 
     public static <T extends Block> BlockBuilder<T, Registrate> simpleBlockBuilder(String name, T block) {
         return REGISTRATE.block(name, (p) -> block).item().tab(() -> EIOCreativeTabs.BLOCKS).build();

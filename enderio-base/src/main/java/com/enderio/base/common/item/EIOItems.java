@@ -355,6 +355,12 @@ public class EIOItems {
         .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
         .register();
 
+    public static ItemEntry<ColdFireIgniter> COLD_FIRE_IGNITER = REGISTRATE
+        .item("cold_fire_igniter", ColdFireIgniter::new)
+        .defaultModel()
+        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.GEAR))
+        .register();
+
     // endregion
 
     // region DarkSteel
