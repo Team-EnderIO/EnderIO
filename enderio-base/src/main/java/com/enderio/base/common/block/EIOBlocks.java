@@ -432,7 +432,6 @@ public class EIOBlocks {
     public static final BlockEntry<ColdFireBlock> COLD_FIRE = REGISTRATE
         .block("cold_fire", ColdFireBlock::new)
         .properties(props -> BlockBehaviour.Properties.copy(Blocks.FIRE).noDrops())
-        //.blockstate(BlockStateUtils::fireModel)
         .blockstate((ctx, prov) -> {})
         .addLayer(() -> RenderType::cutout)
         .register();
