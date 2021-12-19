@@ -12,7 +12,8 @@ import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.config.base.BaseConfig;
 import com.enderio.base.config.decor.DecorConfig;
 import com.enderio.base.config.machines.MachinesConfig;
-import com.enderio.base.data.recipe.standard.EIOItemTagsProvider;
+import com.enderio.base.data.tags.EIOFluidTagsProvider;
+import com.enderio.base.data.tags.EIOItemTagsProvider;
 import com.enderio.base.data.recipe.standard.StandardRecipes;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.NonNullLazyValue;
@@ -84,6 +85,7 @@ public class EnderIO {
             StandardRecipes.generate(generator);
             ForgeBlockTagsProvider b = new ForgeBlockTagsProvider(generator, event.getExistingFileHelper());
             generator.addProvider( new EIOItemTagsProvider(generator, b, event.getExistingFileHelper()));
+            generator.addProvider( new EIOFluidTagsProvider(generator, event.getExistingFileHelper()));
         }
     }
 
