@@ -2,6 +2,7 @@ package com.enderio.base.common.item.tool;
 
 import com.enderio.base.common.block.EIOBlocks;
 import com.enderio.base.common.capability.fluid.AcceptingFluidItemHandler;
+import com.enderio.base.common.tag.EIOTags;
 import com.enderio.core.common.capability.IMultiCapabilityItem;
 import com.enderio.core.common.capability.MultiCapabilityProvider;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -107,7 +108,7 @@ public class ColdFireIgniter extends Item implements IMultiCapabilityItem {
     @Override
     public MultiCapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt, MultiCapabilityProvider provider) {
         provider.addSimple(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY,
-            new AcceptingFluidItemHandler(stack, 1000, Fluids.LAVA)
+            new AcceptingFluidItemHandler(stack, 1000, EIOTags.Fluids.COLD_FIRE_IGNITER_FUEL)
                 .getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY));
         return provider;
     }

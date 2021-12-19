@@ -1,4 +1,4 @@
-package com.enderio.base.data.recipe.standard;
+package com.enderio.base.data.tags;
 
 import com.enderio.base.EnderIO;
 import com.enderio.base.common.tag.EIOTags;
@@ -8,7 +8,7 @@ import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
-public class EIOItemTagsProvider extends ItemTagsProvider{
+public class EIOItemTagsProvider extends ItemTagsProvider {
     
     public EIOItemTagsProvider(DataGenerator pGenerator, BlockTagsProvider pBlockTagsProvider,
             ExistingFileHelper existingFileHelper) {
