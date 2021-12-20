@@ -1,6 +1,7 @@
 package com.enderio.base.data.tags;
 
 import com.enderio.base.EnderIO;
+import com.enderio.base.common.fluid.EIOFluids;
 import com.enderio.base.common.tag.EIOTags;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.FluidTagsProvider;
@@ -16,6 +17,7 @@ public class EIOFluidTagsProvider extends FluidTagsProvider {
 
     @Override
     protected void addTags() {
-        tag(EIOTags.Fluids.COLD_FIRE_IGNITER_FUEL).add(Fluids.LAVA);
+        tag(EIOTags.Fluids.COLD_FIRE_IGNITER_FUEL).add(EIOFluids.VAPOR_OF_LEVITY.get().getSource());
+        tag(EIOTags.Fluids.STAFF_OF_LEVITY_FUEL).add(EIOFluids.VAPOR_OF_LEVITY.get().getSource());
     }
 }

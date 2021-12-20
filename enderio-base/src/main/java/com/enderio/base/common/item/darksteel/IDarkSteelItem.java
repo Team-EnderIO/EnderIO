@@ -108,7 +108,7 @@ public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipPr
     }
 
     default void renderOverlay(ItemStack pStack, int pXPosition, int pYPosition) {
-        ItemBarRenderer.renderOverlay(pStack, pXPosition, pYPosition);
+        ItemBarRenderer.renderEnergyOverlay(pStack, pXPosition, pYPosition);
     }
 
     default boolean isDurabilityBarVisible(ItemStack stack) {

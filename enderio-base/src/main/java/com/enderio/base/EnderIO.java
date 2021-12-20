@@ -3,6 +3,7 @@ package com.enderio.base;
 import com.enderio.base.common.block.EIOBlocks;
 import com.enderio.base.common.blockentity.EIOBlockEntities;
 import com.enderio.base.common.enchantment.EIOEnchantments;
+import com.enderio.base.common.fluid.EIOFluids;
 import com.enderio.base.common.item.EIOItems;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.menu.EIOMenus;
@@ -60,14 +61,15 @@ public class EnderIO {
         EIOItems.register();
         EIOBlocks.register();
         EIOBlockEntities.register();
+        EIOFluids.register();
         EIOEnchantments.register();
         EIOTags.init();
         EIOMenus.register();
         EIOPackets.getNetwork();
         EIOLang.register();
 
+        // Register recipe events
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-
         EIORecipes.register(modEventBus);
 
         // Run datagen after registrate is finished.
