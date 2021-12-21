@@ -8,6 +8,7 @@ public class DarkSteelConfig {
     public final ForgeConfigSpec.ConfigValue<Integer> DARK_STEEL_PICKAXE_OBSIDIAN_ENERGY_COST;
     public final ForgeConfigSpec.ConfigValue<Integer> DARK_STEEL_PICKAXE_OBSIDIAN_SPEED;
     public final ForgeConfigSpec.ConfigValue<Integer> DARK_STEEL_PICKAXE_AS_OBSIDIAN_AT_HARDNESS;
+
     public final ForgeConfigSpec.ConfigValue<Integer> EMPOWERED_EFFICIENCY_BOOST;
     public final ForgeConfigSpec.ConfigValue<Integer> EMPOWERED_ENERGY_PER_DAMAGE;
     public final ForgeConfigSpec.ConfigValue<Integer> EMPOWERED_ACTIVATION_COST_I;
@@ -22,6 +23,17 @@ public class DarkSteelConfig {
     public final ForgeConfigSpec.ConfigValue<Integer> EMPOWERED_ACTIVATION_COST_IV;
     public final ForgeConfigSpec.ConfigValue<Float> EMPOWERED_DAMAGE_ABSORPTION_CHANCE_IV;
     public final ForgeConfigSpec.ConfigValue<Integer> EMPOWERED_MAX_ENERGY_IV;
+
+    public final ForgeConfigSpec.ConfigValue<Integer> EXPLOSIVE_RADIUS_ACTIVATION_COST_I;
+    public final ForgeConfigSpec.ConfigValue<Integer> EXPLOSIVE_I;
+    public final ForgeConfigSpec.ConfigValue<Integer> EXPLOSIVE_ACTIVATION_COST_II;
+    public final ForgeConfigSpec.ConfigValue<Integer> EXPLOSIVE_II;
+    public final ForgeConfigSpec.ConfigValue<Integer> EXPLOSIVE_PENETRATION_ACTIVATION_COST_I;
+    public final ForgeConfigSpec.ConfigValue<Integer> EXPLOSIVE_PENETRATION_I;
+    public final ForgeConfigSpec.ConfigValue<Integer> EXPLOSIVE_PENETRATION_ACTIVATION_COST_II;
+    public final ForgeConfigSpec.ConfigValue<Integer> EXPLOSIVE_PENETRATION_II;
+    public final ForgeConfigSpec.ConfigValue<Integer> EXPLOSIVE_ENERGY_PER_EXPLODED_BLOCK;
+
     public final ForgeConfigSpec.ConfigValue<Integer> SPOON_ACTIVATION_COST;
     public final ForgeConfigSpec.ConfigValue<Integer> FORK_ACTIVATION_COST;
     public final ForgeConfigSpec.ConfigValue<Integer> DIRECT_ACTIVATION_COST;
@@ -56,6 +68,21 @@ public class DarkSteelConfig {
         EMPOWERED_DAMAGE_ABSORPTION_CHANCE_IV = builder.define("damageAbsorptionChance_l4", 0.85f);
         EMPOWERED_MAX_ENERGY_IV = builder.define("maxEnergy_l4", 1000000);
         builder.pop();
+
+        builder.push("explosive");
+        EXPLOSIVE_ENERGY_PER_EXPLODED_BLOCK = builder.define("explosiveEnergyPerBlock", 30);
+
+        EXPLOSIVE_RADIUS_ACTIVATION_COST_I = builder.define("explosiveActivationCostI", 8);
+        EXPLOSIVE_I = builder.define("explosiveI", 1);
+        EXPLOSIVE_ACTIVATION_COST_II = builder.define("explosiveActivationCostII", 12);
+        EXPLOSIVE_II = builder.define("explosiveII", 2);
+
+        EXPLOSIVE_PENETRATION_ACTIVATION_COST_I = builder.define("explosivePenetrationActivationCostI", 8);
+        EXPLOSIVE_PENETRATION_I = builder.define("explosivePenetrationI", 1);
+        EXPLOSIVE_PENETRATION_ACTIVATION_COST_II = builder.define("explosivePenetrationActivationCostII", 12);
+        EXPLOSIVE_PENETRATION_II = builder.define("explosivePenetrationII", 2);
+        builder.pop();
+
         SPOON_ACTIVATION_COST = builder.define("spoonActivationCost", 4);
         FORK_ACTIVATION_COST = builder.define("forkActivationCost", 4);
         DIRECT_ACTIVATION_COST = builder.define("directActivationCost", 4);

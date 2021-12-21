@@ -4,6 +4,9 @@ import com.enderio.base.common.capability.darksteel.DarkSteelUpgradeable;
 import com.enderio.base.common.item.EIOItems;
 import com.enderio.base.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.SpoonUpgrade;
+import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosivePenetrationUpgrade;
+import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosiveUpgrade;
+import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosiveUpgradeHandler;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.config.base.BaseConfig;
 import com.enderio.core.common.util.EnergyUtil;
@@ -14,10 +17,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.PickaxeItem;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -51,6 +51,7 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem 
     public float getDestroySpeed(ItemStack pStack, BlockState pState) {
         final float baseSpeed = canHarvest(pStack, pState) ? speed : 1.0f;
         float adjustedSpeed = getEmpoweredUpgrade(pStack).map(empoweredUpgrade -> empoweredUpgrade.adjustDestroySpeed(baseSpeed)).orElse(baseSpeed);
+        adjustedSpeed = ExplosiveUpgradeHandler.adjustDestroySpeed(adjustedSpeed, pStack);
         if (useObsidianMining(pState, pStack)) {
             adjustedSpeed += speedBoostWhenObsidian.get();
         }
@@ -62,6 +63,7 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem 
         if (useObsidianMining(pState, pStack)) {
             EnergyUtil.extractEnergy(pStack, obsidianBreakPowerUse.get(), false);
         }
+        ExplosiveUpgradeHandler.onMineBlock(pStack, pLevel, pPos, pEntityLiving);
         return super.mineBlock(pStack, pLevel, pState, pPos, pEntityLiving);
     }
 
@@ -81,6 +83,16 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem 
     @Override
     public boolean canPerformAction(ItemStack stack, net.minecraftforge.common.ToolAction toolAction) {
         return super.canPerformAction(stack, toolAction) || (hasSpoon(stack) && ToolActions.DEFAULT_SHOVEL_ACTIONS.contains(toolAction));
+    }
+
+    @Override
+    public void addCreativeItems(NonNullList<ItemStack> pItems, Item item) {
+        IDarkSteelItem.super.addCreativeItems(pItems, item);
+        //Include a fully upgraded version without explosive upgrades
+        ItemStack itemStack = createFullyUpgradedStack(item);
+        DarkSteelUpgradeable.removeUpgrade(itemStack, ExplosiveUpgrade.NAME);
+        DarkSteelUpgradeable.removeUpgrade(itemStack, ExplosivePenetrationUpgrade.NAME);
+        pItems.add(itemStack);
     }
 
     private boolean canHarvest(ItemStack stack, BlockState state) {
