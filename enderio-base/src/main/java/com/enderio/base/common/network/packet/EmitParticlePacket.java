@@ -52,7 +52,6 @@ public class EmitParticlePacket implements Packet {
         writeInto.writeDouble(x);
         writeInto.writeDouble(y);
         writeInto.writeDouble(z);
-
         writeInto.writeResourceLocation(Objects.requireNonNull(particleOptions.getType().getRegistryName()));
         particleOptions.writeToNetwork(writeInto);
     }

@@ -87,7 +87,7 @@ public class EnderIO {
             ForgeBlockTagsProvider b = new ForgeBlockTagsProvider(generator, event.getExistingFileHelper());
             generator.addProvider( new EIOItemTagsProvider(generator, b, event.getExistingFileHelper()));
             generator.addProvider( new EIOFluidTagsProvider(generator, event.getExistingFileHelper()));
-            generator.addProvider(new ExplosiveTagsProvider(generator, event.getExistingFileHelper()));
+            generator.addProvider( new ExplosiveTagsProvider(generator, event.getExistingFileHelper()));
         }
     }
 

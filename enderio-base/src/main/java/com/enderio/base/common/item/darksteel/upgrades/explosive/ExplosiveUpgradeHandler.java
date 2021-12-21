@@ -97,7 +97,7 @@ public class ExplosiveUpgradeHandler {
             EnergyUtil.extractEnergy(itemStack, EXPLOSIVE_BREAK_POWER_USE.get(),false);
             if (RAND.nextFloat() < .3f) {
                 particles.add(minePos, ParticleTypes.LARGE_SMOKE);
-            } else if (RAND.nextFloat() < .5f) {
+            } else if (RAND.nextFloat() < .7f) {
                 particles.add(minePos, ParticleTypes.SMOKE);
             }
             return true;

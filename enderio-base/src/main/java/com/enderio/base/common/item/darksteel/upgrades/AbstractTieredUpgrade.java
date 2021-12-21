@@ -35,7 +35,7 @@ public abstract class AbstractTieredUpgrade<T extends IUpgradeTier> implements I
 
     @Override
     public boolean isValidUpgrade(IDarkSteelUpgrade upgrade) {
-        if (upgrade instanceof AbstractTieredUpgrade up) {
+        if (getSerializedName().equals(upgrade.getSerializedName()) && upgrade instanceof AbstractTieredUpgrade up) {
             return up.tier.getLevel() == tier.getLevel() + 1;
         }
         return false;
