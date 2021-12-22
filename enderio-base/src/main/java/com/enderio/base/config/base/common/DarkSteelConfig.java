@@ -48,7 +48,7 @@ public class DarkSteelConfig {
         builder.push("darksteelpickaxe");
         DARK_STEEL_PICKAXE_OBSIDIAN_ENERGY_COST = builder.define("obsidianBreakPowerUse", 50);
         DARK_STEEL_PICKAXE_OBSIDIAN_SPEED = builder.define("speedBoostWhenObsidian", 50);
-        DARK_STEEL_PICKAXE_AS_OBSIDIAN_AT_HARDNESS = builder.define("useObsidianBreakSpeedAtHardness", 50);
+        DARK_STEEL_PICKAXE_AS_OBSIDIAN_AT_HARDNESS = builder.define("useObsidianBreakSpeedAtHardness", 30);
         builder.pop();
 
         builder.push("upgrades");
