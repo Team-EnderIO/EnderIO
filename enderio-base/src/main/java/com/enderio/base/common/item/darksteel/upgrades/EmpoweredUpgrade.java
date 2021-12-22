@@ -63,7 +63,9 @@ public class EmpoweredUpgrade extends AbstractTieredUpgrade<EmpoweredUpgradeTier
     }
 
     @Override
-    protected EmpoweredUpgradeTier getBaseTier() { return EmpoweredUpgradeTier.ONE; }
+    protected EmpoweredUpgradeTier getBaseTier() {
+        return EmpoweredUpgradeTier.ONE;
+    }
 
     @Override
     protected Optional<EmpoweredUpgradeTier> getTier(int tier) {

@@ -30,11 +30,10 @@ public final class BlockUtil {
         if (removed) {
             state.getBlock().destroy(level, pos, state);
             state.getBlock().playerDestroy(level, player, pos, state, null, tool);
-            if(event.getExpToDrop() > 0 && level instanceof ServerLevel serverLevel) {
+            if (level instanceof ServerLevel serverLevel) {
                 state.getBlock().popExperience(serverLevel, pos, event.getExpToDrop());
             }
         }
         return removed;
     }
-
 }

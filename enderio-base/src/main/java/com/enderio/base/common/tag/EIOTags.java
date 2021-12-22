@@ -60,8 +60,8 @@ public class EIOTags {
         public static final IOptionalNamedTag<Block> FUSED_QUARTZ = BlockTags.createOptional(EnderIO.loc("fused_quartz"));
         public static final IOptionalNamedTag<Block> CLEAR_GLASS = BlockTags.createOptional(EnderIO.loc("clear_glass"));
         public static final IOptionalNamedTag<Block> DARK_STEEL_TIER = BlockTags.createOptional(EnderIO.loc("needs_dark_steel"));
-        public static final IOptionalNamedTag<Block> DARK_STEEL_EXPLODABLE_BLACKLIST = BlockTags.createOptional(EnderIO.loc("dark_steel_explodable_blacklist"));
-        public static final IOptionalNamedTag<Block> DARK_STEEL_EXPLODABLE_WHITELIST = BlockTags.createOptional(EnderIO.loc("dark_steel_explodable_whitelist"));
+        public static final IOptionalNamedTag<Block> DARK_STEEL_EXPLODABLE_DENY_LIST = BlockTags.createOptional(EnderIO.loc("dark_steel_explodable_deny_list"));
+        public static final IOptionalNamedTag<Block> DARK_STEEL_EXPLODABLE_ALLOW_LIST = BlockTags.createOptional(EnderIO.loc("dark_steel_explodable_allow_list"));
 
     }
     

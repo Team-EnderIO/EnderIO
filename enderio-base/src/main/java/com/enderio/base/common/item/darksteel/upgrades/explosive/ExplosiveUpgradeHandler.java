@@ -64,8 +64,7 @@ public class ExplosiveUpgradeHandler {
             BlockHitResult hit = Item.getPlayerPOVHitResult(pLevel, player, ClipContext.Fluid.NONE);
             if (pPos.equals(hit.getBlockPos())) {
                 EmitParticlesPacket particles = new EmitParticlesPacket();
-                boolean didAnySploding = explodeArea(pStack, pLevel, player, hit, particles);
-                if (didAnySploding) {
+                if (explodeArea(pStack, pLevel, player, hit, particles)) {
                     EIOPackets.getNetwork().getNetworkChannel().send(PacketDistributor.TRACKING_CHUNK.with(() -> pLevel.getChunkAt(pPos)), particles);
                 }
             }
@@ -106,10 +105,10 @@ public class ExplosiveUpgradeHandler {
     }
 
     private static boolean canExplode(ItemStack itemStack, BlockState blockState, @Nullable BlockEntity blockEntity) {
-        if (EIOTags.Blocks.DARK_STEEL_EXPLODABLE_WHITELIST.contains(blockState.getBlock())) {
+        if (EIOTags.Blocks.DARK_STEEL_EXPLODABLE_ALLOW_LIST.contains(blockState.getBlock())) {
             return true;
         }
-        if(EIOTags.Blocks.DARK_STEEL_EXPLODABLE_BLACKLIST.contains(blockState.getBlock()) || blockEntity != null) {
+        if (EIOTags.Blocks.DARK_STEEL_EXPLODABLE_DENY_LIST.contains(blockState.getBlock()) || blockEntity != null) {
             return false;
         }
         return Items.STONE_PICKAXE.isCorrectToolForDrops(blockState) ||

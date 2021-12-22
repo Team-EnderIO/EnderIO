@@ -5,11 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
-
-import static com.enderio.base.common.lang.EIOLang.DS_UPGRADE_EXPLOSIVE_DESCRIPTION;
 
 public abstract class AbstractTieredUpgrade<T extends IUpgradeTier> implements IDarkSteelUpgrade {
 
@@ -49,11 +45,6 @@ public abstract class AbstractTieredUpgrade<T extends IUpgradeTier> implements I
     @Override
     public Component getDisplayName() {
         return tier.getDisplayName();
-    }
-
-    @Override
-    public Collection<Component> getDescription() {
-        return List.of(DS_UPGRADE_EXPLOSIVE_DESCRIPTION);
     }
 
     @Override

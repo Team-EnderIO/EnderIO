@@ -33,7 +33,9 @@ public enum ExplosiveUpgradeTier implements IUpgradeTier {
         factory = () -> new ExplosiveUpgrade(this);
     }
 
-    public ForgeConfigSpec.ConfigValue<Integer> getMagnitude() { return magnitude;}
+    public ForgeConfigSpec.ConfigValue<Integer> getMagnitude() {
+        return magnitude;
+    }
 
     @Override
     public Supplier<IDarkSteelUpgrade> getFactory() {
@@ -41,10 +43,16 @@ public enum ExplosiveUpgradeTier implements IUpgradeTier {
     }
 
     @Override
-    public int getLevel() {return ordinal();}
+    public int getLevel() {
+        return ordinal();
+    }
 
     @Override
-    public Component getDisplayName() { return displayName; }
+    public Component getDisplayName() {
+        return displayName;
+    }
 
-    public ForgeConfigSpec.ConfigValue<Integer> getActivationCost() { return activationCost; }
+    public ForgeConfigSpec.ConfigValue<Integer> getActivationCost() {
+        return activationCost;
+    }
 }

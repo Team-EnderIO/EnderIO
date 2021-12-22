@@ -4,7 +4,7 @@ import com.enderio.base.common.block.EIOBlocks;
 import com.enderio.base.common.blockentity.EIOBlockEntities;
 import com.enderio.base.common.enchantment.EIOEnchantments;
 import com.enderio.base.common.item.EIOItems;
-import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosiveTagsProvider;
+import com.enderio.base.data.tags.EIOBlockTagsProvider;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.menu.EIOMenus;
 import com.enderio.base.common.network.EIOPackets;
@@ -87,7 +87,7 @@ public class EnderIO {
             ForgeBlockTagsProvider b = new ForgeBlockTagsProvider(generator, event.getExistingFileHelper());
             generator.addProvider( new EIOItemTagsProvider(generator, b, event.getExistingFileHelper()));
             generator.addProvider( new EIOFluidTagsProvider(generator, event.getExistingFileHelper()));
-            generator.addProvider( new ExplosiveTagsProvider(generator, event.getExistingFileHelper()));
+            generator.addProvider( new EIOBlockTagsProvider(generator, event.getExistingFileHelper()));
         }
     }
 

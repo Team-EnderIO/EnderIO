@@ -74,5 +74,4 @@ public class EmitParticlesPacket implements Packet {
         }
     }
 
-
 }

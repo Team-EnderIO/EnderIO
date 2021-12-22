@@ -58,7 +58,7 @@ public class EmitParticlePacket implements Packet {
 
     @Override
     public void handle(NetworkEvent.Context context) {
-        Objects.requireNonNull(Minecraft.getInstance().level).addParticle(particleOptions, x, y, z, 0.0D, 0.0D, 0.0D);
+        Minecraft.getInstance().level.addParticle(particleOptions, x, y, z, 0.0D, 0.0D, 0.0D);
     }
 
     public static class Handler extends Packet.PacketHandler<EmitParticlePacket> {
@@ -78,5 +78,4 @@ public class EmitParticlePacket implements Packet {
             packet.write(buf);
         }
     }
-
 }

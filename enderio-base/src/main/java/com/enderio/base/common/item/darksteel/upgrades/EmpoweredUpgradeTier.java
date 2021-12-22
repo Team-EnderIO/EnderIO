@@ -55,9 +55,15 @@ public enum EmpoweredUpgradeTier implements IUpgradeTier {
     }
 
     @Override
-    public int getLevel() { return ordinal(); }
+    public int getLevel() {
+        return ordinal();
+    }
 
-    public ForgeConfigSpec.ConfigValue<Integer> getActivationCost() { return activationCost; }
+    public ForgeConfigSpec.ConfigValue<Integer> getActivationCost() {
+        return activationCost;
+    }
 
-    public Component getDisplayName() { return displayName; }
+    public Component getDisplayName() {
+        return displayName;
+    }
 }
