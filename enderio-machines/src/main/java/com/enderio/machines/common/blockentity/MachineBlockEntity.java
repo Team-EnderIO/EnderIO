@@ -30,7 +30,7 @@ import java.util.Optional;
 
 import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
-public abstract class AbstractMachineBlockEntity extends SyncedBlockEntity implements MenuProvider {
+public abstract class MachineBlockEntity extends SyncedBlockEntity implements MenuProvider {
 
     private final IOConfig config = new IOConfig();
 
@@ -40,7 +40,7 @@ public abstract class AbstractMachineBlockEntity extends SyncedBlockEntity imple
     private final EnumMap<Direction, LazyOptional<IFluidHandler>> fluidHandlerCache = new EnumMap<>(Direction.class);
     private boolean isCacheDirty = false;
 
-    public AbstractMachineBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
+    public MachineBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);
         add2WayDataSlot(new EnumDataSlot<>(this::getRedstoneControl, this::setRedstoneControl, SyncMode.GUI));
         add2WayDataSlot(new NBTSerializableDataSlot<>(() -> config, SyncMode.WORLD));
@@ -84,7 +84,7 @@ public abstract class AbstractMachineBlockEntity extends SyncedBlockEntity imple
         isCacheDirty = true;
     }
 
-    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, AbstractMachineBlockEntity pBlockEntity) {
+    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, MachineBlockEntity pBlockEntity) {
         pBlockEntity.tick();
     }
     @Override
