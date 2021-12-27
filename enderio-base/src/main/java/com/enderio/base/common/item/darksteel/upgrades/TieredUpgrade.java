@@ -7,14 +7,14 @@ import net.minecraft.network.chat.Component;
 
 import java.util.Optional;
 
-public abstract class AbstractTieredUpgrade<T extends IUpgradeTier> implements IDarkSteelUpgrade {
+public abstract class TieredUpgrade<T extends IUpgradeTier> implements IDarkSteelUpgrade {
 
     public static final String TIER_KEY = "tier";
 
     protected T tier;
     private final String serializedName;
 
-    protected AbstractTieredUpgrade(T tier, String serializedName) {
+    protected TieredUpgrade(T tier, String serializedName) {
       this.tier = tier;
       this.serializedName = serializedName;
     }
@@ -31,7 +31,7 @@ public abstract class AbstractTieredUpgrade<T extends IUpgradeTier> implements I
 
     @Override
     public boolean isValidUpgrade(IDarkSteelUpgrade upgrade) {
-        if (getSerializedName().equals(upgrade.getSerializedName()) && upgrade instanceof AbstractTieredUpgrade up) {
+        if (getSerializedName().equals(upgrade.getSerializedName()) && upgrade instanceof TieredUpgrade up) {
             return up.tier.getLevel() == tier.getLevel() + 1;
         }
         return false;

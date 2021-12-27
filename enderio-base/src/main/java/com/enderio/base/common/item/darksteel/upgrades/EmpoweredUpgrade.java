@@ -11,7 +11,7 @@ import net.minecraftforge.energy.EnergyStorage;
 
 import java.util.*;
 
-public class EmpoweredUpgrade extends AbstractTieredUpgrade<EmpoweredUpgradeTier>  {
+public class EmpoweredUpgrade extends TieredUpgrade<EmpoweredUpgradeTier> {
 
     public static final String NAME = DarkSteelUpgradeRegistry.UPGRADE_PREFIX + "empowered";
     public static final String STORAGE_KEY = "storage";

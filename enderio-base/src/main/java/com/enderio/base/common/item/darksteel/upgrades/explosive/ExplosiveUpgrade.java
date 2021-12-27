@@ -1,7 +1,7 @@
 package com.enderio.base.common.item.darksteel.upgrades.explosive;
 
 import com.enderio.base.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
-import com.enderio.base.common.item.darksteel.upgrades.AbstractTieredUpgrade;
+import com.enderio.base.common.item.darksteel.upgrades.TieredUpgrade;
 import com.enderio.base.common.lang.EIOLang;
 import net.minecraft.network.chat.Component;
 
@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-public class ExplosiveUpgrade extends AbstractTieredUpgrade<ExplosiveUpgradeTier> {
+public class ExplosiveUpgrade extends TieredUpgrade<ExplosiveUpgradeTier> {
 
     public static final String NAME = DarkSteelUpgradeRegistry.UPGRADE_PREFIX + "explosive";
 
