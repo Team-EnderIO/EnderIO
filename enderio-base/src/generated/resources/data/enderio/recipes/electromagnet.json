@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CVC",
+    "C C",
+    "E E"
+  ],
+  "key": {
+    "V": {
+      "item": "enderio:vibrant_crystal"
+    },
+    "C": {
+      "item": "enderio:conductive_iron_ingot"
+    },
+    "E": {
+      "item": "enderio:electrical_steel_ingot"
+    }
+  },
+  "result": {
+    "item": "enderio:electromagnet"
+  }
+}

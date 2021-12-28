@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "IEI",
+    " CI",
+    "  I"
+  ],
+  "key": {
+    "I": {
+      "item": "enderio:electrical_steel_ingot"
+    },
+    "C": {
+      "item": "minecraft:compass"
+    },
+    "E": {
+      "tag": "forge:ender_pearls"
+    }
+  },
+  "result": {
+    "item": "enderio:coordinate_selector"
+  }
+}
