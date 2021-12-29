@@ -168,7 +168,6 @@ subprojects {
 
     // Example for how to get properties into the manifest for reading at runtime.
     jar {
-//        destinationDirectory.set(file("$rootDir/build/libs"))
         manifest {
             attributes([
                     "Specification-Title"     : "${modId}",
@@ -193,7 +192,7 @@ subprojects {
         // Not a fan of how registrate is bundled in each time, but I don't think there's much that can be done.
         shadowJar {
             configurations = [project.configurations.shade]
-            relocate 'com.tterrag.registrate', "com.enderio.${modId}.registrate"
+            relocate 'com.tterrag.registrate', "com.enderio.registrate"
         }
 
         reobf {
