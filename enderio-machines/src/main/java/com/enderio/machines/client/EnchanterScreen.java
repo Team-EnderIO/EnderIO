@@ -35,11 +35,6 @@ public class EnchanterScreen extends EIOScreen<EnchanterMenu> {
     protected Vector2i getBackgroundImageSize() {
         return new Vector2i(176, 166);
     }
-
-    @Override
-    protected void renderBg(PoseStack pPoseStack, float pPartialTicks, int pMouseX, int pMouseY) {
-        renderGradleWeirdnessBackground(pPoseStack, pPartialTicks, pMouseX, pMouseY);
-    }
     
     @Override
     public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {

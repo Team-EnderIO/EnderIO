@@ -33,9 +33,4 @@ public class FluidTankScreen extends EIOScreen<FluidTankMenu> {
     protected Vector2i getBackgroundImageSize() {
         return new Vector2i(176, 166);
     }
-
-    @Override
-    protected void renderBg(PoseStack pPoseStack, float pPartialTicks, int pMouseX, int pMouseY) {
-        renderGradleWeirdnessBackground(pPoseStack, pPartialTicks, pMouseX, pMouseY);
-    }
 }
