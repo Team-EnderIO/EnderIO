@@ -16,6 +16,9 @@ plugins {
     id 'com.github.johnrengelman.shadow' version "${shadow_version}"
 }
 
+// Determine if we're building for release
+def release = System.getenv("RELEASE") != null && !System.getenv("RELEASE").equalsIgnoreCase("false")
+
 subprojects {
     apply plugin: 'net.minecraftforge.gradle'
     apply plugin: 'org.parchmentmc.librarian.forgegradle'
@@ -131,6 +134,8 @@ subprojects {
                 includeGroup "curse.maven"
             }
         }
+
+        maven { url 'https://maven.blamejared.com' }
     }
 
     dependencies {
@@ -142,7 +147,10 @@ subprojects {
 //        implementation fg.deobf("mcjty.theoneprobe:TheOneProbe:${minecraft_version}-${top_version}")
         implementation fg.deobf("curse.maven:the-one-probe-245211:${top_version}")
 
-        if (project.name.equals("enderio-base")) {
+        compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
+        runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
+
+        if (project.name != "endercore") {
             def registrate = "com.tterrag.registrate:Registrate:${registrate_version}"
             implementation fg.deobf(registrate)
             shade registrate
@@ -163,7 +171,7 @@ subprojects {
 
     // Example for how to get properties into the manifest for reading at runtime.
     jar {
-        destinationDirectory.set(file("$rootDir/build/libs"))
+//        destinationDirectory.set(file("$rootDir/build/libs"))
         manifest {
             attributes([
                     "Specification-Title"     : "${modId}",
@@ -184,19 +192,17 @@ subprojects {
         delete "$buildDir/libs"
     }
 
-    shadowJar {
-        configurations = [project.configurations.shade]
-        relocate 'com.tterrag.registrate', 'com.enderio.repack.registrate'
-    }
+    if (project.name != "endercore") {
+        // Not a fan of how registrate is bundled in each time, but I don't think there's much that can be done.
+        shadowJar {
+            configurations = [project.configurations.shade]
+            relocate 'com.tterrag.registrate', "com.enderio.${modId}.registrate"
+        }
 
-    reobf {
-        shadowJar {}
+        reobf {
+            shadowJar {}
+        }
     }
-
-//    if (project.hasProperty("releaseBuild") && project.releaseBuild == true) {
-//        jar.finalizedBy('reobfJar')
-//    }
-//    publish.dependsOn('reobfJar')
 
     publishing {
         publications {
@@ -229,6 +235,23 @@ subprojects {
     }
 
     // endregion
+
+    // Copy release files out
+    if (project.name != "endercore") {
+        task copyFiles(type: Copy, dependsOn: reobfShadowJar) {
+            from(shadowJar)
+            into rootProject.file('build/libs')
+        }
+    } else {
+        task copyFiles(type: Copy, dependsOn: 'reobfJar') {
+            from(jar)
+            into rootProject.file('build/libs')
+        }
+    }
+
+    if (release) {
+        build.dependsOn copyFiles
+    }
 }
 
 // region Versioning

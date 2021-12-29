@@ -15,10 +15,10 @@ import com.enderio.base.config.machines.MachinesConfig;
 import com.enderio.base.data.recipe.standard.EIOItemTagsProvider;
 import com.enderio.base.data.recipe.standard.StandardRecipes;
 import com.tterrag.registrate.Registrate;
-import com.tterrag.registrate.util.NonNullLazyValue;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.data.ForgeBlockTagsProvider;
+import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -36,7 +36,7 @@ import java.nio.file.Files;
 public class EnderIO {
     public static final @Nonnull String MODID = "enderio";
 
-    private static final NonNullLazyValue<Registrate> REGISTRATE = new NonNullLazyValue<>(() -> Registrate.create(MODID));
+    private static final Lazy<Registrate> REGISTRATE = Lazy.of(() -> Registrate.create(MODID));
 
     public EnderIO() {
         // Create configs subdirectory

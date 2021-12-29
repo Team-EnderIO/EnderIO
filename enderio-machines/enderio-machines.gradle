@@ -1,5 +1,5 @@
 dependencies {
     // TODO: move to build.gradle once endercore is separate
     implementation project(":endercore")
-    implementation project(path: ':enderio-base', configuration: 'shadow')
+    implementation project(path: ':enderio-base')
 }
