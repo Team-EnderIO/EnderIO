@@ -205,32 +205,41 @@ subprojects {
     }
 
     publishing {
+        // Wait until reobf is finished.
+        tasks.publish.dependsOn 'build'
         publications {
             mavenJava(MavenPublication) {
-                artifact jar
+                if (project.name != 'endercore') {
+                    artifact shadowJar // Push the 'all' jar.
+                } else {
+                    artifact jar
+                }
                 artifactId = getArchiveBaseName(project)
             }
         }
         repositories {
-            def pubHypherion = System.getenv('MAVEN_URL') != null
+            mavenLocal()
 
-            //if (pubHypherion) {
-            maven {
-                url System.getenv('MAVEN_URL')
-                credentials {
-                    username System.getenv('MAVEN_USER')
-                    password System.getenv('MAVEN_PASS_2')
-                }
-            }
-            //} else {
-            maven {
-                url "https://maven.nerdthings.dev/snapshots"
-                credentials {
-                    username = System.getenv("MAVEN_USERNAME")
-                    password = System.getenv("MAVEN_PASSWORD")
-                }
-            }
-            //}
+            // TODO: Configure tterrag maven.
+//            def pubHypherion = System.getenv('MAVEN_URL') != null
+//
+//            //if (pubHypherion) {
+//            maven {
+//                url System.getenv('MAVEN_URL')
+//                credentials {
+//                    username System.getenv('MAVEN_USER')
+//                    password System.getenv('MAVEN_PASS_2')
+//                }
+//            }
+//            //} else {
+//            maven {
+//                url "https://maven.nerdthings.dev/snapshots"
+//                credentials {
+//                    username = System.getenv("MAVEN_USERNAME")
+//                    password = System.getenv("MAVEN_PASSWORD")
+//                }
+//            }
+//            //}
         }
     }
 
@@ -249,9 +258,8 @@ subprojects {
         }
     }
 
-    if (release) {
-        build.dependsOn copyFiles
-    }
+    // Copy the obfuscated files after build.
+    build.dependsOn copyFiles
 }
 
 // region Versioning
