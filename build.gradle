@@ -16,9 +16,6 @@ plugins {
     id 'com.github.johnrengelman.shadow' version "${shadow_version}"
 }
 
-// Determine if we're building for release
-def release = System.getenv("RELEASE") != null && !System.getenv("RELEASE").equalsIgnoreCase("false")
-
 subprojects {
     apply plugin: 'net.minecraftforge.gradle'
     apply plugin: 'org.parchmentmc.librarian.forgegradle'
