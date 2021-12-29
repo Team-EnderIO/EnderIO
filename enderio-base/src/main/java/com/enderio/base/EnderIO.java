@@ -4,6 +4,7 @@ import com.enderio.base.common.block.EIOBlocks;
 import com.enderio.base.common.blockentity.EIOBlockEntities;
 import com.enderio.base.common.enchantment.EIOEnchantments;
 import com.enderio.base.common.item.EIOItems;
+import com.enderio.base.data.tags.EIOBlockTagsProvider;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.menu.EIOMenus;
 import com.enderio.base.common.network.EIOPackets;
@@ -12,7 +13,8 @@ import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.config.base.BaseConfig;
 import com.enderio.base.config.decor.DecorConfig;
 import com.enderio.base.config.machines.MachinesConfig;
-import com.enderio.base.data.recipe.standard.EIOItemTagsProvider;
+import com.enderio.base.data.tags.EIOFluidTagsProvider;
+import com.enderio.base.data.tags.EIOItemTagsProvider;
 import com.enderio.base.data.recipe.standard.StandardRecipes;
 import com.tterrag.registrate.Registrate;
 import net.minecraft.data.DataGenerator;
@@ -84,6 +86,8 @@ public class EnderIO {
             StandardRecipes.generate(generator);
             ForgeBlockTagsProvider b = new ForgeBlockTagsProvider(generator, event.getExistingFileHelper());
             generator.addProvider( new EIOItemTagsProvider(generator, b, event.getExistingFileHelper()));
+            generator.addProvider( new EIOFluidTagsProvider(generator, event.getExistingFileHelper()));
+            generator.addProvider( new EIOBlockTagsProvider(generator, event.getExistingFileHelper()));
         }
     }
 

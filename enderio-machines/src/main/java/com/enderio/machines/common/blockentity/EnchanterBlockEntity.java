@@ -3,7 +3,7 @@ package com.enderio.machines.common.blockentity;
 import com.enderio.base.common.blockentity.RedstoneControl;
 import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemHandlerMaster;
 import com.enderio.machines.common.menu.EnchanterMenu;
-import com.enderio.machines.common.recipe.IEnchanterRecipe;
+import com.enderio.machines.common.recipe.EnchanterRecipe;
 import com.enderio.machines.common.recipe.MachineRecipes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -18,12 +18,12 @@ import net.minecraftforge.items.wrapper.RecipeWrapper;
 import java.util.List;
 import java.util.Optional;
 
-public class EnchanterBlockEntity extends AbstractMachineBlockEntity{
+public class EnchanterBlockEntity extends MachineBlockEntity {
 
     private ItemHandlerMaster itemHandlerMaster = new ItemHandlerMaster(getConfig(), 4, List.of(0,1,2), List.of(3)) {
         protected void onContentsChanged(int slot) {
             if (slot != 3) {
-                Optional<IEnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.Types.ENCHANTING, new RecipeWrapper(itemHandlerMaster), level);
+                Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.Types.ENCHANTING, new RecipeWrapper(itemHandlerMaster), level);
                 if (recipe.isPresent()) {
                     itemHandlerMaster.setStackInSlot(3, recipe.get().assemble(new RecipeWrapper(itemHandlerMaster)));
                 }
@@ -32,14 +32,14 @@ public class EnchanterBlockEntity extends AbstractMachineBlockEntity{
                 }
             }
             setChanged();
-        };
+        }
         
         public ItemStack extractItem(int slot, int amount, boolean simulate) {
             if (slot == 3 && !isAction()) {
                 return ItemStack.EMPTY;
             }
             return super.extractItem(slot, amount, simulate);
-        };
+        }
     };
     
     public EnchanterBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {

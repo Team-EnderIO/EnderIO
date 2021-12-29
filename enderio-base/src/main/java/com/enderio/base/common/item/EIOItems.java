@@ -5,11 +5,12 @@ import com.enderio.base.common.item.capacitors.LootCapacitorItem;
 import com.enderio.base.common.item.darksteel.DarkSteelAxeItem;
 import com.enderio.base.common.item.darksteel.DarkSteelPickaxeItem;
 import com.enderio.base.common.item.darksteel.DarkSteelUpgradeItem;
-import com.enderio.base.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
-import com.enderio.base.common.item.darksteel.upgrades.EmpoweredUpgrade;
-import com.enderio.base.common.item.darksteel.upgrades.ForkUpgrade;
-import com.enderio.base.common.item.darksteel.upgrades.SpoonUpgrade;
+import com.enderio.base.common.item.darksteel.upgrades.*;
 import com.enderio.base.common.item.darksteel.upgrades.direct.DirectUpgrade;
+import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosivePenetrationUpgrade;
+import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosivePenetrationUpgradeTier;
+import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosiveUpgrade;
+import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosiveUpgradeTier;
 import com.enderio.base.common.item.food.EnderiosItem;
 import com.enderio.base.common.item.misc.EnderfaceItem;
 import com.enderio.base.common.item.misc.GearItem;
@@ -26,7 +27,6 @@ import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Tier;
@@ -354,6 +354,12 @@ public class EIOItems {
         .tab(() -> EIOCreativeTabs.GEAR)
         .register();
 
+    public static ItemEntry<ColdFireIgniter> COLD_FIRE_IGNITER = REGISTRATE
+        .item("cold_fire_igniter", ColdFireIgniter::new)
+        .defaultModel()
+        .tab(() -> EIOCreativeTabs.GEAR)
+        .register();
+
     // endregion
 
     // region DarkSteel
@@ -367,7 +373,8 @@ public class EIOItems {
         .tab(() -> EIOCreativeTabs.GEAR)
         .onRegister(item -> DarkSteelUpgradeRegistry
             .instance()
-            .addUpgradesForItem(Objects.requireNonNull(item.getRegistryName()), EmpoweredUpgrade.NAME, SpoonUpgrade.NAME, DirectUpgrade.NAME))
+            .addUpgradesForItem(Objects.requireNonNull(item.getRegistryName()), EmpoweredUpgrade.NAME, SpoonUpgrade.NAME, DirectUpgrade.NAME,
+                ExplosiveUpgrade.NAME, ExplosivePenetrationUpgrade.NAME))
         .register();
 
     public static ItemEntry<DarkSteelAxeItem> DARK_STEEL_AXE = REGISTRATE
@@ -389,28 +396,28 @@ public class EIOItems {
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_1 = REGISTRATE
         .item("dark_steel_upgrade_empowered_1",
-            properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgrade.Tier.ONE.getActivationCost(), EmpoweredUpgrade.Tier.ONE.getFactory()))
+            properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgradeTier.ONE.getActivationCost(), EmpoweredUpgradeTier.ONE.getFactory()))
         .tab(() -> EIOCreativeTabs.GEAR)
         .lang("Empowered" + UPGRADE_TEXT)
         .register();
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_2 = REGISTRATE
         .item("dark_steel_upgrade_empowered_2",
-            properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgrade.Tier.TWO.getActivationCost(), EmpoweredUpgrade.Tier.TWO.getFactory()))
+            properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgradeTier.TWO.getActivationCost(), EmpoweredUpgradeTier.TWO.getFactory()))
         .tab(() -> EIOCreativeTabs.GEAR)
         .lang("Empowered II" + UPGRADE_TEXT)
         .register();
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_3 = REGISTRATE
-        .item("dark_steel_upgrade_empowered_3",
-            properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgrade.Tier.THREE.getActivationCost(), EmpoweredUpgrade.Tier.THREE.getFactory()))
+        .item("dark_steel_upgrade_empowered_3", 
+            properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgradeTier.THREE.getActivationCost(), EmpoweredUpgradeTier.THREE.getFactory()))
         .tab(() -> EIOCreativeTabs.GEAR)
         .lang("Empowered III" + UPGRADE_TEXT)
         .register();
 
     public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_4 = REGISTRATE
-        .item("dark_steel_upgrade_empowered_4",
-            properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgrade.Tier.FOUR.getActivationCost(), EmpoweredUpgrade.Tier.FOUR.getFactory()))
+        .item("dark_steel_upgrade_empowered_4", 
+            properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgradeTier.FOUR.getActivationCost(), EmpoweredUpgradeTier.FOUR.getFactory()))
         .tab(() -> EIOCreativeTabs.GEAR)
         .lang("Empowered IV" + UPGRADE_TEXT)
         .register();
@@ -432,6 +439,35 @@ public class EIOItems {
             properties -> new DarkSteelUpgradeItem(properties, BaseConfig.COMMON.DARK_STEEL.DIRECT_ACTIVATION_COST, DirectUpgrade::new))
         .tab(() -> EIOCreativeTabs.GEAR)
         .lang("Direct" + UPGRADE_TEXT)
+        .register();
+
+    public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_1 = REGISTRATE
+        .item("dark_steel_upgrade_tnt", properties -> new DarkSteelUpgradeItem(properties, ExplosiveUpgradeTier.ONE.getActivationCost(),
+            ExplosiveUpgradeTier.ONE.getFactory()))
+        .tab(() -> EIOCreativeTabs.GEAR)
+        .lang("Explosive I" + UPGRADE_TEXT)
+        .register();
+
+    public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_2 = REGISTRATE
+        .item("dark_steel_upgrade_tnt1", properties -> new DarkSteelUpgradeItem(properties, ExplosiveUpgradeTier.TWO.getActivationCost(),
+            ExplosiveUpgradeTier.TWO.getFactory()))
+        .tab(() -> EIOCreativeTabs.GEAR)
+        .lang("Explosive II" + UPGRADE_TEXT)
+        .register();
+
+    //TODO: Textures for dark_steel_upgrade_penetration_1 and dark_steel_upgrade_penetration_2 needed
+    public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_1 = REGISTRATE
+        .item("dark_steel_upgrade_penetration_1", properties -> new DarkSteelUpgradeItem(properties, ExplosivePenetrationUpgradeTier.ONE.getActivationCost(),
+            ExplosivePenetrationUpgradeTier.ONE.getFactory()))
+        .tab(() -> EIOCreativeTabs.GEAR)
+        .lang("Explosive Penetration I" + UPGRADE_TEXT)
+        .register();
+
+    public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_2 = REGISTRATE
+        .item("dark_steel_upgrade_penetration_2", properties -> new DarkSteelUpgradeItem(properties, ExplosivePenetrationUpgradeTier.TWO.getActivationCost(),
+            ExplosivePenetrationUpgradeTier.TWO.getFactory()))
+        .tab(() -> EIOCreativeTabs.GEAR)
+        .lang("Explosive Penetration II" + UPGRADE_TEXT)
         .register();
 
     // endregion

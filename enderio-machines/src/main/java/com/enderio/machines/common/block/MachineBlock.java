@@ -1,6 +1,6 @@
 package com.enderio.machines.common.block;
 
-import com.enderio.machines.common.blockentity.AbstractMachineBlockEntity;
+import com.enderio.machines.common.blockentity.MachineBlockEntity;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -23,9 +23,9 @@ import net.minecraftforge.network.NetworkHooks;
 import javax.annotation.Nullable;
 
 public class MachineBlock extends BaseEntityBlock {
-    private final BlockEntityEntry<? extends AbstractMachineBlockEntity> blockEntityType;
+    private final BlockEntityEntry<? extends MachineBlockEntity> blockEntityType;
 
-    public MachineBlock(Properties p_49795_, BlockEntityEntry<? extends AbstractMachineBlockEntity> blockEntityType) {
+    public MachineBlock(Properties p_49795_, BlockEntityEntry<? extends MachineBlockEntity> blockEntityType) {
         super(p_49795_);
         this.blockEntityType = blockEntityType;
     }
@@ -38,7 +38,7 @@ public class MachineBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return createTickerHelper(pBlockEntityType, blockEntityType.get(), AbstractMachineBlockEntity::tick);
+        return createTickerHelper(pBlockEntityType, blockEntityType.get(), MachineBlockEntity::tick);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class MachineBlock extends BaseEntityBlock {
 
     private void updateBlockEntityCache(LevelReader level, BlockPos pos) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (blockEntity instanceof AbstractMachineBlockEntity machineBlockEntity) {
+        if (blockEntity instanceof MachineBlockEntity machineBlockEntity) {
             machineBlockEntity.updateCache();
         }
     }
