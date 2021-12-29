@@ -6,9 +6,9 @@ import com.enderio.machines.common.menu.MachineMenus;
 import com.enderio.machines.common.recipe.MachineRecipes;
 import com.enderio.machines.data.recipe.MachineRecipeGenerator;
 import com.tterrag.registrate.Registrate;
-import com.tterrag.registrate.util.NonNullLazyValue;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -19,7 +19,7 @@ import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 public class EIOMachines {
     public static final String MODID = "enderio_machines";
 
-    private static final NonNullLazyValue<Registrate> REGISTRATE = new NonNullLazyValue<>(() -> Registrate.create(MODID));
+    private static final Lazy<Registrate> REGISTRATE = Lazy.of(() -> Registrate.create(MODID));
 
     public EIOMachines() {
         MachineBlocks.register();
