@@ -2,9 +2,9 @@ package com.enderio.decoration.common.blockentity;
 
 import com.enderio.decoration.EIODecor;
 import com.enderio.decoration.common.block.DecorBlocks;
-import com.tterrag.registrate.Registrate;
-import com.tterrag.registrate.util.entry.BlockEntityEntry;
-import com.tterrag.registrate.util.nullness.NonNullSupplier;
+import com.enderio.registrate.Registrate;
+import com.enderio.registrate.util.entry.BlockEntityEntry;
+import com.enderio.registrate.util.nullness.NonNullSupplier;
 
 public class DecorBlockEntities {
 

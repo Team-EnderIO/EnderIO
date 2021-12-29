@@ -1,7 +1,7 @@
 package com.enderio.machines.common.block;
 
 import com.enderio.machines.common.blockentity.MachineBlockEntity;
-import com.tterrag.registrate.util.entry.BlockEntityEntry;
+import com.enderio.registrate.util.entry.BlockEntityEntry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;

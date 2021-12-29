@@ -1,7 +1,7 @@
 package com.enderio.decoration.data.model.block;
 
-import com.tterrag.registrate.providers.DataGenContext;
-import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
+import com.enderio.registrate.providers.DataGenContext;
+import com.enderio.registrate.providers.RegistrateBlockstateProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.ModelProvider;

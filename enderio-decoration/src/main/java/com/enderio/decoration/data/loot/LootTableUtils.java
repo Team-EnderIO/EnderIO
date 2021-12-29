@@ -1,6 +1,6 @@
 package com.enderio.decoration.data.loot;
 
-import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
+import com.enderio.registrate.providers.loot.RegistrateBlockLootTables;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SlabBlock;

@@ -3,7 +3,7 @@ package com.enderio.base.data.recipe.standard;
 import com.enderio.base.common.block.EIOBlocks;
 import com.enderio.base.common.block.ResettingLeverBlock;
 import com.enderio.base.common.item.EIOItems;
-import com.tterrag.registrate.util.entry.BlockEntry;
+import com.enderio.registrate.util.entry.BlockEntry;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;

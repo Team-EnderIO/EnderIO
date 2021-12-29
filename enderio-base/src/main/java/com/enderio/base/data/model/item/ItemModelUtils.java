@@ -1,8 +1,8 @@
 package com.enderio.base.data.model.item;
 
-import com.tterrag.registrate.providers.DataGenContext;
-import com.tterrag.registrate.providers.RegistrateItemModelProvider;
-import com.tterrag.registrate.util.entry.ItemEntry;
+import com.enderio.registrate.providers.DataGenContext;
+import com.enderio.registrate.providers.RegistrateItemModelProvider;
+import com.enderio.registrate.util.entry.ItemEntry;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
 

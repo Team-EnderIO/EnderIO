@@ -3,8 +3,8 @@ package com.enderio.machines.common.menu;
 import com.enderio.machines.EIOMachines;
 import com.enderio.machines.client.EnchanterScreen;
 import com.enderio.machines.client.FluidTankScreen;
-import com.tterrag.registrate.Registrate;
-import com.tterrag.registrate.util.entry.MenuEntry;
+import com.enderio.registrate.Registrate;
+import com.enderio.registrate.util.entry.MenuEntry;
 
 public class MachineMenus {
     private MachineMenus() {}

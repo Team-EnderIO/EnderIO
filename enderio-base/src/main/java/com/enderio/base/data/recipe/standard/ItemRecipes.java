@@ -3,7 +3,7 @@ package com.enderio.base.data.recipe.standard;
 import com.enderio.base.common.item.EIOItems;
 import com.enderio.base.common.item.darksteel.DarkSteelUpgradeItem;
 import com.enderio.base.common.item.misc.MaterialItem;
-import com.tterrag.registrate.util.entry.ItemEntry;
+import com.enderio.registrate.util.entry.ItemEntry;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;

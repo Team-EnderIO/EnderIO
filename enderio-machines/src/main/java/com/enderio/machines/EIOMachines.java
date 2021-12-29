@@ -5,7 +5,7 @@ import com.enderio.machines.common.blockentity.MachineBlockEntities;
 import com.enderio.machines.common.menu.MachineMenus;
 import com.enderio.machines.common.recipe.MachineRecipes;
 import com.enderio.machines.data.recipe.MachineRecipeGenerator;
-import com.tterrag.registrate.Registrate;
+import com.enderio.registrate.Registrate;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.util.Lazy;

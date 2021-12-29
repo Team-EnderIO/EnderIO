@@ -2,8 +2,8 @@ package com.enderio.base.common.menu;
 
 import com.enderio.base.EnderIO;
 import com.enderio.base.client.screen.CoordinateMenuScreen;
-import com.tterrag.registrate.Registrate;
-import com.tterrag.registrate.util.entry.MenuEntry;
+import com.enderio.registrate.Registrate;
+import com.enderio.registrate.util.entry.MenuEntry;
 
 public class EIOMenus {
     private static final Registrate REGISTRATE = EnderIO.registrate();

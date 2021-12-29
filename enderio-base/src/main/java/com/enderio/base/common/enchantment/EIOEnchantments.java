@@ -2,9 +2,9 @@ package com.enderio.base.common.enchantment;
 
 import com.enderio.base.EnderIO;
 import com.enderio.base.common.lang.EIOLang;
-import com.tterrag.registrate.Registrate;
-import com.tterrag.registrate.builders.EnchantmentBuilder;
-import com.tterrag.registrate.util.entry.RegistryEntry;
+import com.enderio.registrate.Registrate;
+import com.enderio.registrate.builders.EnchantmentBuilder;
+import com.enderio.registrate.util.entry.RegistryEntry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;

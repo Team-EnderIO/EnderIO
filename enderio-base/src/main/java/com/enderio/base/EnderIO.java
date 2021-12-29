@@ -16,7 +16,7 @@ import com.enderio.base.config.machines.MachinesConfig;
 import com.enderio.base.data.tags.EIOFluidTagsProvider;
 import com.enderio.base.data.tags.EIOItemTagsProvider;
 import com.enderio.base.data.recipe.standard.StandardRecipes;
-import com.tterrag.registrate.Registrate;
+import com.enderio.registrate.Registrate;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.data.ForgeBlockTagsProvider;

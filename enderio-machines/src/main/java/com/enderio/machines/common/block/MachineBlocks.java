@@ -4,8 +4,8 @@ import com.enderio.base.common.item.EIOCreativeTabs;
 import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.blockentity.MachineBlockEntities;
 import com.enderio.machines.common.data.LootTableUtils;
-import com.tterrag.registrate.Registrate;
-import com.tterrag.registrate.util.entry.BlockEntry;
+import com.enderio.registrate.Registrate;
+import com.enderio.registrate.util.entry.BlockEntry;
 
 public class MachineBlocks {
     private static final Registrate REGISTRATE = EIOMachines.registrate();

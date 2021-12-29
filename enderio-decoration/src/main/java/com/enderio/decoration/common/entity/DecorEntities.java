@@ -2,8 +2,8 @@ package com.enderio.decoration.common.entity;
 
 import com.enderio.decoration.EIODecor;
 import com.enderio.decoration.client.painted.PaintedSandRenderer;
-import com.tterrag.registrate.Registrate;
-import com.tterrag.registrate.util.entry.EntityEntry;
+import com.enderio.registrate.Registrate;
+import com.enderio.registrate.util.entry.EntityEntry;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 

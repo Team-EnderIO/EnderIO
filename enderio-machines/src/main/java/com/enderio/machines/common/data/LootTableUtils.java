@@ -1,6 +1,6 @@
 package com.enderio.machines.common.data;
 
-import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
+import com.enderio.registrate.providers.loot.RegistrateBlockLootTables;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;

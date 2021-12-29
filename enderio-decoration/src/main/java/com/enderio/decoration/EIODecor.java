@@ -3,7 +3,7 @@ package com.enderio.decoration;
 import com.enderio.decoration.common.block.DecorBlocks;
 import com.enderio.decoration.common.blockentity.DecorBlockEntities;
 import com.enderio.decoration.common.entity.DecorEntities;
-import com.tterrag.registrate.Registrate;
+import com.enderio.registrate.Registrate;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.fml.common.Mod;

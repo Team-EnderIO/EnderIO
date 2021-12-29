@@ -3,7 +3,7 @@ package com.enderio.base.common.lang;
 import com.enderio.base.EnderIO;
 import com.enderio.base.common.capability.capacitors.ICapacitorData;
 import com.enderio.core.common.util.TooltipUtil;
-import com.tterrag.registrate.Registrate;
+import com.enderio.registrate.Registrate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;

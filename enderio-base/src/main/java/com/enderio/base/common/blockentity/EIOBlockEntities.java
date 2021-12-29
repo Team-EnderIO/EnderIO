@@ -2,8 +2,8 @@ package com.enderio.base.common.blockentity;
 
 import com.enderio.base.EnderIO;
 import com.enderio.base.common.block.EIOBlocks;
-import com.tterrag.registrate.Registrate;
-import com.tterrag.registrate.util.entry.BlockEntityEntry;
+import com.enderio.registrate.Registrate;
+import com.enderio.registrate.util.entry.BlockEntityEntry;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class EIOBlockEntities {

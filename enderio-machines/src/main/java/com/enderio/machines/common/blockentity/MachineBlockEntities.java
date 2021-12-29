@@ -2,8 +2,8 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.block.MachineBlocks;
-import com.tterrag.registrate.Registrate;
-import com.tterrag.registrate.util.entry.BlockEntityEntry;
+import com.enderio.registrate.Registrate;
+import com.enderio.registrate.util.entry.BlockEntityEntry;
 
 public class MachineBlockEntities {
     private static final Registrate REGISTRATE = EIOMachines.registrate();
