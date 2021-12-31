@@ -2,7 +2,7 @@
   "required": true,
   "package": "com.enderio.core.mixin",
   "compatibilityLevel": "JAVA_17",
-  "refmap": "endercore.refmap.json",
+  "refmap": "mixins.endercore.refmap.json",
   "mixins": [
   ],
   "client": [
