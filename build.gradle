@@ -20,13 +20,14 @@ plugins {
 // Thanks pupnewfster for this :)
 gradle.projectsEvaluated {
     // Probably don't need so many of these, but I'm being careful
-    project(":endercore").tasks.named("reobfJar").configure(t ->
-        t.mustRunAfter(project(":enderio-base").tasks.named('reobfJar')))
-
-    project(":enderio-base").tasks.named("reobfJar").configure(t ->
-            t.mustRunAfter(project(":enderio-decoration").tasks.named('reobfJar')))
-    project(":enderio-base").tasks.named("reobfJar").configure(t ->
-            t.mustRunAfter(project(":enderio-machines").tasks.named('reobfJar')))
+    def baseReobf = project(":enderio-base").tasks.named('reobfJar')
+    project(":endercore").tasks.named("reobfJar").configure(t -> t.mustRunAfter(baseReobf))
+    baseReobf.configure(t -> {
+        t.mustRunAfter(
+            project(":enderio-decoration").tasks.named('reobfJar'),
+            project(":enderio-machines").tasks.named('reobfJar')
+        )
+    })
 }
 
 subprojects {
