@@ -33,12 +33,16 @@ import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 @Mod(EnderIO.MODID)
 public class EnderIO {
     public static final @Nonnull String MODID = "enderio";
 
     private static final Lazy<Registrate> REGISTRATE = Lazy.of(() -> Registrate.create(MODID));
+
+    public static final Logger LOGGER = LogManager.getLogManager().getLogger(MODID);
 
     public EnderIO() {
         // Create configs subdirectory

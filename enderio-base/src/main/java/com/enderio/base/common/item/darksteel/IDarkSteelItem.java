@@ -1,19 +1,19 @@
 package com.enderio.base.common.item.darksteel;
 
+import com.enderio.base.client.render.IItemOverlayRender;
 import com.enderio.base.client.renderer.ItemBarRenderer;
+import com.enderio.base.client.tooltip.IAdvancedTooltipProvider;
 import com.enderio.base.common.capability.EIOCapabilities;
+import com.enderio.base.common.capability.IMultiCapabilityItem;
+import com.enderio.base.common.capability.INamedNBTSerializable;
+import com.enderio.base.common.capability.MultiCapabilityProvider;
 import com.enderio.base.common.capability.darksteel.DarkSteelUpgradeable;
 import com.enderio.base.common.capability.darksteel.EnergyDelegator;
 import com.enderio.base.common.capability.darksteel.IDarkSteelUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.core.client.render.IItemOverlayRender;
-import com.enderio.core.client.tooltip.IAdvancedTooltipProvider;
-import com.enderio.core.common.capability.IMultiCapabilityItem;
-import com.enderio.core.common.capability.INamedNBTSerializable;
-import com.enderio.core.common.capability.MultiCapabilityProvider;
-import com.enderio.core.common.util.EnergyUtil;
-import com.enderio.core.common.util.TooltipUtil;
+import com.enderio.base.common.util.EnergyUtil;
+import com.enderio.base.common.util.TooltipUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;

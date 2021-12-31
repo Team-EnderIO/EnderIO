@@ -1,6 +1,6 @@
 package com.enderio.base.common.capability.location;
 
-import com.enderio.core.common.capability.INamedNBTSerializable;
+import com.enderio.base.common.capability.INamedNBTSerializable;
 import net.minecraft.nbt.Tag;
 
 import java.util.function.Consumer;

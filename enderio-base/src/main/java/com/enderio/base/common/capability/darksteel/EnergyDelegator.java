@@ -1,8 +1,8 @@
 package com.enderio.base.common.capability.darksteel;
 
 import com.enderio.base.common.capability.EIOCapabilities;
+import com.enderio.base.common.capability.MultiCapabilityProvider;
 import com.enderio.base.common.item.darksteel.upgrades.EmpoweredUpgrade;
-import com.enderio.core.common.capability.MultiCapabilityProvider;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
 

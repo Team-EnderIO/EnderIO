@@ -1,6 +1,6 @@
 package com.enderio.base.common.capability.darksteel;
 
-import com.enderio.core.common.capability.INamedNBTSerializable;
+import com.enderio.base.common.capability.INamedNBTSerializable;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;

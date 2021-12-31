@@ -1,9 +1,9 @@
 package com.enderio.machines.client;
 
 import com.enderio.base.EnderIO;
-import com.enderio.core.client.screen.EIOScreen;
-import com.enderio.core.client.screen.EnumIconWidget;
-import com.enderio.core.common.util.Vector2i;
+import com.enderio.base.client.screen.EIOScreen;
+import com.enderio.base.client.screen.EnumIconWidget;
+import com.enderio.base.common.util.Vector2i;
 import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.menu.EnchanterMenu;
 import com.mojang.blaze3d.vertex.PoseStack;

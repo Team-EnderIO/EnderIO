@@ -1,7 +1,7 @@
 package com.enderio.base.common.network.packet;
 
 import com.enderio.base.common.menu.CoordinateMenu;
-import com.enderio.core.common.network.ClientToServerMenuPacket;
+import com.enderio.base.common.network.ClientToServerMenuPacket;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
 
