@@ -161,6 +161,7 @@ subprojects {
         def registrate = "com.tterrag.registrate:Registrate:${registrate_version}"
         implementation fg.deobf(registrate)
         shade registrate
+        
         // Apply Mixin AP
         if (enableMixin)
             annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
