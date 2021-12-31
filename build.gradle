@@ -221,9 +221,7 @@ subprojects {
         }
 
         reobf {
-            shadowJar {
-                dependsOn 'reobfJar'
-            }
+            shadowJar { }
         }
     }
 
