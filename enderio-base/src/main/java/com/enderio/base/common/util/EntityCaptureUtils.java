@@ -1,7 +1,6 @@
 package com.enderio.base.common.util;
 
 import com.enderio.base.config.base.BaseConfig;
-import com.enderio.core.common.util.EntityUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;

@@ -1,10 +1,10 @@
 package com.enderio.machines.common.blockentity;
 
 import com.enderio.base.common.blockentity.RedstoneControl;
-import com.enderio.core.common.blockentity.SyncedBlockEntity;
-import com.enderio.core.common.blockentity.sync.EnumDataSlot;
-import com.enderio.core.common.blockentity.sync.NBTSerializableDataSlot;
-import com.enderio.core.common.blockentity.sync.SyncMode;
+import com.enderio.base.common.blockentity.SyncedBlockEntity;
+import com.enderio.base.common.blockentity.sync.EnumDataSlot;
+import com.enderio.base.common.blockentity.sync.NBTSerializableDataSlot;
+import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.machines.common.blockentity.data.sidecontrol.IOConfig;
 import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemHandlerMaster;
 import net.minecraft.core.BlockPos;

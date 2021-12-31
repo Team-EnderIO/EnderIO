@@ -1,5 +1,3 @@
 dependencies {
-    // TODO: move to build.gradle once endercore is separate
-    implementation project(":endercore")
     implementation project(':enderio-base')
 }

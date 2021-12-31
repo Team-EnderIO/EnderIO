@@ -16,6 +16,17 @@ plugins {
     id 'com.github.johnrengelman.shadow' version "${shadow_version}"
 }
 
+// Run reobfuscation after dependents
+// Thanks pupnewfster for this :)
+gradle.projectsEvaluated {
+    project(":enderio-base").tasks.named('reobfJar').configure(t -> {
+        t.mustRunAfter(
+                project(":enderio-decoration").tasks.named('reobfJar'),
+                project(":enderio-machines").tasks.named('reobfJar')
+        )
+    })
+}
+
 subprojects {
     apply plugin: 'net.minecraftforge.gradle'
     apply plugin: 'org.parchmentmc.librarian.forgegradle'
@@ -147,12 +158,10 @@ subprojects {
         compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
         runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
 
-        if (project.name != "endercore") {
-            def registrate = "com.tterrag.registrate:Registrate:${registrate_version}"
-            implementation fg.deobf(registrate)
-            shade registrate
-        }
-
+        def registrate = "com.tterrag.registrate:Registrate:${registrate_version}"
+        implementation fg.deobf(registrate)
+        shade registrate
+        
         // Apply Mixin AP
         if (enableMixin)
             annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
@@ -168,6 +177,7 @@ subprojects {
 
     // Example for how to get properties into the manifest for reading at runtime.
     jar {
+        classifier 'raw'
         manifest {
             attributes([
                     "Specification-Title"     : "${modId}",
@@ -188,21 +198,25 @@ subprojects {
         delete "$buildDir/libs"
     }
 
-    if (project.name != "endercore") {
-        // Not a fan of how registrate is bundled in each time, but I don't think there's much that can be done.
-        shadowJar {
-            configurations = [project.configurations.shade]
-            relocate 'com.tterrag.registrate', "com.enderio.registrate"
-        }
+    shadowJar {
+        classifier ''
+        configurations = [project.configurations.shade]
+        relocate 'com.tterrag.registrate', "com.enderio.registrate"
 
-        reobf {
-            shadowJar {}
+        // Strip the registrate classes out of the other modules.
+        if (project.name != "enderio-base") {
+            exclude 'com/tterrag/registrate/**'
         }
     }
 
+    reobf {
+        shadowJar { }
+    }
+
+    // Depending on build seems to ensure that published jars are reobfed.
+    publish.dependsOn 'build'
+
     publishing {
-        // Wait until reobf is finished.
-        tasks.publish.dependsOn 'build'
         publications {
             mavenJava(MavenPublication) {
                 if (project.name != 'endercore') {
@@ -214,48 +228,21 @@ subprojects {
             }
         }
         repositories {
-            mavenLocal()
-
             // TODO: Configure tterrag maven.
-//            def pubHypherion = System.getenv('MAVEN_URL') != null
-//
-//            //if (pubHypherion) {
-//            maven {
-//                url System.getenv('MAVEN_URL')
-//                credentials {
-//                    username System.getenv('MAVEN_USER')
-//                    password System.getenv('MAVEN_PASS_2')
-//                }
-//            }
-//            //} else {
-//            maven {
-//                url "https://maven.nerdthings.dev/snapshots"
-//                credentials {
-//                    username = System.getenv("MAVEN_USERNAME")
-//                    password = System.getenv("MAVEN_PASSWORD")
-//                }
-//            }
-//            //}
+            mavenLocal()
         }
     }
 
     // endregion
 
     // Copy release files out
-    if (project.name != "endercore") {
-        task copyFiles(type: Copy, dependsOn: reobfShadowJar) {
-            from(shadowJar)
-            into rootProject.file('build/libs')
-        }
-    } else {
-        task copyFiles(type: Copy, dependsOn: 'reobfJar') {
-            from(jar)
-            into rootProject.file('build/libs')
-        }
+    task copyFiles(type: Copy) {
+        from(shadowJar)
+        into rootProject.file('build/libs')
     }
 
-    // Copy the obfuscated files after build.
-    build.dependsOn copyFiles
+    // Copy jars after build.
+    build.finalizedBy copyFiles
 }
 
 // region Versioning

@@ -4,8 +4,6 @@ import com.enderio.base.EnderIO;
 import com.enderio.base.common.network.packet.EmitParticlePacket;
 import com.enderio.base.common.network.packet.EmitParticlesPacket;
 import com.enderio.base.common.network.packet.UpdateCoordinateSelectionNameMenuPacket;
-import com.enderio.core.common.network.ClientToServerMenuPacket;
-import com.enderio.core.common.network.EnderNetwork;
 import net.minecraft.resources.ResourceLocation;
 
 public class EIOPackets extends EnderNetwork {

@@ -1,6 +1,9 @@
 package com.enderio.base.common.item.tool;
 
+import com.enderio.base.client.tooltip.IAdvancedTooltipProvider;
 import com.enderio.base.common.capability.EIOCapabilities;
+import com.enderio.base.common.capability.IMultiCapabilityItem;
+import com.enderio.base.common.capability.MultiCapabilityProvider;
 import com.enderio.base.common.capability.entity.EntityStorage;
 import com.enderio.base.common.capability.entity.IEntityStorage;
 import com.enderio.base.common.capability.entity.StoredEntityData;
@@ -8,11 +11,8 @@ import com.enderio.base.common.item.EIOCreativeTabs;
 import com.enderio.base.common.item.EIOItems;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.util.EntityCaptureUtils;
-import com.enderio.core.client.tooltip.IAdvancedTooltipProvider;
-import com.enderio.core.common.capability.IMultiCapabilityItem;
-import com.enderio.core.common.capability.MultiCapabilityProvider;
-import com.enderio.core.common.util.EntityUtil;
-import com.enderio.core.common.util.TooltipUtil;
+import com.enderio.base.common.util.EntityUtil;
+import com.enderio.base.common.util.TooltipUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
