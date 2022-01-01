@@ -5,6 +5,7 @@ import com.enderio.base.common.blockentity.EIOBlockEntities;
 import com.enderio.base.common.enchantment.EIOEnchantments;
 import com.enderio.base.common.fluid.EIOFluids;
 import com.enderio.base.common.item.EIOItems;
+import com.enderio.base.data.tags.EIOBlockTagsProvider;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.menu.EIOMenus;
 import com.enderio.base.common.network.EIOPackets;
@@ -17,10 +18,10 @@ import com.enderio.base.data.tags.EIOFluidTagsProvider;
 import com.enderio.base.data.tags.EIOItemTagsProvider;
 import com.enderio.base.data.recipe.standard.StandardRecipes;
 import com.tterrag.registrate.Registrate;
-import com.tterrag.registrate.util.NonNullLazyValue;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.data.ForgeBlockTagsProvider;
+import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -33,12 +34,16 @@ import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 @Mod(EnderIO.MODID)
 public class EnderIO {
     public static final @Nonnull String MODID = "enderio";
 
-    private static final NonNullLazyValue<Registrate> REGISTRATE = new NonNullLazyValue<>(() -> Registrate.create(MODID));
+    private static final Lazy<Registrate> REGISTRATE = Lazy.of(() -> Registrate.create(MODID));
+
+    public static final Logger LOGGER = LogManager.getLogManager().getLogger(MODID);
 
     public EnderIO() {
         // Create configs subdirectory
@@ -88,6 +93,7 @@ public class EnderIO {
             ForgeBlockTagsProvider b = new ForgeBlockTagsProvider(generator, event.getExistingFileHelper());
             generator.addProvider( new EIOItemTagsProvider(generator, b, event.getExistingFileHelper()));
             generator.addProvider( new EIOFluidTagsProvider(generator, event.getExistingFileHelper()));
+            generator.addProvider( new EIOBlockTagsProvider(generator, event.getExistingFileHelper()));
         }
     }
 

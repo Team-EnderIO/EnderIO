@@ -9,7 +9,6 @@ import com.enderio.base.data.model.block.BlockStateUtils;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
-import com.tterrag.registrate.util.NonNullLazyValue;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.client.renderer.RenderType;
@@ -88,7 +87,7 @@ public class EIOBlocks {
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .item()
         .model((ctx, prov) -> prov.generated(ctx, prov.modLoc("block/dark_steel_ladder")))
-        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.BLOCKS))
+        .tab(() -> EIOCreativeTabs.BLOCKS)
         .build()
         .register();
 
@@ -100,7 +99,7 @@ public class EIOBlocks {
         .tag(BlockTags.NEEDS_IRON_TOOL)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .item()
-        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.BLOCKS))
+        .tab(() -> EIOCreativeTabs.BLOCKS)
         .model((ctx, prov) -> prov.generated(ctx, prov.modLoc("block/dark_steel_bars")))
         .build()
         .register();
@@ -115,7 +114,7 @@ public class EIOBlocks {
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .item()
         .model((ctx, prov) -> prov.generated(ctx))
-        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.BLOCKS))
+        .tab(() -> EIOCreativeTabs.BLOCKS)
         .build()
         .register();
 
@@ -128,7 +127,7 @@ public class EIOBlocks {
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .item()
         .model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.modLoc("block/dark_steel_trapdoor_bottom")))
-        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.BLOCKS))
+        .tab(() -> EIOCreativeTabs.BLOCKS)
         .build()
         .register();
 
@@ -140,7 +139,7 @@ public class EIOBlocks {
         .tag(BlockTags.NEEDS_IRON_TOOL)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .item()
-        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.BLOCKS))
+        .tab(() -> EIOCreativeTabs.BLOCKS)
         .model((ctx, prov) -> prov.generated(ctx, prov.modLoc("block/end_steel_bars")))
         .build()
         .register();
@@ -152,7 +151,7 @@ public class EIOBlocks {
         .tag(BlockTags.NEEDS_DIAMOND_TOOL)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .item()
-        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.BLOCKS))
+        .tab(() -> EIOCreativeTabs.BLOCKS)
         .build()
         .register();
 
@@ -268,7 +267,7 @@ public class EIOBlocks {
         .tag(BlockTags.NEEDS_IRON_TOOL)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .item()
-        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.BLOCKS))
+        .tab(() -> EIOCreativeTabs.BLOCKS)
         .build()
         .register();
 
@@ -276,7 +275,7 @@ public class EIOBlocks {
         .block("budding_infinity_crystal", Material.AMETHYST, BuddingInfinityCrystalBlock::new)
         .properties(props -> props.noDrops().strength(1.5F).sound(SoundType.AMETHYST).requiresCorrectToolForDrops().randomTicks())
         .item()
-        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.BLOCKS))
+        .tab(() -> EIOCreativeTabs.BLOCKS)
         .build()
         .register();
 
@@ -288,7 +287,7 @@ public class EIOBlocks {
         .loot(EIOBlocks::createInfinityCrystalDrops)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .item()
-        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.BLOCKS))
+        .tab(() -> EIOCreativeTabs.BLOCKS)
         .build()
         .register();
 
@@ -310,7 +309,7 @@ public class EIOBlocks {
         .properties(props -> props.noOcclusion().randomTicks().sound(SoundType.AMETHYST_CLUSTER).lightLevel((state) -> 4))
         .loot(RegistrateBlockLootTables::dropWhenSilkTouch)
         .item()
-        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.BLOCKS)) // TODO: Take away...
+        .tab(() -> EIOCreativeTabs.BLOCKS) // TODO: Take away...
         .build()
         .register();
 
@@ -321,7 +320,7 @@ public class EIOBlocks {
         .properties(props -> props.noOcclusion().randomTicks().sound(SoundType.AMETHYST_CLUSTER).lightLevel((state) -> 2))
         .loot(RegistrateBlockLootTables::dropWhenSilkTouch)
         .item()
-        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.BLOCKS)) // TODO: Take away...
+        .tab(() -> EIOCreativeTabs.BLOCKS) // TODO: Take away...
         .build()
         .register();
 
@@ -332,7 +331,7 @@ public class EIOBlocks {
         .properties(props -> props.noOcclusion().randomTicks().sound(SoundType.AMETHYST_CLUSTER).lightLevel((state) -> 1))
         .loot(RegistrateBlockLootTables::dropWhenSilkTouch)
         .item()
-        .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.BLOCKS)) // TODO: Take away...
+        .tab(() -> EIOCreativeTabs.BLOCKS) // TODO: Take away...
         .build()
         .register();
 
@@ -453,7 +452,7 @@ public class EIOBlocks {
             .tag(BlockTags.NEEDS_STONE_TOOL)
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .item()
-            .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.BLOCKS))
+            .tab(() -> EIOCreativeTabs.BLOCKS)
             .build();
     }
 
@@ -469,7 +468,7 @@ public class EIOBlocks {
             .tag(BlockTags.NEEDS_STONE_TOOL)
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .item()
-            .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.BLOCKS))
+            .tab(() -> EIOCreativeTabs.BLOCKS)
             .build();
     }
 

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "  C",
+    " R ",
+    "R  "
+  ],
+  "key": {
+    "C": {
+      "item": "enderio:pulsating_crystal"
+    },
+    "R": {
+      "item": "enderio:infinity_rod"
+    }
+  },
+  "result": {
+    "item": "enderio:staff_of_levity"
+  }
+}

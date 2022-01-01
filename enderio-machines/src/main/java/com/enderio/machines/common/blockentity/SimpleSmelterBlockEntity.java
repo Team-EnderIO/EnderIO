@@ -20,7 +20,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class SimpleSmelterBlockEntity extends AbstractMachineBlockEntity {
+public class SimpleSmelterBlockEntity extends MachineBlockEntity {
     private final ItemStackHandler itemHandler = createItemHandler();
     private final LazyOptional<IItemHandler> itemHandlerLazy = LazyOptional.of(() -> itemHandler);
 

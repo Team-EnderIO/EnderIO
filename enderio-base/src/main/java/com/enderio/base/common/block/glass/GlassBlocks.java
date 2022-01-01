@@ -4,7 +4,6 @@ import com.enderio.base.EnderIO;
 import com.enderio.base.common.item.EIOCreativeTabs;
 import com.enderio.base.common.tag.EIOTags;
 import com.tterrag.registrate.Registrate;
-import com.tterrag.registrate.util.NonNullLazyValue;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.renderer.RenderType;
@@ -88,7 +87,7 @@ public class GlassBlocks {
                 .isSuffocating(GlassBlocks::never)
                 .isViewBlocking(GlassBlocks::never))
             .item(FusedQuartzItem::new)
-            .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.BLOCKS))
+            .tab(() -> EIOCreativeTabs.BLOCKS)
             .tag(name.contains("clear_glass")? EIOTags.Items.CLEAR_GLASS : EIOTags.Items.FUSED_QUARTZ)
             .build()
             .register();
@@ -103,7 +102,7 @@ public class GlassBlocks {
             .lang(english)
             .blockstate((con, prov) -> prov.simpleBlock(con.get(), prov.models().getExistingFile(getModelFile(name))))
             .addLayer(() -> RenderType::cutout)
-            .color(new NonNullLazyValue<>(() -> () -> (p_92567_, p_92568_, p_92569_, p_92570_) -> color.getMaterialColor().col))
+            .color(() -> () -> (p_92567_, p_92568_, p_92569_, p_92570_) -> color.getMaterialColor().col)
             .properties(props -> props
                 .noOcclusion()
                 .strength(0.3F)
@@ -115,8 +114,8 @@ public class GlassBlocks {
                 .isViewBlocking(GlassBlocks::never)
                 .color(color.getMaterialColor()))
             .item(FusedQuartzItem::new)
-            .tab(new NonNullLazyValue<>(() -> EIOCreativeTabs.BLOCKS))
-            .color(new NonNullLazyValue<>(() -> () -> (ItemColor) (p_92672_, p_92673_) -> color.getMaterialColor().col))
+            .tab(() -> EIOCreativeTabs.BLOCKS)
+            .color(() -> () -> (ItemColor) (p_92672_, p_92673_) -> color.getMaterialColor().col)
             .build()
             .register();
     }

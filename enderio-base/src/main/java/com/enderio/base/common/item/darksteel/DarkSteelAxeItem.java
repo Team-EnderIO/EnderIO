@@ -5,13 +5,13 @@ import com.enderio.base.common.item.EIOItems;
 import com.enderio.base.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.ForkUpgrade;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.base.common.util.BlockUtil;
+import com.enderio.base.common.util.EnergyUtil;
+import com.enderio.base.common.util.TooltipUtil;
 import com.enderio.base.config.base.BaseConfig;
-import com.enderio.core.common.util.EnergyUtil;
-import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -24,10 +24,8 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.TierSortingRegistry;
 import net.minecraftforge.common.ToolActions;
-import net.minecraftforge.event.world.BlockEvent;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -74,7 +72,7 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem {
                 int chopCount = 0;
                 int energyUse = 0;
                 for (BlockPos chopPos : toChop) {
-                    if (removeBlock(pLevel, player, pStack, chopPos)) {
+                    if (BlockUtil.removeBlock(pLevel, player, pStack, chopPos)) {
                         energyUse += energyPerBlock;
                         chopCount++;
                         if(chopCount >= maxBlocks) {
@@ -151,24 +149,6 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem {
             }
         }
         res.remove(pos);
-    }
-
-    private boolean removeBlock(Level level, Player player, ItemStack tool, BlockPos pos) {
-        BlockState state = level.getBlockState(pos);
-        BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(level, pos, state, player);
-        MinecraftForge.EVENT_BUS.post(event);
-        if (event.isCanceled()) {
-            return false;
-        }
-        boolean removed = state.onDestroyedByPlayer(level, pos, player, true, level.getFluidState(pos));
-        if (removed) {
-            state.getBlock().destroy(level, pos, state);
-            state.getBlock().playerDestroy(level, player, pos, state, null, tool);
-            if(event.getExpToDrop() > 0 && level instanceof ServerLevel serverLevel) {
-                state.getBlock().popExperience(serverLevel, pos, event.getExpToDrop());
-            }
-        }
-        return removed;
     }
 
     @Override

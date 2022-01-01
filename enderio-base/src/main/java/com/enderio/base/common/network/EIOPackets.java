@@ -1,9 +1,9 @@
 package com.enderio.base.common.network;
 
 import com.enderio.base.EnderIO;
+import com.enderio.base.common.network.packet.EmitParticlePacket;
+import com.enderio.base.common.network.packet.EmitParticlesPacket;
 import com.enderio.base.common.network.packet.UpdateCoordinateSelectionNameMenuPacket;
-import com.enderio.core.common.network.ClientToServerMenuPacket;
-import com.enderio.core.common.network.EnderNetwork;
 import net.minecraft.resources.ResourceLocation;
 
 public class EIOPackets extends EnderNetwork {
@@ -31,5 +31,7 @@ public class EIOPackets extends EnderNetwork {
     @Override
     protected void registerMessages() {
         registerMessage(new ClientToServerMenuPacket.Handler<>(UpdateCoordinateSelectionNameMenuPacket::new), UpdateCoordinateSelectionNameMenuPacket.class);
+        registerMessage(new EmitParticlePacket.Handler(), EmitParticlePacket.class);
+        registerMessage(new EmitParticlesPacket.Handler(), EmitParticlesPacket.class);
     }
 }

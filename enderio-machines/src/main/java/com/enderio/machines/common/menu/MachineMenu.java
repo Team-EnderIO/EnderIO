@@ -1,7 +1,7 @@
 package com.enderio.machines.common.menu;
 
-import com.enderio.core.common.menu.SyncedMenu;
-import com.enderio.machines.common.blockentity.AbstractMachineBlockEntity;
+import com.enderio.base.common.menu.SyncedMenu;
+import com.enderio.machines.common.blockentity.MachineBlockEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
@@ -10,7 +10,7 @@ import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
 
-public abstract class MachineMenu<T extends AbstractMachineBlockEntity> extends SyncedMenu<T> {
+public abstract class MachineMenu<T extends MachineBlockEntity> extends SyncedMenu<T> {
 
     protected MachineMenu(@Nullable T blockEntity, Inventory inventory, @Nullable MenuType<?> pMenuType, int pContainerId) {
         super(blockEntity, inventory, pMenuType, pContainerId);

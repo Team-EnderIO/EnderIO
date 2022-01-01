@@ -4,8 +4,7 @@ import com.enderio.base.EnderIO;
 import com.enderio.base.common.menu.CoordinateMenu;
 import com.enderio.base.common.network.EIOPackets;
 import com.enderio.base.common.network.packet.UpdateCoordinateSelectionNameMenuPacket;
-import com.enderio.core.client.screen.EIOScreen;
-import com.enderio.core.common.util.Vector2i;
+import com.enderio.base.common.util.Vector2i;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -45,7 +44,7 @@ public class CoordinateMenuScreen extends EIOScreen<CoordinateMenu> {
 
     @Override
     protected void renderBg(PoseStack pPoseStack, float pPartialTicks, int pMouseX, int pMouseY) {
-        renderGradleWeirdnessBackground(pPoseStack, pPartialTicks, pMouseX, pMouseY);
+        super.renderBg(pPoseStack, pPartialTicks, pMouseX, pMouseY);
 
         int midX = this.width / 2;
         int y = topPos + 48;
