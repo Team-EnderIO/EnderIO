@@ -1,12 +1,12 @@
 package com.enderio.base.common.item.tool;
 
+import com.enderio.base.client.render.IItemOverlayRender;
 import com.enderio.base.client.renderer.ItemBarRenderer;
+import com.enderio.base.common.capability.MultiCapabilityProvider;
 import com.enderio.base.common.capability.fluid.AcceptingFluidItemHandler;
 import com.enderio.base.common.fluid.EIOFluids;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.config.base.BaseConfig;
-import com.enderio.core.client.render.IItemOverlayRender;
-import com.enderio.core.common.capability.MultiCapabilityProvider;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -14,7 +14,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
