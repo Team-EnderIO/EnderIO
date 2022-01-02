@@ -145,6 +145,8 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
 
         @Override
         public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
+            pPoseStack.pushPose();
+            ForgeHax.setItemRendererDepthForScreen(this, pPoseStack);
             tooltips.clear();
             renderSimpleArea(pPoseStack, expandTopLeft, expandBottomRight);
             super.render(pPoseStack, pMouseX, pMouseY, pPartialTicks);
@@ -152,6 +154,8 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
             for (LateTooltipData tooltip : tooltips) {
                 renderTooltip(tooltip.getPoseStack(), tooltip.getText(), tooltip.getMouseX(), tooltip.getMouseY());
             }
+
+            pPoseStack.popPose();
         }
 
         @Override
