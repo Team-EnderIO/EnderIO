@@ -22,23 +22,36 @@ public class ForgeHax {
         }
     }
 
-    public static void setItemRendererDepthForScreen(Screen screen, PoseStack poseStack) {
-        poseStack.translate(0, 0, -2000 * ForgeHax.getGuiLayer(screen));
+    public static void setPoseStackDepth(Screen screen, PoseStack poseStack) {
+        poseStack.translate(0, 0, -2000 * ForgeHax.getReverseGuiLayer(screen));
     }
 
-    private static int getGuiLayer(Screen screen) {
-        try {
-            Stack<Screen> guiLayers = (Stack<Screen>)guiLayersField.get(null);
-            for (int i = 0; i < guiLayers.size(); i++) {
-                if (guiLayers.get(i) == screen) {
-                    return guiLayers.size() - i - 1;
-                }
+    /**
+     * returns the depth of the screen in the GuiStack. 0 is the topmost screen
+     * @param screen
+     * @return
+     */
+    public static int getReverseGuiLayer(Screen screen) {
+        return getGuiLayers().size() - getGuiLayer(screen);
+    }
+
+    public static int getGuiLayer(Screen screen) {
+        Stack<Screen> guiLayers = getGuiLayers();
+        for (int i = 0; i < guiLayers.size(); i++) {
+            if (guiLayers.get(i) == screen) {
+                return i + 1;
             }
-            return guiLayers.size();
+        }
+        return 0;
+    }
+
+    private static Stack<Screen> getGuiLayers() {
+        try {
+            return (Stack<Screen>)guiLayersField.get(null);
         } catch (IllegalAccessException e) {
             EnderIO.LOGGER.warning("Couldn't access guiLayers, report to enderio if you are using the latest Version");
             e.printStackTrace();
         }
-        return 0;
+        return new Stack<>();
     }
 }
