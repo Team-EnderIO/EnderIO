@@ -58,6 +58,13 @@ public class ItemHandlerMaster extends ItemStackHandler {
         return returnValue;
     }
 
+    public boolean canForceInsert(int slot, @Nonnull ItemStack stack) {
+        isForceMode = true;
+        ItemStack returnValue = insertItem(slot, stack, true);
+        isForceMode = false;
+        return returnValue.isEmpty();
+    }
+
     @Override
     public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
         return isForceMode || (inputPredicates.getOrDefault(slot, itemStack -> true).test(stack) && !getOnlyOutputs().contains(slot));

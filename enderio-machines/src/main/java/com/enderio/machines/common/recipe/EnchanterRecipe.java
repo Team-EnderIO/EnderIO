@@ -17,6 +17,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.Optional;
 import java.util.stream.Stream;
+
 public class EnchanterRecipe extends MachineRecipe<EnchanterRecipe, Container> {
     private final ResourceLocation id;
     private final Enchantment enchantment;

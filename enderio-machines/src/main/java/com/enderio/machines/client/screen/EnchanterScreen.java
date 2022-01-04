@@ -1,6 +1,5 @@
-package com.enderio.machines.client;
+package com.enderio.machines.client.screen;
 
-import com.enderio.base.EnderIO;
 import com.enderio.base.client.screen.EIOScreen;
 import com.enderio.base.client.screen.EnumIconWidget;
 import com.enderio.base.common.util.Vector2i;

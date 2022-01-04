@@ -1,6 +1,5 @@
 package com.enderio.machines.common.recipe;
 
-import com.enderio.base.EnderIO;
 import com.enderio.machines.EIOMachines;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -21,8 +20,8 @@ public class MachineRecipes {
 
         public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZER_REGISTRY = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, EIOMachines.MODID);
 
-        public static final RegistryObject<EnchanterRecipe.Serializer> ENCHANTING = RECIPE_SERIALIZER_REGISTRY.register("enchanting",
-                EnchanterRecipe.Serializer::new);
+        public static final RegistryObject<EnchanterRecipe.Serializer> ENCHANTING = RECIPE_SERIALIZER_REGISTRY.register("enchanting", EnchanterRecipe.Serializer::new);
+        public static final RegistryObject<AlloySmeltingRecipe.Serializer> ALLOY_SMELTING = RECIPE_SERIALIZER_REGISTRY.register("alloy_smelting", AlloySmeltingRecipe.Serializer::new);
 
         public static void register(IEventBus bus) {
             RECIPE_SERIALIZER_REGISTRY.register(bus);
@@ -33,6 +32,7 @@ public class MachineRecipes {
         private Types() {}
 
         public static RecipeType<EnchanterRecipe> ENCHANTING = RecipeType.register(EIOMachines.MODID + ":enchanting");
+        public static RecipeType<AlloySmeltingRecipe> ALLOY_SMELTING = RecipeType.register(EIOMachines.MODID + ":alloy_smelting");
 
         public static void register() {}
     }

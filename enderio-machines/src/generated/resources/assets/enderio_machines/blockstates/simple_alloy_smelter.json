@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "enderio_machines:block/simple_alloy_smelter"
+    }
+  }
+}

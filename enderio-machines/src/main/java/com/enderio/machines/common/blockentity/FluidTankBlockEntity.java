@@ -2,6 +2,7 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.base.common.blockentity.sync.FluidStackDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
+import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.blockentity.data.sidecontrol.fluid.FluidTankMaster;
 import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemHandlerMaster;
@@ -39,7 +40,7 @@ public class FluidTankBlockEntity extends MachineBlockEntity {
     private final ItemHandlerMaster itemHandlerMaster = new ItemHandlerMaster(getConfig(), 4, List.of(0,2), List.of(1,3));
 
     public FluidTankBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-        super(pType, pWorldPosition, pBlockState);
+        super(MachineTier.Standard, pType, pWorldPosition, pBlockState);
         addDataSlot(new FluidStackDataSlot(() -> fluidTank.getFluidInTank(0), fluidTank::setFluid, SyncMode.WORLD));
         itemHandlerMaster.addPredicate(0, itemStack ->
             (itemStack.getItem() instanceof BucketItem bucketItem && bucketItem.getFluid() != Fluids.EMPTY && !(bucketItem instanceof MobBucketItem))
@@ -65,7 +66,7 @@ public class FluidTankBlockEntity extends MachineBlockEntity {
 
     @Override
     public void tick() {
-        if (shouldTickSlow()) {
+        if (shouldActSlow()) {
             fillInternal();
             drainInternal();
         }

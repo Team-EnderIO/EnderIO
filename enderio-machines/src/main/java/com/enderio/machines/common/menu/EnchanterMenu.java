@@ -16,7 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity>{
+public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
     private Level level;
 
     public EnchanterMenu(EnchanterBlockEntity blockEntity, Inventory inventory, int pContainerId) {
@@ -44,7 +44,7 @@ public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity>{
                 @Override
                 public boolean mayPickup(Player playerIn) {
                     Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.Types.ENCHANTING, new RecipeWrapper(blockEntity.getItemHandlerMaster()), level);
-                    if (recipe.isPresent() && (playerIn.experienceLevel > recipe.get().getLevelCost(new RecipeWrapper(blockEntity.getItemHandlerMaster())) || playerIn.isCreative()) && blockEntity.shouldTick()) {
+                    if (recipe.isPresent() && (playerIn.experienceLevel > recipe.get().getLevelCost(new RecipeWrapper(blockEntity.getItemHandlerMaster())) || playerIn.isCreative()) && blockEntity.shouldAct()) {
                         return super.mayPickup(playerIn);
                     }
                     return false;

@@ -5,6 +5,7 @@ import com.enderio.base.common.blockentity.SyncedBlockEntity;
 import com.enderio.base.common.blockentity.sync.EnumDataSlot;
 import com.enderio.base.common.blockentity.sync.NBTSerializableDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
+import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.data.sidecontrol.IOConfig;
 import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemHandlerMaster;
 import net.minecraft.core.BlockPos;
@@ -39,11 +40,17 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
     private final EnumMap<Direction, LazyOptional<IItemHandler>> itemHandlerCache = new EnumMap<>(Direction.class);
     private final EnumMap<Direction, LazyOptional<IFluidHandler>> fluidHandlerCache = new EnumMap<>(Direction.class);
     private boolean isCacheDirty = false;
+    private final MachineTier tier;
 
-    public MachineBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
+    public MachineBlockEntity(MachineTier tier, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);
+        this.tier = tier;
         add2WayDataSlot(new EnumDataSlot<>(this::getRedstoneControl, this::setRedstoneControl, SyncMode.GUI));
         add2WayDataSlot(new NBTSerializableDataSlot<>(() -> config, SyncMode.WORLD));
+    }
+
+    public final MachineTier getTier() {
+        return tier;
     }
 
     public final IOConfig getConfig() {
@@ -93,7 +100,7 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
         if (isCacheDirty) {
             updateCache();
         }
-        if (shouldTickSlow()) {
+        if (shouldActSlow()) {
             for (Direction direction : Direction.values()) {
                 if (config.getIO(direction).canForce()) {
                     moveItems(direction);
@@ -104,15 +111,17 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
         super.tick();
     }
 
-    // shouldAct
-    public boolean shouldTick() {
-        return !level.isClientSide
+    public boolean isServer() {
+        return !level.isClientSide;
+    }
+
+    public boolean shouldAct() {
+        return isServer()
             && redstoneControl.isActive(level.hasNeighborSignal(worldPosition));
     }
 
-    // shouldActSlow
-    public boolean shouldTickSlow() {
-        return shouldTick()
+    public boolean shouldActSlow() {
+        return shouldAct()
             && level.getGameTime() % 5 == 0;
     }
 

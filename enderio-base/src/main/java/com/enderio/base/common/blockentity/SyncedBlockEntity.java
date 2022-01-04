@@ -2,7 +2,7 @@ package com.enderio.base.common.blockentity;
 
 import com.enderio.base.common.blockentity.sync.EnderDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
-import com.enderio.base.common.util.CallOnly;
+import com.enderio.base.common.util.UseOnly;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -114,7 +114,7 @@ public abstract class SyncedBlockEntity extends BlockEntity {
     /**
      * Sync the BlockEntity to all tracking players.
      */
-    @CallOnly(LogicalSide.SERVER)
+    @UseOnly(LogicalSide.SERVER)
     private void sync() {
         ClientboundBlockEntityDataPacket fullUpdate = createUpdatePacket(true, SyncMode.WORLD);
         ClientboundBlockEntityDataPacket partialUpdate = getUpdatePacket();
@@ -142,7 +142,7 @@ public abstract class SyncedBlockEntity extends BlockEntity {
      * never call this on client
      * @return all ServerPlayers tracking this BlockEntity
      */
-    @CallOnly(LogicalSide.SERVER)
+    @UseOnly(LogicalSide.SERVER)
     private List<ServerPlayer> getTrackingPlayers() {
         return ((ServerChunkCache)level.getChunkSource()).chunkMap.getPlayers(new ChunkPos(worldPosition), false);
     }

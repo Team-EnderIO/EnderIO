@@ -8,11 +8,6 @@ import com.tterrag.registrate.util.entry.BlockEntityEntry;
 public class MachineBlockEntities {
     private static final Registrate REGISTRATE = EIOMachines.registrate();
 
-    public static final BlockEntityEntry<SimpleSmelterBlockEntity> SMELTER = REGISTRATE
-        .blockEntity("smelter", SimpleSmelterBlockEntity::new)
-        .validBlocks(MachineBlocks.SIMPLE_POWERED_FURNACE)
-        .register();
-
     public static final BlockEntityEntry<FluidTankBlockEntity> FLUID_TANK = REGISTRATE
         .blockEntity("fluid_tank", FluidTankBlockEntity::new)
         .validBlocks(MachineBlocks.FLUID_TANK)
@@ -21,6 +16,21 @@ public class MachineBlockEntities {
     public static final BlockEntityEntry<EnchanterBlockEntity> ENCHANTER = REGISTRATE
         .blockEntity("enchanter", EnchanterBlockEntity::new)
         .validBlocks(MachineBlocks.ENCHANTER)
+        .register();
+
+    public static final BlockEntityEntry<AlloySmelterBlockEntity.SimpleSmelter> SIMPLE_POWERED_FURNACE = REGISTRATE
+        .blockEntity("simple_powered_furnace", AlloySmelterBlockEntity.SimpleSmelter::new)
+        .validBlocks(MachineBlocks.SIMPLE_POWERED_FURNACE)
+        .register();
+
+    public static final BlockEntityEntry<AlloySmelterBlockEntity.SimpleAlloySmelter> SIMPLE_ALLOY_SMELTER = REGISTRATE
+        .blockEntity("simple_alloy_smelter", AlloySmelterBlockEntity.SimpleAlloySmelter::new)
+        .validBlocks(MachineBlocks.SIMPLE_ALLOY_SMELTER)
+        .register();
+
+    public static final BlockEntityEntry<AlloySmelterBlockEntity.AlloySmelter> ALLOY_SMELTER = REGISTRATE
+        .blockEntity("alloy_smelter", AlloySmelterBlockEntity.AlloySmelter::new)
+        .validBlocks(MachineBlocks.ALLOY_SMELTER)
         .register();
 
     public static void register() {}

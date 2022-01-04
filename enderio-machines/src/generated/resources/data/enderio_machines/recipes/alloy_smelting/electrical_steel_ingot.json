@@ -1,0 +1,19 @@
+{
+  "type": "enderio_machines:alloy_smelting",
+  "ingredients": [
+    {
+      "tag": "forge:ingots/iron"
+    },
+    {
+      "item": "enderio:coal_powder"
+    },
+    {
+      "item": "enderio:silicon"
+    }
+  ],
+  "result": {
+    "item": "enderio:electrical_steel_ingot"
+  },
+  "energy": 10000,
+  "experience": 0.3
+}

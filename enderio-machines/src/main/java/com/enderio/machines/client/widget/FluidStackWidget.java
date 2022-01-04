@@ -1,4 +1,4 @@
-package com.enderio.machines.client;
+package com.enderio.machines.client.widget;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -32,6 +32,12 @@ public class FluidStackWidget extends AbstractWidget {
 
     @Override
     public void updateNarration(NarrationElementOutput pNarrationElementOutput) {}
+
+    // Stop the click sound
+    @Override
+    public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
+        return false;
+    }
 
     @Override
     public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {

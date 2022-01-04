@@ -1,0 +1,19 @@
+{
+  "type": "enderio_machines:alloy_smelting",
+  "ingredients": [
+    {
+      "item": "minecraft:redstone"
+    },
+    {
+      "tag": "forge:ingots/gold"
+    },
+    {
+      "item": "minecraft:glowstone_dust"
+    }
+  ],
+  "result": {
+    "item": "enderio:energetic_alloy_ingot"
+  },
+  "energy": 10000,
+  "experience": 0.3
+}
