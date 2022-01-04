@@ -1,4 +1,4 @@
-package com.enderio.machines.common.blockentity;
+package com.enderio.machines.common.blockentity.base;
 
 import com.enderio.base.common.blockentity.RedstoneControl;
 import com.enderio.base.common.blockentity.SyncedBlockEntity;
@@ -87,12 +87,13 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, MachineBlockEntity pBlockEntity) {
         pBlockEntity.tick();
     }
+
     @Override
     public void tick() {
         if (isCacheDirty) {
             updateCache();
         }
-        if (isTickAction()) {
+        if (shouldTickSlow()) {
             for (Direction direction : Direction.values()) {
                 if (config.getIO(direction).canForce()) {
                     moveItems(direction);
@@ -103,13 +104,15 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
         super.tick();
     }
 
-    public boolean isAction() {
+    // shouldAct
+    public boolean shouldTick() {
         return !level.isClientSide
             && redstoneControl.isActive(level.hasNeighborSignal(worldPosition));
     }
 
-    public boolean isTickAction() {
-        return isAction()
+    // shouldActSlow
+    public boolean shouldTickSlow() {
+        return shouldTick()
             && level.getGameTime() % 5 == 0;
     }
 

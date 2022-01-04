@@ -2,6 +2,7 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.base.common.blockentity.sync.FluidStackDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
+import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.blockentity.data.sidecontrol.fluid.FluidTankMaster;
 import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemHandlerMaster;
 import com.enderio.machines.common.menu.FluidTankMenu;
@@ -64,7 +65,7 @@ public class FluidTankBlockEntity extends MachineBlockEntity {
 
     @Override
     public void tick() {
-        if (isTickAction()) {
+        if (shouldTickSlow()) {
             fillInternal();
             drainInternal();
         }

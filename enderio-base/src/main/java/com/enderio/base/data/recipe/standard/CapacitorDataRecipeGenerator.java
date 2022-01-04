@@ -29,7 +29,7 @@ public class CapacitorDataRecipeGenerator extends RecipeProvider {
 
     protected void build(float allUpgrades, Item item, Consumer<FinishedRecipe> recipeConsumer) {
         Map<String, Float> specialisations = new HashMap<>();
-        specialisations.put(ICapacitorData.ALL_ENERGY_CONSUMPSTION, allUpgrades);
+        specialisations.put(ICapacitorData.ALL_ENERGY_CONSUMPTION, allUpgrades);
         specialisations.put(ICapacitorData.ALL_PRODUCTION_SPEED, allUpgrades);
         build(0.0f, specialisations, item, recipeConsumer);
     }

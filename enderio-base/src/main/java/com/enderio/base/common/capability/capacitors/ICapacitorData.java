@@ -17,10 +17,10 @@ public interface ICapacitorData extends INamedNBTSerializable<Tag> {
     /**
      * Static strings for specialization types.
      */
-    String ALL_ENERGY_CONSUMPSTION = "all_energy_consuption";
+    String ALL_ENERGY_CONSUMPTION = "all_energy_consumption";
     String ALL_PRODUCTION_SPEED = "all_production_speed";
 
-    String ALLOY_ENERGY_CONSUMPSTION = "alloy_energy_consuption";
+    String ALLOY_ENERGY_CONSUMPTION = "alloy_energy_consumption";
     String ALLOY_PRODUCTION_SPEED = "alloy_production_speed";
 
     /**

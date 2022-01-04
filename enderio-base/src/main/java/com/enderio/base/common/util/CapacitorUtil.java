@@ -26,10 +26,10 @@ public class CapacitorUtil {
     private static ArrayList<String> types = new ArrayList<>();
 
     static {
-        types.add(ICapacitorData.ALL_ENERGY_CONSUMPSTION);
+        types.add(ICapacitorData.ALL_ENERGY_CONSUMPTION);
         types.add(ICapacitorData.ALL_PRODUCTION_SPEED);
-        types.add(ICapacitorData.ALLOY_ENERGY_CONSUMPSTION);
-        types.add(ICapacitorData.ALLOY_ENERGY_CONSUMPSTION);
+        types.add(ICapacitorData.ALLOY_ENERGY_CONSUMPTION);
+        types.add(ICapacitorData.ALLOY_ENERGY_CONSUMPTION);
     }
 
     public static void addType(String type) {

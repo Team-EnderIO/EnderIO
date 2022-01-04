@@ -1,6 +1,7 @@
 package com.enderio.machines.common.blockentity;
 
 import com.enderio.base.common.blockentity.RedstoneControl;
+import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemHandlerMaster;
 import com.enderio.machines.common.menu.EnchanterMenu;
 import com.enderio.machines.common.recipe.EnchanterRecipe;
@@ -35,7 +36,7 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
         }
         
         public ItemStack extractItem(int slot, int amount, boolean simulate) {
-            if (slot == 3 && !isAction()) {
+            if (slot == 3 && !shouldTick()) {
                 return ItemStack.EMPTY;
             }
             return super.extractItem(slot, amount, simulate);

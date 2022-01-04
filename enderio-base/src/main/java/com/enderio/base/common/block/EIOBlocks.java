@@ -82,9 +82,7 @@ public class EIOBlocks {
             .texture("particle", prov.blockTexture(ctx.get()))
             .texture("texture", prov.blockTexture(ctx.get()))))
         .addLayer(() -> RenderType::cutoutMipped)
-        .tag(BlockTags.CLIMBABLE)
-        .tag(BlockTags.NEEDS_IRON_TOOL)
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .tag(BlockTags.CLIMBABLE, BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
         .item()
         .model((ctx, prov) -> prov.generated(ctx, prov.modLoc("block/dark_steel_ladder")))
         .tab(() -> EIOCreativeTabs.BLOCKS)
@@ -110,8 +108,7 @@ public class EIOBlocks {
         .properties(props -> props.strength(5.0f, 2000.0f).sound(SoundType.METAL).noOcclusion())
         .blockstate((ctx, prov) -> prov.doorBlock(ctx.get(), prov.modLoc("block/dark_steel_door_bottom"), prov.modLoc("block/dark_steel_door_top")))
         .addLayer(() -> RenderType::cutout)
-        .tag(BlockTags.NEEDS_IRON_TOOL)
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL, BlockTags.DOORS)
         .item()
         .model((ctx, prov) -> prov.generated(ctx))
         .tab(() -> EIOCreativeTabs.BLOCKS)
@@ -123,8 +120,7 @@ public class EIOBlocks {
         .properties(props -> props.strength(5.0f, 2000.0f).sound(SoundType.METAL).noOcclusion())
         .blockstate((ctx, prov) -> prov.trapdoorBlock(ctx.get(), prov.modLoc("block/dark_steel_trapdoor"), true))
         .addLayer(() -> RenderType::cutout)
-        .tag(BlockTags.NEEDS_IRON_TOOL)
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL, BlockTags.TRAPDOORS)
         .item()
         .model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.modLoc("block/dark_steel_trapdoor_bottom")))
         .tab(() -> EIOCreativeTabs.BLOCKS)
@@ -431,6 +427,7 @@ public class EIOBlocks {
     public static final BlockEntry<ColdFireBlock> COLD_FIRE = REGISTRATE
         .block("cold_fire", ColdFireBlock::new)
         .properties(props -> BlockBehaviour.Properties.copy(Blocks.FIRE).noDrops())
+        .tag(BlockTags.FIRE)
         .blockstate((ctx, prov) -> {})
         .addLayer(() -> RenderType::cutout)
         .register();
@@ -488,8 +485,7 @@ public class EIOBlocks {
             vb.partialState().with(PressurePlateBlock.POWERED, true).addModels(new ConfiguredModel(dm));
             vb.partialState().with(PressurePlateBlock.POWERED, false).addModels(new ConfiguredModel(um));
         });
-        bb.tag(BlockTags.NEEDS_STONE_TOOL)
-            .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        bb.tag(BlockTags.NEEDS_STONE_TOOL, BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.PRESSURE_PLATES)
             .item()
             .tab(() -> EIOCreativeTabs.BLOCKS)
             .build();
@@ -502,7 +498,7 @@ public class EIOBlocks {
 
         BlockBuilder<SilentPressurePlateBlock, Registrate> bb = REGISTRATE.block("silent_" + upModelLoc.getPath(),
             block.getStateDefinition().any().getMaterial(), (props) -> new SilentPressurePlateBlock(block));
-        bb.tag(BlockTags.MINEABLE_WITH_PICKAXE);
+        bb.tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.PRESSURE_PLATES);
 
         bb.blockstate((ctx, prov) -> {
             VariantBlockStateBuilder vb = prov.getVariantBuilder(ctx.get());
@@ -531,7 +527,7 @@ public class EIOBlocks {
             }
             return new ConfiguredModel[] { new ConfiguredModel(prov.models().getExistingFile(downModelLoc)) };
         }));
-        bb.tag(BlockTags.MINEABLE_WITH_PICKAXE);
+        bb.tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.PRESSURE_PLATES);
 
         var itemBuilder = bb.item();
         itemBuilder.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), upModelLoc));
