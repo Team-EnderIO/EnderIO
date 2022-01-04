@@ -3,12 +3,14 @@ buildscript {
         // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
         maven { url = 'https://maven.minecraftforge.net' }
         maven { url = 'https://maven.parchmentmc.org' }
+        maven { url = 'https://noeppi-noeppi.github.io/MinecraftUtilities/maven' }
         mavenCentral()
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
         classpath 'org.parchmentmc:librarian:1.+'
         classpath 'org.spongepowered:mixingradle:0.7.+'
+        classpath 'io.github.noeppi_noeppi.tools:ModGradle:2.0.9'
     }
 }
 
@@ -33,6 +35,7 @@ subprojects {
     apply plugin: 'eclipse'
     apply plugin: 'maven-publish'
     apply plugin: 'com.github.johnrengelman.shadow'
+    apply plugin: 'io.github.noeppi_noeppi.tools.modgradle.mapping'
 
     def enableMixin = false
     if (project.hasProperty("enable_mixin")) {
