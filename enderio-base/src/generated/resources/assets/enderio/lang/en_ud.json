@@ -989,5 +989,6 @@
   "tooltip.enderio.dark_steel_ladder.faster": "s\u0279\u01DDpp\u0250\u05DF \u0279\u0250\u05DFnb\u01DD\u0279 u\u0250\u0265\u0287 \u0279\u01DD\u0287s\u0250\u2132",
   "tooltip.enderio.fused_quartz.blocks_light": "\u0287\u0265b\u0131\u05DF s\u029E\u0254o\u05DF\u15FA",
   "tooltip.enderio.fused_quartz.emits_light": "\u0287\u0265b\u0131\u05DF s\u0287\u0131\u026F\u018E",
+  "tooltip.enderio.gui.show_advanced_tooltip": ">\u0287\u025F\u0131\u0265S p\u05DFoH<",
   "tooltip.enderio.soul_vial.health": "%s/%s :\u0265\u0287\u05DF\u0250\u01DDH"
 }

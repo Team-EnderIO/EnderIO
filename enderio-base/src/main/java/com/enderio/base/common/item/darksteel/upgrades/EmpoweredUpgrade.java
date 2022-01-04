@@ -1,8 +1,8 @@
 package com.enderio.base.common.item.darksteel.upgrades;
 
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.base.common.util.TooltipUtil;
 import com.enderio.base.config.base.BaseConfig;
-import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;

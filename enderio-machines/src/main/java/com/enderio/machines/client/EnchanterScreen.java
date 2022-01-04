@@ -1,9 +1,9 @@
 package com.enderio.machines.client;
 
 import com.enderio.base.EnderIO;
-import com.enderio.core.client.screen.EIOScreen;
-import com.enderio.core.client.screen.EnumIconWidget;
-import com.enderio.core.common.util.Vector2i;
+import com.enderio.base.client.screen.EIOScreen;
+import com.enderio.base.client.screen.EnumIconWidget;
+import com.enderio.base.common.util.Vector2i;
 import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.menu.EnchanterMenu;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -34,11 +34,6 @@ public class EnchanterScreen extends EIOScreen<EnchanterMenu> {
     @Override
     protected Vector2i getBackgroundImageSize() {
         return new Vector2i(176, 166);
-    }
-
-    @Override
-    protected void renderBg(PoseStack pPoseStack, float pPartialTicks, int pMouseX, int pMouseY) {
-        renderGradleWeirdnessBackground(pPoseStack, pPartialTicks, pMouseX, pMouseY);
     }
     
     @Override

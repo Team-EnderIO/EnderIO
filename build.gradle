@@ -18,6 +18,17 @@ plugins {
     id 'com.github.johnrengelman.shadow' version "${shadow_version}"
 }
 
+// Run reobfuscation after dependents
+// Thanks pupnewfster for this :)
+gradle.projectsEvaluated {
+    project(":enderio-base").tasks.named('reobfJar').configure(t -> {
+        t.mustRunAfter(
+                project(":enderio-decoration").tasks.named('reobfJar'),
+                project(":enderio-machines").tasks.named('reobfJar')
+        )
+    })
+}
+
 subprojects {
     apply plugin: 'net.minecraftforge.gradle'
     apply plugin: 'org.parchmentmc.librarian.forgegradle'
@@ -134,6 +145,8 @@ subprojects {
                 includeGroup "curse.maven"
             }
         }
+
+        maven { url 'https://maven.blamejared.com' }
     }
 
     dependencies {
@@ -145,10 +158,13 @@ subprojects {
 //        implementation fg.deobf("mcjty.theoneprobe:TheOneProbe:${minecraft_version}-${top_version}")
         implementation fg.deobf("curse.maven:the-one-probe-245211:${top_version}")
 
+        compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
+        runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
+
         def registrate = "com.tterrag.registrate:Registrate:${registrate_version}"
         implementation fg.deobf(registrate)
         shade registrate
-
+        
         // Apply Mixin AP
         if (enableMixin)
             annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
@@ -164,7 +180,7 @@ subprojects {
 
     // Example for how to get properties into the manifest for reading at runtime.
     jar {
-        destinationDirectory.set(file("$rootDir/build/libs"))
+        classifier 'raw'
         manifest {
             attributes([
                     "Specification-Title"     : "${modId}",
@@ -186,50 +202,50 @@ subprojects {
     }
 
     shadowJar {
+        classifier ''
         configurations = [project.configurations.shade]
-        relocate 'com.tterrag.registrate', 'com.enderio.repack.registrate'
+        relocate 'com.tterrag.registrate', "com.enderio.registrate"
+
+        // Strip the registrate classes out of the other modules.
+        if (project.name != "enderio-base") {
+            exclude 'com/tterrag/registrate/**'
+        }
     }
 
     reobf {
-        shadowJar {}
+        shadowJar { }
     }
 
-    if (project.hasProperty("releaseBuild") && project.releaseBuild == true) {
-        jar.finalizedBy('reobfJar')
-    }
-    publish.dependsOn('reobfJar')
+    // Depending on build seems to ensure that published jars are reobfed.
+    publish.dependsOn 'build'
 
     publishing {
         publications {
             mavenJava(MavenPublication) {
-                artifact jar
+                if (project.name != 'endercore') {
+                    artifact shadowJar // Push the 'all' jar.
+                } else {
+                    artifact jar
+                }
                 artifactId = getArchiveBaseName(project)
             }
         }
         repositories {
-            def pubHypherion = System.getenv('MAVEN_URL') != null
-
-            //if (pubHypherion) {
-            maven {
-                url System.getenv('MAVEN_URL')
-                credentials {
-                    username System.getenv('MAVEN_USER')
-                    password System.getenv('MAVEN_PASS_2')
-                }
-            }
-            //} else {
-            maven {
-                url "https://maven.nerdthings.dev/snapshots"
-                credentials {
-                    username = System.getenv("MAVEN_USERNAME")
-                    password = System.getenv("MAVEN_PASSWORD")
-                }
-            }
-            //}
+            // TODO: Configure tterrag maven.
+            mavenLocal()
         }
     }
 
     // endregion
+
+    // Copy release files out
+    task copyFiles(type: Copy) {
+        from(shadowJar)
+        into rootProject.file('build/libs')
+    }
+
+    // Copy jars after build.
+    build.finalizedBy copyFiles
 }
 
 // region Versioning

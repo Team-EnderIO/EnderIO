@@ -989,5 +989,6 @@
   "tooltip.enderio.dark_steel_ladder.faster": "Faster than regular ladders",
   "tooltip.enderio.fused_quartz.blocks_light": "Blocks light",
   "tooltip.enderio.fused_quartz.emits_light": "Emits light",
+  "tooltip.enderio.gui.show_advanced_tooltip": "<Hold Shift>",
   "tooltip.enderio.soul_vial.health": "Health: %s/%s"
 }

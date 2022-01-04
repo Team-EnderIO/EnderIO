@@ -1,3 +1,0 @@
-minecraft {
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-}

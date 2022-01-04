@@ -1,10 +1,10 @@
 package com.enderio.base.common.item.tool;
 
 import com.enderio.base.common.block.EIOBlocks;
+import com.enderio.base.common.capability.IMultiCapabilityItem;
+import com.enderio.base.common.capability.MultiCapabilityProvider;
 import com.enderio.base.common.capability.fluid.AcceptingFluidItemHandler;
 import com.enderio.base.common.tag.EIOTags;
-import com.enderio.core.common.capability.IMultiCapabilityItem;
-import com.enderio.core.common.capability.MultiCapabilityProvider;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

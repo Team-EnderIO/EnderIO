@@ -32,6 +32,5 @@ minecraft {
 }
 
 dependencies {
-    // TODO: move to build.gradle once endercore is separate
-    implementation project(":endercore")
+
 }

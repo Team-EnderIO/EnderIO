@@ -1,6 +1,6 @@
 package com.enderio.base.common.network.packet;
 
-import com.enderio.core.common.network.Packet;
+import com.enderio.base.common.network.Packet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
