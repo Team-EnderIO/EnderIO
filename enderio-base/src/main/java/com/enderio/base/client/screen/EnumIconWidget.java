@@ -1,5 +1,6 @@
 package com.enderio.base.client.screen;
 
+import com.enderio.base.client.ForgeHax;
 import com.enderio.base.common.util.Vector2i;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -145,6 +146,8 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
 
         @Override
         public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
+            pPoseStack.pushPose();
+            ForgeHax.setPoseStackDepth(this, pPoseStack);
             tooltips.clear();
             renderSimpleArea(pPoseStack, expandTopLeft, expandBottomRight);
             super.render(pPoseStack, pMouseX, pMouseY, pPartialTicks);
@@ -152,6 +155,8 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
             for (LateTooltipData tooltip : tooltips) {
                 renderTooltip(tooltip.getPoseStack(), tooltip.getText(), tooltip.getMouseX(), tooltip.getMouseY());
             }
+
+            pPoseStack.popPose();
         }
 
         @Override
