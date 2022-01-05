@@ -2,10 +2,13 @@ package com.enderio.machines.client.screen;
 
 import com.enderio.base.client.screen.EIOScreen;
 import com.enderio.base.client.screen.EnumIconWidget;
+import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.util.Vector2i;
 import com.enderio.machines.EIOMachines;
 import com.enderio.machines.client.widget.EnergyWidget;
+import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.AlloySmelterBlockEntity;
+import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.machine.AlloySmelterMode;
 import com.enderio.machines.common.menu.AlloySmelterMenu;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -27,9 +30,13 @@ public class AlloySmelterScreen extends EIOScreen<AlloySmelterMenu> {
     @Override
     protected void init() {
         super.init();
-        addRenderableWidget(new EnergyWidget(this, getMenu().getBlockEntity()::guiGetEnergy, 16 + leftPos, 14 + topPos, 9, 42));
-        addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(), control -> menu.getBlockEntity().setRedstoneControl(control)));
-        addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 6 + 16 * 3, () -> menu.getBlockEntity().getMode(), mode -> menu.getBlockEntity().setMode(mode)));
+        addRenderableWidget(new EnergyWidget(this, getMenu().getBlockEntity()::getGuiEnergy, 16 + leftPos, 14 + topPos, 9, 42));
+        addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),
+            control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
+
+        if (getMenu().getBlockEntity().getTier() != MachineTier.Simple) {
+            addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 6 + 16 * 3, () -> menu.getBlockEntity().getMode(), mode -> menu.getBlockEntity().setMode(mode), MachineLang.ALLOY_SMELTER_MODE));
+        }
     }
 
     @Override

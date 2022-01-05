@@ -1,6 +1,7 @@
 {
-  "parent": "minecraft:block/cube_all",
-  "textures": {
-    "all": "enderio_machines:block/fluid_tank"
-  }
+  "loader": "enderio_machines:machine_model",
+  "components": [
+    "enderio_machines:block/machine_frame",
+    "enderio_machines:block/placeholder_machine_front"
+  ]
 }

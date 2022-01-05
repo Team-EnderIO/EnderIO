@@ -8,7 +8,6 @@ import com.enderio.machines.common.blockentity.data.sidecontrol.fluid.FluidTankM
 import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemHandlerMaster;
 import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemSlotLayout;
 import com.enderio.machines.common.menu.FluidTankMenu;
-import com.sun.jna.platform.win32.WinUser;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -33,7 +32,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Optional;
 
 public class FluidTankBlockEntity extends MachineBlockEntity {

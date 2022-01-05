@@ -12,7 +12,7 @@ public class MachineEnergyStorage implements INBTSerializable<Tag>, IEnergyStora
     protected int storedEnergy;
 
     // TODO: Provide via constructor
-    protected int baseMaxStored = 10000;
+    protected int baseCapacity = 10000;
     protected int baseMaxTransfer = 120;
     protected int baseMaxConsumption = 120;
 
@@ -31,7 +31,7 @@ public class MachineEnergyStorage implements INBTSerializable<Tag>, IEnergyStora
 
     @Override
     public int getMaxEnergyStored() {
-        return Math.round(baseMaxStored * capacitorSupplier.get().map(ICapacitorData::getBase).orElse(1.0f));
+        return Math.round(baseCapacity * capacitorSupplier.get().map(ICapacitorData::getBase).orElse(1.0f));
     }
 
     public int getMaxEnergyConsumption() {

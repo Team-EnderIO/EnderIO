@@ -2,10 +2,10 @@
   "type": "enderio_machines:alloy_smelting",
   "ingredients": [
     {
-      "item": "minecraft:redstone"
+      "tag": "forge:dusts/redstone"
     },
     {
-      "item": "enderio:silicon"
+      "tag": "forge:silicon"
     }
   ],
   "result": {

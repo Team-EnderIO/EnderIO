@@ -125,7 +125,7 @@ public class ItemSlotLayout {
             int max = 0;
             for (Integer slot : slots) {
                 if (slot > max)
-                    max = max;
+                    max = slot;
             }
 
             if (max != slotTypeMap.size() - 1)

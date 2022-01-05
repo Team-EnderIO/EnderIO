@@ -811,6 +811,7 @@
   "gui.enderio.redstone.active_with_signal": "Active with signal",
   "gui.enderio.redstone.active_without_signal": "Active without signal",
   "gui.enderio.redstone.always_active": "Always active",
+  "gui.enderio.redstone.mode": "Redstone Mode",
   "gui.enderio.redstone.never_active": "Never active",
   "info.enderio.coordinate_selector.no_block": "No Block in Range",
   "info.enderio.coordinate_selector.no_paper": "No Paper in Inventory",

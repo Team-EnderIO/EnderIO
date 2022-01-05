@@ -5,10 +5,10 @@
       "tag": "forge:ingots/iron"
     },
     {
-      "item": "enderio:coal_powder"
+      "tag": "forge:dusts/coal"
     },
     {
-      "item": "enderio:silicon"
+      "tag": "forge:silicon"
     }
   ],
   "result": {

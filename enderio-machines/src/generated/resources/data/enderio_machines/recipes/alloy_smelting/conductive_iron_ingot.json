@@ -2,7 +2,7 @@
   "type": "enderio_machines:alloy_smelting",
   "ingredients": [
     {
-      "item": "minecraft:redstone"
+      "tag": "forge:dusts/redstone"
     },
     {
       "tag": "forge:ingots/iron"

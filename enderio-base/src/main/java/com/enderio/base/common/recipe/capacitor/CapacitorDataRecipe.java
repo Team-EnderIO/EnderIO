@@ -101,9 +101,9 @@ public class CapacitorDataRecipe implements Recipe<Container> {
         @Nullable
         @Override
         public CapacitorDataRecipe fromNetwork(@Nonnull ResourceLocation recipeId, FriendlyByteBuf buffer) {
-            Item capacitor = ForgeRegistries.ITEMS.getValue(buffer.readResourceLocation());
             CapacitorData capacitorData = new CapacitorData();
             capacitorData.deserializeNBT(buffer.readNbt());
+            Item capacitor = ForgeRegistries.ITEMS.getValue(buffer.readResourceLocation());
             return new CapacitorDataRecipe(recipeId, capacitor, capacitorData);
         }
 

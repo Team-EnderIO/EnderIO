@@ -5,7 +5,7 @@
       "tag": "forge:ingots/iron"
     },
     {
-      "item": "minecraft:ender_pearl"
+      "tag": "forge:ender_pearls"
     }
   ],
   "result": {

@@ -1,4 +1,4 @@
-package com.enderio.base.client.screen;
+package com.enderio.base.client.icon;
 
 import com.enderio.base.common.util.Vector2i;
 import net.minecraft.network.chat.Component;

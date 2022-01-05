@@ -56,8 +56,8 @@ public class LevitationStaffItem extends PoweredToggledItem implements IItemOver
     protected void setFullCharge(ItemStack pStack) {
         super.setFullCharge(pStack);
         getTankCap(pStack).ifPresent(handler -> {
-            if (handler instanceof AcceptingFluidItemHandler) {
-                ((AcceptingFluidItemHandler) handler).setFluid(new FluidStack(EIOFluids.VAPOR_OF_LEVITY.get(), handler.getTankCapacity(0)));
+            if (handler instanceof AcceptingFluidItemHandler fluidHandler) {
+                fluidHandler.setFluid(new FluidStack(EIOFluids.VAPOR_OF_LEVITY.get(), handler.getTankCapacity(0)));
             }
         });
     }
@@ -71,9 +71,8 @@ public class LevitationStaffItem extends PoweredToggledItem implements IItemOver
     @Nullable
     @Override
     public MultiCapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt, MultiCapabilityProvider provider) {
-        // TODO: OUR OWN TAG
         provider.addSimple(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY,
-            new AcceptingFluidItemHandler(stack, 1000, EIOTags.Fluids.COLD_FIRE_IGNITER_FUEL).getCapability(
+            new AcceptingFluidItemHandler(stack, 1000, EIOTags.Fluids.STAFF_OF_LEVITY_FUEL).getCapability(
                 CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY));
         return super.initCapabilities(stack, nbt, provider);
     }

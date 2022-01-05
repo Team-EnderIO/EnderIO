@@ -2,7 +2,6 @@ package com.enderio.machines.common.blockentity.base;
 
 import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.base.common.capability.capacitors.ICapacitorData;
-import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.CapacitorUtil;
 import com.enderio.base.common.util.UseOnly;
 import com.enderio.base.common.util.Vector2i;
@@ -12,7 +11,6 @@ import com.enderio.machines.common.blockentity.sync.MachineEnergyDataSlot;
 import com.enderio.machines.common.energy.MachineEnergyStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
@@ -47,7 +45,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
 
     // Helper methods for gui:
     @UseOnly(LogicalSide.CLIENT)
-    public Vector2i guiGetEnergy() {
+    public Vector2i getGuiEnergy() {
         if (level.isClientSide) {
             return clientEnergy;
         }

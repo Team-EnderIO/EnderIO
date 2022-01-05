@@ -116,11 +116,11 @@ public class ColdFireIgniter extends Item implements IMultiCapabilityItem {
             pItems.add(is.copy());
 
             getTankCap(is).ifPresent(handler -> {
-                if (handler instanceof AcceptingFluidItemHandler) {
-                    ((AcceptingFluidItemHandler) handler).setFluid(new FluidStack(EIOFluids.VAPOR_OF_LEVITY.get(), handler.getTankCapacity(0)));
+                if (handler instanceof AcceptingFluidItemHandler fluidHandler) {
+                    fluidHandler.setFluid(new FluidStack(EIOFluids.VAPOR_OF_LEVITY.get(), handler.getTankCapacity(0)));
+                    pItems.add(is);
                 }
             });
-            pItems.add(is);
         }
     }
 

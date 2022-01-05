@@ -1,7 +1,7 @@
 package com.enderio.machines.common.machine;
 
 import com.enderio.base.EnderIO;
-import com.enderio.base.client.screen.IIcon;
+import com.enderio.base.client.icon.IIcon;
 import com.enderio.base.common.util.Vector2i;
 import com.enderio.machines.common.lang.MachineLang;
 import net.minecraft.network.chat.Component;
@@ -15,15 +15,15 @@ public enum AlloySmelterMode implements IIcon {
     public final boolean canAlloy;
     public final boolean canSmelt;
 
-    private static final ResourceLocation TEXTURE = EnderIO.loc("textures/gui/40/widgetsv2.png"); // TODO: Redo widgets
-    private static final Vector2i SIZE = new Vector2i(32, 32);
+    private static final ResourceLocation TEXTURE = EnderIO.loc("textures/gui/icons.png"); // TODO: Redo widgets
+    private static final Vector2i SIZE = new Vector2i(12, 12);
     private final Vector2i pos;
     private final Component tooltip;
 
     AlloySmelterMode(boolean canAlloy, boolean canSmelt, Component tooltip) {
         this.canAlloy = canAlloy;
         this.canSmelt = canSmelt;
-        pos = new Vector2i( 32 * ordinal(), 288);
+        pos = new Vector2i( 48 + 12 * ordinal(), 0);
         this.tooltip = tooltip;
     }
 
@@ -38,11 +38,6 @@ public enum AlloySmelterMode implements IIcon {
     }
 
     @Override
-    public Vector2i getRenderSize() {
-        return new Vector2i(12, 12);
-    }
-
-    @Override
     public Vector2i getTexturePosition() {
         return pos;
     }
@@ -54,7 +49,7 @@ public enum AlloySmelterMode implements IIcon {
 
     @Override
     public Vector2i getTextureSize() {
-        return new Vector2i(512, 512);
+        return new Vector2i(256, 256);
     }
 }
 

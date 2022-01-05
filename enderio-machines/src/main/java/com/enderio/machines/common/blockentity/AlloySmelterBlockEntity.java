@@ -61,7 +61,9 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachineEntity<Recipe
         this.mode = defaultMode;
 
         // This can be changed by the gui for the normal and enhanced machines.
-        add2WayDataSlot(new EnumDataSlot<>(this::getMode, this::setMode, SyncMode.GUI));
+        if (getTier() != MachineTier.Simple) {
+            add2WayDataSlot(new EnumDataSlot<>(this::getMode, this::setMode, SyncMode.GUI));
+        }
     }
 
     public AlloySmelterMode getMode() {

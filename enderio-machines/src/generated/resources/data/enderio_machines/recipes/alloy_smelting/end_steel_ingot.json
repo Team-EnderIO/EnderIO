@@ -2,13 +2,13 @@
   "type": "enderio_machines:alloy_smelting",
   "ingredients": [
     {
-      "item": "minecraft:end_stone"
+      "tag": "forge:end_stones"
     },
     {
       "item": "enderio:dark_steel_ingot"
     },
     {
-      "item": "minecraft:obsidian"
+      "tag": "forge:obsidian"
     }
   ],
   "result": {

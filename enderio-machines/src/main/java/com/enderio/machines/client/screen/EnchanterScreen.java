@@ -2,6 +2,7 @@ package com.enderio.machines.client.screen;
 
 import com.enderio.base.client.screen.EIOScreen;
 import com.enderio.base.client.screen.EnumIconWidget;
+import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.util.Vector2i;
 import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.menu.EnchanterMenu;
@@ -22,7 +23,8 @@ public class EnchanterScreen extends EIOScreen<EnchanterMenu> {
     @Override
     protected void init() {
         super.init();
-        addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(), control -> menu.getBlockEntity().setRedstoneControl(control)));
+        addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),
+            control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
     }
     
     @Override

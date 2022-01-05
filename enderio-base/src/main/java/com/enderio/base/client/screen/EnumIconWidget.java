@@ -1,9 +1,11 @@
 package com.enderio.base.client.screen;
 
 import com.enderio.base.client.ForgeHax;
+import com.enderio.base.client.icon.IIcon;
 import com.enderio.base.common.util.Vector2i;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -13,10 +15,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -40,10 +39,14 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
 
     private final SelectionScreen selection;
 
-    public EnumIconWidget(U addedOn, int pX, int pY, Supplier<T> getter, Consumer<T> setter) {
+    // TODO: I don't like that this is separate, maybe we need an IOptionIcon for holding the option name?
+    private final Component optionName;
+
+    public EnumIconWidget(U addedOn, int pX, int pY, Supplier<T> getter, Consumer<T> setter, Component optionName) {
         super(pX, pY, getter.get().getRenderSize().getX(), getter.get().getRenderSize().getY(), TextComponent.EMPTY);
         this.getter = getter;
         this.setter = setter;
+        this.optionName = optionName;
         T[] values = (T[])(getter.get().getClass().getEnumConstants());
         Vector2i pos = calculateFirstPosition(values[0], values.length);
         Vector2i elementDistance = values[0].getRenderSize().expand(SPACE_BETWEEN_ELEMENTS);
@@ -122,7 +125,7 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
     @Override
     public void renderToolTip(PoseStack poseStack, int mouseX, int mouseY) {
         if (isHovered && isActive()) {
-            addedOn.renderTooltip(poseStack, getter.get().getTooltip(), mouseX, mouseY);
+            addedOn.renderTooltip(poseStack, List.of(optionName, getter.get().getTooltip().copy().withStyle(ChatFormatting.GRAY)), Optional.empty(), mouseX, mouseY);
         }
     }
 

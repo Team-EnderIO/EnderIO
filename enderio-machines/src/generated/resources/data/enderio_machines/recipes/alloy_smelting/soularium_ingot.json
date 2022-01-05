@@ -1,9 +1,14 @@
 {
   "type": "enderio_machines:alloy_smelting",
   "ingredients": [
-    {
-      "item": "minecraft:soul_sand"
-    },
+    [
+      {
+        "item": "minecraft:soul_sand"
+      },
+      {
+        "item": "minecraft:soul_soil"
+      }
+    ],
     {
       "tag": "forge:ingots/gold"
     }

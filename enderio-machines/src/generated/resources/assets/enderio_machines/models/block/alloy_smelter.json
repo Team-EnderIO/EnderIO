@@ -1,6 +1,7 @@
 {
-  "parent": "minecraft:block/cube_all",
-  "textures": {
-    "all": "enderio_machines:block/alloy_smelter"
-  }
+  "loader": "enderio_machines:machine_model",
+  "components": [
+    "enderio_machines:block/alloy_smelter_front",
+    "enderio_machines:block/machine_frame"
+  ]
 }

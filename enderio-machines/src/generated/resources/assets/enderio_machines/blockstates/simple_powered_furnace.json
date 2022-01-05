@@ -1,7 +1,19 @@
 {
   "variants": {
-    "": {
+    "facing=north": {
       "model": "enderio_machines:block/simple_powered_furnace"
+    },
+    "facing=south": {
+      "model": "enderio_machines:block/simple_powered_furnace",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "enderio_machines:block/simple_powered_furnace",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "enderio_machines:block/simple_powered_furnace",
+      "y": 90
     }
   }
 }

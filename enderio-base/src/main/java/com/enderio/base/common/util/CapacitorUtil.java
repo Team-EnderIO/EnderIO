@@ -57,6 +57,7 @@ public class CapacitorUtil {
      * @param tooltipComponents
      */
     public static void getTooltip(ItemStack stack, List<Component> tooltipComponents) {
+        // TODO: Crashes client if the item was spawned in as it doesn't have any specializations.
         stack.getCapability(EIOCapabilities.CAPACITOR).ifPresent(cap -> {
             TranslatableComponent t = new TranslatableComponent(getFlavor(cap.getFlavor()),
                 getGradeText(cap.getSpecializations().values().stream().findFirst().get()),
@@ -92,8 +93,6 @@ public class CapacitorUtil {
     }
 
     private static final HashMap<Item, ICapacitorData> lookup = new HashMap<>();
-
-    public static final ICapacitorData DEFAULT = new CapacitorData(1.0f, Map.of());
 
     public static Optional<ICapacitorData> getCapacitorData(ItemStack itemStack) {
         // Search for an ICapacitorData capability

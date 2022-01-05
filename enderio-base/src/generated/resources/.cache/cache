@@ -777,8 +777,8 @@ c576d6933476be300044e56c3bad1c564c91b4d6 assets/enderio/blockstates/soularium_pr
 9d188f1f7881c12ea11e4fe99b57f81b0c11d12b assets/enderio/blockstates/vapor_of_levity.json
 5550f77ed45ea032817d22620b85af8638d93d6e assets/enderio/blockstates/vibrant_alloy_block.json
 098d5614008b659465de60b5f5279dd9132cc0d7 assets/enderio/blockstates/xp_juice.json
-c1617dbc5ade411ccb337a7bb0faf9a72113c126 assets/enderio/lang/en_ud.json
-b33a9be95a79a8cad3828b6bc38f2660cee2ba04 assets/enderio/lang/en_us.json
+f681acf0531fff160b34d1c37a5201c9f6701496 assets/enderio/lang/en_ud.json
+56604195ce6a11882b7dfb939fefaee3195e537b assets/enderio/lang/en_us.json
 54f3ab5f2428d51b7c0082ca5267b6c50dcff443 assets/enderio/models/block/budding_infinity_crystal.json
 b15848e5e6691f1112a018e7084b8424a0ceda60 assets/enderio/models/block/cloud_seed.json
 9fb8b1b1202c908eb800d6eb46b0ce17a8493b81 assets/enderio/models/block/cloud_seed_concentrated.json
@@ -2829,7 +2829,6 @@ ede12d5685eb0acf69ba6ad0819ca99b7876bd55 data/forge/tags/items/gears/stone.json
 421c2c32b8a870a9bf3f50171a7b909e3ba34b25 data/minecraft/recipes/stick.json
 8807d22b2d59936947a94887e38a6ad179c6d6c8 data/minecraft/tags/blocks/climbable.json
 8c78cf2632c6a9231438461a2a9399de73ac3017 data/minecraft/tags/blocks/doors.json
-e93a05f8d20754bcaef729ddbc7dcb109cd8a868 data/minecraft/tags/blocks/fire.json
 66c2d079ec505a7eb94d2d55e858bb195b46fd5d data/minecraft/tags/blocks/mineable/pickaxe.json
 10d9ea0cdc4a1da2c44d0b3f533771b6eff8a01f data/minecraft/tags/blocks/needs_diamond_tool.json
 781894fd1036dfb654a40eb44e6b7e4e4df60241 data/minecraft/tags/blocks/needs_iron_tool.json

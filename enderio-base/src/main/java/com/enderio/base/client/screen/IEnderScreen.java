@@ -1,5 +1,6 @@
 package com.enderio.base.client.screen;
 
+import com.enderio.base.client.icon.IIcon;
 import com.enderio.base.common.util.Vector2i;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
