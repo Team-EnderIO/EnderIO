@@ -1,6 +1,7 @@
 package com.enderio.base.common.lang;
 
 import com.enderio.base.EnderIO;
+import com.enderio.base.common.capability.capacitors.CapacitorSpecializations;
 import com.enderio.base.common.capability.capacitors.ICapacitorData;
 import com.enderio.base.common.util.TooltipUtil;
 import com.tterrag.registrate.Registrate;
@@ -101,11 +102,11 @@ public class EIOLang {
 
     // region Capacitors
 
-    public static final Component CAPACITOR_ALL_ENERGY_CONSUMPSTION = capacitorDescriptionBuilder("type", ICapacitorData.ALL_ENERGY_CONSUMPTION, "Leaky");
-    public static final Component CAPACITOR_ALL_PRODUCTION_SPEED = capacitorDescriptionBuilder("type", ICapacitorData.ALL_PRODUCTION_SPEED, "Fast");
-    public static final Component CAPACITOR_ALLOY_ENERGY_CONSUMPSTION = capacitorDescriptionBuilder("type", ICapacitorData.ALLOY_ENERGY_CONSUMPTION,
+    public static final Component CAPACITOR_ALL_ENERGY_CONSUMPSTION = capacitorDescriptionBuilder("type", CapacitorSpecializations.ALL_ENERGY_CONSUMPTION, "Leaky");
+    public static final Component CAPACITOR_ALL_PRODUCTION_SPEED = capacitorDescriptionBuilder("type", CapacitorSpecializations.ALL_PRODUCTION_SPEED, "Fast");
+    public static final Component CAPACITOR_ALLOY_ENERGY_CONSUMPSTION = capacitorDescriptionBuilder("type", CapacitorSpecializations.ALLOY_ENERGY_CONSUMPTION,
         "Melted");
-    public static final Component CAPACITOR_ALLOY_PRODUCTION_SPEED = capacitorDescriptionBuilder("type", ICapacitorData.ALLOY_PRODUCTION_SPEED, "Smelting");
+    public static final Component CAPACITOR_ALLOY_PRODUCTION_SPEED = capacitorDescriptionBuilder("type", CapacitorSpecializations.ALLOY_PRODUCTION_SPEED, "Smelting");
 
     public static final Component CAPACITOR_DUD = capacitorDescriptionBuilder("base", "0", "Capacitor Dud");
     public static final Component CAPACITOR_GOOD = capacitorDescriptionBuilder("base", "1", "Good Capacitor");

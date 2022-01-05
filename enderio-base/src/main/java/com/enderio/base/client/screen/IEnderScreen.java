@@ -18,7 +18,7 @@ public interface IEnderScreen {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, icon.getTextureLocation());
-        GuiComponent.blit(pPoseStack, pos.getX(), pos.getY(), icon.getTexturePosition().getX(), icon.getTexturePosition().getY(), icon.getIconSize().getX(),  icon.getIconSize().getY(), icon.getTextureSize().getX(), icon.getTextureSize().getY());
+        GuiComponent.blit(pPoseStack, pos.getX(), pos.getY(), icon.getRenderSize().getX(), icon.getRenderSize().getY(), icon.getTexturePosition().getX(), icon.getTexturePosition().getY(), icon.getIconSize().getX(),  icon.getIconSize().getY(), icon.getTextureSize().getX(), icon.getTextureSize().getY());
     }
 
     default void renderSimpleArea(PoseStack pPoseStack, Vector2i pos, Vector2i pos2) {
@@ -29,7 +29,7 @@ public interface IEnderScreen {
     }
 
     default void renderIconBackground(PoseStack pPoseStack, Vector2i pos, IIcon icon) {
-        renderSimpleArea(pPoseStack, pos , pos.add(icon.getIconSize()).expand(2));
+        renderSimpleArea(pPoseStack, pos , pos.add(icon.getRenderSize()).expand(2));
     }
      default void renderTooltipAfterEverything(PoseStack pPoseStack, Component pText, int pMouseX, int pMouseY) {
          addTooltip(new LateTooltipData(pPoseStack, pText, pMouseX, pMouseY));

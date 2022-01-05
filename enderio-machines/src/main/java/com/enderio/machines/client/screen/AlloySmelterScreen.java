@@ -1,10 +1,12 @@
 package com.enderio.machines.client.screen;
 
 import com.enderio.base.client.screen.EIOScreen;
+import com.enderio.base.client.screen.EnumIconWidget;
 import com.enderio.base.common.util.Vector2i;
 import com.enderio.machines.EIOMachines;
 import com.enderio.machines.client.widget.EnergyWidget;
 import com.enderio.machines.common.blockentity.AlloySmelterBlockEntity;
+import com.enderio.machines.common.machine.AlloySmelterMode;
 import com.enderio.machines.common.menu.AlloySmelterMenu;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
@@ -26,6 +28,8 @@ public class AlloySmelterScreen extends EIOScreen<AlloySmelterMenu> {
     protected void init() {
         super.init();
         addRenderableWidget(new EnergyWidget(this, getMenu().getBlockEntity()::guiGetEnergy, 16 + leftPos, 14 + topPos, 9, 42));
+        addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(), control -> menu.getBlockEntity().setRedstoneControl(control)));
+        addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 6 + 16 * 3, () -> menu.getBlockEntity().getMode(), mode -> menu.getBlockEntity().setMode(mode)));
     }
 
     @Override
@@ -39,7 +43,7 @@ public class AlloySmelterScreen extends EIOScreen<AlloySmelterMenu> {
     protected ResourceLocation getBackgroundImage() {
         AlloySmelterBlockEntity be = getMenu().getBlockEntity();
         return switch (be.getTier()) {
-            case Simple -> be.getMode() == AlloySmelterBlockEntity.SmeltingMode.Alloys ? BG_TEXTURE_SIMPLE_ALLOY : BG_TEXTURE_SIMPLE_FURNACE;
+            case Simple -> be.getMode() == AlloySmelterMode.Alloys ? BG_TEXTURE_SIMPLE_ALLOY : BG_TEXTURE_SIMPLE_FURNACE;
             case Standard, Enhanced -> switch (be.getMode()) {
                 case All -> BG_TEXTURE_AUTO;
                 case Alloys -> BG_TEXTURE_ALLOY;

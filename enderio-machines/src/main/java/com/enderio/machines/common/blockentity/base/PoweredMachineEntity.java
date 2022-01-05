@@ -1,9 +1,13 @@
 package com.enderio.machines.common.blockentity.base;
 
 import com.enderio.base.common.blockentity.sync.SyncMode;
+import com.enderio.base.common.capability.capacitors.ICapacitorData;
+import com.enderio.base.common.tag.EIOTags;
+import com.enderio.base.common.util.CapacitorUtil;
 import com.enderio.base.common.util.UseOnly;
 import com.enderio.base.common.util.Vector2i;
 import com.enderio.machines.common.MachineTier;
+import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemSlotLayout;
 import com.enderio.machines.common.blockentity.sync.MachineEnergyDataSlot;
 import com.enderio.machines.common.energy.MachineEnergyStorage;
 import net.minecraft.core.BlockPos;
@@ -51,8 +55,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
     }
 
     protected MachineEnergyStorage createEnergyStorage() {
-        // TODO: Need a way of getting the machine's capacitor.
-        return new MachineEnergyStorage(Optional::empty) {
+        return new MachineEnergyStorage(this::getCapacitorData) {
             @Override
             protected void onEnergyChanged() {
                 setChanged();
@@ -68,4 +71,30 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
         }
         return super.getCapability(cap, side);
     }
+
+    // region Capacitors
+
+    public boolean hasCapacitor() {
+        return getSlotLayout().map(layout -> {
+            int slot = layout.getFirst(ItemSlotLayout.SlotType.CAPACITOR);
+            if (slot != -1) {
+                return CapacitorUtil.isCapacitor(getItemHandler().getStackInSlot(slot));
+            }
+
+            return false;
+        }).orElse(false);
+    }
+
+    public Optional<ICapacitorData> getCapacitorData() {
+        if (getSlotLayout().isPresent()) {
+            ItemSlotLayout layout = getSlotLayout().get();
+            int slot = layout.getFirst(ItemSlotLayout.SlotType.CAPACITOR);
+            if (slot != -1) {
+                return CapacitorUtil.getCapacitorData(getItemHandler().getStackInSlot(slot));
+            }
+        }
+        return Optional.empty();
+    }
+
+    // endregion
 }

@@ -2,6 +2,7 @@ package com.enderio.machines;
 
 import com.enderio.machines.common.block.MachineBlocks;
 import com.enderio.machines.common.blockentity.MachineBlockEntities;
+import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.menu.MachineMenus;
 import com.enderio.machines.common.recipe.MachineRecipes;
 import com.enderio.machines.data.recipe.MachineRecipeGenerator;
@@ -25,6 +26,7 @@ public class EIOMachines {
         MachineBlocks.register();
         MachineBlockEntities.register();
         MachineMenus.register();
+        MachineLang.register();
         
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         

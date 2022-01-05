@@ -12,6 +12,10 @@ public interface IIcon {
 
     Vector2i getIconSize();
 
+    default Vector2i getRenderSize() {
+        return getIconSize();
+    }
+
     Vector2i getTexturePosition();
 
     default Component getTooltip() {

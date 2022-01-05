@@ -22,6 +22,7 @@ public class MachineBlocks {
     public static final BlockEntry<MachineBlock> ENCHANTER = REGISTRATE
         .block("enchanter", props -> new MachineBlock(props, MachineBlockEntities.ENCHANTER))
         .properties(props -> props.strength(2.5f,8))
+        .loot(LootTableUtils::copyNBT)
         .item()
         .tab(() -> EIOCreativeTabs.MACHINES)
         .build()
@@ -30,6 +31,7 @@ public class MachineBlocks {
     public static final BlockEntry<MachineBlock> SIMPLE_POWERED_FURNACE = REGISTRATE
         .block("simple_powered_furnace", props -> new MachineBlock(props, MachineBlockEntities.SIMPLE_POWERED_FURNACE))
         .properties(props -> props.strength(2.5f,8))
+        .loot(LootTableUtils::copyNBT)
         .item()
         .tab(() -> EIOCreativeTabs.MACHINES)
         .build()
@@ -38,6 +40,7 @@ public class MachineBlocks {
     public static final BlockEntry<MachineBlock> SIMPLE_ALLOY_SMELTER = REGISTRATE
         .block("simple_alloy_smelter", props -> new MachineBlock(props, MachineBlockEntities.SIMPLE_ALLOY_SMELTER))
         .properties(props -> props.strength(2.5f,8))
+        .loot(LootTableUtils::copyNBT)
         .item()
         .tab(() -> EIOCreativeTabs.MACHINES)
         .build()
@@ -46,6 +49,7 @@ public class MachineBlocks {
     public static final BlockEntry<MachineBlock> ALLOY_SMELTER = REGISTRATE
         .block("alloy_smelter", props -> new MachineBlock(props, MachineBlockEntities.ALLOY_SMELTER))
         .properties(props -> props.strength(2.5f,8))
+        .loot(LootTableUtils::copyNBT)
         .item()
         .tab(() -> EIOCreativeTabs.MACHINES)
         .build()

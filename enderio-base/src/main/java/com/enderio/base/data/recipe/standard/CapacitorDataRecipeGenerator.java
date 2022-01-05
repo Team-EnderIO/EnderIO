@@ -1,6 +1,7 @@
 package com.enderio.base.data.recipe.standard;
 
 import com.enderio.base.common.capability.capacitors.CapacitorData;
+import com.enderio.base.common.capability.capacitors.CapacitorSpecializations;
 import com.enderio.base.common.capability.capacitors.ICapacitorData;
 import com.enderio.base.common.item.EIOItems;
 import com.enderio.base.common.recipe.capacitor.CapacitorDataRecipe;
@@ -27,11 +28,9 @@ public class CapacitorDataRecipeGenerator extends RecipeProvider {
         build(4.0f, EIOItems.OCTADIC_CAPACITOR.get(), recipeConsumer);
     }
 
-    protected void build(float allUpgrades, Item item, Consumer<FinishedRecipe> recipeConsumer) {
+    protected void build(float base, Item item, Consumer<FinishedRecipe> recipeConsumer) {
         Map<String, Float> specialisations = new HashMap<>();
-        specialisations.put(ICapacitorData.ALL_ENERGY_CONSUMPTION, allUpgrades);
-        specialisations.put(ICapacitorData.ALL_PRODUCTION_SPEED, allUpgrades);
-        build(0.0f, specialisations, item, recipeConsumer);
+        build(base, specialisations, item, recipeConsumer);
     }
 
     protected void build(float base, Map<String, Float> specialisations, Item item, Consumer<FinishedRecipe> recipeConsumer) {
@@ -42,7 +41,7 @@ public class CapacitorDataRecipeGenerator extends RecipeProvider {
     }
 
     protected void build(CapacitorData capacitorData, Item item, Consumer<FinishedRecipe> recipeConsumer) {
-        build(new CapacitorDataRecipe(null, Ingredient.of(item), capacitorData), item.getRegistryName().getPath(), recipeConsumer);
+        build(new CapacitorDataRecipe(null, item, capacitorData), item.getRegistryName().getPath(), recipeConsumer);
     }
 
     protected void build(CapacitorDataRecipe recipe, String name, Consumer<FinishedRecipe> recipeConsumer) {

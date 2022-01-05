@@ -23,28 +23,28 @@ public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
         super(blockEntity, inventory, MachineMenus.ENCHANTER.get(), pContainerId);
         if (blockEntity != null) {
             this.level = blockEntity.getLevel();
-            addSlot(new MachineSlot(blockEntity.getItemHandlerMaster(), 0, 16, 35));
-            addSlot(new MachineSlot(blockEntity.getItemHandlerMaster(), 1, 65, 35));
-            addSlot(new MachineSlot(blockEntity.getItemHandlerMaster(), 2, 85, 35));
-            addSlot(new MachineSlot(blockEntity.getItemHandlerMaster(), 3, 144, 35) {
+            addSlot(new MachineSlot(blockEntity.getItemHandler(), 0, 16, 35));
+            addSlot(new MachineSlot(blockEntity.getItemHandler(), 1, 65, 35));
+            addSlot(new MachineSlot(blockEntity.getItemHandler(), 2, 85, 35));
+            addSlot(new MachineSlot(blockEntity.getItemHandler(), 3, 144, 35) {
                 @Override
                 public void onTake(Player pPlayer, ItemStack pStack) {
-                    Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.Types.ENCHANTING, new RecipeWrapper(blockEntity.getItemHandlerMaster()), level);
-                    if (recipe.isPresent() && (pPlayer.experienceLevel > recipe.get().getLevelCost(new RecipeWrapper(blockEntity.getItemHandlerMaster())) || pPlayer.isCreative())) {
-                        int amount = recipe.get().getAmount(new RecipeWrapper(blockEntity.getItemHandlerMaster()));
-                        int lapizForLevel = recipe.get().getLapisForLevel(recipe.get().getEnchantmentLevel(blockEntity.getItemHandlerMaster().getStackInSlot(1).getCount()));
-                        pPlayer.giveExperienceLevels(-recipe.get().getLevelCost(new RecipeWrapper(blockEntity.getItemHandlerMaster())));
-                        blockEntity.getItemHandlerMaster().getStackInSlot(0).shrink(1);
-                        blockEntity.getItemHandlerMaster().getStackInSlot(1).shrink(amount);
-                        blockEntity.getItemHandlerMaster().getStackInSlot(2).shrink(lapizForLevel);
+                    Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.Types.ENCHANTING, blockEntity.getRecipeWrapper(), level);
+                    if (recipe.isPresent() && (pPlayer.experienceLevel > recipe.get().getLevelCost(blockEntity.getRecipeWrapper()) || pPlayer.isCreative())) {
+                        int amount = recipe.get().getAmount(blockEntity.getRecipeWrapper());
+                        int lapizForLevel = recipe.get().getLapisForLevel(recipe.get().getEnchantmentLevel(blockEntity.getItemHandler().getStackInSlot(1).getCount()));
+                        pPlayer.giveExperienceLevels(-recipe.get().getLevelCost(blockEntity.getRecipeWrapper()));
+                        blockEntity.getItemHandler().getStackInSlot(0).shrink(1);
+                        blockEntity.getItemHandler().getStackInSlot(1).shrink(amount);
+                        blockEntity.getItemHandler().getStackInSlot(2).shrink(lapizForLevel);
                     }
                     super.onTake(pPlayer, pStack);
                 }
 
                 @Override
                 public boolean mayPickup(Player playerIn) {
-                    Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.Types.ENCHANTING, new RecipeWrapper(blockEntity.getItemHandlerMaster()), level);
-                    if (recipe.isPresent() && (playerIn.experienceLevel > recipe.get().getLevelCost(new RecipeWrapper(blockEntity.getItemHandlerMaster())) || playerIn.isCreative()) && blockEntity.shouldAct()) {
+                    Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.Types.ENCHANTING, blockEntity.getRecipeWrapper(), level);
+                    if (recipe.isPresent() && (playerIn.experienceLevel > recipe.get().getLevelCost(blockEntity.getRecipeWrapper()) || playerIn.isCreative()) && blockEntity.shouldAct()) {
                         return super.mayPickup(playerIn);
                     }
                     return false;
@@ -64,9 +64,9 @@ public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
 
     public int getCurrentCost() {
         if (level != null) {
-            Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.Types.ENCHANTING, new RecipeWrapper(this.getBlockEntity().getItemHandlerMaster()), level);
+            Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.Types.ENCHANTING, getBlockEntity().getRecipeWrapper(), level);
             if (recipe.isPresent()) {
-                return recipe.get().getLevelCost(new RecipeWrapper(this.getBlockEntity().getItemHandlerMaster()));
+                return recipe.get().getLevelCost(new RecipeWrapper(this.getBlockEntity().getItemHandler()));
             }
         }
         return -1;

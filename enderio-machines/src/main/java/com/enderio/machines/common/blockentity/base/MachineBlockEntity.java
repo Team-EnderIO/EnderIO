@@ -8,6 +8,7 @@ import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.data.sidecontrol.IOConfig;
 import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemHandlerMaster;
+import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemSlotLayout;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -25,6 +26,8 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.RecipeWrapper;
+import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.EnumMap;
 import java.util.Optional;
@@ -42,9 +45,17 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
     private boolean isCacheDirty = false;
     private final MachineTier tier;
 
+    private ItemHandlerMaster itemHandlerMaster;
+
     public MachineBlockEntity(MachineTier tier, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);
         this.tier = tier;
+
+        // If the machine declares an inventory layout, use it to create a handler
+        getSlotLayout().ifPresent(layout -> {
+            itemHandlerMaster = createItemHandler(layout);
+        });
+
         add2WayDataSlot(new EnumDataSlot<>(this::getRedstoneControl, this::setRedstoneControl, SyncMode.GUI));
         add2WayDataSlot(new NBTSerializableDataSlot<>(() -> config, SyncMode.WORLD));
     }
@@ -57,7 +68,24 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
         return this.config;
     }
 
-    public abstract ItemHandlerMaster getItemHandlerMaster();
+    public final ItemHandlerMaster getItemHandler() {
+        return itemHandlerMaster;
+    }
+
+    public final RecipeWrapper getRecipeWrapper() {
+        return new RecipeWrapper(itemHandlerMaster);
+    }
+
+    public Optional<ItemSlotLayout> getSlotLayout() {
+        return Optional.empty();
+    }
+
+    /**
+     * Called to create an item handler if a slot layout is provided.
+     */
+    protected ItemHandlerMaster createItemHandler(ItemSlotLayout layout) {
+        throw new NotImplementedException("Dev didn't implement the item handler for this BE");
+    }
 
     public void updateCache() {
         itemHandlerCache.clear();
@@ -180,12 +208,21 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
         super.saveAdditional(pTag);
         pTag.put("io_config", config.serializeNBT());
         pTag.putInt("redstone", redstoneControl.ordinal());
+
+        if (itemHandlerMaster != null) {
+            pTag.put("inventory", itemHandlerMaster.serializeNBT());
+        }
     }
 
     @Override
     public void load(CompoundTag pTag) {
         config.deserializeNBT(pTag.getCompound("io_config"));
         redstoneControl = RedstoneControl.values()[pTag.getInt("redstone")];
+
+        if (itemHandlerMaster != null) {
+            itemHandlerMaster.deserializeNBT(pTag.getCompound("inventory"));
+        }
+
         super.load(pTag);
     }
 

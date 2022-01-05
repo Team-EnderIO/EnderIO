@@ -18,25 +18,31 @@ public class ItemHandlerMaster extends ItemStackHandler {
     private final EnumMap<Direction, SidedItemHandlerAccess> access = new EnumMap(Direction.class);
     private final IOConfig config;
 
-    private List<Integer> onlyInputs;
-    private List<Integer> onlyOutputs;
+    private ItemSlotLayout layout;
 
     private Map<Integer, Predicate<ItemStack>> inputPredicates = new HashMap<>();
     private boolean isForceMode = false;
 
+    public ItemHandlerMaster(IOConfig config, ItemSlotLayout layout) {
+        super(layout.getSlotCount());
+        this.config = config;
+        this.layout = layout;
+    }
+
     public ItemHandlerMaster(IOConfig config, int size) {
-        this(config, size, new ArrayList<>(), new ArrayList<>());
+        this(config, size, List.of(), List.of(), List.of());
     }
 
     public ItemHandlerMaster(IOConfig config, int size, List<Integer> onlyInputs, List<Integer> onlyOutputs) {
-        super(size);
-        this.onlyInputs = onlyInputs;
-        this.onlyOutputs = onlyOutputs;
-        this.config = config;
+        this(config, size, onlyInputs, onlyOutputs, List.of());
+    }
+
+    public ItemHandlerMaster(IOConfig config, int size, List<Integer> onlyInputs, List<Integer> onlyOutputs, List<Integer> upgradeSlots) {
+        this(config, ItemSlotLayout.fromLegacy(onlyInputs, onlyOutputs, upgradeSlots));
     }
 
     public void addPredicate(int slot, Predicate<ItemStack> predicate) {
-        if (onlyOutputs.contains(slot))
+        if (layout.slotIs(slot, ItemSlotLayout.SlotType.OUTPUT))
             throw new IllegalArgumentException("Tried to add an insert predicate to the output slot:" + slot);
         if (slot >= getSlots())
             throw new IllegalArgumentException("Tried to add an insert predicate to an invalid slot:" + slot);
@@ -46,28 +52,21 @@ public class ItemHandlerMaster extends ItemStackHandler {
     @Nonnull
     @Override
     public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-        if (onlyOutputs.contains(slot) && !isForceMode)
+        if (layout.slotIs(slot, ItemSlotLayout.SlotType.OUTPUT) && !isForceMode)
             return stack;
         return super.insertItem(slot, stack, simulate);
     }
 
-    public ItemStack forceInsertItem(int slot, @Nonnull ItemStack stack) {
+    public ItemStack forceInsertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
         isForceMode = true;
-        ItemStack returnValue = insertItem(slot, stack, false);
+        ItemStack returnValue = insertItem(slot, stack, simulate);
         isForceMode = false;
         return returnValue;
     }
 
-    public boolean canForceInsert(int slot, @Nonnull ItemStack stack) {
-        isForceMode = true;
-        ItemStack returnValue = insertItem(slot, stack, true);
-        isForceMode = false;
-        return returnValue.isEmpty();
-    }
-
     @Override
     public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-        return isForceMode || (inputPredicates.getOrDefault(slot, itemStack -> true).test(stack) && !getOnlyOutputs().contains(slot));
+        return isForceMode || (inputPredicates.getOrDefault(slot, itemStack -> true).test(stack) && !layout.slotIs(slot, ItemSlotLayout.SlotType.OUTPUT));
     }
 
     public ItemStack guiExtractItem(int slot, int amount, boolean simulate) {
@@ -80,7 +79,7 @@ public class ItemHandlerMaster extends ItemStackHandler {
     @Nonnull
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
-        if (onlyInputs.contains(slot) && !isForceMode)
+        if (layout.slotIs(slot, ItemSlotLayout.SlotType.INPUT) && !isForceMode)
             return ItemStack.EMPTY;
         return super.extractItem(slot, amount, simulate);
     }
@@ -94,11 +93,7 @@ public class ItemHandlerMaster extends ItemStackHandler {
         return config;
     }
 
-    public List<Integer> getOnlyInputs() {
-        return onlyInputs;
-    }
-
-    public List<Integer> getOnlyOutputs() {
-        return onlyOutputs;
+    public ItemSlotLayout getLayout() {
+        return layout;
     }
 }

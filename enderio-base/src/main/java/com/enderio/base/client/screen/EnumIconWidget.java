@@ -41,12 +41,12 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
     private final SelectionScreen selection;
 
     public EnumIconWidget(U addedOn, int pX, int pY, Supplier<T> getter, Consumer<T> setter) {
-        super(pX, pY, getter.get().getIconSize().getX(), getter.get().getIconSize().getY(), TextComponent.EMPTY);
+        super(pX, pY, getter.get().getRenderSize().getX(), getter.get().getRenderSize().getY(), TextComponent.EMPTY);
         this.getter = getter;
         this.setter = setter;
         T[] values = (T[])(getter.get().getClass().getEnumConstants());
         Vector2i pos = calculateFirstPosition(values[0], values.length);
-        Vector2i elementDistance = values[0].getIconSize().expand(SPACE_BETWEEN_ELEMENTS);
+        Vector2i elementDistance = values[0].getRenderSize().expand(SPACE_BETWEEN_ELEMENTS);
         for (int i = 0; i < values.length; i++) {
             T value = values[i];
             Vector2i subWidgetPos = pos.add(getColumn(i) * elementDistance.getX(), getRow(i)* elementDistance.getY()).add(pX, pY);
@@ -70,8 +70,8 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
 
     private Vector2i calculateFirstPosition(T icon, int amount) {
         int maxColumns = Math.min(amount, ELEMENTS_IN_ROW);
-        int width = (maxColumns-1)*(icon.getIconSize().getX() + SPACE_BETWEEN_ELEMENTS);
-        return new Vector2i(-width/2, 2 * SPACE_BETWEEN_ELEMENTS + icon.getIconSize().getY());
+        int width = (maxColumns-1)*(icon.getRenderSize().getX() + SPACE_BETWEEN_ELEMENTS);
+        return new Vector2i(-width/2, 2 * SPACE_BETWEEN_ELEMENTS + icon.getRenderSize().getY());
     }
 
     @Override
@@ -115,6 +115,15 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
 
         addedOn.renderIconBackground(pPoseStack, new Vector2i(x, y), icon);
         addedOn.renderIcon(pPoseStack, new Vector2i(x, y).expand(1), icon);
+
+        renderToolTip(pPoseStack, pMouseX, pMouseY);
+    }
+
+    @Override
+    public void renderToolTip(PoseStack poseStack, int mouseX, int mouseY) {
+        if (isHovered && isActive()) {
+            addedOn.renderTooltip(poseStack, getter.get().getTooltip(), mouseX, mouseY);
+        }
     }
 
     @Override
@@ -185,7 +194,7 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
         private final T value;
 
         public SelectionWidget(Vector2i pos, T value) {
-            super(pos.getX(), pos.getY(), value.getIconSize().getX() + 2, value.getIconSize().getY() + 2, value.getTooltip());
+            super(pos.getX(), pos.getY(), value.getRenderSize().getX() + 2, value.getRenderSize().getY() + 2, value.getTooltip());
             this.value = value;
         }
 
