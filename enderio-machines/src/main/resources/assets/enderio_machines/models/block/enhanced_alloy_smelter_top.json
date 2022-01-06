@@ -3,6 +3,7 @@
 	"textures": {
 		"front": "enderio_machines:block/enhanced_alloy_smelter_front",
 		"bars": "enderio_machines:block/enhanced_extension_bars",
+		"particle": "enderio_machines:block/enhanced_machine_side",
 		"side": "enderio_machines:block/enhanced_machine_side",
 		"top": "enderio_machines:block/enhanced_machine_top"
 	},
@@ -208,9 +209,7 @@
 			"from": [15, 9.25, 1],
 			"to": [16, 10.25, 15],
 			"faces": {
-				"north": {"uv": [0, 0, 1, 1], "texture": "#missing"},
 				"east": {"uv": [1, 0, 15, 1], "texture": "#side"},
-				"south": {"uv": [0, 0, 1, 1], "texture": "#missing"},
 				"west": {"uv": [0, 1, 1, 15], "texture": "#side"},
 				"up": {"uv": [0, 1, 1, 15], "texture": "#side"},
 				"down": {"uv": [0, 0, 15, 1], "texture": "#side"}
@@ -220,9 +219,7 @@
 			"from": [0, 9.25, 1],
 			"to": [1, 10.25, 15],
 			"faces": {
-				"north": {"uv": [0, 0, 1, 1], "texture": "#missing"},
 				"east": {"uv": [15, 1, 16, 15], "texture": "#side"},
-				"south": {"uv": [0, 0, 1, 1], "texture": "#missing"},
 				"west": {"uv": [1, 0, 15, 1], "texture": "#side"},
 				"up": {"uv": [15, 1, 16, 15], "texture": "#side"},
 				"down": {"uv": [1, 0, 15, 1], "texture": "#side"}
@@ -233,9 +230,7 @@
 			"to": [15, 10.25, 16],
 			"faces": {
 				"north": {"uv": [1, 0, 15, 1], "texture": "#side"},
-				"east": {"uv": [0, 0, 1, 1], "texture": "#missing"},
 				"south": {"uv": [1, 0, 15, 1], "texture": "#side"},
-				"west": {"uv": [0, 0, 1, 1], "texture": "#missing"},
 				"up": {"uv": [1, 0, 15, 1], "texture": "#side"},
 				"down": {"uv": [1, 0, 15, 1], "texture": "#side"}
 			}
@@ -245,9 +240,7 @@
 			"to": [15, 10.25, 1],
 			"faces": {
 				"north": {"uv": [1, 0, 15, 1], "texture": "#side"},
-				"east": {"uv": [0, 0, 1, 1], "texture": "#missing"},
 				"south": {"uv": [1, 0, 15, 1], "texture": "#side"},
-				"west": {"uv": [0, 0, 1, 1], "texture": "#missing"},
 				"up": {"uv": [1, 15, 15, 16], "texture": "#front"},
 				"down": {"uv": [1, 0, 15, 1], "texture": "#side"}
 			}
@@ -256,9 +249,7 @@
 			"from": [15, 3.25, 1],
 			"to": [16, 4.25, 15],
 			"faces": {
-				"north": {"uv": [0, 0, 1, 1], "texture": "#missing"},
 				"east": {"uv": [1, 15, 15, 16], "texture": "#side"},
-				"south": {"uv": [0, 0, 1, 1], "texture": "#missing"},
 				"west": {"uv": [0, 1, 1, 15], "texture": "#side"},
 				"up": {"uv": [1, 15, 15, 16], "texture": "#side"},
 				"down": {"uv": [0, 1, 1, 15], "texture": "#side"}
@@ -269,9 +260,7 @@
 			"to": [15, 4.25, 16],
 			"faces": {
 				"north": {"uv": [1, 15, 15, 16], "texture": "#side"},
-				"east": {"uv": [0, 0, 1, 1], "texture": "#missing"},
 				"south": {"uv": [1, 0, 15, 1], "texture": "#side"},
-				"west": {"uv": [0, 0, 1, 1], "texture": "#missing"},
 				"up": {"uv": [1, 0, 15, 1], "texture": "#side"},
 				"down": {"uv": [1, 15, 15, 16], "texture": "#side"}
 			}
@@ -281,9 +270,7 @@
 			"to": [15, 4.25, 1],
 			"faces": {
 				"north": {"uv": [1, 15, 15, 16], "texture": "#side"},
-				"east": {"uv": [0, 0, 1, 1], "texture": "#missing"},
 				"south": {"uv": [1, 0, 15, 1], "texture": "#side"},
-				"west": {"uv": [0, 0, 1, 1], "texture": "#missing"},
 				"up": {"uv": [1, 15, 15, 16], "texture": "#side"},
 				"down": {"uv": [1, 0, 15, 1], "texture": "#side"}
 			}
@@ -292,9 +279,7 @@
 			"from": [0, 3.25, 1],
 			"to": [1, 4.25, 15],
 			"faces": {
-				"north": {"uv": [0, 0, 1, 1], "texture": "#missing"},
 				"east": {"uv": [15, 1, 16, 15], "texture": "#side"},
-				"south": {"uv": [0, 0, 1, 1], "texture": "#missing"},
 				"west": {"uv": [1, 15, 15, 16], "texture": "#side"},
 				"up": {"uv": [1, 15, 15, 16], "texture": "#side"},
 				"down": {"uv": [15, 1, 16, 15], "texture": "#side"}

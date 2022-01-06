@@ -3,6 +3,7 @@
 	"textures": {
 		"bottom": "enderio_machines:block/machine_bottom",
 		"top": "enderio_machines:block/machine_top",
+		"particle": "enderio_machines:block/machine_side",
 		"side": "enderio_machines:block/machine_side",
 		"back": "enderio_machines:block/machine_back"
 	},

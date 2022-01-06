@@ -1,4 +1,4 @@
-package com.enderio.base.client.render;
+package com.enderio.base.client.model.rotating;
 
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraftforge.client.IItemRenderProperties;

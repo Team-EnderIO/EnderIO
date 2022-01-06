@@ -1,6 +1,7 @@
 package com.enderio.base.client;
 
 import com.enderio.base.EnderIO;
+import com.enderio.base.client.model.composite.CompositeModelLoader;
 import com.enderio.base.client.renderer.GraveRenderer;
 import com.enderio.base.common.blockentity.EIOBlockEntities;
 import com.enderio.base.common.fluid.EIOFluids;
@@ -11,6 +12,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ForgeModelBakery;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.fml.common.Mod;
@@ -41,6 +43,8 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void customModelLoaders(ModelRegistryEvent event) {
+        ModelLoaderRegistry.registerLoader(EnderIO.loc("composite_model"), new CompositeModelLoader());
+
         ForgeModelBakery.addSpecialModel(EnderIO.loc("item/wood_gear_helper"));
         ForgeModelBakery.addSpecialModel(EnderIO.loc("item/stone_gear_helper"));
         ForgeModelBakery.addSpecialModel(EnderIO.loc("item/iron_gear_helper"));

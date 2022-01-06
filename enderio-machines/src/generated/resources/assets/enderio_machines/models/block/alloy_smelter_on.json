@@ -9,7 +9,7 @@
       "model": "enderio_machines:block/io_overlay"
     },
     {
-      "model": "enderio_machines:block/alloy_smelter_front"
+      "model": "enderio_machines:block/alloy_smelter_front_on"
     }
   ]
 }

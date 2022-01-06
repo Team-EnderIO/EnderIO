@@ -1,4 +1,4 @@
-package com.enderio.base.client.render;
+package com.enderio.base.client.model.rotating;
 
 import com.enderio.base.common.util.PoseStackHelper;
 import com.mojang.blaze3d.vertex.PoseStack;

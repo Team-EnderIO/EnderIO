@@ -20,6 +20,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -28,6 +31,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 import org.apache.commons.lang3.NotImplementedException;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumMap;
 import java.util.Optional;
@@ -36,7 +40,9 @@ import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public abstract class MachineBlockEntity extends SyncedBlockEntity implements MenuProvider {
 
-    private final IOConfig config = new IOConfig();
+    public static final ModelProperty<IOConfig> IO_CONFIG_PROPERTY = new ModelProperty<>();
+
+    private final IOConfig ioConfig = new IOConfig();
 
     private RedstoneControl redstoneControl = RedstoneControl.ALWAYS_ACTIVE;
 
@@ -46,6 +52,8 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
     private final MachineTier tier;
 
     private ItemHandlerMaster itemHandlerMaster;
+
+    private final IModelData modelData = new ModelDataMap.Builder().build();
 
     public MachineBlockEntity(MachineTier tier, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);
@@ -57,15 +65,28 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
         });
 
         add2WayDataSlot(new EnumDataSlot<>(this::getRedstoneControl, this::setRedstoneControl, SyncMode.GUI));
-        add2WayDataSlot(new NBTSerializableDataSlot<>(() -> config, SyncMode.WORLD));
+        add2WayDataSlot(new NBTSerializableDataSlot<>(() -> ioConfig, SyncMode.WORLD, () -> {
+            if (!isServer()) {
+                modelData.setData(IO_CONFIG_PROPERTY, ioConfig); // TODO: Check if this is needed given its NBT Deserialized
+                requestModelDataUpdate();
+            }
+        }));
+
+        modelData.setData(IO_CONFIG_PROPERTY, ioConfig);
+    }
+
+    @NotNull
+    @Override
+    public IModelData getModelData() {
+        return modelData;
     }
 
     public final MachineTier getTier() {
         return tier;
     }
 
-    public final IOConfig getConfig() {
-        return this.config;
+    public final IOConfig getIoConfig() {
+        return this.ioConfig;
     }
 
     public final ItemHandlerMaster getItemHandler() {
@@ -130,7 +151,7 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
         }
         if (shouldActSlow()) {
             for (Direction direction : Direction.values()) {
-                if (config.getIO(direction).canForce()) {
+                if (ioConfig.getIO(direction).canForce()) {
                     moveItems(direction);
                     moveFluids(direction);
                 }
@@ -206,7 +227,7 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
     @Override
     public void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
-        pTag.put("io_config", config.serializeNBT());
+        pTag.put("io_config", ioConfig.serializeNBT());
         pTag.putInt("redstone", redstoneControl.ordinal());
 
         if (itemHandlerMaster != null) {
@@ -216,7 +237,7 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
 
     @Override
     public void load(CompoundTag pTag) {
-        config.deserializeNBT(pTag.getCompound("io_config"));
+        ioConfig.deserializeNBT(pTag.getCompound("io_config"));
         redstoneControl = RedstoneControl.values()[pTag.getInt("redstone")];
 
         if (itemHandlerMaster != null) {

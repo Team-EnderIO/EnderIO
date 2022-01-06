@@ -16,7 +16,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -38,7 +38,7 @@ public class EnhancedMachineBlock extends ProgressMachineBlock {
 
     public EnhancedMachineBlock(Properties p_49795_, BlockEntityEntry<? extends MachineBlockEntity> blockEntityType) {
         super(p_49795_, blockEntityType);
-        this.registerDefaultState(this.defaultBlockState().setValue(HALF, DoubleBlockHalf.LOWER));
+        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(POWERED, false).setValue(HALF, DoubleBlockHalf.LOWER));
     }
 
     @Override
@@ -62,8 +62,7 @@ public class EnhancedMachineBlock extends ProgressMachineBlock {
         BlockPos blockpos = context.getClickedPos();
         Level level = context.getLevel();
         if (blockpos.getY() < level.getMaxBuildHeight() - 1 && level.getBlockState(blockpos.above()).canBeReplaced(context)) {
-            boolean flag = level.hasNeighborSignal(blockpos) || level.hasNeighborSignal(blockpos.above());
-            return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite()).setValue(POWERED, flag).setValue(HALF, DoubleBlockHalf.LOWER);
+            return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite()).setValue(POWERED, false).setValue(HALF, DoubleBlockHalf.LOWER);
         } else {
             return null;
         }
@@ -72,6 +71,15 @@ public class EnhancedMachineBlock extends ProgressMachineBlock {
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         level.setBlock(pos.above(), state.setValue(HALF, DoubleBlockHalf.UPPER), Block.UPDATE_ALL);
+    }
+
+    @Override
+    public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+        if (!level.isClientSide && player.isCreative()) {
+            DoublePlantBlock.preventCreativeDropFromBottomPart(level, pos, state, player);
+        }
+
+        super.playerWillDestroy(level, pos, state, player);
     }
 
     @Override

@@ -48,7 +48,7 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
 
     @Override
     protected ItemHandlerMaster createItemHandler(ItemSlotLayout layout) {
-        return new ItemHandlerMaster(getConfig(), layout) {
+        return new ItemHandlerMaster(getIoConfig(), layout) {
             protected void onContentsChanged(int slot) {
                 if (slot != 3) {
                     Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.Types.ENCHANTING, getRecipeWrapper(), level);

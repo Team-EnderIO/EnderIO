@@ -39,7 +39,7 @@ public class NBTSerializableDataSlot<T extends INBTSerializable<CompoundTag>> ex
         setterCallback.call();
     }
 
-    interface Callback {
+    public interface Callback {
         void call();
     }
 }

@@ -36,7 +36,7 @@ import java.util.Optional;
 
 public class FluidTankBlockEntity extends MachineBlockEntity {
 
-    private final FluidTankMaster fluidTank = new FluidTankMaster(16 * FluidAttributes.BUCKET_VOLUME, getConfig());
+    private final FluidTankMaster fluidTank = new FluidTankMaster(16 * FluidAttributes.BUCKET_VOLUME, getIoConfig());
 
     public FluidTankBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(MachineTier.Standard, pType, pWorldPosition, pBlockState);
@@ -173,6 +173,6 @@ public class FluidTankBlockEntity extends MachineBlockEntity {
 
     @Override
     protected ItemHandlerMaster createItemHandler(ItemSlotLayout layout) {
-        return new ItemHandlerMaster(getConfig(), layout);
+        return new ItemHandlerMaster(getIoConfig(), layout);
     }
 }

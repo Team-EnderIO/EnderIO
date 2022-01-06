@@ -2,7 +2,6 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.base.common.blockentity.sync.EnumDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
-import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.CapacitorUtil;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.PoweredCraftingMachineEntity;
@@ -165,8 +164,13 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachineEntity<Recipe
     }
 
     @Override
+    protected boolean canSelectRecipe() {
+        return (getTier() == MachineTier.Simple || hasCapacitor()) && super.canSelectRecipe();
+    }
+
+    @Override
     protected ItemHandlerMaster createItemHandler(ItemSlotLayout layout) {
-        return new ItemHandlerMaster(getConfig(), layout) {
+        return new ItemHandlerMaster(getIoConfig(), layout) {
             @NotNull
             @Override
             public ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
@@ -188,11 +192,21 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachineEntity<Recipe
 
     @Override
     public void saveAdditional(CompoundTag pTag) {
+        if (getTier() != MachineTier.Simple) {
+            pTag.putInt("mode", this.mode.ordinal());
+        }
         super.saveAdditional(pTag);
     }
 
     @Override
     public void load(CompoundTag pTag) {
+        if (getTier() != MachineTier.Simple) {
+            try {
+                mode = AlloySmelterMode.values()[pTag.getInt("mode")];
+            } catch (IndexOutOfBoundsException ex) { // In case something happens in the future.
+                mode = AlloySmelterMode.All;
+            }
+        }
         super.load(pTag);
     }
 }

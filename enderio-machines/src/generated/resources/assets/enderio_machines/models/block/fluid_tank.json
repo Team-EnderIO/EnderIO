@@ -1,7 +1,12 @@
 {
-  "loader": "enderio_machines:machine_model",
+  "loader": "enderio:composite_model",
   "components": [
-    "enderio_machines:block/machine_frame",
-    "enderio_machines:block/placeholder_machine_front"
+    {
+      "model": "enderio_machines:block/placeholder_machine_front"
+    },
+    {
+      "model": "enderio_machines:block/machine_frame",
+      "particle_provider": true
+    }
   ]
 }

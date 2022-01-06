@@ -1,7 +1,15 @@
 {
-  "loader": "enderio_machines:machine_model",
+  "loader": "enderio:composite_model",
   "components": [
-    "enderio_machines:block/enhanced_alloy_smelter_front_on",
-    "enderio_machines:block/enhanced_machine_frame"
+    {
+      "model": "enderio_machines:block/enhanced_machine_frame",
+      "particle_provider": true
+    },
+    {
+      "model": "enderio_machines:block/enhanced_alloy_smelter_front_on"
+    },
+    {
+      "model": "enderio_machines:block/io_overlay"
+    }
   ]
 }

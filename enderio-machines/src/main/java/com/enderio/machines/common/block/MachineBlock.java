@@ -1,6 +1,7 @@
 package com.enderio.machines.common.block;
 
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
+import com.enderio.machines.common.blockentity.data.sidecontrol.IOConfig;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -25,6 +26,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.network.NetworkHooks;
 
 import javax.annotation.Nullable;

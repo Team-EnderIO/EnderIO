@@ -1,3 +1,19 @@
 {
-  "parent": "enderio_machines:block/enhanced_alloy_smelter"
+  "loader": "enderio:composite_model",
+  "components": [
+    {
+      "model": "enderio_machines:block/enhanced_machine_frame"
+    },
+    {
+      "model": "enderio_machines:block/enhanced_alloy_smelter_top",
+      "translation": [
+        0.0,
+        1.0,
+        0.0
+      ]
+    },
+    {
+      "model": "enderio_machines:block/enhanced_alloy_smelter_front"
+    }
+  ]
 }

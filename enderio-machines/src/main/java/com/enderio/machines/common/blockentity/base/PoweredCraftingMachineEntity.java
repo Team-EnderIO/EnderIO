@@ -1,12 +1,14 @@
 package com.enderio.machines.common.blockentity.base;
 
 import com.enderio.machines.common.MachineTier;
+import com.enderio.machines.common.block.ProgressMachineBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -22,21 +24,33 @@ public abstract class PoweredCraftingMachineEntity<R extends Recipe<Container>> 
 
     @Override
     public void tick() {
+        boolean active = false;
+
         if (shouldAct()) {
             // TODO: Check we have energy.
             if (canCraft()) {
-                if (energyConsumed <= getEnergyCost(getCurrentRecipe()))
+                if (energyConsumed <= getEnergyCost(getCurrentRecipe())) {
                     energyConsumed += 1;
+                    active = true;
+                }
 
                 if (canTakeOutput(getCurrentRecipe()) && energyConsumed >= getEnergyCost(getCurrentRecipe())) {
                     assembleRecipe(getCurrentRecipe());
                     clearRecipe();
                     selectNextRecipe();
                 }
-            } else {
+            } else if (canSelectRecipe()) {
                 selectNextRecipe();
             }
         }
+
+        // We do this outside of shouldAct() so it still fires if we have no redstone signal
+        if (isServer()) {
+            if (getBlockState().getValue(ProgressMachineBlock.POWERED) != active) {
+                level.setBlock(getBlockPos(), getBlockState().setValue(ProgressMachineBlock.POWERED, active), Block.UPDATE_ALL);
+            }
+        }
+
         super.tick();
     }
 
@@ -61,6 +75,14 @@ public abstract class PoweredCraftingMachineEntity<R extends Recipe<Container>> 
      */
     protected boolean canCraft() {
         return getCurrentRecipe() != null;
+    }
+
+    /**
+     * Whether the machine can start a new recipe
+     * @return
+     */
+    protected boolean canSelectRecipe() {
+        return true;
     }
 
     /**
@@ -135,6 +157,7 @@ public abstract class PoweredCraftingMachineEntity<R extends Recipe<Container>> 
         if (pTag.contains("recipe")) {
             String recipeLoc = pTag.getString("recipe");
 
+            // TODO: Getting the current recipe like this doesn't work. level is null when the game first loads.
             level.getRecipeManager().byKey(new ResourceLocation(recipeLoc)).ifPresent(recipe -> {
                 currentRecipe = (R) recipe;
             });
