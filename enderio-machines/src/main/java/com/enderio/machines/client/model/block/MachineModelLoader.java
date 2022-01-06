@@ -1,4 +1,4 @@
-package com.enderio.machines.client.model;
+package com.enderio.machines.client.model.block;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;

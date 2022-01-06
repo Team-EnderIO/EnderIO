@@ -1,4 +1,4 @@
-package com.enderio.machines.client.model;
+package com.enderio.machines.client.model.block;
 
 import com.enderio.machines.EIOMachines;
 import com.mojang.math.Vector3f;

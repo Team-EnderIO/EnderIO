@@ -33,5 +33,10 @@ public class MachineBlockEntities {
         .validBlocks(MachineBlocks.ALLOY_SMELTER)
         .register();
 
+    public static final BlockEntityEntry<AlloySmelterBlockEntity.Enhanced> ENHANCED_ALLOY_SMELTER = REGISTRATE
+        .blockEntity("enhanced_alloy_smelter", AlloySmelterBlockEntity.Enhanced::new)
+        .validBlocks(MachineBlocks.ENHANCED_ALLOY_SMELTER)
+        .register();
+
     public static void register() {}
 }

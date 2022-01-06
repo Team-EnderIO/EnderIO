@@ -52,6 +52,13 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachineEntity<Recipe
         }
     }
 
+    public static class Enhanced extends AlloySmelterBlockEntity {
+        // TODO: Make it enhanced
+        public Enhanced(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
+            super(AlloySmelterMode.All, MachineTier.Enhanced, pType, pWorldPosition, pBlockState);
+        }
+    }
+
     private final AlloySmelterMode defaultMode;
     private AlloySmelterMode mode;
 

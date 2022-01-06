@@ -1,0 +1,7 @@
+{
+  "loader": "enderio_machines:machine_model",
+  "components": [
+    "enderio_machines:block/enhanced_alloy_smelter_front",
+    "enderio_machines:block/enhanced_machine_frame"
+  ]
+}

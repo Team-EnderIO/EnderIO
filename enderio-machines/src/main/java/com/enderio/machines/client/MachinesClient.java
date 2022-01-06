@@ -1,7 +1,7 @@
 package com.enderio.machines.client;
 
 import com.enderio.machines.EIOMachines;
-import com.enderio.machines.client.model.MachineModelLoader;
+import com.enderio.machines.client.model.block.MachineModelLoader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoaderRegistry;

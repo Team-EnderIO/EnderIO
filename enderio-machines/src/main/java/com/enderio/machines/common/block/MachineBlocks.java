@@ -7,7 +7,9 @@ import com.enderio.machines.common.data.LootTableUtils;
 import com.enderio.machines.data.model.MachineModelBuilder;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.BlockEntry;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 
@@ -62,12 +64,16 @@ public class MachineBlocks {
         .properties(props -> props.strength(2.5f,8))
         .loot(LootTableUtils::copyNBT)
         .blockstate((ctx, prov) -> {
-            // TODO: Common model utils class
-            Function<Boolean, ModelFile> getModel = (on) -> prov.models().getBuilder(ctx.getName() + (on ? "_on" : ""))
+            // Get the model.
+            Function<Boolean, ModelFile> getModel = on -> prov.models().getBuilder(ctx.getName() + (on ? "_on" : ""))
                 .customLoader(MachineModelBuilder::begin)
                 .component(EIOMachines.loc("block/simple_machine_frame"))
                 .component(EIOMachines.loc("block/simple_alloy_smelter_front" + (on ? "_on" : "")))
                 .end();
+
+            // Generate the "on" front
+            prov.models().withExistingParent("simple_alloy_smelter_front_on", EIOMachines.loc("block/simple_alloy_smelter_front"))
+                .texture("front", EIOMachines.loc("block/simple_alloy_smelter_front_on"));
 
             prov.getVariantBuilder(ctx.get())
                 .forAllStates(state -> ConfiguredModel.builder()
@@ -91,6 +97,46 @@ public class MachineBlocks {
                 .component(EIOMachines.loc("block/machine_frame"))
                 .component(EIOMachines.loc("block/alloy_smelter_front"))
                 .end());
+        })
+        .item()
+        .tab(() -> EIOCreativeTabs.MACHINES)
+        .build()
+        .register();
+
+    public static final BlockEntry<EnhancedMachineBlock> ENHANCED_ALLOY_SMELTER = REGISTRATE
+        .block("enhanced_alloy_smelter", props -> new EnhancedMachineBlock(props, MachineBlockEntities.ENHANCED_ALLOY_SMELTER))
+        .properties(props -> props.strength(2.5f,8))
+        .loot(LootTableUtils::copyNBT)
+        .blockstate((ctx, prov) -> {
+            // TODO: Common model utils class
+            // Get bottom model.
+            Function<Boolean, ModelFile> getBottomModel = on -> prov.models().getBuilder(ctx.getName() + (on ? "_on" : ""))
+                .customLoader(MachineModelBuilder::begin)
+                .component(EIOMachines.loc("block/enhanced_machine_frame"))
+                .component(EIOMachines.loc("block/enhanced_alloy_smelter_front" + (on ? "_on" : "")))
+                .end();
+
+            // Get top model.
+            Function<Boolean, ModelFile> getTopModel = on -> {
+                if (on)
+                    return prov.models().withExistingParent("enhanced_alloy_smelter_top_on", EIOMachines.loc("block/enhanced_alloy_smelter_top"))
+                        .texture("front", EIOMachines.loc("block/enhanced_alloy_smelter_front_on"));
+                return prov.models().getExistingFile(EIOMachines.loc("block/enhanced_alloy_smelter_top"));
+            };
+
+            // Generate the "on" variants
+            prov.models().withExistingParent("enhanced_alloy_smelter_front_on", EIOMachines.loc("block/enhanced_alloy_smelter_front"))
+                .texture("front", EIOMachines.loc("block/enhanced_alloy_smelter_front_on"));
+
+            prov.getVariantBuilder(ctx.get())
+                .forAllStates(state -> {
+                    boolean on = state.getValue(ProgressMachineBlock.POWERED);
+                    DoubleBlockHalf half = state.getValue(EnhancedMachineBlock.HALF);
+                    return ConfiguredModel.builder()
+                        .modelFile(half == DoubleBlockHalf.LOWER ? getBottomModel.apply(on) : getTopModel.apply(on))
+                        .rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + 180) % 360)
+                        .build();
+                });
         })
         .item()
         .tab(() -> EIOCreativeTabs.MACHINES)

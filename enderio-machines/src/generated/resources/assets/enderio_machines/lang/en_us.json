@@ -1,6 +1,7 @@
 {
   "block.enderio_machines.alloy_smelter": "Alloy Smelter",
   "block.enderio_machines.enchanter": "Enchanter",
+  "block.enderio_machines.enhanced_alloy_smelter": "Enhanced Alloy Smelter",
   "block.enderio_machines.fluid_tank": "Fluid Tank",
   "block.enderio_machines.simple_alloy_smelter": "Simple Alloy Smelter",
   "block.enderio_machines.simple_powered_furnace": "Simple Powered Furnace",
