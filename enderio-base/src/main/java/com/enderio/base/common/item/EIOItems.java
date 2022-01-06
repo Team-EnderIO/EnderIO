@@ -1,7 +1,7 @@
 package com.enderio.base.common.item;
 
 import com.enderio.base.EnderIO;
-import com.enderio.base.common.item.capacitors.LootCapacitorItem;
+import com.enderio.base.common.item.capacitor.LootCapacitorItem;
 import com.enderio.base.common.item.darksteel.DarkSteelAxeItem;
 import com.enderio.base.common.item.darksteel.DarkSteelPickaxeItem;
 import com.enderio.base.common.item.darksteel.DarkSteelUpgradeItem;

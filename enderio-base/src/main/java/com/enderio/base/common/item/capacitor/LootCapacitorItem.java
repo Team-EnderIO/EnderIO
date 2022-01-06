@@ -1,4 +1,4 @@
-package com.enderio.base.common.item.capacitors;
+package com.enderio.base.common.item.capacitor;
 
 import com.enderio.base.common.capability.EIOCapabilities;
 import com.enderio.base.common.capability.IMultiCapabilityItem;
