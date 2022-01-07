@@ -1,5 +1,6 @@
 package com.enderio.base.client.model.composite;
 
+import com.enderio.base.EnderIO;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mojang.math.Quaternion;
@@ -40,7 +41,7 @@ public record CompositeModelComponent(ResourceLocation model, Vector3f translati
             if (translationJson.size() == 3) {
                 translation = new Vector3f(translationJson.get(0).getAsFloat(), translationJson.get(1).getAsFloat(), translationJson.get(2).getAsFloat());
             } else {
-                // TODO: Log warning
+                EnderIO.LOGGER.warning("Composite model component has invalid translation!");
             }
         }
 

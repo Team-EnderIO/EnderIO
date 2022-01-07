@@ -2,6 +2,7 @@ package com.enderio.machines.common.menu;
 
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.AlloySmelterBlockEntity;
+import com.enderio.machines.common.init.MachineMenus;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;

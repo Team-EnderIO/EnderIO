@@ -1,7 +1,7 @@
 package com.enderio.base.common.blockentity;
 
-import com.enderio.base.common.block.EIOBlocks;
-import com.enderio.base.common.capability.EIOCapabilities;
+import com.enderio.base.common.init.EIOBlocks;
+import com.enderio.base.common.init.EIOCapabilities;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;

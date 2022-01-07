@@ -1,5 +1,6 @@
 package com.enderio.base.common.block;
 
+import com.enderio.base.common.init.EIOBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;

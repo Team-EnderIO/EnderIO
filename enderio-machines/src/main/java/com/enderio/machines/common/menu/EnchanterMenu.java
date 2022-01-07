@@ -1,8 +1,9 @@
 package com.enderio.machines.common.menu;
 
 import com.enderio.machines.common.blockentity.EnchanterBlockEntity;
+import com.enderio.machines.common.init.MachineMenus;
 import com.enderio.machines.common.recipe.EnchanterRecipe;
-import com.enderio.machines.common.recipe.MachineRecipes;
+import com.enderio.machines.common.init.MachineRecipes;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;

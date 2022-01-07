@@ -1,5 +1,6 @@
 package com.enderio.decoration.common.entity;
 
+import com.enderio.decoration.common.init.DecorEntities;
 import com.enderio.decoration.common.util.PaintUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;

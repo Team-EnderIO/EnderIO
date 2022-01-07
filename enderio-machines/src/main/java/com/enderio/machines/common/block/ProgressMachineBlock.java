@@ -12,8 +12,8 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 public class ProgressMachineBlock extends MachineBlock {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
-    public ProgressMachineBlock(Properties p_49795_, BlockEntityEntry<? extends MachineBlockEntity> blockEntityType) {
-        super(p_49795_, blockEntityType);
+    public ProgressMachineBlock(Properties properties, BlockEntityEntry<? extends MachineBlockEntity> blockEntityType) {
+        super(properties, blockEntityType);
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(POWERED, false));
     }
 

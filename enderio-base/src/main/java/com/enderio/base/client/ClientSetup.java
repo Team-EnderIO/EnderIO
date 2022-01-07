@@ -1,10 +1,11 @@
 package com.enderio.base.client;
 
 import com.enderio.base.EnderIO;
+import com.enderio.base.client.model.DummyCustomRenderModel;
 import com.enderio.base.client.model.composite.CompositeModelLoader;
-import com.enderio.base.client.renderer.GraveRenderer;
-import com.enderio.base.common.blockentity.EIOBlockEntities;
-import com.enderio.base.common.fluid.EIOFluids;
+import com.enderio.base.client.renderer.blockentity.GraveRenderer;
+import com.enderio.base.common.init.EIOBlockEntities;
+import com.enderio.base.common.init.EIOFluids;
 import com.tterrag.registrate.util.entry.FluidEntry;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -44,6 +45,7 @@ public class ClientSetup {
     @SubscribeEvent
     public static void customModelLoaders(ModelRegistryEvent event) {
         ModelLoaderRegistry.registerLoader(EnderIO.loc("composite_model"), new CompositeModelLoader());
+        ModelLoaderRegistry.registerLoader(EnderIO.loc("dummy"), new DummyCustomRenderModel.Loader());
 
         ForgeModelBakery.addSpecialModel(EnderIO.loc("item/wood_gear_helper"));
         ForgeModelBakery.addSpecialModel(EnderIO.loc("item/stone_gear_helper"));

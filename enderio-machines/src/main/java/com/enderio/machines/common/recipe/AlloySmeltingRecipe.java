@@ -1,6 +1,7 @@
 package com.enderio.machines.common.recipe;
 
 import com.enderio.base.common.recipe.DataGenSerializer;
+import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.core.NonNullList;

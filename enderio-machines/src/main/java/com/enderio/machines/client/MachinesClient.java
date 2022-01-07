@@ -1,10 +1,9 @@
 package com.enderio.machines.client;
 
 import com.enderio.machines.EIOMachines;
-import com.enderio.machines.client.blockentity.FluidTankBER;
-import com.enderio.machines.client.model.IOOverlayBakedModel;
-import com.enderio.machines.client.model.TankFluidBakedModel;
-import com.enderio.machines.common.blockentity.MachineBlockEntities;
+import com.enderio.machines.client.rendering.blockentity.FluidTankBER;
+import com.enderio.machines.client.rendering.model.IOOverlayBakedModel;
+import com.enderio.machines.common.init.MachineBlockEntities;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -18,16 +17,10 @@ public class MachinesClient {
     @SubscribeEvent
     public static void customModelLoaders(ModelRegistryEvent event) {
         ModelLoaderRegistry.registerLoader(EIOMachines.loc("io_overlay"), new IOOverlayBakedModel.Loader());
-        ModelLoaderRegistry.registerLoader(EIOMachines.loc("tank_fluid_overlay"), new TankFluidBakedModel.Loader());
     }
 
     @SubscribeEvent
     public static void textureStitch(TextureStitchEvent.Pre event) {
-        // TODO: Stitch machine overlays
-        event.addSprite(EIOMachines.loc("block/overlay/disabled"));
-        event.addSprite(EIOMachines.loc("block/overlay/pull"));
-        event.addSprite(EIOMachines.loc("block/overlay/push"));
-        event.addSprite(EIOMachines.loc("block/overlay/push_pull"));
     }
 
     @SubscribeEvent

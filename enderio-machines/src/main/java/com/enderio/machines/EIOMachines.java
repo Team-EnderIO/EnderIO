@@ -1,11 +1,11 @@
 package com.enderio.machines;
 
-import com.enderio.machines.common.block.MachineBlocks;
-import com.enderio.machines.common.blockentity.MachineBlockEntities;
+import com.enderio.machines.common.init.MachineBlocks;
+import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.lang.MachineLang;
-import com.enderio.machines.common.menu.MachineMenus;
-import com.enderio.machines.common.recipe.MachineRecipes;
-import com.enderio.machines.data.recipe.MachineRecipeGenerator;
+import com.enderio.machines.common.init.MachineMenus;
+import com.enderio.machines.common.init.MachineRecipes;
+import com.enderio.machines.datagen.recipe.MachineRecipeGenerator;
 import com.tterrag.registrate.Registrate;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;

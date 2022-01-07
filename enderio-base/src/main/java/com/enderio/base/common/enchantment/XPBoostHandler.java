@@ -1,5 +1,6 @@
 package com.enderio.base.common.enchantment;
 
+import com.enderio.base.common.init.EIOEnchantments;
 import com.google.common.base.Throwables;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

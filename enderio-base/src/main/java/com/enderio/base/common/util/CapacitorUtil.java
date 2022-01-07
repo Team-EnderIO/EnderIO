@@ -1,18 +1,15 @@
 package com.enderio.base.common.util;
 
 import com.enderio.base.EnderIO;
-import com.enderio.base.common.capability.EIOCapabilities;
-import com.enderio.base.common.capability.capacitors.CapacitorData;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.capability.capacitors.CapacitorSpecializations;
 import com.enderio.base.common.capability.capacitors.ICapacitorData;
-import com.enderio.base.common.recipe.EIORecipes;
-import com.enderio.base.common.recipe.capacitor.CapacitorDataRecipe;
+import com.enderio.base.common.init.EIORecipes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

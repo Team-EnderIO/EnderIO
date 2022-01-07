@@ -7,7 +7,7 @@ import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemHandler
 import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemSlotLayout;
 import com.enderio.machines.common.menu.EnchanterMenu;
 import com.enderio.machines.common.recipe.EnchanterRecipe;
-import com.enderio.machines.common.recipe.MachineRecipes;
+import com.enderio.machines.common.init.MachineRecipes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;

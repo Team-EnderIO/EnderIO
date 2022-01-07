@@ -36,7 +36,9 @@ import java.util.Optional;
 
 public class FluidTankBlockEntity extends MachineBlockEntity {
 
-    private final FluidTankMaster fluidTank = new FluidTankMaster(16 * FluidAttributes.BUCKET_VOLUME, getIoConfig());
+    public static final int CAPACITY = 16 * FluidAttributes.BUCKET_VOLUME;
+
+    private final FluidTankMaster fluidTank = new FluidTankMaster(CAPACITY, getIoConfig());
 
     public FluidTankBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(MachineTier.Standard, pType, pWorldPosition, pBlockState);
@@ -52,6 +54,8 @@ public class FluidTankBlockEntity extends MachineBlockEntity {
     @Override
     public void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
+        // TODO: Rename to fluid or tank.
+        // TODO: Common place for all NBT names.
         pTag.put("Fluids", fluidTank.writeToNBT(new CompoundTag()));
     }
 
