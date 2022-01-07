@@ -4,8 +4,7 @@ import com.enderio.base.common.item.EIOCreativeTabs;
 import com.enderio.base.data.model.EIOModel;
 import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.blockentity.MachineBlockEntities;
-import com.enderio.machines.common.data.LootTableUtils;
-import com.enderio.base.data.model.CompositeModelBuilder;
+import com.enderio.machines.data.LootTableUtils;
 import com.mojang.math.Vector3f;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.BlockEntry;
@@ -24,8 +23,9 @@ public class MachineBlocks {
         .block("fluid_tank", props -> new MachineBlock(props, MachineBlockEntities.FLUID_TANK))
         .properties(props -> props.strength(2.5f, 8))
         .loot(LootTableUtils::copyNBT)
+        .addLayer(() -> RenderType::cutout)
         .blockstate((ctx, prov) -> prov.horizontalBlock(ctx.get(), EIOModel.compositeModel(prov.models(), ctx.getName(),
-            builder -> builder.component(EIOMachines.loc("block/machine_frame"), true).component(EIOMachines.loc("block/placeholder_machine_front")))))
+            builder -> builder.component(EIOMachines.loc("block/fluid_tank_body"), true).component(EIOMachines.loc("block/io_overlay")))))
         .item()
         .tab(() -> EIOCreativeTabs.MACHINES)
         .build()
@@ -46,23 +46,25 @@ public class MachineBlocks {
         .loot(LootTableUtils::copyNBT)
         .addLayer(() -> RenderType::cutout)
         .blockstate((ctx, prov) -> {
-            // Get the model.
-            Function<Boolean, ModelFile> getModel = on -> EIOModel.compositeModel(prov.models(), ctx.getName() + (on ? "_on" : ""), builder -> builder
-                .component(EIOMachines.loc("block/simple_machine_frame"), true)
-                .component(EIOMachines.loc("block/simple_powered_furnace_front" + (on ? "_on" : "")))
-                .component(EIOMachines.loc("block/io_overlay")));
+            // Generate the models
+            ModelFile onModel = EIOModel.compositeModel(prov.models(), ctx.getName(), builder -> builder
+                .component(EIOMachines.loc("block/simple_machine_frame"))
+                .component(EIOMachines.loc("block/io_overlay"))
+                .component(EIOMachines.loc("block/simple_powered_furnace_front")));
 
-            // Generate the "on" front
-            prov
-                .models()
-                .withExistingParent("simple_powered_furnace_front_on", EIOMachines.loc("block/simple_powered_furnace_front"))
-                .texture("front", EIOMachines.loc("block/simple_powered_furnace_front_on"));
+            ModelFile offModel = EIOModel.compositeModel(prov.models(), ctx.getName(), builder -> builder
+                .component(EIOMachines.loc("block/simple_machine_frame"))
+                .component(EIOMachines.loc("block/io_overlay"))
+                .component(prov
+                    .models()
+                    .withExistingParent("simple_powered_furnace_on", EIOMachines.loc("block/simple_powered_furnace"))
+                    .texture("front", EIOMachines.loc("block/simple_powered_furnace_front"))));
 
             prov
                 .getVariantBuilder(ctx.get())
                 .forAllStates(state -> ConfiguredModel
                     .builder()
-                    .modelFile(getModel.apply(state.getValue(ProgressMachineBlock.POWERED)))
+                    .modelFile(state.getValue(ProgressMachineBlock.POWERED) ? onModel : offModel)
                     .rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + 180) % 360)
                     .build());
         })

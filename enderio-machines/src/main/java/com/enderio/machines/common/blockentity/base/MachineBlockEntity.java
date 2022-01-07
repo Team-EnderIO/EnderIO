@@ -176,13 +176,16 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
 
     private void moveFluids(Direction direction) {
         getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction).resolve().ifPresent(fluidHandler -> {
-            Optional<IFluidHandler> otherFluid = fluidHandlerCache.get(direction).resolve();
-            if (otherFluid.isPresent()) {
-                FluidStack stack = fluidHandler.drain(100, FluidAction.SIMULATE);
-                if (stack.isEmpty()) {
-                    moveFluids(otherFluid.get(), fluidHandler, 100);
-                } else {
-                    moveFluids(fluidHandler, otherFluid.get(), 100);
+            LazyOptional<IFluidHandler> lazyFluidHandler = fluidHandlerCache.get(direction);
+            if (lazyFluidHandler != null) {
+                Optional<IFluidHandler> otherFluid = lazyFluidHandler.resolve();
+                if (otherFluid.isPresent()) {
+                    FluidStack stack = fluidHandler.drain(100, FluidAction.SIMULATE);
+                    if (stack.isEmpty()) {
+                        moveFluids(otherFluid.get(), fluidHandler, 100);
+                    } else {
+                        moveFluids(fluidHandler, otherFluid.get(), 100);
+                    }
                 }
             }
         });
@@ -200,11 +203,14 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
 
     private void moveItems(Direction direction) {
         getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, direction).resolve().ifPresent(itemHandler -> {
-            Optional<IItemHandler> otherItem = itemHandlerCache.get(direction).resolve();
+            LazyOptional<IItemHandler> lazyItemHandler = itemHandlerCache.get(direction);
+            if (lazyItemHandler != null) {
+                Optional<IItemHandler> otherItem = lazyItemHandler.resolve();
 
-            if (otherItem.isPresent()) {
-                moveItems(itemHandler, otherItem.get());
-                moveItems(otherItem.get(), itemHandler);
+                if (otherItem.isPresent()) {
+                    moveItems(itemHandler, otherItem.get());
+                    moveItems(otherItem.get(), itemHandler);
+                }
             }
         });
     }

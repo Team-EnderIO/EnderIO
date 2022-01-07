@@ -1,4 +1,4 @@
-package com.enderio.machines.common.data;
+package com.enderio.machines.data;
 
 import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;

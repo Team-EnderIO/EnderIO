@@ -8,6 +8,7 @@ import com.mojang.math.Vector3f;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.model.generators.CustomLoaderBuilder;
 import net.minecraftforge.client.model.generators.ModelBuilder;
+import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
 import java.util.HashSet;
@@ -23,6 +24,24 @@ public class CompositeModelBuilder<T extends ModelBuilder<T>> extends CustomLoad
 
     protected CompositeModelBuilder(T parent, ExistingFileHelper existingFileHelper) {
         super(EnderIO.loc("composite_model"), parent, existingFileHelper);
+    }
+
+    public CompositeModelBuilder<T> component(ModelFile component) {
+        components.add(new CompositeModelComponent(component.getUncheckedLocation(), Vector3f.ZERO, false));
+        return this;
+    }
+
+    public CompositeModelBuilder<T> component(ModelFile component, boolean particleProvider) {
+        return this.component(component, Vector3f.ZERO, particleProvider);
+    }
+
+    public CompositeModelBuilder<T> component(ModelFile component, Vector3f translation) {
+        return this.component(component, translation, false);
+    }
+
+    public CompositeModelBuilder<T> component(ModelFile component, Vector3f translation, boolean particleProvider) {
+        components.add(new CompositeModelComponent(component.getUncheckedLocation(), translation, particleProvider));
+        return this;
     }
 
     public CompositeModelBuilder<T> component(ResourceLocation component) {
