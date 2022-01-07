@@ -28,20 +28,37 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public class FluidTankBlockEntity extends MachineBlockEntity {
+public abstract class FluidTankBlockEntity extends MachineBlockEntity {
 
-    public static final int CAPACITY = 16 * FluidAttributes.BUCKET_VOLUME;
+    public static class Standard extends FluidTankBlockEntity {
+        public static final int CAPACITY = 16 * FluidAttributes.BUCKET_VOLUME;
 
-    private final FluidTankMaster fluidTank = new FluidTankMaster(CAPACITY, getIoConfig());
+        public Standard(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
+            super(pType, pWorldPosition, pBlockState, CAPACITY);
+        }
+    }
 
-    public FluidTankBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
+    public static class Enhanced extends FluidTankBlockEntity {
+        public static final int CAPACITY = 32 * FluidAttributes.BUCKET_VOLUME;
+
+        public Enhanced(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
+            super(pType, pWorldPosition, pBlockState, CAPACITY);
+        }
+    }
+
+    private final FluidTankMaster fluidTank;
+
+    public FluidTankBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState, int capacity) {
         super(MachineTier.Standard, pType, pWorldPosition, pBlockState);
+        this.fluidTank =  new FluidTankMaster(capacity, getIoConfig());
+
         addDataSlot(new FluidStackDataSlot(() -> fluidTank.getFluidInTank(0), fluidTank::setFluid, SyncMode.WORLD));
         getItemHandler().addPredicate(0, itemStack ->
             (itemStack.getItem() instanceof BucketItem bucketItem && bucketItem.getFluid() != Fluids.EMPTY && !(bucketItem instanceof MobBucketItem))

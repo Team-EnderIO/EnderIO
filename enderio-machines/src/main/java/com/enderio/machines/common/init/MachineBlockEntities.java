@@ -10,9 +10,14 @@ import com.tterrag.registrate.util.entry.BlockEntityEntry;
 public class MachineBlockEntities {
     private static final Registrate REGISTRATE = EIOMachines.registrate();
 
-    public static final BlockEntityEntry<FluidTankBlockEntity> FLUID_TANK = REGISTRATE
-        .blockEntity("fluid_tank", FluidTankBlockEntity::new)
+    public static final BlockEntityEntry<FluidTankBlockEntity.Standard> FLUID_TANK = REGISTRATE
+        .blockEntity("fluid_tank", FluidTankBlockEntity.Standard::new)
         .validBlocks(MachineBlocks.FLUID_TANK)
+        .register();
+
+    public static final BlockEntityEntry<FluidTankBlockEntity.Enhanced> PRESSURIZED_FLUID_TANK = REGISTRATE
+        .blockEntity("pressurized_fluid_tank", FluidTankBlockEntity.Enhanced::new)
+        .validBlocks(MachineBlocks.PRESSURIZED_FLUID_TANK)
         .register();
     
     public static final BlockEntityEntry<EnchanterBlockEntity> ENCHANTER = REGISTRATE

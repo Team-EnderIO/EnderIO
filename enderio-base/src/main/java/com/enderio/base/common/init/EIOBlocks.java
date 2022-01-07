@@ -349,16 +349,16 @@ public class EIOBlocks {
     // region Pressure Plates
 
     public static final BlockEntry<EIOPressurePlateBlock> DARK_STEEL_PRESSURE_PLATE = pressurePlateBlock("dark_steel_pressure_plate",
-        EnderIO.loc("block/block_dark_steel_pressure_plate"), EIOPressurePlateBlock.PLAYER, false);
+        EnderIO.loc("block/dark_steel_pressure_plate"), EIOPressurePlateBlock.PLAYER, false);
 
     public static final BlockEntry<EIOPressurePlateBlock> SILENT_DARK_STEEL_PRESSURE_PLATE = pressurePlateBlock("silent_dark_steel_pressure_plate",
-        EnderIO.loc("block/block_dark_steel_pressure_plate"), EIOPressurePlateBlock.PLAYER, true);
+        EnderIO.loc("block/dark_steel_pressure_plate"), EIOPressurePlateBlock.PLAYER, true);
 
     public static final BlockEntry<EIOPressurePlateBlock> SOULARIUM_PRESSURE_PLATE = pressurePlateBlock("soularium_pressure_plate",
-        EnderIO.loc("block/block_soularium_pressure_plate"), EIOPressurePlateBlock.HOSTILE_MOB, false);
+        EnderIO.loc("block/soularium_pressure_plate"), EIOPressurePlateBlock.HOSTILE_MOB, false);
 
     public static final BlockEntry<EIOPressurePlateBlock> SILENT_SOULARIUM_PRESSURE_PLATE = pressurePlateBlock("silent_soularium_pressure_plate",
-        EnderIO.loc("block/block_soularium_pressure_plate"), EIOPressurePlateBlock.HOSTILE_MOB, true);
+        EnderIO.loc("block/soularium_pressure_plate"), EIOPressurePlateBlock.HOSTILE_MOB, true);
 
     public static final BlockEntry<SilentPressurePlateBlock> SILENT_OAK_PRESSURE_PLATE = silentPressurePlateBlock(
         (PressurePlateBlock) Blocks.OAK_PRESSURE_PLATE);

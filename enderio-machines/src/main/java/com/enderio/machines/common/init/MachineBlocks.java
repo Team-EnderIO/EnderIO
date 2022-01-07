@@ -1,5 +1,6 @@
 package com.enderio.machines.common.init;
 
+import com.enderio.base.EnderIO;
 import com.enderio.base.common.item.EIOCreativeTabs;
 import com.enderio.base.datagen.model.EIOModel;
 import com.enderio.machines.EIOMachines;
@@ -30,7 +31,28 @@ public class MachineBlocks {
         .loot(MachinesLootTable::copyNBT)
         .addLayer(() -> RenderType::cutout)
         .blockstate((ctx, prov) -> prov.horizontalBlock(ctx.get(), EIOModel.compositeModel(prov.models(), ctx.getName(),
-            builder -> builder.component(EIOMachines.loc("block/fluid_tank_body"), true).component(EIOMachines.loc("block/io_overlay")))))
+            builder -> builder
+                .component(EIOMachines.loc("block/fluid_tank_body"), true)
+                .component(EIOMachines.loc("block/io_overlay")))))
+        .item(FluidTankItem::new)
+        .model((ctx, prov) -> EIOModel.dummyModel(prov, ctx.getName()))
+        .tab(() -> EIOCreativeTabs.MACHINES)
+        .build()
+        .register();
+
+    public static final BlockEntry<MachineBlock> PRESSURIZED_FLUID_TANK = REGISTRATE
+        .block("pressurized_fluid_tank", props -> new MachineBlock(props, MachineBlockEntities.PRESSURIZED_FLUID_TANK))
+        .properties(props -> props.strength(2.5f, 8))
+        .loot(MachinesLootTable::copyNBT)
+        .addLayer(() -> RenderType::cutout)
+        .blockstate((ctx, prov) -> prov.horizontalBlock(ctx.get(), EIOModel.compositeModel(prov.models(), ctx.getName(),
+            builder -> builder
+                .component(prov.models()
+                    .withExistingParent(ctx.getName() + "_body", EIOMachines.loc("block/fluid_tank_body"))
+                    .texture("tank", EIOMachines.loc("block/pressurized_fluid_tank"))
+                    .texture("bottom", EIOMachines.loc("block/enhanced_machine_bottom"))
+                    .texture("top", EIOMachines.loc("block/enhanced_machine_top")), true)
+                .component(EIOMachines.loc("block/io_overlay")))))
         .item(FluidTankItem::new)
         .model((ctx, prov) -> EIOModel.dummyModel(prov, ctx.getName()))
         .tab(() -> EIOCreativeTabs.MACHINES)
@@ -41,6 +63,11 @@ public class MachineBlocks {
         .block("enchanter", props -> new MachineBlock(props, MachineBlockEntities.ENCHANTER))
         .properties(props -> props.strength(2.5f, 8))
         .loot(MachinesLootTable::copyNBT)
+        .blockstate((ctx, prov) -> prov.horizontalBlock(ctx.get(), EIOModel.compositeModel(prov.models(), ctx.getName(), builder -> builder
+            .component(prov.models()
+                .withExistingParent(ctx.getName() + "_plinth", EIOMachines.loc("block/dialing_device"))
+                .texture("button", EnderIO.loc("block/dark_steel_pressure_plate")), true)
+                .component(EIOMachines.loc("block/enchanter_book"), new Vector3f(0, 11.25f / 16.0f, -3.5f / 16.0f), new Vector3f(-22.5f * 0.01745f, 0, 0)))))
         .item()
         .tab(() -> EIOCreativeTabs.MACHINES)
         .build()

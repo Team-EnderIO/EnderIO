@@ -6,10 +6,10 @@
       "particle_provider": true
     },
     {
-      "model": "enderio_machines:block/enhanced_alloy_smelter_front"
+      "model": "enderio_machines:block/io_overlay"
     },
     {
-      "model": "enderio_machines:block/io_overlay"
+      "model": "enderio_machines:block/enhanced_alloy_smelter_front"
     }
   ]
 }

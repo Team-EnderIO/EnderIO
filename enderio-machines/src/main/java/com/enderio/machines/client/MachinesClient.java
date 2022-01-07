@@ -26,5 +26,6 @@ public class MachinesClient {
     @SubscribeEvent
     public static void registerBERs(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(MachineBlockEntities.FLUID_TANK.get(), FluidTankBER::new);
+        event.registerBlockEntityRenderer(MachineBlockEntities.PRESSURIZED_FLUID_TANK.get(), FluidTankBER::new);
     }
 }

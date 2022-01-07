@@ -2,6 +2,7 @@ package com.enderio.machines.client.rendering.item;
 
 import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
+import com.enderio.machines.common.init.MachineBlocks;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix3f;
@@ -37,9 +38,9 @@ public class FluidTankBEWLR extends BlockEntityWithoutLevelRenderer {
     @Override
     public void renderByItem(ItemStack stack, ItemTransforms.TransformType transformType, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
 
-        BakedModel model = Minecraft.getInstance().getModelManager().getModel(new ModelResourceLocation(EIOMachines.loc("fluid_tank"), "facing=north"));
-        poseStack.pushPose();
+        BakedModel model = Minecraft.getInstance().getModelManager().getModel(new ModelResourceLocation(stack.getItem().getRegistryName(), "facing=north"));
 
+        poseStack.pushPose();
         Minecraft.getInstance().getItemRenderer().renderModelLists(model, stack, packedLight, packedOverlay, poseStack, buffer.getBuffer(RenderType.cutout()));
 
         // Read the fluid from the NBT, if it has fluid, then we display it.
@@ -61,7 +62,13 @@ public class FluidTankBEWLR extends BlockEntityWithoutLevelRenderer {
                             fluidBuffer = buffer.getBuffer(RenderType.solid());
                         }
 
-                        renderFluid(fluid, amount / (float) FluidTankBlockEntity.CAPACITY, poseStack.last().pose(), poseStack.last().normal(), fluidBuffer);
+                        // Determine capacity.
+                        int capacity = FluidTankBlockEntity.Standard.CAPACITY;
+                        if (stack.is(MachineBlocks.PRESSURIZED_FLUID_TANK.get().asItem())) {
+                            capacity = FluidTankBlockEntity.Enhanced.CAPACITY;
+                        }
+
+                        renderFluid(fluid, amount / (float) capacity, poseStack.last().pose(), poseStack.last().normal(), fluidBuffer);
                     }
                 }
             }

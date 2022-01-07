@@ -8,7 +8,7 @@ import com.mojang.math.Transformation;
 import com.mojang.math.Vector3f;
 import net.minecraft.resources.ResourceLocation;
 
-public record CompositeModelComponent(ResourceLocation model, Vector3f translation, boolean particleProvider) {
+public record CompositeModelComponent(ResourceLocation model, Vector3f translation, Vector3f rotation, boolean particleProvider) {
     public JsonObject toJson() {
         JsonObject json = new JsonObject();
         json.addProperty("model", model.toString());
@@ -21,6 +21,14 @@ public record CompositeModelComponent(ResourceLocation model, Vector3f translati
             json.add("translation", array);
         }
 
+        if (rotation != Vector3f.ZERO) {
+            JsonArray array = new JsonArray();
+            array.add(rotation.x());
+            array.add(rotation.y());
+            array.add(rotation.z());
+            json.add("rotation", array);
+        }
+
         if (particleProvider) {
             json.addProperty("particle_provider", true);
         }
@@ -29,7 +37,7 @@ public record CompositeModelComponent(ResourceLocation model, Vector3f translati
     }
 
     public Transformation getTransformation() {
-        return new Transformation(translation, Quaternion.ONE, new Vector3f(1, 1, 1), Quaternion.ONE);
+        return new Transformation(translation, Quaternion.fromXYZ(rotation), new Vector3f(1, 1, 1), Quaternion.ONE);
     }
 
     public static CompositeModelComponent fromJson(JsonObject object) {
@@ -45,10 +53,20 @@ public record CompositeModelComponent(ResourceLocation model, Vector3f translati
             }
         }
 
+        Vector3f rotation = Vector3f.ZERO;
+        if (object.has("rotation")) {
+            JsonArray rotationJson = object.get("rotation").getAsJsonArray();
+            if (rotationJson.size() == 3) {
+                rotation = new Vector3f(rotationJson.get(0).getAsFloat(), rotationJson.get(1).getAsFloat(), rotationJson.get(2).getAsFloat());
+            } else {
+                EnderIO.LOGGER.warning("Composite model component has invalid rotation!");
+            }
+        }
+
         boolean particleProvider = false;
         if (object.has("particle_provider"))
             particleProvider = object.get("particle_provider").getAsBoolean();
 
-        return new CompositeModelComponent(model, translation, particleProvider);
+        return new CompositeModelComponent(model, translation, rotation, particleProvider);
     }
 }

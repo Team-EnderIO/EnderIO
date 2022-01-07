@@ -1,0 +1,6 @@
+{
+  "parent": "enderio_machines:block/dialing_device",
+  "textures": {
+    "button": "enderio:block/dark_steel_pressure_plate"
+  }
+}

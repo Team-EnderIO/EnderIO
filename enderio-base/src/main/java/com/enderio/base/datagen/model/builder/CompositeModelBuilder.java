@@ -27,8 +27,7 @@ public class CompositeModelBuilder<T extends ModelBuilder<T>> extends CustomLoad
     }
 
     public CompositeModelBuilder<T> component(ModelFile component) {
-        components.add(new CompositeModelComponent(component.getUncheckedLocation(), Vector3f.ZERO, false));
-        return this;
+        return component(component, false);
     }
 
     public CompositeModelBuilder<T> component(ModelFile component, boolean particleProvider) {
@@ -40,27 +39,40 @@ public class CompositeModelBuilder<T extends ModelBuilder<T>> extends CustomLoad
     }
 
     public CompositeModelBuilder<T> component(ModelFile component, Vector3f translation, boolean particleProvider) {
-        components.add(new CompositeModelComponent(component.getUncheckedLocation(), translation, particleProvider));
+        return component(component, translation, Vector3f.ZERO, particleProvider);
+    }
+
+    public CompositeModelBuilder<T> component(ModelFile component, Vector3f translation, Vector3f rotation) {
+        return component(component, translation, rotation, false);
+    }
+
+    public CompositeModelBuilder<T> component(ModelFile component, Vector3f translation, Vector3f rotation, boolean particleProvider) {
+        components.add(new CompositeModelComponent(component.getUncheckedLocation(), translation, rotation, particleProvider));
         return this;
     }
 
     public CompositeModelBuilder<T> component(ResourceLocation component) {
-        components.add(new CompositeModelComponent(component, Vector3f.ZERO, false));
-        return this;
+        return component(component, false);
     }
 
     public CompositeModelBuilder<T> component(ResourceLocation component, boolean particleProvider) {
-        components.add(new CompositeModelComponent(component, Vector3f.ZERO, particleProvider));
-        return this;
+        return component(component, Vector3f.ZERO, particleProvider);
     }
 
     public CompositeModelBuilder<T> component(ResourceLocation component, Vector3f translation) {
-        components.add(new CompositeModelComponent(component, translation, false));
-        return this;
+        return component(component, translation, false);
     }
 
     public CompositeModelBuilder<T> component(ResourceLocation component, Vector3f translation, boolean particleProvider) {
-        components.add(new CompositeModelComponent(component, translation, particleProvider));
+        return component(component, translation, Vector3f.ZERO, particleProvider);
+    }
+
+    public CompositeModelBuilder<T> component(ResourceLocation component, Vector3f translation, Vector3f rotation) {
+        return component(component, translation, rotation, false);
+    }
+
+    public CompositeModelBuilder<T> component(ResourceLocation component, Vector3f translation, Vector3f rotation, boolean particleProvider) {
+        components.add(new CompositeModelComponent(component, translation, rotation, particleProvider));
         return this;
     }
 
