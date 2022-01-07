@@ -14,15 +14,9 @@ public class IOConfig implements INBTSerializable<CompoundTag> {
     private final EnumMap<Direction, IOState> config = new EnumMap(Direction.class);
 
     public IOConfig() {
-//        for (Direction value : Direction.values()) {
-//            config.put(value, IOState.NONE);
-//        }
-        config.put(Direction.UP, IOState.NONE);
-        config.put(Direction.DOWN, IOState.BOTH);
-        config.put(Direction.NORTH, IOState.DISABLED);
-        config.put(Direction.SOUTH, IOState.NONE);
-        config.put(Direction.EAST, IOState.PULL);
-        config.put(Direction.WEST, IOState.PUSH);
+        for (Direction value : Direction.values()) {
+            config.put(value, IOState.NONE);
+        }
     }
 
     public IOState getIO(Direction direction) {
