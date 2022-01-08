@@ -1,7 +1,7 @@
 package com.enderio.machines.common.menu;
 
 import com.enderio.base.common.menu.SyncedMenu;
-import com.enderio.machines.common.blockentity.MachineBlockEntity;
+import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;

@@ -1,6 +1,6 @@
 package com.enderio.base.common.item.capacitors;
 
-import com.enderio.base.common.capability.EIOCapabilities;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.capability.IMultiCapabilityItem;
 import com.enderio.base.common.capability.MultiCapabilityProvider;
 import com.enderio.base.common.capability.capacitors.CapacitorData;

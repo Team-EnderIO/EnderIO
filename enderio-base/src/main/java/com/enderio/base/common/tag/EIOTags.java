@@ -68,7 +68,8 @@ public class EIOTags {
     public static class Fluids {
         private static void init() {}
 
-        public static final IOptionalNamedTag<Fluid> COLD_FIRE_IGNITER_FUEL = FluidTags.createOptional(EnderIO.loc("cold_fire_igniter_fuel"));
+        public static final IOptionalNamedTag<Fluid> COLD_FIRE_IGNITER_FUEL = FluidTags.createOptional(EnderIO.loc("fluid_fuel/cold_fire_igniter"));
+        public static final IOptionalNamedTag<Fluid> STAFF_OF_LEVITY_FUEL = FluidTags.createOptional(EnderIO.loc("fluid_fuel/staff_of_levity"));
 
     }
 }

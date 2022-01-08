@@ -1,8 +1,8 @@
 package com.enderio.decoration;
 
-import com.enderio.decoration.common.block.DecorBlocks;
-import com.enderio.decoration.common.blockentity.DecorBlockEntities;
-import com.enderio.decoration.common.entity.DecorEntities;
+import com.enderio.decoration.common.init.DecorBlocks;
+import com.enderio.decoration.common.init.DecorBlockEntities;
+import com.enderio.decoration.common.init.DecorEntities;
 import com.tterrag.registrate.Registrate;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.util.Lazy;

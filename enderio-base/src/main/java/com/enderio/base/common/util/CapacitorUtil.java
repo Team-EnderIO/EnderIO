@@ -1,52 +1,41 @@
 package com.enderio.base.common.util;
 
-import com.enderio.base.common.capability.EIOCapabilities;
+import com.enderio.base.EnderIO;
+import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.base.common.capability.capacitors.CapacitorSpecializations;
 import com.enderio.base.common.capability.capacitors.ICapacitorData;
-import com.enderio.base.common.recipe.EIORecipes;
-import com.enderio.base.common.recipe.capacitor.CapacitorDataRecipe;
+import com.enderio.base.common.init.EIORecipes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
+import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Helper class for Capacitors
  */
+@Mod.EventBusSubscriber(modid = EnderIO.MODID)
 public class CapacitorUtil {
     /**
      * Static maps with specializations for the "basic"
      */
-    private static ArrayList<String> types = new ArrayList<>();
+    private static ArrayList<String> types = new ArrayList<>(); // TODO: make it so mods can add to this, IMC maybe?
 
     static {
-        types.add(ICapacitorData.ALL_ENERGY_CONSUMPSTION);
-        types.add(ICapacitorData.ALL_PRODUCTION_SPEED);
-        types.add(ICapacitorData.ALLOY_ENERGY_CONSUMPSTION);
-        types.add(ICapacitorData.ALLOY_ENERGY_CONSUMPSTION);
+        types.add(CapacitorSpecializations.ALL_ENERGY_CONSUMPTION);
+        types.add(CapacitorSpecializations.ALL_PRODUCTION_SPEED);
+        types.add(CapacitorSpecializations.ALLOY_ENERGY_CONSUMPTION);
+        types.add(CapacitorSpecializations.ALLOY_ENERGY_CONSUMPTION);
     }
 
     public static void addType(String type) {
         types.add(type);
-    }
-
-    public static Optional<ICapacitorData> getCapacitorData(ItemStack itemStack, Level level) {
-        LazyOptional<ICapacitorData> capacitorDataCap = itemStack.getCapability(EIOCapabilities.CAPACITOR);
-        if (capacitorDataCap.isPresent())
-            return Optional.of(capacitorDataCap.orElseThrow(NullPointerException::new));
-        Optional<CapacitorDataRecipe> recipe = level
-            .getRecipeManager()
-            .getAllRecipesFor(EIORecipes.Types.CAPACITOR_DATA)
-            .stream()
-            .filter(r -> r.matches(itemStack))
-            .findFirst();
-        return recipe.map(CapacitorDataRecipe::getCapacitorData);
     }
 
     /**
@@ -65,6 +54,7 @@ public class CapacitorUtil {
      * @param tooltipComponents
      */
     public static void getTooltip(ItemStack stack, List<Component> tooltipComponents) {
+        // TODO: Crashes client if the item was spawned in as it doesn't have any specializations.
         stack.getCapability(EIOCapabilities.CAPACITOR).ifPresent(cap -> {
             TranslatableComponent t = new TranslatableComponent(getFlavor(cap.getFlavor()),
                 getGradeText(cap.getSpecializations().values().stream().findFirst().get()),
@@ -97,5 +87,41 @@ public class CapacitorUtil {
         TranslatableComponent t = new TranslatableComponent("description.enderio.capacitor.grade." + (int) Math.ceil(grade));
         t.withStyle(ChatFormatting.ITALIC);
         return t;
+    }
+
+    private static final HashMap<Item, ICapacitorData> lookup = new HashMap<>();
+
+    public static Optional<ICapacitorData> getCapacitorData(ItemStack itemStack) {
+        // Search for an ICapacitorData capability
+        LazyOptional<ICapacitorData> capacitorDataCap = itemStack.getCapability(EIOCapabilities.CAPACITOR);
+        if (capacitorDataCap.isPresent())
+            return Optional.of(capacitorDataCap.orElseThrow(NullPointerException::new));
+
+        // Find a cached ICapacitorData value
+        if (lookup.containsKey(itemStack.getItem())) {
+            return Optional.ofNullable(lookup.get(itemStack.getItem()));
+        }
+
+        return Optional.empty();
+    }
+
+    public static boolean isCapacitor(ItemStack itemStack) {
+        LazyOptional<ICapacitorData> capacitorDataCap = itemStack.getCapability(EIOCapabilities.CAPACITOR);
+        if (capacitorDataCap.isPresent())
+            return true;
+        return lookup.containsKey(itemStack.getItem());
+    }
+
+    @SubscribeEvent
+    public static void onRecipesUpdated(RecipesUpdatedEvent event) {
+        // Wipe the lookup table
+        lookup.clear();
+
+        // Discover all capacitors again.
+        event.getRecipeManager()
+            .getAllRecipesFor(EIORecipes.Types.CAPACITOR_DATA)
+            .forEach(capacitorDataRecipe -> {
+                lookup.put(capacitorDataRecipe.getCapacitorItem(), capacitorDataRecipe.getCapacitorData());
+            });
     }
 }

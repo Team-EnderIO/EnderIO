@@ -15,15 +15,6 @@ public interface ICapacitorData extends INamedNBTSerializable<Tag> {
     }
 
     /**
-     * Static strings for specialization types.
-     */
-    String ALL_ENERGY_CONSUMPSTION = "all_energy_consuption";
-    String ALL_PRODUCTION_SPEED = "all_production_speed";
-
-    String ALLOY_ENERGY_CONSUMPSTION = "alloy_energy_consuption";
-    String ALLOY_PRODUCTION_SPEED = "alloy_production_speed";
-
-    /**
      * Gets Base value used for non specialization.
      */
     void setBase(float base);
@@ -52,6 +43,20 @@ public interface ICapacitorData extends INamedNBTSerializable<Tag> {
      * Gets all specializations.
      */
     Map<String, Float> getSpecializations();
+
+    default float getSpecialization(String specialization) {
+        return getSpecializations().getOrDefault(specialization, getBase());
+    }
+
+    default float scale(String specialization, float base) {
+        return base * getSpecialization(specialization);
+    }
+
+    default float scale(String specialization, String allSpecialization, float base) {
+        float specificMult = getSpecialization(specialization);
+        float allMult = getSpecialization(allSpecialization);
+        return base * specificMult > allMult ? specificMult : allMult;
+    }
 
     /**
      * Flavor text used by loot capacitor.

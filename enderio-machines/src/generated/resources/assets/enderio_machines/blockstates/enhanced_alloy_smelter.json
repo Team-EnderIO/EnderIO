@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "facing=north,half=upper,powered=false": {
+      "model": "enderio_machines:block/enhanced_alloy_smelter_top"
+    },
+    "facing=south,half=upper,powered=false": {
+      "model": "enderio_machines:block/enhanced_alloy_smelter_top",
+      "y": 180
+    },
+    "facing=west,half=upper,powered=false": {
+      "model": "enderio_machines:block/enhanced_alloy_smelter_top",
+      "y": 270
+    },
+    "facing=east,half=upper,powered=false": {
+      "model": "enderio_machines:block/enhanced_alloy_smelter_top",
+      "y": 90
+    },
+    "facing=north,half=lower,powered=false": {
+      "model": "enderio_machines:block/enhanced_alloy_smelter"
+    },
+    "facing=south,half=lower,powered=false": {
+      "model": "enderio_machines:block/enhanced_alloy_smelter",
+      "y": 180
+    },
+    "facing=west,half=lower,powered=false": {
+      "model": "enderio_machines:block/enhanced_alloy_smelter",
+      "y": 270
+    },
+    "facing=east,half=lower,powered=false": {
+      "model": "enderio_machines:block/enhanced_alloy_smelter",
+      "y": 90
+    },
+    "facing=north,half=upper,powered=true": {
+      "model": "enderio_machines:block/enhanced_alloy_smelter_top_on"
+    },
+    "facing=south,half=upper,powered=true": {
+      "model": "enderio_machines:block/enhanced_alloy_smelter_top_on",
+      "y": 180
+    },
+    "facing=west,half=upper,powered=true": {
+      "model": "enderio_machines:block/enhanced_alloy_smelter_top_on",
+      "y": 270
+    },
+    "facing=east,half=upper,powered=true": {
+      "model": "enderio_machines:block/enhanced_alloy_smelter_top_on",
+      "y": 90
+    },
+    "facing=north,half=lower,powered=true": {
+      "model": "enderio_machines:block/enhanced_alloy_smelter_on"
+    },
+    "facing=south,half=lower,powered=true": {
+      "model": "enderio_machines:block/enhanced_alloy_smelter_on",
+      "y": 180
+    },
+    "facing=west,half=lower,powered=true": {
+      "model": "enderio_machines:block/enhanced_alloy_smelter_on",
+      "y": 270
+    },
+    "facing=east,half=lower,powered=true": {
+      "model": "enderio_machines:block/enhanced_alloy_smelter_on",
+      "y": 90
+    }
+  }
+}

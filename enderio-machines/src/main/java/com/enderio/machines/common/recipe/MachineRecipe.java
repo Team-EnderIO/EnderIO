@@ -43,4 +43,8 @@ public abstract class MachineRecipe<T extends MachineRecipe<T, C>, C extends Con
             .filter(string -> !StringUtils.equalsAny(string, "minecraft", "forge", EnderIO.MODID, EIOMachines.MODID)) //remove minecraft, forge and enderio
             .distinct().toList();
     }
+
+    public int getEnergyCost() {
+        return 0;
+    }
 }

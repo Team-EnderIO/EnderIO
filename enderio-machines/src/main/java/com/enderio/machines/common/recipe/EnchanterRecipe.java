@@ -1,6 +1,7 @@
 package com.enderio.machines.common.recipe;
 
 import com.enderio.base.common.recipe.DataGenSerializer;
+import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonObject;
 import net.minecraft.ResourceLocationException;
 import net.minecraft.core.NonNullList;
@@ -17,19 +18,20 @@ import net.minecraft.world.level.Level;
 
 import java.util.Optional;
 import java.util.stream.Stream;
+
 public class EnchanterRecipe extends MachineRecipe<EnchanterRecipe, Container> {
-    private ResourceLocation id;
-    private Enchantment enchantment;
-    private int levelmodifier;
-    private Ingredient ingredient;
-    private int amountPerLevel;
+    private final ResourceLocation id;
+    private final Enchantment enchantment;
+    private final int levelModifier;
+    private final Ingredient ingredient;
+    private final int amountPerLevel;
 
     public EnchanterRecipe(ResourceLocation id, Ingredient ingredient, Enchantment enchantment, int amountPerLevel, int levelModifier) {
         this.id = id;
         this.ingredient = ingredient;
         this.enchantment = enchantment;
         this.amountPerLevel = amountPerLevel;
-        this.levelmodifier = levelModifier;
+        this.levelModifier = levelModifier;
     }
 
     public Enchantment getEnchantment() {
@@ -37,7 +39,7 @@ public class EnchanterRecipe extends MachineRecipe<EnchanterRecipe, Container> {
     }
 
     public int getLevelModifier() {
-        return levelmodifier;
+        return levelModifier;
     }
 
     public int getLevelCost(Container container) {
@@ -78,7 +80,7 @@ public class EnchanterRecipe extends MachineRecipe<EnchanterRecipe, Container> {
 
     private int getRawXPCostForLevel(int level) {
         double min = Math.max(1, enchantment.getMinCost(level));
-        min *= levelmodifier;
+        min *= levelModifier;
         int cost = (int) Math.round(min * 1); //TODO global scaling
         cost += 1; //TODO base cost
         return cost;
@@ -170,7 +172,7 @@ public class EnchanterRecipe extends MachineRecipe<EnchanterRecipe, Container> {
            pRecipe.ingredient.toNetwork(pBuffer);
            pBuffer.writeResourceLocation(pRecipe.enchantment.getRegistryName());
            pBuffer.writeInt(pRecipe.amountPerLevel);
-           pBuffer.writeInt(pRecipe.levelmodifier);
+           pBuffer.writeInt(pRecipe.levelModifier);
         }
 
         @Override
@@ -178,7 +180,7 @@ public class EnchanterRecipe extends MachineRecipe<EnchanterRecipe, Container> {
             json.add("ingredient", recipe.ingredient.toJson());
             json.addProperty("enchantment", recipe.enchantment.getRegistryName().toString());
             json.addProperty("amount", recipe.amountPerLevel);
-            json.addProperty("level", recipe.levelmodifier);
+            json.addProperty("level", recipe.levelModifier);
         }
     }
 }

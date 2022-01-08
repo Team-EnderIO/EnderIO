@@ -1,6 +1,6 @@
 package com.enderio.base.common.capability.toggled;
 
-import com.enderio.base.common.capability.EIOCapabilities;
+import com.enderio.base.common.init.EIOCapabilities;
 import net.minecraft.nbt.ByteTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;

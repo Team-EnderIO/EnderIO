@@ -1,6 +1,6 @@
 package com.enderio.base.common.item.misc;
 
-import com.enderio.base.client.render.IRotatingItem;
+import com.enderio.base.client.renderer.item.IRotatingItem;
 import net.minecraftforge.client.IItemRenderProperties;
 
 import javax.annotation.Nonnull;

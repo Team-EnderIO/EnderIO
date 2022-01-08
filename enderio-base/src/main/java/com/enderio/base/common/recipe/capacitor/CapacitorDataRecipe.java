@@ -3,18 +3,20 @@ package com.enderio.base.common.recipe.capacitor;
 import com.enderio.base.common.capability.capacitors.CapacitorData;
 import com.enderio.base.common.capability.capacitors.ICapacitorData;
 import com.enderio.base.common.recipe.DataGenSerializer;
-import com.enderio.base.common.recipe.EIORecipes;
+import com.enderio.base.common.init.EIORecipes;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -22,10 +24,10 @@ import javax.annotation.Nullable;
 public class CapacitorDataRecipe implements Recipe<Container> {
 
     private final ResourceLocation id;
-    private final Ingredient capacitor;
+    private final Item capacitor;
     private final CapacitorData capacitorData;
 
-    public CapacitorDataRecipe(ResourceLocation id, Ingredient capacitor, CapacitorData capacitorData) {
+    public CapacitorDataRecipe(ResourceLocation id, Item capacitor, CapacitorData capacitorData) {
         this.id = id;
         this.capacitor = capacitor;
         this.capacitorData = capacitorData;
@@ -35,8 +37,8 @@ public class CapacitorDataRecipe implements Recipe<Container> {
         return capacitorData;
     }
 
-    public boolean matches(ItemStack stack) {
-        return capacitor.test(stack);
+    public Item getCapacitorItem() {
+        return capacitor;
     }
 
     // Prevent unknown RecipeCategory log spamming
@@ -90,7 +92,9 @@ public class CapacitorDataRecipe implements Recipe<Container> {
         @Nonnull
         @Override
         public CapacitorDataRecipe fromJson(@Nonnull ResourceLocation recipeId, JsonObject json) {
-            Ingredient capacitor = Ingredient.fromJson(json.get("capacitor"));
+            Item capacitor = ForgeRegistries.ITEMS.getValue(new ResourceLocation(json.get("capacitor").getAsString())); // TODO: These may need more checks?
+            if (capacitor == Items.AIR)
+                throw new RuntimeException("Capacitor in data recipe was not found!");
             CapacitorData capacitorData = new CapacitorData();
             capacitorData.deserializeNBT(JsonOps.INSTANCE.convertTo(NbtOps.INSTANCE, json.get("data")));
             return new CapacitorDataRecipe(recipeId, capacitor, capacitorData);
@@ -101,18 +105,19 @@ public class CapacitorDataRecipe implements Recipe<Container> {
         public CapacitorDataRecipe fromNetwork(@Nonnull ResourceLocation recipeId, FriendlyByteBuf buffer) {
             CapacitorData capacitorData = new CapacitorData();
             capacitorData.deserializeNBT(buffer.readNbt());
-            return new CapacitorDataRecipe(recipeId, Ingredient.fromNetwork(buffer), capacitorData);
+            Item capacitor = ForgeRegistries.ITEMS.getValue(buffer.readResourceLocation());
+            return new CapacitorDataRecipe(recipeId, capacitor, capacitorData);
         }
 
         @Override
         public void toNetwork(FriendlyByteBuf buffer, CapacitorDataRecipe recipe) {
             buffer.writeNbt(recipe.capacitorData.serializeNBT());
-            recipe.capacitor.toNetwork(buffer);
+            buffer.writeResourceLocation(recipe.capacitor.getRegistryName());
         }
 
         @Override
         public void toJson(CapacitorDataRecipe recipe, JsonObject json) {
-            json.add("capacitor", recipe.capacitor.toJson());
+            json.addProperty("capacitor", recipe.capacitor.getRegistryName().toString());
             json.add("data", NbtOps.INSTANCE.convertTo(JsonOps.INSTANCE, recipe.capacitorData.serializeNBT()));
         }
     }

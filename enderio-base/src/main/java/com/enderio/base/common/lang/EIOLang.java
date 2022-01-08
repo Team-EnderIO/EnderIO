@@ -1,13 +1,13 @@
 package com.enderio.base.common.lang;
 
 import com.enderio.base.EnderIO;
+import com.enderio.base.common.capability.capacitors.CapacitorSpecializations;
 import com.enderio.base.common.capability.capacitors.ICapacitorData;
 import com.enderio.base.common.util.TooltipUtil;
 import com.tterrag.registrate.Registrate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
 
 public class EIOLang {
     private static Registrate REGISTRATE = EnderIO.registrate();
@@ -41,6 +41,9 @@ public class EIOLang {
 
     public static final Component COORDINATE_SELECTOR_NO_PAPER = REGISTRATE.addLang("info", EnderIO.loc("coordinate_selector.no_paper"), "No Paper in Inventory");
     public static final Component COORDINATE_SELECTOR_NO_BLOCK = REGISTRATE.addLang("info", EnderIO.loc("coordinate_selector.no_block"), "No Block in Range");
+
+
+    public static final Component REDSTONE_MODE = REGISTRATE.addLang("gui", EnderIO.loc("redstone.mode"), "Redstone Mode");
     public static final Component REDSTONE_ALWAYS_ACTIVE = REGISTRATE.addLang("gui", EnderIO.loc("redstone.always_active"), "Always active");
     public static final Component REDSTONE_ACTIVE_WITH_SIGNAL = REGISTRATE.addLang("gui", EnderIO.loc("redstone.active_with_signal"), "Active with signal");
     public static final Component REDSTONE_ACTIVE_WITHOUT_SIGNAL = REGISTRATE.addLang("gui", EnderIO.loc("redstone.active_without_signal"), "Active without signal");
@@ -102,11 +105,11 @@ public class EIOLang {
 
     // region Capacitors
 
-    public static final Component CAPACITOR_ALL_ENERGY_CONSUMPSTION = capacitorDescriptionBuilder("type", ICapacitorData.ALL_ENERGY_CONSUMPSTION, "Leaky");
-    public static final Component CAPACITOR_ALL_PRODUCTION_SPEED = capacitorDescriptionBuilder("type", ICapacitorData.ALL_PRODUCTION_SPEED, "Fast");
-    public static final Component CAPACITOR_ALLOY_ENERGY_CONSUMPSTION = capacitorDescriptionBuilder("type", ICapacitorData.ALLOY_ENERGY_CONSUMPSTION,
+    public static final Component CAPACITOR_ALL_ENERGY_CONSUMPSTION = capacitorDescriptionBuilder("type", CapacitorSpecializations.ALL_ENERGY_CONSUMPTION, "Leaky");
+    public static final Component CAPACITOR_ALL_PRODUCTION_SPEED = capacitorDescriptionBuilder("type", CapacitorSpecializations.ALL_PRODUCTION_SPEED, "Fast");
+    public static final Component CAPACITOR_ALLOY_ENERGY_CONSUMPSTION = capacitorDescriptionBuilder("type", CapacitorSpecializations.ALLOY_ENERGY_CONSUMPTION,
         "Melted");
-    public static final Component CAPACITOR_ALLOY_PRODUCTION_SPEED = capacitorDescriptionBuilder("type", ICapacitorData.ALLOY_PRODUCTION_SPEED, "Smelting");
+    public static final Component CAPACITOR_ALLOY_PRODUCTION_SPEED = capacitorDescriptionBuilder("type", CapacitorSpecializations.ALLOY_PRODUCTION_SPEED, "Smelting");
 
     public static final Component CAPACITOR_DUD = capacitorDescriptionBuilder("base", "0", "Capacitor Dud");
     public static final Component CAPACITOR_GOOD = capacitorDescriptionBuilder("base", "1", "Good Capacitor");

@@ -1,6 +1,6 @@
 package com.enderio.base.mixin.client;
 
-import com.enderio.base.client.render.IItemOverlayRender;
+import com.enderio.base.client.renderer.item.IItemOverlayRender;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.world.item.ItemStack;

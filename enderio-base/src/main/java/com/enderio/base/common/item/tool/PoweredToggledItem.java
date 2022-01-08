@@ -1,8 +1,8 @@
 package com.enderio.base.common.item.tool;
 
-import com.enderio.base.client.renderer.ItemBarRenderer;
+import com.enderio.base.client.renderer.item.ItemBarRenderer;
 import com.enderio.base.client.tooltip.IAdvancedTooltipProvider;
-import com.enderio.base.common.capability.EIOCapabilities;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.capability.IMultiCapabilityItem;
 import com.enderio.base.common.capability.MultiCapabilityProvider;
 import com.enderio.base.common.capability.toggled.Toggled;
@@ -49,12 +49,16 @@ public abstract class PoweredToggledItem extends Item implements IMultiCapabilit
         Toggled.setEnabled(stack, false);
     }
 
-    protected boolean hasEnergy(ItemStack pStack) {
+    protected boolean hasCharge(ItemStack pStack) {
         return EnergyUtil.extractEnergy(pStack, getEnergyUse(), true) > 0;
     }
 
-    protected void useEnergy(ItemStack pStack) {
+    protected void consumeCharge(ItemStack pStack) {
         EnergyUtil.extractEnergy(pStack, getEnergyUse(), false);
+    }
+
+    protected void setFullCharge(ItemStack pStack) {
+        EnergyUtil.setFull(pStack);
     }
 
     @Override
@@ -68,7 +72,7 @@ public abstract class PoweredToggledItem extends Item implements IMultiCapabilit
             ItemStack is = new ItemStack(this);
             pItems.add(is.copy());
 
-            EnergyUtil.setFull(is);
+            setFullCharge(is);
             pItems.add(is);
         }
     }
@@ -80,7 +84,7 @@ public abstract class PoweredToggledItem extends Item implements IMultiCapabilit
             ItemStack stack = pPlayer.getItemInHand(pUsedHand);
             if (Toggled.isEnabled(stack)) {
                 disable(stack);
-            } else if (hasEnergy(stack)) {
+            } else if (hasCharge(stack)) {
                 enable(stack);
             }
         }
@@ -91,8 +95,8 @@ public abstract class PoweredToggledItem extends Item implements IMultiCapabilit
     public void inventoryTick(@Nonnull ItemStack pStack, @Nonnull Level pLevel, @Nonnull Entity pEntity, int pSlotId, boolean pIsSelected) {
         if (pEntity instanceof Player player) {
             if (Toggled.isEnabled(pStack)) {
-                if (hasEnergy(pStack)) {
-                    useEnergy(pStack);
+                if (hasCharge(pStack)) {
+                    consumeCharge(pStack);
                     onTickWhenActive(player, pStack, pLevel, pEntity, pSlotId, pIsSelected);
                 } else {
                     disable(pStack);

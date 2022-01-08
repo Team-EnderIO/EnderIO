@@ -85,7 +85,7 @@ public class MultiCapabilityProvider implements ICapabilitySerializable<Compound
         }
 
         if (key.startsWith("pend_")) {
-            EnderIO.LOGGER.warning("A INamedNBTSerializable didn't return a valid name, a pending name has been mapped instead!");
+            EnderIO.LOGGER.warn("A INamedNBTSerializable didn't return a valid name, a pending name has been mapped instead!");
         }
 
         return key;

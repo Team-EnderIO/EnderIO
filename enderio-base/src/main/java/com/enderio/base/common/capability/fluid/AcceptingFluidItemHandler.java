@@ -29,6 +29,11 @@ public class AcceptingFluidItemHandler extends FluidHandlerItemStack {
     }
 
     @Override
+    public void setFluid(FluidStack fluid) {
+        super.setFluid(fluid);
+    }
+
+    @Override
     public boolean canFillFluidType(FluidStack fluid) {
         return fluidPredicate.test(fluid.getFluid());
     }
