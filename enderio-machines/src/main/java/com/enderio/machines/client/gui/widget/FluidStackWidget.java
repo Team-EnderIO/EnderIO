@@ -1,5 +1,6 @@
 package com.enderio.machines.client.gui.widget;
 
+import com.enderio.base.client.gui.widgets.EIOWidget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -19,28 +20,19 @@ import net.minecraftforge.fluids.capability.templates.FluidTank;
 import java.util.Arrays;
 import java.util.function.Supplier;
 
-public class FluidStackWidget extends AbstractWidget {
+public class FluidStackWidget extends EIOWidget {
 
     private final Screen displayOn;
     private final Supplier<FluidTank> getFluid;
 
     public FluidStackWidget(Screen displayOn, Supplier<FluidTank> getFluid, int pX, int pY, int pWidth, int pHeight) {
-        super(pX, pY, pWidth, pHeight, TextComponent.EMPTY);
+        super(pX, pY, pWidth, pHeight);
         this.displayOn = displayOn;
         this.getFluid = getFluid;
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput pNarrationElementOutput) {}
-
-    // Stop the click sound
-    @Override
-    public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-        return false;
-    }
-
-    @Override
-    public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         Minecraft minecraft = Minecraft.getInstance();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.defaultBlendFunc();
@@ -72,26 +64,26 @@ public class FluidStackWidget extends AbstractWidget {
                     int atlasWidth = (int)(sprite.getWidth() / (sprite.getU1() - sprite.getU0()));
                     int atlasHeight = (int)(sprite.getHeight() / (sprite.getV1() - sprite.getV0()));
 
-                    pPoseStack.pushPose();
-                    pPoseStack.translate(0, height-16, 0);
+                    poseStack.pushPose();
+                    poseStack.translate(0, height-16, 0);
                     for (int i = 0; i < Math.ceil(renderableHeight / 16f); i++) {
                         int drawingHeight = Math.min(16, renderableHeight - 16*i);
                         int notDrawingHeight = 16 - drawingHeight;
-                        blit(pPoseStack, x, y + notDrawingHeight, displayOn.getBlitOffset(), sprite.getU0()*atlasWidth, sprite.getV0()*atlasHeight + notDrawingHeight, sprite.getWidth(), drawingHeight, atlasWidth, atlasHeight);
-                        pPoseStack.translate(0,-16, 0);
+                        blit(poseStack, x, y + notDrawingHeight, displayOn.getBlitOffset(), sprite.getU0()*atlasWidth, sprite.getV0()*atlasHeight + notDrawingHeight, sprite.getWidth(), drawingHeight, atlasWidth, atlasHeight);
+                        poseStack.translate(0,-16, 0);
                     }
 
                     RenderSystem.setShaderColor(1, 1, 1, 1);
-                    pPoseStack.popPose();
+                    poseStack.popPose();
                 }
             }
-            renderToolTip(pPoseStack, pMouseX, pMouseY);
+            renderToolTip(poseStack, mouseX, mouseY);
         }
     }
-    @Override
-    public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY) {
-        if (isActive() && isHovered) {
-            displayOn.renderTooltip(pPoseStack, Arrays.asList(getFluid.get().getFluid().getDisplayName().getVisualOrderText(), new TextComponent(getFluid.get().getFluidAmount() + "mB").getVisualOrderText()), pMouseX, pMouseY);
+
+    public void renderToolTip(PoseStack poseStack, int mouseX, int mouseY) {
+        if (isHovered(mouseX, mouseY)) {
+            displayOn.renderTooltip(poseStack, Arrays.asList(getFluid.get().getFluid().getDisplayName().getVisualOrderText(), new TextComponent(getFluid.get().getFluidAmount() + "mB").getVisualOrderText()), mouseX, mouseY);
         }
     }
 }

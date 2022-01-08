@@ -1,7 +1,7 @@
 package com.enderio.base.common.init;
 
 import com.enderio.base.EnderIO;
-import com.enderio.base.client.gui.screens.CoordinateMenuScreen;
+import com.enderio.base.client.gui.screen.CoordinateMenuScreen;
 import com.enderio.base.common.menu.CoordinateMenu;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.MenuEntry;

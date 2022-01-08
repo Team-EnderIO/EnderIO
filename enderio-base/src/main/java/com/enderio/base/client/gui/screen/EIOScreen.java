@@ -1,4 +1,4 @@
-package com.enderio.base.client.gui.screens;
+package com.enderio.base.client.gui.screen;
 
 import com.enderio.base.common.util.Vector2i;
 import com.mojang.blaze3d.systems.RenderSystem;

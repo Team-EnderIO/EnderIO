@@ -15,12 +15,12 @@ public class RenderUtil {
      */
     public static void renderFace(Direction face, Matrix4f pose, Matrix3f normal, VertexConsumer consumer, TextureAtlasSprite texture, float x, float y, float z, float w, float h, int color) {
         switch (face) {
-        case DOWN -> renderFace(pose, normal, consumer, texture, color, x, x + w, 1.0f - z, 1.0f - z, y, y, y + h, y + h, x, x + w, y, y + h);
-        case UP -> renderFace(pose, normal, consumer, texture, color, x, x + w, z, z, y + h, y + h, y, y, x, x + w, y, y + h);
-        case NORTH -> renderFace(pose, normal, consumer, texture, color, x, x + w, y + h, y, z, z, z, z, x, x + w, y, y + h);
-        case SOUTH -> renderFace(pose, normal, consumer, texture, color, x, x + w, y, y + h, 1.0f - z, 1.0f - z, 1.0f - z, 1.0f - z, x + w, x, y + h, y);
-        case WEST -> renderFace(pose, normal, consumer, texture, color, 1.0f - z, 1.0f - z, y + h, y, x, x + w, x + w, x, x, x + w, y, y + h);
-        case EAST -> renderFace(pose, normal, consumer, texture, color, z, z, y, y + h, x, x + w, x + w, x, x + w, x, y + h, y);
+            case DOWN -> renderFace(pose, normal, consumer, texture, color, x, x + w, 1.0f - z, 1.0f - z, y, y, y + h, y + h, x, x + w, y, y + h);
+            case UP -> renderFace(pose, normal, consumer, texture, color, x, x + w, z, z, y + h, y + h, y, y, x, x + w, y, y + h);
+            case NORTH -> renderFace(pose, normal, consumer, texture, color, x, x + w, y + h, y, z, z, z, z, x, x + w, y, y + h);
+            case SOUTH -> renderFace(pose, normal, consumer, texture, color, x, x + w, y, y + h, 1.0f - z, 1.0f - z, 1.0f - z, 1.0f - z, x + w, x, y + h, y);
+            case WEST -> renderFace(pose, normal, consumer, texture, color, 1.0f - z, 1.0f - z, y + h, y, x, x + w, x + w, x, x, x + w, y, y + h);
+            case EAST -> renderFace(pose, normal, consumer, texture, color, z, z, y, y + h, x, x + w, x + w, x, x + w, x, y + h, y);
         }
     }
 

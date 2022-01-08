@@ -1,5 +1,6 @@
 package com.enderio.decoration.client.model.painted;
 
+import com.enderio.base.datagen.model.EIOModel;
 import com.enderio.decoration.common.blockentity.DoublePaintedBlockEntity;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -70,6 +71,6 @@ public class PaintedSlabModel extends PaintedModel implements IDynamicBakedModel
             BakedModel model = getModel(paint.defaultBlockState());
             return model.getParticleIcon(EmptyModelData.INSTANCE);
         }
-        return getMissingTexture();
+        return EIOModel.getMissingTexture();
     }
 }

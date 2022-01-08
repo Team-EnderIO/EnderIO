@@ -138,12 +138,12 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachineEntity<Recipe
     @Override
     protected void selectNextRecipe() {
         // Select an alloy smelting recipe if we support it.
-        if (getMode().canAlloy) {
+        if (getMode().canAlloy()) {
             super.selectNextRecipe();
         }
 
         // Find a smelting recipe if we aren't alloy smelting.
-        if (getMode().canSmelt && getCurrentRecipe() == null) {
+        if (getMode().canSmelt() && getCurrentRecipe() == null) {
             // TODO: Support adding 3 ingredients at once to get 3 smelted outputs.
             level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, getRecipeWrapper(), level).ifPresent(this::setCurrentRecipe);
         }
@@ -230,5 +230,14 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachineEntity<Recipe
         }
         resultModifier = pTag.getInt("result_modifier");
         super.load(pTag);
+    }
+
+    @Override
+    protected void processLoadedRecipe() {
+        super.processLoadedRecipe();
+
+        // Reset the result modifier if the recipe load failed.
+        if (getCurrentRecipe() == null)
+            resultModifier = 1;
     }
 }

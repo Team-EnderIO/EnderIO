@@ -24,7 +24,7 @@ public class AlloySmeltingRecipe extends MachineRecipe<AlloySmeltingRecipe, Cont
 
     public AlloySmeltingRecipe(ResourceLocation id, NonNullList<Ingredient> ingredients, ItemStack result, int energy, float experience) {
         if (ingredients.size() > 3) {
-            throw new IllegalArgumentException("Developer tried to create an invalid alloy smelting recipe!");
+            throw new IllegalArgumentException("Tried to create an invalid alloy smelting recipe!");
         }
 
         this.id = id;
@@ -124,28 +124,6 @@ public class AlloySmeltingRecipe extends MachineRecipe<AlloySmeltingRecipe, Cont
         }
 
         @Override
-        public AlloySmeltingRecipe fromNetwork(ResourceLocation pRecipeId, FriendlyByteBuf pBuffer) {
-            int ingredientCount = pBuffer.readVarInt();
-            NonNullList<Ingredient> ingredients = NonNullList.withSize(ingredientCount, Ingredient.EMPTY);
-            for (int i = 0; i < ingredientCount; i++) {
-                ingredients.set(i, Ingredient.fromNetwork(pBuffer));
-            }
-
-            ItemStack result = pBuffer.readItem();
-            int energy = pBuffer.readInt();
-            float experience = pBuffer.readFloat();
-            return new AlloySmeltingRecipe(pRecipeId, ingredients, result, energy, experience);
-        }
-
-        @Override
-        public void toNetwork(FriendlyByteBuf pBuffer, AlloySmeltingRecipe pRecipe) {
-            pBuffer.writeCollection(pRecipe.ingredients, (buf, ing) -> ing.toNetwork(buf));
-            pBuffer.writeItem(pRecipe.result);
-            pBuffer.writeInt(pRecipe.energy);
-            pBuffer.writeFloat(pRecipe.experience);
-        }
-
-        @Override
         public void toJson(AlloySmeltingRecipe recipe, JsonObject json) {
             JsonArray ingredients = new JsonArray(recipe.ingredients.size());
             recipe.ingredients.forEach(ing -> ingredients.add(ing.toJson()));
@@ -162,6 +140,23 @@ public class AlloySmeltingRecipe extends MachineRecipe<AlloySmeltingRecipe, Cont
 
             json.addProperty("energy", recipe.energy);
             json.addProperty("experience", recipe.experience);
+        }
+
+        @Override
+        public AlloySmeltingRecipe fromNetwork(ResourceLocation pRecipeId, FriendlyByteBuf pBuffer) {
+            NonNullList<Ingredient> ingredients = pBuffer.readCollection(count -> NonNullList.withSize(count, Ingredient.EMPTY), Ingredient::fromNetwork);
+            ItemStack result = pBuffer.readItem();
+            int energy = pBuffer.readInt();
+            float experience = pBuffer.readFloat();
+            return new AlloySmeltingRecipe(pRecipeId, ingredients, result, energy, experience);
+        }
+
+        @Override
+        public void toNetwork(FriendlyByteBuf pBuffer, AlloySmeltingRecipe pRecipe) {
+            pBuffer.writeCollection(pRecipe.ingredients, (buf, ing) -> ing.toNetwork(buf));
+            pBuffer.writeItem(pRecipe.result);
+            pBuffer.writeInt(pRecipe.energy);
+            pBuffer.writeFloat(pRecipe.experience);
         }
     }
 }

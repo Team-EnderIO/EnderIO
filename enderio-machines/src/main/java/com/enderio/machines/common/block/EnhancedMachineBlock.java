@@ -34,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 public class EnhancedMachineBlock extends ProgressMachineBlock {
     public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
 
-    private static final VoxelShape UPPER_SHAPE = Shapes.create(0, 0, 0, 1 , 0.64f, 1); //6.25
+    private static final VoxelShape UPPER_SHAPE = Shapes.create(0, 0, 0, 1 , 10.25f / 16.0f, 1);
 
     public EnhancedMachineBlock(Properties p_49795_, BlockEntityEntry<? extends MachineBlockEntity> blockEntityType) {
         super(p_49795_, blockEntityType);

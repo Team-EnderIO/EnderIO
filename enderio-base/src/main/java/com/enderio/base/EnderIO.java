@@ -30,12 +30,12 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
 
 @Mod(EnderIO.MODID)
 public class EnderIO {
@@ -43,7 +43,7 @@ public class EnderIO {
 
     private static final Lazy<Registrate> REGISTRATE = Lazy.of(() -> Registrate.create(MODID));
 
-    public static final Logger LOGGER = LogManager.getLogManager().getLogger(MODID);
+    public static final Logger LOGGER = LogManager.getLogger(MODID);
 
     public EnderIO() {
         // Create configs subdirectory

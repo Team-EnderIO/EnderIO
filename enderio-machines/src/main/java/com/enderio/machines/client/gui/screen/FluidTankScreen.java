@@ -1,6 +1,6 @@
-package com.enderio.machines.client.gui.screens;
+package com.enderio.machines.client.gui.screen;
 
-import com.enderio.base.client.gui.screens.EIOScreen;
+import com.enderio.base.client.gui.screen.EIOScreen;
 import com.enderio.base.client.gui.widgets.EnumIconWidget;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.util.Vector2i;
@@ -20,7 +20,7 @@ public class FluidTankScreen extends EIOScreen<FluidTankMenu> {
     @Override
     protected void init() {
         super.init();
-        addRenderableWidget(new FluidStackWidget(this, getMenu().getBlockEntity()::getFluidTank, 80 + leftPos, 21 + topPos, 16, 47));
+        addRenderableOnly(new FluidStackWidget(this, getMenu().getBlockEntity()::getFluidTank, 80 + leftPos, 21 + topPos, 16, 47));
         addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
     }

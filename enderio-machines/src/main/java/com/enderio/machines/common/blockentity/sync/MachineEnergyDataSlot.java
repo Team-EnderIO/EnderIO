@@ -10,22 +10,22 @@ import net.minecraft.util.Tuple;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class MachineEnergyDataSlot extends EnderDataSlot<Vector2i> {
-    public MachineEnergyDataSlot(MachineEnergyStorage storage, Consumer<Vector2i> clientConsumer, SyncMode syncMode) {
+public class MachineEnergyDataSlot extends EnderDataSlot<EnergyData> {
+    public MachineEnergyDataSlot(MachineEnergyStorage storage, Consumer<EnergyData> clientConsumer, SyncMode syncMode) {
         // We dont set a setter here as energy should *never* be client -> server synced.
-        super(() -> new Vector2i(storage.getEnergyStored(), storage.getMaxEnergyStored()), clientConsumer, syncMode);
+        super(() -> new EnergyData(storage.getEnergyStored(), storage.getMaxEnergyStored()), clientConsumer, syncMode);
     }
 
     @Override
     public CompoundTag toFullNBT() {
         CompoundTag tag = new CompoundTag();
-        tag.putInt("Energy", getter().get().getX());
-        tag.putInt("Capacity", getter().get().getY());
+        tag.putInt("Energy", getter().get().energy());
+        tag.putInt("Capacity", getter().get().capacity());
         return tag;
     }
 
     @Override
-    protected Vector2i fromNBT(CompoundTag nbt) {
-        return new Vector2i(nbt.getInt("Energy"), nbt.getInt("Capacity"));
+    protected EnergyData fromNBT(CompoundTag nbt) {
+        return new EnergyData(nbt.getInt("Energy"), nbt.getInt("Capacity"));
     }
 }

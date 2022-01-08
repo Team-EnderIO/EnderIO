@@ -7,20 +7,16 @@ import com.enderio.machines.common.init.MachineBlockEntities;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
-public class MachinesClient {
+public class MachinesClientSetup {
+
     @SubscribeEvent
     public static void customModelLoaders(ModelRegistryEvent event) {
         ModelLoaderRegistry.registerLoader(EIOMachines.loc("io_overlay"), new IOOverlayBakedModel.Loader());
-    }
-
-    @SubscribeEvent
-    public static void textureStitch(TextureStitchEvent.Pre event) {
     }
 
     @SubscribeEvent

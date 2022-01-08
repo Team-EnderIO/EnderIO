@@ -33,15 +33,15 @@ public class MachineEnergyStorage implements INBTSerializable<Tag>, IEnergyStora
 
     @Override
     public int getMaxEnergyStored() {
-        return Math.round(baseCapacity * capacitorSupplier.get().map(ICapacitorData::getBase).orElse(1.0f));
+        return Math.round(baseCapacity * capacitorSupplier.get().map(ICapacitorData::getBase).orElse(0.0f));
     }
 
     public int getMaxEnergyConsumption() {
-        return Math.round(baseMaxConsumption * capacitorSupplier.get().map(ICapacitorData::getBase).orElse(1.0f));
+        return Math.round(baseMaxConsumption * capacitorSupplier.get().map(ICapacitorData::getBase).orElse(0.0f));
     }
 
     public int getMaxEnergyTransfer() {
-        return Math.round(baseMaxTransfer * capacitorSupplier.get().map(ICapacitorData::getBase).orElse(1.0f));
+        return Math.round(baseMaxTransfer * capacitorSupplier.get().map(ICapacitorData::getBase).orElse(0.0f));
     }
 
     // endregion

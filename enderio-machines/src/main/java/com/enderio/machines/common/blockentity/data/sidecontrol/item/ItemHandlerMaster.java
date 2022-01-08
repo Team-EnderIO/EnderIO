@@ -6,10 +6,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
@@ -29,20 +27,8 @@ public class ItemHandlerMaster extends ItemStackHandler {
         this.layout = layout;
     }
 
-    public ItemHandlerMaster(IOConfig config, int size) {
-        this(config, size, List.of(), List.of(), List.of());
-    }
-
-    public ItemHandlerMaster(IOConfig config, int size, List<Integer> onlyInputs, List<Integer> onlyOutputs) {
-        this(config, size, onlyInputs, onlyOutputs, List.of());
-    }
-
-    public ItemHandlerMaster(IOConfig config, int size, List<Integer> onlyInputs, List<Integer> onlyOutputs, List<Integer> upgradeSlots) {
-        this(config, ItemSlotLayout.fromLegacy(onlyInputs, onlyOutputs, upgradeSlots));
-    }
-
     public void addPredicate(int slot, Predicate<ItemStack> predicate) {
-        if (layout.slotIs(slot, ItemSlotLayout.SlotType.OUTPUT))
+        if (layout.isSlotType(slot, ItemSlotLayout.SlotType.OUTPUT))
             throw new IllegalArgumentException("Tried to add an insert predicate to the output slot:" + slot);
         if (slot >= getSlots())
             throw new IllegalArgumentException("Tried to add an insert predicate to an invalid slot:" + slot);
@@ -52,7 +38,7 @@ public class ItemHandlerMaster extends ItemStackHandler {
     @Nonnull
     @Override
     public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-        if (layout.slotIs(slot, ItemSlotLayout.SlotType.OUTPUT) && !isForceMode)
+        if (layout.isSlotType(slot, ItemSlotLayout.SlotType.OUTPUT) && !isForceMode)
             return stack;
         return super.insertItem(slot, stack, simulate);
     }
@@ -66,7 +52,7 @@ public class ItemHandlerMaster extends ItemStackHandler {
 
     @Override
     public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-        return isForceMode || (inputPredicates.getOrDefault(slot, itemStack -> true).test(stack) && !layout.slotIs(slot, ItemSlotLayout.SlotType.OUTPUT));
+        return isForceMode || (inputPredicates.getOrDefault(slot, itemStack -> true).test(stack) && !layout.isSlotType(slot, ItemSlotLayout.SlotType.OUTPUT));
     }
 
     public ItemStack guiExtractItem(int slot, int amount, boolean simulate) {
@@ -79,7 +65,7 @@ public class ItemHandlerMaster extends ItemStackHandler {
     @Nonnull
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
-        if (layout.slotIs(slot, ItemSlotLayout.SlotType.INPUT) && !isForceMode)
+        if (layout.isSlotType(slot, ItemSlotLayout.SlotType.INPUT) && !isForceMode)
             return ItemStack.EMPTY;
         return super.extractItem(slot, amount, simulate);
     }

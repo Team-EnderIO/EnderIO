@@ -1,4 +1,4 @@
-package com.enderio.base.client.gui.screens;
+package com.enderio.base.client.gui.screen;
 
 public interface IFullScreenListener {
 

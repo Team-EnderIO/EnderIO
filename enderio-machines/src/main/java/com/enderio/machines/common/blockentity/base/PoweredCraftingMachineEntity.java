@@ -1,6 +1,6 @@
 package com.enderio.machines.common.blockentity.base;
 
-import com.enderio.base.common.blockentity.sync.EnderDataSlot;
+import com.enderio.base.common.blockentity.sync.FloatDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.base.common.util.UseOnly;
 import com.enderio.machines.common.MachineTier;
@@ -35,19 +35,7 @@ public abstract class PoweredCraftingMachineEntity<R extends Recipe<Container>> 
         super(tier, pType, pWorldPosition, pBlockState);
 
         // Sync machine progress to the client.
-        addDataSlot(new EnderDataSlot<>(this::getProgress, (progress) -> clientProgress = progress, SyncMode.GUI) {
-            @Override
-            public CompoundTag toFullNBT() {
-                CompoundTag nbt = new CompoundTag();
-                nbt.putFloat("progress", getter().get());
-                return nbt;
-            }
-
-            @Override
-            protected Float fromNBT(CompoundTag nbt) {
-                return nbt.getFloat("progress");
-            }
-        });
+        addDataSlot(new FloatDataSlot(this::getProgress, p -> clientProgress = p, SyncMode.GUI));
     }
 
     public float getProgress() {
@@ -65,16 +53,7 @@ public abstract class PoweredCraftingMachineEntity<R extends Recipe<Container>> 
         if (shouldAct()) {
             // If we've been asked to load a recipe (from NBT load usually), do it.
             if (loadedRecipe != null) {
-                level.getRecipeManager().byKey(loadedRecipe).ifPresent(recipe -> {
-                    try {
-                        currentRecipe = (R) recipe;
-                    } catch (ClassCastException ex) {
-                        // Do nothing. Forget the recipe existed.
-                    }
-                });
-
-                // We've tried loading the recipe now, forget it.
-                loadedRecipe = null;
+                processLoadedRecipe();
             }
 
             if (canCraft()) {
@@ -151,7 +130,7 @@ public abstract class PoweredCraftingMachineEntity<R extends Recipe<Container>> 
      * Select the next recipe for crafting.
      */
     protected void selectNextRecipe() {
-        getRecipe().ifPresent(this::setCurrentRecipe);
+        findMatchingRecipe().ifPresent(this::setCurrentRecipe);
     }
 
     // endregion
@@ -166,14 +145,14 @@ public abstract class PoweredCraftingMachineEntity<R extends Recipe<Container>> 
     /**
      * Get the currently crafting recipe.
      */
-    protected R getCurrentRecipe() {
+    public R getCurrentRecipe() {
         return currentRecipe;
     }
 
     /**
      * Get the recipe from the recipe manager.
      */
-    private Optional<R> getRecipe() {
+    private Optional<R> findMatchingRecipe() {
         return level.getRecipeManager().getRecipeFor((RecipeType<R>) getRecipeType(), getRecipeWrapper(), level);
     }
 
@@ -217,6 +196,20 @@ public abstract class PoweredCraftingMachineEntity<R extends Recipe<Container>> 
             loadedRecipe = new ResourceLocation(pTag.getString("recipe"));
         }
         super.load(pTag);
+    }
+
+    protected void processLoadedRecipe() {
+        // Try to find the recipe.
+        level.getRecipeManager().byKey(loadedRecipe).ifPresent(recipe -> {
+            try {
+                currentRecipe = (R) recipe;
+            } catch (ClassCastException ex) {
+                // Do nothing. Forget the recipe existed.
+            }
+        });
+
+        // We've tried loading the recipe now, forget it.
+        loadedRecipe = null;
     }
 
     // endregion

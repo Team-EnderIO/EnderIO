@@ -1,5 +1,6 @@
 package com.enderio.base.client.model.composite;
 
+import com.enderio.base.EnderIO;
 import com.google.common.collect.Maps;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Transformation;
@@ -30,6 +31,11 @@ public class CompositeModelGeometry implements IModelGeometry<CompositeModelGeom
         List<BakedModel> componentModels = new ArrayList<>(components.size());
         Supplier<TextureAtlasSprite> particleSupplier = null;
         for (CompositeModelComponent component : components) {
+            if (component.model() == modelLocation) {
+                EnderIO.LOGGER.warn("Model " + modelLocation + " referenced itself!");
+                continue;
+            }
+
             ModelState componentState = new ModelState() {
                 @Override
                 public Transformation getRotation() {
@@ -49,6 +55,8 @@ public class CompositeModelGeometry implements IModelGeometry<CompositeModelGeom
             // If we don't yet have the particle model, save
             if (particleSupplier == null && baked != null && component.particleProvider()) {
                 particleSupplier = baked::getParticleIcon;
+            } else if (particleSupplier != null && component.particleProvider()) {
+                EnderIO.LOGGER.warn("Duplicate particle supplier found on model " + modelLocation);
             }
         }
         return new CompositeBakedModel(componentModels, particleSupplier);
@@ -57,7 +65,9 @@ public class CompositeModelGeometry implements IModelGeometry<CompositeModelGeom
     @Override
     public Collection<Material> getTextures(IModelConfiguration owner, Function<ResourceLocation, UnbakedModel> modelGetter,
         Set<Pair<String, String>> missingTextureErrors) {
-        // TODO: Check we aren't referencing ourselves and causing a stack overflow. Don't ask me how I know this'll happen...
-        return components.stream().map(component -> modelGetter.apply(component.model()).getMaterials(modelGetter, missingTextureErrors)).flatMap(Collection::stream).collect(Collectors.toList());
+        return components.stream()
+            .filter(component -> !component.model().equals(new ResourceLocation(owner.getModelName()))) // ignore self referencing
+            .map(component -> modelGetter.apply(component.model()).getMaterials(modelGetter, missingTextureErrors))
+            .flatMap(Collection::stream).collect(Collectors.toList());
     }
 }

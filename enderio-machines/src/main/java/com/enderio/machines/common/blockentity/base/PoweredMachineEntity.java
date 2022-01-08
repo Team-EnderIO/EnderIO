@@ -1,5 +1,6 @@
 package com.enderio.machines.common.blockentity.base;
 
+import com.enderio.base.EnderIO;
 import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.base.common.capability.capacitors.ICapacitorData;
 import com.enderio.base.common.util.CapacitorUtil;
@@ -7,6 +8,7 @@ import com.enderio.base.common.util.UseOnly;
 import com.enderio.base.common.util.Vector2i;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemSlotLayout;
+import com.enderio.machines.common.blockentity.sync.EnergyData;
 import com.enderio.machines.common.blockentity.sync.MachineEnergyDataSlot;
 import com.enderio.machines.common.energy.MachineEnergyStorage;
 import net.minecraft.core.BlockPos;
@@ -31,8 +33,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
 
     private final LazyOptional<IEnergyStorage> energyCap = LazyOptional.of(() -> this.energyStorage);
 
-    @UseOnly(LogicalSide.CLIENT)
-    private Vector2i clientEnergy;
+    @UseOnly(LogicalSide.CLIENT) private EnergyData clientEnergy;
 
     public PoweredMachineEntity(MachineTier tier, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(tier, pType, pWorldPosition, pBlockState);
@@ -45,11 +46,12 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
 
     // Helper methods for gui:
     @UseOnly(LogicalSide.CLIENT)
-    public Vector2i getGuiEnergy() {
+    public EnergyData getGuiEnergy() {
         if (level.isClientSide) {
             return clientEnergy;
         }
-        return new Vector2i(energyStorage.getEnergyStored(), energyStorage.getMaxEnergyStored());
+        EnderIO.LOGGER.warn("getGuiEnergy called on server!");
+        return new EnergyData(energyStorage.getEnergyStored(), energyStorage.getMaxEnergyStored());
     }
 
     protected MachineEnergyStorage createEnergyStorage() {
@@ -73,25 +75,18 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
     // region Capacitors
 
     public boolean hasCapacitor() {
-        return getSlotLayout().map(layout -> {
-            int slot = layout.getFirst(ItemSlotLayout.SlotType.CAPACITOR);
-            if (slot != -1) {
-                return CapacitorUtil.isCapacitor(getItemHandler().getStackInSlot(slot));
-            }
-
-            return false;
-        }).orElse(false);
+        return getSlotLayout()
+            .map(layout -> layout
+                .getFirst(ItemSlotLayout.SlotType.CAPACITOR)
+                .map(slot -> CapacitorUtil.isCapacitor(getItemHandler().getStackInSlot(slot)))
+                .orElse(false))
+            .orElse(false);
     }
 
     public Optional<ICapacitorData> getCapacitorData() {
-        if (getSlotLayout().isPresent()) {
-            ItemSlotLayout layout = getSlotLayout().get();
-            int slot = layout.getFirst(ItemSlotLayout.SlotType.CAPACITOR);
-            if (slot != -1) {
-                return CapacitorUtil.getCapacitorData(getItemHandler().getStackInSlot(slot));
-            }
-        }
-        return Optional.empty();
+        return getSlotLayout().flatMap(layout -> layout
+            .getFirst(ItemSlotLayout.SlotType.CAPACITOR)
+            .flatMap(slot -> CapacitorUtil.getCapacitorData(getItemHandler().getStackInSlot(slot))));
     }
 
     // endregion

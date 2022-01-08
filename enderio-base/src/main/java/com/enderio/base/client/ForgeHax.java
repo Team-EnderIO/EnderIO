@@ -49,7 +49,7 @@ public class ForgeHax {
         try {
             return (Stack<Screen>)guiLayersField.get(null);
         } catch (IllegalAccessException e) {
-            EnderIO.LOGGER.warning("Couldn't access guiLayers, report to enderio if you are using the latest Version");
+            EnderIO.LOGGER.warn("Couldn't access guiLayers, report to enderio if you are using the latest Version");
             e.printStackTrace();
         }
         return new Stack<>();

@@ -1,9 +1,6 @@
 package com.enderio.machines.common.blockentity.data.sidecontrol.item;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ItemSlotLayout {
@@ -19,7 +16,7 @@ public class ItemSlotLayout {
     private final int slotCount;
 
     private ItemSlotLayout(Map<Integer, SlotType> slotTypeMap) {
-        this.slotTypeMap = slotTypeMap;
+        this.slotTypeMap = Map.copyOf(slotTypeMap);
         this.slotCount = slotTypeMap.size();
     }
 
@@ -67,18 +64,6 @@ public class ItemSlotLayout {
         return new ItemSlotLayout(slotMap);
     }
 
-    public static ItemSlotLayout fromLegacy(List<Integer> inputs, List<Integer> outputs) {
-        return fromLegacy(inputs, outputs, List.of());
-    }
-
-    public static ItemSlotLayout fromLegacy(List<Integer> inputs, List<Integer> outputs, List<Integer> upgradeSlots) {
-        Map<Integer, SlotType> slotMap = new HashMap<>();
-        inputs.forEach(slot -> slotMap.put(slot, SlotType.INPUT));
-        outputs.forEach(slot -> slotMap.put(slot, SlotType.OUTPUT));
-        upgradeSlots.forEach(slot -> slotMap.put(slot, SlotType.UPGRADE));
-        return new ItemSlotLayout(slotMap);
-    }
-
     public static Builder builder() {
         return new Builder();
     }
@@ -87,7 +72,7 @@ public class ItemSlotLayout {
         return slotCount;
     }
 
-    public boolean slotIs(int slot, SlotType type) {
+    public boolean isSlotType(int slot, SlotType type) {
         return slotTypeMap.getOrDefault(slot, SlotType.MISC) == type;
     }
 
@@ -95,11 +80,11 @@ public class ItemSlotLayout {
         return slotTypeMap.entrySet().stream().filter(entry -> entry.getValue() == type).map(Map.Entry::getKey).collect(Collectors.toList());
     }
 
-    public int getFirst(SlotType type) {
+    public Optional<Integer> getFirst(SlotType type) {
         if (getAll(type).size() > 0) {
-            return getAll(type).get(0);
+            return Optional.of(getAll(type).get(0));
         }
-        return -1;
+        return Optional.empty();
     }
 
     public static class Builder {

@@ -1,9 +1,9 @@
 package com.enderio.machines.common.init;
 
 import com.enderio.machines.EIOMachines;
-import com.enderio.machines.client.gui.screens.AlloySmelterScreen;
-import com.enderio.machines.client.gui.screens.EnchanterScreen;
-import com.enderio.machines.client.gui.screens.FluidTankScreen;
+import com.enderio.machines.client.gui.screen.AlloySmelterScreen;
+import com.enderio.machines.client.gui.screen.EnchanterScreen;
+import com.enderio.machines.client.gui.screen.FluidTankScreen;
 import com.enderio.machines.common.menu.AlloySmelterMenu;
 import com.enderio.machines.common.menu.EnchanterMenu;
 import com.enderio.machines.common.menu.FluidTankMenu;

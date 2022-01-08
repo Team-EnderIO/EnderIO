@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.Random;
 
 public class SimpleMachineBlock extends ProgressMachineBlock implements Fallable {
+
     public SimpleMachineBlock(Properties properties, BlockEntityEntry<? extends MachineBlockEntity> blockEntityType) {
         super(properties, blockEntityType);
     }

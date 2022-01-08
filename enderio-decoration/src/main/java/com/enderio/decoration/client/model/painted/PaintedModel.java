@@ -1,5 +1,6 @@
 package com.enderio.decoration.client.model.painted;
 
+import com.enderio.base.datagen.model.EIOModel;
 import com.enderio.decoration.common.blockentity.SinglePaintedBlockEntity;
 import com.enderio.decoration.common.util.PaintUtils;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -119,7 +120,7 @@ public abstract class PaintedModel implements IDynamicBakedModel {
         LightUtil.unpack(shape.getVertices(), normalData, DefaultVertexFormat.BLOCK, 0, 4);
         Direction normal = Direction.getNearest(normalData[0], normalData[1], normalData[2]);
         List<BakedQuad> quads = model.getQuads(state, normal, new Random());
-        return quads.isEmpty() ? Pair.of(getMissingTexture(), false) : Pair.of(quads.get(0).getSprite(), quads.get(0).isTinted());
+        return quads.isEmpty() ? Pair.of(EIOModel.getMissingTexture(), false) : Pair.of(quads.get(0).getSprite(), quads.get(0).isTinted());
     }
 
     /**
@@ -174,10 +175,6 @@ public abstract class PaintedModel implements IDynamicBakedModel {
         return copied;
     }
 
-    public TextureAtlasSprite getMissingTexture() {
-        return Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(new ResourceLocation("minecraft", "missingno"));
-    }
-
     @Override
     public ItemOverrides getOverrides() {
         return ItemOverrides.EMPTY;
@@ -214,12 +211,12 @@ public abstract class PaintedModel implements IDynamicBakedModel {
             BakedModel model = getModel(paint.defaultBlockState());
             return model.getParticleIcon(EmptyModelData.INSTANCE);
         }
-        return getMissingTexture();
+        return EIOModel.getMissingTexture();
     }
 
     @Override
     public TextureAtlasSprite getParticleIcon() {
-        return getMissingTexture();
+        return EIOModel.getMissingTexture();
     }
 
     // used to modify model based on ItemStack data

@@ -68,7 +68,7 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
         add2WayDataSlot(new EnumDataSlot<>(this::getRedstoneControl, this::setRedstoneControl, SyncMode.GUI));
         add2WayDataSlot(new NBTSerializableDataSlot<>(() -> ioConfig, SyncMode.WORLD, () -> {
             if (!isServer()) {
-                modelData.setData(IO_CONFIG_PROPERTY, ioConfig); // TODO: Check if this is needed given its NBT Deserialized
+                modelData.setData(IO_CONFIG_PROPERTY, ioConfig);
                 requestModelDataUpdate();
             }
         }));

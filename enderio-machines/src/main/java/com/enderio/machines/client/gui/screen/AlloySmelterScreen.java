@@ -1,6 +1,6 @@
-package com.enderio.machines.client.gui.screens;
+package com.enderio.machines.client.gui.screen;
 
-import com.enderio.base.client.gui.screens.EIOScreen;
+import com.enderio.base.client.gui.screen.EIOScreen;
 import com.enderio.base.client.gui.widgets.EnumIconWidget;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.util.Vector2i;
@@ -18,6 +18,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public class AlloySmelterScreen extends EIOScreen<AlloySmelterMenu> {
+
     private static final ResourceLocation BG_TEXTURE_SIMPLE_ALLOY = EIOMachines.loc("textures/gui/simple_alloy_smelter.png");
     private static final ResourceLocation BG_TEXTURE_SIMPLE_FURNACE = EIOMachines.loc("textures/gui/simple_furnace.png");
     private static final ResourceLocation BG_TEXTURE_ALLOY = EIOMachines.loc("textures/gui/alloy_smelter_alloy.png");
@@ -31,21 +32,16 @@ public class AlloySmelterScreen extends EIOScreen<AlloySmelterMenu> {
     @Override
     protected void init() {
         super.init();
-        addRenderableWidget(new ProgressWidget(this, () -> menu.getBlockEntity().getProgress(), getGuiLeft() + 56, getGuiTop() + 36, 14, 14, 176, 0));
-        addRenderableWidget(new ProgressWidget(this, () -> menu.getBlockEntity().getProgress(), getGuiLeft() + 104, getGuiTop() + 36, 14, 14, 176, 0));
+        addRenderableOnly(new ProgressWidget(this, () -> menu.getBlockEntity().getProgress(), getGuiLeft() + 56, getGuiTop() + 36, 14, 14, 176, 0));
+        addRenderableOnly(new ProgressWidget(this, () -> menu.getBlockEntity().getProgress(), getGuiLeft() + 104, getGuiTop() + 36, 14, 14, 176, 0));
+        addRenderableOnly(new EnergyWidget(this, getMenu().getBlockEntity()::getGuiEnergy, 16 + leftPos, 14 + topPos, 9, 42));
 
-        addRenderableWidget(new EnergyWidget(this, getMenu().getBlockEntity()::getGuiEnergy, 16 + leftPos, 14 + topPos, 9, 42));
         addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
 
         if (getMenu().getBlockEntity().getTier() != MachineTier.Simple) {
             addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 6 + 16 * 3, () -> menu.getBlockEntity().getMode(), mode -> menu.getBlockEntity().setMode(mode), MachineLang.ALLOY_SMELTER_MODE));
         }
-    }
-
-    @Override
-    protected void renderBg(PoseStack pPoseStack, float pPartialTick, int pMouseX, int pMouseY) {
-        super.renderBg(pPoseStack, pPartialTick, pMouseX, pMouseY);
     }
 
     @Override

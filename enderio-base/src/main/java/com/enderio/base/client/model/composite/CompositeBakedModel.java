@@ -1,6 +1,7 @@
 package com.enderio.base.client.model.composite;
 
 import com.enderio.base.client.model.ItemTransformUtil;
+import com.enderio.base.datagen.model.EIOModel;
 import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -26,9 +27,11 @@ import java.util.function.Supplier;
 public class CompositeBakedModel implements IDynamicBakedModel {
 
     private final List<BakedModel> components;
+
+    @Nullable
     private final Supplier<TextureAtlasSprite> particleSupplier;
 
-    public CompositeBakedModel(List<BakedModel> components, Supplier<TextureAtlasSprite> particleSupplier) {
+    public CompositeBakedModel(List<BakedModel> components, @Nullable Supplier<TextureAtlasSprite> particleSupplier) {
         this.components = components;
         this.particleSupplier = particleSupplier;
     }
@@ -68,7 +71,7 @@ public class CompositeBakedModel implements IDynamicBakedModel {
     public TextureAtlasSprite getParticleIcon() {
         if (particleSupplier != null)
             return particleSupplier.get();
-        return Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(MissingTextureAtlasSprite.getLocation());
+        return EIOModel.getMissingTexture();
     }
 
     @Override

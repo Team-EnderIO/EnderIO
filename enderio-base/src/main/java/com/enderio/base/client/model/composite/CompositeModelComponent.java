@@ -9,6 +9,7 @@ import com.mojang.math.Vector3f;
 import net.minecraft.resources.ResourceLocation;
 
 public record CompositeModelComponent(ResourceLocation model, Vector3f translation, Vector3f rotation, boolean particleProvider) {
+
     public JsonObject toJson() {
         JsonObject json = new JsonObject();
         json.addProperty("model", model.toString());
@@ -49,7 +50,7 @@ public record CompositeModelComponent(ResourceLocation model, Vector3f translati
             if (translationJson.size() == 3) {
                 translation = new Vector3f(translationJson.get(0).getAsFloat(), translationJson.get(1).getAsFloat(), translationJson.get(2).getAsFloat());
             } else {
-                EnderIO.LOGGER.warning("Composite model component has invalid translation!");
+                EnderIO.LOGGER.warn("Composite model component has invalid translation!");
             }
         }
 
@@ -59,7 +60,7 @@ public record CompositeModelComponent(ResourceLocation model, Vector3f translati
             if (rotationJson.size() == 3) {
                 rotation = new Vector3f(rotationJson.get(0).getAsFloat(), rotationJson.get(1).getAsFloat(), rotationJson.get(2).getAsFloat());
             } else {
-                EnderIO.LOGGER.warning("Composite model component has invalid rotation!");
+                EnderIO.LOGGER.warn("Composite model component has invalid rotation!");
             }
         }
 
