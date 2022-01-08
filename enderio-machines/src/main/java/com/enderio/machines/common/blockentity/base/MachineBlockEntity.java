@@ -44,6 +44,7 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
 
     private final IOConfig ioConfig = new IOConfig();
 
+    // TODO: This isn't available on some machines, shouldn't be default. Will deal with in future.
     private RedstoneControl redstoneControl = RedstoneControl.ALWAYS_ACTIVE;
 
     private final EnumMap<Direction, LazyOptional<IItemHandler>> itemHandlerCache = new EnumMap<>(Direction.class);
@@ -81,6 +82,7 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
         return modelData;
     }
 
+    // TODO: Could just make this abstract and remove the field...
     public final MachineTier getTier() {
         return tier;
     }
@@ -88,6 +90,8 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
     public final IOConfig getIoConfig() {
         return this.ioConfig;
     }
+
+    // TODO: supportsIOMode method.
 
     public final ItemHandlerMaster getItemHandler() {
         return itemHandlerMaster;
@@ -176,9 +180,8 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
 
     private void moveFluids(Direction direction) {
         getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction).resolve().ifPresent(fluidHandler -> {
-            LazyOptional<IFluidHandler> lazyFluidHandler = fluidHandlerCache.get(direction);
-            if (lazyFluidHandler != null) {
-                Optional<IFluidHandler> otherFluid = lazyFluidHandler.resolve();
+            if (fluidHandlerCache.containsKey(direction)) {
+                Optional<IFluidHandler> otherFluid = fluidHandlerCache.get(direction).resolve();
                 if (otherFluid.isPresent()) {
                     FluidStack stack = fluidHandler.drain(100, FluidAction.SIMULATE);
                     if (stack.isEmpty()) {
@@ -203,9 +206,8 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
 
     private void moveItems(Direction direction) {
         getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, direction).resolve().ifPresent(itemHandler -> {
-            LazyOptional<IItemHandler> lazyItemHandler = itemHandlerCache.get(direction);
-            if (lazyItemHandler != null) {
-                Optional<IItemHandler> otherItem = lazyItemHandler.resolve();
+            if (itemHandlerCache.containsKey(direction)) {
+                Optional<IItemHandler> otherItem = itemHandlerCache.get(direction).resolve();
 
                 if (otherItem.isPresent()) {
                     moveItems(itemHandler, otherItem.get());
@@ -248,6 +250,12 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
 
         if (itemHandlerMaster != null) {
             itemHandlerMaster.deserializeNBT(pTag.getCompound("inventory"));
+        }
+
+        // For rendering io overlays after placed by an nbt filled block item
+        if (level != null) {
+            modelData.setData(IO_CONFIG_PROPERTY, ioConfig);
+            requestModelDataUpdate();
         }
 
         super.load(pTag);

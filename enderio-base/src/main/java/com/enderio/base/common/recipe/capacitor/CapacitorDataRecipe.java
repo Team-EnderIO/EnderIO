@@ -92,6 +92,8 @@ public class CapacitorDataRecipe implements Recipe<Container> {
         @Override
         public CapacitorDataRecipe fromJson(@Nonnull ResourceLocation recipeId, JsonObject json) {
             Item capacitor = ForgeRegistries.ITEMS.getValue(new ResourceLocation(json.get("capacitor").getAsString())); // TODO: These may need more checks?
+            if (capacitor == null)
+                throw new RuntimeException("Capacitor in data recipe was not found!");
             CapacitorData capacitorData = new CapacitorData();
             capacitorData.deserializeNBT(JsonOps.INSTANCE.convertTo(NbtOps.INSTANCE, json.get("data")));
             return new CapacitorDataRecipe(recipeId, capacitor, capacitorData);

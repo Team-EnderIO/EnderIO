@@ -15,12 +15,6 @@ import com.mojang.math.Vector3f;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
-import net.minecraftforge.client.model.generators.ConfiguredModel;
-import net.minecraftforge.client.model.generators.ModelFile;
-
-import java.util.function.Function;
 
 public class MachineBlocks {
     private static final Registrate REGISTRATE = EIOMachines.registrate();

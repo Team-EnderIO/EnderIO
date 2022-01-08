@@ -1,7 +1,11 @@
 package com.enderio.machines.common.blockentity.base;
 
+import com.enderio.base.common.blockentity.sync.EnderDataSlot;
+import com.enderio.base.common.blockentity.sync.SyncMode;
+import com.enderio.base.common.util.UseOnly;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.block.ProgressMachineBlock;
+import com.enderio.machines.common.recipe.MachineRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -11,15 +15,47 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.fml.LogicalSide;
+import org.apache.commons.lang3.NotImplementedException;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public abstract class PoweredCraftingMachineEntity<R extends Recipe<Container>> extends PoweredMachineEntity {
+public abstract class PoweredCraftingMachineEntity<R extends Recipe<Container>> extends PowerConsumingMachineEntity {
     private int energyConsumed;
     private R currentRecipe;
 
+    @Nullable
+    private ResourceLocation loadedRecipe = null;
+
+    @UseOnly(LogicalSide.CLIENT)
+    private float clientProgress;
+
     public PoweredCraftingMachineEntity(MachineTier tier, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(tier, pType, pWorldPosition, pBlockState);
+
+        // Sync machine progress to the client.
+        addDataSlot(new EnderDataSlot<>(this::getProgress, (progress) -> clientProgress = progress, SyncMode.GUI) {
+            @Override
+            public CompoundTag toFullNBT() {
+                CompoundTag nbt = new CompoundTag();
+                nbt.putFloat("progress", getter().get());
+                return nbt;
+            }
+
+            @Override
+            protected Float fromNBT(CompoundTag nbt) {
+                return nbt.getFloat("progress");
+            }
+        });
+    }
+
+    public float getProgress() {
+        if (level.isClientSide)
+            return clientProgress;
+        if (getCurrentRecipe() == null)
+            return 0;
+        return energyConsumed / (float) getEnergyCost(getCurrentRecipe());
     }
 
     @Override
@@ -27,10 +63,24 @@ public abstract class PoweredCraftingMachineEntity<R extends Recipe<Container>> 
         boolean active = false;
 
         if (shouldAct()) {
-            // TODO: Check we have energy.
+            // If we've been asked to load a recipe (from NBT load usually), do it.
+            if (loadedRecipe != null) {
+                level.getRecipeManager().byKey(loadedRecipe).ifPresent(recipe -> {
+                    try {
+                        currentRecipe = (R) recipe;
+                    } catch (ClassCastException ex) {
+                        // Do nothing. Forget the recipe existed.
+                    }
+                });
+
+                // We've tried loading the recipe now, forget it.
+                loadedRecipe = null;
+            }
+
             if (canCraft()) {
-                if (energyConsumed <= getEnergyCost(getCurrentRecipe())) {
-                    energyConsumed += 1;
+                int cost = getEnergyCost(getCurrentRecipe());
+                if (energyConsumed <= cost) {
+                    energyConsumed += consumeEnergy(cost);
                     active = true;
                 }
 
@@ -70,11 +120,13 @@ public abstract class PoweredCraftingMachineEntity<R extends Recipe<Container>> 
 
     // region Crafting Lifecycle
 
+    // TODO: Do we add capacitor requirement logic in here? Probably. I'll do it when I add the SAG mill.
+
     /**
      * Whether crafting is running.
      */
     protected boolean canCraft() {
-        return getCurrentRecipe() != null;
+        return getCurrentRecipe() != null && hasEnergy();
     }
 
     /**
@@ -82,13 +134,18 @@ public abstract class PoweredCraftingMachineEntity<R extends Recipe<Container>> 
      * @return
      */
     protected boolean canSelectRecipe() {
-        return true;
+        return hasEnergy(); // Need some energy, stops from consuming the resources
     }
 
     /**
      * Get the cost of crafting this recipe
      */
-    protected abstract int getEnergyCost(R recipe);
+    protected int getEnergyCost(R recipe) {
+        if (recipe instanceof MachineRecipe<?,?> machineRecipe) {
+            return machineRecipe.getEnergyCost();
+        }
+        throw new NotImplementedException("Machine must implement getEnergyCost for types not implementing MachineRecipe");
+    }
 
     /**
      * Select the next recipe for crafting.
@@ -154,13 +211,10 @@ public abstract class PoweredCraftingMachineEntity<R extends Recipe<Container>> 
 
     @Override
     public void load(CompoundTag pTag) {
+        energyConsumed = pTag.getInt("energy_used");
         if (pTag.contains("recipe")) {
-            String recipeLoc = pTag.getString("recipe");
-
-            // TODO: Getting the current recipe like this doesn't work. level is null when the game first loads.
-            level.getRecipeManager().byKey(new ResourceLocation(recipeLoc)).ifPresent(recipe -> {
-                currentRecipe = (R) recipe;
-            });
+            // Save the recipe for later when the level is loaded
+            loadedRecipe = new ResourceLocation(pTag.getString("recipe"));
         }
         super.load(pTag);
     }

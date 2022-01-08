@@ -40,6 +40,11 @@ public class AlloySmeltingRecipe extends MachineRecipe<AlloySmeltingRecipe, Cont
     }
 
     @Override
+    public int getEnergyCost() {
+        return energy;
+    }
+
+    @Override
     public boolean matches(Container pContainer, Level pLevel) {
         // TODO: Test
         boolean[] matchArray = new boolean[3]; // Used to ensure there are blank slots left. // TODO: I want to get rid of it

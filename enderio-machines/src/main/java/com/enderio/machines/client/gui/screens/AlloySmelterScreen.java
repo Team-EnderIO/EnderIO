@@ -6,6 +6,7 @@ import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.util.Vector2i;
 import com.enderio.machines.EIOMachines;
 import com.enderio.machines.client.gui.widget.EnergyWidget;
+import com.enderio.machines.client.gui.widget.ProgressWidget;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.AlloySmelterBlockEntity;
 import com.enderio.machines.common.lang.MachineLang;
@@ -30,6 +31,9 @@ public class AlloySmelterScreen extends EIOScreen<AlloySmelterMenu> {
     @Override
     protected void init() {
         super.init();
+        addRenderableWidget(new ProgressWidget(this, () -> menu.getBlockEntity().getProgress(), getGuiLeft() + 56, getGuiTop() + 36, 14, 14, 176, 0));
+        addRenderableWidget(new ProgressWidget(this, () -> menu.getBlockEntity().getProgress(), getGuiLeft() + 104, getGuiTop() + 36, 14, 14, 176, 0));
+
         addRenderableWidget(new EnergyWidget(this, getMenu().getBlockEntity()::getGuiEnergy, 16 + leftPos, 14 + topPos, 9, 42));
         addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
@@ -42,8 +46,6 @@ public class AlloySmelterScreen extends EIOScreen<AlloySmelterMenu> {
     @Override
     protected void renderBg(PoseStack pPoseStack, float pPartialTick, int pMouseX, int pMouseY) {
         super.renderBg(pPoseStack, pPartialTick, pMouseX, pMouseY);
-
-        // TODO: Get machine progress and blit the flame :)
     }
 
     @Override

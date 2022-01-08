@@ -18,12 +18,15 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.ForgeHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -59,6 +62,8 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachineEntity<Recipe
 
     private final AlloySmelterMode defaultMode;
     private AlloySmelterMode mode;
+
+    private int resultModifier = 1;
 
     public AlloySmelterBlockEntity(AlloySmelterMode defaultMode, MachineTier tier, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(tier, pType, pWorldPosition, pBlockState);
@@ -99,23 +104,35 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachineEntity<Recipe
                     }
                 }
             }
+
+            // We only craft 1x when alloying
+            resultModifier = 1;
         } else if (recipe instanceof SmeltingRecipe) {
             // Remove the cooked item.
+            int smelting = 0;
             for (int i = 0; i < 3; i++) {
                 ItemStack stack = itemHandler.getStackInSlot(i);
                 if (ingredients.get(0).test(stack)) {
                     stack.shrink(1);
                     itemHandler.setStackInSlot(i, stack);
-                    break;
+                    smelting++;
                 }
             }
+
+            // Save the amount we are smelting, it allows multiple smelts in one go
+            resultModifier = smelting;
         }
     }
 
+    // TODO: Ensure this is in line with the stirling generator.
+    private static final int RF_PER_ITEM = ForgeHooks.getBurnTime(new ItemStack(Items.COAL, 1), RecipeType.SMELTING) * 10 / 8;
+
     @Override
     protected int getEnergyCost(Recipe<Container> recipe) {
-        // TODO
-        return 64;
+        if (recipe instanceof SmeltingRecipe) {
+            return RF_PER_ITEM * resultModifier;
+        }
+        return super.getEnergyCost(recipe);
     }
 
     @Override
@@ -135,12 +152,16 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachineEntity<Recipe
     // TODO: A way to fold this back into PoweredCraftingMachineEntity:
     @Override
     protected void assembleRecipe(Recipe<Container> recipe) {
-        getItemHandler().forceInsertItem(3, recipe.assemble(getRecipeWrapper()), false);
+        ItemStack result = recipe.assemble(getRecipeWrapper());
+        result.setCount(result.getCount() * resultModifier);
+        getItemHandler().forceInsertItem(3, result, false);
     }
 
     @Override
     protected boolean canTakeOutput(Recipe<Container> recipe) {
-        return getItemHandler().forceInsertItem(3, recipe.assemble(getRecipeWrapper()), true).isEmpty();
+        ItemStack result = recipe.assemble(getRecipeWrapper());
+        result.setCount(result.getCount() * resultModifier);
+        return getItemHandler().forceInsertItem(3, result, true).isEmpty();
     }
 
     @Nullable
@@ -194,6 +215,7 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachineEntity<Recipe
         if (getTier() != MachineTier.Simple) {
             pTag.putInt("mode", this.mode.ordinal());
         }
+        pTag.putInt("result_modifier", resultModifier);
         super.saveAdditional(pTag);
     }
 
@@ -206,6 +228,7 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachineEntity<Recipe
                 mode = AlloySmelterMode.All;
             }
         }
+        resultModifier = pTag.getInt("result_modifier");
         super.load(pTag);
     }
 }

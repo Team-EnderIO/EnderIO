@@ -14,7 +14,7 @@ public class MachineEnergyStorage implements INBTSerializable<Tag>, IEnergyStora
     // TODO: Provide via constructor
     protected int baseCapacity = 10000;
     protected int baseMaxTransfer = 120;
-    protected int baseMaxConsumption = 120;
+    protected int baseMaxConsumption = 40;
 
     private final Supplier<Optional<ICapacitorData>> capacitorSupplier;
 
@@ -26,7 +26,9 @@ public class MachineEnergyStorage implements INBTSerializable<Tag>, IEnergyStora
 
     @Override
     public int getEnergyStored() {
-        return storedEnergy;
+//        return storedEnergy;
+        // TODO: For testing
+        return getMaxEnergyStored();
     }
 
     @Override
@@ -54,6 +56,10 @@ public class MachineEnergyStorage implements INBTSerializable<Tag>, IEnergyStora
     public void addEnergy(int energy) {
         this.storedEnergy = Math.min(this.storedEnergy + energy, getMaxEnergyStored());
         onEnergyChanged();
+    }
+
+    public boolean hasEnergy(int energy) {
+        return storedEnergy >= energy;
     }
 
     /**

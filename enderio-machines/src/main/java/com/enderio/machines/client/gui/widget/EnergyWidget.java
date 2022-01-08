@@ -18,6 +18,8 @@ import java.util.function.Supplier;
 
 public class EnergyWidget extends AbstractWidget {
 
+    // TODO: Will need some way of displaying no tooltip and instead asking for a capacitor on non-simple machines.
+
     private static final ResourceLocation WIDGETS = EIOMachines.loc("textures/gui/widgets.png");
 
     private final Screen displayOn;
