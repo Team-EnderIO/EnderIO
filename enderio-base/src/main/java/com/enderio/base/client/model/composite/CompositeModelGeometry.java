@@ -56,7 +56,7 @@ public class CompositeModelGeometry implements IModelGeometry<CompositeModelGeom
             if (particleSupplier == null && baked != null && component.particleProvider()) {
                 particleSupplier = baked::getParticleIcon;
             } else if (particleSupplier != null && component.particleProvider()) {
-                EnderIO.LOGGER.warn("Duplicate particle supplier found on model " + modelLocation);
+                EnderIO.LOGGER.warn("Multiple particle suppliers found on model " + modelLocation);
             }
         }
         return new CompositeBakedModel(componentModels, particleSupplier);
