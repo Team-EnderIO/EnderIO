@@ -12,8 +12,8 @@ import javax.annotation.Nullable;
 
 public class PaintedSlabBlock extends SlabBlock implements EntityBlock {
 
-    public PaintedSlabBlock(Properties p_56359_) {
-        super(p_56359_);
+    public PaintedSlabBlock(Properties properties) {
+        super(properties);
     }
 
     @Nullable

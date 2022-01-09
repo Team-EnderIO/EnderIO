@@ -9,7 +9,6 @@ import com.enderio.machines.common.menu.EnchanterMenu;
 import com.enderio.machines.common.recipe.EnchanterRecipe;
 import com.enderio.machines.common.init.MachineRecipes;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -23,17 +22,7 @@ import java.util.Optional;
 public class EnchanterBlockEntity extends MachineBlockEntity {
 
     public EnchanterBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-        super(MachineTier.Standard, pType, pWorldPosition, pBlockState);
-    }
-    
-    @Override
-    public void saveAdditional(CompoundTag pTag) {
-        super.saveAdditional(pTag);
-    }
-    
-    @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
+        super(MachineTier.STANDARD, pType, pWorldPosition, pBlockState);
     }
 
     @Override

@@ -34,7 +34,7 @@ public class AlloyRecipeGenerator extends RecipeProvider {
         build(new ItemStack(EIOItems.DARK_STEEL_INGOT.get()), NonNullList.of(Ingredient.EMPTY, Ingredient.of(Tags.Items.INGOTS_IRON), Ingredient.of(EIOTags.Items.DUSTS_COAL), Ingredient.of(Tags.Items.OBSIDIAN)), 10000, 0.3f, pFinishedRecipeConsumer);
         build(new ItemStack(EIOItems.SOULARIUM_INGOT.get()), NonNullList.of(Ingredient.EMPTY, Ingredient.of(Items.SOUL_SAND, Items.SOUL_SOIL), Ingredient.of(Tags.Items.INGOTS_GOLD)), 10000, 0.3f, pFinishedRecipeConsumer);
         build(new ItemStack(EIOItems.END_STEEL_INGOT.get()), NonNullList.of(Ingredient.EMPTY, Ingredient.of(Tags.Items.END_STONES), Ingredient.of(EIOItems.DARK_STEEL_INGOT.get()), Ingredient.of(Tags.Items.OBSIDIAN)), 20000, 0.3f, pFinishedRecipeConsumer);
-        // What the fuck is iron alloy lmao
+
     }
 
     protected void build(ItemStack result, NonNullList<Ingredient> ingredients, int energy, float experience, Consumer<FinishedRecipe> recipeConsumer) {

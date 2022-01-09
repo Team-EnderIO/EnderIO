@@ -54,12 +54,14 @@ public class CapacitorUtil {
      * @param tooltipComponents
      */
     public static void getTooltip(ItemStack stack, List<Component> tooltipComponents) {
-        // TODO: Crashes client if the item was spawned in as it doesn't have any specializations.
         stack.getCapability(EIOCapabilities.CAPACITOR).ifPresent(cap -> {
-            TranslatableComponent t = new TranslatableComponent(getFlavor(cap.getFlavor()),
-                getGradeText(cap.getSpecializations().values().stream().findFirst().get()),
-                getTypeText(cap.getSpecializations().keySet().stream().findFirst().get()), getBaseText(cap.getBase()));
-            tooltipComponents.add(t);
+            if (cap.getSpecializations().size() > 0) {
+                TranslatableComponent t = new TranslatableComponent(getFlavor(cap.getFlavor()),
+                    getGradeText(cap.getSpecializations().values().iterator().next()),
+                    getTypeText(cap.getSpecializations().keySet().iterator().next()),
+                    getBaseText(cap.getBase()));
+                tooltipComponents.add(t);
+            }
         });
     }
 
@@ -120,8 +122,8 @@ public class CapacitorUtil {
         // Discover all capacitors again.
         event.getRecipeManager()
             .getAllRecipesFor(EIORecipes.Types.CAPACITOR_DATA)
-            .forEach(capacitorDataRecipe -> {
-                lookup.put(capacitorDataRecipe.getCapacitorItem(), capacitorDataRecipe.getCapacitorData());
-            });
+            .forEach(capacitorDataRecipe ->
+                lookup.put(capacitorDataRecipe.getCapacitorItem(), capacitorDataRecipe.getCapacitorData())
+            );
     }
 }

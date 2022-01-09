@@ -61,10 +61,10 @@ public class XPBoostHandler {
     public static void handleBlockBreak(BlockEvent.BreakEvent event) {
         int level = getXPBoostLevel(event.getPlayer());
 
-        if (level >= 0) {//TODO re add notnullhelper checks if needed
-            final @Nonnull BlockState state = event.getState();
-            final @Nonnull Level world = (Level) event.getWorld();
-            final @Nonnull BlockPos pos = event.getPos();
+        if (level >= 0) {
+            BlockState state = event.getState();
+            Level world = (Level) event.getWorld();
+            BlockPos pos = event.getPos();
             final int fortune = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, event.getPlayer().getMainHandItem());
             final int xp = state.getBlock().getExpDrop(state, world, pos, fortune, 0);
             if (xp > 0) {
@@ -93,41 +93,35 @@ public class XPBoostHandler {
         return Math.round(xp * ((float) Math.log10(level + 1) * 2));
     }
 
-    private static int getXPBoostLevel(Entity player) {
-        if (player == null || !(player instanceof Player) || player instanceof FakePlayer) {
-            return -1;
-        }
-        ItemStack weapon = ((LivingEntity) player).getMainHandItem();
-        if (weapon.isEmpty()) {
-            return -1;
-        }
+    private static int getXPBoostLevel(Entity entity) {
 
-        int result = -1;
-        Map<Enchantment, Integer> enchants = EnchantmentHelper.getEnchantments(weapon);
-        for (Enchantment i : enchants.keySet()) {
-            if (i == EIOEnchantments.XP_BOOST.get()) {
-                result = enchants.get(i);
-            } else if (i == Enchantments.SILK_TOUCH) {
-                // No XP boost on silk touch
+        if (entity instanceof Player player && !(player instanceof FakePlayer)) {
+            ItemStack weapon = player.getMainHandItem();
+            if (weapon.isEmpty()) {
                 return -1;
             }
+
+            int result = -1;
+
+            for (Map.Entry<Enchantment, Integer> entry : EnchantmentHelper.getEnchantments(weapon).entrySet()) {
+                if (entry.getKey() == Enchantments.SILK_TOUCH) {
+                    return -1;
+                }
+                if (entry.getKey() == EIOEnchantments.XP_BOOST.get()) {
+                    result = entry.getValue();
+                }
+            }
+            return result;
         }
-        return result;
+        return -1;
     }
 
     private static void scheduleXP(Entity entity, int boost) {
         scheduleXP(entity.level, entity.getX(), entity.getY(), entity.getZ(), boost);
     }
 
-    private static void scheduleXP(final Level world, final double x, final double y, final double z, final int boost) {
-        if (boost <= 0) {
-            return;
-        } //TODO do we need a shedular? really not my cup of thee -Ferri_Arnus
-        //		Scheduler.instance().schedule(20, new Runnable() {
-        //			@Override
-        //			public void run() {
-        world.addFreshEntity(new ExperienceOrb(world, x, y, z, boost));
-        //			}
-        //		});
+    private static void scheduleXP(Level world, double x, double y, double z, int boost) {
+        if (boost > 0)
+            world.addFreshEntity(new ExperienceOrb(world, x, y, z, boost));
     }
 }

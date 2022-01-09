@@ -126,7 +126,6 @@ public class BlockRecipes extends RecipeProvider {
         addMetalBlockRecipe(recipeConsumer, EIOBlocks.DARK_STEEL_BLOCK, EIOItems.DARK_STEEL_INGOT.get());
         addMetalBlockRecipe(recipeConsumer, EIOBlocks.SOULARIUM_BLOCK, EIOItems.SOULARIUM_INGOT.get());
         addMetalBlockRecipe(recipeConsumer, EIOBlocks.END_STEEL_BLOCK, EIOItems.END_STEEL_INGOT.get());
-//        addMetalBlockRecipe(recipeConsumer, EIOBlocks.CONSTRUCTION_ALLOY_BLOCK, EIOItems.CONSTRUCTION_ALLOY_INGOT.get());
     }
 
     private void addMetalBlockRecipe(@Nonnull Consumer<FinishedRecipe> recipeConsumer, BlockEntry<? extends Block> result, ItemLike ingredient) {

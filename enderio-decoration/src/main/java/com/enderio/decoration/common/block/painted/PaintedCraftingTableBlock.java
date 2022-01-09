@@ -23,8 +23,8 @@ public class PaintedCraftingTableBlock extends CraftingTableBlock implements Ent
 
     private static final Component CONTAINER_TITLE = new TranslatableComponent("container.crafting");
 
-    public PaintedCraftingTableBlock(Properties p_52225_) {
-        super(p_52225_);
+    public PaintedCraftingTableBlock(Properties properties) {
+        super(properties);
     }
 
     @Nullable
@@ -35,7 +35,7 @@ public class PaintedCraftingTableBlock extends CraftingTableBlock implements Ent
 
     @Override
     public MenuProvider getMenuProvider(@Nonnull BlockState pState, @Nonnull Level pLevel, @Nonnull BlockPos pPos) {
-        return new SimpleMenuProvider((p_52229_, p_52230_, p_52231_) -> new CraftingMenu(p_52229_, p_52230_, ContainerLevelAccess.create(pLevel, pPos)) {
+        return new SimpleMenuProvider((containerId, inventory, player) -> new CraftingMenu(containerId, inventory, ContainerLevelAccess.create(pLevel, pPos)) {
             @Override
             public boolean stillValid(@Nonnull Player pPlayer) {
                 try {

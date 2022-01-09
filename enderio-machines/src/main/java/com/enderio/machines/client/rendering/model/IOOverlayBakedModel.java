@@ -128,10 +128,6 @@ public class IOOverlayBakedModel implements IDynamicBakedModel {
         return ItemOverrides.EMPTY;
     }
 
-    private static Vec3 v(double x, double y, double z) {
-        return new Vec3(x, y, z);
-    }
-
     public static class Geometry implements IModelGeometry<Geometry> {
         @Override
         public BakedModel bake(IModelConfiguration owner, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform,

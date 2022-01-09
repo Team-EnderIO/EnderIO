@@ -7,7 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 
 public class MachineLang {
-    private static Registrate REGISTRATE = EIOMachines.registrate();
+    private static final Registrate REGISTRATE = EIOMachines.registrate();
 
     public static final TranslatableComponent PROGRESS_TOOLTIP = REGISTRATE.addLang("gui", EnderIO.loc("progress"), "Progress %s%%");
 

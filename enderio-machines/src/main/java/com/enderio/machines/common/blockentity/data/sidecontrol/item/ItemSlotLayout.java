@@ -77,11 +77,11 @@ public class ItemSlotLayout {
     }
 
     public List<Integer> getAll(SlotType type) {
-        return slotTypeMap.entrySet().stream().filter(entry -> entry.getValue() == type).map(Map.Entry::getKey).collect(Collectors.toList());
+        return slotTypeMap.entrySet().stream().filter(entry -> entry.getValue() == type).map(Map.Entry::getKey).toList();
     }
 
     public Optional<Integer> getFirst(SlotType type) {
-        if (getAll(type).size() > 0) {
+        if (!getAll(type).isEmpty()) {
             return Optional.of(getAll(type).get(0));
         }
         return Optional.empty();

@@ -5,7 +5,7 @@ import net.minecraft.client.renderer.block.model.ItemTransform;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 
 public class ItemTransformUtil {
-    public static ItemTransforms DEFAULT;
+    public static final ItemTransforms DEFAULT;
 
     static {
         ItemTransform tpLeft = getTransform(ItemTransforms.TransformType.THIRD_PERSON_LEFT_HAND);

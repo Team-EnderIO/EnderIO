@@ -48,7 +48,7 @@ public class EnderIO {
     public EnderIO() {
         // Create configs subdirectory
         try {
-            Files.createDirectories(FMLPaths.CONFIGDIR.get().resolve("enderio"));
+            Files.createDirectories(FMLPaths.CONFIGDIR.get().resolve(MODID));
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -152,11 +152,11 @@ public class EIOItems {
 
     // region Infinity
 
-    public static ItemEntry<MaterialItem> INFINITY_CRYSTAL = materialItem("infinity_crystal").register();
+    public static final ItemEntry<MaterialItem> INFINITY_CRYSTAL = materialItem("infinity_crystal").register();
 
     public static final ItemEntry<MaterialItem> GRAINS_OF_INFINITY = materialItem("grains_of_infinity").lang("Grains of Infinity").register();
 
-    public static ItemEntry<MaterialItem> INFINITY_ROD = materialItem("infinity_rod").register();
+    public static final ItemEntry<MaterialItem> INFINITY_ROD = materialItem("infinity_rod").register();
 
     // endregion
 
@@ -228,31 +228,31 @@ public class EIOItems {
 
     // region Misc Materials
 
-    public static ItemEntry<MaterialItem> PHOTOVOLTAIC_PLATE = materialItem("photovoltaic_plate")
+    public static final ItemEntry<MaterialItem> PHOTOVOLTAIC_PLATE = materialItem("photovoltaic_plate")
         .model((ctx, prov) -> prov.withExistingParent(prov.name(ctx), prov.mcLoc("block/pressure_plate_up")).texture("texture", prov.itemTexture(ctx)))
         .register();
 
-    public static ItemEntry<MaterialItem> NUTRITIOUS_STICK = materialItem("nutritious_stick").register();
+    public static final ItemEntry<MaterialItem> NUTRITIOUS_STICK = materialItem("nutritious_stick").register();
 
-    public static ItemEntry<MaterialItem> PLANT_MATTER_GREEN = materialItem("plant_matter_green").lang("Clippings and Trimmings").register();
+    public static final ItemEntry<MaterialItem> PLANT_MATTER_GREEN = materialItem("plant_matter_green").lang("Clippings and Trimmings").register();
 
-    public static ItemEntry<MaterialItem> PLANT_MATTER_BROWN = materialItem("plant_matter_brown").lang("Twigs and Prunings").register();
+    public static final ItemEntry<MaterialItem> PLANT_MATTER_BROWN = materialItem("plant_matter_brown").lang("Twigs and Prunings").register();
 
-    public static ItemEntry<MaterialItem> GLIDER_WING = materialItem("glider_wing").register();
-    public static ItemEntry<MaterialItem> GLIDER_WINGS = materialItem("glider_wings").register();
+    public static final ItemEntry<MaterialItem> GLIDER_WING = materialItem("glider_wing").register();
+    public static final ItemEntry<MaterialItem> GLIDER_WINGS = materialItem("glider_wings").register();
 
-    public static ItemEntry<MaterialItem> ANIMAL_TOKEN = materialItemGlinted("animal_token").register();
-    public static ItemEntry<MaterialItem> MONSTER_TOKEN = materialItemGlinted("monster_token").register();
-    public static ItemEntry<MaterialItem> PLAYER_TOKEN = materialItemGlinted("player_token").register();
+    public static final ItemEntry<MaterialItem> ANIMAL_TOKEN = materialItemGlinted("animal_token").register();
+    public static final ItemEntry<MaterialItem> MONSTER_TOKEN = materialItemGlinted("monster_token").register();
+    public static final ItemEntry<MaterialItem> PLAYER_TOKEN = materialItemGlinted("player_token").register();
 
-    public static ItemEntry<MaterialItem> UNFIRED_DEATH_URN = materialItem("unfired_death_urn").register();
-    public static ItemEntry<MaterialItem> CAKE_BASE = materialItem("cake_base").register();
-    public static ItemEntry<MaterialItem> BLACK_PAPER = materialItem("black_paper").register();
-    public static ItemEntry<MaterialItem> CLAYED_GLOWSTONE = materialItem("clayed_glowstone").register();
-    public static ItemEntry<MaterialItem> NETHERCOTTA = materialItem("nethercotta").register();
-    public static ItemEntry<MaterialItem> REDSTONE_FILTER_BASE = materialItem("redstone_filter_base").register();
-    public static ItemEntry<MaterialItem> REMOTE_AWARENESS_UPGRADE = materialItem("remote_awareness_upgrade").register();
-    public static ItemEntry<MaterialItem> INGOT_ENDERIUM_BASE = materialItem("ingot_enderium_base").register(); // TODO: Depend on enderium ingot tag
+    public static final ItemEntry<MaterialItem> UNFIRED_DEATH_URN = materialItem("unfired_death_urn").register();
+    public static final ItemEntry<MaterialItem> CAKE_BASE = materialItem("cake_base").register();
+    public static final ItemEntry<MaterialItem> BLACK_PAPER = materialItem("black_paper").register();
+    public static final ItemEntry<MaterialItem> CLAYED_GLOWSTONE = materialItem("clayed_glowstone").register();
+    public static final ItemEntry<MaterialItem> NETHERCOTTA = materialItem("nethercotta").register();
+    public static final ItemEntry<MaterialItem> REDSTONE_FILTER_BASE = materialItem("redstone_filter_base").register();
+    public static final ItemEntry<MaterialItem> REMOTE_AWARENESS_UPGRADE = materialItem("remote_awareness_upgrade").register();
+    public static final ItemEntry<MaterialItem> INGOT_ENDERIUM_BASE = materialItem("ingot_enderium_base").register(); // TODO: Depend on enderium ingot tag
 
     public static final ItemEntry<BrokenSpawnerItem> BROKEN_SPAWNER = REGISTRATE
         .item("broken_spawner", BrokenSpawnerItem::new)
@@ -264,23 +264,23 @@ public class EIOItems {
 
     // region GrindingBalls
 
-    public static ItemEntry<MaterialItem> SOULARIUM_BALL = materialItem("soularium_ball").register();
+    public static final ItemEntry<MaterialItem> SOULARIUM_BALL = materialItem("soularium_ball").register();
 
-    public static ItemEntry<MaterialItem> CONDUCTIVE_IRON_BALL = materialItem("conductive_iron_ball").register();
+    public static final ItemEntry<MaterialItem> CONDUCTIVE_IRON_BALL = materialItem("conductive_iron_ball").register();
 
-    public static ItemEntry<MaterialItem> PULSATING_IRON_BALL = materialItem("pulsating_iron_ball").register();
+    public static final ItemEntry<MaterialItem> PULSATING_IRON_BALL = materialItem("pulsating_iron_ball").register();
 
-    public static ItemEntry<MaterialItem> REDSTONE_ALLOY_BALL = materialItem("redstone_alloy_ball").register();
+    public static final ItemEntry<MaterialItem> REDSTONE_ALLOY_BALL = materialItem("redstone_alloy_ball").register();
 
-    public static ItemEntry<MaterialItem> ENERGETIC_ALLOY_BALL = materialItem("energetic_alloy_ball").register();
+    public static final ItemEntry<MaterialItem> ENERGETIC_ALLOY_BALL = materialItem("energetic_alloy_ball").register();
 
-    public static ItemEntry<MaterialItem> VIBRANT_ALLOY_BALL = materialItem("vibrant_alloy_ball").register();
+    public static final ItemEntry<MaterialItem> VIBRANT_ALLOY_BALL = materialItem("vibrant_alloy_ball").register();
 
-    public static ItemEntry<MaterialItem> ELECTRICAL_STEEL_BALL = materialItem("electrical_steel_ball").register();
+    public static final ItemEntry<MaterialItem> ELECTRICAL_STEEL_BALL = materialItem("electrical_steel_ball").register();
 
-    public static ItemEntry<MaterialItem> DARK_STEEL_BALL = materialItem("dark_steel_ball").register();
+    public static final ItemEntry<MaterialItem> DARK_STEEL_BALL = materialItem("dark_steel_ball").register();
 
-    public static ItemEntry<MaterialItem> END_STEEL_BALL = materialItem("end_steel_ball").register();
+    public static final ItemEntry<MaterialItem> END_STEEL_BALL = materialItem("end_steel_ball").register();
 
     // endregion
 
@@ -302,7 +302,7 @@ public class EIOItems {
     //        .group(() -> EnderIO.TAB_MAIN));
     //  }
 
-    private static ItemBuilder<MaterialItem, Registrate> materialItemGlinted(String name) {
+    private static final ItemBuilder<MaterialItem, Registrate> materialItemGlinted(String name) {
         return REGISTRATE.item(name, props -> new MaterialItem(props, true)).tab(() -> EIOCreativeTabs.MAIN);
     }
 
@@ -312,14 +312,14 @@ public class EIOItems {
 
     // TODO: Will need sorted once we have added more.
 
-    public static ItemEntry<SoulVialItem> EMPTY_SOUL_VIAL = groupedItem("empty_soul_vial", SoulVialItem::new, () -> EIOCreativeTabs.GEAR);
+    public static final ItemEntry<SoulVialItem> EMPTY_SOUL_VIAL = groupedItem("empty_soul_vial", SoulVialItem::new, () -> EIOCreativeTabs.GEAR);
 
-    public static ItemEntry<SoulVialItem> FILLED_SOUL_VIAL = REGISTRATE
+    public static final ItemEntry<SoulVialItem> FILLED_SOUL_VIAL = REGISTRATE
         .item("filled_soul_vial", SoulVialItem::new)
         .properties(props -> props.stacksTo(1))
         .register();
 
-    public static ItemEntry<EnderiosItem> ENDERIOS = REGISTRATE
+    public static final ItemEntry<EnderiosItem> ENDERIOS = REGISTRATE
         .item("enderios", EnderiosItem::new)
         .tab(() -> EIOCreativeTabs.MAIN)
         .lang("\"Enderios\"")
@@ -329,36 +329,36 @@ public class EIOItems {
     // endregion
 
     // region Tools
-    public static ItemEntry<YetaWrenchItem> YETA_WRENCH = REGISTRATE
+    public static final ItemEntry<YetaWrenchItem> YETA_WRENCH = REGISTRATE
         .item("yeta_wrench", YetaWrenchItem::new)
         .tab(() -> EIOCreativeTabs.GEAR)
         .properties(props -> props.stacksTo(1))
         .tag(EIOTags.Items.WRENCH)
         .register();
 
-    public static ItemEntry<LocationPrintoutItem> LOCATION_PRINTOUT = REGISTRATE
+    public static final ItemEntry<LocationPrintoutItem> LOCATION_PRINTOUT = REGISTRATE
         .item("location_printout", LocationPrintoutItem::new)
         .tab(() -> EIOCreativeTabs.GEAR)
         .properties(props -> props.stacksTo(1))
         .register();
 
-    public static ItemEntry<CoordinateSelectorItem> COORDINATE_SELECTOR = REGISTRATE
+    public static final ItemEntry<CoordinateSelectorItem> COORDINATE_SELECTOR = REGISTRATE
         .item("coordinate_selector", CoordinateSelectorItem::new)
         .tab(() -> EIOCreativeTabs.GEAR)
         .properties(props -> props.stacksTo(1))
         .register();
 
-    public static ItemEntry<LevitationStaffItem> LEVITATION_STAFF = REGISTRATE
+    public static final ItemEntry<LevitationStaffItem> LEVITATION_STAFF = REGISTRATE
         .item("staff_of_levity", LevitationStaffItem::new)
         .tab(() -> EIOCreativeTabs.GEAR)
         .register();
 
-    public static ItemEntry<ElectromagnetItem> ELECTROMAGNET = REGISTRATE
+    public static final ItemEntry<ElectromagnetItem> ELECTROMAGNET = REGISTRATE
         .item("electromagnet", ElectromagnetItem::new)
         .tab(() -> EIOCreativeTabs.GEAR)
         .register();
 
-    public static ItemEntry<ColdFireIgniter> COLD_FIRE_IGNITER = REGISTRATE
+    public static final ItemEntry<ColdFireIgniter> COLD_FIRE_IGNITER = REGISTRATE
         .item("cold_fire_igniter", ColdFireIgniter::new)
         .defaultModel()
         .tab(() -> EIOCreativeTabs.GEAR)
@@ -372,7 +372,7 @@ public class EIOItems {
         new ForgeTier(3, 2000, 8.0F, 3, 25, EIOTags.Blocks.DARK_STEEL_TIER, () -> Ingredient.of(EIOItems.DARK_STEEL_INGOT.get())),
         EnderIO.loc("dark_steel_tier"), List.of(Tiers.DIAMOND), List.of(Tiers.NETHERITE));
 
-    public static ItemEntry<DarkSteelPickaxeItem> DARK_STEEL_PICKAXE = REGISTRATE
+    public static final ItemEntry<DarkSteelPickaxeItem> DARK_STEEL_PICKAXE = REGISTRATE
         .item("dark_steel_pickaxe", DarkSteelPickaxeItem::new)
         .tab(() -> EIOCreativeTabs.GEAR)
         .onRegister(item -> DarkSteelUpgradeRegistry
@@ -381,7 +381,7 @@ public class EIOItems {
                 ExplosiveUpgrade.NAME, ExplosivePenetrationUpgrade.NAME))
         .register();
 
-    public static ItemEntry<DarkSteelAxeItem> DARK_STEEL_AXE = REGISTRATE
+    public static final ItemEntry<DarkSteelAxeItem> DARK_STEEL_AXE = REGISTRATE
         .item("dark_steel_axe", DarkSteelAxeItem::new)
         .tab(() -> EIOCreativeTabs.GEAR)
         .onRegister(item -> DarkSteelUpgradeRegistry
@@ -392,67 +392,67 @@ public class EIOItems {
 
     private static final String UPGRADE_TEXT = " Upgrade";
 
-    public static ItemEntry<MaterialItem> DARK_STEEL_UPGRADE_BLANK = REGISTRATE
+    public static final ItemEntry<MaterialItem> DARK_STEEL_UPGRADE_BLANK = REGISTRATE
         .item("dark_steel_upgrade_blank", props -> new MaterialItem(props, false))
         .tab(() -> EIOCreativeTabs.GEAR)
         .lang("Blank" + UPGRADE_TEXT)
         .register();
 
-    public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_1 = REGISTRATE
+    public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_1 = REGISTRATE
         .item("dark_steel_upgrade_empowered_1",
             properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgradeTier.ONE.getActivationCost(), EmpoweredUpgradeTier.ONE.getFactory()))
         .tab(() -> EIOCreativeTabs.GEAR)
         .lang("Empowered" + UPGRADE_TEXT)
         .register();
 
-    public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_2 = REGISTRATE
+    public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_2 = REGISTRATE
         .item("dark_steel_upgrade_empowered_2",
             properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgradeTier.TWO.getActivationCost(), EmpoweredUpgradeTier.TWO.getFactory()))
         .tab(() -> EIOCreativeTabs.GEAR)
         .lang("Empowered II" + UPGRADE_TEXT)
         .register();
 
-    public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_3 = REGISTRATE
+    public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_3 = REGISTRATE
         .item("dark_steel_upgrade_empowered_3", 
             properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgradeTier.THREE.getActivationCost(), EmpoweredUpgradeTier.THREE.getFactory()))
         .tab(() -> EIOCreativeTabs.GEAR)
         .lang("Empowered III" + UPGRADE_TEXT)
         .register();
 
-    public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_4 = REGISTRATE
+    public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_4 = REGISTRATE
         .item("dark_steel_upgrade_empowered_4", 
             properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgradeTier.FOUR.getActivationCost(), EmpoweredUpgradeTier.FOUR.getFactory()))
         .tab(() -> EIOCreativeTabs.GEAR)
         .lang("Empowered IV" + UPGRADE_TEXT)
         .register();
 
-    public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_SPOON = REGISTRATE
+    public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_SPOON = REGISTRATE
         .item("dark_steel_upgrade_spoon", properties -> new DarkSteelUpgradeItem(properties, BaseConfig.COMMON.DARK_STEEL.SPOON_ACTIVATION_COST, SpoonUpgrade::new))
         .tab(() -> EIOCreativeTabs.GEAR)
         .lang("Spoon" + UPGRADE_TEXT)
         .register();
 
-    public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_FORK = REGISTRATE
+    public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_FORK = REGISTRATE
         .item("dark_steel_upgrade_fork", properties -> new DarkSteelUpgradeItem(properties, BaseConfig.COMMON.DARK_STEEL.FORK_ACTIVATION_COST, ForkUpgrade::new))
         .tab(() -> EIOCreativeTabs.GEAR)
         .lang("Fork" + UPGRADE_TEXT)
         .register();
 
-    public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_DIRECT = REGISTRATE
+    public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_DIRECT = REGISTRATE
         .item("dark_steel_upgrade_direct",
             properties -> new DarkSteelUpgradeItem(properties, BaseConfig.COMMON.DARK_STEEL.DIRECT_ACTIVATION_COST, DirectUpgrade::new))
         .tab(() -> EIOCreativeTabs.GEAR)
         .lang("Direct" + UPGRADE_TEXT)
         .register();
 
-    public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_1 = REGISTRATE
+    public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_1 = REGISTRATE
         .item("dark_steel_upgrade_tnt", properties -> new DarkSteelUpgradeItem(properties, ExplosiveUpgradeTier.ONE.getActivationCost(),
             ExplosiveUpgradeTier.ONE.getFactory()))
         .tab(() -> EIOCreativeTabs.GEAR)
         .lang("Explosive I" + UPGRADE_TEXT)
         .register();
 
-    public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_2 = REGISTRATE
+    public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_2 = REGISTRATE
         .item("dark_steel_upgrade_tnt1", properties -> new DarkSteelUpgradeItem(properties, ExplosiveUpgradeTier.TWO.getActivationCost(),
             ExplosiveUpgradeTier.TWO.getFactory()))
         .tab(() -> EIOCreativeTabs.GEAR)
@@ -460,14 +460,14 @@ public class EIOItems {
         .register();
 
     //TODO: Textures for dark_steel_upgrade_penetration_1 and dark_steel_upgrade_penetration_2 needed
-    public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_1 = REGISTRATE
+    public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_1 = REGISTRATE
         .item("dark_steel_upgrade_penetration_1", properties -> new DarkSteelUpgradeItem(properties, ExplosivePenetrationUpgradeTier.ONE.getActivationCost(),
             ExplosivePenetrationUpgradeTier.ONE.getFactory()))
         .tab(() -> EIOCreativeTabs.GEAR)
         .lang("Explosive Penetration I" + UPGRADE_TEXT)
         .register();
 
-    public static ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_2 = REGISTRATE
+    public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_2 = REGISTRATE
         .item("dark_steel_upgrade_penetration_2", properties -> new DarkSteelUpgradeItem(properties, ExplosivePenetrationUpgradeTier.TWO.getActivationCost(),
             ExplosivePenetrationUpgradeTier.TWO.getFactory()))
         .tab(() -> EIOCreativeTabs.GEAR)
@@ -486,13 +486,13 @@ public class EIOItems {
 
     // region Creative Tab Icons
 
-    public static ItemEntry<EnderfaceItem> CREATIVE_ICON_NONE = dumbItem("enderface_none", EnderfaceItem::new);
-    public static ItemEntry<EnderfaceItem> CREATIVE_ICON_ITEMS = dumbItem("enderface_items", EnderfaceItem::new);
-    public static ItemEntry<EnderfaceItem> CREATIVE_ICON_MATERIALS = dumbItem("enderface_materials", EnderfaceItem::new);
-    public static ItemEntry<EnderfaceItem> CREATIVE_ICON_MACHINES = dumbItem("enderface_machines", EnderfaceItem::new);
-    public static ItemEntry<EnderfaceItem> CREATIVE_ICON_CONDUITS = dumbItem("enderface_conduits", EnderfaceItem::new);
-    public static ItemEntry<EnderfaceItem> CREATIVE_ICON_MOBS = dumbItem("enderface_mobs", EnderfaceItem::new);
-    public static ItemEntry<EnderfaceItem> CREATIVE_ICON_INVPANEL = dumbItem("enderface_invpanel", EnderfaceItem::new);
+    public static final ItemEntry<EnderfaceItem> CREATIVE_ICON_NONE = dumbItem("enderface_none", EnderfaceItem::new);
+    public static final ItemEntry<EnderfaceItem> CREATIVE_ICON_ITEMS = dumbItem("enderface_items", EnderfaceItem::new);
+    public static final ItemEntry<EnderfaceItem> CREATIVE_ICON_MATERIALS = dumbItem("enderface_materials", EnderfaceItem::new);
+    public static final ItemEntry<EnderfaceItem> CREATIVE_ICON_MACHINES = dumbItem("enderface_machines", EnderfaceItem::new);
+    public static final ItemEntry<EnderfaceItem> CREATIVE_ICON_CONDUITS = dumbItem("enderface_conduits", EnderfaceItem::new);
+    public static final ItemEntry<EnderfaceItem> CREATIVE_ICON_MOBS = dumbItem("enderface_mobs", EnderfaceItem::new);
+    public static final ItemEntry<EnderfaceItem> CREATIVE_ICON_INVPANEL = dumbItem("enderface_invpanel", EnderfaceItem::new);
 
     // endregion
 

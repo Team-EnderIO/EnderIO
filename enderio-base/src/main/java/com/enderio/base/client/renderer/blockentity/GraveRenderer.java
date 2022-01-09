@@ -34,7 +34,7 @@ public class GraveRenderer implements BlockEntityRenderer<BlockEntity> {
         Direction direction = null;//TODO if we make the grave rotatable
         SkullModelBase skullmodelbase = new SkullModel(this.context.bakeLayer(ModelLayers.PLAYER_HEAD));
         AtomicReference<RenderType> rendertype = new AtomicReference<>(RenderType.entityCutoutNoCull(DefaultPlayerSkin.getDefaultSkin()));
-        grave.getCapability(EIOCapabilities.OWNER).ifPresent((cap) -> {
+        grave.getCapability(EIOCapabilities.OWNER).ifPresent(cap -> {
             if (cap.getProfile() != null) {
                 rendertype.set(SkullBlockRenderer.getRenderType(SkullBlock.Types.PLAYER, cap.getProfile()));
             }

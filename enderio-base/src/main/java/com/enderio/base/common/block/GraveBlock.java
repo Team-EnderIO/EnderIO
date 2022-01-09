@@ -21,9 +21,8 @@ import net.minecraft.world.phys.BlockHitResult;
 
 public class GraveBlock extends Block implements EntityBlock {
 
-    public GraveBlock(Properties p_49795_) {
-        super(p_49795_);
-        // TODO Auto-generated constructor stub
+    public GraveBlock(Properties properties) {
+        super(properties);
     }
 
     @Override

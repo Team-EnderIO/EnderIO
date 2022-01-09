@@ -93,15 +93,15 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
 
                 // Get the entity type and verify it isn't blacklisted
                 switch (EntityCaptureUtils.getCapturableStatus(pInteractionTarget)) {
-                case Boss -> {
+                case BOSS -> {
                     pPlayer.displayClientMessage(EIOLang.SOUL_VIAL_ERROR_BOSS, true);
                     return InteractionResult.FAIL;
                 }
-                case Blacklisted -> {
+                case BLACKLISTED -> {
                     pPlayer.displayClientMessage(EIOLang.SOUL_VIAL_ERROR_BLACKLISTED, true);
                     return InteractionResult.FAIL;
                 }
-                case Incompatible -> {
+                case INCOMPATIBLE -> {
                     pPlayer.displayClientMessage(EIOLang.SOUL_VIAL_ERROR_FAILED, true);
                     return InteractionResult.FAIL;
                 }

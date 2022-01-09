@@ -1,6 +1,5 @@
 package com.enderio.base.client.renderer.item;
 
-import com.enderio.base.EnderIO;
 import com.enderio.base.common.util.PoseStackHelper;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;

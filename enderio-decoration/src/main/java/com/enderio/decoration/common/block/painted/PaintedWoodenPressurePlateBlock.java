@@ -12,8 +12,8 @@ import javax.annotation.Nullable;
 
 public class PaintedWoodenPressurePlateBlock extends PressurePlateBlock implements EntityBlock {
 
-    public PaintedWoodenPressurePlateBlock(Properties p_52225_) {
-        super(Sensitivity.EVERYTHING, p_52225_);
+    public PaintedWoodenPressurePlateBlock(Properties properties) {
+        super(Sensitivity.EVERYTHING, properties);
     }
 
     @Nullable

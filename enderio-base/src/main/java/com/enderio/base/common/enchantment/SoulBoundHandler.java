@@ -28,7 +28,7 @@ public class SoulBoundHandler {
         if (event.getEntityLiving().level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
             return;
         }
-        ArrayList<ItemStack> soulitems = new ArrayList<ItemStack>();
+        ArrayList<ItemStack> soulItems = new ArrayList<>();
         if (event.getEntityLiving() instanceof Player player) {
             Iterator<ItemEntity> iter = event.getDrops().iterator();
             while (iter.hasNext()) {
@@ -38,13 +38,13 @@ public class SoulBoundHandler {
                     if (player.addItem(item)) {
                         iter.remove();
                     }//TODO More detailed and better item storage.
-                    soulitems.add(item);
+                    soulItems.add(item);
                 }
             }
-            if (soulitems.isEmpty()) {
+            if (soulItems.isEmpty()) {
                 return;
             }
-            soulitems.forEach((item) -> player.addItem(item));
+            soulItems.forEach(player::addItem);
         }
     }
 

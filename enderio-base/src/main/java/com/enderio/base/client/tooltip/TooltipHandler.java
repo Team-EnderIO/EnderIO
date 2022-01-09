@@ -25,12 +25,12 @@ public class TooltipHandler {
     public static void addTooltips(ItemTooltipEvent evt) {
         ItemStack forItem = evt.getItemStack();
         IAdvancedTooltipProvider provider = null;
-        if(forItem.getItem() instanceof IAdvancedTooltipProvider p) {
+        if (forItem.getItem() instanceof IAdvancedTooltipProvider p) {
             provider = p;
-        } else if(forItem.getItem() instanceof BlockItem bi && bi.getBlock() instanceof  IAdvancedTooltipProvider p) {
+        } else if(forItem.getItem() instanceof BlockItem bi && bi.getBlock() instanceof IAdvancedTooltipProvider p) {
             provider = p;
         }
-        if(provider != null) {
+        if (provider != null) {
             addTooltips(provider, forItem, evt.getPlayer(), evt.getToolTip(), shouldShowAdvancedTooltips());
         }
     }

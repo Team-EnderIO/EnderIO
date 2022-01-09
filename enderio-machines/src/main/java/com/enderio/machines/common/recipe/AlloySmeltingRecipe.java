@@ -51,24 +51,22 @@ public class AlloySmeltingRecipe extends MachineRecipe<AlloySmeltingRecipe, Cont
         int matches = 0;
 
         for (int i = 0; i < 3; i++) {
-            if (matchArray[i])
-                continue;
-
             for (int j = 0; j < 3; j++) {
                 if (j < ingredients.size()) {
                     if (ingredients.get(j).test(pContainer.getItem(i))) {
                         matchArray[i] = true;
                         matches++;
                     }
-                } else if (pContainer.getItem(i).isEmpty())
+                } else if (pContainer.getItem(i).isEmpty()) {
                     matchArray[i] = true;
+                }
             }
 
             for (Ingredient ingredient : ingredients) {
-                if (ingredient.test(pContainer.getItem(i)))
+                if (ingredient.test(pContainer.getItem(i))
+                    || ingredient == Ingredient.EMPTY && pContainer.getItem(i).isEmpty()) {
                     matchArray[i] = true;
-                else if (ingredient == Ingredient.EMPTY && pContainer.getItem(i).isEmpty())
-                    matchArray[i] = true;
+                }
             }
         }
 

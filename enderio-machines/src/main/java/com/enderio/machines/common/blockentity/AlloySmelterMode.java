@@ -8,9 +8,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public enum AlloySmelterMode implements IIcon {
-    Furnace(false, true, MachineLang.ALLOY_SMELTER_MODE_FURNACE),
-    All(true, true, MachineLang.ALLOY_SMELTER_MODE_ALL),
-    Alloys(true, false, MachineLang.ALLOY_SMELTER_MODE_ALLOY);
+    FURNACE(false, true, MachineLang.ALLOY_SMELTER_MODE_FURNACE),
+    ALL(true, true, MachineLang.ALLOY_SMELTER_MODE_ALL),
+    ALLOYS(true, false, MachineLang.ALLOY_SMELTER_MODE_ALLOY);
 
     private static final ResourceLocation TEXTURE = EnderIO.loc("textures/gui/icons.png"); // TODO: Redo widgets
     private static final Vector2i SIZE = new Vector2i(12, 12);

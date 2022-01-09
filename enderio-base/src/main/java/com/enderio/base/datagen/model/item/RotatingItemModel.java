@@ -7,6 +7,7 @@ import net.minecraftforge.client.model.generators.ModelBuilder;
 import net.minecraftforge.client.model.generators.ModelFile;
 
 public class RotatingItemModel {
+
     // No longer using registrate as once we move EnderCore away, we're not going to have it.
     public static void create(Item item, ItemModelProvider prov) {
         // json so the BEWLR is used + perspectives

@@ -130,7 +130,7 @@ public abstract class PoweredToggledItem extends Item implements IMultiCapabilit
     public int getBarWidth(ItemStack pStack) {
         return pStack
             .getCapability(CapabilityEnergy.ENERGY)
-            .map(energyStorage -> Math.round((float)energyStorage.getEnergyStored() * 13.0F / (float)energyStorage.getMaxEnergyStored()))
+            .map(energyStorage -> Math.round(energyStorage.getEnergyStored() * 13.0F / energyStorage.getMaxEnergyStored()))
             .orElse(0);
     }
 

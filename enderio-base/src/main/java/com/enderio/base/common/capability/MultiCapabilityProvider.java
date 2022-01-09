@@ -54,13 +54,10 @@ public class MultiCapabilityProvider implements ICapabilitySerializable<Compound
         CompoundTag tag = new CompoundTag();
 
         for (var entry : serializedCaps.entrySet()) {
-            entry
-                .getValue()
-                .ifPresent(capability -> {
-                    tag.put(getSerializedName(entry.getKey(), capability), capability.serializeNBT());
-                });
+            entry.getValue().ifPresent(
+                capability -> tag.put(getSerializedName(entry.getKey(), capability), capability.serializeNBT())
+            );
         }
-
         return tag;
     }
 
