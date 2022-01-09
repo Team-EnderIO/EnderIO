@@ -1,0 +1,19 @@
+{
+  "type": "enderio_machines:alloy_smelting",
+  "ingredients": [
+    {
+      "tag": "forge:end_stones"
+    },
+    {
+      "item": "enderio:dark_steel_ingot"
+    },
+    {
+      "tag": "forge:obsidian"
+    }
+  ],
+  "result": {
+    "item": "enderio:end_steel_ingot"
+  },
+  "energy": 20000,
+  "experience": 0.3
+}

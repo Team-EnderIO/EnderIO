@@ -1,5 +1,6 @@
 package com.enderio.decoration.common.entity;
 
+import com.enderio.decoration.common.init.DecorEntities;
 import com.enderio.decoration.common.util.PaintUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -7,6 +8,8 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -14,18 +17,19 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.entity.IEntityAdditionalSpawnData;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
 
 public class PaintedSandEntity extends FallingBlockEntity implements IEntityAdditionalSpawnData {
 
-    public PaintedSandEntity(EntityType<? extends FallingBlockEntity> p_31950_, Level level) {
-        super(p_31950_, level);
+    public PaintedSandEntity(EntityType<? extends FallingBlockEntity> type, Level level) {
+        super(type, level);
     }
 
-    public PaintedSandEntity(Level p_31953_, double p_31954_, double p_31955_, double p_31956_, BlockState p_31957_) {
-        super(p_31953_, p_31954_, p_31955_, p_31956_, p_31957_);
+    public PaintedSandEntity(Level level, double x, double y, double z, BlockState state) {
+        super(level, x, y, z, state);
     }
 
     @Nonnull
@@ -65,5 +69,17 @@ public class PaintedSandEntity extends FallingBlockEntity implements IEntityAddi
         Block block = ForgeRegistries.BLOCKS.getValue(rl);
         if (block != Blocks.AIR)
             setPaint(block);
+    }
+
+    @Nullable
+    @Override
+    public ItemEntity spawnAtLocation(ItemStack stack, float offsetY) {
+        // Add block entity NBT to item stack
+        if (!stack.isEmpty() && blockData != null) {
+            CompoundTag itemNbt = new CompoundTag();
+            itemNbt.put("BlockEntityTag", blockData);
+            stack.setTag(itemNbt);
+        }
+        return super.spawnAtLocation(stack, offsetY);
     }
 }

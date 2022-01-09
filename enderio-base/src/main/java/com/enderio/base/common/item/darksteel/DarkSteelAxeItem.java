@@ -1,7 +1,7 @@
 package com.enderio.base.common.item.darksteel;
 
 import com.enderio.base.common.capability.darksteel.DarkSteelUpgradeable;
-import com.enderio.base.common.item.EIOItems;
+import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.ForkUpgrade;
 import com.enderio.base.common.lang.EIOLang;

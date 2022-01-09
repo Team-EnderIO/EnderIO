@@ -21,7 +21,7 @@ public class EIOPressurePlateBlock extends PressurePlateBlock {
         int getSignalStrength(Level pLevel, BlockPos pPos);
     }
 
-    public static Detector PLAYER = (pLevel, pPos) -> {
+    public static final Detector PLAYER = (pLevel, pPos) -> {
         net.minecraft.world.phys.AABB aabb = TOUCH_AABB.move(pPos);
         List<? extends Entity> list;
         list = pLevel.getEntitiesOfClass(Player.class, aabb);
@@ -33,7 +33,7 @@ public class EIOPressurePlateBlock extends PressurePlateBlock {
         return 0;
     };
 
-    public static Detector HOSTILE_MOB = (pLevel, pPos) -> {
+    public static final Detector HOSTILE_MOB = (pLevel, pPos) -> {
         net.minecraft.world.phys.AABB aabb = TOUCH_AABB.move(pPos);
         List<LivingEntity> list;
         list = pLevel.getEntitiesOfClass(LivingEntity.class, aabb);

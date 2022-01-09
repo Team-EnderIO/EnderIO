@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/pressure_plate_down",
   "textures": {
-    "texture": "enderio:block/block_soularium_pressure_plate"
+    "texture": "enderio:block/soularium_pressure_plate"
   }
 }

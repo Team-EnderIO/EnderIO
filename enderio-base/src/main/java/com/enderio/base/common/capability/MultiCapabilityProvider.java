@@ -54,13 +54,10 @@ public class MultiCapabilityProvider implements ICapabilitySerializable<Compound
         CompoundTag tag = new CompoundTag();
 
         for (var entry : serializedCaps.entrySet()) {
-            entry
-                .getValue()
-                .ifPresent(capability -> {
-                    tag.put(getSerializedName(entry.getKey(), capability), capability.serializeNBT());
-                });
+            entry.getValue().ifPresent(
+                capability -> tag.put(getSerializedName(entry.getKey(), capability), capability.serializeNBT())
+            );
         }
-
         return tag;
     }
 
@@ -85,7 +82,7 @@ public class MultiCapabilityProvider implements ICapabilitySerializable<Compound
         }
 
         if (key.startsWith("pend_")) {
-            EnderIO.LOGGER.warning("A INamedNBTSerializable didn't return a valid name, a pending name has been mapped instead!");
+            EnderIO.LOGGER.warn("A INamedNBTSerializable didn't return a valid name, a pending name has been mapped instead!");
         }
 
         return key;

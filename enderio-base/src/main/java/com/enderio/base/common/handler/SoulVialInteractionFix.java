@@ -1,7 +1,7 @@
 package com.enderio.base.common.handler;
 
 import com.enderio.base.EnderIO;
-import com.enderio.base.common.item.EIOItems;
+import com.enderio.base.common.init.EIOItems;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.horse.AbstractChestedHorse;
 import net.minecraft.world.entity.npc.Villager;

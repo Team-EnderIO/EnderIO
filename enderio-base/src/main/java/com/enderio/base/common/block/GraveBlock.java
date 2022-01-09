@@ -1,8 +1,8 @@
 package com.enderio.base.common.block;
 
-import com.enderio.base.common.blockentity.EIOBlockEntities;
+import com.enderio.base.common.init.EIOBlockEntities;
 import com.enderio.base.common.blockentity.GraveBlockEntity;
-import com.enderio.base.common.capability.EIOCapabilities;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.lang.EIOLang;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -21,9 +21,8 @@ import net.minecraft.world.phys.BlockHitResult;
 
 public class GraveBlock extends Block implements EntityBlock {
 
-    public GraveBlock(Properties p_49795_) {
-        super(p_49795_);
-        // TODO Auto-generated constructor stub
+    public GraveBlock(Properties properties) {
+        super(properties);
     }
 
     @Override

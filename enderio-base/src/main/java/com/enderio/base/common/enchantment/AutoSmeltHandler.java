@@ -1,5 +1,6 @@
 package com.enderio.base.common.enchantment;
 
+import com.enderio.base.common.init.EIOEnchantments;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Containers;
 import net.minecraft.world.SimpleContainer;
@@ -36,7 +37,7 @@ public class AutoSmeltHandler {
                 ItemStack stack = serverWorld
                     .getRecipeManager()
                     .getRecipeFor(RecipeType.SMELTING, new SimpleContainer(item), serverWorld)
-                    .map((r) -> r.assemble(new SimpleContainer(item)))
+                    .map(r -> r.assemble(new SimpleContainer(item)))
                     .filter(itemStack -> !itemStack.isEmpty())
                     .map(itemStack -> ItemHandlerHelper.copyStackWithSize(itemStack, item.getCount() * itemStack.getCount()))
                     .orElse(item); // Recipe as var

@@ -1,6 +1,6 @@
 package com.enderio.base.common.blockentity;
 
-import com.enderio.base.common.capability.EIOCapabilities;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.capability.owner.IOwner;
 import com.enderio.base.common.capability.owner.Owner;
 import net.minecraft.core.BlockPos;

@@ -1,6 +1,14 @@
 {
-  "parent": "minecraft:block/cube_all",
-  "textures": {
-    "all": "enderio_machines:block/simple_powered_furnace"
-  }
+  "loader": "enderio:composite_model",
+  "components": [
+    {
+      "model": "enderio_machines:block/simple_powered_furnace_front"
+    },
+    {
+      "model": "enderio_machines:block/simple_machine_frame"
+    },
+    {
+      "model": "enderio_machines:block/io_overlay"
+    }
+  ]
 }

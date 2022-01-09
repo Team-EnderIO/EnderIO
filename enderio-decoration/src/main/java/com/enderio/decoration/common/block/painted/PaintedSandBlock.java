@@ -1,6 +1,6 @@
 package com.enderio.decoration.common.block.painted;
 
-import com.enderio.decoration.common.blockentity.DecorBlockEntities;
+import com.enderio.decoration.common.init.DecorBlockEntities;
 import com.enderio.decoration.common.blockentity.SinglePaintedBlockEntity;
 import com.enderio.decoration.common.entity.PaintedSandEntity;
 import net.minecraft.core.BlockPos;

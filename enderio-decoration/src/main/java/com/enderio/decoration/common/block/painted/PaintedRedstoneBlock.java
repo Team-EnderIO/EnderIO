@@ -1,6 +1,6 @@
 package com.enderio.decoration.common.block.painted;
 
-import com.enderio.decoration.common.blockentity.DecorBlockEntities;
+import com.enderio.decoration.common.init.DecorBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.PoweredBlock;
@@ -12,8 +12,8 @@ import javax.annotation.Nullable;
 
 public class PaintedRedstoneBlock extends PoweredBlock implements EntityBlock {
 
-    public PaintedRedstoneBlock(Properties p_52225_) {
-        super(p_52225_);
+    public PaintedRedstoneBlock(Properties properties) {
+        super(properties);
     }
 
     @Nullable

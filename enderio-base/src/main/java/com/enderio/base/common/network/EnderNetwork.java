@@ -8,7 +8,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
 public class EnderNetwork {
 
     private static final String PROTOCOL_VERSION = "1.0";
-    public static EnderNetwork NETWORK = new EnderNetwork();
+    public static final EnderNetwork NETWORK = new EnderNetwork();
     private final SimpleChannel channel = NetworkRegistry.newSimpleChannel(
         channelName(),
         () -> PROTOCOL_VERSION,

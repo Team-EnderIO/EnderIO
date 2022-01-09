@@ -1,5 +1,6 @@
 package com.enderio.base.common.block;
 
+import com.enderio.base.common.init.EIOBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -15,10 +16,11 @@ import java.util.Random;
 public class BuddingInfinityCrystalBlock extends BuddingAmethystBlock {
     private static final Direction[] DIRECTIONS = Direction.values();
 
-    public BuddingInfinityCrystalBlock(Properties p_152726_) {
-        super(p_152726_);
+    public BuddingInfinityCrystalBlock(Properties properties) {
+        super(properties);
     }
 
+    @Override
     public void randomTick(@Nonnull BlockState pState, @Nonnull ServerLevel pLevel, @Nonnull BlockPos pPos, Random pRandom) {
         if (pRandom.nextInt(5) == 0) {
             Direction direction = DIRECTIONS[pRandom.nextInt(DIRECTIONS.length)];

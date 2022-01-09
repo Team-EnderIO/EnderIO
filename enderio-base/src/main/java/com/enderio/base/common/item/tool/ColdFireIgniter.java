@@ -1,12 +1,14 @@
 package com.enderio.base.common.item.tool;
 
-import com.enderio.base.common.block.EIOBlocks;
+import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.capability.IMultiCapabilityItem;
 import com.enderio.base.common.capability.MultiCapabilityProvider;
 import com.enderio.base.common.capability.fluid.AcceptingFluidItemHandler;
+import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.tag.EIOTags;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -15,6 +17,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -24,6 +27,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
@@ -103,6 +107,22 @@ public class ColdFireIgniter extends Item implements IMultiCapabilityItem {
             }
         });
     }
+
+    @Override
+    public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {
+        if (allowdedIn(pCategory)) {
+            ItemStack is = new ItemStack(this);
+            pItems.add(is.copy());
+
+            getTankCap(is).ifPresent(handler -> {
+                if (handler instanceof AcceptingFluidItemHandler fluidHandler) {
+                    fluidHandler.setFluid(new FluidStack(EIOFluids.VAPOR_OF_LEVITY.get(), handler.getTankCapacity(0)));
+                    pItems.add(is);
+                }
+            });
+        }
+    }
+
     @Nullable
     @Override
     public MultiCapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt, MultiCapabilityProvider provider) {

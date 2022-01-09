@@ -1,9 +1,9 @@
 package com.enderio.base.common.item.darksteel;
 
-import com.enderio.base.client.render.IItemOverlayRender;
-import com.enderio.base.client.renderer.ItemBarRenderer;
+import com.enderio.base.client.renderer.item.IItemOverlayRender;
+import com.enderio.base.client.renderer.item.ItemBarRenderer;
 import com.enderio.base.client.tooltip.IAdvancedTooltipProvider;
-import com.enderio.base.common.capability.EIOCapabilities;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.capability.IMultiCapabilityItem;
 import com.enderio.base.common.capability.INamedNBTSerializable;
 import com.enderio.base.common.capability.MultiCapabilityProvider;
@@ -68,13 +68,16 @@ public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipPr
         return is;
     }
 
+    @Override
     default void addCommonTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
     }
 
+    @Override
     default void addBasicTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
         addCurrentUpgradeTooltips(itemStack, tooltips, false);
     }
 
+    @Override
     default void addDetailedTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
         addDurabilityTooltips(itemStack, tooltips);
         addCurrentUpgradeTooltips(itemStack, tooltips, true);
@@ -111,7 +114,7 @@ public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipPr
     }
 
     default void renderOverlay(ItemStack pStack, int pXPosition, int pYPosition) {
-        ItemBarRenderer.renderOverlay(pStack, pXPosition, pYPosition);
+        ItemBarRenderer.renderEnergyOverlay(pStack, pXPosition, pYPosition);
     }
 
     default boolean isDurabilityBarVisible(ItemStack stack) {

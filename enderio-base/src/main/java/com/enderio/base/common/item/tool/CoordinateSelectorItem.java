@@ -60,11 +60,6 @@ public class CoordinateSelectorItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-    }
-
-    @Override
     public InteractionResult useOn(UseOnContext pContext) {
         if (pContext.getPlayer() != null && checkPaper(pContext.getPlayer())) {
             if (pContext.getPlayer() instanceof ServerPlayer serverPlayer)

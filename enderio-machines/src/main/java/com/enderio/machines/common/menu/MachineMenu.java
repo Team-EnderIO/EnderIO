@@ -1,7 +1,7 @@
 package com.enderio.machines.common.menu;
 
 import com.enderio.base.common.menu.SyncedMenu;
-import com.enderio.machines.common.blockentity.MachineBlockEntity;
+import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
@@ -22,6 +22,7 @@ public abstract class MachineMenu<T extends MachineBlockEntity> extends SyncedMe
             && getBlockEntity().stillValid(pPlayer);
     }
 
+    @Override
     public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(pIndex);

@@ -1,6 +1,6 @@
 package com.enderio.decoration.common.block.painted;
 
-import com.enderio.decoration.common.blockentity.DecorBlockEntities;
+import com.enderio.decoration.common.init.DecorBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SlabBlock;
@@ -12,8 +12,8 @@ import javax.annotation.Nullable;
 
 public class PaintedSlabBlock extends SlabBlock implements EntityBlock {
 
-    public PaintedSlabBlock(Properties p_56359_) {
-        super(p_56359_);
+    public PaintedSlabBlock(Properties properties) {
+        super(properties);
     }
 
     @Nullable

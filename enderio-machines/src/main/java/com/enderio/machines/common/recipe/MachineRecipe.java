@@ -3,15 +3,10 @@ package com.enderio.machines.common.recipe;
 import com.enderio.base.EnderIO;
 import com.enderio.base.common.recipe.DataGenSerializer;
 import com.enderio.machines.EIOMachines;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.common.crafting.conditions.ICondition;
-import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 import net.minecraftforge.fluids.FluidStack;
 import org.apache.commons.lang3.StringUtils;
 
@@ -42,5 +37,9 @@ public abstract class MachineRecipe<T extends MachineRecipe<T, C>, C extends Con
             .map(ResourceLocation::getNamespace) //get their origin
             .filter(string -> !StringUtils.equalsAny(string, "minecraft", "forge", EnderIO.MODID, EIOMachines.MODID)) //remove minecraft, forge and enderio
             .distinct().toList();
+    }
+
+    public int getEnergyCost() {
+        return 0;
     }
 }

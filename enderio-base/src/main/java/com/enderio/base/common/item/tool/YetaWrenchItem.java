@@ -42,11 +42,6 @@ public class YetaWrenchItem extends Item {
         return super.useOn(pContext);
     }
 
-    @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-    }
-
     @SuppressWarnings("unchecked")
     private static Optional<Either<DirectionProperty, EnumProperty<Direction.Axis>>> getRotationProperty(BlockState state) {
         for (Property<?> property : state.getProperties()) {

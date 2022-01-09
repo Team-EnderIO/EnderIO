@@ -37,7 +37,6 @@ public class ResettingLeverBlock extends LeverBlock {
         return super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
     }
 
-    @Deprecated
     @Override
     public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, Random pRand) {
         super.tick(pState, pLevel, pPos, pRand);

@@ -1,6 +1,6 @@
 package com.enderio.decoration.common.block.painted;
 
-import com.enderio.decoration.common.blockentity.DecorBlockEntities;
+import com.enderio.decoration.common.init.DecorBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.PressurePlateBlock;
@@ -12,8 +12,8 @@ import javax.annotation.Nullable;
 
 public class PaintedWoodenPressurePlateBlock extends PressurePlateBlock implements EntityBlock {
 
-    public PaintedWoodenPressurePlateBlock(Properties p_52225_) {
-        super(Sensitivity.EVERYTHING, p_52225_);
+    public PaintedWoodenPressurePlateBlock(Properties properties) {
+        super(Sensitivity.EVERYTHING, properties);
     }
 
     @Nullable

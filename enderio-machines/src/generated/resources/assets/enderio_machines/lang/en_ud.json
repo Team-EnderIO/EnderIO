@@ -1,5 +1,14 @@
 {
+  "block.enderio_machines.alloy_smelter": "\u0279\u01DD\u0287\u05DF\u01DD\u026FS \u028Eo\u05DF\u05DF\u2C6F",
   "block.enderio_machines.enchanter": "\u0279\u01DD\u0287u\u0250\u0265\u0254u\u018E",
+  "block.enderio_machines.enhanced_alloy_smelter": "\u0279\u01DD\u0287\u05DF\u01DD\u026FS \u028Eo\u05DF\u05DF\u2C6F p\u01DD\u0254u\u0250\u0265u\u018E",
   "block.enderio_machines.fluid_tank": "\u029Eu\u0250\u27D8 p\u0131n\u05DF\u2132",
-  "block.enderio_machines.simple_powered_furnace": "\u01DD\u0254\u0250u\u0279n\u2132 p\u01DD\u0279\u01DD\u028Do\u0500 \u01DD\u05DFd\u026F\u0131S"
+  "block.enderio_machines.pressurized_fluid_tank": "\u029Eu\u0250\u27D8 p\u0131n\u05DF\u2132 p\u01DDz\u0131\u0279nss\u01DD\u0279\u0500",
+  "block.enderio_machines.simple_alloy_smelter": "\u0279\u01DD\u0287\u05DF\u01DD\u026FS \u028Eo\u05DF\u05DF\u2C6F \u01DD\u05DFd\u026F\u0131S",
+  "block.enderio_machines.simple_powered_furnace": "\u01DD\u0254\u0250u\u0279n\u2132 p\u01DD\u0279\u01DD\u028Do\u0500 \u01DD\u05DFd\u026F\u0131S",
+  "gui.enderio.alloy_smelter.mode": "\u01DDpoW bu\u0131\u0287\u05DF\u01DD\u026FS",
+  "gui.enderio.alloy_smelter.mode_all": "bu\u0131\u0287\u05DF\u01DD\u026FS pu\u0250 bu\u0131\u028Eo\u05DF\u05DF\u2C6F",
+  "gui.enderio.alloy_smelter.mode_alloy": "\u028E\u05DFuO s\u028Eo\u05DF\u05DF\u2C6F",
+  "gui.enderio.alloy_smelter.mode_furnace": "\u028E\u05DFuO \u01DD\u0254\u0250u\u0279n\u2132",
+  "gui.enderio.progress": "%s%% ss\u01DD\u0279bo\u0279\u0500"
 }

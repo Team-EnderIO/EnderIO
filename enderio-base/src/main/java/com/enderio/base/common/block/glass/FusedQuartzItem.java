@@ -1,6 +1,6 @@
 package com.enderio.base.common.block.glass;
 
-import com.enderio.base.client.render.IItemOverlayRender;
+import com.enderio.base.client.renderer.item.IItemOverlayRender;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;

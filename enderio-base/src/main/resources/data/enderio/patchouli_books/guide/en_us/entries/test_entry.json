@@ -1,0 +1,11 @@
+{
+  "name": "Test Entry",
+  "icon": "minecraft:writable_book",
+  "category": "enderio:test_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "This is a test entry, but it should show up!"
+    }
+  ]
+}

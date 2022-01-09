@@ -6,6 +6,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 
 public class TooltipUtil {
+
     public static Component style(MutableComponent component) {
         return component.withStyle(ChatFormatting.ITALIC, ChatFormatting.GRAY);
     }

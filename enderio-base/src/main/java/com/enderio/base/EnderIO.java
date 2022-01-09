@@ -1,21 +1,22 @@
 package com.enderio.base;
 
-import com.enderio.base.common.block.EIOBlocks;
-import com.enderio.base.common.blockentity.EIOBlockEntities;
-import com.enderio.base.common.enchantment.EIOEnchantments;
-import com.enderio.base.common.item.EIOItems;
-import com.enderio.base.data.tags.EIOBlockTagsProvider;
+import com.enderio.base.common.init.EIOBlocks;
+import com.enderio.base.common.init.EIOBlockEntities;
+import com.enderio.base.common.init.EIOEnchantments;
+import com.enderio.base.common.init.EIOFluids;
+import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.datagen.tags.EIOBlockTagsProvider;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.base.common.menu.EIOMenus;
-import com.enderio.base.common.network.EIOPackets;
-import com.enderio.base.common.recipe.EIORecipes;
+import com.enderio.base.common.init.EIOMenus;
+import com.enderio.base.common.init.EIOPackets;
+import com.enderio.base.common.init.EIORecipes;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.config.base.BaseConfig;
 import com.enderio.base.config.decor.DecorConfig;
 import com.enderio.base.config.machines.MachinesConfig;
-import com.enderio.base.data.tags.EIOFluidTagsProvider;
-import com.enderio.base.data.tags.EIOItemTagsProvider;
-import com.enderio.base.data.recipe.standard.StandardRecipes;
+import com.enderio.base.datagen.tags.EIOFluidTagsProvider;
+import com.enderio.base.datagen.tags.EIOItemTagsProvider;
+import com.enderio.base.datagen.recipe.standard.StandardRecipes;
 import com.tterrag.registrate.Registrate;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
@@ -29,12 +30,12 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
 
 @Mod(EnderIO.MODID)
 public class EnderIO {
@@ -42,12 +43,12 @@ public class EnderIO {
 
     private static final Lazy<Registrate> REGISTRATE = Lazy.of(() -> Registrate.create(MODID));
 
-    public static final Logger LOGGER = LogManager.getLogManager().getLogger(MODID);
+    public static final Logger LOGGER = LogManager.getLogger(MODID);
 
     public EnderIO() {
         // Create configs subdirectory
         try {
-            Files.createDirectories(FMLPaths.CONFIGDIR.get().resolve("enderio"));
+            Files.createDirectories(FMLPaths.CONFIGDIR.get().resolve(MODID));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -65,14 +66,15 @@ public class EnderIO {
         EIOItems.register();
         EIOBlocks.register();
         EIOBlockEntities.register();
+        EIOFluids.register();
         EIOEnchantments.register();
         EIOTags.init();
         EIOMenus.register();
         EIOPackets.getNetwork();
         EIOLang.register();
 
+        // Register recipe events
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-
         EIORecipes.register(modEventBus);
 
         // Run datagen after registrate is finished.

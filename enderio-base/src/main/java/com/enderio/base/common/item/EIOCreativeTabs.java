@@ -1,7 +1,7 @@
 package com.enderio.base.common.item;
 
 import com.enderio.base.EnderIO;
-import net.minecraft.resources.ResourceLocation;
+import com.enderio.base.common.init.EIOItems;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
