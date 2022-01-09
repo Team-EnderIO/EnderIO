@@ -68,6 +68,6 @@ public class CompositeModelGeometry implements IModelGeometry<CompositeModelGeom
         return components.stream()
             .filter(component -> !component.model().equals(new ResourceLocation(owner.getModelName()))) // ignore self referencing
             .map(component -> modelGetter.apply(component.model()).getMaterials(modelGetter, missingTextureErrors))
-            .flatMap(Collection::stream).collect(Collectors.toList());
+            .flatMap(Collection::stream).toList();
     }
 }

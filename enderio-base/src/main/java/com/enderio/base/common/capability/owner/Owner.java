@@ -6,34 +6,32 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
 
 public class Owner implements IOwner {
-    private GameProfile owner;
-
-    public Owner() {}
+    private GameProfile profile;
 
     @Override
     public GameProfile getProfile() {
-        return owner;
+        return profile;
     }
 
     @Override
     public void setProfile(GameProfile profile, ProfileSetCallback callback) {
         synchronized (this) {
-            owner = profile;
+            this.profile = profile;
         }
 
         // Perform update.
-        SkullBlockEntity.updateGameprofile(owner, (p_155747_) -> {
-            owner = p_155747_;
-            callback.profileSet(owner);
+        SkullBlockEntity.updateGameprofile(this.profile, newProfile -> {
+            this.profile = newProfile;
+            callback.profileSet(this.profile);
         });
     }
 
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
-        if (owner != null) {
+        if (profile != null) {
             CompoundTag ownerTag = new CompoundTag();
-            NbtUtils.writeGameProfile(ownerTag, owner);
+            NbtUtils.writeGameProfile(ownerTag, profile);
             tag.put("Owner", ownerTag);
         }
         return tag;
@@ -42,7 +40,7 @@ public class Owner implements IOwner {
     @Override
     public void deserializeNBT(CompoundTag nbt) {
         if (nbt.contains("Owner")) {
-            owner = NbtUtils.readGameProfile(nbt.getCompound("Owner"));
+            profile = NbtUtils.readGameProfile(nbt.getCompound("Owner"));
         }
     }
 }

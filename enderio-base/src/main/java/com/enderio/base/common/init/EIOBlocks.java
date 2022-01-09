@@ -278,7 +278,7 @@ public class EIOBlocks {
         .block("infinity_crystal_cluster", Material.AMETHYST, props -> new AmethystClusterBlock(7, 3, props))
         .blockstate((ctx, prov) -> prov.directionalBlock(ctx.get(), prov.models().cross(ctx.getName(), prov.modLoc("block/" + ctx.getName()))))
         .addLayer(() -> RenderType::cutout)
-        .properties(props -> props.noOcclusion().randomTicks().sound(SoundType.AMETHYST_CLUSTER).strength(1.5f).lightLevel((state) -> 5))
+        .properties(props -> props.noOcclusion().randomTicks().sound(SoundType.AMETHYST_CLUSTER).strength(1.5f).lightLevel(state -> 5))
         .loot(EIOBlocks::createInfinityCrystalDrops)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .item()
@@ -301,7 +301,7 @@ public class EIOBlocks {
         .block("large_infinity_bud", Material.AMETHYST, props -> new AmethystClusterBlock(5, 3, props))
         .blockstate((ctx, prov) -> prov.directionalBlock(ctx.get(), prov.models().cross(ctx.getName(), prov.modLoc("block/" + ctx.getName()))))
         .addLayer(() -> RenderType::cutout)
-        .properties(props -> props.noOcclusion().randomTicks().sound(SoundType.AMETHYST_CLUSTER).lightLevel((state) -> 4))
+        .properties(props -> props.noOcclusion().randomTicks().sound(SoundType.AMETHYST_CLUSTER).lightLevel(state -> 4))
         .loot(RegistrateBlockLootTables::dropWhenSilkTouch)
         .item()
         .tab(() -> EIOCreativeTabs.BLOCKS) // TODO: Take away...
@@ -312,7 +312,7 @@ public class EIOBlocks {
         .block("medium_infinity_bud", Material.AMETHYST, props -> new AmethystClusterBlock(4, 3, props))
         .blockstate((ctx, prov) -> prov.directionalBlock(ctx.get(), prov.models().cross(ctx.getName(), prov.modLoc("block/" + ctx.getName()))))
         .addLayer(() -> RenderType::cutout)
-        .properties(props -> props.noOcclusion().randomTicks().sound(SoundType.AMETHYST_CLUSTER).lightLevel((state) -> 2))
+        .properties(props -> props.noOcclusion().randomTicks().sound(SoundType.AMETHYST_CLUSTER).lightLevel(state -> 2))
         .loot(RegistrateBlockLootTables::dropWhenSilkTouch)
         .item()
         .tab(() -> EIOCreativeTabs.BLOCKS) // TODO: Take away...
@@ -323,7 +323,7 @@ public class EIOBlocks {
         .block("small_infinity_bud", Material.AMETHYST, props -> new AmethystClusterBlock(3, 3, props))
         .blockstate((ctx, prov) -> prov.directionalBlock(ctx.get(), prov.models().cross(ctx.getName(), prov.modLoc("block/" + ctx.getName()))))
         .addLayer(() -> RenderType::cutout)
-        .properties(props -> props.noOcclusion().randomTicks().sound(SoundType.AMETHYST_CLUSTER).lightLevel((state) -> 1))
+        .properties(props -> props.noOcclusion().randomTicks().sound(SoundType.AMETHYST_CLUSTER).lightLevel(state -> 1))
         .loot(RegistrateBlockLootTables::dropWhenSilkTouch)
         .item()
         .tab(() -> EIOCreativeTabs.BLOCKS) // TODO: Take away...
@@ -339,9 +339,6 @@ public class EIOBlocks {
         .properties(props -> props.strength(-1.0F, 3600000.0F).noDrops().noOcclusion())
         .blockstate((con, prov) -> prov.simpleBlock(con.get(), prov.models().getExistingFile(EnderIO.loc("block/grave"))))
         .addLayer(() -> RenderType::cutout)
-        .item()
-//        .group(() -> EIOCreativeTabs.BLOCKS) // TODO: Is this supposed to be acquired?
-        .build()
         .register();
 
     // endregion
@@ -433,7 +430,7 @@ public class EIOBlocks {
 
 
     public static <T extends Block> BlockBuilder<T, Registrate> simpleBlockBuilder(String name, T block) {
-        return REGISTRATE.block(name, (p) -> block).item().tab(() -> EIOCreativeTabs.BLOCKS).build();
+        return REGISTRATE.block(name, p -> block).item().tab(() -> EIOCreativeTabs.BLOCKS).build();
     }
 
     private static BlockBuilder<Block, Registrate> metalBlock(String name) {
@@ -471,7 +468,7 @@ public class EIOBlocks {
         boolean silent) {
 
         BlockBuilder<EIOPressurePlateBlock, Registrate> bb = REGISTRATE.block(name, Material.METAL,
-            (props) -> new EIOPressurePlateBlock(props.strength(5, 6), type, silent));
+            props -> new EIOPressurePlateBlock(props.strength(5, 6), type, silent));
 
         bb.blockstate((ctx, prov) -> {
 
@@ -495,7 +492,7 @@ public class EIOBlocks {
         ResourceLocation downModelLoc = new ResourceLocation(upModelLoc.getNamespace(), upModelLoc.getPath() + "_down");
 
         BlockBuilder<SilentPressurePlateBlock, Registrate> bb = REGISTRATE.block("silent_" + upModelLoc.getPath(),
-            block.getStateDefinition().any().getMaterial(), (props) -> new SilentPressurePlateBlock(block));
+            block.getStateDefinition().any().getMaterial(), props -> new SilentPressurePlateBlock(block));
         bb.tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.PRESSURE_PLATES);
 
         bb.blockstate((ctx, prov) -> {
@@ -517,7 +514,7 @@ public class EIOBlocks {
         ResourceLocation downModelLoc = new ResourceLocation(upModelLoc.getNamespace(), upModelLoc.getPath() + "_down");
 
         BlockBuilder<SilentWeightedPressurePlateBlock, Registrate> bb = REGISTRATE.block("silent_" + upModelLoc.getPath(),
-            (props) -> new SilentWeightedPressurePlateBlock(block));
+            props -> new SilentWeightedPressurePlateBlock(block));
 
         bb.blockstate((ctx, prov) -> prov.getVariantBuilder(ctx.get()).forAllStates(blockState -> {
             if (blockState.getValue(WeightedPressurePlateBlock.POWER) == 0) {
@@ -537,7 +534,7 @@ public class EIOBlocks {
 
     private static BlockEntry<ResettingLeverBlock> resettingLeverBlock(String name, int duration, boolean inverted) {
 
-        BlockBuilder<ResettingLeverBlock, Registrate> bb = REGISTRATE.block(name, (props) -> new ResettingLeverBlock(duration, inverted));
+        BlockBuilder<ResettingLeverBlock, Registrate> bb = REGISTRATE.block(name, props -> new ResettingLeverBlock(duration, inverted));
         String durLab = "(" + (duration >= 60 ? duration / 60 : duration) + " " + (duration == 60 ? "minute" : duration > 60 ? "minutes" : "seconds") + ")";
         bb.lang("Resetting Lever " + (inverted ? "Inverted " : "") + durLab);
 

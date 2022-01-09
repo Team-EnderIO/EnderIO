@@ -22,6 +22,7 @@ public abstract class MachineMenu<T extends MachineBlockEntity> extends SyncedMe
             && getBlockEntity().stillValid(pPlayer);
     }
 
+    @Override
     public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(pIndex);

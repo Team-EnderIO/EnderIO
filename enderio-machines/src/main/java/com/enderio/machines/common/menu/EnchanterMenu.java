@@ -20,7 +20,7 @@ import java.util.Optional;
 public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
     private Level level;
 
-    public EnchanterMenu(EnchanterBlockEntity blockEntity, Inventory inventory, int pContainerId) {
+    public EnchanterMenu(@Nullable EnchanterBlockEntity blockEntity, Inventory inventory, int pContainerId) {
         super(blockEntity, inventory, MachineMenus.ENCHANTER.get(), pContainerId);
         if (blockEntity != null) {
             this.level = blockEntity.getLevel();

@@ -20,7 +20,7 @@ public class AlloySmelterMenu extends MachineMenu<AlloySmelterBlockEntity> {
             addSlot(new MachineSlot(blockEntity.getItemHandler(), 3, 79, 58));
 
             // Capacitor slot
-            if (blockEntity.getTier() != MachineTier.Simple) {
+            if (blockEntity.getTier() != MachineTier.SIMPLE) {
                 addSlot(new MachineSlot(blockEntity.getItemHandler(), 4, 12, 60));
             }
         }

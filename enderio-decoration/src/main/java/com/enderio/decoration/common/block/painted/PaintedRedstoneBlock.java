@@ -12,8 +12,8 @@ import javax.annotation.Nullable;
 
 public class PaintedRedstoneBlock extends PoweredBlock implements EntityBlock {
 
-    public PaintedRedstoneBlock(Properties p_52225_) {
-        super(p_52225_);
+    public PaintedRedstoneBlock(Properties properties) {
+        super(properties);
     }
 
     @Nullable

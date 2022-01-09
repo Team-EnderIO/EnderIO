@@ -37,7 +37,7 @@ public class AutoSmeltHandler {
                 ItemStack stack = serverWorld
                     .getRecipeManager()
                     .getRecipeFor(RecipeType.SMELTING, new SimpleContainer(item), serverWorld)
-                    .map((r) -> r.assemble(new SimpleContainer(item)))
+                    .map(r -> r.assemble(new SimpleContainer(item)))
                     .filter(itemStack -> !itemStack.isEmpty())
                     .map(itemStack -> ItemHandlerHelper.copyStackWithSize(itemStack, item.getCount() * itemStack.getCount()))
                     .orElse(item); // Recipe as var

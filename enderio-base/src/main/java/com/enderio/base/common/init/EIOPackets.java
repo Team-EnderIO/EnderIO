@@ -12,7 +12,7 @@ public class EIOPackets extends EnderNetwork {
 
     private EIOPackets() {}
 
-    public static EIOPackets NETWORK = new EIOPackets();
+    public static final EIOPackets NETWORK = new EIOPackets();
 
     private static final String PROTOCOL_VERSION = "1.0";
 

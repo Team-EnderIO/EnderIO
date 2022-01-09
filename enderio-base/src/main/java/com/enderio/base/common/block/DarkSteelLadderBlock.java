@@ -12,8 +12,8 @@ import java.util.List;
 
 public class DarkSteelLadderBlock extends LadderBlock {
 
-    public DarkSteelLadderBlock(Properties p_54345_) {
-        super(p_54345_);
+    public DarkSteelLadderBlock(Properties properties) {
+        super(properties);
     }
 
     @Override

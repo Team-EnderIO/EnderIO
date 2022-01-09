@@ -38,8 +38,8 @@ public class EIORecipes {
     public static class Types {
         private Types() {}
 
-        public static RecipeType<CapacitorDataRecipe> CAPACITOR_DATA = RecipeType.register(EnderIO.MODID + ":capacitor_data");
-        public static RecipeType<GrindingballRecipe> GRINDINGBALL = RecipeType.register(EnderIO.MODID + ":grindingball");
+        public static final RecipeType<CapacitorDataRecipe> CAPACITOR_DATA = RecipeType.register(EnderIO.MODID + ":capacitor_data");
+        public static final RecipeType<GrindingballRecipe> GRINDINGBALL = RecipeType.register(EnderIO.MODID + ":grindingball");
 
         public static void register() {}
     }

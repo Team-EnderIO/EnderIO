@@ -4,8 +4,8 @@ import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Widget;
 
 public abstract class EIOWidget extends GuiComponent implements Widget {
-    public int x;
-    public int y;
+    public final int x;
+    public final int y;
     protected int width;
     protected int height;
 

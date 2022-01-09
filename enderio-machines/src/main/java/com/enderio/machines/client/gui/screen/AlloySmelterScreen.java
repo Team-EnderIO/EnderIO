@@ -12,7 +12,6 @@ import com.enderio.machines.common.blockentity.AlloySmelterBlockEntity;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.blockentity.AlloySmelterMode;
 import com.enderio.machines.common.menu.AlloySmelterMenu;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -39,7 +38,7 @@ public class AlloySmelterScreen extends EIOScreen<AlloySmelterMenu> {
         addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
 
-        if (getMenu().getBlockEntity().getTier() != MachineTier.Simple) {
+        if (getMenu().getBlockEntity().getTier() != MachineTier.SIMPLE) {
             addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 6 + 16 * 3, () -> menu.getBlockEntity().getMode(), mode -> menu.getBlockEntity().setMode(mode), MachineLang.ALLOY_SMELTER_MODE));
         }
     }
@@ -48,11 +47,11 @@ public class AlloySmelterScreen extends EIOScreen<AlloySmelterMenu> {
     protected ResourceLocation getBackgroundImage() {
         AlloySmelterBlockEntity be = getMenu().getBlockEntity();
         return switch (be.getTier()) {
-            case Simple -> be.getMode() == AlloySmelterMode.Alloys ? BG_TEXTURE_SIMPLE_ALLOY : BG_TEXTURE_SIMPLE_FURNACE;
-            case Standard, Enhanced -> switch (be.getMode()) {
-                case All -> BG_TEXTURE_AUTO;
-                case Alloys -> BG_TEXTURE_ALLOY;
-                case Furnace -> BG_TEXTURE_FURNACE;
+            case SIMPLE -> be.getMode() == AlloySmelterMode.ALLOYS ? BG_TEXTURE_SIMPLE_ALLOY : BG_TEXTURE_SIMPLE_FURNACE;
+            case STANDARD, ENHANCED -> switch (be.getMode()) {
+                case ALL -> BG_TEXTURE_AUTO;
+                case ALLOYS -> BG_TEXTURE_ALLOY;
+                case FURNACE -> BG_TEXTURE_FURNACE;
             };
         };
     }

@@ -29,7 +29,6 @@ public class GrindingballRecipeGenerator extends RecipeProvider {
         build(EIOItems.PULSATING_IRON_BALL.get(), 1.00F, 1.85F, 1.0F, 100000, pFinishedRecipeConsumer);
         build(EIOItems.SOULARIUM_BALL.get(), 1.2F, 2.15F, 0.9F, 80000, pFinishedRecipeConsumer);
         build(EIOItems.END_STEEL_BALL.get(), 1.4F, 2.4F, 0.7F, 75000, pFinishedRecipeConsumer);
-//        build(EIOItems.CONSTRUCTION_ALLOY_BALL.get(), 1.00F, 0.33F, 0.25F, 12000, pFinishedRecipeConsumer);
     }
 
     protected void build(Item item, float grinding, float chance, float power, int durability, Consumer<FinishedRecipe> recipeConsumer) {

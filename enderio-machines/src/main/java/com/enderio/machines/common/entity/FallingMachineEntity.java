@@ -15,8 +15,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class FallingMachineEntity extends FallingBlockEntity {
-    public FallingMachineEntity(EntityType<? extends FallingBlockEntity> p_31950_, Level p_31951_) {
-        super(p_31950_, p_31951_);
+    public FallingMachineEntity(EntityType<? extends FallingBlockEntity> type, Level level) {
+        super(type, level);
     }
 
     public FallingMachineEntity(Level level, double xo, double yo, double zo, BlockState state) {

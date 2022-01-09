@@ -28,25 +28,25 @@ public class EntityCaptureUtils {
     }
 
     public enum CapturableStatus {
-        Capturable,
-        Boss,
-        Blacklisted,
-        Incompatible,
+        CAPTURABLE,
+        BOSS,
+        BLACKLISTED,
+        INCOMPATIBLE,
     }
 
     public static CapturableStatus getCapturableStatus(Entity entity) {
         EntityType<?> type = entity.getType();
 
         if (isBlacklistedBoss(entity))
-            return CapturableStatus.Boss;
+            return CapturableStatus.BOSS;
 
         if (!type.canSerialize())
-            return CapturableStatus.Incompatible;
+            return CapturableStatus.INCOMPATIBLE;
 
         if (BaseConfig.COMMON.ITEMS.SOUL_VIAL_BLACKLIST.get().contains(type.getRegistryName().toString()))
-            return CapturableStatus.Blacklisted;
+            return CapturableStatus.BLACKLISTED;
 
-        return CapturableStatus.Capturable;
+        return CapturableStatus.CAPTURABLE;
     }
 
     public static boolean isBlacklistedBoss(Entity entity) {

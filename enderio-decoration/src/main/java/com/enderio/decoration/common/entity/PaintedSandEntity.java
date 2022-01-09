@@ -24,12 +24,12 @@ import java.util.Objects;
 
 public class PaintedSandEntity extends FallingBlockEntity implements IEntityAdditionalSpawnData {
 
-    public PaintedSandEntity(EntityType<? extends FallingBlockEntity> p_31950_, Level level) {
-        super(p_31950_, level);
+    public PaintedSandEntity(EntityType<? extends FallingBlockEntity> type, Level level) {
+        super(type, level);
     }
 
-    public PaintedSandEntity(Level p_31953_, double p_31954_, double p_31955_, double p_31956_, BlockState p_31957_) {
-        super(p_31953_, p_31954_, p_31955_, p_31956_, p_31957_);
+    public PaintedSandEntity(Level level, double x, double y, double z, BlockState state) {
+        super(level, x, y, z, state);
     }
 
     @Nonnull

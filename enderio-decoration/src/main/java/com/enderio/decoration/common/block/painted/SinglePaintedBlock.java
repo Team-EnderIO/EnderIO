@@ -11,8 +11,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class SinglePaintedBlock extends BaseEntityBlock {
-    public SinglePaintedBlock(Properties p_49224_) {
-        super(p_49224_);
+    public SinglePaintedBlock(Properties properties) {
+        super(properties);
     }
 
     @Nonnull

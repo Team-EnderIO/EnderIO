@@ -12,13 +12,9 @@ public class SilentWeightedPressurePlateBlock extends WeightedPressurePlateBlock
     }
 
     @Override
-    protected void playOnSound(LevelAccessor pLevel, BlockPos pPos) {
-
-    }
+    protected void playOnSound(LevelAccessor pLevel, BlockPos pPos) {}
 
     @Override
-    protected void playOffSound(LevelAccessor pLevel, BlockPos pPos) {
-
-    }
+    protected void playOffSound(LevelAccessor pLevel, BlockPos pPos) {}
 
 }

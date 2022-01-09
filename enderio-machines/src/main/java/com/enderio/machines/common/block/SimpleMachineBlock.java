@@ -38,7 +38,7 @@ public class SimpleMachineBlock extends ProgressMachineBlock implements Fallable
     @Override
     public void tick(BlockState state, ServerLevel level, BlockPos pos, Random random) {
         if (FallingBlock.isFree(level.getBlockState(pos.below())) && pos.getY() >= level.getMinBuildHeight()) {
-            FallingMachineEntity fallingblockentity = new FallingMachineEntity(level, (double)pos.getX() + 0.5D, (double)pos.getY(), (double)pos.getZ() + 0.5D, level.getBlockState(pos));
+            FallingMachineEntity fallingblockentity = new FallingMachineEntity(level, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, level.getBlockState(pos));
 
             // Save NBT
             BlockEntity be = level.getBlockEntity(pos);

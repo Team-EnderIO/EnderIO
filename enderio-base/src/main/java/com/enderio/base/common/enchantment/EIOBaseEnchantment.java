@@ -10,12 +10,10 @@ import java.util.function.Supplier;
 
 public class EIOBaseEnchantment extends Enchantment {
 
-    private EnchantmentCategory category;
     protected final @Nonnull Supplier<Boolean> enableFlag;
 
     public EIOBaseEnchantment(Rarity pRarity, EnchantmentCategory pCategory, EquipmentSlot[] pApplicableSlots, @Nonnull Supplier<Boolean> flag) {
         super(pRarity, pCategory, pApplicableSlots);
-        this.category = pCategory;
         this.enableFlag = flag;
     }
 

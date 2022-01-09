@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
  * Container helper for the fused glass/quartz blocks as theres a lot, and this will tidy stuff up.
  */
 public class GlassBlocks {
-    public BlockEntry<FusedQuartzBlock> CLEAR, WHITE, ORANGE, MAGENTA, LIGHT_BLUE, YELLOW, LIME, PINK, GRAY, LIGHT_GRAY, CYAN, PURPLE, BLUE, BROWN, GREEN, RED, BLACK;
+    public final BlockEntry<FusedQuartzBlock> CLEAR, WHITE, ORANGE, MAGENTA, LIGHT_BLUE, YELLOW, LIME, PINK, GRAY, LIGHT_GRAY, CYAN, PURPLE, BLUE, BROWN, GREEN, RED, BLACK;
 
     private final GlassCollisionPredicate collisionPredicate;
 

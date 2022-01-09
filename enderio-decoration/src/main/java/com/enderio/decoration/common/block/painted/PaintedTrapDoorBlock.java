@@ -12,8 +12,8 @@ import javax.annotation.Nullable;
 
 public class PaintedTrapDoorBlock extends TrapDoorBlock implements EntityBlock {
 
-    public PaintedTrapDoorBlock(Properties p_52225_) {
-        super(p_52225_);
+    public PaintedTrapDoorBlock(Properties properties) {
+        super(properties);
     }
 
     @Nullable

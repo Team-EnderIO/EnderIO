@@ -25,6 +25,7 @@ public class WitherBladeEnchantment extends EIOBaseEnchantment {
         return BaseConfig.COMMON.ENCHANTMENTS.WITHERING_BLADE_MAX_COST.get();
     }
 
+    @Override
     public int getMinCost(int pLevel) {
         return BaseConfig.COMMON.ENCHANTMENTS.WITHERING_BLADE_MIN_COST.get();
     }

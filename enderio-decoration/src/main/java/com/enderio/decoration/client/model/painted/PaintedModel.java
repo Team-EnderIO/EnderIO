@@ -230,6 +230,7 @@ public abstract class PaintedModel implements IDynamicBakedModel {
      * @param fabulous  is graphics setting fabulous?
      * @return single Item Layer for ItemStack using the default shape and the correct ItemTransforms and cache Item with NBT Data, so u don't need to bake the model again
      */
+    @Override
     public List<Pair<BakedModel, RenderType>> getLayerModels(ItemStack itemStack, boolean fabulous) {
         return itemRenderCache.computeIfAbsent(itemStack, itemStack1 -> createLayerModels(itemStack, fabulous));
     }

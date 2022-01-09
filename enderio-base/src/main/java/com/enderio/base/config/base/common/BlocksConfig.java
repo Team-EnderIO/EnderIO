@@ -3,11 +3,11 @@ package com.enderio.base.config.base.common;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class BlocksConfig {
-    public ForgeConfigSpec.ConfigValue<Float> BROKEN_SPAWNER_DROP_CHANCE;
+    public final ForgeConfigSpec.ConfigValue<Float> BROKEN_SPAWNER_DROP_CHANCE;
 
-    public ForgeConfigSpec.ConfigValue<Float> EXPLOSION_RESISTANCE;
+    public final ForgeConfigSpec.ConfigValue<Float> EXPLOSION_RESISTANCE;
 
-    public ForgeConfigSpec.ConfigValue<Float> DARK_STEEL_LADDER_BOOST;
+    public final ForgeConfigSpec.ConfigValue<Float> DARK_STEEL_LADDER_BOOST;
 
     public BlocksConfig(ForgeConfigSpec.Builder builder) {
         builder.push("blocks");
