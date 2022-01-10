@@ -35,6 +35,7 @@ public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipPr
         return DarkSteelUpgradeable.getUpgradeAs(stack, EmpoweredUpgrade.NAME, EmpoweredUpgrade.class);
     }
 
+    @Override
     default MultiCapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt, MultiCapabilityProvider provider) {
         return initDarkSteelCapabilities(provider, Objects.requireNonNull(stack.getItem().getRegistryName()));
     }
@@ -68,13 +69,16 @@ public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipPr
         return is;
     }
 
+    @Override
     default void addCommonTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
     }
 
+    @Override
     default void addBasicTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
         addCurrentUpgradeTooltips(itemStack, tooltips, false);
     }
 
+    @Override
     default void addDetailedTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
         addDurabilityTooltips(itemStack, tooltips);
         addCurrentUpgradeTooltips(itemStack, tooltips, true);
