@@ -1,10 +1,13 @@
 package com.enderio.machines;
 
+import com.enderio.base.common.handler.travel.TravelRegistry;
+import com.enderio.machines.client.rendering.travel.TravelAnchorRenderer;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.init.MachineMenus;
 import com.enderio.machines.common.init.MachineRecipes;
+import com.enderio.machines.common.travel.AnchorTravelTarget;
 import com.enderio.machines.datagen.recipe.MachineRecipeGenerator;
 import com.tterrag.registrate.Registrate;
 import net.minecraft.data.DataGenerator;
@@ -27,7 +30,9 @@ public class EIOMachines {
         MachineBlockEntities.register();
         MachineMenus.register();
         MachineLang.register();
-        
+
+        TravelRegistry.addTravelEntry(loc("travel_anchor"), AnchorTravelTarget::new, TravelAnchorRenderer::new);
+
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         
         MachineRecipes.register(modEventBus);

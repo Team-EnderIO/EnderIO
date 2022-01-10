@@ -4,7 +4,6 @@ import com.enderio.base.EnderIO;
 import com.enderio.base.common.item.capacitor.LootCapacitorItem;
 import com.enderio.base.common.item.EIOCreativeTabs;
 import com.enderio.base.common.item.LocationPrintoutItem;
-import com.enderio.base.common.item.capacitors.LootCapacitorItem;
 import com.enderio.base.common.item.darksteel.DarkSteelAxeItem;
 import com.enderio.base.common.item.darksteel.DarkSteelPickaxeItem;
 import com.enderio.base.common.item.darksteel.DarkSteelUpgradeItem;
@@ -351,6 +350,12 @@ public class EIOItems {
 
     public static final ItemEntry<LevitationStaffItem> LEVITATION_STAFF = REGISTRATE
         .item("staff_of_levity", LevitationStaffItem::new)
+        .tab(() -> EIOCreativeTabs.GEAR)
+        .register();
+
+    public static final ItemEntry<TravelStaffItem> TRAVEL_STAFF = REGISTRATE
+        .item("staff_of_travelling", TravelStaffItem::new)
+        .properties(props -> props.stacksTo(1))
         .tab(() -> EIOCreativeTabs.GEAR)
         .register();
 

@@ -4,10 +4,7 @@ import com.enderio.base.EnderIO;
 import com.enderio.base.common.item.EIOCreativeTabs;
 import com.enderio.base.datagen.model.EIOModel;
 import com.enderio.machines.EIOMachines;
-import com.enderio.machines.common.block.EnhancedMachineBlock;
-import com.enderio.machines.common.block.MachineBlock;
-import com.enderio.machines.common.block.ProgressMachineBlock;
-import com.enderio.machines.common.block.SimpleMachineBlock;
+import com.enderio.machines.common.block.*;
 import com.enderio.machines.common.item.FluidTankItem;
 import com.enderio.machines.datagen.loot.MachinesLootTable;
 import com.enderio.machines.datagen.model.block.MachinesBlockState;
@@ -173,6 +170,17 @@ public class MachineBlocks {
             .component(EIOMachines.loc("block/enhanced_machine_frame"))
             .component(EIOMachines.loc("block/enhanced_alloy_smelter_front"))
             .component(EIOMachines.loc("block/enhanced_alloy_smelter_top"), new Vector3f(0.0f, 1.0f, 0.0f))))
+        .build()
+        .register();
+
+
+    public static final BlockEntry<TravelAnchorBlock> TRAVEL_ANCHOR = REGISTRATE
+        .block("travel_anchor", TravelAnchorBlock::new)
+        .properties(props -> props.strength(2.5f, 8))
+        .loot(MachinesLootTable::copyNBT)
+        .addLayer(() -> RenderType::cutout)
+        .item()
+        .tab(() -> EIOCreativeTabs.MACHINES)
         .build()
         .register();
 
