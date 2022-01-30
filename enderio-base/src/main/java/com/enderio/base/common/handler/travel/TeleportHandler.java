@@ -5,6 +5,7 @@ import com.enderio.base.common.item.darksteel.IDarkSteelItem;
 import com.enderio.base.config.base.BaseConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -49,8 +50,10 @@ public class TeleportHandler {
                 if (eventPos.isPresent()) {
                     player.teleportTo(eventPos.get().x(), eventPos.get().y(), eventPos.get().z());
                     player.fallDistance = 0;
+                    player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
+                } else {
+                    player.playNotifySound(SoundEvents.DISPENSER_FAIL, SoundSource.PLAYERS, 1F, 1F);
                 }
-                player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
             }
             return true;
         } else {
@@ -62,12 +65,12 @@ public class TeleportHandler {
         Optional<ITravelTarget> target = getAnchorTarget(player);
         if (target.isPresent()) {
             if (!player.getLevel().isClientSide) {
-                Optional<Double> height = isValidGround(level, target.get().getPos());
+                Optional<Double> height = isTeleportPositionClear(level, target.get().getPos());
                 if (height.isEmpty()) {
                     return false;
                 }
                 BlockPos blockPos = target.get().getPos();
-                Vec3 teleportPosition = new Vec3(blockPos.getX(), blockPos.getY()+height.get()+1, blockPos.getZ());
+                Vec3 teleportPosition = new Vec3(blockPos.getX() + 0.5f, blockPos.getY()+height.get()+1, blockPos.getZ() + 0.5f);
                 teleportPosition = teleportEvent(player, teleportPosition).orElse(null);
                 if (teleportPosition != null) {
                     player.fallDistance = 0;
@@ -88,7 +91,7 @@ public class TeleportHandler {
         for (double i = BaseConfig.COMMON.ITEMS.TRAVELLING_BLINK_RANGE.get(); i >= 2; i -= 0.5) {
             Vec3 v3d = targetVec.add(lookVec.scale(i));
             target = new BlockPos(Math.round(v3d.x), Math.round(v3d.y), Math.round(v3d.z));
-            Optional<Double> ground = isValidGround(level, target.below());
+            Optional<Double> ground = isTeleportPositionClear(level, target.below());
             if (ground.isPresent()) { //to use the same check as the anchors use the position below
                 floorHeight = ground.get();
                 break;
@@ -106,8 +109,9 @@ public class TeleportHandler {
         Vec3 positionVec = player.position().add(0, player.getEyeHeight(), 0);
 
         return TravelSavedData.getTravelData(player.getLevel()).getTravelTargetsInItemRange(new BlockPos(player.position()))
+            .filter(target -> target.getPos().distSqr(player.getX(), player.getY(), player.getZ(), true) > 25) //only teleport to blocks not directly in range
             .filter(target -> Math.abs(getAngleRadians(positionVec, target.getPos(), player.getYRot(), player.getXRot())) <= Math.toRadians(15))
-            .filter(target -> isValidGround(player.getLevel(), target.getPos()).isPresent())
+            .filter(target -> isTeleportPositionClear(player.getLevel(), target.getPos()).isPresent())
             .min(Comparator.comparingDouble(target ->
                 Math.abs(getAngleRadians(positionVec, target.getPos(), player.getYRot(), player.getXRot()))
             ));
@@ -126,7 +130,9 @@ public class TeleportHandler {
      * @param target
      * @return Optional.empty if it can't teleport and the height where to place the player. This is so you can tp ontop of carpets up to a whole block
      */
-    private static Optional<Double> isValidGround(BlockGetter level, BlockPos target) {
+    private static Optional<Double> isTeleportPositionClear(BlockGetter level, BlockPos target) {
+        if (level.isOutsideBuildHeight(target))
+            return Optional.empty();
         if (!level.getBlockState(target.above(2)).canOcclude()) {
             BlockPos above = target.above();
             double height = level.getBlockState(above).getCollisionShape(level, above).max(Direction.Axis.Y);

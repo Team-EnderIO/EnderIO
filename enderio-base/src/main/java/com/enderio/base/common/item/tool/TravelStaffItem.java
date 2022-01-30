@@ -49,7 +49,7 @@ public class TravelStaffItem extends Item implements IDarkSteelItem {
     @Override
     public InteractionResult useOn(UseOnContext context) {
         if (getActivationStatus(context.getItemInHand()).isBlock()) {
-            if (tryPerformAction(context.getLevel(), context.getPlayer(), context.getItemInHand())) {
+            if (context.getPlayer() != null && tryPerformAction(context.getLevel(), context.getPlayer(), context.getItemInHand())) {
                 return InteractionResult.sidedSuccess(context.getLevel().isClientSide());
             }
             return InteractionResult.FAIL;
@@ -74,9 +74,16 @@ public class TravelStaffItem extends Item implements IDarkSteelItem {
      * @return true if it was a success and you want to consume the resources
      */
     public boolean performAction(Level level, Player player, ItemStack stack) {
-        if (player.isShiftKeyDown() && TeleportHandler.shortTeleport(level, player)) {
-            player.getCooldowns().addCooldown(this, BaseConfig.COMMON.ITEMS.TRAVELLING_BLINK_DISABLED_TIME.get());
-            return true;
+        if (player.isShiftKeyDown()) {
+            if (TeleportHandler.shortTeleport(level, player)) {
+                player.getCooldowns().addCooldown(this, BaseConfig.COMMON.ITEMS.TRAVELLING_BLINK_DISABLED_TIME.get());
+                return true;
+            }
+        } else {
+            if (TeleportHandler.blockTeleport(level, player)) {
+                player.getCooldowns().addCooldown(this, BaseConfig.COMMON.ITEMS.TRAVELLING_BLINK_DISABLED_TIME.get());
+                return true;
+            }
         }
         return false;
     }

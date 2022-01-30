@@ -1,4 +1,4 @@
-package com.enderio.base.client;
+package com.enderio.base.client.renderer.teleportation;
 
 import com.enderio.base.common.handler.travel.TeleportHandler;
 import com.enderio.base.common.menu.SyncedMenu;
@@ -20,8 +20,7 @@ import java.util.Date;
 import java.util.Optional;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
-public class ClientEventHandler {
-
+public class TeleportParticleHandler {
     private static int tick = 0;
 
     @SubscribeEvent
@@ -29,39 +28,32 @@ public class ClientEventHandler {
         LocalPlayer player = Minecraft.getInstance().player;
         if (e.phase == TickEvent.Phase.END && player != null) {
             tick++;
-            //Sync Menu
-            if (player.containerMenu instanceof SyncedMenu syncedMenu) {
-                syncedMenu.clientTick();
-            }
-
-            //TravellingStaffParticle
             if (player.isShiftKeyDown() && TeleportHandler.canTeleport(player) && tick%3==0) {
                 Optional<Vec3> pos = TeleportHandler.teleportPosition(player.getLevel(), player);
                 if (pos.isPresent()) {
-                    addParticle(pos.get());
+                    addTravelParticle(pos.get());
                 }
             }
         }
     }
 
 
-    private static void addParticle(Vec3 pos) {
+    private static void addTravelParticle(Vec3 pos) {
         int time = tick/3%20;
         float x = Mth.sin((float)(time*Math.PI)/10f);
         float z = Mth.cos((float)(time*Math.PI)/10f);
-        @Nullable
-        Particle particle = Minecraft.getInstance().levelRenderer.addParticleInternal(ParticleTypes.TOTEM_OF_UNDYING, false, true, pos.x() + x, pos.y() + 0.4, pos.z() + z, 0, 0, 0);
+        @Nullable Particle particle = Minecraft.getInstance().levelRenderer.addParticleInternal(
+            ParticleTypes.TOTEM_OF_UNDYING, false, true, pos.x() + x, pos.y() + 0.4, pos.z() + z, 0, 0, 0);
         if (particle != null) {
             particle.setLifetime(30);
-            var color = getColor();
+            var color = getTravelParticleColor();
             particle.gravity = 0;
             particle.setColor(color.getLeft(), color.getMiddle(), color.getRight());
         }
     }
 
-    private static Triple<Float, Float, Float> getColor() {
-        Date date = new Date();
-        if (date.getMonth() == Calendar.JUNE) {
+    private static Triple<Float, Float, Float> getTravelParticleColor() {
+        if (Calendar.getInstance().get(Calendar.MONTH) == Calendar.JUNE) {
             int halfTick = tick/3%10;
             return switch (halfTick) {
                 case 0: yield Triple.of(228/255f, 3/255f, 3/255f);
