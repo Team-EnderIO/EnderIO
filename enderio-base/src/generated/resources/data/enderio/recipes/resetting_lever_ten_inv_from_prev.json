@@ -5,7 +5,7 @@
       "item": "enderio:resetting_lever_five_inv"
     },
     {
-      "item": "minecraft:redstone"
+      "tag": "forge:dusts/redstone"
     }
   ],
   "result": {

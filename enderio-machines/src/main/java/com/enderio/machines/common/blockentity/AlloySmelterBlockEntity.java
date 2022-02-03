@@ -91,22 +91,16 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachineEntity<Recipe
 
     @Override
     protected void consumeIngredients(Recipe<Container> recipe) {
-        NonNullList<Ingredient> ingredients = getCurrentRecipe().getIngredients();
         ItemHandlerMaster itemHandler = getItemHandler();
-        if (recipe instanceof AlloySmeltingRecipe) {
+        if (recipe instanceof AlloySmeltingRecipe alloySmeltingRecipe) {
             for (int i = 0; i < 3; i++) {
-                for (Ingredient ingredient : ingredients) {
-                    ItemStack stack = itemHandler.getStackInSlot(i);
-                    if (ingredient.test(stack)) {
-                        stack.shrink(1); // TODO: Get from recipe.
-                        itemHandler.setStackInSlot(i, stack);
-                    }
-                }
+                alloySmeltingRecipe.consumeInput(itemHandler.getStackInSlot(i));
             }
 
             // We only craft 1x when alloying
             resultModifier = 1;
         } else if (recipe instanceof SmeltingRecipe) {
+            NonNullList<Ingredient> ingredients = getCurrentRecipe().getIngredients();
             // Remove the cooked item.
             int smelting = 0;
             for (int i = 0; i < 3; i++) {
@@ -124,7 +118,8 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachineEntity<Recipe
     }
 
     // TODO: Ensure this is in line with the stirling generator.
-    private static final int RF_PER_ITEM = ForgeHooks.getBurnTime(new ItemStack(Items.COAL, 1), RecipeType.SMELTING) * 10 / 8;
+    // TODO: Someplace to keep constants like this common.
+    public static final int RF_PER_ITEM = ForgeHooks.getBurnTime(new ItemStack(Items.COAL, 1), RecipeType.SMELTING) * 10 / 8;
 
     @Override
     protected int getEnergyCost(Recipe<Container> recipe) {
@@ -143,7 +138,6 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachineEntity<Recipe
 
         // Find a smelting recipe if we aren't alloy smelting.
         if (getMode().canSmelt() && getCurrentRecipe() == null) {
-            // TODO: Support adding 3 ingredients at once to get 3 smelted outputs.
             level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, getRecipeWrapper(), level).ifPresent(this::setCurrentRecipe);
         }
     }

@@ -1,19 +1,28 @@
 {
   "type": "enderio_machines:alloy_smelting",
-  "ingredients": [
+  "inputs": [
     {
-      "tag": "forge:ingots/iron"
+      "ingredient": {
+        "tag": "forge:ingots/iron"
+      },
+      "count": 1
     },
     {
-      "tag": "forge:dusts/coal"
+      "ingredient": {
+        "tag": "forge:dusts/coal"
+      },
+      "count": 1
     },
     {
-      "tag": "forge:obsidian"
+      "ingredient": {
+        "tag": "forge:obsidian"
+      },
+      "count": 1
     }
   ],
   "result": {
     "item": "enderio:dark_steel_ingot"
   },
-  "energy": 10000,
+  "energy": 20000,
   "experience": 0.3
 }

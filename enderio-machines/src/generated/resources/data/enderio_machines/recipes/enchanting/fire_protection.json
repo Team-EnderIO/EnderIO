@@ -1,6 +1,6 @@
 {
   "type": "enderio_machines:enchanting",
-  "ingredient": {
+  "input": {
     "item": "minecraft:blaze_powder"
   },
   "enchantment": "minecraft:fire_protection",

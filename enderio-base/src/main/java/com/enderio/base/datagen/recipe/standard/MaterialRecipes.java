@@ -198,6 +198,36 @@ public class MaterialRecipes extends RecipeProvider {
         upgradeGear(recipeConsumer, EIOItems.GEAR_VIBRANT.get(), EIOItems.GEAR_ENERGIZED.get(), EIOItems.VIBRANT_ALLOY_INGOT.get(), EIOItems.VIBRANT_ALLOY_NUGGET.get());
         upgradeGear(recipeConsumer, EIOItems.GEAR_DARK_STEEL.get(), EIOItems.GEAR_ENERGIZED.get(), EIOItems.DARK_STEEL_INGOT.get(), EIOItems.DARK_STEEL_NUGGET.get());
 
+        ShapedRecipeBuilder.shaped(EIOItems.BASIC_CAPACITOR.get())
+            .pattern(" NG")
+            .pattern("NIN")
+            .pattern("GN ")
+            .define('N', Tags.Items.NUGGETS_GOLD)
+            .define('G', EIOItems.GRAINS_OF_INFINITY.get())
+            .define('I', Tags.Items.INGOTS_COPPER)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GRAINS_OF_INFINITY.get()))
+            .save(recipeConsumer);
+
+        ShapedRecipeBuilder.shaped(EIOItems.DOUBLE_LAYER_CAPACITOR.get())
+            .pattern(" I ")
+            .pattern("CDC")
+            .pattern(" I ")
+            .define('I', EIOItems.ENERGETIC_ALLOY_INGOT.get())
+            .define('C', EIOItems.BASIC_CAPACITOR.get())
+            .define('D', EIOTags.Items.DUSTS_COAL)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.BASIC_CAPACITOR.get()))
+            .save(recipeConsumer);
+
+        ShapedRecipeBuilder.shaped(EIOItems.OCTADIC_CAPACITOR.get())
+            .pattern(" I ")
+            .pattern("CGC")
+            .pattern(" I ")
+            .define('I', EIOItems.VIBRANT_ALLOY_INGOT.get())
+            .define('C', EIOItems.DOUBLE_LAYER_CAPACITOR.get())
+            .define('G', Items.GLOWSTONE)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DOUBLE_LAYER_CAPACITOR.get()))
+            .save(recipeConsumer);
+
         ShapedRecipeBuilder.shaped(EIOItems.WEATHER_CRYSTAL.get())
             .pattern(" P ")
             .pattern("VEV")

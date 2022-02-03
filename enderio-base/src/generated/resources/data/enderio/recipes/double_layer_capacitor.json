@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " I ",
+    "CDC",
+    " I "
+  ],
+  "key": {
+    "I": {
+      "item": "enderio:energetic_alloy_ingot"
+    },
+    "C": {
+      "item": "enderio:basic_capacitor"
+    },
+    "D": {
+      "tag": "forge:dusts/coal"
+    }
+  },
+  "result": {
+    "item": "enderio:double_layer_capacitor"
+  }
+}

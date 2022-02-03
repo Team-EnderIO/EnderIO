@@ -17,6 +17,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 
+import java.text.NumberFormat;
 import java.util.function.Supplier;
 
 public class EnergyWidget extends EIOWidget {
@@ -67,7 +68,8 @@ public class EnergyWidget extends EIOWidget {
     public void renderToolTip(PoseStack poseStack, int mouseX, int mouseY) {
         if (isHovered(mouseX, mouseY)) {
             EnergyData energy = getEnergy.get();
-            displayOn.renderTooltip(poseStack, TooltipUtil.withArgs(EIOLang.ENERGY_AMOUNT, energy.energy() + "/" + energy.capacity()), mouseX, mouseY);
+            NumberFormat fmt = NumberFormat.getInstance();
+            displayOn.renderTooltip(poseStack, TooltipUtil.withArgs(EIOLang.ENERGY_AMOUNT, fmt.format(energy.energy()) + "/" + fmt.format(energy.capacity())), mouseX, mouseY);
         }
     }
 }

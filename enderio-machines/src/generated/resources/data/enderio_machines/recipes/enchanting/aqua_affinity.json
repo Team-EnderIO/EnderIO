@@ -1,6 +1,6 @@
 {
   "type": "enderio_machines:enchanting",
-  "ingredient": {
+  "input": {
     "item": "minecraft:lily_pad"
   },
   "enchantment": "minecraft:aqua_affinity",

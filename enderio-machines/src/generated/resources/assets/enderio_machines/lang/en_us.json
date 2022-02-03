@@ -10,5 +10,6 @@
   "gui.enderio.alloy_smelter.mode_all": "Alloying and Smelting",
   "gui.enderio.alloy_smelter.mode_alloy": "Alloys Only",
   "gui.enderio.alloy_smelter.mode_furnace": "Furnace Only",
+  "gui.enderio.energy_equivalence": "A unit of energy, equivalent to FE.",
   "gui.enderio.progress": "Progress %s%%"
 }

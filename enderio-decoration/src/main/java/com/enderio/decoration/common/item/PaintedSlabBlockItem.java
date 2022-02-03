@@ -40,7 +40,7 @@ public class PaintedSlabBlockItem extends BlockItem {
                         return false;
                     }
 
-                    CompoundTag compoundtag1 = blockentity.save(new CompoundTag());
+                    CompoundTag compoundtag1 = blockentity.saveWithoutMetadata();
                     CompoundTag compoundtag2 = compoundtag1.copy();
 
                     Block oldPaint = PaintUtils.getBlockFromRL(compoundtag1.getString("paint"));

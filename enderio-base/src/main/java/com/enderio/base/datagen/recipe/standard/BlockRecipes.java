@@ -11,6 +11,7 @@ import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -82,7 +83,7 @@ public class BlockRecipes extends RecipeProvider {
             .shaped(EIOBlocks.REINFORCED_OBSIDIAN.get())
             .define('B', EIOBlocks.DARK_STEEL_BARS.get())
             .define('G', EIOItems.GRAINS_OF_INFINITY.get())
-            .define('O', Blocks.OBSIDIAN)
+            .define('O', Tags.Items.OBSIDIAN)
             .pattern("GBG")
             .pattern("BOB")
             .pattern("GBG")
@@ -204,7 +205,7 @@ public class BlockRecipes extends RecipeProvider {
         ShapelessRecipeBuilder recipe = ShapelessRecipeBuilder
             .shapeless(base.get())
             .requires(Blocks.LEVER)
-            .requires(Blocks.REDSTONE_WIRE, numRedstone)
+            .requires(Ingredient.of(Tags.Items.DUSTS_REDSTONE), numRedstone)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Blocks.LEVER));
         StandardRecipes.saveRecipe(recipe, null, recipeConsumer);
 
@@ -221,7 +222,7 @@ public class BlockRecipes extends RecipeProvider {
             recipe = ShapelessRecipeBuilder
                 .shapeless(base.get())
                 .requires(previous.get())
-                .requires(Blocks.REDSTONE_WIRE)
+                .requires(Tags.Items.DUSTS_REDSTONE)
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Blocks.LEVER));
             StandardRecipes.saveRecipe(recipe, "_from_prev", recipeConsumer);
         }
@@ -232,7 +233,7 @@ public class BlockRecipes extends RecipeProvider {
         ShapelessRecipeBuilder
             .shapeless(inverted.get())
             .requires(Blocks.LEVER)
-            .requires(Blocks.REDSTONE_WIRE, numRedstone)
+            .requires(Ingredient.of(Tags.Items.DUSTS_REDSTONE), numRedstone)
             .requires(Blocks.REDSTONE_TORCH)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Blocks.LEVER))
             .save(recipeConsumer);
@@ -250,7 +251,7 @@ public class BlockRecipes extends RecipeProvider {
             recipe = ShapelessRecipeBuilder
                 .shapeless(inverted.get())
                 .requires(previousInverted.get())
-                .requires(Blocks.REDSTONE_WIRE)
+                .requires(Ingredient.of(Tags.Items.DUSTS_REDSTONE))
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Blocks.LEVER));
             StandardRecipes.saveRecipe(recipe, "_from_prev", recipeConsumer);
         }

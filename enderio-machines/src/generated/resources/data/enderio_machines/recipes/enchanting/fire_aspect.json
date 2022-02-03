@@ -1,6 +1,6 @@
 {
   "type": "enderio_machines:enchanting",
-  "ingredient": {
+  "input": {
     "item": "minecraft:blaze_rod"
   },
   "enchantment": "minecraft:fire_aspect",
