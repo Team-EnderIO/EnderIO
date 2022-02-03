@@ -29,9 +29,9 @@ public class EnchanterRecipeGenerator extends RecipeProvider {
         //vanilla
         build(Enchantments.ALL_DAMAGE_PROTECTION, EIOItems.DARK_STEEL_INGOT.get(), 16, 1, pFinishedRecipeConsumer);
         build(Enchantments.FIRE_PROTECTION, Items.BLAZE_POWDER, 16, 1, pFinishedRecipeConsumer);
-        build(Enchantments.FALL_PROTECTION, Items.FEATHER, 1, 1, pFinishedRecipeConsumer);
+        build(Enchantments.FALL_PROTECTION, Tags.Items.FEATHERS, 1, 1, pFinishedRecipeConsumer);
         build(Enchantments.BLAST_PROTECTION, Items.GUNPOWDER, 16, 1, pFinishedRecipeConsumer);
-        build(Enchantments.PROJECTILE_PROTECTION, Items.LEATHER, 16, 1, pFinishedRecipeConsumer);//change arrow->leather?
+        build(Enchantments.PROJECTILE_PROTECTION, Tags.Items.LEATHER, 16, 1, pFinishedRecipeConsumer);//change arrow->leather?
         build(Enchantments.RESPIRATION, Items.GLASS_BOTTLE, 1, 1, pFinishedRecipeConsumer);
         build(Enchantments.AQUA_AFFINITY, Items.LILY_PAD, 1, 1, pFinishedRecipeConsumer);
         build(Enchantments.DEPTH_STRIDER, Items.PRISMARINE_SHARD, 1, 1, pFinishedRecipeConsumer);

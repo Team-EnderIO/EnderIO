@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "enderio:electrical_steel_block"
+      "item": "enderio:copper_alloy_block"
     }
   ],
   "result": {

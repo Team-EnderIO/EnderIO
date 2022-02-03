@@ -9,7 +9,7 @@
     },
     {
       "ingredient": {
-        "item": "minecraft:slime_ball"
+        "tag": "forge:slimeballs"
       },
       "count": 1
     },

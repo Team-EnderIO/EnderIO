@@ -1,5 +1,6 @@
 package com.enderio.machines.datagen.recipe.enchanter;
 
+import com.enderio.base.common.block.glass.FusedQuartzBlock;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.recipe.EnderIngredient;
@@ -14,6 +15,7 @@ import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 
 import java.util.List;
@@ -56,18 +58,18 @@ public class AlloyRecipeGenerator extends RecipeProvider {
 
         // region Dyes
 
-        build(new ItemStack(EIOItems.DYE_GREEN.get()), List.of(EnderIngredient.of(Items.GREEN_DYE), EnderIngredient.of(Items.EGG), EnderIngredient.of(EIOTags.Items.DUSTS_COAL)), 1500, 0.3f, pFinishedRecipeConsumer);
-        build(new ItemStack(EIOItems.DYE_GREEN.get(), 2), "double", List.of(EnderIngredient.of(2, Items.GREEN_DYE), EnderIngredient.of(Items.SLIME_BALL), EnderIngredient.of(2, EIOTags.Items.DUSTS_COAL)), 2000, 0.3f, pFinishedRecipeConsumer);
+        build(new ItemStack(EIOItems.DYE_GREEN.get()), List.of(EnderIngredient.of(Tags.Items.DYES_GREEN), EnderIngredient.of(Items.EGG), EnderIngredient.of(EIOTags.Items.DUSTS_COAL)), 1500, 0.3f, pFinishedRecipeConsumer);
+        build(new ItemStack(EIOItems.DYE_GREEN.get(), 2), "double", List.of(EnderIngredient.of(2, Tags.Items.DYES_GREEN), EnderIngredient.of(Tags.Items.SLIMEBALLS), EnderIngredient.of(2, EIOTags.Items.DUSTS_COAL)), 2000, 0.3f, pFinishedRecipeConsumer);
         build(new ItemStack(EIOItems.DYE_GREEN.get()), "clippings", List.of(EnderIngredient.of(6, EIOItems.PLANT_MATTER_GREEN.get()), EnderIngredient.of(Items.EGG)), 1500, 0.3f, pFinishedRecipeConsumer);
-        build(new ItemStack(EIOItems.DYE_GREEN.get(), 2), "double_clippings", List.of(EnderIngredient.of(12, EIOItems.PLANT_MATTER_GREEN.get()), EnderIngredient.of(Items.SLIME_BALL)), 2000, 0.3f, pFinishedRecipeConsumer);
+        build(new ItemStack(EIOItems.DYE_GREEN.get(), 2), "double_clippings", List.of(EnderIngredient.of(12, EIOItems.PLANT_MATTER_GREEN.get()), EnderIngredient.of(Tags.Items.SLIMEBALLS)), 2000, 0.3f, pFinishedRecipeConsumer);
 
         build(new ItemStack(EIOItems.DYE_BROWN.get()), List.of(EnderIngredient.of(Items.BROWN_DYE), EnderIngredient.of(Items.EGG), EnderIngredient.of(EIOTags.Items.DUSTS_COAL)), 1500, 0.3f, pFinishedRecipeConsumer);
-        build(new ItemStack(EIOItems.DYE_BROWN.get(), 2), "double", List.of(EnderIngredient.of(2, Items.BROWN_DYE), EnderIngredient.of(Items.SLIME_BALL), EnderIngredient.of(2, EIOTags.Items.DUSTS_COAL)), 2000, 0.3f, pFinishedRecipeConsumer);
+        build(new ItemStack(EIOItems.DYE_BROWN.get(), 2), "double", List.of(EnderIngredient.of(2, Items.BROWN_DYE), EnderIngredient.of(Tags.Items.SLIMEBALLS), EnderIngredient.of(2, EIOTags.Items.DUSTS_COAL)), 2000, 0.3f, pFinishedRecipeConsumer);
         build(new ItemStack(EIOItems.DYE_BROWN.get()), "twigs", List.of(EnderIngredient.of(6, EIOItems.PLANT_MATTER_BROWN.get()), EnderIngredient.of(Items.EGG)), 1500, 0.3f, pFinishedRecipeConsumer);
-        build(new ItemStack(EIOItems.DYE_BROWN.get(), 2), "twigs_double", List.of(EnderIngredient.of(12, EIOItems.PLANT_MATTER_BROWN.get()), EnderIngredient.of(Items.SLIME_BALL)), 2000, 0.3f, pFinishedRecipeConsumer);
+        build(new ItemStack(EIOItems.DYE_BROWN.get(), 2), "twigs_double", List.of(EnderIngredient.of(12, EIOItems.PLANT_MATTER_BROWN.get()), EnderIngredient.of(Tags.Items.SLIMEBALLS)), 2000, 0.3f, pFinishedRecipeConsumer);
 
         build(new ItemStack(EIOItems.DYE_BLACK.get()), List.of(EnderIngredient.of(3, EIOTags.Items.DUSTS_COAL), EnderIngredient.of(Items.EGG)), 1500, 0.3f, pFinishedRecipeConsumer);
-        build(new ItemStack(EIOItems.DYE_BLACK.get(), 2), "double", List.of(EnderIngredient.of(6, EIOTags.Items.DUSTS_COAL), EnderIngredient.of(Items.SLIME_BALL)), 2000, 0.3f, pFinishedRecipeConsumer);
+        build(new ItemStack(EIOItems.DYE_BLACK.get(), 2), "double", List.of(EnderIngredient.of(6, EIOTags.Items.DUSTS_COAL), EnderIngredient.of(Tags.Items.SLIMEBALLS)), 2000, 0.3f, pFinishedRecipeConsumer);
 
         build(new ItemStack(Items.RED_DYE, 12), List.of(EnderIngredient.of(Items.BEETROOT), EnderIngredient.of(3, Items.CLAY_BALL), EnderIngredient.of(6, Items.EGG)), 15000, 0.3f, pFinishedRecipeConsumer);
 
@@ -81,30 +83,75 @@ public class AlloyRecipeGenerator extends RecipeProvider {
 
         // endregion
 
+        // region Glass
+
+        glass(EIOBlocks.QUITE_CLEAR_GLASS.CLEAR.get(), EnderIngredient.of(Tags.Items.GLASS_COLORLESS), 2500, 0.3f, pFinishedRecipeConsumer);
+
+        glass(EIOBlocks.FUSED_QUARTZ.CLEAR.get(), EnderIngredient.of(4, Tags.Items.GEMS_QUARTZ), EnderIngredient.of(Tags.Items.STORAGE_BLOCKS_QUARTZ), 5000, 0.3f, pFinishedRecipeConsumer);
+
+        compositeGlass(EIOBlocks.DARK_FUSED_QUARTZ.CLEAR.get(), EnderIngredient.of(4, Tags.Items.GEMS_QUARTZ), EnderIngredient.of(4, Tags.Items.GEMS_AMETHYST), EnderIngredient.of(Blocks.AMETHYST_BLOCK), 5000, 0.3f, pFinishedRecipeConsumer);
+        compositeGlass(EIOBlocks.DARK_FUSED_QUARTZ.CLEAR.get(), "quartz_block", EnderIngredient.of(Tags.Items.STORAGE_BLOCKS_QUARTZ), EnderIngredient.of(4, Tags.Items.GEMS_AMETHYST), EnderIngredient.of(Blocks.AMETHYST_BLOCK), 5000, 0.3f, pFinishedRecipeConsumer);
+        compositeGlass(EIOBlocks.DARK_FUSED_QUARTZ.CLEAR.get(), "fused_quartz", EnderIngredient.of(EIOBlocks.FUSED_QUARTZ.CLEAR.get()), EnderIngredient.of(4, Tags.Items.GEMS_AMETHYST), EnderIngredient.of(Blocks.AMETHYST_BLOCK), 2500, 0.3f, pFinishedRecipeConsumer);
+
+        compositeGlass(EIOBlocks.DARK_CLEAR_GLASS.CLEAR.get(), EnderIngredient.of(Tags.Items.GLASS_COLORLESS), EnderIngredient.of(4, Tags.Items.GEMS_AMETHYST), EnderIngredient.of(Blocks.AMETHYST_BLOCK), 2500, 0.3f, pFinishedRecipeConsumer);
+        compositeGlass(EIOBlocks.DARK_CLEAR_GLASS.CLEAR.get(), "clear_glass", EnderIngredient.of(EIOBlocks.FUSED_QUARTZ.CLEAR.get()), EnderIngredient.of(4, Tags.Items.GEMS_AMETHYST), EnderIngredient.of(Blocks.AMETHYST_BLOCK), 1250, 0.3f, pFinishedRecipeConsumer);
+
+        compositeGlass(EIOBlocks.ENLIGHTENED_FUSED_QUARTZ.CLEAR.get(), EnderIngredient.of(4, Tags.Items.GEMS_QUARTZ), EnderIngredient.of(4, Tags.Items.DUSTS_GLOWSTONE), EnderIngredient.of(Blocks.GLOWSTONE), 5000, 0.3f, pFinishedRecipeConsumer);
+        compositeGlass(EIOBlocks.ENLIGHTENED_FUSED_QUARTZ.CLEAR.get(), "quartz_block", EnderIngredient.of(Tags.Items.STORAGE_BLOCKS_QUARTZ), EnderIngredient.of(4, Tags.Items.DUSTS_GLOWSTONE), EnderIngredient.of(Blocks.GLOWSTONE), 5000, 0.3f, pFinishedRecipeConsumer);
+        compositeGlass(EIOBlocks.ENLIGHTENED_FUSED_QUARTZ.CLEAR.get(), "fused_quartz", EnderIngredient.of(EIOBlocks.FUSED_QUARTZ.CLEAR.get()), EnderIngredient.of(4, Tags.Items.DUSTS_GLOWSTONE), EnderIngredient.of(Blocks.GLOWSTONE), 2500, 0.3f, pFinishedRecipeConsumer);
+
+        compositeGlass(EIOBlocks.ENLIGHTENED_CLEAR_GLASS.CLEAR.get(), EnderIngredient.of(Tags.Items.GLASS_COLORLESS), EnderIngredient.of(4, Tags.Items.DUSTS_GLOWSTONE), EnderIngredient.of(Blocks.GLOWSTONE), 2500, 0.3f, pFinishedRecipeConsumer);
+        compositeGlass(EIOBlocks.ENLIGHTENED_CLEAR_GLASS.CLEAR.get(), "clear_glass", EnderIngredient.of(EIOBlocks.FUSED_QUARTZ.CLEAR.get()), EnderIngredient.of(4, Tags.Items.DUSTS_GLOWSTONE), EnderIngredient.of(Blocks.GLOWSTONE), 1250, 0.3f, pFinishedRecipeConsumer);
+
+        // endregion
+
         // region Misc
 
         build(new ItemStack(EIOItems.CAKE_BASE.get(), 2), List.of(EnderIngredient.of(3, EIOItems.FLOUR.get()), EnderIngredient.of(Items.EGG)), 2000, 0.3f, pFinishedRecipeConsumer);
 
         build(new ItemStack(Items.COOKIE, 8), List.of(EnderIngredient.of(EIOItems.FLOUR.get()), EnderIngredient.of(Items.COCOA_BEANS)), 2000, 0.3f, pFinishedRecipeConsumer);
 
-        build(new ItemStack(EIOBlocks.QUITE_CLEAR_GLASS.CLEAR.get()), List.of(EnderIngredient.of(Tags.Items.GLASS_COLORLESS)), 2500, 0.3f, pFinishedRecipeConsumer);
-        build(new ItemStack(EIOBlocks.FUSED_QUARTZ.CLEAR.get()), List.of(EnderIngredient.of(4, Tags.Items.GEMS_QUARTZ)), 5000, 0.3f, pFinishedRecipeConsumer);
-        build(new ItemStack(EIOBlocks.FUSED_QUARTZ.CLEAR.get()), "block", List.of(EnderIngredient.of(Tags.Items.STORAGE_BLOCKS_QUARTZ)), 5000, 0.3f, pFinishedRecipeConsumer);
-
         build(new ItemStack(EIOItems.PHOTOVOLTAIC_PLATE.get()), List.of(EnderIngredient.of(3, EIOItems.PHOTOVOLTAIC_COMPOSITE.get())), 15000, 0.3f, pFinishedRecipeConsumer);
 
-        build(new ItemStack(Items.ENDER_PEARL), List.of(EnderIngredient.of(9, EIOItems.ENDER_PEARL_POWDER.get())), 2000, 0.3f, pFinishedRecipeConsumer);
+        build(new ItemStack(Items.ENDER_PEARL), List.of(EnderIngredient.of(9, EIOTags.Items.DUSTS_ENDER)), 2000, 0.3f, pFinishedRecipeConsumer);
 
         // TODO: Infinity reagent
         //        build(new ItemStack(), List.of(EnderIngredient.of(EIOItems.GRAINS_OF_INFINITY.get()), EnderIngredient.of(EIOTags.Items.DUSTS_COAL)), 5000, 0.3f, pFinishedRecipeConsumer);
 
         build(new ItemStack(Items.DEAD_BUSH), List.of(EnderIngredient.of(ItemTags.SAPLINGS)), 2000, 0.3f, pFinishedRecipeConsumer);
 
-        build(new ItemStack(EIOItems.DARK_STEEL_UPGRADE_BLANK.get()), List.of(EnderIngredient.of(EIOBlocks.DARK_STEEL_BARS.get()), EnderIngredient.of(Items.CLAY_BALL), EnderIngredient.of(4, Items.STRING)), 30000, 0.3f, pFinishedRecipeConsumer);
+        build(new ItemStack(EIOItems.DARK_STEEL_UPGRADE_BLANK.get()), List.of(EnderIngredient.of(EIOBlocks.DARK_STEEL_BARS.get()), EnderIngredient.of(Items.CLAY_BALL), EnderIngredient.of(4, Tags.Items.STRING)), 30000, 0.3f, pFinishedRecipeConsumer);
 
         build(new ItemStack(EIOItems.CLAYED_GLOWSTONE.get(), 2), List.of(EnderIngredient.of(Tags.Items.DUSTS_GLOWSTONE), EnderIngredient.of(Items.CLAY_BALL)), 5000, 0.3f, pFinishedRecipeConsumer);
 
         // endregion
+    }
+
+    protected void glass(FusedQuartzBlock block, EnderIngredient input, int energy, float experience, Consumer<FinishedRecipe> recipeConsumer) {
+        build(new ItemStack(block), List.of(input), energy, experience, recipeConsumer);
+    }
+
+    protected void glass(FusedQuartzBlock block, EnderIngredient input, EnderIngredient inputAlt, int energy, float experience, Consumer<FinishedRecipe> recipeConsumer) {
+        build(new ItemStack(block), List.of(input), energy, experience, recipeConsumer);
+        build(new ItemStack(block), "alt", List.of(inputAlt), energy, experience, recipeConsumer);
+    }
+
+    protected void compositeGlass(FusedQuartzBlock block, EnderIngredient inputA, EnderIngredient inputB, int energy, float experience, Consumer<FinishedRecipe> recipeConsumer) {
+        build(new ItemStack(block), List.of(inputA, inputB), energy, experience, recipeConsumer);
+    }
+
+    protected void compositeGlass(FusedQuartzBlock block, String suffix, EnderIngredient inputA, EnderIngredient inputB, int energy, float experience, Consumer<FinishedRecipe> recipeConsumer) {
+        build(new ItemStack(block), suffix, List.of(inputA, inputB), energy, experience, recipeConsumer);
+    }
+
+    protected void compositeGlass(FusedQuartzBlock block, EnderIngredient inputA, EnderIngredient inputB, EnderIngredient inputBAlt, int energy, float experience, Consumer<FinishedRecipe> recipeConsumer) {
+        build(new ItemStack(block), List.of(inputA, inputB), energy, experience, recipeConsumer);
+        build(new ItemStack(block), "alt", List.of(inputA, inputBAlt), energy, experience, recipeConsumer);
+    }
+
+    protected void compositeGlass(FusedQuartzBlock block, String suffix, EnderIngredient inputA, EnderIngredient inputB, EnderIngredient inputBAlt, int energy, float experience, Consumer<FinishedRecipe> recipeConsumer) {
+        build(new ItemStack(block), suffix, List.of(inputA, inputB), energy, experience, recipeConsumer);
+        build(new ItemStack(block), suffix + "_alt", List.of(inputA, inputBAlt), energy, experience, recipeConsumer);
     }
 
     protected void build(ItemStack result, List<EnderIngredient> ingredients, int energy, float experience, Consumer<FinishedRecipe> recipeConsumer) {

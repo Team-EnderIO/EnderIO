@@ -1,7 +1,7 @@
 {
   "type": "enderio_machines:enchanting",
   "input": {
-    "item": "minecraft:feather"
+    "tag": "forge:feathers"
   },
   "enchantment": "minecraft:feather_falling",
   "amount": 1,

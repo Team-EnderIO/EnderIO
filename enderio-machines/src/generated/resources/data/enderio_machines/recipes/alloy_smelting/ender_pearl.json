@@ -3,7 +3,7 @@
   "inputs": [
     {
       "ingredient": {
-        "item": "enderio:ender_pearl_powder"
+        "tag": "forge:dusts/ender"
       },
       "count": 9
     }

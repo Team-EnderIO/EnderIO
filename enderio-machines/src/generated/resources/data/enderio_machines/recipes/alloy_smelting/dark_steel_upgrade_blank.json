@@ -15,7 +15,7 @@
     },
     {
       "ingredient": {
-        "item": "minecraft:string"
+        "tag": "forge:string"
       },
       "count": 4
     }

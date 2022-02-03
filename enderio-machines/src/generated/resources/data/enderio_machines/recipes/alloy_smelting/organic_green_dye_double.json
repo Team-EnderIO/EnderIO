@@ -3,13 +3,13 @@
   "inputs": [
     {
       "ingredient": {
-        "item": "minecraft:green_dye"
+        "tag": "forge:dyes/green"
       },
       "count": 2
     },
     {
       "ingredient": {
-        "item": "minecraft:slime_ball"
+        "tag": "forge:slimeballs"
       },
       "count": 1
     },

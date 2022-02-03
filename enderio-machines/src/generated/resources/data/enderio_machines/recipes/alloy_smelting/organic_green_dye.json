@@ -3,7 +3,7 @@
   "inputs": [
     {
       "ingredient": {
-        "item": "minecraft:green_dye"
+        "tag": "forge:dyes/green"
       },
       "count": 1
     },
