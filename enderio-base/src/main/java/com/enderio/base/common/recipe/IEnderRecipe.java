@@ -1,6 +1,5 @@
 package com.enderio.base.common.recipe;
 
-import com.enderio.base.EnderIO;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -21,7 +20,7 @@ public interface IEnderRecipe<R extends IEnderRecipe<R, C>, C extends Container>
     }
 
     default String getOwningMod() {
-        return EnderIO.MODID;
+        return getId().getNamespace();
     }
 
     /**
