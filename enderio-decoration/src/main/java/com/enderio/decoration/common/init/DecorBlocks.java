@@ -12,6 +12,7 @@ import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -77,7 +78,7 @@ public class DecorBlocks {
 
     @SafeVarargs
     private static <T extends Block> BlockEntry<T> paintedBlock(String name, NonNullFunction<BlockBehaviour.Properties, T> blockFactory, Block copyFrom,
-        Tag.Named<Block>... tags) {
+        TagKey<Block>... tags) {
         BlockEntry<T> paintedBlockEntry = REGISTRATE
             .block(name, blockFactory)
             .blockstate((ctx, cons) -> DecorBlockState.paintedBlock(ctx, cons, copyFrom))

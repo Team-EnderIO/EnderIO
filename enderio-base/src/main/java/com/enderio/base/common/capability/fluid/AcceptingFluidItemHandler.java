@@ -1,6 +1,7 @@
 package com.enderio.base.common.capability.fluid;
 
 import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -19,8 +20,9 @@ public class AcceptingFluidItemHandler extends FluidHandlerItemStack {
     public AcceptingFluidItemHandler(@NotNull ItemStack container, int capacity, Fluid validFluid) {
         this(container, capacity, fluid -> fluid == validFluid);
     }
-    public AcceptingFluidItemHandler(@NotNull ItemStack container, int capacity, Tag<Fluid> validFluid) {
-        this(container, capacity, validFluid::contains);
+
+    public AcceptingFluidItemHandler(@NotNull ItemStack container, int capacity, TagKey<Fluid> validFluid) {
+        this(container, capacity, fluid -> fluid.is(validFluid));
     }
 
     public AcceptingFluidItemHandler(@NotNull ItemStack container, int capacity, Predicate<Fluid> isFluidValid) {

@@ -5,7 +5,10 @@ import com.enderio.base.common.recipe.capacitor.CapacitorDataRecipe;
 import com.enderio.base.common.recipe.grindingball.GrindingballRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -16,7 +19,6 @@ public class EIORecipes {
 
     public static void register(IEventBus bus) {
         Serializer.register(bus);
-        Types.register();
     }
 
     public static class Serializer {
@@ -35,12 +37,17 @@ public class EIORecipes {
         }
     }
 
+    @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class Types {
         private Types() {}
 
-        public static final RecipeType<CapacitorDataRecipe> CAPACITOR_DATA = RecipeType.register(EnderIO.MODID + ":capacitor_data");
-        public static final RecipeType<GrindingballRecipe> GRINDINGBALL = RecipeType.register(EnderIO.MODID + ":grindingball");
+        public static RecipeType<CapacitorDataRecipe> CAPACITOR_DATA;
+        public static RecipeType<GrindingballRecipe> GRINDINGBALL;
 
-        public static void register() {}
+        @SubscribeEvent
+        public static void onRecipeSerializerRegistry(RegistryEvent.Register<RecipeSerializer<?>> event) {
+            CAPACITOR_DATA = RecipeType.register(EnderIO.MODID + ":capacitor_data");
+            GRINDINGBALL = RecipeType.register(EnderIO.MODID + ":grindingball");
+        }
     }
 }

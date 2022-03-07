@@ -7,11 +7,13 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import net.minecraft.core.Registry;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.Serializer;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -19,12 +21,18 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 @Mod.EventBusSubscriber(modid = EnderIO.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class DirectUpgradeLootCondition implements LootItemCondition {
 
-    public static final LootItemConditionType HAS_DIRECT_UPGRADE = Registry.register(Registry.LOOT_CONDITION_TYPE, EnderIO.loc("has_direct_upgrade"),
-        new LootItemConditionType(new InnerSerializer()));
+    public static LootItemConditionType HAS_DIRECT_UPGRADE;
 
     @SubscribeEvent
     public static void commonSetup(final FMLCommonSetupEvent event) {
         //force static init
+    }
+
+    // LootItemConditionType has no event, but it works on any.
+    @SubscribeEvent
+    public static void register(RegistryEvent.Register<RecipeSerializer<?>> event) {
+        HAS_DIRECT_UPGRADE = Registry.register(Registry.LOOT_CONDITION_TYPE, EnderIO.loc("has_direct_upgrade"),
+            new LootItemConditionType(new InnerSerializer()));
     }
 
     @Override
