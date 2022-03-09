@@ -2,6 +2,8 @@ package com.enderio.decoration.common.init;
 
 import com.enderio.decoration.EIODecor;
 import com.enderio.decoration.common.blockentity.DoublePaintedBlockEntity;
+import com.enderio.decoration.common.blockentity.LightNodeBlockEntity;
+import com.enderio.decoration.common.blockentity.PoweredLightBlockEntity;
 import com.enderio.decoration.common.blockentity.SinglePaintedBlockEntity;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
@@ -20,6 +22,16 @@ public class DecorBlockEntities {
         .blockEntity("double_painted", DoublePaintedBlockEntity::new)
         .validBlocks(DecorBlocks.PAINTED_SLAB)
         .register();
+    
+    public static final BlockEntityEntry<PoweredLightBlockEntity> POWERED_LIGHT = REGISTRATE
+    	.blockEntity("powered_light", PoweredLightBlockEntity::new)
+    	.validBlock(DecorBlocks.POWERED_LIGHT)
+    	.register();
+    
+    public static final BlockEntityEntry<LightNodeBlockEntity> LIGHT_NODE = REGISTRATE
+        	.blockEntity("light_node", LightNodeBlockEntity::new)
+        	.validBlock(DecorBlocks.POWERED_LIGHT)
+        	.register();
 
     public static void classload() {}
 
