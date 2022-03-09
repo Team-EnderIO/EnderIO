@@ -7,6 +7,7 @@ import com.enderio.decoration.common.init.DecorBlockEntities;
 import com.enderio.decoration.common.init.DecorBlocks;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
@@ -14,15 +15,21 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.AttachFace;
 
 public class PoweredLight extends Light implements EntityBlock{
 	public boolean wireless;
 
 	public PoweredLight(Properties p_49224_, boolean inverted, boolean wireless) {
 		super(p_49224_, inverted);
+		this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(ENABLED, false).setValue(FACE, AttachFace.WALL));
 		this.wireless = wireless;
 	}
 
+	public boolean isWireless() {
+		return wireless;
+	}
+	
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		return DecorBlockEntities.POWERED_LIGHT.create(pos, state);
@@ -45,5 +52,17 @@ public class PoweredLight extends Light implements EntityBlock{
 				light.needsUpdate();
 			}
 		}
+		super.neighborChanged(state, level, pos, block, fromPos, isMoving);
+	}
+	
+	@Override
+	public void checkPoweredState(Level level, BlockPos pos, BlockState state) {
+		if (level.getBlockEntity(pos) instanceof PoweredLightBlockEntity light) {
+			if (light.isActive()) {
+				super.checkPoweredState(level, pos, state);
+				return;
+			}
+		}
+		level.setBlock(pos, state.setValue(ENABLED, false), 3);
 	}
 }

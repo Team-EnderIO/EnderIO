@@ -31,7 +31,7 @@ public class DecorBlockState {
     	prov.getVariantBuilder(ctx.get()).forAllStates(state -> {
             Direction facing = state.getValue(PoweredLight.FACING);
             AttachFace face = state.getValue(PoweredLight.FACE);
-            boolean powered = state.getValue(PoweredLight.POWERED);
+            boolean powered = state.getValue(PoweredLight.ENABLED);
 
             ModelFile light = prov.models().withExistingParent(ctx.get().getRegistryName().getPath(), new ResourceLocation(EIODecor.MODID, "block/lightblock"));
 			ModelFile light_powered = prov.models().withExistingParent(ctx.get().getRegistryName().getPath() + "_powered", new ResourceLocation(EIODecor.MODID, "block/lightblock"));

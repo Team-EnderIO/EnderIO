@@ -133,7 +133,12 @@ public class DecorBlocks {
     		.block(name, blockFactory)
     		.blockstate((ctx, prov) -> DecorBlockState.lightBlock(ctx, prov))
     		.initialProperties(Material.METAL)
-    		.properties(p -> p.lightLevel(l -> 15))
+    		.properties(p -> p.lightLevel(l -> {
+    				if (l.getValue(Light.ENABLED)) {
+    					return 15;
+    				}
+    				return 0;
+    			}))
     		.item()
     		.model((ctx, prov) -> prov.withExistingParent(name, "block/button_inventory"))
     		.tab(() -> DECOR)

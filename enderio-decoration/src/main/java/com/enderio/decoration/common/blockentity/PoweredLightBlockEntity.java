@@ -4,25 +4,41 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import com.enderio.decoration.common.block.light.Light;
+import com.enderio.decoration.common.block.light.PoweredLight;
 import com.enderio.decoration.common.init.DecorBlocks;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 
 public class PoweredLightBlockEntity extends BlockEntity{
+	private static final int RF_USE_TICK = 1;
 	static int spread = 2;
 	private boolean update = true;
+	private boolean active = false;
 
 	public PoweredLightBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
 		super(type, worldPosition, blockState);
 	}
 	
 	public static void tick(Level level, BlockPos pos, BlockState state, PoweredLightBlockEntity e) {
+		if(((PoweredLight) state.getBlock()).isWireless()){
+			consumePowerWireless(level, pos, state, e);
+		}else { 
+			consumePower(level, pos, state, e);
+		}
 		if (e.update) {
 			createNodes(level, pos, state);
 			e.update = false;
@@ -31,6 +47,10 @@ public class PoweredLightBlockEntity extends BlockEntity{
 	
 	public void needsUpdate() {
 		this.update = true;
+	}
+	
+	public boolean isActive() {
+		return active;
 	}
 
 	private static void createNodes(Level level, BlockPos center, BlockState state) {
@@ -140,5 +160,51 @@ public class PoweredLightBlockEntity extends BlockEntity{
 		return true;
 	}
 	
+	private static void consumePower(Level level, BlockPos pos, BlockState state, PoweredLightBlockEntity e) {
+		BlockEntity be = level.getBlockEntity(pos.relative(state.getValue(Light.FACING).getOpposite()));
+		if (be != null) {
+			LazyOptional<IEnergyStorage> energy = be.getCapability(CapabilityEnergy.ENERGY, state.getValue(Light.FACING));
+			if (energy.isPresent()) {
+				if (energy.resolve().get().extractEnergy(RF_USE_TICK, true) == RF_USE_TICK) {
+					boolean powered = level.hasNeighborSignal(pos);
+					if (powered == ((Light) state.getBlock()).isInverted() ? state.getValue(Light.ENABLED) : !state.getValue(Light.ENABLED)) {
+						return;
+					}
+					energy.resolve().get().extractEnergy(RF_USE_TICK, false);
+					return;
+				}
+			}
+		}
+		boolean powered = level.hasNeighborSignal(pos);
+		if (powered != ((Light) state.getBlock()).isInverted() ? state.getValue(Light.ENABLED) : !state.getValue(Light.ENABLED)) {
+			level.setBlock(pos, state.setValue(Light.ENABLED, false), 3);
+			e.needsUpdate();
+		}
+	}
+	
+	private static void consumePowerWireless(Level level, BlockPos pos, BlockState state, PoweredLightBlockEntity e) {
+		boolean powered = level.hasNeighborSignal(pos);
+		if (powered != ((Light) state.getBlock()).isInverted() ? state.getValue(Light.ENABLED) : !state.getValue(Light.ENABLED)) {
+			level.setBlock(pos, state.setValue(Light.ENABLED, false), 3);
+			e.needsUpdate();
+		}
+	}
+	
+	@Override
+	protected void saveAdditional(CompoundTag tag) {
+		tag.putBoolean("active", active);
+		super.saveAdditional(tag);
+	}
+	
+	@Override
+	public void load(CompoundTag tag) {
+		super.load(tag);
+		this.active = tag.getBoolean("active");
+	}
+	
+	@Override
+	public Packet<ClientGamePacketListener> getUpdatePacket() {
+		return ClientboundBlockEntityDataPacket.create(this);
+	}
 
 }

@@ -1,115 +1,115 @@
 {
   "variants": {
-    "face=floor,facing=north,powered=false": {
+    "enabled=false,face=floor,facing=north": {
       "model": "enderio_decoration:block/powerd_light_inverted_powered"
     },
-    "face=wall,facing=north,powered=false": {
-      "model": "enderio_decoration:block/powerd_light_inverted_powered",
-      "x": 90,
-      "uvlock": true
-    },
-    "face=ceiling,facing=north,powered=false": {
-      "model": "enderio_decoration:block/powerd_light_inverted_powered",
-      "x": 180,
-      "y": 180
-    },
-    "face=floor,facing=south,powered=false": {
-      "model": "enderio_decoration:block/powerd_light_inverted_powered",
-      "y": 180
-    },
-    "face=wall,facing=south,powered=false": {
-      "model": "enderio_decoration:block/powerd_light_inverted_powered",
-      "x": 90,
-      "y": 180,
-      "uvlock": true
-    },
-    "face=ceiling,facing=south,powered=false": {
-      "model": "enderio_decoration:block/powerd_light_inverted_powered",
-      "x": 180
-    },
-    "face=floor,facing=west,powered=false": {
-      "model": "enderio_decoration:block/powerd_light_inverted_powered",
-      "y": 270
-    },
-    "face=wall,facing=west,powered=false": {
-      "model": "enderio_decoration:block/powerd_light_inverted_powered",
-      "x": 90,
-      "y": 270,
-      "uvlock": true
-    },
-    "face=ceiling,facing=west,powered=false": {
-      "model": "enderio_decoration:block/powerd_light_inverted_powered",
-      "x": 180,
-      "y": 90
-    },
-    "face=floor,facing=east,powered=false": {
-      "model": "enderio_decoration:block/powerd_light_inverted_powered",
-      "y": 90
-    },
-    "face=wall,facing=east,powered=false": {
-      "model": "enderio_decoration:block/powerd_light_inverted_powered",
-      "x": 90,
-      "y": 90,
-      "uvlock": true
-    },
-    "face=ceiling,facing=east,powered=false": {
-      "model": "enderio_decoration:block/powerd_light_inverted_powered",
-      "x": 180,
-      "y": 270
-    },
-    "face=floor,facing=north,powered=true": {
+    "enabled=true,face=floor,facing=north": {
       "model": "enderio_decoration:block/powerd_light_inverted"
     },
-    "face=wall,facing=north,powered=true": {
+    "enabled=false,face=wall,facing=north": {
+      "model": "enderio_decoration:block/powerd_light_inverted_powered",
+      "x": 90,
+      "uvlock": true
+    },
+    "enabled=true,face=wall,facing=north": {
       "model": "enderio_decoration:block/powerd_light_inverted",
       "x": 90,
       "uvlock": true
     },
-    "face=ceiling,facing=north,powered=true": {
+    "enabled=false,face=ceiling,facing=north": {
+      "model": "enderio_decoration:block/powerd_light_inverted_powered",
+      "x": 180,
+      "y": 180
+    },
+    "enabled=true,face=ceiling,facing=north": {
       "model": "enderio_decoration:block/powerd_light_inverted",
       "x": 180,
       "y": 180
     },
-    "face=floor,facing=south,powered=true": {
+    "enabled=false,face=floor,facing=south": {
+      "model": "enderio_decoration:block/powerd_light_inverted_powered",
+      "y": 180
+    },
+    "enabled=true,face=floor,facing=south": {
       "model": "enderio_decoration:block/powerd_light_inverted",
       "y": 180
     },
-    "face=wall,facing=south,powered=true": {
+    "enabled=false,face=wall,facing=south": {
+      "model": "enderio_decoration:block/powerd_light_inverted_powered",
+      "x": 90,
+      "y": 180,
+      "uvlock": true
+    },
+    "enabled=true,face=wall,facing=south": {
       "model": "enderio_decoration:block/powerd_light_inverted",
       "x": 90,
       "y": 180,
       "uvlock": true
     },
-    "face=ceiling,facing=south,powered=true": {
+    "enabled=false,face=ceiling,facing=south": {
+      "model": "enderio_decoration:block/powerd_light_inverted_powered",
+      "x": 180
+    },
+    "enabled=true,face=ceiling,facing=south": {
       "model": "enderio_decoration:block/powerd_light_inverted",
       "x": 180
     },
-    "face=floor,facing=west,powered=true": {
+    "enabled=false,face=floor,facing=west": {
+      "model": "enderio_decoration:block/powerd_light_inverted_powered",
+      "y": 270
+    },
+    "enabled=true,face=floor,facing=west": {
       "model": "enderio_decoration:block/powerd_light_inverted",
       "y": 270
     },
-    "face=wall,facing=west,powered=true": {
+    "enabled=false,face=wall,facing=west": {
+      "model": "enderio_decoration:block/powerd_light_inverted_powered",
+      "x": 90,
+      "y": 270,
+      "uvlock": true
+    },
+    "enabled=true,face=wall,facing=west": {
       "model": "enderio_decoration:block/powerd_light_inverted",
       "x": 90,
       "y": 270,
       "uvlock": true
     },
-    "face=ceiling,facing=west,powered=true": {
+    "enabled=false,face=ceiling,facing=west": {
+      "model": "enderio_decoration:block/powerd_light_inverted_powered",
+      "x": 180,
+      "y": 90
+    },
+    "enabled=true,face=ceiling,facing=west": {
       "model": "enderio_decoration:block/powerd_light_inverted",
       "x": 180,
       "y": 90
     },
-    "face=floor,facing=east,powered=true": {
+    "enabled=false,face=floor,facing=east": {
+      "model": "enderio_decoration:block/powerd_light_inverted_powered",
+      "y": 90
+    },
+    "enabled=true,face=floor,facing=east": {
       "model": "enderio_decoration:block/powerd_light_inverted",
       "y": 90
     },
-    "face=wall,facing=east,powered=true": {
+    "enabled=false,face=wall,facing=east": {
+      "model": "enderio_decoration:block/powerd_light_inverted_powered",
+      "x": 90,
+      "y": 90,
+      "uvlock": true
+    },
+    "enabled=true,face=wall,facing=east": {
       "model": "enderio_decoration:block/powerd_light_inverted",
       "x": 90,
       "y": 90,
       "uvlock": true
     },
-    "face=ceiling,facing=east,powered=true": {
+    "enabled=false,face=ceiling,facing=east": {
+      "model": "enderio_decoration:block/powerd_light_inverted_powered",
+      "x": 180,
+      "y": 270
+    },
+    "enabled=true,face=ceiling,facing=east": {
       "model": "enderio_decoration:block/powerd_light_inverted",
       "x": 180,
       "y": 270
