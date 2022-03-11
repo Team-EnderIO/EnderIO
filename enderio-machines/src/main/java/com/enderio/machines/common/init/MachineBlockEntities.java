@@ -42,6 +42,11 @@ public class MachineBlockEntities {
         .blockEntity("enhanced_alloy_smelter", AlloySmelterBlockEntity.Enhanced::new)
         .validBlocks(MachineBlocks.ENHANCED_ALLOY_SMELTER)
         .register();
+    
+    public static final BlockEntityEntry<VacuumChestBlockEntity> VACUUM_CHEST = REGISTRATE
+            .blockEntity("vacuum_chest", VacuumChestBlockEntity::new)
+            .validBlocks(MachineBlocks.VACUUM_CHEST)
+            .register();
 
     public static final BlockEntityEntry<CreativePowerBlockEntity> CREATIVE_POWER = REGISTRATE
         .blockEntity("creative_power", CreativePowerBlockEntity::new)

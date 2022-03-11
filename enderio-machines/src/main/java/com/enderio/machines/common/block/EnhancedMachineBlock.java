@@ -1,7 +1,10 @@
 package com.enderio.machines.common.block;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -29,7 +32,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * An enhanced machine block is two blocks high.
@@ -133,6 +135,6 @@ public class EnhancedMachineBlock extends ProgressMachineBlock {
         }
         return null;
     }
-
+    
     // endregion
 }
