@@ -1,7 +1,10 @@
 package com.enderio.machines.common.block;
 
+import org.jetbrains.annotations.Nullable;
+
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -29,7 +32,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.Nullable;
 
 public class EnhancedMachineBlock extends ProgressMachineBlock {
     public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
@@ -129,7 +131,7 @@ public class EnhancedMachineBlock extends ProgressMachineBlock {
         }
         return null;
     }
-
+    
     // endregion
 
     // TODO: Look at DoorBlock for stopping the top block from existing etc. Lets get it placing first.
