@@ -186,6 +186,15 @@ public class MachineBlocks {
             .tab(() -> EIOCreativeTabs.MACHINES)
             .build()
             .register();
+    
+    public static final BlockEntry<MachineBlock> XP_VACUUM = REGISTRATE
+            .block("xp_vacuum", p -> new MachineBlock(p, MachineBlockEntities.XP_VACUUM))
+            .properties(props -> props.strength(2.5f, 8))
+            .loot(MachinesLootTable::copyNBT)
+            .item()
+            .tab(() -> EIOCreativeTabs.MACHINES)
+            .build()
+            .register();
 
     public static void classload() {}
 }

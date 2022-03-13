@@ -5,6 +5,7 @@ import com.enderio.machines.common.blockentity.AlloySmelterBlockEntity;
 import com.enderio.machines.common.blockentity.EnchanterBlockEntity;
 import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
 import com.enderio.machines.common.blockentity.VacuumChestBlockEntity;
+import com.enderio.machines.common.blockentity.XPVacuumBlockEntity;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 
@@ -49,6 +50,11 @@ public class MachineBlockEntities {
     public static final BlockEntityEntry<VacuumChestBlockEntity> VACUUM_CHEST = REGISTRATE
             .blockEntity("vacuum_chest", VacuumChestBlockEntity::new)
             .validBlocks(MachineBlocks.VACUUM_CHEST)
+            .register();
+    
+    public static final BlockEntityEntry<XPVacuumBlockEntity> XP_VACUUM = REGISTRATE
+            .blockEntity("xp_vacuum", XPVacuumBlockEntity::new)
+            .validBlocks(MachineBlocks.XP_VACUUM)
             .register();
 
     public static void classload() {}
