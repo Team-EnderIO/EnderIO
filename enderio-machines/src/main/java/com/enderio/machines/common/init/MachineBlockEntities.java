@@ -47,6 +47,11 @@ public class MachineBlockEntities {
             .blockEntity("vacuum_chest", VacuumChestBlockEntity::new)
             .validBlocks(MachineBlocks.VACUUM_CHEST)
             .register();
+    
+    public static final BlockEntityEntry<XPVacuumBlockEntity> XP_VACUUM = REGISTRATE
+            .blockEntity("xp_vacuum", XPVacuumBlockEntity::new)
+            .validBlocks(MachineBlocks.XP_VACUUM)
+            .register();
 
     public static final BlockEntityEntry<CreativePowerBlockEntity> CREATIVE_POWER = REGISTRATE
         .blockEntity("creative_power", CreativePowerBlockEntity::new)
