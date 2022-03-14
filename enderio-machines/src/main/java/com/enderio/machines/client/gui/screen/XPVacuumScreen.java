@@ -21,16 +21,17 @@ public class XPVacuumScreen extends EIOScreen<XPVacuumMenu>{
 
 	public XPVacuumScreen(XPVacuumMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
 		super(pMenu, pPlayerInventory, pTitle, true);
+		this.inventoryLabelY = this.imageHeight - 50;
 	}
 	
 	@Override
 	protected void init() {
 		super.init();
-		addRenderableOnly(new FluidStackStaticWidget(this, getMenu().getBlockEntity()::getFluidTank, leftPos + 20, topPos + 10, 64, 64));
-		addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 86, () -> menu.getBlockEntity().getRedstoneControl(),
+		addRenderableOnly(new FluidStackStaticWidget(this, getMenu().getBlockEntity()::getFluidTank, leftPos + 27, topPos + 22, 32, 32));
+		addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 50, () -> menu.getBlockEntity().getRedstoneControl(),
 				control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
-		addRenderableWidget(new Button(leftPos + imageWidth - 8 - 12 - 20 - 2, topPos + 86 - 5, 20, 9, new TextComponent("\u2303"), (b) -> this.getMenu().getBlockEntity().increasseRange()));
-		addRenderableWidget(new Button(leftPos + imageWidth - 8 - 12 - 20 - 2, topPos + 86 + 6, 20, 9, new TextComponent("\u2304"), (b) -> this.getMenu().getBlockEntity().decreasseRange()));
+		addRenderableWidget(new Button(leftPos + imageWidth - 8 - 12 - 20 - 2, topPos + 50 - 5, 20, 9, new TextComponent("\u2303"), (b) -> this.getMenu().getBlockEntity().increasseRange()));
+		addRenderableWidget(new Button(leftPos + imageWidth - 8 - 12 - 20 - 2, topPos + 50 + 6, 20, 9, new TextComponent("\u2304"), (b) -> this.getMenu().getBlockEntity().decreasseRange()));
 	}
 
 	@Override
@@ -46,7 +47,7 @@ public class XPVacuumScreen extends EIOScreen<XPVacuumMenu>{
 	@Override
 	public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
 		super.render(pPoseStack, pMouseX, pMouseY, pPartialTicks);
-		font.draw(pPoseStack, this.getMenu().getBlockEntity().getRange() +"", leftPos + imageWidth - 8 - 12 - 20 - 2 - 8, topPos + 86, 0);
+		font.draw(pPoseStack, this.getMenu().getBlockEntity().getRange() +"", leftPos + imageWidth - 8 - 12 - 20 - 2 - 8, topPos + 50, 0);
 	}
 
 }
