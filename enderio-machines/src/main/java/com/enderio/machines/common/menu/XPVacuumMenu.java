@@ -19,7 +19,7 @@ public class XPVacuumMenu extends MachineMenu<XPVacuumBlockEntity>{
 		if (blockEntity != null) {
 			
 		}
-		addInventorySlots(8,66);
+		addInventorySlots(8,70);
 	}
 	
 	public static XPVacuumMenu factory(@Nullable MenuType<XPVacuumMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
