@@ -14,6 +14,7 @@ import com.enderio.machines.datagen.model.block.MachinesBlockState;
 import com.mojang.math.Vector3f;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.BlockEntry;
+
 import net.minecraft.client.renderer.RenderType;
 
 public class MachineBlocks {
@@ -175,6 +176,15 @@ public class MachineBlocks {
             .component(EIOMachines.loc("block/enhanced_alloy_smelter_top"), new Vector3f(0.0f, 1.0f, 0.0f))))
         .build()
         .register();
+    
+    public static final BlockEntry<MachineBlock> IMPULSE_HOPPER = REGISTRATE
+            .block("impulse_hopper", props -> new MachineBlock(props, MachineBlockEntities.IMPULSE_HOPPER))
+            .properties(props -> props.strength(2.5f, 8))
+            .loot(MachinesLootTable::copyNBT)
+            .item()
+            .tab(() -> EIOCreativeTabs.MACHINES)
+            .build()
+            .register();
 
     public static void classload() {}
 }

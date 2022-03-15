@@ -4,6 +4,7 @@ import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.blockentity.AlloySmelterBlockEntity;
 import com.enderio.machines.common.blockentity.EnchanterBlockEntity;
 import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
+import com.enderio.machines.common.blockentity.ImpulseHopperBlockEntity;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 
@@ -44,6 +45,11 @@ public class MachineBlockEntities {
         .blockEntity("enhanced_alloy_smelter", AlloySmelterBlockEntity.Enhanced::new)
         .validBlocks(MachineBlocks.ENHANCED_ALLOY_SMELTER)
         .register();
+    
+    public static final BlockEntityEntry<ImpulseHopperBlockEntity> IMPULSE_HOPPER = REGISTRATE
+            .blockEntity("impulse_hopper", ImpulseHopperBlockEntity::new)
+            .validBlocks(MachineBlocks.IMPULSE_HOPPER)
+            .register();
 
     public static void classload() {}
 }

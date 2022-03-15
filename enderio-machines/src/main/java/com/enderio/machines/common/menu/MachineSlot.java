@@ -1,11 +1,12 @@
 package com.enderio.machines.common.menu;
 
+import javax.annotation.Nonnull;
+
 import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemHandlerMaster;
+
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
-
-import javax.annotation.Nonnull;
 
 public class MachineSlot extends SlotItemHandler {
 
