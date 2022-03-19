@@ -5,10 +5,8 @@ import com.enderio.base.common.recipe.capacitor.CapacitorDataRecipe;
 import com.enderio.base.common.recipe.grindingball.GrindingballRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -17,14 +15,10 @@ public class EIORecipes {
 
     //TODO: Create a Registrate method for RecipeSerializer
 
-    public static void register(IEventBus bus) {
-        Serializer.register(bus);
-    }
-
     public static class Serializer {
         private Serializer() {}
 
-        public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZER_REGISTRY = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS,
+        private static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZER_REGISTRY = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS,
             EnderIO.MODID);
 
         public static final RegistryObject<CapacitorDataRecipe.Serializer> CAPACITOR_DATA = RECIPE_SERIALIZER_REGISTRY.register("capacitor_data",
@@ -32,22 +26,17 @@ public class EIORecipes {
         public static final RegistryObject<GrindingballRecipe.Serializer> GRINDINGBALL = RECIPE_SERIALIZER_REGISTRY.register("grindingball",
             GrindingballRecipe.Serializer::new);
 
-        public static void register(IEventBus bus) {
-            RECIPE_SERIALIZER_REGISTRY.register(bus);
+        public static void classload() {
+            RECIPE_SERIALIZER_REGISTRY.register(FMLJavaModLoadingContext.get().getModEventBus());
         }
     }
 
-    @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class Types {
         private Types() {}
 
-        public static RecipeType<CapacitorDataRecipe> CAPACITOR_DATA;
-        public static RecipeType<GrindingballRecipe> GRINDINGBALL;
+        public static final RecipeType<CapacitorDataRecipe> CAPACITOR_DATA = RecipeType.register(EnderIO.MODID + ":capacitor_data");
+        public static final RecipeType<GrindingballRecipe> GRINDINGBALL = RecipeType.register(EnderIO.MODID + ":grindingball");
 
-        @SubscribeEvent
-        public static void onRecipeSerializerRegistry(RegistryEvent.Register<RecipeSerializer<?>> event) {
-            CAPACITOR_DATA = RecipeType.register(EnderIO.MODID + ":capacitor_data");
-            GRINDINGBALL = RecipeType.register(EnderIO.MODID + ":grindingball");
-        }
+        public static void classload() {}
     }
 }

@@ -13,7 +13,7 @@ import net.minecraftforge.versions.forge.ForgeVersion;
 
 public class EIOTags {
 
-    public static void init() {
+    public static void classload() {
         Items.init();
         Blocks.init();
         Fluids.init();

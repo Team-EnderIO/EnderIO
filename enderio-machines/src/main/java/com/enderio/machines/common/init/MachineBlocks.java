@@ -176,5 +176,5 @@ public class MachineBlocks {
         .build()
         .register();
 
-    public static void register() {}
+    public static void classload() {}
 }

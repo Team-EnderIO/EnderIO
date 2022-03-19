@@ -21,6 +21,6 @@ public class DecorBlockEntities {
         .validBlocks(DecorBlocks.PAINTED_SLAB)
         .register();
 
-    public static void register() {}
+    public static void classload() {}
 
 }
