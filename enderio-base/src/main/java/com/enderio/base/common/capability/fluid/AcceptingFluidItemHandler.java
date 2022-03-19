@@ -1,6 +1,5 @@
 package com.enderio.base.common.capability.fluid;
 
-import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
