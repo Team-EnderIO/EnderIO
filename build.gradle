@@ -10,7 +10,7 @@ buildscript {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
         classpath 'org.parchmentmc:librarian:1.+'
         classpath 'org.spongepowered:mixingradle:0.7.+'
-        classpath 'io.github.noeppi_noeppi.tools:ModGradle:2.0.9'
+        classpath 'io.github.noeppi_noeppi.tools:ModGradle:2.0.14'
     }
 }
 
@@ -147,8 +147,6 @@ subprojects {
         }
 
         maven { url 'https://maven.blamejared.com' }
-
-        mavenLocal()
     }
 
     dependencies {
