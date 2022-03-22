@@ -73,7 +73,7 @@ public class XPVacuumBlockEntity extends MachineBlockEntity {
     }
     
     private void collectXP(Level level, BlockPos pos, int range) {
-        if ((level.getGameTime() % this.hashCode()) % 5 == 0 || this.xpEntities.isEmpty()) {
+        if ((level.getGameTime() + pos.asLong()) % 5 == 0 || this.xpEntities.isEmpty()) {
             AABB area = new AABB(pos).inflate(range);
             this.xpEntities = level.getEntitiesOfClass(ExperienceOrb.class, area);
         }
