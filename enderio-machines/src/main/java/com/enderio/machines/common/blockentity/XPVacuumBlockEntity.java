@@ -1,10 +1,11 @@
 package com.enderio.machines.common.blockentity;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import com.enderio.base.common.blockentity.sync.FluidStackDataSlot;
 import com.enderio.base.common.blockentity.sync.IntegerDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
+import com.enderio.base.common.util.AttractionUtil;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.blockentity.data.sidecontrol.fluid.FluidTankMaster;
@@ -21,28 +22,27 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class XPVacuumBlockEntity extends MachineBlockEntity {
-	private static final double COLLISION_DISTANCE_SQ = 1 * 1;
+    private static final double COLLISION_DISTANCE_SQ = 1 * 1;
     private static final double SPEED = 0.025;
-    private static final double SPEED_4 = SPEED ;
-	private static final int MAX_RANGE = 6;
+    private static final double SPEED_4 = SPEED*4 ;
+    private static final int MAX_RANGE = 6;
 	private int range = 6;
 	private FluidTankMaster fluidTank;
+	private List<ExperienceOrb> xpEntities = new ArrayList<>();
 
-	public XPVacuumBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition,
-			BlockState pBlockState) {
+	public XPVacuumBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
 		super(MachineTier.STANDARD, pType, pWorldPosition, pBlockState);
 		this.fluidTank =  new FluidTankMaster(Integer.MAX_VALUE, getIoConfig()); //that seems quite large?
-		addDataSlot(new FluidStackDataSlot(() -> fluidTank.getFluidInTank(0), fluidTank::setFluid, SyncMode.WORLD));
+		addDataSlot(new IntegerDataSlot(() -> fluidTank.getFluidInTank(0).getAmount(), (i) -> fluidTank.setFluid(new FluidStack(Fluids.WATER, i)), SyncMode.WORLD));
 		add2WayDataSlot(new IntegerDataSlot(() -> this.range, this::setRange, SyncMode.GUI));
 	}
 	
 	public FluidTankMaster getFluidTank() {
-		return fluidTank;
+	    return fluidTank;
 	}
 	
 	@Override
@@ -59,49 +59,33 @@ public class XPVacuumBlockEntity extends MachineBlockEntity {
         fluidTank.readFromNBT(pTag.getCompound("Fluids"));
     }
 
-	@Override
-	public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-		return new XPVacuumMenu(this, inventory, containerId);
+    @Override
+    public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
+	    return new XPVacuumMenu(this, inventory, containerId);
 	}
 	
 	@Override
 	public void tick() {
-		super.tick();
 		if (this.getRedstoneControl().isActive(level.hasNeighborSignal(worldPosition))) {
 			this.collectXP(this.getLevel(), this.getBlockPos(), this.range);
 		}
+		super.tick();
 	}
 	
 	private void collectXP(Level level, BlockPos pos, int range) {
-		AABB area = new AABB(pos).inflate(range);
-		List<ExperienceOrb> xpEntities = level.getEntitiesOfClass(ExperienceOrb.class, area);
-		for (ExperienceOrb xpe: xpEntities) { //magnet code
-			double x = pos.getX() + 0.5D - xpe.getX();
-			double y = pos.getY() + 0.5D - xpe.getY();
-			double z = pos.getZ() + 0.5D - xpe.getZ();
-			
-			double distanceSq = x * x + y * y + z * z;
-			
-			if (distanceSq < COLLISION_DISTANCE_SQ) {
-				int filled = fluidTank.fill(new FluidStack(Fluids.WATER, xpe.getValue()), FluidAction.EXECUTE);//TODO xp fluid
-				if (filled == xpe.value) {
-					xpe.discard();
-					return;
-				} else {
-					xpe.value -= filled;
-				}
-			} else {
-				double adjustedSpeed = SPEED_4 / distanceSq;
-				Vec3 mov = xpe.getDeltaMovement();
-				double deltaX = mov.x + x * adjustedSpeed;
-				double deltaZ = mov.z + z * adjustedSpeed;
-				double deltaY;
-				if (y > 0) {
-					deltaY = 0.12;
-				} else {
-					deltaY = mov.y + y * SPEED;
-				}
-				xpe.setDeltaMovement(deltaX, deltaY, deltaZ);
+	    if ((level.getGameTime() % this.hashCode()) % 5 == 0 || this.xpEntities.isEmpty()) {
+	        AABB area = new AABB(pos).inflate(range);
+	        this.xpEntities = level.getEntitiesOfClass(ExperienceOrb.class, area);
+	    }
+		for (ExperienceOrb xpe: xpEntities) {
+			if (AttractionUtil.hasReachedPos(xpe, pos, SPEED, SPEED_4, COLLISION_DISTANCE_SQ)) {
+			    int filled = fluidTank.fill(new FluidStack(Fluids.WATER, xpe.getValue()), FluidAction.EXECUTE);//TODO xp fluid
+                if (filled == xpe.value) {
+                    xpe.discard();
+                    return;
+                } else {
+                    xpe.value -= filled;
+                }
 			}
 		}
 	}

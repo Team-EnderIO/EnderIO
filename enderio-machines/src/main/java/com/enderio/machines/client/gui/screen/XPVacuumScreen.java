@@ -47,7 +47,7 @@ public class XPVacuumScreen extends EIOScreen<XPVacuumMenu>{
 	@Override
 	public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
 		super.render(pPoseStack, pMouseX, pMouseY, pPartialTicks);
-		font.draw(pPoseStack, this.getMenu().getBlockEntity().getRange() +"", leftPos + imageWidth - 8 - 12 - 20 - 2 - 8, topPos + 50, 0);
+		font.draw(pPoseStack, this.getMenu().getBlockEntity().getRange() + "", leftPos + imageWidth - 8 - 12 - 20 - 2 - 8, topPos + 50, 0);
 	}
 
 }

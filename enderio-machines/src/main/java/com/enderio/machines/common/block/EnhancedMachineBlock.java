@@ -135,6 +135,5 @@ public class EnhancedMachineBlock extends ProgressMachineBlock {
         }
         return null;
     }
-    
     // endregion
 }
