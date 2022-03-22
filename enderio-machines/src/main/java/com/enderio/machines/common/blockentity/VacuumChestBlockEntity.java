@@ -32,8 +32,7 @@ public class VacuumChestBlockEntity extends MachineBlockEntity {
     private int range = 6;
     private List<ItemEntity> itemEntities = new ArrayList<>();
     
-    public VacuumChestBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition,
-            BlockState pBlockState) {
+    public VacuumChestBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(MachineTier.STANDARD, pType, pWorldPosition, pBlockState);
         add2WayDataSlot(new IntegerDataSlot(() -> this.range, this::setRange, SyncMode.GUI));
     }
