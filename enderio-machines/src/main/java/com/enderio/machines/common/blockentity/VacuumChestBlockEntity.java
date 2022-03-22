@@ -74,7 +74,7 @@ public class VacuumChestBlockEntity extends MachineBlockEntity {
     }
     
     private void collectItems(Level level, BlockPos pos, int range) {
-        if ((level.getGameTime() % this.hashCode()) % 5 == 0 || this.itemEntities.isEmpty()) {
+        if ((level.getGameTime() + pos.asLong()) % 5 == 0 || this.itemEntities.isEmpty()) {
             AABB area = new AABB(pos).inflate(range);
             this.itemEntities = level.getEntitiesOfClass(ItemEntity.class, area, e -> true); //TODO filter logic
         }

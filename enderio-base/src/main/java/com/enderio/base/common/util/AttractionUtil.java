@@ -31,6 +31,9 @@ public class AttractionUtil {
      * @return if the entity is inside the collision distance.
      */
     public static boolean hasReachedPos(Entity entity , double x, double y, double z, double speed, double speed4, double collisionDistanceSq) {
+        if (entity == null) { //If the entity no longer exists, return false
+            return false;
+        }
         x -= entity.getX();
         y -= entity.getY();
         z -= entity.getZ();
