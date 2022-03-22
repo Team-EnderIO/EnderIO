@@ -25,63 +25,63 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
 public class VacuumChestBlockEntity extends MachineBlockEntity {
-	private static final double COLLISION_DISTANCE_SQ = 1 * 1;
+    private static final double COLLISION_DISTANCE_SQ = 1 * 1;
     private static final double SPEED = 0.025;
     private static final double SPEED_4 = SPEED*4 ;
-	private static final int MAX_RANGE = 6;
-	private int range = 6;
+    private static final int MAX_RANGE = 6;
+    private int range = 6;
     private List<ItemEntity> itemEntities = new ArrayList<>();
-
-	public VacuumChestBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition,
-			BlockState pBlockState) {
-		super(MachineTier.STANDARD, pType, pWorldPosition, pBlockState);
-		add2WayDataSlot(new IntegerDataSlot(() -> this.range, this::setRange, SyncMode.GUI));
-	}
-
-	@Override
-	public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-		return new VacuumChestMenu(this, inventory, containerId);
-	}
-	
-	@Override
-	public Optional<ItemSlotLayout> getSlotLayout() {
-		return Optional.of(ItemSlotLayout.basic(28,0));
-	}
-	
-	@Override
-	protected ItemHandlerMaster createItemHandler(ItemSlotLayout layout) {
-		return new ItemHandlerMaster(getIoConfig(), layout) {
-			@Override
+    
+    public VacuumChestBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition,
+            BlockState pBlockState) {
+        super(MachineTier.STANDARD, pType, pWorldPosition, pBlockState);
+        add2WayDataSlot(new IntegerDataSlot(() -> this.range, this::setRange, SyncMode.GUI));
+    }
+    
+    @Override
+    public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
+        return new VacuumChestMenu(this, inventory, containerId);
+    }
+    
+    @Override
+    public Optional<ItemSlotLayout> getSlotLayout() {
+        return Optional.of(ItemSlotLayout.basic(28,0));
+    }
+    
+    @Override
+    protected ItemHandlerMaster createItemHandler(ItemSlotLayout layout) {
+        return new ItemHandlerMaster(getIoConfig(), layout) {
+            @Override
             protected void onContentsChanged(int slot) {
                 setChanged();
             }
-			
-			@Override
-			public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-				if (slot == 27) {
-					return stack;
-				}
-				return super.insertItem(slot, stack, simulate);
-			}
-		};
-	}
-	
-	@Override
-	public void tick() {
-		if (this.getRedstoneControl().isActive(level.hasNeighborSignal(worldPosition))) {
-			this.collectItems(this.getLevel(), this.getBlockPos(), this.range);
-		}
-		super.tick();
-	}
-	
-	private void collectItems(Level level, BlockPos pos, int range) {
-	    if ((level.getGameTime() % this.hashCode()) % 5 == 0 || this.itemEntities.isEmpty()) {
+            
+            @Override
+            public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+                if (slot == 27) {
+                    return stack;
+                }
+                return super.insertItem(slot, stack, simulate);
+            }
+        };
+    }
+    
+    @Override
+    public void tick() {
+        if (this.getRedstoneControl().isActive(level.hasNeighborSignal(worldPosition))) {
+            this.collectItems(this.getLevel(), this.getBlockPos(), this.range);
+        }
+        super.tick();
+    }
+    
+    private void collectItems(Level level, BlockPos pos, int range) {
+        if ((level.getGameTime() % this.hashCode()) % 5 == 0 || this.itemEntities.isEmpty()) {
             AABB area = new AABB(pos).inflate(range);
             this.itemEntities = level.getEntitiesOfClass(ItemEntity.class, area, e -> true); //TODO filter logic
         }
-		for (ItemEntity ie: itemEntities) {
-		    if (AttractionUtil.hasReachedPos(ie, pos, SPEED, SPEED_4, COLLISION_DISTANCE_SQ)) {
-		        for (int i=0; i<this.getItemHandler().getSlots();i++) {
+        for (ItemEntity ie: itemEntities) {
+            if (AttractionUtil.hasReachedPos(ie, pos, SPEED, SPEED_4, COLLISION_DISTANCE_SQ)) {
+                for (int i=0; i<this.getItemHandler().getSlots();i++) {
                     ItemStack reminder = this.getItemHandler().insertItem(i, ie.getItem().copy(), false);
                     if (reminder.isEmpty()) {
                         ie.discard();
@@ -90,27 +90,27 @@ public class VacuumChestBlockEntity extends MachineBlockEntity {
                         ie.getItem().setCount(reminder.getCount());
                     }
                 } 
-		    }
-		}
-	}
-	
-	public int getRange() {
-		return range;
-	}
-	
-	public void setRange(int range) {
-		this.range = range;
-	}
-	
-	public void decreasseRange() {
-		if (this.range > 0) {
-			this.range--;
-		}
-	}
-	
-	public void increasseRange() {
-		if (this.range < MAX_RANGE) {
-			this.range++;
-		}
-	}
+            }
+        }
+    }
+    
+    public int getRange() {
+        return range;
+    }
+    
+    public void setRange(int range) {
+        this.range = range;
+    }
+    
+    public void decreasseRange() {
+        if (this.range > 0) {
+            this.range--;
+        }
+    }
+    
+    public void increasseRange() {
+        if (this.range < MAX_RANGE) {
+            this.range++;
+        }
+    }
 }
