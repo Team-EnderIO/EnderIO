@@ -11,7 +11,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -45,7 +44,7 @@ public class VacuumChestScreen extends EIOScreen<VacuumChestMenu>{
 	
 	@Override
 	protected void renderLabels(PoseStack pPoseStack, int pMouseX, int pMouseY) {
-		this.font.draw(pPoseStack, new TranslatableComponent("enderio.gui.filter"), 8, this.imageHeight - 134, 4210752);
+		this.font.draw(pPoseStack, EIOLang.FILTER, 8, this.imageHeight - 134, 4210752);
 		super.renderLabels(pPoseStack, pMouseX, pMouseY);
 	}
 	

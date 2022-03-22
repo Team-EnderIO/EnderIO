@@ -55,9 +55,7 @@ public class FluidStackStaticWidget extends EIOWidget {
                     RenderSystem.enableBlend();
 
                     int atlasWidth = (int)(sprite.getWidth() / (sprite.getU1() - sprite.getU0()));
-                    int atlasHeight = (int)(sprite.getHeight() / (sprite.getV1() - sprite.getV0()));
-                    //blit(poseStack, x, y, displayOn.getBlitOffset(), sprite.getU0()*atlasWidth, sprite.getV0()*atlasHeight, sprite.getWidth(), sprite.getHeight(), atlasWidth, atlasHeight);
-                    
+                    int atlasHeight = (int)(sprite.getHeight() / (sprite.getV1() - sprite.getV0()));                    
                     blit(poseStack, x, y, width, height, sprite.getU0()*atlasWidth, sprite.getV0()*atlasHeight, sprite.getWidth(), sprite.getHeight(), atlasWidth, atlasHeight);
                     RenderSystem.setShaderColor(1, 1, 1, 1);
                     

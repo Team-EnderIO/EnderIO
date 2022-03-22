@@ -131,7 +131,6 @@ public class EnhancedMachineBlock extends ProgressMachineBlock {
         }
         return null;
     }
-    
     // endregion
 
     // TODO: Look at DoorBlock for stopping the top block from existing etc. Lets get it placing first.

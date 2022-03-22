@@ -4,6 +4,7 @@ import com.enderio.base.EnderIO;
 import com.enderio.base.common.capability.capacitors.CapacitorSpecializations;
 import com.enderio.base.common.util.TooltipUtil;
 import com.tterrag.registrate.Registrate;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -149,6 +150,12 @@ public class EIOLang {
     private static Component enchantmentDescription(String enchantmentname, String description) {
         return TooltipUtil.style(REGISTRATE.addLang("description", EnderIO.loc("enchantment." + enchantmentname), description));
     }
+    
+    //region filters
+    
+    public static final Component FILTER = REGISTRATE.addLang("gui", EnderIO.loc("filter"), "Filter");
+    
+    // endregion
 
     // endregion
 
