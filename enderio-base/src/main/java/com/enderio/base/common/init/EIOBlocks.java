@@ -565,7 +565,7 @@ public class EIOBlocks {
         return bb.register();
     }
 
-    public static void register() {}
+    public static void classload() {}
 
     public static void clientInit() {
 

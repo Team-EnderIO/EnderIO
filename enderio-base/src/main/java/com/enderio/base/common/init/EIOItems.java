@@ -508,5 +508,5 @@ public class EIOItems {
 
     // endregion
 
-    public static void register() {}
+    public static void classload() {}
 }
