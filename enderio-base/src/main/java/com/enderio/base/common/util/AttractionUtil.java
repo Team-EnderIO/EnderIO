@@ -16,7 +16,7 @@ public class AttractionUtil {
     /**
      * Pulls the entity closer to the given x, y and z coordinates. Once it is in inside the collision distance, the function will return true, otherwise it returns false.
      */
-    public static boolean moveToPos(Entity entity , double x, double y, double z, double speed, double speed4, double collisionDistanceSq) {
+    public static boolean moveToPos(Entity entity, double x, double y, double z, double speed, double speed4, double collisionDistanceSq) {
         if (entity.isRemoved()) { //If the entity no longer exists, return false
             return false;
         }

@@ -1,5 +1,6 @@
 package com.enderio.machines.common.blockentity;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,7 +31,7 @@ public class VacuumChestBlockEntity extends MachineBlockEntity {
     private static final double SPEED_4 = SPEED*4 ;
     private static final int MAX_RANGE = 6;
     private int range = 6;
-    private List<ItemEntity> itemEntities = new ArrayList<>();
+    private List<WeakReference<ItemEntity>> itemEntities = new ArrayList<>();
     
     public VacuumChestBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(MachineTier.STANDARD, pType, pWorldPosition, pBlockState);
@@ -76,9 +77,15 @@ public class VacuumChestBlockEntity extends MachineBlockEntity {
     private void collectItems(Level level, BlockPos pos, int range) {
         if ((level.getGameTime() + pos.asLong()) % 5 == 0) {
             AABB area = new AABB(pos).inflate(range);
-            this.itemEntities = level.getEntitiesOfClass(ItemEntity.class, area, e -> true); //TODO filter logic
+            for (ItemEntity ie:level.getEntitiesOfClass(ItemEntity.class, area, e -> true)) {
+                this.itemEntities.add(new WeakReference<ItemEntity>(ie));
+            }; //TODO filter logic
         }
-        for (ItemEntity ie: itemEntities) {
+        for (WeakReference<ItemEntity> ref: itemEntities) {
+            if (ref.get() == null) {
+                return;
+            }
+            ItemEntity ie = ref.get();
             if (AttractionUtil.moveToPos(ie, pos, SPEED, SPEED_4, COLLISION_DISTANCE_SQ)) {
                 for (int i=0; i<this.getItemHandler().getSlots();i++) {
                     ItemStack reminder = this.getItemHandler().insertItem(i, ie.getItem().copy(), false);
@@ -117,7 +124,9 @@ public class VacuumChestBlockEntity extends MachineBlockEntity {
     public void onLoad() {
         if (this.itemEntities.isEmpty()) {
             AABB area = new AABB(this.getBlockPos()).inflate(range);
-            this.itemEntities = level.getEntitiesOfClass(ItemEntity.class, area, e -> true); //TODO filter logic
+            for (ItemEntity ie:level.getEntitiesOfClass(ItemEntity.class, area, e -> true)) {
+                this.itemEntities.add(new WeakReference<ItemEntity>(ie));
+            }; //TODO filter logic
         }
         super.onLoad();
     }
