@@ -74,12 +74,12 @@ public class VacuumChestBlockEntity extends MachineBlockEntity {
     }
     
     private void collectItems(Level level, BlockPos pos, int range) {
-        if ((level.getGameTime() + pos.asLong()) % 5 == 0 || this.itemEntities.isEmpty()) {
+        if ((level.getGameTime() + pos.asLong()) % 5 == 0) {
             AABB area = new AABB(pos).inflate(range);
             this.itemEntities = level.getEntitiesOfClass(ItemEntity.class, area, e -> true); //TODO filter logic
         }
         for (ItemEntity ie: itemEntities) {
-            if (AttractionUtil.hasReachedPos(ie, pos, SPEED, SPEED_4, COLLISION_DISTANCE_SQ)) {
+            if (AttractionUtil.moveToPos(ie, pos, SPEED, SPEED_4, COLLISION_DISTANCE_SQ)) {
                 for (int i=0; i<this.getItemHandler().getSlots();i++) {
                     ItemStack reminder = this.getItemHandler().insertItem(i, ie.getItem().copy(), false);
                     if (reminder.isEmpty()) {
@@ -101,15 +101,24 @@ public class VacuumChestBlockEntity extends MachineBlockEntity {
         this.range = range;
     }
     
-    public void decreasseRange() {
+    public void decreaseRange() {
         if (this.range > 0) {
             this.range--;
         }
     }
     
-    public void increasseRange() {
+    public void increaseRange() {
         if (this.range < MAX_RANGE) {
             this.range++;
         }
+    }
+    
+    @Override
+    public void onLoad() {
+        if (this.itemEntities.isEmpty()) {
+            AABB area = new AABB(this.getBlockPos()).inflate(range);
+            this.itemEntities = level.getEntitiesOfClass(ItemEntity.class, area, e -> true); //TODO filter logic
+        }
+        super.onLoad();
     }
 }

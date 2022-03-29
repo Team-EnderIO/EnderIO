@@ -16,9 +16,6 @@ public class XPVacuumMenu extends MachineMenu<XPVacuumBlockEntity>{
     
     public XPVacuumMenu(XPVacuumBlockEntity blockEntity, Inventory inventory, int pContainerId) {
         super(blockEntity, inventory, MachineMenus.XP_VACUUM.get(), pContainerId);
-        if (blockEntity != null) {
-            
-        }
         addInventorySlots(8,70);
     }
     
