@@ -1,5 +1,6 @@
 package com.enderio.machines.common.blockentity;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class XPVacuumBlockEntity extends MachineBlockEntity {
     private static final int MAX_RANGE = 6;
     private int range = 6;
     private FluidTankMaster fluidTank;
-    private List<ExperienceOrb> xpEntities = new ArrayList<>();
+    private List<WeakReference<ExperienceOrb>> xpEntities = new ArrayList<>();
     
     public XPVacuumBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(MachineTier.STANDARD, pType, pWorldPosition, pBlockState);
@@ -75,9 +76,15 @@ public class XPVacuumBlockEntity extends MachineBlockEntity {
     private void collectXP(Level level, BlockPos pos, int range) {
         if ((level.getGameTime() + pos.asLong()) % 5 == 0) {
             AABB area = new AABB(pos).inflate(range);
-            this.xpEntities = level.getEntitiesOfClass(ExperienceOrb.class, area);
+            for (ExperienceOrb ex:level.getEntitiesOfClass(ExperienceOrb.class, area)) {
+                this.xpEntities.add(new WeakReference<ExperienceOrb>(ex));
+            };
         }
-        for (ExperienceOrb xpe: xpEntities) {
+        for (WeakReference<ExperienceOrb> ref: xpEntities) {
+            if (ref.get() == null) {
+                return;
+            }
+            ExperienceOrb xpe = ref.get();
             if (AttractionUtil.moveToPos(xpe, pos, SPEED, SPEED_4, COLLISION_DISTANCE_SQ)) {
                 int filled = fluidTank.fill(new FluidStack(Fluids.WATER, xpe.getValue()), FluidAction.EXECUTE);//TODO xp fluid
                 if (filled == xpe.value) {
@@ -114,7 +121,9 @@ public class XPVacuumBlockEntity extends MachineBlockEntity {
     public void onLoad() {
         if (this.xpEntities.isEmpty()) {
             AABB area = new AABB(this.getBlockPos()).inflate(range);
-            this.xpEntities = level.getEntitiesOfClass(ExperienceOrb.class, area);
+            for (ExperienceOrb ex:level.getEntitiesOfClass(ExperienceOrb.class, area)) {
+                this.xpEntities.add(new WeakReference<ExperienceOrb>(ex));
+            };
         }
         super.onLoad();
     }
