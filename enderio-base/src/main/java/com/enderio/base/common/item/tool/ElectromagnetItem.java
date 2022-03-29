@@ -72,7 +72,7 @@ public class ElectromagnetItem extends PoweredToggledItem {
 
         for (Entity entity : toMove) {
 
-            if (AttractionUtil.hasReachedPos(pEntity, player.getX(), player.getY() + player.getEyeHeight() * .75f, player.getZ(), SPEED, SPEED_4, COLLISION_DISTANCE_SQ)) {
+            if (AttractionUtil.moveToPos(pEntity, player.getX(), player.getY() + player.getEyeHeight() * .75f, player.getZ(), SPEED, SPEED_4, COLLISION_DISTANCE_SQ)) {
                 entity.playerTouch(player);
             }
             if (itemsRemaining-- <= 0) {

@@ -73,12 +73,12 @@ public class XPVacuumBlockEntity extends MachineBlockEntity {
     }
     
     private void collectXP(Level level, BlockPos pos, int range) {
-        if ((level.getGameTime() + pos.asLong()) % 5 == 0 || this.xpEntities.isEmpty()) {
+        if ((level.getGameTime() + pos.asLong()) % 5 == 0) {
             AABB area = new AABB(pos).inflate(range);
             this.xpEntities = level.getEntitiesOfClass(ExperienceOrb.class, area);
         }
         for (ExperienceOrb xpe: xpEntities) {
-            if (AttractionUtil.hasReachedPos(xpe, pos, SPEED, SPEED_4, COLLISION_DISTANCE_SQ)) {
+            if (AttractionUtil.moveToPos(xpe, pos, SPEED, SPEED_4, COLLISION_DISTANCE_SQ)) {
                 int filled = fluidTank.fill(new FluidStack(Fluids.WATER, xpe.getValue()), FluidAction.EXECUTE);//TODO xp fluid
                 if (filled == xpe.value) {
                     xpe.discard();
@@ -98,15 +98,24 @@ public class XPVacuumBlockEntity extends MachineBlockEntity {
         this.range = range;
     }
     
-    public void decreasseRange() {
+    public void decreaseRange() {
         if (this.range > 0) {
             this.range--;
         }
     }
     
-    public void increasseRange() {
+    public void increaseRange() {
         if (this.range < MAX_RANGE) {
             this.range++;
         }
+    }
+    
+    @Override
+    public void onLoad() {
+        if (this.xpEntities.isEmpty()) {
+            AABB area = new AABB(this.getBlockPos()).inflate(range);
+            this.xpEntities = level.getEntitiesOfClass(ExperienceOrb.class, area);
+        }
+        super.onLoad();
     }
 }
