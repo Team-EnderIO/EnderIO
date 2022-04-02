@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[39,)"
+loaderVersion="[40,)"
 issueTrackerURL="https://github.com/SleepyTrousers/EnderIO-Rewrite/issues"
 license="CC0"
 
@@ -15,13 +15,13 @@ logoFile="logo.png"
 [[dependencies.enderio_decoration]]
 modId="minecraft"
 mandatory=true
-versionRange="1.18.1"
+versionRange="1.18.2"
 side="BOTH"
 
 [[dependencies.enderio_decoration]]
 modId="forge"
 mandatory=true
-versionRange="39.0.5"
+versionRange="[40,)"
 side="BOTH"
 
 [[dependencies.enderio_decoration]]

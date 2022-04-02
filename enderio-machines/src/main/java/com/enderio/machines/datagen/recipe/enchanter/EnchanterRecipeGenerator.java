@@ -9,6 +9,7 @@ import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -76,7 +77,7 @@ public class EnchanterRecipeGenerator extends RecipeProvider {
         build(new EnchanterRecipe(null, Ingredient.of(ingredient), enchantment, amountPerLevel, levelModifier), enchantment.getRegistryName().getPath(), recipeConsumer);
     }
     
-    protected void build(Enchantment enchantment, Tag<Item> ingredient, int amountPerLevel, int levelModifier, Consumer<FinishedRecipe> recipeConsumer) {
+    protected void build(Enchantment enchantment, TagKey<Item> ingredient, int amountPerLevel, int levelModifier, Consumer<FinishedRecipe> recipeConsumer) {
         build(new EnchanterRecipe(null, Ingredient.of(ingredient), enchantment, amountPerLevel, levelModifier), enchantment.getRegistryName().getPath(), recipeConsumer);
     }
     

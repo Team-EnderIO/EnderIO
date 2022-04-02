@@ -12,5 +12,5 @@ public class EIOMenus {
     public static final MenuEntry<CoordinateMenu> COORDINATE = REGISTRATE.menu("coordinate",
         CoordinateMenu::factory, () -> CoordinateMenuScreen::new).register();
 
-    public static void register() {}
+    public static void classload() {}
 }

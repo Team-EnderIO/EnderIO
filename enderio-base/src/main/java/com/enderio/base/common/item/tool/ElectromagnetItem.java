@@ -1,7 +1,13 @@
 package com.enderio.base.common.item.tool;
 
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
 import com.enderio.base.common.tag.EIOTags;
+import com.enderio.base.common.util.AttractionUtil;
 import com.enderio.base.config.base.BaseConfig;
+
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -9,10 +15,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
-
-import javax.annotation.Nonnull;
-import java.util.List;
 
 public class ElectromagnetItem extends PoweredToggledItem {
 
@@ -70,35 +72,12 @@ public class ElectromagnetItem extends PoweredToggledItem {
 
         for (Entity entity : toMove) {
 
-            double x = player.getX() - entity.getX();
-            //for y value, make attraction point a little bellow eye level for best visual effect
-            double y = player.getY() + player.getEyeHeight() * .75f - entity.getY();
-            double z = player.getZ() - entity.getZ();
-
-            double distanceSq = x * x + y * y + z * z;
-
-            if (distanceSq < COLLISION_DISTANCE_SQ) {
+            if (AttractionUtil.moveToPos(pEntity, player.getX(), player.getY() + player.getEyeHeight() * .75f, player.getZ(), SPEED, SPEED_4, COLLISION_DISTANCE_SQ)) {
                 entity.playerTouch(player);
-            } else {
-                double adjustedSpeed = SPEED_4 / distanceSq;
-                Vec3 mov = entity.getDeltaMovement();
-                double deltaX = mov.x + x * adjustedSpeed;
-                double deltaZ = mov.z + z * adjustedSpeed;
-                double deltaY;
-                if (y > 0) {
-                    //if items are below, raise them to player level at a fixed rate
-                    deltaY = 0.12;
-                } else {
-                    //Scaling y speed based on distance works poorly due to 'gravity' so use fixed speed
-                    deltaY = mov.y + y * SPEED;
-                }
-                entity.setDeltaMovement(deltaX, deltaY, deltaZ);
             }
-
             if (itemsRemaining-- <= 0) {
                 return;
             }
         }
     }
-
 }
