@@ -1,15 +1,10 @@
 package com.enderio.machines.common.blockentity;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
-import com.enderio.base.common.blockentity.sync.IntegerDataSlot;
-import com.enderio.base.common.blockentity.sync.SyncMode;
-import com.enderio.base.common.util.AttractionUtil;
 import com.enderio.machines.common.MachineTier;
-import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
+import com.enderio.machines.common.blockentity.base.VacuumMachineEntity;
 import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemHandlerMaster;
 import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemSlotLayout;
 import com.enderio.machines.common.menu.VacuumChestMenu;
@@ -20,22 +15,13 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 
-public class VacuumChestBlockEntity extends MachineBlockEntity {
-    private static final double COLLISION_DISTANCE_SQ = 1 * 1;
-    private static final double SPEED = 0.025;
-    private static final double SPEED_4 = SPEED*4 ;
-    private static final int MAX_RANGE = 6;
-    private int range = 6;
-    private List<WeakReference<ItemEntity>> itemEntities = new ArrayList<>();
+public class VacuumChestBlockEntity extends VacuumMachineEntity<ItemEntity> {
     
     public VacuumChestBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-        super(MachineTier.STANDARD, pType, pWorldPosition, pBlockState);
-        add2WayDataSlot(new IntegerDataSlot(() -> this.range, this::setRange, SyncMode.GUI));
+        super(MachineTier.STANDARD, pType, pWorldPosition, pBlockState, ItemEntity.class);
     }
     
     @Override
@@ -65,69 +51,23 @@ public class VacuumChestBlockEntity extends MachineBlockEntity {
             }
         };
     }
-    
-    @Override
-    public void tick() {
-        if (this.getRedstoneControl().isActive(level.hasNeighborSignal(worldPosition))) {
-            this.collectItems(this.getLevel(), this.getBlockPos(), this.range);
-        }
-        super.tick();
-    }
-    
-    private void collectItems(Level level, BlockPos pos, int range) {
-        if ((level.getGameTime() + pos.asLong()) % 5 == 0) {
-            AABB area = new AABB(pos).inflate(range);
-            for (ItemEntity ie:level.getEntitiesOfClass(ItemEntity.class, area, e -> true)) {
-                this.itemEntities.add(new WeakReference<ItemEntity>(ie));
-            }; //TODO filter logic
-        }
-        for (WeakReference<ItemEntity> ref: itemEntities) {
-            if (ref.get() == null) {
-                return;
+
+	@Override
+	public void handleEntity(ItemEntity entity) {
+		for (int i=0; i<this.getItemHandler().getSlots();i++) {
+            ItemStack reminder = this.getItemHandler().insertItem(i, entity.getItem().copy(), false);
+            if (reminder.isEmpty()) {
+            	entity.discard();
+            	return;
+            } else {
+            	entity.getItem().setCount(reminder.getCount());
             }
-            ItemEntity ie = ref.get();
-            if (AttractionUtil.moveToPos(ie, pos, SPEED, SPEED_4, COLLISION_DISTANCE_SQ)) {
-                for (int i=0; i<this.getItemHandler().getSlots();i++) {
-                    ItemStack reminder = this.getItemHandler().insertItem(i, ie.getItem().copy(), false);
-                    if (reminder.isEmpty()) {
-                        ie.discard();
-                        return;
-                    } else {
-                        ie.getItem().setCount(reminder.getCount());
-                    }
-                } 
-            }
-        }
-    }
-    
-    public int getRange() {
-        return range;
-    }
-    
-    public void setRange(int range) {
-        this.range = range;
-    }
-    
-    public void decreaseRange() {
-        if (this.range > 0) {
-            this.range--;
-        }
-    }
-    
-    public void increaseRange() {
-        if (this.range < MAX_RANGE) {
-            this.range++;
-        }
-    }
-    
-    @Override
-    public void onLoad() {
-        if (this.itemEntities.isEmpty()) {
-            AABB area = new AABB(this.getBlockPos()).inflate(range);
-            for (ItemEntity ie:level.getEntitiesOfClass(ItemEntity.class, area, e -> true)) {
-                this.itemEntities.add(new WeakReference<ItemEntity>(ie));
-            }; //TODO filter logic
-        }
-        super.onLoad();
-    }
+        } 
+	}
+	
+	//TODO filter
+	@Override
+	public Predicate<ItemEntity> getFilter() {
+		return super.getFilter();
+	}
 }
