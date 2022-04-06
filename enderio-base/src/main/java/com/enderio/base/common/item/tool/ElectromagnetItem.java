@@ -2,8 +2,6 @@ package com.enderio.base.common.item.tool;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
-
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.AttractionUtil;
 import com.enderio.base.config.base.BaseConfig;
@@ -56,7 +54,7 @@ public class ElectromagnetItem extends PoweredToggledItem {
     }
 
     @Override
-    protected void onTickWhenActive(Player player, @Nonnull ItemStack pStack, @Nonnull Level pLevel, @Nonnull Entity pEntity, int pSlotId,
+    protected void onTickWhenActive(Player player, ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId,
         boolean pIsSelected) {
 
         int range = getRange();

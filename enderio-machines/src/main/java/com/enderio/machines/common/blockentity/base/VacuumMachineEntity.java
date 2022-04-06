@@ -1,0 +1,110 @@
+package com.enderio.machines.common.blockentity.base;
+
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.function.Predicate;
+
+import com.enderio.base.common.blockentity.sync.IntegerDataSlot;
+import com.enderio.base.common.blockentity.sync.SyncMode;
+import com.enderio.base.common.util.AttractionUtil;
+import com.enderio.machines.common.MachineTier;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+
+public abstract class VacuumMachineEntity<T extends Entity> extends MachineBlockEntity{
+	private static final double COLLISION_DISTANCE_SQ = 1 * 1;
+    protected static final double SPEED = 0.025;
+    protected static final double SPEED_4 = SPEED*4 ;
+    private static final int MAX_RANGE = 6;
+    private int range = 6;
+    private List<WeakReference<T>> entities = new ArrayList<>();
+	private Class<T> clazz;
+
+	public VacuumMachineEntity(MachineTier tier, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState, Class<T> clazz) {
+		super(tier, pType, pWorldPosition, pBlockState);
+		this.clazz = clazz;
+		add2WayDataSlot(new IntegerDataSlot(() -> this.getRange(), this::setRange, SyncMode.GUI));
+	}
+	
+	@Override
+    public void tick() {
+        if (this.getRedstoneControl().isActive(level.hasNeighborSignal(worldPosition))) {
+            this.attractEntities(this.getLevel(), this.getBlockPos(), this.range);
+        }
+        super.tick();
+    }
+	
+	public Predicate<T> getFilter() {
+		return (e -> true);
+	}
+    
+    private void attractEntities(Level level, BlockPos pos, int range) {
+        if ((level.getGameTime() + pos.asLong()) % 5 == 0) {
+        	getEntities(level, pos, range, getFilter());
+        }
+        Iterator<WeakReference<T>> iterator = entities.iterator();
+        while (iterator.hasNext()) {
+        	WeakReference<T> ref = iterator.next();
+            if (ref.get() == null) { //If the entity no longer exists, remove from the list
+            	iterator.remove();
+            	continue;
+            }
+            T entity = ref.get();
+            if (entity.isRemoved()) { //If the entity no longer exists, remove from the list
+            	iterator.remove();
+            	continue;
+            }
+            if (AttractionUtil.moveToPos(entity, pos, SPEED, SPEED_4, COLLISION_DISTANCE_SQ)) {
+                handleEntity(entity);
+            }
+        }
+    }
+    
+    public abstract void handleEntity(T entity);
+
+	private void getEntities(Level level, BlockPos pos, int range, Predicate<T> filter) {
+		this.entities.clear();
+		AABB area = new AABB(pos).inflate(range);
+		for (T ie:level.getEntitiesOfClass(clazz, area, filter)) {
+		    this.entities.add(new WeakReference<>(ie));
+		};
+	}
+    
+    public int getRange() {
+        return range;
+    }
+    
+    public void setRange(int range) {
+        this.range = range;
+    }
+    
+    public void decreaseRange() {
+        if (this.range > 0) {
+            this.range--;
+        }
+    }
+    
+    public void increaseRange() {
+        if (this.range < MAX_RANGE) {
+            this.range++;
+        }
+    }
+    
+    @Override
+    public void onLoad() {
+        if (this.entities.isEmpty()) {
+           getEntities(getLevel(), getBlockPos(), getRange(), getFilter());
+        }
+        super.onLoad();
+    }
+	
+	
+
+}

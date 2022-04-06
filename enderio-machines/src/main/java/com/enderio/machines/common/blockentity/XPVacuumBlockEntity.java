@@ -1,14 +1,9 @@
 package com.enderio.machines.common.blockentity;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.enderio.base.common.blockentity.sync.IntegerDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
-import com.enderio.base.common.util.AttractionUtil;
 import com.enderio.machines.common.MachineTier;
-import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
+import com.enderio.machines.common.blockentity.base.VacuumMachineEntity;
 import com.enderio.machines.common.blockentity.data.sidecontrol.fluid.FluidTankMaster;
 import com.enderio.machines.common.menu.XPVacuumMenu;
 
@@ -18,28 +13,19 @@ import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.phys.AABB;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
-public class XPVacuumBlockEntity extends MachineBlockEntity {
-    private static final double COLLISION_DISTANCE_SQ = 1 * 1;
-    private static final double SPEED = 0.025;
-    private static final double SPEED_4 = SPEED*4 ;
-    private static final int MAX_RANGE = 6;
-    private int range = 6;
+public class XPVacuumBlockEntity extends VacuumMachineEntity<ExperienceOrb> {
     private FluidTankMaster fluidTank;
-    private List<WeakReference<ExperienceOrb>> xpEntities = new ArrayList<>();
     
     public XPVacuumBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-        super(MachineTier.STANDARD, pType, pWorldPosition, pBlockState);
+        super(MachineTier.STANDARD, pType, pWorldPosition, pBlockState, ExperienceOrb.class);
         this.fluidTank =  new FluidTankMaster(Integer.MAX_VALUE, getIoConfig()); //that seems quite large?
         addDataSlot(new IntegerDataSlot(() -> fluidTank.getFluidInTank(0).getAmount(), (i) -> fluidTank.setFluid(new FluidStack(Fluids.WATER, i)), SyncMode.WORLD));
-        add2WayDataSlot(new IntegerDataSlot(() -> this.range, this::setRange, SyncMode.GUI));
     }
     
     public FluidTankMaster getFluidTank() {
@@ -65,66 +51,13 @@ public class XPVacuumBlockEntity extends MachineBlockEntity {
         return new XPVacuumMenu(this, inventory, containerId);
     }
     
-    @Override
-    public void tick() {
-        if (this.getRedstoneControl().isActive(level.hasNeighborSignal(worldPosition))) {
-            this.collectXP(this.getLevel(), this.getBlockPos(), this.range);
+	@Override
+	public void handleEntity(ExperienceOrb xpe) {
+		int filled = fluidTank.fill(new FluidStack(Fluids.WATER, xpe.getValue()), FluidAction.EXECUTE);//TODO xp fluid
+        if (filled == xpe.value) {
+            xpe.discard();
+        } else {
+            xpe.value -= filled;
         }
-        super.tick();
-    }
-    
-    private void collectXP(Level level, BlockPos pos, int range) {
-        if ((level.getGameTime() + pos.asLong()) % 5 == 0) {
-            AABB area = new AABB(pos).inflate(range);
-            for (ExperienceOrb ex:level.getEntitiesOfClass(ExperienceOrb.class, area)) {
-                this.xpEntities.add(new WeakReference<ExperienceOrb>(ex));
-            };
-        }
-        for (WeakReference<ExperienceOrb> ref: xpEntities) {
-            if (ref.get() == null) {
-                return;
-            }
-            ExperienceOrb xpe = ref.get();
-            if (AttractionUtil.moveToPos(xpe, pos, SPEED, SPEED_4, COLLISION_DISTANCE_SQ)) {
-                int filled = fluidTank.fill(new FluidStack(Fluids.WATER, xpe.getValue()), FluidAction.EXECUTE);//TODO xp fluid
-                if (filled == xpe.value) {
-                    xpe.discard();
-                    return;
-                } else {
-                    xpe.value -= filled;
-                }
-            }
-        }
-    }
-    
-    public int getRange() {
-        return range;
-    }
-    
-    public void setRange(int range) {
-        this.range = range;
-    }
-    
-    public void decreaseRange() {
-        if (this.range > 0) {
-            this.range--;
-        }
-    }
-    
-    public void increaseRange() {
-        if (this.range < MAX_RANGE) {
-            this.range++;
-        }
-    }
-    
-    @Override
-    public void onLoad() {
-        if (this.xpEntities.isEmpty()) {
-            AABB area = new AABB(this.getBlockPos()).inflate(range);
-            for (ExperienceOrb ex:level.getEntitiesOfClass(ExperienceOrb.class, area)) {
-                this.xpEntities.add(new WeakReference<ExperienceOrb>(ex));
-            };
-        }
-        super.onLoad();
-    }
+	}
 }
