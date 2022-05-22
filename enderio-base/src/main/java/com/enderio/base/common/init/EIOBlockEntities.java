@@ -13,5 +13,5 @@ public class EIOBlockEntities {
         .validBlock(EIOBlocks.GRAVE)
         .register();
 
-    public static void register() {}
+    public static void classload() {}
 }

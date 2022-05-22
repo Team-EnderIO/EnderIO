@@ -20,8 +20,10 @@ import com.enderio.base.datagen.recipe.standard.StandardRecipes;
 import com.tterrag.registrate.Registrate;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.common.data.ForgeBlockTagsProvider;
 import net.minecraftforge.common.util.Lazy;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -62,24 +64,24 @@ public class EnderIO {
         ctx.registerConfig(ModConfig.Type.COMMON, MachinesConfig.COMMON_SPEC, "enderio/machines-common.toml");
         ctx.registerConfig(ModConfig.Type.CLIENT, MachinesConfig.CLIENT_SPEC, "enderio/machines-client.toml");
 
-        // Registries
-        EIOItems.register();
-        EIOBlocks.register();
-        EIOBlockEntities.register();
-        EIOFluids.register();
-        EIOEnchantments.register();
-        EIOTags.init();
-        EIOMenus.register();
-        EIOPackets.getNetwork();
-        EIOLang.register();
-
-        // Register recipe events
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        EIORecipes.register(modEventBus);
+        // Perform classloads for everything so things are registered.
+        EIOItems.classload();
+        EIOBlocks.classload();
+        EIOBlockEntities.classload();
+        EIOFluids.classload();
+        EIOEnchantments.classload();
+        EIOTags.classload();
+        EIOMenus.classload();
+        EIOPackets.classload();
+        EIOLang.classload();
+        EIORecipes.Serializer.classload();
 
         // Run datagen after registrate is finished.
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addListener(EventPriority.LOWEST, this::gatherData);
 
+        // Helpers for registering stuff that registrate doesn't handle
+        modEventBus.addGenericListener(RecipeSerializer.class, this::onRecipeSerializerRegistry);
     }
 
     public static ResourceLocation loc(String path) {
@@ -95,6 +97,10 @@ public class EnderIO {
             generator.addProvider( new EIOFluidTagsProvider(generator, event.getExistingFileHelper()));
             generator.addProvider( new EIOBlockTagsProvider(generator, event.getExistingFileHelper()));
         }
+    }
+
+    public void onRecipeSerializerRegistry(RegistryEvent.Register<RecipeSerializer<?>> event) {
+        EIORecipes.Types.classload();
     }
 
     public static Registrate registrate() {

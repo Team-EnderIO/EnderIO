@@ -164,5 +164,5 @@ public class EIOLang {
 
     // endregion
 
-    public static void register() {}
+    public static void classload() {}
 }

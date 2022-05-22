@@ -45,5 +45,5 @@ public class MachineBlockEntities {
         .validBlocks(MachineBlocks.ENHANCED_ALLOY_SMELTER)
         .register();
 
-    public static void register() {}
+    public static void classload() {}
 }

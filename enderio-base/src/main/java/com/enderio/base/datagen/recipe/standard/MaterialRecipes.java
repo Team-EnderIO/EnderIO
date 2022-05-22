@@ -13,7 +13,7 @@ import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
@@ -290,7 +290,7 @@ public class MaterialRecipes extends RecipeProvider {
             .save(recipeConsumer);
     }
     
-    private void upgradeGear(Consumer<FinishedRecipe> recipeConsumer, Item resultGear, ItemLike inputGear, Tag<Item> cross, Tag<Item> corner) {
+    private void upgradeGear(Consumer<FinishedRecipe> recipeConsumer, Item resultGear, ItemLike inputGear, TagKey<Item> cross, TagKey<Item> corner) {
         ShapedRecipeBuilder.shaped(resultGear)
             .pattern("NIN")
             .pattern("IGI")

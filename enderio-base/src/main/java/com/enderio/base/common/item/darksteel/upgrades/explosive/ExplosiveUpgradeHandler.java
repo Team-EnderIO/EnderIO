@@ -105,10 +105,10 @@ public class ExplosiveUpgradeHandler {
     }
 
     private static boolean canExplode(ItemStack itemStack, BlockState blockState, @Nullable BlockEntity blockEntity) {
-        if (EIOTags.Blocks.DARK_STEEL_EXPLODABLE_ALLOW_LIST.contains(blockState.getBlock())) {
+        if (blockState.is(EIOTags.Blocks.DARK_STEEL_EXPLODABLE_ALLOW_LIST)) {
             return true;
         }
-        if (EIOTags.Blocks.DARK_STEEL_EXPLODABLE_DENY_LIST.contains(blockState.getBlock()) || blockEntity != null) {
+        if (blockState.is(EIOTags.Blocks.DARK_STEEL_EXPLODABLE_DENY_LIST) || blockEntity != null) {
             return false;
         }
         return Items.STONE_PICKAXE.isCorrectToolForDrops(blockState) ||
