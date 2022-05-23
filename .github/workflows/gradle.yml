@@ -3,9 +3,9 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Gradle Build
+name: Gradle CI Build
 
-on: [pull_request]
+on: [push, pull_request]
 
 jobs:
   build:
@@ -13,14 +13,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up JDK 17
+      - name: Set up JDK
         uses: actions/setup-java@v2
         with:
           java-version: '17'
           distribution: 'adopt'
-      - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@e6e38bacfdf1a337459f332974bb2327a31aaf4b
+      - name: Restore cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/build.gradle') }}
       - name: Make gradlew executable
         run: chmod +x ./gradlew
       - name: Build with Gradle
-        run: ./gradlew cleanJars build
+        run: ./gradlew build
