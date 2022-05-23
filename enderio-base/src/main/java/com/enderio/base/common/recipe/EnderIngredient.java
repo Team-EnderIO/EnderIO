@@ -2,12 +2,11 @@ package com.enderio.base.common.recipe;
 
 import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.block.Block;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -45,11 +44,11 @@ public record EnderIngredient(Ingredient ingredient, int count) {
         return new EnderIngredient(Ingredient.of(stacks), count);
     }
 
-    public static EnderIngredient of(Tag<Item> tag) {
+    public static EnderIngredient of(TagKey<Item> tag) {
         return of(1, tag);
     }
 
-    public static EnderIngredient of(int count, Tag<Item> tag) {
+    public static EnderIngredient of(int count, TagKey<Item> tag) {
         return new EnderIngredient(Ingredient.fromValues(Stream.of(new Ingredient.TagValue(tag))), count);
     }
 
