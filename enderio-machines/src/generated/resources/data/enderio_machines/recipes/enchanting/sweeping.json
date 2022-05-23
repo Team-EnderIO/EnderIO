@@ -1,9 +1,9 @@
 {
   "type": "enderio_machines:enchanting",
+  "enchantment": "minecraft:sweeping",
   "input": {
     "tag": "forge:ingots/iron"
   },
-  "enchantment": "minecraft:sweeping",
-  "amount": 8,
+  "amount_per_level": 8,
   "level": 1
 }

@@ -1,9 +1,9 @@
 {
   "type": "enderio_machines:enchanting",
+  "enchantment": "minecraft:power",
   "input": {
     "item": "minecraft:flint"
   },
-  "enchantment": "minecraft:power",
-  "amount": 12,
+  "amount_per_level": 12,
   "level": 1
 }

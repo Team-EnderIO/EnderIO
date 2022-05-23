@@ -1,9 +1,9 @@
 {
   "type": "enderio_machines:enchanting",
+  "enchantment": "enderio:soulbound",
   "input": {
     "item": "enderio:ender_crystal"
   },
-  "enchantment": "enderio:soulbound",
-  "amount": 1,
+  "amount_per_level": 1,
   "level": 1
 }

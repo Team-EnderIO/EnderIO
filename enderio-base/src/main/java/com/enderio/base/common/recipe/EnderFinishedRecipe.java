@@ -14,18 +14,18 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnderRecipeResult<R extends IEnderRecipe<R, ?>> implements FinishedRecipe {
+public class EnderFinishedRecipe<R extends IEnderRecipe<R, ?>> implements FinishedRecipe {
 
     private final R recipe;
     private final ResourceLocation id;
 
     private final List<ICondition> conditions = new ArrayList<>();
 
-    public EnderRecipeResult(R recipe, String modid, String name) {
+    public EnderFinishedRecipe(R recipe, String modid, String name) {
         this(recipe, new ResourceLocation(modid, recipe.getSerializer().getRegistryName().getPath() + "/" + name));
     }
 
-    public EnderRecipeResult(R recipe, ResourceLocation id) {
+    public EnderFinishedRecipe(R recipe, ResourceLocation id) {
         this.recipe = recipe;
         this.id = id;
     }
@@ -39,7 +39,7 @@ public class EnderRecipeResult<R extends IEnderRecipe<R, ?>> implements Finished
         // Serialize recipe
         recipe.getSerializer().toJson(recipe, json);
 
-        // Stop recipes from loading
+        // Stop recipes from loading without the required mods.
         List<String> modDependencies = recipe.getModDependencies();
         for (String modDependency : modDependencies) {
             conditions.add(new ModLoadedCondition(modDependency));

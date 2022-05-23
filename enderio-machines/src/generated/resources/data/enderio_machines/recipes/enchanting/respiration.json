@@ -1,9 +1,9 @@
 {
   "type": "enderio_machines:enchanting",
+  "enchantment": "minecraft:respiration",
   "input": {
     "item": "minecraft:glass_bottle"
   },
-  "enchantment": "minecraft:respiration",
-  "amount": 1,
+  "amount_per_level": 1,
   "level": 1
 }

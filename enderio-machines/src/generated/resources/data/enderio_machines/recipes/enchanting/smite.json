@@ -1,9 +1,9 @@
 {
   "type": "enderio_machines:enchanting",
+  "enchantment": "minecraft:smite",
   "input": {
     "item": "minecraft:rotten_flesh"
   },
-  "enchantment": "minecraft:smite",
-  "amount": 12,
+  "amount_per_level": 12,
   "level": 1
 }

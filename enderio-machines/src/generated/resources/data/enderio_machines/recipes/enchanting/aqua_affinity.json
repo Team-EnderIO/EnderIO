@@ -1,9 +1,9 @@
 {
   "type": "enderio_machines:enchanting",
+  "enchantment": "minecraft:aqua_affinity",
   "input": {
     "item": "minecraft:lily_pad"
   },
-  "enchantment": "minecraft:aqua_affinity",
-  "amount": 1,
+  "amount_per_level": 1,
   "level": 1
 }

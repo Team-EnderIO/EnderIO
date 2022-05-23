@@ -150,7 +150,7 @@ public abstract class EnchanterRecipe implements IEnderRecipe<EnchanterRecipe, C
     }
 
     @Override
-    public List<ResourceLocation> getOtherDependencies() {
+    public List<ResourceLocation> getMiscModDependencies() {
         return List.of(enchantment.getRegistryName());
     }
 }

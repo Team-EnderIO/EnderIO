@@ -4,7 +4,7 @@ import com.enderio.base.common.block.glass.FusedQuartzBlock;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.api.recipe.CountedIngredient;
-import com.enderio.base.common.recipe.EnderRecipeResult;
+import com.enderio.base.common.recipe.EnderFinishedRecipe;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.machines.EIOMachines;
 import com.enderio.api.recipe.AlloySmeltingRecipe;
@@ -163,6 +163,6 @@ public class AlloyRecipeGenerator extends RecipeProvider {
     }
 
     protected void build(AlloySmeltingRecipe recipe, String name, Consumer<FinishedRecipe> recipeConsumer) {
-        recipeConsumer.accept(new EnderRecipeResult<>(recipe, EIOMachines.MODID, name));
+        recipeConsumer.accept(new EnderFinishedRecipe<>(recipe, EIOMachines.MODID, name));
     }
 }

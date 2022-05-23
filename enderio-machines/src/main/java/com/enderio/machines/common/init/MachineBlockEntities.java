@@ -48,7 +48,7 @@ public class MachineBlockEntities {
 
     public static final BlockEntityEntry<CreativePowerBlockEntity> CREATIVE_POWER = REGISTRATE
         .blockEntity("creative_power", CreativePowerBlockEntity::new)
-        .validBlocks(MachineBlocks.CREATIVE_POWER)
+//        .validBlocks(MachineBlocks.CREATIVE_POWER)
         .register();
 
     public static void classload() {}

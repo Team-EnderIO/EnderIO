@@ -176,12 +176,12 @@ public class MachineBlocks {
         .build()
         .register();
 
-    public static BlockEntry<MachineBlock> CREATIVE_POWER = REGISTRATE
-        .block("creative_power", props -> new MachineBlock(props, MachineBlockEntities.CREATIVE_POWER))
-        .item()
-        .tab(() -> EIOCreativeTabs.MACHINES)
-        .build()
-        .register();
+//    public static BlockEntry<MachineBlock> CREATIVE_POWER = REGISTRATE
+//        .block("creative_power", props -> new MachineBlock(props, MachineBlockEntities.CREATIVE_POWER))
+//        .item()
+//        .tab(() -> EIOCreativeTabs.MACHINES)
+//        .build()
+//        .register();
 
     public static void classload() {}
 }

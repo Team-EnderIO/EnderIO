@@ -1,9 +1,9 @@
 {
   "type": "enderio_machines:enchanting",
+  "enchantment": "minecraft:efficiency",
   "input": {
     "tag": "forge:dusts/redstone"
   },
-  "enchantment": "minecraft:efficiency",
-  "amount": 12,
+  "amount_per_level": 12,
   "level": 1
 }

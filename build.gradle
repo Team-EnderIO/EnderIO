@@ -65,8 +65,8 @@ subprojects {
             client {
                 workingDirectory project.file('run')
 
-                property 'forge.logging.markers', 'REGISTRIES'
-                property 'forge.logging.console.level', 'debug'
+//                property 'forge.logging.markers', 'REGISTRIES'
+//                property 'forge.logging.console.level', 'debug'
 
                 // Allow dependent mixins to run
                 property 'mixin.env.remapRefMap', 'true'
@@ -82,7 +82,7 @@ subprojects {
             server {
                 workingDirectory project.file('run')
 
-                property 'forge.logging.console.level', 'debug'
+//                property 'forge.logging.console.level', 'debug'
 
                 // Allow dependent mixins to run
                 property 'mixin.env.remapRefMap', 'true'
@@ -98,8 +98,8 @@ subprojects {
             data {
                 workingDirectory project.file('run')
 
-                property 'forge.logging.markers', 'REGISTRIES'
-                property 'forge.logging.console.level', 'debug'
+//                property 'forge.logging.markers', 'REGISTRIES'
+//                property 'forge.logging.console.level', 'debug'
 
                 // Allow dependent mixins to run
                 property 'mixin.env.remapRefMap', 'true'

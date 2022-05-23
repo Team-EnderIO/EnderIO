@@ -1,9 +1,9 @@
 {
   "type": "enderio_machines:enchanting",
+  "enchantment": "minecraft:piercing",
   "input": {
     "tag": "forge:ingots/iron"
   },
-  "enchantment": "minecraft:piercing",
-  "amount": 8,
+  "amount_per_level": 8,
   "level": 1
 }

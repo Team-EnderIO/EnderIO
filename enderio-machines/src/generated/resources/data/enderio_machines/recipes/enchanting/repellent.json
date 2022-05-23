@@ -1,9 +1,9 @@
 {
   "type": "enderio_machines:enchanting",
+  "enchantment": "enderio:repellent",
   "input": {
     "item": "minecraft:ender_pearl"
   },
-  "enchantment": "enderio:repellent",
-  "amount": 4,
+  "amount_per_level": 4,
   "level": 2
 }

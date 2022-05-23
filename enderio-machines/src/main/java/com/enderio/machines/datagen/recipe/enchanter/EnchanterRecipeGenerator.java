@@ -2,7 +2,7 @@ package com.enderio.machines.datagen.recipe.enchanter;
 
 import com.enderio.base.common.init.EIOEnchantments;
 import com.enderio.base.common.init.EIOItems;
-import com.enderio.base.common.recipe.EnderRecipeResult;
+import com.enderio.base.common.recipe.EnderFinishedRecipe;
 import com.enderio.machines.EIOMachines;
 import com.enderio.api.recipe.EnchanterRecipe;
 import com.enderio.machines.common.recipe.EnchanterRecipeImpl;
@@ -84,6 +84,6 @@ public class EnchanterRecipeGenerator extends RecipeProvider {
     }
 
     protected void build(EnchanterRecipe recipe, String name, Consumer<FinishedRecipe> recipeConsumer) {
-        recipeConsumer.accept(new EnderRecipeResult<>(recipe, EIOMachines.MODID, name));
+        recipeConsumer.accept(new EnderFinishedRecipe<>(recipe, EIOMachines.MODID, name));
     }
 }
