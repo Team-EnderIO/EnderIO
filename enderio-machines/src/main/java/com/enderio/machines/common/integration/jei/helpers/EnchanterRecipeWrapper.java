@@ -22,7 +22,7 @@ public class EnchanterRecipeWrapper {
         List<ItemStack> leftInputs = new ArrayList<>();
         List<ItemStack> rightInputs = new ArrayList<>();
         for (ItemStack input : recipe.getInput().getItems()) {
-            leftInputs.add(new ItemStack(input.getItem(), recipe.getAmountPerLevel() * level));
+            leftInputs.add(new ItemStack(input.getItem(), recipe.getInputAmountPerLevel() * level));
             rightInputs.add(new ItemStack(Items.LAPIS_LAZULI, recipe.getLapisForLevel(level)));
         }
 

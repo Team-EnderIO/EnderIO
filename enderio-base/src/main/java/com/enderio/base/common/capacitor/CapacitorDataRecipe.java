@@ -1,4 +1,4 @@
-package com.enderio.base.common.recipe.capacitor;
+package com.enderio.base.common.capacitor;
 
 import com.enderio.base.common.capability.CapacitorData;
 import com.enderio.api.capability.ICapacitorData;

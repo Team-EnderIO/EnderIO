@@ -151,6 +151,7 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
         if (isCacheDirty) {
             updateCache();
         }
+        // TODO: Need to do energy pushing if possible.
         if (shouldActSlow()) {
             for (Direction direction : Direction.values()) {
                 if (ioConfig.getIO(direction).canForce()) {

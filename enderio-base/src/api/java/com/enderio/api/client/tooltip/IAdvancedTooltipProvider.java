@@ -1,4 +1,4 @@
-package com.enderio.base.client.tooltip;
+package com.enderio.api.client.tooltip;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;

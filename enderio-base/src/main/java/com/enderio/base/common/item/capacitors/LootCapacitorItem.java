@@ -4,7 +4,7 @@ import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.api.capability.IMultiCapabilityItem;
 import com.enderio.api.capability.MultiCapabilityProvider;
 import com.enderio.base.common.capability.CapacitorData;
-import com.enderio.base.common.util.CapacitorUtil;
+import com.enderio.base.common.capacitor.CapacitorUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;

@@ -13,44 +13,50 @@ import java.util.Arrays;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-public record EnderIngredient(Ingredient ingredient, int count) implements Predicate<ItemStack> {
+/**
+ * An ingredient with an item count associated with it.
+ */
+public record CountedIngredient(Ingredient ingredient, int count) implements Predicate<ItemStack> {
 
-    public static EnderIngredient EMPTY = new EnderIngredient(Ingredient.EMPTY, 0);
+    /**
+     * An empty ingredient.
+     */
+    public static CountedIngredient EMPTY = new CountedIngredient(Ingredient.EMPTY, 0);
 
-    public static EnderIngredient of() {
+    public static CountedIngredient of() {
         return EMPTY;
     }
 
-    public static EnderIngredient of(ItemLike... items) {
+    public static CountedIngredient of(ItemLike... items) {
         return of(Arrays.stream(items).map(ItemStack::new));
     }
 
-    public static EnderIngredient of(int count, ItemLike... items) {
+    public static CountedIngredient of(int count, ItemLike... items) {
         return of(count, Arrays.stream(items).map(ItemStack::new));
     }
 
-    public static EnderIngredient of(ItemStack... stacks) {
+    public static CountedIngredient of(ItemStack... stacks) {
         return of(Arrays.stream(stacks));
     }
 
-    public static EnderIngredient of(int count, ItemStack... stacks) {
+    public static CountedIngredient of(int count, ItemStack... stacks) {
         return of(count, Arrays.stream(stacks));
     }
 
-    public static EnderIngredient of(Stream<ItemStack> stacks) {
+    public static CountedIngredient of(Stream<ItemStack> stacks) {
         return of(1, stacks);
     }
 
-    public static EnderIngredient of(int count, Stream<ItemStack> stacks) {
-        return new EnderIngredient(Ingredient.of(stacks), count);
+    public static CountedIngredient of(int count, Stream<ItemStack> stacks) {
+        return new CountedIngredient(Ingredient.of(stacks), count);
     }
 
-    public static EnderIngredient of(TagKey<Item> tag) {
+    public static CountedIngredient of(TagKey<Item> tag) {
         return of(1, tag);
     }
 
-    public static EnderIngredient of(int count, TagKey<Item> tag) {
-        return new EnderIngredient(Ingredient.fromValues(Stream.of(new Ingredient.TagValue(tag))), count);
+    public static CountedIngredient of(int count, TagKey<Item> tag) {
+        return new CountedIngredient(Ingredient.fromValues(Stream.of(new Ingredient.TagValue(tag))), count);
     }
 
     public ItemStack[] getItems() {
@@ -61,12 +67,13 @@ public record EnderIngredient(Ingredient ingredient, int count) implements Predi
         return matchingStacks;
     }
 
+    @Override
     public boolean test(@Nullable ItemStack itemStack) {
         return ingredient.test(itemStack) && itemStack.getCount() >= count;
     }
 
-    public static EnderIngredient fromJson(JsonObject json) {
-        return new EnderIngredient(Ingredient.fromJson(json.get("ingredient")), json.get("count").getAsInt());
+    public static CountedIngredient fromJson(JsonObject json) {
+        return new CountedIngredient(Ingredient.fromJson(json.get("ingredient")), json.get("count").getAsInt());
     }
 
     public JsonObject toJson() {
@@ -76,9 +83,9 @@ public record EnderIngredient(Ingredient ingredient, int count) implements Predi
         return json;
     }
 
-    public static EnderIngredient fromNetwork(FriendlyByteBuf buffer) {
+    public static CountedIngredient fromNetwork(FriendlyByteBuf buffer) {
         Ingredient ingredient = Ingredient.fromNetwork(buffer);
-        return new EnderIngredient(ingredient, buffer.readShort());
+        return new CountedIngredient(ingredient, buffer.readShort());
     }
 
     public void toNetwork(FriendlyByteBuf buffer) {

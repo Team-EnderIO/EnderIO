@@ -1,4 +1,4 @@
-package com.enderio.base.common.util;
+package com.enderio.api;
 
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.util.thread.EffectiveSide;

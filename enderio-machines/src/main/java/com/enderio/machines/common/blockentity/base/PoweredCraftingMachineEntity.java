@@ -2,7 +2,7 @@ package com.enderio.machines.common.blockentity.base;
 
 import com.enderio.base.common.blockentity.sync.FloatDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
-import com.enderio.base.common.util.UseOnly;
+import com.enderio.api.UseOnly;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.block.ProgressMachineBlock;
 import com.enderio.api.recipe.IMachineRecipe;

@@ -26,9 +26,7 @@ public class MachineEnergyStorage implements INBTSerializable<Tag>, IEnergyStora
 
     @Override
     public int getEnergyStored() {
-//        return storedEnergy;
-        // TODO: For testing
-        return getMaxEnergyStored();
+        return storedEnergy;
     }
 
     @Override
@@ -36,10 +34,18 @@ public class MachineEnergyStorage implements INBTSerializable<Tag>, IEnergyStora
         return Math.round(baseCapacity * capacitorSupplier.get().map(ICapacitorData::getBase).orElse(0.0f));
     }
 
+    // TODO: Should the next two methods be exposed by an interface?
+
+    /**
+     * Maximum speed of energy consumption within the block itself.
+     */
     public int getMaxEnergyConsumption() {
         return Math.round(baseMaxConsumption * capacitorSupplier.get().map(ICapacitorData::getBase).orElse(0.0f));
     }
 
+    /**
+     * Maximum speed of energy transfer in and out of the block.
+     */
     public int getMaxEnergyTransfer() {
         return Math.round(baseMaxTransfer * capacitorSupplier.get().map(ICapacitorData::getBase).orElse(0.0f));
     }
@@ -82,12 +88,22 @@ public class MachineEnergyStorage implements INBTSerializable<Tag>, IEnergyStora
 
     @Override
     public int receiveEnergy(int maxReceive, boolean simulate) {
-        return 0;
+        if (!canReceive()) return 0;
+        int energyReceived = Math.min(getMaxEnergyStored() - getEnergyStored(), Math.min(getMaxEnergyTransfer(), maxReceive));
+        if (!simulate) {
+            addEnergy(energyReceived);
+        }
+        return energyReceived;
     }
 
     @Override
     public int extractEnergy(int maxExtract, boolean simulate) {
-        return 0;
+        if (!canExtract()) return 0;
+        int energyExtracted = Math.min(getEnergyStored(), Math.min(getMaxEnergyTransfer(), maxExtract));
+        if (!simulate) {
+            addEnergy(-energyExtracted);
+        }
+        return energyExtracted;
     }
 
     @Override

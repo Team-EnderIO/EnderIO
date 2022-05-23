@@ -1,8 +1,9 @@
 package com.enderio.base.datagen.recipe.standard;
 
 import com.enderio.base.common.capability.CapacitorData;
+import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.base.common.init.EIOItems;
-import com.enderio.base.common.recipe.capacitor.CapacitorDataRecipe;
+import com.enderio.base.common.capacitor.CapacitorDataRecipe;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
@@ -20,9 +21,9 @@ public class CapacitorDataRecipeGenerator extends RecipeProvider {
 
     @Override
     protected void buildCraftingRecipes(@Nonnull Consumer<FinishedRecipe> recipeConsumer) {
-        build(1.0f, EIOItems.BASIC_CAPACITOR.get(), recipeConsumer);
-        build(2.0f, EIOItems.DOUBLE_LAYER_CAPACITOR.get(), recipeConsumer);
-        build(4.0f, EIOItems.OCTADIC_CAPACITOR.get(), recipeConsumer);
+        build(CapacitorUtil.BASIC, EIOItems.BASIC_CAPACITOR.get(), recipeConsumer);
+        build(CapacitorUtil.DOUBLE_LAYER, EIOItems.DOUBLE_LAYER_CAPACITOR.get(), recipeConsumer);
+        build(CapacitorUtil.OCTADIC, EIOItems.OCTADIC_CAPACITOR.get(), recipeConsumer);
     }
 
     protected void build(float base, Item item, Consumer<FinishedRecipe> recipeConsumer) {

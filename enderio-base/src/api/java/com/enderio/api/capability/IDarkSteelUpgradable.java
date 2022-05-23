@@ -1,5 +1,6 @@
 package com.enderio.api.capability;
 
+import com.enderio.api.nbt.INamedNBTSerializable;
 import net.minecraft.nbt.Tag;
 
 import java.util.Collection;

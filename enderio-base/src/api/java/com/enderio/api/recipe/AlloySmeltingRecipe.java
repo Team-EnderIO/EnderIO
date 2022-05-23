@@ -11,12 +11,12 @@ import java.util.List;
 
 public abstract class AlloySmeltingRecipe implements IMachineRecipe<AlloySmeltingRecipe, Container> {
     private final ResourceLocation id;
-    private final List<EnderIngredient> inputs;
+    private final List<CountedIngredient> inputs;
     private final ItemStack result;
     private final int energy;
     private final float experience;
 
-    public AlloySmeltingRecipe(ResourceLocation id, List<EnderIngredient> inputs, ItemStack result, int energy, float experience) {
+    public AlloySmeltingRecipe(ResourceLocation id, List<CountedIngredient> inputs, ItemStack result, int energy, float experience) {
         if (inputs.size() > 3) {
             throw new IllegalArgumentException("Tried to create an invalid alloy smelting recipe!");
         }
@@ -29,7 +29,7 @@ public abstract class AlloySmeltingRecipe implements IMachineRecipe<AlloySmeltin
     }
 
     // TODO: Need a better solution to this.
-    public List<EnderIngredient> getInputs() {
+    public List<CountedIngredient> getInputs() {
         return inputs;
     }
 
@@ -39,7 +39,7 @@ public abstract class AlloySmeltingRecipe implements IMachineRecipe<AlloySmeltin
             return input;
 
         // Try to work out which ingredient this is
-        for (EnderIngredient ingredient : inputs) {
+        for (CountedIngredient ingredient : inputs) {
             if (ingredient.test(input)) {
                 input.shrink(ingredient.count());
                 return input;
@@ -52,7 +52,7 @@ public abstract class AlloySmeltingRecipe implements IMachineRecipe<AlloySmeltin
     @Override
     public List<List<ItemStack>> getAllInputs() {
         List<List<ItemStack>> inputs = new ArrayList<>();
-        for (EnderIngredient ingredient : this.inputs) {
+        for (CountedIngredient ingredient : this.inputs) {
             inputs.add(Arrays.stream(ingredient.getItems()).toList());
         }
         return inputs;
@@ -92,10 +92,10 @@ public abstract class AlloySmeltingRecipe implements IMachineRecipe<AlloySmeltin
                     matchArray[i] = true;
             }
 
-            for (EnderIngredient ingredient : inputs) {
+            for (CountedIngredient ingredient : inputs) {
                 if (ingredient.test(pContainer.getItem(i)))
                     matchArray[i] = true;
-                else if (ingredient == EnderIngredient.EMPTY && pContainer.getItem(i).isEmpty())
+                else if (ingredient == CountedIngredient.EMPTY && pContainer.getItem(i).isEmpty())
                     matchArray[i] = true;
             }
         }

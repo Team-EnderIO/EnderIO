@@ -1,11 +1,10 @@
 package com.enderio.base.common.init;
 
 import com.enderio.base.EnderIO;
-import com.enderio.base.common.recipe.capacitor.CapacitorDataRecipe;
+import com.enderio.base.common.capacitor.CapacitorDataRecipe;
 import com.enderio.base.common.recipe.grindingball.GrindingballRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;

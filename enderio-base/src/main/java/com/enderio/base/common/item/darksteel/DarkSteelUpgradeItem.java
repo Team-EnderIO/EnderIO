@@ -1,6 +1,6 @@
 package com.enderio.base.common.item.darksteel;
 
-import com.enderio.base.client.tooltip.IAdvancedTooltipProvider;
+import com.enderio.api.client.tooltip.IAdvancedTooltipProvider;
 import com.enderio.api.capability.IDarkSteelUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
 import com.enderio.base.common.lang.EIOLang;

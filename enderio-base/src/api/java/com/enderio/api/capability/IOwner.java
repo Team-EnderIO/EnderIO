@@ -1,6 +1,6 @@
 package com.enderio.api.capability;
 
-import com.enderio.api.capability.INamedNBTSerializable;
+import com.enderio.api.nbt.INamedNBTSerializable;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.nbt.CompoundTag;
 

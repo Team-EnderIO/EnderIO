@@ -1,6 +1,7 @@
-package com.enderio.base.common.util;
+package com.enderio.base.common.capacitor;
 
 import com.enderio.base.EnderIO;
+import com.enderio.base.common.capability.CapacitorData;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.capability.CapacitorSpecializations;
 import com.enderio.api.capability.ICapacitorData;
@@ -22,6 +23,11 @@ import java.util.*;
  */
 @Mod.EventBusSubscriber(modid = EnderIO.MODID)
 public class CapacitorUtil {
+    // Base capacitor datum for easy access.
+    public static final CapacitorData BASIC = new CapacitorData(1.0f, Map.of());
+    public static final CapacitorData DOUBLE_LAYER = new CapacitorData(2.0f, Map.of());
+    public static final CapacitorData OCTADIC = new CapacitorData(4.0f, Map.of());
+
     /**
      * Static maps with specializations for the "basic"
      */

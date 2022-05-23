@@ -15,33 +15,49 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * A recipe for the enchanter.
+ * Takes in an ingredient, some XP and some lapis lazuli and in turn enchants an item with the given enchantment.
+ */
 public abstract class EnchanterRecipe implements IEnderRecipe<EnchanterRecipe, Container> {
     private final ResourceLocation id;
     private final Enchantment enchantment;
     private final int levelModifier;
     private final Ingredient input;
-    private final int amountPerLevel;
+    private final int inputAmountPerLevel;
 
     public EnchanterRecipe(ResourceLocation id, Ingredient input, Enchantment enchantment, int amountPerLevel, int levelModifier) {
         this.id = id;
         this.input = input;
         this.enchantment = enchantment;
-        this.amountPerLevel = amountPerLevel;
+        this.inputAmountPerLevel = amountPerLevel;
         this.levelModifier = levelModifier;
     }
 
+    /**
+     * Get the enchantment provided by the recipe.
+     */
     public Enchantment getEnchantment() {
         return this.enchantment;
     }
 
+    /**
+     * Get the input ingredient for the recipe.
+     */
     public Ingredient getInput() {return this.input;}
 
+    /**
+     * Get the XP level modifier
+     */
     public int getLevelModifier() {
         return levelModifier;
     }
 
-    public int getAmountPerLevel() {
-        return amountPerLevel;
+    /**
+     * Get the amount of the ingredient per level
+     */
+    public int getInputAmountPerLevel() {
+        return inputAmountPerLevel;
     }
 
     public int getLevelCost(Container container) {
@@ -49,18 +65,15 @@ public abstract class EnchanterRecipe implements IEnderRecipe<EnchanterRecipe, C
         return getEnchantCost(level);
     }
 
-    public int getEnchantmentLevel(int amount) {
-        return Math.min(amount / amountPerLevel, enchantment.getMaxLevel());
+    public int getEnchantmentLevel(int ingredientCount) {
+        return Math.min(ingredientCount / inputAmountPerLevel, enchantment.getMaxLevel());
     }
 
-    public int getLapisForLevel(int level) {
-        int res = enchantment.getMaxLevel() == 1 ? 5 : level;
-        return Math.max(1, Math.round(res * 1)); //TODO config
-    }
+    public abstract int getLapisForLevel(int level);
 
     public int getAmount(Container container) {
         if (matches(container, null)) {
-            return getEnchantmentLevel(container.getItem(1).getCount()) * this.amountPerLevel;
+            return getEnchantmentLevel(container.getItem(1).getCount()) * this.inputAmountPerLevel;
         }
         return 0;
     }
@@ -99,7 +112,7 @@ public abstract class EnchanterRecipe implements IEnderRecipe<EnchanterRecipe, C
         if (!pContainer.getItem(0).is(Items.WRITABLE_BOOK)) {
             return false;
         }
-        if (!input.test(pContainer.getItem(1)) || pContainer.getItem(1).getCount() < amountPerLevel) {
+        if (!input.test(pContainer.getItem(1)) || pContainer.getItem(1).getCount() < inputAmountPerLevel) {
             return false;
         }
         if (!pContainer.getItem(2).is(Items.LAPIS_LAZULI) || pContainer.getItem(2).getCount() < getLapisForLevel(
@@ -140,6 +153,4 @@ public abstract class EnchanterRecipe implements IEnderRecipe<EnchanterRecipe, C
     public List<ResourceLocation> getOtherDependencies() {
         return List.of(enchantment.getRegistryName());
     }
-
-
 }

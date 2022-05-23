@@ -2,7 +2,7 @@ package com.enderio.machines.common.recipe;
 
 import com.enderio.api.recipe.AlloySmeltingRecipe;
 import com.enderio.api.recipe.DataGenSerializer;
-import com.enderio.api.recipe.EnderIngredient;
+import com.enderio.api.recipe.CountedIngredient;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AlloySmeltingRecipeImpl extends AlloySmeltingRecipe {
-    public AlloySmeltingRecipeImpl(ResourceLocation id, List<EnderIngredient> inputs, ItemStack result, int energy, float experience) {
+    public AlloySmeltingRecipeImpl(ResourceLocation id, List<CountedIngredient> inputs, ItemStack result, int energy, float experience) {
         super(id, inputs, result, energy, experience);
     }
 
@@ -38,9 +38,9 @@ public class AlloySmeltingRecipeImpl extends AlloySmeltingRecipe {
         public AlloySmeltingRecipe fromJson(ResourceLocation pRecipeId, JsonObject pSerializedRecipe) {
             // Load ingredients
             JsonArray jsonInputs = pSerializedRecipe.getAsJsonArray("inputs");
-            List<EnderIngredient> inputs = new ArrayList<>(jsonInputs.size());
+            List<CountedIngredient> inputs = new ArrayList<>(jsonInputs.size());
             for (int i = 0; i < jsonInputs.size(); i++) {
-                inputs.add(i, EnderIngredient.fromJson(jsonInputs.get(i).getAsJsonObject()));
+                inputs.add(i, CountedIngredient.fromJson(jsonInputs.get(i).getAsJsonObject()));
             }
 
             // Load result, energy and experience.
@@ -52,7 +52,7 @@ public class AlloySmeltingRecipeImpl extends AlloySmeltingRecipe {
 
         @Override
         public void toJson(AlloySmeltingRecipe recipe, JsonObject json) {
-            List<EnderIngredient> recipeInputs = recipe.getInputs();
+            List<CountedIngredient> recipeInputs = recipe.getInputs();
 
             JsonArray inputs = new JsonArray(recipeInputs.size());
             recipeInputs.forEach(ing -> inputs.add(ing.toJson()));
@@ -75,7 +75,7 @@ public class AlloySmeltingRecipeImpl extends AlloySmeltingRecipe {
 
         @Override
         public AlloySmeltingRecipe fromNetwork(ResourceLocation pRecipeId, FriendlyByteBuf pBuffer) {
-            List<EnderIngredient> ingredients = pBuffer.readList(EnderIngredient::fromNetwork);
+            List<CountedIngredient> ingredients = pBuffer.readList(CountedIngredient::fromNetwork);
             ItemStack result = pBuffer.readItem();
             int energy = pBuffer.readInt();
             float experience = pBuffer.readFloat();

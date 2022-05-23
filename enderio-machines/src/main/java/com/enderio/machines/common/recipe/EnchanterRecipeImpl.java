@@ -2,6 +2,7 @@ package com.enderio.machines.common.recipe;
 
 import com.enderio.api.recipe.DataGenSerializer;
 import com.enderio.api.recipe.EnchanterRecipe;
+import com.enderio.base.config.machines.MachinesConfig;
 import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonObject;
@@ -19,6 +20,12 @@ import java.util.Optional;
 public class EnchanterRecipeImpl extends EnchanterRecipe {
     public EnchanterRecipeImpl(ResourceLocation id, Ingredient input, Enchantment enchantment, int amountPerLevel, int levelModifier) {
         super(id, input, enchantment, amountPerLevel, levelModifier);
+    }
+
+    @Override
+    public int getLapisForLevel(int level) {
+        int res = getEnchantment().getMaxLevel() == 1 ? 5 : level;
+        return Math.max(1, Math.round(res * MachinesConfig.COMMON.ENCHANTER_LAPIS_COST_FACTOR.get()));
     }
 
     @Override
@@ -45,7 +52,7 @@ public class EnchanterRecipeImpl extends EnchanterRecipe {
             if (enchantment.isEmpty()) {
                 throw new ResourceLocationException("The enchantment in " + pRecipeId.toString() + " does not exist");
             }
-            int amount = pSerializedRecipe.get("amount").getAsInt();
+            int amount = pSerializedRecipe.get("amount_per_level").getAsInt();
             int level = pSerializedRecipe.get("level").getAsInt();
             return new EnchanterRecipeImpl(pRecipeId, ingredient, enchantment.get(), amount, level);
         }
@@ -63,15 +70,15 @@ public class EnchanterRecipeImpl extends EnchanterRecipe {
         public void toNetwork(FriendlyByteBuf pBuffer, EnchanterRecipe pRecipe) {
             pRecipe.getInput().toNetwork(pBuffer);
             pBuffer.writeResourceLocation(pRecipe.getEnchantment().getRegistryName());
-            pBuffer.writeInt(pRecipe.getAmountPerLevel());
+            pBuffer.writeInt(pRecipe.getInputAmountPerLevel());
             pBuffer.writeInt(pRecipe.getLevelModifier());
         }
 
         @Override
         public void toJson(EnchanterRecipe recipe, JsonObject json) {
-            json.add("input", recipe.getInput().toJson());
             json.addProperty("enchantment", recipe.getEnchantment().getRegistryName().toString());
-            json.addProperty("amount", recipe.getAmountPerLevel());
+            json.add("input", recipe.getInput().toJson());
+            json.addProperty("amount_per_level", recipe.getInputAmountPerLevel());
             json.addProperty("level", recipe.getLevelModifier());
         }
     }

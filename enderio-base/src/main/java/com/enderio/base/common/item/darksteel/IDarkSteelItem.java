@@ -2,10 +2,10 @@ package com.enderio.base.common.item.darksteel;
 
 import com.enderio.base.client.renderer.item.IItemOverlayRender;
 import com.enderio.base.client.renderer.item.ItemBarRenderer;
-import com.enderio.base.client.tooltip.IAdvancedTooltipProvider;
+import com.enderio.api.client.tooltip.IAdvancedTooltipProvider;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.api.capability.IMultiCapabilityItem;
-import com.enderio.api.capability.INamedNBTSerializable;
+import com.enderio.api.nbt.INamedNBTSerializable;
 import com.enderio.api.capability.MultiCapabilityProvider;
 import com.enderio.base.common.capability.DarkSteelUpgradeable;
 import com.enderio.base.common.capability.EnergyDelegator;

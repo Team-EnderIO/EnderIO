@@ -1,5 +1,6 @@
 package com.enderio.api.capability;
 
+import com.enderio.api.nbt.INamedNBTSerializable;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;

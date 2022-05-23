@@ -1,6 +1,6 @@
 package com.enderio.base.common.item.tool;
 
-import com.enderio.base.client.tooltip.IAdvancedTooltipProvider;
+import com.enderio.api.client.tooltip.IAdvancedTooltipProvider;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.api.capability.IMultiCapabilityItem;
 import com.enderio.api.capability.MultiCapabilityProvider;
