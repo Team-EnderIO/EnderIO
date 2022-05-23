@@ -15,11 +15,13 @@ public class MachineEnergyStorage implements INBTSerializable<Tag>, IEnergyStora
     protected int baseCapacity = 10000;
     protected int baseMaxTransfer = 120;
     protected int baseMaxConsumption = 40;
+    private final EnergyTransferMode transferMode;
 
     private final Supplier<Optional<ICapacitorData>> capacitorSupplier;
 
-    public MachineEnergyStorage(Supplier<Optional<ICapacitorData>> capacitorSupplier) {
+    public MachineEnergyStorage(Supplier<Optional<ICapacitorData>> capacitorSupplier, EnergyTransferMode transferMode) {
         this.capacitorSupplier = capacitorSupplier;
+        this.transferMode = transferMode;
     }
 
     // region Getters
@@ -108,12 +110,12 @@ public class MachineEnergyStorage implements INBTSerializable<Tag>, IEnergyStora
 
     @Override
     public boolean canExtract() {
-        return getMaxEnergyTransfer() > 0;
+        return transferMode == EnergyTransferMode.Extract && getMaxEnergyTransfer() > 0;
     }
 
     @Override
     public boolean canReceive() {
-        return getMaxEnergyTransfer() > 0;
+        return transferMode == EnergyTransferMode.Insert && getMaxEnergyTransfer() > 0;
     }
 
     // endregion

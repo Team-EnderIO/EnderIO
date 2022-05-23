@@ -9,9 +9,11 @@ import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemSlotLayout;
 import com.enderio.api.energy.EnergyCapacityPair;
 import com.enderio.machines.common.blockentity.sync.MachineEnergyDataSlot;
+import com.enderio.machines.common.energy.EnergyTransferMode;
 import com.enderio.machines.common.energy.MachineEnergyStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
@@ -23,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * A machine that stores power.
@@ -34,14 +37,16 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
 
     @UseOnly(LogicalSide.CLIENT) private EnergyCapacityPair clientEnergy;
 
-    public PoweredMachineEntity(MachineTier tier, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
+    public PoweredMachineEntity(MachineTier tier, EnergyTransferMode transferMode, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(tier, pType, pWorldPosition, pBlockState);
 
-        energyStorage = createEnergyStorage();
+        energyStorage = createEnergyStorage(transferMode);
 
         // Add energy storage dataslot. It will only ever be synced to the client.
         addDataSlot(new MachineEnergyDataSlot(energyStorage, vec -> clientEnergy = vec, SyncMode.GUI));
     }
+
+    // region Energy
 
     // Helper methods for gui:
     @UseOnly(LogicalSide.CLIENT)
@@ -53,8 +58,9 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
         return new EnergyCapacityPair(energyStorage.getEnergyStored(), energyStorage.getMaxEnergyStored());
     }
 
-    protected MachineEnergyStorage createEnergyStorage() {
-        return new MachineEnergyStorage(this::getCapacitorData) {
+    protected MachineEnergyStorage createEnergyStorage(EnergyTransferMode transferMode) {
+        // TODO: Review how energy storage is dealt with now we have the EnergyTransferMode.
+        return new MachineEnergyStorage(this::getCapacitorData, transferMode) {
             @Override
             protected void onEnergyChanged() {
                 setChanged();
@@ -70,6 +76,38 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
         }
         return super.getCapability(cap, side);
     }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        // Transmit power to adjacent block entities if our storage is set up to extract from.
+        AtomicInteger stored = new AtomicInteger(energyStorage.getEnergyStored());
+        if (stored.get() > 0 && energyStorage.canExtract()) { // TODO: Is using canExtract correct? Or should we handle this some other way.
+            for (Direction direction : Direction.values()) {
+                BlockEntity adjacent = level.getBlockEntity(worldPosition.relative(direction));
+                if (adjacent != null) {
+                    boolean canContinue = adjacent.getCapability(CapabilityEnergy.ENERGY, direction.getOpposite()).map(handler -> {
+                        if (handler.canReceive()) {
+                            int received = handler.receiveEnergy(Math.min(stored.get(), energyStorage.getMaxEnergyTransfer()), false);
+                            stored.addAndGet(-received);
+                            energyStorage.consumeEnergy(received);
+                            setChanged();
+                            return stored.get() > 0;
+                        } else {
+                            return true;
+                        }
+                    }).orElse(true);
+
+                    if (!canContinue) {
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    // endregion
 
     // region Capacitors
 
