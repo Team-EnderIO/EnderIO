@@ -1,11 +1,17 @@
 {
   "type": "enderio_machines:alloy_smelting",
-  "ingredients": [
+  "inputs": [
     {
-      "item": "enderio:energetic_alloy_ingot"
+      "ingredient": {
+        "item": "enderio:energetic_alloy_ingot"
+      },
+      "count": 1
     },
     {
-      "tag": "forge:ender_pearls"
+      "ingredient": {
+        "tag": "forge:ender_pearls"
+      },
+      "count": 1
     }
   ],
   "result": {

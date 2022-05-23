@@ -1,6 +1,6 @@
 {
   "type": "enderio_machines:enchanting",
-  "ingredient": {
+  "input": {
     "tag": "minecraft:fishes"
   },
   "enchantment": "minecraft:lure",

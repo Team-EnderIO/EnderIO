@@ -1,6 +1,6 @@
 {
   "type": "enderio_machines:enchanting",
-  "ingredient": {
+  "input": {
     "item": "enderio:grains_of_infinity"
   },
   "enchantment": "minecraft:infinity",

@@ -47,31 +47,27 @@ public class EIOItems {
 
     // region Materials
 
-    // TODO: Roll out the new alloys and retire the old.
-//    public static final ItemEntry<MaterialItem> COPPER_ALLOY_INGOT = materialItem("copper_alloy_ingot").register();
-//    public static final ItemEntry<MaterialItem> PULSATING_ALLOY_INGOT = materialItem("pulsating_alloy_ingot").register();
-//    public static final ItemEntry<MaterialItem> SUPER_CONDUCTIVE_ALLOY_INGOT = materialItem("super_conductive_alloy_ingot").register();
-//    public static final ItemEntry<MaterialItem> IRON_ALLOY_INGOT = materialItem("iron_alloy_ingot").register();
-
-    public static final ItemEntry<MaterialItem> ELECTRICAL_STEEL_INGOT = materialItem("electrical_steel_ingot").register();
+    public static final ItemEntry<MaterialItem> COPPER_ALLOY_INGOT = materialItem("copper_alloy_ingot").register();
     public static final ItemEntry<MaterialItem> ENERGETIC_ALLOY_INGOT = materialItem("energetic_alloy_ingot").register();
     public static final ItemEntry<MaterialItem> VIBRANT_ALLOY_INGOT = materialItem("vibrant_alloy_ingot").register();
     public static final ItemEntry<MaterialItem> REDSTONE_ALLOY_INGOT = materialItem("redstone_alloy_ingot").register();
-    public static final ItemEntry<MaterialItem> CONDUCTIVE_IRON_INGOT = materialItem("conductive_iron_ingot").register();
-    public static final ItemEntry<MaterialItem> PULSATING_IRON_INGOT = materialItem("pulsating_iron_ingot").register();
+    public static final ItemEntry<MaterialItem> CONDUCTIVE_ALLOY_INGOT = materialItem("conductive_alloy_ingot").register();
+    public static final ItemEntry<MaterialItem> PULSATING_ALLOY_INGOT = materialItem("pulsating_alloy_ingot").register();
     public static final ItemEntry<MaterialItem> DARK_STEEL_INGOT = materialItem("dark_steel_ingot").register();
     public static final ItemEntry<MaterialItem> SOULARIUM_INGOT = materialItem("soularium_ingot").register();
     public static final ItemEntry<MaterialItem> END_STEEL_INGOT = materialItem("end_steel_ingot").register();
+    public static final ItemEntry<MaterialItem> IRON_ALLOY_INGOT = materialItem("iron_alloy_ingot").tag(Tags.Items.INGOTS_IRON).register();
 
-    public static final ItemEntry<MaterialItem> ELECTRICAL_STEEL_NUGGET = materialItem("electrical_steel_nugget").register();
+    public static final ItemEntry<MaterialItem> COPPER_ALLOY_NUGGET = materialItem("copper_alloy_nugget").register();
     public static final ItemEntry<MaterialItem> ENERGETIC_ALLOY_NUGGET = materialItem("energetic_alloy_nugget").register();
     public static final ItemEntry<MaterialItem> VIBRANT_ALLOY_NUGGET = materialItem("vibrant_alloy_nugget").register();
     public static final ItemEntry<MaterialItem> REDSTONE_ALLOY_NUGGET = materialItem("redstone_alloy_nugget").register();
-    public static final ItemEntry<MaterialItem> CONDUCTIVE_IRON_NUGGET = materialItem("conductive_iron_nugget").register();
-    public static final ItemEntry<MaterialItem> PULSATING_IRON_NUGGET = materialItem("pulsating_iron_nugget").register();
+    public static final ItemEntry<MaterialItem> CONDUCTIVE_ALLOY_NUGGET = materialItem("conductive_alloy_nugget").register();
+    public static final ItemEntry<MaterialItem> PULSATING_ALLOY_NUGGET = materialItem("pulsating_alloy_nugget").register();
     public static final ItemEntry<MaterialItem> DARK_STEEL_NUGGET = materialItem("dark_steel_nugget").register();
     public static final ItemEntry<MaterialItem> SOULARIUM_NUGGET = materialItem("soularium_nugget").register();
     public static final ItemEntry<MaterialItem> END_STEEL_NUGGET = materialItem("end_steel_nugget").register();
+    public static final ItemEntry<MaterialItem> IRON_ALLOY_NUGGET = materialItem("iron_alloy_nugget").tag(Tags.Items.NUGGETS_IRON).register();
 
     // region Basic Materials
 
@@ -264,23 +260,15 @@ public class EIOItems {
 
     // region GrindingBalls
 
-    public static final ItemEntry<MaterialItem> SOULARIUM_BALL = materialItem("soularium_ball").register();
-
-    public static final ItemEntry<MaterialItem> CONDUCTIVE_IRON_BALL = materialItem("conductive_iron_ball").register();
-
-    public static final ItemEntry<MaterialItem> PULSATING_IRON_BALL = materialItem("pulsating_iron_ball").register();
-
-    public static final ItemEntry<MaterialItem> REDSTONE_ALLOY_BALL = materialItem("redstone_alloy_ball").register();
-
-    public static final ItemEntry<MaterialItem> ENERGETIC_ALLOY_BALL = materialItem("energetic_alloy_ball").register();
-
-    public static final ItemEntry<MaterialItem> VIBRANT_ALLOY_BALL = materialItem("vibrant_alloy_ball").register();
-
-    public static final ItemEntry<MaterialItem> ELECTRICAL_STEEL_BALL = materialItem("electrical_steel_ball").register();
-
-    public static final ItemEntry<MaterialItem> DARK_STEEL_BALL = materialItem("dark_steel_ball").register();
-
-    public static final ItemEntry<MaterialItem> END_STEEL_BALL = materialItem("end_steel_ball").register();
+    public static final ItemEntry<MaterialItem> SOULARIUM_BALL = materialItem("soularium_grinding_ball").register();
+    public static final ItemEntry<MaterialItem> CONDUCTIVE_ALLOY_BALL = materialItem("conductive_alloy_grinding_ball").register();
+    public static final ItemEntry<MaterialItem> PULSATING_ALLOY_BALL = materialItem("pulsating_alloy_grinding_ball").register();
+    public static final ItemEntry<MaterialItem> REDSTONE_ALLOY_BALL = materialItem("redstone_alloy_grinding_ball").register();
+    public static final ItemEntry<MaterialItem> ENERGETIC_ALLOY_BALL = materialItem("energetic_alloy_grinding_ball").register();
+    public static final ItemEntry<MaterialItem> VIBRANT_ALLOY_BALL = materialItem("vibrant_alloy_grinding_ball").register();
+    public static final ItemEntry<MaterialItem> COPPER_ALLOY_BALL = materialItem("copper_alloy_grinding_ball").register();
+    public static final ItemEntry<MaterialItem> DARK_STEEL_BALL = materialItem("dark_steel_grinding_ball").register();
+    public static final ItemEntry<MaterialItem> END_STEEL_BALL = materialItem("end_steel_grinding_ball").register();
 
     // endregion
 

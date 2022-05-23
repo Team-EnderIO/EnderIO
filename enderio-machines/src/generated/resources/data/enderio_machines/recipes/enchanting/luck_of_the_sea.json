@@ -1,7 +1,7 @@
 {
   "type": "enderio_machines:enchanting",
-  "ingredient": {
-    "item": "minecraft:lapis_lazuli"
+  "input": {
+    "tag": "forge:gems/lapis"
   },
   "enchantment": "minecraft:luck_of_the_sea",
   "amount": 1,

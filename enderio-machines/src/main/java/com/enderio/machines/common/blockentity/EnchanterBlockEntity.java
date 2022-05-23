@@ -1,13 +1,12 @@
 package com.enderio.machines.common.blockentity;
 
-import com.enderio.base.common.blockentity.RedstoneControl;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemHandlerMaster;
 import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemSlotLayout;
+import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.menu.EnchanterMenu;
 import com.enderio.machines.common.recipe.EnchanterRecipe;
-import com.enderio.machines.common.init.MachineRecipes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -58,12 +57,6 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
                 return super.extractItem(slot, amount, simulate);
             }
         };
-    }
-    
-    @Override
-    public void setRedstoneControl(RedstoneControl redstoneControl) {
-        setChanged();
-        super.setRedstoneControl(redstoneControl);
     }
     
 }

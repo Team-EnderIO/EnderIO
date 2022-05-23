@@ -1,6 +1,6 @@
 {
   "type": "enderio_machines:enchanting",
-  "ingredient": {
+  "input": {
     "item": "minecraft:prismarine_shard"
   },
   "enchantment": "minecraft:depth_strider",

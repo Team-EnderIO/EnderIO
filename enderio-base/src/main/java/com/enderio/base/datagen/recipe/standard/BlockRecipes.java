@@ -11,6 +11,7 @@ import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -82,7 +83,7 @@ public class BlockRecipes extends RecipeProvider {
             .shaped(EIOBlocks.REINFORCED_OBSIDIAN.get())
             .define('B', EIOBlocks.DARK_STEEL_BARS.get())
             .define('G', EIOItems.GRAINS_OF_INFINITY.get())
-            .define('O', Blocks.OBSIDIAN)
+            .define('O', Tags.Items.OBSIDIAN)
             .pattern("GBG")
             .pattern("BOB")
             .pattern("GBG")
@@ -117,12 +118,12 @@ public class BlockRecipes extends RecipeProvider {
     }
 
     private void addMetalBlockRecipes(Consumer<FinishedRecipe> recipeConsumer) {
-        addMetalBlockRecipe(recipeConsumer, EIOBlocks.ELECTRICAL_STEEL_BLOCK, EIOItems.ELECTRICAL_STEEL_INGOT.get());
+        addMetalBlockRecipe(recipeConsumer, EIOBlocks.COPPER_ALLOY_BLOCK, EIOItems.COPPER_ALLOY_INGOT.get());
         addMetalBlockRecipe(recipeConsumer, EIOBlocks.ENERGETIC_ALLOY_BLOCK, EIOItems.ENERGETIC_ALLOY_INGOT.get());
         addMetalBlockRecipe(recipeConsumer, EIOBlocks.VIBRANT_ALLOY_BLOCK, EIOItems.VIBRANT_ALLOY_INGOT.get());
         addMetalBlockRecipe(recipeConsumer, EIOBlocks.REDSTONE_ALLOY_BLOCK, EIOItems.REDSTONE_ALLOY_INGOT.get());
-        addMetalBlockRecipe(recipeConsumer, EIOBlocks.CONDUCTIVE_IRON_BLOCK, EIOItems.CONDUCTIVE_IRON_INGOT.get());
-        addMetalBlockRecipe(recipeConsumer, EIOBlocks.PULSATING_IRON_BLOCK, EIOItems.PULSATING_IRON_INGOT.get());
+        addMetalBlockRecipe(recipeConsumer, EIOBlocks.CONDUCTIVE_ALLOY_BLOCK, EIOItems.CONDUCTIVE_ALLOY_INGOT.get());
+        addMetalBlockRecipe(recipeConsumer, EIOBlocks.PULSATING_ALLOY_BLOCK, EIOItems.PULSATING_ALLOY_INGOT.get());
         addMetalBlockRecipe(recipeConsumer, EIOBlocks.DARK_STEEL_BLOCK, EIOItems.DARK_STEEL_INGOT.get());
         addMetalBlockRecipe(recipeConsumer, EIOBlocks.SOULARIUM_BLOCK, EIOItems.SOULARIUM_INGOT.get());
         addMetalBlockRecipe(recipeConsumer, EIOBlocks.END_STEEL_BLOCK, EIOItems.END_STEEL_INGOT.get());
@@ -204,7 +205,7 @@ public class BlockRecipes extends RecipeProvider {
         ShapelessRecipeBuilder recipe = ShapelessRecipeBuilder
             .shapeless(base.get())
             .requires(Blocks.LEVER)
-            .requires(Blocks.REDSTONE_WIRE, numRedstone)
+            .requires(Ingredient.of(Tags.Items.DUSTS_REDSTONE), numRedstone)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Blocks.LEVER));
         StandardRecipes.saveRecipe(recipe, null, recipeConsumer);
 
@@ -221,7 +222,7 @@ public class BlockRecipes extends RecipeProvider {
             recipe = ShapelessRecipeBuilder
                 .shapeless(base.get())
                 .requires(previous.get())
-                .requires(Blocks.REDSTONE_WIRE)
+                .requires(Tags.Items.DUSTS_REDSTONE)
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Blocks.LEVER));
             StandardRecipes.saveRecipe(recipe, "_from_prev", recipeConsumer);
         }
@@ -232,7 +233,7 @@ public class BlockRecipes extends RecipeProvider {
         ShapelessRecipeBuilder
             .shapeless(inverted.get())
             .requires(Blocks.LEVER)
-            .requires(Blocks.REDSTONE_WIRE, numRedstone)
+            .requires(Ingredient.of(Tags.Items.DUSTS_REDSTONE), numRedstone)
             .requires(Blocks.REDSTONE_TORCH)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Blocks.LEVER))
             .save(recipeConsumer);
@@ -250,7 +251,7 @@ public class BlockRecipes extends RecipeProvider {
             recipe = ShapelessRecipeBuilder
                 .shapeless(inverted.get())
                 .requires(previousInverted.get())
-                .requires(Blocks.REDSTONE_WIRE)
+                .requires(Ingredient.of(Tags.Items.DUSTS_REDSTONE))
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Blocks.LEVER));
             StandardRecipes.saveRecipe(recipe, "_from_prev", recipeConsumer);
         }
