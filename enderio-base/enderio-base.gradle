@@ -1,12 +1,61 @@
+// Thanks Mekanism for base of api build code
+
+// Configure API source set
+sourceSets {
+    api {
+        // The API has no resources
+        resources.srcDirs = []
+    }
+
+    main {
+        compileClasspath += api.output
+        runtimeClasspath += api.output
+    }
+}
+
+configurations {
+    extendConfigurations(implementation, apiImplementation)
+    extendConfigurations(compileOnly, apiCompileOnly)
+    extendConfigurations(runtimeOnly, apiRuntimeOnly)
+}
+
+static void extendConfigurations(Configuration base, Configuration... configurations) {
+    for (def configuration : configurations) {
+        configuration.extendsFrom(base)
+    }
+}
+
 minecraft {
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     runs {
+        client.mods {
+            "enderio-base" {
+                sources((SourceSet[]) [sourceSets.main, sourceSets.api])
+            }
+        }
+
+        server.mods {
+            "enderio-base" {
+                sources((SourceSet[]) [sourceSets.main, sourceSets.api])
+            }
+        }
+
+        data.mods {
+            "enderio-base" {
+                sources((SourceSet[]) [sourceSets.main, sourceSets.api])
+            }
+        }
+
         // Monolithic client, runs all mods together
         clientMonolith {
             parent minecraft.runs.client
 
             mods {
+                "enderio-base" {
+                    sources((SourceSet[]) [sourceSets.main, sourceSets.api])
+                }
+
                 "enderio-decoration" {
                     source project(':enderio-decoration').sourceSets.main
                 }
@@ -20,6 +69,10 @@ minecraft {
             parent minecraft.runs.server
 
             mods {
+                "enderio-base" {
+                    sources((SourceSet[]) [sourceSets.main, sourceSets.api])
+                }
+
                 "enderio-decoration" {
                     source project(':enderio-decoration').sourceSets.main
                 }
@@ -33,4 +86,32 @@ minecraft {
 
 dependencies {
 
+}
+
+jar {
+    from([sourceSets.api.output, sourceSets.main.output])
+}
+
+task apiJar(type: Jar) {
+    duplicatesStrategy(DuplicatesStrategy.FAIL)
+    archiveClassifier.set("api")
+    from sourceSets.api.output
+    manifest {
+        manifest {
+            attributes([
+                    "Specification-Title"     : "enderio",
+                    "Specification-Vendor"    : "EnderIO",
+                    "Specification-Version"   : "${project.version}",
+                    "Implementation-Title"    : project.name,
+                    "Implementation-Version"  : "${project.version}",
+                    "Implementation-Vendor"   : "EnderIO",
+                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+            ])
+        }
+    }
+    afterEvaluate { finalizedBy reobfApiJar }
+}
+
+reobf {
+    apiJar { classpath.from(sourceSets.api.compileClasspath) }
 }

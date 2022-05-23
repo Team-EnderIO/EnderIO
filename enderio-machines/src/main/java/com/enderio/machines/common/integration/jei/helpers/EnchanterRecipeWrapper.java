@@ -1,6 +1,6 @@
 package com.enderio.machines.common.integration.jei.helpers;
 
-import com.enderio.machines.common.recipe.EnchanterRecipe;
+import com.enderio.api.recipe.EnchanterRecipe;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;

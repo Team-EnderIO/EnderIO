@@ -15,13 +15,16 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Random;
 
+/**
+ * A simple machine can fall like sand.
+ */
 public class SimpleMachineBlock extends ProgressMachineBlock implements Fallable {
 
     public SimpleMachineBlock(Properties properties, BlockEntityEntry<? extends MachineBlockEntity> blockEntityType) {
         super(properties, blockEntityType);
     }
 
-    // region Falling Logic, copied from FallingBlock
+    // region Falling Logic, based upon FallingBlock
 
     @Override
     public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
@@ -46,6 +49,7 @@ public class SimpleMachineBlock extends ProgressMachineBlock implements Fallable
                 fallingblockentity.blockData = be.saveWithoutMetadata();
             }
 
+            // Add the falling entity to the level.
             level.addFreshEntity(fallingblockentity);
         }
     }

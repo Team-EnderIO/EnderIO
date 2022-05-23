@@ -3,12 +3,12 @@ package com.enderio.machines.datagen.recipe.enchanter;
 import com.enderio.base.common.block.glass.FusedQuartzBlock;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
-import com.enderio.base.common.recipe.EnderIngredient;
-import com.enderio.base.common.recipe.EnderIngredient;
+import com.enderio.api.recipe.EnderIngredient;
 import com.enderio.base.common.recipe.EnderRecipeResult;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.machines.EIOMachines;
-import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
+import com.enderio.api.recipe.AlloySmeltingRecipe;
+import com.enderio.machines.common.recipe.AlloySmeltingRecipeImpl;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
@@ -155,11 +155,11 @@ public class AlloyRecipeGenerator extends RecipeProvider {
     }
 
     protected void build(ItemStack result, List<EnderIngredient> ingredients, int energy, float experience, Consumer<FinishedRecipe> recipeConsumer) {
-        build(new AlloySmeltingRecipe(null, ingredients, result, energy, experience), result.getItem().getRegistryName().getPath(), recipeConsumer);
+        build(new AlloySmeltingRecipeImpl(null, ingredients, result, energy, experience), result.getItem().getRegistryName().getPath(), recipeConsumer);
     }
 
     protected void build(ItemStack result, String suffix, List<EnderIngredient> ingredients, int energy, float experience, Consumer<FinishedRecipe> recipeConsumer) {
-        build(new AlloySmeltingRecipe(null, ingredients, result, energy, experience), result.getItem().getRegistryName().getPath() + "_" + suffix, recipeConsumer);
+        build(new AlloySmeltingRecipeImpl(null, ingredients, result, energy, experience), result.getItem().getRegistryName().getPath() + "_" + suffix, recipeConsumer);
     }
 
     protected void build(AlloySmeltingRecipe recipe, String name, Consumer<FinishedRecipe> recipeConsumer) {

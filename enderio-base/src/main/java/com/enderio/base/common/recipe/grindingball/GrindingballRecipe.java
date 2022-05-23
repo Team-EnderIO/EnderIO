@@ -1,6 +1,6 @@
 package com.enderio.base.common.recipe.grindingball;
 
-import com.enderio.base.common.recipe.DataGenSerializer;
+import com.enderio.api.recipe.DataGenSerializer;
 import com.enderio.base.common.init.EIORecipes;
 import com.google.gson.JsonObject;
 import net.minecraft.core.NonNullList;

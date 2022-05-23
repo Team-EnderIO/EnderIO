@@ -31,13 +31,15 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * An enhanced machine block is two blocks high.
+ */
 public class EnhancedMachineBlock extends ProgressMachineBlock {
     public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
-
     private static final VoxelShape UPPER_SHAPE = Shapes.create(0, 0, 0, 1 , 10.25f / 16.0f, 1);
 
-    public EnhancedMachineBlock(Properties p_49795_, BlockEntityEntry<? extends MachineBlockEntity> blockEntityType) {
-        super(p_49795_, blockEntityType);
+    public EnhancedMachineBlock(Properties properties, BlockEntityEntry<? extends MachineBlockEntity> blockEntityType) {
+        super(properties, blockEntityType);
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(POWERED, false).setValue(HALF, DoubleBlockHalf.LOWER));
     }
 
@@ -115,6 +117,7 @@ public class EnhancedMachineBlock extends ProgressMachineBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
+        // Only create the block entity on the lower half of the block.
         if (pState.getValue(HALF) == DoubleBlockHalf.LOWER) {
             return super.newBlockEntity(pPos, pState);
         }
@@ -124,6 +127,7 @@ public class EnhancedMachineBlock extends ProgressMachineBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+        // Only tick the bottom half.
         if (pState.getValue(HALF) == DoubleBlockHalf.LOWER) {
             return super.getTicker(pLevel, pState, pBlockEntityType);
         }
@@ -131,6 +135,4 @@ public class EnhancedMachineBlock extends ProgressMachineBlock {
     }
 
     // endregion
-
-    // TODO: Look at DoorBlock for stopping the top block from existing etc. Lets get it placing first.
 }

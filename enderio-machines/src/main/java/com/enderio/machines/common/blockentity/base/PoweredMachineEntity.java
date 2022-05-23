@@ -2,12 +2,12 @@ package com.enderio.machines.common.blockentity.base;
 
 import com.enderio.base.EnderIO;
 import com.enderio.base.common.blockentity.sync.SyncMode;
-import com.enderio.base.common.capability.capacitors.ICapacitorData;
+import com.enderio.api.capability.ICapacitorData;
 import com.enderio.base.common.util.CapacitorUtil;
 import com.enderio.base.common.util.UseOnly;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemSlotLayout;
-import com.enderio.machines.common.blockentity.sync.EnergyData;
+import com.enderio.api.energy.EnergyCapacityPair;
 import com.enderio.machines.common.blockentity.sync.MachineEnergyDataSlot;
 import com.enderio.machines.common.energy.MachineEnergyStorage;
 import net.minecraft.core.BlockPos;
@@ -32,7 +32,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
 
     private final LazyOptional<IEnergyStorage> energyCap = LazyOptional.of(() -> this.energyStorage);
 
-    @UseOnly(LogicalSide.CLIENT) private EnergyData clientEnergy;
+    @UseOnly(LogicalSide.CLIENT) private EnergyCapacityPair clientEnergy;
 
     public PoweredMachineEntity(MachineTier tier, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(tier, pType, pWorldPosition, pBlockState);
@@ -45,12 +45,12 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
 
     // Helper methods for gui:
     @UseOnly(LogicalSide.CLIENT)
-    public EnergyData getGuiEnergy() {
+    public EnergyCapacityPair getGuiEnergy() {
         if (level.isClientSide) {
             return clientEnergy;
         }
         EnderIO.LOGGER.warn("getGuiEnergy called on server!");
-        return new EnergyData(energyStorage.getEnergyStored(), energyStorage.getMaxEnergyStored());
+        return new EnergyCapacityPair(energyStorage.getEnergyStored(), energyStorage.getMaxEnergyStored());
     }
 
     protected MachineEnergyStorage createEnergyStorage() {

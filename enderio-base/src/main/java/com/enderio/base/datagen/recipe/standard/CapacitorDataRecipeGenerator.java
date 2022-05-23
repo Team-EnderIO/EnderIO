@@ -1,6 +1,6 @@
 package com.enderio.base.datagen.recipe.standard;
 
-import com.enderio.base.common.capability.capacitors.CapacitorData;
+import com.enderio.base.common.capability.CapacitorData;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.recipe.capacitor.CapacitorDataRecipe;
 import net.minecraft.data.DataGenerator;

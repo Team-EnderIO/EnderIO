@@ -1,6 +1,6 @@
 package com.enderio.machines.common.energy;
 
-import com.enderio.base.common.capability.capacitors.ICapacitorData;
+import com.enderio.api.capability.ICapacitorData;
 import net.minecraft.nbt.Tag;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.energy.IEnergyStorage;

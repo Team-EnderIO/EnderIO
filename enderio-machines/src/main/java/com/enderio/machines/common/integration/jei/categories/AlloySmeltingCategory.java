@@ -6,7 +6,7 @@ import com.enderio.machines.client.gui.screen.AlloySmelterScreen;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.integration.jei.JEIPlugin;
 import com.enderio.machines.common.lang.MachineLang;
-import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
+import com.enderio.api.recipe.AlloySmeltingRecipe;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -60,8 +60,8 @@ public class AlloySmeltingCategory implements IRecipeCategory<AlloySmeltingRecip
 
     @Override
     public void setIngredients(AlloySmeltingRecipe recipe, IIngredients ingredients) {
-        ingredients.setInputLists(VanillaTypes.ITEM, recipe.getAllInputs());
-        ingredients.setOutputs(VanillaTypes.ITEM, recipe.getAllOutputs());
+        ingredients.setInputLists(VanillaTypes.ITEM_STACK, recipe.getAllInputs());
+        ingredients.setOutputs(VanillaTypes.ITEM_STACK, recipe.getAllOutputs());
     }
 
     @Override

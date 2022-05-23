@@ -1,6 +1,6 @@
 package com.enderio.base.common.item.darksteel.upgrades.explosive;
 
-import com.enderio.base.common.capability.darksteel.IDarkSteelUpgrade;
+import com.enderio.api.capability.IDarkSteelUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.IUpgradeTier;
 import com.enderio.base.config.base.BaseConfig;
 import net.minecraft.network.chat.Component;

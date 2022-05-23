@@ -5,7 +5,7 @@ import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.base.common.util.UseOnly;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.block.ProgressMachineBlock;
-import com.enderio.machines.common.recipe.IMachineRecipe;
+import com.enderio.api.recipe.IMachineRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;

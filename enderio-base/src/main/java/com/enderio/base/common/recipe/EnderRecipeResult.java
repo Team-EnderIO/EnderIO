@@ -1,5 +1,6 @@
 package com.enderio.base.common.recipe;
 
+import com.enderio.api.recipe.IEnderRecipe;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.data.recipes.FinishedRecipe;

@@ -8,7 +8,7 @@ import com.enderio.machines.common.blockentity.base.PoweredCraftingMachineEntity
 import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemHandlerMaster;
 import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemSlotLayout;
 import com.enderio.machines.common.menu.AlloySmelterMenu;
-import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
+import com.enderio.api.recipe.AlloySmeltingRecipe;
 import com.enderio.machines.common.init.MachineRecipes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;

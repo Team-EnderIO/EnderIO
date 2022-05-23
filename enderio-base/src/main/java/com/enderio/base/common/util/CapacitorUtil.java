@@ -2,8 +2,8 @@ package com.enderio.base.common.util;
 
 import com.enderio.base.EnderIO;
 import com.enderio.base.common.init.EIOCapabilities;
-import com.enderio.base.common.capability.capacitors.CapacitorSpecializations;
-import com.enderio.base.common.capability.capacitors.ICapacitorData;
+import com.enderio.base.common.capability.CapacitorSpecializations;
+import com.enderio.api.capability.ICapacitorData;
 import com.enderio.base.common.init.EIORecipes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
