@@ -33,7 +33,7 @@ public class EnergyWidget extends EIOWidget {
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         // Don't bother if we have no energy. Also protects from divide by zero's when there's no capacitor.
         EnergyCapacityPair energy = getEnergy.get();
-        if (energy.energy() <= 0)
+        if (energy.energy() <= 0 || energy.capacity() <= 0)
             return;
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);

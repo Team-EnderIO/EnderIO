@@ -28,7 +28,8 @@ public class MachineEnergyStorage implements INBTSerializable<Tag>, IEnergyStora
 
     @Override
     public int getEnergyStored() {
-        return storedEnergy;
+        // Stops the energy reading as over capacity.
+        return Math.min(storedEnergy, getMaxEnergyStored());
     }
 
     @Override
