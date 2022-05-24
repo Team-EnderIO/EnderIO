@@ -79,8 +79,6 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
 
     @Override
     public void tick() {
-        super.tick();
-
         // Transmit power to adjacent block entities if our storage is set up to extract from.
         AtomicInteger stored = new AtomicInteger(energyStorage.getEnergyStored());
         if (stored.get() > 0 && energyStorage.canExtract()) { // TODO: Is using canExtract correct? Or should we handle this some other way.
@@ -105,6 +103,8 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
                 }
             }
         }
+
+        super.tick();
     }
 
     // endregion

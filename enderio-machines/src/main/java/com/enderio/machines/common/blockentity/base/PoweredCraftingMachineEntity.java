@@ -25,11 +25,9 @@ public abstract class PoweredCraftingMachineEntity<R extends Recipe<Container>> 
     private int energyConsumed;
     private R currentRecipe;
 
-    @Nullable
-    private ResourceLocation loadedRecipe = null;
+    @Nullable private ResourceLocation loadedRecipe = null;
 
-    @UseOnly(LogicalSide.CLIENT)
-    private float clientProgress;
+    @UseOnly(LogicalSide.CLIENT) private float clientProgress;
 
     public PoweredCraftingMachineEntity(MachineTier tier, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(tier, pType, pWorldPosition, pBlockState);
@@ -110,6 +108,7 @@ public abstract class PoweredCraftingMachineEntity<R extends Recipe<Container>> 
 
     /**
      * Whether the machine can start a new recipe
+     *
      * @return
      */
     protected boolean canSelectRecipe() {
@@ -120,7 +119,7 @@ public abstract class PoweredCraftingMachineEntity<R extends Recipe<Container>> 
      * Get the cost of crafting this recipe
      */
     protected int getEnergyCost(R recipe) {
-        if (recipe instanceof IMachineRecipe<?,?> machineRecipe) {
+        if (recipe instanceof IMachineRecipe<?, ?> machineRecipe) {
             return machineRecipe.getEnergyCost();
         }
         throw new NotImplementedException("Machine must implement getEnergyCost for types not implementing MachineRecipe");
