@@ -1,7 +1,5 @@
 package com.enderio.machines.common.blockentity;
 
-import com.enderio.api.capability.ICapacitorData;
-import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.PoweredMachineEntity;
@@ -19,7 +17,12 @@ import java.util.Optional;
 
 public class CreativePowerBlockEntity extends PoweredMachineEntity {
     public CreativePowerBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-        super(MachineTier.ENHANCED, EnergyTransferMode.Extract, pType, pWorldPosition, pBlockState);
+        super(EnergyTransferMode.Extract, pType, pWorldPosition, pBlockState);
+    }
+
+    @Override
+    public MachineTier getTier() {
+        return MachineTier.Enhanced;
     }
 
     @Override

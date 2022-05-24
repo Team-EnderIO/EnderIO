@@ -5,7 +5,6 @@ import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.api.capability.ICapacitorData;
 import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.api.UseOnly;
-import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemSlotLayout;
 import com.enderio.api.energy.EnergyCapacityPair;
 import com.enderio.machines.common.blockentity.sync.MachineEnergyDataSlot;
@@ -37,8 +36,8 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
 
     @UseOnly(LogicalSide.CLIENT) private EnergyCapacityPair clientEnergy;
 
-    public PoweredMachineEntity(MachineTier tier, EnergyTransferMode transferMode, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-        super(tier, pType, pWorldPosition, pBlockState);
+    public PoweredMachineEntity(EnergyTransferMode transferMode, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
+        super(pType, pWorldPosition, pBlockState);
 
         energyStorage = createEnergyStorage(transferMode);
 

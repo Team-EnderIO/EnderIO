@@ -3,7 +3,6 @@ package com.enderio.machines.common.blockentity.base;
 import com.enderio.base.common.blockentity.sync.FloatDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.api.UseOnly;
-import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.block.ProgressMachineBlock;
 import com.enderio.api.recipe.IMachineRecipe;
 import net.minecraft.core.BlockPos;
@@ -29,8 +28,8 @@ public abstract class PoweredCraftingMachineEntity<R extends Recipe<Container>> 
 
     @UseOnly(LogicalSide.CLIENT) private float clientProgress;
 
-    public PoweredCraftingMachineEntity(MachineTier tier, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-        super(tier, pType, pWorldPosition, pBlockState);
+    public PoweredCraftingMachineEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
+        super(pType, pWorldPosition, pBlockState);
 
         // Sync machine progress to the client.
         addDataSlot(new FloatDataSlot(this::getProgress, p -> clientProgress = p, SyncMode.GUI));
