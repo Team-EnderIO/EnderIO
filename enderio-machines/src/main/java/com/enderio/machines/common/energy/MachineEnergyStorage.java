@@ -5,9 +5,14 @@ import net.minecraft.nbt.Tag;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.energy.IEnergyStorage;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+/**
+ * Energy storage intended for use with a machine that has a capacitor.
+ * All base values are scaled with the capacitor base and specialisations.
+ */
 public class MachineEnergyStorage implements INBTSerializable<Tag>, IEnergyStorage {
     protected int storedEnergy;
 

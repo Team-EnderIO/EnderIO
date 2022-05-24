@@ -58,7 +58,6 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
     }
 
     protected MachineEnergyStorage createEnergyStorage(EnergyTransferMode transferMode) {
-        // TODO: Review how energy storage is dealt with now we have the EnergyTransferMode.
         return new MachineEnergyStorage(this::getCapacitorData, transferMode) {
             @Override
             protected void onEnergyChanged() {
@@ -78,6 +77,29 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
 
     @Override
     public void tick() {
+        pushEnergy();
+        super.tick();
+    }
+
+    // endregion
+
+    // region Energy and Capacitors
+
+    public boolean hasCapacitor() {
+        return getSlotLayout()
+            .flatMap(layout -> layout
+                .getFirst(ItemSlotLayout.SlotType.CAPACITOR))
+            .map(slot -> CapacitorUtil.isCapacitor(getItemHandler().getStackInSlot(slot)))
+            .orElse(false);
+    }
+
+    public Optional<ICapacitorData> getCapacitorData() {
+        return getSlotLayout().flatMap(layout -> layout
+            .getFirst(ItemSlotLayout.SlotType.CAPACITOR)
+            .flatMap(slot -> CapacitorUtil.getCapacitorData(getItemHandler().getStackInSlot(slot))));
+    }
+
+    private void pushEnergy() {
         // Transmit power to adjacent block entities if our storage is set up to extract from.
         AtomicInteger stored = new AtomicInteger(energyStorage.getEnergyStored());
         if (stored.get() > 0 && energyStorage.canExtract()) { // TODO: Is using canExtract correct? Or should we handle this some other way.
@@ -102,26 +124,6 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
                 }
             }
         }
-
-        super.tick();
-    }
-
-    // endregion
-
-    // region Capacitors
-
-    public boolean hasCapacitor() {
-        return getSlotLayout()
-            .flatMap(layout -> layout
-                .getFirst(ItemSlotLayout.SlotType.CAPACITOR))
-            .map(slot -> CapacitorUtil.isCapacitor(getItemHandler().getStackInSlot(slot)))
-            .orElse(false);
-    }
-
-    public Optional<ICapacitorData> getCapacitorData() {
-        return getSlotLayout().flatMap(layout -> layout
-            .getFirst(ItemSlotLayout.SlotType.CAPACITOR)
-            .flatMap(slot -> CapacitorUtil.getCapacitorData(getItemHandler().getStackInSlot(slot))));
     }
 
     // endregion
