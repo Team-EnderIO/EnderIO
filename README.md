@@ -81,10 +81,7 @@ repositories {
 }
 
 dependencies {
-    // Include the API package
-    implementation fg.deobf("com.enderio:enderio-base:<VERSION>-api")
-    
-    // Include EnderIO at runtime
+    implementation fg.deobf("com.enderio:enderio-base:<VERSION>")
     runtimeOnly fg.deobf("com.enderio:enderio-base:<VERSION>")
     runtimeOnly fg.deobf("com.enderio:enderio-machines:<VERSION>")
     // ...
