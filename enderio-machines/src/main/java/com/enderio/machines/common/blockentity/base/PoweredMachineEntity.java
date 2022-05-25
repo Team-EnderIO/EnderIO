@@ -1,20 +1,19 @@
 package com.enderio.machines.common.blockentity.base;
 
+import com.enderio.api.UseOnly;
 import com.enderio.api.capability.ICapacitorData;
 import com.enderio.api.capacitor.CapacitorKey;
+import com.enderio.api.energy.EnergyCapacityPair;
 import com.enderio.base.EnderIO;
 import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.base.common.capacitor.CapacitorUtil;
-import com.enderio.api.UseOnly;
+import com.enderio.base.common.capacitor.DefaultCapacitorData;
 import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemSlotLayout;
-import com.enderio.api.energy.EnergyCapacityPair;
 import com.enderio.machines.common.blockentity.sync.MachineEnergyDataSlot;
 import com.enderio.machines.common.energy.EnergyTransferMode;
 import com.enderio.machines.common.energy.MachineEnergyStorage;
-import com.enderio.machines.common.init.MachineCapacitorKeys;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -40,7 +39,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
     protected final CapacitorKey capacityKey, transferKey, consumptionKey;
 
     // TODO: Cache capacitor data rather than constantly querying an optional?
-
+    
     @UseOnly(LogicalSide.CLIENT) private EnergyCapacityPair clientEnergy;
 
     public PoweredMachineEntity(CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey consumptionKey, EnergyTransferMode transferMode, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
@@ -98,24 +97,6 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
         super.tick();
     }
 
-    // endregion
-
-    // region Energy and Capacitors
-
-    public boolean hasCapacitor() {
-        return getSlotLayout()
-            .flatMap(layout -> layout
-                .getFirst(ItemSlotLayout.SlotType.CAPACITOR))
-            .map(slot -> CapacitorUtil.isCapacitor(getItemHandler().getStackInSlot(slot)))
-            .orElse(false);
-    }
-
-    public Optional<ICapacitorData> getCapacitorData() {
-        return getSlotLayout().flatMap(layout -> layout
-            .getFirst(ItemSlotLayout.SlotType.CAPACITOR)
-            .flatMap(slot -> CapacitorUtil.getCapacitorData(getItemHandler().getStackInSlot(slot))));
-    }
-
     private void pushEnergy() {
         // Transmit power to adjacent block entities if our storage is set up to extract from.
         AtomicInteger stored = new AtomicInteger(energyStorage.getEnergyStored());
@@ -142,6 +123,26 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
             }
         }
     }
+
+    // endregion
+
+    // Capacitors
+
+    public boolean hasCapacitor() {
+        return getSlotLayout()
+            .flatMap(layout -> layout
+                .getFirst(ItemSlotLayout.SlotType.CAPACITOR))
+            .map(slot -> CapacitorUtil.isCapacitor(getItemHandler().getStackInSlot(slot)))
+            .orElse(false);
+    }
+
+    public Optional<ICapacitorData> getCapacitorData() {
+        return getSlotLayout().flatMap(layout -> layout
+            .getFirst(ItemSlotLayout.SlotType.CAPACITOR)
+            .flatMap(slot -> CapacitorUtil.getCapacitorData(getItemHandler().getStackInSlot(slot))));
+    }
+
+    // TODO: Hook inventory slot changes and rescan for a capacitor rather than fetching from the slot each time.
 
     // endregion
 }
