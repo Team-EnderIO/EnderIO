@@ -22,6 +22,13 @@ public final class CapacitorKey extends ForgeRegistryEntry<CapacitorKey> {
     }
 
     /**
+     * Get the base value of the key without scaling.
+     */
+    public float getBase() {
+        return base;
+    }
+
+    /**
      * Get the value of the key at the given level.
      */
     public float getValue(float level) {
@@ -34,7 +41,7 @@ public final class CapacitorKey extends ForgeRegistryEntry<CapacitorKey> {
     public float getValue(ICapacitorData data) {
         return getValue(data.getLevel(this));
     }
-
+    
     public int getInt(float level) {
         return Math.round(getValue(level));
     }
