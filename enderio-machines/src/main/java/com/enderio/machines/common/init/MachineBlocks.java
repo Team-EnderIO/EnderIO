@@ -190,8 +190,8 @@ public class MachineBlocks {
         .build()
         .register();
 
-    public static BlockEntry<MachineBlock> STIRLING_GENERATOR = REGISTRATE
-        .block("stirling_generator", props -> new MachineBlock(props, MachineBlockEntities.STIRLING_GENERATOR))
+    public static BlockEntry<ProgressMachineBlock> STIRLING_GENERATOR = REGISTRATE
+        .block("stirling_generator", props -> new ProgressMachineBlock(props, MachineBlockEntities.STIRLING_GENERATOR))
         .item()
         .tab(() -> EIOCreativeTabs.MACHINES)
         .build()

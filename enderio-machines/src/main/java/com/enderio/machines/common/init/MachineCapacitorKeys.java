@@ -28,9 +28,9 @@ public class MachineCapacitorKeys {
     public static final RegistryObject<CapacitorKey> ENHANCED_ALLOY_SMELTER_ENERGY_CONSUME = CAPACITOR_KEYS.register("enhanced_alloy_smelter_consume", () -> new CapacitorKey(45, Scalers.ENERGY));
 
     // Development entries for new/wip machines.
-    public static final RegistryObject<CapacitorKey> DEV_ENERGY_CAPACITY = CAPACITOR_KEYS.register("dev_capacity", () -> new CapacitorKey(100000, Scalers.ENERGY));
-    public static final RegistryObject<CapacitorKey> DEV_ENERGY_TRANSFER = CAPACITOR_KEYS.register("dev_transfer", () -> new CapacitorKey(120, Scalers.ENERGY));
-    public static final RegistryObject<CapacitorKey> DEV_ENERGY_CONSUME = CAPACITOR_KEYS.register("dev_consume", () -> new CapacitorKey(30, Scalers.ENERGY));
+    public static final RegistryObject<CapacitorKey> DEV_ENERGY_CAPACITY = CAPACITOR_KEYS.register("dev_capacity", () -> new CapacitorKey(100000, Scalers.FIXED));
+    public static final RegistryObject<CapacitorKey> DEV_ENERGY_TRANSFER = CAPACITOR_KEYS.register("dev_transfer", () -> new CapacitorKey(120, Scalers.FIXED));
+    public static final RegistryObject<CapacitorKey> DEV_ENERGY_CONSUME = CAPACITOR_KEYS.register("dev_consume", () -> new CapacitorKey(30, Scalers.FIXED));
 
     public static void classload() {
         CAPACITOR_KEYS.register(FMLJavaModLoadingContext.get().getModEventBus());

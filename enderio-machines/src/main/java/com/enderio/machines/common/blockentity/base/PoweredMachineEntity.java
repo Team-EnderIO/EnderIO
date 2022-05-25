@@ -15,6 +15,7 @@ import com.enderio.machines.common.energy.EnergyTransferMode;
 import com.enderio.machines.common.energy.MachineEnergyStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -93,8 +94,17 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
     }
 
     @Override
+    public boolean shouldAct() {
+        if (getTier() == MachineTier.Simple)
+            return super.shouldAct();
+        return super.shouldAct() && hasCapacitor();
+    }
+
+    @Override
     public void tick() {
-        pushEnergy();
+        if (shouldAct()) {
+            pushEnergy();
+        }
         super.tick();
     }
 
@@ -144,6 +154,21 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
     }
 
     // TODO: Hook inventory slot changes and rescan for a capacitor rather than fetching from the slot each time.
+
+    // endregion
+
+    // region Serialization
+
+    @Override
+    public void saveAdditional(CompoundTag pTag) {
+        // TODO: Save energy storage.
+        super.saveAdditional(pTag);
+    }
+
+    @Override
+    public void load(CompoundTag pTag) {
+        super.load(pTag);
+    }
 
     // endregion
 }

@@ -6,6 +6,7 @@ import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.util.Vector2i;
 import com.enderio.machines.EIOMachines;
 import com.enderio.machines.client.gui.widget.EnergyWidget;
+import com.enderio.machines.client.gui.widget.ProgressWidget;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.StirlingGeneratorBlockEntity;
 import com.enderio.machines.common.menu.StirlingGeneratorMenu;
@@ -25,7 +26,7 @@ public class StirlingGeneratorScreen extends EIOScreen<StirlingGeneratorMenu> {
     protected void init() {
         super.init();
 
-        // TODO: Progress widget.
+        addRenderableOnly(new ProgressWidget(this, () -> menu.getBlockEntity().getBurnProgress(), getGuiLeft() + 81, getGuiTop() + 53, 14, 14, 176, 0));
 
         addRenderableOnly(new EnergyWidget(this, getMenu().getBlockEntity()::getGuiEnergy, 16 + leftPos, 14 + topPos, 9, 42));
 
