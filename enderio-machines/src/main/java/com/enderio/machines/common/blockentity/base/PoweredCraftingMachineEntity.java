@@ -103,7 +103,7 @@ public abstract class PoweredCraftingMachineEntity<R extends Recipe<Container>> 
      * Whether crafting is running.
      */
     protected boolean canCraft() {
-        return getCurrentRecipe() != null && hasEnergy();
+        return getCurrentRecipe() != null && getEnergyStored() > 0;
     }
 
     /**
@@ -112,7 +112,7 @@ public abstract class PoweredCraftingMachineEntity<R extends Recipe<Container>> 
      * @return
      */
     protected boolean canSelectRecipe() {
-        return hasEnergy(); // Need some energy, stops from consuming the resources
+        return getEnergyStored() > 0; // Need some energy, stops from consuming the resources
     }
 
     /**

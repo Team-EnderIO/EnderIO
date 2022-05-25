@@ -82,11 +82,10 @@ public abstract class StirlingGeneratorBlockEntity extends PowerGeneratingMachin
                 burnTime--;
             }
 
-            // Only continue burning if redstone is enabled.
-            if (shouldAct() && !isGenerating()) {
+            // Only continue burning if redstone is enabled and the internal buffer has space.
+            if (shouldAct() && !isGenerating() && getEnergyStored() < getMaxEnergyStored()) {
                 // Get the fuel
                 ItemStack fuel = getInventory().getStackInSlot(0);
-
                 if (!fuel.isEmpty()) {
                     // Get the burn time.
                     int burningTime = ForgeHooks.getBurnTime(fuel, RecipeType.SMELTING);

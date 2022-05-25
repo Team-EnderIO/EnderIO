@@ -49,16 +49,12 @@ public interface IMachineEnergy {
     /**
      * Whether energy can be inserted via the given side.
      * @apiNote Should check the side of access when it matters, usually only for power buffers/storage.
-     *
-     * @todo This is to be used in the IEnergyStorage sided wrapper
      */
     boolean canInsertEnergy(@Nullable Direction side);
 
     /**
      * Whether energy can be extracted from the given side.
      * @apiNote Should check the side of access when it matters, usually only for power buffers/storage.
-     *
-     * @todo This is to be used in the IEnergyStorage sided wrapper
      */
     boolean canExtractEnergy(@Nullable Direction side);
 
