@@ -1,11 +1,11 @@
 package com.enderio.machines.common.energy;
 
 import com.enderio.api.capability.ICapacitorData;
+import com.enderio.api.capacitor.CapacitorKey;
 import net.minecraft.nbt.Tag;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.energy.IEnergyStorage;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -15,17 +15,18 @@ import java.util.function.Supplier;
  */
 public class MachineEnergyStorage implements INBTSerializable<Tag>, IEnergyStorage {
     protected int storedEnergy;
-
-    // TODO: Provide via constructor
-    protected int baseCapacity = 10000;
-    protected int baseMaxTransfer = 120;
-    protected int baseMaxConsumption = 40;
     private final EnergyTransferMode transferMode;
 
-    private final Supplier<Optional<ICapacitorData>> capacitorSupplier;
+    // Store relevant capacitor keys.
+    private final CapacitorKey capacityKey, transferKey, consumptionKey;
 
-    public MachineEnergyStorage(Supplier<Optional<ICapacitorData>> capacitorSupplier, EnergyTransferMode transferMode) {
-        this.capacitorSupplier = capacitorSupplier;
+    private final Supplier<Optional<ICapacitorData>> capacitorDataSupplier;
+
+    public MachineEnergyStorage(Supplier<Optional<ICapacitorData>> capacitorDataSupplier, CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey consumptionKey, EnergyTransferMode transferMode) {
+        this.capacitorDataSupplier = capacitorDataSupplier;
+        this.capacityKey = capacityKey;
+        this.transferKey = transferKey;
+        this.consumptionKey = consumptionKey;
         this.transferMode = transferMode;
     }
 
@@ -39,7 +40,7 @@ public class MachineEnergyStorage implements INBTSerializable<Tag>, IEnergyStora
 
     @Override
     public int getMaxEnergyStored() {
-        return Math.round(baseCapacity * capacitorSupplier.get().map(ICapacitorData::getBase).orElse(0.0f));
+        return capacitorDataSupplier.get().map(capacityKey::getInt).orElse(0);
     }
 
     // TODO: Should the next two methods be exposed by an interface?
@@ -48,14 +49,14 @@ public class MachineEnergyStorage implements INBTSerializable<Tag>, IEnergyStora
      * Maximum speed of energy consumption within the block itself.
      */
     public int getMaxEnergyConsumption() {
-        return Math.round(baseMaxConsumption * capacitorSupplier.get().map(ICapacitorData::getBase).orElse(0.0f));
+        return capacitorDataSupplier.get().map(consumptionKey::getInt).orElse(0);
     }
 
     /**
      * Maximum speed of energy transfer in and out of the block.
      */
     public int getMaxEnergyTransfer() {
-        return Math.round(baseMaxTransfer * capacitorSupplier.get().map(ICapacitorData::getBase).orElse(0.0f));
+        return capacitorDataSupplier.get().map(transferKey::getInt).orElse(0);
     }
 
     // endregion

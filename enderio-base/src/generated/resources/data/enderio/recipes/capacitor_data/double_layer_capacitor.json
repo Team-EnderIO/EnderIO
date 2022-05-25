@@ -1,8 +1,0 @@
-{
-  "type": "enderio:capacitor_data",
-  "capacitor": "enderio:double_layer_capacitor",
-  "data": {
-    "specializations": [],
-    "base": 2.0
-  }
-}

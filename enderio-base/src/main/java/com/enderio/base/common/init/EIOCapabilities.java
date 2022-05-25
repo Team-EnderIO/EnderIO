@@ -1,7 +1,7 @@
 package com.enderio.base.common.init;
 
-import com.enderio.base.EnderIO;
 import com.enderio.api.capability.ICapacitorData;
+import com.enderio.base.EnderIO;
 import com.enderio.api.capability.IDarkSteelUpgradable;
 import com.enderio.api.capability.IEntityStorage;
 import com.enderio.api.capability.ICoordinateSelectionHolder;

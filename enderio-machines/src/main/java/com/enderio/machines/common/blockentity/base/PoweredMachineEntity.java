@@ -1,12 +1,14 @@
 package com.enderio.machines.common.blockentity.base;
 
+import com.enderio.api.UseOnly;
+import com.enderio.api.capability.ICapacitorData;
+import com.enderio.api.capacitor.CapacitorKey;
+import com.enderio.api.energy.EnergyCapacityPair;
 import com.enderio.base.EnderIO;
 import com.enderio.base.common.blockentity.sync.SyncMode;
-import com.enderio.api.capability.ICapacitorData;
 import com.enderio.base.common.capacitor.CapacitorUtil;
-import com.enderio.api.UseOnly;
+import com.enderio.base.common.capacitor.DefaultCapacitorData;
 import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemSlotLayout;
-import com.enderio.api.energy.EnergyCapacityPair;
 import com.enderio.machines.common.blockentity.sync.MachineEnergyDataSlot;
 import com.enderio.machines.common.energy.EnergyTransferMode;
 import com.enderio.machines.common.energy.MachineEnergyStorage;
@@ -27,17 +29,25 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * A machine that stores power.
+ * A machine that stores power using {@link MachineEnergyStorage}.
  */
 public abstract class PoweredMachineEntity extends MachineBlockEntity {
     protected MachineEnergyStorage energyStorage;
 
     private final LazyOptional<IEnergyStorage> energyCap = LazyOptional.of(() -> this.energyStorage);
 
+    protected final CapacitorKey capacityKey, transferKey, consumptionKey;
+
+    // TODO: Cache capacitor data rather than constantly querying an optional?
+    
     @UseOnly(LogicalSide.CLIENT) private EnergyCapacityPair clientEnergy;
 
-    public PoweredMachineEntity(EnergyTransferMode transferMode, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
+    public PoweredMachineEntity(CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey consumptionKey, EnergyTransferMode transferMode, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);
+
+        this.capacityKey = capacityKey;
+        this.transferKey = transferKey;
+        this.consumptionKey = consumptionKey;
 
         energyStorage = createEnergyStorage(transferMode);
 
@@ -47,6 +57,21 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
 
     // region Energy
 
+    // TODO: Energy leakage and efficiency multipliers
+
+    /**
+     * Override this to define your energy storage medium.
+     */
+
+    protected MachineEnergyStorage createEnergyStorage(EnergyTransferMode transferMode) {
+        return new MachineEnergyStorage(this::getCapacitorData, capacityKey, transferKey, consumptionKey, transferMode) {
+            @Override
+            protected void onEnergyChanged() {
+                setChanged();
+            }
+        };
+    }
+
     // Helper methods for gui:
     @UseOnly(LogicalSide.CLIENT)
     public EnergyCapacityPair getGuiEnergy() {
@@ -55,15 +80,6 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
         }
         EnderIO.LOGGER.warn("getGuiEnergy called on server!");
         return new EnergyCapacityPair(energyStorage.getEnergyStored(), energyStorage.getMaxEnergyStored());
-    }
-
-    protected MachineEnergyStorage createEnergyStorage(EnergyTransferMode transferMode) {
-        return new MachineEnergyStorage(this::getCapacitorData, transferMode) {
-            @Override
-            protected void onEnergyChanged() {
-                setChanged();
-            }
-        };
     }
 
     @NotNull
@@ -79,24 +95,6 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
     public void tick() {
         pushEnergy();
         super.tick();
-    }
-
-    // endregion
-
-    // region Energy and Capacitors
-
-    public boolean hasCapacitor() {
-        return getSlotLayout()
-            .flatMap(layout -> layout
-                .getFirst(ItemSlotLayout.SlotType.CAPACITOR))
-            .map(slot -> CapacitorUtil.isCapacitor(getItemHandler().getStackInSlot(slot)))
-            .orElse(false);
-    }
-
-    public Optional<ICapacitorData> getCapacitorData() {
-        return getSlotLayout().flatMap(layout -> layout
-            .getFirst(ItemSlotLayout.SlotType.CAPACITOR)
-            .flatMap(slot -> CapacitorUtil.getCapacitorData(getItemHandler().getStackInSlot(slot))));
     }
 
     private void pushEnergy() {
@@ -125,6 +123,26 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
             }
         }
     }
+
+    // endregion
+
+    // Capacitors
+
+    public boolean hasCapacitor() {
+        return getSlotLayout()
+            .flatMap(layout -> layout
+                .getFirst(ItemSlotLayout.SlotType.CAPACITOR))
+            .map(slot -> CapacitorUtil.isCapacitor(getItemHandler().getStackInSlot(slot)))
+            .orElse(false);
+    }
+
+    public Optional<ICapacitorData> getCapacitorData() {
+        return getSlotLayout().flatMap(layout -> layout
+            .getFirst(ItemSlotLayout.SlotType.CAPACITOR)
+            .flatMap(slot -> CapacitorUtil.getCapacitorData(getItemHandler().getStackInSlot(slot))));
+    }
+
+    // TODO: Hook inventory slot changes and rescan for a capacitor rather than fetching from the slot each time.
 
     // endregion
 }
