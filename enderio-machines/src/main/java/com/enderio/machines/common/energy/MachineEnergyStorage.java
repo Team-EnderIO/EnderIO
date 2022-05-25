@@ -2,6 +2,7 @@ package com.enderio.machines.common.energy;
 
 import com.enderio.api.capability.ICapacitorData;
 import com.enderio.api.capacitor.CapacitorKey;
+import com.enderio.base.common.capacitor.DefaultCapacitorData;
 import net.minecraft.nbt.Tag;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -40,7 +41,7 @@ public class MachineEnergyStorage implements INBTSerializable<Tag>, IEnergyStora
 
     @Override
     public int getMaxEnergyStored() {
-        return capacitorDataSupplier.get().map(capacityKey::getInt).orElse(0);
+        return capacityKey.getInt(capacitorDataSupplier.get().orElse(DefaultCapacitorData.NONE));
     }
 
     // TODO: Should the next two methods be exposed by an interface?
@@ -49,14 +50,14 @@ public class MachineEnergyStorage implements INBTSerializable<Tag>, IEnergyStora
      * Maximum speed of energy consumption within the block itself.
      */
     public int getMaxEnergyConsumption() {
-        return capacitorDataSupplier.get().map(consumptionKey::getInt).orElse(0);
+        return consumptionKey.getInt(capacitorDataSupplier.get().orElse(DefaultCapacitorData.NONE));
     }
 
     /**
      * Maximum speed of energy transfer in and out of the block.
      */
     public int getMaxEnergyTransfer() {
-        return capacitorDataSupplier.get().map(transferKey::getInt).orElse(0);
+        return transferKey.getInt(capacitorDataSupplier.get().orElse(DefaultCapacitorData.NONE));
     }
 
     // endregion
@@ -84,7 +85,7 @@ public class MachineEnergyStorage implements INBTSerializable<Tag>, IEnergyStora
      * @return
      */
     public int consumeEnergy(int energy) {
-        int energyConsumed = Math.min(energy, Math.min(getMaxEnergyConsumption(), energy));
+        int energyConsumed = Math.min(storedEnergy, Math.min(getMaxEnergyConsumption(), energy));
         this.storedEnergy -= energyConsumed;
         return energyConsumed;
     }

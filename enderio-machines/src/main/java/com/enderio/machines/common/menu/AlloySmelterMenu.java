@@ -27,7 +27,7 @@ public class AlloySmelterMenu extends MachineMenu<AlloySmelterBlockEntity> {
         addInventorySlots(8,84);
     }
 
-    public static AlloySmelterMenu factory(@javax.annotation.Nullable MenuType<AlloySmelterMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
+    public static AlloySmelterMenu factory(@Nullable MenuType<AlloySmelterMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level.getBlockEntity(buf.readBlockPos());
         if (entity instanceof AlloySmelterBlockEntity castBlockEntity)
             return new AlloySmelterMenu(castBlockEntity, inventory, pContainerId);

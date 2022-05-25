@@ -183,5 +183,19 @@ public class MachineBlocks {
         .build()
         .register();
 
+    public static BlockEntry<SimpleMachineBlock> SIMPLE_STIRLING_GENERATOR = REGISTRATE
+        .block("simple_stirling_generator", props -> new SimpleMachineBlock(props, MachineBlockEntities.SIMPLE_STIRLING_GENERATOR))
+        .item()
+        .tab(() -> EIOCreativeTabs.MACHINES)
+        .build()
+        .register();
+
+    public static BlockEntry<MachineBlock> STIRLING_GENERATOR = REGISTRATE
+        .block("stirling_generator", props -> new MachineBlock(props, MachineBlockEntities.STIRLING_GENERATOR))
+        .item()
+        .tab(() -> EIOCreativeTabs.MACHINES)
+        .build()
+        .register();
+
     public static void classload() {}
 }

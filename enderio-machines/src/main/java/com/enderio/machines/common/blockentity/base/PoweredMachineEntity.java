@@ -8,6 +8,7 @@ import com.enderio.base.EnderIO;
 import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.base.common.capacitor.DefaultCapacitorData;
+import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemSlotLayout;
 import com.enderio.machines.common.blockentity.sync.MachineEnergyDataSlot;
 import com.enderio.machines.common.energy.EnergyTransferMode;
@@ -39,7 +40,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
     protected final CapacitorKey capacityKey, transferKey, consumptionKey;
 
     // TODO: Cache capacitor data rather than constantly querying an optional?
-    
+
     @UseOnly(LogicalSide.CLIENT) private EnergyCapacityPair clientEnergy;
 
     public PoweredMachineEntity(CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey consumptionKey, EnergyTransferMode transferMode, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {

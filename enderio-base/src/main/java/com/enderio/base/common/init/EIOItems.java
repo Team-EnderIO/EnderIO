@@ -114,19 +114,16 @@ public class EIOItems {
 
     public static final ItemEntry<DefaultCapacitorItem> BASIC_CAPACITOR = REGISTRATE
         .item("basic_capacitor", props -> new DefaultCapacitorItem(DefaultCapacitorData.BASIC, props))
-        .properties(p -> p.stacksTo(1))
         .tab(() -> EIOCreativeTabs.MAIN)
         .register();
 
     public static final ItemEntry<DefaultCapacitorItem> DOUBLE_LAYER_CAPACITOR = REGISTRATE
         .item("double_layer_capacitor", props -> new DefaultCapacitorItem(DefaultCapacitorData.DOUBLE_LAYER, props))
-        .properties(p -> p.stacksTo(1))
         .tab(() -> EIOCreativeTabs.MAIN)
         .register();
 
     public static final ItemEntry<DefaultCapacitorItem> OCTADIC_CAPACITOR = REGISTRATE
         .item("octadic_capacitor", props -> new DefaultCapacitorItem(DefaultCapacitorData.OCTADIC, props))
-        .properties(p -> p.stacksTo(1))
         .tab(() -> EIOCreativeTabs.MAIN)
         .register();
 
