@@ -2,10 +2,9 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.PoweredMachineEntity;
-import com.enderio.machines.common.energy.EnergyTransferMode;
-import com.enderio.machines.common.energy.MachineEnergyStorage;
 import com.enderio.machines.common.init.MachineCapacitorKeys;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -19,7 +18,7 @@ public class CreativePowerBlockEntity extends PoweredMachineEntity {
         super(MachineCapacitorKeys.DEV_ENERGY_CAPACITY.get(),
             MachineCapacitorKeys.DEV_ENERGY_TRANSFER.get(),
             MachineCapacitorKeys.DEV_ENERGY_CONSUME.get(),
-            EnergyTransferMode.Extract, pType, pWorldPosition, pBlockState);
+            pType, pWorldPosition, pBlockState);
     }
 
     @Override
@@ -27,24 +26,30 @@ public class CreativePowerBlockEntity extends PoweredMachineEntity {
         return MachineTier.Enhanced;
     }
 
-    @Override
-    protected MachineEnergyStorage createEnergyStorage(EnergyTransferMode transferMode) {
-        return new MachineEnergyStorage(this::getCapacitorData, capacityKey, transferKey, consumptionKey, transferMode) {
-            @Override
-            public int getEnergyStored() {
-                return getMaxEnergyStored();
-            }
-
-            @Override
-            protected void onEnergyChanged() {
-                setChanged();
-            }
-        };
-    }
-
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
         return null;
+    }
+
+    // TODO: Shouldn't be necessary
+    @Override
+    public boolean shouldAct() {
+        return isServer();
+    }
+
+    @Override
+    public int getEnergyStored() {
+        return getMaxEnergyStored() / 2;
+    }
+
+    @Override
+    public boolean canInsertEnergy(@Nullable Direction side) {
+        return false;
+    }
+
+    @Override
+    public boolean canExtractEnergy(@Nullable Direction side) {
+        return true;
     }
 }

@@ -8,10 +8,10 @@ import javax.annotation.Nonnull;
 
 public class SidedItemHandlerAccess implements IItemHandler {
 
-    private final ItemHandlerMaster master;
+    private final MachineItemHandler master;
     private final Direction direction;
 
-    public SidedItemHandlerAccess(ItemHandlerMaster master, Direction direction) {
+    public SidedItemHandlerAccess(MachineItemHandler master, Direction direction) {
         this.master = master;
         this.direction = direction;
     }

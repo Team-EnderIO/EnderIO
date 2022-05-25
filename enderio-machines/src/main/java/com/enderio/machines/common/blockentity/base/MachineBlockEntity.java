@@ -5,11 +5,10 @@ import com.enderio.base.common.blockentity.SyncedBlockEntity;
 import com.enderio.base.common.blockentity.sync.EnumDataSlot;
 import com.enderio.base.common.blockentity.sync.NBTSerializableDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
-import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.data.sidecontrol.IOConfig;
-import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemHandlerMaster;
-import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemSlotLayout;
+import com.enderio.machines.common.blockentity.data.sidecontrol.item.MachineItemHandler;
+import com.enderio.machines.common.blockentity.data.sidecontrol.item.MachineInventoryLayout;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -32,7 +31,6 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
-import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumMap;
@@ -60,7 +58,7 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
 
     // region Items and Fluids
 
-    private ItemHandlerMaster itemHandlerMaster;
+    private MachineItemHandler itemHandler;
 
     private final EnumMap<Direction, LazyOptional<IItemHandler>> itemHandlerCache = new EnumMap<>(Direction.class);
     private final EnumMap<Direction, LazyOptional<IFluidHandler>> fluidHandlerCache = new EnumMap<>(Direction.class);
@@ -72,9 +70,9 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
         super(pType, pWorldPosition, pBlockState);
 
         // If the machine declares an inventory layout, use it to create a handler
-        ItemSlotLayout slotLayout = getSlotLayout();
+        MachineInventoryLayout slotLayout = getInventoryLayout();
         if (slotLayout != null) {
-            itemHandlerMaster = createItemHandler(slotLayout);
+            itemHandler = createItemHandler(slotLayout);
         }
 
         if (supportsRedstoneControl()) {
@@ -120,7 +118,7 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
     /**
      * Get the block entity's inventory slot layout.
      */
-    public ItemSlotLayout getSlotLayout() {
+    public MachineInventoryLayout getInventoryLayout() {
         return null;
     }
 
@@ -140,19 +138,19 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
 
     // region Item Handling
 
-    public final ItemHandlerMaster getItemHandler() {
-        return itemHandlerMaster;
+    public final MachineItemHandler getInventory() {
+        return itemHandler;
     }
 
     public final RecipeWrapper getRecipeWrapper() {
-        return new RecipeWrapper(itemHandlerMaster);
+        return new RecipeWrapper(itemHandler);
     }
 
     /**
      * Called to create an item handler if a slot layout is provided.
      */
-    protected ItemHandlerMaster createItemHandler(ItemSlotLayout layout) {
-        return new ItemHandlerMaster(getIoConfig(), layout) {
+    protected MachineItemHandler createItemHandler(MachineInventoryLayout layout) {
+        return new MachineItemHandler(getIoConfig(), layout) {
             @Override
             protected void onContentsChanged(int slot) {
                 setChanged();
@@ -312,8 +310,8 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
             pTag.putInt("redstone", redstoneControl.ordinal());
         }
 
-        if (itemHandlerMaster != null) {
-            pTag.put("inventory", itemHandlerMaster.serializeNBT());
+        if (itemHandler != null) {
+            pTag.put("inventory", itemHandler.serializeNBT());
         }
     }
 
@@ -327,8 +325,8 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
             redstoneControl = RedstoneControl.values()[pTag.getInt("redstone")];
         }
 
-        if (itemHandlerMaster != null) {
-            itemHandlerMaster.deserializeNBT(pTag.getCompound("inventory"));
+        if (itemHandler != null) {
+            itemHandler.deserializeNBT(pTag.getCompound("inventory"));
         }
 
         // For rendering io overlays after placed by an nbt filled block item
