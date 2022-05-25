@@ -37,10 +37,18 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
 
     private final LazyOptional<IEnergyStorage> energyCap = LazyOptional.of(() -> this.energyStorage);
 
+    protected final CapacitorKey capacityKey, transferKey, consumptionKey;
+
+    // TODO: Cache capacitor data rather than constantly querying an optional?
+
     @UseOnly(LogicalSide.CLIENT) private EnergyCapacityPair clientEnergy;
 
-    public PoweredMachineEntity(EnergyTransferMode transferMode, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
+    public PoweredMachineEntity(CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey consumptionKey, EnergyTransferMode transferMode, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);
+
+        this.capacityKey = capacityKey;
+        this.transferKey = transferKey;
+        this.consumptionKey = consumptionKey;
 
         energyStorage = createEnergyStorage(transferMode);
 
@@ -54,37 +62,10 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
 
     /**
      * Override this to define your energy storage medium.
-     * Consider using {@link #createDefaultEnergyStorage(CapacitorKey, CapacitorKey, CapacitorKey, EnergyTransferMode)} for a run-of-the-mill storage medium.
-     * Note: you can use {@link #createDevEnergyStorage(EnergyTransferMode)} for temporary development purposes.
      */
 
-    protected abstract MachineEnergyStorage createEnergyStorage(EnergyTransferMode transferMode);
-
-    /**
-     * Create a default energy storage.
-     */
-    protected MachineEnergyStorage createDefaultEnergyStorage(CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey consumptionKey, EnergyTransferMode transferMode) {
+    protected MachineEnergyStorage createEnergyStorage(EnergyTransferMode transferMode) {
         return new MachineEnergyStorage(this::getCapacitorData, capacityKey, transferKey, consumptionKey, transferMode) {
-            @Override
-            protected void onEnergyChanged() {
-                setChanged();
-            }
-        };
-    }
-
-    /**
-     * Create a development energy storage
-     * @deprecated Not intended for finished machines.
-     */
-    @Deprecated
-    protected MachineEnergyStorage createDevEnergyStorage(EnergyTransferMode transferMode) {
-        return new MachineEnergyStorage(
-            this::getCapacitorData,
-            MachineCapacitorKeys.DEV_ENERGY_CAPACITY.get(),
-            MachineCapacitorKeys.DEV_ENERGY_TRANSFER.get(),
-            MachineCapacitorKeys.DEV_ENERGY_CONSUME.get(),
-            transferMode
-        ) {
             @Override
             protected void onEnergyChanged() {
                 setChanged();

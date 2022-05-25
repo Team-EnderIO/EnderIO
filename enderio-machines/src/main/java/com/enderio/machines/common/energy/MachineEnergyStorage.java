@@ -17,9 +17,8 @@ public class MachineEnergyStorage implements INBTSerializable<Tag>, IEnergyStora
     protected int storedEnergy;
     private final EnergyTransferMode transferMode;
 
-    private final CapacitorKey capacityKey;
-    private final CapacitorKey transferKey;
-    private final CapacitorKey consumptionKey;
+    // Store relevant capacitor keys.
+    private final CapacitorKey capacityKey, transferKey, consumptionKey;
 
     private final Supplier<Optional<ICapacitorData>> capacitorDataSupplier;
 

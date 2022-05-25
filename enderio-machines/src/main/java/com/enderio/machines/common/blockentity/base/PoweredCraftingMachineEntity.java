@@ -1,5 +1,6 @@
 package com.enderio.machines.common.blockentity.base;
 
+import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.base.common.blockentity.sync.FloatDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.api.UseOnly;
@@ -28,8 +29,8 @@ public abstract class PoweredCraftingMachineEntity<R extends Recipe<Container>> 
 
     @UseOnly(LogicalSide.CLIENT) private float clientProgress;
 
-    public PoweredCraftingMachineEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-        super(pType, pWorldPosition, pBlockState);
+    public PoweredCraftingMachineEntity(CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey consumptionKey, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
+        super(capacityKey, transferKey, consumptionKey, pType, pWorldPosition, pBlockState);
 
         // Sync machine progress to the client.
         addDataSlot(new FloatDataSlot(this::getProgress, p -> clientProgress = p, SyncMode.GUI));

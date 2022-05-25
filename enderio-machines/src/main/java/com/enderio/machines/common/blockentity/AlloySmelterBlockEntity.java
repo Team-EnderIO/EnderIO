@@ -40,7 +40,10 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
 
     public static class Simple extends AlloySmelterBlockEntity {
         public Simple(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-            super(AlloySmelterMode.ALLOYS, pType, pWorldPosition, pBlockState);
+            super(MachineCapacitorKeys.SIMPLE_ALLOY_SMELTER_ENERGY_CAPACITY.get(),
+                MachineCapacitorKeys.SIMPLE_ALLOY_SMELTER_ENERGY_TRANSFER.get(),
+                MachineCapacitorKeys.SIMPLE_ALLOY_SMELTER_ENERGY_CONSUME.get(),
+                AlloySmelterMode.ALLOYS, pType, pWorldPosition, pBlockState);
         }
 
         @Override
@@ -51,7 +54,10 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
 
     public static class Furnace extends AlloySmelterBlockEntity {
         public Furnace(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-            super(AlloySmelterMode.FURNACE, pType, pWorldPosition, pBlockState);
+            super(MachineCapacitorKeys.SIMPLE_ALLOY_SMELTER_ENERGY_CAPACITY.get(),
+                MachineCapacitorKeys.SIMPLE_ALLOY_SMELTER_ENERGY_TRANSFER.get(),
+                MachineCapacitorKeys.SIMPLE_ALLOY_SMELTER_ENERGY_CONSUME.get(),
+                AlloySmelterMode.FURNACE, pType, pWorldPosition, pBlockState);
         }
 
         @Override
@@ -62,7 +68,10 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
 
     public static class Standard extends AlloySmelterBlockEntity {
         public Standard(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-            super(AlloySmelterMode.ALL, pType, pWorldPosition, pBlockState);
+            super(MachineCapacitorKeys.ALLOY_SMELTER_ENERGY_CAPACITY.get(),
+                MachineCapacitorKeys.ALLOY_SMELTER_ENERGY_TRANSFER.get(),
+                MachineCapacitorKeys.ALLOY_SMELTER_ENERGY_CONSUME.get(),
+                AlloySmelterMode.ALL, pType, pWorldPosition, pBlockState);
         }
 
         @Override
@@ -72,9 +81,11 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
     }
 
     public static class Enhanced extends AlloySmelterBlockEntity {
-        // TODO: Make it enhanced
         public Enhanced(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-            super(AlloySmelterMode.ALL, pType, pWorldPosition, pBlockState);
+            super(MachineCapacitorKeys.ENHANCED_ALLOY_SMELTER_ENERGY_CAPACITY.get(),
+                MachineCapacitorKeys.ENHANCED_ALLOY_SMELTER_ENERGY_TRANSFER.get(),
+                MachineCapacitorKeys.ENHANCED_ALLOY_SMELTER_ENERGY_CONSUME.get(),
+                AlloySmelterMode.ALL, pType, pWorldPosition, pBlockState);
         }
 
         @Override
@@ -88,8 +99,8 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
 
     private int resultModifier = 1;
 
-    public AlloySmelterBlockEntity(AlloySmelterMode defaultMode, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-        super(pType, pWorldPosition, pBlockState);
+    public AlloySmelterBlockEntity(CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey consumptionKey, AlloySmelterMode defaultMode, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
+        super(capacityKey, transferKey, consumptionKey, pType, pWorldPosition, pBlockState);
         this.defaultMode = defaultMode;
         this.mode = defaultMode;
 
@@ -97,33 +108,6 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
         if (getTier() != MachineTier.Simple) {
             add2WayDataSlot(new EnumDataSlot<>(this::getMode, this::setMode, SyncMode.GUI));
         }
-    }
-
-    // Configure energy storage medium
-
-    // TODO: We're gonna revert this in the next commit, I don't like how this works.
-    @Override
-    protected MachineEnergyStorage createEnergyStorage(EnergyTransferMode transferMode) {
-         return switch (getTier()) {
-             case Simple -> createDefaultEnergyStorage(
-                 MachineCapacitorKeys.SIMPLE_ALLOY_SMELTER_ENERGY_CAPACITY.get(),
-                 MachineCapacitorKeys.SIMPLE_ALLOY_SMELTER_ENERGY_TRANSFER.get(),
-                 MachineCapacitorKeys.SIMPLE_ALLOY_SMELTER_ENERGY_CONSUME.get(),
-                 transferMode
-             );
-             case Standard -> createDefaultEnergyStorage(
-                 MachineCapacitorKeys.ALLOY_SMELTER_ENERGY_CAPACITY.get(),
-                 MachineCapacitorKeys.ALLOY_SMELTER_ENERGY_TRANSFER.get(),
-                 MachineCapacitorKeys.ALLOY_SMELTER_ENERGY_CONSUME.get(),
-                 transferMode
-             );
-             case Enhanced -> createDefaultEnergyStorage(
-                 MachineCapacitorKeys.ENHANCED_ALLOY_SMELTER_ENERGY_CAPACITY.get(),
-                 MachineCapacitorKeys.ENHANCED_ALLOY_SMELTER_ENERGY_TRANSFER.get(),
-                 MachineCapacitorKeys.ENHANCED_ALLOY_SMELTER_ENERGY_CONSUME.get(),
-                 transferMode
-             );
-         };
     }
 
     public AlloySmelterMode getMode() {

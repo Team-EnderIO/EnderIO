@@ -1,5 +1,6 @@
 package com.enderio.machines.common.blockentity;
 
+import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.PowerGeneratingMachineEntity;
 import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemSlotLayout;
@@ -15,9 +16,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 public abstract class StirlingGeneratorBlockEntity extends PowerGeneratingMachineEntity {
-    public StirlingGeneratorBlockEntity(EnergyTransferMode transferMode, BlockEntityType<?> pType, BlockPos pWorldPosition,
+    public StirlingGeneratorBlockEntity(CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey consumptionKey, BlockEntityType<?> pType, BlockPos pWorldPosition,
         BlockState pBlockState) {
-        super(transferMode, pType, pWorldPosition, pBlockState);
+        super(capacityKey, transferKey, consumptionKey, pType, pWorldPosition, pBlockState);
     }
 
     @Override

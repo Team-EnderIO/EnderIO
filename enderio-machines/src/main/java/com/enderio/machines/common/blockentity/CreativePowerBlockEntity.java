@@ -13,9 +13,13 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
+// TODO: This should be replaced with creative power bank and buffer in the future, this is temporary :)
 public class CreativePowerBlockEntity extends PoweredMachineEntity {
     public CreativePowerBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-        super(EnergyTransferMode.Extract, pType, pWorldPosition, pBlockState);
+        super(MachineCapacitorKeys.DEV_ENERGY_CAPACITY.get(),
+            MachineCapacitorKeys.DEV_ENERGY_TRANSFER.get(),
+            MachineCapacitorKeys.DEV_ENERGY_CONSUME.get(),
+            EnergyTransferMode.Extract, pType, pWorldPosition, pBlockState);
     }
 
     @Override
@@ -25,13 +29,7 @@ public class CreativePowerBlockEntity extends PoweredMachineEntity {
 
     @Override
     protected MachineEnergyStorage createEnergyStorage(EnergyTransferMode transferMode) {
-        return new MachineEnergyStorage(
-            this::getCapacitorData,
-            MachineCapacitorKeys.DEV_ENERGY_CAPACITY.get(),
-            MachineCapacitorKeys.DEV_ENERGY_TRANSFER.get(),
-            MachineCapacitorKeys.DEV_ENERGY_CONSUME.get(),
-            transferMode
-        ) {
+        return new MachineEnergyStorage(this::getCapacitorData, capacityKey, transferKey, consumptionKey, transferMode) {
             @Override
             public int getEnergyStored() {
                 return getMaxEnergyStored();
