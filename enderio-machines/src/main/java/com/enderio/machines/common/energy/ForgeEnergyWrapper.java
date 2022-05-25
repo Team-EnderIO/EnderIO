@@ -15,20 +15,25 @@ import java.util.Map;
  */
 public final class ForgeEnergyWrapper {
     private final Map<Direction, LazyOptional<Side>> sideCache;
+    private final LazyOptional<Side> nullSide;
 
     public ForgeEnergyWrapper(IMachineEnergy wrapped) {
         HashMap<Direction, LazyOptional<Side>> sides = new HashMap<>();
         for (Direction dir : Direction.values()) {
             sides.put(dir, LazyOptional.of(() -> new Side(wrapped, dir)));
         }
-        sides.put(null, LazyOptional.of(() -> new Side(wrapped, null)));
         this.sideCache = Map.copyOf(sides);
+
+        nullSide = LazyOptional.of(() -> new Side(wrapped, null));
     }
 
     /**
      * Get {@link IEnergyStorage} capability for the given side.
      */
-    public LazyOptional<IEnergyStorage> getCapability(Direction side) {
+    public LazyOptional<IEnergyStorage> getCapability(@Nullable Direction side) {
+        if (side == null) {
+            return nullSide.cast();
+        }
         return sideCache.get(side).cast();
     }
 

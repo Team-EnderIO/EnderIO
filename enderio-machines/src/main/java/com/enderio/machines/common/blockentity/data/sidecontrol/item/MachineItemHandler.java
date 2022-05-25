@@ -8,7 +8,6 @@ import net.minecraftforge.items.ItemStackHandler;
 import javax.annotation.Nonnull;
 import java.util.EnumMap;
 
-// TODO: PR 27 - Consider an interface IMachineInventory with easier accessors for inputs, i.e. getInput(1) for the 1st input. That way the capacitor slot can be put to slot 0 if present but it doesn't ruin machine logic.
 public class MachineItemHandler extends ItemStackHandler {
 
     private final EnumMap<Direction, SidedItemHandlerAccess> access = new EnumMap(Direction.class);

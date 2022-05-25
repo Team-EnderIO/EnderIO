@@ -128,7 +128,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity implements
 
     private void pushEnergy() {
         // Transmit power to adjacent block entities if our storage is set up to extract from.
-        if (getEnergyStored() > 0 && canExtractEnergy(null)) { // TODO: Is using canExtract correct? Or should we handle this some other way.
+        if (getEnergyStored() > 0 && canExtractEnergy(null)) {
             for (Direction direction : Direction.values()) {
                 BlockEntity adjacent = level.getBlockEntity(worldPosition.relative(direction));
                 if (adjacent != null) {

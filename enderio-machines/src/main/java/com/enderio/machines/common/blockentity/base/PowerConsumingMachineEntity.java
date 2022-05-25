@@ -12,14 +12,6 @@ public abstract class PowerConsumingMachineEntity extends PoweredMachineEntity {
         super(capacityKey, transferKey, consumptionKey, pType, pWorldPosition, pBlockState);
     }
 
-    /**
-     * @deprecated Kind of useless.
-     */
-    @Deprecated
-    public boolean hasEnergy() {
-        return getEnergyStored() > 0;
-    }
-
     @Override
     public boolean canInsertEnergy(Direction side) {
         return getIoConfig().getIO(side) != IOConfig.IOState.DISABLED;
