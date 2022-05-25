@@ -199,11 +199,17 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
     }
 
     @Override
-    public Optional<ItemSlotLayout> getSlotLayout() {
-        if (getTier() == MachineTier.Simple) {
-            return Optional.of(ItemSlotLayout.basic(3, 1));
-        }
-        return Optional.of(ItemSlotLayout.withCapacitor(3, 1));
+    public ItemSlotLayout getSlotLayout() {
+        // Setup item slots
+        ItemSlotLayout.Builder builder = ItemSlotLayout.builder()
+            .addBasicInputs(3)
+            .addOutput();
+
+        // Add capacitor to non-simple machines.
+        if (getTier() != MachineTier.Simple)
+            builder = builder.capacitor();
+
+        return builder.build();
     }
 
     @Override

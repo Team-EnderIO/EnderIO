@@ -77,31 +77,15 @@ public abstract class StirlingGeneratorBlockEntity extends PowerGeneratingMachin
     }
 
     @Override
-    public Optional<ItemSlotLayout> getSlotLayout() {
-        if (getTier() == MachineTier.Simple) {
-            return Optional.of(ItemSlotLayout.basic(1, 0));
-        }
-        return Optional.of(ItemSlotLayout.withCapacitor(1, 0));
-    }
+    public ItemSlotLayout getSlotLayout() {
+        // Setup input
+        ItemSlotLayout.Builder builder = ItemSlotLayout.builder().addInput(stack -> ForgeHooks.getBurnTime(stack, RecipeType.SMELTING) > 0);
 
-    @Override
-    protected ItemHandlerMaster createItemHandler(ItemSlotLayout layout) {
-        // TODO: Really not a fan of how this works. Review this in my next PR... I kinda want to put slot validation into ItemSlotLayout maybe?
-        return new ItemHandlerMaster(getIoConfig(), layout) {
-            @NotNull
-            @Override
-            public ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
-                // Check its a capacitor.
-                if (slot == 1 && !CapacitorUtil.isCapacitor(stack))
-                    return stack;
-                return super.insertItem(slot, stack, simulate);
-            }
+        // Add capacitor to non-simple machines.
+        if (getTier() != MachineTier.Simple)
+            builder = builder.capacitor();
 
-            @Override
-            protected void onContentsChanged(int slot) {
-                setChanged();
-            }
-        };
+        return builder.build();
     }
 
     @Override

@@ -140,17 +140,23 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
     // Capacitors
 
     public boolean hasCapacitor() {
-        return getSlotLayout()
-            .flatMap(layout -> layout
-                .getFirst(ItemSlotLayout.SlotType.CAPACITOR))
-            .map(slot -> CapacitorUtil.isCapacitor(getItemHandler().getStackInSlot(slot)))
-            .orElse(false);
+        ItemSlotLayout layout = getSlotLayout();
+        if (layout != null) {
+            return layout.getFirst(ItemSlotLayout.SlotType.CAPACITOR)
+                .map(slot -> CapacitorUtil.isCapacitor(getItemHandler().getStackInSlot(slot)))
+                .orElse(false);
+        }
+
+        return false;
     }
 
     public Optional<ICapacitorData> getCapacitorData() {
-        return getSlotLayout().flatMap(layout -> layout
-            .getFirst(ItemSlotLayout.SlotType.CAPACITOR)
-            .flatMap(slot -> CapacitorUtil.getCapacitorData(getItemHandler().getStackInSlot(slot))));
+        ItemSlotLayout layout = getSlotLayout();
+        if (layout != null) {
+            return layout.getFirst(ItemSlotLayout.SlotType.CAPACITOR)
+                .flatMap(slot -> CapacitorUtil.getCapacitorData(getItemHandler().getStackInSlot(slot)));
+        }
+        return Optional.empty();
     }
 
     // TODO: Hook inventory slot changes and rescan for a capacitor rather than fetching from the slot each time.
