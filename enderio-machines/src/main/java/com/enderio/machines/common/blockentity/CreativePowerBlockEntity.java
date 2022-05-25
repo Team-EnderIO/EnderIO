@@ -1,6 +1,5 @@
 package com.enderio.machines.common.blockentity;
 
-import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.base.common.capacitor.DefaultCapacitorData;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.PoweredMachineEntity;
