@@ -69,12 +69,6 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
         this.fluidTank =  new FluidTankMaster(capacity, getIoConfig());
 
         addDataSlot(new FluidStackDataSlot(() -> fluidTank.getFluidInTank(0), fluidTank::setFluid, SyncMode.WORLD));
-        getItemHandler().addPredicate(0, itemStack ->
-            (itemStack.getItem() instanceof BucketItem bucketItem && bucketItem.getFluid() != Fluids.EMPTY && !(bucketItem instanceof MobBucketItem))
-                || (!(itemStack.getItem() instanceof BucketItem) && itemStack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent()));
-        getItemHandler().addPredicate(2, itemStack ->
-            itemStack.getItem() == Items.BUCKET
-            || (!(itemStack.getItem() instanceof BucketItem) && itemStack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent()));
     }
 
     @Override
@@ -191,14 +185,18 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public Optional<ItemSlotLayout> getSlotLayout() {
-        return Optional.ofNullable(ItemSlotLayout
+    public ItemSlotLayout getSlotLayout() {
+        return ItemSlotLayout
             .builder()
-            .addSlot(0, ItemSlotLayout.SlotType.INPUT)
-            .addSlot(2, ItemSlotLayout.SlotType.INPUT)
-            .addSlot(1, ItemSlotLayout.SlotType.OUTPUT)
-            .addSlot(3, ItemSlotLayout.SlotType.OUTPUT)
-            .build());
+            .addInput(itemStack ->
+                (itemStack.getItem() instanceof BucketItem bucketItem && bucketItem.getFluid() != Fluids.EMPTY && !(bucketItem instanceof MobBucketItem))
+                    || (!(itemStack.getItem() instanceof BucketItem) && itemStack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent()))
+            .addOutput()
+            .addInput(itemStack ->
+                itemStack.getItem() == Items.BUCKET
+                    || (!(itemStack.getItem() instanceof BucketItem) && itemStack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent()))
+            .addOutput()
+            .build();
     }
 
     @Override

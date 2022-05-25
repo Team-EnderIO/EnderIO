@@ -1,6 +1,12 @@
 package com.enderio.machines.common.blockentity.data.sidecontrol.item;
 
+import com.enderio.base.EnderIO;
+import com.enderio.base.common.capacitor.CapacitorUtil;
+import net.minecraft.world.item.ItemStack;
+
+import javax.naming.OperationNotSupportedException;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class ItemSlotLayout {
@@ -12,56 +18,60 @@ public class ItemSlotLayout {
         MISC
     }
 
+    private record SlotDefinition(SlotType type, Predicate<ItemStack> validator) {}
+
     private final Map<Integer, SlotType> slotTypeMap;
+    private final Map<Integer, Predicate<ItemStack>> slotPredicates;
     private final int slotCount;
 
-    private ItemSlotLayout(Map<Integer, SlotType> slotTypeMap) {
+    private ItemSlotLayout(Map<Integer, SlotType> slotTypeMap, Map<Integer, Predicate<ItemStack>> slotPredicates) {
         this.slotTypeMap = Map.copyOf(slotTypeMap);
+        this.slotPredicates = Map.copyOf(slotPredicates);
         this.slotCount = slotTypeMap.size();
     }
 
-    public static ItemSlotLayout basic(int inputs, int outputs) {
-        return basic(inputs, outputs, 0);
+    public boolean validateStack(int slot, ItemStack stack) {
+        if (slotPredicates.containsKey(slot)) {
+            return slotPredicates.get(slot).test(stack);
+        }
+
+        return true;
     }
 
-    public static ItemSlotLayout basic(int inputs, int outputs, int upgrades) {
+    @Deprecated
+    public static ItemSlotLayout basic(int inputs, int outputs) {
         Map<Integer, SlotType> slotMap = new HashMap<>();
-        for (int i = 0; i < inputs + outputs + upgrades; i++) {
+        for (int i = 0; i < inputs + outputs; i++) {
             SlotType type;
             if (i < inputs) {
                 type = SlotType.INPUT;
             } else if (i < inputs + outputs) {
                 type = SlotType.OUTPUT;
             } else {
-                type = SlotType.UPGRADE;
+                type = SlotType.MISC;
             }
 
             slotMap.put(i, type);
         }
-        return new ItemSlotLayout(slotMap);
+        return new ItemSlotLayout(slotMap, Map.of());
     }
 
+    @Deprecated
     public static ItemSlotLayout withCapacitor(int inputs, int outputs) {
-        return withCapacitor(inputs, outputs, 0);
-    }
-
-    public static ItemSlotLayout withCapacitor(int inputs, int outputs, int upgrades) {
         Map<Integer, SlotType> slotMap = new HashMap<>();
-        for (int i = 0; i < inputs + outputs + upgrades + 1; i++) {
+        for (int i = 0; i < inputs + outputs + 1; i++) {
             SlotType type;
             if (i < inputs) {
                 type = SlotType.INPUT;
             } else if (i < inputs + outputs) {
                 type = SlotType.OUTPUT;
-            } else if (i < inputs + outputs + upgrades) {
-                type = SlotType.UPGRADE;
             } else {
                 type = SlotType.CAPACITOR;
             }
 
             slotMap.put(i, type);
         }
-        return new ItemSlotLayout(slotMap);
+        return new ItemSlotLayout(slotMap, Map.of());
     }
 
     public static Builder builder() {
@@ -89,34 +99,81 @@ public class ItemSlotLayout {
 
     public static class Builder {
         private final Map<Integer, SlotType> slotTypeMap;
+        private final Map<Integer, Predicate<ItemStack>> slotPredicates;
+
+        private int slotCounter;
 
         private Builder() {
             slotTypeMap = new HashMap<>();
+            slotPredicates = new HashMap<>();
         }
 
-        public Builder addSlot(int slot, SlotType type) {
-            slotTypeMap.put(slot, type);
+        public Builder addInput() {
+            slotTypeMap.put(slotCounter++, SlotType.INPUT);
+            return this;
+        }
+
+        public Builder addInput(Predicate<ItemStack> validator) {
+            slotTypeMap.put(slotCounter, SlotType.INPUT);
+            slotPredicates.put(slotCounter, validator);
+            slotCounter++;
+            return this;
+        }
+
+        public Builder addBasicInputs(int count) {
+            for (int i = 0; i < count; i++) {
+                slotTypeMap.put(slotCounter++, SlotType.INPUT);
+            }
+            return this;
+        }
+
+        public Builder addOutput() {
+            slotTypeMap.put(slotCounter, SlotType.OUTPUT);
+            slotCounter++;
+            return this;
+        }
+
+        public Builder addOutputs(int count) {
+            for (int i = 0; i < count; i++) {
+                addOutput();
+            }
+            return this;
+        }
+
+        public Builder addMisc() {
+            slotTypeMap.put(slotCounter++, SlotType.MISC);
+            return this;
+        }
+
+        public Builder addMisc(Predicate<ItemStack> validator) {
+            slotTypeMap.put(slotCounter, SlotType.MISC);
+            slotPredicates.put(slotCounter, validator);
+            slotCounter++;
+            return this;
+        }
+
+        public Builder addBasicMisc(int count) {
+            for (int i = 0; i < count; i++) {
+                slotTypeMap.put(slotCounter++, SlotType.MISC);
+            }
+            return this;
+        }
+
+        public Builder capacitor() {
+            if (slotTypeMap.containsValue(SlotType.CAPACITOR)) {
+                EnderIO.LOGGER.error("Attempted to add a second capacitor slot to an inventory.");
+                return this;
+            }
+
+            // Add slot type and the validator.
+            slotTypeMap.put(slotCounter, SlotType.CAPACITOR);
+            slotPredicates.put(slotCounter, CapacitorUtil::isCapacitor);
+            slotCounter++;
             return this;
         }
 
         public ItemSlotLayout build() {
-            // Ensure all slots are accounted for
-            List<Integer> slots = new ArrayList<>();
-            for (Map.Entry<Integer, SlotType> entry : slotTypeMap.entrySet()) {
-                slots.add(entry.getKey());
-            }
-
-            // Find max id
-            int max = 0;
-            for (Integer slot : slots) {
-                if (slot > max)
-                    max = slot;
-            }
-
-            if (max != slotTypeMap.size() - 1)
-                throw new RuntimeException("DEV: Slot count mismatch!");
-
-            return new ItemSlotLayout(slotTypeMap);
+            return new ItemSlotLayout(slotTypeMap, slotPredicates);
         }
     }
 }

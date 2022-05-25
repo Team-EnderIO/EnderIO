@@ -5,6 +5,7 @@ import com.enderio.base.common.blockentity.SyncedBlockEntity;
 import com.enderio.base.common.blockentity.sync.EnumDataSlot;
 import com.enderio.base.common.blockentity.sync.NBTSerializableDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
+import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.data.sidecontrol.IOConfig;
 import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemHandlerMaster;
@@ -71,7 +72,10 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
         super(pType, pWorldPosition, pBlockState);
 
         // If the machine declares an inventory layout, use it to create a handler
-        getSlotLayout().ifPresent(layout -> itemHandlerMaster = createItemHandler(layout));
+        ItemSlotLayout slotLayout = getSlotLayout();
+        if (slotLayout != null) {
+            itemHandlerMaster = createItemHandler(slotLayout);
+        }
 
         if (supportsRedstoneControl()) {
             // Register sync slot for redstone control.
@@ -116,8 +120,8 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
     /**
      * Get the block entity's inventory slot layout.
      */
-    public Optional<ItemSlotLayout> getSlotLayout() {
-        return Optional.empty();
+    public ItemSlotLayout getSlotLayout() {
+        return null;
     }
 
     // endregion
@@ -148,7 +152,12 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
      * Called to create an item handler if a slot layout is provided.
      */
     protected ItemHandlerMaster createItemHandler(ItemSlotLayout layout) {
-        throw new NotImplementedException("Dev didn't implement the item handler for this block entity!");
+        return new ItemHandlerMaster(getIoConfig(), layout) {
+            @Override
+            protected void onContentsChanged(int slot) {
+                setChanged();
+            }
+        };
     }
 
     // endregion
