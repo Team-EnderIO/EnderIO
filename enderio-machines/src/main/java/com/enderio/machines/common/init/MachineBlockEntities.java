@@ -48,10 +48,10 @@ public class MachineBlockEntities {
         .validBlocks(MachineBlocks.CREATIVE_POWER)
         .register();
 
-    public static final BlockEntityEntry<StirlingGeneratorBlockEntity.Simple> SIMPLE_STIRLING_GENERATOR = REGISTRATE
-        .blockEntity("simple_stirling_generator", StirlingGeneratorBlockEntity.Simple::new)
-        .validBlocks(MachineBlocks.SIMPLE_STIRLING_GENERATOR)
-        .register();
+//    public static final BlockEntityEntry<StirlingGeneratorBlockEntity.Simple> SIMPLE_STIRLING_GENERATOR = REGISTRATE
+//        .blockEntity("simple_stirling_generator", StirlingGeneratorBlockEntity.Simple::new)
+//        .validBlocks(MachineBlocks.SIMPLE_STIRLING_GENERATOR)
+//        .register();
 
     public static final BlockEntityEntry<StirlingGeneratorBlockEntity.Standard> STIRLING_GENERATOR = REGISTRATE
         .blockEntity("stirling_generator", StirlingGeneratorBlockEntity.Standard::new)
