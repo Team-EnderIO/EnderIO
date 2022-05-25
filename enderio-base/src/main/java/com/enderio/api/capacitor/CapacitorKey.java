@@ -34,4 +34,12 @@ public final class CapacitorKey extends ForgeRegistryEntry<CapacitorKey> {
     public float getValue(ICapacitorData data) {
         return getValue(data.getLevel(this));
     }
+
+    public int getInt(float level) {
+        return Math.round(getValue(level));
+    }
+
+    public int getInt(ICapacitorData data) {
+        return getInt(data.getLevel(this));
+    }
 }

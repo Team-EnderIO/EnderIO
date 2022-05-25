@@ -9,7 +9,7 @@ import net.minecraft.nbt.Tag;
 public enum DefaultCapacitorData implements ICapacitorData {
     BASIC(1.0f),
     DOUBLE_LAYER(2.0f),
-    OCTADIC(4.0f);
+    OCTADIC(3.0f);
 
     private final float base;
 

@@ -1,5 +1,6 @@
 package com.enderio.machines.common.blockentity;
 
+import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.base.common.blockentity.sync.EnumDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.base.common.capacitor.CapacitorUtil;
@@ -7,6 +8,9 @@ import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.PoweredCraftingMachineEntity;
 import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemHandlerMaster;
 import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemSlotLayout;
+import com.enderio.machines.common.energy.EnergyTransferMode;
+import com.enderio.machines.common.energy.MachineEnergyStorage;
+import com.enderio.machines.common.init.MachineCapacitorKeys;
 import com.enderio.machines.common.menu.AlloySmelterMenu;
 import com.enderio.api.recipe.AlloySmeltingRecipe;
 import com.enderio.machines.common.init.MachineRecipes;
@@ -93,6 +97,33 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
         if (getTier() != MachineTier.Simple) {
             add2WayDataSlot(new EnumDataSlot<>(this::getMode, this::setMode, SyncMode.GUI));
         }
+    }
+
+    // Configure energy storage medium
+
+    // TODO: We're gonna revert this in the next commit, I don't like how this works.
+    @Override
+    protected MachineEnergyStorage createEnergyStorage(EnergyTransferMode transferMode) {
+         return switch (getTier()) {
+             case Simple -> createDefaultEnergyStorage(
+                 MachineCapacitorKeys.SIMPLE_ALLOY_SMELTER_ENERGY_CAPACITY.get(),
+                 MachineCapacitorKeys.SIMPLE_ALLOY_SMELTER_ENERGY_TRANSFER.get(),
+                 MachineCapacitorKeys.SIMPLE_ALLOY_SMELTER_ENERGY_CONSUME.get(),
+                 transferMode
+             );
+             case Standard -> createDefaultEnergyStorage(
+                 MachineCapacitorKeys.ALLOY_SMELTER_ENERGY_CAPACITY.get(),
+                 MachineCapacitorKeys.ALLOY_SMELTER_ENERGY_TRANSFER.get(),
+                 MachineCapacitorKeys.ALLOY_SMELTER_ENERGY_CONSUME.get(),
+                 transferMode
+             );
+             case Enhanced -> createDefaultEnergyStorage(
+                 MachineCapacitorKeys.ENHANCED_ALLOY_SMELTER_ENERGY_CAPACITY.get(),
+                 MachineCapacitorKeys.ENHANCED_ALLOY_SMELTER_ENERGY_TRANSFER.get(),
+                 MachineCapacitorKeys.ENHANCED_ALLOY_SMELTER_ENERGY_CONSUME.get(),
+                 transferMode
+             );
+         };
     }
 
     public AlloySmelterMode getMode() {

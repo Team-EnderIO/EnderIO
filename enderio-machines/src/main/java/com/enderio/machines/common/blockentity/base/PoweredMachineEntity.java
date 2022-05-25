@@ -1,6 +1,7 @@
 package com.enderio.machines.common.blockentity.base;
 
 import com.enderio.api.capability.ICapacitorData;
+import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.base.EnderIO;
 import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.base.common.capacitor.CapacitorUtil;
@@ -10,8 +11,10 @@ import com.enderio.api.energy.EnergyCapacityPair;
 import com.enderio.machines.common.blockentity.sync.MachineEnergyDataSlot;
 import com.enderio.machines.common.energy.EnergyTransferMode;
 import com.enderio.machines.common.energy.MachineEnergyStorage;
+import com.enderio.machines.common.init.MachineCapacitorKeys;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -27,7 +30,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * A machine that stores power.
+ * A machine that stores power using {@link MachineEnergyStorage}.
  */
 public abstract class PoweredMachineEntity extends MachineBlockEntity {
     protected MachineEnergyStorage energyStorage;
@@ -47,6 +50,48 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
 
     // region Energy
 
+    // TODO: Energy leakage and efficiency multipliers
+
+    /**
+     * Override this to define your energy storage medium.
+     * Consider using {@link #createDefaultEnergyStorage(CapacitorKey, CapacitorKey, CapacitorKey, EnergyTransferMode)} for a run-of-the-mill storage medium.
+     * Note: you can use {@link #createDevEnergyStorage(EnergyTransferMode)} for temporary development purposes.
+     */
+
+    protected abstract MachineEnergyStorage createEnergyStorage(EnergyTransferMode transferMode);
+
+    /**
+     * Create a default energy storage.
+     */
+    protected MachineEnergyStorage createDefaultEnergyStorage(CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey consumptionKey, EnergyTransferMode transferMode) {
+        return new MachineEnergyStorage(this::getCapacitorData, capacityKey, transferKey, consumptionKey, transferMode) {
+            @Override
+            protected void onEnergyChanged() {
+                setChanged();
+            }
+        };
+    }
+
+    /**
+     * Create a development energy storage
+     * @deprecated Not intended for finished machines.
+     */
+    @Deprecated
+    protected MachineEnergyStorage createDevEnergyStorage(EnergyTransferMode transferMode) {
+        return new MachineEnergyStorage(
+            this::getCapacitorData,
+            MachineCapacitorKeys.DEV_ENERGY_CAPACITY.get(),
+            MachineCapacitorKeys.DEV_ENERGY_TRANSFER.get(),
+            MachineCapacitorKeys.DEV_ENERGY_CONSUME.get(),
+            transferMode
+        ) {
+            @Override
+            protected void onEnergyChanged() {
+                setChanged();
+            }
+        };
+    }
+
     // Helper methods for gui:
     @UseOnly(LogicalSide.CLIENT)
     public EnergyCapacityPair getGuiEnergy() {
@@ -55,15 +100,6 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
         }
         EnderIO.LOGGER.warn("getGuiEnergy called on server!");
         return new EnergyCapacityPair(energyStorage.getEnergyStored(), energyStorage.getMaxEnergyStored());
-    }
-
-    protected MachineEnergyStorage createEnergyStorage(EnergyTransferMode transferMode) {
-        return new MachineEnergyStorage(this::getCapacitorData, transferMode) {
-            @Override
-            protected void onEnergyChanged() {
-                setChanged();
-            }
-        };
     }
 
     @NotNull
