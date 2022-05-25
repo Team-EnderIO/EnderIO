@@ -10,18 +10,23 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
  * <p>
  * Should implement {@link #getValue(float)} to define how scaling works.
  */
-public abstract class CapacitorKey extends ForgeRegistryEntry<CapacitorKey> {
+public final class CapacitorKey extends ForgeRegistryEntry<CapacitorKey> {
 
-    protected final float base;
+    private final float base;
 
-    public CapacitorKey(float baseValue) {
+    private final IScaler scaler;
+
+    public CapacitorKey(float baseValue, IScaler scaler) {
         this.base = baseValue;
+        this.scaler = scaler;
     }
 
     /**
      * Get the value of the key at the given level.
      */
-    public abstract float getValue(float level);
+    public float getValue(float level) {
+        return scaler.scale(base, level);
+    }
 
     /**
      * Get the value of the key using the capacitor data.

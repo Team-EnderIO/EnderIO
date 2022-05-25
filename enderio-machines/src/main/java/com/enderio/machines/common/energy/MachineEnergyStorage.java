@@ -1,6 +1,7 @@
 package com.enderio.machines.common.energy;
 
 import com.enderio.api.capability.ICapacitorData;
+import com.enderio.machines.common.init.MachineCapacitorKeys;
 import net.minecraft.nbt.Tag;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -38,7 +39,8 @@ public class MachineEnergyStorage implements INBTSerializable<Tag>, IEnergyStora
 
     @Override
     public int getMaxEnergyStored() {
-        return Math.round(baseCapacity * capacitorSupplier.get().map(ICapacitorData::getBase).orElse(0.0f));
+//        return Math.round(baseCapacity * capacitorSupplier.get().map(ICapacitorData::getBase).orElse(0.0f));
+        return Math.round(capacitorSupplier.get().map(data -> data.getValue(MachineCapacitorKeys.ALLOY_SMELTER_ENERGY_CAPACITY.get())).orElse(0.0f));
     }
 
     // TODO: Should the next two methods be exposed by an interface?
