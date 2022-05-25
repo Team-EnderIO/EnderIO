@@ -1,5 +1,8 @@
 package com.enderio.api.capacitor;
 
+/**
+ * Indexed scaler, interpolates between a list of key values based on level.
+ */
 public class IndexedScaler implements IScaler {
     private final float scale;
     private final float[] keyValues;
