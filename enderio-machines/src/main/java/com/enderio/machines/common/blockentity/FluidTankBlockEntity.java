@@ -5,8 +5,8 @@ import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.blockentity.data.sidecontrol.fluid.FluidTankMaster;
-import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemHandlerMaster;
-import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemSlotLayout;
+import com.enderio.machines.common.blockentity.data.sidecontrol.item.MachineItemHandler;
+import com.enderio.machines.common.blockentity.data.sidecontrol.item.MachineInventoryLayout;
 import com.enderio.machines.common.menu.FluidTankMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -95,8 +95,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     }
 
     private void fillInternal() {
-        ItemStack inputItem = getItemHandler().getStackInSlot(0);
-        ItemStack outputItem = getItemHandler().getStackInSlot(1);
+        ItemStack inputItem = getInventory().getStackInSlot(0);
+        ItemStack outputItem = getInventory().getStackInSlot(1);
         if (!inputItem.isEmpty()) {
             if (inputItem.getItem() instanceof BucketItem filledBucket) {
                 if (outputItem.isEmpty() || (outputItem.getItem() == Items.BUCKET && outputItem.getCount() < outputItem.getMaxStackSize())) {
@@ -104,7 +104,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
                     if (filled == FluidAttributes.BUCKET_VOLUME) {
                         fluidTank.fill(new FluidStack(filledBucket.getFluid(), FluidAttributes.BUCKET_VOLUME), IFluidHandler.FluidAction.EXECUTE);
                         inputItem.shrink(1);
-                        getItemHandler().forceInsertItem(1, Items.BUCKET.getDefaultInstance(), false);
+                        getInventory().forceInsertItem(1, Items.BUCKET.getDefaultInstance(), false);
                     }
                 }
             } else {
@@ -114,8 +114,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
 
                     int filled = moveFluids(itemFluid, fluidTank, fluidTank.getCapacity());
                     if (filled > 0) {
-                        getItemHandler().setStackInSlot(1, itemFluid.getContainer());
-                        getItemHandler().setStackInSlot(0, ItemStack.EMPTY);
+                        getInventory().setStackInSlot(1, itemFluid.getContainer());
+                        getInventory().setStackInSlot(0, ItemStack.EMPTY);
                     }
                 }
             }
@@ -123,8 +123,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     }
 
     private void drainInternal() {
-        ItemStack inputItem = getItemHandler().getStackInSlot(2);
-        ItemStack outputItem = getItemHandler().getStackInSlot(3);
+        ItemStack inputItem = getInventory().getStackInSlot(2);
+        ItemStack outputItem = getInventory().getStackInSlot(3);
         if (!inputItem.isEmpty()) {
             if (inputItem.getItem() == Items.BUCKET) {
                 if (!fluidTank.isEmpty()) {
@@ -133,7 +133,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
                         fluidTank.drain(FluidAttributes.BUCKET_VOLUME, IFluidHandler.FluidAction.EXECUTE);
                         inputItem.shrink(1);
                         if (outputItem.isEmpty()) {
-                            getItemHandler().setStackInSlot(3, stack.getFluid().getBucket().getDefaultInstance());
+                            getInventory().setStackInSlot(3, stack.getFluid().getBucket().getDefaultInstance());
                         } else {
                             outputItem.grow(1);
                         }
@@ -145,8 +145,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
                     IFluidHandlerItem itemFluid = fluidHandlerCap.get();
                     int filled = moveFluids(fluidTank, itemFluid, fluidTank.getFluidAmount());
                     if (filled > 0) {
-                        getItemHandler().setStackInSlot(3, itemFluid.getContainer());
-                        getItemHandler().setStackInSlot(2, ItemStack.EMPTY);
+                        getInventory().setStackInSlot(3, itemFluid.getContainer());
+                        getInventory().setStackInSlot(2, ItemStack.EMPTY);
                     }
                 }
             }
@@ -160,7 +160,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
             if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
                 return LazyOptional.of(() -> fluidTank.getAccess(direction)).cast();
             if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-                return LazyOptional.of(() -> getItemHandler().getAccess(direction)).cast();
+                return LazyOptional.of(() -> getInventory().getAccess(direction)).cast();
         }
         return super.getCapability(cap, direction);
     }
@@ -171,7 +171,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
         if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
             return LazyOptional.of(() -> fluidTank).cast();
         if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-            return LazyOptional.of(this::getItemHandler).cast();
+            return LazyOptional.of(this::getInventory).cast();
         return super.getCapability(cap);
     }
 
@@ -185,8 +185,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public ItemSlotLayout getSlotLayout() {
-        return ItemSlotLayout
+    public MachineInventoryLayout getInventoryLayout() {
+        return MachineInventoryLayout
             .builder()
             .addInput(itemStack ->
                 (itemStack.getItem() instanceof BucketItem bucketItem && bucketItem.getFluid() != Fluids.EMPTY && !(bucketItem instanceof MobBucketItem))
@@ -200,7 +200,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected ItemHandlerMaster createItemHandler(ItemSlotLayout layout) {
-        return new ItemHandlerMaster(getIoConfig(), layout);
+    protected MachineItemHandler createItemHandler(MachineInventoryLayout layout) {
+        return new MachineItemHandler(getIoConfig(), layout);
     }
 }

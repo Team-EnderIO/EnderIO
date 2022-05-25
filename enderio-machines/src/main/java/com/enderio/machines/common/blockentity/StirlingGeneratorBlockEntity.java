@@ -4,32 +4,22 @@ import com.enderio.api.UseOnly;
 import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.base.common.blockentity.sync.FloatDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
-import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.machines.common.MachineTier;
-import com.enderio.machines.common.block.ProgressMachineBlock;
 import com.enderio.machines.common.blockentity.base.PowerGeneratingMachineEntity;
-import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemHandlerMaster;
-import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemSlotLayout;
-import com.enderio.machines.common.energy.EnergyTransferMode;
+import com.enderio.machines.common.blockentity.data.sidecontrol.item.MachineInventoryLayout;
 import com.enderio.machines.common.init.MachineCapacitorKeys;
-import com.enderio.machines.common.menu.AlloySmelterMenu;
 import com.enderio.machines.common.menu.StirlingGeneratorMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.LogicalSide;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Optional;
 
 public abstract class StirlingGeneratorBlockEntity extends PowerGeneratingMachineEntity {
     // TODO: Add capacitor keys.
@@ -77,15 +67,11 @@ public abstract class StirlingGeneratorBlockEntity extends PowerGeneratingMachin
     }
 
     @Override
-    public ItemSlotLayout getSlotLayout() {
-        // Setup input
-        ItemSlotLayout.Builder builder = ItemSlotLayout.builder().addInput(stack -> ForgeHooks.getBurnTime(stack, RecipeType.SMELTING) > 0);
-
-        // Add capacitor to non-simple machines.
-        if (getTier() != MachineTier.Simple)
-            builder = builder.capacitor();
-
-        return builder.build();
+    public MachineInventoryLayout getInventoryLayout() {
+        return MachineInventoryLayout.builder()
+            .addInput(stack -> ForgeHooks.getBurnTime(stack, RecipeType.SMELTING) > 0)
+            .capacitor(() -> getTier() != MachineTier.Simple)
+            .build();
     }
 
     @Override
@@ -99,7 +85,7 @@ public abstract class StirlingGeneratorBlockEntity extends PowerGeneratingMachin
             // Only continue burning if redstone is enabled.
             if (shouldAct() && !isGenerating()) {
                 // Get the fuel
-                ItemStack fuel = getItemHandler().getStackInSlot(0);
+                ItemStack fuel = getInventory().getStackInSlot(0);
 
                 if (!fuel.isEmpty()) {
                     // Get the burn time.
@@ -111,7 +97,7 @@ public abstract class StirlingGeneratorBlockEntity extends PowerGeneratingMachin
 
                         // Remove the fuel
                         fuel.shrink(1);
-                        getItemHandler().setStackInSlot(0, fuel);
+                        getInventory().setStackInSlot(0, fuel);
                     }
                 }
             }

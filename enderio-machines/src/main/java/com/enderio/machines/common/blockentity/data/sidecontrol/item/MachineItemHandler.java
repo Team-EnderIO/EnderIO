@@ -9,15 +9,15 @@ import javax.annotation.Nonnull;
 import java.util.EnumMap;
 
 // TODO: PR 27 - Consider an interface IMachineInventory with easier accessors for inputs, i.e. getInput(1) for the 1st input. That way the capacitor slot can be put to slot 0 if present but it doesn't ruin machine logic.
-public class ItemHandlerMaster extends ItemStackHandler {
+public class MachineItemHandler extends ItemStackHandler {
 
     private final EnumMap<Direction, SidedItemHandlerAccess> access = new EnumMap(Direction.class);
     private final IOConfig config;
 
-    private ItemSlotLayout layout;
+    private MachineInventoryLayout layout;
     private boolean isForceMode = false;
 
-    public ItemHandlerMaster(IOConfig config, ItemSlotLayout layout) {
+    public MachineItemHandler(IOConfig config, MachineInventoryLayout layout) {
         super(layout.getSlotCount());
         this.config = config;
         this.layout = layout;
@@ -27,7 +27,7 @@ public class ItemHandlerMaster extends ItemStackHandler {
     @Override
     public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
         if (!isForceMode) {
-            if (layout.isSlotType(slot, ItemSlotLayout.SlotType.OUTPUT) || !layout.validateStack(slot, stack))
+            if (layout.isSlotType(slot, MachineInventoryLayout.SlotType.OUTPUT) || !layout.validateStack(slot, stack))
                 return stack;
         }
         return super.insertItem(slot, stack, simulate);
@@ -42,12 +42,12 @@ public class ItemHandlerMaster extends ItemStackHandler {
 
     @Override
     public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-        return isForceMode || (layout.validateStack(slot, stack) && !layout.isSlotType(slot, ItemSlotLayout.SlotType.OUTPUT));
+        return isForceMode || (layout.validateStack(slot, stack) && !layout.isSlotType(slot, MachineInventoryLayout.SlotType.OUTPUT));
     }
 
     @Override
     public int getSlotLimit(int slot) {
-        if (layout.isSlotType(slot, ItemSlotLayout.SlotType.CAPACITOR))
+        if (layout.isSlotType(slot, MachineInventoryLayout.SlotType.CAPACITOR))
             return 1;
         return super.getSlotLimit(slot);
     }
@@ -62,7 +62,7 @@ public class ItemHandlerMaster extends ItemStackHandler {
     @Nonnull
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
-        if (layout.isSlotType(slot, ItemSlotLayout.SlotType.INPUT) && !isForceMode)
+        if (layout.isSlotType(slot, MachineInventoryLayout.SlotType.INPUT) && !isForceMode)
             return ItemStack.EMPTY;
         return super.extractItem(slot, amount, simulate);
     }
@@ -76,7 +76,7 @@ public class ItemHandlerMaster extends ItemStackHandler {
         return config;
     }
 
-    public ItemSlotLayout getLayout() {
+    public MachineInventoryLayout getLayout() {
         return layout;
     }
 }

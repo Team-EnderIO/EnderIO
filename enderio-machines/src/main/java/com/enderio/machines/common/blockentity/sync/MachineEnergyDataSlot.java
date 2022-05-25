@@ -3,15 +3,15 @@ package com.enderio.machines.common.blockentity.sync;
 import com.enderio.api.energy.EnergyCapacityPair;
 import com.enderio.base.common.blockentity.sync.EnderDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
-import com.enderio.machines.common.energy.MachineEnergyStorage;
 import net.minecraft.nbt.CompoundTag;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class MachineEnergyDataSlot extends EnderDataSlot<EnergyCapacityPair> {
-    public MachineEnergyDataSlot(MachineEnergyStorage storage, Consumer<EnergyCapacityPair> clientConsumer, SyncMode syncMode) {
+    public MachineEnergyDataSlot(Supplier<Integer> getEnergyStored, Supplier<Integer> getEnergyCapacity, Consumer<EnergyCapacityPair> clientConsumer, SyncMode syncMode) {
         // We dont set a setter here as energy should *never* be client -> server synced.
-        super(() -> new EnergyCapacityPair(storage.getEnergyStored(), storage.getMaxEnergyStored()), clientConsumer, syncMode);
+        super(() -> new EnergyCapacityPair(getEnergyStored.get(), getEnergyCapacity.get()), clientConsumer, syncMode);
     }
 
     @Override

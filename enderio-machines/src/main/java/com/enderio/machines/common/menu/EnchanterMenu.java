@@ -24,20 +24,20 @@ public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
         super(blockEntity, inventory, MachineMenus.ENCHANTER.get(), pContainerId);
         if (blockEntity != null) {
             this.level = blockEntity.getLevel();
-            addSlot(new MachineSlot(blockEntity.getItemHandler(), 0, 16, 35));
-            addSlot(new MachineSlot(blockEntity.getItemHandler(), 1, 65, 35));
-            addSlot(new MachineSlot(blockEntity.getItemHandler(), 2, 85, 35));
-            addSlot(new MachineSlot(blockEntity.getItemHandler(), 3, 144, 35) {
+            addSlot(new MachineSlot(blockEntity.getInventory(), 0, 16, 35));
+            addSlot(new MachineSlot(blockEntity.getInventory(), 1, 65, 35));
+            addSlot(new MachineSlot(blockEntity.getInventory(), 2, 85, 35));
+            addSlot(new MachineSlot(blockEntity.getInventory(), 3, 144, 35) {
                 @Override
                 public void onTake(Player pPlayer, ItemStack pStack) {
                     Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.Types.ENCHANTING, blockEntity.getRecipeWrapper(), level);
                     if (recipe.isPresent() && (pPlayer.experienceLevel > recipe.get().getLevelCost(blockEntity.getRecipeWrapper()) || pPlayer.isCreative())) {
                         int amount = recipe.get().getAmount(blockEntity.getRecipeWrapper());
-                        int lapizForLevel = recipe.get().getLapisForLevel(recipe.get().getEnchantmentLevel(blockEntity.getItemHandler().getStackInSlot(1).getCount()));
+                        int lapizForLevel = recipe.get().getLapisForLevel(recipe.get().getEnchantmentLevel(blockEntity.getInventory().getStackInSlot(1).getCount()));
                         pPlayer.giveExperienceLevels(-recipe.get().getLevelCost(blockEntity.getRecipeWrapper()));
-                        blockEntity.getItemHandler().getStackInSlot(0).shrink(1);
-                        blockEntity.getItemHandler().getStackInSlot(1).shrink(amount);
-                        blockEntity.getItemHandler().getStackInSlot(2).shrink(lapizForLevel);
+                        blockEntity.getInventory().getStackInSlot(0).shrink(1);
+                        blockEntity.getInventory().getStackInSlot(1).shrink(amount);
+                        blockEntity.getInventory().getStackInSlot(2).shrink(lapizForLevel);
                     }
                     super.onTake(pPlayer, pStack);
                 }
@@ -67,7 +67,7 @@ public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
         if (level != null) {
             Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.Types.ENCHANTING, getBlockEntity().getRecipeWrapper(), level);
             if (recipe.isPresent()) {
-                return recipe.get().getLevelCost(new RecipeWrapper(this.getBlockEntity().getItemHandler()));
+                return recipe.get().getLevelCost(new RecipeWrapper(this.getBlockEntity().getInventory()));
             }
         }
         return -1;

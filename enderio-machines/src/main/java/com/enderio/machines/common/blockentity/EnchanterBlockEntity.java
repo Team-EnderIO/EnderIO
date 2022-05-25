@@ -2,8 +2,8 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
-import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemHandlerMaster;
-import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemSlotLayout;
+import com.enderio.machines.common.blockentity.data.sidecontrol.item.MachineItemHandler;
+import com.enderio.machines.common.blockentity.data.sidecontrol.item.MachineInventoryLayout;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.menu.EnchanterMenu;
 import com.enderio.api.recipe.EnchanterRecipe;
@@ -31,8 +31,8 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public ItemSlotLayout getSlotLayout() {
-        return ItemSlotLayout.builder()
+    public MachineInventoryLayout getInventoryLayout() {
+        return MachineInventoryLayout.builder()
             .addInput(itemStack -> itemStack.getItem() == Items.WRITABLE_BOOK)
             .addInput()
             .addInput()
@@ -56,16 +56,16 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected ItemHandlerMaster createItemHandler(ItemSlotLayout layout) {
-        return new ItemHandlerMaster(getIoConfig(), layout) {
+    protected MachineItemHandler createItemHandler(MachineInventoryLayout layout) {
+        return new MachineItemHandler(getIoConfig(), layout) {
             protected void onContentsChanged(int slot) {
                 if (slot != 3) {
                     Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.Types.ENCHANTING, getRecipeWrapper(), level);
                     if (recipe.isPresent()) {
-                        getItemHandler().setStackInSlot(3, recipe.get().assemble(getRecipeWrapper()));
+                        getInventory().setStackInSlot(3, recipe.get().assemble(getRecipeWrapper()));
                     }
                     else {
-                        getItemHandler().setStackInSlot(3, ItemStack.EMPTY);
+                        getInventory().setStackInSlot(3, ItemStack.EMPTY);
                     }
                 }
                 setChanged();

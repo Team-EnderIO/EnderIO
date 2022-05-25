@@ -4,12 +4,11 @@ import com.enderio.base.EnderIO;
 import com.enderio.base.common.capacitor.CapacitorUtil;
 import net.minecraft.world.item.ItemStack;
 
-import javax.naming.OperationNotSupportedException;
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
+import java.util.function.Supplier;
 
-public class ItemSlotLayout {
+public class MachineInventoryLayout {
     public enum SlotType {
         INPUT,
         OUTPUT,
@@ -24,7 +23,7 @@ public class ItemSlotLayout {
     private final Map<Integer, Predicate<ItemStack>> slotPredicates;
     private final int slotCount;
 
-    private ItemSlotLayout(Map<Integer, SlotType> slotTypeMap, Map<Integer, Predicate<ItemStack>> slotPredicates) {
+    private MachineInventoryLayout(Map<Integer, SlotType> slotTypeMap, Map<Integer, Predicate<ItemStack>> slotPredicates) {
         this.slotTypeMap = Map.copyOf(slotTypeMap);
         this.slotPredicates = Map.copyOf(slotPredicates);
         this.slotCount = slotTypeMap.size();
@@ -39,7 +38,7 @@ public class ItemSlotLayout {
     }
 
     @Deprecated
-    public static ItemSlotLayout basic(int inputs, int outputs) {
+    public static MachineInventoryLayout basic(int inputs, int outputs) {
         Map<Integer, SlotType> slotMap = new HashMap<>();
         for (int i = 0; i < inputs + outputs; i++) {
             SlotType type;
@@ -53,11 +52,11 @@ public class ItemSlotLayout {
 
             slotMap.put(i, type);
         }
-        return new ItemSlotLayout(slotMap, Map.of());
+        return new MachineInventoryLayout(slotMap, Map.of());
     }
 
     @Deprecated
-    public static ItemSlotLayout withCapacitor(int inputs, int outputs) {
+    public static MachineInventoryLayout withCapacitor(int inputs, int outputs) {
         Map<Integer, SlotType> slotMap = new HashMap<>();
         for (int i = 0; i < inputs + outputs + 1; i++) {
             SlotType type;
@@ -71,7 +70,7 @@ public class ItemSlotLayout {
 
             slotMap.put(i, type);
         }
-        return new ItemSlotLayout(slotMap, Map.of());
+        return new MachineInventoryLayout(slotMap, Map.of());
     }
 
     public static Builder builder() {
@@ -172,8 +171,12 @@ public class ItemSlotLayout {
             return this;
         }
 
-        public ItemSlotLayout build() {
-            return new ItemSlotLayout(slotTypeMap, slotPredicates);
+        public Builder capacitor(Supplier<Boolean> present) {
+            return present.get() ? capacitor() : this;
+        }
+
+        public MachineInventoryLayout build() {
+            return new MachineInventoryLayout(slotTypeMap, slotPredicates);
         }
     }
 }
