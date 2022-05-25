@@ -31,7 +31,7 @@ public class MultiCapabilityProvider implements ICapabilitySerializable<Compound
         capabilities.putIfAbsent(cap, optional);
     }
 
-    public <T extends INamedNBTSerializable<Tag>> void addSerialized(@Nonnull Capability<T> cap, @Nonnull LazyOptional<T> optional) {
+    public <T extends INamedNBTSerializable<Tag>> void addSerialized(@Nonnull Capability<T> cap, @Nonnull LazyOptional<? extends T> optional) {
         capabilities.putIfAbsent(cap, optional);
         serializedCaps.putIfAbsent("pend_" + serializedNameCounter++, optional);
     }

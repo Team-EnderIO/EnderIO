@@ -1,66 +1,35 @@
 package com.enderio.api.capability;
 
+import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.api.nbt.INamedNBTSerializable;
 import net.minecraft.nbt.Tag;
 
-import java.util.Map;
-
 /**
- * interface for storing capacitor data
+ * Capacitor data.
+ * This defines a capacitor that stores.
+ * Can be attached to an item as a capability.
  */
 public interface ICapacitorData extends INamedNBTSerializable<Tag> {
-    @Override
-    default String getSerializedName() {
-        return "CapacitorData";
-    }
-
     /**
-     * Gets Base value used for non specialization.
-     */
-    void setBase(float base);
-
-    /**
-     * Sets Base value used for non specialization.
+     * Get the base modifier of the capacitor.
      */
     float getBase();
 
     /**
-     * Add a specialization. It contains a String for the type and a float for the value.
+     * Get the level for the given capacitor key.
      */
-    void addSpecialization(String type, float modifier);
+    float getLevel(CapacitorKey key);
 
     /**
-     * Clears old and adds a new specialization;
+     * Get the value for a given capacitor key.
      */
-    void addNewSpecialization(String type, float modifier);
-
-    /**
-     * Adds all specializations to the capacitor.
-     */
-    void addAllSpecialization(Map<String, Float> specializations);
-
-    /**
-     * Gets all specializations.
-     */
-    Map<String, Float> getSpecializations();
-
-    default float getSpecialization(String specialization) {
-        return getSpecializations().getOrDefault(specialization, getBase());
+    default float getValue(CapacitorKey key) {
+        return key.getValue(getLevel(key));
     }
 
-    default float scale(String specialization, float base) {
-        return base * getSpecialization(specialization);
+    // Allows the interface to be serialized as a capability.
+    @Override
+    default String getSerializedName() {
+        return "CapacitorData";
     }
-
-    default float scale(String specialization, String allSpecialization, float base) {
-        float specificMult = getSpecialization(specialization);
-        float allMult = getSpecialization(allSpecialization);
-        return base * specificMult > allMult ? specificMult : allMult;
-    }
-
-    /**
-     * Flavor text used by loot capacitor.
-     */
-    int getFlavor();
-
 }

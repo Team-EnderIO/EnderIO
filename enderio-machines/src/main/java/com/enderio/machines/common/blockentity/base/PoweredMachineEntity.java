@@ -1,8 +1,8 @@
 package com.enderio.machines.common.blockentity.base;
 
+import com.enderio.api.capability.ICapacitorData;
 import com.enderio.base.EnderIO;
 import com.enderio.base.common.blockentity.sync.SyncMode;
-import com.enderio.api.capability.ICapacitorData;
 import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.api.UseOnly;
 import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemSlotLayout;

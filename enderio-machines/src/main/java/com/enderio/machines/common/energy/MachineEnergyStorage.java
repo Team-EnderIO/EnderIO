@@ -5,7 +5,6 @@ import net.minecraft.nbt.Tag;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.energy.IEnergyStorage;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 

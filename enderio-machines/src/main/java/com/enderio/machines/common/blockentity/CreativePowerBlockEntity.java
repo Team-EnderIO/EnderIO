@@ -1,6 +1,7 @@
 package com.enderio.machines.common.blockentity;
 
 import com.enderio.base.common.capacitor.CapacitorUtil;
+import com.enderio.base.common.capacitor.DefaultCapacitorData;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.PoweredMachineEntity;
 import com.enderio.machines.common.energy.EnergyTransferMode;
@@ -27,7 +28,7 @@ public class CreativePowerBlockEntity extends PoweredMachineEntity {
 
     @Override
     protected MachineEnergyStorage createEnergyStorage(EnergyTransferMode transferMode) {
-        return new MachineEnergyStorage(() -> Optional.of(CapacitorUtil.OCTADIC), transferMode) {
+        return new MachineEnergyStorage(() -> Optional.of(DefaultCapacitorData.OCTADIC), transferMode) {
             @Override
             public int getEnergyStored() {
                 return getMaxEnergyStored();
