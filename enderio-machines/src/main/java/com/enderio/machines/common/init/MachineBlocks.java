@@ -196,5 +196,41 @@ public class MachineBlocks {
             .build()
             .register();
 
+    public static BlockEntry<MachineBlock> CREATIVE_POWER = REGISTRATE
+        .block("creative_power", props -> new MachineBlock(props, MachineBlockEntities.CREATIVE_POWER))
+        .item()
+        .tab(() -> EIOCreativeTabs.MACHINES)
+        .build()
+        .register();
+
+//    public static BlockEntry<SimpleMachineBlock> SIMPLE_STIRLING_GENERATOR = REGISTRATE
+//        .block("simple_stirling_generator", props -> new SimpleMachineBlock(props, MachineBlockEntities.SIMPLE_STIRLING_GENERATOR))
+//        .item()
+//        .tab(() -> EIOCreativeTabs.MACHINES)
+//        .build()
+//        .register();
+
+    public static BlockEntry<ProgressMachineBlock> STIRLING_GENERATOR = REGISTRATE
+        .block("stirling_generator", props -> new ProgressMachineBlock(props, MachineBlockEntities.STIRLING_GENERATOR))
+        .addLayer(() -> RenderType::cutout)
+        .blockstate((ctx, prov) -> {
+            MachinesBlockState.machineBlock(ctx, prov,
+                EIOModel.compositeModel(prov.models(), ctx.getName(), builder -> builder
+                    .component(EIOMachines.loc("block/machine_frame"), true)
+                    .component(EIOMachines.loc("block/io_overlay"))
+                    .component(EIOMachines.loc("block/stirling_generator_front"))),
+                EIOModel.compositeModel(prov.models(), ctx.getName() + "_on", builder -> builder
+                    .component(EIOMachines.loc("block/machine_frame"), true)
+                    .component(EIOMachines.loc("block/io_overlay"))
+                    .component(prov
+                        .models()
+                        .withExistingParent("stirling_generator_front_on", EIOMachines.loc("block/stirling_generator_front"))
+                        .texture("front", EIOMachines.loc("block/stirling_generator_front_on")))));
+        })
+        .item()
+        .tab(() -> EIOCreativeTabs.MACHINES)
+        .build()
+        .register();
+
     public static void classload() {}
 }

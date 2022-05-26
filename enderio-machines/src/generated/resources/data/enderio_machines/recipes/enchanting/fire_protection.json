@@ -1,9 +1,9 @@
 {
   "type": "enderio_machines:enchanting",
-  "ingredient": {
+  "enchantment": "minecraft:fire_protection",
+  "input": {
     "item": "minecraft:blaze_powder"
   },
-  "enchantment": "minecraft:fire_protection",
-  "amount": 16,
+  "amount_per_level": 16,
   "level": 1
 }

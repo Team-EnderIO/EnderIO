@@ -29,7 +29,6 @@ import javax.annotation.Nullable;
 
 public class MachineBlock extends BaseEntityBlock {
     private final BlockEntityEntry<? extends MachineBlockEntity> blockEntityType;
-
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     public MachineBlock(Properties properties, BlockEntityEntry<? extends MachineBlockEntity> blockEntityType) {

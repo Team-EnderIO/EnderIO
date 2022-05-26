@@ -1,9 +1,9 @@
 {
   "type": "enderio_machines:enchanting",
-  "ingredient": {
-    "item": "minecraft:leather"
-  },
   "enchantment": "minecraft:projectile_protection",
-  "amount": 16,
+  "input": {
+    "tag": "forge:leather"
+  },
+  "amount_per_level": 16,
   "level": 1
 }

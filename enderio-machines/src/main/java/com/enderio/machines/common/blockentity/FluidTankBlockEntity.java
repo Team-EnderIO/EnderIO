@@ -42,6 +42,11 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
         public Standard(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
             super(pType, pWorldPosition, pBlockState, CAPACITY);
         }
+
+        @Override
+        public MachineTier getTier() {
+            return MachineTier.Standard;
+        }
     }
 
     public static class Enhanced extends FluidTankBlockEntity {
@@ -50,12 +55,17 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
         public Enhanced(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
             super(pType, pWorldPosition, pBlockState, CAPACITY);
         }
+
+        @Override
+        public MachineTier getTier() {
+            return MachineTier.Standard;
+        }
     }
 
     private final FluidTankMaster fluidTank;
 
     public FluidTankBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState, int capacity) {
-        super(MachineTier.STANDARD, pType, pWorldPosition, pBlockState);
+        super(pType, pWorldPosition, pBlockState);
         this.fluidTank =  new FluidTankMaster(capacity, getIoConfig());
 
         addDataSlot(new FluidStackDataSlot(() -> fluidTank.getFluidInTank(0), fluidTank::setFluid, SyncMode.WORLD));

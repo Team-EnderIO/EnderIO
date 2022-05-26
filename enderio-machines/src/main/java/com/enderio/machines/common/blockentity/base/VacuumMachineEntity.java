@@ -9,7 +9,6 @@ import java.util.function.Predicate;
 import com.enderio.base.common.blockentity.sync.IntegerDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.base.common.util.AttractionUtil;
-import com.enderio.machines.common.MachineTier;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
@@ -27,10 +26,15 @@ public abstract class VacuumMachineEntity<T extends Entity> extends MachineBlock
     private List<WeakReference<T>> entities = new ArrayList<>();
 	private Class<T> clazz;
 
-	public VacuumMachineEntity(MachineTier tier, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState, Class<T> clazz) {
-		super(tier, pType, pWorldPosition, pBlockState);
+	public VacuumMachineEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState, Class<T> clazz) {
+		super(pType, pWorldPosition, pBlockState);
 		this.clazz = clazz;
 		add2WayDataSlot(new IntegerDataSlot(() -> this.getRange(), this::setRange, SyncMode.GUI));
+	}
+	
+	@Override
+	public boolean supportsIo() {
+		return false;
 	}
 	
 	@Override

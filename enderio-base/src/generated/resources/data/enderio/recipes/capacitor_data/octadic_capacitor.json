@@ -1,8 +1,0 @@
-{
-  "type": "enderio:capacitor_data",
-  "capacitor": "enderio:octadic_capacitor",
-  "data": {
-    "specializations": [],
-    "base": 4.0
-  }
-}

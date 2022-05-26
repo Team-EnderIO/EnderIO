@@ -39,7 +39,7 @@ subprojects {
 
     def enableMixin = false
     if (project.hasProperty("enable_mixin")) {
-        enableMixin = project.enable_mixin
+        //enableMixin = project.enable_mixin
     }
 
     // MixinGradle:
@@ -56,6 +56,7 @@ subprojects {
     java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
     println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
+
     minecraft {
         mappings channel: "${mappings_channel}", version: "${mappings_version}"
 
@@ -64,8 +65,8 @@ subprojects {
             client {
                 workingDirectory project.file('run')
 
-                property 'forge.logging.markers', 'REGISTRIES'
-                property 'forge.logging.console.level', 'debug'
+//                property 'forge.logging.markers', 'REGISTRIES'
+//                property 'forge.logging.console.level', 'debug'
 
                 // Allow dependent mixins to run
                 property 'mixin.env.remapRefMap', 'true'
@@ -81,7 +82,7 @@ subprojects {
             server {
                 workingDirectory project.file('run')
 
-                property 'forge.logging.console.level', 'debug'
+//                property 'forge.logging.console.level', 'debug'
 
                 // Allow dependent mixins to run
                 property 'mixin.env.remapRefMap', 'true'
@@ -97,8 +98,8 @@ subprojects {
             data {
                 workingDirectory project.file('run')
 
-                property 'forge.logging.markers', 'REGISTRIES'
-                property 'forge.logging.console.level', 'debug'
+//                property 'forge.logging.markers', 'REGISTRIES'
+//                property 'forge.logging.console.level', 'debug'
 
                 // Allow dependent mixins to run
                 property 'mixin.env.remapRefMap', 'true'
@@ -161,10 +162,13 @@ subprojects {
         compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
         runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
 
+        // While we don't have conduits etc.
+        runtimeOnly fg.deobf("curse.maven:mekanism-268560:3743835")
+
         def registrate = "com.tterrag.registrate:Registrate:${registrate_version}"
         implementation fg.deobf(registrate)
         shade registrate
-        
+
         // Apply Mixin AP
         if (enableMixin)
             annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'

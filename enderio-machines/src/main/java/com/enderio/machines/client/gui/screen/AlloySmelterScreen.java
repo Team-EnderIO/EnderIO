@@ -18,10 +18,10 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class AlloySmelterScreen extends EIOScreen<AlloySmelterMenu> {
 
+    public static final ResourceLocation BG_TEXTURE_AUTO = EIOMachines.loc("textures/gui/alloy_smelter_auto.png");
     private static final ResourceLocation BG_TEXTURE_SIMPLE_ALLOY = EIOMachines.loc("textures/gui/simple_alloy_smelter.png");
     private static final ResourceLocation BG_TEXTURE_SIMPLE_FURNACE = EIOMachines.loc("textures/gui/simple_furnace.png");
     private static final ResourceLocation BG_TEXTURE_ALLOY = EIOMachines.loc("textures/gui/alloy_smelter_alloy.png");
-    private static final ResourceLocation BG_TEXTURE_AUTO = EIOMachines.loc("textures/gui/alloy_smelter_auto.png");
     private static final ResourceLocation BG_TEXTURE_FURNACE = EIOMachines.loc("textures/gui/alloy_smelter_furnace.png");
 
     public AlloySmelterScreen(AlloySmelterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
@@ -38,7 +38,7 @@ public class AlloySmelterScreen extends EIOScreen<AlloySmelterMenu> {
         addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
 
-        if (getMenu().getBlockEntity().getTier() != MachineTier.SIMPLE) {
+        if (getMenu().getBlockEntity().getTier() != MachineTier.Simple) {
             addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 6 + 16 * 3, () -> menu.getBlockEntity().getMode(), mode -> menu.getBlockEntity().setMode(mode), MachineLang.ALLOY_SMELTER_MODE));
         }
     }
@@ -47,8 +47,8 @@ public class AlloySmelterScreen extends EIOScreen<AlloySmelterMenu> {
     protected ResourceLocation getBackgroundImage() {
         AlloySmelterBlockEntity be = getMenu().getBlockEntity();
         return switch (be.getTier()) {
-            case SIMPLE -> be.getMode() == AlloySmelterMode.ALLOYS ? BG_TEXTURE_SIMPLE_ALLOY : BG_TEXTURE_SIMPLE_FURNACE;
-            case STANDARD, ENHANCED -> switch (be.getMode()) {
+            case Simple -> be.getMode() == AlloySmelterMode.ALLOYS ? BG_TEXTURE_SIMPLE_ALLOY : BG_TEXTURE_SIMPLE_FURNACE;
+            case Standard, Enhanced -> switch (be.getMode()) {
                 case ALL -> BG_TEXTURE_AUTO;
                 case ALLOYS -> BG_TEXTURE_ALLOY;
                 case FURNACE -> BG_TEXTURE_FURNACE;

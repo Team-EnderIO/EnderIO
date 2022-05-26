@@ -1,11 +1,17 @@
 {
   "type": "enderio_machines:alloy_smelting",
-  "ingredients": [
+  "inputs": [
     {
-      "tag": "forge:dusts/redstone"
+      "ingredient": {
+        "tag": "forge:dusts/redstone"
+      },
+      "count": 1
     },
     {
-      "tag": "forge:silicon"
+      "ingredient": {
+        "tag": "forge:silicon"
+      },
+      "count": 1
     }
   ],
   "result": {

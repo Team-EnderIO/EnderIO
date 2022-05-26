@@ -1,6 +1,8 @@
 package com.enderio.machines.common.energy;
 
-import com.enderio.base.common.capability.capacitors.ICapacitorData;
+import com.enderio.api.capability.ICapacitorData;
+import com.enderio.api.capacitor.CapacitorKey;
+import com.enderio.base.common.capacitor.DefaultCapacitorData;
 import net.minecraft.nbt.Tag;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -8,40 +10,54 @@ import net.minecraftforge.energy.IEnergyStorage;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+/**
+ * Energy storage intended for use with a machine that has a capacitor.
+ * All base values are scaled with the capacitor base and specialisations.
+ */
 public class MachineEnergyStorage implements INBTSerializable<Tag>, IEnergyStorage {
     protected int storedEnergy;
+    private final EnergyTransferMode transferMode;
 
-    // TODO: Provide via constructor
-    protected int baseCapacity = 10000;
-    protected int baseMaxTransfer = 120;
-    protected int baseMaxConsumption = 40;
+    // Store relevant capacitor keys.
+    private final CapacitorKey capacityKey, transferKey, consumptionKey;
 
-    private final Supplier<Optional<ICapacitorData>> capacitorSupplier;
+    private final Supplier<Optional<ICapacitorData>> capacitorDataSupplier;
 
-    public MachineEnergyStorage(Supplier<Optional<ICapacitorData>> capacitorSupplier) {
-        this.capacitorSupplier = capacitorSupplier;
+    public MachineEnergyStorage(Supplier<Optional<ICapacitorData>> capacitorDataSupplier, CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey consumptionKey, EnergyTransferMode transferMode) {
+        this.capacitorDataSupplier = capacitorDataSupplier;
+        this.capacityKey = capacityKey;
+        this.transferKey = transferKey;
+        this.consumptionKey = consumptionKey;
+        this.transferMode = transferMode;
     }
 
     // region Getters
 
     @Override
     public int getEnergyStored() {
-//        return storedEnergy;
-        // TODO: For testing
-        return getMaxEnergyStored();
+        // Stops the energy reading as over capacity.
+        return Math.min(storedEnergy, getMaxEnergyStored());
     }
 
     @Override
     public int getMaxEnergyStored() {
-        return Math.round(baseCapacity * capacitorSupplier.get().map(ICapacitorData::getBase).orElse(0.0f));
+        return capacityKey.getInt(capacitorDataSupplier.get().orElse(DefaultCapacitorData.NONE));
     }
 
+    // TODO: Should the next two methods be exposed by an interface?
+
+    /**
+     * Maximum speed of energy consumption within the block itself.
+     */
     public int getMaxEnergyConsumption() {
-        return Math.round(baseMaxConsumption * capacitorSupplier.get().map(ICapacitorData::getBase).orElse(0.0f));
+        return consumptionKey.getInt(capacitorDataSupplier.get().orElse(DefaultCapacitorData.NONE));
     }
 
+    /**
+     * Maximum speed of energy transfer in and out of the block.
+     */
     public int getMaxEnergyTransfer() {
-        return Math.round(baseMaxTransfer * capacitorSupplier.get().map(ICapacitorData::getBase).orElse(0.0f));
+        return transferKey.getInt(capacitorDataSupplier.get().orElse(DefaultCapacitorData.NONE));
     }
 
     // endregion
@@ -69,7 +85,7 @@ public class MachineEnergyStorage implements INBTSerializable<Tag>, IEnergyStora
      * @return
      */
     public int consumeEnergy(int energy) {
-        int energyConsumed = Math.min(energy, Math.min(getMaxEnergyConsumption(), energy));
+        int energyConsumed = Math.min(storedEnergy, Math.min(getMaxEnergyConsumption(), energy));
         this.storedEnergy -= energyConsumed;
         return energyConsumed;
     }
@@ -82,22 +98,32 @@ public class MachineEnergyStorage implements INBTSerializable<Tag>, IEnergyStora
 
     @Override
     public int receiveEnergy(int maxReceive, boolean simulate) {
-        return 0;
+        if (!canReceive()) return 0;
+        int energyReceived = Math.min(getMaxEnergyStored() - getEnergyStored(), Math.min(getMaxEnergyTransfer(), maxReceive));
+        if (!simulate) {
+            addEnergy(energyReceived);
+        }
+        return energyReceived;
     }
 
     @Override
     public int extractEnergy(int maxExtract, boolean simulate) {
-        return 0;
+        if (!canExtract()) return 0;
+        int energyExtracted = Math.min(getEnergyStored(), Math.min(getMaxEnergyTransfer(), maxExtract));
+        if (!simulate) {
+            addEnergy(-energyExtracted);
+        }
+        return energyExtracted;
     }
 
     @Override
     public boolean canExtract() {
-        return getMaxEnergyTransfer() > 0;
+        return transferMode == EnergyTransferMode.Extract && getMaxEnergyTransfer() > 0;
     }
 
     @Override
     public boolean canReceive() {
-        return getMaxEnergyTransfer() > 0;
+        return transferMode == EnergyTransferMode.Insert && getMaxEnergyTransfer() > 0;
     }
 
     // endregion

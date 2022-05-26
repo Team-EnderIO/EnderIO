@@ -1,9 +1,9 @@
 {
   "type": "enderio_machines:enchanting",
-  "ingredient": {
+  "enchantment": "minecraft:knockback",
+  "input": {
     "item": "minecraft:piston"
   },
-  "enchantment": "minecraft:knockback",
-  "amount": 1,
+  "amount_per_level": 1,
   "level": 1
 }

@@ -20,14 +20,14 @@ public class AlloySmelterMenu extends MachineMenu<AlloySmelterBlockEntity> {
             addSlot(new MachineSlot(blockEntity.getItemHandler(), 3, 79, 58));
 
             // Capacitor slot
-            if (blockEntity.getTier() != MachineTier.SIMPLE) {
+            if (blockEntity.getTier() != MachineTier.Simple) {
                 addSlot(new MachineSlot(blockEntity.getItemHandler(), 4, 12, 60));
             }
         }
         addInventorySlots(8,84);
     }
 
-    public static AlloySmelterMenu factory(@javax.annotation.Nullable MenuType<AlloySmelterMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
+    public static AlloySmelterMenu factory(@Nullable MenuType<AlloySmelterMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level.getBlockEntity(buf.readBlockPos());
         if (entity instanceof AlloySmelterBlockEntity castBlockEntity)
             return new AlloySmelterMenu(castBlockEntity, inventory, pContainerId);

@@ -20,6 +20,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
@@ -40,49 +41,91 @@ import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public abstract class MachineBlockEntity extends SyncedBlockEntity implements MenuProvider {
 
-    public static final ModelProperty<IOConfig> IO_CONFIG_PROPERTY = new ModelProperty<>();
+    // region IO Configuration
 
     private final IOConfig ioConfig = new IOConfig();
 
-    // TODO: This isn't available on some machines, shouldn't be default. Will deal with in future.
+    public static final ModelProperty<IOConfig> IO_CONFIG_PROPERTY = new ModelProperty<>();
+
+    private final IModelData modelData = new ModelDataMap.Builder().build();
+
+    // endregion
+
+    // region Redstone Control
+
     private RedstoneControl redstoneControl = RedstoneControl.ALWAYS_ACTIVE;
+
+    // endregion
+
+    // region Items and Fluids
+
+    private ItemHandlerMaster itemHandlerMaster;
 
     private final EnumMap<Direction, LazyOptional<IItemHandler>> itemHandlerCache = new EnumMap<>(Direction.class);
     private final EnumMap<Direction, LazyOptional<IFluidHandler>> fluidHandlerCache = new EnumMap<>(Direction.class);
     private boolean isCacheDirty = false;
-    private final MachineTier tier;
 
-    private ItemHandlerMaster itemHandlerMaster;
+    // endregion
 
-    private final IModelData modelData = new ModelDataMap.Builder().build();
-
-    public MachineBlockEntity(MachineTier tier, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
+    public MachineBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);
-        this.tier = tier;
 
         // If the machine declares an inventory layout, use it to create a handler
         getSlotLayout().ifPresent(layout -> itemHandlerMaster = createItemHandler(layout));
 
-        add2WayDataSlot(new EnumDataSlot<>(this::getRedstoneControl, this::setRedstoneControl, SyncMode.GUI));
-        add2WayDataSlot(new NBTSerializableDataSlot<>(() -> ioConfig, SyncMode.WORLD, () -> {
-            if (!isServer()) {
-                modelData.setData(IO_CONFIG_PROPERTY, ioConfig);
-                requestModelDataUpdate();
-            }
-        }));
+        if (supportsRedstoneControl()) {
+            // Register sync slot for redstone control.
+            add2WayDataSlot(new EnumDataSlot<>(this::getRedstoneControl, this::setRedstoneControl, SyncMode.GUI));
+        }
 
-        modelData.setData(IO_CONFIG_PROPERTY, ioConfig);
+        if (supportsIo()) {
+            // Register sync slot for ioConfig and setup model data.
+            add2WayDataSlot(new NBTSerializableDataSlot<>(() -> ioConfig, SyncMode.WORLD, () -> {
+                if (!isServer()) {
+                    modelData.setData(IO_CONFIG_PROPERTY, ioConfig);
+                    requestModelDataUpdate();
+                }
+            }));
+
+            modelData.setData(IO_CONFIG_PROPERTY, ioConfig);
+        }
     }
+
+    // region Per-machine config/features
+
+    /**
+     * Get the machine's tier.
+     * Abstract to ensure developers don't leave this as default.
+     */
+    public abstract MachineTier getTier();
+
+    /**
+     * Whether this block entity supports redstone control
+     */
+    public boolean supportsRedstoneControl() {
+        return true; // TODO: Is this a reasonable default?
+    }
+
+    /**
+     * Whether or not this block entity supports item and fluid transfer.
+     */
+    public boolean supportsIo() { // TODO: Maybe better name?
+        return true; // TODO: Is this a reasonable default
+    }
+
+    /**
+     * Get the block entity's inventory slot layout.
+     */
+    public Optional<ItemSlotLayout> getSlotLayout() {
+        return Optional.empty();
+    }
+
+    // endregion
 
     @NotNull
     @Override
     public IModelData getModelData() {
-        return modelData;
-    }
-
-    // TODO: Could just make this abstract and remove the field...
-    public final MachineTier getTier() {
-        return tier;
+        return supportsIo() ? modelData : EmptyModelData.INSTANCE;
     }
 
     public final IOConfig getIoConfig() {
@@ -90,6 +133,8 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
     }
 
     // TODO: supportsIOMode method.
+
+    // region Item Handling
 
     public final ItemHandlerMaster getItemHandler() {
         return itemHandlerMaster;
@@ -99,15 +144,63 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
         return new RecipeWrapper(itemHandlerMaster);
     }
 
-    public Optional<ItemSlotLayout> getSlotLayout() {
-        return Optional.empty();
-    }
-
     /**
      * Called to create an item handler if a slot layout is provided.
      */
     protected ItemHandlerMaster createItemHandler(ItemSlotLayout layout) {
-        throw new NotImplementedException("Dev didn't implement the item handler for this BE");
+        throw new NotImplementedException("Dev didn't implement the item handler for this block entity!");
+    }
+
+    // endregion
+
+    // region Block Entity ticking
+
+    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, MachineBlockEntity pBlockEntity) {
+        pBlockEntity.tick();
+    }
+
+    @Override
+    public void tick() {
+        if (isCacheDirty) {
+            updateCache();
+        }
+
+        if (shouldActSlow()) {
+            moveResources();
+        }
+
+        super.tick();
+    }
+
+    public boolean isServer() {
+        return !level.isClientSide;
+    }
+
+    public boolean shouldAct() {
+        if (supportsRedstoneControl())
+            return isServer() && redstoneControl.isActive(level.hasNeighborSignal(worldPosition));
+        return isServer();
+    }
+
+    public boolean shouldActSlow() {
+        return shouldAct()
+            && level.getGameTime() % 5 == 0;
+    }
+
+    // endregion
+
+    // region Item movement
+
+    // TODO: Calling @agnor99 to maybe document some of what this is doing?
+
+    private void moveResources() {
+        // TODO: What do we do if ioConfig's are disabled. Allow or disallow movement?
+        for (Direction direction : Direction.values()) {
+            if (ioConfig.getIO(direction).canForce()) {
+                moveItems(direction);
+                moveFluids(direction);
+            }
+        }
     }
 
     public void updateCache() {
@@ -140,40 +233,6 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
 
     private <T> void markCacheDirty(LazyOptional<T> capability) {
         isCacheDirty = true;
-    }
-
-    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, MachineBlockEntity pBlockEntity) {
-        pBlockEntity.tick();
-    }
-
-    @Override
-    public void tick() {
-        if (isCacheDirty) {
-            updateCache();
-        }
-        if (shouldActSlow()) {
-            for (Direction direction : Direction.values()) {
-                if (ioConfig.getIO(direction).canForce()) {
-                    moveItems(direction);
-                    moveFluids(direction);
-                }
-            }
-        }
-        super.tick();
-    }
-
-    public boolean isServer() {
-        return !level.isClientSide;
-    }
-
-    public boolean shouldAct() {
-        return isServer()
-            && redstoneControl.isActive(level.hasNeighborSignal(worldPosition));
-    }
-
-    public boolean shouldActSlow() {
-        return shouldAct()
-            && level.getGameTime() % 5 == 0;
     }
 
     private void moveFluids(Direction direction) {
@@ -230,11 +289,19 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
         }
     }
 
+    // endregion
+
     @Override
     public void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
-        pTag.put("io_config", ioConfig.serializeNBT());
-        pTag.putInt("redstone", redstoneControl.ordinal());
+
+        if (supportsIo()) {
+            pTag.put("io_config", ioConfig.serializeNBT());
+        }
+
+        if (supportsRedstoneControl()) {
+            pTag.putInt("redstone", redstoneControl.ordinal());
+        }
 
         if (itemHandlerMaster != null) {
             pTag.put("inventory", itemHandlerMaster.serializeNBT());
@@ -243,8 +310,13 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
 
     @Override
     public void load(CompoundTag pTag) {
-        ioConfig.deserializeNBT(pTag.getCompound("io_config"));
-        redstoneControl = RedstoneControl.values()[pTag.getInt("redstone")];
+        if (supportsIo()) {
+            ioConfig.deserializeNBT(pTag.getCompound("io_config"));
+        }
+
+        if (supportsRedstoneControl()) {
+            redstoneControl = RedstoneControl.values()[pTag.getInt("redstone")];
+        }
 
         if (itemHandlerMaster != null) {
             itemHandlerMaster.deserializeNBT(pTag.getCompound("inventory"));

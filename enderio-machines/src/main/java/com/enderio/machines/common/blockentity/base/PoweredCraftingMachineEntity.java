@@ -1,11 +1,11 @@
 package com.enderio.machines.common.blockentity.base;
 
+import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.base.common.blockentity.sync.FloatDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
-import com.enderio.base.common.util.UseOnly;
-import com.enderio.machines.common.MachineTier;
+import com.enderio.api.UseOnly;
 import com.enderio.machines.common.block.ProgressMachineBlock;
-import com.enderio.machines.common.recipe.MachineRecipe;
+import com.enderio.api.recipe.IMachineRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -25,14 +25,12 @@ public abstract class PoweredCraftingMachineEntity<R extends Recipe<Container>> 
     private int energyConsumed;
     private R currentRecipe;
 
-    @Nullable
-    private ResourceLocation loadedRecipe = null;
+    @Nullable private ResourceLocation loadedRecipe = null;
 
-    @UseOnly(LogicalSide.CLIENT)
-    private float clientProgress;
+    @UseOnly(LogicalSide.CLIENT) private float clientProgress;
 
-    public PoweredCraftingMachineEntity(MachineTier tier, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-        super(tier, pType, pWorldPosition, pBlockState);
+    public PoweredCraftingMachineEntity(CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey consumptionKey, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
+        super(capacityKey, transferKey, consumptionKey, pType, pWorldPosition, pBlockState);
 
         // Sync machine progress to the client.
         addDataSlot(new FloatDataSlot(this::getProgress, p -> clientProgress = p, SyncMode.GUI));
@@ -110,6 +108,7 @@ public abstract class PoweredCraftingMachineEntity<R extends Recipe<Container>> 
 
     /**
      * Whether the machine can start a new recipe
+     *
      * @return
      */
     protected boolean canSelectRecipe() {
@@ -120,7 +119,7 @@ public abstract class PoweredCraftingMachineEntity<R extends Recipe<Container>> 
      * Get the cost of crafting this recipe
      */
     protected int getEnergyCost(R recipe) {
-        if (recipe instanceof MachineRecipe<?,?> machineRecipe) {
+        if (recipe instanceof IMachineRecipe<?, ?> machineRecipe) {
             return machineRecipe.getEnergyCost();
         }
         throw new NotImplementedException("Machine must implement getEnergyCost for types not implementing MachineRecipe");

@@ -1,7 +1,7 @@
 package com.enderio.base.common.lang;
 
 import com.enderio.base.EnderIO;
-import com.enderio.base.common.capability.capacitors.CapacitorSpecializations;
+import com.enderio.base.common.capability.CapacitorSpecializations;
 import com.enderio.base.common.util.TooltipUtil;
 import com.tterrag.registrate.Registrate;
 

@@ -33,12 +33,12 @@ public class ItemRecipes extends RecipeProvider {
     private void addTools(@Nonnull Consumer<FinishedRecipe> recipeConsumer) {
         ShapedRecipeBuilder
             .shaped(EIOItems.YETA_WRENCH.get())
-            .define('I', EIOItems.ELECTRICAL_STEEL_INGOT.get())
+            .define('I', EIOItems.COPPER_ALLOY_INGOT.get())
             .define('G', EIOItems.GEAR_STONE.get())
             .pattern("I I")
             .pattern(" G ")
             .pattern(" I ")
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.ELECTRICAL_STEEL_INGOT.get()))
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.COPPER_ALLOY_INGOT.get()))
             .save(recipeConsumer);
 
         ShapelessRecipeBuilder
@@ -50,20 +50,20 @@ public class ItemRecipes extends RecipeProvider {
 
         ShapedRecipeBuilder
             .shaped(EIOItems.COORDINATE_SELECTOR.get())
-            .define('I', EIOItems.ELECTRICAL_STEEL_INGOT.get())
+            .define('I', EIOItems.COPPER_ALLOY_INGOT.get())
             .define('C', Items.COMPASS)
             .define('E', Tags.Items.ENDER_PEARLS)
             .pattern("IEI")
             .pattern(" CI")
             .pattern("  I")
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.ELECTRICAL_STEEL_INGOT.get()))
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.COPPER_ALLOY_INGOT.get()))
             .save(recipeConsumer);
 
         ShapedRecipeBuilder
             .shaped(EIOItems.ELECTROMAGNET.get())
             .define('V', EIOItems.VIBRANT_CRYSTAL.get())
-            .define('C', EIOItems.CONDUCTIVE_IRON_INGOT.get())
-            .define('E', EIOItems.ELECTRICAL_STEEL_INGOT.get())
+            .define('C', EIOItems.CONDUCTIVE_ALLOY_INGOT.get())
+            .define('E', EIOItems.COPPER_ALLOY_INGOT.get())
             .pattern("CVC")
             .pattern("C C")
             .pattern("E E")
