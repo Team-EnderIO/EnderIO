@@ -69,8 +69,8 @@ public class IOConfig implements IIOConfig {
     // region Capability Provider
 
     @Override
-    public boolean isCapability(@NotNull Capability<?> cap) {
-        return cap == EIOCapabilities.SIDE_CONFIG;
+    public Capability<ISideConfig> getCapabilityType() {
+        return EIOCapabilities.SIDE_CONFIG;
     }
 
     /**
