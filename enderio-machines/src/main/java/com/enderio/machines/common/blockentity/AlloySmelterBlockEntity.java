@@ -194,14 +194,24 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
 
     @Override
     public MachineInventoryLayout getInventoryLayout() {
-        // TODO: Stop items being added if a recipe is valid, fixes automatic insertion
-
         // Setup item slots
         return MachineInventoryLayout.builder()
-            .addBasicInputs(3)
+            .addInputs(3, this::acceptSlotInput)
             .addOutput()
             .capacitor(() -> getTier() != MachineTier.Simple)
             .build();
+    }
+
+    private boolean acceptSlotInput(int slot, ItemStack stack) {
+        if (getCurrentRecipe() == null)
+            return true;
+
+        if (getInventory().getStackInSlot(slot).is(stack.getItem()))
+            return true;
+
+        // TODO: Deal with the case that the slot has become empty. Maybe we need to store in PoweredCraftingMachineEntity the item types in all the slots before a recipe started?
+
+        return false;
     }
 
     @Override

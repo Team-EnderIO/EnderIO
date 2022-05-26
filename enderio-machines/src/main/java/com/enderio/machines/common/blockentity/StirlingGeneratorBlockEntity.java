@@ -68,7 +68,7 @@ public abstract class StirlingGeneratorBlockEntity extends PowerGeneratingMachin
     @Override
     public MachineInventoryLayout getInventoryLayout() {
         return MachineInventoryLayout.builder()
-            .addInput(stack -> ForgeHooks.getBurnTime(stack, RecipeType.SMELTING) > 0)
+            .addInput((slot, stack) -> ForgeHooks.getBurnTime(stack, RecipeType.SMELTING) > 0)
             .capacitor(() -> getTier() != MachineTier.Simple)
             .build();
     }

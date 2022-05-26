@@ -5,7 +5,7 @@ import com.enderio.base.common.capacitor.CapacitorUtil;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.*;
-import java.util.function.Predicate;
+import java.util.function.BiPredicate;
 import java.util.function.Supplier;
 
 public class MachineInventoryLayout {
@@ -17,7 +17,7 @@ public class MachineInventoryLayout {
     }
 
     private final Map<Integer, SlotType> slotTypeMap;
-    private final Map<Integer, Predicate<ItemStack>> slotPredicates;
+    private final Map<Integer, BiPredicate<Integer, ItemStack>> slotPredicates;
     private final int slotCount;
     private final int capacitorSlot;
 
@@ -30,7 +30,7 @@ public class MachineInventoryLayout {
 
     public boolean validateStack(int slot, ItemStack stack) {
         if (slotPredicates.containsKey(slot)) {
-            return slotPredicates.get(slot).test(stack);
+            return slotPredicates.get(slot).test(slot, stack);
         }
         return true;
     }
@@ -69,7 +69,7 @@ public class MachineInventoryLayout {
 
     public static class Builder {
         private final Map<Integer, SlotType> slotTypeMap;
-        private final Map<Integer, Predicate<ItemStack>> slotPredicates;
+        private final Map<Integer, BiPredicate<Integer, ItemStack>> slotPredicates;
 
         private int slotCounter;
 
@@ -85,16 +85,25 @@ public class MachineInventoryLayout {
             return this;
         }
 
-        public Builder addInput(Predicate<ItemStack> validator) {
+        public Builder addInput(BiPredicate<Integer, ItemStack> validator) {
             slotTypeMap.put(slotCounter, SlotType.INPUT);
             slotPredicates.put(slotCounter, validator);
             slotCounter++;
             return this;
         }
 
-        public Builder addBasicInputs(int count) {
+        public Builder addInputs(int count) {
             for (int i = 0; i < count; i++) {
                 slotTypeMap.put(slotCounter++, SlotType.INPUT);
+            }
+            return this;
+        }
+
+        public Builder addInputs(int count, BiPredicate<Integer, ItemStack> validator) {
+            for (int i = 0; i < count; i++) {
+                slotTypeMap.put(slotCounter, SlotType.INPUT);
+                slotPredicates.put(slotCounter, validator);
+                slotCounter++;
             }
             return this;
         }
@@ -117,7 +126,7 @@ public class MachineInventoryLayout {
             return this;
         }
 
-        public Builder addMisc(Predicate<ItemStack> validator) {
+        public Builder addMisc(BiPredicate<Integer, ItemStack> validator) {
             slotTypeMap.put(slotCounter, SlotType.MISC);
             slotPredicates.put(slotCounter, validator);
             slotCounter++;
@@ -139,7 +148,7 @@ public class MachineInventoryLayout {
 
             // Add slot type and the validator.
             slotTypeMap.put(slotCounter, SlotType.CAPACITOR);
-            slotPredicates.put(slotCounter, CapacitorUtil::isCapacitor);
+            slotPredicates.put(slotCounter, (slot, stack) -> CapacitorUtil.isCapacitor(stack));
             capacitorSlot = slotCounter;
             slotCounter++;
             return this;

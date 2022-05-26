@@ -186,13 +186,13 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     public MachineInventoryLayout getInventoryLayout() {
         return MachineInventoryLayout
             .builder()
-            .addInput(itemStack ->
-                (itemStack.getItem() instanceof BucketItem bucketItem && bucketItem.getFluid() != Fluids.EMPTY && !(bucketItem instanceof MobBucketItem))
-                    || (!(itemStack.getItem() instanceof BucketItem) && itemStack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent()))
+            .addInput((slot, stack) ->
+                (stack.getItem() instanceof BucketItem bucketItem && bucketItem.getFluid() != Fluids.EMPTY && !(bucketItem instanceof MobBucketItem))
+                    || (!(stack.getItem() instanceof BucketItem) && stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent()))
             .addOutput()
-            .addInput(itemStack ->
-                itemStack.getItem() == Items.BUCKET
-                    || (!(itemStack.getItem() instanceof BucketItem) && itemStack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent()))
+            .addInput((slot, stack) ->
+                stack.getItem() == Items.BUCKET
+                    || (!(stack.getItem() instanceof BucketItem) && stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent()))
             .addOutput()
             .build();
     }
