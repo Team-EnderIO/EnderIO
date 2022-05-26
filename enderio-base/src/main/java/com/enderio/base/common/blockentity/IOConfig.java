@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * Represents the state of each side of the block
  */
-public abstract class IOConfig implements INBTSerializable<CompoundTag> {
+public class IOConfig implements INBTSerializable<CompoundTag> {
 
     public enum State {
         /**
@@ -142,9 +142,6 @@ public abstract class IOConfig implements INBTSerializable<CompoundTag> {
         };
     }
 
-    // TODO: Having abstracts in here is kinda gross.
-    protected abstract Direction getBlockFacing();
-
     /**
      * Get side config as a capability.
      */
@@ -164,6 +161,11 @@ public abstract class IOConfig implements INBTSerializable<CompoundTag> {
     // Override in a BE
     protected void onChanged() {
 
+    }
+
+    // Override if the machine can be rotated.
+    protected Direction getBlockFacing() {
+        return Direction.SOUTH;
     }
 
     @Override

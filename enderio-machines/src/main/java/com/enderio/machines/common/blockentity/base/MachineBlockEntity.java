@@ -55,7 +55,10 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
 
         @Override
         protected Direction getBlockFacing() {
-            return getBlockState().getValue(MachineBlock.FACING);
+            BlockState state = getBlockState();
+            if (state.hasProperty(MachineBlock.FACING))
+                return getBlockState().getValue(MachineBlock.FACING);
+            return super.getBlockFacing();
         }
     };
 
