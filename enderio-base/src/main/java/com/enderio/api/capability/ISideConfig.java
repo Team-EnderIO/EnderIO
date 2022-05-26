@@ -1,8 +1,9 @@
 package com.enderio.api.capability;
 
-import com.enderio.base.common.blockentity.IOConfig;
+import com.enderio.api.io.IOMode;
 
 public interface ISideConfig {
-    IOConfig.State getState();
-    void setState(IOConfig.State state);
+    IOMode getMode();
+    void setMode(IOMode mode);
+    void cycleMode();
 }

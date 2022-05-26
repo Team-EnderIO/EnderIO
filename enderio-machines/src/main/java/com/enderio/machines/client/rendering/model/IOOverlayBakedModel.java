@@ -1,8 +1,10 @@
 package com.enderio.machines.client.rendering.model;
 
+import com.enderio.api.io.IIOConfig;
+import com.enderio.api.io.IOMode;
 import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
-import com.enderio.base.common.blockentity.IOConfig;
+import com.enderio.base.common.io.IOConfig;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Pair;
@@ -43,7 +45,7 @@ public class IOOverlayBakedModel implements IDynamicBakedModel {
         }
     }
 
-    private TextureAtlasSprite getTexture(IOConfig.State state) {
+    private TextureAtlasSprite getTexture(IOMode state) {
         ResourceLocation tex = switch (state) {
             case NONE -> MissingTextureAtlasSprite.getLocation();
         case PUSH -> TEX_PUSH;
@@ -66,17 +68,17 @@ public class IOOverlayBakedModel implements IDynamicBakedModel {
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull IModelData extraData) {
         if (extraData.hasProperty(MachineBlockEntity.IO_CONFIG_PROPERTY)) {
             // Get io config from the block entity.
-            IOConfig config = extraData.getData(MachineBlockEntity.IO_CONFIG_PROPERTY);
-            if (config != null) {
+            IIOConfig config = extraData.getData(MachineBlockEntity.IO_CONFIG_PROPERTY);
+            if (config != null && config.renderOverlay()) {
                 // Build a list of quads
                 List<BakedQuad> quads = new ArrayList<>();
 
                 // Get all states for each direction. If its not "None" then we render an overlay quad.
                 for (Direction dir : Direction.values()) {
-                    IOConfig.State ioState = config.getSide(dir);
-                    if (ioState != IOConfig.State.NONE) {
+                    IOMode mode = config.getMode(dir);
+                    if (mode != IOMode.NONE) {
                         Vec3[] verts = QUADS.get(dir);
-                        quads.add(ModelRenderUtil.createQuad(verts, getTexture(ioState)));
+                        quads.add(ModelRenderUtil.createQuad(verts, getTexture(mode)));
                     }
                 }
 

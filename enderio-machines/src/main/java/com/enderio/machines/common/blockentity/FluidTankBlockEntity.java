@@ -66,7 +66,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
 
     public FluidTankBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState, int capacity) {
         super(pType, pWorldPosition, pBlockState);
-        this.fluidTank =  new FluidTankMaster(capacity, getIoConfig());
+        this.fluidTank =  new FluidTankMaster(capacity, getIOConfig());
 
         addDataSlot(new FluidStackDataSlot(() -> fluidTank.getFluidInTank(0), fluidTank::setFluid, SyncMode.WORLD));
     }
@@ -157,7 +157,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         if (side != null) {
-            if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && getIoConfig().getSide(side).canConnect())
+            if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && getIOConfig().getMode(side).canConnect())
                 return LazyOptional.of(() -> fluidTank.getAccess(side)).cast();
         }
         return super.getCapability(cap, side);
@@ -199,6 +199,6 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
 
     @Override
     protected ItemHandlerMaster createItemHandler(MachineInventoryLayout layout) {
-        return new ItemHandlerMaster(getIoConfig(), layout);
+        return new ItemHandlerMaster(getIOConfig(), layout);
     }
 }

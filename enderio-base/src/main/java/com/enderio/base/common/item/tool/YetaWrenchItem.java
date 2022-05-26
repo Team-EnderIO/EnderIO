@@ -1,8 +1,8 @@
 package com.enderio.base.common.item.tool;
 
 import com.enderio.api.capability.ISideConfig;
+import com.enderio.api.io.IOMode;
 import com.enderio.base.common.init.EIOCapabilities;
-import com.enderio.base.common.blockentity.IOConfig;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -46,15 +46,10 @@ public class YetaWrenchItem extends Item {
         // Check for side config capability
         BlockEntity be = level.getBlockEntity(pos);
         if (be != null) {
-            LazyOptional<ISideConfig> optSideConfig = be.getCapability(EIOCapabilities.SIDE_CONFIG, pContext.getClickedFace()); // TODO: Get rotated face somehow?
+            LazyOptional<ISideConfig> optSideConfig = be.getCapability(EIOCapabilities.SIDE_CONFIG, pContext.getClickedFace());
             if (optSideConfig.isPresent()) {
                 // Cycle state.
-                optSideConfig.ifPresent(sideConfig -> {
-                    int currentStateIdx = sideConfig.getState().ordinal();
-                    int nextStateIdx = (currentStateIdx + 1) % IOConfig.State.values().length;
-                    sideConfig.setState(IOConfig.State.values()[nextStateIdx]);
-                });
-
+                optSideConfig.ifPresent(ISideConfig::cycleMode);
                 return InteractionResult.SUCCESS;
             }
         }

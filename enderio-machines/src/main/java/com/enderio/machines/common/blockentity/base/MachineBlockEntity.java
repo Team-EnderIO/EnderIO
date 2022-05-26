@@ -1,5 +1,7 @@
 package com.enderio.machines.common.blockentity.base;
 
+import com.enderio.api.io.IIOConfig;
+import com.enderio.api.io.IOMode;
 import com.enderio.base.common.blockentity.RedstoneControl;
 import com.enderio.base.common.blockentity.SyncedBlockEntity;
 import com.enderio.base.common.blockentity.sync.EnumDataSlot;
@@ -7,7 +9,7 @@ import com.enderio.base.common.blockentity.sync.NBTSerializableDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.machines.common.MachineTier;
-import com.enderio.base.common.blockentity.IOConfig;
+import com.enderio.base.common.io.IOConfig;
 import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.io.item.ItemHandlerMaster;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
@@ -47,22 +49,9 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
 
     // region IO Configuration
 
-    private final IOConfig ioConfig = new IOConfig() {
-        @Override
-        protected void onChanged() {
-            setChanged();
-        }
+    private final IIOConfig ioConfig;
 
-        @Override
-        protected Direction getBlockFacing() {
-            BlockState state = getBlockState();
-            if (state.hasProperty(MachineBlock.FACING))
-                return getBlockState().getValue(MachineBlock.FACING);
-            return super.getBlockFacing();
-        }
-    };
-
-    public static final ModelProperty<IOConfig> IO_CONFIG_PROPERTY = new ModelProperty<>();
+    public static final ModelProperty<IIOConfig> IO_CONFIG_PROPERTY = new ModelProperty<>();
 
     private final IModelData modelData = new ModelDataMap.Builder().build();
 
@@ -87,6 +76,9 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
     public MachineBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);
 
+        // Create IO Config.
+        this.ioConfig = createIOConfig();
+
         // If the machine declares an inventory layout, use it to create a handler
         MachineInventoryLayout slotLayout = getInventoryLayout();
         if (slotLayout != null) {
@@ -98,17 +90,17 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
             add2WayDataSlot(new EnumDataSlot<>(this::getRedstoneControl, this::setRedstoneControl, SyncMode.GUI));
         }
 
-        if (supportsIo()) {
-            // Register sync slot for ioConfig and setup model data.
-            add2WayDataSlot(new NBTSerializableDataSlot<>(() -> ioConfig, SyncMode.WORLD, () -> {
-                if (!isServer()) {
-                    modelData.setData(IO_CONFIG_PROPERTY, ioConfig);
-                    requestModelDataUpdate();
-                    level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
-                }
-            }));
+        // Register sync slot for ioConfig and setup model data.
+        add2WayDataSlot(new NBTSerializableDataSlot<>(this::getIOConfig, SyncMode.WORLD, () -> {
+            if (!isServer() && getIOConfig().renderOverlay()) {
+                modelData.setData(IO_CONFIG_PROPERTY, getIOConfig());
+                requestModelDataUpdate();
+                level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
+            }
+        }));
 
-            modelData.setData(IO_CONFIG_PROPERTY, ioConfig);
+        if (getIOConfig().renderOverlay()) {
+            modelData.setData(IO_CONFIG_PROPERTY, getIOConfig());
         }
     }
 
@@ -128,13 +120,6 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
     }
 
     /**
-     * Whether or not this block entity supports item and fluid transfer.
-     */
-    public boolean supportsIo() { // TODO: Maybe better name?
-        return true; // TODO: Is this a reasonable default
-    }
-
-    /**
      * Get the block entity's inventory slot layout.
      */
     public MachineInventoryLayout getInventoryLayout() {
@@ -143,17 +128,61 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
 
     // endregion
 
-    @NotNull
-    @Override
-    public IModelData getModelData() {
-        return supportsIo() ? modelData : EmptyModelData.INSTANCE;
+    // region IO Config
+
+    /**
+     * Create the IO Config.
+     * Override and return FixedIOConfig to stop it from being configurable.
+     *
+     * Must never be null!
+     */
+    protected IIOConfig createIOConfig() {
+        return new IOConfig() {
+            @Override
+            protected void onChanged() {
+                setChanged();
+            }
+
+            @Override
+            protected Direction getBlockFacing() {
+                BlockState state = getBlockState();
+                if (state.hasProperty(MachineBlock.FACING))
+                    return getBlockState().getValue(MachineBlock.FACING);
+                return super.getBlockFacing();
+            }
+
+            @Override
+            public boolean supportsMode(Direction side, IOMode mode) {
+                return supportsIOMode(side, mode);
+            }
+        };
     }
 
-    public final IOConfig getIoConfig() {
+    /**
+     * Get the IO Config for this machine.
+     */
+    public final IIOConfig getIOConfig() {
         return this.ioConfig;
     }
 
-    // TODO: supportsIOMode method.
+    /**
+     * Override to declare custom constraints on IOMode's for sides of blocks.
+     */
+    protected boolean supportsIOMode(Direction side, IOMode mode) {
+        // Enhanced machines cannot have IO out the top.
+        if (getTier() == MachineTier.Enhanced && side == Direction.UP && mode != IOMode.NONE) {
+            return false;
+        }
+        return true;
+    }
+
+    @NotNull
+    @Override
+    public IModelData getModelData() {
+        return getIOConfig().renderOverlay() ? modelData : EmptyModelData.INSTANCE;
+    }
+
+    // endregion
 
     // region Item Handling
 
@@ -169,7 +198,7 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
      * Called to create an item handler if a slot layout is provided.
      */
     protected ItemHandlerMaster createItemHandler(MachineInventoryLayout layout) {
-        return new ItemHandlerMaster(getIoConfig(), layout) {
+        return new ItemHandlerMaster(getIOConfig(), layout) {
             @Override
             protected void onContentsChanged(int slot) {
                 setChanged();
@@ -222,7 +251,7 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
      */
     private void forceResources() {
         for (Direction direction : Direction.values()) {
-            if (ioConfig.getSide(direction).canForce()) {
+            if (ioConfig.getMode(direction).canForce()) {
                 moveItems(direction);
                 moveFluids(direction);
             }
@@ -241,15 +270,15 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
 
                 if (otherHandler.isPresent()) {
                     // Get side config
-                    IOConfig.State sideState = ioConfig.getSide(side);
+                    IOMode mode = ioConfig.getMode(side);
 
                     // Output items to the other provider if enabled.
-                    if (sideState.canPush()) {
+                    if (mode.canPush()) {
                         moveItems(selfHandler, otherHandler.get());
                     }
 
                     // Insert items from the other provider if enabled.
-                    if (sideState.canPull()) {
+                    if (mode.canPull()) {
                         moveItems(otherHandler.get(), selfHandler);
                     }
                 }
@@ -287,15 +316,15 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
 
                 if (otherHandler.isPresent()) {
                     // Get side config
-                    IOConfig.State sideState = ioConfig.getSide(side);
+                    IOMode mode = ioConfig.getMode(side);
 
                     // Test if we have fluid.
                     FluidStack stack = selfHandler.drain(100, FluidAction.SIMULATE);
 
                     // If we have no fluids, see if we can pull. Otherwise, push.
-                    if (stack.isEmpty() && sideState.canPull()) {
+                    if (stack.isEmpty() && mode.canPull()) {
                         moveFluids(otherHandler.get(), selfHandler, 100);
-                    } else if (sideState.canPush()) {
+                    } else if (mode.canPush()) {
                         moveFluids(selfHandler, otherHandler.get(), 100);
                     }
                 }
@@ -363,7 +392,7 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
             if (cap == EIOCapabilities.SIDE_CONFIG)
                 return ioConfig.getCapabilityFor(side).cast();
 
-            if (getInventory() != null && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && getIoConfig().getSide(side).canConnect())
+            if (getInventory() != null && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && getIOConfig().getMode(side).canConnect())
                 return LazyOptional.of(() -> getInventory().getAccess(side)).cast();
         }
 
@@ -380,9 +409,8 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
     public void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
 
-        if (supportsIo()) {
-            pTag.put("io_config", ioConfig.serializeNBT());
-        }
+        // Save io config.
+        pTag.put("io_config", getIOConfig().serializeNBT());
 
         if (supportsRedstoneControl()) {
             pTag.putInt("redstone", redstoneControl.ordinal());
@@ -395,9 +423,8 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
 
     @Override
     public void load(CompoundTag pTag) {
-        if (supportsIo()) {
-            ioConfig.deserializeNBT(pTag.getCompound("io_config"));
-        }
+        // Load io config.
+        ioConfig.deserializeNBT(pTag.getCompound("io_config"));
 
         if (supportsRedstoneControl()) {
             redstoneControl = RedstoneControl.values()[pTag.getInt("redstone")];
