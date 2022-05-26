@@ -15,6 +15,8 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nonnull;
 import java.util.EnumMap;
 
+// TODO: Might need to do more work in here, some machines can have multiple fluids in them (combustion generator fuel and coolant).
+//       I'll look at it in this PR if I have time.
 public class MachineFluidTank extends FluidTank implements IEnderCapabilityProvider<IFluidHandler> {
 
     private final IIOConfig config;
