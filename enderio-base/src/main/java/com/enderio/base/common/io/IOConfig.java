@@ -12,8 +12,6 @@ import net.minecraftforge.common.util.LazyOptional;
 import java.util.EnumMap;
 import java.util.Map;
 
-// TODO: Way for IOConfig to have disabled sides.
-
 /**
  * Represents the state of each side of the block
  */

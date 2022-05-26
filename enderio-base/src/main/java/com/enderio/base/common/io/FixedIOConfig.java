@@ -5,7 +5,11 @@ import com.enderio.api.io.IOMode;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 
-public class FixedIOConfig implements IIOConfig {
+/**
+ * Fixed IO Config.
+ * Used when a block only has a single mode for all sides (or even wants to disable external IO altogether).
+ */
+public final class FixedIOConfig implements IIOConfig {
     private final IOMode mode;
 
     public FixedIOConfig(IOMode mode) {
