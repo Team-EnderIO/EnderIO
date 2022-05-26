@@ -4,7 +4,6 @@ import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
 import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
-import com.enderio.base.common.io.IOConfig;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Pair;

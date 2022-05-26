@@ -9,7 +9,7 @@ import com.enderio.base.common.blockentity.sync.NBTSerializableDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.machines.common.MachineTier;
-import com.enderio.base.common.io.IOConfig;
+import com.enderio.machines.common.io.IOConfig;
 import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.io.item.ItemHandlerMaster;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;

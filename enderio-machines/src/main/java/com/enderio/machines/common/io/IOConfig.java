@@ -1,4 +1,4 @@
-package com.enderio.base.common.io;
+package com.enderio.machines.common.io;
 
 import com.enderio.api.capability.ISideConfig;
 import com.enderio.api.io.IIOConfig;

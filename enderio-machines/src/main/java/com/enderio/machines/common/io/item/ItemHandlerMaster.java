@@ -1,7 +1,6 @@
 package com.enderio.machines.common.io.item;
 
 import com.enderio.api.io.IIOConfig;
-import com.enderio.base.common.io.IOConfig;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
