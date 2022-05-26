@@ -39,7 +39,7 @@ public class SidedFluidHandlerAccess implements IFluidHandler {
 
     @Override
     public int fill(FluidStack resource, FluidAction action) {
-        if (master.getConfig().getSide(direction).canInput())
+        if (master.getConfig().getMode(direction).canInput())
             return master.fill(resource, action);
         return 0;
     }
@@ -47,7 +47,7 @@ public class SidedFluidHandlerAccess implements IFluidHandler {
     @Nonnull
     @Override
     public FluidStack drain(FluidStack resource, FluidAction action) {
-        if (master.getConfig().getSide(direction).canOutput())
+        if (master.getConfig().getMode(direction).canOutput())
             return master.drain(resource, action);
         return FluidStack.EMPTY;
     }
@@ -55,7 +55,7 @@ public class SidedFluidHandlerAccess implements IFluidHandler {
     @Nonnull
     @Override
     public FluidStack drain(int maxDrain, FluidAction action) {
-        if (master.getConfig().getSide(direction).canOutput())
+        if (master.getConfig().getMode(direction).canOutput())
             return master.drain(maxDrain, action);
         return FluidStack.EMPTY;
     }

@@ -1,6 +1,7 @@
 package com.enderio.machines.common.io.item;
 
-import com.enderio.base.common.blockentity.IOConfig;
+import com.enderio.api.io.IIOConfig;
+import com.enderio.base.common.io.IOConfig;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
@@ -11,12 +12,12 @@ import java.util.EnumMap;
 public class ItemHandlerMaster extends ItemStackHandler {
 
     private final EnumMap<Direction, SidedItemHandlerAccess> access = new EnumMap(Direction.class);
-    private final IOConfig config;
+    private final IIOConfig config;
 
     private MachineInventoryLayout layout;
     private boolean isForceMode = false;
 
-    public ItemHandlerMaster(IOConfig config, MachineInventoryLayout layout) {
+    public ItemHandlerMaster(IIOConfig config, MachineInventoryLayout layout) {
         super(layout.getSlotCount());
         this.config = config;
         this.layout = layout;
@@ -71,7 +72,7 @@ public class ItemHandlerMaster extends ItemStackHandler {
             dir -> new SidedItemHandlerAccess(this, dir));
     }
 
-    public IOConfig getConfig() {
+    public IIOConfig getConfig() {
         return config;
     }
 
