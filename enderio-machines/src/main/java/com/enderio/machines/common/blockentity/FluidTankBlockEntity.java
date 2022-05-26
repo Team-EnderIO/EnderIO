@@ -4,8 +4,7 @@ import com.enderio.base.common.blockentity.sync.FluidStackDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
-import com.enderio.machines.common.io.fluid.MachineFluidTank;
-import com.enderio.machines.common.io.item.MachineInventory;
+import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.menu.FluidTankMenu;
 import net.minecraft.core.BlockPos;
@@ -25,9 +24,11 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -61,34 +62,47 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
         }
     }
 
-    private final MachineFluidTank fluidTank;
+    private final FluidTank fluidTank;
 
-    private final LazyOptional<MachineFluidTank> fluidTankCap;
+    private final MachineFluidHandler fluidHandler;
+
+    private final LazyOptional<MachineFluidHandler> fluidHandlerCap;
 
     public FluidTankBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState, int capacity) {
         super(pType, pWorldPosition, pBlockState);
 
-        this.fluidTank = new MachineFluidTank(capacity, getIOConfig());
-        this.fluidTankCap = LazyOptional.of(() -> this.fluidTank);
+        // Create fluid tank.
+        this.fluidTank = createFluidTank(capacity);
+
+        // Create fluid tank storage.
+        this.fluidHandler = new MachineFluidHandler(getIOConfig(), fluidTank);
+        this.fluidHandlerCap = LazyOptional.of(() -> fluidHandler);
 
         // Add capability provider
-        addCapabilityProvider(fluidTank);
+        addCapabilityProvider(fluidHandler);
 
-        addDataSlot(new FluidStackDataSlot(() -> fluidTank.getFluidInTank(0), fluidTank::setFluid, SyncMode.WORLD));
+        addDataSlot(new FluidStackDataSlot(fluidTank::getFluid, fluidTank::setFluid, SyncMode.WORLD));
+    }
+
+    private FluidTank createFluidTank(int capacity) {
+        return new FluidTank(capacity) {
+            @Override
+            protected void onContentsChanged() {
+                setChanged();
+            }
+        };
     }
 
     @Override
     public void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
-        // TODO: Rename to fluid or tank.
-        // TODO: Common place for all NBT names.
-        pTag.put("Fluids", fluidTank.writeToNBT(new CompoundTag()));
+        pTag.put("fluid", fluidTank.writeToNBT(new CompoundTag()));
     }
 
     @Override
     public void load(CompoundTag pTag) {
         super.load(pTag);
-        fluidTank.readFromNBT(pTag.getCompound("Fluids"));
+        fluidTank.readFromNBT(pTag.getCompound("fluid"));
     }
 
     @Override
@@ -164,7 +178,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
         return new FluidTankMenu(this, pInventory, pContainerId);
     }
 
-    public MachineFluidTank getFluidTank() {
+    public FluidTank getFluidTank() {
         return fluidTank;
     }
 
@@ -189,7 +203,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && side == null) {
-            return fluidTankCap.cast();
+            return fluidHandlerCap.cast();
         }
 
         return super.getCapability(cap, side);
@@ -198,7 +212,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     @Override
     public void invalidateCaps() {
         super.invalidateCaps();
-        fluidTankCap.invalidate();
+        fluidHandlerCap.invalidate();
     }
 
     // endregion

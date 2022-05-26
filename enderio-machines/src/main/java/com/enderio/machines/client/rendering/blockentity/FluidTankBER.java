@@ -2,7 +2,7 @@ package com.enderio.machines.client.rendering.blockentity;
 
 import com.enderio.base.client.renderer.RenderUtil;
 import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
-import com.enderio.machines.common.io.fluid.MachineFluidTank;
+import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix3f;
@@ -19,6 +19,7 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
     public FluidTankBER(BlockEntityRendererProvider.Context context) {
@@ -29,7 +30,7 @@ public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
     public void render(FluidTankBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight,
         int packedOverlay) {
 
-        MachineFluidTank tank = blockEntity.getFluidTank();
+        FluidTank tank = blockEntity.getFluidTank();
 
         // Don't waste time if there's no fluid.
         if (tank.getFluidAmount() > 0) {

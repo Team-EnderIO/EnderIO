@@ -9,30 +9,104 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.util.EnumMap;
+import java.util.List;
 
-// TODO: Might need to do more work in here, some machines can have multiple fluids in them (combustion generator fuel and coolant).
-//       I'll look at it in this PR if I have time.
-public class MachineFluidTank extends FluidTank implements IEnderCapabilityProvider<IFluidHandler> {
-
+/**
+ * MachineFluidStorage takes a list of fluid tanks and handles IO for them all.
+ */
+public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvider<IFluidHandler> {
     private final IIOConfig config;
+
+    private final List<IFluidTank> tanks;
 
     private final EnumMap<Direction, LazyOptional<Sided>> sideCache = new EnumMap<>(Direction.class);
 
-    public MachineFluidTank(int capacity, IIOConfig config) {
-        super(capacity);
+    public MachineFluidHandler(IIOConfig config, IFluidTank... tanks) {
         this.config = config;
+        this.tanks = List.of(tanks);
     }
 
-    public IIOConfig getConfig() {
+    public final IIOConfig getConfig() {
         return config;
     }
 
-    // region Sided access
+    public final IFluidTank getTank(int tank) {
+        return tanks.get(tank);
+    }
+
+    @Override
+    public int getTanks() {
+        return tanks.size();
+    }
+
+    @NotNull
+    @Override
+    public FluidStack getFluidInTank(int tank) {
+        return tanks.get(tank).getFluid();
+    }
+
+    @Override
+    public int getTankCapacity(int tank) {
+        return tanks.get(tank).getCapacity();
+    }
+
+    @Override
+    public boolean isFluidValid(int tank, @NotNull FluidStack stack) {
+        return tanks.get(tank).isFluidValid(stack);
+    }
+
+    @Override
+    public int fill(FluidStack resource, FluidAction action) {
+        // Don't waste any time.
+        if (resource.isEmpty())
+            return 0;
+
+        // Copy the fluid stack and prepare to distribute it across all tanks
+        FluidStack resourceLeft = resource.copy();
+        int totalFilled = 0;
+
+        for (IFluidTank tank : tanks) {
+            // Attempt to fill the tank
+            int filled = tank.fill(resourceLeft, action);
+            resourceLeft.shrink(filled);
+            totalFilled += filled;
+
+            // If we used up all the resource, stop trying.
+            if (resourceLeft.isEmpty())
+                break;
+        }
+
+        return totalFilled;
+    }
+
+    @NotNull
+    @Override
+    public FluidStack drain(FluidStack resource, FluidAction action) {
+        for (IFluidTank tank : tanks) {
+            if (tank.drain(resource, FluidAction.SIMULATE) != FluidStack.EMPTY) {
+                return tank.drain(resource, action);
+            }
+        }
+
+        return FluidStack.EMPTY;
+    }
+
+    @NotNull
+    @Override
+    public FluidStack drain(int maxDrain, FluidAction action) {
+        for (IFluidTank tank : tanks) {
+            if (tank.drain(maxDrain, FluidAction.SIMULATE) != FluidStack.EMPTY) {
+                return tank.drain(maxDrain, action);
+            }
+        }
+
+        return FluidStack.EMPTY;
+    }
+
     @Override
     public Capability<IFluidHandler> getCapabilityType() {
         return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
@@ -60,12 +134,13 @@ public class MachineFluidTank extends FluidTank implements IEnderCapabilityProvi
         }
     }
 
+    // Sided capability access
     private static class Sided implements IFluidHandler {
 
-        private final MachineFluidTank master;
+        private final MachineFluidHandler master;
         private final Direction direction;
 
-        public Sided(MachineFluidTank master, Direction direction) {
+        public Sided(MachineFluidHandler master, Direction direction) {
             this.master = master;
             this.direction = direction;
         }
@@ -114,6 +189,4 @@ public class MachineFluidTank extends FluidTank implements IEnderCapabilityProvi
             return FluidStack.EMPTY;
         }
     }
-
-    // endregion
 }
