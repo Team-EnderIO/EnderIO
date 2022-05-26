@@ -1,9 +1,9 @@
 {
   "type": "enderio_machines:enchanting",
+  "enchantment": "minecraft:lure",
   "input": {
     "tag": "minecraft:fishes"
   },
-  "enchantment": "minecraft:lure",
-  "amount": 1,
+  "amount_per_level": 1,
   "level": 1
 }

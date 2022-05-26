@@ -1,9 +1,9 @@
 {
   "type": "enderio_machines:enchanting",
+  "enchantment": "minecraft:blast_protection",
   "input": {
     "item": "minecraft:gunpowder"
   },
-  "enchantment": "minecraft:blast_protection",
-  "amount": 16,
+  "amount_per_level": 16,
   "level": 1
 }

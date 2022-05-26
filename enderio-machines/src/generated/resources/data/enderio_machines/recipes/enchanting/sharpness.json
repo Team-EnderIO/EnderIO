@@ -1,9 +1,9 @@
 {
   "type": "enderio_machines:enchanting",
+  "enchantment": "minecraft:sharpness",
   "input": {
     "tag": "forge:gems/quartz"
   },
-  "enchantment": "minecraft:sharpness",
-  "amount": 12,
+  "amount_per_level": 12,
   "level": 1
 }

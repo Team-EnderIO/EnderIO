@@ -1,5 +1,6 @@
 package com.enderio.base.client.tooltip;
 
+import com.enderio.api.client.tooltip.IAdvancedTooltipProvider;
 import com.enderio.base.common.lang.EIOLang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;

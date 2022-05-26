@@ -1,9 +1,9 @@
 {
   "type": "enderio_machines:enchanting",
+  "enchantment": "minecraft:luck_of_the_sea",
   "input": {
     "tag": "forge:gems/lapis"
   },
-  "enchantment": "minecraft:luck_of_the_sea",
-  "amount": 1,
+  "amount_per_level": 1,
   "level": 1
 }

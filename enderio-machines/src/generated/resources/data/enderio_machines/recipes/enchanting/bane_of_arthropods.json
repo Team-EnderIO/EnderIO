@@ -1,9 +1,9 @@
 {
   "type": "enderio_machines:enchanting",
+  "enchantment": "minecraft:bane_of_arthropods",
   "input": {
     "item": "minecraft:spider_eye"
   },
-  "enchantment": "minecraft:bane_of_arthropods",
-  "amount": 12,
+  "amount_per_level": 12,
   "level": 1
 }

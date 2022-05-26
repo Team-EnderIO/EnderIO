@@ -2,14 +2,14 @@ package com.enderio.machines.datagen.recipe.enchanter;
 
 import com.enderio.base.common.init.EIOEnchantments;
 import com.enderio.base.common.init.EIOItems;
-import com.enderio.base.common.recipe.EnderRecipeResult;
+import com.enderio.base.common.recipe.EnderFinishedRecipe;
 import com.enderio.machines.EIOMachines;
-import com.enderio.machines.common.recipe.EnchanterRecipe;
+import com.enderio.api.recipe.EnchanterRecipe;
+import com.enderio.machines.common.recipe.EnchanterRecipeImpl;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -76,14 +76,14 @@ public class EnchanterRecipeGenerator extends RecipeProvider {
     }
 
     protected void build(Enchantment enchantment, Item ingredient, int amountPerLevel, int levelModifier, Consumer<FinishedRecipe> recipeConsumer) {
-        build(new EnchanterRecipe(null, Ingredient.of(ingredient), enchantment, amountPerLevel, levelModifier), enchantment.getRegistryName().getPath(), recipeConsumer);
+        build(new EnchanterRecipeImpl(null, Ingredient.of(ingredient), enchantment, amountPerLevel, levelModifier), enchantment.getRegistryName().getPath(), recipeConsumer);
     }
     
     protected void build(Enchantment enchantment, TagKey<Item> ingredient, int amountPerLevel, int levelModifier, Consumer<FinishedRecipe> recipeConsumer) {
-        build(new EnchanterRecipe(null, Ingredient.of(ingredient), enchantment, amountPerLevel, levelModifier), enchantment.getRegistryName().getPath(), recipeConsumer);
+        build(new EnchanterRecipeImpl(null, Ingredient.of(ingredient), enchantment, amountPerLevel, levelModifier), enchantment.getRegistryName().getPath(), recipeConsumer);
     }
 
     protected void build(EnchanterRecipe recipe, String name, Consumer<FinishedRecipe> recipeConsumer) {
-        recipeConsumer.accept(new EnderRecipeResult<>(recipe, EIOMachines.MODID, name));
+        recipeConsumer.accept(new EnderFinishedRecipe<>(recipe, EIOMachines.MODID, name));
     }
 }

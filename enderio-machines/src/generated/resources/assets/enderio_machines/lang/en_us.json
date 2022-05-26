@@ -1,11 +1,13 @@
 {
   "block.enderio_machines.alloy_smelter": "Alloy Smelter",
+  "block.enderio_machines.creative_power": "Creative Power",
   "block.enderio_machines.enchanter": "Enchanter",
   "block.enderio_machines.enhanced_alloy_smelter": "Enhanced Alloy Smelter",
   "block.enderio_machines.fluid_tank": "Fluid Tank",
   "block.enderio_machines.pressurized_fluid_tank": "Pressurized Fluid Tank",
   "block.enderio_machines.simple_alloy_smelter": "Simple Alloy Smelter",
   "block.enderio_machines.simple_powered_furnace": "Simple Powered Furnace",
+  "block.enderio_machines.stirling_generator": "Stirling Generator",
   "gui.enderio.alloy_smelter.mode": "Smelting Mode",
   "gui.enderio.alloy_smelter.mode_all": "Alloying and Smelting",
   "gui.enderio.alloy_smelter.mode_alloy": "Alloys Only",

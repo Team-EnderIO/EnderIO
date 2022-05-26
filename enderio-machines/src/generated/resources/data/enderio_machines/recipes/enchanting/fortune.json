@@ -1,9 +1,9 @@
 {
   "type": "enderio_machines:enchanting",
+  "enchantment": "minecraft:fortune",
   "input": {
     "tag": "forge:gems/emerald"
   },
-  "enchantment": "minecraft:fortune",
-  "amount": 1,
+  "amount_per_level": 1,
   "level": 1
 }

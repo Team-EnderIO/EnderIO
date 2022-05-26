@@ -6,7 +6,7 @@ import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemHandler
 import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemSlotLayout;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.menu.EnchanterMenu;
-import com.enderio.machines.common.recipe.EnchanterRecipe;
+import com.enderio.api.recipe.EnchanterRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -21,17 +21,32 @@ import java.util.Optional;
 public class EnchanterBlockEntity extends MachineBlockEntity {
 
     public EnchanterBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-        super(MachineTier.STANDARD, pType, pWorldPosition, pBlockState);
+        super(pType, pWorldPosition, pBlockState);
     }
 
     @Override
-    public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-        return new EnchanterMenu(this, pInventory, pContainerId);
+    public MachineTier getTier() {
+        return MachineTier.Standard;
     }
 
     @Override
     public Optional<ItemSlotLayout> getSlotLayout() {
         return Optional.of(ItemSlotLayout.basic(3, 1));
+    }
+
+    @Override
+    public boolean supportsRedstoneControl() {
+        return false;
+    }
+
+    @Override
+    public boolean supportsIo() {
+        return false;
+    }
+
+    @Override
+    public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
+        return new EnchanterMenu(this, pInventory, pContainerId);
     }
 
     @Override

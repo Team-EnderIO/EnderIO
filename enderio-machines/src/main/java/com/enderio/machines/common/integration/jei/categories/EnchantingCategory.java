@@ -77,8 +77,8 @@ public class EnchantingCategory implements IRecipeCategory<EnchanterRecipeWrappe
 
     @Override
     public void setIngredients(EnchanterRecipeWrapper recipe, IIngredients ingredients) {
-        ingredients.setInputLists(VanillaTypes.ITEM, recipe.getInputs());
-        ingredients.setOutput(VanillaTypes.ITEM, recipe.getOutput());
+        ingredients.setInputLists(VanillaTypes.ITEM_STACK, recipe.getInputs());
+        ingredients.setOutput(VanillaTypes.ITEM_STACK, recipe.getOutput());
     }
 
     @Override

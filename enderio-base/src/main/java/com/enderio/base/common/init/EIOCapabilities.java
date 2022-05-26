@@ -1,12 +1,12 @@
 package com.enderio.base.common.init;
 
+import com.enderio.api.capability.ICapacitorData;
 import com.enderio.base.EnderIO;
-import com.enderio.base.common.capability.capacitors.ICapacitorData;
-import com.enderio.base.common.capability.darksteel.IDarkSteelUpgradable;
-import com.enderio.base.common.capability.entity.IEntityStorage;
-import com.enderio.base.common.capability.location.ICoordinateSelectionHolder;
-import com.enderio.base.common.capability.owner.IOwner;
-import com.enderio.base.common.capability.toggled.IToggled;
+import com.enderio.api.capability.IDarkSteelUpgradable;
+import com.enderio.api.capability.IEntityStorage;
+import com.enderio.api.capability.ICoordinateSelectionHolder;
+import com.enderio.api.capability.IOwner;
+import com.enderio.api.capability.IToggled;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;

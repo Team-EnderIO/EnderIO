@@ -9,6 +9,9 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
+/**
+ * A block that can display its powered state when performing its action.
+ */
 public class ProgressMachineBlock extends MachineBlock {
 
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;

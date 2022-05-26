@@ -1,9 +1,9 @@
 {
   "type": "enderio_machines:enchanting",
+  "enchantment": "minecraft:multishot",
   "input": {
     "tag": "minecraft:arrows"
   },
-  "enchantment": "minecraft:multishot",
-  "amount": 16,
+  "amount_per_level": 16,
   "level": 1
 }

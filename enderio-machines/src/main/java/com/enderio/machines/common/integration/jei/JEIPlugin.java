@@ -34,6 +34,7 @@ public class JEIPlugin implements IModPlugin {
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
         JEIRecipes recipes = new JEIRecipes();
+
         registration.addRecipes(recipes.getAlloyingRecipes(), CATEGORY_ALLOY_SMELTING);
         registration.addRecipes(recipes.getEnchantingRecipes(), CATEGORY_ENCHANTING);
     }
