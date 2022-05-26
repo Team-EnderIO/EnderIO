@@ -396,10 +396,10 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
             if (cap == EIOCapabilities.SIDE_CONFIG)
                 return ioConfig.getCapability(side).cast();
 
-            if (getInventory() != null && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && getIOConfig().getMode(side).canConnect())
+            if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && getInventory() != null && getIOConfig().getMode(side).canConnect())
                 return LazyOptional.of(() -> inventory.getCapability(side)).cast();
         } else {
-            if (getInventory() != null && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && getInventory() != null) {
                 return inventoryCap.cast();
             }
         }
