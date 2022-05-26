@@ -15,20 +15,15 @@ import java.util.EnumMap;
 public final class ForgeEnergyWrapper {
     private final IMachineEnergy wrapped;
     private final EnumMap<Direction, LazyOptional<Side>> sideCache = new EnumMap<>(Direction.class);
-    private final LazyOptional<Side> nullSide;
 
     public ForgeEnergyWrapper(IMachineEnergy wrapped) {
         this.wrapped = wrapped;
-        nullSide = LazyOptional.of(() -> new Side(wrapped, null));
     }
 
     /**
      * Get {@link IEnergyStorage} capability for the given side.
      */
-    public LazyOptional<IEnergyStorage> getCapabilityFor(@Nullable Direction side) {
-        if (side == null) {
-            return nullSide.cast();
-        }
+    public LazyOptional<IEnergyStorage> getCapabilityFor(Direction side) {
         return sideCache.computeIfAbsent(side, direction -> LazyOptional.of(() -> new Side(wrapped, direction))).cast();
     }
 
@@ -39,10 +34,9 @@ public final class ForgeEnergyWrapper {
         for (LazyOptional<Side> side : sideCache.values()) {
             side.invalidate();
         }
-        nullSide.invalidate();
     }
 
-    private record Side(IMachineEnergy wrapped, @Nullable Direction side) implements IEnergyStorage {
+    private record Side(IMachineEnergy wrapped, Direction side) implements IEnergyStorage {
 
         @Override
         public int receiveEnergy(int maxReceive, boolean simulate) {

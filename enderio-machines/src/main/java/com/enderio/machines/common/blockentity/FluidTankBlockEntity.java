@@ -155,12 +155,12 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
 
     @Nonnull
     @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction direction) {
-        if (direction != null) {
-            if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-                return LazyOptional.of(() -> fluidTank.getAccess(direction)).cast();
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+        if (side != null) {
+            if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && getIoConfig().getSide(side).canConnect())
+                return LazyOptional.of(() -> fluidTank.getAccess(side)).cast();
         }
-        return super.getCapability(cap, direction);
+        return super.getCapability(cap, side);
     }
 
     @Nonnull

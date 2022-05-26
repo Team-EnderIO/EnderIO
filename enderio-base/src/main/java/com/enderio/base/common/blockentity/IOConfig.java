@@ -22,7 +22,7 @@ public class IOConfig implements INBTSerializable<CompoundTag> {
         /**
          * No specific configuration, allows external input and output but doesn't pull or push itself.
          */
-        NONE(true, true, false),
+        NONE(true, true, false, true),
 
         /**
          * Only pushes outputs allows both external pulling and the machine pushes itself.
@@ -31,7 +31,7 @@ public class IOConfig implements INBTSerializable<CompoundTag> {
          *
          * @apiNote Each machine determines what this means this for energy. Some may ignore it.
          */
-        PUSH(false, true, true),
+        PUSH(false, true, true, true),
 
         /**
          * Only pulls inputs, allowing both external pushing and the machine pulling itself.
@@ -40,28 +40,29 @@ public class IOConfig implements INBTSerializable<CompoundTag> {
          *
          * @apiNote Each machine determines what this means this for energy. Some may ignore it.
          */
-        PULL(true, false, true),
+        PULL(true, false, true, true),
 
         /**
          * Allow both pulling and pushing by both the machine and external blocks.
          *
          * @apiNote Each machine determines what this means this for energy. Some may ignore it.
          */
-        BOTH(true, true, true),
+        BOTH(true, true, true, true),
 
         /**
          * Disallow any side access for all resources (including energy).
          *
          * @apiNote All machines will disallow power access for this side.
          */
-        DISABLED(false, false, false);
+        DISABLED(false, false, false, false);
 
-        private final boolean input, output, force;
+        private final boolean input, output, force, canConnect;
 
-        State(boolean input, boolean output, boolean force) {
+        State(boolean input, boolean output, boolean force, boolean canConnect) {
             this.input = input;
             this.output = output;
             this.force = force;
+            this.canConnect = canConnect;
         }
 
         /**
@@ -76,6 +77,13 @@ public class IOConfig implements INBTSerializable<CompoundTag> {
          */
         public boolean canOutput() {
             return output;
+        }
+
+        /**
+         * Whether or not this side can be connected to by external blocks.
+         */
+        public boolean canConnect() {
+            return canConnect;
         }
 
         /**
