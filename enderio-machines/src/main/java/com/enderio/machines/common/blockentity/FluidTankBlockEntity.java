@@ -180,11 +180,6 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
             .build();
     }
 
-    @Override
-    protected MachineInventory createItemHandler(MachineInventoryLayout layout) {
-        return new MachineInventory(getIOConfig(), layout);
-    }
-
     // region Capabilities
 
     @Nonnull

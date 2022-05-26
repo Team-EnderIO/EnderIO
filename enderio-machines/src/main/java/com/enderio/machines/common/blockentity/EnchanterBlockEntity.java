@@ -44,6 +44,8 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
             .build();
     }
 
+    // region Machine config
+
     @Override
     public boolean supportsRedstoneControl() {
         return false;
@@ -55,21 +57,23 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
         return new FixedIOConfig(IOMode.DISABLED);
     }
 
+    // endregion
+
     @Override
     public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
         return new EnchanterMenu(this, pInventory, pContainerId);
     }
 
     @Override
-    protected MachineInventory createItemHandler(MachineInventoryLayout layout) {
+    protected MachineInventory createMachineInventory(MachineInventoryLayout layout) {
+        // Custom behaviour as this works more like a crafting table than a machine.
         return new MachineInventory(getIOConfig(), layout) {
             protected void onContentsChanged(int slot) {
                 if (slot != 3) {
                     Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.Types.ENCHANTING, getRecipeWrapper(), level);
                     if (recipe.isPresent()) {
                         getInventory().setStackInSlot(3, recipe.get().assemble(getRecipeWrapper()));
-                    }
-                    else {
+                    } else {
                         getInventory().setStackInSlot(3, ItemStack.EMPTY);
                     }
                 }

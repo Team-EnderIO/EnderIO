@@ -85,7 +85,7 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
         // If the machine declares an inventory layout, use it to create a handler
         MachineInventoryLayout slotLayout = getInventoryLayout();
         if (slotLayout != null) {
-            inventory = createItemHandler(slotLayout);
+            inventory = createMachineInventory(slotLayout);
             inventoryCap = LazyOptional.of(() -> inventory);
         } else {
             inventory = null;
@@ -123,7 +123,7 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
      * Whether this block entity supports redstone control
      */
     public boolean supportsRedstoneControl() {
-        return true; // TODO: Is this a reasonable default?
+        return true;
     }
 
     /**
@@ -201,7 +201,7 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
     /**
      * Called to create an item handler if a slot layout is provided.
      */
-    protected MachineInventory createItemHandler(MachineInventoryLayout layout) {
+    protected MachineInventory createMachineInventory(MachineInventoryLayout layout) {
         return new MachineInventory(getIOConfig(), layout) {
             @Override
             protected void onContentsChanged(int slot) {
