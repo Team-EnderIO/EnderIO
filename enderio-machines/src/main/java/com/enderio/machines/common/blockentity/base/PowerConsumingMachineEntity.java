@@ -14,7 +14,7 @@ public abstract class PowerConsumingMachineEntity extends PoweredMachineEntity {
 
     @Override
     public boolean canInsertEnergy(Direction side) {
-        return getIoConfig().getSide(side) != IOConfig.State.DISABLED;
+        return getIoConfig().getSide(side).canConnect();
     }
 
     @Override

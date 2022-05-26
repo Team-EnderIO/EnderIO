@@ -43,6 +43,6 @@ public abstract class PowerGeneratingMachineEntity extends PoweredMachineEntity 
 
     @Override
     public boolean canExtractEnergy(Direction side) {
-        return getIoConfig().getSide(side) != IOConfig.State.DISABLED;
+        return getIoConfig().getSide(side).canConnect();
     }
 }
