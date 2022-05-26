@@ -39,7 +39,7 @@ subprojects {
 
     def enableMixin = false
     if (project.hasProperty("enable_mixin")) {
-        enableMixin = project.enable_mixin
+        //enableMixin = project.enable_mixin
     }
 
     // MixinGradle:

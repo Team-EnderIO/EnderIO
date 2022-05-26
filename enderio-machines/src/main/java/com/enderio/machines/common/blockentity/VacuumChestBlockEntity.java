@@ -21,7 +21,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class VacuumChestBlockEntity extends VacuumMachineEntity<ItemEntity> {
     
     public VacuumChestBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-        super(MachineTier.STANDARD, pType, pWorldPosition, pBlockState, ItemEntity.class);
+        super(pType, pWorldPosition, pBlockState, ItemEntity.class);
     }
     
     @Override
@@ -69,5 +69,10 @@ public class VacuumChestBlockEntity extends VacuumMachineEntity<ItemEntity> {
 	@Override
 	public Predicate<ItemEntity> getFilter() {
 		return super.getFilter();
+	}
+
+	@Override
+	public MachineTier getTier() {
+		return MachineTier.Standard;
 	}
 }

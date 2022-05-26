@@ -23,7 +23,7 @@ public class XPVacuumBlockEntity extends VacuumMachineEntity<ExperienceOrb> {
     private FluidTankMaster fluidTank;
     
     public XPVacuumBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-        super(MachineTier.STANDARD, pType, pWorldPosition, pBlockState, ExperienceOrb.class);
+        super(pType, pWorldPosition, pBlockState, ExperienceOrb.class);
         this.fluidTank =  new FluidTankMaster(Integer.MAX_VALUE, getIoConfig()); //that seems quite large?
         addDataSlot(new IntegerDataSlot(() -> fluidTank.getFluidInTank(0).getAmount(), (i) -> fluidTank.setFluid(new FluidStack(Fluids.WATER, i)), SyncMode.WORLD));
     }
@@ -59,5 +59,10 @@ public class XPVacuumBlockEntity extends VacuumMachineEntity<ExperienceOrb> {
         } else {
             xpe.value -= filled;
         }
+	}
+
+	@Override
+	public MachineTier getTier() {
+		return MachineTier.Standard;
 	}
 }
