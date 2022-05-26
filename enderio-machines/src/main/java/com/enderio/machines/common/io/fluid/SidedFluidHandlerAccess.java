@@ -1,4 +1,4 @@
-package com.enderio.machines.common.blockentity.data.sidecontrol.fluid;
+package com.enderio.machines.common.io.fluid;
 
 import net.minecraft.core.Direction;
 import net.minecraftforge.fluids.FluidStack;

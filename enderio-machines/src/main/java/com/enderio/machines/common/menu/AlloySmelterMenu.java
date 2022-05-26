@@ -15,7 +15,7 @@ public class AlloySmelterMenu extends MachineMenu<AlloySmelterBlockEntity> {
         super(blockEntity, inventory, MachineMenus.ALLOY_SMELTER.get(), pContainerId);
         if (blockEntity != null) {
             // Capacitor slot
-            if (blockEntity.getTier() != MachineTier.Simple) {
+            if (blockEntity.requiresCapacitor()) {
                 addSlot(new MachineSlot(blockEntity.getInventory(), 4, 12, 60));
             }
 

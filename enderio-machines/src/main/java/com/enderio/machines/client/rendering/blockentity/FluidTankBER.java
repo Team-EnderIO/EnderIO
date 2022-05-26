@@ -2,7 +2,7 @@ package com.enderio.machines.client.rendering.blockentity;
 
 import com.enderio.base.client.renderer.RenderUtil;
 import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
-import com.enderio.machines.common.blockentity.data.sidecontrol.fluid.FluidTankMaster;
+import com.enderio.machines.common.io.fluid.FluidTankMaster;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix3f;
@@ -13,15 +13,11 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 
 public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {

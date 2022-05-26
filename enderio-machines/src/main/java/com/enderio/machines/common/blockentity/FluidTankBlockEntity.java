@@ -4,9 +4,9 @@ import com.enderio.base.common.blockentity.sync.FluidStackDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
-import com.enderio.machines.common.blockentity.data.sidecontrol.fluid.FluidTankMaster;
-import com.enderio.machines.common.blockentity.data.sidecontrol.item.MachineItemHandler;
-import com.enderio.machines.common.blockentity.data.sidecontrol.item.MachineInventoryLayout;
+import com.enderio.machines.common.io.fluid.FluidTankMaster;
+import com.enderio.machines.common.io.item.ItemHandlerMaster;
+import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.menu.FluidTankMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -200,7 +200,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected MachineItemHandler createItemHandler(MachineInventoryLayout layout) {
-        return new MachineItemHandler(getIoConfig(), layout);
+    protected ItemHandlerMaster createItemHandler(MachineInventoryLayout layout) {
+        return new ItemHandlerMaster(getIoConfig(), layout);
     }
 }

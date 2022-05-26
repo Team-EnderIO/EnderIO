@@ -1,4 +1,4 @@
-package com.enderio.machines.common.blockentity.data.sidecontrol;
+package com.enderio.machines.common.io;
 
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -9,6 +9,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 import java.util.EnumMap;
 import java.util.Map;
 
+// TODO: Add a capability for io config on each side so that it can be configured with the yeta wrench easily.
 public class IOConfig implements INBTSerializable<CompoundTag> {
 
     private final EnumMap<Direction, IOState> config = new EnumMap(Direction.class);
@@ -49,8 +50,8 @@ public class IOConfig implements INBTSerializable<CompoundTag> {
 
     public enum IOState {
         NONE(true, true, false),
-        PUSH(false, true, true),
-        PULL(true, false, true),
+        PUSH(false, true, true), // TODO: Rename output?
+        PULL(true, false, true), // TODO: Rename input?
         BOTH(true, true, true),
         DISABLED(false, false, false);
 

@@ -32,12 +32,6 @@ public class CreativePowerBlockEntity extends PoweredMachineEntity {
         return null;
     }
 
-    // TODO: Shouldn't be necessary
-    @Override
-    public boolean shouldAct() {
-        return isServer();
-    }
-
     @Override
     public int getEnergyStored() {
         return getMaxEnergyStored() / 2;

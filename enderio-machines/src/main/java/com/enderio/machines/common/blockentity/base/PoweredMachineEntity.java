@@ -9,9 +9,9 @@ import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.base.common.capacitor.DefaultCapacitorData;
 import com.enderio.machines.common.MachineTier;
-import com.enderio.machines.common.blockentity.data.sidecontrol.item.MachineInventoryLayout;
+import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.blockentity.sync.MachineEnergyDataSlot;
-import com.enderio.machines.common.energy.ForgeEnergyWrapper;
+import com.enderio.machines.common.io.energy.ForgeEnergyWrapper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -24,8 +24,6 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.LogicalSide;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Optional;
 
 /**
  * A machine that stores power.
@@ -83,19 +81,20 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity implements
         if (level.isClientSide) {
             return clientEnergy.capacity();
         }
-        return capacityKey.getInt(getCapacitorData().orElse(DefaultCapacitorData.NONE));
+        return capacityKey.getInt(getCapacitorData());
     }
 
     @Override
     public int getMaxEnergyConsumption() {
-        return consumptionKey.getInt(getCapacitorData().orElse(DefaultCapacitorData.NONE));
+        return consumptionKey.getInt(getCapacitorData());
     }
 
     @Override
     public int getMaxEnergyTransfer() {
-        return transferKey.getInt(getCapacitorData().orElse(DefaultCapacitorData.NONE));
+        return transferKey.getInt(getCapacitorData());
     }
 
+    // TODO: Implement energy leaking.
     @Override
     public int getEnergyLeakRate() {
         return 0;
@@ -111,11 +110,17 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity implements
     }
 
     @Override
+    public void invalidateCaps() {
+        super.invalidateCaps();
+        energyWrapper.invalidateCaps();
+    }
+
+    @Override
     public boolean shouldAct() {
         // Ignore capacitor state on simple machines.
         if (getTier() == MachineTier.Simple)
             return super.shouldAct();
-        return super.shouldAct() && hasCapacitor(); // TODO: Determine if the machine needs a capacitor to run? Maybe leave it to the machine impl to decide?
+        return super.shouldAct() && (!requiresCapacitor() || isCapacitorInstalled());
     }
 
     @Override
@@ -152,26 +157,39 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity implements
 
     // endregion
 
-    // Capacitors
+    // region Capacitors
 
-    public boolean hasCapacitor() {
+    /**
+     * Whether the machine requires a capacitor to operate.
+     */
+    public boolean requiresCapacitor() {
         MachineInventoryLayout layout = getInventoryLayout();
-        if (layout != null) {
-            return layout.getFirst(MachineInventoryLayout.SlotType.CAPACITOR)
-                .map(slot -> CapacitorUtil.isCapacitor(getInventory().getStackInSlot(slot)))
-                .orElse(false);
+        if (layout == null)
+            return false;
+        return layout.hasCapacitorSlot();
+    }
+
+    /**
+     * Whether the machine has a capacitor installed.
+     */
+    public boolean isCapacitorInstalled() {
+        MachineInventoryLayout layout = getInventoryLayout();
+        if (requiresCapacitor() && layout != null) {
+            return CapacitorUtil.isCapacitor(getInventory().getStackInSlot(layout.getCapacitorSlot()));
         }
 
         return false;
     }
 
-    public Optional<ICapacitorData> getCapacitorData() {
+    /**
+     * Get the capacitor data for the machine.
+     */
+    public ICapacitorData getCapacitorData() {
         MachineInventoryLayout layout = getInventoryLayout();
-        if (layout != null) {
-            return layout.getFirst(MachineInventoryLayout.SlotType.CAPACITOR)
-                .flatMap(slot -> CapacitorUtil.getCapacitorData(getInventory().getStackInSlot(slot)));
+        if (requiresCapacitor() && layout != null) {
+            return CapacitorUtil.getCapacitorData(getInventory().getStackInSlot(getInventoryLayout().getCapacitorSlot())).orElse(DefaultCapacitorData.NONE);
         }
-        return Optional.empty();
+        return DefaultCapacitorData.NONE;
     }
 
     // TODO: Hook inventory slot changes and rescan for a capacitor rather than fetching from the slot each time.

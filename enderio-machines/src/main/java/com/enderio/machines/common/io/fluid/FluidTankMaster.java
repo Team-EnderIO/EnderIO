@@ -1,6 +1,6 @@
-package com.enderio.machines.common.blockentity.data.sidecontrol.fluid;
+package com.enderio.machines.common.io.fluid;
 
-import com.enderio.machines.common.blockentity.data.sidecontrol.IOConfig;
+import com.enderio.machines.common.io.IOConfig;
 import net.minecraft.core.Direction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
@@ -15,6 +15,7 @@ public class FluidTankMaster extends FluidTank {
         this.config = config;
     }
 
+    // TODO: Its come to my attention nullable Direction needs to be supported.
     public SidedFluidHandlerAccess getAccess(Direction direction) {
         return access.computeIfAbsent(direction,
             dir -> new SidedFluidHandlerAccess(this, dir));

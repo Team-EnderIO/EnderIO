@@ -6,7 +6,7 @@ import com.enderio.base.common.blockentity.sync.FloatDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.PowerGeneratingMachineEntity;
-import com.enderio.machines.common.blockentity.data.sidecontrol.item.MachineInventoryLayout;
+import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.init.MachineCapacitorKeys;
 import com.enderio.machines.common.menu.StirlingGeneratorMenu;
 import net.minecraft.core.BlockPos;
@@ -22,11 +22,10 @@ import net.minecraftforge.fml.LogicalSide;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class StirlingGeneratorBlockEntity extends PowerGeneratingMachineEntity {
-    // TODO: Add capacitor keys.
     public static class Simple extends StirlingGeneratorBlockEntity {
         public Simple(BlockEntityType<?> pType, BlockPos pWorldPosition,
             BlockState pBlockState) {
-            super(MachineCapacitorKeys.DEV_ENERGY_CAPACITY.get(),
+            super(MachineCapacitorKeys.SIMPLE_STIRLING_GENERATOR_ENERGY_CAPACITY.get(),
                 MachineCapacitorKeys.DEV_ENERGY_TRANSFER.get(),
                 MachineCapacitorKeys.DEV_ENERGY_CONSUME.get(),
                 pType, pWorldPosition, pBlockState);
@@ -41,7 +40,7 @@ public abstract class StirlingGeneratorBlockEntity extends PowerGeneratingMachin
     public static class Standard extends StirlingGeneratorBlockEntity {
         public Standard(BlockEntityType<?> pType, BlockPos pWorldPosition,
             BlockState pBlockState) {
-            super(MachineCapacitorKeys.DEV_ENERGY_CAPACITY.get(),
+            super(MachineCapacitorKeys.STIRLING_GENERATOR_ENERGY_CAPACITY.get(),
                 MachineCapacitorKeys.DEV_ENERGY_TRANSFER.get(),
                 MachineCapacitorKeys.DEV_ENERGY_CONSUME.get(),
                 pType, pWorldPosition, pBlockState);

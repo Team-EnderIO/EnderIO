@@ -1,4 +1,4 @@
-package com.enderio.machines.common.energy;
+package com.enderio.machines.common.io.energy;
 
 import com.enderio.api.energy.IMachineEnergy;
 import net.minecraft.core.Direction;
@@ -35,6 +35,13 @@ public final class ForgeEnergyWrapper {
             return nullSide.cast();
         }
         return sideCache.get(side).cast();
+    }
+
+    public void invalidateCaps() {
+        for (Direction dir : Direction.values()) {
+            sideCache.get(dir).invalidate();
+        }
+        nullSide.invalidate();
     }
 
     private record Side(IMachineEnergy wrapped, @Nullable Direction side) implements IEnergyStorage {

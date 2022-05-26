@@ -10,6 +10,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.Tags;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -115,7 +116,7 @@ public abstract class EnchanterRecipe implements IEnderRecipe<EnchanterRecipe, C
         if (!input.test(pContainer.getItem(1)) || pContainer.getItem(1).getCount() < inputAmountPerLevel) {
             return false;
         }
-        if (!pContainer.getItem(2).is(Items.LAPIS_LAZULI) || pContainer.getItem(2).getCount() < getLapisForLevel(
+        if (!pContainer.getItem(2).is(Tags.Items.GEMS_LAPIS) || pContainer.getItem(2).getCount() < getLapisForLevel(
             getEnchantmentLevel(pContainer.getItem(1).getCount()))) {
             return false;
         }

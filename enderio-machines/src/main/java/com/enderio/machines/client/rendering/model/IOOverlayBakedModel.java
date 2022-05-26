@@ -2,7 +2,7 @@ package com.enderio.machines.client.rendering.model;
 
 import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
-import com.enderio.machines.common.blockentity.data.sidecontrol.IOConfig;
+import com.enderio.machines.common.io.IOConfig;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Pair;

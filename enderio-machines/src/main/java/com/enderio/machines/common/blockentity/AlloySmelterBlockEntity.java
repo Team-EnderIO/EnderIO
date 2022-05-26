@@ -5,8 +5,8 @@ import com.enderio.base.common.blockentity.sync.EnumDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.PoweredCraftingMachineEntity;
-import com.enderio.machines.common.blockentity.data.sidecontrol.item.MachineItemHandler;
-import com.enderio.machines.common.blockentity.data.sidecontrol.item.MachineInventoryLayout;
+import com.enderio.machines.common.io.item.ItemHandlerMaster;
+import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.init.MachineCapacitorKeys;
 import com.enderio.machines.common.menu.AlloySmelterMenu;
 import com.enderio.api.recipe.AlloySmeltingRecipe;
@@ -120,7 +120,7 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
 
     @Override
     protected void consumeIngredients(Recipe<Container> recipe) {
-        MachineItemHandler itemHandler = getInventory();
+        ItemHandlerMaster itemHandler = getInventory();
         if (recipe instanceof AlloySmeltingRecipe alloySmeltingRecipe) {
             for (int i = 0; i < 3; i++) {
                 alloySmeltingRecipe.consumeInput(itemHandler.getStackInSlot(i));
@@ -204,12 +204,12 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
 
     @Override
     protected boolean canCraft() {
-        return (getTier() == MachineTier.Simple || hasCapacitor()) && super.canCraft();
+        return (getTier() == MachineTier.Simple || isCapacitorInstalled()) && super.canCraft();
     }
 
     @Override
     protected boolean canSelectRecipe() {
-        return (getTier() == MachineTier.Simple || hasCapacitor()) && super.canSelectRecipe();
+        return (getTier() == MachineTier.Simple || isCapacitorInstalled()) && super.canSelectRecipe();
     }
 
     @Override
