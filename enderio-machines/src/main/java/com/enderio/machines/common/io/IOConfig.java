@@ -64,7 +64,7 @@ public class IOConfig implements IIOConfig {
     /**
      * Get side config as a capability.
      */
-    public LazyOptional<ISideConfig> getCapabilityFor(Direction side) {
+    public LazyOptional<ISideConfig> getCapability(Direction side) {
         return sideAccessCache.computeIfAbsent(side, dir -> LazyOptional.of(() -> new SideAccess(this, dir))).cast();
     }
 

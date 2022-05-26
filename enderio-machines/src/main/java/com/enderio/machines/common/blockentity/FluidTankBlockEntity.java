@@ -4,8 +4,8 @@ import com.enderio.base.common.blockentity.sync.FluidStackDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
-import com.enderio.machines.common.io.fluid.FluidTankMaster;
-import com.enderio.machines.common.io.item.ItemHandlerMaster;
+import com.enderio.machines.common.io.fluid.MachineFluidTank;
+import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.menu.FluidTankMenu;
 import net.minecraft.core.BlockPos;
@@ -28,7 +28,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -62,11 +61,15 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
         }
     }
 
-    private final FluidTankMaster fluidTank;
+    private final MachineFluidTank fluidTank;
+
+    private final LazyOptional<MachineFluidTank> fluidTankCap;
 
     public FluidTankBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState, int capacity) {
         super(pType, pWorldPosition, pBlockState);
-        this.fluidTank =  new FluidTankMaster(capacity, getIOConfig());
+
+        this.fluidTank = new MachineFluidTank(capacity, getIOConfig());
+        this.fluidTankCap = LazyOptional.of(() -> this.fluidTank);
 
         addDataSlot(new FluidStackDataSlot(() -> fluidTank.getFluidInTank(0), fluidTank::setFluid, SyncMode.WORLD));
     }
@@ -153,32 +156,12 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
         }
     }
 
-    @Nonnull
-    @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        if (side != null) {
-            if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && getIOConfig().getMode(side).canConnect())
-                return LazyOptional.of(() -> fluidTank.getAccess(side)).cast();
-        }
-        return super.getCapability(cap, side);
-    }
-
-    @Nonnull
-    @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap) {
-        if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-            return LazyOptional.of(() -> fluidTank).cast();
-        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-            return LazyOptional.of(this::getInventory).cast();
-        return super.getCapability(cap);
-    }
-
     @Nullable
     public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
         return new FluidTankMenu(this, pInventory, pContainerId);
     }
 
-    public FluidTankMaster getFluidTank() {
+    public MachineFluidTank getFluidTank() {
         return fluidTank;
     }
 
@@ -198,7 +181,31 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected ItemHandlerMaster createItemHandler(MachineInventoryLayout layout) {
-        return new ItemHandlerMaster(getIOConfig(), layout);
+    protected MachineInventory createItemHandler(MachineInventoryLayout layout) {
+        return new MachineInventory(getIOConfig(), layout);
     }
+
+    // region Capabilities
+
+    @Nonnull
+    @Override
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+        if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+            if (side != null && getIOConfig().getMode(side).canConnect()) {
+                return fluidTank.getCapability(side).cast();
+            }
+            return fluidTankCap.cast();
+        }
+
+        return super.getCapability(cap, side);
+    }
+
+    @Override
+    public void invalidateCaps() {
+        super.invalidateCaps();
+        fluidTank.invalidateCaps();
+        fluidTankCap.invalidate();
+    }
+
+    // endregion
 }

@@ -11,7 +11,7 @@ import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.io.IOConfig;
 import com.enderio.machines.common.block.MachineBlock;
-import com.enderio.machines.common.io.item.ItemHandlerMaster;
+import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -65,8 +65,11 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
 
     // region Items and Fluids
 
-    private ItemHandlerMaster itemHandler;
+    private final MachineInventory inventory;
 
+    private final LazyOptional<MachineInventory> inventoryCap;
+
+    // Caches for external block interaction
     private final EnumMap<Direction, LazyOptional<IItemHandler>> itemHandlerCache = new EnumMap<>(Direction.class);
     private final EnumMap<Direction, LazyOptional<IFluidHandler>> fluidHandlerCache = new EnumMap<>(Direction.class);
     private boolean isCacheDirty = false;
@@ -82,7 +85,11 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
         // If the machine declares an inventory layout, use it to create a handler
         MachineInventoryLayout slotLayout = getInventoryLayout();
         if (slotLayout != null) {
-            itemHandler = createItemHandler(slotLayout);
+            inventory = createItemHandler(slotLayout);
+            inventoryCap = LazyOptional.of(() -> inventory);
+        } else {
+            inventory = null;
+            inventoryCap = LazyOptional.empty();
         }
 
         if (supportsRedstoneControl()) {
@@ -170,10 +177,7 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
      */
     protected boolean supportsIOMode(Direction side, IOMode mode) {
         // Enhanced machines cannot have IO out the top.
-        if (getTier() == MachineTier.Enhanced && side == Direction.UP && mode != IOMode.NONE) {
-            return false;
-        }
-        return true;
+        return getTier() != MachineTier.Enhanced || side != Direction.UP || mode == IOMode.NONE;
     }
 
     @NotNull
@@ -186,19 +190,19 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
 
     // region Item Handling
 
-    public final ItemHandlerMaster getInventory() {
-        return itemHandler;
+    public final MachineInventory getInventory() {
+        return inventory;
     }
 
     public final RecipeWrapper getRecipeWrapper() {
-        return new RecipeWrapper(itemHandler);
+        return new RecipeWrapper(inventory);
     }
 
     /**
      * Called to create an item handler if a slot layout is provided.
      */
-    protected ItemHandlerMaster createItemHandler(MachineInventoryLayout layout) {
-        return new ItemHandlerMaster(getIOConfig(), layout) {
+    protected MachineInventory createItemHandler(MachineInventoryLayout layout) {
+        return new MachineInventory(getIOConfig(), layout) {
             @Override
             protected void onContentsChanged(int slot) {
                 setChanged();
@@ -390,10 +394,14 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
     public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
         if (side != null) {
             if (cap == EIOCapabilities.SIDE_CONFIG)
-                return ioConfig.getCapabilityFor(side).cast();
+                return ioConfig.getCapability(side).cast();
 
             if (getInventory() != null && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && getIOConfig().getMode(side).canConnect())
-                return LazyOptional.of(() -> getInventory().getAccess(side)).cast();
+                return LazyOptional.of(() -> inventory.getCapability(side)).cast();
+        } else {
+            if (getInventory() != null && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+                return inventoryCap.cast();
+            }
         }
 
         return super.getCapability(cap, side);
@@ -403,6 +411,8 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
     public void invalidateCaps() {
         super.invalidateCaps();
         ioConfig.invalidateCaps();
+        inventory.invalidateCaps();
+        inventoryCap.invalidate();
     }
 
     @Override
@@ -416,8 +426,8 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
             pTag.putInt("redstone", redstoneControl.ordinal());
         }
 
-        if (itemHandler != null) {
-            pTag.put("inventory", itemHandler.serializeNBT());
+        if (inventory != null) {
+            pTag.put("inventory", inventory.serializeNBT());
         }
     }
 
@@ -430,8 +440,8 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
             redstoneControl = RedstoneControl.values()[pTag.getInt("redstone")];
         }
 
-        if (itemHandler != null) {
-            itemHandler.deserializeNBT(pTag.getCompound("inventory"));
+        if (inventory != null) {
+            inventory.deserializeNBT(pTag.getCompound("inventory"));
         }
 
         // For rendering io overlays after placed by an nbt filled block item

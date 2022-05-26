@@ -1,6 +1,7 @@
 package com.enderio.api.io;
 
 import com.enderio.api.UseOnly;
+import com.enderio.api.capability.ICapabilityProvider;
 import com.enderio.api.capability.ISideConfig;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -8,7 +9,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.LogicalSide;
 
-public interface IIOConfig extends INBTSerializable<CompoundTag> {
+public interface IIOConfig extends INBTSerializable<CompoundTag>, ICapabilityProvider<ISideConfig> {
     /**
      * Get the current IO mode for the given side.
      */
@@ -48,16 +49,12 @@ public interface IIOConfig extends INBTSerializable<CompoundTag> {
      */
     boolean supportsMode(Direction side, IOMode state);
 
-    /**
-     * Get a capability to access config from the given side.
-     */
-    default LazyOptional<ISideConfig> getCapabilityFor(Direction side) {
+    @Override
+    default LazyOptional<ISideConfig> getCapability(Direction side) {
         return LazyOptional.empty();
     }
 
-    /**
-     * Invalidate any capabilities cached by the config.
-     */
+    @Override
     default void invalidateCaps() {}
 
     /**

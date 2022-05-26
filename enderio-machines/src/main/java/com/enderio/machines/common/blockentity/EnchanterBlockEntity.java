@@ -5,7 +5,7 @@ import com.enderio.api.io.IOMode;
 import com.enderio.machines.common.io.FixedIOConfig;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
-import com.enderio.machines.common.io.item.ItemHandlerMaster;
+import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.menu.EnchanterMenu;
@@ -61,8 +61,8 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected ItemHandlerMaster createItemHandler(MachineInventoryLayout layout) {
-        return new ItemHandlerMaster(getIOConfig(), layout) {
+    protected MachineInventory createItemHandler(MachineInventoryLayout layout) {
+        return new MachineInventory(getIOConfig(), layout) {
             protected void onContentsChanged(int slot) {
                 if (slot != 3) {
                     Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.Types.ENCHANTING, getRecipeWrapper(), level);

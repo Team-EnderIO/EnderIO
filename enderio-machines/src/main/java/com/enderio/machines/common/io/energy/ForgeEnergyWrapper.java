@@ -1,10 +1,10 @@
 package com.enderio.machines.common.io.energy;
 
+import com.enderio.api.capability.ICapabilityProvider;
 import com.enderio.api.energy.IMachineEnergy;
 import net.minecraft.core.Direction;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.IEnergyStorage;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
 
@@ -12,24 +12,27 @@ import java.util.EnumMap;
  * Forge energy wrapper.
  * Used to wrap the different sides with a different {@link IEnergyStorage} for each so that side control can be easily maintained.
  */
-public final class ForgeEnergyWrapper {
+public final class ForgeEnergyWrapper implements ICapabilityProvider<IEnergyStorage> {
+    /**
+     * The wrapped energy holder.
+     */
     private final IMachineEnergy wrapped;
+
+    /**
+     * Cached map of all sided access capabilities.
+     */
     private final EnumMap<Direction, LazyOptional<Side>> sideCache = new EnumMap<>(Direction.class);
 
     public ForgeEnergyWrapper(IMachineEnergy wrapped) {
         this.wrapped = wrapped;
     }
 
-    /**
-     * Get {@link IEnergyStorage} capability for the given side.
-     */
-    public LazyOptional<IEnergyStorage> getCapabilityFor(Direction side) {
+    @Override
+    public LazyOptional<IEnergyStorage> getCapability(Direction side) {
         return sideCache.computeIfAbsent(side, direction -> LazyOptional.of(() -> new Side(wrapped, direction))).cast();
     }
 
-    /**
-     * Invalidate any side caps.
-     */
+    @Override
     public void invalidateCaps() {
         for (LazyOptional<Side> side : sideCache.values()) {
             side.invalidate();
@@ -37,7 +40,6 @@ public final class ForgeEnergyWrapper {
     }
 
     private record Side(IMachineEnergy wrapped, Direction side) implements IEnergyStorage {
-
         @Override
         public int receiveEnergy(int maxReceive, boolean simulate) {
             if (!canReceive()) return 0;
