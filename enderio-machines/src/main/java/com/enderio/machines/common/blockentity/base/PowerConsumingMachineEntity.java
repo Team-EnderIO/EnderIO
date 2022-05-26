@@ -1,7 +1,7 @@
 package com.enderio.machines.common.blockentity.base;
 
 import com.enderio.api.capacitor.CapacitorKey;
-import com.enderio.machines.common.blockentity.data.sidecontrol.IOConfig;
+import com.enderio.machines.common.io.IOConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntityType;

@@ -1,4 +1,4 @@
-package com.enderio.machines.common.blockentity.data.sidecontrol.item;
+package com.enderio.machines.common.io.item;
 
 import com.enderio.base.EnderIO;
 import com.enderio.base.common.capacitor.CapacitorUtil;
@@ -13,64 +13,26 @@ public class MachineInventoryLayout {
         INPUT,
         OUTPUT,
         CAPACITOR,
-        UPGRADE,
         MISC
     }
-
-    private record SlotDefinition(SlotType type, Predicate<ItemStack> validator) {}
 
     private final Map<Integer, SlotType> slotTypeMap;
     private final Map<Integer, Predicate<ItemStack>> slotPredicates;
     private final int slotCount;
+    private final int capacitorSlot;
 
-    private MachineInventoryLayout(Map<Integer, SlotType> slotTypeMap, Map<Integer, Predicate<ItemStack>> slotPredicates) {
-        this.slotTypeMap = Map.copyOf(slotTypeMap);
-        this.slotPredicates = Map.copyOf(slotPredicates);
+    private MachineInventoryLayout(Builder builder) {
+        this.slotTypeMap = Map.copyOf(builder.slotTypeMap);
+        this.slotPredicates = Map.copyOf(builder.slotPredicates);
         this.slotCount = slotTypeMap.size();
+        this.capacitorSlot = builder.capacitorSlot;
     }
 
     public boolean validateStack(int slot, ItemStack stack) {
         if (slotPredicates.containsKey(slot)) {
             return slotPredicates.get(slot).test(stack);
         }
-
         return true;
-    }
-
-    @Deprecated
-    public static MachineInventoryLayout basic(int inputs, int outputs) {
-        Map<Integer, SlotType> slotMap = new HashMap<>();
-        for (int i = 0; i < inputs + outputs; i++) {
-            SlotType type;
-            if (i < inputs) {
-                type = SlotType.INPUT;
-            } else if (i < inputs + outputs) {
-                type = SlotType.OUTPUT;
-            } else {
-                type = SlotType.MISC;
-            }
-
-            slotMap.put(i, type);
-        }
-        return new MachineInventoryLayout(slotMap, Map.of());
-    }
-
-    @Deprecated
-    public static MachineInventoryLayout withCapacitor(int inputs, int outputs) {
-        Map<Integer, SlotType> slotMap = new HashMap<>();
-        for (int i = 0; i < inputs + outputs + 1; i++) {
-            SlotType type;
-            if (i < inputs) {
-                type = SlotType.INPUT;
-            } else if (i < inputs + outputs) {
-                type = SlotType.OUTPUT;
-            } else {
-                type = SlotType.CAPACITOR;
-            }
-
-            slotMap.put(i, type);
-        }
-        return new MachineInventoryLayout(slotMap, Map.of());
     }
 
     public static Builder builder() {
@@ -81,19 +43,28 @@ public class MachineInventoryLayout {
         return slotCount;
     }
 
-    public boolean isSlotType(int slot, SlotType type) {
-        return slotTypeMap.getOrDefault(slot, SlotType.MISC) == type;
+    public boolean isInput(int slot) {
+        return slotTypeMap.containsKey(slot) && slotTypeMap.get(slot) == SlotType.INPUT;
     }
 
-    public List<Integer> getAll(SlotType type) {
-        return slotTypeMap.entrySet().stream().filter(entry -> entry.getValue() == type).map(Map.Entry::getKey).toList();
+    public boolean isOutput(int slot) {
+        return slotTypeMap.containsKey(slot) && slotTypeMap.get(slot) == SlotType.OUTPUT;
     }
 
-    public Optional<Integer> getFirst(SlotType type) {
-        if (!getAll(type).isEmpty()) {
-            return Optional.of(getAll(type).get(0));
-        }
-        return Optional.empty();
+    /**
+     * Whether the inventory has a capacitor slot
+     */
+    public boolean hasCapacitorSlot() {
+        return getCapacitorSlot() > 0;
+    }
+
+    /**
+     * Get the slot that the capacitor lies in.
+     *
+     * @apiNote This can be -1 meaning the machine has no capacitor.
+     */
+    public int getCapacitorSlot() {
+        return capacitorSlot;
     }
 
     public static class Builder {
@@ -101,6 +72,8 @@ public class MachineInventoryLayout {
         private final Map<Integer, Predicate<ItemStack>> slotPredicates;
 
         private int slotCounter;
+
+        private int capacitorSlot;
 
         private Builder() {
             slotTypeMap = new HashMap<>();
@@ -167,6 +140,7 @@ public class MachineInventoryLayout {
             // Add slot type and the validator.
             slotTypeMap.put(slotCounter, SlotType.CAPACITOR);
             slotPredicates.put(slotCounter, CapacitorUtil::isCapacitor);
+            capacitorSlot = slotCounter;
             slotCounter++;
             return this;
         }
@@ -176,7 +150,7 @@ public class MachineInventoryLayout {
         }
 
         public MachineInventoryLayout build() {
-            return new MachineInventoryLayout(slotTypeMap, slotPredicates);
+            return new MachineInventoryLayout(this);
         }
     }
 }

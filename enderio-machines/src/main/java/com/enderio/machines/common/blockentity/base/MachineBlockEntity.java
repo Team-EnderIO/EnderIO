@@ -6,9 +6,9 @@ import com.enderio.base.common.blockentity.sync.EnumDataSlot;
 import com.enderio.base.common.blockentity.sync.NBTSerializableDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.machines.common.MachineTier;
-import com.enderio.machines.common.blockentity.data.sidecontrol.IOConfig;
-import com.enderio.machines.common.blockentity.data.sidecontrol.item.MachineItemHandler;
-import com.enderio.machines.common.blockentity.data.sidecontrol.item.MachineInventoryLayout;
+import com.enderio.machines.common.io.IOConfig;
+import com.enderio.machines.common.io.item.ItemHandlerMaster;
+import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -58,7 +58,7 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
 
     // region Items and Fluids
 
-    private MachineItemHandler itemHandler;
+    private ItemHandlerMaster itemHandler;
 
     private final EnumMap<Direction, LazyOptional<IItemHandler>> itemHandlerCache = new EnumMap<>(Direction.class);
     private final EnumMap<Direction, LazyOptional<IFluidHandler>> fluidHandlerCache = new EnumMap<>(Direction.class);
@@ -138,7 +138,7 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
 
     // region Item Handling
 
-    public final MachineItemHandler getInventory() {
+    public final ItemHandlerMaster getInventory() {
         return itemHandler;
     }
 
@@ -149,8 +149,8 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
     /**
      * Called to create an item handler if a slot layout is provided.
      */
-    protected MachineItemHandler createItemHandler(MachineInventoryLayout layout) {
-        return new MachineItemHandler(getIoConfig(), layout) {
+    protected ItemHandlerMaster createItemHandler(MachineInventoryLayout layout) {
+        return new ItemHandlerMaster(getIoConfig(), layout) {
             @Override
             protected void onContentsChanged(int slot) {
                 setChanged();

@@ -2,8 +2,8 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
-import com.enderio.machines.common.blockentity.data.sidecontrol.item.MachineItemHandler;
-import com.enderio.machines.common.blockentity.data.sidecontrol.item.MachineInventoryLayout;
+import com.enderio.machines.common.io.item.ItemHandlerMaster;
+import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.menu.EnchanterMenu;
 import com.enderio.api.recipe.EnchanterRecipe;
@@ -15,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -35,7 +36,7 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
         return MachineInventoryLayout.builder()
             .addInput(itemStack -> itemStack.getItem() == Items.WRITABLE_BOOK)
             .addInput()
-            .addInput()
+            .addInput(itemStack -> itemStack.is(Tags.Items.GEMS_LAPIS))
             .addOutput()
             .build();
     }
@@ -56,8 +57,8 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected MachineItemHandler createItemHandler(MachineInventoryLayout layout) {
-        return new MachineItemHandler(getIoConfig(), layout) {
+    protected ItemHandlerMaster createItemHandler(MachineInventoryLayout layout) {
+        return new ItemHandlerMaster(getIoConfig(), layout) {
             protected void onContentsChanged(int slot) {
                 if (slot != 3) {
                     Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.Types.ENCHANTING, getRecipeWrapper(), level);

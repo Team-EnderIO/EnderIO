@@ -23,6 +23,11 @@ public enum MachineCapacitorKeys {
     ENHANCED_ALLOY_SMELTER_ENERGY_TRANSFER(() -> new CapacitorKey(180, Scalers.ENERGY)),
     ENHANCED_ALLOY_SMELTER_ENERGY_CONSUME(() -> new CapacitorKey(45, Scalers.ENERGY)),
 
+    SIMPLE_STIRLING_GENERATOR_ENERGY_CAPACITY(() -> new CapacitorKey(2000, Scalers.FIXED)),
+
+    STIRLING_GENERATOR_ENERGY_CAPACITY(() -> new CapacitorKey(100000, Scalers.ENERGY)),
+    // TODO: Generation rate and efficiency.
+
     DEV_ENERGY_CAPACITY(() -> new CapacitorKey(100000, Scalers.FIXED)),
     DEV_ENERGY_TRANSFER(() -> new CapacitorKey(120, Scalers.FIXED)),
     DEV_ENERGY_CONSUME(() -> new CapacitorKey(30, Scalers.FIXED)),

@@ -1,4 +1,4 @@
-package com.enderio.machines.common.blockentity.data.sidecontrol.item;
+package com.enderio.machines.common.io.item;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -8,10 +8,10 @@ import javax.annotation.Nonnull;
 
 public class SidedItemHandlerAccess implements IItemHandler {
 
-    private final MachineItemHandler master;
+    private final ItemHandlerMaster master;
     private final Direction direction;
 
-    public SidedItemHandlerAccess(MachineItemHandler master, Direction direction) {
+    public SidedItemHandlerAccess(ItemHandlerMaster master, Direction direction) {
         this.master = master;
         this.direction = direction;
     }

@@ -15,7 +15,7 @@ public class StirlingGeneratorMenu extends MachineMenu<StirlingGeneratorBlockEnt
         super(blockEntity, inventory, MachineMenus.STIRLING_GENERATOR.get(), pContainerId);
         if (blockEntity != null) {
             // Capacitor slot
-            if (blockEntity.getTier() != MachineTier.Simple) {
+            if (blockEntity.requiresCapacitor()) {
                 addSlot(new MachineSlot(blockEntity.getInventory(), 1, 12, 60));
             }
 
