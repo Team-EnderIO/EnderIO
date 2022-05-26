@@ -71,6 +71,9 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
         this.fluidTank = new MachineFluidTank(capacity, getIOConfig());
         this.fluidTankCap = LazyOptional.of(() -> this.fluidTank);
 
+        // Add capability provider
+        addCapabilityProvider(fluidTank);
+
         addDataSlot(new FluidStackDataSlot(() -> fluidTank.getFluidInTank(0), fluidTank::setFluid, SyncMode.WORLD));
     }
 
@@ -185,10 +188,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-            if (side != null && getIOConfig().getMode(side).canConnect()) {
-                return fluidTank.getCapability(side).cast();
-            }
+        if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && side == null) {
             return fluidTankCap.cast();
         }
 
@@ -198,7 +198,6 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     @Override
     public void invalidateCaps() {
         super.invalidateCaps();
-        fluidTank.invalidateCaps();
         fluidTankCap.invalidate();
     }
 

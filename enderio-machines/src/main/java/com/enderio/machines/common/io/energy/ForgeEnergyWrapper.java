@@ -1,9 +1,12 @@
 package com.enderio.machines.common.io.energy;
 
-import com.enderio.api.capability.ICapabilityProvider;
+import com.enderio.api.capability.IEnderCapabilityProvider;
 import com.enderio.api.energy.IMachineEnergy;
+import com.enderio.api.io.IIOConfig;
 import net.minecraft.core.Direction;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
 import java.util.EnumMap;
@@ -12,7 +15,13 @@ import java.util.EnumMap;
  * Forge energy wrapper.
  * Used to wrap the different sides with a different {@link IEnergyStorage} for each so that side control can be easily maintained.
  */
-public final class ForgeEnergyWrapper implements ICapabilityProvider<IEnergyStorage> {
+// TODO: Do we want to revert the whole IMachineEnergy change?
+public final class ForgeEnergyWrapper implements IEnderCapabilityProvider<IEnergyStorage> {
+    /**
+     * Machine's io config
+     */
+    private final IIOConfig config;
+
     /**
      * The wrapped energy holder.
      */
@@ -23,13 +32,29 @@ public final class ForgeEnergyWrapper implements ICapabilityProvider<IEnergyStor
      */
     private final EnumMap<Direction, LazyOptional<Side>> sideCache = new EnumMap<>(Direction.class);
 
-    public ForgeEnergyWrapper(IMachineEnergy wrapped) {
+    public ForgeEnergyWrapper(IIOConfig config, IMachineEnergy wrapped) {
+        this.config = config;
         this.wrapped = wrapped;
     }
 
     @Override
+    public Capability<IEnergyStorage> getCapabilityType() {
+        return CapabilityEnergy.ENERGY;
+    }
+
+    @Override
     public LazyOptional<IEnergyStorage> getCapability(Direction side) {
+        if (!config.getMode(side).canConnect())
+            return LazyOptional.empty();
         return sideCache.computeIfAbsent(side, direction -> LazyOptional.of(() -> new Side(wrapped, direction))).cast();
+    }
+
+    @Override
+    public void invalidateSide(Direction side) {
+        if (sideCache.containsKey(side)) {
+            sideCache.get(side).invalidate();
+            sideCache.remove(side);
+        }
     }
 
     @Override

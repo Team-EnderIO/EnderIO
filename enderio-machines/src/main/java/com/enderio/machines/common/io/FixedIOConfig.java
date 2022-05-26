@@ -1,9 +1,13 @@
 package com.enderio.machines.common.io;
 
+import com.enderio.api.capability.ISideConfig;
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Fixed IO Config.
@@ -45,8 +49,28 @@ public final class FixedIOConfig implements IIOConfig {
         return tag;
     }
 
+    // region Stubs
+
     @Override
     public void deserializeNBT(CompoundTag nbt) {
         // Not enabled.
     }
+
+    @Override
+    public boolean isCapability(@NotNull Capability<?> cap) {
+        return false;
+    }
+
+    @Override
+    public LazyOptional<ISideConfig> getCapability(Direction side) {
+        return LazyOptional.empty();
+    }
+
+    @Override
+    public void invalidateSide(Direction side) {}
+
+    @Override
+    public void invalidateCaps() {}
+
+    // endregion
 }

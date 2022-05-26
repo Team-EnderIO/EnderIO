@@ -1,5 +1,6 @@
 package com.enderio.machines.common.blockentity.base;
 
+import com.enderio.api.capability.IEnderCapabilityProvider;
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
 import com.enderio.base.common.blockentity.RedstoneControl;
@@ -7,10 +8,9 @@ import com.enderio.base.common.blockentity.SyncedBlockEntity;
 import com.enderio.base.common.blockentity.sync.EnumDataSlot;
 import com.enderio.base.common.blockentity.sync.NBTSerializableDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
-import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.machines.common.MachineTier;
-import com.enderio.machines.common.io.IOConfig;
 import com.enderio.machines.common.block.MachineBlock;
+import com.enderio.machines.common.io.IOConfig;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import net.minecraft.core.BlockPos;
@@ -41,6 +41,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
@@ -76,17 +78,25 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
 
     // endregion
 
+    // region Capabilities
+
+    private final Map<Capability<?>, IEnderCapabilityProvider<?>> capabilityProviders = new HashMap<>();
+
+    // endregion
+
     public MachineBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);
 
         // Create IO Config.
         this.ioConfig = createIOConfig();
+        addCapabilityProvider(ioConfig);
 
         // If the machine declares an inventory layout, use it to create a handler
         MachineInventoryLayout slotLayout = getInventoryLayout();
         if (slotLayout != null) {
             inventory = createMachineInventory(slotLayout);
             inventoryCap = LazyOptional.of(() -> inventory);
+            addCapabilityProvider(inventory);
         } else {
             inventory = null;
             inventoryCap = LazyOptional.empty();
@@ -102,7 +112,7 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
             if (!isServer() && getIOConfig().renderOverlay()) {
                 modelData.setData(IO_CONFIG_PROPERTY, getIOConfig());
                 requestModelDataUpdate();
-                level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
+                level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
             }
         }));
 
@@ -146,8 +156,19 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
     protected IIOConfig createIOConfig() {
         return new IOConfig() {
             @Override
-            protected void onChanged() {
+            protected void onChanged(Direction side, IOMode oldMode, IOMode newMode) {
+                // Mark entity as changed.
                 setChanged();
+
+                // Invalidate capabilities for this side as the side has been disabled.
+                if (newMode == IOMode.DISABLED) {
+                    for (IEnderCapabilityProvider<?> capProvider : capabilityProviders.values()) {
+                        capProvider.invalidateSide(side);
+                    }
+                }
+
+                // Notify neighbors of update
+                level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
             }
 
             @Override
@@ -208,6 +229,14 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
                 setChanged();
             }
         };
+    }
+
+    // endregion
+
+    // region Block capabilities
+
+    public void addCapabilityProvider(IEnderCapabilityProvider<?> provider) {
+        capabilityProviders.put(provider.getCapabilityType(), provider);
     }
 
     // endregion
@@ -393,11 +422,9 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
     @Override
     public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
         if (side != null) {
-            if (cap == EIOCapabilities.SIDE_CONFIG)
-                return ioConfig.getCapability(side).cast();
-
-            if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && getInventory() != null && getIOConfig().getMode(side).canConnect())
-                return LazyOptional.of(() -> inventory.getCapability(side)).cast();
+            if (capabilityProviders.containsKey(cap)) {
+                return capabilityProviders.get(cap).getCapability(side).cast();
+            }
         } else {
             if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && getInventory() != null) {
                 return inventoryCap.cast();
@@ -410,9 +437,12 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
     @Override
     public void invalidateCaps() {
         super.invalidateCaps();
-        ioConfig.invalidateCaps();
-        inventory.invalidateCaps();
         inventoryCap.invalidate();
+
+        // Invalidate all provided capabilities
+        for (IEnderCapabilityProvider<?> provider : capabilityProviders.values()) {
+            provider.invalidateCaps();
+        }
     }
 
     @Override

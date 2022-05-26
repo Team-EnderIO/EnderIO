@@ -33,7 +33,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity implements
 
     private int storedEnergy;
 
-    private final ForgeEnergyWrapper energyWrapper = new ForgeEnergyWrapper(this);
+    private final ForgeEnergyWrapper energyWrapper;
 
     @UseOnly(LogicalSide.CLIENT) private EnergyCapacityPair clientEnergy;
 
@@ -46,6 +46,10 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity implements
         this.capacityKey = capacityKey;
         this.transferKey = transferKey;
         this.consumptionKey = consumptionKey;
+
+        // Create energy wrapper
+        energyWrapper = new ForgeEnergyWrapper(getIOConfig(), this);
+        addCapabilityProvider(energyWrapper);
 
         // Sync energy
         addDataSlot(new MachineEnergyDataSlot(this::getEnergyStored, this::getMaxEnergyStored, vec -> clientEnergy = vec, SyncMode.GUI));
@@ -103,8 +107,9 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity implements
     @NotNull
     @Override
     public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if (cap == CapabilityEnergy.ENERGY && side != null && getIOConfig().getMode(side).canConnect()) {
-            return energyWrapper.getCapability(side).cast();
+        if (cap == CapabilityEnergy.ENERGY && side == null) {
+            // TODO: Null side access..
+//            return energyWrapper.getCapability(side).cast();
         }
         return super.getCapability(cap, side);
     }
@@ -112,7 +117,6 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity implements
     @Override
     public void invalidateCaps() {
         super.invalidateCaps();
-        energyWrapper.invalidateCaps();
     }
 
     @Override

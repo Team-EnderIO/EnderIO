@@ -1,17 +1,20 @@
 package com.enderio.machines.common.io.item;
 
-import com.enderio.api.capability.ICapabilityProvider;
+import com.enderio.api.capability.IEnderCapabilityProvider;
 import com.enderio.api.io.IIOConfig;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.util.EnumMap;
 
-public class MachineInventory extends ItemStackHandler implements ICapabilityProvider<IItemHandler> {
+public class MachineInventory extends ItemStackHandler implements IEnderCapabilityProvider<IItemHandler> {
 
     private final IIOConfig config;
 
@@ -82,8 +85,23 @@ public class MachineInventory extends ItemStackHandler implements ICapabilityPro
     // region Sided access
 
     @Override
+    public Capability<IItemHandler> getCapabilityType() {
+        return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+    }
+
+    @Override
     public LazyOptional<IItemHandler> getCapability(Direction side) {
+        if (!config.getMode(side).canConnect())
+            return LazyOptional.empty();
         return sideCache.computeIfAbsent(side, dir -> LazyOptional.of(() -> new Sided(this, dir))).cast();
+    }
+
+    @Override
+    public void invalidateSide(Direction side) {
+        if (sideCache.containsKey(side)) {
+            sideCache.get(side).invalidate();
+            sideCache.remove(side);
+        }
     }
 
     @Override

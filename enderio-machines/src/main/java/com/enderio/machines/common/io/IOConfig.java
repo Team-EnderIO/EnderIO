@@ -3,11 +3,14 @@ package com.enderio.machines.common.io;
 import com.enderio.api.capability.ISideConfig;
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
+import com.enderio.base.common.init.EIOCapabilities;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -33,9 +36,11 @@ public class IOConfig implements IIOConfig {
     }
 
     @Override
-    public void setMode(Direction side, IOMode state) {
-        config.put(translateSide(side), state);
-        onChanged();
+    public void setMode(Direction side, IOMode mode) {
+        Direction relSide = translateSide(side);
+        IOMode oldMode = config.get(relSide);
+        config.put(relSide, mode);
+        onChanged(side, oldMode, mode);
     }
 
     @Override
@@ -61,11 +66,26 @@ public class IOConfig implements IIOConfig {
         };
     }
 
+    // region Capability Provider
+
+    @Override
+    public boolean isCapability(@NotNull Capability<?> cap) {
+        return cap == EIOCapabilities.SIDE_CONFIG;
+    }
+
     /**
      * Get side config as a capability.
      */
     public LazyOptional<ISideConfig> getCapability(Direction side) {
         return sideAccessCache.computeIfAbsent(side, dir -> LazyOptional.of(() -> new SideAccess(this, dir))).cast();
+    }
+
+    @Override
+    public void invalidateSide(Direction side) {
+        if (sideAccessCache.containsKey(side)) {
+            sideAccessCache.get(side).invalidate();
+            sideAccessCache.remove(side);
+        }
     }
 
     /**
@@ -77,8 +97,10 @@ public class IOConfig implements IIOConfig {
         }
     }
 
+    // endregion
+
     // Override in a BE
-    protected void onChanged() {
+    protected void onChanged(Direction side, IOMode oldMode, IOMode newMode) {
 
     }
 

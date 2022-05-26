@@ -1,18 +1,21 @@
 package com.enderio.machines.common.io.fluid;
 
-import com.enderio.api.capability.ICapabilityProvider;
+import com.enderio.api.capability.IEnderCapabilityProvider;
 import com.enderio.api.io.IIOConfig;
 import net.minecraft.core.Direction;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.util.EnumMap;
 
-public class MachineFluidTank extends FluidTank implements ICapabilityProvider<IFluidTank> {
+public class MachineFluidTank extends FluidTank implements IEnderCapabilityProvider<IFluidHandler> {
 
     private final IIOConfig config;
 
@@ -28,10 +31,24 @@ public class MachineFluidTank extends FluidTank implements ICapabilityProvider<I
     }
 
     // region Sided access
+    @Override
+    public Capability<IFluidHandler> getCapabilityType() {
+        return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
+    }
 
     @Override
-    public LazyOptional<IFluidTank> getCapability(Direction side) {
+    public LazyOptional<IFluidHandler> getCapability(Direction side) {
+        if (!config.getMode(side).canConnect())
+            return LazyOptional.empty();
         return sideCache.computeIfAbsent(side, dir -> LazyOptional.of(() -> new Sided(this, dir))).cast();
+    }
+
+    @Override
+    public void invalidateSide(Direction side) {
+        if (sideCache.containsKey(side)) {
+            sideCache.get(side).invalidate();
+            sideCache.remove(side);
+        }
     }
 
     @Override
