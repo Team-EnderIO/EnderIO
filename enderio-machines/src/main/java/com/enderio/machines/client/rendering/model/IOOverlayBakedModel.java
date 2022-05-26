@@ -2,7 +2,7 @@ package com.enderio.machines.client.rendering.model;
 
 import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
-import com.enderio.machines.common.io.IOConfig;
+import com.enderio.base.common.blockentity.IOConfig;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Pair;
@@ -43,8 +43,8 @@ public class IOOverlayBakedModel implements IDynamicBakedModel {
         }
     }
 
-    private TextureAtlasSprite getTexture(IOConfig.IOState ioState) {
-        ResourceLocation tex = switch (ioState) {
+    private TextureAtlasSprite getTexture(IOConfig.State state) {
+        ResourceLocation tex = switch (state) {
             case NONE -> MissingTextureAtlasSprite.getLocation();
         case PUSH -> TEX_PUSH;
         case PULL -> TEX_PULL;
@@ -61,17 +61,6 @@ public class IOOverlayBakedModel implements IDynamicBakedModel {
         this.north = Direction.rotate(transform.getRotation().getMatrix(), Direction.NORTH);
     }
 
-    // Gets the direction local to the rendered block, rather than the query
-    private Direction getWorldDirection(Direction direction) {
-        return switch (direction) {
-        case NORTH -> this.north;
-        case SOUTH -> this.north.getOpposite();
-        case WEST -> this.north.getCounterClockWise();
-        case EAST -> this.north.getClockWise();
-        default -> direction;
-        };
-    }
-
     @NotNull
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull IModelData extraData) {
@@ -84,9 +73,9 @@ public class IOOverlayBakedModel implements IDynamicBakedModel {
 
                 // Get all states for each direction. If its not "None" then we render an overlay quad.
                 for (Direction dir : Direction.values()) {
-                    IOConfig.IOState ioState = config.getIO(dir);
-                    if (ioState != IOConfig.IOState.NONE) {
-                        Vec3[] verts = QUADS.get(getWorldDirection(dir));
+                    IOConfig.State ioState = config.getSide(dir);
+                    if (ioState != IOConfig.State.NONE) {
+                        Vec3[] verts = QUADS.get(dir);
                         quads.add(ModelRenderUtil.createQuad(verts, getTexture(ioState)));
                     }
                 }

@@ -159,8 +159,6 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
         if (direction != null) {
             if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
                 return LazyOptional.of(() -> fluidTank.getAccess(direction)).cast();
-            if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-                return LazyOptional.of(() -> getInventory().getAccess(direction)).cast();
         }
         return super.getCapability(cap, direction);
     }

@@ -1,6 +1,6 @@
 package com.enderio.machines.common.io.item;
 
-import com.enderio.machines.common.io.IOConfig;
+import com.enderio.base.common.blockentity.IOConfig;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
@@ -61,12 +61,11 @@ public class ItemHandlerMaster extends ItemStackHandler {
     @Nonnull
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
-        if (layout.isInput(slot) && !isForceMode)
+        if (!layout.isOutput(slot) && !isForceMode)
             return ItemStack.EMPTY;
         return super.extractItem(slot, amount, simulate);
     }
 
-    // TODO: Its come to my attention nullable Direction needs to be supported.
     public SidedItemHandlerAccess getAccess(Direction direction) {
         return access.computeIfAbsent(direction,
             dir -> new SidedItemHandlerAccess(this, dir));
