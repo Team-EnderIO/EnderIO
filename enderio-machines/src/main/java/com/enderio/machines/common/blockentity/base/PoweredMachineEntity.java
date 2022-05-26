@@ -104,7 +104,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity implements
     @Override
     public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
         if (cap == CapabilityEnergy.ENERGY) {
-            return energyWrapper.getCapability(side).cast();
+            return energyWrapper.getCapabilityFor(side).cast();
         }
         return super.getCapability(cap, side);
     }

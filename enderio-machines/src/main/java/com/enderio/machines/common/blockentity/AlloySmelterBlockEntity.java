@@ -194,6 +194,8 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
 
     @Override
     public MachineInventoryLayout getInventoryLayout() {
+        // TODO: Stop items being added if a recipe is valid, fixes automatic insertion
+
         // Setup item slots
         return MachineInventoryLayout.builder()
             .addBasicInputs(3)

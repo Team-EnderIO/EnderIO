@@ -2,7 +2,7 @@ package com.enderio.machines.common.blockentity.base;
 
 import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.machines.common.block.ProgressMachineBlock;
-import com.enderio.machines.common.io.IOConfig;
+import com.enderio.base.common.blockentity.IOConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
@@ -43,6 +43,6 @@ public abstract class PowerGeneratingMachineEntity extends PoweredMachineEntity 
 
     @Override
     public boolean canExtractEnergy(Direction side) {
-        return getIoConfig().getIO(side) != IOConfig.IOState.DISABLED;
+        return getIoConfig().getSide(side) != IOConfig.State.DISABLED;
     }
 }

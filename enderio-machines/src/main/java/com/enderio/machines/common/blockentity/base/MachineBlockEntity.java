@@ -5,8 +5,10 @@ import com.enderio.base.common.blockentity.SyncedBlockEntity;
 import com.enderio.base.common.blockentity.sync.EnumDataSlot;
 import com.enderio.base.common.blockentity.sync.NBTSerializableDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.machines.common.MachineTier;
-import com.enderio.machines.common.io.IOConfig;
+import com.enderio.base.common.blockentity.IOConfig;
+import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.io.item.ItemHandlerMaster;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import net.minecraft.core.BlockPos;
@@ -17,6 +19,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -24,6 +27,7 @@ import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -32,6 +36,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
 import java.util.Optional;
@@ -42,7 +47,17 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
 
     // region IO Configuration
 
-    private final IOConfig ioConfig = new IOConfig();
+    private final IOConfig ioConfig = new IOConfig() {
+        @Override
+        protected void onChanged() {
+            setChanged();
+        }
+
+        @Override
+        protected Direction getBlockFacing() {
+            return getBlockState().getValue(MachineBlock.FACING);
+        }
+    };
 
     public static final ModelProperty<IOConfig> IO_CONFIG_PROPERTY = new ModelProperty<>();
 
@@ -86,6 +101,7 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
                 if (!isServer()) {
                     modelData.setData(IO_CONFIG_PROPERTY, ioConfig);
                     requestModelDataUpdate();
+                    level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
                 }
             }));
 
@@ -169,11 +185,11 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
     @Override
     public void tick() {
         if (isCacheDirty) {
-            updateCache();
+            updateCapabilityCache();
         }
 
         if (shouldActSlow()) {
-            moveResources();
+            forceResources();
         }
 
         super.tick();
@@ -198,90 +214,50 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
 
     // region Item movement
 
-    // TODO: Calling @agnor99 to maybe document some of what this is doing?
-
-    private void moveResources() {
-        // TODO: What do we do if ioConfig's are disabled. Allow or disallow movement?
+    /**
+     * Push and pull resources to/from other blocks.
+     */
+    private void forceResources() {
         for (Direction direction : Direction.values()) {
-            if (ioConfig.getIO(direction).canForce()) {
+            if (ioConfig.getSide(direction).canForce()) {
                 moveItems(direction);
                 moveFluids(direction);
             }
         }
     }
 
-    public void updateCache() {
-        itemHandlerCache.clear();
-        fluidHandlerCache.clear();
-        for (Direction direction: Direction.values()) {
-            BlockEntity neighbor = level.getBlockEntity(worldPosition.relative(direction));
-
-            if (neighbor != null) {
-                itemHandlerCache.put(direction, addInvalidationListener(neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, direction.getOpposite())));
-                fluidHandlerCache.put(direction, addInvalidationListener(neighbor.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction.getOpposite())));
-            } else {
-                itemHandlerCache.put(direction, LazyOptional.empty());
-                fluidHandlerCache.put(direction, LazyOptional.empty());
-            }
-        }
-    }
-
     /**
-     * needs to be called to prevent an instant call of the listener if the capability is not present
-     * @param capability
-     * @param <T>
-     * @return
+     * Move items to and fro via the given side.
      */
-    private <T> LazyOptional<T> addInvalidationListener(LazyOptional<T> capability) {
-        if (capability.isPresent())
-            capability.addListener(this::markCacheDirty);
-        return capability;
-    }
+    private void moveItems(Direction side) {
+        // Get our item handler.
+        getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side).resolve().ifPresent(selfHandler -> {
+            // Get neighboring item handler.
+            if (itemHandlerCache.containsKey(side)) {
+                Optional<IItemHandler> otherHandler = itemHandlerCache.get(side).resolve();
 
-    private <T> void markCacheDirty(LazyOptional<T> capability) {
-        isCacheDirty = true;
-    }
+                if (otherHandler.isPresent()) {
+                    // Get side config
+                    IOConfig.State sideState = ioConfig.getSide(side);
 
-    private void moveFluids(Direction direction) {
-        getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction).resolve().ifPresent(fluidHandler -> {
-            if (fluidHandlerCache.containsKey(direction)) {
-                Optional<IFluidHandler> otherFluid = fluidHandlerCache.get(direction).resolve();
-                if (otherFluid.isPresent()) {
-                    FluidStack stack = fluidHandler.drain(100, FluidAction.SIMULATE);
-                    if (stack.isEmpty()) {
-                        moveFluids(otherFluid.get(), fluidHandler, 100);
-                    } else {
-                        moveFluids(fluidHandler, otherFluid.get(), 100);
+                    // Output items to the other provider if enabled.
+                    if (sideState.canPush()) {
+                        moveItems(selfHandler, otherHandler.get());
+                    }
+
+                    // Insert items from the other provider if enabled.
+                    if (sideState.canPull()) {
+                        moveItems(otherHandler.get(), selfHandler);
                     }
                 }
             }
         });
     }
-    public int moveFluids(IFluidHandler from, IFluidHandler to, int maxDrain) {
-        FluidStack stack = from.drain(maxDrain, FluidAction.SIMULATE);
-        if(stack.isEmpty()) {
-            return 0;
-        }
-        int filled = to.fill(stack, FluidAction.EXECUTE);
-        stack.setAmount(filled);
-        from.drain(stack, FluidAction.EXECUTE);
-        return filled;
-    }
 
-    private void moveItems(Direction direction) {
-        getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, direction).resolve().ifPresent(itemHandler -> {
-            if (itemHandlerCache.containsKey(direction)) {
-                Optional<IItemHandler> otherItem = itemHandlerCache.get(direction).resolve();
-
-                if (otherItem.isPresent()) {
-                    moveItems(itemHandler, otherItem.get());
-                    moveItems(otherItem.get(), itemHandler);
-                }
-            }
-        });
-    }
-
-    private void moveItems(IItemHandler from, IItemHandler to) {
+    /**
+     * Move items from one item handler to the other.
+     */
+    protected void moveItems(IItemHandler from, IItemHandler to) {
         for (int i = 0; i < from.getSlots(); i++) {
             ItemStack extracted = from.extractItem(i, 1, true);
             if (!extracted.isEmpty()) {
@@ -296,7 +272,106 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
         }
     }
 
+    /**
+     * Move fluids to and fro via the given side.
+     */
+    private void moveFluids(Direction side) {
+        // Get our fluid handler
+        getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side).resolve().ifPresent(selfHandler -> {
+            // Get neighboring fluid handler.
+            if (fluidHandlerCache.containsKey(side)) {
+                Optional<IFluidHandler> otherHandler = fluidHandlerCache.get(side).resolve();
+
+                if (otherHandler.isPresent()) {
+                    // Get side config
+                    IOConfig.State sideState = ioConfig.getSide(side);
+
+                    // Test if we have fluid.
+                    FluidStack stack = selfHandler.drain(100, FluidAction.SIMULATE);
+
+                    // If we have no fluids, see if we can pull. Otherwise, push.
+                    if (stack.isEmpty() && sideState.canPull()) {
+                        moveFluids(otherHandler.get(), selfHandler, 100);
+                    } else if (sideState.canPush()) {
+                        moveFluids(selfHandler, otherHandler.get(), 100);
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * Move fluids from one handler to the other.
+     */
+    protected int moveFluids(IFluidHandler from, IFluidHandler to, int maxDrain) {
+        FluidStack stack = from.drain(maxDrain, FluidAction.SIMULATE);
+        if(stack.isEmpty()) {
+            return 0;
+        }
+        int filled = to.fill(stack, FluidAction.EXECUTE);
+        stack.setAmount(filled);
+        from.drain(stack, FluidAction.EXECUTE);
+        return filled;
+    }
+
+    /**
+     * Add invalidation handler to a capability to be notified if it is removed.
+     */
+    private <T> LazyOptional<T> addInvalidationListener(LazyOptional<T> capability) {
+        if (capability.isPresent())
+            capability.addListener(this::markCapabilityCacheDirty);
+        return capability;
+    }
+
+    /**
+     * Mark the capability cache as dirty. Will be updated next tick.
+     */
+    private <T> void markCapabilityCacheDirty(LazyOptional<T> capability) {
+        isCacheDirty = true;
+    }
+
+    /**
+     * Update capability cache
+     */
+    public void updateCapabilityCache() {
+        // Update capability cache by searching for item and fluid handlers.
+        itemHandlerCache.clear();
+        fluidHandlerCache.clear();
+        for (Direction direction : Direction.values()) {
+            BlockEntity neighbor = level.getBlockEntity(worldPosition.relative(direction));
+            if (neighbor != null) {
+                itemHandlerCache.put(direction, addInvalidationListener(neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, direction.getOpposite())));
+                fluidHandlerCache.put(direction, addInvalidationListener(neighbor.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction.getOpposite())));
+            } else {
+                itemHandlerCache.put(direction, LazyOptional.empty());
+                fluidHandlerCache.put(direction, LazyOptional.empty());
+            }
+        }
+    }
+
     // endregion
+
+    // region Capabilities and Serialization
+
+    @NotNull
+    @Override
+    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+        if (side != null) {
+            if (cap == EIOCapabilities.SIDE_CONFIG)
+                return ioConfig.getCapabilityFor(side).cast();
+
+            if (getInventory() != null && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+                return LazyOptional.of(() -> getInventory().getAccess(side)).cast();
+        }
+
+        return super.getCapability(cap, side);
+    }
+
+    @Override
+    public void invalidateCaps() {
+        super.invalidateCaps();
+        ioConfig.invalidateCaps();
+    }
 
     @Override
     public void saveAdditional(CompoundTag pTag) {
@@ -335,8 +410,13 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
             requestModelDataUpdate();
         }
 
+        // Mark capability cache dirty
+        isCacheDirty = true;
+
         super.load(pTag);
     }
+
+    // endregion
 
     @Override
     public Component getDisplayName() {

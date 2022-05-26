@@ -1,12 +1,7 @@
 package com.enderio.base.common.init;
 
-import com.enderio.api.capability.ICapacitorData;
+import com.enderio.api.capability.*;
 import com.enderio.base.EnderIO;
-import com.enderio.api.capability.IDarkSteelUpgradable;
-import com.enderio.api.capability.IEntityStorage;
-import com.enderio.api.capability.ICoordinateSelectionHolder;
-import com.enderio.api.capability.IOwner;
-import com.enderio.api.capability.IToggled;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
@@ -28,6 +23,8 @@ public class EIOCapabilities {
 
     public static final Capability<IDarkSteelUpgradable> DARK_STEEL_UPGRADABLE = CapabilityManager.get(new CapabilityToken<>() {});
 
+    public static final Capability<ISideConfig> SIDE_CONFIG = CapabilityManager.get(new CapabilityToken<>() {});
+
     @SubscribeEvent
     public static void register(RegisterCapabilitiesEvent event) {
         event.register(IEntityStorage.class);
@@ -36,5 +33,6 @@ public class EIOCapabilities {
         event.register(ICapacitorData.class);
         event.register(IDarkSteelUpgradable.class);
         event.register(ICoordinateSelectionHolder.class);
+        event.register(ISideConfig.class);
     }
 }

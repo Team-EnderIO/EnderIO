@@ -6,40 +6,38 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.EnumMap;
 
 /**
  * Forge energy wrapper.
  * Used to wrap the different sides with a different {@link IEnergyStorage} for each so that side control can be easily maintained.
  */
 public final class ForgeEnergyWrapper {
-    private final Map<Direction, LazyOptional<Side>> sideCache;
+    private final IMachineEnergy wrapped;
+    private final EnumMap<Direction, LazyOptional<Side>> sideCache = new EnumMap<>(Direction.class);
     private final LazyOptional<Side> nullSide;
 
     public ForgeEnergyWrapper(IMachineEnergy wrapped) {
-        HashMap<Direction, LazyOptional<Side>> sides = new HashMap<>();
-        for (Direction dir : Direction.values()) {
-            sides.put(dir, LazyOptional.of(() -> new Side(wrapped, dir)));
-        }
-        this.sideCache = Map.copyOf(sides);
-
+        this.wrapped = wrapped;
         nullSide = LazyOptional.of(() -> new Side(wrapped, null));
     }
 
     /**
      * Get {@link IEnergyStorage} capability for the given side.
      */
-    public LazyOptional<IEnergyStorage> getCapability(@Nullable Direction side) {
+    public LazyOptional<IEnergyStorage> getCapabilityFor(@Nullable Direction side) {
         if (side == null) {
             return nullSide.cast();
         }
-        return sideCache.get(side).cast();
+        return sideCache.computeIfAbsent(side, direction -> LazyOptional.of(() -> new Side(wrapped, direction))).cast();
     }
 
+    /**
+     * Invalidate any side caps.
+     */
     public void invalidateCaps() {
-        for (Direction dir : Direction.values()) {
-            sideCache.get(dir).invalidate();
+        for (LazyOptional<Side> side : sideCache.values()) {
+            side.invalidate();
         }
         nullSide.invalidate();
     }
