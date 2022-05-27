@@ -5,9 +5,9 @@ import com.enderio.api.io.IOMode;
 import com.enderio.machines.common.io.FixedIOConfig;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
-import com.enderio.machines.common.io.item.MachineInventory;
-import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.init.MachineRecipes;
+import com.enderio.machines.common.io.item.NInventoryLayout;
+import com.enderio.machines.common.io.item.NMachineInventory;
 import com.enderio.machines.common.menu.EnchanterMenu;
 import com.enderio.api.recipe.EnchanterRecipe;
 import net.minecraft.core.BlockPos;
@@ -35,12 +35,12 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public MachineInventoryLayout getInventoryLayout() {
-        return MachineInventoryLayout.builder()
-            .addInput((slot, stack) -> stack.getItem() == Items.WRITABLE_BOOK)
-            .addInput()
-            .addInput((slot, stack) -> stack.is(Tags.Items.GEMS_LAPIS))
-            .addOutput()
+    public NInventoryLayout getInventoryLayout() {
+        return NInventoryLayout.builder(false)
+            .inputSlot((slot, stack) -> stack.getItem() == Items.WRITABLE_BOOK)
+            .inputSlot()
+            .inputSlot((slot, stack) -> stack.is(Tags.Items.GEMS_LAPIS))
+            .outputSlot()
             .build();
     }
 
@@ -65,9 +65,9 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected MachineInventory createMachineInventory(MachineInventoryLayout layout) {
+    protected NMachineInventory createMachineInventory(NInventoryLayout layout) {
         // Custom behaviour as this works more like a crafting table than a machine.
-        return new MachineInventory(getIOConfig(), layout) {
+        return new NMachineInventory(getIOConfig(), layout) {
             protected void onContentsChanged(int slot) {
                 if (slot != 3) {
                     Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.Types.ENCHANTING, getRecipeWrapper(), level);

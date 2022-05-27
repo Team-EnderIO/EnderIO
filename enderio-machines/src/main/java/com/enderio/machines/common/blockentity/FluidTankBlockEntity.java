@@ -5,7 +5,7 @@ import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
-import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import com.enderio.machines.common.io.item.NInventoryLayout;
 import com.enderio.machines.common.menu.FluidTankMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -124,7 +124,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
                     if (filled == FluidAttributes.BUCKET_VOLUME) {
                         fluidTank.fill(new FluidStack(filledBucket.getFluid(), FluidAttributes.BUCKET_VOLUME), IFluidHandler.FluidAction.EXECUTE);
                         inputItem.shrink(1);
-                        getInventory().forceInsertItem(1, Items.BUCKET.getDefaultInstance(), false);
+                        getInventory().insertItem(1, Items.BUCKET.getDefaultInstance(), false);
                     }
                 }
             } else {
@@ -149,7 +149,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
             if (inputItem.getItem() == Items.BUCKET) {
                 if (!fluidTank.isEmpty()) {
                     FluidStack stack = fluidTank.drain(FluidAttributes.BUCKET_VOLUME, IFluidHandler.FluidAction.SIMULATE);
-                    if (stack.getAmount() == FluidAttributes.BUCKET_VOLUME && (outputItem.isEmpty() || (outputItem.getItem() == stack.getFluid().getBucket() && outputItem.getCount() < outputItem.getMaxStackSize()))) {
+                    if (stack.getAmount() == FluidAttributes.BUCKET_VOLUME && (outputItem.isEmpty() || (outputItem.getItem() == stack.getFluid().getBucket()
+                        && outputItem.getCount() < outputItem.getMaxStackSize()))) {
                         fluidTank.drain(FluidAttributes.BUCKET_VOLUME, IFluidHandler.FluidAction.EXECUTE);
                         inputItem.shrink(1);
                         if (outputItem.isEmpty()) {
@@ -183,17 +184,17 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public MachineInventoryLayout getInventoryLayout() {
-        return MachineInventoryLayout
-            .builder()
-            .addInput((slot, stack) ->
-                (stack.getItem() instanceof BucketItem bucketItem && bucketItem.getFluid() != Fluids.EMPTY && !(bucketItem instanceof MobBucketItem))
-                    || (!(stack.getItem() instanceof BucketItem) && stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent()))
-            .addOutput()
-            .addInput((slot, stack) ->
-                stack.getItem() == Items.BUCKET
-                    || (!(stack.getItem() instanceof BucketItem) && stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent()))
-            .addOutput()
+    public NInventoryLayout getInventoryLayout() {
+        return NInventoryLayout
+            .builder(false)
+            .inputSlot((slot, stack) ->
+                (stack.getItem() instanceof BucketItem bucketItem && bucketItem.getFluid() != Fluids.EMPTY && !(bucketItem instanceof MobBucketItem)) || (
+                    !(stack.getItem() instanceof BucketItem) && stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent()))
+            .outputSlot()
+            .inputSlot((slot, stack) -> stack.getItem() == Items.BUCKET || (!(stack.getItem() instanceof BucketItem) && stack
+                .getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY)
+                .isPresent()))
+            .outputSlot()
             .build();
     }
 

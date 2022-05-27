@@ -11,6 +11,7 @@ import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.sync.CapacitorDataSlot;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import com.enderio.machines.common.io.item.NInventoryLayout;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -174,10 +175,10 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
      * Whether the machine requires a capacitor to operate.
      */
     public boolean requiresCapacitor() {
-        MachineInventoryLayout layout = getInventoryLayout();
+        NInventoryLayout layout = getInventoryLayout();
         if (layout == null)
             return false;
-        return layout.hasCapacitorSlot();
+        return layout.supportsCapacitor();
     }
 
     /**
@@ -190,7 +191,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
     }
 
     public ItemStack getCapacitorItem() {
-        MachineInventoryLayout layout = getInventoryLayout();
+        NInventoryLayout layout = getInventoryLayout();
         if (layout == null)
             return ItemStack.EMPTY;
         return getInventory().getStackInSlot(layout.getCapacitorSlot());
@@ -221,7 +222,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
             return;
         }
 
-        MachineInventoryLayout layout = getInventoryLayout();
+        NInventoryLayout layout = getInventoryLayout();
         if (requiresCapacitor() && layout != null) {
             cachedCapacitorData = CapacitorUtil.getCapacitorData(getCapacitorItem()).orElse(DefaultCapacitorData.NONE);
         } else {

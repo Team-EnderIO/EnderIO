@@ -14,6 +14,8 @@ import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.io.IOConfig;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import com.enderio.machines.common.io.item.NInventoryLayout;
+import com.enderio.machines.common.io.item.NMachineInventory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -66,9 +68,9 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     // region Items and Fluids
 
-    private final MachineInventory inventory;
+    private final NMachineInventory inventory;
 
-    private final LazyOptional<MachineInventory> inventoryCap;
+    private final LazyOptional<NMachineInventory> inventoryCap;
 
     // Caches for external block interaction
     private final EnumMap<Direction, LazyOptional<IItemHandler>> itemHandlerCache = new EnumMap<>(Direction.class);
@@ -85,7 +87,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         addCapabilityProvider(ioConfig);
 
         // If the machine declares an inventory layout, use it to create a handler
-        MachineInventoryLayout slotLayout = getInventoryLayout();
+        NInventoryLayout slotLayout = getInventoryLayout();
         if (slotLayout != null) {
             inventory = createMachineInventory(slotLayout);
             inventoryCap = LazyOptional.of(() -> inventory);
@@ -126,7 +128,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     /**
      * Get the block entity's inventory slot layout.
      */
-    public MachineInventoryLayout getInventoryLayout() {
+    public NInventoryLayout getInventoryLayout() {
         return null;
     }
 
@@ -204,7 +206,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     // region Inventory
 
-    public final MachineInventory getInventory() {
+    public final NMachineInventory getInventory() {
         return inventory;
     }
 
@@ -215,8 +217,8 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     /**
      * Called to create an item handler if a slot layout is provided.
      */
-    protected MachineInventory createMachineInventory(MachineInventoryLayout layout) {
-        return new MachineInventory(getIOConfig(), layout) {
+    protected NMachineInventory createMachineInventory(NInventoryLayout layout) {
+        return new NMachineInventory(getIOConfig(), layout) {
             @Override
             protected void onContentsChanged(int slot) {
                 onInventoryContentsChanged(slot);

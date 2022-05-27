@@ -8,6 +8,7 @@ import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.PowerGeneratingMachineEntity;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.init.MachineCapacitorKeys;
+import com.enderio.machines.common.io.item.NInventoryLayout;
 import com.enderio.machines.common.menu.StirlingGeneratorMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
@@ -71,10 +72,9 @@ public abstract class StirlingGeneratorBlockEntity extends PowerGeneratingMachin
     }
 
     @Override
-    public MachineInventoryLayout getInventoryLayout() {
-        return MachineInventoryLayout.builder()
-            .addInput((slot, stack) -> ForgeHooks.getBurnTime(stack, RecipeType.SMELTING) > 0)
-            .capacitor(() -> getTier() != MachineTier.Simple)
+    public NInventoryLayout getInventoryLayout() {
+        return NInventoryLayout.builder(getTier() != MachineTier.Simple)
+            .inputSlot((slot, stack) -> ForgeHooks.getBurnTime(stack, RecipeType.SMELTING) > 0)
             .build();
     }
 

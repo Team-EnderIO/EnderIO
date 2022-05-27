@@ -5,9 +5,9 @@ import com.enderio.base.common.blockentity.sync.EnumDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.PoweredCraftingMachineEntity;
-import com.enderio.machines.common.io.item.MachineInventory;
-import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.init.MachineCapacitorKeys;
+import com.enderio.machines.common.io.item.NInventoryLayout;
+import com.enderio.machines.common.io.item.NMachineInventory;
 import com.enderio.machines.common.menu.AlloySmelterMenu;
 import com.enderio.api.recipe.AlloySmeltingRecipe;
 import com.enderio.machines.common.init.MachineRecipes;
@@ -125,7 +125,7 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
 
     @Override
     protected void consumeIngredients(Recipe<Container> recipe) {
-        MachineInventory itemHandler = getInventory();
+        NMachineInventory itemHandler = getInventory();
         if (recipe instanceof AlloySmeltingRecipe alloySmeltingRecipe) {
             for (int i = 0; i < 3; i++) {
                 alloySmeltingRecipe.consumeInput(itemHandler.getStackInSlot(i));
@@ -181,14 +181,14 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
     protected void assembleRecipe(Recipe<Container> recipe) {
         ItemStack result = recipe.assemble(getRecipeWrapper());
         result.setCount(result.getCount() * resultModifier);
-        getInventory().forceInsertItem(3, result, false);
+        getInventory().insertItem(3, result, false);
     }
 
     @Override
     protected boolean canTakeOutput(Recipe<Container> recipe) {
         ItemStack result = recipe.assemble(getRecipeWrapper());
         result.setCount(result.getCount() * resultModifier);
-        return getInventory().forceInsertItem(3, result, true).isEmpty();
+        return getInventory().insertItem(3, result, true).isEmpty();
     }
 
     @Nullable
@@ -198,12 +198,11 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
     }
 
     @Override
-    public MachineInventoryLayout getInventoryLayout() {
+    public NInventoryLayout getInventoryLayout() {
         // Setup item slots
-        return MachineInventoryLayout.builder()
-            .addInputs(3, this::acceptSlotInput)
-            .addOutput()
-            .capacitor(() -> getTier() != MachineTier.Simple)
+        return NInventoryLayout.builder(getTier() != MachineTier.Simple)
+            .inputSlot(3, this::acceptSlotInput)
+            .outputSlot()
             .build();
     }
 
