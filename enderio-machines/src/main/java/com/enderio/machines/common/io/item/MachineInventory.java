@@ -9,79 +9,55 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.util.EnumMap;
 
+/**
+ * A machine inventory.
+ * Configured and controlled by a machine's {@link IIOConfig} and a {@link MachineInventoryLayout}.
+ */
 public class MachineInventory extends ItemStackHandler implements IEnderCapabilityProvider<IItemHandler> {
-
     private final IIOConfig config;
-
     private final MachineInventoryLayout layout;
 
-    private boolean isForceMode = false;
+    private final EnumMap<Direction, LazyOptional<Wrapped>> sideCache = new EnumMap<>(Direction.class);
+    private LazyOptional<Wrapped> selfCache = LazyOptional.empty();
 
-    private final EnumMap<Direction, LazyOptional<Sided>> sideCache = new EnumMap<>(Direction.class);
-
+    /**
+     * Create a new machine inventory.
+     */
     public MachineInventory(IIOConfig config, MachineInventoryLayout layout) {
         super(layout.getSlotCount());
         this.config = config;
         this.layout = layout;
     }
 
-    @Nonnull
-    @Override
-    public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-        if (!isForceMode) {
-            if (layout.isOutput(slot) || !layout.validateStack(slot, stack))
-                return stack;
-        }
-        return super.insertItem(slot, stack, simulate);
-    }
-
-    public ItemStack forceInsertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-        isForceMode = true;
-        ItemStack returnValue = insertItem(slot, stack, simulate);
-        isForceMode = false;
-        return returnValue;
-    }
-
-    @Override
-    public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-        return isForceMode || (layout.validateStack(slot, stack) && !layout.isOutput(slot));
-    }
-
-    @Override
-    public int getSlotLimit(int slot) {
-        if (layout.getCapacitorSlot() == slot)
-            return 1;
-        return super.getSlotLimit(slot);
-    }
-
-    public ItemStack guiExtractItem(int slot, int amount, boolean simulate) {
-        isForceMode = true;
-        ItemStack returnValue = super.extractItem(slot, amount, simulate);
-        isForceMode = false;
-        return returnValue;
-    }
-
-    @Nonnull
-    @Override
-    public ItemStack extractItem(int slot, int amount, boolean simulate) {
-        if (!layout.isOutput(slot) && !isForceMode)
-            return ItemStack.EMPTY;
-        return super.extractItem(slot, amount, simulate);
-    }
-
+    /**
+     * Get the IO config for the machine.
+     */
     public final IIOConfig getConfig() {
         return config;
     }
 
-    public MachineInventoryLayout getLayout() {
+    /**
+     * Get the inventory layout.
+     */
+    public final MachineInventoryLayout getLayout() {
         return layout;
     }
 
-    // region Sided access
+    @Override
+    public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+        return layout.isItemValid(slot, stack);
+    }
+
+    @Override
+    public int getSlotLimit(int slot) {
+        return layout.getStackLimit(slot);
+    }
 
     @Override
     public Capability<IItemHandler> getCapabilityType() {
@@ -90,33 +66,39 @@ public class MachineInventory extends ItemStackHandler implements IEnderCapabili
 
     @Override
     public LazyOptional<IItemHandler> getCapability(Direction side) {
+        if (side == null) {
+            // Create own cache if its been invalidated or not created yet.
+            if (!selfCache.isPresent())
+                selfCache = LazyOptional.of(() -> new Wrapped(this, null));
+            return selfCache.cast();
+        }
+
         if (!config.getMode(side).canConnect())
             return LazyOptional.empty();
-        return sideCache.computeIfAbsent(side, dir -> LazyOptional.of(() -> new Sided(this, dir))).cast();
+        return sideCache.computeIfAbsent(side, dir -> LazyOptional.of(() -> new Wrapped(this, dir))).cast();
     }
 
     @Override
     public void invalidateSide(Direction side) {
-        if (sideCache.containsKey(side)) {
-            sideCache.get(side).invalidate();
-            sideCache.remove(side);
+        if (side != null) {
+            if (sideCache.containsKey(side)) {
+                sideCache.get(side).invalidate();
+                sideCache.remove(side);
+            }
+        } else {
+            selfCache.invalidate();
         }
     }
 
     @Override
     public void invalidateCaps() {
-        for (LazyOptional<Sided> access : sideCache.values()) {
+        for (LazyOptional<Wrapped> access : sideCache.values()) {
             access.invalidate();
         }
     }
 
-    private static class Sided implements IItemHandler {
-
-        private final MachineInventory master;
-
-        private final Direction side;
-
-        public Sided(MachineInventory master, Direction side) {
+    private record Wrapped(MachineInventory master, @Nullable Direction side) implements IItemHandler {
+        private Wrapped(MachineInventory master, @Nullable Direction side) {
             this.master = master;
             this.side = side;
         }
@@ -135,17 +117,29 @@ public class MachineInventory extends ItemStackHandler implements IEnderCapabili
         @Nonnull
         @Override
         public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-            if (master.getConfig().getMode(side).canInput())
-                return master.insertItem(slot, stack, simulate);
-            return stack;
+            // Check we allow insertion on the slot
+            if (!master.getLayout().canInsert(slot))
+                return stack;
+
+            // Check we allow input to the block on this side
+            if (side != null && !master.getConfig().getMode(side).canInput())
+                return stack;
+
+            return master.insertItem(slot, stack, simulate);
         }
 
         @Nonnull
         @Override
         public ItemStack extractItem(int slot, int amount, boolean simulate) {
-            if (master.getConfig().getMode(side).canOutput())
-                return master.extractItem(slot, amount, simulate);
-            return ItemStack.EMPTY;
+            // Check we allow extraction on the slot
+            if (!master.getLayout().canExtract(slot))
+                return ItemStack.EMPTY;
+
+            // Check we allow output from the block on this side
+            if (side != null && !master.getConfig().getMode(side).canOutput())
+                return ItemStack.EMPTY;
+
+            return master.extractItem(slot, amount, simulate);
         }
 
         @Override
@@ -158,6 +152,4 @@ public class MachineInventory extends ItemStackHandler implements IEnderCapabili
             return master.isItemValid(slot, stack);
         }
     }
-
-    // endregion
 }

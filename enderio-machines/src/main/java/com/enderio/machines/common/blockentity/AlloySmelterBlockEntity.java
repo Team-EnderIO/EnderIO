@@ -6,8 +6,8 @@ import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.PoweredCraftingMachineEntity;
 import com.enderio.machines.common.init.MachineCapacitorKeys;
-import com.enderio.machines.common.io.item.NInventoryLayout;
-import com.enderio.machines.common.io.item.NMachineInventory;
+import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.menu.AlloySmelterMenu;
 import com.enderio.api.recipe.AlloySmeltingRecipe;
 import com.enderio.machines.common.init.MachineRecipes;
@@ -125,7 +125,7 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
 
     @Override
     protected void consumeIngredients(Recipe<Container> recipe) {
-        NMachineInventory itemHandler = getInventory();
+        MachineInventory itemHandler = getInventory();
         if (recipe instanceof AlloySmeltingRecipe alloySmeltingRecipe) {
             for (int i = 0; i < 3; i++) {
                 alloySmeltingRecipe.consumeInput(itemHandler.getStackInSlot(i));
@@ -198,9 +198,9 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
     }
 
     @Override
-    public NInventoryLayout getInventoryLayout() {
+    public MachineInventoryLayout getInventoryLayout() {
         // Setup item slots
-        return NInventoryLayout.builder(getTier() != MachineTier.Simple)
+        return MachineInventoryLayout.builder(getTier() != MachineTier.Simple)
             .inputSlot(3, this::acceptSlotInput)
             .outputSlot()
             .build();

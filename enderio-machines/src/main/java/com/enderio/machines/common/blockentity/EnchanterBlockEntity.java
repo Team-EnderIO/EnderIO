@@ -6,8 +6,8 @@ import com.enderio.machines.common.io.FixedIOConfig;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.init.MachineRecipes;
-import com.enderio.machines.common.io.item.NInventoryLayout;
-import com.enderio.machines.common.io.item.NMachineInventory;
+import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.menu.EnchanterMenu;
 import com.enderio.api.recipe.EnchanterRecipe;
 import net.minecraft.core.BlockPos;
@@ -35,8 +35,8 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public NInventoryLayout getInventoryLayout() {
-        return NInventoryLayout.builder(false)
+    public MachineInventoryLayout getInventoryLayout() {
+        return MachineInventoryLayout.builder(false)
             .inputSlot((slot, stack) -> stack.getItem() == Items.WRITABLE_BOOK)
             .inputSlot()
             .inputSlot((slot, stack) -> stack.is(Tags.Items.GEMS_LAPIS))
@@ -65,9 +65,9 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected NMachineInventory createMachineInventory(NInventoryLayout layout) {
+    protected MachineInventory createMachineInventory(MachineInventoryLayout layout) {
         // Custom behaviour as this works more like a crafting table than a machine.
-        return new NMachineInventory(getIOConfig(), layout) {
+        return new MachineInventory(getIOConfig(), layout) {
             protected void onContentsChanged(int slot) {
                 if (slot != 3) {
                     Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.Types.ENCHANTING, getRecipeWrapper(), level);
