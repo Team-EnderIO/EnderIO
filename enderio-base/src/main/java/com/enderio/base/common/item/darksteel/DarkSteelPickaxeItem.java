@@ -1,6 +1,6 @@
 package com.enderio.base.common.item.darksteel;
 
-import com.enderio.base.common.capability.darksteel.DarkSteelUpgradeable;
+import com.enderio.base.common.capability.DarkSteelUpgradeable;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.SpoonUpgrade;
@@ -96,7 +96,7 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem 
     }
 
     private boolean canHarvest(ItemStack stack, BlockState state) {
-        return BlockTags.MINEABLE_WITH_PICKAXE.contains(state.getBlock()) || (state.is(BlockTags.MINEABLE_WITH_SHOVEL) && hasSpoon(stack));
+        return state.is(BlockTags.MINEABLE_WITH_PICKAXE) || (state.is(BlockTags.MINEABLE_WITH_SHOVEL) && hasSpoon(stack));
     }
 
     private boolean hasSpoon(ItemStack stack) {

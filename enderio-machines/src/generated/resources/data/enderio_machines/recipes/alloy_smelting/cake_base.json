@@ -1,0 +1,23 @@
+{
+  "type": "enderio_machines:alloy_smelting",
+  "inputs": [
+    {
+      "ingredient": {
+        "item": "enderio:flour"
+      },
+      "count": 3
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:egg"
+      },
+      "count": 1
+    }
+  ],
+  "result": {
+    "item": "enderio:cake_base",
+    "count": 2
+  },
+  "energy": 2000,
+  "experience": 0.3
+}

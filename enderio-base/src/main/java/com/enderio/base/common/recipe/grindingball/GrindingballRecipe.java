@@ -1,6 +1,7 @@
 package com.enderio.base.common.recipe.grindingball;
 
-import com.enderio.base.common.recipe.DataGenSerializer;
+import com.enderio.api.IGrindingballData;
+import com.enderio.api.recipe.DataGenSerializer;
 import com.enderio.base.common.init.EIORecipes;
 import com.google.gson.JsonObject;
 import net.minecraft.core.NonNullList;
@@ -9,10 +10,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
-public class GrindingballRecipe implements IGrindingballRecipe{
+public class GrindingballRecipe implements IGrindingballData, Recipe<Container> {
     private ResourceLocation id;
     private Ingredient grindingball;
     private float grinding;

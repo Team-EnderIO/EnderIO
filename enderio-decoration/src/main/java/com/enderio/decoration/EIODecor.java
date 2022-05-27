@@ -15,9 +15,10 @@ public class EIODecor {
     private static final Lazy<Registrate> REGISTRATE = Lazy.of(() -> Registrate.create(MODID));
 
     public EIODecor() {
-        DecorBlocks.register();
-        DecorBlockEntities.register();
-        DecorEntities.register();
+        // Perform classloads for everything so things are registered.
+        DecorBlocks.classload();
+        DecorBlockEntities.classload();
+        DecorEntities.classload();
     }
 
     public static ResourceLocation loc(String path) {

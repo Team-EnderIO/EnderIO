@@ -37,7 +37,7 @@ public class PaintedSandBlock extends SandBlock implements EntityBlock {
             this.falling(paintedSandEntity);
             BlockEntity be = pLevel.getBlockEntity(pPos);
             if (be != null)
-                paintedSandEntity.blockData = be.save(new CompoundTag());
+                paintedSandEntity.blockData = be.saveWithoutMetadata();
             pLevel.addFreshEntity(paintedSandEntity);
         }
     }

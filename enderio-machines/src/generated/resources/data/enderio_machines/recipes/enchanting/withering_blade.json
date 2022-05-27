@@ -1,9 +1,9 @@
 {
   "type": "enderio_machines:enchanting",
-  "ingredient": {
+  "enchantment": "enderio:withering_blade",
+  "input": {
     "item": "enderio:withering_powder"
   },
-  "enchantment": "enderio:withering_blade",
-  "amount": 4,
+  "amount_per_level": 4,
   "level": 1
 }

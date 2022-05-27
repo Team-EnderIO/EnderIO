@@ -1,7 +1,7 @@
 package com.enderio.base.common.lang;
 
 import com.enderio.base.EnderIO;
-import com.enderio.base.common.capability.capacitors.CapacitorSpecializations;
+import com.enderio.base.common.capability.CapacitorSpecializations;
 import com.enderio.base.common.util.TooltipUtil;
 import com.tterrag.registrate.Registrate;
 import net.minecraft.ChatFormatting;
@@ -164,5 +164,5 @@ public class EIOLang {
 
     // endregion
 
-    public static void register() {}
+    public static void classload() {}
 }

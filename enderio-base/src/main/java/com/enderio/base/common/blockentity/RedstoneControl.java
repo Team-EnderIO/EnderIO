@@ -14,9 +14,11 @@ public enum RedstoneControl implements IIcon {
     ACTIVE_WITH_SIGNAL(bool -> bool, EIOLang.REDSTONE_ACTIVE_WITH_SIGNAL),
     ACTIVE_WITHOUT_SIGNAL(bool -> !bool, EIOLang.REDSTONE_ACTIVE_WITHOUT_SIGNAL),
     NEVER_ACTIVE(bool -> false, EIOLang.REDSTONE_NEVER_ACTIVE);
-    UnaryOperator<Boolean> isActive;
     private static final ResourceLocation TEXTURE = EnderIO.loc("textures/gui/icons/redstone_control.png");
     private static final Vector2i SIZE = new Vector2i(12, 12);
+
+    private final UnaryOperator<Boolean> isActive;
+
     private final Vector2i pos;
     private final Component tooltip;
 

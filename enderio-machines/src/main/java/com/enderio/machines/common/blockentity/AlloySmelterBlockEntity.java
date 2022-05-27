@@ -1,14 +1,15 @@
 package com.enderio.machines.common.blockentity;
 
+import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.base.common.blockentity.sync.EnumDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
-import com.enderio.base.common.util.CapacitorUtil;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.PoweredCraftingMachineEntity;
-import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemHandlerMaster;
-import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemSlotLayout;
+import com.enderio.machines.common.io.item.MachineInventory;
+import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import com.enderio.machines.common.init.MachineCapacitorKeys;
 import com.enderio.machines.common.menu.AlloySmelterMenu;
-import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
+import com.enderio.api.recipe.AlloySmeltingRecipe;
 import com.enderio.machines.common.init.MachineRecipes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -26,36 +27,69 @@ import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeHooks;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
-
 // Using the base Recipe<Container> class so we can support both smelting recipe and alloy smelting recipe.
-public class AlloySmelterBlockEntity extends PoweredCraftingMachineEntity<Recipe<Container>> {
+public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEntity<Recipe<Container>> {
 
     public static class Simple extends AlloySmelterBlockEntity {
         public Simple(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-            super(AlloySmelterMode.ALLOYS, MachineTier.SIMPLE, pType, pWorldPosition, pBlockState);
+            super(MachineCapacitorKeys.SIMPLE_ALLOY_SMELTER_ENERGY_CAPACITY.get(),
+                MachineCapacitorKeys.SIMPLE_ALLOY_SMELTER_ENERGY_TRANSFER.get(),
+                MachineCapacitorKeys.SIMPLE_ALLOY_SMELTER_ENERGY_CONSUME.get(),
+                AlloySmelterMode.ALLOYS, pType, pWorldPosition, pBlockState);
+        }
+
+        @Override
+        public MachineTier getTier() {
+            return MachineTier.Simple;
+        }
+
+        @Override
+        public int getEnergyLeakRate() {
+            return 5; // TODO: Config
         }
     }
 
     public static class Furnace extends AlloySmelterBlockEntity {
         public Furnace(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-            super(AlloySmelterMode.FURNACE, MachineTier.SIMPLE, pType, pWorldPosition, pBlockState);
+            super(MachineCapacitorKeys.SIMPLE_ALLOY_SMELTER_ENERGY_CAPACITY.get(),
+                MachineCapacitorKeys.SIMPLE_ALLOY_SMELTER_ENERGY_TRANSFER.get(),
+                MachineCapacitorKeys.SIMPLE_ALLOY_SMELTER_ENERGY_CONSUME.get(),
+                AlloySmelterMode.FURNACE, pType, pWorldPosition, pBlockState);
+        }
+
+        @Override
+        public MachineTier getTier() {
+            return MachineTier.Simple;
         }
     }
 
     public static class Standard extends AlloySmelterBlockEntity {
         public Standard(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-            super(AlloySmelterMode.ALL, MachineTier.STANDARD, pType, pWorldPosition, pBlockState);
+            super(MachineCapacitorKeys.ALLOY_SMELTER_ENERGY_CAPACITY.get(),
+                MachineCapacitorKeys.ALLOY_SMELTER_ENERGY_TRANSFER.get(),
+                MachineCapacitorKeys.ALLOY_SMELTER_ENERGY_CONSUME.get(),
+                AlloySmelterMode.ALL, pType, pWorldPosition, pBlockState);
+        }
+
+        @Override
+        public MachineTier getTier() {
+            return MachineTier.Standard;
         }
     }
 
     public static class Enhanced extends AlloySmelterBlockEntity {
-        // TODO: Make it enhanced
         public Enhanced(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-            super(AlloySmelterMode.ALL, MachineTier.ENHANCED, pType, pWorldPosition, pBlockState);
+            super(MachineCapacitorKeys.ENHANCED_ALLOY_SMELTER_ENERGY_CAPACITY.get(),
+                MachineCapacitorKeys.ENHANCED_ALLOY_SMELTER_ENERGY_TRANSFER.get(),
+                MachineCapacitorKeys.ENHANCED_ALLOY_SMELTER_ENERGY_CONSUME.get(),
+                AlloySmelterMode.ALL, pType, pWorldPosition, pBlockState);
+        }
+
+        @Override
+        public MachineTier getTier() {
+            return MachineTier.Enhanced;
         }
     }
 
@@ -64,20 +98,20 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachineEntity<Recipe
 
     private int resultModifier = 1;
 
-    public AlloySmelterBlockEntity(AlloySmelterMode defaultMode, MachineTier tier, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-        super(tier, pType, pWorldPosition, pBlockState);
+    public AlloySmelterBlockEntity(CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey consumptionKey, AlloySmelterMode defaultMode, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
+        super(capacityKey, transferKey, consumptionKey, pType, pWorldPosition, pBlockState);
         this.defaultMode = defaultMode;
         this.mode = defaultMode;
 
         // This can be changed by the gui for the normal and enhanced machines.
-        if (getTier() != MachineTier.SIMPLE) {
+        if (getTier() != MachineTier.Simple) {
             add2WayDataSlot(new EnumDataSlot<>(this::getMode, this::setMode, SyncMode.GUI));
         }
     }
 
     public AlloySmelterMode getMode() {
         // Lock to default mode if this is a simple machine.
-        return getTier() == MachineTier.SIMPLE ? defaultMode : mode;
+        return getTier() == MachineTier.Simple ? defaultMode : mode;
     }
 
     public void setMode(AlloySmelterMode mode) {
@@ -91,22 +125,16 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachineEntity<Recipe
 
     @Override
     protected void consumeIngredients(Recipe<Container> recipe) {
-        NonNullList<Ingredient> ingredients = getCurrentRecipe().getIngredients();
-        ItemHandlerMaster itemHandler = getItemHandler();
-        if (recipe instanceof AlloySmeltingRecipe) {
+        MachineInventory itemHandler = getInventory();
+        if (recipe instanceof AlloySmeltingRecipe alloySmeltingRecipe) {
             for (int i = 0; i < 3; i++) {
-                for (Ingredient ingredient : ingredients) {
-                    ItemStack stack = itemHandler.getStackInSlot(i);
-                    if (ingredient.test(stack)) {
-                        stack.shrink(1); // TODO: Get from recipe.
-                        itemHandler.setStackInSlot(i, stack);
-                    }
-                }
+                alloySmeltingRecipe.consumeInput(itemHandler.getStackInSlot(i));
             }
 
             // We only craft 1x when alloying
             resultModifier = 1;
         } else if (recipe instanceof SmeltingRecipe) {
+            NonNullList<Ingredient> ingredients = getCurrentRecipe().getIngredients();
             // Remove the cooked item.
             int smelting = 0;
             for (int i = 0; i < 3; i++) {
@@ -124,7 +152,8 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachineEntity<Recipe
     }
 
     // TODO: Ensure this is in line with the stirling generator.
-    private static final int RF_PER_ITEM = ForgeHooks.getBurnTime(new ItemStack(Items.COAL, 1), RecipeType.SMELTING) * 10 / 8;
+    // TODO: Someplace to keep constants like this common.
+    public static final int RF_PER_ITEM = ForgeHooks.getBurnTime(new ItemStack(Items.COAL, 1), RecipeType.SMELTING) * 10 / 8;
 
     @Override
     protected int getEnergyCost(Recipe<Container> recipe) {
@@ -143,7 +172,6 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachineEntity<Recipe
 
         // Find a smelting recipe if we aren't alloy smelting.
         if (getMode().canSmelt() && getCurrentRecipe() == null) {
-            // TODO: Support adding 3 ingredients at once to get 3 smelted outputs.
             level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, getRecipeWrapper(), level).ifPresent(this::setCurrentRecipe);
         }
     }
@@ -153,14 +181,14 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachineEntity<Recipe
     protected void assembleRecipe(Recipe<Container> recipe) {
         ItemStack result = recipe.assemble(getRecipeWrapper());
         result.setCount(result.getCount() * resultModifier);
-        getItemHandler().forceInsertItem(3, result, false);
+        getInventory().forceInsertItem(3, result, false);
     }
 
     @Override
     protected boolean canTakeOutput(Recipe<Container> recipe) {
         ItemStack result = recipe.assemble(getRecipeWrapper());
         result.setCount(result.getCount() * resultModifier);
-        return getItemHandler().forceInsertItem(3, result, true).isEmpty();
+        return getInventory().forceInsertItem(3, result, true).isEmpty();
     }
 
     @Nullable
@@ -170,48 +198,40 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachineEntity<Recipe
     }
 
     @Override
-    public Optional<ItemSlotLayout> getSlotLayout() {
-        if (getTier() == MachineTier.SIMPLE) {
-            return Optional.of(ItemSlotLayout.basic(3, 1));
-        }
-        return Optional.of(ItemSlotLayout.withCapacitor(3, 1));
+    public MachineInventoryLayout getInventoryLayout() {
+        // Setup item slots
+        return MachineInventoryLayout.builder()
+            .addInputs(3, this::acceptSlotInput)
+            .addOutput()
+            .capacitor(() -> getTier() != MachineTier.Simple)
+            .build();
+    }
+
+    private boolean acceptSlotInput(int slot, ItemStack stack) {
+        if (getCurrentRecipe() == null)
+            return true;
+
+        if (getInventory().getStackInSlot(slot).is(stack.getItem()))
+            return true;
+
+        // TODO: Deal with the case that the slot has become empty. Maybe we need to store in PoweredCraftingMachineEntity the item types in all the slots before a recipe started?
+
+        return false;
     }
 
     @Override
     protected boolean canCraft() {
-        return (getTier() == MachineTier.SIMPLE || hasCapacitor()) && super.canCraft();
+        return (getTier() == MachineTier.Simple || isCapacitorInstalled()) && super.canCraft();
     }
 
     @Override
     protected boolean canSelectRecipe() {
-        return (getTier() == MachineTier.SIMPLE || hasCapacitor()) && super.canSelectRecipe();
-    }
-
-    @Override
-    protected ItemHandlerMaster createItemHandler(ItemSlotLayout layout) {
-        return new ItemHandlerMaster(getIoConfig(), layout) {
-            @NotNull
-            @Override
-            public ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
-                // If we already have a recipe, disallow use of an empty slot.
-                // TODO: This doesn't work too great. Need a better solution.
-                //            if (getOnlyInputs().contains(slot) && getCurrentRecipe() != null && getStackInSlot(slot).isEmpty())
-                //                return stack;
-                if (slot == 4 && !CapacitorUtil.isCapacitor(stack))
-                    return stack;
-                return super.insertItem(slot, stack, simulate);
-            }
-
-            @Override
-            protected void onContentsChanged(int slot) {
-                setChanged();
-            }
-        };
+        return (getTier() == MachineTier.Simple || isCapacitorInstalled()) && super.canSelectRecipe();
     }
 
     @Override
     public void saveAdditional(CompoundTag pTag) {
-        if (getTier() != MachineTier.SIMPLE) {
+        if (getTier() != MachineTier.Simple) {
             pTag.putInt("mode", this.mode.ordinal());
         }
         pTag.putInt("result_modifier", resultModifier);
@@ -220,7 +240,7 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachineEntity<Recipe
 
     @Override
     public void load(CompoundTag pTag) {
-        if (getTier() != MachineTier.SIMPLE) {
+        if (getTier() != MachineTier.Simple) {
             try {
                 mode = AlloySmelterMode.values()[pTag.getInt("mode")];
             } catch (IndexOutOfBoundsException ex) { // In case something happens in the future.

@@ -14,20 +14,20 @@ public class AlloySmelterMenu extends MachineMenu<AlloySmelterBlockEntity> {
     public AlloySmelterMenu(@Nullable AlloySmelterBlockEntity blockEntity, Inventory inventory, int pContainerId) {
         super(blockEntity, inventory, MachineMenus.ALLOY_SMELTER.get(), pContainerId);
         if (blockEntity != null) {
-            addSlot(new MachineSlot(blockEntity.getItemHandler(), 0, 54, 17));
-            addSlot(new MachineSlot(blockEntity.getItemHandler(), 1, 79, 7));
-            addSlot(new MachineSlot(blockEntity.getItemHandler(), 2, 103, 17));
-            addSlot(new MachineSlot(blockEntity.getItemHandler(), 3, 79, 58));
-
             // Capacitor slot
-            if (blockEntity.getTier() != MachineTier.SIMPLE) {
-                addSlot(new MachineSlot(blockEntity.getItemHandler(), 4, 12, 60));
+            if (blockEntity.requiresCapacitor()) {
+                addSlot(new MachineSlot(blockEntity.getInventory(), 4, 12, 60));
             }
+
+            addSlot(new MachineSlot(blockEntity.getInventory(), 0, 54, 17));
+            addSlot(new MachineSlot(blockEntity.getInventory(), 1, 79, 7));
+            addSlot(new MachineSlot(blockEntity.getInventory(), 2, 103, 17));
+            addSlot(new MachineSlot(blockEntity.getInventory(), 3, 79, 58));
         }
         addInventorySlots(8,84);
     }
 
-    public static AlloySmelterMenu factory(@javax.annotation.Nullable MenuType<AlloySmelterMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
+    public static AlloySmelterMenu factory(@Nullable MenuType<AlloySmelterMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level.getBlockEntity(buf.readBlockPos());
         if (entity instanceof AlloySmelterBlockEntity castBlockEntity)
             return new AlloySmelterMenu(castBlockEntity, inventory, pContainerId);

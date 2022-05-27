@@ -1,6 +1,6 @@
 package com.enderio.base.common.item.darksteel;
 
-import com.enderio.base.common.capability.darksteel.DarkSteelUpgradeable;
+import com.enderio.base.common.capability.DarkSteelUpgradeable;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.ForkUpgrade;
@@ -107,7 +107,7 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem {
     }
 
     private boolean canHarvest(ItemStack stack, BlockState state) {
-        return BlockTags.MINEABLE_WITH_AXE.contains(state.getBlock()) || (state.is(BlockTags.MINEABLE_WITH_HOE) && hasFork(stack));
+        return state.is(BlockTags.MINEABLE_WITH_AXE) || (state.is(BlockTags.MINEABLE_WITH_HOE) && hasFork(stack));
     }
 
     private boolean hasFork(ItemStack stack) {
