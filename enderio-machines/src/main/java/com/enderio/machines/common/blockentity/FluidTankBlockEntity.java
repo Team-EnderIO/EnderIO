@@ -65,8 +65,6 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
 
     private final MachineFluidHandler fluidHandler;
 
-    private final LazyOptional<MachineFluidHandler> fluidHandlerCap;
-
     public FluidTankBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState, int capacity) {
         super(pType, pWorldPosition, pBlockState);
 
@@ -75,7 +73,6 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
 
         // Create fluid tank storage.
         this.fluidHandler = new MachineFluidHandler(getIOConfig(), fluidTank);
-        this.fluidHandlerCap = LazyOptional.of(() -> fluidHandler);
 
         // Add capability provider
         addCapabilityProvider(fluidHandler);
@@ -90,18 +87,6 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
                 setChanged();
             }
         };
-    }
-
-    @Override
-    public void saveAdditional(CompoundTag pTag) {
-        super.saveAdditional(pTag);
-        pTag.put("fluid", fluidTank.writeToNBT(new CompoundTag()));
-    }
-
-    @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
-        fluidTank.readFromNBT(pTag.getCompound("fluid"));
     }
 
     @Override
@@ -198,22 +183,18 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
             .build();
     }
 
-    // region Capabilities
+    // region Serialization
 
-    @Nonnull
     @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && side == null) {
-            return fluidHandlerCap.cast();
-        }
-
-        return super.getCapability(cap, side);
+    public void saveAdditional(CompoundTag pTag) {
+        super.saveAdditional(pTag);
+        pTag.put("fluid", fluidTank.writeToNBT(new CompoundTag()));
     }
 
     @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-        fluidHandlerCap.invalidate();
+    public void load(CompoundTag pTag) {
+        super.load(pTag);
+        fluidTank.readFromNBT(pTag.getCompound("fluid"));
     }
 
     // endregion
