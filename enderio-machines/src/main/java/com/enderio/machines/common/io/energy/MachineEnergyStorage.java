@@ -6,6 +6,7 @@ import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.api.energy.EnergyIOMode;
 import com.enderio.api.io.IIOConfig;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.Tag;
 import net.minecraftforge.common.capabilities.Capability;
@@ -13,6 +14,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import org.checkerframework.checker.units.qual.C;
 
 import java.util.EnumMap;
 import java.util.function.Supplier;
@@ -22,7 +24,7 @@ import java.util.function.Supplier;
  * Uses capacitor keys to determine maximum capacity and transfer rate.
  * Also provides sided access through capabilities.
  */
-public class MachineEnergyStorage implements IEnergyStorage, IEnderCapabilityProvider<IEnergyStorage>, INBTSerializable<Tag> {
+public class MachineEnergyStorage implements IEnergyStorage, IEnderCapabilityProvider<IEnergyStorage>, INBTSerializable<CompoundTag> {
     private final IIOConfig config;
     private final EnergyIOMode ioMode;
     private final Supplier<ICapacitorData> capacitorData;
@@ -160,17 +162,15 @@ public class MachineEnergyStorage implements IEnergyStorage, IEnderCapabilityPro
     }
 
     @Override
-    public Tag serializeNBT() {
-        return IntTag.valueOf(energyStored);
+    public CompoundTag serializeNBT() {
+        CompoundTag tag = new CompoundTag();
+        tag.putInt("stored", energyStored);
+        return tag;
     }
 
     @Override
-    public void deserializeNBT(Tag nbt) {
-        if (nbt instanceof IntTag intTag) {
-            energyStored = intTag.getAsInt();
-        }
-
-        // TODO: Log error
+    public void deserializeNBT(CompoundTag nbt) {
+        energyStored = nbt.getInt("stored");
     }
 
     private static class Sided implements IEnergyStorage {

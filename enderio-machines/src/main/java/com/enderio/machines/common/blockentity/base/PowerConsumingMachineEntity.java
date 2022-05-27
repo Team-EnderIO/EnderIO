@@ -11,7 +11,7 @@ public abstract class PowerConsumingMachineEntity extends PoweredMachineEntity {
         super(EnergyIOMode.Input, capacityKey, transferKey, consumptionKey, pType, pWorldPosition, pBlockState);
     }
 
-    // TODO: Power consumption helpers? is that a good idea?
+    // TODO: This is temporary, i plan to do more work on power consuming machines in the sagmill branch.
 
     /**
      * Try to consume energy.

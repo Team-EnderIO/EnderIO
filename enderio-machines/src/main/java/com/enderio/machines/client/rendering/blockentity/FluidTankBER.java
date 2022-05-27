@@ -63,8 +63,9 @@ public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
         float inset = 0.0625F;
         float faceSize = 14 / 16.0f;
 
+
         // Top
-        RenderUtil.renderFace(Direction.UP, pose, normal, consumer, texture, inset, inset, fluidHeight, faceSize, faceSize, color);
+        RenderUtil.renderFace(Direction.UP, pose, normal, consumer, texture, inset, inset, inset + fluidHeight, faceSize, faceSize, color);
 
         // Sides
         RenderUtil.renderFace(Direction.SOUTH, pose, normal, consumer, texture, inset, inset, inset, faceSize, fluidHeight, color);

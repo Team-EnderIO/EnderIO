@@ -73,7 +73,7 @@ public class MachineInventory extends ItemStackHandler implements IEnderCapabili
         return super.extractItem(slot, amount, simulate);
     }
 
-    public IIOConfig getConfig() {
+    public final IIOConfig getConfig() {
         return config;
     }
 

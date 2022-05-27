@@ -97,7 +97,7 @@ public class EnderBlockEntity extends BlockEntity {
      * @param fullUpdate if this packet should send all information (this is used for players who started tracking this BlockEntity)
      * @return the UpdatePacket
      */
-    @javax.annotation.Nullable
+    @Nullable
     public ClientboundBlockEntityDataPacket createUpdatePacket(boolean fullUpdate, SyncMode mode) {
         CompoundTag nbt = new CompoundTag();
         ListTag listNBT = new ListTag();
@@ -169,7 +169,7 @@ public class EnderBlockEntity extends BlockEntity {
         lastSyncedToPlayers.addAll(currentlyTracking);
     }
 
-    public void sendPacket(ServerPlayer player, @javax.annotation.Nullable Packet<?> packet) {
+    public void sendPacket(ServerPlayer player, @Nullable Packet<?> packet) {
         if (packet != null)
             player.connection.send(packet);
     }

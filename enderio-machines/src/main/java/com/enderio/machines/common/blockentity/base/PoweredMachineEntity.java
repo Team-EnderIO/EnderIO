@@ -264,7 +264,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
 
     @Override
     public void load(CompoundTag pTag) {
-        energyStorage.deserializeNBT(pTag.get("energy"));
+        energyStorage.deserializeNBT(pTag.getCompound("energy"));
         super.load(pTag);
     }
 
