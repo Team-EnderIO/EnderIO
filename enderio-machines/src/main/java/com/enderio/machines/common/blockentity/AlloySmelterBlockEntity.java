@@ -3,13 +3,10 @@ package com.enderio.machines.common.blockentity;
 import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.base.common.blockentity.sync.EnumDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
-import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.PoweredCraftingMachineEntity;
-import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemHandlerMaster;
-import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemSlotLayout;
-import com.enderio.machines.common.energy.EnergyTransferMode;
-import com.enderio.machines.common.energy.MachineEnergyStorage;
+import com.enderio.machines.common.io.item.MachineInventory;
+import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.init.MachineCapacitorKeys;
 import com.enderio.machines.common.menu.AlloySmelterMenu;
 import com.enderio.api.recipe.AlloySmeltingRecipe;
@@ -30,10 +27,7 @@ import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeHooks;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Optional;
 
 // Using the base Recipe<Container> class so we can support both smelting recipe and alloy smelting recipe.
 public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEntity<Recipe<Container>> {
@@ -49,6 +43,11 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
         @Override
         public MachineTier getTier() {
             return MachineTier.Simple;
+        }
+
+        @Override
+        public int getEnergyLeakRate() {
+            return 5; // TODO: Config
         }
     }
 
@@ -126,7 +125,7 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
 
     @Override
     protected void consumeIngredients(Recipe<Container> recipe) {
-        ItemHandlerMaster itemHandler = getItemHandler();
+        MachineInventory itemHandler = getInventory();
         if (recipe instanceof AlloySmeltingRecipe alloySmeltingRecipe) {
             for (int i = 0; i < 3; i++) {
                 alloySmeltingRecipe.consumeInput(itemHandler.getStackInSlot(i));
@@ -182,14 +181,14 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
     protected void assembleRecipe(Recipe<Container> recipe) {
         ItemStack result = recipe.assemble(getRecipeWrapper());
         result.setCount(result.getCount() * resultModifier);
-        getItemHandler().forceInsertItem(3, result, false);
+        getInventory().forceInsertItem(3, result, false);
     }
 
     @Override
     protected boolean canTakeOutput(Recipe<Container> recipe) {
         ItemStack result = recipe.assemble(getRecipeWrapper());
         result.setCount(result.getCount() * resultModifier);
-        return getItemHandler().forceInsertItem(3, result, true).isEmpty();
+        return getInventory().forceInsertItem(3, result, true).isEmpty();
     }
 
     @Nullable
@@ -199,43 +198,35 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
     }
 
     @Override
-    public Optional<ItemSlotLayout> getSlotLayout() {
-        if (getTier() == MachineTier.Simple) {
-            return Optional.of(ItemSlotLayout.basic(3, 1));
-        }
-        return Optional.of(ItemSlotLayout.withCapacitor(3, 1));
+    public MachineInventoryLayout getInventoryLayout() {
+        // Setup item slots
+        return MachineInventoryLayout.builder()
+            .addInputs(3, this::acceptSlotInput)
+            .addOutput()
+            .capacitor(() -> getTier() != MachineTier.Simple)
+            .build();
+    }
+
+    private boolean acceptSlotInput(int slot, ItemStack stack) {
+        if (getCurrentRecipe() == null)
+            return true;
+
+        if (getInventory().getStackInSlot(slot).is(stack.getItem()))
+            return true;
+
+        // TODO: Deal with the case that the slot has become empty. Maybe we need to store in PoweredCraftingMachineEntity the item types in all the slots before a recipe started?
+
+        return false;
     }
 
     @Override
     protected boolean canCraft() {
-        return (getTier() == MachineTier.Simple || hasCapacitor()) && super.canCraft();
+        return (getTier() == MachineTier.Simple || isCapacitorInstalled()) && super.canCraft();
     }
 
     @Override
     protected boolean canSelectRecipe() {
-        return (getTier() == MachineTier.Simple || hasCapacitor()) && super.canSelectRecipe();
-    }
-
-    @Override
-    protected ItemHandlerMaster createItemHandler(ItemSlotLayout layout) {
-        return new ItemHandlerMaster(getIoConfig(), layout) {
-            @NotNull
-            @Override
-            public ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
-                // If we already have a recipe, disallow use of an empty slot.
-                // TODO: This doesn't work too great. Need a better solution.
-                //            if (getOnlyInputs().contains(slot) && getCurrentRecipe() != null && getStackInSlot(slot).isEmpty())
-                //                return stack;
-                if (slot == 4 && !CapacitorUtil.isCapacitor(stack))
-                    return stack;
-                return super.insertItem(slot, stack, simulate);
-            }
-
-            @Override
-            protected void onContentsChanged(int slot) {
-                setChanged();
-            }
-        };
+        return (getTier() == MachineTier.Simple || isCapacitorInstalled()) && super.canSelectRecipe();
     }
 
     @Override

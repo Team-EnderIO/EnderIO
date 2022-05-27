@@ -1,10 +1,11 @@
 package com.enderio.machines.common.blockentity;
 
+import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.PoweredMachineEntity;
-import com.enderio.machines.common.energy.EnergyTransferMode;
-import com.enderio.machines.common.energy.MachineEnergyStorage;
 import com.enderio.machines.common.init.MachineCapacitorKeys;
+import com.enderio.api.energy.EnergyIOMode;
+import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -16,30 +17,26 @@ import org.jetbrains.annotations.Nullable;
 // TODO: This should be replaced with creative power bank and buffer in the future, this is temporary :)
 public class CreativePowerBlockEntity extends PoweredMachineEntity {
     public CreativePowerBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-        super(MachineCapacitorKeys.DEV_ENERGY_CAPACITY.get(),
+        super(EnergyIOMode.Output,
+            MachineCapacitorKeys.DEV_ENERGY_CAPACITY.get(),
             MachineCapacitorKeys.DEV_ENERGY_TRANSFER.get(),
             MachineCapacitorKeys.DEV_ENERGY_CONSUME.get(),
-            EnergyTransferMode.Extract, pType, pWorldPosition, pBlockState);
+            pType, pWorldPosition, pBlockState);
+    }
+
+    @Override
+    protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, CapacitorKey capacityKey, CapacitorKey transferKey) {
+        return new MachineEnergyStorage(getIOConfig(), energyIOMode, this::getCapacitorData, capacityKey, transferKey) {
+            @Override
+            public int getEnergyStored() {
+                return getMaxEnergyStored() / 2;
+            }
+        };
     }
 
     @Override
     public MachineTier getTier() {
         return MachineTier.Enhanced;
-    }
-
-    @Override
-    protected MachineEnergyStorage createEnergyStorage(EnergyTransferMode transferMode) {
-        return new MachineEnergyStorage(this::getCapacitorData, capacityKey, transferKey, consumptionKey, transferMode) {
-            @Override
-            public int getEnergyStored() {
-                return getMaxEnergyStored();
-            }
-
-            @Override
-            protected void onEnergyChanged() {
-                setChanged();
-            }
-        };
     }
 
     @Nullable

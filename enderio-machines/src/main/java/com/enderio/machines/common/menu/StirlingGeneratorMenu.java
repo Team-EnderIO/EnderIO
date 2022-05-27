@@ -14,12 +14,12 @@ public class StirlingGeneratorMenu extends MachineMenu<StirlingGeneratorBlockEnt
     public StirlingGeneratorMenu(@Nullable StirlingGeneratorBlockEntity blockEntity, Inventory inventory, int pContainerId) {
         super(blockEntity, inventory, MachineMenus.STIRLING_GENERATOR.get(), pContainerId);
         if (blockEntity != null) {
-            addSlot(new MachineSlot(blockEntity.getItemHandler(), 0, 80, 34));
-
             // Capacitor slot
-            if (blockEntity.getTier() != MachineTier.Simple) {
-                addSlot(new MachineSlot(blockEntity.getItemHandler(), 1, 12, 60));
+            if (blockEntity.requiresCapacitor()) {
+                addSlot(new MachineSlot(blockEntity.getInventory(), 1, 12, 60));
             }
+
+            addSlot(new MachineSlot(blockEntity.getInventory(), 0, 80, 34));
         }
         addInventorySlots(8, 84);
     }
