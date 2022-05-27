@@ -99,11 +99,11 @@ public class NMachineInventory extends ItemStackHandler implements IEnderCapabil
         public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
             // Check we allow insertion on the slot
             if (!master.getLayout().canInsert(slot))
-                return ItemStack.EMPTY;
+                return stack;
 
             // Check we allow input to the block on this side
             if (side != null && !master.getConfig().getMode(side).canInput())
-                return ItemStack.EMPTY;
+                return stack;
 
             return master.insertItem(slot, stack, simulate);
         }

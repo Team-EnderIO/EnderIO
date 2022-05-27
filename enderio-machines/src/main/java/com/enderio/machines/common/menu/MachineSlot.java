@@ -22,11 +22,11 @@ public class MachineSlot extends SlotItemHandler {
 
     @Override
     public boolean mayPlace(@NotNull ItemStack stack) {
-        return getItemHandler().getLayout().guiCanInsert(this.getSlotIndex());
+        return getItemHandler().getLayout().guiCanInsert(this.getSlotIndex()) && super.mayPlace(stack);
     }
 
     @Override
     public boolean mayPickup(Player playerIn) {
-        return getItemHandler().getLayout().guiCanExtract(this.getSlotIndex());
+        return getItemHandler().getLayout().guiCanExtract(this.getSlotIndex()) && super.mayPickup(playerIn);
     }
 }
