@@ -74,7 +74,6 @@ public abstract class AlloySmeltingRecipe implements IMachineRecipe<AlloySmeltin
 
     @Override
     public boolean matches(Container pContainer, Level pLevel) {
-        // TODO: Test
         boolean[] matched = new boolean[3];
 
         // Iterate over the slots
