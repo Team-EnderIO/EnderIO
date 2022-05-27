@@ -4,39 +4,28 @@ import com.enderio.api.UseOnly;
 import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.base.common.blockentity.sync.FloatDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
-import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.machines.common.MachineTier;
-import com.enderio.machines.common.block.ProgressMachineBlock;
 import com.enderio.machines.common.blockentity.base.PowerGeneratingMachineEntity;
-import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemHandlerMaster;
-import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemSlotLayout;
-import com.enderio.machines.common.energy.EnergyTransferMode;
+import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.init.MachineCapacitorKeys;
-import com.enderio.machines.common.menu.AlloySmelterMenu;
 import com.enderio.machines.common.menu.StirlingGeneratorMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.LogicalSide;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
-
 public abstract class StirlingGeneratorBlockEntity extends PowerGeneratingMachineEntity {
-    // TODO: Add capacitor keys.
     public static class Simple extends StirlingGeneratorBlockEntity {
         public Simple(BlockEntityType<?> pType, BlockPos pWorldPosition,
             BlockState pBlockState) {
-            super(MachineCapacitorKeys.DEV_ENERGY_CAPACITY.get(),
+            super(MachineCapacitorKeys.SIMPLE_STIRLING_GENERATOR_ENERGY_CAPACITY.get(),
                 MachineCapacitorKeys.DEV_ENERGY_TRANSFER.get(),
                 MachineCapacitorKeys.DEV_ENERGY_CONSUME.get(),
                 pType, pWorldPosition, pBlockState);
@@ -46,12 +35,17 @@ public abstract class StirlingGeneratorBlockEntity extends PowerGeneratingMachin
         public MachineTier getTier() {
             return MachineTier.Simple;
         }
+
+        @Override
+        public int getEnergyLeakRate() {
+            return 10; // TODO config
+        }
     }
 
     public static class Standard extends StirlingGeneratorBlockEntity {
         public Standard(BlockEntityType<?> pType, BlockPos pWorldPosition,
             BlockState pBlockState) {
-            super(MachineCapacitorKeys.DEV_ENERGY_CAPACITY.get(),
+            super(MachineCapacitorKeys.STIRLING_GENERATOR_ENERGY_CAPACITY.get(),
                 MachineCapacitorKeys.DEV_ENERGY_TRANSFER.get(),
                 MachineCapacitorKeys.DEV_ENERGY_CONSUME.get(),
                 pType, pWorldPosition, pBlockState);
@@ -77,63 +71,40 @@ public abstract class StirlingGeneratorBlockEntity extends PowerGeneratingMachin
     }
 
     @Override
-    public Optional<ItemSlotLayout> getSlotLayout() {
-        if (getTier() == MachineTier.Simple) {
-            return Optional.of(ItemSlotLayout.basic(1, 0));
+    public MachineInventoryLayout getInventoryLayout() {
+        return MachineInventoryLayout.builder()
+            .addInput((slot, stack) -> ForgeHooks.getBurnTime(stack, RecipeType.SMELTING) > 0)
+            .capacitor(() -> getTier() != MachineTier.Simple)
+            .build();
+    }
+
+    @Override
+    public void serverTick() {
+        // Tick burn time even if redstone activation has stopped.
+        if (isGenerating()) {
+            burnTime--;
         }
-        return Optional.of(ItemSlotLayout.withCapacitor(1, 0));
-    }
 
-    @Override
-    protected ItemHandlerMaster createItemHandler(ItemSlotLayout layout) {
-        // TODO: Really not a fan of how this works. Review this in my next PR... I kinda want to put slot validation into ItemSlotLayout maybe?
-        return new ItemHandlerMaster(getIoConfig(), layout) {
-            @NotNull
-            @Override
-            public ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
-                // Check its a capacitor.
-                if (slot == 1 && !CapacitorUtil.isCapacitor(stack))
-                    return stack;
-                return super.insertItem(slot, stack, simulate);
-            }
+        // Only continue burning if redstone is enabled and the internal buffer has space.
+        if (canAct() && !isGenerating() && getEnergyStorage().getEnergyStored() < getEnergyStorage().getMaxEnergyStored()) {
+            // Get the fuel
+            ItemStack fuel = getInventory().getStackInSlot(0);
+            if (!fuel.isEmpty()) {
+                // Get the burn time.
+                int burningTime = ForgeHooks.getBurnTime(fuel, RecipeType.SMELTING);
 
-            @Override
-            protected void onContentsChanged(int slot) {
-                setChanged();
-            }
-        };
-    }
+                if (burningTime > 0) {
+                    burnTime = burningTime;
+                    burnDuration = burnTime;
 
-    @Override
-    public void tick() {
-        if (isServer()) {
-            // Tick burn time even if redstone activation has stopped.
-            if (isGenerating()) {
-                burnTime--;
-            }
-
-            // Only continue burning if redstone is enabled.
-            if (shouldAct() && !isGenerating()) {
-                // Get the fuel
-                ItemStack fuel = getItemHandler().getStackInSlot(0);
-
-                if (!fuel.isEmpty()) {
-                    // Get the burn time.
-                    int burningTime = ForgeHooks.getBurnTime(fuel, RecipeType.SMELTING);
-
-                    if (burningTime > 0) {
-                        burnTime = burningTime;
-                        burnDuration = burnTime;
-
-                        // Remove the fuel
-                        fuel.shrink(1);
-                        getItemHandler().setStackInSlot(0, fuel);
-                    }
+                    // Remove the fuel
+                    fuel.shrink(1);
+                    getInventory().setStackInSlot(0, fuel);
                 }
             }
         }
 
-        super.tick();
+        super.serverTick();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.enderio.machines.common.init;
 
 import com.enderio.api.capacitor.CapacitorKey;
+import com.enderio.api.capacitor.CapacitorKeyType;
 import com.enderio.api.capacitor.Scalers;
 import com.enderio.base.EnderIO;
 import com.enderio.machines.EIOMachines;
@@ -8,31 +9,55 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
-public class MachineCapacitorKeys {
-    // TODO: Might want to turn this into an enum?
+import java.util.function.Supplier;
 
-    private static final DeferredRegister<CapacitorKey> CAPACITOR_KEYS = DeferredRegister.create(EnderIO.CAPACITOR_KEY_REGISTRY_KEY, EIOMachines.MODID);
+public enum MachineCapacitorKeys {
+    SIMPLE_ALLOY_SMELTER_ENERGY_CAPACITY(() -> new CapacitorKey(2000, CapacitorKeyType.EnergyCapacity, Scalers.FIXED)),
+    SIMPLE_ALLOY_SMELTER_ENERGY_TRANSFER(() -> new CapacitorKey(15, CapacitorKeyType.EnergyTransfer, Scalers.FIXED)),
+    SIMPLE_ALLOY_SMELTER_ENERGY_CONSUME(() -> new CapacitorKey(30, CapacitorKeyType.EnergyUsage, Scalers.FIXED)),
 
-    // TODO: If this is used, one day configs should be explored.
+    ALLOY_SMELTER_ENERGY_CAPACITY(() -> new CapacitorKey(100000, CapacitorKeyType.EnergyCapacity, Scalers.ENERGY)),
+    ALLOY_SMELTER_ENERGY_TRANSFER(() -> new CapacitorKey(120, CapacitorKeyType.EnergyTransfer, Scalers.ENERGY)),
+    ALLOY_SMELTER_ENERGY_CONSUME(() -> new CapacitorKey(30, CapacitorKeyType.EnergyUsage, Scalers.ENERGY)),
 
-    public static final RegistryObject<CapacitorKey> SIMPLE_ALLOY_SMELTER_ENERGY_CAPACITY = CAPACITOR_KEYS.register("simple_alloy_smelter_capacity", () -> new CapacitorKey(2000, Scalers.FIXED));
-    public static final RegistryObject<CapacitorKey> SIMPLE_ALLOY_SMELTER_ENERGY_TRANSFER = CAPACITOR_KEYS.register("simple_alloy_smelter_transfer", () -> new CapacitorKey(15, Scalers.FIXED));
-    public static final RegistryObject<CapacitorKey> SIMPLE_ALLOY_SMELTER_ENERGY_CONSUME = CAPACITOR_KEYS.register("simple_alloy_smelter_consume", () -> new CapacitorKey(30, Scalers.FIXED));
+    ENHANCED_ALLOY_SMELTER_ENERGY_CAPACITY(() -> new CapacitorKey(1500000, CapacitorKeyType.EnergyCapacity, Scalers.ENERGY)),
+    ENHANCED_ALLOY_SMELTER_ENERGY_TRANSFER(() -> new CapacitorKey(180, CapacitorKeyType.EnergyTransfer, Scalers.ENERGY)),
+    ENHANCED_ALLOY_SMELTER_ENERGY_CONSUME(() -> new CapacitorKey(45, CapacitorKeyType.EnergyUsage, Scalers.ENERGY)),
 
-    public static final RegistryObject<CapacitorKey> ALLOY_SMELTER_ENERGY_CAPACITY = CAPACITOR_KEYS.register("alloy_smelter_capacity", () -> new CapacitorKey(100000, Scalers.ENERGY));
-    public static final RegistryObject<CapacitorKey> ALLOY_SMELTER_ENERGY_TRANSFER = CAPACITOR_KEYS.register("alloy_smelter_transfer", () -> new CapacitorKey(120, Scalers.ENERGY));
-    public static final RegistryObject<CapacitorKey> ALLOY_SMELTER_ENERGY_CONSUME = CAPACITOR_KEYS.register("alloy_smelter_consume", () -> new CapacitorKey(30, Scalers.ENERGY));
+    SIMPLE_STIRLING_GENERATOR_ENERGY_CAPACITY(() -> new CapacitorKey(2000, CapacitorKeyType.EnergyCapacity, Scalers.FIXED)),
 
-    public static final RegistryObject<CapacitorKey> ENHANCED_ALLOY_SMELTER_ENERGY_CAPACITY = CAPACITOR_KEYS.register("enhanced_alloy_smelter_capacity", () -> new CapacitorKey(1500000, Scalers.ENERGY));
-    public static final RegistryObject<CapacitorKey> ENHANCED_ALLOY_SMELTER_ENERGY_TRANSFER = CAPACITOR_KEYS.register("enhanced_alloy_smelter_transfer", () -> new CapacitorKey(180, Scalers.ENERGY));
-    public static final RegistryObject<CapacitorKey> ENHANCED_ALLOY_SMELTER_ENERGY_CONSUME = CAPACITOR_KEYS.register("enhanced_alloy_smelter_consume", () -> new CapacitorKey(45, Scalers.ENERGY));
+    STIRLING_GENERATOR_ENERGY_CAPACITY(() -> new CapacitorKey(100000, CapacitorKeyType.EnergyCapacity, Scalers.ENERGY)),
+    // TODO: Generation rate and efficiency.
 
-    // Development entries for new/wip machines.
-    public static final RegistryObject<CapacitorKey> DEV_ENERGY_CAPACITY = CAPACITOR_KEYS.register("dev_capacity", () -> new CapacitorKey(100000, Scalers.FIXED));
-    public static final RegistryObject<CapacitorKey> DEV_ENERGY_TRANSFER = CAPACITOR_KEYS.register("dev_transfer", () -> new CapacitorKey(120, Scalers.FIXED));
-    public static final RegistryObject<CapacitorKey> DEV_ENERGY_CONSUME = CAPACITOR_KEYS.register("dev_consume", () -> new CapacitorKey(30, Scalers.FIXED));
+    DEV_ENERGY_CAPACITY(() -> new CapacitorKey(100000, CapacitorKeyType.EnergyCapacity, Scalers.FIXED)),
+    DEV_ENERGY_TRANSFER(() -> new CapacitorKey(120, CapacitorKeyType.EnergyTransfer, Scalers.FIXED)),
+    DEV_ENERGY_CONSUME(() -> new CapacitorKey(30, CapacitorKeyType.EnergyUsage, Scalers.FIXED)),
+    ;
+
+    // In a subclass so that its loaded.
+    private static class Register {
+        private static final DeferredRegister<CapacitorKey> CAPACITOR_KEYS = DeferredRegister.create(EnderIO.CAPACITOR_KEY_REGISTRY_KEY, EIOMachines.MODID);
+    }
 
     public static void classload() {
-        CAPACITOR_KEYS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        Register.CAPACITOR_KEYS.register(FMLJavaModLoadingContext.get().getModEventBus());
+    }
+
+    private final RegistryObject<CapacitorKey> registryObject;
+
+    MachineCapacitorKeys(Supplier<CapacitorKey> factory) {
+        registryObject = Register.CAPACITOR_KEYS.register(name().toLowerCase(), factory);
+    }
+
+    MachineCapacitorKeys(String name, Supplier<CapacitorKey> factory) {
+        registryObject = Register.CAPACITOR_KEYS.register(name, factory);
+    }
+
+    public RegistryObject<CapacitorKey> getRegistryObject() {
+        return registryObject;
+    }
+
+    public CapacitorKey get() {
+        return registryObject.get();
     }
 }

@@ -1,25 +1,23 @@
 package com.enderio.machines.common.blockentity.base;
 
 import com.enderio.api.capacitor.CapacitorKey;
-import com.enderio.machines.common.energy.EnergyTransferMode;
+import com.enderio.api.energy.EnergyIOMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class PowerConsumingMachineEntity extends PoweredMachineEntity {
     public PowerConsumingMachineEntity(CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey consumptionKey, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-        super(capacityKey, transferKey, consumptionKey, EnergyTransferMode.Insert, pType, pWorldPosition, pBlockState);
+        super(EnergyIOMode.Input, capacityKey, transferKey, consumptionKey, pType, pWorldPosition, pBlockState);
     }
 
-    public boolean hasEnergy() {
-        return energyStorage.getEnergyStored() > 0;
-    }
+    // TODO: This is temporary, i plan to do more work on power consuming machines in the sagmill branch.
 
-    public boolean canConsumeEnergy(int energy) {
-        return energyStorage.hasEnergy(energy);
-    }
-
-    public int consumeEnergy(int energy) {
-        return energyStorage.consumeEnergy(energy);
+    /**
+     * Try to consume energy.
+     * Capped at the machines max use rate.
+     */
+    public final int consumeEnergy(int maxConsume) {
+        return getEnergyStorage().consumeEnergy(Math.min(maxConsume, getMaxEnergyUse()));
     }
 }

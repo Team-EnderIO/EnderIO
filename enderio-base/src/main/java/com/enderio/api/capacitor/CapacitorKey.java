@@ -14,10 +14,13 @@ public final class CapacitorKey extends ForgeRegistryEntry<CapacitorKey> {
 
     private final float base;
 
+    private final CapacitorKeyType type;
+
     private final IScaler scaler;
 
-    public CapacitorKey(float baseValue, IScaler scaler) {
+    public CapacitorKey(float baseValue, CapacitorKeyType type, IScaler scaler) {
         this.base = baseValue;
+        this.type = type;
         this.scaler = scaler;
     }
 

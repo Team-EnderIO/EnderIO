@@ -2,7 +2,7 @@ package com.enderio.machines.client.rendering.blockentity;
 
 import com.enderio.base.client.renderer.RenderUtil;
 import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
-import com.enderio.machines.common.blockentity.data.sidecontrol.fluid.FluidTankMaster;
+import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix3f;
@@ -13,16 +13,13 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
     public FluidTankBER(BlockEntityRendererProvider.Context context) {
@@ -33,7 +30,7 @@ public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
     public void render(FluidTankBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight,
         int packedOverlay) {
 
-        FluidTankMaster tank = blockEntity.getFluidTank();
+        FluidTank tank = blockEntity.getFluidTank();
 
         // Don't waste time if there's no fluid.
         if (tank.getFluidAmount() > 0) {
@@ -66,8 +63,9 @@ public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
         float inset = 0.0625F;
         float faceSize = 14 / 16.0f;
 
+
         // Top
-        RenderUtil.renderFace(Direction.UP, pose, normal, consumer, texture, inset, inset, fluidHeight, faceSize, faceSize, color);
+        RenderUtil.renderFace(Direction.UP, pose, normal, consumer, texture, inset, inset, inset + fluidHeight, faceSize, faceSize, color);
 
         // Sides
         RenderUtil.renderFace(Direction.SOUTH, pose, normal, consumer, texture, inset, inset, inset, faceSize, fluidHeight, color);

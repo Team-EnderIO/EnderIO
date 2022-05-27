@@ -28,7 +28,7 @@ public class StirlingGeneratorScreen extends EIOScreen<StirlingGeneratorMenu> {
 
         addRenderableOnly(new ProgressWidget(this, () -> menu.getBlockEntity().getBurnProgress(), getGuiLeft() + 81, getGuiTop() + 53, 14, 14, 176, 0));
 
-        addRenderableOnly(new EnergyWidget(this, getMenu().getBlockEntity()::getGuiEnergy, 16 + leftPos, 14 + topPos, 9, 42));
+        addRenderableOnly(new EnergyWidget(this, getMenu().getBlockEntity()::getEnergyStorage, 16 + leftPos, 14 + topPos, 9, 42));
 
         addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
