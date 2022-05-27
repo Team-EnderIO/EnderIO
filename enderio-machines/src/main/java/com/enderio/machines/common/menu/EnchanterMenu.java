@@ -45,7 +45,7 @@ public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
                 @Override
                 public boolean mayPickup(Player playerIn) {
                     Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.Types.ENCHANTING, blockEntity.getRecipeWrapper(), level);
-                    if (recipe.isPresent() && (playerIn.experienceLevel > recipe.get().getLevelCost(blockEntity.getRecipeWrapper()) || playerIn.isCreative()) && blockEntity.shouldAct()) {
+                    if (recipe.isPresent() && (playerIn.experienceLevel > recipe.get().getLevelCost(blockEntity.getRecipeWrapper()) || playerIn.isCreative()) && blockEntity.canAct()) {
                         return super.mayPickup(playerIn);
                     }
                     return false;

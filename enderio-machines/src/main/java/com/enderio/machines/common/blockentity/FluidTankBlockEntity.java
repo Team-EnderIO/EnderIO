@@ -24,7 +24,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
@@ -106,12 +105,13 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public void tick() {
-        if (shouldActSlow()) {
+    public void serverTick() {
+        if (canActSlow()) {
             fillInternal();
             drainInternal();
         }
-        super.tick();
+
+        super.serverTick();
     }
 
     private void fillInternal() {

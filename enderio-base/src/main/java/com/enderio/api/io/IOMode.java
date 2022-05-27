@@ -8,7 +8,7 @@ public enum IOMode {
 
     /**
      * Only pushes outputs allows both external pulling and the machine pushes itself.
-     * <p>
+     *
      * For example conduits can pull themselves, however putting a chest next to the machine will cause it to push items to the chest.
      *
      * @apiNote Each machine determines what this means this for energy. Some may ignore it.
@@ -17,7 +17,7 @@ public enum IOMode {
 
     /**
      * Only pulls inputs, allowing both external pushing and the machine pulling itself.
-     * <p>
+     *
      * For example conduits can push into the machine themselves, but a chest next to the machine will also be pulled from.
      *
      * @apiNote Each machine determines what this means this for energy. Some may ignore it.

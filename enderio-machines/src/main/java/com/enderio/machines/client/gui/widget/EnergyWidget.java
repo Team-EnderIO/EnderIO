@@ -4,7 +4,7 @@ import com.enderio.base.client.gui.widgets.EIOWidget;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.util.TooltipUtil;
 import com.enderio.machines.EIOMachines;
-import com.enderio.api.energy.EnergyCapacityPair;
+import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.screens.Screen;
@@ -21,19 +21,19 @@ public class EnergyWidget extends EIOWidget {
     private static final ResourceLocation WIDGETS = EIOMachines.loc("textures/gui/widgets.png");
 
     private final Screen displayOn;
-    private final Supplier<EnergyCapacityPair> getEnergy;
+    private final Supplier<MachineEnergyStorage> storageSupplier;
 
-    public EnergyWidget(Screen displayOn, Supplier<EnergyCapacityPair> getEnergy, int x, int y, int width, int height) {
+    public EnergyWidget(Screen displayOn, Supplier<MachineEnergyStorage> storageSupplier, int x, int y, int width, int height) {
         super(x, y, width, height);
         this.displayOn = displayOn;
-        this.getEnergy = getEnergy;
+        this.storageSupplier = storageSupplier;
     }
 
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         // Don't bother if we have no energy capacity, protects from divide by zero's when there's no capacitor.
-        EnergyCapacityPair energy = getEnergy.get();
-        if (energy.capacity() <= 0)
+        MachineEnergyStorage storage = storageSupplier.get();
+        if (storage.getMaxEnergyStored() <= 0)
             return;
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
@@ -41,7 +41,7 @@ public class EnergyWidget extends EIOWidget {
         RenderSystem.enableDepthTest();
         RenderSystem.setShaderTexture(0, WIDGETS);
 
-        float filledVolume = energy.energy() / (float) energy.capacity();
+        float filledVolume = storage.getEnergyStored() / (float) storage.getMaxEnergyStored();
         int renderableHeight = (int)(filledVolume * height);
 
         poseStack.pushPose();
@@ -61,9 +61,11 @@ public class EnergyWidget extends EIOWidget {
 
     public void renderToolTip(PoseStack poseStack, int mouseX, int mouseY) {
         if (isHovered(mouseX, mouseY)) {
-            EnergyCapacityPair energy = getEnergy.get();
+            MachineEnergyStorage storage = storageSupplier.get();
+
             NumberFormat fmt = NumberFormat.getInstance();
-            displayOn.renderTooltip(poseStack, TooltipUtil.withArgs(EIOLang.ENERGY_AMOUNT, fmt.format(energy.energy()) + "/" + fmt.format(energy.capacity())), mouseX, mouseY);
+            displayOn.renderTooltip(poseStack, TooltipUtil.withArgs(EIOLang.ENERGY_AMOUNT, fmt.format(storage.getEnergyStored()) + "/" + fmt.format(
+                storage.getMaxEnergyStored())), mouseX, mouseY);
         }
     }
 }

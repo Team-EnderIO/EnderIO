@@ -35,6 +35,11 @@ public abstract class StirlingGeneratorBlockEntity extends PowerGeneratingMachin
         public MachineTier getTier() {
             return MachineTier.Simple;
         }
+
+        @Override
+        public int getEnergyLeakRate() {
+            return 10; // TODO config
+        }
     }
 
     public static class Standard extends StirlingGeneratorBlockEntity {
@@ -74,34 +79,32 @@ public abstract class StirlingGeneratorBlockEntity extends PowerGeneratingMachin
     }
 
     @Override
-    public void tick() {
-        if (isServer()) {
-            // Tick burn time even if redstone activation has stopped.
-            if (isGenerating()) {
-                burnTime--;
-            }
+    public void serverTick() {
+        // Tick burn time even if redstone activation has stopped.
+        if (isGenerating()) {
+            burnTime--;
+        }
 
-            // Only continue burning if redstone is enabled and the internal buffer has space.
-            if (shouldAct() && !isGenerating() && getEnergyStored() < getMaxEnergyStored()) {
-                // Get the fuel
-                ItemStack fuel = getInventory().getStackInSlot(0);
-                if (!fuel.isEmpty()) {
-                    // Get the burn time.
-                    int burningTime = ForgeHooks.getBurnTime(fuel, RecipeType.SMELTING);
+        // Only continue burning if redstone is enabled and the internal buffer has space.
+        if (canAct() && !isGenerating() && getEnergyStorage().getEnergyStored() < getEnergyStorage().getMaxEnergyStored()) {
+            // Get the fuel
+            ItemStack fuel = getInventory().getStackInSlot(0);
+            if (!fuel.isEmpty()) {
+                // Get the burn time.
+                int burningTime = ForgeHooks.getBurnTime(fuel, RecipeType.SMELTING);
 
-                    if (burningTime > 0) {
-                        burnTime = burningTime;
-                        burnDuration = burnTime;
+                if (burningTime > 0) {
+                    burnTime = burningTime;
+                    burnDuration = burnTime;
 
-                        // Remove the fuel
-                        fuel.shrink(1);
-                        getInventory().setStackInSlot(0, fuel);
-                    }
+                    // Remove the fuel
+                    fuel.shrink(1);
+                    getInventory().setStackInSlot(0, fuel);
                 }
             }
         }
 
-        super.tick();
+        super.serverTick();
     }
 
     @Override

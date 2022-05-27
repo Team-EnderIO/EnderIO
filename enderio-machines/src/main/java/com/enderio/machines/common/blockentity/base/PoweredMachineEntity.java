@@ -1,162 +1,169 @@
 package com.enderio.machines.common.blockentity.base;
 
-import com.enderio.api.UseOnly;
 import com.enderio.api.capability.ICapacitorData;
 import com.enderio.api.capacitor.CapacitorKey;
-import com.enderio.api.energy.EnergyCapacityPair;
-import com.enderio.api.energy.IMachineEnergy;
+import com.enderio.api.energy.EnergyIOMode;
+import com.enderio.base.common.blockentity.sync.IntegerDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.base.common.capacitor.DefaultCapacitorData;
 import com.enderio.machines.common.MachineTier;
+import com.enderio.machines.common.blockentity.sync.CapacitorDataSlot;
+import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
-import com.enderio.machines.common.blockentity.sync.MachineEnergyDataSlot;
-import com.enderio.machines.common.io.energy.ForgeEnergyWrapper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.EnumMap;
+import java.util.Optional;
+
 /**
- * A machine that stores power.
+ * A machine that stores energy.
  */
-public abstract class PoweredMachineEntity extends MachineBlockEntity implements IMachineEnergy {
-    protected final CapacitorKey capacityKey, transferKey, consumptionKey;
+public abstract class PoweredMachineEntity extends MachineBlockEntity {
+    protected final MachineEnergyStorage energyStorage;
 
-    private int storedEnergy;
+    private final LazyOptional<MachineEnergyStorage> energyStorageCap;
 
-    private final ForgeEnergyWrapper energyWrapper;
+    protected final CapacitorKey energyUseKey;
 
-    @UseOnly(LogicalSide.CLIENT) private EnergyCapacityPair clientEnergy;
+    // Cache for external energy interaction
+    private final EnumMap<Direction, LazyOptional<IEnergyStorage>> energyHandlerCache = new EnumMap<>(Direction.class);
 
-    // TODO: Cache capacitor data rather than constantly querying an optional?
+    private ICapacitorData cachedCapacitorData;
+    private boolean capacitorCacheDirty;
 
-    public PoweredMachineEntity(CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey consumptionKey, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
+    public PoweredMachineEntity(EnergyIOMode energyIOMode, CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey energyUseKey, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);
 
-        // Store capacitor keys
-        this.capacityKey = capacityKey;
-        this.transferKey = transferKey;
-        this.consumptionKey = consumptionKey;
+        // Store energy use key
+        // TODO: Energy use rewrite.
+        this.energyUseKey = energyUseKey;
 
-        // Create energy wrapper
-        energyWrapper = new ForgeEnergyWrapper(getIOConfig(), this);
-        addCapabilityProvider(energyWrapper);
+        // Create energy storage
+        this.energyStorage = createEnergyStorage(energyIOMode, capacityKey, transferKey);
+        this.energyStorageCap = LazyOptional.of(() -> energyStorage);
+        addCapabilityProvider(energyStorage);
 
-        // Sync energy
-        addDataSlot(new MachineEnergyDataSlot(this::getEnergyStored, this::getMaxEnergyStored, vec -> clientEnergy = vec, SyncMode.GUI));
+        // Mark capacitor cache as dirty
+        capacitorCacheDirty = true;
+
+        // Sync capacitor and energy storage
+        addDataSlot(new CapacitorDataSlot(this::getCapacitorItem, data -> cachedCapacitorData = data, SyncMode.GUI));
+        addDataSlot(new IntegerDataSlot(energyStorage::getEnergyStored, energyStorage::setEnergyStored, SyncMode.GUI));
+    }
+
+    @Override
+    public void serverTick() {
+        // Leak energy
+        energyStorage.consumeEnergy(getEnergyLeakRate());
+
+        // If redstone config is not enabled.
+        if (canAct()) {
+            // Push energy to other blocks.
+            pushEnergy();
+        }
+
+        super.serverTick();
     }
 
     // region Energy
 
-    // TODO: Energy leakage and efficiency multipliers
+    // TODO: Machine efficiency features.
 
-    @Override
-    public int getEnergyStored() {
-        if (level.isClientSide) {
-            return clientEnergy.energy();
-        }
-        return storedEnergy;
+    public final MachineEnergyStorage getEnergyStorage() {
+        return energyStorage;
     }
 
-    @Override
-    public void addEnergy(int energy) {
-        storedEnergy = Math.min(this.storedEnergy + energy, getMaxEnergyStored());
-        setChanged();
+    public final int getMaxEnergyUse() {
+        return energyUseKey.getInt(getCapacitorData());
     }
 
-    @Override
-    public int consumeEnergy(int energy) {
-        int energyConsumed = Math.min(storedEnergy, Math.min(getMaxEnergyConsumption(), energy));
-        addEnergy(-energyConsumed);
-        return energyConsumed;
-    }
-
-    @Override
-    public int getMaxEnergyStored() {
-        if (level.isClientSide) {
-            return clientEnergy.capacity();
-        }
-        return capacityKey.getInt(getCapacitorData());
-    }
-
-    @Override
-    public int getMaxEnergyConsumption() {
-        return consumptionKey.getInt(getCapacitorData());
-    }
-
-    @Override
-    public int getMaxEnergyTransfer() {
-        return transferKey.getInt(getCapacitorData());
-    }
-
-    // TODO: Implement energy leaking.
-    @Override
     public int getEnergyLeakRate() {
         return 0;
     }
 
-    @NotNull
-    @Override
-    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if (cap == CapabilityEnergy.ENERGY && side == null) {
-            // TODO: Null side access..
-//            return energyWrapper.getCapability(side).cast();
-        }
-        return super.getCapability(cap, side);
-    }
-
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-    }
-
-    @Override
-    public boolean shouldAct() {
-        // Ignore capacitor state on simple machines.
-        if (getTier() == MachineTier.Simple)
-            return super.shouldAct();
-        return super.shouldAct() && (!requiresCapacitor() || isCapacitorInstalled());
-    }
-
-    @Override
-    public void tick() {
-        if (shouldAct()) {
-            pushEnergy();
-        }
-        super.tick();
-    }
-
+    /**
+     * Push energy out to neighboring blocks.
+     */
     private void pushEnergy() {
-        // Transmit power to adjacent block entities if our storage is set up to extract from.
-        if (getEnergyStored() > 0 && canExtractEnergy(null)) {
-            for (Direction direction : Direction.values()) {
-                BlockEntity adjacent = level.getBlockEntity(worldPosition.relative(direction));
-                if (adjacent != null) {
-                    boolean canContinue = adjacent.getCapability(CapabilityEnergy.ENERGY, direction.getOpposite()).map(handler -> {
-                        if (handler.canReceive()) {
-                            int received = handler.receiveEnergy(Math.min(getEnergyStored(), getMaxEnergyTransfer()), false);
-                            consumeEnergy(received);
-                            return getEnergyStored() > 0;
-                        } else {
-                            return true;
-                        }
-                    }).orElse(true);
+        // Don't bother if our energy storage cannot output ever.
+        if (!getEnergyStorage().getIOMode().canOutput())
+            return;
 
-                    if (!canContinue) {
-                        break;
+        // Transmit power out all sides.
+        for (Direction side : Direction.values()) {
+            // Get our energy handler, this will handle all sidedness tests for us.
+            getCapability(CapabilityEnergy.ENERGY, side).resolve().ifPresent(selfHandler -> {
+                // If we can't extract out this side, continue
+                if (selfHandler.getEnergyStored() <= 0 || !selfHandler.canExtract())
+                    return;
+
+                // Get the other energy handler
+                Optional<IEnergyStorage> otherHandler = getNeighboringEnergyHandler(side).resolve();
+                if (otherHandler.isPresent()) {
+                    // If the other handler can receive power transmit ours
+                    if (otherHandler.get().canReceive()) {
+                        // Try to send as much as our transfer rate will allow
+                        int received = otherHandler.get().receiveEnergy(Math.min(selfHandler.getEnergyStored(), getEnergyStorage().getMaxEnergyTransfer()), false);
+
+                        // Consume that energy from our buffer.
+                        getEnergyStorage().consumeEnergy(received);
                     }
                 }
-            }
+            });
         }
+    }
+
+    /**
+     * Create the energy storage medium
+     * Override this to customise the behaviour of the energy storage.
+     */
+    protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, CapacitorKey capacityKey, CapacitorKey transferKey) {
+        return new MachineEnergyStorage(getIOConfig(), energyIOMode, this::getCapacitorData, capacityKey, transferKey) {
+            @Override
+            protected void onContentsChanged() {
+                setChanged();
+            }
+        };
+    }
+
+    // endregion
+
+    // region Neighboring Capabilities
+
+    @Override
+    protected void clearCaches() {
+        super.clearCaches();
+        energyHandlerCache.clear();
+    }
+
+    @Override
+    protected void populateCaches(Direction direction, @Nullable BlockEntity neighbor) {
+        super.populateCaches(direction, neighbor);
+
+        if (neighbor != null) {
+            energyHandlerCache.put(direction, addInvalidationListener(neighbor.getCapability(CapabilityEnergy.ENERGY, direction.getOpposite())));
+        } else {
+            energyHandlerCache.put(direction, LazyOptional.empty());
+        }
+    }
+
+    protected LazyOptional<IEnergyStorage> getNeighboringEnergyHandler(Direction side) {
+        if (!energyHandlerCache.containsKey(side))
+            return LazyOptional.empty();
+        return energyHandlerCache.get(side);
     }
 
     // endregion
@@ -177,40 +184,87 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity implements
      * Whether the machine has a capacitor installed.
      */
     public boolean isCapacitorInstalled() {
-        MachineInventoryLayout layout = getInventoryLayout();
-        if (requiresCapacitor() && layout != null) {
-            return CapacitorUtil.isCapacitor(getInventory().getStackInSlot(layout.getCapacitorSlot()));
-        }
+        if (capacitorCacheDirty)
+            cacheCapacitorData();
+        return cachedCapacitorData != DefaultCapacitorData.NONE;
+    }
 
-        return false;
+    public ItemStack getCapacitorItem() {
+        MachineInventoryLayout layout = getInventoryLayout();
+        if (layout == null)
+            return ItemStack.EMPTY;
+        return getInventory().getStackInSlot(layout.getCapacitorSlot());
     }
 
     /**
      * Get the capacitor data for the machine.
      */
     public ICapacitorData getCapacitorData() {
-        MachineInventoryLayout layout = getInventoryLayout();
-        if (requiresCapacitor() && layout != null) {
-            return CapacitorUtil.getCapacitorData(getInventory().getStackInSlot(getInventoryLayout().getCapacitorSlot())).orElse(DefaultCapacitorData.NONE);
-        }
-        return DefaultCapacitorData.NONE;
+        if (capacitorCacheDirty)
+            cacheCapacitorData();
+        return cachedCapacitorData;
     }
 
-    // TODO: Hook inventory slot changes and rescan for a capacitor rather than fetching from the slot each time.
+    @Override
+    protected void onInventoryContentsChanged(int slot) {
+        if (getInventoryLayout().getCapacitorSlot() == slot) {
+            capacitorCacheDirty = true;
+        }
+        super.onInventoryContentsChanged(slot);
+    }
+
+    private void cacheCapacitorData() {
+        capacitorCacheDirty = false;
+
+        // Don't do this on client side, client waits for the sync packet.
+        if (isClientSide()) {
+            return;
+        }
+
+        MachineInventoryLayout layout = getInventoryLayout();
+        if (requiresCapacitor() && layout != null) {
+            cachedCapacitorData = CapacitorUtil.getCapacitorData(getCapacitorItem()).orElse(DefaultCapacitorData.NONE);
+        } else {
+            cachedCapacitorData = DefaultCapacitorData.NONE;
+        }
+    }
+
+    @Override
+    public boolean canAct() {
+        // Ignore capacitor state on simple machines.
+        if (getTier() == MachineTier.Simple)
+            return super.canAct();
+        return super.canAct() && (!requiresCapacitor() || isCapacitorInstalled());
+    }
 
     // endregion
 
-    // region Serialization
+    // region Capabilities and Serialization
+
+    @NotNull
+    @Override
+    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+        if (cap == CapabilityEnergy.ENERGY && side == null) {
+            return energyStorageCap.cast();
+        }
+        return super.getCapability(cap, side);
+    }
+
+    @Override
+    public void invalidateCaps() {
+        super.invalidateCaps();
+        energyStorageCap.invalidate();
+    }
 
     @Override
     public void saveAdditional(CompoundTag pTag) {
-        pTag.putInt("Energy", storedEnergy);
+        pTag.put("energy", energyStorage.serializeNBT());
         super.saveAdditional(pTag);
     }
 
     @Override
     public void load(CompoundTag pTag) {
-        storedEnergy = pTag.getInt("Energy");
+        energyStorage.deserializeNBT(pTag.get("energy"));
         super.load(pTag);
     }
 

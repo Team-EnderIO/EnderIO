@@ -1,10 +1,11 @@
 package com.enderio.machines.common.blockentity.base;
 
+import com.enderio.api.UseOnly;
 import com.enderio.api.capability.IEnderCapabilityProvider;
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
+import com.enderio.base.common.blockentity.EnderBlockEntity;
 import com.enderio.base.common.blockentity.RedstoneControl;
-import com.enderio.base.common.blockentity.SyncedBlockEntity;
 import com.enderio.base.common.blockentity.sync.EnumDataSlot;
 import com.enderio.base.common.blockentity.sync.NBTSerializableDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
@@ -20,7 +21,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -34,6 +34,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
@@ -41,13 +42,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
-public abstract class MachineBlockEntity extends SyncedBlockEntity implements MenuProvider {
+public abstract class MachineBlockEntity extends EnderBlockEntity implements MenuProvider {
 
     // region IO Configuration
 
@@ -78,12 +77,6 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
 
     // endregion
 
-    // region Capabilities
-
-    private final Map<Capability<?>, IEnderCapabilityProvider<?>> capabilityProviders = new HashMap<>();
-
-    // endregion
-
     public MachineBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);
 
@@ -109,16 +102,10 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
 
         // Register sync slot for ioConfig and setup model data.
         add2WayDataSlot(new NBTSerializableDataSlot<>(this::getIOConfig, SyncMode.WORLD, () -> {
-            if (!isServer() && getIOConfig().renderOverlay()) {
-                modelData.setData(IO_CONFIG_PROPERTY, getIOConfig());
-                requestModelDataUpdate();
-                level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+            if (level.isClientSide) {
+                onIOConfigChanged();
             }
         }));
-
-        if (getIOConfig().renderOverlay()) {
-            modelData.setData(IO_CONFIG_PROPERTY, getIOConfig());
-        }
     }
 
     // region Per-machine config/features
@@ -162,9 +149,7 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
 
                 // Invalidate capabilities for this side as the side has been disabled.
                 if (newMode == IOMode.DISABLED) {
-                    for (IEnderCapabilityProvider<?> capProvider : capabilityProviders.values()) {
-                        capProvider.invalidateSide(side);
-                    }
+                    invalidateSide(side);
                 }
 
                 // Notify neighbors of update
@@ -207,9 +192,17 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
         return getIOConfig().renderOverlay() ? modelData : EmptyModelData.INSTANCE;
     }
 
+    private void onIOConfigChanged() {
+        if (level.isClientSide && ioConfig.renderOverlay()) {
+            modelData.setData(IO_CONFIG_PROPERTY, ioConfig);
+            requestModelDataUpdate();
+        }
+        level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+    }
+
     // endregion
 
-    // region Item Handling
+    // region Inventory
 
     public final MachineInventory getInventory() {
         return inventory;
@@ -226,58 +219,52 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
         return new MachineInventory(getIOConfig(), layout) {
             @Override
             protected void onContentsChanged(int slot) {
+                onInventoryContentsChanged(slot);
                 setChanged();
             }
         };
     }
 
-    // endregion
+    /**
+     * @apiNote Must call this on custom MachineInventory handlers!
+     */
+    protected void onInventoryContentsChanged(int slot) {
 
-    // region Block capabilities
-
-    public void addCapabilityProvider(IEnderCapabilityProvider<?> provider) {
-        capabilityProviders.put(provider.getCapabilityType(), provider);
     }
 
     // endregion
 
     // region Block Entity ticking
 
-    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, MachineBlockEntity pBlockEntity) {
-        pBlockEntity.tick();
-    }
+    // TODO: Should we separate clientTick and serverTick so there's less chance of a mistake?
 
     @Override
-    public void tick() {
+    public void serverTick() {
         if (isCacheDirty) {
             updateCapabilityCache();
         }
 
-        if (shouldActSlow()) {
+        if (canActSlow()) {
             forceResources();
         }
 
-        super.tick();
+        super.serverTick();
     }
 
-    public boolean isServer() {
-        return !level.isClientSide;
-    }
-
-    public boolean shouldAct() {
+    public boolean canAct() {
         if (supportsRedstoneControl())
-            return isServer() && redstoneControl.isActive(level.hasNeighborSignal(worldPosition));
-        return isServer();
+            return redstoneControl.isActive(level.hasNeighborSignal(worldPosition));
+        return true;
     }
 
-    public boolean shouldActSlow() {
-        return shouldAct()
+    public boolean canActSlow() {
+        return canAct()
             && level.getGameTime() % 5 == 0;
     }
 
     // endregion
 
-    // region Item movement
+    // region Resource movement
 
     /**
      * Push and pull resources to/from other blocks.
@@ -285,6 +272,7 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
     private void forceResources() {
         for (Direction direction : Direction.values()) {
             if (ioConfig.getMode(direction).canForce()) {
+                // TODO: Maybe some kind of resource distributor so that items are transmitted evenly around? rather than taking the order of Direction.values()
                 moveItems(direction);
                 moveFluids(direction);
             }
@@ -298,22 +286,20 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
         // Get our item handler.
         getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side).resolve().ifPresent(selfHandler -> {
             // Get neighboring item handler.
-            if (itemHandlerCache.containsKey(side)) {
-                Optional<IItemHandler> otherHandler = itemHandlerCache.get(side).resolve();
+            Optional<IItemHandler> otherHandler = getNeighboringItemHandler(side).resolve();
 
-                if (otherHandler.isPresent()) {
-                    // Get side config
-                    IOMode mode = ioConfig.getMode(side);
+            if (otherHandler.isPresent()) {
+                // Get side config
+                IOMode mode = ioConfig.getMode(side);
 
-                    // Output items to the other provider if enabled.
-                    if (mode.canPush()) {
-                        moveItems(selfHandler, otherHandler.get());
-                    }
+                // Output items to the other provider if enabled.
+                if (mode.canPush()) {
+                    moveItems(selfHandler, otherHandler.get());
+                }
 
-                    // Insert items from the other provider if enabled.
-                    if (mode.canPull()) {
-                        moveItems(otherHandler.get(), selfHandler);
-                    }
+                // Insert items from the other provider if enabled.
+                if (mode.canPull()) {
+                    moveItems(otherHandler.get(), selfHandler);
                 }
             }
         });
@@ -344,22 +330,20 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
         // Get our fluid handler
         getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side).resolve().ifPresent(selfHandler -> {
             // Get neighboring fluid handler.
-            if (fluidHandlerCache.containsKey(side)) {
-                Optional<IFluidHandler> otherHandler = fluidHandlerCache.get(side).resolve();
+            Optional<IFluidHandler> otherHandler = getNeighboringFluidHandler(side).resolve();
 
-                if (otherHandler.isPresent()) {
-                    // Get side config
-                    IOMode mode = ioConfig.getMode(side);
+            if (otherHandler.isPresent()) {
+                // Get side config
+                IOMode mode = ioConfig.getMode(side);
 
-                    // Test if we have fluid.
-                    FluidStack stack = selfHandler.drain(100, FluidAction.SIMULATE);
+                // Test if we have fluid.
+                FluidStack stack = selfHandler.drain(100, FluidAction.SIMULATE);
 
-                    // If we have no fluids, see if we can pull. Otherwise, push.
-                    if (stack.isEmpty() && mode.canPull()) {
-                        moveFluids(otherHandler.get(), selfHandler, 100);
-                    } else if (mode.canPush()) {
-                        moveFluids(selfHandler, otherHandler.get(), 100);
-                    }
+                // If we have no fluids, see if we can pull. Otherwise, push.
+                if (stack.isEmpty() && mode.canPull()) {
+                    moveFluids(otherHandler.get(), selfHandler, 100);
+                } else if (mode.canPush()) {
+                    moveFluids(selfHandler, otherHandler.get(), 100);
                 }
             }
         });
@@ -379,10 +363,26 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
         return filled;
     }
 
+    // endregion
+
+    // region Neighboring Capabilities
+
+    protected LazyOptional<IItemHandler> getNeighboringItemHandler(Direction side) {
+        if (!itemHandlerCache.containsKey(side))
+            return LazyOptional.empty();
+        return itemHandlerCache.get(side);
+    }
+
+    protected LazyOptional<IFluidHandler> getNeighboringFluidHandler(Direction side) {
+        if (!fluidHandlerCache.containsKey(side))
+            return LazyOptional.empty();
+        return fluidHandlerCache.get(side);
+    }
+
     /**
      * Add invalidation handler to a capability to be notified if it is removed.
      */
-    private <T> LazyOptional<T> addInvalidationListener(LazyOptional<T> capability) {
+    protected <T> LazyOptional<T> addInvalidationListener(LazyOptional<T> capability) {
         if (capability.isPresent())
             capability.addListener(this::markCapabilityCacheDirty);
         return capability;
@@ -399,18 +399,27 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
      * Update capability cache
      */
     public void updateCapabilityCache() {
-        // Update capability cache by searching for item and fluid handlers.
-        itemHandlerCache.clear();
-        fluidHandlerCache.clear();
+        // Refresh capability cache.
+        clearCaches();
         for (Direction direction : Direction.values()) {
             BlockEntity neighbor = level.getBlockEntity(worldPosition.relative(direction));
-            if (neighbor != null) {
-                itemHandlerCache.put(direction, addInvalidationListener(neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, direction.getOpposite())));
-                fluidHandlerCache.put(direction, addInvalidationListener(neighbor.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction.getOpposite())));
-            } else {
-                itemHandlerCache.put(direction, LazyOptional.empty());
-                fluidHandlerCache.put(direction, LazyOptional.empty());
-            }
+            populateCaches(direction, neighbor);
+        }
+    }
+
+    // Override the next two to implement new capability caches on the machine.
+    protected void clearCaches() {
+        itemHandlerCache.clear();
+        fluidHandlerCache.clear();
+    }
+
+    protected void populateCaches(Direction direction, @Nullable BlockEntity neighbor) {
+        if (neighbor != null) {
+            itemHandlerCache.put(direction, addInvalidationListener(neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, direction.getOpposite())));
+            fluidHandlerCache.put(direction, addInvalidationListener(neighbor.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction.getOpposite())));
+        } else {
+            itemHandlerCache.put(direction, LazyOptional.empty());
+            fluidHandlerCache.put(direction, LazyOptional.empty());
         }
     }
 
@@ -421,11 +430,7 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
     @NotNull
     @Override
     public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if (side != null) {
-            if (capabilityProviders.containsKey(cap)) {
-                return capabilityProviders.get(cap).getCapability(side).cast();
-            }
-        } else {
+        if (side == null) {
             if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && getInventory() != null) {
                 return inventoryCap.cast();
             }
@@ -438,11 +443,6 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
     public void invalidateCaps() {
         super.invalidateCaps();
         inventoryCap.invalidate();
-
-        // Invalidate all provided capabilities
-        for (IEnderCapabilityProvider<?> provider : capabilityProviders.values()) {
-            provider.invalidateCaps();
-        }
     }
 
     @Override
@@ -476,8 +476,7 @@ public abstract class MachineBlockEntity extends SyncedBlockEntity implements Me
 
         // For rendering io overlays after placed by an nbt filled block item
         if (level != null) {
-            modelData.setData(IO_CONFIG_PROPERTY, ioConfig);
-            requestModelDataUpdate();
+            onIOConfigChanged();
         }
 
         // Mark capability cache dirty

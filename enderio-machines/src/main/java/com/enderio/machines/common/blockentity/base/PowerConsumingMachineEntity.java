@@ -1,23 +1,23 @@
 package com.enderio.machines.common.blockentity.base;
 
 import com.enderio.api.capacitor.CapacitorKey;
+import com.enderio.api.energy.EnergyIOMode;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class PowerConsumingMachineEntity extends PoweredMachineEntity {
     public PowerConsumingMachineEntity(CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey consumptionKey, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-        super(capacityKey, transferKey, consumptionKey, pType, pWorldPosition, pBlockState);
+        super(EnergyIOMode.Input, capacityKey, transferKey, consumptionKey, pType, pWorldPosition, pBlockState);
     }
 
-    @Override
-    public boolean canInsertEnergy(Direction side) {
-        return getIOConfig().getMode(side).canConnect();
-    }
+    // TODO: Power consumption helpers? is that a good idea?
 
-    @Override
-    public boolean canExtractEnergy(Direction side) {
-        return false;
+    /**
+     * Try to consume energy.
+     * Capped at the machines max use rate.
+     */
+    public final int consumeEnergy(int maxConsume) {
+        return getEnergyStorage().consumeEnergy(Math.min(maxConsume, getMaxEnergyUse()));
     }
 }

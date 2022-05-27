@@ -21,6 +21,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
+// TODO: I wanna turn crafting into a task based system, so we can have PoweredProgressMachineEntity that takes a task and performs it. Means less base-class nonsense
+//       This is a job for the sagmill branch.
 public abstract class PoweredCraftingMachineEntity<R extends Recipe<Container>> extends PowerConsumingMachineEntity {
     private int energyConsumed;
     private R currentRecipe;
@@ -45,10 +47,10 @@ public abstract class PoweredCraftingMachineEntity<R extends Recipe<Container>> 
     }
 
     @Override
-    public void tick() {
+    public void serverTick() {
         boolean active = false;
 
-        if (shouldAct()) {
+        if (canAct()) {
             // If we've been asked to load a recipe (from NBT load usually), do it.
             if (loadedRecipe != null) {
                 processLoadedRecipe();
@@ -57,7 +59,8 @@ public abstract class PoweredCraftingMachineEntity<R extends Recipe<Container>> 
             if (canCraft()) {
                 int cost = getEnergyCost(getCurrentRecipe());
                 if (energyConsumed <= cost) {
-                    energyConsumed += consumeEnergy(cost);
+                    // Attempt to consume the rest of the required energy.
+                    energyConsumed += consumeEnergy(cost - energyConsumed);
                     active = true;
                 }
 
@@ -72,13 +75,11 @@ public abstract class PoweredCraftingMachineEntity<R extends Recipe<Container>> 
         }
 
         // We do this outside of shouldAct() so it still fires if we have no redstone signal
-        if (isServer()) {
-            if (getBlockState().getValue(ProgressMachineBlock.POWERED) != active) {
-                level.setBlock(getBlockPos(), getBlockState().setValue(ProgressMachineBlock.POWERED, active), Block.UPDATE_ALL);
-            }
+        if (getBlockState().getValue(ProgressMachineBlock.POWERED) != active) {
+            level.setBlock(getBlockPos(), getBlockState().setValue(ProgressMachineBlock.POWERED, active), Block.UPDATE_ALL);
         }
 
-        super.tick();
+        super.serverTick();
     }
 
     protected void setCurrentRecipe(R recipe) {
@@ -103,7 +104,7 @@ public abstract class PoweredCraftingMachineEntity<R extends Recipe<Container>> 
      * Whether crafting is running.
      */
     protected boolean canCraft() {
-        return getCurrentRecipe() != null && getEnergyStored() > 0;
+        return getCurrentRecipe() != null && getEnergyStorage().getEnergyStored() > 0;
     }
 
     /**
@@ -112,7 +113,7 @@ public abstract class PoweredCraftingMachineEntity<R extends Recipe<Container>> 
      * @return
      */
     protected boolean canSelectRecipe() {
-        return getEnergyStored() > 0; // Need some energy, stops from consuming the resources
+        return getEnergyStorage().getEnergyStored() > 0; // Need some energy, stops from consuming the resources
     }
 
     /**

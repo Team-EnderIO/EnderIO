@@ -1,9 +1,11 @@
 package com.enderio.base.common.blockentity;
 
+import com.enderio.api.UseOnly;
+import com.enderio.api.capability.IEnderCapabilityProvider;
 import com.enderio.base.common.blockentity.sync.EnderDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
-import com.enderio.api.UseOnly;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -13,19 +15,23 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.LogicalSide;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
-public abstract class SyncedBlockEntity extends BlockEntity {
-
+/**
+ * Base block entity class for EnderIO.
+ * Handles data slot syncing and capability providers.
+ */
+public class EnderBlockEntity extends BlockEntity {
     /**
      * This list is needed to send a full update packet to Players who started tracking this BlockEntity.
      * The Clients only receive changed data to reduce the amount of Data sent to the client.
@@ -36,19 +42,49 @@ public abstract class SyncedBlockEntity extends BlockEntity {
 
     private final List<EnderDataSlot<?>> clientDecidingDataSlots = new ArrayList<>();
 
-    public SyncedBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-        super(pType, pWorldPosition, pBlockState);
+    private final Map<Capability<?>, IEnderCapabilityProvider<?>> capabilityProviders = new HashMap<>();
+
+    public EnderBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
+        super(type, worldPosition, blockState);
+    }
+
+    // region Ticking
+
+    public static void tick(Level level, BlockPos pos, BlockState state, EnderBlockEntity blockEntity) {
+        if (level.isClientSide) {
+            blockEntity.clientTick();
+        } else {
+            blockEntity.serverTick();
+        }
     }
 
     /**
-     * call this ticker method to sync all renderData to the Client
+     * Perform server-side ticking
      */
-    public void tick() {
+    public void serverTick() {
+        // Perform syncing.
         if (level != null && !level.isClientSide) {
             sync();
+            setChanged();
         }
-        setChanged();
     }
+
+    /**
+     * Perform client side ticking.
+     */
+    public void clientTick() {
+
+    }
+
+    public boolean isClientSide() {
+        if (level != null)
+            return level.isClientSide;
+        return false;
+    }
+
+    // endregion
+
+    // region Sync
 
     @Nullable
     @Override
@@ -61,7 +97,7 @@ public abstract class SyncedBlockEntity extends BlockEntity {
      * @param fullUpdate if this packet should send all information (this is used for players who started tracking this BlockEntity)
      * @return the UpdatePacket
      */
-    @Nullable
+    @javax.annotation.Nullable
     public ClientboundBlockEntityDataPacket createUpdatePacket(boolean fullUpdate, SyncMode mode) {
         CompoundTag nbt = new CompoundTag();
         ListTag listNBT = new ListTag();
@@ -133,7 +169,7 @@ public abstract class SyncedBlockEntity extends BlockEntity {
         lastSyncedToPlayers.addAll(currentlyTracking);
     }
 
-    public void sendPacket(ServerPlayer player, @Nullable Packet<?> packet) {
+    public void sendPacket(ServerPlayer player, @javax.annotation.Nullable Packet<?> packet) {
         if (packet != null)
             player.connection.send(packet);
     }
@@ -154,4 +190,50 @@ public abstract class SyncedBlockEntity extends BlockEntity {
     public List<EnderDataSlot<?>> getClientDecidingDataSlots() {
         return clientDecidingDataSlots;
     }
+
+    // endregion
+
+    // region Capabilities
+
+    /**
+     * Get all capability providers
+     */
+    public Map<Capability<?>, IEnderCapabilityProvider<?>> getCapabilityProviders() {
+        return capabilityProviders;
+    }
+
+    /**
+     * Add a capability provider to the block entity.
+     */
+    public void addCapabilityProvider(IEnderCapabilityProvider<?> provider) {
+        capabilityProviders.put(provider.getCapabilityType(), provider);
+    }
+
+    /**
+     * Invalidate capabilities serving the given side.
+     */
+    public void invalidateCaps(Direction side) {
+        for (IEnderCapabilityProvider<?> capProvider : capabilityProviders.values()) {
+            capProvider.invalidateSide(side);
+        }
+    }
+
+    @NotNull
+    @Override
+    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+        if (side != null && capabilityProviders.containsKey(cap)) {
+            return capabilityProviders.get(cap).getCapability(side).cast(); // TODO: Capability providers should maybe support null sides too?
+        }
+        return super.getCapability(cap, side);
+    }
+
+    @Override
+    public void invalidateCaps() {
+        super.invalidateCaps();
+        for (IEnderCapabilityProvider<?> provider : capabilityProviders.values()) {
+            provider.invalidateCaps();
+        }
+    }
+
+    // endregion
 }

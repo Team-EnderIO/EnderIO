@@ -44,6 +44,11 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
         public MachineTier getTier() {
             return MachineTier.Simple;
         }
+
+        @Override
+        public int getEnergyLeakRate() {
+            return 5; // TODO: Config
+        }
     }
 
     public static class Furnace extends AlloySmelterBlockEntity {

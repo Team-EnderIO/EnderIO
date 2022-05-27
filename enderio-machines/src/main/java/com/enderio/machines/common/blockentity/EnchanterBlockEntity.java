@@ -77,11 +77,13 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
                         getInventory().setStackInSlot(3, ItemStack.EMPTY);
                     }
                 }
+
+                onInventoryContentsChanged(slot);
                 setChanged();
             }
 
             public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
-                if (slot == 3 && !isServer()) {
+                if (slot == 3 && isClientSide()) {
                     return ItemStack.EMPTY;
                 }
                 return super.extractItem(slot, amount, simulate);
