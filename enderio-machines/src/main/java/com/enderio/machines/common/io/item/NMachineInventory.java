@@ -24,6 +24,7 @@ public class NMachineInventory extends ItemStackHandler implements IEnderCapabil
     private final NInventoryLayout layout;
 
     private final EnumMap<Direction, LazyOptional<Wrapped>> sideCache = new EnumMap<>(Direction.class);
+    private LazyOptional<Wrapped> selfCache = LazyOptional.empty();
 
     /**
      * Create a new machine inventory.
@@ -65,6 +66,13 @@ public class NMachineInventory extends ItemStackHandler implements IEnderCapabil
 
     @Override
     public LazyOptional<IItemHandler> getCapability(Direction side) {
+        if (side == null) {
+            // Create own cache if its been invalidated or not created yet.
+            if (!selfCache.isPresent())
+                selfCache = LazyOptional.of(() -> new Wrapped(this, null));
+            return selfCache.cast();
+        }
+
         if (!config.getMode(side).canConnect())
             return LazyOptional.empty();
         return sideCache.computeIfAbsent(side, dir -> LazyOptional.of(() -> new Wrapped(this, dir))).cast();
@@ -72,9 +80,13 @@ public class NMachineInventory extends ItemStackHandler implements IEnderCapabil
 
     @Override
     public void invalidateSide(Direction side) {
-        if (sideCache.containsKey(side)) {
-            sideCache.get(side).invalidate();
-            sideCache.remove(side);
+        if (side != null) {
+            if (sideCache.containsKey(side)) {
+                sideCache.get(side).invalidate();
+                sideCache.remove(side);
+            }
+        } else {
+            selfCache.invalidate();
         }
     }
 
