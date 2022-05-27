@@ -15,29 +15,42 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.Nonnull;
 import java.util.EnumMap;
 
+/**
+ * A machine inventory.
+ * Configured and controlled by a machine's {@link IIOConfig} and a {@link NInventoryLayout}.
+ */
 public class NMachineInventory extends ItemStackHandler implements IEnderCapabilityProvider<IItemHandler> {
     private final IIOConfig config;
     private final NInventoryLayout layout;
 
     private final EnumMap<Direction, LazyOptional<Wrapped>> sideCache = new EnumMap<>(Direction.class);
 
+    /**
+     * Create a new machine inventory.
+     */
     public NMachineInventory(IIOConfig config, NInventoryLayout layout) {
         super(layout.getSlotCount());
         this.config = config;
         this.layout = layout;
     }
 
+    /**
+     * Get the IO config for the machine.
+     */
     public final IIOConfig getConfig() {
         return config;
     }
 
+    /**
+     * Get the inventory layout.
+     */
     public final NInventoryLayout getLayout() {
         return layout;
     }
 
     @Override
     public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-        return layout.test(slot, stack);
+        return layout.isItemValid(slot, stack);
     }
 
     @Override
@@ -72,13 +85,8 @@ public class NMachineInventory extends ItemStackHandler implements IEnderCapabil
         }
     }
 
-    private static class Wrapped implements IItemHandler {
-
-        private final NMachineInventory master;
-
-        private final @Nullable Direction side;
-
-        public Wrapped(NMachineInventory master, @Nullable Direction side) {
+    private record Wrapped(NMachineInventory master, @Nullable Direction side) implements IItemHandler {
+        private Wrapped(NMachineInventory master, @Nullable Direction side) {
             this.master = master;
             this.side = side;
         }

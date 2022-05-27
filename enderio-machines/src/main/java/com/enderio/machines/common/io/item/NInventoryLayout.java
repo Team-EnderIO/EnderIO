@@ -8,10 +8,20 @@ import java.util.List;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 
+/**
+ * Describes the slot configuration of an inventory.
+ */
 public class NInventoryLayout {
-    
-    private List<SlotConfig> slots;
-    private int capacitorSlot;
+
+    /**
+     * Slot configurations.
+     */
+    private final List<SlotConfig> slots;
+
+    /**
+     * The index of the capacitor-specific slot.
+     */
+    private final int capacitorSlot;
 
     private NInventoryLayout(LayoutBuilder builder) {
         this.slots = List.copyOf(builder.slots);
@@ -20,44 +30,76 @@ public class NInventoryLayout {
             capacitorSlot = slots.size() - 1;
         else capacitorSlot = -1;
     }
-    
+
+    /**
+     * Get an inventory layout builder.
+     * @param capacitor Whether or not the inventory will have a capacitor slot.
+     */
     public static LayoutBuilder builder(boolean capacitor) {
         return new LayoutBuilder(capacitor);
     }
 
+    /**
+     * Get the number of slots the inventory will have.
+     */
     public int getSlotCount() {
         return slots.size();
     }
 
+    /**
+     * Whether the inventory supports a capacitor.
+     */
     public boolean supportsCapacitor() {
         return capacitorSlot >= 0;
     }
 
+    /**
+     * Get the capacitor slot.
+     * @return The capacitor slot or -1 if there isn't one. Use {@link #supportsCapacitor()} to check.
+     */
     public int getCapacitorSlot() {
         return capacitorSlot;
     }
 
+    /**
+     * Get the item stack limit for the given slot.
+     */
     public int getStackLimit(int slot) {
         return slots.get(slot).stackLimit;
     }
 
+    /**
+     * Determine if the slot can be inserted to externally.
+     */
     public boolean canInsert(int slot) {
         return slots.get(slot).insert;
     }
-    
+
+    /**
+     * Determine if the slot can be extracted from externally.
+     */
     public boolean canExtract(int slot) {
         return slots.get(slot).extract;
     }
-    
-    public boolean guiCanExtract(int slot) {
-        return slots.get(slot).guiExtract;
-    }
-    
+
+    /**
+     * Determine if the slot can be inserted to in gui.
+     */
     public boolean guiCanInsert(int slot) {
         return slots.get(slot).guiInsert;
     }
-    
-    public boolean test(int slot, ItemStack stack) {
+
+    /**
+     * Determine if the slot can be extracted from in gui.
+     */
+    public boolean guiCanExtract(int slot) {
+        return slots.get(slot).guiExtract;
+    }
+
+    /**
+     * Test if an item stack is valid for the given slot.
+     */
+    public boolean isItemValid(int slot, ItemStack stack) {
         return slots.get(slot).filter.test(slot, stack);
     }
 
@@ -80,18 +122,41 @@ public class NInventoryLayout {
 
         // region Preset slot types
 
+        /**
+         * Add an input slot.
+         * This slot can be inserted and extracted via gui but only inserted to externally.
+         */
         public LayoutBuilder inputSlot() {
             return inputSlot(1, (i,s) -> true);
         }
 
+        /**
+         * Add some input slots.
+         * This slot can be inserted and extracted via gui but only inserted to externally.
+         *
+         * @param count The number of slots to add.
+         */
         public LayoutBuilder inputSlot(int count) {
             return inputSlot(count, (i,s) -> true);
         }
 
+        /**
+         * Add an input slot.
+         * This slot can be inserted and extracted via gui but only inserted to externally.
+         *
+         * @param filter The filter predicate for the slot
+         */
         public LayoutBuilder inputSlot(BiPredicate<Integer, ItemStack> filter) {
             return inputSlot(1, filter);
         }
 
+        /**
+         * Add some input slots.
+         * This slot can be inserted and extracted via gui but only inserted to externally.
+         *
+         * @param count The number of slots to add.
+         * @param filter The filter predicate for the slot
+         */
         public LayoutBuilder inputSlot(int count, BiPredicate<Integer, ItemStack> filter) {
             for (int i = 0; i < count; i++) {
                 slot(slot -> slot.guiInsert().guiExtract().insert().filter(filter));
@@ -99,18 +164,41 @@ public class NInventoryLayout {
             return this;
         }
 
+        /**
+         * Add an output slot.
+         * This slot can only be extracted from via gui and externally.
+         */
         public LayoutBuilder outputSlot() {
             return outputSlot(1, (i,s) -> true);
         }
 
+        /**
+         * Add some output slots.
+         * This slot can only be extracted from via gui and externally.
+         *
+         * @param count The number of slots to add.
+         */
         public LayoutBuilder outputSlot(int count) {
             return outputSlot(count, (i,s) -> true);
         }
 
+        /**
+         * Add some output slots.
+         * This slot can only be extracted from via gui and externally.
+         *
+         * @param filter The filter predicate for the slot
+         */
         public LayoutBuilder outputSlot(BiPredicate<Integer, ItemStack> filter) {
             return outputSlot(1, filter);
         }
 
+        /**
+         * Add some output slots.
+         * This slot can only be extracted from via gui and externally.
+         *
+         * @param count The number of slots to add.
+         * @param filter The filter predicate for the slot
+         */
         public LayoutBuilder outputSlot(int count, BiPredicate<Integer, ItemStack> filter) {
             for (int i = 0; i < count; i++) {
                 slot(slot -> slot.guiExtract().extract().filter(filter));
@@ -118,18 +206,41 @@ public class NInventoryLayout {
             return this;
         }
 
+        /**
+         * Add a storage slot.
+         * This slot can inserted to or extracted from via gui and externally.
+         */
         public LayoutBuilder storageSlot() {
             return storageSlot(1, (i,s) -> true);
         }
 
+        /**
+         * Add a storage slot.
+         * This slot can inserted to or extracted from via gui and externally.
+         *
+         * @param count The number of slots to add.
+         */
         public LayoutBuilder storageSlot(int count) {
             return storageSlot(count, (i,s) -> true);
         }
 
+        /**
+         * Add a storage slot.
+         * This slot can inserted to or extracted from via gui and externally.
+         *
+         * @param filter The filter predicate for the slot
+         */
         public LayoutBuilder storageSlot(BiPredicate<Integer, ItemStack> filter) {
             return storageSlot(1, filter);
         }
 
+        /**
+         * Add a storage slot.
+         * This slot can inserted to or extracted from via gui and externally.
+         *
+         * @param count The number of slots to add.
+         * @param filter The filter predicate for the slot
+         */
         public LayoutBuilder storageSlot(int count, BiPredicate<Integer, ItemStack> filter) {
             for (int i = 0; i < count; i++) {
                 slot(slot -> slot.guiInsert().guiExtract().insert().extract().filter(filter));
@@ -139,6 +250,9 @@ public class NInventoryLayout {
 
         // endregion
 
+        /**
+         * Build the inventory layout.
+         */
         public NInventoryLayout build() {
             // Add capacitor if it was requested
             if (hasCapacitor) {
@@ -155,31 +269,50 @@ public class NInventoryLayout {
 
             private SlotBuilder() {}
 
+            /**
+             * Enable external insertion.
+             */
             public SlotBuilder insert() {
                 insert = true;
                 return this;
             }
 
+            /**
+             * Enable external extraction.
+             */
             public SlotBuilder extract() {
                 extract = true;
                 return this;
             }
 
-            public SlotBuilder guiExtract() {
-                guiExtract = true;
-                return this;
-            }
-
+            /**
+             * Enable GUI insertion.
+             * @return
+             */
             public SlotBuilder guiInsert() {
                 guiInsert = true;
                 return this;
             }
 
+            /**
+             * Enable gui extraction.
+             */
+            public SlotBuilder guiExtract() {
+                guiExtract = true;
+                return this;
+            }
+
+            /**
+             * Set the slot filter.
+             */
             public SlotBuilder filter(BiPredicate<Integer, ItemStack> filter) {
                 this.filter = filter;
                 return this;
             }
 
+            /**
+             * Set the stack limit.
+             */
             public SlotBuilder stackLimit(int limit) {
                 this.stackLimit = Math.max(Math.min(limit, 64), 0);
                 return this;
