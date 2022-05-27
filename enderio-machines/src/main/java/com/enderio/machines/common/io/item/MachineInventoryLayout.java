@@ -248,6 +248,48 @@ public class MachineInventoryLayout {
             return this;
         }
 
+        /**
+         * Add a ghost slot.
+         * This slot can only be interacted with via gui.
+         */
+        public Builder ghostSlot() {
+            return ghostSlot(1, (i,s) -> true);
+        }
+
+        /**
+         * Add a ghost slot.
+         * This slot can only be interacted with via gui.
+         *
+         * @param count The number of slots to add.
+         */
+        public Builder ghostSlot(int count) {
+            return ghostSlot(count, (i,s) -> true);
+        }
+
+        /**
+         * Add a ghost slot.
+         * This slot can only be interacted with via gui.
+         *
+         * @param filter The filter predicate for the slot
+         */
+        public Builder ghostSlot(BiPredicate<Integer, ItemStack> filter) {
+            return ghostSlot(1, filter);
+        }
+
+        /**
+         * Add a ghost slot.
+         * This slot can only be inserted to (or cleared as per implementation of GhostSlot).
+         *
+         * @param count The number of slots to add.
+         * @param filter The filter predicate for the slot
+         */
+        public Builder ghostSlot(int count, BiPredicate<Integer, ItemStack> filter) {
+            for (int i = 0; i < count; i++) {
+                slot(slot -> slot.guiInsert().filter(filter));
+            }
+            return this;
+        }
+
         // endregion
 
         /**
