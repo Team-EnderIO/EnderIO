@@ -91,29 +91,29 @@ public class MachineBlocks {
         .build()
         .register();
 
-    public static final BlockEntry<ProgressMachineBlock> SIMPLE_ALLOY_SMELTER = REGISTRATE
-        .block("simple_alloy_smelter", props -> new ProgressMachineBlock(props, MachineBlockEntities.SIMPLE_ALLOY_SMELTER))
-        .properties(props -> props.strength(2.5f, 8))
-        .loot(MachinesLootTable::copyNBT)
-        .addLayer(() -> RenderType::cutout)
-        .blockstate((ctx, prov) -> {
-            MachinesBlockState.machineBlock(ctx, prov,
-                EIOModel.compositeModel(prov.models(), ctx.getName(), builder -> builder
-                    .component(EIOMachines.loc("block/simple_machine_frame"), true)
-                    .component(EIOMachines.loc("block/simple_alloy_smelter_front"))
-                    .component(EIOMachines.loc("block/io_overlay"))),
-                EIOModel.compositeModel(prov.models(), ctx.getName() + "_on", builder -> builder
-                    .component(EIOMachines.loc("block/simple_machine_frame"), true)
-                    .component(EIOMachines.loc("block/io_overlay"))
-                    .component(prov
-                        .models()
-                        .withExistingParent("simple_alloy_smelter_front_on", EIOMachines.loc("block/simple_alloy_smelter_front"))
-                        .texture("front", EIOMachines.loc("block/simple_alloy_smelter_front_on")))));
-        })
-        .item()
-        .tab(() -> EIOCreativeTabs.MACHINES)
-        .build()
-        .register();
+//    public static final BlockEntry<ProgressMachineBlock> SIMPLE_ALLOY_SMELTER = REGISTRATE
+//        .block("simple_alloy_smelter", props -> new ProgressMachineBlock(props, MachineBlockEntities.SIMPLE_ALLOY_SMELTER))
+//        .properties(props -> props.strength(2.5f, 8))
+//        .loot(MachinesLootTable::copyNBT)
+//        .addLayer(() -> RenderType::cutout)
+//        .blockstate((ctx, prov) -> {
+//            MachinesBlockState.machineBlock(ctx, prov,
+//                EIOModel.compositeModel(prov.models(), ctx.getName(), builder -> builder
+//                    .component(EIOMachines.loc("block/simple_machine_frame"), true)
+//                    .component(EIOMachines.loc("block/simple_alloy_smelter_front"))
+//                    .component(EIOMachines.loc("block/io_overlay"))),
+//                EIOModel.compositeModel(prov.models(), ctx.getName() + "_on", builder -> builder
+//                    .component(EIOMachines.loc("block/simple_machine_frame"), true)
+//                    .component(EIOMachines.loc("block/io_overlay"))
+//                    .component(prov
+//                        .models()
+//                        .withExistingParent("simple_alloy_smelter_front_on", EIOMachines.loc("block/simple_alloy_smelter_front"))
+//                        .texture("front", EIOMachines.loc("block/simple_alloy_smelter_front_on")))));
+//        })
+//        .item()
+//        .tab(() -> EIOCreativeTabs.MACHINES)
+//        .build()
+//        .register();
 
     public static final BlockEntry<ProgressMachineBlock> ALLOY_SMELTER = REGISTRATE
         .block("alloy_smelter", props -> new ProgressMachineBlock(props, MachineBlockEntities.ALLOY_SMELTER))
@@ -139,42 +139,42 @@ public class MachineBlocks {
         .build()
         .register();
 
-    public static final BlockEntry<EnhancedMachineBlock> ENHANCED_ALLOY_SMELTER = REGISTRATE
-        .block("enhanced_alloy_smelter", props -> new EnhancedMachineBlock(props, MachineBlockEntities.ENHANCED_ALLOY_SMELTER))
-        .properties(props -> props.strength(2.5f, 8))
-        .loot(MachinesLootTable::tallCopyNBT)
-        .addLayer(() -> RenderType::cutout)
-        .blockstate((ctx, prov) -> {
-            MachinesBlockState.enhancedMachineBlock(ctx, prov,
-                // bottom unpowered
-                EIOModel.compositeModel(prov.models(), ctx.getName(), builder -> builder
-                    .component(EIOMachines.loc("block/enhanced_machine_frame"), true)
-                    .component(EIOMachines.loc("block/enhanced_alloy_smelter_front"))
-                    .component(EIOMachines.loc("block/io_overlay"))),
-                // bottom powered
-                EIOModel.compositeModel(prov.models(), ctx.getName() + "_on", builder -> builder
-                    .component(EIOMachines.loc("block/enhanced_machine_frame"), true)
-                    .component(prov
-                        .models()
-                        .withExistingParent("enhanced_alloy_smelter_front_on", EIOMachines.loc("block/enhanced_alloy_smelter_front"))
-                        .texture("front", EIOMachines.loc("block/enhanced_alloy_smelter_front_on")))
-                    .component(EIOMachines.loc("block/io_overlay"))),
-                // top unpowered
-                prov.models().getExistingFile(EIOMachines.loc("block/enhanced_alloy_smelter_top")),
-                // top powered
-                prov
-                    .models()
-                    .withExistingParent("enhanced_alloy_smelter_top_on", EIOMachines.loc("block/enhanced_alloy_smelter_top"))
-                    .texture("front", EIOMachines.loc("block/enhanced_alloy_smelter_front_on")));
-        })
-        .item()
-        .tab(() -> EIOCreativeTabs.MACHINES)
-        .model((ctx, prov) -> EIOModel.compositeModel(prov, ctx.getName(), builder -> builder
-            .component(EIOMachines.loc("block/enhanced_machine_frame"))
-            .component(EIOMachines.loc("block/enhanced_alloy_smelter_front"))
-            .component(EIOMachines.loc("block/enhanced_alloy_smelter_top"), new Vector3f(0.0f, 1.0f, 0.0f))))
-        .build()
-        .register();
+//    public static final BlockEntry<EnhancedMachineBlock> ENHANCED_ALLOY_SMELTER = REGISTRATE
+//        .block("enhanced_alloy_smelter", props -> new EnhancedMachineBlock(props, MachineBlockEntities.ENHANCED_ALLOY_SMELTER))
+//        .properties(props -> props.strength(2.5f, 8))
+//        .loot(MachinesLootTable::tallCopyNBT)
+//        .addLayer(() -> RenderType::cutout)
+//        .blockstate((ctx, prov) -> {
+//            MachinesBlockState.enhancedMachineBlock(ctx, prov,
+//                // bottom unpowered
+//                EIOModel.compositeModel(prov.models(), ctx.getName(), builder -> builder
+//                    .component(EIOMachines.loc("block/enhanced_machine_frame"), true)
+//                    .component(EIOMachines.loc("block/enhanced_alloy_smelter_front"))
+//                    .component(EIOMachines.loc("block/io_overlay"))),
+//                // bottom powered
+//                EIOModel.compositeModel(prov.models(), ctx.getName() + "_on", builder -> builder
+//                    .component(EIOMachines.loc("block/enhanced_machine_frame"), true)
+//                    .component(prov
+//                        .models()
+//                        .withExistingParent("enhanced_alloy_smelter_front_on", EIOMachines.loc("block/enhanced_alloy_smelter_front"))
+//                        .texture("front", EIOMachines.loc("block/enhanced_alloy_smelter_front_on")))
+//                    .component(EIOMachines.loc("block/io_overlay"))),
+//                // top unpowered
+//                prov.models().getExistingFile(EIOMachines.loc("block/enhanced_alloy_smelter_top")),
+//                // top powered
+//                prov
+//                    .models()
+//                    .withExistingParent("enhanced_alloy_smelter_top_on", EIOMachines.loc("block/enhanced_alloy_smelter_top"))
+//                    .texture("front", EIOMachines.loc("block/enhanced_alloy_smelter_front_on")));
+//        })
+//        .item()
+//        .tab(() -> EIOCreativeTabs.MACHINES)
+//        .model((ctx, prov) -> EIOModel.compositeModel(prov, ctx.getName(), builder -> builder
+//            .component(EIOMachines.loc("block/enhanced_machine_frame"))
+//            .component(EIOMachines.loc("block/enhanced_alloy_smelter_front"))
+//            .component(EIOMachines.loc("block/enhanced_alloy_smelter_top"), new Vector3f(0.0f, 1.0f, 0.0f))))
+//        .build()
+//        .register();
 
     public static BlockEntry<MachineBlock> CREATIVE_POWER = REGISTRATE
         .block("creative_power", props -> new MachineBlock(props, MachineBlockEntities.CREATIVE_POWER))

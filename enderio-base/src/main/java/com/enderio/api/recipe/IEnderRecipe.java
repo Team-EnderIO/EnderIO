@@ -26,6 +26,25 @@ public interface IEnderRecipe<R extends IEnderRecipe<R, C>, C extends Container>
         throw new UnsupportedOperationException("assemble is disabled on custom recipes in favour of craft");
     }
 
+
+
+    // region New shite
+
+    /**
+     * Craft this recipe
+     * @return All outputs of the recipe.
+     */
+    List<ItemStack> craft(C container);
+
+    /**
+     * Get the number of outputs from this recipe.
+     */
+    int getOutputCount(C container);
+
+    // endregion
+
+
+
     /**
      * Return a list of all possible inputs for each slot.
      */

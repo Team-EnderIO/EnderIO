@@ -208,6 +208,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         return inventory;
     }
 
+    // TODO: should recipe wrapping be left to the individual machine?
     public final RecipeWrapper getRecipeWrapper() {
         return new RecipeWrapper(inventory);
     }

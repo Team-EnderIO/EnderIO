@@ -9,6 +9,7 @@ import com.enderio.machines.client.gui.widget.EnergyWidget;
 import com.enderio.machines.client.gui.widget.ProgressWidget;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.AlloySmelterBlockEntity;
+import com.enderio.machines.common.blockentity.NewAlloySmelterBlockEntity;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.blockentity.AlloySmelterMode;
 import com.enderio.machines.common.menu.AlloySmelterMenu;
@@ -39,21 +40,22 @@ public class AlloySmelterScreen extends EIOScreen<AlloySmelterMenu> {
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
 
         if (getMenu().getBlockEntity().getTier() != MachineTier.Simple) {
-            addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 6 + 16 * 3, () -> menu.getBlockEntity().getMode(), mode -> menu.getBlockEntity().setMode(mode), MachineLang.ALLOY_SMELTER_MODE));
+//            addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 6 + 16 * 3, () -> menu.getBlockEntity().getMode(), mode -> menu.getBlockEntity().setMode(mode), MachineLang.ALLOY_SMELTER_MODE));
         }
     }
 
     @Override
     protected ResourceLocation getBackgroundImage() {
-        AlloySmelterBlockEntity be = getMenu().getBlockEntity();
-        return switch (be.getTier()) {
-            case Simple -> be.getMode() == AlloySmelterMode.ALLOYS ? BG_TEXTURE_SIMPLE_ALLOY : BG_TEXTURE_SIMPLE_FURNACE;
-            case Standard, Enhanced -> switch (be.getMode()) {
-                case ALL -> BG_TEXTURE_AUTO;
-                case ALLOYS -> BG_TEXTURE_ALLOY;
-                case FURNACE -> BG_TEXTURE_FURNACE;
-            };
-        };
+        NewAlloySmelterBlockEntity be = getMenu().getBlockEntity();
+//        return switch (be.getTier()) {
+//            case Simple -> be.getMode() == AlloySmelterMode.ALLOYS ? BG_TEXTURE_SIMPLE_ALLOY : BG_TEXTURE_SIMPLE_FURNACE;
+//            case Standard, Enhanced -> switch (be.getMode()) {
+//                case ALL -> BG_TEXTURE_AUTO;
+//                case ALLOYS -> BG_TEXTURE_ALLOY;
+//                case FURNACE -> BG_TEXTURE_FURNACE;
+//            };
+//        };
+        return BG_TEXTURE_AUTO;
     }
 
     @Override

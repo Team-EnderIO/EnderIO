@@ -36,23 +36,17 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
 
     private final LazyOptional<MachineEnergyStorage> energyStorageCap;
 
-    protected final CapacitorKey energyUseKey;
-
     // Cache for external energy interaction
     private final EnumMap<Direction, LazyOptional<IEnergyStorage>> energyHandlerCache = new EnumMap<>(Direction.class);
 
     private ICapacitorData cachedCapacitorData;
     private boolean capacitorCacheDirty;
 
-    public PoweredMachineEntity(EnergyIOMode energyIOMode, CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey energyUseKey, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
+    public PoweredMachineEntity(EnergyIOMode energyIOMode, CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey useKey, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);
 
-        // Store energy use key
-        // TODO: Energy use rewrite.
-        this.energyUseKey = energyUseKey;
-
         // Create energy storage
-        this.energyStorage = createEnergyStorage(energyIOMode, capacityKey, transferKey);
+        this.energyStorage = createEnergyStorage(energyIOMode, capacityKey, transferKey, useKey );
         this.energyStorageCap = LazyOptional.of(() -> energyStorage);
         addCapabilityProvider(energyStorage);
 
@@ -67,7 +61,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
     @Override
     public void serverTick() {
         // Leak energy
-        energyStorage.consumeEnergy(getEnergyLeakRate());
+        energyStorage.takeEnergy(getEnergyLeakRate());
 
         // If redstone config is not enabled.
         if (canAct()) {
@@ -84,10 +78,6 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
 
     public final MachineEnergyStorage getEnergyStorage() {
         return energyStorage;
-    }
-
-    public final int getMaxEnergyUse() {
-        return energyUseKey.getInt(getCapacitorData());
     }
 
     public int getEnergyLeakRate() {
@@ -119,7 +109,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
                         int received = otherHandler.get().receiveEnergy(Math.min(selfHandler.getEnergyStored(), getEnergyStorage().getMaxEnergyTransfer()), false);
 
                         // Consume that energy from our buffer.
-                        getEnergyStorage().consumeEnergy(received);
+                        getEnergyStorage().takeEnergy(received);
                     }
                 }
             });
@@ -130,8 +120,8 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
      * Create the energy storage medium
      * Override this to customise the behaviour of the energy storage.
      */
-    protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, CapacitorKey capacityKey, CapacitorKey transferKey) {
-        return new MachineEnergyStorage(getIOConfig(), energyIOMode, this::getCapacitorData, capacityKey, transferKey) {
+    protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey useKey) {
+        return new MachineEnergyStorage(getIOConfig(), energyIOMode, this::getCapacitorData, capacityKey, transferKey, useKey) {
             @Override
             protected void onContentsChanged() {
                 setChanged();

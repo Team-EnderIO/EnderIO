@@ -129,6 +129,16 @@ public abstract class EnchanterRecipe implements IEnderRecipe<EnchanterRecipe, C
     }
 
     @Override
+    public List<ItemStack> craft(Container container) {
+        return List.of(EnchantedBookItem.createForEnchantment(new EnchantmentInstance(enchantment, getEnchantmentLevel(container.getItem(1).getCount()))));
+    }
+
+    @Override
+    public int getOutputCount(Container container) {
+        return 1;
+    }
+
+    @Override
     public boolean canCraftInDimensions(int pWidth, int pHeight) {
         return true;
     }

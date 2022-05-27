@@ -194,7 +194,8 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-        return new AlloySmelterMenu(this, pInventory, pContainerId);
+//        return new AlloySmelterMenu(this, pInventory, pContainerId);
+        return null;
     }
 
     @Override

@@ -60,7 +60,7 @@ public abstract class PoweredCraftingMachineEntity<R extends Recipe<Container>> 
                 int cost = getEnergyCost(getCurrentRecipe());
                 if (energyConsumed <= cost) {
                     // Attempt to consume the rest of the required energy.
-                    energyConsumed += consumeEnergy(cost - energyConsumed);
+                    energyConsumed += energyStorage.consumeEnergy(cost - energyConsumed);
                     active = true;
                 }
 

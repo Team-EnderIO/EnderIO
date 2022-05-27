@@ -42,10 +42,10 @@ public class JEIPlugin implements IModPlugin {
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         // TODO: Automate this somehow... Maybe tag machines?
-        registration.addRecipeCatalyst(new ItemStack(MachineBlocks.SIMPLE_ALLOY_SMELTER.get()), CATEGORY_ALLOY_SMELTING);
+//        registration.addRecipeCatalyst(new ItemStack(MachineBlocks.SIMPLE_ALLOY_SMELTER.get()), CATEGORY_ALLOY_SMELTING);
         registration.addRecipeCatalyst(new ItemStack(MachineBlocks.SIMPLE_POWERED_FURNACE.get()), VanillaRecipeCategoryUid.FURNACE);
         registration.addRecipeCatalyst(new ItemStack(MachineBlocks.ALLOY_SMELTER.get()), CATEGORY_ALLOY_SMELTING, VanillaRecipeCategoryUid.FURNACE);
-        registration.addRecipeCatalyst(new ItemStack(MachineBlocks.ENHANCED_ALLOY_SMELTER.get()), CATEGORY_ALLOY_SMELTING, VanillaRecipeCategoryUid.FURNACE);
+//        registration.addRecipeCatalyst(new ItemStack(MachineBlocks.ENHANCED_ALLOY_SMELTER.get()), CATEGORY_ALLOY_SMELTING, VanillaRecipeCategoryUid.FURNACE);
         registration.addRecipeCatalyst(new ItemStack(MachineBlocks.ENCHANTER.get()), CATEGORY_ENCHANTING);
     }
 }

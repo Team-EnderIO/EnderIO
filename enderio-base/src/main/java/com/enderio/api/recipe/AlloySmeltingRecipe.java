@@ -109,6 +109,16 @@ public abstract class AlloySmeltingRecipe implements IMachineRecipe<AlloySmeltin
     }
 
     @Override
+    public List<ItemStack> craft(Container container) {
+        return List.of(result.copy());
+    }
+
+    @Override
+    public int getOutputCount(Container container) {
+        return 1;
+    }
+
+    @Override
     public boolean canCraftInDimensions(int pWidth, int pHeight) {
         return true;
     }
