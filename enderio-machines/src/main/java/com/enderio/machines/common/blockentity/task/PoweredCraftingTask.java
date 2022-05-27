@@ -33,8 +33,6 @@ public abstract class PoweredCraftingTask<T extends IMachineRecipe<T, Container>
      */
     private boolean collectedInputs;
 
-    // TODO: Do we store the claimed ingredients here in a kind of pseudo inventory? Would allow for some small benefits.
-
     /**
      * Whether the recipe craft is complete.
      * Will not be true until the inventory has the result item.
@@ -52,14 +50,19 @@ public abstract class PoweredCraftingTask<T extends IMachineRecipe<T, Container>
         this.container = container;
     }
 
-    public static <T extends IMachineRecipe<T, Container>> PoweredCraftingTask<T> create() {
-        return null;
+    public final T getRecipe() {
+        return recipe;
     }
 
     protected abstract boolean takeOutputs(List<ItemStack> outputs);
 
     @Override
     public void tick() {
+        if (!collectedInputs) {
+            recipe.consumeInputs(container);
+            collectedInputs = true;
+        }
+
         // Try to consume as much energy as possible to finish the craft.
         if (energyConsumed <= recipe.getEnergyCost()) {
             energyConsumed += energyStorage.consumeEnergy(recipe.getEnergyCost() - energyConsumed);

@@ -109,6 +109,36 @@ public abstract class AlloySmeltingRecipe implements IMachineRecipe<AlloySmeltin
     }
 
     @Override
+    public void consumeInputs(Container container) {
+        boolean[] consumed = new boolean[3];
+
+        // Iterate over the slots
+        for (int i = 0; i < 3; i++) {
+
+            // Iterate over the inputs
+            for (int j = 0; j < 3; j++) {
+
+                // If this ingredient has been matched already, continue
+                if (consumed[j])
+                    continue;
+
+                if (j < inputs.size()) {
+                    // If we expect an input, test we have a match for it.
+                    CountedIngredient input = inputs.get(j);
+
+                    if (input.test(container.getItem(i))) {
+                        consumed[j] = true;
+                        container.removeItem(i, input.count());
+                    }
+                } else if (container.getItem(i) == ItemStack.EMPTY) {
+                    // If we don't expect an input, make sure we have a blank for it.
+                    consumed[j] = true;
+                }
+            }
+        }
+    }
+
+    @Override
     public List<ItemStack> craft(Container container) {
         return List.of(result.copy());
     }

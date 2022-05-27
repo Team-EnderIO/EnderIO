@@ -54,7 +54,18 @@ public abstract class NewAlloySmelterBlockEntity extends PoweredTaskMachineEntit
     }
 
     private boolean acceptSlotInput(int slot, ItemStack stack) {
-        // TODO
+        // Ensure we don't break automation by inserting items that'll break the current recipe.
+        PoweredCraftingTask<AlloySmeltingRecipe> currentTask = getCurrentTask();
+        if (currentTask != null) {
+            MachineInventory inventory = getInventory();
+            ItemStack currentContents = inventory.getStackInSlot(slot);
+            inventory.setStackInSlot(slot, stack);
+
+            boolean accept = currentTask.getRecipe().matches(getRecipeWrapper(), level);
+
+            inventory.setStackInSlot(slot, currentContents);
+            return accept;
+        }
         return true;
     }
 
@@ -73,12 +84,8 @@ public abstract class NewAlloySmelterBlockEntity extends PoweredTaskMachineEntit
     }
 
     private PoweredCraftingTask<AlloySmeltingRecipe> createTask(AlloySmeltingRecipe recipe) {
-        // TODO: Nice system for consuming inputs
-        for (int i = 0; i < 3; i++) {
-            recipe.consumeInput(getInventory().getStackInSlot(i));
-        }
-
         return new PoweredCraftingTask<>(energyStorage, recipe, getRecipeWrapper()) {
+            // TODO: Squish this into the recipe too, however I'm gonna do that after the items PR is merged.
             @Override
             protected boolean takeOutputs(List<ItemStack> outputs) {
                 // Alloy smelting recipes only have a single output

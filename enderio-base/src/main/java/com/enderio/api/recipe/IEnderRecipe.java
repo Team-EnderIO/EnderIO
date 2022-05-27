@@ -31,6 +31,11 @@ public interface IEnderRecipe<R extends IEnderRecipe<R, C>, C extends Container>
     // region New shite
 
     /**
+     * Consume all ingredients necessary to craft this recipe.
+     */
+    void consumeInputs(C container);
+
+    /**
      * Craft this recipe
      * @return All outputs of the recipe.
      */
