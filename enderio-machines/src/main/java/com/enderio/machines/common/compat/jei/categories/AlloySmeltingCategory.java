@@ -1,10 +1,10 @@
-package com.enderio.machines.common.integration.jei.categories;
+package com.enderio.machines.common.compat.jei.categories;
 
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.util.TooltipUtil;
 import com.enderio.machines.client.gui.screen.AlloySmelterScreen;
 import com.enderio.machines.common.init.MachineBlocks;
-import com.enderio.machines.common.integration.jei.JEIPlugin;
+import com.enderio.machines.common.compat.jei.JEIPlugin;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.api.recipe.AlloySmeltingRecipe;
 import com.mojang.blaze3d.vertex.PoseStack;

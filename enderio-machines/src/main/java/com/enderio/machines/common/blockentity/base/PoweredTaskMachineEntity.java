@@ -27,7 +27,7 @@ public abstract class PoweredTaskMachineEntity<T extends PoweredTask> extends Po
     public void serverTick() {
         if (canAct()) {
             // If we have no active task, get a new one
-            if (currentTask == null || currentTask.isComplete()) {
+            if ((currentTask == null || currentTask.isComplete()) && hasNextTask()) {
                 currentTask = getNextTask();
             }
 
@@ -52,9 +52,13 @@ public abstract class PoweredTaskMachineEntity<T extends PoweredTask> extends Po
         return currentTask;
     }
 
+    protected boolean hasNextTask() {
+        return true;
+    }
+
     protected abstract @Nullable T getNextTask();
 
-//    protected abstract @Nullable T loadTask(CompoundTag tag);
+    protected abstract @Nullable T loadTask(CompoundTag nbt);
 
     @Override
     public void saveAdditional(CompoundTag pTag) {
@@ -67,7 +71,8 @@ public abstract class PoweredTaskMachineEntity<T extends PoweredTask> extends Po
     @Override
     public void load(CompoundTag pTag) {
         super.load(pTag);
-        // TODO: Work out how we're going to deal with the level not being present yet? Do we just store the nbt tag until we're loaded?
-//        currentTask = loadTask(pTag.getCompound("task"));
+
+        if (pTag.contains("task"))
+            currentTask = loadTask(pTag.getCompound("task"));
     }
 }

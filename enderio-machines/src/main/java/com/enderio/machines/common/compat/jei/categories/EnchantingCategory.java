@@ -1,10 +1,10 @@
-package com.enderio.machines.common.integration.jei.categories;
+package com.enderio.machines.common.compat.jei.categories;
 
 import com.enderio.machines.client.gui.screen.EnchanterScreen;
 import com.enderio.machines.common.init.MachineBlocks;
-import com.enderio.machines.common.integration.jei.JEIPlugin;
-import com.enderio.machines.common.integration.jei.helpers.EnchanterRecipeDisplayData;
-import com.enderio.machines.common.integration.jei.helpers.EnchanterRecipeWrapper;
+import com.enderio.machines.common.compat.jei.JEIPlugin;
+import com.enderio.machines.common.compat.jei.helpers.EnchanterRecipeDisplayData;
+import com.enderio.machines.common.compat.jei.helpers.EnchanterRecipeWrapper;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -28,8 +28,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class EnchantingCategory implements IRecipeCategory<EnchanterRecipeWrapper> {

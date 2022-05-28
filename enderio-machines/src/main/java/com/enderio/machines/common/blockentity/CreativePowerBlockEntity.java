@@ -36,7 +36,7 @@ public class CreativePowerBlockEntity extends PoweredMachineEntity {
 
     @Override
     public MachineTier getTier() {
-        return MachineTier.Enhanced;
+        return MachineTier.ENHANCED;
     }
 
     @Nullable

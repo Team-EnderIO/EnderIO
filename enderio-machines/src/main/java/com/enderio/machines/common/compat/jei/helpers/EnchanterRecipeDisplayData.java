@@ -1,4 +1,4 @@
-package com.enderio.machines.common.integration.jei.helpers;
+package com.enderio.machines.common.compat.jei.helpers;
 
 import mezz.jei.api.gui.ingredient.IGuiIngredient;
 import net.minecraft.world.item.ItemStack;

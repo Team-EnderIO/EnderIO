@@ -8,7 +8,6 @@ import com.enderio.machines.common.blockentity.base.PoweredCraftingMachineEntity
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.init.MachineCapacitorKeys;
-import com.enderio.machines.common.menu.AlloySmelterMenu;
 import com.enderio.api.recipe.AlloySmeltingRecipe;
 import com.enderio.machines.common.init.MachineRecipes;
 import net.minecraft.core.BlockPos;
@@ -42,7 +41,7 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
 
         @Override
         public MachineTier getTier() {
-            return MachineTier.Simple;
+            return MachineTier.SIMPLE;
         }
 
         @Override
@@ -61,7 +60,7 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
 
         @Override
         public MachineTier getTier() {
-            return MachineTier.Simple;
+            return MachineTier.SIMPLE;
         }
     }
 
@@ -75,7 +74,7 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
 
         @Override
         public MachineTier getTier() {
-            return MachineTier.Standard;
+            return MachineTier.STANDARD;
         }
     }
 
@@ -89,7 +88,7 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
 
         @Override
         public MachineTier getTier() {
-            return MachineTier.Enhanced;
+            return MachineTier.ENHANCED;
         }
     }
 
@@ -104,14 +103,14 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
         this.mode = defaultMode;
 
         // This can be changed by the gui for the normal and enhanced machines.
-        if (getTier() != MachineTier.Simple) {
+        if (getTier() != MachineTier.SIMPLE) {
             add2WayDataSlot(new EnumDataSlot<>(this::getMode, this::setMode, SyncMode.GUI));
         }
     }
 
     public AlloySmelterMode getMode() {
         // Lock to default mode if this is a simple machine.
-        return getTier() == MachineTier.Simple ? defaultMode : mode;
+        return getTier() == MachineTier.SIMPLE ? defaultMode : mode;
     }
 
     public void setMode(AlloySmelterMode mode) {
@@ -127,9 +126,8 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
     protected void consumeIngredients(Recipe<Container> recipe) {
         MachineInventory itemHandler = getInventory();
         if (recipe instanceof AlloySmeltingRecipe alloySmeltingRecipe) {
-            for (int i = 0; i < 3; i++) {
-                alloySmeltingRecipe.consumeInput(itemHandler.getStackInSlot(i));
-            }
+            // Consume inputs
+            alloySmeltingRecipe.consumeInputs(getRecipeWrapper());
 
             // We only craft 1x when alloying
             resultModifier = 1;
@@ -204,7 +202,7 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
         return MachineInventoryLayout.builder()
             .addInputs(3, this::acceptSlotInput)
             .addOutput()
-            .capacitor(() -> getTier() != MachineTier.Simple)
+            .capacitor(() -> getTier() != MachineTier.SIMPLE)
             .build();
     }
 
@@ -222,17 +220,17 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
 
     @Override
     protected boolean canCraft() {
-        return (getTier() == MachineTier.Simple || isCapacitorInstalled()) && super.canCraft();
+        return (getTier() == MachineTier.SIMPLE || isCapacitorInstalled()) && super.canCraft();
     }
 
     @Override
     protected boolean canSelectRecipe() {
-        return (getTier() == MachineTier.Simple || isCapacitorInstalled()) && super.canSelectRecipe();
+        return (getTier() == MachineTier.SIMPLE || isCapacitorInstalled()) && super.canSelectRecipe();
     }
 
     @Override
     public void saveAdditional(CompoundTag pTag) {
-        if (getTier() != MachineTier.Simple) {
+        if (getTier() != MachineTier.SIMPLE) {
             pTag.putInt("mode", this.mode.ordinal());
         }
         pTag.putInt("result_modifier", resultModifier);
@@ -241,7 +239,7 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
 
     @Override
     public void load(CompoundTag pTag) {
-        if (getTier() != MachineTier.Simple) {
+        if (getTier() != MachineTier.SIMPLE) {
             try {
                 mode = AlloySmelterMode.values()[pTag.getInt("mode")];
             } catch (IndexOutOfBoundsException ex) { // In case something happens in the future.

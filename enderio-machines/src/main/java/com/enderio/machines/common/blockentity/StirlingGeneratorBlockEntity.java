@@ -33,7 +33,7 @@ public abstract class StirlingGeneratorBlockEntity extends PowerGeneratingMachin
 
         @Override
         public MachineTier getTier() {
-            return MachineTier.Simple;
+            return MachineTier.SIMPLE;
         }
 
         @Override
@@ -53,7 +53,7 @@ public abstract class StirlingGeneratorBlockEntity extends PowerGeneratingMachin
 
         @Override
         public MachineTier getTier() {
-            return MachineTier.Standard;
+            return MachineTier.STANDARD;
         }
     }
 
@@ -74,7 +74,7 @@ public abstract class StirlingGeneratorBlockEntity extends PowerGeneratingMachin
     public MachineInventoryLayout getInventoryLayout() {
         return MachineInventoryLayout.builder()
             .addInput((slot, stack) -> ForgeHooks.getBurnTime(stack, RecipeType.SMELTING) > 0)
-            .capacitor(() -> getTier() != MachineTier.Simple)
+            .capacitor(() -> getTier() != MachineTier.SIMPLE)
             .build();
     }
 

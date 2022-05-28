@@ -1,9 +1,9 @@
-package com.enderio.machines.common.integration.jei;
+package com.enderio.machines.common.compat.jei;
 
 import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.init.MachineBlocks;
-import com.enderio.machines.common.integration.jei.categories.AlloySmeltingCategory;
-import com.enderio.machines.common.integration.jei.categories.EnchantingCategory;
+import com.enderio.machines.common.compat.jei.categories.AlloySmeltingCategory;
+import com.enderio.machines.common.compat.jei.categories.EnchantingCategory;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaRecipeCategoryUid;

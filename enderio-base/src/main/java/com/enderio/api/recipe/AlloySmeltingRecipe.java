@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+// TODO: 27/05/2022 Revert this abstract pattern, i dont know where I picked it up but I think it just confuses things more.
 public abstract class AlloySmeltingRecipe implements IMachineRecipe<AlloySmeltingRecipe, Container> {
     private final ResourceLocation id;
     private final List<CountedIngredient> inputs;
@@ -28,39 +29,13 @@ public abstract class AlloySmeltingRecipe implements IMachineRecipe<AlloySmeltin
         this.experience = experience;
     }
 
-    // TODO: Need a better solution to this.
+    @Override
+    public ResourceLocation getId() {
+        return this.id;
+    }
+
     public List<CountedIngredient> getInputs() {
         return inputs;
-    }
-
-    public ItemStack consumeInput(ItemStack input) {
-        // We allow empty slots
-        if (input.isEmpty())
-            return input;
-
-        // Try to work out which ingredient this is
-        for (CountedIngredient ingredient : inputs) {
-            if (ingredient.test(input)) {
-                input.shrink(ingredient.count());
-                return input;
-            }
-        }
-
-        throw new RuntimeException("Tried to consume an invalid input. A recipe match check must not have been performed!");
-    }
-
-    @Override
-    public List<List<ItemStack>> getAllInputs() {
-        List<List<ItemStack>> inputs = new ArrayList<>();
-        for (CountedIngredient ingredient : this.inputs) {
-            inputs.add(Arrays.stream(ingredient.getItems()).toList());
-        }
-        return inputs;
-    }
-
-    @Override
-    public List<ItemStack> getAllOutputs() {
-        return List.of(result);
     }
 
     @Override
@@ -71,6 +46,8 @@ public abstract class AlloySmeltingRecipe implements IMachineRecipe<AlloySmeltin
     public float getExperience() {
         return experience;
     }
+
+    // region Crafting
 
     @Override
     public boolean matches(Container pContainer, Level pLevel) {
@@ -104,12 +81,8 @@ public abstract class AlloySmeltingRecipe implements IMachineRecipe<AlloySmeltin
     }
 
     @Override
-    public ItemStack assemble(Container pContainer) {
-        return result.copy();
-    }
-
-    @Override
     public void consumeInputs(Container container) {
+        // Track which ingredients have been consumed
         boolean[] consumed = new boolean[3];
 
         // Iterate over the slots
@@ -148,18 +121,24 @@ public abstract class AlloySmeltingRecipe implements IMachineRecipe<AlloySmeltin
         return 1;
     }
 
+    // endregion
+
+    // region JEI Helpers
+
     @Override
-    public boolean canCraftInDimensions(int pWidth, int pHeight) {
-        return true;
+    public List<List<ItemStack>> getAllInputs() {
+        List<List<ItemStack>> inputs = new ArrayList<>();
+        for (CountedIngredient ingredient : this.inputs) {
+            inputs.add(Arrays.stream(ingredient.getItems()).toList());
+        }
+        return inputs;
     }
 
     @Override
-    public ItemStack getResultItem() {
-        return result.copy();
+    public List<ItemStack> getAllOutputs() {
+        return List.of(result);
     }
 
-    @Override
-    public ResourceLocation getId() {
-        return this.id;
-    }
+    // endregion
+
 }

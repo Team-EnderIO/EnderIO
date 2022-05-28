@@ -37,7 +37,7 @@ public class StirlingGeneratorScreen extends EIOScreen<StirlingGeneratorMenu> {
     @Override
     protected ResourceLocation getBackgroundImage() {
         StirlingGeneratorBlockEntity be = getMenu().getBlockEntity();
-        return be.getTier() == MachineTier.Simple ? BG_TEXTURE_SIMPLE : BG_TEXTURE;
+        return be.getTier() == MachineTier.SIMPLE ? BG_TEXTURE_SIMPLE : BG_TEXTURE;
     }
 
     @Override

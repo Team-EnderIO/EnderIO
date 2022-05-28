@@ -44,7 +44,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
 
         @Override
         public MachineTier getTier() {
-            return MachineTier.Standard;
+            return MachineTier.STANDARD;
         }
     }
 
@@ -57,7 +57,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
 
         @Override
         public MachineTier getTier() {
-            return MachineTier.Standard;
+            return MachineTier.STANDARD;
         }
     }
 

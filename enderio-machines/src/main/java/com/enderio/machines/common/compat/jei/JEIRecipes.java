@@ -1,8 +1,8 @@
-package com.enderio.machines.common.integration.jei;
+package com.enderio.machines.common.compat.jei;
 
 import com.enderio.machines.common.init.MachineRecipes;
-import com.enderio.machines.common.integration.jei.helpers.AlloySmelterFurnaceRecipe;
-import com.enderio.machines.common.integration.jei.helpers.EnchanterRecipeWrapper;
+import com.enderio.machines.common.compat.jei.helpers.AlloySmelterFurnaceRecipe;
+import com.enderio.machines.common.compat.jei.helpers.EnchanterRecipeWrapper;
 import com.enderio.api.recipe.AlloySmeltingRecipe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;

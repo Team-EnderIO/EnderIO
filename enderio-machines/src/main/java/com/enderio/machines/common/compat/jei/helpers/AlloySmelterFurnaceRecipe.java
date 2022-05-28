@@ -1,4 +1,4 @@
-package com.enderio.machines.common.integration.jei.helpers;
+package com.enderio.machines.common.compat.jei.helpers;
 
 import com.enderio.api.recipe.CountedIngredient;
 import com.enderio.machines.common.blockentity.AlloySmelterBlockEntity;

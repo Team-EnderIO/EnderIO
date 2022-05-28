@@ -3,23 +3,31 @@ package com.enderio.machines.common.blockentity.task;
 import com.enderio.api.recipe.IMachineRecipe;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * A crafting task that consumes energy.
  */
 public abstract class PoweredCraftingTask<T extends IMachineRecipe<T, Container>> extends PoweredTask {
 
-    // TODO: Might have to deal with loading before level is done here. Maybe save ResourceLocation of recipe and query it on first tick?
+    // TODO: 28/05/2022 Drop the generic maybe and do recipe querying in here? That way we can whittle down some more redundancy that is seen in NewAlloySmelterBlockEntity 
 
     /**
      * The recipe being crafted.
      */
-    private final T recipe;
+    private T recipe;
+
+    private final Level level;
 
     private final Container container;
 
@@ -39,14 +47,17 @@ public abstract class PoweredCraftingTask<T extends IMachineRecipe<T, Container>
      */
     private boolean complete;
 
+    private @Nullable CompoundTag recipeToLoad;
+
     /**
      * Create a new powered crafting task.
      *
      * @param energyStorage The energy storage used to power the task.
      */
-    public PoweredCraftingTask(IMachineEnergyStorage energyStorage, T recipe, Container container) {
+    public PoweredCraftingTask(IMachineEnergyStorage energyStorage, @Nullable T recipe, Level level, Container container) {
         super(energyStorage);
         this.recipe = recipe;
+        this.level = level;
         this.container = container;
     }
 
@@ -54,10 +65,30 @@ public abstract class PoweredCraftingTask<T extends IMachineRecipe<T, Container>
         return recipe;
     }
 
-    protected abstract boolean takeOutputs(List<ItemStack> outputs);
+    protected abstract boolean takeOutputs(List<ItemStack> outputs); // TODO: Simulate?
 
     @Override
     public void tick() {
+        // TODO: 28/05/2022 Don't start if the output cannot be taken
+        
+        // If the recipe is done, don't let it tick.
+        if (complete)
+            return;
+
+        // If we have a recipe ready to load up, load it.
+        if (recipeToLoad != null) {
+            // Attempt to load the saved recipe.
+            recipe = loadRecipe(recipeToLoad);
+            recipeToLoad = null;
+        }
+
+        // If the recipe load fails, ignore it and consider the task complete.
+        if (recipe == null) {
+            complete = true;
+            return;
+        }
+
+        // If we haven't done so already, consume inputs for the recipe.
         if (!collectedInputs) {
             recipe.consumeInputs(container);
             collectedInputs = true;
@@ -93,67 +124,33 @@ public abstract class PoweredCraftingTask<T extends IMachineRecipe<T, Container>
 
     // region Serialization
 
-    // TODO
-
     @Override
     public CompoundTag serializeNBT() {
-        return new CompoundTag();
+        CompoundTag tag = new CompoundTag();
+        tag.put("recipe", serializeRecipe(new CompoundTag(), recipe));
+        tag.putInt("energy_consumed", energyConsumed);
+        tag.putBoolean("collected_inputs", collectedInputs);
+        tag.putBoolean("complete", complete);
+        return tag;
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
+        recipeToLoad = nbt.getCompound("recipe").copy();
+        energyConsumed = nbt.getInt("energy_consumed");
+        collectedInputs = nbt.getBoolean("collected_inputs");
+        complete = nbt.getBoolean("complete");
+    }
 
+    protected CompoundTag serializeRecipe(CompoundTag tag, T recipe) {
+        tag.putString("id", recipe.getId().toString());
+        return tag;
+    }
+
+    protected @Nullable T loadRecipe(CompoundTag nbt) {
+        ResourceLocation id = new ResourceLocation(nbt.getString("id"));
+        return (T) level.getRecipeManager().byKey(id).orElse(null);
     }
 
     // endregion
-
-    private class TaskContainer implements Container {
-
-        private List<ItemStack> inputs;
-
-        @Override
-        public int getContainerSize() {
-            return inputs.size() + recipe.getOutputCount(this);
-        }
-
-        @Override
-        public boolean isEmpty() {
-            return false;
-        }
-
-        @Override
-        public ItemStack getItem(int index) {
-            return null;
-        }
-
-        @Override
-        public ItemStack removeItem(int index, int count) {
-            return null;
-        }
-
-        @Override
-        public ItemStack removeItemNoUpdate(int index) {
-            return null;
-        }
-
-        @Override
-        public void setItem(int index, ItemStack stack) {
-
-        }
-
-        @Override
-        public void setChanged() {
-
-        }
-
-        @Override
-        public boolean stillValid(Player player) {
-            return false;
-        }
-
-        @Override
-        public void clearContent() {
-
-        }
-    }
 }

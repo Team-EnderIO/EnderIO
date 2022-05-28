@@ -1,7 +1,5 @@
 package com.enderio.machines.common.blockentity.base;
 
-import com.enderio.api.UseOnly;
-import com.enderio.api.capability.IEnderCapabilityProvider;
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
 import com.enderio.base.common.blockentity.EnderBlockEntity;
@@ -34,7 +32,6 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
@@ -183,7 +180,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
      */
     protected boolean supportsIOMode(Direction side, IOMode mode) {
         // Enhanced machines cannot have IO out the top.
-        return getTier() != MachineTier.Enhanced || side != Direction.UP || mode == IOMode.NONE;
+        return getTier() != MachineTier.ENHANCED || side != Direction.UP || mode == IOMode.NONE;
     }
 
     @NotNull
