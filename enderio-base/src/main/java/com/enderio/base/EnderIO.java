@@ -6,6 +6,7 @@ import com.enderio.base.common.init.EIOBlockEntities;
 import com.enderio.base.common.init.EIOEnchantments;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.datagen.loot.FireCraftingLootProvider;
 import com.enderio.base.datagen.tags.EIOBlockTagsProvider;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.init.EIOMenus;
@@ -54,8 +55,7 @@ public class EnderIO {
 
     public static ResourceLocation CAPACITOR_KEY_REGISTRY_KEY = new ResourceLocation(MODID, "capacitor_keys");
 
-    @Nullable
-    public static IForgeRegistry<CapacitorKey> CAPACITOR_KEY_REGISTRY;
+    @Nullable public static IForgeRegistry<CapacitorKey> CAPACITOR_KEY_REGISTRY;
 
     public EnderIO() {
         // Create configs subdirectory
@@ -100,9 +100,7 @@ public class EnderIO {
     }
 
     public void createRegistries(NewRegistryEvent event) {
-        event.create(new RegistryBuilder<CapacitorKey>()
-            .setName(CAPACITOR_KEY_REGISTRY_KEY)
-            .setType(CapacitorKey.class),
+        event.create(new RegistryBuilder<CapacitorKey>().setName(CAPACITOR_KEY_REGISTRY_KEY).setType(CapacitorKey.class),
             registry -> CAPACITOR_KEY_REGISTRY = registry);
     }
 
@@ -111,9 +109,10 @@ public class EnderIO {
         if (event.includeServer()) {
             StandardRecipes.generate(generator);
             ForgeBlockTagsProvider b = new ForgeBlockTagsProvider(generator, event.getExistingFileHelper());
-            generator.addProvider( new EIOItemTagsProvider(generator, b, event.getExistingFileHelper()));
-            generator.addProvider( new EIOFluidTagsProvider(generator, event.getExistingFileHelper()));
-            generator.addProvider( new EIOBlockTagsProvider(generator, event.getExistingFileHelper()));
+            generator.addProvider(new EIOItemTagsProvider(generator, b, event.getExistingFileHelper()));
+            generator.addProvider(new EIOFluidTagsProvider(generator, event.getExistingFileHelper()));
+            generator.addProvider(new EIOBlockTagsProvider(generator, event.getExistingFileHelper()));
+            generator.addProvider(new FireCraftingLootProvider(generator));
         }
     }
 
