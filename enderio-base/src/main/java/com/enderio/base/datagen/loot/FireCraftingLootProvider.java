@@ -43,7 +43,7 @@ public class FireCraftingLootProvider extends LootTableProvider {
             .add(LootItem.lootTableItem(EIOItems.GRAINS_OF_INFINITY.get())
                 .when(LootItemRandomChanceCondition.randomChance(0.5f)))).setParamSet(LootContextParamSet.builder().build()).build();
 
-        tables.put(EnderIO.loc("infinity"), infinity);
+        tables.put(EnderIO.loc("fire/infinity"), infinity);
 
         writeTables(cache, tables);
     }

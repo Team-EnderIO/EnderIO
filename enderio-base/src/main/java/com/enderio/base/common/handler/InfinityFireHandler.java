@@ -32,7 +32,7 @@ import java.util.*;
 public class InfinityFireHandler {
     private static final Random RANDOM = new Random();
     private static final Map<FireIndex, Long> FIRE_TRACKER = new HashMap<>();
-    private static final ResourceLocation LOOT_TABLE = EnderIO.loc("infinity");
+    private static final ResourceLocation LOOT_TABLE = EnderIO.loc("fire/infinity");
 
     private record FireIndex(BlockPos pos, ResourceKey<Level> dimension) {}
 
