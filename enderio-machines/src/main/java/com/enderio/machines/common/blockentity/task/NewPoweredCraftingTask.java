@@ -46,7 +46,7 @@ public abstract class NewPoweredCraftingTask extends PoweredTask {
         return recipe;
     }
 
-    protected abstract boolean takeOutputs(List<ItemStack> outputs);
+    protected abstract boolean takeOutputs(List<ItemStack> outputs, boolean simulate);
 
     @Override
     public void tick() {
@@ -69,6 +69,12 @@ public abstract class NewPoweredCraftingTask extends PoweredTask {
             return;
         }
 
+        // If we can't output, cancel the task. However if for some reason we can't output after the inputs are collected, don't.
+        if (!collectedInputs && !takeOutputs(recipe.craft(container), true)) {
+            complete = true;
+            return;
+        }
+
         // If we haven't done so already, consume inputs for the recipe.
         if (!collectedInputs) {
             recipe.consumeInputs(container);
@@ -86,7 +92,7 @@ public abstract class NewPoweredCraftingTask extends PoweredTask {
             List<ItemStack> outputs = recipe.craft(container);
 
             // Attempt to add these to the inventory
-            if (takeOutputs(outputs)) {
+            if (takeOutputs(outputs, false)) {
                 // The receiver was able to take the outputs, task complete.
                 complete = true;
             }

@@ -102,6 +102,7 @@ public abstract class NewAlloySmelterBlockEntity extends PoweredTaskMachineEntit
     @Override
     protected void onInventoryContentsChanged(int slot) {
         inventoryChanged = true; // TODO: 28/05/2022 This kind of thing might be a good idea for a base crafter class?
+        super.onInventoryContentsChanged(slot);
     }
 
     @Override
@@ -153,14 +154,15 @@ public abstract class NewAlloySmelterBlockEntity extends PoweredTaskMachineEntit
     private NewPoweredCraftingTask createTask(@Nullable AlloySmeltingRecipe recipe) {
         return new NewPoweredCraftingTask(energyStorage, recipe, level, getRecipeWrapper()) {
             @Override
-            protected boolean takeOutputs(List<ItemStack> outputs) {
+            protected boolean takeOutputs(List<ItemStack> outputs, boolean simulate) {
                 // Alloy smelting recipes only have a single output
                 ItemStack out = outputs.get(0);
 
                 MachineInventory inv = getInventory();
 
                 if (inv.forceInsertItem(3, out, true).isEmpty()) {
-                    inv.forceInsertItem(3, out, false);
+                    if (!simulate)
+                        inv.forceInsertItem(3, out, false);
                     return true;
                 }
 
