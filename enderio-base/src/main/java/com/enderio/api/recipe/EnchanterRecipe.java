@@ -20,7 +20,7 @@ import java.util.List;
  * A recipe for the enchanter.
  * Takes in an ingredient, some XP and some lapis lazuli and in turn enchants an item with the given enchantment.
  */
-public abstract class EnchanterRecipe implements IEnderRecipe<EnchanterRecipe, Container> {
+public abstract class EnchanterRecipe implements IEnderRecipe<Container> {
     private final ResourceLocation id;
     private final Enchantment enchantment;
     private final int levelModifier;

@@ -17,6 +17,7 @@ import java.util.Set;
  * Base interface for custom recipes.
  */
 public interface IEnderRecipe<R extends IEnderRecipe<R, C>, C extends Container> extends Recipe<C> {
+    // TODO: Can something be done to rid ourselves of the awful type parameter mess?
     @Override
     DataGenSerializer<R, C> getSerializer();
 
@@ -31,7 +32,7 @@ public interface IEnderRecipe<R extends IEnderRecipe<R, C>, C extends Container>
      * Consume all ingredients necessary to craft this recipe.
      * @apiNote Assumes that the recipe already matches! Check first with {@link #matches(Container, Level)}
      */
-    void consumeInputs(C container);
+    void consumeInputs(C container); // TODO: Use a list of item stacks instead (that will be modified)?
 
     /**
      * Craft this recipe
@@ -39,13 +40,13 @@ public interface IEnderRecipe<R extends IEnderRecipe<R, C>, C extends Container>
      *
      * @apiNote The container is unlikely to have the ingredients in it, however the container can be used for upgrade checks like grindingball.
      */
-    List<ItemStack> craft(C container);
+    List<ItemStack> craft(C container); // TODO: Use a list of item stacks instead?
 
     /**
      * Get the number of outputs from this recipe.
      */
     // TODO: 27/05/2022 Needs a better name.
-    int getOutputCount(C container);
+    int getOutputCount(C container); // TODO: Do we even need this?
 
     // Disable the old methods as we have recipes that can assemble many items from one recipe.
     @Override

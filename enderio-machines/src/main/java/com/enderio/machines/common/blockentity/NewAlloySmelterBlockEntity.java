@@ -6,6 +6,7 @@ import com.enderio.api.recipe.DataGenSerializer;
 import com.enderio.api.recipe.IMachineRecipe;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.PoweredTaskMachineEntity;
+import com.enderio.machines.common.blockentity.task.NewPoweredCraftingTask;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingTask;
 import com.enderio.machines.common.init.MachineCapacitorKeys;
 import com.enderio.machines.common.init.MachineRecipes;
@@ -34,7 +35,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class NewAlloySmelterBlockEntity extends PoweredTaskMachineEntity<PoweredCraftingTask<AlloySmeltingRecipe>> {
+public abstract class NewAlloySmelterBlockEntity extends PoweredTaskMachineEntity<NewPoweredCraftingTask> {
     public static class Standard extends NewAlloySmelterBlockEntity {
 
         public Standard(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
@@ -84,7 +85,7 @@ public abstract class NewAlloySmelterBlockEntity extends PoweredTaskMachineEntit
 
     private boolean acceptSlotInput(int slot, ItemStack stack) {
         // Ensure we don't break automation by inserting items that'll break the current recipe.
-        PoweredCraftingTask<?> currentTask = getCurrentTask();
+        NewPoweredCraftingTask currentTask = getCurrentTask();
         if (currentTask != null) {
             MachineInventory inventory = getInventory();
             ItemStack currentContents = inventory.getStackInSlot(slot);
@@ -109,7 +110,7 @@ public abstract class NewAlloySmelterBlockEntity extends PoweredTaskMachineEntit
     }
 
     @Override
-    protected @Nullable PoweredCraftingTask<AlloySmeltingRecipe> getNextTask() {
+    protected @Nullable NewPoweredCraftingTask getNextTask() {
         if (level == null)
             return null;
 
@@ -117,7 +118,7 @@ public abstract class NewAlloySmelterBlockEntity extends PoweredTaskMachineEntit
 
         // Search for an alloy recipe.
         if (getMode().canAlloy()) {
-            PoweredCraftingTask<AlloySmeltingRecipe> task = level
+            NewPoweredCraftingTask task = level
                 .getRecipeManager()
                 .getRecipeFor(MachineRecipes.Types.ALLOY_SMELTING, getRecipeWrapper(), level)
                 .map(this::createTask)
@@ -129,7 +130,7 @@ public abstract class NewAlloySmelterBlockEntity extends PoweredTaskMachineEntit
 
         // Search for a smelting recipe.
         if (getMode().canSmelt()) {
-            PoweredCraftingTask<AlloySmeltingRecipe> task = level
+            NewPoweredCraftingTask task = level
                 .getRecipeManager()
                 .getRecipeFor(RecipeType.SMELTING, getRecipeWrapper(), level)
                 .map(recipe -> createTask(new WrappedSmeltingRecipe(recipe)))
@@ -143,14 +144,14 @@ public abstract class NewAlloySmelterBlockEntity extends PoweredTaskMachineEntit
     }
 
     @Override
-    protected @Nullable PoweredCraftingTask<AlloySmeltingRecipe> loadTask(CompoundTag nbt) {
-        PoweredCraftingTask<AlloySmeltingRecipe> task = createTask(null);
+    protected @Nullable NewPoweredCraftingTask loadTask(CompoundTag nbt) {
+        NewPoweredCraftingTask task = createTask(null);
         task.deserializeNBT(nbt);
         return task;
     }
 
-    private PoweredCraftingTask<AlloySmeltingRecipe> createTask(@Nullable AlloySmeltingRecipe recipe) {
-        return new PoweredCraftingTask<>(energyStorage, recipe, level, getRecipeWrapper()) {
+    private NewPoweredCraftingTask createTask(@Nullable AlloySmeltingRecipe recipe) {
+        return new NewPoweredCraftingTask(energyStorage, recipe, level, getRecipeWrapper()) {
             @Override
             protected boolean takeOutputs(List<ItemStack> outputs) {
                 // Alloy smelting recipes only have a single output
@@ -167,7 +168,7 @@ public abstract class NewAlloySmelterBlockEntity extends PoweredTaskMachineEntit
             }
 
             @Override
-            protected CompoundTag serializeRecipe(CompoundTag tag, AlloySmeltingRecipe recipe) {
+            protected CompoundTag serializeRecipe(CompoundTag tag, IMachineRecipe<?, Container> recipe) {
                 if (recipe instanceof WrappedSmeltingRecipe wrappedSmeltingRecipe) {
                     tag.putInt("multiplier", wrappedSmeltingRecipe.multiplier);
                 }
@@ -175,7 +176,7 @@ public abstract class NewAlloySmelterBlockEntity extends PoweredTaskMachineEntit
             }
 
             @Override
-            protected @Nullable AlloySmeltingRecipe loadRecipe(CompoundTag nbt) {
+            protected @Nullable IMachineRecipe<?, Container> loadRecipe(CompoundTag nbt) {
                 ResourceLocation id = new ResourceLocation(nbt.getString("id"));
                 return level.getRecipeManager().byKey(id).map(recipe -> {
                     if (recipe.getType() == MachineRecipes.Types.ALLOY_SMELTING) {
