@@ -1,7 +1,5 @@
 package com.enderio.machines.common.blockentity.base;
 
-import com.enderio.api.UseOnly;
-import com.enderio.api.capability.IEnderCapabilityProvider;
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
 import com.enderio.base.common.blockentity.EnderBlockEntity;
@@ -12,8 +10,8 @@ import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.io.IOConfig;
-import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import com.enderio.machines.common.io.item.MachineInventory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -29,12 +27,10 @@ import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
@@ -68,8 +64,6 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     private final MachineInventory inventory;
 
-    private final LazyOptional<MachineInventory> inventoryCap;
-
     // Caches for external block interaction
     private final EnumMap<Direction, LazyOptional<IItemHandler>> itemHandlerCache = new EnumMap<>(Direction.class);
     private final EnumMap<Direction, LazyOptional<IFluidHandler>> fluidHandlerCache = new EnumMap<>(Direction.class);
@@ -88,11 +82,9 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         MachineInventoryLayout slotLayout = getInventoryLayout();
         if (slotLayout != null) {
             inventory = createMachineInventory(slotLayout);
-            inventoryCap = LazyOptional.of(() -> inventory);
             addCapabilityProvider(inventory);
         } else {
             inventory = null;
-            inventoryCap = LazyOptional.empty();
         }
 
         if (supportsRedstoneControl()) {
@@ -425,25 +417,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     // endregion
 
-    // region Capabilities and Serialization
-
-    @NotNull
-    @Override
-    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if (side == null) {
-            if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && getInventory() != null) {
-                return inventoryCap.cast();
-            }
-        }
-
-        return super.getCapability(cap, side);
-    }
-
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-        inventoryCap.invalidate();
-    }
+    // region Serialization
 
     @Override
     public void saveAdditional(CompoundTag pTag) {

@@ -5,9 +5,9 @@ import com.enderio.api.io.IOMode;
 import com.enderio.machines.common.io.FixedIOConfig;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
-import com.enderio.machines.common.io.item.MachineInventory;
-import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.init.MachineRecipes;
+import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.menu.EnchanterMenu;
 import com.enderio.api.recipe.EnchanterRecipe;
 import net.minecraft.core.BlockPos;
@@ -36,11 +36,11 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
 
     @Override
     public MachineInventoryLayout getInventoryLayout() {
-        return MachineInventoryLayout.builder()
-            .addInput((slot, stack) -> stack.getItem() == Items.WRITABLE_BOOK)
-            .addInput()
-            .addInput((slot, stack) -> stack.is(Tags.Items.GEMS_LAPIS))
-            .addOutput()
+        return MachineInventoryLayout.builder(false)
+            .inputSlot((slot, stack) -> stack.getItem() == Items.WRITABLE_BOOK)
+            .inputSlot()
+            .inputSlot((slot, stack) -> stack.is(Tags.Items.GEMS_LAPIS))
+            .outputSlot()
             .build();
     }
 

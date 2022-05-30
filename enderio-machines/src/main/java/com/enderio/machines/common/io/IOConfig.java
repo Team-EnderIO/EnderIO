@@ -10,6 +10,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -75,12 +76,17 @@ public class IOConfig implements IIOConfig {
     /**
      * Get side config as a capability.
      */
-    public LazyOptional<ISideConfig> getCapability(Direction side) {
+    public LazyOptional<ISideConfig> getCapability(@Nullable Direction side) {
+        if (side == null)
+            return LazyOptional.empty();
         return sideAccessCache.computeIfAbsent(side, dir -> LazyOptional.of(() -> new SideAccess(this, dir))).cast();
     }
 
     @Override
-    public void invalidateSide(Direction side) {
+    public void invalidateSide(@Nullable Direction side) {
+        if (side == null)
+            return;
+
         if (sideAccessCache.containsKey(side)) {
             sideAccessCache.get(side).invalidate();
             sideAccessCache.remove(side);
