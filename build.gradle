@@ -39,7 +39,7 @@ allprojects {
 
 subprojects {
     apply plugin: 'com.github.johnrengelman.shadow'
-    
+
     version = getVersionString(project)
     group = 'com.enderio'
     archivesBaseName = getArchiveBaseName(project)
@@ -95,7 +95,7 @@ subprojects {
         // While we don't have conduits etc.
         runtimeOnly fg.deobf("curse.maven:mekanism-268560:3743835")
     }
-
+    
     jar {
         classifier 'raw'
     }
