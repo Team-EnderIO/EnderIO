@@ -29,8 +29,6 @@ allprojects {
         mappings channel: "${mappings_channel}", version: "${mappings_version}"
     }
 
-    sourceSets.main.resources { srcDir 'src/generated/resources' }
-
     dependencies {
         // Forge
         minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
@@ -43,6 +41,58 @@ subprojects {
     version = getVersionString(project)
     group = 'com.enderio'
     archivesBaseName = getArchiveBaseName(project)
+    def modId = getModId(project)
+
+    minecraft {
+        runs {
+            individualClient {
+                workingDirectory project.file('run')
+
+                // Allow dependent mixins to run
+                property 'mixin.env.remapRefMap', 'true'
+                property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
+
+                mods {
+                    "${project.name}" { source sourceSets.main }
+                }
+            }
+
+            individualServer {
+                workingDirectory project.file('run')
+
+                // Allow dependent mixins to run
+                property 'mixin.env.remapRefMap', 'true'
+                property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
+
+                mods {
+                    "${project.name}" { source sourceSets.main }
+                }
+            }
+
+            data {
+                workingDirectory project.file('run')
+
+                // Allow all data runs to continue thru
+                forceExit = false
+
+                // Allow dependent mixins to run
+                property 'mixin.env.remapRefMap', 'true'
+                property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
+
+                // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
+                args '--mod', modId, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+
+                // Add base resources.
+                if (project.name != 'enderio-base') {
+                    args '--existing', file('../enderio-base/generated/resources'), '--existing', file('../enderio-base/src/main/resources')
+                }
+
+                mods {
+                    "${project.name}" { source sourceSets.main }
+                }
+            }
+        }
+    }
 
     repositories {
         // Registrate
@@ -70,6 +120,8 @@ subprojects {
         maven { url 'https://maven.blamejared.com' }
     }
 
+    sourceSets.main.resources { srcDir 'src/generated/resources' }
+
     configurations {
         shade
     }
@@ -95,9 +147,20 @@ subprojects {
         // While we don't have conduits etc.
         runtimeOnly fg.deobf("curse.maven:mekanism-268560:3743835")
     }
-    
+
     jar {
         classifier 'raw'
+        manifest {
+            attributes([
+                    "Specification-Title"     : "${modId}",
+                    "Specification-Vendor"    : "EnderIO",
+                    "Specification-Version"   : "${project.version}",
+                    "Implementation-Title"    : project.name,
+                    "Implementation-Version"  : "${project.version}",
+                    "Implementation-Vendor"   : "EnderIO",
+                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+            ])
+        }
     }
 
     // Shadow registrate
@@ -115,7 +178,7 @@ subprojects {
 
     // Reobfuscate shadowed jars
     reobf {
-        shadowJar { }
+        shadowJar {}
     }
 
     // Copy to main libs dir
@@ -127,6 +190,9 @@ subprojects {
     // Copy finished jars into the main libs directory.
     build.finalizedBy copyFiles
 }
+
+// Remove root project source set
+//sourceSets.remove(sourceSets.main)
 
 // Make the base project reobfuscate once its been compiled against by sub mods.
 gradle.projectsEvaluated {
@@ -145,17 +211,20 @@ reobf {
     jar { enabled = false }
 }
 
+// Main runs. These will run the "main" EnderIO Modules. Addons will not be included.
 minecraft {
     runs {
         client {
             workingDirectory project.file('run')
+
+            // Allow graceful shutdown
+            forceExit = false
 
             // Allow dependent mixins to run
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
 
             mods {
-                // TODO: Do this automatically...
                 'enderio' { source project(':enderio-base').sourceSets.main }
                 'enderio-conduits' { source project(':enderio-conduits').sourceSets.main }
                 'enderio-decoration' { source project(':enderio-decoration').sourceSets.main }
@@ -166,12 +235,14 @@ minecraft {
         server {
             workingDirectory project.file('run')
 
+            // Allow graceful shutdown
+            forceExit = false
+
             // Allow dependent mixins to run
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
 
             mods {
-                // TODO: Do this automatically...
                 'enderio' { source project(':enderio-base').sourceSets.main }
                 'enderio-conduits' { source project(':enderio-conduits').sourceSets.main }
                 'enderio-decoration' { source project(':enderio-decoration').sourceSets.main }
@@ -179,28 +250,7 @@ minecraft {
             }
         }
 
-        // TODO: Run all datagen at once..
-//        data {
-//            workingDirectory project.file('run')
-//
-////                property 'forge.logging.markers', 'REGISTRIES'
-////                property 'forge.logging.console.level', 'debug'
-//
-//            // Allow dependent mixins to run
-//            property 'mixin.env.remapRefMap', 'true'
-//            property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
-//
-//            // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-//            args '--mod', modId, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-//
-//            mods {
-//                // TODO: Do this automatically...
-//                'enderio' { source project(':enderio-base').sourceSets.main }
-//                'enderio-conduits' { source project(':enderio-conduits').sourceSets.main }
-//                'enderio-decoration' { source project(':enderio-decoration').sourceSets.main }
-//                'enderio-machines' { source project(':enderio-machines').sourceSets.main }
-//            }
-//        }
+        // TODO: When we do addons, maybe we bring in monolithic runs again, but this time for with all compat mods etc for bulk testing?
     }
 }
 

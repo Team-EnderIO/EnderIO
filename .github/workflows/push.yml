@@ -1,0 +1,31 @@
+name: Build push
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Build
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build -DVERSION_CLS=ci
+        env:
+          GRADLE_BUILD_ACTION_CACHE_DEBUG_ENABLED: true
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: built-jars
+          path: build/libs/*.jar
