@@ -1,4 +1,4 @@
-name: Build push
+name: Build Jars
 
 on: [push]
 
@@ -21,11 +21,12 @@ jobs:
       - name: Build
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: build -DVERSION_CLS=ci
+          arguments: build
         env:
           GRADLE_BUILD_ACTION_CACHE_DEBUG_ENABLED: true
+          VERSION_CLS: ci
 
       - uses: actions/upload-artifact@v3
         with:
-          name: built-jars
+          name: EnderIO-jars
           path: build/libs/*.jar
