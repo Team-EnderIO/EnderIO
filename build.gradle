@@ -285,8 +285,9 @@ String getVersionString(Project proj) {
     def build_server = System.getenv('CI') != null || System.getenv('BUILD_NUMBER') != null
 
     def version_patch_lc = proj.version_patch
-    if (System.getenv('BUILD_NUMBER') != null)
-        version_patch_lc = System.getenv('BUILD_NUMBER')
+    def version_appendix = proj.version_appendix
+    if (System.getenv('GITHUB_RUN_NUMBER') != null)
+        version_patch_lc = System.getenv('GITHUB_RUN_NUMBER')
 
     def version_classifier = ''
     if (System.getenv('VERSION_CLS') != null)
@@ -302,7 +303,7 @@ String getVersionString(Project proj) {
         }
     }
 
-    def version_base = "${proj.version_major}.${proj.version_minor}.${version_patch_lc}"
+    def version_base = "${proj.version_major}.${proj.version_minor}.${version_patch_lc}-${version_appendix}"
     def version_parts = ([version_base, version_classifier, version_hash]).findAll { p -> p != '' }
 
     return String.join('-', version_parts)
