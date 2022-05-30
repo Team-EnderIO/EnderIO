@@ -49,7 +49,7 @@ subprojects {
 
     minecraft {
         runs {
-            individualClient {
+            client {
                 workingDirectory project.file('run')
 
                 // Allow dependent mixins to run
@@ -61,7 +61,7 @@ subprojects {
                 }
             }
 
-            individualServer {
+            server {
                 workingDirectory project.file('run')
 
                 // Allow dependent mixins to run
@@ -221,9 +221,6 @@ minecraft {
         client {
             workingDirectory project.file('run')
 
-            // Allow graceful shutdown
-            forceExit = false
-
             // Allow dependent mixins to run
             property 'mixin.env.remapRefMap', 'true'
             property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
@@ -238,9 +235,6 @@ minecraft {
 
         server {
             workingDirectory project.file('run')
-
-            // Allow graceful shutdown
-            forceExit = false
 
             // Allow dependent mixins to run
             property 'mixin.env.remapRefMap', 'true'
