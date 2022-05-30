@@ -1,0 +1,25 @@
+modLoader="javafml"
+loaderVersion="[40,)"
+issueTrackerURL="https://github.com/SleepyTrousers/EnderIO-Rewrite/issues"
+license="CC0"
+
+[[mods]]
+modId="enderio_conduits"
+version="${file.jarVersion}"
+displayName="Ender IO Conduits"
+authors="CrazyPants, tterrag, HenryLoenwind, MatthiasM, CyanideX, EpicSquid, Rover656, HypherionSA, agnor99, Ferri_Arnus"
+description="Compact conduits."
+displayURL="http://enderio.com/"
+logoFile="logo.png"
+
+[[dependencies.enderio]]
+modId="minecraft"
+mandatory=true
+versionRange="1.18.2"
+side="BOTH"
+
+[[dependencies.enderio]]
+modId="forge"
+mandatory=true
+versionRange="[40,)"
+side="BOTH"
