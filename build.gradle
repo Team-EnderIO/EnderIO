@@ -19,9 +19,13 @@ plugins {
 }
 
 allprojects {
+    // Forge Gradle and Extensions
     apply plugin: "net.minecraftforge.gradle"
     apply plugin: 'org.parchmentmc.librarian.forgegradle'
     apply plugin: 'io.github.noeppi_noeppi.tools.modgradle.mapping'
+
+    // Eclipse support
+    apply plugin: 'eclipse'
 
     java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
