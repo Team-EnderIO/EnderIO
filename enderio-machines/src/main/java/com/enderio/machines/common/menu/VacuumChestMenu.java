@@ -19,10 +19,10 @@ public class VacuumChestMenu extends MachineMenu<VacuumChestBlockEntity>{
         if (blockEntity != null) {
             for(int j = 0; j < 3; ++j) {
                 for(int k = 0; k < 9; ++k) {
-                    this.addSlot(new MachineSlot(blockEntity.getItemHandler(), k + j * 9, 8 + k * 18, 18 + j * 18));
+                    this.addSlot(new MachineSlot(blockEntity.getInventory(), k + j * 9, 8 + k * 18, 18 + j * 18));
                 }
             }
-            this.addSlot(new MachineSlot(blockEntity.getItemHandler(), 27 , 8, 86));
+            this.addSlot(new MachineSlot(blockEntity.getInventory(), 27 , 8, 86));
         }
         addInventorySlots(8,124);
     }

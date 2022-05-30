@@ -6,9 +6,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
 
+import com.enderio.api.io.IIOConfig;
+import com.enderio.api.io.IOMode;
 import com.enderio.base.common.blockentity.sync.IntegerDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.base.common.util.AttractionUtil;
+import com.enderio.machines.common.io.FixedIOConfig;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
@@ -33,17 +36,25 @@ public abstract class VacuumMachineEntity<T extends Entity> extends MachineBlock
 	}
 	
 	@Override
-	public boolean supportsIo() {
-		return false;
-	}
-	
-	@Override
-    public void tick() {
+    public void serverTick() {
         if (this.getRedstoneControl().isActive(level.hasNeighborSignal(worldPosition))) {
             this.attractEntities(this.getLevel(), this.getBlockPos(), this.range);
         }
-        super.tick();
+        super.serverTick();
     }
+	
+	@Override
+    public void clientTick() {
+        if (this.getRedstoneControl().isActive(level.hasNeighborSignal(worldPosition))) {
+            this.attractEntities(this.getLevel(), this.getBlockPos(), this.range);
+        }
+        super.clientTick();
+    }
+	
+	@Override
+	protected IIOConfig createIOConfig() {
+	    return new FixedIOConfig(IOMode.PUSH);
+	}
 	
 	public Predicate<T> getFilter() {
 		return (e -> true);

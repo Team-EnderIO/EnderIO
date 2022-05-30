@@ -1,12 +1,12 @@
 package com.enderio.machines.common.blockentity;
 
-import java.util.Optional;
 import java.util.function.Predicate;
 
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.VacuumMachineEntity;
-import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemHandlerMaster;
-import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemSlotLayout;
+import com.enderio.machines.common.io.item.MachineInventory;
+import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import com.enderio.machines.common.io.item.MachineInventoryLayout.Builder;
 import com.enderio.machines.common.menu.VacuumChestMenu;
 
 import net.minecraft.core.BlockPos;
@@ -30,13 +30,14 @@ public class VacuumChestBlockEntity extends VacuumMachineEntity<ItemEntity> {
     }
     
     @Override
-    public Optional<ItemSlotLayout> getSlotLayout() {
-        return Optional.of(ItemSlotLayout.basic(28,0));
+    public MachineInventoryLayout getInventoryLayout() {
+        return extractableGUISlot(MachineInventoryLayout.builder(false),28).build();
     }
     
     @Override
-    protected ItemHandlerMaster createItemHandler(ItemSlotLayout layout) {
-        return new ItemHandlerMaster(getIoConfig(), layout) {
+    protected MachineInventory createMachineInventory(MachineInventoryLayout layout) {
+        // TODO Auto-generated method stub
+        return new MachineInventory(getIOConfig(), layout) {
             @Override
             protected void onContentsChanged(int slot) {
                 setChanged();
@@ -44,18 +45,19 @@ public class VacuumChestBlockEntity extends VacuumMachineEntity<ItemEntity> {
             
             @Override
             public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-                if (slot == 27) {
+                if (slot == 27) { //TODO filter slot type
                     return stack;
                 }
                 return super.insertItem(slot, stack, simulate);
             }
+            
         };
     }
 
 	@Override
 	public void handleEntity(ItemEntity entity) {
-		for (int i=0; i<this.getItemHandler().getSlots();i++) {
-            ItemStack reminder = this.getItemHandler().insertItem(i, entity.getItem().copy(), false);
+		for (int i=0; i<this.getInventory().getSlots();i++) {
+            ItemStack reminder = this.getInventory().insertItem(i, entity.getItem().copy(), false);
             if (reminder.isEmpty()) {
             	entity.discard();
             	return;
@@ -75,4 +77,13 @@ public class VacuumChestBlockEntity extends VacuumMachineEntity<ItemEntity> {
 	public MachineTier getTier() {
 		return MachineTier.Standard;
 	}
+	
+	// Slot config
+	
+	public Builder extractableGUISlot(Builder builder, int count) {
+        for (int i = 0; i < count; i++) {
+            builder.slot(slot -> slot.guiInsert().guiExtract().extract());
+        }
+        return builder;
+    }
 }
