@@ -1,0 +1,23 @@
+name: Gradle CI Build [WIP]
+
+on: [pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+      - name: Build
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build
+        env:
+          GRADLE_BUILD_ACTION_CACHE_DEBUG_ENABLED: true
