@@ -200,7 +200,7 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
     @Override
     public MachineInventoryLayout getInventoryLayout() {
         // Setup item slots
-        return MachineInventoryLayout.builder(getTier() != MachineTier.Simple)
+        return MachineInventoryLayout.builder(getTier() != MachineTier.SIMPLE)
             .inputSlot(3, this::acceptSlotInput)
             .outputSlot()
             .build();

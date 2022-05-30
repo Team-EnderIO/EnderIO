@@ -76,10 +76,9 @@ public abstract class NewAlloySmelterBlockEntity extends PoweredTaskMachineEntit
     @Override
     public MachineInventoryLayout getInventoryLayout() {
         // Setup item slots
-        return MachineInventoryLayout.builder()
-            .addInputs(3, this::acceptSlotInput)
-            .addOutput()
-            .capacitor(() -> getTier() != MachineTier.SIMPLE)
+        return MachineInventoryLayout.builder(getTier() != MachineTier.SIMPLE)
+            .inputSlot(3, this::acceptSlotInput)
+            .outputSlot()
             .build();
     }
 
@@ -160,9 +159,9 @@ public abstract class NewAlloySmelterBlockEntity extends PoweredTaskMachineEntit
 
                 MachineInventory inv = getInventory();
 
-                if (inv.forceInsertItem(3, out, true).isEmpty()) {
+                if (inv.insertItem(3, out, true).isEmpty()) {
                     if (!simulate)
-                        inv.forceInsertItem(3, out, false);
+                        inv.insertItem(3, out, false);
                     return true;
                 }
 
