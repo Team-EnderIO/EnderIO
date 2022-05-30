@@ -10,6 +10,7 @@ import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.util.EnumMap;
@@ -24,6 +25,7 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
     private final List<IFluidTank> tanks;
 
     private final EnumMap<Direction, LazyOptional<Sided>> sideCache = new EnumMap<>(Direction.class);
+    private LazyOptional<MachineFluidHandler> selfCache = LazyOptional.empty();
 
     public MachineFluidHandler(IIOConfig config, IFluidTank... tanks) {
         this.config = config;
@@ -113,17 +115,28 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
     }
 
     @Override
-    public LazyOptional<IFluidHandler> getCapability(Direction side) {
+    public LazyOptional<IFluidHandler> getCapability(@Nullable Direction side) {
+        if (side == null) {
+            // Create own cache if its been invalidated or not created yet.
+            if (!selfCache.isPresent())
+                selfCache = LazyOptional.of(() -> this);
+            return selfCache.cast();
+        }
+
         if (!config.getMode(side).canConnect())
             return LazyOptional.empty();
         return sideCache.computeIfAbsent(side, dir -> LazyOptional.of(() -> new Sided(this, dir))).cast();
     }
 
     @Override
-    public void invalidateSide(Direction side) {
-        if (sideCache.containsKey(side)) {
-            sideCache.get(side).invalidate();
-            sideCache.remove(side);
+    public void invalidateSide(@Nullable Direction side) {
+        if (side != null) {
+            if (sideCache.containsKey(side)) {
+                sideCache.get(side).invalidate();
+                sideCache.remove(side);
+            }
+        } else {
+            selfCache.invalidate();
         }
     }
 
@@ -132,6 +145,7 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
         for (LazyOptional<Sided> side : sideCache.values()) {
             side.invalidate();
         }
+        selfCache.invalidate();
     }
 
     // Sided capability access

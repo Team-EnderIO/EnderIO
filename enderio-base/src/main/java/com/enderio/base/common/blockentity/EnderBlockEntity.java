@@ -212,7 +212,7 @@ public class EnderBlockEntity extends BlockEntity {
     /**
      * Invalidate capabilities serving the given side.
      */
-    public void invalidateCaps(Direction side) {
+    public void invalidateCaps(@Nullable Direction side) {
         for (IEnderCapabilityProvider<?> capProvider : capabilityProviders.values()) {
             capProvider.invalidateSide(side);
         }
@@ -221,8 +221,8 @@ public class EnderBlockEntity extends BlockEntity {
     @NotNull
     @Override
     public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if (side != null && capabilityProviders.containsKey(cap)) {
-            return capabilityProviders.get(cap).getCapability(side).cast(); // TODO: Capability providers should maybe support null sides too?
+        if (capabilityProviders.containsKey(cap)) {
+            return capabilityProviders.get(cap).getCapability(side).cast();
         }
         return super.getCapability(cap, side);
     }

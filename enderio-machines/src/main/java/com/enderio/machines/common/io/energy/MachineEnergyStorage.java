@@ -12,6 +12,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
 import java.util.function.Supplier;
@@ -31,6 +32,7 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, IEnderCapabi
     private final CapacitorKey capacityKey, transferKey, useKey;
 
     private final EnumMap<Direction, LazyOptional<Sided>> sideCache = new EnumMap<>(Direction.class);
+    private LazyOptional<MachineEnergyStorage> selfCache = LazyOptional.empty();
 
     public MachineEnergyStorage(IIOConfig config, EnergyIOMode ioMode, Supplier<ICapacitorData> capacitorData, CapacitorKey capacityKey,
         CapacitorKey transferKey, CapacitorKey useKey) {
@@ -142,17 +144,28 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, IEnderCapabi
     }
 
     @Override
-    public LazyOptional<IEnergyStorage> getCapability(Direction side) {
+    public LazyOptional<IEnergyStorage> getCapability(@Nullable Direction side) {
+        if (side == null) {
+            // Create own cache if its been invalidated or not created yet.
+            if (!selfCache.isPresent())
+                selfCache = LazyOptional.of(() -> this);
+            return selfCache.cast();
+        }
+
         if (!config.getMode(side).canConnect())
             return LazyOptional.empty();
         return sideCache.computeIfAbsent(side, dir -> LazyOptional.of(() -> new Sided(this, dir))).cast();
     }
 
     @Override
-    public void invalidateSide(Direction side) {
-        if (sideCache.containsKey(side)) {
-            sideCache.get(side).invalidate();
-            sideCache.remove(side);
+    public void invalidateSide(@Nullable Direction side) {
+        if (side != null) {
+            if (sideCache.containsKey(side)) {
+                sideCache.get(side).invalidate();
+                sideCache.remove(side);
+            }
+        } else {
+            selfCache.invalidate();
         }
     }
 
@@ -161,6 +174,7 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, IEnderCapabi
         for (LazyOptional<Sided> side : sideCache.values()) {
             side.invalidate();
         }
+        selfCache.invalidate();
     }
 
     @Override

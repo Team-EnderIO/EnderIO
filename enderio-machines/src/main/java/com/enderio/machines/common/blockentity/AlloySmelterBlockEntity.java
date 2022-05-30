@@ -5,9 +5,10 @@ import com.enderio.base.common.blockentity.sync.EnumDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.PoweredCraftingMachineEntity;
-import com.enderio.machines.common.io.item.MachineInventory;
-import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.init.MachineCapacitorKeys;
+import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import com.enderio.machines.common.io.item.MachineInventory;
+import com.enderio.machines.common.menu.AlloySmelterMenu;
 import com.enderio.api.recipe.AlloySmeltingRecipe;
 import com.enderio.machines.common.init.MachineRecipes;
 import net.minecraft.core.BlockPos;
@@ -179,14 +180,14 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
     protected void assembleRecipe(Recipe<Container> recipe) {
         ItemStack result = recipe.assemble(getRecipeWrapper());
         result.setCount(result.getCount() * resultModifier);
-        getInventory().forceInsertItem(3, result, false);
+        getInventory().insertItem(3, result, false);
     }
 
     @Override
     protected boolean canTakeOutput(Recipe<Container> recipe) {
         ItemStack result = recipe.assemble(getRecipeWrapper());
         result.setCount(result.getCount() * resultModifier);
-        return getInventory().forceInsertItem(3, result, true).isEmpty();
+        return getInventory().insertItem(3, result, true).isEmpty();
     }
 
     @Nullable
@@ -199,10 +200,9 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
     @Override
     public MachineInventoryLayout getInventoryLayout() {
         // Setup item slots
-        return MachineInventoryLayout.builder()
-            .addInputs(3, this::acceptSlotInput)
-            .addOutput()
-            .capacitor(() -> getTier() != MachineTier.SIMPLE)
+        return MachineInventoryLayout.builder(getTier() != MachineTier.Simple)
+            .inputSlot(3, this::acceptSlotInput)
+            .outputSlot()
             .build();
     }
 

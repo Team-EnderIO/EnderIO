@@ -9,6 +9,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Fixed IO Config.
@@ -63,12 +64,12 @@ public final class FixedIOConfig implements IIOConfig {
     }
 
     @Override
-    public LazyOptional<ISideConfig> getCapability(Direction side) {
+    public LazyOptional<ISideConfig> getCapability(@Nullable Direction side) {
         return LazyOptional.empty();
     }
 
     @Override
-    public void invalidateSide(Direction side) {}
+    public void invalidateSide(@Nullable Direction side) {}
 
     @Override
     public void invalidateCaps() {}

@@ -51,33 +51,38 @@ public abstract class AlloySmeltingRecipe implements IMachineRecipe<AlloySmeltin
 
     @Override
     public boolean matches(Container pContainer, Level pLevel) {
-        // TODO: Test
-        boolean[] matchArray = new boolean[3]; // Used to ensure there are blank slots left. // TODO: I want to get rid of it
-        int matches = 0;
+        boolean[] matched = new boolean[3];
 
+        // Iterate over the slots
         for (int i = 0; i < 3; i++) {
-            if (matchArray[i])
-                continue;
 
+            // Iterate over the inputs
             for (int j = 0; j < 3; j++) {
+
+                // If this ingredient has been matched already, continue
+                if (matched[j])
+                    continue;
+
                 if (j < inputs.size()) {
+                    // If we expect an input, test we have a match for it.
                     if (inputs.get(j).test(pContainer.getItem(i))) {
-                        matchArray[i] = true;
-                        matches++;
+                        matched[j] = true;
                     }
-                } else if (pContainer.getItem(i).isEmpty())
-                    matchArray[i] = true;
+                } else if (pContainer.getItem(i) == ItemStack.EMPTY) {
+                    // If we don't expect an input, make sure we have a blank for it.
+                    matched[j] = true;
+                }
             }
 
-            for (CountedIngredient ingredient : inputs) {
-                if (ingredient.test(pContainer.getItem(i)))
-                    matchArray[i] = true;
-                else if (ingredient == CountedIngredient.EMPTY && pContainer.getItem(i).isEmpty())
-                    matchArray[i] = true;
-            }
         }
 
-        return matches == inputs.size() && matchArray[0] && matchArray[1] && matchArray[2];
+        // If we matched all our ingredients, we win!
+        for (int i = 0; i < 3; i++) {
+            if (!matched[i])
+                return false;
+        }
+
+        return true;
     }
 
     @Override
