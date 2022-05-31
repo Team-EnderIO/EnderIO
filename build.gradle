@@ -195,9 +195,6 @@ subprojects {
     build.finalizedBy copyFiles
 }
 
-// Remove root project source set
-//sourceSets.remove(sourceSets.main)
-
 // Make the base project reobfuscate once its been compiled against by sub mods.
 gradle.projectsEvaluated {
     project(":enderio-base").tasks.named('reobfJar').configure(t -> {
