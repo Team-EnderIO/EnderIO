@@ -81,7 +81,7 @@ class CombineJars {
     }
 
     private static String mergeATs(List<Project> toMerge) {
-        print("[Mod Merger - ATs] Merging access transformers.")
+        println("[Mod Merger - ATs] Merging access transformers.")
         def ats = ""
         toMerge.each { subproject ->
             def moduleATs = new File(subproject.sourceSets.main.output.resourcesDir, 'META-INF/accesstransformer.cfg')

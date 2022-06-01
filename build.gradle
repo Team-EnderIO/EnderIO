@@ -85,11 +85,13 @@ allprojects {
 
     // Shadow registrate
     shadowJar {
+        // Remove the -all classifier.
         classifier ''
 
         // Put the outputs into the main build directory
         destinationDirectory.set(file("$rootProject.buildDir/libs"))
 
+        // Setup relocation
         configurations = [project.configurations.shade]
         relocate 'com.tterrag.registrate', "com.enderio.registrate"
 
@@ -107,18 +109,19 @@ allprojects {
 
     // Publishing
     def mainModrinthProject = rootProject.modrinth_projectId
-    def modrinthEnabled = project.hasProperty("modrinth_projectId") && (project.modrinth_projectId != mainModrinthProject || project.name == rootProject.name)
+    def modrinthEnabled = System.getenv("MODRINTH_TOKEN") != null &&  project.hasProperty("modrinth_projectId") && (project.modrinth_projectId != mainModrinthProject || project.name == rootProject.name)
     if (modrinthEnabled) {
         // Make modrinth use our reobfuscated shadowed jar.
         project.tasks.modrinth {
             dependsOn(reobfShadowJar)
         }
 
+        // Configure modrinth
         modrinth {
             token = System.getenv("MODRINTH_TOKEN")
             projectId = project.modrinth_projectId
             versionNumber = project.version
-            versionType = version_appendix
+            versionType = release_type
             uploadFile = shadowJar
             gameVersions = [minecraft_version]
             loaders = ["forge"]
@@ -255,6 +258,20 @@ subprojects {
         // While we don't have conduits etc.
         runtimeOnly fg.deobf("curse.maven:mekanism-268560:3743835")
     }
+
+    processResources {
+        // Fill mods.toml placeholders
+        filesMatching("META-INF/mods.toml") {
+            expand 'version': version,
+                    'mcversion': minecraft_version_range,
+                    'forge_version': forge_version_range,
+                    'loader_version': loader_version_range
+
+        }
+
+        // Copy our logo in
+        from("$rootDir/doc/img/logo.png") into 'logo.png'
+    }
 }
 
 // Setup module reobfuscation orders. Ensures devtime works correctly.
@@ -267,6 +284,7 @@ gradle.projectsEvaluated {
 }
 
 // Combined jar
+// TODO: Maybe don't hard code this...
 def combJarProjects = [project(':enderio-base'), project(':enderio-machines'), project(':enderio-decoration')]
 
 // Depend on combined classes
@@ -348,7 +366,7 @@ String getVersionString(Project proj) {
     def build_server = System.getenv('CI') != null || System.getenv('BUILD_NUMBER') != null
 
     def version_patch_lc = proj.version_patch
-    def version_appendix = proj.version_appendix
+    def version_appendix = proj.release_type
     if (System.getenv('GITHUB_RUN_NUMBER') != null)
         version_patch_lc = System.getenv('GITHUB_RUN_NUMBER')
 
@@ -366,7 +384,7 @@ String getVersionString(Project proj) {
         }
     }
 
-    def version_base = "${proj.version_major}.${proj.version_minor}.${version_patch_lc}-${version_appendix}"
+    def version_base = "${proj.version_major}.${proj.version_minor}.${version_patch_lc}-${release_type}"
     def version_parts = ([version_base, version_classifier, version_hash]).findAll { p -> p != '' }
 
     return String.join('-', version_parts)
