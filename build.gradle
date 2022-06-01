@@ -65,10 +65,22 @@ allprojects {
         shade registrate
     }
 
-    // Differentiate the non-shadowed version by storing it in a different directory.
-    // Makes for cleaner libs directory.
     jar {
+        // Differentiate the non-shadowed version by storing it in a different directory.
+        // Makes for cleaner libs directory.
         destinationDirectory.set(file("$buildDir/rawJar"))
+
+        manifest {
+            attributes([
+                    "Specification-Title"     : "${getModId(project)}",
+                    "Specification-Vendor"    : "EnderIO",
+                    "Specification-Version"   : "${project.version}",
+                    "Implementation-Title"    : project.name,
+                    "Implementation-Version"  : "${project.version}",
+                    "Implementation-Vendor"   : "EnderIO",
+                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+            ])
+        }
     }
 
     // Shadow registrate
@@ -150,7 +162,6 @@ allprojects {
 
 subprojects {
     archivesBaseName = getArchiveBaseName(project)
-    def modId = getModId(project)
 
     minecraft {
         runs {
@@ -189,7 +200,7 @@ subprojects {
                 property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
 
                 // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-                args '--mod', modId, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+                args '--mod', getModId(project), '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
                 // Add base resources.
                 if (project.name != 'enderio-base') {
@@ -244,20 +255,6 @@ subprojects {
         // While we don't have conduits etc.
         runtimeOnly fg.deobf("curse.maven:mekanism-268560:3743835")
     }
-
-    jar {
-        manifest {
-            attributes([
-                    "Specification-Title"     : "${modId}",
-                    "Specification-Vendor"    : "EnderIO",
-                    "Specification-Version"   : "${project.version}",
-                    "Implementation-Title"    : project.name,
-                    "Implementation-Version"  : "${project.version}",
-                    "Implementation-Vendor"   : "EnderIO",
-                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-            ])
-        }
-    }
 }
 
 // Setup module reobfuscation orders. Ensures devtime works correctly.
@@ -269,25 +266,22 @@ gradle.projectsEvaluated {
     })
 }
 
-// TODO: Once this is working, turn it into a nice build script?
 // Combined jar
 def combJarProjects = [project(':enderio-base'), project(':enderio-machines'), project(':enderio-decoration')]
 
-// Combine jar resources
-jar.doFirst {
-    CombineJars.mergeResources(rootProject, combJarProjects)
-}
-jar.dependsOn combJarProjects.tasks['classes']
-
 // Depend on combined classes
-//shadowJar.dependsOn jar
+shadowJar.dependsOn combJarProjects.tasks['jar']
 shadowJar {
     duplicatesStrategy = DuplicatesStrategy.FAIL
+
+    CombineJars.mergeResources(rootProject, combJarProjects)
+
     combJarProjects.each { subproject ->
         def isMain = subproject.name == 'enderio-base'
         from(subproject.sourceSets.main.output.classesDirs)
         from(subproject.sourceSets.main.output.resourcesDir, c -> c.exclude(CombineJars.getPathsToExclude(subproject, isMain)))
     }
+    from("$buildDir/generated", CombineJars.getGeneratedClosure())
 }
 
 // Main runs. These will run the "main" EnderIO Modules. Addons will not be included.
