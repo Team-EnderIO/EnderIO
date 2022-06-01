@@ -16,8 +16,8 @@ class CombineJars {
 
         // Exclude duplicated data
         def resourcesDir = project.rootProject.sourceSets.main.output.resourcesDir
-        int baseLength = "$resourcesDir/resources/main/".length()
-        project.fileTree(dir: "$resourcesDir/resources/main/data/").each {
+        int baseLength = "$resourcesDir".length()
+        project.fileTree(dir: "$resourcesDir/data/").each {
             File file -> toExclude.add(file.getPath().substring(baseLength))
         }
 
@@ -36,6 +36,10 @@ class CombineJars {
         // Create resource directories
         def resourcesDir = rootProject.sourceSets.main.output.resourcesDir
         rootProject.mkdir("$resourcesDir/META-INF")
+
+        // Delete data resources to prevent pollution
+        rootProject.file("$resourcesDir/data").deleteDir()
+        rootProject.mkdir("$resourcesDir/data")
 
         new File(resourcesDir, "META-INF/mods.toml") << mergeManifests(toMerge)
         new File(resourcesDir, "META-INF/accesstransformer.cfg") << mergeATs(toMerge)
