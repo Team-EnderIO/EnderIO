@@ -1,3 +1,5 @@
+import com.enderio.CombineJars
+
 buildscript {
     repositories {
         // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
@@ -16,6 +18,7 @@ buildscript {
 
 plugins {
     id 'com.github.johnrengelman.shadow' version "${shadow_version}"
+    id "com.modrinth.minotaur" version "2.+"
 }
 
 allprojects {
@@ -27,23 +30,125 @@ allprojects {
     // Eclipse support
     apply plugin: 'eclipse'
 
+    // Shadowing
+    apply plugin: 'com.github.johnrengelman.shadow'
+
+    // Publishing
+    apply plugin: 'maven-publish'
+    apply plugin: "com.modrinth.minotaur"
+
     java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+    version = getVersionString(project)
+    group = 'com.enderio'
 
     minecraft {
         mappings channel: "${mappings_channel}", version: "${mappings_version}"
     }
 
+    repositories {
+        // Registrate
+        maven { url "https://maven.tterrag.com/" }
+    }
+
+    configurations {
+        shade
+    }
+
     dependencies {
         // Forge
         minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+
+        // Registrate
+        def registrate = "com.tterrag.registrate:Registrate:${registrate_version}"
+        implementation fg.deobf(registrate)
+        shade registrate
+    }
+
+    // Differentiate the non-shadowed version by storing it in a different directory.
+    // Makes for cleaner libs directory.
+    jar {
+        destinationDirectory.set(file("$buildDir/rawJar"))
+    }
+
+    // Shadow registrate
+    shadowJar {
+        classifier ''
+
+        // Put the outputs into the main build directory
+        destinationDirectory.set(file("$rootProject.buildDir/libs"))
+
+        configurations = [project.configurations.shade]
+        relocate 'com.tterrag.registrate', "com.enderio.registrate"
+
+        // Strip the registrate classes out of the other modules.
+        // We still have to do shadowing for these however, because it gets relocated to com.enderio.registrate.
+        if (project.name != "enderio-base" && project.name != rootProject.name) {
+            exclude 'com/tterrag/registrate/**'
+        }
+    }
+
+    // Reobfuscate shadowed jars
+    reobf {
+        shadowJar {}
+    }
+
+    // Publishing
+    def mainModrinthProject = rootProject.modrinth_projectId
+    def modrinthEnabled = project.hasProperty("modrinth_projectId") && (project.modrinth_projectId != mainModrinthProject || project.name == rootProject.name)
+    if (modrinthEnabled) {
+        // Make modrinth use our reobfuscated shadowed jar.
+        project.tasks.modrinth {
+            dependsOn(reobfShadowJar)
+        }
+
+        modrinth {
+            token = System.getenv("MODRINTH_TOKEN")
+            projectId = project.modrinth_projectId
+            versionNumber = project.version
+            versionType = version_appendix
+            uploadFile = shadowJar
+            gameVersions = [minecraft_version]
+            loaders = ["forge"]
+
+            // Allow the other modules to trudge on.
+            failSilently = true
+
+            if (project.hasProperty('modrinth_body')) {
+                syncBodyFrom = rootProject.file("doc/modpages/modrinth/${project.modrinth_body}").text
+            }
+
+            dependencies {
+                // scope.type
+                // The scope can be `required`, `optional`, or `incompatible`
+                // The type can either be `project` or `version`
+                if (project.name != 'enderio-base' && project.name != rootProject.name) {
+                    optional.project project(':enderio-base').modrinth_projectId
+                    optional.project rootProject.modrinth_projectId
+                }
+
+                if (project.name == rootProject.name) {
+                    incompatible.project project(':enderio-base').modrinth_projectId
+                    incompatible.project project(':enderio-decoration').modrinth_projectId
+                    incompatible.project project(':enderio-machines').modrinth_projectId
+                }
+
+                // Patchouli
+                optional.project "nU0bVIaL"
+            }
+        }
+    } else {
+        // Disable on projects that aren't supporting modrinth publish.
+        tasks.modrinth { enabled = false }
+    }
+
+    // Disable modrinth body sync for mods that have no body defined.
+    if (!project.hasProperty('modrinth_body') || !modrinthEnabled) {
+        tasks.modrinthSyncBody { enabled = false }
     }
 }
 
 subprojects {
-    apply plugin: 'com.github.johnrengelman.shadow'
-
-    version = getVersionString(project)
-    group = 'com.enderio'
     archivesBaseName = getArchiveBaseName(project)
     def modId = getModId(project)
 
@@ -99,9 +204,6 @@ subprojects {
     }
 
     repositories {
-        // Registrate
-        maven { url "https://maven.tterrag.com/" }
-
         maven {
             // location of the maven that hosts JEI files
             name = "Progwml6 maven"
@@ -126,16 +228,7 @@ subprojects {
 
     sourceSets.main.resources { srcDir 'src/generated/resources' }
 
-    configurations {
-        shade
-    }
-
     dependencies {
-        // Registrate
-        def registrate = "com.tterrag.registrate:Registrate:${registrate_version}"
-        implementation fg.deobf(registrate)
-        shade registrate
-
         // JEI
         compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}:api")
         runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")
@@ -153,7 +246,6 @@ subprojects {
     }
 
     jar {
-        classifier 'raw'
         manifest {
             attributes([
                     "Specification-Title"     : "${modId}",
@@ -166,50 +258,35 @@ subprojects {
             ])
         }
     }
-
-    // Shadow registrate
-    shadowJar {
-        classifier ''
-        configurations = [project.configurations.shade]
-        relocate 'com.tterrag.registrate', "com.enderio.registrate"
-
-        // Strip the registrate classes out of the other modules.
-        // We still have to do shadowing for these however, because it gets relocated to com.enderio.registrate.
-        if (project.name != "enderio-base") {
-            exclude 'com/tterrag/registrate/**'
-        }
-    }
-
-    // Reobfuscate shadowed jars
-    reobf {
-        shadowJar {}
-    }
-
-    // Copy to main libs dir
-    task copyFiles(type: Copy) {
-        from(shadowJar)
-        into rootProject.file('build/libs')
-    }
-
-    // Copy finished jars into the main libs directory.
-    build.finalizedBy copyFiles
 }
 
-// Make the base project reobfuscate once its been compiled against by sub mods.
+// Setup module reobfuscation orders. Ensures devtime works correctly.
 gradle.projectsEvaluated {
     project(":enderio-base").tasks.named('reobfJar').configure(t -> {
-        subprojects.forEach {
-            if (it.name != 'enderio-base') {
-                t.mustRunAfter(it.tasks.named('reobfJar'))
-            }
-        }
+        t.mustRunAfter(project(':enderio-conduits').tasks.named('reobfJar'))
+        t.mustRunAfter(project(':enderio-decoration').tasks.named('reobfJar'))
+        t.mustRunAfter(project(':enderio-machines').tasks.named('reobfJar'))
     })
 }
 
-// Disable root project jar
-jar.enabled = false
-reobf {
-    jar { enabled = false }
+// TODO: Once this is working, turn it into a nice build script?
+// Combined jar
+def combJarProjects = [project(':enderio-base'), project(':enderio-machines'), project(':enderio-decoration')]
+
+// Combine jar resources
+jar.doFirst {
+    CombineJars.mergeResources(rootProject, combJarProjects)
+}
+
+// Depend on combined classes
+shadowJar.dependsOn combJarProjects.tasks['classes']
+shadowJar {
+    duplicatesStrategy = DuplicatesStrategy.FAIL
+    combJarProjects.each { subproject ->
+        def isMain = subproject.name == 'enderio-base'
+        from(subproject.sourceSets.main.output.classesDirs)
+        from(subproject.sourceSets.main.output.resourcesDir, c -> c.exclude(CombineJars.getPathsToExclude(subproject, isMain)))
+    }
 }
 
 // Main runs. These will run the "main" EnderIO Modules. Addons will not be included.
