@@ -277,9 +277,10 @@ def combJarProjects = [project(':enderio-base'), project(':enderio-machines'), p
 jar.doFirst {
     CombineJars.mergeResources(rootProject, combJarProjects)
 }
+jar.dependsOn combJarProjects.tasks['classes']
 
 // Depend on combined classes
-shadowJar.dependsOn combJarProjects.tasks['classes']
+//shadowJar.dependsOn jar
 shadowJar {
     duplicatesStrategy = DuplicatesStrategy.FAIL
     combJarProjects.each { subproject ->
