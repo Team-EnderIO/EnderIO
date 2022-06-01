@@ -15,8 +15,9 @@ class CombineJars {
         toExclude.add('.cache/cache')
 
         // Exclude duplicated data
-        int baseLength = "$project.rootProject.buildDir/resources/main/".length()
-        project.fileTree(dir: "$project.rootProject.buildDir/resources/main/data/").each {
+        def resourcesDir = project.rootProject.sourceSets.main.output.resourcesDir
+        int baseLength = "$resourcesDir/resources/main/".length()
+        project.fileTree(dir: "$resourcesDir/resources/main/data/").each {
             File file -> toExclude.add(file.getPath().substring(baseLength))
         }
 
