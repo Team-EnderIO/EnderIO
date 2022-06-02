@@ -32,7 +32,7 @@ class CombineJars {
     /**
      * Merge mod resources together.
      */
-    static void mergeResources(Project rootProject, List<Project> toMerge) {
+    static void mergeResources(Project rootProject, Set<Project> toMerge) {
         println("[Mod Merger] Merging mod resources.")
 
         // Create resource directories
@@ -57,7 +57,7 @@ class CombineJars {
         }
     }
 
-    private static String mergeManifests(List<Project> toMerge) {
+    private static String mergeManifests(Set<Project> toMerge) {
         println("[Mod Merger - TOMLs] Merged mods.toml's.")
         def modsToml = ""
 
@@ -80,7 +80,7 @@ class CombineJars {
         return modsToml
     }
 
-    private static String mergeATs(List<Project> toMerge) {
+    private static String mergeATs(Set<Project> toMerge) {
         println("[Mod Merger - ATs] Merging access transformers.")
         def ats = ""
         toMerge.each { subproject ->
@@ -93,7 +93,7 @@ class CombineJars {
     }
 
     // More from Mekanism, thank you!
-    private static void mergeTags(Project rootProject, List<Project> toMerge) {
+    private static void mergeTags(Project rootProject, Set<Project> toMerge) {
         println("[Mod Merger - Tags] Merging tags")
         Closure tagFilter = { PatternFilterable pf -> pf.include('**/data/*/tags/**/*.json') }
         Map<String, List<String>> reverseTags = new HashMap<>()

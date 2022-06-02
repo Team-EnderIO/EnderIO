@@ -37,6 +37,23 @@ allprojects {
     apply plugin: 'maven-publish'
     apply plugin: "com.modrinth.minotaur"
 
+    // Sort out project properties
+    if (!project.hasProperty('include_in_monolith'))
+        project.ext.include_in_monolith = false
+    else
+        project.ext.include_in_monolith = project.include_in_monolith != 'false'
+
+    if (!project.hasProperty('publish_api'))
+        project.ext.publish_api = false
+    else
+        project.ext.publish_api = project.publish_api != 'false'
+
+    if (!project.hasProperty('publish_sources'))
+        project.ext.publish_sources = false
+    else
+        project.ext.publish_sources = project.publish_sources != 'false'
+
+    // Set java version
     java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
     version = getVersionString(project)
@@ -108,10 +125,25 @@ allprojects {
         shadowJar {}
     }
 
-    // Other jars
-    // TODO: API Jar
+    // API Jar
+    task apiJar(type: Jar) {
+        enabled = project.ext.publish_api
+        destinationDirectory.set(file("$rootProject.buildDir/libs"))
+        classifier 'api'
 
+        // TODO: Maybe allow com.enderio.<module>.api?
+        from sourceSets.main.output.classesDirs
+        include 'com/enderio/api/**/*.class'
+
+        from sourceSets.main.java
+        include 'com/enderio/api/**/*.java'
+    }
+
+    build.dependsOn apiJar
+
+    // Sources jar
     task sourcesJar(type: Jar, dependsOn: classes) {
+        enabled = project.ext.publish_sources
         destinationDirectory.set(file("$rootProject.buildDir/libs"))
         classifier 'sources'
         from sourceSets.main.allJava
@@ -119,7 +151,6 @@ allprojects {
 
     build.dependsOn sourcesJar
 
-    // Publishing
     if (System.getenv("MODRINTH_TOKEN") != null || project.hasProperty('modrinthToken')) {
         def isRoot = rootProject == project
         def modrinthProjectId = project.hasProperty("modrinth_projectId") ? project.modrinth_projectId : isRoot ? rootProject.combi_modrinth_projectId : null
@@ -180,8 +211,31 @@ allprojects {
 
         publications {
             maven(MavenPublication) {
+                artifactId = getPrettyName(project)
+
+                artifact shadowJar
                 artifact sourcesJar
+                artifact apiJar
+
+                pom {
+                    name = getPrettyName(project)
+                    description = 'Ender IO is a full-featured tech mod. It has armor, tools, weapons, machines, conduits, inventory management, mobs, etc.'
+                    url = 'https://github.com/SleepyTrousers/EnderIO-Rewrite'
+
+                    licenses {
+                        license {
+                            name = 'Unlicense'
+                            url = 'https://github.com/SleepyTrousers/EnderIO-Rewrite/blob/dev/1.18.x/LICENSE.txt'
+                        }
+                    }
+
+                    scm {
+                        url = 'https://github.com/SleepyTrousers/EnderIO-Rewrite.git'
+                    }
+                }
             }
+
+            // TODO: Repositories to publish to...
         }
     }
 }
@@ -299,6 +353,7 @@ subprojects {
 
 // Setup module reobfuscation orders. Ensures devtime works correctly.
 gradle.projectsEvaluated {
+    // TODO: Dynamically fetch all project dependencies and sort out this order automatically.
     project(":enderio-base").tasks.named('reobfJar').configure(t -> {
         t.mustRunAfter(project(':enderio-conduits').tasks.named('reobfJar'))
         t.mustRunAfter(project(':enderio-decoration').tasks.named('reobfJar'))
@@ -307,23 +362,24 @@ gradle.projectsEvaluated {
 }
 
 // Combined jar
-// TODO: Maybe don't hard code this...
-def combJarProjects = [project(':enderio-base'), project(':enderio-machines'), project(':enderio-decoration')]
+def monolithProjects = subprojects.findAll { sp -> sp.ext.include_in_monolith }
 
 // Depend on combined classes
-shadowJar.dependsOn combJarProjects.tasks['jar']
+shadowJar.dependsOn monolithProjects.tasks['jar']
 shadowJar {
     duplicatesStrategy = DuplicatesStrategy.FAIL
 
-    CombineJars.mergeResources(rootProject, combJarProjects)
+    CombineJars.mergeResources(rootProject, monolithProjects)
 
-    combJarProjects.each { subproject ->
+    monolithProjects.each { subproject ->
         def isMain = subproject.name == 'enderio-base'
         from(subproject.sourceSets.main.output.classesDirs)
         from(subproject.sourceSets.main.output.resourcesDir, c -> c.exclude(CombineJars.getPathsToExclude(subproject, isMain)))
     }
     from("$buildDir/generated", CombineJars.getGeneratedClosure())
 }
+
+// TODO: Combined api jar maybe?
 
 // Main runs. These will run the "main" EnderIO Modules. Addons will not be included.
 minecraft {
