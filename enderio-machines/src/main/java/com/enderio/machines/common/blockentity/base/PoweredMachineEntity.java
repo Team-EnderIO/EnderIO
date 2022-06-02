@@ -177,7 +177,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
         MachineInventoryLayout layout = getInventoryLayout();
         if (layout == null)
             return false;
-        return layout.hasCapacitorSlot();
+        return layout.supportsCapacitor();
     }
 
     /**

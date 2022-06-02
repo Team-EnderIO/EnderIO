@@ -1,165 +1,370 @@
 package com.enderio.machines.common.io.item;
 
-import com.enderio.base.EnderIO;
 import com.enderio.base.common.capacitor.CapacitorUtil;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiPredicate;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
+/**
+ * Describes the slot configuration of an inventory.
+ */
 public class MachineInventoryLayout {
-    public enum SlotType {
-        INPUT,
-        OUTPUT,
-        CAPACITOR,
-        MISC
-    }
 
-    private final Map<Integer, SlotType> slotTypeMap;
-    private final Map<Integer, BiPredicate<Integer, ItemStack>> slotPredicates;
-    private final int slotCount;
+    /**
+     * Slot configurations.
+     */
+    private final List<SlotConfig> slots;
+
+    /**
+     * The index of the capacitor-specific slot.
+     */
     private final int capacitorSlot;
 
     private MachineInventoryLayout(Builder builder) {
-        this.slotTypeMap = Map.copyOf(builder.slotTypeMap);
-        this.slotPredicates = Map.copyOf(builder.slotPredicates);
-        this.slotCount = slotTypeMap.size();
-        this.capacitorSlot = builder.capacitorSlot;
-    }
+        this.slots = List.copyOf(builder.slots);
 
-    public boolean validateStack(int slot, ItemStack stack) {
-        if (slotPredicates.containsKey(slot)) {
-            return slotPredicates.get(slot).test(slot, stack);
-        }
-        return true;
-    }
-
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    public int getSlotCount() {
-        return slotCount;
-    }
-
-    public boolean isInput(int slot) {
-        return slotTypeMap.containsKey(slot) && slotTypeMap.get(slot) == SlotType.INPUT;
-    }
-
-    public boolean isOutput(int slot) {
-        return slotTypeMap.containsKey(slot) && slotTypeMap.get(slot) == SlotType.OUTPUT;
+        if (builder.hasCapacitor)
+            capacitorSlot = slots.size() - 1;
+        else capacitorSlot = -1;
     }
 
     /**
-     * Whether the inventory has a capacitor slot
+     * Get an inventory layout builder.
+     * @param capacitor Whether or not the inventory will have a capacitor slot.
      */
-    public boolean hasCapacitorSlot() {
-        return getCapacitorSlot() > 0;
+    public static Builder builder(boolean capacitor) {
+        return new Builder(capacitor);
     }
 
     /**
-     * Get the slot that the capacitor lies in.
-     *
-     * @apiNote This can be -1 meaning the machine has no capacitor.
+     * Get the number of slots the inventory will have.
+     */
+    public int getSlotCount() {
+        return slots.size();
+    }
+
+    /**
+     * Whether the inventory supports a capacitor.
+     */
+    public boolean supportsCapacitor() {
+        return capacitorSlot >= 0;
+    }
+
+    /**
+     * Get the capacitor slot.
+     * @return The capacitor slot or -1 if there isn't one. Use {@link #supportsCapacitor()} to check.
      */
     public int getCapacitorSlot() {
         return capacitorSlot;
     }
 
+    /**
+     * Get the item stack limit for the given slot.
+     */
+    public int getStackLimit(int slot) {
+        return slots.get(slot).stackLimit;
+    }
+
+    /**
+     * Determine if the slot can be inserted to externally.
+     */
+    public boolean canInsert(int slot) {
+        return slots.get(slot).insert;
+    }
+
+    /**
+     * Determine if the slot can be extracted from externally.
+     */
+    public boolean canExtract(int slot) {
+        return slots.get(slot).extract;
+    }
+
+    /**
+     * Determine if the slot can be inserted to in gui.
+     */
+    public boolean guiCanInsert(int slot) {
+        return slots.get(slot).guiInsert;
+    }
+
+    /**
+     * Determine if the slot can be extracted from in gui.
+     */
+    public boolean guiCanExtract(int slot) {
+        return slots.get(slot).guiExtract;
+    }
+
+    /**
+     * Test if an item stack is valid for the given slot.
+     */
+    public boolean isItemValid(int slot, ItemStack stack) {
+        return slots.get(slot).filter.test(slot, stack);
+    }
+
     public static class Builder {
-        private final Map<Integer, SlotType> slotTypeMap;
-        private final Map<Integer, BiPredicate<Integer, ItemStack>> slotPredicates;
 
-        private int slotCounter;
+        private final ArrayList<SlotConfig> slots = new ArrayList<>();
+        private final boolean hasCapacitor;
 
-        private int capacitorSlot;
-
-        private Builder() {
-            slotTypeMap = new HashMap<>();
-            slotPredicates = new HashMap<>();
+        private Builder(boolean capacitor) {
+            hasCapacitor = capacitor;
         }
 
-        public Builder addInput() {
-            slotTypeMap.put(slotCounter++, SlotType.INPUT);
+        /**
+         * Add a custom slot to the inventory layout.
+         */
+        public Builder slot(Function<SlotBuilder, SlotBuilder> builder) {
+            slots.add(builder.apply(new SlotBuilder()).build());
             return this;
         }
 
-        public Builder addInput(BiPredicate<Integer, ItemStack> validator) {
-            slotTypeMap.put(slotCounter, SlotType.INPUT);
-            slotPredicates.put(slotCounter, validator);
-            slotCounter++;
-            return this;
+        // region Preset slot types
+
+        /**
+         * Add an input slot.
+         * This slot can be inserted and extracted via gui but only inserted to externally.
+         */
+        public Builder inputSlot() {
+            return inputSlot(1, (i,s) -> true);
         }
 
-        public Builder addInputs(int count) {
+        /**
+         * Add some input slots.
+         * This slot can be inserted and extracted via gui but only inserted to externally.
+         *
+         * @param count The number of slots to add.
+         */
+        public Builder inputSlot(int count) {
+            return inputSlot(count, (i,s) -> true);
+        }
+
+        /**
+         * Add an input slot.
+         * This slot can be inserted and extracted via gui but only inserted to externally.
+         *
+         * @param filter The filter predicate for the slot
+         */
+        public Builder inputSlot(BiPredicate<Integer, ItemStack> filter) {
+            return inputSlot(1, filter);
+        }
+
+        /**
+         * Add some input slots.
+         * This slot can be inserted and extracted via gui but only inserted to externally.
+         *
+         * @param count The number of slots to add.
+         * @param filter The filter predicate for the slot
+         */
+        public Builder inputSlot(int count, BiPredicate<Integer, ItemStack> filter) {
             for (int i = 0; i < count; i++) {
-                slotTypeMap.put(slotCounter++, SlotType.INPUT);
+                slot(slot -> slot.guiInsert().guiExtract().insert().filter(filter));
             }
             return this;
         }
 
-        public Builder addInputs(int count, BiPredicate<Integer, ItemStack> validator) {
+        /**
+         * Add an output slot.
+         * This slot can only be extracted from via gui and externally.
+         */
+        public Builder outputSlot() {
+            return outputSlot(1, (i,s) -> true);
+        }
+
+        /**
+         * Add some output slots.
+         * This slot can only be extracted from via gui and externally.
+         *
+         * @param count The number of slots to add.
+         */
+        public Builder outputSlot(int count) {
+            return outputSlot(count, (i,s) -> true);
+        }
+
+        /**
+         * Add some output slots.
+         * This slot can only be extracted from via gui and externally.
+         *
+         * @param filter The filter predicate for the slot
+         */
+        public Builder outputSlot(BiPredicate<Integer, ItemStack> filter) {
+            return outputSlot(1, filter);
+        }
+
+        /**
+         * Add some output slots.
+         * This slot can only be extracted from via gui and externally.
+         *
+         * @param count The number of slots to add.
+         * @param filter The filter predicate for the slot
+         */
+        public Builder outputSlot(int count, BiPredicate<Integer, ItemStack> filter) {
             for (int i = 0; i < count; i++) {
-                slotTypeMap.put(slotCounter, SlotType.INPUT);
-                slotPredicates.put(slotCounter, validator);
-                slotCounter++;
+                slot(slot -> slot.guiExtract().extract().filter(filter));
             }
             return this;
         }
 
-        public Builder addOutput() {
-            slotTypeMap.put(slotCounter, SlotType.OUTPUT);
-            slotCounter++;
-            return this;
+        /**
+         * Add a storage slot.
+         * This slot can inserted to or extracted from via gui and externally.
+         */
+        public Builder storageSlot() {
+            return storageSlot(1, (i,s) -> true);
         }
 
-        public Builder addOutputs(int count) {
+        /**
+         * Add a storage slot.
+         * This slot can inserted to or extracted from via gui and externally.
+         *
+         * @param count The number of slots to add.
+         */
+        public Builder storageSlot(int count) {
+            return storageSlot(count, (i,s) -> true);
+        }
+
+        /**
+         * Add a storage slot.
+         * This slot can inserted to or extracted from via gui and externally.
+         *
+         * @param filter The filter predicate for the slot
+         */
+        public Builder storageSlot(BiPredicate<Integer, ItemStack> filter) {
+            return storageSlot(1, filter);
+        }
+
+        /**
+         * Add a storage slot.
+         * This slot can inserted to or extracted from via gui and externally.
+         *
+         * @param count The number of slots to add.
+         * @param filter The filter predicate for the slot
+         */
+        public Builder storageSlot(int count, BiPredicate<Integer, ItemStack> filter) {
             for (int i = 0; i < count; i++) {
-                addOutput();
+                slot(slot -> slot.guiInsert().guiExtract().insert().extract().filter(filter));
             }
             return this;
         }
 
-        public Builder addMisc() {
-            slotTypeMap.put(slotCounter++, SlotType.MISC);
-            return this;
+        /**
+         * Add a ghost slot.
+         * This slot can only be interacted with via gui.
+         */
+        public Builder ghostSlot() {
+            return ghostSlot(1, (i,s) -> true);
         }
 
-        public Builder addMisc(BiPredicate<Integer, ItemStack> validator) {
-            slotTypeMap.put(slotCounter, SlotType.MISC);
-            slotPredicates.put(slotCounter, validator);
-            slotCounter++;
-            return this;
+        /**
+         * Add a ghost slot.
+         * This slot can only be interacted with via gui.
+         *
+         * @param count The number of slots to add.
+         */
+        public Builder ghostSlot(int count) {
+            return ghostSlot(count, (i,s) -> true);
         }
 
-        public Builder addBasicMisc(int count) {
+        /**
+         * Add a ghost slot.
+         * This slot can only be interacted with via gui.
+         *
+         * @param filter The filter predicate for the slot
+         */
+        public Builder ghostSlot(BiPredicate<Integer, ItemStack> filter) {
+            return ghostSlot(1, filter);
+        }
+
+        /**
+         * Add a ghost slot.
+         * This slot can only be inserted to (or cleared as per implementation of GhostSlot).
+         *
+         * @param count The number of slots to add.
+         * @param filter The filter predicate for the slot
+         */
+        public Builder ghostSlot(int count, BiPredicate<Integer, ItemStack> filter) {
             for (int i = 0; i < count; i++) {
-                slotTypeMap.put(slotCounter++, SlotType.MISC);
+                slot(slot -> slot.guiInsert().filter(filter));
             }
             return this;
         }
 
-        public Builder capacitor() {
-            if (slotTypeMap.containsValue(SlotType.CAPACITOR)) {
-                EnderIO.LOGGER.error("Attempted to add a second capacitor slot to an inventory.");
+        // endregion
+
+        /**
+         * Build the inventory layout.
+         */
+        public MachineInventoryLayout build() {
+            // Add capacitor if it was requested
+            if (hasCapacitor) {
+                slot(slot -> slot.guiInsert().guiExtract().filter((i, s) -> CapacitorUtil.isCapacitor(s)).stackLimit(1));
+            }
+            return new MachineInventoryLayout(this);
+        }
+
+        public static class SlotBuilder {
+            private boolean insert, extract, guiInsert, guiExtract;
+            private int stackLimit = 64;
+
+            private BiPredicate<Integer, ItemStack> filter = (i,s) -> true;
+
+            private SlotBuilder() {}
+
+            /**
+             * Enable external insertion.
+             */
+            public SlotBuilder insert() {
+                insert = true;
                 return this;
             }
 
-            // Add slot type and the validator.
-            slotTypeMap.put(slotCounter, SlotType.CAPACITOR);
-            slotPredicates.put(slotCounter, (slot, stack) -> CapacitorUtil.isCapacitor(stack));
-            capacitorSlot = slotCounter;
-            slotCounter++;
-            return this;
-        }
+            /**
+             * Enable external extraction.
+             */
+            public SlotBuilder extract() {
+                extract = true;
+                return this;
+            }
 
-        public Builder capacitor(Supplier<Boolean> present) {
-            return present.get() ? capacitor() : this;
-        }
+            /**
+             * Enable GUI insertion.
+             * @return
+             */
+            public SlotBuilder guiInsert() {
+                guiInsert = true;
+                return this;
+            }
 
-        public MachineInventoryLayout build() {
-            return new MachineInventoryLayout(this);
+            /**
+             * Enable gui extraction.
+             */
+            public SlotBuilder guiExtract() {
+                guiExtract = true;
+                return this;
+            }
+
+            /**
+             * Set the slot filter.
+             */
+            public SlotBuilder filter(BiPredicate<Integer, ItemStack> filter) {
+                this.filter = filter;
+                return this;
+            }
+
+            /**
+             * Set the stack limit.
+             */
+            public SlotBuilder stackLimit(int limit) {
+                this.stackLimit = Math.max(Math.min(limit, 64), 0);
+                return this;
+            }
+
+            private SlotConfig build() {
+                return new SlotConfig(insert, extract, guiInsert, guiExtract, stackLimit, filter);
+            }
         }
     }
+
+    private record SlotConfig(boolean insert, boolean extract, boolean guiInsert, boolean guiExtract, int stackLimit, BiPredicate<Integer, ItemStack> filter) {}
 }

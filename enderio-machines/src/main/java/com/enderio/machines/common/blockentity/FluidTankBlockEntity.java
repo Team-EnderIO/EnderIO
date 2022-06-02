@@ -8,7 +8,6 @@ import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.menu.FluidTankMenu;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -20,8 +19,6 @@ import net.minecraft.world.item.MobBucketItem;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -29,7 +26,6 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
@@ -65,8 +61,6 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
 
     private final MachineFluidHandler fluidHandler;
 
-    private final LazyOptional<MachineFluidHandler> fluidHandlerCap;
-
     public FluidTankBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState, int capacity) {
         super(pType, pWorldPosition, pBlockState);
 
@@ -75,7 +69,6 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
 
         // Create fluid tank storage.
         this.fluidHandler = new MachineFluidHandler(getIOConfig(), fluidTank);
-        this.fluidHandlerCap = LazyOptional.of(() -> fluidHandler);
 
         // Add capability provider
         addCapabilityProvider(fluidHandler);
@@ -90,18 +83,6 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
                 setChanged();
             }
         };
-    }
-
-    @Override
-    public void saveAdditional(CompoundTag pTag) {
-        super.saveAdditional(pTag);
-        pTag.put("fluid", fluidTank.writeToNBT(new CompoundTag()));
-    }
-
-    @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
-        fluidTank.readFromNBT(pTag.getCompound("fluid"));
     }
 
     @Override
@@ -124,7 +105,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
                     if (filled == FluidAttributes.BUCKET_VOLUME) {
                         fluidTank.fill(new FluidStack(filledBucket.getFluid(), FluidAttributes.BUCKET_VOLUME), IFluidHandler.FluidAction.EXECUTE);
                         inputItem.shrink(1);
-                        getInventory().forceInsertItem(1, Items.BUCKET.getDefaultInstance(), false);
+                        getInventory().insertItem(1, Items.BUCKET.getDefaultInstance(), false);
                     }
                 }
             } else {
@@ -149,7 +130,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
             if (inputItem.getItem() == Items.BUCKET) {
                 if (!fluidTank.isEmpty()) {
                     FluidStack stack = fluidTank.drain(FluidAttributes.BUCKET_VOLUME, IFluidHandler.FluidAction.SIMULATE);
-                    if (stack.getAmount() == FluidAttributes.BUCKET_VOLUME && (outputItem.isEmpty() || (outputItem.getItem() == stack.getFluid().getBucket() && outputItem.getCount() < outputItem.getMaxStackSize()))) {
+                    if (stack.getAmount() == FluidAttributes.BUCKET_VOLUME && (outputItem.isEmpty() || (outputItem.getItem() == stack.getFluid().getBucket()
+                        && outputItem.getCount() < outputItem.getMaxStackSize()))) {
                         fluidTank.drain(FluidAttributes.BUCKET_VOLUME, IFluidHandler.FluidAction.EXECUTE);
                         inputItem.shrink(1);
                         if (outputItem.isEmpty()) {
@@ -185,34 +167,30 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     @Override
     public MachineInventoryLayout getInventoryLayout() {
         return MachineInventoryLayout
-            .builder()
-            .addInput((slot, stack) ->
-                (stack.getItem() instanceof BucketItem bucketItem && bucketItem.getFluid() != Fluids.EMPTY && !(bucketItem instanceof MobBucketItem))
-                    || (!(stack.getItem() instanceof BucketItem) && stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent()))
-            .addOutput()
-            .addInput((slot, stack) ->
-                stack.getItem() == Items.BUCKET
-                    || (!(stack.getItem() instanceof BucketItem) && stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent()))
-            .addOutput()
+            .builder(false)
+            .inputSlot((slot, stack) ->
+                (stack.getItem() instanceof BucketItem bucketItem && bucketItem.getFluid() != Fluids.EMPTY && !(bucketItem instanceof MobBucketItem)) || (
+                    !(stack.getItem() instanceof BucketItem) && stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent()))
+            .outputSlot()
+            .inputSlot((slot, stack) -> stack.getItem() == Items.BUCKET || (!(stack.getItem() instanceof BucketItem) && stack
+                .getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY)
+                .isPresent()))
+            .outputSlot()
             .build();
     }
 
-    // region Capabilities
+    // region Serialization
 
-    @Nonnull
     @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && side == null) {
-            return fluidHandlerCap.cast();
-        }
-
-        return super.getCapability(cap, side);
+    public void saveAdditional(CompoundTag pTag) {
+        super.saveAdditional(pTag);
+        pTag.put("fluid", fluidTank.writeToNBT(new CompoundTag()));
     }
 
     @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-        fluidHandlerCap.invalidate();
+    public void load(CompoundTag pTag) {
+        super.load(pTag);
+        fluidTank.readFromNBT(pTag.getCompound("fluid"));
     }
 
     // endregion

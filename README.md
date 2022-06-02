@@ -81,9 +81,13 @@ repositories {
 }
 
 dependencies {
-    implementation fg.deobf("com.enderio:enderio-base:<VERSION>")
-    runtimeOnly fg.deobf("com.enderio:enderio-base:<VERSION>")
-    runtimeOnly fg.deobf("com.enderio:enderio-machines:<VERSION>")
+    // Include Ender IO Base API
+    compileOnly fg.deobf("com.enderio:EnderIO-base:<VERSION>:api")
+    
+    // Test with Ender IO in the mod:
+    runtimeOnly fg.deobf("com.enderio.EnderIO:<VERSION>") // For monolithic build
+    
+    runtimeOnly fg.deobf("com.enderio:EnderIO-<MODULE>:<VERSION>") // For individual modules
     // ...
 }
 ```

@@ -1,12 +1,12 @@
 modLoader="javafml"
-loaderVersion="[40,)"
+loaderVersion="${loader_version}"
 issueTrackerURL="https://github.com/SleepyTrousers/EnderIO-Rewrite/issues"
 license="CC0"
 
 [[mods]]
 modId="enderio"
-version="${file.jarVersion}"
-displayName="Ender IO"
+version="${version}"
+displayName="Ender IO Base"
 authors="CrazyPants, tterrag, HenryLoenwind, MatthiasM, CyanideX, EpicSquid, Rover656, HypherionSA, agnor99, Ferri_Arnus"
 description="Compact conduits, painted things and all sorts of stuff and bling."
 displayURL="http://enderio.com/"
@@ -15,11 +15,11 @@ logoFile="logo.png"
 [[dependencies.enderio]]
 modId="minecraft"
 mandatory=true
-versionRange="1.18.2"
+versionRange="${mcversion}"
 side="BOTH"
 
 [[dependencies.enderio]]
 modId="forge"
 mandatory=true
-versionRange="[40,)"
+versionRange="${forge_version}"
 side="BOTH"
