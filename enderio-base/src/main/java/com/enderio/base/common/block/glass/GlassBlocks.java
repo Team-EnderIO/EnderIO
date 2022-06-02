@@ -23,18 +23,19 @@ public class GlassBlocks {
 
     private final GlassCollisionPredicate collisionPredicate;
 
-    private final boolean emitsLight, blocksLight, explosionResistant;
+    private final boolean explosionResistant;
+
+    private final GlassLighting glassLighting;
 
     /**
      * Create the entire color family for this configuration of fused glass.
      */
-    public GlassBlocks(Registrate registrate, String name, String english, GlassCollisionPredicate collisionPredicate, boolean emitsLight, boolean blocksLight,
-        boolean explosionResistant) {
-        this.collisionPredicate = collisionPredicate;
-        this.emitsLight = emitsLight;
-        this.blocksLight = blocksLight;
-        this.explosionResistant = explosionResistant;
-
+    public GlassBlocks(Registrate registrate, GlassIdentifier identifier) {
+        this.collisionPredicate = identifier.collisionPredicate();
+        this.glassLighting = identifier.lighting();
+        this.explosionResistant = identifier.explosion_resistance();
+        String name = createGlassName(identifier);
+        String english = createEnglishGlassName(identifier);
         CLEAR = register(registrate, name, english);
         WHITE = register(registrate, name.concat("_white"), "White ".concat(english), DyeColor.WHITE);
         ORANGE = register(registrate, name.concat("_orange"), "Orange ".concat(english), DyeColor.ORANGE);
@@ -54,10 +55,39 @@ public class GlassBlocks {
         BLACK = register(registrate, name.concat("_black"), "Black ".concat(english), DyeColor.BLACK);
     }
 
-    private static ResourceLocation getModelFile(String name) {
-        return name.contains("clear_glass") ? EnderIO.loc("block/clear_glass") : EnderIO.loc("block/fused_quartz");
+    private ResourceLocation getModelFile() {
+        return explosionResistant ? EnderIO.loc("block/fused_quartz") : EnderIO.loc("block/clear_glass");
     }
 
+    private static String createGlassName(GlassIdentifier identifier) {
+        StringBuilder main = new StringBuilder();
+        if (identifier.explosion_resistance()) {
+            main.append("fused_quartz");
+        } else {
+            main.append("clear_glass");
+        }
+        StringBuilder modifier = new StringBuilder();
+        modifier.append(identifier.lighting().shortName());
+        modifier.append(identifier.collisionPredicate().shortName());
+        if (modifier.length() != 0) {
+            main.append("_");
+            main.append(modifier);
+        }
+        return main.toString();
+    }
+    private static String createEnglishGlassName(GlassIdentifier identifier) {
+        StringBuilder main = new StringBuilder();
+        if (identifier.lighting() != GlassLighting.NONE) {
+            main.append(identifier.lighting().englishName());
+            main.append(" ");
+        }
+        if (identifier.explosion_resistance()) {
+            main.append("Fused Quartz");
+        } else {
+            main.append("Clear Glass");
+        }
+        return main.toString();
+    }
     // Dirty dirty. TODO: Just access transforms for these in Blocks??
     private static boolean never(BlockState p_50806_, BlockGetter p_50807_, BlockPos p_50808_) {
         return false;
@@ -72,10 +102,10 @@ public class GlassBlocks {
      */
     private BlockEntry<FusedQuartzBlock> register(Registrate registrate, String name, String english) {
         return registrate
-            .block(name, props -> new FusedQuartzBlock(props, collisionPredicate, emitsLight, blocksLight, explosionResistant))
-            .tag(name.contains("clear_glass")? EIOTags.Blocks.CLEAR_GLASS : EIOTags.Blocks.FUSED_QUARTZ)
+            .block(name, props -> new FusedQuartzBlock(props, collisionPredicate, glassLighting, explosionResistant))
+            .tag(explosionResistant ? EIOTags.Blocks.FUSED_QUARTZ : EIOTags.Blocks.CLEAR_GLASS)
             .lang(english)
-            .blockstate((con, prov) -> prov.simpleBlock(con.get(), prov.models().getExistingFile(getModelFile(name))))
+            .blockstate((con, prov) -> prov.simpleBlock(con.get(), prov.models().getExistingFile(getModelFile())))
             .addLayer(() -> RenderType::cutout)
             .properties(props -> props
                 .noOcclusion()
@@ -88,7 +118,7 @@ public class GlassBlocks {
                 .isViewBlocking(GlassBlocks::never))
             .item(FusedQuartzItem::new)
             .tab(() -> EIOCreativeTabs.BLOCKS)
-            .tag(name.contains("clear_glass")? EIOTags.Items.CLEAR_GLASS : EIOTags.Items.FUSED_QUARTZ)
+            .tag(explosionResistant ? EIOTags.Items.FUSED_QUARTZ : EIOTags.Items.CLEAR_GLASS)
             .build()
             .register();
     }
@@ -98,9 +128,9 @@ public class GlassBlocks {
      */
     private BlockEntry<FusedQuartzBlock> register(Registrate registrate, String name, String english, DyeColor color) {
         return registrate
-            .block(name, props -> new FusedQuartzBlock(props, collisionPredicate, emitsLight, blocksLight, explosionResistant))
+            .block(name, props -> new FusedQuartzBlock(props, collisionPredicate, glassLighting, explosionResistant))
             .lang(english)
-            .blockstate((con, prov) -> prov.simpleBlock(con.get(), prov.models().getExistingFile(getModelFile(name))))
+            .blockstate((con, prov) -> prov.simpleBlock(con.get(), prov.models().getExistingFile(getModelFile())))
             .addLayer(() -> RenderType::cutout)
             .color(() -> () -> (p_92567_, p_92568_, p_92569_, p_92570_) -> color.getMaterialColor().col)
             .properties(props -> props

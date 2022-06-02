@@ -1,6 +1,6 @@
 package com.enderio.machines.datagen.recipe.enchanter;
 
-import com.enderio.base.common.block.glass.FusedQuartzBlock;
+import com.enderio.base.common.block.glass.*;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.api.recipe.CountedIngredient;
@@ -15,10 +15,13 @@ import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 
+import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class AlloyRecipeGenerator extends RecipeProvider {
@@ -85,23 +88,28 @@ public class AlloyRecipeGenerator extends RecipeProvider {
 
         // region Glass
 
-        glass(EIOBlocks.QUITE_CLEAR_GLASS.CLEAR.get(), CountedIngredient.of(Tags.Items.GLASS_COLORLESS), 2500, 0.3f, pFinishedRecipeConsumer);
+        for (Map.Entry<GlassIdentifier, GlassBlocks> glassGroup : EIOBlocks.GLASS_BLOCKS.entrySet()) {
+            GlassIdentifier identifier = glassGroup.getKey();
+            if (identifier.collisionPredicate() == GlassCollisionPredicate.NONE) {
+                FusedQuartzBlock clear = glassGroup.getValue().CLEAR.get();
+                var mainIngredient = identifier.explosion_resistance() ? CountedIngredient.of(4, Tags.Items.GEMS_QUARTZ) : CountedIngredient.of(Tags.Items.GLASS_COLORLESS);
+                @Nullable
+                var altIngredient = identifier.explosion_resistance() ? CountedIngredient.of(Tags.Items.STORAGE_BLOCKS_QUARTZ) : null;
+                var energy = identifier.explosion_resistance() ? 5000 : 2500;
+                if (identifier.lighting() == GlassLighting.NONE) {
+                    glass(clear, mainIngredient, altIngredient, energy, 0.3f, pFinishedRecipeConsumer);
+                } else {
+                    var composite = identifier.lighting() == GlassLighting.EMITTING ? CountedIngredient.of(4, Tags.Items.DUSTS_GLOWSTONE) : CountedIngredient.of(4, Tags.Items.GEMS_AMETHYST);
+                    var compositeB = identifier.lighting() == GlassLighting.EMITTING ? CountedIngredient.of(Blocks.GLOWSTONE) : CountedIngredient.of(Tags.Items.STORAGE_BLOCKS_AMETHYST);
+                    compositeGlass(clear, "from_main", mainIngredient, composite, compositeB, energy, 0.3f, pFinishedRecipeConsumer);
+                    if (altIngredient != null)
+                        compositeGlass(clear, "from_storage", altIngredient, composite, compositeB, energy, 0.3f, pFinishedRecipeConsumer);
 
-        glass(EIOBlocks.FUSED_QUARTZ.CLEAR.get(), CountedIngredient.of(4, Tags.Items.GEMS_QUARTZ), CountedIngredient.of(Tags.Items.STORAGE_BLOCKS_QUARTZ), 5000, 0.3f, pFinishedRecipeConsumer);
-
-        compositeGlass(EIOBlocks.DARK_FUSED_QUARTZ.CLEAR.get(), CountedIngredient.of(4, Tags.Items.GEMS_QUARTZ), CountedIngredient.of(4, Tags.Items.GEMS_AMETHYST), CountedIngredient.of(Blocks.AMETHYST_BLOCK), 5000, 0.3f, pFinishedRecipeConsumer);
-        compositeGlass(EIOBlocks.DARK_FUSED_QUARTZ.CLEAR.get(), "quartz_block", CountedIngredient.of(Tags.Items.STORAGE_BLOCKS_QUARTZ), CountedIngredient.of(4, Tags.Items.GEMS_AMETHYST), CountedIngredient.of(Blocks.AMETHYST_BLOCK), 5000, 0.3f, pFinishedRecipeConsumer);
-        compositeGlass(EIOBlocks.DARK_FUSED_QUARTZ.CLEAR.get(), "fused_quartz", CountedIngredient.of(EIOBlocks.FUSED_QUARTZ.CLEAR.get()), CountedIngredient.of(4, Tags.Items.GEMS_AMETHYST), CountedIngredient.of(Blocks.AMETHYST_BLOCK), 2500, 0.3f, pFinishedRecipeConsumer);
-
-        compositeGlass(EIOBlocks.DARK_CLEAR_GLASS.CLEAR.get(), CountedIngredient.of(Tags.Items.GLASS_COLORLESS), CountedIngredient.of(4, Tags.Items.GEMS_AMETHYST), CountedIngredient.of(Blocks.AMETHYST_BLOCK), 2500, 0.3f, pFinishedRecipeConsumer);
-        compositeGlass(EIOBlocks.DARK_CLEAR_GLASS.CLEAR.get(), "clear_glass", CountedIngredient.of(EIOBlocks.FUSED_QUARTZ.CLEAR.get()), CountedIngredient.of(4, Tags.Items.GEMS_AMETHYST), CountedIngredient.of(Blocks.AMETHYST_BLOCK), 1250, 0.3f, pFinishedRecipeConsumer);
-
-        compositeGlass(EIOBlocks.ENLIGHTENED_FUSED_QUARTZ.CLEAR.get(), CountedIngredient.of(4, Tags.Items.GEMS_QUARTZ), CountedIngredient.of(4, Tags.Items.DUSTS_GLOWSTONE), CountedIngredient.of(Blocks.GLOWSTONE), 5000, 0.3f, pFinishedRecipeConsumer);
-        compositeGlass(EIOBlocks.ENLIGHTENED_FUSED_QUARTZ.CLEAR.get(), "quartz_block", CountedIngredient.of(Tags.Items.STORAGE_BLOCKS_QUARTZ), CountedIngredient.of(4, Tags.Items.DUSTS_GLOWSTONE), CountedIngredient.of(Blocks.GLOWSTONE), 5000, 0.3f, pFinishedRecipeConsumer);
-        compositeGlass(EIOBlocks.ENLIGHTENED_FUSED_QUARTZ.CLEAR.get(), "fused_quartz", CountedIngredient.of(EIOBlocks.FUSED_QUARTZ.CLEAR.get()), CountedIngredient.of(4, Tags.Items.DUSTS_GLOWSTONE), CountedIngredient.of(Blocks.GLOWSTONE), 2500, 0.3f, pFinishedRecipeConsumer);
-
-        compositeGlass(EIOBlocks.ENLIGHTENED_CLEAR_GLASS.CLEAR.get(), CountedIngredient.of(Tags.Items.GLASS_COLORLESS), CountedIngredient.of(4, Tags.Items.DUSTS_GLOWSTONE), CountedIngredient.of(Blocks.GLOWSTONE), 2500, 0.3f, pFinishedRecipeConsumer);
-        compositeGlass(EIOBlocks.ENLIGHTENED_CLEAR_GLASS.CLEAR.get(), "clear_glass", CountedIngredient.of(EIOBlocks.FUSED_QUARTZ.CLEAR.get()), CountedIngredient.of(4, Tags.Items.DUSTS_GLOWSTONE), CountedIngredient.of(Blocks.GLOWSTONE), 1250, 0.3f, pFinishedRecipeConsumer);
+                    Block withoutLight = EIOBlocks.GLASS_BLOCKS.get(identifier.withoutLight()).CLEAR.get();
+                    compositeGlass(clear,"from_base", CountedIngredient.of(withoutLight), composite, compositeB, energy/2, 0.3f, pFinishedRecipeConsumer);
+                }
+            }
+        }
 
         // endregion
 
@@ -131,22 +139,10 @@ public class AlloyRecipeGenerator extends RecipeProvider {
         build(new ItemStack(block), List.of(input), energy, experience, recipeConsumer);
     }
 
-    protected void glass(FusedQuartzBlock block, CountedIngredient input, CountedIngredient inputAlt, int energy, float experience, Consumer<FinishedRecipe> recipeConsumer) {
+    protected void glass(FusedQuartzBlock block, CountedIngredient input, @Nullable CountedIngredient inputAlt, int energy, float experience, Consumer<FinishedRecipe> recipeConsumer) {
         build(new ItemStack(block), List.of(input), energy, experience, recipeConsumer);
-        build(new ItemStack(block), "alt", List.of(inputAlt), energy, experience, recipeConsumer);
-    }
-
-    protected void compositeGlass(FusedQuartzBlock block, CountedIngredient inputA, CountedIngredient inputB, int energy, float experience, Consumer<FinishedRecipe> recipeConsumer) {
-        build(new ItemStack(block), List.of(inputA, inputB), energy, experience, recipeConsumer);
-    }
-
-    protected void compositeGlass(FusedQuartzBlock block, String suffix, CountedIngredient inputA, CountedIngredient inputB, int energy, float experience, Consumer<FinishedRecipe> recipeConsumer) {
-        build(new ItemStack(block), suffix, List.of(inputA, inputB), energy, experience, recipeConsumer);
-    }
-
-    protected void compositeGlass(FusedQuartzBlock block, CountedIngredient inputA, CountedIngredient inputB, CountedIngredient inputBAlt, int energy, float experience, Consumer<FinishedRecipe> recipeConsumer) {
-        build(new ItemStack(block), List.of(inputA, inputB), energy, experience, recipeConsumer);
-        build(new ItemStack(block), "alt", List.of(inputA, inputBAlt), energy, experience, recipeConsumer);
+        if (inputAlt != null)
+            build(new ItemStack(block), "alt", List.of(inputAlt), energy, experience, recipeConsumer);
     }
 
     protected void compositeGlass(FusedQuartzBlock block, String suffix, CountedIngredient inputA, CountedIngredient inputB, CountedIngredient inputBAlt, int energy, float experience, Consumer<FinishedRecipe> recipeConsumer) {

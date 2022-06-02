@@ -22,16 +22,13 @@ public class FusedQuartzBlock extends AbstractGlassBlock {
     // TODO: Connected textures
 
     private final GlassCollisionPredicate collisionPredicate;
-    private final boolean emitsLight;
-    private final boolean blocksLight;
+    private final GlassLighting glassLighting;
     private final boolean explosionResistant;
 
-    public FusedQuartzBlock(Properties pProps, GlassCollisionPredicate collisionPredicate, boolean emitsLight, boolean blocksLight,
-        boolean explosionResistant) {
+    public FusedQuartzBlock(Properties pProps, GlassCollisionPredicate collisionPredicate, GlassLighting glassLighting, boolean explosionResistant) {
         super(pProps);
         this.collisionPredicate = collisionPredicate;
-        this.emitsLight = emitsLight;
-        this.blocksLight = blocksLight;
+        this.glassLighting = glassLighting;
         this.explosionResistant = explosionResistant;
     }
 
@@ -41,21 +38,21 @@ public class FusedQuartzBlock extends AbstractGlassBlock {
 
         if (explosionResistant)
             pTooltip.add(EIOLang.BLOCK_BLAST_RESISTANT);
-        if (emitsLight)
+        if (glassLighting == GlassLighting.EMITTING)
             pTooltip.add(EIOLang.FUSED_QUARTZ_EMITS_LIGHT);
-        if (blocksLight)
+        if (glassLighting == GlassLighting.BLOCKING)
             pTooltip.add(EIOLang.FUSED_QUARTZ_BLOCKS_LIGHT);
         collisionPredicate.getDescription().ifPresent(pTooltip::add);
     }
 
     @Override
     public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
-        return emitsLight ? 15 : 0;
+        return glassLighting == GlassLighting.EMITTING ? 15 : 0;
     }
 
     @Override
     public int getLightBlock(@Nonnull BlockState pState, @Nonnull BlockGetter pLevel, @Nonnull BlockPos pPos) {
-        return blocksLight ? 255 : 0;
+        return glassLighting == GlassLighting.BLOCKING ? pLevel.getMaxLightLevel() : 0;
     }
 
     @Override
@@ -72,5 +69,13 @@ public class FusedQuartzBlock extends AbstractGlassBlock {
             }
         }
         return super.getCollisionShape(pState, pLevel, pPos, pContext);
+    }
+
+    public GlassLighting getGlassLighting() {
+        return glassLighting;
+    }
+
+    public GlassCollisionPredicate getCollisionPredicate() {
+        return collisionPredicate;
     }
 }

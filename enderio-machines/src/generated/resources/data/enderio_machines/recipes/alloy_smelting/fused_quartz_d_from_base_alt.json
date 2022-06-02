@@ -1,0 +1,22 @@
+{
+  "type": "enderio_machines:alloy_smelting",
+  "inputs": [
+    {
+      "ingredient": {
+        "item": "enderio:fused_quartz"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "tag": "forge:storage_blocks/amethyst"
+      },
+      "count": 1
+    }
+  ],
+  "result": {
+    "item": "enderio:fused_quartz_d"
+  },
+  "energy": 2500,
+  "experience": 0.3
+}

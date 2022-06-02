@@ -1,7 +1,11 @@
 package com.enderio.base.common.block.glass;
 
+import com.enderio.base.EnderIO;
+import com.enderio.base.client.gui.IIcon;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.base.common.util.Vector2i;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
@@ -15,7 +19,8 @@ import java.util.function.Predicate;
  * Glass collision predicate wrapper.
  * Contains the predicate, the description id for the tooltip and the icon for the itemstack.
  */
-public enum GlassCollisionPredicate {
+public enum GlassCollisionPredicate implements IIcon {
+
     NONE(ctx -> false, null),
 
     PLAYERS_PASS(ctx -> ctx.getEntity() instanceof Player, EIOLang.GLASS_COLLISION_PLAYERS_PASS),
@@ -33,6 +38,8 @@ public enum GlassCollisionPredicate {
     private final Predicate<EntityCollisionContext> predicate;
     private final @Nullable Component description;
 
+    public static final ResourceLocation TEXTURE = EnderIO.loc("textures/item/overlay/fused_quartz_hitbox_overlay.png");
+
     GlassCollisionPredicate(Predicate<EntityCollisionContext> predicate, @Nullable Component description) {
         this.predicate = predicate;
         this.description = description;
@@ -48,5 +55,47 @@ public enum GlassCollisionPredicate {
         return Optional.empty();
     }
 
-    // TODO: Get icon for overlay
+    @Override
+    public ResourceLocation getTextureLocation() {
+        return TEXTURE;
+    }
+
+    @Override
+    public Vector2i getIconSize() {
+        return new Vector2i(32,32);
+    }
+
+    @Override
+    public Vector2i getRenderSize() {
+        return new Vector2i(16,16);
+    }
+
+    @Override
+    public Vector2i getTexturePosition() {
+        return switch (this) {
+            case NONE, PLAYERS_PASS -> new Vector2i(0,0);
+            case PLAYERS_BLOCK -> new Vector2i(0,32);
+            case MOBS_PASS -> new Vector2i(32,0);
+            case MOBS_BLOCK -> new Vector2i(32,32);
+            case ANIMALS_PASS -> new Vector2i(64,0);
+            case ANIMALS_BLOCK -> new Vector2i(64,32);
+        };
+    }
+
+    @Override
+    public boolean shouldRender() {
+        return this != GlassCollisionPredicate.NONE;
+    }
+
+    public String shortName() {
+        return switch (this) {
+            case NONE -> "";
+            case PLAYERS_PASS -> "p";
+            case PLAYERS_BLOCK -> "np";
+            case MOBS_PASS -> "m";
+            case MOBS_BLOCK -> "nm";
+            case ANIMALS_PASS -> "a";
+            case ANIMALS_BLOCK -> "na";
+        };
+    }
 }

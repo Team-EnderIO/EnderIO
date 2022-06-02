@@ -25,4 +25,8 @@ public interface IIcon {
     default Vector2i getTextureSize() {
         return DEFAULT_TEXTURE_SIZE;
     }
+
+    default boolean shouldRender() {
+        return false;
+    }
 }
