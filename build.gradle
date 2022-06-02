@@ -351,16 +351,6 @@ subprojects {
     }
 }
 
-// Setup module reobfuscation orders. Ensures devtime works correctly.
-gradle.projectsEvaluated {
-    // TODO: Dynamically fetch all project dependencies and sort out this order automatically.
-    project(":enderio-base").tasks.named('reobfJar').configure(t -> {
-        t.mustRunAfter(project(':enderio-conduits').tasks.named('reobfJar'))
-        t.mustRunAfter(project(':enderio-decoration').tasks.named('reobfJar'))
-        t.mustRunAfter(project(':enderio-machines').tasks.named('reobfJar'))
-    })
-}
-
 // Combined jar
 def monolithProjects = subprojects.findAll { sp -> sp.ext.include_in_monolith }
 
