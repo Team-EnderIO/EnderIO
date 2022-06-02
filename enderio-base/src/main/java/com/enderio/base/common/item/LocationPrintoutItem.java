@@ -105,7 +105,7 @@ public class LocationPrintoutItem extends Item implements IMultiCapabilityItem {
     }
 
     private static MutableComponent writeCoordinate(char character, int number) {
-        return new TextComponent("" + character).withStyle(ChatFormatting.YELLOW).append(new TextComponent("" + number).withStyle(ChatFormatting.GREEN));
+        return new TextComponent("" + character).withStyle(ChatFormatting.GRAY).append(new TextComponent("" + number).withStyle(ChatFormatting.GREEN));
     }
 
     @Nullable
