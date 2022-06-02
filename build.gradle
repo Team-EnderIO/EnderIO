@@ -69,6 +69,7 @@ allprojects {
         // Differentiate the non-shadowed version by storing it in a different directory.
         // Makes for cleaner libs directory.
         destinationDirectory.set(file("$buildDir/rawJar"))
+        classifier 'raw'
 
         manifest {
             attributes([
@@ -107,19 +108,37 @@ allprojects {
         shadowJar {}
     }
 
+    // Other jars
+    // TODO: API Jar
+
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        destinationDirectory.set(file("$rootProject.buildDir/libs"))
+        classifier 'sources'
+        from sourceSets.main.allJava
+    }
+
+    build.dependsOn sourcesJar
+
     // Publishing
-    def mainModrinthProject = rootProject.modrinth_projectId
-    def modrinthEnabled = System.getenv("MODRINTH_TOKEN") != null &&  project.hasProperty("modrinth_projectId") && (project.modrinth_projectId != mainModrinthProject || project.name == rootProject.name)
-    if (modrinthEnabled) {
-        // Make modrinth use our reobfuscated shadowed jar.
+    if (System.getenv("MODRINTH_TOKEN") != null || project.hasProperty('modrinthToken')) {
+        def isRoot = rootProject == project
+        def modrinthProjectId = project.hasProperty("modrinth_projectId") ? project.modrinth_projectId : isRoot ? rootProject.combi_modrinth_projectId : null
+        def modrinthPublish = project.hasProperty("modrinth_publish") ? project.modrinth_publish : isRoot ? rootProject.combi_modrinth_publish : false
+        def modrinthBody = project.hasProperty("modrinth_body") ? project.modrinth_body : isRoot ? rootProject.combi_modrinth_body : null
+
         project.tasks.modrinth {
+            enabled = modrinthProjectId != null && modrinthPublish
             dependsOn(reobfShadowJar)
+        }
+
+        project.tasks.modrinthSyncBody {
+            enabled = modrinthProjectId != null && modrinthBody != null
         }
 
         // Configure modrinth
         modrinth {
-            token = System.getenv("MODRINTH_TOKEN")
-            projectId = project.modrinth_projectId
+            token = System.getenv("MODRINTH_TOKEN") ?: project.findProperty("modrinthToken")
+            projectId = modrinthProjectId
             versionNumber = project.version
             versionType = release_type
             uploadFile = shadowJar
@@ -129,17 +148,17 @@ allprojects {
             // Allow the other modules to trudge on.
             failSilently = true
 
-            if (project.hasProperty('modrinth_body')) {
-                syncBodyFrom = rootProject.file("doc/modpages/modrinth/${project.modrinth_body}").text
+            if (modrinthBody != null) {
+                syncBodyFrom = rootProject.file("doc/modpages/modrinth/${modrinthBody}").text
             }
 
             dependencies {
                 // scope.type
                 // The scope can be `required`, `optional`, or `incompatible`
                 // The type can either be `project` or `version`
-                if (project.name != 'enderio-base' && project.name != rootProject.name) {
+                if (project.name != 'enderio-base' && !isRoot) {
                     optional.project project(':enderio-base').modrinth_projectId
-                    optional.project rootProject.modrinth_projectId
+                    optional.project rootProject.combi_modrinth_projectId
                 }
 
                 if (project.name == rootProject.name) {
@@ -152,14 +171,18 @@ allprojects {
                 optional.project "nU0bVIaL"
             }
         }
-    } else {
-        // Disable on projects that aren't supporting modrinth publish.
-        tasks.modrinth { enabled = false }
     }
 
-    // Disable modrinth body sync for mods that have no body defined.
-    if (!project.hasProperty('modrinth_body') || !modrinthEnabled) {
-        tasks.modrinthSyncBody { enabled = false }
+    // Maven
+    publishing {
+        tasks.publish.dependsOn 'build'
+        tasks.publishToMavenLocal.dependsOn 'build'
+
+        publications {
+            maven(MavenPublication) {
+                artifact sourcesJar
+            }
+        }
     }
 }
 
