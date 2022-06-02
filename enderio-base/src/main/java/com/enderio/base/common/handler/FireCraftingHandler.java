@@ -1,6 +1,8 @@
 package com.enderio.base.common.handler;
 
 import com.enderio.base.EnderIO;
+import com.enderio.base.common.init.EIORecipes;
+import com.enderio.base.common.recipe.FireCraftingRecipe;
 import com.enderio.base.config.base.BaseConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
@@ -19,6 +21,7 @@ import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
+import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -29,16 +32,24 @@ import java.util.*;
 
 @SuppressWarnings("unused")
 @Mod.EventBusSubscriber(modid = EnderIO.MODID)
-public class InfinityFireHandler {
+public class FireCraftingHandler {
     private static final Random RANDOM = new Random();
     private static final Map<FireIndex, Long> FIRE_TRACKER = new HashMap<>();
-    private static final ResourceLocation LOOT_TABLE = EnderIO.loc("fire/infinity");
+
+    private static List<FireCraftingRecipe> cachedRecipes;
+    private static boolean recipesCached = false;
+
 
     private record FireIndex(BlockPos pos, ResourceKey<Level> dimension) {}
 
     @SubscribeEvent
+    public static void onRecipeUpdate(RecipesUpdatedEvent event) {
+        recipesCached = false;
+    }
+
+    @SubscribeEvent
     public static void on(BlockEvent.NeighborNotifyEvent event) {
-        if (event.getWorld() instanceof ServerLevel level && dimensionEnabled(level)) {
+        if (event.getWorld() instanceof ServerLevel level) {
             // Finish early if we're not tracking any fires and this is a fire removal.
             boolean isFire = event.getState().getBlock() instanceof FireBlock;
             if (FIRE_TRACKER.isEmpty() && !isFire) {
@@ -50,20 +61,37 @@ public class InfinityFireHandler {
             FireIndex fireIndex = new FireIndex(pos, level.dimension());
             long gameTime = level.getGameTime();
 
-            // TODO: Bedrock config.
-            boolean bedrockBelow = BaseConfig.COMMON.INFINITY.INFINITE_BLOCKS.get().contains(level.getBlockState(pos.below()).getBlock().getRegistryName().toString());
+            Block baseBlock = level.getBlockState(pos.below()).getBlock();
 
-            if (isFire && bedrockBelow) {
+            // Cache recipes
+            if (!recipesCached) {
+                cachedRecipes = level.getRecipeManager().getAllRecipesFor(EIORecipes.Types.FIRE_CRAFTING);
+                recipesCached = false;
+            }
+
+            // Search for this recipe.
+            FireCraftingRecipe matchingRecipe = null;
+            for (FireCraftingRecipe recipe : cachedRecipes) {
+                if (recipe.isBaseValid(baseBlock) && recipe.isDimensionValid(level.dimension())) {
+                    matchingRecipe = recipe;
+                    break;
+                }
+            }
+
+            if (matchingRecipe == null)
+                return;
+
+            if (isFire) {
                 // If we're tracking lots of fire, look at culling the herd.
                 if (FIRE_TRACKER.size() > 100) {
                     FIRE_TRACKER.values().removeIf(age -> age < gameTime || FIRE_TRACKER.size() > 500);
                 }
 
                 // Add to the tracker.
-                FIRE_TRACKER.putIfAbsent(fireIndex, gameTime + 100); // TODO: Min age config.
+                FIRE_TRACKER.putIfAbsent(fireIndex, gameTime + BaseConfig.COMMON.INFINITY.FIRE_MIN_AGE.get());
             } else if (FIRE_TRACKER.containsKey(fireIndex)) {
-                if (level.getBlockState(pos).isAir() && bedrockBelow && gameTime > FIRE_TRACKER.get(fireIndex)) {
-                    spawnInfinityDrops(level, pos, LOOT_TABLE);
+                if (level.getBlockState(pos).isAir() && gameTime > FIRE_TRACKER.get(fireIndex)) {
+                    spawnInfinityDrops(level, pos, matchingRecipe.getLootTable());
                 }
                 FIRE_TRACKER.remove(fireIndex);
             }
@@ -99,7 +127,7 @@ public class InfinityFireHandler {
     // Support worlds where firetick is disabled:
     @SubscribeEvent
     public static void onWorldTick(TickEvent.WorldTickEvent event) {
-        if (!FIRE_TRACKER.isEmpty() && !event.world.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK) && dimensionEnabled(event.world)) {
+        if (!FIRE_TRACKER.isEmpty() && !event.world.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK)) {
             // Create a list of positions that need to be turned to air. Fixes issues with the fire tracker being modified while we iterate
             List<BlockPos> blocksToClear = new ArrayList<>();
 
@@ -121,14 +149,5 @@ public class InfinityFireHandler {
                 event.world.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
             }
         }
-    }
-
-    /**
-     * Determine if this dimension has fire crafting enabled.
-     */
-    private static boolean dimensionEnabled(Level level) {
-        if (BaseConfig.COMMON.INFINITY.ENABLE_IN_ALL_DIMENSIONS.get())
-            return true;
-        return BaseConfig.COMMON.INFINITY.DIMENSION_WHITELIST.get().contains(level.dimension().location().toString());
     }
 }

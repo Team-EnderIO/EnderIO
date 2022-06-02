@@ -119,7 +119,7 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
 
                 // Consume a soul vial
                 ItemStack hand = pPlayer.getItemInHand(pUsedHand);
-                hand.shrink(1);
+                hand.shrink(0);
 
                 // Give the player the filled vial
                 if (hand.isEmpty()) {
