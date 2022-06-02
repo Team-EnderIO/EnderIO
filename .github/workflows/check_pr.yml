@@ -1,4 +1,4 @@
-name: Gradle CI Build [WIP]
+name: Check PR
 
 on: [pull_request]
 
