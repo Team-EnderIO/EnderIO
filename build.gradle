@@ -1,3 +1,6 @@
+//file:noinspection GrEqualsBetweenInconvertibleTypes
+import com.enderio.CombineJars
+
 buildscript {
     repositories {
         // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
@@ -9,125 +12,290 @@ buildscript {
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
         classpath 'org.parchmentmc:librarian:1.+'
-        classpath 'org.spongepowered:mixingradle:0.7.+'
         classpath 'io.github.noeppi_noeppi.tools:ModGradle:2.0.14'
+        classpath 'org.spongepowered:mixingradle:0.7.+'
     }
 }
 
 plugins {
     id 'com.github.johnrengelman.shadow' version "${shadow_version}"
+    id "com.modrinth.minotaur" version "2.+"
 }
 
-// Run reobfuscation after dependents
-// Thanks pupnewfster for this :)
-gradle.projectsEvaluated {
-    project(":enderio-base").tasks.named('reobfJar').configure(t -> {
-        t.mustRunAfter(
-                project(":enderio-decoration").tasks.named('reobfJar'),
-                project(":enderio-machines").tasks.named('reobfJar')
-        )
-    })
-}
-
-subprojects {
-    apply plugin: 'net.minecraftforge.gradle'
+allprojects {
+    // Forge Gradle and Extensions
+    apply plugin: "net.minecraftforge.gradle"
     apply plugin: 'org.parchmentmc.librarian.forgegradle'
-    apply plugin: 'eclipse'
-    apply plugin: 'maven-publish'
-    apply plugin: 'com.github.johnrengelman.shadow'
     apply plugin: 'io.github.noeppi_noeppi.tools.modgradle.mapping'
 
-    def enableMixin = false
-    if (project.hasProperty("enable_mixin")) {
-        enableMixin = project.enable_mixin
-    }
+    // Eclipse support
+    apply plugin: 'eclipse'
 
-    // MixinGradle:
-    if (enableMixin) {
-        apply plugin: 'org.spongepowered.mixin'
-    }
+    // Shadowing
+    apply plugin: 'com.github.johnrengelman.shadow'
+
+    // Publishing
+    apply plugin: 'maven-publish'
+    apply plugin: "com.modrinth.minotaur"
+
+    // Sort out project properties
+    if (!project.hasProperty('include_in_monolith'))
+        project.ext.include_in_monolith = false
+    else
+        project.ext.include_in_monolith = project.include_in_monolith != 'false'
+
+    if (!project.hasProperty('publish_api'))
+        project.ext.publish_api = false
+    else
+        project.ext.publish_api = project.publish_api != 'false'
+
+    if (!project.hasProperty('publish_sources'))
+        project.ext.publish_sources = false
+    else
+        project.ext.publish_sources = project.publish_sources != 'false'
+
+    // Set java version
+    java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
     version = getVersionString(project)
     group = 'com.enderio'
-    archivesBaseName = getArchiveBaseName(project)
-    def modId = getModId(project)
-
-    // Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
-    java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-
-    println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 
     minecraft {
         mappings channel: "${mappings_channel}", version: "${mappings_version}"
+    }
 
-        // Default run configurations.
-        runs {
-            client {
-                workingDirectory project.file('run')
-
-//                property 'forge.logging.markers', 'REGISTRIES'
-//                property 'forge.logging.console.level', 'debug'
-
-                // Allow dependent mixins to run
-                property 'mixin.env.remapRefMap', 'true'
-                property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
-
-                mods {
-                    "${project.name}" {
-                        source sourceSets.main
-                    }
-                }
-            }
-
-            server {
-                workingDirectory project.file('run')
-
-//                property 'forge.logging.console.level', 'debug'
-
-                // Allow dependent mixins to run
-                property 'mixin.env.remapRefMap', 'true'
-                property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
-
-                mods {
-                    "${project.name}" {
-                        source sourceSets.main
-                    }
-                }
-            }
-
-            data {
-                workingDirectory project.file('run')
-
-//                property 'forge.logging.markers', 'REGISTRIES'
-//                property 'forge.logging.console.level', 'debug'
-
-                // Allow dependent mixins to run
-                property 'mixin.env.remapRefMap', 'true'
-                property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
-
-                // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-                args '--mod', modId, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-
-                mods {
-                    "${project.name}" {
-                        source sourceSets.main
-                    }
-                }
-            }
-        }
+    repositories {
+        // Registrate
+        maven { url "https://maven.tterrag.com/" }
     }
 
     configurations {
         shade
     }
 
-    // Include resources generated by data generators.
-    sourceSets.main.resources { srcDir 'src/generated/resources' }
+    dependencies {
+        // Forge
+        minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+
+        // Registrate
+        def registrate = "com.tterrag.registrate:Registrate:${registrate_version}"
+        implementation fg.deobf(registrate)
+        shade registrate
+    }
+
+    jar {
+        // Differentiate the non-shadowed version by storing it in a different directory.
+        // Makes for cleaner libs directory.
+        destinationDirectory.set(file("$buildDir/rawJar"))
+        classifier 'raw'
+
+        manifest {
+            attributes([
+                    "Specification-Title"     : "${getModId(project)}",
+                    "Specification-Vendor"    : "EnderIO",
+                    "Specification-Version"   : "${project.version}",
+                    "Implementation-Title"    : project.name,
+                    "Implementation-Version"  : "${project.version}",
+                    "Implementation-Vendor"   : "EnderIO",
+                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+            ])
+        }
+    }
+
+    // Shadow registrate
+    shadowJar {
+        // Remove the -all classifier.
+        classifier ''
+
+        // Put the outputs into the main build directory
+        destinationDirectory.set(file("$rootProject.buildDir/libs"))
+
+        // Setup relocation
+        configurations = [project.configurations.shade]
+        relocate 'com.tterrag.registrate', "com.enderio.registrate"
+
+        // Strip the registrate classes out of the other modules.
+        // We still have to do shadowing for these however, because it gets relocated to com.enderio.registrate.
+        if (project.name != "enderio-base" && project.name != rootProject.name) {
+            exclude 'com/tterrag/registrate/**'
+        }
+    }
+
+    // Reobfuscate shadowed jars
+    reobf {
+        shadowJar {}
+    }
+
+    // API Jar
+    task apiJar(type: Jar) {
+        enabled = project.ext.publish_api
+        destinationDirectory.set(file("$rootProject.buildDir/libs"))
+        classifier 'api'
+
+        // TODO: Maybe allow com.enderio.<module>.api?
+        from sourceSets.main.output.classesDirs
+        include 'com/enderio/api/**/*.class'
+
+        from sourceSets.main.java
+        include 'com/enderio/api/**/*.java'
+    }
+
+    build.dependsOn apiJar
+
+    // Sources jar
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        enabled = project.ext.publish_sources
+        destinationDirectory.set(file("$rootProject.buildDir/libs"))
+        classifier 'sources'
+        from sourceSets.main.allJava
+    }
+
+    build.dependsOn sourcesJar
+
+    if (System.getenv("MODRINTH_TOKEN") != null || project.hasProperty('modrinthToken')) {
+        def isRoot = rootProject == project
+        def modrinthProjectId = project.hasProperty("modrinth_projectId") ? project.modrinth_projectId : isRoot ? rootProject.combi_modrinth_projectId : null
+        def modrinthPublish = project.hasProperty("modrinth_publish") ? project.modrinth_publish : isRoot ? rootProject.combi_modrinth_publish : false
+        def modrinthBody = project.hasProperty("modrinth_body") ? project.modrinth_body : isRoot ? rootProject.combi_modrinth_body : null
+
+        project.tasks.modrinth {
+            enabled = modrinthProjectId != null && modrinthPublish
+            dependsOn(reobfShadowJar)
+        }
+
+        project.tasks.modrinthSyncBody {
+            enabled = modrinthProjectId != null && modrinthBody != null
+        }
+
+        // Configure modrinth
+        modrinth {
+            token = System.getenv("MODRINTH_TOKEN") ?: project.findProperty("modrinthToken")
+            projectId = modrinthProjectId
+            versionNumber = project.version
+            versionType = release_type
+            uploadFile = shadowJar
+            gameVersions = [minecraft_version]
+            loaders = ["forge"]
+
+            // Allow the other modules to trudge on.
+            failSilently = true
+
+            if (modrinthBody != null) {
+                syncBodyFrom = rootProject.file("doc/modpages/modrinth/${modrinthBody}").text
+            }
+
+            dependencies {
+                // scope.type
+                // The scope can be `required`, `optional`, or `incompatible`
+                // The type can either be `project` or `version`
+                if (project.name != 'enderio-base' && !isRoot) {
+                    optional.project project(':enderio-base').modrinth_projectId
+                    optional.project rootProject.combi_modrinth_projectId
+                }
+
+                if (project.name == rootProject.name) {
+                    incompatible.project project(':enderio-base').modrinth_projectId
+                    incompatible.project project(':enderio-decoration').modrinth_projectId
+                    incompatible.project project(':enderio-machines').modrinth_projectId
+                }
+
+                // Patchouli
+                optional.project "nU0bVIaL"
+            }
+        }
+    }
+
+    // Maven
+    publishing {
+        tasks.publish.dependsOn 'build'
+        tasks.publishToMavenLocal.dependsOn 'build'
+
+        publications {
+            maven(MavenPublication) {
+                artifactId = getPrettyName(project)
+
+                artifact shadowJar
+                artifact sourcesJar
+                artifact apiJar
+
+                pom {
+                    name = getPrettyName(project)
+                    description = 'Ender IO is a full-featured tech mod. It has armor, tools, weapons, machines, conduits, inventory management, mobs, etc.'
+                    url = 'https://github.com/SleepyTrousers/EnderIO-Rewrite'
+
+                    licenses {
+                        license {
+                            name = 'Unlicense'
+                            url = 'https://github.com/SleepyTrousers/EnderIO-Rewrite/blob/dev/1.18.x/LICENSE.txt'
+                        }
+                    }
+
+                    scm {
+                        url = 'https://github.com/SleepyTrousers/EnderIO-Rewrite.git'
+                    }
+                }
+            }
+
+            // TODO: Repositories to publish to...
+        }
+    }
+}
+
+subprojects {
+    archivesBaseName = getArchiveBaseName(project)
+
+    minecraft {
+        runs {
+            client {
+                workingDirectory project.file('run')
+
+                // Allow dependent mixins to run
+                property 'mixin.env.remapRefMap', 'true'
+                property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
+
+                mods {
+                    "${project.name}" { source sourceSets.main }
+                }
+            }
+
+            server {
+                workingDirectory project.file('run')
+
+                // Allow dependent mixins to run
+                property 'mixin.env.remapRefMap', 'true'
+                property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
+
+                mods {
+                    "${project.name}" { source sourceSets.main }
+                }
+            }
+
+            data {
+                workingDirectory project.file('run')
+
+                // Allow all data runs to continue thru
+                forceExit = false
+
+                // Allow dependent mixins to run
+                property 'mixin.env.remapRefMap', 'true'
+                property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
+
+                // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
+                args '--mod', getModId(project), '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+
+                // Add base resources.
+                if (project.name != 'enderio-base') {
+                    args '--existing', file('../enderio-base/generated/resources'), '--existing', file('../enderio-base/src/main/resources')
+                }
+
+                mods {
+                    "${project.name}" { source sourceSets.main }
+                }
+            }
+        }
+    }
 
     repositories {
-        // Registrate
-        maven { url "https://maven.tterrag.com/" }
-
         maven {
             // location of the maven that hosts JEI files
             name = "Progwml6 maven"
@@ -150,106 +318,93 @@ subprojects {
         maven { url 'https://maven.blamejared.com' }
     }
 
-    dependencies {
-        minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    sourceSets.main.resources { srcDir 'src/generated/resources' }
 
+    dependencies {
+        // JEI
         compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}:api")
         runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")
 
+        // The One Probe
 //        implementation fg.deobf("mcjty.theoneprobe:TheOneProbe:${minecraft_version}-${top_version}")
         implementation fg.deobf("curse.maven:the-one-probe-245211:${top_version}")
 
+        // Patchouli
         compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
         runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
 
         // While we don't have conduits etc.
         runtimeOnly fg.deobf("curse.maven:mekanism-268560:3743835")
-
-        def registrate = "com.tterrag.registrate:Registrate:${registrate_version}"
-        implementation fg.deobf(registrate)
-        shade registrate
-
-        // Apply Mixin AP
-        if (enableMixin)
-            annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
     }
 
-    if (enableMixin) {
-        mixin {
-            // MixinGradle Settings
-            add sourceSets.main, "mixins.${modId}.refmap.json"
-            config "mixins.${modId}.json"
+    processResources {
+        // Fill mods.toml placeholders
+        filesMatching("META-INF/mods.toml") {
+            expand 'version': version,
+                    'mcversion': minecraft_version_range,
+                    'forge_version': forge_version_range,
+                    'loader_version': loader_version_range
+
         }
+
+        // Copy our logo in
+        from("$rootDir/doc/img/logo.png") into 'logo.png'
     }
+}
 
-    // Example for how to get properties into the manifest for reading at runtime.
-    jar {
-        classifier 'raw'
-        manifest {
-            attributes([
-                    "Specification-Title"     : "${modId}",
-                    "Specification-Vendor"    : "EnderIO",
-                    "Specification-Version"   : "${project.version}",
-                    "Implementation-Title"    : project.name,
-                    "Implementation-Version"  : "${project.version}",
-                    "Implementation-Vendor"   : "EnderIO",
-                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-            ])
-        }
+// Combined jar
+def monolithProjects = subprojects.findAll { sp -> sp.ext.include_in_monolith }
+
+// Depend on combined classes
+shadowJar.dependsOn monolithProjects.tasks['jar']
+shadowJar {
+    duplicatesStrategy = DuplicatesStrategy.FAIL
+
+    CombineJars.mergeResources(rootProject, monolithProjects)
+
+    monolithProjects.each { subproject ->
+        def isMain = subproject.name == 'enderio-base'
+        from(subproject.sourceSets.main.output.classesDirs)
+        from(subproject.sourceSets.main.output.resourcesDir, c -> c.exclude(CombineJars.getPathsToExclude(subproject, isMain)))
     }
+    from("$buildDir/generated", CombineJars.getGeneratedClosure())
+}
 
-    // region Tasks
+// TODO: Combined api jar maybe?
 
-    task cleanJars {
-        delete "$rootDir/build/libs"
-        delete "$buildDir/libs"
-    }
+// Main runs. These will run the "main" EnderIO Modules. Addons will not be included.
+minecraft {
+    runs {
+        client {
+            workingDirectory project.file('run')
 
-    shadowJar {
-        classifier ''
-        configurations = [project.configurations.shade]
-        relocate 'com.tterrag.registrate', "com.enderio.registrate"
+            // Allow dependent mixins to run
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
 
-        // Strip the registrate classes out of the other modules.
-        if (project.name != "enderio-base") {
-            exclude 'com/tterrag/registrate/**'
-        }
-    }
-
-    reobf {
-        shadowJar { }
-    }
-
-    // Depending on build seems to ensure that published jars are reobfed.
-    publish.dependsOn 'build'
-
-    publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                if (project.name != 'endercore') {
-                    artifact shadowJar // Push the 'all' jar.
-                } else {
-                    artifact jar
-                }
-                artifactId = getArchiveBaseName(project)
+            mods {
+                monolithProjects.each(sp -> {
+                    "${sp.name}" { source sp.sourceSets.main }
+                })
             }
         }
-        repositories {
-            // TODO: Configure tterrag maven.
-            mavenLocal()
+
+        server {
+            workingDirectory project.file('run')
+
+            // Allow dependent mixins to run
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
+
+            mods {
+                monolithProjects.each(sp -> {
+                    "${sp.name}" { source sp.sourceSets.main }
+                })
+            }
         }
+
+        // TODO: When we do addons, maybe we bring in monolithic runs again, but this time for with all compat mods etc for bulk testing?
     }
-
-    // endregion
-
-    // Copy release files out
-    task copyFiles(type: Copy) {
-        from(shadowJar)
-        into rootProject.file('build/libs')
-    }
-
-    // Copy jars after build.
-    build.finalizedBy copyFiles
 }
 
 // region Versioning
@@ -275,7 +430,7 @@ subprojects {
 //   * enderio-base-1.12.2-4.0.1.jar            :: release version 4.0.1 for mc 1.12.2
 //   * enderio-base-1.12.2-4.2.1-nightly-4      :: nightly build no. 4 for version 4.2.1
 //   * enderio-base-1.12.2-4.5.1-dev-c91c8ee6e  :: dev (local) build for commit c91c8ee6e
-String getVersionString(Project proj) {
+static String getVersionString(Project proj) {
     def build_server = System.getenv('CI') != null || System.getenv('BUILD_NUMBER') != null
 
     def version_patch_lc = proj.version_patch
@@ -292,11 +447,11 @@ String getVersionString(Project proj) {
     if (!build_server) {
         try {
             version_hash = "git rev-parse --short HEAD".execute().text.trim()
-        } catch (all) {
+        } catch (ignored) {
         }
     }
 
-    def version_base = "${proj.version_major}.${proj.version_minor}.${version_patch_lc}"
+    def version_base = "${proj.version_major}.${proj.version_minor}.${version_patch_lc}-${proj.release_type}"
     def version_parts = ([version_base, version_classifier, version_hash]).findAll { p -> p != '' }
 
     return String.join('-', version_parts)
@@ -312,11 +467,11 @@ String getArchiveBaseName(Project proj) {
     return getPrettyName(proj) + "-${rootProject.minecraft_version}"
 }
 
-String getModId(Project proj) {
+static String getModId(Project proj) {
     // Force enderio-base -> enderio.
     if (proj.hasProperty("modid"))
-        return proj.modid;
-    return proj.name.replaceAll('-', '_');
+        return proj.modid
+    return proj.name.replaceAll('-', '_')
 }
 
 // endregion
