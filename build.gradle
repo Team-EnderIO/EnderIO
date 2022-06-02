@@ -392,6 +392,7 @@ minecraft {
             property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
 
             mods {
+                // TODO: Can we automatically populate this using the monolith logic?
                 'enderio' { source project(':enderio-base').sourceSets.main }
                 'enderio-conduits' { source project(':enderio-conduits').sourceSets.main }
                 'enderio-decoration' { source project(':enderio-decoration').sourceSets.main }
@@ -445,9 +446,8 @@ String getVersionString(Project proj) {
     def build_server = System.getenv('CI') != null || System.getenv('BUILD_NUMBER') != null
 
     def version_patch_lc = proj.version_patch
-    def version_appendix = proj.release_type
-    if (System.getenv('GITHUB_RUN_NUMBER') != null)
-        version_patch_lc = System.getenv('GITHUB_RUN_NUMBER')
+    if (System.getenv('BUILD_NUMBER') != null)
+        version_patch_lc = System.getenv('BUILD_NUMBER')
 
     def version_classifier = ''
     if (System.getenv('VERSION_CLS') != null)
