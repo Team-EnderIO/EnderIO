@@ -1,3 +1,4 @@
+//file:noinspection GrEqualsBetweenInconvertibleTypes
 import com.enderio.CombineJars
 
 buildscript {
@@ -429,7 +430,7 @@ minecraft {
 //   * enderio-base-1.12.2-4.0.1.jar            :: release version 4.0.1 for mc 1.12.2
 //   * enderio-base-1.12.2-4.2.1-nightly-4      :: nightly build no. 4 for version 4.2.1
 //   * enderio-base-1.12.2-4.5.1-dev-c91c8ee6e  :: dev (local) build for commit c91c8ee6e
-String getVersionString(Project proj) {
+static String getVersionString(Project proj) {
     def build_server = System.getenv('CI') != null || System.getenv('BUILD_NUMBER') != null
 
     def version_patch_lc = proj.version_patch
@@ -446,11 +447,11 @@ String getVersionString(Project proj) {
     if (!build_server) {
         try {
             version_hash = "git rev-parse --short HEAD".execute().text.trim()
-        } catch (all) {
+        } catch (ignored) {
         }
     }
 
-    def version_base = "${proj.version_major}.${proj.version_minor}.${version_patch_lc}-${release_type}"
+    def version_base = "${proj.version_major}.${proj.version_minor}.${version_patch_lc}-${proj.release_type}"
     def version_parts = ([version_base, version_classifier, version_hash]).findAll { p -> p != '' }
 
     return String.join('-', version_parts)
@@ -466,11 +467,11 @@ String getArchiveBaseName(Project proj) {
     return getPrettyName(proj) + "-${rootProject.minecraft_version}"
 }
 
-String getModId(Project proj) {
+static String getModId(Project proj) {
     // Force enderio-base -> enderio.
     if (proj.hasProperty("modid"))
-        return proj.modid;
-    return proj.name.replaceAll('-', '_');
+        return proj.modid
+    return proj.name.replaceAll('-', '_')
 }
 
 // endregion
