@@ -392,11 +392,9 @@ minecraft {
             property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
 
             mods {
-                // TODO: Can we automatically populate this using the monolith logic?
-                'enderio' { source project(':enderio-base').sourceSets.main }
-                'enderio-conduits' { source project(':enderio-conduits').sourceSets.main }
-                'enderio-decoration' { source project(':enderio-decoration').sourceSets.main }
-                'enderio-machines' { source project(':enderio-machines').sourceSets.main }
+                monolithProjects.each(sp -> {
+                    "${sp.name}" { source sp.sourceSets.main }
+                })
             }
         }
 
@@ -408,10 +406,9 @@ minecraft {
             property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
 
             mods {
-                'enderio' { source project(':enderio-base').sourceSets.main }
-                'enderio-conduits' { source project(':enderio-conduits').sourceSets.main }
-                'enderio-decoration' { source project(':enderio-decoration').sourceSets.main }
-                'enderio-machines' { source project(':enderio-machines').sourceSets.main }
+                monolithProjects.each(sp -> {
+                    "${sp.name}" { source sp.sourceSets.main }
+                })
             }
         }
 
