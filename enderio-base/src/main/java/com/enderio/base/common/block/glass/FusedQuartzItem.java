@@ -18,8 +18,8 @@ public class FusedQuartzItem extends BlockItem implements IItemOverlayRender {
         poseStack.pushPose();
         poseStack.translate(0,0,190);
         if (getBlock() instanceof FusedQuartzBlock block) {
-            IEnderScreen.renderIconStatic(poseStack, new Vector2i(0,0), block.getCollisionPredicate());
-            IEnderScreen.renderIconStatic(poseStack, new Vector2i(0,0), block.getGlassLighting());
+            IEnderScreen.renderIcon(poseStack, new Vector2i(0,0), block.getCollisionPredicate());
+            IEnderScreen.renderIcon(poseStack, new Vector2i(0,0), block.getGlassLighting());
         }
         poseStack.popPose();
     }

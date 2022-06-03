@@ -15,11 +15,7 @@ public interface IEnderScreen {
         return (Screen) this;
     }
 
-    default void renderIcon(PoseStack pPoseStack, Vector2i pos, IIcon icon) {
-        renderIconStatic(pPoseStack, pos, icon);
-    }
-
-    static void renderIconStatic(PoseStack poseStack, Vector2i pos, IIcon icon) {
+    static void renderIcon(PoseStack poseStack, Vector2i pos, IIcon icon) {
         if (!icon.shouldRender())
             return;
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
