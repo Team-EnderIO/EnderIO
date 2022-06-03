@@ -1,6 +1,5 @@
 package com.enderio.base.common.integration;
 
-import com.tterrag.registrate.Registrate;
 
 public abstract class Integration {
 
@@ -14,9 +13,5 @@ public abstract class Integration {
         if (this.modid != null)
             throw new IllegalCallerException("You are not allowed to set the modid of an integration");
         this.modid = modid;
-    }
-
-    public Registrate registrate() {
-        return Registrate.create(modid);
     }
 }

@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "enderio:clear_glass_p"
+    },
+    {
+      "tag": "enderio:clear_glass_p"
+    },
+    {
+      "tag": "enderio:clear_glass_p"
+    },
+    {
+      "tag": "enderio:clear_glass_p"
+    },
+    {
+      "tag": "enderio:clear_glass_p"
+    },
+    {
+      "tag": "enderio:clear_glass_p"
+    },
+    {
+      "tag": "enderio:clear_glass_p"
+    },
+    {
+      "tag": "enderio:clear_glass_p"
+    },
+    {
+      "tag": "forge:dyes/yellow"
+    }
+  ],
+  "result": {
+    "item": "enderio:clear_glass_p_yellow",
+    "count": 8
+  }
+}

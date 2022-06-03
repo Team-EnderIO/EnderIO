@@ -25,11 +25,11 @@ public class FusedQuartzBlock extends AbstractGlassBlock {
     private final GlassLighting glassLighting;
     private final boolean explosionResistant;
 
-    public FusedQuartzBlock(Properties pProps, GlassCollisionPredicate collisionPredicate, GlassLighting glassLighting, boolean explosionResistant) {
+    public FusedQuartzBlock(Properties pProps, GlassIdentifier glassIdentifier) {
         super(pProps);
-        this.collisionPredicate = collisionPredicate;
-        this.glassLighting = glassLighting;
-        this.explosionResistant = explosionResistant;
+        this.collisionPredicate = glassIdentifier.collisionPredicate();
+        this.glassLighting = glassIdentifier.lighting();
+        this.explosionResistant = glassIdentifier.explosion_resistance();
     }
 
     @Override

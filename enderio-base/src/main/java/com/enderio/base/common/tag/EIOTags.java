@@ -1,6 +1,10 @@
 package com.enderio.base.common.tag;
 
 import com.enderio.base.EnderIO;
+import com.enderio.base.common.block.glass.GlassBlocks;
+import com.enderio.base.common.block.glass.GlassCollisionPredicate;
+import com.enderio.base.common.block.glass.GlassIdentifier;
+import com.enderio.base.common.block.glass.GlassLighting;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
@@ -10,6 +14,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.versions.forge.ForgeVersion;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class EIOTags {
 
@@ -51,6 +58,20 @@ public class EIOTags {
         public static final TagKey<Item> BROKEN_SPAWNER_BLACKLIST = ItemTags.create(EnderIO.loc("blacklists/broken_spawner"));
         public static final TagKey<Item> ELECTROMAGNET_BLACKLIST = ItemTags.create(EnderIO.loc("blacklists/electromagnet"));
 
+        public static final Map<GlassIdentifier, TagKey<Item>> GLASS_TAGS = createGlassTags();
+
+        public static Map<GlassIdentifier, TagKey<Item>> createGlassTags() {
+            Map<GlassIdentifier, TagKey<Item>> map = new HashMap<>();
+            for (GlassLighting lighting: GlassLighting.values()) {
+                for (GlassCollisionPredicate collisionPredicate: GlassCollisionPredicate.values()) {
+                    for (Boolean isFused: new boolean[]{false, true}) {
+                        GlassIdentifier identifier = new GlassIdentifier(lighting, collisionPredicate, isFused);
+                        map.put(identifier, ItemTags.create(EnderIO.loc(identifier.glassName())));
+                    }
+                }
+            }
+            return map;
+        }
     }
 
     public static class Blocks {

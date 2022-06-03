@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "enderio:clear_glass_dnp"
+    },
+    {
+      "tag": "enderio:clear_glass_dnp"
+    },
+    {
+      "tag": "enderio:clear_glass_dnp"
+    },
+    {
+      "tag": "enderio:clear_glass_dnp"
+    },
+    {
+      "tag": "enderio:clear_glass_dnp"
+    },
+    {
+      "tag": "enderio:clear_glass_dnp"
+    },
+    {
+      "tag": "enderio:clear_glass_dnp"
+    },
+    {
+      "tag": "enderio:clear_glass_dnp"
+    },
+    {
+      "tag": "forge:dyes/light_blue"
+    }
+  ],
+  "result": {
+    "item": "enderio:clear_glass_dnp_light_blue",
+    "count": 8
+  }
+}

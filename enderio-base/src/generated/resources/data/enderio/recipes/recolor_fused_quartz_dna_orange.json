@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "enderio:fused_quartz_dna"
+    },
+    {
+      "tag": "enderio:fused_quartz_dna"
+    },
+    {
+      "tag": "enderio:fused_quartz_dna"
+    },
+    {
+      "tag": "enderio:fused_quartz_dna"
+    },
+    {
+      "tag": "enderio:fused_quartz_dna"
+    },
+    {
+      "tag": "enderio:fused_quartz_dna"
+    },
+    {
+      "tag": "enderio:fused_quartz_dna"
+    },
+    {
+      "tag": "enderio:fused_quartz_dna"
+    },
+    {
+      "tag": "forge:dyes/orange"
+    }
+  ],
+  "result": {
+    "item": "enderio:fused_quartz_dna_orange",
+    "count": 8
+  }
+}
