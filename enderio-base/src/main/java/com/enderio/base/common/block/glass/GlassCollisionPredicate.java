@@ -2,6 +2,7 @@ package com.enderio.base.common.block.glass;
 
 import com.enderio.base.EnderIO;
 import com.enderio.base.client.gui.IIcon;
+import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.util.Vector2i;
 import net.minecraft.network.chat.Component;
@@ -9,6 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 
 import javax.annotation.Nullable;
@@ -96,6 +98,37 @@ public enum GlassCollisionPredicate implements IIcon {
             case MOBS_BLOCK -> "nm";
             case ANIMALS_PASS -> "a";
             case ANIMALS_BLOCK -> "na";
+        };
+    }
+
+    /**
+     * @param token to invert
+     * @return the predicate for the token or null if none found. Used for datagen
+     */
+    @Nullable
+    public static GlassCollisionPredicate fromToken(Item token) {
+        if (token == EIOItems.PLAYER_TOKEN.get())
+            return PLAYERS_PASS;
+        if (token == EIOItems.ANIMAL_TOKEN.get())
+            return ANIMALS_PASS;
+        if (token == EIOItems.MONSTER_TOKEN.get())
+            return MOBS_PASS;
+        return null;
+    }
+
+    /**
+     * @param predicate to invert
+     * @return the inverted predicate. Used for datagen
+     */
+    public static GlassCollisionPredicate invert(GlassCollisionPredicate predicate) {
+        return switch (predicate) {
+            case NONE -> NONE;
+            case MOBS_PASS -> MOBS_BLOCK;
+            case MOBS_BLOCK -> MOBS_PASS;
+            case ANIMALS_BLOCK -> ANIMALS_PASS;
+            case ANIMALS_PASS -> ANIMALS_BLOCK;
+            case PLAYERS_BLOCK -> PLAYERS_PASS;
+            case PLAYERS_PASS -> PLAYERS_BLOCK;
         };
     }
 }

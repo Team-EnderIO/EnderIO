@@ -5,6 +5,10 @@ public record GlassIdentifier(GlassLighting lighting, GlassCollisionPredicate co
         return new GlassIdentifier(GlassLighting.NONE, collisionPredicate, explosion_resistance);
     }
 
+    public GlassIdentifier withCollision(GlassCollisionPredicate collisionPredicate) {
+        return new GlassIdentifier(lighting, collisionPredicate, explosion_resistance);
+    }
+
 
     public String glassName() {
         StringBuilder main = new StringBuilder();
