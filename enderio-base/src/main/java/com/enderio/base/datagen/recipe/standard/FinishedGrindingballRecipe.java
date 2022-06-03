@@ -7,15 +7,15 @@ import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 
-public class BasicRecipeResult implements FinishedRecipe{
+public class FinishedGrindingballRecipe implements FinishedRecipe{
     private GrindingballRecipe recipe;
     private ResourceLocation id;
 
-    public BasicRecipeResult(GrindingballRecipe recipe, String name) {
+    public FinishedGrindingballRecipe(GrindingballRecipe recipe, String name) {
        this(recipe, EnderIO.loc("grindingballs/" + name));
     }
     
-    public BasicRecipeResult(GrindingballRecipe recipe, ResourceLocation id) {
+    public FinishedGrindingballRecipe(GrindingballRecipe recipe, ResourceLocation id) {
         this.recipe = recipe;
         this.id = id;
     }

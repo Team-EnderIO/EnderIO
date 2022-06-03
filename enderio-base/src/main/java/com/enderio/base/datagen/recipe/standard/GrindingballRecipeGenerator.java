@@ -36,7 +36,7 @@ public class GrindingballRecipeGenerator extends RecipeProvider {
     }
 
     protected void build(GrindingballRecipe recipe, String name, Consumer<FinishedRecipe> recipeConsumer) {
-        recipeConsumer.accept(new BasicRecipeResult(recipe, name));
+        recipeConsumer.accept(new FinishedGrindingballRecipe(recipe, name));
     }
 
 }
