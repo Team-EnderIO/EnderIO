@@ -2,15 +2,14 @@ package com.enderio.machines.common.init;
 
 import com.enderio.base.EnderIO;
 import com.enderio.base.common.item.EIOCreativeTabs;
-import com.enderio.base.datagen.model.EIOModel;
+import com.enderio.base.data.model.EIOModel;
 import com.enderio.machines.EIOMachines;
-import com.enderio.machines.common.block.EnhancedMachineBlock;
 import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.block.ProgressMachineBlock;
 import com.enderio.machines.common.block.SimpleMachineBlock;
 import com.enderio.machines.common.item.FluidTankItem;
-import com.enderio.machines.datagen.loot.MachinesLootTable;
-import com.enderio.machines.datagen.model.block.MachinesBlockState;
+import com.enderio.machines.data.loot.MachinesLootTable;
+import com.enderio.machines.data.model.block.MachinesBlockState;
 import com.mojang.math.Vector3f;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.BlockEntry;

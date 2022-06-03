@@ -8,9 +8,8 @@ import com.enderio.machines.common.blockentity.base.PoweredCraftingMachineEntity
 import com.enderio.machines.common.init.MachineCapacitorKeys;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.MachineInventory;
-import com.enderio.machines.common.menu.AlloySmelterMenu;
-import com.enderio.api.recipe.AlloySmeltingRecipe;
 import com.enderio.machines.common.init.MachineRecipes;
+import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -128,7 +127,7 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
         MachineInventory itemHandler = getInventory();
         if (recipe instanceof AlloySmeltingRecipe alloySmeltingRecipe) {
             // Consume inputs
-            alloySmeltingRecipe.consumeInputs(getRecipeWrapper());
+//            alloySmeltingRecipe.consumeInputs(getRecipeWrapper());
 
             // We only craft 1x when alloying
             resultModifier = 1;

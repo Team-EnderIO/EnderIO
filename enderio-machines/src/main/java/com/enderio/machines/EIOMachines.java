@@ -2,7 +2,8 @@ package com.enderio.machines;
 
 import com.enderio.machines.common.init.*;
 import com.enderio.machines.common.lang.MachineLang;
-import com.enderio.machines.datagen.recipe.MachineRecipeGenerator;
+import com.enderio.machines.data.recipes.AlloyRecipeProvider;
+import com.enderio.machines.data.recipes.EnchanterRecipeProvider;
 import com.tterrag.registrate.Registrate;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
@@ -45,7 +46,8 @@ public class EIOMachines {
     public void gatherData(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
         if (event.includeServer()) {
-            MachineRecipeGenerator.generate(generator);
+            generator.addProvider(new AlloyRecipeProvider(generator));
+            generator.addProvider(new EnchanterRecipeProvider(generator));
         }
     }
 

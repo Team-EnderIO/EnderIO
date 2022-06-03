@@ -9,7 +9,7 @@ import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.menu.EnchanterMenu;
-import com.enderio.api.recipe.EnchanterRecipe;
+import com.enderio.machines.common.recipe.EnchanterRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
