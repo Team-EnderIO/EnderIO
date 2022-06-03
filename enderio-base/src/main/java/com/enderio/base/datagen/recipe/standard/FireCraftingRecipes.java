@@ -6,6 +6,7 @@ import com.enderio.base.common.recipe.FireCraftingRecipe;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 
@@ -23,7 +24,8 @@ public class FireCraftingRecipes extends RecipeProvider {
             new FireCraftingRecipe(
                 null,
                 EnderIO.loc("fire_crafting/infinity"),
-                List.of(Blocks.BEDROCK.getRegistryName()),
+                List.of(Blocks.BEDROCK),
+                List.of(),
                 List.of(Level.OVERWORLD.location())
             ), EnderIO.loc("fire_crafting/infinity")));
     }

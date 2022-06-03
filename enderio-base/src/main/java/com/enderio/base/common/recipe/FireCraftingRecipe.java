@@ -9,12 +9,15 @@ import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.common.crafting.conditions.ICondition;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.tags.ITag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,13 +25,15 @@ import java.util.List;
 public class FireCraftingRecipe implements IEnderRecipe<FireCraftingRecipe, Container> {
     private final ResourceLocation id;
     private final ResourceLocation lootTable;
-    private final List<ResourceLocation> baseBlocks;
+    private final List<Block> bases;
+    private final List<TagKey<Block>> baseTags;
     private final List<ResourceLocation> dimensions;
 
-    public FireCraftingRecipe(ResourceLocation id, ResourceLocation lootTable, List<ResourceLocation> baseBlocks, List<ResourceLocation> dimensions) {
+    public FireCraftingRecipe(ResourceLocation id, ResourceLocation lootTable, List<Block> bases, List<TagKey<Block>> baseTags, List<ResourceLocation> dimensions) {
         this.id = id;
         this.lootTable = lootTable;
-        this.baseBlocks = baseBlocks;
+        this.bases = bases;
+        this.baseTags = baseTags;
         this.dimensions = dimensions;
     }
 
@@ -36,8 +41,22 @@ public class FireCraftingRecipe implements IEnderRecipe<FireCraftingRecipe, Cont
         return lootTable;
     }
 
+    // Get all base blocks
+    public List<Block> getBases() {
+        List<Block> blocks = new ArrayList<>(bases);
+        for (TagKey<Block> blockTagKey : baseTags) {
+            ITag<Block> tag = ForgeRegistries.BLOCKS.tags().getTag(blockTagKey);
+            blocks.addAll(tag.stream().toList());
+        }
+        return blocks;
+    }
+
     public boolean isBaseValid(Block block) {
-        return baseBlocks.contains(block.getRegistryName());
+        for (TagKey<Block> tag : baseTags) {
+            if (block.defaultBlockState().is(tag))
+                return true;
+        }
+        return bases.contains(block);
     }
 
     public boolean isDimensionValid(ResourceKey<Level> dimension) {
@@ -99,10 +118,16 @@ public class FireCraftingRecipe implements IEnderRecipe<FireCraftingRecipe, Cont
         public FireCraftingRecipe fromJson(ResourceLocation pRecipeId, JsonObject pSerializedRecipe) {
             ResourceLocation lootTable = new ResourceLocation(pSerializedRecipe.get("lootTable").getAsString());
 
-            List<ResourceLocation> baseBlocks = new ArrayList<>();
+            List<Block> baseBlocks = new ArrayList<>();
+            List<TagKey<Block>> baseTags = new ArrayList<>();
             JsonArray baseBlocksJson = pSerializedRecipe.getAsJsonArray("base_blocks");
             for (JsonElement baseBlock : baseBlocksJson) {
-                baseBlocks.add(new ResourceLocation(baseBlock.getAsString()));
+                String id = baseBlock.getAsString();
+                if (id.startsWith("#")) {
+                    baseTags.add(BlockTags.create(new ResourceLocation(id.substring(1))));
+                } else {
+                    baseBlocks.add(ForgeRegistries.BLOCKS.getValue(new ResourceLocation(id)));
+                }
             }
 
             List<ResourceLocation> dimensions = new ArrayList<>();
@@ -111,14 +136,17 @@ public class FireCraftingRecipe implements IEnderRecipe<FireCraftingRecipe, Cont
                 dimensions.add(new ResourceLocation(dimension.getAsString()));
             }
 
-            return new FireCraftingRecipe(pRecipeId, lootTable, baseBlocks, dimensions);
+            return new FireCraftingRecipe(pRecipeId, lootTable, baseBlocks, baseTags, dimensions);
         }
 
         @Override
         public void toJson(FireCraftingRecipe recipe, JsonObject json) {
-            JsonArray baseBlocksJson = new JsonArray();
-            for (ResourceLocation baseBlock : recipe.baseBlocks) {
-                baseBlocksJson.add(baseBlock.toString());
+            JsonArray basesJson = new JsonArray();
+            for (Block baseBlock : recipe.bases) {
+                basesJson.add(baseBlock.getRegistryName().toString());
+            }
+            for (TagKey<Block> tag : recipe.baseTags) {
+                basesJson.add("#" + tag.location().toString());
             }
 
             JsonArray dimensionsJson = new JsonArray();
@@ -127,7 +155,7 @@ public class FireCraftingRecipe implements IEnderRecipe<FireCraftingRecipe, Cont
             }
 
             json.addProperty("lootTable", recipe.lootTable.toString());
-            json.add("base_blocks", baseBlocksJson);
+            json.add("base_blocks", basesJson);
             json.add("dimensions", dimensionsJson);
         }
 
@@ -135,15 +163,15 @@ public class FireCraftingRecipe implements IEnderRecipe<FireCraftingRecipe, Cont
         public FireCraftingRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 
             ResourceLocation lootTable = buffer.readResourceLocation();
-            List<ResourceLocation> baseBlocks = buffer.readList(FriendlyByteBuf::readResourceLocation);
+            List<Block> baseBlocks = buffer.readList(buf -> ForgeRegistries.BLOCKS.getValue(buf.readResourceLocation()));
             List<ResourceLocation> dimensions = buffer.readList(FriendlyByteBuf::readResourceLocation);
-            return new FireCraftingRecipe(recipeId, lootTable, baseBlocks, dimensions);
+            return new FireCraftingRecipe(recipeId, lootTable, baseBlocks, List.of(), dimensions);
         }
 
         @Override
         public void toNetwork(FriendlyByteBuf buffer, FireCraftingRecipe recipe) {
             buffer.writeResourceLocation(recipe.lootTable);
-            buffer.writeCollection(recipe.baseBlocks, FriendlyByteBuf::writeResourceLocation);
+            buffer.writeCollection(recipe.getBases(), (buf, block) -> buf.writeResourceLocation(block.getRegistryName()));
             buffer.writeCollection(recipe.dimensions, FriendlyByteBuf::writeResourceLocation);
         }
 
