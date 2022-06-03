@@ -4,6 +4,8 @@ import com.enderio.base.EnderIO;
 import com.enderio.base.common.block.*;
 import com.enderio.base.common.block.glass.GlassBlocks;
 import com.enderio.base.common.block.glass.GlassCollisionPredicate;
+import com.enderio.base.common.block.glass.GlassIdentifier;
+import com.enderio.base.common.block.glass.GlassLighting;
 import com.enderio.base.common.item.EIOCreativeTabs;
 import com.enderio.base.datagen.model.block.EIOBlockState;
 import com.tterrag.registrate.Registrate;
@@ -33,6 +35,8 @@ import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.VariantBlockStateBuilder;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 @SuppressWarnings("unused")
@@ -154,103 +158,20 @@ public class EIOBlocks {
 
     // region Fused Quartz/Glass
 
-    public static final GlassBlocks FUSED_QUARTZ = new GlassBlocks(REGISTRATE, "fused_quartz", "Fused Quartz", GlassCollisionPredicate.NONE, false, false,
-        true);
-    public static final GlassBlocks ENLIGHTENED_FUSED_QUARTZ = new GlassBlocks(REGISTRATE, "fused_quartz_e", "Enlightened Fused Quartz",
-        GlassCollisionPredicate.NONE, true, false, true);
-    public static final GlassBlocks DARK_FUSED_QUARTZ = new GlassBlocks(REGISTRATE, "fused_quartz_d", "Dark Fused Quartz", GlassCollisionPredicate.NONE, false,
-        true, true);
+    public static final Map<GlassIdentifier, GlassBlocks> GLASS_BLOCKS = fillGlassMap();
 
-    public static final GlassBlocks FUSED_QUARTZ_PLAYERS_PASS = new GlassBlocks(REGISTRATE, "fused_quartz_p", "Fused Quartz",
-        GlassCollisionPredicate.PLAYERS_PASS, false, false, false);
-    public static final GlassBlocks ENLIGHTENED_FUSED_QUARTZ_PLAYERS_PASS = new GlassBlocks(REGISTRATE, "fused_quartz_ep", "Enlightened Fused Quartz",
-        GlassCollisionPredicate.PLAYERS_PASS, true, false, true);
-    public static final GlassBlocks DARK_FUSED_QUARTZ_PLAYERS_PASS = new GlassBlocks(REGISTRATE, "fused_quartz_dp", "Dark Fused Quartz",
-        GlassCollisionPredicate.PLAYERS_PASS, false, true, true);
-
-    public static final GlassBlocks FUSED_QUARTZ_MOBS_PASS = new GlassBlocks(REGISTRATE, "fused_quartz_m", "Fused Quartz", GlassCollisionPredicate.MOBS_PASS,
-        false, false, false);
-    public static final GlassBlocks ENLIGHTENED_FUSED_QUARTZ_MOBS_PASS = new GlassBlocks(REGISTRATE, "fused_quartz_em", "Enlightened Fused Quartz",
-        GlassCollisionPredicate.MOBS_PASS, true, false, true);
-    public static final GlassBlocks DARK_FUSED_QUARTZ_MOBS_PASS = new GlassBlocks(REGISTRATE, "fused_quartz_dm", "Dark Fused Quartz",
-        GlassCollisionPredicate.MOBS_PASS, false, true, true);
-
-    public static final GlassBlocks FUSED_QUARTZ_ANIMAL_PASS = new GlassBlocks(REGISTRATE, "fused_quartz_a", "Fused Quartz", GlassCollisionPredicate.MOBS_PASS,
-        false, false, false);
-    public static final GlassBlocks ENLIGHTENED_FUSED_QUARTZ_ANIMAL_PASS = new GlassBlocks(REGISTRATE, "fused_quartz_ea", "Enlightened Fused Quartz",
-        GlassCollisionPredicate.MOBS_PASS, true, false, true);
-    public static final GlassBlocks DARK_FUSED_QUARTZ_ANIMAL_PASS = new GlassBlocks(REGISTRATE, "fused_quartz_da", "Dark Fused Quartz",
-        GlassCollisionPredicate.MOBS_PASS, false, true, true);
-
-    public static final GlassBlocks FUSED_QUARTZ_PLAYER_BLOCK = new GlassBlocks(REGISTRATE, "fused_quartz_np", "Fused Quartz",
-        GlassCollisionPredicate.PLAYERS_BLOCK, false, false, false);
-    public static final GlassBlocks ENLIGHTENED_FUSED_QUARTZ_PLAYER_BLOCK = new GlassBlocks(REGISTRATE, "fused_quartz_enp", "Enlightened Fused Quartz",
-        GlassCollisionPredicate.PLAYERS_BLOCK, true, false, true);
-    public static final GlassBlocks DARK_FUSED_QUARTZ_PLAYER_BLOCK = new GlassBlocks(REGISTRATE, "fused_quartz_dnp", "Dark Fused Quartz",
-        GlassCollisionPredicate.PLAYERS_BLOCK, false, true, true);
-
-    public static final GlassBlocks FUSED_QUARTZ_MONSTER_BLOCK = new GlassBlocks(REGISTRATE, "fused_quartz_nm", "Fused Quartz",
-        GlassCollisionPredicate.MOBS_PASS, false, false, false);
-    public static final GlassBlocks ENLIGHTENED_FUSED_QUARTZ_MONSTER_BLOCK = new GlassBlocks(REGISTRATE, "fused_quartz_enm", "Enlightened Fused Quartz",
-        GlassCollisionPredicate.MOBS_PASS, true, false, true);
-    public static final GlassBlocks DARK_FUSED_QUARTZ_MONSTER_BLOCK = new GlassBlocks(REGISTRATE, "fused_quartz_dnm", "Dark Fused Quartz",
-        GlassCollisionPredicate.MOBS_PASS, false, true, true);
-
-    public static final GlassBlocks FUSED_QUARTZ_ANIMAL_BLOCK = new GlassBlocks(REGISTRATE, "fused_quartz_na", "Fused Quartz",
-        GlassCollisionPredicate.MOBS_PASS, false, false, false);
-    public static final GlassBlocks ENLIGHTENED_FUSED_QUARTZ_ANIMAL_BLOCK = new GlassBlocks(REGISTRATE, "fused_quartz_ena", "Enlightened Fused Quartz",
-        GlassCollisionPredicate.MOBS_PASS, true, false, true);
-    public static final GlassBlocks DARK_FUSED_QUARTZ_ANIMAL_BLOCK = new GlassBlocks(REGISTRATE, "fused_quartz_dna", "Dark Fused Quartz",
-        GlassCollisionPredicate.MOBS_PASS, false, true, true);
-
-    public static final GlassBlocks QUITE_CLEAR_GLASS = new GlassBlocks(REGISTRATE, "clear_glass", "Quite Clear Glass", GlassCollisionPredicate.NONE, false,
-        false, true);
-    public static final GlassBlocks ENLIGHTENED_CLEAR_GLASS = new GlassBlocks(REGISTRATE, "enlightened_clear_glass", "Enlightened Clear Glass",
-        GlassCollisionPredicate.NONE, true, false, true);
-    public static final GlassBlocks DARK_CLEAR_GLASS = new GlassBlocks(REGISTRATE, "dark_clear_glass", "Dark Clear Glass", GlassCollisionPredicate.NONE, true,
-        false, true);
-
-    public static final GlassBlocks QUITE_CLEAR_GLASS_PLAYERS_PASS = new GlassBlocks(REGISTRATE, "clear_glass_p", "Quite Clear Glass",
-        GlassCollisionPredicate.PLAYERS_PASS, false, false, false);
-    public static final GlassBlocks ENLIGHTENED_CLEAR_GLASS_PLAYERS_PASS = new GlassBlocks(REGISTRATE, "clear_glass_ep", "Enlightened Clear Glass",
-        GlassCollisionPredicate.PLAYERS_PASS, true, false, true);
-    public static final GlassBlocks DARK_CLEAR_GLASS_PLAYERS_PASS = new GlassBlocks(REGISTRATE, "clear_glass_dp", "Dark Clear Glass",
-        GlassCollisionPredicate.PLAYERS_PASS, true, false, true);
-
-    public static final GlassBlocks QUITE_CLEAR_GLASS_MOBS_PASS = new GlassBlocks(REGISTRATE, "clear_glass_m", "Quite Clear Glass",
-        GlassCollisionPredicate.MOBS_PASS, false, false, false);
-    public static final GlassBlocks ENLIGHTENED_CLEAR_GLASS_MOBS_PASS = new GlassBlocks(REGISTRATE, "clear_glass_em", "Enlightened Clear Glass",
-        GlassCollisionPredicate.MOBS_PASS, true, false, true);
-    public static final GlassBlocks DARK_CLEAR_GLASS_MOBS_PASS = new GlassBlocks(REGISTRATE, "clear_glass_dm", "Dark Clear Glass",
-        GlassCollisionPredicate.MOBS_PASS, true, false, true);
-
-    public static final GlassBlocks QUITE_CLEAR_GLASS_ANIMAL_PASS = new GlassBlocks(REGISTRATE, "clear_glass_a", "Quite Clear Glass",
-        GlassCollisionPredicate.ANIMALS_PASS, false, false, false);
-    public static final GlassBlocks ENLIGHTENED_CLEAR_GLASS_ANIMAL_PASS = new GlassBlocks(REGISTRATE, "clear_glass_ea", "Enlightened Clear Glass",
-        GlassCollisionPredicate.ANIMALS_PASS, true, false, true);
-    public static final GlassBlocks DARK_CLEAR_GLASS_ANIMAL_PASS = new GlassBlocks(REGISTRATE, "clear_glass_da", "Dark Clear Glass",
-        GlassCollisionPredicate.ANIMALS_PASS, true, false, true);
-
-    public static final GlassBlocks QUITE_CLEAR_GLASS_PLAYER_BLOCK = new GlassBlocks(REGISTRATE, "clear_glass_np", "Quite Clear Glass",
-        GlassCollisionPredicate.PLAYERS_BLOCK, false, false, false);
-    public static final GlassBlocks ENLIGHTENED_CLEAR_GLASS_PLAYER_BLOCK = new GlassBlocks(REGISTRATE, "clear_glass_enp", "Enlightened Clear Glass",
-        GlassCollisionPredicate.PLAYERS_BLOCK, true, false, true);
-    public static final GlassBlocks DARK_CLEAR_GLASS_PLAYER_BLOCK = new GlassBlocks(REGISTRATE, "clear_glass_dnp", "Dark Clear Glass",
-        GlassCollisionPredicate.PLAYERS_BLOCK, true, false, true);
-
-    public static final GlassBlocks QUITE_CLEAR_GLASS_MONSTER_BLOCK = new GlassBlocks(REGISTRATE, "clear_glass_nm", "Quite Clear Glass",
-        GlassCollisionPredicate.MOBS_PASS, false, false, false);
-    public static final GlassBlocks ENLIGHTENED_CLEAR_GLASS_MONSTER_BLOCK = new GlassBlocks(REGISTRATE, "clear_glass_enm", "Enlightened Clear Glass",
-        GlassCollisionPredicate.MOBS_PASS, true, false, true);
-    public static final GlassBlocks DARK_CLEAR_GLASS_MONSTER_BLOCK = new GlassBlocks(REGISTRATE, "clear_glass_dnm", "Dark Clear Glass",
-        GlassCollisionPredicate.MOBS_PASS, true, false, true);
-
-    public static final GlassBlocks QUITE_CLEAR_GLASS_ANIMAL_BLOCK = new GlassBlocks(REGISTRATE, "clear_glass_na", "Quite Clear Glass",
-        GlassCollisionPredicate.ANIMALS_BLOCK, false, false, false);
-    public static final GlassBlocks ENLIGHTENED_CLEAR_GLASS_ANIMAL_BLOCK = new GlassBlocks(REGISTRATE, "clear_glass_ena", "Enlightened Clear Glass",
-        GlassCollisionPredicate.ANIMALS_BLOCK, true, false, true);
-    public static final GlassBlocks DARK_CLEAR_GLASS_ANIMAL_BLOCK = new GlassBlocks(REGISTRATE, "clear_glass_dna", "Dark Clear Glass",
-        GlassCollisionPredicate.ANIMALS_BLOCK, true, false, true);
+    private static Map<GlassIdentifier, GlassBlocks> fillGlassMap() {
+        Map<GlassIdentifier, GlassBlocks> map = new HashMap<>();
+        for (GlassLighting lighting: GlassLighting.values()) {
+            for (GlassCollisionPredicate collisionPredicate: GlassCollisionPredicate.values()) {
+                for (Boolean isFused: new boolean[]{false, true}) {
+                    GlassIdentifier identifier = new GlassIdentifier(lighting, collisionPredicate, isFused);
+                    map.put(identifier, new GlassBlocks(REGISTRATE, identifier));
+                }
+            }
+        }
+        return map;
+    }
 
     // endregion
 

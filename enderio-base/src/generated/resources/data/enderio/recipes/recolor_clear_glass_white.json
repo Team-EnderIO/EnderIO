@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "enderio:clear_glass"
+    },
+    {
+      "tag": "enderio:clear_glass"
+    },
+    {
+      "tag": "enderio:clear_glass"
+    },
+    {
+      "tag": "enderio:clear_glass"
+    },
+    {
+      "tag": "enderio:clear_glass"
+    },
+    {
+      "tag": "enderio:clear_glass"
+    },
+    {
+      "tag": "enderio:clear_glass"
+    },
+    {
+      "tag": "enderio:clear_glass"
+    },
+    {
+      "tag": "forge:dyes/white"
+    }
+  ],
+  "result": {
+    "item": "enderio:clear_glass_white",
+    "count": 8
+  }
+}

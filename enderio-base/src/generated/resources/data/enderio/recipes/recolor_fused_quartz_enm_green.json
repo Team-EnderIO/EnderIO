@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "enderio:fused_quartz_enm"
+    },
+    {
+      "tag": "enderio:fused_quartz_enm"
+    },
+    {
+      "tag": "enderio:fused_quartz_enm"
+    },
+    {
+      "tag": "enderio:fused_quartz_enm"
+    },
+    {
+      "tag": "enderio:fused_quartz_enm"
+    },
+    {
+      "tag": "enderio:fused_quartz_enm"
+    },
+    {
+      "tag": "enderio:fused_quartz_enm"
+    },
+    {
+      "tag": "enderio:fused_quartz_enm"
+    },
+    {
+      "tag": "forge:dyes/green"
+    }
+  ],
+  "result": {
+    "item": "enderio:fused_quartz_enm_green",
+    "count": 8
+  }
+}

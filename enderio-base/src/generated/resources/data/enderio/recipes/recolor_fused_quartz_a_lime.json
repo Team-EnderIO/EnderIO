@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "enderio:fused_quartz_a"
+    },
+    {
+      "tag": "enderio:fused_quartz_a"
+    },
+    {
+      "tag": "enderio:fused_quartz_a"
+    },
+    {
+      "tag": "enderio:fused_quartz_a"
+    },
+    {
+      "tag": "enderio:fused_quartz_a"
+    },
+    {
+      "tag": "enderio:fused_quartz_a"
+    },
+    {
+      "tag": "enderio:fused_quartz_a"
+    },
+    {
+      "tag": "enderio:fused_quartz_a"
+    },
+    {
+      "tag": "forge:dyes/lime"
+    }
+  ],
+  "result": {
+    "item": "enderio:fused_quartz_a_lime",
+    "count": 8
+  }
+}

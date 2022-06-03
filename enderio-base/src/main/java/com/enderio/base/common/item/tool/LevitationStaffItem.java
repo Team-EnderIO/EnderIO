@@ -7,6 +7,7 @@ import com.enderio.base.common.capability.AcceptingFluidItemHandler;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.config.base.BaseConfig;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -82,7 +83,7 @@ public class LevitationStaffItem extends PoweredToggledItem implements IItemOver
     }
 
     @Override
-    public void renderOverlay(ItemStack pStack, int pXPosition, int pYPosition) {
+    public void renderOverlay(ItemStack pStack, int pXPosition, int pYPosition, PoseStack poseStack) {
         ItemBarRenderer.renderFluidOverlay(pStack, 0, pXPosition, pYPosition);
     }
 }
