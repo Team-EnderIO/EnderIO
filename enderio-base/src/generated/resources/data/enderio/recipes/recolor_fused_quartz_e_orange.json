@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "enderio:fused_quartz_e"
+    },
+    {
+      "tag": "enderio:fused_quartz_e"
+    },
+    {
+      "tag": "enderio:fused_quartz_e"
+    },
+    {
+      "tag": "enderio:fused_quartz_e"
+    },
+    {
+      "tag": "enderio:fused_quartz_e"
+    },
+    {
+      "tag": "enderio:fused_quartz_e"
+    },
+    {
+      "tag": "enderio:fused_quartz_e"
+    },
+    {
+      "tag": "enderio:fused_quartz_e"
+    },
+    {
+      "tag": "forge:dyes/orange"
+    }
+  ],
+  "result": {
+    "item": "enderio:fused_quartz_e_orange",
+    "count": 8
+  }
+}

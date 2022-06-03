@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "enderio:clear_glass_dna"
+    },
+    {
+      "tag": "enderio:clear_glass_dna"
+    },
+    {
+      "tag": "enderio:clear_glass_dna"
+    },
+    {
+      "tag": "enderio:clear_glass_dna"
+    },
+    {
+      "tag": "enderio:clear_glass_dna"
+    },
+    {
+      "tag": "enderio:clear_glass_dna"
+    },
+    {
+      "tag": "enderio:clear_glass_dna"
+    },
+    {
+      "tag": "enderio:clear_glass_dna"
+    },
+    {
+      "tag": "forge:dyes/black"
+    }
+  ],
+  "result": {
+    "item": "enderio:clear_glass_dna_black",
+    "count": 8
+  }
+}

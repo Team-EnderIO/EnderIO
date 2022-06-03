@@ -14,6 +14,7 @@ import com.enderio.base.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.util.EnergyUtil;
 import com.enderio.base.common.util.TooltipUtil;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -113,7 +114,7 @@ public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipPr
         }
     }
 
-    default void renderOverlay(ItemStack pStack, int pXPosition, int pYPosition) {
+    default void renderOverlay(ItemStack pStack, int pXPosition, int pYPosition, PoseStack poseStack) {
         ItemBarRenderer.renderEnergyOverlay(pStack, pXPosition, pYPosition);
     }
 

@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "enderio:fused_quartz"
+    },
+    {
+      "tag": "enderio:fused_quartz"
+    },
+    {
+      "tag": "enderio:fused_quartz"
+    },
+    {
+      "tag": "enderio:fused_quartz"
+    },
+    {
+      "tag": "enderio:fused_quartz"
+    },
+    {
+      "tag": "enderio:fused_quartz"
+    },
+    {
+      "tag": "enderio:fused_quartz"
+    },
+    {
+      "tag": "enderio:fused_quartz"
+    },
+    {
+      "tag": "forge:dyes/black"
+    }
+  ],
+  "result": {
+    "item": "enderio:fused_quartz_black",
+    "count": 8
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "enderio:clear_glass_dna"
+    },
+    {
+      "tag": "enderio:clear_glass_dna"
+    },
+    {
+      "tag": "enderio:clear_glass_dna"
+    },
+    {
+      "tag": "enderio:clear_glass_dna"
+    },
+    {
+      "tag": "enderio:clear_glass_dna"
+    },
+    {
+      "tag": "enderio:clear_glass_dna"
+    },
+    {
+      "tag": "enderio:clear_glass_dna"
+    },
+    {
+      "tag": "enderio:clear_glass_dna"
+    },
+    {
+      "tag": "forge:dyes/lime"
+    }
+  ],
+  "result": {
+    "item": "enderio:clear_glass_dna_lime",
+    "count": 8
+  }
+}
