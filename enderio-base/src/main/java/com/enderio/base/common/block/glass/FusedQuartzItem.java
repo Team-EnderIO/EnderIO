@@ -16,7 +16,7 @@ public class FusedQuartzItem extends BlockItem implements IItemOverlayRender {
     @Override
     public void renderOverlay(ItemStack pStack, int pXPosition, int pYPosition, PoseStack poseStack) {
         poseStack.pushPose();
-        poseStack.translate(0,0,190);
+        poseStack.translate(0,0,IItemOverlayRender.BLIT_HEIGHT_COUNT - 1);
         if (getBlock() instanceof FusedQuartzBlock block) {
             IEnderScreen.renderIcon(poseStack, new Vector2i(0,0), block.getCollisionPredicate());
             IEnderScreen.renderIcon(poseStack, new Vector2i(0,0), block.getGlassLighting());
