@@ -1,6 +1,7 @@
 package com.enderio.base.common.block.glass;
 
 import com.enderio.base.EnderIO;
+import com.enderio.base.common.integration.IntegrationManager;
 import com.enderio.base.common.item.EIOCreativeTabs;
 import com.enderio.base.common.tag.EIOTags;
 import com.tterrag.registrate.Registrate;
@@ -15,11 +16,16 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 
+import javax.annotation.Nullable;
+
 /**
  * Container helper for the fused glass/quartz blocks as theres a lot, and this will tidy stuff up.
  */
 public class GlassBlocks {
-    public final BlockEntry<FusedQuartzBlock> CLEAR, WHITE, ORANGE, MAGENTA, LIGHT_BLUE, YELLOW, LIME, PINK, GRAY, LIGHT_GRAY, CYAN, PURPLE, BLUE, BROWN, GREEN, RED, BLACK;
+    public final BlockEntry<FusedQuartzBlock> CLEAR;
+
+    @Nullable
+    public BlockEntry<FusedQuartzBlock> WHITE, ORANGE, MAGENTA, LIGHT_BLUE, YELLOW, LIME, PINK, GRAY, LIGHT_GRAY, CYAN, PURPLE, BLUE, BROWN, GREEN, RED, BLACK;
 
     private final GlassCollisionPredicate collisionPredicate;
 
@@ -37,22 +43,27 @@ public class GlassBlocks {
         String name = createGlassName(identifier);
         String english = createEnglishGlassName(identifier);
         CLEAR = register(registrate, name, english);
-        WHITE = register(registrate, name.concat("_white"), "White ".concat(english), DyeColor.WHITE);
-        ORANGE = register(registrate, name.concat("_orange"), "Orange ".concat(english), DyeColor.ORANGE);
-        MAGENTA = register(registrate, name.concat("_magenta"), "Magenta ".concat(english), DyeColor.MAGENTA);
-        LIGHT_BLUE = register(registrate, name.concat("_light_blue"), "Light Blue ".concat(english), DyeColor.LIGHT_BLUE);
-        YELLOW = register(registrate, name.concat("_yellow"), "Yellow ".concat(english), DyeColor.YELLOW);
-        LIME = register(registrate, name.concat("_lime"), "Lime ".concat(english), DyeColor.LIME);
-        PINK = register(registrate, name.concat("_pink"), "Pink ".concat(english), DyeColor.PINK);
-        GRAY = register(registrate, name.concat("_gray"), "Gray ".concat(english), DyeColor.GRAY);
-        LIGHT_GRAY = register(registrate, name.concat("_light_gray"), "Light Gray ".concat(english), DyeColor.LIGHT_GRAY);
-        CYAN = register(registrate, name.concat("_cyan"), "Cyan ".concat(english), DyeColor.CYAN);
-        PURPLE = register(registrate, name.concat("_purple"), "Purple ".concat(english), DyeColor.PURPLE);
-        BLUE = register(registrate, name.concat("_blue"), "Blue ".concat(english), DyeColor.BLUE);
-        BROWN = register(registrate, name.concat("_brown"), "Brown ".concat(english), DyeColor.BROWN);
-        GREEN = register(registrate, name.concat("_green"), "Green ".concat(english), DyeColor.GREEN);
-        RED = register(registrate, name.concat("_red"), "Red ".concat(english), DyeColor.RED);
-        BLACK = register(registrate, name.concat("_black"), "Black ".concat(english), DyeColor.BLACK);
+        IntegrationManager.DECORATION.ifPresent(
+            dummyIntegration -> {
+                Registrate decorationRegistrate = dummyIntegration.registrate();
+                WHITE = register(decorationRegistrate, name.concat("_white"), "White ".concat(english), DyeColor.WHITE);
+                ORANGE = register(decorationRegistrate, name.concat("_orange"), "Orange ".concat(english), DyeColor.ORANGE);
+                MAGENTA = register(decorationRegistrate, name.concat("_magenta"), "Magenta ".concat(english), DyeColor.MAGENTA);
+                LIGHT_BLUE = register(decorationRegistrate, name.concat("_light_blue"), "Light Blue ".concat(english), DyeColor.LIGHT_BLUE);
+                YELLOW = register(decorationRegistrate, name.concat("_yellow"), "Yellow ".concat(english), DyeColor.YELLOW);
+                LIME = register(decorationRegistrate, name.concat("_lime"), "Lime ".concat(english), DyeColor.LIME);
+                PINK = register(decorationRegistrate, name.concat("_pink"), "Pink ".concat(english), DyeColor.PINK);
+                GRAY = register(decorationRegistrate, name.concat("_gray"), "Gray ".concat(english), DyeColor.GRAY);
+                LIGHT_GRAY = register(decorationRegistrate, name.concat("_light_gray"), "Light Gray ".concat(english), DyeColor.LIGHT_GRAY);
+                CYAN = register(decorationRegistrate, name.concat("_cyan"), "Cyan ".concat(english), DyeColor.CYAN);
+                PURPLE = register(decorationRegistrate, name.concat("_purple"), "Purple ".concat(english), DyeColor.PURPLE);
+                BLUE = register(decorationRegistrate, name.concat("_blue"), "Blue ".concat(english), DyeColor.BLUE);
+                BROWN = register(decorationRegistrate, name.concat("_brown"), "Brown ".concat(english), DyeColor.BROWN);
+                GREEN = register(decorationRegistrate, name.concat("_green"), "Green ".concat(english), DyeColor.GREEN);
+                RED = register(decorationRegistrate, name.concat("_red"), "Red ".concat(english), DyeColor.RED);
+                BLACK = register(decorationRegistrate, name.concat("_black"), "Black ".concat(english), DyeColor.BLACK);
+            }
+        );
     }
 
     private ResourceLocation getModelFile() {
