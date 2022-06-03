@@ -27,6 +27,12 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
     private int energyConsumed;
 
     /**
+     * Amount of energy needed to be consumed.
+     * Stored because the recipe needs access to the container to determine energy cost. Once inputs are consumed, we can't query again.
+     */
+    private int energyCost;
+
+    /**
      * Whether or not inputs have been collected.
      */
     private boolean collectedInputs;
@@ -50,57 +56,59 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
         return recipe;
     }
 
-    protected abstract boolean takeOutputs(List<ItemStack> outputs, boolean simulate);
+    protected abstract void takeInputs(R recipe);
+
+    protected abstract boolean takeOutputs(R recipe, C container, boolean simulate);
 
     @Override
     public void tick() {
-        // TODO: 28/05/2022 Don't start if the output cannot be taken
+        // If the recipe is done, don't let it tick.
+        if (complete)
+            return;
 
-//        // If the recipe is done, don't let it tick.
-//        if (complete)
-//            return;
-//
-//        // If we have a recipe ready to load up, load it.
-//        if (recipeToLoad != null) {
-//            // Attempt to load the saved recipe.
-//            recipe = loadRecipe(recipeToLoad);
-//            recipeToLoad = null;
-//        }
-//
-//        // If the recipe load fails, ignore it and consider the task complete.
-//        if (recipe == null) {
-//            complete = true;
-//            return;
-//        }
-//
-//        // If we can't output, cancel the task. However if for some reason we can't output after the inputs are collected, don't.
-//        if (!collectedInputs && !takeOutputs(recipe.craft(container), true)) {
-//            complete = true;
-//            return;
-//        }
-//
-//        // If we haven't done so already, consume inputs for the recipe.
-//        if (!collectedInputs) {
-//            recipe.consumeInputs(container);
-//            collectedInputs = true;
-//        }
-//
-//        // Try to consume as much energy as possible to finish the craft.
-//        if (energyConsumed <= recipe.getEnergyCost()) {
-//            energyConsumed += energyStorage.consumeEnergy(recipe.getEnergyCost() - energyConsumed);
-//        }
-//
-//        // If the recipe has been crafted, attempt to put it into storage
-//        if (energyConsumed >= recipe.getEnergyCost()) {
-//            // Perform the craft
-//            List<ItemStack> outputs = recipe.craft(container);
-//
-//            // Attempt to add these to the inventory
-//            if (takeOutputs(outputs, false)) {
-//                // The receiver was able to take the outputs, task complete.
-//                complete = true;
-//            }
-//        }
+        // If we have a recipe ready to load up, load it.
+        if (recipeToLoad != null) {
+            // Attempt to load the saved recipe.
+            recipe = loadRecipe(recipeToLoad);
+            recipeToLoad = null;
+        }
+
+        // If the recipe load fails, ignore it and consider the task complete.
+        if (recipe == null) {
+            complete = true;
+            return;
+        }
+
+        // If we can't inputs or outputs, cancel the task. However if for some reason we can't output after the inputs are collected, don't.
+        if (!collectedInputs && (!takeOutputs(recipe, container, true) || !recipe.matches(container, level))) {
+            complete = true;
+            return;
+        }
+
+        // If we haven't done so already, consume inputs for the recipe.
+        if (!collectedInputs) {
+            // Consume inputs for the recipe.
+            takeInputs(recipe);
+            collectedInputs = true;
+
+            // Store the recipe energy cost.
+            // This is run afterwards as it allows container context changes after takeInputs()
+            energyCost = recipe.getEnergyCost(container);
+        }
+
+        // Try to consume as much energy as possible to finish the craft.
+        if (energyConsumed <= energyCost) {
+            energyConsumed += energyStorage.consumeEnergy(energyCost - energyConsumed);
+        }
+
+        // If the recipe has been crafted, attempt to put it into storage
+        if (energyConsumed >= energyCost) {
+            // Attempt to complete the craft
+            if (takeOutputs(recipe, container, false)) {
+                // The receiver was able to take the outputs, task complete.
+                complete = true;
+            }
+        }
     }
 
     @Override
@@ -120,6 +128,7 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
         CompoundTag tag = new CompoundTag();
         tag.put("recipe", serializeRecipe(new CompoundTag(), recipe));
         tag.putInt("energy_consumed", energyConsumed);
+        tag.putInt("energy_cost", energyConsumed);
         tag.putBoolean("collected_inputs", collectedInputs);
         tag.putBoolean("complete", complete);
         return tag;
@@ -129,6 +138,7 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
     public void deserializeNBT(CompoundTag nbt) {
         recipeToLoad = nbt.getCompound("recipe").copy();
         energyConsumed = nbt.getInt("energy_consumed");
+        energyCost = nbt.getInt("energy_cost");
         collectedInputs = nbt.getBoolean("collected_inputs");
         complete = nbt.getBoolean("complete");
     }

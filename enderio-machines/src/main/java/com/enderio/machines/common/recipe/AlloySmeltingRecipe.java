@@ -2,6 +2,7 @@ package com.enderio.machines.common.recipe;
 
 import com.enderio.api.machines.recipes.IAlloySmeltingRecipe;
 import com.enderio.api.recipe.CountedIngredient;
+import com.enderio.machines.common.blockentity.NewAlloySmelterBlockEntity;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -46,7 +47,7 @@ public class AlloySmeltingRecipe implements IAlloySmeltingRecipe {
     }
 
     @Override
-    public int getEnergyCost(Container container) {
+    public int getEnergyCost(NewAlloySmelterBlockEntity.AlloySmelterContainer container) {
         return energy;
     }
 
@@ -56,12 +57,43 @@ public class AlloySmeltingRecipe implements IAlloySmeltingRecipe {
     }
 
     @Override
-    public boolean matches(Container container, Level level) {
-        return false;
+    public boolean matches(NewAlloySmelterBlockEntity.AlloySmelterContainer container, Level level) {
+        boolean[] matched = new boolean[3];
+
+        // Iterate over the slots
+        for (int i = 0; i < 3; i++) {
+
+            // Iterate over the inputs
+            for (int j = 0; j < 3; j++) {
+
+                // If this ingredient has been matched already, continue
+                if (matched[j])
+                    continue;
+
+                if (j < inputs.size()) {
+                    // If we expect an input, test we have a match for it.
+                    if (inputs.get(j).test(container.getItem(i))) {
+                        matched[j] = true;
+                    }
+                } else if (container.getItem(i) == ItemStack.EMPTY) {
+                    // If we don't expect an input, make sure we have a blank for it.
+                    matched[j] = true;
+                }
+            }
+
+        }
+
+        // If we matched all our ingredients, we win!
+        for (int i = 0; i < 3; i++) {
+            if (!matched[i])
+                return false;
+        }
+
+        return true;
     }
 
     @Override
-    public ItemStack assemble(Container container) {
+    public ItemStack assemble(NewAlloySmelterBlockEntity.AlloySmelterContainer container) {
         return output.copy();
     }
 

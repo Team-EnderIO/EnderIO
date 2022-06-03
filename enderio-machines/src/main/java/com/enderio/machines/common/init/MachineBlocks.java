@@ -66,29 +66,29 @@ public class MachineBlocks {
         .build()
         .register();
 
-    public static final BlockEntry<SimpleMachineBlock> SIMPLE_POWERED_FURNACE = REGISTRATE
-        .block("simple_powered_furnace", props -> new SimpleMachineBlock(props, MachineBlockEntities.SIMPLE_POWERED_FURNACE))
-        .properties(props -> props.strength(2.5f, 8))
-        .loot(MachinesLootTable::copyNBT)
-        .addLayer(() -> RenderType::cutout)
-        .blockstate((ctx, prov) -> {
-            MachinesBlockState.machineBlock(ctx, prov,
-                EIOModel.compositeModel(prov.models(), ctx.getName(), builder -> builder
-                    .component(EIOMachines.loc("block/simple_machine_frame"))
-                    .component(EIOMachines.loc("block/io_overlay"))
-                    .component(EIOMachines.loc("block/simple_powered_furnace_front"))),
-                EIOModel.compositeModel(prov.models(), ctx.getName() + "_on", builder -> builder
-                    .component(EIOMachines.loc("block/simple_machine_frame"))
-                    .component(EIOMachines.loc("block/io_overlay"))
-                    .component(prov
-                        .models()
-                        .withExistingParent("simple_powered_furnace_front_on", EIOMachines.loc("block/simple_powered_furnace_front"))
-                        .texture("front", EIOMachines.loc("block/simple_powered_furnace_front")))));
-        })
-        .item()
-        .tab(() -> EIOCreativeTabs.MACHINES)
-        .build()
-        .register();
+//    public static final BlockEntry<SimpleMachineBlock> SIMPLE_POWERED_FURNACE = REGISTRATE
+//        .block("simple_powered_furnace", props -> new SimpleMachineBlock(props, MachineBlockEntities.SIMPLE_POWERED_FURNACE))
+//        .properties(props -> props.strength(2.5f, 8))
+//        .loot(MachinesLootTable::copyNBT)
+//        .addLayer(() -> RenderType::cutout)
+//        .blockstate((ctx, prov) -> {
+//            MachinesBlockState.machineBlock(ctx, prov,
+//                EIOModel.compositeModel(prov.models(), ctx.getName(), builder -> builder
+//                    .component(EIOMachines.loc("block/simple_machine_frame"))
+//                    .component(EIOMachines.loc("block/io_overlay"))
+//                    .component(EIOMachines.loc("block/simple_powered_furnace_front"))),
+//                EIOModel.compositeModel(prov.models(), ctx.getName() + "_on", builder -> builder
+//                    .component(EIOMachines.loc("block/simple_machine_frame"))
+//                    .component(EIOMachines.loc("block/io_overlay"))
+//                    .component(prov
+//                        .models()
+//                        .withExistingParent("simple_powered_furnace_front_on", EIOMachines.loc("block/simple_powered_furnace_front"))
+//                        .texture("front", EIOMachines.loc("block/simple_powered_furnace_front")))));
+//        })
+//        .item()
+//        .tab(() -> EIOCreativeTabs.MACHINES)
+//        .build()
+//        .register();
 
 //    public static final BlockEntry<ProgressMachineBlock> SIMPLE_ALLOY_SMELTER = REGISTRATE
 //        .block("simple_alloy_smelter", props -> new ProgressMachineBlock(props, MachineBlockEntities.SIMPLE_ALLOY_SMELTER))

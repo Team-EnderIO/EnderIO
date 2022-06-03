@@ -23,10 +23,10 @@ public class MachineBlockEntities {
         .validBlocks(MachineBlocks.ENCHANTER)
         .register();
 
-    public static final BlockEntityEntry<AlloySmelterBlockEntity.Furnace> SIMPLE_POWERED_FURNACE = REGISTRATE
-        .blockEntity("simple_powered_furnace", AlloySmelterBlockEntity.Furnace::new)
-        .validBlocks(MachineBlocks.SIMPLE_POWERED_FURNACE)
-        .register();
+//    public static final BlockEntityEntry<AlloySmelterBlockEntity.Furnace> SIMPLE_POWERED_FURNACE = REGISTRATE
+//        .blockEntity("simple_powered_furnace", AlloySmelterBlockEntity.Furnace::new)
+//        .validBlocks(MachineBlocks.SIMPLE_POWERED_FURNACE)
+//        .register();
 
 //    public static final BlockEntityEntry<AlloySmelterBlockEntity.Simple> SIMPLE_ALLOY_SMELTER = REGISTRATE
 //        .blockEntity("simple_alloy_smelter", AlloySmelterBlockEntity.Simple::new)
