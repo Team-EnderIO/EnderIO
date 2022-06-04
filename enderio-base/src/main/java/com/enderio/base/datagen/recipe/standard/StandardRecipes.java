@@ -15,6 +15,7 @@ public class StandardRecipes {
         dataGenerator.addProvider(new ItemRecipes(dataGenerator));
         dataGenerator.addProvider(new GrindingballRecipeGenerator(dataGenerator));
         dataGenerator.addProvider(new GlassRecipes(dataGenerator));
+        dataGenerator.addProvider(new FireCraftingRecipes(dataGenerator));
     }
 
     public static void saveRecipe(RecipeBuilder recipe, String variant, Consumer<FinishedRecipe> recipeConsumer) {

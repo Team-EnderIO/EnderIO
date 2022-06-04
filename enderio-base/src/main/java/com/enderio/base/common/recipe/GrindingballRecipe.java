@@ -1,7 +1,8 @@
-package com.enderio.base.common.recipe.grindingball;
+package com.enderio.base.common.recipe;
 
 import com.enderio.api.IGrindingballData;
 import com.enderio.api.recipe.DataGenSerializer;
+import com.enderio.base.EnderIO;
 import com.enderio.base.common.init.EIORecipes;
 import com.google.gson.JsonObject;
 import net.minecraft.core.NonNullList;
@@ -107,21 +108,31 @@ public class GrindingballRecipe implements IGrindingballData, Recipe<Container> 
 
         @Override
         public GrindingballRecipe fromNetwork(ResourceLocation pRecipeId, FriendlyByteBuf pBuffer) {
-            Ingredient grindingball = Ingredient.fromNetwork(pBuffer);
-            float grinding = pBuffer.readFloat();
-            float chance = pBuffer.readFloat();
-            float power = pBuffer.readFloat();
-            int durability = pBuffer.readInt();
-            return new GrindingballRecipe(pRecipeId, grindingball, grinding, chance, power, durability);
+            try {
+                Ingredient grindingball = Ingredient.fromNetwork(pBuffer);
+                float grinding = pBuffer.readFloat();
+                float chance = pBuffer.readFloat();
+                float power = pBuffer.readFloat();
+                int durability = pBuffer.readInt();
+                return new GrindingballRecipe(pRecipeId, grindingball, grinding, chance, power, durability);
+            } catch (Exception e) {
+                EnderIO.LOGGER.error("Error reading grinding ball recipe from packet.", e);
+                throw e;
+            }
         }
 
         @Override
         public void toNetwork(FriendlyByteBuf pBuffer, GrindingballRecipe pRecipe) {
-            pRecipe.grindingball.toNetwork(pBuffer);
-            pBuffer.writeFloat(pRecipe.grinding);
-            pBuffer.writeFloat(pRecipe.chance);
-            pBuffer.writeFloat(pRecipe.power);
-            pBuffer.writeInt(pRecipe.durability);
+            try {
+                pRecipe.grindingball.toNetwork(pBuffer);
+                pBuffer.writeFloat(pRecipe.grinding);
+                pBuffer.writeFloat(pRecipe.chance);
+                pBuffer.writeFloat(pRecipe.power);
+                pBuffer.writeInt(pRecipe.durability);
+            } catch (Exception ex) {
+                EnderIO.LOGGER.error("Error writing grinding ball recipe to packet.", ex);
+                throw ex;
+            }
         }
 
         @Override

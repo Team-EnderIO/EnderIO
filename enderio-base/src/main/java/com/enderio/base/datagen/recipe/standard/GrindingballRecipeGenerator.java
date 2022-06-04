@@ -1,7 +1,7 @@
 package com.enderio.base.datagen.recipe.standard;
 
 import com.enderio.base.common.init.EIOItems;
-import com.enderio.base.common.recipe.grindingball.GrindingballRecipe;
+import com.enderio.base.common.recipe.GrindingballRecipe;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
@@ -36,7 +36,7 @@ public class GrindingballRecipeGenerator extends RecipeProvider {
     }
 
     protected void build(GrindingballRecipe recipe, String name, Consumer<FinishedRecipe> recipeConsumer) {
-        recipeConsumer.accept(new GrindingballRecipeResult(recipe, name));
+        recipeConsumer.accept(new FinishedGrindingballRecipe(recipe, name));
     }
 
 }
