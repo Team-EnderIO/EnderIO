@@ -2,7 +2,7 @@ package com.enderio.base.common.init;
 
 import com.enderio.base.EnderIO;
 import com.enderio.base.common.recipe.FireCraftingRecipe;
-import com.enderio.base.common.recipe.grindingball.GrindingballRecipe;
+import com.enderio.base.common.recipe.GrindingballRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;

@@ -1,7 +1,7 @@
 package com.enderio.base.datagen.recipe.standard;
 
 import com.enderio.base.common.init.EIOItems;
-import com.enderio.base.common.recipe.grindingball.GrindingballRecipe;
+import com.enderio.base.common.recipe.GrindingballRecipe;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
