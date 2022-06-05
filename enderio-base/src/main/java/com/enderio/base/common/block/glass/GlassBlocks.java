@@ -1,7 +1,6 @@
 package com.enderio.base.common.block.glass;
 
 import com.enderio.base.EnderIO;
-import com.enderio.base.common.integration.IntegrationManager;
 import com.enderio.base.common.item.EIOCreativeTabs;
 import com.enderio.base.common.tag.EIOTags;
 import com.google.common.collect.ImmutableMap;
@@ -14,11 +13,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 

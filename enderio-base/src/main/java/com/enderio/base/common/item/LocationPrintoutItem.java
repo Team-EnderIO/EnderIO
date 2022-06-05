@@ -1,8 +1,8 @@
 package com.enderio.base.common.item;
 
 import com.enderio.base.common.init.EIOCapabilities;
-import com.enderio.api.capability.IMultiCapabilityItem;
-import com.enderio.api.capability.MultiCapabilityProvider;
+import com.enderio.core.common.capability.IMultiCapabilityItem;
+import com.enderio.core.common.capability.MultiCapabilityProvider;
 import com.enderio.api.capability.CoordinateSelection;
 import com.enderio.base.common.capability.CoordinateSelectionHolder;
 import com.enderio.api.capability.ICoordinateSelectionHolder;

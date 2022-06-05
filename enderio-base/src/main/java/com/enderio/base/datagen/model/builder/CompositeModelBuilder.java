@@ -1,7 +1,7 @@
 package com.enderio.base.datagen.model.builder;
 
 import com.enderio.base.EnderIO;
-import com.enderio.base.client.model.composite.CompositeModelComponent;
+import com.enderio.core.client.model.composite.CompositeModelComponent;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mojang.math.Vector3f;

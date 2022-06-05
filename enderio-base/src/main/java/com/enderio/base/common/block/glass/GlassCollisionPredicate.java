@@ -4,7 +4,7 @@ import com.enderio.base.EnderIO;
 import com.enderio.base.client.gui.IIcon;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.base.common.util.Vector2i;
+import com.enderio.core.common.util.Vector2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Mob;

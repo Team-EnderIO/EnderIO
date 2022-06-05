@@ -1,6 +1,6 @@
 package com.enderio.base.client.renderer.item;
 
-import com.enderio.base.common.util.EnergyUtil;
+import com.enderio.core.common.util.EnergyUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.renderer.GameRenderer;

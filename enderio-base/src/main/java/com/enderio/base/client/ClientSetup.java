@@ -2,11 +2,11 @@ package com.enderio.base.client;
 
 import com.enderio.base.EnderIO;
 import com.enderio.base.client.model.DummyCustomRenderModel;
-import com.enderio.base.client.model.composite.CompositeModelLoader;
+import com.enderio.core.client.model.composite.CompositeModelLoader;
 import com.enderio.base.client.model.painted.PaintedSimpleModel;
 import com.enderio.base.client.model.painted.PaintedSlabModel;
 import com.enderio.base.client.renderer.blockentity.GraveRenderer;
-import com.enderio.base.common.blockentity.IPaintableBlockEntity;
+import com.enderio.api.paint.IPaintableBlockEntity;
 import com.enderio.base.common.init.EIOBlockEntities;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOFluids;

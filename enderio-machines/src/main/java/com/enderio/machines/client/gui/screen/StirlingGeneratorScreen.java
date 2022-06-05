@@ -3,7 +3,7 @@ package com.enderio.machines.client.gui.screen;
 import com.enderio.base.client.gui.screen.EIOScreen;
 import com.enderio.base.client.gui.widgets.EnumIconWidget;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.base.common.util.Vector2i;
+import com.enderio.core.common.util.Vector2i;
 import com.enderio.machines.EIOMachines;
 import com.enderio.machines.client.gui.widget.EnergyWidget;
 import com.enderio.machines.client.gui.widget.ProgressWidget;

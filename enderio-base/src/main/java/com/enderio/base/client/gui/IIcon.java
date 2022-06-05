@@ -1,6 +1,6 @@
 package com.enderio.base.client.gui;
 
-import com.enderio.base.common.util.Vector2i;
+import com.enderio.core.common.util.Vector2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;

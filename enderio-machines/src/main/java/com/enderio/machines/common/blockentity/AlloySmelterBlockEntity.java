@@ -1,8 +1,8 @@
 package com.enderio.machines.common.blockentity;
 
 import com.enderio.api.capacitor.CapacitorKey;
-import com.enderio.base.common.blockentity.sync.EnumDataSlot;
-import com.enderio.base.common.blockentity.sync.SyncMode;
+import com.enderio.core.common.blockentity.sync.EnumDataSlot;
+import com.enderio.core.common.blockentity.sync.SyncMode;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.PoweredCraftingMachineEntity;
 import com.enderio.machines.common.init.MachineCapacitorKeys;

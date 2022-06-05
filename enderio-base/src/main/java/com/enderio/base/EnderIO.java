@@ -14,7 +14,6 @@ import com.enderio.base.common.init.EIOPackets;
 import com.enderio.base.common.init.EIORecipes;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.config.base.BaseConfig;
-import com.enderio.base.config.decor.DecorConfig;
 import com.enderio.base.config.machines.MachinesConfig;
 import com.enderio.base.datagen.tags.EIOFluidTagsProvider;
 import com.enderio.base.datagen.tags.EIOItemTagsProvider;
@@ -69,8 +68,6 @@ public class EnderIO {
         var ctx = ModLoadingContext.get();
         ctx.registerConfig(ModConfig.Type.COMMON, BaseConfig.COMMON_SPEC, "enderio/base-common.toml");
         ctx.registerConfig(ModConfig.Type.CLIENT, BaseConfig.CLIENT_SPEC, "enderio/base-client.toml");
-        ctx.registerConfig(ModConfig.Type.COMMON, DecorConfig.COMMON_SPEC, "enderio/decor-common.toml");
-        ctx.registerConfig(ModConfig.Type.CLIENT, DecorConfig.CLIENT_SPEC, "enderio/decor-client.toml");
         ctx.registerConfig(ModConfig.Type.COMMON, MachinesConfig.COMMON_SPEC, "enderio/machines-common.toml");
         ctx.registerConfig(ModConfig.Type.CLIENT, MachinesConfig.CLIENT_SPEC, "enderio/machines-client.toml");
 

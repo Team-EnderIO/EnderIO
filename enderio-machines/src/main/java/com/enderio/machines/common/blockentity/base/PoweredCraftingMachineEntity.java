@@ -1,8 +1,8 @@
 package com.enderio.machines.common.blockentity.base;
 
 import com.enderio.api.capacitor.CapacitorKey;
-import com.enderio.base.common.blockentity.sync.FloatDataSlot;
-import com.enderio.base.common.blockentity.sync.SyncMode;
+import com.enderio.core.common.blockentity.sync.FloatDataSlot;
+import com.enderio.core.common.blockentity.sync.SyncMode;
 import com.enderio.api.UseOnly;
 import com.enderio.machines.common.block.ProgressMachineBlock;
 import com.enderio.api.recipe.IMachineRecipe;

@@ -1,5 +1,6 @@
 package com.enderio.base.client.model;
 
+import com.enderio.core.client.model.ItemTransformUtil;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Pair;

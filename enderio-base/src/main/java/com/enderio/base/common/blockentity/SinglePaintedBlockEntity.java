@@ -1,5 +1,6 @@
 package com.enderio.base.common.blockentity;
 
+import com.enderio.api.paint.IPaintableBlockEntity;
 import com.enderio.base.common.util.PaintUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

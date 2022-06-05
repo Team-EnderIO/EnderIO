@@ -1,8 +1,8 @@
 package com.enderio.machines.common.blockentity.sync;
 
 import com.enderio.api.capability.ICapacitorData;
-import com.enderio.base.common.blockentity.sync.EnderDataSlot;
-import com.enderio.base.common.blockentity.sync.SyncMode;
+import com.enderio.core.common.blockentity.sync.EnderDataSlot;
+import com.enderio.core.common.blockentity.sync.SyncMode;
 import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.base.common.capacitor.DefaultCapacitorData;
 import net.minecraft.nbt.CompoundTag;

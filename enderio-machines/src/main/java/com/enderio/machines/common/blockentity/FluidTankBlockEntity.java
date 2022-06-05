@@ -1,7 +1,7 @@
 package com.enderio.machines.common.blockentity;
 
-import com.enderio.base.common.blockentity.sync.FluidStackDataSlot;
-import com.enderio.base.common.blockentity.sync.SyncMode;
+import com.enderio.core.common.blockentity.sync.FluidStackDataSlot;
+import com.enderio.core.common.blockentity.sync.SyncMode;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;

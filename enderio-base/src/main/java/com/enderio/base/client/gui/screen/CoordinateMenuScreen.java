@@ -4,7 +4,7 @@ import com.enderio.base.EnderIO;
 import com.enderio.base.common.menu.CoordinateMenu;
 import com.enderio.base.common.init.EIOPackets;
 import com.enderio.base.common.network.packet.UpdateCoordinateSelectionNameMenuPacket;
-import com.enderio.base.common.util.Vector2i;
+import com.enderio.core.common.util.Vector2i;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
