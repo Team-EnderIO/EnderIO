@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "enderio:clear_glass_na"
+    },
+    {
+      "tag": "enderio:clear_glass_na"
+    },
+    {
+      "tag": "enderio:clear_glass_na"
+    },
+    {
+      "tag": "enderio:clear_glass_na"
+    },
+    {
+      "tag": "enderio:clear_glass_na"
+    },
+    {
+      "tag": "enderio:clear_glass_na"
+    },
+    {
+      "tag": "enderio:clear_glass_na"
+    },
+    {
+      "tag": "enderio:clear_glass_na"
+    },
+    {
+      "tag": "forge:dyes/purple"
+    }
+  ],
+  "result": {
+    "item": "enderio:clear_glass_na_purple",
+    "count": 8
+  }
+}

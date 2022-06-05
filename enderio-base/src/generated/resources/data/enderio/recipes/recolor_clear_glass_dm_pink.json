@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "enderio:clear_glass_dm"
+    },
+    {
+      "tag": "enderio:clear_glass_dm"
+    },
+    {
+      "tag": "enderio:clear_glass_dm"
+    },
+    {
+      "tag": "enderio:clear_glass_dm"
+    },
+    {
+      "tag": "enderio:clear_glass_dm"
+    },
+    {
+      "tag": "enderio:clear_glass_dm"
+    },
+    {
+      "tag": "enderio:clear_glass_dm"
+    },
+    {
+      "tag": "enderio:clear_glass_dm"
+    },
+    {
+      "tag": "forge:dyes/pink"
+    }
+  ],
+  "result": {
+    "item": "enderio:clear_glass_dm_pink",
+    "count": 8
+  }
+}

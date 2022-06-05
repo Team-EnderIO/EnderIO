@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "enderio:fused_quartz_m"
+    },
+    {
+      "tag": "enderio:fused_quartz_m"
+    },
+    {
+      "tag": "enderio:fused_quartz_m"
+    },
+    {
+      "tag": "enderio:fused_quartz_m"
+    },
+    {
+      "tag": "enderio:fused_quartz_m"
+    },
+    {
+      "tag": "enderio:fused_quartz_m"
+    },
+    {
+      "tag": "enderio:fused_quartz_m"
+    },
+    {
+      "tag": "enderio:fused_quartz_m"
+    },
+    {
+      "tag": "forge:dyes/light_blue"
+    }
+  ],
+  "result": {
+    "item": "enderio:fused_quartz_m_light_blue",
+    "count": 8
+  }
+}

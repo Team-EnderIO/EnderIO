@@ -1,0 +1,21 @@
+{
+  "pools": [
+    {
+      "name": "infinity_in_world_crafting",
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "condition": "minecraft:random_chance",
+              "chance": 0.5
+            }
+          ],
+          "name": "enderio:grains_of_infinity"
+        }
+      ]
+    }
+  ]
+}
