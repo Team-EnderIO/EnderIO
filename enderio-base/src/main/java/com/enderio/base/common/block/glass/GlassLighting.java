@@ -31,7 +31,7 @@ public enum GlassLighting implements IIcon {
     public Vector2i getTexturePosition() {
         return switch (this) {
             case NONE, EMITTING -> new Vector2i(0,0);
-            case BLOCKING -> new Vector2i(0,32);
+            case BLOCKING -> new Vector2i(32,0);
         };
     }
 
