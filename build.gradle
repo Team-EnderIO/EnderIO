@@ -231,8 +231,8 @@ allprojects {
 
                 if (project.name == rootProject.name) {
                     incompatible.project project(':enderio-base').modrinth_projectId
-                    incompatible.project project(':enderio-decoration').modrinth_projectId
                     incompatible.project project(':enderio-machines').modrinth_projectId
+                    incompatible.project project(':enderio-conduits').modrinth_projectId
                 }
 
                 // Patchouli

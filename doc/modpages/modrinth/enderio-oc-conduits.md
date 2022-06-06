@@ -1,4 +1,4 @@
-# Ender IO - Base
+# Ender IO - OC Conduits
 Ender IO is a full-featured tech mod. It has armor, tools, weapons, machines, conduits, inventory management, mobs, etc.
 
 **Attention!** This module is to be used for modular installations of Ender IO. Most people will want to install the [monolithic version](https://modrinth.com/mod/enderio) instead.
@@ -9,24 +9,18 @@ Alpha builds will be posted to these pages as they are ready.
 Some modules may appear after others.
 
 ## Features
-This is the base module that is required by all other modules. This includes:
-- Armor
-- Weapons
-- Tools
-- Enchantments
-- Basic blocks
-- All items
+This is the module that adds Open Computers conduits.
 
-**NOTE:** Many items or blocks will have no uses or crafting recipes unless you install the other modules.
+If installed modularly, base and conduits are both required.
 
 ## Other modules
+- [Base](https://modrinth.com/mod/enderio-base)
 - [Machines](https://modrinth.com/mod/enderio-machines)
 - [Conduits](https://modrinth.com/mod/enderio-conduits)
 - [Inventory Panel](https://modrinth.com/mod/enderio-invpanel)
 
 ## Integration modules
 - [Applied Energistics 2 (ME Conduits)](https://modrinth.com/mod/enderio-ae2-conduits)
-- [Open Computers (OC Conduits)](https://modrinth.com/mod/enderio-oc-conduits)
 - [Refined Storage (RS Conduits)](https://modrinth.com/mod/enderio-rs-conduits)
 - [Forestry](https://modrinth.com/mod/enderio-forestry)
 - [Tinkers Construct](https://modrinth.com/mod/enderio-tic)
