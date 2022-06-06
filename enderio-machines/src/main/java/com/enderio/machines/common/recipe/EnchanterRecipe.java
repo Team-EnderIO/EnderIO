@@ -2,6 +2,7 @@ package com.enderio.machines.common.recipe;
 
 import com.enderio.base.config.machines.MachinesConfig;
 import com.enderio.core.recipes.EnderRecipe;
+import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonObject;
 import net.minecraft.ResourceLocationException;
@@ -166,22 +167,32 @@ public class EnchanterRecipe implements EnderRecipe<Container> {
         @Nullable
         @Override
         public EnchanterRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-            Ingredient ingredient = Ingredient.fromNetwork(buffer);
-            Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(buffer.readResourceLocation());
-            if (enchantment == null) {
-                throw new ResourceLocationException("The enchantment in " + recipeId + " does not exist");
+            try {
+                Ingredient ingredient = Ingredient.fromNetwork(buffer);
+                Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(buffer.readResourceLocation());
+                if (enchantment == null) {
+                    throw new ResourceLocationException("The enchantment in " + recipeId + " does not exist");
+                }
+                int amount = buffer.readInt();
+                int level = buffer.readInt();
+                return new EnchanterRecipe(recipeId, ingredient, enchantment, amount, level);
+            } catch (Exception ex) {
+                EIOMachines.LOGGER.error("Error reading enchanter recipe from packet.", ex);
+                throw ex;
             }
-            int amount = buffer.readInt();
-            int level = buffer.readInt();
-            return new EnchanterRecipe(recipeId, ingredient, enchantment, amount, level);
         }
 
         @Override
         public void toNetwork(FriendlyByteBuf buffer, EnchanterRecipe recipe) {
-            recipe.getInput().toNetwork(buffer);
-            buffer.writeResourceLocation(Objects.requireNonNull(recipe.getEnchantment().getRegistryName()));
-            buffer.writeInt(recipe.getInputAmountPerLevel());
-            buffer.writeInt(recipe.getLevelModifier());
+            try {
+                recipe.getInput().toNetwork(buffer);
+                buffer.writeResourceLocation(Objects.requireNonNull(recipe.getEnchantment().getRegistryName()));
+                buffer.writeInt(recipe.getInputAmountPerLevel());
+                buffer.writeInt(recipe.getLevelModifier());
+            } catch (Exception ex) {
+                EIOMachines.LOGGER.error("Error writing enchanter recipe to packet.", ex);
+                throw ex;
+            }
         }
     }
 }

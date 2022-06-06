@@ -2,6 +2,7 @@ package com.enderio.machines.common.recipe;
 
 import com.enderio.api.machines.recipes.IAlloySmeltingRecipe;
 import com.enderio.api.recipe.CountedIngredient;
+import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.blockentity.NewAlloySmelterBlockEntity;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonArray;
@@ -133,19 +134,29 @@ public class AlloySmeltingRecipe implements IAlloySmeltingRecipe {
         @Nullable
         @Override
         public AlloySmeltingRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-            List<CountedIngredient> ingredients = buffer.readList(CountedIngredient::fromNetwork);
-            ItemStack result = buffer.readItem();
-            int energy = buffer.readInt();
-            float experience = buffer.readFloat();
-            return new AlloySmeltingRecipe(recipeId, ingredients, result, energy, experience);
+            try {
+                List<CountedIngredient> ingredients = buffer.readList(CountedIngredient::fromNetwork);
+                ItemStack result = buffer.readItem();
+                int energy = buffer.readInt();
+                float experience = buffer.readFloat();
+                return new AlloySmeltingRecipe(recipeId, ingredients, result, energy, experience);
+            } catch (Exception ex) {
+                EIOMachines.LOGGER.error("Error reading alloy smelting recipe from packet.", ex);
+                throw ex;
+            }
         }
 
         @Override
         public void toNetwork(FriendlyByteBuf buffer, AlloySmeltingRecipe recipe) {
-            buffer.writeCollection(recipe.inputs, (buf, ing) -> ing.toNetwork(buf));
-            buffer.writeItem(recipe.output);
-            buffer.writeInt(recipe.energy);
-            buffer.writeFloat(recipe.experience);
+            try {
+                buffer.writeCollection(recipe.inputs, (buf, ing) -> ing.toNetwork(buf));
+                buffer.writeItem(recipe.output);
+                buffer.writeInt(recipe.energy);
+                buffer.writeFloat(recipe.experience);
+            } catch (Exception ex) {
+                EIOMachines.LOGGER.error("Error writing alloy smelting reciep to packet.", ex);
+                throw ex;
+            }
         }
     }
 }
