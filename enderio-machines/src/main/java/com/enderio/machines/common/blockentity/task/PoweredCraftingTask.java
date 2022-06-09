@@ -1,7 +1,7 @@
 package com.enderio.machines.common.blockentity.task;
 
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
-import com.enderio.machines.common.recipe.MachineRecipe;
+import com.enderio.api.machines.recipes.MachineRecipe;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;

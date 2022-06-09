@@ -1,6 +1,7 @@
 package com.enderio.machines.common.compat;
 
 import com.enderio.api.machines.recipes.IAlloySmeltingRecipe;
+import com.enderio.api.machines.recipes.OutputStack;
 import com.enderio.api.recipe.CountedIngredient;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -45,15 +46,15 @@ public class VanillaAlloySmeltingRecipe implements IAlloySmeltingRecipe {
     }
 
     @Override
-    public ItemStack assemble(IAlloySmeltingRecipe.Container container) {
+    public List<OutputStack> craft(Container container) {
         ItemStack result = vanillaRecipe.assemble(container);
         result.setCount(result.getCount() * container.getInputsTaken());
-        return result;
+        return List.of(OutputStack.of(result));
     }
 
     @Override
-    public ItemStack getResultItem() {
-        return vanillaRecipe.getResultItem();
+    public List<OutputStack> getResultStacks() {
+        return List.of(OutputStack.of(vanillaRecipe.getResultItem()));
     }
 
     @Override

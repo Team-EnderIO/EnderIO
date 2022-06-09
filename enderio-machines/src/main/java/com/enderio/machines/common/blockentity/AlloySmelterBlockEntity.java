@@ -2,9 +2,11 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.api.machines.recipes.IAlloySmeltingRecipe;
+import com.enderio.api.machines.recipes.OutputStack;
 import com.enderio.api.recipe.CountedIngredient;
 import com.enderio.base.common.blockentity.sync.EnumDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
+import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.PoweredTaskMachineEntity;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingTask;
@@ -277,14 +279,29 @@ public abstract class AlloySmelterBlockEntity extends PoweredTaskMachineEntity<P
 
             @Override
             protected boolean takeOutputs(IAlloySmeltingRecipe recipe, IAlloySmeltingRecipe.Container container, boolean simulate) {
-                ItemStack result = recipe.assemble(container);
-                MachineInventory inv = getInventory();
-                if (inv.insertItem(3, result, true).isEmpty()) {
-                    if (!simulate)
-                        inv.insertItem(3, result, false);
-                    return true;
+                List<OutputStack> result = recipe.craft(container);
+
+                // Log some errors if a recipe is doing something wrong.
+                if (result.size() > 1) {
+                    EIOMachines.LOGGER.error("Alloy smelting recipe {} tried to have more than one result stack!", recipe.getId());
                 }
 
+                // Get the output
+                OutputStack stack = result.get(0);
+
+                // Ensure the recipe is returning a valid item.
+                if (!stack.isItem()) {
+                    EIOMachines.LOGGER.error("Alloy smelting recipe {} didn't return an item!", recipe.getId());
+                    return false;
+                }
+
+                // Add the item to our inventory.
+                MachineInventory inv = getInventory();
+                if (inv.insertItem(3, stack.getItem(), true).isEmpty()) {
+                    if (!simulate)
+                        inv.insertItem(3, stack.getItem(), false);
+                    return true;
+                }
                 return false;
             }
 

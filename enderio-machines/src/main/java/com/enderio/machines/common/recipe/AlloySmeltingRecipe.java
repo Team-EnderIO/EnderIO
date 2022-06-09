@@ -1,6 +1,7 @@
 package com.enderio.machines.common.recipe;
 
 import com.enderio.api.machines.recipes.IAlloySmeltingRecipe;
+import com.enderio.api.machines.recipes.OutputStack;
 import com.enderio.api.recipe.CountedIngredient;
 import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.init.MachineRecipes;
@@ -38,11 +39,6 @@ public class AlloySmeltingRecipe implements IAlloySmeltingRecipe {
     @Override
     public List<CountedIngredient> getInputs() {
         return inputs;
-    }
-
-    @Override
-    public ItemStack getResultItem() {
-        return output.copy();
     }
 
     @Override
@@ -89,8 +85,13 @@ public class AlloySmeltingRecipe implements IAlloySmeltingRecipe {
     }
 
     @Override
-    public ItemStack assemble(IAlloySmeltingRecipe.Container container) {
-        return output.copy();
+    public List<OutputStack> craft(Container container) {
+         return List.of(OutputStack.of(output.copy()));
+    }
+
+    @Override
+    public List<OutputStack> getResultStacks() {
+        return List.of(OutputStack.of(output.copy()));
     }
 
     @Override
