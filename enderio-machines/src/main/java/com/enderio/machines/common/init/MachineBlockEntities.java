@@ -23,25 +23,25 @@ public class MachineBlockEntities {
         .validBlocks(MachineBlocks.ENCHANTER)
         .register();
 
-//    public static final BlockEntityEntry<AlloySmelterBlockEntity.Furnace> SIMPLE_POWERED_FURNACE = REGISTRATE
-//        .blockEntity("simple_powered_furnace", AlloySmelterBlockEntity.Furnace::new)
-//        .validBlocks(MachineBlocks.SIMPLE_POWERED_FURNACE)
-//        .register();
+    public static final BlockEntityEntry<AlloySmelterBlockEntity.Furnace> SIMPLE_POWERED_FURNACE = REGISTRATE
+        .blockEntity("simple_powered_furnace", AlloySmelterBlockEntity.Furnace::new)
+        .validBlocks(MachineBlocks.SIMPLE_POWERED_FURNACE)
+        .register();
 
-//    public static final BlockEntityEntry<AlloySmelterBlockEntity.Simple> SIMPLE_ALLOY_SMELTER = REGISTRATE
-//        .blockEntity("simple_alloy_smelter", AlloySmelterBlockEntity.Simple::new)
-//        .validBlocks(MachineBlocks.SIMPLE_ALLOY_SMELTER)
-//        .register();
+    public static final BlockEntityEntry<AlloySmelterBlockEntity.Simple> SIMPLE_ALLOY_SMELTER = REGISTRATE
+        .blockEntity("simple_alloy_smelter", AlloySmelterBlockEntity.Simple::new)
+        .validBlocks(MachineBlocks.SIMPLE_ALLOY_SMELTER)
+        .register();
 
-    public static final BlockEntityEntry<NewAlloySmelterBlockEntity.Standard> ALLOY_SMELTER = REGISTRATE
-        .blockEntity("alloy_smelter", NewAlloySmelterBlockEntity.Standard::new)
+    public static final BlockEntityEntry<AlloySmelterBlockEntity.Standard> ALLOY_SMELTER = REGISTRATE
+        .blockEntity("alloy_smelter", AlloySmelterBlockEntity.Standard::new)
         .validBlocks(MachineBlocks.ALLOY_SMELTER)
         .register();
 
-//    public static final BlockEntityEntry<AlloySmelterBlockEntity.Enhanced> ENHANCED_ALLOY_SMELTER = REGISTRATE
-//        .blockEntity("enhanced_alloy_smelter", AlloySmelterBlockEntity.Enhanced::new)
-//        .validBlocks(MachineBlocks.ENHANCED_ALLOY_SMELTER)
-//        .register();
+    public static final BlockEntityEntry<AlloySmelterBlockEntity.Enhanced> ENHANCED_ALLOY_SMELTER = REGISTRATE
+        .blockEntity("enhanced_alloy_smelter", AlloySmelterBlockEntity.Enhanced::new)
+        .validBlocks(MachineBlocks.ENHANCED_ALLOY_SMELTER)
+        .register();
 
     public static final BlockEntityEntry<CreativePowerBlockEntity> CREATIVE_POWER = REGISTRATE
         .blockEntity("creative_power", CreativePowerBlockEntity::new)

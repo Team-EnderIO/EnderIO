@@ -9,7 +9,7 @@ import com.enderio.machines.client.gui.widget.EnergyWidget;
 import com.enderio.machines.client.gui.widget.ProgressWidget;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.AlloySmelterMode;
-import com.enderio.machines.common.blockentity.NewAlloySmelterBlockEntity;
+import com.enderio.machines.common.blockentity.AlloySmelterBlockEntity;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.menu.AlloySmelterMenu;
 import net.minecraft.network.chat.Component;
@@ -45,7 +45,7 @@ public class AlloySmelterScreen extends EIOScreen<AlloySmelterMenu> {
 
     @Override
     protected ResourceLocation getBackgroundImage() {
-        NewAlloySmelterBlockEntity be = getMenu().getBlockEntity();
+        AlloySmelterBlockEntity be = getMenu().getBlockEntity();
         return switch (be.getTier()) {
             case SIMPLE -> be.getMode() == AlloySmelterMode.ALLOYS ? BG_TEXTURE_SIMPLE_ALLOY : BG_TEXTURE_SIMPLE_FURNACE;
             case STANDARD, ENHANCED -> switch (be.getMode()) {

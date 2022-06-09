@@ -1,7 +1,6 @@
 package com.enderio.machines.common.menu;
 
-import com.enderio.machines.common.MachineTier;
-import com.enderio.machines.common.blockentity.NewAlloySmelterBlockEntity;
+import com.enderio.machines.common.blockentity.AlloySmelterBlockEntity;
 import com.enderio.machines.common.init.MachineMenus;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -10,8 +9,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 
-public class AlloySmelterMenu extends MachineMenu<NewAlloySmelterBlockEntity> {
-    public AlloySmelterMenu(@Nullable NewAlloySmelterBlockEntity blockEntity, Inventory inventory, int pContainerId) {
+public class AlloySmelterMenu extends MachineMenu<AlloySmelterBlockEntity> {
+    public AlloySmelterMenu(@Nullable AlloySmelterBlockEntity blockEntity, Inventory inventory, int pContainerId) {
         super(blockEntity, inventory, MachineMenus.ALLOY_SMELTER.get(), pContainerId);
         if (blockEntity != null) {
             // Capacitor slot
@@ -29,7 +28,7 @@ public class AlloySmelterMenu extends MachineMenu<NewAlloySmelterBlockEntity> {
 
     public static AlloySmelterMenu factory(@Nullable MenuType<AlloySmelterMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level.getBlockEntity(buf.readBlockPos());
-        if (entity instanceof NewAlloySmelterBlockEntity castBlockEntity)
+        if (entity instanceof AlloySmelterBlockEntity castBlockEntity)
             return new AlloySmelterMenu(castBlockEntity, inventory, pContainerId);
         LogManager.getLogger().warn("couldn't find BlockEntity");
         return new AlloySmelterMenu(null, inventory, pContainerId);

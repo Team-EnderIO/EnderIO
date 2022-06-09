@@ -3,13 +3,11 @@ package com.enderio.machines.common.recipe;
 import com.enderio.api.machines.recipes.IAlloySmeltingRecipe;
 import com.enderio.api.recipe.CountedIngredient;
 import com.enderio.machines.EIOMachines;
-import com.enderio.machines.common.blockentity.NewAlloySmelterBlockEntity;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -48,7 +46,7 @@ public class AlloySmeltingRecipe implements IAlloySmeltingRecipe {
     }
 
     @Override
-    public int getEnergyCost(NewAlloySmelterBlockEntity.AlloySmelterContainer container) {
+    public int getEnergyCost(IAlloySmeltingRecipe.Container container) {
         return energy;
     }
 
@@ -58,15 +56,13 @@ public class AlloySmeltingRecipe implements IAlloySmeltingRecipe {
     }
 
     @Override
-    public boolean matches(NewAlloySmelterBlockEntity.AlloySmelterContainer container, Level level) {
+    public boolean matches(IAlloySmeltingRecipe.Container container, Level level) {
         boolean[] matched = new boolean[3];
 
         // Iterate over the slots
         for (int i = 0; i < 3; i++) {
-
             // Iterate over the inputs
             for (int j = 0; j < 3; j++) {
-
                 // If this ingredient has been matched already, continue
                 if (matched[j])
                     continue;
@@ -81,7 +77,6 @@ public class AlloySmeltingRecipe implements IAlloySmeltingRecipe {
                     matched[j] = true;
                 }
             }
-
         }
 
         // If we matched all our ingredients, we win!
@@ -94,7 +89,7 @@ public class AlloySmeltingRecipe implements IAlloySmeltingRecipe {
     }
 
     @Override
-    public ItemStack assemble(NewAlloySmelterBlockEntity.AlloySmelterContainer container) {
+    public ItemStack assemble(IAlloySmeltingRecipe.Container container) {
         return output.copy();
     }
 
@@ -154,7 +149,7 @@ public class AlloySmeltingRecipe implements IAlloySmeltingRecipe {
                 buffer.writeInt(recipe.energy);
                 buffer.writeFloat(recipe.experience);
             } catch (Exception ex) {
-                EIOMachines.LOGGER.error("Error writing alloy smelting reciep to packet.", ex);
+                EIOMachines.LOGGER.error("Error writing alloy smelting recipe to packet.", ex);
                 throw ex;
             }
         }
