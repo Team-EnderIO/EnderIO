@@ -170,6 +170,13 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
         return layout.supportsCapacitor();
     }
 
+    public int getCapacitorSlot() {
+        MachineInventoryLayout layout = getInventoryLayout();
+        if (layout == null)
+            return -1;
+        return layout.getCapacitorSlot();
+    }
+
     /**
      * Whether the machine has a capacitor installed.
      */

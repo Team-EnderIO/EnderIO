@@ -24,6 +24,10 @@ public enum MachineCapacitorKeys {
     ENHANCED_ALLOY_SMELTER_ENERGY_TRANSFER(() -> new CapacitorKey(180, CapacitorKeyType.EnergyTransfer, Scalers.ENERGY)),
     ENHANCED_ALLOY_SMELTER_ENERGY_CONSUME(() -> new CapacitorKey(45, CapacitorKeyType.EnergyUsage, Scalers.ENERGY)),
 
+    SAG_MILL_ENERGY_CAPACITY(() -> new CapacitorKey(100000, CapacitorKeyType.EnergyCapacity, Scalers.ENERGY)),
+    SAG_MILL_ENERGY_TRANSFER(() -> new CapacitorKey(120, CapacitorKeyType.EnergyTransfer, Scalers.ENERGY)),
+    SAG_MILL_ENERGY_CONSUME(() -> new CapacitorKey(30, CapacitorKeyType.EnergyUsage, Scalers.ENERGY)),
+
     SIMPLE_STIRLING_GENERATOR_ENERGY_CAPACITY(() -> new CapacitorKey(2000, CapacitorKeyType.EnergyCapacity, Scalers.FIXED)),
 
     STIRLING_GENERATOR_ENERGY_CAPACITY(() -> new CapacitorKey(100000, CapacitorKeyType.EnergyCapacity, Scalers.ENERGY)),

@@ -32,6 +32,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+// TODO: Award XP
+
 public abstract class AlloySmelterBlockEntity extends PoweredTaskMachineEntity<PoweredCraftingTask<IAlloySmeltingRecipe, IAlloySmeltingRecipe.Container>> {
     public static class Simple extends AlloySmelterBlockEntity {
 
@@ -278,16 +280,14 @@ public abstract class AlloySmelterBlockEntity extends PoweredTaskMachineEntity<P
             }
 
             @Override
-            protected boolean takeOutputs(IAlloySmeltingRecipe recipe, IAlloySmeltingRecipe.Container container, boolean simulate) {
-                List<OutputStack> result = recipe.craft(container);
-
+            protected boolean takeOutputs(List<OutputStack> outputs, boolean simulate) {
                 // Log some errors if a recipe is doing something wrong.
-                if (result.size() > 1) {
+                if (outputs.size() > 1) {
                     EIOMachines.LOGGER.error("Alloy smelting recipe {} tried to have more than one result stack!", recipe.getId());
                 }
 
                 // Get the output
-                OutputStack stack = result.get(0);
+                OutputStack stack = outputs.get(0);
 
                 // Ensure the recipe is returning a valid item.
                 if (!stack.isItem()) {

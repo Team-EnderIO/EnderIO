@@ -195,6 +195,8 @@ public class AlloyRecipeProvider extends EnderRecipeProvider {
 
             json.addProperty("energy", energy);
             json.addProperty("experience", experience);
+
+            super.serializeRecipeData(json);
         }
 
         @Override

@@ -17,13 +17,15 @@ public class ProgressWidget extends AbstractWidget {
     private final Screen screen;
     private final int u;
     private final int v;
+    private final boolean fromBottom;
 
-    public ProgressWidget(Screen screen, Supplier<Float> getter, int x, int y, int width, int height, int u, int v) {
+    public ProgressWidget(Screen screen, Supplier<Float> getter, int x, int y, int width, int height, int u, int v, boolean fromBottom) {
         super(x, y, width, height, TextComponent.EMPTY);
         this.screen = screen;
         this.getter = getter;
         this.u = u;
         this.v = v;
+        this.fromBottom = fromBottom;
     }
 
     // Stop the click sound
@@ -40,8 +42,15 @@ public class ProgressWidget extends AbstractWidget {
         poseStack.pushPose();
 
         float progress = getter.get();
-        int yOffset = (int)(14 * (1.0f - progress));
-        int height = (int) (14 * progress);
+
+        int yOffset, height;
+        if (fromBottom) {
+            yOffset = (int)(this.height * (1.0f - progress));
+            height = (int) (this.height * progress);
+        } else {
+            yOffset = 0;
+            height = (int) (this.height * progress);
+        }
 
         blit(poseStack, x, y + yOffset, u, v + yOffset, width, height);
 

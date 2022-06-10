@@ -25,6 +25,7 @@ public interface MachineRecipe<C extends Container> extends EnderRecipe<C> {
      * Get the results of this machine, for display or verification purposes only.
      * @return
      */
+    // TODO: Is this redundant
     List<OutputStack> getResultStacks();
 
     /**

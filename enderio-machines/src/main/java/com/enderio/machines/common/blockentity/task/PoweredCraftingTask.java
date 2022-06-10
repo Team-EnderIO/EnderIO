@@ -1,14 +1,18 @@
 package com.enderio.machines.common.blockentity.task;
 
+import com.enderio.api.machines.recipes.OutputStack;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.enderio.api.machines.recipes.MachineRecipe;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,6 +42,17 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
     private boolean collectedInputs;
 
     /**
+     * Whether the outputs have been determined yet.
+     */
+    private boolean determinedOutputs;
+
+    /**
+     * The outputs of the recipe.
+     * These are determined after we take ingredients, as we don't want the outputs to change later.
+     */
+    private List<OutputStack> outputs;
+
+    /**
      * Whether the recipe craft is complete.
      * Will not be true until the inventory has the result item.
      */
@@ -58,7 +73,7 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
 
     protected abstract void takeInputs(R recipe);
 
-    protected abstract boolean takeOutputs(R recipe, C container, boolean simulate);
+    protected abstract boolean takeOutputs(List<OutputStack> outputs, boolean simulate);
 
     @Override
     public void tick() {
@@ -79,8 +94,17 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
             return;
         }
 
+        // Get the outputs list.
+        if (!determinedOutputs) {
+            outputs = recipe.craft(container);
+
+            // TODO: Compact any items that are the same into singular stacks.
+
+            determinedOutputs = true;
+        }
+
         // If we can't inputs or outputs, cancel the task. However if for some reason we can't output after the inputs are collected, don't.
-        if (!collectedInputs && (!takeOutputs(recipe, container, true) || !recipe.matches(container, level))) {
+        if (!collectedInputs && (!takeOutputs(outputs, true) || !recipe.matches(container, level))) {
             complete = true;
             return;
         }
@@ -104,7 +128,7 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
         // If the recipe has been crafted, attempt to put it into storage
         if (energyConsumed >= energyCost) {
             // Attempt to complete the craft
-            if (takeOutputs(recipe, container, false)) {
+            if (takeOutputs(outputs, false)) {
                 // The receiver was able to take the outputs, task complete.
                 complete = true;
             }
@@ -131,6 +155,16 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
         tag.putInt("energy_cost", energyConsumed);
         tag.putBoolean("collected_inputs", collectedInputs);
         tag.putBoolean("complete", complete);
+
+        tag.putBoolean("determined_outputs", determinedOutputs);
+        if (determinedOutputs) {
+            ListTag outputsNbt = new ListTag();
+            for (OutputStack stack : outputs) {
+                outputsNbt.add(stack.serializeNBT());
+            }
+            tag.put("outputs", outputsNbt);
+        }
+
         return tag;
     }
 
@@ -141,16 +175,30 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
         energyCost = nbt.getInt("energy_cost");
         collectedInputs = nbt.getBoolean("collected_inputs");
         complete = nbt.getBoolean("complete");
+
+        determinedOutputs = nbt.getBoolean("determined_outputs");
+        if (determinedOutputs) {
+            ListTag outputsNbt = nbt.getList("outputs", Tag.TAG_COMPOUND);
+            outputs = new ArrayList<>();
+            for (Tag tag : outputsNbt) {
+                outputs.add(OutputStack.fromNBT((CompoundTag) tag));
+            }
+        }
     }
 
     protected CompoundTag serializeRecipe(CompoundTag tag, R recipe) {
-        tag.putString("id", recipe.getId().toString());
+        if (recipe != null) {
+            tag.putString("id", recipe.getId().toString());
+        }
         return tag;
     }
 
     protected @Nullable R loadRecipe(CompoundTag nbt) {
-        ResourceLocation id = new ResourceLocation(nbt.getString("id"));
-        return (R) level.getRecipeManager().byKey(id).orElse(null);
+        if (nbt.contains("id")) {
+            ResourceLocation id = new ResourceLocation(nbt.getString("id"));
+            return (R) level.getRecipeManager().byKey(id).orElse(null);
+        }
+        return null;
     }
 
     // endregion
