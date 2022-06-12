@@ -1,0 +1,25 @@
+{
+  "type": "enderio_machines:slicing",
+  "output": "enderio:skeletal_contractor",
+  "inputs": [
+    {
+      "item": "enderio:soularium_ingot"
+    },
+    {
+      "item": "minecraft:skeleton_skull"
+    },
+    {
+      "item": "enderio:soularium_ingot"
+    },
+    {
+      "item": "minecraft:rotten_flesh"
+    },
+    {
+      "item": "enderio:basic_capacitor"
+    },
+    {
+      "item": "minecraft:rotten_flesh"
+    }
+  ],
+  "energy": 20000
+}

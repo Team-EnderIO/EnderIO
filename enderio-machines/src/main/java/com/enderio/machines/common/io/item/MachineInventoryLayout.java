@@ -107,6 +107,7 @@ public class MachineInventoryLayout {
 
         private final ArrayList<SlotConfig> slots = new ArrayList<>();
         private final boolean hasCapacitor;
+        private int currentStackLimit = 64;
 
         private Builder(boolean capacitor) {
             hasCapacitor = capacitor;
@@ -119,6 +120,15 @@ public class MachineInventoryLayout {
             slots.add(builder.apply(new SlotBuilder()).build());
             return this;
         }
+
+        // region Stack limit helper
+
+        public Builder setStackLimit(int limit) {
+            currentStackLimit = limit;
+            return this;
+        }
+
+        // endregion
 
         // region Preset slot types
 
@@ -159,7 +169,7 @@ public class MachineInventoryLayout {
          */
         public Builder inputSlot(int count, BiPredicate<Integer, ItemStack> filter) {
             for (int i = 0; i < count; i++) {
-                slot(slot -> slot.guiInsert().guiExtract().insert().filter(filter));
+                slot(slot -> slot.guiInsert().guiExtract().insert().filter(filter).stackLimit(currentStackLimit));
             }
             return this;
         }
@@ -201,7 +211,7 @@ public class MachineInventoryLayout {
          */
         public Builder outputSlot(int count, BiPredicate<Integer, ItemStack> filter) {
             for (int i = 0; i < count; i++) {
-                slot(slot -> slot.guiExtract().extract().filter(filter));
+                slot(slot -> slot.guiExtract().extract().filter(filter).stackLimit(currentStackLimit));
             }
             return this;
         }
@@ -243,7 +253,7 @@ public class MachineInventoryLayout {
          */
         public Builder storageSlot(int count, BiPredicate<Integer, ItemStack> filter) {
             for (int i = 0; i < count; i++) {
-                slot(slot -> slot.guiInsert().guiExtract().insert().extract().filter(filter));
+                slot(slot -> slot.guiInsert().guiExtract().insert().extract().filter(filter).stackLimit(currentStackLimit));
             }
             return this;
         }
@@ -285,7 +295,7 @@ public class MachineInventoryLayout {
          */
         public Builder ghostSlot(int count, BiPredicate<Integer, ItemStack> filter) {
             for (int i = 0; i < count; i++) {
-                slot(slot -> slot.guiInsert().filter(filter));
+                slot(slot -> slot.guiInsert().filter(filter).stackLimit(currentStackLimit));
             }
             return this;
         }

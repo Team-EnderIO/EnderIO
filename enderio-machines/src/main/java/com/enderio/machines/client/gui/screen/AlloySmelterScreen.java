@@ -31,8 +31,8 @@ public class AlloySmelterScreen extends EIOScreen<AlloySmelterMenu> {
     @Override
     protected void init() {
         super.init();
-        addRenderableOnly(new ProgressWidget(this, () -> menu.getBlockEntity().getProgress(), getGuiLeft() + 56, getGuiTop() + 36, 14, 14, 176, 0, true));
-        addRenderableOnly(new ProgressWidget(this, () -> menu.getBlockEntity().getProgress(), getGuiLeft() + 104, getGuiTop() + 36, 14, 14, 176, 0, true));
+        addRenderableOnly(new ProgressWidget(this, () -> menu.getBlockEntity().getProgress(), getGuiLeft() + 56, getGuiTop() + 36, 14, 14, 176, 0, ProgressWidget.Direction.BOTTOM_UP));
+        addRenderableOnly(new ProgressWidget(this, () -> menu.getBlockEntity().getProgress(), getGuiLeft() + 104, getGuiTop() + 36, 14, 14, 176, 0, ProgressWidget.Direction.BOTTOM_UP));
         addRenderableOnly(new EnergyWidget(this, getMenu().getBlockEntity()::getEnergyStorage, 16 + leftPos, 14 + topPos, 9, 42));
 
         addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),

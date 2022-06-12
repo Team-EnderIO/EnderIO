@@ -219,5 +219,12 @@ public class MachineBlocks {
         .build()
         .register();
 
+    public static BlockEntry<MachineBlock> SLICE_N_SPLICE = REGISTRATE
+        .block("slice_n_splice", props -> new MachineBlock(props, MachineBlockEntities.SLICE_N_SPLICE))
+        .item()
+        .tab(() -> EIOCreativeTabs.MACHINES)
+        .build()
+        .register();
+
     public static void classload() {}
 }

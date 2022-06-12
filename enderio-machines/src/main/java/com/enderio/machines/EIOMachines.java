@@ -5,6 +5,7 @@ import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.data.recipes.AlloyRecipeProvider;
 import com.enderio.machines.data.recipes.EnchanterRecipeProvider;
 import com.enderio.machines.data.recipes.SagMillRecipeProvider;
+import com.enderio.machines.data.recipes.SlicingRecipeProvider;
 import com.tterrag.registrate.Registrate;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
@@ -54,6 +55,7 @@ public class EIOMachines {
             generator.addProvider(new AlloyRecipeProvider(generator));
             generator.addProvider(new EnchanterRecipeProvider(generator));
             generator.addProvider(new SagMillRecipeProvider(generator));
+            generator.addProvider(new SlicingRecipeProvider(generator));
         }
     }
 

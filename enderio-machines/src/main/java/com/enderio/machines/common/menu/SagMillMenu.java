@@ -1,7 +1,6 @@
 package com.enderio.machines.common.menu;
 
 import com.enderio.machines.common.MachineTier;
-import com.enderio.machines.common.blockentity.AlloySmelterBlockEntity;
 import com.enderio.machines.common.blockentity.SagMillBlockEntity;
 import com.enderio.machines.common.init.MachineMenus;
 import net.minecraft.network.FriendlyByteBuf;
@@ -24,7 +23,7 @@ public class SagMillMenu extends MachineMenu<SagMillBlockEntity> {
             // Input
             addSlot(new MachineSlot(blockEntity.getInventory(), 0, 80, 12));
 
-            // Outputss
+            // Outputs
             addSlot(new MachineSlot(blockEntity.getInventory(), 1, 49, 59));
             addSlot(new MachineSlot(blockEntity.getInventory(), 2, 70, 59));
             addSlot(new MachineSlot(blockEntity.getInventory(), 3, 91, 59));
