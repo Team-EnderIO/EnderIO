@@ -200,11 +200,6 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         return inventory;
     }
 
-    // TODO: should recipe wrapping be left to the individual machine?
-    public final RecipeWrapper getRecipeWrapper() {
-        return new RecipeWrapper(inventory);
-    }
-
     /**
      * Called to create an item handler if a slot layout is provided.
      */
@@ -221,15 +216,11 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     /**
      * @apiNote Must call this on custom MachineInventory handlers!
      */
-    protected void onInventoryContentsChanged(int slot) {
-
-    }
+    protected void onInventoryContentsChanged(int slot) { }
 
     // endregion
 
     // region Block Entity ticking
-
-    // TODO: Should we separate clientTick and serverTick so there's less chance of a mistake?
 
     @Override
     public void serverTick() {

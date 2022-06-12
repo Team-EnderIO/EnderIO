@@ -1,5 +1,6 @@
 package com.enderio.machines.common.init;
 
+import com.enderio.api.machines.recipes.IAlloySmeltingRecipe;
 import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
 import com.enderio.machines.common.recipe.EnchanterRecipe;
@@ -33,7 +34,7 @@ public class MachineRecipes {
         private Types() {}
 
         public static final RecipeType<EnchanterRecipe> ENCHANTING = RecipeType.register(EIOMachines.MODID + ":enchanting");
-        public static final RecipeType<AlloySmeltingRecipe> ALLOY_SMELTING = RecipeType.register(EIOMachines.MODID + ":alloy_smelting");
+        public static final RecipeType<IAlloySmeltingRecipe> ALLOY_SMELTING = RecipeType.register(EIOMachines.MODID + ":alloy_smelting");
         public static final RecipeType<SagMillingRecipe> SAGMILLING = RecipeType.register(EIOMachines.MODID + ":sagmilling");
         public static final RecipeType<SlicingRecipe> SLICING = RecipeType.register(EIOMachines.MODID + ":slicing");
 

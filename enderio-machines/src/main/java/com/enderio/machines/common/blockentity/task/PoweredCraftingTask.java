@@ -1,15 +1,16 @@
 package com.enderio.machines.common.blockentity.task;
 
 import com.enderio.api.machines.recipes.OutputStack;
-import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
+import com.enderio.machines.common.blockentity.base.PoweredCraftingMachine;
+import com.enderio.machines.common.blockentity.base.PoweredTaskMachineEntity;
 import com.enderio.api.machines.recipes.MachineRecipe;
+import com.enderio.machines.common.io.item.MachineInventory;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -20,10 +21,17 @@ import java.util.List;
  * @param <C> The container type used by the recipes. Mostly useful for {@link net.minecraft.world.item.crafting.CraftingRecipe}'s.
  */
 public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends Container> extends PoweredTask {
-    private final Level level;
+    /**
+     * The attached machine.
+     */
+    private final PoweredCraftingMachine<R, C> blockEntity;
+
     private final C container;
 
     private R recipe;
+
+    private final int outputStartIndex;
+    private final int outputCount;
 
     /**
      * Amount of energy consumed to craft so far.
@@ -60,11 +68,17 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
 
     private @Nullable CompoundTag recipeToLoad;
 
-    public PoweredCraftingTask(IMachineEnergyStorage energyStorage, @Nullable R recipe, Level level, C container) {
-        super(energyStorage);
+    public PoweredCraftingTask(PoweredCraftingMachine<R, C> blockEntity, C container, int outputStartIndex, int outputCount, @Nullable R recipe) {
+        super(blockEntity.getEnergyStorage());
+        this.outputStartIndex = outputStartIndex;
+        this.outputCount = outputCount;
         this.recipe = recipe;
-        this.level = level;
         this.container = container;
+        this.blockEntity = blockEntity;
+    }
+
+    public PoweredCraftingTask(PoweredCraftingMachine<R, C> blockEntity, C container, int outputIndex, @Nullable R recipe) {
+        this(blockEntity, container, outputIndex, 1, recipe);
     }
 
     public final R getRecipe() {
@@ -73,7 +87,40 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
 
     protected abstract void takeInputs(R recipe);
 
-    protected abstract boolean takeOutputs(List<OutputStack> outputs, boolean simulate);
+    protected boolean takeOutputs(List<OutputStack> outputs, boolean simulate) {
+        // TODO: Handle fluids too.
+
+        // Get outputs
+        MachineInventory inv = blockEntity.getInventory();
+
+        // See that we can add all of the outputs
+        for (OutputStack output : outputs) {
+            ItemStack item = output.getItem();
+
+            // Try putting some in each slot.
+            for (int i = outputStartIndex; i < outputStartIndex + outputCount; i++) {
+                item = inv.insertItem(i, item, true);
+            }
+
+            // If we fail, say we can't accept these outputs
+            if (!item.isEmpty())
+                return false;
+        }
+
+        // If we're not simulating, go for it
+        if (!simulate) {
+            for (OutputStack output : outputs) {
+                ItemStack item = output.getItem();
+
+                // Try putting some in each slot.
+                for (int i = outputStartIndex; i < outputStartIndex + outputCount; i++) {
+                    item = inv.insertItem(i, item, false);
+                }
+            }
+        }
+
+        return true;
+    }
 
     @Override
     public void tick() {
@@ -104,8 +151,10 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
         }
 
         // If we can't inputs or outputs, cancel the task. However if for some reason we can't output after the inputs are collected, don't.
-        if (!collectedInputs && (!takeOutputs(outputs, true) || !recipe.matches(container, level))) {
+        if (!collectedInputs && (!takeOutputs(outputs, true) || !recipe.matches(container, blockEntity.getLevel()))) {
             complete = true;
+            // This means if a sagmill recipe outputs 2 it cancels the recipe, and the determined outputs are cleared. Its a weird behaviour but not necessarily a bug.
+            // We might want to review how this works in future, as right now we wait for an inventory change rather than the machine tick repeatedly.
             return;
         }
 
@@ -196,7 +245,7 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
     protected @Nullable R loadRecipe(CompoundTag nbt) {
         if (nbt.contains("id")) {
             ResourceLocation id = new ResourceLocation(nbt.getString("id"));
-            return (R) level.getRecipeManager().byKey(id).orElse(null);
+            return (R) blockEntity.getLevel().getRecipeManager().byKey(id).orElse(null);
         }
         return null;
     }

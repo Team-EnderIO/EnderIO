@@ -19,19 +19,27 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.items.wrapper.RecipeWrapper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
 public class EnchanterBlockEntity extends MachineBlockEntity {
 
+    private final RecipeWrapper container;
+
     public EnchanterBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);
+        container = new RecipeWrapper(getInventory());
     }
 
     @Override
     public MachineTier getTier() {
         return MachineTier.STANDARD;
+    }
+
+    public RecipeWrapper getContainer() {
+        return container;
     }
 
     @Override
@@ -70,9 +78,9 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
         return new MachineInventory(getIOConfig(), layout) {
             protected void onContentsChanged(int slot) {
                 if (slot != 3) {
-                    Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.Types.ENCHANTING, getRecipeWrapper(), level);
+                    Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.Types.ENCHANTING, container, level);
                     if (recipe.isPresent()) {
-                        getInventory().setStackInSlot(3, recipe.get().assemble(getRecipeWrapper()));
+                        getInventory().setStackInSlot(3, recipe.get().assemble(container));
                     } else {
                         getInventory().setStackInSlot(3, ItemStack.EMPTY);
                     }

@@ -2,12 +2,11 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.api.machines.recipes.IAlloySmeltingRecipe;
-import com.enderio.api.machines.recipes.OutputStack;
 import com.enderio.api.recipe.CountedIngredient;
 import com.enderio.base.common.blockentity.sync.EnumDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
-import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.MachineTier;
+import com.enderio.machines.common.blockentity.base.PoweredCraftingMachine;
 import com.enderio.machines.common.blockentity.base.PoweredTaskMachineEntity;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingTask;
 import com.enderio.machines.common.compat.VanillaAlloySmeltingRecipe;
@@ -31,10 +30,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 // TODO: Award XP
 
-public abstract class AlloySmelterBlockEntity extends PoweredTaskMachineEntity<PoweredCraftingTask<IAlloySmeltingRecipe, IAlloySmeltingRecipe.Container>> {
+public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachine<IAlloySmeltingRecipe, IAlloySmeltingRecipe.Container> {
     public static class Simple extends AlloySmelterBlockEntity {
 
         public Simple(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
@@ -111,13 +111,11 @@ public abstract class AlloySmelterBlockEntity extends PoweredTaskMachineEntity<P
 
     private final AlloySmelterMode defaultMode;
     private AlloySmelterMode mode;
-    private boolean inventoryChanged = true;
-
     private final IAlloySmeltingRecipe.Container container;
 
     public AlloySmelterBlockEntity(AlloySmelterMode mode, CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey energyUseKey,
         BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-        super(capacityKey, transferKey, energyUseKey, pType, pWorldPosition, pBlockState);
+        super(MachineRecipes.Types.ALLOY_SMELTING, capacityKey, transferKey, energyUseKey, pType, pWorldPosition, pBlockState);
 
         this.defaultMode = mode;
         this.mode = mode;
@@ -166,66 +164,29 @@ public abstract class AlloySmelterBlockEntity extends PoweredTaskMachineEntity<P
     }
 
     @Override
-    protected void onInventoryContentsChanged(int slot) {
-        inventoryChanged = true; // TODO: 28/05/2022 This kind of thing might be a good idea for a base crafter class?
-        super.onInventoryContentsChanged(slot);
-    }
-
-    @Override
-    protected boolean hasNextTask() {
-        return inventoryChanged;
-    }
-
-    @Override
-    protected @Nullable PoweredCraftingTask<IAlloySmeltingRecipe, IAlloySmeltingRecipe.Container> getNextTask() {
-        if (level == null)
-            return null;
-
-        // Mark inventory changed false again
-        inventoryChanged = false;
-
-        // Search for an alloy recipe.
+    protected Optional<IAlloySmeltingRecipe> findRecipe() {
+        // Get alloy smelting recipe (Default)
         if (getMode().canAlloy()) {
-            var task = level
-                .getRecipeManager()
-                .getRecipeFor(MachineRecipes.Types.ALLOY_SMELTING, container, level)
-                .map(this::createTask)
-                .orElse(null);
-
-            if (task != null)
-                return task;
+            var recipe = super.findRecipe();
+            if (recipe.isPresent())
+                return recipe;
         }
 
-        // Search for a smelting recipe.
+        // Get vanilla smelting recipe.
         if (getMode().canSmelt()) {
-            var task = level
-                .getRecipeManager()
-                .getRecipeFor(RecipeType.SMELTING, getRecipeWrapper(), level)
-                .map(recipe -> createTask(new VanillaAlloySmeltingRecipe(recipe)))
-                .orElse(null);
-
-            if (task != null)
-                return task;
+            var recipe = level.getRecipeManager()
+                .getRecipeFor(RecipeType.SMELTING, getContainer(), level);
+            if (recipe.isPresent())
+                return Optional.of(new VanillaAlloySmeltingRecipe(recipe.get()));
         }
-
-        return null;
+        return Optional.empty();
     }
 
     @Override
-    protected @Nullable PoweredCraftingTask<IAlloySmeltingRecipe, IAlloySmeltingRecipe.Container> loadTask(CompoundTag nbt) {
-        PoweredCraftingTask<IAlloySmeltingRecipe, IAlloySmeltingRecipe.Container> task = createTask(null);
-        task.deserializeNBT(nbt);
-        return task;
-    }
-
-    private PoweredCraftingTask<IAlloySmeltingRecipe, IAlloySmeltingRecipe.Container> createTask(@Nullable IAlloySmeltingRecipe recipe) {
-        return new PoweredCraftingTask<>(energyStorage, recipe, level, container) {
-
+    protected PoweredCraftingTask<IAlloySmeltingRecipe, IAlloySmeltingRecipe.Container> createTask(@Nullable IAlloySmeltingRecipe recipe) {
+        return new PoweredCraftingTask<>(this, container, 3, recipe) {
             @Override
             protected void takeInputs(IAlloySmeltingRecipe recipe) {
-                // TODO: Maybe delegate this to the recipe by passing in the MachineRecipe itself? Or just the container?
-                //       I'm really not a fan of how much code this leaves inside machines.
-                //       But then again the machine should really decide how to deal with inputs and outputs, rather than the recipe it processes I suppose?
                 if (recipe instanceof AlloySmeltingRecipe) {
                     // Track which ingredients have been consumed
                     MachineInventory inv = getInventory();
@@ -280,32 +241,6 @@ public abstract class AlloySmelterBlockEntity extends PoweredTaskMachineEntity<P
             }
 
             @Override
-            protected boolean takeOutputs(List<OutputStack> outputs, boolean simulate) {
-                // Log some errors if a recipe is doing something wrong.
-                if (outputs.size() > 1) {
-                    EIOMachines.LOGGER.error("Alloy smelting recipe {} tried to have more than one result stack!", recipe.getId());
-                }
-
-                // Get the output
-                OutputStack stack = outputs.get(0);
-
-                // Ensure the recipe is returning a valid item.
-                if (!stack.isItem()) {
-                    EIOMachines.LOGGER.error("Alloy smelting recipe {} didn't return an item!", recipe.getId());
-                    return false;
-                }
-
-                // Add the item to our inventory.
-                MachineInventory inv = getInventory();
-                if (inv.insertItem(3, stack.getItem(), true).isEmpty()) {
-                    if (!simulate)
-                        inv.insertItem(3, stack.getItem(), false);
-                    return true;
-                }
-                return false;
-            }
-
-            @Override
             protected @Nullable IAlloySmeltingRecipe loadRecipe(CompoundTag nbt) {
                 ResourceLocation id = new ResourceLocation(nbt.getString("id"));
                 return level.getRecipeManager().byKey(id).map(recipe -> {
@@ -320,10 +255,9 @@ public abstract class AlloySmelterBlockEntity extends PoweredTaskMachineEntity<P
         };
     }
 
-    @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-        return new AlloySmelterMenu(this, inventory, containerId);
+    protected IAlloySmeltingRecipe.Container getContainer() {
+        return container;
     }
 
     @Override
@@ -346,5 +280,11 @@ public abstract class AlloySmelterBlockEntity extends PoweredTaskMachineEntity<P
         }
         container.setInputsTaken(pTag.getInt("inputs_taken"));
         super.load(pTag);
+    }
+
+    @Nullable
+    @Override
+    public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
+        return new AlloySmelterMenu(this, inventory, containerId);
     }
 }
