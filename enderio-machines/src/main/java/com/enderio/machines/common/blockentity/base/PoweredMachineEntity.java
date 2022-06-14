@@ -54,13 +54,16 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
         capacitorCacheDirty = true;
 
         // Sync capacitor and energy storage
-        addDataSlot(new CapacitorDataSlot(this::getCapacitorItem, data -> cachedCapacitorData = data, SyncMode.GUI));
+        if (requiresCapacitor()) {
+            addDataSlot(new CapacitorDataSlot(this::getCapacitorItem, data -> cachedCapacitorData = data, SyncMode.GUI));
+        }
         addDataSlot(new IntegerDataSlot(energyStorage::getEnergyStored, energyStorage::setEnergyStored, SyncMode.GUI));
     }
 
     @Override
     public void serverTick() {
         // Leak energy
+        // TODO: Leak per second instead of per tick? Would make it nicer
         energyStorage.takeEnergy(getEnergyLeakRate());
 
         // If redstone config is not enabled.

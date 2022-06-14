@@ -149,14 +149,12 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachine<IAl
 
     private boolean acceptSlotInput(int slot, ItemStack stack) {
         // Ensure we don't break automation by inserting items that'll break the current recipe.
-        PoweredCraftingTask<IAlloySmeltingRecipe, IAlloySmeltingRecipe.Container> currentTask = getCurrentTask();
-        if (currentTask != null) {
+        var currentTask = getCurrentTask();
+        if (currentTask != null && currentTask.getRecipe() != null) {
             MachineInventory inventory = getInventory();
             ItemStack currentContents = inventory.getStackInSlot(slot);
             inventory.setStackInSlot(slot, stack);
-
             boolean accept = currentTask.getRecipe().matches(container, level);
-
             inventory.setStackInSlot(slot, currentContents);
             return accept;
         }

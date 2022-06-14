@@ -48,25 +48,25 @@ public class MachineBlockEntities {
         .validBlocks(MachineBlocks.CREATIVE_POWER)
         .register();
 
-//    public static final BlockEntityEntry<StirlingGeneratorBlockEntity.Simple> SIMPLE_STIRLING_GENERATOR = REGISTRATE
-//        .blockEntity("simple_stirling_generator", StirlingGeneratorBlockEntity.Simple::new)
-//        .validBlocks(MachineBlocks.SIMPLE_STIRLING_GENERATOR)
-//        .register();
+    public static final BlockEntityEntry<StirlingGeneratorBlockEntity.Simple> SIMPLE_STIRLING_GENERATOR = REGISTRATE
+        .blockEntity("simple_stirling_generator", StirlingGeneratorBlockEntity.Simple::new)
+        .validBlocks(MachineBlocks.SIMPLE_STIRLING_GENERATOR)
+        .register();
 
     public static final BlockEntityEntry<StirlingGeneratorBlockEntity.Standard> STIRLING_GENERATOR = REGISTRATE
         .blockEntity("stirling_generator", StirlingGeneratorBlockEntity.Standard::new)
         .validBlocks(MachineBlocks.STIRLING_GENERATOR)
         .register();
 
-    public static final BlockEntityEntry<SagMillBlockEntity.Standard> SAG_MILL = REGISTRATE
-        .blockEntity("sag_mill", SagMillBlockEntity.Standard::new)
-        .validBlocks(MachineBlocks.SAG_MILL)
-        .register();
-
-    public static final BlockEntityEntry<SlicerBlockEntity> SLICE_N_SPLICE = REGISTRATE
-        .blockEntity("slice_n_splice", SlicerBlockEntity::new)
-        .validBlocks(MachineBlocks.SLICE_N_SPLICE)
-        .register();
+//    public static final BlockEntityEntry<SagMillBlockEntity.Standard> SAG_MILL = REGISTRATE
+//        .blockEntity("sag_mill", SagMillBlockEntity.Standard::new)
+//        .validBlocks(MachineBlocks.SAG_MILL)
+//        .register();
+//
+//    public static final BlockEntityEntry<SlicerBlockEntity> SLICE_N_SPLICE = REGISTRATE
+//        .blockEntity("slice_n_splice", SlicerBlockEntity::new)
+//        .validBlocks(MachineBlocks.SLICE_N_SPLICE)
+//        .register();
 
     public static void classload() {}
 }
