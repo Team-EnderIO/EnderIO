@@ -3,9 +3,11 @@ package com.enderio.machines.common.blockentity.base;
 import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.base.common.blockentity.sync.FloatDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
+import com.enderio.machines.common.block.ProgressMachineBlock;
 import com.enderio.machines.common.blockentity.task.PoweredTask;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -35,6 +37,11 @@ public abstract class PoweredTaskMachineEntity<T extends PoweredTask> extends Po
             if (currentTask != null && !currentTask.isComplete()) {
                 currentTask.tick();
             }
+
+            // Update block state
+            if (getBlockState().getValue(ProgressMachineBlock.POWERED) != hasTask()) {
+                level.setBlock(getBlockPos(), getBlockState().setValue(ProgressMachineBlock.POWERED, hasTask()), Block.UPDATE_ALL);
+            }
         }
 
         super.serverTick();
@@ -50,6 +57,10 @@ public abstract class PoweredTaskMachineEntity<T extends PoweredTask> extends Po
 
     protected T getCurrentTask() {
         return currentTask;
+    }
+
+    protected boolean hasTask() {
+        return currentTask != null;
     }
 
     protected boolean hasNextTask() {

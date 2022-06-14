@@ -58,11 +58,11 @@ public class MachineBlockEntities {
         .validBlocks(MachineBlocks.STIRLING_GENERATOR)
         .register();
 
-//    public static final BlockEntityEntry<SagMillBlockEntity.Standard> SAG_MILL = REGISTRATE
-//        .blockEntity("sag_mill", SagMillBlockEntity.Standard::new)
-//        .validBlocks(MachineBlocks.SAG_MILL)
-//        .register();
-//
+    public static final BlockEntityEntry<SagMillBlockEntity.Standard> SAG_MILL = REGISTRATE
+        .blockEntity("sag_mill", SagMillBlockEntity.Standard::new)
+        .validBlocks(MachineBlocks.SAG_MILL)
+        .register();
+
 //    public static final BlockEntityEntry<SlicerBlockEntity> SLICE_N_SPLICE = REGISTRATE
 //        .blockEntity("slice_n_splice", SlicerBlockEntity::new)
 //        .validBlocks(MachineBlocks.SLICE_N_SPLICE)
