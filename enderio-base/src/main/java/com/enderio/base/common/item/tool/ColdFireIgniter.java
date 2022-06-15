@@ -1,9 +1,9 @@
 package com.enderio.base.common.item.tool;
 
 import com.enderio.base.common.init.EIOBlocks;
-import com.enderio.base.common.capability.IMultiCapabilityItem;
-import com.enderio.base.common.capability.MultiCapabilityProvider;
-import com.enderio.base.common.capability.fluid.AcceptingFluidItemHandler;
+import com.enderio.api.capability.IMultiCapabilityItem;
+import com.enderio.api.capability.MultiCapabilityProvider;
+import com.enderio.base.common.capability.AcceptingFluidItemHandler;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.tag.EIOTags;
 import net.minecraft.advancements.CriteriaTriggers;

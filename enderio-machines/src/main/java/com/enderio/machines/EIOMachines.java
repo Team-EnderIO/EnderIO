@@ -1,9 +1,6 @@
 package com.enderio.machines;
 
-import com.enderio.machines.common.init.MachineBlockEntities;
-import com.enderio.machines.common.init.MachineBlocks;
-import com.enderio.machines.common.init.MachineMenus;
-import com.enderio.machines.common.init.MachineRecipes;
+import com.enderio.machines.common.init.*;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.datagen.recipe.MachineRecipeGenerator;
 import com.tterrag.registrate.Registrate;
@@ -31,6 +28,7 @@ public class EIOMachines {
         MachineMenus.classload();
         MachineLang.classload();
         MachineRecipes.Serializer.classload();
+        MachineCapacitorKeys.classload();
 
         // Run datagen after registrate
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();

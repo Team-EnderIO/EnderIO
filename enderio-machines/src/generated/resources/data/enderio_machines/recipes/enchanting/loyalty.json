@@ -1,9 +1,9 @@
 {
   "type": "enderio_machines:enchanting",
-  "ingredient": {
+  "enchantment": "minecraft:loyalty",
+  "input": {
     "item": "minecraft:lead"
   },
-  "enchantment": "minecraft:loyalty",
-  "amount": 1,
+  "amount_per_level": 1,
   "level": 1
 }

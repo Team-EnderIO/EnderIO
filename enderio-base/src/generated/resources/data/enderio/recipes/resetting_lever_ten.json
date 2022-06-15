@@ -5,10 +5,10 @@
       "item": "minecraft:lever"
     },
     {
-      "item": "minecraft:redstone"
+      "tag": "forge:dusts/redstone"
     },
     {
-      "item": "minecraft:redstone"
+      "tag": "forge:dusts/redstone"
     }
   ],
   "result": {

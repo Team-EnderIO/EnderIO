@@ -1,11 +1,11 @@
 package com.enderio.machines.common.blockentity.base;
 
+import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.base.common.blockentity.sync.FloatDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
-import com.enderio.base.common.util.UseOnly;
-import com.enderio.machines.common.MachineTier;
+import com.enderio.api.UseOnly;
 import com.enderio.machines.common.block.ProgressMachineBlock;
-import com.enderio.machines.common.recipe.MachineRecipe;
+import com.enderio.api.recipe.IMachineRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -21,18 +21,18 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
+// TODO: I wanna turn crafting into a task based system, so we can have PoweredProgressMachineEntity that takes a task and performs it. Means less base-class nonsense
+//       This is a job for the sagmill branch.
 public abstract class PoweredCraftingMachineEntity<R extends Recipe<Container>> extends PowerConsumingMachineEntity {
     private int energyConsumed;
     private R currentRecipe;
 
-    @Nullable
-    private ResourceLocation loadedRecipe = null;
+    @Nullable private ResourceLocation loadedRecipe = null;
 
-    @UseOnly(LogicalSide.CLIENT)
-    private float clientProgress;
+    @UseOnly(LogicalSide.CLIENT) private float clientProgress;
 
-    public PoweredCraftingMachineEntity(MachineTier tier, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-        super(tier, pType, pWorldPosition, pBlockState);
+    public PoweredCraftingMachineEntity(CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey consumptionKey, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
+        super(capacityKey, transferKey, consumptionKey, pType, pWorldPosition, pBlockState);
 
         // Sync machine progress to the client.
         addDataSlot(new FloatDataSlot(this::getProgress, p -> clientProgress = p, SyncMode.GUI));
@@ -47,10 +47,10 @@ public abstract class PoweredCraftingMachineEntity<R extends Recipe<Container>> 
     }
 
     @Override
-    public void tick() {
+    public void serverTick() {
         boolean active = false;
 
-        if (shouldAct()) {
+        if (canAct()) {
             // If we've been asked to load a recipe (from NBT load usually), do it.
             if (loadedRecipe != null) {
                 processLoadedRecipe();
@@ -59,7 +59,8 @@ public abstract class PoweredCraftingMachineEntity<R extends Recipe<Container>> 
             if (canCraft()) {
                 int cost = getEnergyCost(getCurrentRecipe());
                 if (energyConsumed <= cost) {
-                    energyConsumed += consumeEnergy(cost);
+                    // Attempt to consume the rest of the required energy.
+                    energyConsumed += consumeEnergy(cost - energyConsumed);
                     active = true;
                 }
 
@@ -74,13 +75,11 @@ public abstract class PoweredCraftingMachineEntity<R extends Recipe<Container>> 
         }
 
         // We do this outside of shouldAct() so it still fires if we have no redstone signal
-        if (isServer()) {
-            if (getBlockState().getValue(ProgressMachineBlock.POWERED) != active) {
-                level.setBlock(getBlockPos(), getBlockState().setValue(ProgressMachineBlock.POWERED, active), Block.UPDATE_ALL);
-            }
+        if (getBlockState().getValue(ProgressMachineBlock.POWERED) != active) {
+            level.setBlock(getBlockPos(), getBlockState().setValue(ProgressMachineBlock.POWERED, active), Block.UPDATE_ALL);
         }
 
-        super.tick();
+        super.serverTick();
     }
 
     protected void setCurrentRecipe(R recipe) {
@@ -105,22 +104,23 @@ public abstract class PoweredCraftingMachineEntity<R extends Recipe<Container>> 
      * Whether crafting is running.
      */
     protected boolean canCraft() {
-        return getCurrentRecipe() != null && hasEnergy();
+        return getCurrentRecipe() != null && getEnergyStorage().getEnergyStored() > 0;
     }
 
     /**
      * Whether the machine can start a new recipe
+     *
      * @return
      */
     protected boolean canSelectRecipe() {
-        return hasEnergy(); // Need some energy, stops from consuming the resources
+        return getEnergyStorage().getEnergyStored() > 0; // Need some energy, stops from consuming the resources
     }
 
     /**
      * Get the cost of crafting this recipe
      */
     protected int getEnergyCost(R recipe) {
-        if (recipe instanceof MachineRecipe<?,?> machineRecipe) {
+        if (recipe instanceof IMachineRecipe<?, ?> machineRecipe) {
             return machineRecipe.getEnergyCost();
         }
         throw new NotImplementedException("Machine must implement getEnergyCost for types not implementing MachineRecipe");

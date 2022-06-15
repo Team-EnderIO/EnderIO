@@ -1,5 +1,6 @@
 package com.enderio.machines.common.block;
 
+import com.enderio.base.common.init.EIOItems;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import net.minecraft.core.BlockPos;
@@ -29,7 +30,6 @@ import javax.annotation.Nullable;
 
 public class MachineBlock extends BaseEntityBlock {
     private final BlockEntityEntry<? extends MachineBlockEntity> blockEntityType;
-
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     public MachineBlock(Properties properties, BlockEntityEntry<? extends MachineBlockEntity> blockEntityType) {
@@ -75,12 +75,16 @@ public class MachineBlock extends BaseEntityBlock {
     private void updateBlockEntityCache(LevelReader level, BlockPos pos) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof MachineBlockEntity machineBlockEntity) {
-            machineBlockEntity.updateCache();
+            machineBlockEntity.updateCapabilityCache();
         }
     }
 
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+        if (pPlayer.getItemInHand(pHand).is(EIOItems.YETA_WRENCH.get())) {
+            return InteractionResult.PASS;
+        }
+
         if (pLevel.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {

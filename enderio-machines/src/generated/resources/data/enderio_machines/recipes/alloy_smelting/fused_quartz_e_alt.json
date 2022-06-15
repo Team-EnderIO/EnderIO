@@ -1,0 +1,22 @@
+{
+  "type": "enderio_machines:alloy_smelting",
+  "inputs": [
+    {
+      "ingredient": {
+        "tag": "forge:gems/quartz"
+      },
+      "count": 4
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:glowstone"
+      },
+      "count": 1
+    }
+  ],
+  "result": {
+    "item": "enderio:fused_quartz_e"
+  },
+  "energy": 5000,
+  "experience": 0.3
+}

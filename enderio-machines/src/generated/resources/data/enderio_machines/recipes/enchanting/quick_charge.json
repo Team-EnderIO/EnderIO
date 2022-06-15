@@ -1,9 +1,9 @@
 {
   "type": "enderio_machines:enchanting",
-  "ingredient": {
+  "enchantment": "minecraft:quick_charge",
+  "input": {
     "item": "minecraft:sugar"
   },
-  "enchantment": "minecraft:quick_charge",
-  "amount": 16,
+  "amount_per_level": 16,
   "level": 1
 }

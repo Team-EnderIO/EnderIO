@@ -1,12 +1,5 @@
 minecraft {
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-
-    runs {
-        data {
-            // Add enderio-base resources.
-            args '--existing', file('../enderio-base/src/main/resources/'), '--existing', file('../enderio-base/src/generated/resources/')
-        }
-    }
 }
 
 dependencies {

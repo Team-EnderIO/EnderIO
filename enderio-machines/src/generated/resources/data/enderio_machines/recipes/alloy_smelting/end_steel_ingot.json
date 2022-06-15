@@ -1,14 +1,23 @@
 {
   "type": "enderio_machines:alloy_smelting",
-  "ingredients": [
+  "inputs": [
     {
-      "tag": "forge:end_stones"
+      "ingredient": {
+        "tag": "forge:end_stones"
+      },
+      "count": 1
     },
     {
-      "item": "enderio:dark_steel_ingot"
+      "ingredient": {
+        "item": "enderio:dark_steel_ingot"
+      },
+      "count": 1
     },
     {
-      "tag": "forge:obsidian"
+      "ingredient": {
+        "tag": "forge:obsidian"
+      },
+      "count": 1
     }
   ],
   "result": {

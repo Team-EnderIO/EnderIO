@@ -1,11 +1,11 @@
 modLoader="javafml"
-loaderVersion="[40,)"
+loaderVersion="${loader_version}"
 issueTrackerURL="https://github.com/SleepyTrousers/EnderIO-Rewrite/issues"
 license="CC0"
 
 [[mods]]
 modId="enderio_machines"
-version="${file.jarVersion}"
+version="${version}"
 displayName="Ender IO Machines"
 authors="CrazyPants, tterrag, HenryLoenwind, MatthiasM, CyanideX, EpicSquid, Rover656, HypherionSA, agnor99, Ferri_Arnus"
 description="todo"
@@ -15,18 +15,18 @@ logoFile="logo.png"
 [[dependencies.enderio_machines]]
 modId="minecraft"
 mandatory=true
-versionRange="1.18.2"
+versionRange="${mcversion}"
 side="BOTH"
 
 [[dependencies.enderio_machines]]
 modId="forge"
 mandatory=true
-versionRange="[40,)"
+versionRange="${forge_version}"
 side="BOTH"
 
 [[dependencies.enderio_machines]]
 modId="enderio"
 mandatory=true
-versionRange="[5.0,)"
+versionRange="${version}"
 ordering="AFTER"
 side="BOTH"

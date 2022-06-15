@@ -71,7 +71,7 @@ Download the latest JAR file from GitHub releases or from [CurseForge](https://w
 
 ### For Mod Developers
 
-EnderIO (along with EnderCore) is available via our maven.
+EnderIO and it's modules are available via our maven.
 
 Update your `build.gradle` to contain the foillowing:
 
@@ -81,9 +81,14 @@ repositories {
 }
 
 dependencies {
-    // TODO: We may release an API package
+    // Include Ender IO Base API
+    compileOnly fg.deobf("com.enderio:EnderIO-base:<VERSION>:api")
     
-    runtimeOnly fg.deobf("com.enderio:enderio-base:<VERSION>")
+    // Test with Ender IO in the mod:
+    runtimeOnly fg.deobf("com.enderio.EnderIO:<VERSION>") // For monolithic build
+    
+    runtimeOnly fg.deobf("com.enderio:EnderIO-<MODULE>:<VERSION>") // For individual modules
+    // ...
 }
 ```
 

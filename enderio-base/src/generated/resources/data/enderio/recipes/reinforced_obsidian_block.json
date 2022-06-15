@@ -13,7 +13,7 @@
       "item": "enderio:grains_of_infinity"
     },
     "O": {
-      "item": "minecraft:obsidian"
+      "tag": "forge:obsidian"
     }
   },
   "result": {

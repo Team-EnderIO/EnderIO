@@ -1,0 +1,28 @@
+{
+  "type": "enderio_machines:alloy_smelting",
+  "inputs": [
+    {
+      "ingredient": {
+        "tag": "forge:dyes/green"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:egg"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "tag": "forge:dusts/coal"
+      },
+      "count": 1
+    }
+  ],
+  "result": {
+    "item": "enderio:organic_green_dye"
+  },
+  "energy": 1500,
+  "experience": 0.3
+}

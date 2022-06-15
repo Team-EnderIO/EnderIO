@@ -1,6 +1,6 @@
 package com.enderio.base.common.menu;
 
-import com.enderio.base.common.blockentity.SyncedBlockEntity;
+import com.enderio.base.common.blockentity.EnderBlockEntity;
 import com.enderio.base.common.blockentity.sync.EnderDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.base.common.network.EnderNetwork;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class SyncedMenu<T extends SyncedBlockEntity> extends AbstractContainerMenu {
+public abstract class SyncedMenu<T extends EnderBlockEntity> extends AbstractContainerMenu {
 
     @Nullable
     private final T blockEntity;
