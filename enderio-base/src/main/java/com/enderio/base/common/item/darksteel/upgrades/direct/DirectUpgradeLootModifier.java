@@ -1,7 +1,7 @@
 package com.enderio.base.common.item.darksteel.upgrades.direct;
 
-import com.enderio.base.EnderIO;
 import com.google.gson.JsonObject;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -10,26 +10,22 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.common.loot.LootModifier;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mod.EventBusSubscriber(modid = EnderIO.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class DirectUpgradeLootModifier extends LootModifier {
 
     protected DirectUpgradeLootModifier(LootItemCondition[] conditionsIn) {
         super(conditionsIn);
     }
 
-    @Nonnull
     @Override
-    protected List<ItemStack> doApply(List<ItemStack> generatedLoot, LootContext context) {
+    protected @NotNull ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
         if (context.getParam(LootContextParams.THIS_ENTITY) instanceof Player player) {
-            List<ItemStack> remaining = new ArrayList<>();
+            ObjectArrayList<ItemStack> remaining = new ObjectArrayList<>();
             for (ItemStack is : generatedLoot) {
                 if(!player.addItem(is)) {
                     remaining.add(is);
@@ -38,11 +34,6 @@ public class DirectUpgradeLootModifier extends LootModifier {
             generatedLoot = remaining;
         }
         return generatedLoot;
-    }
-
-    @SubscribeEvent
-    public static void register(@Nonnull RegistryEvent.Register<GlobalLootModifierSerializer<?>> event) {
-        event.getRegistry().register(new Serializer().setRegistryName(EnderIO.loc("direct_upgrade")));
     }
 
     public static class Serializer extends GlobalLootModifierSerializer<DirectUpgradeLootModifier> {

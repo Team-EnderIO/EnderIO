@@ -9,6 +9,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.conditions.ICondition;
 import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class EnderFinishedRecipe<R extends IEnderRecipe<R, ?>> implements Finish
     private final List<ICondition> conditions = new ArrayList<>();
 
     public EnderFinishedRecipe(R recipe, String modid, String name) {
-        this(recipe, new ResourceLocation(modid, recipe.getSerializer().getRegistryName().getPath() + "/" + name));
+        this(recipe, new ResourceLocation(modid, ForgeRegistries.RECIPE_SERIALIZERS.getKey(recipe.getSerializer()).getPath() + "/" + name));
     }
 
     public EnderFinishedRecipe(R recipe, ResourceLocation id) {

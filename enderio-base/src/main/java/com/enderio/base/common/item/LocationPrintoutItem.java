@@ -11,7 +11,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -74,7 +73,7 @@ public class LocationPrintoutItem extends Item implements IMultiCapabilityItem {
         NetworkHooks.openGui(player,new MenuProvider() {
             @Override
             public Component getDisplayName() {
-                return new TextComponent("");
+                return Component.literal("");
             }
 
             @Nullable
@@ -100,12 +99,12 @@ public class LocationPrintoutItem extends Item implements IMultiCapabilityItem {
                 toolTip.add(writeCoordinate('x', selection.getPos().getX())
                     .append(writeCoordinate('y', selection.getPos().getY()))
                     .append(writeCoordinate('z', selection.getPos().getZ())));
-                toolTip.add(new TextComponent(selection.getLevelName()));
+                toolTip.add(Component.literal(selection.getLevelName()));
         });
     }
 
     private static MutableComponent writeCoordinate(char character, int number) {
-        return new TextComponent("" + character).withStyle(ChatFormatting.GRAY).append(new TextComponent("" + number).withStyle(ChatFormatting.GREEN));
+        return Component.literal("" + character).withStyle(ChatFormatting.GRAY).append(Component.literal("" + number).withStyle(ChatFormatting.GREEN));
     }
 
     @Nullable

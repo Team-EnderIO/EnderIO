@@ -6,7 +6,7 @@ import com.enderio.base.common.init.EIOMenus;
 import com.enderio.base.common.item.LocationPrintoutItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
@@ -72,6 +72,11 @@ public class CoordinateMenu extends AbstractContainerMenu {
     }
 
     @Override
+    public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
+        return ItemStack.EMPTY;
+    }
+
+    @Override
     public void removed(Player pPlayer) {
         super.removed(pPlayer);
         Optional<ItemStack> paper = findPaper(pPlayer);
@@ -80,7 +85,7 @@ public class CoordinateMenu extends AbstractContainerMenu {
             ItemStack itemstack = EIOItems.LOCATION_PRINTOUT.get().getDefaultInstance();
             LocationPrintoutItem.setSelection(itemstack, selection);
             if (!StringUtils.isBlank(name))
-                itemstack.setHoverName(new TextComponent(name).withStyle(ChatFormatting.AQUA));
+                itemstack.setHoverName(Component.literal(name).withStyle(ChatFormatting.AQUA));
 
             if (severPlayer.isAlive() && !severPlayer.hasDisconnected()) {
                 severPlayer.getInventory().placeItemBackInInventory(itemstack);
@@ -120,7 +125,7 @@ public class CoordinateMenu extends AbstractContainerMenu {
                     if (StringUtils.isBlank(name)) {
                         stack.resetHoverName();
                     } else {
-                        stack.setHoverName(new TextComponent(name).withStyle(ChatFormatting.AQUA));
+                        stack.setHoverName(Component.literal(name).withStyle(ChatFormatting.AQUA));
                     }
                 }
             }

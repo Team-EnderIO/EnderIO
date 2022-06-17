@@ -4,6 +4,7 @@ import com.enderio.base.common.init.EIOBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.AmethystClusterBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BuddingAmethystBlock;
@@ -21,11 +22,11 @@ public class BuddingInfinityCrystalBlock extends BuddingAmethystBlock {
     }
 
     @Override
-    public void randomTick(@Nonnull BlockState pState, @Nonnull ServerLevel pLevel, @Nonnull BlockPos pPos, Random pRandom) {
-        if (pRandom.nextInt(5) == 0) {
-            Direction direction = DIRECTIONS[pRandom.nextInt(DIRECTIONS.length)];
-            BlockPos blockpos = pPos.relative(direction);
-            BlockState blockstate = pLevel.getBlockState(blockpos);
+    public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource randomSource) {
+        if (randomSource.nextInt(5) == 0) {
+            Direction direction = DIRECTIONS[randomSource.nextInt(DIRECTIONS.length)];
+            BlockPos blockpos = pos.relative(direction);
+            BlockState blockstate = level.getBlockState(blockpos);
             Block block = null;
             if (canClusterGrowAtState(blockstate)) {
                 block = EIOBlocks.SMALL_INFINITY_BUD.get();
@@ -42,9 +43,8 @@ public class BuddingInfinityCrystalBlock extends BuddingAmethystBlock {
                     .defaultBlockState()
                     .setValue(AmethystClusterBlock.FACING, direction)
                     .setValue(AmethystClusterBlock.WATERLOGGED, blockstate.getFluidState().getType() == Fluids.WATER);
-                pLevel.setBlockAndUpdate(blockpos, blockstate1);
+                level.setBlockAndUpdate(blockpos, blockstate1);
             }
-
         }
     }
 }

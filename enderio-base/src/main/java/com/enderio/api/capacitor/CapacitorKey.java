@@ -1,7 +1,6 @@
 package com.enderio.api.capacitor;
 
 import com.enderio.api.capability.ICapacitorData;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 /**
  * A capacitor key.
@@ -10,7 +9,7 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
  * <p>
  * Should implement {@link #getValue(float)} to define how scaling works.
  */
-public final class CapacitorKey extends ForgeRegistryEntry<CapacitorKey> {
+public final class CapacitorKey {
 
     private final float base;
 

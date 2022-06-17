@@ -30,7 +30,7 @@ import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Tier;
@@ -39,6 +39,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.ForgeTier;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.TierSortingRegistry;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 import java.util.Objects;
@@ -364,7 +365,7 @@ public class EIOItems {
         .tab(() -> EIOCreativeTabs.GEAR)
         .onRegister(item -> DarkSteelUpgradeRegistry
             .instance()
-            .addUpgradesForItem(Objects.requireNonNull(item.getRegistryName()), EmpoweredUpgrade.NAME, SpoonUpgrade.NAME, DirectUpgrade.NAME,
+            .addUpgradesForItem(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)), EmpoweredUpgrade.NAME, SpoonUpgrade.NAME, DirectUpgrade.NAME,
                 ExplosiveUpgrade.NAME, ExplosivePenetrationUpgrade.NAME))
         .register();
 
@@ -373,9 +374,8 @@ public class EIOItems {
         .tab(() -> EIOCreativeTabs.GEAR)
         .onRegister(item -> DarkSteelUpgradeRegistry
             .instance()
-            .addUpgradesForItem(Objects.requireNonNull(item.getRegistryName()), EmpoweredUpgrade.NAME, ForkUpgrade.NAME, DirectUpgrade.NAME))
+            .addUpgradesForItem(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)), EmpoweredUpgrade.NAME, ForkUpgrade.NAME, DirectUpgrade.NAME))
         .register();
-
 
     private static final String UPGRADE_TEXT = " Upgrade";
 
@@ -465,7 +465,7 @@ public class EIOItems {
 
     // region description
 
-    public static TranslatableComponent capacitorDescriptionBuilder(String type, String value, String description) {
+    public static MutableComponent capacitorDescriptionBuilder(String type, String value, String description) {
         return REGISTRATE.addLang("description", EnderIO.loc("capacitor." + type + "." + value), description);
     }
 
@@ -495,5 +495,5 @@ public class EIOItems {
 
     // endregion
 
-    public static void classload() {}
+    public static void register() {}
 }

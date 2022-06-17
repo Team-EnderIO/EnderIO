@@ -89,5 +89,5 @@ public class EIOEnchantments {
         }
     }
 
-    public static void classload() {}
+    public static void register() {}
 }

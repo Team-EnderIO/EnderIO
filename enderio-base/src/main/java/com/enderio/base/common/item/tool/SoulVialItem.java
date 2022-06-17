@@ -18,7 +18,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -56,7 +55,7 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
     public void addCommonTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
         itemStack.getCapability(EIOCapabilities.ENTITY_STORAGE).ifPresent(entityStorage -> {
             entityStorage.getStoredEntityData().getEntityType().ifPresent(entityType -> {
-                tooltips.add(TooltipUtil.style(new TranslatableComponent(EntityUtil.getEntityDescriptionId(entityType))));
+                tooltips.add(TooltipUtil.style(Component.translatable(EntityUtil.getEntityDescriptionId(entityType))));
             });
         });
     }

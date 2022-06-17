@@ -8,6 +8,7 @@ import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.Consumer;
 
@@ -32,7 +33,7 @@ public class GrindingballRecipeGenerator extends RecipeProvider {
     }
 
     protected void build(Item item, float grinding, float chance, float power, int durability, Consumer<FinishedRecipe> recipeConsumer) {
-        build(new GrindingballRecipe(null, Ingredient.of(item), grinding, chance, power, durability), item.getRegistryName().getPath(), recipeConsumer);
+        build(new GrindingballRecipe(null, Ingredient.of(item), grinding, chance, power, durability), ForgeRegistries.ITEMS.getKey(item).getPath(), recipeConsumer);
     }
 
     protected void build(GrindingballRecipe recipe, String name, Consumer<FinishedRecipe> recipeConsumer) {

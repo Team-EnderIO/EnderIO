@@ -5,6 +5,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -38,12 +39,12 @@ public class ResettingLeverBlock extends LeverBlock {
     }
 
     @Override
-    public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, Random pRand) {
-        super.tick(pState, pLevel, pPos, pRand);
-        if (pState.getValue(POWERED) && !pLevel.isClientSide) {
-            BlockState blockstate = this.pull(pState, pLevel, pPos);
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource randomSource) {
+        super.tick(state, level, pos, randomSource);
+        if (state.getValue(POWERED) && !level.isClientSide) {
+            BlockState blockstate = this.pull(state, level, pos);
             float f = blockstate.getValue(POWERED) ? 0.6F : 0.5F;
-            pLevel.playSound(null, pPos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3F, f);
+            level.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3F, f);
         }
     }
 

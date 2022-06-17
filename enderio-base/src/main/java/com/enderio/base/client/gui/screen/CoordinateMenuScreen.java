@@ -10,7 +10,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -28,7 +27,7 @@ public class CoordinateMenuScreen extends EIOScreen<CoordinateMenu> {
         super.init();
         Minecraft.getInstance().keyboardHandler.setSendRepeatsToGui(true);
 
-        EditBox name = new EditBox(this.font, leftPos + 43 + 4, topPos + 20 + 4, 92 - 12, 18, new TextComponent("name"));
+        EditBox name = new EditBox(this.font, leftPos + 43 + 4, topPos + 20 + 4, 92 - 12, 18, Component.literal("name"));
         name.setCanLoseFocus(false);
         name.setTextColor(0xFFFFFFFF);
         name.setTextColorUneditable(0xFFFFFFFF);
@@ -39,7 +38,7 @@ public class CoordinateMenuScreen extends EIOScreen<CoordinateMenu> {
         this.addRenderableWidget(name);
         this.setInitialFocus(name);
         name.setEditable(true);
-        this.addRenderableWidget(new Button(getGuiLeft() + imageWidth - 30, getGuiTop() + imageHeight - 30, 20, 20, new TextComponent("Ok"), mouseButton -> Minecraft.getInstance().player.closeContainer())); //TOOD: translation
+        this.addRenderableWidget(new Button(getGuiLeft() + imageWidth - 30, getGuiTop() + imageHeight - 30, 20, 20, Component.literal("Ok"), mouseButton -> Minecraft.getInstance().player.closeContainer())); //TOOD: translation
     }
 
     @Override

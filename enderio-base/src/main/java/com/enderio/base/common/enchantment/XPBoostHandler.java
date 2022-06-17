@@ -4,6 +4,7 @@ import com.enderio.base.common.init.EIOEnchantments;
 import com.google.common.base.Throwables;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.LivingEntity;
@@ -66,7 +67,7 @@ public class XPBoostHandler {
             Level world = (Level) event.getWorld();
             BlockPos pos = event.getPos();
             final int fortune = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, event.getPlayer().getMainHandItem());
-            final int xp = state.getBlock().getExpDrop(state, world, pos, fortune, 0);
+            final int xp = state.getBlock().getExpDrop(state, world, RandomSource.create(), pos, fortune, 0);
             if (xp > 0) {
                 world.addFreshEntity(new ExperienceOrb(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, getXPBoost(xp, level)));
             }

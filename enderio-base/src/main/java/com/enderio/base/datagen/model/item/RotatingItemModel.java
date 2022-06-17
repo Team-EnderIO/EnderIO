@@ -5,6 +5,7 @@ import net.minecraft.world.item.Item;
 import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.client.model.generators.ModelBuilder;
 import net.minecraftforge.client.model.generators.ModelFile;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class RotatingItemModel {
 
@@ -12,7 +13,7 @@ public class RotatingItemModel {
     public static void create(Item item, ItemModelProvider prov) {
         // json so the BEWLR is used + perspectives
 
-        ResourceLocation registryName = item.getRegistryName();
+        ResourceLocation registryName = ForgeRegistries.ITEMS.getKey(item);
 
         // @formatter:off
         prov

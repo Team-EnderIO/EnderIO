@@ -1,31 +1,21 @@
 package com.enderio.base;
 
-import com.enderio.api.capacitor.CapacitorKey;
-import com.enderio.base.common.init.EIOBlocks;
-import com.enderio.base.common.init.EIOBlockEntities;
-import com.enderio.base.common.init.EIOEnchantments;
-import com.enderio.base.common.init.EIOFluids;
-import com.enderio.base.common.init.EIOItems;
-import com.enderio.base.datagen.loot.FireCraftingLootProvider;
-import com.enderio.base.datagen.tags.EIOBlockTagsProvider;
+import com.enderio.base.common.init.*;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.base.common.init.EIOMenus;
-import com.enderio.base.common.init.EIOPackets;
-import com.enderio.base.common.init.EIORecipes;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.config.base.BaseConfig;
 import com.enderio.base.config.decor.DecorConfig;
 import com.enderio.base.config.machines.MachinesConfig;
+import com.enderio.base.datagen.loot.FireCraftingLootProvider;
+import com.enderio.base.datagen.recipe.standard.StandardRecipes;
+import com.enderio.base.datagen.tags.EIOBlockTagsProvider;
 import com.enderio.base.datagen.tags.EIOFluidTagsProvider;
 import com.enderio.base.datagen.tags.EIOItemTagsProvider;
-import com.enderio.base.datagen.recipe.standard.StandardRecipes;
 import com.tterrag.registrate.Registrate;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.common.data.ForgeBlockTagsProvider;
 import net.minecraftforge.common.util.Lazy;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -34,14 +24,10 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.NewRegistryEvent;
-import net.minecraftforge.registries.RegistryBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.Files;
 
@@ -52,10 +38,6 @@ public class EnderIO {
     private static final Lazy<Registrate> REGISTRATE = Lazy.of(() -> Registrate.create(MODID));
 
     public static final Logger LOGGER = LogManager.getLogger(MODID);
-
-    public static ResourceLocation CAPACITOR_KEY_REGISTRY_KEY = new ResourceLocation(MODID, "capacitor_keys");
-
-    @Nullable public static IForgeRegistry<CapacitorKey> CAPACITOR_KEY_REGISTRY;
 
     public EnderIO() {
         // Create configs subdirectory
@@ -74,50 +56,38 @@ public class EnderIO {
         ctx.registerConfig(ModConfig.Type.COMMON, MachinesConfig.COMMON_SPEC, "enderio/machines-common.toml");
         ctx.registerConfig(ModConfig.Type.CLIENT, MachinesConfig.CLIENT_SPEC, "enderio/machines-client.toml");
 
-        // Perform classloads for everything so things are registered.
-        EIOItems.classload();
-        EIOBlocks.classload();
-        EIOBlockEntities.classload();
-        EIOFluids.classload();
-        EIOEnchantments.classload();
-        EIOTags.classload();
-        EIOMenus.classload();
-        EIOPackets.classload();
-        EIOLang.classload();
-        EIORecipes.Serializer.classload();
+        // Perform initialization and registration for everything so things are registered.
+        EIORegistries.init();
+        EIOItems.register();
+        EIOBlocks.register();
+        EIOBlockEntities.register();
+        EIOFluids.register();
+        EIOEnchantments.register();
+        EIOTags.register();
+        EIOMenus.register();
+        EIOPackets.register();
+        EIOLang.register();
+        EIORecipes.registerType();
+        EIOLootModifiers.register();
 
         // Run datagen after registrate is finished.
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addListener(EventPriority.LOWEST, this::gatherData);
-        modEventBus.addListener(this::createRegistries);
-
-        // Helpers for registering stuff that registrate doesn't handle
-        modEventBus.addGenericListener(RecipeSerializer.class, this::onRecipeSerializerRegistry);
     }
 
     public static ResourceLocation loc(String path) {
         return new ResourceLocation(MODID, path);
     }
 
-    public void createRegistries(NewRegistryEvent event) {
-        event.create(new RegistryBuilder<CapacitorKey>().setName(CAPACITOR_KEY_REGISTRY_KEY).setType(CapacitorKey.class),
-            registry -> CAPACITOR_KEY_REGISTRY = registry);
-    }
-
     public void gatherData(GatherDataEvent event) {
+        // TODO: 1.19: This will be tidied once machines rework is merged.
         DataGenerator generator = event.getGenerator();
-        if (event.includeServer()) {
-            StandardRecipes.generate(generator);
-            ForgeBlockTagsProvider b = new ForgeBlockTagsProvider(generator, event.getExistingFileHelper());
-            generator.addProvider(new EIOItemTagsProvider(generator, b, event.getExistingFileHelper()));
-            generator.addProvider(new EIOFluidTagsProvider(generator, event.getExistingFileHelper()));
-            generator.addProvider(new EIOBlockTagsProvider(generator, event.getExistingFileHelper()));
-            generator.addProvider(new FireCraftingLootProvider(generator));
-        }
-    }
-
-    public void onRecipeSerializerRegistry(RegistryEvent.Register<RecipeSerializer<?>> event) {
-        EIORecipes.Types.classload();
+        StandardRecipes.generate(event.includeServer(), generator);
+        ForgeBlockTagsProvider b = new ForgeBlockTagsProvider(generator, event.getExistingFileHelper());
+        generator.addProvider(event.includeServer(), new EIOItemTagsProvider(generator, b, event.getExistingFileHelper()));
+        generator.addProvider(event.includeServer(), new EIOFluidTagsProvider(generator, event.getExistingFileHelper()));
+        generator.addProvider(event.includeServer(), new EIOBlockTagsProvider(generator, event.getExistingFileHelper()));
+        generator.addProvider(event.includeServer(), new FireCraftingLootProvider(generator));
     }
 
     public static Registrate registrate() {

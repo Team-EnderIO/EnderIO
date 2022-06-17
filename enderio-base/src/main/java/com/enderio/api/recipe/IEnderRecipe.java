@@ -5,6 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
@@ -50,8 +51,8 @@ public interface IEnderRecipe<R extends IEnderRecipe<R, C>, C extends Container>
         Set<String> mods = new HashSet<>();
 
         // Get mods for inputs, outputs and other mods
-        getIngredients().forEach(ing -> Arrays.stream(ing.getItems()).forEach(itm -> mods.add(itm.getItem().getRegistryName().getNamespace())));
-        getAllOutputs().forEach(dep -> mods.add(dep.getItem().getRegistryName().getNamespace()));
+        getIngredients().forEach(ing -> Arrays.stream(ing.getItems()).forEach(itm -> mods.add(ForgeRegistries.ITEMS.getKey(itm.getItem()).getNamespace())));
+        getAllOutputs().forEach(dep -> mods.add(ForgeRegistries.ITEMS.getKey(dep.getItem()).getNamespace()));
         getMiscModDependencies().forEach(dep -> mods.add(dep.getNamespace()));
 
         // Get which mod owns the recipe type. Makes sure the mod that deserializes the recipe is ignored in the list.

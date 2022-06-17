@@ -37,5 +37,5 @@ public class EIOPackets extends EnderNetwork {
         registerMessage(new EmitParticlesPacket.Handler(), EmitParticlesPacket.class);
     }
 
-    public static void classload() {}
+    public static void register() {}
 }

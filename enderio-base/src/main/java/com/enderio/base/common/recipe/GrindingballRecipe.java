@@ -59,12 +59,12 @@ public class GrindingballRecipe implements IGrindingballData, Recipe<Container> 
 
     @Override
     public DataGenSerializer<GrindingballRecipe, Container> getSerializer() {
-        return EIORecipes.Serializer.GRINDINGBALL.get();
+        return EIORecipes.GRINDINGBALL_SERIALIZER.get();
     }
 
     @Override
     public RecipeType<?> getType() {
-        return EIORecipes.Types.GRINDINGBALL;
+        return EIORecipes.GRINDINGBALL.get();
     }
     
     @Override

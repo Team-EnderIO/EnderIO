@@ -43,7 +43,7 @@ public class EntityCaptureUtils {
         if (!type.canSerialize())
             return CapturableStatus.INCOMPATIBLE;
 
-        if (BaseConfig.COMMON.ITEMS.SOUL_VIAL_BLACKLIST.get().contains(type.getRegistryName().toString()))
+        if (BaseConfig.COMMON.ITEMS.SOUL_VIAL_BLACKLIST.get().contains(ForgeRegistries.ENTITIES.getKey(type).toString()))
             return CapturableStatus.BLACKLISTED;
 
         return CapturableStatus.CAPTURABLE;

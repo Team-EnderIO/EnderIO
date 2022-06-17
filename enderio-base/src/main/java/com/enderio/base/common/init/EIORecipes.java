@@ -1,10 +1,13 @@
 package com.enderio.base.common.init;
 
 import com.enderio.base.EnderIO;
+import com.enderio.base.common.recipe.DarkSteelUpgradeRecipe;
 import com.enderio.base.common.recipe.FireCraftingRecipe;
 import com.enderio.base.common.recipe.GrindingballRecipe;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -14,30 +17,29 @@ public class EIORecipes {
 
     //TODO: Create a Registrate method for RecipeSerializer
 
-    public static class Serializer {
-        private Serializer() {}
+    private static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS,
+        EnderIO.MODID);
 
-        private static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZER_REGISTRY = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS,
-            EnderIO.MODID);
+    private static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(ForgeRegistries.RECIPE_TYPES,
+        EnderIO.MODID);
 
-        public static final RegistryObject<GrindingballRecipe.Serializer> GRINDINGBALL = RECIPE_SERIALIZER_REGISTRY.register("grindingball",
-            GrindingballRecipe.Serializer::new);
+    public static final RegistryObject<RecipeType<GrindingballRecipe>> GRINDINGBALL = registerType("grindingball");
+    public static final RegistryObject<GrindingballRecipe.Serializer> GRINDINGBALL_SERIALIZER = RECIPE_SERIALIZERS.register("grindingball",
+        GrindingballRecipe.Serializer::new);
 
-        public static final RegistryObject<FireCraftingRecipe.Serializer> FIRE_CRAFTING = RECIPE_SERIALIZER_REGISTRY.register("fire_crafting",
-            FireCraftingRecipe.Serializer::new);
+    public static final RegistryObject<RecipeType<FireCraftingRecipe>> FIRE_CRAFTING = registerType("fire_crafting");
+    public static final RegistryObject<FireCraftingRecipe.Serializer> FIRE_CRAFTING_SERIALIZER = RECIPE_SERIALIZERS.register("fire_crafting",
+        FireCraftingRecipe.Serializer::new);
 
-        public static void classload() {
-            RECIPE_SERIALIZER_REGISTRY.register(FMLJavaModLoadingContext.get().getModEventBus());
-        }
+    public static final RegistryObject<DarkSteelUpgradeRecipe.Serializer> DARK_STEEL_UPGRADE_SERIALIZER = RECIPE_SERIALIZERS.register("dark_steel_upgrade", DarkSteelUpgradeRecipe.Serializer::new);
+
+    private static <I extends Recipe<?>> RegistryObject<RecipeType<I>> registerType(String name) {
+        return RECIPE_TYPES.register(name, () -> RecipeType.simple(EnderIO.loc(name)));
     }
 
-    public static class Types {
-        private Types() {}
-
-        public static final RecipeType<GrindingballRecipe> GRINDINGBALL = RecipeType.register(EnderIO.MODID + ":grindingball");
-
-        public static final RecipeType<FireCraftingRecipe> FIRE_CRAFTING = RecipeType.register(EnderIO.MODID + ":fire_crafting");
-
-        public static void classload() {}
+    public static void registerType() {
+        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+        RECIPE_SERIALIZERS.register(bus);
+        RECIPE_TYPES.register(bus);
     }
 }

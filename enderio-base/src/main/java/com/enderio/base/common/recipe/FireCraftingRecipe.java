@@ -101,12 +101,12 @@ public class FireCraftingRecipe implements IEnderRecipe<FireCraftingRecipe, Cont
 
     @Override
     public DataGenSerializer<FireCraftingRecipe, Container> getSerializer() {
-        return EIORecipes.Serializer.FIRE_CRAFTING.get();
+        return EIORecipes.FIRE_CRAFTING_SERIALIZER.get();
     }
 
     @Override
     public RecipeType<?> getType() {
-        return EIORecipes.Types.FIRE_CRAFTING;
+        return EIORecipes.FIRE_CRAFTING.get();
     }
 
     public static class Serializer extends DataGenSerializer<FireCraftingRecipe, Container> {
@@ -144,7 +144,7 @@ public class FireCraftingRecipe implements IEnderRecipe<FireCraftingRecipe, Cont
         public void toJson(FireCraftingRecipe recipe, JsonObject json) {
             JsonArray basesJson = new JsonArray();
             for (Block baseBlock : recipe.bases) {
-                basesJson.add(baseBlock.getRegistryName().toString());
+                basesJson.add(ForgeRegistries.BLOCKS.getKey(baseBlock).toString());
             }
             for (TagKey<Block> tag : recipe.baseTags) {
                 basesJson.add("#" + tag.location().toString());
@@ -177,7 +177,7 @@ public class FireCraftingRecipe implements IEnderRecipe<FireCraftingRecipe, Cont
         public void toNetwork(FriendlyByteBuf buffer, FireCraftingRecipe recipe) {
             try {
                 buffer.writeResourceLocation(recipe.lootTable);
-                buffer.writeCollection(recipe.getBases(), (buf, block) -> buf.writeResourceLocation(block.getRegistryName()));
+                buffer.writeCollection(recipe.getBases(), (buf, block) -> buf.writeResourceLocation(ForgeRegistries.BLOCKS.getKey(block)));
                 buffer.writeCollection(recipe.dimensions, FriendlyByteBuf::writeResourceLocation);
             } catch (Exception ex) {
                 EnderIO.LOGGER.error("Error writing fire crafting recipe to packet.", ex);

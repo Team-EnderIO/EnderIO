@@ -34,6 +34,7 @@ import net.minecraftforge.client.model.generators.BlockModelProvider;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.VariantBlockStateBuilder;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -189,7 +190,7 @@ public class EIOBlocks {
 
     public static final BlockEntry<BuddingInfinityCrystalBlock> BUDDING_INFINITY_CRYSTAL = REGISTRATE
         .block("budding_infinity_crystal", Material.AMETHYST, BuddingInfinityCrystalBlock::new)
-        .properties(props -> props.noDrops().strength(1.5F).sound(SoundType.AMETHYST).requiresCorrectToolForDrops().randomTicks())
+        .properties(props -> props.noLootTable().strength(1.5F).sound(SoundType.AMETHYST).requiresCorrectToolForDrops().randomTicks())
         .item()
         .tab(() -> EIOCreativeTabs.BLOCKS)
         .build()
@@ -257,7 +258,7 @@ public class EIOBlocks {
 
     public static final BlockEntry<GraveBlock> GRAVE = REGISTRATE
         .block("grave", Material.STONE, GraveBlock::new)
-        .properties(props -> props.strength(-1.0F, 3600000.0F).noDrops().noOcclusion())
+        .properties(props -> props.strength(-1.0F, 3600000.0F).noLootTable().noOcclusion())
         .blockstate((con, prov) -> prov.simpleBlock(con.get(), prov.models().getExistingFile(EnderIO.loc("block/grave"))))
         .addLayer(() -> RenderType::cutout)
         .register();
@@ -343,7 +344,7 @@ public class EIOBlocks {
 
     public static final BlockEntry<ColdFireBlock> COLD_FIRE = REGISTRATE
         .block("cold_fire", ColdFireBlock::new)
-        .properties(props -> BlockBehaviour.Properties.copy(Blocks.FIRE).noDrops())
+        .properties(props -> BlockBehaviour.Properties.copy(Blocks.FIRE).noLootTable())
         .blockstate((ctx, prov) -> {})
         .addLayer(() -> RenderType::cutout)
         .register();
@@ -409,7 +410,7 @@ public class EIOBlocks {
     }
 
     private static BlockEntry<SilentPressurePlateBlock> silentPressurePlateBlock(final PressurePlateBlock block) {
-        ResourceLocation upModelLoc = Objects.requireNonNull(block.getRegistryName());
+        ResourceLocation upModelLoc = Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(block));
         ResourceLocation downModelLoc = new ResourceLocation(upModelLoc.getNamespace(), upModelLoc.getPath() + "_down");
 
         BlockBuilder<SilentPressurePlateBlock, Registrate> bb = REGISTRATE.block("silent_" + upModelLoc.getPath(),
@@ -431,7 +432,7 @@ public class EIOBlocks {
     }
 
     private static BlockEntry<SilentWeightedPressurePlateBlock> silentWeightedPressurePlateBlock(WeightedPressurePlateBlock block) {
-        ResourceLocation upModelLoc = Objects.requireNonNull(block.getRegistryName());
+        ResourceLocation upModelLoc = Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(block));
         ResourceLocation downModelLoc = new ResourceLocation(upModelLoc.getNamespace(), upModelLoc.getPath() + "_down");
 
         BlockBuilder<SilentWeightedPressurePlateBlock, Registrate> bb = REGISTRATE.block("silent_" + upModelLoc.getPath(),
@@ -486,7 +487,7 @@ public class EIOBlocks {
         return bb.register();
     }
 
-    public static void classload() {}
+    public static void register() {}
 
     public static void clientInit() {
 

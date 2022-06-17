@@ -13,7 +13,6 @@ import com.enderio.base.common.util.TooltipUtil;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -61,7 +60,7 @@ public class BrokenSpawnerItem extends Item implements IMultiCapabilityItem {
     public void appendHoverText(@Nonnull ItemStack pStack, @Nullable Level pLevel, @Nonnull List<Component> pTooltipComponents,
         @Nonnull TooltipFlag pIsAdvanced) {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        getEntityType(pStack).ifPresent(type -> pTooltipComponents.add(TooltipUtil.style(new TranslatableComponent(EntityUtil.getEntityDescriptionId(type)))));
+        getEntityType(pStack).ifPresent(type -> pTooltipComponents.add(TooltipUtil.style(Component.translatable(EntityUtil.getEntityDescriptionId(type)))));
     }
 
     // region Entity Storage

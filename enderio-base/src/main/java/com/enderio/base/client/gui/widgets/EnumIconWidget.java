@@ -15,7 +15,6 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -45,7 +44,7 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
     private final Component optionName;
 
     public EnumIconWidget(U addedOn, int pX, int pY, Supplier<T> getter, Consumer<T> setter, Component optionName) {
-        super(pX, pY, getter.get().getRenderSize().getX(), getter.get().getRenderSize().getY(), TextComponent.EMPTY);
+        super(pX, pY, getter.get().getRenderSize().getX(), getter.get().getRenderSize().getY(), Component.empty());
         this.getter = getter;
         this.setter = setter;
         this.optionName = optionName;
@@ -149,7 +148,7 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
 
         private final List<LateTooltipData> tooltips = new ArrayList<>();
         protected SelectionScreen() {
-            super(TextComponent.EMPTY);
+            super(Component.empty());
         }
 
         @Override
@@ -224,7 +223,7 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
 
             if (isMouseOver(pMouseX, pMouseY)) {
                 Component tooltip = value.getTooltip();
-                if (tooltip != TextComponent.EMPTY) {
+                if (tooltip != Component.empty()) {
                     selection.renderTooltipAfterEverything(pPoseStack, tooltip, pMouseX, pMouseY);
                 }
             }

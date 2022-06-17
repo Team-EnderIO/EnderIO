@@ -168,7 +168,7 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem {
 
     @Override
     public void fillItemCategory(@Nonnull CreativeModeTab pCategory, @Nonnull NonNullList<ItemStack> pItems) {
-        if (allowdedIn(pCategory)) {
+        if (allowedIn(pCategory)) {
             addCreativeItems(pItems, this);
         }
     }

@@ -6,6 +6,7 @@ import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.google.gson.JsonObject;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
@@ -14,14 +15,10 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.common.loot.LootModifier;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
-@Mod.EventBusSubscriber(modid = EnderIO.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class CapacitorLootModifier extends LootModifier {
     /**
      * The minimum base value
@@ -47,7 +44,7 @@ public class CapacitorLootModifier extends LootModifier {
      * Makes a loot capacitor with random stats and adds it to the loot.
      */
     @Override
-    protected List<ItemStack> doApply(List<ItemStack> generatedLoot, LootContext context) {
+    protected @NotNull ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
         ItemStack capacitor = new ItemStack(EIOItems.LOOT_CAPACITOR.get());
         capacitor.getCapability(EIOCapabilities.CAPACITOR).ifPresent(cap -> {
             if (cap instanceof LootCapacitorData lootCap) {
@@ -76,11 +73,6 @@ public class CapacitorLootModifier extends LootModifier {
             return obj;
         }
 
-    }
-
-    @SubscribeEvent
-    public static void register(@Nonnull RegistryEvent.Register<GlobalLootModifierSerializer<?>> event) {
-        event.getRegistry().register(new Serializer().setRegistryName(EnderIO.loc("capacitor_loot")));
     }
 
 }

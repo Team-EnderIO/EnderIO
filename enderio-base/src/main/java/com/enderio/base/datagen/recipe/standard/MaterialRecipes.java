@@ -19,6 +19,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 import java.util.function.Consumer;
@@ -173,7 +174,7 @@ public class MaterialRecipes extends RecipeProvider {
             .pattern("S S")
             .define('S', Tags.Items.RODS_WOODEN)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(Tags.Items.RODS_WOODEN).build()))
-            .save(recipeConsumer, new ResourceLocation(EnderIO.MODID, EIOItems.GEAR_WOOD.get().getRegistryName().getPath() +"_corner"));
+            .save(recipeConsumer, new ResourceLocation(EnderIO.MODID, EIOItems.GEAR_WOOD.getId().getPath() + "_corner"));
         
         ShapedRecipeBuilder.shaped(EIOItems.GEAR_STONE.get())
             .pattern("NIN")
@@ -191,7 +192,7 @@ public class MaterialRecipes extends RecipeProvider {
             .define('I', Tags.Items.COBBLESTONE)
             .define('G', EIOItems.GEAR_WOOD.get())
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GEAR_WOOD.get()))
-            .save(recipeConsumer, new ResourceLocation(EnderIO.MODID, EIOItems.GEAR_STONE.get().getRegistryName().getPath() + "_upgrade"));
+            .save(recipeConsumer, new ResourceLocation(EnderIO.MODID, EIOItems.GEAR_STONE.getId().getPath() + "_upgrade"));
         
         upgradeGear(recipeConsumer, EIOItems.GEAR_IRON.get(), EIOItems.GRAINS_OF_INFINITY.get(), Tags.Items.INGOTS_IRON, Tags.Items.NUGGETS_IRON);
         upgradeGear(recipeConsumer, EIOItems.GEAR_ENERGIZED.get(), EIOItems.GEAR_IRON.get(), EIOItems.ENERGETIC_ALLOY_INGOT.get(), EIOItems.ENERGETIC_ALLOY_NUGGET.get());

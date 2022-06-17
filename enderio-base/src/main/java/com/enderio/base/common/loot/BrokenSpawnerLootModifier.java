@@ -5,6 +5,7 @@ import com.enderio.base.common.item.spawner.BrokenSpawnerItem;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.config.base.BaseConfig;
 import com.google.gson.JsonObject;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -16,14 +17,13 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.common.loot.LootModifier;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
-@Mod.EventBusSubscriber(modid = EnderIO.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class BrokenSpawnerLootModifier extends LootModifier {
     /**
      * Constructs a LootModifier.
@@ -34,9 +34,8 @@ public class BrokenSpawnerLootModifier extends LootModifier {
         super(conditionsIn);
     }
 
-    @Nonnull
     @Override
-    protected List<ItemStack> doApply(List<ItemStack> generatedLoot, LootContext context) {
+    protected @NotNull ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
         BlockEntity entity = context.getParam(LootContextParams.BLOCK_ENTITY);
         if (entity instanceof SpawnerBlockEntity spawnerBlockEntity) {
             if (!context.getParam(LootContextParams.TOOL).is(EIOTags.Items.BROKEN_SPAWNER_BLACKLIST)) {
@@ -66,10 +65,5 @@ public class BrokenSpawnerLootModifier extends LootModifier {
         public JsonObject write(BrokenSpawnerLootModifier instance) {
             return makeConditions(instance.conditions);
         }
-    }
-
-    @SubscribeEvent
-    public static void register(@Nonnull RegistryEvent.Register<GlobalLootModifierSerializer<?>> event) {
-        event.getRegistry().register(new Serializer().setRegistryName(EnderIO.loc("broken_spawner")));
     }
 }

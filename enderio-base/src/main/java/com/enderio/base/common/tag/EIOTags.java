@@ -1,7 +1,6 @@
 package com.enderio.base.common.tag;
 
 import com.enderio.base.EnderIO;
-import com.enderio.base.common.block.glass.GlassBlocks;
 import com.enderio.base.common.block.glass.GlassCollisionPredicate;
 import com.enderio.base.common.block.glass.GlassIdentifier;
 import com.enderio.base.common.block.glass.GlassLighting;
@@ -20,7 +19,7 @@ import java.util.Map;
 
 public class EIOTags {
 
-    public static void classload() {
+    public static void register() {
         Items.init();
         Blocks.init();
         Fluids.init();

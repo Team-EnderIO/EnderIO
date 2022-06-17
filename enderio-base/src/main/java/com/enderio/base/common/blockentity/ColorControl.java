@@ -4,7 +4,6 @@ import com.enderio.base.EnderIO;
 import com.enderio.base.client.gui.IIcon;
 import com.enderio.base.common.util.Vector2i;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Locale;
@@ -42,7 +41,7 @@ public enum ColorControl implements IIcon {
 
     @Override
     public Component getTooltip() {
-        return new TextComponent(name().toLowerCase(Locale.ROOT).replace('_', ' '));
+        return Component.literal(name().toLowerCase(Locale.ROOT).replace('_', ' '));
     }
 
     @Override

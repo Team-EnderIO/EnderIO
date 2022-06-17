@@ -2,7 +2,6 @@ package com.enderio.base.client.gui;
 
 import com.enderio.base.common.util.Vector2i;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 
 public interface IIcon {
@@ -34,7 +33,7 @@ public interface IIcon {
      * @return a Component that is rendered on hover, if this icon is rendered on a gui
      */
     default Component getTooltip() {
-        return TextComponent.EMPTY;
+        return Component.empty();
     }
 
     /**

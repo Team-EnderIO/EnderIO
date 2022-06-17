@@ -52,7 +52,7 @@ public class EmitParticlePacket implements Packet {
         writeInto.writeDouble(x);
         writeInto.writeDouble(y);
         writeInto.writeDouble(z);
-        writeInto.writeResourceLocation(Objects.requireNonNull(particleOptions.getType().getRegistryName()));
+        writeInto.writeResourceLocation(Objects.requireNonNull(ForgeRegistries.PARTICLE_TYPES.getKey(particleOptions.getType())));
         particleOptions.writeToNetwork(writeInto);
     }
 

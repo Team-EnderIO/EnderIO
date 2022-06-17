@@ -39,7 +39,7 @@ public class GraveBlock extends Block implements EntityBlock {
                     pLevel.removeBlock(grave.getBlockPos(), false);
                     pLevel.removeBlockEntity(grave.getBlockPos());
                 } else {
-                    pPlayer.sendMessage(EIOLang.GRAVE_WRONG_OWNER, Util.NIL_UUID);
+                    pPlayer.sendSystemMessage(EIOLang.GRAVE_WRONG_OWNER);
                 }
             });
         }

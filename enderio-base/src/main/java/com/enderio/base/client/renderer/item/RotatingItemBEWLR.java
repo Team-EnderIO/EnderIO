@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class RotatingItemBEWLR extends BlockEntityWithoutLevelRenderer {
 
@@ -30,7 +31,7 @@ public class RotatingItemBEWLR extends BlockEntityWithoutLevelRenderer {
         }
 
         if (pStack.getItem() instanceof IRotatingItem rotatingItem) {
-            ResourceLocation itemRegName = pStack.getItem().getRegistryName();
+            ResourceLocation itemRegName = ForgeRegistries.ITEMS.getKey(pStack.getItem());
 
             BakedModel model = mc.getModelManager().getModel(new ResourceLocation(itemRegName.getNamespace(), "item/" + itemRegName.getPath() + "_helper"));
             pPoseStack.pushPose();

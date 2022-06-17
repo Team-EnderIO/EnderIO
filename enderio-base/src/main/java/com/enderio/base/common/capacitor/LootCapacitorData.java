@@ -3,10 +3,12 @@ package com.enderio.base.common.capacitor;
 import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.api.capability.ICapacitorData;
 import com.enderio.base.EnderIO;
+import com.enderio.base.common.init.EIORegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,15 +38,16 @@ public final class LootCapacitorData implements ICapacitorData {
     }
 
     @Override
-    public float getLevel(CapacitorKey key) {
-        if (specializations.containsKey(key.getRegistryName())) {
-            return specializations.get(key.getRegistryName());
+    public float getLevel(CapacitorKey capacitorKey) {
+        ResourceLocation key = EIORegistries.CAPACITOR_KEYS_REGISTRY.get().getKey(capacitorKey);
+        if (specializations.containsKey(key)) {
+            return specializations.get(key);
         }
         return getBase();
     }
 
     public void addSpecialization(CapacitorKey key, float level) {
-        this.specializations.put(key.getRegistryName(), level);
+        this.specializations.put(EIORegistries.CAPACITOR_KEYS_REGISTRY.get().getKey(key), level);
     }
 
     public void addNewSpecialization(CapacitorKey key, float level) {
@@ -83,7 +86,7 @@ public final class LootCapacitorData implements ICapacitorData {
             ListTag list = tag.getList("specializations", Tag.TAG_COMPOUND);
             for (int i = 0; i < list.size(); i++) {
                 CompoundTag listElement = list.getCompound(i);
-                CapacitorKey key = EnderIO.CAPACITOR_KEY_REGISTRY.getValue(new ResourceLocation(listElement.getString("type")));
+                CapacitorKey key = EIORegistries.CAPACITOR_KEYS_REGISTRY.get().getValue(new ResourceLocation(listElement.getString("type")));
 
                 if (key == null) {
                     EnderIO.LOGGER.warn("Capacitor had a specialization for a capacitor key that isn't registered! Ignoring. Data may be lost.");

@@ -68,7 +68,7 @@ public abstract class PoweredToggledItem extends Item implements IMultiCapabilit
 
     @Override
     public void fillItemCategory(@Nonnull CreativeModeTab pCategory, @Nonnull NonNullList<ItemStack> pItems) {
-        if (allowdedIn(pCategory)) {
+        if (allowedIn(pCategory)) {
             ItemStack is = new ItemStack(this);
             pItems.add(is.copy());
 

@@ -92,5 +92,5 @@ public class EIOFluids {
             .build();
     }
 
-    public static void classload() {}
+    public static void register() {}
 }

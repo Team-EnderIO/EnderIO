@@ -11,7 +11,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -98,19 +97,19 @@ public class ColdFireIgniter extends Item implements IMultiCapabilityItem {
         getTankCap(stack).ifPresent(handler -> {
             boolean isOneTank = handler.getTanks() == 1;
             if (!isOneTank) {
-                components.add(new TextComponent("Fluids:"));
+                components.add(Component.literal("Fluids:"));
             }
             for (int i = 0; i < handler.getTanks(); i++) {
                 String prefix = isOneTank ? "" : i + ": ";
-                Component postFix = handler.getFluidInTank(i).isEmpty() ? new TextComponent("") : handler.getFluidInTank(i).getDisplayName();
-                components.add(new TextComponent(prefix + handler.getFluidInTank(i).getAmount() + " / " + handler.getTankCapacity(i) + " ").append(postFix));
+                Component postFix = handler.getFluidInTank(i).isEmpty() ? Component.literal("") : handler.getFluidInTank(i).getDisplayName();
+                components.add(Component.literal(prefix + handler.getFluidInTank(i).getAmount() + " / " + handler.getTankCapacity(i) + " ").append(postFix));
             }
         });
     }
 
     @Override
     public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {
-        if (allowdedIn(pCategory)) {
+        if (allowedIn(pCategory)) {
             ItemStack is = new ItemStack(this);
             pItems.add(is.copy());
 

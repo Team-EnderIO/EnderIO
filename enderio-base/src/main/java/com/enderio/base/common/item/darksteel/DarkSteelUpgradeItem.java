@@ -46,7 +46,7 @@ public class DarkSteelUpgradeItem extends Item implements IAdvancedTooltipProvid
 
     @Override
     public void fillItemCategory(@Nonnull CreativeModeTab pCategory, @Nonnull NonNullList<ItemStack> pItems) {
-        if (allowdedIn(pCategory)) {
+        if (allowedIn(pCategory)) {
             ItemStack is = new ItemStack(this);
             pItems.add(is.copy());
 
@@ -66,7 +66,7 @@ public class DarkSteelUpgradeItem extends Item implements IAdvancedTooltipProvid
                 DarkSteelUpgradeRegistry.instance().writeUpgradeToItemStack(stack, upgrade.get());
                 pLevel.playSound(pPlayer, pPlayer.getOnPos(), SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 1.0F, new Random().nextFloat() * 0.1F + 0.9F);
             } else if (pLevel.isClientSide){
-                pPlayer.sendMessage(EIOLang.DS_UPGRADE_ITEM_NO_XP, Util.NIL_UUID);
+                pPlayer.sendSystemMessage(EIOLang.DS_UPGRADE_ITEM_NO_XP);
             }
             return InteractionResultHolder.consume(stack);
         }
