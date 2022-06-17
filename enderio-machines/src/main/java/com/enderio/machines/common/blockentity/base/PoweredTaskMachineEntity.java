@@ -24,6 +24,11 @@ public abstract class PoweredTaskMachineEntity<T extends PoweredTask> extends Po
     private @Nullable T currentTask;
 
     /**
+     * A serialized task waiting for the level to load.
+     */
+    private @Nullable CompoundTag pendingTask;
+
+    /**
      * The task progress (client side)
      */
     @UseOnly(LogicalSide.CLIENT)
@@ -35,6 +40,17 @@ public abstract class PoweredTaskMachineEntity<T extends PoweredTask> extends Po
 
         // Sync machine progress to the client.
         addDataSlot(new FloatDataSlot(this::getProgress, p -> clientProgress = p, SyncMode.GUI));
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+
+        // Load any pending tasks.
+        if (pendingTask != null) {
+            currentTask = loadTask(pendingTask);
+            pendingTask = null;
+        }
     }
 
     @Override
@@ -114,7 +130,8 @@ public abstract class PoweredTaskMachineEntity<T extends PoweredTask> extends Po
     public void load(CompoundTag pTag) {
         super.load(pTag);
 
+        // Store the task for the onLoad() call
         if (pTag.contains("task"))
-            currentTask = loadTask(pTag.getCompound("task"));
+            pendingTask = pTag.getCompound("task").copy();
     }
 }

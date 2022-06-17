@@ -78,12 +78,6 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
      */
     private boolean complete;
 
-    /**
-     * The recipe to load.
-     * If this is set, we've just loaded into the game.
-     */
-    private @Nullable CompoundTag recipeToLoad;
-
     public PoweredCraftingTask(PoweredCraftingMachine<R, C> blockEntity, C container, int outputStartIndex, int outputCount, @Nullable R recipe) {
         super(blockEntity.getEnergyStorage());
         this.outputStartIndex = outputStartIndex;
@@ -109,6 +103,14 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
      * Take inputs from the machine.
      */
     protected abstract void takeInputs(R recipe);
+
+    /**
+     * Consume energy from the buffer.
+     * Only really exposed so the SAG mill can take durability from grinding balls.
+     */
+    protected int consumeEnergy(int maxConsume) {
+        return energyStorage.consumeEnergy(maxConsume);
+    }
 
     /**
      * Place outputs into the machine.
@@ -154,14 +156,7 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
         if (complete)
             return;
 
-        // If we have a recipe ready to load up, load it.
-        if (recipeToLoad != null) {
-            // Attempt to load the saved recipe.
-            recipe = loadRecipe(recipeToLoad);
-            recipeToLoad = null;
-        }
-
-        // If the recipe load fails, ignore it and consider the task complete.
+        // If the recipe failed to load somehow, cancel
         if (recipe == null) {
             complete = true;
             return;
@@ -197,7 +192,7 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
 
         // Try to consume as much energy as possible to finish the craft.
         if (energyConsumed <= energyCost) {
-            energyConsumed += energyStorage.consumeEnergy(energyCost - energyConsumed);
+            energyConsumed += consumeEnergy(energyCost - energyConsumed);
         }
 
         // If the recipe has been crafted, attempt to put it into storage
@@ -212,6 +207,8 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
 
     @Override
     public float getProgress() {
+        if (recipe == null)
+            return 0.0f;
         return energyConsumed / (float) recipe.getEnergyCost(container);
     }
 
@@ -225,19 +222,19 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
-        tag.put("recipe", serializeRecipe(new CompoundTag(), recipe));
-        tag.putInt("energy_consumed", energyConsumed);
-        tag.putInt("energy_cost", energyConsumed);
-        tag.putBoolean("collected_inputs", collectedInputs);
-        tag.putBoolean("complete", complete);
+        tag.put("Recipe", serializeRecipe(new CompoundTag(), recipe));
+        tag.putInt("EnergyConsumed", energyConsumed);
+        tag.putInt("EnergyCost", energyConsumed);
+        tag.putBoolean("CollectedInputs", collectedInputs);
+        tag.putBoolean("Complete", complete);
 
-        tag.putBoolean("determined_outputs", determinedOutputs);
+        tag.putBoolean("DeterminedOutputs", determinedOutputs);
         if (determinedOutputs) {
             ListTag outputsNbt = new ListTag();
             for (OutputStack stack : outputs) {
                 outputsNbt.add(stack.serializeNBT());
             }
-            tag.put("outputs", outputsNbt);
+            tag.put("Outputs", outputsNbt);
         }
 
         return tag;
@@ -245,15 +242,15 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        recipeToLoad = nbt.getCompound("recipe").copy();
-        energyConsumed = nbt.getInt("energy_consumed");
-        energyCost = nbt.getInt("energy_cost");
-        collectedInputs = nbt.getBoolean("collected_inputs");
-        complete = nbt.getBoolean("complete");
+        recipe = loadRecipe(nbt.getCompound("Recipe"));
+        energyConsumed = nbt.getInt("EnergyConsumed");
+        energyCost = nbt.getInt("EnergyCost");
+        collectedInputs = nbt.getBoolean("CollectedInputs");
+        complete = nbt.getBoolean("Complete");
 
-        determinedOutputs = nbt.getBoolean("determined_outputs");
+        determinedOutputs = nbt.getBoolean("DeterminedOutputs");
         if (determinedOutputs) {
-            ListTag outputsNbt = nbt.getList("outputs", Tag.TAG_COMPOUND);
+            ListTag outputsNbt = nbt.getList("Outputs", Tag.TAG_COMPOUND);
             outputs = new ArrayList<>();
             for (Tag tag : outputsNbt) {
                 outputs.add(OutputStack.fromNBT((CompoundTag) tag));
