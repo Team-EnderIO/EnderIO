@@ -37,7 +37,7 @@ public class EIORecipes {
         return RECIPE_TYPES.register(name, () -> RecipeType.simple(EnderIO.loc(name)));
     }
 
-    public static void registerType() {
+    public static void register() {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         RECIPE_SERIALIZERS.register(bus);
         RECIPE_TYPES.register(bus);

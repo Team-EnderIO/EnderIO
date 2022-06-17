@@ -67,7 +67,7 @@ public class EnderIO {
         EIOMenus.register();
         EIOPackets.register();
         EIOLang.register();
-        EIORecipes.registerType();
+        EIORecipes.register();
         EIOLootModifiers.register();
 
         // Run datagen after registrate is finished.
