@@ -3,7 +3,7 @@ package com.enderio.machines.common.init;
 import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.api.capacitor.CapacitorKeyType;
 import com.enderio.api.capacitor.Scalers;
-import com.enderio.base.EnderIO;
+import com.enderio.base.common.init.EIORegistries;
 import com.enderio.machines.EIOMachines;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
@@ -36,10 +36,10 @@ public enum MachineCapacitorKeys {
 
     // In a subclass so that its loaded.
     private static class Register {
-        private static final DeferredRegister<CapacitorKey> CAPACITOR_KEYS = DeferredRegister.create(EnderIO.CAPACITOR_KEY_REGISTRY_KEY, EIOMachines.MODID);
+        private static final DeferredRegister<CapacitorKey> CAPACITOR_KEYS = DeferredRegister.create(EIORegistries.CAPACITOR_KEYS, EIOMachines.MODID);
     }
 
-    public static void classload() {
+    public static void register() {
         Register.CAPACITOR_KEYS.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 

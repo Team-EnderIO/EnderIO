@@ -4,6 +4,7 @@ import com.enderio.decoration.common.blockentity.SinglePaintedBlockEntity;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
@@ -32,7 +33,7 @@ public class PaintedSimpleModel extends PaintedModel implements IDynamicBakedMod
 
     @Nonnull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull IModelData extraData) {
         List<BakedQuad> shape = getModelFromOwn(state).getQuads(copyBlockState(state), side, rand);
         Direction direction = null;
         if (state != null) {

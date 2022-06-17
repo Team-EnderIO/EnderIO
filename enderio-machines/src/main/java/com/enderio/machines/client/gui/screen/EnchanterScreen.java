@@ -1,15 +1,13 @@
 package com.enderio.machines.client.gui.screen;
 
 import com.enderio.base.client.gui.screen.EIOScreen;
-import com.enderio.base.client.gui.widgets.EnumIconWidget;
-import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.util.Vector2i;
 import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.menu.EnchanterMenu;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -40,7 +38,7 @@ public class EnchanterScreen extends EIOScreen<EnchanterMenu> {
         super.render(pPoseStack, pMouseX, pMouseY, pPartialTicks);
         if (this.getMenu().getCurrentCost() < 0) return;
         int colour = 8453920; //green
-        TranslatableComponent component = new TranslatableComponent("container.repair.cost", this.getMenu().getCurrentCost());
+        MutableComponent component = Component.translatable("container.repair.cost", this.getMenu().getCurrentCost());
         if (Minecraft.getInstance().player.experienceLevel < this.getMenu().getCurrentCost() && !Minecraft.getInstance().player.isCreative()) {
             colour = 16736352; //red
         }

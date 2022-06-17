@@ -5,6 +5,7 @@ import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.ModelProvider;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class DecorBlockState {
     /**
@@ -12,10 +13,11 @@ public class DecorBlockState {
      */
     public static void paintedBlock(DataGenContext<Block, ? extends Block> ctx, RegistrateBlockstateProvider prov, Block toCopy) {
         Block paintedBlock = ctx.get();
+        ResourceLocation paintedBlockId = ForgeRegistries.BLOCKS.getKey(paintedBlock);
         PaintedModelBuilder paintedModel = new PaintedModelBuilder(
-            new ResourceLocation(paintedBlock.getRegistryName().getNamespace(), ModelProvider.BLOCK_FOLDER + "/" + paintedBlock.getRegistryName().getPath()),
+            new ResourceLocation(paintedBlockId.getNamespace(), ModelProvider.BLOCK_FOLDER + "/" + paintedBlockId.getPath()),
             prov.models().existingFileHelper, toCopy);
-        prov.models().getBuilder(paintedBlock.getRegistryName().getPath());
+        prov.models().getBuilder(paintedBlockId.getPath());
         prov.models().generatedModels.put(paintedModel.getLocation(), paintedModel);
         prov.simpleBlock(paintedBlock, paintedModel);
     }

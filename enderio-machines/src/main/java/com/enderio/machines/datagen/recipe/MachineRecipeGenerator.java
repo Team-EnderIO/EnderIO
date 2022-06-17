@@ -6,8 +6,8 @@ import net.minecraft.data.DataGenerator;
 
 public class MachineRecipeGenerator {
 
-    public static void generate(DataGenerator dataGenerator) {
-        dataGenerator.addProvider(new AlloyRecipeGenerator(dataGenerator));
-        dataGenerator.addProvider(new EnchanterRecipeGenerator(dataGenerator));
+    public static void generate(boolean includeServer, DataGenerator dataGenerator) {
+        dataGenerator.addProvider(includeServer, new AlloyRecipeGenerator(dataGenerator));
+        dataGenerator.addProvider(includeServer, new EnchanterRecipeGenerator(dataGenerator));
     }
 }

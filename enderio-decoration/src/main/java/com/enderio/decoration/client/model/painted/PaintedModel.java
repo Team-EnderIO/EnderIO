@@ -17,6 +17,7 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -61,7 +62,7 @@ public abstract class PaintedModel implements IDynamicBakedModel {
      * @param rotation rotation you want to have applied to the block
      * @return a List of BakedQuads from a shape using the paint as a texture
      */
-    protected List<BakedQuad> getQuadsUsingShape(Block paint, List<BakedQuad> shape, @Nullable Direction side, @Nonnull Random rand,
+    protected List<BakedQuad> getQuadsUsingShape(Block paint, List<BakedQuad> shape, @Nullable Direction side, @Nonnull RandomSource rand,
         @Nullable Direction rotation) {
         if (paint != null) {
             BakedModel model = getModel(paintWithRotation(paint, rotation));
@@ -95,7 +96,7 @@ public abstract class PaintedModel implements IDynamicBakedModel {
      * @param rotation a rotation value, so that if both blocks support rotation, the correct texture is gathered
      * @return an Optional of a Pair of the texture of the Block and if the texture is tinted at that side
      */
-    private Optional<Pair<TextureAtlasSprite, Boolean>> getSpriteData(Block paint, Direction side, Random rand, Direction rotation) {
+    private Optional<Pair<TextureAtlasSprite, Boolean>> getSpriteData(Block paint, Direction side, RandomSource rand, Direction rotation) {
         BlockState state = paintWithRotation(paint, rotation);
         List<BakedQuad> quads = getModel(state).getQuads(state, side, rand, EmptyModelData.INSTANCE);
         return quads.isEmpty() ? Optional.empty() : Optional.of(Pair.of(quads.get(0).getSprite(), quads.get(0).isTinted()));
@@ -119,7 +120,7 @@ public abstract class PaintedModel implements IDynamicBakedModel {
         BlockState state = paintWithRotation(paint, rotation);
         LightUtil.unpack(shape.getVertices(), normalData, DefaultVertexFormat.BLOCK, 0, 4);
         Direction normal = Direction.getNearest(normalData[0], normalData[1], normalData[2]);
-        List<BakedQuad> quads = model.getQuads(state, normal, new Random());
+        List<BakedQuad> quads = model.getQuads(state, normal, RandomSource.create());
         return quads.isEmpty() ? Pair.of(EIOModel.getMissingTexture(), false) : Pair.of(quads.get(0).getSprite(), quads.get(0).isTinted());
     }
 
@@ -270,7 +271,7 @@ public abstract class PaintedModel implements IDynamicBakedModel {
 
         @Nonnull
         @Override
-        public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
+        public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull IModelData extraData) {
             return bakedQuads.computeIfAbsent(side, side1 -> PaintedModel.this.getQuadsUsingShape(paint, Minecraft
                 .getInstance()
                 .getItemRenderer()

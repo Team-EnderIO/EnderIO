@@ -17,6 +17,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.Consumer;
 
@@ -76,11 +77,11 @@ public class EnchanterRecipeGenerator extends RecipeProvider {
     }
 
     protected void build(Enchantment enchantment, Item ingredient, int amountPerLevel, int levelModifier, Consumer<FinishedRecipe> recipeConsumer) {
-        build(new EnchanterRecipeImpl(null, Ingredient.of(ingredient), enchantment, amountPerLevel, levelModifier), enchantment.getRegistryName().getPath(), recipeConsumer);
+        build(new EnchanterRecipeImpl(null, Ingredient.of(ingredient), enchantment, amountPerLevel, levelModifier), ForgeRegistries.ENCHANTMENTS.getKey(enchantment).getPath(), recipeConsumer);
     }
     
     protected void build(Enchantment enchantment, TagKey<Item> ingredient, int amountPerLevel, int levelModifier, Consumer<FinishedRecipe> recipeConsumer) {
-        build(new EnchanterRecipeImpl(null, Ingredient.of(ingredient), enchantment, amountPerLevel, levelModifier), enchantment.getRegistryName().getPath(), recipeConsumer);
+        build(new EnchanterRecipeImpl(null, Ingredient.of(ingredient), enchantment, amountPerLevel, levelModifier), ForgeRegistries.ENCHANTMENTS.getKey(enchantment).getPath(), recipeConsumer);
     }
 
     protected void build(EnchanterRecipe recipe, String name, Consumer<FinishedRecipe> recipeConsumer) {

@@ -67,8 +67,7 @@ public class ItemBarRenderer {
         pRenderer.vertex(pX, pY + pHeight, 0.0D).color(pRed, pGreen, pBlue, 255).endVertex();
         pRenderer.vertex(pX + pWidth, pY + pHeight, 0.0D).color(pRed, pGreen, pBlue, 255).endVertex();
         pRenderer.vertex(pX + pWidth, pY, 0.0D).color(pRed, pGreen, pBlue, 255).endVertex();
-        pRenderer.end();
-        BufferUploader.end(pRenderer);
+        BufferUploader.draw(pRenderer.end());
     }
 
 }

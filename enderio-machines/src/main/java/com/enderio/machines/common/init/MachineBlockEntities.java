@@ -58,5 +58,5 @@ public class MachineBlockEntities {
         .validBlocks(MachineBlocks.STIRLING_GENERATOR)
         .register();
 
-    public static void classload() {}
+    public static void register() {}
 }

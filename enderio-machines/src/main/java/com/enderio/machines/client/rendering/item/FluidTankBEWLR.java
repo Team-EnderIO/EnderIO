@@ -38,7 +38,7 @@ public class FluidTankBEWLR extends BlockEntityWithoutLevelRenderer {
     @Override
     public void renderByItem(ItemStack stack, ItemTransforms.TransformType transformType, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
 
-        BakedModel model = Minecraft.getInstance().getModelManager().getModel(new ModelResourceLocation(stack.getItem().getRegistryName(), "facing=north"));
+        BakedModel model = Minecraft.getInstance().getModelManager().getModel(new ModelResourceLocation(ForgeRegistries.ITEMS.getKey(stack.getItem()), "facing=north"));
 
         poseStack.pushPose();
         Minecraft.getInstance().getItemRenderer().renderModelLists(model, stack, packedLight, packedOverlay, poseStack, buffer.getBuffer(RenderType.cutout()));

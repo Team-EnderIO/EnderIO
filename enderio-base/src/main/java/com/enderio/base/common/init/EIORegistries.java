@@ -6,10 +6,8 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.GameData;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryBuilder;
 
@@ -20,7 +18,7 @@ public class EIORegistries {
     public static final ResourceKey<Registry<CapacitorKey>> CAPACITOR_KEYS = key(EnderIO.loc("capacitor_keys"));
 
     // Registry creation
-    private static DeferredRegister<CapacitorKey> DEFERRED_CAPACITOR_KEYS = DeferredRegister.create(CAPACITOR_KEYS, EnderIO.MODID);
+    private static final DeferredRegister<CapacitorKey> DEFERRED_CAPACITOR_KEYS = DeferredRegister.create(CAPACITOR_KEYS, EnderIO.MODID);
     public static final Supplier<IForgeRegistry<CapacitorKey>> CAPACITOR_KEYS_REGISTRY = DEFERRED_CAPACITOR_KEYS.makeRegistry(EIORegistries::capacitorKeyRegistryBuilder);
 
     private static <T> ResourceKey<Registry<T>> key(ResourceLocation id) {

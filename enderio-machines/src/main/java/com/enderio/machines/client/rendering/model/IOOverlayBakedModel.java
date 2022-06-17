@@ -17,6 +17,7 @@ import net.minecraft.client.resources.model.*;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.model.IModelConfiguration;
@@ -64,7 +65,7 @@ public class IOOverlayBakedModel implements IDynamicBakedModel {
 
     @NotNull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull IModelData extraData) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull IModelData extraData) {
         if (extraData.hasProperty(MachineBlockEntity.IO_CONFIG_PROPERTY)) {
             // Get io config from the block entity.
             IIOConfig config = extraData.getData(MachineBlockEntity.IO_CONFIG_PROPERTY);

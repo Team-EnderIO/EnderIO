@@ -6,7 +6,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 
 import java.util.function.Supplier;
 
@@ -19,7 +19,7 @@ public class ProgressWidget extends AbstractWidget {
     private final int v;
 
     public ProgressWidget(Screen screen, Supplier<Float> getter, int x, int y, int width, int height, int u, int v) {
-        super(x, y, width, height, TextComponent.EMPTY);
+        super(x, y, width, height, Component.empty());
         this.screen = screen;
         this.getter = getter;
         this.u = u;

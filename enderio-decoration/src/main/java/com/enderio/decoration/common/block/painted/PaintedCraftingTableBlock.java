@@ -4,7 +4,6 @@ import com.enderio.decoration.common.init.DecorBlocks;
 import com.enderio.decoration.common.init.DecorBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
@@ -21,7 +20,7 @@ import javax.annotation.Nullable;
 
 public class PaintedCraftingTableBlock extends CraftingTableBlock implements EntityBlock {
 
-    private static final Component CONTAINER_TITLE = new TranslatableComponent("container.crafting");
+    private static final Component CONTAINER_TITLE = Component.translatable("container.crafting");
 
     public PaintedCraftingTableBlock(Properties properties) {
         super(properties);

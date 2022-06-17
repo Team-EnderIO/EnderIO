@@ -23,5 +23,5 @@ public class MachineMenus {
 
     public static final MenuEntry<StirlingGeneratorMenu> STIRLING_GENERATOR = REGISTRATE.menu("stirling_generator", StirlingGeneratorMenu::factory, () -> StirlingGeneratorScreen::new).register();
 
-    public static void classload() {}
+    public static void register() {}
 }

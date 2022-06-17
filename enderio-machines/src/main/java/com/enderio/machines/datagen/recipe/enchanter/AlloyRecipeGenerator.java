@@ -18,6 +18,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -151,11 +152,11 @@ public class AlloyRecipeGenerator extends RecipeProvider {
     }
 
     protected void build(ItemStack result, List<CountedIngredient> ingredients, int energy, float experience, Consumer<FinishedRecipe> recipeConsumer) {
-        build(new AlloySmeltingRecipeImpl(null, ingredients, result, energy, experience), result.getItem().getRegistryName().getPath(), recipeConsumer);
+        build(new AlloySmeltingRecipeImpl(null, ingredients, result, energy, experience), ForgeRegistries.ITEMS.getKey(result.getItem()).getPath(), recipeConsumer);
     }
 
     protected void build(ItemStack result, String suffix, List<CountedIngredient> ingredients, int energy, float experience, Consumer<FinishedRecipe> recipeConsumer) {
-        build(new AlloySmeltingRecipeImpl(null, ingredients, result, energy, experience), result.getItem().getRegistryName().getPath() + "_" + suffix, recipeConsumer);
+        build(new AlloySmeltingRecipeImpl(null, ingredients, result, energy, experience), ForgeRegistries.ITEMS.getKey(result.getItem()).getPath() + "_" + suffix, recipeConsumer);
     }
 
     protected void build(AlloySmeltingRecipe recipe, String name, Consumer<FinishedRecipe> recipeConsumer) {

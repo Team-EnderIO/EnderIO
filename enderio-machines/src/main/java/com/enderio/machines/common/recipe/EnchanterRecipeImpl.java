@@ -23,11 +23,11 @@ public class EnchanterRecipeImpl extends EnchanterRecipe {
 
     @Override
     public DataGenSerializer<EnchanterRecipe, Container> getSerializer() {
-        return MachineRecipes.Serializer.ENCHANTING.get();
+        return MachineRecipes.ENCHANTING_SERIALIZER.get();
     }
 
     @Override
     public RecipeType<?> getType() {
-        return MachineRecipes.Types.ENCHANTING;
+        return MachineRecipes.ENCHANTING.get();
     }
 }

@@ -13,6 +13,7 @@ import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -94,7 +95,7 @@ public class SinglePaintedBlockEntity extends BlockEntity implements IPaintableB
 
     protected void writePaint(CompoundTag tag) {
         if (paint != null) {
-            tag.putString("paint", Objects.requireNonNull(paint.getRegistryName()).toString());
+            tag.putString("paint", Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(paint)).toString());
         }
     }
 }

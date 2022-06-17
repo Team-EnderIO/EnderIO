@@ -11,6 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Optional;
 
@@ -40,14 +41,14 @@ public class EnchanterRecipeSerializer extends DataGenSerializer<EnchanterRecipe
     @Override
     public void toNetwork(FriendlyByteBuf pBuffer, EnchanterRecipe pRecipe) {
         pRecipe.getInput().toNetwork(pBuffer);
-        pBuffer.writeResourceLocation(pRecipe.getEnchantment().getRegistryName());
+        pBuffer.writeResourceLocation(ForgeRegistries.ENCHANTMENTS.getKey(pRecipe.getEnchantment()));
         pBuffer.writeInt(pRecipe.getInputAmountPerLevel());
         pBuffer.writeInt(pRecipe.getLevelModifier());
     }
 
     @Override
     public void toJson(EnchanterRecipe recipe, JsonObject json) {
-        json.addProperty("enchantment", recipe.getEnchantment().getRegistryName().toString());
+        json.addProperty("enchantment", ForgeRegistries.ENCHANTMENTS.getKey(recipe.getEnchantment()).toString());
         json.add("input", recipe.getInput().toJson());
         json.addProperty("amount_per_level", recipe.getInputAmountPerLevel());
         json.addProperty("level", recipe.getLevelModifier());

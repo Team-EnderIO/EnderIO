@@ -12,6 +12,7 @@ import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -79,7 +80,7 @@ public class DoublePaintedBlockEntity extends SinglePaintedBlockEntity {
     protected void writePaint(CompoundTag tag) {
         super.writePaint(tag);
         if (paint2 != null) {
-            tag.putString("paint2", Objects.requireNonNull(paint2.getRegistryName()).toString());
+            tag.putString("paint2", Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(paint2)).toString());
         }
     }
 }

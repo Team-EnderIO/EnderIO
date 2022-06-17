@@ -120,7 +120,7 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachineEnti
 
     @Override
     protected RecipeType<AlloySmeltingRecipe> getRecipeType() {
-        return MachineRecipes.Types.ALLOY_SMELTING;
+        return MachineRecipes.ALLOY_SMELTING.get();
     }
 
     @Override

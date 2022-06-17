@@ -18,11 +18,11 @@ public class AlloySmeltingRecipeImpl extends AlloySmeltingRecipe {
 
     @Override
     public DataGenSerializer<AlloySmeltingRecipe, Container> getSerializer() {
-        return MachineRecipes.Serializer.ALLOY_SMELTING.get();
+        return MachineRecipes.ALLOY_SMELTING_SERIALIZER.get();
     }
 
     @Override
     public RecipeType<?> getType() {
-        return MachineRecipes.Types.ALLOY_SMELTING;
+        return MachineRecipes.ALLOY_SMELTING.get();
     }
 }

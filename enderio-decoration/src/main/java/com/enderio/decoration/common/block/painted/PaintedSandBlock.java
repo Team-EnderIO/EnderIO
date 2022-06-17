@@ -6,6 +6,7 @@ import com.enderio.decoration.common.entity.PaintedSandEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
@@ -30,7 +31,7 @@ public class PaintedSandBlock extends SandBlock implements EntityBlock {
     }
 
     @Override
-    public void tick(@Nonnull BlockState pState, ServerLevel pLevel, BlockPos pPos, @Nonnull Random pRand) {
+    public void tick(@Nonnull BlockState pState, ServerLevel pLevel, BlockPos pPos, @Nonnull RandomSource pRand) {
         if (isFree(pLevel.getBlockState(pPos.below())) && pPos.getY() >= pLevel.getMinBuildHeight()) {
             PaintedSandEntity paintedSandEntity = new PaintedSandEntity(pLevel, pPos.getX() + 0.5D, pPos.getY(), pPos.getZ() + 0.5D,
                 pLevel.getBlockState(pPos));
