@@ -73,7 +73,7 @@ public class LocationPrintoutItem extends Item implements IMultiCapabilityItem {
         NetworkHooks.openGui(player,new MenuProvider() {
             @Override
             public Component getDisplayName() {
-                return Component.literal("");
+                return Component.empty();
             }
 
             @Nullable

@@ -1,6 +1,5 @@
 package com.enderio.base.common.loot;
 
-import com.enderio.base.EnderIO;
 import com.enderio.base.common.capacitor.LootCapacitorData;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOItems;
@@ -16,9 +15,6 @@ import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.common.loot.LootModifier;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
-
 public class CapacitorLootModifier extends LootModifier {
     /**
      * The minimum base value
@@ -44,7 +40,7 @@ public class CapacitorLootModifier extends LootModifier {
      * Makes a loot capacitor with random stats and adds it to the loot.
      */
     @Override
-    protected @NotNull ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
+    protected ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
         ItemStack capacitor = new ItemStack(EIOItems.LOOT_CAPACITOR.get());
         capacitor.getCapability(EIOCapabilities.CAPACITOR).ifPresent(cap -> {
             if (cap instanceof LootCapacitorData lootCap) {

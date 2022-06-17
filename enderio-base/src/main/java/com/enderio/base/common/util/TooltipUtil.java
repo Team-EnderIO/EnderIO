@@ -11,6 +11,7 @@ public class TooltipUtil {
     }
 
     public static MutableComponent withArgs(MutableComponent component, Object... args) {
+        // TODO: component.getString() no longer includes placeholder markers.
         return Component.translatable(component.getString(), args);
     }
 

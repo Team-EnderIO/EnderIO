@@ -41,7 +41,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
     // Cache for external energy interaction
     private final EnumMap<Direction, LazyOptional<IEnergyStorage>> energyHandlerCache = new EnumMap<>(Direction.class);
 
-    private ICapacitorData cachedCapacitorData;
+    private @NotNull ICapacitorData cachedCapacitorData = DefaultCapacitorData.NONE;
     private boolean capacitorCacheDirty;
 
     public PoweredMachineEntity(EnergyIOMode energyIOMode, CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey energyUseKey, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
@@ -199,7 +199,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
     /**
      * Get the capacitor data for the machine.
      */
-    public ICapacitorData getCapacitorData() {
+    public @NotNull ICapacitorData getCapacitorData() {
         if (capacitorCacheDirty)
             cacheCapacitorData();
         return cachedCapacitorData;
