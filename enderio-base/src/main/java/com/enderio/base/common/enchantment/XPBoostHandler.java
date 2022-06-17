@@ -17,6 +17,7 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.world.BlockEvent;
@@ -30,8 +31,9 @@ import java.util.Map;
 
 @EventBusSubscriber
 public class XPBoostHandler {
-    private static final Method getExperiencePoints = ObfuscationReflectionHelper.findMethod(LivingEntity.class, "m_6552_", Player.class);
     private static final @Nonnull String NBT_KEY = "enderio:xpboost";
+
+    // TODO: Use LivingExperienceDropEvent instead.
 
     @SubscribeEvent
     public static void handleEntityKill(LivingDeathEvent event) {
@@ -81,7 +83,7 @@ public class XPBoostHandler {
     private static int getXPBoost(LivingEntity killed, Player player, int level) {
         if (level >= 0) {
             try {
-                int xp = (Integer) getExperiencePoints.invoke(killed, player);
+                int xp = killed.getExperienceReward();
                 return getXPBoost(xp, level);
             } catch (Exception e) {
                 Throwables.propagate(e);

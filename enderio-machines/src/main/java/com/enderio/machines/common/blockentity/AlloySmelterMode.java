@@ -59,5 +59,6 @@ public enum AlloySmelterMode implements IIcon {
     public Vector2i getTextureSize() {
         return new Vector2i(256, 256);
     }
+
 }
 
