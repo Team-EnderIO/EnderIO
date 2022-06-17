@@ -18,6 +18,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class SagMillBlockEntity extends PoweredCraftingMachine<SagMillingRecipe, SagMillingRecipe.Container> {
+
+    // region Tiers
+
+    // TODO: Simple and Enhanced.
+
     public static class Standard extends SagMillBlockEntity {
 
         public Standard(BlockEntityType<?> pType, BlockPos pWorldPosition,
@@ -33,6 +38,8 @@ public abstract class SagMillBlockEntity extends PoweredCraftingMachine<SagMilli
             return MachineTier.STANDARD;
         }
     }
+
+    // endregion
 
     private final SagMillingRecipe.Container container;
 

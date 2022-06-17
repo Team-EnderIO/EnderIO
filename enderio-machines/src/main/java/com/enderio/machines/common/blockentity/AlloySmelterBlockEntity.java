@@ -5,6 +5,7 @@ import com.enderio.api.machines.recipes.IAlloySmeltingRecipe;
 import com.enderio.api.recipe.CountedIngredient;
 import com.enderio.base.common.blockentity.sync.EnumDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
+import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.PoweredCraftingMachine;
 import com.enderio.machines.common.blockentity.base.PoweredTaskMachineEntity;
@@ -35,6 +36,9 @@ import java.util.Optional;
 // TODO: Award XP
 
 public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachine<IAlloySmeltingRecipe, IAlloySmeltingRecipe.Container> {
+
+    // region Tiers
+
     public static class Simple extends AlloySmelterBlockEntity {
 
         public Simple(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
@@ -109,15 +113,22 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachine<IAl
         }
     }
 
-    private final AlloySmelterMode defaultMode;
+    // endregion
+
+    /**
+     * The alloying mode for the machine.
+     * Determines which recipes it can craft.
+     */
     private AlloySmelterMode mode;
+
+    /**
+     * The container used for crafting context.
+     */
     private final IAlloySmeltingRecipe.Container container;
 
     public AlloySmelterBlockEntity(AlloySmelterMode mode, CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey energyUseKey,
         BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(MachineRecipes.Types.ALLOY_SMELTING, capacityKey, transferKey, energyUseKey, pType, pWorldPosition, pBlockState);
-
-        this.defaultMode = mode;
         this.mode = mode;
 
         // Create the crafting inventory. Used for context in the vanilla recipe wrapper.
@@ -129,12 +140,22 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachine<IAl
         }
     }
 
+    /**
+     * Get the alloy smelting mode.
+     */
     public AlloySmelterMode getMode() {
         // Lock to default mode if this is a simple machine.
-        return getTier() == MachineTier.SIMPLE ? defaultMode : mode;
+        return mode;
     }
 
+    /**
+     * Set the alloy smelting mode.
+     * Calling on a simple tier machine does nothing.
+     */
     public void setMode(AlloySmelterMode mode) {
+        // Disallow changing the simple mode.
+        if (getTier() == MachineTier.SIMPLE)
+            return;
         this.mode = mode;
     }
 
@@ -150,13 +171,16 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachine<IAl
     private boolean acceptSlotInput(int slot, ItemStack stack) {
         // Ensure we don't break automation by inserting items that'll break the current recipe.
         var currentTask = getCurrentTask();
-        if (currentTask != null && currentTask.getRecipe() != null) {
-            MachineInventory inventory = getInventory();
-            ItemStack currentContents = inventory.getStackInSlot(slot);
-            inventory.setStackInSlot(slot, stack);
-            boolean accept = currentTask.getRecipe().matches(container, level);
-            inventory.setStackInSlot(slot, currentContents);
-            return accept;
+        if (currentTask != null) {
+            var currentRecipe = currentTask.getRecipe();
+            if (currentRecipe != null) {
+                MachineInventory inventory = getInventory();
+                ItemStack currentContents = inventory.getStackInSlot(slot);
+                inventory.setStackInSlot(slot, stack);
+                boolean accept = currentRecipe.matches(container, level);
+                inventory.setStackInSlot(slot, currentContents);
+                return accept;
+            }
         }
         return true;
     }
@@ -273,7 +297,7 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachine<IAl
             try {
                 mode = AlloySmelterMode.values()[pTag.getInt("mode")];
             } catch (IndexOutOfBoundsException ex) { // In case something happens in the future.
-                mode = defaultMode;
+                EIOMachines.LOGGER.error("Invalid alloy smelter mode loaded from NBT. Ignoring.");
             }
         }
         container.setInputsTaken(pTag.getInt("inputs_taken"));

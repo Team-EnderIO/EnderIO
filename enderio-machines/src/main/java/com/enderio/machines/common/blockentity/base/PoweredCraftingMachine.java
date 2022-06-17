@@ -22,10 +22,18 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Generic class for a machine that performs crafting recipes.
+ */
 public abstract class PoweredCraftingMachine<R extends MachineRecipe<C>, C extends Container> extends PoweredTaskMachineEntity<PoweredCraftingTask> {
-    // Flag for determining if we should re-check for a possible recipe.
+    /**
+     * Flag for determining if a new recipe could be present.
+     */
     protected boolean inventoryDirty = true;
 
+    /**
+     * The recipe type this machine can accept.
+     */
     protected final RecipeType<R> recipeType;
 
     public PoweredCraftingMachine(RecipeType<R> recipeType, CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey energyUseKey, BlockEntityType<?> pType,
@@ -36,12 +44,13 @@ public abstract class PoweredCraftingMachine<R extends MachineRecipe<C>, C exten
 
     @Override
     protected void onInventoryContentsChanged(int slot) {
+        // If the inventory changed, a new recipe may be ready.
         inventoryDirty = true;
         super.onInventoryContentsChanged(slot);
     }
 
     @Override
-    protected boolean hasNextTask() {
+    protected boolean newTaskAvailable() {
         return inventoryDirty;
     }
 
@@ -49,17 +58,11 @@ public abstract class PoweredCraftingMachine<R extends MachineRecipe<C>, C exten
      * @apiNote If you override this, make sure to set the inventoryDirty flag to false!
      */
     @Override
-    protected @Nullable PoweredCraftingTask<R, C> getNextTask() {
+    protected @Nullable PoweredCraftingTask<R, C> getNewTask() {
         inventoryDirty = false;
         return findRecipe()
             .map(this::createTask)
             .orElse(null);
-    }
-
-    protected Optional<R> findRecipe() {
-        return level
-            .getRecipeManager()
-            .getRecipeFor(recipeType, getContainer(), level);
     }
 
     @Override
@@ -69,7 +72,23 @@ public abstract class PoweredCraftingMachine<R extends MachineRecipe<C>, C exten
         return task;
     }
 
+    /**
+     * Find a recipe of this machine's type.
+     */
+    protected Optional<R> findRecipe() {
+        return level
+            .getRecipeManager()
+            .getRecipeFor(recipeType, getContainer(), level);
+    }
+
+    /**
+     * Create a new crafting task.
+     * @param recipe The recipe to craft (or null).
+     */
     protected abstract PoweredCraftingTask<R, C> createTask(@Nullable R recipe);
 
+    /**
+     * Get the container used for crafting.
+     */
     protected abstract C getContainer();
 }

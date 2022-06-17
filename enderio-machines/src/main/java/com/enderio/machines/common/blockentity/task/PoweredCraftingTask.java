@@ -2,7 +2,6 @@ package com.enderio.machines.common.blockentity.task;
 
 import com.enderio.api.machines.recipes.OutputStack;
 import com.enderio.machines.common.blockentity.base.PoweredCraftingMachine;
-import com.enderio.machines.common.blockentity.base.PoweredTaskMachineEntity;
 import com.enderio.api.machines.recipes.MachineRecipe;
 import com.enderio.machines.common.io.item.MachineInventory;
 import net.minecraft.nbt.CompoundTag;
@@ -17,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * A recipe crafting task that consumes energy.
  * @param <C> The container type used by the recipes. Mostly useful for {@link net.minecraft.world.item.crafting.CraftingRecipe}'s.
  */
 public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends Container> extends PoweredTask {
@@ -26,11 +25,24 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
      */
     private final PoweredCraftingMachine<R, C> blockEntity;
 
+    /**
+     * The container we are crafting in.
+     */
     private final C container;
 
-    private R recipe;
+    /**
+     * The recipe being crafted.
+     */
+    private @Nullable R recipe;
 
+    /**
+     * The index of the first output slot.
+     */
     private final int outputStartIndex;
+
+    /**
+     * The number of output slots.
+     */
     private final int outputCount;
 
     /**
@@ -66,6 +78,10 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
      */
     private boolean complete;
 
+    /**
+     * The recipe to load.
+     * If this is set, we've just loaded into the game.
+     */
     private @Nullable CompoundTag recipeToLoad;
 
     public PoweredCraftingTask(PoweredCraftingMachine<R, C> blockEntity, C container, int outputStartIndex, int outputCount, @Nullable R recipe) {
@@ -81,13 +97,23 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
         this(blockEntity, container, outputIndex, 1, recipe);
     }
 
-    public final R getRecipe() {
+    /**
+     * Get the recipe being crafted.
+     * May be null if an error has occurred or the level isn't loaded yet.
+     */
+    public final @Nullable R getRecipe() {
         return recipe;
     }
 
+    /**
+     * Take inputs from the machine.
+     */
     protected abstract void takeInputs(R recipe);
 
-    protected boolean takeOutputs(List<OutputStack> outputs, boolean simulate) {
+    /**
+     * Place outputs into the machine.
+     */
+    protected boolean placeOutputs(List<OutputStack> outputs, boolean simulate) {
         // TODO: Handle fluids too.
 
         // Get outputs
@@ -145,13 +171,13 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
         if (!determinedOutputs) {
             outputs = recipe.craft(container);
 
-            // TODO: Compact any items that are the same into singular stacks.
+            // TODO: Compact any items that are the same into singular stacks?
 
             determinedOutputs = true;
         }
 
         // If we can't inputs or outputs, cancel the task. However if for some reason we can't output after the inputs are collected, don't.
-        if (!collectedInputs && (!takeOutputs(outputs, true) || !recipe.matches(container, blockEntity.getLevel()))) {
+        if (!collectedInputs && (!placeOutputs(outputs, true) || !recipe.matches(container, blockEntity.getLevel()))) {
             complete = true;
             // This means if a sagmill recipe outputs 2 it cancels the recipe, and the determined outputs are cleared. Its a weird behaviour but not necessarily a bug.
             // We might want to review how this works in future, as right now we wait for an inventory change rather than the machine tick repeatedly.
@@ -177,7 +203,7 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
         // If the recipe has been crafted, attempt to put it into storage
         if (energyConsumed >= energyCost) {
             // Attempt to complete the craft
-            if (takeOutputs(outputs, false)) {
+            if (placeOutputs(outputs, false)) {
                 // The receiver was able to take the outputs, task complete.
                 complete = true;
             }
@@ -235,6 +261,10 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
         }
     }
 
+    /**
+     * Serialize the recipe.
+     * Override this if something else needs to be saved.
+     */
     protected CompoundTag serializeRecipe(CompoundTag tag, R recipe) {
         if (recipe != null) {
             tag.putString("id", recipe.getId().toString());
@@ -242,6 +272,10 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
         return tag;
     }
 
+    /**
+     * Load recipe from NBT.
+     * Can be overridden to support custom recipe handling/wrapping.
+     */
     protected @Nullable R loadRecipe(CompoundTag nbt) {
         if (nbt.contains("id")) {
             ResourceLocation id = new ResourceLocation(nbt.getString("id"));
@@ -251,9 +285,4 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
     }
 
     // endregion
-
-    // TODO: For the builder pattern, we'll use this once we need getInputs too (when we phase out direct use of Container).
-    public interface OutputAcceptor {
-        boolean accept(List<ItemStack> outputs, boolean simulate);
-    }
 }

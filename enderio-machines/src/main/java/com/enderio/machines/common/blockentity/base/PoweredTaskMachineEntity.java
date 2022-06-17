@@ -1,5 +1,6 @@
 package com.enderio.machines.common.blockentity.base;
 
+import com.enderio.api.UseOnly;
 import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.base.common.blockentity.sync.FloatDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
@@ -10,11 +11,22 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.fml.LogicalSide;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Generic class for a machine that can perform a task.
+ */
 public abstract class PoweredTaskMachineEntity<T extends PoweredTask> extends PowerConsumingMachineEntity {
-    private T currentTask;
+    /**
+     * The current task being executed.
+     */
+    private @Nullable T currentTask;
 
+    /**
+     * The task progress (client side)
+     */
+    @UseOnly(LogicalSide.CLIENT)
     private float clientProgress;
 
     public PoweredTaskMachineEntity(CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey energyUseKey,
@@ -29,8 +41,8 @@ public abstract class PoweredTaskMachineEntity<T extends PoweredTask> extends Po
     public void serverTick() {
         if (canAct()) {
             // If we have no active task, get a new one
-            if ((currentTask == null || currentTask.isComplete()) && hasNextTask()) {
-                currentTask = getNextTask();
+            if ((currentTask == null || currentTask.isComplete()) && newTaskAvailable()) {
+                currentTask = getNewTask();
             }
 
             // If we have an unfinished task, continue it.
@@ -47,6 +59,10 @@ public abstract class PoweredTaskMachineEntity<T extends PoweredTask> extends Po
         super.serverTick();
     }
 
+    /**
+     * Get task completion progress
+     * @return Percentage completion, represented 0.0->1.0
+     */
     public float getProgress() {
         if (isClientSide())
             return clientProgress;
@@ -55,20 +71,35 @@ public abstract class PoweredTaskMachineEntity<T extends PoweredTask> extends Po
         return currentTask.getProgress();
     }
 
-    protected T getCurrentTask() {
+    /**
+     * Get the current task
+     */
+    protected @Nullable T getCurrentTask() {
         return currentTask;
     }
 
+    /**
+     * Whether the machine is executing a task.
+     */
     protected boolean hasTask() {
         return currentTask != null;
     }
 
-    protected boolean hasNextTask() {
+    /**
+     * Whether a new task is ready to be received.
+     */
+    protected boolean newTaskAvailable() {
         return true;
     }
 
-    protected abstract @Nullable T getNextTask();
+    /**
+     * Get the new task.
+     */
+    protected abstract @Nullable T getNewTask();
 
+    /**
+     * Load the task from NBT.
+     */
     protected abstract @Nullable T loadTask(CompoundTag nbt);
 
     @Override
