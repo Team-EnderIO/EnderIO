@@ -48,6 +48,6 @@ public interface IIcon {
      * @return if this icon should render
      */
     default boolean shouldRender() {
-        return false;
+        return true;
     }
 }
