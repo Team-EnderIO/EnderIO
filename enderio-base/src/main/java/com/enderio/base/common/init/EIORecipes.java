@@ -2,7 +2,7 @@ package com.enderio.base.common.init;
 
 import com.enderio.base.EnderIO;
 import com.enderio.base.common.recipe.FireCraftingRecipe;
-import com.enderio.base.common.recipe.GrindingballRecipe;
+import com.enderio.base.common.recipe.GrindingBallRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -20,8 +20,8 @@ public class EIORecipes {
         private static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZER_REGISTRY = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS,
             EnderIO.MODID);
 
-        public static final RegistryObject<GrindingballRecipe.Serializer> GRINDINGBALL = RECIPE_SERIALIZER_REGISTRY.register("grindingball",
-            GrindingballRecipe.Serializer::new);
+        public static final RegistryObject<GrindingBallRecipe.Serializer> GRINDINGBALL = RECIPE_SERIALIZER_REGISTRY.register("grindingball",
+            GrindingBallRecipe.Serializer::new);
 
         public static final RegistryObject<FireCraftingRecipe.Serializer> FIRE_CRAFTING = RECIPE_SERIALIZER_REGISTRY.register("fire_crafting",
             FireCraftingRecipe.Serializer::new);
@@ -34,7 +34,7 @@ public class EIORecipes {
     public static class Types {
         private Types() {}
 
-        public static final RecipeType<GrindingballRecipe> GRINDINGBALL = RecipeType.register(EnderIO.MODID + ":grindingball");
+        public static final RecipeType<GrindingBallRecipe> GRINDINGBALL = RecipeType.register(EnderIO.MODID + ":grindingball");
 
         public static final RecipeType<FireCraftingRecipe> FIRE_CRAFTING = RecipeType.register(EnderIO.MODID + ":fire_crafting");
 

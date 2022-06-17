@@ -1,8 +1,6 @@
 {
   "type": "enderio:grindingball",
-  "grindingball": {
-    "item": "enderio:end_steel_grinding_ball"
-  },
+  "item": "enderio:end_steel_grinding_ball",
   "grinding": 1.4,
   "chance": 2.4,
   "power": 0.7,

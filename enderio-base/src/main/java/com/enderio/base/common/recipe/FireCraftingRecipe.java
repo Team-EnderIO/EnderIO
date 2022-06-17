@@ -1,7 +1,5 @@
 package com.enderio.base.common.recipe;
 
-import com.enderio.api.recipe.DataGenSerializer;
-import com.enderio.api.recipe.IEnderRecipe;
 import com.enderio.base.EnderIO;
 import com.enderio.base.common.init.EIORecipes;
 import com.google.gson.JsonArray;
@@ -15,10 +13,12 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.registries.tags.ITag;
 
 import java.util.ArrayList;
@@ -91,7 +91,7 @@ public class FireCraftingRecipe implements Recipe<Container> {
     }
 
     @Override
-    public DataGenSerializer<FireCraftingRecipe, Container> getSerializer() {
+    public RecipeSerializer<FireCraftingRecipe> getSerializer() {
         return EIORecipes.Serializer.FIRE_CRAFTING.get();
     }
 
@@ -100,7 +100,7 @@ public class FireCraftingRecipe implements Recipe<Container> {
         return EIORecipes.Types.FIRE_CRAFTING;
     }
 
-    public static class Serializer extends DataGenSerializer<FireCraftingRecipe, Container> {
+    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<FireCraftingRecipe> {
 
         @Override
         public FireCraftingRecipe fromJson(ResourceLocation pRecipeId, JsonObject pSerializedRecipe) {
@@ -128,26 +128,6 @@ public class FireCraftingRecipe implements Recipe<Container> {
             }
 
             return new FireCraftingRecipe(pRecipeId, lootTable, baseBlocks, baseTags, dimensions);
-        }
-
-        @Override
-        public void toJson(FireCraftingRecipe recipe, JsonObject json) {
-            JsonArray basesJson = new JsonArray();
-            for (Block baseBlock : recipe.bases) {
-                basesJson.add(baseBlock.getRegistryName().toString());
-            }
-            for (TagKey<Block> tag : recipe.baseTags) {
-                basesJson.add("#" + tag.location());
-            }
-
-            JsonArray dimensionsJson = new JsonArray();
-            for (ResourceLocation dimension : recipe.dimensions) {
-                dimensionsJson.add(dimension.toString());
-            }
-
-            json.addProperty("lootTable", recipe.lootTable.toString());
-            json.add("base_blocks", basesJson);
-            json.add("dimensions", dimensionsJson);
         }
 
         @Override

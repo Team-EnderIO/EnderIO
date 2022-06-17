@@ -13,7 +13,7 @@ public class StandardRecipes {
         dataGenerator.addProvider(new MaterialRecipes(dataGenerator));
         dataGenerator.addProvider(new BlockRecipes(dataGenerator));
         dataGenerator.addProvider(new ItemRecipes(dataGenerator));
-        dataGenerator.addProvider(new GrindingballRecipeGenerator(dataGenerator));
+        dataGenerator.addProvider(new GrindingBallRecipeProvider(dataGenerator));
         dataGenerator.addProvider(new GlassRecipes(dataGenerator));
         dataGenerator.addProvider(new FireCraftingRecipes(dataGenerator));
     }

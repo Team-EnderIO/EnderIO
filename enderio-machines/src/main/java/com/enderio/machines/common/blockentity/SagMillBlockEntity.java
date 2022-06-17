@@ -1,6 +1,7 @@
 package com.enderio.machines.common.blockentity;
 
 import com.enderio.api.capacitor.CapacitorKey;
+import com.enderio.base.common.util.GrindingBallManager;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.PoweredCraftingMachine;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingTask;
@@ -56,7 +57,7 @@ public abstract class SagMillBlockEntity extends PoweredCraftingMachine<SagMilli
         return MachineInventoryLayout.builder(getTier() != MachineTier.SIMPLE)
             .inputSlot()
             .outputSlot(4)
-            .inputSlot((slot, stack) -> true) // TODO: Check this is actually a grinding ball.
+            .inputSlot((slot, stack) -> GrindingBallManager.isGrindingBall(stack))
             .build();
     }
 
