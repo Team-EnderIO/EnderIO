@@ -171,6 +171,7 @@ public class PoweredLightBlockEntity extends BlockEntity{
 					    e.active = false;
 						return;
 					}
+			        level.setBlock(pos, state.setValue(Light.ENABLED, false), 3);
 					e.active = true;
 					energy.resolve().get().extractEnergy(RF_USE_TICK, false);
 					return;
