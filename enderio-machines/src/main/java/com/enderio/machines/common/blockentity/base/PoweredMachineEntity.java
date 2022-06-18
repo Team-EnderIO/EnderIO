@@ -1,14 +1,16 @@
 package com.enderio.machines.common.blockentity.base;
 
 import com.enderio.api.capability.ICapacitorData;
+import com.enderio.api.capability.IEnderCapabilityProvider;
 import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.api.energy.EnergyIOMode;
-import com.enderio.base.common.blockentity.sync.IntegerDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.base.common.capacitor.DefaultCapacitorData;
 import com.enderio.machines.common.MachineTier;
-import com.enderio.machines.common.blockentity.sync.CapacitorDataSlot;
+import com.enderio.machines.common.blockentity.sync.MachineEnergyDataSlot;
+import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
+import com.enderio.machines.common.io.energy.ImmutableMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import net.minecraft.core.BlockPos;
@@ -19,6 +21,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -32,9 +35,19 @@ import java.util.Optional;
  * A machine that stores energy.
  */
 public abstract class PoweredMachineEntity extends MachineBlockEntity {
+    /**
+     * The energy storage medium for the block entity.
+     * This will be a mutable energy storage.
+     */
     protected final MachineEnergyStorage energyStorage;
 
-    private final LazyOptional<MachineEnergyStorage> energyStorageCap;
+    /**
+     * The client value of the energy storage.
+     * This will be an instance of {@link ImmutableMachineEnergyStorage}.
+     */
+    private IMachineEnergyStorage clientEnergyStorage = ImmutableMachineEnergyStorage.EMPTY;
+
+    private final LazyOptional<IMachineEnergyStorage> energyStorageCap;
 
     // Cache for external energy interaction
     private final EnumMap<Direction, LazyOptional<IEnergyStorage>> energyHandlerCache = new EnumMap<>(Direction.class);
@@ -53,11 +66,8 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
         // Mark capacitor cache as dirty
         capacitorCacheDirty = true;
 
-        // Sync capacitor and energy storage
-        if (requiresCapacitor()) {
-            addDataSlot(new CapacitorDataSlot(this::getCapacitorItem, data -> cachedCapacitorData = data, SyncMode.GUI));
-        }
-        addDataSlot(new IntegerDataSlot(energyStorage::getEnergyStored, energyStorage::setEnergyStored, SyncMode.GUI));
+        // new new way of syncing energy storage.
+        addDataSlot(new MachineEnergyDataSlot(this::getEnergyStorage, storage -> clientEnergyStorage = storage, SyncMode.GUI));
     }
 
     @Override
@@ -79,7 +89,15 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
 
     // TODO: Machine efficiency features.
 
-    public final MachineEnergyStorage getEnergyStorage() {
+    /**
+     * Get the machine's energy storage.
+     * On client side, this will likely be an instance of {@link ImmutableMachineEnergyStorage}.
+     * On server side, it will be an instance descended of {@link MachineEnergyStorage}.
+     */
+    public final IMachineEnergyStorage getEnergyStorage() {
+        if (isClientSide()) {
+            return clientEnergyStorage;
+        }
         return energyStorage;
     }
 

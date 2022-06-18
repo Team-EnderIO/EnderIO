@@ -1,5 +1,7 @@
 package com.enderio.machines.common.io.energy;
 
+import com.enderio.api.energy.EnergyIOMode;
+import com.enderio.api.io.IIOConfig;
 import net.minecraftforge.energy.IEnergyStorage;
 
 /**
@@ -42,4 +44,16 @@ public interface IMachineEnergyStorage extends IEnergyStorage {
      * Generally this is the consumption speed or generation speed.
      */
     int getMaxEnergyUse();
+
+    /**
+     * Get the IO config for the storage.
+     * This is generally provided by the machine.
+     */
+    IIOConfig getConfig();
+
+    /**
+     * Get the energy IO mode for the storage
+     * Determines how the IO config modifies behaviour.
+     */
+    EnergyIOMode getIOMode();
 }

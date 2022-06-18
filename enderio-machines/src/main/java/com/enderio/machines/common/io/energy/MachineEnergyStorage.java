@@ -44,10 +44,12 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, IEnderCapabi
         this.useKey = useKey;
     }
 
+    @Override
     public final IIOConfig getConfig() {
         return config;
     }
 
+    @Override
     public final EnergyIOMode getIOMode() {
         return ioMode;
     }
