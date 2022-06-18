@@ -2,9 +2,11 @@ package com.enderio.base.common.recipe;
 
 import com.enderio.base.EnderIO;
 import com.enderio.base.common.init.EIORecipes;
+import com.enderio.core.recipes.EnderRecipe;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.minecraft.ResourceLocationException;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -12,7 +14,6 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -24,7 +25,7 @@ import net.minecraftforge.registries.tags.ITag;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FireCraftingRecipe implements Recipe<Container> {
+public class FireCraftingRecipe implements EnderRecipe<Container> {
     private final ResourceLocation id;
     private final ResourceLocation lootTable;
     private final List<Block> bases;
@@ -76,11 +77,6 @@ public class FireCraftingRecipe implements Recipe<Container> {
     }
 
     @Override
-    public boolean canCraftInDimensions(int width, int height) {
-        return false;
-    }
-
-    @Override
     public ItemStack getResultItem() {
         return ItemStack.EMPTY;
     }
@@ -103,12 +99,12 @@ public class FireCraftingRecipe implements Recipe<Container> {
     public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<FireCraftingRecipe> {
 
         @Override
-        public FireCraftingRecipe fromJson(ResourceLocation pRecipeId, JsonObject pSerializedRecipe) {
-            ResourceLocation lootTable = new ResourceLocation(pSerializedRecipe.get("lootTable").getAsString());
+        public FireCraftingRecipe fromJson(ResourceLocation recipeId, JsonObject serializedRecipe) {
+            ResourceLocation lootTable = new ResourceLocation(serializedRecipe.get("lootTable").getAsString());
 
             List<Block> baseBlocks = new ArrayList<>();
             List<TagKey<Block>> baseTags = new ArrayList<>();
-            JsonArray baseBlocksJson = pSerializedRecipe.getAsJsonArray("base_blocks");
+            JsonArray baseBlocksJson = serializedRecipe.getAsJsonArray("base_blocks");
             for (JsonElement baseBlock : baseBlocksJson) {
                 String id = baseBlock.getAsString();
                 if (id.startsWith("#")) {
@@ -116,18 +112,18 @@ public class FireCraftingRecipe implements Recipe<Container> {
                 } else {
                     Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(id));
                     if (block == null) {
-                        EnderIO.LOGGER.error("Missing block {} for recipe {}.", id, pRecipeId);
+                        throw new ResourceLocationException("Missing block " + id + " for fire crafting recipe " + recipeId);
                     } else baseBlocks.add(block);
                 }
             }
 
             List<ResourceLocation> dimensions = new ArrayList<>();
-            JsonArray dimensionsJson = pSerializedRecipe.getAsJsonArray("dimensions");
+            JsonArray dimensionsJson = serializedRecipe.getAsJsonArray("dimensions");
             for (JsonElement dimension : dimensionsJson) {
                 dimensions.add(new ResourceLocation(dimension.getAsString()));
             }
 
-            return new FireCraftingRecipe(pRecipeId, lootTable, baseBlocks, baseTags, dimensions);
+            return new FireCraftingRecipe(recipeId, lootTable, baseBlocks, baseTags, dimensions);
         }
 
         @Override

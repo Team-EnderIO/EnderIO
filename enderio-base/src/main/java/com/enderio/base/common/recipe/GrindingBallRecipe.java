@@ -20,6 +20,8 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
+import java.util.Objects;
+
 public class GrindingBallRecipe implements IGrindingBallData, EnderRecipe<Container> {
     private final ResourceLocation id;
     private final Item item;
@@ -42,12 +44,12 @@ public class GrindingBallRecipe implements IGrindingBallData, EnderRecipe<Contai
     }
     
     @Override
-    public boolean matches(Container pContainer, Level pLevel) {
-        return pContainer.getItem(0).is(item);
+    public boolean matches(Container container, Level level) {
+        return container.getItem(0).is(item);
     }
 
     @Override
-    public ItemStack assemble(Container pContainer) {
+    public ItemStack assemble(Container container) {
         return this.getResultItem();
     }
 
@@ -101,34 +103,34 @@ public class GrindingBallRecipe implements IGrindingBallData, EnderRecipe<Contai
     public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<GrindingBallRecipe> {
 
         @Override
-        public GrindingBallRecipe fromJson(ResourceLocation pRecipeId, JsonObject pSerializedRecipe) {
-            ResourceLocation grindingBallId = new ResourceLocation(pSerializedRecipe.get("item").getAsString());
+        public GrindingBallRecipe fromJson(ResourceLocation recipeId, JsonObject serializedRecipe) {
+            ResourceLocation grindingBallId = new ResourceLocation(serializedRecipe.get("item").getAsString());
             Item grindingBall = ForgeRegistries.ITEMS.getValue(grindingBallId);
             if (grindingBall == null) {
                 throw new ResourceLocationException("Grinding ball item not found!");
             }
 
-            float grinding = pSerializedRecipe.get("grinding").getAsFloat();
-            float chance = pSerializedRecipe.get("chance").getAsFloat();
-            float power = pSerializedRecipe.get("power").getAsFloat();
-            int durability = pSerializedRecipe.get("durability").getAsInt();
-            return new GrindingBallRecipe(pRecipeId, grindingBall, grinding, chance, power, durability);
+            float grinding = serializedRecipe.get("grinding").getAsFloat();
+            float chance = serializedRecipe.get("chance").getAsFloat();
+            float power = serializedRecipe.get("power").getAsFloat();
+            int durability = serializedRecipe.get("durability").getAsInt();
+            return new GrindingBallRecipe(recipeId, grindingBall, grinding, chance, power, durability);
         }
 
         @Override
-        public GrindingBallRecipe fromNetwork(ResourceLocation pRecipeId, FriendlyByteBuf pBuffer) {
+        public GrindingBallRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
             try {
-                ResourceLocation grindingBallId = pBuffer.readResourceLocation();
+                ResourceLocation grindingBallId = buffer.readResourceLocation();
                 Item grindingBall = ForgeRegistries.ITEMS.getValue(grindingBallId);
                 if (grindingBall == null) {
                     throw new ResourceLocationException("Grinding ball item not found!");
                 }
 
-                float grinding = pBuffer.readFloat();
-                float chance = pBuffer.readFloat();
-                float power = pBuffer.readFloat();
-                int durability = pBuffer.readInt();
-                return new GrindingBallRecipe(pRecipeId, grindingBall, grinding, chance, power, durability);
+                float grinding = buffer.readFloat();
+                float chance = buffer.readFloat();
+                float power = buffer.readFloat();
+                int durability = buffer.readInt();
+                return new GrindingBallRecipe(recipeId, grindingBall, grinding, chance, power, durability);
             } catch (Exception e) {
                 EnderIO.LOGGER.error("Error reading grinding ball recipe from packet.", e);
                 throw e;
@@ -136,13 +138,13 @@ public class GrindingBallRecipe implements IGrindingBallData, EnderRecipe<Contai
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf pBuffer, GrindingBallRecipe pRecipe) {
+        public void toNetwork(FriendlyByteBuf buffer, GrindingBallRecipe recipe) {
             try {
-                pBuffer.writeResourceLocation(ForgeRegistries.ITEMS.getKey(pRecipe.item));
-                pBuffer.writeFloat(pRecipe.mainOutput);
-                pBuffer.writeFloat(pRecipe.bonusOutput);
-                pBuffer.writeFloat(pRecipe.powerUse);
-                pBuffer.writeInt(pRecipe.durability);
+                buffer.writeResourceLocation(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(recipe.item)));
+                buffer.writeFloat(recipe.mainOutput);
+                buffer.writeFloat(recipe.bonusOutput);
+                buffer.writeFloat(recipe.powerUse);
+                buffer.writeInt(recipe.durability);
             } catch (Exception ex) {
                 EnderIO.LOGGER.error("Error writing grinding ball recipe to packet.", ex);
                 throw ex;

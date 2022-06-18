@@ -123,7 +123,7 @@ public abstract class PoweredTaskMachineEntity<T extends PoweredTask> extends Po
         super.saveAdditional(pTag);
 
         if (currentTask != null)
-            pTag.put("task", currentTask.serializeNBT());
+            pTag.put("Task", currentTask.serializeNBT());
     }
 
     @Override
@@ -131,7 +131,7 @@ public abstract class PoweredTaskMachineEntity<T extends PoweredTask> extends Po
         super.load(pTag);
 
         // Store the task for the onLoad() call
-        if (pTag.contains("task"))
-            pendingTask = pTag.getCompound("task").copy();
+        if (pTag.contains("Task"))
+            pendingTask = pTag.getCompound("Task").copy();
     }
 }

@@ -285,9 +285,9 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachine<IAl
     @Override
     public void saveAdditional(CompoundTag pTag) {
         if (getTier() != MachineTier.SIMPLE) {
-            pTag.putInt("mode", this.mode.ordinal());
+            pTag.putInt("Mode", this.mode.ordinal());
         }
-        pTag.putInt("inputs_taken", container.getInputsTaken());
+        pTag.putInt("InputsTaken", container.getInputsTaken());
         super.saveAdditional(pTag);
     }
 
@@ -295,12 +295,12 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachine<IAl
     public void load(CompoundTag pTag) {
         if (getTier() != MachineTier.SIMPLE) {
             try {
-                mode = AlloySmelterMode.values()[pTag.getInt("mode")];
+                mode = AlloySmelterMode.values()[pTag.getInt("Mode")];
             } catch (IndexOutOfBoundsException ex) { // In case something happens in the future.
                 EIOMachines.LOGGER.error("Invalid alloy smelter mode loaded from NBT. Ignoring.");
             }
         }
-        container.setInputsTaken(pTag.getInt("inputs_taken"));
+        container.setInputsTaken(pTag.getInt("InputsTaken"));
         super.load(pTag);
     }
 

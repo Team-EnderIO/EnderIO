@@ -46,7 +46,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
         super(pType, pWorldPosition, pBlockState);
 
         // Create energy storage
-        this.energyStorage = createEnergyStorage(energyIOMode, capacityKey, transferKey, useKey );
+        this.energyStorage = createEnergyStorage(energyIOMode, capacityKey, transferKey, useKey);
         this.energyStorageCap = LazyOptional.of(() -> energyStorage);
         addCapabilityProvider(energyStorage);
 
