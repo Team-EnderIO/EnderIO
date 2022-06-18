@@ -99,14 +99,14 @@ public class DecorBlocks {
     public static final BlockEntry<Light> LIGHT_INVERTED = lightBlock("light_inverted", s -> new Light(s, true));
     public static final BlockEntry<PoweredLight> POWERED_LIGHT = lightBlock("powerd_light", s -> new PoweredLight(s, false, false));
     public static final BlockEntry<PoweredLight> POWERED_LIGHT_INVERTED = lightBlock("powerd_light_inverted", s -> new PoweredLight(s, true, false));
-    public static final BlockEntry<PoweredLight> POWERED_LIGHT_WIRELESS = lightBlock("powerd_light_wireless", s -> new PoweredLight(s, false, false));
-    public static final BlockEntry<PoweredLight> POWERED_LIGHT_INVERTED_WIRELESS = lightBlock("powerd_light_inverted_wireless", s -> new PoweredLight(s, true, false));
+    public static final BlockEntry<PoweredLight> POWERED_LIGHT_WIRELESS = lightBlock("powerd_light_wireless", s -> new PoweredLight(s, false, true));
+    public static final BlockEntry<PoweredLight> POWERED_LIGHT_INVERTED_WIRELESS = lightBlock("powerd_light_inverted_wireless", s -> new PoweredLight(s, true, true));
     
     public static final BlockEntry<LightNode> LIGHT_NODE = REGISTRATE
     		.block("light_node", LightNode::new)
     		.blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().withExistingParent("light_node", "block/air")))
     		.initialProperties(Material.AIR)
-    		.properties(p -> p.lightLevel(l -> 15).noCollission().noOcclusion().noDrops())
+    		.properties(p -> p.lightLevel(l -> 15).noDrops().noCollission().noOcclusion())
     		.register();
     
     // endregion

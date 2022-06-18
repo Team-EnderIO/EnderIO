@@ -7,7 +7,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
@@ -32,11 +31,6 @@ public class LightNode extends Block implements EntityBlock{
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		return DecorBlockEntities.LIGHT_NODE.create(pos, state);
-	}
-	
-	@Override
-	public void onNeighborChange(BlockState state, LevelReader world, BlockPos pos, BlockPos neighbor) {
-		BlockEntity be = world.getBlockEntity(pos);
 	}
 	
 	@Override

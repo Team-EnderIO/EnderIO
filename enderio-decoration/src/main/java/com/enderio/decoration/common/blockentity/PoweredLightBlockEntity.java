@@ -39,7 +39,7 @@ public class PoweredLightBlockEntity extends BlockEntity{
 		}else { 
 			consumePower(level, pos, state, e);
 		}
-		if (e.update) {
+		if (e.update && e.active) {
 			createNodes(level, pos, state);
 			e.update = false;
 		}
@@ -88,7 +88,7 @@ public class PoweredLightBlockEntity extends BlockEntity{
 			if (!prev.contains(relative) && inSpreadZone(relative, center)) {
 				next.add(relative);
 				if (level.getBlockState(relative).isAir()) {
-					level.setBlockAndUpdate(relative, DecorBlocks.LIGHT_NODE.get().defaultBlockState());
+					level.setBlock(relative, DecorBlocks.LIGHT_NODE.get().defaultBlockState(),1);
 					if (level.getBlockEntity(relative) instanceof LightNodeBlockEntity light) {
 						light.setMaster((PoweredLightBlockEntity) level.getBlockEntity(center));
 					}
@@ -96,7 +96,7 @@ public class PoweredLightBlockEntity extends BlockEntity{
 				boolean bl = false;
 				for (BlockPos blockedpos: blocked) {
 					if (isBlocked(relative, center, blockedpos) && level.getBlockState(relative).is(DecorBlocks.LIGHT_NODE.get())) {
-						level.setBlock(relative, Blocks.AIR.defaultBlockState(), 3);
+						level.setBlock(relative, Blocks.AIR.defaultBlockState(), 1);
 						bl = true;
 					}
 				}
@@ -168,26 +168,23 @@ public class PoweredLightBlockEntity extends BlockEntity{
 				if (energy.resolve().get().extractEnergy(RF_USE_TICK, true) == RF_USE_TICK) {
 					boolean powered = level.hasNeighborSignal(pos);
 					if (powered == ((Light) state.getBlock()).isInverted() ? state.getValue(Light.ENABLED) : !state.getValue(Light.ENABLED)) {
+					    e.active = false;
 						return;
 					}
+					e.active = true;
 					energy.resolve().get().extractEnergy(RF_USE_TICK, false);
 					return;
 				}
 			}
 		}
-		boolean powered = level.hasNeighborSignal(pos);
-		if (powered != ((Light) state.getBlock()).isInverted() ? state.getValue(Light.ENABLED) : !state.getValue(Light.ENABLED)) {
-			level.setBlock(pos, state.setValue(Light.ENABLED, false), 3);
-			e.needsUpdate();
-		}
 	}
 	
 	private static void consumePowerWireless(Level level, BlockPos pos, BlockState state, PoweredLightBlockEntity e) {
-		boolean powered = level.hasNeighborSignal(pos);
-		if (powered != ((Light) state.getBlock()).isInverted() ? state.getValue(Light.ENABLED) : !state.getValue(Light.ENABLED)) {
-			level.setBlock(pos, state.setValue(Light.ENABLED, false), 3);
-			e.needsUpdate();
-		}
+	    boolean powered = level.hasNeighborSignal(pos);
+	    if (powered != ((Light) state.getBlock()).isInverted() ? state.getValue(Light.ENABLED) : !state.getValue(Light.ENABLED)) {
+	        level.setBlock(pos, state.setValue(Light.ENABLED, false), 3);
+	        e.active = true;
+	    }
 	}
 	
 	@Override

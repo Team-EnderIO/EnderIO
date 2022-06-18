@@ -1,5 +1,8 @@
 package com.enderio.decoration.common.blockentity;
 
+import com.enderio.decoration.common.network.EnderDecorNetwork;
+import com.enderio.decoration.common.network.ServerToClientLightUpdate;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -12,6 +15,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.network.PacketDistributor;
 
 public class LightNodeBlockEntity extends BlockEntity{
 	public BlockPos masterpos;
@@ -30,13 +34,15 @@ public class LightNodeBlockEntity extends BlockEntity{
 			return;
 		}
 		if (!(level.getBlockEntity(e.masterpos) instanceof PoweredLightBlockEntity)) {
-			level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+            level.setBlock(pos, Blocks.AIR.defaultBlockState(), 1);
+            EnderDecorNetwork.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(pos)), new ServerToClientLightUpdate(pos, Blocks.AIR.defaultBlockState()));
 			return;
 		}
 		if (PoweredLightBlockEntity.inSpreadZone(fromPos, e.masterpos)) {
 			PoweredLightBlockEntity master = (PoweredLightBlockEntity) level.getBlockEntity(e.masterpos);
 			if (!master.isActive()) {
-				level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+				level.setBlock(pos, Blocks.AIR.defaultBlockState(), 1);
+				EnderDecorNetwork.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(pos)), new ServerToClientLightUpdate(pos, Blocks.AIR.defaultBlockState()));
 				return;
 			}
 			if (level.getBlockEntity(fromPos) instanceof LightNodeBlockEntity light) {

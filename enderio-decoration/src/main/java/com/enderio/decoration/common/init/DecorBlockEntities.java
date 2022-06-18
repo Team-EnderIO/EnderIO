@@ -25,12 +25,12 @@ public class DecorBlockEntities {
     
     public static final BlockEntityEntry<PoweredLightBlockEntity> POWERED_LIGHT = REGISTRATE
     	.blockEntity("powered_light", PoweredLightBlockEntity::new)
-    	.validBlock(DecorBlocks.POWERED_LIGHT)
+    	.validBlocks(DecorBlocks.POWERED_LIGHT, DecorBlocks.POWERED_LIGHT_INVERTED, DecorBlocks.POWERED_LIGHT_WIRELESS, DecorBlocks.POWERED_LIGHT_INVERTED_WIRELESS)
     	.register();
     
     public static final BlockEntityEntry<LightNodeBlockEntity> LIGHT_NODE = REGISTRATE
         	.blockEntity("light_node", LightNodeBlockEntity::new)
-        	.validBlock(DecorBlocks.POWERED_LIGHT)
+        	.validBlock(DecorBlocks.LIGHT_NODE)
         	.register();
 
     public static void classload() {}
