@@ -47,7 +47,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
      */
     private IMachineEnergyStorage clientEnergyStorage = ImmutableMachineEnergyStorage.EMPTY;
 
-    private final LazyOptional<IMachineEnergyStorage> energyStorageCap;
+    private final LazyOptional<MachineEnergyStorage> energyStorageCap;
 
     // Cache for external energy interaction
     private final EnumMap<Direction, LazyOptional<IEnergyStorage>> energyHandlerCache = new EnumMap<>(Direction.class);
