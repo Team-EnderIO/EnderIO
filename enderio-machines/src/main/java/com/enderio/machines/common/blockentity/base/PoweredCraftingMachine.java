@@ -36,9 +36,9 @@ public abstract class PoweredCraftingMachine<R extends MachineRecipe<C>, C exten
      */
     protected final RecipeType<R> recipeType;
 
-    public PoweredCraftingMachine(RecipeType<R> recipeType, CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey energyUseKey, BlockEntityType<?> pType,
-        BlockPos pWorldPosition, BlockState pBlockState) {
-        super(capacityKey, transferKey, energyUseKey, pType, pWorldPosition, pBlockState);
+    public PoweredCraftingMachine(RecipeType<R> recipeType, CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey energyUseKey, BlockEntityType<?> type,
+        BlockPos worldPosition, BlockState blockState) {
+        super(capacityKey, transferKey, energyUseKey, type, worldPosition, blockState);
         this.recipeType = recipeType;
     }
 

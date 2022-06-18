@@ -14,6 +14,10 @@ import net.minecraftforge.common.ForgeHooks;
 
 import java.util.List;
 
+/**
+ * Wrap a vanilla smelting recipe so that it can be used in an alloy smelter.
+ * This recipe uses the additional context from the container to determine if we're smelting multiple at a time and reacts accordingly.
+ */
 public class VanillaAlloySmeltingRecipe implements IAlloySmeltingRecipe {
     private final SmeltingRecipe vanillaRecipe;
 
@@ -38,7 +42,7 @@ public class VanillaAlloySmeltingRecipe implements IAlloySmeltingRecipe {
         return RF_PER_ITEM * container.getInputsTaken();
     }
 
-    // TODO: Write our own matcher that can check all three slots :)
+    // TODO: Write our own matcher that can check all three slots instead of just the one.
     @Deprecated
     @Override
     public boolean matches(IAlloySmeltingRecipe.Container container, Level level) {
@@ -62,9 +66,13 @@ public class VanillaAlloySmeltingRecipe implements IAlloySmeltingRecipe {
         return vanillaRecipe.getId();
     }
 
+    /**
+     * @deprecated Cannot serialize a wrapped recipe.
+     */
+    @Deprecated
     @Override
     public RecipeSerializer<?> getSerializer() {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Cannot serialize a wrapped recipe!");
     }
 
     @Override

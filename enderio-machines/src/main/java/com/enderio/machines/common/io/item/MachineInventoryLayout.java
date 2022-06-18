@@ -123,6 +123,9 @@ public class MachineInventoryLayout {
 
         // region Stack limit helper
 
+        /**
+         * Set the stack limit for the next slots to be added.
+         */
         public Builder setStackLimit(int limit) {
             currentStackLimit = limit;
             return this;
@@ -339,7 +342,6 @@ public class MachineInventoryLayout {
 
             /**
              * Enable GUI insertion.
-             * @return
              */
             public SlotBuilder guiInsert() {
                 guiInsert = true;

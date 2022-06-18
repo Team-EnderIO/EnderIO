@@ -35,8 +35,8 @@ public abstract class PoweredTaskMachineEntity<T extends PoweredTask> extends Po
     private float clientProgress;
 
     public PoweredTaskMachineEntity(CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey energyUseKey,
-        BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-        super(capacityKey, transferKey, energyUseKey, pType, pWorldPosition, pBlockState);
+        BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
+        super(capacityKey, transferKey, energyUseKey, type, worldPosition, blockState);
 
         // Sync machine progress to the client.
         addDataSlot(new FloatDataSlot(this::getProgress, p -> clientProgress = p, SyncMode.GUI));

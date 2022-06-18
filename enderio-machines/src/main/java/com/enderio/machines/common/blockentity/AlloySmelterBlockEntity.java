@@ -41,12 +41,12 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachine<IAl
 
     public static class Simple extends AlloySmelterBlockEntity {
 
-        public Simple(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
+        public Simple(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
             super(AlloySmelterMode.ALLOYS,
                 MachineCapacitorKeys.SIMPLE_ALLOY_SMELTER_ENERGY_CAPACITY.get(),
                 MachineCapacitorKeys.SIMPLE_ALLOY_SMELTER_ENERGY_TRANSFER.get(),
                 MachineCapacitorKeys.SIMPLE_ALLOY_SMELTER_ENERGY_CONSUME.get(),
-                pType, pWorldPosition, pBlockState);
+                type, worldPosition, blockState);
         }
 
         @Override
@@ -62,12 +62,12 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachine<IAl
 
     public static class Furnace extends AlloySmelterBlockEntity {
 
-        public Furnace(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
+        public Furnace(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
             super(AlloySmelterMode.FURNACE,
                 MachineCapacitorKeys.SIMPLE_ALLOY_SMELTER_ENERGY_CAPACITY.get(),
                 MachineCapacitorKeys.SIMPLE_ALLOY_SMELTER_ENERGY_TRANSFER.get(),
                 MachineCapacitorKeys.SIMPLE_ALLOY_SMELTER_ENERGY_CONSUME.get(),
-                pType, pWorldPosition, pBlockState);
+                type, worldPosition, blockState);
         }
 
         @Override
@@ -83,12 +83,12 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachine<IAl
 
     public static class Standard extends AlloySmelterBlockEntity {
 
-        public Standard(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
+        public Standard(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
             super(AlloySmelterMode.ALL,
                 MachineCapacitorKeys.ALLOY_SMELTER_ENERGY_CAPACITY.get(),
                 MachineCapacitorKeys.ALLOY_SMELTER_ENERGY_TRANSFER.get(),
                 MachineCapacitorKeys.ALLOY_SMELTER_ENERGY_CONSUME.get(),
-                pType, pWorldPosition, pBlockState);
+                type, worldPosition, blockState);
         }
 
         @Override
@@ -99,12 +99,12 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachine<IAl
 
     public static class Enhanced extends AlloySmelterBlockEntity {
 
-        public Enhanced(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
+        public Enhanced(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
             super(AlloySmelterMode.ALL,
                 MachineCapacitorKeys.ENHANCED_ALLOY_SMELTER_ENERGY_CAPACITY.get(),
                 MachineCapacitorKeys.ENHANCED_ALLOY_SMELTER_ENERGY_TRANSFER.get(),
                 MachineCapacitorKeys.ENHANCED_ALLOY_SMELTER_ENERGY_CONSUME.get(),
-                pType, pWorldPosition, pBlockState);
+                type, worldPosition, blockState);
         }
 
         @Override

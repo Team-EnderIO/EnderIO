@@ -31,12 +31,11 @@ public abstract class SagMillBlockEntity extends PoweredCraftingMachine<SagMilli
 
     public static class Standard extends SagMillBlockEntity {
 
-        public Standard(BlockEntityType<?> pType, BlockPos pWorldPosition,
-            BlockState pBlockState) {
+        public Standard(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
             super(MachineCapacitorKeys.SAG_MILL_ENERGY_CAPACITY.get(),
                 MachineCapacitorKeys.SAG_MILL_ENERGY_TRANSFER.get(),
                 MachineCapacitorKeys.SAG_MILL_ENERGY_CONSUME.get(),
-                pType, pWorldPosition, pBlockState);
+                type, worldPosition, blockState);
         }
 
         @Override
@@ -56,9 +55,9 @@ public abstract class SagMillBlockEntity extends PoweredCraftingMachine<SagMilli
     private final SagMillingRecipe.Container container;
 
 
-    public SagMillBlockEntity(CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey energyUseKey, BlockEntityType<?> pType, BlockPos pWorldPosition,
-        BlockState pBlockState) {
-        super(MachineRecipes.Types.SAGMILLING, capacityKey, transferKey, energyUseKey, pType, pWorldPosition, pBlockState);
+    public SagMillBlockEntity(CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey energyUseKey, BlockEntityType<?> type, BlockPos worldPosition,
+        BlockState blockState) {
+        super(MachineRecipes.Types.SAGMILLING, capacityKey, transferKey, energyUseKey, type, worldPosition, blockState);
         container = new SagMillingRecipe.Container(getInventory());
     }
 

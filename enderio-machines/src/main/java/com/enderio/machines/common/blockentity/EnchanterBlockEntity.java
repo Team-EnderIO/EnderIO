@@ -28,8 +28,8 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
 
     private final RecipeWrapper container;
 
-    public EnchanterBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-        super(pType, pWorldPosition, pBlockState);
+    public EnchanterBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
+        super(type, worldPosition, blockState);
         container = new RecipeWrapper(getInventory());
     }
 

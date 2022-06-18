@@ -16,12 +16,12 @@ import org.jetbrains.annotations.Nullable;
 
 // TODO: This should be replaced with creative power bank and buffer in the future, this is temporary :)
 public class CreativePowerBlockEntity extends PoweredMachineEntity {
-    public CreativePowerBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
+    public CreativePowerBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Output,
             MachineCapacitorKeys.DEV_ENERGY_CAPACITY.get(),
             MachineCapacitorKeys.DEV_ENERGY_TRANSFER.get(),
             MachineCapacitorKeys.DEV_ENERGY_CONSUME.get(),
-            pType, pWorldPosition, pBlockState);
+            type, worldPosition, blockState);
     }
 
     @Override

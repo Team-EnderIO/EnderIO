@@ -16,11 +16,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * A base recipe provider, does nothing but contain {@link EnderRecipeProvider.EnderFinishedRecipe}.
+ */
 public abstract class EnderRecipeProvider extends RecipeProvider {
     public EnderRecipeProvider(DataGenerator generator) {
         super(generator);
     }
 
+    /**
+     * Base class for a finished recipe.
+     */
     protected abstract static class EnderFinishedRecipe implements FinishedRecipe {
         private final ResourceLocation id;
         private final List<ICondition> conditions = new ArrayList<>();
@@ -29,6 +35,9 @@ public abstract class EnderRecipeProvider extends RecipeProvider {
             this.id = id;
         }
 
+        /**
+         * Get the list of mod dependencies for the recipe conditions.
+         */
         protected abstract Set<String> getModDependencies();
 
         @Override
@@ -36,6 +45,10 @@ public abstract class EnderRecipeProvider extends RecipeProvider {
             return id;
         }
 
+        /**
+         * @apiNote Should still be overridden to serialize recipe data.
+         * Should match the structure of the deserializer.
+         */
         @Override
         public void serializeRecipeData(JsonObject json) {
             // Build mod loaded conditions
