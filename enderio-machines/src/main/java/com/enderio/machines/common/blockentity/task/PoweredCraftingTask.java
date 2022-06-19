@@ -221,7 +221,7 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
-        tag.put("Recipe", serializeRecipe(new CompoundTag(), recipe));
+        tag.putString("RecipeId", recipe.getId().toString());
         tag.putInt("EnergyConsumed", energyConsumed);
         tag.putInt("EnergyCost", energyConsumed);
         tag.putBoolean("CollectedInputs", collectedInputs);
@@ -241,7 +241,7 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        recipe = loadRecipe(nbt.getCompound("Recipe"));
+        recipe = loadRecipe(new ResourceLocation(nbt.getString("RecipeId")));
         energyConsumed = nbt.getInt("EnergyConsumed");
         energyCost = nbt.getInt("EnergyCost");
         collectedInputs = nbt.getBoolean("CollectedInputs");
@@ -257,27 +257,8 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
         }
     }
 
-    /**
-     * Serialize the recipe.
-     * Override this if something else needs to be saved.
-     */
-    protected CompoundTag serializeRecipe(CompoundTag tag, R recipe) {
-        if (recipe != null) {
-            tag.putString("id", recipe.getId().toString());
-        }
-        return tag;
-    }
-
-    /**
-     * Load recipe from NBT.
-     * Can be overridden to support custom recipe handling/wrapping.
-     */
-    protected @Nullable R loadRecipe(CompoundTag nbt) {
-        if (nbt.contains("id")) {
-            ResourceLocation id = new ResourceLocation(nbt.getString("id"));
-            return (R) blockEntity.getLevel().getRecipeManager().byKey(id).orElse(null);
-        }
-        return null;
+    protected @Nullable R loadRecipe(ResourceLocation id) {
+        return (R) blockEntity.getLevel().getRecipeManager().byKey(id).orElse(null);
     }
 
     // endregion
