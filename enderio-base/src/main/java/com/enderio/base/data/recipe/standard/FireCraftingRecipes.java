@@ -14,6 +14,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.HashSet;
 import java.util.List;
@@ -61,10 +62,14 @@ public class FireCraftingRecipes extends EnderRecipeProvider {
         public void serializeRecipeData(JsonObject json) {
             JsonArray basesJson = new JsonArray();
             for (Block baseBlock : bases) {
-                basesJson.add(baseBlock.getRegistryName().toString());
+                JsonObject obj = new JsonObject();
+                obj.addProperty("block", ForgeRegistries.BLOCKS.getKey(baseBlock).toString());
+                basesJson.add(obj);
             }
             for (TagKey<Block> tag : baseTags) {
-                basesJson.add("#" + tag.location());
+                JsonObject obj = new JsonObject();
+                obj.addProperty("tag", tag.location().toString());
+                basesJson.add(obj);
             }
 
             JsonArray dimensionsJson = new JsonArray();
