@@ -27,11 +27,6 @@ import java.util.Optional;
  */
 public abstract class PoweredCraftingMachine<R extends MachineRecipe<C>, C extends Container> extends PoweredTaskMachineEntity<PoweredCraftingTask> {
     /**
-     * Flag for determining if a new recipe could be present.
-     */
-    protected boolean inventoryDirty = true;
-
-    /**
      * The recipe type this machine can accept.
      */
     protected final RecipeType<R> recipeType;
@@ -45,13 +40,8 @@ public abstract class PoweredCraftingMachine<R extends MachineRecipe<C>, C exten
     @Override
     protected void onInventoryContentsChanged(int slot) {
         // If the inventory changed, a new recipe may be ready.
-        inventoryDirty = true;
+        newTaskAvailable();
         super.onInventoryContentsChanged(slot);
-    }
-
-    @Override
-    protected boolean newTaskAvailable() {
-        return inventoryDirty;
     }
 
     /**
@@ -59,7 +49,6 @@ public abstract class PoweredCraftingMachine<R extends MachineRecipe<C>, C exten
      */
     @Override
     protected @Nullable PoweredCraftingTask<R, C> getNewTask() {
-        inventoryDirty = false;
         return findRecipe()
             .map(this::createTask)
             .orElse(null);

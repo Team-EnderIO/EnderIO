@@ -1,18 +1,17 @@
 package com.enderio.machines.common.recipe;
 
+import com.enderio.api.grindingball.IGrindingBallData;
 import com.enderio.api.machines.recipes.MachineRecipe;
 import com.enderio.api.machines.recipes.OutputStack;
 import com.enderio.base.common.util.TagUtil;
 import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -28,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Supplier;
 
 public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Container> {
     private static final Random RANDOM = new Random();
@@ -36,15 +36,15 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
     private final Ingredient input;
     private final List<OutputItem> outputs;
     private final int energy;
+    private final BonusType bonusType;
 
-    public SagMillingRecipe(ResourceLocation id, Ingredient input, List<OutputItem> outputs, int energy) {
+    public SagMillingRecipe(ResourceLocation id, Ingredient input, List<OutputItem> outputs, int energy, BonusType bonusType) {
         this.id = id;
         this.input = input;
         this.outputs = outputs;
         this.energy = energy;
+        this.bonusType = bonusType;
     }
-
-    // TODO: Bonus types
 
     public Ingredient getInput() {
         return input;
@@ -52,37 +52,52 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
 
     @Override
     public int getEnergyCost(Container container) {
-        return energy;
+        return (int) (energy * container.getGrindingBall().getPowerUse());
+    }
+
+    public BonusType getBonusType() {
+        return bonusType;
     }
 
     @Override
     public List<OutputStack> craft(Container container) {
-        // TODO: Perform random chance multiplications etc. with grinding ball.
         List<OutputStack> outputs = new ArrayList<>();
 
-        for (OutputItem output : this.outputs) {
-            // TODO: Multiply chance by grindingball multiplier.
-            if (output.isPresent() && output.getChance() >= RANDOM.nextFloat()) {
-                Item item = output.getItem();
-                int count = output.getCount();
+        // Iterate over the number of outputs
+        float outputCount = getBonusType().canMultiply() ? container.getGrindingBall().getOutputMultiplier() : 1.0f;
+        float chanceMult = getBonusType().doChance() ? container.getGrindingBall().getBonusMultiplier() : 1.0f;
 
-                // Iterate over existing output stacks, adding to them if this item is present
-                for (OutputStack stack : outputs) {
-                    if (count <= 0)
-                        break;
+        // Iterate over the number of outputs.
+        // Without a grinding ball this only runs once.
+        while (outputCount > 0) {
+            if (RANDOM.nextFloat() < outputCount) {
+                for (OutputItem output : this.outputs) {
+                    if (output.isPresent() && RANDOM.nextFloat() < output.getChance() * chanceMult) {
+                        // Collect the output
+                        Item item = output.getItem();
+                        int count = output.getCount();
 
-                    ItemStack itemStack = stack.getItem();
-                    if (itemStack.is(item)) {
-                        int growth = Math.min(count, itemStack.getMaxStackSize());
-                        itemStack.grow(growth);
-                        count -= growth;
+                        // Attempt to add to an existing stack.
+                        for (OutputStack stack : outputs) {
+                            if (count <= 0)
+                                break;
+
+                            ItemStack itemStack = stack.getItem();
+                            if (itemStack.is(item)) {
+                                int growth = Math.min(count, itemStack.getMaxStackSize());
+                                itemStack.grow(growth);
+                                count -= growth;
+                            }
+                        }
+
+                        // Add new stack.
+                        if (count >= 0) {
+                            outputs.add(OutputStack.of(new ItemStack(item, count)));
+                        }
                     }
                 }
-
-                if (count >= 0) {
-                    outputs.add(OutputStack.of(new ItemStack(item, count)));
-                }
             }
+            outputCount--;
         }
 
         return outputs;
@@ -119,6 +134,31 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
     @Override
     public RecipeType<?> getType() {
         return MachineRecipes.Types.SAGMILLING;
+    }
+
+    public enum BonusType {
+        NONE(false, false),
+        MULTIPLY_OUTPUT(true, true),
+        CHANCE_ONLY(false, true);
+
+        private final boolean multiply, chance;
+
+        BonusType(boolean multiply, boolean chance) {
+            this.multiply = multiply;
+            this.chance = chance;
+        }
+
+        public boolean canMultiply() {
+            return multiply;
+        }
+
+        public boolean doChance() {
+            return chance;
+        }
+
+        public boolean useGrindingBall() {
+            return multiply || chance;
+        }
     }
 
     public static class OutputItem {
@@ -183,11 +223,16 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
 
     public static class Container extends RecipeWrapper {
 
-        public Container(IItemHandlerModifiable inv) {
+        private final Supplier<IGrindingBallData> grindingBallData;
+
+        public Container(IItemHandlerModifiable inv, Supplier<IGrindingBallData> data) {
             super(inv);
+            this.grindingBallData = data;
         }
 
-        // TODO: Grinding ball chance multiplier business
+        public final IGrindingBallData getGrindingBall() {
+            return grindingBallData.get();
+        }
     }
 
     public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<SagMillingRecipe> {
@@ -199,6 +244,12 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
 
             // Load energy
             int energy = serializedRecipe.get("energy").getAsInt();
+
+            // Get the bonus type.
+            BonusType bonusType = BonusType.MULTIPLY_OUTPUT;
+            if (serializedRecipe.has("bonus")) {
+                BonusType.valueOf(serializedRecipe.get("bonus").getAsString().toUpperCase());
+            }
 
             // Load outputs
             JsonArray jsonOutputs = serializedRecipe.getAsJsonArray("outputs");
@@ -239,7 +290,7 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
                 }
             }
 
-            return new SagMillingRecipe(recipeId, input, outputs, energy);
+            return new SagMillingRecipe(recipeId, input, outputs, energy, bonusType);
         }
 
         @Nullable
@@ -248,6 +299,7 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
             try {
                 Ingredient input = Ingredient.fromNetwork(buffer);
                 int energy = buffer.readInt();
+                BonusType bonusType = buffer.readEnum(BonusType.class);
 
                 List<OutputItem> outputs = new ArrayList<>();
                 int outputCount = buffer.readInt();
@@ -284,7 +336,7 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
                     }
                 }
 
-                return new SagMillingRecipe(recipeId, input, outputs, energy);
+                return new SagMillingRecipe(recipeId, input, outputs, energy, bonusType);
             } catch (Exception ex) {
                 EIOMachines.LOGGER.error("Error reading allow smelting recipe to packet.", ex);
                 throw ex;
@@ -296,6 +348,7 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
             try {
                 recipe.input.toNetwork(buffer);
                 buffer.writeInt(recipe.energy);
+                buffer.writeEnum(recipe.bonusType);
 
                 buffer.writeInt(recipe.outputs.size());
                 for (OutputItem item : recipe.outputs) {

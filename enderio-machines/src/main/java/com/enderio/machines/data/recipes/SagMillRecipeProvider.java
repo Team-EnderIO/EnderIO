@@ -1,11 +1,11 @@
 package com.enderio.machines.data.recipes;
 
-import com.enderio.api.recipe.CountedIngredient;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.data.recipe.EnderRecipeProvider;
 import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.recipe.SagMillingRecipe;
+import com.enderio.machines.common.recipe.SagMillingRecipe.BonusType;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.data.DataGenerator;
@@ -41,11 +41,15 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
     }
 
     protected void build(String name, Ingredient input, List<SagMillingRecipe.OutputItem> outputs, int energy, Consumer<FinishedRecipe> recipeConsumer) {
-        build(EIOMachines.loc("sagmilling/" + name), input, outputs, energy, recipeConsumer);
+        build(EIOMachines.loc("sagmilling/" + name), input, outputs, energy, BonusType.MULTIPLY_OUTPUT, recipeConsumer);
     }
 
-    protected void build(ResourceLocation id, Ingredient input, List<SagMillingRecipe.OutputItem> outputs, int energy, Consumer<FinishedRecipe> recipeConsumer) {
-        recipeConsumer.accept(new FinishedSagMillRecipe(id, input, outputs, energy));
+    protected void build(String name, Ingredient input, List<SagMillingRecipe.OutputItem> outputs, int energy, BonusType bonusType, Consumer<FinishedRecipe> recipeConsumer) {
+        build(EIOMachines.loc("sagmilling/" + name), input, outputs, energy, bonusType, recipeConsumer);
+    }
+
+    protected void build(ResourceLocation id, Ingredient input, List<SagMillingRecipe.OutputItem> outputs, int energy, BonusType bonusType, Consumer<FinishedRecipe> recipeConsumer) {
+        recipeConsumer.accept(new FinishedSagMillRecipe(id, input, outputs, energy, bonusType));
     }
 
     protected SagMillingRecipe.OutputItem output(Item item) {
@@ -93,18 +97,23 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
         private final Ingredient input;
         private final List<SagMillingRecipe.OutputItem> outputs;
         private final int energy;
+        private final BonusType bonusType;
 
-        public FinishedSagMillRecipe(ResourceLocation id, Ingredient input, List<SagMillingRecipe.OutputItem> outputs, int energy) {
+        public FinishedSagMillRecipe(ResourceLocation id, Ingredient input, List<SagMillingRecipe.OutputItem> outputs, int energy, BonusType bonusType) {
             super(id);
             this.input = input;
             this.outputs = outputs;
             this.energy = energy;
+            this.bonusType = bonusType;
         }
 
         @Override
         public void serializeRecipeData(JsonObject json) {
             json.add("input", input.toJson());
             json.addProperty("energy", energy);
+            if (bonusType != BonusType.MULTIPLY_OUTPUT) {
+                json.addProperty("bonus", bonusType.toString().toLowerCase());
+            }
 
             JsonArray outputJson = new JsonArray();
             for (SagMillingRecipe.OutputItem item : outputs) {

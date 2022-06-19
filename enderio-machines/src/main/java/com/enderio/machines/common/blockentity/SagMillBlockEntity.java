@@ -21,6 +21,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class SagMillBlockEntity extends PoweredCraftingMachine<SagMillingRecipe, SagMillingRecipe.Container> {
@@ -46,7 +47,7 @@ public abstract class SagMillBlockEntity extends PoweredCraftingMachine<SagMilli
 
     // endregion
 
-    private @Nullable IGrindingBallData grindingBallData;
+    private IGrindingBallData grindingBallData = IGrindingBallData.IDENTITY;
 
     private @Nullable ResourceLocation pendingGrindingBallId;
 
@@ -58,7 +59,7 @@ public abstract class SagMillBlockEntity extends PoweredCraftingMachine<SagMilli
     public SagMillBlockEntity(CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey energyUseKey, BlockEntityType<?> type, BlockPos worldPosition,
         BlockState blockState) {
         super(MachineRecipes.Types.SAGMILLING, capacityKey, transferKey, energyUseKey, type, worldPosition, blockState);
-        container = new SagMillingRecipe.Container(getInventory());
+        container = new SagMillingRecipe.Container(getInventory(), this::getGrindingBallData);
     }
 
     public @Nullable IGrindingBallData getGrindingBallData() {
@@ -98,7 +99,7 @@ public abstract class SagMillBlockEntity extends PoweredCraftingMachine<SagMilli
                 inv.getStackInSlot(0).shrink(1);
 
                 // Claim any available grinding balls.
-                if (grindingBallData == null) {
+                if (grindingBallData == IGrindingBallData.IDENTITY) {
                     ItemStack ball = inv.getStackInSlot(5);
                     if (!ball.isEmpty()) {
                         IGrindingBallData data = GrindingBallManager.getData(ball);
@@ -114,8 +115,16 @@ public abstract class SagMillBlockEntity extends PoweredCraftingMachine<SagMilli
             protected int consumeEnergy(int maxConsume) {
                 int energyConsumed = super.consumeEnergy(maxConsume);
 
-                // Damage the grinding ball by how much micro infinity was consumed.
-                grindingBallDamage += energyConsumed;
+                if (getRecipe().getBonusType().useGrindingBall()) {
+                    // Damage the grinding ball by how much micro infinity was consumed.
+                    grindingBallDamage += energyConsumed;
+
+                    // If its broken, go back to identity.
+                    if (grindingBallDamage >= grindingBallData.getDurability()) {
+                        setGrindingBallData(IGrindingBallData.IDENTITY);
+                    }
+                }
+
                 return energyConsumed;
             }
         };
@@ -129,7 +138,7 @@ public abstract class SagMillBlockEntity extends PoweredCraftingMachine<SagMilli
     @Override
     public void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
-        if (grindingBallData != null) {
+        if (grindingBallData != IGrindingBallData.IDENTITY) {
             pTag.putString("GrindingBall", grindingBallData.getId().toString());
             pTag.putInt("GrindingBallDamage", grindingBallDamage);
         }

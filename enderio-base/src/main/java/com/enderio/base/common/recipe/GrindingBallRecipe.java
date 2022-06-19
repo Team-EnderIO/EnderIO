@@ -1,7 +1,6 @@
 package com.enderio.base.common.recipe;
 
 import com.enderio.api.grindingball.IGrindingBallData;
-import com.enderio.api.recipe.DataGenSerializer;
 import com.enderio.base.EnderIO;
 import com.enderio.base.common.init.EIORecipes;
 import com.enderio.core.recipes.EnderRecipe;
@@ -25,16 +24,16 @@ import java.util.Objects;
 public class GrindingBallRecipe implements IGrindingBallData, EnderRecipe<Container> {
     private final ResourceLocation id;
     private final Item item;
-    private final float mainOutput;
-    private final float bonusOutput;
+    private final float doublingChance;
+    private final float bonusMultiplier;
     private final float powerUse;
     private final int durability;
 
-    public GrindingBallRecipe(ResourceLocation id, Item item, float mainOutput, float bonusOutput, float powerUse, int durability) {
+    public GrindingBallRecipe(ResourceLocation id, Item item, float doublingChance, float bonusMultiplier, float powerUse, int durability) {
         this.id = id;
         this.item = item;
-        this.mainOutput = mainOutput;
-        this.bonusOutput = bonusOutput;
+        this.doublingChance = doublingChance;
+        this.bonusMultiplier = bonusMultiplier;
         this.powerUse = powerUse;
         this.durability = durability;
     }
@@ -81,13 +80,13 @@ public class GrindingBallRecipe implements IGrindingBallData, EnderRecipe<Contai
     }
     
     @Override
-    public float getMainOutput() {
-        return mainOutput;
+    public float getOutputMultiplier() {
+        return doublingChance;
     }
     
     @Override
-    public float getBonusOutput() {
-        return bonusOutput;
+    public float getBonusMultiplier() {
+        return bonusMultiplier;
     }
     
     @Override
@@ -141,8 +140,8 @@ public class GrindingBallRecipe implements IGrindingBallData, EnderRecipe<Contai
         public void toNetwork(FriendlyByteBuf buffer, GrindingBallRecipe recipe) {
             try {
                 buffer.writeResourceLocation(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(recipe.item)));
-                buffer.writeFloat(recipe.mainOutput);
-                buffer.writeFloat(recipe.bonusOutput);
+                buffer.writeFloat(recipe.doublingChance);
+                buffer.writeFloat(recipe.bonusMultiplier);
                 buffer.writeFloat(recipe.powerUse);
                 buffer.writeInt(recipe.durability);
             } catch (Exception ex) {

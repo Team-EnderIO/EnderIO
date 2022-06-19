@@ -164,11 +164,10 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
 
         // Get the outputs list.
         if (!determinedOutputs) {
+            determinedOutputs = true;
             outputs = recipe.craft(container);
 
             // TODO: Compact any items that are the same into singular stacks?
-
-            determinedOutputs = true;
         }
 
         // If we can't inputs or outputs, cancel the task. However if for some reason we can't output after the inputs are collected, don't.

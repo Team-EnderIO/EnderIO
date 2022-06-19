@@ -29,6 +29,11 @@ public abstract class PoweredTaskMachineEntity<T extends PoweredTask> extends Po
     private @Nullable CompoundTag pendingTask;
 
     /**
+     * Whether a new task is available.
+     */
+    private boolean hasNewTask;
+
+    /**
      * The task progress (client side)
      */
     @UseOnly(LogicalSide.CLIENT)
@@ -51,19 +56,30 @@ public abstract class PoweredTaskMachineEntity<T extends PoweredTask> extends Po
             currentTask = loadTask(pendingTask);
             pendingTask = null;
         }
+
+        // If we have no task, check for an initial one
+        if (currentTask == null) {
+            currentTask = getNewTask();
+        }
     }
 
     @Override
     public void serverTick() {
         if (canAct()) {
             // If we have no active task, get a new one
-            if ((currentTask == null || currentTask.isComplete()) && newTaskAvailable()) {
+            if ((currentTask == null || currentTask.isComplete()) && hasNewTask) {
                 currentTask = getNewTask();
             }
 
             // If we have an unfinished task, continue it.
             if (currentTask != null && !currentTask.isComplete()) {
                 currentTask.tick();
+            }
+
+            // If the task finished, next tick we'll try find a new one.
+            // Just in case the task didn't perform an action that caused a task change.
+            if (currentTask != null && currentTask.isComplete()) {
+                newTaskAvailable();
             }
 
             // Update block state
@@ -88,6 +104,13 @@ public abstract class PoweredTaskMachineEntity<T extends PoweredTask> extends Po
     }
 
     /**
+     * Call this to indicate a new task has become available.
+     */
+    public void newTaskAvailable() {
+        hasNewTask = true;
+    }
+
+    /**
      * Get the current task
      */
     protected @Nullable T getCurrentTask() {
@@ -99,13 +122,6 @@ public abstract class PoweredTaskMachineEntity<T extends PoweredTask> extends Po
      */
     protected boolean hasTask() {
         return currentTask != null;
-    }
-
-    /**
-     * Whether a new task is ready to be received.
-     */
-    protected boolean newTaskAvailable() {
-        return true;
     }
 
     /**

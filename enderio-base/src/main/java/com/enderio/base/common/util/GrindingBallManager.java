@@ -27,11 +27,11 @@ public class GrindingBallManager {
 
     public static IGrindingBallData getData(ItemStack stack) {
         Item item = stack.getItem();
-        return itemToData.get(item);
+        return itemToData.getOrDefault(item, IGrindingBallData.IDENTITY);
     }
 
     public static IGrindingBallData getData(ResourceLocation dataId) {
-        return idToData.get(dataId);
+        return idToData.getOrDefault(dataId, IGrindingBallData.IDENTITY);
     }
 
     @SubscribeEvent
