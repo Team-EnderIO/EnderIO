@@ -7,6 +7,15 @@
       "entries": [
         {
           "type": "minecraft:item",
+          "conditions": [
+            {
+              "condition": "minecraft:block_state_property",
+              "block": "enderio_machines:enhanced_sag_mill",
+              "properties": {
+                "half": "lower"
+              }
+            }
+          ],
           "functions": [
             {
               "function": "minecraft:copy_nbt",
@@ -20,7 +29,7 @@
               ]
             }
           ],
-          "name": "enderio_machines:slice_and_splice"
+          "name": "enderio_machines:enhanced_sag_mill"
         }
       ]
     }

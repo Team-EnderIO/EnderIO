@@ -32,6 +32,10 @@ public enum MachineCapacitorKeys {
     SAG_MILL_ENERGY_TRANSFER(() -> new CapacitorKey(120, CapacitorKeyType.EnergyTransfer, Scalers.ENERGY)),
     SAG_MILL_ENERGY_CONSUME(() -> new CapacitorKey(30, CapacitorKeyType.EnergyUsage, Scalers.ENERGY)),
 
+    ENHANCED_SAG_MILL_ENERGY_CAPACITY(() -> new CapacitorKey(1500000, CapacitorKeyType.EnergyCapacity, Scalers.ENERGY)),
+    ENHANCED_SAG_MILL_ENERGY_TRANSFER(() -> new CapacitorKey(180, CapacitorKeyType.EnergyTransfer, Scalers.ENERGY)),
+    ENHANCED_SAG_MILL_ENERGY_CONSUME(() -> new CapacitorKey(45, CapacitorKeyType.EnergyUsage, Scalers.ENERGY)),
+
     SLICE_AND_SPLICE_ENERGY_CAPACITY(() -> new CapacitorKey(100000, CapacitorKeyType.EnergyCapacity, Scalers.ENERGY)),
     SLICE_AND_SPLICE_ENERGY_TRANSFER(() -> new CapacitorKey(120, CapacitorKeyType.EnergyTransfer, Scalers.ENERGY)),
     SLICE_AND_SPLICE_ENERGY_CONSUME(() -> new CapacitorKey(80, CapacitorKeyType.EnergyUsage, Scalers.ENERGY)),

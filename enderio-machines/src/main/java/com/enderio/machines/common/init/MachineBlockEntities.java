@@ -68,6 +68,11 @@ public class MachineBlockEntities {
         .validBlocks(MachineBlocks.SAG_MILL)
         .register();
 
+    public static final BlockEntityEntry<SagMillBlockEntity.Enhanced> ENHANCED_SAG_MILL = REGISTRATE
+        .blockEntity("enhanced_sag_mill", SagMillBlockEntity.Enhanced::new)
+        .validBlocks(MachineBlocks.ENHANCED_SAG_MILL)
+        .register();
+
     public static final BlockEntityEntry<SlicerBlockEntity> SLICE_AND_SPLICE = REGISTRATE
         .blockEntity("slice_and_splice", SlicerBlockEntity::new)
         .validBlocks(MachineBlocks.SLICE_AND_SPLICE)
