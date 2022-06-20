@@ -10,8 +10,8 @@ import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.io.IOConfig;
-import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.MachineInventory;
+import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -33,7 +33,6 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.wrapper.RecipeWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -71,8 +70,8 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     // endregion
 
-    public MachineBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-        super(pType, pWorldPosition, pBlockState);
+    public MachineBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
+        super(type, worldPosition, blockState);
 
         // Create IO Config.
         this.ioConfig = createIOConfig();
@@ -175,7 +174,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
      */
     protected boolean supportsIOMode(Direction side, IOMode mode) {
         // Enhanced machines cannot have IO out the top.
-        return getTier() != MachineTier.Enhanced || side != Direction.UP || mode == IOMode.NONE;
+        return getTier() != MachineTier.ENHANCED || side != Direction.UP || mode == IOMode.NONE;
     }
 
     @NotNull
@@ -200,10 +199,6 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         return inventory;
     }
 
-    public final RecipeWrapper getRecipeWrapper() {
-        return new RecipeWrapper(inventory);
-    }
-
     /**
      * Called to create an item handler if a slot layout is provided.
      */
@@ -220,15 +215,11 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     /**
      * @apiNote Must call this on custom MachineInventory handlers!
      */
-    protected void onInventoryContentsChanged(int slot) {
-
-    }
+    protected void onInventoryContentsChanged(int slot) { }
 
     // endregion
 
     // region Block Entity ticking
-
-    // TODO: Should we separate clientTick and serverTick so there's less chance of a mistake?
 
     @Override
     public void serverTick() {

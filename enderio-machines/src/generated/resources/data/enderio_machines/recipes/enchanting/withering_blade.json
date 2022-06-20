@@ -4,6 +4,6 @@
   "input": {
     "item": "enderio:withering_powder"
   },
-  "amount_per_level": 4,
-  "level": 1
+  "amount": 4,
+  "cost_multiplier": 1
 }

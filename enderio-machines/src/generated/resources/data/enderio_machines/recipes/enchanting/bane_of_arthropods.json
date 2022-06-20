@@ -4,6 +4,6 @@
   "input": {
     "item": "minecraft:spider_eye"
   },
-  "amount_per_level": 12,
-  "level": 1
+  "amount": 12,
+  "cost_multiplier": 1
 }

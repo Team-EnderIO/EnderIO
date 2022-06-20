@@ -1,0 +1,25 @@
+{
+  "type": "enderio_machines:slicing",
+  "output": "enderio:zombie_controller",
+  "inputs": [
+    {
+      "item": "enderio:soularium_ingot"
+    },
+    {
+      "item": "minecraft:zombie_head"
+    },
+    {
+      "item": "enderio:soularium_ingot"
+    },
+    {
+      "item": "enderio:silicon"
+    },
+    {
+      "item": "minecraft:redstone"
+    },
+    {
+      "item": "enderio:silicon"
+    }
+  ],
+  "energy": 20000
+}

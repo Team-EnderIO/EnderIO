@@ -4,6 +4,6 @@
   "input": {
     "item": "minecraft:blaze_rod"
   },
-  "amount_per_level": 8,
-  "level": 1
+  "amount": 8,
+  "cost_multiplier": 1
 }

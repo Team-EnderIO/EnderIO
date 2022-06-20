@@ -1,0 +1,6 @@
+{
+  "parent": "enderio_machines:block/simple_sag_mill_front",
+  "textures": {
+    "front": "enderio_machines:block/simple_sag_mill_front_on"
+  }
+}

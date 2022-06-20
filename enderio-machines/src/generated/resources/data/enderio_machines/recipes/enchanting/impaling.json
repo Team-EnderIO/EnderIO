@@ -4,6 +4,6 @@
   "input": {
     "tag": "forge:ingots/iron"
   },
-  "amount_per_level": 8,
-  "level": 1
+  "amount": 8,
+  "cost_multiplier": 1
 }

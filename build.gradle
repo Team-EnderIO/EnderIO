@@ -116,7 +116,7 @@ allprojects {
         runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
 
         // While we don't have conduits etc.
-//        runtimeOnly fg.deobf("curse.maven:mekanism-268560:3743835")
+        runtimeOnly fg.deobf("curse.maven:mekanism-268560:3743835")
     }
 
     jar {

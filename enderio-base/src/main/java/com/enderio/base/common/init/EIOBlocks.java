@@ -7,7 +7,7 @@ import com.enderio.base.common.block.glass.GlassCollisionPredicate;
 import com.enderio.base.common.block.glass.GlassIdentifier;
 import com.enderio.base.common.block.glass.GlassLighting;
 import com.enderio.base.common.item.EIOCreativeTabs;
-import com.enderio.base.datagen.model.block.EIOBlockState;
+import com.enderio.base.data.model.block.EIOBlockState;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;

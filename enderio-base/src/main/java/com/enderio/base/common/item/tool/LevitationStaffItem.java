@@ -1,8 +1,8 @@
 package com.enderio.base.common.item.tool;
 
+import com.enderio.api.capability.MultiCapabilityProvider;
 import com.enderio.base.client.renderer.item.IItemOverlayRender;
 import com.enderio.base.client.renderer.item.ItemBarRenderer;
-import com.enderio.api.capability.MultiCapabilityProvider;
 import com.enderio.base.common.capability.AcceptingFluidItemHandler;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.tag.EIOTags;

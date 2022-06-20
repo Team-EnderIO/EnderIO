@@ -1,10 +1,10 @@
 package com.enderio.base.common.loot;
 
 import com.enderio.base.EnderIO;
+import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.base.common.capacitor.LootCapacitorData;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOItems;
-import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.google.gson.JsonObject;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
