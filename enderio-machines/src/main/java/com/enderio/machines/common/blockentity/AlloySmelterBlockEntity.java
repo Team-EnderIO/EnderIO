@@ -1,14 +1,12 @@
 package com.enderio.machines.common.blockentity;
 
 import com.enderio.api.capacitor.CapacitorKey;
-import com.enderio.api.machines.recipes.IAlloySmeltingRecipe;
 import com.enderio.api.recipe.CountedIngredient;
 import com.enderio.base.common.blockentity.sync.EnumDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.PoweredCraftingMachine;
-import com.enderio.machines.common.blockentity.base.PoweredTaskMachineEntity;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingTask;
 import com.enderio.machines.common.compat.VanillaAlloySmeltingRecipe;
 import com.enderio.machines.common.init.MachineCapacitorKeys;
@@ -17,6 +15,7 @@ import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.menu.AlloySmelterMenu;
 import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
+import com.enderio.machines.common.recipe.IAlloySmeltingRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;

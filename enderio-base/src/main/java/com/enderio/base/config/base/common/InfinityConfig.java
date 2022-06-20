@@ -2,9 +2,6 @@ package com.enderio.base.config.base.common;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class InfinityConfig {
     public final ForgeConfigSpec.ConfigValue<Boolean> MAKES_SOUND;
     public final ForgeConfigSpec.ConfigValue<Integer> FIRE_MIN_AGE;

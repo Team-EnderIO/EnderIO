@@ -45,8 +45,6 @@ public class ProgressWidget extends AbstractWidget {
 
     @Override
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        poseStack.pushPose();
-
         float progress = getter.get();
 
         int yOffset = 0;
@@ -67,8 +65,8 @@ public class ProgressWidget extends AbstractWidget {
         }
         }
 
+        poseStack.pushPose();
         blit(poseStack, x + xOffset, y + yOffset, u, v + yOffset, width, height);
-
         poseStack.popPose();
 
         if (this.isHoveredOrFocused()) {

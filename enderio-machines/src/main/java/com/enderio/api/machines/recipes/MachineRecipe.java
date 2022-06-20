@@ -1,10 +1,8 @@
 package com.enderio.api.machines.recipes;
 
-import com.enderio.api.machines.recipes.OutputStack;
 import com.enderio.core.recipes.EnderRecipe;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
 

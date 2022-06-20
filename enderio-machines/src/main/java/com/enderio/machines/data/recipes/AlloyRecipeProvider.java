@@ -1,9 +1,9 @@
 package com.enderio.machines.data.recipes;
 
+import com.enderio.api.recipe.CountedIngredient;
 import com.enderio.base.common.block.glass.*;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
-import com.enderio.api.recipe.CountedIngredient;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.recipe.EnderRecipeProvider;
 import com.enderio.machines.EIOMachines;

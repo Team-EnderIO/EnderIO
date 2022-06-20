@@ -2,12 +2,12 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
-import com.enderio.machines.common.io.FixedIOConfig;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.init.MachineRecipes;
-import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import com.enderio.machines.common.io.FixedIOConfig;
 import com.enderio.machines.common.io.item.MachineInventory;
+import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.menu.EnchanterMenu;
 import com.enderio.machines.common.recipe.EnchanterRecipe;
 import net.minecraft.core.BlockPos;

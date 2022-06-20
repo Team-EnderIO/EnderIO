@@ -1,7 +1,6 @@
 package com.enderio.base.data.recipe.standard;
 
 import com.enderio.base.EnderIO;
-import com.enderio.base.common.block.glass.FusedQuartzBlock;
 import com.enderio.base.common.block.glass.GlassBlocks;
 import com.enderio.base.common.block.glass.GlassCollisionPredicate;
 import com.enderio.base.common.init.EIOBlocks;
@@ -16,7 +15,6 @@ import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nonnull;
 import java.util.function.Consumer;

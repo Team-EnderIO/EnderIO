@@ -1,5 +1,6 @@
-package com.enderio.api.machines.recipes;
+package com.enderio.machines.common.recipe;
 
+import com.enderio.api.machines.recipes.MachineRecipe;
 import com.enderio.api.recipe.CountedIngredient;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.RecipeWrapper;

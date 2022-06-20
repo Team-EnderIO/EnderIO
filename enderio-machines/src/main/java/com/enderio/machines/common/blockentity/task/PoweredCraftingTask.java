@@ -1,8 +1,8 @@
 package com.enderio.machines.common.blockentity.task;
 
+import com.enderio.api.machines.recipes.MachineRecipe;
 import com.enderio.api.machines.recipes.OutputStack;
 import com.enderio.machines.common.blockentity.base.PoweredCraftingMachine;
-import com.enderio.api.machines.recipes.MachineRecipe;
 import com.enderio.machines.common.io.item.MachineInventory;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;

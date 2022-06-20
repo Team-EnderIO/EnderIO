@@ -1,11 +1,7 @@
 package com.enderio.machines.common.init;
 
-import com.enderio.api.machines.recipes.IAlloySmeltingRecipe;
 import com.enderio.machines.EIOMachines;
-import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
-import com.enderio.machines.common.recipe.EnchanterRecipe;
-import com.enderio.machines.common.recipe.SagMillingRecipe;
-import com.enderio.machines.common.recipe.SlicingRecipe;
+import com.enderio.machines.common.recipe.*;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;

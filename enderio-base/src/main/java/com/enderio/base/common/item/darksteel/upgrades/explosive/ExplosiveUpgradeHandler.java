@@ -1,8 +1,8 @@
 package com.enderio.base.common.item.darksteel.upgrades.explosive;
 
 import com.enderio.base.common.capability.DarkSteelUpgradeable;
-import com.enderio.base.common.item.darksteel.upgrades.SpoonUpgrade;
 import com.enderio.base.common.init.EIOPackets;
+import com.enderio.base.common.item.darksteel.upgrades.SpoonUpgrade;
 import com.enderio.base.common.network.packet.EmitParticlesPacket;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.BlockUtil;

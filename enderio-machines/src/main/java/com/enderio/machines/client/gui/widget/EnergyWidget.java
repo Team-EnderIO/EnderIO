@@ -5,7 +5,6 @@ import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.util.TooltipUtil;
 import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
-import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.screens.Screen;

@@ -1,6 +1,5 @@
 package com.enderio.machines.common.recipe;
 
-import com.enderio.api.machines.recipes.IAlloySmeltingRecipe;
 import com.enderio.api.machines.recipes.OutputStack;
 import com.enderio.api.recipe.CountedIngredient;
 import com.enderio.machines.EIOMachines;

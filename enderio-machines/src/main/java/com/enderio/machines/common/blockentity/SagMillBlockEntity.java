@@ -2,6 +2,9 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.api.grindingball.IGrindingBallData;
+import com.enderio.base.common.blockentity.sync.IntegerDataSlot;
+import com.enderio.base.common.blockentity.sync.ResourceLocationDataSlot;
+import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.base.common.util.GrindingBallManager;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.PoweredCraftingMachine;
@@ -21,7 +24,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class SagMillBlockEntity extends PoweredCraftingMachine<SagMillingRecipe, SagMillingRecipe.Container> {
@@ -93,6 +95,9 @@ public abstract class SagMillBlockEntity extends PoweredCraftingMachine<SagMilli
         BlockState blockState) {
         super(MachineRecipes.Types.SAGMILLING, capacityKey, transferKey, energyUseKey, type, worldPosition, blockState);
         container = new SagMillingRecipe.Container(getInventory(), this::getGrindingBallData);
+
+        addDataSlot(new IntegerDataSlot(() -> grindingBallDamage, dmg -> grindingBallDamage = dmg, SyncMode.GUI));
+        addDataSlot(new ResourceLocationDataSlot(() -> grindingBallData.getId(), gId -> grindingBallData = GrindingBallManager.getData(gId), SyncMode.GUI));
     }
 
     public @Nullable IGrindingBallData getGrindingBallData() {
@@ -102,6 +107,12 @@ public abstract class SagMillBlockEntity extends PoweredCraftingMachine<SagMilli
     public void setGrindingBallData(IGrindingBallData data) {
         grindingBallDamage = 0;
         grindingBallData = data;
+    }
+
+    public float getGrindingBallDamage() {
+        if (grindingBallData.getDurability() <= 0)
+            return 0.0f;
+        return 1.0f - (grindingBallDamage / (float) grindingBallData.getDurability());
     }
 
     @Override

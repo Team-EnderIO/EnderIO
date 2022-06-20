@@ -1,8 +1,8 @@
 package com.enderio.machines.common.compat;
 
-import com.enderio.api.machines.recipes.IAlloySmeltingRecipe;
 import com.enderio.api.machines.recipes.OutputStack;
 import com.enderio.api.recipe.CountedIngredient;
+import com.enderio.machines.common.recipe.IAlloySmeltingRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;

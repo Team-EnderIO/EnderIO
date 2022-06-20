@@ -3,7 +3,6 @@ package com.enderio.base.data.recipe.standard;
 import com.enderio.base.EnderIO;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.init.EIORecipes;
-import com.enderio.base.common.recipe.GrindingBallRecipe;
 import com.enderio.base.data.recipe.EnderRecipeProvider;
 import com.google.gson.JsonObject;
 import net.minecraft.data.DataGenerator;

@@ -2,7 +2,6 @@ package com.enderio.base.data.recipe.standard;
 
 import com.enderio.base.EnderIO;
 import com.enderio.base.common.init.EIORecipes;
-import com.enderio.base.common.recipe.FireCraftingRecipe;
 import com.enderio.base.data.recipe.EnderRecipeProvider;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -16,7 +15,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;

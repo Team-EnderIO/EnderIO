@@ -2,24 +2,15 @@ package com.enderio.machines.common.blockentity.base;
 
 import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.api.machines.recipes.MachineRecipe;
-import com.enderio.api.machines.recipes.OutputStack;
-import com.enderio.machines.common.MachineTier;
-import com.enderio.machines.common.blockentity.SlicerBlockEntity;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingTask;
-import com.enderio.machines.common.init.MachineRecipes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
