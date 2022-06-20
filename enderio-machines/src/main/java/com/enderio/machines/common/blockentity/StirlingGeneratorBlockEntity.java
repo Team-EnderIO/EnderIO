@@ -37,8 +37,8 @@ public abstract class StirlingGeneratorBlockEntity extends PowerGeneratingMachin
         }
 
         @Override
-        public int getEnergyLeakRate() {
-            return 1; // TODO config
+        public int getEnergyLeakPerSecond() {
+            return 2;
         }
     }
 

@@ -55,7 +55,7 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachine<IAl
         }
 
         @Override
-        public int getEnergyLeakRate() {
+        public int getEnergyLeakPerSecond() {
             return 5; // TODO: Config
         }
     }
@@ -76,8 +76,8 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachine<IAl
         }
 
         @Override
-        public int getEnergyLeakRate() {
-            return 5; // TODO: Config
+        public int getEnergyLeakPerSecond() {
+            return 1;
         }
     }
 

@@ -45,7 +45,7 @@ public abstract class SagMillBlockEntity extends PoweredCraftingMachine<SagMilli
         }
 
         @Override
-        public int getEnergyLeakRate() {
+        public int getEnergyLeakPerSecond() {
             return 1; // TODO: Config
         }
     }

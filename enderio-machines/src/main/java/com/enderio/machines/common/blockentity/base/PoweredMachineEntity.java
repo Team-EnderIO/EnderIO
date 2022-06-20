@@ -1,7 +1,6 @@
 package com.enderio.machines.common.blockentity.base;
 
 import com.enderio.api.capability.ICapacitorData;
-import com.enderio.api.capability.IEnderCapabilityProvider;
 import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.api.energy.EnergyIOMode;
 import com.enderio.base.common.blockentity.sync.SyncMode;
@@ -21,7 +20,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -72,9 +70,10 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
 
     @Override
     public void serverTick() {
-        // Leak energy
-        // TODO: Leak per second instead of per tick? Would make it nicer
-        energyStorage.takeEnergy(getEnergyLeakRate());
+        // Leak energy once per second
+        if (level.getGameTime() % 20 == 0) {
+            energyStorage.takeEnergy(getEnergyLeakPerSecond());
+        }
 
         // If redstone config is not enabled.
         if (canAct()) {
@@ -101,7 +100,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
         return energyStorage;
     }
 
-    public int getEnergyLeakRate() {
+    public int getEnergyLeakPerSecond() {
         return 0;
     }
 
