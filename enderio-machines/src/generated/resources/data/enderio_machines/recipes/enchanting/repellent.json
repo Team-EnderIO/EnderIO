@@ -4,6 +4,6 @@
   "input": {
     "item": "minecraft:ender_pearl"
   },
-  "amount_per_level": 4,
-  "level": 2
+  "amount": 4,
+  "cost_multiplier": 2
 }

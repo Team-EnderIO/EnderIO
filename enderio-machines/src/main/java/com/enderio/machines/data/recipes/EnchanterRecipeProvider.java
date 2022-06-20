@@ -97,14 +97,14 @@ public class EnchanterRecipeProvider extends EnderRecipeProvider {
         private final Enchantment enchantment;
         private final Ingredient input;
         private final int amountPerLevel;
-        private final int levelModifier;
+        private final int costMultiplier;
 
-        public FinishedEnchantingRecipe(ResourceLocation id, Enchantment enchantment, Ingredient input, int amountPerLevel, int levelModifier) {
+        public FinishedEnchantingRecipe(ResourceLocation id, Enchantment enchantment, Ingredient input, int amountPerLevel, int costMultiplier) {
             super(id);
             this.enchantment = enchantment;
             this.input = input;
             this.amountPerLevel = amountPerLevel;
-            this.levelModifier = levelModifier;
+            this.costMultiplier = costMultiplier;
         }
 
         @Override
@@ -119,8 +119,8 @@ public class EnchanterRecipeProvider extends EnderRecipeProvider {
         public void serializeRecipeData(JsonObject json) {
             json.addProperty("enchantment", enchantment.getRegistryName().toString());
             json.add("input", input.toJson());
-            json.addProperty("amount_per_level", amountPerLevel);
-            json.addProperty("level", levelModifier);
+            json.addProperty("amount", amountPerLevel);
+            json.addProperty("cost_multiplier", costMultiplier);
             super.serializeRecipeData(json);
         }
 

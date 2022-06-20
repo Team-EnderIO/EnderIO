@@ -25,36 +25,51 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
+/**
+ * A recipe for the enchanter.
+ */
 public class EnchanterRecipe implements EnderRecipe<Container> {
 
     private final ResourceLocation id;
     private final Enchantment enchantment;
-    private final int levelModifier;
+    private final int costMultiplier;
     private final Ingredient input;
-    private final int inputAmountPerLevel;
+    private final int amountPerLevel;
 
-    public EnchanterRecipe(ResourceLocation id, Ingredient input, Enchantment enchantment, int amountPerLevel, int levelModifier) {
+    public EnchanterRecipe(ResourceLocation id, Ingredient input, Enchantment enchantment, int amountPerLevel, int costMultiplier) {
         this.id = id;
         this.input = input;
         this.enchantment = enchantment;
-        this.inputAmountPerLevel = amountPerLevel;
-        this.levelModifier = levelModifier;
+        this.amountPerLevel = amountPerLevel;
+        this.costMultiplier = costMultiplier;
     }
 
     // region Get recipe parameters
 
+    /**
+     * Get the input ingredient.
+     */
     public Ingredient getInput() {
         return input;
     }
 
-    public int getLevelModifier() {
-        return levelModifier;
+    /**
+     * Get the XP multiplier.
+     */
+    public int getCostMultiplier() {
+        return costMultiplier;
     }
 
-    public int getInputAmountPerLevel() {
-        return inputAmountPerLevel;
+    /**
+     * Get the input amount per level.
+     */
+    public int getAmountPerLevel() {
+        return amountPerLevel;
     }
 
+    /**
+     * Get the resuting enchantment.
+     */
     public Enchantment getEnchantment() {
         return enchantment;
     }
@@ -63,50 +78,71 @@ public class EnchanterRecipe implements EnderRecipe<Container> {
 
     // region Calculations
 
-    public int getLevelCost(Container container) {
-        int level = getEnchantmentLevel(container.getItem(1).getCount());
-        return getEnchantCost(level);
-    }
-
+    /**
+     * Get the enchantment level based on the number of the input ingredient.
+     */
     public int getEnchantmentLevel(int ingredientCount) {
-        return Math.min(ingredientCount / inputAmountPerLevel, enchantment.getMaxLevel());
+        return Math.min(ingredientCount / amountPerLevel, enchantment.getMaxLevel());
     }
 
+    /**
+     * Get the amount of lapis required for the given level.
+     */
     public int getLapisForLevel(int level) {
         int res = getEnchantment().getMaxLevel() == 1 ? 5 : level;
         return Math.max(1, Math.round(res * MachinesConfig.COMMON.ENCHANTER_LAPIS_COST_FACTOR.get()));
     }
 
-    public int getAmount(Container container) {
+    /**
+     * Get the number of ingredients to be consumed when crafting.
+     * Basically just determines the exact amount of the ingredient to take, rather than just taking everything provided.
+     */
+    public int getInputAmountConsumed(Container container) {
         if (matches(container, null)) {
-            return getEnchantmentLevel(container.getItem(1).getCount()) * this.inputAmountPerLevel;
+            return getEnchantmentLevel(container.getItem(1).getCount()) * this.amountPerLevel;
         }
         return 0;
     }
 
-    public int getEnchantCost(int level) {
+    /**
+     * Get the XP level cost of the recipe.
+     */
+    public int getXPCost(Container container) {
+        int level = getEnchantmentLevel(container.getItem(1).getCount());
+        return getXPCostForLevel(level);
+    }
+
+    /**
+     * Get the XP cost for crafting at the given level.
+     */
+    public int getXPCostForLevel(int level) {
         level = Math.min(level, enchantment.getMaxLevel());
         int cost = getRawXPCostForLevel(level);
         if (level < enchantment.getMaxLevel()) {
             // min cost of half the next levels XP cause books combined in anvil
-            int nextCost = getEnchantCost(level + 1);
+            int nextCost = getXPCostForLevel(level + 1);
             cost = Math.max(nextCost / 2, cost);
         }
         return Math.max(1, cost);
     }
 
+    /**
+     * Get the raw xp cost for the given level.
+     */
     private int getRawXPCostForLevel(int level) {
         double min = Math.max(1, enchantment.getMinCost(level));
-        min *= levelModifier;
-        int cost = (int) Math.round(min * 1); //TODO global scaling
-        cost += 1; //TODO base cost
+        min *= costMultiplier;
+        int cost = (int) Math.round(min * MachinesConfig.COMMON.ENCHANTER_LEVEL_COST_FACTOR.get());
+        cost += MachinesConfig.COMMON.ENCHANTER_BASE_LEVEL_COST.get();
         return cost;
     }
 
+    /**
+     * Get the enchanted book with the correct enchantment of level.
+     */
     public ItemStack getBookForLevel(int level) {
         return EnchantedBookItem.createForEnchantment(new EnchantmentInstance(enchantment, level));
     }
-
 
     // endregion
 
@@ -115,7 +151,7 @@ public class EnchanterRecipe implements EnderRecipe<Container> {
         if (!container.getItem(0).is(Items.WRITABLE_BOOK)) {
             return false;
         }
-        if (!input.test(container.getItem(1)) || container.getItem(1).getCount() < inputAmountPerLevel) {
+        if (!input.test(container.getItem(1)) || container.getItem(1).getCount() < amountPerLevel) {
             return false;
         }
         if (!container.getItem(2).is(Tags.Items.GEMS_LAPIS) || container.getItem(2).getCount() < getLapisForLevel(
@@ -159,9 +195,9 @@ public class EnchanterRecipe implements EnderRecipe<Container> {
             if (enchantment == null) {
                 throw new ResourceLocationException("The enchantment in " + recipeId + " does not exist");
             }
-            int amount = serializedRecipe.get("amount_per_level").getAsInt();
-            int level = serializedRecipe.get("level").getAsInt();
-            return new EnchanterRecipe(recipeId, ingredient, enchantment, amount, level);
+            int amountPerLevel = serializedRecipe.get("amount").getAsInt();
+            int costMultiplier = serializedRecipe.get("cost_multiplier").getAsInt();
+            return new EnchanterRecipe(recipeId, ingredient, enchantment, amountPerLevel, costMultiplier);
         }
 
         @Nullable
@@ -187,8 +223,8 @@ public class EnchanterRecipe implements EnderRecipe<Container> {
             try {
                 recipe.getInput().toNetwork(buffer);
                 buffer.writeResourceLocation(Objects.requireNonNull(recipe.getEnchantment().getRegistryName()));
-                buffer.writeInt(recipe.getInputAmountPerLevel());
-                buffer.writeInt(recipe.getLevelModifier());
+                buffer.writeInt(recipe.getAmountPerLevel());
+                buffer.writeInt(recipe.getCostMultiplier());
             } catch (Exception ex) {
                 EIOMachines.LOGGER.error("Error writing enchanter recipe to packet.", ex);
                 throw ex;

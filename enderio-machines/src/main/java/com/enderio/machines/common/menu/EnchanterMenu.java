@@ -31,10 +31,10 @@ public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
                 @Override
                 public void onTake(Player pPlayer, ItemStack pStack) {
                     Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.Types.ENCHANTING, blockEntity.getContainer(), level);
-                    if (recipe.isPresent() && (pPlayer.experienceLevel > recipe.get().getLevelCost(blockEntity.getContainer()) || pPlayer.isCreative())) {
-                        int amount = recipe.get().getAmount(blockEntity.getContainer());
+                    if (recipe.isPresent() && (pPlayer.experienceLevel > recipe.get().getXPCost(blockEntity.getContainer()) || pPlayer.isCreative())) {
+                        int amount = recipe.get().getInputAmountConsumed(blockEntity.getContainer());
                         int lapizForLevel = recipe.get().getLapisForLevel(recipe.get().getEnchantmentLevel(blockEntity.getInventory().getStackInSlot(1).getCount()));
-                        pPlayer.giveExperienceLevels(-recipe.get().getLevelCost(blockEntity.getContainer()));
+                        pPlayer.giveExperienceLevels(-recipe.get().getXPCost(blockEntity.getContainer()));
                         blockEntity.getInventory().getStackInSlot(0).shrink(1);
                         blockEntity.getInventory().getStackInSlot(1).shrink(amount);
                         blockEntity.getInventory().getStackInSlot(2).shrink(lapizForLevel);
@@ -45,7 +45,7 @@ public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
                 @Override
                 public boolean mayPickup(Player playerIn) {
                     Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.Types.ENCHANTING, blockEntity.getContainer(), level);
-                    if (recipe.isPresent() && (playerIn.experienceLevel > recipe.get().getLevelCost(blockEntity.getContainer()) || playerIn.isCreative()) && blockEntity.canAct()) {
+                    if (recipe.isPresent() && (playerIn.experienceLevel > recipe.get().getXPCost(blockEntity.getContainer()) || playerIn.isCreative()) && blockEntity.canAct()) {
                         return super.mayPickup(playerIn);
                     }
                     return false;
@@ -67,7 +67,7 @@ public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
         if (level != null) {
             Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.Types.ENCHANTING, getBlockEntity().getContainer(), level);
             if (recipe.isPresent()) {
-                return recipe.get().getLevelCost(new RecipeWrapper(this.getBlockEntity().getInventory()));
+                return recipe.get().getXPCost(new RecipeWrapper(this.getBlockEntity().getInventory()));
             }
         }
         return -1;
