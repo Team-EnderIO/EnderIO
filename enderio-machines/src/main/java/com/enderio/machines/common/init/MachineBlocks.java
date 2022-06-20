@@ -171,12 +171,14 @@ public class MachineBlocks {
         .build()
         .register();
 
-//    public static BlockEntry<ProgressMachineBlock> SLICE_N_SPLICE = REGISTRATE
-//        .block("slice_n_splice", props -> new ProgressMachineBlock(props, MachineBlockEntities.SLICE_N_SPLICE))
-//        .item()
-//        .tab(() -> EIOCreativeTabs.MACHINES)
-//        .build()
-//        .register();
+    public static BlockEntry<ProgressMachineBlock> SLICE_AND_SPLICE = REGISTRATE
+        .block("slice_and_splice", props -> new ProgressMachineBlock(props, MachineBlockEntities.SLICE_AND_SPLICE))
+        .addLayer(() -> RenderType::cutout)
+        .blockstate(MachinesBlockState::soulMachineBlock)
+        .item()
+        .tab(() -> EIOCreativeTabs.MACHINES)
+        .build()
+        .register();
 
     public static void classload() {}
 }

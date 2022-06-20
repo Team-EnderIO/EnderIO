@@ -63,10 +63,10 @@ public class MachineBlockEntities {
         .validBlocks(MachineBlocks.SAG_MILL)
         .register();
 
-//    public static final BlockEntityEntry<SlicerBlockEntity> SLICE_N_SPLICE = REGISTRATE
-//        .blockEntity("slice_n_splice", SlicerBlockEntity::new)
-//        .validBlocks(MachineBlocks.SLICE_N_SPLICE)
-//        .register();
+    public static final BlockEntityEntry<SlicerBlockEntity> SLICE_AND_SPLICE = REGISTRATE
+        .blockEntity("slice_and_splice", SlicerBlockEntity::new)
+        .validBlocks(MachineBlocks.SLICE_AND_SPLICE)
+        .register();
 
     public static void classload() {}
 }

@@ -67,8 +67,9 @@ public abstract class PoweredTaskMachineEntity<T extends PoweredTask> extends Po
     public void serverTick() {
         if (canAct()) {
             // If we have no active task, get a new one
-            if ((currentTask == null || currentTask.isComplete()) && hasNewTask) {
+            if ((currentTask == null || currentTask.isComplete()) && hasNewTask && energyStorage.getEnergyStored() > 0) {
                 currentTask = getNewTask();
+                hasNewTask = false;
             }
 
             // If we have an unfinished task, continue it.

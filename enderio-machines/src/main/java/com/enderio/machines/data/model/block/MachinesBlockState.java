@@ -15,65 +15,33 @@ import net.minecraftforge.client.model.generators.ModelFile;
 
 public class MachinesBlockState {
 
-    public static ModelFile machineBody(RegistrateBlockstateProvider prov, String name, ModelFile frontModel) {
-        return machineBody(prov, name, frontModel.getUncheckedLocation());
-    }
-
-    public static ModelFile machineBody(RegistrateBlockstateProvider prov, String name, ResourceLocation frontModel) {
-        return EIOModel.compositeModel(prov.models(), name, builder -> builder
-            .component(EIOMachines.loc("block/machine_frame"), true)
-            .component(EIOMachines.loc("block/io_overlay"))
-            .component(frontModel));
-    }
-
-    public static ModelFile simpleMachineBody(RegistrateBlockstateProvider prov, String name, ModelFile frontModel) {
-        return simpleMachineBody(prov, name, frontModel.getUncheckedLocation());
-    }
-
-    public static ModelFile simpleMachineBody(RegistrateBlockstateProvider prov, String name, ResourceLocation frontModel) {
-        return EIOModel.compositeModel(prov.models(), name, builder -> builder
-            .component(EIOMachines.loc("block/simple_machine_frame"), true)
-            .component(EIOMachines.loc("block/io_overlay"))
-            .component(frontModel));
-    }
+    // region Block states
 
     public static void machineBlock(DataGenContext<Block, ? extends Block> ctx, RegistrateBlockstateProvider prov) {
-        String ns = ctx.getId().getNamespace();
-        String path = ctx.getId().getPath();
-        ModelFile unpowered = machineBody(prov, ctx.getName(), new ResourceLocation(ns, "block/" + path + "_front"));
-        ModelFile powered = machineBody(prov, ctx.getName() + "_on", prov
-            .models()
-            .withExistingParent(ctx.getName() + "_front_on", new ResourceLocation(ns, "block/" + path + "_front"))
-            .texture("front", EIOMachines.loc("block/" + ctx.getName() + "_front_on")));
+        machineBlock(ctx, prov, MachinesBlockState::machineBody);
+    }
 
-        prov
-            .getVariantBuilder(ctx.get())
-            .forAllStates(state -> ConfiguredModel
-                .builder()
-                .modelFile(state.getValue(ProgressMachineBlock.POWERED) ? powered : unpowered)
-                .rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + 180) % 360)
-                .build());
+    public static void soulMachineBlock(DataGenContext<Block, ? extends Block> ctx, RegistrateBlockstateProvider prov) {
+        machineBlock(ctx, prov, MachinesBlockState::soulMachineBody);
     }
 
     public static void simpleMachineBlock(DataGenContext<Block, ? extends Block> ctx, RegistrateBlockstateProvider prov) {
+        machineBlock(ctx, prov, MachinesBlockState::simpleMachineBody);
+    }
+
+    private static void machineBlock(DataGenContext<Block, ? extends Block> ctx, RegistrateBlockstateProvider prov, MachineBodyBuilder bodyBuilder) {
+        // Create unpowered and powered bodies.
         String ns = ctx.getId().getNamespace();
         String path = ctx.getId().getPath();
-        ModelFile unpowered = simpleMachineBody(prov, ctx.getName(), new ResourceLocation(ns, "block/" + path + "_front"));
-        ModelFile powered = simpleMachineBody(prov, ctx.getName() + "_on", prov
+        ModelFile unpowered = bodyBuilder.build(prov, ctx.getName(), prov.models().getExistingFile(new ResourceLocation(ns, "block/" + path + "_front")));
+        ModelFile powered = bodyBuilder.build(prov, ctx.getName() + "_on", prov
             .models()
             .withExistingParent(ctx.getName() + "_front_on", new ResourceLocation(ns, "block/" + path + "_front"))
             .texture("front", EIOMachines.loc("block/" + ctx.getName() + "_front_on")));
-
-        prov
-            .getVariantBuilder(ctx.get())
-            .forAllStates(state -> ConfiguredModel
-                .builder()
-                .modelFile(state.getValue(ProgressMachineBlock.POWERED) ? powered : unpowered)
-                .rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + 180) % 360)
-                .build());
+        machineBlock(ctx, prov, unpowered, powered);
     }
 
-    public static void machineBlock(DataGenContext<Block, ? extends Block> ctx, RegistrateBlockstateProvider prov, ModelFile unpowered, ModelFile powered) {
+    private static void machineBlock(DataGenContext<Block, ? extends Block> ctx, RegistrateBlockstateProvider prov, ModelFile unpowered, ModelFile powered) {
         prov
             .getVariantBuilder(ctx.get())
             .forAllStates(state -> ConfiguredModel
@@ -96,4 +64,34 @@ public class MachinesBlockState {
                     .build();
             });
     }
+
+    // endregion
+
+    // region Models
+
+    @FunctionalInterface
+    private interface MachineBodyBuilder {
+        ModelFile build(RegistrateBlockstateProvider prov, String name, ModelFile frontModel);
+    }
+
+    private static ModelFile machineBody(RegistrateBlockstateProvider prov, String name, ModelFile frontModel) {
+        return machineBodyModel(prov, name, frontModel, EIOMachines.loc("block/machine_frame"));
+    }
+
+    private static ModelFile soulMachineBody(RegistrateBlockstateProvider prov, String name, ModelFile frontModel) {
+        return machineBodyModel(prov, name, frontModel, EIOMachines.loc("block/soul_machine_frame"));
+    }
+
+    private static ModelFile simpleMachineBody(RegistrateBlockstateProvider prov, String name, ModelFile frontModel) {
+        return machineBodyModel(prov, name, frontModel, EIOMachines.loc("block/simple_machine_frame"));
+    }
+
+    private static ModelFile machineBodyModel(RegistrateBlockstateProvider prov, String name, ModelFile frontModel, ResourceLocation frameModel) {
+        return EIOModel.compositeModel(prov.models(), name, builder -> builder
+            .component(frameModel, true)
+            .component(EIOMachines.loc("block/io_overlay"))
+            .component(frontModel));
+    }
+
+    // endregion
 }
