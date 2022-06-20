@@ -30,7 +30,7 @@
     }
   ],
   "result": {
-    "item": "enderio:clear_glass_na_blue",
-    "count": 8
+    "count": 8,
+    "item": "enderio:clear_glass_na_blue"
   }
 }

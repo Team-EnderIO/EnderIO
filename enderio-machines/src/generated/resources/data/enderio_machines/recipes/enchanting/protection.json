@@ -1,9 +1,9 @@
 {
   "type": "enderio_machines:enchanting",
+  "amount": 16,
+  "cost_multiplier": 1,
   "enchantment": "minecraft:protection",
   "input": {
     "item": "enderio:dark_steel_ingot"
-  },
-  "amount": 16,
-  "cost_multiplier": 1
+  }
 }

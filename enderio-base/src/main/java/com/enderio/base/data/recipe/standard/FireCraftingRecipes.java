@@ -84,7 +84,7 @@ public class FireCraftingRecipes extends EnderRecipeProvider {
 
         @Override
         public RecipeSerializer<?> getType() {
-            return EIORecipes.Serializer.FIRE_CRAFTING.get();
+            return EIORecipes.FIRE_CRAFTING_SERIALIZER.get();
         }
     }
 }

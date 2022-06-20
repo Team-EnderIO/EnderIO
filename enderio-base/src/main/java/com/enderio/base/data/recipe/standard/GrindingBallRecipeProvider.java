@@ -75,7 +75,7 @@ public class GrindingBallRecipeProvider extends EnderRecipeProvider {
 
         @Override
         public RecipeSerializer<?> getType() {
-            return EIORecipes.Serializer.GRINDINGBALL.get();
+            return EIORecipes.GRINDINGBALL_SERIALIZER.get();
         }
     }
 

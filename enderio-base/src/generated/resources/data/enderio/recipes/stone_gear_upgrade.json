@@ -1,18 +1,18 @@
 {
   "type": "minecraft:crafting_shaped",
+  "key": {
+    "G": {
+      "item": "enderio:wood_gear"
+    },
+    "I": {
+      "tag": "forge:cobblestone"
+    }
+  },
   "pattern": [
     " I ",
     "IGI",
     " I "
   ],
-  "key": {
-    "I": {
-      "tag": "forge:cobblestone"
-    },
-    "G": {
-      "item": "enderio:wood_gear"
-    }
-  },
   "result": {
     "item": "enderio:stone_gear"
   }

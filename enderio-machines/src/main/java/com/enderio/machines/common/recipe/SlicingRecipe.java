@@ -18,11 +18,11 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class SlicingRecipe implements MachineRecipe<Container> {
     private final ResourceLocation id;
@@ -68,15 +68,15 @@ public class SlicingRecipe implements MachineRecipe<Container> {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return MachineRecipes.Serializer.SLICING.get();
+        return MachineRecipes.SLICING_SERIALIZER.get();
     }
 
     @Override
     public RecipeType<?> getType() {
-        return MachineRecipes.Types.SLICING;
+        return MachineRecipes.SLICING.get();
     }
 
-    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<SlicingRecipe> {
+    public static class Serializer implements RecipeSerializer<SlicingRecipe> {
 
         @Override
         public SlicingRecipe fromJson(ResourceLocation recipeId, JsonObject serializedRecipe) {
@@ -122,7 +122,7 @@ public class SlicingRecipe implements MachineRecipe<Container> {
         @Override
         public void toNetwork(FriendlyByteBuf buffer, SlicingRecipe recipe) {
             try {
-                buffer.writeResourceLocation(recipe.output.getRegistryName());
+                buffer.writeResourceLocation(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(recipe.output)));
                 buffer.writeCollection(recipe.inputs, (buf, ing) -> ing.toNetwork(buf));
                 buffer.writeInt(recipe.energy);
             } catch (Exception ex) {

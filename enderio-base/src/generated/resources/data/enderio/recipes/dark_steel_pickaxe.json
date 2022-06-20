@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "III",
-    " S ",
-    " S "
-  ],
   "key": {
     "I": {
       "item": "enderio:dark_steel_ingot"
@@ -13,6 +8,11 @@
       "tag": "forge:rods/wooden"
     }
   },
+  "pattern": [
+    "III",
+    " S ",
+    " S "
+  ],
   "result": {
     "item": "enderio:dark_steel_pickaxe"
   }

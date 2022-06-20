@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "BIB",
-    "IGI",
-    "BIB"
-  ],
   "key": {
     "B": {
       "item": "enderio:end_steel_bars"
@@ -16,6 +11,11 @@
       "item": "enderio:end_steel_ingot"
     }
   },
+  "pattern": [
+    "BIB",
+    "IGI",
+    "BIB"
+  ],
   "result": {
     "item": "enderio:end_steel_machine_chassis"
   }

@@ -15,6 +15,7 @@ import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 import java.util.function.Consumer;
@@ -47,7 +48,7 @@ public class GlassRecipes extends RecipeProvider {
             }
             builder.requires(color.getTag())
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(blocks.CLEAR.get()))
-                .save(recipeConsumer, EnderIO.loc("recolor_" + blocks.COLORS.get(color).get().getRegistryName().getPath()));
+                .save(recipeConsumer, EnderIO.loc("recolor_" + ForgeRegistries.BLOCKS.getKey(blocks.COLORS.get(color).get()).getPath()));
         }
     }
 
@@ -64,7 +65,7 @@ public class GlassRecipes extends RecipeProvider {
             .pattern("GTG")
             .pattern("GGG")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(token))
-            .save(recipeConsumer, EnderIO.loc("collision_token_" + output.getRegistryName().getPath()));
+            .save(recipeConsumer, EnderIO.loc("collision_token_" + ForgeRegistries.BLOCKS.getKey(output).getPath()));
 
     }
     private static void invert(GlassBlocks blocks, Consumer<FinishedRecipe> recipeConsumer) {
@@ -80,7 +81,7 @@ public class GlassRecipes extends RecipeProvider {
             .pattern("GTG")
             .pattern("GGG")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(blocks.CLEAR.get()))
-            .save(recipeConsumer, EnderIO.loc("invert_" + output.getRegistryName().getPath()));
+            .save(recipeConsumer, EnderIO.loc("invert_" + ForgeRegistries.BLOCKS.getKey(output).getPath()));
 
     }
 

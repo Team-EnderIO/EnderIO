@@ -2,9 +2,9 @@ package com.enderio.base.common.item.darksteel.upgrades;
 
 import com.enderio.api.capability.IDarkSteelUpgradable;
 import com.enderio.api.capability.IDarkSteelUpgrade;
-import com.enderio.base.EnderIO;
 import com.enderio.base.common.capability.DarkSteelUpgradeable;
 import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.base.common.init.EIORecipes;
 import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -14,27 +14,10 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.UpgradeRecipe;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import java.util.Optional;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = EnderIO.MODID)
 public class DarkSteelUpgradeRecipe extends UpgradeRecipe {
-
-    // region Register recipe
-
-    public static final RecipeSerializer<DarkSteelUpgradeRecipe> SERIALIZER = new Serializer();
-
-    @SubscribeEvent
-    public static void registerSerializers(RegistryEvent.Register<RecipeSerializer<?>> event) {
-        DarkSteelUpgradeRecipe.SERIALIZER.setRegistryName(new ResourceLocation(EnderIO.MODID, "dark_steel_upgrade"));
-        event.getRegistry().register(SERIALIZER);
-    }
-
-    // endregion
 
     public DarkSteelUpgradeRecipe(ResourceLocation pRecipeId) {
         super(pRecipeId, Ingredient.EMPTY,Ingredient.EMPTY,ItemStack.EMPTY);
@@ -75,10 +58,10 @@ public class DarkSteelUpgradeRecipe extends UpgradeRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return SERIALIZER;
+        return EIORecipes.DARK_STEEL_UPGRADE_SERIALIZER.get();
     }
 
-    static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<DarkSteelUpgradeRecipe> {
+    public static class Serializer implements RecipeSerializer<DarkSteelUpgradeRecipe> {
 
         @Override
         public DarkSteelUpgradeRecipe fromJson(ResourceLocation pRecipeId, JsonObject pSerializedRecipe) {

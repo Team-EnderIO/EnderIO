@@ -30,7 +30,7 @@
     }
   ],
   "result": {
-    "item": "enderio:fused_quartz_ena_yellow",
-    "count": 8
+    "count": 8,
+    "item": "enderio:fused_quartz_ena_yellow"
   }
 }

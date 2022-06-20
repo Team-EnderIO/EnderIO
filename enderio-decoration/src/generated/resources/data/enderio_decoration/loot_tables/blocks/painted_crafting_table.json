@@ -2,7 +2,6 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "rolls": 1.0,
       "bonus_rolls": 0.0,
       "entries": [
         {
@@ -10,19 +9,20 @@
           "functions": [
             {
               "function": "minecraft:copy_nbt",
-              "source": "block_entity",
               "ops": [
                 {
+                  "op": "replace",
                   "source": "paint",
-                  "target": "BlockEntityTag.paint",
-                  "op": "replace"
+                  "target": "BlockEntityTag.paint"
                 }
-              ]
+              ],
+              "source": "block_entity"
             }
           ],
           "name": "enderio_decoration:painted_crafting_table"
         }
-      ]
+      ],
+      "rolls": 1.0
     }
   ]
 }

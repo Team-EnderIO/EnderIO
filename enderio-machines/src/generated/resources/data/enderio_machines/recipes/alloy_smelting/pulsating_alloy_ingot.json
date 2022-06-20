@@ -1,22 +1,22 @@
 {
   "type": "enderio_machines:alloy_smelting",
+  "energy": 10000,
+  "experience": 0.3,
   "inputs": [
     {
+      "count": 1,
       "ingredient": {
         "tag": "forge:ingots/copper"
-      },
-      "count": 1
+      }
     },
     {
+      "count": 1,
       "ingredient": {
         "tag": "forge:ender_pearls"
-      },
-      "count": 1
+      }
     }
   ],
   "result": {
     "item": "enderio:pulsating_alloy_ingot"
-  },
-  "energy": 10000,
-  "experience": 0.3
+  }
 }

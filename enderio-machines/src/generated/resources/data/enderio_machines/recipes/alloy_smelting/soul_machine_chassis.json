@@ -1,22 +1,22 @@
 {
   "type": "enderio_machines:alloy_smelting",
+  "energy": 3600,
+  "experience": 0.3,
   "inputs": [
     {
+      "count": 1,
       "ingredient": {
         "item": "enderio:simple_machine_chassis"
-      },
-      "count": 1
+      }
     },
     {
+      "count": 1,
       "ingredient": {
         "item": "enderio:soul_attuned_dye_blend"
-      },
-      "count": 1
+      }
     }
   ],
   "result": {
     "item": "enderio:soul_machine_chassis"
-  },
-  "energy": 3600,
-  "experience": 0.3
+  }
 }

@@ -1,24 +1,24 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "LQG",
-    "QBQ",
-    "GQL"
-  ],
   "key": {
-    "L": {
-      "tag": "forge:dusts/lapis"
-    },
-    "Q": {
-      "tag": "forge:dusts/quartz"
-    },
     "B": {
       "item": "enderio:organic_black_dye"
     },
     "G": {
       "item": "enderio:organic_green_dye"
+    },
+    "L": {
+      "tag": "forge:dusts/lapis"
+    },
+    "Q": {
+      "tag": "forge:dusts/quartz"
     }
   },
+  "pattern": [
+    "LQG",
+    "QBQ",
+    "GQL"
+  ],
   "result": {
     "item": "enderio:industrial_dye_blend"
   }

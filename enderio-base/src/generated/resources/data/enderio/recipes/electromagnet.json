@@ -1,21 +1,21 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "CVC",
-    "C C",
-    "E E"
-  ],
   "key": {
-    "V": {
-      "item": "enderio:vibrant_crystal"
-    },
     "C": {
       "item": "enderio:conductive_alloy_ingot"
     },
     "E": {
       "item": "enderio:copper_alloy_ingot"
+    },
+    "V": {
+      "item": "enderio:vibrant_crystal"
     }
   },
+  "pattern": [
+    "CVC",
+    "C C",
+    "E E"
+  ],
   "result": {
     "item": "enderio:electromagnet"
   }

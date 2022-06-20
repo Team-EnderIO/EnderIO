@@ -1,17 +1,17 @@
 {
   "type": "minecraft:crafting_shaped",
+  "key": {
+    "P": {
+      "item": "minecraft:acacia_pressure_plate"
+    },
+    "W": {
+      "tag": "minecraft:wool"
+    }
+  },
   "pattern": [
     "W",
     "P"
   ],
-  "key": {
-    "W": {
-      "tag": "minecraft:wool"
-    },
-    "P": {
-      "item": "minecraft:acacia_pressure_plate"
-    }
-  },
   "result": {
     "item": "enderio:silent_acacia_pressure_plate"
   }

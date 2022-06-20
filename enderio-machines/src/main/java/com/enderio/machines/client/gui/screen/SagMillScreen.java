@@ -19,7 +19,6 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -65,7 +64,7 @@ public class SagMillScreen extends EIOScreen<SagMillMenu> {
         private static final int HEIGHT = 16;
 
         public GrindingBallWidget(int x, int y) {
-            super(x, y, WIDTH, HEIGHT, TextComponent.EMPTY);
+            super(x, y, WIDTH, HEIGHT, Component.empty());
         }
 
         // Stop the click noise

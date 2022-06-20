@@ -1,21 +1,21 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    " I ",
-    "CGC",
-    " I "
-  ],
   "key": {
-    "I": {
-      "item": "enderio:vibrant_alloy_ingot"
-    },
     "C": {
       "item": "enderio:double_layer_capacitor"
     },
     "G": {
       "item": "minecraft:glowstone"
+    },
+    "I": {
+      "item": "enderio:vibrant_alloy_ingot"
     }
   },
+  "pattern": [
+    " I ",
+    "CGC",
+    " I "
+  ],
   "result": {
     "item": "enderio:octadic_capacitor"
   }

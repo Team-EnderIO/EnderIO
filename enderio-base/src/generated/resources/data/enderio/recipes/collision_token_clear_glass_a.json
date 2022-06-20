@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "GGG",
-    "GTG",
-    "GGG"
-  ],
   "key": {
     "G": {
       "item": "enderio:clear_glass"
@@ -13,8 +8,13 @@
       "item": "enderio:animal_token"
     }
   },
+  "pattern": [
+    "GGG",
+    "GTG",
+    "GGG"
+  ],
   "result": {
-    "item": "enderio:clear_glass_a",
-    "count": 8
+    "count": 8,
+    "item": "enderio:clear_glass_a"
   }
 }

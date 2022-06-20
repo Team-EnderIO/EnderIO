@@ -6,6 +6,24 @@
     "power=1": {
       "model": "minecraft:block/light_weighted_pressure_plate_down"
     },
+    "power=10": {
+      "model": "minecraft:block/light_weighted_pressure_plate_down"
+    },
+    "power=11": {
+      "model": "minecraft:block/light_weighted_pressure_plate_down"
+    },
+    "power=12": {
+      "model": "minecraft:block/light_weighted_pressure_plate_down"
+    },
+    "power=13": {
+      "model": "minecraft:block/light_weighted_pressure_plate_down"
+    },
+    "power=14": {
+      "model": "minecraft:block/light_weighted_pressure_plate_down"
+    },
+    "power=15": {
+      "model": "minecraft:block/light_weighted_pressure_plate_down"
+    },
     "power=2": {
       "model": "minecraft:block/light_weighted_pressure_plate_down"
     },
@@ -28,24 +46,6 @@
       "model": "minecraft:block/light_weighted_pressure_plate_down"
     },
     "power=9": {
-      "model": "minecraft:block/light_weighted_pressure_plate_down"
-    },
-    "power=10": {
-      "model": "minecraft:block/light_weighted_pressure_plate_down"
-    },
-    "power=11": {
-      "model": "minecraft:block/light_weighted_pressure_plate_down"
-    },
-    "power=12": {
-      "model": "minecraft:block/light_weighted_pressure_plate_down"
-    },
-    "power=13": {
-      "model": "minecraft:block/light_weighted_pressure_plate_down"
-    },
-    "power=14": {
-      "model": "minecraft:block/light_weighted_pressure_plate_down"
-    },
-    "power=15": {
       "model": "minecraft:block/light_weighted_pressure_plate_down"
     }
   }

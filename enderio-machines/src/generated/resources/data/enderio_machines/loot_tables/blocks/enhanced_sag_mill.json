@@ -2,15 +2,14 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "rolls": 1.0,
       "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
           "conditions": [
             {
-              "condition": "minecraft:block_state_property",
               "block": "enderio_machines:enhanced_sag_mill",
+              "condition": "minecraft:block_state_property",
               "properties": {
                 "half": "lower"
               }
@@ -19,19 +18,20 @@
           "functions": [
             {
               "function": "minecraft:copy_nbt",
-              "source": "block_entity",
               "ops": [
                 {
+                  "op": "replace",
                   "source": "",
-                  "target": "BlockEntityTag",
-                  "op": "replace"
+                  "target": "BlockEntityTag"
                 }
-              ]
+              ],
+              "source": "block_entity"
             }
           ],
           "name": "enderio_machines:enhanced_sag_mill"
         }
-      ]
+      ],
+      "rolls": 1.0
     }
   ]
 }

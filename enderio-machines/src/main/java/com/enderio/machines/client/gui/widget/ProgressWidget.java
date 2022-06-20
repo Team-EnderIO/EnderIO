@@ -26,7 +26,7 @@ public class ProgressWidget extends AbstractWidget {
     private final Direction direction;
 
     public ProgressWidget(Screen screen, Supplier<Float> getter, int x, int y, int width, int height, int u, int v, Direction direction) {
-        super(x, y, width, height, TextComponent.EMPTY);
+        super(x, y, width, height, Component.empty());
         this.screen = screen;
         this.getter = getter;
         this.u = u;

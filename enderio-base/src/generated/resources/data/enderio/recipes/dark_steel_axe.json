@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "II",
-    "IS",
-    " S"
-  ],
   "key": {
     "I": {
       "item": "enderio:dark_steel_ingot"
@@ -13,6 +8,11 @@
       "tag": "forge:rods/wooden"
     }
   },
+  "pattern": [
+    "II",
+    "IS",
+    " S"
+  ],
   "result": {
     "item": "enderio:dark_steel_axe"
   }

@@ -48,10 +48,10 @@ public class EIOMachines {
     public void gatherData(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
         if (event.includeServer()) {
-            generator.addProvider(new AlloyRecipeProvider(generator));
-            generator.addProvider(new EnchanterRecipeProvider(generator));
-            generator.addProvider(new SagMillRecipeProvider(generator));
-            generator.addProvider(new SlicingRecipeProvider(generator));
+            generator.addProvider(event.includeServer(), new AlloyRecipeProvider(generator));
+            generator.addProvider(event.includeServer(), new EnchanterRecipeProvider(generator));
+            generator.addProvider(event.includeServer(), new SagMillRecipeProvider(generator));
+            generator.addProvider(event.includeServer(), new SlicingRecipeProvider(generator));
         }
     }
 

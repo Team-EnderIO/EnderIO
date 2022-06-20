@@ -17,7 +17,6 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import java.util.Objects;
 
@@ -63,7 +62,7 @@ public class GrindingBallRecipe implements IGrindingBallData, EnderRecipe<Contai
     }
 
     @Override
-    public DataGenSerializer<GrindingballRecipe, Container> getSerializer() {
+    public RecipeSerializer<GrindingBallRecipe> getSerializer() {
         return EIORecipes.GRINDINGBALL_SERIALIZER.get();
     }
 
@@ -99,7 +98,7 @@ public class GrindingBallRecipe implements IGrindingBallData, EnderRecipe<Contai
         return durability;
     }
 
-    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<GrindingBallRecipe> {
+    public static class Serializer implements RecipeSerializer<GrindingBallRecipe> {
 
         @Override
         public GrindingBallRecipe fromJson(ResourceLocation recipeId, JsonObject serializedRecipe) {

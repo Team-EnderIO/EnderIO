@@ -13,7 +13,6 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -100,15 +99,15 @@ public class AlloySmeltingRecipe implements IAlloySmeltingRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return MachineRecipes.Serializer.ALLOY_SMELTING.get();
+        return MachineRecipes.ALLOY_SMELTING_SERIALIZER.get();
     }
 
     @Override
     public RecipeType<?> getType() {
-        return MachineRecipes.Types.ALLOY_SMELTING;
+        return MachineRecipes.ALLOY_SMELTING.get();
     }
 
-    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<AlloySmeltingRecipe> {
+    public static class Serializer implements RecipeSerializer<AlloySmeltingRecipe> {
 
         @Override
         public AlloySmeltingRecipe fromJson(ResourceLocation recipeId, JsonObject serializedRecipe) {

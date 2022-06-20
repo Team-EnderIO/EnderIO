@@ -1,8 +1,8 @@
 {
   "type": "enderio:grindingball",
-  "item": "enderio:conductive_alloy_grinding_ball",
-  "grinding": 1.35,
   "chance": 1.0,
-  "power": 1.0,
-  "durability": 40000
+  "durability": 40000,
+  "grinding": 1.35,
+  "item": "enderio:conductive_alloy_grinding_ball",
+  "power": 1.0
 }

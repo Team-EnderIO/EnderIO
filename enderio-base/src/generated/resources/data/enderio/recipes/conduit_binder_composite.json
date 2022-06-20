@@ -1,21 +1,21 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "GCG",
-    "SGS",
-    "GCG"
-  ],
   "key": {
+    "C": {
+      "item": "minecraft:clay_ball"
+    },
     "G": {
       "tag": "forge:gravel"
     },
     "S": {
       "tag": "forge:sand"
-    },
-    "C": {
-      "item": "minecraft:clay_ball"
     }
   },
+  "pattern": [
+    "GCG",
+    "SGS",
+    "GCG"
+  ],
   "result": {
     "item": "enderio:conduit_binder_composite"
   }

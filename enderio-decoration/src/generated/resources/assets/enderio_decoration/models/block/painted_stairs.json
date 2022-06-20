@@ -1,6 +1,4 @@
 {
-  "loader": "enderio:painted_model",
-  "reference": "minecraft:oak_stairs",
   "display": {
     "gui": {
       "rotation": [
@@ -27,16 +25,18 @@
         -135,
         0
       ],
-      "translation": [
-        0,
-        2.5,
-        0
-      ],
       "scale": [
         0.375,
         0.375,
         0.375
+      ],
+      "translation": [
+        0,
+        2.5,
+        0
       ]
     }
-  }
+  },
+  "loader": "enderio:painted_model",
+  "reference": "minecraft:oak_stairs"
 }

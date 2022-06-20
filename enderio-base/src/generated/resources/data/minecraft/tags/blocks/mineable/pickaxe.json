@@ -1,5 +1,4 @@
 {
-  "replace": false,
   "values": [
     "enderio:copper_alloy_block",
     "enderio:energetic_alloy_block",
@@ -19,12 +18,8 @@
     "enderio:soulless_machine_chassis",
     "enderio:dark_steel_ladder",
     "enderio:dark_steel_bars",
-    "enderio:dark_steel_door",
-    "enderio:dark_steel_trapdoor",
     "enderio:end_steel_bars",
     "enderio:reinforced_obsidian_block",
-    "enderio:infinity_crystal_block",
-    "enderio:infinity_crystal_cluster",
     "enderio:dark_steel_pressure_plate",
     "enderio:silent_dark_steel_pressure_plate",
     "enderio:soularium_pressure_plate",

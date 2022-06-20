@@ -1,9 +1,9 @@
 package com.enderio.base.common.init;
 
 import com.enderio.base.EnderIO;
-import com.enderio.base.common.recipe.DarkSteelUpgradeRecipe;
+import com.enderio.base.common.item.darksteel.upgrades.DarkSteelUpgradeRecipe;
 import com.enderio.base.common.recipe.FireCraftingRecipe;
-import com.enderio.base.common.recipe.GrindingballRecipe;
+import com.enderio.base.common.recipe.GrindingBallRecipe;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -23,9 +23,9 @@ public class EIORecipes {
     private static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(ForgeRegistries.RECIPE_TYPES,
         EnderIO.MODID);
 
-    public static final RegistryObject<RecipeType<GrindingballRecipe>> GRINDINGBALL = registerType("grindingball");
-    public static final RegistryObject<GrindingballRecipe.Serializer> GRINDINGBALL_SERIALIZER = RECIPE_SERIALIZERS.register("grindingball",
-        GrindingballRecipe.Serializer::new);
+    public static final RegistryObject<RecipeType<GrindingBallRecipe>> GRINDINGBALL = registerType("grindingball");
+    public static final RegistryObject<GrindingBallRecipe.Serializer> GRINDINGBALL_SERIALIZER = RECIPE_SERIALIZERS.register("grindingball",
+        GrindingBallRecipe.Serializer::new);
 
     public static final RegistryObject<RecipeType<FireCraftingRecipe>> FIRE_CRAFTING = registerType("fire_crafting");
     public static final RegistryObject<FireCraftingRecipe.Serializer> FIRE_CRAFTING_SERIALIZER = RECIPE_SERIALIZERS.register("fire_crafting",

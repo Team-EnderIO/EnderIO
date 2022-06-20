@@ -1,18 +1,18 @@
 {
   "type": "minecraft:crafting_shaped",
+  "key": {
+    "D": {
+      "tag": "forge:gems/diamond"
+    },
+    "P": {
+      "item": "enderio:pulsating_alloy_nugget"
+    }
+  },
   "pattern": [
     "PPP",
     "PDP",
     "PPP"
   ],
-  "key": {
-    "P": {
-      "item": "enderio:pulsating_alloy_nugget"
-    },
-    "D": {
-      "tag": "forge:gems/diamond"
-    }
-  },
   "result": {
     "item": "enderio:pulsating_crystal"
   }

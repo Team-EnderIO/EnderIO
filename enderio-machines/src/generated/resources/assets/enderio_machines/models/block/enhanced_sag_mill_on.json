@@ -1,5 +1,4 @@
 {
-  "loader": "enderio:composite_model",
   "components": [
     {
       "model": "enderio_machines:block/enhanced_machine_frame",
@@ -11,5 +10,6 @@
     {
       "model": "enderio_machines:block/enhanced_sag_mill_front_on"
     }
-  ]
+  ],
+  "loader": "enderio:composite_model"
 }

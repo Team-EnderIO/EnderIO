@@ -1,5 +1,4 @@
 {
-  "loader": "enderio:composite_model",
   "components": [
     {
       "model": "enderio_machines:block/enhanced_alloy_smelter_front_on"
@@ -11,5 +10,6 @@
     {
       "model": "enderio_machines:block/io_overlay"
     }
-  ]
+  ],
+  "loader": "enderio:composite_model"
 }

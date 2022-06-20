@@ -20,7 +20,6 @@ import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -178,15 +177,15 @@ public class EnchanterRecipe implements EnderRecipe<Container> {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return MachineRecipes.Serializer.ENCHANTING.get();
+        return MachineRecipes.ENCHANTING_SERIALIZER.get();
     }
 
     @Override
     public RecipeType<?> getType() {
-        return MachineRecipes.Types.ENCHANTING;
+        return MachineRecipes.ENCHANTING.get();
     }
 
-    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<EnchanterRecipe> {
+    public static class Serializer implements RecipeSerializer<EnchanterRecipe> {
 
         @Override
         public EnchanterRecipe fromJson(ResourceLocation recipeId, JsonObject serializedRecipe) {
@@ -222,7 +221,7 @@ public class EnchanterRecipe implements EnderRecipe<Container> {
         public void toNetwork(FriendlyByteBuf buffer, EnchanterRecipe recipe) {
             try {
                 recipe.getInput().toNetwork(buffer);
-                buffer.writeResourceLocation(Objects.requireNonNull(recipe.getEnchantment().getRegistryName()));
+                buffer.writeResourceLocation(Objects.requireNonNull(ForgeRegistries.ENCHANTMENTS.getKey(recipe.getEnchantment())));
                 buffer.writeInt(recipe.getAmountPerLevel());
                 buffer.writeInt(recipe.getCostMultiplier());
             } catch (Exception ex) {

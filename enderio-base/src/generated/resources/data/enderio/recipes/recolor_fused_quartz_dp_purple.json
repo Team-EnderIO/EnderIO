@@ -30,7 +30,7 @@
     }
   ],
   "result": {
-    "item": "enderio:fused_quartz_dp_purple",
-    "count": 8
+    "count": 8,
+    "item": "enderio:fused_quartz_dp_purple"
   }
 }

@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:block/cross",
-  "textures": {
-    "cross": "enderio:block/small_infinity_bud"
-  }
-}

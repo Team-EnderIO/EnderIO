@@ -55,7 +55,7 @@ public class SlicingRecipeProvider extends EnderRecipeProvider {
     }
 
     protected void build(Item output, List<Ingredient> inputs, int energy, Consumer<FinishedRecipe> finishedRecipeConsumer) {
-        finishedRecipeConsumer.accept(new FinishedSlicingRecipe(EIOMachines.loc("slicing/" + output.getRegistryName().getPath()), output, inputs, energy));
+        finishedRecipeConsumer.accept(new FinishedSlicingRecipe(EIOMachines.loc("slicing/" + ForgeRegistries.ITEMS.getKey(output).getPath()), output, inputs, energy));
     }
 
     protected static class FinishedSlicingRecipe extends EnderFinishedRecipe {
@@ -73,7 +73,7 @@ public class SlicingRecipeProvider extends EnderRecipeProvider {
 
         @Override
         public void serializeRecipeData(JsonObject json) {
-            json.addProperty("output", output.getRegistryName().toString());
+            json.addProperty("output", ForgeRegistries.ITEMS.getKey(output).toString());
 
             JsonArray inputsArray = new JsonArray();
             for (Ingredient input : inputs) {
@@ -96,7 +96,7 @@ public class SlicingRecipeProvider extends EnderRecipeProvider {
 
         @Override
         public RecipeSerializer<?> getType() {
-            return MachineRecipes.Serializer.SLICING.get();
+            return MachineRecipes.SLICING_SERIALIZER.get();
         }
     }
 }

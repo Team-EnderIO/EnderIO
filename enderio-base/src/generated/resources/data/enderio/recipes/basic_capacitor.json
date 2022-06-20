@@ -1,21 +1,21 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    " NG",
-    "NIN",
-    "GN "
-  ],
   "key": {
-    "N": {
-      "tag": "forge:nuggets/gold"
-    },
     "G": {
       "item": "enderio:grains_of_infinity"
     },
     "I": {
       "tag": "forge:ingots/copper"
+    },
+    "N": {
+      "tag": "forge:nuggets/gold"
     }
   },
+  "pattern": [
+    " NG",
+    "NIN",
+    "GN "
+  ],
   "result": {
     "item": "enderio:basic_capacitor"
   }

@@ -1,9 +1,9 @@
 {
   "type": "enderio_machines:enchanting",
+  "amount": 1,
+  "cost_multiplier": 1,
   "enchantment": "minecraft:fortune",
   "input": {
     "tag": "forge:gems/emerald"
-  },
-  "amount": 1,
-  "cost_multiplier": 1
+  }
 }

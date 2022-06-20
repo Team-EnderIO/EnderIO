@@ -41,7 +41,7 @@ public class GrindingBallManager {
 
         // Discover all capacitors again.
         event.getRecipeManager()
-            .getAllRecipesFor(EIORecipes.Types.GRINDINGBALL)
+            .getAllRecipesFor(EIORecipes.GRINDINGBALL.get())
             .forEach(grindingBallRecipe -> {
                     itemToData.put(grindingBallRecipe.getItem(), grindingBallRecipe);
                     idToData.put(grindingBallRecipe.getId(), grindingBallRecipe);

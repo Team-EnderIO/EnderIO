@@ -153,11 +153,11 @@ public class AlloyRecipeProvider extends EnderRecipeProvider {
     }
 
     protected void build(ItemStack output, List<CountedIngredient> inputs, int energy, float experience, Consumer<FinishedRecipe> recipeConsumer) {
-        build(EIOMachines.loc("alloy_smelting/" + output.getItem().getRegistryName().getPath()), inputs, output, energy, experience, recipeConsumer);
+        build(EIOMachines.loc("alloy_smelting/" + ForgeRegistries.ITEMS.getKey(output.getItem()).getPath()), inputs, output, energy, experience, recipeConsumer);
     }
 
     protected void build(ItemStack output, String suffix, List<CountedIngredient> inputs, int energy, float experience, Consumer<FinishedRecipe> recipeConsumer) {
-        build(EIOMachines.loc("alloy_smelting/" + output.getItem().getRegistryName().getPath() + "_" + suffix), inputs, output, energy, experience, recipeConsumer);
+        build(EIOMachines.loc("alloy_smelting/" + ForgeRegistries.ITEMS.getKey(output.getItem()).getPath() + "_" + suffix), inputs, output, energy, experience, recipeConsumer);
     }
 
     protected void build(ResourceLocation id, List<CountedIngredient> inputs, ItemStack output, int energy, float experience, Consumer<FinishedRecipe> recipeConsumer) {
@@ -202,14 +202,14 @@ public class AlloyRecipeProvider extends EnderRecipeProvider {
         @Override
         protected Set<String> getModDependencies() {
             Set<String> mods = new HashSet<>();
-            inputs.forEach(input -> Arrays.stream(input.getItems()).forEach(item -> mods.add(item.getItem().getRegistryName().getNamespace())));
-            mods.add(output.getItem().getRegistryName().getNamespace());
+            inputs.forEach(input -> Arrays.stream(input.getItems()).forEach(item -> mods.add(ForgeRegistries.ITEMS.getKey(item.getItem()).getNamespace())));
+            mods.add(ForgeRegistries.ITEMS.getKey(output.getItem()).getNamespace());
             return mods;
         }
 
         @Override
         public RecipeSerializer<?> getType() {
-            return MachineRecipes.Serializer.ALLOY_SMELTING.get();
+            return MachineRecipes.ALLOY_SMELTING_SERIALIZER.get();
         }
     }
 }

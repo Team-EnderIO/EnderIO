@@ -18,6 +18,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -89,7 +90,7 @@ public class EnchanterRecipeProvider extends EnderRecipeProvider {
     }
 
     protected void build(Enchantment enchantment, Ingredient input, int amountPerLevel, int levelModifier, Consumer<FinishedRecipe> recipeConsumer) {
-        recipeConsumer.accept(new FinishedEnchantingRecipe(EIOMachines.loc("enchanting/" + enchantment.getRegistryName().getPath()), enchantment, input, amountPerLevel, levelModifier));
+        recipeConsumer.accept(new FinishedEnchantingRecipe(EIOMachines.loc("enchanting/" + ForgeRegistries.ENCHANTMENTS.getKey(enchantment).getPath()), enchantment, input, amountPerLevel, levelModifier));
     }
 
     protected static class FinishedEnchantingRecipe extends EnderFinishedRecipe {
@@ -110,14 +111,14 @@ public class EnchanterRecipeProvider extends EnderRecipeProvider {
         @Override
         protected Set<String> getModDependencies() {
             Set<String> mods = new HashSet<>();
-            Arrays.stream(input.getItems()).forEach(item -> mods.add(item.getItem().getRegistryName().getNamespace()));
-            mods.add(enchantment.getRegistryName().getNamespace());
+            Arrays.stream(input.getItems()).forEach(item -> mods.add(ForgeRegistries.ITEMS.getKey(item.getItem()).getNamespace()));
+            mods.add(ForgeRegistries.ENCHANTMENTS.getKey(enchantment).getNamespace());
             return mods;
         }
 
         @Override
         public void serializeRecipeData(JsonObject json) {
-            json.addProperty("enchantment", enchantment.getRegistryName().toString());
+            json.addProperty("enchantment", ForgeRegistries.ENCHANTMENTS.getKey(enchantment).toString());
             json.add("input", input.toJson());
             json.addProperty("amount", amountPerLevel);
             json.addProperty("cost_multiplier", costMultiplier);
@@ -126,7 +127,7 @@ public class EnchanterRecipeProvider extends EnderRecipeProvider {
 
         @Override
         public RecipeSerializer<?> getType() {
-            return MachineRecipes.Serializer.ENCHANTING.get();
+            return MachineRecipes.ENCHANTING_SERIALIZER.get();
         }
 
     }

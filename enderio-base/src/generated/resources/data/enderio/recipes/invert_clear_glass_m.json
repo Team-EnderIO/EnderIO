@@ -1,10 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "GGG",
-    "GTG",
-    "GGG"
-  ],
   "key": {
     "G": {
       "item": "enderio:clear_glass_m"
@@ -13,8 +8,13 @@
       "item": "minecraft:redstone_torch"
     }
   },
+  "pattern": [
+    "GGG",
+    "GTG",
+    "GGG"
+  ],
   "result": {
-    "item": "enderio:clear_glass_m",
-    "count": 8
+    "count": 8,
+    "item": "enderio:clear_glass_m"
   }
 }

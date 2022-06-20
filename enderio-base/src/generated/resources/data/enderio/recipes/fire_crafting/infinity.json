@@ -1,6 +1,5 @@
 {
   "type": "enderio:fire_crafting",
-  "lootTable": "enderio:fire_crafting/infinity",
   "base_blocks": [
     {
       "block": "minecraft:bedrock"
@@ -8,5 +7,6 @@
   ],
   "dimensions": [
     "minecraft:overworld"
-  ]
+  ],
+  "lootTable": "enderio:fire_crafting/infinity"
 }

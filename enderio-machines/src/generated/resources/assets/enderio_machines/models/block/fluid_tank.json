@@ -1,5 +1,4 @@
 {
-  "loader": "enderio:composite_model",
   "components": [
     {
       "model": "enderio_machines:block/io_overlay"
@@ -8,5 +7,6 @@
       "model": "enderio_machines:block/fluid_tank_body",
       "particle_provider": true
     }
-  ]
+  ],
+  "loader": "enderio:composite_model"
 }

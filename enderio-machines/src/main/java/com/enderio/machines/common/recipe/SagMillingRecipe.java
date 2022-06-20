@@ -21,7 +21,6 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -128,12 +127,12 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return MachineRecipes.Serializer.SAGMILLING.get();
+        return MachineRecipes.SAGMILLING_SERIALIZER.get();
     }
 
     @Override
     public RecipeType<?> getType() {
-        return MachineRecipes.Types.SAGMILLING;
+        return MachineRecipes.SAGMILLING.get();
     }
 
     public enum BonusType {
@@ -235,7 +234,7 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
         }
     }
 
-    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<SagMillingRecipe> {
+    public static class Serializer implements RecipeSerializer<SagMillingRecipe> {
 
         @Override
         public SagMillingRecipe fromJson(ResourceLocation recipeId, JsonObject serializedRecipe) {
@@ -358,7 +357,7 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
                     if (item.isTag()) {
                         buffer.writeResourceLocation(item.tag.location());
                     } else {
-                        buffer.writeResourceLocation(item.item.getRegistryName());
+                        buffer.writeResourceLocation(ForgeRegistries.ITEMS.getKey(item.item));
                     }
 
                     buffer.writeInt(item.count);

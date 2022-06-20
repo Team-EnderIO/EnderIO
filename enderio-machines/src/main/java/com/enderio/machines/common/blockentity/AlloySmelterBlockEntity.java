@@ -127,7 +127,7 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachine<IAl
 
     public AlloySmelterBlockEntity(AlloySmelterMode mode, CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey energyUseKey,
         BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-        super(MachineRecipes.Types.ALLOY_SMELTING, capacityKey, transferKey, energyUseKey, pType, pWorldPosition, pBlockState);
+        super(MachineRecipes.ALLOY_SMELTING.get(), capacityKey, transferKey, energyUseKey, pType, pWorldPosition, pBlockState);
         this.mode = mode;
 
         // Create the crafting inventory. Used for context in the vanilla recipe wrapper.
@@ -160,12 +160,7 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachine<IAl
 
     @Override
     public MachineInventoryLayout getInventoryLayout() {
-        return MachineInventoryLayout.builder(getTier() != MachineTier.SIMPLE)
-            .inputSlot(3, this::acceptSlotInput)
-            .outputSlot()
-            .build();
-    protected RecipeType<AlloySmeltingRecipe> getRecipeType() {
-        return MachineRecipes.ALLOY_SMELTING.get();
+        return MachineInventoryLayout.builder(getTier() != MachineTier.SIMPLE).inputSlot(3, this::acceptSlotInput).outputSlot().build();
     }
 
     private boolean acceptSlotInput(int slot, ItemStack stack) {
@@ -265,7 +260,7 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachine<IAl
             @Override
             protected @Nullable IAlloySmeltingRecipe loadRecipe(ResourceLocation id) {
                 return level.getRecipeManager().byKey(id).map(recipe -> {
-                    if (recipe.getType() == MachineRecipes.Types.ALLOY_SMELTING) {
+                    if (recipe.getType() == MachineRecipes.ALLOY_SMELTING.get()) {
                         return (AlloySmeltingRecipe) recipe;
                     } else if (recipe.getType() == RecipeType.SMELTING) {
                         return new VanillaAlloySmeltingRecipe((SmeltingRecipe) recipe);

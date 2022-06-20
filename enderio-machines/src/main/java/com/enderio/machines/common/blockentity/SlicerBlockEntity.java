@@ -29,7 +29,7 @@ public class SlicerBlockEntity extends PoweredCraftingMachine<SlicingRecipe, Con
     private final RecipeWrapper container;
 
     public SlicerBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
-        super(MachineRecipes.Types.SLICING,
+        super(MachineRecipes.SLICING.get(),
             MachineCapacitorKeys.SLICE_AND_SPLICE_ENERGY_CAPACITY.get(),
             MachineCapacitorKeys.SLICE_AND_SPLICE_ENERGY_TRANSFER.get(),
             MachineCapacitorKeys.SLICE_AND_SPLICE_ENERGY_CONSUME.get(),

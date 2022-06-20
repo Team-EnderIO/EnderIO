@@ -1,22 +1,22 @@
 {
-  "loader": "enderio:composite_model",
   "components": [
     {
       "model": "enderio_machines:block/enchanter_book",
-      "translation": [
-        0.0,
-        0.703125,
-        -0.21875
-      ],
       "rotation": [
         -0.39262497,
         0.0,
         0.0
+      ],
+      "translation": [
+        0.0,
+        0.703125,
+        -0.21875
       ]
     },
     {
       "model": "enderio_machines:block/enchanter_plinth",
       "particle_provider": true
     }
-  ]
+  ],
+  "loader": "enderio:composite_model"
 }

@@ -1,18 +1,18 @@
 {
   "type": "minecraft:crafting_shaped",
+  "key": {
+    "I": {
+      "tag": "forge:cobblestone"
+    },
+    "N": {
+      "tag": "forge:rods/wooden"
+    }
+  },
   "pattern": [
     "NIN",
     "I I",
     "NIN"
   ],
-  "key": {
-    "N": {
-      "tag": "forge:rods/wooden"
-    },
-    "I": {
-      "tag": "forge:cobblestone"
-    }
-  },
   "result": {
     "item": "enderio:stone_gear"
   }

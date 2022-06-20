@@ -1,6 +1,6 @@
 {
   "type": "enderio_machines:slicing",
-  "output": "enderio:skeletal_contractor",
+  "energy": 20000,
   "inputs": [
     {
       "item": "enderio:soularium_ingot"
@@ -21,5 +21,5 @@
       "item": "minecraft:rotten_flesh"
     }
   ],
-  "energy": 20000
+  "output": "enderio:skeletal_contractor"
 }

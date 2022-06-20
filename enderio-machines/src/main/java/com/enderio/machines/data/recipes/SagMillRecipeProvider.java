@@ -17,6 +17,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.versions.forge.ForgeVersion;
 
 import java.util.List;
@@ -122,7 +123,7 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
                 if (item.isTag()) {
                     obj.addProperty("tag", item.getTag().location().toString());
                 } else {
-                    obj.addProperty("item", item.getItem().getRegistryName().toString());
+                    obj.addProperty("item", ForgeRegistries.ITEMS.getKey(item.getItem()).toString());
                 }
 
                 if (item.getCount() != 1)
@@ -149,7 +150,7 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
 
         @Override
         public RecipeSerializer<?> getType() {
-            return MachineRecipes.Serializer.SAGMILLING.get();
+            return MachineRecipes.SAGMILLING_SERIALIZER.get();
         }
     }
 }

@@ -1,5 +1,9 @@
 {
   "variants": {
+    "facing=east": {
+      "model": "enderio_machines:block/fluid_tank",
+      "y": 90
+    },
     "facing=north": {
       "model": "enderio_machines:block/fluid_tank"
     },
@@ -10,10 +14,6 @@
     "facing=west": {
       "model": "enderio_machines:block/fluid_tank",
       "y": 270
-    },
-    "facing=east": {
-      "model": "enderio_machines:block/fluid_tank",
-      "y": 90
     }
   }
 }

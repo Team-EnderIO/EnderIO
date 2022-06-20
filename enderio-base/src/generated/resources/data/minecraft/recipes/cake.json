@@ -1,20 +1,20 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "MMM",
-    "SCS"
-  ],
   "key": {
+    "C": {
+      "item": "enderio:cake_base"
+    },
     "M": {
       "item": "minecraft:milk_bucket"
     },
     "S": {
       "item": "minecraft:sugar"
-    },
-    "C": {
-      "item": "enderio:cake_base"
     }
   },
+  "pattern": [
+    "MMM",
+    "SCS"
+  ],
   "result": {
     "item": "minecraft:cake"
   }

@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "III",
-    "III"
-  ],
   "key": {
     "I": {
       "item": "enderio:end_steel_ingot"
     }
   },
+  "pattern": [
+    "III",
+    "III"
+  ],
   "result": {
-    "item": "enderio:end_steel_bars",
-    "count": 12
+    "count": 12,
+    "item": "enderio:end_steel_bars"
   }
 }

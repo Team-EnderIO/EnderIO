@@ -19,11 +19,11 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.registries.tags.ITag;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class FireCraftingRecipe implements EnderRecipe<Container> {
     private final ResourceLocation id;
@@ -87,7 +87,7 @@ public class FireCraftingRecipe implements EnderRecipe<Container> {
     }
 
     @Override
-    public DataGenSerializer<FireCraftingRecipe, Container> getSerializer() {
+    public RecipeSerializer<FireCraftingRecipe> getSerializer() {
         return EIORecipes.FIRE_CRAFTING_SERIALIZER.get();
     }
 
@@ -96,7 +96,7 @@ public class FireCraftingRecipe implements EnderRecipe<Container> {
         return EIORecipes.FIRE_CRAFTING.get();
     }
 
-    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<FireCraftingRecipe> {
+    public static class Serializer implements RecipeSerializer<FireCraftingRecipe> {
 
         @Override
         public FireCraftingRecipe fromJson(ResourceLocation recipeId, JsonObject serializedRecipe) {
@@ -148,7 +148,7 @@ public class FireCraftingRecipe implements EnderRecipe<Container> {
         public void toNetwork(FriendlyByteBuf buffer, FireCraftingRecipe recipe) {
             try {
                 buffer.writeResourceLocation(recipe.lootTable);
-                buffer.writeCollection(recipe.bases, (buf, block) -> buf.writeResourceLocation(block.getRegistryName()));
+                buffer.writeCollection(recipe.bases, (buf, block) -> buf.writeResourceLocation(Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(block))));
                 buffer.writeCollection(recipe.baseTags, (buf, tag) -> buf.writeResourceLocation(tag.location()));
                 buffer.writeCollection(recipe.dimensions, FriendlyByteBuf::writeResourceLocation);
             } catch (Exception ex) {

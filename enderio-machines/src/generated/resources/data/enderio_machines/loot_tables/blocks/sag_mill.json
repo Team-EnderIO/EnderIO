@@ -2,7 +2,6 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "rolls": 1.0,
       "bonus_rolls": 0.0,
       "entries": [
         {
@@ -10,19 +9,20 @@
           "functions": [
             {
               "function": "minecraft:copy_nbt",
-              "source": "block_entity",
               "ops": [
                 {
+                  "op": "replace",
                   "source": "",
-                  "target": "BlockEntityTag",
-                  "op": "replace"
+                  "target": "BlockEntityTag"
                 }
-              ]
+              ],
+              "source": "block_entity"
             }
           ],
           "name": "enderio_machines:sag_mill"
         }
-      ]
+      ],
+      "rolls": 1.0
     }
   ]
 }

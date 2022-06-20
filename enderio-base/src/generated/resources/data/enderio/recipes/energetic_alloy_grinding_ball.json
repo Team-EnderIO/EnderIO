@@ -1,17 +1,17 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    " I ",
-    "III",
-    " I "
-  ],
   "key": {
     "I": {
       "item": "enderio:energetic_alloy_ingot"
     }
   },
+  "pattern": [
+    " I ",
+    "III",
+    " I "
+  ],
   "result": {
-    "item": "enderio:energetic_alloy_grinding_ball",
-    "count": 24
+    "count": 24,
+    "item": "enderio:energetic_alloy_grinding_ball"
   }
 }
