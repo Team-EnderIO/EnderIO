@@ -2,8 +2,8 @@ package com.enderio.machines.common.menu;
 
 import com.enderio.machines.common.blockentity.EnchanterBlockEntity;
 import com.enderio.machines.common.init.MachineMenus;
-import com.enderio.api.recipe.EnchanterRecipe;
 import com.enderio.machines.common.init.MachineRecipes;
+import com.enderio.machines.common.recipe.EnchanterRecipe;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -34,7 +34,7 @@ public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
                     if (recipe.isPresent() && (pPlayer.experienceLevel > recipe.get().getLevelCost(blockEntity.getRecipeWrapper()) || pPlayer.isCreative())) {
                         int amount = recipe.get().getAmount(blockEntity.getRecipeWrapper());
                         int lapizForLevel = recipe.get().getLapisForLevel(recipe.get().getEnchantmentLevel(blockEntity.getInventory().getStackInSlot(1).getCount()));
-                        pPlayer.giveExperienceLevels(-recipe.get().getLevelCost(blockEntity.getRecipeWrapper()));
+                        pPlayer.giveExperienceLevels(-recipe.get().getXPCost(blockEntity.getContainer()));
                         blockEntity.getInventory().getStackInSlot(0).shrink(1);
                         blockEntity.getInventory().getStackInSlot(1).shrink(amount);
                         blockEntity.getInventory().getStackInSlot(2).shrink(lapizForLevel);
@@ -67,7 +67,7 @@ public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
         if (level != null) {
             Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.ENCHANTING.get(), getBlockEntity().getRecipeWrapper(), level);
             if (recipe.isPresent()) {
-                return recipe.get().getLevelCost(new RecipeWrapper(this.getBlockEntity().getInventory()));
+                return recipe.get().getXPCost(new RecipeWrapper(this.getBlockEntity().getInventory()));
             }
         }
         return -1;

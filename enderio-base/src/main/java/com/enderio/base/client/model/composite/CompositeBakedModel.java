@@ -1,15 +1,10 @@
 package com.enderio.base.client.model.composite;
 
 import com.enderio.base.client.model.ItemTransformUtil;
-import com.enderio.base.datagen.model.EIOModel;
-import com.mojang.math.Vector3f;
-import net.minecraft.client.Minecraft;
+import com.enderio.base.data.model.EIOModel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
-import net.minecraft.client.renderer.block.model.ItemTransform;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;

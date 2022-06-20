@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,powered=false": {
+      "model": "enderio_machines:block/slice_and_splice"
+    },
+    "facing=south,powered=false": {
+      "model": "enderio_machines:block/slice_and_splice",
+      "y": 180
+    },
+    "facing=west,powered=false": {
+      "model": "enderio_machines:block/slice_and_splice",
+      "y": 270
+    },
+    "facing=east,powered=false": {
+      "model": "enderio_machines:block/slice_and_splice",
+      "y": 90
+    },
+    "facing=north,powered=true": {
+      "model": "enderio_machines:block/slice_and_splice_on"
+    },
+    "facing=south,powered=true": {
+      "model": "enderio_machines:block/slice_and_splice_on",
+      "y": 180
+    },
+    "facing=west,powered=true": {
+      "model": "enderio_machines:block/slice_and_splice_on",
+      "y": 270
+    },
+    "facing=east,powered=true": {
+      "model": "enderio_machines:block/slice_and_splice_on",
+      "y": 90
+    }
+  }
+}

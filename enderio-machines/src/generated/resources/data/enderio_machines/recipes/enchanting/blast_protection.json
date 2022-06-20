@@ -4,6 +4,6 @@
   "input": {
     "item": "minecraft:gunpowder"
   },
-  "amount_per_level": 16,
-  "level": 1
+  "amount": 16,
+  "cost_multiplier": 1
 }

@@ -4,6 +4,6 @@
   "input": {
     "item": "minecraft:skeleton_skull"
   },
-  "amount_per_level": 1,
-  "level": 1
+  "amount": 1,
+  "cost_multiplier": 1
 }

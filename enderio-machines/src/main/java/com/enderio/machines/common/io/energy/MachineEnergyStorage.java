@@ -22,31 +22,34 @@ import java.util.function.Supplier;
  * Uses capacitor keys to determine maximum capacity and transfer rate.
  * Also provides sided access through capabilities.
  */
-public class MachineEnergyStorage implements IEnergyStorage, IEnderCapabilityProvider<IEnergyStorage>, INBTSerializable<CompoundTag> {
+public class MachineEnergyStorage implements IMachineEnergyStorage, IEnderCapabilityProvider<IEnergyStorage>, INBTSerializable<CompoundTag> {
     private final IIOConfig config;
     private final EnergyIOMode ioMode;
     private final Supplier<ICapacitorData> capacitorData;
 
     private int energyStored;
 
-    private final CapacitorKey capacityKey, transferKey;
+    private final CapacitorKey capacityKey, transferKey, useKey;
 
     private final EnumMap<Direction, LazyOptional<Sided>> sideCache = new EnumMap<>(Direction.class);
     private LazyOptional<MachineEnergyStorage> selfCache = LazyOptional.empty();
 
     public MachineEnergyStorage(IIOConfig config, EnergyIOMode ioMode, Supplier<ICapacitorData> capacitorData, CapacitorKey capacityKey,
-        CapacitorKey transferKey) {
+        CapacitorKey transferKey, CapacitorKey useKey) {
         this.config = config;
         this.ioMode = ioMode;
         this.capacitorData = capacitorData;
         this.capacityKey = capacityKey;
         this.transferKey = transferKey;
+        this.useKey = useKey;
     }
 
+    @Override
     public final IIOConfig getConfig() {
         return config;
     }
 
+    @Override
     public final EnergyIOMode getIOMode() {
         return ioMode;
     }
@@ -68,11 +71,7 @@ public class MachineEnergyStorage implements IEnergyStorage, IEnderCapabilityPro
         energyStored = Math.min(energy, getMaxEnergyStored());
     }
 
-    /**
-     * Add energy to the storage.
-     *
-     * @return The amount of energy added to the storage.
-     */
+    @Override
     public int addEnergy(int energy) {
         int energyBefore = energyStored;
         energyStored = Math.min(energyStored + energy, getMaxEnergyStored());
@@ -80,12 +79,8 @@ public class MachineEnergyStorage implements IEnergyStorage, IEnderCapabilityPro
         return energyStored - energyBefore;
     }
 
-    /**
-     * Consume energy from the storage.
-     *
-     * @return The amount of energy consumed from the storage.
-     */
-    public int consumeEnergy(int energy) {
+    @Override
+    public int takeEnergy(int energy) {
         int energyBefore = energyStored;
         energyStored = Math.max(energyStored - energy, 0);
         onContentsChanged();
@@ -93,12 +88,24 @@ public class MachineEnergyStorage implements IEnergyStorage, IEnderCapabilityPro
     }
 
     @Override
+    public int consumeEnergy(int energy) {
+        // Cap rate
+        return takeEnergy(Math.min(energy, getMaxEnergyUse()));
+    }
+
+    @Override
     public int getMaxEnergyStored() {
         return capacityKey.getInt(capacitorData.get());
     }
 
+    @Override
     public int getMaxEnergyTransfer() {
         return transferKey.getInt(capacitorData.get());
+    }
+
+    @Override
+    public int getMaxEnergyUse() {
+        return useKey.getInt(capacitorData.get());
     }
 
     @Override

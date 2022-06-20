@@ -1,7 +1,7 @@
 package com.enderio.base.common.item.darksteel.upgrades;
 
-import com.enderio.base.EnderIO;
 import com.enderio.api.capability.IDarkSteelUpgrade;
+import com.enderio.base.EnderIO;
 import com.enderio.base.common.item.darksteel.upgrades.direct.DirectUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosivePenetrationUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosiveUpgrade;

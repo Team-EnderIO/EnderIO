@@ -4,6 +4,6 @@
   "input": {
     "tag": "forge:obsidian"
   },
-  "amount_per_level": 1,
-  "level": 1
+  "amount": 1,
+  "cost_multiplier": 1
 }

@@ -2,15 +2,15 @@ package com.enderio.machines.common.init;
 
 import com.enderio.base.EnderIO;
 import com.enderio.base.common.item.EIOCreativeTabs;
-import com.enderio.base.datagen.model.EIOModel;
+import com.enderio.base.data.model.EIOModel;
 import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.block.EnhancedMachineBlock;
 import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.block.ProgressMachineBlock;
 import com.enderio.machines.common.block.SimpleMachineBlock;
 import com.enderio.machines.common.item.FluidTankItem;
-import com.enderio.machines.datagen.loot.MachinesLootTable;
-import com.enderio.machines.datagen.model.block.MachinesBlockState;
+import com.enderio.machines.data.loot.MachinesLootTable;
+import com.enderio.machines.data.model.block.MachineModelUtil;
 import com.mojang.math.Vector3f;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.BlockEntry;
@@ -72,20 +72,7 @@ public class MachineBlocks {
         .properties(props -> props.strength(2.5f, 8))
         .loot(MachinesLootTable::copyNBT)
         .addLayer(() -> RenderType::cutout)
-        .blockstate((ctx, prov) -> {
-            MachinesBlockState.machineBlock(ctx, prov,
-                EIOModel.compositeModel(prov.models(), ctx.getName(), builder -> builder
-                    .component(EIOMachines.loc("block/simple_machine_frame"))
-                    .component(EIOMachines.loc("block/io_overlay"))
-                    .component(EIOMachines.loc("block/simple_powered_furnace_front"))),
-                EIOModel.compositeModel(prov.models(), ctx.getName() + "_on", builder -> builder
-                    .component(EIOMachines.loc("block/simple_machine_frame"))
-                    .component(EIOMachines.loc("block/io_overlay"))
-                    .component(prov
-                        .models()
-                        .withExistingParent("simple_powered_furnace_front_on", EIOMachines.loc("block/simple_powered_furnace_front"))
-                        .texture("front", EIOMachines.loc("block/simple_powered_furnace_front")))));
-        })
+        .blockstate(MachineModelUtil::simpleMachineBlock)
         .item()
         .tab(() -> EIOCreativeTabs.MACHINES)
         .build()
@@ -96,20 +83,7 @@ public class MachineBlocks {
         .properties(props -> props.strength(2.5f, 8))
         .loot(MachinesLootTable::copyNBT)
         .addLayer(() -> RenderType::cutout)
-        .blockstate((ctx, prov) -> {
-            MachinesBlockState.machineBlock(ctx, prov,
-                EIOModel.compositeModel(prov.models(), ctx.getName(), builder -> builder
-                    .component(EIOMachines.loc("block/simple_machine_frame"), true)
-                    .component(EIOMachines.loc("block/simple_alloy_smelter_front"))
-                    .component(EIOMachines.loc("block/io_overlay"))),
-                EIOModel.compositeModel(prov.models(), ctx.getName() + "_on", builder -> builder
-                    .component(EIOMachines.loc("block/simple_machine_frame"), true)
-                    .component(EIOMachines.loc("block/io_overlay"))
-                    .component(prov
-                        .models()
-                        .withExistingParent("simple_alloy_smelter_front_on", EIOMachines.loc("block/simple_alloy_smelter_front"))
-                        .texture("front", EIOMachines.loc("block/simple_alloy_smelter_front_on")))));
-        })
+        .blockstate(MachineModelUtil::simpleMachineBlock)
         .item()
         .tab(() -> EIOCreativeTabs.MACHINES)
         .build()
@@ -120,20 +94,7 @@ public class MachineBlocks {
         .properties(props -> props.strength(2.5f, 8))
         .loot(MachinesLootTable::copyNBT)
         .addLayer(() -> RenderType::cutout)
-        .blockstate((ctx, prov) -> {
-            MachinesBlockState.machineBlock(ctx, prov,
-                EIOModel.compositeModel(prov.models(), ctx.getName(), builder -> builder
-                    .component(EIOMachines.loc("block/machine_frame"), true)
-                    .component(EIOMachines.loc("block/io_overlay"))
-                    .component(EIOMachines.loc("block/alloy_smelter_front"))),
-                EIOModel.compositeModel(prov.models(), ctx.getName() + "_on", builder -> builder
-                    .component(EIOMachines.loc("block/machine_frame"), true)
-                    .component(EIOMachines.loc("block/io_overlay"))
-                    .component(prov
-                        .models()
-                        .withExistingParent("alloy_smelter_front_on", EIOMachines.loc("block/alloy_smelter_front"))
-                        .texture("front", EIOMachines.loc("block/alloy_smelter_front_on")))));
-        })
+        .blockstate(MachineModelUtil::machineBlock)
         .item()
         .tab(() -> EIOCreativeTabs.MACHINES)
         .build()
@@ -144,35 +105,10 @@ public class MachineBlocks {
         .properties(props -> props.strength(2.5f, 8))
         .loot(MachinesLootTable::tallCopyNBT)
         .addLayer(() -> RenderType::cutout)
-        .blockstate((ctx, prov) -> {
-            MachinesBlockState.enhancedMachineBlock(ctx, prov,
-                // bottom unpowered
-                EIOModel.compositeModel(prov.models(), ctx.getName(), builder -> builder
-                    .component(EIOMachines.loc("block/enhanced_machine_frame"), true)
-                    .component(EIOMachines.loc("block/enhanced_alloy_smelter_front"))
-                    .component(EIOMachines.loc("block/io_overlay"))),
-                // bottom powered
-                EIOModel.compositeModel(prov.models(), ctx.getName() + "_on", builder -> builder
-                    .component(EIOMachines.loc("block/enhanced_machine_frame"), true)
-                    .component(prov
-                        .models()
-                        .withExistingParent("enhanced_alloy_smelter_front_on", EIOMachines.loc("block/enhanced_alloy_smelter_front"))
-                        .texture("front", EIOMachines.loc("block/enhanced_alloy_smelter_front_on")))
-                    .component(EIOMachines.loc("block/io_overlay"))),
-                // top unpowered
-                prov.models().getExistingFile(EIOMachines.loc("block/enhanced_alloy_smelter_top")),
-                // top powered
-                prov
-                    .models()
-                    .withExistingParent("enhanced_alloy_smelter_top_on", EIOMachines.loc("block/enhanced_alloy_smelter_top"))
-                    .texture("front", EIOMachines.loc("block/enhanced_alloy_smelter_front_on")));
-        })
+        .blockstate(MachineModelUtil::enhancedMachineBlock)
         .item()
         .tab(() -> EIOCreativeTabs.MACHINES)
-        .model((ctx, prov) -> EIOModel.compositeModel(prov, ctx.getName(), builder -> builder
-            .component(EIOMachines.loc("block/enhanced_machine_frame"))
-            .component(EIOMachines.loc("block/enhanced_alloy_smelter_front"))
-            .component(EIOMachines.loc("block/enhanced_alloy_smelter_top"), new Vector3f(0.0f, 1.0f, 0.0f))))
+        .model(MachineModelUtil::enhancedMachineBlockItem)
         .build()
         .register();
 
@@ -183,30 +119,66 @@ public class MachineBlocks {
         .build()
         .register();
 
-//    public static BlockEntry<SimpleMachineBlock> SIMPLE_STIRLING_GENERATOR = REGISTRATE
-//        .block("simple_stirling_generator", props -> new SimpleMachineBlock(props, MachineBlockEntities.SIMPLE_STIRLING_GENERATOR))
-//        .item()
-//        .tab(() -> EIOCreativeTabs.MACHINES)
-//        .build()
-//        .register();
+    public static BlockEntry<SimpleMachineBlock> SIMPLE_STIRLING_GENERATOR = REGISTRATE
+        .block("simple_stirling_generator", props -> new SimpleMachineBlock(props, MachineBlockEntities.SIMPLE_STIRLING_GENERATOR))
+        .loot(MachinesLootTable::copyNBT)
+        .addLayer(() -> RenderType::cutout)
+        .blockstate(MachineModelUtil::simpleMachineBlock)
+        .item()
+        .tab(() -> EIOCreativeTabs.MACHINES)
+        .build()
+        .register();
 
     public static BlockEntry<ProgressMachineBlock> STIRLING_GENERATOR = REGISTRATE
         .block("stirling_generator", props -> new ProgressMachineBlock(props, MachineBlockEntities.STIRLING_GENERATOR))
+        .loot(MachinesLootTable::copyNBT)
         .addLayer(() -> RenderType::cutout)
-        .blockstate((ctx, prov) -> {
-            MachinesBlockState.machineBlock(ctx, prov,
-                EIOModel.compositeModel(prov.models(), ctx.getName(), builder -> builder
-                    .component(EIOMachines.loc("block/machine_frame"), true)
-                    .component(EIOMachines.loc("block/io_overlay"))
-                    .component(EIOMachines.loc("block/stirling_generator_front"))),
-                EIOModel.compositeModel(prov.models(), ctx.getName() + "_on", builder -> builder
-                    .component(EIOMachines.loc("block/machine_frame"), true)
-                    .component(EIOMachines.loc("block/io_overlay"))
-                    .component(prov
-                        .models()
-                        .withExistingParent("stirling_generator_front_on", EIOMachines.loc("block/stirling_generator_front"))
-                        .texture("front", EIOMachines.loc("block/stirling_generator_front_on")))));
-        })
+        .blockstate(MachineModelUtil::machineBlock)
+        .item()
+        .tab(() -> EIOCreativeTabs.MACHINES)
+        .build()
+        .register();
+
+    public static BlockEntry<SimpleMachineBlock> SIMPLE_SAG_MILL = REGISTRATE
+        .block("simple_sag_mill", props -> new SimpleMachineBlock(props, MachineBlockEntities.SIMPLE_SAG_MILL))
+        .lang("Simple SAG Mill")
+        .loot(MachinesLootTable::copyNBT)
+        .addLayer(() -> RenderType::cutout)
+        .blockstate(MachineModelUtil::simpleMachineBlock)
+        .item()
+        .tab(() -> EIOCreativeTabs.MACHINES)
+        .build()
+        .register();
+
+    public static BlockEntry<ProgressMachineBlock> SAG_MILL = REGISTRATE
+        .block("sag_mill", props -> new ProgressMachineBlock(props, MachineBlockEntities.SAG_MILL))
+        .lang("SAG Mill")
+        .loot(MachinesLootTable::copyNBT)
+        .addLayer(() -> RenderType::cutout)
+        .blockstate(MachineModelUtil::machineBlock)
+        .item()
+        .tab(() -> EIOCreativeTabs.MACHINES)
+        .build()
+        .register();
+
+    public static BlockEntry<EnhancedMachineBlock> ENHANCED_SAG_MILL = REGISTRATE
+        .block("enhanced_sag_mill", props -> new EnhancedMachineBlock(props, MachineBlockEntities.ENHANCED_SAG_MILL))
+        .lang("Enhanced SAG Mill")
+        .loot(MachinesLootTable::tallCopyNBT)
+        .addLayer(() -> RenderType::cutout)
+        .blockstate(MachineModelUtil::enhancedMachineBlock)
+        .item()
+        .tab(() -> EIOCreativeTabs.MACHINES)
+        .model(MachineModelUtil::enhancedMachineBlockItem)
+        .build()
+        .register();
+
+    public static BlockEntry<ProgressMachineBlock> SLICE_AND_SPLICE = REGISTRATE
+        .block("slice_and_splice", props -> new ProgressMachineBlock(props, MachineBlockEntities.SLICE_AND_SPLICE))
+        .lang("Slice'N'Splice")
+        .loot(MachinesLootTable::copyNBT)
+        .addLayer(() -> RenderType::cutout)
+        .blockstate(MachineModelUtil::soulMachineBlock)
         .item()
         .tab(() -> EIOCreativeTabs.MACHINES)
         .build()

@@ -7,9 +7,24 @@ import com.enderio.machines.common.lang.MachineLang;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * Alloy smelter mode.
+ * Also provides icon behaviours for GUI.
+ */
 public enum AlloySmelterMode implements IIcon {
+    /**
+     * Furnace mode, only performs smelting recipes.
+     */
     FURNACE(false, true, MachineLang.ALLOY_SMELTER_MODE_FURNACE),
+
+    /**
+     * All mode, performs smelting and alloying.
+     */
     ALL(true, true, MachineLang.ALLOY_SMELTER_MODE_ALL),
+
+    /**
+     * Alloy mode, only performs alloying.
+     */
     ALLOYS(true, false, MachineLang.ALLOY_SMELTER_MODE_ALLOY);
 
     private static final ResourceLocation TEXTURE = EnderIO.loc("textures/gui/icons.png"); // TODO: Redo widgets

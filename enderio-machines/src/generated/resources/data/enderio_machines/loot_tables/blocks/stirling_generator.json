@@ -7,12 +7,20 @@
       "entries": [
         {
           "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:copy_nbt",
+              "source": "block_entity",
+              "ops": [
+                {
+                  "source": "",
+                  "target": "BlockEntityTag",
+                  "op": "replace"
+                }
+              ]
+            }
+          ],
           "name": "enderio_machines:stirling_generator"
-        }
-      ],
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
         }
       ]
     }
