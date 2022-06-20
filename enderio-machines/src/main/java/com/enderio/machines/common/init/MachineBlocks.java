@@ -162,6 +162,15 @@ public class MachineBlocks {
         .build()
         .register();
 
+    public static BlockEntry<SimpleMachineBlock> SIMPLE_SAG_MILL = REGISTRATE
+        .block("simple_sag_mill", props -> new SimpleMachineBlock(props, MachineBlockEntities.SIMPLE_SAG_MILL))
+        .addLayer(() -> RenderType::cutout)
+        .blockstate(MachinesBlockState::simpleMachineBlock)
+        .item()
+        .tab(() -> EIOCreativeTabs.MACHINES)
+        .build()
+        .register();
+
     public static BlockEntry<ProgressMachineBlock> SAG_MILL = REGISTRATE
         .block("sag_mill", props -> new ProgressMachineBlock(props, MachineBlockEntities.SAG_MILL))
         .addLayer(() -> RenderType::cutout)

@@ -28,7 +28,27 @@ public abstract class SagMillBlockEntity extends PoweredCraftingMachine<SagMilli
 
     // region Tiers
 
-    // TODO: Simple and Enhanced.
+    // TODO: Enhanced.
+
+    public static class Simple extends SagMillBlockEntity {
+
+        public Simple(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
+            super(MachineCapacitorKeys.SIMPLE_SAG_MILL_ENERGY_CAPACITY.get(),
+                MachineCapacitorKeys.SIMPLE_SAG_MILL_ENERGY_TRANSFER.get(),
+                MachineCapacitorKeys.SIMPLE_SAG_MILL_ENERGY_CONSUME.get(),
+                type, worldPosition, blockState);
+        }
+
+        @Override
+        public MachineTier getTier() {
+            return MachineTier.SIMPLE;
+        }
+
+        @Override
+        public int getEnergyLeakRate() {
+            return 1; // TODO: Config
+        }
+    }
 
     public static class Standard extends SagMillBlockEntity {
 
