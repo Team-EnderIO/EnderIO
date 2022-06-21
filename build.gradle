@@ -365,25 +365,28 @@ subprojects {
     }
 }
 
+// Make shadowing happen after all jars are built
+subprojects.each { p ->
+    shadowJar.dependsOn p.tasks['jar']
+}
+
 // TODO: 1.19: Replace "combining" process with Jar-in-Jar instead?
 
 // Combined jar
 def monolithProjects = subprojects.findAll { sp -> sp.ext.include_in_monolith }
 
-// Depend on combined classes
-shadowJar.dependsOn monolithProjects.tasks['jar']
-shadowJar {
-    duplicatesStrategy = DuplicatesStrategy.FAIL
-
-    CombineJars.mergeResources(rootProject, monolithProjects)
-
-    monolithProjects.each { subproject ->
-        def isMain = subproject.name == 'enderio-base'
-        from(subproject.sourceSets.main.output.classesDirs)
-        from(subproject.sourceSets.main.output.resourcesDir, c -> c.exclude(CombineJars.getPathsToExclude(subproject, isMain)))
-    }
-    from("$buildDir/generated", CombineJars.getGeneratedClosure())
-}
+//shadowJar {
+//    duplicatesStrategy = DuplicatesStrategy.FAIL
+//
+//    CombineJars.mergeResources(rootProject, monolithProjects)
+//
+//    monolithProjects.each { subproject ->
+//        def isMain = subproject.name == 'enderio-base'
+//        from(subproject.sourceSets.main.output.classesDirs)
+//        from(subproject.sourceSets.main.output.resourcesDir, c -> c.exclude(CombineJars.getPathsToExclude(subproject, isMain)))
+//    }
+//    from("$buildDir/generated", CombineJars.getGeneratedClosure())
+//}
 
 // TODO: Combined api jar maybe?
 

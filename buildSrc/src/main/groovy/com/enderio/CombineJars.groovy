@@ -13,7 +13,7 @@ class CombineJars {
         List<String> toExclude = new ArrayList<>()
         toExclude.add('META-INF/mods.toml')
         toExclude.add('META-INF/accesstransformer.cfg')
-        toExclude.add('.cache/cache')
+        toExclude.add('.cache/*')
 
         // Exclude duplicated data
         int baseLength = "$project.rootProject.buildDir/generated/".length()
