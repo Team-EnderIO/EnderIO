@@ -13,6 +13,8 @@ import java.util.Arrays;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+// TODO: Javadocs
+
 /**
  * An ingredient with an item count associated with it.
  */
@@ -57,6 +59,14 @@ public record CountedIngredient(Ingredient ingredient, int count) implements Pre
 
     public static CountedIngredient of(int count, TagKey<Item> tag) {
         return new CountedIngredient(Ingredient.fromValues(Stream.of(new Ingredient.TagValue(tag))), count);
+    }
+
+    public static CountedIngredient of(Ingredient ingredient) {
+        return new CountedIngredient(ingredient, 1);
+    }
+
+    public static CountedIngredient of(int count, Ingredient ingredient) {
+        return new CountedIngredient(ingredient, count);
     }
 
     public ItemStack[] getItems() {

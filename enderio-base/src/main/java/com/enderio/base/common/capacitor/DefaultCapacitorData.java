@@ -1,7 +1,7 @@
 package com.enderio.base.common.capacitor;
 
-import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.api.capability.ICapacitorData;
+import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.base.EnderIO;
 import net.minecraft.nbt.FloatTag;
 import net.minecraft.nbt.Tag;

@@ -1,9 +1,9 @@
 package com.enderio.base.common.item.tool;
 
-import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.api.capability.IMultiCapabilityItem;
 import com.enderio.api.capability.MultiCapabilityProvider;
 import com.enderio.base.common.capability.AcceptingFluidItemHandler;
+import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.tag.EIOTags;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -24,7 +24,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraftforge.fluids.FluidStack;

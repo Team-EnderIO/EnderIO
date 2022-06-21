@@ -23,37 +23,37 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class StirlingGeneratorBlockEntity extends PowerGeneratingMachineEntity {
     public static class Simple extends StirlingGeneratorBlockEntity {
-        public Simple(BlockEntityType<?> pType, BlockPos pWorldPosition,
-            BlockState pBlockState) {
+        public Simple(BlockEntityType<?> type, BlockPos worldPosition,
+            BlockState blockState) {
             super(MachineCapacitorKeys.SIMPLE_STIRLING_GENERATOR_ENERGY_CAPACITY.get(),
                 MachineCapacitorKeys.DEV_ENERGY_TRANSFER.get(),
                 MachineCapacitorKeys.DEV_ENERGY_CONSUME.get(),
-                pType, pWorldPosition, pBlockState);
+                type, worldPosition, blockState);
         }
 
         @Override
         public MachineTier getTier() {
-            return MachineTier.Simple;
+            return MachineTier.SIMPLE;
         }
 
         @Override
-        public int getEnergyLeakRate() {
-            return 10; // TODO config
+        public int getEnergyLeakPerSecond() {
+            return 2;
         }
     }
 
     public static class Standard extends StirlingGeneratorBlockEntity {
-        public Standard(BlockEntityType<?> pType, BlockPos pWorldPosition,
-            BlockState pBlockState) {
+        public Standard(BlockEntityType<?> type, BlockPos worldPosition,
+            BlockState blockState) {
             super(MachineCapacitorKeys.STIRLING_GENERATOR_ENERGY_CAPACITY.get(),
                 MachineCapacitorKeys.DEV_ENERGY_TRANSFER.get(),
                 MachineCapacitorKeys.DEV_ENERGY_CONSUME.get(),
-                pType, pWorldPosition, pBlockState);
+                type, worldPosition, blockState);
         }
 
         @Override
         public MachineTier getTier() {
-            return MachineTier.Standard;
+            return MachineTier.STANDARD;
         }
     }
 
@@ -63,16 +63,16 @@ public abstract class StirlingGeneratorBlockEntity extends PowerGeneratingMachin
     @UseOnly(LogicalSide.CLIENT)
     private float clientBurnProgress;
 
-    public StirlingGeneratorBlockEntity(CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey consumptionKey, BlockEntityType<?> pType, BlockPos pWorldPosition,
-        BlockState pBlockState) {
-        super(capacityKey, transferKey, consumptionKey, pType, pWorldPosition, pBlockState);
+    public StirlingGeneratorBlockEntity(CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey consumptionKey, BlockEntityType<?> type, BlockPos worldPosition,
+        BlockState blockState) {
+        super(capacityKey, transferKey, consumptionKey, type, worldPosition, blockState);
 
         addDataSlot(new FloatDataSlot(this::getBurnProgress, p -> clientBurnProgress = p, SyncMode.GUI));
     }
 
     @Override
     public MachineInventoryLayout getInventoryLayout() {
-        return MachineInventoryLayout.builder(getTier() != MachineTier.Simple)
+        return MachineInventoryLayout.builder(getTier() != MachineTier.SIMPLE)
             .inputSlot((slot, stack) -> ForgeHooks.getBurnTime(stack, RecipeType.SMELTING) > 0)
             .build();
     }

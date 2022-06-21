@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "enderio:clear_glass_np"
+    },
+    {
+      "tag": "enderio:clear_glass_np"
+    },
+    {
+      "tag": "enderio:clear_glass_np"
+    },
+    {
+      "tag": "enderio:clear_glass_np"
+    },
+    {
+      "tag": "enderio:clear_glass_np"
+    },
+    {
+      "tag": "enderio:clear_glass_np"
+    },
+    {
+      "tag": "enderio:clear_glass_np"
+    },
+    {
+      "tag": "enderio:clear_glass_np"
+    },
+    {
+      "tag": "forge:dyes/green"
+    }
+  ],
+  "result": {
+    "item": "enderio:clear_glass_np_green",
+    "count": 8
+  }
+}

@@ -119,7 +119,7 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
         T icon = getter.get();
 
         addedOn.renderIconBackground(pPoseStack, new Vector2i(x, y), icon);
-        addedOn.renderIcon(pPoseStack, new Vector2i(x, y).expand(1), icon);
+        IEnderScreen.renderIcon(pPoseStack, new Vector2i(x, y).expand(1), icon);
 
         renderToolTip(pPoseStack, pMouseX, pMouseY);
     }
@@ -220,7 +220,7 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
                 GuiComponent.fill(pPoseStack, x, y, x + width, y + height, 0xFF0020FF); //TODO: Client Config
                 GuiComponent.fill(pPoseStack, x + 1, y + 1, x + width - 1, y + height - 1, 0xFF8B8B8B);
             }
-            selection.renderIcon(pPoseStack, new Vector2i(x, y).expand(1), value);
+            IEnderScreen.renderIcon(pPoseStack, new Vector2i(x, y).expand(1), value);
 
             if (isMouseOver(pMouseX, pMouseY)) {
                 Component tooltip = value.getTooltip();

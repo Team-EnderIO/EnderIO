@@ -3,12 +3,13 @@ package com.enderio.machines.common.blockentity.base;
 import com.enderio.api.capability.ICapacitorData;
 import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.api.energy.EnergyIOMode;
-import com.enderio.base.common.blockentity.sync.IntegerDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.base.common.capacitor.DefaultCapacitorData;
 import com.enderio.machines.common.MachineTier;
-import com.enderio.machines.common.blockentity.sync.CapacitorDataSlot;
+import com.enderio.machines.common.blockentity.sync.MachineEnergyDataSlot;
+import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
+import com.enderio.machines.common.io.energy.ImmutableMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import net.minecraft.core.BlockPos;
@@ -32,42 +33,47 @@ import java.util.Optional;
  * A machine that stores energy.
  */
 public abstract class PoweredMachineEntity extends MachineBlockEntity {
+    /**
+     * The energy storage medium for the block entity.
+     * This will be a mutable energy storage.
+     */
     protected final MachineEnergyStorage energyStorage;
 
-    private final LazyOptional<MachineEnergyStorage> energyStorageCap;
+    /**
+     * The client value of the energy storage.
+     * This will be an instance of {@link ImmutableMachineEnergyStorage}.
+     */
+    private IMachineEnergyStorage clientEnergyStorage = ImmutableMachineEnergyStorage.EMPTY;
 
-    protected final CapacitorKey energyUseKey;
+    private final LazyOptional<MachineEnergyStorage> energyStorageCap;
 
     // Cache for external energy interaction
     private final EnumMap<Direction, LazyOptional<IEnergyStorage>> energyHandlerCache = new EnumMap<>(Direction.class);
 
-    private ICapacitorData cachedCapacitorData;
+    private ICapacitorData cachedCapacitorData = DefaultCapacitorData.NONE;
     private boolean capacitorCacheDirty;
 
-    public PoweredMachineEntity(EnergyIOMode energyIOMode, CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey energyUseKey, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-        super(pType, pWorldPosition, pBlockState);
-
-        // Store energy use key
-        // TODO: Energy use rewrite.
-        this.energyUseKey = energyUseKey;
+    public PoweredMachineEntity(EnergyIOMode energyIOMode, CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey useKey, BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
+        super(type, worldPosition, blockState);
 
         // Create energy storage
-        this.energyStorage = createEnergyStorage(energyIOMode, capacityKey, transferKey);
+        this.energyStorage = createEnergyStorage(energyIOMode, capacityKey, transferKey, useKey);
         this.energyStorageCap = LazyOptional.of(() -> energyStorage);
         addCapabilityProvider(energyStorage);
 
         // Mark capacitor cache as dirty
         capacitorCacheDirty = true;
 
-        // Sync capacitor and energy storage
-        addDataSlot(new CapacitorDataSlot(this::getCapacitorItem, data -> cachedCapacitorData = data, SyncMode.GUI));
-        addDataSlot(new IntegerDataSlot(energyStorage::getEnergyStored, energyStorage::setEnergyStored, SyncMode.GUI));
+        // new new way of syncing energy storage.
+        addDataSlot(new MachineEnergyDataSlot(this::getEnergyStorage, storage -> clientEnergyStorage = storage, SyncMode.GUI));
     }
 
     @Override
     public void serverTick() {
-        // Leak energy
-        energyStorage.consumeEnergy(getEnergyLeakRate());
+        // Leak energy once per second
+        if (level.getGameTime() % 20 == 0) {
+            energyStorage.takeEnergy(getEnergyLeakPerSecond());
+        }
 
         // If redstone config is not enabled.
         if (canAct()) {
@@ -82,15 +88,19 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
 
     // TODO: Machine efficiency features.
 
-    public final MachineEnergyStorage getEnergyStorage() {
+    /**
+     * Get the machine's energy storage.
+     * On client side, this will likely be an instance of {@link ImmutableMachineEnergyStorage}.
+     * On server side, it will be an instance descended of {@link MachineEnergyStorage}.
+     */
+    public final IMachineEnergyStorage getEnergyStorage() {
+        if (isClientSide()) {
+            return clientEnergyStorage;
+        }
         return energyStorage;
     }
 
-    public final int getMaxEnergyUse() {
-        return energyUseKey.getInt(getCapacitorData());
-    }
-
-    public int getEnergyLeakRate() {
+    public int getEnergyLeakPerSecond() {
         return 0;
     }
 
@@ -119,7 +129,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
                         int received = otherHandler.get().receiveEnergy(Math.min(selfHandler.getEnergyStored(), getEnergyStorage().getMaxEnergyTransfer()), false);
 
                         // Consume that energy from our buffer.
-                        getEnergyStorage().consumeEnergy(received);
+                        getEnergyStorage().takeEnergy(received);
                     }
                 }
             });
@@ -130,8 +140,8 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
      * Create the energy storage medium
      * Override this to customise the behaviour of the energy storage.
      */
-    protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, CapacitorKey capacityKey, CapacitorKey transferKey) {
-        return new MachineEnergyStorage(getIOConfig(), energyIOMode, this::getCapacitorData, capacityKey, transferKey) {
+    protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey useKey) {
+        return new MachineEnergyStorage(getIOConfig(), energyIOMode, this::getCapacitorData, capacityKey, transferKey, useKey) {
             @Override
             protected void onContentsChanged() {
                 setChanged();
@@ -178,6 +188,13 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
         if (layout == null)
             return false;
         return layout.supportsCapacitor();
+    }
+
+    public int getCapacitorSlot() {
+        MachineInventoryLayout layout = getInventoryLayout();
+        if (layout == null)
+            return -1;
+        return layout.getCapacitorSlot();
     }
 
     /**
@@ -232,7 +249,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
     @Override
     public boolean canAct() {
         // Ignore capacitor state on simple machines.
-        if (getTier() == MachineTier.Simple)
+        if (getTier() == MachineTier.SIMPLE)
             return super.canAct();
         return super.canAct() && (!requiresCapacitor() || isCapacitorInstalled());
     }

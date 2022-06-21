@@ -1,8 +1,8 @@
 package com.enderio.base.common.item.capacitors;
 
+import com.enderio.api.capability.ICapacitorData;
 import com.enderio.api.capability.IMultiCapabilityItem;
 import com.enderio.api.capability.MultiCapabilityProvider;
-import com.enderio.api.capability.ICapacitorData;
 import com.enderio.base.common.init.EIOCapabilities;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Item;

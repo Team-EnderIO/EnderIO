@@ -7,17 +7,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 public abstract class PowerConsumingMachineEntity extends PoweredMachineEntity {
-    public PowerConsumingMachineEntity(CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey consumptionKey, BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-        super(EnergyIOMode.Input, capacityKey, transferKey, consumptionKey, pType, pWorldPosition, pBlockState);
-    }
-
-    // TODO: This is temporary, i plan to do more work on power consuming machines in the sagmill branch.
-
-    /**
-     * Try to consume energy.
-     * Capped at the machines max use rate.
-     */
-    public final int consumeEnergy(int maxConsume) {
-        return getEnergyStorage().consumeEnergy(Math.min(maxConsume, getMaxEnergyUse()));
+    public PowerConsumingMachineEntity(CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey consumptionKey, BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
+        super(EnergyIOMode.Input, capacityKey, transferKey, consumptionKey, type, worldPosition, blockState);
     }
 }

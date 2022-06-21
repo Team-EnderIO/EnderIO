@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "enderio:clear_glass_d"
+    },
+    {
+      "tag": "enderio:clear_glass_d"
+    },
+    {
+      "tag": "enderio:clear_glass_d"
+    },
+    {
+      "tag": "enderio:clear_glass_d"
+    },
+    {
+      "tag": "enderio:clear_glass_d"
+    },
+    {
+      "tag": "enderio:clear_glass_d"
+    },
+    {
+      "tag": "enderio:clear_glass_d"
+    },
+    {
+      "tag": "enderio:clear_glass_d"
+    },
+    {
+      "tag": "forge:dyes/orange"
+    }
+  ],
+  "result": {
+    "item": "enderio:clear_glass_d_orange",
+    "count": 8
+  }
+}

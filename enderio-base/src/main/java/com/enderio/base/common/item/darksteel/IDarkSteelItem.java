@@ -1,19 +1,20 @@
 package com.enderio.base.common.item.darksteel;
 
+import com.enderio.api.capability.IDarkSteelUpgrade;
+import com.enderio.api.capability.IMultiCapabilityItem;
+import com.enderio.api.capability.MultiCapabilityProvider;
+import com.enderio.api.client.tooltip.IAdvancedTooltipProvider;
+import com.enderio.api.nbt.INamedNBTSerializable;
 import com.enderio.base.client.renderer.item.IItemOverlayRender;
 import com.enderio.base.client.renderer.item.ItemBarRenderer;
-import com.enderio.api.client.tooltip.IAdvancedTooltipProvider;
-import com.enderio.base.common.init.EIOCapabilities;
-import com.enderio.api.capability.IMultiCapabilityItem;
-import com.enderio.api.nbt.INamedNBTSerializable;
-import com.enderio.api.capability.MultiCapabilityProvider;
 import com.enderio.base.common.capability.DarkSteelUpgradeable;
 import com.enderio.base.common.capability.EnergyDelegator;
-import com.enderio.api.capability.IDarkSteelUpgrade;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.util.EnergyUtil;
 import com.enderio.base.common.util.TooltipUtil;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -113,7 +114,7 @@ public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipPr
         }
     }
 
-    default void renderOverlay(ItemStack pStack, int pXPosition, int pYPosition) {
+    default void renderOverlay(ItemStack pStack, int pXPosition, int pYPosition, PoseStack poseStack) {
         ItemBarRenderer.renderEnergyOverlay(pStack, pXPosition, pYPosition);
     }
 

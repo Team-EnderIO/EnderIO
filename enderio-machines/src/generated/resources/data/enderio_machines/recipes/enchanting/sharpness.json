@@ -4,6 +4,6 @@
   "input": {
     "tag": "forge:gems/quartz"
   },
-  "amount_per_level": 12,
-  "level": 1
+  "amount": 12,
+  "cost_multiplier": 1
 }

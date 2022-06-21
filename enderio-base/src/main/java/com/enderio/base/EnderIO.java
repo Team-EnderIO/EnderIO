@@ -1,23 +1,17 @@
 package com.enderio.base;
 
 import com.enderio.api.capacitor.CapacitorKey;
-import com.enderio.base.common.init.EIOBlocks;
-import com.enderio.base.common.init.EIOBlockEntities;
-import com.enderio.base.common.init.EIOEnchantments;
-import com.enderio.base.common.init.EIOFluids;
-import com.enderio.base.common.init.EIOItems;
-import com.enderio.base.datagen.tags.EIOBlockTagsProvider;
+import com.enderio.base.common.init.*;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.base.common.init.EIOMenus;
-import com.enderio.base.common.init.EIOPackets;
-import com.enderio.base.common.init.EIORecipes;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.config.base.BaseConfig;
 import com.enderio.base.config.decor.DecorConfig;
 import com.enderio.base.config.machines.MachinesConfig;
-import com.enderio.base.datagen.tags.EIOFluidTagsProvider;
-import com.enderio.base.datagen.tags.EIOItemTagsProvider;
-import com.enderio.base.datagen.recipe.standard.StandardRecipes;
+import com.enderio.base.data.loot.FireCraftingLootProvider;
+import com.enderio.base.data.recipe.standard.StandardRecipes;
+import com.enderio.base.data.tags.EIOBlockTagsProvider;
+import com.enderio.base.data.tags.EIOFluidTagsProvider;
+import com.enderio.base.data.tags.EIOItemTagsProvider;
 import com.tterrag.registrate.Registrate;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
@@ -54,8 +48,7 @@ public class EnderIO {
 
     public static ResourceLocation CAPACITOR_KEY_REGISTRY_KEY = new ResourceLocation(MODID, "capacitor_keys");
 
-    @Nullable
-    public static IForgeRegistry<CapacitorKey> CAPACITOR_KEY_REGISTRY;
+    @Nullable public static IForgeRegistry<CapacitorKey> CAPACITOR_KEY_REGISTRY;
 
     public EnderIO() {
         // Create configs subdirectory
@@ -100,9 +93,7 @@ public class EnderIO {
     }
 
     public void createRegistries(NewRegistryEvent event) {
-        event.create(new RegistryBuilder<CapacitorKey>()
-            .setName(CAPACITOR_KEY_REGISTRY_KEY)
-            .setType(CapacitorKey.class),
+        event.create(new RegistryBuilder<CapacitorKey>().setName(CAPACITOR_KEY_REGISTRY_KEY).setType(CapacitorKey.class),
             registry -> CAPACITOR_KEY_REGISTRY = registry);
     }
 
@@ -111,9 +102,10 @@ public class EnderIO {
         if (event.includeServer()) {
             StandardRecipes.generate(generator);
             ForgeBlockTagsProvider b = new ForgeBlockTagsProvider(generator, event.getExistingFileHelper());
-            generator.addProvider( new EIOItemTagsProvider(generator, b, event.getExistingFileHelper()));
-            generator.addProvider( new EIOFluidTagsProvider(generator, event.getExistingFileHelper()));
-            generator.addProvider( new EIOBlockTagsProvider(generator, event.getExistingFileHelper()));
+            generator.addProvider(new EIOItemTagsProvider(generator, b, event.getExistingFileHelper()));
+            generator.addProvider(new EIOFluidTagsProvider(generator, event.getExistingFileHelper()));
+            generator.addProvider(new EIOBlockTagsProvider(generator, event.getExistingFileHelper()));
+            generator.addProvider(new FireCraftingLootProvider(generator));
         }
     }
 
