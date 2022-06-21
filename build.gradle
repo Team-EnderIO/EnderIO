@@ -337,20 +337,38 @@ subprojects {
 
     sourceSets.main.resources { srcDir 'src/generated/resources' }
 
-    processResources {
-        // Fill mods.toml placeholders
-        filesMatching("META-INF/mods.toml") {
-            expand 'version': version,
-                    'mcversion': minecraft_version_range,
-                    'forge_version': forge_version_range,
-                    'loader_version': loader_version_range
+    def resourceTargets = ['META-INF/mods.toml', 'pack.mcmeta']
+    def intoTargets = ["$rootDir/${project.name}/bin/main/"]
+    def replaceProperties = [
+            version: version, mcversion: minecraft_version_range,
+            resource_pack_format: resource_pack_format,
+            data_pack_format: data_pack_format,
+            forge_version: forge_version_range,
+            loader_version: loader_version_range]
 
+    processResources {
+        inputs.properties replaceProperties
+        replaceProperties.put 'project', project
+
+        filesMatching(resourceTargets) {
+            expand replaceProperties
         }
 
-        // Copy our logo in
-        from("$rootDir/doc/img/logo.png") into 'logo.png'
+        intoTargets.each { target ->
+            if (file(target).exists()) {
+                copy {
+                    from(sourceSets.main.resources) {
+                        include resourceTargets
+                        expand replaceProperties
+                    }
+                    into target
+                }
+            }
+        }
     }
 }
+
+// TODO: 1.19: Replace "combining" process with Jar-in-Jar instead?
 
 // Combined jar
 def monolithProjects = subprojects.findAll { sp -> sp.ext.include_in_monolith }
