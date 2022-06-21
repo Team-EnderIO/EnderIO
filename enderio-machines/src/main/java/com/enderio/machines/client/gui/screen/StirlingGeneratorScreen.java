@@ -26,7 +26,7 @@ public class StirlingGeneratorScreen extends EIOScreen<StirlingGeneratorMenu> {
     protected void init() {
         super.init();
 
-        addRenderableOnly(new ProgressWidget(this, () -> menu.getBlockEntity().getBurnProgress(), getGuiLeft() + 81, getGuiTop() + 53, 14, 14, 176, 0));
+        addRenderableOnly(new ProgressWidget(this, () -> menu.getBlockEntity().getBurnProgress(), getGuiLeft() + 81, getGuiTop() + 53, 14, 14, 176, 0, ProgressWidget.Direction.BOTTOM_UP));
 
         addRenderableOnly(new EnergyWidget(this, getMenu().getBlockEntity()::getEnergyStorage, 16 + leftPos, 14 + topPos, 9, 42));
 
@@ -37,7 +37,7 @@ public class StirlingGeneratorScreen extends EIOScreen<StirlingGeneratorMenu> {
     @Override
     protected ResourceLocation getBackgroundImage() {
         StirlingGeneratorBlockEntity be = getMenu().getBlockEntity();
-        return be.getTier() == MachineTier.Simple ? BG_TEXTURE_SIMPLE : BG_TEXTURE;
+        return be.getTier() == MachineTier.SIMPLE ? BG_TEXTURE_SIMPLE : BG_TEXTURE;
     }
 
     @Override

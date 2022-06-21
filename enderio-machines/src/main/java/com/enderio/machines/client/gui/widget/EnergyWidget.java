@@ -4,7 +4,7 @@ import com.enderio.base.client.gui.widgets.EIOWidget;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.util.TooltipUtil;
 import com.enderio.machines.EIOMachines;
-import com.enderio.machines.common.io.energy.MachineEnergyStorage;
+import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.screens.Screen;
@@ -21,9 +21,9 @@ public class EnergyWidget extends EIOWidget {
     private static final ResourceLocation WIDGETS = EIOMachines.loc("textures/gui/widgets.png");
 
     private final Screen displayOn;
-    private final Supplier<MachineEnergyStorage> storageSupplier;
+    private final Supplier<IMachineEnergyStorage> storageSupplier;
 
-    public EnergyWidget(Screen displayOn, Supplier<MachineEnergyStorage> storageSupplier, int x, int y, int width, int height) {
+    public EnergyWidget(Screen displayOn, Supplier<IMachineEnergyStorage> storageSupplier, int x, int y, int width, int height) {
         super(x, y, width, height);
         this.displayOn = displayOn;
         this.storageSupplier = storageSupplier;
@@ -32,7 +32,7 @@ public class EnergyWidget extends EIOWidget {
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         // Don't bother if we have no energy capacity, protects from divide by zero's when there's no capacitor.
-        MachineEnergyStorage storage = storageSupplier.get();
+        IMachineEnergyStorage storage = storageSupplier.get();
         if (storage.getMaxEnergyStored() <= 0)
             return;
 
@@ -61,7 +61,7 @@ public class EnergyWidget extends EIOWidget {
 
     public void renderToolTip(PoseStack poseStack, int mouseX, int mouseY) {
         if (isHovered(mouseX, mouseY)) {
-            MachineEnergyStorage storage = storageSupplier.get();
+            IMachineEnergyStorage storage = storageSupplier.get();
 
             NumberFormat fmt = NumberFormat.getInstance();
             displayOn.renderTooltip(poseStack, TooltipUtil.withArgs(EIOLang.ENERGY_AMOUNT, fmt.format(storage.getEnergyStored()) + "/" + fmt.format(

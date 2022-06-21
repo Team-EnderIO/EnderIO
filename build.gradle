@@ -67,6 +67,27 @@ allprojects {
     repositories {
         // Registrate
         maven { url "https://maven.tterrag.com/" }
+
+        maven {
+            // location of the maven that hosts JEI files
+            name = "Progwml6 maven"
+            url = "https://dvs1.progwml6.com/files/maven/"
+        }
+        maven {
+            // location of a maven mirror for JEI files, as a fallback
+            name = "ModMaven"
+            url = "https://modmaven.dev"
+        }
+
+        // Temp for TOP, https://github.com/McJtyMods/TheOneProbe/issues/506
+        maven {
+            url "https://cursemaven.com"
+            content {
+                includeGroup "curse.maven"
+            }
+        }
+
+        maven { url 'https://maven.blamejared.com' }
     }
 
     configurations {
@@ -81,6 +102,21 @@ allprojects {
         def registrate = "com.tterrag.registrate:Registrate:${registrate_version}"
         implementation fg.deobf(registrate)
         shade registrate
+
+        // JEI
+        compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}:api")
+        runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")
+
+        // The One Probe
+//        implementation fg.deobf("mcjty.theoneprobe:TheOneProbe:${minecraft_version}-${top_version}")
+        implementation fg.deobf("curse.maven:the-one-probe-245211:${top_version}")
+
+        // Patchouli
+        compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
+        runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
+
+        // While we don't have conduits etc.
+        runtimeOnly fg.deobf("curse.maven:mekanism-268560:3743835")
     }
 
     jar {
@@ -195,8 +231,8 @@ allprojects {
 
                 if (project.name == rootProject.name) {
                     incompatible.project project(':enderio-base').modrinth_projectId
-                    incompatible.project project(':enderio-decoration').modrinth_projectId
                     incompatible.project project(':enderio-machines').modrinth_projectId
+                    incompatible.project project(':enderio-conduits').modrinth_projectId
                 }
 
                 // Patchouli
@@ -295,73 +331,21 @@ subprojects {
         }
     }
 
-    repositories {
-        maven {
-            // location of the maven that hosts JEI files
-            name = "Progwml6 maven"
-            url = "https://dvs1.progwml6.com/files/maven/"
-        }
-        maven {
-            // location of a maven mirror for JEI files, as a fallback
-            name = "ModMaven"
-            url = "https://modmaven.dev"
-        }
-
-        // Temp for TOP, https://github.com/McJtyMods/TheOneProbe/issues/506
-        maven {
-            url "https://cursemaven.com"
-            content {
-                includeGroup "curse.maven"
-            }
-        }
-
-        maven { url 'https://maven.blamejared.com' }
-    }
-
     sourceSets.main.resources { srcDir 'src/generated/resources' }
 
-    dependencies {
-        // JEI
-        compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}:api")
-        runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")
+    processResources {
+        // Fill mods.toml placeholders
+        filesMatching("META-INF/mods.toml") {
+            expand 'version': version,
+                    'mcversion': minecraft_version_range,
+                    'forge_version': forge_version_range,
+                    'loader_version': loader_version_range
 
-        // The One Probe
-//        implementation fg.deobf("mcjty.theoneprobe:TheOneProbe:${minecraft_version}-${top_version}")
-        implementation fg.deobf("curse.maven:the-one-probe-245211:${top_version}")
+        }
 
-        // Patchouli
-        compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
-        runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
-
-        // While we don't have conduits etc.
-        runtimeOnly fg.deobf("curse.maven:mekanism-268560:3743835")
+        // Copy our logo in
+        from("$rootDir/doc/img/logo.png") into 'logo.png'
     }
-    
-    def resourceTargets = ['META-INF/mods.toml', 'pack.mcmeta']
-	def intoTargets = ["$rootDir/${project.name}/bin/main/"]
-	def replaceProperties = [version: version, mcversion: minecraft_version_range,
-                    forge_version: forge_version_range,
-                    loader_version: loader_version_range]
-	processResources {
-    	inputs.properties replaceProperties
-    	replaceProperties.put 'project', project
-
-    	filesMatching(resourceTargets) {
-        	expand replaceProperties
-    	}
-
-    	intoTargets.each { target ->
-       	 if (file(target).exists()) {
-            	copy {
-                	from(sourceSets.main.resources) {
-                    	include resourceTargets
-                    	expand replaceProperties
-                	}
-                	into target
-            	}
-        	}
-    	}
-	} 
 }
 
 // Combined jar

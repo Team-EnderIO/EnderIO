@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "enderio:clear_glass_da"
+    },
+    {
+      "tag": "enderio:clear_glass_da"
+    },
+    {
+      "tag": "enderio:clear_glass_da"
+    },
+    {
+      "tag": "enderio:clear_glass_da"
+    },
+    {
+      "tag": "enderio:clear_glass_da"
+    },
+    {
+      "tag": "enderio:clear_glass_da"
+    },
+    {
+      "tag": "enderio:clear_glass_da"
+    },
+    {
+      "tag": "enderio:clear_glass_da"
+    },
+    {
+      "tag": "forge:dyes/cyan"
+    }
+  ],
+  "result": {
+    "item": "enderio:clear_glass_da_cyan",
+    "count": 8
+  }
+}

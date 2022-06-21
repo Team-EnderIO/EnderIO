@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "enderio:fused_quartz_ena"
+    },
+    {
+      "tag": "enderio:fused_quartz_ena"
+    },
+    {
+      "tag": "enderio:fused_quartz_ena"
+    },
+    {
+      "tag": "enderio:fused_quartz_ena"
+    },
+    {
+      "tag": "enderio:fused_quartz_ena"
+    },
+    {
+      "tag": "enderio:fused_quartz_ena"
+    },
+    {
+      "tag": "enderio:fused_quartz_ena"
+    },
+    {
+      "tag": "enderio:fused_quartz_ena"
+    },
+    {
+      "tag": "forge:dyes/light_gray"
+    }
+  ],
+  "result": {
+    "item": "enderio:fused_quartz_ena_light_gray",
+    "count": 8
+  }
+}

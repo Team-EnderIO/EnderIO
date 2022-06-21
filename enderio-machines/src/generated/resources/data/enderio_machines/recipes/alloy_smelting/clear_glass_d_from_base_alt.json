@@ -1,0 +1,22 @@
+{
+  "type": "enderio_machines:alloy_smelting",
+  "inputs": [
+    {
+      "ingredient": {
+        "item": "enderio:clear_glass"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "tag": "forge:storage_blocks/amethyst"
+      },
+      "count": 1
+    }
+  ],
+  "result": {
+    "item": "enderio:clear_glass_d"
+  },
+  "energy": 1250,
+  "experience": 0.3
+}

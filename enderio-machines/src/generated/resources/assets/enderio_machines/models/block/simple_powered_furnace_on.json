@@ -2,13 +2,14 @@
   "loader": "enderio:composite_model",
   "components": [
     {
-      "model": "enderio_machines:block/simple_machine_frame"
-    },
-    {
       "model": "enderio_machines:block/simple_powered_furnace_front_on"
     },
     {
       "model": "enderio_machines:block/io_overlay"
+    },
+    {
+      "model": "enderio_machines:block/simple_machine_frame",
+      "particle_provider": true
     }
   ]
 }

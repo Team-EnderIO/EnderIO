@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "enderio:fused_quartz_np"
+    },
+    {
+      "tag": "enderio:fused_quartz_np"
+    },
+    {
+      "tag": "enderio:fused_quartz_np"
+    },
+    {
+      "tag": "enderio:fused_quartz_np"
+    },
+    {
+      "tag": "enderio:fused_quartz_np"
+    },
+    {
+      "tag": "enderio:fused_quartz_np"
+    },
+    {
+      "tag": "enderio:fused_quartz_np"
+    },
+    {
+      "tag": "enderio:fused_quartz_np"
+    },
+    {
+      "tag": "forge:dyes/yellow"
+    }
+  ],
+  "result": {
+    "item": "enderio:fused_quartz_np_yellow",
+    "count": 8
+  }
+}

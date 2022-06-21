@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "enderio:fused_quartz_nm"
+    },
+    {
+      "tag": "enderio:fused_quartz_nm"
+    },
+    {
+      "tag": "enderio:fused_quartz_nm"
+    },
+    {
+      "tag": "enderio:fused_quartz_nm"
+    },
+    {
+      "tag": "enderio:fused_quartz_nm"
+    },
+    {
+      "tag": "enderio:fused_quartz_nm"
+    },
+    {
+      "tag": "enderio:fused_quartz_nm"
+    },
+    {
+      "tag": "enderio:fused_quartz_nm"
+    },
+    {
+      "tag": "forge:dyes/white"
+    }
+  ],
+  "result": {
+    "item": "enderio:fused_quartz_nm_white",
+    "count": 8
+  }
+}

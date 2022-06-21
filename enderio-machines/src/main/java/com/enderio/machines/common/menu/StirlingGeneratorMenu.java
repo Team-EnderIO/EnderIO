@@ -1,6 +1,5 @@
 package com.enderio.machines.common.menu;
 
-import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.StirlingGeneratorBlockEntity;
 import com.enderio.machines.common.init.MachineMenus;
 import net.minecraft.network.FriendlyByteBuf;

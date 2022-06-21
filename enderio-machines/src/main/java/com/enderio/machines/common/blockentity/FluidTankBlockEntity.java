@@ -34,26 +34,16 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     public static class Standard extends FluidTankBlockEntity {
         public static final int CAPACITY = 16 * FluidAttributes.BUCKET_VOLUME;
 
-        public Standard(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-            super(pType, pWorldPosition, pBlockState, CAPACITY);
-        }
-
-        @Override
-        public MachineTier getTier() {
-            return MachineTier.Standard;
+        public Standard(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
+            super(type, worldPosition, blockState, CAPACITY);
         }
     }
 
     public static class Enhanced extends FluidTankBlockEntity {
         public static final int CAPACITY = 32 * FluidAttributes.BUCKET_VOLUME;
 
-        public Enhanced(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-            super(pType, pWorldPosition, pBlockState, CAPACITY);
-        }
-
-        @Override
-        public MachineTier getTier() {
-            return MachineTier.Standard;
+        public Enhanced(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
+            super(type, worldPosition, blockState, CAPACITY);
         }
     }
 
@@ -61,8 +51,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
 
     private final MachineFluidHandler fluidHandler;
 
-    public FluidTankBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState, int capacity) {
-        super(pType, pWorldPosition, pBlockState);
+    public FluidTankBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState, int capacity) {
+        super(type, worldPosition, blockState);
 
         // Create fluid tank.
         this.fluidTank = createFluidTank(capacity);
@@ -83,6 +73,11 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
                 setChanged();
             }
         };
+    }
+
+    @Override
+    public MachineTier getTier() {
+        return MachineTier.STANDARD;
     }
 
     @Override

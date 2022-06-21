@@ -1,0 +1,21 @@
+{
+  "type": "enderio_machines:sagmilling",
+  "input": {
+    "item": "minecraft:coal"
+  },
+  "energy": 2400,
+  "outputs": [
+    {
+      "item": "enderio:coal_powder"
+    },
+    {
+      "item": "enderio:coal_powder",
+      "chance": 0.1
+    },
+    {
+      "tag": "forge:dusts/sulfur",
+      "chance": 0.1,
+      "optional": true
+    }
+  ]
+}

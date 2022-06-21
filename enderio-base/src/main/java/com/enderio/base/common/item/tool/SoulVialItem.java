@@ -1,14 +1,14 @@
 package com.enderio.base.common.item.tool;
 
-import com.enderio.api.client.tooltip.IAdvancedTooltipProvider;
-import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.api.capability.IEntityStorage;
 import com.enderio.api.capability.IMultiCapabilityItem;
 import com.enderio.api.capability.MultiCapabilityProvider;
-import com.enderio.base.common.capability.EntityStorage;
-import com.enderio.api.capability.IEntityStorage;
 import com.enderio.api.capability.StoredEntityData;
-import com.enderio.base.common.item.EIOCreativeTabs;
+import com.enderio.api.client.tooltip.IAdvancedTooltipProvider;
+import com.enderio.base.common.capability.EntityStorage;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.common.item.EIOCreativeTabs;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.util.EntityCaptureUtils;
 import com.enderio.base.common.util.EntityUtil;

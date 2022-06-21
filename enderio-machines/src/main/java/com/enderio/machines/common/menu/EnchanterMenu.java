@@ -2,8 +2,8 @@ package com.enderio.machines.common.menu;
 
 import com.enderio.machines.common.blockentity.EnchanterBlockEntity;
 import com.enderio.machines.common.init.MachineMenus;
-import com.enderio.api.recipe.EnchanterRecipe;
 import com.enderio.machines.common.init.MachineRecipes;
+import com.enderio.machines.common.recipe.EnchanterRecipe;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -30,11 +30,11 @@ public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
             addSlot(new MachineSlot(blockEntity.getInventory(), 3, 144, 35) {
                 @Override
                 public void onTake(Player pPlayer, ItemStack pStack) {
-                    Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.Types.ENCHANTING, blockEntity.getRecipeWrapper(), level);
-                    if (recipe.isPresent() && (pPlayer.experienceLevel > recipe.get().getLevelCost(blockEntity.getRecipeWrapper()) || pPlayer.isCreative())) {
-                        int amount = recipe.get().getAmount(blockEntity.getRecipeWrapper());
+                    Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.Types.ENCHANTING, blockEntity.getContainer(), level);
+                    if (recipe.isPresent() && (pPlayer.experienceLevel > recipe.get().getXPCost(blockEntity.getContainer()) || pPlayer.isCreative())) {
+                        int amount = recipe.get().getInputAmountConsumed(blockEntity.getContainer());
                         int lapizForLevel = recipe.get().getLapisForLevel(recipe.get().getEnchantmentLevel(blockEntity.getInventory().getStackInSlot(1).getCount()));
-                        pPlayer.giveExperienceLevels(-recipe.get().getLevelCost(blockEntity.getRecipeWrapper()));
+                        pPlayer.giveExperienceLevels(-recipe.get().getXPCost(blockEntity.getContainer()));
                         blockEntity.getInventory().getStackInSlot(0).shrink(1);
                         blockEntity.getInventory().getStackInSlot(1).shrink(amount);
                         blockEntity.getInventory().getStackInSlot(2).shrink(lapizForLevel);
@@ -44,8 +44,8 @@ public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
 
                 @Override
                 public boolean mayPickup(Player playerIn) {
-                    Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.Types.ENCHANTING, blockEntity.getRecipeWrapper(), level);
-                    if (recipe.isPresent() && (playerIn.experienceLevel > recipe.get().getLevelCost(blockEntity.getRecipeWrapper()) || playerIn.isCreative()) && blockEntity.canAct()) {
+                    Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.Types.ENCHANTING, blockEntity.getContainer(), level);
+                    if (recipe.isPresent() && (playerIn.experienceLevel > recipe.get().getXPCost(blockEntity.getContainer()) || playerIn.isCreative()) && blockEntity.canAct()) {
                         return super.mayPickup(playerIn);
                     }
                     return false;
@@ -65,9 +65,9 @@ public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
 
     public int getCurrentCost() {
         if (level != null) {
-            Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.Types.ENCHANTING, getBlockEntity().getRecipeWrapper(), level);
+            Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.Types.ENCHANTING, getBlockEntity().getContainer(), level);
             if (recipe.isPresent()) {
-                return recipe.get().getLevelCost(new RecipeWrapper(this.getBlockEntity().getInventory()));
+                return recipe.get().getXPCost(new RecipeWrapper(this.getBlockEntity().getInventory()));
             }
         }
         return -1;

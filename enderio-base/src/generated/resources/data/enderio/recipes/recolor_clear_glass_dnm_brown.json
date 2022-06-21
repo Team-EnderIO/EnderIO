@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "enderio:clear_glass_dnm"
+    },
+    {
+      "tag": "enderio:clear_glass_dnm"
+    },
+    {
+      "tag": "enderio:clear_glass_dnm"
+    },
+    {
+      "tag": "enderio:clear_glass_dnm"
+    },
+    {
+      "tag": "enderio:clear_glass_dnm"
+    },
+    {
+      "tag": "enderio:clear_glass_dnm"
+    },
+    {
+      "tag": "enderio:clear_glass_dnm"
+    },
+    {
+      "tag": "enderio:clear_glass_dnm"
+    },
+    {
+      "tag": "forge:dyes/brown"
+    }
+  ],
+  "result": {
+    "item": "enderio:clear_glass_dnm_brown",
+    "count": 8
+  }
+}

@@ -1,6 +1,6 @@
 {
   "parent": "enderio_machines:block/simple_powered_furnace_front",
   "textures": {
-    "front": "enderio_machines:block/simple_powered_furnace_front"
+    "front": "enderio_machines:block/simple_powered_furnace_front_on"
   }
 }
