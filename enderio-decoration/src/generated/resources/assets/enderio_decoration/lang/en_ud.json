@@ -1,4 +1,7 @@
 {
+  "block.enderio_decoration.light": "\u0287\u0265b\u0131\uA780",
+  "block.enderio_decoration.light_inverted": "p\u01DD\u0287\u0279\u01DD\u028CuI \u0287\u0265b\u0131\uA780",
+  "block.enderio_decoration.light_node": "\u01DDpoN \u0287\u0265b\u0131\uA780",
   "block.enderio_decoration.painted_crafting_table": "\u01DD\u05DFq\u0250\u27D8 bu\u0131\u0287\u025F\u0250\u0279\u0186 p\u01DD\u0287u\u0131\u0250\u0500",
   "block.enderio_decoration.painted_fence": "\u01DD\u0254u\u01DD\u2132 p\u01DD\u0287u\u0131\u0250\u0500",
   "block.enderio_decoration.painted_fence_gate": "\u01DD\u0287\u0250\u2141 \u01DD\u0254u\u01DD\u2132 p\u01DD\u0287u\u0131\u0250\u0500",
@@ -9,5 +12,9 @@
   "block.enderio_decoration.painted_stairs": "s\u0279\u0131\u0250\u0287S p\u01DD\u0287u\u0131\u0250\u0500",
   "block.enderio_decoration.painted_trapdoor": "\u0279oopd\u0250\u0279\u27D8 p\u01DD\u0287u\u0131\u0250\u0500",
   "block.enderio_decoration.painted_wooden_pressure_plate": "\u01DD\u0287\u0250\u05DF\u0500 \u01DD\u0279nss\u01DD\u0279\u0500 u\u01DDpooM p\u01DD\u0287u\u0131\u0250\u0500",
+  "block.enderio_decoration.powerd_light": "\u0287\u0265b\u0131\uA780 p\u0279\u01DD\u028Do\u0500",
+  "block.enderio_decoration.powerd_light_inverted": "p\u01DD\u0287\u0279\u01DD\u028CuI \u0287\u0265b\u0131\uA780 p\u0279\u01DD\u028Do\u0500",
+  "block.enderio_decoration.powerd_light_inverted_wireless": "ss\u01DD\u05DF\u01DD\u0279\u0131M p\u01DD\u0287\u0279\u01DD\u028CuI \u0287\u0265b\u0131\uA780 p\u0279\u01DD\u028Do\u0500",
+  "block.enderio_decoration.powerd_light_wireless": "ss\u01DD\u05DF\u01DD\u0279\u0131M \u0287\u0265b\u0131\uA780 p\u0279\u01DD\u028Do\u0500",
   "entity.enderio_decoration.painted_sand": "pu\u0250S p\u01DD\u0287u\u0131\u0250\u0500"
 }

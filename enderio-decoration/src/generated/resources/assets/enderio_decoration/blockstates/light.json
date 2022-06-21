@@ -1,0 +1,118 @@
+{
+  "variants": {
+    "enabled=false,face=floor,facing=north": {
+      "model": "enderio_decoration:block/light_powered"
+    },
+    "enabled=true,face=floor,facing=north": {
+      "model": "enderio_decoration:block/light"
+    },
+    "enabled=false,face=wall,facing=north": {
+      "model": "enderio_decoration:block/light_powered",
+      "x": 90,
+      "uvlock": true
+    },
+    "enabled=true,face=wall,facing=north": {
+      "model": "enderio_decoration:block/light",
+      "x": 90,
+      "uvlock": true
+    },
+    "enabled=false,face=ceiling,facing=north": {
+      "model": "enderio_decoration:block/light_powered",
+      "x": 180,
+      "y": 180
+    },
+    "enabled=true,face=ceiling,facing=north": {
+      "model": "enderio_decoration:block/light",
+      "x": 180,
+      "y": 180
+    },
+    "enabled=false,face=floor,facing=south": {
+      "model": "enderio_decoration:block/light_powered",
+      "y": 180
+    },
+    "enabled=true,face=floor,facing=south": {
+      "model": "enderio_decoration:block/light",
+      "y": 180
+    },
+    "enabled=false,face=wall,facing=south": {
+      "model": "enderio_decoration:block/light_powered",
+      "x": 90,
+      "y": 180,
+      "uvlock": true
+    },
+    "enabled=true,face=wall,facing=south": {
+      "model": "enderio_decoration:block/light",
+      "x": 90,
+      "y": 180,
+      "uvlock": true
+    },
+    "enabled=false,face=ceiling,facing=south": {
+      "model": "enderio_decoration:block/light_powered",
+      "x": 180
+    },
+    "enabled=true,face=ceiling,facing=south": {
+      "model": "enderio_decoration:block/light",
+      "x": 180
+    },
+    "enabled=false,face=floor,facing=west": {
+      "model": "enderio_decoration:block/light_powered",
+      "y": 270
+    },
+    "enabled=true,face=floor,facing=west": {
+      "model": "enderio_decoration:block/light",
+      "y": 270
+    },
+    "enabled=false,face=wall,facing=west": {
+      "model": "enderio_decoration:block/light_powered",
+      "x": 90,
+      "y": 270,
+      "uvlock": true
+    },
+    "enabled=true,face=wall,facing=west": {
+      "model": "enderio_decoration:block/light",
+      "x": 90,
+      "y": 270,
+      "uvlock": true
+    },
+    "enabled=false,face=ceiling,facing=west": {
+      "model": "enderio_decoration:block/light_powered",
+      "x": 180,
+      "y": 90
+    },
+    "enabled=true,face=ceiling,facing=west": {
+      "model": "enderio_decoration:block/light",
+      "x": 180,
+      "y": 90
+    },
+    "enabled=false,face=floor,facing=east": {
+      "model": "enderio_decoration:block/light_powered",
+      "y": 90
+    },
+    "enabled=true,face=floor,facing=east": {
+      "model": "enderio_decoration:block/light",
+      "y": 90
+    },
+    "enabled=false,face=wall,facing=east": {
+      "model": "enderio_decoration:block/light_powered",
+      "x": 90,
+      "y": 90,
+      "uvlock": true
+    },
+    "enabled=true,face=wall,facing=east": {
+      "model": "enderio_decoration:block/light",
+      "x": 90,
+      "y": 90,
+      "uvlock": true
+    },
+    "enabled=false,face=ceiling,facing=east": {
+      "model": "enderio_decoration:block/light_powered",
+      "x": 180,
+      "y": 270
+    },
+    "enabled=true,face=ceiling,facing=east": {
+      "model": "enderio_decoration:block/light",
+      "x": 180,
+      "y": 270
+    }
+  }
+}
