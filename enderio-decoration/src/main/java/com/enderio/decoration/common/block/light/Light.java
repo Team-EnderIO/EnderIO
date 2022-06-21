@@ -14,6 +14,11 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+/**
+ * Default might class. 
+ * Handles shape related code.
+ * Holds "inverted" property
+ */
 public class Light extends FaceAttachedHorizontalDirectionalBlock{
 	public static final BooleanProperty ENABLED = BlockStateProperties.ENABLED;
 	protected static final VoxelShape CEILING_AABB_X = Block.box(6.0D, 14.0D, 5.0D, 10.0D, 16.0D, 11.0D);

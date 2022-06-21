@@ -17,6 +17,9 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+/**
+ * Dummy light block
+ */
 public class LightNode extends Block implements EntityBlock{
 
 	public LightNode(Properties properties) {

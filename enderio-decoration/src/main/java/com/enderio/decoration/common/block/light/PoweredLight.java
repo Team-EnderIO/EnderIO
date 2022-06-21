@@ -17,6 +17,11 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 
+/**
+ * Class for all power consuming lights. 
+ * Handles {@code PoweredLightBlockEntity} interactions.
+ * Handles "Wireless" subtype.
+ */
 public class PoweredLight extends Light implements EntityBlock{
 	public boolean wireless;
 

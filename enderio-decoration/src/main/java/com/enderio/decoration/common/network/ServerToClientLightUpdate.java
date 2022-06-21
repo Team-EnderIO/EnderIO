@@ -8,6 +8,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.network.NetworkEvent.Context;
 
+/**
+ * Custom setblock packet to update light
+ */
 public class ServerToClientLightUpdate {
     public final BlockPos pos;
     public final BlockState state;

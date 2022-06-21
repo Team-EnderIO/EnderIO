@@ -1,5 +1,6 @@
 package com.enderio.decoration.common.blockentity;
 
+import com.enderio.decoration.common.block.light.LightNode;
 import com.enderio.decoration.common.network.EnderDecorNetwork;
 import com.enderio.decoration.common.network.ServerToClientLightUpdate;
 
@@ -29,20 +30,26 @@ public class LightNodeBlockEntity extends BlockEntity {
 		this.setChanged();
 	}
 	
+	/**
+	 * called in {@link LightNode.neighborChanged} when a neighbor changes serverside.
+	 * Checks if the this block still has a {@code PoweredLight}, if not it removes itself.
+	 * Checks if the {@code PoweredLight} is still active, if not it removes itself.
+	 * If the block changed inside the range, call the {@code PoweredLightBlockEntity} to update. //TODO make smarter? 
+	 */
 	public static void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving, LightNodeBlockEntity e) {
 		if (e.masterpos == null) {
 			return;
 		}
 		if (!(level.getBlockEntity(e.masterpos) instanceof PoweredLightBlockEntity)) {
             level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_NEIGHBORS);
-            EnderDecorNetwork.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(pos)), new ServerToClientLightUpdate(pos, Blocks.AIR.defaultBlockState()));
+            EnderDecorNetwork.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(pos)), new ServerToClientLightUpdate(pos, Blocks.AIR.defaultBlockState())); //custom setblock packet to update light
 			return;
 		}
 		if (PoweredLightBlockEntity.inSpreadZone(fromPos, e.masterpos)) {
 			PoweredLightBlockEntity master = (PoweredLightBlockEntity) level.getBlockEntity(e.masterpos);
 			if (!master.isActive()) {
 				level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_NEIGHBORS);
-				EnderDecorNetwork.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(pos)), new ServerToClientLightUpdate(pos, Blocks.AIR.defaultBlockState()));
+				EnderDecorNetwork.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(pos)), new ServerToClientLightUpdate(pos, Blocks.AIR.defaultBlockState())); //custom setblock packet to update light
 				return;
 			}
 			if (level.getBlockEntity(fromPos) instanceof LightNodeBlockEntity light) {

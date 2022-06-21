@@ -5,6 +5,9 @@ import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.network.NetworkEvent.Context;
 
+/**
+ * Custom setblock packet to update light
+ */
 public class ServerToClientLightUpdateHandler {
 
     public static void handlePacket(ServerToClientLightUpdate message, Supplier<Context> ctx) {

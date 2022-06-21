@@ -35,7 +35,7 @@ public class PoweredLightBlockEntity extends BlockEntity{
 	}
 	
 	public static void tick(Level level, BlockPos pos, BlockState state, PoweredLightBlockEntity e) {
-		if(((PoweredLight) state.getBlock()).isWireless()){
+		if(((PoweredLight) state.getBlock()).isWireless()){ //check if wireless
 			consumePowerWireless(level, pos, state, e);
 		}else { 
 			consumePower(level, pos, state, e);
@@ -54,6 +54,9 @@ public class PoweredLightBlockEntity extends BlockEntity{
 		return active;
 	}
 
+	/**
+	 * Start the spreading algorithm by calling {@link PoweredLightBlockEntity.spreadNode} on each block recursively.
+	 */
 	private static void createNodes(Level level, BlockPos center, BlockState state) {
 		ArrayList<BlockPos> start = new ArrayList<BlockPos>();
 		ArrayList<BlockPos> prev = new ArrayList<BlockPos>();
@@ -148,6 +151,9 @@ public class PoweredLightBlockEntity extends BlockEntity{
 		return true;
 	}
 	
+	/**
+	 * Consumes power from the block entity below, if possible.
+	 */
 	private static void consumePower(Level level, BlockPos pos, BlockState state, PoweredLightBlockEntity e) {
 		BlockEntity be = level.getBlockEntity(pos.relative(state.getValue(Light.FACING).getOpposite()));
 		if (be != null) {
@@ -168,6 +174,9 @@ public class PoweredLightBlockEntity extends BlockEntity{
 		}
 	}
 	
+	/**
+     * Consumes wireless power, if possible.
+     */
 	private static void consumePowerWireless(Level level, BlockPos pos, BlockState state, PoweredLightBlockEntity e) {
 	    boolean powered = level.hasNeighborSignal(pos);
 	    if (powered != ((Light) state.getBlock()).isInverted() ? state.getValue(Light.ENABLED) : !state.getValue(Light.ENABLED)) {
