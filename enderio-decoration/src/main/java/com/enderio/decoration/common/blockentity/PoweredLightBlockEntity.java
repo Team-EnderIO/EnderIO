@@ -15,6 +15,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -74,12 +75,6 @@ public class PoweredLightBlockEntity extends BlockEntity{
 	/**
 	 * Add Light nodes to the axis of the center block. If the position is already occupied, it is added to the blocked list. 
 	 * If the position is not blocked by a block in the blocked list and is within the spread zone, it is added to the array of starting positions for the next iteration.
-	 * @param level
-	 * @param node
-	 * @param center
-	 * @param blocked
-	 * @param prev 
-	 * @return The next starting positions for the algorithm.
 	 */
 	private static List<BlockPos> spreadNode(Level level, BlockPos node, BlockPos center, List<BlockPos> blocked, ArrayList<BlockPos> prev) {
 		ArrayList<BlockPos> next = new ArrayList<>();
@@ -88,7 +83,7 @@ public class PoweredLightBlockEntity extends BlockEntity{
 			if (!prev.contains(relative) && inSpreadZone(relative, center)) {
 				next.add(relative);
 				if (level.getBlockState(relative).isAir()) {
-					level.setBlock(relative, DecorBlocks.LIGHT_NODE.get().defaultBlockState(),1);
+					level.setBlock(relative, DecorBlocks.LIGHT_NODE.get().defaultBlockState(), Block.UPDATE_ALL);
 					if (level.getBlockEntity(relative) instanceof LightNodeBlockEntity light) {
 						light.setMaster((PoweredLightBlockEntity) level.getBlockEntity(center));
 					}
@@ -96,7 +91,7 @@ public class PoweredLightBlockEntity extends BlockEntity{
 				boolean bl = false;
 				for (BlockPos blockedpos: blocked) {
 					if (isBlocked(relative, center, blockedpos) && level.getBlockState(relative).is(DecorBlocks.LIGHT_NODE.get())) {
-						level.setBlock(relative, Blocks.AIR.defaultBlockState(), 1);
+						level.setBlock(relative, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
 						bl = true;
 					}
 				}
@@ -111,10 +106,6 @@ public class PoweredLightBlockEntity extends BlockEntity{
 	/**
 	 * Check if the light is blocked by another block. For now this means any that the block is inside a cube 
 	 * created away from the center, with the blocked position as edge.
-	 * @param node
-	 * @param center
-	 * @param blocked
-	 * @return
 	 */
 	private static boolean isBlocked(BlockPos node, BlockPos center, BlockPos blocked) {
 		boolean x = false;
@@ -143,9 +134,6 @@ public class PoweredLightBlockEntity extends BlockEntity{
 	
 	/**
 	 * Returns true if the block is inside the zone defined by the spread.
-	 * @param node
-	 * @param center
-	 * @return
 	 */
 	public static boolean inSpreadZone(BlockPos node, BlockPos center) { 
 		if (Math.abs(node.getX()-center.getX()) > spread) {
@@ -171,7 +159,7 @@ public class PoweredLightBlockEntity extends BlockEntity{
 					    e.active = false;
 						return;
 					}
-			        level.setBlock(pos, state.setValue(Light.ENABLED, false), 3);
+			        level.setBlock(pos, state.setValue(Light.ENABLED, false), Block.UPDATE_ALL);
 					e.active = true;
 					energy.resolve().get().extractEnergy(RF_USE_TICK, false);
 					return;
@@ -183,7 +171,7 @@ public class PoweredLightBlockEntity extends BlockEntity{
 	private static void consumePowerWireless(Level level, BlockPos pos, BlockState state, PoweredLightBlockEntity e) {
 	    boolean powered = level.hasNeighborSignal(pos);
 	    if (powered != ((Light) state.getBlock()).isInverted() ? state.getValue(Light.ENABLED) : !state.getValue(Light.ENABLED)) {
-	        level.setBlock(pos, state.setValue(Light.ENABLED, false), 3);
+	        level.setBlock(pos, state.setValue(Light.ENABLED, false), Block.UPDATE_ALL);
 	        e.active = true;
 	    }
 	}

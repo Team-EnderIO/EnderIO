@@ -18,6 +18,5 @@ public class EnderDecorNetwork {
     public static void register() {
         INSTANCE.registerMessage(0, ServerToClientLightUpdate.class, ServerToClientLightUpdate::write, ServerToClientLightUpdate::new, ServerToClientLightUpdate::handle);
     }
-
     
 }

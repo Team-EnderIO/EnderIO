@@ -26,8 +26,8 @@ public class Light extends FaceAttachedHorizontalDirectionalBlock{
 	protected static final VoxelShape EAST_AABB = Block.box(0.0D, 6.0D, 5.0D, 2.0D, 10.0D, 11.0D);
 	private boolean inverted;
 	
-	public Light(Properties p_53182_, boolean inverted) {
-		super(p_53182_);
+	public Light(Properties properties, boolean inverted) {
+		super(properties);
 		this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(ENABLED, Boolean.valueOf(!inverted)).setValue(FACE, AttachFace.WALL));
 		this.inverted = inverted;
 	}

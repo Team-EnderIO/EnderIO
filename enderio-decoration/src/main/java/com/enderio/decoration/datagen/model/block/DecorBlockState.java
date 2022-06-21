@@ -28,7 +28,7 @@ public class DecorBlockState {
     }
     
     public static void lightBlock(DataGenContext<Block, ? extends Block> ctx, RegistrateBlockstateProvider prov) {
-    	prov.getVariantBuilder(ctx.get()).forAllStates(state -> {
+        prov.getVariantBuilder(ctx.get()).forAllStates(state -> {
             Direction facing = state.getValue(PoweredLight.FACING);
             AttachFace face = state.getValue(PoweredLight.FACE);
             boolean powered = state.getValue(PoweredLight.ENABLED);

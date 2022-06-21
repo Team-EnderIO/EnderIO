@@ -20,8 +20,8 @@ import net.minecraft.world.level.block.state.properties.AttachFace;
 public class PoweredLight extends Light implements EntityBlock{
 	public boolean wireless;
 
-	public PoweredLight(Properties p_49224_, boolean inverted, boolean wireless) {
-		super(p_49224_, inverted);
+	public PoweredLight(Properties properties, boolean inverted, boolean wireless) {
+		super(properties, inverted);
 		this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(ENABLED, false).setValue(FACE, AttachFace.WALL));
 		this.wireless = wireless;
 	}
@@ -41,8 +41,8 @@ public class PoweredLight extends Light implements EntityBlock{
 	}
 	
 	@Nullable
-	protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> p_152133_, BlockEntityType<E> p_152134_, BlockEntityTicker<? super E> p_152135_) {
-		return p_152134_ == p_152133_ ? (BlockEntityTicker<A>)p_152135_ : null;
+	protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> typeA, BlockEntityType<E> typeE, BlockEntityTicker<? super E> ticker) {
+		return typeA == typeE ? (BlockEntityTicker<A>)ticker : null;
 	}
 
 	@Override

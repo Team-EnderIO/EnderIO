@@ -336,20 +336,32 @@ subprojects {
         // While we don't have conduits etc.
         runtimeOnly fg.deobf("curse.maven:mekanism-268560:3743835")
     }
+    
+    def resourceTargets = ['META-INF/mods.toml', 'pack.mcmeta']
+	def intoTargets = ["$rootDir/${project.name}/bin/main/"]
+	def replaceProperties = [version: version, mcversion: minecraft_version_range,
+                    forge_version: forge_version_range,
+                    loader_version: loader_version_range]
+	processResources {
+    	inputs.properties replaceProperties
+    	replaceProperties.put 'project', project
 
-    processResources {
-        // Fill mods.toml placeholders
-        filesMatching("META-INF/mods.toml") {
-            expand 'version': version,
-                    'mcversion': minecraft_version_range,
-                    'forge_version': forge_version_range,
-                    'loader_version': loader_version_range
+    	filesMatching(resourceTargets) {
+        	expand replaceProperties
+    	}
 
-        }
-
-        // Copy our logo in
-        from("$rootDir/doc/img/logo.png") into 'logo.png'
-    }
+    	intoTargets.each { target ->
+       	 if (file(target).exists()) {
+            	copy {
+                	from(sourceSets.main.resources) {
+                    	include resourceTargets
+                    	expand replaceProperties
+                	}
+                	into target
+            	}
+        	}
+    	}
+	} 
 }
 
 // Combined jar

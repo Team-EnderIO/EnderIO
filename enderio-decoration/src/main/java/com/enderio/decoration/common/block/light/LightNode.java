@@ -19,8 +19,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class LightNode extends Block implements EntityBlock{
 
-	public LightNode(Properties p_49224_) {
-		super(p_49224_);
+	public LightNode(Properties properties) {
+		super(properties);
 	}
 	
 	@Override

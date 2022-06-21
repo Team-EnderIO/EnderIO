@@ -28,9 +28,7 @@ public class ServerToClientLightUpdate {
     }
     
     static void handle(final ServerToClientLightUpdate message, Supplier<Context> ctx) {
-        ctx.get().enqueueWork(() ->
-             ServerToClientLightUpdateHandler.handlePacket(message, ctx)
-                );
+        ctx.get().enqueueWork(() -> ServerToClientLightUpdateHandler.handlePacket(message, ctx));
         ctx.get().setPacketHandled(true);
     }
 
