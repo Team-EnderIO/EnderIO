@@ -7,11 +7,13 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 
+import javax.annotation.Nullable;
+
 public class CoordinateSelectionHolder implements ICoordinateSelectionHolder {
-    private CoordinateSelection selection;
+    private @Nullable CoordinateSelection selection;
 
     @Override
-    public CoordinateSelection getSelection() {
+    public @Nullable CoordinateSelection getSelection() {
         return selection;
     }
 
@@ -24,8 +26,8 @@ public class CoordinateSelectionHolder implements ICoordinateSelectionHolder {
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
         if (hasSelection()) {
-            nbt.putString("level", selection.getLevel().toString());
-            nbt.put("pos", NbtUtils.writeBlockPos(selection.getPos()));
+            nbt.putString("level", selection.level().toString());
+            nbt.put("pos", NbtUtils.writeBlockPos(selection.pos()));
         }
         return nbt;
     }
@@ -33,7 +35,7 @@ public class CoordinateSelectionHolder implements ICoordinateSelectionHolder {
     @Override
     public void deserializeNBT(Tag tag) {
         if (tag instanceof CompoundTag nbt && !nbt.isEmpty()) {
-            selection = CoordinateSelection.of(new ResourceLocation(nbt.getString("level")),
+            selection = new CoordinateSelection(new ResourceLocation(nbt.getString("level")),
                 NbtUtils.readBlockPos(nbt.getCompound("pos")));
         }
     }

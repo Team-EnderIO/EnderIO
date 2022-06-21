@@ -88,12 +88,12 @@ public class FireCraftingRecipe implements EnderRecipe<Container> {
 
     @Override
     public RecipeSerializer<FireCraftingRecipe> getSerializer() {
-        return EIORecipes.FIRE_CRAFTING_SERIALIZER.get();
+        return EIORecipes.FIRE_CRAFTING.serializer().get();
     }
 
     @Override
     public RecipeType<?> getType() {
-        return EIORecipes.FIRE_CRAFTING.get();
+        return EIORecipes.FIRE_CRAFTING.type().get();
     }
 
     public static class Serializer implements RecipeSerializer<FireCraftingRecipe> {

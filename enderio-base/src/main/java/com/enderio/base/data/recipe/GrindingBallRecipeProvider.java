@@ -1,9 +1,9 @@
-package com.enderio.base.data.recipe.standard;
+package com.enderio.base.data.recipe;
 
 import com.enderio.base.EnderIO;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.init.EIORecipes;
-import com.enderio.base.data.recipe.EnderRecipeProvider;
+import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.google.gson.JsonObject;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
@@ -75,7 +75,7 @@ public class GrindingBallRecipeProvider extends EnderRecipeProvider {
 
         @Override
         public RecipeSerializer<?> getType() {
-            return EIORecipes.GRINDINGBALL_SERIALIZER.get();
+            return EIORecipes.GRINDING_BALL.serializer().get();
         }
     }
 

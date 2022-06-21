@@ -1,6 +1,6 @@
 package com.enderio.machines.common.io.energy;
 
-import com.enderio.api.energy.EnergyIOMode;
+import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.api.io.IIOConfig;
 import net.minecraftforge.energy.IEnergyStorage;
 
@@ -28,7 +28,7 @@ public interface IMachineEnergyStorage extends IEnergyStorage {
 
     /**
      * Consume energy from storage.
-     * @apiNote This is capped to {@link #getMaxEnergyUse()}, for uncapped use use {@link #takeEnergy(int)} instead.
+     * @apiNote This is capped to {@link #getMaxEnergyUse()}, for uncapped use {@link #takeEnergy(int)} instead.
      * @return Amount of energy consumed.
      */
     int consumeEnergy(int energy);

@@ -1,6 +1,5 @@
 package com.enderio.base;
 
-import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.base.common.init.*;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.tag.EIOTags;
@@ -8,7 +7,7 @@ import com.enderio.base.config.base.BaseConfig;
 import com.enderio.base.config.decor.DecorConfig;
 import com.enderio.base.config.machines.MachinesConfig;
 import com.enderio.base.data.loot.FireCraftingLootProvider;
-import com.enderio.base.data.recipe.standard.StandardRecipes;
+import com.enderio.base.data.recipe.*;
 import com.enderio.base.data.tags.EIOBlockTagsProvider;
 import com.enderio.base.data.tags.EIOFluidTagsProvider;
 import com.enderio.base.data.tags.EIOItemTagsProvider;
@@ -83,7 +82,14 @@ public class EnderIO {
     public void gatherData(GatherDataEvent event) {
         // TODO: 1.19: This will be tidied once machines rework is merged.
         DataGenerator generator = event.getGenerator();
-        StandardRecipes.generate(event.includeServer(), generator);
+
+        generator.addProvider(event.includeServer(), new MaterialRecipes(generator));
+        generator.addProvider(event.includeServer(), new BlockRecipes(generator));
+        generator.addProvider(event.includeServer(), new ItemRecipes(generator));
+        generator.addProvider(event.includeServer(), new GrindingBallRecipeProvider(generator));
+        generator.addProvider(event.includeServer(), new GlassRecipes(generator));
+        generator.addProvider(event.includeServer(), new FireCraftingRecipes(generator));
+
         ForgeBlockTagsProvider b = new ForgeBlockTagsProvider(generator, event.getExistingFileHelper());
         generator.addProvider(event.includeServer(), new EIOItemTagsProvider(generator, b, event.getExistingFileHelper()));
         generator.addProvider(event.includeServer(), new EIOFluidTagsProvider(generator, event.getExistingFileHelper()));

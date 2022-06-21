@@ -34,7 +34,7 @@ public class EIOCreativeTabs extends CreativeModeTab {
     @Override
     public ItemStack makeIcon() {
         if (itemIcon.get() == null)
-            return new ItemStack(Items.BEDROCK);
+            return new ItemStack(Items.BARRIER);
         return new ItemStack(itemIcon.get());
     }
 }

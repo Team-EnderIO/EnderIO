@@ -99,12 +99,12 @@ public class AlloySmeltingRecipe implements IAlloySmeltingRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return MachineRecipes.ALLOY_SMELTING_SERIALIZER.get();
+        return MachineRecipes.ALLOY_SMELTING.serializer().get();
     }
 
     @Override
     public RecipeType<?> getType() {
-        return MachineRecipes.ALLOY_SMELTING.get();
+        return MachineRecipes.ALLOY_SMELTING.type().get();
     }
 
     public static class Serializer implements RecipeSerializer<AlloySmeltingRecipe> {

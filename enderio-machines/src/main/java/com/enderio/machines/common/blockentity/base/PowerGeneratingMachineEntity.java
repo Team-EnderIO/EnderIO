@@ -1,7 +1,7 @@
 package com.enderio.machines.common.blockentity.base;
 
 import com.enderio.api.capacitor.CapacitorKey;
-import com.enderio.api.energy.EnergyIOMode;
+import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.machines.common.block.ProgressMachineBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;

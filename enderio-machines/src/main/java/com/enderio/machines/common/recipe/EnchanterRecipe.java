@@ -177,12 +177,12 @@ public class EnchanterRecipe implements EnderRecipe<Container> {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return MachineRecipes.ENCHANTING_SERIALIZER.get();
+        return MachineRecipes.ENCHANTING.serializer().get();
     }
 
     @Override
     public RecipeType<?> getType() {
-        return MachineRecipes.ENCHANTING.get();
+        return MachineRecipes.ENCHANTING.type().get();
     }
 
     public static class Serializer implements RecipeSerializer<EnchanterRecipe> {

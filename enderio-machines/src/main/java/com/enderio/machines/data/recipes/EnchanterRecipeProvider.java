@@ -2,7 +2,7 @@ package com.enderio.machines.data.recipes;
 
 import com.enderio.base.common.init.EIOEnchantments;
 import com.enderio.base.common.init.EIOItems;
-import com.enderio.base.data.recipe.EnderRecipeProvider;
+import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonObject;
@@ -127,7 +127,7 @@ public class EnchanterRecipeProvider extends EnderRecipeProvider {
 
         @Override
         public RecipeSerializer<?> getType() {
-            return MachineRecipes.ENCHANTING_SERIALIZER.get();
+            return MachineRecipes.ENCHANTING.serializer().get();
         }
 
     }

@@ -5,12 +5,13 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
+import org.jetbrains.annotations.Nullable;
 
 public class Owner implements IOwner {
-    private GameProfile profile;
+    private @Nullable GameProfile profile;
 
     @Override
-    public GameProfile getProfile() {
+    public @Nullable GameProfile getProfile() {
         return profile;
     }
 

@@ -78,7 +78,7 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
         return new MachineInventory(getIOConfig(), layout) {
             protected void onContentsChanged(int slot) {
                 if (slot != 3) {
-                    Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.ENCHANTING.get(), container, level);
+                    Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.ENCHANTING.type().get(), container, level);
                     if (recipe.isPresent()) {
                         getInventory().setStackInSlot(3, recipe.get().assemble(container));
                     } else {

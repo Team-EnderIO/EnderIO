@@ -1,4 +1,4 @@
-package com.enderio.api.energy;
+package com.enderio.api.io.energy;
 
 /**
  * Energy IO Mode declares how Energy IO is determined using IO configs.

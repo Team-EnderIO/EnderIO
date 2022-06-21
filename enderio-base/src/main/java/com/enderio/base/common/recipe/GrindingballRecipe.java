@@ -63,12 +63,12 @@ public class GrindingBallRecipe implements IGrindingBallData, EnderRecipe<Contai
 
     @Override
     public RecipeSerializer<GrindingBallRecipe> getSerializer() {
-        return EIORecipes.GRINDINGBALL_SERIALIZER.get();
+        return EIORecipes.GRINDING_BALL.serializer().get();
     }
 
     @Override
     public RecipeType<?> getType() {
-        return EIORecipes.GRINDINGBALL.get();
+        return EIORecipes.GRINDING_BALL.type().get();
     }
     
     @Override

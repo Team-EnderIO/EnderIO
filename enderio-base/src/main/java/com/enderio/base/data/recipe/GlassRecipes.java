@@ -1,4 +1,4 @@
-package com.enderio.base.data.recipe.standard;
+package com.enderio.base.data.recipe;
 
 import com.enderio.base.EnderIO;
 import com.enderio.base.common.block.glass.GlassBlocks;

@@ -34,6 +34,7 @@ import java.util.Optional;
 
 // TODO: Award XP
 
+// TODO: Rid ourselves of the need to have an interface for this recipe, reducing the hell that it causes.
 public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachine<IAlloySmeltingRecipe, IAlloySmeltingRecipe.Container> {
 
     // region Tiers
@@ -127,7 +128,7 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachine<IAl
 
     public AlloySmelterBlockEntity(AlloySmelterMode mode, CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey energyUseKey,
         BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-        super(MachineRecipes.ALLOY_SMELTING.get(), capacityKey, transferKey, energyUseKey, pType, pWorldPosition, pBlockState);
+        super(MachineRecipes.ALLOY_SMELTING.type().get(), capacityKey, transferKey, energyUseKey, pType, pWorldPosition, pBlockState);
         this.mode = mode;
 
         // Create the crafting inventory. Used for context in the vanilla recipe wrapper.
@@ -260,7 +261,7 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachine<IAl
             @Override
             protected @Nullable IAlloySmeltingRecipe loadRecipe(ResourceLocation id) {
                 return level.getRecipeManager().byKey(id).map(recipe -> {
-                    if (recipe.getType() == MachineRecipes.ALLOY_SMELTING.get()) {
+                    if (recipe.getType() == MachineRecipes.ALLOY_SMELTING.type().get()) {
                         return (AlloySmeltingRecipe) recipe;
                     } else if (recipe.getType() == RecipeType.SMELTING) {
                         return new VanillaAlloySmeltingRecipe((SmeltingRecipe) recipe);

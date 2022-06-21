@@ -85,7 +85,9 @@ public class LocationPrintoutItem extends Item implements IMultiCapabilityItem {
     }
 
     public static Optional<CoordinateSelection> getSelection(ItemStack stack) {
-        return stack.getCapability(EIOCapabilities.COORDINATE_SELECTION_HOLDER).filter(ICoordinateSelectionHolder::hasSelection).map(selectionHolder -> selectionHolder.getSelection());
+        return stack.getCapability(EIOCapabilities.COORDINATE_SELECTION_HOLDER)
+            .filter(ICoordinateSelectionHolder::hasSelection)
+            .map(ICoordinateSelectionHolder::getSelection);
     }
 
     public static void setSelection(ItemStack stack, CoordinateSelection selection) {
@@ -96,9 +98,9 @@ public class LocationPrintoutItem extends Item implements IMultiCapabilityItem {
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> toolTip, TooltipFlag pIsAdvanced) {
         super.appendHoverText(pStack, pLevel, toolTip, pIsAdvanced);
         getSelection(pStack).ifPresent(selection -> {
-                toolTip.add(writeCoordinate('x', selection.getPos().getX())
-                    .append(writeCoordinate('y', selection.getPos().getY()))
-                    .append(writeCoordinate('z', selection.getPos().getZ())));
+                toolTip.add(writeCoordinate('x', selection.pos().getX())
+                    .append(writeCoordinate('y', selection.pos().getY()))
+                    .append(writeCoordinate('z', selection.pos().getZ())));
                 toolTip.add(Component.literal(selection.getLevelName()));
         });
     }

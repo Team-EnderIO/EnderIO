@@ -1,4 +1,4 @@
-package com.enderio.base.data.recipe;
+package com.enderio.core.data.recipes;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;

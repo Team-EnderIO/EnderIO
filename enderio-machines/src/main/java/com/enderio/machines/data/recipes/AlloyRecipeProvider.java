@@ -5,7 +5,7 @@ import com.enderio.base.common.block.glass.*;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
-import com.enderio.base.data.recipe.EnderRecipeProvider;
+import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonArray;
@@ -209,7 +209,7 @@ public class AlloyRecipeProvider extends EnderRecipeProvider {
 
         @Override
         public RecipeSerializer<?> getType() {
-            return MachineRecipes.ALLOY_SMELTING_SERIALIZER.get();
+            return MachineRecipes.ALLOY_SMELTING.serializer().get();
         }
     }
 }

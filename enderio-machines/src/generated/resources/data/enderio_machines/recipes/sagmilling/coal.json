@@ -1,6 +1,6 @@
 {
   "type": "enderio_machines:sagmilling",
-  "energy": 100,
+  "energy": 2400,
   "input": {
     "item": "minecraft:coal"
   },

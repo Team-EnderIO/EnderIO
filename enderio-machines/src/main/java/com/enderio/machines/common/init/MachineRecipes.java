@@ -1,6 +1,7 @@
 package com.enderio.machines.common.init;
 
 import com.enderio.base.EnderIO;
+import com.enderio.core.recipes.RecipeTypeSerializerPair;
 import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.recipe.*;
 import net.minecraft.world.item.crafting.Recipe;
@@ -12,25 +13,28 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.function.Supplier;
+
 public class MachineRecipes {
 
     private static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(ForgeRegistries.RECIPE_TYPES, EIOMachines.MODID);
     private static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, EIOMachines.MODID);
 
-    public static final RegistryObject<RecipeType<EnchanterRecipe>> ENCHANTING = registerType("enchanting");
-    public static final RegistryObject<EnchanterRecipe.Serializer> ENCHANTING_SERIALIZER = RECIPE_SERIALIZERS.register("enchanting", EnchanterRecipe.Serializer::new);
+    public static final RecipeTypeSerializerPair<EnchanterRecipe, EnchanterRecipe.Serializer> ENCHANTING = register("enchanting", EnchanterRecipe.Serializer::new);
+    public static final RecipeTypeSerializerPair<IAlloySmeltingRecipe, AlloySmeltingRecipe.Serializer> ALLOY_SMELTING = register("alloy_smelting", AlloySmeltingRecipe.Serializer::new);
+    public static final RecipeTypeSerializerPair<SagMillingRecipe, SagMillingRecipe.Serializer> SAGMILLING = register("sagmilling", SagMillingRecipe.Serializer::new);
+    public static final RecipeTypeSerializerPair<SlicingRecipe, SlicingRecipe.Serializer> SLICING = register("slicing", SlicingRecipe.Serializer::new);
 
-    public static final RegistryObject<RecipeType<IAlloySmeltingRecipe>> ALLOY_SMELTING = registerType("alloy_smelting");
-    public static final RegistryObject<AlloySmeltingRecipe.Serializer> ALLOY_SMELTING_SERIALIZER = RECIPE_SERIALIZERS.register("alloy_smelting", AlloySmeltingRecipe.Serializer::new);
-
-    public static final RegistryObject<RecipeType<SagMillingRecipe>> SAGMILLING = registerType("sagmilling");
-    public static final RegistryObject<SagMillingRecipe.Serializer> SAGMILLING_SERIALIZER = RECIPE_SERIALIZERS.register("sagmilling", SagMillingRecipe.Serializer::new);
-
-    public static final RegistryObject<RecipeType<SlicingRecipe>> SLICING = registerType("slicing");
-    public static final RegistryObject<SlicingRecipe.Serializer> SLICING_SERIALIZER = RECIPE_SERIALIZERS.register("slicing", SlicingRecipe.Serializer::new);
 
     private static <I extends Recipe<?>> RegistryObject<RecipeType<I>> registerType(String name) {
         return RECIPE_TYPES.register(name, () -> RecipeType.simple(EnderIO.loc(name)));
+    }
+
+    // TODO: Some way of generifying this code.
+    private static <R extends Recipe<?>, S extends RecipeSerializer<? extends R>> RecipeTypeSerializerPair<R, S> register(String name, Supplier<S> serializerFactory) {
+        RegistryObject<RecipeType<R>> type = RECIPE_TYPES.register(name, () -> RecipeType.simple(EnderIO.loc(name)));
+        RegistryObject<S> serializer = RECIPE_SERIALIZERS.register(name, serializerFactory);
+        return new RecipeTypeSerializerPair<>(type, serializer);
     }
 
     public static void register() {

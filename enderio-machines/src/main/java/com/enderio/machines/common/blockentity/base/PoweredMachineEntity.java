@@ -2,7 +2,7 @@ package com.enderio.machines.common.blockentity.base;
 
 import com.enderio.api.capability.ICapacitorData;
 import com.enderio.api.capacitor.CapacitorKey;
-import com.enderio.api.energy.EnergyIOMode;
+import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.base.common.blockentity.sync.SyncMode;
 import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.base.common.capacitor.DefaultCapacitorData;

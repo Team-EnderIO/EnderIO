@@ -10,10 +10,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.Nullable;
 
-public class DefaultCapacitorItem extends Item implements IMultiCapabilityItem {
+/**
+ * A capacitor item that has fixed capacitor data attached.
+ */
+public class FixedCapacitorItem extends Item implements IMultiCapabilityItem {
     private final ICapacitorData data;
 
-    public DefaultCapacitorItem(ICapacitorData data, Properties properties) {
+    public FixedCapacitorItem(ICapacitorData data, Properties properties) {
         super(properties);
         this.data = data;
     }

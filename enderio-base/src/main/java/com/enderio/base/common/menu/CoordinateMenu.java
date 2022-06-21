@@ -30,9 +30,7 @@ public class CoordinateMenu extends AbstractContainerMenu {
 
     protected CoordinateMenu(@Nullable MenuType<CoordinateMenu> pMenuType, int pContainerId, FriendlyByteBuf buf) {
         super(pMenuType, pContainerId);
-        selection = new CoordinateSelection();
-        selection.setPos(buf.readBlockPos());
-        selection.setLevel(buf.readResourceLocation());
+        selection = new CoordinateSelection(buf.readResourceLocation(), buf.readBlockPos());
         isPrintout = buf.readBoolean();
         name = buf.readUtf(50);
     }
@@ -55,8 +53,8 @@ public class CoordinateMenu extends AbstractContainerMenu {
      * @param name is null when you used the coordinate selector, if it's the printout use the ItemStack name
      */
     public static FriendlyByteBuf writeAdditionalData(FriendlyByteBuf buf, CoordinateSelection selection, @Nullable String name) {
-        buf.writeBlockPos(selection.getPos());
-        buf.writeResourceLocation(selection.getLevel());
+        buf.writeBlockPos(selection.pos());
+        buf.writeResourceLocation(selection.level());
         buf.writeBoolean(name == null);
         buf.writeUtf(name == null ? "" : name, 50);
         return buf;

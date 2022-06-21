@@ -30,7 +30,7 @@ public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
             addSlot(new MachineSlot(blockEntity.getInventory(), 3, 144, 35) {
                 @Override
                 public void onTake(Player pPlayer, ItemStack pStack) {
-                    Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.ENCHANTING.get(), blockEntity.getContainer(), level);
+                    Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.ENCHANTING.type().get(), blockEntity.getContainer(), level);
                     if (recipe.isPresent() && (pPlayer.experienceLevel > recipe.get().getXPCost(blockEntity.getContainer()) || pPlayer.isCreative())) {
                         int amount = recipe.get().getInputAmountConsumed(blockEntity.getContainer());
                         int lapizForLevel = recipe.get().getLapisForLevel(recipe.get().getEnchantmentLevel(blockEntity.getInventory().getStackInSlot(1).getCount()));
@@ -44,7 +44,7 @@ public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
 
                 @Override
                 public boolean mayPickup(Player playerIn) {
-                    Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.ENCHANTING.get(), blockEntity.getContainer(), level);
+                    Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.ENCHANTING.type().get(), blockEntity.getContainer(), level);
                     if (recipe.isPresent() && (playerIn.experienceLevel > recipe.get().getXPCost(blockEntity.getContainer()) || playerIn.isCreative()) && blockEntity.canAct()) {
                         return super.mayPickup(playerIn);
                     }
@@ -65,7 +65,7 @@ public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
 
     public int getCurrentCost() {
         if (level != null) {
-            Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.ENCHANTING.get(), getBlockEntity().getContainer(), level);
+            Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.ENCHANTING.type().get(), getBlockEntity().getContainer(), level);
             if (recipe.isPresent()) {
                 return recipe.get().getXPCost(new RecipeWrapper(this.getBlockEntity().getInventory()));
             }

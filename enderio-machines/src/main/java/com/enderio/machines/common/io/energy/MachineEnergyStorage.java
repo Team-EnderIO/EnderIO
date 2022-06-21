@@ -3,7 +3,7 @@ package com.enderio.machines.common.io.energy;
 import com.enderio.api.capability.ICapacitorData;
 import com.enderio.api.capability.IEnderCapabilityProvider;
 import com.enderio.api.capacitor.CapacitorKey;
-import com.enderio.api.energy.EnergyIOMode;
+import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.api.io.IIOConfig;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

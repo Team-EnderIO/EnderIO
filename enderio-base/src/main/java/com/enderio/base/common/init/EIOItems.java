@@ -4,7 +4,7 @@ import com.enderio.base.EnderIO;
 import com.enderio.base.common.capacitor.DefaultCapacitorData;
 import com.enderio.base.common.item.EIOCreativeTabs;
 import com.enderio.base.common.item.LocationPrintoutItem;
-import com.enderio.base.common.item.capacitors.DefaultCapacitorItem;
+import com.enderio.base.common.item.capacitors.FixedCapacitorItem;
 import com.enderio.base.common.item.capacitors.LootCapacitorItem;
 import com.enderio.base.common.item.darksteel.DarkSteelAxeItem;
 import com.enderio.base.common.item.darksteel.DarkSteelPickaxeItem;
@@ -113,18 +113,18 @@ public class EIOItems {
 
     // region capacitors
 
-    public static final ItemEntry<DefaultCapacitorItem> BASIC_CAPACITOR = REGISTRATE
-        .item("basic_capacitor", props -> new DefaultCapacitorItem(DefaultCapacitorData.BASIC, props))
+    public static final ItemEntry<FixedCapacitorItem> BASIC_CAPACITOR = REGISTRATE
+        .item("basic_capacitor", props -> new FixedCapacitorItem(DefaultCapacitorData.BASIC, props))
         .tab(() -> EIOCreativeTabs.MAIN)
         .register();
 
-    public static final ItemEntry<DefaultCapacitorItem> DOUBLE_LAYER_CAPACITOR = REGISTRATE
-        .item("double_layer_capacitor", props -> new DefaultCapacitorItem(DefaultCapacitorData.DOUBLE_LAYER, props))
+    public static final ItemEntry<FixedCapacitorItem> DOUBLE_LAYER_CAPACITOR = REGISTRATE
+        .item("double_layer_capacitor", props -> new FixedCapacitorItem(DefaultCapacitorData.DOUBLE_LAYER, props))
         .tab(() -> EIOCreativeTabs.MAIN)
         .register();
 
-    public static final ItemEntry<DefaultCapacitorItem> OCTADIC_CAPACITOR = REGISTRATE
-        .item("octadic_capacitor", props -> new DefaultCapacitorItem(DefaultCapacitorData.OCTADIC, props))
+    public static final ItemEntry<FixedCapacitorItem> OCTADIC_CAPACITOR = REGISTRATE
+        .item("octadic_capacitor", props -> new FixedCapacitorItem(DefaultCapacitorData.OCTADIC, props))
         .tab(() -> EIOCreativeTabs.MAIN)
         .register();
 

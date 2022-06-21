@@ -1,4 +1,4 @@
-package com.enderio.base.data.recipe.standard;
+package com.enderio.base.data.recipe;
 
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.item.darksteel.DarkSteelUpgradeItem;

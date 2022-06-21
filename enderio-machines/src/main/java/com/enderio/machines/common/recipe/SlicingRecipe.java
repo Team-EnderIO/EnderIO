@@ -68,12 +68,12 @@ public class SlicingRecipe implements MachineRecipe<Container> {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return MachineRecipes.SLICING_SERIALIZER.get();
+        return MachineRecipes.SLICING.serializer().get();
     }
 
     @Override
     public RecipeType<?> getType() {
-        return MachineRecipes.SLICING.get();
+        return MachineRecipes.SLICING.type().get();
     }
 
     public static class Serializer implements RecipeSerializer<SlicingRecipe> {

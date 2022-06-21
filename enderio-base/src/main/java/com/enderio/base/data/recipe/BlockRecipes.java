@@ -1,8 +1,9 @@
-package com.enderio.base.data.recipe.standard;
+package com.enderio.base.data.recipe;
 
 import com.enderio.base.common.block.ResettingLeverBlock;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.data.recipe.standard.StandardRecipes;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.data.DataGenerator;

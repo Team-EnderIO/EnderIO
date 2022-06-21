@@ -8,13 +8,19 @@ import com.enderio.machines.common.block.EnhancedMachineBlock;
 import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.block.ProgressMachineBlock;
 import com.enderio.machines.common.block.SimpleMachineBlock;
+import com.enderio.machines.common.blockentity.AlloySmelterBlockEntity;
+import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.item.FluidTankItem;
 import com.enderio.machines.data.loot.MachinesLootTable;
 import com.enderio.machines.data.model.block.MachineModelUtil;
 import com.mojang.math.Vector3f;
 import com.tterrag.registrate.Registrate;
+import com.tterrag.registrate.builders.BlockBuilder;
+import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.client.renderer.RenderType;
+
+import java.util.function.Supplier;
 
 public class MachineBlocks {
     private static final Registrate REGISTRATE = EIOMachines.registrate();
@@ -67,49 +73,16 @@ public class MachineBlocks {
         .build()
         .register();
 
-    public static final BlockEntry<SimpleMachineBlock> SIMPLE_POWERED_FURNACE = REGISTRATE
-        .block("simple_powered_furnace", props -> new SimpleMachineBlock(props, MachineBlockEntities.SIMPLE_POWERED_FURNACE))
-        .properties(props -> props.strength(2.5f, 8))
-        .loot(MachinesLootTable::copyNBT)
-        .addLayer(() -> RenderType::cutout)
-        .blockstate(MachineModelUtil::simpleMachineBlock)
-        .item()
-        .tab(() -> EIOCreativeTabs.MACHINES)
-        .build()
+    public static final BlockEntry<SimpleMachineBlock> SIMPLE_POWERED_FURNACE = simpleMachine("simple_powered_furnace", () -> MachineBlockEntities.SIMPLE_POWERED_FURNACE)
         .register();
 
-    public static final BlockEntry<ProgressMachineBlock> SIMPLE_ALLOY_SMELTER = REGISTRATE
-        .block("simple_alloy_smelter", props -> new ProgressMachineBlock(props, MachineBlockEntities.SIMPLE_ALLOY_SMELTER))
-        .properties(props -> props.strength(2.5f, 8))
-        .loot(MachinesLootTable::copyNBT)
-        .addLayer(() -> RenderType::cutout)
-        .blockstate(MachineModelUtil::simpleMachineBlock)
-        .item()
-        .tab(() -> EIOCreativeTabs.MACHINES)
-        .build()
+    public static final BlockEntry<SimpleMachineBlock> SIMPLE_ALLOY_SMELTER = simpleMachine("simple_alloy_smelter", () -> MachineBlockEntities.SIMPLE_ALLOY_SMELTER)
         .register();
 
-    public static final BlockEntry<ProgressMachineBlock> ALLOY_SMELTER = REGISTRATE
-        .block("alloy_smelter", props -> new ProgressMachineBlock(props, MachineBlockEntities.ALLOY_SMELTER))
-        .properties(props -> props.strength(2.5f, 8))
-        .loot(MachinesLootTable::copyNBT)
-        .addLayer(() -> RenderType::cutout)
-        .blockstate(MachineModelUtil::machineBlock)
-        .item()
-        .tab(() -> EIOCreativeTabs.MACHINES)
-        .build()
+    public static final BlockEntry<ProgressMachineBlock> ALLOY_SMELTER = standardMachine("alloy_smelter", () -> MachineBlockEntities.ALLOY_SMELTER)
         .register();
 
-    public static final BlockEntry<EnhancedMachineBlock> ENHANCED_ALLOY_SMELTER = REGISTRATE
-        .block("enhanced_alloy_smelter", props -> new EnhancedMachineBlock(props, MachineBlockEntities.ENHANCED_ALLOY_SMELTER))
-        .properties(props -> props.strength(2.5f, 8))
-        .loot(MachinesLootTable::tallCopyNBT)
-        .addLayer(() -> RenderType::cutout)
-        .blockstate(MachineModelUtil::enhancedMachineBlock)
-        .item()
-        .tab(() -> EIOCreativeTabs.MACHINES)
-        .model(MachineModelUtil::enhancedMachineBlockItem)
-        .build()
+    public static final BlockEntry<EnhancedMachineBlock> ENHANCED_ALLOY_SMELTER = enhancedMachine("enhanced_alloy_smelter", () -> MachineBlockEntities.ENHANCED_ALLOY_SMELTER)
         .register();
 
     public static BlockEntry<MachineBlock> CREATIVE_POWER = REGISTRATE
@@ -119,70 +92,77 @@ public class MachineBlocks {
         .build()
         .register();
 
-    public static BlockEntry<SimpleMachineBlock> SIMPLE_STIRLING_GENERATOR = REGISTRATE
-        .block("simple_stirling_generator", props -> new SimpleMachineBlock(props, MachineBlockEntities.SIMPLE_STIRLING_GENERATOR))
-        .loot(MachinesLootTable::copyNBT)
-        .addLayer(() -> RenderType::cutout)
-        .blockstate(MachineModelUtil::simpleMachineBlock)
-        .item()
-        .tab(() -> EIOCreativeTabs.MACHINES)
-        .build()
+    public static BlockEntry<SimpleMachineBlock> SIMPLE_STIRLING_GENERATOR = simpleMachine("simple_stirling_generator", () -> MachineBlockEntities.SIMPLE_STIRLING_GENERATOR)
         .register();
 
-    public static BlockEntry<ProgressMachineBlock> STIRLING_GENERATOR = REGISTRATE
-        .block("stirling_generator", props -> new ProgressMachineBlock(props, MachineBlockEntities.STIRLING_GENERATOR))
-        .loot(MachinesLootTable::copyNBT)
-        .addLayer(() -> RenderType::cutout)
-        .blockstate(MachineModelUtil::machineBlock)
-        .item()
-        .tab(() -> EIOCreativeTabs.MACHINES)
-        .build()
+    public static BlockEntry<ProgressMachineBlock> STIRLING_GENERATOR = standardMachine("stirling_generator", () -> MachineBlockEntities.STIRLING_GENERATOR)
         .register();
 
-    public static BlockEntry<SimpleMachineBlock> SIMPLE_SAG_MILL = REGISTRATE
-        .block("simple_sag_mill", props -> new SimpleMachineBlock(props, MachineBlockEntities.SIMPLE_SAG_MILL))
+    public static BlockEntry<SimpleMachineBlock> SIMPLE_SAG_MILL = simpleMachine("simple_sag_mill", () -> MachineBlockEntities.SIMPLE_SAG_MILL)
         .lang("Simple SAG Mill")
-        .loot(MachinesLootTable::copyNBT)
-        .addLayer(() -> RenderType::cutout)
-        .blockstate(MachineModelUtil::simpleMachineBlock)
-        .item()
-        .tab(() -> EIOCreativeTabs.MACHINES)
-        .build()
         .register();
 
-    public static BlockEntry<ProgressMachineBlock> SAG_MILL = REGISTRATE
-        .block("sag_mill", props -> new ProgressMachineBlock(props, MachineBlockEntities.SAG_MILL))
+    public static BlockEntry<ProgressMachineBlock> SAG_MILL = standardMachine("sag_mill", () -> MachineBlockEntities.SAG_MILL)
         .lang("SAG Mill")
-        .loot(MachinesLootTable::copyNBT)
-        .addLayer(() -> RenderType::cutout)
-        .blockstate(MachineModelUtil::machineBlock)
-        .item()
-        .tab(() -> EIOCreativeTabs.MACHINES)
-        .build()
         .register();
 
-    public static BlockEntry<EnhancedMachineBlock> ENHANCED_SAG_MILL = REGISTRATE
-        .block("enhanced_sag_mill", props -> new EnhancedMachineBlock(props, MachineBlockEntities.ENHANCED_SAG_MILL))
+    public static BlockEntry<EnhancedMachineBlock> ENHANCED_SAG_MILL = enhancedMachine("enhanced_sag_mill", () -> MachineBlockEntities.ENHANCED_SAG_MILL)
         .lang("Enhanced SAG Mill")
-        .loot(MachinesLootTable::tallCopyNBT)
-        .addLayer(() -> RenderType::cutout)
-        .blockstate(MachineModelUtil::enhancedMachineBlock)
-        .item()
-        .tab(() -> EIOCreativeTabs.MACHINES)
-        .model(MachineModelUtil::enhancedMachineBlockItem)
-        .build()
         .register();
 
-    public static BlockEntry<ProgressMachineBlock> SLICE_AND_SPLICE = REGISTRATE
-        .block("slice_and_splice", props -> new ProgressMachineBlock(props, MachineBlockEntities.SLICE_AND_SPLICE))
+    public static BlockEntry<ProgressMachineBlock> SLICE_AND_SPLICE = soulMachine("slice_and_splice", () -> MachineBlockEntities.SLICE_AND_SPLICE)
         .lang("Slice'N'Splice")
-        .loot(MachinesLootTable::copyNBT)
-        .addLayer(() -> RenderType::cutout)
-        .blockstate(MachineModelUtil::soulMachineBlock)
-        .item()
-        .tab(() -> EIOCreativeTabs.MACHINES)
-        .build()
         .register();
+
+    // We use a supplier for the block entity entry so it doesnt init the block entities until its the right time.
+    private static BlockBuilder<SimpleMachineBlock, Registrate> simpleMachine(String name, Supplier<BlockEntityEntry<? extends MachineBlockEntity>> blockEntityEntry) {
+        return REGISTRATE
+            .block(name, props -> new SimpleMachineBlock(props, blockEntityEntry.get()))
+            .properties(props -> props.strength(2.5f, 8))
+            .loot(MachinesLootTable::copyNBT)
+            .addLayer(() -> RenderType::cutout)
+            .blockstate(MachineModelUtil::simpleMachineBlock)
+            .item()
+            .tab(() -> EIOCreativeTabs.MACHINES)
+            .build();
+    }
+
+    private static BlockBuilder<ProgressMachineBlock, Registrate> standardMachine(String name, Supplier<BlockEntityEntry<? extends MachineBlockEntity>> blockEntityEntry) {
+        return REGISTRATE
+            .block(name, props -> new ProgressMachineBlock(props, blockEntityEntry.get()))
+            .properties(props -> props.strength(2.5f, 8))
+            .loot(MachinesLootTable::copyNBT)
+            .addLayer(() -> RenderType::cutout)
+            .blockstate(MachineModelUtil::machineBlock)
+            .item()
+            .tab(() -> EIOCreativeTabs.MACHINES)
+            .build();
+    }
+
+    private static BlockBuilder<ProgressMachineBlock, Registrate> soulMachine(String name, Supplier<BlockEntityEntry<? extends MachineBlockEntity>> blockEntityEntry) {
+        return REGISTRATE
+            .block(name, props -> new ProgressMachineBlock(props, blockEntityEntry.get()))
+            .properties(props -> props.strength(2.5f, 8))
+            .loot(MachinesLootTable::copyNBT)
+            .addLayer(() -> RenderType::cutout)
+            .blockstate(MachineModelUtil::soulMachineBlock)
+            .item()
+            .tab(() -> EIOCreativeTabs.MACHINES)
+            .build();
+    }
+
+    private static BlockBuilder<EnhancedMachineBlock, Registrate> enhancedMachine(String name, Supplier<BlockEntityEntry<? extends MachineBlockEntity>> blockEntityEntry) {
+        return REGISTRATE
+            .block(name, props -> new EnhancedMachineBlock(props, blockEntityEntry.get()))
+            .properties(props -> props.strength(2.5f, 8))
+            .loot(MachinesLootTable::tallCopyNBT)
+            .addLayer(() -> RenderType::cutout)
+            .blockstate(MachineModelUtil::enhancedMachineBlock)
+            .item()
+            .tab(() -> EIOCreativeTabs.MACHINES)
+            .model(MachineModelUtil::enhancedMachineBlockItem)
+            .build();
+    }
 
     public static void register() {}
 }

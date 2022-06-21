@@ -1,7 +1,7 @@
 package com.enderio.machines.data.recipes;
 
 import com.enderio.base.common.init.EIOItems;
-import com.enderio.base.data.recipe.EnderRecipeProvider;
+import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.recipe.SagMillingRecipe;
@@ -38,7 +38,7 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
             output(EIOItems.COAL_POWDER.get()),
             output(EIOItems.COAL_POWDER.get(), 0.1f),
             output(SULFUR, 1, 0.1f, true)),
-            100, finishedRecipeConsumer);
+            2400, finishedRecipeConsumer);
     }
 
     protected void build(String name, Ingredient input, List<SagMillingRecipe.OutputItem> outputs, int energy, Consumer<FinishedRecipe> recipeConsumer) {
@@ -150,7 +150,7 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
 
         @Override
         public RecipeSerializer<?> getType() {
-            return MachineRecipes.SAGMILLING_SERIALIZER.get();
+            return MachineRecipes.SAGMILLING.serializer().get();
         }
     }
 }

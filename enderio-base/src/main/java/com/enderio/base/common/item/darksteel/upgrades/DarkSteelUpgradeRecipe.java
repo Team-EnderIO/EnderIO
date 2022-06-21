@@ -58,7 +58,7 @@ public class DarkSteelUpgradeRecipe extends UpgradeRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return EIORecipes.DARK_STEEL_UPGRADE_SERIALIZER.get();
+        return EIORecipes.DARK_STEEL_UPGRADE.get();
     }
 
     public static class Serializer implements RecipeSerializer<DarkSteelUpgradeRecipe> {

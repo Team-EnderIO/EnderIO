@@ -1,5 +1,5 @@
 {
-  "type": "enderio:grindingball",
+  "type": "enderio:grinding_ball",
   "chance": 1.0,
   "durability": 40000,
   "grinding": 1.35,

@@ -93,7 +93,7 @@ public abstract class SagMillBlockEntity extends PoweredCraftingMachine<SagMilli
 
     public SagMillBlockEntity(CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey energyUseKey, BlockEntityType<?> type, BlockPos worldPosition,
         BlockState blockState) {
-        super(MachineRecipes.SAGMILLING.get(), capacityKey, transferKey, energyUseKey, type, worldPosition, blockState);
+        super(MachineRecipes.SAGMILLING.type().get(), capacityKey, transferKey, energyUseKey, type, worldPosition, blockState);
         container = new SagMillingRecipe.Container(getInventory(), this::getGrindingBallData);
 
         addDataSlot(new IntegerDataSlot(() -> grindingBallDamage, dmg -> grindingBallDamage = dmg, SyncMode.GUI));

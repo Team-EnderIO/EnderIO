@@ -39,7 +39,6 @@ public class FireCraftingHandler {
     private static List<FireCraftingRecipe> cachedRecipes;
     private static boolean recipesCached = false;
 
-
     private record FireIndex(BlockPos pos, ResourceKey<Level> dimension) {}
 
     @SubscribeEvent
@@ -65,7 +64,7 @@ public class FireCraftingHandler {
 
             // Cache recipes
             if (!recipesCached) {
-                cachedRecipes = level.getRecipeManager().getAllRecipesFor(EIORecipes.FIRE_CRAFTING.get());
+                cachedRecipes = level.getRecipeManager().getAllRecipesFor(EIORecipes.FIRE_CRAFTING.type().get());
                 recipesCached = false;
             }
 
