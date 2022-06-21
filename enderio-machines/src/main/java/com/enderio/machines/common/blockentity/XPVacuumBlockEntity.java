@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 
 import com.enderio.base.common.blockentity.sync.IntegerDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
+import com.enderio.base.common.init.EIOFluids;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.VacuumMachineEntity;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
@@ -19,7 +20,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -45,7 +45,7 @@ public class XPVacuumBlockEntity extends VacuumMachineEntity<ExperienceOrb> {
 
         // Add capability provider
         addCapabilityProvider(fluidHandler);
-        addDataSlot(new IntegerDataSlot(() -> fluidTank.getFluidInTank(0).getAmount(), (i) -> fluidTank.setFluid(new FluidStack(Fluids.WATER, i)), SyncMode.WORLD));
+        addDataSlot(new IntegerDataSlot(() -> fluidTank.getFluidInTank(0).getAmount(), (i) -> fluidTank.setFluid(new FluidStack(EIOFluids.XP_JUICE.get(), i)), SyncMode.WORLD));
     }
     
     public FluidTank getFluidTank() {
@@ -73,11 +73,11 @@ public class XPVacuumBlockEntity extends VacuumMachineEntity<ExperienceOrb> {
     
 	@Override
 	public void handleEntity(ExperienceOrb xpe) {
-		int filled = fluidTank.fill(new FluidStack(Fluids.WATER, xpe.getValue()), FluidAction.EXECUTE);//TODO xp fluid
-        if (filled == xpe.value) {
+		int filled = fluidTank.fill(new FluidStack(EIOFluids.XP_JUICE.get(), xpe.getValue()*20), FluidAction.EXECUTE);
+        if (filled == xpe.getValue()*20) {
             xpe.discard();
         } else {
-            xpe.value -= filled;
+            xpe.value -= filled / 20f;
         }
 	}
 	
