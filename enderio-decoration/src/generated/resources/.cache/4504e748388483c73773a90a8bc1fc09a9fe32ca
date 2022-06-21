@@ -1,4 +1,4 @@
-// 1.19	2022-06-21T20:14:49.5559946	Registrate Provider for enderio_decoration [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
+// 1.19	2022-06-21T22:26:00.7899015	Registrate Provider for enderio_decoration [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
 d01cee687c04a18d22b0d7ebbd500800fcb072bb assets/enderio_decoration/blockstates/light.json
 3ce0b9f966c69822cf014d596e479f244a42d703 assets/enderio_decoration/blockstates/light_inverted.json
 3f5c87a7dbfd919c583fba12c1f42ead4a09cfb0 assets/enderio_decoration/blockstates/light_node.json
