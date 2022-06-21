@@ -337,12 +337,9 @@ subprojects {
 
     sourceSets.main.resources { srcDir 'src/generated/resources' }
 
-    def resourceTargets = ['META-INF/mods.toml', 'pack.mcmeta']
     def intoTargets = ["$rootDir/${project.name}/bin/main/"]
     def replaceProperties = [
             version: version, mcversion: minecraft_version_range,
-            resource_pack_format: resource_pack_format,
-            data_pack_format: data_pack_format,
             forge_version: forge_version_range,
             loader_version: loader_version_range]
 
@@ -350,7 +347,7 @@ subprojects {
         inputs.properties replaceProperties
         replaceProperties.put 'project', project
 
-        filesMatching(resourceTargets) {
+        filesMatching('META-INF/mods.toml') {
             expand replaceProperties
         }
 

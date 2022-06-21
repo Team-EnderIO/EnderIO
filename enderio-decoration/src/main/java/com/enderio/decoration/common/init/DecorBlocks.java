@@ -106,7 +106,7 @@ public class DecorBlocks {
     		.block("light_node", LightNode::new)
     		.blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().withExistingParent("light_node", "block/air")))
     		.initialProperties(Material.AIR)
-    		.properties(p -> p.lightLevel(l -> 15).noDrops().noCollission().noOcclusion())
+    		.properties(p -> p.lightLevel(l -> 15).noLootTable().noCollission().noOcclusion())
     		.register();
     
     // endregion

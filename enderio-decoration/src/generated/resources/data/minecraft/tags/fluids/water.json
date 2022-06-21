@@ -1,0 +1,24 @@
+{
+  "values": [
+    "enderio:flowing_nutrient_distillation",
+    "enderio:nutrient_distillation",
+    "enderio:flowing_dew_of_the_void",
+    "enderio:dew_of_the_void",
+    "enderio:flowing_vapor_of_levity",
+    "enderio:vapor_of_levity",
+    "enderio:flowing_hootch",
+    "enderio:hootch",
+    "enderio:flowing_rocket_fuel",
+    "enderio:rocket_fuel",
+    "enderio:flowing_fire_water",
+    "enderio:fire_water",
+    "enderio:flowing_xp_juice",
+    "enderio:xp_juice",
+    "enderio:flowing_liquid_sunshine",
+    "enderio:liquid_sunshine",
+    "enderio:flowing_cloud_seed",
+    "enderio:cloud_seed",
+    "enderio:flowing_cloud_seed_concentrated",
+    "enderio:cloud_seed_concentrated"
+  ]
+}

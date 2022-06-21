@@ -34,9 +34,10 @@ public class DecorBlockState {
             Direction facing = state.getValue(PoweredLight.FACING);
             AttachFace face = state.getValue(PoweredLight.FACE);
             boolean powered = state.getValue(PoweredLight.ENABLED);
-            
-            ModelFile light = prov.models().withExistingParent(ctx.get().getRegistryName().getPath(), new ResourceLocation(EIODecor.MODID, "block/lightblock"));
-            ModelFile light_powered = prov.models().withExistingParent(ctx.get().getRegistryName().getPath() + "_powered", new ResourceLocation(EIODecor.MODID, "block/lightblock"));
+
+            ResourceLocation id = ForgeRegistries.BLOCKS.getKey(ctx.get());
+            ModelFile light = prov.models().withExistingParent(id.getPath(), new ResourceLocation(EIODecor.MODID, "block/lightblock"));
+            ModelFile light_powered = prov.models().withExistingParent(id.getPath() + "_powered", new ResourceLocation(EIODecor.MODID, "block/lightblock"));
             return ConfiguredModel.builder()
                     .modelFile(powered ? light : light_powered)
                     .rotationX(face == AttachFace.FLOOR ? 0 : (face == AttachFace.WALL ? 90 : 180))
