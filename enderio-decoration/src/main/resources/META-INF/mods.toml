@@ -1,11 +1,11 @@
 modLoader="javafml"
-loaderVersion="[40,)"
+loaderVersion="${loader_version}"
 issueTrackerURL="https://github.com/SleepyTrousers/EnderIO-Rewrite/issues"
 license="CC0"
 
 [[mods]]
 modId="enderio_decoration"
-version="${file.jarVersion}"
+version="${version}"
 displayName="Ender IO Decoration"
 authors="CrazyPants, tterrag, HenryLoenwind, MatthiasM, CyanideX, EpicSquid, Rover656, HypherionSA, agnor99, Ferri_Arnus"
 description="Decorative blocks powered by Ender IO."
@@ -15,18 +15,18 @@ logoFile="logo.png"
 [[dependencies.enderio_decoration]]
 modId="minecraft"
 mandatory=true
-versionRange="1.18.2"
+versionRange="${mcversion}"
 side="BOTH"
 
 [[dependencies.enderio_decoration]]
 modId="forge"
 mandatory=true
-versionRange="[40,)"
+versionRange="${forge_version}"
 side="BOTH"
 
 [[dependencies.enderio_decoration]]
 modId="enderio"
 mandatory=true
-versionRange="[5.0,)"
+versionRange="${version}"
 ordering="AFTER"
 side="BOTH"
