@@ -177,6 +177,7 @@ public class PoweredLightBlockEntity extends BlockEntity{
 	/**
      * Consumes wireless power, if possible.
      */
+	//TODO add wireless power capability
 	private static void consumePowerWireless(Level level, BlockPos pos, BlockState state, PoweredLightBlockEntity e) {
 	    boolean powered = level.hasNeighborSignal(pos);
 	    if (powered != ((Light) state.getBlock()).isInverted() ? state.getValue(Light.ENABLED) : !state.getValue(Light.ENABLED)) {
