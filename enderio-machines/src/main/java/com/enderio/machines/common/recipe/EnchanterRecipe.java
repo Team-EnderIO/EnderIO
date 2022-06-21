@@ -1,7 +1,7 @@
 package com.enderio.machines.common.recipe;
 
 import com.enderio.base.config.machines.MachinesConfig;
-import com.enderio.core.recipes.EnderRecipe;
+import com.enderio.core.common.recipes.EnderRecipe;
 import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonObject;

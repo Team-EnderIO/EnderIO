@@ -4,7 +4,7 @@ import com.enderio.base.client.ForgeHax;
 import com.enderio.base.client.gui.IIcon;
 import com.enderio.base.client.gui.screen.IEnderScreen;
 import com.enderio.base.client.gui.screen.IFullScreenListener;
-import com.enderio.base.common.util.Vector2i;
+import com.enderio.core.common.util.Vector2i;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
@@ -44,7 +44,7 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
     private final Component optionName;
 
     public EnumIconWidget(U addedOn, int pX, int pY, Supplier<T> getter, Consumer<T> setter, Component optionName) {
-        super(pX, pY, getter.get().getRenderSize().getX(), getter.get().getRenderSize().getY(), Component.empty());
+        super(pX, pY, getter.get().getRenderSize().x(), getter.get().getRenderSize().y(), Component.empty());
         this.getter = getter;
         this.setter = setter;
         this.optionName = optionName;
@@ -53,7 +53,7 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
         Vector2i elementDistance = values[0].getRenderSize().expand(SPACE_BETWEEN_ELEMENTS);
         for (int i = 0; i < values.length; i++) {
             T value = values[i];
-            Vector2i subWidgetPos = pos.add(getColumn(i) * elementDistance.getX(), getRow(i)* elementDistance.getY()).add(pX, pY);
+            Vector2i subWidgetPos = pos.add(getColumn(i) * elementDistance.x(), getRow(i)* elementDistance.y()).add(pX, pY);
             SelectionWidget widget = new SelectionWidget(subWidgetPos, value);
             icons.put(value, widget);
         }
@@ -61,10 +61,10 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
         Vector2i topLeft = Vector2i.MAX;
         Vector2i bottomRight = Vector2i.MIN;
         for (SelectionWidget widget : icons.values()) {
-            topLeft = topLeft.withX(Math.min(topLeft.getX(), widget.x));
-            topLeft = topLeft.withY(Math.min(topLeft.getY(), widget.y));
-            bottomRight = bottomRight.withX(Math.max(bottomRight.getX(), widget.x + widget.getWidth()));
-            bottomRight = bottomRight.withY(Math.max(bottomRight.getY(), widget.y + widget.getHeight()));
+            topLeft = topLeft.withX(Math.min(topLeft.x(), widget.x));
+            topLeft = topLeft.withY(Math.min(topLeft.y(), widget.y));
+            bottomRight = bottomRight.withX(Math.max(bottomRight.x(), widget.x + widget.getWidth()));
+            bottomRight = bottomRight.withY(Math.max(bottomRight.y(), widget.y + widget.getHeight()));
         }
         expandTopLeft = topLeft.expand(-SPACE_BETWEEN_ELEMENTS);
         expandBottomRight = bottomRight.expand(SPACE_BETWEEN_ELEMENTS);
@@ -74,8 +74,8 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
 
     private Vector2i calculateFirstPosition(T icon, int amount) {
         int maxColumns = Math.min(amount, ELEMENTS_IN_ROW);
-        int width = (maxColumns-1)*(icon.getRenderSize().getX() + SPACE_BETWEEN_ELEMENTS);
-        return new Vector2i(-width/2, 2 * SPACE_BETWEEN_ELEMENTS + icon.getRenderSize().getY());
+        int width = (maxColumns-1)*(icon.getRenderSize().x() + SPACE_BETWEEN_ELEMENTS);
+        return new Vector2i(-width/2, 2 * SPACE_BETWEEN_ELEMENTS + icon.getRenderSize().y());
     }
 
     @Override
@@ -136,8 +136,8 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
     @Override
     public void onGlobalClick(double mouseX, double mouseY) {
         if (isExpanded &&
-            !(expandTopLeft.getX() <= mouseX && expandBottomRight.getX() >= mouseX
-            && expandTopLeft.getY() <= mouseY && expandBottomRight.getY() >= mouseY
+            !(expandTopLeft.x() <= mouseX && expandBottomRight.x() >= mouseX
+            && expandTopLeft.y() <= mouseY && expandBottomRight.y() >= mouseY
             || isMouseOver(mouseX, mouseY))) {
             isExpanded = false;
             Minecraft.getInstance().popGuiLayer();
@@ -198,7 +198,7 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
         private final T value;
 
         public SelectionWidget(Vector2i pos, T value) {
-            super(pos.getX(), pos.getY(), value.getRenderSize().getX() + 2, value.getRenderSize().getY() + 2, value.getTooltip());
+            super(pos.x(), pos.y(), value.getRenderSize().x() + 2, value.getRenderSize().y() + 2, value.getTooltip());
             this.value = value;
         }
 

@@ -2,7 +2,7 @@ package com.enderio.base.common.recipe;
 
 import com.enderio.base.EnderIO;
 import com.enderio.base.common.init.EIORecipes;
-import com.enderio.core.recipes.EnderRecipe;
+import com.enderio.core.common.recipes.EnderRecipe;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

@@ -1,4 +1,4 @@
-package com.enderio.core.recipes;
+package com.enderio.core.common.recipes;
 
 import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.Recipe;

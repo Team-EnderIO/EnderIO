@@ -12,9 +12,9 @@
   "block.enderio_decoration.painted_stairs": "Painted Stairs",
   "block.enderio_decoration.painted_trapdoor": "Painted Trapdoor",
   "block.enderio_decoration.painted_wooden_pressure_plate": "Painted Wooden Pressure Plate",
-  "block.enderio_decoration.powerd_light": "Powerd Light",
-  "block.enderio_decoration.powerd_light_inverted": "Powerd Light Inverted",
-  "block.enderio_decoration.powerd_light_inverted_wireless": "Powerd Light Inverted Wireless",
-  "block.enderio_decoration.powerd_light_wireless": "Powerd Light Wireless",
+  "block.enderio_decoration.powered_light": "Powered Light",
+  "block.enderio_decoration.powered_light_inverted": "Powered Light Inverted",
+  "block.enderio_decoration.powered_light_inverted_wireless": "Powered Light Inverted Wireless",
+  "block.enderio_decoration.powered_light_wireless": "Powered Light Wireless",
   "entity.enderio_decoration.painted_sand": "Painted Sand"
 }

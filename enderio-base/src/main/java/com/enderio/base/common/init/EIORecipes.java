@@ -4,7 +4,7 @@ import com.enderio.base.EnderIO;
 import com.enderio.base.common.item.darksteel.upgrades.DarkSteelUpgradeRecipe;
 import com.enderio.base.common.recipe.FireCraftingRecipe;
 import com.enderio.base.common.recipe.GrindingBallRecipe;
-import com.enderio.core.recipes.RecipeTypeSerializerPair;
+import com.enderio.core.common.recipes.RecipeTypeSerializerPair;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;

@@ -2,7 +2,7 @@ package com.enderio.base.common.block.glass;
 
 import com.enderio.base.client.gui.screen.IEnderScreen;
 import com.enderio.base.client.renderer.item.IItemOverlayRender;
-import com.enderio.base.common.util.Vector2i;
+import com.enderio.core.common.util.Vector2i;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;

@@ -1,5 +1,6 @@
 package com.enderio.decoration.datagen.model.block;
 
+import com.enderio.decoration.EIODecor;
 import com.google.gson.JsonObject;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.resources.ResourceLocation;
@@ -22,7 +23,7 @@ public class PaintedModelBuilder extends BlockModelBuilder {
     public JsonObject toJson() {
         JsonObject json = super.toJson();
         JsonObject root = new JsonObject();
-        root.addProperty("loader", reference instanceof SlabBlock ? "enderio:painted_slab" : "enderio:painted_model");
+        root.addProperty("loader", reference instanceof SlabBlock ? EIODecor.MODID + ":painted_slab" : EIODecor.MODID + ":painted_model");
         root.addProperty("reference", ForgeRegistries.BLOCKS.getKey(reference).toString());
         if (json.has("display")) {
             root.add("display", json.get("display"));

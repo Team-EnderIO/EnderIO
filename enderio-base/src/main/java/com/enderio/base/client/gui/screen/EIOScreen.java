@@ -1,6 +1,6 @@
 package com.enderio.base.client.gui.screen;
 
-import com.enderio.base.common.util.Vector2i;
+import com.enderio.core.common.util.Vector2i;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -34,8 +34,8 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
     protected EIOScreen(T pMenu, Inventory pPlayerInventory, Component pTitle, boolean renderLabels) {
         super(pMenu, pPlayerInventory, pTitle);
         this.renderLabels = renderLabels;
-        this.imageWidth = getBackgroundImageSize().getX();
-        this.imageHeight = getBackgroundImageSize().getY();
+        this.imageWidth = getBackgroundImageSize().x();
+        this.imageHeight = getBackgroundImageSize().y();
     }
 
     @Override

@@ -29,17 +29,26 @@ import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
 
-@SuppressWarnings("unused")
+//@SuppressWarnings("unused")
 public class DecorBlocks {
 
     private static final Registrate REGISTRATE = EIODecor.registrate();
-    public static final EIOCreativeTabs DECOR = new EIOCreativeTabs("decor", () -> Items.PAINTING); //TODO make proper tab
+
+    // TODO: 1.19: Once forge bumped, check if we can use EIOCreativeModeTab again.
+    public static final CreativeModeTab DECOR = new CreativeModeTab("enderio.decor") {
+        @Override
+        public ItemStack makeIcon() {
+            return new ItemStack(Items.PAINTING);
+        }
+    };
 
 
     // region Painted
@@ -97,11 +106,11 @@ public class DecorBlocks {
     
     public static final BlockEntry<Light> LIGHT = lightBlock("light", s -> new Light(s, false));
     public static final BlockEntry<Light> LIGHT_INVERTED = lightBlock("light_inverted", s -> new Light(s, true));
-    public static final BlockEntry<PoweredLight> POWERED_LIGHT = lightBlock("powerd_light", s -> new PoweredLight(s, false, false));
-    public static final BlockEntry<PoweredLight> POWERED_LIGHT_INVERTED = lightBlock("powerd_light_inverted", s -> new PoweredLight(s, true, false));
-    public static final BlockEntry<PoweredLight> POWERED_LIGHT_WIRELESS = lightBlock("powerd_light_wireless", s -> new PoweredLight(s, false, true));
-    public static final BlockEntry<PoweredLight> POWERED_LIGHT_INVERTED_WIRELESS = lightBlock("powerd_light_inverted_wireless", s -> new PoweredLight(s, true, true));
-    
+    public static final BlockEntry<PoweredLight> POWERED_LIGHT = lightBlock("powered_light", s -> new PoweredLight(s, false, false));
+    public static final BlockEntry<PoweredLight> POWERED_LIGHT_INVERTED = lightBlock("powered_light_inverted", s -> new PoweredLight(s, true, false));
+    public static final BlockEntry<PoweredLight> POWERED_LIGHT_WIRELESS = lightBlock("powered_light_wireless", s -> new PoweredLight(s, false, true));
+    public static final BlockEntry<PoweredLight> POWERED_LIGHT_INVERTED_WIRELESS = lightBlock("powered_light_inverted_wireless", s -> new PoweredLight(s, true, true));
+
     public static final BlockEntry<LightNode> LIGHT_NODE = REGISTRATE
     		.block("light_node", LightNode::new)
     		.blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().withExistingParent("light_node", "block/air")))
@@ -127,8 +136,8 @@ public class DecorBlocks {
         painted.add(paintedBlockEntry);
         return paintedBlockEntry;
     }
-    
-    public static <T extends Block> BlockEntry<T> lightBlock(String name, NonNullFunction<BlockBehaviour.Properties, T> blockFactory) { 
+
+    public static <T extends Block> BlockEntry<T> lightBlock(String name, NonNullFunction<BlockBehaviour.Properties, T> blockFactory) {
     	BlockEntry<T> lightBlockEntry = REGISTRATE
     		.block(name, blockFactory)
     		.blockstate((ctx, prov) -> DecorBlockState.lightBlock(ctx, prov))

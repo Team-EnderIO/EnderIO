@@ -11,7 +11,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "enderio_decoration:powerd_light_inverted_wireless"
+          "name": "enderio_decoration:powered_light_wireless"
         }
       ],
       "rolls": 1.0

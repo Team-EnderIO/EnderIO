@@ -1,6 +1,6 @@
 package com.enderio.decoration.client;
 
-import com.enderio.base.EnderIO;
+import com.enderio.decoration.EIODecor;
 import com.enderio.decoration.client.model.painted.PaintedSimpleModel;
 import com.enderio.decoration.client.model.painted.PaintedSlabModel;
 import com.enderio.decoration.common.init.DecorBlocks;
@@ -55,29 +55,31 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void modelInit(final ModelRegistryEvent e) {
-        ModelLoaderRegistry.registerLoader(EnderIO.loc("painted_model"), new WrappedModelLoader(false));
-        ModelLoaderRegistry.registerLoader(EnderIO.loc("painted_slab"), new WrappedModelLoader(true));
+        ModelLoaderRegistry.registerLoader(EIODecor.loc("painted_model"), new WrappedModelLoader(false));
+        ModelLoaderRegistry.registerLoader(EIODecor.loc("painted_slab"), new WrappedModelLoader(true));
     }
 
     @SubscribeEvent
     public static void colorItemInit(final ColorHandlerEvent.Item e) {
         // TODO: Move into registrate.
         PaintedBlockColor color = new PaintedBlockColor();
-        e.getBlockColors().register(color, DecorBlocks.getPainted().toArray(new Block[0]));
-        e.getItemColors().register(color, DecorBlocks.getPainted().toArray(new Block[0]));
-        e.getBlockColors().register(color, DecorBlocks.PAINTED_SLAB.get());
-        e.getItemColors().register(color, DecorBlocks.PAINTED_SLAB.get());
+        // todo 1.19
+//        e.getBlockColors().register(color, DecorBlocks.getPainted().toArray(new Block[0]));
+//        e.getItemColors().register(color, DecorBlocks.getPainted().toArray(new Block[0]));
+//        e.getBlockColors().register(color, DecorBlocks.PAINTED_SLAB.get());
+//        e.getItemColors().register(color, DecorBlocks.PAINTED_SLAB.get());
     }
 
     @SubscribeEvent
     public static void init(FMLClientSetupEvent e) {
-        e.enqueueWork(() -> {
-            for (Block paintedBlock : DecorBlocks.getPainted()) {
-                ItemBlockRenderTypes.setRenderLayer(paintedBlock, RenderType.translucent());
-            }
-            ItemBlockRenderTypes.setRenderLayer(DecorBlocks.PAINTED_SLAB.get(), RenderType.translucent());
-
-        });
+        // todo 1.19
+//        e.enqueueWork(() -> {
+//            for (Block paintedBlock : DecorBlocks.getPainted()) {
+//                ItemBlockRenderTypes.setRenderLayer(paintedBlock, RenderType.translucent());
+//            }
+//            ItemBlockRenderTypes.setRenderLayer(DecorBlocks.PAINTED_SLAB.get(), RenderType.translucent());
+//
+//        });
     }
 
     private static class PaintedBlockColor implements BlockColor, ItemColor {

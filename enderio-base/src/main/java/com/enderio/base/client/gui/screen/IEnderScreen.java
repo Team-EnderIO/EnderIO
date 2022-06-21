@@ -1,7 +1,7 @@
 package com.enderio.base.client.gui.screen;
 
 import com.enderio.base.client.gui.IIcon;
-import com.enderio.base.common.util.Vector2i;
+import com.enderio.core.common.util.Vector2i;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiComponent;
@@ -22,15 +22,14 @@ public interface IEnderScreen {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, icon.getTextureLocation());
         RenderSystem.enableBlend();
-        GuiComponent.blit(poseStack, pos.getX(), pos.getY(), icon.getRenderSize().getX(), icon.getRenderSize().getY(), icon.getTexturePosition().getX(), icon.getTexturePosition().getY(), icon.getIconSize().getX(),  icon.getIconSize().getY(), icon.getTextureSize().getX(), icon.getTextureSize().getY());
-
+        GuiComponent.blit(poseStack, pos.x(), pos.y(), icon.getRenderSize().x(), icon.getRenderSize().y(), icon.getTexturePosition().x(), icon.getTexturePosition().y(), icon.getIconSize().x(),  icon.getIconSize().y(), icon.getTextureSize().x(), icon.getTextureSize().y());
     }
 
     default void renderSimpleArea(PoseStack pPoseStack, Vector2i pos, Vector2i pos2) {
-        GuiComponent.fill(pPoseStack, pos.getX(), pos.getY(), pos2.getX(), pos2.getY(), 0xFF8B8B8B);
-        GuiComponent.fill(pPoseStack, pos.getX(), pos.getY(), pos2.getX() - 1, pos2.getY() - 1, 0xFF373737);
-        GuiComponent.fill(pPoseStack, pos.getX() + 1, pos.getY() + 1, pos2.getX(), pos2.getY(), 0xFFFFFFFF);
-        GuiComponent.fill(pPoseStack, pos.getX() + 1, pos.getY() + 1, pos2.getX() - 1, pos2.getY() - 1, 0xFF8B8B8B);
+        GuiComponent.fill(pPoseStack, pos.x(), pos.y(), pos2.x(), pos2.y(), 0xFF8B8B8B);
+        GuiComponent.fill(pPoseStack, pos.x(), pos.y(), pos2.x() - 1, pos2.y() - 1, 0xFF373737);
+        GuiComponent.fill(pPoseStack, pos.x() + 1, pos.y() + 1, pos2.x(), pos2.y(), 0xFFFFFFFF);
+        GuiComponent.fill(pPoseStack, pos.x() + 1, pos.y() + 1, pos2.x() - 1, pos2.y() - 1, 0xFF8B8B8B);
     }
 
     default void renderIconBackground(PoseStack pPoseStack, Vector2i pos, IIcon icon) {
