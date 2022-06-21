@@ -31,7 +31,7 @@ public class VacuumChestBlockEntity extends VacuumMachineEntity<ItemEntity> {
     
     @Override
     public MachineInventoryLayout getInventoryLayout() {
-        return extractableGUISlot(MachineInventoryLayout.builder(false),28).build();
+        return extractableGUISlot(MachineInventoryLayout.builder(false),27).slot(slot -> slot.guiInsert().guiExtract().filter((i,s)->false)).build(); //TODO add proper filter slot and predicate
     }
     
     @Override
@@ -42,15 +42,6 @@ public class VacuumChestBlockEntity extends VacuumMachineEntity<ItemEntity> {
             protected void onContentsChanged(int slot) {
                 setChanged();
             }
-            
-            @Override
-            public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-                if (slot == 27) { //TODO filter slot type
-                    return stack;
-                }
-                return super.insertItem(slot, stack, simulate);
-            }
-            
         };
     }
 
@@ -70,12 +61,14 @@ public class VacuumChestBlockEntity extends VacuumMachineEntity<ItemEntity> {
 	//TODO filter
 	@Override
 	public Predicate<ItemEntity> getFilter() {
+	    // get filter slot -> get filter item -> filter
+	    // maybe cache on item insert 
 		return super.getFilter();
 	}
 
 	@Override
 	public MachineTier getTier() {
-		return MachineTier.Standard;
+		return MachineTier.STANDARD;
 	}
 	
 	// Slot config

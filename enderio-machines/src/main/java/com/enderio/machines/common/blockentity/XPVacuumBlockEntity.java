@@ -36,13 +36,13 @@ public class XPVacuumBlockEntity extends VacuumMachineEntity<ExperienceOrb> {
     
     public XPVacuumBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState, ExperienceOrb.class);
-     // Create fluid tank.
+        // Create fluid tank.
         this.fluidTank = createFluidTank(Integer.MAX_VALUE);
-
+        
         // Create fluid tank storage.
         this.fluidHandler = new MachineFluidHandler(getIOConfig(), fluidTank);
         this.fluidHandlerCap = LazyOptional.of(() -> fluidHandler);
-
+        
         // Add capability provider
         addCapabilityProvider(fluidHandler);
         addDataSlot(new IntegerDataSlot(() -> fluidTank.getFluidInTank(0).getAmount(), (i) -> fluidTank.setFluid(new FluidStack(EIOFluids.XP_JUICE.get(), i)), SyncMode.WORLD));
@@ -83,7 +83,7 @@ public class XPVacuumBlockEntity extends VacuumMachineEntity<ExperienceOrb> {
 	
 	@Override
 	public MachineTier getTier() {
-	    return MachineTier.Standard;
+	    return MachineTier.STANDARD;
 	}
 	
 	@Nonnull

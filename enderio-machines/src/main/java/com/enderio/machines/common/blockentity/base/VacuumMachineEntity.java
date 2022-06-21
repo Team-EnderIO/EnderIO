@@ -119,7 +119,4 @@ public abstract class VacuumMachineEntity<T extends Entity> extends MachineBlock
         }
         super.onLoad();
     }
-	
-	
-
 }
