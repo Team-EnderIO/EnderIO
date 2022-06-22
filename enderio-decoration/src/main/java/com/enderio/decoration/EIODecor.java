@@ -1,9 +1,11 @@
 package com.enderio.decoration;
 
-import com.enderio.decoration.common.init.DecorBlocks;
 import com.enderio.decoration.common.init.DecorBlockEntities;
+import com.enderio.decoration.common.init.DecorBlocks;
 import com.enderio.decoration.common.init.DecorEntities;
+import com.enderio.decoration.common.network.EnderDecorNetwork;
 import com.tterrag.registrate.Registrate;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.fml.common.Mod;
@@ -19,6 +21,7 @@ public class EIODecor {
         DecorBlocks.classload();
         DecorBlockEntities.classload();
         DecorEntities.classload();
+        EnderDecorNetwork.register();
     }
 
     public static ResourceLocation loc(String path) {
