@@ -1,12 +1,9 @@
 package com.enderio.machines.common.blockentity;
 
-import java.util.Optional;
-
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.PowerConsumingMachineEntity;
-import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemHandlerMaster;
-import com.enderio.machines.common.blockentity.data.sidecontrol.item.ItemSlotLayout;
-import com.enderio.machines.common.init.MachineBlockEntities;
+import com.enderio.machines.common.init.MachineCapacitorKeys;
+import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.menu.ImpulseHopperMenu;
 
 import net.minecraft.core.BlockPos;
@@ -16,15 +13,15 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.items.ItemStackHandler;
 
 public class ImpulseHopperBlockEntity extends PowerConsumingMachineEntity{
 	private static final int IMPULSE_HOPPER_POWER_USE_PER_ITEM = 10; //TODO config?
-	private ItemStackHandler ghosthandler = new ItemStackHandler(6);
 
-	public ImpulseHopperBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition,
-			BlockState pBlockState) {
-		super(MachineTier.SIMPLE, MachineBlockEntities.IMPULSE_HOPPER.get(), pWorldPosition, pBlockState);
+	public ImpulseHopperBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
+		super(MachineCapacitorKeys.SIMPLE_ALLOY_SMELTER_ENERGY_CAPACITY.get(),
+                MachineCapacitorKeys.SIMPLE_ALLOY_SMELTER_ENERGY_TRANSFER.get(),
+                MachineCapacitorKeys.SIMPLE_ALLOY_SMELTER_ENERGY_CONSUME.get(),
+                type, worldPosition, blockState);
 	}
 
 	@Override
@@ -33,29 +30,20 @@ public class ImpulseHopperBlockEntity extends PowerConsumingMachineEntity{
 	}
 	
 	@Override
-	public Optional<ItemSlotLayout> getSlotLayout() {
-		return Optional.of(ItemSlotLayout.withCapacitor(6, 6));
+	public MachineInventoryLayout getInventoryLayout() {
+	    return MachineInventoryLayout.builder(true).inputSlot(6).outputSlot(6).ghostSlot(6).build(); // first 6 input, second 6 output, third 6 ghost
 	}
 	
 	@Override
-	protected ItemHandlerMaster createItemHandler(ItemSlotLayout layout) {
-		return new ItemHandlerMaster(getIoConfig(), layout);
-	}
-	
-	public ItemStackHandler getGhosthandler() {
-		return ghosthandler;
-	}
-	
-	@Override
-	public void tick() {
-		super.tick();
+	public void serverTick() {
+		super.serverTick();
 		if(ShouldActTick() && shouldPassItems()) {
 			passItems();
 		}
 	}
 	
 	public boolean ShouldActTick() {// TODO General tick method for power consuming devices?
-		return shouldAct() && level.getGameTime() % ticksForAction() == 0;
+		return canAct() && level.getGameTime() % ticksForAction() == 0;
 	}
 	
 	public int ticksForAction() {
@@ -63,8 +51,8 @@ public class ImpulseHopperBlockEntity extends PowerConsumingMachineEntity{
 	}
 	
 	public boolean canPass(int slot) {
-		if (this.getItemHandler().getStackInSlot(slot).getItem().equals(this.getGhosthandler().getStackInSlot(slot).getItem()) || this.getGhosthandler().getStackInSlot(slot).isEmpty()) {
-			if (this.getItemHandler().getStackInSlot(slot).getCount() >= this.getGhosthandler().getStackInSlot(slot).getCount()) {
+		if (this.getInventory().getStackInSlot(slot).getItem().equals(this.getInventory().getStackInSlot(slot+6+6).getItem()) || this.getInventory().getStackInSlot(slot+6+6).isEmpty()) {
+			if (this.getInventory().getStackInSlot(slot).getCount() >= this.getInventory().getStackInSlot(slot+6+6).getCount()) {
 				return true;
 			}
 		}
@@ -73,24 +61,24 @@ public class ImpulseHopperBlockEntity extends PowerConsumingMachineEntity{
 	
 	public boolean shouldPassItems() {
 		int totalpower = 0;
-		for (int i = 0; i < this.getGhosthandler().getSlots(); i++) {
+		for (int i = 0; i < 6; i++) {
 			if (canPass(i)) {
-				totalpower += this.getGhosthandler().getStackInSlot(i).getCount() * IMPULSE_HOPPER_POWER_USE_PER_ITEM;
+				totalpower += this.getInventory().getStackInSlot(i+6+6).getCount() * IMPULSE_HOPPER_POWER_USE_PER_ITEM;
 				continue;
 			}
 			return false;
 		}
-		if (canConsumeEnergy(totalpower)) {
-			return true;
-		}
+//		if (canConsumeEnergy(totalpower)) {
+//			return true;
+//		}
 		return false;
 	}
 	
 	public void passItems() {
-		for (int i = 0; i < this.getGhosthandler().getSlots(); i++) {
-			ItemStack stack = this.getItemHandler().getStackInSlot(i);
-			ItemStack ghost = this.getGhosthandler().getStackInSlot(i);
-			ItemStack result = this.getItemHandler().getStackInSlot(i + 6);
+		for (int i = 0; i < 6; i++) {
+			ItemStack stack = this.getInventory().getStackInSlot(i);
+			ItemStack ghost = this.getInventory().getStackInSlot(i+6+6);
+			ItemStack result = this.getInventory().getStackInSlot(i + 6);
 			if (ghost.isEmpty()) {
 				continue;
 			}
@@ -102,10 +90,15 @@ public class ImpulseHopperBlockEntity extends PowerConsumingMachineEntity{
 			} else {
 				continue;
 			}
-			this.consumeEnergy(ghost.getCount());
+//			this.consumeEnergy(ghost.getCount());
 			stack.shrink(ghost.getCount());
-			this.getItemHandler().setStackInSlot(i + 6, result);
+			this.getInventory().setStackInSlot(i + 6, result);
 		}
 	}
+
+    @Override
+    public MachineTier getTier() {
+        return MachineTier.STANDARD;
+    }
 
 }
