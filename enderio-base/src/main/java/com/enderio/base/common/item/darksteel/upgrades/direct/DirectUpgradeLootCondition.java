@@ -1,7 +1,7 @@
 package com.enderio.base.common.item.darksteel.upgrades.direct;
 
 import com.enderio.base.EnderIO;
-import com.enderio.base.common.capability.darksteel.DarkSteelUpgradeable;
+import com.enderio.base.common.capability.DarkSteelUpgradeable;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;

@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "enderio:clear_glass_a"
+    },
+    {
+      "tag": "enderio:clear_glass_a"
+    },
+    {
+      "tag": "enderio:clear_glass_a"
+    },
+    {
+      "tag": "enderio:clear_glass_a"
+    },
+    {
+      "tag": "enderio:clear_glass_a"
+    },
+    {
+      "tag": "enderio:clear_glass_a"
+    },
+    {
+      "tag": "enderio:clear_glass_a"
+    },
+    {
+      "tag": "enderio:clear_glass_a"
+    },
+    {
+      "tag": "forge:dyes/red"
+    }
+  ],
+  "result": {
+    "item": "enderio:clear_glass_a_red",
+    "count": 8
+  }
+}

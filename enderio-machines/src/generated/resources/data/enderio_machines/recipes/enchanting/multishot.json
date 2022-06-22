@@ -1,9 +1,9 @@
 {
   "type": "enderio_machines:enchanting",
-  "ingredient": {
-    "item": "minecraft:arrow"
-  },
   "enchantment": "minecraft:multishot",
+  "input": {
+    "tag": "minecraft:arrows"
+  },
   "amount": 16,
-  "level": 1
+  "cost_multiplier": 1
 }

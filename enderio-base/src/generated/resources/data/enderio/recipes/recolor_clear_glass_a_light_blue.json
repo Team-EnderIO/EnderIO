@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "enderio:clear_glass_a"
+    },
+    {
+      "tag": "enderio:clear_glass_a"
+    },
+    {
+      "tag": "enderio:clear_glass_a"
+    },
+    {
+      "tag": "enderio:clear_glass_a"
+    },
+    {
+      "tag": "enderio:clear_glass_a"
+    },
+    {
+      "tag": "enderio:clear_glass_a"
+    },
+    {
+      "tag": "enderio:clear_glass_a"
+    },
+    {
+      "tag": "enderio:clear_glass_a"
+    },
+    {
+      "tag": "forge:dyes/light_blue"
+    }
+  ],
+  "result": {
+    "item": "enderio:clear_glass_a_light_blue",
+    "count": 8
+  }
+}

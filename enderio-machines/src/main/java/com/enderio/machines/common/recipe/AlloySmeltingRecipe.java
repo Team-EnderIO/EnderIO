@@ -1,100 +1,105 @@
 package com.enderio.machines.common.recipe;
 
-import com.enderio.base.common.recipe.DataGenSerializer;
+import com.enderio.api.machines.recipes.OutputStack;
+import com.enderio.api.recipe.CountedIngredient;
+import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import net.minecraft.core.NonNullList;
-import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.registries.ForgeRegistryEntry;
+import org.jetbrains.annotations.Nullable;
 
-public class AlloySmeltingRecipe extends MachineRecipe<AlloySmeltingRecipe, Container> {
+import java.util.ArrayList;
+import java.util.List;
+
+public class AlloySmeltingRecipe implements IAlloySmeltingRecipe {
+
     private final ResourceLocation id;
-    private final NonNullList<Ingredient> ingredients; // TODO: Custom "Ingredient" class supporting counts
-    private final ItemStack result;
+    private final List<CountedIngredient> inputs;
+    private final ItemStack output;
     private final int energy;
     private final float experience;
 
-    public AlloySmeltingRecipe(ResourceLocation id, NonNullList<Ingredient> ingredients, ItemStack result, int energy, float experience) {
-        if (ingredients.size() > 3) {
-            throw new IllegalArgumentException("Tried to create an invalid alloy smelting recipe!");
-        }
-
+    public AlloySmeltingRecipe(ResourceLocation id, List<CountedIngredient> inputs, ItemStack output, int energy, float experience) {
         this.id = id;
-        this.ingredients = ingredients;
-        this.result = result;
+        this.inputs = inputs;
+        this.output = output;
         this.energy = energy;
         this.experience = experience;
     }
 
     @Override
-    public NonNullList<Ingredient> getIngredients() {
-        return ingredients;
+    public List<CountedIngredient> getInputs() {
+        return inputs;
     }
 
     @Override
-    public int getEnergyCost() {
+    public int getEnergyCost(IAlloySmeltingRecipe.Container container) {
         return energy;
     }
 
     @Override
-    public boolean matches(Container pContainer, Level pLevel) {
-        // TODO: Test
-        boolean[] matchArray = new boolean[3]; // Used to ensure there are blank slots left. // TODO: I want to get rid of it
-        int matches = 0;
+    public float getExperience() {
+        return experience;
+    }
 
+    @Override
+    public boolean matches(IAlloySmeltingRecipe.Container container, Level level) {
+        boolean[] matched = new boolean[3];
+
+        // Iterate over the slots
         for (int i = 0; i < 3; i++) {
+            // Iterate over the inputs
             for (int j = 0; j < 3; j++) {
-                if (j < ingredients.size()) {
-                    if (ingredients.get(j).test(pContainer.getItem(i))) {
-                        matchArray[i] = true;
-                        matches++;
-                    }
-                } else if (pContainer.getItem(i).isEmpty()) {
-                    matchArray[i] = true;
-                }
-            }
+                // If this ingredient has been matched already, continue
+                if (matched[j])
+                    continue;
 
-            for (Ingredient ingredient : ingredients) {
-                if (ingredient.test(pContainer.getItem(i))
-                    || ingredient == Ingredient.EMPTY && pContainer.getItem(i).isEmpty()) {
-                    matchArray[i] = true;
+                if (j < inputs.size()) {
+                    // If we expect an input, test we have a match for it.
+                    if (inputs.get(j).test(container.getItem(i))) {
+                        matched[j] = true;
+                    }
+                } else if (container.getItem(i) == ItemStack.EMPTY) {
+                    // If we don't expect an input, make sure we have a blank for it.
+                    matched[j] = true;
                 }
             }
         }
 
-        return matches == ingredients.size() && matchArray[0] && matchArray[1] && matchArray[2];
-    }
+        // If we matched all our ingredients, we win!
+        for (int i = 0; i < 3; i++) {
+            if (!matched[i])
+                return false;
+        }
 
-    @Override
-    public ItemStack assemble(Container pContainer) {
-        return result.copy();
-    }
-
-    @Override
-    public boolean canCraftInDimensions(int pWidth, int pHeight) {
         return true;
     }
 
     @Override
-    public ItemStack getResultItem() {
-        return ItemStack.EMPTY;
+    public List<OutputStack> craft(Container container) {
+         return List.of(OutputStack.of(output.copy()));
+    }
+
+    @Override
+    public List<OutputStack> getResultStacks() {
+        return List.of(OutputStack.of(output.copy()));
     }
 
     @Override
     public ResourceLocation getId() {
-        return this.id;
+        return id;
     }
 
     @Override
-    public DataGenSerializer<AlloySmeltingRecipe, Container> getSerializer() {
+    public RecipeSerializer<?> getSerializer() {
         return MachineRecipes.Serializer.ALLOY_SMELTING.get();
     }
 
@@ -103,58 +108,50 @@ public class AlloySmeltingRecipe extends MachineRecipe<AlloySmeltingRecipe, Cont
         return MachineRecipes.Types.ALLOY_SMELTING;
     }
 
-    public static class Serializer extends DataGenSerializer<AlloySmeltingRecipe, Container> {
+    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<AlloySmeltingRecipe> {
 
         @Override
-        public AlloySmeltingRecipe fromJson(ResourceLocation pRecipeId, JsonObject pSerializedRecipe) {
+        public AlloySmeltingRecipe fromJson(ResourceLocation recipeId, JsonObject serializedRecipe) {
             // Load ingredients
-            JsonArray jsonIngredients = pSerializedRecipe.getAsJsonArray("ingredients");
-            NonNullList<Ingredient> ingredients = NonNullList.withSize(jsonIngredients.size(), Ingredient.EMPTY);
-            for (int i = 0; i < jsonIngredients.size(); i++) {
-                ingredients.set(i, Ingredient.fromJson(jsonIngredients.get(i)));
+            JsonArray jsonInputs = serializedRecipe.getAsJsonArray("inputs");
+            List<CountedIngredient> inputs = new ArrayList<>(jsonInputs.size());
+            for (int i = 0; i < jsonInputs.size(); i++) {
+                inputs.add(i, CountedIngredient.fromJson(jsonInputs.get(i).getAsJsonObject()));
             }
 
             // Load result, energy and experience.
-            ItemStack result = CraftingHelper.getItemStack(pSerializedRecipe.getAsJsonObject("result"), false);
-            int energy = pSerializedRecipe.get("energy").getAsInt();
-            float experience = pSerializedRecipe.get("experience").getAsInt();
-            return new AlloySmeltingRecipe(pRecipeId, ingredients, result, energy, experience);
+            ItemStack result = CraftingHelper.getItemStack(serializedRecipe.getAsJsonObject("result"), false);
+            int energy = serializedRecipe.get("energy").getAsInt();
+            float experience = serializedRecipe.get("experience").getAsInt();
+            return new AlloySmeltingRecipe(recipeId, inputs, result, energy, experience);
         }
 
+        @Nullable
         @Override
-        public void toJson(AlloySmeltingRecipe recipe, JsonObject json) {
-            JsonArray ingredients = new JsonArray(recipe.ingredients.size());
-            recipe.ingredients.forEach(ing -> ingredients.add(ing.toJson()));
-
-            json.add("ingredients", ingredients);
-
-            JsonObject jsonobject = new JsonObject();
-            jsonobject.addProperty("item", Registry.ITEM.getKey(recipe.result.getItem()).toString());
-            if (recipe.result.getCount() > 1) {
-                jsonobject.addProperty("count", recipe.result.getCount());
+        public AlloySmeltingRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
+            try {
+                List<CountedIngredient> ingredients = buffer.readList(CountedIngredient::fromNetwork);
+                ItemStack result = buffer.readItem();
+                int energy = buffer.readInt();
+                float experience = buffer.readFloat();
+                return new AlloySmeltingRecipe(recipeId, ingredients, result, energy, experience);
+            } catch (Exception ex) {
+                EIOMachines.LOGGER.error("Error reading alloy smelting recipe from packet.", ex);
+                throw ex;
             }
-
-            json.add("result", jsonobject);
-
-            json.addProperty("energy", recipe.energy);
-            json.addProperty("experience", recipe.experience);
         }
 
         @Override
-        public AlloySmeltingRecipe fromNetwork(ResourceLocation pRecipeId, FriendlyByteBuf pBuffer) {
-            NonNullList<Ingredient> ingredients = pBuffer.readCollection(count -> NonNullList.withSize(count, Ingredient.EMPTY), Ingredient::fromNetwork);
-            ItemStack result = pBuffer.readItem();
-            int energy = pBuffer.readInt();
-            float experience = pBuffer.readFloat();
-            return new AlloySmeltingRecipe(pRecipeId, ingredients, result, energy, experience);
-        }
-
-        @Override
-        public void toNetwork(FriendlyByteBuf pBuffer, AlloySmeltingRecipe pRecipe) {
-            pBuffer.writeCollection(pRecipe.ingredients, (buf, ing) -> ing.toNetwork(buf));
-            pBuffer.writeItem(pRecipe.result);
-            pBuffer.writeInt(pRecipe.energy);
-            pBuffer.writeFloat(pRecipe.experience);
+        public void toNetwork(FriendlyByteBuf buffer, AlloySmeltingRecipe recipe) {
+            try {
+                buffer.writeCollection(recipe.inputs, (buf, ing) -> ing.toNetwork(buf));
+                buffer.writeItem(recipe.output);
+                buffer.writeInt(recipe.energy);
+                buffer.writeFloat(recipe.experience);
+            } catch (Exception ex) {
+                EIOMachines.LOGGER.error("Error writing alloy smelting recipe to packet.", ex);
+                throw ex;
+            }
         }
     }
 }

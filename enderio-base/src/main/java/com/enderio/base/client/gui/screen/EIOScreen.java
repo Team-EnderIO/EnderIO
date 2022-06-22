@@ -30,6 +30,7 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
     protected EIOScreen(T pMenu, Inventory pPlayerInventory, Component pTitle) {
         this(pMenu, pPlayerInventory, pTitle, false);
     }
+
     protected EIOScreen(T pMenu, Inventory pPlayerInventory, Component pTitle, boolean renderLabels) {
         super(pMenu, pPlayerInventory, pTitle);
         this.renderLabels = renderLabels;
@@ -40,12 +41,12 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
     @Override
     public void resize(Minecraft pMinecraft, int pWidth, int pHeight) {
         Map<String, String> oldEditBoxValues = new HashMap<>();
-        for (EditBox editBox: editBoxList) {
+        for (EditBox editBox : editBoxList) {
             oldEditBoxValues.put(editBox.getMessage().getString(), editBox.getValue());
         }
         editBoxList.clear();
         super.resize(pMinecraft, pWidth, pHeight);
-        for (EditBox editBox: editBoxList) {
+        for (EditBox editBox : editBoxList) {
             editBox.setValue(oldEditBoxValues.getOrDefault(editBox.getMessage().getString(), ""));
         }
     }
@@ -74,9 +75,8 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
         if (pKeyCode == 256) { //ESC has priority
             Minecraft.getInstance().player.closeContainer();
         }
-        for (EditBox editBox: editBoxList) {
-            if (editBox.keyPressed(pKeyCode, pScanCode, pModifiers)
-                || editBox.canConsumeInput()) {
+        for (EditBox editBox : editBoxList) {
+            if (editBox.keyPressed(pKeyCode, pScanCode, pModifiers) || editBox.canConsumeInput()) {
                 return true;
             }
         }
@@ -93,7 +93,7 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
 
     @Override
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-        for (GuiEventListener widget: children()) {
+        for (GuiEventListener widget : children()) {
             if (widget instanceof AbstractWidget abstractWidget && abstractWidget.isActive() && widget instanceof IFullScreenListener fullScreenListener) {
                 fullScreenListener.onGlobalClick(pMouseX, pMouseY);
             }
@@ -111,7 +111,7 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
     @Override
     protected void containerTick() {
         super.containerTick();
-        for (EditBox editBox: editBoxList) {
+        for (EditBox editBox : editBoxList) {
             editBox.tick();
         }
     }

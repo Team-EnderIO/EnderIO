@@ -1,0 +1,25 @@
+{
+  "type": "enderio_machines:slicing",
+  "output": "enderio:zombie_electrode",
+  "inputs": [
+    {
+      "item": "enderio:energetic_alloy_ingot"
+    },
+    {
+      "item": "minecraft:zombie_head"
+    },
+    {
+      "item": "enderio:energetic_alloy_ingot"
+    },
+    {
+      "item": "enderio:silicon"
+    },
+    {
+      "item": "enderio:basic_capacitor"
+    },
+    {
+      "item": "enderio:silicon"
+    }
+  ],
+  "energy": 20000
+}

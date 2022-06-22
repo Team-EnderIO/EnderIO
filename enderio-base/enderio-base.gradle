@@ -1,36 +1,15 @@
+apply plugin: 'org.spongepowered.mixin'
+
 minecraft {
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-
-    runs {
-        // Monolithic client, runs all mods together
-        clientMonolith {
-            parent minecraft.runs.client
-
-            mods {
-                "enderio-decoration" {
-                    source project(':enderio-decoration').sourceSets.main
-                }
-                "enderio-machines" {
-                    source project(':enderio-machines').sourceSets.main
-                }
-            }
-        }
-
-        serverMonolith {
-            parent minecraft.runs.server
-
-            mods {
-                "enderio-decoration" {
-                    source project(':enderio-decoration').sourceSets.main
-                }
-                "enderio-machines" {
-                    source project(':enderio-machines').sourceSets.main
-                }
-            }
-        }
-    }
 }
 
 dependencies {
+    annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
+}
 
+// MixinGradle Settings
+mixin {
+    add sourceSets.main, "mixins.enderio.refmap.json"
+    config "mixins.enderio.json"
 }

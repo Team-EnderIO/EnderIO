@@ -1,8 +1,6 @@
 package com.enderio.machines.client.gui.screen;
 
 import com.enderio.base.client.gui.screen.EIOScreen;
-import com.enderio.base.client.gui.widgets.EnumIconWidget;
-import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.util.Vector2i;
 import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.menu.EnchanterMenu;
@@ -14,7 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public class EnchanterScreen extends EIOScreen<EnchanterMenu> {
-    private static final ResourceLocation BG_TEXTURE = EIOMachines.loc("textures/gui/enchanter.png");
+    public static final ResourceLocation BG_TEXTURE = EIOMachines.loc("textures/gui/enchanter.png");
 
     public EnchanterScreen(EnchanterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -23,8 +21,6 @@ public class EnchanterScreen extends EIOScreen<EnchanterMenu> {
     @Override
     protected void init() {
         super.init();
-        addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),
-            control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
     }
     
     @Override

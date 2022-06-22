@@ -1,9 +1,9 @@
 {
   "type": "enderio_machines:enchanting",
-  "ingredient": {
-    "item": "minecraft:slime_ball"
-  },
   "enchantment": "minecraft:silk_touch",
+  "input": {
+    "tag": "forge:slimeballs"
+  },
   "amount": 1,
-  "level": 1
+  "cost_multiplier": 1
 }

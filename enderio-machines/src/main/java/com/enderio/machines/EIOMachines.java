@@ -1,11 +1,11 @@
 package com.enderio.machines;
 
-import com.enderio.machines.common.init.MachineBlockEntities;
-import com.enderio.machines.common.init.MachineBlocks;
-import com.enderio.machines.common.init.MachineMenus;
-import com.enderio.machines.common.init.MachineRecipes;
+import com.enderio.machines.common.init.*;
 import com.enderio.machines.common.lang.MachineLang;
-import com.enderio.machines.datagen.recipe.MachineRecipeGenerator;
+import com.enderio.machines.data.recipes.AlloyRecipeProvider;
+import com.enderio.machines.data.recipes.EnchanterRecipeProvider;
+import com.enderio.machines.data.recipes.SagMillRecipeProvider;
+import com.enderio.machines.data.recipes.SlicingRecipeProvider;
 import com.tterrag.registrate.Registrate;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
@@ -17,10 +17,14 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Mod(EIOMachines.MODID)
 public class EIOMachines {
     public static final String MODID = "enderio_machines";
+
+    public static final Logger LOGGER = LogManager.getLogger(MODID);
 
     private static final Lazy<Registrate> REGISTRATE = Lazy.of(() -> Registrate.create(MODID));
 
@@ -31,6 +35,7 @@ public class EIOMachines {
         MachineMenus.classload();
         MachineLang.classload();
         MachineRecipes.Serializer.classload();
+        MachineCapacitorKeys.classload();
 
         // Run datagen after registrate
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -47,7 +52,10 @@ public class EIOMachines {
     public void gatherData(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
         if (event.includeServer()) {
-            MachineRecipeGenerator.generate(generator);
+            generator.addProvider(new AlloyRecipeProvider(generator));
+            generator.addProvider(new EnchanterRecipeProvider(generator));
+            generator.addProvider(new SagMillRecipeProvider(generator));
+            generator.addProvider(new SlicingRecipeProvider(generator));
         }
     }
 

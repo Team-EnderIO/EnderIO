@@ -1,9 +1,9 @@
 {
   "type": "enderio_machines:enchanting",
-  "ingredient": {
-    "item": "minecraft:feather"
-  },
   "enchantment": "minecraft:feather_falling",
+  "input": {
+    "tag": "forge:feathers"
+  },
   "amount": 1,
-  "level": 1
+  "cost_multiplier": 1
 }

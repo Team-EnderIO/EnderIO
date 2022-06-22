@@ -1,9 +1,10 @@
 package com.enderio.base.common.loot;
 
 import com.enderio.base.EnderIO;
+import com.enderio.base.common.capacitor.CapacitorUtil;
+import com.enderio.base.common.capacitor.LootCapacitorData;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOItems;
-import com.enderio.base.common.util.CapacitorUtil;
 import com.google.gson.JsonObject;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -49,8 +50,10 @@ public class CapacitorLootModifier extends LootModifier {
     protected List<ItemStack> doApply(List<ItemStack> generatedLoot, LootContext context) {
         ItemStack capacitor = new ItemStack(EIOItems.LOOT_CAPACITOR.get());
         capacitor.getCapability(EIOCapabilities.CAPACITOR).ifPresent(cap -> {
-            cap.setBase(UniformGenerator.between(min, max).getFloat(context));
-            cap.addNewSpecialization(CapacitorUtil.getRandomType(), UniformGenerator.between(0.0F, 4.5F).getFloat(context));
+            if (cap instanceof LootCapacitorData lootCap) {
+                lootCap.setBase(UniformGenerator.between(min, max).getFloat(context));
+                lootCap.addNewSpecialization(CapacitorUtil.getRandomKey(), UniformGenerator.between(0.0F, 4.5F).getFloat(context));
+            }
         });
         generatedLoot.add(capacitor);
         return generatedLoot;

@@ -5,10 +5,11 @@
       "model": "enderio_machines:block/simple_powered_furnace_front"
     },
     {
-      "model": "enderio_machines:block/simple_machine_frame"
+      "model": "enderio_machines:block/io_overlay"
     },
     {
-      "model": "enderio_machines:block/io_overlay"
+      "model": "enderio_machines:block/simple_machine_frame",
+      "particle_provider": true
     }
   ]
 }

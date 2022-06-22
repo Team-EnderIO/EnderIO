@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GGG",
+    "GTG",
+    "GGG"
+  ],
+  "key": {
+    "G": {
+      "item": "enderio:clear_glass_e"
+    },
+    "T": {
+      "item": "enderio:player_token"
+    }
+  },
+  "result": {
+    "item": "enderio:clear_glass_ep",
+    "count": 8
+  }
+}

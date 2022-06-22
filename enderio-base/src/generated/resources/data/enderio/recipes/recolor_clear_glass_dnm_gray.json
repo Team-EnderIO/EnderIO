@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "enderio:clear_glass_dnm"
+    },
+    {
+      "tag": "enderio:clear_glass_dnm"
+    },
+    {
+      "tag": "enderio:clear_glass_dnm"
+    },
+    {
+      "tag": "enderio:clear_glass_dnm"
+    },
+    {
+      "tag": "enderio:clear_glass_dnm"
+    },
+    {
+      "tag": "enderio:clear_glass_dnm"
+    },
+    {
+      "tag": "enderio:clear_glass_dnm"
+    },
+    {
+      "tag": "enderio:clear_glass_dnm"
+    },
+    {
+      "tag": "forge:dyes/gray"
+    }
+  ],
+  "result": {
+    "item": "enderio:clear_glass_dnm_gray",
+    "count": 8
+  }
+}

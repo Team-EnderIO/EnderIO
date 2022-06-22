@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GGG",
+    "GTG",
+    "GGG"
+  ],
+  "key": {
+    "G": {
+      "item": "enderio:fused_quartz_d"
+    },
+    "T": {
+      "item": "enderio:monster_token"
+    }
+  },
+  "result": {
+    "item": "enderio:fused_quartz_dm",
+    "count": 8
+  }
+}

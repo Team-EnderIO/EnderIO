@@ -1,6 +1,6 @@
 package com.enderio.decoration.client.model.painted;
 
-import com.enderio.base.datagen.model.EIOModel;
+import com.enderio.base.data.model.EIOModel;
 import com.enderio.decoration.common.blockentity.DoublePaintedBlockEntity;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemTransforms;

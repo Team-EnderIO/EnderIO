@@ -1,0 +1,8 @@
+{
+  "type": "enderio:grindingball",
+  "item": "enderio:pulsating_alloy_grinding_ball",
+  "grinding": 1.0,
+  "chance": 1.85,
+  "power": 1.0,
+  "durability": 100000
+}

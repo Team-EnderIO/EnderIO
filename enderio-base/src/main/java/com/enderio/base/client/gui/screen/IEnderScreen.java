@@ -15,11 +15,15 @@ public interface IEnderScreen {
         return (Screen) this;
     }
 
-    default void renderIcon(PoseStack pPoseStack, Vector2i pos, IIcon icon) {
+    static void renderIcon(PoseStack poseStack, Vector2i pos, IIcon icon) {
+        if (!icon.shouldRender())
+            return;
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, icon.getTextureLocation());
-        GuiComponent.blit(pPoseStack, pos.getX(), pos.getY(), icon.getRenderSize().getX(), icon.getRenderSize().getY(), icon.getTexturePosition().getX(), icon.getTexturePosition().getY(), icon.getIconSize().getX(),  icon.getIconSize().getY(), icon.getTextureSize().getX(), icon.getTextureSize().getY());
+        RenderSystem.enableBlend();
+        GuiComponent.blit(poseStack, pos.getX(), pos.getY(), icon.getRenderSize().getX(), icon.getRenderSize().getY(), icon.getTexturePosition().getX(), icon.getTexturePosition().getY(), icon.getIconSize().getX(),  icon.getIconSize().getY(), icon.getTextureSize().getX(), icon.getTextureSize().getY());
+
     }
 
     default void renderSimpleArea(PoseStack pPoseStack, Vector2i pos, Vector2i pos2) {

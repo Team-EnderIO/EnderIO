@@ -1,9 +1,9 @@
 {
   "type": "enderio_machines:enchanting",
-  "ingredient": {
-    "item": "minecraft:obsidian"
-  },
   "enchantment": "minecraft:unbreaking",
+  "input": {
+    "tag": "forge:obsidian"
+  },
   "amount": 1,
-  "level": 1
+  "cost_multiplier": 1
 }

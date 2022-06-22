@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "facing=north,half=upper,powered=false": {
+      "model": "enderio_machines:block/enhanced_sag_mill_top"
+    },
+    "facing=south,half=upper,powered=false": {
+      "model": "enderio_machines:block/enhanced_sag_mill_top",
+      "y": 180
+    },
+    "facing=west,half=upper,powered=false": {
+      "model": "enderio_machines:block/enhanced_sag_mill_top",
+      "y": 270
+    },
+    "facing=east,half=upper,powered=false": {
+      "model": "enderio_machines:block/enhanced_sag_mill_top",
+      "y": 90
+    },
+    "facing=north,half=lower,powered=false": {
+      "model": "enderio_machines:block/enhanced_sag_mill"
+    },
+    "facing=south,half=lower,powered=false": {
+      "model": "enderio_machines:block/enhanced_sag_mill",
+      "y": 180
+    },
+    "facing=west,half=lower,powered=false": {
+      "model": "enderio_machines:block/enhanced_sag_mill",
+      "y": 270
+    },
+    "facing=east,half=lower,powered=false": {
+      "model": "enderio_machines:block/enhanced_sag_mill",
+      "y": 90
+    },
+    "facing=north,half=upper,powered=true": {
+      "model": "enderio_machines:block/enhanced_sag_mill_top_on"
+    },
+    "facing=south,half=upper,powered=true": {
+      "model": "enderio_machines:block/enhanced_sag_mill_top_on",
+      "y": 180
+    },
+    "facing=west,half=upper,powered=true": {
+      "model": "enderio_machines:block/enhanced_sag_mill_top_on",
+      "y": 270
+    },
+    "facing=east,half=upper,powered=true": {
+      "model": "enderio_machines:block/enhanced_sag_mill_top_on",
+      "y": 90
+    },
+    "facing=north,half=lower,powered=true": {
+      "model": "enderio_machines:block/enhanced_sag_mill_on"
+    },
+    "facing=south,half=lower,powered=true": {
+      "model": "enderio_machines:block/enhanced_sag_mill_on",
+      "y": 180
+    },
+    "facing=west,half=lower,powered=true": {
+      "model": "enderio_machines:block/enhanced_sag_mill_on",
+      "y": 270
+    },
+    "facing=east,half=lower,powered=true": {
+      "model": "enderio_machines:block/enhanced_sag_mill_on",
+      "y": 90
+    }
+  }
+}

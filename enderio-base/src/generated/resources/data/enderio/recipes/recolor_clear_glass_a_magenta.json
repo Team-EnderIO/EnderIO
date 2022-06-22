@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "enderio:clear_glass_a"
+    },
+    {
+      "tag": "enderio:clear_glass_a"
+    },
+    {
+      "tag": "enderio:clear_glass_a"
+    },
+    {
+      "tag": "enderio:clear_glass_a"
+    },
+    {
+      "tag": "enderio:clear_glass_a"
+    },
+    {
+      "tag": "enderio:clear_glass_a"
+    },
+    {
+      "tag": "enderio:clear_glass_a"
+    },
+    {
+      "tag": "enderio:clear_glass_a"
+    },
+    {
+      "tag": "forge:dyes/magenta"
+    }
+  ],
+  "result": {
+    "item": "enderio:clear_glass_a_magenta",
+    "count": 8
+  }
+}

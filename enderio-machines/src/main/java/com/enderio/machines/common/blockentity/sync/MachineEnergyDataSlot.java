@@ -2,30 +2,39 @@ package com.enderio.machines.common.blockentity.sync;
 
 import com.enderio.base.common.blockentity.sync.EnderDataSlot;
 import com.enderio.base.common.blockentity.sync.SyncMode;
-import com.enderio.base.common.util.Vector2i;
-import com.enderio.machines.common.energy.MachineEnergyStorage;
+import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
+import com.enderio.machines.common.io.energy.ImmutableMachineEnergyStorage;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.Tuple;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class MachineEnergyDataSlot extends EnderDataSlot<EnergyData> {
-    public MachineEnergyDataSlot(MachineEnergyStorage storage, Consumer<EnergyData> clientConsumer, SyncMode syncMode) {
-        // We dont set a setter here as energy should *never* be client -> server synced.
-        super(() -> new EnergyData(storage.getEnergyStored(), storage.getMaxEnergyStored()), clientConsumer, syncMode);
+/**
+ * Data slot for syncing an instance of {@link IMachineEnergyStorage} using a data slot.
+ * @apiNote Sends a {@link ImmutableMachineEnergyStorage} to the receiver.
+ */
+public class MachineEnergyDataSlot extends EnderDataSlot<IMachineEnergyStorage> {
+    public MachineEnergyDataSlot(Supplier<IMachineEnergyStorage> getter, Consumer<IMachineEnergyStorage> setter, SyncMode mode) {
+        super(getter, setter, mode);
     }
 
     @Override
     public CompoundTag toFullNBT() {
+        IMachineEnergyStorage storage = getter().get();
         CompoundTag tag = new CompoundTag();
-        tag.putInt("Energy", getter().get().energy());
-        tag.putInt("Capacity", getter().get().capacity());
+        tag.putInt("Energy", storage.getEnergyStored());
+        tag.putInt("MaxStored", storage.getMaxEnergyStored());
+        tag.putInt("MaxTransfer", storage.getMaxEnergyTransfer());
+        tag.putInt("MaxUse", storage.getMaxEnergyUse());
         return tag;
     }
 
     @Override
-    protected EnergyData fromNBT(CompoundTag nbt) {
-        return new EnergyData(nbt.getInt("Energy"), nbt.getInt("Capacity"));
+    protected IMachineEnergyStorage fromNBT(CompoundTag nbt) {
+        int energy = nbt.getInt("Energy");
+        int maxStored = nbt.getInt("MaxStored");
+        int maxTransfer = nbt.getInt("MaxTransfer");
+        int maxUse = nbt.getInt("MaxUse");
+        return new ImmutableMachineEnergyStorage(energy, maxStored, maxTransfer, maxUse);
     }
 }
