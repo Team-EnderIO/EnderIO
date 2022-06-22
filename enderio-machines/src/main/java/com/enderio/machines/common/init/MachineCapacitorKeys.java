@@ -1,15 +1,16 @@
 package com.enderio.machines.common.init;
 
+import java.util.function.Supplier;
+
 import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.api.capacitor.CapacitorKeyType;
 import com.enderio.api.capacitor.Scalers;
 import com.enderio.base.EnderIO;
 import com.enderio.machines.EIOMachines;
+
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
-
-import java.util.function.Supplier;
 
 public enum MachineCapacitorKeys {
     SIMPLE_ALLOY_SMELTER_ENERGY_CAPACITY(() -> new CapacitorKey(2000, CapacitorKeyType.EnergyCapacity, Scalers.FIXED)),
@@ -44,6 +45,12 @@ public enum MachineCapacitorKeys {
 
     STIRLING_GENERATOR_ENERGY_CAPACITY(() -> new CapacitorKey(100000, CapacitorKeyType.EnergyCapacity, Scalers.ENERGY)),
     // TODO: Generation rate and efficiency.
+    
+    IMPULSE_HOPPER_ENERGY_CAPACITY(() -> new CapacitorKey(100000, CapacitorKeyType.EnergyCapacity, Scalers.ENERGY)),
+    IMPULSE_HOPPER_ENERGY_TRANSFER(() -> new CapacitorKey(120, CapacitorKeyType.EnergyTransfer, Scalers.ENERGY)),
+    IMPULSE_HOPPER_ENERGY_CONSUME(() -> new CapacitorKey(16, CapacitorKeyType.EnergyUsage, Scalers.ENERGY)),
+    IMPULSE_HOPPER_ENERGY_CONSUME_ITEM(() -> new CapacitorKey(10, CapacitorKeyType.EnergyUsage, Scalers.FIXED)),
+    IMPULSE_HOPPER_ENERGY_SPEED(() -> new CapacitorKey(1, CapacitorKeyType.EnergyUsage, Scalers.QUADRATIC)),
 
     DEV_ENERGY_CAPACITY(() -> new CapacitorKey(100000, CapacitorKeyType.EnergyCapacity, Scalers.FIXED)),
     DEV_ENERGY_TRANSFER(() -> new CapacitorKey(120, CapacitorKeyType.EnergyTransfer, Scalers.FIXED)),

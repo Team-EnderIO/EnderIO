@@ -7,6 +7,7 @@ public enum Scalers implements IScaler {
     FIXED((v, l) -> v),
     LINEAR((v, l) -> v * l),
     POW((v, l) -> (float)Math.pow(v, l)),
+    QUADRATIC((v, l) -> (float)Math.pow(v*l, 2)),
     LINEAR_2_MINUS_1((v, l) -> v * ((2 * l) - 1)),
     ENERGY(new IndexedScaler(1f, 0, 1, 3, 5, 8, 13, 18))
     ;

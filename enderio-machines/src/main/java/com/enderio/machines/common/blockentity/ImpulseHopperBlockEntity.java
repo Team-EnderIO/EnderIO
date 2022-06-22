@@ -15,12 +15,12 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class ImpulseHopperBlockEntity extends PowerConsumingMachineEntity{
-	private static final int IMPULSE_HOPPER_POWER_USE_PER_ITEM = 10; //TODO config?
+	private static final int IMPULSE_HOPPER_POWER_USE_PER_ITEM = 10; //TODO MachineCapacitorKeys.IMPULSE_HOPPER_ENERGY_CONSUME_ITEM
 
 	public ImpulseHopperBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
-		super(MachineCapacitorKeys.SIMPLE_ALLOY_SMELTER_ENERGY_CAPACITY.get(),
-                MachineCapacitorKeys.SIMPLE_ALLOY_SMELTER_ENERGY_TRANSFER.get(),
-                MachineCapacitorKeys.SIMPLE_ALLOY_SMELTER_ENERGY_CONSUME.get(),
+		super(MachineCapacitorKeys.IMPULSE_HOPPER_ENERGY_CAPACITY.get(),
+                MachineCapacitorKeys.IMPULSE_HOPPER_ENERGY_TRANSFER.get(),
+                MachineCapacitorKeys.IMPULSE_HOPPER_ENERGY_CONSUME.get(),
                 type, worldPosition, blockState);
 	}
 
@@ -47,7 +47,7 @@ public class ImpulseHopperBlockEntity extends PowerConsumingMachineEntity{
 	}
 	
 	public int ticksForAction() {
-		return 20; //TODO Speed modifier
+		return 20; //TODO Speed modifier MachineCapacitorKeys.IMPULSE_HOPPER_ENERGY_SPEED
 	}
 	
 	public boolean canPass(int slot) {
