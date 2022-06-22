@@ -1,10 +1,16 @@
 package com.enderio.machines.common.io.energy;
 
+import java.util.EnumMap;
+import java.util.function.Supplier;
+
+import org.jetbrains.annotations.Nullable;
+
 import com.enderio.api.capability.ICapacitorData;
 import com.enderio.api.capability.IEnderCapabilityProvider;
 import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.api.energy.EnergyIOMode;
 import com.enderio.api.io.IIOConfig;
+
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.Capability;
@@ -12,10 +18,6 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.EnumMap;
-import java.util.function.Supplier;
 
 /**
  * Machine energy storage medium.
@@ -91,6 +93,11 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, IEnderCapabi
     public int consumeEnergy(int energy) {
         // Cap rate
         return takeEnergy(Math.min(energy, getMaxEnergyUse()));
+    }
+    
+    @Override
+    public boolean canConsumeEnergy(int energy) {
+        return (energyStored - energy) >= 0;
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.enderio.machines.common.io.energy;
 
 import com.enderio.api.energy.EnergyIOMode;
 import com.enderio.api.io.IIOConfig;
+
 import net.minecraftforge.energy.IEnergyStorage;
 
 /**
@@ -32,6 +33,12 @@ public interface IMachineEnergyStorage extends IEnergyStorage {
      * @return Amount of energy consumed.
      */
     int consumeEnergy(int energy);
+    
+    /**
+     * Can consume energy from storage.
+     * @return If the amount can be taken from the storage.
+     */
+    boolean canConsumeEnergy(int energy);
 
     /**
      * Get the max energy transfer rate.

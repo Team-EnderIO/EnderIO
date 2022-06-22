@@ -1,8 +1,9 @@
 package com.enderio.machines.common.io.energy;
 
+import org.apache.commons.lang3.NotImplementedException;
+
 import com.enderio.api.energy.EnergyIOMode;
 import com.enderio.api.io.IIOConfig;
-import org.apache.commons.lang3.NotImplementedException;
 
 /**
  * An immutable machine energy storage.
@@ -123,6 +124,15 @@ public class ImmutableMachineEnergyStorage implements IMachineEnergyStorage {
     @Deprecated
     @Override
     public int consumeEnergy(int energy) {
+        throw new UnsupportedOperationException();
+    }
+    
+    /**
+     * @deprecated This storage is immutable.
+     */
+    @Deprecated
+    @Override
+    public boolean canConsumeEnergy(int energy) {
         throw new UnsupportedOperationException();
     }
 }

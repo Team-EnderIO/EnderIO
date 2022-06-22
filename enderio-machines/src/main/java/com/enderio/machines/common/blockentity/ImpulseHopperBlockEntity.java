@@ -36,10 +36,10 @@ public class ImpulseHopperBlockEntity extends PowerConsumingMachineEntity{
 	
 	@Override
 	public void serverTick() {
-		super.serverTick();
-		if(ShouldActTick() && shouldPassItems()) {
+		if(shouldPassItems() && ShouldActTick()) {
 			passItems();
 		}
+		super.serverTick();
 	}
 	
 	public boolean ShouldActTick() {// TODO General tick method for power consuming devices?
@@ -68,9 +68,9 @@ public class ImpulseHopperBlockEntity extends PowerConsumingMachineEntity{
 			}
 			return false;
 		}
-//		if (canConsumeEnergy(totalpower)) {
-//			return true;
-//		}
+		if (this.getEnergyStorage().canConsumeEnergy(totalpower)) {
+			return true;
+		}
 		return false;
 	}
 	
@@ -90,7 +90,7 @@ public class ImpulseHopperBlockEntity extends PowerConsumingMachineEntity{
 			} else {
 				continue;
 			}
-//			this.consumeEnergy(ghost.getCount());
+			this.getEnergyStorage().consumeEnergy(ghost.getCount() * IMPULSE_HOPPER_POWER_USE_PER_ITEM);
 			stack.shrink(ghost.getCount());
 			this.getInventory().setStackInSlot(i + 6, result);
 		}

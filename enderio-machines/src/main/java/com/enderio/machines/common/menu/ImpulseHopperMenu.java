@@ -23,7 +23,7 @@ public class ImpulseHopperMenu extends MachineMenu<ImpulseHopperBlockEntity>{
 				}
 			}
 			for(int k = 0; k < 6; ++k) {
-				this.addSlot(new GhostSlot(blockEntity.getInventory(), 12 + k , 8 + 36 + k * 18, 9 + 27));
+				this.addSlot(new GhostMachineSlot(blockEntity.getInventory(), 12 + k , 8 + 36 + k * 18, 9 + 27));
 			}
 			this.addSlot(new MachineSlot(blockEntity.getInventory(), 18, 11, 60));
 		}

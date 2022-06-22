@@ -185,14 +185,14 @@ public class MachineBlocks {
         .build()
         .register();
     
-    public static final BlockEntry<MachineBlock> IMPULSE_HOPPER = REGISTRATE
-            .block("impulse_hopper", props -> new MachineBlock(props, MachineBlockEntities.IMPULSE_HOPPER))
-            .properties(props -> props.strength(2.5f, 8))
-            .loot(MachinesLootTable::copyNBT)
-            .item()
-            .tab(() -> EIOCreativeTabs.MACHINES)
-            .build()
-            .register();
+    public static BlockEntry<ProgressMachineBlock> IMPULSE_HOPPER = REGISTRATE
+        .block("impulse_hopper", props -> new ProgressMachineBlock(props, MachineBlockEntities.IMPULSE_HOPPER))
+        .properties(props -> props.strength(2.5f, 8))
+        .loot(MachinesLootTable::copyNBT)
+        .item()
+        .tab(() -> EIOCreativeTabs.MACHINES)
+        .build()
+        .register();
 
     public static void classload() {}
 }
