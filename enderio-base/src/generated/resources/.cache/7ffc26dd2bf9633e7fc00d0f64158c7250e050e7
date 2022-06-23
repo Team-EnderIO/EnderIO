@@ -1,4 +1,4 @@
-// 1.19	2022-06-20T22:22:16.6813908	Registrate Provider for enderio [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
+// 1.19	2022-06-23T02:06:12.3220545	Registrate Provider for enderio [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
 38456017a1ded6fddac24d85def47523e9ee034c assets/enderio/blockstates/clear_glass.json
 38456017a1ded6fddac24d85def47523e9ee034c assets/enderio/blockstates/clear_glass_a.json
 38456017a1ded6fddac24d85def47523e9ee034c assets/enderio/blockstates/clear_glass_a_black.json
@@ -770,8 +770,8 @@ f10adb46259e30c36318f0c7da5a9bc8f4a16fe8 assets/enderio/blockstates/soul_machine
 e9c8dc43c691ba3df30fca3e86b0f709bd93c46b assets/enderio/blockstates/vapor_of_levity.json
 fffb418818fa4ec53a362ef433d0c30f00f9d39d assets/enderio/blockstates/vibrant_alloy_block.json
 dc9a80d96b9da4a13c49c78cb65adbbf7c4928dc assets/enderio/blockstates/xp_juice.json
-11d9cb8a283bd199744a4e57bc766ea3304eb303 assets/enderio/lang/en_ud.json
-b14ac96010abe908008695ee758a1297dd1078aa assets/enderio/lang/en_us.json
+80c76b3728d80b2acfd16f28d36d369c237c51e4 assets/enderio/lang/en_ud.json
+613087246a5debcf0354be3a324dac062a59aae5 assets/enderio/lang/en_us.json
 82e1f9bc8c11ad2e19253c6536d80a1d3398b4a1 assets/enderio/models/block/cloud_seed.json
 90f9b8c9f86c62f9dfc8826139350b24d16492b1 assets/enderio/models/block/cloud_seed_concentrated.json
 85968b6918885e5e706e34021e4a865eacecd54d assets/enderio/models/block/conductive_alloy_block.json
@@ -2565,4 +2565,3 @@ d4e3eb66c0a2e66bebe1c93a3f9f0a22b444e382 data/minecraft/tags/blocks/needs_iron_t
 fe9f40971d8d08d36e322e51675f7be55f36cd2d data/minecraft/tags/blocks/needs_stone_tool.json
 064336dbc8dd5ed53eac9e17c6811a2557789adf data/minecraft/tags/blocks/pressure_plates.json
 8b7ea81d6ee2fb49f28ec4c73713628118f03948 data/minecraft/tags/blocks/wither_immune.json
-49c6fe49771aa1db5f7a2b0e80c8a35b0df58096 data/minecraft/tags/fluids/water.json

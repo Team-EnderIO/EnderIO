@@ -89,8 +89,9 @@ public class SlicingRecipeProvider extends EnderRecipeProvider {
         @Override
         protected Set<String> getModDependencies() {
             Set<String> mods = new HashSet<>();
+            // TODO: 1.19: config thing seems to affect Ingredient#getItems at datagen time? Might need reporting
+//            inputs.stream().map(ing -> Arrays.stream(ing.getItems()).map(item -> mods.add(ForgeRegistries.ITEMS.getKey(item.getItem()).getNamespace())));
             mods.add(ForgeRegistries.ITEMS.getKey(output).getNamespace());
-            inputs.stream().map(ing -> Arrays.stream(ing.getItems()).map(item -> mods.add(ForgeRegistries.ITEMS.getKey(item.getItem()).getNamespace())));
             return mods;
         }
 
