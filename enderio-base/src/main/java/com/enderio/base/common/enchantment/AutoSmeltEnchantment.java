@@ -11,7 +11,8 @@ import javax.annotation.Nonnull;
 public class AutoSmeltEnchantment extends EIOBaseEnchantment {
 
     public AutoSmeltEnchantment() {
-        super(BaseConfig.COMMON.ENCHANTMENTS.AUTO_SMELT_RARITY.get(), EnchantmentCategory.DIGGER, new EquipmentSlot[] { EquipmentSlot.MAINHAND }, () -> true);
+        // TODO 1.19: config before load
+        super(/*BaseConfig.COMMON.ENCHANTMENTS.AUTO_SMELT_RARITY.get()*/ Rarity.RARE, EnchantmentCategory.DIGGER, new EquipmentSlot[] { EquipmentSlot.MAINHAND }, () -> true);
     }
 
     @Override

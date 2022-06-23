@@ -19,8 +19,8 @@ import net.minecraft.world.item.MobBucketItem;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
@@ -32,7 +32,7 @@ import java.util.Optional;
 public abstract class FluidTankBlockEntity extends MachineBlockEntity {
 
     public static class Standard extends FluidTankBlockEntity {
-        public static final int CAPACITY = 16 * FluidAttributes.BUCKET_VOLUME;
+        public static final int CAPACITY = 16 * FluidType.BUCKET_VOLUME;
 
         public Standard(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
             super(type, worldPosition, blockState, CAPACITY);
@@ -40,7 +40,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     }
 
     public static class Enhanced extends FluidTankBlockEntity {
-        public static final int CAPACITY = 32 * FluidAttributes.BUCKET_VOLUME;
+        public static final int CAPACITY = 32 * FluidType.BUCKET_VOLUME;
 
         public Enhanced(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
             super(type, worldPosition, blockState, CAPACITY);
@@ -96,9 +96,9 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
         if (!inputItem.isEmpty()) {
             if (inputItem.getItem() instanceof BucketItem filledBucket) {
                 if (outputItem.isEmpty() || (outputItem.getItem() == Items.BUCKET && outputItem.getCount() < outputItem.getMaxStackSize())) {
-                    int filled = fluidTank.fill(new FluidStack(filledBucket.getFluid(), FluidAttributes.BUCKET_VOLUME), IFluidHandler.FluidAction.SIMULATE);
-                    if (filled == FluidAttributes.BUCKET_VOLUME) {
-                        fluidTank.fill(new FluidStack(filledBucket.getFluid(), FluidAttributes.BUCKET_VOLUME), IFluidHandler.FluidAction.EXECUTE);
+                    int filled = fluidTank.fill(new FluidStack(filledBucket.getFluid(), FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.SIMULATE);
+                    if (filled == FluidType.BUCKET_VOLUME) {
+                        fluidTank.fill(new FluidStack(filledBucket.getFluid(), FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.EXECUTE);
                         inputItem.shrink(1);
                         getInventory().insertItem(1, Items.BUCKET.getDefaultInstance(), false);
                     }
@@ -124,10 +124,10 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
         if (!inputItem.isEmpty()) {
             if (inputItem.getItem() == Items.BUCKET) {
                 if (!fluidTank.isEmpty()) {
-                    FluidStack stack = fluidTank.drain(FluidAttributes.BUCKET_VOLUME, IFluidHandler.FluidAction.SIMULATE);
-                    if (stack.getAmount() == FluidAttributes.BUCKET_VOLUME && (outputItem.isEmpty() || (outputItem.getItem() == stack.getFluid().getBucket()
+                    FluidStack stack = fluidTank.drain(FluidType.BUCKET_VOLUME, IFluidHandler.FluidAction.SIMULATE);
+                    if (stack.getAmount() == FluidType.BUCKET_VOLUME && (outputItem.isEmpty() || (outputItem.getItem() == stack.getFluid().getBucket()
                         && outputItem.getCount() < outputItem.getMaxStackSize()))) {
-                        fluidTank.drain(FluidAttributes.BUCKET_VOLUME, IFluidHandler.FluidAction.EXECUTE);
+                        fluidTank.drain(FluidType.BUCKET_VOLUME, IFluidHandler.FluidAction.EXECUTE);
                         inputItem.shrink(1);
                         if (outputItem.isEmpty()) {
                             getInventory().setStackInSlot(3, stack.getFluid().getBucket().getDefaultInstance());

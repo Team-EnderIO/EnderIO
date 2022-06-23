@@ -43,7 +43,9 @@ public enum EmpoweredUpgradeTier implements IUpgradeTier {
     }
 
     public int getMaxStorage() {
-        return maxStorage.get();
+        // TODO 1.19: config before load
+        return 100;
+//        return maxStorage.get();
     }
 
     public float getDamageAbsorptionChance() {

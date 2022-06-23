@@ -12,6 +12,8 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
+import net.minecraftforge.client.IFluidTypeRenderProperties;
+import net.minecraftforge.client.RenderProperties;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
@@ -38,14 +40,15 @@ public class FluidStackWidget extends EIOWidget {
         FluidTank fluidTank = getFluid.get();
         if (!fluidTank.isEmpty()) {
             FluidStack fluidStack = fluidTank.getFluid();
-            ResourceLocation still = fluidStack.getFluid().getAttributes().getStillTexture(fluidStack);
+            IFluidTypeRenderProperties props = RenderProperties.get(fluidStack.getFluid());
+            ResourceLocation still = props.getStillTexture(fluidStack);
             if (still != null) {
                 AbstractTexture texture = minecraft.getTextureManager().getTexture(TextureAtlas.LOCATION_BLOCKS);
                 if (texture instanceof TextureAtlas atlas) {
                     TextureAtlasSprite sprite = atlas.getSprite(still);
                     RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
 
-                    int color = fluidStack.getFluid().getAttributes().getColor();
+                    int color = props.getColorTint();
                     RenderSystem.setShaderColor(
                         FastColor.ARGB32.red(color) / 255.0F,
                         FastColor.ARGB32.green(color) / 255.0F,

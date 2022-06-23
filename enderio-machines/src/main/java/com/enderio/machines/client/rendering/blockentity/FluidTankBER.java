@@ -17,6 +17,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraftforge.client.IFluidTypeRenderProperties;
+import net.minecraftforge.client.RenderProperties;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
@@ -50,12 +53,14 @@ public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
     }
 
     private static void renderFluid(Matrix4f pose, Matrix3f normal, VertexConsumer consumer, BlockEntity entity, Fluid fluid, float fillAmount) {
-        renderFluid(pose, normal, consumer, fluid, fillAmount, fluid.getAttributes().getColor(entity.getLevel(), entity.getBlockPos()));
+        IFluidTypeRenderProperties props = RenderProperties.get(fluid);
+        renderFluid(pose, normal, consumer, fluid, fillAmount, props.getColorTint(null, entity.getLevel(), entity.getBlockPos())); // TODO: 1.19 is null bad?
     }
 
     public static void renderFluid(Matrix4f pose, Matrix3f normal, VertexConsumer consumer, Fluid fluid, float fillAmount, int color) {
         // Get fluid texture
-        TextureAtlasSprite texture = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(fluid.getAttributes().getStillTexture());
+        IFluidTypeRenderProperties props = RenderProperties.get(fluid);
+        TextureAtlasSprite texture = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(props.getStillTexture());
 
         // Get sizes
         float fluidHeight = (14 * fillAmount) / 16.0f;

@@ -114,10 +114,10 @@ allprojects {
         jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: '[MC1.19-1.1,)')
 
         // JEI
-//        compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
-//        compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
-//        runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common:${jei_version}")
-//        runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
+        compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
+        compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
+        runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common:${jei_version}")
+        runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
 
         // The One Probe
 //        implementation fg.deobf("mcjty.theoneprobe:TheOneProbe:${minecraft_version}-${top_version}")

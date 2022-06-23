@@ -11,7 +11,8 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 public class WitherArrowEnchantment extends EIOBaseEnchantment {
 
     public WitherArrowEnchantment() {
-        super(BaseConfig.COMMON.ENCHANTMENTS.WITHERING_ARROW_RARITY.get(), EIOEnchantmentCategories.ARROW, new EquipmentSlot[] { EquipmentSlot.MAINHAND }, () -> true);
+        // TODO 1.19: config before load
+        super(/*BaseConfig.COMMON.ENCHANTMENTS.WITHERING_ARROW_RARITY.get()*/ Rarity.UNCOMMON, EIOEnchantmentCategories.ARROW, new EquipmentSlot[] { EquipmentSlot.MAINHAND }, () -> true);
     }
 
     @Override

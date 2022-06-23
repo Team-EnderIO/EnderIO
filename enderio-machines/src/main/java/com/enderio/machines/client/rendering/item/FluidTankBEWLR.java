@@ -19,6 +19,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.client.IFluidTypeRenderProperties;
+import net.minecraftforge.client.RenderProperties;
 import net.minecraftforge.registries.ForgeRegistries;
 
 // TODO: No longer lights in the inventory/hand like other machines...
@@ -63,7 +65,8 @@ public class FluidTankBEWLR extends BlockEntityWithoutLevelRenderer {
                         }
 
                         PoseStack.Pose pose = poseStack.last();
-                        FluidTankBER.renderFluid(pose.pose(), pose.normal(), fluidBuffer, fluid, amount / (float) capacity, fluid.getAttributes().getColor());
+                        IFluidTypeRenderProperties props = RenderProperties.get(fluid);
+                        FluidTankBER.renderFluid(pose.pose(), pose.normal(), fluidBuffer, fluid, amount / (float) capacity, props.getColorTint());
                     }
                 }
             }
