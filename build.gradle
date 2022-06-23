@@ -16,10 +16,22 @@ buildscript {
 }
 
 plugins {
-    id 'com.github.johnrengelman.shadow' version "${shadow_version}"
     id "com.modrinth.minotaur" version "2.+"
     id 'net.minecraftforge.gradle' version '5.1.+'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+}
+
+// Run reobfuscation after dependents
+// Thanks pupnewfster for this :)
+gradle.projectsEvaluated {
+    subprojects.forEach(p -> {
+        def projectDependencies = p.configurations.default.getAllDependencies().withType(ProjectDependency)
+        projectDependencies.forEach(d -> {
+            d.dependencyProject.tasks.named('reobfJar').configure(t -> {
+                t.mustRunAfter(p.tasks.named('reobfJar'))
+            })
+        })
+    })
 }
 
 allprojects {
@@ -30,9 +42,6 @@ allprojects {
 
     // Eclipse support
     apply plugin: 'eclipse'
-
-    // Shadowing
-    apply plugin: 'com.github.johnrengelman.shadow'
 
     // Publishing
     apply plugin: 'maven-publish'
@@ -59,6 +68,9 @@ allprojects {
 
     version = getVersionString(project)
     group = 'com.enderio'
+
+    // Enable jarjar
+    jarJar.enable()
 
     minecraft {
         mappings channel: "${mappings_channel}", version: "${mappings_version}"
@@ -92,18 +104,14 @@ allprojects {
         mavenLocal()
     }
 
-    configurations {
-        shade
-    }
-
     dependencies {
         // Forge
         minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
         // Registrate
-        def registrate = "com.tterrag.registrate:Registrate:${registrate_version}"
-        implementation fg.deobf(registrate)
-        shade registrate
+        implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
+
+        jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: '[MC1.19-1.1,)')
 
         // JEI
 //        compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
@@ -124,11 +132,6 @@ allprojects {
     }
 
     jar {
-        // Differentiate the non-shadowed version by storing it in a different directory.
-        // Makes for cleaner libs directory.
-        destinationDirectory.set(file("$buildDir/rawJar"))
-        classifier 'raw'
-
         manifest {
             attributes([
                     "Specification-Title"     : "${getModId(project)}",
@@ -140,30 +143,6 @@ allprojects {
                     "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
             ])
         }
-    }
-
-    // Shadow registrate
-    shadowJar {
-        // Remove the -all classifier.
-        classifier ''
-
-        // Put the outputs into the main build directory
-        destinationDirectory.set(file("$rootProject.buildDir/libs"))
-
-        // Setup relocation
-        configurations = [project.configurations.shade]
-        relocate 'com.tterrag.registrate', "com.enderio.registrate"
-
-        // Strip the registrate classes out of the other modules.
-        // We still have to do shadowing for these however, because it gets relocated to com.enderio.registrate.
-        if (project.name != "enderio-base" && project.name != rootProject.name) {
-            exclude 'com/tterrag/registrate/**'
-        }
-    }
-
-    // Reobfuscate shadowed jars
-    reobf {
-        shadowJar {}
     }
 
     // API Jar
@@ -200,7 +179,7 @@ allprojects {
 
         project.tasks.modrinth {
             enabled = modrinthProjectId != null && modrinthPublish
-            dependsOn(reobfShadowJar)
+            dependsOn('reobfJar')
         }
 
         project.tasks.modrinthSyncBody {
@@ -213,7 +192,7 @@ allprojects {
             projectId = modrinthProjectId
             versionNumber = project.version
             versionType = release_type
-            uploadFile = shadowJar
+            uploadFile = jar
             gameVersions = [minecraft_version]
             loaders = ["forge"]
 
@@ -254,7 +233,7 @@ allprojects {
             maven(MavenPublication) {
                 artifactId = getPrettyName(project)
 
-                artifact shadowJar
+                artifact jar
                 artifact sourcesJar
                 artifact apiJar
 
@@ -366,9 +345,9 @@ subprojects {
 }
 
 // Make shadowing happen after all jars are built
-subprojects.each { p ->
-    shadowJar.dependsOn p.tasks['jar']
-}
+//subprojects.each { p ->
+//    shadowJar.dependsOn p.tasks['jar']
+//}
 
 // TODO: 1.19: Replace "combining" process with Jar-in-Jar instead?
 
