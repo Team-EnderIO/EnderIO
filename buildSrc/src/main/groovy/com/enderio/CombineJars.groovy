@@ -34,14 +34,14 @@ class CombineJars {
      */
     static void mergeResources(Project rootProject, Set<Project> toMerge) {
         println("[Mod Merger] Merging mod resources.")
+        def generatedDir = "$rootProject.buildDir/generated"
+
+        // Delete old generated resources
+        rootProject.file("$generatedDir").deleteDir()
+        rootProject.mkdir("$generatedDir")
 
         // Create resource directories
-        def generatedDir = "$rootProject.buildDir/generated"
         rootProject.mkdir("$generatedDir/META-INF")
-
-        // Delete data resources to prevent pollution
-        rootProject.file("$generatedDir/data").deleteDir()
-        rootProject.mkdir("$generatedDir/data")
 
         new File("$generatedDir/META-INF/mods.toml") << mergeManifests(toMerge)
         new File("$generatedDir/META-INF/accesstransformer.cfg") << mergeATs(toMerge)
@@ -62,17 +62,14 @@ class CombineJars {
         def modsToml = ""
 
         for (Project subproject : toMerge) {
-            subproject.sourceSets.main.resources.matching { PatternFilterable pf ->
-                pf.include('META-INF/mods.toml')
-            }.each { file ->
-                if (modsToml.isEmpty()) {
-                    modsToml += file.getText()
-                } else {
-                    def splitLines = file.getText().split('\n')
+            def moduleManifest = new File(subproject.sourceSets.main.output.resourcesDir, 'META-INF/mods.toml')
+            if (modsToml.isEmpty()) {
+                modsToml += moduleManifest.getText()
+            } else {
+                def splitLines = moduleManifest.getText().split('\n')
 
-                    for (def i = 4; i < splitLines.length; i++) {
-                        modsToml += '\n' + splitLines[i]
-                    }
+                for (def i = 4; i < splitLines.length; i++) {
+                    modsToml += '\n' + splitLines[i]
                 }
             }
         }
@@ -86,7 +83,7 @@ class CombineJars {
         toMerge.each { subproject ->
             def moduleATs = new File(subproject.sourceSets.main.output.resourcesDir, 'META-INF/accesstransformer.cfg')
             if (moduleATs.exists()) {
-                ats += moduleATs.text
+                ats += moduleATs.text + "\n"
             }
         }
         return ats

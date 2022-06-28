@@ -110,14 +110,13 @@ allprojects {
 
         // Registrate
         implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
-
-        jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: '[MC1.19-1.1,)')
+        jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: "${registrate_version_range}")
 
         // JEI
-        compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
-        compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
-        runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common:${jei_version}")
-        runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
+//        compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
+//        compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
+//        runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common:${jei_version}")
+//        runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
 
         // The One Probe
 //        implementation fg.deobf("mcjty.theoneprobe:TheOneProbe:${minecraft_version}-${top_version}")
@@ -132,6 +131,11 @@ allprojects {
     }
 
     jar {
+        // Differentiate the non-shadowed version by storing it in a different directory.
+        // Makes for cleaner libs directory.
+        destinationDirectory.set(file("$buildDir/rawJar"))
+        classifier 'raw'
+
         manifest {
             attributes([
                     "Specification-Title"     : "${getModId(project)}",
@@ -143,6 +147,14 @@ allprojects {
                     "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
             ])
         }
+    }
+
+    tasks.jarJar.configure {
+        // Remove the -all classifier.
+        classifier ''
+
+        // Put the outputs into the main build directory
+        destinationDirectory.set(file("$rootProject.buildDir/libs"))
     }
 
     // API Jar
@@ -344,17 +356,28 @@ subprojects {
     }
 }
 
-// Make shadowing happen after all jars are built
-//subprojects.each { p ->
-//    shadowJar.dependsOn p.tasks['jar']
-//}
-
-// TODO: 1.19: Replace "combining" process with Jar-in-Jar instead?
-
 // Combined jar
 def monolithProjects = subprojects.findAll { sp -> sp.ext.include_in_monolith }
 
-//shadowJar {
+// Depend on combined classes
+jarJar.dependencies {
+    dependencies {
+        include(dependency('com.enderio:*'))
+    }
+}
+
+dependencies {
+    monolithProjects.forEach(p -> {
+        implementation(p) /*{
+            jarJar.pin(it, "${p.version}")
+        }*/
+    })
+}
+
+jarJar.fromRuntimeConfiguration()
+
+//tasks.jarJar.dependsOn monolithProjects.tasks['jarJar']
+//tasks.jarJar.configure {
 //    duplicatesStrategy = DuplicatesStrategy.FAIL
 //
 //    CombineJars.mergeResources(rootProject, monolithProjects)
@@ -365,6 +388,13 @@ def monolithProjects = subprojects.findAll { sp -> sp.ext.include_in_monolith }
 //        from(subproject.sourceSets.main.output.resourcesDir, c -> c.exclude(CombineJars.getPathsToExclude(subproject, isMain)))
 //    }
 //    from("$buildDir/generated", CombineJars.getGeneratedClosure())
+//}
+
+// Collect all sources from the modules and merge them
+// into the all jar.
+//tasks.jarJar.dependsOn combjarprojects.tasks['classes']
+//tasks.jarJar {
+//
 //}
 
 // TODO: Combined api jar maybe?
