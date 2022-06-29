@@ -1,15 +1,11 @@
 package com.enderio.base.common.integration;
 
-
-import net.minecraftforge.fml.common.Mod;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-@Mod.EventBusSubscriber
 public class IntegrationManager {
 
     static final List<Integration> ALL_INTEGRATIONS = new ArrayList<>();
