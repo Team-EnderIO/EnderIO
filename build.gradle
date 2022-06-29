@@ -1,8 +1,26 @@
+buildscript {
+    repositories {
+        // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
+        maven { url = 'https://maven.minecraftforge.net' }
+        maven { url = 'https://maven.parchmentmc.org' }
+        maven { url = 'https://noeppi-noeppi.github.io/MinecraftUtilities/maven' }
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'io.github.noeppi_noeppi.tools:ModGradle:2.0.14'
+        classpath 'org.spongepowered:mixingradle:0.7.+'
+    }
+}
+
 plugins {
     id 'eclipse'
     id 'maven-publish'
+    id "com.modrinth.minotaur" version "2.+"
     id 'net.minecraftforge.gradle' version '5.1.+'
+    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 }
+
+apply plugin: 'org.spongepowered.mixin'
 
 version = getVersionString()
 group = 'com.enderio'
@@ -157,6 +175,9 @@ dependencies {
     // Forge
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
+    // Mixins TODO: 1.19: Hopefully we can just remove mixins, even if we dump stuff into EnderCore
+    annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
+
     // Source set dependencies
 //    implementation sourceSets.api.output
 //    implementation sourceSets.core.output
@@ -185,6 +206,12 @@ dependencies {
 //    runtimeOnly fg.deobf("curse.maven:mekanism-268560:3743835")
 }
 
+// MixinGradle Settings
+mixin {
+    add sourceSets.main, "mixins.enderio.refmap.json"
+    config "mixins.enderio.json"
+}
+
 // Example for how to get properties into the manifest for reading at runtime.
 jar {
     manifest {
@@ -199,34 +226,75 @@ jar {
         ])
     }
 
-    // Add other source sets
+    // Add all other source sets
     from sourceSets.api.output
-
     for (String set : subsets) {
         from sourceSets.getByName(set).output
     }
+
+    // TODO: Do we need to bother reobfuscating it?
+    //       The real question is does maven need it to be obfuscated? If so then this stays
+    finalizedBy('reobfJar')
 }
 
+task apiJar(type: Jar) {
+    classifier 'api'
+    from sourceSets.api.output
+}
+build.dependsOn apiJar
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier 'sources'
+
+    from sourceSets.api.allJava
+    from sourceSets.main.allJava
+
+    for (String set : subsets) {
+        from sourceSets.getByName(set).allJava
+    }
+}
+build.dependsOn sourcesJar
+
+// Add other source sets to jarJar
 tasks.jarJar.configure {
     from sourceSets.api.output
-
     for (String set : subsets) {
         from sourceSets.getByName(set).output
     }
 }
 
-jar.finalizedBy('reobfJar')
+// TODO: 1.19: Modrinth publishing.
 
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        maven(MavenPublication) {
+            groupId = 'com.enderio'
+            artifactId = 'EnderIO'
+            version = project.version
+
             artifact jar
+            artifact sourcesJar
+            artifact apiJar
+
+            pom {
+                name = 'Ender IO'
+                description = 'Ender IO is a full-featured tech mod. It has armor, tools, weapons, machines, conduits, inventory management, mobs, etc.'
+                url = 'https://github.com/SleepyTrousers/EnderIO-Rewrite'
+
+                licenses {
+                    license {
+                        name = 'Unlicense'
+                        url = 'https://github.com/SleepyTrousers/EnderIO-Rewrite/blob/dev/1.18.x/LICENSE.txt'
+                    }
+                }
+
+                scm {
+                    url = 'https://github.com/SleepyTrousers/EnderIO-Rewrite.git'
+                }
+            }
         }
-    }
-    repositories {
-        maven {
-            url "file://${project.projectDir}/mcmodsrepo"
-        }
+
+        // TODO: Repositories to publish to...
     }
 }
 
