@@ -1,0 +1,15 @@
+{
+  "components": [
+    {
+      "model": "enderio:block/slice_and_splice_front"
+    },
+    {
+      "model": "enderio:block/io_overlay"
+    },
+    {
+      "model": "enderio:block/soul_machine_frame",
+      "particle_provider": true
+    }
+  ],
+  "loader": "enderio:composite_model"
+}

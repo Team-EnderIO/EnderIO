@@ -1,0 +1,15 @@
+{
+  "components": [
+    {
+      "model": "enderio:block/io_overlay"
+    },
+    {
+      "model": "enderio:block/stirling_generator_front_on"
+    },
+    {
+      "model": "enderio:block/machine_frame",
+      "particle_provider": true
+    }
+  ],
+  "loader": "enderio:composite_model"
+}

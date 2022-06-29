@@ -1,0 +1,8 @@
+{
+  "parent": "enderio:block/fluid_tank_body",
+  "textures": {
+    "bottom": "enderio:block/enhanced_machine_bottom",
+    "tank": "enderio:block/pressurized_fluid_tank",
+    "top": "enderio:block/enhanced_machine_top"
+  }
+}

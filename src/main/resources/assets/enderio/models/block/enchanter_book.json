@@ -1,0 +1,49 @@
+{
+	"credit": "Made with Blockbench by Rover656",
+	"textures": {
+		"page": "enderio:block/enchanter",
+		"book": "item/book"
+	},
+	"elements": [
+		{
+			"from": [3, 1, 4.5],
+			"to": [8, 1.5, 11.5],
+			"rotation": {"angle": -22.5, "axis": "z", "origin": [5.5, 0.5, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 5, 1], "texture": "#page"},
+				"south": {"uv": [0, 0, 5, 1], "texture": "#page"},
+				"west": {"uv": [0, 0, 5, 1], "texture": "#page"},
+				"up": {"uv": [0, 0, 8, 16], "texture": "#page"}
+			}
+		},
+		{
+			"from": [8, 1, 4.5],
+			"to": [13, 1.5, 11.5],
+			"rotation": {"angle": 22.5, "axis": "z", "origin": [10.5, 0.5, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 5, 1], "texture": "#page"},
+				"east": {"uv": [0, 0, 7, 1], "texture": "#page"},
+				"south": {"uv": [0, 0, 5, 1], "texture": "#page"},
+				"up": {"uv": [8, 0, 16, 16], "texture": "#page"}
+			}
+		},
+		{
+			"from": [2.5, 1, 4],
+			"to": [8, 1, 12],
+			"rotation": {"angle": -22.5, "axis": "z", "origin": [5.5, 0.5, 8]},
+			"faces": {
+				"up": {"uv": [6, 3, 11.5, 7], "texture": "#book"},
+				"down": {"uv": [6, 3, 11.5, 7], "texture": "#book"}
+			}
+		},
+		{
+			"from": [8, 1, 4],
+			"to": [13.5, 1, 12],
+			"rotation": {"angle": 22.5, "axis": "z", "origin": [10.5, 0.5, 8]},
+			"faces": {
+				"up": {"uv": [6, 3, 11.5, 7], "texture": "#book"},
+				"down": {"uv": [6, 3, 11.5, 7], "texture": "#book"}
+			}
+		}
+	]
+}

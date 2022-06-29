@@ -1,0 +1,12 @@
+{
+  "components": [
+    {
+      "model": "enderio:block/io_overlay"
+    },
+    {
+      "model": "enderio:block/pressurized_fluid_tank_body",
+      "particle_provider": true
+    }
+  ],
+  "loader": "enderio:composite_model"
+}

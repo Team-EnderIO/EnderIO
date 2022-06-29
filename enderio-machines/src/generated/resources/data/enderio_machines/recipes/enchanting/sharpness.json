@@ -1,9 +1,0 @@
-{
-  "type": "enderio_machines:enchanting",
-  "amount": 12,
-  "cost_multiplier": 1,
-  "enchantment": "minecraft:sharpness",
-  "input": {
-    "tag": "forge:gems/quartz"
-  }
-}

@@ -1,6 +1,0 @@
-{
-  "parent": "enderio_machines:block/placeholder_machine_front",
-  "textures": {
-    "front": "enderio_machines:block/enhanced_machine_side"
-  }
-}

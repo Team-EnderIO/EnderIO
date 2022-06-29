@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "enderio:block/pressurized_fluid_tank",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "enderio:block/pressurized_fluid_tank"
+    },
+    "facing=south": {
+      "model": "enderio:block/pressurized_fluid_tank",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "enderio:block/pressurized_fluid_tank",
+      "y": 270
+    }
+  }
+}
