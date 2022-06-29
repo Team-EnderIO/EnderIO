@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.enderio.EnderIO;
+import com.enderio.base.common.item.EIOCreativeTabs;
 import com.enderio.decoration.common.block.light.Light;
 import com.enderio.decoration.common.block.light.LightNode;
 import com.enderio.decoration.common.block.light.PoweredLight;
@@ -28,27 +29,19 @@ import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
 
-//@SuppressWarnings("unused")
+@SuppressWarnings("unused")
 public class DecorBlocks {
 
     private static final Registrate REGISTRATE = EnderIO.registrate();
 
-    // TODO: 1.19: Once forge bumped, check if we can use EIOCreativeModeTab again.
-    public static final CreativeModeTab DECOR = new CreativeModeTab("enderio.decor") {
-        @Override
-        public ItemStack makeIcon() {
-            return new ItemStack(Items.PAINTING);
-        }
-    };
-
+    // TODO: 1.19: Move into EIOCreativeTabs?
+    public static final EIOCreativeTabs DECOR = new EIOCreativeTabs("decor", () -> Items.PAINTING);
 
     // region Painted
 

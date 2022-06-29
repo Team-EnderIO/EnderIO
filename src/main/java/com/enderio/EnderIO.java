@@ -84,7 +84,6 @@ public class EnderIO {
     }
 
     public void onGatherData(GatherDataEvent event) {
-        // TODO: 1.19: Tidy this more.
         DataGenerator generator = event.getGenerator();
 
         generator.addProvider(event.includeServer(), new MaterialRecipes(generator));
