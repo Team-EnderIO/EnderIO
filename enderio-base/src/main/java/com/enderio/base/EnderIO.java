@@ -2,6 +2,7 @@ package com.enderio.base;
 
 import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.base.common.init.*;
+import com.enderio.base.common.integration.IntegrationManager;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.config.base.BaseConfig;
@@ -107,6 +108,7 @@ public class EnderIO {
             generator.addProvider(new EIOBlockTagsProvider(generator, event.getExistingFileHelper()));
             generator.addProvider(new FireCraftingLootProvider(generator));
         }
+        IntegrationManager.forAll(integration -> integration.createData(event));
     }
 
     public void onRecipeSerializerRegistry(RegistryEvent.Register<RecipeSerializer<?>> event) {
