@@ -1,0 +1,22 @@
+{
+  "type": "enderio:alloy_smelting",
+  "energy": 1500,
+  "experience": 0.3,
+  "inputs": [
+    {
+      "count": 6,
+      "ingredient": {
+        "item": "enderio:plant_matter_green"
+      }
+    },
+    {
+      "count": 1,
+      "ingredient": {
+        "item": "minecraft:egg"
+      }
+    }
+  ],
+  "result": {
+    "item": "enderio:organic_green_dye"
+  }
+}

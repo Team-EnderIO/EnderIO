@@ -1,0 +1,22 @@
+{
+  "type": "enderio:alloy_smelting",
+  "energy": 10000,
+  "experience": 0.3,
+  "inputs": [
+    {
+      "count": 1,
+      "ingredient": {
+        "item": "enderio:energetic_alloy_ingot"
+      }
+    },
+    {
+      "count": 1,
+      "ingredient": {
+        "tag": "forge:ender_pearls"
+      }
+    }
+  ],
+  "result": {
+    "item": "enderio:vibrant_alloy_ingot"
+  }
+}

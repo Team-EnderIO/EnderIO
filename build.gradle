@@ -58,7 +58,7 @@ for (String set : subsets) {
 }
 
 minecraft {
-    mappings channel: 'official', version: '1.19'
+    mappings channel: "${mappings_channel}", version: "${mappings_version}"
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
@@ -178,29 +178,23 @@ dependencies {
     // Mixins TODO: 1.19: Hopefully we can just remove mixins, even if we dump stuff into EnderCore
     annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
 
-    // Source set dependencies
-//    implementation sourceSets.api.output
-//    implementation sourceSets.core.output
-
-//    conduitsImplementation sourceSets.main.output
-
     // Registrate
     implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
     jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: "${registrate_version_range}")
 
     // JEI
-//    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
-//    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
-//    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common:${jei_version}")
-//    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
+    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
+    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
+    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common:${jei_version}")
+    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
 
     // The One Probe
 //    implementation fg.deobf("mcjty.theoneprobe:TheOneProbe:${minecraft_version}-${top_version}")
-//    implementation fg.deobf("curse.maven:the-one-probe-245211:${top_version}")
+    implementation fg.deobf("curse.maven:the-one-probe-245211:${top_version}")
 
     // Patchouli
-//    compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
-//    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
+    compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
+    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
 
     // While we don't have conduits etc.
 //    runtimeOnly fg.deobf("curse.maven:mekanism-268560:3743835")

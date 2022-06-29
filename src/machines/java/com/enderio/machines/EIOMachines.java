@@ -24,12 +24,9 @@ public class EIOMachines {
         MachineLang.register();
         MachineRecipes.register();
         MachineCapacitorKeys.register();
-
-        // Run datagen after registrate
-//        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-//        modEventBus.addListener(EventPriority.LOWEST, this::gatherData);
     }
 
+    @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
         if (event.includeServer()) {
