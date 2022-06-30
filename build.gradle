@@ -328,9 +328,9 @@ tasks.withType(JavaCompile).configureEach {
 //   if on a dev machine - the current commit hash
 
 // Examples:
-//   * enderio-base-1.12.2-4.0.1.jar            :: release version 4.0.1 for mc 1.12.2
-//   * enderio-base-1.12.2-4.2.1-nightly-4      :: nightly build no. 4 for version 4.2.1
-//   * enderio-base-1.12.2-4.5.1-dev-c91c8ee6e  :: dev (local) build for commit c91c8ee6e
+//   * enderio-1.19.1-6.0.1.jar            :: release version 6.0.1 for mc 1.19.1
+//   * enderio-1.19.1-6.2.1-nightly-4      :: nightly build no. 4 for version 6.2.1
+//   * enderio-1.19.1-6.5.1-dev-c91c8ee6e  :: dev (local) build for commit c91c8ee6e
 String getVersionString() {
     def build_server = System.getenv('CI') != null || System.getenv('BUILD_NUMBER') != null
 
