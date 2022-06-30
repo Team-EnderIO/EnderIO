@@ -23,7 +23,7 @@ import com.enderio.base.common.item.spawner.BrokenSpawnerItem;
 import com.enderio.base.common.item.tool.*;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.config.base.BaseConfig;
-import com.enderio.base.data.model.EIOModel;
+import com.enderio.core.data.model.EIOModel;
 import com.enderio.base.data.model.item.RotatingItemModel;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.ItemBuilder;

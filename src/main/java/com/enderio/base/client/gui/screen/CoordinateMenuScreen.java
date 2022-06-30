@@ -3,7 +3,9 @@ package com.enderio.base.client.gui.screen;
 import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOPackets;
 import com.enderio.base.common.menu.CoordinateMenu;
-import com.enderio.base.common.network.packet.UpdateCoordinateSelectionNameMenuPacket;
+import com.enderio.base.common.network.UpdateCoordinateSelectionNameMenuPacket;
+import com.enderio.core.client.gui.screen.EIOScreen;
+import com.enderio.core.common.network.CoreNetwork;
 import com.enderio.core.common.util.Vector2i;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -68,6 +70,6 @@ public class CoordinateMenuScreen extends EIOScreen<CoordinateMenu> {
 
 
     private void onNameChanged(String name) {
-        EIOPackets.getNetwork().getNetworkChannel().sendToServer(new UpdateCoordinateSelectionNameMenuPacket(getMenu().containerId, name));
+        CoreNetwork.sendToServer(new UpdateCoordinateSelectionNameMenuPacket(getMenu().containerId, name));
     }
 }

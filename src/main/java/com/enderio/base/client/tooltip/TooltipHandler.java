@@ -1,6 +1,6 @@
 package com.enderio.base.client.tooltip;
 
-import com.enderio.api.client.tooltip.IAdvancedTooltipProvider;
+import com.enderio.core.client.item.IAdvancedTooltipProvider;
 import com.enderio.base.common.lang.EIOLang;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
@@ -17,6 +17,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: 1.19: Move to core.
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class TooltipHandler {
 

@@ -1,6 +1,6 @@
 package com.enderio.decoration.client.model.painted;
 
-import com.enderio.base.data.model.EIOModel;
+import com.enderio.core.data.model.EIOModel;
 import com.enderio.decoration.common.blockentity.SinglePaintedBlockEntity;
 import com.enderio.decoration.common.util.PaintUtils;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;

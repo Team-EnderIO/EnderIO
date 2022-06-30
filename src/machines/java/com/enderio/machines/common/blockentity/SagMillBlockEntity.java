@@ -2,9 +2,9 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.api.grindingball.IGrindingBallData;
-import com.enderio.base.common.blockentity.sync.IntegerDataSlot;
-import com.enderio.base.common.blockentity.sync.ResourceLocationDataSlot;
-import com.enderio.base.common.blockentity.sync.SyncMode;
+import com.enderio.core.common.sync.IntegerDataSlot;
+import com.enderio.core.common.sync.ResourceLocationDataSlot;
+import com.enderio.core.common.sync.SyncMode;
 import com.enderio.base.common.util.GrindingBallManager;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.PoweredCraftingMachine;

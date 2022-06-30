@@ -1,9 +1,9 @@
 package com.enderio.base.common.block.glass;
 
 import com.enderio.EnderIO;
-import com.enderio.base.client.gui.IIcon;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.core.client.gui.IIcon;
 import com.enderio.core.common.util.Vector2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;

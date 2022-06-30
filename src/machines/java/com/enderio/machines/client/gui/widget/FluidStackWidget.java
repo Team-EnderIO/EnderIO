@@ -1,6 +1,6 @@
 package com.enderio.machines.client.gui.widget;
 
-import com.enderio.base.client.gui.widgets.EIOWidget;
+import com.enderio.core.client.gui.widgets.EIOWidget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;

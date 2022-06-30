@@ -1,6 +1,6 @@
 package com.enderio.machines.client.rendering.blockentity;
 
-import com.enderio.base.client.renderer.RenderUtil;
+import com.enderio.core.client.RenderUtil;
 import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -17,7 +17,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.client.IFluidTypeRenderProperties;
 import net.minecraftforge.client.RenderProperties;
 import net.minecraftforge.fluids.FluidStack;

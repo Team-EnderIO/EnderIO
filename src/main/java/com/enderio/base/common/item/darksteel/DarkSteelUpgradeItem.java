@@ -1,12 +1,11 @@
 package com.enderio.base.common.item.darksteel;
 
 import com.enderio.api.capability.IDarkSteelUpgrade;
-import com.enderio.api.client.tooltip.IAdvancedTooltipProvider;
+import com.enderio.core.client.item.IAdvancedTooltipProvider;
 import com.enderio.base.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.base.common.util.TooltipUtil;
+import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;

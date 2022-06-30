@@ -1,7 +1,7 @@
 package com.enderio.machines.data.model.block;
 
 import com.enderio.EnderIO;
-import com.enderio.base.data.model.EIOModel;
+import com.enderio.core.data.model.EIOModel;
 import com.enderio.machines.common.block.EnhancedMachineBlock;
 import com.enderio.machines.common.block.ProgressMachineBlock;
 import com.mojang.math.Vector3f;

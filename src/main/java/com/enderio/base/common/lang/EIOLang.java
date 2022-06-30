@@ -2,7 +2,7 @@ package com.enderio.base.common.lang;
 
 import com.enderio.EnderIO;
 import com.enderio.base.common.capability.CapacitorSpecializations;
-import com.enderio.base.common.util.TooltipUtil;
+import com.enderio.core.common.util.TooltipUtil;
 import com.tterrag.registrate.Registrate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;

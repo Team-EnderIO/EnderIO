@@ -39,8 +39,12 @@ def subsets = [
 
 sourceSets {
     api
+    core {
+        compileClasspath += sourceSets.api.output
+    }
     main {
         compileClasspath += sourceSets.api.output
+        compileClasspath += sourceSets.core.output
         resources { srcDir 'src/generated/resources' }
     }
 }
@@ -50,6 +54,9 @@ configurations {
     apiImplementation.extendsFrom(implementation)
     apiCompileOnly.extendsFrom(compileOnly)
     apiRuntimeOnly.extendsFrom(runtimeOnly)
+    coreImplementation.extendsFrom(implementation)
+    coreCompileOnly.extendsFrom(compileOnly)
+    coreRuntimeOnly.extendsFrom(runtimeOnly)
 }
 
 // Add all subset source sets.
@@ -75,6 +82,7 @@ minecraft {
             mods {
                 enderio {
                     source sourceSets.api
+                    source sourceSets.core
                     source sourceSets.main
 
                     for (String set : subsets) {
@@ -95,6 +103,7 @@ minecraft {
             mods {
                 enderio {
                     source sourceSets.api
+                    source sourceSets.core
                     source sourceSets.main
 
                     for (String set : subsets) {
@@ -116,6 +125,7 @@ minecraft {
             mods {
                 enderio {
                     source sourceSets.api
+                    source sourceSets.core
                     source sourceSets.main
 
                     for (String set : subsets) {
@@ -356,6 +366,7 @@ def setupSourceSet(String name) {
     // Add api and main modules.
     sourceSet.compileClasspath += sourceSets.api.output
     sourceSet.compileClasspath += sourceSets.main.output
+    sourceSet.compileClasspath += sourceSets.core.output
 
     // Extend configurations
     setupExtraSourceSets(sourceSet)

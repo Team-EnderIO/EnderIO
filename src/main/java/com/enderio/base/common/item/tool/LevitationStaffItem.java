@@ -1,12 +1,12 @@
 package com.enderio.base.common.item.tool;
 
 import com.enderio.api.capability.MultiCapabilityProvider;
-import com.enderio.base.client.renderer.item.IItemOverlayRender;
 import com.enderio.base.client.renderer.item.ItemBarRenderer;
 import com.enderio.base.common.capability.AcceptingFluidItemHandler;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.config.base.BaseConfig;
+import com.enderio.core.client.item.IItemOverlayRender;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.effect.MobEffectInstance;

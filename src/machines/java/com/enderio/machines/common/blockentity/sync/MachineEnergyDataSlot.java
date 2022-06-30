@@ -1,7 +1,7 @@
 package com.enderio.machines.common.blockentity.sync;
 
-import com.enderio.base.common.blockentity.sync.EnderDataSlot;
-import com.enderio.base.common.blockentity.sync.SyncMode;
+import com.enderio.core.common.sync.EnderDataSlot;
+import com.enderio.core.common.sync.SyncMode;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.ImmutableMachineEnergyStorage;
 import net.minecraft.nbt.CompoundTag;

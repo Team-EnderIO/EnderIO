@@ -1,6 +1,6 @@
 package com.enderio.base.client.renderer.item;
 
-import com.enderio.base.common.util.EnergyUtil;
+import com.enderio.core.common.util.EnergyUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.renderer.GameRenderer;
@@ -11,6 +11,7 @@ import net.minecraftforge.client.RenderProperties;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
+// TODO: 1.19: This could be doing with a refactor
 public class ItemBarRenderer {
 
     public static final int ENERGY_BAR_RGB = 0x00B168E4;

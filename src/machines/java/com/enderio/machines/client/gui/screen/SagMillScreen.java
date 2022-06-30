@@ -2,10 +2,10 @@ package com.enderio.machines.client.gui.screen;
 
 import com.enderio.EnderIO;
 import com.enderio.api.grindingball.IGrindingBallData;
-import com.enderio.base.client.gui.screen.EIOScreen;
-import com.enderio.base.client.gui.widgets.EnumIconWidget;
+import com.enderio.core.client.gui.screen.EIOScreen;
+import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.base.common.util.TooltipUtil;
+import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.core.common.util.Vector2i;
 import com.enderio.machines.client.gui.widget.EnergyWidget;
 import com.enderio.machines.client.gui.widget.ProgressWidget;

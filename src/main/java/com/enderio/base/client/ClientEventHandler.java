@@ -1,6 +1,6 @@
 package com.enderio.base.client;
 
-import com.enderio.base.common.menu.SyncedMenu;
+import com.enderio.core.common.menu.SyncedMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.TickEvent;

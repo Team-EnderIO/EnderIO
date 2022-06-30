@@ -1,8 +1,8 @@
 package com.enderio.machines.client.gui.screen;
 
 import com.enderio.EnderIO;
-import com.enderio.base.client.gui.screen.EIOScreen;
-import com.enderio.base.client.gui.widgets.EnumIconWidget;
+import com.enderio.core.client.gui.screen.EIOScreen;
+import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.common.util.Vector2i;
 import com.enderio.machines.client.gui.widget.FluidStackWidget;

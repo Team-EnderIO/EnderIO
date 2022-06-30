@@ -8,8 +8,8 @@ import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosivePenetr
 import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosiveUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosiveUpgradeHandler;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.base.common.util.EnergyUtil;
-import com.enderio.base.common.util.TooltipUtil;
+import com.enderio.core.common.util.EnergyUtil;
+import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.base.config.base.BaseConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;

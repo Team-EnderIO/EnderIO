@@ -3,10 +3,11 @@ package com.enderio.base.common.item.darksteel.upgrades.explosive;
 import com.enderio.base.common.capability.DarkSteelUpgradeable;
 import com.enderio.base.common.init.EIOPackets;
 import com.enderio.base.common.item.darksteel.upgrades.SpoonUpgrade;
-import com.enderio.base.common.network.packet.EmitParticlesPacket;
+import com.enderio.core.common.network.CoreNetwork;
+import com.enderio.core.common.network.EmitParticlesPacket;
 import com.enderio.base.common.tag.EIOTags;
-import com.enderio.base.common.util.BlockUtil;
-import com.enderio.base.common.util.EnergyUtil;
+import com.enderio.core.common.util.BlockUtil;
+import com.enderio.core.common.util.EnergyUtil;
 import com.enderio.base.config.base.BaseConfig;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -65,7 +66,7 @@ public class ExplosiveUpgradeHandler {
             if (pPos.equals(hit.getBlockPos())) {
                 EmitParticlesPacket particles = new EmitParticlesPacket();
                 if (explodeArea(pStack, pLevel, player, hit, particles)) {
-                    EIOPackets.getNetwork().getNetworkChannel().send(PacketDistributor.TRACKING_CHUNK.with(() -> pLevel.getChunkAt(pPos)), particles);
+                    CoreNetwork.sendToTracking(pLevel.getChunkAt(pPos), particles);
                 }
             }
         }

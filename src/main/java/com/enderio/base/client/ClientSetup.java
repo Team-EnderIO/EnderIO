@@ -1,8 +1,8 @@
 package com.enderio.base.client;
 
 import com.enderio.EnderIO;
-import com.enderio.base.client.model.DummyCustomRenderModel;
-import com.enderio.base.client.model.composite.CompositeModelLoader;
+import com.enderio.core.client.gui.model.DummyCustomRenderModel;
+import com.enderio.core.client.gui.model.composite.CompositeModelLoader;
 import com.enderio.base.client.renderer.blockentity.GraveRenderer;
 import com.enderio.base.common.init.EIOBlockEntities;
 import com.enderio.base.common.init.EIOFluids;

@@ -2,7 +2,6 @@ package com.enderio.machines.common.init;
 
 import com.enderio.EnderIO;
 import com.enderio.core.common.recipes.RecipeTypeSerializerPair;
-import com.enderio.machines.EIOMachines;
 import com.enderio.machines.common.recipe.*;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;

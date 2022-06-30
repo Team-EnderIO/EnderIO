@@ -1,6 +1,6 @@
 package com.enderio.machines.client.gui.widget;
 
-import com.enderio.base.common.util.TooltipUtil;
+import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.machines.common.lang.MachineLang;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.components.AbstractWidget;

@@ -1,13 +1,14 @@
 package com.enderio.base.common.blockentity;
 
-import com.enderio.EnderIO;
-import com.enderio.base.client.gui.IIcon;
+import com.enderio.core.EnderCore;
+import com.enderio.core.client.gui.IIcon;
 import com.enderio.core.common.util.Vector2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Locale;
 
+// TODO: 1.19: Move to core
 public enum ColorControl implements IIcon {
     GREEN,
     BROWN,
@@ -26,7 +27,7 @@ public enum ColorControl implements IIcon {
     BLACK,
     RED;
 
-    private static final ResourceLocation TEXTURE = EnderIO.loc("textures/gui/icons/color_control.png");
+    private static final ResourceLocation TEXTURE = EnderCore.loc("textures/gui/icons/color_control.png");
     private static final Vector2i SIZE = new Vector2i(12, 12);
     private final Vector2i pos;
 
