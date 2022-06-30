@@ -188,7 +188,7 @@ dependencies {
     // Forge
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    // Mixins TODO: 1.19: Hopefully we can just remove mixins, even if we dump stuff into EnderCore
+    // Mixins TODO: 1.19: Hopefully we can just remove mixins someday
     annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
 
     // Registrate
@@ -316,9 +316,9 @@ tasks.withType(JavaCompile).configureEach {
 // Utilities
 // ============
 
-// This is the new version/module format:
-// module name:
-//   enderio-<name>-<mc-version>-<version>
+// This is the new version format:
+// artifact name
+//   enderio-<mc-version>-<version>
 // version:
 //   <major>.<minor>.<patch>-<cls>-<hash>
 // patch:
