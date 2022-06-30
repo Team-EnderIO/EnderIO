@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "I": {
+      "item": "enderio:copper_alloy_ingot"
+    }
+  },
+  "pattern": [
+    " I ",
+    "III",
+    " I "
+  ],
+  "result": {
+    "count": 24,
+    "item": "enderio:copper_alloy_grinding_ball"
+  }
+}

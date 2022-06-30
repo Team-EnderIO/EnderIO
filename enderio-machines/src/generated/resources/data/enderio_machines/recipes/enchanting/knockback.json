@@ -1,9 +1,0 @@
-{
-  "type": "enderio_machines:enchanting",
-  "enchantment": "minecraft:knockback",
-  "input": {
-    "item": "minecraft:piston"
-  },
-  "amount": 1,
-  "cost_multiplier": 1
-}

@@ -1,9 +1,0 @@
-{
-  "type": "enderio_machines:enchanting",
-  "enchantment": "minecraft:looting",
-  "input": {
-    "item": "minecraft:skeleton_skull"
-  },
-  "amount": 1,
-  "cost_multiplier": 1
-}

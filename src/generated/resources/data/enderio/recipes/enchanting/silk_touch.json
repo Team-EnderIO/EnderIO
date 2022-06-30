@@ -1,0 +1,9 @@
+{
+  "type": "enderio:enchanting",
+  "amount": 1,
+  "cost_multiplier": 1,
+  "enchantment": "minecraft:silk_touch",
+  "input": {
+    "tag": "forge:slimeballs"
+  }
+}

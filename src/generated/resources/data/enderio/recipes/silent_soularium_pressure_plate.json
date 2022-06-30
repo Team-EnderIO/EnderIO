@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "P": {
+      "item": "enderio:soularium_pressure_plate"
+    },
+    "W": {
+      "tag": "minecraft:wool"
+    }
+  },
+  "pattern": [
+    "W",
+    "P"
+  ],
+  "result": {
+    "item": "enderio:silent_soularium_pressure_plate"
+  }
+}

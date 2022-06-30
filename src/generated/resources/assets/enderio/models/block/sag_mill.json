@@ -1,0 +1,15 @@
+{
+  "components": [
+    {
+      "model": "enderio:block/io_overlay"
+    },
+    {
+      "model": "enderio:block/sag_mill_front"
+    },
+    {
+      "model": "enderio:block/machine_frame",
+      "particle_provider": true
+    }
+  ],
+  "loader": "enderio:composite_model"
+}

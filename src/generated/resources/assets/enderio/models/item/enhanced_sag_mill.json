@@ -1,0 +1,19 @@
+{
+  "components": [
+    {
+      "model": "enderio:block/enhanced_sag_mill_front"
+    },
+    {
+      "model": "enderio:block/enhanced_sag_mill_top",
+      "translation": [
+        0.0,
+        1.0,
+        0.0
+      ]
+    },
+    {
+      "model": "enderio:block/enhanced_machine_frame"
+    }
+  ],
+  "loader": "enderio:composite_model"
+}

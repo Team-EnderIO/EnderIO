@@ -1,0 +1,74 @@
+package com.enderio.base.common.loot;
+
+import com.enderio.base.common.capacitor.CapacitorUtil;
+import com.enderio.base.common.capacitor.LootCapacitorData;
+import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.base.common.init.EIOItems;
+import com.google.gson.JsonObject;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
+import net.minecraftforge.common.loot.LootModifier;
+
+public class CapacitorLootModifier extends LootModifier {
+    /**
+     * The minimum base value
+     */
+    private final float min;
+    /**
+     * The maximum base value
+     */
+    private final float max;
+
+    /**
+     * Constructs a LootModifier.
+     *
+     * @param conditionsIn the ILootConditions that need to be matched before the loot is modified.
+     */
+    protected CapacitorLootModifier(LootItemCondition[] conditionsIn, float min, float max) {
+        super(conditionsIn);
+        this.min = min;
+        this.max = max;
+    }
+
+    /**
+     * Makes a loot capacitor with random stats and adds it to the loot.
+     */
+    @Override
+    protected ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
+        ItemStack capacitor = new ItemStack(EIOItems.LOOT_CAPACITOR.get());
+        capacitor.getCapability(EIOCapabilities.CAPACITOR).ifPresent(cap -> {
+            if (cap instanceof LootCapacitorData lootCap) {
+                lootCap.setBase(UniformGenerator.between(min, max).getFloat(context));
+                lootCap.addNewSpecialization(CapacitorUtil.getRandomKey(), UniformGenerator.between(0.0F, 4.5F).getFloat(context));
+            }
+        });
+        generatedLoot.add(capacitor);
+        return generatedLoot;
+    }
+
+    public static class Serializer extends GlobalLootModifierSerializer<CapacitorLootModifier> {
+
+        @Override
+        public CapacitorLootModifier read(ResourceLocation location, JsonObject object, LootItemCondition[] ailootcondition) {
+            float min = GsonHelper.getAsFloat(object, "min");
+            float max = GsonHelper.getAsFloat(object, "max");
+            return new CapacitorLootModifier(ailootcondition, min, max);
+        }
+
+        @Override
+        public JsonObject write(CapacitorLootModifier instance) {
+            JsonObject obj = this.makeConditions(instance.conditions);
+            obj.addProperty("min", instance.min);
+            obj.addProperty("max", instance.max);
+            return obj;
+        }
+
+    }
+
+}

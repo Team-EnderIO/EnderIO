@@ -1,9 +1,0 @@
-{
-  "type": "enderio_machines:enchanting",
-  "enchantment": "enderio:withering_blade",
-  "input": {
-    "item": "enderio:withering_powder"
-  },
-  "amount": 4,
-  "cost_multiplier": 1
-}

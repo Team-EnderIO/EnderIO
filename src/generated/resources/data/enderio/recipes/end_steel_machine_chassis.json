@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": {
+      "item": "enderio:end_steel_bars"
+    },
+    "G": {
+      "item": "enderio:grains_of_infinity"
+    },
+    "I": {
+      "item": "enderio:end_steel_ingot"
+    }
+  },
+  "pattern": [
+    "BIB",
+    "IGI",
+    "BIB"
+  ],
+  "result": {
+    "item": "enderio:end_steel_machine_chassis"
+  }
+}

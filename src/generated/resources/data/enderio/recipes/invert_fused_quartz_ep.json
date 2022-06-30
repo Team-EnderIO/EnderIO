@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "G": {
+      "item": "enderio:fused_quartz_ep"
+    },
+    "T": {
+      "item": "minecraft:redstone_torch"
+    }
+  },
+  "pattern": [
+    "GGG",
+    "GTG",
+    "GGG"
+  ],
+  "result": {
+    "count": 8,
+    "item": "enderio:fused_quartz_ep"
+  }
+}

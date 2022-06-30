@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": {
+      "item": "enderio:organic_black_dye"
+    },
+    "P": {
+      "item": "enderio:pulsating_powder"
+    },
+    "Q": {
+      "tag": "forge:dusts/quartz"
+    }
+  },
+  "pattern": [
+    "PQP",
+    "QBQ",
+    "PQP"
+  ],
+  "result": {
+    "item": "enderio:enhanced_dye_blend"
+  }
+}

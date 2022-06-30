@@ -1,9 +1,0 @@
-{
-  "type": "enderio_machines:enchanting",
-  "enchantment": "minecraft:fire_aspect",
-  "input": {
-    "item": "minecraft:blaze_rod"
-  },
-  "amount": 8,
-  "cost_multiplier": 1
-}

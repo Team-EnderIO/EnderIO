@@ -1,0 +1,22 @@
+{
+  "type": "enderio:alloy_smelting",
+  "energy": 2500,
+  "experience": 0.3,
+  "inputs": [
+    {
+      "count": 1,
+      "ingredient": {
+        "tag": "forge:glass/colorless"
+      }
+    },
+    {
+      "count": 4,
+      "ingredient": {
+        "tag": "forge:gems/amethyst"
+      }
+    }
+  ],
+  "result": {
+    "item": "enderio:clear_glass_d"
+  }
+}

@@ -1,9 +1,0 @@
-{
-  "type": "enderio_machines:enchanting",
-  "enchantment": "minecraft:infinity",
-  "input": {
-    "item": "enderio:grains_of_infinity"
-  },
-  "amount": 1,
-  "cost_multiplier": 1
-}

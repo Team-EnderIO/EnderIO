@@ -1,9 +1,0 @@
-{
-  "type": "enderio_machines:enchanting",
-  "enchantment": "minecraft:flame",
-  "input": {
-    "tag": "forge:netherrack"
-  },
-  "amount": 1,
-  "cost_multiplier": 1
-}

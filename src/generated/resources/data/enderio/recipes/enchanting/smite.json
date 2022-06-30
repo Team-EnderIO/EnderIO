@@ -1,0 +1,9 @@
+{
+  "type": "enderio:enchanting",
+  "amount": 12,
+  "cost_multiplier": 1,
+  "enchantment": "minecraft:smite",
+  "input": {
+    "item": "minecraft:rotten_flesh"
+  }
+}

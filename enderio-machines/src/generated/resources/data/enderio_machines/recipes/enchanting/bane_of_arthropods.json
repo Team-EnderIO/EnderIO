@@ -1,9 +1,0 @@
-{
-  "type": "enderio_machines:enchanting",
-  "enchantment": "minecraft:bane_of_arthropods",
-  "input": {
-    "item": "minecraft:spider_eye"
-  },
-  "amount": 12,
-  "cost_multiplier": 1
-}

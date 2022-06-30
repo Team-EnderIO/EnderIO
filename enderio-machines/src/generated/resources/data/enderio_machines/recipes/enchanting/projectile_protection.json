@@ -1,9 +1,0 @@
-{
-  "type": "enderio_machines:enchanting",
-  "enchantment": "minecraft:projectile_protection",
-  "input": {
-    "tag": "forge:leather"
-  },
-  "amount": 16,
-  "cost_multiplier": 1
-}

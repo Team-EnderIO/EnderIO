@@ -1,0 +1,11 @@
+{
+	"credit": "Made with Blockbench by Rover656",
+	"parent": "enderio:block/machine_frame",
+	"textures": {
+		"bottom": "enderio:block/simple_machine_bottom",
+		"top": "enderio:block/simple_machine_top",
+		"particle": "enderio:block/simple_machine_side",
+		"side": "enderio:block/simple_machine_side",
+		"back": "enderio:block/simple_machine_back"
+	}
+}

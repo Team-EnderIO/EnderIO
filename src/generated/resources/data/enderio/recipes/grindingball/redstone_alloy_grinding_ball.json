@@ -1,0 +1,8 @@
+{
+  "type": "enderio:grinding_ball",
+  "chance": 1.0,
+  "durability": 30000,
+  "grinding": 1.0,
+  "item": "enderio:redstone_alloy_grinding_ball",
+  "power": 0.35
+}
