@@ -176,7 +176,10 @@ repositories {
 
     maven { url 'https://maven.blamejared.com' }
 
-    mavenLocal()
+    // Temporary for Registrate
+    maven {
+        url "https://maven.nerdthings.dev/snapshots"
+    }
 }
 
 jarJar.enable()
@@ -189,8 +192,11 @@ dependencies {
     annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
 
     // Registrate
-    implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
-    jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: "${registrate_version_range}")
+    implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}") {
+        // TODO: Temporary while we're rockin' custom registrate.
+        jarJar.pin(it, registrate_version)
+    }
+//    jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: "${registrate_version_range}")
 
     // JEI
     compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
