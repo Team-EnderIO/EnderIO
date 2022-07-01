@@ -1,7 +1,7 @@
-package com.enderio.base.config.decor;
+package com.enderio.decoration.common.config;
 
-import com.enderio.base.config.decor.client.DecorClientConfig;
-import com.enderio.base.config.decor.common.DecorCommonConfig;
+import com.enderio.decoration.common.config.client.DecorClientConfig;
+import com.enderio.decoration.common.config.common.DecorCommonConfig;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
 

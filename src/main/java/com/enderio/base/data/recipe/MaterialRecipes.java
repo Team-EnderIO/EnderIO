@@ -48,7 +48,7 @@ public class MaterialRecipes extends RecipeProvider {
             .define('S', Items.SUGAR)
             .define('C', EIOItems.CAKE_BASE.get())
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CAKE_BASE.get()))
-            .save(recipeConsumer);
+            .save(recipeConsumer, EnderIO.loc("cake"));
         
         ShapelessRecipeBuilder.shapeless(EIOItems.PHOTOVOLTAIC_COMPOSITE.get())
             .requires(EIOTags.Items.DUSTS_LAPIS)
@@ -251,7 +251,7 @@ public class MaterialRecipes extends RecipeProvider {
             .pattern("W")
             .define('W', ItemTags.LOGS)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(ItemTags.LOGS).build()))
-            .save(recipeConsumer);
+            .save(recipeConsumer, EnderIO.loc("stick"));
         
         grindingBall(recipeConsumer, EIOItems.DARK_STEEL_BALL.get(), EIOItems.DARK_STEEL_INGOT.get());
         grindingBall(recipeConsumer, EIOItems.SOULARIUM_BALL.get(), EIOItems.SOULARIUM_INGOT.get());

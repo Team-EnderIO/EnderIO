@@ -1,7 +1,7 @@
-package com.enderio.base.config.base;
+package com.enderio.base.common.config;
 
-import com.enderio.base.config.base.client.BaseClientConfig;
-import com.enderio.base.config.base.common.BaseCommonConfig;
+import com.enderio.base.common.config.client.BaseClientConfig;
+import com.enderio.base.common.config.common.BaseCommonConfig;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
 

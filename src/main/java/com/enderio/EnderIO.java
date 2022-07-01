@@ -3,14 +3,13 @@ package com.enderio;
 import com.enderio.base.common.init.*;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.tag.EIOTags;
-import com.enderio.base.config.base.BaseConfig;
-import com.enderio.base.config.decor.DecorConfig;
-import com.enderio.base.config.machines.MachinesConfig;
+import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.data.loot.FireCraftingLootProvider;
 import com.enderio.base.data.recipe.*;
 import com.enderio.base.data.tags.EIOBlockTagsProvider;
 import com.enderio.base.data.tags.EIOFluidTagsProvider;
 import com.enderio.base.data.tags.EIOItemTagsProvider;
+import com.enderio.core.EnderCore;
 import com.enderio.core.common.network.CoreNetwork;
 import com.tterrag.registrate.Registrate;
 import net.minecraft.data.DataGenerator;
@@ -34,7 +33,8 @@ import java.nio.file.Files;
 
 @Mod(EnderIO.MODID)
 public class EnderIO {
-    public static final @NotNull String MODID = "enderio";
+    // The Mod ID. This is stored in EnderCore as its the furthest source away but it ensures that it is constant across all source sets.
+    public static final @NotNull String MODID = EnderCore.MODID;
 
     private static final Lazy<Registrate> REGISTRATE = Lazy.of(() -> Registrate.create(MODID));
 
@@ -49,7 +49,7 @@ public class EnderIO {
     }
 
     public EnderIO() {
-        // Create configs subdirectory
+        // Ensure the enderio config subdirectory is present.
         try {
             Files.createDirectories(FMLPaths.CONFIGDIR.get().resolve(MODID));
         } catch (IOException e) {
@@ -60,10 +60,7 @@ public class EnderIO {
         var ctx = ModLoadingContext.get();
         ctx.registerConfig(ModConfig.Type.COMMON, BaseConfig.COMMON_SPEC, "enderio/base-common.toml");
         ctx.registerConfig(ModConfig.Type.CLIENT, BaseConfig.CLIENT_SPEC, "enderio/base-client.toml");
-        ctx.registerConfig(ModConfig.Type.COMMON, DecorConfig.COMMON_SPEC, "enderio/decor-common.toml");
-        ctx.registerConfig(ModConfig.Type.CLIENT, DecorConfig.CLIENT_SPEC, "enderio/decor-client.toml");
-        ctx.registerConfig(ModConfig.Type.COMMON, MachinesConfig.COMMON_SPEC, "enderio/machines-common.toml");
-        ctx.registerConfig(ModConfig.Type.CLIENT, MachinesConfig.CLIENT_SPEC, "enderio/machines-client.toml");
+
 
         // Setup core networking now
         CoreNetwork.networkInit();

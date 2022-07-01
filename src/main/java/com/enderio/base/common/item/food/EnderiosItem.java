@@ -1,7 +1,7 @@
 package com.enderio.base.common.item.food;
 
 import com.enderio.core.common.util.TeleportUtils;
-import com.enderio.base.config.base.BaseConfig;
+import com.enderio.base.common.config.BaseConfig;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BowlFoodItem;

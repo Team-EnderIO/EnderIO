@@ -1,4 +1,4 @@
-package com.enderio.base.client;
+package com.enderio.core.client;
 
 import com.enderio.core.common.menu.SyncedMenu;
 import net.minecraft.client.Minecraft;

@@ -54,9 +54,4 @@ public class ClientSetup {
         ForgeModelBakery.addSpecialModel(EnderIO.loc("item/vibrant_gear_helper"));
         ForgeModelBakery.addSpecialModel(EnderIO.loc("item/dark_bimetal_gear_helper"));
     }
-
-    @SubscribeEvent
-    public static void registerBERS(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerBlockEntityRenderer(EIOBlockEntities.GRAVE.get(), GraveRenderer::new);
-    }
 }

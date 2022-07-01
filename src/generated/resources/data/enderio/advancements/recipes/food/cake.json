@@ -5,7 +5,9 @@
       "conditions": {
         "items": [
           {
-            "tag": "minecraft:logs"
+            "items": [
+              "enderio:cake_base"
+            ]
           }
         ]
       },
@@ -13,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:stick"
+        "recipe": "enderio:cake"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:stick"
+      "enderio:cake"
     ]
   }
 }

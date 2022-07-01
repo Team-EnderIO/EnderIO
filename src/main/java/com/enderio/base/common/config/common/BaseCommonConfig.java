@@ -1,4 +1,4 @@
-package com.enderio.base.config.base.common;
+package com.enderio.base.common.config.common;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 

@@ -1,6 +1,6 @@
 package com.enderio.base.common.enchantment;
 
-import com.enderio.base.config.base.BaseConfig;
+import com.enderio.base.common.config.BaseConfig;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;

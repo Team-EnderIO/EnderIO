@@ -2,7 +2,7 @@ package com.enderio.base.common.loot;
 
 import com.enderio.base.common.item.spawner.BrokenSpawnerItem;
 import com.enderio.base.common.tag.EIOTags;
-import com.enderio.base.config.base.BaseConfig;
+import com.enderio.base.common.config.BaseConfig;
 import com.google.gson.JsonObject;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.nbt.CompoundTag;
