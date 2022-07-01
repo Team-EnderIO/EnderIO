@@ -8,7 +8,7 @@ import net.minecraft.world.item.enchantment.Enchantments;
 public class XPBoostEnchantment extends EIOBaseEnchantment {
 
     public XPBoostEnchantment() {
-        // TODO 1.19: config before load
+        // TODO: 1.19: config before load
         super(/*BaseConfig.COMMON.ENCHANTMENTS.XP_BOOST_RARITY.get()*/ Rarity.COMMON, EIOEnchantmentCategories.XPBOOST, new EquipmentSlot[] { EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND }, () -> true);
     }
 

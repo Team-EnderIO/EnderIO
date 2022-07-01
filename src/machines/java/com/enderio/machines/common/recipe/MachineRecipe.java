@@ -1,5 +1,6 @@
-package com.enderio.api.machines.recipes;
+package com.enderio.machines.common.recipe;
 
+import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.core.common.recipes.EnderRecipe;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;

@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO: 1.19: Move to core.
+// TODO: 1.19: Move to core. Need to work out what to do about the shift lang key.
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class TooltipHandler {
 

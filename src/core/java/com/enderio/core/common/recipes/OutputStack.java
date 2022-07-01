@@ -1,4 +1,4 @@
-package com.enderio.api.machines.recipes;
+package com.enderio.core.common.recipes;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -8,7 +8,7 @@ import net.minecraftforge.fluids.FluidStack;
  * An output stack for a recipe.
  * This can be either an item or fluid stack.
  */
-public class OutputStack {
+public final class OutputStack {
     private final ItemStack itemStack;
     private final FluidStack fluidStack;
 

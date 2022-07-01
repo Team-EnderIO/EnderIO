@@ -43,7 +43,7 @@ public enum EmpoweredUpgradeTier implements IUpgradeTier {
     }
 
     public int getMaxStorage() {
-        // TODO 1.19: config before load
+        // TODO: 1.19: config before load
         return 100;
 //        return maxStorage.get();
     }

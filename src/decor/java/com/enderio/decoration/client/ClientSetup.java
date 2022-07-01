@@ -4,6 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.decoration.client.model.painted.PaintedSimpleModel;
 import com.enderio.decoration.client.model.painted.PaintedSlabModel;
 import com.enderio.decoration.common.blockentity.IPaintableBlockEntity;
+import com.enderio.decoration.common.init.DecorBlocks;
 import com.enderio.decoration.common.util.PaintUtils;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
@@ -12,6 +13,8 @@ import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransform;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -60,23 +63,21 @@ public class ClientSetup {
     public static void colorItemInit(final ColorHandlerEvent.Item e) {
         // TODO: Move into registrate.
         PaintedBlockColor color = new PaintedBlockColor();
-        // todo 1.19
-//        e.getBlockColors().register(color, DecorBlocks.getPainted().toArray(new Block[0]));
-//        e.getItemColors().register(color, DecorBlocks.getPainted().toArray(new Block[0]));
-//        e.getBlockColors().register(color, DecorBlocks.PAINTED_SLAB.get());
-//        e.getItemColors().register(color, DecorBlocks.PAINTED_SLAB.get());
+        e.getBlockColors().register(color, DecorBlocks.getPainted().toArray(new Block[0]));
+        e.getItemColors().register(color, DecorBlocks.getPainted().toArray(new Block[0]));
+        e.getBlockColors().register(color, DecorBlocks.PAINTED_SLAB.get());
+        e.getItemColors().register(color, DecorBlocks.PAINTED_SLAB.get());
     }
 
     @SubscribeEvent
     public static void init(FMLClientSetupEvent e) {
-        // todo 1.19
-//        e.enqueueWork(() -> {
-//            for (Block paintedBlock : DecorBlocks.getPainted()) {
-//                ItemBlockRenderTypes.setRenderLayer(paintedBlock, RenderType.translucent());
-//            }
-//            ItemBlockRenderTypes.setRenderLayer(DecorBlocks.PAINTED_SLAB.get(), RenderType.translucent());
-//
-//        });
+        e.enqueueWork(() -> {
+            for (Block paintedBlock : DecorBlocks.getPainted()) {
+                ItemBlockRenderTypes.setRenderLayer(paintedBlock, RenderType.translucent());
+            }
+            ItemBlockRenderTypes.setRenderLayer(DecorBlocks.PAINTED_SLAB.get(), RenderType.translucent());
+
+        });
     }
 
     private static class PaintedBlockColor implements BlockColor, ItemColor {

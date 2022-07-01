@@ -1,4 +1,4 @@
-package com.enderio.api.recipe;
+package com.enderio.core.common.recipes;
 
 import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;

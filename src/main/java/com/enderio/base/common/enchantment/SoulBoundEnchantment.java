@@ -7,7 +7,7 @@ import net.minecraft.world.item.enchantment.EnchantmentCategory;
 public class SoulBoundEnchantment extends EIOBaseEnchantment {
 
     public SoulBoundEnchantment() {
-        // TODO 1.19: config before load
+        // TODO: 1.19: config before load
         super(/*BaseConfig.COMMON.ENCHANTMENTS.SOUL_BOUND_RARITY.get()*/ Rarity.VERY_RARE, EnchantmentCategory.VANISHABLE, EquipmentSlot.values(), () -> true);
     }
 

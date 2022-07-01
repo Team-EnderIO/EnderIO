@@ -6,6 +6,9 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.registries.RegistryObject;
 
+/**
+ * Some sensible base overrides for Ender IO recipes.
+ */
 public interface EnderRecipe<C extends Container> extends Recipe<C> {
     // region Common values
 

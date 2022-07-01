@@ -1,4 +1,4 @@
-package com.enderio.base.common.blockentity;
+package com.enderio.core.common.blockentity;
 
 import com.enderio.core.EnderCore;
 import com.enderio.core.client.gui.IIcon;

@@ -20,7 +20,7 @@ public class MachineRecipes {
     private static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, EnderIO.MODID);
 
     public static final RecipeTypeSerializerPair<EnchanterRecipe, EnchanterRecipe.Serializer> ENCHANTING = register("enchanting", EnchanterRecipe.Serializer::new);
-    public static final RecipeTypeSerializerPair<IAlloySmeltingRecipe, AlloySmeltingRecipe.Serializer> ALLOY_SMELTING = register("alloy_smelting", AlloySmeltingRecipe.Serializer::new);
+    public static final RecipeTypeSerializerPair<AlloySmeltingRecipe, AlloySmeltingRecipe.Serializer> ALLOY_SMELTING = register("alloy_smelting", AlloySmeltingRecipe.Serializer::new);
     public static final RecipeTypeSerializerPair<SagMillingRecipe, SagMillingRecipe.Serializer> SAGMILLING = register("sagmilling", SagMillingRecipe.Serializer::new);
     public static final RecipeTypeSerializerPair<SlicingRecipe, SlicingRecipe.Serializer> SLICING = register("slicing", SlicingRecipe.Serializer::new);
 

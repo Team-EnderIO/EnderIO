@@ -1,11 +1,11 @@
 package com.enderio.machines.common.compat;
 
-import com.enderio.api.machines.recipes.OutputStack;
-import com.enderio.api.recipe.CountedIngredient;
-import com.enderio.machines.common.recipe.IAlloySmeltingRecipe;
-import net.minecraft.resources.ResourceLocation;
+import com.enderio.core.common.recipes.CountedIngredient;
+import com.enderio.core.common.recipes.OutputStack;
+import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
@@ -14,18 +14,18 @@ import net.minecraftforge.common.ForgeHooks;
 
 import java.util.List;
 
-/**
- * Wrap a vanilla smelting recipe so that it can be used in an alloy smelter.
- * This recipe uses the additional context from the container to determine if we're smelting multiple at a time and reacts accordingly.
- */
-public class VanillaAlloySmeltingRecipe implements IAlloySmeltingRecipe {
-    private final SmeltingRecipe vanillaRecipe;
-
+public class VanillaAlloySmeltingRecipe extends AlloySmeltingRecipe {
     public static final int RF_PER_ITEM = ForgeHooks.getBurnTime(new ItemStack(Items.COAL, 1), RecipeType.SMELTING) * 10 / 8;
 
+    private final SmeltingRecipe vanillaRecipe;
+
     public VanillaAlloySmeltingRecipe(SmeltingRecipe vanillaRecipe) {
+        // Provide some dummy values.
+        super(vanillaRecipe.getId(), List.of(), ItemStack.EMPTY, 0, 0);
         this.vanillaRecipe = vanillaRecipe;
     }
+
+    // Override base behaviour to insert the vanilla recipe
 
     @Override
     public List<CountedIngredient> getInputs() {
@@ -33,17 +33,15 @@ public class VanillaAlloySmeltingRecipe implements IAlloySmeltingRecipe {
     }
 
     @Override
-    public float getExperience() {
-        return vanillaRecipe.getExperience();
-    }
-
-    @Override
     public int getEnergyCost(Container container) {
         return RF_PER_ITEM * container.getInputsTaken();
     }
 
-    // TODO: Write our own matcher that can check all three slots instead of just the one.
-    @Deprecated
+    @Override
+    public float getExperience() {
+        return vanillaRecipe.getExperience();
+    }
+
     @Override
     public boolean matches(Container container, Level level) {
         return vanillaRecipe.matches(container, level);
@@ -59,11 +57,6 @@ public class VanillaAlloySmeltingRecipe implements IAlloySmeltingRecipe {
     @Override
     public List<OutputStack> getResultStacks() {
         return List.of(OutputStack.of(vanillaRecipe.getResultItem()));
-    }
-
-    @Override
-    public ResourceLocation getId() {
-        return vanillaRecipe.getId();
     }
 
     /**
