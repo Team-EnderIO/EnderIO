@@ -1,5 +1,7 @@
 package com.enderio.base.common.item.darksteel.upgrades.direct;
 
+import com.enderio.api.integration.IntegrationManager;
+import com.enderio.api.integration.IntegrationMethods;
 import com.enderio.base.common.capability.DarkSteelUpgradeable;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
@@ -25,7 +27,8 @@ public class DirectUpgradeLootCondition implements LootItemCondition {
         if(!context.hasParam(LootContextParams.TOOL) || !context.hasParam(LootContextParams.THIS_ENTITY)) {
             return false;
         }
-        return DarkSteelUpgradeable.hasUpgrade(context.getParam(LootContextParams.TOOL), DirectUpgrade.NAME)
+        return (DarkSteelUpgradeable.hasUpgrade(context.getParam(LootContextParams.TOOL), DirectUpgrade.NAME)
+            || IntegrationManager.anyMatch(integration -> integration.canMineWithDirect(context.getParam(LootContextParams.TOOL))))
             && context.getParam(LootContextParams.THIS_ENTITY) instanceof Player;
     }
 
