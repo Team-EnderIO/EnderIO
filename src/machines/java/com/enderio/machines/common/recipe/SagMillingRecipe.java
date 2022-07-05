@@ -355,9 +355,9 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
                     buffer.writeBoolean(item.isTag());
 
                     if (item.isTag()) {
-                        buffer.writeResourceLocation(item.tag.location());
+                        buffer.writeResourceLocation(item.getTag().location());
                     } else {
-                        buffer.writeResourceLocation(ForgeRegistries.ITEMS.getKey(item.item));
+                        buffer.writeResourceLocation(ForgeRegistries.ITEMS.getKey(item.getItem()));
                     }
 
                     buffer.writeInt(item.count);
