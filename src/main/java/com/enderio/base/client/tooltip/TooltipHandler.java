@@ -35,7 +35,7 @@ public class TooltipHandler {
         if (item instanceof IAdvancedTooltipProvider provider)
             return Optional.of(provider);
         if (item instanceof BlockItem blockItem && blockItem.getBlock() instanceof IAdvancedTooltipProvider provider)
-            return Optional.ofNullable(provider);
+            return Optional.of(provider);
         return Optional.empty();
     }
 
