@@ -8,8 +8,8 @@ import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
  * Please make sure that all methods only reference API or Minecraft classes, so that this can be part of the API, after stable release
  */
 public interface IntegrationMethods {
-    default void createData(GatherDataEvent event) {
 
+    default void createData(GatherDataEvent event) {
     }
 
     /**

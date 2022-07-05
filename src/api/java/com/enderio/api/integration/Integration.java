@@ -3,14 +3,20 @@ package com.enderio.api.integration;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 
-public abstract class Integration implements IntegrationMethods{
+public abstract class Integration implements IntegrationMethods {
 
     private String modid;
 
+    /**
+     * @return the modid this integration was made for. Usage intended for datagen
+     */
     public String getModid() {
         return modid;
     }
 
+    /**
+     * sets the modid for this integration. Usage intended for datagen and set by {@link IntegrationWrapper} in it's constructor for first party integrations
+     */
     public void setModid(String modid) {
         if (this.modid != null)
             throw new IllegalCallerException("You are not allowed to set the modid of an integration");
@@ -18,6 +24,5 @@ public abstract class Integration implements IntegrationMethods{
     }
 
     void addEventListener(IEventBus modEventBus, IEventBus forgeEventBus) {
-
     }
 }
