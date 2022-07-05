@@ -161,8 +161,10 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
     }
 
     public static class OutputItem {
-        private final @Nullable Item item;
-        private final @Nullable TagKey<Item> tag;
+        @Nullable
+        private final Item item;
+        @Nullable
+        private final TagKey<Item> tag;
         private final int count;
         private final float chance;
         private final boolean optional;
@@ -187,7 +189,8 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
             return getItem() != null;
         }
 
-        public @Nullable Item getItem() {
+        @Nullable
+        public Item getItem() {
             if (item != null)
                 return item;
             if (tag != null)
@@ -195,7 +198,8 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
             return null;
         }
 
-        public @Nullable TagKey<Item> getTag() {
+        @Nullable
+        public TagKey<Item> getTag() {
             return tag;
         }
 

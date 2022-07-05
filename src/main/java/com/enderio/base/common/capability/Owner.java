@@ -8,10 +8,13 @@ import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 public class Owner implements IOwner {
-    private @Nullable GameProfile profile;
 
+    @Nullable
+    private GameProfile profile;
+
+    @Nullable
     @Override
-    public @Nullable GameProfile getProfile() {
+    public GameProfile getProfile() {
         return profile;
     }
 

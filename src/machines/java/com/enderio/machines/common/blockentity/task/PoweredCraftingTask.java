@@ -33,7 +33,8 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
     /**
      * The recipe being crafted.
      */
-    private @Nullable R recipe;
+    @Nullable
+    private R recipe;
 
     /**
      * The index of the first output slot.
@@ -95,7 +96,8 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
      * Get the recipe being crafted.
      * May be null if an error has occurred or the level isn't loaded yet.
      */
-    public final @Nullable R getRecipe() {
+    @Nullable
+    public final R getRecipe() {
         return recipe;
     }
 
@@ -257,7 +259,8 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
         }
     }
 
-    protected @Nullable R loadRecipe(ResourceLocation id) {
+    @Nullable
+    protected R loadRecipe(ResourceLocation id) {
         return (R) blockEntity.getLevel().getRecipeManager().byKey(id).orElse(null);
     }
 
