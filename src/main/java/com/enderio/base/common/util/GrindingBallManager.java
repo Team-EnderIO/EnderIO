@@ -18,10 +18,8 @@ public class GrindingBallManager {
     private static final HashMap<ResourceLocation, IGrindingBallData> idToData = new HashMap<>();
 
     public static boolean isGrindingBall(ItemStack stack) {
-        Item item = stack.getItem();
-        if (!stack.isEmpty() && itemToData.containsKey(item))
-            return true;
-        return false;
+        return !stack.isEmpty()
+            && itemToData.containsKey(stack.getItem());
     }
 
     public static IGrindingBallData getData(ItemStack stack) {
@@ -39,7 +37,7 @@ public class GrindingBallManager {
         itemToData.clear();
         idToData.clear();
 
-        // Discover all capacitors again.
+        // Discover all grindingballs again.
         event.getRecipeManager()
             .getAllRecipesFor(EIORecipes.GRINDING_BALL.type().get())
             .forEach(grindingBallRecipe -> {
