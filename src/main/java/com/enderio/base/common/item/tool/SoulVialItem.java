@@ -281,7 +281,6 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
         }
     }
 
-    @SubscribeEvent
     public static void onCommonSetup(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
             DispenserBlock.registerBehavior(EIOItems.FILLED_SOUL_VIAL.get(), new EmptySoulVialDispenseBehavior());
