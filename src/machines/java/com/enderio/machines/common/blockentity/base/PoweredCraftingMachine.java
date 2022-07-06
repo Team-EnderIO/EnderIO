@@ -38,15 +38,18 @@ public abstract class PoweredCraftingMachine<R extends MachineRecipe<C>, C exten
     /**
      * @apiNote If you override this, make sure to set the inventoryDirty flag to false!
      */
+
+    @Nullable
     @Override
-    protected @Nullable PoweredCraftingTask<R, C> getNewTask() {
+    protected PoweredCraftingTask<R, C> getNewTask() {
         return findRecipe()
             .map(this::createTask)
             .orElse(null);
     }
 
+    @Nullable
     @Override
-    protected @Nullable PoweredCraftingTask<R, C> loadTask(CompoundTag nbt) {
+    protected PoweredCraftingTask<R, C> loadTask(CompoundTag nbt) {
         PoweredCraftingTask<R, C> task = createTask(null);
         task.deserializeNBT(nbt);
         return task;

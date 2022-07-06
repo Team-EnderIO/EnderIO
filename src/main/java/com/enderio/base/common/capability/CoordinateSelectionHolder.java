@@ -10,10 +10,13 @@ import net.minecraft.resources.ResourceLocation;
 import javax.annotation.Nullable;
 
 public class CoordinateSelectionHolder implements ICoordinateSelectionHolder {
-    private @Nullable CoordinateSelection selection;
 
+    @Nullable
+    private CoordinateSelection selection;
+
+    @Nullable
     @Override
-    public @Nullable CoordinateSelection getSelection() {
+    public CoordinateSelection getSelection() {
         return selection;
     }
 
