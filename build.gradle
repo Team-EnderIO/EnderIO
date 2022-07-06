@@ -214,6 +214,9 @@ dependencies {
 
     // While we don't have conduits etc.
 //    runtimeOnly fg.deobf("curse.maven:mekanism-268560:3743835")
+
+    // Jetbrains annotations
+    compileOnly 'org.jetbrains:annotations:23.0.0'
 }
 
 // MixinGradle Settings
