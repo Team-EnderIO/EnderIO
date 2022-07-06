@@ -33,7 +33,7 @@ import java.nio.file.Files;
 @Mod(EnderIO.MODID)
 public class EnderIO {
     // The Mod ID. This is stored in EnderCore as its the furthest source away but it ensures that it is constant across all source sets.
-    public static final @NotNull String MODID = EnderCore.MODID;
+    public static final String MODID = EnderCore.MODID;
 
     private static final Lazy<Registrate> REGISTRATE = Lazy.of(() -> Registrate.create(MODID));
 
