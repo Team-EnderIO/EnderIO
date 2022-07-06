@@ -38,7 +38,8 @@ public enum GlassCollisionPredicate implements IIcon {
     ANIMALS_BLOCK(ctx -> !(ctx.getEntity() instanceof Animal), EIOLang.GLASS_COLLISION_ANIMALS_BLOCK);
 
     private final Predicate<EntityCollisionContext> predicate;
-    private final @Nullable Component description;
+    @Nullable
+    private final Component description;
 
     public static final ResourceLocation TEXTURE = EnderIO.loc("textures/item/overlay/fused_quartz_hitbox_overlay.png");
 
@@ -102,7 +103,6 @@ public enum GlassCollisionPredicate implements IIcon {
     }
 
     /**
-     * @param token to invert
      * @return the predicate for the token or null if none found. Used for datagen
      */
     @Nullable

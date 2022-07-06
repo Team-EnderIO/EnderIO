@@ -7,6 +7,7 @@ import com.enderio.core.common.util.TagUtil;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.mojang.datafixers.util.Either;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -160,23 +161,22 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
     }
 
     public static class OutputItem {
-        private final @Nullable Item item;
-        private final @Nullable TagKey<Item> tag;
+
+        private final Either<Item, TagKey<Item>> item;
         private final int count;
         private final float chance;
         private final boolean optional;
 
         public static OutputItem of(Item item, int count, float chance, boolean optional) {
-            return new OutputItem(item, null, count, chance, optional);
+            return new OutputItem(Either.left(item), count, chance, optional);
         }
 
         public static OutputItem of(TagKey<Item> tag, int count, float chance, boolean optional) {
-            return new OutputItem(null, tag, count, chance, optional);
+            return new OutputItem(Either.right(tag), count, chance, optional);
         }
 
-        public OutputItem(@Nullable Item item, @Nullable TagKey<Item> tag, int count, float chance, boolean optional) {
+        public OutputItem(Either<Item, TagKey<Item>> item, int count, float chance, boolean optional) {
             this.item = item;
-            this.tag = tag;
             this.count = count;
             this.chance = chance;
             this.optional = optional;
@@ -186,24 +186,24 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
             return getItem() != null;
         }
 
-        public @Nullable Item getItem() {
-            if (item != null)
-                return item;
-            if (tag != null)
-                return TagUtil.getOptionalItem(tag).orElse(null);
-            return null;
+        @Nullable
+        public Item getItem() {
+            return item.left().or(() -> TagUtil.getOptionalItem(item.right().get())).orElse(null);
         }
 
-        public @Nullable TagKey<Item> getTag() {
-            return tag;
+        @Nullable
+        public TagKey<Item> getTag() {
+            if (!isTag())
+                return null;
+            return item.right().get();
         }
 
         public boolean isTag() {
-            return tag != null;
+            return item.right().isPresent();
         }
 
         public boolean isItem() {
-            return item != null;
+            return item.left().isPresent();
         }
 
         public int getCount() {
@@ -354,9 +354,9 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
                     buffer.writeBoolean(item.isTag());
 
                     if (item.isTag()) {
-                        buffer.writeResourceLocation(item.tag.location());
+                        buffer.writeResourceLocation(item.getTag().location());
                     } else {
-                        buffer.writeResourceLocation(ForgeRegistries.ITEMS.getKey(item.item));
+                        buffer.writeResourceLocation(ForgeRegistries.ITEMS.getKey(item.getItem()));
                     }
 
                     buffer.writeInt(item.count);

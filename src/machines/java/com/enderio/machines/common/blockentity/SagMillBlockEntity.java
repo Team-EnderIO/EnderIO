@@ -84,7 +84,8 @@ public abstract class SagMillBlockEntity extends PoweredCraftingMachine<SagMilli
 
     private IGrindingBallData grindingBallData = IGrindingBallData.IDENTITY;
 
-    private @Nullable ResourceLocation pendingGrindingBallId;
+    @Nullable
+    private ResourceLocation pendingGrindingBallId;
 
     private int grindingBallDamage;
 
@@ -100,7 +101,8 @@ public abstract class SagMillBlockEntity extends PoweredCraftingMachine<SagMilli
         addDataSlot(new ResourceLocationDataSlot(() -> grindingBallData.getId(), gId -> grindingBallData = GrindingBallManager.getData(gId), SyncMode.GUI));
     }
 
-    public @Nullable IGrindingBallData getGrindingBallData() {
+    @Nullable
+    public IGrindingBallData getGrindingBallData() {
         return grindingBallData;
     }
 

@@ -260,8 +260,9 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachine<All
                 }
             }
 
+            @Nullable
             @Override
-            protected @Nullable AlloySmeltingRecipe loadRecipe(ResourceLocation id) {
+            protected IAlloySmeltingRecipe loadRecipe(ResourceLocation id) {
                 return level.getRecipeManager().byKey(id).map(recipe -> {
                     if (recipe.getType() == MachineRecipes.ALLOY_SMELTING.type().get()) {
                         return (AlloySmeltingRecipe) recipe;

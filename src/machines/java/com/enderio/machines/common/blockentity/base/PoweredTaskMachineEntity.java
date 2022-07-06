@@ -21,12 +21,14 @@ public abstract class PoweredTaskMachineEntity<T extends PoweredTask> extends Po
     /**
      * The current task being executed.
      */
-    private @Nullable T currentTask;
+    @Nullable
+    private T currentTask;
 
     /**
      * A serialized task waiting for the level to load.
      */
-    private @Nullable CompoundTag pendingTask;
+    @Nullable
+    private CompoundTag pendingTask;
 
     /**
      * Whether a new task is available.
@@ -114,7 +116,8 @@ public abstract class PoweredTaskMachineEntity<T extends PoweredTask> extends Po
     /**
      * Get the current task
      */
-    protected @Nullable T getCurrentTask() {
+    @Nullable
+    protected T getCurrentTask() {
         return currentTask;
     }
 
@@ -128,12 +131,14 @@ public abstract class PoweredTaskMachineEntity<T extends PoweredTask> extends Po
     /**
      * Get the new task.
      */
-    protected abstract @Nullable T getNewTask();
+    @Nullable
+    protected abstract T getNewTask();
 
     /**
      * Load the task from NBT.
      */
-    protected abstract @Nullable T loadTask(CompoundTag nbt);
+    @Nullable
+    protected abstract T loadTask(CompoundTag nbt);
 
     @Override
     public void saveAdditional(CompoundTag pTag) {

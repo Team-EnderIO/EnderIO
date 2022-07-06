@@ -1,8 +1,10 @@
-package com.enderio.core.common.integration;
+package com.enderio.api.integration;
 
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullConsumer;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
@@ -18,7 +20,11 @@ public class IntegrationWrapper<T extends Integration> {
     public IntegrationWrapper(String modid, Supplier<T> supplier) {
         this.modid = modid;
         value = ModList.get().isLoaded(modid) ? supplier.get() : null;
-        ifPresent(integration -> integration.setModid(modid));
+        ifPresent(integration -> {
+            integration.setModid(modid);
+            IntegrationManager.addIntegration(integration);
+            integration.addEventListener(FMLJavaModLoadingContext.get().getModEventBus(), MinecraftForge.EVENT_BUS);
+        });
     }
 
     public boolean isPresent() {

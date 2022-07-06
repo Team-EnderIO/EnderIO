@@ -68,8 +68,9 @@ public class SlicerBlockEntity extends PoweredCraftingMachine<SlicingRecipe, Con
         return false;
     }
 
+    @Nullable
     @Override
-    protected @Nullable PoweredCraftingTask<SlicingRecipe, Container> getNewTask() {
+    protected PoweredCraftingTask<SlicingRecipe, Container> getNewTask() {
         MachineInventory inv = getInventory();
         if (inv.getStackInSlot(6).isEmpty() || inv.getStackInSlot(7).isEmpty())
             return null;
