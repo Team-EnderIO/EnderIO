@@ -29,6 +29,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.horse.AbstractChestedHorse;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
@@ -167,7 +168,10 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
                 // Consume a soul vial
                 soulVial.shrink(1);
                 // Create a filled vial and put the entity's NBT inside.
-                ItemStack filledVial = new ItemStack(EIOItems.FILLED_SOUL_VIAL.get());
+                ItemStack filledVial = EIOItems.FILLED_SOUL_VIAL.get().getDefaultInstance();
+                if (entity instanceof Mob mob && mob.getLeashHolder() != null) {
+                    mob.dropLeash(true, true);
+                }
                 setEntityData(filledVial, entity);
                 // Give the player the filled vial
                 filledVialInsertion.accept(filledVial);
@@ -216,11 +220,11 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
     @Override
     public void fillItemCategory(@Nonnull CreativeModeTab pCategory, @Nonnull NonNullList<ItemStack> pItems) {
         if (pCategory == getItemCategory()) {
-            pItems.add(new ItemStack(EIOItems.EMPTY_SOUL_VIAL.get()));
+            pItems.add(EIOItems.EMPTY_SOUL_VIAL.get().getDefaultInstance());
         } else if (pCategory == EIOCreativeTabs.SOULS) {
             // Register for every mob that can be captured.
             for (ResourceLocation entity : EntityCaptureUtils.getCapturableEntities()) {
-                ItemStack is = new ItemStack(EIOItems.FILLED_SOUL_VIAL.get());
+                ItemStack is = EIOItems.FILLED_SOUL_VIAL.get().getDefaultInstance();
                 setEntityType(is, entity);
                 pItems.add(is);
             }
@@ -318,7 +322,7 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
         protected ItemStack execute(BlockSource source, ItemStack stack) {
             Direction dispenserDirection = source.getBlockState().getValue(DispenserBlock.FACING);
             AtomicReference<ItemStack> emptyVial = new AtomicReference<>();
-            releaseEntity(source.getLevel(), stack, dispenserDirection.getOpposite(), source.getPos(), emptyVial::set);
+            releaseEntity(source.getLevel(), stack, dispenserDirection, source.getPos(), emptyVial::set);
             if (emptyVial.get() != null) {
                 return emptyVial.get();
             } else {
