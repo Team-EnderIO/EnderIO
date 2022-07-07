@@ -18,7 +18,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -40,16 +39,14 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -67,7 +64,7 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
     // Item appearance and description
 
     @Override
-    public boolean isFoil(@Nonnull ItemStack pStack) {
+    public boolean isFoil(ItemStack pStack) {
         return pStack.getCapability(EIOCapabilities.ENTITY_STORAGE).map(IEntityStorage::hasStoredEntity).orElse(false);
     }
 
@@ -94,10 +91,8 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
     // region Interactions
 
     // Capture logic
-    @Nonnull
     @Override
-    public InteractionResult interactLivingEntity(@Nonnull ItemStack pStack, @Nonnull Player pPlayer, @Nonnull LivingEntity pInteractionTarget,
-        @Nonnull InteractionHand pUsedHand) {
+    public InteractionResult interactLivingEntity(ItemStack pStack, Player pPlayer, LivingEntity pInteractionTarget, InteractionHand pUsedHand) {
         if (pPlayer.level.isClientSide) {
             return InteractionResult.FAIL;
         }
@@ -118,7 +113,6 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
     }
 
     // Release logic
-    @Nonnull
     @Override
     public InteractionResult useOn(UseOnContext pContext) {
         if (pContext.getLevel().isClientSide) {
@@ -218,7 +212,7 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
     // region Creative tabs
 
     @Override
-    public void fillItemCategory(@Nonnull CreativeModeTab pCategory, @Nonnull NonNullList<ItemStack> pItems) {
+    public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {
         if (pCategory == getItemCategory()) {
             pItems.add(EIOItems.EMPTY_SOUL_VIAL.get().getDefaultInstance());
         } else if (pCategory == EIOCreativeTabs.SOULS) {
