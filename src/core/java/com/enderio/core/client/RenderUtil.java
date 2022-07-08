@@ -6,6 +6,7 @@ import com.mojang.math.Matrix4f;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
+import net.minecraftforge.client.model.IQuadTransformer;
 
 public class RenderUtil {
     /**
@@ -34,5 +35,16 @@ public class RenderUtil {
         consumer.vertex(pose, x1, y0, z1).color(color).uv(texture.getU(maxU), texture.getV(minV)).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880).normal(normal, 0.0f, 0.0f, 0.0f).endVertex();
         consumer.vertex(pose, x1, y1, z2).color(color).uv(texture.getU(maxU), texture.getV(maxV)).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880).normal(normal, 0.0f, 0.0f, 0.0f).endVertex();
         consumer.vertex(pose, x0, y1, z3).color(color).uv(texture.getU(minU), texture.getV(maxV)).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880).normal(normal, 0.0f, 0.0f, 0.0f).endVertex();
+    }
+
+    public static float[] unpackVertices(int[] vertices, int startIndex, int position, int count) {
+        float[] floats = new float[count];
+
+        for (int i = startIndex; i < startIndex + count; i++) {
+            int offset = i * IQuadTransformer.STRIDE + position;
+            floats[i - startIndex] = Float.intBitsToFloat(vertices[offset]);
+        }
+
+        return floats;
     }
 }

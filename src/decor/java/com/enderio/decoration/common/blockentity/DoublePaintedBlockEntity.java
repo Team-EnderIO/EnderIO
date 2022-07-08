@@ -8,9 +8,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.ModelDataManager;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -39,8 +37,8 @@ public class DoublePaintedBlockEntity extends SinglePaintedBlockEntity {
 
     @Nonnull
     @Override
-    public IModelData getModelData() {
-        return new ModelDataMap.Builder().withInitial(PAINT, getPaint()).withInitial(PAINT2, paint2).build();
+    public ModelData getModelData() {
+        return ModelData.builder().with(PAINT, getPaint()).with(PAINT2, paint2).build();
     }
 
     @Nullable
@@ -54,7 +52,7 @@ public class DoublePaintedBlockEntity extends SinglePaintedBlockEntity {
         Block oldPaint = getPaint2();
         super.onDataPacket(net, pkt);
         if (oldPaint != paint2) {
-            ModelDataManager.requestModelDataRefresh(this);
+            requestModelDataUpdate();
             if (level != null) {
                 level.setBlock(getBlockPos(), level.getBlockState(getBlockPos()), 9);
             }
@@ -68,7 +66,7 @@ public class DoublePaintedBlockEntity extends SinglePaintedBlockEntity {
             paint2 = PaintUtils.getBlockFromRL(tag.getString("paint2"));
             if (level != null) {
                 if (level.isClientSide) {
-                    ModelDataManager.requestModelDataRefresh(this);
+                    requestModelDataUpdate();
                     level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(),
                         Block.UPDATE_NEIGHBORS + Block.UPDATE_CLIENTS);
                 }

@@ -9,9 +9,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.ModelDataManager;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -35,8 +33,8 @@ public class SinglePaintedBlockEntity extends BlockEntity implements IPaintableB
 
     @Nonnull
     @Override
-    public IModelData getModelData() {
-        return new ModelDataMap.Builder().withInitial(PAINT, paint).build();
+    public ModelData getModelData() {
+        return ModelData.builder().with(PAINT, paint).build();
     }
 
     @Nullable
@@ -51,7 +49,7 @@ public class SinglePaintedBlockEntity extends BlockEntity implements IPaintableB
         CompoundTag tag = pkt.getTag();
         handleUpdateTag(tag);
         if (oldPaint != paint) {
-            ModelDataManager.requestModelDataRefresh(this);
+            requestModelDataUpdate();
             if (level != null) {
                 level.setBlock(getBlockPos(), level.getBlockState(getBlockPos()), 9);
             }
@@ -78,7 +76,7 @@ public class SinglePaintedBlockEntity extends BlockEntity implements IPaintableB
             paint = PaintUtils.getBlockFromRL(tag.getString("paint"));
             if (level != null) {
                 if (level.isClientSide) {
-                    ModelDataManager.requestModelDataRefresh(this);
+                    requestModelDataUpdate();
                     level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(),
                         Block.UPDATE_NEIGHBORS + Block.UPDATE_CLIENTS);
                 }

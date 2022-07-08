@@ -2,6 +2,7 @@ package com.enderio.core.client.gui.model.composite;
 
 import com.enderio.core.client.gui.model.ItemTransformUtil;
 import com.enderio.core.data.model.EIOModel;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -10,8 +11,8 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.IDynamicBakedModel;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.IDynamicBakedModel;
+import net.minecraftforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,13 +32,13 @@ public class CompositeBakedModel implements IDynamicBakedModel {
         this.particleSupplier = particleSupplier;
     }
 
-    @NotNull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull IModelData extraData) {
+    public @NotNull List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull ModelData extraData,
+        @Nullable RenderType renderType) {
         // Get all component quads
         List<BakedQuad> quads = new ArrayList<>();
         for (BakedModel model : components) {
-            quads.addAll(model.getQuads(state, side, rand, extraData));
+            quads.addAll(model.getQuads(state, side, rand, extraData, renderType));
         }
         return quads;
     }

@@ -1,6 +1,7 @@
 package com.enderio.decoration.client.model.painted;
 
 import com.enderio.decoration.common.blockentity.SinglePaintedBlockEntity;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.core.Direction;
@@ -9,11 +10,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraftforge.client.model.data.IDynamicBakedModel;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.IDynamicBakedModel;
+import net.minecraftforge.client.model.data.ModelData;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class PaintedSimpleModel extends PaintedModel implements IDynamicBakedModel {
@@ -30,9 +30,9 @@ public class PaintedSimpleModel extends PaintedModel implements IDynamicBakedMod
         return referenceModel;
     }
 
-    @Nonnull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand, @Nonnull IModelData extraData) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side,
+        RandomSource rand, ModelData extraData, @Nullable RenderType renderType) {
         List<BakedQuad> shape = getModelFromOwn(state).getQuads(copyBlockState(state), side, rand);
         Direction direction = null;
         if (state != null) {
@@ -42,6 +42,6 @@ public class PaintedSimpleModel extends PaintedModel implements IDynamicBakedMod
                 }
             }
         }
-        return getQuadsUsingShape(extraData.getData(SinglePaintedBlockEntity.PAINT), shape, side, rand, direction);
+        return getQuadsUsingShape(extraData.get(SinglePaintedBlockEntity.PAINT), shape, side, rand, direction, renderType);
     }
 }

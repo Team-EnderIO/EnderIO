@@ -6,8 +6,7 @@ import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.IFluidTypeRenderProperties;
-import net.minecraftforge.client.RenderProperties;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
@@ -41,8 +40,8 @@ public class ItemBarRenderer {
 
             double fillRatio = 1.0D - (double) handler.getFluidInTank(tank).getAmount() / (double) handler.getTankCapacity(tank);
 
-            IFluidTypeRenderProperties props = RenderProperties.get(handler.getFluidInTank(tank).getFluid());
-            renderOverlay(pXPosition, pYPosition, fillRatio, props.getColorTint()); // TODO: Test this out!
+            IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(handler.getFluidInTank(tank).getFluid());
+            renderOverlay(pXPosition, pYPosition, fillRatio, props.getTintColor()); // TODO: Test this out!
         });
     }
 

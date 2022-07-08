@@ -2,18 +2,13 @@ package com.enderio.base.client;
 
 import com.enderio.EnderIO;
 import com.enderio.core.client.gui.model.DummyCustomRenderModel;
-import com.enderio.core.client.gui.model.composite.CompositeModelLoader;
-import com.enderio.base.client.renderer.blockentity.GraveRenderer;
-import com.enderio.base.common.init.EIOBlockEntities;
+import com.enderio.core.client.gui.model.composite.CompositeGeometryLoader;
 import com.enderio.base.common.init.EIOFluids;
 import com.tterrag.registrate.util.entry.FluidEntry;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.model.ForgeModelBakery;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
+import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.fml.common.Mod;
@@ -43,15 +38,18 @@ public class ClientSetup {
     }
 
     @SubscribeEvent
-    public static void customModelLoaders(ModelRegistryEvent event) {
-        ModelLoaderRegistry.registerLoader(EnderIO.loc("composite_model"), new CompositeModelLoader());
-        ModelLoaderRegistry.registerLoader(EnderIO.loc("dummy"), new DummyCustomRenderModel.Loader());
-
-        ForgeModelBakery.addSpecialModel(EnderIO.loc("item/wood_gear_helper"));
-        ForgeModelBakery.addSpecialModel(EnderIO.loc("item/stone_gear_helper"));
-        ForgeModelBakery.addSpecialModel(EnderIO.loc("item/iron_gear_helper"));
-        ForgeModelBakery.addSpecialModel(EnderIO.loc("item/energized_gear_helper"));
-        ForgeModelBakery.addSpecialModel(EnderIO.loc("item/vibrant_gear_helper"));
-        ForgeModelBakery.addSpecialModel(EnderIO.loc("item/dark_bimetal_gear_helper"));
+    public static void customModelLoaders(ModelEvent.RegisterGeometryLoaders event) {
+        event.register("composite_model", new CompositeGeometryLoader());
+        event.register("dummy", new DummyCustomRenderModel.Loader());
+    }
+    
+    @SubscribeEvent
+    public static void additionalModels(ModelEvent.RegisterAdditional event) {
+        event.register(EnderIO.loc("item/wood_gear_helper"));
+        event.register(EnderIO.loc("item/stone_gear_helper"));
+        event.register(EnderIO.loc("item/iron_gear_helper"));
+        event.register(EnderIO.loc("item/energized_gear_helper"));
+        event.register(EnderIO.loc("item/vibrant_gear_helper"));
+        event.register(EnderIO.loc("item/dark_bimetal_gear_helper"));
     }
 }

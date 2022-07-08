@@ -8,6 +8,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
@@ -20,11 +21,11 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.model.IModelConfiguration;
-import net.minecraftforge.client.model.IModelLoader;
-import net.minecraftforge.client.model.data.IDynamicBakedModel;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.geometry.IModelGeometry;
+import net.minecraftforge.client.model.IDynamicBakedModel;
+import net.minecraftforge.client.model.data.ModelData;
+import net.minecraftforge.client.model.geometry.IGeometryBakingContext;
+import net.minecraftforge.client.model.geometry.IGeometryLoader;
+import net.minecraftforge.client.model.geometry.IUnbakedGeometry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,10 +66,10 @@ public class IOOverlayBakedModel implements IDynamicBakedModel {
 
     @NotNull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull IModelData extraData) {
-        if (extraData.hasProperty(MachineBlockEntity.IO_CONFIG_PROPERTY)) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull ModelData extraData, RenderType renderType) {
+        if (extraData.has(MachineBlockEntity.IO_CONFIG_PROPERTY)) {
             // Get io config from the block entity.
-            IIOConfig config = extraData.getData(MachineBlockEntity.IO_CONFIG_PROPERTY);
+            IIOConfig config = extraData.get(MachineBlockEntity.IO_CONFIG_PROPERTY);
             if (config != null && config.renderOverlay()) {
                 // Build a list of quads
                 List<BakedQuad> quads = new ArrayList<>();
@@ -119,15 +120,15 @@ public class IOOverlayBakedModel implements IDynamicBakedModel {
         return ItemOverrides.EMPTY;
     }
 
-    public static class Geometry implements IModelGeometry<Geometry> {
+    public static class Geometry implements IUnbakedGeometry<Geometry> {
         @Override
-        public BakedModel bake(IModelConfiguration owner, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform,
+        public BakedModel bake(IGeometryBakingContext context, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform,
             ItemOverrides overrides, ResourceLocation modelLocation) {
             return new IOOverlayBakedModel(modelTransform);
         }
 
         @Override
-        public Collection<Material> getTextures(IModelConfiguration owner, Function<ResourceLocation, UnbakedModel> modelGetter,
+        public Collection<Material> getMaterials(IGeometryBakingContext context, Function<ResourceLocation, UnbakedModel> modelGetter,
             Set<Pair<String, String>> missingTextureErrors) {
             return List.of(
                 new Material(TextureAtlas.LOCATION_BLOCKS, EnderIO.loc("block/overlay/disabled")),
@@ -138,15 +139,10 @@ public class IOOverlayBakedModel implements IDynamicBakedModel {
         }
     }
 
-    public static class Loader implements IModelLoader<Geometry> {
+    public static class Loader implements IGeometryLoader<Geometry> {
         @Override
-        public Geometry read(JsonDeserializationContext deserializationContext, JsonObject modelContents) {
+        public Geometry read(JsonObject modelContents, JsonDeserializationContext deserializationContext) {
             return new Geometry();
-        }
-
-        @Override
-        public void onResourceManagerReload(ResourceManager resourceManager) {
-
         }
     }
 

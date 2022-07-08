@@ -37,7 +37,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.DrawSelectionEvent;
+import net.minecraftforge.client.event.RenderHighlightEvent;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -162,14 +162,14 @@ public class ExplosiveUpgradeHandler {
     // region area highlight
 
     @SubscribeEvent
-    public static void showAreaOfEffectHighlight(DrawSelectionEvent.HighlightBlock event) {
+    public static void showAreaOfEffectHighlight(RenderHighlightEvent.Block event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player != null && !player.isCrouching() && hasExplosiveUpgrades(player.getItemInHand(InteractionHand.MAIN_HAND))) {
             drawHighlight(event, player.getItemInHand(InteractionHand.MAIN_HAND));
         }
     }
 
-    private static void drawHighlight(DrawSelectionEvent.HighlightBlock event, ItemStack held) {
+    private static void drawHighlight(RenderHighlightEvent.Block event, ItemStack held) {
         ClientLevel level = Minecraft.getInstance().level;
         if (level == null) {
             return;

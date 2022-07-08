@@ -19,8 +19,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.client.IFluidTypeRenderProperties;
-import net.minecraftforge.client.RenderProperties;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.registries.ForgeRegistries;
 
 // TODO: No longer lights in the inventory/hand like other machines...
@@ -51,12 +50,14 @@ public class FluidTankBEWLR extends BlockEntityWithoutLevelRenderer {
                     int amount = tank.getInt("Amount");
 
                     if (fluid != null && amount > 0) {
-                        VertexConsumer fluidBuffer;
-                        if (ItemBlockRenderTypes.canRenderInLayer(fluid.defaultFluidState(), RenderType.translucent())) {
-                            fluidBuffer = buffer.getBuffer(RenderType.translucent());
-                        } else {
-                            fluidBuffer = buffer.getBuffer(RenderType.solid());
-                        }
+//                        VertexConsumer fluidBuffer;
+//                        if (ItemBlockRenderTypes.canRenderInLayer(fluid.defaultFluidState(), RenderType.translucent())) {
+//                            fluidBuffer = buffer.getBuffer(RenderType.translucent());
+//                        } else {
+//                            fluidBuffer = buffer.getBuffer(RenderType.solid());
+//                        }
+                        // TODO: 1.19: TEST
+                        VertexConsumer fluidBuffer = buffer.getBuffer(ItemBlockRenderTypes.getRenderLayer(fluid.defaultFluidState()));
 
                         // Determine capacity.
                         int capacity = FluidTankBlockEntity.Standard.CAPACITY;
@@ -65,8 +66,8 @@ public class FluidTankBEWLR extends BlockEntityWithoutLevelRenderer {
                         }
 
                         PoseStack.Pose pose = poseStack.last();
-                        IFluidTypeRenderProperties props = RenderProperties.get(fluid);
-                        FluidTankBER.renderFluid(pose.pose(), pose.normal(), fluidBuffer, fluid, amount / (float) capacity, props.getColorTint());
+                        IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluid);
+                        FluidTankBER.renderFluid(pose.pose(), pose.normal(), fluidBuffer, fluid, amount / (float) capacity, props.getTintColor());
                     }
                 }
             }

@@ -7,8 +7,8 @@ import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.*;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.model.IModelConfiguration;
-import net.minecraftforge.client.model.geometry.IModelGeometry;
+import net.minecraftforge.client.model.geometry.IGeometryBakingContext;
+import net.minecraftforge.client.model.geometry.IUnbakedGeometry;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,16 +17,16 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class CompositeModelGeometry implements IModelGeometry<CompositeModelGeometry> {
+public class CompositeUnbakedGeometry implements IUnbakedGeometry<CompositeUnbakedGeometry> {
 
     private final List<CompositeModelComponent> components;
 
-    public CompositeModelGeometry(List<CompositeModelComponent> components) {
+    public CompositeUnbakedGeometry(List<CompositeModelComponent> components) {
         this.components = components;
     }
 
     @Override
-    public BakedModel bake(IModelConfiguration owner, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform,
+    public BakedModel bake(IGeometryBakingContext context, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform,
         ItemOverrides overrides, ResourceLocation modelLocation) {
         // Get all dependencies and bake them in
         List<BakedModel> componentModels = new ArrayList<>(components.size());
@@ -64,10 +64,10 @@ public class CompositeModelGeometry implements IModelGeometry<CompositeModelGeom
     }
 
     @Override
-    public Collection<Material> getTextures(IModelConfiguration owner, Function<ResourceLocation, UnbakedModel> modelGetter,
+    public Collection<Material> getMaterials(IGeometryBakingContext context, Function<ResourceLocation, UnbakedModel> modelGetter,
         Set<Pair<String, String>> missingTextureErrors) {
         return components.stream()
-            .filter(component -> !component.model().equals(new ResourceLocation(owner.getModelName()))) // ignore self referencing
+            .filter(component -> !component.model().equals(new ResourceLocation(context.getModelName()))) // ignore self referencing
             .map(component -> modelGetter.apply(component.model()).getMaterials(modelGetter, missingTextureErrors))
             .flatMap(Collection::stream).toList();
     }

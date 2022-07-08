@@ -1,6 +1,5 @@
 package com.enderio.decoration.client;
 
-import com.enderio.EnderIO;
 import com.enderio.decoration.client.model.painted.PaintedSimpleModel;
 import com.enderio.decoration.client.model.painted.PaintedSlabModel;
 import com.enderio.decoration.common.blockentity.IPaintableBlockEntity;
@@ -24,19 +23,17 @@ import net.minecraft.client.resources.model.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ColorHandlerEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.model.IModelConfiguration;
-import net.minecraftforge.client.model.IModelLoader;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
-import net.minecraftforge.client.model.geometry.IModelGeometry;
+import net.minecraftforge.client.event.ModelEvent;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import net.minecraftforge.client.model.geometry.IGeometryBakingContext;
+import net.minecraftforge.client.model.geometry.IGeometryLoader;
+import net.minecraftforge.client.model.geometry.IUnbakedGeometry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -54,24 +51,25 @@ public class ClientSetup {
     private ClientSetup() {}
 
     @SubscribeEvent
-    public static void modelInit(final ModelRegistryEvent e) {
-        ModelLoaderRegistry.registerLoader(EnderIO.loc("painted_model"), new WrappedModelLoader(false));
-        ModelLoaderRegistry.registerLoader(EnderIO.loc("painted_slab"), new WrappedModelLoader(true));
+    public static void modelInit(ModelEvent.RegisterGeometryLoaders event) {
+        event.register("painted_model", new WrappedModelLoader(false));
+        event.register("painted_slab", new WrappedModelLoader(true));
     }
 
     @SubscribeEvent
-    public static void colorItemInit(final ColorHandlerEvent.Item e) {
+    public static void colorItemInit(RegisterColorHandlersEvent.Item event) {
         // TODO: Move into registrate.
         PaintedBlockColor color = new PaintedBlockColor();
-        e.getBlockColors().register(color, DecorBlocks.getPainted().toArray(new Block[0]));
-        e.getItemColors().register(color, DecorBlocks.getPainted().toArray(new Block[0]));
-        e.getBlockColors().register(color, DecorBlocks.PAINTED_SLAB.get());
-        e.getItemColors().register(color, DecorBlocks.PAINTED_SLAB.get());
+        event.register(color, DecorBlocks.getPainted().toArray(new Block[0]));
+        event.register(color, DecorBlocks.getPainted().toArray(new Block[0]));
+        event.register(color, DecorBlocks.PAINTED_SLAB.get());
+        event.register(color, DecorBlocks.PAINTED_SLAB.get());
     }
 
     @SubscribeEvent
     public static void init(FMLClientSetupEvent e) {
         e.enqueueWork(() -> {
+            // TODO: 1.19: Fix this deprecation.
             for (Block paintedBlock : DecorBlocks.getPainted()) {
                 ItemBlockRenderTypes.setRenderLayer(paintedBlock, RenderType.translucent());
             }
@@ -116,7 +114,7 @@ public class ClientSetup {
         }
     }
 
-    private static class WrappedModelLoader implements IModelLoader<Geometry> {
+    private static class WrappedModelLoader implements IGeometryLoader<Geometry> {
 
         private static final ItemTransforms.Deserializer INSTANCE = new ItemTransforms.Deserializer();
 
@@ -128,7 +126,7 @@ public class ClientSetup {
 
         @Nonnull
         @Override
-        public Geometry read(@Nonnull JsonDeserializationContext deserializationContext, JsonObject modelContents) {
+        public Geometry read(JsonObject modelContents, JsonDeserializationContext deserializationContext) {
             return new Geometry(PaintUtils.getBlockFromRL(modelContents.get("reference").getAsString()),
                 getItemTransforms(deserializationContext, modelContents), isDouble);
         }
@@ -138,12 +136,9 @@ public class ClientSetup {
                 return new DefaultItemTransforms(INSTANCE.deserialize(modelContents.get("display"), null, deserializationContext));
             return new DefaultItemTransforms();
         }
-
-        @Override
-        public void onResourceManagerReload(@Nonnull ResourceManager pResourceManager) {}
     }
 
-    private static class Geometry implements IModelGeometry<Geometry> {
+    private static class Geometry implements IUnbakedGeometry<Geometry> {
 
         final Block shape;
         ItemTransforms transforms;
@@ -156,13 +151,13 @@ public class ClientSetup {
         }
 
         @Override
-        public BakedModel bake(IModelConfiguration owner, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform,
+        public BakedModel bake(IGeometryBakingContext context, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform,
             ItemOverrides overrides, ResourceLocation modelLocation) {
             return isDouble ? new PaintedSlabModel(shape, transforms) : new PaintedSimpleModel(shape, transforms);
         }
 
         @Override
-        public Collection<Material> getTextures(IModelConfiguration owner, Function<ResourceLocation, UnbakedModel> modelGetter,
+        public Collection<Material> getMaterials(IGeometryBakingContext context, Function<ResourceLocation, UnbakedModel> modelGetter,
             Set<Pair<String, String>> missingTextureErrors) {
             return Collections.singletonList(new Material(TextureAtlas.LOCATION_BLOCKS, new ResourceLocation("minecraft", "missingno")));
         }

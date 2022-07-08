@@ -5,10 +5,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.FallingBlockRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.FallingBlockEntity;
@@ -16,6 +19,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.client.ForgeRenderTypes;
+import net.minecraftforge.client.model.BakedModelWrapper;
+import net.minecraftforge.client.model.data.ModelData;
+import oshi.jna.platform.windows.NtDll;
 
 public class PaintedSandRenderer extends FallingBlockRenderer {
     public PaintedSandRenderer(EntityRendererProvider.Context ctx) {
@@ -34,19 +41,18 @@ public class PaintedSandRenderer extends FallingBlockRenderer {
                 BlockPos blockpos = new BlockPos(pEntity.getX(), pEntity.getBoundingBox().maxY, pEntity.getZ());
                 pMatrixStack.translate(-0.5D, 0.0D, -0.5D);
                 BlockRenderDispatcher blockrenderdispatcher = Minecraft.getInstance().getBlockRenderer();
-                for (net.minecraft.client.renderer.RenderType type : net.minecraft.client.renderer.RenderType.chunkBufferLayers()) {
-                    if (ItemBlockRenderTypes.canRenderInLayer(blockstate, type)) {
-                        net.minecraftforge.client.ForgeHooksClient.setRenderType(type);
-                        blockrenderdispatcher
-                            .getModelRenderer()
-                            .tesselateBlock(level, blockrenderdispatcher.getBlockModel(blockstate), blockstate, blockpos, pMatrixStack, pBuffer.getBuffer(type),
-                                false, RandomSource.create(), blockstate.getSeed(pEntity.getStartPos()), OverlayTexture.NO_OVERLAY);
-                    }
+                BakedModel model = blockrenderdispatcher.getBlockModel(blockstate);
+
+                for (RenderType type : model.getRenderTypes(blockstate, RandomSource.create(blockstate.getSeed(pEntity.blockPosition())), ModelData.EMPTY)) {
+                    blockrenderdispatcher
+                        .getModelRenderer()
+                        .tesselateBlock(level, blockrenderdispatcher.getBlockModel(blockstate), blockstate, blockpos, pMatrixStack, pBuffer.getBuffer(type),
+                            false, RandomSource.create(), blockstate.getSeed(pEntity.getStartPos()), OverlayTexture.NO_OVERLAY, ModelData.EMPTY, type);
                 }
-                net.minecraftforge.client.ForgeHooksClient.setRenderType(null);
                 pMatrixStack.popPose();
+
                 //Super.super.render
-                net.minecraftforge.client.event.RenderNameplateEvent renderNameplateEvent = new net.minecraftforge.client.event.RenderNameplateEvent(pEntity,
+                net.minecraftforge.client.event.RenderNameTagEvent renderNameplateEvent = new net.minecraftforge.client.event.RenderNameTagEvent(pEntity,
                     pEntity.getDisplayName(), this, pMatrixStack, pBuffer, pPackedLight, pPartialTicks);
                 net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(renderNameplateEvent);
                 if (renderNameplateEvent.getResult() != net.minecraftforge.eventbus.api.Event.Result.DENY && (
