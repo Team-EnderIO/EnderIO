@@ -2,22 +2,21 @@ package com.enderio.decoration.client.model.painted;
 
 import com.enderio.core.client.RenderUtil;
 import com.enderio.core.data.model.EIOModel;
+import com.enderio.decoration.common.blockentity.IPaintableBlockEntity;
 import com.enderio.decoration.common.blockentity.SinglePaintedBlockEntity;
 import com.enderio.decoration.common.util.PaintUtils;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.VertexBuffer;
-import com.mojang.blaze3d.vertex.VertexFormatElement;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -26,6 +25,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraftforge.client.ChunkRenderTypeSet;
 import net.minecraftforge.client.model.IDynamicBakedModel;
 import net.minecraftforge.client.model.IQuadTransformer;
 import net.minecraftforge.client.model.data.ModelData;
@@ -36,7 +36,7 @@ import java.util.*;
 
 public abstract class PaintedModel implements IDynamicBakedModel {
 
-    private static final Map<ItemStack, List<Pair<BakedModel, RenderType>>> itemRenderCache = new HashMap<>();
+    private final Map<Block, List<BakedModel>> itemRenderCache = new HashMap<>();
 
     private final ItemTransforms transforms;
 
@@ -116,9 +116,7 @@ public abstract class PaintedModel implements IDynamicBakedModel {
      * @return Returns TextureData from baked model information. Is slower than the primary method, so this is just a fallback.
      */
     protected Pair<TextureAtlasSprite, Boolean> getSpriteFromModel(BakedQuad shape, BakedModel model, Block paint, Direction rotation) {
-//        float[] normalData = new float[4];
         BlockState state = paintWithRotation(paint, rotation);
-//        LightUtil.unpack(shape.getVertices(), normalData, DefaultVertexFormat.BLOCK, 0, 4);
         float[] normalData = RenderUtil.unpackVertices(shape.getVertices(), 0, IQuadTransformer.NORMAL, 4);
         Direction normal = Direction.getNearest(normalData[0], normalData[1], normalData[2]);
         List<BakedQuad> quads = model.getQuads(state, normal, RandomSource.create());
@@ -165,13 +163,10 @@ public abstract class PaintedModel implements IDynamicBakedModel {
         BakedQuad copied = new BakedQuad(Arrays.copyOf(toCopy.getVertices(), 32), shouldTint ? 1 : -1, toCopy.getDirection(), sprite, toCopy.isShade());
 
         for (int i = 0; i < 4; i++) {
-            float[] textureData = new float[2]; // uv data pair
-            LightUtil.unpack(copied.getVertices(), textureData, DefaultVertexFormat.BLOCK, i, 2);
-            textureData[0] = (textureData[0] - toCopy.getSprite().getU0()) * sprite.getWidth() / toCopy.getSprite().getWidth() + sprite.getU0();
-            textureData[1] = (textureData[1] - toCopy.getSprite().getV0()) * sprite.getHeight() / toCopy.getSprite().getHeight() + sprite.getV0();
-            int[] packedTextureData = new int[8];
-            LightUtil.pack(textureData, packedTextureData, DefaultVertexFormat.BLOCK, 0, 0);
-            //put uv data back
+            float[] uv0 = RenderUtil.unpackVertices(copied.getVertices(), i, IQuadTransformer.UV0,2);
+            uv0[0] = (uv0[0] - toCopy.getSprite().getU0()) * sprite.getWidth() / toCopy.getSprite().getWidth() + sprite.getU0();
+            uv0[1] = (uv0[1] - toCopy.getSprite().getV0()) * sprite.getHeight() / toCopy.getSprite().getHeight() + sprite.getV0();
+            int[] packedTextureData = RenderUtil.packUV(uv0[0], uv0[1]);
             copied.getVertices()[4 + i * 8] = packedTextureData[0];
             copied.getVertices()[5 + i * 8] = packedTextureData[1];
         }
@@ -222,31 +217,41 @@ public abstract class PaintedModel implements IDynamicBakedModel {
         return EIOModel.getMissingTexture();
     }
 
-    /**
-     * @param itemStack ItemStack of the Painted BlockItem
-     * @param fabulous  is graphics setting fabulous?
-     * @return single Item Layer for ItemStack using the default shape and the correct ItemTransforms and cache Item with NBT Data, so u don't need to bake the model again
-     */
     @Override
-    public List<Pair<BakedModel, RenderType>> getLayerModels(ItemStack itemStack, boolean fabulous) {
-        return itemRenderCache.computeIfAbsent(itemStack, itemStack1 -> createLayerModels(itemStack, fabulous));
+    public ChunkRenderTypeSet getRenderTypes(BlockState paintedBlockState, RandomSource rand, ModelData data) {
+        ChunkRenderTypeSet chunkRenderTypeSet = ChunkRenderTypeSet.union(
+            IPaintableBlockEntity.PAINT_DATA_PROPERTIES.stream()
+                    .map(data::get)
+                    //remove all unset paints
+                    .filter(Objects::nonNull)
+                    .map(Block::defaultBlockState)
+                    //do original ChunkRenderType lookup
+                    .map(state -> ItemBlockRenderTypes.getRenderLayers(state))
+                    .toList());
+
+        if (chunkRenderTypeSet.isEmpty()) {
+            return ChunkRenderTypeSet.of(RenderType.solid());
+        }
+        return chunkRenderTypeSet;
     }
 
-    /**
-     * @param itemStack itemStack of the painted model
-     * @param fabulous  is graphics setting fabulous?
-     * @return a sigle ItemLayer for the block with the applied paint
-     */
-    private List<Pair<BakedModel, RenderType>> createLayerModels(ItemStack itemStack, boolean fabulous) {
-        CompoundTag tag = itemStack.getTag();
-        if (tag != null && tag.contains("BlockEntityTag")) {
-            CompoundTag blockEntityTag = tag.getCompound("BlockEntityTag");
-            if (blockEntityTag.contains("paint")) {
-                Block paint = PaintUtils.getBlockFromRL(blockEntityTag.getString("paint"));
-                return List.of(Pair.of(new ItemPaintedModel(paint, copyModelFromBlock()), ItemBlockRenderTypes.getRenderType(itemStack, fabulous)));
-            }
+    @Override
+    public List<RenderType> getRenderTypes(ItemStack itemStack, boolean fabulous) {
+        @Nullable
+        Block paint = PaintUtils.getPaint(itemStack);
+        if (paint != null) {
+            return List.of(ItemBlockRenderTypes.getRenderType(paint.defaultBlockState(), fabulous));
         }
-        return List.of(Pair.of(this, ItemBlockRenderTypes.getRenderType(itemStack, fabulous)));
+        return List.of(fabulous ? Sheets.translucentCullBlockSheet() : Sheets.translucentItemSheet());
+    }
+
+    @Override
+    public List<BakedModel> getRenderPasses(ItemStack itemStack, boolean fabulous) {
+        Block paint = PaintUtils.getPaint(itemStack);
+        if (paint != null) {
+            return itemRenderCache.computeIfAbsent(paint, paintKey -> List.of(new ItemPaintedModel(paintKey, copyModelFromBlock())));
+        }
+        return List.of(this);
     }
 
     @Override

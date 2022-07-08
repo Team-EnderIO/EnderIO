@@ -25,7 +25,7 @@ public class SinglePaintedBlockEntity extends BlockEntity implements IPaintableB
         return paint;
     }
 
-    public static final ModelProperty<Block> PAINT = new ModelProperty<>();
+    public static final ModelProperty<Block> PAINT = IPaintableBlockEntity.createAndRegisterModelProperty();
 
     public SinglePaintedBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);

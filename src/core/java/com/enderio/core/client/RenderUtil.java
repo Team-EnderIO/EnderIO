@@ -8,6 +8,9 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraftforge.client.model.IQuadTransformer;
 
+import static net.minecraftforge.client.model.IQuadTransformer.STRIDE;
+import static net.minecraftforge.client.model.IQuadTransformer.UV0;
+
 public class RenderUtil {
     /**
      * Render a face with its texture with local face coordinates.
@@ -46,5 +49,16 @@ public class RenderUtil {
         }
 
         return floats;
+    }
+
+    /**
+     * {@see net.minecraftforge.client.model.pipeline.QuadBakingVertexConsumer}
+     * @return packedUV Data
+     */
+    public static int[] packUV(float u, float v) {
+        int[] quadData = new int[2];
+        quadData[0] = Float.floatToRawIntBits(u);
+        quadData[1] = Float.floatToRawIntBits(v);
+        return quadData;
     }
 }
