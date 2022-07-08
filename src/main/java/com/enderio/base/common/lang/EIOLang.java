@@ -163,6 +163,13 @@ public class EIOLang {
     public static final MutableComponent SHOW_DETAIL_TOOLTIP = REGISTRATE.addLang("tooltip", EnderIO.loc("gui.show_advanced_tooltip"), "<Hold Shift>");
 
     // endregion
+    
+    // region Guidebook
+    
+    public static final Component GUIDEBOOK_TITLE = REGISTRATE.addLang("guidebook", EnderIO.loc("book_title"), "Book Title");
+    public static final Component GUIDEBOOK_LANDING_TEXT = REGISTRATE.addLang("guidebook", EnderIO.loc("landing_text"), "Landing Text");
+
+    //endregion
 
     public static void register() {}
 }
