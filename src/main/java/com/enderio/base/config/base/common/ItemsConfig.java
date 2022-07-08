@@ -1,8 +1,10 @@
 package com.enderio.base.config.base.common;
 
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ItemsConfig {
@@ -17,7 +19,7 @@ public class ItemsConfig {
     public final ForgeConfigSpec.ConfigValue<Integer> LEVITATION_STAFF_ENERGY_USE;
     public final ForgeConfigSpec.ConfigValue<Integer> LEVITATION_STAFF_MAX_ENERGY;
 
-    public final ForgeConfigSpec.ConfigValue<List<String>> SOUL_VIAL_BLACKLIST;
+    public final ForgeConfigSpec.ConfigValue<List<? extends String>> SOUL_VIAL_BLACKLIST;
 
     public ItemsConfig(ForgeConfigSpec.Builder builder) {
         builder.push("items");
@@ -40,7 +42,10 @@ public class ItemsConfig {
         builder.pop();
 
         builder.push("soulvial");
-        SOUL_VIAL_BLACKLIST = builder.comment("A list of entities that cannot be captured in the soul vial.").define("blacklist", new ArrayList<>());
+        SOUL_VIAL_BLACKLIST = builder.comment("A list of entities that cannot be captured in the soul vial.")
+            .defineList("denylist",
+                List.of(ForgeRegistries.ENTITIES.getKey(EntityType.WITHER).toString(),ForgeRegistries.ENTITIES.getKey(EntityType.ELDER_GUARDIAN).toString()),
+                value -> value instanceof String string && ResourceLocation.isValidResourceLocation(string));
         builder.pop();
 
         builder.pop();

@@ -90,7 +90,6 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
 
     // region Interactions
 
-    // Capture logic
     @Override
     public InteractionResult interactLivingEntity(ItemStack pStack, Player pPlayer, LivingEntity pInteractionTarget, InteractionHand pUsedHand) {
         if (pPlayer.level.isClientSide) {
@@ -112,7 +111,6 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
         );
     }
 
-    // Release logic
     @Override
     public InteractionResult useOn(UseOnContext pContext) {
         if (pContext.getLevel().isClientSide) {
@@ -133,41 +131,34 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
     private static InteractionResult catchEntity(ItemStack soulVial, LivingEntity entity, Consumer<ItemStack> filledVialInsertion, Consumer<Component> displayCallback) {
         return soulVial.getCapability(EIOCapabilities.ENTITY_STORAGE).map(entityStorage -> {
             if (!entityStorage.hasStoredEntity()) {
-                // Don't allow bottled player.
+
                 if (entity instanceof Player) {
                     displayCallback.accept(EIOLang.SOUL_VIAL_ERROR_PLAYER);
                     return InteractionResult.FAIL;
                 }
-                // Get the entity type and verify it isn't blacklisted
-                switch (EntityCaptureUtils.getCapturableStatus(entity)) {
-                    case BOSS -> {
-                        displayCallback.accept(EIOLang.SOUL_VIAL_ERROR_PLAYER);
-                        return InteractionResult.FAIL;
-                    }
-                    case BLACKLISTED -> {
-                        displayCallback.accept(EIOLang.SOUL_VIAL_ERROR_BLACKLISTED);
-                        return InteractionResult.FAIL;
-                    }
-                    case INCOMPATIBLE -> {
-                        displayCallback.accept(EIOLang.SOUL_VIAL_ERROR_FAILED);
-                        return InteractionResult.FAIL;
-                    }
+
+                // Get the entity type and verify it is allowed to be captured
+                EntityCaptureUtils.CapturableStatus status = EntityCaptureUtils.getCapturableStatus(entity.getType(),entity);
+                if (status != EntityCaptureUtils.CapturableStatus.CAPTURABLE) {
+                    displayCallback.accept(status.errorMessage());
+                    return InteractionResult.FAIL;
                 }
 
-                // No dead mobs.
                 if (!entity.isAlive()) {
                     displayCallback.accept(EIOLang.SOUL_VIAL_ERROR_DEAD);
                     return InteractionResult.FAIL;
                 }
-                // Consume a soul vial
+
                 soulVial.shrink(1);
+
                 // Create a filled vial and put the entity's NBT inside.
-                ItemStack filledVial = EIOItems.FILLED_SOUL_VIAL.get().getDefaultInstance();
                 if (entity instanceof Mob mob && mob.getLeashHolder() != null) {
                     mob.dropLeash(true, true);
                 }
+                ItemStack filledVial = EIOItems.FILLED_SOUL_VIAL.get().getDefaultInstance();
                 setEntityData(filledVial, entity);
-                // Give the player the filled vial
+
+                // give back the filled vial
                 filledVialInsertion.accept(filledVial);
 
                 // Remove the captured mob.

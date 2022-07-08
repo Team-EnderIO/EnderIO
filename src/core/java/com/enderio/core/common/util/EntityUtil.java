@@ -11,6 +11,7 @@ import java.util.Optional;
  * Helper utilities for dealing with entities.
  */
 public class EntityUtil {
+
     /**
      * Get the description ID from an entity type in the registry.
      *
@@ -25,8 +26,6 @@ public class EntityUtil {
     }
 
     /**
-     * Determine whether the entity is a boss.
-     *
      * @param entity The entity being checked.
      * @return Whether the entity is a boss.
      */
@@ -42,10 +41,7 @@ public class EntityUtil {
      * @param entity The entity to lookup.
      * @return The resource location of the entity type.
      */
-    public static Optional<ResourceLocation> getEntityType(Entity entity) {
-        ResourceLocation id = ForgeRegistries.ENTITIES.getKey(entity.getType());
-        if (id != null)
-            return Optional.of(id);
-        return Optional.empty();
+    public static Optional<ResourceLocation> getEntityTypeRL(Entity entity) {
+        return Optional.ofNullable(ForgeRegistries.ENTITIES.getKey(entity.getType()));
     }
 }
