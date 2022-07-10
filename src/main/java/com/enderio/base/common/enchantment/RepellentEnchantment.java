@@ -10,9 +10,7 @@ import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 public class RepellentEnchantment extends EIOBaseEnchantment {
     public RepellentEnchantment() {
-        // TODO: 1.19: config before load
-        super(/*BaseConfig.COMMON.ENCHANTMENTS.REPELLENT_RARITY.get()*/ Rarity.VERY_RARE, EnchantmentCategory.ARMOR,
-            new EquipmentSlot[] { EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET }, () -> true);
+        super(Rarity.VERY_RARE, EnchantmentCategory.ARMOR, new EquipmentSlot[] { EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET }, () -> true);
     }
 
     @Override

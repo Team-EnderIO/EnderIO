@@ -7,8 +7,7 @@ import net.minecraft.world.item.enchantment.EnchantmentCategory;
 public class ShimmerEnchantment extends EIOBaseEnchantment {
 
     public ShimmerEnchantment() {
-        // TODO: 1.19: config before load
-        super(/*BaseConfig.COMMON.ENCHANTMENTS.SHIMMER_RARITY.get()*/ Rarity.VERY_RARE, EnchantmentCategory.VANISHABLE, EquipmentSlot.values(), () -> true);
+        super(Rarity.VERY_RARE, EnchantmentCategory.VANISHABLE, EquipmentSlot.values(), () -> true);
     }
 
     @Override
