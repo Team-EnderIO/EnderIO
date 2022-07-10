@@ -7,6 +7,7 @@ import com.enderio.decoration.common.blockentity.SinglePaintedBlockEntity;
 import com.enderio.decoration.common.util.PaintUtils;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.datafixers.util.Pair;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.ItemModelShaper;
@@ -30,9 +31,9 @@ import net.minecraftforge.client.ChunkRenderTypeSet;
 import net.minecraftforge.client.model.IDynamicBakedModel;
 import net.minecraftforge.client.model.IQuadTransformer;
 import net.minecraftforge.client.model.data.ModelData;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.*;
 
 public abstract class PaintedModel implements IDynamicBakedModel {
@@ -41,8 +42,12 @@ public abstract class PaintedModel implements IDynamicBakedModel {
 
     private final ItemTransforms transforms;
 
-    protected PaintedModel(ItemTransforms transforms) {
+    @Nullable
+    private final Direction rotateItemTo;
+
+    protected PaintedModel(ItemTransforms transforms, @Nullable Direction rotateItemTo) {
         this.transforms = transforms;
+        this.rotateItemTo = rotateItemTo;
     }
 
     protected abstract Block copyModelFromBlock();
@@ -118,9 +123,7 @@ public abstract class PaintedModel implements IDynamicBakedModel {
      */
     protected Pair<TextureAtlasSprite, Boolean> getSpriteFromModel(BakedQuad shape, BakedModel model, Block paint, Direction rotation) {
         BlockState state = paintWithRotation(paint, rotation);
-        float[] normalData = RenderUtil.unpackVertices(shape.getVertices(), 0, IQuadTransformer.NORMAL, 4);
-        Direction normal = Direction.getNearest(normalData[0], normalData[1], normalData[2]);
-        List<BakedQuad> quads = model.getQuads(state, normal, RandomSource.create());
+        List<BakedQuad> quads = model.getQuads(state, shape.getDirection(), RandomSource.create());
         return quads.isEmpty() ? Pair.of(EIOModel.getMissingTexture(), false) : Pair.of(quads.get(0).getSprite(), quads.get(0).isTinted());
     }
 
@@ -250,7 +253,9 @@ public abstract class PaintedModel implements IDynamicBakedModel {
     public List<BakedModel> getRenderPasses(ItemStack itemStack, boolean fabulous) {
         Block paint = PaintUtils.getPaint(itemStack);
         if (paint != null) {
-            return itemRenderCache.computeIfAbsent(paint, paintKey -> List.of(new ItemPaintedModel(paintKey, copyModelFromBlock())));
+            return itemRenderCache.computeIfAbsent(paint,
+                paintKey -> List.of(new ItemPaintedModel(paint, copyModelFromBlock(), rotateItemTo))
+            );
         }
         return List.of(this);
     }
@@ -265,20 +270,26 @@ public abstract class PaintedModel implements IDynamicBakedModel {
         private final Block paint;
         private final Block shapeFrom;
         private final Map<Direction, List<BakedQuad>> bakedQuads = new HashMap<>();
+        @Nullable
+        private final Direction rotateItemTo;
 
-        private ItemPaintedModel(Block paint, Block shapeFrom) {
+        private ItemPaintedModel(Block paint, Block shapeFrom, @Nullable Direction rotateItemTo) {
             this.paint = paint;
             this.shapeFrom = shapeFrom;
+            this.rotateItemTo = rotateItemTo;
         }
 
         @Nonnull
         @Override
         public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand, ModelData extraData, RenderType renderType) {
-            return bakedQuads.computeIfAbsent(side, side1 -> PaintedModel.this.getQuadsUsingShape(paint, Minecraft
-                .getInstance()
-                .getItemRenderer()
-                .getModel(shapeFrom.asItem().getDefaultInstance(), null, null, 0)
-                .getQuads(state, side, rand, ModelData.EMPTY, renderType), side, rand, null, renderType));
+            return bakedQuads.computeIfAbsent(side, side1 -> PaintedModel.this.getQuadsUsingShape(
+                paint,
+                Minecraft
+                    .getInstance()
+                    .getItemRenderer()
+                    .getModel(shapeFrom.asItem().getDefaultInstance(), null, null, 0)
+                    .getQuads(state, side, rand, ModelData.EMPTY, renderType),
+                side, rand, rotateItemTo, renderType));
         }
 
         @Override

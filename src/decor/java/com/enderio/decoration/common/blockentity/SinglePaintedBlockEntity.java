@@ -6,6 +6,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -19,7 +20,7 @@ import java.util.Objects;
 
 public class SinglePaintedBlockEntity extends BlockEntity implements IPaintableBlockEntity {
 
-    private Block paint;
+    private Block paint = Blocks.AIR;//ForgeRegistries.BLOCKS.getValues().stream().skip(new Random().nextInt(ForgeRegistries.BLOCKS.getValues().size())).findFirst().get();
 
     public Block getPaint() {
         return paint;
@@ -47,6 +48,8 @@ public class SinglePaintedBlockEntity extends BlockEntity implements IPaintableB
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         Block oldPaint = paint;
         CompoundTag tag = pkt.getTag();
+        if (tag == null)
+            return;
         handleUpdateTag(tag);
         if (oldPaint != paint) {
             requestModelDataUpdate();
@@ -57,12 +60,11 @@ public class SinglePaintedBlockEntity extends BlockEntity implements IPaintableB
     }
 
     @Override
-    public void load(@Nonnull CompoundTag tag) {
+    public void load(CompoundTag tag) {
         super.load(tag);
         readPaint(tag);
     }
 
-    @Nonnull
     @Override
     public CompoundTag getUpdateTag() {
         CompoundTag nbt = super.getUpdateTag();

@@ -3,20 +3,30 @@ package com.enderio.decoration.datagen.model.block;
 import com.enderio.EnderIO;
 import com.google.gson.JsonObject;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.*;
 import net.minecraftforge.client.model.generators.BlockModelBuilder;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.Nullable;
 
 public class PaintedModelBuilder extends BlockModelBuilder {
 
     private final Block reference;
 
+    @Nullable
+    Direction itemTextureRotation;
+
     public PaintedModelBuilder(ResourceLocation outputLocation, ExistingFileHelper existingFileHelper, Block reference) {
+        this(outputLocation, existingFileHelper, reference, null);
+    }
+
+    public PaintedModelBuilder(ResourceLocation outputLocation, ExistingFileHelper existingFileHelper, Block reference, Direction itemTextureRotation) {
         super(outputLocation, existingFileHelper);
         this.reference = reference;
         transform();
+        this.itemTextureRotation = itemTextureRotation;
     }
 
     @Override
@@ -25,6 +35,9 @@ public class PaintedModelBuilder extends BlockModelBuilder {
         JsonObject root = new JsonObject();
         root.addProperty("loader", reference instanceof SlabBlock ? EnderIO.MODID + ":painted_slab" : EnderIO.MODID + ":painted_model");
         root.addProperty("reference", ForgeRegistries.BLOCKS.getKey(reference).toString());
+        if (itemTextureRotation != null && itemTextureRotation != Direction.NORTH) {
+            root.addProperty("item_texture_rotation", itemTextureRotation.toString());
+        }
         if (json.has("display")) {
             root.add("display", json.get("display"));
         }

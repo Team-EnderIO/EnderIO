@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class PaintedTrapDoorBlock extends TrapDoorBlock implements EntityBlock {
+public class PaintedTrapDoorBlock extends TrapDoorBlock implements EntityBlock, IPaintedBlock {
 
     public PaintedTrapDoorBlock(Properties properties) {
         super(properties);

@@ -12,8 +12,6 @@ import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransform;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -21,6 +19,7 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.*;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -36,10 +35,10 @@ import net.minecraftforge.client.model.geometry.IGeometryLoader;
 import net.minecraftforge.client.model.geometry.IUnbakedGeometry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
@@ -61,21 +60,14 @@ public class ClientSetup {
         // TODO: Move into registrate.
         PaintedBlockColor color = new PaintedBlockColor();
         event.register(color, DecorBlocks.getPainted().toArray(new Block[0]));
-        event.register(color, DecorBlocks.getPainted().toArray(new Block[0]));
-        event.register(color, DecorBlocks.PAINTED_SLAB.get());
         event.register(color, DecorBlocks.PAINTED_SLAB.get());
     }
-
     @SubscribeEvent
-    public static void init(FMLClientSetupEvent e) {
-        e.enqueueWork(() -> {
-            // TODO: 1.19: Fix this deprecation.
-            for (Block paintedBlock : DecorBlocks.getPainted()) {
-                ItemBlockRenderTypes.setRenderLayer(paintedBlock, RenderType.translucent());
-            }
-            ItemBlockRenderTypes.setRenderLayer(DecorBlocks.PAINTED_SLAB.get(), RenderType.translucent());
-
-        });
+    public static void colorItemInit(RegisterColorHandlersEvent.Block event) {
+        // TODO: Move into registrate.
+        PaintedBlockColor color = new PaintedBlockColor();
+        event.register(color, DecorBlocks.getPainted().toArray(new Block[0]));
+        event.register(color, DecorBlocks.PAINTED_SLAB.get());
     }
 
     private static class PaintedBlockColor implements BlockColor, ItemColor {
@@ -128,7 +120,7 @@ public class ClientSetup {
         @Override
         public Geometry read(JsonObject modelContents, JsonDeserializationContext deserializationContext) {
             return new Geometry(PaintUtils.getBlockFromRL(modelContents.get("reference").getAsString()),
-                getItemTransforms(deserializationContext, modelContents), isDouble);
+                getItemTransforms(deserializationContext, modelContents), isDouble, getItemTextureRotation(modelContents));
         }
 
         private static ItemTransforms getItemTransforms(JsonDeserializationContext deserializationContext, JsonObject modelContents) {
@@ -136,24 +128,38 @@ public class ClientSetup {
                 return new DefaultItemTransforms(INSTANCE.deserialize(modelContents.get("display"), null, deserializationContext));
             return new DefaultItemTransforms();
         }
+
+        @Nullable
+        private static Direction getItemTextureRotation(JsonObject modelContents) {
+            if (modelContents.has("item_texture_rotation")) {
+                return Arrays.stream(Direction.values())
+                    .filter(dir -> dir.getName().equals(modelContents.get("item_texture_rotation").getAsString()))
+                    .findFirst()
+                    .orElse(null);
+            }
+            return null;
+        }
     }
 
     private static class Geometry implements IUnbakedGeometry<Geometry> {
 
-        final Block shape;
-        ItemTransforms transforms;
-        final boolean isDouble;
+        private final Block shape;
+        private final ItemTransforms transforms;
+        private final boolean isDouble;
+        @Nullable
+        private final Direction itemTextureRotation;
 
-        private Geometry(Block shape, ItemTransforms itemTransforms, boolean isDouble) {
+        private Geometry(Block shape, ItemTransforms itemTransforms, boolean isDouble, @Nullable Direction itemTextureRotation) {
             this.shape = shape;
             this.transforms = itemTransforms;
             this.isDouble = isDouble;
+            this.itemTextureRotation = itemTextureRotation;
         }
 
         @Override
         public BakedModel bake(IGeometryBakingContext context, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform,
             ItemOverrides overrides, ResourceLocation modelLocation) {
-            return isDouble ? new PaintedSlabModel(shape, transforms) : new PaintedSimpleModel(shape, transforms);
+            return isDouble ? new PaintedSlabModel(shape, transforms, itemTextureRotation) : new PaintedSimpleModel(shape, transforms, itemTextureRotation);
         }
 
         @Override

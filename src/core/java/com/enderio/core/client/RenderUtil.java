@@ -3,6 +3,7 @@ package com.enderio.core.client;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
@@ -40,15 +41,22 @@ public class RenderUtil {
         consumer.vertex(pose, x0, y1, z3).color(color).uv(texture.getU(minU), texture.getV(maxV)).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880).normal(normal, 0.0f, 0.0f, 0.0f).endVertex();
     }
 
-    public static float[] unpackVertices(int[] vertices, int startIndex, int position, int count) {
+    public static float[] unpackVertices(int[] vertices, int vertexIndex, int position, int count) {
         float[] floats = new float[count];
-
-        for (int i = startIndex; i < startIndex + count; i++) {
-            int offset = i * IQuadTransformer.STRIDE + position;
-            floats[i - startIndex] = Float.intBitsToFloat(vertices[offset]);
+        int startIndex = vertexIndex * IQuadTransformer.STRIDE + position;
+        for (int i = 0; i < count; i++) {
+            floats[i] = Float.intBitsToFloat(vertices[startIndex + i]);
         }
-
         return floats;
+    }
+
+    public static Vector3f getNormalData(int[] vertices, int vertexIndex) {
+        float x,y,z;
+        int vertexData = vertices[vertexIndex * STRIDE + IQuadTransformer.NORMAL];
+        x = (vertexData & 0x000000FF) / 127f;
+        y = ((vertexData & 0x0000FF00) >> 8) / 127f;
+        z = ((vertexData & 0x00FF0000) >> 16) / 127f;
+        return new Vector3f(x,y,z);
     }
 
     /**

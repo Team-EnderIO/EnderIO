@@ -20,8 +20,8 @@ public class PaintedSimpleModel extends PaintedModel implements IDynamicBakedMod
 
     private final Block referenceModel;
 
-    public PaintedSimpleModel(Block referenceModel, ItemTransforms transforms) {
-        super(transforms);
+    public PaintedSimpleModel(Block referenceModel, ItemTransforms transforms, @Nullable Direction itemTextureRotation) {
+        super(transforms, itemTextureRotation);
         this.referenceModel = referenceModel;
     }
 

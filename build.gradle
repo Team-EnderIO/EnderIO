@@ -34,7 +34,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 def subsets = [
         'conduits',
         'machines',
-//        'decor'
+        'decor'
 ]
 
 sourceSets {

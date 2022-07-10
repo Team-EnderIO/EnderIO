@@ -17,6 +17,8 @@ public interface IPaintableBlockEntity {
     }
 
     static ModelProperty<Block> createAndRegisterModelProperty() {
-        return new ModelProperty<>();
+        ModelProperty<Block> property = new ModelProperty<>();
+        PAINT_DATA_PROPERTIES.add(property);
+        return property;
     }
 }

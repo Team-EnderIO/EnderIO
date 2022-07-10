@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class PaintedFenceGateBlock extends FenceGateBlock implements EntityBlock {
+public class PaintedFenceGateBlock extends FenceGateBlock implements EntityBlock, IPaintedBlock {
 
     public PaintedFenceGateBlock(Properties properties) {
         super(properties);

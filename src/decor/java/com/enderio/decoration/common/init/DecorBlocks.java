@@ -18,6 +18,7 @@ import com.enderio.decoration.common.block.painted.PaintedStairBlock;
 import com.enderio.decoration.common.block.painted.PaintedTrapDoorBlock;
 import com.enderio.decoration.common.block.painted.PaintedWoodenPressurePlateBlock;
 import com.enderio.decoration.common.block.painted.SinglePaintedBlock;
+import com.enderio.decoration.common.item.PaintedBlockItem;
 import com.enderio.decoration.common.item.PaintedSlabBlockItem;
 import com.enderio.decoration.datagen.loot.DecorLootTable;
 import com.enderio.decoration.datagen.model.block.DecorBlockState;
@@ -27,6 +28,7 @@ import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Items;
@@ -34,6 +36,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
+import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("unused")
 public class DecorBlocks {
@@ -57,7 +60,7 @@ public class DecorBlocks {
         BlockTags.MINEABLE_WITH_SHOVEL);
 
     public static final BlockEntry<PaintedStairBlock> PAINTED_STAIRS = paintedBlock("painted_stairs", PaintedStairBlock::new, Blocks.OAK_STAIRS,
-        BlockTags.WOODEN_STAIRS, BlockTags.MINEABLE_WITH_AXE);
+        Direction.WEST,BlockTags.WOODEN_STAIRS, BlockTags.MINEABLE_WITH_AXE);
 
     public static final BlockEntry<PaintedCraftingTableBlock> PAINTED_CRAFTING_TABLE = paintedBlock("painted_crafting_table", PaintedCraftingTableBlock::new,
         Blocks.CRAFTING_TABLE, BlockTags.MINEABLE_WITH_AXE);
@@ -115,14 +118,22 @@ public class DecorBlocks {
     @SafeVarargs
     private static <T extends Block> BlockEntry<T> paintedBlock(String name, NonNullFunction<BlockBehaviour.Properties, T> blockFactory, Block copyFrom,
         TagKey<Block>... tags) {
+
+        return paintedBlock(name, blockFactory, copyFrom, null, tags);
+    }
+
+    @SafeVarargs
+    private static <T extends Block> BlockEntry<T> paintedBlock(String name, NonNullFunction<BlockBehaviour.Properties, T> blockFactory, Block copyFrom,
+        @Nullable Direction itemTextureRotation, TagKey<Block>... tags) {
+
         BlockEntry<T> paintedBlockEntry = REGISTRATE
             .block(name, blockFactory)
-            .blockstate((ctx, cons) -> DecorBlockState.paintedBlock(ctx, cons, copyFrom))
-            .addLayer(() -> RenderType::translucent)
+            .blockstate((ctx, cons) -> DecorBlockState.paintedBlock(ctx, cons, copyFrom, itemTextureRotation))
             .loot(DecorLootTable::withPaint)
             .initialProperties(() -> copyFrom)
             .properties(BlockBehaviour.Properties::noOcclusion)
-            .simpleItem()
+            .item(PaintedBlockItem::new)
+            .build()
             .tag(tags)
             .register();
         painted.add(paintedBlockEntry);
@@ -130,7 +141,7 @@ public class DecorBlocks {
     }
 
     public static <T extends Block> BlockEntry<T> lightBlock(String name, NonNullFunction<BlockBehaviour.Properties, T> blockFactory) {
-    	BlockEntry<T> lightBlockEntry = REGISTRATE
+    	return REGISTRATE
     		.block(name, blockFactory)
     		.blockstate((ctx, prov) -> DecorBlockState.lightBlock(ctx, prov))
     		.initialProperties(Material.METAL)
@@ -145,7 +156,6 @@ public class DecorBlocks {
     		.tab(() -> DECOR)
     		.build()
     		.register();
-    	return lightBlockEntry;
     }
 
     public static void classload() {}
