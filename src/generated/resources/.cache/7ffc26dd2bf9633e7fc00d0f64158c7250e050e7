@@ -1,4 +1,4 @@
-// 1.19	2022-07-10T17:26:29.769661	Registrate Provider for enderio [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
+// 1.19	2022-07-10T17:39:03.601982	Registrate Provider for enderio [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
 73adb56f72a5805aa07ee54397acb790c30cccb5 assets/enderio/blockstates/alloy_smelter.json
 38456017a1ded6fddac24d85def47523e9ee034c assets/enderio/blockstates/clear_glass.json
 38456017a1ded6fddac24d85def47523e9ee034c assets/enderio/blockstates/clear_glass_a.json
@@ -836,6 +836,16 @@ bfd7c22aaf20ad0a4219c2752c0e506a6c47fa36 assets/enderio/models/block/enhanced_sa
 8ad3d7f0a29657f49e2ec1eac1bca6492d6101a8 assets/enderio/models/block/enhanced_sag_mill_front_on.json
 5d08a8234c0b8438c459a8877c6f7de827ddcbcd assets/enderio/models/block/enhanced_sag_mill_on.json
 b74725aabaa1fe269751b9c30f644fec6e0d07f6 assets/enderio/models/block/enhanced_sag_mill_top_on.json
+b4ee0d4c70b453ec76e8e104b98c7259090d01da assets/enderio/models/block/fire_floor0.json
+941c6f977a205f06c7a5028daca780b36cc14515 assets/enderio/models/block/fire_floor1.json
+9a2261572431a84e5d71812319e95c8337368cd9 assets/enderio/models/block/fire_side0.json
+9c2aa1be899fdb8d298a8e62ab666f3d2bf6eb8c assets/enderio/models/block/fire_side1.json
+d3a9cd35d57940f75d75d834e413c9deb98c048d assets/enderio/models/block/fire_side_alt0.json
+71a6a773ef887026479e0c58d720873987857cf3 assets/enderio/models/block/fire_side_alt1.json
+0d82229ac2985ba7a231666500949c351ca98a06 assets/enderio/models/block/fire_up0.json
+4cb84fa74a280a82ee6c542713256febb398b05d assets/enderio/models/block/fire_up1.json
+2b33c69a995bdf31afabe7462edb66e6475ee0e9 assets/enderio/models/block/fire_up_alt0.json
+16f2cf3d11f8edeb7fdf0f3662175d8b84a92df8 assets/enderio/models/block/fire_up_alt1.json
 0aaf03660f794c57e1d98c58abd2fc093021bdb9 assets/enderio/models/block/fire_water.json
 4124ea8e83be89af8574583b1b2033202ab192f7 assets/enderio/models/block/fluid_tank.json
 01f400cf1c822061351abe8cb78b143f93f70a3c assets/enderio/models/block/hootch.json

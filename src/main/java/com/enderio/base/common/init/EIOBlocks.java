@@ -271,8 +271,19 @@ public class EIOBlocks {
     public static final BlockEntry<ColdFireBlock> COLD_FIRE = REGISTRATE
         .block("cold_fire", ColdFireBlock::new)
         .properties(props -> BlockBehaviour.Properties.copy(Blocks.FIRE).noLootTable())
-        .blockstate((ctx, prov) -> {})
-        .addLayer(() -> RenderType::cutout) // TODO: Need to create new fire models and populate with cutout.
+        .blockstate((ctx, prov) -> {
+            // This generates the models used for the blockstate in our resources.
+            // One day we may bother to datagen that file.
+            String[] toCopy = {
+                "fire_floor0", "fire_floor1",
+                "fire_side0", "fire_side1", "fire_side_alt0", "fire_side_alt1",
+                "fire_up0", "fire_up1", "fire_up_alt0", "fire_up_alt1"
+            };
+
+            for (String name : toCopy) {
+                prov.models().withExistingParent(name, prov.mcLoc(name)).renderType("cutout");
+            }
+        })
         .register();
 
     public static <T extends Block> BlockBuilder<T, Registrate> simpleBlockBuilder(String name, T block) {
