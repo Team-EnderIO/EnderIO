@@ -73,9 +73,9 @@ public class EIOBlocks {
         .blockstate((ctx, prov) -> prov.horizontalBlock(ctx.get(), prov
             .models()
             .withExistingParent(ctx.getName(), prov.mcLoc("block/ladder"))
+            .renderType(prov.mcLoc("cutout_mipped"))
             .texture("particle", prov.blockTexture(ctx.get()))
             .texture("texture", prov.blockTexture(ctx.get()))))
-        .addLayer(() -> RenderType::cutoutMipped)
         .tag(BlockTags.CLIMBABLE, BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
         .item()
         .model((ctx, prov) -> prov.generated(ctx, prov.modLoc("block/dark_steel_ladder")))
@@ -87,7 +87,6 @@ public class EIOBlocks {
         .block("dark_steel_bars", IronBarsBlock::new)
         .properties(props -> props.strength(5.0f, 1000.0f).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion())
         .blockstate(EIOBlockState::paneBlock)
-        .addLayer(() -> RenderType::cutoutMipped)
         .tag(BlockTags.NEEDS_IRON_TOOL)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .item()
@@ -126,7 +125,6 @@ public class EIOBlocks {
         .block("end_steel_bars", IronBarsBlock::new)
         .blockstate(EIOBlockState::paneBlock)
         .properties(props -> props.strength(5.0f, 1000.0f).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion())
-        .addLayer(() -> RenderType::cutoutMipped)
         .tag(BlockTags.NEEDS_IRON_TOOL)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .item()
@@ -172,8 +170,7 @@ public class EIOBlocks {
     public static final BlockEntry<GraveBlock> GRAVE = REGISTRATE
         .block("grave", Material.STONE, GraveBlock::new)
         .properties(props -> props.strength(-1.0F, 3600000.0F).noLootTable().noOcclusion())
-        .blockstate((con, prov) -> prov.simpleBlock(con.get(), prov.models().getExistingFile(EnderIO.loc("block/grave"))))
-        .addLayer(() -> RenderType::cutout)
+        .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(ctx.getId())))
         .register();
 
     // endregion
@@ -254,15 +251,12 @@ public class EIOBlocks {
 
     // endregion
 
-
     public static final BlockEntry<ColdFireBlock> COLD_FIRE = REGISTRATE
         .block("cold_fire", ColdFireBlock::new)
         .properties(props -> BlockBehaviour.Properties.copy(Blocks.FIRE).noLootTable())
         .blockstate((ctx, prov) -> {})
-        .addLayer(() -> RenderType::cutout)
+        .addLayer(() -> RenderType::cutout) // TODO: How is this working...
         .register();
-
-
 
     public static <T extends Block> BlockBuilder<T, Registrate> simpleBlockBuilder(String name, T block) {
         return REGISTRATE.block(name, p -> block).item().tab(() -> EIOCreativeTabs.BLOCKS).build();
@@ -286,7 +280,10 @@ public class EIOBlocks {
     private static BlockBuilder<Block, Registrate> chassisBlock(String name) {
         return REGISTRATE
             .block(name, Material.METAL, Block::new)
-            .addLayer(() -> RenderType::cutout)
+            .blockstate((ctx, prov) ->
+                prov.simpleBlock(ctx.get(), prov.models()
+                    .cubeAll(ctx.getName(), prov.blockTexture(ctx.get()))
+                    .renderType(prov.mcLoc("translucent"))))
             .properties(props -> props
                 .noOcclusion()
                 .sound(SoundType.METAL)
