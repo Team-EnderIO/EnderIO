@@ -99,7 +99,6 @@ public class GlassBlocks {
             .tag(glassIdentifier.explosion_resistance() ? EIOTags.Blocks.FUSED_QUARTZ : EIOTags.Blocks.CLEAR_GLASS)
             .lang(english)
             .blockstate((con, prov) -> prov.simpleBlock(con.get(), prov.models().getExistingFile(getModelFile())))
-            .addLayer(() -> RenderType::cutout)
             .properties(props -> props
                 .noOcclusion()
                 .strength(0.3F)
@@ -125,7 +124,6 @@ public class GlassBlocks {
             .block(name, props -> new FusedQuartzBlock(props, glassIdentifier))
             .lang(english)
             .blockstate((con, prov) -> prov.simpleBlock(con.get(), prov.models().getExistingFile(getModelFile())))
-            .addLayer(() -> RenderType::cutout)
             .color(() -> () -> (p_92567_, p_92568_, p_92569_, p_92570_) -> color.getMaterialColor().col)
             .properties(props -> props
                 .noOcclusion()
