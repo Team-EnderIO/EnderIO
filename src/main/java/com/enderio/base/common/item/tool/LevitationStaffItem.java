@@ -24,7 +24,6 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.Nonnull;
 import java.util.Optional;
 
-// TODO: Fluid bar.
 public class LevitationStaffItem extends PoweredToggledItem implements IItemOverlayRender {
     public LevitationStaffItem(Properties pProperties) {
         super(pProperties);
@@ -84,6 +83,7 @@ public class LevitationStaffItem extends PoweredToggledItem implements IItemOver
 
     @Override
     public void renderOverlay(ItemStack pStack, int pXPosition, int pYPosition, PoseStack poseStack) {
-        ItemBarRenderer.renderFluidOverlay(pStack, 0, pXPosition, pYPosition);
+        // Render fluid bar above energy bar
+        ItemBarRenderer.renderFluidBar(pStack, 0, pXPosition, pYPosition);
     }
 }
