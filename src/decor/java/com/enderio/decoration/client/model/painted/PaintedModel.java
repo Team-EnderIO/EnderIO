@@ -9,6 +9,7 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.ItemModelShaper;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -226,7 +227,7 @@ public abstract class PaintedModel implements IDynamicBakedModel {
                     .filter(Objects::nonNull)
                     .map(Block::defaultBlockState)
                     //do original ChunkRenderType lookup
-                    .map(state -> ItemBlockRenderTypes.getRenderLayers(state))
+                    .map(state -> getModel(state).getRenderTypes(state, rand, ModelData.EMPTY))
                     .toList());
 
         if (chunkRenderTypeSet.isEmpty()) {
