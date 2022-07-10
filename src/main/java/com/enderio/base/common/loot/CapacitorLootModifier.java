@@ -4,18 +4,26 @@ import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.base.common.capacitor.LootCapacitorData;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOItems;
-import com.google.gson.JsonObject;
+import com.google.common.base.Suppliers;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
-import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
+import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.common.loot.LootModifier;
 
+import java.util.function.Supplier;
+
 public class CapacitorLootModifier extends LootModifier {
+    public static final Supplier<Codec<CapacitorLootModifier>> CODEC = Suppliers.memoize(() -> RecordCodecBuilder.create(inst -> codecStart(inst).and(
+        inst.group(
+            Codec.FLOAT.fieldOf("min").forGetter(m -> m.min),
+            Codec.FLOAT.fieldOf("max").forGetter(m -> m.max)
+        )).apply(inst, CapacitorLootModifier::new)));
+
     /**
      * The minimum base value
      */
@@ -52,23 +60,9 @@ public class CapacitorLootModifier extends LootModifier {
         return generatedLoot;
     }
 
-    public static class Serializer extends GlobalLootModifierSerializer<CapacitorLootModifier> {
-
-        @Override
-        public CapacitorLootModifier read(ResourceLocation location, JsonObject object, LootItemCondition[] ailootcondition) {
-            float min = GsonHelper.getAsFloat(object, "min");
-            float max = GsonHelper.getAsFloat(object, "max");
-            return new CapacitorLootModifier(ailootcondition, min, max);
-        }
-
-        @Override
-        public JsonObject write(CapacitorLootModifier instance) {
-            JsonObject obj = this.makeConditions(instance.conditions);
-            obj.addProperty("min", instance.min);
-            obj.addProperty("max", instance.max);
-            return obj;
-        }
-
+    @Override
+    public Codec<? extends IGlobalLootModifier> codec() {
+        return CODEC.get();
     }
 
 }

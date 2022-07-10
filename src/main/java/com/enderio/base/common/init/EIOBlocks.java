@@ -96,30 +96,47 @@ public class EIOBlocks {
         .register();
 
     // TODO: Door drops itself in creative????
-    // TODO: 1.19: Waiting on https://github.com/MinecraftForge/MinecraftForge/pull/8687
-//    public static final BlockEntry<DoorBlock> DARK_STEEL_DOOR = REGISTRATE
-//        .block("dark_steel_door", Material.METAL, DoorBlock::new)
-//        .properties(props -> props.strength(5.0f, 2000.0f).sound(SoundType.METAL).noOcclusion())
-//        .blockstate((ctx, prov) -> prov.doorBlock(ctx.get(), prov.modLoc("block/dark_steel_door_bottom"), prov.modLoc("block/dark_steel_door_top")))
-//        .addLayer(() -> RenderType::cutout)
-//        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL, BlockTags.DOORS)
-//        .item()
-//        .model((ctx, prov) -> prov.generated(ctx))
-//        .tab(() -> EIOCreativeTabs.BLOCKS)
-//        .build()
-//        .register();
-//
-//    public static final BlockEntry<TrapDoorBlock> DARK_STEEL_TRAPDOOR = REGISTRATE
-//        .block("dark_steel_trapdoor", Material.METAL, TrapDoorBlock::new)
-//        .properties(props -> props.strength(5.0f, 2000.0f).sound(SoundType.METAL).noOcclusion())
-//        .blockstate((ctx, prov) -> prov.trapdoorBlock(ctx.get(), prov.modLoc("block/dark_steel_trapdoor"), true))
-//        .addLayer(() -> RenderType::cutout)
-//        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL, BlockTags.TRAPDOORS)
-//        .item()
-//        .model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.modLoc("block/dark_steel_trapdoor_bottom")))
-//        .tab(() -> EIOCreativeTabs.BLOCKS)
-//        .build()
-//        .register();
+    public static final BlockEntry<DoorBlock> DARK_STEEL_DOOR = REGISTRATE
+        .block("dark_steel_door", Material.METAL, DoorBlock::new)
+        .properties(props -> props.strength(5.0f, 2000.0f).sound(SoundType.METAL).noOcclusion())
+        .blockstate((ctx, prov) -> {
+            ResourceLocation bottom = prov.modLoc("block/dark_steel_door_bottom");
+            ResourceLocation top = prov.modLoc("block/dark_steel_door_top");
+            prov.doorBlock(ctx.get(),
+                prov.models().doorBottomLeft(ctx.getName() + "_bottom_left", bottom, top).renderType(prov.mcLoc("cutout")),
+                prov.models().doorBottomLeftOpen(ctx.getName() + "_bottom_left_open", bottom, top).renderType(prov.mcLoc("cutout")),
+                prov.models().doorBottomRight(ctx.getName() + "_bottom_right", bottom, top).renderType(prov.mcLoc("cutout")),
+                prov.models().doorBottomRightOpen(ctx.getName() + "_bottom_right_open", bottom, top).renderType(prov.mcLoc("cutout")),
+                prov.models().doorTopLeft(ctx.getName() + "_top_left", bottom, top).renderType(prov.mcLoc("cutout")),
+                prov.models().doorTopLeftOpen(ctx.getName() + "_top_left_open", bottom, top).renderType(prov.mcLoc("cutout")),
+                prov.models().doorTopRight(ctx.getName() + "_top_right", bottom, top).renderType(prov.mcLoc("cutout")),
+                prov.models().doorTopRightOpen(ctx.getName() + "_top_right_open", bottom, top).renderType(prov.mcLoc("cutout")));
+        })
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL, BlockTags.DOORS)
+        .item()
+        .model((ctx, prov) -> prov.generated(ctx))
+        .tab(() -> EIOCreativeTabs.BLOCKS)
+        .build()
+        .register();
+
+    public static final BlockEntry<TrapDoorBlock> DARK_STEEL_TRAPDOOR = REGISTRATE
+        .block("dark_steel_trapdoor", Material.METAL, TrapDoorBlock::new)
+        .properties(props -> props.strength(5.0f, 2000.0f).sound(SoundType.METAL).noOcclusion())
+        .blockstate((ctx, prov) -> prov.trapdoorBlock(ctx.get(), prov.modLoc("block/dark_steel_trapdoor"), true))
+        .blockstate((ctx, prov) -> {
+            ResourceLocation texture = prov.modLoc("block/" + ctx.getName());
+            prov.trapdoorBlock(ctx.get(),
+                prov.models().trapdoorOrientableBottom(ctx.getName() + "_bottom", texture).renderType(prov.mcLoc("cutout")),
+                prov.models().trapdoorOrientableTop(ctx.getName() + "_top", texture).renderType(prov.mcLoc("cutout")),
+                prov.models().trapdoorOrientableOpen(ctx.getName() + "_open", texture).renderType(prov.mcLoc("cutout")),
+                true);
+        })
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL, BlockTags.TRAPDOORS)
+        .item()
+        .model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.modLoc("block/dark_steel_trapdoor_bottom")))
+        .tab(() -> EIOCreativeTabs.BLOCKS)
+        .build()
+        .register();
 
     public static final BlockEntry<IronBarsBlock> END_STEEL_BARS = REGISTRATE
         .block("end_steel_bars", IronBarsBlock::new)
@@ -254,8 +271,19 @@ public class EIOBlocks {
     public static final BlockEntry<ColdFireBlock> COLD_FIRE = REGISTRATE
         .block("cold_fire", ColdFireBlock::new)
         .properties(props -> BlockBehaviour.Properties.copy(Blocks.FIRE).noLootTable())
-        .blockstate((ctx, prov) -> {})
-        .addLayer(() -> RenderType::cutout) // TODO: How is this working...
+        .blockstate((ctx, prov) -> {
+            // This generates the models used for the blockstate in our resources.
+            // One day we may bother to datagen that file.
+            String[] toCopy = {
+                "fire_floor0", "fire_floor1",
+                "fire_side0", "fire_side1", "fire_side_alt0", "fire_side_alt1",
+                "fire_up0", "fire_up1", "fire_up_alt0", "fire_up_alt1"
+            };
+
+            for (String name : toCopy) {
+                prov.models().withExistingParent(name, prov.mcLoc(name)).renderType("cutout");
+            }
+        })
         .register();
 
     public static <T extends Block> BlockBuilder<T, Registrate> simpleBlockBuilder(String name, T block) {

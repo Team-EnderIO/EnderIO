@@ -86,7 +86,7 @@ public class EIOFluids {
     private static FluidBuilder<? extends ForgeFlowingFluid, Registrate> basicFluid(String name) {
         return REGISTRATE.fluid(name, EnderIO.loc("block/fluid_" + name + "_still"),
             EnderIO.loc("block/fluid_" + name + "_flowing"))
-            .renderLayer(RenderType::translucent)
+            .renderType(RenderType::translucent)
             .source(ForgeFlowingFluid.Source::new)
             .block()
             .build();

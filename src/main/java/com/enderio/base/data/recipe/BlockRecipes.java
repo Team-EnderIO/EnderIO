@@ -55,23 +55,22 @@ public class BlockRecipes extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DARK_STEEL_INGOT.get()))
             .save(recipeConsumer);
 
-        // TODO: 1.19: DOORS
-//        ShapedRecipeBuilder
-//            .shaped(EIOBlocks.DARK_STEEL_TRAPDOOR.get(), 1)
-//            .define('I', EIOItems.DARK_STEEL_INGOT.get())
-//            .pattern("II")
-//            .pattern("II")
-//            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DARK_STEEL_INGOT.get()))
-//            .save(recipeConsumer);
-//
-//        ShapedRecipeBuilder
-//            .shaped(EIOBlocks.DARK_STEEL_DOOR.get(), 3)
-//            .define('I', EIOItems.DARK_STEEL_INGOT.get())
-//            .pattern("II")
-//            .pattern("II")
-//            .pattern("II")
-//            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DARK_STEEL_INGOT.get()))
-//            .save(recipeConsumer);
+        ShapedRecipeBuilder
+            .shaped(EIOBlocks.DARK_STEEL_TRAPDOOR.get(), 1)
+            .define('I', EIOItems.DARK_STEEL_INGOT.get())
+            .pattern("II")
+            .pattern("II")
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DARK_STEEL_INGOT.get()))
+            .save(recipeConsumer);
+
+        ShapedRecipeBuilder
+            .shaped(EIOBlocks.DARK_STEEL_DOOR.get(), 3)
+            .define('I', EIOItems.DARK_STEEL_INGOT.get())
+            .pattern("II")
+            .pattern("II")
+            .pattern("II")
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DARK_STEEL_INGOT.get()))
+            .save(recipeConsumer);
 
         ShapedRecipeBuilder
             .shaped(EIOBlocks.END_STEEL_BARS.get(), 12)

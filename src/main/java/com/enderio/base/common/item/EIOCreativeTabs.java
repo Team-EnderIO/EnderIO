@@ -11,7 +11,7 @@ import java.util.Locale;
 import java.util.function.Supplier;
 
 public class EIOCreativeTabs extends CreativeModeTab {
-    // TODO: 1.19: Review creative tabs.
+    // TODO: Review creative tabs?
     public static final EIOCreativeTabs MAIN = new EIOCreativeTabs("main", EIOItems.CREATIVE_ICON_NONE::get);
     public static final EIOCreativeTabs GEAR = new EIOCreativeTabs("gear", EIOItems.CREATIVE_ICON_ITEMS::get);
     public static final EIOCreativeTabs BLOCKS = new EIOCreativeTabs("blocks", EIOItems.CREATIVE_ICON_MATERIALS::get);

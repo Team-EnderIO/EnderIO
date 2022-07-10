@@ -9,7 +9,6 @@ import net.minecraft.world.level.block.IronBarsBlock;
 public class EIOBlockState {
 
     public static void paneBlock(DataGenContext<Block, ? extends IronBarsBlock> ctx, RegistrateBlockstateProvider prov) {
-        // TODO: 1.19: Not working...
         prov.paneBlock(ctx.get(),
             prov.models()
                 .panePost(ctx.getName().concat("_post"), prov.blockTexture(ctx.get()), prov.blockTexture(ctx.get()))

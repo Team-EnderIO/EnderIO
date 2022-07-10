@@ -188,9 +188,6 @@ dependencies {
     // Forge
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    // Mixins TODO: 1.19: Hopefully we can just remove mixins someday
-    annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
-
     // Registrate
     implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}") {
         // TODO: Temporary while we're rockin' custom registrate.
@@ -209,8 +206,8 @@ dependencies {
 //    implementation fg.deobf("curse.maven:the-one-probe-245211:${top_version}")
 
     // Patchouli
-//    compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
-//    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
+    compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
+    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
 
     // While we don't have conduits etc.
 //    runtimeOnly fg.deobf("curse.maven:mekanism-268560:3743835")

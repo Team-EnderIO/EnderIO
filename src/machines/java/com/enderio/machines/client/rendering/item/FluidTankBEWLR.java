@@ -42,21 +42,15 @@ public class FluidTankBEWLR extends BlockEntityWithoutLevelRenderer {
         CompoundTag nbt = stack.getTag();
         if (nbt != null && nbt.contains("BlockEntityTag")) {
             CompoundTag blockEntityTag = nbt.getCompound("BlockEntityTag");
-            if (blockEntityTag.contains("Fluids")) {
-                CompoundTag tank = blockEntityTag.getCompound("Fluids");
+            if (blockEntityTag.contains("fluid")) {
+                CompoundTag tank = blockEntityTag.getCompound("fluid");
 
                 if (tank.contains("FluidName") && tank.contains("Amount")) {
                     Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(tank.getString("FluidName")));
                     int amount = tank.getInt("Amount");
 
                     if (fluid != null && amount > 0) {
-//                        VertexConsumer fluidBuffer;
-//                        if (ItemBlockRenderTypes.canRenderInLayer(fluid.defaultFluidState(), RenderType.translucent())) {
-//                            fluidBuffer = buffer.getBuffer(RenderType.translucent());
-//                        } else {
-//                            fluidBuffer = buffer.getBuffer(RenderType.solid());
-//                        }
-                        // TODO: 1.19: TEST
+                        // Get the preferred render buffer
                         VertexConsumer fluidBuffer = buffer.getBuffer(ItemBlockRenderTypes.getRenderLayer(fluid.defaultFluidState()));
 
                         // Determine capacity.

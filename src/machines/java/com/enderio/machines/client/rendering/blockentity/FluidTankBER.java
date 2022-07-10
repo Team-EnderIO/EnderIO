@@ -35,14 +35,7 @@ public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
         if (tank.getFluidAmount() > 0) {
             FluidStack fluidStack = tank.getFluid();
 
-            // Determine the fluid's preferred buffer
-//            VertexConsumer buffer;
-//            if (ItemBlockRenderTypes.canRenderInLayer(fluidStack.getFluid().defaultFluidState(), RenderType.translucent())) {
-//                buffer = bufferSource.getBuffer(RenderType.translucent());
-//            } else {
-//                buffer = bufferSource.getBuffer(RenderType.solid());
-//            }
-            // TODO: 1.19: TEST ME
+            // Get the preferred render buffer
             VertexConsumer buffer = bufferSource.getBuffer(ItemBlockRenderTypes.getRenderLayer(fluidStack.getFluid().defaultFluidState()));
 
             // Render the fluid
@@ -53,7 +46,7 @@ public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
 
     private static void renderFluid(Matrix4f pose, Matrix3f normal, VertexConsumer consumer, BlockEntity entity, Fluid fluid, float fillAmount) {
         IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluid);
-        renderFluid(pose, normal, consumer, fluid, fillAmount, props.getTintColor(null, entity.getLevel(), entity.getBlockPos())); // TODO: 1.19 is null bad?
+        renderFluid(pose, normal, consumer, fluid, fillAmount, props.getTintColor(null, entity.getLevel(), entity.getBlockPos()));
     }
 
     public static void renderFluid(Matrix4f pose, Matrix3f normal, VertexConsumer consumer, Fluid fluid, float fillAmount, int color) {
