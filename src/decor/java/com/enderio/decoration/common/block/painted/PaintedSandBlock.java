@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class PaintedSandBlock extends SandBlock implements EntityBlock {
+public class PaintedSandBlock extends SandBlock implements EntityBlock, IPaintedBlock {
 
     public PaintedSandBlock(Properties properties) {
         super(0, properties);

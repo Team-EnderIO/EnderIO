@@ -24,8 +24,8 @@ public class PaintedSlabModel extends PaintedModel implements IDynamicBakedModel
 
     private final Block referenceModel;
 
-    public PaintedSlabModel(Block referenceModel, ItemTransforms transforms) {
-        super(transforms);
+    public PaintedSlabModel(Block referenceModel, ItemTransforms transforms, @Nullable Direction itemTextureRotation) {
+        super(transforms, itemTextureRotation);
         this.referenceModel = referenceModel;
     }
 

@@ -13,17 +13,21 @@ import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.ModelProvider;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.Nullable;
 
 public class DecorBlockState {
     /**
      * {@see ModelProvider.MODEL}
      */
     public static void paintedBlock(DataGenContext<Block, ? extends Block> ctx, RegistrateBlockstateProvider prov, Block toCopy) {
+        paintedBlock(ctx, prov, toCopy, null);
+    }
+    public static void paintedBlock(DataGenContext<Block, ? extends Block> ctx, RegistrateBlockstateProvider prov, Block toCopy, @Nullable Direction itemTextureRotation) {
         Block paintedBlock = ctx.get();
         ResourceLocation paintedBlockId = ForgeRegistries.BLOCKS.getKey(paintedBlock);
         PaintedModelBuilder paintedModel = new PaintedModelBuilder(
             new ResourceLocation(paintedBlockId.getNamespace(), ModelProvider.BLOCK_FOLDER + "/" + paintedBlockId.getPath()),
-            prov.models().existingFileHelper, toCopy);
+            prov.models().existingFileHelper, toCopy, itemTextureRotation);
         prov.models().getBuilder(paintedBlockId.getPath());
         prov.models().generatedModels.put(paintedModel.getLocation(), paintedModel);
         prov.simpleBlock(paintedBlock, paintedModel);

@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class PaintedWoodenPressurePlateBlock extends PressurePlateBlock implements EntityBlock {
+public class PaintedWoodenPressurePlateBlock extends PressurePlateBlock implements EntityBlock, IPaintedBlock {
 
     public PaintedWoodenPressurePlateBlock(Properties properties) {
         super(Sensitivity.EVERYTHING, properties);

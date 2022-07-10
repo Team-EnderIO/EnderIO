@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class PaintedCraftingTableBlock extends CraftingTableBlock implements EntityBlock {
+public class PaintedCraftingTableBlock extends CraftingTableBlock implements EntityBlock, IPaintedBlock {
 
     private static final Component CONTAINER_TITLE = Component.translatable("container.crafting");
 
