@@ -14,13 +14,15 @@ import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 public class DoublePaintedBlockEntity extends SinglePaintedBlockEntity {
 
-    private Block paint2 = Blocks.AIR;
+    @Nullable
+    private Block paint2;
 
+    @Nullable
     public Block getPaint2() {
         return paint2;
     }

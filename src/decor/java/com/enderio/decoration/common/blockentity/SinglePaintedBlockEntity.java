@@ -13,15 +13,17 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Objects;
 
 public class SinglePaintedBlockEntity extends BlockEntity implements IPaintableBlockEntity {
 
-    private Block paint = Blocks.AIR;//ForgeRegistries.BLOCKS.getValues().stream().skip(new Random().nextInt(ForgeRegistries.BLOCKS.getValues().size())).findFirst().get();
+    @Nullable
+    private Block paint;
 
+    @Nullable
     public Block getPaint() {
         return paint;
     }
