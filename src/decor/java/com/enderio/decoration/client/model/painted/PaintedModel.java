@@ -68,7 +68,7 @@ public abstract class PaintedModel implements IDynamicBakedModel {
      * @param rotation rotation you want to have applied to the block
      * @return a List of BakedQuads from a shape using the paint as a texture
      */
-    protected List<BakedQuad> getQuadsUsingShape(Block paint, List<BakedQuad> shape, @Nullable Direction side, @Nonnull RandomSource rand,
+    protected List<BakedQuad> getQuadsUsingShape(@Nullable Block paint, List<BakedQuad> shape, @Nullable Direction side, @Nonnull RandomSource rand,
         @Nullable Direction rotation, RenderType renderType) {
         if (paint != null) {
             BakedModel model = getModel(paintWithRotation(paint, rotation));
