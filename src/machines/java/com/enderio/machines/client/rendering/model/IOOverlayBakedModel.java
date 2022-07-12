@@ -19,8 +19,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.client.ChunkRenderTypeSet;
 import net.minecraftforge.client.model.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.geometry.IGeometryBakingContext;
@@ -55,7 +57,7 @@ public class IOOverlayBakedModel implements IDynamicBakedModel {
         case DISABLED -> TEX_DISABLED;
         };
 
-        return Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(tex);
+        return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(tex);
     }
 
     private final Direction north;
@@ -88,6 +90,11 @@ public class IOOverlayBakedModel implements IDynamicBakedModel {
         }
 
         return Collections.emptyList();
+    }
+
+    @Override
+    public ChunkRenderTypeSet getRenderTypes(@NotNull BlockState state, @NotNull RandomSource rand, @NotNull ModelData data) {
+        return ChunkRenderTypeSet.of(RenderType.cutout());
     }
 
     @Override
@@ -131,10 +138,10 @@ public class IOOverlayBakedModel implements IDynamicBakedModel {
         public Collection<Material> getMaterials(IGeometryBakingContext context, Function<ResourceLocation, UnbakedModel> modelGetter,
             Set<Pair<String, String>> missingTextureErrors) {
             return List.of(
-                new Material(TextureAtlas.LOCATION_BLOCKS, EnderIO.loc("block/overlay/disabled")),
-                new Material(TextureAtlas.LOCATION_BLOCKS, EnderIO.loc("block/overlay/pull")),
-                new Material(TextureAtlas.LOCATION_BLOCKS, EnderIO.loc("block/overlay/push")),
-                new Material(TextureAtlas.LOCATION_BLOCKS, EnderIO.loc("block/overlay/push_pull"))
+                new Material(InventoryMenu.BLOCK_ATLAS, EnderIO.loc("block/overlay/disabled")),
+                new Material(InventoryMenu.BLOCK_ATLAS, EnderIO.loc("block/overlay/pull")),
+                new Material(InventoryMenu.BLOCK_ATLAS, EnderIO.loc("block/overlay/push")),
+                new Material(InventoryMenu.BLOCK_ATLAS, EnderIO.loc("block/overlay/push_pull"))
             );
         }
     }

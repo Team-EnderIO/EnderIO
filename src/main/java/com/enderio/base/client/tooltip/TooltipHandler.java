@@ -27,7 +27,7 @@ public class TooltipHandler {
     public static void addTooltips(ItemTooltipEvent evt) {
         ItemStack forItem = evt.getItemStack();
         providerOf(forItem.getItem()).ifPresent(provider ->
-            addTooltips(provider, forItem, evt.getPlayer(), evt.getToolTip(), shouldShowAdvancedTooltips())
+            addTooltips(provider, forItem, evt.getEntity(), evt.getToolTip(), shouldShowAdvancedTooltips())
         );
     }
 

@@ -1,12 +1,21 @@
 {
-  "components": [
-    {
-      "model": "enderio:block/io_overlay"
+  "parent": "minecraft:block/block",
+  "children": {
+    "overlay": {
+      "parent": "enderio:block/io_overlay"
     },
-    {
-      "model": "enderio:block/pressurized_fluid_tank_body",
-      "particle_provider": true
+    "tank": {
+      "parent": "enderio:block/fluid_tank_body",
+      "textures": {
+        "bottom": "enderio:block/enhanced_machine_bottom",
+        "tank": "enderio:block/pressurized_fluid_tank",
+        "top": "enderio:block/enhanced_machine_top"
+      }
     }
+  },
+  "item_render_order": [
+    "tank",
+    "overlay"
   ],
-  "loader": "enderio:composite_model"
+  "loader": "forge:composite"
 }

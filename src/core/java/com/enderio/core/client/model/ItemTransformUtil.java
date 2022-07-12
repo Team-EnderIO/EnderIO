@@ -1,4 +1,4 @@
-package com.enderio.core.client.gui.model;
+package com.enderio.core.client.model;
 
 import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.block.model.ItemTransform;

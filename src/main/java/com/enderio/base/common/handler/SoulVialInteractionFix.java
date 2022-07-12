@@ -25,7 +25,7 @@ public class SoulVialInteractionFix {
         ItemStack stack = event.getItemStack();
         if (stack.is(EIOItems.EMPTY_SOUL_VIAL.get())) {
             if (event.getTarget() instanceof AbstractChestedHorse || event.getTarget() instanceof Villager) {
-                stack.getItem().interactLivingEntity(stack, event.getPlayer(), (LivingEntity) event.getTarget(), event.getHand());
+                stack.getItem().interactLivingEntity(stack, event.getEntity(), (LivingEntity) event.getTarget(), event.getHand());
             }
         }
     }

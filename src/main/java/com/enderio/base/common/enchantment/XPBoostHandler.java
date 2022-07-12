@@ -17,16 +17,13 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
 import javax.annotation.Nonnull;
-import java.lang.reflect.Method;
 import java.util.Map;
 
 @EventBusSubscriber
@@ -37,7 +34,7 @@ public class XPBoostHandler {
 
     @SubscribeEvent
     public static void handleEntityKill(LivingDeathEvent event) {
-        LivingEntity entity = event.getEntityLiving();
+        LivingEntity entity = event.getEntity();
         Entity killer = event.getSource().getDirectEntity();
 
         if (!entity.level.isClientSide && killer != null) {
@@ -54,7 +51,7 @@ public class XPBoostHandler {
     }
 
     @SubscribeEvent
-    public static void handleArrowFire(EntityJoinWorldEvent event) {
+    public static void handleArrowFire(EntityJoinLevelEvent event) {
         if (event.getEntity() instanceof Arrow arrow) {
             arrow.getPersistentData().putInt(NBT_KEY, getXPBoostLevel(arrow.getOwner()));
         }
@@ -62,16 +59,16 @@ public class XPBoostHandler {
 
     @SubscribeEvent
     public static void handleBlockBreak(BlockEvent.BreakEvent event) {
-        int level = getXPBoostLevel(event.getPlayer());
+        int boostLevel = getXPBoostLevel(event.getPlayer());
 
-        if (level >= 0) {
+        if (boostLevel >= 0) {
             BlockState state = event.getState();
-            Level world = (Level) event.getWorld();
+            Level level = (Level) event.getLevel();
             BlockPos pos = event.getPos();
             final int fortune = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, event.getPlayer().getMainHandItem());
-            final int xp = state.getBlock().getExpDrop(state, world, RandomSource.create(), pos, fortune, 0);
+            final int xp = state.getBlock().getExpDrop(state, level, RandomSource.create(), pos, fortune, 0);
             if (xp > 0) {
-                world.addFreshEntity(new ExperienceOrb(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, getXPBoost(xp, level)));
+                level.addFreshEntity(new ExperienceOrb(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, getXPBoost(xp, boostLevel)));
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.enderio.machines.data.model.block;
+package com.enderio.machines.data.model;
 
 import com.enderio.EnderIO;
 import com.enderio.core.data.model.EIOModel;
@@ -13,8 +13,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraftforge.client.model.generators.BlockModelBuilder;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
+import net.minecraftforge.client.model.generators.loaders.CompositeModelBuilder;
 
 public class MachineModelUtil {
 
@@ -36,7 +38,7 @@ public class MachineModelUtil {
         // Create unpowered and powered bodies.
         String ns = ctx.getId().getNamespace();
         String path = ctx.getId().getPath();
-        ModelFile unpowered = bodyBuilder.build(prov, ctx.getName(), prov.models().getExistingFile(new ResourceLocation(ns, "block/" + path + "_front")));
+        ModelFile unpowered = bodyBuilder.build(prov, ctx.getName(), EIOModel.getExistingParent(prov.models(), new ResourceLocation(ns, "block/" + path + "_front")));
         ModelFile powered = bodyBuilder.build(prov, ctx.getName() + "_on", prov
             .models()
             .withExistingParent(ctx.getName() + "_front_on", new ResourceLocation(ns, "block/" + path + "_front"))
@@ -63,7 +65,7 @@ public class MachineModelUtil {
         String path = ctx.getId().getPath();
 
         // Get bottom models
-        ModelFile bottomUnpowered = bottomBuilder.build(prov, ctx.getName(), prov.models().getExistingFile(new ResourceLocation(ns, "block/" + path + "_front")));
+        ModelFile bottomUnpowered = bottomBuilder.build(prov, ctx.getName(), EIOModel.getExistingParent(prov.models(), new ResourceLocation(ns, "block/" + path + "_front")));
         ModelFile bottomPowered = bottomBuilder.build(prov, ctx.getName() + "_on", prov
             .models()
             .withExistingParent(ctx.getName() + "_front_on", new ResourceLocation(ns, "block/" + path + "_front"))
@@ -92,6 +94,7 @@ public class MachineModelUtil {
     }
 
     public static void enhancedMachineBlockItem(DataGenContext<Item, ? extends Item> ctx, RegistrateItemModelProvider prov) {
+        // TODO: Work out how we're doing this. Probably just make a block model called item then bundle this in?
         EIOModel.compositeModel(prov, ctx.getName(), builder -> builder
             .component(EnderIO.loc("block/enhanced_machine_frame"))
             .component(EnderIO.loc("block/" + ctx.getName() + "_front"))
@@ -104,30 +107,32 @@ public class MachineModelUtil {
 
     @FunctionalInterface
     private interface MachineBodyBuilder {
-        ModelFile build(RegistrateBlockstateProvider prov, String name, ModelFile frontModel);
+        ModelFile build(RegistrateBlockstateProvider prov, String name, BlockModelBuilder frontModel);
     }
 
-    private static ModelFile machineBody(RegistrateBlockstateProvider prov, String name, ModelFile frontModel) {
+    private static ModelFile machineBody(RegistrateBlockstateProvider prov, String name, BlockModelBuilder frontModel) {
         return machineBodyModel(prov, name, frontModel, EnderIO.loc("block/machine_frame"));
     }
 
-    private static ModelFile soulMachineBody(RegistrateBlockstateProvider prov, String name, ModelFile frontModel) {
+    private static ModelFile soulMachineBody(RegistrateBlockstateProvider prov, String name, BlockModelBuilder frontModel) {
         return machineBodyModel(prov, name, frontModel, EnderIO.loc("block/soul_machine_frame"));
     }
 
-    private static ModelFile simpleMachineBody(RegistrateBlockstateProvider prov, String name, ModelFile frontModel) {
+    private static ModelFile simpleMachineBody(RegistrateBlockstateProvider prov, String name, BlockModelBuilder frontModel) {
         return machineBodyModel(prov, name, frontModel, EnderIO.loc("block/simple_machine_frame"));
     }
 
-    private static ModelFile enhancedMachineBody(RegistrateBlockstateProvider prov, String name, ModelFile frontModel) {
+    private static ModelFile enhancedMachineBody(RegistrateBlockstateProvider prov, String name, BlockModelBuilder frontModel) {
         return machineBodyModel(prov, name, frontModel, EnderIO.loc("block/enhanced_machine_frame"));
     }
 
-    private static ModelFile machineBodyModel(RegistrateBlockstateProvider prov, String name, ModelFile frontModel, ResourceLocation frameModel) {
-        return EIOModel.compositeModel(prov.models(), name, builder -> builder
-            .component(frameModel, true)
-            .component(EnderIO.loc("block/io_overlay"))
-            .component(frontModel));
+    private static ModelFile machineBodyModel(RegistrateBlockstateProvider prov, String name, BlockModelBuilder frontModel, ResourceLocation frameModel) {
+        return prov.models().withExistingParent(name, prov.mcLoc("block/block"))
+            .customLoader(CompositeModelBuilder::begin)
+                .child("frame", EIOModel.getExistingParent(prov.models(), frameModel))
+                .child("overlay", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/io_overlay")))
+                .child("front", frontModel)
+            .end();
     }
 
     // endregion

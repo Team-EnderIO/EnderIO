@@ -70,7 +70,7 @@ public class LocationPrintoutItem extends Item implements IMultiCapabilityItem {
 
     private static void openMenu(ServerPlayer player, CoordinateSelection selection, String name) {
 
-        NetworkHooks.openGui(player,new MenuProvider() {
+        NetworkHooks.openScreen(player,new MenuProvider() {
             @Override
             public Component getDisplayName() {
                 return Component.empty();

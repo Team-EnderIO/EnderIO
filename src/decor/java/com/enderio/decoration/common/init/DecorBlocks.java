@@ -43,9 +43,6 @@ public class DecorBlocks {
 
     private static final Registrate REGISTRATE = EnderIO.registrate();
 
-    // TODO: 1.19: Move into EIOCreativeTabs?
-    public static final EIOCreativeTabs DECOR = new EIOCreativeTabs("decor", () -> Items.PAINTING);
-
     // region Painted
 
     private static final List<NonNullSupplier<? extends Block>> painted = new ArrayList<>();
@@ -153,10 +150,10 @@ public class DecorBlocks {
     			}))
     		.item()
     		.model((ctx, prov) -> prov.withExistingParent(name, "block/button_inventory"))
-    		.tab(() -> DECOR)
+    		.tab(() -> EIOCreativeTabs.BLOCKS)
     		.build()
     		.register();
     }
 
-    public static void classload() {}
+    public static void register() {}
 }

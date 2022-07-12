@@ -18,5 +18,5 @@ public class DecorEntities {
         .lang("Painted Sand")
         .register();
 
-    public static void classload() {}
+    public static void register() {}
 }

@@ -17,9 +17,9 @@ public class EntityCaptureUtils {
 
     public static List<ResourceLocation> getCapturableEntities() {
         List<ResourceLocation> entities = new ArrayList<>();
-        for (EntityType<?> type : ForgeRegistries.ENTITIES.getValues()) {
+        for (EntityType<?> type : ForgeRegistries.ENTITY_TYPES.getValues()) {
             if (type.getCategory() != MobCategory.MISC) {
-                ResourceLocation key = ForgeRegistries.ENTITIES.getKey(type);
+                ResourceLocation key = ForgeRegistries.ENTITY_TYPES.getKey(type);
                 if (key != null && !key.equals(DRAGON)) {
                     entities.add(key);
                 }
@@ -44,7 +44,7 @@ public class EntityCaptureUtils {
         if (!type.canSerialize())
             return CapturableStatus.INCOMPATIBLE;
 
-        if (BaseConfig.COMMON.ITEMS.SOUL_VIAL_BLACKLIST.get().contains(ForgeRegistries.ENTITIES.getKey(type).toString()))
+        if (BaseConfig.COMMON.ITEMS.SOUL_VIAL_BLACKLIST.get().contains(ForgeRegistries.ENTITY_TYPES.getKey(type).toString()))
             return CapturableStatus.BLACKLISTED;
 
         return CapturableStatus.CAPTURABLE;

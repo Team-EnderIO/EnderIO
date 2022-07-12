@@ -1,4 +1,4 @@
-package com.enderio.core.client.gui.model.composite;
+package com.enderio.core.client.model.composite;
 
 import com.enderio.core.EnderCore;
 import com.google.gson.JsonArray;
@@ -8,6 +8,10 @@ import com.mojang.math.Transformation;
 import com.mojang.math.Vector3f;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * @deprecated Use forge's {@link net.minecraftforge.client.model.generators.loaders.CompositeModelBuilder}
+ */
+@Deprecated(forRemoval = true)
 public record CompositeModelComponent(ResourceLocation model, Vector3f translation, Vector3f rotation, boolean particleProvider) {
 
     public JsonObject toJson() {

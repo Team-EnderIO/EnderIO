@@ -33,6 +33,6 @@ public class DecorBlockEntities {
         	.validBlock(DecorBlocks.LIGHT_NODE)
         	.register();
 
-    public static void classload() {}
+    public static void register() {}
 
 }

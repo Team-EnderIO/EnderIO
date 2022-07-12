@@ -77,7 +77,6 @@ public class ModelRenderUtil {
         float ny = (float) normal.y;
         float nz = (float) normal.z;
 
-
         int tw = sprite.getWidth();
         int th = sprite.getHeight();
 
@@ -86,12 +85,13 @@ public class ModelRenderUtil {
         float b = FastColor.ARGB32.blue(color) / 255.0f;
 
         BakedQuad[] quad = new BakedQuad[1];
-        QuadBakingVertexConsumer baker = new QuadBakingVertexConsumer(q -> quad[0] = q); // TODO: Cache this maybe?
+        QuadBakingVertexConsumer baker = new QuadBakingVertexConsumer(q -> quad[0] = q);
         baker.setSprite(sprite);
-        baker.normal(nx, ny, nz).vertex(v1.x, v1.y, v1.z).uv(0, 0).color(r, g, b, alpha).endVertex();
-        baker.normal(nx, ny, nz).vertex(v2.x, v2.y, v2.z).uv(0, th).color(r, g, b, alpha).endVertex();
-        baker.normal(nx, ny, nz).vertex(v3.x, v3.y, v3.z).uv(tw, th).color(r, g, b, alpha).endVertex();
-        baker.normal(nx, ny, nz).vertex(v4.x, v4.y, v4.z).uv(tw, 0).color(r, g, b, alpha).endVertex();
+        baker.setDirection(Direction.getNearest(normal.x, normal.y, normal.z));
+        baker.normal(nx, ny, nz).vertex(v1.x, v1.y, v1.z).uv(sprite.getU(0), sprite.getV(0)).color(r, g, b, alpha).endVertex();
+        baker.normal(nx, ny, nz).vertex(v2.x, v2.y, v2.z).uv(sprite.getU(0), sprite.getV(th)).color(r, g, b, alpha).endVertex();
+        baker.normal(nx, ny, nz).vertex(v3.x, v3.y, v3.z).uv(sprite.getU(tw), sprite.getV(th)).color(r, g, b, alpha).endVertex();
+        baker.normal(nx, ny, nz).vertex(v4.x, v4.y, v4.z).uv(sprite.getU(tw), sprite.getV(0)).color(r, g, b, alpha).endVertex();
         return quad[0];
     }
 }

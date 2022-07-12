@@ -1,4 +1,4 @@
-package com.enderio.core.client.gui.model.composite;
+package com.enderio.core.client.model.composite;
 
 import com.enderio.core.EnderCore;
 import com.mojang.datafixers.util.Pair;
@@ -17,6 +17,10 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+/**
+ * @deprecated Use forge's {@link net.minecraftforge.client.model.generators.loaders.CompositeModelBuilder}
+ */
+@Deprecated(forRemoval = true)
 public class CompositeUnbakedGeometry implements IUnbakedGeometry<CompositeUnbakedGeometry> {
 
     private final List<CompositeModelComponent> components;

@@ -1,15 +1,20 @@
 {
-  "components": [
-    {
-      "model": "enderio:block/simple_machine_frame",
-      "particle_provider": true
+  "parent": "minecraft:block/block",
+  "children": {
+    "frame": {
+      "parent": "enderio:block/simple_machine_frame"
     },
-    {
-      "model": "enderio:block/io_overlay"
+    "front": {
+      "parent": "enderio:block/simple_stirling_generator_front"
     },
-    {
-      "model": "enderio:block/simple_stirling_generator_front"
+    "overlay": {
+      "parent": "enderio:block/io_overlay"
     }
+  },
+  "item_render_order": [
+    "frame",
+    "overlay",
+    "front"
   ],
-  "loader": "enderio:composite_model"
+  "loader": "forge:composite"
 }

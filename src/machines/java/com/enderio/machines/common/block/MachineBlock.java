@@ -90,7 +90,7 @@ public class MachineBlock extends BaseEntityBlock {
         } else {
             MenuProvider menuprovider = this.getMenuProvider(pState, pLevel, pPos);
             if (menuprovider != null && pPlayer instanceof ServerPlayer serverPlayer) {
-                NetworkHooks.openGui(serverPlayer,menuprovider, buf -> buf.writeBlockPos(pPos));
+                NetworkHooks.openScreen(serverPlayer,menuprovider, buf -> buf.writeBlockPos(pPos));
             }
             return InteractionResult.CONSUME;
         }

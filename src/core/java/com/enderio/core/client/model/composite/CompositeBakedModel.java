@@ -1,6 +1,6 @@
-package com.enderio.core.client.gui.model.composite;
+package com.enderio.core.client.model.composite;
 
-import com.enderio.core.client.gui.model.ItemTransformUtil;
+import com.enderio.core.client.model.ItemTransformUtil;
 import com.enderio.core.data.model.EIOModel;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -20,6 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+/**
+ * @deprecated Use forge's {@link net.minecraftforge.client.model.generators.loaders.CompositeModelBuilder}
+ */
+@Deprecated(forRemoval = true)
 public class CompositeBakedModel implements IDynamicBakedModel {
 
     private final List<BakedModel> components;

@@ -1,4 +1,4 @@
-package com.enderio.core.client.gui.model.composite;
+package com.enderio.core.client.model.composite;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
@@ -8,6 +8,10 @@ import net.minecraftforge.client.model.geometry.IGeometryLoader;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @deprecated Use forge's {@link net.minecraftforge.client.model.generators.loaders.CompositeModelBuilder}
+ */
+@Deprecated(forRemoval = true)
 public class CompositeGeometryLoader implements IGeometryLoader<CompositeUnbakedGeometry> {
 
     @Override

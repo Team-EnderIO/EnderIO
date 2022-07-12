@@ -22,7 +22,9 @@ public class DecorBlockState {
     public static void paintedBlock(DataGenContext<Block, ? extends Block> ctx, RegistrateBlockstateProvider prov, Block toCopy) {
         paintedBlock(ctx, prov, toCopy, null);
     }
+
     public static void paintedBlock(DataGenContext<Block, ? extends Block> ctx, RegistrateBlockstateProvider prov, Block toCopy, @Nullable Direction itemTextureRotation) {
+        // TODO: 1.19: Tidy and add rendertype
         Block paintedBlock = ctx.get();
         ResourceLocation paintedBlockId = ForgeRegistries.BLOCKS.getKey(paintedBlock);
         PaintedModelBuilder paintedModel = new PaintedModelBuilder(
