@@ -35,7 +35,7 @@ public class EIOModel {
         compositeBuilder.accept(builder);
         return builder.end();
     }
-    
+
     // endregion
 
     // region Item

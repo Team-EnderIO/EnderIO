@@ -91,6 +91,16 @@ public class MachineModelUtil {
                     .rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + 180) % 360)
                     .build();
             });
+
+        // TODO: Finish after Rover's forge PR.
+//        prov.models()
+//            .withExistingParent(ctx.getName() + "_item", prov.mcLoc("block/block"))
+//            .customLoader(CompositeModelBuilder::begin)
+//            .child("frame", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/enhanced_machine_frame")))
+//            .child("front", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/" + ctx.getName() + "_front")))
+//            .child("top", EIOModel
+//                .getExistingParent(prov.models(), EnderIO.loc("block/" + ctx.getName() + "_top")))
+//            .end();
     }
 
     public static void enhancedMachineBlockItem(DataGenContext<Item, ? extends Item> ctx, RegistrateItemModelProvider prov) {

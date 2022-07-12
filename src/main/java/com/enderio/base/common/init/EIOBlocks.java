@@ -99,19 +99,7 @@ public class EIOBlocks {
     public static final BlockEntry<DoorBlock> DARK_STEEL_DOOR = REGISTRATE
         .block("dark_steel_door", Material.METAL, DoorBlock::new)
         .properties(props -> props.strength(5.0f, 2000.0f).sound(SoundType.METAL).noOcclusion())
-        .blockstate((ctx, prov) -> {
-            ResourceLocation bottom = prov.modLoc("block/dark_steel_door_bottom");
-            ResourceLocation top = prov.modLoc("block/dark_steel_door_top");
-            prov.doorBlock(ctx.get(),
-                prov.models().doorBottomLeft(ctx.getName() + "_bottom_left", bottom, top).renderType(prov.mcLoc("cutout")),
-                prov.models().doorBottomLeftOpen(ctx.getName() + "_bottom_left_open", bottom, top).renderType(prov.mcLoc("cutout")),
-                prov.models().doorBottomRight(ctx.getName() + "_bottom_right", bottom, top).renderType(prov.mcLoc("cutout")),
-                prov.models().doorBottomRightOpen(ctx.getName() + "_bottom_right_open", bottom, top).renderType(prov.mcLoc("cutout")),
-                prov.models().doorTopLeft(ctx.getName() + "_top_left", bottom, top).renderType(prov.mcLoc("cutout")),
-                prov.models().doorTopLeftOpen(ctx.getName() + "_top_left_open", bottom, top).renderType(prov.mcLoc("cutout")),
-                prov.models().doorTopRight(ctx.getName() + "_top_right", bottom, top).renderType(prov.mcLoc("cutout")),
-                prov.models().doorTopRightOpen(ctx.getName() + "_top_right_open", bottom, top).renderType(prov.mcLoc("cutout")));
-        })
+        .blockstate((ctx, prov) -> prov.doorBlockWithRenderType(ctx.get(), prov.modLoc("block/dark_steel_door_bottom"), prov.modLoc("block/dark_steel_door_top"), prov.mcLoc("cutout")))
         .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL, BlockTags.DOORS)
         .item()
         .model((ctx, prov) -> prov.generated(ctx))
@@ -122,15 +110,7 @@ public class EIOBlocks {
     public static final BlockEntry<TrapDoorBlock> DARK_STEEL_TRAPDOOR = REGISTRATE
         .block("dark_steel_trapdoor", Material.METAL, TrapDoorBlock::new)
         .properties(props -> props.strength(5.0f, 2000.0f).sound(SoundType.METAL).noOcclusion())
-        .blockstate((ctx, prov) -> prov.trapdoorBlock(ctx.get(), prov.modLoc("block/dark_steel_trapdoor"), true))
-        .blockstate((ctx, prov) -> {
-            ResourceLocation texture = prov.modLoc("block/" + ctx.getName());
-            prov.trapdoorBlock(ctx.get(),
-                prov.models().trapdoorOrientableBottom(ctx.getName() + "_bottom", texture).renderType(prov.mcLoc("cutout")),
-                prov.models().trapdoorOrientableTop(ctx.getName() + "_top", texture).renderType(prov.mcLoc("cutout")),
-                prov.models().trapdoorOrientableOpen(ctx.getName() + "_open", texture).renderType(prov.mcLoc("cutout")),
-                true);
-        })
+        .blockstate((ctx, prov) -> prov.trapdoorBlockWithRenderType(ctx.get(), prov.modLoc("block/dark_steel_trapdoor"), true, prov.mcLoc("cutout")))
         .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL, BlockTags.TRAPDOORS)
         .item()
         .model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.modLoc("block/dark_steel_trapdoor_bottom")))
