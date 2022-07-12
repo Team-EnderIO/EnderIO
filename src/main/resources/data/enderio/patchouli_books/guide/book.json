@@ -1,6 +1,10 @@
 {
-  "name": "Guide Book",
-  "landing_text": "LANDING TEXT",
+  "name": "guidebook.enderio.book_title",
+  "landing_text": "guidebook.enderio.landing_text",
   "version": 1,
-  "creative_tab": "enderio.main"
+  "creative_tab": "enderio.main",
+  "book_texture": "patchouli:textures/gui/book_cyan.png",
+  "model": "patchouli:book_cyan",
+  "show_progress": false,
+  "use_resource_pack": true
 }

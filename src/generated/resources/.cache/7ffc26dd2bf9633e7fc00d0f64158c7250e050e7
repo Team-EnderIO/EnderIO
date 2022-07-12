@@ -1,4 +1,4 @@
-// 1.19	2022-07-12T15:33:02.634422	Registrate Provider for enderio [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
+// 1.19	2022-07-12T20:01:14.255162	Registrate Provider for enderio [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
 73adb56f72a5805aa07ee54397acb790c30cccb5 assets/enderio/blockstates/alloy_smelter.json
 38456017a1ded6fddac24d85def47523e9ee034c assets/enderio/blockstates/clear_glass.json
 38456017a1ded6fddac24d85def47523e9ee034c assets/enderio/blockstates/clear_glass_a.json
@@ -803,8 +803,8 @@ ec8b3676cc0ea0ecbd662f59aafde18cf843d91a assets/enderio/blockstates/soularium_bl
 e9c8dc43c691ba3df30fca3e86b0f709bd93c46b assets/enderio/blockstates/vapor_of_levity.json
 fffb418818fa4ec53a362ef433d0c30f00f9d39d assets/enderio/blockstates/vibrant_alloy_block.json
 dc9a80d96b9da4a13c49c78cb65adbbf7c4928dc assets/enderio/blockstates/xp_juice.json
-d2b0a65114707c7f88d8e947932c4f046ad94bae assets/enderio/lang/en_ud.json
-c4a15263ede8c9ead0f96baaf40142e84849dcf9 assets/enderio/lang/en_us.json
+753bd84a0b69468203cd94afd9bd2d4d3d93423d assets/enderio/lang/en_ud.json
+9e2643488367fea9974c9dcc31263ca807c39dea assets/enderio/lang/en_us.json
 be027ef82ca7f17fdd8d0edacfacf4f7f07e7a06 assets/enderio/models/block/alloy_smelter.json
 ef459b1b7abed93577f72840c13d2b529cfae6d4 assets/enderio/models/block/alloy_smelter_front_on.json
 ca9a3c2ef9be4346cb7045f4b3140409f5468624 assets/enderio/models/block/alloy_smelter_on.json
