@@ -35,37 +35,7 @@ public class EIOModel {
         compositeBuilder.accept(builder);
         return builder.end();
     }
-
-    public static <T extends ModelProvider<B>, B extends ModelBuilder<B>> ModelFile entityModel(T prov, String name) {
-        return prov.withExistingParent(name, "builtin/entity")
-            .transforms()
-                .transform(ItemTransforms.TransformType.GUI)
-                    .rotation(30, 45, 0)
-                    .scale(0.625f)
-                .end()
-                .transform(ItemTransforms.TransformType.GROUND)
-                    .translation(0, 3, 0)
-                    .scale(0.25f)
-                .end()
-                    .transform(ItemTransforms.TransformType.HEAD)
-                    .rotation(0, 180, 0)
-                .end()
-                    .transform(ItemTransforms.TransformType.FIXED)
-                    .rotation(0, 180, 0)
-                .scale(0.5f)
-                .end()
-                    .transform(ItemTransforms.TransformType.THIRD_PERSON_RIGHT_HAND)
-                    .rotation(75, 315, 0)
-                    .translation(0, 2.5f, 0)
-                    .scale(0.375f)
-                .end()
-                .transform(ItemTransforms.TransformType.FIRST_PERSON_RIGHT_HAND)
-                    .rotation(0, 315, 0)
-                    .scale(0.4f)
-                .end()
-            .end();
-    }
-
+    
     // endregion
 
     // region Item
