@@ -1,6 +1,7 @@
 package com.enderio;
 
 import com.enderio.base.common.init.*;
+import com.enderio.base.common.item.tool.SoulVialItem;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.config.BaseConfig;
@@ -81,6 +82,7 @@ public class EnderIO {
         // Run datagen after registrate is finished.
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addListener(EventPriority.LOWEST, this::onGatherData);
+        modEventBus.addListener(SoulVialItem::onCommonSetup);
     }
 
     public void onGatherData(GatherDataEvent event) {
