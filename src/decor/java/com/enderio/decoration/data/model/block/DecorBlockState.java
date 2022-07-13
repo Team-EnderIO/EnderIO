@@ -1,4 +1,4 @@
-package com.enderio.decoration.datagen.model.block;
+package com.enderio.decoration.data.model.block;
 
 import com.enderio.EnderIO;
 import com.enderio.decoration.common.block.light.PoweredLight;
@@ -11,28 +11,17 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.client.model.generators.ModelProvider;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 public class DecorBlockState {
-    /**
-     * {@see ModelProvider.MODEL}
-     */
-    public static void paintedBlock(DataGenContext<Block, ? extends Block> ctx, RegistrateBlockstateProvider prov, Block toCopy) {
-        paintedBlock(ctx, prov, toCopy, null);
-    }
-
     public static void paintedBlock(DataGenContext<Block, ? extends Block> ctx, RegistrateBlockstateProvider prov, Block toCopy, @Nullable Direction itemTextureRotation) {
-        // TODO: 1.19: Tidy and add rendertype
-        Block paintedBlock = ctx.get();
-        ResourceLocation paintedBlockId = ForgeRegistries.BLOCKS.getKey(paintedBlock);
-        PaintedModelBuilder paintedModel = new PaintedModelBuilder(
-            new ResourceLocation(paintedBlockId.getNamespace(), ModelProvider.BLOCK_FOLDER + "/" + paintedBlockId.getPath()),
-            prov.models().existingFileHelper, toCopy, itemTextureRotation);
-        prov.models().getBuilder(paintedBlockId.getPath());
-        prov.models().generatedModels.put(paintedModel.getLocation(), paintedModel);
-        prov.simpleBlock(paintedBlock, paintedModel);
+        prov.simpleBlock(ctx.get(), prov.models().getBuilder(ctx.getName())
+            .customLoader(PaintedBlockModelBuilder::begin)
+            .reference(toCopy)
+            .itemTextureRotation(itemTextureRotation)
+            .end()
+        );
     }
     
     public static void lightBlock(DataGenContext<Block, ? extends Block> ctx, RegistrateBlockstateProvider prov) {

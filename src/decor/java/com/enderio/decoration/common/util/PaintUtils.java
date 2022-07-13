@@ -1,10 +1,6 @@
 package com.enderio.decoration.common.util;
 
-import com.enderio.decoration.client.model.painted.PaintedModel;
 import com.enderio.decoration.common.block.painted.IPaintedBlock;
-import com.enderio.decoration.common.item.PaintedBlockItem;
-import com.mojang.datafixers.util.Pair;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -25,6 +21,8 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class PaintUtils {
+    /** @deprecated This is kinda dirty, lets just do this properly */
+    @Deprecated(forRemoval = true)
     public static Block getBlockFromRL(String rl) {
         //Not Nullable, as ForgeRegistries usually return a default
         return ForgeRegistries.BLOCKS.getValue(new ResourceLocation(rl));

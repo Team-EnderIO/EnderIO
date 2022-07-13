@@ -16,20 +16,14 @@ import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.SlabType;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-public class PaintedSlabBlockItem extends BlockItem {
+public class PaintedSlabBlockItem extends PaintedBlockItem {
 
     public PaintedSlabBlockItem(Block pBlock, Properties pProperties) {
         super(pBlock, pProperties);
-    }
-
-    @Override
-    protected SoundEvent getPlaceSound(BlockState state, Level level, BlockPos pos, Player player) {
-        return PaintUtils.getPlaceSound(state, level, pos, player, PaintedSlabBlockItem.class)
-            .orElseGet(() -> super.getPlaceSound(state, level, pos, player));
     }
 
     //copied with hate, but I need to deal special with tileentitydata in that item

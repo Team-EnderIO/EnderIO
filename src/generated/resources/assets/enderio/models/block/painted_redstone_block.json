@@ -1,4 +1,4 @@
 {
-  "loader": "enderio:painted_model",
+  "loader": "enderio:painted_block",
   "reference": "minecraft:redstone_block"
 }

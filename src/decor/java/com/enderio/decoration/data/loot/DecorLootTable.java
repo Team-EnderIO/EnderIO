@@ -1,4 +1,4 @@
-package com.enderio.decoration.datagen.loot;
+package com.enderio.decoration.data.loot;
 
 import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;

@@ -1,30 +1,4 @@
 {
-  "display": {
-    "fixed": {
-      "rotation": [
-        0,
-        90,
-        0
-      ],
-      "scale": [
-        0.5,
-        0.5,
-        0.5
-      ]
-    },
-    "gui": {
-      "rotation": [
-        30,
-        135,
-        0
-      ],
-      "scale": [
-        0.625,
-        0.625,
-        0.625
-      ]
-    }
-  },
-  "loader": "enderio:painted_model",
+  "loader": "enderio:painted_block",
   "reference": "minecraft:oak_fence"
 }

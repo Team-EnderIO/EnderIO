@@ -1,4 +1,4 @@
-// 1.19	2022-07-12T20:01:14.255162	Registrate Provider for enderio [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
+// 1.19	2022-07-13T01:46:10.649432	Registrate Provider for enderio [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
 73adb56f72a5805aa07ee54397acb790c30cccb5 assets/enderio/blockstates/alloy_smelter.json
 38456017a1ded6fddac24d85def47523e9ee034c assets/enderio/blockstates/clear_glass.json
 38456017a1ded6fddac24d85def47523e9ee034c assets/enderio/blockstates/clear_glass_a.json
@@ -875,16 +875,16 @@ cf0ff299729718c8eca585cf46d502dac1d877e7 assets/enderio/models/block/light_inver
 cf0ff299729718c8eca585cf46d502dac1d877e7 assets/enderio/models/block/light_powered.json
 b4d6e89ae3ba83eddfd94b22eacf008ee7f0d692 assets/enderio/models/block/liquid_sunshine.json
 63033bb641035993ef11b17c5583b91e3663d8c3 assets/enderio/models/block/nutrient_distillation.json
-082add226b212b4fd633a652b61b47324a2645f0 assets/enderio/models/block/painted_crafting_table.json
-88d1d3b944e113d9f554d54c01caa21e2a5d12bf assets/enderio/models/block/painted_fence.json
-1f8b641186e6e0e659094ce088767e95f0db96e8 assets/enderio/models/block/painted_fence_gate.json
-bc5ef93cafbc688896c030d03768e65816ec82d2 assets/enderio/models/block/painted_glowstone.json
-ee05aff9088764754282a13031c4be1c8793ce4d assets/enderio/models/block/painted_redstone_block.json
-2df754f89aa20d9c7f76b8b73ed62be71c69bc36 assets/enderio/models/block/painted_sand.json
-96701e495d4a9ff215879fd33e22e6613db96205 assets/enderio/models/block/painted_slab.json
-52709b020d10afa87cc60811b308e437ebfcf397 assets/enderio/models/block/painted_stairs.json
-3cf1a7a3e61421932c529d720bdaee9f299c45c3 assets/enderio/models/block/painted_trapdoor.json
-65c381646c2b43b38bc653d1bddca6128ef53391 assets/enderio/models/block/painted_wooden_pressure_plate.json
+0eeb8b822a0a45ef5277b27eec1cb23c128c3a63 assets/enderio/models/block/painted_crafting_table.json
+f1255f99cb5c52274b94158f64d4bd3201966b6a assets/enderio/models/block/painted_fence.json
+c68744baacde733bc27447c6c1b7748c9508c7fc assets/enderio/models/block/painted_fence_gate.json
+903636de0f4e8f5a652080d1f5aa01f5e06ac0e8 assets/enderio/models/block/painted_glowstone.json
+d65c437f0f4252bfcb9e55a307db78e8e72d6bc3 assets/enderio/models/block/painted_redstone_block.json
+f44bed2e58cb63be5962e4d57b66e7ddbd5231a2 assets/enderio/models/block/painted_sand.json
+0aa18b0556dd164305c8356dfe3edc48a9ed235c assets/enderio/models/block/painted_slab.json
+79eabf3c1a729e31f17d424988d8e6ac3b62e74e assets/enderio/models/block/painted_stairs.json
+b82a67235c438c42a41c1b602939f013e534eccb assets/enderio/models/block/painted_trapdoor.json
+aa3f8ea8ca98fad6920cb71015c5b88f5e24fbb1 assets/enderio/models/block/painted_wooden_pressure_plate.json
 cf0ff299729718c8eca585cf46d502dac1d877e7 assets/enderio/models/block/powered_light.json
 cf0ff299729718c8eca585cf46d502dac1d877e7 assets/enderio/models/block/powered_light_inverted.json
 cf0ff299729718c8eca585cf46d502dac1d877e7 assets/enderio/models/block/powered_light_inverted_powered.json
@@ -2617,7 +2617,7 @@ f2418a696c4af742fb0eee30e69489f8a9fa53b5 data/enderio/loot_tables/blocks/painted
 2137b78520f2d1fcfeadd9c2dcce50ebb78c3080 data/enderio/loot_tables/blocks/painted_glowstone.json
 1829c09f3862097d2350ec76e55dac1877383c3c data/enderio/loot_tables/blocks/painted_redstone_block.json
 ada06d0d4af25d17fa1966d635b5fbbee39d8d71 data/enderio/loot_tables/blocks/painted_sand.json
-a8a919ea3b020a9b847be86aa3397faacc8a709a data/enderio/loot_tables/blocks/painted_slab.json
+bab9903afe840adde41898daec18cfc52828f551 data/enderio/loot_tables/blocks/painted_slab.json
 8c004ad5fe3d6b31d4f6bc57692d63d0c3480c8a data/enderio/loot_tables/blocks/painted_stairs.json
 15dc5f788642ba21c01a8461b9774b919f48b8b9 data/enderio/loot_tables/blocks/painted_trapdoor.json
 82e0df4a112b5b94456ba225f9dc552f9f19a1b4 data/enderio/loot_tables/blocks/painted_wooden_pressure_plate.json

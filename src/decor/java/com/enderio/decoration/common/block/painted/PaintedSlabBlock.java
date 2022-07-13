@@ -31,7 +31,7 @@ public class PaintedSlabBlock extends SlabBlock implements EntityBlock, IPainted
     public Block getPaint(BlockGetter level, BlockPos pos) {
         if (level.getBlockState(pos).getValue(SlabBlock.TYPE) != SlabType.BOTTOM
             && level.getExistingBlockEntity(pos) instanceof DoublePaintedBlockEntity paintedBlockEntity
-            && paintedBlockEntity.getPaint2() != Blocks.AIR)
+            && paintedBlockEntity.getPaint2() != null)
             return paintedBlockEntity.getPaint2();
         return IPaintedBlock.super.getPaint(level, pos);
     }

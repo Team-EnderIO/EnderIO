@@ -2,15 +2,14 @@ package com.enderio.decoration.client.model.painted;
 
 import com.enderio.core.client.RenderUtil;
 import com.enderio.core.data.model.EIOModel;
+import com.enderio.decoration.common.blockentity.DoublePaintedBlockEntity;
 import com.enderio.decoration.common.blockentity.IPaintableBlockEntity;
 import com.enderio.decoration.common.blockentity.SinglePaintedBlockEntity;
 import com.enderio.decoration.common.util.PaintUtils;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.datafixers.util.Pair;
-import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.ItemModelShaper;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -22,43 +21,205 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.block.state.properties.*;
 import net.minecraftforge.client.ChunkRenderTypeSet;
 import net.minecraftforge.client.model.IDynamicBakedModel;
 import net.minecraftforge.client.model.IQuadTransformer;
 import net.minecraftforge.client.model.data.ModelData;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.util.*;
 
-// TODO: 1.19: Delete after checks.
-public abstract class PaintedModel implements IDynamicBakedModel {
+// TODO: This needs major cleaning. Just migrating first.
+// TODO: Block color seems buggy on sides of double slabs. Unsure if it affects others
+public class PaintedBlockModel implements IDynamicBakedModel {
 
-    private final Map<Block, List<BakedModel>> itemRenderCache = new HashMap<>();
+    private final @Nullable Map<Block, List<BakedModel>> itemRenderCache;
 
-    private final ItemTransforms transforms;
+    private final Block reference;
 
     @Nullable
     private final Direction rotateItemTo;
 
-    protected PaintedModel(ItemTransforms transforms, @Nullable Direction rotateItemTo) {
-        this.transforms = transforms;
+    public PaintedBlockModel(Block reference, @Nullable Direction rotateItemTo) {
+        this.itemRenderCache = new HashMap<>();
+        this.reference = reference;
         this.rotateItemTo = rotateItemTo;
     }
 
-    protected abstract Block copyModelFromBlock();
+    @Override
+    public @NotNull List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull ModelData extraData,
+        @Nullable RenderType renderType) {
+        if (state != null) {
+            BlockState replicaState = replicateState(state);
 
-    protected BakedModel getModel(BlockState state) {
+            if (state.hasProperty(SlabBlock.TYPE)) {
+                // Slab specifics
+                List<BakedQuad> quads = new ArrayList<>();
+                SlabType slabType = state.getValue(SlabBlock.TYPE);
+
+                // Bottom slab
+                if (slabType == SlabType.BOTTOM || slabType == SlabType.DOUBLE) {
+                    Block paint = extraData.get(DoublePaintedBlockEntity.PAINT);
+                    // @formatter:off
+                    List<BakedQuad> shape = getModel(replicaState.setValue(SlabBlock.TYPE, SlabType.BOTTOM))
+                        .getQuads(state, side, rand, ModelData.EMPTY, renderType);
+                    // @formatter:on
+                    quads.addAll(getQuadsUsingShape(paint, shape, side, rand, null, renderType));
+                }
+
+                // Top slab
+                if (slabType == SlabType.TOP || slabType == SlabType.DOUBLE) {
+                    Block paint = extraData.get(DoublePaintedBlockEntity.PAINT2);
+                    // @formatter:off
+                    List<BakedQuad> shape = getModel(replicaState.setValue(SlabBlock.TYPE, SlabType.TOP))
+                        .getQuads(state, side, rand, ModelData.EMPTY, renderType);
+                    // @formatter:on
+                    quads.addAll(getQuadsUsingShape(paint, shape, side, rand, null, renderType));
+                }
+
+                return quads;
+            } else {
+                // Simple model
+                List<BakedQuad> shape = getModel(replicaState).getQuads(replicaState, side, rand);
+                Direction direction = null;
+                for (Property<?> property : state.getProperties()) {
+                    if (property instanceof DirectionProperty directionProperty) {
+                        direction = state.getValue(directionProperty).getOpposite();
+                    }
+                }
+
+                return getQuadsUsingShape(extraData.get(SinglePaintedBlockEntity.PAINT), shape, side, rand, direction, renderType);
+            }
+        }
+
+        return List.of();
+    }
+
+    @Override
+    public boolean useAmbientOcclusion() {
+        return true;
+    }
+
+    @Override
+    public boolean isGui3d() {
+        return true;
+    }
+
+    @Override
+    public boolean usesBlockLight() {
+        return true;
+    }
+
+    @Override
+    public boolean isCustomRenderer() {
+        return false;
+    }
+
+    @Override
+    public TextureAtlasSprite getParticleIcon(@NotNull ModelData data) {
+        Block paint = data.get(SinglePaintedBlockEntity.PAINT);
+        if (paint != null) {
+            BakedModel model = getModel(paint.defaultBlockState());
+            TextureAtlasSprite sprite = model.getParticleIcon(ModelData.EMPTY);
+            if (!sprite.getName().getPath().equals("missingno"))
+                return sprite;
+        }
+
+        if (data.has(DoublePaintedBlockEntity.PAINT2)) {
+            paint = data.get(DoublePaintedBlockEntity.PAINT2);
+            if (paint != null) {
+                BakedModel model = getModel(paint.defaultBlockState());
+                return model.getParticleIcon(ModelData.EMPTY);
+            }
+        }
+
+        return EIOModel.getMissingTexture();
+    }
+
+    @Override
+    public TextureAtlasSprite getParticleIcon() {
+        return EIOModel.getMissingTexture();
+    }
+
+    @Override
+    public ItemOverrides getOverrides() {
+        return ItemOverrides.EMPTY;
+    }
+
+    @Override
+    public ChunkRenderTypeSet getRenderTypes(BlockState paintedBlockState, RandomSource rand, ModelData data) {
+        ChunkRenderTypeSet chunkRenderTypeSet = ChunkRenderTypeSet.union(
+            IPaintableBlockEntity.PAINT_DATA_PROPERTIES.stream()
+                .map(data::get)
+                //remove all unset paints
+                .filter(Objects::nonNull)
+                .map(Block::defaultBlockState)
+                //do original ChunkRenderType lookup
+                .map(state -> getModel(state).getRenderTypes(state, rand, ModelData.EMPTY))
+                .toList());
+
+        if (chunkRenderTypeSet.isEmpty()) {
+            return ChunkRenderTypeSet.of(RenderType.solid());
+        }
+        return chunkRenderTypeSet;
+    }
+
+    @Override
+    public List<RenderType> getRenderTypes(ItemStack itemStack, boolean fabulous) {
+        @Nullable
+        Block paint = PaintUtils.getPaint(itemStack);
+        if (paint != null) {
+            return List.of(ItemBlockRenderTypes.getRenderType(paint.defaultBlockState(), fabulous));
+        }
+        return List.of(fabulous ? Sheets.translucentCullBlockSheet() : Sheets.translucentItemSheet());
+    }
+
+    @Override
+    public List<BakedModel> getRenderPasses(ItemStack itemStack, boolean fabulous) {
+        if (itemRenderCache == null)
+            return List.of(this);
+        Block paint = PaintUtils.getPaint(itemStack);
+        if (paint != null) {
+            return itemRenderCache.computeIfAbsent(paint,
+                paintKey -> List.of(new ItemModel(paint))
+            );
+        }
+        return List.of(this);
+    }
+
+    @Override
+    public ItemTransforms getTransforms() {
+        return getItemModel().getTransforms();
+    }
+
+    // region Model Shadowing Logic
+
+    private BakedModel getModel(BlockState state) {
         return Minecraft.getInstance().getBlockRenderer().getBlockModel(state);
     }
 
-    protected BakedModel getModelFromOwn(BlockState ownBlockState) {
-        return getModel(copyBlockState(ownBlockState));
+    private BakedModel getItemModel() {
+        return Minecraft.getInstance().getItemRenderer().getModel(reference.asItem().getDefaultInstance(), null, null, 0);
+    }
+
+    private BlockState replicateState(@Nullable BlockState selfState) {
+        BlockState toState = reference.defaultBlockState();
+        if (selfState == null)
+            return toState;
+        for (Property<?> property : selfState.getProperties()) {
+            if (property instanceof BooleanProperty booleanProperty && toState.hasProperty(booleanProperty)) {
+                toState = toState.setValue(booleanProperty, selfState.getValue(booleanProperty));
+            }
+            if (property instanceof EnumProperty enumProperty && toState.hasProperty(enumProperty)) {
+                toState = toState.setValue(enumProperty, selfState.getValue(enumProperty));
+            }
+        }
+        return toState;
     }
 
     /**
@@ -77,7 +238,7 @@ public abstract class PaintedModel implements IDynamicBakedModel {
             List<BakedQuad> returnQuads = new ArrayList<>();
             for (BakedQuad shapeQuad : shape) {
                 Pair<TextureAtlasSprite, Boolean> spriteData = spriteOptional.orElseGet(() -> getSpriteFromModel(shapeQuad, model, paint, rotation));
-                returnQuads.add(copyQuad(shapeQuad, spriteData.getFirst(), spriteData.getSecond()));
+                returnQuads.add(paintQuad(shapeQuad, spriteData.getFirst(), spriteData.getSecond()));
             }
             return returnQuads;
         }
@@ -103,7 +264,8 @@ public abstract class PaintedModel implements IDynamicBakedModel {
      * @param rotation a rotation value, so that if both blocks support rotation, the correct texture is gathered
      * @return an Optional of a Pair of the texture of the Block and if the texture is tinted at that side
      */
-    private Optional<Pair<TextureAtlasSprite, Boolean>> getSpriteData(Block paint, Direction side, RandomSource rand, Direction rotation, RenderType renderType) {
+    private Optional<Pair<TextureAtlasSprite, Boolean>> getSpriteData(Block paint, Direction side, RandomSource rand, Direction rotation,
+        RenderType renderType) {
         BlockState state = paintWithRotation(paint, rotation);
         List<BakedQuad> quads = getModel(state).getQuads(state, side, rand, ModelData.EMPTY, renderType);
         return quads.isEmpty() ? Optional.empty() : Optional.of(Pair.of(quads.get(0).getSprite(), quads.get(0).isTinted()));
@@ -128,28 +290,6 @@ public abstract class PaintedModel implements IDynamicBakedModel {
         return quads.isEmpty() ? Pair.of(EIOModel.getMissingTexture(), false) : Pair.of(quads.get(0).getSprite(), quads.get(0).isTinted());
     }
 
-
-    /**
-     * copies Painted BlockState Properties to shape for enum Properties and BooleanProperties to use the correct stair for shape etc.
-     *
-     * @param ownBlockState paint
-     * @return shape
-     */
-    protected BlockState copyBlockState(BlockState ownBlockState) {
-        BlockState toState = copyModelFromBlock().defaultBlockState();
-        if (ownBlockState == null)
-            return toState;
-        for (Property<?> property : ownBlockState.getProperties()) {
-            if (property instanceof BooleanProperty booleanProperty && toState.hasProperty(booleanProperty)) {
-                toState = toState.setValue(booleanProperty, ownBlockState.getValue(booleanProperty));
-            }
-            if (property instanceof EnumProperty enumProperty && toState.hasProperty(enumProperty)) {
-                toState = toState.setValue(enumProperty, ownBlockState.getValue(enumProperty));
-            }
-        }
-        return toState;
-    }
-
     /**
      * This method copies a quad from the shape and modifies it to create one, that display the new texture.
      * First it copies the quad with the values of the shape quad. The new Sprite and tintValues are added to the quad.
@@ -164,11 +304,11 @@ public abstract class PaintedModel implements IDynamicBakedModel {
      * @param shouldTint is that quad on the texture tinted
      * @return a new Quad with the same coordinates but a different texture
      */
-    protected BakedQuad copyQuad(BakedQuad toCopy, TextureAtlasSprite sprite, boolean shouldTint) {
+    protected BakedQuad paintQuad(BakedQuad toCopy, TextureAtlasSprite sprite, boolean shouldTint) {
         BakedQuad copied = new BakedQuad(Arrays.copyOf(toCopy.getVertices(), 32), shouldTint ? 1 : -1, toCopy.getDirection(), sprite, toCopy.isShade());
 
         for (int i = 0; i < 4; i++) {
-            float[] uv0 = RenderUtil.unpackVertices(copied.getVertices(), i, IQuadTransformer.UV0,2);
+            float[] uv0 = RenderUtil.unpackVertices(copied.getVertices(), i, IQuadTransformer.UV0, 2);
             uv0[0] = (uv0[0] - toCopy.getSprite().getU0()) * sprite.getWidth() / toCopy.getSprite().getWidth() + sprite.getU0();
             uv0[1] = (uv0[1] - toCopy.getSprite().getV0()) * sprite.getHeight() / toCopy.getSprite().getHeight() + sprite.getV0();
             int[] packedTextureData = RenderUtil.packUV(uv0[0], uv0[1]);
@@ -178,119 +318,22 @@ public abstract class PaintedModel implements IDynamicBakedModel {
         return copied;
     }
 
-    @Override
-    public ItemOverrides getOverrides() {
-        return ItemOverrides.EMPTY;
-    }
+    // endregion
 
-    @Override
-    public boolean useAmbientOcclusion() {
-        return false;
-    }
-
-    @Override
-    public boolean isGui3d() {
-        return true;
-    }
-
-    @Override
-    public boolean usesBlockLight() {
-        return true;
-    }
-
-    @Override
-    public boolean isCustomRenderer() {
-        return false;
-    }
-
-    /**
-     * @param data
-     * @return the particleIcon used for the breaking animation and other. Currently not used properly by Forge. A PR is in the works
-     */
-    @Override
-    public TextureAtlasSprite getParticleIcon(@Nonnull ModelData data) {
-        Block paint = data.get(SinglePaintedBlockEntity.PAINT);
-        if (paint != null) {
-            BakedModel model = getModel(paint.defaultBlockState());
-            return model.getParticleIcon(ModelData.EMPTY);
-        }
-        return EIOModel.getMissingTexture();
-    }
-
-    @Override
-    public TextureAtlasSprite getParticleIcon() {
-        return EIOModel.getMissingTexture();
-    }
-
-    @Override
-    public ChunkRenderTypeSet getRenderTypes(BlockState paintedBlockState, RandomSource rand, ModelData data) {
-        ChunkRenderTypeSet chunkRenderTypeSet = ChunkRenderTypeSet.union(
-            IPaintableBlockEntity.PAINT_DATA_PROPERTIES.stream()
-                    .map(data::get)
-                    //remove all unset paints
-                    .filter(Objects::nonNull)
-                    .map(Block::defaultBlockState)
-                    //do original ChunkRenderType lookup
-                    .map(state -> getModel(state).getRenderTypes(state, rand, ModelData.EMPTY))
-                    .toList());
-
-        if (chunkRenderTypeSet.isEmpty()) {
-            return ChunkRenderTypeSet.of(RenderType.solid());
-        }
-        return chunkRenderTypeSet;
-    }
-
-    @Override
-    public List<RenderType> getRenderTypes(ItemStack itemStack, boolean fabulous) {
-        @Nullable
-        Block paint = PaintUtils.getPaint(itemStack);
-        if (paint != null) {
-            return List.of(ItemBlockRenderTypes.getRenderType(paint.defaultBlockState(), fabulous));
-        }
-        return List.of(fabulous ? Sheets.translucentCullBlockSheet() : Sheets.translucentItemSheet());
-    }
-
-    @Override
-    public List<BakedModel> getRenderPasses(ItemStack itemStack, boolean fabulous) {
-        Block paint = PaintUtils.getPaint(itemStack);
-        if (paint != null) {
-            return itemRenderCache.computeIfAbsent(paint,
-                paintKey -> List.of(new ItemPaintedModel(paint, copyModelFromBlock(), rotateItemTo))
-            );
-        }
-        return List.of(this);
-    }
-
-    @Override
-    public ItemTransforms getTransforms() {
-        return transforms;
-    }
-
-    private class ItemPaintedModel implements IDynamicBakedModel {
+    private class ItemModel implements IDynamicBakedModel {
 
         private final Block paint;
-        private final Block shapeFrom;
         private final Map<Direction, List<BakedQuad>> bakedQuads = new HashMap<>();
-        @Nullable
-        private final Direction rotateItemTo;
 
-        private ItemPaintedModel(Block paint, Block shapeFrom, @Nullable Direction rotateItemTo) {
+        private ItemModel(Block paint) {
             this.paint = paint;
-            this.shapeFrom = shapeFrom;
-            this.rotateItemTo = rotateItemTo;
         }
 
-        @Nonnull
         @Override
-        public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand, ModelData extraData, RenderType renderType) {
-            return bakedQuads.computeIfAbsent(side, side1 -> PaintedModel.this.getQuadsUsingShape(
-                paint,
-                Minecraft
-                    .getInstance()
-                    .getItemRenderer()
-                    .getModel(shapeFrom.asItem().getDefaultInstance(), null, null, 0)
-                    .getQuads(state, side, rand, ModelData.EMPTY, renderType),
-                side, rand, rotateItemTo, renderType));
+        public @NotNull List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull ModelData extraData,
+            @Nullable RenderType renderType) {
+            return bakedQuads.computeIfAbsent(side, side1 -> getQuadsUsingShape(paint, getItemModel().getQuads(state, side, rand, ModelData.EMPTY, renderType),
+                side1, rand, rotateItemTo, renderType));
         }
 
         @Override
@@ -315,7 +358,7 @@ public abstract class PaintedModel implements IDynamicBakedModel {
 
         @Override
         public TextureAtlasSprite getParticleIcon() {
-            return PaintedModel.this.getParticleIcon();
+            return PaintedBlockModel.this.getParticleIcon();
         }
 
         @Override
@@ -325,7 +368,7 @@ public abstract class PaintedModel implements IDynamicBakedModel {
 
         @Override
         public ItemTransforms getTransforms() {
-            return transforms;
+            return getItemModel().getTransforms();
         }
     }
 }
