@@ -1,6 +1,6 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "enderio:item/vapor_of_levity_bucket"
-  }
+  "parent": "forge:item/bucket",
+  "flip_gas": true,
+  "fluid": "enderio:vapor_of_levity",
+  "loader": "forge:fluid_container"
 }

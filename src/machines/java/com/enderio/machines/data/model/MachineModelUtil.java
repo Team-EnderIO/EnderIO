@@ -92,23 +92,24 @@ public class MachineModelUtil {
                     .build();
             });
 
-        // TODO: Finish after Rover's forge PR.
-//        prov.models()
-//            .withExistingParent(ctx.getName() + "_item", prov.mcLoc("block/block"))
-//            .customLoader(CompositeModelBuilder::begin)
-//            .child("frame", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/enhanced_machine_frame")))
-//            .child("front", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/" + ctx.getName() + "_front")))
+        prov.models()
+            .withExistingParent(ctx.getName() + "_inventory", prov.mcLoc("block/block"))
+            .customLoader(CompositeModelBuilder::begin)
+            .child("frame", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/enhanced_machine_frame")))
+            .child("front", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/" + ctx.getName() + "_front")))
+            // TODO: Top with offset after my PR./ :)
 //            .child("top", EIOModel
 //                .getExistingParent(prov.models(), EnderIO.loc("block/" + ctx.getName() + "_top")))
-//            .end();
+            .end();
     }
 
     public static void enhancedMachineBlockItem(DataGenContext<Item, ? extends Item> ctx, RegistrateItemModelProvider prov) {
         // TODO: Work out how we're doing this. Probably just make a block model called item then bundle this in?
-        EIOModel.compositeModel(prov, ctx.getName(), builder -> builder
-            .component(EnderIO.loc("block/enhanced_machine_frame"))
-            .component(EnderIO.loc("block/" + ctx.getName() + "_front"))
-            .component(EnderIO.loc("block/" + ctx.getName() + "_top"), new Vector3f(0.0f, 1.0f, 0.0f)));
+//        EIOModel.compositeModel(prov, ctx.getName(), builder -> builder
+//            .component(EnderIO.loc("block/enhanced_machine_frame"))
+//            .component(EnderIO.loc("block/" + ctx.getName() + "_front"))
+//            .component(EnderIO.loc("block/" + ctx.getName() + "_top"), new Vector3f(0.0f, 1.0f, 0.0f)));
+        prov.withExistingParent(ctx.getName(), EnderIO.loc("block/" + ctx.getName() + "_inventory"));
     }
 
     // endregion

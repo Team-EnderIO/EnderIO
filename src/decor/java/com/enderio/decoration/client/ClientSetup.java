@@ -1,6 +1,6 @@
 package com.enderio.decoration.client;
 
-import com.enderio.decoration.client.model.painted.PaintedBlockLoader;
+import com.enderio.decoration.client.model.painted.PaintedBlockGeometry;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -13,7 +13,7 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void modelInit(ModelEvent.RegisterGeometryLoaders event) {
-        event.register("painted_block", new PaintedBlockLoader());
+        event.register("painted_block", new PaintedBlockGeometry.Loader());
     }
 
 }

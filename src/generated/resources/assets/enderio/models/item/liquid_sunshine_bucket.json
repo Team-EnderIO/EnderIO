@@ -1,6 +1,5 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "enderio:item/liquid_sunshine_bucket"
-  }
+  "parent": "forge:item/bucket",
+  "fluid": "enderio:liquid_sunshine",
+  "loader": "forge:fluid_container"
 }

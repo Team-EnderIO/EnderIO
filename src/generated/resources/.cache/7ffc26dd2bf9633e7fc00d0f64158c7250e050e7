@@ -1,4 +1,4 @@
-// 1.19	2022-07-13T01:46:10.649432	Registrate Provider for enderio [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
+// 1.19	2022-07-14T22:18:02.295517	Registrate Provider for enderio [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
 73adb56f72a5805aa07ee54397acb790c30cccb5 assets/enderio/blockstates/alloy_smelter.json
 38456017a1ded6fddac24d85def47523e9ee034c assets/enderio/blockstates/clear_glass.json
 38456017a1ded6fddac24d85def47523e9ee034c assets/enderio/blockstates/clear_glass_a.json
@@ -846,11 +846,13 @@ f8f249350a74deab33c17209c157173118f06241 assets/enderio/models/block/end_steel_b
 b77719df0e9f5330599ed56387c05f372a9a04b6 assets/enderio/models/block/energetic_alloy_block.json
 8486facee689624254f5aaab0d5d60f12e15295f assets/enderio/models/block/enhanced_alloy_smelter.json
 7a984f0cb6c4984a122697c65b21dcca45d49c1a assets/enderio/models/block/enhanced_alloy_smelter_front_on.json
+2a122a17dc1ddb030295ac90e7821afe1d592223 assets/enderio/models/block/enhanced_alloy_smelter_inventory.json
 9e26c3692200a67f210e067846ac4f166039a093 assets/enderio/models/block/enhanced_alloy_smelter_on.json
 7a7b42cc73c625791616c5c6227b8515905e3e38 assets/enderio/models/block/enhanced_alloy_smelter_top_on.json
 29ad6035b17698d9d7f6518cbe8409ebd7bb8b75 assets/enderio/models/block/enhanced_machine_chassis.json
 d0d09ad9b4551f94fabb0e063683e7729d1fcc89 assets/enderio/models/block/enhanced_sag_mill.json
 8ad3d7f0a29657f49e2ec1eac1bca6492d6101a8 assets/enderio/models/block/enhanced_sag_mill_front_on.json
+b5f2d2cc2fe2298f01b4ea8dc340c767981ac991 assets/enderio/models/block/enhanced_sag_mill_inventory.json
 d6815f3972da81cf050d311a0aebe170a28fa3b2 assets/enderio/models/block/enhanced_sag_mill_on.json
 b74725aabaa1fe269751b9c30f644fec6e0d07f6 assets/enderio/models/block/enhanced_sag_mill_top_on.json
 b4ee0d4c70b453ec76e8e104b98c7259090d01da assets/enderio/models/block/fire_floor0.json
@@ -1297,8 +1299,8 @@ dcd597bc3571cb0309a859d096e37964bbe254e0 assets/enderio/models/item/clear_glass_
 dcd597bc3571cb0309a859d096e37964bbe254e0 assets/enderio/models/item/clear_glass_red.json
 dcd597bc3571cb0309a859d096e37964bbe254e0 assets/enderio/models/item/clear_glass_white.json
 dcd597bc3571cb0309a859d096e37964bbe254e0 assets/enderio/models/item/clear_glass_yellow.json
-868d995f89bad44001052075cdbb8a90ea4900fd assets/enderio/models/item/cloud_seed_bucket.json
-a884158be68762f60431f9cb7769115fd4dbce12 assets/enderio/models/item/cloud_seed_concentrated_bucket.json
+5072c38a244be52709677a2cb1cb7a74114a07a3 assets/enderio/models/item/cloud_seed_bucket.json
+921c8d095edd753aeb908e735a988b393b5ddd9f assets/enderio/models/item/cloud_seed_concentrated_bucket.json
 ed1532916163b822c9743e77c083634a03aa92f1 assets/enderio/models/item/coal_powder.json
 4d6e6bd91db367ba57b22e4ba50857068487c3af assets/enderio/models/item/cobalt_powder.json
 37ac1dd6a77dc2f47e5de9785a8e7645485b0616 assets/enderio/models/item/cold_fire_igniter.json
@@ -1341,7 +1343,7 @@ bb521df1a2b5f3a2e0b3f060e3ab7ed83ac3b758 assets/enderio/models/item/dark_steel_u
 c0eabd0976dd3f43bff923ef883fe1525ae628e5 assets/enderio/models/item/dark_steel_upgrade_spoon.json
 f1b89ceb5f8759ec4b54050fdc54650674189b5e assets/enderio/models/item/dark_steel_upgrade_tnt.json
 1019ae1ad5e635b7c509ba6d989c14f544deae6c assets/enderio/models/item/dark_steel_upgrade_tnt1.json
-3f9f35dc1fa38f62ce37a72bf7f5938e619921ba assets/enderio/models/item/dew_of_the_void_bucket.json
+d5831f5cd1caadc0c28c7c8ac66a59cdac26947f assets/enderio/models/item/dew_of_the_void_bucket.json
 e9e4465eba745b4292e56b3614e3e910a48aad3d assets/enderio/models/item/double_layer_capacitor.json
 7dc3539f41fc45d478be5ce1839b435eaf1c6ba3 assets/enderio/models/item/electromagnet.json
 888978000eef46a2da4d5204036d57c94cfe2a79 assets/enderio/models/item/empty_soul_vial.json
@@ -1371,14 +1373,14 @@ ba0bd75fa285d74340a5e239de562abd8613e89e assets/enderio/models/item/energetic_al
 12a6f20717edcfb7c502023f9f2bd3b4fe187132 assets/enderio/models/item/energetic_alloy_nugget.json
 d1038b29864d40de2d1ef378ce7499e9e9289807 assets/enderio/models/item/energized_gear.json
 0a154b4a5dbffb5072a46f734e8d7f0903109864 assets/enderio/models/item/energized_gear_helper.json
-2406b765717a8bb3ba2a2223d551346621c4bae2 assets/enderio/models/item/enhanced_alloy_smelter.json
+195386844aa7fbba85d0f118f98bdff2d47b47d4 assets/enderio/models/item/enhanced_alloy_smelter.json
 b8929c93257f026d8f6929f548e2d3c6a06ea293 assets/enderio/models/item/enhanced_dye_blend.json
 fea320aa8b28123e9616a2fd24a922aef9eeec1e assets/enderio/models/item/enhanced_machine_chassis.json
 5d1d056b309fa1cad705fd913e3d749517b83c7c assets/enderio/models/item/enhanced_machine_parts.json
-bf6981d59c842a25514702e8fd0915206d0a662b assets/enderio/models/item/enhanced_sag_mill.json
+de71a32a0248a1a279ec5ce52aefde7e21ae0249 assets/enderio/models/item/enhanced_sag_mill.json
 59d6784c12eaf298e099563717d9b0a93329d915 assets/enderio/models/item/enticing_crystal.json
 78c3a80c6fdc07869762df50f4741032f693f5da assets/enderio/models/item/filled_soul_vial.json
-aae6f7e72bd1ab0aaf3dec01e76ec5c4e5f3aa2f assets/enderio/models/item/fire_water_bucket.json
+cca1cca320fb65e24e56132e8895a8138db6dde8 assets/enderio/models/item/fire_water_bucket.json
 329a67c05dcaf87bcb6e94b81ab71b2257f8e5a7 assets/enderio/models/item/flour.json
 064480335fe09964a54889a0012fd164431fd8af assets/enderio/models/item/franken_zombie.json
 64ae589a803bc440e2fbbe3dc30c93d58fd686d2 assets/enderio/models/item/fused_quartz.json
@@ -1743,7 +1745,7 @@ f580841073573761d2535d45f89ee10aa0e1317d assets/enderio/models/item/glider_wings
 02ba60cac37eb6d958e38f52e6a2aeca52442b87 assets/enderio/models/item/gold_powder.json
 af38979577ffdcc92c1727a640ed46838f9d91e6 assets/enderio/models/item/grains_of_infinity.json
 5f9efb8639febee262c11035c4a8213ff6066c65 assets/enderio/models/item/guardian_diode.json
-e1ffa9410929bf0284a0e331f0f6e0ddcb04837d assets/enderio/models/item/hootch_bucket.json
+fb786f09ff8b6a7c3e8aafcf763845ec1233a88e assets/enderio/models/item/hootch_bucket.json
 80e34b528b89a656f34c98a52bf15e72e8c423b2 assets/enderio/models/item/industrial_dye_blend.json
 7ef5b6e5fda9122d4d176c585548d62ce2d14221 assets/enderio/models/item/industrial_machine_chassis.json
 0a0758abf571400112e6becc08f96e44fba5602f assets/enderio/models/item/industrial_machine_parts.json
@@ -1759,12 +1761,12 @@ d1038b29864d40de2d1ef378ce7499e9e9289807 assets/enderio/models/item/iron_gear.js
 f293ecbd0ab01aa75030ef1af5894c21b707452c assets/enderio/models/item/lapis_lazuli_powder.json
 e4b847950b42d50fe47c6bc70184f947bc32be44 assets/enderio/models/item/light.json
 e4b847950b42d50fe47c6bc70184f947bc32be44 assets/enderio/models/item/light_inverted.json
-26cfb402d5e367f2eb5295051cb6fce93aeee5e1 assets/enderio/models/item/liquid_sunshine_bucket.json
+ac086baee59f7f31d942fe2ac121d1506b983560 assets/enderio/models/item/liquid_sunshine_bucket.json
 829ad621773906479f115824c4ac31a5979a5118 assets/enderio/models/item/location_printout.json
 e1beab9392cc6d650bc2790ae1e162081b3f0d87 assets/enderio/models/item/loot_capacitor.json
 cf1dcabe426d89ab894dde879fa5e6283a17893e assets/enderio/models/item/monster_token.json
 ae824e8244ff4b867de297336e19214cf3659d97 assets/enderio/models/item/nethercotta.json
-608267f488561677c99b7833e0df72b293f16fda assets/enderio/models/item/nutrient_distillation_bucket.json
+3ac6dc423a2c2ff37a65f23b6547215add96d947 assets/enderio/models/item/nutrient_distillation_bucket.json
 16368aeeb8d8923ce1d1efce3470f5641bf55c1a assets/enderio/models/item/nutritious_stick.json
 47444500f58113a680dfc4916fef5597d9fd14aa assets/enderio/models/item/obsidian_powder.json
 4ec7baf4bc038fc1a8e2b32e1f26029895c83e98 assets/enderio/models/item/octadic_capacitor.json
@@ -1816,7 +1818,7 @@ eaa251a9f559c7b174b4fd57af66f1c93abb86ef assets/enderio/models/item/redstone_all
 0dfa0f3ddffcf59aa6bea887859239f157664344 assets/enderio/models/item/resetting_lever_thirty_inv.json
 0dfa0f3ddffcf59aa6bea887859239f157664344 assets/enderio/models/item/resetting_lever_three_hundred.json
 0dfa0f3ddffcf59aa6bea887859239f157664344 assets/enderio/models/item/resetting_lever_three_hundred_inv.json
-aaa85c97bf7fe92bafc0999c2e643dd343654a69 assets/enderio/models/item/rocket_fuel_bucket.json
+579cef2b0aa9afeb3275b90638b9a3f3408f2018 assets/enderio/models/item/rocket_fuel_bucket.json
 7c15178f1fe94ed2ff667dff33a195d610765404 assets/enderio/models/item/sag_mill.json
 796197b55d6c851182809f466a26f644f8d3606f assets/enderio/models/item/sentient_ender.json
 e45b2c454f5835507c6300b560f3618d9dee96b8 assets/enderio/models/item/silent_acacia_pressure_plate.json
@@ -1857,7 +1859,7 @@ d1038b29864d40de2d1ef378ce7499e9e9289807 assets/enderio/models/item/stone_gear.j
 aadd332db19bd3265bf5d4d3585d9a0838fde13e assets/enderio/models/item/stone_gear_helper.json
 5ffec96a993c32c44a8c963a8ccf60a28fc884a2 assets/enderio/models/item/tin_powder.json
 cac47137420ec2bd1014a4e7df6368ca791d17d3 assets/enderio/models/item/unfired_death_urn.json
-b294b20f62d35ce7c0d5aae1eb8a983f9d4568b8 assets/enderio/models/item/vapor_of_levity_bucket.json
+214428576ef06e0892bf9ccec3ee8722f56cb3ee assets/enderio/models/item/vapor_of_levity_bucket.json
 661e7a19d90054fc2654576752a63a1a6ccded8d assets/enderio/models/item/vibrant_alloy_block.json
 379f6ee9316abe994052b2855078ca1ff095d516 assets/enderio/models/item/vibrant_alloy_grinding_ball.json
 581c437ca94d110987932f875d900c35f2838587 assets/enderio/models/item/vibrant_alloy_ingot.json
@@ -1870,7 +1872,7 @@ d1038b29864d40de2d1ef378ce7499e9e9289807 assets/enderio/models/item/vibrant_gear
 4accaa7430f2e705365693931196d5a041220b4c assets/enderio/models/item/withering_powder.json
 d1038b29864d40de2d1ef378ce7499e9e9289807 assets/enderio/models/item/wood_gear.json
 7248ab7e60d0ca1ee31d7c091e7b38071463b5cb assets/enderio/models/item/wood_gear_helper.json
-0cf5f1f814175de9d7cd2d5fa0f1f4a34bfaa542 assets/enderio/models/item/xp_juice_bucket.json
+7d5556372d91efdb1dc73df0656035d512475f23 assets/enderio/models/item/xp_juice_bucket.json
 91206927b32aaa6648e1dee9e6e3ab74c639a297 assets/enderio/models/item/yeta_wrench.json
 064480335fe09964a54889a0012fd164431fd8af assets/enderio/models/item/zombie_controller.json
 4f2a8044184315a68a5dc0700e1826c521357570 assets/enderio/models/item/zombie_electrode.json

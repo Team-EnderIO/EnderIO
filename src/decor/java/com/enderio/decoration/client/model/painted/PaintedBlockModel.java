@@ -40,6 +40,9 @@ public class PaintedBlockModel implements IDynamicBakedModel {
 
     private final @Nullable Map<Block, List<BakedModel>> itemRenderCache;
 
+    /**
+     * The block which model we retexture
+     */
     private final Block reference;
 
     @Nullable
@@ -58,7 +61,7 @@ public class PaintedBlockModel implements IDynamicBakedModel {
             BlockState replicaState = replicateState(state);
 
             if (state.hasProperty(SlabBlock.TYPE)) {
-                // Slab specifics
+                // Support slabs with different textures on top and bottom
                 List<BakedQuad> quads = new ArrayList<>();
                 SlabType slabType = state.getValue(SlabBlock.TYPE);
 
