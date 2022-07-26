@@ -7,6 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
@@ -57,7 +58,7 @@ public class EntityCaptureUtils {
         if (entity != null && isBlacklistedBoss(entity))
             return CapturableStatus.BOSS;
 
-        if (!type.canSerialize())
+        if (!type.canSerialize() || type.getCategory() == MobCategory.MISC)
             return CapturableStatus.INCOMPATIBLE;
 
         if (BaseConfig.COMMON.ITEMS.SOUL_VIAL_BLACKLIST.get().contains(ForgeRegistries.ENTITY_TYPES.getKey(type).toString()))
