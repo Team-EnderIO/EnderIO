@@ -35,7 +35,6 @@ import javax.annotation.Nonnull;
 import java.util.*;
 
 // TODO: This needs major cleaning. Just migrating first.
-// TODO: Block color seems buggy on sides of double slabs. Unsure if it affects others
 public class PaintedBlockModel implements IDynamicBakedModel {
 
     private final @Nullable Map<Block, List<BakedModel>> itemRenderCache;
@@ -293,6 +292,7 @@ public class PaintedBlockModel implements IDynamicBakedModel {
         return quads.isEmpty() ? Pair.of(EIOModel.getMissingTexture(), false) : Pair.of(quads.get(0).getSprite(), quads.get(0).isTinted());
     }
 
+    // TODO: @agnor99 Update this.
     /**
      * This method copies a quad from the shape and modifies it to create one, that display the new texture.
      * First it copies the quad with the values of the shape quad. The new Sprite and tintValues are added to the quad.

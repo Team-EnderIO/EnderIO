@@ -8,12 +8,13 @@ import net.minecraftforge.client.model.generators.CustomLoaderBuilder;
 import net.minecraftforge.client.model.generators.ModelBuilder;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
 public class PaintedBlockModelBuilder<T extends ModelBuilder<T>> extends CustomLoaderBuilder<T> {
 
-    private Block referenceBlock = Blocks.AIR;
+    private @Nullable Block referenceBlock = null;
     private Direction itemTextureRotation = Direction.NORTH;
 
     public static <T extends ModelBuilder<T>> PaintedBlockModelBuilder<T> begin(T parent, ExistingFileHelper existingFileHelper) {
@@ -37,7 +38,7 @@ public class PaintedBlockModelBuilder<T extends ModelBuilder<T>> extends CustomL
     @Override
     public JsonObject toJson(JsonObject json) {
         json = super.toJson(json);
-        json.addProperty("reference", Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(referenceBlock)).toString());
+        json.addProperty("reference", Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(Objects.requireNonNull(referenceBlock))).toString());
         if (itemTextureRotation != null && itemTextureRotation != Direction.NORTH) {
             json.addProperty("item_texture_rotation", itemTextureRotation.toString());
         }

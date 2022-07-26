@@ -18,6 +18,7 @@ import javax.annotation.Nonnull;
 
 public class PaintedBlockColor implements BlockColor, ItemColor {
 
+    // TODO: Buggy on the sides of blocks.
     @Override
     public int getColor(@Nonnull BlockState state, @Nullable BlockAndTintGetter level, @Nullable BlockPos pos, int tintIndex) {
         if (level != null && pos != null && tintIndex != 0) {
