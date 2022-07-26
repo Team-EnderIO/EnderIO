@@ -34,7 +34,6 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.Nonnull;
 import java.util.*;
 
-// TODO: This needs major cleaning. Just migrating first.
 public class PaintedBlockModel implements IDynamicBakedModel {
 
     private final @Nullable Map<Block, List<BakedModel>> itemRenderCache;
@@ -44,6 +43,10 @@ public class PaintedBlockModel implements IDynamicBakedModel {
      */
     private final Block reference;
 
+    /**
+     * Rotate the item model perspective.
+     * Used to fix stairs.
+     */
     @Nullable
     private final Direction rotateItemTo;
 
@@ -201,14 +204,23 @@ public class PaintedBlockModel implements IDynamicBakedModel {
 
     // region Model Shadowing Logic
 
+    /**
+     * Get the block model for a given block state.
+     */
     private BakedModel getModel(BlockState state) {
         return Minecraft.getInstance().getBlockRenderer().getBlockModel(state);
     }
 
+    /**
+     * Get the reference block's item model.
+     */
     private BakedModel getItemModel() {
         return Minecraft.getInstance().getItemRenderer().getModel(reference.asItem().getDefaultInstance(), null, null, 0);
     }
 
+    /**
+     * Replicate the painted block state as the reference block.
+     */
     private BlockState replicateState(@Nullable BlockState selfState) {
         BlockState toState = reference.defaultBlockState();
         if (selfState == null)
@@ -292,7 +304,7 @@ public class PaintedBlockModel implements IDynamicBakedModel {
         return quads.isEmpty() ? Pair.of(EIOModel.getMissingTexture(), false) : Pair.of(quads.get(0).getSprite(), quads.get(0).isTinted());
     }
 
-    // TODO: @agnor99 Update this.
+    // TODO: @agnor99 Update this comment.
     /**
      * This method copies a quad from the shape and modifies it to create one, that display the new texture.
      * First it copies the quad with the values of the shape quad. The new Sprite and tintValues are added to the quad.
@@ -323,6 +335,9 @@ public class PaintedBlockModel implements IDynamicBakedModel {
 
     // endregion
 
+    /**
+     * Simple pass-through item model.
+     */
     private class ItemModel implements IDynamicBakedModel {
 
         private final Block paint;
