@@ -22,7 +22,7 @@ public class DecorLootTable {
                 LootItem.lootTableItem(block).apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY).copy("paint", "BlockEntityTag.paint")))));
     }
 
-    public static <T extends Block> void paintedSlab(RegistrateBlockLootTables loot, T block) {
+    public static <T extends Block> void withPaint2(RegistrateBlockLootTables loot, T block) {
         loot.add(block, LootTable
             .lootTable()
             .withPool(new LootPool.Builder().add(LootItem
