@@ -14,7 +14,8 @@ import java.util.Objects;
 
 public class PaintedBlockModelBuilder<T extends ModelBuilder<T>> extends CustomLoaderBuilder<T> {
 
-    private @Nullable Block referenceBlock = null;
+    @Nullable
+    private Block referenceBlock = null;
     private Direction itemTextureRotation = Direction.NORTH;
 
     public static <T extends ModelBuilder<T>> PaintedBlockModelBuilder<T> begin(T parent, ExistingFileHelper existingFileHelper) {
@@ -38,7 +39,9 @@ public class PaintedBlockModelBuilder<T extends ModelBuilder<T>> extends CustomL
     @Override
     public JsonObject toJson(JsonObject json) {
         json = super.toJson(json);
-        json.addProperty("reference", Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(Objects.requireNonNull(referenceBlock))).toString());
+        json.addProperty("reference", Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(
+                Objects.requireNonNull(referenceBlock, "Reference block was null!")
+        ), "Reference block resource location was null!").toString());
         if (itemTextureRotation != null && itemTextureRotation != Direction.NORTH) {
             json.addProperty("item_texture_rotation", itemTextureRotation.toString());
         }

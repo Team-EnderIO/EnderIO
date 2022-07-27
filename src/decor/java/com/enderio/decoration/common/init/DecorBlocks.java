@@ -67,7 +67,7 @@ public class DecorBlocks {
 
     public static final BlockEntry<PaintedSlabBlock> PAINTED_SLAB = paintedBlock("painted_slab",
         PaintedSlabBlock::new, PaintedSlabBlockItem::new, Blocks.OAK_SLAB, BlockTags.WOODEN_SLABS, BlockTags.MINEABLE_WITH_AXE)
-        .loot(DecorLootTable::withPaint2)
+        .loot(DecorLootTable::paintedSlab)
         .register();
 
     public static final BlockEntry<SinglePaintedBlock> PAINTED_GLOWSTONE = paintedBlock("painted_glowstone", SinglePaintedBlock::new, Blocks.GLOWSTONE).register();

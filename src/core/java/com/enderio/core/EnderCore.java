@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 public class EnderCore {
     // Stored here just to make sure its the same.
     // This definition is used *everywhere* else.
-    public static final @NotNull String MODID = "enderio";
+    public static final String MODID = "enderio";
 
     public static final Logger LOGGER = LogManager.getLogger(MODID + ":core");
 

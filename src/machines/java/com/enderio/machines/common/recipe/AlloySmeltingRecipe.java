@@ -113,11 +113,11 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
         return MachineRecipes.ALLOY_SMELTING.type().get();
     }
 
-    public static /**
+    /**
      * The recipe container.
      * This acts as additional context.
      */
-    class Container extends RecipeWrapper {
+    public static class Container extends RecipeWrapper {
 
         private int inputsTaken;
 

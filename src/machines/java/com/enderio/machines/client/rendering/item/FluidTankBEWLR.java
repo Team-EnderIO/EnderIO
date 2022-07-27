@@ -34,8 +34,6 @@ public class FluidTankBEWLR extends BlockEntityWithoutLevelRenderer {
     public void renderByItem(ItemStack stack, ItemTransforms.TransformType transformType, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
         // Get the model for the fluid tank block
         BakedModel model = Minecraft.getInstance().getModelManager().getModel(new ModelResourceLocation(ForgeRegistries.ITEMS.getKey(stack.getItem()), "facing=north"));
-
-        // Push the stack
         poseStack.pushPose();
 
         // Render the main model
@@ -69,8 +67,6 @@ public class FluidTankBEWLR extends BlockEntityWithoutLevelRenderer {
                 }
             }
         }
-
-        // POP!
         poseStack.popPose();
     }
 }

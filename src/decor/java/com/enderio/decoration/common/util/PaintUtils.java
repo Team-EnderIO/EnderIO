@@ -21,8 +21,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class PaintUtils {
-    /** @deprecated This is kinda dirty, lets just do this properly */
-    @Deprecated(forRemoval = true)
     public static Block getBlockFromRL(String rl) {
         //Not Nullable, as ForgeRegistries usually return a default
         return ForgeRegistries.BLOCKS.getValue(new ResourceLocation(rl));
