@@ -189,11 +189,10 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
     // Registrate
-    implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}") {
-        // TODO: Temporary while we're rockin' custom registrate.
-        jarJar.pin(it, registrate_version)
-    }
-//    jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: "${registrate_version_range}")
+    implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
+    jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: "${registrate_version_range}")
+
+    coreAnnotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     // JEI
 //    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
@@ -218,7 +217,7 @@ dependencies {
 
 // MixinGradle Settings
 mixin {
-    add sourceSets.main, "mixins.enderio.refmap.json"
+    add sourceSets.core, "mixins.enderio.refmap.json"
     config "mixins.enderio.json"
 }
 
@@ -238,6 +237,7 @@ jar {
 
     // Add all other source sets
     from sourceSets.api.output
+//    from sourceSets.core.output // Stop peeps from running the jar.
     for (String set : subsets) {
         from sourceSets.getByName(set).output
     }
@@ -258,6 +258,7 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 
     from sourceSets.api.allJava
     from sourceSets.main.allJava
+    from sourceSets.core.allJava
 
     for (String set : subsets) {
         from sourceSets.getByName(set).allJava
@@ -268,6 +269,7 @@ build.dependsOn sourcesJar
 // Add other source sets to jarJar
 tasks.jarJar.configure {
     from sourceSets.api.output
+//    from sourceSets.core.output // Stop people running the mod.
     for (String set : subsets) {
         from sourceSets.getByName(set).output
     }
