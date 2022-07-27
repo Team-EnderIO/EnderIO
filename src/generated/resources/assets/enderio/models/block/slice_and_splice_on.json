@@ -1,15 +1,23 @@
 {
-  "components": [
-    {
-      "model": "enderio:block/io_overlay"
+  "parent": "minecraft:block/block",
+  "children": {
+    "frame": {
+      "parent": "enderio:block/soul_machine_frame"
     },
-    {
-      "model": "enderio:block/slice_and_splice_front_on"
+    "front": {
+      "parent": "enderio:block/slice_and_splice_front",
+      "textures": {
+        "front": "enderio:block/slice_and_splice_front_on"
+      }
     },
-    {
-      "model": "enderio:block/soul_machine_frame",
-      "particle_provider": true
+    "overlay": {
+      "parent": "enderio:block/io_overlay"
     }
+  },
+  "item_render_order": [
+    "frame",
+    "overlay",
+    "front"
   ],
-  "loader": "enderio:composite_model"
+  "loader": "forge:composite"
 }

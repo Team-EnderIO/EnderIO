@@ -1,9 +1,9 @@
 package com.enderio.base.data.recipe;
 
+import com.enderio.EnderIO;
 import com.enderio.base.common.block.ResettingLeverBlock;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
-import com.enderio.base.data.recipe.standard.StandardRecipes;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.data.DataGenerator;
@@ -55,23 +55,22 @@ public class BlockRecipes extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DARK_STEEL_INGOT.get()))
             .save(recipeConsumer);
 
-        // TODO: 1.19: DOORS
-//        ShapedRecipeBuilder
-//            .shaped(EIOBlocks.DARK_STEEL_TRAPDOOR.get(), 1)
-//            .define('I', EIOItems.DARK_STEEL_INGOT.get())
-//            .pattern("II")
-//            .pattern("II")
-//            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DARK_STEEL_INGOT.get()))
-//            .save(recipeConsumer);
-//
-//        ShapedRecipeBuilder
-//            .shaped(EIOBlocks.DARK_STEEL_DOOR.get(), 3)
-//            .define('I', EIOItems.DARK_STEEL_INGOT.get())
-//            .pattern("II")
-//            .pattern("II")
-//            .pattern("II")
-//            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DARK_STEEL_INGOT.get()))
-//            .save(recipeConsumer);
+        ShapedRecipeBuilder
+            .shaped(EIOBlocks.DARK_STEEL_TRAPDOOR.get(), 1)
+            .define('I', EIOItems.DARK_STEEL_INGOT.get())
+            .pattern("II")
+            .pattern("II")
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DARK_STEEL_INGOT.get()))
+            .save(recipeConsumer);
+
+        ShapedRecipeBuilder
+            .shaped(EIOBlocks.DARK_STEEL_DOOR.get(), 3)
+            .define('I', EIOItems.DARK_STEEL_INGOT.get())
+            .pattern("II")
+            .pattern("II")
+            .pattern("II")
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DARK_STEEL_INGOT.get()))
+            .save(recipeConsumer);
 
         ShapedRecipeBuilder
             .shaped(EIOBlocks.END_STEEL_BARS.get(), 12)
@@ -197,65 +196,65 @@ public class BlockRecipes extends RecipeProvider {
             EIOBlocks.RESETTING_LEVER_SIXTY_INV, 5);
     }
 
-    private void addLeverRecipe(Consumer<FinishedRecipe> recipeConsumer, BlockEntry<? extends ResettingLeverBlock> base,
+    private void addLeverRecipe(Consumer<FinishedRecipe> finishedRecipeConsumer, BlockEntry<? extends ResettingLeverBlock> base,
         BlockEntry<? extends ResettingLeverBlock> inverted, @Nullable BlockEntry<? extends ResettingLeverBlock> previous,
         @Nullable BlockEntry<? extends ResettingLeverBlock> previousInverted, int numRedstone) {
 
-        //-- base recipes
+        // Get name of each lever.
+        String baseName = base.getId().getPath();
+        String invertedName = inverted.getId().getPath();
 
-        //lever and redstone
-        ShapelessRecipeBuilder recipe = ShapelessRecipeBuilder
+        // Main recipe.
+        ShapelessRecipeBuilder
             .shapeless(base.get())
             .requires(Blocks.LEVER)
             .requires(Ingredient.of(Tags.Items.DUSTS_REDSTONE), numRedstone)
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Blocks.LEVER));
-        StandardRecipes.saveRecipe(recipe, null, recipeConsumer);
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Blocks.LEVER))
+            .save(finishedRecipeConsumer);
 
-        //inverted and torch
-        recipe = ShapelessRecipeBuilder
+        // Un-invert inverted.
+        ShapelessRecipeBuilder
             .shapeless(base.get())
             .requires(inverted.get())
             .requires(Blocks.REDSTONE_TORCH)
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Blocks.LEVER));
-        StandardRecipes.saveRecipe(recipe, "_from_inv", recipeConsumer);
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Blocks.LEVER))
+            .save(finishedRecipeConsumer, EnderIO.loc(baseName + "_from_inv"));
 
-        //previous and redstone
+        // Previous upgrade recipe
         if (previous != null) {
-            recipe = ShapelessRecipeBuilder
+            ShapelessRecipeBuilder
                 .shapeless(base.get())
                 .requires(previous.get())
                 .requires(Tags.Items.DUSTS_REDSTONE)
-                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Blocks.LEVER));
-            StandardRecipes.saveRecipe(recipe, "_from_prev", recipeConsumer);
+                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Blocks.LEVER))
+                .save(finishedRecipeConsumer, EnderIO.loc(baseName + "_from_prev"));
         }
 
-        //-- inverted recipes
-
-        //lever, redstone and torch
+        // Main inverted recipe.
         ShapelessRecipeBuilder
             .shapeless(inverted.get())
             .requires(Blocks.LEVER)
             .requires(Ingredient.of(Tags.Items.DUSTS_REDSTONE), numRedstone)
             .requires(Blocks.REDSTONE_TORCH)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Blocks.LEVER))
-            .save(recipeConsumer);
+            .save(finishedRecipeConsumer);
 
-        //base and torch
-        recipe = ShapelessRecipeBuilder
+        // Invert base.
+        ShapelessRecipeBuilder
             .shapeless(inverted.get())
             .requires(base.get())
             .requires(Blocks.REDSTONE_TORCH)
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Blocks.LEVER));
-        StandardRecipes.saveRecipe(recipe, "_from_base", recipeConsumer);
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Blocks.LEVER))
+            .save(finishedRecipeConsumer, EnderIO.loc(invertedName + "_from_base"));
 
-        //previous and redstone
+        // Previous upgrade recipe
         if (previousInverted != null) {
-            recipe = ShapelessRecipeBuilder
+            ShapelessRecipeBuilder
                 .shapeless(inverted.get())
                 .requires(previousInverted.get())
                 .requires(Ingredient.of(Tags.Items.DUSTS_REDSTONE))
-                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Blocks.LEVER));
-            StandardRecipes.saveRecipe(recipe, "_from_prev", recipeConsumer);
+                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Blocks.LEVER))
+                .save(finishedRecipeConsumer, EnderIO.loc(invertedName + "_from_prev"));
         }
 
     }

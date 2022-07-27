@@ -2,8 +2,10 @@ package com.enderio.base.common.loot;
 
 import com.enderio.base.common.item.spawner.BrokenSpawnerItem;
 import com.enderio.base.common.tag.EIOTags;
-import com.enderio.base.config.base.BaseConfig;
-import com.google.gson.JsonObject;
+import com.enderio.base.common.config.BaseConfig;
+import com.google.common.base.Suppliers;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -14,11 +16,15 @@ import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
+import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.common.loot.LootModifier;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Supplier;
+
 public class BrokenSpawnerLootModifier extends LootModifier {
+    public static final Supplier<Codec<BrokenSpawnerLootModifier>> CODEC = Suppliers.memoize(() -> RecordCodecBuilder.create(inst -> codecStart(inst).apply(inst, BrokenSpawnerLootModifier::new)));
+
     /**
      * Constructs a LootModifier.
      *
@@ -49,15 +55,8 @@ public class BrokenSpawnerLootModifier extends LootModifier {
         return generatedLoot;
     }
 
-    public static class Serializer extends GlobalLootModifierSerializer<BrokenSpawnerLootModifier> {
-        @Override
-        public BrokenSpawnerLootModifier read(ResourceLocation location, JsonObject object, LootItemCondition[] ailootcondition) {
-            return new BrokenSpawnerLootModifier(ailootcondition);
-        }
-
-        @Override
-        public JsonObject write(BrokenSpawnerLootModifier instance) {
-            return makeConditions(instance.conditions);
-        }
+    @Override
+    public Codec<? extends IGlobalLootModifier> codec() {
+        return CODEC.get();
     }
 }

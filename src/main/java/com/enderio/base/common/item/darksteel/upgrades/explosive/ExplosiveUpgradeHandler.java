@@ -1,14 +1,13 @@
 package com.enderio.base.common.item.darksteel.upgrades.explosive;
 
 import com.enderio.base.common.capability.DarkSteelUpgradeable;
-import com.enderio.base.common.init.EIOPackets;
 import com.enderio.base.common.item.darksteel.upgrades.SpoonUpgrade;
 import com.enderio.core.common.network.CoreNetwork;
 import com.enderio.core.common.network.EmitParticlesPacket;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.core.common.util.BlockUtil;
 import com.enderio.core.common.util.EnergyUtil;
-import com.enderio.base.config.base.BaseConfig;
+import com.enderio.base.common.config.BaseConfig;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3d;
@@ -38,11 +37,10 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.DrawSelectionEvent;
+import net.minecraftforge.client.event.RenderHighlightEvent;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -164,14 +162,14 @@ public class ExplosiveUpgradeHandler {
     // region area highlight
 
     @SubscribeEvent
-    public static void showAreaOfEffectHighlight(DrawSelectionEvent.HighlightBlock event) {
+    public static void showAreaOfEffectHighlight(RenderHighlightEvent.Block event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player != null && !player.isCrouching() && hasExplosiveUpgrades(player.getItemInHand(InteractionHand.MAIN_HAND))) {
             drawHighlight(event, player.getItemInHand(InteractionHand.MAIN_HAND));
         }
     }
 
-    private static void drawHighlight(DrawSelectionEvent.HighlightBlock event, ItemStack held) {
+    private static void drawHighlight(RenderHighlightEvent.Block event, ItemStack held) {
         ClientLevel level = Minecraft.getInstance().level;
         if (level == null) {
             return;

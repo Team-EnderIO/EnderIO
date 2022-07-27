@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class PaintedRedstoneBlock extends PoweredBlock implements EntityBlock {
+public class PaintedRedstoneBlock extends PoweredBlock implements EntityBlock, IPaintedBlock {
 
     public PaintedRedstoneBlock(Properties properties) {
         super(properties);

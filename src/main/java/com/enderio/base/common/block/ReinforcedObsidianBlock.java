@@ -1,6 +1,6 @@
 package com.enderio.base.common.block;
 
-import com.enderio.base.config.base.BaseConfig;
+import com.enderio.base.common.config.BaseConfig;
 import com.mojang.math.Vector3f;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -12,8 +12,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-
-import java.util.Random;
 
 public class ReinforcedObsidianBlock extends Block {
 

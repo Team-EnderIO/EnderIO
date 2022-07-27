@@ -2,7 +2,7 @@ package com.enderio.base.common.item.darksteel.upgrades;
 
 import com.enderio.api.capability.IDarkSteelUpgrade;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.base.config.base.BaseConfig;
+import com.enderio.base.common.config.BaseConfig;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.ForgeConfigSpec;
 
@@ -43,7 +43,7 @@ public enum EmpoweredUpgradeTier implements IUpgradeTier {
     }
 
     public int getMaxStorage() {
-        // TODO 1.19: config before load
+        // TODO: 1.19: config before load
         return 100;
 //        return maxStorage.get();
     }

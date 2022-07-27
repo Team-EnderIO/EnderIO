@@ -1,6 +1,6 @@
 package com.enderio.base.common.enchantment;
 
-import com.enderio.base.config.base.BaseConfig;
+import com.enderio.base.common.config.BaseConfig;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -8,8 +8,7 @@ import net.minecraft.world.item.enchantment.Enchantments;
 public class XPBoostEnchantment extends EIOBaseEnchantment {
 
     public XPBoostEnchantment() {
-        // TODO 1.19: config before load
-        super(/*BaseConfig.COMMON.ENCHANTMENTS.XP_BOOST_RARITY.get()*/ Rarity.COMMON, EIOEnchantmentCategories.XPBOOST, new EquipmentSlot[] { EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND }, () -> true);
+        super(Rarity.COMMON, EIOEnchantmentCategories.XPBOOST, new EquipmentSlot[] { EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND }, () -> true);
     }
 
     @Override

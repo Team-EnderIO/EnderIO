@@ -1,6 +1,5 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "enderio:item/hootch_bucket"
-  }
+  "parent": "forge:item/bucket",
+  "fluid": "enderio:hootch",
+  "loader": "forge:fluid_container"
 }

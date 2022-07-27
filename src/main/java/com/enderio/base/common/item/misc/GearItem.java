@@ -1,7 +1,7 @@
 package com.enderio.base.common.item.misc;
 
 import com.enderio.base.client.renderer.item.IRotatingItem;
-import net.minecraftforge.client.IItemRenderProperties;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 
 import javax.annotation.Nonnull;
 import java.util.function.Consumer;
@@ -17,7 +17,7 @@ public class GearItem extends MaterialItem implements IRotatingItem {
 
     // enables the use of a BEWLR
     @Override
-    public void initializeClient(@Nonnull Consumer<IItemRenderProperties> consumer) {
+    public void initializeClient(@Nonnull Consumer<IClientItemExtensions> consumer) {
         setupBEWLR(consumer);
     }
 

@@ -1,0 +1,16 @@
+{
+  "parent": "minecraft:block/block",
+  "children": {
+    "frame": {
+      "parent": "enderio:block/enhanced_machine_frame"
+    },
+    "front": {
+      "parent": "enderio:block/enhanced_alloy_smelter_front"
+    }
+  },
+  "item_render_order": [
+    "frame",
+    "front"
+  ],
+  "loader": "forge:composite"
+}

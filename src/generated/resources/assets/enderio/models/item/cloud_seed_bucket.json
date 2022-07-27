@@ -1,6 +1,5 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "enderio:item/cloud_seed_bucket"
-  }
+  "parent": "forge:item/bucket",
+  "fluid": "enderio:cloud_seed",
+  "loader": "forge:fluid_container"
 }

@@ -9,7 +9,6 @@ import com.mojang.math.Matrix4f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -17,8 +16,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.client.IFluidTypeRenderProperties;
-import net.minecraftforge.client.RenderProperties;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
@@ -37,13 +35,8 @@ public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
         if (tank.getFluidAmount() > 0) {
             FluidStack fluidStack = tank.getFluid();
 
-            // Determine the fluid's preferred buffer
-            VertexConsumer buffer;
-            if (ItemBlockRenderTypes.canRenderInLayer(fluidStack.getFluid().defaultFluidState(), RenderType.translucent())) {
-                buffer = bufferSource.getBuffer(RenderType.translucent());
-            } else {
-                buffer = bufferSource.getBuffer(RenderType.solid());
-            }
+            // Get the preferred render buffer
+            VertexConsumer buffer = bufferSource.getBuffer(ItemBlockRenderTypes.getRenderLayer(fluidStack.getFluid().defaultFluidState()));
 
             // Render the fluid
             PoseStack.Pose last = poseStack.last();
@@ -52,13 +45,13 @@ public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
     }
 
     private static void renderFluid(Matrix4f pose, Matrix3f normal, VertexConsumer consumer, BlockEntity entity, Fluid fluid, float fillAmount) {
-        IFluidTypeRenderProperties props = RenderProperties.get(fluid);
-        renderFluid(pose, normal, consumer, fluid, fillAmount, props.getColorTint(null, entity.getLevel(), entity.getBlockPos())); // TODO: 1.19 is null bad?
+        IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluid);
+        renderFluid(pose, normal, consumer, fluid, fillAmount, props.getTintColor(null, entity.getLevel(), entity.getBlockPos()));
     }
 
     public static void renderFluid(Matrix4f pose, Matrix3f normal, VertexConsumer consumer, Fluid fluid, float fillAmount, int color) {
         // Get fluid texture
-        IFluidTypeRenderProperties props = RenderProperties.get(fluid);
+        IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluid);
         TextureAtlasSprite texture = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(props.getStillTexture());
 
         // Get sizes

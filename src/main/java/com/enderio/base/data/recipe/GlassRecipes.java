@@ -37,7 +37,6 @@ public class GlassRecipes extends RecipeProvider {
                 invert(glassBlocks, recipeConsumer);
             }
         }
-
     }
 
     private static void recolor(GlassBlocks blocks, Consumer<FinishedRecipe> recipeConsumer) {

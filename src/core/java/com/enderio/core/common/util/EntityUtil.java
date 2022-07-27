@@ -19,7 +19,7 @@ public class EntityUtil {
      * @return The description ID.
      */
     public static String getEntityDescriptionId(ResourceLocation entityType) {
-        EntityType<?> type = ForgeRegistries.ENTITIES.getValue(entityType);
+        EntityType<?> type = ForgeRegistries.ENTITY_TYPES.getValue(entityType);
         if (type == null)
             return "error"; // TODO: Proper key
         return type.getDescriptionId();
@@ -42,6 +42,6 @@ public class EntityUtil {
      * @return The resource location of the entity type.
      */
     public static Optional<ResourceLocation> getEntityTypeRL(Entity entity) {
-        return Optional.ofNullable(ForgeRegistries.ENTITIES.getKey(entity.getType()));
+        return Optional.ofNullable(ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()));
     }
 }

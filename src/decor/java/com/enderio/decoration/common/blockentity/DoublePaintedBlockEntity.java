@@ -6,22 +6,23 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.ModelDataManager;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 public class DoublePaintedBlockEntity extends SinglePaintedBlockEntity {
 
+    @Nullable
     private Block paint2;
 
+    @Nullable
     public Block getPaint2() {
         return paint2;
     }
@@ -31,7 +32,7 @@ public class DoublePaintedBlockEntity extends SinglePaintedBlockEntity {
         return new Block[] { getPaint(), getPaint2() };
     }
 
-    public static final ModelProperty<Block> PAINT2 = new ModelProperty<>();
+    public static final ModelProperty<Block> PAINT2 = IPaintableBlockEntity.createAndRegisterModelProperty();
 
     public DoublePaintedBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);
@@ -39,8 +40,8 @@ public class DoublePaintedBlockEntity extends SinglePaintedBlockEntity {
 
     @Nonnull
     @Override
-    public IModelData getModelData() {
-        return new ModelDataMap.Builder().withInitial(PAINT, getPaint()).withInitial(PAINT2, paint2).build();
+    public ModelData getModelData() {
+        return ModelData.builder().with(PAINT, getPaint()).with(PAINT2, paint2).build();
     }
 
     @Nullable
@@ -54,7 +55,7 @@ public class DoublePaintedBlockEntity extends SinglePaintedBlockEntity {
         Block oldPaint = getPaint2();
         super.onDataPacket(net, pkt);
         if (oldPaint != paint2) {
-            ModelDataManager.requestModelDataRefresh(this);
+            requestModelDataUpdate();
             if (level != null) {
                 level.setBlock(getBlockPos(), level.getBlockState(getBlockPos()), 9);
             }
@@ -68,7 +69,7 @@ public class DoublePaintedBlockEntity extends SinglePaintedBlockEntity {
             paint2 = PaintUtils.getBlockFromRL(tag.getString("paint2"));
             if (level != null) {
                 if (level.isClientSide) {
-                    ModelDataManager.requestModelDataRefresh(this);
+                    requestModelDataUpdate();
                     level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(),
                         Block.UPDATE_NEIGHBORS + Block.UPDATE_CLIENTS);
                 }

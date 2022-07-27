@@ -1,7 +1,7 @@
 package com.enderio.base.common.item.tool;
 
 import com.enderio.base.common.tag.EIOTags;
-import com.enderio.base.config.base.BaseConfig;
+import com.enderio.base.common.config.BaseConfig;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.item.ItemEntity;

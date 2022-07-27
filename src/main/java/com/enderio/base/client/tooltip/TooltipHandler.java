@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-// TODO: 1.19: Move to core.
+// TODO: 1.19: Move to core. Need to work out what to do about the shift lang key.
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class TooltipHandler {
 
@@ -27,7 +27,7 @@ public class TooltipHandler {
     public static void addTooltips(ItemTooltipEvent evt) {
         ItemStack forItem = evt.getItemStack();
         providerOf(forItem.getItem()).ifPresent(provider ->
-            addTooltips(provider, forItem, evt.getPlayer(), evt.getToolTip(), shouldShowAdvancedTooltips())
+            addTooltips(provider, forItem, evt.getEntity(), evt.getToolTip(), shouldShowAdvancedTooltips())
         );
     }
 

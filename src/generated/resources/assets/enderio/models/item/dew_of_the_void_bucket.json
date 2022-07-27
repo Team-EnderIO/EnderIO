@@ -1,6 +1,5 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "enderio:item/dew_of_the_void_bucket"
-  }
+  "parent": "forge:item/bucket",
+  "fluid": "enderio:dew_of_the_void",
+  "loader": "forge:fluid_container"
 }

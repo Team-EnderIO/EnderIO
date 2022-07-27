@@ -1,15 +1,23 @@
 {
-  "components": [
-    {
-      "model": "enderio:block/enhanced_machine_frame",
-      "particle_provider": true
+  "parent": "minecraft:block/block",
+  "children": {
+    "frame": {
+      "parent": "enderio:block/enhanced_machine_frame"
     },
-    {
-      "model": "enderio:block/io_overlay"
+    "front": {
+      "parent": "enderio:block/enhanced_alloy_smelter_front",
+      "textures": {
+        "front": "enderio:block/enhanced_alloy_smelter_front_on"
+      }
     },
-    {
-      "model": "enderio:block/enhanced_alloy_smelter_front_on"
+    "overlay": {
+      "parent": "enderio:block/io_overlay"
     }
+  },
+  "item_render_order": [
+    "frame",
+    "overlay",
+    "front"
   ],
-  "loader": "enderio:composite_model"
+  "loader": "forge:composite"
 }

@@ -1,12 +1,15 @@
 {
-  "components": [
-    {
-      "model": "enderio:block/io_overlay"
+  "children": {
+    "overlay": {
+      "parent": "enderio:block/io_overlay"
     },
-    {
-      "model": "enderio:block/fluid_tank_body",
-      "particle_provider": true
+    "tank": {
+      "parent": "enderio:block/fluid_tank_body"
     }
+  },
+  "item_render_order": [
+    "tank",
+    "overlay"
   ],
-  "loader": "enderio:composite_model"
+  "loader": "forge:composite"
 }

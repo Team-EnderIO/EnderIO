@@ -10,7 +10,7 @@
   <h3 align="center">EnderIO</h3>
 
   <p align="center">
-    The full-fat tech mod for Minecraft 1.18.
+    The full-fat tech mod for Minecraft 1.19.
     <br />
     <a href="https://github.com/Rover656/EnderIO-Rewrite/wiki"><strong>Browse the Wiki »</strong></a>
     <br />

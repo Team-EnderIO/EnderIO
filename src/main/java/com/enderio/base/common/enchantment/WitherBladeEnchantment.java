@@ -1,6 +1,6 @@
 package com.enderio.base.common.enchantment;
 
-import com.enderio.base.config.base.BaseConfig;
+import com.enderio.base.common.config.BaseConfig;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -12,8 +12,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 public class WitherBladeEnchantment extends EIOBaseEnchantment {
 
     public WitherBladeEnchantment() {
-        // TODO 1.19: config before load
-        super(/*BaseConfig.COMMON.ENCHANTMENTS.WITHERING_BLADE_RARITY.get()*/ Rarity.UNCOMMON, EnchantmentCategory.WEAPON, new EquipmentSlot[] { EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND }, () -> true);
+        super(Rarity.UNCOMMON, EnchantmentCategory.WEAPON, new EquipmentSlot[] { EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND }, () -> true);
     }
 
     @Override

@@ -1,0 +1,4 @@
+{
+  "parent": "minecraft:block/fire_up_alt1",
+  "render_type": "minecraft:cutout"
+}

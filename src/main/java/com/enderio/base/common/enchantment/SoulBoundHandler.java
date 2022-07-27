@@ -22,14 +22,14 @@ public class SoulBoundHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void deathHandler(LivingDropsEvent event) {
-        if (event.getEntityLiving() == null || event.getEntityLiving() instanceof FakePlayer || event.isCanceled()) {
+        if (event.getEntity() == null || event.getEntity() instanceof FakePlayer || event.isCanceled()) {
             return;
         }
-        if (event.getEntityLiving().level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
+        if (event.getEntity().level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
             return;
         }
         ArrayList<ItemStack> soulItems = new ArrayList<>();
-        if (event.getEntityLiving() instanceof Player player) {
+        if (event.getEntity() instanceof Player player) {
             Iterator<ItemEntity> iter = event.getDrops().iterator();
             while (iter.hasNext()) {
                 ItemEntity ei = iter.next();
@@ -53,9 +53,9 @@ public class SoulBoundHandler {
         if (!event.getOriginal().isDeadOrDying()) {
             return;
         }//TODO More detailed and better item recovery.
-        event.getOriginal().getInventory().items.forEach(item -> event.getPlayer().addItem(item));
-        event.getOriginal().getInventory().armor.forEach(armor -> event.getPlayer().addItem(armor));
-        event.getOriginal().getInventory().offhand.forEach(offhand -> event.getPlayer().addItem(offhand));
+        event.getOriginal().getInventory().items.forEach(item -> event.getEntity().addItem(item));
+        event.getOriginal().getInventory().armor.forEach(armor -> event.getEntity().addItem(armor));
+        event.getOriginal().getInventory().offhand.forEach(offhand -> event.getEntity().addItem(offhand));
     }
 
     public static boolean isSoulBound(ItemStack item) {

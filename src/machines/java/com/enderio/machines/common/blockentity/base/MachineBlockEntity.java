@@ -23,9 +23,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.EmptyModelData;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -49,7 +47,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     public static final ModelProperty<IIOConfig> IO_CONFIG_PROPERTY = new ModelProperty<>();
 
-    private final IModelData modelData = new ModelDataMap.Builder().build();
+    private ModelData modelData = ModelData.EMPTY;
 
     // endregion
 
@@ -179,13 +177,13 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     @NotNull
     @Override
-    public IModelData getModelData() {
-        return getIOConfig().renderOverlay() ? modelData : EmptyModelData.INSTANCE;
+    public ModelData getModelData() {
+        return getIOConfig().renderOverlay() ? modelData : ModelData.EMPTY;
     }
 
     private void onIOConfigChanged() {
         if (level.isClientSide && ioConfig.renderOverlay()) {
-            modelData.setData(IO_CONFIG_PROPERTY, ioConfig);
+            modelData = modelData.derive().with(IO_CONFIG_PROPERTY, ioConfig).build();
             requestModelDataUpdate();
         }
         level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);

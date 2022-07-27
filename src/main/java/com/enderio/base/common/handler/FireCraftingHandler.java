@@ -3,7 +3,7 @@ package com.enderio.base.common.handler;
 import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIORecipes;
 import com.enderio.base.common.recipe.FireCraftingRecipe;
-import com.enderio.base.config.base.BaseConfig;
+import com.enderio.base.common.config.BaseConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -23,7 +23,7 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
@@ -48,7 +48,7 @@ public class FireCraftingHandler {
 
     @SubscribeEvent
     public static void on(BlockEvent.NeighborNotifyEvent event) {
-        if (event.getWorld() instanceof ServerLevel level) {
+        if (event.getLevel() instanceof ServerLevel level) {
             // Finish early if we're not tracking any fires and this is a fire removal.
             boolean isFire = event.getState().getBlock() instanceof FireBlock;
             if (FIRE_TRACKER.isEmpty() && !isFire) {
@@ -125,17 +125,17 @@ public class FireCraftingHandler {
 
     // Support worlds where firetick is disabled:
     @SubscribeEvent
-    public static void onWorldTick(TickEvent.WorldTickEvent event) {
-        if (!FIRE_TRACKER.isEmpty() && !event.world.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK)) {
+    public static void onWorldTick(TickEvent.LevelTickEvent event) {
+        if (!FIRE_TRACKER.isEmpty() && !event.level.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK)) {
             // Create a list of positions that need to be turned to air. Fixes issues with the fire tracker being modified while we iterate
             List<BlockPos> blocksToClear = new ArrayList<>();
 
             // Search for any fires that are due to spawn drops.
-            long gameTime = event.world.getGameTime();
+            long gameTime = event.level.getGameTime();
             for (Map.Entry<FireIndex, Long> fire : FIRE_TRACKER.entrySet()) {
                 BlockPos pos = fire.getKey().pos();
                 if (gameTime > fire.getValue()) {
-                    if (event.world.getBlockState(pos).getBlock() instanceof FireBlock) {
+                    if (event.level.getBlockState(pos).getBlock() instanceof FireBlock) {
                         blocksToClear.add(pos);
                     } else {
                         FIRE_TRACKER.remove(fire.getKey());
@@ -145,7 +145,7 @@ public class FireCraftingHandler {
 
             // Turn them to air to trigger the usual event.
             for (BlockPos pos : blocksToClear) {
-                event.world.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+                event.level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
             }
         }
     }

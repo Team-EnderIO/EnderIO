@@ -1,6 +1,5 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "enderio:item/nutrient_distillation_bucket"
-  }
+  "parent": "forge:item/bucket",
+  "fluid": "enderio:nutrient_distillation",
+  "loader": "forge:fluid_container"
 }

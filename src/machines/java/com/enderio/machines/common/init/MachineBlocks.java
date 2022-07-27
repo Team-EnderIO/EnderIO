@@ -10,13 +10,13 @@ import com.enderio.machines.common.block.SimpleMachineBlock;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.item.FluidTankItem;
 import com.enderio.machines.data.loot.MachinesLootTable;
-import com.enderio.machines.data.model.block.MachineModelUtil;
+import com.enderio.machines.data.model.MachineModelUtil;
 import com.mojang.math.Vector3f;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import com.tterrag.registrate.util.entry.BlockEntry;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraftforge.client.model.generators.loaders.CompositeModelBuilder;
 
 import java.util.function.Supplier;
 
@@ -27,13 +27,15 @@ public class MachineBlocks {
         .block("fluid_tank", props -> new MachineBlock(props, MachineBlockEntities.FLUID_TANK))
         .properties(props -> props.strength(2.5f, 8))
         .loot(MachinesLootTable::copyNBT)
-        .addLayer(() -> RenderType::cutout)
-        .blockstate((ctx, prov) -> prov.horizontalBlock(ctx.get(), EIOModel.compositeModel(prov.models(), ctx.getName(),
-            builder -> builder
-                .component(EnderIO.loc("block/fluid_tank_body"), true)
-                .component(EnderIO.loc("block/io_overlay")))))
+        .blockstate((ctx, prov) -> prov.horizontalBlock(ctx.get(), prov.models()
+            .getBuilder(ctx.getName())
+            .customLoader(CompositeModelBuilder::begin)
+                .child("tank", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/fluid_tank_body")))
+                .child("overlay", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/io_overlay")))
+            .end()
+        ))
         .item(FluidTankItem::new)
-        .model((ctx, prov) -> EIOModel.dummyModel(prov, ctx.getName()))
+        .model((ctx, prov) -> {})
         .tab(() -> EIOCreativeTabs.MACHINES)
         .build()
         .register();
@@ -42,17 +44,19 @@ public class MachineBlocks {
         .block("pressurized_fluid_tank", props -> new MachineBlock(props, MachineBlockEntities.PRESSURIZED_FLUID_TANK))
         .properties(props -> props.strength(2.5f, 8))
         .loot(MachinesLootTable::copyNBT)
-        .addLayer(() -> RenderType::cutout)
-        .blockstate((ctx, prov) -> prov.horizontalBlock(ctx.get(), EIOModel.compositeModel(prov.models(), ctx.getName(),
-            builder -> builder
-                .component(prov.models()
-                    .withExistingParent(ctx.getName() + "_body", EnderIO.loc("block/fluid_tank_body"))
-                    .texture("tank", EnderIO.loc("block/pressurized_fluid_tank"))
-                    .texture("bottom", EnderIO.loc("block/enhanced_machine_bottom"))
-                    .texture("top", EnderIO.loc("block/enhanced_machine_top")), true)
-                .component(EnderIO.loc("block/io_overlay")))))
+        .blockstate((ctx, prov) -> prov.horizontalBlock(ctx.get(), prov.models()
+                .withExistingParent(ctx.getName(), prov.mcLoc("block/block"))
+                .customLoader(CompositeModelBuilder::begin)
+                    .child("tank", EIOModel
+                        .getExistingParent(prov.models(), EnderIO.loc("block/fluid_tank_body"))
+                            .texture("tank", EnderIO.loc("block/pressurized_fluid_tank"))
+                            .texture("bottom", EnderIO.loc("block/enhanced_machine_bottom"))
+                            .texture("top", EnderIO.loc("block/enhanced_machine_top")))
+                    .child("overlay", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/io_overlay")))
+            .end()
+        ))
         .item(FluidTankItem::new)
-        .model((ctx, prov) -> EIOModel.dummyModel(prov, ctx.getName()))
+        .model((ctx, prov) -> {})
         .tab(() -> EIOCreativeTabs.MACHINES)
         .build()
         .register();
@@ -65,7 +69,21 @@ public class MachineBlocks {
             .component(prov.models()
                 .withExistingParent(ctx.getName() + "_plinth", EnderIO.loc("block/dialing_device"))
                 .texture("button", EnderIO.loc("block/dark_steel_pressure_plate")), true)
-                .component(EnderIO.loc("block/enchanter_book"), new Vector3f(0, 11.25f / 16.0f, -3.5f / 16.0f), new Vector3f(-22.5f * 0.01745f, 0, 0)))))
+            .component(EnderIO.loc("block/enchanter_book"), new Vector3f(0, 11.25f / 16.0f, -3.5f / 16.0f), new Vector3f(-22.5f * 0.01745f, 0, 0)))))
+        // TODO: 1.19: https://github.com/MinecraftForge/MinecraftForge/pull/8860
+//        .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models()
+//            .withExistingParent(ctx.getName(), prov.mcLoc("block/block"))
+//            .customLoader(CompositeModelBuilder::begin)
+//            .child("plinth", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/dialing_device"))
+//                .texture("button", EnderIO.loc("block/dark_steel_pressure_plate")))
+//            .child("book", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/enchanter_book"))
+//                .rootTransform()
+//                    .translation(new Vector3f(0, 11.25f / 16.0f, -3.5f / 16.0f))
+//                    .rotation(Quaternion.fromXYZDegrees(new Vector3f(-22.5f, 0, 0)))
+//                    .origin("center")
+//                .end())
+//            .end()
+//        ))
         .item()
         .tab(() -> EIOCreativeTabs.MACHINES)
         .build()
@@ -118,7 +136,6 @@ public class MachineBlocks {
             .block(name, props -> new SimpleMachineBlock(props, blockEntityEntry.get()))
             .properties(props -> props.strength(2.5f, 8))
             .loot(MachinesLootTable::copyNBT)
-            .addLayer(() -> RenderType::cutout)
             .blockstate(MachineModelUtil::simpleMachineBlock)
             .item()
             .tab(() -> EIOCreativeTabs.MACHINES)
@@ -130,7 +147,6 @@ public class MachineBlocks {
             .block(name, props -> new ProgressMachineBlock(props, blockEntityEntry.get()))
             .properties(props -> props.strength(2.5f, 8))
             .loot(MachinesLootTable::copyNBT)
-            .addLayer(() -> RenderType::cutout)
             .blockstate(MachineModelUtil::machineBlock)
             .item()
             .tab(() -> EIOCreativeTabs.MACHINES)
@@ -142,7 +158,6 @@ public class MachineBlocks {
             .block(name, props -> new ProgressMachineBlock(props, blockEntityEntry.get()))
             .properties(props -> props.strength(2.5f, 8))
             .loot(MachinesLootTable::copyNBT)
-            .addLayer(() -> RenderType::cutout)
             .blockstate(MachineModelUtil::soulMachineBlock)
             .item()
             .tab(() -> EIOCreativeTabs.MACHINES)
@@ -154,7 +169,6 @@ public class MachineBlocks {
             .block(name, props -> new EnhancedMachineBlock(props, blockEntityEntry.get()))
             .properties(props -> props.strength(2.5f, 8))
             .loot(MachinesLootTable::tallCopyNBT)
-            .addLayer(() -> RenderType::cutout)
             .blockstate(MachineModelUtil::enhancedMachineBlock)
             .item()
             .tab(() -> EIOCreativeTabs.MACHINES)

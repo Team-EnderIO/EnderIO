@@ -9,7 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.UnaryOperator;
 
-// TODO: 1.19: Move to core
+// TODO: 1.19: Move to core. Lang keys are a pain
 public enum RedstoneControl implements IIcon {
     ALWAYS_ACTIVE(bool -> true, EIOLang.REDSTONE_ALWAYS_ACTIVE),
     ACTIVE_WITH_SIGNAL(bool -> bool, EIOLang.REDSTONE_ACTIVE_WITH_SIGNAL),

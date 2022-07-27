@@ -19,8 +19,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.client.IFluidTypeRenderProperties;
-import net.minecraftforge.client.RenderProperties;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.registries.ForgeRegistries;
 
 // TODO: No longer lights in the inventory/hand like other machines...
@@ -33,30 +32,27 @@ public class FluidTankBEWLR extends BlockEntityWithoutLevelRenderer {
 
     @Override
     public void renderByItem(ItemStack stack, ItemTransforms.TransformType transformType, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
-
+        // Get the model for the fluid tank block
         BakedModel model = Minecraft.getInstance().getModelManager().getModel(new ModelResourceLocation(ForgeRegistries.ITEMS.getKey(stack.getItem()), "facing=north"));
-
         poseStack.pushPose();
+
+        // Render the main model
         Minecraft.getInstance().getItemRenderer().renderModelLists(model, stack, packedLight, packedOverlay, poseStack, buffer.getBuffer(RenderType.cutout()));
 
-        // Read the fluid from the NBT, if it has fluid, then we display it.
+        // Read the fluid from the NBT, if it has fluid, then we render it.
         CompoundTag nbt = stack.getTag();
         if (nbt != null && nbt.contains("BlockEntityTag")) {
             CompoundTag blockEntityTag = nbt.getCompound("BlockEntityTag");
-            if (blockEntityTag.contains("Fluids")) {
-                CompoundTag tank = blockEntityTag.getCompound("Fluids");
+            if (blockEntityTag.contains("fluid")) {
+                CompoundTag tank = blockEntityTag.getCompound("fluid");
 
                 if (tank.contains("FluidName") && tank.contains("Amount")) {
                     Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(tank.getString("FluidName")));
                     int amount = tank.getInt("Amount");
 
                     if (fluid != null && amount > 0) {
-                        VertexConsumer fluidBuffer;
-                        if (ItemBlockRenderTypes.canRenderInLayer(fluid.defaultFluidState(), RenderType.translucent())) {
-                            fluidBuffer = buffer.getBuffer(RenderType.translucent());
-                        } else {
-                            fluidBuffer = buffer.getBuffer(RenderType.solid());
-                        }
+                        // Get the preferred render buffer
+                        VertexConsumer fluidBuffer = buffer.getBuffer(ItemBlockRenderTypes.getRenderLayer(fluid.defaultFluidState()));
 
                         // Determine capacity.
                         int capacity = FluidTankBlockEntity.Standard.CAPACITY;
@@ -65,13 +61,12 @@ public class FluidTankBEWLR extends BlockEntityWithoutLevelRenderer {
                         }
 
                         PoseStack.Pose pose = poseStack.last();
-                        IFluidTypeRenderProperties props = RenderProperties.get(fluid);
-                        FluidTankBER.renderFluid(pose.pose(), pose.normal(), fluidBuffer, fluid, amount / (float) capacity, props.getColorTint());
+                        IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluid);
+                        FluidTankBER.renderFluid(pose.pose(), pose.normal(), fluidBuffer, fluid, amount / (float) capacity, props.getTintColor());
                     }
                 }
             }
         }
-
         poseStack.popPose();
     }
 }

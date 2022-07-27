@@ -2,7 +2,7 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.EnderIO;
 import com.enderio.api.capacitor.CapacitorKey;
-import com.enderio.api.recipe.CountedIngredient;
+import com.enderio.core.common.recipes.CountedIngredient;
 import com.enderio.core.common.sync.EnumDataSlot;
 import com.enderio.core.common.sync.SyncMode;
 import com.enderio.machines.common.MachineTier;
@@ -15,7 +15,6 @@ import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.menu.AlloySmelterMenu;
 import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
-import com.enderio.machines.common.recipe.IAlloySmeltingRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -34,8 +33,7 @@ import java.util.Optional;
 
 // TODO: Award XP
 
-// TODO: Rid ourselves of the need to have an interface for this recipe, reducing the hell that it causes.
-public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachine<IAlloySmeltingRecipe, IAlloySmeltingRecipe.Container> {
+public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltingRecipe, AlloySmeltingRecipe.Container> {
 
     // region Tiers
 
@@ -124,7 +122,7 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachine<IAl
     /**
      * The container used for crafting context.
      */
-    private final IAlloySmeltingRecipe.Container container;
+    private final AlloySmeltingRecipe.Container container;
 
     public AlloySmelterBlockEntity(AlloySmelterMode mode, CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey energyUseKey,
         BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
@@ -132,7 +130,7 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachine<IAl
         this.mode = mode;
 
         // Create the crafting inventory. Used for context in the vanilla recipe wrapper.
-        this.container = new IAlloySmeltingRecipe.Container(getInventory());
+        this.container = new AlloySmeltingRecipe.Container(getInventory());
 
         // This can be changed by the gui for the normal and enhanced machines.
         if (getTier() != MachineTier.SIMPLE) {
@@ -185,7 +183,7 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachine<IAl
     }
 
     @Override
-    protected Optional<IAlloySmeltingRecipe> findRecipe() {
+    protected Optional<AlloySmeltingRecipe> findRecipe() {
         // Get alloy smelting recipe (Default)
         if (getMode().canAlloy()) {
             var recipe = super.findRecipe();
@@ -195,6 +193,7 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachine<IAl
 
         // Get vanilla smelting recipe.
         if (getMode().canSmelt()) {
+            // TODO: Maybe add the ability for this to check all 3 slots?
             var recipe = level.getRecipeManager()
                 .getRecipeFor(RecipeType.SMELTING, getContainer(), level);
             if (recipe.isPresent())
@@ -204,10 +203,10 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachine<IAl
     }
 
     @Override
-    protected PoweredCraftingTask<IAlloySmeltingRecipe, IAlloySmeltingRecipe.Container> createTask(@Nullable IAlloySmeltingRecipe recipe) {
+    protected PoweredCraftingTask<AlloySmeltingRecipe, AlloySmeltingRecipe.Container> createTask(@Nullable AlloySmeltingRecipe recipe) {
         return new PoweredCraftingTask<>(this, container, 3, recipe) {
             @Override
-            protected void takeInputs(IAlloySmeltingRecipe recipe) {
+            protected void takeInputs(AlloySmeltingRecipe recipe) {
                 if (recipe instanceof AlloySmeltingRecipe) {
                     // Track which ingredients have been consumed
                     MachineInventory inv = getInventory();
@@ -263,7 +262,7 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachine<IAl
 
             @Nullable
             @Override
-            protected IAlloySmeltingRecipe loadRecipe(ResourceLocation id) {
+            protected AlloySmeltingRecipe loadRecipe(ResourceLocation id) {
                 return level.getRecipeManager().byKey(id).map(recipe -> {
                     if (recipe.getType() == MachineRecipes.ALLOY_SMELTING.type().get()) {
                         return (AlloySmeltingRecipe) recipe;
@@ -277,7 +276,7 @@ public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachine<IAl
     }
 
     @Override
-    protected IAlloySmeltingRecipe.Container getContainer() {
+    protected AlloySmeltingRecipe.Container getContainer() {
         return container;
     }
 

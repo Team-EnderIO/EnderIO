@@ -1,7 +1,7 @@
 package com.enderio.decoration.common.init;
 
 import com.enderio.EnderIO;
-import com.enderio.decoration.client.renderer.entity.PaintedSandRenderer;
+import com.enderio.decoration.client.render.entity.PaintedSandRenderer;
 import com.enderio.decoration.common.entity.PaintedSandEntity;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.EntityEntry;
@@ -18,5 +18,5 @@ public class DecorEntities {
         .lang("Painted Sand")
         .register();
 
-    public static void classload() {}
+    public static void register() {}
 }

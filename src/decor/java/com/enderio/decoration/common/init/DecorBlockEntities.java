@@ -15,7 +15,17 @@ public class DecorBlockEntities {
 
     public static final BlockEntityEntry<SinglePaintedBlockEntity> SINGLE_PAINTED = REGISTRATE
         .blockEntity("single_painted", SinglePaintedBlockEntity::new)
-        .validBlocks(DecorBlocks.getPaintedSupplier().toArray(new NonNullSupplier[0]))
+        .validBlocks(
+            DecorBlocks.PAINTED_FENCE,
+            DecorBlocks.PAINTED_FENCE_GATE,
+            DecorBlocks.PAINTED_SAND,
+            DecorBlocks.PAINTED_STAIRS,
+            DecorBlocks.PAINTED_CRAFTING_TABLE,
+            DecorBlocks.PAINTED_REDSTONE_BLOCK,
+            DecorBlocks.PAINTED_TRAPDOOR,
+            DecorBlocks.PAINTED_WOODEN_PRESSURE_PLATE,
+            DecorBlocks.PAINTED_GLOWSTONE
+        )
         .register();
 
     public static final BlockEntityEntry<DoublePaintedBlockEntity> DOUBLE_PAINTED = REGISTRATE
@@ -33,6 +43,6 @@ public class DecorBlockEntities {
         	.validBlock(DecorBlocks.LIGHT_NODE)
         	.register();
 
-    public static void classload() {}
+    public static void register() {}
 
 }

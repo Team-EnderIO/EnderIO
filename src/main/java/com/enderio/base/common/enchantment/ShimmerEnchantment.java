@@ -1,14 +1,13 @@
 package com.enderio.base.common.enchantment;
 
-import com.enderio.base.config.base.BaseConfig;
+import com.enderio.base.common.config.BaseConfig;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 public class ShimmerEnchantment extends EIOBaseEnchantment {
 
     public ShimmerEnchantment() {
-        // TODO 1.19: config before load
-        super(/*BaseConfig.COMMON.ENCHANTMENTS.SHIMMER_RARITY.get()*/ Rarity.VERY_RARE, EnchantmentCategory.VANISHABLE, EquipmentSlot.values(), () -> true);
+        super(Rarity.VERY_RARE, EnchantmentCategory.VANISHABLE, EquipmentSlot.values(), () -> true);
     }
 
     @Override

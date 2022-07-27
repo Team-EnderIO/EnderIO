@@ -6,18 +6,15 @@ import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.IFluidTypeRenderProperties;
-import net.minecraftforge.client.RenderProperties;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
-// TODO: 1.19: This could be doing with a refactor
 public class ItemBarRenderer {
 
     public static final int ENERGY_BAR_RGB = 0x00B168E4;
-    public static final int FLUID_BAR_RGB = 0x99BD42; // TODO: Defer to the item to decide colour based on fluid?
 
-    public static void renderEnergyOverlay(ItemStack pStack, int pXPosition, int pYPosition) {
+    public static void renderEnergyBar(ItemStack pStack, int pXPosition, int pYPosition) {
         // Hide bar if no energy
         if (EnergyUtil.getMaxEnergyStored(pStack) <= 0) {
             return;
@@ -30,10 +27,10 @@ public class ItemBarRenderer {
             .orElse(0d);
 
         // Render the bar overlay
-        renderOverlay(pXPosition, pYPosition, fillRatio, ENERGY_BAR_RGB);
+        renderBar(pXPosition, pYPosition, fillRatio, ENERGY_BAR_RGB);
     }
 
-    public static void renderFluidOverlay(ItemStack pStack, int tank, int pXPosition, int pYPosition) {
+    public static void renderFluidBar(ItemStack pStack, int tank, int pXPosition, int pYPosition) {
         pStack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).ifPresent(handler -> {
             if (handler.getFluidInTank(tank).getAmount() <= 0) {
                 return;
@@ -41,12 +38,12 @@ public class ItemBarRenderer {
 
             double fillRatio = 1.0D - (double) handler.getFluidInTank(tank).getAmount() / (double) handler.getTankCapacity(tank);
 
-            IFluidTypeRenderProperties props = RenderProperties.get(handler.getFluidInTank(tank).getFluid());
-            renderOverlay(pXPosition, pYPosition, fillRatio, props.getColorTint()); // TODO: Test this out!
+            IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(handler.getFluidInTank(tank).getFluid());
+            renderBar(pXPosition, pYPosition, fillRatio, props.getTintColor()); // TODO: Test this out!
         });
     }
 
-    public static void renderOverlay(int pXPosition, int pYPosition, double fillRatio, int pColor) {
+    public static void renderBar(int pXPosition, int pYPosition, double fillRatio, int pColor) {
         RenderSystem.disableDepthTest();
         RenderSystem.disableTexture();
         RenderSystem.disableBlend();

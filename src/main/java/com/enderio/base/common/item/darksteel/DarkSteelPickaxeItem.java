@@ -10,7 +10,7 @@ import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosiveUpgrad
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.common.util.EnergyUtil;
 import com.enderio.core.common.util.TooltipUtil;
-import com.enderio.base.config.base.BaseConfig;
+import com.enderio.base.common.config.BaseConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;

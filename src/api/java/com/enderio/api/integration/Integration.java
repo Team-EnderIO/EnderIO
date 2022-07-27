@@ -1,7 +1,6 @@
 package com.enderio.api.integration;
 
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 
 public abstract class Integration implements IntegrationMethods {
 

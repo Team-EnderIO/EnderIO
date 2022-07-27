@@ -1,7 +1,7 @@
 package com.enderio.core.data.model;
 
 import com.enderio.core.EnderCore;
-import com.enderio.core.client.gui.model.composite.CompositeModelComponent;
+import com.enderio.core.client.model.composite.CompositeModelComponent;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mojang.math.Vector3f;
@@ -14,6 +14,10 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * @deprecated Use forge's {@link net.minecraftforge.client.model.generators.loaders.CompositeModelBuilder}
+ */
+@Deprecated(forRemoval = true)
 public class CompositeModelBuilder<T extends ModelBuilder<T>> extends CustomLoaderBuilder<T> {
 
     private final Set<CompositeModelComponent> components = new HashSet<>();

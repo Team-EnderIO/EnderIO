@@ -6,8 +6,7 @@ import com.enderio.machines.client.rendering.model.IOOverlayBakedModel;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
+import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -15,8 +14,8 @@ import net.minecraftforge.fml.common.Mod;
 public class MachinesClientSetup {
 
     @SubscribeEvent
-    public static void customModelLoaders(ModelRegistryEvent event) {
-        ModelLoaderRegistry.registerLoader(EnderIO.loc("io_overlay"), new IOOverlayBakedModel.Loader());
+    public static void customModelLoaders(ModelEvent.RegisterGeometryLoaders event) {
+        event.register("io_overlay", new IOOverlayBakedModel.Loader());
     }
 
     @SubscribeEvent

@@ -1,5 +1,6 @@
 package com.enderio.core.common.util;
 
+import com.enderio.core.EnderCore;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -9,12 +10,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class TagUtil {
-    private static final List<String> ENDER_MODIDS = List.of(
-        "enderio",
-        "enderio_machines",
-        "enderio_conduits" // TODO: Add all modules here.
-    );
-
     /**
      * Get an optional item from a tag.
      * An optional item means the item may not actually be present, and if it isn't it is handled gracefully.
@@ -27,7 +22,7 @@ public class TagUtil {
         ITag<Item> tag = ForgeRegistries.ITEMS.tags().getTag(tagKey);
 
         // Search for an EnderIO item
-        Optional<Item> enderItem = tag.stream().filter(item -> ENDER_MODIDS.contains(ForgeRegistries.ITEMS.getKey(item).getNamespace())).findAny();
+        Optional<Item> enderItem = tag.stream().filter(item -> ForgeRegistries.ITEMS.getKey(item).getNamespace().equals(EnderCore.MODID)).findFirst();
         if (enderItem.isPresent())
             return enderItem;
 
