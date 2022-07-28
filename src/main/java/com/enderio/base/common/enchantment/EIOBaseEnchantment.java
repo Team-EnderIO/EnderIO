@@ -5,14 +5,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
-import javax.annotation.Nonnull;
 import java.util.function.Supplier;
 
 public class EIOBaseEnchantment extends Enchantment {
 
-    protected final @Nonnull Supplier<Boolean> enableFlag;
+    protected final Supplier<Boolean> enableFlag;
 
-    public EIOBaseEnchantment(Rarity pRarity, EnchantmentCategory pCategory, EquipmentSlot[] pApplicableSlots, @Nonnull Supplier<Boolean> flag) {
+    public EIOBaseEnchantment(Rarity pRarity, EnchantmentCategory pCategory, EquipmentSlot[] pApplicableSlots, Supplier<Boolean> flag) {
         super(pRarity, pCategory, pApplicableSlots);
         this.enableFlag = flag;
     }

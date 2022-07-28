@@ -1,4 +1,4 @@
-package com.enderio.base.common.item.spawner;
+package com.enderio.base.common.item.misc;
 
 import com.enderio.api.capability.IMultiCapabilityItem;
 import com.enderio.api.capability.MultiCapabilityProvider;
@@ -21,8 +21,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.LazyOptional;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -40,7 +39,7 @@ public class BrokenSpawnerItem extends Item implements IMultiCapabilityItem {
     }
 
     @Override
-    public void fillItemCategory(@Nonnull CreativeModeTab pCategory, @Nonnull NonNullList<ItemStack> pItems) {
+    public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {
         if (allowedIn(pCategory)) {
             pItems.add(new ItemStack(this));
         } else if (pCategory == EIOCreativeTabs.SOULS) {
@@ -57,8 +56,7 @@ public class BrokenSpawnerItem extends Item implements IMultiCapabilityItem {
     }
 
     @Override
-    public void appendHoverText(@Nonnull ItemStack pStack, @Nullable Level pLevel, @Nonnull List<Component> pTooltipComponents,
-        @Nonnull TooltipFlag pIsAdvanced) {
+    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
         getEntityType(pStack).ifPresent(type -> pTooltipComponents.add(TooltipUtil.style(Component.translatable(EntityUtil.getEntityDescriptionId(type)))));
     }

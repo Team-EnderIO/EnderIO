@@ -14,13 +14,12 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
 
 public class PaintedBlockColor implements BlockColor, ItemColor {
 
-    // TODO: Buggy on the sides of blocks.
+    // TODO: Buggy on the sides of blocks. (Grass)
     @Override
-    public int getColor(@Nonnull BlockState state, @Nullable BlockAndTintGetter level, @Nullable BlockPos pos, int tintIndex) {
+    public int getColor(BlockState state, @Nullable BlockAndTintGetter level, @Nullable BlockPos pos, int tintIndex) {
         if (level != null && pos != null && tintIndex != 0) {
             BlockEntity entity = level.getBlockEntity(pos);
             if (entity instanceof IPaintableBlockEntity paintedBlockEntity) {

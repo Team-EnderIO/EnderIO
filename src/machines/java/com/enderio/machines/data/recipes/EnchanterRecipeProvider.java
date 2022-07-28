@@ -19,7 +19,6 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -31,7 +30,7 @@ public class EnchanterRecipeProvider extends EnderRecipeProvider {
     }
 
     @Override
-    protected void buildCraftingRecipes(@NotNull Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
+    protected void buildCraftingRecipes(Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
         //vanilla
         build(Enchantments.ALL_DAMAGE_PROTECTION, EIOItems.DARK_STEEL_INGOT.get(), 16, 1, pFinishedRecipeConsumer);
         build(Enchantments.FIRE_PROTECTION, Items.BLAZE_POWDER, 16, 1, pFinishedRecipeConsumer);

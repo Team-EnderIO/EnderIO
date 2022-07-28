@@ -26,7 +26,7 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class MachineBlock extends BaseEntityBlock {
     private final BlockEntityEntry<? extends MachineBlockEntity> blockEntityType;

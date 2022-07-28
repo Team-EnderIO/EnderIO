@@ -3,7 +3,7 @@ package com.enderio.base.common.menu;
 import com.enderio.api.capability.CoordinateSelection;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.init.EIOMenus;
-import com.enderio.base.common.item.LocationPrintoutItem;
+import com.enderio.base.common.item.misc.LocationPrintoutItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -18,7 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 public class CoordinateMenu extends AbstractContainerMenu {

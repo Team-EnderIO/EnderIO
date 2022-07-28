@@ -14,7 +14,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.Tags;
 
-import javax.annotation.Nonnull;
 import java.util.function.Consumer;
 
 public class ItemRecipes extends RecipeProvider {
@@ -24,13 +23,13 @@ public class ItemRecipes extends RecipeProvider {
     }
 
     @Override
-    protected void buildCraftingRecipes(@Nonnull Consumer<FinishedRecipe> recipeConsumer) {
+    protected void buildCraftingRecipes(Consumer<FinishedRecipe> recipeConsumer) {
         addTools(recipeConsumer);
         addDarkSteelTools(recipeConsumer);
         addDarkSteelUpgrades(recipeConsumer);
     }
 
-    private void addTools(@Nonnull Consumer<FinishedRecipe> recipeConsumer) {
+    private void addTools(Consumer<FinishedRecipe> recipeConsumer) {
         ShapedRecipeBuilder
             .shaped(EIOItems.YETA_WRENCH.get())
             .define('I', EIOItems.COPPER_ALLOY_INGOT.get())
@@ -81,7 +80,7 @@ public class ItemRecipes extends RecipeProvider {
             .save(recipeConsumer);
     }
 
-    private void addDarkSteelTools(@Nonnull Consumer<FinishedRecipe> recipeConsumer) {
+    private void addDarkSteelTools(Consumer<FinishedRecipe> recipeConsumer) {
         MaterialItem ingot = EIOItems.DARK_STEEL_INGOT.get();
 
         ShapedRecipeBuilder

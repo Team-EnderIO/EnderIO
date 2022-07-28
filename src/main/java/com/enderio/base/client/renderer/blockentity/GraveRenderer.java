@@ -16,7 +16,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.SkullBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-import javax.annotation.Nonnull;
 import java.util.concurrent.atomic.AtomicReference;
 
 //renders grave as a playerskull
@@ -28,8 +27,7 @@ public class GraveRenderer implements BlockEntityRenderer<BlockEntity> {
     }
 
     @Override
-    public void render(@Nonnull BlockEntity pBlockEntity, float pPartialTicks, PoseStack pMatrixStack, @Nonnull MultiBufferSource pBuffer, int pCombinedLight,
-        int pCombinedOverlay) {
+    public void render(BlockEntity pBlockEntity, float pPartialTicks, PoseStack poseStack, MultiBufferSource pBuffer, int light, int pCombinedOverlay) {
         GraveBlockEntity grave = (GraveBlockEntity) pBlockEntity;
         Direction direction = null;//TODO if we make the grave rotatable
         SkullModelBase skullmodelbase = new SkullModel(this.context.bakeLayer(ModelLayers.PLAYER_HEAD));
@@ -39,10 +37,10 @@ public class GraveRenderer implements BlockEntityRenderer<BlockEntity> {
                 rendertype.set(SkullBlockRenderer.getRenderType(SkullBlock.Types.PLAYER, cap.getProfile()));
             }
         });
-        pMatrixStack.pushPose();
-        pMatrixStack.translate(1, 1, 0);
-        pMatrixStack.popPose();
-        SkullBlockRenderer.renderSkull(direction, 0.0F, 0.0F, pMatrixStack, pBuffer, pCombinedLight, skullmodelbase, rendertype.get());
+        poseStack.pushPose();
+        poseStack.translate(1, 1, 0);
+        poseStack.popPose();
+        SkullBlockRenderer.renderSkull(direction, 0.0F, 0.0F, poseStack, pBuffer, light, skullmodelbase, rendertype.get());
     }
 
 }

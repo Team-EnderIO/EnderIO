@@ -15,8 +15,7 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class PaintedCraftingTableBlock extends CraftingTableBlock implements EntityBlock, IPaintedBlock {
 
@@ -28,15 +27,15 @@ public class PaintedCraftingTableBlock extends CraftingTableBlock implements Ent
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return DecorBlockEntities.SINGLE_PAINTED.create(pos, state);
     }
 
     @Override
-    public MenuProvider getMenuProvider(@Nonnull BlockState pState, @Nonnull Level pLevel, @Nonnull BlockPos pPos) {
+    public MenuProvider getMenuProvider(BlockState pState, Level pLevel, BlockPos pPos) {
         return new SimpleMenuProvider((containerId, inventory, player) -> new CraftingMenu(containerId, inventory, ContainerLevelAccess.create(pLevel, pPos)) {
             @Override
-            public boolean stillValid(@Nonnull Player pPlayer) {
+            public boolean stillValid(Player pPlayer) {
                 try {
                     return stillValid(access, pPlayer, DecorBlocks.PAINTED_CRAFTING_TABLE.get());
                 } catch (Exception e) {
