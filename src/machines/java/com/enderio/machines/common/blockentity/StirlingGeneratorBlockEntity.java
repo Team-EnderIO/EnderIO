@@ -22,52 +22,25 @@ import net.minecraftforge.fml.LogicalSide;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class StirlingGeneratorBlockEntity extends PowerGeneratingMachineEntity {
-    public static class Simple extends StirlingGeneratorBlockEntity {
-        public Simple(BlockEntityType<?> type, BlockPos worldPosition,
-            BlockState blockState) {
-            super(MachineCapacitorKeys.SIMPLE_STIRLING_GENERATOR_ENERGY_CAPACITY.get(),
-                MachineCapacitorKeys.DEV_ENERGY_TRANSFER.get(),
-                MachineCapacitorKeys.DEV_ENERGY_CONSUME.get(),
-                type, worldPosition, blockState);
-        }
-
-        @Override
-        public MachineTier getTier() {
-            return MachineTier.SIMPLE;
-        }
-
-        @Override
-        public int getEnergyLeakPerSecond() {
-            return 2;
-        }
-    }
-
-    public static class Standard extends StirlingGeneratorBlockEntity {
-        public Standard(BlockEntityType<?> type, BlockPos worldPosition,
-            BlockState blockState) {
-            super(MachineCapacitorKeys.STIRLING_GENERATOR_ENERGY_CAPACITY.get(),
-                MachineCapacitorKeys.DEV_ENERGY_TRANSFER.get(),
-                MachineCapacitorKeys.DEV_ENERGY_CONSUME.get(),
-                type, worldPosition, blockState);
-        }
-
-        @Override
-        public MachineTier getTier() {
-            return MachineTier.STANDARD;
-        }
-    }
-
     private int burnTime;
     private int burnDuration;
 
     @UseOnly(LogicalSide.CLIENT)
     private float clientBurnProgress;
 
-    public StirlingGeneratorBlockEntity(CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey consumptionKey, BlockEntityType<?> type, BlockPos worldPosition,
+    public StirlingGeneratorBlockEntity(BlockEntityType<?> type, BlockPos worldPosition,
         BlockState blockState) {
-        super(capacityKey, transferKey, consumptionKey, type, worldPosition, blockState);
+        super(MachineCapacitorKeys.STIRLING_GENERATOR_ENERGY_CAPACITY.get(),
+            MachineCapacitorKeys.DEV_ENERGY_TRANSFER.get(),
+            MachineCapacitorKeys.DEV_ENERGY_CONSUME.get(),
+            type, worldPosition, blockState);
 
         addDataSlot(new FloatDataSlot(this::getBurnProgress, p -> clientBurnProgress = p, SyncMode.GUI));
+    }
+
+    @Override
+    public MachineTier getTier() {
+        return MachineTier.STANDARD;
     }
 
     @Override

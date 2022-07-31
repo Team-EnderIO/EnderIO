@@ -8,7 +8,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-// TODO: Remaster this sometime to work the same as 1.12
+// TODO: Remaster power generation sometime.
 public abstract class PowerGeneratingMachineEntity extends PoweredMachineEntity {
     public PowerGeneratingMachineEntity(CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey consumptionKey, BlockEntityType<?> type, BlockPos worldPosition,
         BlockState blockState) {

@@ -38,6 +38,7 @@ public class AlloySmelterScreen extends EIOScreen<AlloySmelterMenu> {
         addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
 
+        // TODO: leaving this as a note for the primitive smelter.
         if (getMenu().getBlockEntity().getTier() != MachineTier.SIMPLE) {
             addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 6 + 16 * 3, () -> menu.getBlockEntity().getMode(), mode -> menu.getBlockEntity().setMode(mode), MachineLang.ALLOY_SMELTER_MODE));
         }

@@ -35,49 +35,7 @@ import java.util.Optional;
 
 public abstract class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltingRecipe, AlloySmeltingRecipe.Container> {
 
-    // region Tiers
-
-    public static class Simple extends AlloySmelterBlockEntity {
-
-        public Simple(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
-            super(AlloySmelterMode.ALLOYS,
-                MachineCapacitorKeys.SIMPLE_ALLOY_SMELTER_ENERGY_CAPACITY.get(),
-                MachineCapacitorKeys.SIMPLE_ALLOY_SMELTER_ENERGY_TRANSFER.get(),
-                MachineCapacitorKeys.SIMPLE_ALLOY_SMELTER_ENERGY_CONSUME.get(),
-                type, worldPosition, blockState);
-        }
-
-        @Override
-        public MachineTier getTier() {
-            return MachineTier.SIMPLE;
-        }
-
-        @Override
-        public int getEnergyLeakPerSecond() {
-            return 5; // TODO: Config
-        }
-    }
-
-    public static class Furnace extends AlloySmelterBlockEntity {
-
-        public Furnace(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
-            super(AlloySmelterMode.FURNACE,
-                MachineCapacitorKeys.SIMPLE_ALLOY_SMELTER_ENERGY_CAPACITY.get(),
-                MachineCapacitorKeys.SIMPLE_ALLOY_SMELTER_ENERGY_TRANSFER.get(),
-                MachineCapacitorKeys.SIMPLE_ALLOY_SMELTER_ENERGY_CONSUME.get(),
-                type, worldPosition, blockState);
-        }
-
-        @Override
-        public MachineTier getTier() {
-            return MachineTier.SIMPLE;
-        }
-
-        @Override
-        public int getEnergyLeakPerSecond() {
-            return 1;
-        }
-    }
+    // TODO: Primitive
 
     public static class Standard extends AlloySmelterBlockEntity {
 

@@ -13,10 +13,6 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.function.Supplier;
 
 public enum MachineCapacitorKeys {
-    SIMPLE_ALLOY_SMELTER_ENERGY_CAPACITY(2000, CapacitorKeyType.EnergyCapacity, Scalers.FIXED),
-    SIMPLE_ALLOY_SMELTER_ENERGY_TRANSFER(30, CapacitorKeyType.EnergyTransfer, Scalers.FIXED),
-    SIMPLE_ALLOY_SMELTER_ENERGY_CONSUME(15, CapacitorKeyType.EnergyUsage, Scalers.FIXED),
-
     ALLOY_SMELTER_ENERGY_CAPACITY(100000, CapacitorKeyType.EnergyCapacity, Scalers.ENERGY),
     ALLOY_SMELTER_ENERGY_TRANSFER(120, CapacitorKeyType.EnergyTransfer, Scalers.ENERGY),
     ALLOY_SMELTER_ENERGY_CONSUME(30, CapacitorKeyType.EnergyUsage, Scalers.ENERGY),
@@ -24,10 +20,6 @@ public enum MachineCapacitorKeys {
     ENHANCED_ALLOY_SMELTER_ENERGY_CAPACITY(1500000, CapacitorKeyType.EnergyCapacity, Scalers.ENERGY),
     ENHANCED_ALLOY_SMELTER_ENERGY_TRANSFER(180, CapacitorKeyType.EnergyTransfer, Scalers.ENERGY),
     ENHANCED_ALLOY_SMELTER_ENERGY_CONSUME(45, CapacitorKeyType.EnergyUsage, Scalers.ENERGY),
-
-    SIMPLE_SAG_MILL_ENERGY_CAPACITY(2000, CapacitorKeyType.EnergyCapacity, Scalers.FIXED),
-    SIMPLE_SAG_MILL_ENERGY_TRANSFER(30, CapacitorKeyType.EnergyTransfer, Scalers.FIXED),
-    SIMPLE_SAG_MILL_ENERGY_CONSUME(15, CapacitorKeyType.EnergyUsage, Scalers.FIXED),
 
     SAG_MILL_ENERGY_CAPACITY(100000, CapacitorKeyType.EnergyCapacity, Scalers.ENERGY),
     SAG_MILL_ENERGY_TRANSFER(120, CapacitorKeyType.EnergyTransfer, Scalers.ENERGY),
@@ -40,8 +32,6 @@ public enum MachineCapacitorKeys {
     SLICE_AND_SPLICE_ENERGY_CAPACITY(100000, CapacitorKeyType.EnergyCapacity, Scalers.ENERGY),
     SLICE_AND_SPLICE_ENERGY_TRANSFER(120, CapacitorKeyType.EnergyTransfer, Scalers.ENERGY),
     SLICE_AND_SPLICE_ENERGY_CONSUME(80, CapacitorKeyType.EnergyUsage, Scalers.ENERGY),
-
-    SIMPLE_STIRLING_GENERATOR_ENERGY_CAPACITY(2000, CapacitorKeyType.EnergyCapacity, Scalers.FIXED),
 
     STIRLING_GENERATOR_ENERGY_CAPACITY(100000, CapacitorKeyType.EnergyCapacity, Scalers.ENERGY),
     // TODO: Generation rate and efficiency.
