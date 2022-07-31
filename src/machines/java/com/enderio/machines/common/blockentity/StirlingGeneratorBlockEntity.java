@@ -1,10 +1,12 @@
 package com.enderio.machines.common.blockentity;
 
 import com.enderio.api.UseOnly;
+import com.enderio.api.capacitor.CapacitorModifier;
+import com.enderio.api.capacitor.ScalableValue;
+import com.enderio.api.capacitor.Scalers;
 import com.enderio.core.common.sync.FloatDataSlot;
 import com.enderio.core.common.sync.SyncMode;
 import com.enderio.machines.common.blockentity.base.PowerGeneratingMachineEntity;
-import com.enderio.machines.common.init.MachineCapacitorKeys;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.menu.StirlingGeneratorMenu;
 import net.minecraft.core.BlockPos;
@@ -20,6 +22,10 @@ import net.minecraftforge.fml.LogicalSide;
 import org.jetbrains.annotations.Nullable;
 
 public class StirlingGeneratorBlockEntity extends PowerGeneratingMachineEntity {
+    public static final ScalableValue CAPACITY = new ScalableValue(CapacitorModifier.ENERGY_CAPACITY, () -> 100000f, Scalers.ENERGY);
+    public static final ScalableValue TRANSFER = new ScalableValue(CapacitorModifier.ENERGY_TRANSFER, () -> 120f, Scalers.ENERGY);
+    public static final ScalableValue USAGE = ScalableValue.fixed(0f);
+
     private int burnTime;
     private int burnDuration;
 
@@ -28,11 +34,7 @@ public class StirlingGeneratorBlockEntity extends PowerGeneratingMachineEntity {
 
     public StirlingGeneratorBlockEntity(BlockEntityType<?> type, BlockPos worldPosition,
         BlockState blockState) {
-        super(MachineCapacitorKeys.STIRLING_GENERATOR_ENERGY_CAPACITY.get(),
-            MachineCapacitorKeys.DEV_ENERGY_TRANSFER.get(),
-            MachineCapacitorKeys.DEV_ENERGY_CONSUME.get(),
-            type, worldPosition, blockState);
-
+        super(CAPACITY, TRANSFER, USAGE, type, worldPosition, blockState);
         addDataSlot(new FloatDataSlot(this::getBurnProgress, p -> clientBurnProgress = p, SyncMode.GUI));
     }
 

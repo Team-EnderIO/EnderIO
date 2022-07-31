@@ -1,6 +1,6 @@
 package com.enderio.api.capability;
 
-import com.enderio.api.capacitor.CapacitorKey;
+import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.nbt.INamedNBTSerializable;
 import net.minecraft.nbt.Tag;
 
@@ -16,16 +16,9 @@ public interface ICapacitorData extends INamedNBTSerializable<Tag> {
     float getBase();
 
     /**
-     * Get the level for the given capacitor key.
+     * Get the level for the given capacitor modifier.
      */
-    float getLevel(CapacitorKey key);
-
-    /**
-     * Get the value for a given capacitor key.
-     */
-    default float getValue(CapacitorKey key) {
-        return key.getValue(getLevel(key));
-    }
+    float getLevel(CapacitorModifier modifier);
 
     // Allows the interface to be serialized as a capability.
     @Override

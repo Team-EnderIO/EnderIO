@@ -2,17 +2,12 @@ package com.enderio.machines.data.model;
 
 import com.enderio.EnderIO;
 import com.enderio.core.data.model.EIOModel;
-import com.enderio.machines.common.block.EnhancedMachineBlock;
 import com.enderio.machines.common.block.ProgressMachineBlock;
-import com.mojang.math.Vector3f;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
-import com.tterrag.registrate.providers.RegistrateItemModelProvider;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraftforge.client.model.generators.BlockModelBuilder;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;

@@ -66,7 +66,6 @@ public class EnderIO {
         CoreNetwork.networkInit();
 
         // Perform initialization and registration for everything so things are registered.
-        EIORegistries.init();
         EIOItems.register();
         EIOBlocks.register();
         EIOBlockEntities.register();

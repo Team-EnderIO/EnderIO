@@ -31,7 +31,6 @@ public class EIOMachines {
         MachineMenus.register();
         MachineLang.register();
         MachineRecipes.register();
-        MachineCapacitorKeys.register();
     }
 
     @SubscribeEvent

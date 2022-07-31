@@ -2,7 +2,6 @@ package com.enderio.machines.common.io.energy;
 
 import com.enderio.api.capability.ICapacitorData;
 import com.enderio.api.capability.IEnderCapabilityProvider;
-import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.api.io.IIOConfig;
 import net.minecraft.core.Direction;
@@ -25,23 +24,20 @@ import java.util.function.Supplier;
 public class MachineEnergyStorage implements IMachineEnergyStorage, IEnderCapabilityProvider<IEnergyStorage>, INBTSerializable<CompoundTag> {
     private final IIOConfig config;
     private final EnergyIOMode ioMode;
-    private final Supplier<ICapacitorData> capacitorData;
 
     private int energyStored;
 
-    private final CapacitorKey capacityKey, transferKey, useKey;
+    private final Supplier<Integer> capacity, transferRate, usageRate;
 
     private final EnumMap<Direction, LazyOptional<Sided>> sideCache = new EnumMap<>(Direction.class);
     private LazyOptional<MachineEnergyStorage> selfCache = LazyOptional.empty();
 
-    public MachineEnergyStorage(IIOConfig config, EnergyIOMode ioMode, Supplier<ICapacitorData> capacitorData, CapacitorKey capacityKey,
-        CapacitorKey transferKey, CapacitorKey useKey) {
+    public MachineEnergyStorage(IIOConfig config, EnergyIOMode ioMode, Supplier<Integer> capacity, Supplier<Integer> transferRate, Supplier<Integer> usageRate) {
         this.config = config;
         this.ioMode = ioMode;
-        this.capacitorData = capacitorData;
-        this.capacityKey = capacityKey;
-        this.transferKey = transferKey;
-        this.useKey = useKey;
+        this.capacity = capacity;
+        this.transferRate = transferRate;
+        this.usageRate = usageRate;
     }
 
     @Override
@@ -95,17 +91,17 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, IEnderCapabi
 
     @Override
     public int getMaxEnergyStored() {
-        return capacityKey.getInt(capacitorData.get());
+        return Math.round(capacity.get());
     }
 
     @Override
     public int getMaxEnergyTransfer() {
-        return transferKey.getInt(capacitorData.get());
+        return Math.round(transferRate.get());
     }
 
     @Override
     public int getMaxEnergyUse() {
-        return useKey.getInt(capacitorData.get());
+        return Math.round(usageRate.get());
     }
 
     @Override

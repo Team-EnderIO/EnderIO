@@ -1,8 +1,10 @@
 package com.enderio.machines.common.blockentity;
 
+import com.enderio.api.capacitor.CapacitorModifier;
+import com.enderio.api.capacitor.ScalableValue;
+import com.enderio.api.capacitor.Scalers;
 import com.enderio.machines.common.blockentity.base.PoweredCraftingMachine;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingTask;
-import com.enderio.machines.common.init.MachineCapacitorKeys;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
@@ -25,14 +27,14 @@ import org.jetbrains.annotations.Nullable;
 
 public class SlicerBlockEntity extends PoweredCraftingMachine<SlicingRecipe, Container> {
 
+    public static final ScalableValue CAPACITY = new ScalableValue(CapacitorModifier.ENERGY_CAPACITY, () -> 100000f, Scalers.ENERGY);
+    public static final ScalableValue TRANSFER = new ScalableValue(CapacitorModifier.ENERGY_TRANSFER, () -> 120f, Scalers.ENERGY);
+    public static final ScalableValue USAGE = new ScalableValue(CapacitorModifier.ENERGY_USE, () -> 30f, Scalers.ENERGY);
+
     private final RecipeWrapper container;
 
     public SlicerBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
-        super(MachineRecipes.SLICING.type().get(),
-            MachineCapacitorKeys.SLICE_AND_SPLICE_ENERGY_CAPACITY.get(),
-            MachineCapacitorKeys.SLICE_AND_SPLICE_ENERGY_TRANSFER.get(),
-            MachineCapacitorKeys.SLICE_AND_SPLICE_ENERGY_CONSUME.get(),
-            type, worldPosition, blockState);
+        super(MachineRecipes.SLICING.type().get(), CAPACITY, TRANSFER, USAGE, type, worldPosition, blockState);
 
         container = new RecipeWrapper(getInventory());
     }

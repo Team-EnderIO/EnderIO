@@ -32,7 +32,7 @@ public class MachineBlockEntities {
         MachineBlocks.CREATIVE_POWER);
     public static final BlockEntityEntry<StirlingGeneratorBlockEntity> STIRLING_GENERATOR = register("stirling_generator",
         StirlingGeneratorBlockEntity::new, MachineBlocks.STIRLING_GENERATOR);
-    public static final BlockEntityEntry<SagMillBlockEntity.Standard> SAG_MILL = register("sag_mill", SagMillBlockEntity.Standard::new, MachineBlocks.SAG_MILL);
+    public static final BlockEntityEntry<SagMillBlockEntity> SAG_MILL = register("sag_mill", SagMillBlockEntity::new, MachineBlocks.SAG_MILL);
 
     public static final BlockEntityEntry<SlicerBlockEntity> SLICE_AND_SPLICE = register("slice_and_splice", SlicerBlockEntity::new,
         MachineBlocks.SLICE_AND_SPLICE);

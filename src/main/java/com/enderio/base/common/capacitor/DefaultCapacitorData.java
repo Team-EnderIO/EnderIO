@@ -1,8 +1,8 @@
 package com.enderio.base.common.capacitor;
 
 import com.enderio.api.capability.ICapacitorData;
-import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.EnderIO;
+import com.enderio.api.capacitor.CapacitorModifier;
 import net.minecraft.nbt.FloatTag;
 import net.minecraft.nbt.Tag;
 
@@ -24,7 +24,7 @@ public enum DefaultCapacitorData implements ICapacitorData {
     }
 
     @Override
-    public float getLevel(CapacitorKey key) {
+    public float getLevel(CapacitorModifier modifier) {
         return getBase();
     }
 

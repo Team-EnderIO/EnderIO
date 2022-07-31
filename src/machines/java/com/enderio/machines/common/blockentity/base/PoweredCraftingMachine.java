@@ -1,12 +1,11 @@
 package com.enderio.machines.common.blockentity.base;
 
-import com.enderio.api.capacitor.CapacitorKey;
+import com.enderio.api.capacitor.ScalableValue;
 import com.enderio.machines.common.recipe.MachineRecipe;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingTask;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -23,9 +22,9 @@ public abstract class PoweredCraftingMachine<R extends MachineRecipe<C>, C exten
      */
     protected final RecipeType<R> recipeType;
 
-    public PoweredCraftingMachine(RecipeType<R> recipeType, CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey energyUseKey, BlockEntityType<?> type,
-        BlockPos worldPosition, BlockState blockState) {
-        super(capacityKey, transferKey, energyUseKey, type, worldPosition, blockState);
+    public PoweredCraftingMachine(RecipeType<R> recipeType, ScalableValue capacity, ScalableValue transferRate, ScalableValue usageRate,
+        BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
+        super(capacity, transferRate, usageRate, type, worldPosition, blockState);
         this.recipeType = recipeType;
     }
 

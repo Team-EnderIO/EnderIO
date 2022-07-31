@@ -2,7 +2,7 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.EnderIO;
 import com.enderio.api.UseOnly;
-import com.enderio.api.capacitor.CapacitorKey;
+import com.enderio.api.capacitor.*;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.recipes.CountedIngredient;
 import com.enderio.core.common.sync.EnumDataSlot;
@@ -11,7 +11,6 @@ import com.enderio.core.common.sync.SyncMode;
 import com.enderio.machines.common.blockentity.base.PoweredCraftingMachine;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingTask;
 import com.enderio.machines.common.compat.VanillaAlloySmeltingRecipe;
-import com.enderio.machines.common.init.MachineCapacitorKeys;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import com.enderio.machines.common.io.item.MachineInventory;
@@ -39,10 +38,15 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 // TODO: Award XP
 
 public class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltingRecipe, AlloySmeltingRecipe.Container> {
+
+    public static final ScalableValue CAPACITY = new ScalableValue(CapacitorModifier.ENERGY_CAPACITY, () -> 100000f, Scalers.ENERGY);
+    public static final ScalableValue TRANSFER = new ScalableValue(CapacitorModifier.ENERGY_TRANSFER, () -> 120f, Scalers.ENERGY);
+    public static final ScalableValue USAGE = new ScalableValue(CapacitorModifier.ENERGY_USE, () -> 30f, Scalers.ENERGY);
 
     public static class Primitive extends AlloySmelterBlockEntity {
         private int burnTime;
@@ -112,16 +116,15 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltin
         }
 
         @Override
-        protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey useKey) {
-            return new MachineEnergyStorage(getIOConfig(), energyIOMode, this::getCapacitorData, capacityKey, transferKey, useKey) {
+        protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, Supplier<Integer> capacity, Supplier<Integer> transferRate,
+            Supplier<Integer> usageRate) {
+            return new MachineEnergyStorage(getIOConfig(), energyIOMode, () -> getBurnToFE(), () -> 0, () -> 0) {
                 @Override
                 public int getEnergyStored() {
-                    return 10;
-                }
-
-                @Override
-                public int getMaxEnergyStored() {
-                    return 10;
+                    if (isBurning()) {
+                        return getBurnToFE();
+                    }
+                    return 0;
                 }
 
                 @Override
@@ -175,10 +178,7 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltin
     private final AlloySmeltingRecipe.Container container;
 
     public AlloySmelterBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-        super(MachineRecipes.ALLOY_SMELTING.type().get(), MachineCapacitorKeys.ALLOY_SMELTER_ENERGY_CAPACITY.get(),
-            MachineCapacitorKeys.ALLOY_SMELTER_ENERGY_TRANSFER.get(),
-            MachineCapacitorKeys.ALLOY_SMELTER_ENERGY_CONSUME.get(),
-            pType, pWorldPosition, pBlockState);
+        super(MachineRecipes.ALLOY_SMELTING.type().get(), CAPACITY, TRANSFER, USAGE, pType, pWorldPosition, pBlockState);
 
         // Create the crafting inventory. Used for context in the vanilla recipe wrapper.
         this.container = new AlloySmeltingRecipe.Container(getInventory());
