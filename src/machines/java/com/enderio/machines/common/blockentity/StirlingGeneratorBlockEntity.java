@@ -1,10 +1,8 @@
 package com.enderio.machines.common.blockentity;
 
 import com.enderio.api.UseOnly;
-import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.core.common.sync.FloatDataSlot;
 import com.enderio.core.common.sync.SyncMode;
-import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.PowerGeneratingMachineEntity;
 import com.enderio.machines.common.init.MachineCapacitorKeys;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
@@ -21,7 +19,7 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.LogicalSide;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class StirlingGeneratorBlockEntity extends PowerGeneratingMachineEntity {
+public class StirlingGeneratorBlockEntity extends PowerGeneratingMachineEntity {
     private int burnTime;
     private int burnDuration;
 
@@ -39,13 +37,8 @@ public abstract class StirlingGeneratorBlockEntity extends PowerGeneratingMachin
     }
 
     @Override
-    public MachineTier getTier() {
-        return MachineTier.STANDARD;
-    }
-
-    @Override
     public MachineInventoryLayout getInventoryLayout() {
-        return MachineInventoryLayout.builder(getTier() != MachineTier.SIMPLE)
+        return MachineInventoryLayout.builder(true)
             .inputSlot((slot, stack) -> ForgeHooks.getBurnTime(stack, RecipeType.SMELTING) > 0)
             .build();
     }

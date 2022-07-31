@@ -1,6 +1,5 @@
 package com.enderio.machines.common.blockentity;
 
-import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.PoweredCraftingMachine;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingTask;
 import com.enderio.machines.common.init.MachineCapacitorKeys;
@@ -36,11 +35,6 @@ public class SlicerBlockEntity extends PoweredCraftingMachine<SlicingRecipe, Con
             type, worldPosition, blockState);
 
         container = new RecipeWrapper(getInventory());
-    }
-
-    @Override
-    public MachineTier getTier() {
-        return MachineTier.STANDARD;
     }
 
     @Nullable

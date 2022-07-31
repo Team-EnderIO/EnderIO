@@ -2,7 +2,6 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
-import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.FixedIOConfig;
@@ -31,11 +30,6 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
     public EnchanterBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
         container = new RecipeWrapper(getInventory());
-    }
-
-    @Override
-    public MachineTier getTier() {
-        return MachineTier.STANDARD;
     }
 
     public RecipeWrapper getContainer() {

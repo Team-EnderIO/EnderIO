@@ -22,20 +22,17 @@ public class MachineBlockEntities {
 
     public static final BlockEntityEntry<EnchanterBlockEntity> ENCHANTER = register("enchanter", EnchanterBlockEntity::new, MachineBlocks.ENCHANTER);
 
-    // TODO: Simple alloy smelter.
+    public static final BlockEntityEntry<AlloySmelterBlockEntity.Primitive> PRIMITIVE_ALLOY_SMELTER = register("primitive_alloy_smelter", AlloySmelterBlockEntity.Primitive::new,
+        MachineBlocks.PRIMITIVE_ALLOY_SMELTER);
 
-    public static final BlockEntityEntry<AlloySmelterBlockEntity.Standard> ALLOY_SMELTER = register("alloy_smelter", AlloySmelterBlockEntity.Standard::new,
+    public static final BlockEntityEntry<AlloySmelterBlockEntity> ALLOY_SMELTER = register("alloy_smelter", AlloySmelterBlockEntity::new,
         MachineBlocks.ALLOY_SMELTER);
-    public static final BlockEntityEntry<AlloySmelterBlockEntity.Enhanced> ENHANCED_ALLOY_SMELTER = register("enhanced_alloy_smelter",
-        AlloySmelterBlockEntity.Enhanced::new, MachineBlocks.ENHANCED_ALLOY_SMELTER);
 
     public static final BlockEntityEntry<CreativePowerBlockEntity> CREATIVE_POWER = register("creative_power", CreativePowerBlockEntity::new,
         MachineBlocks.CREATIVE_POWER);
-    public static final BlockEntityEntry<StirlingGeneratorBlockEntity.Standard> STIRLING_GENERATOR = register("stirling_generator",
-        StirlingGeneratorBlockEntity.Standard::new, MachineBlocks.STIRLING_GENERATOR);
+    public static final BlockEntityEntry<StirlingGeneratorBlockEntity> STIRLING_GENERATOR = register("stirling_generator",
+        StirlingGeneratorBlockEntity::new, MachineBlocks.STIRLING_GENERATOR);
     public static final BlockEntityEntry<SagMillBlockEntity.Standard> SAG_MILL = register("sag_mill", SagMillBlockEntity.Standard::new, MachineBlocks.SAG_MILL);
-    public static final BlockEntityEntry<SagMillBlockEntity.Enhanced> ENHANCED_SAG_MILL = register("enhanced_sag_mill", SagMillBlockEntity.Enhanced::new,
-        MachineBlocks.ENHANCED_SAG_MILL);
 
     public static final BlockEntityEntry<SlicerBlockEntity> SLICE_AND_SPLICE = register("slice_and_splice", SlicerBlockEntity::new,
         MachineBlocks.SLICE_AND_SPLICE);

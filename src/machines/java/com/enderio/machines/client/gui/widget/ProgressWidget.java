@@ -10,7 +10,8 @@ import net.minecraft.network.chat.Component;
 
 import java.util.function.Supplier;
 
-// Will need adapting for arrows, will do that as part of SAG mill
+// TODO: Nicer constructor
+// TODO: Configurable tooltip behaviour
 public class ProgressWidget extends AbstractWidget {
     public enum Direction {
         BOTTOM_UP,

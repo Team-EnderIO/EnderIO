@@ -2,7 +2,6 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.core.common.sync.FluidStackDataSlot;
 import com.enderio.core.common.sync.SyncMode;
-import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
@@ -73,11 +72,6 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
                 setChanged();
             }
         };
-    }
-
-    @Override
-    public MachineTier getTier() {
-        return MachineTier.STANDARD;
     }
 
     @Override

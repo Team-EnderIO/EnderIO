@@ -6,7 +6,6 @@ import com.enderio.core.common.sync.IntegerDataSlot;
 import com.enderio.core.common.sync.ResourceLocationDataSlot;
 import com.enderio.core.common.sync.SyncMode;
 import com.enderio.base.common.util.GrindingBallManager;
-import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.PoweredCraftingMachine;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingTask;
 import com.enderio.machines.common.init.MachineCapacitorKeys;
@@ -39,10 +38,6 @@ public abstract class SagMillBlockEntity extends PoweredCraftingMachine<SagMilli
                 type, worldPosition, blockState);
         }
 
-        @Override
-        public MachineTier getTier() {
-            return MachineTier.STANDARD;
-        }
     }
 
     public static class Enhanced extends SagMillBlockEntity {
@@ -54,10 +49,6 @@ public abstract class SagMillBlockEntity extends PoweredCraftingMachine<SagMilli
                 type, worldPosition, blockState);
         }
 
-        @Override
-        public MachineTier getTier() {
-            return MachineTier.ENHANCED;
-        }
     }
 
     // endregion
@@ -109,7 +100,7 @@ public abstract class SagMillBlockEntity extends PoweredCraftingMachine<SagMilli
 
     @Override
     public MachineInventoryLayout getInventoryLayout() {
-        return MachineInventoryLayout.builder(getTier() != MachineTier.SIMPLE)
+        return MachineInventoryLayout.builder(true)
             .inputSlot()
             .outputSlot(4)
             .inputSlot((slot, stack) -> GrindingBallManager.isGrindingBall(stack))

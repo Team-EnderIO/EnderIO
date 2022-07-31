@@ -6,7 +6,6 @@ import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.sync.SyncMode;
 import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.base.common.capacitor.DefaultCapacitorData;
-import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.sync.MachineEnergyDataSlot;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.ImmutableMachineEnergyStorage;
@@ -248,9 +247,6 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
 
     @Override
     public boolean canAct() {
-        // Ignore capacitor state on simple machines.
-        if (getTier() == MachineTier.SIMPLE)
-            return super.canAct();
         return super.canAct() && (!requiresCapacitor() || isCapacitorInstalled());
     }
 

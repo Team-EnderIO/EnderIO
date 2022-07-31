@@ -2,7 +2,6 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.PoweredMachineEntity;
 import com.enderio.machines.common.init.MachineCapacitorKeys;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
@@ -32,11 +31,6 @@ public class CreativePowerBlockEntity extends PoweredMachineEntity {
                 return getMaxEnergyStored() / 2;
             }
         };
-    }
-
-    @Override
-    public MachineTier getTier() {
-        return MachineTier.ENHANCED;
     }
 
     @Nullable

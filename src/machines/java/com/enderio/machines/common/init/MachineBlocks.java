@@ -88,12 +88,10 @@ public class MachineBlocks {
         .build()
         .register();
 
-    // TODO: Primitive alloy smelter.
-
-    public static final BlockEntry<ProgressMachineBlock> ALLOY_SMELTER = standardMachine("alloy_smelter", () -> MachineBlockEntities.ALLOY_SMELTER)
+    public static final BlockEntry<ProgressMachineBlock> PRIMITIVE_ALLOY_SMELTER = standardMachine("primitive_alloy_smelter", () -> MachineBlockEntities.PRIMITIVE_ALLOY_SMELTER)
         .register();
 
-    public static final BlockEntry<EnhancedMachineBlock> ENHANCED_ALLOY_SMELTER = enhancedMachine("enhanced_alloy_smelter", () -> MachineBlockEntities.ENHANCED_ALLOY_SMELTER)
+    public static final BlockEntry<ProgressMachineBlock> ALLOY_SMELTER = standardMachine("alloy_smelter", () -> MachineBlockEntities.ALLOY_SMELTER)
         .register();
 
     public static BlockEntry<MachineBlock> CREATIVE_POWER = REGISTRATE
@@ -108,10 +106,6 @@ public class MachineBlocks {
 
     public static BlockEntry<ProgressMachineBlock> SAG_MILL = standardMachine("sag_mill", () -> MachineBlockEntities.SAG_MILL)
         .lang("SAG Mill")
-        .register();
-
-    public static BlockEntry<EnhancedMachineBlock> ENHANCED_SAG_MILL = enhancedMachine("enhanced_sag_mill", () -> MachineBlockEntities.ENHANCED_SAG_MILL)
-        .lang("Enhanced SAG Mill")
         .register();
 
     public static BlockEntry<ProgressMachineBlock> SLICE_AND_SPLICE = soulMachine("slice_and_splice", () -> MachineBlockEntities.SLICE_AND_SPLICE)
@@ -137,18 +131,6 @@ public class MachineBlocks {
             .blockstate(MachineModelUtil::soulMachineBlock)
             .item()
             .tab(() -> EIOCreativeTabs.MACHINES)
-            .build();
-    }
-
-    private static BlockBuilder<EnhancedMachineBlock, Registrate> enhancedMachine(String name, Supplier<BlockEntityEntry<? extends MachineBlockEntity>> blockEntityEntry) {
-        return REGISTRATE
-            .block(name, props -> new EnhancedMachineBlock(props, blockEntityEntry.get()))
-            .properties(props -> props.strength(2.5f, 8))
-            .loot(MachinesLootTable::tallCopyNBT)
-            .blockstate(MachineModelUtil::enhancedMachineBlock)
-            .item()
-            .tab(() -> EIOCreativeTabs.MACHINES)
-            .model(MachineModelUtil::enhancedMachineBlockItem)
             .build();
     }
 

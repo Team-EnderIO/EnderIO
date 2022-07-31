@@ -1,6 +1,5 @@
 package com.enderio.machines.common.menu;
 
-import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.SagMillBlockEntity;
 import com.enderio.machines.common.init.MachineMenus;
 import net.minecraft.network.FriendlyByteBuf;
@@ -30,9 +29,7 @@ public class SagMillMenu extends MachineMenu<SagMillBlockEntity> {
             addSlot(new MachineSlot(blockEntity.getInventory(), 4, 112, 59));
 
             // Grindingball slot
-            if (blockEntity.getTier() != MachineTier.SIMPLE) {
-                addSlot(new MachineSlot(blockEntity.getInventory(), 5, 122, 23));
-            }
+            addSlot(new MachineSlot(blockEntity.getInventory(), 5, 122, 23));
         }
         addInventorySlots(8,84);
     }

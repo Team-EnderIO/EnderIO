@@ -35,7 +35,7 @@ public class MachineInventoryLayout {
      * Get an inventory layout builder.
      * @param capacitor Whether or not the inventory will have a capacitor slot.
      */
-    public static Builder builder(boolean capacitor) {
+    public static Builder builder(boolean capacitor) { // TODO: Move this to a method rather than a flag.
         return new Builder(capacitor);
     }
 
