@@ -35,7 +35,7 @@ public final class LootCapacitorData implements ICapacitorData {
     }
 
     @Override
-    public float getLevel(CapacitorModifier modifier) {
+    public float getModifier(CapacitorModifier modifier) {
         if (modifiers.containsKey(modifier)) {
             return modifiers.get(modifier);
         }

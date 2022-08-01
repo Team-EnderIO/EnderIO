@@ -24,7 +24,7 @@ public enum DefaultCapacitorData implements ICapacitorData {
     }
 
     @Override
-    public float getLevel(CapacitorModifier modifier) {
+    public float getModifier(CapacitorModifier modifier) {
         return getBase();
     }
 

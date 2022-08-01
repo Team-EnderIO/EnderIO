@@ -21,10 +21,10 @@ public record ScalableValue(CapacitorModifier modifier, Supplier<Float> base, IS
     }
 
     public Supplier<Float> scale(NonNullSupplier<ICapacitorData> data) {
-        return () -> scaler.scale(base.get(), data.get().getLevel(modifier));
+        return () -> scaler.scale(base.get(), data.get().getModifier(modifier));
     }
 
     public Supplier<Integer> scaleRounded(NonNullSupplier<ICapacitorData> data) {
-        return () -> Math.round(scaler.scale(base.get(), data.get().getLevel(modifier)));
+        return () -> Math.round(scaler.scale(base.get(), data.get().getModifier(modifier)));
     }
 }

@@ -15,9 +15,9 @@ public interface ICapacitorData extends INamedNBTSerializable<Tag> {
     float getBase();
 
     /**
-     * Get the level for the given capacitor modifier.
+     * Get the modifier value for the given capacitor modifier type.
      */
-    float getLevel(CapacitorModifier modifier);
+    float getModifier(CapacitorModifier modifier);
 
     // Allows the interface to be serialized as a capability.
     @Override
