@@ -46,10 +46,6 @@ import java.util.function.Supplier;
 
 public class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltingRecipe, AlloySmeltingRecipe.Container> {
 
-    public static final ScalableValue CAPACITY = new ScalableValue(CapacitorModifier.ENERGY_CAPACITY, () -> 100000f, Scalers.ENERGY);
-    public static final ScalableValue TRANSFER = new ScalableValue(CapacitorModifier.ENERGY_TRANSFER, () -> 120f, Scalers.ENERGY);
-    public static final ScalableValue USAGE = new ScalableValue(CapacitorModifier.ENERGY_USE, () -> 30f, Scalers.ENERGY);
-
     public static class Primitive extends AlloySmelterBlockEntity {
         private int burnTime;
         private int burnDuration;
@@ -163,7 +159,9 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltin
         }
     }
 
-    // endregion
+    public static final ScalableValue CAPACITY = new ScalableValue(CapacitorModifier.ENERGY_CAPACITY, () -> 100000f, Scalers.ENERGY);
+    public static final ScalableValue TRANSFER = new ScalableValue(CapacitorModifier.ENERGY_TRANSFER, () -> 120f, Scalers.ENERGY);
+    public static final ScalableValue USAGE = new ScalableValue(CapacitorModifier.ENERGY_USE, () -> 30f, Scalers.ENERGY);
 
     /**
      * The alloying mode for the machine.
@@ -241,7 +239,6 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltin
 
         // Get vanilla smelting recipe.
         if (getMode().canSmelt()) {
-            // TODO: Maybe add the ability for this to check all 3 slots?
             var recipe = level.getRecipeManager()
                 .getRecipeFor(RecipeType.SMELTING, getContainer(), level);
             if (recipe.isPresent())
@@ -259,9 +256,25 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltin
         return new PoweredCraftingTask<>(this, container, outputIndex, recipe) {
             @Override
             protected void takeInputs(AlloySmeltingRecipe recipe) {
-                if (recipe instanceof AlloySmeltingRecipe) {
+                MachineInventory inv = getInventory();
+
+                if (recipe instanceof VanillaAlloySmeltingRecipe) {
+                    CountedIngredient input = recipe.getInputs().get(0);
+
+                    // Iterate over the slots
+                    int consumeCount = 0;
+                    for (int i = 0; i < 3; i++) {
+                        ItemStack stack = inv.getStackInSlot(i);
+
+                        if (input.test(stack)) {
+                            stack.shrink(input.count());
+                            consumeCount++;
+                        }
+                    }
+
+                    container.setInputsTaken(consumeCount);
+                } else {
                     // Track which ingredients have been consumed
-                    MachineInventory inv = getInventory();
                     List<CountedIngredient> inputs = recipe.getInputs();
                     boolean[] consumed = new boolean[3];
 
@@ -293,22 +306,6 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltin
 
                     // Only accepted *1* times inputs.
                     container.setInputsTaken(1);
-                } else if (recipe instanceof VanillaAlloySmeltingRecipe) {
-                    MachineInventory inv = getInventory();
-                    CountedIngredient input = recipe.getInputs().get(0);
-
-                    // Iterate over the slots
-                    int consumeCount = 0;
-                    for (int i = 0; i < 3; i++) {
-                        ItemStack stack = inv.getStackInSlot(i);
-
-                        if (input.test(stack)) {
-                            stack.shrink(input.count());
-                            consumeCount++;
-                        }
-                    }
-
-                    container.setInputsTaken(consumeCount);
                 }
             }
 

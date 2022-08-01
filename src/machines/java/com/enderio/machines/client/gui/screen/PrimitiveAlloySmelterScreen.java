@@ -19,8 +19,8 @@ public class PrimitiveAlloySmelterScreen extends EIOScreen<PrimitiveAlloySmelter
     @Override
     protected void init() {
         super.init();
-        addRenderableOnly(new ProgressWidget(this, () -> menu.getBlockEntity().getBurnProgress(), getGuiLeft() + 41, getGuiTop() + 37, 14, 14, 176, 0, ProgressWidget.Direction.BOTTOM_UP));
-        addRenderableOnly(new ProgressWidget(this, () -> menu.getBlockEntity().getProgress(), getGuiLeft() + 79, getGuiTop() + 35, 24, 17, 176, 14, ProgressWidget.Direction.LEFT_RIGHT));
+        addRenderableOnly(new ProgressWidget.BottomUp(this, () -> menu.getBlockEntity().getBurnProgress(), getGuiLeft() + 41, getGuiTop() + 37, 14, 14, 176, 0, false));
+        addRenderableOnly(new ProgressWidget.LeftRight(this, () -> menu.getBlockEntity().getProgress(), getGuiLeft() + 79, getGuiTop() + 35, 24, 17, 176, 14));
     }
 
     @Override
