@@ -28,7 +28,7 @@ public class LootCapacitorItem extends Item implements IMultiCapabilityItem {
     public void appendHoverText(@Nonnull ItemStack pStack, Level pLevel, @Nonnull List<Component> pTooltipComponents, @Nonnull TooltipFlag pIsAdvanced) {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
         pStack.getCapability(EIOCapabilities.CAPACITOR).ifPresent(data -> {
-            pTooltipComponents.add(TooltipUtil.withArgs(EIOLang.CAPACITOR_TOOLTIP_BASE, (int) (data.getBase() * 100)));
+            pTooltipComponents.add(TooltipUtil.styledWithArgs(EIOLang.CAPACITOR_TOOLTIP_BASE, data.getBase()));
             if (data instanceof LootCapacitorData lootCapacitorData) {
                 // TODO: Generate tooltips list for specialisations
             }

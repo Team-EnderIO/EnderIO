@@ -120,13 +120,10 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltin
         @Override
         protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, Supplier<Integer> capacity, Supplier<Integer> transferRate,
             Supplier<Integer> usageRate) {
-            return new MachineEnergyStorage(getIOConfig(), energyIOMode, () -> getBurnToFE(), () -> 0, () -> 0) {
+            return new MachineEnergyStorage(getIOConfig(), energyIOMode, this::getBurnToFE, () -> 0, () -> 0) {
                 @Override
                 public int getEnergyStored() {
-                    if (isBurning()) {
-                        return getBurnToFE();
-                    }
-                    return 0;
+                    return getBurnToFE();
                 }
 
                 @Override

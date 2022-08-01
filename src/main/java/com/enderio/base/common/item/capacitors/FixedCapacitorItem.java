@@ -31,7 +31,7 @@ public class FixedCapacitorItem extends Item implements IMultiCapabilityItem {
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        pTooltipComponents.add(TooltipUtil.withArgs(EIOLang.CAPACITOR_TOOLTIP_BASE, (int) (data.getBase() * 100)));
+        pTooltipComponents.add(TooltipUtil.styledWithArgs(EIOLang.CAPACITOR_TOOLTIP_BASE, data.getBase()));
     }
 
     @Nullable

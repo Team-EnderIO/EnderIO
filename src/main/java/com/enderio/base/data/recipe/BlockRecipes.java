@@ -94,16 +94,16 @@ public class BlockRecipes extends RecipeProvider {
 
     private void addChassisRecipes(Consumer<FinishedRecipe> recipeConsumer) {
 
-        ShapedRecipeBuilder
-            .shaped(EIOBlocks.SIMPLE_MACHINE_CHASSIS.get())
-            .define('B', Blocks.IRON_BARS)
-            .define('G', EIOItems.GRAINS_OF_INFINITY.get())
-            .define('I', Tags.Items.INGOTS_IRON)
-            .pattern("BIB")
-            .pattern("IGI")
-            .pattern("BIB")
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GRAINS_OF_INFINITY.get()))
-            .save(recipeConsumer);
+//        ShapedRecipeBuilder
+//            .shaped(EIOBlocks.SIMPLE_MACHINE_CHASSIS.get())
+//            .define('B', Blocks.IRON_BARS)
+//            .define('G', EIOItems.GRAINS_OF_INFINITY.get())
+//            .define('I', Tags.Items.INGOTS_IRON)
+//            .pattern("BIB")
+//            .pattern("IGI")
+//            .pattern("BIB")
+//            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GRAINS_OF_INFINITY.get()))
+//            .save(recipeConsumer);
 
         ShapedRecipeBuilder
             .shaped(EIOBlocks.END_STEEL_MACHINE_CHASSIS.get())

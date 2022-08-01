@@ -92,7 +92,7 @@ public class MachineBlocks {
 
     public static final BlockEntry<ProgressMachineBlock> PRIMITIVE_ALLOY_SMELTER = standardMachine("primitive_alloy_smelter", () -> MachineBlockEntities.PRIMITIVE_ALLOY_SMELTER)
         .blockstate((ctx, prov) -> {
-            ModelFile model = prov.models().withExistingParent(ctx.getName(), prov.mcLoc("furnace")).texture("front", EnderIO.loc("primitive_alloy_smelter_front"));
+            ModelFile model = prov.models().withExistingParent(ctx.getName(), prov.mcLoc("furnace")).texture("front", EnderIO.loc("block/primitive_alloy_smelter_front"));
             prov
                 .getVariantBuilder(ctx.get())
                 .forAllStates(state -> ConfiguredModel

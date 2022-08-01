@@ -103,7 +103,7 @@ public class EIOLang {
 
     // region Capacitors
 
-    public static final MutableComponent CAPACITOR_TOOLTIP_BASE = REGISTRATE.addLang("tooltip", EnderIO.loc("capacitor.base"), "Base Multiplier: %s%%");
+    public static final MutableComponent CAPACITOR_TOOLTIP_BASE = REGISTRATE.addLang("tooltip", EnderIO.loc("capacitor.base"), "Base Modifier: %s");
 
     // TODO: Loot capacitor lang
 //    public static final Component CAPACITOR_ALL_ENERGY_CONSUMPSTION = capacitorDescriptionBuilder("type", CapacitorSpecializations.ALL_ENERGY_CONSUMPTION, "Leaky");

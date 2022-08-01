@@ -6,15 +6,6 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "conditions": [
-            {
-              "block": "enderio:enhanced_alloy_smelter",
-              "condition": "minecraft:block_state_property",
-              "properties": {
-                "half": "lower"
-              }
-            }
-          ],
           "functions": [
             {
               "function": "minecraft:copy_nbt",
@@ -28,7 +19,7 @@
               "source": "block_entity"
             }
           ],
-          "name": "enderio:enhanced_alloy_smelter"
+          "name": "enderio:primitive_alloy_smelter"
         }
       ],
       "rolls": 1.0

@@ -1,33 +1,33 @@
 {
   "variants": {
     "facing=east,powered=false": {
-      "model": "enderio:block/simple_alloy_smelter",
+      "model": "enderio:block/primitive_alloy_smelter",
       "y": 90
     },
     "facing=east,powered=true": {
-      "model": "enderio:block/simple_alloy_smelter_on",
+      "model": "enderio:block/primitive_alloy_smelter",
       "y": 90
     },
     "facing=north,powered=false": {
-      "model": "enderio:block/simple_alloy_smelter"
+      "model": "enderio:block/primitive_alloy_smelter"
     },
     "facing=north,powered=true": {
-      "model": "enderio:block/simple_alloy_smelter_on"
+      "model": "enderio:block/primitive_alloy_smelter"
     },
     "facing=south,powered=false": {
-      "model": "enderio:block/simple_alloy_smelter",
+      "model": "enderio:block/primitive_alloy_smelter",
       "y": 180
     },
     "facing=south,powered=true": {
-      "model": "enderio:block/simple_alloy_smelter_on",
+      "model": "enderio:block/primitive_alloy_smelter",
       "y": 180
     },
     "facing=west,powered=false": {
-      "model": "enderio:block/simple_alloy_smelter",
+      "model": "enderio:block/primitive_alloy_smelter",
       "y": 270
     },
     "facing=west,powered=true": {
-      "model": "enderio:block/simple_alloy_smelter_on",
+      "model": "enderio:block/primitive_alloy_smelter",
       "y": 270
     }
   }
