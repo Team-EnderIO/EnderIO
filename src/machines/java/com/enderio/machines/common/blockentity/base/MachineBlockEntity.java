@@ -30,7 +30,6 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
@@ -167,7 +166,6 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         return true;
     }
 
-    @NotNull
     @Override
     public ModelData getModelData() {
         return getIOConfig().renderOverlay() ? modelData : ModelData.EMPTY;

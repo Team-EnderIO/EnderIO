@@ -9,10 +9,8 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
 import java.util.EnumMap;
 
 /**
@@ -50,7 +48,7 @@ public class MachineInventory extends ItemStackHandler implements IEnderCapabili
     }
 
     @Override
-    public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+    public boolean isItemValid(int slot, ItemStack stack) {
         return layout.isItemValid(slot, stack);
     }
 
@@ -108,15 +106,13 @@ public class MachineInventory extends ItemStackHandler implements IEnderCapabili
             return master.getSlots();
         }
 
-        @Nonnull
         @Override
         public ItemStack getStackInSlot(int slot) {
             return master.getStackInSlot(slot);
         }
 
-        @Nonnull
         @Override
-        public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
             // Check we allow insertion on the slot
             if (!master.getLayout().canInsert(slot))
                 return stack;
@@ -128,7 +124,6 @@ public class MachineInventory extends ItemStackHandler implements IEnderCapabili
             return master.insertItem(slot, stack, simulate);
         }
 
-        @Nonnull
         @Override
         public ItemStack extractItem(int slot, int amount, boolean simulate) {
             // Check we allow extraction on the slot
@@ -148,7 +143,7 @@ public class MachineInventory extends ItemStackHandler implements IEnderCapabili
         }
 
         @Override
-        public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+        public boolean isItemValid(int slot, ItemStack stack) {
             return master.isItemValid(slot, stack);
         }
     }

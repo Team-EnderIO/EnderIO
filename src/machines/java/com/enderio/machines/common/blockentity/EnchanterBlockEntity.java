@@ -19,7 +19,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -84,7 +83,7 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
                 setChanged();
             }
 
-            public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
+            public ItemStack extractItem(int slot, int amount, boolean simulate) {
                 if (slot == 3 && isClientSide()) {
                     return ItemStack.EMPTY;
                 }

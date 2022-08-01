@@ -24,8 +24,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.network.NetworkHooks;
 
-import javax.annotation.Nonnull;
-
 public class CoordinateSelectorItem extends Item {
 
     public CoordinateSelectorItem(Properties pProperties) {
@@ -74,7 +72,6 @@ public class CoordinateSelectorItem extends Item {
                 return Component.literal("");
             }
 
-            @Nonnull
             @Override
             public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
                 return new CoordinateMenu(pContainerId, selection, null);

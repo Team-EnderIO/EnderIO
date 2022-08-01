@@ -14,7 +14,6 @@ import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
 import java.util.Objects;
 
 public class SinglePaintedBlockEntity extends BlockEntity implements IPaintableBlockEntity {
@@ -33,7 +32,6 @@ public class SinglePaintedBlockEntity extends BlockEntity implements IPaintableB
         super(pType, pWorldPosition, pBlockState);
     }
 
-    @Nonnull
     @Override
     public ModelData getModelData() {
         return ModelData.builder().with(PAINT, paint).build();
@@ -87,9 +85,8 @@ public class SinglePaintedBlockEntity extends BlockEntity implements IPaintableB
         }
     }
 
-    @Nonnull
     @Override
-    public void saveAdditional(@Nonnull CompoundTag tag) {
+    public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
         writePaint(tag);
     }

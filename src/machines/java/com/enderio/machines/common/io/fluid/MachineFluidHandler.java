@@ -9,10 +9,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
 import java.util.EnumMap;
 import java.util.List;
 
@@ -45,7 +43,6 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
         return tanks.size();
     }
 
-    @NotNull
     @Override
     public FluidStack getFluidInTank(int tank) {
         return tanks.get(tank).getFluid();
@@ -57,7 +54,7 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
     }
 
     @Override
-    public boolean isFluidValid(int tank, @NotNull FluidStack stack) {
+    public boolean isFluidValid(int tank, FluidStack stack) {
         return tanks.get(tank).isFluidValid(stack);
     }
 
@@ -85,7 +82,6 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
         return totalFilled;
     }
 
-    @NotNull
     @Override
     public FluidStack drain(FluidStack resource, FluidAction action) {
         for (IFluidTank tank : tanks) {
@@ -97,7 +93,6 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
         return FluidStack.EMPTY;
     }
 
-    @NotNull
     @Override
     public FluidStack drain(int maxDrain, FluidAction action) {
         for (IFluidTank tank : tanks) {
@@ -164,7 +159,6 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
             return master.getTanks();
         }
 
-        @Nonnull
         @Override
         public FluidStack getFluidInTank(int tank) {
             return master.getFluidInTank(tank);
@@ -176,7 +170,7 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
         }
 
         @Override
-        public boolean isFluidValid(int tank, @Nonnull FluidStack stack) {
+        public boolean isFluidValid(int tank, FluidStack stack) {
             return master.isFluidValid(tank, stack);
         }
 
@@ -187,7 +181,6 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
             return 0;
         }
 
-        @Nonnull
         @Override
         public FluidStack drain(FluidStack resource, FluidAction action) {
             if (master.getConfig().getMode(direction).canOutput())
@@ -195,7 +188,6 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
             return FluidStack.EMPTY;
         }
 
-        @Nonnull
         @Override
         public FluidStack drain(int maxDrain, FluidAction action) {
             if (master.getConfig().getMode(direction).canOutput())

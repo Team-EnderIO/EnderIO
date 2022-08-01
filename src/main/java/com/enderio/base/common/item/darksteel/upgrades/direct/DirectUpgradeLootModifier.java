@@ -11,7 +11,6 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.common.loot.LootModifier;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
@@ -24,7 +23,7 @@ public class DirectUpgradeLootModifier extends LootModifier {
     }
 
     @Override
-    protected @NotNull ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
+    protected ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
         if (context.getParam(LootContextParams.THIS_ENTITY) instanceof Player player) {
             ObjectArrayList<ItemStack> remaining = new ObjectArrayList<>();
             for (ItemStack is : generatedLoot) {

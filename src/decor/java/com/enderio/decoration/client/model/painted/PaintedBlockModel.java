@@ -28,15 +28,13 @@ import net.minecraftforge.client.ChunkRenderTypeSet;
 import net.minecraftforge.client.model.IDynamicBakedModel;
 import net.minecraftforge.client.model.IQuadTransformer;
 import net.minecraftforge.client.model.data.ModelData;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
 import java.util.*;
 
 public class PaintedBlockModel implements IDynamicBakedModel {
 
-    private final @Nullable Map<Block, List<BakedModel>> itemRenderCache;
+    private final Map<Block, List<BakedModel>> itemRenderCache = new HashMap<>();
 
     /**
      * The block which model we retexture
@@ -51,13 +49,12 @@ public class PaintedBlockModel implements IDynamicBakedModel {
     private final Direction rotateItemTo;
 
     public PaintedBlockModel(Block reference, @Nullable Direction rotateItemTo) {
-        this.itemRenderCache = new HashMap<>();
         this.reference = reference;
         this.rotateItemTo = rotateItemTo;
     }
 
     @Override
-    public @NotNull List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull ModelData extraData,
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand, ModelData extraData,
         @Nullable RenderType renderType) {
         if (state != null) {
             BlockState replicaState = replicateState(state);
@@ -126,7 +123,7 @@ public class PaintedBlockModel implements IDynamicBakedModel {
     }
 
     @Override
-    public TextureAtlasSprite getParticleIcon(@NotNull ModelData data) {
+    public TextureAtlasSprite getParticleIcon(ModelData data) {
         Block paint = data.get(SinglePaintedBlockEntity.PAINT);
         if (paint != null) {
             BakedModel model = getModel(paint.defaultBlockState());
@@ -186,8 +183,6 @@ public class PaintedBlockModel implements IDynamicBakedModel {
 
     @Override
     public List<BakedModel> getRenderPasses(ItemStack itemStack, boolean fabulous) {
-        if (itemRenderCache == null)
-            return List.of(this);
         Block paint = PaintUtils.getPaint(itemStack);
         if (paint != null) {
             return itemRenderCache.computeIfAbsent(paint,
@@ -244,7 +239,7 @@ public class PaintedBlockModel implements IDynamicBakedModel {
      * @param rotation rotation you want to have applied to the block
      * @return a List of BakedQuads from a shape using the paint as a texture
      */
-    protected List<BakedQuad> getQuadsUsingShape(@Nullable Block paint, List<BakedQuad> shape, @Nullable Direction side, @Nonnull RandomSource rand,
+    protected List<BakedQuad> getQuadsUsingShape(@Nullable Block paint, List<BakedQuad> shape, @Nullable Direction side, RandomSource rand,
         @Nullable Direction rotation, RenderType renderType) {
         if (paint != null) {
             BakedModel model = getModel(paintWithRotation(paint, rotation));
@@ -348,7 +343,7 @@ public class PaintedBlockModel implements IDynamicBakedModel {
         }
 
         @Override
-        public @NotNull List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull ModelData extraData,
+        public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand, ModelData extraData,
             @Nullable RenderType renderType) {
             return bakedQuads.computeIfAbsent(side, side1 -> getQuadsUsingShape(paint, getItemModel().getQuads(state, side, rand, ModelData.EMPTY, renderType),
                 side1, rand, rotateItemTo, renderType));

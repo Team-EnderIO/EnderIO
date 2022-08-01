@@ -21,7 +21,6 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
 import java.util.Optional;
 
 public class LevitationStaffItem extends PoweredToggledItem implements IItemOverlayRender {
@@ -63,8 +62,7 @@ public class LevitationStaffItem extends PoweredToggledItem implements IItemOver
     }
 
     @Override
-    protected void onTickWhenActive(Player player, @Nonnull ItemStack pStack, @Nonnull Level pLevel, @Nonnull Entity pEntity, int pSlotId,
-        boolean pIsSelected) {
+    protected void onTickWhenActive(Player player, ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
         player.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 1)); // TODO: An upgrade to make it faster?
     }
 

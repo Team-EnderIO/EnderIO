@@ -6,8 +6,6 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.item.enchantment.Enchantments;
 
-import javax.annotation.Nonnull;
-
 public class AutoSmeltEnchantment extends EIOBaseEnchantment {
 
     public AutoSmeltEnchantment() {
@@ -30,7 +28,7 @@ public class AutoSmeltEnchantment extends EIOBaseEnchantment {
     }
 
     @Override
-    protected boolean checkCompatibility(@Nonnull Enchantment pOther) {
+    protected boolean checkCompatibility(Enchantment pOther) {
         return super.checkCompatibility(pOther) && pOther != Enchantments.SILK_TOUCH;
     }
 }

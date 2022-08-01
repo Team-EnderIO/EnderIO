@@ -27,7 +27,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipProvider, IItemOverlayRender {

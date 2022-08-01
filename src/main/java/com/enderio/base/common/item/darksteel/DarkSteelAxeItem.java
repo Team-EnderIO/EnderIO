@@ -28,7 +28,6 @@ import net.minecraftforge.common.TierSortingRegistry;
 import net.minecraftforge.common.ToolAction;
 import net.minecraftforge.common.ToolActions;
 
-import javax.annotation.Nonnull;
 import java.util.*;
 
 public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem {
@@ -168,7 +167,7 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem {
     }
 
     @Override
-    public void fillItemCategory(@Nonnull CreativeModeTab pCategory, @Nonnull NonNullList<ItemStack> pItems) {
+    public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {
         if (allowedIn(pCategory)) {
             addCreativeItems(pItems, this);
         }

@@ -11,7 +11,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ElectromagnetItem extends PoweredToggledItem {
@@ -54,7 +53,7 @@ public class ElectromagnetItem extends PoweredToggledItem {
     }
 
     @Override
-    protected void onTickWhenActive(Player player, @Nonnull ItemStack pStack, @Nonnull Level pLevel, @Nonnull Entity pEntity, int pSlotId,
+    protected void onTickWhenActive(Player player, ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId,
         boolean pIsSelected) {
 
         int range = getRange();

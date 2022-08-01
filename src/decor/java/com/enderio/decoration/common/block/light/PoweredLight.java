@@ -14,10 +14,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
- * Class for all power consuming lights. 
+ * Class for all power consuming lights.
  * Handles {@code PoweredLightBlockEntity} interactions.
  * Handles "Wireless" subtype.
  */
@@ -33,17 +33,17 @@ public class PoweredLight extends Light implements EntityBlock{
 	public boolean isWireless() {
 		return wireless;
 	}
-	
+
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		return DecorBlockEntities.POWERED_LIGHT.create(pos, state);
 	}
-	
+
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
 		return createTickerHelper(blockEntityType, DecorBlockEntities.POWERED_LIGHT.get(), PoweredLightBlockEntity::tick);
 	}
-	
+
 	@Nullable
 	protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> typeA, BlockEntityType<E> typeE, BlockEntityTicker<? super E> ticker) {
 		return typeA == typeE ? (BlockEntityTicker<A>)ticker : null;
@@ -58,7 +58,7 @@ public class PoweredLight extends Light implements EntityBlock{
 		}
 		super.neighborChanged(state, level, pos, block, fromPos, isMoving);
 	}
-	
+
 	@Override
 	public void checkPoweredState(Level level, BlockPos pos, BlockState state) {
 		if (level.getBlockEntity(pos) instanceof PoweredLightBlockEntity light) {

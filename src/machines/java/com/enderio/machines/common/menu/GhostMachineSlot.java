@@ -4,7 +4,6 @@ import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * A ghost slot is a slot that can be populated with an item, but that item isn't really real.
@@ -35,7 +34,6 @@ public class GhostMachineSlot extends MachineSlot {
         return stack;
     }
 
-    @NotNull
     @Override
     public ItemStack remove(int amount) {
         set(ItemStack.EMPTY);

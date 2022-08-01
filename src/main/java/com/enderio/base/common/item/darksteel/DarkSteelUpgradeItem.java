@@ -19,8 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeConfigSpec;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
@@ -44,7 +43,7 @@ public class DarkSteelUpgradeItem extends Item implements IAdvancedTooltipProvid
     }
 
     @Override
-    public void fillItemCategory(@Nonnull CreativeModeTab pCategory, @Nonnull NonNullList<ItemStack> pItems) {
+    public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {
         if (allowedIn(pCategory)) {
             ItemStack is = new ItemStack(this);
             pItems.add(is.copy());

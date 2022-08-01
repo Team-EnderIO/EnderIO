@@ -3,8 +3,6 @@ package com.enderio.api.capability;
 import com.enderio.api.nbt.INamedNBTSerializable;
 import net.minecraft.nbt.Tag;
 
-import javax.annotation.Nonnull;
-
 /**
  * A capability used for storing an entity inside of an item/block.
  */
@@ -22,7 +20,6 @@ public interface IEntityStorage extends INamedNBTSerializable<Tag> {
      * Get the entity NBT tag.
      * Generally used for creating the entity.
      */
-    @Nonnull
     StoredEntityData getStoredEntityData();
 
     /**

@@ -18,8 +18,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 
 public class BlockRecipes extends RecipeProvider {
@@ -28,7 +27,7 @@ public class BlockRecipes extends RecipeProvider {
     }
 
     @Override
-    protected void buildCraftingRecipes(@Nonnull Consumer<FinishedRecipe> recipeConsumer) {
+    protected void buildCraftingRecipes(Consumer<FinishedRecipe> recipeConsumer) {
         addPressurePlateRecipes(recipeConsumer);
         addLeverRecipes(recipeConsumer);
         addMetalBlockRecipes(recipeConsumer);
@@ -130,7 +129,7 @@ public class BlockRecipes extends RecipeProvider {
         addMetalBlockRecipe(recipeConsumer, EIOBlocks.END_STEEL_BLOCK, EIOItems.END_STEEL_INGOT.get());
     }
 
-    private void addMetalBlockRecipe(@Nonnull Consumer<FinishedRecipe> recipeConsumer, BlockEntry<? extends Block> result, ItemLike ingredient) {
+    private void addMetalBlockRecipe(Consumer<FinishedRecipe> recipeConsumer, BlockEntry<? extends Block> result, ItemLike ingredient) {
         ShapedRecipeBuilder
             .shaped(result.get())
             .define('#', ingredient)
@@ -141,7 +140,7 @@ public class BlockRecipes extends RecipeProvider {
             .save(recipeConsumer);
     }
 
-    private void addPressurePlateRecipes(@Nonnull Consumer<FinishedRecipe> recipeConsumer) {
+    private void addPressurePlateRecipes(Consumer<FinishedRecipe> recipeConsumer) {
         //eio plates
         addPressurePlateRecipe(recipeConsumer, EIOBlocks.DARK_STEEL_PRESSURE_PLATE, EIOItems.DARK_STEEL_INGOT::get);
         addSilentPressurePlateRecipe(recipeConsumer, EIOBlocks.SILENT_DARK_STEEL_PRESSURE_PLATE, EIOBlocks.DARK_STEEL_PRESSURE_PLATE.get());
@@ -164,7 +163,7 @@ public class BlockRecipes extends RecipeProvider {
         addSilentPressurePlateRecipe(recipeConsumer, EIOBlocks.SILENT_LIGHT_WEIGHTED_PRESSURE_PLATE, Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE);
     }
 
-    private void addPressurePlateRecipe(@Nonnull Consumer<FinishedRecipe> recipeConsumer, BlockEntry<? extends Block> result, ItemLike ingredient) {
+    private void addPressurePlateRecipe(Consumer<FinishedRecipe> recipeConsumer, BlockEntry<? extends Block> result, ItemLike ingredient) {
         ShapedRecipeBuilder
             .shaped(result.get().asItem())
             .define('#', ingredient)
@@ -173,7 +172,7 @@ public class BlockRecipes extends RecipeProvider {
             .save(recipeConsumer);
     }
 
-    private void addSilentPressurePlateRecipe(@Nonnull Consumer<FinishedRecipe> recipeConsumer, BlockEntry<? extends Block> result, ItemLike ingredient) {
+    private void addSilentPressurePlateRecipe(Consumer<FinishedRecipe> recipeConsumer, BlockEntry<? extends Block> result, ItemLike ingredient) {
         ShapedRecipeBuilder
             .shaped(result.get().asItem())
             .define('W', ItemTags.WOOL)
@@ -184,7 +183,7 @@ public class BlockRecipes extends RecipeProvider {
             .save(recipeConsumer);
     }
 
-    private void addLeverRecipes(@Nonnull Consumer<FinishedRecipe> recipeConsumer) {
+    private void addLeverRecipes(Consumer<FinishedRecipe> recipeConsumer) {
         addLeverRecipe(recipeConsumer, EIOBlocks.RESETTING_LEVER_FIVE, EIOBlocks.RESETTING_LEVER_FIVE_INV, null, null, 1);
         addLeverRecipe(recipeConsumer, EIOBlocks.RESETTING_LEVER_TEN, EIOBlocks.RESETTING_LEVER_TEN_INV, EIOBlocks.RESETTING_LEVER_FIVE,
             EIOBlocks.RESETTING_LEVER_FIVE_INV, 2);

@@ -22,11 +22,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import javax.annotation.Nullable;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import org.jetbrains.annotations.Nullable;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class AlloyRecipeProvider extends EnderRecipeProvider {

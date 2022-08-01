@@ -14,8 +14,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.LazyOptional;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class LootCapacitorItem extends Item implements IMultiCapabilityItem {
@@ -25,7 +24,7 @@ public class LootCapacitorItem extends Item implements IMultiCapabilityItem {
     }
 
     @Override
-    public void appendHoverText(@Nonnull ItemStack pStack, Level pLevel, @Nonnull List<Component> pTooltipComponents, @Nonnull TooltipFlag pIsAdvanced) {
+    public void appendHoverText(ItemStack pStack, Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
         pStack.getCapability(EIOCapabilities.CAPACITOR).ifPresent(data -> {
             pTooltipComponents.add(TooltipUtil.styledWithArgs(EIOLang.CAPACITOR_TOOLTIP_BASE, data.getBase()));
@@ -41,5 +40,4 @@ public class LootCapacitorItem extends Item implements IMultiCapabilityItem {
         provider.addSerialized(EIOCapabilities.CAPACITOR, LazyOptional.of(LootCapacitorData::new));
         return provider;
     }
-
 }
