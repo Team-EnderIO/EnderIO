@@ -20,8 +20,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 
 public class GraveBlockEntity extends BlockEntity {
@@ -57,9 +56,8 @@ public class GraveBlockEntity extends BlockEntity {
         itemLazy.invalidate();
     }
 
-    @Nonnull
     @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, Direction side) {
+    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
         if (cap == EIOCapabilities.OWNER) {
             return this.ownerLazy.cast();
         }
@@ -76,7 +74,6 @@ public class GraveBlockEntity extends BlockEntity {
         super.load(pTag);
     }
 
-    @Nonnull
     @Override
     public void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
@@ -95,7 +92,6 @@ public class GraveBlockEntity extends BlockEntity {
     }
 
     @Override
-    @Nonnull
     public CompoundTag getUpdateTag() {
         var tag = new CompoundTag();
         saveAdditional(tag);
@@ -119,13 +115,11 @@ public class GraveBlockEntity extends BlockEntity {
             return stacks;
         }
 
-        @Nonnull
         @Override
-        public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
             return stack;
         }
 
-        @Nonnull
         @Override
         public ItemStack extractItem(int slot, int amount, boolean simulate) {
             return ItemStack.EMPTY;

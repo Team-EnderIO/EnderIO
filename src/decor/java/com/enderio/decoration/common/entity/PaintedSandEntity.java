@@ -19,7 +19,6 @@ import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
 import java.util.Objects;
 
 public class PaintedSandEntity extends FallingBlockEntity implements IEntityAdditionalSpawnData {
@@ -32,18 +31,17 @@ public class PaintedSandEntity extends FallingBlockEntity implements IEntityAddi
         super(level, x, y, z, state);
     }
 
-    @Nonnull
     @Override
     public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
-    @Nonnull
     @Override
     public EntityType<?> getType() {
         return DecorEntities.PAINTED_SAND.get();
     }
 
+    @Nullable
     public Block getPaint() {
         if (blockData != null) {
             return PaintUtils.getBlockFromRL(blockData.getString("paint"));

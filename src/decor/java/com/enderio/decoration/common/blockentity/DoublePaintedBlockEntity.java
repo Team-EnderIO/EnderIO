@@ -13,7 +13,6 @@ import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import javax.annotation.Nonnull;
 import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
@@ -38,7 +37,6 @@ public class DoublePaintedBlockEntity extends SinglePaintedBlockEntity {
         super(pType, pWorldPosition, pBlockState);
     }
 
-    @Nonnull
     @Override
     public ModelData getModelData() {
         return ModelData.builder().with(PAINT, getPaint()).with(PAINT2, paint2).build();

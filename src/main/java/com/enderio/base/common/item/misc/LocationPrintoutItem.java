@@ -1,4 +1,4 @@
-package com.enderio.base.common.item;
+package com.enderio.base.common.item.misc;
 
 import com.enderio.api.capability.CoordinateSelection;
 import com.enderio.api.capability.ICoordinateSelectionHolder;
@@ -27,7 +27,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.network.NetworkHooks;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Optional;
 

@@ -9,8 +9,7 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,23 +26,22 @@ public class MultiCapabilityProvider implements ICapabilitySerializable<Compound
         serializedCaps = new HashMap<>();
     }
 
-    public <T> void addSimple(@Nonnull Capability<T> cap, @Nonnull LazyOptional<?> optional) {
+    public <T> void addSimple(Capability<T> cap, LazyOptional<?> optional) {
         capabilities.putIfAbsent(cap, optional);
     }
 
-    public <T extends INamedNBTSerializable<Tag>> void addSerialized(@Nonnull Capability<T> cap, @Nonnull LazyOptional<? extends T> optional) {
+    public <T extends INamedNBTSerializable<Tag>> void addSerialized(Capability<T> cap, LazyOptional<? extends T> optional) {
         capabilities.putIfAbsent(cap, optional);
         serializedCaps.putIfAbsent("pend_" + serializedNameCounter++, optional);
     }
 
-    public <T> void addSerialized(String serializedName, @Nonnull Capability<T> cap, @Nonnull LazyOptional<? extends INBTSerializable<Tag>> optional) {
+    public <T> void addSerialized(String serializedName, Capability<T> cap, LazyOptional<? extends INBTSerializable<Tag>> optional) {
         capabilities.putIfAbsent(cap, optional);
         serializedCaps.putIfAbsent(serializedName, optional);
     }
 
-    @Nonnull
     @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+    public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
         return capabilities
             .getOrDefault(cap, LazyOptional.empty())
             .cast();

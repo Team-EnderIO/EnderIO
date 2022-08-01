@@ -1,6 +1,6 @@
 package com.enderio.decoration.common.block.light;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import com.enderio.decoration.common.blockentity.PoweredLightBlockEntity;
 import com.enderio.decoration.common.init.DecorBlockEntities;

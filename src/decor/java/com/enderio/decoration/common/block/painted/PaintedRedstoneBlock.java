@@ -7,8 +7,7 @@ import net.minecraft.world.level.block.PoweredBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class PaintedRedstoneBlock extends PoweredBlock implements EntityBlock, IPaintedBlock {
 
@@ -18,7 +17,7 @@ public class PaintedRedstoneBlock extends PoweredBlock implements EntityBlock, I
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return DecorBlockEntities.SINGLE_PAINTED.create(pos, state);
     }
 }

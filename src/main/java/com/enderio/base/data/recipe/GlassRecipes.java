@@ -17,7 +17,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import javax.annotation.Nonnull;
 import java.util.function.Consumer;
 
 public class GlassRecipes extends RecipeProvider {
@@ -26,7 +25,7 @@ public class GlassRecipes extends RecipeProvider {
     }
 
     @Override
-    protected void buildCraftingRecipes(@Nonnull Consumer<FinishedRecipe> recipeConsumer) {
+    protected void buildCraftingRecipes(Consumer<FinishedRecipe> recipeConsumer) {
         for (GlassBlocks glassBlocks : EIOBlocks.GLASS_BLOCKS.values()) {
             recolor(glassBlocks, recipeConsumer);
             if (glassBlocks.getGlassIdentifier().collisionPredicate() == GlassCollisionPredicate.NONE) {

@@ -23,12 +23,11 @@ import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-import javax.annotation.Nonnull;
 import java.util.Map;
 
 @EventBusSubscriber
 public class XPBoostHandler {
-    private static final @Nonnull String NBT_KEY = "enderio:xpboost";
+    private static final String NBT_KEY = "enderio:xpboost";
 
     // TODO: Use LivingExperienceDropEvent instead.
 
@@ -37,7 +36,7 @@ public class XPBoostHandler {
         LivingEntity entity = event.getEntity();
         Entity killer = event.getSource().getDirectEntity();
 
-        if (!entity.level.isClientSide && killer != null) {
+        if (!entity.level.isClientSide) {
             if (killer instanceof Player player) {
                 scheduleXP(entity, getXPBoost(entity, player));
             } else if (killer instanceof Arrow arrow) {

@@ -23,7 +23,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
@@ -50,7 +49,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
     // Cache for external energy interaction
     private final EnumMap<Direction, LazyOptional<IEnergyStorage>> energyHandlerCache = new EnumMap<>(Direction.class);
 
-    private @NotNull ICapacitorData cachedCapacitorData = DefaultCapacitorData.NONE;
+    private ICapacitorData cachedCapacitorData = DefaultCapacitorData.NONE;
     private boolean capacitorCacheDirty;
 
     public PoweredMachineEntity(EnergyIOMode energyIOMode, CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey useKey, BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
@@ -216,7 +215,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
     /**
      * Get the capacitor data for the machine.
      */
-    public @NotNull ICapacitorData getCapacitorData() {
+    public ICapacitorData getCapacitorData() {
         if (capacitorCacheDirty)
             cacheCapacitorData();
         return cachedCapacitorData;
@@ -258,9 +257,8 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
 
     // region Capabilities and Serialization
 
-    @NotNull
     @Override
-    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+    public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
         if (cap == CapabilityEnergy.ENERGY && side == null) {
             return energyStorageCap.cast();
         }
