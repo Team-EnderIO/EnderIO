@@ -156,7 +156,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     @Override
     public MachineInventoryLayout getInventoryLayout() {
         return MachineInventoryLayout
-            .builder(false)
+            .builder()
             .inputSlot((slot, stack) ->
                 (stack.getItem() instanceof BucketItem bucketItem && bucketItem.getFluid() != Fluids.EMPTY && !(bucketItem instanceof MobBucketItem)) || (
                     !(stack.getItem() instanceof BucketItem) && stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent()))

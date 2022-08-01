@@ -65,7 +65,7 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltin
 
         @Override
         public MachineInventoryLayout getInventoryLayout() {
-            return MachineInventoryLayout.builder(false).inputSlot(4, this::acceptSlotInput).outputSlot().build();
+            return MachineInventoryLayout.builder().inputSlot(4, this::acceptSlotInput).outputSlot().build();
         }
 
         @Override
@@ -208,7 +208,7 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltin
 
     @Override
     public MachineInventoryLayout getInventoryLayout() {
-        return MachineInventoryLayout.builder(true).inputSlot(3, this::acceptSlotInput).outputSlot().build();
+        return MachineInventoryLayout.builder().inputSlot(3, this::acceptSlotInput).outputSlot().capacitor().build();
     }
 
     protected boolean acceptSlotInput(int slot, ItemStack stack) {

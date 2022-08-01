@@ -40,8 +40,9 @@ public class StirlingGeneratorBlockEntity extends PowerGeneratingMachineEntity {
 
     @Override
     public MachineInventoryLayout getInventoryLayout() {
-        return MachineInventoryLayout.builder(true)
+        return MachineInventoryLayout.builder()
             .inputSlot((slot, stack) -> ForgeHooks.getBurnTime(stack, RecipeType.SMELTING) > 0)
+            .capacitor()
             .build();
     }
 

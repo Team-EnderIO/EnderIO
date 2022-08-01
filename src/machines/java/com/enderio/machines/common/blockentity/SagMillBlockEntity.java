@@ -78,10 +78,11 @@ public class SagMillBlockEntity extends PoweredCraftingMachine<SagMillingRecipe,
 
     @Override
     public MachineInventoryLayout getInventoryLayout() {
-        return MachineInventoryLayout.builder(true)
+        return MachineInventoryLayout.builder()
             .inputSlot()
             .outputSlot(4)
             .inputSlot((slot, stack) -> GrindingBallManager.isGrindingBall(stack))
+            .capacitor()
             .build();
     }
 

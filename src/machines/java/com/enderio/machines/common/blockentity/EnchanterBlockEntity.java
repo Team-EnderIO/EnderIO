@@ -37,7 +37,7 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
 
     @Override
     public MachineInventoryLayout getInventoryLayout() {
-        return MachineInventoryLayout.builder(false)
+        return MachineInventoryLayout.builder()
             .inputSlot((slot, stack) -> stack.getItem() == Items.WRITABLE_BOOK)
             .inputSlot()
             .inputSlot((slot, stack) -> stack.is(Tags.Items.GEMS_LAPIS))

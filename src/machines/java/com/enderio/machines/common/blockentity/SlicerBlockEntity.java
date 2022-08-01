@@ -47,13 +47,14 @@ public class SlicerBlockEntity extends PoweredCraftingMachine<SlicingRecipe, Con
 
     @Override
     public MachineInventoryLayout getInventoryLayout() {
-        return MachineInventoryLayout.builder(true)
+        return MachineInventoryLayout.builder()
             .setStackLimit(1) // Force all input slots to have 1 output
             .inputSlot(6) // Inputs
             .inputSlot(this::validAxe) // Axe
             .inputSlot((slot, stack) -> stack.getItem() instanceof ShearsItem) // Shears
             .setStackLimit(64) // Reset stack limit
             .outputSlot() // Result
+            .capacitor()
             .build();
     }
 
