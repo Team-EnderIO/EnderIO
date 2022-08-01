@@ -1,13 +1,13 @@
 package com.enderio.base.common.item.darksteel.upgrades.explosive;
 
 import com.enderio.base.common.capability.DarkSteelUpgradeable;
+import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.item.darksteel.upgrades.SpoonUpgrade;
+import com.enderio.base.common.tag.EIOTags;
 import com.enderio.core.common.network.CoreNetwork;
 import com.enderio.core.common.network.EmitParticlesPacket;
-import com.enderio.base.common.tag.EIOTags;
 import com.enderio.core.common.util.BlockUtil;
 import com.enderio.core.common.util.EnergyUtil;
-import com.enderio.base.common.config.BaseConfig;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3d;

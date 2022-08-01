@@ -1,7 +1,6 @@
 package com.enderio.machines.common.lang;
 
 import com.enderio.EnderIO;
-import com.enderio.machines.EIOMachines;
 import com.tterrag.registrate.Registrate;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;

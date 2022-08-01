@@ -1,12 +1,12 @@
 package com.enderio.decoration.common.network;
 
-import java.util.function.Supplier;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.network.NetworkEvent.Context;
+
+import java.util.function.Supplier;
 
 /**
  * Custom setblock packet to update light

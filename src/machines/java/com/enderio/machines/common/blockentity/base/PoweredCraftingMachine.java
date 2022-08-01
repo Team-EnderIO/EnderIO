@@ -1,8 +1,8 @@
 package com.enderio.machines.common.blockentity.base;
 
 import com.enderio.api.capacitor.ScalableValue;
-import com.enderio.machines.common.recipe.MachineRecipe;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingTask;
+import com.enderio.machines.common.recipe.MachineRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;

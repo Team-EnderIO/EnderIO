@@ -1,8 +1,8 @@
 package com.enderio.base.common.capacitor;
 
-import com.enderio.api.capability.ICapacitorData;
 import com.enderio.EnderIO;
 import com.enderio.api.capacitor.CapacitorModifier;
+import com.enderio.api.capacitor.ICapacitorData;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -10,7 +10,6 @@ import net.minecraft.nbt.Tag;
 import java.util.HashMap;
 import java.util.Map;
 
-// TODO: Flavour text logic should probably be moved into here from CapacitorUtil.
 public final class LootCapacitorData implements ICapacitorData {
     private float base;
 
@@ -71,7 +70,7 @@ public final class LootCapacitorData implements ICapacitorData {
             entry.putFloat("level", l);
             list.add(entry);
         });
-        tag.put("specializations", list);
+        tag.put("modifiers", list);
         return tag;
     }
 
@@ -80,7 +79,7 @@ public final class LootCapacitorData implements ICapacitorData {
         if (nbt instanceof CompoundTag tag) {
             this.modifiers.clear();
             this.base = tag.getFloat("base");
-            ListTag list = tag.getList("specializations", Tag.TAG_COMPOUND);
+            ListTag list = tag.getList("modifiers", Tag.TAG_COMPOUND);
             for (int i = 0; i < list.size(); i++) {
                 CompoundTag listElement = list.getCompound(i);
                 try {

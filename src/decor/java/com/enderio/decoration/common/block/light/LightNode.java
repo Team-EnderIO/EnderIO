@@ -2,7 +2,6 @@ package com.enderio.decoration.common.block.light;
 
 import com.enderio.decoration.common.blockentity.LightNodeBlockEntity;
 import com.enderio.decoration.common.init.DecorBlockEntities;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;

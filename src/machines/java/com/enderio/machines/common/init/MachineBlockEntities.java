@@ -9,8 +9,6 @@ import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-import java.util.function.Supplier;
-
 public class MachineBlockEntities {
     private static final Registrate REGISTRATE = EnderIO.registrate();
 

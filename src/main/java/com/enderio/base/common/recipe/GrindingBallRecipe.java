@@ -1,7 +1,7 @@
 package com.enderio.base.common.recipe;
 
-import com.enderio.api.grindingball.IGrindingBallData;
 import com.enderio.EnderIO;
+import com.enderio.api.grindingball.IGrindingBallData;
 import com.enderio.base.common.init.EIORecipes;
 import com.enderio.core.common.recipes.EnderRecipe;
 import com.google.gson.JsonObject;

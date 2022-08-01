@@ -1,13 +1,10 @@
 package com.enderio.decoration.common.item;
 
-import com.enderio.decoration.common.block.painted.IPaintedBlock;
 import com.enderio.decoration.common.util.PaintUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;

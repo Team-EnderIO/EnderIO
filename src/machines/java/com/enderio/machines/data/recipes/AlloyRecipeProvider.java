@@ -1,11 +1,11 @@
 package com.enderio.machines.data.recipes;
 
 import com.enderio.EnderIO;
-import com.enderio.core.common.recipes.CountedIngredient;
 import com.enderio.base.common.block.glass.*;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
+import com.enderio.core.common.recipes.CountedIngredient;
 import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonArray;
@@ -23,7 +23,10 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public class AlloyRecipeProvider extends EnderRecipeProvider {

@@ -1,8 +1,8 @@
 package com.enderio.machines.common.recipe;
 
 import com.enderio.EnderIO;
-import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.core.common.recipes.EnderRecipe;
+import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonObject;
 import net.minecraft.ResourceLocationException;

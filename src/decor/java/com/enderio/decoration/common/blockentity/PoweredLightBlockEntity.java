@@ -1,13 +1,8 @@
 package com.enderio.decoration.common.blockentity;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-
 import com.enderio.decoration.common.block.light.Light;
 import com.enderio.decoration.common.block.light.PoweredLight;
 import com.enderio.decoration.common.init.DecorBlocks;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -23,6 +18,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 public class PoweredLightBlockEntity extends BlockEntity{
 	private static final int RF_USE_TICK = 1;

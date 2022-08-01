@@ -1,6 +1,5 @@
 package com.enderio.api.capacitor;
 
-import com.enderio.api.capability.ICapacitorData;
 import net.minecraftforge.common.util.NonNullSupplier;
 
 import java.util.function.Supplier;

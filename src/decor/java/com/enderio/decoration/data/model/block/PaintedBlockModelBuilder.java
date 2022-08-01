@@ -3,7 +3,7 @@ package com.enderio.decoration.data.model.block;
 import com.enderio.EnderIO;
 import com.google.gson.JsonObject;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.CustomLoaderBuilder;
 import net.minecraftforge.client.model.generators.ModelBuilder;
 import net.minecraftforge.common.data.ExistingFileHelper;

@@ -1,7 +1,7 @@
 package com.enderio.machines.common.io.energy;
 
-import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.api.io.IIOConfig;
+import com.enderio.api.io.energy.EnergyIOMode;
 import net.minecraftforge.energy.IEnergyStorage;
 
 /**

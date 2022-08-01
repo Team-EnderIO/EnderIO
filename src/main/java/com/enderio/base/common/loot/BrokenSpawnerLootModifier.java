@@ -1,8 +1,8 @@
 package com.enderio.base.common.loot;
 
+import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.item.spawner.BrokenSpawnerItem;
 import com.enderio.base.common.tag.EIOTags;
-import com.enderio.base.common.config.BaseConfig;
 import com.google.common.base.Suppliers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

@@ -2,7 +2,9 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.EnderIO;
 import com.enderio.api.UseOnly;
-import com.enderio.api.capacitor.*;
+import com.enderio.api.capacitor.CapacitorModifier;
+import com.enderio.api.capacitor.ScalableValue;
+import com.enderio.api.capacitor.Scalers;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.recipes.CountedIngredient;
 import com.enderio.core.common.sync.EnumDataSlot;

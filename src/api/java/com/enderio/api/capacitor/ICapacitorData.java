@@ -1,6 +1,5 @@
-package com.enderio.api.capability;
+package com.enderio.api.capacitor;
 
-import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.nbt.INamedNBTSerializable;
 import net.minecraft.nbt.Tag;
 

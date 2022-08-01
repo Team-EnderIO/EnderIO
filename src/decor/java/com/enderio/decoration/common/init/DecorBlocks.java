@@ -1,8 +1,5 @@
 package com.enderio.decoration.common.init;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.enderio.EnderIO;
 import com.enderio.base.common.item.EIOCreativeTabs;
 import com.enderio.decoration.client.render.PaintedBlockColor;
@@ -20,7 +17,6 @@ import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullBiFunction;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
-
 import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
@@ -31,6 +27,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("unused")
 public class DecorBlocks {
