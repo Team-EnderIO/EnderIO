@@ -2,8 +2,8 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.api.UseOnly;
 import com.enderio.api.capacitor.CapacitorModifier;
-import com.enderio.api.capacitor.ScalableValue;
-import com.enderio.api.capacitor.Scalers;
+import com.enderio.api.capacitor.FixedScalable;
+import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.core.common.sync.FloatDataSlot;
 import com.enderio.core.common.sync.SyncMode;
 import com.enderio.machines.common.blockentity.base.PowerGeneratingMachineEntity;
@@ -22,9 +22,9 @@ import net.minecraftforge.fml.LogicalSide;
 import org.jetbrains.annotations.Nullable;
 
 public class StirlingGeneratorBlockEntity extends PowerGeneratingMachineEntity {
-    public static final ScalableValue CAPACITY = new ScalableValue(CapacitorModifier.ENERGY_CAPACITY, () -> 100000f, Scalers.ENERGY);
-    public static final ScalableValue TRANSFER = new ScalableValue(CapacitorModifier.ENERGY_TRANSFER, () -> 120f, Scalers.ENERGY);
-    public static final ScalableValue USAGE = ScalableValue.fixed(0f);
+    public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, () -> 100000f);
+    public static final QuadraticScalable TRANSFER = new QuadraticScalable(CapacitorModifier.ENERGY_TRANSFER, () -> 120f);
+    public static final FixedScalable USAGE = new FixedScalable(() -> 0f);
 
     private int burnTime;
     private int burnDuration;

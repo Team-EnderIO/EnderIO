@@ -1,7 +1,7 @@
 package com.enderio.machines.common.blockentity.base;
 
 import com.enderio.api.capacitor.ICapacitorData;
-import com.enderio.api.capacitor.ScalableValue;
+import com.enderio.api.capacitor.ICapacitorScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.base.common.capacitor.DefaultCapacitorData;
@@ -52,14 +52,14 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
     private ICapacitorData cachedCapacitorData = DefaultCapacitorData.NONE;
     private boolean capacitorCacheDirty;
 
-    public PoweredMachineEntity(EnergyIOMode energyIOMode, ScalableValue capacity, ScalableValue transferRate, ScalableValue usageRate, BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
+    public PoweredMachineEntity(EnergyIOMode energyIOMode, ICapacitorScalable capacity, ICapacitorScalable transferRate, ICapacitorScalable usageRate, BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
 
         // Create energy storage
         this.energyStorage = createEnergyStorage(energyIOMode,
-            capacity.scaleRounded(this::getCapacitorData),
-            transferRate.scaleRounded(this::getCapacitorData),
-            usageRate.scaleRounded(this::getCapacitorData));
+            capacity.scaleI(this::getCapacitorData),
+            transferRate.scaleI(this::getCapacitorData),
+            usageRate.scaleI(this::getCapacitorData));
         this.energyStorageCap = LazyOptional.of(() -> energyStorage);
         addCapabilityProvider(energyStorage);
 

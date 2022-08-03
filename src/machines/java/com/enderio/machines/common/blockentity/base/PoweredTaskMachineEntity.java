@@ -1,7 +1,7 @@
 package com.enderio.machines.common.blockentity.base;
 
 import com.enderio.api.UseOnly;
-import com.enderio.api.capacitor.ScalableValue;
+import com.enderio.api.capacitor.ICapacitorScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.sync.FloatDataSlot;
 import com.enderio.core.common.sync.SyncMode;
@@ -42,7 +42,7 @@ public abstract class PoweredTaskMachineEntity<T extends PoweredTask> extends Po
     @UseOnly(LogicalSide.CLIENT)
     private float clientProgress;
 
-    public PoweredTaskMachineEntity(ScalableValue capacity, ScalableValue transferRate, ScalableValue usageRate,
+    public PoweredTaskMachineEntity(ICapacitorScalable capacity, ICapacitorScalable transferRate, ICapacitorScalable usageRate,
         BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Input, capacity, transferRate, usageRate, type, worldPosition, blockState);
         addDataSlot(new FloatDataSlot(this::getProgress, p -> clientProgress = p, SyncMode.GUI));

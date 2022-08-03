@@ -1,6 +1,6 @@
 package com.enderio.machines.common.blockentity.base;
 
-import com.enderio.api.capacitor.ScalableValue;
+import com.enderio.api.capacitor.ICapacitorScalable;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingTask;
 import com.enderio.machines.common.recipe.MachineRecipe;
 import net.minecraft.core.BlockPos;
@@ -22,7 +22,7 @@ public abstract class PoweredCraftingMachine<R extends MachineRecipe<C>, C exten
      */
     protected final RecipeType<R> recipeType;
 
-    public PoweredCraftingMachine(RecipeType<R> recipeType, ScalableValue capacity, ScalableValue transferRate, ScalableValue usageRate,
+    public PoweredCraftingMachine(RecipeType<R> recipeType, ICapacitorScalable capacity, ICapacitorScalable transferRate, ICapacitorScalable usageRate,
         BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(capacity, transferRate, usageRate, type, worldPosition, blockState);
         this.recipeType = recipeType;

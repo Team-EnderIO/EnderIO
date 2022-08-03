@@ -1,8 +1,6 @@
 package com.enderio.machines.common.blockentity;
 
-import com.enderio.api.capacitor.CapacitorModifier;
-import com.enderio.api.capacitor.ScalableValue;
-import com.enderio.api.capacitor.Scalers;
+import com.enderio.api.capacitor.FixedScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.machines.common.blockentity.base.PoweredMachineEntity;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
@@ -20,9 +18,9 @@ import java.util.function.Supplier;
 public class CreativePowerBlockEntity extends PoweredMachineEntity {
 
     // Daft dummy values
-    public static final ScalableValue CAPACITY = new ScalableValue(CapacitorModifier.ENERGY_CAPACITY, () -> 100000f, Scalers.ENERGY);
-    public static final ScalableValue TRANSFER = new ScalableValue(CapacitorModifier.ENERGY_TRANSFER, () -> 120f, Scalers.ENERGY);
-    public static final ScalableValue USAGE = new ScalableValue(CapacitorModifier.ENERGY_USE, () -> 30f, Scalers.ENERGY);
+    public static final FixedScalable CAPACITY = new FixedScalable(() -> 100000f);
+    public static final FixedScalable TRANSFER = new FixedScalable(() -> 120f);
+    public static final FixedScalable USAGE = new FixedScalable(() -> 30f);
 
     public CreativePowerBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Output, CAPACITY, TRANSFER, USAGE, type, worldPosition, blockState);
