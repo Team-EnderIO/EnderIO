@@ -94,6 +94,11 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, IEnderCapabi
     }
 
     @Override
+    public boolean canConsumeEnergy(int energy) {
+        return (energyStored - energy) >= 0;
+    }
+
+    @Override
     public int getMaxEnergyStored() {
         return capacityKey.getInt(capacitorData.get());
     }

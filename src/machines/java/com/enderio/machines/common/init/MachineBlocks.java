@@ -130,6 +130,15 @@ public class MachineBlocks {
         .lang("Slice'N'Splice")
         .register();
 
+    public static BlockEntry<ProgressMachineBlock> IMPULSE_HOPPER = REGISTRATE
+        .block("impulse_hopper", props -> new ProgressMachineBlock(props, MachineBlockEntities.IMPULSE_HOPPER))
+        .properties(props -> props.strength(2.5f, 8))
+        .loot(MachinesLootTable::copyNBT)
+        .item()
+        .tab(() -> EIOCreativeTabs.MACHINES)
+        .build()
+        .register();
+
     // We use a supplier for the block entity entry so it doesnt init the block entities until its the right time.
     private static BlockBuilder<SimpleMachineBlock, Registrate> simpleMachine(String name, Supplier<BlockEntityEntry<? extends MachineBlockEntity>> blockEntityEntry) {
         return REGISTRATE

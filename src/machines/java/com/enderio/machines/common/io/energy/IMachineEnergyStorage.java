@@ -34,6 +34,11 @@ public interface IMachineEnergyStorage extends IEnergyStorage {
     int consumeEnergy(int energy);
 
     /**
+     * Can consume energy from storage.
+     * @return If the amount can be taken from the storage.
+     */
+    boolean canConsumeEnergy(int energy);
+    /**
      * Get the max energy transfer rate.
      * Generally used for limiting external IO.
      */

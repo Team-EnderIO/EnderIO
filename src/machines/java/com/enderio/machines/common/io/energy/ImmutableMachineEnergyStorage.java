@@ -125,4 +125,13 @@ public class ImmutableMachineEnergyStorage implements IMachineEnergyStorage {
     public int consumeEnergy(int energy) {
         throw new UnsupportedOperationException();
     }
+
+    /**
+     * @deprecated This storage is immutable.
+     */
+    @Deprecated
+    @Override
+    public boolean canConsumeEnergy(int energy) {
+        throw new UnsupportedOperationException();
+    }
 }
