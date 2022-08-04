@@ -36,13 +36,13 @@ public class ImpulseHopperBlockEntity extends PowerConsumingMachineEntity{
 
     @Override
     public void serverTick() {
-        if(shouldPassItems() && ShouldActTick()) {
+        if(shouldActTick() && shouldPassItems()) {
             passItems();
         }
         super.serverTick();
     }
 
-    public boolean ShouldActTick() {// TODO General tick method for power consuming devices?
+    public boolean shouldActTick() {// TODO General tick method for power consuming devices?
         return canAct() && level.getGameTime() % ticksForAction() == 0;
     }
 
@@ -78,7 +78,7 @@ public class ImpulseHopperBlockEntity extends PowerConsumingMachineEntity{
         for (int i = 0; i < 6; i++) {
             ItemStack stack = this.getInventory().getStackInSlot(i);
             ItemStack ghost = this.getInventory().getStackInSlot(i+6+6);
-            ItemStack result = this.getInventory().getStackInSlot(i + 6);
+            ItemStack result = this.getInventory().getStackInSlot(i+6);
             if (ghost.isEmpty()) {
                 continue;
             }
