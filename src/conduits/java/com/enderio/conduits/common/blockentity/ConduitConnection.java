@@ -2,7 +2,6 @@ package com.enderio.conduits.common.blockentity;
 
 import com.enderio.core.common.blockentity.ColorControl;
 import com.enderio.core.common.sync.EnderDataSlot;
-import com.enderio.core.common.sync.IntegerDataSlot;
 import com.enderio.core.common.sync.NullableEnumDataSlot;
 import com.enderio.core.common.sync.SyncMode;
 import org.jetbrains.annotations.Nullable;
@@ -14,16 +13,31 @@ import java.util.Optional;
 
 public class ConduitConnection {
 
-    private final ConduitCore core;
-    private final ConnectionState[] connectionStates = new ConnectionState[ConduitCore.MAX_CONDUIT_TYPES];
+    private final ConduitBundle bundle;
+    private final ConnectionState[] connectionStates = new ConnectionState[ConduitBundle.MAX_CONDUIT_TYPES];
 
-    public ConduitConnection(ConduitCore core) {
-        this.core = core;
+    public ConduitConnection(ConduitBundle bundle) {
+        this.bundle = bundle;
     }
 
+    /**
+     * shift all behind that one to the back and set that index to null
+     * @param index
+     */
+    public void addType(int index) {
+        for (int i = index; i < ConduitBundle.MAX_CONDUIT_TYPES; i++) {
+            connectionStates[i+1] = connectionStates[i];
+        }
+        connectionStates[index] = null;
+    }
+
+    /**
+     * remove entry and shift all behind one to the front
+     * @param index
+     */
     public void removeType(int index) {
         connectionStates[index] = null;
-        for (int i = index+1; i < ConduitCore.MAX_CONDUIT_TYPES; i++) {
+        for (int i = index+1; i < ConduitBundle.MAX_CONDUIT_TYPES; i++) {
             connectionStates[i-1] = connectionStates[i];
         }
     }
@@ -32,7 +46,7 @@ public class ConduitConnection {
      * @param dataSlots Add dataslots to this list
      */
     public void gatherDataSlots(List<EnderDataSlot<?>> dataSlots) {
-        for (int i = 0; i < ConduitCore.MAX_CONDUIT_TYPES; i++) {
+        for (int i = 0; i < ConduitBundle.MAX_CONDUIT_TYPES; i++) {
             int finalI = i;
             dataSlots.add(new NullableEnumDataSlot<>(
                 () -> Optional.ofNullable(connectionStates[finalI]).map(ConnectionState::in).orElse(null),

@@ -1,9 +1,7 @@
 package com.enderio.api.conduit;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.RegistryBuilder;
+import net.minecraftforge.registries.*;
 
 import java.util.function.Supplier;
 
@@ -18,4 +16,9 @@ public class ConduitTypes {
      * Create a new DeferredRegister using this ForgeRegistry as a base
      */
     public static final Supplier<IForgeRegistry<IConduitType>> REGISTRY = CONDUIT_TYPES.makeRegistry(RegistryBuilder::new);
+
+    public static ForgeRegistry<IConduitType> getRegistry() {
+        //should always be a forgeRegistry. Needed for IDs for networking/ordering
+        return (ForgeRegistry<IConduitType>)REGISTRY.get();
+    }
 }

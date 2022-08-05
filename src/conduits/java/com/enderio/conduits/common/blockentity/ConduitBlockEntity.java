@@ -7,10 +7,10 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class ConduitBlockEntity extends EnderBlockEntity {
 
-    ConduitCore core = new ConduitCore();
+    private final ConduitBundle bundle = new ConduitBundle();
 
     public ConduitBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
-        core.gatherDataSlots().forEach(this::addDataSlot);
+        bundle.gatherDataSlots().forEach(this::addDataSlot);
     }
 }

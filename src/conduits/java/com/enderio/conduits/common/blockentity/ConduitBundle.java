@@ -1,17 +1,16 @@
 package com.enderio.conduits.common.blockentity;
 
-import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.core.common.sync.EnderDataSlot;
-import com.enderio.core.common.sync.ResourceLocationDataSlot;
+import com.enderio.core.common.sync.IntegerDataSlot;
 import com.enderio.core.common.sync.SyncMode;
 import net.minecraft.core.Direction;
 import net.minecraftforge.fml.loading.FMLLoader;
 
 import java.util.*;
 
-public final class ConduitCore {
+public final class ConduitBundle {
 
     public static final int MAX_CONDUIT_TYPES = 16;
 
@@ -20,7 +19,7 @@ public final class ConduitCore {
     private final List<IConduitType> types = new ArrayList<>();
 
 
-    public ConduitCore() {
+    public ConduitBundle() {
         for (Direction value : Direction.values()) {
             connections.put(value, new ConduitConnection(this));
         }
@@ -45,7 +44,17 @@ public final class ConduitCore {
         //some conduit says no (like higher energy conduit)
         if (types.stream().anyMatch(existingConduit -> !existingConduit.canBeInSameBlock(type)))
             return Optional.of(type);
-        types.add(type);
+        //sort the list, so order is consistant
+        int id = ConduitTypes.getRegistry().getID(type);
+        var addBefore = types.stream().map(existing -> ConduitTypes.getRegistry().getID(existing)).filter(existingID -> existingID > id).findFirst();
+        if (addBefore.isPresent()) {
+            types.add(addBefore.get(), type);
+            for (Direction direction: Direction.values()) {
+                connections.get(direction).addType(addBefore.get());
+            }
+        } else {
+            types.add(type);
+        }
         return Optional.empty();
     }
 
@@ -76,14 +85,14 @@ public final class ConduitCore {
         //TODO: create a listdataslot to solve this mess
         for (int i = 0; i < MAX_CONDUIT_TYPES; i++) {
             int finalI = i;
-            dataSlots.add(new ResourceLocationDataSlot(
+            dataSlots.add(new IntegerDataSlot(
                 () -> {
                     if (finalI >= types.size())
-                        return EnderIO.loc("missing");
-                    return ConduitTypes.REGISTRY.get().getKey(types.get(finalI));
+                        return -1;
+                    return ConduitTypes.getRegistry().getID(types.get(finalI));
                 },
-                location -> {
-                    if (location.equals(EnderIO.loc("missing"))) {
+                id -> {
+                    if (id == -1) {
                         if (finalI < types.size()) {
                             //remove as many elements as we need so if finalI = 0, list shrinks to no elements
                             int toRemove = types.size() - finalI;
@@ -92,7 +101,7 @@ public final class ConduitCore {
                             }
                         }
                     } else {
-                        IConduitType type = ConduitTypes.REGISTRY.get().getValue(location);
+                        IConduitType type = ConduitTypes.getRegistry().getValue(id);
                         if (finalI < types.size()) {
                             types.set(finalI, type);
                         } else if (finalI == types.size()) {
