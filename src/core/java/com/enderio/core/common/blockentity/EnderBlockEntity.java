@@ -147,10 +147,10 @@ public class EnderBlockEntity extends BlockEntity {
     }
 
     /**
-     * Sync the BlockEntity to all tracking players.
+     * Sync the BlockEntity to all tracking players. Don't call this if you don't know what you do
      */
     @UseOnly(LogicalSide.SERVER)
-    private void sync() {
+    public void sync() {
         ClientboundBlockEntityDataPacket fullUpdate = createUpdatePacket(true, SyncMode.WORLD);
         ClientboundBlockEntityDataPacket partialUpdate = getUpdatePacket();
 

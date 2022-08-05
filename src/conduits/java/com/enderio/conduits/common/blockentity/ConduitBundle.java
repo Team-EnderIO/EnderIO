@@ -4,8 +4,10 @@ import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.core.common.sync.EnderDataSlot;
 import com.enderio.core.common.sync.IntegerDataSlot;
+import com.enderio.core.common.sync.ListDataSlot;
 import com.enderio.core.common.sync.SyncMode;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.IntTag;
 import net.minecraftforge.fml.loading.FMLLoader;
 
 import java.util.*;
@@ -17,9 +19,10 @@ public final class ConduitBundle {
     private final Map<Direction, ConduitConnection> connections = new EnumMap<>(Direction.class);
 
     private final List<IConduitType> types = new ArrayList<>();
+    private final Runnable scheduleSync;
 
-
-    public ConduitBundle() {
+    public ConduitBundle(Runnable scheduleSync) {
+        this.scheduleSync = scheduleSync;
         for (Direction value : Direction.values()) {
             connections.put(value, new ConduitConnection(this));
         }
@@ -39,6 +42,7 @@ public final class ConduitBundle {
         if (first.isPresent()) {
             int index = types.indexOf(first.get());
             types.set(index, type);
+            scheduleSync.run();
             return first;
         }
         //some conduit says no (like higher energy conduit)
@@ -55,6 +59,7 @@ public final class ConduitBundle {
         } else {
             types.add(type);
         }
+        scheduleSync.run();
         return Optional.empty();
     }
 
@@ -76,45 +81,19 @@ public final class ConduitBundle {
             connections.get(direction).removeType(index);
         }
         types.remove(index);
+        scheduleSync.run();
         return types.isEmpty();
     }
 
     public List<EnderDataSlot<?>> gatherDataSlots() {
         List<EnderDataSlot<?>> dataSlots = new ArrayList<>();
 
-        //TODO: create a listdataslot to solve this mess
-        for (int i = 0; i < MAX_CONDUIT_TYPES; i++) {
-            int finalI = i;
-            dataSlots.add(new IntegerDataSlot(
-                () -> {
-                    if (finalI >= types.size())
-                        return -1;
-                    return ConduitTypes.getRegistry().getID(types.get(finalI));
-                },
-                id -> {
-                    if (id == -1) {
-                        if (finalI < types.size()) {
-                            //remove as many elements as we need so if finalI = 0, list shrinks to no elements
-                            int toRemove = types.size() - finalI;
-                            for (int j = 0; j < toRemove; j++) {
-                                types.remove(types.size());
-                            }
-                        }
-                    } else {
-                        IConduitType type = ConduitTypes.getRegistry().getValue(id);
-                        if (finalI < types.size()) {
-                            types.set(finalI, type);
-                        } else if (finalI == types.size()) {
-                            types.add(type);
-                        } else {
-                            //TODO don't throw exceptions in dataslots, maybe fixed in the coming listdataslot impl
-                            throw new IllegalArgumentException("Should never come here, as previous dataslots are synced first, so they should have atleast this size");
-                        }
-                    }
-                },
-                SyncMode.WORLD
-            ));
-        }
+        dataSlots.add(new ListDataSlot<>(
+            () -> types,
+            type -> IntTag.valueOf(ConduitTypes.getRegistry().getID(type)),
+            intTag -> ConduitTypes.getRegistry().getValue(intTag.getAsInt()),
+            SyncMode.WORLD
+        ));
         connections.values().forEach(connection -> connection.gatherDataSlots(dataSlots));
         return dataSlots;
     }

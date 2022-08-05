@@ -1,15 +1,22 @@
 package com.enderio.conduits.common.blockentity;
 
+import com.enderio.api.UseOnly;
+import com.enderio.base.common.blockentity.RedstoneControl;
 import com.enderio.core.common.blockentity.ColorControl;
 import com.enderio.core.common.sync.EnderDataSlot;
-import com.enderio.core.common.sync.NullableEnumDataSlot;
 import com.enderio.core.common.sync.SyncMode;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.LogicalSide;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class ConduitConnection {
 
@@ -48,18 +55,10 @@ public class ConduitConnection {
     public void gatherDataSlots(List<EnderDataSlot<?>> dataSlots) {
         for (int i = 0; i < ConduitBundle.MAX_CONDUIT_TYPES; i++) {
             int finalI = i;
-            dataSlots.add(new NullableEnumDataSlot<>(
-                () -> Optional.ofNullable(connectionStates[finalI]).map(ConnectionState::in).orElse(null),
-                value -> connectionStates[finalI] = new ConnectionState(value, Optional.ofNullable(connectionStates[finalI]).map(ConnectionState::out).orElse(null)),
-                ColorControl.class,
-                SyncMode.WORLD)
-            );
-            dataSlots.add(new NullableEnumDataSlot<>(
-                () -> Optional.ofNullable(connectionStates[finalI]).map(ConnectionState::out).orElse(null),
-                value -> connectionStates[finalI] = new ConnectionState(Optional.ofNullable(connectionStates[finalI]).map(ConnectionState::in).orElse(null), value),
-                ColorControl.class,
-                SyncMode.WORLD)
-            );
+            dataSlots.add(new ConnectionStateDataSlot(
+                () -> connectionStates[finalI],
+                state -> connectionStates[finalI] = state
+            ));
         }
     }
 
@@ -67,9 +66,50 @@ public class ConduitConnection {
         return Arrays.stream(connectionStates).filter(Objects::nonNull).anyMatch(ConnectionState::isEnd);
     }
 
-    private record ConnectionState(@Nullable ColorControl in, @Nullable ColorControl out) {
+    private record ConnectionState(@Nullable ColorControl in, @Nullable ColorControl out, RedstoneControl control, @Nullable ColorControl redstoneChannel, @UseOnly(LogicalSide.SERVER) ItemStack filter) {
         public boolean isEnd() {
             return in != null || out != null;
+        }
+    }
+
+    /**
+     * filter is not synced, because that will be synced using the container
+     */
+    private class ConnectionStateDataSlot extends EnderDataSlot<ConnectionState> {
+
+        public ConnectionStateDataSlot(Supplier<ConnectionState> getter, Consumer<ConnectionState> setter) {
+            super(getter, setter, SyncMode.WORLD);
+        }
+
+        @Override
+        public CompoundTag toFullNBT() {
+            CompoundTag tag = new CompoundTag();
+            var state = getter().get();
+            if (state != null) {
+                tag.putInt("in",state.in() != null ? state.in().ordinal() : -1);
+                tag.putInt("out",state.out() != null ? state.out().ordinal() : -1);
+                tag.putInt("redControl",state.control().ordinal());
+                tag.putInt("redChannel",state.redstoneChannel() != null ? state.redstoneChannel().ordinal() : -1);
+            }
+            return tag;
+        }
+
+        @Override
+        @Nullable
+        protected ConnectionState fromNBT(CompoundTag nbt) {
+            if (!nbt.contains("in") || !nbt.contains("out"))
+                return null;
+            var inIndex = nbt.getInt("in");
+            var outIndex = nbt.getInt("out");
+            var redControl = nbt.getInt("redControl");
+            var redChannel = nbt.getInt("redChannel");
+            return new ConnectionState(
+                inIndex != -1 ? ColorControl.values()[inIndex] : null,
+                outIndex != -1 ? ColorControl.values()[outIndex] : null,
+                RedstoneControl.values()[redControl],
+                redChannel != -1 ? ColorControl.values()[redChannel] : null,
+                Items.AIR.getDefaultInstance()
+            );
         }
     }
 }
