@@ -8,8 +8,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class EnderConduitTypes {
 
-    private static final DeferredRegister<IConduitType> CONDUIT_TYPES = DeferredRegister.create(ConduitTypes.REGISTRY.get(), "enderio");
+    public static final RegistryObject<IConduitType> POWER = ConduitTypes.CONDUIT_TYPES.register("power", () -> ConduitType.POWER);
 
-    public static final RegistryObject<IConduitType> POWER = CONDUIT_TYPES.register("power", () -> ConduitType.POWER);
-
+    public static void register() {}
 }

@@ -1,7 +1,13 @@
 package com.enderio.conduits;
 
 import com.enderio.EnderIO;
+import com.enderio.api.conduit.ConduitItemFactory;
 import com.enderio.api.conduit.ConduitTypes;
+import com.enderio.conduits.common.init.ConduitBlockEntities;
+import com.enderio.conduits.common.init.ConduitBlocks;
+import com.enderio.conduits.common.init.ConduitItems;
+import com.enderio.conduits.common.init.EnderConduitTypes;
+import com.enderio.conduits.common.items.ConduitBlockItem;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -14,8 +20,11 @@ public class EIOConduits {
     public static void onConstruct(FMLConstructModEvent event) {
         System.out.println("================ Conduits construct ==================");
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-        ConduitTypes.CONDUIT_TYPES.register(bus);
-//        EnderIO.registrate().item("test", Item::new).register();
+        ConduitTypes.register(bus);
+        EnderConduitTypes.register();
+        ConduitBlockEntities.register();
+        ConduitBlocks.register();
+        ConduitItems.register();
+        ConduitItemFactory.setFactory((type, properties) -> new ConduitBlockItem(type, ConduitBlocks.CONDUIT.get(), properties));
     }
-    // GatherDataEvent too!
 }

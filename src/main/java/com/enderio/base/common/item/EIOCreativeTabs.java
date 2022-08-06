@@ -17,6 +17,7 @@ public class EIOCreativeTabs extends CreativeModeTab {
     public static final EIOCreativeTabs BLOCKS = new EIOCreativeTabs("blocks", EIOItems.CREATIVE_ICON_MATERIALS::get);
     public static final EIOCreativeTabs MACHINES = new EIOCreativeTabs("machines", EIOItems.CREATIVE_ICON_MACHINES::get);
     public static final EIOCreativeTabs SOULS = new EIOCreativeTabs("souls", EIOItems.CREATIVE_ICON_MOBS::get);
+    public static final EIOCreativeTabs CONDUITS = new EIOCreativeTabs("conduits", EIOItems.CREATIVE_ICON_CONDUITS::get);
 
     private final Supplier<Item> itemIcon;
 

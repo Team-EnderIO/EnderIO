@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import java.util.concurrent.atomic.AtomicReference;
 
 //renders grave as a playerskull
-public class GraveRenderer implements BlockEntityRenderer<BlockEntity> {
+public class GraveRenderer implements BlockEntityRenderer<GraveBlockEntity> {
     private final BlockEntityRendererProvider.Context context;
 
     public GraveRenderer(BlockEntityRendererProvider.Context context) {
@@ -27,8 +27,7 @@ public class GraveRenderer implements BlockEntityRenderer<BlockEntity> {
     }
 
     @Override
-    public void render(BlockEntity pBlockEntity, float pPartialTicks, PoseStack poseStack, MultiBufferSource pBuffer, int light, int pCombinedOverlay) {
-        GraveBlockEntity grave = (GraveBlockEntity) pBlockEntity;
+    public void render(GraveBlockEntity grave, float pPartialTicks, PoseStack poseStack, MultiBufferSource pBuffer, int light, int pCombinedOverlay) {
         Direction direction = null;//TODO if we make the grave rotatable
         SkullModelBase skullmodelbase = new SkullModel(this.context.bakeLayer(ModelLayers.PLAYER_HEAD));
         AtomicReference<RenderType> rendertype = new AtomicReference<>(RenderType.entityCutoutNoCull(DefaultPlayerSkin.getDefaultSkin()));

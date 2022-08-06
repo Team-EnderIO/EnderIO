@@ -1,4 +1,4 @@
-// 1.19	2022-07-26T01:49:09.7254177	Registrate Provider for enderio [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
+// 1.19.1	2022-08-06T19:58:00.9839357	Registrate Provider for enderio [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
 73adb56f72a5805aa07ee54397acb790c30cccb5 assets/enderio/blockstates/alloy_smelter.json
 38456017a1ded6fddac24d85def47523e9ee034c assets/enderio/blockstates/clear_glass.json
 38456017a1ded6fddac24d85def47523e9ee034c assets/enderio/blockstates/clear_glass_a.json
@@ -360,6 +360,7 @@
 df096963e805bab0722815e37b86404779c7f3e9 assets/enderio/blockstates/cloud_seed.json
 5a53d190c4a574c9f4c347dee03e46e5b95cb8a5 assets/enderio/blockstates/cloud_seed_concentrated.json
 9326296ffb00255d3e08c5994a32197db9683aa1 assets/enderio/blockstates/conductive_alloy_block.json
+40bd0b47d351f98df20d1190443648e4fc1e93bd assets/enderio/blockstates/conduit.json
 1016b50ba8cb61d4f695a3f471ed4a875faecfc2 assets/enderio/blockstates/copper_alloy_block.json
 d68f1462814d8bee2cf35ca20700e3a3cff1285c assets/enderio/blockstates/creative_power.json
 7e512a2f2bdb54368cd3acd473582b79b7ad45fe assets/enderio/blockstates/dark_steel_bars.json
@@ -803,14 +804,15 @@ f10adb46259e30c36318f0c7da5a9bc8f4a16fe8 assets/enderio/blockstates/soul_machine
 e9c8dc43c691ba3df30fca3e86b0f709bd93c46b assets/enderio/blockstates/vapor_of_levity.json
 fffb418818fa4ec53a362ef433d0c30f00f9d39d assets/enderio/blockstates/vibrant_alloy_block.json
 dc9a80d96b9da4a13c49c78cb65adbbf7c4928dc assets/enderio/blockstates/xp_juice.json
-753bd84a0b69468203cd94afd9bd2d4d3d93423d assets/enderio/lang/en_ud.json
-9e2643488367fea9974c9dcc31263ca807c39dea assets/enderio/lang/en_us.json
+9d6b4cae324f8f467b5e8e28e8268f81babd1abf assets/enderio/lang/en_ud.json
+6bbe2919a0f86a707762dd18aaf24696e4c036c4 assets/enderio/lang/en_us.json
 be027ef82ca7f17fdd8d0edacfacf4f7f07e7a06 assets/enderio/models/block/alloy_smelter.json
 ef459b1b7abed93577f72840c13d2b529cfae6d4 assets/enderio/models/block/alloy_smelter_front_on.json
 ca9a3c2ef9be4346cb7045f4b3140409f5468624 assets/enderio/models/block/alloy_smelter_on.json
 82e1f9bc8c11ad2e19253c6536d80a1d3398b4a1 assets/enderio/models/block/cloud_seed.json
 90f9b8c9f86c62f9dfc8826139350b24d16492b1 assets/enderio/models/block/cloud_seed_concentrated.json
 85968b6918885e5e706e34021e4a865eacecd54d assets/enderio/models/block/conductive_alloy_block.json
+6c170bbcbdd0147c666c974741d430b3bdbf03ac assets/enderio/models/block/conduit.json
 e9c1e159d4fc7d7bf25c14535542eeef91a27134 assets/enderio/models/block/copper_alloy_block.json
 20a94a9e17f4c5d0150589dc6a2957ea04520fdc assets/enderio/models/block/creative_power.json
 1b75396effc27d3d9a37f74e00accc09a59f0e99 assets/enderio/models/block/dark_steel_bars_no_side.json
@@ -1792,6 +1794,7 @@ e4b847950b42d50fe47c6bc70184f947bc32be44 assets/enderio/models/item/powered_ligh
 e4b847950b42d50fe47c6bc70184f947bc32be44 assets/enderio/models/item/powered_light_inverted.json
 e4b847950b42d50fe47c6bc70184f947bc32be44 assets/enderio/models/item/powered_light_inverted_wireless.json
 e4b847950b42d50fe47c6bc70184f947bc32be44 assets/enderio/models/item/powered_light_wireless.json
+aa503fc2701db1df29c22de64f5dfb2be7fe794c assets/enderio/models/item/power_conduit.json
 e6bbc833dc57e4cefe79fb03a0d0a6c507b56cbb assets/enderio/models/item/precient_crystal.json
 8bd0e92f7a23e677a7bbee286c3368fb124b6bc3 assets/enderio/models/item/precient_powder.json
 4ef8e2e371e7c053d3666784174af551fe939fda assets/enderio/models/item/pulsating_alloy_block.json

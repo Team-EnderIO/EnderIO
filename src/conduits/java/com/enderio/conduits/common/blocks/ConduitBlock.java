@@ -1,15 +1,19 @@
-package com.enderio.conduits.common.blockentity;
+package com.enderio.conduits.common.blocks;
 
+import com.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class ConduitBlock extends Block {
+public class ConduitBlock extends Block implements EntityBlock {
 
     public ConduitBlock(Properties properties) {
         super(properties);
@@ -30,5 +34,11 @@ public class ConduitBlock extends Block {
                 enderBlockEntity.sync();
             }
         });
+    }
+
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return ConduitBlockEntities.CONDUIT.create(pos, state);
     }
 }
