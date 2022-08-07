@@ -15,7 +15,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class ImpulseHopperBlockEntity extends PowerConsumingMachineEntity{
-    private static final int IMPULSE_HOPPER_POWER_USE_PER_ITEM = 10; //TODO MachineCapacitorKeys.IMPULSE_HOPPER_ENERGY_CONSUME_ITEM
+    private static final int IMPULSE_HOPPER_POWER_USE_PER_ITEM = 10;
 
     public ImpulseHopperBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(MachineCapacitorKeys.IMPULSE_HOPPER_ENERGY_CAPACITY.get(),
@@ -47,7 +47,7 @@ public class ImpulseHopperBlockEntity extends PowerConsumingMachineEntity{
     }
 
     public int ticksForAction() {
-        return 20; //TODO Speed modifier MachineCapacitorKeys.IMPULSE_HOPPER_ENERGY_SPEED
+        return 20;
     }
 
     public boolean canPass(int slot) {
@@ -59,10 +59,14 @@ public class ImpulseHopperBlockEntity extends PowerConsumingMachineEntity{
         return false;
     }
 
+    public boolean canHold(int slot) {
+        return this.getInventory().getStackInSlot(slot+6).getCount() + this.getInventory().getStackInSlot(slot+6+6).getCount() <= 64;
+    }
+
     public boolean shouldPassItems() {
         int totalpower = 0;
         for (int i = 0; i < 6; i++) {
-            if (canPass(i)) {
+            if (canPass(i) && canHold(i)) {
                 totalpower += this.getInventory().getStackInSlot(i+6+6).getCount() * IMPULSE_HOPPER_POWER_USE_PER_ITEM;
                 continue;
             }
@@ -99,6 +103,10 @@ public class ImpulseHopperBlockEntity extends PowerConsumingMachineEntity{
     @Override
     public MachineTier getTier() {
         return MachineTier.STANDARD;
+    }
+
+    public boolean ghostSlotHasItem(int slot){
+        return !this.getInventory().getStackInSlot(slot+6+6).isEmpty();
     }
 
 }

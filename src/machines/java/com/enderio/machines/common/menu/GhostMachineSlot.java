@@ -27,7 +27,6 @@ public class GhostMachineSlot extends MachineSlot {
         // If this stack is valid, set the inventory slot value.
         if (!stack.isEmpty() && mayPlace(stack)) {
             ItemStack ghost = stack.copy();
-            ghost.setCount(1);
             set(ghost);
         }
 
