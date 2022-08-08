@@ -5,16 +5,27 @@ import com.enderio.api.conduit.IConduitType;
 import net.minecraft.resources.ResourceLocation;
 
 public enum ConduitType implements IConduitType {
-    POWER(EnderIO.loc("blocks/conduits/power"));
+    POWER(EnderIO.loc("block/conduit/power"));
+
+
+    private final ResourceLocation texture;
+    private final int activeLightLevel;
 
     ConduitType(ResourceLocation texture) {
-        this.texture = texture;
+        this(texture, 0);
     }
-    private final ResourceLocation texture;
 
+    ConduitType(ResourceLocation texture, int activeLightLevel) {
+        this.texture = texture;
+        this.activeLightLevel = activeLightLevel;
+    }
     @Override
     public ResourceLocation getTexture() {
         return texture;
     }
 
+    @Override
+    public int getLightLevel(boolean isActive) {
+        return isActive ? activeLightLevel : 0;
+    }
 }

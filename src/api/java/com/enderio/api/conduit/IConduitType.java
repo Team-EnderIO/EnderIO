@@ -13,4 +13,8 @@ public interface IConduitType {
     default boolean canBeReplacedBy(IConduitType other) {
         return false;
     }
+
+    default int getLightLevel(boolean isActive) {
+        return 0;
+    }
 }
