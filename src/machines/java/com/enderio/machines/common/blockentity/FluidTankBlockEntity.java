@@ -1,5 +1,6 @@
 package com.enderio.machines.common.blockentity;
 
+import com.enderio.base.common.capability.FluidHandlerBlockItemStack;
 import com.enderio.core.common.sync.FluidStackDataSlot;
 import com.enderio.core.common.sync.SyncMode;
 import com.enderio.machines.common.MachineTier;
@@ -7,6 +8,8 @@ import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.menu.FluidTankMenu;
+import com.mojang.datafixers.util.Pair;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
@@ -28,8 +31,14 @@ import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
+import java.util.function.Function;
 
 public abstract class FluidTankBlockEntity extends MachineBlockEntity {
+    public enum FluidOperationResult {
+        INVALIDFLUIDITEM,
+        FAIL,
+        SUCCESS
+    }
 
     public static class Standard extends FluidTankBlockEntity {
         public static final int CAPACITY = 16 * FluidType.BUCKET_VOLUME;
@@ -90,27 +99,35 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
         super.serverTick();
     }
 
+    private IFluidHandlerItem GetIFluidHandlerItem(ItemStack itemStack) {
+        if (itemStack == null) {
+            return null;
+        }
+
+        Optional<IFluidHandlerItem> fluidHandlerCap = itemStack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).resolve();
+        if (!fluidHandlerCap.isPresent()) {
+            return null;
+        }
+
+        return fluidHandlerCap.get();
+    }
+
     private void fillInternal() {
         ItemStack inputItem = getInventory().getStackInSlot(0);
         ItemStack outputItem = getInventory().getStackInSlot(1);
         if (!inputItem.isEmpty()) {
             if (inputItem.getItem() instanceof BucketItem filledBucket) {
                 if (outputItem.isEmpty() || (outputItem.getItem() == Items.BUCKET && outputItem.getCount() < outputItem.getMaxStackSize())) {
-                    int filled = fluidTank.fill(new FluidStack(filledBucket.getFluid(), FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.SIMULATE);
-                    if (filled == FluidType.BUCKET_VOLUME) {
-                        fluidTank.fill(new FluidStack(filledBucket.getFluid(), FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.EXECUTE);
+                    if (this.fillTankFromBucket(filledBucket) == FluidOperationResult.SUCCESS) {
                         inputItem.shrink(1);
                         getInventory().insertItem(1, Items.BUCKET.getDefaultInstance(), false);
                     }
                 }
             } else {
-                Optional<IFluidHandlerItem> fluidHandlerCap = inputItem.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).resolve();
-                if (fluidHandlerCap.isPresent() && outputItem.isEmpty()) {
-                    IFluidHandlerItem itemFluid = fluidHandlerCap.get();
-
-                    int filled = moveFluids(itemFluid, fluidTank, fluidTank.getCapacity());
-                    if (filled > 0) {
-                        getInventory().setStackInSlot(1, itemFluid.getContainer());
+                if (outputItem.isEmpty()) {
+                    Pair<FluidOperationResult, IFluidHandlerItem> result = fillTankFromItem(inputItem);
+                    if (result.getFirst() == FluidOperationResult.SUCCESS) {
+                        getInventory().setStackInSlot(1, result.getSecond().getContainer());
                         getInventory().setStackInSlot(0, ItemStack.EMPTY);
                     }
                 }
@@ -118,36 +135,96 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
         }
     }
 
+    public FluidOperationResult fillTankFromBucket(BucketItem bucket) {
+        if (bucket == null) {
+            return FluidOperationResult.INVALIDFLUIDITEM;
+        }
+
+        int filled = fluidTank.fill(new FluidStack(bucket.getFluid(), FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.SIMULATE);
+        if (filled != FluidType.BUCKET_VOLUME) {
+            return FluidOperationResult.FAIL;
+        }
+
+        fluidTank.fill(new FluidStack(bucket.getFluid(), FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.EXECUTE);
+        return FluidOperationResult.SUCCESS;
+    }
+
+    private Pair<FluidOperationResult, IFluidHandlerItem> fillTankFromItem(ItemStack itemStack) {
+        IFluidHandlerItem fluidHandler = GetIFluidHandlerItem(itemStack);
+        return Pair.of(fluidHandler == null ? FluidOperationResult.INVALIDFLUIDITEM : fillTankFromItem(fluidHandler), fluidHandler);
+    }
+
+    public FluidOperationResult fillTankFromItem(IFluidHandlerItem item) {
+        if (item == null) {
+            return FluidOperationResult.INVALIDFLUIDITEM;
+        }
+
+        return moveFluids(item, fluidTank, fluidTank.getCapacity()) > 0 ? FluidOperationResult.SUCCESS : FluidOperationResult.FAIL;
+    }
+
     private void drainInternal() {
         ItemStack inputItem = getInventory().getStackInSlot(2);
         ItemStack outputItem = getInventory().getStackInSlot(3);
         if (!inputItem.isEmpty()) {
             if (inputItem.getItem() == Items.BUCKET) {
-                if (!fluidTank.isEmpty()) {
-                    FluidStack stack = fluidTank.drain(FluidType.BUCKET_VOLUME, IFluidHandler.FluidAction.SIMULATE);
-                    if (stack.getAmount() == FluidType.BUCKET_VOLUME && (outputItem.isEmpty() || (outputItem.getItem() == stack.getFluid().getBucket()
-                        && outputItem.getCount() < outputItem.getMaxStackSize()))) {
-                        fluidTank.drain(FluidType.BUCKET_VOLUME, IFluidHandler.FluidAction.EXECUTE);
-                        inputItem.shrink(1);
-                        if (outputItem.isEmpty()) {
-                            getInventory().setStackInSlot(3, stack.getFluid().getBucket().getDefaultInstance());
-                        } else {
-                            outputItem.grow(1);
-                        }
+                Pair<Boolean, FluidStack> result = drainTankWithBucket(stack -> (outputItem.isEmpty() || (outputItem.getItem() == stack.getFluid().getBucket() && outputItem.getCount() < outputItem.getMaxStackSize())));
+                if (result.getFirst()) {
+                    inputItem.shrink(1);
+                    if (outputItem.isEmpty()) {
+                        getInventory().setStackInSlot(3, result.getSecond().getFluid().getBucket().getDefaultInstance());
+                    } else {
+                        outputItem.grow(1);
                     }
                 }
             } else {
-                Optional<IFluidHandlerItem> fluidHandlerCap = inputItem.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).resolve();
-                if (fluidHandlerCap.isPresent() && outputItem.isEmpty()) {
-                    IFluidHandlerItem itemFluid = fluidHandlerCap.get();
-                    int filled = moveFluids(fluidTank, itemFluid, fluidTank.getFluidAmount());
-                    if (filled > 0) {
-                        getInventory().setStackInSlot(3, itemFluid.getContainer());
+                if (outputItem.isEmpty()) {
+                    Pair<FluidOperationResult, IFluidHandlerItem> result = drainTankWithItem(inputItem);
+                    if (result.getFirst() == FluidOperationResult.SUCCESS) {
+                        getInventory().setStackInSlot(3, result.getSecond().getContainer());
                         getInventory().setStackInSlot(2, ItemStack.EMPTY);
                     }
                 }
             }
         }
+    }
+
+    public Pair<Boolean, FluidStack> drainTankWithBucket() {
+        return drainTankWithBucket(null);
+    }
+
+    public Pair<Boolean, FluidStack> drainTankWithBucket(Function<FluidStack, Boolean> shouldDrain) {
+        if (fluidTank.isEmpty()) {
+            return Pair.of(false, null);
+        }
+
+        FluidStack stack = fluidTank.drain(FluidType.BUCKET_VOLUME, IFluidHandler.FluidAction.SIMULATE);
+        if (stack.getAmount() != FluidType.BUCKET_VOLUME) {
+            return Pair.of(false, null);
+        }
+
+        boolean shouldDrainResult = true;
+        if (shouldDrain != null) {
+            shouldDrainResult = shouldDrain.apply(stack);
+        }
+        if (!shouldDrainResult) {
+            return Pair.of(false, null);
+        }
+
+        fluidTank.drain(FluidType.BUCKET_VOLUME, IFluidHandler.FluidAction.EXECUTE);
+        return Pair.of(true, stack);
+    }
+
+    private Pair<FluidOperationResult, IFluidHandlerItem> drainTankWithItem(ItemStack itemStack) {
+        IFluidHandlerItem fluidHandler = GetIFluidHandlerItem(itemStack);
+        return Pair.of(fluidHandler == null ? FluidOperationResult.INVALIDFLUIDITEM : drainTankWithItem(fluidHandler), fluidHandler);
+    }
+
+    public FluidOperationResult drainTankWithItem(IFluidHandlerItem item) {
+        if (item == null) {
+            return FluidOperationResult.INVALIDFLUIDITEM;
+        }
+
+        return moveFluids(fluidTank, item, fluidTank.getFluidAmount()) > 0 ? FluidOperationResult.SUCCESS : FluidOperationResult.FAIL;
     }
 
     @Nullable
