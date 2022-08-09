@@ -1,6 +1,5 @@
 package com.enderio.machines.client.gui.screen;
 
-
 import com.enderio.EnderIO;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.gui.screen.EIOScreen;
@@ -8,7 +7,6 @@ import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.enderio.core.common.util.Vector2i;
 import com.enderio.machines.client.gui.widget.EnergyWidget;
 import com.enderio.machines.common.menu.ImpulseHopperMenu;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -35,19 +33,17 @@ public class ImpulseHopperScreen extends EIOScreen<ImpulseHopperMenu> {
         super.renderBg(pPoseStack, pPartialTick, pMouseX, pMouseY);
 
         //for all ghost slots
-        for(int i = 0; i < 6; i ++){
-            if(getMenu().getBlockEntity().ghostSlotHasItem(i)){
-                if (getMenu().getBlockEntity().canPass(i)){
-                    this.blit(pPoseStack,getGuiLeft() + 43 + (18*i),getGuiTop() + 26 ,200,9, 18,9);
+        for (int i = 0; i < 6; i++) {
+            if (getMenu().getBlockEntity().ghostSlotHasItem(i)) {
+                if (getMenu().getBlockEntity().canPass(i)) {
+                    this.blit(pPoseStack, getGuiLeft() + 43 + (18 * i), getGuiTop() + 26, 200, 9, 18, 9);
+                } else {
+                    this.blit(pPoseStack, getGuiLeft() + 43 + (18 * i), getGuiTop() + 26, 200, 0, 18, 9);
                 }
-                else {
-                    this.blit(pPoseStack,getGuiLeft() + 43 + (18*i),getGuiTop() + 26 ,200,0, 18,9);
-                }
-                if (getMenu().getBlockEntity().canHold(i)){
-                    this.blit(pPoseStack,getGuiLeft() + 43 + (18*i),getGuiTop() + 53,200,9, 18,9);
-                }
-                else {
-                    this.blit(pPoseStack,getGuiLeft() + 43 + (18*i),getGuiTop() + 53 ,200,0, 18,9);
+                if (getMenu().getBlockEntity().canHold(i)) {
+                    this.blit(pPoseStack, getGuiLeft() + 43 + (18 * i), getGuiTop() + 53, 200, 9, 18, 9);
+                } else {
+                    this.blit(pPoseStack, getGuiLeft() + 43 + (18 * i), getGuiTop() + 53, 200, 0, 18, 9);
                 }
             }
         }
