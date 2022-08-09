@@ -4,6 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.base.common.item.EIOCreativeTabs;
 import com.enderio.core.data.model.EIOModel;
 import com.enderio.machines.common.block.EnhancedMachineBlock;
+import com.enderio.machines.common.block.FluidTankBlock;
 import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.block.ProgressMachineBlock;
 import com.enderio.machines.common.block.SimpleMachineBlock;
@@ -23,8 +24,8 @@ import java.util.function.Supplier;
 public class MachineBlocks {
     private static final Registrate REGISTRATE = EnderIO.registrate();
 
-    public static final BlockEntry<MachineBlock> FLUID_TANK = REGISTRATE
-        .block("fluid_tank", props -> new MachineBlock(props, MachineBlockEntities.FLUID_TANK))
+    public static final BlockEntry<FluidTankBlock> FLUID_TANK = REGISTRATE
+        .block("fluid_tank", props -> new FluidTankBlock(props, MachineBlockEntities.FLUID_TANK))
         .properties(props -> props.strength(2.5f, 8))
         .loot(MachinesLootTable::copyNBT)
         .blockstate((ctx, prov) -> prov.horizontalBlock(ctx.get(), prov.models()
@@ -40,8 +41,8 @@ public class MachineBlocks {
         .build()
         .register();
 
-    public static final BlockEntry<MachineBlock> PRESSURIZED_FLUID_TANK = REGISTRATE
-        .block("pressurized_fluid_tank", props -> new MachineBlock(props, MachineBlockEntities.PRESSURIZED_FLUID_TANK))
+    public static final BlockEntry<FluidTankBlock> PRESSURIZED_FLUID_TANK = REGISTRATE
+        .block("pressurized_fluid_tank", props -> new FluidTankBlock(props, MachineBlockEntities.PRESSURIZED_FLUID_TANK))
         .properties(props -> props.strength(2.5f, 8))
         .loot(MachinesLootTable::copyNBT)
         .blockstate((ctx, prov) -> prov.horizontalBlock(ctx.get(), prov.models()
