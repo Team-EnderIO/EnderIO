@@ -1,5 +1,6 @@
 package com.enderio.machines.client.rendering.item;
 
+import com.enderio.base.common.capability.FluidHandlerBlockItemStack;
 import com.enderio.machines.client.rendering.blockentity.FluidTankBER;
 import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
 import com.enderio.machines.common.init.MachineBlocks;
@@ -16,10 +17,11 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
 // TODO: No longer lights in the inventory/hand like other machines...
@@ -41,16 +43,15 @@ public class FluidTankBEWLR extends BlockEntityWithoutLevelRenderer {
 
         // Read the fluid from the NBT, if it has fluid, then we render it.
         CompoundTag nbt = stack.getTag();
-        if (nbt != null && nbt.contains("BlockEntityTag")) {
-            CompoundTag blockEntityTag = nbt.getCompound("BlockEntityTag");
-            if (blockEntityTag.contains("fluid")) {
-                CompoundTag tank = blockEntityTag.getCompound("fluid");
+        if (nbt != null && nbt.contains(FluidHandlerBlockItemStack.BLOCK_ENTITY_NBT_KEY)) {
+            CompoundTag blockEntityTag = nbt.getCompound(FluidHandlerBlockItemStack.BLOCK_ENTITY_NBT_KEY);
+            if (blockEntityTag != null && blockEntityTag.contains(FluidHandlerBlockItemStack.FLUID_NBT_KEY)) {
+                FluidStack fluidStack = FluidStack.loadFluidStackFromNBT(blockEntityTag.getCompound(FluidHandlerBlockItemStack.FLUID_NBT_KEY));
+                if (fluidStack != null) {
+                    Fluid fluid = fluidStack.getFluid();
+                    int amount = fluidStack.getAmount();
 
-                if (tank.contains("FluidName") && tank.contains("Amount")) {
-                    Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(tank.getString("FluidName")));
-                    int amount = tank.getInt("Amount");
-
-                    if (fluid != null && amount > 0) {
+                    if (fluid != null && fluid != Fluids.EMPTY && amount > 0) {
                         // Get the preferred render buffer
                         VertexConsumer fluidBuffer = buffer.getBuffer(ItemBlockRenderTypes.getRenderLayer(fluid.defaultFluidState()));
 
