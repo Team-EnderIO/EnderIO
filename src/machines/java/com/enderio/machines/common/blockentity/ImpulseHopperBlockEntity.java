@@ -67,10 +67,7 @@ public class ImpulseHopperBlockEntity extends PowerConsumingMachineEntity {
             }
             return false;
         }
-        if (this.getEnergyStorage().canConsumeEnergy(totalpower)) {
-            return true;
-        }
-        return false;
+        return this.getEnergyStorage().consumeEnergy(totalpower, true) > 0;
     }
 
     private void passItems() {
@@ -87,7 +84,7 @@ public class ImpulseHopperBlockEntity extends PowerConsumingMachineEntity {
             } else if (stack.is(result.getItem())) {
                 result.setCount(result.getCount() + ghost.getCount());
             }
-            this.getEnergyStorage().consumeEnergy(ghost.getCount() * IMPULSE_HOPPER_POWER_USE_PER_ITEM);
+            this.getEnergyStorage().consumeEnergy(ghost.getCount() * IMPULSE_HOPPER_POWER_USE_PER_ITEM, false);
             stack.shrink(ghost.getCount());
             this.getInventory().setStackInSlot(i + 6, result);
         }
