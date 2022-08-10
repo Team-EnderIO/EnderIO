@@ -16,8 +16,7 @@ public class FluidHandlerBlockItemStack extends FluidHandlerItemStack {
 
     @Override
     @NotNull
-    public FluidStack getFluid()
-    {
+    public FluidStack getFluid() {
         CompoundTag tagCompound = container.getTag();
         if (tagCompound == null || !tagCompound.contains(BLOCK_ENTITY_NBT_KEY)) {
             return FluidStack.EMPTY;
@@ -30,8 +29,7 @@ public class FluidHandlerBlockItemStack extends FluidHandlerItemStack {
     }
 
     @Override
-    protected void setFluid(FluidStack fluid)
-    {
+    protected void setFluid(FluidStack fluid) {
         if (!container.hasTag()) {
             container.setTag(new CompoundTag());
         }
@@ -47,8 +45,7 @@ public class FluidHandlerBlockItemStack extends FluidHandlerItemStack {
     }
 
     @Override
-    protected void setContainerToEmpty()
-    {
+    protected void setContainerToEmpty() {
         CompoundTag tagCompound = container.getTag();
         if (tagCompound != null && tagCompound.contains(BLOCK_ENTITY_NBT_KEY)) {
             tagCompound = container.getTag().getCompound(BLOCK_ENTITY_NBT_KEY);

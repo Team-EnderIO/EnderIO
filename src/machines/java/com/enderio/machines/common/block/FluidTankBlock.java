@@ -31,7 +31,8 @@ public class FluidTankBlock extends MachineBlock {
 
     // TODO: Play fluid sound when filling/emptying.
     @Override
-    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand,
+            BlockHitResult pHit) {
         BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
         if (blockEntity instanceof FluidTankBlockEntity fluidTankBlockEntity) {
             ItemStack itemStack = pPlayer.getItemInHand(pHand);
@@ -39,7 +40,8 @@ public class FluidTankBlock extends MachineBlock {
                 // If bucket is empty.
                 if (bucket.getFluid() == Fluids.EMPTY) {
                     Pair<Boolean, FluidStack> result = fluidTankBlockEntity.drainTankWithBucket();
-                    // If the block entity rejects the bucket, most likely because it's not the same fluid type.
+                    // If the block entity rejects the bucket, most likely because it's not the same
+                    // fluid type.
                     if (!result.getFirst()) {
                         return InteractionResult.FAIL;
                     }
@@ -53,7 +55,7 @@ public class FluidTankBlock extends MachineBlock {
                         pPlayer.getInventory().add(emptyBucket);
                     }
                     return InteractionResult.SUCCESS;
-                // If bucket has a fluid in it.
+                    // If bucket has a fluid in it.
                 } else {
                     FluidOperationResult result = fluidTankBlockEntity.fillTankFromBucket(bucket);
                     if (result != FluidOperationResult.INVALIDFLUIDITEM) {
@@ -67,7 +69,8 @@ public class FluidTankBlock extends MachineBlock {
                     }
                 }
             } else {
-                Optional<IFluidHandlerItem> fluidHandlerCap = itemStack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).resolve();
+                Optional<IFluidHandlerItem> fluidHandlerCap = itemStack
+                        .getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).resolve();
                 if (fluidHandlerCap.isPresent()) {
                     // Read the information for the Fluid in the block.
                     IFluidHandlerItem fluidHandler = fluidHandlerCap.get();
@@ -85,20 +88,23 @@ public class FluidTankBlock extends MachineBlock {
                     // If the block and the item are both empty: pass.
                     if (!blockIsEmpty || !itemIsEmpty) {
                         FluidOperationResult result;
-                        // If the block is empty, and the item is not empty: fill the block from the item.
+                        // If the block is empty, and the item is not empty: fill the block from the
+                        // item.
                         if (blockIsEmpty && !itemIsEmpty) {
                             result = fluidTankBlockEntity.fillTankFromItem(fluidHandler);
-                        // If the block is not empty, and the item is empty: fill the item from the block.
+                            // If the block is not empty, and the item is empty: fill the item from the
+                            // block.
                         } else if (!blockIsEmpty && itemIsEmpty) {
                             result = fluidTankBlockEntity.drainTankWithItem(fluidHandler);
-                        // If the block is not empty, and the item is not empty:
+                            // If the block is not empty, and the item is not empty:
                         } else {
                             // If the fluid is the same: fill the block from the item.
                             result = fluidTankBlockEntity.fillTankFromItem(fluidHandler);
                         }
 
                         if (result != FluidOperationResult.INVALIDFLUIDITEM) {
-                            return result == FluidOperationResult.FAIL ? InteractionResult.FAIL : InteractionResult.SUCCESS;
+                            return result == FluidOperationResult.FAIL ? InteractionResult.FAIL
+                                    : InteractionResult.SUCCESS;
                         }
                     }
                 }

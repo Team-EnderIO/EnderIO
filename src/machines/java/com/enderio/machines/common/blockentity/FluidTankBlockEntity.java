@@ -114,7 +114,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
             return null;
         }
 
-        Optional<IFluidHandlerItem> fluidHandlerCap = itemStack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).resolve();
+        Optional<IFluidHandlerItem> fluidHandlerCap = itemStack
+                .getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).resolve();
         if (!fluidHandlerCap.isPresent()) {
             return null;
         }
@@ -127,7 +128,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
         ItemStack outputItem = getInventory().getStackInSlot(1);
         if (!inputItem.isEmpty()) {
             if (inputItem.getItem() instanceof BucketItem filledBucket) {
-                if (outputItem.isEmpty() || (outputItem.getItem() == Items.BUCKET && outputItem.getCount() < outputItem.getMaxStackSize())) {
+                if (outputItem.isEmpty() || (outputItem.getItem() == Items.BUCKET
+                        && outputItem.getCount() < outputItem.getMaxStackSize())) {
                     if (this.fillTankFromBucket(filledBucket) == FluidOperationResult.SUCCESS) {
                         inputItem.shrink(1);
                         getInventory().insertItem(1, Items.BUCKET.getDefaultInstance(), false);
@@ -150,7 +152,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
             return FluidOperationResult.INVALIDFLUIDITEM;
         }
 
-        int filled = fluidTank.fill(new FluidStack(bucket.getFluid(), FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.SIMULATE);
+        int filled = fluidTank.fill(new FluidStack(bucket.getFluid(), FluidType.BUCKET_VOLUME),
+                IFluidHandler.FluidAction.SIMULATE);
         if (filled != FluidType.BUCKET_VOLUME) {
             return FluidOperationResult.FAIL;
         }
@@ -161,7 +164,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
 
     private Pair<FluidOperationResult, IFluidHandlerItem> fillTankFromItem(ItemStack itemStack) {
         IFluidHandlerItem fluidHandler = GetIFluidHandlerItem(itemStack);
-        return Pair.of(fluidHandler == null ? FluidOperationResult.INVALIDFLUIDITEM : fillTankFromItem(fluidHandler), fluidHandler);
+        return Pair.of(fluidHandler == null ? FluidOperationResult.INVALIDFLUIDITEM : fillTankFromItem(fluidHandler),
+                fluidHandler);
     }
 
     public FluidOperationResult fillTankFromItem(IFluidHandlerItem item) {
@@ -169,7 +173,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
             return FluidOperationResult.INVALIDFLUIDITEM;
         }
 
-        return moveFluids(item, fluidTank, fluidTank.getCapacity()) > 0 ? FluidOperationResult.SUCCESS : FluidOperationResult.FAIL;
+        return moveFluids(item, fluidTank, fluidTank.getCapacity()) > 0 ? FluidOperationResult.SUCCESS
+                : FluidOperationResult.FAIL;
     }
 
     private void drainInternal() {
@@ -177,11 +182,14 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
         ItemStack outputItem = getInventory().getStackInSlot(3);
         if (!inputItem.isEmpty()) {
             if (inputItem.getItem() == Items.BUCKET) {
-                Pair<Boolean, FluidStack> result = drainTankWithBucket(stack -> (outputItem.isEmpty() || (outputItem.getItem() == stack.getFluid().getBucket() && outputItem.getCount() < outputItem.getMaxStackSize())));
+                Pair<Boolean, FluidStack> result = drainTankWithBucket(
+                        stack -> (outputItem.isEmpty() || (outputItem.getItem() == stack.getFluid().getBucket()
+                                && outputItem.getCount() < outputItem.getMaxStackSize())));
                 if (result.getFirst()) {
                     inputItem.shrink(1);
                     if (outputItem.isEmpty()) {
-                        getInventory().setStackInSlot(3, result.getSecond().getFluid().getBucket().getDefaultInstance());
+                        getInventory().setStackInSlot(3,
+                                result.getSecond().getFluid().getBucket().getDefaultInstance());
                     } else {
                         outputItem.grow(1);
                     }
@@ -226,7 +234,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
 
     private Pair<FluidOperationResult, IFluidHandlerItem> drainTankWithItem(ItemStack itemStack) {
         IFluidHandlerItem fluidHandler = GetIFluidHandlerItem(itemStack);
-        return Pair.of(fluidHandler == null ? FluidOperationResult.INVALIDFLUIDITEM : drainTankWithItem(fluidHandler), fluidHandler);
+        return Pair.of(fluidHandler == null ? FluidOperationResult.INVALIDFLUIDITEM : drainTankWithItem(fluidHandler),
+                fluidHandler);
     }
 
     public FluidOperationResult drainTankWithItem(IFluidHandlerItem item) {
@@ -234,7 +243,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
             return FluidOperationResult.INVALIDFLUIDITEM;
         }
 
-        return moveFluids(fluidTank, item, fluidTank.getFluidAmount()) > 0 ? FluidOperationResult.SUCCESS : FluidOperationResult.FAIL;
+        return moveFluids(fluidTank, item, fluidTank.getFluidAmount()) > 0 ? FluidOperationResult.SUCCESS
+                : FluidOperationResult.FAIL;
     }
 
     @Nullable
@@ -249,16 +259,18 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     @Override
     public MachineInventoryLayout getInventoryLayout() {
         return MachineInventoryLayout
-            .builder(false)
-            .inputSlot((slot, stack) ->
-                (stack.getItem() instanceof BucketItem bucketItem && bucketItem.getFluid() != Fluids.EMPTY && !(bucketItem instanceof MobBucketItem)) || (
-                    !(stack.getItem() instanceof BucketItem) && stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent()))
-            .outputSlot()
-            .inputSlot((slot, stack) -> stack.getItem() == Items.BUCKET || (!(stack.getItem() instanceof BucketItem) && stack
-                .getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY)
-                .isPresent()))
-            .outputSlot()
-            .build();
+                .builder(false)
+                .inputSlot((slot, stack) -> (stack.getItem() instanceof BucketItem bucketItem
+                        && bucketItem.getFluid() != Fluids.EMPTY && !(bucketItem instanceof MobBucketItem))
+                        || (!(stack.getItem() instanceof BucketItem) && stack
+                                .getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent()))
+                .outputSlot()
+                .inputSlot((slot,
+                        stack) -> stack.getItem() == Items.BUCKET || (!(stack.getItem() instanceof BucketItem) && stack
+                                .getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY)
+                                .isPresent()))
+                .outputSlot()
+                .build();
     }
 
     // region Serialization

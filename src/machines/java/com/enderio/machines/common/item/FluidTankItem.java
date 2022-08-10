@@ -65,8 +65,10 @@ public class FluidTankItem extends BlockItem {
         getTankCap(stack).ifPresent(handler -> {
             for (int i = 0; i < handler.getTanks(); i++) {
                 FluidStack fluidStack = handler.getFluidInTank(i);
-                Component postFix = fluidStack.isEmpty() ? Component.literal("") : Component.literal(" ").append(fluidStack.getDisplayName());
-                components.add(Component.literal(fluidStack.getAmount() + " / " + handler.getTankCapacity(i)).append(postFix));
+                Component postFix = fluidStack.isEmpty() ? Component.literal("")
+                        : Component.literal(" ").append(fluidStack.getDisplayName());
+                components.add(
+                        Component.literal(fluidStack.getAmount() + " / " + handler.getTankCapacity(i)).append(postFix));
             }
         });
     }

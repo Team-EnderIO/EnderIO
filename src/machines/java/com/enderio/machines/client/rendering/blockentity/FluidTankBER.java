@@ -33,13 +33,14 @@ public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
     }
 
     @Override
-    public void render(FluidTankBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight,
-        int packedOverlay) {
+    public void render(FluidTankBlockEntity blockEntity, float partialTick, PoseStack poseStack,
+            MultiBufferSource bufferSource, int packedLight,
+            int packedOverlay) {
 
         FluidTank tank = blockEntity.getFluidTank();
         Fluid fluid = tank.getFluid().getFluid();
         int fluidAmount = tank.getFluidAmount();
-        float capacity = (float)tank.getCapacity();
+        float capacity = (float) tank.getCapacity();
 
         AnimationInformation information = map.get(blockEntity.getBlockPos());
         float frameTarget;
@@ -58,7 +59,8 @@ public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
             }
         } else {
             try {
-                float start = information.animation == null ? information.currentTarget / capacity : information.animation.getCurrent();
+                float start = information.animation == null ? information.currentTarget / capacity
+                        : information.animation.getCurrent();
                 float target = fluidAmount / capacity;
                 information.animation = new Animation(start, target, ANIMATION_TICKS);
 
@@ -78,7 +80,8 @@ public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
             Fluid fluidToRender = information == null ? fluid : information.fluid;
 
             // Get the preferred render buffer
-            VertexConsumer buffer = bufferSource.getBuffer(ItemBlockRenderTypes.getRenderLayer(fluidToRender.defaultFluidState()));
+            VertexConsumer buffer = bufferSource
+                    .getBuffer(ItemBlockRenderTypes.getRenderLayer(fluidToRender.defaultFluidState()));
 
             // Render the fluid
             PoseStack.Pose last = poseStack.last();
@@ -86,15 +89,19 @@ public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
         }
     }
 
-    private static void renderFluid(Matrix4f pose, Matrix3f normal, VertexConsumer consumer, BlockEntity entity, Fluid fluid, float fillAmount) {
+    private static void renderFluid(Matrix4f pose, Matrix3f normal, VertexConsumer consumer, BlockEntity entity,
+            Fluid fluid, float fillAmount) {
         IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluid);
-        renderFluid(pose, normal, consumer, fluid, fillAmount, props.getTintColor(null, entity.getLevel(), entity.getBlockPos()));
+        renderFluid(pose, normal, consumer, fluid, fillAmount,
+                props.getTintColor(null, entity.getLevel(), entity.getBlockPos()));
     }
 
-    public static void renderFluid(Matrix4f pose, Matrix3f normal, VertexConsumer consumer, Fluid fluid, float fillAmount, int color) {
+    public static void renderFluid(Matrix4f pose, Matrix3f normal, VertexConsumer consumer, Fluid fluid,
+            float fillAmount, int color) {
         // Get fluid texture
         IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluid);
-        TextureAtlasSprite texture = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(props.getStillTexture());
+        TextureAtlasSprite texture = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
+                .apply(props.getStillTexture());
 
         // Get sizes
         float fluidHeight = (14 * fillAmount) / 16.0f;
@@ -102,13 +109,18 @@ public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
         float faceSize = 14 / 16.0f;
 
         // Top
-        RenderUtil.renderFace(Direction.UP, pose, normal, consumer, texture, inset, inset, inset + fluidHeight, faceSize, faceSize, color);
+        RenderUtil.renderFace(Direction.UP, pose, normal, consumer, texture, inset, inset, inset + fluidHeight,
+                faceSize, faceSize, color);
 
         // Sides
-        RenderUtil.renderFace(Direction.SOUTH, pose, normal, consumer, texture, inset, inset, inset, faceSize, fluidHeight, color);
-        RenderUtil.renderFace(Direction.NORTH, pose, normal, consumer, texture, inset, inset, inset, faceSize, fluidHeight, color);
-        RenderUtil.renderFace(Direction.EAST, pose, normal, consumer, texture, inset, inset, inset, faceSize, fluidHeight, color);
-        RenderUtil.renderFace(Direction.WEST, pose, normal, consumer, texture, inset, inset, inset, faceSize, fluidHeight, color);
+        RenderUtil.renderFace(Direction.SOUTH, pose, normal, consumer, texture, inset, inset, inset, faceSize,
+                fluidHeight, color);
+        RenderUtil.renderFace(Direction.NORTH, pose, normal, consumer, texture, inset, inset, inset, faceSize,
+                fluidHeight, color);
+        RenderUtil.renderFace(Direction.EAST, pose, normal, consumer, texture, inset, inset, inset, faceSize,
+                fluidHeight, color);
+        RenderUtil.renderFace(Direction.WEST, pose, normal, consumer, texture, inset, inset, inset, faceSize,
+                fluidHeight, color);
     }
 
     public static void addBlock(FluidTankBlockEntity entity) {
