@@ -23,9 +23,11 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.common.SoundActions;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
@@ -41,26 +43,34 @@ public class FluidTankBlock extends MachineBlock {
     }
 
     private void playPickupSound(Player player, Level level, Fluid fluid, BlockPos blockPos) {
-        Optional<SoundEvent> optionalSound = fluid.getPickupSound();
-        SoundEvent sound;
-        if (optionalSound.isPresent()) {
-            sound = optionalSound.get();
-        } else {
-            sound = SoundEvents.BUCKET_FILL;
+        // Code adapted from BucketItem class.
+        SoundEvent sound = fluid.getFluidType().getSound(player, level, blockPos, SoundActions.BUCKET_FILL);
+        if (sound == null) {
+            Optional<SoundEvent> optionalSound = fluid.getPickupSound();
+            if (optionalSound.isPresent()) {
+                sound = optionalSound.get();
+            } else {
+                sound = SoundEvents.BUCKET_FILL;
+            }
         }
 
         level.playSound(player, blockPos, sound, SoundSource.BLOCKS, 1.0f, 1.0f);
+        level.gameEvent(player, GameEvent.FLUID_PICKUP, blockPos);
     }
 
     private void playPlaceSound(Player player, Level level, Fluid fluid, BlockPos blockPos) {
-        SoundEvent sound;
-        if (fluid == Fluids.LAVA) {
-            sound = SoundEvents.BUCKET_EMPTY_LAVA;
-        } else {
-            sound = SoundEvents.BUCKET_EMPTY;
+        // Code adapted from BucketItem class.
+        SoundEvent sound = fluid.getFluidType().getSound(player, level, blockPos, SoundActions.BUCKET_EMPTY);
+        if (sound == null) {
+            if (fluid == Fluids.LAVA) {
+                sound = SoundEvents.BUCKET_EMPTY_LAVA;
+            } else {
+                sound = SoundEvents.BUCKET_EMPTY;
+            }
         }
 
         level.playSound(player, blockPos, sound, SoundSource.BLOCKS, 1.0f, 1.0f);
+        level.gameEvent(player, GameEvent.FLUID_PLACE, blockPos);
     }
 
     private Triple<InteractionResult, Fluid, InteractionType> useInternal(BlockState pState, Level pLevel,
