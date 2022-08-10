@@ -3,6 +3,7 @@ package com.enderio.machines.common.blockentity;
 import com.enderio.base.common.capability.FluidHandlerBlockItemStack;
 import com.enderio.core.common.sync.FluidStackDataSlot;
 import com.enderio.core.common.sync.SyncMode;
+import com.enderio.machines.client.rendering.blockentity.FluidTankBER;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
@@ -19,9 +20,12 @@ import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.MobBucketItem;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraftforge.event.level.BlockEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -57,7 +61,6 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     }
 
     private final FluidTank fluidTank;
-
     private final MachineFluidHandler fluidHandler;
 
     public FluidTankBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState, int capacity) {
@@ -73,6 +76,13 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
         addCapabilityProvider(fluidHandler);
 
         addDataSlot(new FluidStackDataSlot(fluidTank::getFluid, fluidTank::setFluid, SyncMode.WORLD));
+    }
+
+    @SubscribeEvent
+    public static void blockBroken(final BlockEvent.BreakEvent event) {
+        BlockEntity entity = event.getLevel().getBlockEntity(event.getPos());
+        if (entity instanceof FluidTankBlockEntity fluidTankBlockEntity)
+            FluidTankBER.removeBlock(fluidTankBlockEntity.getBlockPos());
     }
 
     private FluidTank createFluidTank(int capacity) {
@@ -267,6 +277,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     public void load(CompoundTag pTag) {
         super.load(pTag);
         fluidTank.readFromNBT(pTag.getCompound(FluidHandlerBlockItemStack.FLUID_NBT_KEY));
+        FluidTankBER.addBlock(this);
     }
 
     // endregion
