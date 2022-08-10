@@ -76,7 +76,11 @@ public class FluidTankItem extends BlockItem {
     @Nullable
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
-        return new FluidHandlerBlockItemStack(stack, capacity);
+        if (this instanceof FluidTankItem) {
+            return new FluidHandlerBlockItemStack(stack, capacity);
+        } else {
+            return super.initCapabilities(stack, nbt);
+        }
     }
 
     private Optional<IFluidHandlerItem> getTankCap(ItemStack stack) {
