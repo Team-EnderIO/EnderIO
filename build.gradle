@@ -1,14 +1,12 @@
 buildscript {
     repositories {
         // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
-        maven { url = 'https://maven.minecraftforge.net' }
-        maven { url = 'https://maven.parchmentmc.org' }
-        maven { url = 'https://noeppi-noeppi.github.io/MinecraftUtilities/maven' }
+        maven { url = 'https://maven.moddingx.org' }
         mavenCentral()
     }
     dependencies {
-        classpath 'io.github.noeppi_noeppi.tools:ModGradle:2.0.14'
         classpath 'org.spongepowered:mixingradle:0.7.+'
+        classpath 'org.moddingx:ModGradle:3.0.+'
     }
 }
 
@@ -21,6 +19,7 @@ plugins {
 }
 
 apply plugin: 'org.spongepowered.mixin'
+apply plugin: 'org.moddingx.modgradle.mapping'
 
 version = getVersionString()
 group = 'com.enderio'
@@ -66,6 +65,16 @@ for (String set : subsets) {
 
 minecraft {
     mappings channel: "${mappings_channel}", version: "${mappings_version}"
+
+    if (mappings_channel == "sugarcane") {
+        mappings channel: 'sugarcane', version: "${mappings_version}-${minecraft_version}"
+    } else if (mappings_channel == "parchment") {
+        mappings channel: 'parchment', version: "${mappings_version}-${minecraft_version}"
+    } else if (mappings_channel == "parchment_previous") {
+        mappings channel: 'parchment', version: "${previous_minecraft_version}-${mappings_version}-${minecraft_version}"
+    } else if (mappings_channel == "official") {
+        mappings channel: 'official', version: "${minecraft_version}"
+    }
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
