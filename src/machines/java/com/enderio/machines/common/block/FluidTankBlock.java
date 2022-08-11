@@ -82,6 +82,10 @@ public class FluidTankBlock extends MachineBlock {
         }
 
         ItemStack itemStack = pPlayer.getItemInHand(pHand);
+        if (itemStack.isEmpty()) {
+            return null;
+        }
+
         if (itemStack.getItem() instanceof BucketItem bucket) {
             // If bucket is empty.
             Fluid bucketFluid = bucket.getFluid();
