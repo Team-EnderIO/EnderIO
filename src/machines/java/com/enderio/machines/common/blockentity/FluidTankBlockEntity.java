@@ -81,8 +81,9 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     @SubscribeEvent
     public static void blockBroken(final BlockEvent.BreakEvent event) {
         BlockEntity entity = event.getLevel().getBlockEntity(event.getPos());
-        if (entity instanceof FluidTankBlockEntity fluidTankBlockEntity)
+        if (entity instanceof FluidTankBlockEntity fluidTankBlockEntity) {
             FluidTankBER.removeBlock(fluidTankBlockEntity.getBlockPos());
+        }
     }
 
     private FluidTank createFluidTank(int capacity) {
