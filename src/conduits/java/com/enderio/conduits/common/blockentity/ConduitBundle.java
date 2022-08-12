@@ -3,7 +3,6 @@ package com.enderio.conduits.common.blockentity;
 import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.core.common.sync.EnderDataSlot;
-import com.enderio.core.common.sync.IntegerDataSlot;
 import com.enderio.core.common.sync.ListDataSlot;
 import com.enderio.core.common.sync.SyncMode;
 import net.minecraft.core.Direction;
@@ -42,13 +41,14 @@ public final class ConduitBundle {
         if (first.isPresent()) {
             int index = types.indexOf(first.get());
             types.set(index, type);
+            connections.values().forEach(connection -> connection.clearType(index));
             scheduleSync.run();
             return first;
         }
         //some conduit says no (like higher energy conduit)
         if (types.stream().anyMatch(existingConduit -> !existingConduit.canBeInSameBlock(type)))
             return Optional.of(type);
-        //sort the list, so order is consistant
+        //sort the list, so order is consistent
         int id = ConduitTypes.getRegistry().getID(type);
         var addBefore = types.stream().map(existing -> ConduitTypes.getRegistry().getID(existing)).filter(existingID -> existingID > id).findFirst();
         if (addBefore.isPresent()) {
@@ -96,5 +96,25 @@ public final class ConduitBundle {
         ));
         connections.values().forEach(connection -> connection.gatherDataSlots(dataSlots));
         return dataSlots;
+    }
+
+    //TODO: RFC
+    /**
+     * IMO this should only be used on the client, as this exposes renderinformation, for gamelogic helper should be created here imo.
+     * @param direction
+     * @return
+     */
+    public ConduitConnection getConnection(Direction direction) {
+        return connections.get(direction);
+    }
+    public List<IConduitType> getTypes() {
+        return types;
+    }
+
+    //TODO, make this method more useable
+
+    public void connectTo(Direction direction, IConduitType type, boolean end) {
+        getConnection(direction).connectTo(types.indexOf(type), end);
+        scheduleSync.run();
     }
 }

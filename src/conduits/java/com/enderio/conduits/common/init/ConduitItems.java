@@ -15,7 +15,7 @@ import java.util.Locale;
 public class ConduitItems {
     private static final Registrate REGISTRATE = EnderIO.registrate();
 
-    private static final EnumMap<ConduitType, ItemEntry<Item>> CONDUITS = Util.make(() -> {
+    public static final EnumMap<ConduitType, ItemEntry<Item>> CONDUITS = Util.make(() -> {
         EnumMap<ConduitType, ItemEntry<Item>> map = new EnumMap<>(ConduitType.class);
         for (ConduitType type : ConduitType.values()) {
             ItemEntry<Item> item = REGISTRATE.item(type.name().toLowerCase(Locale.ROOT) + "_conduit",

@@ -1,5 +1,8 @@
 package com.enderio.conduits.client;
 
+import com.enderio.api.conduit.IConduitType;
+import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
+import com.enderio.conduits.common.blockentity.ConduitBundle;
 import com.enderio.conduits.common.blockentity.ConduitType;
 import com.enderio.core.data.model.EIOModel;
 import com.mojang.math.Quaternion;
@@ -32,11 +35,20 @@ public class ConduitBlockModel implements IDynamicBakedModel {
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand, ModelData extraData, @Nullable RenderType renderType) {
         List<BakedQuad> quads = new ArrayList<>();
         findModels();
-        for (Direction direction: new Direction[] {Direction.DOWN, Direction.WEST, Direction.EAST}) {
-            Direction preRotation = rotateDirection(direction, side);
-            quads.addAll(QuadTransformers.applying(rotateTransformation(direction)).process(connector.getQuads(state, preRotation, rand, extraData, renderType)));
-            quads.addAll(new ConduitTextureEmissiveQuadTransformer(ConduitType.POWER, false).andThen(QuadTransformers.applying(rotateTransformation(direction))).process(connection.getQuads(state, preRotation, rand, extraData, renderType)));
-            quads.addAll(new ConduitTextureEmissiveQuadTransformer(ConduitType.POWER, false).process(core.getQuads(state, preRotation, rand, extraData, renderType)));
+        ConduitBundle conduitBundle = extraData.get(ConduitBlockEntity.BUNDLE_MODEL_PROPERTY);
+        if (conduitBundle != null) {
+            for (IConduitType type : conduitBundle.getTypes()) {
+                quads.addAll(new ConduitTextureEmissiveQuadTransformer(type, false).process(core.getQuads(state, side, rand, extraData, renderType)));
+            }
+            for (Direction direction : Direction.values()) {
+                Direction preRotation = rotateDirection(direction, side);
+                if (conduitBundle.getConnection(direction).isEnd()) {
+                    quads.addAll(QuadTransformers.applying(rotateTransformation(direction)).process(connector.getQuads(state, preRotation, rand, extraData, renderType)));
+                }
+                for (IConduitType connectedType : conduitBundle.getConnection(direction).getConnectedTypes()) {
+                    quads.addAll(new ConduitTextureEmissiveQuadTransformer(connectedType, false).andThen(QuadTransformers.applying(rotateTransformation(direction))).process(connection.getQuads(state, preRotation, rand, extraData, renderType)));
+                }
+            }
         }
         return quads;
     }
@@ -71,8 +83,8 @@ public class ConduitBlockModel implements IDynamicBakedModel {
         Quaternion quaternion = Quaternion.ONE.copy();
         switch (toDirection) {
             case UP -> quaternion.mul(Vector3f.ZP.rotationDegrees(180));
-            case NORTH -> quaternion.mul(Vector3f.XN.rotationDegrees(90));
-            case SOUTH -> quaternion.mul(Vector3f.XP.rotationDegrees(90));
+            case NORTH -> quaternion.mul(Vector3f.XP.rotationDegrees(90));
+            case SOUTH -> quaternion.mul(Vector3f.XN.rotationDegrees(90));
             case WEST -> quaternion.mul(Vector3f.ZN.rotationDegrees(90));
             case EAST -> quaternion.mul(Vector3f.ZP.rotationDegrees(90));
         }

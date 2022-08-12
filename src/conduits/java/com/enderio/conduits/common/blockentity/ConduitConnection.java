@@ -1,6 +1,7 @@
 package com.enderio.conduits.common.blockentity;
 
 import com.enderio.api.UseOnly;
+import com.enderio.api.conduit.IConduitType;
 import com.enderio.base.common.blockentity.RedstoneControl;
 import com.enderio.core.common.blockentity.ColorControl;
 import com.enderio.core.common.sync.EnderDataSlot;
@@ -12,6 +13,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.LogicalSide;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -39,6 +42,18 @@ public class ConduitConnection {
     }
 
     /**
+     * I know this method isn't perfect, but will do that once more conduits exist
+     * @param typeIndex
+     * @param end
+     */
+    public void connectTo(int typeIndex, boolean end) {
+        if (end)
+            connectionStates[typeIndex] = new ConnectionState(ColorControl.BLUE, null, RedstoneControl.ALWAYS_ACTIVE, null, ItemStack.EMPTY);
+        else
+            connectionStates[typeIndex] = new ConnectionState(null, null, RedstoneControl.ALWAYS_ACTIVE, null, ItemStack.EMPTY);
+    }
+
+    /**
      * remove entry and shift all behind one to the front
      * @param index
      */
@@ -47,6 +62,10 @@ public class ConduitConnection {
         for (int i = index+1; i < ConduitBundle.MAX_CONDUIT_TYPES; i++) {
             connectionStates[i-1] = connectionStates[i];
         }
+    }
+
+    public void clearType(int index) {
+        connectionStates[index] = null;
     }
 
     /**
@@ -62,8 +81,18 @@ public class ConduitConnection {
         }
     }
 
-    private boolean isEnd() {
+    public boolean isEnd() {
         return Arrays.stream(connectionStates).filter(Objects::nonNull).anyMatch(ConnectionState::isEnd);
+    }
+
+    public List<IConduitType> getConnectedTypes() {
+        List<IConduitType> connected = new ArrayList<>();
+        for (int i = 0; i < connectionStates.length; i++) {
+            if (connectionStates[i] != null) {
+                connected.add(bundle.getTypes().get(i));
+            }
+        }
+        return connected;
     }
 
     private record ConnectionState(@Nullable ColorControl in, @Nullable ColorControl out, RedstoneControl control, @Nullable ColorControl redstoneChannel, @UseOnly(LogicalSide.SERVER) ItemStack filter) {
@@ -75,7 +104,7 @@ public class ConduitConnection {
     /**
      * filter is not synced, because that will be synced using the container
      */
-    private class ConnectionStateDataSlot extends EnderDataSlot<ConnectionState> {
+    public static class ConnectionStateDataSlot extends EnderDataSlot<ConnectionState> {
 
         public ConnectionStateDataSlot(Supplier<ConnectionState> getter, Consumer<ConnectionState> setter) {
             super(getter, setter, SyncMode.WORLD);
@@ -86,10 +115,10 @@ public class ConduitConnection {
             CompoundTag tag = new CompoundTag();
             var state = getter().get();
             if (state != null) {
-                tag.putInt("in",state.in() != null ? state.in().ordinal() : -1);
-                tag.putInt("out",state.out() != null ? state.out().ordinal() : -1);
-                tag.putInt("redControl",state.control().ordinal());
-                tag.putInt("redChannel",state.redstoneChannel() != null ? state.redstoneChannel().ordinal() : -1);
+                tag.putInt("in", state.in() != null ? state.in().ordinal() : -1);
+                tag.putInt("out", state.out() != null ? state.out().ordinal() : -1);
+                tag.putInt("redControl", state.control().ordinal());
+                tag.putInt("redChannel", state.redstoneChannel() != null ? state.redstoneChannel().ordinal() : -1);
             }
             return tag;
         }
