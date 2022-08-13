@@ -9,8 +9,6 @@ import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-import java.util.function.Supplier;
-
 public class MachineBlockEntities {
     private static final Registrate REGISTRATE = EnderIO.registrate();
 
@@ -48,6 +46,8 @@ public class MachineBlockEntities {
 
     public static final BlockEntityEntry<SlicerBlockEntity> SLICE_AND_SPLICE = register("slice_and_splice", SlicerBlockEntity::new,
         MachineBlocks.SLICE_AND_SPLICE);
+    public static final BlockEntityEntry<ImpulseHopperBlockEntity> IMPULSE_HOPPER = register("impulse_hopper", ImpulseHopperBlockEntity::new,
+        MachineBlocks.IMPULSE_HOPPER);
 
     @SafeVarargs
     private static <B extends BlockEntity> BlockEntityEntry<B> register(String name, BlockEntityBuilder.BlockEntityFactory<B> beFactory,
