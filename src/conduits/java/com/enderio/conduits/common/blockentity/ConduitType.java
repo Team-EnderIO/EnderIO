@@ -6,10 +6,9 @@ import com.enderio.conduits.common.init.ConduitItems;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 
-import java.util.function.Supplier;
-
 public enum ConduitType implements IConduitType {
-    POWER(EnderIO.loc("block/conduit/power"));
+    POWER(EnderIO.loc("block/conduit/power")),
+    REDSTONE(EnderIO.loc("block/conduit/redstone"));
 
 
     private final ResourceLocation texture;

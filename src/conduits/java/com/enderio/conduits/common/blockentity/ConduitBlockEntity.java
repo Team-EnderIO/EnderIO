@@ -1,12 +1,12 @@
 package com.enderio.conduits.common.blockentity;
 
+import com.enderio.api.UseOnly;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.energy.CapabilityEnergy;
-import org.jetbrains.annotations.Nullable;
+import net.minecraftforge.fml.LogicalSide;
 
 import java.util.Optional;
 
@@ -22,15 +22,15 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
     public static final ModelProperty<ConduitBundle> BUNDLE_MODEL_PROPERTY = new ModelProperty<>();
 
-    @Nullable
-    private IConduitType toAdd;
-    //TODO:  check if 0 is a viable ticksetting
     private final ConduitBundle bundle = new ConduitBundle(this::scheduleTick);
+    @UseOnly(LogicalSide.CLIENT)
+    private ConduitBundle clientBundle = bundle.deepCopy();
 
     public ConduitBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
         bundle.gatherDataSlots().forEach(this::addDataSlot);
         addAfterSyncRunnable(() -> {
+            clientBundle = bundle.deepCopy();
             level.setBlocksDirty(getBlockPos(), Blocks.AIR.defaultBlockState(), getBlockState());
         });
     }
@@ -60,7 +60,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     public Optional<IConduitType> addType(IConduitType type) {
         var returnType =  bundle.addType(type);
         //something has changed
-        if (returnType.isPresent() && returnType.get() != type || returnType.isEmpty()) {
+        if (isDifferent(returnType, type)) {
             for (Direction dir: Direction.values()) {
                 BlockEntity blockEntity = level.getBlockEntity(getBlockPos().relative(dir));
                 if (blockEntity != null) {
@@ -73,6 +73,10 @@ public class ConduitBlockEntity extends EnderBlockEntity {
             }
         }
         return returnType;
+    }
+
+    public static boolean isDifferent(Optional<IConduitType> first, IConduitType second) {
+        return first.map(conduit -> conduit != second).orElse(true);
     }
 
     /**

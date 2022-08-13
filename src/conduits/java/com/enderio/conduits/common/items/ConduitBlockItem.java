@@ -2,12 +2,9 @@ package com.enderio.conduits.common.items;
 
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
-import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -17,6 +14,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
+
+import java.util.Optional;
 
 public class ConduitBlockItem extends BlockItem {
 
@@ -32,6 +31,15 @@ public class ConduitBlockItem extends BlockItem {
 
     //MC: See original minified to only use stuff we actually need
     public InteractionResult place(BlockPlaceContext context) {
+        Level level = context.getLevel();
+        Player player = context.getPlayer();
+        if (level.getBlockEntity(context.getHitResult().getBlockPos()) instanceof ConduitBlockEntity conduit) {
+            Optional<IConduitType> iConduitType = conduit.addType(type);
+            if (ConduitBlockEntity.isDifferent(iConduitType, type)) {
+                iConduitType.ifPresent(conduitType -> player.getInventory().placeItemBackInInventory(conduitType.getConduitItem().getDefaultInstance()));
+                return InteractionResult.SUCCESS;
+            }
+        }
         if (!context.canPlace()) {
             return InteractionResult.FAIL;
         } else {
@@ -46,24 +54,21 @@ public class ConduitBlockItem extends BlockItem {
                     return InteractionResult.FAIL;
                 } else {
                     BlockPos blockpos = blockplacecontext.getClickedPos();
-                    Level level = blockplacecontext.getLevel();
-                    Player player = blockplacecontext.getPlayer();
                     ItemStack itemstack = blockplacecontext.getItemInHand();
                     BlockState blockstate1 = level.getBlockState(blockpos);
 
                     level.gameEvent(GameEvent.BLOCK_PLACE, blockpos, GameEvent.Context.of(player, blockstate1));
                     SoundType soundtype = blockstate1.getSoundType(level, blockpos, context.getPlayer());
-                    level.playSound(player, blockpos, this.getPlaceSound(blockstate1, level, blockpos, context.getPlayer()), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-                    if (!level.isClientSide() && level.getBlockEntity(blockpos) instanceof ConduitBlockEntity conduit) {
-                        conduit.addType(type).ifPresent(returnConduitType ->
-                            player.getInventory().placeItemBackInInventory(returnConduitType.getConduitItem().getDefaultInstance()));
-                        if (conduit.getLevel().isClientSide)
+                    level.playSound(player, blockpos, this.getPlaceSound(blockstate1, level, blockpos, player), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+                    if (level.getBlockEntity(blockpos) instanceof ConduitBlockEntity conduit) {
+                        conduit.addType(type);
+                        if (level.isClientSide())
                             conduit.requestModelDataUpdate();
                     }
                     if (player == null || !player.getAbilities().instabuild) {
                         itemstack.shrink(1);
                     }
-                    return InteractionResult.sidedSuccess(level.isClientSide);
+                    return InteractionResult.sidedSuccess(level.isClientSide());
                 }
             }
         }

@@ -9,11 +9,9 @@ import com.enderio.core.common.sync.SyncMode;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.LogicalSide;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,12 +21,7 @@ import java.util.function.Supplier;
 
 public class ConduitConnection {
 
-    private final ConduitBundle bundle;
     private final ConnectionState[] connectionStates = new ConnectionState[ConduitBundle.MAX_CONDUIT_TYPES];
-
-    public ConduitConnection(ConduitBundle bundle) {
-        this.bundle = bundle;
-    }
 
     /**
      * shift all behind that one to the back and set that index to null
@@ -85,11 +78,11 @@ public class ConduitConnection {
         return Arrays.stream(connectionStates).filter(Objects::nonNull).anyMatch(ConnectionState::isEnd);
     }
 
-    public List<IConduitType> getConnectedTypes() {
+    public List<IConduitType> getConnectedTypes(ConduitBundle on) {
         List<IConduitType> connected = new ArrayList<>();
         for (int i = 0; i < connectionStates.length; i++) {
             if (connectionStates[i] != null) {
-                connected.add(bundle.getTypes().get(i));
+                connected.add(on.getTypes().get(i));
             }
         }
         return connected;
@@ -140,5 +133,12 @@ public class ConduitConnection {
                 Items.AIR.getDefaultInstance()
             );
         }
+    }
+
+    public ConduitConnection deepCopy() {
+        var connection = new ConduitConnection();
+        //connectionstate is a record, so not mutable, so reference is fine
+        System.arraycopy(connectionStates, 0, connection.connectionStates, 0, ConduitBundle.MAX_CONDUIT_TYPES);
+        return connection;
     }
 }

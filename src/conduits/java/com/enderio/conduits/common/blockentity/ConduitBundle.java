@@ -13,7 +13,8 @@ import java.util.*;
 
 public final class ConduitBundle {
 
-    public static final int MAX_CONDUIT_TYPES = 16;
+    //Do not change this value unless you fix the OffsetHelper
+    public static final int MAX_CONDUIT_TYPES = 9;
 
     private final Map<Direction, ConduitConnection> connections = new EnumMap<>(Direction.class);
 
@@ -23,7 +24,7 @@ public final class ConduitBundle {
     public ConduitBundle(Runnable scheduleSync) {
         this.scheduleSync = scheduleSync;
         for (Direction value : Direction.values()) {
-            connections.put(value, new ConduitConnection(this));
+            connections.put(value, new ConduitConnection());
         }
     }
 
@@ -116,5 +117,14 @@ public final class ConduitBundle {
     public void connectTo(Direction direction, IConduitType type, boolean end) {
         getConnection(direction).connectTo(types.indexOf(type), end);
         scheduleSync.run();
+    }
+
+    public ConduitBundle deepCopy() {
+        var bundle = new ConduitBundle(() -> {});
+        bundle.types.addAll(types);
+        connections.forEach((dir, connection) ->
+            bundle.connections.put(dir, connection.deepCopy())
+        );
+        return bundle;
     }
 }
