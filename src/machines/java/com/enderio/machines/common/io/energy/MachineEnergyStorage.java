@@ -3,8 +3,8 @@ package com.enderio.machines.common.io.energy;
 import com.enderio.api.capability.ICapacitorData;
 import com.enderio.api.capability.IEnderCapabilityProvider;
 import com.enderio.api.capacitor.CapacitorKey;
-import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.api.io.IIOConfig;
+import com.enderio.api.io.energy.EnergyIOMode;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.Capability;
@@ -88,9 +88,13 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, IEnderCapabi
     }
 
     @Override
-    public int consumeEnergy(int energy) {
+    public int consumeEnergy(int energy, boolean simulate) {
         // Cap rate
-        return takeEnergy(Math.min(energy, getMaxEnergyUse()));
+        int usableEnergy = Math.min(energy, getMaxEnergyUse());
+        if (!simulate) {
+            return takeEnergy(usableEnergy);
+        }
+        return usableEnergy;
     }
 
     @Override
