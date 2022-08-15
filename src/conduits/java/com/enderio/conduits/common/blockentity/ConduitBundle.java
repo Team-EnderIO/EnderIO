@@ -51,11 +51,12 @@ public final class ConduitBundle {
             return Optional.of(type);
         //sort the list, so order is consistent
         int id = ConduitTypes.getRegistry().getID(type);
-        var addBefore = types.stream().map(existing -> ConduitTypes.getRegistry().getID(existing)).filter(existingID -> existingID > id).findFirst();
+        var addBefore = types.stream().filter(existing -> ConduitTypes.getRegistry().getID(existing) > id).findFirst();
         if (addBefore.isPresent()) {
-            types.add(addBefore.get(), type);
+            var value = types.indexOf(addBefore.get());
+            types.add(value, type);
             for (Direction direction: Direction.values()) {
-                connections.get(direction).addType(addBefore.get());
+                connections.get(direction).addType(value);
             }
         } else {
             types.add(type);

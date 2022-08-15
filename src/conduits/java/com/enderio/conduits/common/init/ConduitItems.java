@@ -7,11 +7,16 @@ import com.enderio.conduits.common.blockentity.ConduitType;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import net.minecraft.Util;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
 import java.util.EnumMap;
 import java.util.Locale;
 
+@Mod.EventBusSubscriber
 public class ConduitItems {
     private static final Registrate REGISTRATE = EnderIO.registrate();
 
@@ -27,6 +32,15 @@ public class ConduitItems {
         return map;
     });
 
+
+    @SubscribeEvent
+    public static void onEntityJoinWorld(EntityJoinLevelEvent event) {
+        if (event.getEntity() instanceof ServerPlayer serverPlayer) {
+            for (ItemEntry<Item> value : CONDUITS.values()) {
+                serverPlayer.addItem(value.get().getDefaultInstance());
+            }
+        }
+    }
 
     public static void register() {}
 }

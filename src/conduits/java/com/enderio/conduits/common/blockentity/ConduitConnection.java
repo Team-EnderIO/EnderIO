@@ -28,8 +28,8 @@ public class ConduitConnection {
      * @param index
      */
     public void addType(int index) {
-        for (int i = index; i < ConduitBundle.MAX_CONDUIT_TYPES; i++) {
-            connectionStates[i+1] = connectionStates[i];
+        for (int i = ConduitBundle.MAX_CONDUIT_TYPES-1; i > index; i--) {
+            connectionStates[i] = connectionStates[i-1];
         }
         connectionStates[index] = null;
     }

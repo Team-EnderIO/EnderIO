@@ -17,6 +17,7 @@ public class ConduitClientSetup {
     public static final ResourceLocation CONDUIT_CONNECTOR = EnderIO.loc("block/conduit_connector");
     public static final ResourceLocation CONDUIT_CONNECTION = EnderIO.loc("block/conduit_connection");
     public static final ResourceLocation CONDUIT_CORE = EnderIO.loc("block/conduit_core");
+    public static final ResourceLocation BOX = EnderIO.loc("block/box/1x1x1");
 
     private ConduitClientSetup() {}
 
@@ -30,6 +31,7 @@ public class ConduitClientSetup {
         event.register(CONDUIT_CONNECTOR);
         event.register(CONDUIT_CONNECTION);
         event.register(CONDUIT_CORE);
+        event.register(BOX);
     }
 
     @SubscribeEvent
