@@ -264,14 +264,14 @@ public class MaterialRecipes extends RecipeProvider {
 			.unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ingot))
 			.save(recipeConsumer);
 		ShapedRecipeBuilder.shaped(block)
-	    	.pattern("III")
+			.pattern("III")
 	    	.pattern("III")
 	    	.pattern("III")
 	    	.define('I', ingot)
 	    	.unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(block.asItem()))
 	    	.save(recipeConsumer);
 		ShapedRecipeBuilder.shaped(ingot)
-    		.pattern("NNN")
+			.pattern("NNN")
     		.pattern("NNN")
     		.pattern("NNN")
     		.define('N', nugget)
