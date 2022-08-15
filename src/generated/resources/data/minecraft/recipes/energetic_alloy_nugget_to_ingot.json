@@ -1,33 +1,14 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "ingredients": [
-    {
-      "item": "enderio:energetic_alloy_nugget"
-    },
-    {
-      "item": "enderio:energetic_alloy_nugget"
-    },
-    {
-      "item": "enderio:energetic_alloy_nugget"
-    },
-    {
-      "item": "enderio:energetic_alloy_nugget"
-    },
-    {
-      "item": "enderio:energetic_alloy_nugget"
-    },
-    {
-      "item": "enderio:energetic_alloy_nugget"
-    },
-    {
-      "item": "enderio:energetic_alloy_nugget"
-    },
-    {
-      "item": "enderio:energetic_alloy_nugget"
-    },
-    {
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "N": {
       "item": "enderio:energetic_alloy_nugget"
     }
+  },
+  "pattern": [
+    "NNN",
+    "NNN",
+    "NNN"
   ],
   "result": {
     "item": "enderio:energetic_alloy_ingot"

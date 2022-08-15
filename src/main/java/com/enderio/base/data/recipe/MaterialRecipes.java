@@ -256,21 +256,27 @@ public class MaterialRecipes extends RecipeProvider {
 
 	private void makeMaterialRecipes(Consumer<FinishedRecipe> recipeConsumer, Item ingot, Item nugget, Block block ) {
 		ShapelessRecipeBuilder.shapeless(ingot, 9)
-		.requires(block.asItem())
-		.unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(block.asItem()))
-		.save(recipeConsumer);
-		ShapelessRecipeBuilder.shapeless(block)
-		.requires(ingot, 9)
-		.unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(block.asItem()))
-		.save(recipeConsumer, ingot.toString() + "_to_block");
+			.requires(block.asItem())
+			.unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(block.asItem()))
+			.save(recipeConsumer);
 		ShapelessRecipeBuilder.shapeless(nugget, 9)
-		.requires(ingot)
-		.unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ingot))
-		.save(recipeConsumer);
-		ShapelessRecipeBuilder.shapeless(ingot)
-		.requires(nugget, 9)
-		.unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ingot))
-		.save(recipeConsumer, nugget.toString() + "_to_ingot");
+			.requires(ingot)
+			.unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ingot))
+			.save(recipeConsumer);
+		ShapedRecipeBuilder.shaped(block)
+	    	.pattern("III")
+	    	.pattern("III")
+	    	.pattern("III")
+	    	.define('I', ingot)
+	    	.unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(block.asItem()))
+	    	.save(recipeConsumer);
+		ShapedRecipeBuilder.shaped(ingot)
+    		.pattern("NNN")
+    		.pattern("NNN")
+    		.pattern("NNN")
+    		.define('N', nugget)
+    		.unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ingot))
+    		.save(recipeConsumer, nugget.toString() + "_to_ingot");
 }
     private void upgradeGear(Consumer<FinishedRecipe> recipeConsumer, Item resultGear, ItemLike inputGear, ItemLike cross, ItemLike corner) {
         ShapedRecipeBuilder.shaped(resultGear)

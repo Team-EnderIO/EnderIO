@@ -1,33 +1,14 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "ingredients": [
-    {
-      "item": "enderio:end_steel_nugget"
-    },
-    {
-      "item": "enderio:end_steel_nugget"
-    },
-    {
-      "item": "enderio:end_steel_nugget"
-    },
-    {
-      "item": "enderio:end_steel_nugget"
-    },
-    {
-      "item": "enderio:end_steel_nugget"
-    },
-    {
-      "item": "enderio:end_steel_nugget"
-    },
-    {
-      "item": "enderio:end_steel_nugget"
-    },
-    {
-      "item": "enderio:end_steel_nugget"
-    },
-    {
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "N": {
       "item": "enderio:end_steel_nugget"
     }
+  },
+  "pattern": [
+    "NNN",
+    "NNN",
+    "NNN"
   ],
   "result": {
     "item": "enderio:end_steel_ingot"

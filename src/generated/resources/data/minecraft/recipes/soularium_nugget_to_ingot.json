@@ -1,33 +1,14 @@
 {
-  "type": "minecraft:crafting_shapeless",
-  "ingredients": [
-    {
-      "item": "enderio:soularium_nugget"
-    },
-    {
-      "item": "enderio:soularium_nugget"
-    },
-    {
-      "item": "enderio:soularium_nugget"
-    },
-    {
-      "item": "enderio:soularium_nugget"
-    },
-    {
-      "item": "enderio:soularium_nugget"
-    },
-    {
-      "item": "enderio:soularium_nugget"
-    },
-    {
-      "item": "enderio:soularium_nugget"
-    },
-    {
-      "item": "enderio:soularium_nugget"
-    },
-    {
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "N": {
       "item": "enderio:soularium_nugget"
     }
+  },
+  "pattern": [
+    "NNN",
+    "NNN",
+    "NNN"
   ],
   "result": {
     "item": "enderio:soularium_ingot"
