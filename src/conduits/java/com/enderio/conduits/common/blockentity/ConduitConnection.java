@@ -3,9 +3,13 @@ package com.enderio.conduits.common.blockentity;
 import com.enderio.api.UseOnly;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.base.common.blockentity.RedstoneControl;
+import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
+import com.enderio.conduits.common.blockentity.connection.IConnectionState;
+import com.enderio.conduits.common.blockentity.connection.StaticConnectionStates;
 import com.enderio.core.common.blockentity.ColorControl;
 import com.enderio.core.common.sync.EnderDataSlot;
 import com.enderio.core.common.sync.SyncMode;
+import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -21,7 +25,11 @@ import java.util.function.Supplier;
 
 public class ConduitConnection {
 
-    private final ConnectionState[] connectionStates = new ConnectionState[ConduitBundle.MAX_CONDUIT_TYPES];
+    private final IConnectionState[] connectionStates = Util.make(() -> {
+        var states = new IConnectionState[ConduitBundle.MAX_CONDUIT_TYPES];
+        Arrays.fill(states, StaticConnectionStates.DISCONNECTED);
+        return states;
+    });
 
     /**
      * shift all behind that one to the back and set that index to null
@@ -31,7 +39,7 @@ public class ConduitConnection {
         for (int i = ConduitBundle.MAX_CONDUIT_TYPES-1; i > index; i--) {
             connectionStates[i] = connectionStates[i-1];
         }
-        connectionStates[index] = null;
+        connectionStates[index] = StaticConnectionStates.DISCONNECTED;
     }
 
     /**
@@ -41,9 +49,9 @@ public class ConduitConnection {
      */
     public void connectTo(int typeIndex, boolean end) {
         if (end)
-            connectionStates[typeIndex] = new ConnectionState(ColorControl.BLUE, null, RedstoneControl.ALWAYS_ACTIVE, null, ItemStack.EMPTY);
+            connectionStates[typeIndex] = DynamicConnectionState.ofInput();
         else
-            connectionStates[typeIndex] = new ConnectionState(null, null, RedstoneControl.ALWAYS_ACTIVE, null, ItemStack.EMPTY);
+            connectionStates[typeIndex] = StaticConnectionStates.CONNECTED;
     }
 
     /**
@@ -51,14 +59,14 @@ public class ConduitConnection {
      * @param index
      */
     public void removeType(int index) {
-        connectionStates[index] = null;
+        connectionStates[index] = StaticConnectionStates.DISCONNECTED;
         for (int i = index+1; i < ConduitBundle.MAX_CONDUIT_TYPES; i++) {
             connectionStates[i-1] = connectionStates[i];
         }
     }
 
     public void clearType(int index) {
-        connectionStates[index] = null;
+        connectionStates[index] = StaticConnectionStates.DISCONNECTED;
     }
 
     /**
@@ -75,31 +83,25 @@ public class ConduitConnection {
     }
 
     public boolean isEnd() {
-        return Arrays.stream(connectionStates).filter(Objects::nonNull).anyMatch(ConnectionState::isEnd);
+        return Arrays.stream(connectionStates).anyMatch(con -> con instanceof DynamicConnectionState);
     }
 
     public List<IConduitType> getConnectedTypes(ConduitBundle on) {
         List<IConduitType> connected = new ArrayList<>();
         for (int i = 0; i < connectionStates.length; i++) {
-            if (connectionStates[i] != null) {
+            if (connectionStates[i].isConnection()) {
                 connected.add(on.getTypes().get(i));
             }
         }
         return connected;
     }
 
-    private record ConnectionState(@Nullable ColorControl in, @Nullable ColorControl out, RedstoneControl control, @Nullable ColorControl redstoneChannel, @UseOnly(LogicalSide.SERVER) ItemStack filter) {
-        public boolean isEnd() {
-            return in != null || out != null;
-        }
-    }
-
     /**
      * filter is not synced, because that will be synced using the container
      */
-    public static class ConnectionStateDataSlot extends EnderDataSlot<ConnectionState> {
+    public static class ConnectionStateDataSlot extends EnderDataSlot<IConnectionState> {
 
-        public ConnectionStateDataSlot(Supplier<ConnectionState> getter, Consumer<ConnectionState> setter) {
+        public ConnectionStateDataSlot(Supplier<IConnectionState> getter, Consumer<IConnectionState> setter) {
             super(getter, setter, SyncMode.WORLD);
         }
 
@@ -107,37 +109,43 @@ public class ConduitConnection {
         public CompoundTag toFullNBT() {
             CompoundTag tag = new CompoundTag();
             var state = getter().get();
-            if (state != null) {
-                tag.putInt("in", state.in() != null ? state.in().ordinal() : -1);
-                tag.putInt("out", state.out() != null ? state.out().ordinal() : -1);
-                tag.putInt("redControl", state.control().ordinal());
-                tag.putInt("redChannel", state.redstoneChannel() != null ? state.redstoneChannel().ordinal() : -1);
+            tag.putBoolean("static", state instanceof StaticConnectionStates);
+            if (state instanceof StaticConnectionStates staticState) {
+                tag.putInt("index", staticState.ordinal());
+            } else if (state instanceof DynamicConnectionState dynamicState) {
+                tag.putInt("in", dynamicState.in() != null ? dynamicState.in().ordinal() : -1);
+                tag.putInt("out", dynamicState.out() != null ? dynamicState.out().ordinal() : -1);
+                tag.putInt("redControl", dynamicState.control().ordinal());
+                tag.putInt("redChannel", dynamicState.redstoneChannel().ordinal());
+            } else {
+                throw new RuntimeException("Sealed Interface was none of it's sealed types");
             }
             return tag;
         }
 
         @Override
-        @Nullable
-        protected ConnectionState fromNBT(CompoundTag nbt) {
-            if (!nbt.contains("in") || !nbt.contains("out"))
-                return null;
-            var inIndex = nbt.getInt("in");
-            var outIndex = nbt.getInt("out");
-            var redControl = nbt.getInt("redControl");
-            var redChannel = nbt.getInt("redChannel");
-            return new ConnectionState(
-                inIndex != -1 ? ColorControl.values()[inIndex] : null,
-                outIndex != -1 ? ColorControl.values()[outIndex] : null,
-                RedstoneControl.values()[redControl],
-                redChannel != -1 ? ColorControl.values()[redChannel] : null,
-                Items.AIR.getDefaultInstance()
-            );
+        protected IConnectionState fromNBT(CompoundTag nbt) {
+            if (nbt.getBoolean("static")) {
+                return StaticConnectionStates.values()[nbt.getInt("index")];
+            } else {
+                var inIndex = nbt.getInt("in");
+                var outIndex = nbt.getInt("out");
+                var redControl = nbt.getInt("redControl");
+                var redChannel = nbt.getInt("redChannel");
+                return new DynamicConnectionState(
+                    inIndex != -1 ? ColorControl.values()[inIndex] : null,
+                    outIndex != -1 ? ColorControl.values()[outIndex] : null,
+                    RedstoneControl.values()[redControl],
+                    ColorControl.values()[redChannel],
+                    Items.AIR.getDefaultInstance()
+                );
+            }
         }
     }
 
     public ConduitConnection deepCopy() {
         var connection = new ConduitConnection();
-        //connectionstate is a record, so not mutable, so reference is fine
+        //connectionstates are not mutable (enum/record), so reference is fine
         System.arraycopy(connectionStates, 0, connection.connectionStates, 0, ConduitBundle.MAX_CONDUIT_TYPES);
         return connection;
     }
