@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "enderio:redstone_alloy_ingot"
+    },
+    {
+      "item": "enderio:redstone_alloy_ingot"
+    },
+    {
+      "item": "enderio:redstone_alloy_ingot"
+    },
+    {
+      "item": "enderio:redstone_alloy_ingot"
+    },
+    {
+      "item": "enderio:redstone_alloy_ingot"
+    },
+    {
+      "item": "enderio:redstone_alloy_ingot"
+    },
+    {
+      "item": "enderio:redstone_alloy_ingot"
+    },
+    {
+      "item": "enderio:redstone_alloy_ingot"
+    },
+    {
+      "item": "enderio:redstone_alloy_ingot"
+    }
+  ],
+  "result": {
+    "item": "enderio:redstone_alloy_block"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "enderio:vibrant_alloy_ingot"
+    },
+    {
+      "item": "enderio:vibrant_alloy_ingot"
+    },
+    {
+      "item": "enderio:vibrant_alloy_ingot"
+    },
+    {
+      "item": "enderio:vibrant_alloy_ingot"
+    },
+    {
+      "item": "enderio:vibrant_alloy_ingot"
+    },
+    {
+      "item": "enderio:vibrant_alloy_ingot"
+    },
+    {
+      "item": "enderio:vibrant_alloy_ingot"
+    },
+    {
+      "item": "enderio:vibrant_alloy_ingot"
+    },
+    {
+      "item": "enderio:vibrant_alloy_ingot"
+    }
+  ],
+  "result": {
+    "item": "enderio:vibrant_alloy_block"
+  }
+}

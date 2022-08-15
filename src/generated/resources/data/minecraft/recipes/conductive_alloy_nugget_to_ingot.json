@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "enderio:conductive_alloy_nugget"
+    },
+    {
+      "item": "enderio:conductive_alloy_nugget"
+    },
+    {
+      "item": "enderio:conductive_alloy_nugget"
+    },
+    {
+      "item": "enderio:conductive_alloy_nugget"
+    },
+    {
+      "item": "enderio:conductive_alloy_nugget"
+    },
+    {
+      "item": "enderio:conductive_alloy_nugget"
+    },
+    {
+      "item": "enderio:conductive_alloy_nugget"
+    },
+    {
+      "item": "enderio:conductive_alloy_nugget"
+    },
+    {
+      "item": "enderio:conductive_alloy_nugget"
+    }
+  ],
+  "result": {
+    "item": "enderio:conductive_alloy_ingot"
+  }
+}
