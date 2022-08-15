@@ -122,7 +122,7 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltin
                 }
 
                 @Override
-                public int consumeEnergy(int energy) {
+                public int consumeEnergy(int energy, boolean simulate) {
                     // We burn fuel, this energy storage is merely a wrapper now.
                     if (isBurning()) {
                         return getBurnToFE();
