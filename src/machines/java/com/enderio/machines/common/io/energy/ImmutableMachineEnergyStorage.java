@@ -122,7 +122,7 @@ public class ImmutableMachineEnergyStorage implements IMachineEnergyStorage {
      */
     @Deprecated
     @Override
-    public int consumeEnergy(int energy) {
+    public int consumeEnergy(int energy, boolean simulate) {
         throw new UnsupportedOperationException();
     }
 }

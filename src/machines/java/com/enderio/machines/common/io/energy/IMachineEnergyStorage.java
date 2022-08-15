@@ -15,23 +15,26 @@ public interface IMachineEnergyStorage extends IEnergyStorage {
 
     /**
      * Add energy into storage.
+     *
      * @return Amount of energy added.
      */
     int addEnergy(int energy);
 
     /**
      * Remove energy from storage.
-     * @apiNote Uncapped, if you are consuming energy, use {@link #consumeEnergy(int)} instead.
+     *
      * @return Amount of energy taken.
+     * @apiNote Uncapped, if you are consuming energy, use {@link #consumeEnergy(int, boolean)} instead.
      */
     int takeEnergy(int energy);
 
     /**
      * Consume energy from storage.
-     * @apiNote This is capped to {@link #getMaxEnergyUse()}, for uncapped use {@link #takeEnergy(int)} instead.
+     *
      * @return Amount of energy consumed.
+     * @apiNote This is capped to {@link #getMaxEnergyUse()}, for uncapped use {@link #takeEnergy(int)} instead.
      */
-    int consumeEnergy(int energy);
+    int consumeEnergy(int energy, boolean simulate);
 
     /**
      * Get the max energy transfer rate.

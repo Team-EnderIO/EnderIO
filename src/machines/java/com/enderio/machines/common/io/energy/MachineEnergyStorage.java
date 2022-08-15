@@ -83,9 +83,13 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, IEnderCapabi
     }
 
     @Override
-    public int consumeEnergy(int energy) {
+    public int consumeEnergy(int energy, boolean simulate) {
         // Cap rate
-        return takeEnergy(Math.min(energy, getMaxEnergyUse()));
+        int usableEnergy = Math.min(energy, getMaxEnergyUse());
+        if (!simulate) {
+            return takeEnergy(usableEnergy);
+        }
+        return usableEnergy;
     }
 
     @Override

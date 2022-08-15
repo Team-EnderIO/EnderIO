@@ -124,6 +124,10 @@ public class MachineBlocks {
         .lang("Slice'N'Splice")
         .register();
 
+    public static BlockEntry<ProgressMachineBlock> IMPULSE_HOPPER = standardMachine("impulse_hopper", () -> MachineBlockEntities.IMPULSE_HOPPER)
+        .lang("Impulse Hopper")
+        .register();
+
     private static BlockBuilder<ProgressMachineBlock, Registrate> standardMachine(String name, Supplier<BlockEntityEntry<? extends MachineBlockEntity>> blockEntityEntry) {
         return REGISTRATE
             .block(name, props -> new ProgressMachineBlock(props, blockEntityEntry.get()))

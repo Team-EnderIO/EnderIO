@@ -18,6 +18,7 @@ public class MachineMenus {
     public static final MenuEntry<SagMillMenu> SAG_MILL = REGISTRATE.menu("sag_mill", SagMillMenu::factory, () -> SagMillScreen::new).register();
     public static final MenuEntry<StirlingGeneratorMenu> STIRLING_GENERATOR = REGISTRATE.menu("stirling_generator", StirlingGeneratorMenu::factory, () -> StirlingGeneratorScreen::new).register();
     public static final MenuEntry<SlicerMenu> SLICE_N_SPLICE = REGISTRATE.menu("slice_n_splice", SlicerMenu::factory, () -> SlicerScreen::new).register();
+    public static final MenuEntry<ImpulseHopperMenu> IMPULSE_HOPPER = REGISTRATE.menu("impulse_hopper", ImpulseHopperMenu::factory, () -> ImpulseHopperScreen::new).register();
 
     public static void register() {}
 }
