@@ -7,10 +7,7 @@ import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.init.MachineMenus;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.lang.MachineLang;
-import com.enderio.machines.data.recipes.AlloyRecipeProvider;
-import com.enderio.machines.data.recipes.EnchanterRecipeProvider;
-import com.enderio.machines.data.recipes.SagMillRecipeProvider;
-import com.enderio.machines.data.recipes.SlicingRecipeProvider;
+import com.enderio.machines.data.recipes.*;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -39,11 +36,10 @@ public class EIOMachines {
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
-        if (event.includeServer()) {
-            generator.addProvider(event.includeServer(), new AlloyRecipeProvider(generator));
-            generator.addProvider(event.includeServer(), new EnchanterRecipeProvider(generator));
-            generator.addProvider(event.includeServer(), new SagMillRecipeProvider(generator));
-            generator.addProvider(event.includeServer(), new SlicingRecipeProvider(generator));
-        }
+        generator.addProvider(event.includeServer(), new MachineRecipeProvider(generator));
+        generator.addProvider(event.includeServer(), new AlloyRecipeProvider(generator));
+        generator.addProvider(event.includeServer(), new EnchanterRecipeProvider(generator));
+        generator.addProvider(event.includeServer(), new SagMillRecipeProvider(generator));
+        generator.addProvider(event.includeServer(), new SlicingRecipeProvider(generator));
     }
 }

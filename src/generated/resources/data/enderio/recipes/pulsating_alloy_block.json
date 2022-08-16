@@ -1,14 +1,14 @@
 {
   "type": "minecraft:crafting_shaped",
   "key": {
-    "#": {
+    "I": {
       "item": "enderio:pulsating_alloy_ingot"
     }
   },
   "pattern": [
-    "###",
-    "###",
-    "###"
+    "III",
+    "III",
+    "III"
   ],
   "result": {
     "item": "enderio:pulsating_alloy_block"

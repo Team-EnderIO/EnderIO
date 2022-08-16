@@ -6,7 +6,7 @@
         "items": [
           {
             "items": [
-              "enderio:redstone_alloy_block"
+              "enderio:grains_of_infinity"
             ]
           }
         ]
@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:redstone_alloy_block"
+        "recipe": "enderio:primitive_alloy_smelter"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "enderio:redstone_alloy_block"
+      "enderio:primitive_alloy_smelter"
     ]
   }
 }
