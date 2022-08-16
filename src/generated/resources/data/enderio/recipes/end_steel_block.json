@@ -1,14 +1,14 @@
 {
   "type": "minecraft:crafting_shaped",
   "key": {
-    "#": {
+    "I": {
       "item": "enderio:end_steel_ingot"
     }
   },
   "pattern": [
-    "###",
-    "###",
-    "###"
+    "III",
+    "III",
+    "III"
   ],
   "result": {
     "item": "enderio:end_steel_block"
