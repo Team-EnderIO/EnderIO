@@ -74,24 +74,15 @@ public class MaterialRecipes extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PULSATING_POWDER.get()))
             .save(recipeConsumer);
         
-        blockToIngots(recipeConsumer, EIOItems.COPPER_ALLOY_INGOT.get(),EIOBlocks.COPPER_ALLOY_BLOCK.get());
-        ingotToNuggets(recipeConsumer, EIOItems.COPPER_ALLOY_NUGGET.get(), EIOItems.COPPER_ALLOY_INGOT.get());
-        blockToIngots(recipeConsumer, EIOItems.ENERGETIC_ALLOY_INGOT.get(),EIOBlocks.ENERGETIC_ALLOY_BLOCK.get());
-        ingotToNuggets(recipeConsumer, EIOItems.ENERGETIC_ALLOY_NUGGET.get(), EIOItems.ENERGETIC_ALLOY_INGOT.get());
-        blockToIngots(recipeConsumer, EIOItems.VIBRANT_ALLOY_INGOT.get(),EIOBlocks.VIBRANT_ALLOY_BLOCK.get());
-        ingotToNuggets(recipeConsumer, EIOItems.VIBRANT_ALLOY_NUGGET.get(), EIOItems.VIBRANT_ALLOY_INGOT.get());
-        blockToIngots(recipeConsumer, EIOItems.REDSTONE_ALLOY_INGOT.get(),EIOBlocks.REDSTONE_ALLOY_BLOCK.get());
-        ingotToNuggets(recipeConsumer, EIOItems.REDSTONE_ALLOY_NUGGET.get(), EIOItems.REDSTONE_ALLOY_INGOT.get()); 
-        blockToIngots(recipeConsumer, EIOItems.CONDUCTIVE_ALLOY_INGOT.get(),EIOBlocks.CONDUCTIVE_ALLOY_BLOCK.get());
-        ingotToNuggets(recipeConsumer, EIOItems.CONDUCTIVE_ALLOY_NUGGET.get(), EIOItems.CONDUCTIVE_ALLOY_INGOT.get());
-        blockToIngots(recipeConsumer, EIOItems.PULSATING_ALLOY_INGOT.get(),EIOBlocks.PULSATING_ALLOY_BLOCK.get());
-        ingotToNuggets(recipeConsumer, EIOItems.PULSATING_ALLOY_NUGGET.get(), EIOItems.PULSATING_ALLOY_INGOT.get());
-        blockToIngots(recipeConsumer, EIOItems.DARK_STEEL_INGOT.get(),EIOBlocks.DARK_STEEL_BLOCK.get());
-        ingotToNuggets(recipeConsumer, EIOItems.DARK_STEEL_NUGGET.get(), EIOItems.DARK_STEEL_INGOT.get());
-        blockToIngots(recipeConsumer, EIOItems.SOULARIUM_INGOT.get(),EIOBlocks.SOULARIUM_BLOCK.get());
-        ingotToNuggets(recipeConsumer, EIOItems.SOULARIUM_NUGGET.get(), EIOItems.SOULARIUM_INGOT.get());
-        blockToIngots(recipeConsumer, EIOItems.END_STEEL_INGOT.get(),EIOBlocks.END_STEEL_BLOCK.get());
-        ingotToNuggets(recipeConsumer, EIOItems.END_STEEL_NUGGET.get(), EIOItems.END_STEEL_INGOT.get());
+        makeMaterialRecipes(recipeConsumer, EIOItems.COPPER_ALLOY_INGOT.get(), EIOItems.COPPER_ALLOY_NUGGET.get(), EIOBlocks.COPPER_ALLOY_BLOCK.get());
+        makeMaterialRecipes(recipeConsumer, EIOItems.ENERGETIC_ALLOY_INGOT.get(), EIOItems.ENERGETIC_ALLOY_NUGGET.get(), EIOBlocks.ENERGETIC_ALLOY_BLOCK.get());
+        makeMaterialRecipes(recipeConsumer, EIOItems.VIBRANT_ALLOY_INGOT.get(), EIOItems.VIBRANT_ALLOY_NUGGET.get(), EIOBlocks.VIBRANT_ALLOY_BLOCK.get());
+        makeMaterialRecipes(recipeConsumer, EIOItems.REDSTONE_ALLOY_INGOT.get(), EIOItems.REDSTONE_ALLOY_NUGGET.get(), EIOBlocks.REDSTONE_ALLOY_BLOCK.get());
+        makeMaterialRecipes(recipeConsumer, EIOItems.CONDUCTIVE_ALLOY_INGOT.get(), EIOItems.CONDUCTIVE_ALLOY_NUGGET.get(), EIOBlocks.CONDUCTIVE_ALLOY_BLOCK.get());
+        makeMaterialRecipes(recipeConsumer, EIOItems.PULSATING_ALLOY_INGOT.get(), EIOItems.PULSATING_ALLOY_NUGGET.get(), EIOBlocks.PULSATING_ALLOY_BLOCK.get());
+        makeMaterialRecipes(recipeConsumer, EIOItems.DARK_STEEL_INGOT.get(), EIOItems.DARK_STEEL_NUGGET.get(), EIOBlocks.DARK_STEEL_BLOCK.get());
+        makeMaterialRecipes(recipeConsumer, EIOItems.SOULARIUM_INGOT.get(), EIOItems.SOULARIUM_NUGGET.get(), EIOBlocks.SOULARIUM_BLOCK.get());
+        makeMaterialRecipes(recipeConsumer, EIOItems.END_STEEL_INGOT.get(), EIOItems.END_STEEL_NUGGET.get(), EIOBlocks.END_STEEL_BLOCK.get());
         
         ShapedRecipeBuilder.shaped(EIOItems.CONDUIT_BINDER_COMPOSITE.get())
             .pattern("GCG")
@@ -263,20 +254,30 @@ public class MaterialRecipes extends RecipeProvider {
         grindingBall(recipeConsumer, EIOItems.END_STEEL_BALL.get(), EIOItems.END_STEEL_INGOT.get());
     }
 
-    private void blockToIngots(Consumer<FinishedRecipe> recipeConsumer, Item ingot, Block block) {
-        ShapelessRecipeBuilder.shapeless(ingot, 9)
-            .requires(block.asItem())
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(block.asItem()))
-            .save(recipeConsumer);
-    }
-
-    private void ingotToNuggets(Consumer<FinishedRecipe> recipeConsumer, Item nugget, Item ingot) {
-        ShapelessRecipeBuilder.shapeless(nugget, 9)
-            .requires(ingot)
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ingot))
-            .save(recipeConsumer);
-    }
-    
+	private void makeMaterialRecipes(Consumer<FinishedRecipe> recipeConsumer, Item ingot, Item nugget, Block block ) {
+		ShapelessRecipeBuilder.shapeless(ingot, 9)
+			.requires(block.asItem())
+			.unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(block.asItem()))
+			.save(recipeConsumer);
+		ShapelessRecipeBuilder.shapeless(nugget, 9)
+			.requires(ingot)
+			.unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ingot))
+			.save(recipeConsumer);
+		ShapedRecipeBuilder.shaped(block)
+			.pattern("III")
+	    	.pattern("III")
+	    	.pattern("III")
+	    	.define('I', ingot)
+	    	.unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(block.asItem()))
+	    	.save(recipeConsumer);
+		ShapedRecipeBuilder.shaped(ingot)
+			.pattern("NNN")
+    		.pattern("NNN")
+    		.pattern("NNN")
+    		.define('N', nugget)
+    		.unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ingot))
+    		.save(recipeConsumer, nugget.toString() + "_to_ingot");
+}
     private void upgradeGear(Consumer<FinishedRecipe> recipeConsumer, Item resultGear, ItemLike inputGear, ItemLike cross, ItemLike corner) {
         ShapedRecipeBuilder.shaped(resultGear)
             .pattern("NIN")

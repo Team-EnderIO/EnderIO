@@ -46,6 +46,12 @@ public enum MachineCapacitorKeys {
     STIRLING_GENERATOR_ENERGY_CAPACITY(100000, CapacitorKeyType.EnergyCapacity, Scalers.ENERGY),
     // TODO: Generation rate and efficiency.
 
+    IMPULSE_HOPPER_ENERGY_CAPACITY(100000, CapacitorKeyType.EnergyCapacity, Scalers.ENERGY),
+    IMPULSE_HOPPER_ENERGY_TRANSFER(120, CapacitorKeyType.EnergyTransfer, Scalers.ENERGY),
+    IMPULSE_HOPPER_ENERGY_CONSUME(16, CapacitorKeyType.EnergyUsage, Scalers.ENERGY),
+    IMPULSE_HOPPER_ENERGY_CONSUME_ITEM(10, CapacitorKeyType.EnergyUsage, Scalers.FIXED),
+    IMPULSE_HOPPER_ENERGY_SPEED(1, CapacitorKeyType.EnergyUsage, Scalers.QUADRATIC),
+
     DEV_ENERGY_CAPACITY(100000, CapacitorKeyType.EnergyCapacity, Scalers.FIXED),
     DEV_ENERGY_TRANSFER(120, CapacitorKeyType.EnergyTransfer, Scalers.FIXED),
     DEV_ENERGY_CONSUME(30, CapacitorKeyType.EnergyUsage, Scalers.FIXED),

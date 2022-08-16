@@ -1,7 +1,7 @@
 package com.enderio.machines.common.io.energy;
 
-import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.api.io.IIOConfig;
+import com.enderio.api.io.energy.EnergyIOMode;
 import org.apache.commons.lang3.NotImplementedException;
 
 /**
@@ -122,7 +122,7 @@ public class ImmutableMachineEnergyStorage implements IMachineEnergyStorage {
      */
     @Deprecated
     @Override
-    public int consumeEnergy(int energy) {
+    public int consumeEnergy(int energy, boolean simulate) {
         throw new UnsupportedOperationException();
     }
 }

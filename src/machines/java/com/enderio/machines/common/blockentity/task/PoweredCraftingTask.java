@@ -1,9 +1,9 @@
 package com.enderio.machines.common.blockentity.task;
 
-import com.enderio.machines.common.recipe.MachineRecipe;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.blockentity.base.PoweredCraftingMachine;
 import com.enderio.machines.common.io.item.MachineInventory;
+import com.enderio.machines.common.recipe.MachineRecipe;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -17,6 +17,7 @@ import java.util.List;
 
 /**
  * A recipe crafting task that consumes energy.
+ *
  * @param <C> The container type used by the recipes. Mostly useful for {@link net.minecraft.world.item.crafting.CraftingRecipe}'s.
  */
 public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends Container> extends PoweredTask {
@@ -33,8 +34,7 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
     /**
      * The recipe being crafted.
      */
-    @Nullable
-    private R recipe;
+    @Nullable private R recipe;
 
     /**
      * The index of the first output slot.
@@ -111,7 +111,7 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
      * Only really exposed so the SAG mill can take durability from grinding balls.
      */
     protected int consumeEnergy(int maxConsume) {
-        return energyStorage.consumeEnergy(maxConsume);
+        return energyStorage.consumeEnergy(maxConsume, false);
     }
 
     /**
