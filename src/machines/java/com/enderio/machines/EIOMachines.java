@@ -1,7 +1,6 @@
 package com.enderio.machines;
 
 import com.enderio.EnderIO;
-import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.*;
 import com.enderio.machines.common.lang.MachineLang;
@@ -10,7 +9,6 @@ import com.enderio.machines.data.recipes.EnchanterRecipeProvider;
 import com.enderio.machines.data.recipes.SagMillRecipeProvider;
 import com.enderio.machines.data.recipes.SlicingRecipeProvider;
 import net.minecraft.data.DataGenerator;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -34,8 +32,6 @@ public class EIOMachines {
         MachineLang.register();
         MachineRecipes.register();
         MachineCapacitorKeys.register();
-
-        MinecraftForge.EVENT_BUS.register(FluidTankBlockEntity.class);
     }
 
     @SubscribeEvent

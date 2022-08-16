@@ -1,5 +1,6 @@
 package com.enderio.machines.common.blockentity;
 
+import com.enderio.EnderIO;
 import com.enderio.base.common.capability.FluidHandlerBlockItemStack;
 import com.enderio.core.common.sync.FluidStackDataSlot;
 import com.enderio.core.common.sync.SyncMode;
@@ -32,11 +33,14 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 
 import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.function.Function;
 
+@Mod.EventBusSubscriber(modid = EnderIO.MODID, bus = Bus.MOD)
 public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     public enum FluidOperationResult {
         INVALIDFLUIDITEM,
