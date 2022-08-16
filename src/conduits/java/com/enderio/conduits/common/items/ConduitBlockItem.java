@@ -40,6 +40,13 @@ public class ConduitBlockItem extends BlockItem {
                 return InteractionResult.SUCCESS;
             }
         }
+        if (level.getBlockEntity(context.getHitResult().getBlockPos().relative(context.getHitResult().getDirection().getOpposite())) instanceof ConduitBlockEntity conduit) {
+            Optional<IConduitType> iConduitType = conduit.addType(type);
+            if (ConduitBlockEntity.isDifferent(iConduitType, type)) {
+                iConduitType.ifPresent(conduitType -> player.getInventory().placeItemBackInInventory(conduitType.getConduitItem().getDefaultInstance()));
+                return InteractionResult.SUCCESS;
+            }
+        }
         if (!context.canPlace()) {
             return InteractionResult.FAIL;
         } else {
