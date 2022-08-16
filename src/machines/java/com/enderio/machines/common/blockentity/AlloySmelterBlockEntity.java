@@ -51,6 +51,7 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltin
      * This buffer cannot be accessed via external means however.
      */
     public static class Primitive extends AlloySmelterBlockEntity {
+        // TODO: Currently smelts really slowly. Needs addressed when we deal with burn -> FE rates.
         private int burnTime;
         private int burnDuration;
 
@@ -105,6 +106,7 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltin
                     // Get the burn time.
                     int burningTime = ForgeHooks.getBurnTime(fuel, RecipeType.SMELTING);
 
+                    // If this item can burn, burn it.
                     if (burningTime > 0) {
                         burnTime = burningTime;
                         burnDuration = burnTime;

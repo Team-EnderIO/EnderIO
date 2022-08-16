@@ -8,10 +8,17 @@ import net.minecraft.resources.ResourceLocation;
 
 public class TooltipUtil {
 
+    /**
+     * Style a component italic and gray
+     */
     public static Component style(MutableComponent component) {
         return component.withStyle(ChatFormatting.ITALIC, ChatFormatting.GRAY);
     }
 
+    /**
+     * Append arguments to a translatable component.
+     * If you don't pass a translatable component, it will not be modified.
+     */
     public static MutableComponent withArgs(MutableComponent component, Object... args) {
         // Translate with args.
         if (component.getContents() instanceof TranslatableContents translatableContents) {
@@ -22,11 +29,17 @@ public class TooltipUtil {
         return component;
     }
 
+    /**
+     * Style component and fill its args
+     */
     public static Component styledWithArgs(MutableComponent component, Object... args) {
         return style(withArgs(component, args));
     }
 
+    /**
+     * Translate, style and fill args
+     */
     public static Component styledWithArgs(ResourceLocation key, Object... args) {
-        return style(withArgs(Component.translatable(key.toLanguageKey()), args));
+        return style(Component.translatable(key.toLanguageKey(), args));
     }
 }

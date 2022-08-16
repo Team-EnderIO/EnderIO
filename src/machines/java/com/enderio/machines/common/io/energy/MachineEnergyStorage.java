@@ -94,17 +94,17 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, IEnderCapabi
 
     @Override
     public int getMaxEnergyStored() {
-        return Math.round(capacity.get());
+        return capacity.get();
     }
 
     @Override
     public int getMaxEnergyTransfer() {
-        return Math.round(transferRate.get());
+        return transferRate.get();
     }
 
     @Override
     public int getMaxEnergyUse() {
-        return Math.round(usageRate.get());
+        return usageRate.get();
     }
 
     @Override
