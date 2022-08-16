@@ -78,6 +78,7 @@ public class EnderIO {
         EIOLang.register();
         EIORecipes.register();
         EIOLootModifiers.register();
+        EIOLootNbtProvider.register();
 
         // Run datagen after registrate is finished.
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
