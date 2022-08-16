@@ -1,4 +1,4 @@
-// 1.19.1	2022-08-16T01:22:00.0136338	Registrate Provider for enderio [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
+// 1.19.2	2022-08-16T02:21:11.2594403	Registrate Provider for enderio [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
 73adb56f72a5805aa07ee54397acb790c30cccb5 assets/enderio/blockstates/alloy_smelter.json
 38456017a1ded6fddac24d85def47523e9ee034c assets/enderio/blockstates/clear_glass.json
 38456017a1ded6fddac24d85def47523e9ee034c assets/enderio/blockstates/clear_glass_a.json
@@ -2614,7 +2614,7 @@ b8015de32d5b92e20bb83409228bbc7480aa4283 data/enderio/loot_tables/blocks/fused_q
 694dd4926a118c8d69d4655ad6947c4c211a837d data/enderio/loot_tables/blocks/fused_quartz_red.json
 c9f7d9a00640a34d698905e69a2ef7387d96c362 data/enderio/loot_tables/blocks/fused_quartz_white.json
 c1c465e6cb17a1a12386a6602aa9e3ee3ed3ab47 data/enderio/loot_tables/blocks/fused_quartz_yellow.json
-74013f47b0c8b66a955d2a4f9f96d74ed6d63096 data/enderio/loot_tables/blocks/impulse_hopper.json
+074abbbfcf8524ecc96c3681871a0dbb29d43363 data/enderio/loot_tables/blocks/impulse_hopper.json
 0e8ea5ba6ba6f4216c6328df2b18a8437f63bdaa data/enderio/loot_tables/blocks/industrial_machine_chassis.json
 40d79d1e201805b1423e04859e85a3ce8cbeee63 data/enderio/loot_tables/blocks/iron_alloy_block.json
 d73d2a1baadf3256f684944674b2d5d31a1869df data/enderio/loot_tables/blocks/light.json
