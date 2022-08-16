@@ -74,7 +74,7 @@ public final class ConduitBundle {
         int index = types.indexOf(type);
         if (index == -1) {
             if (!FMLLoader.isProduction()) {
-                throw new IllegalArgumentException("Conduit: " + ConduitTypes.REGISTRY.get().getKey(type) + "is not present in conduit bundle "
+                throw new IllegalArgumentException("Conduit: " + ConduitTypes.REGISTRY.get().getKey(type) + " is not present in conduit bundle "
                     + Arrays.toString(types.stream().map(existingType -> ConduitTypes.REGISTRY.get().getKey(existingType)).toArray()));
             }
             return types.isEmpty();
@@ -117,6 +117,11 @@ public final class ConduitBundle {
 
     public void connectTo(Direction direction, IConduitType type, boolean end) {
         getConnection(direction).connectTo(types.indexOf(type), end);
+        scheduleSync.run();
+    }
+
+    public void disconnectFrom(Direction direction, IConduitType type) {
+        getConnection(direction).disconnectFrom(types.indexOf(type));
         scheduleSync.run();
     }
 

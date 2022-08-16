@@ -2,6 +2,7 @@ package com.enderio.conduits.common.blockentity;
 
 import com.enderio.api.UseOnly;
 import com.enderio.api.conduit.IConduitType;
+import com.enderio.conduits.common.ConduitShape;
 import com.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import net.minecraft.core.BlockPos;
@@ -22,6 +23,8 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
     public static final ModelProperty<ConduitBundle> BUNDLE_MODEL_PROPERTY = new ModelProperty<>();
 
+    private ConduitShape shape = new ConduitShape();
+
     private final ConduitBundle bundle = new ConduitBundle(this::scheduleTick);
     @UseOnly(LogicalSide.CLIENT)
     private ConduitBundle clientBundle = bundle.deepCopy();
@@ -31,6 +34,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         bundle.gatherDataSlots().forEach(this::addDataSlot);
         addAfterSyncRunnable(() -> {
             clientBundle = bundle.deepCopy();
+            shape.updateConduit(bundle);
             level.setBlocksDirty(getBlockPos(), Blocks.AIR.defaultBlockState(), getBlockState());
         });
     }
@@ -72,7 +76,35 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                 }
             }
         }
+        updateShape();
         return returnType;
+    }
+
+    public boolean removeType(IConduitType type) {
+        boolean shouldRemove =  bundle.removeType(type);
+        //something has changed
+        if (shouldRemove) {
+            for (Direction dir: Direction.values()) {
+                BlockEntity blockEntity = level.getBlockEntity(getBlockPos().relative(dir));
+                if (blockEntity != null) {
+                    if (blockEntity instanceof ConduitBlockEntity conduit && conduit.connectTo(dir.getOpposite(), type)) {
+                        conduit.disconnect(dir.getOpposite(), type);
+                        conduit.updateShape();
+                    } else if(blockEntity.getCapability(CapabilityEnergy.ENERGY).isPresent()) {
+                        //connectEnd(dir, type);
+                    }
+                }
+            }
+        }
+        updateShape();
+        if (bundle.getTypes().isEmpty()) {
+            return true;
+        }
+        return false;
+    }
+
+    private void updateShape() {
+        shape.updateConduit(bundle);
     }
 
     public static boolean isDifferent(Optional<IConduitType> first, IConduitType second) {
@@ -98,5 +130,17 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
     private void connectEnd(Direction direction, IConduitType type) {
         bundle.connectTo(direction, type, true);
+    }
+
+    private void disconnect(Direction direction, IConduitType type) {
+        bundle.disconnectFrom(direction, type);
+    }
+
+    public ConduitBundle getBundle() {
+        return bundle;
+    }
+
+    public ConduitShape getShape() {
+        return shape;
     }
 }

@@ -1,6 +1,5 @@
 package com.enderio.conduits.common.blockentity;
 
-import com.enderio.api.UseOnly;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.base.common.blockentity.RedstoneControl;
 import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
@@ -11,15 +10,11 @@ import com.enderio.core.common.sync.EnderDataSlot;
 import com.enderio.core.common.sync.SyncMode;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.fml.LogicalSide;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -52,6 +47,10 @@ public class ConduitConnection {
             connectionStates[typeIndex] = DynamicConnectionState.ofInput();
         else
             connectionStates[typeIndex] = StaticConnectionStates.CONNECTED;
+    }
+
+    public void disconnectFrom(int typeIndex) {
+        connectionStates[typeIndex] = StaticConnectionStates.DISCONNECTED;
     }
 
     /**
