@@ -1,5 +1,6 @@
 package com.enderio.decoration.common.item;
 
+import com.enderio.base.common.util.NbtTags;
 import com.enderio.decoration.common.util.PaintUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -29,7 +30,7 @@ public class PaintedSlabBlockItem extends PaintedBlockItem {
         if (minecraftserver == null) {
             return false;
         } else {
-            CompoundTag compoundtag = pStack.getTagElement("BlockEntityTag");
+            CompoundTag compoundtag = pStack.getTagElement(NbtTags.BLOCK_ENTITY_NBT_KEY);
             if (compoundtag != null) {
                 BlockEntity blockentity = pLevel.getBlockEntity(pPos);
                 if (blockentity != null) {

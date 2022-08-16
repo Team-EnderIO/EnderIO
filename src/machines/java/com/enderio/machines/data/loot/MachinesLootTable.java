@@ -1,5 +1,6 @@
 package com.enderio.machines.data.loot;
 
+import com.enderio.base.common.util.NbtTags;
 import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.world.level.block.Block;
@@ -18,7 +19,7 @@ public class MachinesLootTable {
         loot.add(block, LootTable
             .lootTable()
             .withPool(new LootPool.Builder().add(
-                LootItem.lootTableItem(block).apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY).copy("", "BlockEntityTag")))));
+                LootItem.lootTableItem(block).apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY).copy("", NbtTags.BLOCK_ENTITY_NBT_KEY)))));
     }
 
     // Ignores the top block.
@@ -32,6 +33,6 @@ public class MachinesLootTable {
                     .setProperties(StatePropertiesPredicate.Builder
                         .properties()
                         .hasProperty(BlockStateProperties.DOUBLE_BLOCK_HALF, DoubleBlockHalf.LOWER)))
-                .apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY).copy("", "BlockEntityTag")))));
+                .apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY).copy("", NbtTags.BLOCK_ENTITY_NBT_KEY)))));
     }
 }

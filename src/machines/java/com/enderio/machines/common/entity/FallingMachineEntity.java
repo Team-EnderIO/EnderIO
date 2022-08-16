@@ -1,5 +1,6 @@
 package com.enderio.machines.common.entity;
 
+import com.enderio.base.common.util.NbtTags;
 import com.enderio.machines.common.init.MachineEntities;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -37,7 +38,7 @@ public class FallingMachineEntity extends FallingBlockEntity {
         // Add block entity NBT to item stack
         if (!stack.isEmpty() && blockData != null) {
             CompoundTag itemNbt = new CompoundTag();
-            itemNbt.put("BlockEntityTag", blockData);
+            itemNbt.put(NbtTags.BLOCK_ENTITY_NBT_KEY, blockData);
             stack.setTag(itemNbt);
         }
         return super.spawnAtLocation(stack, offsetY);

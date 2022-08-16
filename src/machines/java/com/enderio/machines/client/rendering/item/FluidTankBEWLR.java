@@ -1,6 +1,7 @@
 package com.enderio.machines.client.rendering.item;
 
 import com.enderio.base.common.capability.FluidHandlerBlockItemStack;
+import com.enderio.base.common.util.NbtTags;
 import com.enderio.machines.client.rendering.blockentity.FluidTankBER;
 import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
 import com.enderio.machines.common.init.MachineBlocks;
@@ -47,8 +48,8 @@ public class FluidTankBEWLR extends BlockEntityWithoutLevelRenderer {
 
         // Read the fluid from the NBT, if it has fluid, then we render it.
         CompoundTag nbt = stack.getTag();
-        if (nbt != null && nbt.contains(FluidHandlerBlockItemStack.BLOCK_ENTITY_NBT_KEY)) {
-            CompoundTag blockEntityTag = nbt.getCompound(FluidHandlerBlockItemStack.BLOCK_ENTITY_NBT_KEY);
+        if (nbt != null && nbt.contains(NbtTags.BLOCK_ENTITY_NBT_KEY)) {
+            CompoundTag blockEntityTag = nbt.getCompound(NbtTags.BLOCK_ENTITY_NBT_KEY);
             if (blockEntityTag != null && blockEntityTag.contains(FluidHandlerBlockItemStack.FLUID_NBT_KEY)) {
                 FluidStack fluidStack = FluidStack
                         .loadFluidStackFromNBT(blockEntityTag.getCompound(FluidHandlerBlockItemStack.FLUID_NBT_KEY));

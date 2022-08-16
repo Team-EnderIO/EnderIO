@@ -1,5 +1,6 @@
 package com.enderio.decoration.common.entity;
 
+import com.enderio.base.common.util.NbtTags;
 import com.enderio.decoration.common.init.DecorEntities;
 import com.enderio.decoration.common.util.PaintUtils;
 import net.minecraft.nbt.CompoundTag;
@@ -75,7 +76,7 @@ public class PaintedSandEntity extends FallingBlockEntity implements IEntityAddi
         // Add block entity NBT to item stack
         if (!stack.isEmpty() && blockData != null) {
             CompoundTag itemNbt = new CompoundTag();
-            itemNbt.put("BlockEntityTag", blockData);
+            itemNbt.put(NbtTags.BLOCK_ENTITY_NBT_KEY, blockData);
             stack.setTag(itemNbt);
         }
         return super.spawnAtLocation(stack, offsetY);

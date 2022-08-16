@@ -1,5 +1,6 @@
 package com.enderio.decoration.client.render;
 
+import com.enderio.base.common.util.NbtTags;
 import com.enderio.decoration.common.blockentity.IPaintableBlockEntity;
 import com.enderio.decoration.common.util.PaintUtils;
 import net.minecraft.client.Minecraft;
@@ -39,8 +40,8 @@ public class PaintedBlockColor implements BlockColor, ItemColor {
 
     @Override
     public int getColor(ItemStack itemStack, int tintIndex) {
-        if (itemStack.getTag() != null && itemStack.getTag().contains("BlockEntityTag")) {
-            CompoundTag blockEntityTag = itemStack.getTag().getCompound("BlockEntityTag");
+        if (itemStack.getTag() != null && itemStack.getTag().contains(NbtTags.BLOCK_ENTITY_NBT_KEY)) {
+            CompoundTag blockEntityTag = itemStack.getTag().getCompound(NbtTags.BLOCK_ENTITY_NBT_KEY);
             if (blockEntityTag.contains("paint")) {
                 Block paint = PaintUtils.getBlockFromRL(blockEntityTag.getString("paint"));
                 if (paint == null)

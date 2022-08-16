@@ -1,5 +1,6 @@
 package com.enderio.decoration.common.util;
 
+import com.enderio.base.common.util.NbtTags;
 import com.enderio.decoration.common.block.painted.IPaintedBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -29,8 +30,8 @@ public class PaintUtils {
     @Nullable
     public static Block getPaint(ItemStack stack) {
         CompoundTag tag = stack.getTag();
-        if (tag != null && tag.contains("BlockEntityTag")) {
-            CompoundTag blockEntityTag = tag.getCompound("BlockEntityTag");
+        if (tag != null && tag.contains(NbtTags.BLOCK_ENTITY_NBT_KEY)) {
+            CompoundTag blockEntityTag = tag.getCompound(NbtTags.BLOCK_ENTITY_NBT_KEY);
             if (blockEntityTag.contains("paint")) {
                 return getBlockFromRL(blockEntityTag.getString("paint"));
             }
