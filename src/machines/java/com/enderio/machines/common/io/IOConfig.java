@@ -53,6 +53,16 @@ public class IOConfig implements IIOConfig {
         return true;
     }
 
+    @Override
+    public boolean isDefault() {
+        for (Direction value : Direction.values()) {
+            if (config.get(value) != IOMode.NONE) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     // Translates world side -> rotated side.
     private Direction translateSide(Direction side) {
         // The block faces with its southern face. So the back of the machine.

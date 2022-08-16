@@ -44,6 +44,11 @@ public final class FixedIOConfig implements IIOConfig {
     }
 
     @Override
+    public boolean isDefault() {
+        return true;
+    }
+
+    @Override
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
         tag.putInt("Mode", mode.ordinal());

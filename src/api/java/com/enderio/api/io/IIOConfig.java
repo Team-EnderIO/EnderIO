@@ -56,4 +56,9 @@ public interface IIOConfig extends INBTSerializable<CompoundTag>, IEnderCapabili
      */
     @UseOnly(LogicalSide.CLIENT)
     boolean renderOverlay();
+
+    /**
+     * Whether the IO config is unchanged from initial values.
+     */
+    boolean isDefault();
 }
