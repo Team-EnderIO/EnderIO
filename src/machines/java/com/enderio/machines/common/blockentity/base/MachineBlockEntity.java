@@ -411,14 +411,31 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         super.saveAdditional(pTag);
 
         // Save io config.
-        pTag.put("io_config", getIOConfig().serializeNBT());
+        IIOConfig ioConfig = getIOConfig();
+        if (!ioConfig.isDefault()) {
+            pTag.put("io_config", getIOConfig().serializeNBT());
+        }
 
         if (supportsRedstoneControl()) {
-            pTag.putInt("redstone", redstoneControl.ordinal());
+            RedstoneControl redstoneControl = getRedstoneControl();
+            if (redstoneControl != RedstoneControl.ALWAYS_ACTIVE) {
+                pTag.putInt("redstone", redstoneControl.ordinal());
+            }
         }
 
         if (inventory != null) {
-            pTag.put("inventory", inventory.serializeNBT());
+            boolean hasContents = false;
+            int stacks = inventory.getSlots();
+            for (int i = 0; i < stacks; i++) {
+                if (!inventory.getStackInSlot(i).isEmpty()) {
+                    hasContents = true;
+                    break;
+                }
+            }
+
+            if (hasContents) {
+                pTag.put("inventory", inventory.serializeNBT());
+            }
         }
     }
 
