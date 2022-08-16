@@ -10,6 +10,7 @@ import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.menu.FluidTankMenu;
+import com.enderio.machines.common.util.FluidUtil;
 import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.core.BlockPos;
@@ -37,7 +38,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 
 import org.jetbrains.annotations.Nullable;
-import java.util.Optional;
 import java.util.function.Function;
 
 @Mod.EventBusSubscriber(modid = EnderIO.MODID, bus = Bus.FORGE)
@@ -115,20 +115,6 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
         super.serverTick();
     }
 
-    private IFluidHandlerItem GetIFluidHandlerItem(ItemStack itemStack) {
-        if (itemStack == null) {
-            return null;
-        }
-
-        Optional<IFluidHandlerItem> fluidHandlerCap = itemStack
-                .getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).resolve();
-        if (!fluidHandlerCap.isPresent()) {
-            return null;
-        }
-
-        return fluidHandlerCap.get();
-    }
-
     private void fillInternal() {
         ItemStack inputItem = getInventory().getStackInSlot(0);
         ItemStack outputItem = getInventory().getStackInSlot(1);
@@ -169,7 +155,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     }
 
     private Pair<FluidOperationResult, IFluidHandlerItem> fillTankFromItem(ItemStack itemStack) {
-        IFluidHandlerItem fluidHandler = GetIFluidHandlerItem(itemStack);
+        IFluidHandlerItem fluidHandler = FluidUtil.getIFluidHandlerItem(itemStack);
         return Pair.of(fluidHandler == null ? FluidOperationResult.INVALIDFLUIDITEM : fillTankFromItem(fluidHandler),
                 fluidHandler);
     }
@@ -239,7 +225,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     }
 
     private Pair<FluidOperationResult, IFluidHandlerItem> drainTankWithItem(ItemStack itemStack) {
-        IFluidHandlerItem fluidHandler = GetIFluidHandlerItem(itemStack);
+        IFluidHandlerItem fluidHandler = FluidUtil.getIFluidHandlerItem(itemStack);
         return Pair.of(fluidHandler == null ? FluidOperationResult.INVALIDFLUIDITEM : drainTankWithItem(fluidHandler),
                 fluidHandler);
     }
