@@ -16,7 +16,10 @@
                   "target": "BlockEntityTag"
                 }
               ],
-              "source": "block_entity"
+              "source": {
+                "type": "enderio:improved_context",
+                "target": "block_entity"
+              }
             }
           ],
           "name": "enderio:simple_powered_furnace"
