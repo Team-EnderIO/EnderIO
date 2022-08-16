@@ -40,7 +40,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.function.Function;
 
-@Mod.EventBusSubscriber(modid = EnderIO.MODID, bus = Bus.MOD)
+@Mod.EventBusSubscriber(modid = EnderIO.MODID, bus = Bus.FORGE)
 public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     public enum FluidOperationResult {
         INVALIDFLUIDITEM,
@@ -86,6 +86,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     public static void blockBroken(final BlockEvent.BreakEvent event) {
         BlockEntity entity = event.getLevel().getBlockEntity(event.getPos());
         if (entity instanceof FluidTankBlockEntity fluidTankBlockEntity) {
+            System.out.println("blockBroken");
             FluidTankBER.removeBlock(fluidTankBlockEntity.getBlockPos());
         }
     }
