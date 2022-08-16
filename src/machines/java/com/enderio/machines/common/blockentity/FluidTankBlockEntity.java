@@ -139,7 +139,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
         }
     }
 
-    public FluidOperationResult fillTankFromBucket(BucketItem bucket) {
+    public FluidOperationResult fillTankFromBucket(@Nullable BucketItem bucket) {
         if (bucket == null) {
             return FluidOperationResult.INVALIDFLUIDITEM;
         }
@@ -160,7 +160,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
                 fluidHandler);
     }
 
-    public FluidOperationResult fillTankFromItem(IFluidHandlerItem item) {
+    public FluidOperationResult fillTankFromItem(@Nullable IFluidHandlerItem item) {
         if (item == null) {
             return FluidOperationResult.INVALIDFLUIDITEM;
         }
@@ -202,7 +202,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
         return drainTankWithBucket(null);
     }
 
-    public Pair<Boolean, FluidStack> drainTankWithBucket(Function<FluidStack, Boolean> shouldDrain) {
+    public Pair<Boolean, FluidStack> drainTankWithBucket(@Nullable Function<FluidStack, Boolean> shouldDrain) {
         if (fluidTank.isEmpty()) {
             return Pair.of(false, null);
         }
@@ -230,7 +230,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
                 fluidHandler);
     }
 
-    public FluidOperationResult drainTankWithItem(IFluidHandlerItem item) {
+    public FluidOperationResult drainTankWithItem(@Nullable IFluidHandlerItem item) {
         if (item == null) {
             return FluidOperationResult.INVALIDFLUIDITEM;
         }
