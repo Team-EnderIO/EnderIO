@@ -12,6 +12,8 @@ import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.io.IOConfig;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import com.enderio.machines.common.util.MachineNbtTags;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -413,13 +415,13 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         // Save io config.
         IIOConfig ioConfig = getIOConfig();
         if (!ioConfig.isDefault()) {
-            pTag.put("io_config", getIOConfig().serializeNBT());
+            pTag.put(MachineNbtTags.IO_CONFIG_NBT_KEY, getIOConfig().serializeNBT());
         }
 
         if (supportsRedstoneControl()) {
             RedstoneControl redstoneControl = getRedstoneControl();
             if (redstoneControl != RedstoneControl.ALWAYS_ACTIVE) {
-                pTag.putInt("redstone", redstoneControl.ordinal());
+                pTag.putInt(MachineNbtTags.REDSTONE_CONTROL_NBT_KEY, redstoneControl.ordinal());
             }
         }
 
@@ -434,7 +436,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             }
 
             if (hasContents) {
-                pTag.put("inventory", inventory.serializeNBT());
+                pTag.put(MachineNbtTags.INVENTORY_NBT_KEY, inventory.serializeNBT());
             }
         }
     }
@@ -442,14 +444,14 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     @Override
     public void load(CompoundTag pTag) {
         // Load io config.
-        ioConfig.deserializeNBT(pTag.getCompound("io_config"));
+        ioConfig.deserializeNBT(pTag.getCompound(MachineNbtTags.IO_CONFIG_NBT_KEY));
 
         if (supportsRedstoneControl()) {
-            redstoneControl = RedstoneControl.values()[pTag.getInt("redstone")];
+            redstoneControl = RedstoneControl.values()[pTag.getInt(MachineNbtTags.REDSTONE_CONTROL_NBT_KEY)];
         }
 
         if (inventory != null) {
-            inventory.deserializeNBT(pTag.getCompound("inventory"));
+            inventory.deserializeNBT(pTag.getCompound(MachineNbtTags.INVENTORY_NBT_KEY));
         }
 
         // For rendering io overlays after placed by an nbt filled block item
