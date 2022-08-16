@@ -57,20 +57,21 @@ public class MachineModelUtil {
     }
 
     private static ModelFile machineBody(RegistrateBlockstateProvider prov, String name, BlockModelBuilder frontModel) {
-        return machineBodyModel(prov, name, frontModel, EnderIO.loc("block/machine_frame"));
+        return machineBodyModel(prov, name, frontModel, "machine");
     }
 
     private static ModelFile soulMachineBody(RegistrateBlockstateProvider prov, String name, BlockModelBuilder frontModel) {
-        return machineBodyModel(prov, name, frontModel, EnderIO.loc("block/soul_machine_frame"));
+        return machineBodyModel(prov, name, frontModel, "soul_machine");
     }
 
-    private static ModelFile machineBodyModel(RegistrateBlockstateProvider prov, String name, BlockModelBuilder frontModel, ResourceLocation frameModel) {
+    private static ModelFile machineBodyModel(RegistrateBlockstateProvider prov, String name, BlockModelBuilder frontModel, String type) {
         return prov.models().withExistingParent(name, prov.mcLoc("block/block"))
             .customLoader(CompositeModelBuilder::begin)
-                .child("frame", EIOModel.getExistingParent(prov.models(), frameModel))
+                .child("frame", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/" + type + "_frame")))
                 .child("overlay", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/io_overlay")))
                 .child("front", frontModel)
-            .end();
+            .end()
+            .texture("particle", EnderIO.loc("block/" + type + "_side"));
     }
 
     // endregion

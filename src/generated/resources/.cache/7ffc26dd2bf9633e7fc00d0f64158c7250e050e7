@@ -1,4 +1,4 @@
-// 1.19.2	2022-08-15T23:42:14.071189	Registrate Provider for enderio [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
+// 1.19.2	2022-08-16T13:24:57.430089	Registrate Provider for enderio [Recipes, Advancements, Loot tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), Blockstates, Item models, Lang (en_us/en_ud)]
 73adb56f72a5805aa07ee54397acb790c30cccb5 assets/enderio/blockstates/alloy_smelter.json
 38456017a1ded6fddac24d85def47523e9ee034c assets/enderio/blockstates/clear_glass.json
 38456017a1ded6fddac24d85def47523e9ee034c assets/enderio/blockstates/clear_glass_a.json
@@ -800,9 +800,9 @@ fffb418818fa4ec53a362ef433d0c30f00f9d39d assets/enderio/blockstates/vibrant_allo
 dc9a80d96b9da4a13c49c78cb65adbbf7c4928dc assets/enderio/blockstates/xp_juice.json
 f1f490fe02855517e614aa088770253e3dcb2224 assets/enderio/lang/en_ud.json
 116e44ca1149a121c8ba93437a430377475c6e1c assets/enderio/lang/en_us.json
-be027ef82ca7f17fdd8d0edacfacf4f7f07e7a06 assets/enderio/models/block/alloy_smelter.json
+21cdef0a6b2a33777a1f9a471417261657d753bc assets/enderio/models/block/alloy_smelter.json
 ef459b1b7abed93577f72840c13d2b529cfae6d4 assets/enderio/models/block/alloy_smelter_front_on.json
-ca9a3c2ef9be4346cb7045f4b3140409f5468624 assets/enderio/models/block/alloy_smelter_on.json
+e7d7f08ac0c64ec135e0d9d960aeb78ebfeb2f36 assets/enderio/models/block/alloy_smelter_on.json
 82e1f9bc8c11ad2e19253c6536d80a1d3398b4a1 assets/enderio/models/block/cloud_seed.json
 90f9b8c9f86c62f9dfc8826139350b24d16492b1 assets/enderio/models/block/cloud_seed_concentrated.json
 85968b6918885e5e706e34021e4a865eacecd54d assets/enderio/models/block/conductive_alloy_block.json
@@ -853,9 +853,9 @@ d3a9cd35d57940f75d75d834e413c9deb98c048d assets/enderio/models/block/fire_side_a
 0aaf03660f794c57e1d98c58abd2fc093021bdb9 assets/enderio/models/block/fire_water.json
 88a6b4c705677f253e25ada4b6510010520848b5 assets/enderio/models/block/fluid_tank.json
 01f400cf1c822061351abe8cb78b143f93f70a3c assets/enderio/models/block/hootch.json
-5fe2b5ad39bc629fc5893d48a67cd1bb491d00dc assets/enderio/models/block/impulse_hopper.json
+45db913da652fb37e4ddf126260ca9477d576618 assets/enderio/models/block/impulse_hopper.json
 00dd36ca17eaef1a1dbad8ca761e8d6e401e9db8 assets/enderio/models/block/impulse_hopper_front_on.json
-7346955aafff7e3592f7c703f824330c295b4806 assets/enderio/models/block/impulse_hopper_on.json
+a97a65bbc56f9474449ce5083ce3dfc00de747d5 assets/enderio/models/block/impulse_hopper_on.json
 88cbc845fcb8873a26837dd3277dfef33195997d assets/enderio/models/block/industrial_machine_chassis.json
 3d4bc27d7a4f2fb3dbeb39acd2407a40ffdf5fb5 assets/enderio/models/block/iron_alloy_block.json
 cf0ff299729718c8eca585cf46d502dac1d877e7 assets/enderio/models/block/light.json
@@ -889,24 +889,24 @@ cf0ff299729718c8eca585cf46d502dac1d877e7 assets/enderio/models/block/powered_lig
 1d91945566b51e859513f22da0c8fc9a6842f3f5 assets/enderio/models/block/redstone_alloy_block.json
 0ae5c592ad68027ee6c39e9b3c1c88c42bf327cf assets/enderio/models/block/reinforced_obsidian_block.json
 b5521bdc9384b891dd1d39f628f046d5a05cb651 assets/enderio/models/block/rocket_fuel.json
-5289c980e71cb09d8b2bf6d51c3129bd54d5ae62 assets/enderio/models/block/sag_mill.json
+cb7fae21c3b4f74b7888d22ad543499e552f90d4 assets/enderio/models/block/sag_mill.json
 760fb675090d82c77e1b19579e1f372550c942a1 assets/enderio/models/block/sag_mill_front_on.json
-12305b07870f7ac64693fff07d23c190c5b36c13 assets/enderio/models/block/sag_mill_on.json
+b1ebdc6815dbd8e947aaa827848d0ac589a00743 assets/enderio/models/block/sag_mill_on.json
 0bea7a30090bc9e4475dc467d1f6d445f2e74b5a assets/enderio/models/block/silent_dark_steel_pressure_plate.json
 07fa4e9272fa521594d82615f1feb01dd603963b assets/enderio/models/block/silent_dark_steel_pressure_plate_down.json
 8f412cd0428c5bf2c9c09f0fe29d952fdd332fe5 assets/enderio/models/block/silent_soularium_pressure_plate.json
 6aadafca481eb2a5c6aac53e5a49d6904dae1e32 assets/enderio/models/block/silent_soularium_pressure_plate_down.json
-4c67b202d77c5f881bf8a2dcd6e61e2fd5a87722 assets/enderio/models/block/slice_and_splice.json
+7878c986afc3608ffe836f067066a401f941c644 assets/enderio/models/block/slice_and_splice.json
 22da5ae711372cbc640c27cfc4c0b1b9b74ae624 assets/enderio/models/block/slice_and_splice_front_on.json
-a705bd3f011d071a385b65d72f29f96fc8d70140 assets/enderio/models/block/slice_and_splice_on.json
+4f65dddd7954687598c4d30da3e930b1fa48f235 assets/enderio/models/block/slice_and_splice_on.json
 ba870aa6e8465c5ee69b09be09b5d1ae7b6a965f assets/enderio/models/block/soul_machine_chassis.json
 be95bb55ca637e7a64d4bfc852ccbb9968d1f1ba assets/enderio/models/block/soularium_block.json
 8f412cd0428c5bf2c9c09f0fe29d952fdd332fe5 assets/enderio/models/block/soularium_pressure_plate.json
 6aadafca481eb2a5c6aac53e5a49d6904dae1e32 assets/enderio/models/block/soularium_pressure_plate_down.json
 1170820981c47f6a5efb33f35fb3d60ffd247b45 assets/enderio/models/block/soulless_machine_chassis.json
-405b429b3bc3e2a507d78f734eb0ed9ef2487440 assets/enderio/models/block/stirling_generator.json
+75f677f46d2641684ad98179b695d08dd261a781 assets/enderio/models/block/stirling_generator.json
 6749cf672c00ca7aec48a575e99d22c79bed70f2 assets/enderio/models/block/stirling_generator_front_on.json
-476ffd274392be240de66db29517c4407934200d assets/enderio/models/block/stirling_generator_on.json
+14a6122b4b56efaa65253ba5433aa5306999b88f assets/enderio/models/block/stirling_generator_on.json
 149f761c2849de73091d0c50212b186a0c2d6e07 assets/enderio/models/block/vapor_of_levity.json
 e671f8f377565ee444ed1482c12dcf040701c24e assets/enderio/models/block/vibrant_alloy_block.json
 cad8873a35d97f7776012ecf2d0ae5ae645b68e5 assets/enderio/models/block/xp_juice.json

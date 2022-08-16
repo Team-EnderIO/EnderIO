@@ -1,14 +1,14 @@
 {
   "type": "minecraft:crafting_shaped",
   "key": {
-    "I": {
+    "#": {
       "item": "enderio:soularium_ingot"
     }
   },
   "pattern": [
-    "III",
-    "III",
-    "III"
+    "###",
+    "###",
+    "###"
   ],
   "result": {
     "item": "enderio:soularium_block"
