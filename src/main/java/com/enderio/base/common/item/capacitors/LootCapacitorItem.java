@@ -2,12 +2,14 @@ package com.enderio.base.common.item.capacitors;
 
 import com.enderio.api.capability.IMultiCapabilityItem;
 import com.enderio.api.capability.MultiCapabilityProvider;
+import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.base.common.capacitor.LootCapacitorData;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -16,6 +18,7 @@ import net.minecraftforge.common.util.LazyOptional;
 
 import org.jetbrains.annotations.Nullable;
 import java.util.List;
+import java.util.Map;
 
 public class LootCapacitorItem extends Item implements IMultiCapabilityItem {
 
@@ -29,7 +32,9 @@ public class LootCapacitorItem extends Item implements IMultiCapabilityItem {
         pStack.getCapability(EIOCapabilities.CAPACITOR).ifPresent(data -> {
             pTooltipComponents.add(TooltipUtil.styledWithArgs(EIOLang.CAPACITOR_TOOLTIP_BASE, data.getBase()));
             if (data instanceof LootCapacitorData lootCapacitorData) {
-                // TODO: Generate tooltips list for specialisations
+                for (Map.Entry<CapacitorModifier, Float> modifier : lootCapacitorData.getAllModifiers().entrySet()) {
+                    pTooltipComponents.add(TooltipUtil.styledWithArgs(new ResourceLocation("tooltip", modifier.getKey().id.toLanguageKey()), modifier.getValue()));
+                }
             }
         });
     }

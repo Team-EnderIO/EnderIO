@@ -45,6 +45,11 @@ import java.util.function.Supplier;
 
 public class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltingRecipe, AlloySmeltingRecipe.Container> {
 
+    /**
+     * The primitive variant of the alloy smelter burns coal instead of using an energy buffer.
+     * In order to keep implementation logic together, we do some kinda hacky stuff to emulate an internal buffer.
+     * This buffer cannot be accessed via external means however.
+     */
     public static class Primitive extends AlloySmelterBlockEntity {
         private int burnTime;
         private int burnDuration;
@@ -201,6 +206,10 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltin
         newTaskAvailable();
     }
 
+    /**
+     * Whether the mode is restricted.
+     * Used to disable serialization of the mode and sync of the slot when this is the primitive variant.
+     */
     protected boolean restrictedMode() {
         return false;
     }

@@ -1,6 +1,7 @@
 package com.enderio.base.common.lang;
 
 import com.enderio.EnderIO;
+import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.core.common.util.TooltipUtil;
 import com.tterrag.registrate.Registrate;
 import net.minecraft.ChatFormatting;
@@ -104,6 +105,10 @@ public class EIOLang {
     // region Capacitors
 
     public static final MutableComponent CAPACITOR_TOOLTIP_BASE = REGISTRATE.addLang("tooltip", EnderIO.loc("capacitor.base"), "Base Modifier: %s");
+
+    public static final MutableComponent CAPACITOR_TOOLTIP_ENERGY_CAPACITY = REGISTRATE.addLang("tooltip", CapacitorModifier.ENERGY_CAPACITY.id, "Energy Capacity Modifier: %s");
+    public static final MutableComponent CAPACITOR_TOOLTIP_ENERGY_USE = REGISTRATE.addLang("tooltip", CapacitorModifier.ENERGY_USE.id, "Energy Use Modifier: %s");
+    public static final MutableComponent CAPACITOR_TOOLTIP_ENERGY_TRANSFER = REGISTRATE.addLang("tooltip", CapacitorModifier.ENERGY_TRANSFER.id, "Energy Transfer Modifier: %s");
 
     // TODO: Loot capacitor lang
 //    public static final Component CAPACITOR_ALL_ENERGY_CONSUMPSTION = capacitorDescriptionBuilder("type", CapacitorSpecializations.ALL_ENERGY_CONSUMPTION, "Leaky");
