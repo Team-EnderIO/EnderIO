@@ -93,7 +93,6 @@ public class EnderBlockEntity extends BlockEntity {
 
     /**
      * create the ClientBoundBlockEntityDataPacket for this BlockEntity
-     *
      * @param fullUpdate if this packet should send all information (this is used for players who started tracking this BlockEntity)
      * @return the UpdatePacket
      */
@@ -176,12 +175,11 @@ public class EnderBlockEntity extends BlockEntity {
 
     /**
      * never call this on client
-     *
      * @return all ServerPlayers tracking this BlockEntity
      */
     @UseOnly(LogicalSide.SERVER)
     private List<ServerPlayer> getTrackingPlayers() {
-        return ((ServerChunkCache) level.getChunkSource()).chunkMap.getPlayers(new ChunkPos(worldPosition), false);
+        return ((ServerChunkCache)level.getChunkSource()).chunkMap.getPlayers(new ChunkPos(worldPosition), false);
     }
 
     public List<EnderDataSlot<?>> getDataSlots() {
