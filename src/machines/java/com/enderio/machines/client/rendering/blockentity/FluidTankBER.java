@@ -42,28 +42,40 @@ public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
         int fluidAmount = tank.getFluidAmount();
         float capacity = (float) tank.getCapacity();
 
+        // Check to see if there is an existing animation for this block.
         AnimationInformation information = map.get(blockEntity.getBlockPos());
         float frameTarget;
         if (information == null) {
+            // No existing animation information (an unexpected state), so render as normal.
             frameTarget = fluidAmount / capacity;
         } else if (information.currentTarget == fluidAmount) {
+            // The amount in the FluidTank hasn't changed (i.e. no fluid has been added or
+            // removed).
             if (information.animation == null) {
+                // There is no current animation on-going, so render as normal.
                 frameTarget = fluidAmount / capacity;
             } else {
+                // Advance the animation and update the level to animate at.
                 information.animation.updateByPartialTick(partialTick);
                 frameTarget = information.animation.getCurrent();
+
+                // If the animation has completed, clear it from the information.
                 if (information.animation.isComplete()) {
                     information.animation = null;
                     information.fluid = fluid;
                 }
             }
         } else {
+            // The amount in the FluidTank has changed, so begin animation to new value.
             try {
+                // Start at the current level, or whatever level the previous animation got to.
                 float start = information.animation == null ? information.currentTarget / capacity
                         : information.animation.getCurrent();
                 float target = fluidAmount / capacity;
                 information.animation = new Animation(start, target, ANIMATION_TICKS);
 
+                // If the new fluid is EMPTY (i.e. the FluidTank is now empty), then we need to
+                // retain the 'old' fluid so that the emptying animates correctly.
                 if (fluid != Fluids.EMPTY) {
                     information.fluid = fluid;
                 }
@@ -71,11 +83,12 @@ public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
                 information.currentTarget = fluidAmount;
                 frameTarget = information.animation.getCurrent();
             } catch (Exception e) {
+                // Catching exception from Animation constructor, just render as normal.
                 frameTarget = fluidAmount / capacity;
             }
         }
 
-        // Don't waste time if there's no fluid.
+        // Don't waste time rendering if there's no fluid.
         if (frameTarget > 0) {
             Fluid fluidToRender = information == null ? fluid : information.fluid;
 
@@ -123,17 +136,29 @@ public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
                 fluidHeight, color);
     }
 
+    /**
+     * Registers a {@link FluidTankBlockEntity} so that it can be animated.
+     * 
+     * @param entity {@link FluidTankBlockEntity} to be animated.
+     */
     public static void addBlock(FluidTankBlockEntity entity) {
-        FluidTank tank = entity.getFluidTank();
-
         BlockPos blockPos = entity.getBlockPos();
-        if (!map.containsKey(blockPos)) {
-            AnimationInformation information = new AnimationInformation(tank.getFluidAmount());
-            information.fluid = tank.getFluid().getFluid();
-            map.put(blockPos, information);
+        if (map.containsKey(blockPos)) {
+            return;
         }
+
+        FluidTank tank = entity.getFluidTank();
+        AnimationInformation information = new AnimationInformation(tank.getFluidAmount());
+        information.fluid = tank.getFluid().getFluid();
+        map.put(blockPos, information);
     }
 
+    /**
+     * Removes a {@link BlockPos} from the collection of items to be animated.
+     * 
+     * @param blockPos {@link BlockPos} to be removed.
+     * @return Whether the blockPos was in the collection of items to be animated.
+     */
     public static boolean removeBlock(BlockPos blockPos) {
         return map.remove(blockPos) != null;
     }
