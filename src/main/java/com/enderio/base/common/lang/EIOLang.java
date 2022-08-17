@@ -135,6 +135,12 @@ public class EIOLang {
 
     // endregion
 
+    //region filters
+
+    public static final Component FILTER = REGISTRATE.addLang("gui", EnderIO.loc("filter"), "Filter");
+
+    // endregion
+
     // region Graves
 
     public static final Component GRAVE_WRONG_OWNER = REGISTRATE.addLang("message", EnderIO.loc("grave.wrong_owner"), "This grave is not yours! You cannot open it.");

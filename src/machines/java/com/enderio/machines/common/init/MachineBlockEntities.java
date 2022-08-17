@@ -36,6 +36,14 @@ public class MachineBlockEntities {
         MachineBlocks.SLICE_AND_SPLICE);
     public static final BlockEntityEntry<ImpulseHopperBlockEntity> IMPULSE_HOPPER = register("impulse_hopper", ImpulseHopperBlockEntity::new,
         MachineBlocks.IMPULSE_HOPPER);
+    public static final BlockEntityEntry<VacuumChestBlockEntity> VACUUM_CHEST = REGISTRATE
+        .blockEntity("vacuum_chest", VacuumChestBlockEntity::new)
+        .validBlock(MachineBlocks.VACUUM_CHEST)
+        .register();
+    public static final BlockEntityEntry<XPVacuumBlockEntity> XP_VACUUM = REGISTRATE
+        .blockEntity("xp_vacuum", XPVacuumBlockEntity::new)
+        .validBlock(MachineBlocks.XP_VACUUM)
+        .register();
 
     @SafeVarargs
     private static <B extends BlockEntity> BlockEntityEntry<B> register(String name, BlockEntityBuilder.BlockEntityFactory<B> beFactory,
