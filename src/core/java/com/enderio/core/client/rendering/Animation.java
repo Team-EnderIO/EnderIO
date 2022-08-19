@@ -80,6 +80,6 @@ public class Animation {
      */
     public boolean isComplete() {
         // Check difference with epsilon, because floating point precision is fun.
-        return Mth.abs(current - target) <= Mth.EPSILON;
+        return Mth.abs(currentDurationTick - totalDurationTick) <= Mth.EPSILON;
     }
 }
