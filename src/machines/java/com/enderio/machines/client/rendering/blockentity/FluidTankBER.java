@@ -1,6 +1,6 @@
 package com.enderio.machines.client.rendering.blockentity;
 
-import java.util.HashMap;
+import javax.annotation.Nullable;
 
 import com.enderio.core.client.RenderUtil;
 import com.enderio.core.client.rendering.Animation;
@@ -15,7 +15,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -26,10 +25,8 @@ import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
     private static float ANIMATION_TICKS = 20.0f;
-    private static HashMap<BlockPos, AnimationInformation> map = new HashMap<BlockPos, AnimationInformation>();
 
     public FluidTankBER(BlockEntityRendererProvider.Context context) {
-
     }
 
     @Override
@@ -43,45 +40,45 @@ public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
         float capacity = (float) tank.getCapacity();
 
         // Check to see if there is an existing animation for this block.
-        AnimationInformation information = map.get(blockEntity.getBlockPos());
+        AnimationInformation information = blockEntity.getAnimationInformation();
         float frameTarget;
         if (information == null) {
             // No existing animation information (an unexpected state), so render as normal.
             frameTarget = fluidAmount / capacity;
-        } else if (information.currentTarget == fluidAmount) {
+        } else if (information.getCurrentTarget() == fluidAmount) {
             // The amount in the FluidTank hasn't changed (i.e. no fluid has been added or
             // removed).
-            if (information.animation == null) {
+            if (information.getAnimation() == null) {
                 // There is no current animation on-going, so render as normal.
                 frameTarget = fluidAmount / capacity;
             } else {
                 // Advance the animation and update the level to animate at.
-                information.animation.updateByPartialTick(partialTick);
-                frameTarget = information.animation.getCurrent();
+                information.getAnimation().updateByPartialTick(partialTick);
+                frameTarget = information.getAnimation().getCurrent();
 
                 // If the animation has completed, clear it from the information.
-                if (information.animation.isComplete()) {
-                    information.animation = null;
-                    information.fluid = fluid;
+                if (information.getAnimation().isComplete()) {
+                    information.setAnimation(null);
+                    information.setFluid(fluid);
                 }
             }
         } else {
             // The amount in the FluidTank has changed, so begin animation to new value.
             try {
                 // Start at the current level, or whatever level the previous animation got to.
-                float start = information.animation == null ? information.currentTarget / capacity
-                        : information.animation.getCurrent();
+                float start = information.getAnimation() == null ? information.getCurrentTarget() / capacity
+                        : information.getAnimation().getCurrent();
                 float target = fluidAmount / capacity;
-                information.animation = new Animation(start, target, ANIMATION_TICKS);
+                information.setAnimation(new Animation(start, target, ANIMATION_TICKS));
 
                 // If the new fluid is EMPTY (i.e. the FluidTank is now empty), then we need to
                 // retain the 'old' fluid so that the emptying animates correctly.
                 if (fluid != Fluids.EMPTY) {
-                    information.fluid = fluid;
+                    information.setFluid(fluid);
                 }
 
-                information.currentTarget = fluidAmount;
-                frameTarget = information.animation.getCurrent();
+                information.setCurrentTarget(fluidAmount);
+                frameTarget = information.getAnimation().getCurrent();
             } catch (Exception e) {
                 // Catching exception from Animation constructor, just render as normal.
                 frameTarget = fluidAmount / capacity;
@@ -90,7 +87,7 @@ public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
 
         // Don't waste time rendering if there's no fluid.
         if (frameTarget > 0) {
-            Fluid fluidToRender = information == null ? fluid : information.fluid;
+            Fluid fluidToRender = information == null ? fluid : information.getFluid();
 
             // Get the preferred render buffer
             VertexConsumer buffer = bufferSource
@@ -136,40 +133,42 @@ public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
                 fluidHeight, color);
     }
 
-    /**
-     * Registers a {@link FluidTankBlockEntity} so that it can be animated.
-     * 
-     * @param entity {@link FluidTankBlockEntity} to be animated.
-     */
-    public static void addBlock(FluidTankBlockEntity entity) {
-        BlockPos blockPos = entity.getBlockPos();
-        if (map.containsKey(blockPos)) {
-            return;
+    public static class AnimationInformation {
+        private int currentTarget;
+        private Animation animation = null;
+        private Fluid fluid = null;
+
+        public AnimationInformation(@Nullable Fluid fluid, int currentTarget) {
+            this.fluid = fluid;
+            this.currentTarget = currentTarget;
         }
 
-        FluidTank tank = entity.getFluidTank();
-        AnimationInformation information = new AnimationInformation(tank.getFluidAmount());
-        information.fluid = tank.getFluid().getFluid();
-        map.put(blockPos, information);
-    }
+        public AnimationInformation(FluidTank fluidTank) {
+            this(fluidTank.getFluid().getFluid(), fluidTank.getFluidAmount());
+        }
 
-    /**
-     * Removes a {@link BlockPos} from the collection of items to be animated.
-     * 
-     * @param blockPos {@link BlockPos} to be removed.
-     * @return Whether the blockPos was in the collection of items to be animated.
-     */
-    public static boolean removeBlock(BlockPos blockPos) {
-        return map.remove(blockPos) != null;
-    }
+        public int getCurrentTarget() {
+            return currentTarget;
+        }
 
-    private static class AnimationInformation {
-        public int currentTarget;
-        public Animation animation = null;
-        public Fluid fluid = null;
-
-        public AnimationInformation(int currentTarget) {
+        public void setCurrentTarget(int currentTarget) {
             this.currentTarget = currentTarget;
+        }
+
+        public Animation getAnimation() {
+            return animation;
+        }
+
+        public void setAnimation(@Nullable Animation animation) {
+            this.animation = animation;
+        }
+
+        public Fluid getFluid() {
+            return fluid;
+        }
+
+        public void setFluid(@Nullable Fluid fluid) {
+            this.fluid = fluid;
         }
     }
 }

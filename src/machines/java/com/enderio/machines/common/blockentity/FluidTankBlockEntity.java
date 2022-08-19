@@ -1,10 +1,9 @@
 package com.enderio.machines.common.blockentity;
 
-import com.enderio.EnderIO;
 import com.enderio.base.common.capability.FluidHandlerBlockItemStack;
 import com.enderio.core.common.sync.FluidStackDataSlot;
 import com.enderio.core.common.sync.SyncMode;
-import com.enderio.machines.client.rendering.blockentity.FluidTankBER;
+import com.enderio.machines.client.rendering.blockentity.FluidTankBER.AnimationInformation;
 import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
@@ -22,25 +21,19 @@ import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.MobBucketItem;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 
 import org.jetbrains.annotations.Nullable;
 import java.util.function.Function;
 
-@Mod.EventBusSubscriber(modid = EnderIO.MODID, bus = Bus.FORGE)
 public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     public enum FluidOperationResult {
         INVALIDFLUIDITEM,
@@ -66,6 +59,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
 
     private final FluidTank fluidTank;
     private final MachineFluidHandler fluidHandler;
+    private AnimationInformation animationInformation;
 
     public FluidTankBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState, int capacity) {
         super(type, worldPosition, blockState);
@@ -79,15 +73,15 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
         // Add capability provider
         addCapabilityProvider(fluidHandler);
 
-        addDataSlot(new FluidStackDataSlot(fluidTank::getFluid, fluidTank::setFluid, SyncMode.WORLD));
+        addDataSlot(new FluidStackDataSlot(fluidTank::getFluid, this::setFluidStack, SyncMode.WORLD));
     }
 
-    @SubscribeEvent
-    public static void blockBroken(final BlockEvent.BreakEvent event) {
-        BlockEntity entity = event.getLevel().getBlockEntity(event.getPos());
-        if (entity instanceof FluidTankBlockEntity fluidTankBlockEntity) {
-            System.out.println("blockBroken");
-            FluidTankBER.removeBlock(fluidTankBlockEntity.getBlockPos());
+    private void setFluidStack(FluidStack stack) {
+        fluidTank.setFluid(stack);
+
+        // This only needs to be done upon initialization.
+        if (this.animationInformation == null) {
+            this.setAnimationInformation(new AnimationInformation(fluidTank));
         }
     }
 
@@ -248,6 +242,14 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
         return fluidTank;
     }
 
+    public AnimationInformation getAnimationInformation() {
+        return animationInformation;
+    }
+
+    public void setAnimationInformation(@Nullable AnimationInformation animationInformation) {
+        this.animationInformation = animationInformation;
+    }
+
     @Override
     public MachineInventoryLayout getInventoryLayout() {
         return MachineInventoryLayout
@@ -281,7 +283,6 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     public void load(CompoundTag pTag) {
         super.load(pTag);
         fluidTank.readFromNBT(pTag.getCompound(FluidHandlerBlockItemStack.FLUID_NBT_KEY));
-        FluidTankBER.addBlock(this);
     }
 
     // endregion
