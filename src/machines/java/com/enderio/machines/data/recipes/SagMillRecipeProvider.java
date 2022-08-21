@@ -128,7 +128,7 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
         
         build("sand", Ingredient.of(SAND), List.of(
-        		output(SILICON.get(), 2)
+        		output(SILICON.get(), 0.5f)
         		),BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
         
         build("glowstone", Ingredient.of(GLOWSTONE), List.of(//swap with any:glowstone

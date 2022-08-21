@@ -1,0 +1,18 @@
+{
+  "type": "enderio:sagmilling",
+  "energy": 2400,
+  "input": {
+    "item": "minecraft:bone"
+  },
+  "outputs": [
+    {
+      "count": 6,
+      "item": "minecraft:bone_meal"
+    },
+    {
+      "chance": 0.1,
+      "count": 2,
+      "item": "minecraft:bone_meal"
+    }
+  ]
+}

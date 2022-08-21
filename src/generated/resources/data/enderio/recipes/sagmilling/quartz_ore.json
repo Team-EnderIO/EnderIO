@@ -1,0 +1,21 @@
+{
+  "type": "enderio:sagmilling",
+  "energy": 2400,
+  "input": {
+    "item": "minecraft:nether_quartz_ore"
+  },
+  "outputs": [
+    {
+      "count": 2,
+      "item": "minecraft:quartz"
+    },
+    {
+      "chance": 0.1,
+      "item": "enderio:quartz_powder"
+    },
+    {
+      "chance": 0.15,
+      "item": "minecraft:netherrack"
+    }
+  ]
+}

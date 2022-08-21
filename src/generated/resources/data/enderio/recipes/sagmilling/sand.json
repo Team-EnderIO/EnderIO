@@ -1,0 +1,13 @@
+{
+  "type": "enderio:sagmilling",
+  "energy": 2400,
+  "input": {
+    "item": "minecraft:sand"
+  },
+  "outputs": [
+    {
+      "chance": 0.5,
+      "item": "enderio:silicon"
+    }
+  ]
+}

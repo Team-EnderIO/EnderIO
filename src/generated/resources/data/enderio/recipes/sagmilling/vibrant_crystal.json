@@ -1,0 +1,12 @@
+{
+  "type": "enderio:sagmilling",
+  "energy": 2400,
+  "input": {
+    "item": "enderio:vibrant_crystal"
+  },
+  "outputs": [
+    {
+      "item": "enderio:vibrant_powder"
+    }
+  ]
+}
