@@ -222,9 +222,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     @Override
     public void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
-        if (fluidTank.isEmpty()) {
-            pTag.remove(FluidHandlerBlockItemStack.FLUID_NBT_KEY);
-        } else {
+        if (!fluidTank.isEmpty()) {
             pTag.put(FluidHandlerBlockItemStack.FLUID_NBT_KEY, fluidTank.writeToNBT(new CompoundTag()));
         }
     }
