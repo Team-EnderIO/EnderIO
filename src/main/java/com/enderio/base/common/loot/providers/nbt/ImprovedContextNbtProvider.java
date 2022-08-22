@@ -25,7 +25,8 @@ import net.minecraft.world.level.storage.loot.providers.nbt.NbtProvider;
 /**
  * A NbtProvider that provides either the
  * {@linkplain LootContextParams#BLOCK_ENTITY block entity}'s NBT data or an
- * entity's NBT data based on an {@link LootContext.EntityTarget} but without the id and positional data.
+ * entity's NBT data based on an {@link LootContext.EntityTarget} but without
+ * the id and positional data.
  */
 public class ImprovedContextNbtProvider implements NbtProvider {
     private static final String BLOCK_ENTITY_ID = "block_entity";
