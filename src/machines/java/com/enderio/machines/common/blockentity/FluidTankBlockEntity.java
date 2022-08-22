@@ -27,20 +27,13 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import org.jetbrains.annotations.Nullable;
-import java.util.function.Function;
+import java.util.function.Predicate;
 
 public abstract class FluidTankBlockEntity extends MachineBlockEntity {
-    public enum FluidOperationResult {
-        INVALIDFLUIDITEM,
-        FAIL,
-        SUCCESS
-    }
-
     public static class Standard extends FluidTankBlockEntity {
         public static final int CAPACITY = 16 * FluidType.BUCKET_VOLUME;
 
@@ -116,15 +109,15 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
             if (inputItem.getItem() instanceof BucketItem filledBucket) {
                 if (outputItem.isEmpty() || (outputItem.getItem() == Items.BUCKET
                         && outputItem.getCount() < outputItem.getMaxStackSize())) {
-                    if (this.fillTankFromBucket(filledBucket) == FluidOperationResult.SUCCESS) {
+                    if (fillTankFromBucket(filledBucket) > 0) {
                         inputItem.shrink(1);
                         getInventory().insertItem(1, Items.BUCKET.getDefaultInstance(), false);
                     }
                 }
             } else {
                 if (outputItem.isEmpty()) {
-                    Pair<FluidOperationResult, IFluidHandlerItem> result = fillTankFromItem(inputItem);
-                    if (result.getFirst() == FluidOperationResult.SUCCESS) {
+                    Pair<Integer, IFluidHandlerItem> result = fillTankFromItem(inputItem);
+                    if (result.getFirst() > 0) {
                         getInventory().setStackInSlot(1, result.getSecond().getContainer());
                         getInventory().setStackInSlot(0, ItemStack.EMPTY);
                     }
@@ -133,34 +126,16 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
         }
     }
 
-    public FluidOperationResult fillTankFromBucket(@Nullable BucketItem bucket) {
-        if (bucket == null) {
-            return FluidOperationResult.INVALIDFLUIDITEM;
-        }
-
-        int filled = fluidTank.fill(new FluidStack(bucket.getFluid(), FluidType.BUCKET_VOLUME),
-                IFluidHandler.FluidAction.SIMULATE);
-        if (filled != FluidType.BUCKET_VOLUME) {
-            return FluidOperationResult.FAIL;
-        }
-
-        fluidTank.fill(new FluidStack(bucket.getFluid(), FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.EXECUTE);
-        return FluidOperationResult.SUCCESS;
+    public int fillTankFromBucket(@Nullable BucketItem bucket) {
+        return FluidUtil.fillTankFromBucket(fluidTank, bucket);
     }
 
-    private Pair<FluidOperationResult, IFluidHandlerItem> fillTankFromItem(ItemStack itemStack) {
-        IFluidHandlerItem fluidHandler = FluidUtil.getIFluidHandlerItem(itemStack);
-        return Pair.of(fluidHandler == null ? FluidOperationResult.INVALIDFLUIDITEM : fillTankFromItem(fluidHandler),
-                fluidHandler);
+    private Pair<Integer, IFluidHandlerItem> fillTankFromItem(ItemStack itemStack) {
+        return FluidUtil.fillTankFromItem(fluidTank, itemStack);
     }
 
-    public FluidOperationResult fillTankFromItem(@Nullable IFluidHandlerItem item) {
-        if (item == null) {
-            return FluidOperationResult.INVALIDFLUIDITEM;
-        }
-
-        return moveFluids(item, fluidTank, fluidTank.getCapacity()) > 0 ? FluidOperationResult.SUCCESS
-                : FluidOperationResult.FAIL;
+    public int fillTankFromItem(@Nullable IFluidHandlerItem item) {
+        return FluidUtil.fillTankFromItem(fluidTank, item);
     }
 
     private void drainInternal() {
@@ -182,8 +157,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
                 }
             } else {
                 if (outputItem.isEmpty()) {
-                    Pair<FluidOperationResult, IFluidHandlerItem> result = drainTankWithItem(inputItem);
-                    if (result.getFirst() == FluidOperationResult.SUCCESS) {
+                    Pair<Integer, IFluidHandlerItem> result = drainTankWithItem(inputItem);
+                    if (result.getFirst() > 0) {
                         getInventory().setStackInSlot(3, result.getSecond().getContainer());
                         getInventory().setStackInSlot(2, ItemStack.EMPTY);
                     }
@@ -193,44 +168,19 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     }
 
     public Pair<Boolean, FluidStack> drainTankWithBucket() {
-        return drainTankWithBucket(null);
+        return FluidUtil.drainTankWithBucket(fluidTank);
     }
 
-    public Pair<Boolean, FluidStack> drainTankWithBucket(@Nullable Function<FluidStack, Boolean> shouldDrain) {
-        if (fluidTank.isEmpty()) {
-            return Pair.of(false, null);
-        }
-
-        FluidStack stack = fluidTank.drain(FluidType.BUCKET_VOLUME, IFluidHandler.FluidAction.SIMULATE);
-        if (stack.getAmount() != FluidType.BUCKET_VOLUME) {
-            return Pair.of(false, null);
-        }
-
-        boolean shouldDrainResult = true;
-        if (shouldDrain != null) {
-            shouldDrainResult = shouldDrain.apply(stack);
-        }
-        if (!shouldDrainResult) {
-            return Pair.of(false, null);
-        }
-
-        fluidTank.drain(FluidType.BUCKET_VOLUME, IFluidHandler.FluidAction.EXECUTE);
-        return Pair.of(true, stack);
+    public Pair<Boolean, FluidStack> drainTankWithBucket(@Nullable Predicate<FluidStack> shouldDrain) {
+        return FluidUtil.drainTankWithBucket(fluidTank, shouldDrain);
     }
 
-    private Pair<FluidOperationResult, IFluidHandlerItem> drainTankWithItem(ItemStack itemStack) {
-        IFluidHandlerItem fluidHandler = FluidUtil.getIFluidHandlerItem(itemStack);
-        return Pair.of(fluidHandler == null ? FluidOperationResult.INVALIDFLUIDITEM : drainTankWithItem(fluidHandler),
-                fluidHandler);
+    private Pair<Integer, IFluidHandlerItem> drainTankWithItem(ItemStack itemStack) {
+        return FluidUtil.drainTankWithItem(fluidTank, itemStack);
     }
 
-    public FluidOperationResult drainTankWithItem(@Nullable IFluidHandlerItem item) {
-        if (item == null) {
-            return FluidOperationResult.INVALIDFLUIDITEM;
-        }
-
-        return moveFluids(fluidTank, item, fluidTank.getFluidAmount()) > 0 ? FluidOperationResult.SUCCESS
-                : FluidOperationResult.FAIL;
+    public int drainTankWithItem(@Nullable IFluidHandlerItem item) {
+        return FluidUtil.drainTankWithItem(fluidTank, item);
     }
 
     @Nullable

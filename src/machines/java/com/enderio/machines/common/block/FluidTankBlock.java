@@ -3,8 +3,8 @@ package com.enderio.machines.common.block;
 import java.util.Optional;
 
 import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
-import com.enderio.machines.common.blockentity.FluidTankBlockEntity.FluidOperationResult;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
+import com.enderio.machines.common.util.FluidUtil;
 import com.mojang.datafixers.util.Pair;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 
@@ -110,16 +110,16 @@ public class FluidTankBlock extends MachineBlock {
             }
 
             // If bucket has fluid.
-            switch (fluidTankBlockEntity.fillTankFromBucket(bucket)) {
-                case SUCCESS:
-                    // Give the player back an empty bucket.
-                    pPlayer.setItemInHand(pHand, Items.BUCKET.getDefaultInstance());
-                    return Triple.of(InteractionResult.SUCCESS, bucketFluid, InteractionType.PLACE);
-                case FAIL:
-                    return Triple.of(InteractionResult.FAIL, null, null);
-                default:
-                    return null;
+            int result = fluidTankBlockEntity.fillTankFromBucket(bucket);
+            if (result <= FluidUtil.INVALID_OPERATION) {
+                return null;
             }
+            if (result == 0) {
+                return Triple.of(InteractionResult.FAIL, null, null);
+            }
+            // Give the player back an empty bucket.
+            pPlayer.setItemInHand(pHand, Items.BUCKET.getDefaultInstance());
+            return Triple.of(InteractionResult.SUCCESS, bucketFluid, InteractionType.PLACE);
         }
 
         Optional<IFluidHandlerItem> fluidHandlerCap = itemStack
@@ -147,7 +147,7 @@ public class FluidTankBlock extends MachineBlock {
         }
 
         InteractionType interactionType;
-        FluidOperationResult result;
+        int result;
         Fluid fluid;
         // If the block is empty, and the item is not empty: fill the block from the
         // item.
@@ -169,14 +169,13 @@ public class FluidTankBlock extends MachineBlock {
             result = fluidTankBlockEntity.fillTankFromItem(fluidHandler);
         }
 
-        switch (result) {
-            case FAIL:
-                return Triple.of(InteractionResult.FAIL, null, null);
-            case SUCCESS:
-                return Triple.of(InteractionResult.SUCCESS, fluid, interactionType);
-            default:
-                return null;
+        if (result <= FluidUtil.INVALID_OPERATION) {
+            return null;
         }
+        if (result == 0) {
+            return Triple.of(InteractionResult.FAIL, null, null);
+        }
+        return Triple.of(InteractionResult.SUCCESS, fluid, interactionType);
     }
 
     @Override

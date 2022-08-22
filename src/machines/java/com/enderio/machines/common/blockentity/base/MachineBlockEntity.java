@@ -12,6 +12,7 @@ import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.io.IOConfig;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import com.enderio.machines.common.util.FluidUtil;
 import com.enderio.machines.common.util.MachineNbtTags;
 
 import net.minecraft.core.BlockPos;
@@ -324,26 +325,12 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
                 // If we have no fluids, see if we can pull. Otherwise, push.
                 if (stack.isEmpty() && mode.canPull()) {
-                    moveFluids(otherHandler.get(), selfHandler, 100);
+                    FluidUtil.moveFluids(otherHandler.get(), selfHandler, 100);
                 } else if (mode.canPush()) {
-                    moveFluids(selfHandler, otherHandler.get(), 100);
+                    FluidUtil.moveFluids(selfHandler, otherHandler.get(), 100);
                 }
             }
         });
-    }
-
-    /**
-     * Move fluids from one handler to the other.
-     */
-    protected int moveFluids(IFluidHandler from, IFluidHandler to, int maxDrain) {
-        FluidStack stack = from.drain(maxDrain, FluidAction.SIMULATE);
-        if (stack.isEmpty()) {
-            return 0;
-        }
-        int filled = to.fill(stack, FluidAction.EXECUTE);
-        stack.setAmount(filled);
-        from.drain(stack, FluidAction.EXECUTE);
-        return filled;
     }
 
     // endregion
