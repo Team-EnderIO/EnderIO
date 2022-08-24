@@ -16,13 +16,12 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class ConduitShape {
-    private Map<IConduitType, VoxelShape> conduitShapes = new HashMap<>();
-    private VoxelShape connector = Shapes.join(Block.box(2.5f, 0, 2.5f, 13.5f, 0.5f, 13.5f), Block.box(4.5f, 0.5f, 4.5f, 11.5f, 1f, 11.5f), BooleanOp.OR);
-    private VoxelShape connection = Block.box(7, 7, 9.5, 9, 9, 16);
-    private VoxelShape core = Block.box(6.5f, 6.5f, 6.5f,9.5f, 9.5f, 9.5f);
+    private final Map<IConduitType, VoxelShape> conduitShapes = new HashMap<>();
+    private static final VoxelShape connector = Block.box(2.5f, 2.5, 15f, 13.5f, 13.5f, 16f);
+    private static final VoxelShape connection = Block.box(6.5f, 6.5f, 9.5,9.5f, 9.5f, 16);
+    private static final VoxelShape core = Block.box(6.5f, 6.5f, 6.5f,9.5f, 9.5f, 9.5f);
     private VoxelShape totalShape = core;
 
     public ConduitShape() {
@@ -68,6 +67,7 @@ public class ConduitShape {
     private void updateTotalShape() {
         this.totalShape = Shapes.empty();
         this.conduitShapes.values().forEach( s -> this.totalShape = Shapes.join(this.totalShape, s, BooleanOp.OR));
+        totalShape.optimize();
     }
 
     public VoxelShape getTotalShape() {

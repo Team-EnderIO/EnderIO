@@ -158,14 +158,10 @@ public class ConduitBlockModel implements IDynamicBakedModel {
             if (!bundle.getConnection(dir).getConnectedTypes(bundle).isEmpty())
                 connectedDirs.add(dir);
         }
-        return findAxis(connectedDirs);
-    }
-
-    private Direction.Axis findAxis(List<Direction> directions) {
-        if (directions.isEmpty())
+        if (connectedDirs.isEmpty())
             return Direction.Axis.Z;
         //get Last as MainAxis, because those are the horizontal ones
-        return directions.get(directions.size()-1).getAxis();
+        return connectedDirs.get(connectedDirs.size()-1).getAxis();
     }
 
     /**
