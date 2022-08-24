@@ -27,6 +27,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.ChunkRenderTypeSet;
 import net.minecraftforge.client.model.IDynamicBakedModel;
+import net.minecraftforge.client.model.IQuadTransformer;
 import net.minecraftforge.client.model.QuadTransformers;
 import net.minecraftforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
@@ -48,41 +49,37 @@ public class ConduitBlockModel implements IDynamicBakedModel {
             for (Direction direction : Direction.values()) {
                 Direction preRotation = rotateDirection(direction, side);
                 ConduitConnection connection = conduitBundle.getConnection(direction);
+                IQuadTransformer rotation = QuadTransformers.applying(rotateTransformation(direction));
                 if (connection.isEnd()) {
-                    quads.addAll(QuadTransformers.applying(rotateTransformation(direction))
-                        .process(modelOf(CONDUIT_CONNECTOR).getQuads(state, preRotation, rand, extraData, renderType)));
+                    quads.addAll(rotation.process(modelOf(CONDUIT_CONNECTOR).getQuads(state, preRotation, rand, extraData, renderType)));
                 }
                 var connectedTypes = connection.getConnectedTypes(conduitBundle);
                 for (int i = 0; i < connectedTypes.size(); i++) {
                     IConduitType type = connectedTypes.get(i);
                     Vec3i offset = translationFor(direction.getAxis(), OffsetHelper.offsetConduit(i, connectedTypes.size()));
                     offsets.computeIfAbsent(type, ignored -> new ArrayList<>()).add(offset);
-                    quads.addAll(new ConduitTextureEmissiveQuadTransformer(type, false)
-                        .andThen(QuadTransformers.applying(rotateTransformation(direction)))
-                        .andThen(QuadTransformers.applying(translateTransformation(offset)))
+                    IQuadTransformer rotationTranslation = rotation.andThen(QuadTransformers.applying(translateTransformation(offset)));
+                    quads.addAll(new ConduitTextureEmissiveQuadTransformer(type, false).andThen(rotationTranslation)
                         .process(modelOf(CONDUIT_CONNECTION).getQuads(state, preRotation, rand, extraData, renderType)));
                     if (connection.isEnd()) {
-                        quads.addAll(QuadTransformers.applying(rotateTransformation(direction))
-                            .andThen(QuadTransformers.applying(translateTransformation(offset)))
-                            .process(modelOf(CONDUIT_CONNECTION_BOX).getQuads(state, preRotation, rand, extraData, renderType)));
+                        quads.addAll(rotationTranslation.process(modelOf(CONDUIT_CONNECTION_BOX).getQuads(state, preRotation, rand, extraData, renderType)));
 
                         IConnectionState connectionState = connection.getConnectionState(i);
                         if (connectionState instanceof DynamicConnectionState dyn) {
-                            var transformer = QuadTransformers.applying(rotateTransformation(direction))
-                                .andThen(QuadTransformers.applying(translateTransformation(offset)))
-                                .andThen(new ColorQuadTransformer(dyn.in(), dyn.out()));
+                            IQuadTransformer color = rotationTranslation.andThen(new ColorQuadTransformer(dyn.in(), dyn.out()));
+                            BakedModel model = null;
                             if (dyn.out() != null && dyn.in() != null) {
-                                quads.addAll(transformer.process(modelOf(CONDUIT_IO_IN_OUT).getQuads(state, preRotation, rand, extraData, renderType)));
+                                model = modelOf(CONDUIT_IO_IN_OUT);
                             } else if (dyn.in() != null) {
-                                quads.addAll(transformer.process(modelOf(CONDUIT_IO_IN).getQuads(state, preRotation, rand, extraData, renderType)));
+                                model = modelOf(CONDUIT_IO_IN);
                             } else if (dyn.out() != null) {
-                                quads.addAll(transformer.process(modelOf(CONDUIT_IO_OUT).getQuads(state, preRotation, rand, extraData, renderType)));
+                                model = modelOf(CONDUIT_IO_OUT);
                             }
+                            if (model != null)
+                                quads.addAll(color.process(model.getQuads(state, preRotation, rand, extraData, renderType)));
                             if (dyn.control() == RedstoneControl.ACTIVE_WITH_SIGNAL
                                 || dyn.control() == RedstoneControl.ACTIVE_WITHOUT_SIGNAL) {
-                                quads.addAll(QuadTransformers.applying(rotateTransformation(direction))
-                                    .andThen(QuadTransformers.applying(translateTransformation(offset)))
-                                    .andThen(new ColorQuadTransformer(null, dyn.redstoneChannel()))
+                                quads.addAll(rotationTranslation.andThen(new ColorQuadTransformer(null, dyn.redstoneChannel()))
                                     .process(modelOf(CONDUIT_IO_REDSTONE).getQuads(state, preRotation, rand, extraData, renderType)));
                             }
                         }
@@ -91,12 +88,14 @@ public class ConduitBlockModel implements IDynamicBakedModel {
             }
 
             var allTypes = conduitBundle.getTypes();
-            @Nullable Area box = null;
+            @Nullable
+            Area box = null;
             Map<IConduitType, Integer> notRendered = new HashMap<>();
             List<IConduitType> rendered = new ArrayList<>();
             for (int i = 0; i < allTypes.size(); i++) {
                 var type = allTypes.get(i);
-                @Nullable List<Vec3i> offsetsForType = offsets.get(type);
+                @Nullable
+                List<Vec3i> offsetsForType = offsets.get(type);
                 if (offsetsForType != null) {
                     //all are pointing to the same xyz reference meaning that we can draw the core
                     if (offsetsForType.stream().distinct().count() == 1) {
