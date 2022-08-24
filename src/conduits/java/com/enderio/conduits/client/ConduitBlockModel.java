@@ -44,7 +44,7 @@ public class ConduitBlockModel implements IDynamicBakedModel {
         List<BakedQuad> quads = new ArrayList<>();
         ConduitBundle conduitBundle = extraData.get(ConduitBlockEntity.BUNDLE_MODEL_PROPERTY);
         if (conduitBundle != null) {
-            Direction.Axis axis = findMainAxis(conduitBundle);
+            Direction.Axis axis = OffsetHelper.findMainAxis(conduitBundle);
             Map<IConduitType, List<Vec3i>> offsets = new HashMap<>();
             for (Direction direction : Direction.values()) {
                 Direction preRotation = rotateDirection(direction, side);
@@ -56,7 +56,7 @@ public class ConduitBlockModel implements IDynamicBakedModel {
                 var connectedTypes = connection.getConnectedTypes(conduitBundle);
                 for (int i = 0; i < connectedTypes.size(); i++) {
                     IConduitType type = connectedTypes.get(i);
-                    Vec3i offset = translationFor(direction.getAxis(), OffsetHelper.offsetConduit(i, connectedTypes.size()));
+                    Vec3i offset = OffsetHelper.translationFor(direction.getAxis(), OffsetHelper.offsetConduit(i, connectedTypes.size()));
                     offsets.computeIfAbsent(type, ignored -> new ArrayList<>()).add(offset);
                     IQuadTransformer rotationTranslation = rotation.andThen(QuadTransformers.applying(translateTransformation(offset)));
                     quads.addAll(new ConduitTextureEmissiveQuadTransformer(type, false).andThen(rotationTranslation)
@@ -132,7 +132,7 @@ public class ConduitBlockModel implements IDynamicBakedModel {
 
             if (box != null) {
                 for (Map.Entry<IConduitType, Integer> notRenderedEntry : notRendered.entrySet()) {
-                    Vec3i offset = translationFor(axis, OffsetHelper.offsetConduit(notRenderedEntry.getValue(), allTypes.size()));
+                    Vec3i offset = OffsetHelper.translationFor(axis, OffsetHelper.offsetConduit(notRenderedEntry.getValue(), allTypes.size()));
                     if (!box.contains(offset))
                         quads.addAll(new ConduitTextureEmissiveQuadTransformer(notRenderedEntry.getKey(), false)
                             .andThen(QuadTransformers.applying(translateTransformation(offset)))
@@ -144,24 +144,12 @@ public class ConduitBlockModel implements IDynamicBakedModel {
             } else {
                 for (Map.Entry<IConduitType, Integer> notRenderedEntry : notRendered.entrySet()) {
                     quads.addAll(new ConduitTextureEmissiveQuadTransformer(notRenderedEntry.getKey(), false)
-                        .andThen(QuadTransformers.applying(translateTransformation(translationFor(axis, OffsetHelper.offsetConduit(notRenderedEntry.getValue(), allTypes.size())))))
+                        .andThen(QuadTransformers.applying(translateTransformation(OffsetHelper.translationFor(axis, OffsetHelper.offsetConduit(notRenderedEntry.getValue(), allTypes.size())))))
                         .process(modelOf(CONDUIT_CORE).getQuads(state, side, rand, extraData, renderType)));
                 }
             }
         }
         return quads;
-    }
-
-    public Direction.Axis findMainAxis(ConduitBundle bundle) {
-        List<Direction> connectedDirs = new ArrayList<>();
-        for (Direction dir: Direction.values()) {
-            if (!bundle.getConnection(dir).getConnectedTypes(bundle).isEmpty())
-                connectedDirs.add(dir);
-        }
-        if (connectedDirs.isEmpty())
-            return Direction.Axis.Z;
-        //get Last as MainAxis, because those are the horizontal ones
-        return connectedDirs.get(connectedDirs.size()-1).getAxis();
     }
 
     /**
@@ -205,13 +193,7 @@ public class ConduitBlockModel implements IDynamicBakedModel {
         return new Vector3f(vector.getX()*scaler, vector.getY()*scaler, vector.getZ()*scaler);
     }
 
-    private static Vec3i translationFor(Direction.Axis axis, Vector2i offset) {
-        return switch (axis) {
-            case X -> new Vec3i(0, offset.y(), offset.x());
-            case Y -> new Vec3i(offset.x(), 0, offset.y());
-            case Z -> new Vec3i(offset.x(), offset.y(), 0);
-        };
-    }
+
 
     @Override
     public boolean useAmbientOcclusion() {

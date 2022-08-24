@@ -4,8 +4,12 @@ import com.enderio.EnderIO;
 import com.enderio.base.common.util.ThrowableUtil;
 import com.enderio.core.common.util.Vector2i;
 import net.minecraft.Util;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class OffsetHelper {
@@ -78,5 +82,25 @@ public class OffsetHelper {
 
         EnderIO.LOGGER.warn(ThrowableUtil.addStackTrace(new IndexOutOfBoundsException("fallback was applied")));
         return Vector2i.ZERO;
+    }
+
+    public static Vec3i translationFor(Direction.Axis axis, Vector2i offset) {
+        return switch (axis) {
+            case X -> new Vec3i(0, offset.y(), offset.x());
+            case Y -> new Vec3i(offset.x(), 0, offset.y());
+            case Z -> new Vec3i(offset.x(), offset.y(), 0);
+        };
+    }
+
+    public static Direction.Axis findMainAxis(ConduitBundle bundle) {
+        List<Direction> connectedDirs = new ArrayList<>();
+        for (Direction dir: Direction.values()) {
+            if (!bundle.getConnection(dir).getConnectedTypes(bundle).isEmpty())
+                connectedDirs.add(dir);
+        }
+        if (connectedDirs.isEmpty())
+            return Direction.Axis.Z;
+        //get Last as MainAxis, because those are the horizontal ones
+        return connectedDirs.get(connectedDirs.size()-1).getAxis();
     }
 }

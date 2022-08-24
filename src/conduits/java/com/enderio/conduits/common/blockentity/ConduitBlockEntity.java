@@ -4,7 +4,6 @@ import com.enderio.api.UseOnly;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.conduits.common.ConduitShape;
 import com.enderio.conduits.common.blockentity.action.RightClickAction;
-import com.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.core.common.sync.NBTSerializableDataSlot;
 import com.enderio.core.common.sync.SyncMode;
