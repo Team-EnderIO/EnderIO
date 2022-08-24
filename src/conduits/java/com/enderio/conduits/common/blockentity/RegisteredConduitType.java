@@ -1,24 +1,21 @@
 package com.enderio.conduits.common.blockentity;
 
-import com.enderio.EnderIO;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.conduits.common.init.ConduitItems;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 
-public enum ConduitType implements IConduitType {
-    POWER(EnderIO.loc("block/conduit/power")),
-    REDSTONE(EnderIO.loc("block/conduit/redstone"));
+public class RegisteredConduitType implements IConduitType {
 
 
     private final ResourceLocation texture;
     private final int activeLightLevel;
 
-    ConduitType(ResourceLocation texture) {
+    public RegisteredConduitType(ResourceLocation texture) {
         this(texture, 0);
     }
 
-    ConduitType(ResourceLocation texture, int activeLightLevel) {
+    public RegisteredConduitType(ResourceLocation texture, int activeLightLevel) {
         this.texture = texture;
         this.activeLightLevel = activeLightLevel;
     }
@@ -36,4 +33,5 @@ public enum ConduitType implements IConduitType {
     public int getLightLevel(boolean isActive) {
         return isActive ? activeLightLevel : 0;
     }
+
 }

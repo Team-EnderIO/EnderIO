@@ -2,16 +2,16 @@ package com.enderio.conduits.common.blockentity;
 
 import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.IConduitType;
-import com.enderio.core.common.sync.EnderDataSlot;
-import com.enderio.core.common.sync.ListDataSlot;
-import com.enderio.core.common.sync.SyncMode;
+import com.enderio.conduits.common.blockentity.action.RightClickAction;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.*;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.loading.FMLLoader;
 
 import java.util.*;
 
-public final class ConduitBundle {
+public final class ConduitBundle implements INBTSerializable<CompoundTag> {
 
     //Do not change this value unless you fix the OffsetHelper
     public static final int MAX_CONDUIT_TYPES = 9;
@@ -32,11 +32,11 @@ public final class ConduitBundle {
      * @param type
      * @return the type that is now not in this bundle
      */
-    public Optional<IConduitType> addType(IConduitType type) {
+    public RightClickAction addType(IConduitType type) {
         if (types.size() == MAX_CONDUIT_TYPES)
-            return Optional.of(type);
+            return new RightClickAction.Blocked();
         if (types.contains(type))
-            return Optional.of(type);
+            return new RightClickAction.Blocked();
         //upgrade a conduit
         Optional<IConduitType> first = types.stream().filter(existingConduit -> existingConduit.canBeReplacedBy(type)).findFirst();
         if (first.isPresent()) {
@@ -44,11 +44,11 @@ public final class ConduitBundle {
             types.set(index, type);
             connections.values().forEach(connection -> connection.clearType(index));
             scheduleSync.run();
-            return first;
+            return new RightClickAction.Upgrade(first.get());
         }
         //some conduit says no (like higher energy conduit)
         if (types.stream().anyMatch(existingConduit -> !existingConduit.canBeInSameBlock(type)))
-            return Optional.of(type);
+            return new RightClickAction.Blocked();
         //sort the list, so order is consistent
         int id = ConduitTypes.getRegistry().getID(type);
         var addBefore = types.stream().filter(existing -> ConduitTypes.getRegistry().getID(existing) > id).findFirst();
@@ -62,7 +62,7 @@ public final class ConduitBundle {
             types.add(type);
         }
         scheduleSync.run();
-        return Optional.empty();
+        return new RightClickAction.Insert();
     }
 
     /**
@@ -87,22 +87,53 @@ public final class ConduitBundle {
         return types.isEmpty();
     }
 
-    public List<EnderDataSlot<?>> gatherDataSlots() {
-        List<EnderDataSlot<?>> dataSlots = new ArrayList<>();
+    @Override
+    public CompoundTag serializeNBT() {
+        CompoundTag tag = new CompoundTag();
+        ListTag listTag = new ListTag();
+        for (IConduitType type : types) {
+            listTag.add(StringTag.valueOf(ConduitTypes.getRegistry().getKey(type).toString()));
+        }
+        tag.put("types", listTag);
+        CompoundTag connectionsTag = new CompoundTag();
+        for (Direction dir: Direction.values()) {
+            connectionsTag.put(dir.getName(), connections.get(dir).serializeNBT());
+        }
+        tag.put("connections", connectionsTag);
+        return tag;
+    }
 
-        dataSlots.add(new ListDataSlot<>(
-            () -> types,
-            type -> IntTag.valueOf(ConduitTypes.getRegistry().getID(type)),
-            intTag -> ConduitTypes.getRegistry().getValue(intTag.getAsInt()),
-            SyncMode.WORLD
-        ));
-        connections.values().forEach(connection -> connection.gatherDataSlots(dataSlots));
-        return dataSlots;
+    @Override
+    public void deserializeNBT(CompoundTag nbt) {
+        types.clear();
+        ListTag typesTag = nbt.getList("types", Tag.TAG_STRING);
+        //this is used to shift connections back if a ConduitType was removed from
+        List<Integer> invalidTypes = new ArrayList<>();
+        for (int i = 0; i < typesTag.size(); i++) {
+            StringTag stringTag = (StringTag)typesTag.get(i);
+            IConduitType type = ConduitTypes.getRegistry().getValue(ResourceLocation.tryParse(stringTag.getAsString()));
+            if (type == null) {
+                invalidTypes.add(i);
+                continue;
+            }
+            types.add(type);
+        }
+        CompoundTag connectionsTag = nbt.getCompound("connections");
+        for (Direction dir: Direction.values()) {
+            connections.get(dir).deserializeNBT(connectionsTag.getCompound(dir.getName()));
+            for (Integer invalidType : invalidTypes) {
+                connections.get(dir).removeType(invalidType);
+            }
+            //remove backwards to not shift list further
+            for (int i = invalidTypes.size() - 1; i >= 0; i--) {
+                connections.get(dir).removeType(invalidTypes.get(i));
+            }
+        }
     }
 
     //TODO: RFC
     /**
-     * IMO this should only be used on the client, as this exposes renderinformation, for gamelogic helper should be created here imo.
+     * IMO this should only be used on the client, as this exposes renderinformation, for gamelogic: helper should be created here imo.
      * @param direction
      * @return
      */
@@ -121,8 +152,10 @@ public final class ConduitBundle {
     }
 
     public void disconnectFrom(Direction direction, IConduitType type) {
-        getConnection(direction).disconnectFrom(types.indexOf(type));
-        scheduleSync.run();
+        if (types.contains(type)) {
+            getConnection(direction).disconnectFrom(types.indexOf(type));
+            scheduleSync.run();
+        }
     }
 
     public ConduitBundle deepCopy() {

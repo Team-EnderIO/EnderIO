@@ -47,23 +47,22 @@ public class ConduitShape {
     }
 
     public VoxelShape getShapeFromHit(BlockPos pos, HitResult result) {
-        VoxelShape shape = this.conduitShapes.get(getConduit(pos, result));
-        if (shape == null) {
-            return Shapes.empty();
-        }
-        return shape;
+        return Optional.ofNullable(this.conduitShapes.get(getConduit(pos, result))).orElse(Shapes.empty());
     }
 
+    @Nullable
     public IConduitType getConduit(BlockPos pos, HitResult result) {
-        AtomicReference<IConduitType> type = new AtomicReference<>();
-        this.conduitShapes.forEach( (c,s) -> {
+        for (Map.Entry<IConduitType, VoxelShape> entry : conduitShapes.entrySet()) {
             Vec3 vec3 = result.getLocation().subtract(pos.getX(), pos.getY(), pos.getZ());
-            Vec3 point = s.closestPointTo(vec3).get(); // if not empty check?
-            if (point.closerThan(vec3, 0.001)) { // can't be 0 due to double
-                type.set(c);
+            Optional<Vec3> point = entry.getValue().closestPointTo(vec3);
+            if (point.isEmpty())
+                continue;
+
+            if (point.get().closerThan(vec3, 0.001)) { // can't be 0 due to double
+                return entry.getKey();
             }
-        });
-        return type.get();
+        }
+        return null;
     }
 
     private void updateTotalShape() {

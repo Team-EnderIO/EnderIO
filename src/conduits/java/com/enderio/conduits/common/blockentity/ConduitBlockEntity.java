@@ -3,8 +3,11 @@ package com.enderio.conduits.common.blockentity;
 import com.enderio.api.UseOnly;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.conduits.common.ConduitShape;
+import com.enderio.conduits.common.blockentity.action.RightClickAction;
 import com.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
+import com.enderio.core.common.sync.NBTSerializableDataSlot;
+import com.enderio.core.common.sync.SyncMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -31,43 +34,60 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
     public ConduitBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
-        bundle.gatherDataSlots().forEach(this::addDataSlot);
-        addAfterSyncRunnable(() -> {
-            clientBundle = bundle.deepCopy();
-            shape.updateConduit(bundle);
-            level.setBlocksDirty(getBlockPos(), Blocks.AIR.defaultBlockState(), getBlockState());
-        });
+        addDataSlot(new NBTSerializableDataSlot<>(this::getBundle, SyncMode.WORLD));
+        addAfterSyncRunnable(this::updateClient);
+    }
+
+    public void updateClient() {
+        clientBundle = bundle.deepCopy();
+        updateShape();
+        requestModelDataUpdate();
+        level.setBlocksDirty(getBlockPos(), Blocks.AIR.defaultBlockState(), getBlockState());
     }
 
     private void scheduleTick() {
         if (!level.isClientSide())
-            level.scheduleTick(getBlockPos(), ConduitBlocks.CONDUIT.get(), 0);
-
+        //    level.scheduleTick(getBlockPos(), ConduitBlocks.CONDUIT.get(), 0);
+        setChanged();
     }
 
     @Override
+    public void onLoad() {
+        if (!level.isClientSide())
+            sync();
+    }
+
+    public void everyTick() {
+        serverTick();
+    }
+
+    public void doNothing() {}
+    @Override
     protected void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
+        tag.put("conduit", bundle.serializeNBT());
     }
 
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
+        bundle.deserializeNBT(tag.getCompound("conduit"));
     }
 
     //TODO: Make this async compatible as this might cause crashes, further investigation required (Like Concurrent ModificationException or something like that. Maybe return a synchronized Copy of bundle)
     @Override
     public ModelData getModelData() {
-        return ModelData.builder().with(BUNDLE_MODEL_PROPERTY, bundle).build();
+        return ModelData.builder().with(BUNDLE_MODEL_PROPERTY, clientBundle).build();
     }
 
-    public Optional<IConduitType> addType(IConduitType type) {
-        var returnType =  bundle.addType(type);
+    public RightClickAction addType(IConduitType type) {
+        RightClickAction action = bundle.addType(type);
         //something has changed
-        if (isDifferent(returnType, type)) {
+        if (action.hasChanged()) {
             for (Direction dir: Direction.values()) {
                 BlockEntity blockEntity = level.getBlockEntity(getBlockPos().relative(dir));
                 if (blockEntity != null) {
+                    //add possible connections if you are upgrading or inserting
                     if (blockEntity instanceof ConduitBlockEntity conduit && conduit.connectTo(dir.getOpposite(), type)) {
                         connect(dir, type);
                     } else if(blockEntity.getCapability(CapabilityEnergy.ENERGY).isPresent()) {
@@ -75,40 +95,39 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                     }
                 }
             }
+
+            if (action instanceof RightClickAction.Upgrade upgrade) {
+                removeNeighborConnections(upgrade.getNotInConduit());
+            }
+            updateShape();
         }
-        updateShape();
-        return returnType;
+        return action;
     }
 
     public boolean removeType(IConduitType type) {
         boolean shouldRemove =  bundle.removeType(type);
         //something has changed
-        if (shouldRemove) {
-            for (Direction dir: Direction.values()) {
-                BlockEntity blockEntity = level.getBlockEntity(getBlockPos().relative(dir));
-                if (blockEntity != null) {
-                    if (blockEntity instanceof ConduitBlockEntity conduit && conduit.connectTo(dir.getOpposite(), type)) {
-                        conduit.disconnect(dir.getOpposite(), type);
-                        conduit.updateShape();
-                    } else if(blockEntity.getCapability(CapabilityEnergy.ENERGY).isPresent()) {
-                        //connectEnd(dir, type);
-                    }
-                }
+        removeNeighborConnections(type);
+        updateShape();
+        return shouldRemove;
+    }
+
+    public void removeNeighborConnections(IConduitType type) {
+        for (Direction dir: Direction.values()) {
+            BlockEntity blockEntity = level.getBlockEntity(getBlockPos().relative(dir));
+            if (blockEntity instanceof ConduitBlockEntity conduit) {
+                conduit.disconnect(dir.getOpposite(), type);
+                conduit.updateShape();
             }
         }
-        updateShape();
-        if (bundle.getTypes().isEmpty()) {
-            return true;
-        }
-        return false;
     }
 
     private void updateShape() {
         shape.updateConduit(bundle);
     }
 
-    public static boolean isDifferent(Optional<IConduitType> first, IConduitType second) {
-        return first.map(conduit -> conduit != second).orElse(true);
+    public static boolean isDifferent(IConduitType first, IConduitType second) {
+        return first != second;
     }
 
     /**
@@ -126,18 +145,25 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
     private void connect(Direction direction, IConduitType type) {
         bundle.connectTo(direction, type, false);
+        updateClient();
     }
 
     private void connectEnd(Direction direction, IConduitType type) {
         bundle.connectTo(direction, type, true);
+        updateClient();
     }
 
     private void disconnect(Direction direction, IConduitType type) {
         bundle.disconnectFrom(direction, type);
+        updateClient();
     }
 
     public ConduitBundle getBundle() {
         return bundle;
+    }
+
+    public ConduitBundle getClientBundle() {
+        return clientBundle;
     }
 
     public ConduitShape getShape() {

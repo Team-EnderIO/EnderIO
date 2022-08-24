@@ -11,6 +11,7 @@ import com.enderio.core.common.sync.SyncMode;
 import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Items;
+import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,10 +19,12 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class ConduitConnection {
+import static com.enderio.conduits.common.blockentity.ConduitBundle.MAX_CONDUIT_TYPES;
+
+public class ConduitConnection implements INBTSerializable<CompoundTag> {
 
     private final IConnectionState[] connectionStates = Util.make(() -> {
-        var states = new IConnectionState[ConduitBundle.MAX_CONDUIT_TYPES];
+        var states = new IConnectionState[MAX_CONDUIT_TYPES];
         Arrays.fill(states, StaticConnectionStates.DISCONNECTED);
         return states;
     });
@@ -31,7 +34,7 @@ public class ConduitConnection {
      * @param index
      */
     public void addType(int index) {
-        for (int i = ConduitBundle.MAX_CONDUIT_TYPES-1; i > index; i--) {
+        for (int i = MAX_CONDUIT_TYPES-1; i > index; i--) {
             connectionStates[i] = connectionStates[i-1];
         }
         connectionStates[index] = StaticConnectionStates.DISCONNECTED;
@@ -44,7 +47,7 @@ public class ConduitConnection {
      */
     public void connectTo(int typeIndex, boolean end) {
         if (end)
-            connectionStates[typeIndex] = DynamicConnectionState.ofInput();
+            connectionStates[typeIndex] = DynamicConnectionState.random();
         else
             connectionStates[typeIndex] = StaticConnectionStates.CONNECTED;
     }
@@ -59,26 +62,14 @@ public class ConduitConnection {
      */
     public void removeType(int index) {
         connectionStates[index] = StaticConnectionStates.DISCONNECTED;
-        for (int i = index+1; i < ConduitBundle.MAX_CONDUIT_TYPES; i++) {
+        for (int i = index+1; i < MAX_CONDUIT_TYPES; i++) {
             connectionStates[i-1] = connectionStates[i];
         }
+        connectionStates[MAX_CONDUIT_TYPES-1] = StaticConnectionStates.DISCONNECTED;
     }
 
     public void clearType(int index) {
         connectionStates[index] = StaticConnectionStates.DISCONNECTED;
-    }
-
-    /**
-     * @param dataSlots Add dataslots to this list
-     */
-    public void gatherDataSlots(List<EnderDataSlot<?>> dataSlots) {
-        for (int i = 0; i < ConduitBundle.MAX_CONDUIT_TYPES; i++) {
-            int finalI = i;
-            dataSlots.add(new ConnectionStateDataSlot(
-                () -> connectionStates[finalI],
-                state -> connectionStates[finalI] = state
-            ));
-        }
     }
 
     public boolean isEnd() {
@@ -95,43 +86,41 @@ public class ConduitConnection {
         return connected;
     }
 
-    /**
-     * filter is not synced, because that will be synced using the container
-     */
-    public static class ConnectionStateDataSlot extends EnderDataSlot<IConnectionState> {
-
-        public ConnectionStateDataSlot(Supplier<IConnectionState> getter, Consumer<IConnectionState> setter) {
-            super(getter, setter, SyncMode.WORLD);
-        }
-
-        @Override
-        public CompoundTag toFullNBT() {
-            CompoundTag tag = new CompoundTag();
-            var state = getter().get();
-            tag.putBoolean("static", state instanceof StaticConnectionStates);
+    @Override
+    public CompoundTag serializeNBT() {
+        CompoundTag tag = new CompoundTag();
+        for (int i = 0; i < MAX_CONDUIT_TYPES; i++) {
+            CompoundTag element = new CompoundTag();
+            IConnectionState state = connectionStates[i];
+            element.putBoolean("static", state instanceof StaticConnectionStates);
             if (state instanceof StaticConnectionStates staticState) {
-                tag.putInt("index", staticState.ordinal());
+                element.putInt("index", staticState.ordinal());
             } else if (state instanceof DynamicConnectionState dynamicState) {
-                tag.putInt("in", dynamicState.in() != null ? dynamicState.in().ordinal() : -1);
-                tag.putInt("out", dynamicState.out() != null ? dynamicState.out().ordinal() : -1);
-                tag.putInt("redControl", dynamicState.control().ordinal());
-                tag.putInt("redChannel", dynamicState.redstoneChannel().ordinal());
+                element.putInt("in", dynamicState.in() != null ? dynamicState.in().ordinal() : -1);
+                element.putInt("out", dynamicState.out() != null ? dynamicState.out().ordinal() : -1);
+                element.putInt("redControl", dynamicState.control().ordinal());
+                element.putInt("redChannel", dynamicState.redstoneChannel().ordinal());
+                //TODO: Save Item
             } else {
                 throw new RuntimeException("Sealed Interface was none of it's sealed types");
             }
-            return tag;
+            tag.put(i + "", element);
         }
+        return tag;
+    }
 
-        @Override
-        protected IConnectionState fromNBT(CompoundTag nbt) {
+    @Override
+    public void deserializeNBT(CompoundTag tag) {
+        for (int i = 0; i < MAX_CONDUIT_TYPES; i++) {
+            CompoundTag nbt = tag.getCompound(i + "");
             if (nbt.getBoolean("static")) {
-                return StaticConnectionStates.values()[nbt.getInt("index")];
+                connectionStates[i] = StaticConnectionStates.values()[nbt.getInt("index")];
             } else {
                 var inIndex = nbt.getInt("in");
                 var outIndex = nbt.getInt("out");
                 var redControl = nbt.getInt("redControl");
                 var redChannel = nbt.getInt("redChannel");
-                return new DynamicConnectionState(
+                connectionStates[i] = new DynamicConnectionState(
                     inIndex != -1 ? ColorControl.values()[inIndex] : null,
                     outIndex != -1 ? ColorControl.values()[outIndex] : null,
                     RedstoneControl.values()[redControl],
@@ -145,7 +134,11 @@ public class ConduitConnection {
     public ConduitConnection deepCopy() {
         var connection = new ConduitConnection();
         //connectionstates are not mutable (enum/record), so reference is fine
-        System.arraycopy(connectionStates, 0, connection.connectionStates, 0, ConduitBundle.MAX_CONDUIT_TYPES);
+        System.arraycopy(connectionStates, 0, connection.connectionStates, 0, MAX_CONDUIT_TYPES);
         return connection;
+    }
+
+    public IConnectionState getConnectionState(int index) {
+        return connectionStates[index];
     }
 }

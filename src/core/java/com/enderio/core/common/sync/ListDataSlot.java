@@ -6,6 +6,7 @@ import net.minecraft.nbt.Tag;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -13,9 +14,9 @@ public class ListDataSlot<T, V extends Tag> extends EnderDataSlot<List<T>> {
 
     private final Function<T, V> serializer;
     private final Function<V, T> deSerializer;
-    public ListDataSlot(Supplier<List<T>> getter, Function<T, V> serializer, Function<V, T> deSerializer, SyncMode mode) {
+    public ListDataSlot(Supplier<List<T>> getter, Consumer<List<T>> setter, Function<T, V> serializer, Function<V, T> deSerializer, SyncMode mode) {
         //I can put null here, because I override the only usage of the setter
-        super(getter, null, mode);
+        super(getter, setter, mode);
         this.serializer = serializer;
         this.deSerializer = deSerializer;
     }
@@ -38,10 +39,5 @@ public class ListDataSlot<T, V extends Tag> extends EnderDataSlot<List<T>> {
             list.add(deSerializer.apply((V)tag));
         }
         return list;
-    }
-
-    public void handleNBT(CompoundTag tag) {
-        getter().get().clear();
-        getter().get().addAll(fromNBT(tag));
     }
 }

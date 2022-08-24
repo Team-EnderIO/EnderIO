@@ -20,6 +20,7 @@ public class BoxTextureQuadTransformer implements IQuadTransformer {
         scaling = QuadTransformers.applying(new Transformation(null, null, new Vector3f(toSize.getX(), toSize.getY(), toSize.getZ()), null));
         moveToCenter = QuadTransformers.applying(new Transformation(new Vector3f(6.5f/16, 6.5f/16, 6.5f/16), null, null, null));
     }
+
     @Override
     public void processInPlace(BakedQuad quad) {
         scaling.processInPlace(quad);

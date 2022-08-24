@@ -14,6 +14,7 @@ import net.minecraft.world.item.Item;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.client.model.generators.loaders.DynamicFluidContainerModelBuilder;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.versions.forge.ForgeVersion;
 
 // TODO: Fluid behaviours and some cleaning. https://github.com/SleepyTrousers/EnderIO-Rewrite/issues/34
@@ -79,10 +80,12 @@ public class EIOFluids {
     }
 
     private static FluidBuilder<? extends ForgeFlowingFluid, Registrate> baseFluid(String name) {
-        return REGISTRATE.fluid(name, EnderIO.loc("block/fluid_" + name + "_still"),
-            EnderIO.loc("block/fluid_" + name + "_flowing"))
-            .renderType(RenderType::translucent)
-            .source(ForgeFlowingFluid.Source::new)
+        var thing = REGISTRATE.fluid(name, EnderIO.loc("block/fluid_" + name + "_still"),
+            EnderIO.loc("block/fluid_" + name + "_flowing"));
+        if (FMLEnvironment.dist.isClient()) {
+            thing.renderType(() -> RenderType.translucent());
+        }
+        return thing.source(ForgeFlowingFluid.Source::new)
             .block()
             .build();
     }
