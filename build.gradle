@@ -165,9 +165,13 @@ processResources {
 }
 
 repositories {
+    mavenLocal()
     // Registrate
     maven { url "https://maven.tterrag.com/" }
-
+    maven {
+        //graphlib
+        url 'https://dogforce-games.com/maven'
+    }
     maven {
         // location of the maven that hosts JEI files
         name = "Progwml6 maven"
@@ -205,6 +209,9 @@ dependencies {
     implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
     jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: "${registrate_version_range}")
 
+    // GraphLib
+    implementation implementation(fg.deobf("dev.gigaherz.graph:GraphLib3:${graphlib_version}"))
+    jarJar(group: 'dev.gigaherz.graph', name: 'GraphLib3', version: "${graphlib_version_range}")
     coreAnnotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     // JEI
@@ -222,7 +229,7 @@ dependencies {
 //    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
 
     // While we don't have conduits etc.
-//    runtimeOnly fg.deobf("curse.maven:mekanism-268560:3743835")
+    runtimeOnly fg.deobf("curse.maven:mekanism-268560:3922056")
 
     // Jetbrains annotations
     compileOnly 'org.jetbrains:annotations:23.0.0'

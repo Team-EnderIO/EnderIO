@@ -5,10 +5,12 @@ import com.enderio.base.common.blockentity.RedstoneControl;
 import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
 import com.enderio.conduits.common.blockentity.connection.IConnectionState;
 import com.enderio.conduits.common.blockentity.connection.StaticConnectionStates;
+import com.enderio.conduits.common.network.NodeIdentifier;
 import com.enderio.core.common.blockentity.ColorControl;
 import com.enderio.core.common.sync.EnderDataSlot;
 import com.enderio.core.common.sync.SyncMode;
 import net.minecraft.Util;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -45,11 +47,14 @@ public class ConduitConnection implements INBTSerializable<CompoundTag> {
      * @param typeIndex
      * @param end
      */
-    public void connectTo(int typeIndex, boolean end) {
-        if (end)
-            connectionStates[typeIndex] = DynamicConnectionState.random();
-        else
+    public void connectTo(NodeIdentifier nodeIdentifier, Direction direction, int typeIndex, boolean end) {
+        if (end) {
+            var state = DynamicConnectionState.random();
+            connectionStates[typeIndex] = state;
+            nodeIdentifier.pushState(direction, state.in(), state.out());
+        } else {
             connectionStates[typeIndex] = StaticConnectionStates.CONNECTED;
+        }
     }
 
     public void disconnectFrom(int typeIndex) {

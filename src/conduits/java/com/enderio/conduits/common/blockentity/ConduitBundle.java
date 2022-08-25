@@ -3,6 +3,8 @@ package com.enderio.conduits.common.blockentity;
 import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.conduits.common.blockentity.action.RightClickAction;
+import com.enderio.conduits.common.network.NodeIdentifier;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.*;
 import net.minecraft.resources.ResourceLocation;
@@ -19,13 +21,17 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
     private final Map<Direction, ConduitConnection> connections = new EnumMap<>(Direction.class);
 
     private final List<IConduitType> types = new ArrayList<>();
+    //fill back after world save
+    private final Map<IConduitType, NodeIdentifier> nodes = new HashMap<>();
     private final Runnable scheduleSync;
+    private final BlockPos pos;
 
-    public ConduitBundle(Runnable scheduleSync) {
+    public ConduitBundle(Runnable scheduleSync, BlockPos pos) {
         this.scheduleSync = scheduleSync;
         for (Direction value : Direction.values()) {
             connections.put(value, new ConduitConnection());
         }
+        this.pos = pos;
     }
 
     /**
@@ -33,6 +39,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
      * @return the type that is now not in this bundle
      */
     public RightClickAction addType(IConduitType type) {
+        //TODO: Don't sort by network ID, as upgrading a conduit could result in some kind of order mismatch
         if (types.size() == MAX_CONDUIT_TYPES)
             return new RightClickAction.Blocked();
         if (types.contains(type))
@@ -55,11 +62,13 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         if (addBefore.isPresent()) {
             var value = types.indexOf(addBefore.get());
             types.add(value, type);
+            nodes.put(type, new NodeIdentifier(pos));
             for (Direction direction: Direction.values()) {
                 connections.get(direction).addType(value);
             }
         } else {
             types.add(type);
+            nodes.put(type, new NodeIdentifier(pos));
         }
         scheduleSync.run();
         return new RightClickAction.Insert();
@@ -82,6 +91,9 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         for (Direction direction: Direction.values()) {
             connections.get(direction).removeType(index);
         }
+        NodeIdentifier node = nodes.remove(type);
+        if (node.getGraph() != null)
+            node.getGraph().remove(node);
         types.remove(index);
         scheduleSync.run();
         return types.isEmpty();
@@ -147,19 +159,25 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
     //TODO, make this method more useable
 
     public void connectTo(Direction direction, IConduitType type, boolean end) {
-        getConnection(direction).connectTo(types.indexOf(type), end);
+        getConnection(direction).connectTo(nodes.get(type), direction,types.indexOf(type), end);
         scheduleSync.run();
     }
 
-    public void disconnectFrom(Direction direction, IConduitType type) {
+    public boolean disconnectFrom(Direction direction, IConduitType type) {
         if (types.contains(type)) {
             getConnection(direction).disconnectFrom(types.indexOf(type));
             scheduleSync.run();
+            return true;
         }
+        return false;
+    }
+
+    public NodeIdentifier getNodeFor(IConduitType type) {
+        return nodes.get(type);
     }
 
     public ConduitBundle deepCopy() {
-        var bundle = new ConduitBundle(() -> {});
+        var bundle = new ConduitBundle(() -> {}, pos);
         bundle.types.addAll(types);
         connections.forEach((dir, connection) ->
             bundle.connections.put(dir, connection.deepCopy())

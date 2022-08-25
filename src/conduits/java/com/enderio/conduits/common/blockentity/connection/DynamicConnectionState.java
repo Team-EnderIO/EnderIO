@@ -17,7 +17,8 @@ public record DynamicConnectionState(@Nullable ColorControl in, @Nullable ColorC
     public static DynamicConnectionState ofInput() {
         return new DynamicConnectionState(ColorControl.GREEN, null, RedstoneControl.ACTIVE_WITH_SIGNAL, ColorControl.RED, ItemStack.EMPTY);
     }
-    
+
+    private static int connection = 0;
     //TODO Remove
     public static DynamicConnectionState random() {
         Random r = new Random();
@@ -27,11 +28,16 @@ public record DynamicConnectionState(@Nullable ColorControl in, @Nullable ColorC
         ColorControl out = null;
         RedstoneControl control = random(r, RedstoneControl.class);
         ColorControl redstoneChannel = random(r, ColorControl.class);
-        switch (r.nextInt(3)) {
-            case 0 -> {in = random(r, ColorControl.class); out = random(r, ColorControl.class);}
-            case 1 -> in = random(r, ColorControl.class);
-            default -> out = random(r, ColorControl.class);
+        //switch (r.nextInt(3)) {
+        //    case 0 -> {in = random(r, ColorControl.class); out = random(r, ColorControl.class);}
+        //    case 1 -> in = random(r, ColorControl.class);
+        //    default -> out = random(r, ColorControl.class);
+        //}
+        switch (connection) {
+            case 0,1 -> in = ColorControl.BLUE;
+            default -> out = ColorControl.BLUE;
         }
+        connection++;
         return new DynamicConnectionState(in, out, control, redstoneChannel, ItemStack.EMPTY);
     }
 
