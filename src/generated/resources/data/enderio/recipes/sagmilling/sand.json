@@ -7,7 +7,7 @@
   "outputs": [
     {
       "chance": 0.5,
-      "item": "enderio:silicon"
+      "tag": "forge:silicon"
     }
   ]
 }

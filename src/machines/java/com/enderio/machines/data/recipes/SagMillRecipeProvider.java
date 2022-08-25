@@ -128,7 +128,7 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
         
         build("sand", Ingredient.of(SAND), List.of(
-        		output(SILICON.get(), 0.5f)
+        		output(EIOTags.Items.SILICON, 0.5f)
         		),BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
         
         build("glowstone", Ingredient.of(GLOWSTONE), List.of(//swap with any:glowstone
@@ -262,7 +262,7 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
         		output(PINK_DYE, 2, 0.3f),
         		output(PLANT_MATTER_GREEN.get(), 0.2f)),
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-        //TODO: find sugar cane tag
+        
         build("sugar_canes", Ingredient.of(SUGAR_CANE), List.of(
         		output(PINK_DYE, 2, 0.8f), 
         		output(PINK_DYE, 0.6f),
@@ -281,7 +281,7 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
         		output(PRISMARINE_CRYSTALS), 
         		output(PRISMARINE_CRYSTALS, 0.1f)),
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-        //probably errorous
+        
         build("soularium_block", Ingredient.of(EIOBlocks.SOULARIUM_BLOCK.get()), List.of(
         		output(SOUL_POWDER.get(), 9)
         		), BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
