@@ -126,7 +126,7 @@ public class MachineBlocks {
 
     public static final BlockEntry<MachineBlock> VACUUM_CHEST = REGISTRATE
         .block("vacuum_chest", p -> new MachineBlock(p, MachineBlockEntities.VACUUM_CHEST))
-        .properties(props -> props.strength(2.5f, 8))
+        .properties(props -> props.strength(2.5f, 8).noOcclusion())
         .loot(MachinesLootTable::copyNBT)
         .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIO.loc("block/vacuum_chest"))))
         .item()
@@ -136,7 +136,7 @@ public class MachineBlocks {
 
     public static final BlockEntry<MachineBlock> XP_VACUUM = REGISTRATE
         .block("xp_vacuum", p -> new MachineBlock(p, MachineBlockEntities.XP_VACUUM))
-        .properties(props -> props.strength(2.5f, 8))
+        .properties(props -> props.strength(2.5f, 8).noOcclusion())
         .loot(MachinesLootTable::copyNBT)
         .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIO.loc("block/xp_vacuum"))))
         .item()

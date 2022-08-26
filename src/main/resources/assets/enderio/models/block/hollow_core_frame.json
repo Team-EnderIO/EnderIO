@@ -1,5 +1,6 @@
 {
 	"credit": "Made with Blockbench",
+    "parent": "minecraft:block/block",
 	"textures": {
 		"frame": "enderio:block/hollow_core_frame",
 		"inner": "enderio:block/hollow_core_frame_inner",
@@ -646,5 +647,6 @@
 			"color": 0,
 			"children": [69, 70, 71, 72, 73, 74]
 		}
-	]
+	],
+    "render_type": "minecraft:cutout"
 }
