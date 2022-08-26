@@ -149,6 +149,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                 }
             }
         }
+        bundle.removeNodeFor(type);
     }
 
     private void updateShape() {

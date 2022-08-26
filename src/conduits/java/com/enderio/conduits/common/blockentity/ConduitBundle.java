@@ -49,6 +49,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         if (first.isPresent()) {
             int index = types.indexOf(first.get());
             types.set(index, type);
+            nodes.put(type, new NodeIdentifier(pos));
             connections.values().forEach(connection -> connection.clearType(index));
             scheduleSync.run();
             return new RightClickAction.Upgrade(first.get());
@@ -91,9 +92,6 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         for (Direction direction: Direction.values()) {
             connections.get(direction).removeType(index);
         }
-        NodeIdentifier node = nodes.remove(type);
-        if (node.getGraph() != null)
-            node.getGraph().remove(node);
         types.remove(index);
         scheduleSync.run();
         return types.isEmpty();
@@ -174,6 +172,10 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
 
     public NodeIdentifier getNodeFor(IConduitType type) {
         return nodes.get(type);
+    }
+
+    public void removeNodeFor(IConduitType type) {
+        nodes.remove(type);
     }
 
     public ConduitBundle deepCopy() {
