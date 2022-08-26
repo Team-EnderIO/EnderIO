@@ -44,7 +44,8 @@ public class VacuumChestScreen extends EIOScreen<VacuumChestMenu> {
 
     @Override
     protected void renderLabels(PoseStack pPoseStack, int pMouseX, int pMouseY) {
-        this.font.draw(pPoseStack, EIOLang.FILTER, 8, this.imageHeight - 134, 4210752);
+        this.font.draw(pPoseStack, EIOLang.FILTER, 8, 74, 4210752);
+        this.font.draw(pPoseStack, EIOLang.RANGE, this.imageWidth - 8 - this.font.width(EIOLang.RANGE), 74, 4210752);
         super.renderLabels(pPoseStack, pMouseX, pMouseY);
     }
 
