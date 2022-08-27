@@ -56,9 +56,7 @@ public class ConduitSavedData extends SavedData {
                 for (Tag tag1 : graphsForTypeTag) {
                     CompoundTag graphTag = (CompoundTag) tag1;
 
-                    // List of the graph's objects
                     ListTag graphObjectsTag = graphTag.getList("graphObjects", Tag.TAG_LONG);
-                    // List of the graph's connections
                     ListTag graphConnectionsTag = graphTag.getList("graphConnections", Tag.TAG_COMPOUND);
 
                     List<NodeIdentifier> graphObjects = new ArrayList<>();
@@ -126,9 +124,8 @@ public class ConduitSavedData extends SavedData {
 
                 // Represents one graph
                 CompoundTag graphTag = new CompoundTag();
-                // Represents the graph's objects
+
                 ListTag graphObjectsTag = new ListTag();
-                // Represents the graph's connections
                 ListTag graphConnectionsTag = new ListTag();
 
                 graphsForTypeTag.add(graphTag);
@@ -148,7 +145,7 @@ public class ConduitSavedData extends SavedData {
                     }
 
                     if (graphObject instanceof NodeIdentifier nodeIdentifier) {
-                        // Add a conduit/object represented by its block position in the world
+                        // Add a conduit object represented by its block position in the world
                         graphObjectsTag.add(LongTag.valueOf(nodeIdentifier.getPos().asLong()));
                     } else {
                         throw new ClassCastException("graphObject was not of type nodeIdentifier");
@@ -156,7 +153,7 @@ public class ConduitSavedData extends SavedData {
                 }
 
                 for (Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>> connection : connections) {
-                    // Represents 1 connection between 2 objects
+                    // Represents one connection between 2 objects
                     CompoundTag connectionTag = new CompoundTag();
 
                     connectionTag.put("0", IntTag.valueOf(graphObjects.indexOf(connection.getFirst())));
