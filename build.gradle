@@ -230,6 +230,8 @@ mixin {
     config "mixins.enderio.json"
 }
 
+reobf.create('jarJar')
+
 // Example for how to get properties into the manifest for reading at runtime.
 jar {
     manifest {
@@ -246,7 +248,7 @@ jar {
 
     // Add all other source sets
     from sourceSets.api.output
-//    from sourceSets.core.output // Stop peeps from running the jar.
+    from sourceSets.core.output
     for (String set : subsets) {
         from sourceSets.getByName(set).output
     }
@@ -278,11 +280,14 @@ build.dependsOn sourcesJar
 // Add other source sets to jarJar
 tasks.jarJar.configure {
     from sourceSets.api.output
-//    from sourceSets.core.output // Stop people running the mod.
+    from sourceSets.core.output
     for (String set : subsets) {
         from sourceSets.getByName(set).output
     }
+
+    finalizedBy('reobfJarJar')
 }
+build.dependsOn tasks.jarJar
 
 // TODO: 1.19: Modrinth publishing.
 
