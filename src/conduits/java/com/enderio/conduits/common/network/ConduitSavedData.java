@@ -4,8 +4,10 @@ import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.conduits.common.blockentity.TieredConduit;
 import com.enderio.core.common.blockentity.ColorControl;
+import com.enderio.EnderIO;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
+import com.google.common.collect.MapMaker;
 import com.mojang.datafixers.util.Pair;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
@@ -21,8 +23,11 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.apache.logging.log4j.core.jmx.Server;
+
 import java.util.*;
 
 @Mod.EventBusSubscriber
@@ -31,7 +36,7 @@ public class ConduitSavedData extends SavedData {
     ListMultimap<IConduitType, Graph<Mergeable.Dummy>> networks = ArrayListMultimap.create();
 
     public static ConduitSavedData get(ServerLevel level) {
-        return level.getDataStorage().computeIfAbsent(ConduitSavedData::new, ConduitSavedData::new, "enderio:conduit_network");
+        return level.getDataStorage().computeIfAbsent(ConduitSavedData::new, ConduitSavedData::new, "enderio_conduit_network");
     }
 
     private ConduitSavedData() {
@@ -40,18 +45,16 @@ public class ConduitSavedData extends SavedData {
 
     // Deserialization
     private ConduitSavedData(CompoundTag nbt) {
-        // All conduits' graphs, separated by type
+        System.out.println("Conduit network deserialization started, NBT:");
+        System.out.println(nbt.getAsString());
+
         ListTag graphsTag = nbt.getList("graphs", Tag.TAG_COMPOUND);
         for (Tag tag : graphsTag) {
-            // One type of conduit's graphs and type
             CompoundTag typedGraphTag = (CompoundTag) tag;
             ResourceLocation type = new ResourceLocation(typedGraphTag.getString("type"));
 
             if (ConduitTypes.getRegistry().containsKey(type)) {
-                // The conduit type
                 IConduitType value = ConduitTypes.getRegistry().getValue(type);
-
-                // List of graphs extracted from the CompoundTag
                 ListTag graphsForTypeTag = typedGraphTag.getList("graphs", Tag.TAG_COMPOUND);
                 for (Tag tag1 : graphsForTypeTag) {
                     CompoundTag graphTag = (CompoundTag) tag1;
@@ -61,117 +64,150 @@ public class ConduitSavedData extends SavedData {
 
                     List<NodeIdentifier> graphObjects = new ArrayList<>();
                     List<Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>>> connections = new ArrayList<>();
+                    List<Graph<Mergeable.Dummy>> inGraph = new ArrayList<>();
 
-                    // Add all the objects to a list
                     for (Tag tag2 : graphObjectsTag) {
-                        graphObjects.add(new NodeIdentifier(BlockPos.of(((LongTag)tag2).getAsLong())));
+                        NodeIdentifier node = new NodeIdentifier(BlockPos.of(((LongTag)tag2).getAsLong()));
+                        graphObjects.add(node);
+                        inGraph.add(node.getGraph());
                     }
 
-                    // Add all the connections to a list
+                    System.out.println(Arrays.toString(inGraph.toArray()));
+
                     for (Tag tag2: graphConnectionsTag) {
                         CompoundTag connectionTag = (CompoundTag) tag2;
                         connections.add(new Pair<>(graphObjects.get(connectionTag.getInt("0")), graphObjects.get(connectionTag.getInt("1"))));
                     }
 
-                    // Iterate over the graph objects to create the final graph of conduits of this type
-                    for (NodeIdentifier graphObject: graphObjects) {
-                        List<GraphObject<Mergeable.Dummy>> neighbors = getNeighbors(connections, graphObject);
-
-                        // Integrates these objects into an existing graph, or creates a new graph if they're not connected
-                        Graph.integrate(graphObject, neighbors);
-                        // Remove redundant connections
-                        removeConnections(connections, graphObject, neighbors);
-                    }
-                    networks.get(value).add(graphObjects.get(0).getGraph());
+                    Graph<Mergeable.Dummy> graph = new Graph<>();
+                    merge(graphObjects.get(0), connections, graph);
+                    networks.get(value).add(graph);
                 }
             }
         }
+        System.out.println("Conduit network deserialization finished");
+        System.out.println(networksInfo());
+    }
+
+    private String networksInfo() {
+        int numConduits = 0;
+        if (networks.size() > 0) {
+            for (Graph<Mergeable.Dummy> graph : networks.values()) {
+                numConduits += graph.getObjects().size();
+            }
+        }
+
+        return "Number of networks: " + networks.size() + " || Number of conduits: " + numConduits;
     }
 
     // Serialization
     @Override
     public CompoundTag save(CompoundTag nbt) {
-        // Tag that will be saved to the disk
         ListTag graphsTag = new ListTag();
-
-        // Iterate over the types of conduits
         for (IConduitType type: networks.keySet()) {
-            // Every graph of a single conduit type
             List<Graph<Mergeable.Dummy>> graphs = networks.get(type);
             if (graphs.isEmpty())
                 continue;
 
-            // Represents a list of graphs for one type of conduit
             CompoundTag typedGraphTag = new CompoundTag();
-
-            // Insert the type of conduit into the tag
             typedGraphTag.putString("type", ConduitTypes.getRegistry().getKey(type).toString());
 
-            // Insert the list of graphs
             ListTag graphsForTypeTag = new ListTag();
-            typedGraphTag.put("graphs", graphsForTypeTag);
 
-            // Iterate over the graphs of a single conduit type
             for (Graph<Mergeable.Dummy> graph: graphs) {
                 if (graph.getObjects().isEmpty())
                     continue;
 
-                // List of the graph's objects, each one represents a conduit
-                List<GraphObject<Mergeable.Dummy>> graphObjects = new ArrayList<>(graph.getObjects());
-
-                // List of the conduit's connections
-                List<Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>>> connections = new ArrayList<>();
-
-                // Represents one graph
-                CompoundTag graphTag = new CompoundTag();
-
-                ListTag graphObjectsTag = new ListTag();
-                ListTag graphConnectionsTag = new ListTag();
-
-                graphsForTypeTag.add(graphTag);
-                graphTag.put("graphObjects", graphObjectsTag);
-                graphTag.put("graphConnections", graphConnectionsTag);
-
-                // Iterate over the objects
-                for (GraphObject<Mergeable.Dummy> graphObject: graphObjects) {
-                    // Iterate over the objects' neighbors
-                    for (GraphObject<Mergeable.Dummy> neighbour : graph.getNeighbours(graphObject)) {
-                        // Create a connection between two neighboring conduits
-                        Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>> connection = new Pair<>(graphObject, neighbour);
-                        if (!containsConnection(connections, connection)) {
-                            // Add connection if the connection doesn't exist yet
-                            connections.add(connection);
-                        }
-                    }
-
-                    if (graphObject instanceof NodeIdentifier nodeIdentifier) {
-                        // Add a conduit object represented by its block position in the world
-                        graphObjectsTag.add(LongTag.valueOf(nodeIdentifier.getPos().asLong()));
-                    } else {
-                        throw new ClassCastException("graphObject was not of type nodeIdentifier");
-                    }
-                }
-
-                for (Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>> connection : connections) {
-                    // Represents one connection between 2 objects
-                    CompoundTag connectionTag = new CompoundTag();
-
-                    connectionTag.put("0", IntTag.valueOf(graphObjects.indexOf(connection.getFirst())));
-                    connectionTag.put("1", IntTag.valueOf(graphObjects.indexOf(connection.getSecond())));
-
-                    // Add it to the connections
-                    graphConnectionsTag.add(connectionTag);
-                }
+                graphsForTypeTag.add(serializeGraph(graph));
             }
             if (!graphsForTypeTag.isEmpty()) {
-                // Add the graphs for one type of conduit
+                typedGraphTag.put("graphs", graphsForTypeTag);
                 graphsTag.add(typedGraphTag);
             }
         }
 
-        // Put all the graphs into the final nbt tag to be saved
         nbt.put("graphs", graphsTag);
+
+        System.out.println("Conduit network serialization finished");
+        System.out.println(nbt.getAsString());
+
         return nbt;
+    }
+
+    private static CompoundTag serializeGraph(Graph<Mergeable.Dummy> graph) {
+        List<GraphObject<Mergeable.Dummy>> graphObjects = new ArrayList<>(graph.getObjects());
+        List<Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>>> connections = new ArrayList<>();
+
+        CompoundTag graphTag = new CompoundTag();
+
+        ListTag graphObjectsTag = new ListTag();
+        ListTag graphConnectionsTag = new ListTag();
+
+        for (GraphObject<Mergeable.Dummy> graphObject: graphObjects) {
+            for (GraphObject<Mergeable.Dummy> neighbour : graph.getNeighbours(graphObject)) {
+                Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>> connection = new Pair<>(graphObject, neighbour);
+                if (!containsConnection(connections, connection)) {
+                    connections.add(connection);
+                }
+            }
+
+            if (graphObject instanceof NodeIdentifier nodeIdentifier) {
+                graphObjectsTag.add(LongTag.valueOf(nodeIdentifier.getPos().asLong()));
+            } else {
+                throw new ClassCastException("graphObject was not of type nodeIdentifier");
+            }
+        }
+
+        for (Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>> connection : connections) {
+            CompoundTag connectionTag = new CompoundTag();
+
+            connectionTag.put("0", IntTag.valueOf(graphObjects.indexOf(connection.getFirst())));
+            connectionTag.put("1", IntTag.valueOf(graphObjects.indexOf(connection.getSecond())));
+
+            graphConnectionsTag.add(connectionTag);
+        }
+
+        graphTag.put("graphObjects", graphObjectsTag);
+        graphTag.put("graphConnections", graphConnectionsTag);
+
+        return graphTag;
+    }
+
+    private void merge(GraphObject<Mergeable.Dummy> object, List<Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>>> connections, Graph<Mergeable.Dummy> graph) {
+        System.out.println("    Merging " + connections.size() + " connections with object " + objects.getOrDefault(object, nodeIdForString) + ":");
+        for (var connection : connections) {
+            System.out.println(connectionToString(connection));
+        }
+
+        var filteredConnections = connections.stream().filter(pair -> (pair.getFirst() == object || pair.getSecond() == object)).toList();
+        List<GraphObject<Mergeable.Dummy>> neighbors = filteredConnections.stream().map(pair -> pair.getFirst() == object ? pair.getSecond() : pair.getFirst()).toList();
+
+        // Graph.integrate(object, neighbors);
+        object.setGraph(graph);
+        for (GraphObject<Mergeable.Dummy> neighbor : neighbors) {
+            Graph.integrate(neighbor, List.of(object));
+        }
+
+        connections = connections.stream().filter(v -> !filteredConnections.contains(v)).toList();
+        if (!connections.isEmpty()) {
+            merge(connections.get(0).getFirst(), connections, graph);
+        }
+        System.out.println("Merged; Number of objects: " + graph.getObjects().size());
+    }
+
+    private int nodeIdForString = 0;
+
+    private HashMap<GraphObject<Mergeable.Dummy>, Integer> objects = new HashMap<>();
+    private String connectionToString(Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>> connection) {
+        int a = objects.getOrDefault(connection.getFirst(), nodeIdForString);
+        if (a == nodeIdForString) objects.put(connection.getFirst(), a);
+        nodeIdForString += 1;
+
+        int b = objects.getOrDefault(connection.getSecond(), nodeIdForString);
+        if (b == nodeIdForString) objects.put(connection.getSecond(), b);
+        nodeIdForString += 1;
+
+        return "        " + a + ":" + b;
     }
 
     private static boolean containsConnection(List<Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>>> connections, Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>> connection) {
@@ -201,7 +237,9 @@ public class ConduitSavedData extends SavedData {
         if (event.phase == TickEvent.Phase.START)
             return;
         if (event.level instanceof ServerLevel serverLevel) {
-            for (var entry : get(serverLevel).networks.entries()) {
+            ConduitSavedData savedData = get(serverLevel);
+            savedData.setDirty();
+            for (var entry : savedData.networks.entries()) {
                 //tick four times per second
                 if (serverLevel.getGameTime() % 5 == ConduitTypes.getRegistry().getID(entry.getKey()) % 5) {
 
