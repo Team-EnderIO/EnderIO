@@ -3,6 +3,10 @@ package com.enderio.api.capacitor;
 import com.enderio.api.nbt.INamedNBTSerializable;
 import net.minecraft.nbt.Tag;
 
+// TODO: End game capacitor fabrication with mob fighting? Souls? Capacitor sacrifice?
+
+// TODO: Capacitor filter for conduits.
+
 /**
  * Capacitor data.
  * This defines a capacitor that stores.

@@ -10,6 +10,9 @@ import net.minecraft.nbt.Tag;
 import java.util.HashMap;
 import java.util.Map;
 
+// TODO: Instead of loot capacitors having lists of specialized machines, have different loot capacitor items for different
+//       machine categories.
+// TODO: Loot capacitor types (Sculk, Soul) found in respective dungeons/structures.
 public final class LootCapacitorData implements ICapacitorData {
     private float base;
 
