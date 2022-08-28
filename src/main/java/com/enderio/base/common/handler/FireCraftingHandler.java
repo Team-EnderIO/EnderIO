@@ -26,7 +26,6 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -97,7 +96,7 @@ public class FireCraftingHandler {
         }
     }
 
-    public static void spawnInfinityDrops(@NotNull ServerLevel level, @NotNull BlockPos pos, ResourceLocation lootTable) {
+    public static void spawnInfinityDrops(ServerLevel level, BlockPos pos, ResourceLocation lootTable) {
         LootContext ctx = (new LootContext.Builder(level)).create(LootContextParamSet.builder().build());
         LootTable table = ctx.getLootTable(lootTable);
 

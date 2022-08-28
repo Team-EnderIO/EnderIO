@@ -130,6 +130,10 @@ public class MachineBlocks {
         .lang("Slice'N'Splice")
         .register();
 
+    public static BlockEntry<ProgressMachineBlock> IMPULSE_HOPPER = standardMachine("impulse_hopper", () -> MachineBlockEntities.IMPULSE_HOPPER)
+        .lang("Impulse Hopper")
+        .register();
+
     // We use a supplier for the block entity entry so it doesnt init the block entities until its the right time.
     private static BlockBuilder<SimpleMachineBlock, Registrate> simpleMachine(String name, Supplier<BlockEntityEntry<? extends MachineBlockEntity>> blockEntityEntry) {
         return REGISTRATE

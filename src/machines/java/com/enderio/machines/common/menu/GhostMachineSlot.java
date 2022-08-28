@@ -4,7 +4,6 @@ import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * A ghost slot is a slot that can be populated with an item, but that item isn't really real.
@@ -19,7 +18,7 @@ public class GhostMachineSlot extends MachineSlot {
         MachineInventoryLayout layout = itemHandler.getLayout();
         if (layout.canInsert(index) || layout.canExtract(index))
             throw new RuntimeException("Ghost slot can be externally modified!!");
-        if (!layout.guiCanInsert(index) || !layout.guiCanExtract(index))
+        if (!layout.guiCanInsert(index))
             throw new RuntimeException("Ghost slot cannot be modified by the player!");
     }
 
@@ -28,14 +27,12 @@ public class GhostMachineSlot extends MachineSlot {
         // If this stack is valid, set the inventory slot value.
         if (!stack.isEmpty() && mayPlace(stack)) {
             ItemStack ghost = stack.copy();
-            ghost.setCount(1);
             set(ghost);
         }
 
         return stack;
     }
 
-    @NotNull
     @Override
     public ItemStack remove(int amount) {
         set(ItemStack.EMPTY);

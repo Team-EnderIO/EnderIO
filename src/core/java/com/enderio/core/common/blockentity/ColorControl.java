@@ -8,7 +8,6 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.Locale;
 
-// TODO: 1.19: Move to core
 public enum ColorControl implements IIcon {
     GREEN,
     BROWN,

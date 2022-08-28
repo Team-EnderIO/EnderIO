@@ -13,7 +13,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.ModelData;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -37,7 +36,7 @@ public class CompositeBakedModel implements IDynamicBakedModel {
     }
 
     @Override
-    public @NotNull List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull ModelData extraData,
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand, ModelData extraData,
         @Nullable RenderType renderType) {
         // Get all component quads
         List<BakedQuad> quads = new ArrayList<>();

@@ -28,7 +28,6 @@ import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.geometry.IGeometryBakingContext;
 import net.minecraftforge.client.model.geometry.IGeometryLoader;
 import net.minecraftforge.client.model.geometry.IUnbakedGeometry;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -51,10 +50,10 @@ public class IOOverlayBakedModel implements IDynamicBakedModel {
     private TextureAtlasSprite getTexture(IOMode state) {
         ResourceLocation tex = switch (state) {
             case NONE -> MissingTextureAtlasSprite.getLocation();
-        case PUSH -> TEX_PUSH;
-        case PULL -> TEX_PULL;
-        case BOTH -> TEX_PUSH_PULL;
-        case DISABLED -> TEX_DISABLED;
+            case PUSH -> TEX_PUSH;
+            case PULL -> TEX_PULL;
+            case BOTH -> TEX_PUSH_PULL;
+            case DISABLED -> TEX_DISABLED;
         };
 
         return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(tex);
@@ -66,9 +65,8 @@ public class IOOverlayBakedModel implements IDynamicBakedModel {
         this.north = Direction.rotate(transform.getRotation().getMatrix(), Direction.NORTH);
     }
 
-    @NotNull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull ModelData extraData, RenderType renderType) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand, ModelData extraData, RenderType renderType) {
         if (extraData.has(MachineBlockEntity.IO_CONFIG_PROPERTY)) {
             // Get io config from the block entity.
             IIOConfig config = extraData.get(MachineBlockEntity.IO_CONFIG_PROPERTY);
@@ -93,7 +91,7 @@ public class IOOverlayBakedModel implements IDynamicBakedModel {
     }
 
     @Override
-    public ChunkRenderTypeSet getRenderTypes(@NotNull BlockState state, @NotNull RandomSource rand, @NotNull ModelData data) {
+    public ChunkRenderTypeSet getRenderTypes(BlockState state, RandomSource rand, ModelData data) {
         return ChunkRenderTypeSet.of(RenderType.cutout());
     }
 

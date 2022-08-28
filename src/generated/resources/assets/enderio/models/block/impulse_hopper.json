@@ -1,0 +1,20 @@
+{
+  "parent": "minecraft:block/block",
+  "children": {
+    "frame": {
+      "parent": "enderio:block/machine_frame"
+    },
+    "front": {
+      "parent": "enderio:block/impulse_hopper_front"
+    },
+    "overlay": {
+      "parent": "enderio:block/io_overlay"
+    }
+  },
+  "item_render_order": [
+    "frame",
+    "overlay",
+    "front"
+  ],
+  "loader": "forge:composite"
+}

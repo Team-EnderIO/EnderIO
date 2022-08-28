@@ -1,6 +1,6 @@
 package com.enderio.base.common.loot;
 
-import com.enderio.base.common.item.spawner.BrokenSpawnerItem;
+import com.enderio.base.common.item.misc.BrokenSpawnerItem;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.config.BaseConfig;
 import com.google.common.base.Suppliers;
@@ -18,7 +18,6 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.common.loot.LootModifier;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
@@ -35,7 +34,7 @@ public class BrokenSpawnerLootModifier extends LootModifier {
     }
 
     @Override
-    protected @NotNull ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
+    protected ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
         BlockEntity entity = context.getParam(LootContextParams.BLOCK_ENTITY);
         if (entity instanceof SpawnerBlockEntity spawnerBlockEntity) {
             if (!context.getParam(LootContextParams.TOOL).is(EIOTags.Items.BROKEN_SPAWNER_BLACKLIST)) {

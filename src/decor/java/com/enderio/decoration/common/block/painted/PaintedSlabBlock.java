@@ -11,8 +11,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.SlabType;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class PaintedSlabBlock extends SlabBlock implements EntityBlock, IPaintedBlock {
 
@@ -22,16 +21,18 @@ public class PaintedSlabBlock extends SlabBlock implements EntityBlock, IPainted
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return DecorBlockEntities.DOUBLE_PAINTED.create(pos, state);
     }
 
     @Override
     public Block getPaint(BlockGetter level, BlockPos pos) {
         if (level.getBlockState(pos).getValue(SlabBlock.TYPE) != SlabType.BOTTOM
-            && level.getExistingBlockEntity(pos) instanceof DoublePaintedBlockEntity paintedBlockEntity
-            && paintedBlockEntity.getPaint2() != null)
-            return paintedBlockEntity.getPaint2();
+            && level.getExistingBlockEntity(pos) instanceof DoublePaintedBlockEntity paintedBlockEntity) {
+            Block paint = paintedBlockEntity.getPaint2();
+            if (paint != null)
+                return paint;
+        }
         return IPaintedBlock.super.getPaint(level, pos);
     }
 }

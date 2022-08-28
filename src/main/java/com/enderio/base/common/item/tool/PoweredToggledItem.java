@@ -24,8 +24,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public abstract class PoweredToggledItem extends Item implements IMultiCapabilityItem, IAdvancedTooltipProvider {
@@ -34,7 +33,7 @@ public abstract class PoweredToggledItem extends Item implements IMultiCapabilit
         super(pProperties.stacksTo(1));
     }
 
-    protected abstract void onTickWhenActive(Player player, @Nonnull ItemStack pStack, @Nonnull Level pLevel, @Nonnull Entity pEntity, int pSlotId,
+    protected abstract void onTickWhenActive(Player player, ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId,
         boolean pIsSelected);
 
     protected abstract int getEnergyUse();
@@ -67,7 +66,7 @@ public abstract class PoweredToggledItem extends Item implements IMultiCapabilit
     }
 
     @Override
-    public void fillItemCategory(@Nonnull CreativeModeTab pCategory, @Nonnull NonNullList<ItemStack> pItems) {
+    public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {
         if (allowedIn(pCategory)) {
             ItemStack is = new ItemStack(this);
             pItems.add(is.copy());
@@ -77,9 +76,8 @@ public abstract class PoweredToggledItem extends Item implements IMultiCapabilit
         }
     }
 
-    @Nonnull
     @Override
-    public InteractionResultHolder<ItemStack> use(@Nonnull Level pLevel, Player pPlayer, @Nonnull InteractionHand pUsedHand) {
+    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         if (pPlayer.isCrouching()) {
             ItemStack stack = pPlayer.getItemInHand(pUsedHand);
             if (Toggled.isEnabled(stack)) {
@@ -92,7 +90,7 @@ public abstract class PoweredToggledItem extends Item implements IMultiCapabilit
     }
 
     @Override
-    public void inventoryTick(@Nonnull ItemStack pStack, @Nonnull Level pLevel, @Nonnull Entity pEntity, int pSlotId, boolean pIsSelected) {
+    public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
         if (pEntity instanceof Player player) {
             if (Toggled.isEnabled(pStack)) {
                 if (hasCharge(pStack)) {

@@ -13,8 +13,7 @@ import net.minecraft.world.level.block.SandBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class PaintedSandBlock extends SandBlock implements EntityBlock, IPaintedBlock {
 
@@ -24,12 +23,12 @@ public class PaintedSandBlock extends SandBlock implements EntityBlock, IPainted
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(@Nonnull BlockPos pos, @Nonnull BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return DecorBlockEntities.SINGLE_PAINTED.create(pos, state);
     }
 
     @Override
-    public void tick(@Nonnull BlockState pState, ServerLevel pLevel, BlockPos pPos, @Nonnull RandomSource pRand) {
+    public void tick(BlockState pState, ServerLevel pLevel, BlockPos pPos, RandomSource pRand) {
         if (isFree(pLevel.getBlockState(pPos.below())) && pPos.getY() >= pLevel.getMinBuildHeight()) {
             PaintedSandEntity paintedSandEntity = new PaintedSandEntity(pLevel, pPos.getX() + 0.5D, pPos.getY(), pPos.getZ() + 0.5D,
                 pLevel.getBlockState(pPos));
@@ -42,7 +41,7 @@ public class PaintedSandBlock extends SandBlock implements EntityBlock, IPainted
     }
 
     @Override
-    public int getDustColor(@Nonnull BlockState pState, BlockGetter pReader, @Nonnull BlockPos pPos) {
+    public int getDustColor(BlockState pState, BlockGetter pReader, BlockPos pPos) {
         BlockEntity blockEntity = pReader.getBlockEntity(pPos);
         if (blockEntity instanceof SinglePaintedBlockEntity paintedBlockEntity) {
             Block block = paintedBlockEntity.getPaint();

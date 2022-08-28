@@ -14,8 +14,7 @@ import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class FusedQuartzBlock extends AbstractGlassBlock {
@@ -33,7 +32,7 @@ public class FusedQuartzBlock extends AbstractGlassBlock {
     }
 
     @Override
-    public void appendHoverText(@Nonnull ItemStack pStack, @Nullable BlockGetter pLevel, @Nonnull List<Component> pTooltip, @Nonnull TooltipFlag pFlag) {
+    public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
         super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
 
         if (explosionResistant)
@@ -51,7 +50,7 @@ public class FusedQuartzBlock extends AbstractGlassBlock {
     }
 
     @Override
-    public int getLightBlock(@Nonnull BlockState pState, @Nonnull BlockGetter pLevel, @Nonnull BlockPos pPos) {
+    public int getLightBlock(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
         return glassLighting == GlassLighting.BLOCKING ? pLevel.getMaxLightLevel() : 0;
     }
 
@@ -60,9 +59,8 @@ public class FusedQuartzBlock extends AbstractGlassBlock {
         return explosionResistant ? BaseConfig.COMMON.BLOCKS.EXPLOSION_RESISTANCE.get() : super.getExplosionResistance();
     }
 
-    @Nonnull
     @Override
-    public VoxelShape getCollisionShape(@Nonnull BlockState pState, @Nonnull BlockGetter pLevel, @Nonnull BlockPos pPos, @Nonnull CollisionContext pContext) {
+    public VoxelShape getCollisionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         if (pContext instanceof EntityCollisionContext entityCollisionContext) {
             if (collisionPredicate.canPass(entityCollisionContext)) {
                 return Shapes.empty();

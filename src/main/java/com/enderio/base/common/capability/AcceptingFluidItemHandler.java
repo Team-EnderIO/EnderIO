@@ -5,7 +5,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
 
@@ -16,15 +15,15 @@ public class AcceptingFluidItemHandler extends FluidHandlerItemStack {
 
     private final Predicate<Fluid> fluidPredicate;
 
-    public AcceptingFluidItemHandler(@NotNull ItemStack container, int capacity, Fluid validFluid) {
+    public AcceptingFluidItemHandler(ItemStack container, int capacity, Fluid validFluid) {
         this(container, capacity, fluid -> fluid == validFluid);
     }
 
-    public AcceptingFluidItemHandler(@NotNull ItemStack container, int capacity, TagKey<Fluid> validFluid) {
+    public AcceptingFluidItemHandler(ItemStack container, int capacity, TagKey<Fluid> validFluid) {
         this(container, capacity, fluid -> fluid.is(validFluid));
     }
 
-    public AcceptingFluidItemHandler(@NotNull ItemStack container, int capacity, Predicate<Fluid> isFluidValid) {
+    public AcceptingFluidItemHandler(ItemStack container, int capacity, Predicate<Fluid> isFluidValid) {
         super(container, capacity);
         fluidPredicate = isFluidValid;
     }
@@ -40,7 +39,7 @@ public class AcceptingFluidItemHandler extends FluidHandlerItemStack {
     }
 
     @Override
-    public boolean isFluidValid(int tank, @NotNull FluidStack stack) {
+    public boolean isFluidValid(int tank, FluidStack stack) {
         return fluidPredicate.test(stack.getFluid());
     }
 }
