@@ -12,7 +12,10 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.HashMap;
 import java.util.Map;
 
-// TODO: Flavour text logic should probably be moved into here from CapacitorUtil.
+// TODO: Add tooltips... No more cryptic stuff
+// TODO: Instead of loot capacitors having lists of specialized machines, have different loot capacitor items for different
+//       machine categories.
+// TODO: Loot capacitor types (Sculk, Soul) found in respective dungeons/structures.
 public final class LootCapacitorData implements ICapacitorData {
     private float base;
     private final Map<ResourceLocation, Float> specializations;
