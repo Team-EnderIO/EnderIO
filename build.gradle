@@ -204,21 +204,21 @@ dependencies {
     coreAnnotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     // JEI
-//    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
-//    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
-//    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common:${jei_version}")
-//    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
+    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
+    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
+    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common:${jei_version}")
+    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
 
     // The One Probe
 //    implementation fg.deobf("mcjty.theoneprobe:TheOneProbe:${minecraft_version}-${top_version}")
-//    implementation fg.deobf("curse.maven:the-one-probe-245211:${top_version}")
+    implementation fg.deobf("curse.maven:the-one-probe-245211:${top_version}")
 
     // Patchouli
-//    compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
-//    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
+    compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
+    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
 
     // While we don't have conduits etc.
-//    runtimeOnly fg.deobf("curse.maven:mekanism-268560:3743835")
+    runtimeOnly fg.deobf("curse.maven:mekanism-268560:${mekanism_version}")
 
     // Jetbrains annotations
     compileOnly 'org.jetbrains:annotations:23.0.0'
@@ -229,6 +229,8 @@ mixin {
     add sourceSets.core, "mixins.enderio.refmap.json"
     config "mixins.enderio.json"
 }
+
+reobf.create('jarJar')
 
 // Example for how to get properties into the manifest for reading at runtime.
 jar {
@@ -246,7 +248,7 @@ jar {
 
     // Add all other source sets
     from sourceSets.api.output
-//    from sourceSets.core.output // Stop peeps from running the jar.
+    from sourceSets.core.output
     for (String set : subsets) {
         from sourceSets.getByName(set).output
     }
@@ -278,11 +280,14 @@ build.dependsOn sourcesJar
 // Add other source sets to jarJar
 tasks.jarJar.configure {
     from sourceSets.api.output
-//    from sourceSets.core.output // Stop people running the mod.
+    from sourceSets.core.output
     for (String set : subsets) {
         from sourceSets.getByName(set).output
     }
+
+    finalizedBy('reobfJarJar')
 }
+build.dependsOn tasks.jarJar
 
 // TODO: 1.19: Modrinth publishing.
 
