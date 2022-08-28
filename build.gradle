@@ -230,6 +230,8 @@ mixin {
     config "mixins.enderio.json"
 }
 
+reobf.create('jarJar')
+
 // Example for how to get properties into the manifest for reading at runtime.
 jar {
     manifest {
@@ -282,6 +284,8 @@ tasks.jarJar.configure {
     for (String set : subsets) {
         from sourceSets.getByName(set).output
     }
+
+    finalizedBy('reobfJarJar')
 }
 build.dependsOn tasks.jarJar
 
