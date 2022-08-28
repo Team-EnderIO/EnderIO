@@ -7,7 +7,6 @@ import com.enderio.core.common.blockentity.ColorControl;
 import com.enderio.EnderIO;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
-import com.google.common.collect.MapMaker;
 import com.mojang.datafixers.util.Pair;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
@@ -23,10 +22,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import org.apache.logging.log4j.core.jmx.Server;
 
 import java.util.*;
 
@@ -45,9 +42,8 @@ public class ConduitSavedData extends SavedData {
 
     // Deserialization
     private ConduitSavedData(CompoundTag nbt) {
-        System.out.println("Conduit network deserialization started, NBT:");
-        System.out.println(nbt.getAsString());
-
+        EnderIO.LOGGER.info("Conduit network deserialization started");
+        long start = System.currentTimeMillis();
         ListTag graphsTag = nbt.getList("graphs", Tag.TAG_COMPOUND);
         for (Tag tag : graphsTag) {
             CompoundTag typedGraphTag = (CompoundTag) tag;
@@ -64,45 +60,32 @@ public class ConduitSavedData extends SavedData {
 
                     List<NodeIdentifier> graphObjects = new ArrayList<>();
                     List<Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>>> connections = new ArrayList<>();
-                    List<Graph<Mergeable.Dummy>> inGraph = new ArrayList<>();
+
 
                     for (Tag tag2 : graphObjectsTag) {
                         NodeIdentifier node = new NodeIdentifier(BlockPos.of(((LongTag)tag2).getAsLong()));
                         graphObjects.add(node);
-                        inGraph.add(node.getGraph());
                     }
-
-                    System.out.println(Arrays.toString(inGraph.toArray()));
 
                     for (Tag tag2: graphConnectionsTag) {
                         CompoundTag connectionTag = (CompoundTag) tag2;
                         connections.add(new Pair<>(graphObjects.get(connectionTag.getInt("0")), graphObjects.get(connectionTag.getInt("1"))));
                     }
-
-                    Graph<Mergeable.Dummy> graph = new Graph<>();
-                    merge(graphObjects.get(0), connections, graph);
-                    networks.get(value).add(graph);
+                    NodeIdentifier graphObject = graphObjects.get(0);
+                    Graph.integrate(graphObject, List.of());
+                    merge(graphObject, connections);
+                    networks.get(value).add(graphObject.getGraph());
                 }
             }
         }
-        System.out.println("Conduit network deserialization finished");
-        System.out.println(networksInfo());
-    }
-
-    private String networksInfo() {
-        int numConduits = 0;
-        if (networks.size() > 0) {
-            for (Graph<Mergeable.Dummy> graph : networks.values()) {
-                numConduits += graph.getObjects().size();
-            }
-        }
-
-        return "Number of networks: " + networks.size() + " || Number of conduits: " + numConduits;
+        EnderIO.LOGGER.info("Conduit network deserialization finished, took {}ms", System.currentTimeMillis() - start);
     }
 
     // Serialization
     @Override
     public CompoundTag save(CompoundTag nbt) {
+        EnderIO.LOGGER.info("Conduit network serialization started");
+        long start = System.currentTimeMillis();
         ListTag graphsTag = new ListTag();
         for (IConduitType type: networks.keySet()) {
             List<Graph<Mergeable.Dummy>> graphs = networks.get(type);
@@ -127,10 +110,7 @@ public class ConduitSavedData extends SavedData {
         }
 
         nbt.put("graphs", graphsTag);
-
-        System.out.println("Conduit network serialization finished");
-        System.out.println(nbt.getAsString());
-
+        EnderIO.LOGGER.info("Conduit network serialization finished, took {}ms", System.currentTimeMillis() - start);
         return nbt;
     }
 
@@ -173,63 +153,23 @@ public class ConduitSavedData extends SavedData {
         return graphTag;
     }
 
-    private void merge(GraphObject<Mergeable.Dummy> object, List<Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>>> connections, Graph<Mergeable.Dummy> graph) {
-        System.out.println("    Merging " + connections.size() + " connections with object " + objects.getOrDefault(object, nodeIdForString) + ":");
-        for (var connection : connections) {
-            System.out.println(connectionToString(connection));
-        }
-
+    private void merge(GraphObject<Mergeable.Dummy> object, List<Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>>> connections) {
         var filteredConnections = connections.stream().filter(pair -> (pair.getFirst() == object || pair.getSecond() == object)).toList();
         List<GraphObject<Mergeable.Dummy>> neighbors = filteredConnections.stream().map(pair -> pair.getFirst() == object ? pair.getSecond() : pair.getFirst()).toList();
 
-        // Graph.integrate(object, neighbors);
-        object.setGraph(graph);
+
         for (GraphObject<Mergeable.Dummy> neighbor : neighbors) {
-            Graph.integrate(neighbor, List.of(object));
+            Graph.connect(object, neighbor);
         }
 
         connections = connections.stream().filter(v -> !filteredConnections.contains(v)).toList();
         if (!connections.isEmpty()) {
-            merge(connections.get(0).getFirst(), connections, graph);
+            merge(connections.get(0).getFirst(), connections);
         }
-        System.out.println("Merged; Number of objects: " + graph.getObjects().size());
-    }
-
-    private int nodeIdForString = 0;
-
-    private HashMap<GraphObject<Mergeable.Dummy>, Integer> objects = new HashMap<>();
-    private String connectionToString(Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>> connection) {
-        int a = objects.getOrDefault(connection.getFirst(), nodeIdForString);
-        if (a == nodeIdForString) objects.put(connection.getFirst(), a);
-        nodeIdForString += 1;
-
-        int b = objects.getOrDefault(connection.getSecond(), nodeIdForString);
-        if (b == nodeIdForString) objects.put(connection.getSecond(), b);
-        nodeIdForString += 1;
-
-        return "        " + a + ":" + b;
     }
 
     private static boolean containsConnection(List<Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>>> connections, Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>> connection) {
         return connections.contains(connection) || connections.contains(connection.swap());
-    }
-    private static List<GraphObject<Mergeable.Dummy>> getNeighbors(List<Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>>> connections, GraphObject<Mergeable.Dummy> of) {
-        List<GraphObject<Mergeable.Dummy>> neighbors = new ArrayList<>();
-        for (Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>> connection : connections) {
-            if (connection.getFirst() == of)
-                neighbors.add(connection.getSecond());
-            if(connection.getSecond() == of)
-                neighbors.add(connection.getFirst());
-        }
-        return neighbors;
-    }
-
-    /**
-     * Removes redundant connections in a list of connections
-     */
-    private static void removeConnections(List<Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>>> connections, GraphObject<Mergeable.Dummy> node, List<GraphObject<Mergeable.Dummy>> neighborsOfNode) {
-        List<Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>>> pairs = neighborsOfNode.stream().map(neighbor -> Pair.of(node, neighbor)).toList();
-        connections.removeIf(connection -> containsConnection(pairs, connection));
     }
 
     @SubscribeEvent
@@ -237,48 +177,51 @@ public class ConduitSavedData extends SavedData {
         if (event.phase == TickEvent.Phase.START)
             return;
         if (event.level instanceof ServerLevel serverLevel) {
-            ConduitSavedData savedData = get(serverLevel);
-            savedData.setDirty();
-            for (var entry : savedData.networks.entries()) {
-                //tick four times per second
-                if (serverLevel.getGameTime() % 5 == ConduitTypes.getRegistry().getID(entry.getKey()) % 5) {
+            get(serverLevel).tick(serverLevel);
+        }
+    }
 
-                    if (entry.getKey() instanceof TieredConduit tieredConduit && tieredConduit.getType().equals(new ResourceLocation("forge", "power"))) {
-                        ListMultimap<ColorControl, ConnectorPos> inputs = ArrayListMultimap.create();
-                        ListMultimap<ColorControl, ConnectorPos> outputs = ArrayListMultimap.create();
-                        for (GraphObject<Mergeable.Dummy> object : entry.getValue().getObjects()) {
-                            if (object instanceof NodeIdentifier nodeIdentifier) {
-                                for (Direction direction: Direction.values()) {
-                                    if (serverLevel.isLoaded(nodeIdentifier.getPos()) && serverLevel.shouldTickBlocksAt(nodeIdentifier.getPos())) {
-                                        nodeIdentifier.getIOState(direction).ifPresent(ioState -> {
-                                            ioState.in().ifPresent(color -> inputs.get(color).add(new ConnectorPos(nodeIdentifier.getPos(), direction)));
-                                            ioState.out().ifPresent(color -> outputs.get(color).add(new ConnectorPos(nodeIdentifier.getPos(), direction)));
-                                        });
-                                    }
+    private void tick(ServerLevel serverLevel) {
+        setDirty();
+        for (var entry : networks.entries()) {
+            //tick four times per second
+            if (serverLevel.getGameTime() % 5 == ConduitTypes.getRegistry().getID(entry.getKey()) % 5) {
+                //TODO put that into the conduit instance
+                if (entry.getKey() instanceof TieredConduit tieredConduit && tieredConduit.getType().equals(new ResourceLocation("forge", "power"))) {
+                    ListMultimap<ColorControl, ConnectorPos> inputs = ArrayListMultimap.create();
+                    ListMultimap<ColorControl, ConnectorPos> outputs = ArrayListMultimap.create();
+                    for (GraphObject<Mergeable.Dummy> object : entry.getValue().getObjects()) {
+                        if (object instanceof NodeIdentifier nodeIdentifier) {
+                            for (Direction direction: Direction.values()) {
+                                if (serverLevel.isLoaded(nodeIdentifier.getPos()) && serverLevel.shouldTickBlocksAt(nodeIdentifier.getPos())) {
+                                    nodeIdentifier.getIOState(direction).ifPresent(ioState -> {
+                                        ioState.in().ifPresent(color -> inputs.get(color).add(new ConnectorPos(nodeIdentifier.getPos(), direction)));
+                                        ioState.out().ifPresent(color -> outputs.get(color).add(new ConnectorPos(nodeIdentifier.getPos(), direction)));
+                                    });
                                 }
                             }
                         }
-                        for (ColorControl color: inputs.keySet()) {
-                            Map<ConnectorPos, IEnergyStorage> inputCaps = new HashMap<>();
-                            for (ConnectorPos inputAt : inputs.get(color)) {
-                                checkFor(serverLevel, inputAt, CapabilityEnergy.ENERGY).ifPresent(energy -> inputCaps.put(inputAt, energy));
+                    }
+                    for (ColorControl color: inputs.keySet()) {
+                        Map<ConnectorPos, IEnergyStorage> inputCaps = new HashMap<>();
+                        for (ConnectorPos inputAt : inputs.get(color)) {
+                            checkFor(serverLevel, inputAt, CapabilityEnergy.ENERGY).ifPresent(energy -> inputCaps.put(inputAt, energy));
+                        }
+                        if (inputCaps.isEmpty())
+                            continue;
+                        Map<ConnectorPos, IEnergyStorage> outputCaps = new HashMap<>();
+                        for (ConnectorPos outputAt : outputs.get(color)) {
+                            checkFor(serverLevel, outputAt, CapabilityEnergy.ENERGY).ifPresent(energy -> outputCaps.put(outputAt, energy));
+                        }
+                        for (Map.Entry<ConnectorPos, IEnergyStorage> inputEntry : inputCaps.entrySet()) {
+                            int extracted = inputEntry.getValue().extractEnergy(tieredConduit.getTier(), true);
+                            int inserted = 0;
+                            for (Map.Entry<ConnectorPos, IEnergyStorage> outputEntry : outputCaps.entrySet()) {
+                                inserted += outputEntry.getValue().receiveEnergy(extracted - inserted, false);
+                                if (inserted == extracted)
+                                    break;
                             }
-                            if (inputCaps.isEmpty())
-                                continue;
-                            Map<ConnectorPos, IEnergyStorage> outputCaps = new HashMap<>();
-                            for (ConnectorPos outputAt : outputs.get(color)) {
-                                checkFor(serverLevel, outputAt, CapabilityEnergy.ENERGY).ifPresent(energy -> outputCaps.put(outputAt, energy));
-                            }
-                            for (Map.Entry<ConnectorPos, IEnergyStorage> inputEntry : inputCaps.entrySet()) {
-                                int extracted = inputEntry.getValue().extractEnergy(tieredConduit.getTier(), true);
-                                int inserted = 0;
-                                for (Map.Entry<ConnectorPos, IEnergyStorage> outputEntry : outputCaps.entrySet()) {
-                                    inserted += outputEntry.getValue().receiveEnergy(extracted - inserted, false);
-                                    if (inserted == extracted)
-                                        break;
-                                }
-                                inputEntry.getValue().extractEnergy(inserted, false);
-                            }
+                            inputEntry.getValue().extractEnergy(inserted, false);
                         }
                     }
                 }
@@ -294,7 +237,6 @@ public class ConduitSavedData extends SavedData {
         if (!networks.get(type).contains(graph)) {
             networks.get(type).add(graph);
         }
-        // System.out.println(Arrays.toString(networks.entries().toArray()));
     }
 
     private static <T> Optional<T> checkFor(ServerLevel level, ConnectorPos pos, Capability<T> cap) {
