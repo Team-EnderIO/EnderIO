@@ -17,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A capacitor item that has fixed capacitor data attached.
@@ -32,7 +33,7 @@ public class FixedCapacitorItem extends Item implements IMultiCapabilityItem {
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        pTooltipComponents.add(TooltipUtil.styledWithArgs(EIOLang.CAPACITOR_TOOLTIP_BASE, NumberFormat.getInstance().format(data.getBase())));
+        pTooltipComponents.add(TooltipUtil.styledWithArgs(EIOLang.CAPACITOR_TOOLTIP_BASE, NumberFormat.getInstance(Locale.ENGLISH).format(data.getBase())));
     }
 
     @Nullable

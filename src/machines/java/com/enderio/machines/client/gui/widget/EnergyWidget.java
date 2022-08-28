@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 
 import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.function.Supplier;
 
 public class EnergyWidget extends EIOWidget {
@@ -63,7 +64,7 @@ public class EnergyWidget extends EIOWidget {
         if (isHovered(mouseX, mouseY)) {
             IMachineEnergyStorage storage = storageSupplier.get();
 
-            NumberFormat fmt = NumberFormat.getInstance();
+            NumberFormat fmt = NumberFormat.getInstance(Locale.ENGLISH);
             displayOn.renderTooltip(poseStack, TooltipUtil.withArgs(EIOLang.ENERGY_AMOUNT, fmt.format(storage.getEnergyStored()) + "/" + fmt.format(
                 storage.getMaxEnergyStored())), mouseX, mouseY);
         }

@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class LootCapacitorItem extends Item implements IMultiCapabilityItem {
@@ -32,7 +33,7 @@ public class LootCapacitorItem extends Item implements IMultiCapabilityItem {
     public void appendHoverText(ItemStack pStack, Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
         pStack.getCapability(EIOCapabilities.CAPACITOR).ifPresent(data -> {
-            NumberFormat fmt = NumberFormat.getInstance();
+            NumberFormat fmt = NumberFormat.getInstance(Locale.ENGLISH);
             pTooltipComponents.add(TooltipUtil.styledWithArgs(EIOLang.CAPACITOR_TOOLTIP_BASE, fmt.format(data.getBase())));
             if (data instanceof LootCapacitorData lootCapacitorData) {
                 for (Map.Entry<CapacitorModifier, Float> modifier : lootCapacitorData.getAllModifiers().entrySet()) {
