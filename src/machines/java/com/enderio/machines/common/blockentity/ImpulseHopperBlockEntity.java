@@ -1,8 +1,9 @@
 package com.enderio.machines.common.blockentity;
 
-import com.enderio.machines.common.MachineTier;
-import com.enderio.machines.common.blockentity.base.PowerConsumingMachineEntity;
-import com.enderio.machines.common.init.MachineCapacitorKeys;
+import com.enderio.api.capacitor.CapacitorModifier;
+import com.enderio.api.capacitor.QuadraticScalable;
+import com.enderio.api.io.energy.EnergyIOMode;
+import com.enderio.machines.common.blockentity.base.PoweredMachineEntity;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.menu.ImpulseHopperMenu;
 import net.minecraft.core.BlockPos;
@@ -13,12 +14,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class ImpulseHopperBlockEntity extends PowerConsumingMachineEntity {
-    private static final int IMPULSE_HOPPER_POWER_USE_PER_ITEM = 10;
+public class ImpulseHopperBlockEntity extends PoweredMachineEntity {
+    public static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, () -> 100000f);
+    public static final QuadraticScalable ENERGY_TRANSFER = new QuadraticScalable(CapacitorModifier.ENERGY_TRANSFER, () -> 120f);
+    public static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, () -> 16f);
+    private static final int ENERGY_USAGE_PER_ITEM = 10;
 
     public ImpulseHopperBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
-        super(MachineCapacitorKeys.IMPULSE_HOPPER_ENERGY_CAPACITY.get(), MachineCapacitorKeys.IMPULSE_HOPPER_ENERGY_TRANSFER.get(),
-            MachineCapacitorKeys.IMPULSE_HOPPER_ENERGY_CONSUME.get(), type, worldPosition, blockState);
+        super(EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_TRANSFER, ENERGY_USAGE, type, worldPosition, blockState);
     }
 
     @Override
@@ -28,7 +31,7 @@ public class ImpulseHopperBlockEntity extends PowerConsumingMachineEntity {
 
     @Override
     public MachineInventoryLayout getInventoryLayout() {
-        return MachineInventoryLayout.builder(true).inputSlot(6).outputSlot(6).ghostSlot(6).build(); // first 6 input, second 6 output, third 6 ghost
+        return MachineInventoryLayout.builder().inputSlot(6).outputSlot(6).ghostSlot(6).capacitor().build(); // first 6 input, second 6 output, third 6 ghost
     }
 
     @Override
@@ -62,7 +65,7 @@ public class ImpulseHopperBlockEntity extends PowerConsumingMachineEntity {
         int totalpower = 0;
         for (int i = 0; i < 6; i++) {
             if (canPass(i) && canHold(i)) {
-                totalpower += this.getInventory().getStackInSlot(i + 6 + 6).getCount() * IMPULSE_HOPPER_POWER_USE_PER_ITEM;
+                totalpower += this.getInventory().getStackInSlot(i + 6 + 6).getCount() * ENERGY_USAGE_PER_ITEM;
                 continue;
             }
             return false;
@@ -84,15 +87,10 @@ public class ImpulseHopperBlockEntity extends PowerConsumingMachineEntity {
             } else if (stack.is(result.getItem())) {
                 result.setCount(result.getCount() + ghost.getCount());
             }
-            this.getEnergyStorage().consumeEnergy(ghost.getCount() * IMPULSE_HOPPER_POWER_USE_PER_ITEM, false);
+            this.getEnergyStorage().consumeEnergy(ghost.getCount() * ENERGY_USAGE_PER_ITEM, false);
             stack.shrink(ghost.getCount());
             this.getInventory().setStackInSlot(i + 6, result);
         }
-    }
-
-    @Override
-    public MachineTier getTier() {
-        return MachineTier.STANDARD;
     }
 
     public boolean ghostSlotHasItem(int slot) {

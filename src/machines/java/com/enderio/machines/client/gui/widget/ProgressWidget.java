@@ -10,28 +10,80 @@ import net.minecraft.network.chat.Component;
 
 import java.util.function.Supplier;
 
-// Will need adapting for arrows, will do that as part of SAG mill
-public class ProgressWidget extends AbstractWidget {
-    public enum Direction {
-        BOTTOM_UP,
-        TOP_DOWN,
-        LEFT_RIGHT
+// TODO: Configurable tooltip text
+public abstract class ProgressWidget extends AbstractWidget {
+
+    public static class BottomUp extends ProgressWidget {
+        public BottomUp(Screen screen, Supplier<Float> getter, int x, int y, int width, int height, int u, int v) {
+            super(screen, getter, x, y, width, height, u, v);
+        }
+
+        public BottomUp(Screen screen, Supplier<Float> getter, int x, int y, int width, int height, int u, int v, boolean tooltip) {
+            super(screen, getter, x, y, width, height, u, v, tooltip);
+        }
+
+        @Override
+        public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+            float progress = progressSupplier.get();
+            int yOffset = (int)(this.height * (1.0f - progress));
+            render(poseStack, x, y + yOffset, u, v + yOffset, width, (int) (this.height * progress));
+
+            super.renderButton(poseStack, mouseX, mouseY, partialTick);
+        }
     }
 
-    private Supplier<Float> getter;
+    public static class TopDown extends ProgressWidget {
+        public TopDown(Screen screen, Supplier<Float> getter, int x, int y, int width, int height, int u, int v, boolean tooltip) {
+            super(screen, getter, x, y, width, height, u, v, tooltip);
+        }
+
+        public TopDown(Screen screen, Supplier<Float> getter, int x, int y, int width, int height, int u, int v) {
+            super(screen, getter, x, y, width, height, u, v);
+        }
+
+        @Override
+        public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+            float progress = progressSupplier.get();
+            render(poseStack, x, y, u, v, width, (int) (this.height * progress));
+            super.renderButton(poseStack, mouseX, mouseY, partialTick);
+        }
+    }
+
+    public static class LeftRight extends ProgressWidget {
+        public LeftRight(Screen screen, Supplier<Float> getter, int x, int y, int width, int height, int u, int v, boolean tooltip) {
+            super(screen, getter, x, y, width, height, u, v, tooltip);
+        }
+
+        public LeftRight(Screen screen, Supplier<Float> getter, int x, int y, int width, int height, int u, int v) {
+            super(screen, getter, x, y, width, height, u, v);
+        }
+
+        @Override
+        public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+            float progress = progressSupplier.get();
+            render(poseStack, x, y, u, v, (int) (this.width * progress), height);
+            super.renderButton(poseStack, mouseX, mouseY, partialTick);
+        }
+    }
+
+    protected Supplier<Float> progressSupplier;
 
     private final Screen screen;
-    private final int u;
-    private final int v;
-    private final Direction direction;
+    protected final int u;
+    protected final int v;
+    private boolean tooltip;
 
-    public ProgressWidget(Screen screen, Supplier<Float> getter, int x, int y, int width, int height, int u, int v, Direction direction) {
+    protected ProgressWidget(Screen screen, Supplier<Float> progressSupplier, int x, int y, int width, int height, int u, int v, boolean tooltip) {
         super(x, y, width, height, Component.empty());
         this.screen = screen;
-        this.getter = getter;
+        this.progressSupplier = progressSupplier;
         this.u = u;
         this.v = v;
-        this.direction = direction;
+        this.tooltip = tooltip;
+    }
+
+    protected ProgressWidget(Screen screen, Supplier<Float> progressSupplier, int x, int y, int width, int height, int u, int v) {
+        this(screen, progressSupplier, x, y, width, height, u, v, true);
     }
 
     // Stop the click sound
@@ -45,39 +97,21 @@ public class ProgressWidget extends AbstractWidget {
 
     @Override
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        float progress = getter.get();
-
-        int yOffset = 0;
-        int xOffset = 0;
-        int width = this.width;
-        int height = this.height;
-
-        switch (direction) {
-        case BOTTOM_UP -> {
-            yOffset = (int)(this.height * (1.0f - progress));
-            height = (int) (this.height * progress);
-        }
-        case TOP_DOWN -> {
-            height = (int) (this.height * progress);
-        }
-        case LEFT_RIGHT -> {
-            width = (int) (this.width * progress);
-        }
-        }
-
-        poseStack.pushPose();
-        blit(poseStack, x + xOffset, y + yOffset, u, v + yOffset, width, height);
-        poseStack.popPose();
-
-        if (this.isHoveredOrFocused()) {
+        if (this.isHoveredOrFocused() && tooltip) {
             this.renderToolTip(poseStack, mouseX, mouseY);
         }
+    }
+
+    protected void render(PoseStack poseStack, int x, int y, int u, int v, int w, int h) {
+        poseStack.pushPose();
+        blit(poseStack, x, y, u, v, w, h);
+        poseStack.popPose();
     }
 
     @Override
     public void renderToolTip(PoseStack poseStack, int mouseX, int mouseY) {
         if (isHovered && isActive()) {
-            screen.renderTooltip(poseStack, TooltipUtil.withArgs(MachineLang.PROGRESS_TOOLTIP, (int) (getter.get() * 100)), mouseX, mouseY);
+            screen.renderTooltip(poseStack, TooltipUtil.withArgs(MachineLang.PROGRESS_TOOLTIP, (int) (progressSupplier.get() * 100)), mouseX, mouseY);
         }
     }
 }

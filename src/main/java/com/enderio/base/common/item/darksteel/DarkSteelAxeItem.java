@@ -1,6 +1,7 @@
 package com.enderio.base.common.item.darksteel;
 
 import com.enderio.base.common.capability.DarkSteelUpgradeable;
+import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.ForkUpgrade;
@@ -8,7 +9,6 @@ import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.common.util.BlockUtil;
 import com.enderio.core.common.util.EnergyUtil;
 import com.enderio.core.common.util.TooltipUtil;
-import com.enderio.base.common.config.BaseConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;

@@ -6,7 +6,6 @@ import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.tags.ITag;
 
-import java.util.List;
 import java.util.Optional;
 
 public class TagUtil {

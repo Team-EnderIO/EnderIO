@@ -1,7 +1,5 @@
 package com.enderio.machines.client.rendering.model;
 
-import com.google.common.collect.ImmutableList;
-import com.mojang.blaze3d.vertex.VertexFormatElement;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;

@@ -25,18 +25,14 @@ public class MachineInventoryLayout {
 
     private MachineInventoryLayout(Builder builder) {
         this.slots = List.copyOf(builder.slots);
-
-        if (builder.hasCapacitor)
-            capacitorSlot = slots.size() - 1;
-        else capacitorSlot = -1;
+        this.capacitorSlot = builder.capacitorSlot;
     }
 
     /**
      * Get an inventory layout builder.
-     * @param capacitor Whether or not the inventory will have a capacitor slot.
      */
-    public static Builder builder(boolean capacitor) {
-        return new Builder(capacitor);
+    public static Builder builder() {
+        return new Builder();
     }
 
     /**
@@ -106,12 +102,8 @@ public class MachineInventoryLayout {
     public static class Builder {
 
         private final ArrayList<SlotConfig> slots = new ArrayList<>();
-        private final boolean hasCapacitor;
         private int currentStackLimit = 64;
-
-        private Builder(boolean capacitor) {
-            hasCapacitor = capacitor;
-        }
+        private int capacitorSlot = -1;
 
         /**
          * Add a custom slot to the inventory layout.
@@ -303,16 +295,22 @@ public class MachineInventoryLayout {
             return this;
         }
 
+        public Builder capacitor() {
+            if (capacitorSlot >= 0) {
+                throw new IllegalStateException("A machine inventory may not have more than one capacitor slot!");
+            }
+
+            slot(slot -> slot.guiInsert().guiExtract().filter((i, s) -> CapacitorUtil.isCapacitor(s)).stackLimit(1));
+            capacitorSlot = slots.size() - 1;
+            return this;
+        }
+
         // endregion
 
         /**
          * Build the inventory layout.
          */
         public MachineInventoryLayout build() {
-            // Add capacitor if it was requested
-            if (hasCapacitor) {
-                slot(slot -> slot.guiInsert().guiExtract().filter((i, s) -> CapacitorUtil.isCapacitor(s)).stackLimit(1));
-            }
             return new MachineInventoryLayout(this);
         }
 

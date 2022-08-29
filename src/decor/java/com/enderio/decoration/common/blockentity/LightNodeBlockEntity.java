@@ -3,7 +3,6 @@ package com.enderio.decoration.common.blockentity;
 import com.enderio.decoration.common.block.light.LightNode;
 import com.enderio.decoration.common.network.EnderDecorNetwork;
 import com.enderio.decoration.common.network.ServerToClientLightUpdate;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;

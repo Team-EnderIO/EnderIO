@@ -2,6 +2,7 @@ package com.enderio.base.common.init;
 
 import com.enderio.EnderIO;
 import com.enderio.base.common.capacitor.DefaultCapacitorData;
+import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.item.EIOCreativeTabs;
 import com.enderio.base.common.item.misc.LocationPrintoutItem;
 import com.enderio.base.common.item.capacitors.FixedCapacitorItem;
@@ -22,9 +23,8 @@ import com.enderio.base.common.item.misc.MaterialItem;
 import com.enderio.base.common.item.misc.BrokenSpawnerItem;
 import com.enderio.base.common.item.tool.*;
 import com.enderio.base.common.tag.EIOTags;
-import com.enderio.base.common.config.BaseConfig;
-import com.enderio.core.data.model.EIOModel;
 import com.enderio.base.data.model.item.RotatingItemModel;
+import com.enderio.core.data.model.EIOModel;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.util.entry.ItemEntry;
@@ -83,7 +83,8 @@ public class EIOItems {
 
     // region Machine Parts
 
-    public static final ItemEntry<MaterialItem> SIMPLE_MACHINE_PARTS = materialItem("simple_machine_parts").register();
+    // TODO: Deal with machine parts when we decide machine "tiers"
+//    public static final ItemEntry<MaterialItem> SIMPLE_MACHINE_PARTS = materialItem("simple_machine_parts").register();
     public static final ItemEntry<MaterialItem> INDUSTRIAL_MACHINE_PARTS = materialItem("industrial_machine_parts").register();
     public static final ItemEntry<MaterialItem> ENHANCED_MACHINE_PARTS = materialItem("enhanced_machine_parts").register();
 

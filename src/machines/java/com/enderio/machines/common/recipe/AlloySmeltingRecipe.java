@@ -1,8 +1,8 @@
 package com.enderio.machines.common.recipe;
 
 import com.enderio.EnderIO;
-import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.core.common.recipes.CountedIngredient;
+import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;

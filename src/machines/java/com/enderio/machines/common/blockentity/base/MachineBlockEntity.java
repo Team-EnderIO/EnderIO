@@ -2,12 +2,11 @@ package com.enderio.machines.common.blockentity.base;
 
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
-import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.base.common.blockentity.RedstoneControl;
+import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.core.common.sync.EnumDataSlot;
 import com.enderio.core.common.sync.NBTSerializableDataSlot;
 import com.enderio.core.common.sync.SyncMode;
-import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.io.IOConfig;
 import com.enderio.machines.common.io.item.MachineInventory;
@@ -99,12 +98,6 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     // region Per-machine config/features
 
     /**
-     * Get the machine's tier.
-     * Abstract to ensure developers don't leave this as default.
-     */
-    public abstract MachineTier getTier();
-
-    /**
      * Whether this block entity supports redstone control
      */
     public boolean supportsRedstoneControl() {
@@ -170,8 +163,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
      * Override to declare custom constraints on IOMode's for sides of blocks.
      */
     protected boolean supportsIOMode(Direction side, IOMode mode) {
-        // Enhanced machines cannot have IO out the top.
-        return getTier() != MachineTier.ENHANCED || side != Direction.UP || mode == IOMode.NONE;
+        return true;
     }
 
     @Override

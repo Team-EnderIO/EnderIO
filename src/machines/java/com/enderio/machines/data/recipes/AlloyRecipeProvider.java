@@ -1,11 +1,11 @@
 package com.enderio.machines.data.recipes;
 
 import com.enderio.EnderIO;
-import com.enderio.core.common.recipes.CountedIngredient;
 import com.enderio.base.common.block.glass.*;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
+import com.enderio.core.common.recipes.CountedIngredient;
 import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonArray;
@@ -54,14 +54,6 @@ public class AlloyRecipeProvider extends EnderRecipeProvider {
 
         // endregion
 
-        // region Dusts
-
-        // TODO: These are just smelting recipes, prolly reading the old JEI isnt a good idea
-        //        build(new ItemStack(Items.IRON_INGOT), List.of(EnderIngredient.of(EIOTags.Items.DUSTS_IRON)), 2000, 0.3f, pFinishedRecipeConsumer);
-        //        build(new ItemStack(Items.GOLD_INGOT), List.of(EnderIngredient.of(EIOTags.Items.DUSTS_GOLD)), 2000, 0.3f, pFinishedRecipeConsumer);
-
-        // endregion
-
         // region Dyes
 
         build(new ItemStack(EIOItems.DYE_GREEN.get()), List.of(CountedIngredient.of(Tags.Items.DYES_GREEN), CountedIngredient.of(Items.EGG), CountedIngredient.of(EIOTags.Items.DUSTS_COAL)), 1500, 0.3f, pFinishedRecipeConsumer);
@@ -83,9 +75,10 @@ public class AlloyRecipeProvider extends EnderRecipeProvider {
 
         // region Chassis
 
-        build(new ItemStack(EIOBlocks.INDUSTRIAL_MACHINE_CHASSIS.get()), List.of(CountedIngredient.of(EIOBlocks.SIMPLE_MACHINE_CHASSIS.get()), CountedIngredient.of(EIOItems.DYE_INDUSTRIAL_BLEND.get())), 3600, 0.3f, pFinishedRecipeConsumer);
+        // TODO: Deal with chassis etc.
+//        build(new ItemStack(EIOBlocks.INDUSTRIAL_MACHINE_CHASSIS.get()), List.of(CountedIngredient.of(EIOBlocks.SIMPLE_MACHINE_CHASSIS.get()), CountedIngredient.of(EIOItems.DYE_INDUSTRIAL_BLEND.get())), 3600, 0.3f, pFinishedRecipeConsumer);
         build(new ItemStack(EIOBlocks.ENHANCED_MACHINE_CHASSIS.get()), List.of(CountedIngredient.of(EIOBlocks.END_STEEL_MACHINE_CHASSIS.get()), CountedIngredient.of(EIOItems.DYE_ENHANCED_BLEND.get())), 3600, 0.3f, pFinishedRecipeConsumer);
-        build(new ItemStack(EIOBlocks.SOUL_MACHINE_CHASSIS.get()), List.of(CountedIngredient.of(EIOBlocks.SIMPLE_MACHINE_CHASSIS.get()), CountedIngredient.of(EIOItems.DYE_SOUL_ATTUNED_BLEND.get())), 3600, 0.3f, pFinishedRecipeConsumer);
+//        build(new ItemStack(EIOBlocks.SOUL_MACHINE_CHASSIS.get()), List.of(CountedIngredient.of(EIOBlocks.SIMPLE_MACHINE_CHASSIS.get()), CountedIngredient.of(EIOItems.DYE_SOUL_ATTUNED_BLEND.get())), 3600, 0.3f, pFinishedRecipeConsumer);
 
         // endregion
 
@@ -129,7 +122,7 @@ public class AlloyRecipeProvider extends EnderRecipeProvider {
         build(new ItemStack(Items.ENDER_PEARL), List.of(CountedIngredient.of(9, EIOTags.Items.DUSTS_ENDER)), 2000, 0.3f, pFinishedRecipeConsumer);
 
         // TODO: Infinity reagent
-        //        build(new ItemStack(), List.of(EnderIngredient.of(EIOItems.GRAINS_OF_INFINITY.get()), EnderIngredient.of(EIOTags.Items.DUSTS_COAL)), 5000, 0.3f, pFinishedRecipeConsumer);
+//        build(new ItemStack(), List.of(EnderIngredient.of(EIOItems.GRAINS_OF_INFINITY.get()), EnderIngredient.of(EIOTags.Items.DUSTS_COAL)), 5000, 0.3f, pFinishedRecipeConsumer);
 
         build(new ItemStack(Items.DEAD_BUSH), List.of(CountedIngredient.of(ItemTags.SAPLINGS)), 2000, 0.3f, pFinishedRecipeConsumer);
 
