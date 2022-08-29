@@ -2,6 +2,7 @@ package com.enderio.decoration.client.model.painted;
 
 import com.enderio.core.client.RenderUtil;
 import com.enderio.core.data.model.EIOModel;
+import com.enderio.decoration.client.render.PaintedBlockColor;
 import com.enderio.decoration.common.blockentity.DoublePaintedBlockEntity;
 import com.enderio.decoration.common.blockentity.IPaintableBlockEntity;
 import com.enderio.decoration.common.blockentity.SinglePaintedBlockEntity;
@@ -71,7 +72,8 @@ public class PaintedBlockModel implements IDynamicBakedModel {
                     List<BakedQuad> shape = getModel(replicaState.setValue(SlabBlock.TYPE, SlabType.BOTTOM))
                         .getQuads(state, side, rand, ModelData.EMPTY, renderType);
                     // @formatter:on
-                    quads.addAll(getQuadsUsingShape(paint, shape, side, rand, null, renderType));
+                    IQuadTransformer transformer = quad -> quad.tintIndex = PaintedBlockColor.moveTintIndex(quad.getTintIndex());
+                    quads.addAll(transformer.process(getQuadsUsingShape(paint, shape, side, rand, null, renderType)));
                 }
 
                 // Top slab
@@ -81,6 +83,7 @@ public class PaintedBlockModel implements IDynamicBakedModel {
                     List<BakedQuad> shape = getModel(replicaState.setValue(SlabBlock.TYPE, SlabType.TOP))
                         .getQuads(state, side, rand, ModelData.EMPTY, renderType);
                     // @formatter:on
+                    IQuadTransformer transformer = quad -> quad.tintIndex = PaintedBlockColor.moveTintIndex(quad.getTintIndex());
                     quads.addAll(getQuadsUsingShape(paint, shape, side, rand, null, renderType));
                 }
 
@@ -240,7 +243,7 @@ public class PaintedBlockModel implements IDynamicBakedModel {
      * @return a List of BakedQuads from a shape using the paint as a texture
      */
     protected List<BakedQuad> getQuadsUsingShape(@Nullable Block paint, List<BakedQuad> shape, @Nullable Direction side, RandomSource rand,
-        @Nullable Direction rotation, RenderType renderType) {
+        @Nullable Direction rotation, @Nullable RenderType renderType) {
         if (paint != null) {
             BakedModel model = getModel(paintWithRotation(paint, rotation));
             Optional<Pair<TextureAtlasSprite, Boolean>> spriteOptional = getSpriteData(paint, side, rand, rotation, renderType);
@@ -274,7 +277,7 @@ public class PaintedBlockModel implements IDynamicBakedModel {
      * @return an Optional of a Pair of the texture of the Block and if the texture is tinted at that side
      */
     private Optional<Pair<TextureAtlasSprite, Boolean>> getSpriteData(Block paint, Direction side, RandomSource rand, Direction rotation,
-        RenderType renderType) {
+        @Nullable RenderType renderType) {
         BlockState state = paintWithRotation(paint, rotation);
         List<BakedQuad> quads = getModel(state).getQuads(state, side, rand, ModelData.EMPTY, renderType);
         return quads.isEmpty() ? Optional.empty() : Optional.of(Pair.of(quads.get(0).getSprite(), quads.get(0).isTinted()));
