@@ -210,10 +210,6 @@ public class ConduitSavedData extends SavedData {
                         var blockEntity = level.getBlockEntity(nodeIdentifier.getPos());
                         if (blockEntity instanceof ConduitBlockEntity conduit) {
                             conduit.getBundle().setNodeFor(type, nodeIdentifier);
-                            conduit.updateClient();
-                            conduit.sync();
-                            var yoooo = level.getBlockEntity(nodeIdentifier.getPos());
-                            System.out.println(yoooo);
                         }
                     }
                 }

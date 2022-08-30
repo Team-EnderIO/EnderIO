@@ -186,7 +186,6 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
     public ConduitBundle deepCopy() {
         var bundle = new ConduitBundle(() -> {}, pos);
         bundle.types.addAll(types);
-        bundle.nodes.putAll(nodes);
         connections.forEach((dir, connection) ->
             bundle.connections.put(dir, connection.deepCopy())
         );
