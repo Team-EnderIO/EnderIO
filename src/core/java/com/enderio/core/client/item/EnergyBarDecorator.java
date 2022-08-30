@@ -26,6 +26,7 @@ public class EnergyBarDecorator implements IItemDecorator {
             .orElse(0f);
 
         // Render the bar overlay
-        return ItemBarRenderer.renderBar(fillRatio, xOffset, yOffset, blitOffset, BAR_COLOR);
+        ItemBarRenderer.renderBar(fillRatio, xOffset, yOffset, blitOffset, BAR_COLOR);
+        return false;
     }
 }

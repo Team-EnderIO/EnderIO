@@ -11,14 +11,15 @@ public class FluidBarDecorator implements IItemDecorator {
 
     @Override
     public boolean render(Font font, ItemStack stack, int xOffset, int yOffset, float blitOffset) {
-        return stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).map(handler -> {
+        stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).ifPresent(handler -> {
             if (handler.getFluidInTank(0).getAmount() <= 0)
-                return false;
+                return;
 
             float fillRatio = 1.0F - (float) handler.getFluidInTank(0).getAmount() / (float) handler.getTankCapacity(0);
             IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(handler.getFluidInTank(0).getFluid());
 
-            return ItemBarRenderer.renderBar(fillRatio, xOffset, yOffset, blitOffset, props.getTintColor());
-        }).orElse(false);
+            ItemBarRenderer.renderBar(fillRatio, xOffset, yOffset, blitOffset, props.getTintColor());
+        });
+        return false;
     }
 }

@@ -7,7 +7,7 @@ import net.minecraft.util.FastColor;
 
 public class ItemBarRenderer {
 
-    public static boolean renderBar(float fillRatio, int xOffset, int yOffset, float blitOffset, int color) {
+    public static void renderBar(float fillRatio, int xOffset, int yOffset, float blitOffset, int color) {
         RenderSystem.disableTexture();
         RenderSystem.disableBlend();
         Tesselator tesselator = Tesselator.getInstance();
@@ -19,7 +19,6 @@ public class ItemBarRenderer {
             FastColor.ARGB32.blue(color));
         RenderSystem.enableBlend();
         RenderSystem.enableTexture();
-        return true;
     }
 
     private static void fillRect(BufferBuilder renderer, int x, int y, float z, int width, int height, int red, int green, int blue)
