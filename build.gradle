@@ -210,8 +210,8 @@ dependencies {
     jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: "${registrate_version_range}")
 
     // GraphLib
-    implementation implementation(fg.deobf("dev.gigaherz.graph:GraphLib3:3.0.4"))
-    jarJar(group: 'dev.gigaherz.graph', name: 'GraphLib3', version: "3.0.4")
+    implementation implementation(fg.deobf("dev.gigaherz.graph:GraphLib3:${graphlib_version}"))
+    jarJar(group: 'dev.gigaherz.graph', name: 'GraphLib3', version: "${graphlib_version_range}")
     coreAnnotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     // JEI
