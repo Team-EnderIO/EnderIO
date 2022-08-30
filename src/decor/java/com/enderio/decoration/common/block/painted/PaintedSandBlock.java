@@ -1,8 +1,8 @@
 package com.enderio.decoration.common.block.painted;
 
-import com.enderio.decoration.common.init.DecorBlockEntities;
 import com.enderio.decoration.common.blockentity.SinglePaintedBlockEntity;
 import com.enderio.decoration.common.entity.PaintedSandEntity;
+import com.enderio.decoration.common.init.DecorBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;

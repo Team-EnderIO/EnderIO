@@ -3,10 +3,8 @@ package com.enderio.machines.common.init;
 import com.enderio.EnderIO;
 import com.enderio.base.common.item.EIOCreativeTabs;
 import com.enderio.core.data.model.EIOModel;
-import com.enderio.machines.common.block.EnhancedMachineBlock;
 import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.block.ProgressMachineBlock;
-import com.enderio.machines.common.block.SimpleMachineBlock;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.item.FluidTankItem;
 import com.enderio.machines.data.loot.MachinesLootTable;
@@ -16,6 +14,9 @@ import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import com.tterrag.registrate.util.entry.BlockEntry;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraftforge.client.model.generators.ConfiguredModel;
+import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.loaders.CompositeModelBuilder;
 
 import java.util.function.Supplier;
@@ -89,16 +90,20 @@ public class MachineBlocks {
         .build()
         .register();
 
-    public static final BlockEntry<SimpleMachineBlock> SIMPLE_POWERED_FURNACE = simpleMachine("simple_powered_furnace", () -> MachineBlockEntities.SIMPLE_POWERED_FURNACE)
-        .register();
-
-    public static final BlockEntry<SimpleMachineBlock> SIMPLE_ALLOY_SMELTER = simpleMachine("simple_alloy_smelter", () -> MachineBlockEntities.SIMPLE_ALLOY_SMELTER)
+    public static final BlockEntry<ProgressMachineBlock> PRIMITIVE_ALLOY_SMELTER = standardMachine("primitive_alloy_smelter", () -> MachineBlockEntities.PRIMITIVE_ALLOY_SMELTER)
+        .blockstate((ctx, prov) -> {
+            ModelFile model = prov.models().withExistingParent(ctx.getName(), prov.mcLoc("furnace")).texture("front", EnderIO.loc("block/primitive_alloy_smelter_front"));
+            prov
+                .getVariantBuilder(ctx.get())
+                .forAllStates(state -> ConfiguredModel
+                    .builder()
+                    .modelFile(model)
+                    .rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + 180) % 360)
+                    .build());
+        })
         .register();
 
     public static final BlockEntry<ProgressMachineBlock> ALLOY_SMELTER = standardMachine("alloy_smelter", () -> MachineBlockEntities.ALLOY_SMELTER)
-        .register();
-
-    public static final BlockEntry<EnhancedMachineBlock> ENHANCED_ALLOY_SMELTER = enhancedMachine("enhanced_alloy_smelter", () -> MachineBlockEntities.ENHANCED_ALLOY_SMELTER)
         .register();
 
     public static BlockEntry<MachineBlock> CREATIVE_POWER = REGISTRATE
@@ -108,22 +113,11 @@ public class MachineBlocks {
         .build()
         .register();
 
-    public static BlockEntry<SimpleMachineBlock> SIMPLE_STIRLING_GENERATOR = simpleMachine("simple_stirling_generator", () -> MachineBlockEntities.SIMPLE_STIRLING_GENERATOR)
-        .register();
-
     public static BlockEntry<ProgressMachineBlock> STIRLING_GENERATOR = standardMachine("stirling_generator", () -> MachineBlockEntities.STIRLING_GENERATOR)
-        .register();
-
-    public static BlockEntry<SimpleMachineBlock> SIMPLE_SAG_MILL = simpleMachine("simple_sag_mill", () -> MachineBlockEntities.SIMPLE_SAG_MILL)
-        .lang("Simple SAG Mill")
         .register();
 
     public static BlockEntry<ProgressMachineBlock> SAG_MILL = standardMachine("sag_mill", () -> MachineBlockEntities.SAG_MILL)
         .lang("SAG Mill")
-        .register();
-
-    public static BlockEntry<EnhancedMachineBlock> ENHANCED_SAG_MILL = enhancedMachine("enhanced_sag_mill", () -> MachineBlockEntities.ENHANCED_SAG_MILL)
-        .lang("Enhanced SAG Mill")
         .register();
 
     public static BlockEntry<ProgressMachineBlock> SLICE_AND_SPLICE = soulMachine("slice_and_splice", () -> MachineBlockEntities.SLICE_AND_SPLICE)
@@ -133,18 +127,6 @@ public class MachineBlocks {
     public static BlockEntry<ProgressMachineBlock> IMPULSE_HOPPER = standardMachine("impulse_hopper", () -> MachineBlockEntities.IMPULSE_HOPPER)
         .lang("Impulse Hopper")
         .register();
-
-    // We use a supplier for the block entity entry so it doesnt init the block entities until its the right time.
-    private static BlockBuilder<SimpleMachineBlock, Registrate> simpleMachine(String name, Supplier<BlockEntityEntry<? extends MachineBlockEntity>> blockEntityEntry) {
-        return REGISTRATE
-            .block(name, props -> new SimpleMachineBlock(props, blockEntityEntry.get()))
-            .properties(props -> props.strength(2.5f, 8))
-            .loot(MachinesLootTable::copyNBT)
-            .blockstate(MachineModelUtil::simpleMachineBlock)
-            .item()
-            .tab(() -> EIOCreativeTabs.MACHINES)
-            .build();
-    }
 
     private static BlockBuilder<ProgressMachineBlock, Registrate> standardMachine(String name, Supplier<BlockEntityEntry<? extends MachineBlockEntity>> blockEntityEntry) {
         return REGISTRATE
@@ -165,18 +147,6 @@ public class MachineBlocks {
             .blockstate(MachineModelUtil::soulMachineBlock)
             .item()
             .tab(() -> EIOCreativeTabs.MACHINES)
-            .build();
-    }
-
-    private static BlockBuilder<EnhancedMachineBlock, Registrate> enhancedMachine(String name, Supplier<BlockEntityEntry<? extends MachineBlockEntity>> blockEntityEntry) {
-        return REGISTRATE
-            .block(name, props -> new EnhancedMachineBlock(props, blockEntityEntry.get()))
-            .properties(props -> props.strength(2.5f, 8))
-            .loot(MachinesLootTable::tallCopyNBT)
-            .blockstate(MachineModelUtil::enhancedMachineBlock)
-            .item()
-            .tab(() -> EIOCreativeTabs.MACHINES)
-            .model(MachineModelUtil::enhancedMachineBlockItem)
             .build();
     }
 

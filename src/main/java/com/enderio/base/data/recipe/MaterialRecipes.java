@@ -29,17 +29,17 @@ public class MaterialRecipes extends RecipeProvider {
 
     @Override
     protected void buildCraftingRecipes(Consumer<FinishedRecipe> recipeConsumer) {
-        ShapedRecipeBuilder
-            .shaped(EIOBlocks.SIMPLE_MACHINE_CHASSIS.get().asItem())
-            .pattern("BIB")
-            .pattern("IGI")
-            .pattern("BIB")
-            .define('B', Items.IRON_BARS)
-            .define('I', Tags.Items.INGOTS_IRON)
-            .define('G', EIOItems.GRAINS_OF_INFINITY::get)
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GRAINS_OF_INFINITY::get))
-            .save(recipeConsumer);
-        
+//        ShapedRecipeBuilder
+//            .shaped(EIOBlocks.SIMPLE_MACHINE_CHASSIS.get().asItem())
+//            .pattern("BIB")
+//            .pattern("IGI")
+//            .pattern("BIB")
+//            .define('B', Items.IRON_BARS)
+//            .define('I', Tags.Items.INGOTS_IRON)
+//            .define('G', EIOItems.GRAINS_OF_INFINITY::get)
+//            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GRAINS_OF_INFINITY::get))
+//            .save(recipeConsumer);
+
         ShapedRecipeBuilder.shaped(Items.CAKE)
             .pattern("MMM")
             .pattern("SCS")

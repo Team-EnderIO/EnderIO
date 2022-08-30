@@ -7,7 +7,6 @@ import com.enderio.decoration.common.blockentity.PoweredLightBlockEntity;
 import com.enderio.decoration.common.blockentity.SinglePaintedBlockEntity;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
-import com.tterrag.registrate.util.nullness.NonNullSupplier;
 
 public class DecorBlockEntities {
 

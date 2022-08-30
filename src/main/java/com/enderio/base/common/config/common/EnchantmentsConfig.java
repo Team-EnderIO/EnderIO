@@ -1,6 +1,5 @@
 package com.enderio.base.common.config.common;
 
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class EnchantmentsConfig {

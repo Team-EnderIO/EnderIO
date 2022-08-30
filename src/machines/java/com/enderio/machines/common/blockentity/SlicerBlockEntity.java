@@ -1,9 +1,9 @@
 package com.enderio.machines.common.blockentity;
 
-import com.enderio.machines.common.MachineTier;
+import com.enderio.api.capacitor.CapacitorModifier;
+import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.machines.common.blockentity.base.PoweredCraftingMachine;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingTask;
-import com.enderio.machines.common.init.MachineCapacitorKeys;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
@@ -26,21 +26,16 @@ import org.jetbrains.annotations.Nullable;
 
 public class SlicerBlockEntity extends PoweredCraftingMachine<SlicingRecipe, Container> {
 
+    public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, () -> 100000f);
+    public static final QuadraticScalable TRANSFER = new QuadraticScalable(CapacitorModifier.ENERGY_TRANSFER, () -> 120f);
+    public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, () -> 30f);
+
     private final RecipeWrapper container;
 
     public SlicerBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
-        super(MachineRecipes.SLICING.type().get(),
-            MachineCapacitorKeys.SLICE_AND_SPLICE_ENERGY_CAPACITY.get(),
-            MachineCapacitorKeys.SLICE_AND_SPLICE_ENERGY_TRANSFER.get(),
-            MachineCapacitorKeys.SLICE_AND_SPLICE_ENERGY_CONSUME.get(),
-            type, worldPosition, blockState);
+        super(MachineRecipes.SLICING.type().get(), CAPACITY, TRANSFER, USAGE, type, worldPosition, blockState);
 
         container = new RecipeWrapper(getInventory());
-    }
-
-    @Override
-    public MachineTier getTier() {
-        return MachineTier.STANDARD;
     }
 
     @Nullable
@@ -51,13 +46,14 @@ public class SlicerBlockEntity extends PoweredCraftingMachine<SlicingRecipe, Con
 
     @Override
     public MachineInventoryLayout getInventoryLayout() {
-        return MachineInventoryLayout.builder(true)
+        return MachineInventoryLayout.builder()
             .setStackLimit(1) // Force all input slots to have 1 output
             .inputSlot(6) // Inputs
             .inputSlot(this::validAxe) // Axe
             .inputSlot((slot, stack) -> stack.getItem() instanceof ShearsItem) // Shears
             .setStackLimit(64) // Reset stack limit
             .outputSlot() // Result
+            .capacitor()
             .build();
     }
 

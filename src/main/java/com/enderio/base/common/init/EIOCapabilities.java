@@ -1,7 +1,8 @@
 package com.enderio.base.common.init;
 
-import com.enderio.api.capability.*;
 import com.enderio.EnderIO;
+import com.enderio.api.capability.*;
+import com.enderio.api.capacitor.ICapacitorData;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;

@@ -1,9 +1,9 @@
 package com.enderio.decoration.common.network;
 
-import java.util.function.Supplier;
-
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.network.NetworkEvent.Context;
+
+import java.util.function.Supplier;
 
 /**
  * Custom setblock packet to update light
