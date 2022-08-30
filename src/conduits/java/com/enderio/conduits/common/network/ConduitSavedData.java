@@ -105,6 +105,7 @@ public class ConduitSavedData extends SavedData {
               ┖ type: [conduit type] (ex. "enderio:power3")
      */
 
+    // Serialization
     @Override
     public CompoundTag save(CompoundTag nbt) {
         EnderIO.LOGGER.info("Conduit network serialization started");
