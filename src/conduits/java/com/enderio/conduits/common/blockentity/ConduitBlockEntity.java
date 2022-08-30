@@ -2,7 +2,6 @@ package com.enderio.conduits.common.blockentity;
 
 import com.enderio.api.UseOnly;
 import com.enderio.api.conduit.IConduitType;
-import com.enderio.base.common.util.PosConversionUtil;
 import com.enderio.conduits.common.ConduitShape;
 import com.enderio.conduits.common.blockentity.action.RightClickAction;
 import com.enderio.conduits.common.network.ConduitSavedData;
@@ -168,7 +167,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         Map<IConduitType, Map<ChunkPos, Map<BlockPos, NodeIdentifier>>> deserializedNodes = ConduitSavedData.get((ServerLevel) level).deserializedNodes;
         for (IConduitType type : bundle.getTypes()) {
             NodeIdentifier node = deserializedNodes.get(type)
-                .get(PosConversionUtil.blockPosToChunkPos(this.worldPosition))
+                .get(new ChunkPos(this.worldPosition))
                 .get(this.worldPosition);
 
             bundle.setNodeFor(type, node);

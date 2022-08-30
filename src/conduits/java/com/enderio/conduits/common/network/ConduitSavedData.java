@@ -2,7 +2,6 @@ package com.enderio.conduits.common.network;
 
 import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.IConduitType;
-import com.enderio.base.common.util.PosConversionUtil;
 import com.enderio.conduits.common.blockentity.TieredConduit;
 import com.enderio.core.common.blockentity.ColorControl;
 import com.enderio.EnderIO;
@@ -210,7 +209,7 @@ public class ConduitSavedData extends SavedData {
 
                 for (var object : objects) {
                     if (object instanceof NodeIdentifier nodeIdentifier) {
-                        ChunkPos chunkPos = PosConversionUtil.blockPosToChunkPos(nodeIdentifier.getPos());
+                        ChunkPos chunkPos = new ChunkPos(nodeIdentifier.getPos());
 
                         Map<BlockPos, NodeIdentifier> putChunkMap = new HashMap<>();
                         Map<BlockPos, NodeIdentifier> chunkMap = typeMap.putIfAbsent(chunkPos, putChunkMap);
