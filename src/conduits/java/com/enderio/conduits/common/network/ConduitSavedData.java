@@ -26,7 +26,6 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import javax.annotation.Nullable;
 import java.util.*;
 
 @Mod.EventBusSubscriber
@@ -34,7 +33,8 @@ public class ConduitSavedData extends SavedData {
 
     ListMultimap<IConduitType, Graph<Mergeable.Dummy>> networks = ArrayListMultimap.create();
 
-    public Map<IConduitType, Map<ChunkPos, Map<BlockPos, NodeIdentifier>>> deserializedNodes = new HashMap<>();
+    // Used to find the NodeIdentifier(s) of a conduit when it is loaded
+    private final Map<IConduitType, Map<ChunkPos, Map<BlockPos, NodeIdentifier>>> deserializedNodes = new HashMap<>();
 
     public static ConduitSavedData get(ServerLevel level) {
         return level.getDataStorage().computeIfAbsent(ConduitSavedData::new, ConduitSavedData::new, "enderio_conduit_network");
@@ -70,7 +70,7 @@ public class ConduitSavedData extends SavedData {
                         BlockPos pos = BlockPos.of(((LongTag)tag2).getAsLong());
                         NodeIdentifier node = new NodeIdentifier(pos);
                         graphObjects.add(node);
-                        putNodeIdentifier(value, pos, node);
+                        putUnloadedNodeIdentifier(value, pos, node);
                     }
 
                     for (Tag tag2: graphConnectionsTag) {
@@ -95,17 +95,17 @@ public class ConduitSavedData extends SavedData {
     data
       ┖ graphs (list)
           ┖ [index]
-              ┠ graphs (list) // One type of conduits' graphs
-              ┃   ┠ [index]
-              ┃   ┃   ┠ graphConnections (list)
-              ┃   ┃   ┃   ┖ [index]
-              ┃   ┃   ┃       ┠ 0: [first object's index]
-              ┃   ┃   ┃       ┖ 1: [second object's index]
-              ┃   ┃   ┖ graphObjects (list)
-              ┃   ┃       ┖ [index]: long (representing BlockPos.asLong())
-              ┃   ┖ [next index]
-              ┃       ┖ ...
-              ┖ type: [conduit type] (ex. "enderio:power3")
+              ┠ type: [conduit type] (ex. "enderio:power3")
+              ┖ graphs (list) // One type of conduits' graphs
+                  ┠ [element]
+                  ┃   ┠ graphConnections (list)
+                  ┃   ┃   ┖ [element]
+                  ┃   ┃       ┠ 0: [first object's index]
+                  ┃   ┃       ┖ 1: [second object's index]
+                  ┃   ┖ graphObjects (list)
+                  ┃       ┖ [index]: long (representing BlockPos.asLong())
+                  ┖ [next element]
+                      ┖ ...
      */
 
     // Serialization
@@ -186,7 +186,7 @@ public class ConduitSavedData extends SavedData {
 
 
         for (GraphObject<Mergeable.Dummy> neighbor : neighbors) {
-            Graph.connect(neighbor, object);
+            Graph.connect(object, neighbor);
         }
 
         connections = connections.stream().filter(v -> !filteredConnections.contains(v)).toList();
@@ -195,10 +195,11 @@ public class ConduitSavedData extends SavedData {
         }
     }
 
-    public NodeIdentifier takeNodeIdentifier(IConduitType type, BlockPos pos) {
-        Map<ChunkPos, Map<BlockPos, NodeIdentifier>> typeMap = Objects.requireNonNUll(deserializedNodes.get(type), "Conduit data is missing!");
+    public NodeIdentifier takeUnloadedNodeIdentifier(IConduitType type, BlockPos pos) {
         ChunkPos chunkPos = new ChunkPos(pos);
-        Map<BlockPos, NodeIdentifier> chunkMap = Objects.requireNonNull(typeMap.get(new ChunkPos(pos), "Conduit data is missing!");
+
+        Map<ChunkPos, Map<BlockPos, NodeIdentifier>> typeMap = Objects.requireNonNull(deserializedNodes.get(type), "Conduit data is missing!");
+        Map<BlockPos, NodeIdentifier> chunkMap = Objects.requireNonNull(typeMap.get(new ChunkPos(pos)), "Conduit data is missing!");
         NodeIdentifier node = Objects.requireNonNull(chunkMap.get(pos), "Conduit data is missing!");
 
         chunkMap.remove(pos);
@@ -208,7 +209,7 @@ public class ConduitSavedData extends SavedData {
         return node;
     }
 
-    public void putNodeIdentifier(IConduitType type, BlockPos pos, NodeIdentifier node) {
+    public void putUnloadedNodeIdentifier(IConduitType type, BlockPos pos, NodeIdentifier node) {
         ChunkPos chunkPos = new ChunkPos(pos);
         Map<ChunkPos, Map<BlockPos, NodeIdentifier>> typeMap = deserializedNodes.computeIfAbsent(type, k -> new HashMap<>());
         Map<BlockPos, NodeIdentifier> chunkMap = typeMap.computeIfAbsent(chunkPos, k -> new HashMap<>());

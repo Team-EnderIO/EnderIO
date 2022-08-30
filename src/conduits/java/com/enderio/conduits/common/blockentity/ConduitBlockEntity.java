@@ -16,7 +16,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -29,7 +28,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 public class ConduitBlockEntity extends EnderBlockEntity {
@@ -74,10 +72,10 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     @Override
     public void onChunkUnloaded() {
         super.onChunkUnloaded();
-        if (!level.isClientSide()) {
-            ConduitSavedData savedData = ConduitSavedData.get((ServerLevel) level);
+        if (level instanceof ServerLevel serverLevel) {
+            ConduitSavedData savedData = ConduitSavedData.get(serverLevel);
             for (IConduitType type : bundle.getTypes()) {
-                savedData.putNodeIdentifier(type, this.worldPosition, bundle.getNodeFor(type));
+                savedData.putUnloadedNodeIdentifier(type, this.worldPosition, bundle.getNodeFor(type));
             }
         }
     }
@@ -150,18 +148,16 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                 }
             }
         }
-        if (level instanceof ServerLevel serverLevel) {
-            if (nodeFor.getGraph() != null) {
-                nodeFor.getGraph().remove(nodeFor);
+        if (level instanceof ServerLevel serverLevel && nodeFor.getGraph() != null) {
+            nodeFor.getGraph().remove(nodeFor);
 
-                for (Direction dir: Direction.values()) {
-                    BlockEntity blockEntity = level.getBlockEntity(getBlockPos().relative(dir));
-                    if (blockEntity instanceof ConduitBlockEntity conduit) {
-                        @Nullable
-                        Graph<Mergeable.Dummy> graph = conduit.bundle.getNodeFor(type).getGraph();
-                        if (graph != null) {
-                            ConduitSavedData.addPotentialGraph(type, graph, serverLevel);
-                        }
+            for (Direction dir: Direction.values()) {
+                BlockEntity blockEntity = level.getBlockEntity(getBlockPos().relative(dir));
+                if (blockEntity instanceof ConduitBlockEntity conduit) {
+                    @Nullable
+                    Graph<Mergeable.Dummy> graph = conduit.bundle.getNodeFor(type).getGraph();
+                    if (graph != null) {
+                        ConduitSavedData.addPotentialGraph(type, graph, serverLevel);
                     }
                 }
             }
@@ -177,7 +173,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         if (!(level instanceof ServerLevel)) return;
         ConduitSavedData savedData = ConduitSavedData.get((ServerLevel) level);
         for (IConduitType type : bundle.getTypes()) {
-            NodeIdentifier node = savedData.takeNodeIdentifier(type, this.worldPosition);
+            NodeIdentifier node = savedData.takeUnloadedNodeIdentifier(type, this.worldPosition);
             bundle.setNodeFor(type, node);
         }
     }
