@@ -196,15 +196,10 @@ public class ConduitSavedData extends SavedData {
     }
 
     public NodeIdentifier takeNodeIdentifier(IConduitType type, BlockPos pos) {
-        Map<ChunkPos, Map<BlockPos, NodeIdentifier>> typeMap = deserializedNodes.get(type);
-        if (typeMap == null) throw new IllegalStateException("Conduit data is missing!");
-
+        Map<ChunkPos, Map<BlockPos, NodeIdentifier>> typeMap = Objects.requireNonNUll(deserializedNodes.get(type), "Conduit data is missing!");
         ChunkPos chunkPos = new ChunkPos(pos);
-        Map<BlockPos, NodeIdentifier> chunkMap = typeMap.get(new ChunkPos(pos));
-        if (chunkMap == null) throw new IllegalStateException("Conduit data is missing!");
-
-        NodeIdentifier node = chunkMap.get(pos);
-        if (node == null) throw new IllegalStateException("Conduit data is missing!");
+        Map<BlockPos, NodeIdentifier> chunkMap = Objects.requireNonNull(typeMap.get(new ChunkPos(pos), "Conduit data is missing!");
+        NodeIdentifier node = Objects.requireNonNull(chunkMap.get(pos), "Conduit data is missing!");
 
         chunkMap.remove(pos);
         if (chunkMap.size() == 0) typeMap.remove(chunkPos);
