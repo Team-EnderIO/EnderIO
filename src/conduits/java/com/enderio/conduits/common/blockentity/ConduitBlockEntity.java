@@ -71,6 +71,17 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         }
     }
 
+    @Override
+    public void onChunkUnloaded() {
+        super.onChunkUnloaded();
+        if (!level.isClientSide()) {
+            ConduitSavedData savedData = ConduitSavedData.get((ServerLevel) level);
+            for (IConduitType type : bundle.getTypes()) {
+                savedData.putNodeIdentifier(type, this.worldPosition, bundle.getNodeFor(type));
+            }
+        }
+    }
+
     public void everyTick() {
         serverTick();
     }
@@ -164,12 +175,9 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
     private void loadFromSavedData() {
         if (!(level instanceof ServerLevel)) return;
-        Map<IConduitType, Map<ChunkPos, Map<BlockPos, NodeIdentifier>>> deserializedNodes = ConduitSavedData.get((ServerLevel) level).deserializedNodes;
+        ConduitSavedData savedData = ConduitSavedData.get((ServerLevel) level);
         for (IConduitType type : bundle.getTypes()) {
-            NodeIdentifier node = deserializedNodes.get(type)
-                .get(new ChunkPos(this.worldPosition))
-                .get(this.worldPosition);
-
+            NodeIdentifier node = savedData.takeNodeIdentifier(type, this.worldPosition);
             bundle.setNodeFor(type, node);
         }
     }

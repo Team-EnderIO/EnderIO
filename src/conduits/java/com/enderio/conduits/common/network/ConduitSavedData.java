@@ -26,6 +26,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 @Mod.EventBusSubscriber
@@ -36,9 +37,7 @@ public class ConduitSavedData extends SavedData {
     public Map<IConduitType, Map<ChunkPos, Map<BlockPos, NodeIdentifier>>> deserializedNodes = new HashMap<>();
 
     public static ConduitSavedData get(ServerLevel level) {
-        ConduitSavedData ret = level.getDataStorage().computeIfAbsent(ConduitSavedData::new, ConduitSavedData::new, "enderio_conduit_network");
-        ret.giveData();
-        return ret;
+        return level.getDataStorage().computeIfAbsent(ConduitSavedData::new, ConduitSavedData::new, "enderio_conduit_network");
     }
 
     private ConduitSavedData() {
@@ -68,8 +67,10 @@ public class ConduitSavedData extends SavedData {
 
 
                     for (Tag tag2 : graphObjectsTag) {
-                        NodeIdentifier node = new NodeIdentifier(BlockPos.of(((LongTag)tag2).getAsLong()));
+                        BlockPos pos = BlockPos.of(((LongTag)tag2).getAsLong());
+                        NodeIdentifier node = new NodeIdentifier(pos);
                         graphObjects.add(node);
+                        putNodeIdentifier(value, pos, node);
                     }
 
                     for (Tag tag2: graphConnectionsTag) {
@@ -194,32 +195,37 @@ public class ConduitSavedData extends SavedData {
         }
     }
 
-    public void giveData() {
-        for (IConduitType type: this.networks.keySet()) {
-            List<Graph<Mergeable.Dummy>> graphs = this.networks.get(type);
-            if (graphs.isEmpty()) continue;
+    public NodeIdentifier takeNodeIdentifier(IConduitType type, BlockPos pos) {
+        Map<ChunkPos, Map<BlockPos, NodeIdentifier>> typeMap = deserializedNodes.get(type);
+        if (typeMap == null) throw new IllegalStateException("Conduit data is missing!");
 
-            Map<ChunkPos, Map<BlockPos, NodeIdentifier>> putTypeMap = new HashMap<>();
-            Map<ChunkPos, Map<BlockPos, NodeIdentifier>> typeMap = deserializedNodes.putIfAbsent(type, putTypeMap);
-            if (typeMap == null) typeMap = putTypeMap;
+        ChunkPos chunkPos = new ChunkPos(pos);
+        Map<BlockPos, NodeIdentifier> chunkMap = typeMap.get(new ChunkPos(pos));
+        if (chunkMap == null) throw new IllegalStateException("Conduit data is missing!");
 
-            for (Graph<Mergeable.Dummy> graph: graphs) {
-                Collection<GraphObject<Mergeable.Dummy>> objects = graph.getObjects();
-                if (objects.isEmpty()) continue;
+        NodeIdentifier node = chunkMap.get(pos);
+        if (node == null) throw new IllegalStateException("Conduit data is missing!");
 
-                for (var object : objects) {
-                    if (object instanceof NodeIdentifier nodeIdentifier) {
-                        ChunkPos chunkPos = new ChunkPos(nodeIdentifier.getPos());
+        chunkMap.remove(pos);
+        if (chunkMap.size() == 0) typeMap.remove(chunkPos);
+        if (typeMap.size() == 0) deserializedNodes.remove(type);
 
-                        Map<BlockPos, NodeIdentifier> putChunkMap = new HashMap<>();
-                        Map<BlockPos, NodeIdentifier> chunkMap = typeMap.putIfAbsent(chunkPos, putChunkMap);
-                        if (chunkMap == null) chunkMap = putChunkMap;
+        return node;
+    }
 
-                        chunkMap.put(nodeIdentifier.getPos(), nodeIdentifier);
-                    }
-                }
-            }
-        }
+    public void putNodeIdentifier(IConduitType type, BlockPos pos, NodeIdentifier node) {
+        // TODO: Better way to do this?
+        // putIfAbsent is really useless for not returning the put
+        Map<ChunkPos, Map<BlockPos, NodeIdentifier>> putTypeMap = new HashMap<>();
+        Map<ChunkPos, Map<BlockPos, NodeIdentifier>> typeMap = deserializedNodes.putIfAbsent(type, putTypeMap);
+        if (typeMap == null) typeMap = putTypeMap;
+
+        ChunkPos chunkPos = new ChunkPos(pos);
+        Map<BlockPos, NodeIdentifier> putChunkMap = new HashMap<>();
+        Map<BlockPos, NodeIdentifier> chunkMap = typeMap.putIfAbsent(chunkPos, putChunkMap);
+        if (chunkMap == null) chunkMap = putChunkMap;
+
+        chunkMap.put(pos, node);
     }
 
     private static boolean containsConnection(List<Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>>> connections, Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>> connection) {
