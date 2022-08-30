@@ -1,9 +1,15 @@
 package com.enderio.base.client;
 
 import com.enderio.EnderIO;
+import com.enderio.core.client.item.EnergyBarDecorator;
+import com.enderio.core.client.item.FluidBarDecorator;
+import com.enderio.base.client.renderer.item.GlassIconDecorator;
+import com.enderio.base.common.init.EIOBlocks;
+import com.enderio.base.common.init.EIOItems;
 import com.enderio.core.client.model.composite.CompositeGeometryLoader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ModelEvent;
+import net.minecraftforge.client.event.RegisterItemDecorationsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -24,5 +30,16 @@ public class ClientSetup {
         event.register(EnderIO.loc("item/energized_gear_helper"));
         event.register(EnderIO.loc("item/vibrant_gear_helper"));
         event.register(EnderIO.loc("item/dark_bimetal_gear_helper"));
+    }
+
+    @SubscribeEvent
+    public static void itemDecorators(RegisterItemDecorationsEvent event) {
+        // Register tools
+        event.register(EIOItems.LEVITATION_STAFF.get(), FluidBarDecorator.INSTANCE);
+        event.register(EIOItems.DARK_STEEL_AXE.get(), EnergyBarDecorator.INSTANCE);
+        event.register(EIOItems.DARK_STEEL_PICKAXE.get(), EnergyBarDecorator.INSTANCE);
+
+        // Register all glass blocks
+        EIOBlocks.GLASS_BLOCKS.values().forEach(blocks -> blocks.getAllBlocks().forEach(block -> event.register(block.get(), GlassIconDecorator.INSTANCE)));
     }
 }

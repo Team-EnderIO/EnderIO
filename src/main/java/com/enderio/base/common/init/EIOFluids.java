@@ -17,6 +17,9 @@ import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.versions.forge.ForgeVersion;
 
 // TODO: Fluid behaviours and some cleaning. https://github.com/SleepyTrousers/EnderIO-Rewrite/issues/34
+
+// TODO: Registrate tint color support, it was some reason omitted in my original PR
+
 @SuppressWarnings("unused")
 public class EIOFluids {
     private static final Registrate REGISTRATE = EnderIO.registrate();
