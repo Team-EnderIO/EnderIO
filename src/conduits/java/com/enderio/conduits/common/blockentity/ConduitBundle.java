@@ -21,6 +21,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
     private final Map<Direction, ConduitConnection> connections = new EnumMap<>(Direction.class);
 
     private final List<IConduitType> types = new ArrayList<>();
+
     //fill back after world save
     private final Map<IConduitType, NodeIdentifier> nodes = new HashMap<>();
     private final Runnable scheduleSync;
@@ -174,6 +175,10 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         return nodes.get(type);
     }
 
+    public void setNodeFor(IConduitType type, NodeIdentifier node) {
+        nodes.put(type, node);
+    }
+
     public void removeNodeFor(IConduitType type) {
         nodes.remove(type);
     }
@@ -181,6 +186,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
     public ConduitBundle deepCopy() {
         var bundle = new ConduitBundle(() -> {}, pos);
         bundle.types.addAll(types);
+        bundle.nodes.putAll(nodes);
         connections.forEach((dir, connection) ->
             bundle.connections.put(dir, connection.deepCopy())
         );

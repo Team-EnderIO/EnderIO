@@ -2,6 +2,7 @@ package com.enderio.conduits.common.network;
 
 import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.IConduitType;
+import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
 import com.enderio.conduits.common.blockentity.TieredConduit;
 import com.enderio.core.common.blockentity.ColorControl;
 import com.enderio.EnderIO;
@@ -33,7 +34,9 @@ public class ConduitSavedData extends SavedData {
     ListMultimap<IConduitType, Graph<Mergeable.Dummy>> networks = ArrayListMultimap.create();
 
     public static ConduitSavedData get(ServerLevel level) {
-        return level.getDataStorage().computeIfAbsent(ConduitSavedData::new, ConduitSavedData::new, "enderio_conduit_network");
+        ConduitSavedData ret = level.getDataStorage().computeIfAbsent(ConduitSavedData::new, ConduitSavedData::new, "enderio_conduit_network");
+        ret.giveBlocksData(level);
+        return ret;
     }
 
     private ConduitSavedData() {
@@ -71,9 +74,11 @@ public class ConduitSavedData extends SavedData {
                         CompoundTag connectionTag = (CompoundTag) tag2;
                         connections.add(new Pair<>(graphObjects.get(connectionTag.getInt("0")), graphObjects.get(connectionTag.getInt("1"))));
                     }
+
                     NodeIdentifier graphObject = graphObjects.get(0);
                     Graph.integrate(graphObject, List.of());
                     merge(graphObject, connections);
+
                     networks.get(value).add(graphObject.getGraph());
                 }
             }
@@ -159,12 +164,42 @@ public class ConduitSavedData extends SavedData {
 
 
         for (GraphObject<Mergeable.Dummy> neighbor : neighbors) {
-            Graph.connect(object, neighbor);
+            Graph.connect(neighbor, object);
         }
 
         connections = connections.stream().filter(v -> !filteredConnections.contains(v)).toList();
         if (!connections.isEmpty()) {
             merge(connections.get(0).getFirst(), connections);
+        }
+    }
+
+    private boolean dataGiven = false;
+
+    public void giveBlocksData(ServerLevel level) {
+        if (dataGiven) return;
+        dataGiven = true;
+
+        for (IConduitType type: this.networks.keySet()) {
+            List<Graph<Mergeable.Dummy>> graphs = this.networks.get(type);
+            if (graphs.isEmpty()) continue;
+
+            for (Graph<Mergeable.Dummy> graph: graphs) {
+                Collection<GraphObject<Mergeable.Dummy>> objects = graph.getObjects();
+                if (objects.isEmpty()) continue;
+
+                for (var object : objects) {
+                    if (object instanceof NodeIdentifier nodeIdentifier) {
+                        var blockEntity = level.getBlockEntity(nodeIdentifier.getPos());
+                        if (blockEntity instanceof ConduitBlockEntity conduit) {
+                            conduit.getBundle().setNodeFor(type, nodeIdentifier);
+                            conduit.updateClient();
+                            conduit.sync();
+                            var yoooo = level.getBlockEntity(nodeIdentifier.getPos());
+                            System.out.println(yoooo);
+                        }
+                    }
+                }
+            }
         }
     }
 

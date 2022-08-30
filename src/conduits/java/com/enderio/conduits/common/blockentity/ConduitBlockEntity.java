@@ -105,8 +105,8 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                     }
                 }
             }
-            Graph.integrate(bundle.getNodeFor(type), nodes);
             if (level instanceof ServerLevel serverLevel) {
+                Graph.integrate(bundle.getNodeFor(type), nodes);
                 ConduitSavedData.addPotentialGraph(type, Objects.requireNonNull(bundle.getNodeFor(type).getGraph()), serverLevel);
             }
             if (action instanceof RightClickAction.Upgrade upgrade) {
@@ -135,16 +135,18 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                 }
             }
         }
-        if (nodeFor.getGraph() != null && level instanceof ServerLevel serverLevel) {
-            nodeFor.getGraph().remove(nodeFor);
+        if (level instanceof ServerLevel serverLevel) {
+            if (nodeFor.getGraph() != null) {
+                nodeFor.getGraph().remove(nodeFor);
 
-            for (Direction dir: Direction.values()) {
-                BlockEntity blockEntity = level.getBlockEntity(getBlockPos().relative(dir));
-                if (blockEntity instanceof ConduitBlockEntity conduit) {
-                    @Nullable
-                    Graph<Mergeable.Dummy> graph = conduit.bundle.getNodeFor(type).getGraph();
-                    if (graph != null) {
-                        ConduitSavedData.addPotentialGraph(type, graph, serverLevel);
+                for (Direction dir: Direction.values()) {
+                    BlockEntity blockEntity = level.getBlockEntity(getBlockPos().relative(dir));
+                    if (blockEntity instanceof ConduitBlockEntity conduit) {
+                        @Nullable
+                        Graph<Mergeable.Dummy> graph = conduit.bundle.getNodeFor(type).getGraph();
+                        if (graph != null) {
+                            ConduitSavedData.addPotentialGraph(type, graph, serverLevel);
+                        }
                     }
                 }
             }
