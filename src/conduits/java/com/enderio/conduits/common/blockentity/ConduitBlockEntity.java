@@ -2,6 +2,7 @@ package com.enderio.conduits.common.blockentity;
 
 import com.enderio.api.UseOnly;
 import com.enderio.api.conduit.IConduitType;
+import com.enderio.base.common.util.PosConversionUtil;
 import com.enderio.conduits.common.ConduitShape;
 import com.enderio.conduits.common.blockentity.action.RightClickAction;
 import com.enderio.conduits.common.network.ConduitSavedData;
@@ -16,6 +17,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -28,6 +30,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class ConduitBlockEntity extends EnderBlockEntity {
@@ -63,8 +66,10 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
     @Override
     public void onLoad() {
-        if (!level.isClientSide())
+        if (!level.isClientSide()) {
+            loadFromSavedData();
             sync();
+        }
     }
 
     public void everyTick() {
@@ -156,6 +161,18 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
     private void updateShape() {
         shape.updateConduit(bundle);
+    }
+
+    private void loadFromSavedData() {
+        if (!(level instanceof ServerLevel)) return;
+        Map<IConduitType, Map<ChunkPos, Map<BlockPos, NodeIdentifier>>> deserializedNodes = ConduitSavedData.get((ServerLevel) level).deserializedNodes;
+        for (IConduitType type : bundle.getTypes()) {
+            NodeIdentifier node = deserializedNodes.get(type)
+                .get(PosConversionUtil.blockPosToChunkPos(this.worldPosition))
+                .get(this.worldPosition);
+
+            bundle.setNodeFor(type, node);
+        }
     }
 
     public static boolean isDifferent(IConduitType first, IConduitType second) {

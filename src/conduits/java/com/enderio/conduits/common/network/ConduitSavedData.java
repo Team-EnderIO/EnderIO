@@ -2,7 +2,7 @@ package com.enderio.conduits.common.network;
 
 import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.IConduitType;
-import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
+import com.enderio.base.common.util.PosConversionUtil;
 import com.enderio.conduits.common.blockentity.TieredConduit;
 import com.enderio.core.common.blockentity.ColorControl;
 import com.enderio.EnderIO;
@@ -17,6 +17,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraftforge.common.capabilities.Capability;
@@ -33,9 +34,11 @@ public class ConduitSavedData extends SavedData {
 
     ListMultimap<IConduitType, Graph<Mergeable.Dummy>> networks = ArrayListMultimap.create();
 
+    public Map<IConduitType, Map<ChunkPos, Map<BlockPos, NodeIdentifier>>> deserializedNodes = new HashMap<>();
+
     public static ConduitSavedData get(ServerLevel level) {
         ConduitSavedData ret = level.getDataStorage().computeIfAbsent(ConduitSavedData::new, ConduitSavedData::new, "enderio_conduit_network");
-        ret.giveBlocksData(level);
+        ret.giveData();
         return ret;
     }
 
@@ -192,15 +195,14 @@ public class ConduitSavedData extends SavedData {
         }
     }
 
-    private boolean dataGiven = false;
-
-    public void giveBlocksData(ServerLevel level) {
-        if (dataGiven) return;
-        dataGiven = true;
-
+    public void giveData() {
         for (IConduitType type: this.networks.keySet()) {
             List<Graph<Mergeable.Dummy>> graphs = this.networks.get(type);
             if (graphs.isEmpty()) continue;
+
+            Map<ChunkPos, Map<BlockPos, NodeIdentifier>> putTypeMap = new HashMap<>();
+            Map<ChunkPos, Map<BlockPos, NodeIdentifier>> typeMap = deserializedNodes.putIfAbsent(type, putTypeMap);
+            if (typeMap == null) typeMap = putTypeMap;
 
             for (Graph<Mergeable.Dummy> graph: graphs) {
                 Collection<GraphObject<Mergeable.Dummy>> objects = graph.getObjects();
@@ -208,10 +210,13 @@ public class ConduitSavedData extends SavedData {
 
                 for (var object : objects) {
                     if (object instanceof NodeIdentifier nodeIdentifier) {
-                        var blockEntity = level.getBlockEntity(nodeIdentifier.getPos());
-                        if (blockEntity instanceof ConduitBlockEntity conduit) {
-                            conduit.getBundle().setNodeFor(type, nodeIdentifier);
-                        }
+                        ChunkPos chunkPos = PosConversionUtil.blockPosToChunkPos(nodeIdentifier.getPos());
+
+                        Map<BlockPos, NodeIdentifier> putChunkMap = new HashMap<>();
+                        Map<BlockPos, NodeIdentifier> chunkMap = typeMap.putIfAbsent(chunkPos, putChunkMap);
+                        if (chunkMap == null) chunkMap = putChunkMap;
+
+                        chunkMap.put(nodeIdentifier.getPos(), nodeIdentifier);
                     }
                 }
             }
