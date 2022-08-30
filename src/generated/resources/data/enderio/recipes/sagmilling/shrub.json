@@ -1,0 +1,21 @@
+{
+  "type": "enderio:sagmilling",
+  "energy": 2400,
+  "input": {
+    "item": "minecraft:dead_bush"
+  },
+  "outputs": [
+    {
+      "chance": 0.8,
+      "item": "enderio:plant_matter_brown"
+    },
+    {
+      "chance": 0.6,
+      "item": "enderio:plant_matter_brown"
+    },
+    {
+      "chance": 0.3,
+      "item": "enderio:plant_matter_brown"
+    }
+  ]
+}
