@@ -6,6 +6,7 @@ import com.enderio.core.client.gui.screen.IEnderScreen;
 import com.enderio.core.client.gui.screen.IFullScreenListener;
 import com.enderio.core.common.util.Vector2i;
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -48,7 +49,7 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
         this.getter = getter;
         this.setter = setter;
         this.optionName = optionName;
-        T[] values = (T[])(getter.get().getClass().getEnumConstants());
+        T[] values = getter.get().getDeclaringClass().getEnumConstants();
         Vector2i pos = calculateFirstPosition(values[0], values.length);
         Vector2i elementDistance = values[0].getRenderSize().expand(SPACE_BETWEEN_ELEMENTS);
         for (int i = 0; i < values.length; i++) {
@@ -100,7 +101,7 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
     }
 
     private void selectNext(boolean isForward) {
-        T[] values = (T[])(getter.get().getClass().getEnumConstants());
+        T[] values = getter.get().getDeclaringClass().getEnumConstants();
         int index = getter.get().ordinal() + (isForward ? 1 : -1) + values.length;
         setter.accept(values[index%values.length]);
     }
@@ -116,10 +117,8 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
     @Override
     public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
         T icon = getter.get();
-
         addedOn.renderIconBackground(pPoseStack, new Vector2i(x, y), icon);
         IEnderScreen.renderIcon(pPoseStack, new Vector2i(x, y).expand(1), icon);
-
         renderToolTip(pPoseStack, pMouseX, pMouseY);
     }
 
@@ -159,8 +158,7 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
 
         @Override
         public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
-            pPoseStack.pushPose();
-            ForgeHax.setPoseStackDepth(this, pPoseStack);
+            RenderSystem.disableDepthTest();
             tooltips.clear();
             renderSimpleArea(pPoseStack, expandTopLeft, expandBottomRight);
             super.render(pPoseStack, pMouseX, pMouseY, pPartialTicks);
@@ -168,8 +166,7 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
             for (LateTooltipData tooltip : tooltips) {
                 renderTooltip(tooltip.getPoseStack(), tooltip.getText(), tooltip.getMouseX(), tooltip.getMouseY());
             }
-
-            pPoseStack.popPose();
+            RenderSystem.enableDepthTest();
         }
 
         @Override

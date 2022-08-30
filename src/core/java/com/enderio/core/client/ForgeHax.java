@@ -22,18 +22,6 @@ public class ForgeHax {
         }
     }
 
-    public static void setPoseStackDepth(Screen screen, PoseStack poseStack) {
-        poseStack.translate(0, 0, -2000 * ForgeHax.getReverseGuiLayer(screen));
-    }
-
-    /**
-     * returns the depth of the screen in the GuiStack. 0 is the topmost screen
-     * @param screen
-     * @return
-     */
-    public static int getReverseGuiLayer(Screen screen) {
-        return getGuiLayers().size() - getGuiLayer(screen);
-    }
 
     public static int getGuiLayer(Screen screen) {
         Stack<Screen> guiLayers = getGuiLayers();
