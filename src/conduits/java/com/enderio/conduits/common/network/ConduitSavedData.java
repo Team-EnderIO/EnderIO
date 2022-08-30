@@ -214,17 +214,9 @@ public class ConduitSavedData extends SavedData {
     }
 
     public void putNodeIdentifier(IConduitType type, BlockPos pos, NodeIdentifier node) {
-        // TODO: Better way to do this?
-        // putIfAbsent is really useless for not returning the put
-        Map<ChunkPos, Map<BlockPos, NodeIdentifier>> putTypeMap = new HashMap<>();
-        Map<ChunkPos, Map<BlockPos, NodeIdentifier>> typeMap = deserializedNodes.putIfAbsent(type, putTypeMap);
-        if (typeMap == null) typeMap = putTypeMap;
-
         ChunkPos chunkPos = new ChunkPos(pos);
-        Map<BlockPos, NodeIdentifier> putChunkMap = new HashMap<>();
-        Map<BlockPos, NodeIdentifier> chunkMap = typeMap.putIfAbsent(chunkPos, putChunkMap);
-        if (chunkMap == null) chunkMap = putChunkMap;
-
+        Map<ChunkPos, Map<BlockPos, NodeIdentifier>> typeMap = deserializedNodes.computeIfAbsent(type, k -> new HashMap<>());
+        Map<BlockPos, NodeIdentifier> chunkMap = typeMap.computeIfAbsent(chunkPos, k -> new HashMap<>());
         chunkMap.put(pos, node);
     }
 
