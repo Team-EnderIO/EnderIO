@@ -87,6 +87,24 @@ public class ConduitSavedData extends SavedData {
     }
 
     // Serialization
+
+    /* NBT layout
+    data
+      ┖ graphs (list)
+          ┖ [index]
+              ┠ graphs (list) // One type of conduits' graphs
+              ┃   ┠ [index]
+              ┃   ┃   ┠ graphConnections (list)
+              ┃   ┃   ┃   ┖ [index]
+              ┃   ┃   ┃       ┠ 0: [first object's index]
+              ┃   ┃   ┃       ┖ 1: [second object's index]
+              ┃   ┃   ┖ graphObjects (list)
+              ┃   ┃       ┖ [index]: long (representing BlockPos.asLong())
+              ┃   ┖ [next index]
+              ┃       ┖ ...
+              ┖ type: [conduit type] (ex. "enderio:power3")
+     */
+
     @Override
     public CompoundTag save(CompoundTag nbt) {
         EnderIO.LOGGER.info("Conduit network serialization started");
