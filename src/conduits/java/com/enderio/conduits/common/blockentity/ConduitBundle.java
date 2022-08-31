@@ -3,7 +3,9 @@ package com.enderio.conduits.common.blockentity;
 import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.conduits.common.blockentity.action.RightClickAction;
+import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
 import com.enderio.conduits.common.blockentity.connection.IConnectionState;
+import com.enderio.conduits.common.blockentity.connection.StaticConnectionStates;
 import com.enderio.conduits.common.network.NodeIdentifier;
 import com.enderio.core.common.blockentity.ColorControl;
 import net.minecraft.core.BlockPos;
@@ -181,8 +183,15 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         nodes.put(type, node);
         for (var direction : Direction.values()) {
             ConduitConnection connection = connections.get(direction);
-            if (connection.getConnectedTypes(this).contains(type)) {
-                this.connectTo(direction, type, connection.isEnd());
+            int index = connection.getConnectedTypes(this).indexOf(type);
+            if (index >= 0) {
+                var state = connection.getConnectionState(index);
+                if (state instanceof DynamicConnectionState dynamicState) {
+                    node.pushState(direction, dynamicState.in(), dynamicState.out());
+                } else {
+                    // May be redundant?
+                    this.connectTo(direction, type, false);
+                }
             }
         }
     }
