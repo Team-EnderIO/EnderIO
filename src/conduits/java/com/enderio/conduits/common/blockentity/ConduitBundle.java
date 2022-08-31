@@ -188,9 +188,6 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
                 var state = connection.getConnectionState(index);
                 if (state instanceof DynamicConnectionState dynamicState) {
                     node.pushState(direction, dynamicState.in(), dynamicState.out());
-                } else {
-                    // May be redundant?
-                    this.connectTo(direction, type, false);
                 }
             }
         }
