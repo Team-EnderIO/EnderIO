@@ -3,7 +3,11 @@ package com.enderio.conduits.common.blockentity;
 import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.conduits.common.blockentity.action.RightClickAction;
+import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
+import com.enderio.conduits.common.blockentity.connection.IConnectionState;
+import com.enderio.conduits.common.blockentity.connection.StaticConnectionStates;
 import com.enderio.conduits.common.network.NodeIdentifier;
+import com.enderio.core.common.blockentity.ColorControl;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.*;
@@ -21,6 +25,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
     private final Map<Direction, ConduitConnection> connections = new EnumMap<>(Direction.class);
 
     private final List<IConduitType> types = new ArrayList<>();
+
     //fill back after world save
     private final Map<IConduitType, NodeIdentifier> nodes = new HashMap<>();
     private final Runnable scheduleSync;
@@ -172,6 +177,20 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
 
     public NodeIdentifier getNodeFor(IConduitType type) {
         return nodes.get(type);
+    }
+
+    public void setNodeFor(IConduitType type, NodeIdentifier node) {
+        nodes.put(type, node);
+        for (var direction : Direction.values()) {
+            ConduitConnection connection = connections.get(direction);
+            int index = connection.getConnectedTypes(this).indexOf(type);
+            if (index >= 0) {
+                var state = connection.getConnectionState(index);
+                if (state instanceof DynamicConnectionState dynamicState) {
+                    node.pushState(direction, dynamicState.in(), dynamicState.out());
+                }
+            }
+        }
     }
 
     public void removeNodeFor(IConduitType type) {

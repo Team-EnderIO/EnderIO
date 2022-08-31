@@ -16,6 +16,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraftforge.common.capabilities.Capability;
@@ -31,6 +32,9 @@ import java.util.*;
 public class ConduitSavedData extends SavedData {
 
     ListMultimap<IConduitType, Graph<Mergeable.Dummy>> networks = ArrayListMultimap.create();
+
+    // Used to find the NodeIdentifier(s) of a conduit when it is loaded
+    private final Map<IConduitType, Map<ChunkPos, Map<BlockPos, NodeIdentifier>>> deserializedNodes = new HashMap<>();
 
     public static ConduitSavedData get(ServerLevel level) {
         return level.getDataStorage().computeIfAbsent(ConduitSavedData::new, ConduitSavedData::new, "enderio_conduit_network");
@@ -63,23 +67,46 @@ public class ConduitSavedData extends SavedData {
 
 
                     for (Tag tag2 : graphObjectsTag) {
-                        NodeIdentifier node = new NodeIdentifier(BlockPos.of(((LongTag)tag2).getAsLong()));
+                        BlockPos pos = BlockPos.of(((LongTag)tag2).getAsLong());
+                        NodeIdentifier node = new NodeIdentifier(pos);
                         graphObjects.add(node);
+                        putUnloadedNodeIdentifier(value, pos, node);
                     }
 
                     for (Tag tag2: graphConnectionsTag) {
                         CompoundTag connectionTag = (CompoundTag) tag2;
                         connections.add(new Pair<>(graphObjects.get(connectionTag.getInt("0")), graphObjects.get(connectionTag.getInt("1"))));
                     }
+
                     NodeIdentifier graphObject = graphObjects.get(0);
                     Graph.integrate(graphObject, List.of());
                     merge(graphObject, connections);
+
                     networks.get(value).add(graphObject.getGraph());
                 }
             }
         }
         EnderIO.LOGGER.info("Conduit network deserialization finished, took {}ms", System.currentTimeMillis() - start);
     }
+
+    // Serialization
+
+    /* NBT layout
+    data
+      ┖ graphs (list)
+          ┖ [index]
+              ┠ type: [conduit type] (ex. "enderio:power3")
+              ┖ graphs (list) // One type of conduits' graphs
+                  ┠ [element]
+                  ┃   ┠ graphConnections (list)
+                  ┃   ┃   ┖ [element]
+                  ┃   ┃       ┠ 0: [first object's index]
+                  ┃   ┃       ┖ 1: [second object's index]
+                  ┃   ┖ graphObjects (list)
+                  ┃       ┖ [index]: long (representing BlockPos.asLong())
+                  ┖ [next element]
+                      ┖ ...
+     */
 
     // Serialization
     @Override
@@ -166,6 +193,27 @@ public class ConduitSavedData extends SavedData {
         if (!connections.isEmpty()) {
             merge(connections.get(0).getFirst(), connections);
         }
+    }
+
+    public NodeIdentifier takeUnloadedNodeIdentifier(IConduitType type, BlockPos pos) {
+        ChunkPos chunkPos = new ChunkPos(pos);
+
+        Map<ChunkPos, Map<BlockPos, NodeIdentifier>> typeMap = Objects.requireNonNull(deserializedNodes.get(type), "Conduit data is missing!");
+        Map<BlockPos, NodeIdentifier> chunkMap = Objects.requireNonNull(typeMap.get(new ChunkPos(pos)), "Conduit data is missing!");
+        NodeIdentifier node = Objects.requireNonNull(chunkMap.get(pos), "Conduit data is missing!");
+
+        chunkMap.remove(pos);
+        if (chunkMap.size() == 0) typeMap.remove(chunkPos);
+        if (typeMap.size() == 0) deserializedNodes.remove(type);
+
+        return node;
+    }
+
+    public void putUnloadedNodeIdentifier(IConduitType type, BlockPos pos, NodeIdentifier node) {
+        ChunkPos chunkPos = new ChunkPos(pos);
+        Map<ChunkPos, Map<BlockPos, NodeIdentifier>> typeMap = deserializedNodes.computeIfAbsent(type, k -> new HashMap<>());
+        Map<BlockPos, NodeIdentifier> chunkMap = typeMap.computeIfAbsent(chunkPos, k -> new HashMap<>());
+        chunkMap.put(pos, node);
     }
 
     private static boolean containsConnection(List<Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>>> connections, Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>> connection) {

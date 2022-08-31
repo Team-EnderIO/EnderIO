@@ -63,8 +63,21 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
     @Override
     public void onLoad() {
-        if (!level.isClientSide())
+        if (!level.isClientSide()) {
+            loadFromSavedData();
             sync();
+        }
+    }
+
+    @Override
+    public void onChunkUnloaded() {
+        super.onChunkUnloaded();
+        if (level instanceof ServerLevel serverLevel) {
+            ConduitSavedData savedData = ConduitSavedData.get(serverLevel);
+            for (IConduitType type : bundle.getTypes()) {
+                savedData.putUnloadedNodeIdentifier(type, this.worldPosition, bundle.getNodeFor(type));
+            }
+        }
     }
 
     public void everyTick() {
@@ -105,8 +118,8 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                     }
                 }
             }
-            Graph.integrate(bundle.getNodeFor(type), nodes);
             if (level instanceof ServerLevel serverLevel) {
+                Graph.integrate(bundle.getNodeFor(type), nodes);
                 ConduitSavedData.addPotentialGraph(type, Objects.requireNonNull(bundle.getNodeFor(type).getGraph()), serverLevel);
             }
             if (action instanceof RightClickAction.Upgrade upgrade) {
@@ -135,7 +148,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                 }
             }
         }
-        if (nodeFor.getGraph() != null && level instanceof ServerLevel serverLevel) {
+        if (level instanceof ServerLevel serverLevel && nodeFor.getGraph() != null) {
             nodeFor.getGraph().remove(nodeFor);
 
             for (Direction dir: Direction.values()) {
@@ -154,6 +167,15 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
     private void updateShape() {
         shape.updateConduit(bundle);
+    }
+
+    private void loadFromSavedData() {
+        if (!(level instanceof ServerLevel)) return;
+        ConduitSavedData savedData = ConduitSavedData.get((ServerLevel) level);
+        for (IConduitType type : bundle.getTypes()) {
+            NodeIdentifier node = savedData.takeUnloadedNodeIdentifier(type, this.worldPosition);
+            bundle.setNodeFor(type, node);
+        }
     }
 
     public static boolean isDifferent(IConduitType first, IConduitType second) {
