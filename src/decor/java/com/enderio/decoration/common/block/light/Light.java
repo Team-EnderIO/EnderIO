@@ -29,11 +29,11 @@ public class Light extends FaceAttachedHorizontalDirectionalBlock{
 	protected static final VoxelShape SOUTH_AABB = Block.box(5.0D, 6.0D, 0.0D, 11.0D, 10.0D, 2.0D);
 	protected static final VoxelShape WEST_AABB = Block.box(14.0D, 6.0D, 5.0D, 16.0D, 10.0D, 11.0D);
 	protected static final VoxelShape EAST_AABB = Block.box(0.0D, 6.0D, 5.0D, 2.0D, 10.0D, 11.0D);
-	private boolean inverted;
+	private final boolean inverted;
 	
 	public Light(Properties properties, boolean inverted) {
 		super(properties);
-		this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(ENABLED, Boolean.valueOf(!inverted)).setValue(FACE, AttachFace.WALL));
+		this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(ENABLED, !inverted).setValue(FACE, AttachFace.WALL));
 		this.inverted = inverted;
 	}
 	
@@ -44,10 +44,10 @@ public class Light extends FaceAttachedHorizontalDirectionalBlock{
 	public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		builder.add(FACING, ENABLED, FACE);
 	}
-	
+
 	public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
 		Direction direction = state.getValue(FACING);
-		switch((AttachFace)state.getValue(FACE)) {
+		switch(state.getValue(FACE)) {
 		case FLOOR:
 			if (direction.getAxis() == Direction.Axis.X) {
 				return FLOOR_AABB_X;
@@ -95,7 +95,7 @@ public class Light extends FaceAttachedHorizontalDirectionalBlock{
 	public void checkPoweredState(Level level, BlockPos pos, BlockState state) {
 		boolean powered = level.hasNeighborSignal(pos);
 		if (powered != this.inverted ? state.getValue(ENABLED) : !state.getValue(ENABLED)) {
-			level.setBlock(pos, state.setValue(ENABLED, this.inverted ? Boolean.valueOf(powered) : !Boolean.valueOf(powered)), 3);
+			level.setBlock(pos, state.setValue(ENABLED, this.inverted ? powered : !powered), 3);
 		}
 		
 	}

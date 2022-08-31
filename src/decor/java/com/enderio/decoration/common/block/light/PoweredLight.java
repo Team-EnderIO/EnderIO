@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
  * Handles "Wireless" subtype.
  */
 public class PoweredLight extends Light implements EntityBlock{
-	public boolean wireless;
+	public final boolean wireless;
 
 	public PoweredLight(Properties properties, boolean inverted, boolean wireless) {
 		super(properties, inverted);

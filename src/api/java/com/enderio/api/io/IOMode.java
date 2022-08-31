@@ -64,6 +64,7 @@ public enum IOMode {
     /**
      * Whether or not this side can be connected to by external blocks.
      */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean canConnect() {
         return canConnect;
     }

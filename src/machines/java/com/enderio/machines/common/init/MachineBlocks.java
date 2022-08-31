@@ -106,25 +106,25 @@ public class MachineBlocks {
     public static final BlockEntry<ProgressMachineBlock> ALLOY_SMELTER = standardMachine("alloy_smelter", () -> MachineBlockEntities.ALLOY_SMELTER)
         .register();
 
-    public static BlockEntry<MachineBlock> CREATIVE_POWER = REGISTRATE
+    public static final BlockEntry<MachineBlock> CREATIVE_POWER = REGISTRATE
         .block("creative_power", props -> new MachineBlock(props, MachineBlockEntities.CREATIVE_POWER))
         .item()
         .tab(() -> EIOCreativeTabs.MACHINES)
         .build()
         .register();
 
-    public static BlockEntry<ProgressMachineBlock> STIRLING_GENERATOR = standardMachine("stirling_generator", () -> MachineBlockEntities.STIRLING_GENERATOR)
+    public static final BlockEntry<ProgressMachineBlock> STIRLING_GENERATOR = standardMachine("stirling_generator", () -> MachineBlockEntities.STIRLING_GENERATOR)
         .register();
 
-    public static BlockEntry<ProgressMachineBlock> SAG_MILL = standardMachine("sag_mill", () -> MachineBlockEntities.SAG_MILL)
+    public static final BlockEntry<ProgressMachineBlock> SAG_MILL = standardMachine("sag_mill", () -> MachineBlockEntities.SAG_MILL)
         .lang("SAG Mill")
         .register();
 
-    public static BlockEntry<ProgressMachineBlock> SLICE_AND_SPLICE = soulMachine("slice_and_splice", () -> MachineBlockEntities.SLICE_AND_SPLICE)
+    public static final BlockEntry<ProgressMachineBlock> SLICE_AND_SPLICE = soulMachine("slice_and_splice", () -> MachineBlockEntities.SLICE_AND_SPLICE)
         .lang("Slice'N'Splice")
         .register();
 
-    public static BlockEntry<ProgressMachineBlock> IMPULSE_HOPPER = standardMachine("impulse_hopper", () -> MachineBlockEntities.IMPULSE_HOPPER)
+    public static final BlockEntry<ProgressMachineBlock> IMPULSE_HOPPER = standardMachine("impulse_hopper", () -> MachineBlockEntities.IMPULSE_HOPPER)
         .lang("Impulse Hopper")
         .register();
 

@@ -291,7 +291,7 @@ public class EIOItems {
     //        .group(() -> EnderIO.TAB_MAIN));
     //  }
 
-    private static final ItemBuilder<MaterialItem, Registrate> materialItemGlinted(String name) {
+    private static ItemBuilder<MaterialItem, Registrate> materialItemGlinted(String name) {
         return REGISTRATE.item(name, props -> new MaterialItem(props, true)).tab(() -> EIOCreativeTabs.MAIN);
     }
 

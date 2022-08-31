@@ -24,11 +24,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
@@ -255,7 +254,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
      */
     private void moveItems(Direction side) {
         // Get our item handler.
-        getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side).resolve().ifPresent(selfHandler -> {
+        getCapability(ForgeCapabilities.ITEM_HANDLER, side).resolve().ifPresent(selfHandler -> {
             // Get neighboring item handler.
             Optional<IItemHandler> otherHandler = getNeighboringItemHandler(side).resolve();
 
@@ -299,7 +298,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
      */
     private void moveFluids(Direction side) {
         // Get our fluid handler
-        getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side).resolve().ifPresent(selfHandler -> {
+        getCapability(ForgeCapabilities.FLUID_HANDLER, side).resolve().ifPresent(selfHandler -> {
             // Get neighboring fluid handler.
             Optional<IFluidHandler> otherHandler = getNeighboringFluidHandler(side).resolve();
 
@@ -386,8 +385,8 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     protected void populateCaches(Direction direction, @Nullable BlockEntity neighbor) {
         if (neighbor != null) {
-            itemHandlerCache.put(direction, addInvalidationListener(neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, direction.getOpposite())));
-            fluidHandlerCache.put(direction, addInvalidationListener(neighbor.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction.getOpposite())));
+            itemHandlerCache.put(direction, addInvalidationListener(neighbor.getCapability(ForgeCapabilities.ITEM_HANDLER, direction.getOpposite())));
+            fluidHandlerCache.put(direction, addInvalidationListener(neighbor.getCapability(ForgeCapabilities.FLUID_HANDLER, direction.getOpposite())));
         } else {
             itemHandlerCache.put(direction, LazyOptional.empty());
             fluidHandlerCache.put(direction, LazyOptional.empty());

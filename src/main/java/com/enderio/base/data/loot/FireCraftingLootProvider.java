@@ -50,7 +50,7 @@ public class FireCraftingLootProvider extends LootTableProvider {
             try {
                 DataProvider.saveStable(cachedOutput, LootTables.serialize(lootTable), path);
             } catch (IOException e) {
-                EnderIO.LOGGER.error("Couldn't write loot table {}", path, (Object) e);
+                EnderIO.LOGGER.error("Couldn't write loot table {}: {}", path, e);
             }
         });
     }

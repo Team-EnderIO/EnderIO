@@ -24,7 +24,7 @@ import java.util.stream.Stream;
  */
 public class GlassBlocks {
     public final BlockEntry<FusedQuartzBlock> CLEAR;
-    public Map<DyeColor, BlockEntry<FusedQuartzBlock>> COLORS;
+    public final Map<DyeColor, BlockEntry<FusedQuartzBlock>> COLORS;
 
     private final GlassIdentifier glassIdentifier;
 
