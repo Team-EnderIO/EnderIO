@@ -838,6 +838,8 @@
   "gui.enderio.grinding_ball": "Remaining: %s%%\\nSAG Mill Grinding Ball\\nMain Output %s%%\\nBonus Output %s%%\\nPower Use %s%%",
   "gui.enderio.progress": "Progress %s%%",
   "gui.enderio.range": "Range",
+  "gui.enderio.range.hide": "Hide Range",
+  "gui.enderio.range.show": "Show Range",
   "gui.enderio.redstone.active_with_signal": "Active with signal",
   "gui.enderio.redstone.active_without_signal": "Active without signal",
   "gui.enderio.redstone.always_active": "Always active",

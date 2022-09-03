@@ -838,6 +838,8 @@
   "gui.enderio.grinding_ball": "%s%% ǝs∩ ɹǝʍoԀu\\%s%% ʇndʇnO snuoᗺu\\%s%% ʇndʇnO uıɐWu\\ןןɐᗺ buıpuıɹ⅁ ןןıW ⅁ⱯSu\\%s%% :buıuıɐɯǝᴚ",
   "gui.enderio.progress": "%s%% ssǝɹboɹԀ",
   "gui.enderio.range": "ǝbuɐᴚ",
+  "gui.enderio.range.hide": "ǝbuɐᴚ ǝpıH",
+  "gui.enderio.range.show": "ǝbuɐᴚ ʍoɥS",
   "gui.enderio.redstone.active_with_signal": "ןɐubıs ɥʇıʍ ǝʌıʇɔⱯ",
   "gui.enderio.redstone.active_without_signal": "ןɐubıs ʇnoɥʇıʍ ǝʌıʇɔⱯ",
   "gui.enderio.redstone.always_active": "ǝʌıʇɔɐ sʎɐʍןⱯ",
