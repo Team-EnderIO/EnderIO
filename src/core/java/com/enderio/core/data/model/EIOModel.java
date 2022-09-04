@@ -20,21 +20,6 @@ public class EIOModel {
             .parent(prov.getExistingFile(model));
     }
 
-    // region General
-
-    /**
-     * @deprecated Use forge {@link net.minecraftforge.client.model.generators.loaders.CompositeModelBuilder} instead.
-     */
-    @Deprecated(forRemoval = true)
-    public static <T extends ModelProvider<B>, B extends ModelBuilder<B>> ModelFile compositeModel(T prov, String name, Consumer<CompositeModelBuilder<B>> compositeBuilder) {
-        var builder = prov.getBuilder(name)
-            .customLoader(CompositeModelBuilder::begin);
-        compositeBuilder.accept(builder);
-        return builder.end();
-    }
-
-    // endregion
-
     // region Item
 
     public static ItemModelBuilder fakeBlockModel(DataGenContext<Item, ? extends Item> ctx, RegistrateItemModelProvider prov) {

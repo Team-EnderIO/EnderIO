@@ -15,6 +15,8 @@ import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraftforge.client.model.generators.BlockModelBuilder;
+import net.minecraftforge.client.model.generators.BlockModelBuilder.RootTransformBuilder.TransformOrigin;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.loaders.CompositeModelBuilder;
@@ -66,25 +68,19 @@ public class MachineBlocks {
         .block("enchanter", props -> new MachineBlock(props, MachineBlockEntities.ENCHANTER))
         .properties(props -> props.strength(2.5f, 8))
         .loot(MachinesLootTable::copyNBT)
-        .blockstate((ctx, prov) -> prov.horizontalBlock(ctx.get(), EIOModel.compositeModel(prov.models(), ctx.getName(), builder -> builder
-            .component(prov.models()
-                .withExistingParent(ctx.getName() + "_plinth", EnderIO.loc("block/dialing_device"))
-                .texture("button", EnderIO.loc("block/dark_steel_pressure_plate")), true)
-            .component(EnderIO.loc("block/enchanter_book"), new Vector3f(0, 11.25f / 16.0f, -3.5f / 16.0f), new Vector3f(-22.5f * 0.01745f, 0, 0)))))
-        // TODO: 1.19: https://github.com/MinecraftForge/MinecraftForge/pull/8860
-//        .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models()
-//            .withExistingParent(ctx.getName(), prov.mcLoc("block/block"))
-//            .customLoader(CompositeModelBuilder::begin)
-//            .child("plinth", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/dialing_device"))
-//                .texture("button", EnderIO.loc("block/dark_steel_pressure_plate")))
-//            .child("book", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/enchanter_book"))
-//                .rootTransform()
-//                    .translation(new Vector3f(0, 11.25f / 16.0f, -3.5f / 16.0f))
-//                    .rotation(Quaternion.fromXYZDegrees(new Vector3f(-22.5f, 0, 0)))
-//                    .origin("center")
-//                .end())
-//            .end()
-//        ))
+        .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models()
+            .withExistingParent(ctx.getName(), prov.mcLoc("block/block"))
+            .customLoader(CompositeModelBuilder::begin)
+            .child("plinth", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/dialing_device"))
+                .texture("button", EnderIO.loc("block/dark_steel_pressure_plate")))
+            .child("book", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/enchanter_book"))
+                .rootTransform()
+                    .translation(new Vector3f(0, 11.25f / 16.0f, -3.5f / 16.0f))
+                    .rotation(-22.5f, 0, 0, true)
+                    .origin(TransformOrigin.CENTER)
+                .end())
+            .end()
+        ))
         .item()
         .tab(() -> EIOCreativeTabs.MACHINES)
         .build()
