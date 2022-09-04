@@ -1,0 +1,18 @@
+{
+  "type": "enderio:sagmilling",
+  "energy": 2400,
+  "input": {
+    "item": "minecraft:quartz_stairs"
+  },
+  "outputs": [
+    {
+      "count": 2,
+      "item": "minecraft:quartz"
+    },
+    {
+      "chance": 0.25,
+      "count": 2,
+      "item": "minecraft:quartz"
+    }
+  ]
+}

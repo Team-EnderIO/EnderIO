@@ -1,0 +1,18 @@
+{
+  "type": "enderio:sagmilling",
+  "energy": 2400,
+  "input": {
+    "tag": "forge:sandstone"
+  },
+  "outputs": [
+    {
+      "count": 2,
+      "item": "minecraft:sand"
+    },
+    {
+      "chance": 0.4,
+      "count": 2,
+      "item": "minecraft:sand"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "type": "enderio:sagmilling",
+  "energy": 2400,
+  "input": {
+    "tag": "forge:ores/gold"
+  },
+  "outputs": [
+    {
+      "item": "enderio:gold_powder"
+    },
+    {
+      "chance": 0.33,
+      "item": "enderio:gold_powder"
+    },
+    {
+      "chance": 0.15,
+      "item": "minecraft:cobblestone"
+    }
+  ]
+}

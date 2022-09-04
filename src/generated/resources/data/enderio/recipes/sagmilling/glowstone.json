@@ -1,0 +1,17 @@
+{
+  "type": "enderio:sagmilling",
+  "energy": 2400,
+  "input": {
+    "item": "minecraft:glowstone"
+  },
+  "outputs": [
+    {
+      "count": 3,
+      "item": "minecraft:glowstone_dust"
+    },
+    {
+      "chance": 0.8,
+      "item": "minecraft:glowstone_dust"
+    }
+  ]
+}
