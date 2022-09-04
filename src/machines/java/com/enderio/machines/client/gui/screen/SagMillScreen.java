@@ -6,7 +6,7 @@ import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.common.util.TooltipUtil;
-import com.enderio.core.common.util.Vector2i;
+import com.enderio.api.misc.Vector2i;
 import com.enderio.machines.client.gui.widget.EnergyWidget;
 import com.enderio.machines.client.gui.widget.ProgressWidget;
 import com.enderio.machines.common.MachineTier;

@@ -1,4 +1,4 @@
-package com.enderio.conduits.client;
+package com.enderio.conduits.client.model;
 
 import com.mojang.math.Transformation;
 import com.mojang.math.Vector3f;

@@ -1,8 +1,6 @@
 package com.enderio.conduits.common.init;
 
 import com.enderio.EnderIO;
-import com.enderio.conduits.client.ConduitClientSetup;
-import com.enderio.conduits.common.blockentity.ConduitConnection;
 import com.enderio.conduits.common.blocks.ConduitBlock;
 import com.enderio.conduits.data.model.ConduitBlockState;
 import com.tterrag.registrate.Registrate;

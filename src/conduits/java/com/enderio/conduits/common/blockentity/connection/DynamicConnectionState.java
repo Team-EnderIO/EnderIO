@@ -2,43 +2,18 @@ package com.enderio.conduits.common.blockentity.connection;
 
 import com.enderio.api.UseOnly;
 import com.enderio.base.common.blockentity.RedstoneControl;
+import com.enderio.conduits.common.blockentity.SlotType;
 import com.enderio.core.common.blockentity.ColorControl;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.LogicalSide;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Random;
+import java.util.HashMap;
+import java.util.Map;
 
-public record DynamicConnectionState(@Nullable ColorControl in, @Nullable ColorControl out, RedstoneControl control, ColorControl redstoneChannel, @UseOnly(LogicalSide.SERVER) ItemStack filter) implements IConnectionState {
+public record DynamicConnectionState(boolean isInsert, ColorControl insert, boolean isExtract, ColorControl extract, RedstoneControl control, ColorControl redstoneChannel, @UseOnly(LogicalSide.SERVER) ItemStack filterInsert, @UseOnly(LogicalSide.SERVER) ItemStack filterExtract, @UseOnly(LogicalSide.SERVER) ItemStack upgradeExtract) implements IConnectionState {
 
-    /**
-     * @return a simple dynamic connection state used for simpler renderingtesting
-     */
-    public static DynamicConnectionState ofInput() {
-        return new DynamicConnectionState(ColorControl.GREEN, null, RedstoneControl.ACTIVE_WITH_SIGNAL, ColorControl.RED, ItemStack.EMPTY);
-    }
-
-    private static int connection = 0;
-    //TODO Remove
-    public static DynamicConnectionState random() {
-        Random r = new Random();
-        @Nullable
-        ColorControl in = null;
-        @Nullable
-        ColorControl out = null;
-        RedstoneControl control = random(r, RedstoneControl.class);
-        ColorControl redstoneChannel = random(r, ColorControl.class);
-        //switch (r.nextInt(3)) {
-        //    case 0 -> {in = random(r, ColorControl.class); out = random(r, ColorControl.class);}
-        //    case 1 -> in = random(r, ColorControl.class);
-        //    default -> out = random(r, ColorControl.class);
-        //}
-        switch (connection) {
-            case 0,1 -> in = ColorControl.BLUE;
-            default -> out = ColorControl.BLUE;
-        }
-        connection++;
-        return new DynamicConnectionState(in, out, control, redstoneChannel, ItemStack.EMPTY);
+    public static DynamicConnectionState defaultConnection() {
+        return new DynamicConnectionState(false, ColorControl.GREEN, true, ColorControl.GREEN, RedstoneControl.NEVER_ACTIVE, ColorControl.RED, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY);
     }
 
     @Override
@@ -46,7 +21,22 @@ public record DynamicConnectionState(@Nullable ColorControl in, @Nullable ColorC
         return true;
     }
 
-    private static <T extends Enum<T>> T random(Random r, Class<T> clazz) {
-        return clazz.getEnumConstants()[r.nextInt(clazz.getEnumConstants().length)];
+    public ItemStack getItem(SlotType slotType) {
+        if (slotType == SlotType.FILTER_EXTRACT)
+            return filterExtract;
+        if (slotType == SlotType.FILTER_INSERT)
+            return filterInsert;
+        return upgradeExtract;
+    }
+
+    public DynamicConnectionState withItem(SlotType type, ItemStack stack) {
+        Map<SlotType, ItemStack> items = new HashMap<>();
+        for (SlotType type1: SlotType.values()) {
+            items.put(type1, type1 == type ? stack: getItem(type1));
+        }
+        return new DynamicConnectionState(isInsert, insert, isExtract, extract, control, redstoneChannel, items.get(SlotType.FILTER_INSERT), items.get(SlotType.FILTER_EXTRACT), items.get(SlotType.UPGRADE_EXTRACT));
+    }
+    public DynamicConnectionState withEnabled(boolean forExtract, boolean value) {
+        return new DynamicConnectionState(!forExtract ? value : isInsert, insert, forExtract ? value : isExtract, extract, control, redstoneChannel, filterInsert, filterExtract, upgradeExtract);
     }
 }

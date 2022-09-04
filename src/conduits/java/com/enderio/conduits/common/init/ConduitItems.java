@@ -4,7 +4,6 @@ import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitItemFactory;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.base.common.item.EIOCreativeTabs;
-import com.enderio.conduits.common.blockentity.RegisteredConduitType;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import net.minecraft.Util;
@@ -16,7 +15,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.function.Supplier;
 

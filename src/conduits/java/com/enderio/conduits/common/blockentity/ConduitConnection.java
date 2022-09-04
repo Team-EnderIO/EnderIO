@@ -7,19 +7,17 @@ import com.enderio.conduits.common.blockentity.connection.IConnectionState;
 import com.enderio.conduits.common.blockentity.connection.StaticConnectionStates;
 import com.enderio.conduits.common.network.NodeIdentifier;
 import com.enderio.core.common.blockentity.ColorControl;
-import com.enderio.core.common.sync.EnderDataSlot;
-import com.enderio.core.common.sync.SyncMode;
 import net.minecraft.Util;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+import java.util.Optional;
 
 import static com.enderio.conduits.common.blockentity.ConduitBundle.MAX_CONDUIT_TYPES;
 
@@ -49,9 +47,9 @@ public class ConduitConnection implements INBTSerializable<CompoundTag> {
      */
     public void connectTo(NodeIdentifier nodeIdentifier, Direction direction, int typeIndex, boolean end) {
         if (end) {
-            var state = DynamicConnectionState.random();
+            var state = DynamicConnectionState.defaultConnection();
             connectionStates[typeIndex] = state;
-            nodeIdentifier.pushState(direction, state.in(), state.out());
+            nodeIdentifier.pushState(direction, state.isExtract() ? state.extract() : null, state.isInsert() ? state.insert() : null);
         } else {
             connectionStates[typeIndex] = StaticConnectionStates.CONNECTED;
         }
@@ -78,7 +76,7 @@ public class ConduitConnection implements INBTSerializable<CompoundTag> {
     }
 
     public boolean isEnd() {
-        return Arrays.stream(connectionStates).anyMatch(con -> con instanceof DynamicConnectionState);
+        return Arrays.stream(connectionStates).anyMatch(DynamicConnectionState.class::isInstance);
     }
 
     public List<IConduitType> getConnectedTypes(ConduitBundle on) {
@@ -101,13 +99,12 @@ public class ConduitConnection implements INBTSerializable<CompoundTag> {
             if (state instanceof StaticConnectionStates staticState) {
                 element.putInt("index", staticState.ordinal());
             } else if (state instanceof DynamicConnectionState dynamicState) {
-                element.putInt("in", dynamicState.in() != null ? dynamicState.in().ordinal() : -1);
-                element.putInt("out", dynamicState.out() != null ? dynamicState.out().ordinal() : -1);
+                element.putBoolean("isExtract", dynamicState.isExtract());
+                element.putInt("extract", dynamicState.extract().ordinal());
+                element.putBoolean("isInsert", dynamicState.isInsert());
+                element.putInt("insert", dynamicState.insert().ordinal());
                 element.putInt("redControl", dynamicState.control().ordinal());
                 element.putInt("redChannel", dynamicState.redstoneChannel().ordinal());
-                //TODO: Save Item
-            } else {
-                throw new RuntimeException("Sealed Interface was none of it's sealed types");
             }
             tag.put(i + "", element);
         }
@@ -121,23 +118,31 @@ public class ConduitConnection implements INBTSerializable<CompoundTag> {
             if (nbt.getBoolean("static")) {
                 connectionStates[i] = StaticConnectionStates.values()[nbt.getInt("index")];
             } else {
-                var inIndex = nbt.getInt("in");
-                var outIndex = nbt.getInt("out");
+                var isInsert = nbt.getBoolean("isInsert");
+                var insertIndex = nbt.getInt("insert");
+                var isExtract = nbt.getBoolean("isExtract");
+                var extractIndex = nbt.getInt("extract");
                 var redControl = nbt.getInt("redControl");
                 var redChannel = nbt.getInt("redChannel");
+                IConnectionState prev = connectionStates[i];
+                Optional<DynamicConnectionState> dyn = Optional.ofNullable(prev instanceof DynamicConnectionState dynState ? dynState : null);
                 connectionStates[i] = new DynamicConnectionState(
-                    inIndex != -1 ? ColorControl.values()[inIndex] : null,
-                    outIndex != -1 ? ColorControl.values()[outIndex] : null,
+                    isInsert,
+                     ColorControl.values()[insertIndex],
+                    isExtract,
+                    ColorControl.values()[extractIndex],
                     RedstoneControl.values()[redControl],
                     ColorControl.values()[redChannel],
-                    Items.AIR.getDefaultInstance()
+                    dyn.map(DynamicConnectionState::filterInsert).orElse(ItemStack.EMPTY),
+                    dyn.map(DynamicConnectionState::filterExtract).orElse(ItemStack.EMPTY),
+                    dyn.map(DynamicConnectionState::upgradeExtract).orElse(ItemStack.EMPTY)
                 );
             }
         }
     }
 
     public ConduitConnection deepCopy() {
-        var connection = new ConduitConnection();
+        ConduitConnection connection = new ConduitConnection();
         //connectionstates are not mutable (enum/record), so reference is fine
         System.arraycopy(connectionStates, 0, connection.connectionStates, 0, MAX_CONDUIT_TYPES);
         return connection;
@@ -145,5 +150,24 @@ public class ConduitConnection implements INBTSerializable<CompoundTag> {
 
     public IConnectionState getConnectionState(int index) {
         return connectionStates[index];
+    }
+    public IConnectionState getConnectionState(IConduitType type, ConduitBundle on) {
+        return connectionStates[on.getTypes().indexOf(type)];
+    }
+    public void setConnectionState(IConduitType type, ConduitBundle on, IConnectionState state) {
+        connectionStates[on.getTypes().indexOf(type)] = state;
+    }
+
+    public ItemStack getItem(SlotType type, int conduitIndex) {
+        if (connectionStates[conduitIndex] instanceof DynamicConnectionState dynamicConnectionState) {
+            return dynamicConnectionState.getItem(type);
+        }
+        return ItemStack.EMPTY;
+    }
+
+    public void setItem(SlotType type, int conduitIndex, ItemStack stack) {
+        if (connectionStates[conduitIndex] instanceof DynamicConnectionState dynamicConnectionState) {
+            connectionStates[conduitIndex] = dynamicConnectionState.withItem(type, stack);
+        }
     }
 }

@@ -15,7 +15,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraftforge.event.level.NoteBlockEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -38,16 +37,7 @@ public class ConduitBlockItem extends BlockItem {
         Level level = context.getLevel();
         @Nullable
         Player player = context.getPlayer();
-        if (level.getBlockEntity(context.getHitResult().getBlockPos()) instanceof ConduitBlockEntity conduit) {
-            Optional<InteractionResult> interactionResult = handleRightClickAction(conduit, context);
-            if (interactionResult.isPresent())
-                return interactionResult.get();
-        }
-        if (level.getBlockEntity(context.getHitResult().getBlockPos().relative(context.getHitResult().getDirection().getOpposite())) instanceof ConduitBlockEntity conduit) {
-            Optional<InteractionResult> interactionResult = handleRightClickAction(conduit, context);
-            if (interactionResult.isPresent())
-                return interactionResult.get();
-        }
+
         if (!context.canPlace()) {
             return InteractionResult.FAIL;
         } else {
@@ -79,20 +69,7 @@ public class ConduitBlockItem extends BlockItem {
         }
     }
 
-    private Optional<InteractionResult> handleRightClickAction(ConduitBlockEntity conduit, BlockPlaceContext context) {
-        RightClickAction action = conduit.addType(type.get());
-        @Nullable
-        Player player = context.getPlayer();
-        if (action instanceof RightClickAction.Upgrade upgradeAction) {
-            if (player != null && !player.getAbilities().instabuild) {
-                context.getItemInHand().shrink(1);
-                player.getInventory().placeItemBackInInventory(upgradeAction.getNotInConduit().getConduitItem().getDefaultInstance());
-            }
-            return Optional.of(InteractionResult.SUCCESS);
-        } else if (action instanceof RightClickAction.Insert && player != null && !player.getAbilities().instabuild) {
-            context.getItemInHand().shrink(1);
-            return Optional.of(InteractionResult.SUCCESS);
-        }
-        return Optional.empty();
+    public IConduitType getType() {
+        return type.get();
     }
 }

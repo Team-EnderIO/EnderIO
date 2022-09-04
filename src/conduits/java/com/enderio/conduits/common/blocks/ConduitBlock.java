@@ -1,16 +1,25 @@
 package com.enderio.conduits.common.blocks;
 
+import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
+import com.enderio.conduits.common.blockentity.ConduitBundle;
+import com.enderio.conduits.common.blockentity.action.RightClickAction;
+import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
+import com.enderio.conduits.common.blockentity.connection.IConnectionState;
+import com.enderio.conduits.common.blockentity.connection.StaticConnectionStates;
 import com.enderio.conduits.common.init.ConduitBlockEntities;
+import com.enderio.conduits.common.items.ConduitBlockItem;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -33,6 +42,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -105,15 +115,122 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof ConduitBlockEntity conduit) {
-            conduit.getShape().getConduit(hit.getBlockPos(), hit); //TODO: Yeta use
+            if (!player.getItemInHand(hand).isEmpty()) {
+                Optional<InteractionResult> interactionResult = addConduit(conduit, player, player.getItemInHand(hand), level.isClientSide());
+                if (interactionResult.isPresent())
+                    return interactionResult.get();
+                interactionResult = handleYeta(conduit, player, player.getItemInHand(hand), hit, level.isClientSide());
+                if (interactionResult.isPresent())
+                    return interactionResult.get();
+            }
+            Optional<InteractionResult> interactionResult = handleScreen(conduit, player, hit, level.isClientSide());
+            if (interactionResult.isPresent())
+                return interactionResult.get();
         }
         return super.use(state, level, pos, player, hand, hit);
+    }
+
+    private Optional<InteractionResult> addConduit(ConduitBlockEntity conduit, Player player, ItemStack stack, boolean isClientSide) {
+        if (!(stack.getItem() instanceof ConduitBlockItem conduitBlockItem))
+            return Optional.empty();
+
+        RightClickAction action = conduit.addType(conduitBlockItem.getType());
+        if (action instanceof RightClickAction.Upgrade upgradeAction) {
+            if (!player.getAbilities().instabuild) {
+                stack.shrink(1);
+                player.getInventory().placeItemBackInInventory(upgradeAction.getNotInConduit().getConduitItem().getDefaultInstance());
+            }
+            return Optional.of(InteractionResult.sidedSuccess(isClientSide));
+        } else if (action instanceof RightClickAction.Insert) {
+            if (!player.getAbilities().instabuild)
+                stack.shrink(1);
+            return Optional.of(InteractionResult.sidedSuccess(isClientSide));
+        }
+        return Optional.empty();
+    }
+
+    private Optional<InteractionResult> handleYeta(ConduitBlockEntity conduit, Player player, ItemStack stack, BlockHitResult hit, boolean isClientSide) {
+
+        return Optional.empty();
+    }
+
+    private Optional<InteractionResult> handleScreen(ConduitBlockEntity conduit, Player player, BlockHitResult hit, boolean isClientSide) {
+        Optional<OpenInformation> openInformation = getOpenInformation(conduit, hit);
+        if (openInformation.isPresent()) {
+            if (player instanceof ServerPlayer serverPlayer) {
+                NetworkHooks.openScreen(serverPlayer, conduit.menuProvider(openInformation.get().direction(), openInformation.get().type()), buf -> {
+                    buf.writeBlockPos(conduit.getBlockPos());
+                    buf.writeEnum(openInformation.get().direction());
+                    buf.writeInt(ConduitTypes.getRegistry().getID(openInformation.get().type()));
+                });
+            }
+            return Optional.of(InteractionResult.sidedSuccess(isClientSide));
+        }
+        return Optional.empty();
+    }
+
+    private Optional<OpenInformation> getOpenInformation(ConduitBlockEntity conduit, BlockHitResult hit) {
+        @Nullable
+        IConduitType type = conduit.getShape().getConduit(hit.getBlockPos(), hit);
+        @Nullable
+        Direction direction = conduit.getShape().getDirection(hit.getBlockPos(), hit);
+        //TODO figure our server check
+        if (direction != null && type != null) {
+            if (canBeOrIsValidConnection(conduit, type, direction)) {
+                return Optional.of(new OpenInformation(direction, type));
+            }
+        }
+
+        if (type != null) {
+            direction = hit.getDirection();
+            if (canBeValidConnection(conduit, type, direction)) {
+                return Optional.of(new OpenInformation(direction, type));
+            }
+        }
+        if (type != null) {
+            for (Direction potential: Direction.values()) {
+                if (canBeValidConnection(conduit, type, potential))
+                    return Optional.of(new OpenInformation(potential, type));
+            }
+        }
+        ConduitBundle bundle = conduit.getBundle();
+        //fallback
+        for (Direction potential: Direction.values()) {
+            if (bundle.getConnection(potential).isEnd()) {
+                for (IConduitType potentialType: bundle.getTypes()) {
+                    if (bundle.getConnection(potential).getConnectionState(potentialType, bundle) instanceof DynamicConnectionState)
+                        return Optional.of(new OpenInformation(potential, potentialType));
+                }
+                throw new IllegalStateException("couldn't find connection even though it should be present");
+            }
+        }
+        for (Direction potential: Direction.values()) {
+            if (!(conduit.getLevel().getBlockEntity(conduit.getBlockPos().relative(potential)) instanceof ConduitBlockEntity)) {
+                for (IConduitType potentialType: bundle.getTypes()) {
+                    if (canBeValidConnection(conduit, potentialType, potential)) {
+                        return Optional.of(new OpenInformation(potential, potentialType));
+                    }
+                }
+            }
+        }
+
+        return Optional.empty();
+    }
+
+    public static boolean canBeOrIsValidConnection(ConduitBlockEntity conduit, IConduitType type, Direction direction) {
+        return conduit.getBundle().getConnection(direction).getConnectionState(type,conduit.getBundle()) instanceof DynamicConnectionState
+            || canBeValidConnection(conduit, type, direction);
+    }
+    public static boolean canBeValidConnection(ConduitBlockEntity conduit, IConduitType type, Direction direction) {
+        IConnectionState connectionState = conduit.getBundle().getConnection(direction).getConnectionState(type, conduit.getBundle());
+        return connectionState instanceof StaticConnectionStates state
+                && state == StaticConnectionStates.DISABLED
+                && !(conduit.getLevel().getBlockEntity(conduit.getBlockPos().relative(direction)) instanceof ConduitBlockEntity);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-
         return (level1, pos, state1, blockEntity) -> {
             if (blockEntity instanceof ConduitBlockEntity conduitBlockEntity)
                 conduitBlockEntity.everyTick();
@@ -132,5 +249,8 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
             }
         }
         return false;
+    }
+
+    private record OpenInformation(Direction direction, IConduitType type) {
     }
 }

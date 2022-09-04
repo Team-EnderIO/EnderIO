@@ -36,8 +36,8 @@ public class NodeIdentifier implements GraphObject<Mergeable.Dummy> {
         this.graph = graph;
     }
 
-    public void pushState(Direction direction, @Nullable ColorControl input, @Nullable ColorControl output) {
-        Optional<IOState> ioState = IOState.of(input, output);
+    public void pushState(Direction direction, @Nullable ColorControl insert, @Nullable ColorControl extract) {
+        Optional<IOState> ioState = IOState.of(insert, extract);
         if (ioState.isPresent()) {
             ioStates.put(direction, ioState.get());
         } else {
@@ -57,13 +57,13 @@ public class NodeIdentifier implements GraphObject<Mergeable.Dummy> {
         return pos;
     }
 
-    public record IOState(Optional<ColorControl> in, Optional<ColorControl> out) {
+    public record IOState(Optional<ColorControl> insert, Optional<ColorControl> extract) {
 
-        public boolean isInput() {
-            return in().isPresent();
+        public boolean isInsert() {
+            return insert().isPresent();
         }
-        public boolean isOutput() {
-            return out().isPresent();
+        public boolean isExtract() {
+            return extract().isPresent();
         }
 
         private static Optional<IOState> of(@Nullable ColorControl in, @Nullable ColorControl out) {

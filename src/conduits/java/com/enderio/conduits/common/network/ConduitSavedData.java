@@ -243,8 +243,8 @@ public class ConduitSavedData extends SavedData {
                             for (Direction direction: Direction.values()) {
                                 if (serverLevel.isLoaded(nodeIdentifier.getPos()) && serverLevel.shouldTickBlocksAt(nodeIdentifier.getPos())) {
                                     nodeIdentifier.getIOState(direction).ifPresent(ioState -> {
-                                        ioState.in().ifPresent(color -> inputs.get(color).add(new ConnectorPos(nodeIdentifier.getPos(), direction)));
-                                        ioState.out().ifPresent(color -> outputs.get(color).add(new ConnectorPos(nodeIdentifier.getPos(), direction)));
+                                        ioState.extract().ifPresent(color -> inputs.get(color).add(new ConnectorPos(nodeIdentifier.getPos(), direction)));
+                                        ioState.insert().ifPresent(color -> outputs.get(color).add(new ConnectorPos(nodeIdentifier.getPos(), direction)));
                                     });
                                 }
                             }

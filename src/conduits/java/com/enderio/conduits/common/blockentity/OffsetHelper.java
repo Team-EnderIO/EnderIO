@@ -2,7 +2,7 @@ package com.enderio.conduits.common.blockentity;
 
 import com.enderio.EnderIO;
 import com.enderio.base.common.util.ThrowableUtil;
-import com.enderio.core.common.util.Vector2i;
+import com.enderio.api.misc.Vector2i;
 import net.minecraft.Util;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;

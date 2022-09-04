@@ -39,9 +39,9 @@ public class EnderBlockEntity extends BlockEntity {
 
     private final List<EnderDataSlot<?>> dataSlots = new ArrayList<>();
 
-    private final List<Runnable> afterDataSync = new ArrayList<>();
-
     private final List<EnderDataSlot<?>> clientDecidingDataSlots = new ArrayList<>();
+
+    private final List<Runnable> afterDataSync = new ArrayList<>();
 
     private final Map<Capability<?>, IEnderCapabilityProvider<?>> capabilityProviders = new HashMap<>();
 

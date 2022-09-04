@@ -3,6 +3,7 @@ package com.enderio.conduits.client;
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.IConduitType;
+import com.enderio.conduits.client.model.ConduitGeometry;
 import com.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.core.common.blockentity.ColorControl;
 import net.minecraft.client.color.block.BlockColor;
@@ -37,8 +38,8 @@ public class ConduitClientSetup {
     public static final ResourceLocation BOX = loc("block/box/1x1x1");
     public static final ResourceLocation CONDUIT_CONNECTION_BOX = loc("block/conduit_connection_box");
     public static final ResourceLocation CONDUIT_IO_IN = loc("block/io/input");
-    public static final ResourceLocation CONDUIT_IO_IN_OUT = loc("block/io/output");
-    public static final ResourceLocation CONDUIT_IO_OUT = loc("block/io/in_out");
+    public static final ResourceLocation CONDUIT_IO_IN_OUT = loc("block/io/in_out");
+    public static final ResourceLocation CONDUIT_IO_OUT = loc("block/io/output");
     public static final ResourceLocation CONDUIT_IO_REDSTONE = loc("block/io/redstone");
 
     private ConduitClientSetup() {}

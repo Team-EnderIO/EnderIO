@@ -1,4 +1,4 @@
-package com.enderio.conduits.client;
+package com.enderio.conduits.client.model;
 
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.core.client.RenderUtil;

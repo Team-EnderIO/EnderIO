@@ -1,4 +1,4 @@
-package com.enderio.conduits.client;
+package com.enderio.conduits.client.model;
 
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.base.common.blockentity.RedstoneControl;
@@ -9,12 +9,10 @@ import com.enderio.conduits.common.blockentity.ConduitConnection;
 import com.enderio.conduits.common.blockentity.OffsetHelper;
 import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
 import com.enderio.conduits.common.blockentity.connection.IConnectionState;
-import com.enderio.core.common.util.Vector2i;
 import com.enderio.core.data.model.EIOModel;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Transformation;
 import com.mojang.math.Vector3f;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -66,13 +64,13 @@ public class ConduitBlockModel implements IDynamicBakedModel {
 
                         IConnectionState connectionState = connection.getConnectionState(i);
                         if (connectionState instanceof DynamicConnectionState dyn) {
-                            IQuadTransformer color = rotationTranslation.andThen(new ColorQuadTransformer(dyn.in(), dyn.out()));
+                            IQuadTransformer color = rotationTranslation.andThen(new ColorQuadTransformer(dyn.insert(), dyn.extract()));
                             BakedModel model = null;
-                            if (dyn.out() != null && dyn.in() != null) {
+                            if (dyn.isExtract() && dyn.isInsert()) {
                                 model = modelOf(CONDUIT_IO_IN_OUT);
-                            } else if (dyn.in() != null) {
+                            } else if (dyn.isInsert()) {
                                 model = modelOf(CONDUIT_IO_IN);
-                            } else if (dyn.out() != null) {
+                            } else if (dyn.isExtract()) {
                                 model = modelOf(CONDUIT_IO_OUT);
                             }
                             if (model != null)

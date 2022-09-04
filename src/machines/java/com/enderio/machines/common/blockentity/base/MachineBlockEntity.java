@@ -25,6 +25,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -456,7 +457,8 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     public boolean stillValid(Player pPlayer) {
         if (this.level.getBlockEntity(this.worldPosition) != this)
             return false;
-        return pPlayer.distanceToSqr(this.worldPosition.getX() + 0.5D, this.worldPosition.getY() + 0.5D, this.worldPosition.getZ() + 0.5D) <= 64.0D;
+        return pPlayer.distanceToSqr(this.worldPosition.getX() + 0.5D, this.worldPosition.getY() + 0.5D, this.worldPosition.getZ() + 0.5D) <= pPlayer.getAttributeValue(
+            ForgeMod.REACH_DISTANCE.get());
     }
 
     public RedstoneControl getRedstoneControl() {

@@ -14,6 +14,7 @@ import net.minecraft.nbt.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.loading.FMLLoader;
+import net.minecraftforge.fml.util.thread.EffectiveSide;
 
 import java.util.*;
 
@@ -144,6 +145,19 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
                 connections.get(dir).removeType(invalidTypes.get(i));
             }
         }
+        //push change from clientsync to node TODO: move to aftersyncrunnable
+        if (EffectiveSide.get().isServer()) {
+            for (IConduitType type: types) {
+                if (nodes.containsKey(type)) {
+                    for (Direction direction : Direction.values()) {
+                        if (getConnection(direction).getConnectionState(type, this) instanceof DynamicConnectionState dyn) {
+                            nodes.get(type).pushState(direction, dyn.isInsert() ? dyn.insert() : null, dyn.isExtract() ? dyn.extract() : null);
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
     //TODO: RFC
@@ -187,7 +201,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
             if (index >= 0) {
                 var state = connection.getConnectionState(index);
                 if (state instanceof DynamicConnectionState dynamicState) {
-                    node.pushState(direction, dynamicState.in(), dynamicState.out());
+                    node.pushState(direction, dynamicState.isInsert() ? dynamicState.insert() : null, dynamicState.isExtract() ? dynamicState.extract() : null);
                 }
             }
         }

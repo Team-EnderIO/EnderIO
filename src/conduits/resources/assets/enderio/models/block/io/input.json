@@ -1,7 +1,7 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"1": "enderio:block/item_conduit_out"
+		"1": "enderio:block/item_conduit_in"
 	},
 	"elements": [
 		{

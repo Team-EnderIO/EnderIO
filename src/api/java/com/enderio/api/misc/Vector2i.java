@@ -1,4 +1,4 @@
-package com.enderio.core.common.util;
+package com.enderio.api.misc;
 
 import java.util.Objects;
 
