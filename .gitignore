@@ -1,6 +1,9 @@
 # OSX
 .DS_Store
 
+# Datagen Caches
+src/generated/resources/.cache
+
 # eclipse
 bin
 *.launch

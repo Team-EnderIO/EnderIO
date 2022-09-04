@@ -26,8 +26,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import org.apache.logging.log4j.LogManager;
@@ -125,13 +125,13 @@ public class ColdFireIgniter extends Item implements IMultiCapabilityItem {
     @Nullable
     @Override
     public MultiCapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt, MultiCapabilityProvider provider) {
-        provider.addSimple(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY,
+        provider.addSimple(ForgeCapabilities.FLUID_HANDLER_ITEM,
             new AcceptingFluidItemHandler(stack, 1000, EIOTags.Fluids.COLD_FIRE_IGNITER_FUEL)
-                .getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY));
+                .getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM));
         return provider;
     }
 
     private Optional<IFluidHandlerItem> getTankCap(ItemStack stack) {
-        return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).resolve();
+        return stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
     }
 }

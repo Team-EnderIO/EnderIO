@@ -25,7 +25,7 @@ public class AutoSmeltHandler {
     public static void handleBlockBreak(BlockEvent.BreakEvent event) {
         // Checks if running on server and enchant is on tool
         if (!event.getLevel().isClientSide()
-            && EnchantmentHelper.getItemEnchantmentLevel(EIOEnchantments.AUTO_SMELT.get(), event.getPlayer().getMainHandItem()) > 0) {
+            && event.getPlayer().getMainHandItem().getEnchantmentLevel(EIOEnchantments.AUTO_SMELT.get()) > 0) {
             ServerLevel serverWorld = ((ServerLevel) event.getLevel()); // Casts IWorld to ServerWorld
             LootContext.Builder lootcontext$builder = (new LootContext.Builder(serverWorld)
                 .withRandom(serverWorld.random)

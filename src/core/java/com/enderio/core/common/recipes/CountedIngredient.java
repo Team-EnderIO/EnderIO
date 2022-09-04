@@ -23,7 +23,7 @@ public record CountedIngredient(Ingredient ingredient, int count) implements Pre
     /**
      * An empty ingredient.
      */
-    public static CountedIngredient EMPTY = new CountedIngredient(Ingredient.EMPTY, 0);
+    public static final CountedIngredient EMPTY = new CountedIngredient(Ingredient.EMPTY, 0);
 
     public static CountedIngredient of() {
         return EMPTY;

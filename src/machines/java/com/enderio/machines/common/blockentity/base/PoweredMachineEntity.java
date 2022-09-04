@@ -19,8 +19,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
@@ -117,7 +117,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
         // Transmit power out all sides.
         for (Direction side : Direction.values()) {
             // Get our energy handler, this will handle all sidedness tests for us.
-            getCapability(CapabilityEnergy.ENERGY, side).resolve().ifPresent(selfHandler -> {
+            getCapability(ForgeCapabilities.ENERGY, side).resolve().ifPresent(selfHandler -> {
                 // If we can't extract out this side, continue
                 if (selfHandler.getEnergyStored() <= 0 || !selfHandler.canExtract())
                     return;
@@ -166,7 +166,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
         super.populateCaches(direction, neighbor);
 
         if (neighbor != null) {
-            energyHandlerCache.put(direction, addInvalidationListener(neighbor.getCapability(CapabilityEnergy.ENERGY, direction.getOpposite())));
+            energyHandlerCache.put(direction, addInvalidationListener(neighbor.getCapability(ForgeCapabilities.ENERGY, direction.getOpposite())));
         } else {
             energyHandlerCache.put(direction, LazyOptional.empty());
         }
@@ -259,7 +259,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
-        if (cap == CapabilityEnergy.ENERGY && side == null) {
+        if (cap == ForgeCapabilities.ENERGY && side == null) {
             return energyStorageCap.cast();
         }
         return super.getCapability(cap, side);

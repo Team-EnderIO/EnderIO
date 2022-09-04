@@ -12,7 +12,7 @@ public class ClientEventHandler {
     @SubscribeEvent
     public static void clientTick(TickEvent.ClientTickEvent e) {
         if (e.phase == TickEvent.Phase.END && Minecraft.getInstance().player != null) {
-            if (Minecraft.getInstance().player.containerMenu instanceof SyncedMenu syncedMenu) {
+            if (Minecraft.getInstance().player.containerMenu instanceof SyncedMenu<?> syncedMenu) {
                 syncedMenu.clientTick();
             }
         }

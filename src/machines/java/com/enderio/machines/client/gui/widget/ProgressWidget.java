@@ -66,12 +66,12 @@ public abstract class ProgressWidget extends AbstractWidget {
         }
     }
 
-    protected Supplier<Float> progressSupplier;
+    protected final Supplier<Float> progressSupplier;
 
     private final Screen screen;
     protected final int u;
     protected final int v;
-    private boolean tooltip;
+    private final boolean tooltip;
 
     protected ProgressWidget(Screen screen, Supplier<Float> progressSupplier, int x, int y, int width, int height, int u, int v, boolean tooltip) {
         super(x, y, width, height, Component.empty());

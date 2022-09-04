@@ -23,6 +23,7 @@ public class ColdFireBlock extends FireBlock {
         //don't spread
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected boolean canBurn(BlockState state) {
         return true;
