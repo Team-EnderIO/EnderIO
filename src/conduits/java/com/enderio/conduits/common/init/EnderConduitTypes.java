@@ -3,6 +3,7 @@ package com.enderio.conduits.common.init;
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.IConduitType;
+import com.enderio.conduits.common.blockentity.PowerConduitType;
 import com.enderio.conduits.common.blockentity.SimpleConduitType;
 import com.enderio.conduits.common.blockentity.TieredConduit;
 import net.minecraft.resources.ResourceLocation;
@@ -17,7 +18,7 @@ public class EnderConduitTypes {
     public static final RegistryObject<IConduitType> REDSTONE = ConduitTypes.CONDUIT_TYPES.register("redstone", () -> new SimpleConduitType(EnderIO.loc("block/conduit/redstone")));
 
     private static RegistryObject<IConduitType> powerConduit(int tier) {
-        return ConduitTypes.CONDUIT_TYPES.register("power" + tier, () -> new TieredConduit(EnderIO.loc("block/conduit/power" + tier), new ResourceLocation("forge", "power"), tier, null));
+        return ConduitTypes.CONDUIT_TYPES.register("power" + tier, () -> new PowerConduitType(EnderIO.loc("block/conduit/power" + tier), tier, null));
     }
 
     public static void register() {}

@@ -1,6 +1,6 @@
 package com.enderio.conduits.client.model;
 
-import com.enderio.core.common.blockentity.ColorControl;
+import com.enderio.api.misc.ColorControl;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraftforge.client.model.IQuadTransformer;
 import org.jetbrains.annotations.Nullable;

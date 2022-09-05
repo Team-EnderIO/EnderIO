@@ -1,6 +1,6 @@
-package com.enderio.conduits.common.network;
+package com.enderio.api.conduit;
 
-import com.enderio.core.common.blockentity.ColorControl;
+import com.enderio.api.misc.ColorControl;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
 import dev.gigaherz.graph3.Mergeable;
@@ -37,12 +37,7 @@ public class NodeIdentifier implements GraphObject<Mergeable.Dummy> {
     }
 
     public void pushState(Direction direction, @Nullable ColorControl insert, @Nullable ColorControl extract) {
-        Optional<IOState> ioState = IOState.of(insert, extract);
-        if (ioState.isPresent()) {
-            ioStates.put(direction, ioState.get());
-        } else {
-            ioStates.remove(direction);
-        }
+        ioStates.put(direction, IOState.of(insert, extract));
     }
 
     public Optional<IOState> getIOState(Direction direction) {
@@ -66,10 +61,8 @@ public class NodeIdentifier implements GraphObject<Mergeable.Dummy> {
             return extract().isPresent();
         }
 
-        private static Optional<IOState> of(@Nullable ColorControl in, @Nullable ColorControl out) {
-            if (in == null && out == null)
-                return Optional.empty();
-            return Optional.of(new IOState(Optional.ofNullable(in), Optional.ofNullable(out)));
+        private static IOState of(@Nullable ColorControl in, @Nullable ColorControl out) {
+            return new IOState(Optional.ofNullable(in), Optional.ofNullable(out));
         }
     }
 }

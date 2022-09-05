@@ -2,7 +2,7 @@ package com.enderio.conduits.common.blockentity;
 
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.IConduitScreenData;
-import com.enderio.api.conduit.IConduitTicker;
+import com.enderio.api.conduit.ticker.IConduitTicker;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.conduits.common.init.ConduitItems;
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
-public class TieredConduit implements IConduitType {
+public abstract class TieredConduit implements IConduitType {
     private final ResourceLocation texture;
     private final ResourceLocation type;
     private final int tier;
@@ -83,11 +83,6 @@ public class TieredConduit implements IConduitType {
     @Override
     public Vector2i getTexturePosition() {
         return new Vector2i(0, 24*getTier());
-    }
-
-    @Override
-    public IConduitTicker getTicker() {
-        return new IConduitTicker() {};
     }
 
     @Override

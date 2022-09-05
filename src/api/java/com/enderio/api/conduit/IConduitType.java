@@ -1,5 +1,6 @@
 package com.enderio.api.conduit;
 
+import com.enderio.api.conduit.ticker.IConduitTicker;
 import com.enderio.api.misc.IIcon;
 import com.enderio.api.misc.Vector2i;
 import net.minecraft.core.BlockPos;

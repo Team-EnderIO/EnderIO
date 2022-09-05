@@ -2,12 +2,9 @@ package com.enderio.conduits.common.blockentity;
 
 import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.IConduitType;
+import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.conduits.common.blockentity.action.RightClickAction;
 import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
-import com.enderio.conduits.common.blockentity.connection.IConnectionState;
-import com.enderio.conduits.common.blockentity.connection.StaticConnectionStates;
-import com.enderio.conduits.common.network.NodeIdentifier;
-import com.enderio.core.common.blockentity.ColorControl;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.*;
@@ -64,8 +61,8 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         if (types.stream().anyMatch(existingConduit -> !existingConduit.canBeInSameBlock(type)))
             return new RightClickAction.Blocked();
         //sort the list, so order is consistent
-        int id = ConduitTypes.getRegistry().getID(type);
-        var addBefore = types.stream().filter(existing -> ConduitTypes.getRegistry().getID(existing) > id).findFirst();
+        int id = ConduitTypeSorter.getSortIndex(type);
+        var addBefore = types.stream().filter(existing -> ConduitTypeSorter.getSortIndex(existing) > id).findFirst();
         if (addBefore.isPresent()) {
             var value = types.indexOf(addBefore.get());
             types.add(value, type);

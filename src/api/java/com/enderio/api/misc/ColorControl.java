@@ -1,8 +1,5 @@
-package com.enderio.core.common.blockentity;
+package com.enderio.api.misc;
 
-import com.enderio.core.EnderCore;
-import com.enderio.api.misc.IIcon;
-import com.enderio.api.misc.Vector2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -26,7 +23,7 @@ public enum ColorControl implements IIcon {
     BLACK(0xFF1E1B1B, 0xFF242020),
     RED(0xFFB3312C, 0xFFD63A34);
 
-    private static final ResourceLocation TEXTURE = EnderCore.loc("textures/gui/icons/color_control.png");
+    private static final ResourceLocation TEXTURE = new ResourceLocation("enderio", "textures/gui/icons/color_control.png");
     private static final Vector2i SIZE = new Vector2i(12, 12);
     private final Vector2i pos;
     private final int color;

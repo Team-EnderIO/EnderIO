@@ -3,7 +3,7 @@ package com.enderio.conduits.common.blockentity.connection;
 import com.enderio.api.UseOnly;
 import com.enderio.base.common.blockentity.RedstoneControl;
 import com.enderio.conduits.common.blockentity.SlotType;
-import com.enderio.core.common.blockentity.ColorControl;
+import com.enderio.api.misc.ColorControl;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.LogicalSide;
 
