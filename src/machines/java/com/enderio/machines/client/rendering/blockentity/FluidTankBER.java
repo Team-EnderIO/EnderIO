@@ -135,10 +135,11 @@ public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
 
     public static class AnimationInformation {
         private int currentTarget;
-        private Animation animation = null;
-        private Fluid fluid = null;
+        private Fluid fluid;
+        @Nullable
+        private Animation animation;
 
-        public AnimationInformation(@Nullable Fluid fluid, int currentTarget) {
+        public AnimationInformation(Fluid fluid, int currentTarget) {
             this.fluid = fluid;
             this.currentTarget = currentTarget;
         }
@@ -155,6 +156,7 @@ public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
             this.currentTarget = currentTarget;
         }
 
+        @Nullable
         public Animation getAnimation() {
             return animation;
         }
@@ -167,7 +169,7 @@ public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
             return fluid;
         }
 
-        public void setFluid(@Nullable Fluid fluid) {
+        public void setFluid(Fluid fluid) {
             this.fluid = fluid;
         }
     }
