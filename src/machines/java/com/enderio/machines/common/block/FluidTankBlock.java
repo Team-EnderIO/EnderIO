@@ -46,12 +46,7 @@ public class FluidTankBlock extends MachineBlock {
         // Code adapted from BucketItem class.
         SoundEvent sound = fluid.getFluidType().getSound(player, level, blockPos, SoundActions.BUCKET_FILL);
         if (sound == null) {
-            Optional<SoundEvent> optionalSound = fluid.getPickupSound();
-            if (optionalSound.isPresent()) {
-                sound = optionalSound.get();
-            } else {
-                sound = SoundEvents.BUCKET_FILL;
-            }
+            sound = fluid.getPickupSound().orElse(SoundEvents.BUCKET_FILL);
         }
 
         level.playSound(player, blockPos, sound, SoundSource.BLOCKS, 1.0f, 1.0f);
@@ -123,7 +118,8 @@ public class FluidTankBlock extends MachineBlock {
         }
 
         Optional<IFluidHandlerItem> fluidHandlerCap = itemStack
-                .getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).resolve();
+                .getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY)
+                .resolve();
         if (!fluidHandlerCap.isPresent()) {
             return null;
         }
@@ -131,14 +127,15 @@ public class FluidTankBlock extends MachineBlock {
         // Read the information for the Fluid in the block.
         IFluidHandlerItem fluidHandler = fluidHandlerCap.get();
         FluidStack blockFluidStack = fluidTankBlockEntity.getFluidTank().getFluid();
-        boolean blockIsEmpty = blockFluidStack == null ? true : blockFluidStack.getFluid() == Fluids.EMPTY;
+        boolean blockIsEmpty = blockFluidStack == null ? true : blockFluidStack.isEmpty();
 
         // Read the information for the Fluid in the item.
         boolean itemIsEmpty = false;
         for (int i = 0; i < fluidHandler.getTanks(); i++) {
-            itemIsEmpty = fluidHandler.getFluidInTank(i).getFluid() == Fluids.EMPTY;
-            if (itemIsEmpty)
+            if (fluidHandler.getFluidInTank(i).isEmpty()) {
+                itemIsEmpty = true;
                 break;
+            }
         }
 
         // If the block and the item are both empty: pass.
@@ -151,13 +148,13 @@ public class FluidTankBlock extends MachineBlock {
         Fluid fluid;
         // If the block is empty, and the item is not empty: fill the block from the
         // item.
-        if (blockIsEmpty && !itemIsEmpty) {
+        if (blockIsEmpty) {
             interactionType = InteractionType.PLACE;
             result = fluidTankBlockEntity.fillTankFromItem(fluidHandler);
             fluid = fluidTankBlockEntity.getFluidTank().getFluid().getFluid();
             // If the block is not empty, and the item is empty: fill the item from the
             // block.
-        } else if (!blockIsEmpty && itemIsEmpty) {
+        } else if (itemIsEmpty) {
             interactionType = InteractionType.PICKUP;
             fluid = fluidTankBlockEntity.getFluidTank().getFluid().getFluid();
             result = fluidTankBlockEntity.drainTankWithItem(fluidHandler);
@@ -190,6 +187,7 @@ public class FluidTankBlock extends MachineBlock {
                     } else {
                         playPlaceSound(pPlayer, pLevel, result.getMiddle(), pPos);
                     }
+                    return result.getLeft();
                 case FAIL:
                     return result.getLeft();
                 default:
