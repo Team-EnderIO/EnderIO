@@ -25,6 +25,7 @@ import net.minecraft.world.item.MobBucketItem;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -90,11 +91,6 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public MachineTier getTier() {
-        return MachineTier.STANDARD;
-    }
-
-    @Override
     public void serverTick() {
         if (canActSlow()) {
             fillInternal();
@@ -156,7 +152,6 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
                     } else {
                         outputItem.grow(1);
                     }
-                }
             } else {
                 if (outputItem.isEmpty()) {
                     Pair<Integer, IFluidHandlerItem> result = drainTankWithItem(inputItem);
@@ -206,15 +201,16 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     @Override
     public MachineInventoryLayout getInventoryLayout() {
         return MachineInventoryLayout
-                .builder(false)
-                .inputSlot((slot, stack) -> (stack.getItem() instanceof BucketItem bucketItem
-                        && bucketItem.getFluid() != Fluids.EMPTY && !(bucketItem instanceof MobBucketItem))
-                        || (!(stack.getItem() instanceof BucketItem) && stack
-                                .getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent()))
+                .builder()
+                .inputSlot((slot,
+                        stack) -> (stack.getItem() instanceof BucketItem bucketItem
+                                && bucketItem.getFluid() != Fluids.EMPTY && !(bucketItem instanceof MobBucketItem))
+                                || (!(stack.getItem() instanceof BucketItem)
+                                        && stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent()))
                 .outputSlot()
                 .inputSlot((slot,
                         stack) -> stack.getItem() == Items.BUCKET || (!(stack.getItem() instanceof BucketItem) && stack
-                                .getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY)
+                                .getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM)
                                 .isPresent()))
                 .outputSlot()
                 .build();

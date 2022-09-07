@@ -7,7 +7,6 @@ import com.google.common.collect.ImmutableMap;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.client.color.item.ItemColor;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -18,13 +17,14 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * Container helper for the fused glass/quartz blocks as theres a lot, and this will tidy stuff up.
  */
 public class GlassBlocks {
     public final BlockEntry<FusedQuartzBlock> CLEAR;
-    public Map<DyeColor, BlockEntry<FusedQuartzBlock>> COLORS;
+    public final Map<DyeColor, BlockEntry<FusedQuartzBlock>> COLORS;
 
     private final GlassIdentifier glassIdentifier;
 
@@ -45,6 +45,10 @@ public class GlassBlocks {
             );
         }
         COLORS = ImmutableMap.copyOf(tempMap);
+    }
+
+    public Stream<BlockEntry<FusedQuartzBlock>> getAllBlocks() {
+        return Stream.concat(Stream.of(CLEAR), COLORS.values().stream());
     }
 
     private ResourceLocation getModelFile() {
@@ -108,7 +112,7 @@ public class GlassBlocks {
                 .isRedstoneConductor(GlassBlocks::never)
                 .isSuffocating(GlassBlocks::never)
                 .isViewBlocking(GlassBlocks::never))
-            .item(FusedQuartzItem::new)
+            .item()
             .tab(() -> EIOCreativeTabs.BLOCKS)
             .tag(glassIdentifier.explosion_resistance() ? EIOTags.Items.FUSED_QUARTZ : EIOTags.Items.CLEAR_GLASS)
             .tag(EIOTags.Items.GLASS_TAGS.get(glassIdentifier))
@@ -135,7 +139,7 @@ public class GlassBlocks {
                 .isSuffocating(GlassBlocks::never)
                 .isViewBlocking(GlassBlocks::never)
                 .color(color.getMaterialColor()))
-            .item(FusedQuartzItem::new)
+            .item()
             .tab(() -> EIOCreativeTabs.BLOCKS)
             .tag(EIOTags.Items.GLASS_TAGS.get(glassIdentifier))
             .color(() -> () -> (ItemColor) (p_92672_, p_92673_) -> color.getMaterialColor().col)

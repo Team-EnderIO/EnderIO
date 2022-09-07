@@ -2,7 +2,6 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
-import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.FixedIOConfig;
@@ -32,18 +31,13 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
         container = new RecipeWrapper(getInventory());
     }
 
-    @Override
-    public MachineTier getTier() {
-        return MachineTier.STANDARD;
-    }
-
     public RecipeWrapper getContainer() {
         return container;
     }
 
     @Override
     public MachineInventoryLayout getInventoryLayout() {
-        return MachineInventoryLayout.builder(false)
+        return MachineInventoryLayout.builder()
             .inputSlot((slot, stack) -> stack.getItem() == Items.WRITABLE_BOOK)
             .inputSlot()
             .inputSlot((slot, stack) -> stack.is(Tags.Items.GEMS_LAPIS))

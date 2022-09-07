@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:copy_nbt",
+              "ops": [
+                {
+                  "op": "replace",
+                  "source": "",
+                  "target": "BlockEntityTag"
+                }
+              ],
+              "source": {
+                "type": "enderio:improved_context",
+                "target": "block_entity"
+              }
+            }
+          ],
+          "name": "enderio:primitive_alloy_smelter"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ]
+}

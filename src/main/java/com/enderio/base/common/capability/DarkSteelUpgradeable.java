@@ -1,8 +1,8 @@
 package com.enderio.base.common.capability;
 
+import com.enderio.EnderIO;
 import com.enderio.api.capability.IDarkSteelUpgradable;
 import com.enderio.api.capability.IDarkSteelUpgrade;
-import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
 import com.enderio.base.common.item.darksteel.upgrades.EmpoweredUpgrade;

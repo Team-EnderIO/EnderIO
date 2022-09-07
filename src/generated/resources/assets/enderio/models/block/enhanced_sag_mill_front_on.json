@@ -1,6 +1,0 @@
-{
-  "parent": "enderio:block/enhanced_sag_mill_front",
-  "textures": {
-    "front": "enderio:block/enhanced_sag_mill_front_on"
-  }
-}

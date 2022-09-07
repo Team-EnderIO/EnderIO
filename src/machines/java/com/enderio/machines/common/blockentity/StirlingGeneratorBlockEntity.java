@@ -1,12 +1,12 @@
 package com.enderio.machines.common.blockentity;
 
 import com.enderio.api.UseOnly;
-import com.enderio.api.capacitor.CapacitorKey;
+import com.enderio.api.capacitor.CapacitorModifier;
+import com.enderio.api.capacitor.FixedScalable;
+import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.core.common.sync.FloatDataSlot;
 import com.enderio.core.common.sync.SyncMode;
-import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.PowerGeneratingMachineEntity;
-import com.enderio.machines.common.init.MachineCapacitorKeys;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.menu.StirlingGeneratorMenu;
 import net.minecraft.core.BlockPos;
@@ -21,41 +21,10 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.LogicalSide;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class StirlingGeneratorBlockEntity extends PowerGeneratingMachineEntity {
-    public static class Simple extends StirlingGeneratorBlockEntity {
-        public Simple(BlockEntityType<?> type, BlockPos worldPosition,
-            BlockState blockState) {
-            super(MachineCapacitorKeys.SIMPLE_STIRLING_GENERATOR_ENERGY_CAPACITY.get(),
-                MachineCapacitorKeys.DEV_ENERGY_TRANSFER.get(),
-                MachineCapacitorKeys.DEV_ENERGY_CONSUME.get(),
-                type, worldPosition, blockState);
-        }
-
-        @Override
-        public MachineTier getTier() {
-            return MachineTier.SIMPLE;
-        }
-
-        @Override
-        public int getEnergyLeakPerSecond() {
-            return 2;
-        }
-    }
-
-    public static class Standard extends StirlingGeneratorBlockEntity {
-        public Standard(BlockEntityType<?> type, BlockPos worldPosition,
-            BlockState blockState) {
-            super(MachineCapacitorKeys.STIRLING_GENERATOR_ENERGY_CAPACITY.get(),
-                MachineCapacitorKeys.DEV_ENERGY_TRANSFER.get(),
-                MachineCapacitorKeys.DEV_ENERGY_CONSUME.get(),
-                type, worldPosition, blockState);
-        }
-
-        @Override
-        public MachineTier getTier() {
-            return MachineTier.STANDARD;
-        }
-    }
+public class StirlingGeneratorBlockEntity extends PowerGeneratingMachineEntity {
+    public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, () -> 100000f);
+    public static final QuadraticScalable TRANSFER = new QuadraticScalable(CapacitorModifier.ENERGY_TRANSFER, () -> 120f);
+    public static final FixedScalable USAGE = new FixedScalable(() -> 0f);
 
     private int burnTime;
     private int burnDuration;
@@ -63,17 +32,17 @@ public abstract class StirlingGeneratorBlockEntity extends PowerGeneratingMachin
     @UseOnly(LogicalSide.CLIENT)
     private float clientBurnProgress;
 
-    public StirlingGeneratorBlockEntity(CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey consumptionKey, BlockEntityType<?> type, BlockPos worldPosition,
+    public StirlingGeneratorBlockEntity(BlockEntityType<?> type, BlockPos worldPosition,
         BlockState blockState) {
-        super(capacityKey, transferKey, consumptionKey, type, worldPosition, blockState);
-
+        super(CAPACITY, TRANSFER, USAGE, type, worldPosition, blockState);
         addDataSlot(new FloatDataSlot(this::getBurnProgress, p -> clientBurnProgress = p, SyncMode.GUI));
     }
 
     @Override
     public MachineInventoryLayout getInventoryLayout() {
-        return MachineInventoryLayout.builder(getTier() != MachineTier.SIMPLE)
+        return MachineInventoryLayout.builder()
             .inputSlot((slot, stack) -> ForgeHooks.getBurnTime(stack, RecipeType.SMELTING) > 0)
+            .capacitor()
             .build();
     }
 

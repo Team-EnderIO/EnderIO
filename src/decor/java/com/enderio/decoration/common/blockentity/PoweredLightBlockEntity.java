@@ -1,13 +1,8 @@
 package com.enderio.decoration.common.blockentity;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-
 import com.enderio.decoration.common.block.light.Light;
 import com.enderio.decoration.common.block.light.PoweredLight;
 import com.enderio.decoration.common.init.DecorBlocks;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -20,13 +15,17 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 public class PoweredLightBlockEntity extends BlockEntity{
 	private static final int RF_USE_TICK = 1;
-	static int spread = 2;
+	private static final int spread = 2;
 	private boolean update = true;
 	private boolean active = false;
 
@@ -58,20 +57,18 @@ public class PoweredLightBlockEntity extends BlockEntity{
 	 * Start the spreading algorithm by calling {@link PoweredLightBlockEntity.spreadNode} on each block recursively.
 	 */
 	private static void createNodes(Level level, BlockPos center, BlockState state) {
-		ArrayList<BlockPos> start = new ArrayList<BlockPos>();
-		ArrayList<BlockPos> prev = new ArrayList<BlockPos>();
-		ArrayList<BlockPos> blocked = new ArrayList<BlockPos>();
+		ArrayList<BlockPos> start = new ArrayList<>();
+		ArrayList<BlockPos> prev = new ArrayList<>();
+		ArrayList<BlockPos> blocked = new ArrayList<>();
 		HashSet<BlockPos> next;
 		start.add(center);
 		while (!start.isEmpty()) {
-			next = new HashSet<BlockPos>();
-			for (int i=0; i < start.size(); i++) {
-				next.addAll(spreadNode(level, start.get(i), center, blocked, prev));
-			}
-			prev = new ArrayList<>();
-			prev.addAll(start);
-			start = new ArrayList<BlockPos>();
-			start.addAll(next);
+			next = new HashSet<>();
+            for (BlockPos blockPos : start) {
+                next.addAll(spreadNode(level, blockPos, center, blocked, prev));
+            }
+            prev = new ArrayList<>(start);
+            start = new ArrayList<>(next);
 		}
 	}
 	
@@ -157,7 +154,7 @@ public class PoweredLightBlockEntity extends BlockEntity{
 	private static void consumePower(Level level, BlockPos pos, BlockState state, PoweredLightBlockEntity e) {
 		BlockEntity be = level.getBlockEntity(pos.relative(state.getValue(Light.FACING).getOpposite()));
 		if (be != null) {
-			LazyOptional<IEnergyStorage> energy = be.getCapability(CapabilityEnergy.ENERGY, state.getValue(Light.FACING));
+			LazyOptional<IEnergyStorage> energy = be.getCapability(ForgeCapabilities.ENERGY, state.getValue(Light.FACING));
 			if (energy.isPresent()) {
 				if (energy.resolve().get().extractEnergy(RF_USE_TICK, true) == RF_USE_TICK) {
 					boolean powered = level.hasNeighborSignal(pos);
@@ -168,8 +165,7 @@ public class PoweredLightBlockEntity extends BlockEntity{
 			        level.setBlock(pos, state.setValue(Light.ENABLED, false), Block.UPDATE_ALL);
 					e.active = true;
 					energy.resolve().get().extractEnergy(RF_USE_TICK, false);
-					return;
-				}
+                }
 			}
 		}
 	}

@@ -11,7 +11,6 @@ import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class ColdFireBlock extends FireBlock {
@@ -24,6 +23,7 @@ public class ColdFireBlock extends FireBlock {
         //don't spread
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected boolean canBurn(BlockState state) {
         return true;

@@ -1,7 +1,8 @@
 package com.enderio.machines.common.blockentity.base;
 
 import com.enderio.api.UseOnly;
-import com.enderio.api.capacitor.CapacitorKey;
+import com.enderio.api.capacitor.ICapacitorScalable;
+import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.sync.FloatDataSlot;
 import com.enderio.core.common.sync.SyncMode;
 import com.enderio.machines.common.block.ProgressMachineBlock;
@@ -17,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Generic class for a machine that can perform a task.
  */
-public abstract class PoweredTaskMachineEntity<T extends PoweredTask> extends PowerConsumingMachineEntity {
+public abstract class PoweredTaskMachineEntity<T extends PoweredTask> extends PoweredMachineEntity {
     /**
      * The current task being executed.
      */
@@ -41,11 +42,9 @@ public abstract class PoweredTaskMachineEntity<T extends PoweredTask> extends Po
     @UseOnly(LogicalSide.CLIENT)
     private float clientProgress;
 
-    public PoweredTaskMachineEntity(CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey energyUseKey,
+    public PoweredTaskMachineEntity(ICapacitorScalable capacity, ICapacitorScalable transferRate, ICapacitorScalable usageRate,
         BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
-        super(capacityKey, transferKey, energyUseKey, type, worldPosition, blockState);
-
-        // Sync machine progress to the client.
+        super(EnergyIOMode.Input, capacity, transferRate, usageRate, type, worldPosition, blockState);
         addDataSlot(new FloatDataSlot(this::getProgress, p -> clientProgress = p, SyncMode.GUI));
     }
 

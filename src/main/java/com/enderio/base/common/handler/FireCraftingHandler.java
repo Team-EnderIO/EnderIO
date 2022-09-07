@@ -1,9 +1,9 @@
 package com.enderio.base.common.handler;
 
 import com.enderio.EnderIO;
+import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.init.EIORecipes;
 import com.enderio.base.common.recipe.FireCraftingRecipe;
-import com.enderio.base.common.config.BaseConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;

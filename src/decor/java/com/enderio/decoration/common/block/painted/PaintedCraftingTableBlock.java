@@ -1,7 +1,7 @@
 package com.enderio.decoration.common.block.painted;
 
-import com.enderio.decoration.common.init.DecorBlocks;
 import com.enderio.decoration.common.init.DecorBlockEntities;
+import com.enderio.decoration.common.init.DecorBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;

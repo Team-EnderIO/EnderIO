@@ -1,10 +1,10 @@
 package com.enderio;
 
+import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.init.*;
 import com.enderio.base.common.item.tool.SoulVialItem;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.tag.EIOTags;
-import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.data.loot.FireCraftingLootProvider;
 import com.enderio.base.data.recipe.*;
 import com.enderio.base.data.tags.EIOBlockTagsProvider;
@@ -66,7 +66,6 @@ public class EnderIO {
         CoreNetwork.networkInit();
 
         // Perform initialization and registration for everything so things are registered.
-        EIORegistries.init();
         EIOItems.register();
         EIOBlocks.register();
         EIOBlockEntities.register();

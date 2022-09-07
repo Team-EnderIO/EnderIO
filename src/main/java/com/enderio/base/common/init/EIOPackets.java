@@ -1,8 +1,8 @@
 package com.enderio.base.common.init;
 
+import com.enderio.base.common.network.UpdateCoordinateSelectionNameMenuPacket;
 import com.enderio.core.common.network.ClientToServerMenuPacket;
 import com.enderio.core.common.network.CoreNetwork;
-import com.enderio.base.common.network.UpdateCoordinateSelectionNameMenuPacket;
 
 public class EIOPackets {
     /**

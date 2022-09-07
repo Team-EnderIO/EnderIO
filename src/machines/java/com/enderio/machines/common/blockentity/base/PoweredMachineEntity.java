@@ -1,12 +1,11 @@
 package com.enderio.machines.common.blockentity.base;
 
-import com.enderio.api.capability.ICapacitorData;
-import com.enderio.api.capacitor.CapacitorKey;
+import com.enderio.api.capacitor.ICapacitorData;
+import com.enderio.api.capacitor.ICapacitorScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.core.common.sync.SyncMode;
 import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.base.common.capacitor.DefaultCapacitorData;
-import com.enderio.machines.common.MachineTier;
+import com.enderio.core.common.sync.SyncMode;
 import com.enderio.machines.common.blockentity.sync.MachineEnergyDataSlot;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.ImmutableMachineEnergyStorage;
@@ -20,13 +19,14 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * A machine that stores energy.
@@ -52,11 +52,14 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
     private ICapacitorData cachedCapacitorData = DefaultCapacitorData.NONE;
     private boolean capacitorCacheDirty;
 
-    public PoweredMachineEntity(EnergyIOMode energyIOMode, CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey useKey, BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
+    public PoweredMachineEntity(EnergyIOMode energyIOMode, ICapacitorScalable capacity, ICapacitorScalable transferRate, ICapacitorScalable usageRate, BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
 
         // Create energy storage
-        this.energyStorage = createEnergyStorage(energyIOMode, capacityKey, transferKey, useKey);
+        this.energyStorage = createEnergyStorage(energyIOMode,
+            capacity.scaleI(this::getCapacitorData),
+            transferRate.scaleI(this::getCapacitorData),
+            usageRate.scaleI(this::getCapacitorData));
         this.energyStorageCap = LazyOptional.of(() -> energyStorage);
         addCapabilityProvider(energyStorage);
 
@@ -114,7 +117,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
         // Transmit power out all sides.
         for (Direction side : Direction.values()) {
             // Get our energy handler, this will handle all sidedness tests for us.
-            getCapability(CapabilityEnergy.ENERGY, side).resolve().ifPresent(selfHandler -> {
+            getCapability(ForgeCapabilities.ENERGY, side).resolve().ifPresent(selfHandler -> {
                 // If we can't extract out this side, continue
                 if (selfHandler.getEnergyStored() <= 0 || !selfHandler.canExtract())
                     return;
@@ -139,8 +142,8 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
      * Create the energy storage medium
      * Override this to customise the behaviour of the energy storage.
      */
-    protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey useKey) {
-        return new MachineEnergyStorage(getIOConfig(), energyIOMode, this::getCapacitorData, capacityKey, transferKey, useKey) {
+    protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, Supplier<Integer> capacity, Supplier<Integer> transferRate, Supplier<Integer> usageRate) {
+        return new MachineEnergyStorage(getIOConfig(), energyIOMode, capacity, transferRate, usageRate) {
             @Override
             protected void onContentsChanged() {
                 setChanged();
@@ -163,7 +166,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
         super.populateCaches(direction, neighbor);
 
         if (neighbor != null) {
-            energyHandlerCache.put(direction, addInvalidationListener(neighbor.getCapability(CapabilityEnergy.ENERGY, direction.getOpposite())));
+            energyHandlerCache.put(direction, addInvalidationListener(neighbor.getCapability(ForgeCapabilities.ENERGY, direction.getOpposite())));
         } else {
             energyHandlerCache.put(direction, LazyOptional.empty());
         }
@@ -247,9 +250,6 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
 
     @Override
     public boolean canAct() {
-        // Ignore capacitor state on simple machines.
-        if (getTier() == MachineTier.SIMPLE)
-            return super.canAct();
         return super.canAct() && (!requiresCapacitor() || isCapacitorInstalled());
     }
 
@@ -259,7 +259,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
-        if (cap == CapabilityEnergy.ENERGY && side == null) {
+        if (cap == ForgeCapabilities.ENERGY && side == null) {
             return energyStorageCap.cast();
         }
         return super.getCapability(cap, side);

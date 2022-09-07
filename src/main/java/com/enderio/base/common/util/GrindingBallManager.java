@@ -1,7 +1,7 @@
 package com.enderio.base.common.util;
 
-import com.enderio.api.grindingball.IGrindingBallData;
 import com.enderio.EnderIO;
+import com.enderio.api.grindingball.IGrindingBallData;
 import com.enderio.base.common.init.EIORecipes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;

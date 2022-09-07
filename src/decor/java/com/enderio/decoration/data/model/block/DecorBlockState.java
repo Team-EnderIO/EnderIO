@@ -4,7 +4,6 @@ import com.enderio.EnderIO;
 import com.enderio.decoration.common.block.light.PoweredLight;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
-
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
