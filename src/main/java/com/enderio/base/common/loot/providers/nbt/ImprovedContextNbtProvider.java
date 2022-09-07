@@ -32,8 +32,8 @@ public class ImprovedContextNbtProvider implements NbtProvider {
     private static final String BLOCK_ENTITY_ID = "block_entity";
 
     private static final ImprovedContextNbtProvider.Getter BLOCK_ENTITY_PROVIDER = new ImprovedContextNbtProvider.Getter() {
-        public Tag get(LootContext p_165582_) {
-            BlockEntity blockentity = p_165582_.getParamOrNull(LootContextParams.BLOCK_ENTITY);
+        public Tag get(LootContext pLootContext) {
+            BlockEntity blockentity = pLootContext.getParamOrNull(LootContextParams.BLOCK_ENTITY);
             if (blockentity == null) {
                 return null;
             }
@@ -55,8 +55,8 @@ public class ImprovedContextNbtProvider implements NbtProvider {
     private static ImprovedContextNbtProvider.Getter forEntity(final LootContext.EntityTarget pEntityTarget) {
         return new ImprovedContextNbtProvider.Getter() {
             @Nullable
-            public Tag get(LootContext p_165589_) {
-                Entity entity = p_165589_.getParamOrNull(pEntityTarget.getParam());
+            public Tag get(LootContext pLootContext) {
+                Entity entity = pLootContext.getParamOrNull(pEntityTarget.getParam());
                 return entity != null ? NbtPredicate.getEntityTagToCompare(entity) : null;
             }
 
@@ -94,10 +94,10 @@ public class ImprovedContextNbtProvider implements NbtProvider {
     static ImprovedContextNbtProvider createFromContext(String pTargetName) {
         if (pTargetName.equals(BLOCK_ENTITY_ID)) {
             return new ImprovedContextNbtProvider(BLOCK_ENTITY_PROVIDER);
-        } else {
-            LootContext.EntityTarget lootcontext$entitytarget = LootContext.EntityTarget.getByName(pTargetName);
-            return new ImprovedContextNbtProvider(forEntity(lootcontext$entitytarget));
         }
+
+        LootContext.EntityTarget lootcontext$entitytarget = LootContext.EntityTarget.getByName(pTargetName);
+        return new ImprovedContextNbtProvider(forEntity(lootcontext$entitytarget));
     }
 
     interface Getter {
@@ -110,32 +110,28 @@ public class ImprovedContextNbtProvider implements NbtProvider {
     }
 
     public static class InlineSerializer implements GsonAdapterFactory.InlineSerializer<ImprovedContextNbtProvider> {
-        public JsonElement serialize(ImprovedContextNbtProvider p_165597_, JsonSerializationContext p_165598_) {
-            return new JsonPrimitive(p_165597_.getter.getId());
+        public JsonElement serialize(ImprovedContextNbtProvider pProvider, JsonSerializationContext pJsonContext) {
+            return new JsonPrimitive(pProvider.getter.getId());
         }
 
-        public ImprovedContextNbtProvider deserialize(JsonElement p_165603_, JsonDeserializationContext p_165604_) {
-            String s = p_165603_.getAsString();
-            return ImprovedContextNbtProvider.createFromContext(s);
+        public ImprovedContextNbtProvider deserialize(JsonElement pJsonElement, JsonDeserializationContext pJsonContext) {
+            return ImprovedContextNbtProvider.createFromContext(pJsonElement.getAsString());
         }
     }
 
-    public static class Serializer
-            implements net.minecraft.world.level.storage.loot.Serializer<ImprovedContextNbtProvider> {
+    public static class JsonSerializer implements net.minecraft.world.level.storage.loot.Serializer<ImprovedContextNbtProvider> {
         /**
          * Serialize the value by putting its data into the JsonObject.
          */
-        public void serialize(JsonObject p_165610_, ImprovedContextNbtProvider p_165611_,
-                JsonSerializationContext p_165612_) {
-            p_165610_.addProperty("target", p_165611_.getter.getId());
+        public void serialize(JsonObject pJsonObject, ImprovedContextNbtProvider pProvider, JsonSerializationContext pContext) {
+            pJsonObject.addProperty("target", pProvider.getter.getId());
         }
 
         /**
          * Deserialize a value by reading it from the JsonObject.
          */
-        public ImprovedContextNbtProvider deserialize(JsonObject p_165618_, JsonDeserializationContext p_165619_) {
-            String s = GsonHelper.getAsString(p_165618_, "target");
-            return ImprovedContextNbtProvider.createFromContext(s);
+        public ImprovedContextNbtProvider deserialize(JsonObject pJsonObject, JsonDeserializationContext pContext) {
+            return ImprovedContextNbtProvider.createFromContext(GsonHelper.getAsString(pJsonObject, "target"));
         }
     }
 }
