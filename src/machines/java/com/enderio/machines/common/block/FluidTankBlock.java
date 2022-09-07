@@ -120,7 +120,7 @@ public class FluidTankBlock extends MachineBlock {
         Optional<IFluidHandlerItem> fluidHandlerCap = itemStack
                 .getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY)
                 .resolve();
-        if (!fluidHandlerCap.isPresent()) {
+        if (fluidHandlerCap.isEmpty()) {
             return null;
         }
 
