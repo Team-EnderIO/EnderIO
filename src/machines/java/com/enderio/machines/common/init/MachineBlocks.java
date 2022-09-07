@@ -3,7 +3,6 @@ package com.enderio.machines.common.init;
 import com.enderio.EnderIO;
 import com.enderio.base.common.item.EIOCreativeTabs;
 import com.enderio.core.data.model.EIOModel;
-import com.enderio.machines.common.block.EnhancedMachineBlock;
 import com.enderio.machines.common.block.FluidTankBlock;
 import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.block.ProgressMachineBlock;
