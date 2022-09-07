@@ -4,15 +4,14 @@ import net.minecraft.util.Mth;
 
 // TODO: Support more interpolation methods, if required.
 /**
- * Class for animating between two values over an amount of time, using
- * {@link Mth.lerp}.
+ * Class for animating between two values over an amount of time, using {@link Mth#lerp}.
  */
 public class Animation {
-    private float start;
-    private float target;
-    private float current;
+    private final float start;
+    private final float target;
+    private final float totalDurationTick;
     private float currentDurationTick;
-    private float totalDurationTick;
+    private float current;
 
     /**
      * Default constructor for Animation class.
