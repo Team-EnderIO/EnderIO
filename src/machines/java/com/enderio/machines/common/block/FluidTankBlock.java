@@ -27,9 +27,9 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.SoundActions;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 public class FluidTankBlock extends MachineBlock {
@@ -118,7 +118,7 @@ public class FluidTankBlock extends MachineBlock {
         }
 
         Optional<IFluidHandlerItem> fluidHandlerCap = itemStack
-                .getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY)
+                .getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM)
                 .resolve();
         if (fluidHandlerCap.isEmpty()) {
             return null;

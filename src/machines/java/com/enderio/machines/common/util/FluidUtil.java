@@ -9,9 +9,9 @@ import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
@@ -36,7 +36,7 @@ public class FluidUtil {
         }
 
         Optional<IFluidHandlerItem> fluidHandlerCap = itemStack
-                .getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).resolve();
+                .getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
         if (!fluidHandlerCap.isPresent()) {
             return null;
         }

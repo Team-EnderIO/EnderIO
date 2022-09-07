@@ -16,9 +16,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.NonNullLazy;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 import java.util.List;
@@ -80,6 +80,6 @@ public class FluidTankItem extends BlockItem {
     }
 
     private Optional<IFluidHandlerItem> getTankCap(ItemStack stack) {
-        return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).resolve();
+        return stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
     }
 }
