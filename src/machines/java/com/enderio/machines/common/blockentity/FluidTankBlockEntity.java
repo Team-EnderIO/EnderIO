@@ -53,7 +53,6 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     }
 
     private final FluidTank fluidTank;
-    private final MachineFluidHandler fluidHandler;
 
     @Nullable
     @UseOnly(LogicalSide.CLIENT)
@@ -65,11 +64,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
         // Create fluid tank.
         this.fluidTank = createFluidTank(capacity);
 
-        // Create fluid tank storage.
-        this.fluidHandler = new MachineFluidHandler(getIOConfig(), fluidTank);
-
         // Add capability provider
-        addCapabilityProvider(fluidHandler);
+        addCapabilityProvider(new MachineFluidHandler(getIOConfig(), fluidTank));
 
         addDataSlot(new FluidStackDataSlot(fluidTank::getFluid, this::setFluidStack, SyncMode.WORLD));
     }
