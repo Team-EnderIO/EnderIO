@@ -1,5 +1,6 @@
 package com.enderio.machines.common.blockentity;
 
+import com.enderio.api.UseOnly;
 import com.enderio.base.common.capability.FluidHandlerBlockItemStack;
 import com.enderio.core.common.sync.FluidStackDataSlot;
 import com.enderio.core.common.sync.SyncMode;
@@ -29,6 +30,7 @@ import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.minecraftforge.fml.LogicalSide;
 
 import org.jetbrains.annotations.Nullable;
 import java.util.function.Predicate;
@@ -52,6 +54,9 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
 
     private final FluidTank fluidTank;
     private final MachineFluidHandler fluidHandler;
+
+    @Nullable
+    @UseOnly(LogicalSide.CLIENT)
     private AnimationInformation animationInformation;
 
     public FluidTankBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState, int capacity) {
@@ -69,6 +74,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
         addDataSlot(new FluidStackDataSlot(fluidTank::getFluid, this::setFluidStack, SyncMode.WORLD));
     }
 
+    @UseOnly(LogicalSide.CLIENT)
     private void setFluidStack(FluidStack stack) {
         fluidTank.setFluid(stack);
 
@@ -192,6 +198,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
         return fluidTank;
     }
 
+    @Nullable
     public AnimationInformation getAnimationInformation() {
         return animationInformation;
     }
