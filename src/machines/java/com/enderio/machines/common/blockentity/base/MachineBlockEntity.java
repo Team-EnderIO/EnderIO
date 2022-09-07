@@ -214,8 +214,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     /**
      * @apiNote Must call this on custom MachineInventory handlers!
      */
-    protected void onInventoryContentsChanged(int slot) {
-    }
+    protected void onInventoryContentsChanged(int slot) {}
 
     // endregion
 
@@ -241,8 +240,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     }
 
     public boolean canActSlow() {
-        return canAct()
-                && level.getGameTime() % 5 == 0;
+        return canAct() && level.getGameTime() % 5 == 0;
     }
 
     // endregion
@@ -255,8 +253,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     private void forceResources() {
         for (Direction direction : Direction.values()) {
             if (ioConfig.getMode(direction).canForce()) {
-                // TODO: Maybe some kind of resource distributor so that items are transmitted
-                // evenly around? rather than taking the order of Direction.values()
+                // TODO: Maybe some kind of resource distributor so that items are transmitted evenly around? rather than taking the order of Direction.values()
                 moveItems(direction);
                 moveFluids(direction);
             }
@@ -385,10 +382,10 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     protected void populateCaches(Direction direction, @Nullable BlockEntity neighbor) {
         if (neighbor != null) {
-            itemHandlerCache.put(direction, addInvalidationListener(
-                    neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, direction.getOpposite())));
-            fluidHandlerCache.put(direction, addInvalidationListener(
-                    neighbor.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction.getOpposite())));
+            itemHandlerCache.put(direction,
+                addInvalidationListener(neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, direction.getOpposite())));
+            fluidHandlerCache.put(direction,
+                addInvalidationListener(neighbor.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, direction.getOpposite())));
         } else {
             itemHandlerCache.put(direction, LazyOptional.empty());
             fluidHandlerCache.put(direction, LazyOptional.empty());
@@ -466,8 +463,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     public boolean stillValid(Player pPlayer) {
         if (this.level.getBlockEntity(this.worldPosition) != this)
             return false;
-        return pPlayer.distanceToSqr(this.worldPosition.getX() + 0.5D, this.worldPosition.getY() + 0.5D,
-                this.worldPosition.getZ() + 0.5D) <= 64.0D;
+        return pPlayer.distanceToSqr(this.worldPosition.getX() + 0.5D, this.worldPosition.getY() + 0.5D, this.worldPosition.getZ() + 0.5D) <= 64.0D;
     }
 
     public RedstoneControl getRedstoneControl() {
