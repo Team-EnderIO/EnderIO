@@ -9,5 +9,5 @@ public enum SyncMode {
     /**
      * Synchronize in menus
      */
-    GUI;
+    GUI
 }

@@ -18,7 +18,7 @@ public class GhostMachineSlot extends MachineSlot {
         MachineInventoryLayout layout = itemHandler.getLayout();
         if (layout.canInsert(index) || layout.canExtract(index))
             throw new RuntimeException("Ghost slot can be externally modified!!");
-        if (!layout.guiCanInsert(index) || !layout.guiCanExtract(index))
+        if (!layout.guiCanInsert(index))
             throw new RuntimeException("Ghost slot cannot be modified by the player!");
     }
 
@@ -27,7 +27,6 @@ public class GhostMachineSlot extends MachineSlot {
         // If this stack is valid, set the inventory slot value.
         if (!stack.isEmpty() && mayPlace(stack)) {
             ItemStack ghost = stack.copy();
-            ghost.setCount(1);
             set(ghost);
         }
 

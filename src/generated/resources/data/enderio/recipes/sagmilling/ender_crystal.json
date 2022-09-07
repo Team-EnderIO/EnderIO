@@ -1,0 +1,12 @@
+{
+  "type": "enderio:sagmilling",
+  "energy": 2400,
+  "input": {
+    "item": "enderio:ender_crystal"
+  },
+  "outputs": [
+    {
+      "item": "enderio:ender_crystal_powder"
+    }
+  ]
+}

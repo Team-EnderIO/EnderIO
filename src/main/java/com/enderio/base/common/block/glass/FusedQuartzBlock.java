@@ -1,7 +1,7 @@
 package com.enderio.base.common.block.glass;
 
-import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.config.BaseConfig;
+import com.enderio.base.common.lang.EIOLang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;

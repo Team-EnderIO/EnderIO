@@ -42,6 +42,8 @@ public class EIOTags {
         public static final TagKey<Item> DUSTS_ARDITE = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "dusts/ardite"));
         public static final TagKey<Item> DUSTS_COBALT = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "dusts/cobalt"));
         public static final TagKey<Item> DUSTS_QUARTZ = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "dusts/quartz"));
+        public static final TagKey<Item> DUSTS_SULFUR = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "dusts/sulfur"));
+        
         public static final TagKey<Item> SILICON = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "silicon"));
         public static final TagKey<Item> GEARS = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "gears"));
         public static final TagKey<Item> GEARS_WOOD = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "gears/wood"));

@@ -31,7 +31,7 @@ public abstract class TieredUpgrade<T extends IUpgradeTier> implements IDarkStee
 
     @Override
     public boolean isValidUpgrade(IDarkSteelUpgrade upgrade) {
-        if (getSerializedName().equals(upgrade.getSerializedName()) && upgrade instanceof TieredUpgrade up) {
+        if (getSerializedName().equals(upgrade.getSerializedName()) && upgrade instanceof TieredUpgrade<?> up) {
             return up.tier.getLevel() == tier.getLevel() + 1;
         }
         return false;

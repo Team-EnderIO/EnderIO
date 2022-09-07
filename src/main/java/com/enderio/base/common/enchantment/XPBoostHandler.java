@@ -64,7 +64,7 @@ public class XPBoostHandler {
             BlockState state = event.getState();
             Level level = (Level) event.getLevel();
             BlockPos pos = event.getPos();
-            final int fortune = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.BLOCK_FORTUNE, event.getPlayer().getMainHandItem());
+            final int fortune = event.getPlayer().getMainHandItem().getEnchantmentLevel(Enchantments.BLOCK_FORTUNE);
             final int xp = state.getBlock().getExpDrop(state, level, RandomSource.create(), pos, fortune, 0);
             if (xp > 0) {
                 level.addFreshEntity(new ExperienceOrb(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, getXPBoost(xp, boostLevel)));
@@ -82,7 +82,7 @@ public class XPBoostHandler {
                 int xp = killed.getExperienceReward();
                 return getXPBoost(xp, level);
             } catch (Exception e) {
-                Throwables.propagate(e);
+                Throwables.throwIfUnchecked(e);
             }
         }
         return 0;

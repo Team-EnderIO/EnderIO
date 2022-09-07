@@ -4,7 +4,6 @@ import com.enderio.base.common.blockentity.GraveBlockEntity;
 import com.enderio.base.common.init.EIOBlockEntities;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.lang.EIOLang;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;

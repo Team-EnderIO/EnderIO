@@ -4,6 +4,7 @@ import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.block.model.ItemTransform;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 
+@Deprecated(forRemoval = true)
 public class ItemTransformUtil {
     public static final ItemTransforms DEFAULT;
 

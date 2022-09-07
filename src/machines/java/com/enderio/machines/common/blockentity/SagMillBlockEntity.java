@@ -1,15 +1,14 @@
 package com.enderio.machines.common.blockentity;
 
-import com.enderio.api.capacitor.CapacitorKey;
+import com.enderio.api.capacitor.CapacitorModifier;
+import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.grindingball.IGrindingBallData;
+import com.enderio.base.common.util.GrindingBallManager;
 import com.enderio.core.common.sync.IntegerDataSlot;
 import com.enderio.core.common.sync.ResourceLocationDataSlot;
 import com.enderio.core.common.sync.SyncMode;
-import com.enderio.base.common.util.GrindingBallManager;
-import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.PoweredCraftingMachine;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingTask;
-import com.enderio.machines.common.init.MachineCapacitorKeys;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
@@ -26,61 +25,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class SagMillBlockEntity extends PoweredCraftingMachine<SagMillingRecipe, SagMillingRecipe.Container> {
-
-    // region Tiers
-
-    public static class Simple extends SagMillBlockEntity {
-
-        public Simple(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
-            super(MachineCapacitorKeys.SIMPLE_SAG_MILL_ENERGY_CAPACITY.get(),
-                MachineCapacitorKeys.SIMPLE_SAG_MILL_ENERGY_TRANSFER.get(),
-                MachineCapacitorKeys.SIMPLE_SAG_MILL_ENERGY_CONSUME.get(),
-                type, worldPosition, blockState);
-        }
-
-        @Override
-        public MachineTier getTier() {
-            return MachineTier.SIMPLE;
-        }
-
-        @Override
-        public int getEnergyLeakPerSecond() {
-            return 1; // TODO: Config
-        }
-    }
-
-    public static class Standard extends SagMillBlockEntity {
-
-        public Standard(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
-            super(MachineCapacitorKeys.SAG_MILL_ENERGY_CAPACITY.get(),
-                MachineCapacitorKeys.SAG_MILL_ENERGY_TRANSFER.get(),
-                MachineCapacitorKeys.SAG_MILL_ENERGY_CONSUME.get(),
-                type, worldPosition, blockState);
-        }
-
-        @Override
-        public MachineTier getTier() {
-            return MachineTier.STANDARD;
-        }
-    }
-
-    public static class Enhanced extends SagMillBlockEntity {
-
-        public Enhanced(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
-            super(MachineCapacitorKeys.ENHANCED_SAG_MILL_ENERGY_CAPACITY.get(),
-                MachineCapacitorKeys.ENHANCED_SAG_MILL_ENERGY_TRANSFER.get(),
-                MachineCapacitorKeys.ENHANCED_SAG_MILL_ENERGY_CONSUME.get(),
-                type, worldPosition, blockState);
-        }
-
-        @Override
-        public MachineTier getTier() {
-            return MachineTier.ENHANCED;
-        }
-    }
-
-    // endregion
+public class SagMillBlockEntity extends PoweredCraftingMachine<SagMillingRecipe, SagMillingRecipe.Container> {
+    public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, () -> 100000f);
+    public static final QuadraticScalable TRANSFER = new QuadraticScalable(CapacitorModifier.ENERGY_TRANSFER, () -> 120f);
+    public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, () -> 30f);
 
     private IGrindingBallData grindingBallData = IGrindingBallData.IDENTITY;
 
@@ -92,9 +40,9 @@ public abstract class SagMillBlockEntity extends PoweredCraftingMachine<SagMilli
     private final SagMillingRecipe.Container container;
 
 
-    public SagMillBlockEntity(CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey energyUseKey, BlockEntityType<?> type, BlockPos worldPosition,
+    public SagMillBlockEntity(BlockEntityType<?> type, BlockPos worldPosition,
         BlockState blockState) {
-        super(MachineRecipes.SAGMILLING.type().get(), capacityKey, transferKey, energyUseKey, type, worldPosition, blockState);
+        super(MachineRecipes.SAGMILLING.type().get(), CAPACITY, TRANSFER, USAGE, type, worldPosition, blockState);
         container = new SagMillingRecipe.Container(getInventory(), this::getGrindingBallData);
 
         addDataSlot(new IntegerDataSlot(() -> grindingBallDamage, dmg -> grindingBallDamage = dmg, SyncMode.GUI));
@@ -129,10 +77,11 @@ public abstract class SagMillBlockEntity extends PoweredCraftingMachine<SagMilli
 
     @Override
     public MachineInventoryLayout getInventoryLayout() {
-        return MachineInventoryLayout.builder(getTier() != MachineTier.SIMPLE)
+        return MachineInventoryLayout.builder()
             .inputSlot()
             .outputSlot(4)
             .inputSlot((slot, stack) -> GrindingBallManager.isGrindingBall(stack))
+            .capacitor()
             .build();
     }
 

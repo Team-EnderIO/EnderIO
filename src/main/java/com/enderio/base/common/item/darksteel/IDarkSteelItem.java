@@ -3,18 +3,15 @@ package com.enderio.base.common.item.darksteel;
 import com.enderio.api.capability.IDarkSteelUpgrade;
 import com.enderio.api.capability.IMultiCapabilityItem;
 import com.enderio.api.capability.MultiCapabilityProvider;
-import com.enderio.core.client.item.IAdvancedTooltipProvider;
 import com.enderio.api.nbt.INamedNBTSerializable;
-import com.enderio.base.client.renderer.item.ItemBarRenderer;
 import com.enderio.base.common.capability.DarkSteelUpgradeable;
 import com.enderio.base.common.capability.EnergyDelegator;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.core.client.item.IAdvancedTooltipProvider;
 import com.enderio.core.common.util.EnergyUtil;
 import com.enderio.core.common.util.TooltipUtil;
-import com.enderio.core.client.item.IItemOverlayRender;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -23,14 +20,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
-public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipProvider, IItemOverlayRender {
+public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipProvider {
 
     default Optional<EmpoweredUpgrade> getEmpoweredUpgrade(ItemStack stack) {
         return DarkSteelUpgradeable.getUpgradeAs(stack, EmpoweredUpgrade.NAME, EmpoweredUpgrade.class);
@@ -42,7 +39,7 @@ public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipPr
 
     default MultiCapabilityProvider initDarkSteelCapabilities(MultiCapabilityProvider provider, ResourceLocation forItem) {
         provider.addSerialized(EIOCapabilities.DARK_STEEL_UPGRADABLE, LazyOptional.of(() -> new DarkSteelUpgradeable(forItem)));
-        provider.addSimple(CapabilityEnergy.ENERGY, LazyOptional.of(() -> new EnergyDelegator(provider)));
+        provider.addSimple(ForgeCapabilities.ENERGY, LazyOptional.of(() -> new EnergyDelegator(provider)));
         return provider;
     }
 
@@ -112,11 +109,6 @@ public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipPr
                 .forEach(upgrade -> tooltips.add(
                     Component.literal(" " + upgrade.getDisplayName().getString()).withStyle(ChatFormatting.DARK_AQUA, ChatFormatting.ITALIC)));
         }
-    }
-
-    default void renderOverlay(ItemStack pStack, int pXPosition, int pYPosition, PoseStack poseStack) {
-        // Render an additional energy bar above item durability.
-        ItemBarRenderer.renderEnergyBar(pStack, pXPosition, pYPosition);
     }
 
     default boolean isDurabilityBarVisible(ItemStack stack) {

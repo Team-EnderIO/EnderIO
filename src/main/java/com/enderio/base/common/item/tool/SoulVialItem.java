@@ -5,13 +5,13 @@ import com.enderio.api.capability.IEntityStorage;
 import com.enderio.api.capability.IMultiCapabilityItem;
 import com.enderio.api.capability.MultiCapabilityProvider;
 import com.enderio.api.capability.StoredEntityData;
-import com.enderio.core.client.item.IAdvancedTooltipProvider;
 import com.enderio.base.common.capability.EntityStorage;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.item.EIOCreativeTabs;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.util.EntityCaptureUtils;
+import com.enderio.core.client.item.IAdvancedTooltipProvider;
 import com.enderio.core.common.util.EntityUtil;
 import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.core.BlockPos;
@@ -39,12 +39,12 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.items.CapabilityItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -70,20 +70,22 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
 
     @Override
     public void addCommonTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
-        itemStack.getCapability(EIOCapabilities.ENTITY_STORAGE).ifPresent(entityStorage -> {
-            entityStorage.getStoredEntityData().getEntityType().ifPresent(entityType -> {
-                tooltips.add(TooltipUtil.style(Component.translatable(EntityUtil.getEntityDescriptionId(entityType))));
-            });
-        });
+        itemStack
+            .getCapability(EIOCapabilities.ENTITY_STORAGE)
+            .ifPresent(entityStorage -> entityStorage
+                .getStoredEntityData()
+                .getEntityType()
+                .ifPresent(entityType -> tooltips.add(TooltipUtil.style(Component.translatable(EntityUtil.getEntityDescriptionId(entityType))))));
     }
 
     @Override
     public void addDetailedTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
-        itemStack.getCapability(EIOCapabilities.ENTITY_STORAGE).ifPresent(entityStorage -> {
-            entityStorage.getStoredEntityData().getHealthState().ifPresent(health -> {
-                tooltips.add(TooltipUtil.styledWithArgs(EIOLang.SOUL_VIAL_TOOLTIP_HEALTH, health.getA(), health.getB()));
-            });
-        });
+        itemStack
+            .getCapability(EIOCapabilities.ENTITY_STORAGE)
+            .ifPresent(entityStorage -> entityStorage
+                .getStoredEntityData()
+                .getHealthState()
+                .ifPresent(health -> tooltips.add(TooltipUtil.styledWithArgs(EIOLang.SOUL_VIAL_TOOLTIP_HEALTH, health.getA(), health.getB()))));
     }
 
     // endregion
@@ -287,7 +289,7 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
                 AtomicReference<ItemStack> filledVial = new AtomicReference<>();
                 if (catchEntity(stack, livingentity, filledVial::set, component -> {}) == InteractionResult.SUCCESS && filledVial.get() != null) {
                     //push filledvial back into dispenser
-                    source.getEntity().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(handler -> {
+                    source.getEntity().getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
                         for (int i = 0; i < handler.getSlots(); i++) {
                             if (handler.insertItem(i, filledVial.get(), true).isEmpty()) {
                                 handler.insertItem(i, filledVial.get(), false);

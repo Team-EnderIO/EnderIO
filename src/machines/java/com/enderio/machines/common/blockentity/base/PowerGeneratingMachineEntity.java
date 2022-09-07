@@ -1,6 +1,6 @@
 package com.enderio.machines.common.blockentity.base;
 
-import com.enderio.api.capacitor.CapacitorKey;
+import com.enderio.api.capacitor.ICapacitorScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.machines.common.block.ProgressMachineBlock;
 import net.minecraft.core.BlockPos;
@@ -8,9 +8,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-// TODO: Remaster this sometime to work the same as 1.12
+// TODO: Remaster power generation sometime.
 public abstract class PowerGeneratingMachineEntity extends PoweredMachineEntity {
-    public PowerGeneratingMachineEntity(CapacitorKey capacityKey, CapacitorKey transferKey, CapacitorKey consumptionKey, BlockEntityType<?> type, BlockPos worldPosition,
+    public PowerGeneratingMachineEntity(ICapacitorScalable capacityKey, ICapacitorScalable transferKey, ICapacitorScalable consumptionKey, BlockEntityType<?> type, BlockPos worldPosition,
         BlockState blockState) {
         super(EnergyIOMode.Output, capacityKey, transferKey, consumptionKey, type, worldPosition, blockState);
     }

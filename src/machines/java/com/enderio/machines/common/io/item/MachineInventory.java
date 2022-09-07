@@ -5,8 +5,8 @@ import com.enderio.api.io.IIOConfig;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
@@ -59,7 +59,7 @@ public class MachineInventory extends ItemStackHandler implements IEnderCapabili
 
     @Override
     public Capability<IItemHandler> getCapabilityType() {
-        return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+        return ForgeCapabilities.ITEM_HANDLER;
     }
 
     @Override
@@ -96,10 +96,6 @@ public class MachineInventory extends ItemStackHandler implements IEnderCapabili
     }
 
     private record Wrapped(MachineInventory master, @Nullable Direction side) implements IItemHandler {
-        private Wrapped(MachineInventory master, @Nullable Direction side) {
-            this.master = master;
-            this.side = side;
-        }
 
         @Override
         public int getSlots() {

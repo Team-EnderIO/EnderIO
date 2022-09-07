@@ -14,7 +14,7 @@ public record OutputStack(Either<ItemStack, FluidStack> stack) {
     /**
      * An empty item stack. Neither an item nor a fluid.
      */
-    public static OutputStack EMPTY = OutputStack.of(ItemStack.EMPTY);
+    public static final OutputStack EMPTY = OutputStack.of(ItemStack.EMPTY);
 
     /**
      * Create an item output stack.

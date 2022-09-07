@@ -1,6 +1,7 @@
 package com.enderio.base.common.lang;
 
 import com.enderio.EnderIO;
+import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.core.common.util.TooltipUtil;
 import com.tterrag.registrate.Registrate;
 import net.minecraft.ChatFormatting;
@@ -103,30 +104,12 @@ public class EIOLang {
 
     // region Capacitors
 
-    // TODO: Loot capacitor lang
-//    public static final Component CAPACITOR_ALL_ENERGY_CONSUMPSTION = capacitorDescriptionBuilder("type", CapacitorSpecializations.ALL_ENERGY_CONSUMPTION, "Leaky");
-//    public static final Component CAPACITOR_ALL_PRODUCTION_SPEED = capacitorDescriptionBuilder("type", CapacitorSpecializations.ALL_PRODUCTION_SPEED, "Fast");
-//    public static final Component CAPACITOR_ALLOY_ENERGY_CONSUMPSTION = capacitorDescriptionBuilder("type", CapacitorSpecializations.ALLOY_ENERGY_CONSUMPTION,
-//        "Melted");
-//    public static final Component CAPACITOR_ALLOY_PRODUCTION_SPEED = capacitorDescriptionBuilder("type", CapacitorSpecializations.ALLOY_PRODUCTION_SPEED, "Smelting");
-//
-//    public static final Component CAPACITOR_DUD = capacitorDescriptionBuilder("base", "0", "Capacitor Dud");
-//    public static final Component CAPACITOR_GOOD = capacitorDescriptionBuilder("base", "1", "Good Capacitor");
-//    public static final Component CAPACITOR_ENHANCED = capacitorDescriptionBuilder("base", "2", "Enhanced Capacitor");
-//    public static final Component CAPACITOR_WONDER = capacitorDescriptionBuilder("base", "3", "Wonder Capacitor");
-//
-//    public static final Component CAPACITOR_FLAVOR0 = capacitorDescriptionBuilder("flavor", "0", "An attached note describes this as \"%1$s %2$s %3$s\"");
-//    public static final Component CAPACITOR_FLAVOR1 = capacitorDescriptionBuilder("flavor", "1",
-//        "You can decipher ancient runes that translate roughly as \"%1$s %2$s %3$s\". Odd...");
-//
-//    public static final Component CAPACITOR_FAILED = capacitorDescriptionBuilder("grade", "0", "Failed");
-//    public static final Component CAPACITOR_INCREDIBLY = capacitorDescriptionBuilder("grade", "4", "Incredibly");
-//    public static final Component CAPACITOR_UNSTABLE = capacitorDescriptionBuilder("grade", "5", "Unstable");
-//
-//    public static Component capacitorDescriptionBuilder(String type, String value, String description) {
-//        return REGISTRATE.addLang("description", EnderIO.loc("capacitor." + type + "." + value), description);
-//    }
+    public static final MutableComponent CAPACITOR_TOOLTIP_BASE = REGISTRATE.addLang("tooltip", EnderIO.loc("capacitor.base"), "Base Modifier: %s");
 
+    public static final MutableComponent CAPACITOR_TOOLTIP_ENERGY_CAPACITY = REGISTRATE.addLang("tooltip", CapacitorModifier.ENERGY_CAPACITY.id, "Energy Capacity Modifier: %s");
+    public static final MutableComponent CAPACITOR_TOOLTIP_ENERGY_USE = REGISTRATE.addLang("tooltip", CapacitorModifier.ENERGY_USE.id, "Energy Use Modifier: %s");
+    public static final MutableComponent CAPACITOR_TOOLTIP_ENERGY_TRANSFER = REGISTRATE.addLang("tooltip", CapacitorModifier.ENERGY_TRANSFER.id, "Energy Transfer Modifier: %s");
+    
     // endregion
 
     // region Enchantments

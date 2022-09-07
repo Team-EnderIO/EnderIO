@@ -1,20 +1,19 @@
 package com.enderio.base.common.capacitor;
 
-import com.enderio.api.capability.ICapacitorData;
-import com.enderio.api.capacitor.CapacitorKey;
 import com.enderio.EnderIO;
+import com.enderio.api.capacitor.CapacitorModifier;
+import com.enderio.api.capacitor.ICapacitorData;
 import com.enderio.base.common.init.EIOCapabilities;
-import com.enderio.base.common.init.EIORegistries;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 /**
  * Helper class for Capacitors
@@ -79,8 +78,7 @@ public class CapacitorUtil {
         return capacitorDataCap.isPresent();
     }
 
-    public static CapacitorKey getRandomKey() {
-        CapacitorKey[] keys = EIORegistries.CAPACITOR_KEYS_REGISTRY.get().getValues().toArray(new CapacitorKey[0]);
-        return keys[new Random().nextInt(keys.length)];
+    public static CapacitorModifier getRandomModifier(RandomSource randomSource) {
+        return CapacitorModifier.values()[randomSource.nextInt(CapacitorModifier.values().length)];
     }
 }

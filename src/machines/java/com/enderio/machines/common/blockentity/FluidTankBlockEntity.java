@@ -2,7 +2,6 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.core.common.sync.FluidStackDataSlot;
 import com.enderio.core.common.sync.SyncMode;
-import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
@@ -19,9 +18,9 @@ import net.minecraft.world.item.MobBucketItem;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
@@ -76,11 +75,6 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public MachineTier getTier() {
-        return MachineTier.STANDARD;
-    }
-
-    @Override
     public void serverTick() {
         if (canActSlow()) {
             fillInternal();
@@ -104,7 +98,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
                     }
                 }
             } else {
-                Optional<IFluidHandlerItem> fluidHandlerCap = inputItem.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).resolve();
+                Optional<IFluidHandlerItem> fluidHandlerCap = inputItem.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
                 if (fluidHandlerCap.isPresent() && outputItem.isEmpty()) {
                     IFluidHandlerItem itemFluid = fluidHandlerCap.get();
 
@@ -137,7 +131,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
                     }
                 }
             } else {
-                Optional<IFluidHandlerItem> fluidHandlerCap = inputItem.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).resolve();
+                Optional<IFluidHandlerItem> fluidHandlerCap = inputItem.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
                 if (fluidHandlerCap.isPresent() && outputItem.isEmpty()) {
                     IFluidHandlerItem itemFluid = fluidHandlerCap.get();
                     int filled = moveFluids(fluidTank, itemFluid, fluidTank.getFluidAmount());
@@ -162,13 +156,13 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     @Override
     public MachineInventoryLayout getInventoryLayout() {
         return MachineInventoryLayout
-            .builder(false)
+            .builder()
             .inputSlot((slot, stack) ->
                 (stack.getItem() instanceof BucketItem bucketItem && bucketItem.getFluid() != Fluids.EMPTY && !(bucketItem instanceof MobBucketItem)) || (
-                    !(stack.getItem() instanceof BucketItem) && stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).isPresent()))
+                    !(stack.getItem() instanceof BucketItem) && stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent()))
             .outputSlot()
             .inputSlot((slot, stack) -> stack.getItem() == Items.BUCKET || (!(stack.getItem() instanceof BucketItem) && stack
-                .getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY)
+                .getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM)
                 .isPresent()))
             .outputSlot()
             .build();

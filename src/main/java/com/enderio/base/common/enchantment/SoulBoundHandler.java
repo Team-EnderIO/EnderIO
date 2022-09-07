@@ -59,7 +59,7 @@ public class SoulBoundHandler {
     }
 
     public static boolean isSoulBound(ItemStack item) {
-        return EnchantmentHelper.getItemEnchantmentLevel(EIOEnchantments.SOULBOUND.get(), item) > 0;
+        return item.getEnchantmentLevel(EIOEnchantments.SOULBOUND.get()) > 0;
     }
 
 }

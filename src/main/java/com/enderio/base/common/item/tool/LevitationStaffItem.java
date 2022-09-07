@@ -1,13 +1,10 @@
 package com.enderio.base.common.item.tool;
 
 import com.enderio.api.capability.MultiCapabilityProvider;
-import com.enderio.base.client.renderer.item.ItemBarRenderer;
 import com.enderio.base.common.capability.AcceptingFluidItemHandler;
+import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.tag.EIOTags;
-import com.enderio.base.common.config.BaseConfig;
-import com.enderio.core.client.item.IItemOverlayRender;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -15,15 +12,15 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class LevitationStaffItem extends PoweredToggledItem implements IItemOverlayRender {
+public class LevitationStaffItem extends PoweredToggledItem {
     public LevitationStaffItem(Properties pProperties) {
         super(pProperties);
     }
@@ -69,19 +66,13 @@ public class LevitationStaffItem extends PoweredToggledItem implements IItemOver
     @Nullable
     @Override
     public MultiCapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt, MultiCapabilityProvider provider) {
-        provider.addSimple(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY,
+        provider.addSimple(ForgeCapabilities.FLUID_HANDLER_ITEM,
             new AcceptingFluidItemHandler(stack, 1000, EIOTags.Fluids.STAFF_OF_LEVITY_FUEL).getCapability(
-                CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY));
+                ForgeCapabilities.FLUID_HANDLER_ITEM));
         return super.initCapabilities(stack, nbt, provider);
     }
 
     private Optional<IFluidHandlerItem> getTankCap(ItemStack stack) {
-        return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).resolve();
-    }
-
-    @Override
-    public void renderOverlay(ItemStack pStack, int pXPosition, int pYPosition, PoseStack poseStack) {
-        // Render fluid bar above energy bar
-        ItemBarRenderer.renderFluidBar(pStack, 0, pXPosition, pYPosition);
+        return stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
     }
 }

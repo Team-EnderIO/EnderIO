@@ -4,10 +4,10 @@ import com.enderio.api.capability.IEnderCapabilityProvider;
 import com.enderio.api.io.IIOConfig;
 import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
@@ -106,7 +106,7 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
 
     @Override
     public Capability<IFluidHandler> getCapabilityType() {
-        return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
+        return ForgeCapabilities.FLUID_HANDLER;
     }
 
     @Override

@@ -1,8 +1,8 @@
 package com.enderio.machines.common.recipe;
 
 import com.enderio.EnderIO;
-import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.core.common.recipes.EnderRecipe;
+import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonObject;
 import net.minecraft.ResourceLocationException;
@@ -153,11 +153,8 @@ public class EnchanterRecipe implements EnderRecipe<Container> {
         if (!input.test(container.getItem(1)) || container.getItem(1).getCount() < amountPerLevel) {
             return false;
         }
-        if (!container.getItem(2).is(Tags.Items.GEMS_LAPIS) || container.getItem(2).getCount() < getLapisForLevel(
-            getEnchantmentLevel(container.getItem(1).getCount()))) {
-            return false;
-        }
-        return true;
+        return container.getItem(2).is(Tags.Items.GEMS_LAPIS) && container.getItem(2).getCount() >= getLapisForLevel(
+            getEnchantmentLevel(container.getItem(1).getCount()));
     }
 
     @Override

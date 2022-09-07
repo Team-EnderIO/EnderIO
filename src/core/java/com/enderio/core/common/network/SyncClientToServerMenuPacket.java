@@ -1,9 +1,7 @@
 package com.enderio.core.common.network;
 
-import com.enderio.core.common.network.Packet;
-import com.enderio.core.common.sync.EnderDataSlot;
 import com.enderio.core.common.menu.SyncedMenu;
-import com.enderio.core.common.network.ClientToServerMenuPacket;
+import com.enderio.core.common.sync.EnderDataSlot;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;

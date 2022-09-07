@@ -6,8 +6,8 @@ import net.minecraft.client.gui.components.Widget;
 public abstract class EIOWidget extends GuiComponent implements Widget {
     public final int x;
     public final int y;
-    protected int width;
-    protected int height;
+    protected final int width;
+    protected final int height;
 
     public EIOWidget(int x, int y, int width, int height) {
         this.x = x;
