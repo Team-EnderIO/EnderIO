@@ -95,6 +95,10 @@ public class MachineInventory extends ItemStackHandler implements IEnderCapabili
         }
     }
 
+    public boolean isEmpty() {
+        return stacks.stream().noneMatch(ItemStack::isEmpty);
+    }
+
     private record Wrapped(MachineInventory master, @Nullable Direction side) implements IItemHandler {
         private Wrapped(MachineInventory master, @Nullable Direction side) {
             this.master = master;

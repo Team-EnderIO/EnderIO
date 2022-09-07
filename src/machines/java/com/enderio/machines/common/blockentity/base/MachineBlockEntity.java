@@ -413,19 +413,8 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             }
         }
 
-        if (inventory != null) {
-            boolean hasContents = false;
-            int stacks = inventory.getSlots();
-            for (int i = 0; i < stacks; i++) {
-                if (!inventory.getStackInSlot(i).isEmpty()) {
-                    hasContents = true;
-                    break;
-                }
-            }
-
-            if (hasContents) {
-                pTag.put(MachineNbtTags.INVENTORY_NBT_KEY, inventory.serializeNBT());
-            }
+        if (inventory != null && !inventory.isEmpty()) {
+            pTag.put(MachineNbtTags.INVENTORY_NBT_KEY, inventory.serializeNBT());
         }
     }
 
