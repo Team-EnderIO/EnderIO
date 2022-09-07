@@ -21,14 +21,16 @@ public class SimpleConduitType implements IConduitType {
 
     private final ResourceLocation texture;
     private final int activeLightLevel;
+    private final IConduitTicker ticker;
 
-    public SimpleConduitType(ResourceLocation texture) {
-        this(texture, 0);
+    public SimpleConduitType(ResourceLocation texture, IConduitTicker ticker) {
+        this(texture, 0, ticker);
     }
 
-    public SimpleConduitType(ResourceLocation texture, int activeLightLevel) {
+    public SimpleConduitType(ResourceLocation texture, int activeLightLevel, IConduitTicker ticker) {
         this.texture = texture;
         this.activeLightLevel = activeLightLevel;
+        this.ticker = ticker;
     }
     @Override
     public ResourceLocation getTexture() {
@@ -62,7 +64,7 @@ public class SimpleConduitType implements IConduitType {
 
     @Override
     public IConduitTicker getTicker() {
-        return ((graph, level) -> {});
+        return ticker;
     }
 
     @Override

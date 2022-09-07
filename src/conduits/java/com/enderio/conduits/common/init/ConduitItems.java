@@ -28,6 +28,7 @@ public class ConduitItems {
         map.put(EnderConduitTypes.POWER2, createConduitItem(EnderConduitTypes.POWER2, "power2"));
         map.put(EnderConduitTypes.POWER3, createConduitItem(EnderConduitTypes.POWER3, "power3"));
         map.put(EnderConduitTypes.REDSTONE, createConduitItem(EnderConduitTypes.REDSTONE, "redstone"));
+        map.put(EnderConduitTypes.ITEM, createConduitItem(EnderConduitTypes.ITEM, "item"));
         return map;
     });
 
