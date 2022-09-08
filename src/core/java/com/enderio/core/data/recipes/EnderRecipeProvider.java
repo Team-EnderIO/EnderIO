@@ -69,6 +69,10 @@ public abstract class EnderRecipeProvider extends RecipeProvider {
             }
         }
 
+        public void addCondition(ICondition condition) {
+            conditions.add(condition);
+        }
+
         @Nullable
         @Override
         public JsonObject serializeAdvancement() {

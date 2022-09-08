@@ -18,6 +18,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.crafting.conditions.NotCondition;
+import net.minecraftforge.common.crafting.conditions.TagEmptyCondition;
 import net.minecraftforge.registries.ForgeRegistries;
 import java.util.List;
 import java.util.Set;
@@ -377,6 +379,14 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
             this.outputs = outputs;
             this.energy = energy;
             this.bonusType = bonusType;
+
+            // Make required tags a recipe condition.
+            // TODO: I don't think this is the best way to do this, but it should prevent the issue we were having with tags not being ready at recipe time?
+            for (SagMillingRecipe.OutputItem output : this.outputs) {
+                if (output.isTag() && !output.isOptional()) {
+                    addCondition(new NotCondition(new TagEmptyCondition(output.getTag().location())));
+                }
+            }
         }
 
         @Override
