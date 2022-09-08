@@ -46,6 +46,7 @@ public class ConduitItems {
         return REGISTRATE.item(itemName + "_conduit",
             properties -> ConduitItemFactory.build(type, properties))
             .tab(() -> EIOCreativeTabs.CONDUITS)
+            .model((ctx, prov) -> {})
             .register();
     }
 

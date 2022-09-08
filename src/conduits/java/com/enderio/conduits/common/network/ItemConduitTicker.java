@@ -4,7 +4,7 @@ import com.enderio.api.conduit.ticker.ICapabilityAwareConduitTicker;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -35,6 +35,6 @@ public class ItemConduitTicker implements ICapabilityAwareConduitTicker<IItemHan
 
     @Override
     public Capability<IItemHandler> getCapability() {
-        return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+        return ForgeCapabilities.ITEM_HANDLER;
     }
 }

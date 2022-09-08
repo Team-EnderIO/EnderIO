@@ -21,6 +21,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -33,7 +34,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -50,7 +51,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
     public static final ModelProperty<ConduitBundle> BUNDLE_MODEL_PROPERTY = new ModelProperty<>();
 
-    private ConduitShape shape = new ConduitShape();
+    private final ConduitShape shape = new ConduitShape();
 
     private final ConduitBundle bundle;
     @UseOnly(LogicalSide.CLIENT)
@@ -72,7 +73,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     }
 
     private void scheduleTick() {
-        if (!level.isClientSide())
+        //if (!level.isClientSide())
         //    level.scheduleTick(getBlockPos(), ConduitBlocks.CONDUIT.get(), 0);
         setChanged();
     }
@@ -88,8 +89,8 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     public boolean stillValid(Player pPlayer) {
         if (this.level.getBlockEntity(this.worldPosition) != this)
             return false;
-        return pPlayer.distanceToSqr(this.worldPosition.getX() + 0.5D, this.worldPosition.getY() + 0.5D, this.worldPosition.getZ() + 0.5D) <= pPlayer.getAttributeValue(
-            ForgeMod.REACH_DISTANCE.get());
+        return pPlayer.distanceToSqr(this.worldPosition.getX() + 0.5D, this.worldPosition.getY() + 0.5D, this.worldPosition.getZ() + 0.5D) <= Mth.square(pPlayer.getAttributeValue(
+            ForgeMod.REACH_DISTANCE.get()));
     }
 
     @Override
@@ -136,7 +137,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                     if (blockEntity instanceof ConduitBlockEntity conduit && conduit.connectTo(dir.getOpposite(), type)) {
                         nodes.add(conduit.bundle.getNodeFor(type));
                         connect(dir, type);
-                    } else if(blockEntity.getCapability(CapabilityEnergy.ENERGY).isPresent()) {
+                    } else if(blockEntity.getCapability(ForgeCapabilities.ENERGY).isPresent()) {
                         connectEnd(dir, type);
                     }
                 }

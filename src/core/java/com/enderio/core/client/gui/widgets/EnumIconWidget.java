@@ -1,6 +1,5 @@
 package com.enderio.core.client.gui.widgets;
 
-import com.enderio.core.client.gui.IIcon;
 import com.enderio.api.misc.IIcon;
 import com.enderio.core.client.gui.screen.IEnderScreen;
 import com.enderio.core.client.gui.screen.IFullScreenListener;
