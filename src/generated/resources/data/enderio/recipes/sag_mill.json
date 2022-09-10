@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": {
+      "item": "enderio:void_chassis"
+    },
+    "F": {
+      "item": "minecraft:flint"
+    },
+    "G": {
+      "item": "enderio:dark_bimetal_gear"
+    },
+    "I": {
+      "item": "enderio:dark_steel_ingot"
+    },
+    "P": {
+      "item": "minecraft:piston"
+    }
+  },
+  "pattern": [
+    "FFF",
+    "ICI",
+    "GPG"
+  ],
+  "result": {
+    "item": "enderio:sag_mill"
+  }
+}

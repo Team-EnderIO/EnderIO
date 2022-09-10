@@ -1,4 +1,4 @@
-package com.enderio.machines.common.compat.jei;
+package com.enderio.machines.common.compat.jei.category;
 
 import com.enderio.EnderIO;
 import com.enderio.machines.client.gui.screen.SlicerScreen;

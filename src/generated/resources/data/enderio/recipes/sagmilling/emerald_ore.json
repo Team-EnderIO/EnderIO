@@ -2,7 +2,7 @@
   "type": "enderio:sagmilling",
   "energy": 2400,
   "input": {
-    "item": "minecraft:emerald_ore"
+    "tag": "forge:ores/emerald"
   },
   "outputs": [
     {

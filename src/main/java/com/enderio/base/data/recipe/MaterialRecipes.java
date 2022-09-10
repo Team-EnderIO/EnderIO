@@ -7,10 +7,7 @@ import com.enderio.base.common.tag.EIOTags;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -80,7 +77,7 @@ public class MaterialRecipes extends RecipeProvider {
         makeMaterialRecipes(recipeConsumer, EIOItems.END_STEEL_INGOT.get(), EIOItems.END_STEEL_NUGGET.get(), EIOBlocks.END_STEEL_BLOCK.get());
 
         ShapedRecipeBuilder
-            .shaped(EIOItems.CONDUIT_BINDER_COMPOSITE.get())
+            .shaped(EIOItems.CONDUIT_BINDER_COMPOSITE.get(), 16)
             .pattern("GCG")
             .pattern("SGS")
             .pattern("GCG")
@@ -258,6 +255,12 @@ public class MaterialRecipes extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(ItemTags.LOGS).build()))
             .save(recipeConsumer, EnderIO.loc("stick"));
 
+        // TODO: Explore adding a custom serializer for smelting so we can do 1:2 again.
+        SimpleCookingRecipeBuilder
+            .smelting(Ingredient.of(EIOItems.CONDUIT_BINDER_COMPOSITE.get()), EIOItems.CONDUIT_BINDER.get(), 0, 100)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER_COMPOSITE.get()))
+            .save(recipeConsumer);
+
         grindingBall(recipeConsumer, EIOItems.DARK_STEEL_BALL.get(), EIOItems.DARK_STEEL_INGOT.get());
         grindingBall(recipeConsumer, EIOItems.SOULARIUM_BALL.get(), EIOItems.SOULARIUM_INGOT.get());
         grindingBall(recipeConsumer, EIOItems.CONDUCTIVE_ALLOY_BALL.get(), EIOItems.CONDUCTIVE_ALLOY_INGOT.get());
@@ -267,6 +270,8 @@ public class MaterialRecipes extends RecipeProvider {
         grindingBall(recipeConsumer, EIOItems.VIBRANT_ALLOY_BALL.get(), EIOItems.VIBRANT_ALLOY_INGOT.get());
         grindingBall(recipeConsumer, EIOItems.COPPER_ALLOY_BALL.get(), EIOItems.COPPER_ALLOY_INGOT.get());
         grindingBall(recipeConsumer, EIOItems.END_STEEL_BALL.get(), EIOItems.END_STEEL_INGOT.get());
+
+        machineReagents(recipeConsumer);
     }
 
     private void machineReagents(Consumer<FinishedRecipe> recipeConsumer) {

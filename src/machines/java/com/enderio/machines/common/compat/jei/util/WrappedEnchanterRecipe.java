@@ -1,4 +1,4 @@
-package com.enderio.machines.common.compat.jei;
+package com.enderio.machines.common.compat.jei.util;
 
 import com.enderio.machines.common.recipe.EnchanterRecipe;
 import net.minecraft.resources.ResourceLocation;
@@ -74,7 +74,7 @@ public class WrappedEnchanterRecipe implements Recipe<Container> {
 
     @Override
     public ResourceLocation getId() {
-        return null;
+        return recipe.getId();
     }
 
     @Override
@@ -84,6 +84,6 @@ public class WrappedEnchanterRecipe implements Recipe<Container> {
 
     @Override
     public RecipeType<?> getType() {
-        return null;
+        return recipe.getType();
     }
 }

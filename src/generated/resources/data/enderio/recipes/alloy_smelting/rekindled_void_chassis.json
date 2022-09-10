@@ -1,22 +1,22 @@
 {
   "type": "enderio:alloy_smelting",
-  "energy": 3600,
+  "energy": 5000,
   "experience": 0.3,
   "inputs": [
     {
       "count": 1,
       "ingredient": {
-        "item": "enderio:end_steel_machine_chassis"
+        "item": "enderio:void_chassis"
       }
     },
     {
       "count": 1,
       "ingredient": {
-        "item": "enderio:enhanced_dye_blend"
+        "item": "minecraft:dragon_breath"
       }
     }
   ],
   "result": {
-    "item": "enderio:enhanced_machine_chassis"
+    "item": "enderio:rekindled_void_chassis"
   }
 }

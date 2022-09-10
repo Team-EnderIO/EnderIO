@@ -1,4 +1,4 @@
-package com.enderio.machines.common.compat.jei;
+package com.enderio.machines.common.compat.jei.category;
 
 import com.enderio.EnderIO;
 import com.enderio.api.grindingball.IGrindingBallData;
@@ -73,26 +73,26 @@ public class SagMillCategory implements IRecipeCategory<SagMillingRecipe> {
         List<SagMillingRecipe.OutputItem> results = recipe.getOutputs();
         if (results.size() > 0)
             builder.addSlot(OUTPUT, 1, 48)
-                .addIngredients(results.get(0).getIngredient())
+                .addItemStack(results.get(0).getItemStack())
                 .addTooltipCallback(chanceTooltip(recipe, results.get(0)));
         if (results.size() > 1)
             builder.addSlot(OUTPUT, 22, 48)
-                .addIngredients(results.get(1).getIngredient())
+                .addItemStack(results.get(1).getItemStack())
                 .addTooltipCallback(chanceTooltip(recipe, results.get(1)));
         if (results.size() > 2)
             builder.addSlot(OUTPUT, 43, 48)
-                .addIngredients(results.get(2).getIngredient())
+                .addItemStack(results.get(2).getItemStack())
                 .addTooltipCallback(chanceTooltip(recipe, results.get(2)));
         if (results.size() > 3)
             builder.addSlot(OUTPUT, 64, 48)
-                .addIngredients(results.get(3).getIngredient())
+                .addItemStack(results.get(3).getItemStack())
                 .addTooltipCallback(chanceTooltip(recipe, results.get(3)));
     }
 
     private IRecipeSlotTooltipCallback chanceTooltip(SagMillingRecipe recipe, SagMillingRecipe.OutputItem item) {
         return (recipeSlotView, tooltip) -> {
             if (item.getChance() < 1.0f) {
-                String chance = NumberFormat.getIntegerInstance(Locale.ENGLISH).format(item.getChance() * 100);
+                String chance = item.getChance() > 0.01f ? NumberFormat.getIntegerInstance(Locale.ENGLISH).format(item.getChance() * 100) : "<1";
                 if (recipe.getBonusType().useGrindingBall()) {
                     tooltip.add(TooltipUtil.styledWithArgs(MachineLang.TOOLTIP_SAG_MILL_CHANCE_BALL, chance));
                 } else {

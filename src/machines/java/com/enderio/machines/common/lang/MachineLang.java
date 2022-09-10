@@ -14,7 +14,8 @@ public class MachineLang {
     public static final Component ALLOY_SMELTER_MODE_ALL = REGISTRATE.addLang("gui", EnderIO.loc("alloy_smelter.mode_all"), "Alloying and Smelting");
     public static final Component ALLOY_SMELTER_MODE_ALLOY = REGISTRATE.addLang("gui", EnderIO.loc("alloy_smelter.mode_alloy"), "Alloys Only");
     public static final Component ALLOY_SMELTER_MODE_FURNACE = REGISTRATE.addLang("gui", EnderIO.loc("alloy_smelter.mode_furnace"), "Furnace Only");
-    public static final MutableComponent SAG_MILL_GRINDINGBALL_TOOLTIP = REGISTRATE.addLang("gui", EnderIO.loc("grinding_ball"), "Remaining: %s%%\\nSAG Mill Grinding Ball\\nMain Output %s%%\\nBonus Output %s%%\\nPower Use %s%%");
+    public static final MutableComponent SAG_MILL_GRINDINGBALL_REMAINING = REGISTRATE.addLang("tooltip", EnderIO.loc("grinding_ball_remaining"), "Remaining: %s%%");
+    public static final MutableComponent SAG_MILL_GRINDINGBALL_TITLE = REGISTRATE.addLang("tooltip", EnderIO.loc("grinding_ball_title"), "SAG Mill Grinding Ball");
 
     public static final Component TOOLTIP_ENERGY_EQUIVALENCE = REGISTRATE.addLang("gui", EnderIO.loc("energy_equivalence"), "A unit of energy, equivalent to FE.");
     public static final MutableComponent TOOLTIP_SAG_MILL_CHANCE_BALL = REGISTRATE.addLang("gui", EnderIO.loc("sag_mill_chance_ball"), "Chance: %s%% (modified by grinding ball)");

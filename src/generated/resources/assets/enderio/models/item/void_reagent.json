@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "enderio:item/infinity_crystal"
+    "layer0": "enderio:item/void_reagent"
   }
 }

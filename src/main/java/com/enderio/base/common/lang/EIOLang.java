@@ -5,8 +5,10 @@ import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.core.common.util.TooltipUtil;
 import com.tterrag.registrate.Registrate;
 import net.minecraft.ChatFormatting;
+import net.minecraft.ResourceLocationException;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 
 public class EIOLang {
     private static final Registrate REGISTRATE = EnderIO.registrate();
@@ -138,6 +140,14 @@ public class EIOLang {
     // region Graves
 
     public static final Component GRAVE_WRONG_OWNER = REGISTRATE.addLang("message", EnderIO.loc("grave.wrong_owner"), "This grave is not yours! You cannot open it.");
+
+    // endregion
+
+    // region Grinding balls
+
+    public static final MutableComponent GRINDINGBALL_MAIN_OUTPUT = REGISTRATE.addLang("tooltip", EnderIO.loc("grinding_ball_main_output"), "Main Output %s%%");
+    public static final MutableComponent GRINDINGBALL_BONUS_OUTPUT = REGISTRATE.addLang("tooltip", EnderIO.loc("grinding_ball_bonus_output"), "Bonus Output %s%%");
+    public static final MutableComponent GRINDINGBALL_POWER_USE = REGISTRATE.addLang("tooltip", EnderIO.loc("grinding_ball_power_use"), "Power Use %s%%");
 
     // endregion
 

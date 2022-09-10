@@ -1,10 +1,11 @@
-package com.enderio.machines.common.compat.jei;
+package com.enderio.machines.common.compat.jei.category;
 
 import com.enderio.EnderIO;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.common.recipes.CountedIngredient;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.machines.client.gui.screen.AlloySmelterScreen;
+import com.enderio.machines.common.compat.jei.util.MachineCategory;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
@@ -27,7 +28,8 @@ import java.util.Locale;
 import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
 import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
 
-public class AlloySmeltingCategory implements IRecipeCategory<AlloySmeltingRecipe> {
+// TODO: A separate category for primitive alloy smelting. This will display the burn time and the correct UI.
+public class AlloySmeltingCategory extends MachineCategory<AlloySmeltingRecipe> {
 
     public static final RecipeType<AlloySmeltingRecipe> TYPE = RecipeType.create(EnderIO.MODID, "alloy_smelting", AlloySmeltingRecipe.class);
 
@@ -35,6 +37,7 @@ public class AlloySmeltingCategory implements IRecipeCategory<AlloySmeltingRecip
     private final IDrawable icon;
 
     public AlloySmeltingCategory(IGuiHelper guiHelper) {
+        super(guiHelper, false);
         this.background = guiHelper.createDrawable(AlloySmelterScreen.BG_TEXTURE_AUTO, 53, 6, 67 + 40, 73); // + 40 text space
         this.icon = guiHelper.createDrawableItemStack(new ItemStack(MachineBlocks.ALLOY_SMELTER.get()));
     }
@@ -81,6 +84,8 @@ public class AlloySmeltingCategory implements IRecipeCategory<AlloySmeltingRecip
 
     @Override
     public void draw(AlloySmeltingRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
+        animatedFlame.draw(stack, 3, 29);
+        animatedFlame.draw(stack, 51, 29);
         Minecraft.getInstance().font.draw(stack, getEnergyString(recipe), 60, 50, 0xff808080);
     }
 

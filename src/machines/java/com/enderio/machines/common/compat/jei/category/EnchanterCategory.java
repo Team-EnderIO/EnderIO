@@ -1,10 +1,9 @@
-package com.enderio.machines.common.compat.jei;
+package com.enderio.machines.common.compat.jei.category;
 
 import com.enderio.EnderIO;
-import com.enderio.machines.client.gui.screen.AlloySmelterScreen;
 import com.enderio.machines.client.gui.screen.EnchanterScreen;
+import com.enderio.machines.common.compat.jei.util.WrappedEnchanterRecipe;
 import com.enderio.machines.common.init.MachineBlocks;
-import com.enderio.machines.common.recipe.EnchanterRecipe;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -20,8 +19,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
 import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;

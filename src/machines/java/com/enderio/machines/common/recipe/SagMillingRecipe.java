@@ -199,19 +199,18 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
             return item.left().or(() -> TagUtil.getOptionalItem(item.right().get())).orElse(null);
         }
 
+        public ItemStack getItemStack() {
+            Item item = getItem();
+            if (item != null)
+                return new ItemStack(item, count);
+            return ItemStack.EMPTY;
+        }
+
         @Nullable
         public TagKey<Item> getTag() {
             if (!isTag())
                 return null;
             return item.right().get();
-        }
-
-        public Ingredient getIngredient() {
-            if (isItem()) {
-                return Ingredient.of(getItem());
-            } else {
-                return Ingredient.of(getTag());
-            }
         }
 
         public boolean isTag() {
@@ -262,7 +261,7 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
             // Get the bonus type.
             BonusType bonusType = BonusType.MULTIPLY_OUTPUT;
             if (serializedRecipe.has("bonus")) {
-                BonusType.valueOf(serializedRecipe.get("bonus").getAsString().toUpperCase());
+                bonusType = BonusType.valueOf(serializedRecipe.get("bonus").getAsString().toUpperCase());
             }
 
             // Load outputs

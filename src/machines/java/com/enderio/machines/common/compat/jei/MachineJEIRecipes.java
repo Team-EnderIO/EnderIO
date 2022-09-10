@@ -1,5 +1,6 @@
 package com.enderio.machines.common.compat.jei;
 
+import com.enderio.machines.common.compat.jei.util.WrappedEnchanterRecipe;
 import com.enderio.machines.common.compat.vanilla.VanillaAlloySmeltingRecipe;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.recipe.AlloySmeltingRecipe;

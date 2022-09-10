@@ -37,10 +37,10 @@ public class MachineRecipeProvider extends RecipeProvider {
             .define('F', Blocks.FURNACE)
             .define('C', EIOBlocks.VOID_CHASSIS.get())
             .define('G', EIOItems.GEAR_DARK_STEEL.get())
-            .define('C', Blocks.CAULDRON)
+            .define('B', Blocks.CAULDRON)
             .pattern("IFI")
             .pattern("FCF")
-            .pattern("GCG")
+            .pattern("GBG")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.VOID_CHASSIS.get()))
             .save(finishedRecipeConsumer);
 
