@@ -61,7 +61,6 @@ public class EnderIO {
         ctx.registerConfig(ModConfig.Type.COMMON, BaseConfig.COMMON_SPEC, "enderio/base-common.toml");
         ctx.registerConfig(ModConfig.Type.CLIENT, BaseConfig.CLIENT_SPEC, "enderio/base-client.toml");
 
-
         // Setup core networking now
         CoreNetwork.networkInit();
 
@@ -77,6 +76,7 @@ public class EnderIO {
         EIOLang.register();
         EIORecipes.register();
         EIOLootModifiers.register();
+        EIOParticles.register();
 
         // Run datagen after registrate is finished.
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
