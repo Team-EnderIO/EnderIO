@@ -1,4 +1,4 @@
-package com.enderio.machines.common.compat;
+package com.enderio.machines.common.compat.vanilla;
 
 import com.enderio.core.common.recipes.CountedIngredient;
 import com.enderio.core.common.recipes.OutputStack;
@@ -29,6 +29,11 @@ public class VanillaAlloySmeltingRecipe extends AlloySmeltingRecipe {
     @Override
     public List<CountedIngredient> getInputs() {
         return List.of(CountedIngredient.of(vanillaRecipe.getIngredients().get(0)));
+    }
+
+    @Override
+    public int getBasicEnergyCost() {
+        return RF_PER_ITEM;
     }
 
     @Override

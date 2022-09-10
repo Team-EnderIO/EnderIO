@@ -50,6 +50,13 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
         return experience;
     }
 
+    /**
+     * Helper for JEI
+     */
+    public int getBasicEnergyCost() {
+        return energy;
+    }
+
     @Override
     public int getEnergyCost(Container container) {
         return energy;

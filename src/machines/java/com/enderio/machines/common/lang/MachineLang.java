@@ -17,6 +17,8 @@ public class MachineLang {
     public static final MutableComponent SAG_MILL_GRINDINGBALL_TOOLTIP = REGISTRATE.addLang("gui", EnderIO.loc("grinding_ball"), "Remaining: %s%%\\nSAG Mill Grinding Ball\\nMain Output %s%%\\nBonus Output %s%%\\nPower Use %s%%");
 
     public static final Component TOOLTIP_ENERGY_EQUIVALENCE = REGISTRATE.addLang("gui", EnderIO.loc("energy_equivalence"), "A unit of energy, equivalent to FE.");
+    public static final MutableComponent TOOLTIP_SAG_MILL_CHANCE_BALL = REGISTRATE.addLang("gui", EnderIO.loc("sag_mill_chance_ball"), "Chance: %s%% (modified by grinding ball)");
+    public static final MutableComponent TOOLTIP_SAG_MILL_CHANCE = REGISTRATE.addLang("gui", EnderIO.loc("sag_mill_chance"), "Chance: %s%%");
 
     public static void register() {}
 }

@@ -282,7 +282,7 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
         build("prismarine_shard", Ingredient.of(PRISMARINE_SHARD), List.of(
         		output(PRISMARINE_CRYSTALS), 
         		output(PRISMARINE_CRYSTALS, 0.1f)),
-        		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
+        		BASE_ENERGY_PER_OPERATION, BonusType.NONE, finishedRecipeConsumer);
         
         build("soularium_block", Ingredient.of(EIOBlocks.SOULARIUM_BLOCK.get()), List.of(
         		output(SOUL_POWDER.get(), 9)

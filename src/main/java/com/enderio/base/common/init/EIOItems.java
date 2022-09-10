@@ -149,8 +149,6 @@ public class EIOItems {
 
     // region Infinity
 
-    public static final ItemEntry<MaterialItem> INFINITY_CRYSTAL = materialItem("infinity_crystal").register();
-
     public static final ItemEntry<MaterialItem> GRAINS_OF_INFINITY = materialItem("grains_of_infinity").lang("Grains of Infinity").register();
 
     public static final ItemEntry<MaterialItem> INFINITY_ROD = materialItem("infinity_rod").register();
@@ -220,6 +218,12 @@ public class EIOItems {
     public static final ItemEntry<MaterialItem> DYE_SOUL_ATTUNED_BLEND = materialItem("soul_attuned_dye_blend").tag(Tags.Items.DYES).register();
 
     public static final ItemEntry<MaterialItem> DYE_ENHANCED_BLEND = materialItem("enhanced_dye_blend").tag(Tags.Items.DYES).register();
+
+    // endregion
+
+    // region Machine Composites
+
+    public static final ItemEntry<MaterialItem> VOID_REAGENT = materialItem("void_reagent").register();
 
     // endregion
 

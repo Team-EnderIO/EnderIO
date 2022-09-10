@@ -50,18 +50,34 @@ public class EIOBlocks {
 
     // region Chassis
 
-    // TODO: Deal with machine chassis when we decide machine "tiers"
-//    public static final BlockEntry<Block> SIMPLE_MACHINE_CHASSIS = chassisBlock("simple_machine_chassis").register();
-
+    @Deprecated(forRemoval = true)
     public static final BlockEntry<Block> INDUSTRIAL_MACHINE_CHASSIS = chassisBlock("industrial_machine_chassis").register();
 
+    @Deprecated(forRemoval = true)
     public static final BlockEntry<Block> END_STEEL_MACHINE_CHASSIS = chassisBlock("end_steel_machine_chassis").lang("End Steel Chassis").register();
 
+    @Deprecated(forRemoval = true)
     public static final BlockEntry<Block> SOUL_MACHINE_CHASSIS = chassisBlock("soul_machine_chassis").register();
 
+    @Deprecated(forRemoval = true)
     public static final BlockEntry<Block> ENHANCED_MACHINE_CHASSIS = chassisBlock("enhanced_machine_chassis").register();
 
+    @Deprecated(forRemoval = true)
     public static final BlockEntry<Block> SOULLESS_MACHINE_CHASSIS = chassisBlock("soulless_machine_chassis").register();
+
+
+
+    public static final BlockEntry<Block> EMPTY_CHASSIS = chassisBlock("empty_chassis").register();
+    public static final BlockEntry<Block> VOID_CHASSIS = chassisBlock("void_chassis").register();
+
+    public static final BlockEntry<Block> REKINDLED_VOID_CHASSIS = chassisBlock("rekindled_void_chassis").register(); // Dragons breath??
+
+    public static final BlockEntry<Block> ENSOULED_CHASSIS = chassisBlock("ensouled_chassis").register();
+
+    // TODO: Needs proper name
+    public static final BlockEntry<Block> ENTRAPPED_SOUL_MACHINE_CHASSIS = chassisBlock("soulless_chassis").register();
+
+    public static final BlockEntry<Block> SKULK_CHASSIS = chassisBlock("skulk_chassis").register();
 
     // endregion
 

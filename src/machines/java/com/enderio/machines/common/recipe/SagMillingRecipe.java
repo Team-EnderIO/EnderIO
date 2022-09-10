@@ -51,7 +51,11 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
 
     @Override
     public int getEnergyCost(Container container) {
-        return (int) (energy * container.getGrindingBall().getPowerUse());
+        return getEnergyCost(container.getGrindingBall());
+    }
+
+    public int getEnergyCost(IGrindingBallData grindingBallData) {
+        return (int) (energy * grindingBallData.getPowerUse());
     }
 
     public BonusType getBonusType() {
@@ -113,6 +117,10 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
             }
         }
         return guaranteedOutputs;
+    }
+
+    public List<OutputItem> getOutputs() {
+        return outputs;
     }
 
     @Override
@@ -196,6 +204,14 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
             if (!isTag())
                 return null;
             return item.right().get();
+        }
+
+        public Ingredient getIngredient() {
+            if (isItem()) {
+                return Ingredient.of(getItem());
+            } else {
+                return Ingredient.of(getTag());
+            }
         }
 
         public boolean isTag() {
