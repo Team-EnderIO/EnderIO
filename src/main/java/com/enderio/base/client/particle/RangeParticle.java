@@ -7,44 +7,40 @@ import com.mojang.math.Vector4f;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-public class RangeParticle<T extends BlockEntity & IRanged> extends TextureSheetParticle {
+public class RangeParticle<T extends BlockEntity> extends TextureSheetParticle {
 
     private static final int INIT_TIME = 20;
 
-    private final T owner;
     private final Vector4f color;
+    private final int range;
 
-    // TODO look into clientLevel
-    public RangeParticle(T owner, ClientLevel level) {
-        this(owner, new Vector4f(1, 1, 1, 0.4f), level);
-    }
-
-    public RangeParticle(T owner, Vector4f color, ClientLevel level) {
-        super(level, owner.getBlockPos().getX(), owner.getBlockPos().getY(), owner.getBlockPos().getZ());
-        this.owner = owner;
+    public RangeParticle(ClientLevel level, Vector4f color, BlockPos pos, int range) {
+        super(level, pos.getX(), pos.getY(), pos.getZ());
         this.color = color;
+        this.range = range;
         this.lifetime = 20 * 60 * 10; // 10 minutes
     }
 
-    @Override
-    public boolean isAlive() {
-        return age < lifetime && owner.hasLevel() && !owner.isRemoved() && owner.isShowingRange() && level.getBlockEntity(owner.getBlockPos()) == owner;
-    }
+    // TODO reimplement this - refer Mek
+    //    @Override
+    //    public boolean isAlive() {
+    //        return age < lifetime && owner.hasLevel() && !owner.isRemoved() && owner.isShowingRange() && level.getBlockEntity(owner.getBlockPos()) == owner;
+    //    }
 
     @Override
     public void render(VertexConsumer consumer, Camera renderInfo, float partialTicks) {
         Vec3 position = renderInfo.getPosition();
-        double diff = owner.getRange();
 
-        Vec3 a = position.add(diff, diff, diff);
-        Vec3 b = position.add(diff, -diff, diff);
-        Vec3 c = position.add(-diff, -diff, diff);
-        Vec3 d = position.add(-diff, diff, diff);
+        Vec3 a = position.add(range, range, range);
+        Vec3 b = position.add(range, -range, range);
+        Vec3 c = position.add(-range, -range, range);
+        Vec3 d = position.add(-range, range, range);
         //        BlockPos position = owner.getBlockPos();
         addFace(Direction.UP, consumer, a, b, c, d, getU0(), getU1(), getV0(), getV1());
     }
