@@ -12,6 +12,9 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
 public class ToggleImageButton<U extends Screen & IEnderScreen> extends AbstractWidget {
 
     private final U addedOn;
@@ -24,22 +27,22 @@ public class ToggleImageButton<U extends Screen & IEnderScreen> extends Abstract
     private final int textureWidth;
     private final int textureHeight;
 
-    private boolean isToggledOn = false;
-    protected final ToggleImageButton.OnPress onPress;
+    private final Supplier<Boolean> getter;
+    private final Consumer<Boolean> setter;
 
     public ToggleImageButton(U addedOn, int x, int y, int width, int height, int xTexStart, int yTexStart, int xDiffTex, int yDiffTex,
-        ResourceLocation resourceLocation, ToggleImageButton.OnPress onPress) {
-        this(addedOn, x, y, width, height, xTexStart, yTexStart, xDiffTex, yDiffTex, resourceLocation, 256, 256, onPress);
+        ResourceLocation resourceLocation, Supplier<Boolean> getter, Consumer<Boolean> setter) {
+        this(addedOn, x, y, width, height, xTexStart, yTexStart, xDiffTex, yDiffTex, resourceLocation, 256, 256, getter, setter);
     }
 
     public ToggleImageButton(U addedOn, int x, int y, int width, int height, int xTexStart, int yTexStart, int xDiffTex, int yDiffTex,
-        ResourceLocation resourceLocation, int textureWidth, int textureHeight, ToggleImageButton.OnPress onPress) {
-        this(addedOn, x, y, width, height, xTexStart, yTexStart, xDiffTex, yDiffTex, resourceLocation, textureWidth, textureHeight, onPress,
+        ResourceLocation resourceLocation, int textureWidth, int textureHeight, Supplier<Boolean> getter, Consumer<Boolean> setter) {
+        this(addedOn, x, y, width, height, xTexStart, yTexStart, xDiffTex, yDiffTex, resourceLocation, textureWidth, textureHeight, getter, setter,
             CommonComponents.EMPTY);
     }
 
     public ToggleImageButton(U addedOn, int x, int y, int width, int height, int xTexStart, int yTexStart, int xDiffTex, int yDiffTex,
-        ResourceLocation resourceLocation, int textureWidth, int textureHeight, ToggleImageButton.OnPress onPress, Component message) {
+        ResourceLocation resourceLocation, int textureWidth, int textureHeight, Supplier<Boolean> getter, Consumer<Boolean> setter, Component message) {
         super(x, y, width, height, message);
         this.textureWidth = textureWidth;
         this.textureHeight = textureHeight;
@@ -49,7 +52,8 @@ public class ToggleImageButton<U extends Screen & IEnderScreen> extends Abstract
         this.yDiffTex = yDiffTex;
         this.resourceLocation = resourceLocation;
         this.addedOn = addedOn;
-        this.onPress = onPress;
+        this.getter = getter;
+        this.setter = setter;
     }
 
     @Override
@@ -63,7 +67,7 @@ public class ToggleImageButton<U extends Screen & IEnderScreen> extends Abstract
         int xTex = this.xTexStart;
         int yTex = this.yTexStart;
 
-        if (this.isToggledOn) {
+        if (getter.get()) {
             xTex += xDiffTex;
             yTex += yDiffTex;
         }
@@ -78,15 +82,10 @@ public class ToggleImageButton<U extends Screen & IEnderScreen> extends Abstract
 
     @Override
     public void onClick(double mouseX, double mouseY) {
-        isToggledOn = !isToggledOn;
-        this.onPress.onPress(isToggledOn);
+        setter.accept(!getter.get());
     }
 
     @Override
     public void updateNarration(NarrationElementOutput narrationElementOutput) {}
-
-    public interface OnPress {
-        void onPress(boolean toggle);
-    }
 
 }
