@@ -2,16 +2,20 @@ package com.enderio.machines.common.blockentity.base;
 
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
+import com.enderio.base.common.particle.RangeParticleData;
 import com.enderio.base.common.util.AttractionUtil;
 import com.enderio.core.common.sync.IntegerDataSlot;
 import com.enderio.core.common.sync.SyncMode;
 import com.enderio.machines.common.io.FixedIOConfig;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -25,6 +29,8 @@ public abstract class VacuumMachineEntity<T extends Entity> extends MachineBlock
     protected static final double SPEED_4 = SPEED * 4;
     private static final int MAX_RANGE = 6;
     private int range = 6;
+
+    private boolean rangeVisible = true;
     private List<WeakReference<T>> entities = new ArrayList<>();
     private Class<T> clazz;
 
@@ -38,6 +44,10 @@ public abstract class VacuumMachineEntity<T extends Entity> extends MachineBlock
     public void serverTick() {
         if (this.getRedstoneControl().isActive(level.hasNeighborSignal(worldPosition))) {
             this.attractEntities(this.getLevel(), this.getBlockPos(), this.range);
+        }
+
+        if (isShowingRange()) {
+            generateParticle(new RangeParticleData(getRange()), new Vec3(getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ()));
         }
         super.serverTick();
     }
@@ -99,6 +109,14 @@ public abstract class VacuumMachineEntity<T extends Entity> extends MachineBlock
         this.range = range;
     }
 
+    public boolean isShowingRange() {
+        return rangeVisible;
+    }
+
+    public void shouldShowRange(boolean show) {
+        rangeVisible = show;
+    }
+
     public void decreaseRange() {
         if (this.range > 0) {
             this.range--;
@@ -117,5 +135,13 @@ public abstract class VacuumMachineEntity<T extends Entity> extends MachineBlock
             getEntities(getLevel(), getBlockPos(), getRange(), getFilter());
         }
         super.onLoad();
+    }
+
+    private void generateParticle(RangeParticleData data, Vec3 pos) {
+        if (!isClientSide() && level instanceof ServerLevel level) {
+            for (ServerPlayer player : level.players()) {
+                level.sendParticles(player, data, true, pos.x, pos.y, pos.z, 1, 0, 0, 0, 0);
+            }
+        }
     }
 }

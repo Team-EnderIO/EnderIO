@@ -3,11 +3,9 @@ package com.enderio.base.client.particle;
 import com.enderio.base.common.particle.RangeParticleData;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
-import com.mojang.math.Vector4f;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
@@ -17,14 +15,21 @@ public class RangeParticle<T extends BlockEntity> extends TextureSheetParticle {
 
     private static final int INIT_TIME = 20;
 
-    private final Vector4f color;
+    //    private final Vector4f color;
     private final int range;
 
-    public RangeParticle(ClientLevel level, Vector4f color, BlockPos pos, int range) {
-        super(level, pos.getX(), pos.getY(), pos.getZ());
-        this.color = color;
+    public RangeParticle(ClientLevel level, Vec3 pos, int range) {
+        super(level, pos.x, pos.y, pos.z);
+        //        this.color = new Vector4f(255, 0, 0, 150);
         this.range = range;
-        this.lifetime = 20 * 60 * 10; // 10 minutes
+        //        this.lifetime = 20 * 60 * 10; // 10 minutes
+        this.lifetime = 5;
+        rCol = 1;
+        gCol = 0;
+        bCol = 0;
+        //Note: Vanilla discards pieces from particles that are under the alpha of 0.1, due to floating point differences
+        // of float and double if we set this to 0.1F, then it ends up getting discarded, so we just set this to 0.11F
+        alpha = 0.11F;
     }
 
     // TODO reimplement this - refer Mek
@@ -70,18 +75,21 @@ public class RangeParticle<T extends BlockEntity> extends TextureSheetParticle {
         consumer.vertex(pos.x(), pos.y(), pos.z()).uv(u, v).color(rCol, gCol, bCol, alpha).uv2(240, 240).endVertex();
     }
 
-    public static class Factory implements ParticleProvider<RangeParticleData> {
+    public static class Provider implements ParticleProvider<RangeParticleData> {
 
         private final SpriteSet spriteSet;
 
-        public Factory(SpriteSet spriteSet) {
+        public Provider(SpriteSet spriteSet) {
             this.spriteSet = spriteSet;
         }
 
         @Nullable
         @Override
-        public Particle createParticle(RangeParticleData type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-            return null;
+        public Particle createParticle(RangeParticleData data, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+            Vec3 pos = new Vec3(x, y, z);
+            RangeParticle particle = new RangeParticle(level, pos, data.range());
+            particle.pickSprite(this.spriteSet);
+            return particle;
         }
     }
 }

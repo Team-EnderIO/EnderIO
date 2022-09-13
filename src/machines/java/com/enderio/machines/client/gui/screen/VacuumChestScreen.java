@@ -30,7 +30,8 @@ public class VacuumChestScreen extends EIOScreen<VacuumChestMenu> {
         addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 14, topPos + 105, () -> menu.getBlockEntity().getRedstoneControl(),
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
         // TODO tooltips
-        addRenderableWidget(new ToggleImageButton<>(this, leftPos + imageWidth - 8 - 32 - 3, topPos + 105, 16, 16, 144, 176, 16, 0, WIDGETS, (state) -> {}));
+        addRenderableWidget(new ToggleImageButton<>(this, leftPos + imageWidth - 8 - 32 - 3, topPos + 105, 16, 16, 144, 176, 16, 0, WIDGETS,
+            state -> this.getMenu().getBlockEntity().shouldShowRange(state)));
         addRenderableWidget(
             new ImageButton(leftPos + imageWidth - 8 - 8, topPos + 86, 8, 8, 8, 0, 16, BUTTONS, (b) -> this.getMenu().getBlockEntity().increaseRange()));
         addRenderableWidget(
