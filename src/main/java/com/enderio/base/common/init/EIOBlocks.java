@@ -141,14 +141,6 @@ public class EIOBlocks {
         .build()
         .register();
 
-    public static final BlockEntry<IndustrialInsulationBlock> INDUSTRIAL_INSULATION = REGISTRATE
-        .block("industrial_insulation_block", Material.SPONGE, IndustrialInsulationBlock::new)
-        .initialProperties(() -> Blocks.SPONGE)
-        .item()
-        .tab(() -> EIOCreativeTabs.BLOCKS)
-        .build()
-        .register();
-
     // endregion
 
     // region Fused Quartz/Glass
@@ -411,8 +403,16 @@ public class EIOBlocks {
         ib.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.mcLoc("item/lever")));
         bb = ib.build();
         return bb.register();
+
     }
 
+    public static final BlockEntry<IndustrialInsulationBlock> INDUSTRIAL_INSULATION = REGISTRATE
+        .block("industrial_insulation_block", Material.SPONGE, IndustrialInsulationBlock::new)
+        .initialProperties(() -> Blocks.SPONGE)
+        .item()
+        .tab(() -> EIOCreativeTabs.BLOCKS)
+        .build()
+        .register();
     public static void register() {}
 
     public static void clientInit() {
