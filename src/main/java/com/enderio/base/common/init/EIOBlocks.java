@@ -141,6 +141,14 @@ public class EIOBlocks {
         .build()
         .register();
 
+    public static final BlockEntry<IndustrialInsulationBlock> INDUSTRIAL_INSULATION = REGISTRATE
+        .block("industrial_insulation_block", Material.SPONGE, IndustrialInsulationBlock::new)
+        .initialProperties(() -> Blocks.SPONGE)
+        .item()
+        .tab(() -> EIOCreativeTabs.BLOCKS)
+        .build()
+        .register();
+
     // endregion
 
     // region Fused Quartz/Glass
