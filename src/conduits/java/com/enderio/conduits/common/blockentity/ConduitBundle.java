@@ -108,7 +108,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
      * @throws IllegalArgumentException if this type is not in the conduitbundle and we are in dev env
      * @return if this bundle is empty and the block has to be removed
      */
-    public boolean removeType(IConduitType<?> type) {
+    public boolean removeType(Level level, IConduitType<?> type) {
         int index = types.indexOf(type);
         if (index == -1) {
             if (!FMLLoader.isProduction()) {
@@ -121,7 +121,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
             connections.get(direction).removeType(index);
         }
         if (EffectiveSide.get().isServer())
-            removeNodeFor(type);
+            removeNodeFor(level, type);
         types.remove(index);
         scheduleSync.run();
         return types.isEmpty();
@@ -288,8 +288,9 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         }
     }
 
-    public void removeNodeFor(IConduitType<?> type) {
+    public void removeNodeFor(Level level, IConduitType<?> type) {
         NodeIdentifier<?> node = nodes.get(type);
+        node.getExtendedConduitData().onRemoved(type, level, pos);
         if (node.getGraph() != null) {
             node.getGraph().remove(node);
         }

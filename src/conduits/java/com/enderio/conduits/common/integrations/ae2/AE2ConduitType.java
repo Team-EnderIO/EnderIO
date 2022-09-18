@@ -3,7 +3,6 @@ package com.enderio.conduits.common.integrations.ae2;
 import appeng.api.networking.IInWorldGridNodeHost;
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.ticker.IConduitTicker;
-import com.enderio.conduits.EIOConduits;
 import com.enderio.conduits.common.blockentity.TieredConduit;
 import com.enderio.conduits.common.integrations.Integrations;
 import dev.gigaherz.graph3.Graph;
@@ -24,7 +23,7 @@ import java.util.function.Supplier;
 
 public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
 
-    private boolean dense = false;
+    private boolean dense;
     public AE2ConduitType(boolean dense, Supplier<Item> conduitItem) {
         super(EnderIO.loc("block/conduit/" + (dense ? "dense_me" : "me")), new ResourceLocation("ae2", "me_cable"), dense ? 32 : 8, conduitItem);
         this.dense = dense;

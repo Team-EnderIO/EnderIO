@@ -169,7 +169,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     }
 
     public boolean removeType(IConduitType<?> type, boolean shouldDrop) {
-        boolean shouldRemove = bundle.removeType(type);
+        boolean shouldRemove = bundle.removeType(level, type);
         //something has changed
         removeNeighborConnections(type);
         updateShape();
