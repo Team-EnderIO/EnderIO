@@ -87,5 +87,6 @@ public class DarkSteelConfig {
         FORK_ACTIVATION_COST = builder.define("forkActivationCost", 4);
         DIRECT_ACTIVATION_COST = builder.define("directActivationCost", 4);
         builder.pop();
+        builder.pop();
     }
 }

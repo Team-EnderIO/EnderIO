@@ -1,5 +1,6 @@
 package com.enderio.base.common.blockentity;
 
+import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOCapabilities;
 import net.minecraft.core.BlockPos.MutableBlockPos;
@@ -12,6 +13,7 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -20,6 +22,8 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber
 public class GraveHandler {
+
+    private static final ForgeConfigSpec.ConfigValue<Boolean> enableGrave = BaseConfig.COMMON.GRAVE.ENABLE_GRAVE;
 
     // TODO implementation with other mods and config?
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -32,6 +36,7 @@ public class GraveHandler {
         }
         if (event.getEntity() instanceof Player player) {
             if (player.isCreative()) return;
+            if(!enableGrave.get()) return;
             MutableBlockPos pos = new MutableBlockPos(player.getBlockX(), player.getBlockY(), player.getBlockZ());
             BlockPlaceContext pUseContext = new BlockPlaceContext(player, InteractionHand.MAIN_HAND, new ItemStack(EIOBlocks.GRAVE.get()),
                 new BlockHitResult(Vec3.atCenterOf(pos), Direction.NORTH, pos, true));
