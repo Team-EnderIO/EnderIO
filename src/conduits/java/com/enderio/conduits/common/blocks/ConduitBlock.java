@@ -2,6 +2,8 @@ package com.enderio.conduits.common.blocks;
 
 import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.IConduitType;
+import com.enderio.api.conduit.NodeIdentifier;
+import com.enderio.api.integration.IntegrationManager;
 import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
 import com.enderio.conduits.common.blockentity.ConduitBundle;
 import com.enderio.conduits.common.blockentity.action.RightClickAction;
@@ -9,7 +11,9 @@ import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState
 import com.enderio.conduits.common.blockentity.connection.IConnectionState;
 import com.enderio.conduits.common.blockentity.connection.StaticConnectionStates;
 import com.enderio.conduits.common.init.ConduitBlockEntities;
+import com.enderio.conduits.common.init.EnderConduitTypes;
 import com.enderio.conduits.common.items.ConduitBlockItem;
+import com.enderio.conduits.common.network.RedstoneExtraData;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -122,6 +126,9 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
                 interactionResult = handleYeta(conduit, player, player.getItemInHand(hand), hit, level.isClientSide());
                 if (interactionResult.isPresent())
                     return interactionResult.get();
+                interactionResult = handleFacade(conduit, player, player.getItemInHand(hand), hit, level.isClientSide());
+                if (interactionResult.isPresent())
+                    return interactionResult.get();
             }
             Optional<InteractionResult> interactionResult = handleScreen(conduit, player, hit, level.isClientSide());
             if (interactionResult.isPresent())
@@ -134,7 +141,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         if (!(stack.getItem() instanceof ConduitBlockItem conduitBlockItem))
             return Optional.empty();
 
-        RightClickAction action = conduit.addType(conduitBlockItem.getType());
+        RightClickAction action = conduit.addType(conduitBlockItem.getType(), player);
         if (action instanceof RightClickAction.Upgrade upgradeAction) {
             if (!player.getAbilities().instabuild) {
                 stack.shrink(1);
@@ -151,6 +158,20 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
 
     private Optional<InteractionResult> handleYeta(ConduitBlockEntity conduit, Player player, ItemStack stack, BlockHitResult hit, boolean isClientSide) {
 
+        return Optional.empty();
+    }
+
+    private Optional<InteractionResult> handleFacade(ConduitBlockEntity conduit, Player player, ItemStack stack, BlockHitResult hit, boolean isClientSide) {
+        Optional<BlockState> facade = IntegrationManager.findFirst(integration -> integration.getFacadeOf(stack));
+        if (facade.isPresent()) {
+            if (conduit.getBundle().hasFacade(hit.getDirection())) {
+                return Optional.of(InteractionResult.FAIL);
+            }
+            conduit.getBundle().setFacade(facade.get(), hit.getDirection());
+            if (!player.getAbilities().instabuild)
+                stack.shrink(1);
+            return Optional.of(InteractionResult.sidedSuccess(isClientSide));
+        }
         return Optional.empty();
     }
 
@@ -171,7 +192,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
 
     private Optional<OpenInformation> getOpenInformation(ConduitBlockEntity conduit, BlockHitResult hit) {
         @Nullable
-        IConduitType type = conduit.getShape().getConduit(hit.getBlockPos(), hit);
+        IConduitType<?> type = conduit.getShape().getConduit(hit.getBlockPos(), hit);
         @Nullable
         Direction direction = conduit.getShape().getDirection(hit.getBlockPos(), hit);
         //TODO figure our server check
@@ -197,7 +218,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         //fallback
         for (Direction potential: Direction.values()) {
             if (bundle.getConnection(potential).isEnd()) {
-                for (IConduitType potentialType: bundle.getTypes()) {
+                for (IConduitType<?> potentialType: bundle.getTypes()) {
                     if (bundle.getConnection(potential).getConnectionState(potentialType, bundle) instanceof DynamicConnectionState)
                         return Optional.of(new OpenInformation(potential, potentialType));
                 }
@@ -206,7 +227,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         }
         for (Direction potential: Direction.values()) {
             if (!(conduit.getLevel().getBlockEntity(conduit.getBlockPos().relative(potential)) instanceof ConduitBlockEntity)) {
-                for (IConduitType potentialType: bundle.getTypes()) {
+                for (IConduitType<?> potentialType: bundle.getTypes()) {
                     if (canBeValidConnection(conduit, potentialType, potential)) {
                         return Optional.of(new OpenInformation(potential, potentialType));
                     }
@@ -217,11 +238,11 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         return Optional.empty();
     }
 
-    public static boolean canBeOrIsValidConnection(ConduitBlockEntity conduit, IConduitType type, Direction direction) {
+    public static boolean canBeOrIsValidConnection(ConduitBlockEntity conduit, IConduitType<?> type, Direction direction) {
         return conduit.getBundle().getConnection(direction).getConnectionState(type,conduit.getBundle()) instanceof DynamicConnectionState
             || canBeValidConnection(conduit, type, direction);
     }
-    public static boolean canBeValidConnection(ConduitBlockEntity conduit, IConduitType type, Direction direction) {
+    public static boolean canBeValidConnection(ConduitBlockEntity conduit, IConduitType<?> type, Direction direction) {
         IConnectionState connectionState = conduit.getBundle().getConnection(direction).getConnectionState(type, conduit.getBundle());
         return connectionState instanceof StaticConnectionStates state
                 && state == StaticConnectionStates.DISABLED
@@ -243,14 +264,34 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof ConduitBlockEntity conduit) {
             @Nullable
-            IConduitType conduitType = conduit.getShape().getConduit(((BlockHitResult)hit).getBlockPos(), hit);
-            if (conduitType == null || conduit.removeType(conduitType)) {
+            IConduitType<?> conduitType = conduit.getShape().getConduit(((BlockHitResult)hit).getBlockPos(), hit);
+            if (conduitType == null || conduit.removeType(conduitType, !player.getAbilities().instabuild)) {
                 return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
             }
         }
         return false;
     }
 
-    private record OpenInformation(Direction direction, IConduitType type) {
+
+
+    @Override
+    public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos, @Nullable Direction direction) {
+        return direction != null
+            && level.getBlockEntity(pos) instanceof ConduitBlockEntity conduit
+            && conduit.getBundle().getTypes().contains(EnderConduitTypes.REDSTONE.get())
+            && conduit.getBundle().getConnection(direction.getOpposite()).getConnectionState(EnderConduitTypes.REDSTONE.get(), conduit.getBundle()) instanceof DynamicConnectionState;
+    }
+
+    public int getSignal(BlockState pBlockState, BlockGetter level, BlockPos pos, Direction direction) {
+        return level.getBlockEntity(pos) instanceof ConduitBlockEntity conduit
+            && conduit.getBundle().getTypes().contains(EnderConduitTypes.REDSTONE.get())
+            && conduit.getBundle().getConnection(direction.getOpposite()).getConnectionState(EnderConduitTypes.REDSTONE.get(), conduit.getBundle()) instanceof DynamicConnectionState dyn
+            && dyn.isInsert()
+            && conduit.getBundle().getNodeFor(EnderConduitTypes.REDSTONE.get()) != null
+            && conduit.getBundle().getNodeFor(EnderConduitTypes.REDSTONE.get()).getExtendedConduitData() instanceof RedstoneExtraData redstoneExtraData
+            && redstoneExtraData.isActive() ? 15 : 0;
+    }
+
+    private record OpenInformation(Direction direction, IConduitType<?> type) {
     }
 }

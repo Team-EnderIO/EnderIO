@@ -10,17 +10,17 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.List;
 
-public class ItemConduitTicker implements ICapabilityAwareConduitTicker<IItemHandler> {
+public class ItemConduitTicker extends ICapabilityAwareConduitTicker<IItemHandler> {
 
     @Override
-    public void tickCapabilityGraph(List<IItemHandler> inserts, List<IItemHandler> extracts, ServerLevel level) {
+    protected void tickCapabilityGraph(List<CapabilityConnection> inserts, List<CapabilityConnection> extracts, ServerLevel level) {
         toNextExtract:
-        for (IItemHandler extract : extracts) {
+        for (IItemHandler extract : extracts.stream().map(e -> e.cap).toList()) {
             for (int i = 0; i < extract.getSlots(); i++) {
                 ItemStack extractedItem = extract.extractItem(i, 4, true);
                 if (extractedItem.isEmpty())
                     continue;
-                for (IItemHandler insert : inserts) {
+                for (IItemHandler insert : inserts.stream().map(e -> e.cap).toList()) {
                     if (insert == extract)
                         continue;
                     ItemStack notInserted = ItemHandlerHelper.insertItem(insert, extractedItem, false);
@@ -34,7 +34,7 @@ public class ItemConduitTicker implements ICapabilityAwareConduitTicker<IItemHan
     }
 
     @Override
-    public Capability<IItemHandler> getCapability() {
+    protected Capability<IItemHandler> getCapability() {
         return ForgeCapabilities.ITEM_HANDLER;
     }
 }

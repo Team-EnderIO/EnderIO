@@ -6,12 +6,14 @@ import com.enderio.api.conduit.IConduitType;
 import com.enderio.conduits.client.model.ConduitGeometry;
 import com.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.api.misc.ColorControl;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ModelEvent;
@@ -33,6 +35,7 @@ public class ConduitClientSetup {
     private static final Map<ResourceLocation, BakedModel> models = new HashMap<>();
 
     public static final ResourceLocation CONDUIT_CONNECTOR = loc("block/conduit_connector");
+    public static final ResourceLocation CONDUIT_FACADE = loc("block/conduit_facade");
     public static final ResourceLocation CONDUIT_CONNECTION = loc("block/conduit_connection");
     public static final ResourceLocation CONDUIT_CORE = loc("block/conduit_core");
     public static final ResourceLocation BOX = loc("block/box/1x1x1");
@@ -66,8 +69,10 @@ public class ConduitClientSetup {
     @SubscribeEvent
     public static void textureStich(TextureStitchEvent.Pre event) {
         if (event.getAtlas().location() == InventoryMenu.BLOCK_ATLAS) {
-            for (IConduitType type : ConduitTypes.getRegistry().getValues()) {
-                event.addSprite(type.getTexture());
+            for (IConduitType<?> type : ConduitTypes.getRegistry().getValues()) {
+                for (ResourceLocation texture : type.getTextures()) {
+                    event.addSprite(texture);
+                }
             }
         }
     }
@@ -93,5 +98,9 @@ public class ConduitClientSetup {
 
     public static BakedModel modelOf(ResourceLocation location) {
         return models.get(location);
+    }
+
+    public static Level getClientLevel() {
+        return Minecraft.getInstance().level;
     }
 }

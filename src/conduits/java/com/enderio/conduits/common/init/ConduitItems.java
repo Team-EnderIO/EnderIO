@@ -22,8 +22,8 @@ import java.util.function.Supplier;
 public class ConduitItems {
     private static final Registrate REGISTRATE = EnderIO.registrate();
 
-    public static final Map<RegistryObject<IConduitType>, ItemEntry<Item>> CONDUITS = Util.make(() -> {
-        Map<RegistryObject<IConduitType>, ItemEntry<Item>> map = new HashMap<>();
+    public static final Map<RegistryObject<? extends IConduitType<?>>, ItemEntry<Item>> CONDUITS = Util.make(() -> {
+        Map<RegistryObject<? extends IConduitType<?>>, ItemEntry<Item>> map = new HashMap<>();
         map.put(EnderConduitTypes.POWER, createConduitItem(EnderConduitTypes.POWER, "power1"));
         map.put(EnderConduitTypes.POWER2, createConduitItem(EnderConduitTypes.POWER2, "power2"));
         map.put(EnderConduitTypes.POWER3, createConduitItem(EnderConduitTypes.POWER3, "power3"));
@@ -42,7 +42,7 @@ public class ConduitItems {
         }
     }
 
-    private static ItemEntry<Item> createConduitItem(Supplier<IConduitType> type, String itemName) {
+    private static ItemEntry<Item> createConduitItem(Supplier<? extends IConduitType<?>> type, String itemName) {
         return REGISTRATE.item(itemName + "_conduit",
             properties -> ConduitItemFactory.build(type, properties))
             .tab(() -> EIOCreativeTabs.CONDUITS)

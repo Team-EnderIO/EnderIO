@@ -2,7 +2,7 @@ package com.enderio.conduits.common.blockentity;
 
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.IConduitScreenData;
-import com.enderio.api.conduit.ticker.IConduitTicker;
+import com.enderio.api.conduit.IExtendedConduitData;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.conduits.common.init.ConduitItems;
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
-public abstract class TieredConduit implements IConduitType {
+public abstract class TieredConduit<T extends IExtendedConduitData<T>> implements IConduitType<T> {
     private final ResourceLocation texture;
     private final ResourceLocation type;
     private final int tier;
@@ -35,8 +35,13 @@ public abstract class TieredConduit implements IConduitType {
     }
 
     @Override
-    public ResourceLocation getTexture() {
+    public ResourceLocation getTexture(T data) {
         return texture;
+    }
+
+    @Override
+    public ResourceLocation[] getTextures() {
+        return new ResourceLocation[]{texture};
     }
 
     @Override
@@ -48,8 +53,8 @@ public abstract class TieredConduit implements IConduitType {
 
 
     @Override
-    public boolean canBeReplacedBy(IConduitType other) {
-        if (!(other instanceof TieredConduit tieredOther))
+    public boolean canBeReplacedBy(IConduitType<?> other) {
+        if (!(other instanceof TieredConduit<?> tieredOther))
             return false;
 
         if (type.equals(tieredOther.getType())) {
@@ -59,8 +64,8 @@ public abstract class TieredConduit implements IConduitType {
     }
 
     @Override
-    public boolean canBeInSameBlock(IConduitType other) {
-        if (!(other instanceof TieredConduit tieredOther))
+    public boolean canBeInSameBlock(IConduitType<?> other) {
+        if (!(other instanceof TieredConduit<?> tieredOther))
             return true;
         // if they have the same type they can't be in the same block, their tier doesn't matter as canBeReplacedBy is checked first
         return !type.equals(tieredOther.getType());

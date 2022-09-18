@@ -2,7 +2,6 @@ package com.enderio.conduits.common.items;
 
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
-import com.enderio.conduits.common.blockentity.action.RightClickAction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
@@ -17,13 +16,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
 import java.util.function.Supplier;
 
 public class ConduitBlockItem extends BlockItem {
 
-    private final Supplier<IConduitType> type;
-    public ConduitBlockItem(Supplier<IConduitType> type, Block block, Properties properties) {
+    private final Supplier<? extends IConduitType<?>> type;
+    public ConduitBlockItem(Supplier<? extends IConduitType<?>> type, Block block, Properties properties) {
         super(block, properties);
         this.type = type;
     }
@@ -55,7 +53,7 @@ public class ConduitBlockItem extends BlockItem {
                 SoundType soundtype = blockstate1.getSoundType(level, blockpos, context.getPlayer());
                 level.playSound(player, blockpos, this.getPlaceSound(blockstate1, level, blockpos, player), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
                 if (level.getBlockEntity(blockpos) instanceof ConduitBlockEntity conduit) {
-                    conduit.addType(type.get());
+                    conduit.addType(type.get(), player);
                     if (level.isClientSide()) {
                         conduit.updateClient();
                     }
@@ -69,7 +67,7 @@ public class ConduitBlockItem extends BlockItem {
         }
     }
 
-    public IConduitType getType() {
+    public IConduitType<?> getType() {
         return type.get();
     }
 }

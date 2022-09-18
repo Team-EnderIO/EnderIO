@@ -8,31 +8,30 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public interface IConduitType extends IIcon {
+public interface IConduitType<T extends IExtendedConduitData<T>> extends IIcon {
 
-    ResourceLocation getTexture();
+    ResourceLocation getTexture(T extendedData);
+
+    ResourceLocation[] getTextures();
 
     Item getConduitItem();
 
-    default boolean canBeInSameBlock(IConduitType other) {
+    default boolean canBeInSameBlock(IConduitType<?> other) {
         return true;
     }
 
-    default boolean canBeReplacedBy(IConduitType other) {
+    default boolean canBeReplacedBy(IConduitType<?> other) {
         return false;
     }
 
     default int getLightLevel(boolean isActive) {
         return 0;
-    }
-
-    //TODO: Remove this and turn to conduitlogicimpl
-    default boolean canConnectTo(Level level, BlockPos pos, Direction direction) {
-        return Optional.ofNullable(level.getBlockEntity(pos)).map(be -> be.getCapability(CapabilityEnergy.ENERGY, direction.getOpposite())).isPresent();
     }
 
     @Override
@@ -48,4 +47,10 @@ public interface IConduitType extends IIcon {
     IConduitTicker getTicker();
 
     IConduitScreenData getData();
+
+    T createExtendedConduitData(Level level, BlockPos pos);
+
+    default <K> Optional<LazyOptional<K>> proxyCapability(Capability<K> cap, T extendedConduitData, @Nullable Direction direction) {
+        return Optional.empty();
+    }
 }

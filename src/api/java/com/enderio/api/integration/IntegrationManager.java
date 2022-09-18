@@ -3,7 +3,9 @@ package com.enderio.api.integration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -11,7 +13,7 @@ public class IntegrationManager {
 
     private static final List<Integration> ALL_INTEGRATIONS = new ArrayList<>();
 
-    private static <T extends Integration> IntegrationWrapper<T> wrapper(String modid, Supplier<T> integration) {
+    public static <T extends Integration> IntegrationWrapper<T> wrapper(String modid, Supplier<T> integration) {
         return new IntegrationWrapper<>(modid, integration);
     }
 
@@ -33,5 +35,9 @@ public class IntegrationManager {
 
     public static void forAll(Consumer<Integration> consumer) {
         ALL_INTEGRATIONS.forEach(consumer);
+    }
+
+    public static <T> Optional<T> findFirst(Function<Integration, Optional<T>> mapper) {
+        return ALL_INTEGRATIONS.stream().map(mapper).filter(Optional::isPresent).findFirst().flatMap(opt -> opt);
     }
 }

@@ -1,5 +1,6 @@
 package com.enderio.api.conduit.ticker;
 
+import com.enderio.api.conduit.IExtendedConduitData;
 import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.api.misc.ColorControl;
 import com.google.common.collect.ArrayListMultimap;
@@ -14,31 +15,31 @@ import java.util.List;
 
 public interface IIOAwareConduitTicker extends ILoadedAwareConduitTicker {
     @Override
-    default void tickGraph(List<NodeIdentifier> loadedNodes, ServerLevel level) {
-        ListMultimap<ColorControl, ConnectorPos> extracts = ArrayListMultimap.create();
-        ListMultimap<ColorControl, ConnectorPos> inserts = ArrayListMultimap.create();
+    default void tickGraph(List<NodeIdentifier<?>> loadedNodes, ServerLevel level) {
+        ListMultimap<ColorControl, Connection> extracts = ArrayListMultimap.create();
+        ListMultimap<ColorControl, Connection> inserts = ArrayListMultimap.create();
         for (GraphObject<Mergeable.Dummy> object : loadedNodes) {
-            if (object instanceof NodeIdentifier nodeIdentifier) {
+            if (object instanceof NodeIdentifier<?> nodeIdentifier) {
                 for (Direction direction: Direction.values()) {
                     nodeIdentifier.getIOState(direction).ifPresent(ioState -> {
-                        ioState.extract().ifPresent(color -> extracts.get(color).add(new ConnectorPos(nodeIdentifier.getPos(), direction)));
-                        ioState.insert().ifPresent(color -> inserts.get(color).add(new ConnectorPos(nodeIdentifier.getPos(), direction)));
+                        ioState.extract().ifPresent(color -> extracts.get(color).add(new Connection(nodeIdentifier.getPos(), direction, nodeIdentifier.getExtendedConduitData())));
+                        ioState.insert().ifPresent(color -> inserts.get(color).add(new Connection(nodeIdentifier.getPos(), direction, nodeIdentifier.getExtendedConduitData())));
                     });
                 }
             }
         }
         for (ColorControl color: ColorControl.values()) {
-            List<ConnectorPos> extractList = extracts.get(color);
-            List<ConnectorPos> insertList = inserts.get(color);
+            List<Connection> extractList = extracts.get(color);
+            List<Connection> insertList = inserts.get(color);
             if (extractList.isEmpty() || insertList.isEmpty())
                 continue;
             tickColoredGraph(insertList, extractList, level);
         }
     }
 
-    void tickColoredGraph(List<ConnectorPos> inserts, List<ConnectorPos> extracts, ServerLevel level);
+    void tickColoredGraph(List<Connection> inserts, List<Connection> extracts, ServerLevel level);
 
-    record ConnectorPos(BlockPos pos, Direction dir) {
+    record Connection(BlockPos pos, Direction dir, IExtendedConduitData<?> data) {
         public BlockPos move() {
             return pos.relative(dir);
         }

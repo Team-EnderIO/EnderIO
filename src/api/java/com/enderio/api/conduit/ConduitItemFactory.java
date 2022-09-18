@@ -13,10 +13,10 @@ public class ConduitItemFactory {
      * this field is set by EIOConduits during the FMLConstructModEvent.
      */
     @Nullable
-    private static BiFunction<Supplier<IConduitType>, Item.Properties, Item> factory = null;
+    private static BiFunction<Supplier<? extends IConduitType<?>>, Item.Properties, Item> factory = null;
 
     @ApiStatus.Internal
-    public static void setFactory(BiFunction<Supplier<IConduitType>, Item.Properties, Item> factory) {
+    public static void setFactory(BiFunction<Supplier<? extends IConduitType<?>>, Item.Properties, Item> factory) {
         ConduitItemFactory.factory = factory;
     }
 
@@ -24,7 +24,7 @@ public class ConduitItemFactory {
      * This will create a Conduit Item. If, during porting, EIOConduits isn't available, a dummy item will be returned.
      * @return
      */
-    public static Item build(Supplier<IConduitType> type, Item.Properties properties) {
+    public static Item build(Supplier<? extends IConduitType<?>> type, Item.Properties properties) {
         if (factory != null)
             return factory.apply(type, properties);
         return new Item(properties);

@@ -4,6 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitItemFactory;
 import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.conduits.common.init.*;
+import com.enderio.conduits.common.integrations.Integrations;
 import com.enderio.conduits.common.items.ConduitBlockItem;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -23,6 +24,7 @@ public class EIOConduits {
         ConduitMenus.register();
         ConduitBlocks.register();
         ConduitItems.register();
+        Integrations.register();
         ConduitItemFactory.setFactory((type, properties) -> new ConduitBlockItem(type, ConduitBlocks.CONDUIT.get(), properties));
     }
 }

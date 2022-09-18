@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * This class is used to sort conduittypes for display. This is needed, so upgrading conduits doesn't require shifting of types, but just recalculating the current connection
  */
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ConduitTypeSorter {
     private static final List<IConduitType> sortedTypes = new ArrayList<>();
 

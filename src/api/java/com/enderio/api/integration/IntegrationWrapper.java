@@ -46,4 +46,12 @@ public class IntegrationWrapper<T extends Integration> {
         if (isPresent())
             consumer.accept(value);
     }
+
+    /**
+     * Only call when you are in code that is running if the Integration is Present
+     * @return
+     */
+    public T expectPresent() {
+        return value;
+    }
 }

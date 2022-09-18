@@ -2,7 +2,10 @@ package com.enderio.api.conduit.ticker;
 
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.Mergeable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
 
 public interface IConduitTicker {
 
@@ -14,4 +17,6 @@ public interface IConduitTicker {
     default int getTickRate() {
         return 5;
     }
+
+    boolean canConnectTo(Level level, BlockPos conduitPos, Direction direction);
 }

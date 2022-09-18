@@ -12,7 +12,8 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class NodeIdentifier implements GraphObject<Mergeable.Dummy> {
+public class NodeIdentifier<T extends IExtendedConduitData<?>> implements GraphObject<Mergeable.Dummy> {
+
 
     private final BlockPos pos;
 
@@ -20,9 +21,11 @@ public class NodeIdentifier implements GraphObject<Mergeable.Dummy> {
     private Graph<Mergeable.Dummy> graph = null;
 
     private final Map<Direction, IOState> ioStates = new EnumMap<>(Direction.class);
+    private final T extendedConduitData;
 
-    public NodeIdentifier(BlockPos pos) {
+    public NodeIdentifier(BlockPos pos, T extendedConduitData) {
         this.pos = pos;
+        this.extendedConduitData = extendedConduitData;
     }
 
     @Nullable
@@ -44,6 +47,9 @@ public class NodeIdentifier implements GraphObject<Mergeable.Dummy> {
         return Optional.ofNullable(ioStates.get(direction));
     }
 
+    public T getExtendedConduitData() {
+        return extendedConduitData;
+    }
     public void clearState(Direction direction) {
         ioStates.remove(direction);
     }

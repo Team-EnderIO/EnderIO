@@ -10,14 +10,12 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraftforge.client.model.IQuadTransformer;
 import net.minecraftforge.client.model.QuadTransformers;
 
-public record ConduitTextureEmissiveQuadTransformer(IConduitType type, boolean isActive) implements IQuadTransformer {
+public record ConduitTextureEmissiveQuadTransformer(TextureAtlasSprite newSprite, int lightLevel) implements IQuadTransformer {
 
     @Override
     public void processInPlace(BakedQuad quad) {
-        int lightLevel = type.getLightLevel(isActive);
         if (lightLevel != 0)
-            QuadTransformers.settingEmissivity(type.getLightLevel(isActive)).processInPlace(quad);
-        TextureAtlasSprite newSprite = blockAtlas().getSprite(type.getTexture());
+            QuadTransformers.settingEmissivity(lightLevel).processInPlace(quad);
         for (int i = 0; i < 4; i++) {
             float[] uv0 = RenderUtil.unpackVertices(quad.getVertices(), i, IQuadTransformer.UV0, 2);
             uv0[0] = (uv0[0] - quad.getSprite().getU0()) * newSprite.getWidth() / quad.getSprite().getWidth() + newSprite.getU0();
