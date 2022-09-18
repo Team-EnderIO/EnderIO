@@ -27,7 +27,11 @@ public class GraveHandler {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void GraveDeath(LivingDropsEvent event) {
-        if (event.getEntity() == null || event.getEntity() instanceof FakePlayer || event.isCanceled()) {
+        if (event.getEntity() == null
+            || event.getEntity() instanceof FakePlayer
+            || event.isCanceled()
+            || !enableGrave.get()
+        ) {
             return;
         }
         if (event.getEntity().level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
@@ -35,7 +39,6 @@ public class GraveHandler {
         }
         if (event.getEntity() instanceof Player player) {
             if (player.isCreative()) return;
-            if(!enableGrave.get()) return;
             MutableBlockPos pos = new MutableBlockPos(player.getBlockX(), player.getBlockY(), player.getBlockZ());
             BlockPlaceContext pUseContext = new BlockPlaceContext(player, InteractionHand.MAIN_HAND, new ItemStack(EIOBlocks.GRAVE.get()),
                 new BlockHitResult(Vec3.atCenterOf(pos), Direction.NORTH, pos, true));
