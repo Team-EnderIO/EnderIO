@@ -30,6 +30,7 @@ public class IndustrialInsulationBlock extends SpongeBlock {
         super.neighborChanged(state, level, pos, block, fromPos, isMoving);
     }
 
+    // Overriding sponge default behavior, easier than overriding the whole BlockSponge and removing all the BlockState code
     protected boolean absorb(Level level, BlockPos pos) {
         Queue<Tuple<BlockPos, Integer>> queue = Lists.newLinkedList();
         List<BlockPos> list = Lists.newArrayList();
