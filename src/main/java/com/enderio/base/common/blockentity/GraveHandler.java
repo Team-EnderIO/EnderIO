@@ -25,7 +25,6 @@ public class GraveHandler {
 
     private static final ForgeConfigSpec.ConfigValue<Boolean> enableGrave = BaseConfig.COMMON.GRAVE.ENABLE_GRAVE;
 
-    // TODO implementation with other mods and config?
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void GraveDeath(LivingDropsEvent event) {
         if (event.getEntity() == null || event.getEntity() instanceof FakePlayer || event.isCanceled()) {
