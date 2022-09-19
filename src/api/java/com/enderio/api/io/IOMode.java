@@ -93,4 +93,8 @@ public enum IOMode {
     public boolean canForce() {
         return force;
     }
+
+    public String getLocalisedName() {
+        return name(); // TODO: Make this localised for real
+    }
 }

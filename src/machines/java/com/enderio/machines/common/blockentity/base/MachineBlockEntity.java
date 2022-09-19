@@ -1,6 +1,7 @@
 package com.enderio.machines.common.blockentity.base;
 
 import com.enderio.api.io.IIOConfig;
+import com.enderio.api.io.IIOConfigProvider;
 import com.enderio.api.io.IOMode;
 import com.enderio.base.common.blockentity.RedstoneControl;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
@@ -36,7 +37,7 @@ import java.util.Optional;
 
 import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
-public abstract class MachineBlockEntity extends EnderBlockEntity implements MenuProvider {
+public abstract class MachineBlockEntity extends EnderBlockEntity implements MenuProvider, IIOConfigProvider {
 
     // region IO Configuration
 
@@ -154,6 +155,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     /**
      * Get the IO Config for this machine.
      */
+    @Override
     public final IIOConfig getIOConfig() {
         return this.ioConfig;
     }
