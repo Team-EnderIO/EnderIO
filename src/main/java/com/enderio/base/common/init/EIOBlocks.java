@@ -403,7 +403,6 @@ public class EIOBlocks {
         ib.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.mcLoc("item/lever")));
         bb = ib.build();
         return bb.register();
-
     }
 
     public static final BlockEntry<IndustrialInsulationBlock> INDUSTRIAL_INSULATION = REGISTRATE
