@@ -43,7 +43,7 @@ public class IndustrialInsulationBlock extends SpongeBlock {
                 Block blockToCheck = blockToCheckState.getBlock();
                 Material blockToReplaceMaterial = blockToCheckState.getMaterial();
 
-                if (blockToCheck instanceof BucketPickup && !((BucketPickup) blockToCheck).pickupBlock(level, blockToCheckPos, blockToCheckState).isEmpty()) {
+                if (blockToCheck instanceof BucketPickup bucketPickup && !bucketPickup.pickupBlock(level, blockToCheckPos, blockToCheckState).isEmpty()) {
                     ++checkedBlocksCount;
 
                     if (currentRange < MAX_RANGE) {
