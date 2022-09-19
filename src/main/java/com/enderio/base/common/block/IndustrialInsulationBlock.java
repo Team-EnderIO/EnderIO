@@ -6,55 +6,65 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Material;
+import net.minecraftforge.common.Tags;
 
-import java.util.Arrays;
 import java.util.Queue;
 
 public class IndustrialInsulationBlock extends SpongeBlock {
-    private final int DIRECTIONS_COUNT = Direction.values().length;
+    private static final int MAX_REPLACES = 64;
+    private static final int MAX_RANGE = 6;
 
     public IndustrialInsulationBlock(Properties props) {
         super(props);
     }
 
-    @Override
-    protected void tryAbsorbWater(Level level, BlockPos pos) {
-        absorb(level, pos);
+    private void removeBlock(BlockPos block, Level level) {
+        level.setBlock(block, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
     }
 
-    // Overriding sponge default behavior, easier than overriding the whole BlockSponge and removing all the BlockState code
-    protected void absorb(Level level, BlockPos pos) {
+    @Override
+    protected void tryAbsorbWater(Level level, BlockPos pos) {
         Queue<Tuple<BlockPos, Integer>> queue = Lists.newLinkedList();
-
-        // Inserts this block on the queue
         queue.add(new Tuple<>(pos, 0));
-        int i = 0;
-
+        int checkedBlocksCount = 0;
 
         while (!queue.isEmpty()) {
             Tuple<BlockPos, Integer> tuple = queue.poll();
             BlockPos blockpos = tuple.getA();
-            int j = tuple.getB();
+            int currentRange = tuple.getB();
 
             for (Direction direction : Direction.values()) {
-                // Get the nearest block in the current direction
-                BlockPos blockToCheck = blockpos.relative(direction);
-                BlockState blockToCheckState = level.getBlockState(blockToCheck);
+                BlockPos blockToCheckPos = blockpos.relative(direction);
+                BlockState blockToCheckState = level.getBlockState(blockToCheckPos);
+                Block blockToCheck = blockToCheckState.getBlock();
+                Material blockToReplaceMaterial = blockToCheckState.getMaterial();
 
-                if (blockToCheckState.getBlock() instanceof LiquidBlock || blockToCheckState.getMaterial() == Material.WATER || blockToCheckState.getMaterial() == Material.LAVA) {
-                    level.setBlock(blockToCheck, Blocks.AIR.defaultBlockState(), 2);
-                    ++i;
+                if (blockToCheck instanceof BucketPickup && !((BucketPickup) blockToCheck).pickupBlock(level, blockToCheckPos, blockToCheckState).isEmpty()) {
+                    ++checkedBlocksCount;
 
-                    if (j < this.DIRECTIONS_COUNT) {
-                        queue.add(new Tuple<>(blockToCheck, j + 1));
+                    if (currentRange < MAX_RANGE) {
+                        queue.add(new Tuple<>(blockToCheckPos, currentRange + 1));
+                    }
+
+                } else if (blockToCheckState.getBlock() instanceof LiquidBlock) {
+                    if (blockToReplaceMaterial == Material.WATER_PLANT || blockToReplaceMaterial == Material.REPLACEABLE_WATER_PLANT) {
+                        BlockEntity blockEntity = blockToCheckState.hasBlockEntity() ? level.getBlockEntity(blockToCheckPos) : null;
+                        dropResources(blockToCheckState, level, blockToCheckPos, blockEntity);
+                    }
+                    this.removeBlock(blockToCheckPos, level);
+                    ++checkedBlocksCount;
+
+                    if (currentRange < MAX_RANGE) {
+                        queue.add(new Tuple<>(blockToCheckPos, currentRange + 1));
                     }
                 }
             }
 
-            int MAX_RANGE = 64;
-            if (i > MAX_RANGE) {
+            if (checkedBlocksCount > MAX_REPLACES) {
                 break;
             }
         }
