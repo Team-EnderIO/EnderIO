@@ -31,10 +31,7 @@ public class GraveHandler {
             || event.getEntity() instanceof FakePlayer
             || event.isCanceled()
             || !enableGrave.get()
-        ) {
-            return;
-        }
-        if (event.getEntity().level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
+            || event.getEntity().level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
             return;
         }
         if (event.getEntity() instanceof Player player) {
