@@ -20,5 +20,7 @@ public class MachineMenus {
     public static final MenuEntry<SlicerMenu> SLICE_N_SPLICE = REGISTRATE.menu("slice_n_splice", SlicerMenu::factory, () -> SlicerScreen::new).register();
     public static final MenuEntry<ImpulseHopperMenu> IMPULSE_HOPPER = REGISTRATE.menu("impulse_hopper", ImpulseHopperMenu::factory, () -> ImpulseHopperScreen::new).register();
 
+    public static final MenuEntry<SoulBinderMenu> SOULBINDER = REGISTRATE.menu("soulbinder", SoulBinderMenu::factory, () -> SoulBinderScreen::new).register();
+
     public static void register() {}
 }

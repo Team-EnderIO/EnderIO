@@ -1,0 +1,13 @@
+{
+  "type": "enderio:soulbinding",
+  "energy": 0,
+  "inputs": [
+    {
+      "item": "enderio:filled_soul_vial"
+    },
+    {
+      "item": "enderio:broken_spawner"
+    }
+  ],
+  "output": "enderio:dark_steel_upgrade_empowered_1"
+}

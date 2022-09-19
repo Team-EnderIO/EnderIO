@@ -37,6 +37,8 @@ public class MachineBlockEntities {
     public static final BlockEntityEntry<ImpulseHopperBlockEntity> IMPULSE_HOPPER = register("impulse_hopper", ImpulseHopperBlockEntity::new,
         MachineBlocks.IMPULSE_HOPPER);
 
+    public static final BlockEntityEntry<SoulBinderBlockEntity> SOULBINDER = register("soulbinder", SoulBinderBlockEntity::new, MachineBlocks.SOULBINDER);
+
     @SafeVarargs
     private static <B extends BlockEntity> BlockEntityEntry<B> register(String name, BlockEntityBuilder.BlockEntityFactory<B> beFactory,
         NonNullSupplier<? extends Block>... blocks) {
