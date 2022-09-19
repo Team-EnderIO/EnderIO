@@ -14,8 +14,6 @@ import java.util.Queue;
 
 public class IndustrialInsulationBlock extends SpongeBlock {
     private final int DIRECTIONS_COUNT = Direction.values().length;
-    private final int MAX_RANGE = 64;
-
 
     public IndustrialInsulationBlock(Properties props) {
         super(props);
@@ -61,7 +59,8 @@ public class IndustrialInsulationBlock extends SpongeBlock {
                 }
             }
 
-            if (i > this.MAX_RANGE) {
+            int MAX_RANGE = 64;
+            if (i > MAX_RANGE) {
                 break;
             }
         }
