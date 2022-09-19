@@ -104,10 +104,6 @@ public class EnchanterCategory implements IRecipeCategory<WrappedEnchanterRecipe
         int width = minecraft.font.width(text);
         int x = background.getWidth() - 2 - width;
         int y = background.getHeight() - 8;
-
-        // TODO 1.13 match the new GuiRepair style
-//        minecraft.font.draw(poseStack, text, x + 1, y, shadowColor);
-//        minecraft.font.draw(poseStack, text, x, y + 1, shadowColor);
         minecraft.font.draw(poseStack, text, x + 1, y + 1, shadowColor);
         minecraft.font.draw(poseStack, text, x, y, mainColor);
     }

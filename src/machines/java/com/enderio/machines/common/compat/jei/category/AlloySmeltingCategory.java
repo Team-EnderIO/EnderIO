@@ -28,7 +28,6 @@ import java.util.Locale;
 import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
 import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
 
-// TODO: A separate category for primitive alloy smelting. This will display the burn time and the correct UI.
 public class AlloySmeltingCategory extends MachineCategory<AlloySmeltingRecipe> {
 
     public static final RecipeType<AlloySmeltingRecipe> TYPE = RecipeType.create(EnderIO.MODID, "alloy_smelting", AlloySmeltingRecipe.class);
