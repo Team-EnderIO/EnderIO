@@ -6,15 +6,17 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Material;
 
-import java.util.List;
+import java.util.Arrays;
 import java.util.Queue;
 
 public class IndustrialInsulationBlock extends SpongeBlock {
+    private final int DIRECTIONS_COUNT = Direction.values().length;
+    private final int MAX_RANGE = 64;
+
+
     public IndustrialInsulationBlock(Properties props) {
         super(props);
     }
@@ -31,37 +33,37 @@ public class IndustrialInsulationBlock extends SpongeBlock {
     }
 
     // Overriding sponge default behavior, easier than overriding the whole BlockSponge and removing all the BlockState code
-    protected boolean absorb(Level level, BlockPos pos) {
+    protected void absorb(Level level, BlockPos pos) {
         Queue<Tuple<BlockPos, Integer>> queue = Lists.newLinkedList();
-        List<BlockPos> list = Lists.newArrayList();
-        queue.add(new Tuple(pos, Integer.valueOf(0)));
+
+        // Inserts this block on the queue
+        queue.add(new Tuple<>(pos, 0));
         int i = 0;
+
 
         while (!queue.isEmpty()) {
             Tuple<BlockPos, Integer> tuple = queue.poll();
             BlockPos blockpos = tuple.getA();
-            int j = tuple.getB().intValue();
+            int j = tuple.getB();
 
             for (Direction direction : Direction.values()) {
-                BlockPos blockpos1 = blockpos.relative(direction);
+                // Get the nearest block in the current direction
+                BlockPos blockToCheck = blockpos.relative(direction);
+                BlockState blockToCheckState = level.getBlockState(blockToCheck);
 
-                BlockState blockToCheck = level.getBlockState(blockpos1);
-                if ( blockToCheck.getBlock() instanceof LiquidBlock || blockToCheck.getMaterial() == Material.WATER || blockToCheck.getMaterial() == Material.LAVA) {
-                    level.setBlock(blockpos1, Blocks.AIR.defaultBlockState(), 2);
-                    list.add(blockpos1);
+                if (blockToCheckState.getBlock() instanceof LiquidBlock || blockToCheckState.getMaterial() == Material.WATER || blockToCheckState.getMaterial() == Material.LAVA) {
+                    level.setBlock(blockToCheck, Blocks.AIR.defaultBlockState(), 2);
                     ++i;
 
-                    if (j < 6) {
-                        queue.add(new Tuple(blockpos1, j + 1));
+                    if (j < this.DIRECTIONS_COUNT) {
+                        queue.add(new Tuple<>(blockToCheck, j + 1));
                     }
                 }
             }
 
-            if (i > 64) {
+            if (i > this.MAX_RANGE) {
                 break;
             }
         }
-
-        return i > 0;
     }
 }
