@@ -1,5 +1,14 @@
 {
   "type": "enderio:sagmilling",
+  "conditions": [
+    {
+      "type": "forge:not",
+      "value": {
+        "type": "forge:tag_empty",
+        "tag": "forge:silicon"
+      }
+    }
+  ],
   "energy": 2400,
   "input": {
     "item": "minecraft:sand"
