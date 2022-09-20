@@ -22,11 +22,11 @@ public class Animation {
      *                          measured in Minecraft ticks. Must be more than zero.
      * @throws Exception Thrown when the time is less than or equal to zero.
      */
-    public Animation(float start, float target, float totalDurationTick) throws Exception {
+    public Animation(float start, float target, float totalDurationTick) {
         this.start = start;
         this.target = target;
         if (totalDurationTick <= 0.0f)
-            throw new Exception("totalDurationTick cannot be less than zero!");
+            throw new IllegalArgumentException("totalDurationTick cannot be less than zero!");
         this.totalDurationTick = totalDurationTick;
 
         current = start;

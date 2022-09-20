@@ -63,26 +63,20 @@ public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
                 }
             }
         } else {
-            // The amount in the FluidTank has changed, so begin animation to new value.
-            try {
-                // Start at the current level, or whatever level the previous animation got to.
-                float start = information.getAnimation() == null ? information.getCurrentTarget() / capacity
-                        : information.getAnimation().getCurrent();
-                float target = fluidAmount / capacity;
-                information.setAnimation(new Animation(start, target, ANIMATION_TICKS));
+            // Start at the current level, or whatever level the previous animation got to.
+            float start = information.getAnimation() == null ? information.getCurrentTarget() / capacity
+                    : information.getAnimation().getCurrent();
+            float target = fluidAmount / capacity;
+            information.setAnimation(new Animation(start, target, ANIMATION_TICKS));
 
-                // If the new fluid is EMPTY (i.e. the FluidTank is now empty), then we need to
-                // retain the 'old' fluid so that the emptying animates correctly.
-                if (fluid != Fluids.EMPTY) {
-                    information.setFluid(fluid);
-                }
-
-                information.setCurrentTarget(fluidAmount);
-                frameTarget = information.getAnimation().getCurrent();
-            } catch (Exception e) {
-                // Catching exception from Animation constructor, just render as normal.
-                frameTarget = fluidAmount / capacity;
+            // If the new fluid is EMPTY (i.e. the FluidTank is now empty), then we need to
+            // retain the 'old' fluid so that the emptying animates correctly.
+            if (fluid != Fluids.EMPTY) {
+                information.setFluid(fluid);
             }
+
+            information.setCurrentTarget(fluidAmount);
+            frameTarget = information.getAnimation().getCurrent();
         }
 
         // Don't waste time rendering if there's no fluid.
