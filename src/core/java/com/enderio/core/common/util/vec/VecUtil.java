@@ -1,5 +1,7 @@
 package com.enderio.core.common.util.vec;
 
+import com.mojang.datafixers.util.Pair;
+
 import java.awt.*;
 import java.util.Optional;
 
@@ -115,14 +117,13 @@ public class VecUtil {
      * This function computes the ray that goes from the eye, through the
      * specified pixel.
      *
-     * @param x      the x pixel location (x = 0 is the left most pixel)
-     * @param y      the y pixel location (y = 0 is the bottom most pixel)
-     * @param eyeOut the eyes position.
-     * @return the normal description the directional component of the ray.
+     * @param x the x pixel location (x = 0 is the left most pixel)
+     * @param y the y pixel location (y = 0 is the bottom most pixel)
+     * @return A pair of the eye and normal description the directional component of the ray.
      */
-    public static ImmutableVector3d computeRayForPixel(Rectangle vp, Matrix4d ipm, Matrix4d ivm, int x, int y, ImmutableVector3d eyeOut) {
+    public static Pair<ImmutableVector3d, ImmutableVector3d> computeRayForPixel(Rectangle vp, Matrix4d ipm, Matrix4d ivm, int x, int y) {
         // grab the eye's position
-        ivm.getTranslation(eyeOut);
+        ImmutableVector3d eyeOut = ivm.getTranslation();
 
         Matrix4d vpm = new Matrix4d();
         vpm.mul(ivm, ipm);
@@ -143,7 +144,7 @@ public class VecUtil {
         vpm.transform(farPlane);
 
         ImmutableVector3d farXYZ = new ImmutableVector3d(farPlane.x() / farPlane.w(), nearPlane.y() / farPlane.w(), nearPlane.z() / farPlane.w());
-        return farXYZ.copy().sub(nearXYZ).normalize();
+        return Pair.of(eyeOut, farXYZ.copy().sub(nearXYZ).normalize());
     }
 
     /**
@@ -348,23 +349,30 @@ public class VecUtil {
     }
 
     /**
-     * Extracts the directional vectors from the specified view matrix.
-     *
-     * @param matrix     the view matrix.
-     * @param upVecOut   the up vector.
-     * @param sideVecOut the side vector.
-     * @param lookVecOut the look vector.
+     * Extracts the up vec from the given view matrix
+     * @param matrix the view matrix
+     * @return the up vec
      */
-    public static void getVectorsForMatrix(Matrix4d matrix, ImmutableVector3d upVecOut, ImmutableVector3d sideVecOut, ImmutableVector3d lookVecOut) {
-        sideVecOut.set(matrix.getElement(0, 0), matrix.getElement(0, 1), matrix.getElement(0, 2));
-        sideVecOut.normalize();
+    public static ImmutableVector3d getUpVecFromMatrix(Matrix4d matrix) {
+        return new ImmutableVector3d(matrix.getElement(1, 0), matrix.getElement(1, 1), matrix.getElement(1, 2)).normalize();
+    }
 
-        upVecOut.set(matrix.getElement(1, 0), matrix.getElement(1, 1), matrix.getElement(1, 2));
-        upVecOut.normalize();
+    /**
+     * Extracts the side vec from the given view matrix
+     * @param matrix the view matrix
+     * @return the side vec
+     */
+    public static ImmutableVector3d getSideVecFromMatrix(Matrix4d matrix) {
+        return new ImmutableVector3d(matrix.getElement(0, 0), matrix.getElement(0, 1), matrix.getElement(0, 2)).normalize();
+    }
 
-        lookVecOut.set(matrix.getElement(2, 0), matrix.getElement(2, 1), matrix.getElement(2, 2));
-        lookVecOut.negate();
-        lookVecOut.normalize();
+    /**
+     * Extracts the look vec from the given view matrix
+     * @param matrix the view matrix
+     * @return the look vec
+     */
+    public static ImmutableVector3d getLookVecFromMatrix(Matrix4d matrix) {
+        return new ImmutableVector3d(matrix.getElement(2, 0), matrix.getElement(2, 1), matrix.getElement(2, 2)).negate().normalize();
     }
 
     /**

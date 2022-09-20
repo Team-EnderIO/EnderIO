@@ -354,16 +354,14 @@ public class Matrix4d {
 
     }
 
-    public void getTranslation(ImmutableVector3d trans) {
-        trans.x = m03;
-        trans.y = m13;
-        trans.z = m23;
+    public ImmutableVector3d    getTranslation() {
+        return new ImmutableVector3d(m03, m13, m23);
     }
 
     public void setTranslation(ImmutableVector3d trans) {
-        m03 = trans.x;
-        m13 = trans.y;
-        m23 = trans.z;
+        m03 = trans.x();
+        m13 = trans.y();
+        m23 = trans.z();
     }
 
     public void makeRotationX(double angle) {
@@ -396,39 +394,34 @@ public class Matrix4d {
         m11 = cos;
     }
 
-    public void transform(ImmutableVector3d vec) {
-        double x = m00 * vec.x + m01 * vec.y + m02 * vec.z + m03;
-        double y = m10 * vec.x + m11 * vec.y + m12 * vec.z + m13;
-        vec.z = m20 * vec.x + m21 * vec.y + m22 * vec.z + m23;
-        vec.x = x;
-        vec.y = y;
+    public ImmutableVector3d transform(ImmutableVector3d vec) {
+        double x = m00 * vec.x() + m01 * vec.y() + m02 * vec.z() + m03;
+        double y = m10 * vec.x() + m11 * vec.y() + m12 * vec.z() + m13;
+        double z = m20 * vec.x() + m21 * vec.y() + m22 * vec.z() + m23;
+        return new ImmutableVector3d(x, y, z);
     }
 
-    public void transform(Vector4d vec) {
-        double x = m00 * vec.x + m01 * vec.y + m02 * vec.z + m03 * vec.w;
-        double y = m10 * vec.x + m11 * vec.y + m12 * vec.z + m13 * vec.w;
-        double z = m20 * vec.x + m21 * vec.y + m22 * vec.z + m23 * vec.w;
-        vec.w = m30 * vec.x + m31 * vec.y + m32 * vec.z + m33 * vec.w;
-        vec.x = x;
-        vec.y = y;
-        vec.z = z;
+    public Vector4d transform(Vector4d vec) {
+        double x = m00 * vec.x() + m01 * vec.y() + m02 * vec.z() + m03 * vec.w();
+        double y = m10 * vec.x() + m11 * vec.y() + m12 * vec.z() + m13 * vec.w();
+        double z = m20 * vec.x() + m21 * vec.y() + m22 * vec.z() + m23 * vec.w();
+        double w = m30 * vec.x() + m31 * vec.y() + m32 * vec.z() + m33 * vec.w();
+        return new Vector4d(x, y, z, w);
     }
 
-    public void transformNormal(ImmutableVector3f normal) {
-        double x = m00 * normal.x + m01 * normal.y + m02 * normal.z;
-        double y = m10 * normal.x + m11 * normal.y + m12 * normal.z;
-        normal.z = (float) (m20 * normal.x + m21 * normal.y + m22 * normal.z);
-        normal.x = (float) x;
-        normal.y = (float) y;
+    public ImmutableVector3f transformNormal(ImmutableVector3f normal) {
+        double x = m00 * normal.x() + m01 * normal.y() + m02 * normal.z();
+        double y = m10 * normal.x() + m11 * normal.y() + m12 * normal.z();
+        double z = m20 * normal.x() + m21 * normal.y() + m22 * normal.z();
+        return new ImmutableVector3f((float) x, (float) y, (float) z);
 
     }
 
-    public void transformNormal(ImmutableVector3d normal) {
-        double x = m00 * normal.x + m01 * normal.y + m02 * normal.z;
-        double y = m10 * normal.x + m11 * normal.y + m12 * normal.z;
-        normal.z = m20 * normal.x + m21 * normal.y + m22 * normal.z;
-        normal.x = x;
-        normal.y = y;
+    public ImmutableVector3d transformNormal(ImmutableVector3d normal) {
+        double x = m00 * normal.x() + m01 * normal.y() + m02 * normal.z();
+        double y = m10 * normal.x() + m11 * normal.y() + m12 * normal.z();
+        double z = m20 * normal.x() + m21 * normal.y() + m22 * normal.z();
+        return new ImmutableVector3d(x, y, z);
     }
 
     public void mul(Matrix4d m1, Matrix4d m2) {

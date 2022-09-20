@@ -1,45 +1,46 @@
-package com.enderio.core.common.util.vec;
+package com.enderio.core.client.render;
 
-import com.mojang.math.Vector3d;
-import com.mojang.math.Vector3f;
-import com.mojang.math.Vector4f;
+import com.enderio.core.common.util.vec.ImmutableVector3d;
+import com.enderio.core.common.util.vec.ImmutableVector3f;
+import com.enderio.core.common.util.vec.ImmutableVector4f;
+import com.enderio.core.common.util.vec.Vector2f;
 
-public record Vertex(Vector3d xyz, Vector2f uv, Vector3f normal, Vector4f color, int brightness) {
+public record Vertex(ImmutableVector3d xyz, Vector2f uv, ImmutableVector3f normal, ImmutableVector4f color, int brightness) {
 
     public Vertex copy() {
         return new Vertex(xyz, uv, normal, color, brightness);
     }
 
-    public Vertex(Vector3d xyz, Vector2f uv, Vector3f normal) {
+    public Vertex(ImmutableVector3d xyz, Vector2f uv, ImmutableVector3f normal) {
         this(xyz, uv, normal, null, -1);
     }
 
     public Vertex(double x, double y, double z, float u, float v, int brightness, float r, float g, float b, float a) {
-        this(new Vector3d(x, y, z), new Vector2f(u, v), null, new Vector4f(r, g, b, a), brightness);
+        this(new ImmutableVector3d(x, y, z), new Vector2f(u, v), null, new ImmutableVector4f(r, g, b, a), brightness);
     }
 
     public Vertex(double x, double y, double z, float u, float v) {
-        this(new Vector3d(x, y, z), new Vector2f(u, v), null, null, -1);
+        this(new ImmutableVector3d(x, y, z), new Vector2f(u, v), null, null, -1);
     }
 
     public Vertex(double x, double y, double z, float u, float v, float nx, float ny, float nz) {
-        this(new Vector3d(x, y, z), new Vector2f(u, v), new Vector3f(nx, ny, nz));
+        this(new ImmutableVector3d(x, y, z), new Vector2f(u, v), new ImmutableVector3f(nx, ny, nz));
     }
 
-    public void translate(Vector3d trans) {
-        xyz.add(trans); // TODO: Determine if we want immutable Vector3d
+    public void translate(ImmutableVector3d trans) {
+        xyz.add(trans); // TODO: Determine if we want immutable ImmutableVector3d
     }
 
     public double x() {
-        return xyz.x;
+        return xyz.x();
     }
 
     public double y() {
-        return xyz.y;
+        return xyz.y();
     }
 
     public double z() {
-        return xyz.z;
+        return xyz.z();
     }
 
     public float nx() {

@@ -1,6 +1,9 @@
 package com.enderio.core.common.util.vec;
 
+import com.mojang.datafixers.util.Pair;
+
 import java.awt.*;
+import java.util.Optional;
 
 public class VecCamera {
 
@@ -38,17 +41,22 @@ public class VecCamera {
         }
         vpm.mul(ivm, ipm);
 
-        ImmutableVector3d eye = ImmutableVector3d.IDENTITY;
-        ivm.getTranslation(eye);
-        return eye;
+        return ivm.getTranslation();
     }
 
-    public boolean getRayForPixel(int x, int y, ImmutableVector3d eyeOut, ImmutableVector3d normalOut) {
+    /**
+     * Returns the ray for the given pixel
+     *
+     * @param x the pixel x
+     * @param y the pixel y
+     * @return an optional pair of the eye and normal vectors (in that order)
+     */
+    public Optional<Pair<ImmutableVector3d, ImmutableVector3d>> getRayForPixel(int x, int y, ImmutableVector3d eyeOut, ImmutableVector3d normalOut) {
+        Pair<ImmutableVector3d, ImmutableVector3d> result = null;
         if (isValid()) {
-            VecUtil.computeRayForPixel(viewport, getInverseProjectionMatrix(), getInverseViewMatrix(), x, y, eyeOut, normalOut);
-            return true;
+            result = VecUtil.computeRayForPixel(viewport, getInverseProjectionMatrix(), getInverseViewMatrix(), x, y);
         }
-        return false;
+        return Optional.ofNullable(result);
     }
 
     public Vector2d getScreenPoint(ImmutableVector3d point3d) {
