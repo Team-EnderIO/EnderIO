@@ -5,7 +5,7 @@ import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IIOConfigProvider;
 import com.enderio.api.io.IOMode;
 import com.enderio.core.client.RenderUtil;
-import com.enderio.core.common.util.vec.ImmutableVector3d;
+import com.enderio.core.common.util.vec.EnderVector3d;
 import com.enderio.core.common.util.vec.Matrix4d;
 import com.enderio.core.common.util.vec.VecCamera;
 import com.enderio.core.common.util.vec.VecUtil;
@@ -53,8 +53,8 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
     private Minecraft mc = Minecraft.getInstance();
     private Level level = mc.player.level;
 
-    private final ImmutableVector3d origin = new ImmutableVector3d(0, 0, 0);
-    private final ImmutableVector3d eye = new ImmutableVector3d(0, 0, 0);
+    private final EnderVector3d origin = new EnderVector3d(0, 0, 0);
+    private final EnderVector3d eye = new EnderVector3d(0, 0, 0);
     private final VecCamera camera = new VecCamera();
     private final Matrix4d pitchRot = new Matrix4d();
     private final Matrix4d yawRot = new Matrix4d();
@@ -74,25 +74,25 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
     public IOConfigRenderer(final NonNullList<BlockPos> configurables) {
         this.configurables.addAll(configurables);
 
-        ImmutableVector3d c;
-        ImmutableVector3d size;
+        EnderVector3d c;
+        EnderVector3d size;
         if (configurables.size() == 1) {
             BlockPos bc = configurables.get(0);
-            c = new ImmutableVector3d(bc.getX() + 0.5, bc.getY() + 0.5, bc.getZ() + 0.5);
-            size = new ImmutableVector3d(1, 1, 1);
+            c = new EnderVector3d(bc.getX() + 0.5, bc.getY() + 0.5, bc.getZ() + 0.5);
+            size = new EnderVector3d(1, 1, 1);
         } else {
-            ImmutableVector3d min = new ImmutableVector3d(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-            ImmutableVector3d max = new ImmutableVector3d(-Double.MAX_VALUE, -Double.MAX_VALUE, -Double.MAX_VALUE);
+            EnderVector3d min = new EnderVector3d(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+            EnderVector3d max = new EnderVector3d(-Double.MAX_VALUE, -Double.MAX_VALUE, -Double.MAX_VALUE);
             for (BlockPos bc : configurables) {
-                min.set(Math.min(bc.getX(), min.x), Math.min(bc.getY(), min.y), Math.min(bc.getZ(), min.z));
-                max.set(Math.max(bc.getX(), max.x), Math.max(bc.getY(), max.y), Math.max(bc.getZ(), max.z));
+                min.set(Math.min(bc.getX(), min.x()), Math.min(bc.getY(), min.y()), Math.min(bc.getZ(), min.z()));
+                max.set(Math.max(bc.getX(), max.x()), Math.max(bc.getY(), max.y()), Math.max(bc.getZ(), max.z()));
             }
-            size = new ImmutableVector3d(0, 0, 0);
+            size = new EnderVector3d(0, 0, 0);
             size.set(max);
             min.scale(-1);
             size.add(min);
             size.scale(0.5);
-            c = new ImmutableVector3d(min.x + size.x, min.y + size.y, min.z + size.z);
+            c = new EnderVector3d(min.x + size.x, min.y + size.y, min.z + size.z);
             size.scale(2);
         }
 
@@ -150,8 +150,8 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
         // Mouse Over
         int x = Mouse.getEventX();
         int y = Mouse.getEventY();
-        ImmutableVector3d start = new ImmutableVector3d();
-        ImmutableVector3d end = new ImmutableVector3d();
+        EnderVector3d start = new EnderVector3d();
+        EnderVector3d end = new EnderVector3d();
         if (camera.getRayForPixel(x, y, start, end)) {
             end.scale(distance * 2);
             end.add(start);
@@ -171,7 +171,7 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
         }
     }
 
-    private void updateSelection(final ImmutableVector3d start, final ImmutableVector3d end) {
+    private void updateSelection(final EnderVector3d start, final EnderVector3d end) {
         start.add(origin);
         end.add(origin);
         final List<HitResult> hits = new ArrayList<HitResult>();
@@ -247,7 +247,7 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
         BufferBuilder tes = Tessellator.getInstance().getBuffer();
 
         GlStateManager.color(1, 1, 1);
-        ImmutableVector3d trans = new ImmutableVector3d((-origin.x) + eye.x, (-origin.y) + eye.y, (-origin.z) + eye.z);
+        EnderVector3d trans = new EnderVector3d((-origin.x) + eye.x, (-origin.y) + eye.y, (-origin.z) + eye.z);
         tes.setTranslation(trans.x, trans.y, trans.z);
         RenderUtil.addVerticesToTessellator(corners, DefaultVertexFormats.POSITION_TEX, true);
         Tessellator.getInstance().draw();
@@ -338,7 +338,7 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
         GlStateManager.enableTexture2D();
         GlStateManager.enableAlpha();
 
-        final ImmutableVector3d trans = new ImmutableVector3d((-origin.x) + eye.x, (-origin.y) + eye.y, (-origin.z) + eye.z);
+        final EnderVector3d trans = new EnderVector3d((-origin.x) + eye.x, (-origin.y) + eye.y, (-origin.z) + eye.z);
 
         BlockRenderLayer oldRenderLayer = MinecraftForgeClient.getRenderLayer();
         try {
@@ -394,7 +394,7 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
                 TileEntity tile = level.getTileEntity(pos);
                 if (tile != null) {
                     if (tile.shouldRenderInPass(pass)) {
-                        ImmutableVector3d at = new ImmutableVector3d(eye.x, eye.y, eye.z);
+                        EnderVector3d at = new EnderVector3d(eye.x, eye.y, eye.z);
                         at.x += pos.getX() - origin.x;
                         at.y += pos.getY() - origin.y;
                         at.z += pos.getZ() - origin.z;
@@ -415,7 +415,7 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
         });
     }
 
-    private void doWorldRenderPass(ImmutableVector3d trans, NonNullList<BlockPos> blocks, final BlockRenderLayer layer) {
+    private void doWorldRenderPass(EnderVector3d trans, NonNullList<BlockPos> blocks, final BlockRenderLayer layer) {
 
         BufferBuilder wr = Tessellator.getInstance().getBuffer();
         wr.begin(7, DefaultVertexFormat.BLOCK);

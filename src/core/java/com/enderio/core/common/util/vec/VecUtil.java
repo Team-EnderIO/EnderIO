@@ -14,21 +14,20 @@ public class VecUtil {
      * @param point the point.
      * @return the distance between them.
      */
-    public static double distanceFromPointToPlane(Vector4d plane, ImmutableVector3d point) {
+    public static double distanceFromPointToPlane(Vector4d plane, EnderVector3d point) {
         Vector4d newPoint = new Vector4d(point.x(), point.y(), point.z(), 1);
         return plane.dot(newPoint);
     }
 
     public static Vector4d computePlaneEquation(Vector4d a, Vector4d b, Vector4d c) {
-        return computePlaneEquation(new ImmutableVector3d(a.x(), a.y(), a.z()), new ImmutableVector3d(b.x(), b.y(), b.z()),
-            new ImmutableVector3d(c.x(), c.y(), c.z()));
+        return computePlaneEquation(new EnderVector3d(a.x(), a.y(), a.z()), new EnderVector3d(b.x(), b.y(), b.z()), new EnderVector3d(c.x(), c.y(), c.z()));
     }
 
-    public static ImmutableVector3d clamp(ImmutableVector3d v, double min, double max) {
+    public static EnderVector3d clamp(EnderVector3d v, double min, double max) {
         double vx = clamp(v.x(), min, max);
         double vy = clamp(v.y(), min, max);
         double vz = clamp(v.z(), min, max);
-        return new ImmutableVector3d(vx, vy, vz);
+        return new EnderVector3d(vx, vy, vz);
     }
 
     public static double clamp(double val, double min, double max) {
@@ -51,19 +50,19 @@ public class VecUtil {
      * @param c vector c.
      * @return the result (A,B,C,D) of plane equation.
      */
-    public static Vector4d computePlaneEquation(ImmutableVector3d a, ImmutableVector3d b, ImmutableVector3d c) {
+    public static Vector4d computePlaneEquation(EnderVector3d a, EnderVector3d b, EnderVector3d c) {
         // compute normal vector
         double ix = c.x() - a.x();
         double iy = c.y() - a.y();
         double iz = c.z() - a.z();
-        ImmutableVector3d i = new ImmutableVector3d(ix, iy, iz);
+        EnderVector3d i = new EnderVector3d(ix, iy, iz);
 
         double jx = b.x() - a.x();
         double jy = b.y() - a.y();
         double jz = b.z() - a.z();
-        ImmutableVector3d j = new ImmutableVector3d(jx, jy, jz);
+        EnderVector3d j = new EnderVector3d(jx, jy, jz);
 
-        ImmutableVector3d k = j.copy().cross(i).normalize();
+        EnderVector3d k = j.copy().cross(i).normalize();
 
         // plane equation: Ax + By + Cz + D = 0
         double w = -(k.x() * a.x() + k.y() * a.y() + k.z() * a.z()); // D
@@ -78,7 +77,7 @@ public class VecUtil {
      */
     public static Vector4d projectPointOntoPlane(Vector4d plane, Vector4d point) {
         double distance = plane.dot(point);
-        ImmutableVector3d planeNormal = new ImmutableVector3d(plane.x(), plane.y(), plane.z()).normalize().scale(distance);
+        EnderVector3d planeNormal = new EnderVector3d(plane.x(), plane.y(), plane.z()).normalize().scale(distance);
         return point.copy().sub(new Vector4d(planeNormal.x(), planeNormal.y(), planeNormal.z(), 0));
     }
 
@@ -91,10 +90,9 @@ public class VecUtil {
      * @return the intersection or null if there is no intersection or the line is
      * on the plane.
      */
-    public static Optional<ImmutableVector3d> computeIntersectionBetweenPlaneAndLine(Vector4d plane, ImmutableVector3d pointInLine,
-        ImmutableVector3d lineDirection) {
+    public static Optional<EnderVector3d> computeIntersectionBetweenPlaneAndLine(Vector4d plane, EnderVector3d pointInLine, EnderVector3d lineDirection) {
         // check for no intersection
-        ImmutableVector3d planeNormal = new ImmutableVector3d(plane.x(), plane.y(), plane.z());
+        EnderVector3d planeNormal = new EnderVector3d(plane.x(), plane.y(), plane.z());
         if (planeNormal.dot(lineDirection) == 0) {
             // line and plane are perpendicular
             return Optional.empty();
@@ -109,7 +107,7 @@ public class VecUtil {
         Vector4d lineNorm = new Vector4d(lineDirection.x(), lineDirection.y(), lineDirection.z(), 0);
         double t = -(plane.dot(point) / plane.dot(lineNorm));
 
-        ImmutableVector3d result = pointInLine.copy();
+        EnderVector3d result = pointInLine.copy();
         return Optional.of(result.add(lineDirection.scale(t)));
     }
 
@@ -121,9 +119,9 @@ public class VecUtil {
      * @param y the y pixel location (y = 0 is the bottom most pixel)
      * @return A pair of the eye and normal description the directional component of the ray.
      */
-    public static Pair<ImmutableVector3d, ImmutableVector3d> computeRayForPixel(Rectangle vp, Matrix4d ipm, Matrix4d ivm, int x, int y) {
+    public static Pair<EnderVector3d, EnderVector3d> computeRayForPixel(Rectangle vp, Matrix4d ipm, Matrix4d ivm, int x, int y) {
         // grab the eye's position
-        ImmutableVector3d eyeOut = ivm.getTranslation();
+        EnderVector3d eyeOut = ivm.getTranslation();
 
         Matrix4d vpm = new Matrix4d();
         vpm.mul(ivm, ipm);
@@ -137,13 +135,13 @@ public class VecUtil {
         Vector4d nearPlane = new Vector4d(screenX, screenY, -1, 1.);
         vpm.transform(nearPlane);
 
-        ImmutableVector3d nearXYZ = new ImmutableVector3d(nearPlane.x() / nearPlane.w(), nearPlane.y() / nearPlane.w(), nearPlane.z() / nearPlane.w());
+        EnderVector3d nearXYZ = new EnderVector3d(nearPlane.x() / nearPlane.w(), nearPlane.y() / nearPlane.w(), nearPlane.z() / nearPlane.w());
 
         // and then on the far plane
         Vector4d farPlane = nearPlane.withZ(1);
         vpm.transform(farPlane);
 
-        ImmutableVector3d farXYZ = new ImmutableVector3d(farPlane.x() / farPlane.w(), nearPlane.y() / farPlane.w(), nearPlane.z() / farPlane.w());
+        EnderVector3d farXYZ = new EnderVector3d(farPlane.x() / farPlane.w(), nearPlane.y() / farPlane.w(), nearPlane.z() / farPlane.w());
         return Pair.of(eyeOut, farXYZ.copy().sub(nearXYZ).normalize());
     }
 
@@ -163,7 +161,7 @@ public class VecUtil {
         // for impl details see gluPerspective doco in OpenGL reference manual
         double aspect = (double) viewportWidth / (double) viewportHeight;
 
-        double theta = (Math.toRadians(fovDegrees) / 2d);
+        double theta = Math.toRadians(fovDegrees) / 2d;
         double f = Math.cos(theta) / Math.sin(theta);
 
         double a = (far + near) / (near - far);
@@ -255,24 +253,19 @@ public class VecUtil {
      * @param upVec     the up vector.
      * @return the look at matrix.
      */
+    public static Matrix4d createMatrixAsLookAt(EnderVector3d eyePos, EnderVector3d lookAtPos, EnderVector3d upVec) {
+        EnderVector3d eye = eyePos.copy();
+        EnderVector3d up = upVec.copy();
+        EnderVector3d forwardVec = lookAtPos.copy().sub(eye).normalize();
 
-    public static Matrix4d createMatrixAsLookAt(ImmutableVector3d eyePos, ImmutableVector3d lookAtPos, ImmutableVector3d upVec) {
-
-        ImmutableVector3d eye = new ImmutableVector3d(eyePos.x(), eyePos.y(), eyePos.z());
-        ImmutableVector3d lookAt = new ImmutableVector3d(lookAtPos.x(), lookAtPos.y(), lookAtPos.z());
-        ImmutableVector3d up = new ImmutableVector3d(upVec.x(), upVec.y(), upVec.z());
-
-        ImmutableVector3d forwardVec = new ImmutableVector3d(lookAt.x(), lookAt.y(), lookAt.z()).sub(eye).normalize();
-        ImmutableVector3d sideVec = forwardVec.cross(up).normalize();
-        ImmutableVector3d upVed = sideVec.cross(forwardVec).normalize();
+        EnderVector3d sideVec = forwardVec.cross(up).normalize();
+        EnderVector3d upVed = sideVec.cross(forwardVec).normalize();
 
         Matrix4d mat = new Matrix4d(sideVec.x(), sideVec.y(), sideVec.z(), 0, upVed.x(), upVed.y(), upVed.z(), 0, -forwardVec.x(), -forwardVec.y(),
             -forwardVec.z(), 0, 0, 0, 0, 1);
 
-        ImmutableVector3d negEye = eye.negate();
-        mat.transformNormal(negEye);
-        mat.setTranslation(negEye);
-        return mat;
+        eye.negate();
+        return mat.transformNormal(eye).setTranslation(eye);
     }
 
     /**
@@ -282,14 +275,14 @@ public class VecUtil {
      * @param mat the matrix.
      * @return the result of the multiplication.
      */
-    public static ImmutableVector3d preMultiply(ImmutableVector3d v, Matrix4d mat) {
+    public static EnderVector3d preMultiply(EnderVector3d v, Matrix4d mat) {
         Matrix4d m = new Matrix4d(mat);
         m.transpose();
         double d = 1.0f / (m.getElement(0, 3) * v.x() + m.getElement(1, 3) * v.y() + m.getElement(2, 3) * v.z() + m.getElement(3, 3));
         double x = (m.getElement(0, 0) * v.x() + m.getElement(1, 0) * v.y() + m.getElement(2, 0) * v.z() + m.getElement(3, 0)) * d;
         double y = (m.getElement(0, 1) * v.x() + m.getElement(1, 1) * v.y() + m.getElement(2, 1) * v.z() + m.getElement(3, 1)) * d;
         double z = (m.getElement(0, 2) * v.x() + m.getElement(1, 2) * v.y() + m.getElement(2, 2) * v.z() + m.getElement(3, 2) * d);
-        return new ImmutableVector3d(x, y, z);
+        return v.set(x, y, z);
     }
 
     /**
@@ -316,73 +309,32 @@ public class VecUtil {
     }
 
     /**
-     * Computes the cross product of the two tuples.
-     *
-     * @param vec1 the first tuple.
-     * @param vec2 the second tuple.
-     * @return the cross product of the two tuples.
-     */
-    public static ImmutableVector3d cross(ImmutableVector3d vec1, ImmutableVector3d vec2) {
-        return vec1.cross(vec2);
-    }
-
-    /**
-     * Returns the distance between the two point from and to.
-     *
-     * @param from the from point.
-     * @param to   the to point.
-     * @return the distance between the two point from and to.
-     */
-    public static double distance(ImmutableVector3d from, ImmutableVector3d to) {
-        return from.distance(to);
-    }
-
-    /**
-     * Returns the distance squared between the two point from and to.
-     *
-     * @param from the from point.
-     * @param to   the to point.
-     * @return the distance squared between the two point from and to.
-     */
-    public static double distanceSquared(ImmutableVector3d from, ImmutableVector3d to) {
-        return from.distanceSqr(to);
-    }
-
-    /**
      * Extracts the up vec from the given view matrix
+     *
      * @param matrix the view matrix
      * @return the up vec
      */
-    public static ImmutableVector3d getUpVecFromMatrix(Matrix4d matrix) {
-        return new ImmutableVector3d(matrix.getElement(1, 0), matrix.getElement(1, 1), matrix.getElement(1, 2)).normalize();
+    public static EnderVector3d getUpVecFromMatrix(Matrix4d matrix) {
+        return new EnderVector3d(matrix.getElement(1, 0), matrix.getElement(1, 1), matrix.getElement(1, 2)).normalize();
     }
 
     /**
      * Extracts the side vec from the given view matrix
+     *
      * @param matrix the view matrix
      * @return the side vec
      */
-    public static ImmutableVector3d getSideVecFromMatrix(Matrix4d matrix) {
-        return new ImmutableVector3d(matrix.getElement(0, 0), matrix.getElement(0, 1), matrix.getElement(0, 2)).normalize();
+    public static EnderVector3d getSideVecFromMatrix(Matrix4d matrix) {
+        return new EnderVector3d(matrix.getElement(0, 0), matrix.getElement(0, 1), matrix.getElement(0, 2)).normalize();
     }
 
     /**
      * Extracts the look vec from the given view matrix
+     *
      * @param matrix the view matrix
      * @return the look vec
      */
-    public static ImmutableVector3d getLookVecFromMatrix(Matrix4d matrix) {
-        return new ImmutableVector3d(matrix.getElement(2, 0), matrix.getElement(2, 1), matrix.getElement(2, 2)).negate().normalize();
+    public static EnderVector3d getLookVecFromMatrix(Matrix4d matrix) {
+        return new EnderVector3d(matrix.getElement(2, 0), matrix.getElement(2, 1), matrix.getElement(2, 2)).negate().normalize();
     }
-
-    /**
-     * Extracts the up vector from the specified view matrix.
-     *
-     * @param matrix the matrix.
-     * @return the up vector from the specified view matrix.
-     */
-    public static ImmutableVector3d getUpFromMatrix(Matrix4d matrix) {
-        return new ImmutableVector3d(matrix.getElement(1, 0), matrix.getElement(1, 1), matrix.getElement(1, 2)).normalize();
-    }
-
 }

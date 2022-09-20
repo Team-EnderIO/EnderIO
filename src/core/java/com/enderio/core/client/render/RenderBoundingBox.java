@@ -1,7 +1,6 @@
 package com.enderio.core.client.render;
 
-import com.enderio.core.common.util.vec.ImmutableVector3d;
-import com.enderio.core.common.util.vec.ImmutableVector3f;
+import com.enderio.core.common.util.vec.EnderVector3d;
 import com.enderio.core.common.util.vec.Vector2f;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -33,7 +32,7 @@ public final class RenderBoundingBox extends AABB {
         super(minX, minY, minZ, maxX, maxY, maxZ);
     }
 
-    public RenderBoundingBox(ImmutableVector3d min, ImmutableVector3d max) {
+    public RenderBoundingBox(EnderVector3d min, EnderVector3d max) {
         super(min.x(), min.y(), min.z(), max.x(), max.y(), max.z());
     }
 
@@ -99,7 +98,7 @@ public final class RenderBoundingBox extends AABB {
         return new RenderBoundingBox(minX + x, minY + y, minZ + z, maxX + x, maxY + y, maxZ + z);
     }
 
-    public RenderBoundingBox translate(ImmutableVector3d translation) {
+    public RenderBoundingBox translate(EnderVector3d translation) {
         return translate((float) translation.x(), (float) translation.y(), (float) translation.z());
     }
 
@@ -121,41 +120,41 @@ public final class RenderBoundingBox extends AABB {
         NonNullList<Vertex> result = NonNullList.create();
         switch (dir) {
         case NORTH:
-            result.add(new Vertex(new ImmutableVector3d(maxX, minY, minZ), new Vector2f(minU, minV), new ImmutableVector3f(0, 0, -1)));
-            result.add(new Vertex(new ImmutableVector3d(minX, minY, minZ), new Vector2f(maxU, minV), new ImmutableVector3f(0, 0, -1)));
-            result.add(new Vertex(new ImmutableVector3d(minX, maxY, minZ), new Vector2f(maxU, maxV), new ImmutableVector3f(0, 0, -1)));
-            result.add(new Vertex(new ImmutableVector3d(maxX, maxY, minZ), new Vector2f(minU, maxV), new ImmutableVector3f(0, 0, -1)));
+            result.add(new Vertex(new EnderVector3d(maxX, minY, minZ), new Vector2f(minU, minV), new ImmutableVector3f(0, 0, -1)));
+            result.add(new Vertex(new EnderVector3d(minX, minY, minZ), new Vector2f(maxU, minV), new ImmutableVector3f(0, 0, -1)));
+            result.add(new Vertex(new EnderVector3d(minX, maxY, minZ), new Vector2f(maxU, maxV), new ImmutableVector3f(0, 0, -1)));
+            result.add(new Vertex(new EnderVector3d(maxX, maxY, minZ), new Vector2f(minU, maxV), new ImmutableVector3f(0, 0, -1)));
             break;
         case SOUTH:
-            result.add(new Vertex(new ImmutableVector3d(minX, minY, maxZ), new Vector2f(maxU, minV), new ImmutableVector3f(0, 0, 1)));
-            result.add(new Vertex(new ImmutableVector3d(maxX, minY, maxZ), new Vector2f(minU, minV), new ImmutableVector3f(0, 0, 1)));
-            result.add(new Vertex(new ImmutableVector3d(maxX, maxY, maxZ), new Vector2f(minU, maxV), new ImmutableVector3f(0, 0, 1)));
-            result.add(new Vertex(new ImmutableVector3d(minX, maxY, maxZ), new Vector2f(maxU, maxV), new ImmutableVector3f(0, 0, 1)));
+            result.add(new Vertex(new EnderVector3d(minX, minY, maxZ), new Vector2f(maxU, minV), new ImmutableVector3f(0, 0, 1)));
+            result.add(new Vertex(new EnderVector3d(maxX, minY, maxZ), new Vector2f(minU, minV), new ImmutableVector3f(0, 0, 1)));
+            result.add(new Vertex(new EnderVector3d(maxX, maxY, maxZ), new Vector2f(minU, maxV), new ImmutableVector3f(0, 0, 1)));
+            result.add(new Vertex(new EnderVector3d(minX, maxY, maxZ), new Vector2f(maxU, maxV), new ImmutableVector3f(0, 0, 1)));
             break;
         case EAST:
-            result.add(new Vertex(new ImmutableVector3d(maxX, maxY, minZ), new Vector2f(maxU, maxV), new ImmutableVector3f(1, 0, 0)));
-            result.add(new Vertex(new ImmutableVector3d(maxX, maxY, maxZ), new Vector2f(minU, maxV), new ImmutableVector3f(1, 0, 0)));
-            result.add(new Vertex(new ImmutableVector3d(maxX, minY, maxZ), new Vector2f(minU, minV), new ImmutableVector3f(1, 0, 0)));
-            result.add(new Vertex(new ImmutableVector3d(maxX, minY, minZ), new Vector2f(maxU, minV), new ImmutableVector3f(1, 0, 0)));
+            result.add(new Vertex(new EnderVector3d(maxX, maxY, minZ), new Vector2f(maxU, maxV), new ImmutableVector3f(1, 0, 0)));
+            result.add(new Vertex(new EnderVector3d(maxX, maxY, maxZ), new Vector2f(minU, maxV), new ImmutableVector3f(1, 0, 0)));
+            result.add(new Vertex(new EnderVector3d(maxX, minY, maxZ), new Vector2f(minU, minV), new ImmutableVector3f(1, 0, 0)));
+            result.add(new Vertex(new EnderVector3d(maxX, minY, minZ), new Vector2f(maxU, minV), new ImmutableVector3f(1, 0, 0)));
             break;
         case WEST:
-            result.add(new Vertex(new ImmutableVector3d(minX, minY, minZ), new Vector2f(maxU, minV), new ImmutableVector3f(-1, 0, 0)));
-            result.add(new Vertex(new ImmutableVector3d(minX, minY, maxZ), new Vector2f(minU, minV), new ImmutableVector3f(-1, 0, 0)));
-            result.add(new Vertex(new ImmutableVector3d(minX, maxY, maxZ), new Vector2f(minU, maxV), new ImmutableVector3f(-1, 0, 0)));
-            result.add(new Vertex(new ImmutableVector3d(minX, maxY, minZ), new Vector2f(maxU, maxV), new ImmutableVector3f(-1, 0, 0)));
+            result.add(new Vertex(new EnderVector3d(minX, minY, minZ), new Vector2f(maxU, minV), new ImmutableVector3f(-1, 0, 0)));
+            result.add(new Vertex(new EnderVector3d(minX, minY, maxZ), new Vector2f(minU, minV), new ImmutableVector3f(-1, 0, 0)));
+            result.add(new Vertex(new EnderVector3d(minX, maxY, maxZ), new Vector2f(minU, maxV), new ImmutableVector3f(-1, 0, 0)));
+            result.add(new Vertex(new EnderVector3d(minX, maxY, minZ), new Vector2f(maxU, maxV), new ImmutableVector3f(-1, 0, 0)));
             break;
         case UP:
-            result.add(new Vertex(new ImmutableVector3d(maxX, maxY, maxZ), new Vector2f(minU, minV), new ImmutableVector3f(0, 1, 0)));
-            result.add(new Vertex(new ImmutableVector3d(maxX, maxY, minZ), new Vector2f(minU, maxV), new ImmutableVector3f(0, 1, 0)));
-            result.add(new Vertex(new ImmutableVector3d(minX, maxY, minZ), new Vector2f(maxU, maxV), new ImmutableVector3f(0, 1, 0)));
-            result.add(new Vertex(new ImmutableVector3d(minX, maxY, maxZ), new Vector2f(maxU, minV), new ImmutableVector3f(0, 1, 0)));
+            result.add(new Vertex(new EnderVector3d(maxX, maxY, maxZ), new Vector2f(minU, minV), new ImmutableVector3f(0, 1, 0)));
+            result.add(new Vertex(new EnderVector3d(maxX, maxY, minZ), new Vector2f(minU, maxV), new ImmutableVector3f(0, 1, 0)));
+            result.add(new Vertex(new EnderVector3d(minX, maxY, minZ), new Vector2f(maxU, maxV), new ImmutableVector3f(0, 1, 0)));
+            result.add(new Vertex(new EnderVector3d(minX, maxY, maxZ), new Vector2f(maxU, minV), new ImmutableVector3f(0, 1, 0)));
             break;
         case DOWN:
         default:
-            result.add(new Vertex(new ImmutableVector3d(minX, minY, minZ), new Vector2f(maxU, maxV), new ImmutableVector3f(0, -1, 0)));
-            result.add(new Vertex(new ImmutableVector3d(maxX, minY, minZ), new Vector2f(minU, maxV), new ImmutableVector3f(0, -1, 0)));
-            result.add(new Vertex(new ImmutableVector3d(maxX, minY, maxZ), new Vector2f(minU, minV), new ImmutableVector3f(0, -1, 0)));
-            result.add(new Vertex(new ImmutableVector3d(minX, minY, maxZ), new Vector2f(maxU, minV), new ImmutableVector3f(0, -1, 0)));
+            result.add(new Vertex(new EnderVector3d(minX, minY, minZ), new Vector2f(maxU, maxV), new ImmutableVector3f(0, -1, 0)));
+            result.add(new Vertex(new EnderVector3d(maxX, minY, minZ), new Vector2f(minU, maxV), new ImmutableVector3f(0, -1, 0)));
+            result.add(new Vertex(new EnderVector3d(maxX, minY, maxZ), new Vector2f(minU, minV), new ImmutableVector3f(0, -1, 0)));
+            result.add(new Vertex(new EnderVector3d(minX, minY, maxZ), new Vector2f(maxU, minV), new ImmutableVector3f(0, -1, 0)));
             break;
         }
         return result;
@@ -164,52 +163,52 @@ public final class RenderBoundingBox extends AABB {
     /**
      * Returns the vertices of the corners for the specified face in counter clockwise order, starting with the top left.
      */
-    public List<ImmutableVector3d> getCornersForDir(Direction dir) {
-        List<ImmutableVector3d> result = new ArrayList<ImmutableVector3d>(4);
+    public List<EnderVector3d> getCornersForDir(Direction dir) {
+        List<EnderVector3d> result = new ArrayList<EnderVector3d>(4);
         switch (dir) {
         case NORTH:
-            result.add(new ImmutableVector3d(minX, maxY, minZ));
-            result.add(new ImmutableVector3d(maxX, maxY, minZ));
-            result.add(new ImmutableVector3d(maxX, minY, minZ));
-            result.add(new ImmutableVector3d(minX, minY, minZ));
+            result.add(new EnderVector3d(minX, maxY, minZ));
+            result.add(new EnderVector3d(maxX, maxY, minZ));
+            result.add(new EnderVector3d(maxX, minY, minZ));
+            result.add(new EnderVector3d(minX, minY, minZ));
             break;
         case SOUTH:
-            result.add(new ImmutableVector3d(minX, maxY, maxZ));
-            result.add(new ImmutableVector3d(minX, minY, maxZ));
-            result.add(new ImmutableVector3d(maxX, minY, maxZ));
-            result.add(new ImmutableVector3d(maxX, maxY, maxZ));
+            result.add(new EnderVector3d(minX, maxY, maxZ));
+            result.add(new EnderVector3d(minX, minY, maxZ));
+            result.add(new EnderVector3d(maxX, minY, maxZ));
+            result.add(new EnderVector3d(maxX, maxY, maxZ));
             break;
         case EAST:
-            result.add(new ImmutableVector3d(maxX, minY, maxZ));
-            result.add(new ImmutableVector3d(maxX, minY, minZ));
-            result.add(new ImmutableVector3d(maxX, maxY, minZ));
-            result.add(new ImmutableVector3d(maxX, maxY, maxZ));
+            result.add(new EnderVector3d(maxX, minY, maxZ));
+            result.add(new EnderVector3d(maxX, minY, minZ));
+            result.add(new EnderVector3d(maxX, maxY, minZ));
+            result.add(new EnderVector3d(maxX, maxY, maxZ));
             break;
         case WEST:
-            result.add(new ImmutableVector3d(minX, maxY, maxZ));
-            result.add(new ImmutableVector3d(minX, maxY, minZ));
-            result.add(new ImmutableVector3d(minX, minY, minZ));
-            result.add(new ImmutableVector3d(minX, minY, maxZ));
+            result.add(new EnderVector3d(minX, maxY, maxZ));
+            result.add(new EnderVector3d(minX, maxY, minZ));
+            result.add(new EnderVector3d(minX, minY, minZ));
+            result.add(new EnderVector3d(minX, minY, maxZ));
             break;
         case UP:
-            result.add(new ImmutableVector3d(maxX, maxY, maxZ));
-            result.add(new ImmutableVector3d(maxX, maxY, minZ));
-            result.add(new ImmutableVector3d(minX, maxY, minZ));
-            result.add(new ImmutableVector3d(minX, maxY, maxZ));
+            result.add(new EnderVector3d(maxX, maxY, maxZ));
+            result.add(new EnderVector3d(maxX, maxY, minZ));
+            result.add(new EnderVector3d(minX, maxY, minZ));
+            result.add(new EnderVector3d(minX, maxY, maxZ));
             break;
         case DOWN:
         default:
-            result.add(new ImmutableVector3d(minX, minY, maxZ));
-            result.add(new ImmutableVector3d(minX, minY, minZ));
-            result.add(new ImmutableVector3d(maxX, minY, minZ));
-            result.add(new ImmutableVector3d(maxX, minY, maxZ));
+            result.add(new EnderVector3d(minX, minY, maxZ));
+            result.add(new EnderVector3d(minX, minY, minZ));
+            result.add(new EnderVector3d(maxX, minY, minZ));
+            result.add(new EnderVector3d(maxX, minY, maxZ));
             break;
         }
         return result;
     }
 
-    public ImmutableVector3d getBBCenter() {
-        return new ImmutableVector3d(minX + (maxX - minX) / 2, minY + (maxY - minY) / 2, minZ + (maxZ - minZ) / 2);
+    public EnderVector3d getBBCenter() {
+        return new EnderVector3d(minX + (maxX - minX) / 2, minY + (maxY - minY) / 2, minZ + (maxZ - minZ) / 2);
     }
 
     public double sizeX() {
@@ -224,12 +223,12 @@ public final class RenderBoundingBox extends AABB {
         return Math.abs(maxZ - minZ);
     }
 
-    public ImmutableVector3d getMin() {
-        return new ImmutableVector3d(minX, minY, minZ);
+    public EnderVector3d getMin() {
+        return new EnderVector3d(minX, minY, minZ);
     }
 
-    public ImmutableVector3d getMax() {
-        return new ImmutableVector3d(maxX, maxY, maxZ);
+    public EnderVector3d getMax() {
+        return new EnderVector3d(maxX, maxY, maxZ);
     }
 
     public double getArea() {
@@ -266,8 +265,8 @@ public final class RenderBoundingBox extends AABB {
     }
 
     public RenderBoundingBox transform(VertexTransform vertexTransform) {
-        ImmutableVector3d min = vertexTransform.apply(new ImmutableVector3d(minX, minY, minZ));
-        ImmutableVector3d max = vertexTransform.apply(new ImmutableVector3d(maxX, maxY, maxZ));
+        EnderVector3d min = vertexTransform.apply(new EnderVector3d(minX, minY, minZ));
+        EnderVector3d max = vertexTransform.apply(new EnderVector3d(maxX, maxY, maxZ));
 
         return new RenderBoundingBox(Math.min(min.x(), max.x()), Math.min(min.y(), max.y()), Math.min(min.z(), max.z()), Math.max(min.x(), max.x()),
             Math.max(min.y(), max.y()), Math.max(min.z(), max.z()));

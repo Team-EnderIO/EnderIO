@@ -354,14 +354,15 @@ public class Matrix4d {
 
     }
 
-    public ImmutableVector3d    getTranslation() {
-        return new ImmutableVector3d(m03, m13, m23);
+    public EnderVector3d getTranslation() {
+        return new EnderVector3d(m03, m13, m23);
     }
 
-    public void setTranslation(ImmutableVector3d trans) {
+    public Matrix4d setTranslation(EnderVector3d trans) {
         m03 = trans.x();
         m13 = trans.y();
         m23 = trans.z();
+        return this;
     }
 
     public void makeRotationX(double angle) {
@@ -394,34 +395,33 @@ public class Matrix4d {
         m11 = cos;
     }
 
-    public ImmutableVector3d transform(ImmutableVector3d vec) {
+    public void transform(EnderVector3d vec) {
         double x = m00 * vec.x() + m01 * vec.y() + m02 * vec.z() + m03;
         double y = m10 * vec.x() + m11 * vec.y() + m12 * vec.z() + m13;
         double z = m20 * vec.x() + m21 * vec.y() + m22 * vec.z() + m23;
-        return new ImmutableVector3d(x, y, z);
+        vec.set(x, y, z);
     }
 
-    public Vector4d transform(Vector4d vec) {
+    public void transform(Vector4d vec) {
         double x = m00 * vec.x() + m01 * vec.y() + m02 * vec.z() + m03 * vec.w();
         double y = m10 * vec.x() + m11 * vec.y() + m12 * vec.z() + m13 * vec.w();
         double z = m20 * vec.x() + m21 * vec.y() + m22 * vec.z() + m23 * vec.w();
         double w = m30 * vec.x() + m31 * vec.y() + m32 * vec.z() + m33 * vec.w();
-        return new Vector4d(x, y, z, w);
+        vec.set(x, y, z, w);
     }
 
-    public ImmutableVector3f transformNormal(ImmutableVector3f normal) {
+    public void transformNormal(EnderVector3f normal) {
         double x = m00 * normal.x() + m01 * normal.y() + m02 * normal.z();
         double y = m10 * normal.x() + m11 * normal.y() + m12 * normal.z();
         double z = m20 * normal.x() + m21 * normal.y() + m22 * normal.z();
-        return new ImmutableVector3f((float) x, (float) y, (float) z);
-
+        normal.set((float) x, (float) y, (float) z);
     }
 
-    public ImmutableVector3d transformNormal(ImmutableVector3d normal) {
+    public void transformNormal(EnderVector3d normal) {
         double x = m00 * normal.x() + m01 * normal.y() + m02 * normal.z();
         double y = m10 * normal.x() + m11 * normal.y() + m12 * normal.z();
         double z = m20 * normal.x() + m21 * normal.y() + m22 * normal.z();
-        return new ImmutableVector3d(x, y, z);
+        normal.set(x, y, z);
     }
 
     public void mul(Matrix4d m1, Matrix4d m2) {

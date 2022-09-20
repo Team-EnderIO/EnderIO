@@ -1,7 +1,7 @@
 package com.enderio.core.client;
 
-import com.enderio.core.common.util.vec.ImmutableVector3f;
-import com.enderio.core.common.util.vec.ImmutableVector4f;
+import com.enderio.core.common.util.vec.EnderVector3f;
+import com.enderio.core.common.util.vec.EnderVector4f;
 import com.mojang.blaze3d.platform.GlStateManager;
 import org.jetbrains.annotations.Nullable;
 
@@ -9,23 +9,23 @@ import java.awt.*;
 
 public final class ColorUtil {
 
-    public static ImmutableVector4f toFloat(Color color) {
+    public static EnderVector4f toFloat(Color color) {
         float[] rgba = color.getComponents(null);
-        return new ImmutableVector4f(rgba[0], rgba[1], rgba[2], rgba[3]);
+        return new EnderVector4f(rgba[0], rgba[1], rgba[2], rgba[3]);
     }
 
-    public static ImmutableVector3f toFloat(int rgb) {
+    public static EnderVector3f toFloat(int rgb) {
         int r = rgb >> 16 & 255;
         int g = rgb >> 8 & 255;
         int b = rgb & 255;
-        return new ImmutableVector3f(r / 255F, g / 255F, b / 255F);
+        return new EnderVector3f(r / 255F, g / 255F, b / 255F);
     }
 
-    public static ImmutableVector4f toFloat4(int rgb) {
+    public static EnderVector4f toFloat4(int rgb) {
         int r = rgb >> 16 & 255;
         int g = rgb >> 8 & 255;
         int b = rgb & 255;
-        return new ImmutableVector4f(r / 255F, g / 255F, b / 255F, 1);
+        return new EnderVector4f(r / 255F, g / 255F, b / 255F, 1);
     }
 
     public static int getRGB(@Nullable Color color) {
@@ -41,7 +41,7 @@ public final class ColorUtil {
         return color == null ? 0 : getRGBA(color.getAlpha(), color.getRed(), color.getGreen(), color.getBlue());
     }
 
-    public static int getRGB(ImmutableVector3f rgb) {
+    public static int getRGB(EnderVector3f rgb) {
         return getRGB(rgb.x(), rgb.y(), rgb.z());
     }
 
@@ -49,7 +49,7 @@ public final class ColorUtil {
         return getRGB((int) (r * 255), (int) (g * 255), (int) (b * 255));
     }
 
-    public static int getRGBA(ImmutableVector4f col) {
+    public static int getRGBA(EnderVector4f col) {
         return getRGBA(col.x(), col.y(), col.z(), col.w());
     }
 

@@ -5,6 +5,7 @@ import com.mojang.datafixers.util.Pair;
 import java.awt.*;
 import java.util.Optional;
 
+// TODO: Rethink this for optionals
 public class VecCamera {
 
     private Rectangle viewport;
@@ -25,11 +26,11 @@ public class VecCamera {
         setProjectionMatrix(VecUtil.createProjectionMatrixAsPerspective(fovDegrees, near, far, viewportWidth, viewportHeight));
     }
 
-    public void setViewMatrixAsLookAt(ImmutableVector3d eyePos, ImmutableVector3d lookAtPos, ImmutableVector3d upVec) {
+    public void setViewMatrixAsLookAt(EnderVector3d eyePos, EnderVector3d lookAtPos, EnderVector3d upVec) {
         setViewMatrix(VecUtil.createMatrixAsLookAt(eyePos, lookAtPos, upVec));
     }
 
-    public ImmutableVector3d getEyePoint() {
+    public EnderVector3d getEyePoint() {
         Matrix4d vpm = new Matrix4d();
         Matrix4d ivm = getInverseViewMatrix();
         if (ivm == null) {
@@ -51,15 +52,15 @@ public class VecCamera {
      * @param y the pixel y
      * @return an optional pair of the eye and normal vectors (in that order)
      */
-    public Optional<Pair<ImmutableVector3d, ImmutableVector3d>> getRayForPixel(int x, int y, ImmutableVector3d eyeOut, ImmutableVector3d normalOut) {
-        Pair<ImmutableVector3d, ImmutableVector3d> result = null;
+    public Optional<Pair<EnderVector3d, EnderVector3d>> getRayForPixel(int x, int y) {
+        Pair<EnderVector3d, EnderVector3d> result = null;
         if (isValid()) {
             result = VecUtil.computeRayForPixel(viewport, getInverseProjectionMatrix(), getInverseViewMatrix(), x, y);
         }
         return Optional.ofNullable(result);
     }
 
-    public Vector2d getScreenPoint(ImmutableVector3d point3d) {
+    public Vector2d getScreenPoint(EnderVector3d point3d) {
         Vector4d transPoint = new Vector4d(point3d.x(), point3d.y(), point3d.z(), 1);
 
         viewMatrix.transform(transPoint);
@@ -150,5 +151,4 @@ public class VecCamera {
         viewTranspose.transpose();
         viewInverse = null;
     }
-
 }

@@ -1,30 +1,35 @@
 package com.enderio.core.common.util.vec;
 
+import com.mojang.math.Vector4f;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.Objects;
 
-public class Vector4d {
+public class EnderVector4f {
 
-    public static Vector4d IDENTITY = new Vector4d(0, 0, 0, 0);
+    public static EnderVector4f ZERO = new EnderVector4f(0, 0, 0, 0);
 
-    private double x;
-    private double y;
-    private double z;
-    private double w;
+    private float x;
+    private float y;
+    private float z;
+    private float w;
 
-    public Vector4d(double x, double y, double z, double w) {
+    public EnderVector4f(float x, float y, float z, float w) {
         this.x = x;
         this.y = y;
         this.z = z;
         this.w = w;
     }
 
-    public Vector4d copy() {
-        return new Vector4d(x, y, z, w);
+    public EnderVector4f(Vector4f vec) {
+        this(vec.x(), vec.y(), vec.z(), vec.w());
     }
 
-    public Vector4d interpolate(Vector4d destination, double factor) {
+    public EnderVector4f copy() {
+        return new EnderVector4f(x, y, z, w);
+    }
+
+    public EnderVector4f interpolate(EnderVector4f destination, float factor) {
         x = (1 - factor) * x + factor * destination.x;
         y = (1 - factor) * y + factor * destination.y;
         z = (1 - factor) * z + factor * destination.z;
@@ -32,11 +37,11 @@ public class Vector4d {
         return this;
     }
 
-    public Vector4d add(Vector4d other) {
+    public EnderVector4f add(EnderVector4f other) {
         return add(other.x, other.y, other.z, other.w);
     }
 
-    public Vector4d add(double x, double y, double z, double w) {
+    public EnderVector4f add(float x, float y, float z, float w) {
         this.x += x;
         this.y += y;
         this.z += z;
@@ -44,11 +49,11 @@ public class Vector4d {
         return this;
     }
 
-    public Vector4d sub(Vector4d other) {
+    public EnderVector4f sub(EnderVector4f other) {
         return sub(other.x, other.y, other.z, other.w);
     }
 
-    public Vector4d sub(double x, double y, double z, double w) {
+    public EnderVector4f sub(float x, float y, float z, float w) {
         this.x -= x;
         this.y -= y;
         this.z -= z;
@@ -56,7 +61,7 @@ public class Vector4d {
         return this;
     }
 
-    public Vector4d negate() {
+    public EnderVector4f negate() {
         x = -x;
         y = -y;
         z = -z;
@@ -64,7 +69,7 @@ public class Vector4d {
         return this;
     }
 
-    public Vector4d scale(double scale) {
+    public EnderVector4f scale(double scale) {
         x *= scale;
         y *= scale;
         z *= scale;
@@ -72,11 +77,11 @@ public class Vector4d {
         return this;
     }
 
-    public Vector4d normalize() {
+    public EnderVector4f normalize() {
         return scale(1.0f / Math.sqrt(x * x + y * y + z * z + w * w));
     }
 
-    public double dot(Vector4d other) {
+    public double dot(EnderVector4f other) {
         return x * other.x + y * other.y + z * other.z + w * other.w;
     }
 
@@ -92,23 +97,23 @@ public class Vector4d {
         return new Vec3(x, y, z);
     }
 
-    public Vector4d withX(double x) {
-        return new Vector4d(x, y, z, w);
+    public EnderVector4f withX(float x) {
+        return new EnderVector4f(x, y, z, w);
     }
 
-    public Vector4d withY(double y) {
-        return new Vector4d(x, y, z, w);
+    public EnderVector4f withY(float y) {
+        return new EnderVector4f(x, y, z, w);
     }
 
-    public Vector4d withZ(double z) {
-        return new Vector4d(x, y, z, w);
+    public EnderVector4f withZ(float z) {
+        return new EnderVector4f(x, y, z, w);
     }
 
-    public Vector4d withW(double w) {
-        return new Vector4d(x, y, z, w);
+    public EnderVector4f withW(float w) {
+        return new EnderVector4f(x, y, z, w);
     }
 
-    public Vector4d set(double x, double y, double z, double w) {
+    public EnderVector4f set(float x, float y, float z, float w) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -116,25 +121,29 @@ public class Vector4d {
         return this;
     }
 
-    public double x() {
+    public float x() {
         return x;
     }
 
-    public double y() {
+    public float y() {
         return y;
     }
 
-    public double z() {
+    public float z() {
         return z;
     }
 
-    public double w() {
+    public float w() {
         return w;
+    }
+
+    public Vector4f toVector4f() {
+        return new Vector4f(x, y, z, w);
     }
 
     @Override
     public String toString() {
-        return "Vector4d{" + "x=" + x + ", y=" + y + ", z=" + z + ", w=" + w + '}';
+        return "EnderVector4f{" + "x=" + x + ", y=" + y + ", z=" + z + ", w=" + w + '}';
     }
 
     @Override
@@ -143,7 +152,7 @@ public class Vector4d {
             return true;
         if (o == null)
             return false;
-        if (o instanceof Vector4d other) {
+        if (o instanceof EnderVector4f other) {
             return x == other.x && y == other.y && z == other.z && w == other.w;
         }
         return false;
