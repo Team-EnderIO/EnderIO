@@ -5,14 +5,15 @@ import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IIOConfigProvider;
 import com.enderio.api.io.IOMode;
 import com.enderio.core.client.RenderUtil;
+import com.enderio.core.common.util.vec.ImmutableVector3d;
+import com.enderio.core.common.util.vec.Matrix4d;
+import com.enderio.core.common.util.vec.VecCamera;
+import com.enderio.core.common.util.vec.VecUtil;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3d;
-import com.mojang.math.Vector4f;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import mcjty.theoneprobe.network.PacketHandler;
 import mcjty.theoneprobe.rendering.RenderHelper;
-import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
@@ -34,8 +35,8 @@ import net.minecraftforge.fml.common.Mod;
 import org.codehaus.plexus.util.dag.Vertex;
 import org.lwjgl.opengl.GL11;
 
-import javax.annotation.Nonnull;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -50,49 +51,49 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
     private double distance;
     private long initTime;
 
-    private @Nonnull Minecraft mc = Minecraft.getInstance();
-    private @Nonnull Level level = mc.player.level;
+    private Minecraft mc = Minecraft.getInstance();
+    private Level level = mc.player.level;
 
-    private final @Nonnull Vector3d origin = new Vector3d(0, 0, 0);
-    private final @Nonnull Vector3d eye = new Vector3d(0, 0, 0);
-    private final @Nonnull Camera camera = new Camera();
-    private final @Nonnull Matrix4f pitchRot = new Matrix4f();
-    private final @Nonnull Matrix4f yawRot = new Matrix4f();
+    private final ImmutableVector3d origin = new ImmutableVector3d(0, 0, 0);
+    private final ImmutableVector3d eye = new ImmutableVector3d(0, 0, 0);
+    private final VecCamera camera = new VecCamera();
+    private final Matrix4d pitchRot = new Matrix4d();
+    private final Matrix4d yawRot = new Matrix4d();
 
-    private @Nonnull NonNullList<BlockPos> configurables = NonNullList.create();
-    private @Nonnull NonNullList<BlockPos> neighbours = NonNullList.create();
+    private NonNullList<BlockPos> configurables = NonNullList.create();
+    private NonNullList<BlockPos> neighbours = NonNullList.create();
 
     private SelectedFace<E> selection;
 
     private boolean renderNeighbours = true;
     private boolean inNeigButBounds = false;
 
-    public IOConfigRenderer(@Nonnull IIOConfig configurable) {
+    public IOConfigRenderer(IIOConfig configurable) {
         this(NonNullList(configurable.getLocation()));
     }
 
-    public IOConfigRenderer(@Nonnull final NonNullList<BlockPos> configurables) {
+    public IOConfigRenderer(final NonNullList<BlockPos> configurables) {
         this.configurables.addAll(configurables);
 
-        Vector3d c;
-        Vector3d size;
+        ImmutableVector3d c;
+        ImmutableVector3d size;
         if (configurables.size() == 1) {
             BlockPos bc = configurables.get(0);
-            c = new Vector3d(bc.getX() + 0.5, bc.getY() + 0.5, bc.getZ() + 0.5);
-            size = new Vector3d(1, 1, 1);
+            c = new ImmutableVector3d(bc.getX() + 0.5, bc.getY() + 0.5, bc.getZ() + 0.5);
+            size = new ImmutableVector3d(1, 1, 1);
         } else {
-            Vector3d min = new Vector3d(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-            Vector3d max = new Vector3d(-Double.MAX_VALUE, -Double.MAX_VALUE, -Double.MAX_VALUE);
+            ImmutableVector3d min = new ImmutableVector3d(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+            ImmutableVector3d max = new ImmutableVector3d(-Double.MAX_VALUE, -Double.MAX_VALUE, -Double.MAX_VALUE);
             for (BlockPos bc : configurables) {
                 min.set(Math.min(bc.getX(), min.x), Math.min(bc.getY(), min.y), Math.min(bc.getZ(), min.z));
                 max.set(Math.max(bc.getX(), max.x), Math.max(bc.getY(), max.y), Math.max(bc.getZ(), max.z));
             }
-            size = new Vector3d(0,0,0);
+            size = new ImmutableVector3d(0, 0, 0);
             size.set(max);
             min.scale(-1);
             size.add(min);
             size.scale(0.5);
-            c = new Vector3d(min.x + size.x, min.y + size.y, min.z + size.z);
+            c = new ImmutableVector3d(min.x + size.x, min.y + size.y, min.z + size.z);
             size.scale(2);
         }
 
@@ -143,15 +144,15 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
         }
 
         distance -= Mouse.getEventDWheel() * 0.01;
-        distance = VecmathUtil.clamp(distance, 0.01, 200);
+        distance = VecUtil.clamp(distance, 0.01, 200);
 
         long elapsed = System.currentTimeMillis() - initTime;
 
         // Mouse Over
         int x = Mouse.getEventX();
         int y = Mouse.getEventY();
-        Vector3d start = new Vector3d();
-        Vector3d end = new Vector3d();
+        ImmutableVector3d start = new ImmutableVector3d();
+        ImmutableVector3d end = new ImmutableVector3d();
         if (camera.getRayForPixel(x, y, start, end)) {
             end.scale(distance * 2);
             end.add(start);
@@ -171,15 +172,14 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
         }
     }
 
-
-    private void updateSelection(@Nonnull final Vector3d start, @Nonnull final Vector3d end) {
+    private void updateSelection(final ImmutableVector3d start, final ImmutableVector3d end) {
         start.add(origin);
         end.add(origin);
-        final List<RayTraceResult> hits = new ArrayList<RayTraceResult>();
+        final List<HitResult> hits = new ArrayList<HitResult>();
 
         configurables.apply(new Callback<BlockPos>() {
             @Override
-            public void apply(@Nonnull BlockPos pos) {
+            public void apply(BlockPos pos) {
                 if (!level.isAirBlock(pos)) {
                     IBlockState bs = level.getBlockState(pos);
                     RayTraceResult hit = bs.collisionRayTrace(level, pos, new Vec3d(start.x, start.y, start.z), new Vec3d(end.x, end.y, end.z));
@@ -201,7 +201,7 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
         }
     }
 
-    public static HitResult getClosestHit(@Nonnull Vec3 origin, @Nonnull Collection<HitResult> candidates) {
+    public static HitResult getClosestHit(Vec3 origin, Collection<HitResult> candidates) {
         double minLengthSquared = Double.POSITIVE_INFINITY;
         HitResult closest = null;
 
@@ -217,13 +217,13 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
         return closest;
     }
 
-    public void drawScreen(int par1, int par2, float partialTick, @Nonnull Rectangle vp, @Nonnull Rectangle parentBounds) {
+    public void drawScreen(int par1, int par2, float partialTick, Rectangle vp, Rectangle parentBounds) {
 
-        if (!updateCamera(partialTick, vp.x, vp.y, vp.width, vp.height)) {
+        if (!updateVecCamera(partialTick, vp.x, vp.y, vp.width, vp.height)) {
             return;
         }
 
-        applyCamera(partialTick);
+        applyVecCamera(partialTick);
         TravelController.setSelectionEnabled(false);
         renderScene();
         TravelController.setSelectionEnabled(true);
@@ -248,7 +248,7 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
         BufferBuilder tes = Tessellator.getInstance().getBuffer();
 
         GlStateManager.color(1, 1, 1);
-        Vector3d trans = new Vector3d((-origin.x) + eye.x, (-origin.y) + eye.y, (-origin.z) + eye.z);
+        ImmutableVector3d trans = new ImmutableVector3d((-origin.x) + eye.x, (-origin.y) + eye.y, (-origin.z) + eye.z);
         tes.setTranslation(trans.x, trans.y, trans.z);
         RenderUtil.addVerticesToTessellator(corners, DefaultVertexFormats.POSITION_TEX, true);
         Tessellator.getInstance().draw();
@@ -312,7 +312,7 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
             y = vph - mc.font.lineHeight - 2;
             mc.font.drawString(getLabelForMode(mode), 4, y, ColorUtil.getRGB(Color.white));
             if (ioIcon != null) {
-                int w = mc.fontRenderer.getStringWidth(mode.getLocalisedName());
+                int w = mc.font.width(mode.getLocalisedName());
                 double xd = (w - ioIcon.width) / 2;
                 xd = Math.max(0, w);
                 xd /= 2;
@@ -323,12 +323,11 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
         }
     }
 
-    protected @Nonnull String getLabelForMode(@Nonnull IOMode mode) {
+    protected String getLabelForMode(IOMode mode) {
         return mode.getLocalisedName();
     }
 
     private void renderScene() {
-
         GlStateManager.enableCull();
         GlStateManager.enableRescaleNormal();
 
@@ -340,13 +339,13 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
         GlStateManager.enableTexture2D();
         GlStateManager.enableAlpha();
 
-        final Vector3d trans = new Vector3d((-origin.x) + eye.x, (-origin.y) + eye.y, (-origin.z) + eye.z);
+        final ImmutableVector3d trans = new ImmutableVector3d((-origin.x) + eye.x, (-origin.y) + eye.y, (-origin.z) + eye.z);
 
         BlockRenderLayer oldRenderLayer = MinecraftForgeClient.getRenderLayer();
         try {
             NNList.of(BlockRenderLayer.class).apply(new Callback<BlockRenderLayer>() {
                 @Override
-                public void apply(@Nonnull BlockRenderLayer layer) {
+                public void apply(BlockRenderLayer layer) {
                     ForgeHooksClient.setRenderLayer(layer);
                     setGlStateForPass(layer, false);
                     doWorldRenderPass(trans, configurables, layer);
@@ -356,7 +355,7 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
             if (renderNeighbours) {
                 NNList.of(BlockRenderLayer.class).apply(new Callback<BlockRenderLayer>() {
                     @Override
-                    public void apply(@Nonnull BlockRenderLayer layer) {
+                    public void apply(BlockRenderLayer layer) {
                         ForgeHooksClient.setRenderLayer(layer);
                         setGlStateForPass(layer, true);
                         doWorldRenderPass(trans, neighbours, layer);
@@ -389,14 +388,14 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
         setGlStateForPass(0, false);
     }
 
-    private void doTileEntityRenderPass(@Nonnull NonNullList<BlockPos> blocks, final int pass) {
+    private void doTileEntityRenderPass(NonNullList<BlockPos> blocks, final int pass) {
         blocks.apply(new Callback<BlockPos>() {
             @Override
-            public void apply(@Nonnull BlockPos pos) {
+            public void apply(BlockPos pos) {
                 TileEntity tile = level.getTileEntity(pos);
                 if (tile != null) {
                     if (tile.shouldRenderInPass(pass)) {
-                        Vector3d at = new Vector3d(eye.x, eye.y, eye.z);
+                        ImmutableVector3d at = new ImmutableVector3d(eye.x, eye.y, eye.z);
                         at.x += pos.getX() - origin.x;
                         at.y += pos.getY() - origin.y;
                         at.z += pos.getZ() - origin.z;
@@ -417,16 +416,16 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
         });
     }
 
-    private void doWorldRenderPass(@Nonnull Vector3d trans, @Nonnull NonNullList<BlockPos> blocks, final @Nonnull BlockRenderLayer layer) {
+    private void doWorldRenderPass(ImmutableVector3d trans, NonNullList<BlockPos> blocks, final BlockRenderLayer layer) {
 
         BufferBuilder wr = Tessellator.getInstance().getBuffer();
-        wr.begin(7, DefaultVertexFormats.BLOCK);
+        wr.begin(7, DefaultVertexFormat.BLOCK);
 
         Tessellator.getInstance().getBuffer().setTranslation(trans.x, trans.y, trans.z);
 
         blocks.apply(new Callback<BlockPos>() {
             @Override
-            public void apply(@Nonnull BlockPos pos) {
+            public void apply(BlockPos pos) {
 
                 BlockState bs = level.getBlockState(pos);
                 Block block = bs.getBlock();
@@ -441,7 +440,7 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
         Tessellator.getInstance().getBuffer().setTranslation(0, 0, 0);
     }
 
-    public void renderBlock(@Nonnull BlockState state, @Nonnull BlockPos pos, @Nonnull BlockDataAccessor blockAccess, @Nonnull BufferBuilder worldRendererIn) {
+    public void renderBlock(BlockState state, BlockPos pos, BlockDataAccessor blockAccess, BufferBuilder worldRendererIn) {
 
         try {
             BlockRenderDispatcher blockrendererdispatcher = mc.getBlockRenderer();
@@ -461,7 +460,7 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
         }
     }
 
-    private void setGlStateForPass(@Nonnull BlockRenderLayer layer, boolean isNeighbour) {
+    private void setGlStateForPass(BlockRenderLayer layer, boolean isNeighbour) {
         int pass = layer == BlockRenderLayer.TRANSLUCENT ? 1 : 0;
         setGlStateForPass(pass, isNeighbour);
     }
@@ -494,7 +493,7 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
 
     }
 
-    private boolean updateCamera(float partialTick, int vpx, int vpy, int vpw, int vph) {
+    private boolean updateVecCamera(float partialTick, int vpx, int vpy, int vpw, int vph) {
         if (vpw <= 0 || vph <= 0) {
             return false;
         }
@@ -509,17 +508,17 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
         return camera.isValid();
     }
 
-    private void applyCamera(float partialTick) {
+    private void applyVecCamera(float partialTick) {
         Rectangle vp = camera.getViewport();
         GL11.glViewport(vp.x, vp.y, vp.width, vp.height);
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
         GL11.glMatrixMode(GL11.GL_PROJECTION);
-        final Matrix4f camaraViewMatrix = camera.getTransposeProjectionMatrix();
+        final Matrix4d camaraViewMatrix = camera.getTransposeProjectionMatrix();
         if (camaraViewMatrix != null) {
             RenderUtil.loadMatrix(camaraViewMatrix);
         }
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
-        final Matrix4f cameraViewMatrix = camera.getTransposeViewMatrix();
+        final Matrix4d cameraViewMatrix = camera.getTransposeViewMatrix();
         if (cameraViewMatrix != null) {
             RenderUtil.loadMatrix(cameraViewMatrix);
         }
@@ -528,10 +527,10 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
 
     public static class SelectedFace<E extends BlockEntity & IIOConfigProvider> {
 
-        public final @Nonnull E config;
-        public final @Nonnull Direction direction;
+        public final E config;
+        public final Direction direction;
 
-        public SelectedFace(@Nonnull E config, @Nonnull Direction direction) {
+        public SelectedFace(E config, Direction direction) {
             this.config = config;
             this.direction = direction;
         }

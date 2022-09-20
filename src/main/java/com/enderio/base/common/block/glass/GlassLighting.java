@@ -2,7 +2,7 @@ package com.enderio.base.common.block.glass;
 
 import com.enderio.EnderIO;
 import com.enderio.core.client.gui.IIcon;
-import com.enderio.core.common.util.Vector2i;
+import com.enderio.core.common.util.vec.Vector2i;
 import net.minecraft.resources.ResourceLocation;
 
 public enum GlassLighting implements IIcon {

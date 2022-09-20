@@ -2,7 +2,7 @@ package com.enderio.core.common.blockentity;
 
 import com.enderio.core.EnderCore;
 import com.enderio.core.client.gui.IIcon;
-import com.enderio.core.common.util.Vector2i;
+import com.enderio.core.common.util.vec.Vector2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 

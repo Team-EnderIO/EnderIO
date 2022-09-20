@@ -2,7 +2,7 @@ package com.enderio.machines.client.gui.screen;
 
 import com.enderio.EnderIO;
 import com.enderio.core.client.gui.screen.EIOScreen;
-import com.enderio.core.common.util.Vector2i;
+import com.enderio.core.common.util.vec.Vector2i;
 import com.enderio.machines.client.gui.widget.ProgressWidget;
 import com.enderio.machines.common.menu.PrimitiveAlloySmelterMenu;
 import net.minecraft.network.chat.Component;

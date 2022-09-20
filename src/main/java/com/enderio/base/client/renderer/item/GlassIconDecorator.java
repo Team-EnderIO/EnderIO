@@ -2,7 +2,7 @@ package com.enderio.base.client.renderer.item;
 
 import com.enderio.base.common.block.glass.FusedQuartzBlock;
 import com.enderio.core.client.gui.screen.IEnderScreen;
-import com.enderio.core.common.util.Vector2i;
+import com.enderio.core.common.util.vec.Vector2i;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Font;
 import net.minecraft.world.item.BlockItem;
