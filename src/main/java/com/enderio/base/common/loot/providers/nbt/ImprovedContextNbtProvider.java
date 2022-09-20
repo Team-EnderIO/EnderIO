@@ -1,7 +1,6 @@
 package com.enderio.base.common.loot.providers.nbt;
 
 import com.enderio.base.common.init.EIOLootNbtProvider;
-import com.google.common.collect.ImmutableSet;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -46,7 +45,7 @@ public class ImprovedContextNbtProvider implements NbtProvider {
         }
 
         public Set<LootContextParam<?>> getReferencedContextParams() {
-            return ImmutableSet.of(LootContextParams.BLOCK_ENTITY);
+            return Set.of(LootContextParams.BLOCK_ENTITY);
         }
     };
     public static final ImprovedContextNbtProvider BLOCK_ENTITY = new ImprovedContextNbtProvider(BLOCK_ENTITY_PROVIDER);
@@ -65,7 +64,7 @@ public class ImprovedContextNbtProvider implements NbtProvider {
             }
 
             public Set<LootContextParam<?>> getReferencedContextParams() {
-                return ImmutableSet.of(pEntityTarget.getParam());
+                return Set.of(pEntityTarget.getParam());
             }
         };
     }
