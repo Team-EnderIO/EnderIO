@@ -5,6 +5,7 @@ import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IIOConfigProvider;
 import com.enderio.api.io.IOMode;
 import com.enderio.core.client.RenderUtil;
+import com.enderio.core.client.render.RenderBoundingBox;
 import com.enderio.core.common.util.vec.EnderVector3d;
 import com.enderio.core.common.util.vec.Matrix4d;
 import com.enderio.core.common.util.vec.VecCamera;
@@ -12,11 +13,14 @@ import com.enderio.core.common.util.vec.VecUtil;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.math.Vector4f;
 import mcjty.theoneprobe.network.PacketHandler;
 import mcjty.theoneprobe.rendering.RenderHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
@@ -25,11 +29,14 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.server.commands.data.BlockDataAccessor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.common.Mod;
 import org.codehaus.plexus.util.dag.Vertex;
 import org.lwjgl.opengl.GL11;
@@ -38,11 +45,13 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Mod.EventBusSubscriber(modid = EnderIO.MODID)
 public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
 
-    public static final TextureSupplier selectedFaceIcon = TextureRegistry.registerTexture("blocks/overlays/selected_face");
+    public static final LazyOptional<AbstractTexture> selectedFaceIcon = LazyOptional.of(
+        () -> Minecraft.getInstance().getTextureManager().getTexture(EnderIO.loc("blocks/overlays/selected_face")));
 
     private boolean dragging = false;
     private float pitch = 0;
@@ -50,7 +59,7 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
     private double distance;
     private long initTime;
 
-    private Minecraft mc = Minecraft.getInstance();
+    private final Minecraft mc = Minecraft.getInstance();
     private Level level = mc.player.level;
 
     private final EnderVector3d origin = new EnderVector3d(0, 0, 0);
@@ -59,8 +68,8 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
     private final Matrix4d pitchRot = new Matrix4d();
     private final Matrix4d yawRot = new Matrix4d();
 
-    private NonNullList<BlockPos> configurables = NonNullList.create();
-    private NonNullList<BlockPos> neighbours = NonNullList.create();
+    private final NonNullList<BlockPos> configurables = NonNullList.create();
+    private final NonNullList<BlockPos> neighbours = NonNullList.create();
 
     private SelectedFace<E> selection;
 
@@ -81,8 +90,8 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
             c = new EnderVector3d(bc.getX() + 0.5, bc.getY() + 0.5, bc.getZ() + 0.5);
             size = new EnderVector3d(1, 1, 1);
         } else {
-            EnderVector3d min = new EnderVector3d(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-            EnderVector3d max = new EnderVector3d(-Double.MAX_VALUE, -Double.MAX_VALUE, -Double.MAX_VALUE);
+            EnderVector3d min = EnderVector3d.MAX;
+            EnderVector3d max = EnderVector3d.MIN;
             for (BlockPos bc : configurables) {
                 min.set(Math.min(bc.getX(), min.x()), Math.min(bc.getY(), min.y()), Math.min(bc.getZ(), min.z()));
                 max.set(Math.max(bc.getX(), max.x()), Math.max(bc.getY(), max.y()), Math.max(bc.getZ(), max.z()));
@@ -92,7 +101,7 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
             min.scale(-1);
             size.add(min);
             size.scale(0.5);
-            c = new EnderVector3d(min.x + size.x, min.y + size.y, min.z + size.z);
+            c = new EnderVector3d(min.x() + size.x(), min.y() + size.y(), min.z() + size.z());
             size.scale(2);
         }
 
@@ -103,7 +112,7 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
         pitch = -mc.player.getRotationVector().x;
         yaw = 180 - mc.player.getRotationVector().y;
 
-        distance = Math.max(Math.max(size.x, size.y), size.z) + 4;
+        distance = Math.max(Math.max(size.x(), size.y()), size.z()) + 4;
 
         configurables.forEach(pos -> Direction.stream().forEach(dir -> {
             BlockPos loc = pos.relative(dir);
@@ -174,37 +183,32 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
     private void updateSelection(final EnderVector3d start, final EnderVector3d end) {
         start.add(origin);
         end.add(origin);
-        final List<HitResult> hits = new ArrayList<HitResult>();
+        final List<BlockHitResult> hits = new ArrayList<BlockHitResult>();
 
-        configurables.apply(new Callback<BlockPos>() {
-            @Override
-            public void apply(BlockPos pos) {
-                if (!level.isAirBlock(pos)) {
-                    IBlockState bs = level.getBlockState(pos);
-                    RayTraceResult hit = bs.collisionRayTrace(level, pos, new Vec3d(start.x, start.y, start.z), new Vec3d(end.x, end.y, end.z));
-                    if (NullHelper.untrust(hit) != null && hit.typeOfHit != RayTraceResult.Type.MISS) {
-                        hits.add(hit);
-                    }
+        configurables.forEach(pos -> {
+            if (!level.isEmptyBlock(pos)) {
+                BlockState bs = level.getBlockState(pos);
+                Optional<BlockHitResult> hit = Optional.ofNullable(bs.getCollisionShape(level, pos).clip(start.toVec3(), end.toVec3(), pos));
+                if (NullHelper.untrust(hit) != null && hit.typeOfHit != RayTraceResult.Type.MISS) {
+                    hits.add(hit);
                 }
             }
         });
 
         selection = null;
-        RayTraceResult hit = getClosestHit(new Vec3d(start.x, start.y, start.z), hits);
-        if (hit != null) {
-            BlockEntity te = level.getBlockEntity(hit.getBlockPos());
-            if (te instanceof IIoConfigurable) {
-                EnumFacing face = hit.sideHit;
-                selection = new SelectedFace<E>((E) te, face);
-            }
+        BlockHitResult hit = getClosestHit(start.toVec3(), hits);
+        BlockEntity te = level.getBlockEntity(hit.getBlockPos());
+        if (te instanceof IIOConfigProvider) {
+            Direction direction = hit.getDirection();
+            selection = new SelectedFace<E>((E) te, direction);
         }
     }
 
-    public static HitResult getClosestHit(Vec3 origin, Collection<HitResult> candidates) {
+    public static BlockHitResult getClosestHit(Vec3 origin, Collection<BlockHitResult> candidates) {
         double minLengthSquared = Double.POSITIVE_INFINITY;
-        HitResult closest = null;
+        BlockHitResult closest = null;
 
-        for (HitResult hit : candidates) {
+        for (BlockHitResult hit : candidates) {
             if (hit != null) {
                 double lengthSquared = hit.getLocation().distanceToSqr(origin);
                 if (lengthSquared < minLengthSquared) {
@@ -223,9 +227,9 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
         }
 
         applyVecCamera(partialTick);
-        TravelController.setSelectionEnabled(false);
+//        TravelController.setSelectionEnabled(false);
         renderScene();
-        TravelController.setSelectionEnabled(true);
+//        TravelController.setSelectionEnabled(true);
         renderSelection();
         renderOverlay(par1, par2);
     }
@@ -235,7 +239,7 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
             return;
         }
 
-        BoundingBox bb = new BoundingBox(selection.config.getLocation());
+        RenderBoundingBox bb = new RenderBoundingBox(selection.config.getLocation());
 
         TextureAtlasSprite icon = selectedFaceIcon.get(TextureAtlasSprite.class);
         List<Vertex> corners = bb.getCornersWithUvForFace(selection.direction, icon.getMinU(), icon.getMaxU(), icon.getMinV(), icon.getMaxV());
@@ -244,13 +248,13 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
         GlStateManager.disableLighting();
 
         RenderUtil.bindBlockTexture();
-        BufferBuilder tes = Tessellator.getInstance().getBuffer();
+        BufferBuilder tes = Tesselator.getInstance().getBuilder();
 
         GlStateManager.color(1, 1, 1);
         EnderVector3d trans = new EnderVector3d((-origin.x) + eye.x, (-origin.y) + eye.y, (-origin.z) + eye.z);
         tes.setTranslation(trans.x, trans.y, trans.z);
-        RenderUtil.addVerticesToTessellator(corners, DefaultVertexFormats.POSITION_TEX, true);
-        Tessellator.getInstance().draw();
+        RenderUtil.addVerticesToTessellator(corners, DefaultVertexFormat.POSITION_TEX, true);
+        Tesselator.getInstance().draw();
         tes.setTranslation(0, 0, 0);
 
     }
@@ -342,7 +346,7 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
 
         BlockRenderLayer oldRenderLayer = MinecraftForgeClient.getRenderLayer();
         try {
-            NNList.of(BlockRenderLayer.class).apply(new Callback<BlockRenderLayer>() {
+            NonNullList.of(BlockRenderLayer.class).apply(new Callback<BlockRenderLayer>() {
                 @Override
                 public void apply(BlockRenderLayer layer) {
                     ForgeHooksClient.setRenderLayer(layer);
@@ -367,12 +371,12 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
 
         RenderHelper.enableStandardItemLighting();
         GlStateManager.enableLighting();
-        BlockEntityRenderDispatcher.instance.entityX = origin.x - eye.x;
-        BlockEntityRenderDispatcher.instance.entityY = origin.y - eye.y;
-        BlockEntityRenderDispatcher.instance.entityZ = origin.z - eye.z;
-        BlockEntityRenderDispatcher.staticPlayerX = origin.x - eye.x;
-        BlockEntityRenderDispatcher.staticPlayerY = origin.y - eye.y;
-        BlockEntityRenderDispatcher.staticPlayerZ = origin.z - eye.z;
+        BlockEntityRenderDispatcher.instance.entityX = origin.x() - eye.x();
+        BlockEntityRenderDispatcher.instance.entityY = origin.y() - eye.y();
+        BlockEntityRenderDispatcher.instance.entityZ = origin.z() - eye.z();
+        BlockEntityRenderDispatcher.staticPlayerX = origin.x() - eye.x();
+        BlockEntityRenderDispatcher.staticPlayerY = origin.y() - eye.y();
+        BlockEntityRenderDispatcher.staticPlayerZ = origin.z() - eye.z();
 
         for (int pass = 0; pass < 2; pass++) {
             ForgeHooksClient.setRenderPass(pass);
@@ -428,9 +432,9 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
 
                 BlockState bs = level.getBlockState(pos);
                 Block block = bs.getBlock();
-                bs = bs.getActualState(level, pos);
+                bs = bs.state(level, pos);
                 if (block.canRenderInLayer(bs, layer)) {
-                    renderBlock(bs, pos, level, Tessellator.getInstance().getBuffer());
+                    renderBlock(bs, pos, level, Tesselator.getInstance().getBuilder());
                 }
             }
         });
@@ -443,24 +447,23 @@ public class IOConfigRenderer<E extends BlockEntity & IIOConfigProvider> {
 
         try {
             BlockRenderDispatcher blockrendererdispatcher = mc.getBlockRenderer();
-            EnumBlockRenderType type = state.getRenderType();
-            if (type != EnumBlockRenderType.MODEL) {
+            RenderShape type = state.getRenderShape();
+            if (type != RenderShape.MODEL) {
                 blockrendererdispatcher.renderBlock(state, pos, blockAccess, worldRendererIn);
                 return;
             }
 
             // We only want to change one param here, the check sides
-            BakedModel ibakedmodel = blockrendererdispatcher.getModelForState(state);
-            state = state.getBlock().getExtendedState(state, level, pos);
-            blockrendererdispatcher.getBlockModelRenderer().renderModel(blockAccess, ibakedmodel, state, pos, worldRendererIn, false);
+            BakedModel model = blockrendererdispatcher.getBlockModel(state);
+            blockrendererdispatcher.getModelRenderer().renderModel(blockAccess, model, state, pos, worldRendererIn, false);
 
         } catch (Throwable throwable) {
             // Just bury a render issue here, it is only the IO screen
         }
     }
 
-    private void setGlStateForPass(BlockRenderLayer layer, boolean isNeighbour) {
-        int pass = layer == BlockRenderLayer.TRANSLUCENT ? 1 : 0;
+    private void setGlStateForPass(BlockState state, boolean isNeighbour) {
+        int pass = state.canOcclude() ? 1 : 0;
         setGlStateForPass(pass, isNeighbour);
     }
 

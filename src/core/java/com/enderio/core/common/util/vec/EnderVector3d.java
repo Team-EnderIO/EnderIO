@@ -8,6 +8,8 @@ import java.util.Objects;
 public class EnderVector3d {
 
     public static EnderVector3d ZERO = new EnderVector3d(0, 0, 0);
+    public static EnderVector3d MAX = new EnderVector3d(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+    public static EnderVector3d MIN = new EnderVector3d(Double.MIN_VALUE, Double.MIN_VALUE, Double.MIN_VALUE);
 
     private double x;
     private double y;
@@ -135,7 +137,6 @@ public class EnderVector3d {
         this.z = z;
         return this;
     }
-
 
     public EnderVector3d set(EnderVector3d vec) {
         this.x = vec.x();
