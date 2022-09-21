@@ -28,7 +28,7 @@ public class SoulBinderBlockEntity extends PoweredCraftingMachine<SoulBindingRec
     private final RecipeWrapper container;
 
     public SoulBinderBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
-        super(MachineRecipes.SOULBINDING.type().get(), CAPACITY, TRANSFER, USAGE, type, worldPosition, blockState);
+        super(MachineRecipes.SOUL_BINDING.type().get(), CAPACITY, TRANSFER, USAGE, type, worldPosition, blockState);
 
         container = new RecipeWrapper(getInventory());
     }

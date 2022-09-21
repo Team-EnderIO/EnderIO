@@ -3,6 +3,7 @@ package com.enderio.machines.data.recipes;
 import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.core.data.recipes.EnderRecipeProvider;
+import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -30,7 +31,7 @@ public class SoulBindingRecipeProvider extends EnderRecipeProvider {
 
     @Override
     protected void buildCraftingRecipes(Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
-        build(EIOItems.DARK_STEEL_UPGRADE_EMPOWERED_1.get(), List.of(Ingredient.of(EIOItems.FILLED_SOUL_VIAL.get()), Ingredient.of(EIOItems.BROKEN_SPAWNER.get())), 2000, pFinishedRecipeConsumer);
+        build(MachineBlocks.POWERED_SPAWNER.get().asItem(), List.of(Ingredient.of(EIOItems.FILLED_SOUL_VIAL.get()), Ingredient.of(EIOItems.BROKEN_SPAWNER.get())), 2000, pFinishedRecipeConsumer);
     }
 
     protected void build(Item output, List<Ingredient> inputs, int energy, EntityType<? extends Entity> entityType, Consumer<FinishedRecipe> finishedRecipeConsumer) {
@@ -86,7 +87,7 @@ public class SoulBindingRecipeProvider extends EnderRecipeProvider {
 
         @Override
         public RecipeSerializer<?> getType() {
-            return MachineRecipes.SOULBINDING.serializer().get();
+            return MachineRecipes.SOUL_BINDING.serializer().get();
         }
     }
 }

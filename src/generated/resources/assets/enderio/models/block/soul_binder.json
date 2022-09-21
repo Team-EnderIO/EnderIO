@@ -5,10 +5,7 @@
       "parent": "enderio:block/soul_machine_frame"
     },
     "front": {
-      "parent": "enderio:block/soulbinder_front",
-      "textures": {
-        "front": "enderio:block/soulbinder_front_on"
-      }
+      "parent": "enderio:block/soul_binder_front"
     },
     "overlay": {
       "parent": "enderio:block/io_overlay"

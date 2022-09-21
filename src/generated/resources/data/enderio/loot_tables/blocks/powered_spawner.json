@@ -19,7 +19,7 @@
               "source": "block_entity"
             }
           ],
-          "name": "enderio:soulbinder"
+          "name": "enderio:powered_spawner"
         }
       ],
       "rolls": 1.0

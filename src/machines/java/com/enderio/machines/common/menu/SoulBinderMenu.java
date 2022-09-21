@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 public class SoulBinderMenu extends MachineMenu<SoulBinderBlockEntity> {
 
     public SoulBinderMenu(@Nullable SoulBinderBlockEntity blockEntity, Inventory inventory, int pContainerId) {
-        super(blockEntity, inventory, MachineMenus.SOULBINDER.get(), pContainerId);
+        super(blockEntity, inventory, MachineMenus.SOUL_BINDER.get(), pContainerId);
 
         if (blockEntity != null) {
             if (blockEntity.requiresCapacitor()) {

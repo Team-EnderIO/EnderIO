@@ -61,7 +61,7 @@ public class SoulBindingRecipe implements MachineRecipe<Container>{
                 });
             });
         });
-        return getResultStacks();
+        return results;
     }
 
     @Override
@@ -96,12 +96,12 @@ public class SoulBindingRecipe implements MachineRecipe<Container>{
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return MachineRecipes.SOULBINDING.serializer().get();
+        return MachineRecipes.SOUL_BINDING.serializer().get();
     }
 
     @Override
     public RecipeType<?> getType() {
-        return MachineRecipes.SOULBINDING.type().get();
+        return MachineRecipes.SOUL_BINDING.type().get();
     }
 
     public static class Serializer implements RecipeSerializer<SoulBindingRecipe> {
@@ -148,7 +148,7 @@ public class SoulBindingRecipe implements MachineRecipe<Container>{
 
                 return new SoulBindingRecipe(recipeId, output, inputs, energy, entityType);
             } catch (Exception ex) {
-                EnderIO.LOGGER.error("Error reading soulbinding recipe from packet.", ex);
+                EnderIO.LOGGER.error("Error reading soul binding recipe from packet.", ex);
                 throw ex;
             }
         }

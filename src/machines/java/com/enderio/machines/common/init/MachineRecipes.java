@@ -24,7 +24,7 @@ public class MachineRecipes {
     public static final RecipeTypeSerializerPair<SagMillingRecipe, SagMillingRecipe.Serializer> SAGMILLING = register("sagmilling", SagMillingRecipe.Serializer::new);
     public static final RecipeTypeSerializerPair<SlicingRecipe, SlicingRecipe.Serializer> SLICING = register("slicing", SlicingRecipe.Serializer::new);
 
-    public static final RecipeTypeSerializerPair<SoulBindingRecipe, SoulBindingRecipe.Serializer> SOULBINDING = register("soulbinding", SoulBindingRecipe.Serializer::new);
+    public static final RecipeTypeSerializerPair<SoulBindingRecipe, SoulBindingRecipe.Serializer> SOUL_BINDING = register("soul_binding", SoulBindingRecipe.Serializer::new);
 
 
 
