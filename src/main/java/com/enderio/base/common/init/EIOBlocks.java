@@ -408,6 +408,7 @@ public class EIOBlocks {
     public static final BlockEntry<IndustrialInsulationBlock> INDUSTRIAL_INSULATION = REGISTRATE
         .block("industrial_insulation_block", Material.SPONGE, IndustrialInsulationBlock::new)
         .initialProperties(() -> Blocks.SPONGE)
+        .lang("Industrial Insulation")
         .item()
         .tab(() -> EIOCreativeTabs.BLOCKS)
         .build()
