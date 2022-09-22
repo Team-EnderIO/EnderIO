@@ -3,14 +3,13 @@ package com.enderio.machines.common.blockentity.task;
 import com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.Difficulty;
-import net.minecraft.world.entity.*;
-import net.minecraft.world.level.LightLayer;
-import net.minecraft.world.level.SpawnData;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 
@@ -102,48 +101,31 @@ public class SpawnTask extends PoweredTask{
             double x = pos.getX() + (randomsource.nextDouble() - randomsource.nextDouble()) * (double)this.blockEntity.getRange().getXsize() + 0.5D;
             double y = pos.getY() + randomsource.nextInt(3) - 1;
             double z = pos.getZ() + (randomsource.nextDouble() - randomsource.nextDouble()) * (double)this.blockEntity.getRange().getZsize() + 0.5D;
+            if (level.noCollision(blockEntity.getEntityType().getAABB(x, y, z))) {
 
-            SpawnData data = new SpawnData();
-            data.getEntityToSpawn().putString("id", Registry.ENTITY_TYPE.getKey(blockEntity.getEntityType()).toString());
+                Entity entity = EntityType.loadEntityRecursive(blockEntity.getEntityData().getEntityTag(), level, entity1 -> {
+                    entity1.moveTo(x, y, z, entity1.getYRot(), entity1.getXRot());
+                    return entity1;
+                });
 
-            Entity entity = EntityType.loadEntityRecursive(data.getEntityToSpawn(), level, entity1 -> {
-                entity1.moveTo(x, y, z, entity1.getYRot(), entity1.getXRot());
-                return entity1;
-            });
-
-
-
-            BlockPos blockPos = new BlockPos(x, y, z);
-            if (data.getCustomSpawnRules().isPresent()) {
-                if (!blockEntity.getEntityType().getCategory().isFriendly() && level.getDifficulty() == Difficulty.PEACEFUL) {
-                    continue;
+                if (entity instanceof Mob) {
+                    Mob mob = (Mob)entity;
+                    net.minecraftforge.eventbus.api.Event.Result res = net.minecraftforge.event.ForgeEventFactory.canEntitySpawn(mob, level, (float)entity.getX(), (float)entity.getY(), (float)entity.getZ(), null, MobSpawnType.SPAWNER);
+                    if (res == net.minecraftforge.eventbus.api.Event.Result.DENY) return;
                 }
 
-                SpawnData.CustomSpawnRules spawndata$customspawnrules = data.getCustomSpawnRules().get();
-                if (!spawndata$customspawnrules.blockLightLimit().isValueInRange(level.getBrightness(LightLayer.BLOCK, blockPos)) || !spawndata$customspawnrules.skyLightLimit().isValueInRange(level.getBrightness(LightLayer.SKY, blockPos))) {
-                    continue;
+                if (!level.tryAddFreshEntityWithPassengers(entity)) {
+                    return;
                 }
-            } else if (!SpawnPlacements.checkSpawnRules(blockEntity.getEntityType(), level, MobSpawnType.SPAWNER, blockPos, level.getRandom())) {
-                continue;
-            }
 
-            if (entity instanceof Mob) {
-                Mob mob = (Mob)entity;
-                net.minecraftforge.eventbus.api.Event.Result res = net.minecraftforge.event.ForgeEventFactory.canEntitySpawn(mob, level, (float)entity.getX(), (float)entity.getY(), (float)entity.getZ(), null, MobSpawnType.SPAWNER);
-                if (res == net.minecraftforge.eventbus.api.Event.Result.DENY) return;
-            }
+                level.levelEvent(2004, pos, 0);
+                level.gameEvent(entity, GameEvent.ENTITY_PLACE, new BlockPos(x, y, z));
+                if (entity instanceof Mob) {
+                    ((Mob)entity).spawnAnim();
+                }
 
-            if (!level.tryAddFreshEntityWithPassengers(entity)) {
-                return;
+                energyStorage.consumeEnergy(energyCost, false);
             }
-
-            level.levelEvent(2004, pos, 0);
-            level.gameEvent(entity, GameEvent.ENTITY_PLACE, blockPos);
-            if (entity instanceof Mob) {
-                ((Mob)entity).spawnAnim();
-            }
-
-            energyStorage.consumeEnergy(energyCost, false);
         }
     }
 }

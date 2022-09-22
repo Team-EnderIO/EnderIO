@@ -30,6 +30,8 @@ public class PoweredSpawnerBlockEntity extends PoweredTaskMachineEntity<SpawnTas
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, () -> 30f);
     private StoredEntityData entityData = StoredEntityData.empty();
 
+    private int range = 3;
+
     public PoweredSpawnerBlockEntity(BlockEntityType type, BlockPos worldPosition, BlockState blockState) {
         super(CAPACITY, TRANSFER, USAGE, type, worldPosition, blockState);
     }
@@ -76,7 +78,7 @@ public class PoweredSpawnerBlockEntity extends PoweredTaskMachineEntity<SpawnTas
     }
 
     public AABB getRange() {
-        return new AABB(this.getBlockPos());
+        return new AABB(this.getBlockPos()).inflate(range);
     }
 
     public EntityType<? extends Entity> getEntityType() {
