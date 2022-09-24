@@ -70,28 +70,6 @@ public class RenderUtil {
             .endVertex();
     }
 
-    //    // without pose and normal
-    //    public static void renderFace(Direction face, VertexConsumer consumer, float minU, float maxU, float minV, float maxV, float x, float y, float z, float w,
-    //        float h, int color) {
-    //        switch (face) {
-    //        case DOWN -> renderFace(consumer, minU, maxU, minV, maxV, color, x, x + w, 1.0f - z, 1.0f - z, y, y, y + h, y + h, x, x + w, y, y + h);
-    //        case UP -> renderFace(consumer, minU, maxU, minV, maxV, color, x, x + w, z, z, y + h, y + h, y, y, x, x + w, y, y + h);
-    //        case NORTH -> renderFace(consumer, minU, maxU, minV, maxV, color, x, x + w, y + h, y, z, z, z, z, x, x + w, y, y + h);
-    //        case SOUTH -> renderFace(consumer, minU, maxU, minV, maxV, color, x, x + w, y, y + h, 1.0f - z, 1.0f - z, 1.0f - z, 1.0f - z, x + w, x, y + h, y);
-    //        case WEST -> renderFace(consumer, minU, maxU, minV, maxV, color, 1.0f - z, 1.0f - z, y + h, y, x, x + w, x + w, x, x, x + w, y, y + h);
-    //        case EAST -> renderFace(consumer, minU, maxU, minV, maxV, color, z, z, y, y + h, x, x + w, x + w, x, x + w, x, y + h, y);
-    //        }
-    //    }
-    //
-    //    private static void renderFace(VertexConsumer consumer, float minU, float maxU, float minV, float maxV, int color, float x0, float x1, float y0, float y1,
-    //        float z0, float z1, float z2, float z3, float u0, float u1, float v0, float v1) {
-    //
-    //        consumer.vertex(x0, y0, z0).color(color).uv(minU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880).endVertex();
-    //        consumer.vertex(x1, y0, z1).color(color).uv(maxU, minV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880).endVertex();
-    //        consumer.vertex(x1, y1, z2).color(color).uv(maxU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880).endVertex();
-    //        consumer.vertex(x0, y1, z3).color(color).uv(minU, maxV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880).endVertex();
-    //    }
-
     public static float[] unpackVertices(int[] vertices, int vertexIndex, int position, int count) {
         float[] floats = new float[count];
         int startIndex = vertexIndex * IQuadTransformer.STRIDE + position;
