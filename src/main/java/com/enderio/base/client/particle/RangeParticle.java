@@ -3,11 +3,13 @@ package com.enderio.base.client.particle;
 import com.enderio.EnderIO;
 import com.enderio.base.common.particle.RangeParticleData;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,8 +42,15 @@ public class RangeParticle extends TextureSheetParticle {
 
     @Override
     public void render(@NotNull VertexConsumer consumer, Camera renderInfo, float partialTicks) {
-        Vec3 position = Vec3.atLowerCornerOf(renderInfo.getBlockPosition());
-        renderFace(Direction.UP, consumer, (float) (position.x - range), (float) (position.y - range), (float) (position.z - range), 2 * range, 2 * range);
+        Vec3 position = renderInfo.getPosition();
+        var mappedX = (float) (Mth.lerp(partialTicks, this.xo, this.x) - position.x());
+        var mappedY = (float) (Mth.lerp(partialTicks, this.yo, this.y) - position.y());
+        var mappedZ = (float) (Mth.lerp(partialTicks, this.zo, this.z) - position.z());
+
+        var vecTop = new Vector3f(-range, -range, -range);
+        var coords = getLerped(calculateFace(Direction.UP, vecTop.x(), vecTop.y(), vecTop.z(), 2 * range + 1, 2 * range + 1), mappedX, mappedY, mappedZ);
+        renderFace(consumer, coords);
+
     }
 
     @Override
@@ -50,31 +59,46 @@ public class RangeParticle extends TextureSheetParticle {
         return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 
-    public void renderFace(Direction face, VertexConsumer consumer, float x, float y, float z, float w, float h) {
-        switch (face) {
-        case DOWN -> renderFace(consumer, x, x + w, 1.0f - z, 1.0f - z, y, y, y + h, y + h);
-        case UP -> renderFace(consumer, x, x + w, z, z, y + h, y + h, y, y);
-        case NORTH -> renderFace(consumer, x, x + w, y + h, y, z, z, z, z);
-        case SOUTH -> renderFace(consumer, x, x + w, y, y + h, 1.0f - z, 1.0f - z, 1.0f - z, 1.0f - z);
-        case WEST -> renderFace(consumer, 1.0f - z, 1.0f - z, y + h, y, x, x + w, x + w, x);
-        case EAST -> renderFace(consumer, z, z, y, y + h, x, x + w, x + w, x);
-        }
+    public Vector3f[] calculateFace(Direction face, float x, float y, float z, float w, float h) {
+        return switch (face) {
+            case DOWN -> calculateCoordinates(x, x + w, 1.0f - z, 1.0f - z, y, y, y + h, y + h);
+            case UP -> calculateCoordinates(x, x + w, z, z, y + h, y + h, y, y);
+            case NORTH -> calculateCoordinates(x, x + w, y + h, y, z, z, z, z);
+            case SOUTH -> calculateCoordinates(x, x + w, y, y + h, 1.0f - z, 1.0f - z, 1.0f - z, 1.0f - z);
+            case WEST -> calculateCoordinates(1.0f - z, 1.0f - z, y + h, y, x, x + w, x + w, x);
+            case EAST -> calculateCoordinates(z, z, y, y + h, x, x + w, x + w, x);
+        };
     }
 
-    private void renderFace(VertexConsumer consumer, float x0, float x1, float y0, float y1, float z0, float z1, float z2, float z3) {
+    private Vector3f[] getLerped(Vector3f[] coords, float mappedX, float mappedY, float mappedZ) {
+        for (Vector3f vec : coords) {
+            vec.add(mappedX, mappedY, mappedZ);
+        }
+        return coords;
+    }
+
+    private Vector3f[] calculateCoordinates(float x0, float x1, float y0, float y1, float z0, float z1, float z2, float z3) {
+        return new Vector3f[] { new Vector3f(x0, y0, z0), new Vector3f(x1, y0, z1), new Vector3f(x1, y1, z2), new Vector3f(x0, y1, z3) };
+    }
+
+    private void renderFace(VertexConsumer consumer, Vector3f[] coords) {
         float minU = getU0();
         float maxU = getU1();
         float minV = getV0();
         float maxV = getV1();
-        consumer.vertex(x0, y0, z0).uv(minU, minV).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(15728880).endVertex();
-        consumer.vertex(x1, y0, z1).uv(maxU, minV).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(15728880).endVertex();
-        consumer.vertex(x1, y1, z2).uv(maxU, maxV).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(15728880).endVertex();
-        consumer.vertex(x0, y1, z3).uv(minU, maxV).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(15728880).endVertex();
+        addVertex(consumer, coords[0], minU, minV);
+        addVertex(consumer, coords[1], maxU, minV);
+        addVertex(consumer, coords[2], maxU, maxV);
+        addVertex(consumer, coords[3], minU, maxV);
         //        backwards
-        consumer.vertex(x1, y0, z1).uv(maxU, minV).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(15728880).endVertex();
-        consumer.vertex(x0, y0, z0).uv(minU, minV).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(15728880).endVertex();
-        consumer.vertex(x0, y1, z3).uv(minU, maxV).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(15728880).endVertex();
-        consumer.vertex(x1, y1, z2).uv(maxU, maxV).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(15728880).endVertex();
+        addVertex(consumer, coords[1], maxU, minV);
+        addVertex(consumer, coords[0], minU, minV);
+        addVertex(consumer, coords[3], minU, maxV);
+        addVertex(consumer, coords[2], maxU, maxV);
+    }
+
+    private void addVertex(VertexConsumer consumer, Vector3f pos, float u, float v) {
+        consumer.vertex(pos.x(), pos.y(), pos.z()).uv(u, v).color(rCol, gCol, bCol, alpha).uv2(240, 240).endVertex();
     }
 
     public static class Provider implements ParticleProvider<RangeParticleData> {
