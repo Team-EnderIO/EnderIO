@@ -23,6 +23,7 @@ public class SpawnTask extends PoweredTask{
     private boolean complete;
     private int energyCost;
     private int progress;
+    private int maxProgress = 40;
     private final PoweredSpawnerBlockEntity blockEntity;
 
     /**
@@ -37,7 +38,7 @@ public class SpawnTask extends PoweredTask{
 
     @Override
     public void tick() {
-        if (progress >= 5) {
+        if (progress >= maxProgress) {
             complete = true;
         }
 
@@ -54,7 +55,7 @@ public class SpawnTask extends PoweredTask{
 
     @Override
     public float getProgress() {
-        return progress;
+        return progress / maxProgress;
     }
 
     @Override
@@ -107,6 +108,10 @@ public class SpawnTask extends PoweredTask{
                     entity1.moveTo(x, y, z, entity1.getYRot(), entity1.getXRot());
                     return entity1;
                 });
+
+                if (entity == null) { //TODO Make default spawn tag
+                    break;
+                }
 
                 if (entity instanceof Mob) {
                     Mob mob = (Mob)entity;

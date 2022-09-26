@@ -31,15 +31,15 @@ public class SoulBindingRecipeProvider extends EnderRecipeProvider {
 
     @Override
     protected void buildCraftingRecipes(Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
-        build(MachineBlocks.POWERED_SPAWNER.get().asItem(), List.of(Ingredient.of(EIOItems.FILLED_SOUL_VIAL.get()), Ingredient.of(EIOItems.BROKEN_SPAWNER.get())), 2000, pFinishedRecipeConsumer);
+        build(MachineBlocks.POWERED_SPAWNER.get().asItem(), List.of(Ingredient.of(EIOItems.FILLED_SOUL_VIAL.get()), Ingredient.of(EIOItems.BROKEN_SPAWNER.get())), 2000, 0, pFinishedRecipeConsumer);
     }
 
-    protected void build(Item output, List<Ingredient> inputs, int energy, EntityType<? extends Entity> entityType, Consumer<FinishedRecipe> finishedRecipeConsumer) {
-        finishedRecipeConsumer.accept(new FinishedSoulBindingRecipe(EnderIO.loc("soulbinding/" + ForgeRegistries.ITEMS.getKey(output).getPath()), output, inputs, energy, ForgeRegistries.ENTITY_TYPES.getKey(entityType)));
+    protected void build(Item output, List<Ingredient> inputs, int energy, int exp, EntityType<? extends Entity> entityType, Consumer<FinishedRecipe> finishedRecipeConsumer) {
+        finishedRecipeConsumer.accept(new FinishedSoulBindingRecipe(EnderIO.loc("soulbinding/" + ForgeRegistries.ITEMS.getKey(output).getPath()), output, inputs, energy, exp, ForgeRegistries.ENTITY_TYPES.getKey(entityType)));
     }
 
-    protected void build(Item output, List<Ingredient> inputs, int energy, Consumer<FinishedRecipe> finishedRecipeConsumer) {
-        finishedRecipeConsumer.accept(new FinishedSoulBindingRecipe(EnderIO.loc("soulbinding/" + ForgeRegistries.ITEMS.getKey(output).getPath()), output, inputs, energy, null));
+    protected void build(Item output, List<Ingredient> inputs, int energy, int exp, Consumer<FinishedRecipe> finishedRecipeConsumer) {
+        finishedRecipeConsumer.accept(new FinishedSoulBindingRecipe(EnderIO.loc("soulbinding/" + ForgeRegistries.ITEMS.getKey(output).getPath()), output, inputs, energy, exp, null));
     }
 
     protected static class FinishedSoulBindingRecipe extends EnderFinishedRecipe {
@@ -47,14 +47,16 @@ public class SoulBindingRecipeProvider extends EnderRecipeProvider {
         private final Item output;
         private final List<Ingredient> inputs;
         private final int energy;
+        private final int exp;
         @Nullable
         private final ResourceLocation entityType;
 
-        public FinishedSoulBindingRecipe(ResourceLocation id, Item output, List<Ingredient> inputs, int energy, @Nullable ResourceLocation entityType) {
+        public FinishedSoulBindingRecipe(ResourceLocation id, Item output, List<Ingredient> inputs, int energy, int exp, @Nullable ResourceLocation entityType) {
             super(id);
             this.output = output;
             this.inputs = inputs;
             this.energy = energy;
+            this.exp = exp;
             this.entityType = entityType;
         }
 
@@ -68,6 +70,7 @@ public class SoulBindingRecipeProvider extends EnderRecipeProvider {
             json.add("inputs", inputsArray);
 
             json.addProperty("energy", energy);
+            json.addProperty("exp", exp);
 
             if (entityType != null) {
                 json.addProperty("entitytype", entityType.toString());

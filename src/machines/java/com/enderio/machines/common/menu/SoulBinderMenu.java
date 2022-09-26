@@ -18,10 +18,11 @@ public class SoulBinderMenu extends MachineMenu<SoulBinderBlockEntity> {
             if (blockEntity.requiresCapacitor()) {
                 addSlot(new MachineSlot(blockEntity.getInventory(), blockEntity.getCapacitorSlot(), 12, 60));
             }
-            addSlot(new MachineSlot(blockEntity.getInventory(), 0, 44,  40));
-            addSlot(new MachineSlot(blockEntity.getInventory(), 1, 62, 40));
+            addSlot(new MachineSlot(blockEntity.getInventory(), 0, 38, 34));
+            addSlot(new MachineSlot(blockEntity.getInventory(), 1, 59, 34));
 
-            addSlot(new MachineSlot(blockEntity.getInventory(), 2, 134, 49));
+            addSlot(new MachineSlot(blockEntity.getInventory(), 2, 112, 34));
+            addSlot(new MachineSlot(blockEntity.getInventory(), 3, 134, 34));
 
         }
 

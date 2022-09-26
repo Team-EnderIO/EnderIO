@@ -1,6 +1,7 @@
 {
   "type": "enderio:soul_binding",
   "energy": 2000,
+  "exp": 0,
   "inputs": [
     {
       "item": "enderio:filled_soul_vial"
