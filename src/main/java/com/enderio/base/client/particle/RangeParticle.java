@@ -10,6 +10,7 @@ import net.minecraft.client.particle.*;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,13 +33,9 @@ public class RangeParticle extends TextureSheetParticle {
         //Note: Vanilla discards pieces from particles that are under the alpha of 0.1, due to floating point differences
         // of float and double if we set this to 0.1F, then it ends up getting discarded, so we just set this to 0.11F
         alpha = 0.11F;
-    }
 
-    // TODO reimplement this - refer Mek
-    //    @Override
-    //    public boolean isAlive() {
-    //        return age < lifetime && owner.hasLevel() && !owner.isRemoved() && owner.isShowingRange() && level.getBlockEntity(owner.getBlockPos()) == owner;
-    //    }
+        setBoundingBox(new AABB(pos.x - range, pos.y - range, pos.z - range, pos.x + range, pos.y + range, pos.z + range));
+    }
 
     @Override
     public void render(@NotNull VertexConsumer consumer, Camera renderInfo, float partialTicks) {
