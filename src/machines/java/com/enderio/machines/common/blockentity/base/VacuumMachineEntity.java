@@ -4,6 +4,7 @@ import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
 import com.enderio.base.common.particle.RangeParticleData;
 import com.enderio.base.common.util.AttractionUtil;
+import com.enderio.core.common.sync.BooleanDataSlot;
 import com.enderio.core.common.sync.IntegerDataSlot;
 import com.enderio.core.common.sync.SyncMode;
 import com.enderio.machines.common.io.FixedIOConfig;
@@ -30,14 +31,15 @@ public abstract class VacuumMachineEntity<T extends Entity> extends MachineBlock
     private static final int MAX_RANGE = 6;
     private int range = 6;
 
-    private boolean rangeVisible = true;
+    private boolean rangeVisible = false;
     private List<WeakReference<T>> entities = new ArrayList<>();
     private Class<T> clazz;
 
     public VacuumMachineEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState, Class<T> clazz) {
         super(pType, pWorldPosition, pBlockState);
         this.clazz = clazz;
-        add2WayDataSlot(new IntegerDataSlot(() -> this.getRange(), this::setRange, SyncMode.GUI));
+        add2WayDataSlot(new IntegerDataSlot(this::getRange, this::setRange, SyncMode.GUI));
+        add2WayDataSlot(new BooleanDataSlot(this::isShowingRange, this::shouldShowRange, SyncMode.GUI));
     }
 
     @Override
@@ -46,7 +48,7 @@ public abstract class VacuumMachineEntity<T extends Entity> extends MachineBlock
             this.attractEntities(this.getLevel(), this.getBlockPos(), this.range);
         }
 
-        if (isShowingRange()) {
+        if (this.isShowingRange()) {
             generateParticle(new RangeParticleData(getRange()), new Vec3(getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ()));
         }
         super.serverTick();
@@ -102,7 +104,7 @@ public abstract class VacuumMachineEntity<T extends Entity> extends MachineBlock
     }
 
     public int getRange() {
-        return range;
+        return this.range;
     }
 
     public void setRange(int range) {
@@ -110,11 +112,11 @@ public abstract class VacuumMachineEntity<T extends Entity> extends MachineBlock
     }
 
     public boolean isShowingRange() {
-        return rangeVisible;
+        return this.rangeVisible;
     }
 
     public void shouldShowRange(boolean show) {
-        rangeVisible = show;
+        this.rangeVisible = show;
     }
 
     public void decreaseRange() {
