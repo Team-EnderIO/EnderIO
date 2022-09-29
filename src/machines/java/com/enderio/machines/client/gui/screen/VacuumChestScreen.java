@@ -27,10 +27,10 @@ public class VacuumChestScreen extends EIOScreen<VacuumChestMenu> {
     @Override
     protected void init() {
         super.init();
-        addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 14, topPos + 105, () -> menu.getBlockEntity().getRedstoneControl(),
+        addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 14, topPos + 105 + 2, () -> menu.getBlockEntity().getRedstoneControl(),
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
         // TODO tooltips
-        addRenderableWidget(new ToggleImageButton<>(this, leftPos + imageWidth - 8 - 32 - 3, topPos + 105, 16, 16, 144, 176, 16, 0, WIDGETS,
+        addRenderableWidget(new ToggleImageButton<>(this, leftPos + imageWidth - 8 - 14 - 2 - 16, topPos + 105, 16, 16, 144, 176, 16, 0, WIDGETS,
             () -> menu.getBlockEntity().isShowingRange(), state -> menu.getBlockEntity().shouldShowRange(state)));
         addRenderableWidget(new ImageButton(leftPos + imageWidth - 8 - 8, topPos + 86, 8, 8, 8, 0, 16, BUTTONS, (b) -> menu.getBlockEntity().increaseRange()));
         addRenderableWidget(new ImageButton(leftPos + imageWidth - 8 - 8, topPos + 94, 8, 8, 8, 8, 16, BUTTONS, (b) -> menu.getBlockEntity().decreaseRange()));
@@ -56,7 +56,7 @@ public class VacuumChestScreen extends EIOScreen<VacuumChestMenu> {
     @Override
     public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
         super.render(pPoseStack, pMouseX, pMouseY, pPartialTicks);
-        font.draw(pPoseStack, this.getMenu().getBlockEntity().getRange() + "", leftPos + 145, topPos + 90, 0);
+        font.draw(pPoseStack, this.getMenu().getBlockEntity().getRange() + "", leftPos + imageWidth - 8 - 8 - 10, topPos + 90, 0);
     }
 
 }
