@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
 
-public record RangeParticleData(int range) implements ParticleOptions {
+public record RangeParticleData(int range, float rCol, float gCol, float bCol) implements ParticleOptions {
     public static final Deserializer<RangeParticleData> DESERIALIZER = new Deserializer<>() {
 
         @NotNull
@@ -21,17 +21,26 @@ public record RangeParticleData(int range) implements ParticleOptions {
         public RangeParticleData fromCommand(@NotNull ParticleType<RangeParticleData> type, @NotNull StringReader reader) throws CommandSyntaxException {
             reader.expect(' ');
             int range = reader.readInt();
-            return new RangeParticleData(range);
+            reader.expect(' ');
+            float rCol = reader.readFloat();
+            reader.expect(' ');
+            float gCol = reader.readFloat();
+            reader.expect(' ');
+            float bCol = reader.readFloat();
+            return new RangeParticleData(range, rCol, gCol, bCol);
         }
 
         @Override
-        public RangeParticleData fromNetwork(ParticleType<RangeParticleData> particleType, FriendlyByteBuf buffer) {
-            return new RangeParticleData(buffer.readInt());
+        @NotNull
+        public RangeParticleData fromNetwork(@NotNull ParticleType<RangeParticleData> particleType, FriendlyByteBuf buffer) {
+            return new RangeParticleData(buffer.readInt(), buffer.readFloat(), buffer.readFloat(), buffer.readFloat());
         }
     };
 
-    public static Codec<RangeParticleData> CODEC = RecordCodecBuilder.create(
-        val -> val.group(Codec.INT.fieldOf("range").forGetter(data -> data.range)).apply(val, RangeParticleData::new));
+    public static Codec<RangeParticleData> CODEC = RecordCodecBuilder.create(val -> val
+        .group(Codec.INT.fieldOf("range").forGetter(data -> data.range), Codec.FLOAT.fieldOf("rCol").forGetter(data -> data.rCol),
+            Codec.FLOAT.fieldOf("gCol").forGetter(data -> data.gCol), Codec.FLOAT.fieldOf("bCol").forGetter(data -> data.bCol))
+        .apply(val, RangeParticleData::new));
 
     @NotNull
     @Override
@@ -42,11 +51,14 @@ public record RangeParticleData(int range) implements ParticleOptions {
     @Override
     public void writeToNetwork(@NotNull FriendlyByteBuf buffer) {
         buffer.writeInt(range);
+        buffer.writeFloat(rCol);
+        buffer.writeFloat(gCol);
+        buffer.writeFloat(bCol);
     }
 
     @NotNull
     @Override
     public String writeToString() {
-        return String.format(Locale.ROOT, "%d", ForgeRegistries.PARTICLE_TYPES.getKey(getType()), range);
+        return String.format(Locale.ROOT, "%d %f %f %f ", ForgeRegistries.PARTICLE_TYPES.getKey(getType()), range, rCol, gCol, bCol);
     }
 }

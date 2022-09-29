@@ -34,6 +34,8 @@ public class XPVacuumBlockEntity extends VacuumMachineEntity<ExperienceOrb> {
 
     public XPVacuumBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState, ExperienceOrb.class);
+        this.rCol = this.bCol = 0;
+        this.gCol = 1;
         // Create fluid tank.
         this.fluidTank = createFluidTank(Integer.MAX_VALUE);
 

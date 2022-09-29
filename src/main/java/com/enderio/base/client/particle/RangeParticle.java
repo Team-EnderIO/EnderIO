@@ -17,13 +17,13 @@ public class RangeParticle extends TextureSheetParticle {
 
     private final int range;
 
-    public RangeParticle(ClientLevel level, Vec3 pos, int range) {
+    public RangeParticle(ClientLevel level, Vec3 pos, int range, float rCol, float gCol, float bCol) {
         super(level, pos.x, pos.y, pos.z);
         this.range = range;
         this.lifetime = 5;
-        rCol = 1;
-        gCol = 0;
-        bCol = 0;
+        this.rCol = rCol;
+        this.gCol = gCol;
+        this.bCol = bCol;
         //Note: Vanilla discards pieces from particles that are under the alpha of 0.1, due to floating point differences
         // of float and double if we set this to 0.1F, then it ends up getting discarded, so we just set this to 0.11F
         alpha = 0.11F;
@@ -114,7 +114,7 @@ public class RangeParticle extends TextureSheetParticle {
         public Particle createParticle(RangeParticleData data, @NotNull ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed,
             double zSpeed) {
             Vec3 pos = new Vec3(x, y, z);
-            RangeParticle particle = new RangeParticle(level, pos, data.range());
+            RangeParticle particle = new RangeParticle(level, pos, data.range(), data.rCol(), data.gCol(), data.bCol());
             particle.pickSprite(this.spriteSet);
             return particle;
         }

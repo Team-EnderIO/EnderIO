@@ -20,6 +20,8 @@ public class VacuumChestBlockEntity extends VacuumMachineEntity<ItemEntity> {
 
     public VacuumChestBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState, ItemEntity.class);
+        this.rCol = this.gCol = 0;
+        this.bCol = 1;
     }
 
     @Override
