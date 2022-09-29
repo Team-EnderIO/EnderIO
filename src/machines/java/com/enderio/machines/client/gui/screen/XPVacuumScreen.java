@@ -31,9 +31,9 @@ public class XPVacuumScreen extends EIOScreen<XPVacuumMenu> {
         addRenderableOnly(new FluidStackStaticWidget(this, getMenu().getBlockEntity()::getFluidTank, leftPos + 27, topPos + 22, 32, 32));
         addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 14, topPos + 52, () -> menu.getBlockEntity().getRedstoneControl(),
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
-        //TODO tooltips
         addRenderableWidget(new ToggleImageButton<>(this, leftPos + imageWidth - 8 - 16, topPos + 34, 16, 16, 144, 176, 16, 0, WIDGETS,
-            () -> menu.getBlockEntity().isShowingRange(), state -> menu.getBlockEntity().shouldShowRange(state)));
+            () -> menu.getBlockEntity().isShowingRange(), state -> menu.getBlockEntity().shouldShowRange(state),
+            () -> menu.getBlockEntity().isShowingRange() ? EIOLang.HIDE_RANGE : EIOLang.SHOW_RANGE));
         addRenderableWidget(
             new ImageButton(leftPos + imageWidth - 8 - 8 - 2 - 16, topPos + 34, 8, 8, 8, 0, 16, BUTTONS, (b) -> this.menu.getBlockEntity().increaseRange()));
         addRenderableWidget(

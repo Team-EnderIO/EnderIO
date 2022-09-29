@@ -4,11 +4,11 @@ import com.enderio.core.client.gui.screen.IEnderScreen;
 import com.enderio.core.common.util.Vector2i;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -29,21 +29,17 @@ public class ToggleImageButton<U extends Screen & IEnderScreen> extends Abstract
 
     private final Supplier<Boolean> getter;
     private final Consumer<Boolean> setter;
+    private final Supplier<Component> tooltip;
 
     public ToggleImageButton(U addedOn, int x, int y, int width, int height, int xTexStart, int yTexStart, int xDiffTex, int yDiffTex,
-        ResourceLocation resourceLocation, Supplier<Boolean> getter, Consumer<Boolean> setter) {
-        this(addedOn, x, y, width, height, xTexStart, yTexStart, xDiffTex, yDiffTex, resourceLocation, 256, 256, getter, setter);
+        ResourceLocation resourceLocation, Supplier<Boolean> getter, Consumer<Boolean> setter, Supplier<Component> tooltip) {
+        this(addedOn, x, y, width, height, xTexStart, yTexStart, xDiffTex, yDiffTex, resourceLocation, 256, 256, getter, setter, tooltip);
     }
 
     public ToggleImageButton(U addedOn, int x, int y, int width, int height, int xTexStart, int yTexStart, int xDiffTex, int yDiffTex,
-        ResourceLocation resourceLocation, int textureWidth, int textureHeight, Supplier<Boolean> getter, Consumer<Boolean> setter) {
-        this(addedOn, x, y, width, height, xTexStart, yTexStart, xDiffTex, yDiffTex, resourceLocation, textureWidth, textureHeight, getter, setter,
-            CommonComponents.EMPTY);
-    }
-
-    public ToggleImageButton(U addedOn, int x, int y, int width, int height, int xTexStart, int yTexStart, int xDiffTex, int yDiffTex,
-        ResourceLocation resourceLocation, int textureWidth, int textureHeight, Supplier<Boolean> getter, Consumer<Boolean> setter, Component message) {
-        super(x, y, width, height, message);
+        ResourceLocation resourceLocation, int textureWidth, int textureHeight, Supplier<Boolean> getter, Consumer<Boolean> setter,
+        Supplier<Component> tooltip) {
+        super(x, y, width, height, Component.empty());
         this.textureWidth = textureWidth;
         this.textureHeight = textureHeight;
         this.xTexStart = xTexStart;
@@ -54,6 +50,7 @@ public class ToggleImageButton<U extends Screen & IEnderScreen> extends Abstract
         this.addedOn = addedOn;
         this.getter = getter;
         this.setter = setter;
+        this.tooltip = tooltip;
     }
 
     @Override
@@ -78,6 +75,11 @@ public class ToggleImageButton<U extends Screen & IEnderScreen> extends Abstract
         if (this.isHovered) {
             renderToolTip(pPoseStack, pMouseX, pMouseY);
         }
+    }
+
+    @Override
+    public void renderToolTip(PoseStack poseStack, int mouseX, int mouseY) {
+        addedOn.renderTooltip(poseStack, this.tooltip.get().copy().withStyle(ChatFormatting.WHITE), mouseX, mouseY);
     }
 
     @Override
