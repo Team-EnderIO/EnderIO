@@ -34,12 +34,12 @@ public class RangeParticle extends TextureSheetParticle {
     @Override
     public void render(@NotNull VertexConsumer consumer, Camera renderInfo, float partialTicks) {
         Vec3 position = renderInfo.getPosition();
-        var mappedX = (float) (Mth.lerp(partialTicks, this.xo, this.x) - position.x());
-        var mappedY = (float) (Mth.lerp(partialTicks, this.yo, this.y) - position.y());
-        var mappedZ = (float) (Mth.lerp(partialTicks, this.zo, this.z) - position.z());
+        float mappedX = (float) (Mth.lerp(partialTicks, this.xo, this.x) - position.x());
+        float mappedY = (float) (Mth.lerp(partialTicks, this.yo, this.y) - position.y());
+        float mappedZ = (float) (Mth.lerp(partialTicks, this.zo, this.z) - position.z());
 
         // Top face requires different z for some reason
-        var vec = new Vector3f(-range, -range, range + 1);
+        Vector3f vec = new Vector3f(-range, -range, range + 1);
         renderFace(consumer, remapPosition(calcPoints(Direction.UP, vec), mappedX, mappedY, mappedZ));
         vec = new Vector3f(-range, -range, -range);
         renderFace(consumer, remapPosition(calcPoints(Direction.SOUTH, vec), mappedX, mappedY, mappedZ));

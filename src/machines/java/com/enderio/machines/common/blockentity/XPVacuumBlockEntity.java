@@ -56,9 +56,7 @@ public class XPVacuumBlockEntity extends VacuumMachineEntity<ExperienceOrb> {
     @Override
     public void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
-        // TODO: Rename to fluid or tank.
-        // TODO: Common place for all NBT names.
-        pTag.put("Fluids", fluidTank.writeToNBT(new CompoundTag()));
+        pTag.put("tank", fluidTank.writeToNBT(new CompoundTag()));
     }
 
     @Override
