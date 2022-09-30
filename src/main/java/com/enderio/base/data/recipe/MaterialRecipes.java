@@ -74,12 +74,12 @@ public class MaterialRecipes extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PULSATING_POWDER.get()))
             .save(recipeConsumer);
         
-        makeMaterialRecipes(recipeConsumer, EIOItems.COPPER_ALLOY_INGOT.get(), EIOItems.COPPER_ALLOY_NUGGET.get(), EIOBlocks.COPPER_ALLOY_BLOCK.get());
+        makeMaterialRecipes(recipeConsumer, EIOItems.ELECTRICAL_STEEL_INGOT.get(), EIOItems.ELECTRICAL_STEEL_NUGGET.get(), EIOBlocks.ELECTRICAL_STEEL_BLOCK.get());
         makeMaterialRecipes(recipeConsumer, EIOItems.ENERGETIC_ALLOY_INGOT.get(), EIOItems.ENERGETIC_ALLOY_NUGGET.get(), EIOBlocks.ENERGETIC_ALLOY_BLOCK.get());
         makeMaterialRecipes(recipeConsumer, EIOItems.VIBRANT_ALLOY_INGOT.get(), EIOItems.VIBRANT_ALLOY_NUGGET.get(), EIOBlocks.VIBRANT_ALLOY_BLOCK.get());
         makeMaterialRecipes(recipeConsumer, EIOItems.REDSTONE_ALLOY_INGOT.get(), EIOItems.REDSTONE_ALLOY_NUGGET.get(), EIOBlocks.REDSTONE_ALLOY_BLOCK.get());
-        makeMaterialRecipes(recipeConsumer, EIOItems.CONDUCTIVE_ALLOY_INGOT.get(), EIOItems.CONDUCTIVE_ALLOY_NUGGET.get(), EIOBlocks.CONDUCTIVE_ALLOY_BLOCK.get());
-        makeMaterialRecipes(recipeConsumer, EIOItems.PULSATING_ALLOY_INGOT.get(), EIOItems.PULSATING_ALLOY_NUGGET.get(), EIOBlocks.PULSATING_ALLOY_BLOCK.get());
+        makeMaterialRecipes(recipeConsumer, EIOItems.CONDUCTIVE_COPPER_INGOT.get(), EIOItems.CONDUCTIVE_COPPER_NUGGET.get(), EIOBlocks.CONDUCTIVE_COPPER_BLOCK.get());
+        makeMaterialRecipes(recipeConsumer, EIOItems.PULSATING_IRON_INGOT.get(), EIOItems.PULSATING_IRON_NUGGET.get(), EIOBlocks.PULSATING_IRON_BLOCK.get());
         makeMaterialRecipes(recipeConsumer, EIOItems.DARK_STEEL_INGOT.get(), EIOItems.DARK_STEEL_NUGGET.get(), EIOBlocks.DARK_STEEL_BLOCK.get());
         makeMaterialRecipes(recipeConsumer, EIOItems.SOULARIUM_INGOT.get(), EIOItems.SOULARIUM_NUGGET.get(), EIOBlocks.SOULARIUM_BLOCK.get());
         makeMaterialRecipes(recipeConsumer, EIOItems.END_STEEL_INGOT.get(), EIOItems.END_STEEL_NUGGET.get(), EIOBlocks.END_STEEL_BLOCK.get());
@@ -100,9 +100,9 @@ public class MaterialRecipes extends RecipeProvider {
             .pattern("PPP")
             .pattern("PDP")
             .pattern("PPP")
-            .define('P', EIOItems.PULSATING_ALLOY_NUGGET.get())
+            .define('P', EIOItems.PULSATING_IRON_NUGGET.get())
             .define('D', Tags.Items.GEMS_DIAMOND)
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PULSATING_ALLOY_NUGGET.get()))
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PULSATING_IRON_NUGGET.get()))
             .save(recipeConsumer);
         
         ShapedRecipeBuilder.shaped(EIOItems.VIBRANT_CRYSTAL.get())
@@ -245,12 +245,12 @@ public class MaterialRecipes extends RecipeProvider {
         
         grindingBall(recipeConsumer, EIOItems.DARK_STEEL_BALL.get(), EIOItems.DARK_STEEL_INGOT.get());
         grindingBall(recipeConsumer, EIOItems.SOULARIUM_BALL.get(), EIOItems.SOULARIUM_INGOT.get());
-        grindingBall(recipeConsumer, EIOItems.CONDUCTIVE_ALLOY_BALL.get(), EIOItems.CONDUCTIVE_ALLOY_INGOT.get());
-        grindingBall(recipeConsumer, EIOItems.PULSATING_ALLOY_BALL.get(), EIOItems.PULSATING_ALLOY_INGOT.get());
+        grindingBall(recipeConsumer, EIOItems.ELECTRICAL_STEEL_BALL.get(), EIOItems.ELECTRICAL_STEEL_INGOT.get());
+        grindingBall(recipeConsumer, EIOItems.PULSATING_IRON_BALL.get(), EIOItems.PULSATING_IRON_INGOT.get());
         grindingBall(recipeConsumer, EIOItems.REDSTONE_ALLOY_BALL.get(), EIOItems.REDSTONE_ALLOY_INGOT.get());
         grindingBall(recipeConsumer, EIOItems.ENERGETIC_ALLOY_BALL.get(), EIOItems.ENERGETIC_ALLOY_INGOT.get());
         grindingBall(recipeConsumer, EIOItems.VIBRANT_ALLOY_BALL.get(), EIOItems.VIBRANT_ALLOY_INGOT.get());
-        grindingBall(recipeConsumer, EIOItems.COPPER_ALLOY_BALL.get(), EIOItems.COPPER_ALLOY_INGOT.get());
+        grindingBall(recipeConsumer, EIOItems.CONDUCTIVE_COPPER_BALL.get(), EIOItems.CONDUCTIVE_COPPER_INGOT.get());
         grindingBall(recipeConsumer, EIOItems.END_STEEL_BALL.get(), EIOItems.END_STEEL_INGOT.get());
     }
 

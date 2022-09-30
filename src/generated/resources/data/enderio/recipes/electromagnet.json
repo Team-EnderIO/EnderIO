@@ -2,10 +2,10 @@
   "type": "minecraft:crafting_shaped",
   "key": {
     "C": {
-      "item": "enderio:conductive_alloy_ingot"
+      "item": "enderio:conductive_copper_ingot"
     },
     "E": {
-      "item": "enderio:copper_alloy_ingot"
+      "item": "enderio:electrical_steel_ingot"
     },
     "V": {
       "item": "enderio:vibrant_crystal"

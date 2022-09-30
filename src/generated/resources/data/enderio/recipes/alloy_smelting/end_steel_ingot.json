@@ -12,13 +12,13 @@
     {
       "count": 1,
       "ingredient": {
-        "item": "enderio:dark_steel_ingot"
+        "tag": "forge:ingots/netherite"
       }
     },
     {
       "count": 1,
       "ingredient": {
-        "tag": "forge:obsidian"
+        "tag": "forge:ender_pearls"
       }
     }
   ],

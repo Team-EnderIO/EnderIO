@@ -26,12 +26,12 @@ public class GrindingBallRecipeProvider extends EnderRecipeProvider {
     protected void buildCraftingRecipes(Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
         build(Items.FLINT, 1.2F, 1.25F, 0.85F, 24000, pFinishedRecipeConsumer);
         build(EIOItems.DARK_STEEL_BALL.get(), 1.35F, 2.00F, 0.7F, 125000, pFinishedRecipeConsumer);
-        build(EIOItems.COPPER_ALLOY_BALL.get(), 1.2F, 1.65F, 0.8F, 40000, pFinishedRecipeConsumer);
+        build(EIOItems.ELECTRICAL_STEEL_BALL.get(), 1.2F, 1.65F, 0.8F, 40000, pFinishedRecipeConsumer);
         build(EIOItems.ENERGETIC_ALLOY_BALL.get(), 1.6F, 1.1F, 1.1F, 80000, pFinishedRecipeConsumer);
         build(EIOItems.VIBRANT_ALLOY_BALL.get(), 1.75F, 1.35F, 1.13F, 80000, pFinishedRecipeConsumer);
         build(EIOItems.REDSTONE_ALLOY_BALL.get(), 1.00F, 1.00F, 0.35F, 30000, pFinishedRecipeConsumer);
-        build(EIOItems.CONDUCTIVE_ALLOY_BALL.get(), 1.35F, 1.00F, 1.0F, 40000, pFinishedRecipeConsumer);
-        build(EIOItems.PULSATING_ALLOY_BALL.get(), 1.00F, 1.85F, 1.0F, 100000, pFinishedRecipeConsumer);
+        build(EIOItems.CONDUCTIVE_COPPER_BALL.get(), 1.35F, 1.00F, 1.0F, 40000, pFinishedRecipeConsumer);
+        build(EIOItems.PULSATING_IRON_BALL.get(), 1.00F, 1.85F, 1.0F, 100000, pFinishedRecipeConsumer);
         build(EIOItems.SOULARIUM_BALL.get(), 1.2F, 2.15F, 0.9F, 80000, pFinishedRecipeConsumer);
         build(EIOItems.END_STEEL_BALL.get(), 1.4F, 2.4F, 0.7F, 75000, pFinishedRecipeConsumer);
     }

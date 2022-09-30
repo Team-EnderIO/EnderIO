@@ -35,12 +35,12 @@ public class EIOBlocks {
 
     // region Alloy Blocks
 
-    public static final BlockEntry<Block> COPPER_ALLOY_BLOCK = metalBlock("copper_alloy_block").register();
+    public static final BlockEntry<Block> ELECTRICAL_STEEL_BLOCK = metalBlock("electrical_steel_block").register();
     public static final BlockEntry<Block> ENERGETIC_ALLOY_BLOCK = metalBlock("energetic_alloy_block").register();
     public static final BlockEntry<Block> VIBRANT_ALLOY_BLOCK = metalBlock("vibrant_alloy_block").register();
     public static final BlockEntry<Block> REDSTONE_ALLOY_BLOCK = metalBlock("redstone_alloy_block").register();
-    public static final BlockEntry<Block> CONDUCTIVE_ALLOY_BLOCK = metalBlock("conductive_alloy_block").register();
-    public static final BlockEntry<Block> PULSATING_ALLOY_BLOCK = metalBlock("pulsating_alloy_block").register();
+    public static final BlockEntry<Block> CONDUCTIVE_COPPER_BLOCK = metalBlock("conductive_copper_block").register();
+    public static final BlockEntry<Block> PULSATING_IRON_BLOCK = metalBlock("pulsating_iron_block").register();
     public static final BlockEntry<Block> DARK_STEEL_BLOCK = metalBlock("dark_steel_block").register();
     public static final BlockEntry<Block> SOULARIUM_BLOCK = metalBlock("soularium_block").register();
     public static final BlockEntry<Block> END_STEEL_BLOCK = metalBlock("end_steel_block").register();

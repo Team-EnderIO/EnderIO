@@ -1,11 +1,11 @@
 {
   "values": [
-    "enderio:copper_alloy_block",
+    "enderio:electrical_steel_block",
     "enderio:energetic_alloy_block",
     "enderio:vibrant_alloy_block",
     "enderio:redstone_alloy_block",
-    "enderio:conductive_alloy_block",
-    "enderio:pulsating_alloy_block",
+    "enderio:conductive_copper_block",
+    "enderio:pulsating_iron_block",
     "enderio:dark_steel_block",
     "enderio:soularium_block",
     "enderio:end_steel_block",
