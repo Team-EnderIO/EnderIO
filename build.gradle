@@ -179,6 +179,7 @@ repositories {
     }
     maven {
         // location of a maven mirror for JEI files, as a fallback
+        // also used for ae2
         name = "ModMaven"
         url = "https://modmaven.dev"
     }
@@ -197,6 +198,9 @@ repositories {
     maven {
         url "https://maven.nerdthings.dev/snapshots"
     }
+    flatDir {
+        dir 'libs'
+    }
 }
 
 jarJar.enable()
@@ -204,7 +208,9 @@ jarJar.enable()
 dependencies {
     // Forge
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-
+    implementation fg.deobf("blank:Xycraft+Core:0.5.2")
+    runtimeOnly fg.deobf("blank:Xycraft+Override:0.5.2")
+    runtimeOnly fg.deobf("blank:Xycraft+World:0.5.2")
     // Registrate
     implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
     jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: "${registrate_version_range}")
@@ -219,6 +225,10 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
     runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common:${jei_version}")
     runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
+
+    // AE2
+    compileOnly "appeng:appliedenergistics2:12.4.0-beta:api"
+    runtimeOnly fg.deobf("appeng:appliedenergistics2:12.4.0")
 
     // The One Probe
 //    implementation fg.deobf("mcjty.theoneprobe:TheOneProbe:${minecraft_version}-${top_version}")

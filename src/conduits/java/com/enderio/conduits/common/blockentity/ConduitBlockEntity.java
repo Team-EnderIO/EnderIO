@@ -9,6 +9,7 @@ import com.enderio.conduits.common.ConduitShape;
 import com.enderio.conduits.common.blockentity.action.RightClickAction;
 import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
 import com.enderio.conduits.common.blockentity.connection.IConnectionState;
+import com.enderio.conduits.common.blockentity.connection.StaticConnectionStates;
 import com.enderio.conduits.common.menu.ConduitMenu;
 import com.enderio.conduits.common.network.ConduitSavedData;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
@@ -148,13 +149,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         if (action.hasChanged()) {
             List<GraphObject<Mergeable.Dummy>> nodes = new ArrayList<>();
             for (Direction dir: Direction.values()) {
-                BlockEntity blockEntity = level.getBlockEntity(getBlockPos().relative(dir));
-                if (blockEntity instanceof ConduitBlockEntity conduit && conduit.connectTo(dir.getOpposite(), type)) {
-                    nodes.add(conduit.bundle.getNodeFor(type));
-                    connect(dir, type);
-                } else if (type.getTicker().canConnectTo(level, getBlockPos(), dir)) {
-                    connectEnd(dir, type);
-                }
+                tryConnectTo(dir, type, false).ifPresent(nodes::add);
             }
             if (level instanceof ServerLevel serverLevel) {
                 Graph.integrate(bundle.getNodeFor(type), nodes);
@@ -168,17 +163,45 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         return action;
     }
 
+    public Optional<GraphObject<Mergeable.Dummy>> tryConnectTo(Direction dir, IConduitType<?> type, boolean forceMerge) {
+        BlockEntity other = level.getBlockEntity(getBlockPos().relative(dir));
+        if (other instanceof ConduitBlockEntity conduit && conduit.connectTo(dir.getOpposite(), type, forceMerge)) {
+            connect(dir, type);
+            return Optional.of(conduit.bundle.getNodeFor(type));
+        } else if (type.getTicker().canConnectTo(level, getBlockPos(), dir)) {
+            connectEnd(dir, type);
+        }
+        return Optional.empty();
+    }
+
     public boolean removeType(IConduitType<?> type, boolean shouldDrop) {
         boolean shouldRemove = bundle.removeType(level, type);
         //something has changed
         removeNeighborConnections(type);
         updateShape();
         if (shouldDrop && !level.isClientSide()) {
-            ItemEntity itemEntity = new ItemEntity(level, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(),
-                type.getConduitItem().getDefaultInstance());
-            level.addFreshEntity(itemEntity);
+            dropItem(type.getConduitItem().getDefaultInstance());
+            for (Direction dir: Direction.values()) {
+                if (getBundle().getConnection(dir).getConnectionState(type, getBundle()) instanceof DynamicConnectionState dyn) {
+                    dropConnection(dyn);
+                }
+            }
         }
         return shouldRemove;
+    }
+
+    public void dropConnection(DynamicConnectionState dyn) {
+        for (SlotType slotType: SlotType.values()) {
+            ItemStack item = dyn.getItem(slotType);
+            if (!item.isEmpty()) {
+                dropItem(item);
+            }
+        }
+    }
+
+    private void dropItem(ItemStack stack) {
+        level.addFreshEntity(new ItemEntity(level, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(),
+            stack));
     }
 
     public void removeNeighborConnections(IConduitType<?> type) {
@@ -204,7 +227,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         }
     }
 
-    private void updateShape() {
+    public void updateShape() {
         shape.updateConduit(bundle);
     }
 
@@ -227,11 +250,14 @@ public class ConduitBlockEntity extends EnderBlockEntity {
      * @param type the type to be connected
      * @return true if a connection happens
      */
-    private boolean connectTo(Direction direction, IConduitType<?> type) {
+    private boolean connectTo(Direction direction, IConduitType<?> type, boolean forceMerge) {
         if (!bundle.getTypes().contains(type))
             return false;
-        connect(direction, type);
-        return true;
+        if (forceMerge || bundle.getConnection(direction).getConnectionState(type, bundle) != StaticConnectionStates.DISABLED) {
+            connect(direction, type);
+            return true;
+        }
+        return false;
     }
 
     private void connect(Direction direction, IConduitType<?> type) {

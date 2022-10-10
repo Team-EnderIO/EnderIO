@@ -55,7 +55,8 @@ public class ConduitConnection implements INBTSerializable<CompoundTag> {
     }
 
     public void disconnectFrom(int typeIndex) {
-        connectionStates[typeIndex] = StaticConnectionStates.DISCONNECTED;
+        if (connectionStates[typeIndex] != StaticConnectionStates.DISABLED)
+            connectionStates[typeIndex] = StaticConnectionStates.DISCONNECTED;
     }
 
     /**
