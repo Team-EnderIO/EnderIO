@@ -31,6 +31,7 @@ public class SoulBinderBlockEntity extends PoweredCraftingMachine<SoulBindingRec
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, () -> 30f);
     private final SoulBindingRecipe.Container container;
     private final FluidTank fluidTank;
+    private int neededXP;
 
     public SoulBinderBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(MachineRecipes.SOUL_BINDING.type().get(), CAPACITY, TRANSFER, USAGE, type, worldPosition, blockState);
@@ -40,6 +41,7 @@ public class SoulBinderBlockEntity extends PoweredCraftingMachine<SoulBindingRec
 
         addDataSlot(new IntegerDataSlot(() -> fluidTank.getFluidInTank(0).getAmount(), (i) -> fluidTank.setFluid(new FluidStack(EIOFluids.XP_JUICE.get(), i)),
             SyncMode.WORLD));
+        addDataSlot(new IntegerDataSlot(() -> neededXP, (i) -> neededXP = i, SyncMode.GUI));
     }
 
     @Override
@@ -54,13 +56,16 @@ public class SoulBinderBlockEntity extends PoweredCraftingMachine<SoulBindingRec
             .inputSlot((slot, stack) -> stack.getCapability(EIOCapabilities.ENTITY_STORAGE).isPresent())
             .inputSlot()
             .setStackLimit(64)
-            .outputSlot(2) //TODO 2 output slots?
+            .outputSlot(2)
             .capacitor()
             .build();
     }
 
     @Override
     protected PoweredCraftingTask<SoulBindingRecipe, SoulBindingRecipe.Container> createTask(@Nullable SoulBindingRecipe recipe) {
+        if (recipe != null) {
+            SoulBinderBlockEntity.this.neededXP = 10;
+        }
         return new PoweredCraftingTask<>(this, getContainer(), 2, recipe) {
 
             @Override
@@ -69,6 +74,7 @@ public class SoulBinderBlockEntity extends PoweredCraftingMachine<SoulBindingRec
                 getInventory().getStackInSlot(1).shrink(1);
 
                 fluidTank.drain(recipe.getExpCost(), IFluidHandler.FluidAction.EXECUTE);
+
             }
         };
     }
@@ -76,5 +82,13 @@ public class SoulBinderBlockEntity extends PoweredCraftingMachine<SoulBindingRec
     @Override
     protected SoulBindingRecipe.Container getContainer() {
         return container;
+    }
+
+    public FluidTank getFluidTank() {
+        return fluidTank;
+    }
+
+    public int getNeededXP() {
+        return neededXP;
     }
 }

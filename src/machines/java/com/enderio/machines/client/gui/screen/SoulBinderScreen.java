@@ -6,6 +6,7 @@ import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.enderio.core.common.util.Vector2i;
 import com.enderio.machines.client.gui.widget.EnergyWidget;
+import com.enderio.machines.client.gui.widget.ExperienceWidget;
 import com.enderio.machines.client.gui.widget.ProgressWidget;
 import com.enderio.machines.common.menu.SoulBinderMenu;
 import net.minecraft.network.chat.Component;
@@ -30,6 +31,8 @@ public class SoulBinderScreen extends EIOScreen<SoulBinderMenu> {
 
         addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
+
+        addRenderableOnly(new ExperienceWidget(this, getMenu().getBlockEntity()::getFluidTank, () -> getMenu().getBlockEntity().getNeededXP(), 56 + leftPos, 68 + topPos, 65, 5));
 
     }
 
