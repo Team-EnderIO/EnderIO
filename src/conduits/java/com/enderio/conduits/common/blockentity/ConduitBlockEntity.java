@@ -48,10 +48,8 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ConduitBlockEntity extends EnderBlockEntity {
 
@@ -165,8 +163,10 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
     public Optional<GraphObject<Mergeable.Dummy>> tryConnectTo(Direction dir, IConduitType<?> type, boolean forceMerge) {
         BlockEntity other = level.getBlockEntity(getBlockPos().relative(dir));
-        if (other instanceof ConduitBlockEntity conduit && conduit.connectTo(dir.getOpposite(), type, forceMerge)) {
+        if (other instanceof ConduitBlockEntity conduit && conduit.connectTo(dir.getOpposite(), type, bundle.getNodeFor(type).getExtendedConduitData(), forceMerge)) {
             connect(dir, type);
+            updateConnectionToData(type);
+            conduit.updateConnectionToData(type);
             return Optional.of(conduit.bundle.getNodeFor(type));
         } else if (type.getTicker().canConnectTo(level, getBlockPos(), dir)) {
             connectEnd(dir, type);
@@ -174,6 +174,12 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         return Optional.empty();
     }
 
+    public void updateConnectionToData(IConduitType<?> type) {
+        getBundle().getNodeFor(type).getExtendedConduitData().updateConnection(
+            Arrays.stream(Direction.values())
+                .filter(streamDir -> getBundle().getConnection(streamDir).getConnectionState(type, bundle) != StaticConnectionStates.DISABLED)
+                .collect(Collectors.toSet()));
+    }
     public boolean removeType(IConduitType<?> type, boolean shouldDrop) {
         boolean shouldRemove = bundle.removeType(level, type);
         //something has changed
@@ -248,10 +254,14 @@ public class ConduitBlockEntity extends EnderBlockEntity {
      *
      * @param direction the Direction to connect to
      * @param type the type to be connected
+     * @param data the other conduitdata to check if those can connect
+     * @param forceMerge if disabledstate should be ignored
      * @return true if a connection happens
      */
-    private boolean connectTo(Direction direction, IConduitType<?> type, boolean forceMerge) {
+    private boolean connectTo(Direction direction, IConduitType<?> type, IExtendedConduitData<?> data, boolean forceMerge) {
         if (!bundle.getTypes().contains(type))
+            return false;
+        if (!data.canConnectTo(bundle.getNodeFor(type).getExtendedConduitData().cast()))
             return false;
         if (forceMerge || bundle.getConnection(direction).getConnectionState(type, bundle) != StaticConnectionStates.DISABLED) {
             connect(direction, type);

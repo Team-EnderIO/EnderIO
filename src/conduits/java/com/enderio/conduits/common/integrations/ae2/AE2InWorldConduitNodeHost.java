@@ -73,7 +73,7 @@ public class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, IExtende
     }
 
     @Override
-    public void updateConnection(IConduitType<?> type, Set<Direction> connectedSides) {
+    public void updateConnection(Set<Direction> connectedSides) {
         mainNode.setExposedOnSides(connectedSides);
     }
 

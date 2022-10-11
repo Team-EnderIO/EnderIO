@@ -178,12 +178,15 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
                     conduit.dropConnection(dyn);
                     conduit.getBundle().getConnection(direction).setConnectionState(type, conduit.getBundle(), StaticConnectionStates.DISABLED);
                     conduit.updateShape();
+                    conduit.updateConnectionToData(type);
                 } else {
                     conduit.getBundle().getConnection(direction).setConnectionState(type, conduit.getBundle(), StaticConnectionStates.DISABLED);
                     conduit.updateShape();
+                    conduit.updateConnectionToData(type);
                     if (conduit.getLevel().getBlockEntity(conduit.getBlockPos().relative(direction)) instanceof ConduitBlockEntity other) {
                         other.getBundle().getConnection(direction.getOpposite()).setConnectionState(type, other.getBundle(), StaticConnectionStates.DISABLED);
                         other.updateShape();
+                        other.updateConnectionToData(type);
                         conduit.getBundle().getNodeFor(type).getGraph().removeSingleEdge(conduit.getBundle().getNodeFor(type), other.getBundle().getNodeFor(type));
                         ConduitSavedData.addPotentialGraph(type, conduit.getBundle().getNodeFor(type).getGraph(), (ServerLevel) conduit.getLevel());
                         ConduitSavedData.addPotentialGraph(type, other.getBundle().getNodeFor(type).getGraph(), (ServerLevel) other.getLevel());
