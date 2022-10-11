@@ -2,7 +2,6 @@ package com.enderio.conduits.common.blocks;
 
 import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.IConduitType;
-import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.api.integration.IntegrationManager;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
@@ -17,8 +16,6 @@ import com.enderio.conduits.common.items.ConduitBlockItem;
 import com.enderio.conduits.common.network.ConduitSavedData;
 import com.enderio.conduits.common.network.RedstoneExtraData;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
-import dev.gigaherz.graph3.Graph;
-import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -50,11 +47,15 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
+@Mod.EventBusSubscriber
 public class ConduitBlock extends Block implements EntityBlock, SimpleWaterloggedBlock {
 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
@@ -170,39 +171,47 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
                 return Optional.empty();
             if (isClientSide)
                 return Optional.of(InteractionResult.sidedSuccess(isClientSide));
-            if (player.isCrouching()) {
-                conduit.removeType(type, true);
-                return Optional.of(InteractionResult.sidedSuccess(isClientSide));
-            } else {
-                if (direction != null) {
-                    IConnectionState connectionState = conduit.getBundle().getConnection(direction).getConnectionState(type, conduit.getBundle());
-                    if (connectionState instanceof DynamicConnectionState dyn) {
-                        conduit.getBundle().getNodeFor(type).clearState(direction);
-                        conduit.dropConnection(dyn);
-                        conduit.getBundle().getConnection(direction).setConnectionState(type, conduit.getBundle(), StaticConnectionStates.DISABLED);
-                        conduit.updateShape();
-                    } else {
-                        conduit.getBundle().getConnection(direction).setConnectionState(type, conduit.getBundle(), StaticConnectionStates.DISABLED);
-                        conduit.updateShape();
-                        if (conduit.getLevel().getBlockEntity(conduit.getBlockPos().relative(direction)) instanceof ConduitBlockEntity other) {
-                            other.getBundle().getConnection(direction.getOpposite()).setConnectionState(type, other.getBundle(), StaticConnectionStates.DISABLED);
-                            other.updateShape();
-                            conduit.getBundle().getNodeFor(type).getGraph().removeSingleEdge(conduit.getBundle().getNodeFor(type), other.getBundle().getNodeFor(type));
-                            ConduitSavedData.addPotentialGraph(type, conduit.getBundle().getNodeFor(type).getGraph(), (ServerLevel) conduit.getLevel());
-                            ConduitSavedData.addPotentialGraph(type, other.getBundle().getNodeFor(type).getGraph(), (ServerLevel) other.getLevel());
-                        }
-                    }
+            if (direction != null) {
+                IConnectionState connectionState = conduit.getBundle().getConnection(direction).getConnectionState(type, conduit.getBundle());
+                if (connectionState instanceof DynamicConnectionState dyn) {
+                    conduit.getBundle().getNodeFor(type).clearState(direction);
+                    conduit.dropConnection(dyn);
+                    conduit.getBundle().getConnection(direction).setConnectionState(type, conduit.getBundle(), StaticConnectionStates.DISABLED);
+                    conduit.updateShape();
                 } else {
-                    IConnectionState connectionState = conduit.getBundle().getConnection(hit.getDirection()).getConnectionState(type, conduit.getBundle());
-                    if (connectionState == StaticConnectionStates.DISABLED) {
-                        conduit.tryConnectTo(hit.getDirection(), type, true);
+                    conduit.getBundle().getConnection(direction).setConnectionState(type, conduit.getBundle(), StaticConnectionStates.DISABLED);
+                    conduit.updateShape();
+                    if (conduit.getLevel().getBlockEntity(conduit.getBlockPos().relative(direction)) instanceof ConduitBlockEntity other) {
+                        other.getBundle().getConnection(direction.getOpposite()).setConnectionState(type, other.getBundle(), StaticConnectionStates.DISABLED);
+                        other.updateShape();
+                        conduit.getBundle().getNodeFor(type).getGraph().removeSingleEdge(conduit.getBundle().getNodeFor(type), other.getBundle().getNodeFor(type));
+                        ConduitSavedData.addPotentialGraph(type, conduit.getBundle().getNodeFor(type).getGraph(), (ServerLevel) conduit.getLevel());
+                        ConduitSavedData.addPotentialGraph(type, other.getBundle().getNodeFor(type).getGraph(), (ServerLevel) other.getLevel());
                     }
                 }
+            } else {
+                IConnectionState connectionState = conduit.getBundle().getConnection(hit.getDirection()).getConnectionState(type, conduit.getBundle());
+                if (connectionState == StaticConnectionStates.DISABLED) {
+                    conduit.tryConnectTo(hit.getDirection(), type, true);
+                }
             }
-
             return Optional.of(InteractionResult.sidedSuccess(isClientSide));
         }
         return Optional.empty();
+    }
+
+    @SubscribeEvent
+    public static void handleShiftYeta(PlayerInteractEvent.RightClickBlock event) {
+        if (event.getItemStack().is(EIOTags.Items.WRENCH)) {
+            if (event.getLevel().getBlockEntity(event.getPos()) instanceof ConduitBlockEntity conduit && event.getEntity().isCrouching()) {
+                @Nullable
+                IConduitType<?> type = conduit.getShape().getConduit(event.getPos(), event.getHitVec());
+                if (type != null) {
+                    conduit.removeType(type, true);
+                    event.setCanceled(true);
+                }
+            }
+        }
     }
 
     private Optional<InteractionResult> handleFacade(ConduitBlockEntity conduit, Player player, ItemStack stack, BlockHitResult hit, boolean isClientSide) {
