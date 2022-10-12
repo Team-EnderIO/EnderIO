@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.blockentity;
 
 import com.enderio.api.UseOnly;
-import com.enderio.api.conduit.IConduitScreenData;
+import com.enderio.api.conduit.IConduitMenuData;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.IExtendedConduitData;
 import com.enderio.api.conduit.NodeIdentifier;
@@ -39,7 +39,6 @@ import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.items.IItemHandler;
@@ -181,10 +180,6 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                 .collect(Collectors.toSet()));
     }
     public boolean removeType(IConduitType<?> type, boolean shouldDrop) {
-        boolean shouldRemove = bundle.removeType(level, type);
-        //something has changed
-        removeNeighborConnections(type);
-        updateShape();
         if (shouldDrop && !level.isClientSide()) {
             dropItem(type.getConduitItem().getDefaultInstance());
             for (Direction dir: Direction.values()) {
@@ -193,6 +188,9 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                 }
             }
         }
+        boolean shouldRemove = bundle.removeType(level, type);
+        removeNeighborConnections(type);
+        updateShape();
         return shouldRemove;
     }
 
@@ -355,7 +353,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
             IConnectionState connectionState = bundle.getConnection(data.direction()).getConnectionState(data.conduitIndex());
             if (!(connectionState instanceof DynamicConnectionState dynamicConnectionState))
                 return ItemStack.EMPTY;
-            IConduitScreenData conduitData = bundle.getTypes().get(data.conduitIndex()).getData();
+            IConduitMenuData conduitData = bundle.getTypes().get(data.conduitIndex()).getMenuData();
             if ((data.slotType() == SlotType.FILTER_EXTRACT && conduitData.hasFilterExtract())
                     || (data.slotType() == SlotType.FILTER_INSERT && conduitData.hasFilterInsert())
                     || (data.slotType() == SlotType.UPGRADE_EXTRACT && conduitData.hasUpgrade()))
@@ -444,7 +442,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
             if (data.conduitIndex() >= bundle.getTypes().size())
                 return;
             ConduitConnection connection = bundle.getConnection(data.direction());
-            IConduitScreenData conduitData = bundle.getTypes().get(data.conduitIndex()).getData();
+            IConduitMenuData conduitData = bundle.getTypes().get(data.conduitIndex()).getMenuData();
             if ((data.slotType() == SlotType.FILTER_EXTRACT && conduitData.hasFilterExtract())
                     || (data.slotType() == SlotType.FILTER_INSERT && conduitData.hasFilterInsert())
                     || (data.slotType() == SlotType.UPGRADE_EXTRACT && conduitData.hasUpgrade())) {

@@ -1,12 +1,13 @@
 package com.enderio.conduits.common.blockentity;
 
-import com.enderio.api.conduit.IConduitScreenData;
+import com.enderio.api.conduit.IConduitMenuData;
 
 public enum SlotType {
     FILTER_EXTRACT,
     FILTER_INSERT,
     UPGRADE_EXTRACT;
 
+    public static final int Y_POSITION = 71;
     public int getX() {
         return switch (this) {
                 case FILTER_EXTRACT -> 113;
@@ -16,10 +17,10 @@ public enum SlotType {
     }
 
     public int getY() {
-        return 71;
+        return Y_POSITION;
     }
 
-    public boolean isAvailableFor(IConduitScreenData data) {
+    public boolean isAvailableFor(IConduitMenuData data) {
         return switch (this) {
             case FILTER_INSERT -> data.hasFilterInsert();
             case FILTER_EXTRACT -> data.hasFilterExtract();

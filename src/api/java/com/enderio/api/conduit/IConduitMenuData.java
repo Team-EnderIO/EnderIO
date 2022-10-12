@@ -1,8 +1,9 @@
 package com.enderio.api.conduit;
 
 
-public interface IConduitScreenData {
+public interface IConduitMenuData {
 
+    //region gui control
     boolean hasFilterInsert();
     boolean hasFilterExtract();
     boolean hasUpgrade();

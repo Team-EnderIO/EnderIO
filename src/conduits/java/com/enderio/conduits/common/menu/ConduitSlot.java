@@ -62,6 +62,6 @@ public class ConduitSlot extends SlotItemHandler {
         return visibleDirection.get() == visibleForDirection
             && visibleType.get() == visibleForType
             && bundle.getTypes().size() > visibleForType
-            && slotType.isAvailableFor(bundle.getTypes().get(visibleForType).getData());
+            && slotType.isAvailableFor(bundle.getTypes().get(visibleForType).getMenuData());
     }
 }

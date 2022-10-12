@@ -36,7 +36,7 @@ public class ConduitMenu extends SyncedMenu<ConduitBlockEntity> {
     private final List<ConduitSlot> conduitSlots = new ArrayList<>();
 
     private Direction direction;
-    private IConduitType type;
+    private IConduitType<?> type;
 
 
     public ConduitMenu(@Nullable ConduitBlockEntity blockEntity, Inventory inventory, int pContainerId, Direction direction, IConduitType type) {
@@ -101,18 +101,18 @@ public class ConduitMenu extends SyncedMenu<ConduitBlockEntity> {
     public static ConduitMenu factory(@Nullable MenuType<ConduitMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level.getBlockEntity(buf.readBlockPos());
         Direction direction = buf.readEnum(Direction.class);
-        IConduitType type = ConduitTypes.getRegistry().getValue(buf.readInt());
+        IConduitType<?> type = ConduitTypes.getRegistry().getValue(buf.readInt());
         if (entity instanceof ConduitBlockEntity castBlockEntity)
             return new ConduitMenu(castBlockEntity, inventory, pContainerId, direction, type);
         LogManager.getLogger().warn("couldn't find BlockEntity");
         return new ConduitMenu(null, inventory, pContainerId, direction, type);
     }
 
-    public IConduitType getConduitType() {
+    public IConduitType<?> getConduitType() {
         return type;
     }
 
-    public void setConduitType(IConduitType type) {
+    public void setConduitType(IConduitType<?> type) {
         this.type = type;
     }
 

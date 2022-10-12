@@ -25,10 +25,10 @@ public class AE2Integration extends Integration {
 
     private final Capability<IInWorldGridNodeHost> IN_WORLD_GRID_NODE_HOST = CapabilityManager.get(new CapabilityToken<>() {});
 
-    private final RegistryObject<AE2ConduitType> DENSE = ConduitTypes.CONDUIT_TYPES.register("dense_me", () -> new AE2ConduitType(true, () -> getDenseItem().get()));
-    private final RegistryObject<AE2ConduitType> NORMAL = ConduitTypes.CONDUIT_TYPES.register("me", () -> new AE2ConduitType(false, () -> getNormalItem().get()));
-    private final ItemEntry<Item> DENSE_ITEM = createConduitItem(DENSE, "dense_me");
-    private final ItemEntry<Item> NORMAL_ITEM = createConduitItem(NORMAL, "me");
+    private final RegistryObject<AE2ConduitType> DENSE = ConduitTypes.CONDUIT_TYPES.register("dense_me", () -> new AE2ConduitType(true));
+    private final RegistryObject<AE2ConduitType> NORMAL = ConduitTypes.CONDUIT_TYPES.register("me", () -> new AE2ConduitType(false));
+    public final ItemEntry<Item> DENSE_ITEM = createConduitItem(DENSE, "dense_me");
+    public final ItemEntry<Item> NORMAL_ITEM = createConduitItem(NORMAL, "me");
 
 
     @Override
@@ -43,13 +43,6 @@ public class AE2Integration extends Integration {
 
     public Capability<IInWorldGridNodeHost> getInWorldGridNodeHost() {
         return IN_WORLD_GRID_NODE_HOST;
-    }
-
-    private ItemEntry<Item> getDenseItem() {
-        return DENSE_ITEM;
-    }
-    private ItemEntry<Item> getNormalItem() {
-        return NORMAL_ITEM;
     }
 
     private static ItemEntry<Item> createConduitItem(Supplier<? extends IConduitType<?>> type, String itemName) {

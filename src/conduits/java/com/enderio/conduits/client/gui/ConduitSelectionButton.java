@@ -47,7 +47,7 @@ public class ConduitSelectionButton extends AbstractButton {
         if (getter.get() == type) {
             blit(pPoseStack, x-3, y, 224, 0, 3, this.height);
         }
-        IEnderScreen.renderIcon(pPoseStack, new Vector2i(x, y).add(3, 6), type);
+        IEnderScreen.renderIcon(pPoseStack, new Vector2i(x, y).add(3, 6), type.getClientData());
     }
 
     @Override

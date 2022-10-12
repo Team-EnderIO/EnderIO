@@ -4,6 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitItemFactory;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.base.common.item.EIOCreativeTabs;
+import com.enderio.conduits.common.items.ConduitBlockItem;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import net.minecraft.Util;
@@ -12,6 +13,7 @@ import net.minecraft.world.item.Item;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.HashMap;
@@ -22,23 +24,16 @@ import java.util.function.Supplier;
 public class ConduitItems {
     private static final Registrate REGISTRATE = EnderIO.registrate();
 
-    public static final Map<RegistryObject<? extends IConduitType<?>>, ItemEntry<Item>> CONDUITS = Util.make(() -> {
-        Map<RegistryObject<? extends IConduitType<?>>, ItemEntry<Item>> map = new HashMap<>();
-        map.put(EnderConduitTypes.POWER, createConduitItem(EnderConduitTypes.POWER, "power1"));
-        map.put(EnderConduitTypes.POWER2, createConduitItem(EnderConduitTypes.POWER2, "power2"));
-        map.put(EnderConduitTypes.POWER3, createConduitItem(EnderConduitTypes.POWER3, "power3"));
-        map.put(EnderConduitTypes.REDSTONE, createConduitItem(EnderConduitTypes.REDSTONE, "redstone"));
-        map.put(EnderConduitTypes.ITEM, createConduitItem(EnderConduitTypes.ITEM, "item"));
-        return map;
-    });
-
+    public static final ItemEntry<Item> POWER = createConduitItem(() -> EnderConduitTypes.POWER.get(), "power1");
+    public static final ItemEntry<Item> POWER2 = createConduitItem(() -> EnderConduitTypes.POWER2.get(), "power2");
+    public static final ItemEntry<Item> POWER3 = createConduitItem(() -> EnderConduitTypes.POWER3.get(), "power3");
+    public static final ItemEntry<Item> REDSTONE = createConduitItem(() -> EnderConduitTypes.REDSTONE.get(), "redstone");
+    public static final ItemEntry<Item> ITEM = createConduitItem(() -> EnderConduitTypes.ITEM.get(), "item");
 
     @SubscribeEvent
     public static void onEntityJoinWorld(EntityJoinLevelEvent event) {
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
-            for (ItemEntry<Item> value : CONDUITS.values()) {
-                serverPlayer.addItem(value.get().getDefaultInstance());
-            }
+            ForgeRegistries.ITEMS.getValues().stream().filter(ConduitBlockItem.class::isInstance).forEach(item -> serverPlayer.addItem(item.getDefaultInstance()));
         }
     }
 

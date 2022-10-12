@@ -2,6 +2,7 @@ package com.enderio.conduits.common.blocks;
 
 import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.IConduitType;
+import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.api.integration.IntegrationManager;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
@@ -187,9 +188,12 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
                         other.getBundle().getConnection(direction.getOpposite()).setConnectionState(type, other.getBundle(), StaticConnectionStates.DISABLED);
                         other.updateShape();
                         other.updateConnectionToData(type);
-                        conduit.getBundle().getNodeFor(type).getGraph().removeSingleEdge(conduit.getBundle().getNodeFor(type), other.getBundle().getNodeFor(type));
-                        ConduitSavedData.addPotentialGraph(type, conduit.getBundle().getNodeFor(type).getGraph(), (ServerLevel) conduit.getLevel());
-                        ConduitSavedData.addPotentialGraph(type, other.getBundle().getNodeFor(type).getGraph(), (ServerLevel) other.getLevel());
+                        NodeIdentifier<?> thisNode = conduit.getBundle().getNodeFor(type);
+                        NodeIdentifier<?> otherNode = other.getBundle().getNodeFor(type);
+                        thisNode.getGraph().removeSingleEdge(thisNode, otherNode);
+                        thisNode.getGraph().removeSingleEdge(otherNode, thisNode);
+                        ConduitSavedData.addPotentialGraph(type, thisNode.getGraph(), (ServerLevel) conduit.getLevel());
+                        ConduitSavedData.addPotentialGraph(type, otherNode.getGraph(), (ServerLevel) other.getLevel());
                     }
                 }
             } else {

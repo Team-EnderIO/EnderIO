@@ -3,7 +3,9 @@ package com.enderio.conduits.common.integrations.ae2;
 import appeng.api.networking.IInWorldGridNodeHost;
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.ticker.IConduitTicker;
+import com.enderio.api.misc.Vector2i;
 import com.enderio.conduits.common.blockentity.TieredConduit;
+import com.enderio.conduits.common.init.EnderConduitTypes;
 import com.enderio.conduits.common.integrations.Integrations;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.Mergeable;
@@ -19,13 +21,13 @@ import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
-import java.util.function.Supplier;
 
 public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
 
     private boolean dense;
-    public AE2ConduitType(boolean dense, Supplier<Item> conduitItem) {
-        super(EnderIO.loc("block/conduit/" + (dense ? "dense_me" : "me")), new ResourceLocation("ae2", "me_cable"), dense ? 32 : 8, conduitItem);
+    public AE2ConduitType(boolean dense) {
+        super(EnderIO.loc("block/conduit/" + (dense ? "dense_me" : "me")), new ResourceLocation("ae2", "me_cable"), dense ? 32 : 8,
+            EnderConduitTypes.ICON_TEXTURE, new Vector2i(0, dense ? 120 : 96));
         this.dense = dense;
     }
 
@@ -56,6 +58,13 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
             return Optional.of(LazyOptional.of(() -> extendedConduitData).cast());
         }
         return Optional.empty();
+    }
+
+    @Override
+    public Item getConduitItem() {
+        if (isDense())
+            return Integrations.ae2Integration.expectPresent().DENSE_ITEM.get();
+        return Integrations.ae2Integration.expectPresent().NORMAL_ITEM.get();
     }
 
     public boolean isDense() {

@@ -27,7 +27,7 @@ import java.util.*;
 @Mod.EventBusSubscriber
 public class ConduitSavedData extends SavedData {
 
-    ListMultimap<IConduitType<?>, Graph<Mergeable.Dummy>> networks = ArrayListMultimap.create();
+    private final ListMultimap<IConduitType<?>, Graph<Mergeable.Dummy>> networks = ArrayListMultimap.create();
 
     // Used to find the NodeIdentifier(s) of a conduit when it is loaded
     private final Map<IConduitType<?>, Map<ChunkPos, Map<BlockPos, NodeIdentifier<?>>>> deserializedNodes = new HashMap<>();
@@ -243,11 +243,11 @@ public class ConduitSavedData extends SavedData {
         }
     }
 
-    public static void addPotentialGraph(IConduitType type, Graph<Mergeable.Dummy> graph, ServerLevel level) {
+    public static void addPotentialGraph(IConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level) {
         get(level).addPotentialGraph(type, graph);
     }
 
-    private void addPotentialGraph(IConduitType type, Graph<Mergeable.Dummy> graph) {
+    private void addPotentialGraph(IConduitType<?> type, Graph<Mergeable.Dummy> graph) {
         if (!networks.get(type).contains(graph)) {
             networks.get(type).add(graph);
         }
