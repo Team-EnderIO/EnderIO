@@ -30,6 +30,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
@@ -42,6 +43,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -99,6 +101,37 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
             level.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
         return super.updateShape(state, direction, neighborState, level, currentPos, neighborPos);
+    }
+
+    @Override
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
+        if (level.getBlockEntity(pos) instanceof ConduitBlockEntity conduit) {
+            for (Direction direction: Direction.values()) {
+                if (!(level.getBlockEntity(fromPos) instanceof ConduitBlockEntity)) {
+                    ConduitBundle bundle = conduit.getBundle();
+                    for (IConduitType<?> type : bundle.getTypes()) {
+                        IConnectionState connectionState = bundle.getConnection(direction).getConnectionState(type, bundle);
+                        if (connectionState instanceof DynamicConnectionState dyn) {
+                            if (!type.getTicker().canConnectTo(level, pos, direction)) {
+                                conduit.getBundle().getNodeFor(type).clearState(direction);
+                                conduit.dropConnection(dyn);
+                                conduit.getBundle().getConnection(direction).setConnectionState(type, conduit.getBundle(), StaticConnectionStates.DISCONNECTED);
+                                conduit.updateShape();
+                                conduit.updateConnectionToData(type);
+                            }
+                        } else if (connectionState == StaticConnectionStates.DISCONNECTED) {
+                            conduit.tryConnectTo(direction, type, true);
+                        }
+                    }
+                }
+            }
+        }
+        super.neighborChanged(state, level, pos, block, fromPos, isMoving);
+    }
+
+    @Override
+    public PushReaction getPistonPushReaction(BlockState pState) {
+        return PushReaction.BLOCK;
     }
 
     @Override
