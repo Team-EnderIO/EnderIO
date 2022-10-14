@@ -18,6 +18,7 @@ import java.util.Optional;
 public interface IConduitType<T extends IExtendedConduitData<T>> {
 
     ResourceLocation getTexture(T extendedData);
+    ResourceLocation getItemTexture();
 
     ResourceLocation[] getTextures();
 

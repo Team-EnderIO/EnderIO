@@ -41,7 +41,7 @@ public class ConduitItems {
         return REGISTRATE.item(itemName + "_conduit",
             properties -> ConduitItemFactory.build(type, properties))
             .tab(() -> EIOCreativeTabs.CONDUITS)
-            .model((ctx, prov) -> {})
+            .model((ctx, prov) -> prov.withExistingParent(itemName+"_conduit", EnderIO.loc("item/conduit")).texture("0", type.get().getItemTexture()))
             .register();
     }
 

@@ -43,6 +43,11 @@ public class SimpleConduitType<T extends IExtendedConduitData<T>> implements ICo
     }
 
     @Override
+    public ResourceLocation getItemTexture() {
+        return texture;
+    }
+
+    @Override
     public ResourceLocation[] getTextures() {
         return new ResourceLocation[]{texture};
     }
