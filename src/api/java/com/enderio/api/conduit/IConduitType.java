@@ -37,10 +37,6 @@ public interface IConduitType<T extends IExtendedConduitData<T>> {
         return false;
     }
 
-    default int getLightLevel(boolean isActive) {
-        return 0;
-    }
-
     IConduitTicker getTicker();
 
     @UseOnly(LogicalSide.CLIENT)

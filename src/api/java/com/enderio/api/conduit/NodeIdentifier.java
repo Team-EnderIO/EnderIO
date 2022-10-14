@@ -1,6 +1,7 @@
 package com.enderio.api.conduit;
 
 import com.enderio.api.misc.ColorControl;
+import com.enderio.api.misc.RedstoneControl;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
 import dev.gigaherz.graph3.Mergeable;
@@ -39,8 +40,8 @@ public class NodeIdentifier<T extends IExtendedConduitData<?>> implements GraphO
         this.graph = graph;
     }
 
-    public void pushState(Direction direction, @Nullable ColorControl insert, @Nullable ColorControl extract) {
-        ioStates.put(direction, IOState.of(insert, extract));
+    public void pushState(Direction direction, @Nullable ColorControl insert, @Nullable ColorControl extract, RedstoneControl control, ColorControl redstoneChannel) {
+        ioStates.put(direction, IOState.of(insert, extract,control, redstoneChannel));
     }
 
     public Optional<IOState> getIOState(Direction direction) {
@@ -58,7 +59,7 @@ public class NodeIdentifier<T extends IExtendedConduitData<?>> implements GraphO
         return pos;
     }
 
-    public record IOState(Optional<ColorControl> insert, Optional<ColorControl> extract) {
+    public record IOState(Optional<ColorControl> insert, Optional<ColorControl> extract, RedstoneControl control, ColorControl redstoneChannel) {
 
         public boolean isInsert() {
             return insert().isPresent();
@@ -67,8 +68,8 @@ public class NodeIdentifier<T extends IExtendedConduitData<?>> implements GraphO
             return extract().isPresent();
         }
 
-        private static IOState of(@Nullable ColorControl in, @Nullable ColorControl out) {
-            return new IOState(Optional.ofNullable(in), Optional.ofNullable(out));
+        private static IOState of(@Nullable ColorControl in, @Nullable ColorControl out, RedstoneControl control, ColorControl redstoneChannel) {
+            return new IOState(Optional.ofNullable(in), Optional.ofNullable(out), control, redstoneChannel);
         }
     }
 }

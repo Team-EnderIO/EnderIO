@@ -3,12 +3,9 @@ package com.enderio.conduits.common.blockentity;
 import com.enderio.api.UseOnly;
 import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.IConduitType;
-import com.enderio.api.conduit.IExtendedConduitData;
 import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.conduits.client.ConduitClientSetup;
-import com.enderio.conduits.common.blockentity.action.RightClickAction;
 import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.*;
@@ -149,11 +146,11 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         if (EffectiveSide.get().isServer()) {
             ListTag nodeTag = new ListTag();
             for (var entry : nodes.entrySet()) {
-                var data = entry.getValue().getExtendedConduitData();
-                if (data.syncDataToClient()) {
+                var data = entry.getValue().getExtendedConduitData().serializeRenderNBT();
+                if (!data.isEmpty()) {
                     CompoundTag dataTag = new CompoundTag();
                     dataTag.putString("type", ConduitTypes.getRegistry().getKey(entry.getKey()).toString());
-                    dataTag.put("data", data.serializeNBT());
+                    dataTag.put("data", data);
                     nodeTag.add(dataTag);
                 }
             }
@@ -162,6 +159,25 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
             }
         }
         return tag;
+    }
+
+    public CompoundTag serializeGuiNBT() {
+        CompoundTag nbt = new CompoundTag();
+        for (IConduitType<?> type : getTypes()) {
+            CompoundTag compoundTag = nodes.get(type).getExtendedConduitData().serializeGuiNBT();
+            if (!compoundTag.isEmpty()) {
+                nbt.put(ConduitTypes.getRegistry().getKey(type).toString(), compoundTag);
+            }
+        }
+        return nbt;
+    }
+
+    public void deserializeGuiNBT(CompoundTag nbt) {
+        for (IConduitType<?> type: getTypes()) {
+            if (nbt.contains(ConduitTypes.getRegistry().getKey(type).toString())) {
+                nodes.get(type).getExtendedConduitData().deserializeNBT(nbt.getCompound(ConduitTypes.getRegistry().getKey(type).toString()));
+            }
+        }
     }
 
     @Override
@@ -202,13 +218,12 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
             facades.put(entry.getKey().getName(), blockStateTag);
         }
         nodes.entrySet().removeIf(entry -> !types.contains(entry.getKey()));
-        //push change from clientsync to node TODO: move to aftersyncrunnable
         if (EffectiveSide.get().isServer()) {
             for (IConduitType<?> type: types) {
                 if (nodes.containsKey(type)) {
                     for (Direction direction : Direction.values()) {
                         if (getConnection(direction).getConnectionState(type, this) instanceof DynamicConnectionState dyn) {
-                            nodes.get(type).pushState(direction, dyn.isInsert() ? dyn.insert() : null, dyn.isExtract() ? dyn.extract() : null);
+                            nodes.get(type).pushState(direction, dyn.isInsert() ? dyn.insert() : null, dyn.isExtract() ? dyn.extract() : null, dyn.control(), dyn.redstoneChannel());
                         }
                     }
                 }
@@ -282,7 +297,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
             if (index >= 0) {
                 var state = connection.getConnectionState(index);
                 if (state instanceof DynamicConnectionState dynamicState) {
-                    node.pushState(direction, dynamicState.isInsert() ? dynamicState.insert() : null, dynamicState.isExtract() ? dynamicState.extract() : null);
+                    node.pushState(direction, dynamicState.isInsert() ? dynamicState.insert() : null, dynamicState.isExtract() ? dynamicState.extract() : null, dynamicState.control(), dynamicState.redstoneChannel());
                 }
             }
         }

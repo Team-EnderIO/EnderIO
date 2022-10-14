@@ -15,10 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class EIOScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> implements IEnderScreen {
 
@@ -57,7 +54,7 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
         super.render(pPoseStack, pMouseX, pMouseY, pPartialTicks);
         this.renderTooltip(pPoseStack, pMouseX, pMouseY);
         for (LateTooltipData tooltip : tooltips) {
-            renderTooltip(tooltip.getPoseStack(), tooltip.getText(), tooltip.getMouseX(), tooltip.getMouseY());
+            renderTooltip(tooltip.getPoseStack(), tooltip.getText(), Optional.empty(), tooltip.getMouseX(), tooltip.getMouseY());
         }
     }
 

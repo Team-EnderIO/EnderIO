@@ -124,7 +124,8 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
     @Override
     public void renderToolTip(PoseStack poseStack, int mouseX, int mouseY) {
         if (isHovered && isActive()) {
-            addedOn.renderTooltip(poseStack, List.of(optionName, getter.get().getTooltip().copy().withStyle(ChatFormatting.GRAY)), Optional.empty(), mouseX, mouseY);
+            IEnderScreen screen = addedOn;
+            addedOn.renderTooltipAfterEverything(poseStack, List.of(optionName, getter.get().getTooltip().copy().withStyle(ChatFormatting.GRAY)), mouseX, mouseY);
         }
     }
 
@@ -151,7 +152,7 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
 
         @Override
         protected void init() {
-            addRenderableWidget(EnumIconWidget.this);
+            addWidget(EnumIconWidget.this);
             EnumIconWidget.this.icons.values().forEach(this::addRenderableWidget);
         }
 
@@ -163,7 +164,7 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
             super.render(pPoseStack, pMouseX, pMouseY, pPartialTicks);
 
             for (LateTooltipData tooltip : tooltips) {
-                renderTooltip(tooltip.getPoseStack(), tooltip.getText(), tooltip.getMouseX(), tooltip.getMouseY());
+                renderTooltip(tooltip.getPoseStack(), tooltip.getText(), Optional.empty(), tooltip.getMouseX(), tooltip.getMouseY());
             }
             RenderSystem.enableDepthTest();
         }
@@ -212,15 +213,15 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
             if (getter.get() != value) {
                 selection.renderIconBackground(pPoseStack, new Vector2i(x, y), value);
             } else {
-                GuiComponent.fill(pPoseStack, x, y, x + width, y + height, 0xFF0020FF); //TODO: Client Config
+                GuiComponent.fill(pPoseStack, x, y, x + width, y + height, 0xFF0020FF);
                 GuiComponent.fill(pPoseStack, x + 1, y + 1, x + width - 1, y + height - 1, 0xFF8B8B8B);
             }
             IEnderScreen.renderIcon(pPoseStack, new Vector2i(x, y).expand(1), value);
 
             if (isMouseOver(pMouseX, pMouseY)) {
                 Component tooltip = value.getTooltip();
-                if (tooltip != Component.empty()) {
-                    selection.renderTooltipAfterEverything(pPoseStack, tooltip, pMouseX, pMouseY);
+                if (tooltip != Component.empty()) { //TODO fix
+                    selection.renderTooltipAfterEverything(pPoseStack, List.of(tooltip), pMouseX, pMouseY);
                 }
             }
         }

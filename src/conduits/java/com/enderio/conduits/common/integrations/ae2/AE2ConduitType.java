@@ -2,9 +2,11 @@ package com.enderio.conduits.common.integrations.ae2;
 
 import appeng.api.networking.IInWorldGridNodeHost;
 import com.enderio.EnderIO;
+import com.enderio.api.conduit.IConduitMenuData;
+import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.ticker.IConduitTicker;
 import com.enderio.api.misc.Vector2i;
-import com.enderio.conduits.common.blockentity.TieredConduit;
+import com.enderio.api.conduit.TieredConduit;
 import com.enderio.conduits.common.init.EnderConduitTypes;
 import com.enderio.conduits.common.integrations.Integrations;
 import dev.gigaherz.graph3.Graph;
@@ -25,6 +27,7 @@ import java.util.Optional;
 public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
 
     private boolean dense;
+
     public AE2ConduitType(boolean dense) {
         super(EnderIO.loc("block/conduit/" + (dense ? "dense_me" : "me")), new ResourceLocation("ae2", "me_cable"), dense ? 32 : 8,
             EnderConduitTypes.ICON_TEXTURE, new Vector2i(0, dense ? 120 : 96));
@@ -35,7 +38,7 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
     public IConduitTicker getTicker() {
         return new IConduitTicker() {
             @Override
-            public void tickGraph(Graph<Mergeable.Dummy> graph, ServerLevel level) { }
+            public void tickGraph(IConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level) { }
 
             @Override
             public boolean canConnectTo(Level level, BlockPos conduitPos, Direction direction) {
@@ -45,6 +48,11 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
                 return blockEntity != null && blockEntity.getCapability(getCapability(), direction.getOpposite()).isPresent();
             }
         };
+    }
+
+    @Override
+    public IConduitMenuData getMenuData() {
+        return ConduitMenuData.INSTANCE;
     }
 
     @Override
@@ -73,5 +81,49 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
 
     protected final Capability<IInWorldGridNodeHost> getCapability() {
         return Integrations.ae2Integration.expectPresent().getInWorldGridNodeHost();
+    }
+
+    private static final class ConduitMenuData implements IConduitMenuData {
+
+        private static IConduitMenuData INSTANCE = new ConduitMenuData();
+        @Override
+        public boolean hasFilterInsert() {
+            return false;
+        }
+
+        @Override
+        public boolean hasFilterExtract() {
+            return false;
+        }
+
+        @Override
+        public boolean hasUpgrade() {
+            return false;
+        }
+
+        @Override
+        public boolean showBarSeperator() {
+            return false;
+        }
+
+        @Override
+        public boolean showBothEnable() {
+            return false;
+        }
+
+        @Override
+        public boolean showColorInsert() {
+            return false;
+        }
+
+        @Override
+        public boolean showColorExtract() {
+            return false;
+        }
+
+        @Override
+        public boolean showRedstoneExtract() {
+            return false;
+        }
     }
 }

@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.blockentity.connection;
 
 import com.enderio.api.UseOnly;
-import com.enderio.base.common.blockentity.RedstoneControl;
+import com.enderio.api.misc.RedstoneControl;
 import com.enderio.conduits.common.blockentity.SlotType;
 import com.enderio.api.misc.ColorControl;
 import net.minecraft.world.item.ItemStack;
@@ -38,5 +38,15 @@ public record DynamicConnectionState(boolean isInsert, ColorControl insert, bool
     }
     public DynamicConnectionState withEnabled(boolean forExtract, boolean value) {
         return new DynamicConnectionState(!forExtract ? value : isInsert, insert, forExtract ? value : isExtract, extract, control, redstoneChannel, filterInsert, filterExtract, upgradeExtract);
+    }
+
+    public DynamicConnectionState withColor(boolean forExtract, ColorControl value) {
+        return new DynamicConnectionState(isInsert, !forExtract ? value : insert, isExtract, forExtract ? value : extract, control, redstoneChannel, filterInsert, filterExtract, upgradeExtract);
+    }
+    public DynamicConnectionState withRedstoneMode(RedstoneControl value) {
+        return new DynamicConnectionState(isInsert, insert, isExtract, extract, value, redstoneChannel, filterInsert, filterExtract, upgradeExtract);
+    }
+    public DynamicConnectionState withRedstoneChannel(ColorControl value) {
+        return new DynamicConnectionState(isInsert, insert, isExtract, extract, control, value, filterInsert, filterExtract, upgradeExtract);
     }
 }

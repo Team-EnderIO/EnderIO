@@ -53,6 +53,22 @@ public interface IExtendedConduitData<T extends IExtendedConduitData<T>> extends
         return false;
     }
 
+    /**
+     *
+     * @return synced renderdata
+     */
+    default CompoundTag serializeRenderNBT() {
+        return new CompoundTag();
+    }
+
+    /**
+     *
+     * @return synced guidata
+     */
+    default CompoundTag serializeGuiNBT() {
+        return new CompoundTag();
+    }
+
     @UseOnly(LogicalSide.CLIENT)
     default T deepCopy() {
         return cast();
@@ -62,5 +78,9 @@ public interface IExtendedConduitData<T extends IExtendedConduitData<T>> extends
     }
     default <Z extends IExtendedConduitData<Z>> Z cast() {
         return (Z) this;
+    }
+
+    default <Z extends IExtendedConduitData<Z>> Z castTo(Class<Z> clazz) {
+        return cast();
     }
 }

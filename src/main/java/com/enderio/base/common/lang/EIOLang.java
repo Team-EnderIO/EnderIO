@@ -2,6 +2,7 @@ package com.enderio.base.common.lang;
 
 import com.enderio.EnderIO;
 import com.enderio.api.capacitor.CapacitorModifier;
+import com.enderio.api.misc.ApiLang;
 import com.enderio.core.common.util.TooltipUtil;
 import com.tterrag.registrate.Registrate;
 import net.minecraft.ChatFormatting;
@@ -42,6 +43,7 @@ public class EIOLang {
     public static final Component COORDINATE_SELECTOR_NO_BLOCK = REGISTRATE.addLang("info", EnderIO.loc("coordinate_selector.no_block"), "No Block in Range");
 
 
+    public static final Component CHANNEL = REGISTRATE.addLang("gui", EnderIO.loc("channel"), "Channel");
     public static final Component REDSTONE_MODE = REGISTRATE.addLang("gui", EnderIO.loc("redstone.mode"), "Redstone Mode");
     public static final Component REDSTONE_ALWAYS_ACTIVE = REGISTRATE.addLang("gui", EnderIO.loc("redstone.always_active"), "Always active");
     public static final Component REDSTONE_ACTIVE_WITH_SIGNAL = REGISTRATE.addLang("gui", EnderIO.loc("redstone.active_with_signal"), "Active with signal");
@@ -154,5 +156,10 @@ public class EIOLang {
 
     //endregion
 
-    public static void register() {}
+    public static void register() {
+        ApiLang.REDSTONE_ACTIVE_WITH_SIGNAL = REDSTONE_ACTIVE_WITH_SIGNAL;
+        ApiLang.REDSTONE_NEVER_ACTIVE = REDSTONE_NEVER_ACTIVE;
+        ApiLang.REDSTONE_ALWAYS_ACTIVE = REDSTONE_ALWAYS_ACTIVE;
+        ApiLang.REDSTONE_ACTIVE_WITHOUT_SIGNAL = REDSTONE_ACTIVE_WITHOUT_SIGNAL;
+    }
 }

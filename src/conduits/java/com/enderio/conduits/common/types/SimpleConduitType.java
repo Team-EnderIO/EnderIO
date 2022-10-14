@@ -1,4 +1,4 @@
-package com.enderio.conduits.common.blockentity;
+package com.enderio.conduits.common.types;
 
 import com.enderio.api.UseOnly;
 import com.enderio.api.conduit.IClientConduitData;
@@ -7,16 +7,10 @@ import com.enderio.api.conduit.IExtendedConduitData;
 import com.enderio.api.conduit.ticker.IConduitTicker;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.misc.Vector2i;
-import com.enderio.conduits.common.init.ConduitItems;
-import com.tterrag.registrate.util.entry.ItemEntry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.registries.RegistryObject;
-
-import java.util.Map;
 import java.util.function.Supplier;
 
 /**
@@ -25,22 +19,23 @@ import java.util.function.Supplier;
 public class SimpleConduitType<T extends IExtendedConduitData<T>> implements IConduitType<T> {
 
     private final ResourceLocation texture;
-    private final int activeLightLevel;
     private final IConduitTicker ticker;
     private final Supplier<T> extendedDataFactory;
 
-    private final IClientConduitData.Simple<T> clientConduitData;
+    private final IClientConduitData<T> clientConduitData;
 
-    public SimpleConduitType(ResourceLocation texture, IConduitTicker ticker, Supplier<T> extendedDataFactory, ResourceLocation iconTexture, Vector2i iconTexturePos) {
-        this(texture, 0, ticker, extendedDataFactory, iconTexture, iconTexturePos);
+    private final IConduitMenuData menuData;
+
+    public SimpleConduitType(ResourceLocation texture, IConduitTicker ticker, Supplier<T> extendedDataFactory, ResourceLocation iconTexture, Vector2i iconTexturePos, IConduitMenuData menuData) {
+        this(texture, ticker, extendedDataFactory, new IClientConduitData.Simple<>(iconTexture, iconTexturePos), menuData);
     }
 
-    public SimpleConduitType(ResourceLocation texture, int activeLightLevel, IConduitTicker ticker, Supplier<T> extendedDataFactory, ResourceLocation iconTexture, Vector2i iconTexturePos) {
+    public SimpleConduitType(ResourceLocation texture, IConduitTicker ticker, Supplier<T> extendedDataFactory, IClientConduitData<T> clientConduitData, IConduitMenuData menuData) {
         this.texture = texture;
-        this.activeLightLevel = activeLightLevel;
         this.ticker = ticker;
         this.extendedDataFactory = extendedDataFactory;
-        clientConduitData = new IClientConduitData.Simple<>(iconTexture, iconTexturePos);
+        this.clientConduitData = clientConduitData;
+        this.menuData = menuData;
     }
     @Override
     public ResourceLocation getTexture(T data) {
@@ -50,11 +45,6 @@ public class SimpleConduitType<T extends IExtendedConduitData<T>> implements ICo
     @Override
     public ResourceLocation[] getTextures() {
         return new ResourceLocation[]{texture};
-    }
-
-    @Override
-    public int getLightLevel(boolean isActive) {
-        return isActive ? activeLightLevel : 0;
     }
 
     @Override
@@ -70,7 +60,7 @@ public class SimpleConduitType<T extends IExtendedConduitData<T>> implements ICo
 
     @Override
     public IConduitMenuData getMenuData() {
-        return new ConduitMenuDataImpl(false, false, false, true, true, false);
+        return menuData;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.enderio.api.conduit.ticker;
 
+import com.enderio.api.conduit.IConduitType;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
@@ -9,7 +10,7 @@ import net.minecraft.world.level.Level;
 
 public interface IConduitTicker {
 
-    void tickGraph(Graph<Mergeable.Dummy> graph, ServerLevel level);
+    void tickGraph(IConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level);
 
     /**
      * @return how often the conduit should tick. 1 is every tick, 5 is every 5th tick, so 4 times a second

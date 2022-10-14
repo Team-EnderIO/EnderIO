@@ -25,13 +25,14 @@ public interface IClientConduitData<T extends IExtendedConduitData<T>> extends I
      *
      * @param extendedConduitData the extendedconduitdata the widgets are fore, manipulate the state of it in the widgets
      * @param direction the supplier to get the current direction for this extendedconduitdata
+     * @param widgetsStart the position on which widgets start
      * @return Widgets that manipulate the extended ConduitData, these changes are synced back to the server
      */
-    List<AbstractWidget> createWidgets(T extendedConduitData, Supplier<Direction> direction);
+    List<AbstractWidget> createWidgets(T extendedConduitData, Supplier<Direction> direction, Vector2i widgetsStart);
 
     record Simple<T extends IExtendedConduitData<T>>(ResourceLocation getTextureLocation, Vector2i getTexturePosition) implements IClientConduitData<T> {
         @Override
-        public List<AbstractWidget> createWidgets(T extendedConduitData, Supplier<Direction> direction) {
+        public List<AbstractWidget> createWidgets(T extendedConduitData, Supplier<Direction> direction, Vector2i widgetsStart) {
             return List.of();
         }
     }

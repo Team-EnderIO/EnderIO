@@ -238,7 +238,7 @@ public class ConduitSavedData extends SavedData {
         setDirty();
         for (var entry : networks.entries()) {
             if (serverLevel.getGameTime() % entry.getKey().getTicker().getTickRate() == ConduitTypes.getRegistry().getID(entry.getKey()) % entry.getKey().getTicker().getTickRate()) {
-                entry.getKey().getTicker().tickGraph(entry.getValue(), serverLevel);
+                entry.getKey().getTicker().tickGraph(entry.getKey(), entry.getValue(), serverLevel);
             }
         }
     }

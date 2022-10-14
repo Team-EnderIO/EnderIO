@@ -1,5 +1,6 @@
 package com.enderio.api.conduit.ticker;
 
+import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.IExtendedConduitData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -14,12 +15,12 @@ import java.util.Optional;
 public abstract class ICapabilityAwareConduitTicker<T> implements IIOAwareConduitTicker {
 
     @Override
-    public final void tickColoredGraph(List<Connection> inserts, List<Connection> extracts, ServerLevel level) {
+    public final void tickColoredGraph(IConduitType<?> type, List<Connection> inserts, List<Connection> extracts, ServerLevel level) {
         List<CapabilityConnection> insertCaps = new ArrayList<>();
         for (Connection insert : inserts) {
             Optional.ofNullable(level.getBlockEntity(insert.move()))
                 .flatMap(b -> b.getCapability(getCapability(), insert.dir().getOpposite()).resolve())
-                .ifPresent(cap -> insertCaps.add(new CapabilityConnection(cap, insert.data())));
+                .ifPresent(cap -> insertCaps.add(new CapabilityConnection(cap, insert.data(), insert.dir())));
         }
         if (!insertCaps.isEmpty()) {
             List<CapabilityConnection> extractCaps = new ArrayList<>();
@@ -27,10 +28,10 @@ public abstract class ICapabilityAwareConduitTicker<T> implements IIOAwareCondui
             for (Connection extract : extracts) {
                 Optional.ofNullable(level.getBlockEntity(extract.move()))
                     .flatMap(b -> b.getCapability(getCapability(), extract.dir().getOpposite()).resolve())
-                    .ifPresent(cap -> extractCaps.add(new CapabilityConnection(cap, extract.data())));
+                    .ifPresent(cap -> extractCaps.add(new CapabilityConnection(cap, extract.data(), extract.dir())));
             }
             if (!extractCaps.isEmpty()) {
-                tickCapabilityGraph(insertCaps, extractCaps, level);
+                tickCapabilityGraph(type, insertCaps, extractCaps, level);
             }
         }
     }
@@ -40,15 +41,17 @@ public abstract class ICapabilityAwareConduitTicker<T> implements IIOAwareCondui
         return Optional.ofNullable(level.getBlockEntity(conduitPos.relative(direction))).flatMap(be -> be.getCapability(getCapability(), direction.getOpposite()).resolve()).isPresent();
     }
 
-    protected abstract void tickCapabilityGraph(List<CapabilityConnection> inserts, List<CapabilityConnection> extracts, ServerLevel level);
+    protected abstract void tickCapabilityGraph(IConduitType<?> type, List<CapabilityConnection> inserts, List<CapabilityConnection> extracts, ServerLevel level);
     protected abstract Capability<T> getCapability();
 
     public class CapabilityConnection {
         public final T cap;
         public final IExtendedConduitData<?> data;
-        private CapabilityConnection(T cap, IExtendedConduitData<?> data) {
+        public final Direction direction;
+        private CapabilityConnection(T cap, IExtendedConduitData<?> data, Direction direction) {
             this.cap = cap;
             this.data = data;
+            this.direction = direction;
         }
     }
 }

@@ -2,6 +2,7 @@ package com.enderio.conduits.common.blockentity;
 
 import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.IConduitType;
+import com.enderio.api.conduit.TieredConduit;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;

@@ -2,7 +2,7 @@ package com.enderio.machines.common.blockentity.base;
 
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
-import com.enderio.base.common.blockentity.RedstoneControl;
+import com.enderio.api.misc.RedstoneControl;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.core.common.sync.EnumDataSlot;
 import com.enderio.core.common.sync.NBTSerializableDataSlot;

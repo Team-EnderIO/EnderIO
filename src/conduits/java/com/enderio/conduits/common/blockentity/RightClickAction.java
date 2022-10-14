@@ -1,4 +1,4 @@
-package com.enderio.conduits.common.blockentity.action;
+package com.enderio.conduits.common.blockentity;
 
 import com.enderio.api.conduit.IConduitType;
 

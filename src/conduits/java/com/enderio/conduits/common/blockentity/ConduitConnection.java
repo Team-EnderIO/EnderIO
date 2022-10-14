@@ -2,7 +2,7 @@ package com.enderio.conduits.common.blockentity;
 
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.NodeIdentifier;
-import com.enderio.base.common.blockentity.RedstoneControl;
+import com.enderio.api.misc.RedstoneControl;
 import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
 import com.enderio.conduits.common.blockentity.connection.IConnectionState;
 import com.enderio.conduits.common.blockentity.connection.StaticConnectionStates;
@@ -44,11 +44,11 @@ public class ConduitConnection implements INBTSerializable<CompoundTag> {
      * @param typeIndex
      * @param end
      */
-    public void connectTo(NodeIdentifier nodeIdentifier, Direction direction, int typeIndex, boolean end) {
+    public void connectTo(NodeIdentifier<?> nodeIdentifier, Direction direction, int typeIndex, boolean end) {
         if (end) {
             var state = DynamicConnectionState.defaultConnection();
             connectionStates[typeIndex] = state;
-            nodeIdentifier.pushState(direction, state.isExtract() ? state.extract() : null, state.isInsert() ? state.insert() : null);
+            nodeIdentifier.pushState(direction, state.isExtract() ? state.extract() : null, state.isInsert() ? state.insert() : null, state.control(), state.redstoneChannel());
         } else {
             connectionStates[typeIndex] = StaticConnectionStates.CONNECTED;
         }

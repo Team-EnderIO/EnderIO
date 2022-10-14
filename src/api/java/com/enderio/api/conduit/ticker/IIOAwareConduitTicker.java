@@ -1,8 +1,10 @@
 package com.enderio.api.conduit.ticker;
 
+import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.IExtendedConduitData;
 import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.api.misc.ColorControl;
+import com.enderio.api.misc.RedstoneControl;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import dev.gigaherz.graph3.GraphObject;
@@ -15,15 +17,16 @@ import java.util.List;
 
 public interface IIOAwareConduitTicker extends ILoadedAwareConduitTicker {
     @Override
-    default void tickGraph(List<NodeIdentifier<?>> loadedNodes, ServerLevel level) {
+    default void tickGraph(IConduitType<?> type, List<NodeIdentifier<?>> loadedNodes, ServerLevel level) {
         ListMultimap<ColorControl, Connection> extracts = ArrayListMultimap.create();
         ListMultimap<ColorControl, Connection> inserts = ArrayListMultimap.create();
         for (GraphObject<Mergeable.Dummy> object : loadedNodes) {
             if (object instanceof NodeIdentifier<?> nodeIdentifier) {
                 for (Direction direction: Direction.values()) {
-                    nodeIdentifier.getIOState(direction).ifPresent(ioState -> {
-                        ioState.extract().ifPresent(color -> extracts.get(color).add(new Connection(nodeIdentifier.getPos(), direction, nodeIdentifier.getExtendedConduitData())));
-                        ioState.insert().ifPresent(color -> inserts.get(color).add(new Connection(nodeIdentifier.getPos(), direction, nodeIdentifier.getExtendedConduitData())));
+                    nodeIdentifier.getIOState(direction)
+                        .ifPresent(ioState -> {
+                            ioState.extract().filter(extract -> isRedstoneMode(type, level, nodeIdentifier.getPos(), ioState)).ifPresent(color -> extracts.get(color).add(new Connection(nodeIdentifier.getPos(), direction, nodeIdentifier.getExtendedConduitData())));
+                            ioState.insert().ifPresent(color -> inserts.get(color).add(new Connection(nodeIdentifier.getPos(), direction, nodeIdentifier.getExtendedConduitData())));
                     });
                 }
             }
@@ -33,12 +36,27 @@ public interface IIOAwareConduitTicker extends ILoadedAwareConduitTicker {
             List<Connection> insertList = inserts.get(color);
             if (extractList.isEmpty() || insertList.isEmpty())
                 continue;
-            tickColoredGraph(insertList, extractList, level);
+            tickColoredGraph(type, insertList, extractList, level);
         }
     }
 
-    void tickColoredGraph(List<Connection> inserts, List<Connection> extracts, ServerLevel level);
-
+    void tickColoredGraph(IConduitType<?> type, List<Connection> inserts, List<Connection> extracts, ServerLevel level);
+    default boolean isRedstoneMode(IConduitType<?> type, ServerLevel level, BlockPos pos, NodeIdentifier.IOState state) {
+        if (!type.getMenuData().showRedstoneExtract())
+            return true;
+        if (state.control() == RedstoneControl.ALWAYS_ACTIVE)
+            return true;
+        if (state.control() == RedstoneControl.NEVER_ACTIVE)
+            return false;
+        boolean hasRedstone = false;
+        for (Direction direction: Direction.values()) {
+            if (level.getSignal(pos.relative(direction), direction) > 0) {
+                hasRedstone = true;
+                break;
+            }
+        }
+        return state.control().isActive(hasRedstone);
+    }
     record Connection(BlockPos pos, Direction dir, IExtendedConduitData<?> data) {
         public BlockPos move() {
             return pos.relative(dir);

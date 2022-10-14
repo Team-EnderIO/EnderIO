@@ -1,10 +1,13 @@
 package com.enderio.api.conduit.ticker;
 
+import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.NodeIdentifier;
+import com.enderio.api.misc.RedstoneControl;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
 import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 
@@ -14,7 +17,7 @@ import java.util.List;
 public interface ILoadedAwareConduitTicker extends IConduitTicker {
 
     @Override
-    default void tickGraph(Graph<Mergeable.Dummy> graph, ServerLevel level) {
+    default void tickGraph(IConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level) {
 
         List<NodeIdentifier<?>> nodeIdentifiers = new ArrayList<>();
         for (GraphObject<Mergeable.Dummy> object : graph.getObjects()) {
@@ -22,10 +25,10 @@ public interface ILoadedAwareConduitTicker extends IConduitTicker {
                 nodeIdentifiers.add(node);
             }
         }
-        tickGraph(nodeIdentifiers, level);
+        tickGraph(type, nodeIdentifiers, level);
     }
 
-    void tickGraph(List<NodeIdentifier<?>> loadedNodes, ServerLevel level);
+    void tickGraph(IConduitType<?> type, List<NodeIdentifier<?>> loadedNodes, ServerLevel level);
 
     default boolean isLoaded(Level level, BlockPos pos) {
         return level.isLoaded(pos) && level.shouldTickBlocksAt(pos);

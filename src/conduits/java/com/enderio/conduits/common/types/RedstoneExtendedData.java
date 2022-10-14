@@ -1,9 +1,9 @@
-package com.enderio.conduits.common.network;
+package com.enderio.conduits.common.types;
 
 import com.enderio.api.conduit.IExtendedConduitData;
 import net.minecraft.nbt.CompoundTag;
 
-public class RedstoneExtraData implements IExtendedConduitData<RedstoneExtraData> {
+public class RedstoneExtendedData implements IExtendedConduitData<RedstoneExtendedData> {
 
     private boolean isActive = false;
 
@@ -31,9 +31,9 @@ public class RedstoneExtraData implements IExtendedConduitData<RedstoneExtraData
         isActive = active;
     }
 
-    public RedstoneExtraData deepCopy() {
-        RedstoneExtraData redstoneExtraData = new RedstoneExtraData();
-        redstoneExtraData.setActive(isActive());
-        return redstoneExtraData;
+    public RedstoneExtendedData deepCopy() {
+        RedstoneExtendedData redstoneExtendedData = new RedstoneExtendedData();
+        redstoneExtendedData.setActive(isActive());
+        return redstoneExtendedData;
     }
 }

@@ -1,11 +1,6 @@
-package com.enderio.conduits.common.blockentity;
+package com.enderio.api.conduit;
 
-import com.enderio.EnderIO;
 import com.enderio.api.UseOnly;
-import com.enderio.api.conduit.IClientConduitData;
-import com.enderio.api.conduit.IConduitMenuData;
-import com.enderio.api.conduit.IExtendedConduitData;
-import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.misc.Vector2i;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.LogicalSide;
@@ -72,10 +67,5 @@ public abstract class TieredConduit<T extends IExtendedConduitData<T>> implement
     @Override
     public IClientConduitData<T> getClientData() {
         return clientConduitData;
-    }
-
-    @Override
-    public IConduitMenuData getMenuData() {
-        return new ConduitMenuDataImpl(false, true, true, false, false, true);
     }
 }

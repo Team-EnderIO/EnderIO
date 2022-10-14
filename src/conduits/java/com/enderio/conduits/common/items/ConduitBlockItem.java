@@ -3,10 +3,12 @@ package com.enderio.conduits.common.items;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
@@ -24,6 +26,13 @@ public class ConduitBlockItem extends BlockItem {
     public ConduitBlockItem(Supplier<? extends IConduitType<?>> type, Block block, Properties properties) {
         super(block, properties);
         this.type = type;
+    }
+
+    @Override
+    public void fillItemCategory(CreativeModeTab pGroup, NonNullList<ItemStack> pItems) {
+        if (this.allowedIn(pGroup)) {
+            pItems.add(getDefaultInstance());
+        }
     }
 
     public String getDescriptionId() {

@@ -6,7 +6,6 @@ import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.IExtendedConduitData;
 import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.conduits.common.ConduitShape;
-import com.enderio.conduits.common.blockentity.action.RightClickAction;
 import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
 import com.enderio.conduits.common.blockentity.connection.IConnectionState;
 import com.enderio.conduits.common.blockentity.connection.StaticConnectionStates;
@@ -14,6 +13,7 @@ import com.enderio.conduits.common.menu.ConduitMenu;
 import com.enderio.conduits.common.network.ConduitSavedData;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.core.common.sync.NBTSerializableDataSlot;
+import com.enderio.core.common.sync.NBTSerializingDataSlot;
 import com.enderio.core.common.sync.SyncMode;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
@@ -66,6 +66,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         bundle = new ConduitBundle(this::scheduleTick, worldPosition);
         clientBundle = bundle.deepCopy();
         add2WayDataSlot(new NBTSerializableDataSlot<>(this::getBundle, SyncMode.WORLD));
+        add2WayDataSlot(new NBTSerializingDataSlot<>(this::getBundle, ConduitBundle::serializeGuiNBT, ConduitBundle::deserializeGuiNBT, SyncMode.GUI));
         addAfterSyncRunnable(this::updateClient);
     }
 
@@ -174,10 +175,11 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     }
 
     public void updateConnectionToData(IConduitType<?> type) {
-        getBundle().getNodeFor(type).getExtendedConduitData().updateConnection(
-            Arrays.stream(Direction.values())
-                .filter(streamDir -> getBundle().getConnection(streamDir).getConnectionState(type, bundle) != StaticConnectionStates.DISABLED)
-                .collect(Collectors.toSet()));
+        if(!level.isClientSide)
+            getBundle().getNodeFor(type).getExtendedConduitData().updateConnection(
+                Arrays.stream(Direction.values())
+                    .filter(streamDir -> getBundle().getConnection(streamDir).getConnectionState(type, bundle) != StaticConnectionStates.DISABLED)
+                    .collect(Collectors.toSet()));
     }
     public boolean removeType(IConduitType<?> type, boolean shouldDrop) {
         if (shouldDrop && !level.isClientSide()) {

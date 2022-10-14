@@ -7,7 +7,7 @@ import com.enderio.api.integration.IntegrationManager;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
 import com.enderio.conduits.common.blockentity.ConduitBundle;
-import com.enderio.conduits.common.blockentity.action.RightClickAction;
+import com.enderio.conduits.common.blockentity.RightClickAction;
 import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
 import com.enderio.conduits.common.blockentity.connection.IConnectionState;
 import com.enderio.conduits.common.blockentity.connection.StaticConnectionStates;
@@ -15,7 +15,7 @@ import com.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.conduits.common.init.EnderConduitTypes;
 import com.enderio.conduits.common.items.ConduitBlockItem;
 import com.enderio.conduits.common.network.ConduitSavedData;
-import com.enderio.conduits.common.network.RedstoneExtraData;
+import com.enderio.conduits.common.types.RedstoneExtendedData;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -30,7 +30,6 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
@@ -181,6 +180,9 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
             return Optional.empty();
 
         RightClickAction action = conduit.addType(conduitBlockItem.getType(), player);
+        if (!(action instanceof RightClickAction.Blocked)) {
+            conduit.getLevel().setBlockAndUpdate(conduit.getBlockPos(), conduit.getBlockState());
+        }
         if (action instanceof RightClickAction.Upgrade upgradeAction) {
             if (!player.getAbilities().instabuild) {
                 stack.shrink(1);
@@ -393,8 +395,8 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
             && conduit.getBundle().getConnection(direction.getOpposite()).getConnectionState(EnderConduitTypes.REDSTONE.get(), conduit.getBundle()) instanceof DynamicConnectionState dyn
             && dyn.isInsert()
             && conduit.getBundle().getNodeFor(EnderConduitTypes.REDSTONE.get()) != null
-            && conduit.getBundle().getNodeFor(EnderConduitTypes.REDSTONE.get()).getExtendedConduitData() instanceof RedstoneExtraData redstoneExtraData
-            && redstoneExtraData.isActive() ? 15 : 0;
+            && conduit.getBundle().getNodeFor(EnderConduitTypes.REDSTONE.get()).getExtendedConduitData() instanceof RedstoneExtendedData redstoneExtendedData
+            && redstoneExtendedData.isActive() ? 15 : 0;
     }
 
     private record OpenInformation(Direction direction, IConduitType<?> type) {
