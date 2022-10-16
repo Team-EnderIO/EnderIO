@@ -208,9 +208,9 @@ jarJar.enable()
 dependencies {
     // Forge
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-    implementation fg.deobf("blank:Xycraft+Core:0.5.2")
-    runtimeOnly fg.deobf("blank:Xycraft+Override:0.5.2")
-    runtimeOnly fg.deobf("blank:Xycraft+World:0.5.2")
+    //implementation fg.deobf("blank:Xycraft+Core:0.5.2")
+    //runtimeOnly fg.deobf("blank:Xycraft+Override:0.5.2")
+    //runtimeOnly fg.deobf("blank:Xycraft+World:0.5.2")
     // Registrate
     implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
     jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: "${registrate_version_range}")
