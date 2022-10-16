@@ -5,8 +5,6 @@ import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.IExtendedConduitData;
 import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.EnderIO;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ListMultimap;
 import com.mojang.datafixers.util.Pair;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
@@ -254,7 +252,7 @@ public class ConduitSavedData extends SavedData {
     }
 
     private void addPotentialGraph(IConduitType<?> type, Graph<Mergeable.Dummy> graph) {
-        if (!networks.get(type).contains(graph)) {
+        if (!networks.computeIfAbsent(type, unused -> new ArrayList<>()).contains(graph)) {
             networks.get(type).add(graph);
         }
     }

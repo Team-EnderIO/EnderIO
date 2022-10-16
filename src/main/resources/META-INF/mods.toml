@@ -27,5 +27,5 @@ side="BOTH"
 [[dependencies.enderio]]
 modId="ae2"
 mandatory=false
-versionRange="[0.0.0,)"
+versionRange="[12.7.0,)"
 side="BOTH"
