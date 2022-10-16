@@ -27,7 +27,7 @@ import java.util.*;
 @Mod.EventBusSubscriber
 public class ConduitSavedData extends SavedData {
 
-    private final ListMultimap<IConduitType<?>, Graph<Mergeable.Dummy>> networks = ArrayListMultimap.create();
+    private final Map<IConduitType<?>, List<Graph<Mergeable.Dummy>>> networks = new HashMap<>();
 
     // Used to find the NodeIdentifier(s) of a conduit when it is loaded
     private final Map<IConduitType<?>, Map<ChunkPos, Map<BlockPos, NodeIdentifier<?>>>> deserializedNodes = new HashMap<>();
@@ -238,16 +238,13 @@ public class ConduitSavedData extends SavedData {
         setDirty();
         for (IConduitType<?> type: networks.keySet()) {
             List<Graph<Mergeable.Dummy>> graphs = networks.get(type);
-            List<Graph<Mergeable.Dummy>> toRemove = new ArrayList<>();
-            for (Graph<Mergeable.Dummy> graph : graphs) {
-                if (graph.getObjects().isEmpty() || graph.getObjects().iterator().next().getGraph() != graph)
-                    toRemove.add(graph);
-            }
-            graphs.removeAll(toRemove);
+            graphs.removeIf(graph -> graph.getObjects().isEmpty() || graph.getObjects().iterator().next().getGraph() != graph);
         }
-        for (var entry : networks.entries()) {
-            if (serverLevel.getGameTime() % entry.getKey().getTicker().getTickRate() == ConduitTypes.getRegistry().getID(entry.getKey()) % entry.getKey().getTicker().getTickRate()) {
-                entry.getKey().getTicker().tickGraph(entry.getKey(), entry.getValue(), serverLevel);
+        for (var entry : networks.entrySet()) {
+            for (Graph<Mergeable.Dummy> graph : entry.getValue()) {
+                if (serverLevel.getGameTime() % entry.getKey().getTicker().getTickRate() == ConduitTypes.getRegistry().getID(entry.getKey()) % entry.getKey().getTicker().getTickRate()) {
+                    entry.getKey().getTicker().tickGraph(entry.getKey(), graph, serverLevel);
+                }
             }
         }
     }
