@@ -79,7 +79,7 @@ public class EIOBlocks {
         .tag(BlockTags.CLIMBABLE, BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
         .item()
         .model((ctx, prov) -> prov.generated(ctx, prov.modLoc("block/dark_steel_ladder")))
-        .tab(() -> EIOCreativeTabs.BLOCKS)
+        //.tab(() -> EIOCreativeTabs.BLOCKS)
         .build()
         .register();
 
@@ -90,7 +90,7 @@ public class EIOBlocks {
         .tag(BlockTags.NEEDS_IRON_TOOL)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .item()
-        .tab(() -> EIOCreativeTabs.BLOCKS)
+        //.tab(() -> EIOCreativeTabs.BLOCKS)
         .model((ctx, prov) -> prov.generated(ctx, prov.modLoc("block/dark_steel_bars")))
         .build()
         .register();
@@ -103,7 +103,7 @@ public class EIOBlocks {
         .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL, BlockTags.DOORS)
         .item()
         .model((ctx, prov) -> prov.generated(ctx))
-        .tab(() -> EIOCreativeTabs.BLOCKS)
+        //.tab(() -> EIOCreativeTabs.BLOCKS)
         .build()
         .register();
 
@@ -114,7 +114,7 @@ public class EIOBlocks {
         .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL, BlockTags.TRAPDOORS)
         .item()
         .model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.modLoc("block/dark_steel_trapdoor_bottom")))
-        .tab(() -> EIOCreativeTabs.BLOCKS)
+        //.tab(() -> EIOCreativeTabs.BLOCKS)
         .build()
         .register();
 
@@ -125,7 +125,7 @@ public class EIOBlocks {
         .tag(BlockTags.NEEDS_IRON_TOOL)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .item()
-        .tab(() -> EIOCreativeTabs.BLOCKS)
+        //.tab(() -> EIOCreativeTabs.BLOCKS)
         .model((ctx, prov) -> prov.generated(ctx, prov.modLoc("block/end_steel_bars")))
         .build()
         .register();
@@ -137,7 +137,7 @@ public class EIOBlocks {
         .tag(BlockTags.NEEDS_DIAMOND_TOOL)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .item()
-        .tab(() -> EIOCreativeTabs.BLOCKS)
+        //.tab(() -> EIOCreativeTabs.BLOCKS)
         .build()
         .register();
 
@@ -267,7 +267,9 @@ public class EIOBlocks {
         .register();
 
     public static <T extends Block> BlockBuilder<T, Registrate> simpleBlockBuilder(String name, T block) {
-        return REGISTRATE.block(name, p -> block).item().tab(() -> EIOCreativeTabs.BLOCKS).build();
+        return REGISTRATE.block(name, p -> block).item()
+            //.tab(() -> EIOCreativeTabs.BLOCKS)
+            .build();
     }
 
     private static BlockBuilder<Block, Registrate> metalBlock(String name) {
@@ -281,7 +283,7 @@ public class EIOBlocks {
             .tag(BlockTags.NEEDS_STONE_TOOL)
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .item()
-            .tab(() -> EIOCreativeTabs.BLOCKS)
+            //.tab(() -> EIOCreativeTabs.BLOCKS)
             .build();
     }
 
@@ -300,7 +302,7 @@ public class EIOBlocks {
             .tag(BlockTags.NEEDS_STONE_TOOL)
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .item()
-            .tab(() -> EIOCreativeTabs.BLOCKS)
+            //.tab(() -> EIOCreativeTabs.BLOCKS)
             .build();
     }
 
@@ -322,7 +324,7 @@ public class EIOBlocks {
         });
         bb.tag(BlockTags.NEEDS_STONE_TOOL, BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.PRESSURE_PLATES)
             .item()
-            .tab(() -> EIOCreativeTabs.BLOCKS)
+            //.tab(() -> EIOCreativeTabs.BLOCKS)
             .build();
         return bb.register();
     }
@@ -341,12 +343,11 @@ public class EIOBlocks {
             vb.partialState().with(PressurePlateBlock.POWERED, false).addModels(new ConfiguredModel(prov.models().getExistingFile(upModelLoc)));
         });
 
-        var itemBuilder = bb.item();
-        itemBuilder.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), upModelLoc));
-        itemBuilder.tab(() -> EIOCreativeTabs.BLOCKS);
-        bb = itemBuilder.build();
-
-        return bb.register();
+        return bb.item()
+            .model((ctx, prov) -> prov.withExistingParent(ctx.getName(), upModelLoc))
+            //.tab(() -> EIOCreativeTabs.BLOCKS)
+            .build()
+            .register();
     }
 
     private static BlockEntry<SilentWeightedPressurePlateBlock> silentWeightedPressurePlateBlock(WeightedPressurePlateBlock block) {
@@ -364,12 +365,11 @@ public class EIOBlocks {
         }));
         bb.tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.PRESSURE_PLATES);
 
-        var itemBuilder = bb.item();
-        itemBuilder.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), upModelLoc));
-        itemBuilder.tab(() -> EIOCreativeTabs.BLOCKS);
-        bb = itemBuilder.build();
-
-        return bb.register();
+        return bb.item()
+            .model((ctx, prov) -> prov.withExistingParent(ctx.getName(), upModelLoc))
+            //.tab(() -> EIOCreativeTabs.BLOCKS)
+            .build()
+            .register();
     }
 
     private static BlockEntry<ResettingLeverBlock> resettingLeverBlock(String name, int duration, boolean inverted) {
@@ -399,10 +399,11 @@ public class EIOBlocks {
             });
         });
 
-        var ib = bb.item().tab(() -> EIOCreativeTabs.BLOCKS);
-        ib.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.mcLoc("item/lever")));
-        bb = ib.build();
-        return bb.register();
+        return bb.item()
+            //.tab(() -> EIOCreativeTabs.BLOCKS)
+            .model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.mcLoc("item/lever")))
+            .build()
+            .register();
     }
 
     public static void register() {}

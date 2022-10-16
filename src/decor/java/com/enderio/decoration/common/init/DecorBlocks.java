@@ -139,7 +139,7 @@ public class DecorBlocks {
     			}))
     		.item()
     		.model((ctx, prov) -> prov.withExistingParent(name, "block/button_inventory"))
-    		.tab(() -> EIOCreativeTabs.BLOCKS)
+    		//.tab(() -> EIOCreativeTabs.BLOCKS)
     		.build()
     		.register();
     }

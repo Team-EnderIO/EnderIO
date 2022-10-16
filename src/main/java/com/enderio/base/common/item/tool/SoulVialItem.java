@@ -206,6 +206,11 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
 
     @Override
     public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {
+        //TODO: For alpha back to correct
+        if (true) {
+            //super.fillItemCategory(pCategory, pItems);
+            return;
+        }
         if (pCategory == getItemCategory()) {
             pItems.add(EIOItems.EMPTY_SOUL_VIAL.get().getDefaultInstance());
         } else if (pCategory == EIOCreativeTabs.SOULS) {

@@ -40,6 +40,8 @@ public class BrokenSpawnerItem extends Item implements IMultiCapabilityItem {
 
     @Override
     public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {
+        if (true)
+            return;
         if (allowedIn(pCategory)) {
             pItems.add(new ItemStack(this));
         } else if (pCategory == EIOCreativeTabs.SOULS) {
@@ -52,7 +54,8 @@ public class BrokenSpawnerItem extends Item implements IMultiCapabilityItem {
 
     @Override
     public Collection<CreativeModeTab> getCreativeTabs() {
-        return Arrays.asList(getItemCategory(), EIOCreativeTabs.SOULS);
+        //TODO: For alpha uncomment return Arrays.asList(getItemCategory(), EIOCreativeTabs.SOULS);
+        return List.of();
     }
 
     @Override

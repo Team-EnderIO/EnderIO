@@ -39,7 +39,7 @@ public class MachineBlocks {
         ))
         .item(FluidTankItem::new)
         .model((ctx, prov) -> {})
-        .tab(() -> EIOCreativeTabs.MACHINES)
+        //.tab(() -> EIOCreativeTabs.MACHINES)
         .build()
         .register();
 
@@ -60,7 +60,7 @@ public class MachineBlocks {
         ))
         .item(FluidTankItem::new)
         .model((ctx, prov) -> {})
-        .tab(() -> EIOCreativeTabs.MACHINES)
+        //.tab(() -> EIOCreativeTabs.MACHINES)
         .build()
         .register();
 
@@ -82,7 +82,7 @@ public class MachineBlocks {
             .end()
         ))
         .item()
-        .tab(() -> EIOCreativeTabs.MACHINES)
+        //.tab(() -> EIOCreativeTabs.MACHINES)
         .build()
         .register();
 
@@ -105,7 +105,7 @@ public class MachineBlocks {
     public static final BlockEntry<MachineBlock> CREATIVE_POWER = REGISTRATE
         .block("creative_power", props -> new MachineBlock(props, MachineBlockEntities.CREATIVE_POWER))
         .item()
-        .tab(() -> EIOCreativeTabs.MACHINES)
+        //.tab(() -> EIOCreativeTabs.MACHINES)
         .build()
         .register();
 
@@ -131,7 +131,7 @@ public class MachineBlocks {
             .loot(MachinesLootTable::copyNBT)
             .blockstate(MachineModelUtil::machineBlock)
             .item()
-            .tab(() -> EIOCreativeTabs.MACHINES)
+            //.tab(() -> EIOCreativeTabs.MACHINES)
             .build();
     }
 
@@ -142,7 +142,7 @@ public class MachineBlocks {
             .loot(MachinesLootTable::copyNBT)
             .blockstate(MachineModelUtil::soulMachineBlock)
             .item()
-            .tab(() -> EIOCreativeTabs.MACHINES)
+            //.tab(() -> EIOCreativeTabs.MACHINES)
             .build();
     }
 

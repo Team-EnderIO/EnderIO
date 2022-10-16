@@ -70,7 +70,7 @@ public class EIOFluids {
         return baseFluid(name)
             .bucket()
             .model(EIOFluids::bucketModel)
-            .tab(() -> EIOCreativeTabs.MAIN)
+            //.tab(() -> EIOCreativeTabs.MAIN)
             .build();
     }
 
@@ -78,7 +78,7 @@ public class EIOFluids {
         return baseFluid(name)
             .bucket()
             .model((ctx, prov) -> bucketModel(ctx, prov).flipGas(true))
-            .tab(() -> EIOCreativeTabs.MAIN)
+            //.tab(() -> EIOCreativeTabs.MAIN)
             .build();
     }
 

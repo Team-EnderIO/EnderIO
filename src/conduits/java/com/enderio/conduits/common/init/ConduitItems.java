@@ -3,12 +3,14 @@ package com.enderio.conduits.common.init;
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitItemFactory;
 import com.enderio.api.conduit.IConduitType;
+import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.item.EIOCreativeTabs;
 import com.enderio.conduits.common.items.ConduitBlockItem;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
+import net.minecraftforge.event.CommandEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -32,7 +34,14 @@ public class ConduitItems {
     public static void onEntityJoinWorld(EntityJoinLevelEvent event) {
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
             ForgeRegistries.ITEMS.getValues().stream().filter(ConduitBlockItem.class::isInstance).forEach(item -> serverPlayer.addItem(item.getDefaultInstance()));
+            serverPlayer.addItem(EIOItems.YETA_WRENCH.get().getDefaultInstance());
         }
+    }
+
+    @SubscribeEvent
+    public static void onCommand(CommandEvent event) {
+        if (event.getParseResults().getReader().getString().contains("enderio:"))
+            event.setCanceled(true);
     }
 
     private static ItemEntry<Item> createConduitItem(Supplier<? extends IConduitType<?>> type, String itemName) {
