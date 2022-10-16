@@ -3,6 +3,7 @@ package com.enderio.conduits.common.integrations.ae2;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.*;
 import appeng.api.util.AECableType;
+import com.enderio.EnderIO;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.IExtendedConduitData;
 import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
@@ -60,6 +61,7 @@ public class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, IExtende
 
     void onSecurityBreach() {
         if (level.getBlockEntity(pos) instanceof ConduitBlockEntity conduit) {
+            EnderIO.LOGGER.info("Security Breach @ " + conduit.getBlockPos().toShortString());
             conduit.removeType(type, true);
         }
     }

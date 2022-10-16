@@ -142,7 +142,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     public RightClickAction addType(IConduitType<?> type, Player player) {
         EnderIO.LOGGER.info("try to add type " + ConduitTypes.getRegistry().getKey(type) + "@ " + getBlockPos().toShortString());
         RightClickAction action = bundle.addType(level, type, player);
-        EnderIO.LOGGER.info("Action " + action.getClass() + " was taken");
+        EnderIO.LOGGER.info("Action " + action + " was taken");
         //something has changed
         if (action.hasChanged()) {
             List<GraphObject<Mergeable.Dummy>> nodes = new ArrayList<>();
@@ -190,6 +190,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                     }
                 }
             }
+            EnderIO.LOGGER.info("connect " + ConduitTypes.getRegistry().getKey(type) + " @ " + getBlockPos().toShortString() + " with " + conduit.getBlockPos().toShortString());
             if (shouldMergeGraph) {
                 Graph.connect(bundle.getNodeFor(type), conduit.bundle.getNodeFor(type));
             }
@@ -208,6 +209,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                     .collect(Collectors.toSet()));
     }
     public boolean removeType(IConduitType<?> type, boolean shouldDrop) {
+        EnderIO.LOGGER.info("removed type " + ConduitTypes.getRegistry().getKey(type) + " @ " + getBlockPos().toShortString());
         if (shouldDrop && !level.isClientSide()) {
             dropItem(type.getConduitItem().getDefaultInstance());
             for (Direction dir: Direction.values()) {
