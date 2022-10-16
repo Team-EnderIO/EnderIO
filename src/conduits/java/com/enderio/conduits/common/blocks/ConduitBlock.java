@@ -1,5 +1,6 @@
 package com.enderio.conduits.common.blocks;
 
+import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.NodeIdentifier;
@@ -119,7 +120,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
                                 conduit.updateConnectionToData(type);
                             }
                         } else if (connectionState == StaticConnectionStates.DISCONNECTED) {
-                            conduit.tryConnectTo(direction, type, true);
+                            conduit.tryConnectTo(direction, type, true, true);
                         }
                     }
                 }
@@ -178,7 +179,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
     private Optional<InteractionResult> addConduit(ConduitBlockEntity conduit, Player player, ItemStack stack, boolean isClientSide) {
         if (!(stack.getItem() instanceof ConduitBlockItem conduitBlockItem))
             return Optional.empty();
-
+        EnderIO.LOGGER.info("rightclicked with conduititem: " + ConduitTypes.getRegistry().getKey(conduitBlockItem.getType()) + " @ " + conduit.getBlockPos().toShortString());
         RightClickAction action = conduit.addType(conduitBlockItem.getType(), player);
         if (!(action instanceof RightClickAction.Blocked)) {
             conduit.getLevel().setBlockAndUpdate(conduit.getBlockPos(), conduit.getBlockState());
@@ -199,6 +200,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
 
     private Optional<InteractionResult> handleYeta(ConduitBlockEntity conduit, Player player, ItemStack stack, BlockHitResult hit, boolean isClientSide) {
         if (stack.is(EIOTags.Items.WRENCH)) {
+            EnderIO.LOGGER.info("rightclicked with wrench @ " + conduit.getBlockPos().toShortString());
             @Nullable
             IConduitType<?> type = conduit.getShape().getConduit(hit.getBlockPos(), hit);
             @Nullable
@@ -234,7 +236,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
             } else {
                 IConnectionState connectionState = conduit.getBundle().getConnection(hit.getDirection()).getConnectionState(type, conduit.getBundle());
                 if (connectionState == StaticConnectionStates.DISABLED) {
-                    conduit.tryConnectTo(hit.getDirection(), type, true);
+                    conduit.tryConnectTo(hit.getDirection(), type, true, true);
                 }
             }
             return Optional.of(InteractionResult.sidedSuccess(isClientSide));

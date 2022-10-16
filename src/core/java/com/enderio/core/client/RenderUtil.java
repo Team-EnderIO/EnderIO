@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraftforge.client.model.IQuadTransformer;
-import org.apache.logging.log4j.util.TriConsumer;
 
 import static net.minecraftforge.client.model.IQuadTransformer.COLOR;
 import static net.minecraftforge.client.model.IQuadTransformer.STRIDE;
@@ -97,14 +96,27 @@ public class RenderUtil {
         blockColorABGR[2] = rgbBlockColor >> 8 & 0xFF;
         blockColorABGR[1] = rgbBlockColor & 0xFF;
         int[] multipliedColor = RenderUtil.multiplyColor(colorABGR, blockColorABGR);
-        RenderUtil.putColor(vertices, vertexIndex, multipliedColor);
+        RenderUtil.putColorABGR(vertices, vertexIndex, multipliedColor);
     }
 
-    private static void putColor(int[] vertices, int vertexIndex, int[] abgr) {
+    public static void putColorABGR(int[] vertices, int vertexIndex, int[] abgr) {
         int offset = vertexIndex * STRIDE + COLOR;
         vertices[offset] = (abgr[0] << 24) |
             (abgr[1] << 16) |
             (abgr[2] << 8) |
             abgr[3];
+    }
+    public static void putColorARGB(int[] vertices, int vertexIndex, int argb) {
+        int[] blockColorABGR = new int[4];
+        blockColorABGR[0] = 0xFF | (argb >> 24 & 0xFF);
+        blockColorABGR[3] = argb >> 16 & 0xFF;
+        blockColorABGR[2] = argb >> 8 & 0xFF;
+        blockColorABGR[1] = argb & 0xFF;
+
+        int offset = vertexIndex * STRIDE + COLOR;
+        vertices[offset] = (blockColorABGR[0] << 24) |
+            (blockColorABGR[1] << 16) |
+            (blockColorABGR[2] << 8) |
+            blockColorABGR[3];
     }
 }

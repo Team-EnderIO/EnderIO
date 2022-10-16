@@ -64,6 +64,7 @@ public class ConduitBlockModel implements IDynamicBakedModel {
                     IQuadTransformer rotationTranslation = rotation.andThen(QuadTransformers.applying(translateTransformation(offset)));
                     quads.addAll(new ConduitTextureEmissiveQuadTransformer(sprite(type, conduitBundle.getNodeFor(type).getExtendedConduitData()), 0).andThen(rotationTranslation)
                         .process(modelOf(CONDUIT_CONNECTION).getQuads(state, preRotation, rand, extraData, renderType)));
+                    quads.addAll(rotationTranslation.process(type.getClientData().createConnectionQuads(conduitBundle.getNodeFor(type).getExtendedConduitData().cast(), side, direction, rand, renderType)));
                     if (connection.isEnd()) {
                         quads.addAll(rotationTranslation.process(modelOf(CONDUIT_CONNECTION_BOX).getQuads(state, preRotation, rand, extraData, renderType)));
 

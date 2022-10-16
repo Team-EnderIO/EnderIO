@@ -2,6 +2,8 @@ package com.enderio.conduits.common.types;
 
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.ticker.ICapabilityAwareConduitTicker;
+import dev.gigaherz.graph3.Graph;
+import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
@@ -14,7 +16,7 @@ import java.util.List;
 public class ItemConduitTicker extends ICapabilityAwareConduitTicker<IItemHandler> {
 
     @Override
-    protected void tickCapabilityGraph(IConduitType<?> type, List<CapabilityConnection> inserts, List<CapabilityConnection> extracts, ServerLevel level) {
+    protected void tickCapabilityGraph(IConduitType<?> type, List<CapabilityConnection> inserts, List<CapabilityConnection> extracts, ServerLevel level, Graph<Mergeable.Dummy> graph) {
         toNextExtract:
         for (CapabilityConnection extract: extracts) {
             IItemHandler extractHandler = extract.cap;
@@ -28,7 +30,7 @@ public class ItemConduitTicker extends ICapabilityAwareConduitTicker<IItemHandle
                         sidedExtractData.rotatingIndex = 0;
                     }
                     for (int j = 0; j < sidedExtractData.rotatingIndex; j++) {
-                        //empty lists are verified in ICapabilityAwaaareConduitTicker
+                        //empty lists are verified in ICapabilityAwareConduitTicker
                         //this moves the first element to the back to give a new cap the next time this is called
                         inserts.add(inserts.remove(0));
                     }

@@ -124,7 +124,6 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
     @Override
     public void renderToolTip(PoseStack poseStack, int mouseX, int mouseY) {
         if (isHovered && isActive()) {
-            IEnderScreen screen = addedOn;
             addedOn.renderTooltipAfterEverything(poseStack, List.of(optionName, getter.get().getTooltip().copy().withStyle(ChatFormatting.GRAY)), mouseX, mouseY);
         }
     }

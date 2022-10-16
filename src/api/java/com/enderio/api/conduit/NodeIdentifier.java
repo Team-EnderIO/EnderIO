@@ -41,7 +41,7 @@ public class NodeIdentifier<T extends IExtendedConduitData<?>> implements GraphO
     }
 
     public void pushState(Direction direction, @Nullable ColorControl insert, @Nullable ColorControl extract, RedstoneControl control, ColorControl redstoneChannel) {
-        ioStates.put(direction, IOState.of(insert, extract,control, redstoneChannel));
+        ioStates.put(direction, IOState.of(insert, extract, control, redstoneChannel));
     }
 
     public Optional<IOState> getIOState(Direction direction) {
@@ -68,8 +68,8 @@ public class NodeIdentifier<T extends IExtendedConduitData<?>> implements GraphO
             return extract().isPresent();
         }
 
-        private static IOState of(@Nullable ColorControl in, @Nullable ColorControl out, RedstoneControl control, ColorControl redstoneChannel) {
-            return new IOState(Optional.ofNullable(in), Optional.ofNullable(out), control, redstoneChannel);
+        private static IOState of(@Nullable ColorControl in, @Nullable ColorControl extract, RedstoneControl control, ColorControl redstoneChannel) {
+            return new IOState(Optional.ofNullable(in), Optional.ofNullable(extract), control, redstoneChannel);
         }
     }
 }

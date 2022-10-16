@@ -7,17 +7,23 @@ import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
+import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
 import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.level.block.Block;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 
 public interface IIOAwareConduitTicker extends ILoadedAwareConduitTicker {
     @Override
-    default void tickGraph(IConduitType<?> type, List<NodeIdentifier<?>> loadedNodes, ServerLevel level) {
+    default void tickGraph(IConduitType<?> type, List<NodeIdentifier<?>> loadedNodes, ServerLevel level, Graph<Mergeable.Dummy> graph) {
         ListMultimap<ColorControl, Connection> extracts = ArrayListMultimap.create();
         ListMultimap<ColorControl, Connection> inserts = ArrayListMultimap.create();
         for (GraphObject<Mergeable.Dummy> object : loadedNodes) {
@@ -36,11 +42,11 @@ public interface IIOAwareConduitTicker extends ILoadedAwareConduitTicker {
             List<Connection> insertList = inserts.get(color);
             if (extractList.isEmpty() || insertList.isEmpty())
                 continue;
-            tickColoredGraph(type, insertList, extractList, level);
+            tickColoredGraph(type, insertList, extractList, level, graph);
         }
     }
 
-    void tickColoredGraph(IConduitType<?> type, List<Connection> inserts, List<Connection> extracts, ServerLevel level);
+    void tickColoredGraph(IConduitType<?> type, List<Connection> inserts, List<Connection> extracts, ServerLevel level, Graph<Mergeable.Dummy> graph);
     default boolean isRedstoneMode(IConduitType<?> type, ServerLevel level, BlockPos pos, NodeIdentifier.IOState state) {
         if (!type.getMenuData().showRedstoneExtract())
             return true;

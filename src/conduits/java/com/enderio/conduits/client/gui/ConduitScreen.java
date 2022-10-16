@@ -108,7 +108,7 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
             }
             menu.getConduitType()
                 .getClientData()
-                .createWidgets(getBundle().getNodeFor(menu.getConduitType()).getExtendedConduitData().cast(), menu::getDirection, new Vector2i(22, 7).add(getGuiLeft(), getGuiTop()))
+                .createWidgets(this, getBundle().getNodeFor(menu.getConduitType()).getExtendedConduitData().cast(), menu::getDirection, new Vector2i(22, 7).add(getGuiLeft(), getGuiTop()))
                 .forEach(this::addTypedButton);
         }
         List<IConduitType<?>> validConnections = new ArrayList<>();

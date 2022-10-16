@@ -11,7 +11,7 @@ public abstract class TieredConduit<T extends IExtendedConduitData<T>> implement
     private final int tier;
 
     @UseOnly(LogicalSide.CLIENT)
-    private final IClientConduitData<T> clientConduitData;
+    protected IClientConduitData<T> clientConduitData;
 
     /**
      * @param texture

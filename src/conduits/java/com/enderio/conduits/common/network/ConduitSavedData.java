@@ -236,6 +236,15 @@ public class ConduitSavedData extends SavedData {
 
     private void tick(ServerLevel serverLevel) {
         setDirty();
+        for (IConduitType<?> type: networks.keySet()) {
+            List<Graph<Mergeable.Dummy>> graphs = networks.get(type);
+            List<Graph<Mergeable.Dummy>> toRemove = new ArrayList<>();
+            for (Graph<Mergeable.Dummy> graph : graphs) {
+                if (graph.getObjects().isEmpty() || graph.getObjects().iterator().next().getGraph() != graph)
+                    toRemove.add(graph);
+            }
+            graphs.removeAll(toRemove);
+        }
         for (var entry : networks.entries()) {
             if (serverLevel.getGameTime() % entry.getKey().getTicker().getTickRate() == ConduitTypes.getRegistry().getID(entry.getKey()) % entry.getKey().getTicker().getTickRate()) {
                 entry.getKey().getTicker().tickGraph(entry.getKey(), entry.getValue(), serverLevel);

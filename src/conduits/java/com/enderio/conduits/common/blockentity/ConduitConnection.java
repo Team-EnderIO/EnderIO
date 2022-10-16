@@ -48,7 +48,7 @@ public class ConduitConnection implements INBTSerializable<CompoundTag> {
         if (end) {
             var state = DynamicConnectionState.defaultConnection();
             connectionStates[typeIndex] = state;
-            nodeIdentifier.pushState(direction, state.isExtract() ? state.extract() : null, state.isInsert() ? state.insert() : null, state.control(), state.redstoneChannel());
+            nodeIdentifier.pushState(direction, state.isInsert() ? state.insert() : null, state.isExtract() ? state.extract() : null, state.control(), state.redstoneChannel());
         } else {
             connectionStates[typeIndex] = StaticConnectionStates.CONNECTED;
         }
@@ -79,8 +79,8 @@ public class ConduitConnection implements INBTSerializable<CompoundTag> {
         return Arrays.stream(connectionStates).anyMatch(DynamicConnectionState.class::isInstance);
     }
 
-    public List<IConduitType> getConnectedTypes(ConduitBundle on) {
-        List<IConduitType> connected = new ArrayList<>();
+    public List<IConduitType<?>> getConnectedTypes(ConduitBundle on) {
+        List<IConduitType<?>> connected = new ArrayList<>();
         for (int i = 0; i < connectionStates.length; i++) {
             if (connectionStates[i].isConnection()) {
                 connected.add(on.getTypes().get(i));

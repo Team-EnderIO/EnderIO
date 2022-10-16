@@ -2,9 +2,17 @@ package com.enderio.api.conduit;
 
 import com.enderio.api.misc.IIcon;
 import com.enderio.api.misc.Vector2i;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.vehicle.Minecart;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -28,11 +36,57 @@ public interface IClientConduitData<T extends IExtendedConduitData<T>> extends I
      * @param widgetsStart the position on which widgets start
      * @return Widgets that manipulate the extended ConduitData, these changes are synced back to the server
      */
-    List<AbstractWidget> createWidgets(T extendedConduitData, Supplier<Direction> direction, Vector2i widgetsStart);
+    default List<AbstractWidget> createWidgets(Screen screen, T extendedConduitData, Supplier<Direction> direction, Vector2i widgetsStart) {
+        return List.of();
+    }
 
-    record Simple<T extends IExtendedConduitData<T>>(ResourceLocation getTextureLocation, Vector2i getTexturePosition) implements IClientConduitData<T> {
+    /**
+     *
+     * @param extendedConduitData your data
+     * @param facing the quads facing that is queried
+     * @param connectionDirection direction you connecto to
+     * @param rand random
+     * @param type RenderType to be used
+     * @return List of quads to be rendered. Those will be rotated in place
+     */
+    default List<BakedQuad> createConnectionQuads(T extendedConduitData, @Nullable Direction facing, Direction connectionDirection, RandomSource rand, @Nullable RenderType type) {
+        return List.of();
+    }
+
+
+    default BakedModel getModel(ResourceLocation model) {
+        return Minecraft.getInstance().getModelManager().getModel(model);
+    }
+    /**
+     *
+     * @return a list that contains all models that should be baked
+     */
+    default List<ResourceLocation> modelsToLoad() {
+        return List.of();
+    }
+
+    class Simple<T extends IExtendedConduitData<T>> implements IClientConduitData<T> {
+        private final ResourceLocation textureLocation;
+        private final Vector2i texturePosition;
+
+        public Simple(ResourceLocation textureLocation, Vector2i texturePosition) {
+            this.textureLocation = textureLocation;
+            this.texturePosition = texturePosition;
+        }
+
         @Override
-        public List<AbstractWidget> createWidgets(T extendedConduitData, Supplier<Direction> direction, Vector2i widgetsStart) {
+        public ResourceLocation getTextureLocation() {
+            return textureLocation;
+        }
+
+        @Override
+        public Vector2i getTexturePosition() {
+            return texturePosition;
+        }
+
+        @Override
+        public List<BakedQuad> createConnectionQuads(T extendedConduitData, @Nullable Direction facing, Direction connectionDirection, RandomSource rand,
+            @Nullable RenderType type) {
             return List.of();
         }
     }

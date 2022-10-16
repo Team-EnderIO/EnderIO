@@ -18,7 +18,7 @@ import java.util.List;
 
 public class RedstoneConduitTicker implements IIOAwareConduitTicker {
 
-    boolean isActive = false;
+    private boolean isActive = false;
     @Override
     public boolean canConnectTo(Level level, BlockPos conduitPos, Direction direction) {
         BlockPos neighbor = conduitPos.relative(direction);
@@ -35,7 +35,7 @@ public class RedstoneConduitTicker implements IIOAwareConduitTicker {
             }
         }
         isActive = false;
-        tickGraph(type,nodeIdentifiers.stream().filter(node -> isLoaded(level, node.getPos())).toList(), level);
+        tickGraph(type,nodeIdentifiers.stream().filter(node -> isLoaded(level, node.getPos())).toList(), level, graph);
         for (NodeIdentifier<?> nodeIdentifier : nodeIdentifiers) {
             RedstoneExtendedData data = nodeIdentifier.getExtendedConduitData().cast();
             data.setActive(isActive);
@@ -43,7 +43,7 @@ public class RedstoneConduitTicker implements IIOAwareConduitTicker {
     }
 
     @Override
-    public void tickColoredGraph(IConduitType<?> type, List<Connection> inserts, List<Connection> extracts, ServerLevel level) {
+    public void tickColoredGraph(IConduitType<?> type, List<Connection> inserts, List<Connection> extracts, ServerLevel level, Graph<Mergeable.Dummy> graph) {
         for (Connection extract : extracts) {
             if (level.hasSignal(extract.move(), extract.dir())) {
                 isActive = true;

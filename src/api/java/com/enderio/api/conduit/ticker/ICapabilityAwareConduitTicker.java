@@ -2,6 +2,8 @@ package com.enderio.api.conduit.ticker;
 
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.IExtendedConduitData;
+import dev.gigaherz.graph3.Graph;
+import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -15,7 +17,7 @@ import java.util.Optional;
 public abstract class ICapabilityAwareConduitTicker<T> implements IIOAwareConduitTicker {
 
     @Override
-    public final void tickColoredGraph(IConduitType<?> type, List<Connection> inserts, List<Connection> extracts, ServerLevel level) {
+    public final void tickColoredGraph(IConduitType<?> type, List<Connection> inserts, List<Connection> extracts, ServerLevel level, Graph<Mergeable.Dummy> graph) {
         List<CapabilityConnection> insertCaps = new ArrayList<>();
         for (Connection insert : inserts) {
             Optional.ofNullable(level.getBlockEntity(insert.move()))
@@ -31,7 +33,7 @@ public abstract class ICapabilityAwareConduitTicker<T> implements IIOAwareCondui
                     .ifPresent(cap -> extractCaps.add(new CapabilityConnection(cap, extract.data(), extract.dir())));
             }
             if (!extractCaps.isEmpty()) {
-                tickCapabilityGraph(type, insertCaps, extractCaps, level);
+                tickCapabilityGraph(type, insertCaps, extractCaps, level, graph);
             }
         }
     }
@@ -41,7 +43,7 @@ public abstract class ICapabilityAwareConduitTicker<T> implements IIOAwareCondui
         return Optional.ofNullable(level.getBlockEntity(conduitPos.relative(direction))).flatMap(be -> be.getCapability(getCapability(), direction.getOpposite()).resolve()).isPresent();
     }
 
-    protected abstract void tickCapabilityGraph(IConduitType<?> type, List<CapabilityConnection> inserts, List<CapabilityConnection> extracts, ServerLevel level);
+    protected abstract void tickCapabilityGraph(IConduitType<?> type, List<CapabilityConnection> inserts, List<CapabilityConnection> extracts, ServerLevel level, Graph<Mergeable.Dummy> graph);
     protected abstract Capability<T> getCapability();
 
     public class CapabilityConnection {

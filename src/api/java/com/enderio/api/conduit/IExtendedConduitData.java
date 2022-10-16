@@ -10,6 +10,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.LogicalSide;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -43,6 +44,13 @@ public interface IExtendedConduitData<T extends IExtendedConduitData<T>> extends
      */
     default boolean canConnectTo(T otherData) {
         return true;
+    }
+
+    /**
+     * This method is called after otherData is integrated into this network. change this or otherData accordingly if you want shared state for all nodes in a graph (like fluids in fluid conduits)
+     * @param otherData
+     */
+    default void onConnectTo(T otherData) {
     }
 
     /**

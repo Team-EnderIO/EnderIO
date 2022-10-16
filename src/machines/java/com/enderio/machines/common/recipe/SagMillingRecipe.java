@@ -315,10 +315,10 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
 
                         // TODO: move these tests into OutputItem instead..
                         // Check tag has entries if its required (although the point of a tag is generally this will be optional, its just in case
-                        if (!optional && ForgeRegistries.ITEMS.tags().getTag(tag).isEmpty()) {
-                            EnderIO.LOGGER.error("Sag milling recipe {} is missing a required output tag {}", recipeId, id);
-                            throw new RuntimeException("Sag milling recipe is missing a required output tag.");
-                        }
+                        //if (!optional && ForgeRegistries.ITEMS.tags().getTag(tag).isEmpty()) {
+                        //    EnderIO.LOGGER.error("Sag milling recipe {} is missing a required output tag {}", recipeId, id);
+                        //    throw new RuntimeException("Sag milling recipe is missing a required output tag.");
+                        //}
 
                         outputs.add(OutputItem.of(tag, count, chance, optional));
                     } else {

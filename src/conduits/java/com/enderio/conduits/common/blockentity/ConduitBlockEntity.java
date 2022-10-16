@@ -1,10 +1,8 @@
 package com.enderio.conduits.common.blockentity;
 
+import com.enderio.EnderIO;
 import com.enderio.api.UseOnly;
-import com.enderio.api.conduit.IConduitMenuData;
-import com.enderio.api.conduit.IConduitType;
-import com.enderio.api.conduit.IExtendedConduitData;
-import com.enderio.api.conduit.NodeIdentifier;
+import com.enderio.api.conduit.*;
 import com.enderio.conduits.common.ConduitShape;
 import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
 import com.enderio.conduits.common.blockentity.connection.IConnectionState;
@@ -142,31 +140,59 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     }
 
     public RightClickAction addType(IConduitType<?> type, Player player) {
+        EnderIO.LOGGER.info("try to add type " + ConduitTypes.getRegistry().getKey(type) + "@ " + getBlockPos().toShortString());
         RightClickAction action = bundle.addType(level, type, player);
+        EnderIO.LOGGER.info("Action " + action.getClass() + " was taken");
         //something has changed
         if (action.hasChanged()) {
             List<GraphObject<Mergeable.Dummy>> nodes = new ArrayList<>();
             for (Direction dir: Direction.values()) {
-                tryConnectTo(dir, type, false).ifPresent(nodes::add);
+                tryConnectTo(dir, type, false, false).ifPresent(nodes::add);
             }
             if (level instanceof ServerLevel serverLevel) {
-                Graph.integrate(bundle.getNodeFor(type), nodes);
-                ConduitSavedData.addPotentialGraph(type, Objects.requireNonNull(bundle.getNodeFor(type).getGraph()), serverLevel);
+                NodeIdentifier<?> thisNode = bundle.getNodeFor(type);
+                Graph.integrate(thisNode, nodes);
+                for (GraphObject<Mergeable.Dummy> object : thisNode.getGraph().getObjects()) {
+                    if (object instanceof NodeIdentifier<?> node) {
+                        thisNode.getExtendedConduitData().onConnectTo(node.getExtendedConduitData().cast());
+                    }
+                }
+                ConduitSavedData.addPotentialGraph(type, Objects.requireNonNull(thisNode.getGraph()), serverLevel);
             }
             if (action instanceof RightClickAction.Upgrade upgrade) {
-                removeNeighborConnections(upgrade.getNotInConduit());
+                removeNeighborConnections(upgrade.notInConduit());
             }
             updateShape();
         }
         return action;
     }
 
-    public Optional<GraphObject<Mergeable.Dummy>> tryConnectTo(Direction dir, IConduitType<?> type, boolean forceMerge) {
+    public Optional<GraphObject<Mergeable.Dummy>> tryConnectTo(Direction dir, IConduitType<?> type, boolean forceMerge, boolean shouldMergeGraph) {
         BlockEntity other = level.getBlockEntity(getBlockPos().relative(dir));
         if (other instanceof ConduitBlockEntity conduit && conduit.connectTo(dir.getOpposite(), type, bundle.getNodeFor(type).getExtendedConduitData(), forceMerge)) {
             connect(dir, type);
             updateConnectionToData(type);
             conduit.updateConnectionToData(type);
+            NodeIdentifier<?> firstNode = conduit.getBundle().getNodeFor(type);
+            NodeIdentifier<?> secondNode = bundle.getNodeFor(type);
+            firstNode.getExtendedConduitData().onConnectTo(secondNode.getExtendedConduitData().cast());
+            if (firstNode.getGraph() != null) {
+                for (GraphObject<Mergeable.Dummy> object : firstNode.getGraph().getObjects()) {
+                    if (object instanceof NodeIdentifier<?> node && node != firstNode) {
+                        firstNode.getExtendedConduitData().onConnectTo(node.getExtendedConduitData().cast());
+                    }
+                }
+            }
+            if (secondNode.getGraph() != null && firstNode.getGraph() != secondNode.getGraph()) {
+                for (GraphObject<Mergeable.Dummy> object : secondNode.getGraph().getObjects()) {
+                    if (object instanceof NodeIdentifier<?> node && node != secondNode) {
+                        secondNode.getExtendedConduitData().onConnectTo(node.getExtendedConduitData().cast());
+                    }
+                }
+            }
+            if (shouldMergeGraph) {
+                Graph.connect(bundle.getNodeFor(type), conduit.bundle.getNodeFor(type));
+            }
             return Optional.of(conduit.bundle.getNodeFor(type));
         } else if (type.getTicker().canConnectTo(level, getBlockPos(), dir)) {
             connectEnd(dir, type);

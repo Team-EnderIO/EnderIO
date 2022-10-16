@@ -1,6 +1,8 @@
 package com.enderio.api.conduit.ticker;
 
 import com.enderio.api.conduit.IConduitType;
+import dev.gigaherz.graph3.Graph;
+import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -20,7 +22,7 @@ public class PowerConduitTicker extends ICapabilityAwareConduitTicker<IEnergySto
     }
 
     @Override
-    public void tickCapabilityGraph(IConduitType<?> type, List<CapabilityConnection> inserts, List<CapabilityConnection> extracts, ServerLevel level) {
+    public void tickCapabilityGraph(IConduitType<?> type, List<CapabilityConnection> inserts, List<CapabilityConnection> extracts, ServerLevel level, Graph<Mergeable.Dummy> graph) {
 
         int availableForExtraction = 0;
         for (IEnergyStorage extract: extracts.stream().map(e -> e.cap).toList()) {
