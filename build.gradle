@@ -227,8 +227,8 @@ dependencies {
     runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
 
     // AE2
-    compileOnly "appeng:appliedenergistics2:12.4.0-beta:api"
-    runtimeOnly fg.deobf("appeng:appliedenergistics2:12.4.0")
+    compileOnly "appeng:appliedenergistics2:12.7.0:api"
+    runtimeOnly fg.deobf("appeng:appliedenergistics2:12.7.0")
 
     // The One Probe
 //    implementation fg.deobf("mcjty.theoneprobe:TheOneProbe:${minecraft_version}-${top_version}")
