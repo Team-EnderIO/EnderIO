@@ -83,8 +83,8 @@ public class MaterialRecipes extends RecipeProvider {
         makeMaterialRecipes(recipeConsumer, EIOItems.DARK_STEEL_INGOT.get(), EIOItems.DARK_STEEL_NUGGET.get(), EIOBlocks.DARK_STEEL_BLOCK.get());
         makeMaterialRecipes(recipeConsumer, EIOItems.SOULARIUM_INGOT.get(), EIOItems.SOULARIUM_NUGGET.get(), EIOBlocks.SOULARIUM_BLOCK.get());
         makeMaterialRecipes(recipeConsumer, EIOItems.END_STEEL_INGOT.get(), EIOItems.END_STEEL_NUGGET.get(), EIOBlocks.END_STEEL_BLOCK.get());
-        
-        ShapedRecipeBuilder.shaped(EIOItems.CONDUIT_BINDER_COMPOSITE.get())
+
+        ShapedRecipeBuilder.shaped(EIOItems.CONDUIT_BINDER_COMPOSITE.get(), 16)
             .pattern("GCG")
             .pattern("SGS")
             .pattern("GCG")
