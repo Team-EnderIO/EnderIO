@@ -85,6 +85,7 @@ public class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, IExtende
     }
 
     public boolean canPlayerModify(Player player) {
+        //TODO add check
         return mainNode.isReady() && mainNode.getGrid().getSecurityService().hasPermission(player, SecurityPermissions.BUILD);
     }
 }

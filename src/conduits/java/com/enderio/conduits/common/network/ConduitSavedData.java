@@ -78,7 +78,7 @@ public class ConduitSavedData extends SavedData {
                     Graph.integrate(graphObject, List.of());
                     merge(graphObject, connections);
 
-                    networks.get(value).add(graphObject.getGraph());
+                    networks.computeIfAbsent(value, ignored -> new ArrayList<>()).add(graphObject.getGraph());
                 }
             }
         }

@@ -43,12 +43,17 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
             @Override
             public boolean canConnectTo(Level level, BlockPos conduitPos, Direction direction) {
                 BlockEntity blockEntity = level.getBlockEntity(conduitPos.relative(direction));
-                if (blockEntity instanceof IInWorldGridNodeHost)
+                if (blockEntity instanceof IInWorldGridNodeHost host && canConnectTo(host, direction))
                     return true;
-                return blockEntity != null && blockEntity.getCapability(getCapability(), direction.getOpposite()).isPresent();
+                return blockEntity != null && blockEntity.getCapability(getCapability(), direction.getOpposite()).resolve().map(node -> canConnectTo(node, direction)).orElse(false);
+            }
+
+            private static boolean canConnectTo(IInWorldGridNodeHost host, Direction direction) {
+                return Optional.ofNullable(host.getGridNode(direction.getOpposite())).map(node -> node.isExposedOnSide(direction.getOpposite())).orElse(false);
             }
         };
     }
+
 
     @Override
     public IConduitMenuData getMenuData() {
