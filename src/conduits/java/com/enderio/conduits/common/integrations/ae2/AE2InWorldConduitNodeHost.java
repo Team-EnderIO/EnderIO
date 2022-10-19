@@ -44,6 +44,8 @@ public class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, IExtende
 
     @Override
     public AECableType getCableConnectionType(Direction dir) {
+        if (type.isDense())
+            return AECableType.DENSE_SMART;
         return AECableType.SMART;
     }
 
