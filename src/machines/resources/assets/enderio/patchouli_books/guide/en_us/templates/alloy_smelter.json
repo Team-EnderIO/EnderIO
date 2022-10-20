@@ -1,0 +1,58 @@
+{
+  "processor": "com.enderio.machines.client.patchouli.AlloySmelterProcessor",
+  "components" : [
+    {
+      "type" : "patchouli:image",
+      "image" : "enderio:textures/gui/book_crafting_overlay.png",
+      "x" : 4,
+      "y" : 14,
+      "width" : 64,
+      "height" : 43,
+      "u" : 87,
+      "v" : 65
+    },
+    {
+      "type" : "patchouli:text",
+      "text" : "#drop",
+      "color" : "77000000",
+      "x" : 27,
+      "y" : 17
+    },
+    {
+      "type" : "patchouli:header",
+      "text" : "#heading",
+      "x" : -1,
+      "y" : -1
+    },
+    {
+      "type" : "patchouli:item",
+      "item" : "#input1",
+      "framed" : "false",
+      "x" : 52,
+      "y" : 20
+    },
+    {
+      "type" : "patchouli:item",
+      "item" : "#block",
+      "framed" : "false",
+      "x" : 24,
+      "y" : 39
+    },
+    {
+      "type" : "patchouli:item",
+      "item" : "#result",
+      "framed" : "false",
+      "x" : 75,
+      "y" : 39
+    },
+    {
+      "type" : "patchouli:separator",
+      "y" : 65
+    },
+    {
+      "type" : "patchouli:text",
+      "text" : "#text",
+      "y" : 75
+    }
+  ]
+}

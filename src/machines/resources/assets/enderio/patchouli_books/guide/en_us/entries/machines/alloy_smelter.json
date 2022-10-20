@@ -12,6 +12,11 @@
       "text": "guidebook.enderio.machines.alloy_smelter.crafting",
       "recipe": "enderio:primitive_alloy_smelter",
       "recipe2": "enderio:alloy_smelter"
+    },
+    {
+      "type": "enderio:alloy_smelter",
+      "text": "guidebook.enderio.machines.alloy_smelter.crafting",
+      "recipe": "enderio:alloy_smelting/ender_pearl"
     }
   ]
 }
