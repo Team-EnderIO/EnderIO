@@ -4,7 +4,7 @@
   "version": 1,
   "creative_tab": "enderio.main",
   "book_texture": "patchouli:textures/gui/book_cyan.png",
-  "model": "patchouli:book_cyan",
+  "model": "enderio:guide_book",
   "show_progress": false,
   "use_resource_pack": true
 }
