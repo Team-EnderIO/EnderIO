@@ -2,11 +2,11 @@
   "components" : [
     {
       "type": "patchouli:image",
-      "image": "enderio:textures/gui/fire_crafting_overlay.png",
+      "image": "enderio:textures/gui/book_crafting_overlay.png",
       "x": 23,
       "y": 22,
       "width": 52,
-      "height": 36
+      "height": 34
     },
     {
       "type": "patchouli:text",
