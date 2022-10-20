@@ -165,7 +165,9 @@ public class EIOLang extends RegLangUtil {
         guideBook("gear.staff_of_levity", "desc", "TODO: DESCRIPTION");
 
         guideBook("gear.yeta_wrench", "title", "Yeta Wrench");
-        guideBook("gear.yeta_wrench", "landing", "TODO: DESCRIPTION");
+        guideBook("gear.yeta_wrench", "landing", """
+            The $(3)Yeta Wrench$() is a tool used for seeing through $(l:enderio:conduit_facade)Conduit Facades$(/l) when being helf
+            and can be used to disassemble machines in one click""");
         guideBook("gear.yeta_wrench", "crafting", "TODO: DESCRIPTION");
 
         // endregion
