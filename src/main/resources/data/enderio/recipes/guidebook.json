@@ -1,0 +1,15 @@
+{
+  "type": "patchouli:shapeless_book_recipe",
+  "ingredients": [
+    {
+      "item": "enderio:silicon"
+    },
+    {
+      "item": "minecraft:book"
+    },
+    {
+      "item": "minecraft:ender_pearl"
+    }
+  ],
+  "book": "enderio:guide"
+}
