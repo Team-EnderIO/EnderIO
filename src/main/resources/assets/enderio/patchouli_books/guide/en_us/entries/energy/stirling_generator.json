@@ -1,0 +1,16 @@
+{
+  "name": "guidebook.enderio.energy.stirling_generator.title",
+  "category": "enderio:energy",
+  "icon": "enderio:stirling_generator",
+  "pages": [
+    {
+      "type": "text",
+      "text": "guidebook.enderio.energy.stirling_generator.landing"
+    },
+    {
+      "type": "crafting",
+      "text": "guidebook.enderio.energy.stirling_generator.crafting",
+      "recipe": "enderio:stirling_generator"
+    }
+  ]
+}

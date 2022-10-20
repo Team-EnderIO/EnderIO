@@ -1,0 +1,11 @@
+{
+  "name": "guidebook.enderio.gear.electromagnet.title",
+  "category": "enderio:gear",
+  "icon": "enderio:electromagnet",
+  "pages": [
+    {
+      "type": "text",
+      "text": "guidebook.enderio.gear.electromagnet.landing"
+    }
+  ]
+}

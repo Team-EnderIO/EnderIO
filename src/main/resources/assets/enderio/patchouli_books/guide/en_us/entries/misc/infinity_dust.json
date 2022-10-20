@@ -1,0 +1,18 @@
+{
+  "name": "guidebook.enderio.misc.infinity_dust.title",
+  "category": "enderio:misc",
+  "icon": "enderio:grains_of_infinity",
+  "pages": [
+    {
+      "type": "text",
+      "text": "guidebook.enderio.misc.infinity_dust.landing"
+    },
+    {
+      "type": "enderio:fire_crafting",
+      "text": "guidebook.enderio.misc.infinity_dust.crafting",
+      "heading": "guidebook.enderio.misc.infinity_dust.heading",
+      "block": "minecraft:bedrock",
+      "result": "enderio:grains_of_infinity"
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "components" : [
+    {
+      "type": "patchouli:image",
+      "image": "enderio:textures/gui/fire_crafting_overlay.png",
+      "x": 23,
+      "y": 22,
+      "width": 52,
+      "height": 36
+    },
+    {
+      "type": "patchouli:text",
+      "text": "#drop",
+      "color": "77000000",
+      "x": 27,
+      "y": 17
+    },
+    {
+      "type": "patchouli:header",
+      "text": "#heading",
+      "x": -1,
+      "y": -1
+    },
+    {
+      "type": "patchouli:item",
+      "item": {
+        "item": "minecraft:flint_and_steel"
+      },
+      "framed": "false",
+      "x": 54,
+      "y": 20
+    },
+    {
+      "type": "patchouli:tooltip",
+      "tooltip": ["Light the block on fire to perform this crafting"],
+      "x": 24,
+      "y": 18,
+      "width": 52,
+      "height": 20
+    },
+    {
+      "type": "patchouli:item",
+      "item": "#block",
+      "framed": "false",
+      "x": 24,
+      "y": 39
+    },
+    {
+      "type": "patchouli:item",
+      "item": "#result",
+      "framed": "false",
+      "x": 75,
+      "y": 39
+    },
+    {
+      "type": "patchouli:separator",
+      "y": 65
+    },
+    {
+      "type": "patchouli:text",
+      "text": "#text",
+      "y": 75
+    }
+  ]
+}

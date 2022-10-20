@@ -1,0 +1,16 @@
+{
+  "name": "guidebook.enderio.machines.sag_mill.title",
+  "category": "enderio:machines",
+  "icon": "enderio:sag_mill",
+  "pages": [
+    {
+      "type": "text",
+      "text": "guidebook.enderio.machines.sag_mill.landing"
+    },
+    {
+      "type": "crafting",
+      "text": "guidebook.enderio.machines.sag_mill.crafting",
+      "recipe": "enderio:sag_mill"
+    }
+  ]
+}

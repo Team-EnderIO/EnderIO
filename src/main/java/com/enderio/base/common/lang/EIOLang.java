@@ -148,11 +148,143 @@ public class EIOLang {
     // endregion
     
     // region Guidebook
-    
-    public static final Component GUIDEBOOK_TITLE = REGISTRATE.addLang("guidebook", EnderIO.loc("book_title"), "Book Title");
-    public static final Component GUIDEBOOK_LANDING_TEXT = REGISTRATE.addLang("guidebook", EnderIO.loc("landing_text"), "Landing Text");
+
+    static {
+        guideBook("book_title", "EnderIO Manual");
+        guideBook("landing_text", "Welcome $(6)$(playername)$() to the world of $(3)EnderIO$(), the full-fat tech mod!");
+
+        // region Gear Category
+
+        guideBook("gear", "title", "Gear");
+        guideBook("gear", "desc", "TODO: DESCRIPTION");
+
+        guideBook("gear.cold_fire", "title", "Cold Fire");
+        guideBook("gear.cold_fire", "desc", "TODO: DESCRIPTION");
+
+        guideBook("gear.coordinate_selector", "title", "Coordinate Selector");
+        guideBook("gear.coordinate_selector", "desc", "TODO: DESCRIPTION");
+
+        guideBook("gear.dark_steel", "title", "Dark Steel Gear");
+        guideBook("gear.dark_steel", "desc", "TODO: DESCRIPTION");
+
+        guideBook("gear.electromagnet", "title", "Electromagnet");
+        guideBook("gear.electromagnet", "desc", "TODO: DESCRIPTION");
+
+        guideBook("gear.staff_of_levity", "title", "Staff of Levity");
+        guideBook("gear.staff_of_levity", "desc", "TODO: DESCRIPTION");
+
+        guideBook("gear.yeta_wrench", "title", "Yeta Wrench");
+        guideBook("gear.yeta_wrench", "landing", "TODO: DESCRIPTION");
+        guideBook("gear.yeta_wrench", "crafting", "TODO: DESCRIPTION");
+
+        // endregion
+        // region Energy Category
+
+        guideBook("energy", "title", "Energy");
+        guideBook("energy", "desc", "TODO: DESCRIPTION");
+
+        guideBook("energy.creative_power", "title", "Creative Power");
+        guideBook("energy.creative_power", "landing", "TODO: LANDING");
+        guideBook("energy.creative_power", "crafting", "TODO: CRAFTING");
+
+        guideBook("energy.stirling_generator", "title", "Stirling Generator");
+        guideBook("energy.stirling_generator", "landing", "TODO: LANDING");
+        guideBook("energy.stirling_generator", "crafting", "TODO: CRAFTING");
+
+        // endregion
+        // region Machine Category
+
+        guideBook("machines", "title", "Machines");
+        guideBook("machines", "desc", "TODO: DESCRIPTION");
+
+        guideBook("machines.alloy_smelter", "title", "Alloy Smelter");
+        guideBook("machines.alloy_smelter", "landing", "TODO: LANDING");
+        guideBook("machines.alloy_smelter", "crafting", "TODO: CRAFTING");
+
+        guideBook("machines.sag_mill", "title", "Sag Mill");
+        guideBook("machines.sag_mill", "landing", "TODO: LANDING");
+        guideBook("machines.sag_mill", "crafting", "TODO: CRAFTING");
+
+        guideBook("machines.slice_and_splice", "title", "Slice n Splice");
+        guideBook("machines.slice_and_splice", "landing", "TODO: LANDING");
+        guideBook("machines.slice_and_splice", "crafting", "TODO: CRAFTING");
+
+        // endregion
+        // region Conduits Category
+
+        guideBook("conduits", "title", "Conduits");
+        guideBook("conduits", "desc", "TODO: DESCRIPTION");
+
+        guideBook("conduits.redstone", "title", "Redstone Conduits");
+        guideBook("conduits.redstone", "landing", "TODO: LANDING");
+        guideBook("conduits.redstone", "crafting", "TODO: CRAFTING");
+
+        guideBook("conduits.refined_storage", "title", "Refined Storage Conduits");
+        guideBook("conduits.refined_storage", "landing", "TODO: LANDING");
+        guideBook("conduits.refined_storage", "crafting", "TODO: CRAFTING");
+
+        guideBook("conduits.item", "title", "Item Conduits");
+        guideBook("conduits.item", "landing", "TODO: LANDING");
+        guideBook("conduits.item", "crafting", "TODO: CRAFTING");
+
+        guideBook("conduits.liquid", "title", "Liquid Conduits");
+        guideBook("conduits.liquid", "landing", "TODO: LANDING");
+        guideBook("conduits.liquid", "crafting", "TODO: CRAFTING");
+
+        guideBook("conduits.gas", "title", "Gas Conduits");
+        guideBook("conduits.gas", "landing", "TODO: LANDING");
+        guideBook("conduits.gas", "crafting", "TODO: CRAFTING");
+
+        guideBook("conduits.energy", "title", "Gas Conduits");
+        guideBook("conduits.energy", "landing", "TODO: LANDING");
+        guideBook("conduits.energy", "crafting", "TODO: CRAFTING");
+
+        guideBook("conduits.applied_energistics", "title", "AE Conduits");
+        guideBook("conduits.applied_energistics", "landing", "TODO: LANDING");
+        guideBook("conduits.applied_energistics", "crafting", "TODO: CRAFTING");
+
+        // endregion
+        // region Misc Category
+
+        guideBook("misc", "title", "Misc");
+        guideBook("misc", "desc", "TODO: DESCRIPTION");
+
+        guideBook("misc.equipment", "title", "Equipment");
+        guideBook("misc.equipment", "landing", "TODO: DESCRIPTION");
+
+        guideBook("misc.infinity_dust", "title", "Grains of Infinity");
+        guideBook("misc.infinity_dust", "landing", "The gains of infinity is essential component!");
+        guideBook("misc.infinity_dust", "heading", "TODO: HEADING");
+        guideBook("misc.infinity_dust", "crafting", "TODO: CRAFTING");
+
+        guideBook("misc.capacitors", "title", "Capacitors");
+        guideBook("misc.capacitors", "landing", "TODO: DESCRIPTION");
+        guideBook("misc.capacitors", "crafting", "TODO: CRAFTING");
+
+        // endregion
+    }
 
     //endregion
 
     public static void register() {}
+
+    // region Utils
+
+    public static MutableComponent guideBook(String category, String localisedValue) {
+        return lang("guidebook", category, localisedValue);
+    }
+
+    public static MutableComponent guideBook(String category, String suffix, String localisedValue) {
+        return lang("guidebook", category, suffix, localisedValue);
+    }
+
+    public static MutableComponent lang(String type, String name, String suffix, String localisedValue) {
+        return REGISTRATE.addLang(type, EnderIO.loc(name), suffix, localisedValue);
+    }
+
+    public static MutableComponent lang(String type, String name, String localisedValue) {
+        return REGISTRATE.addLang(type, EnderIO.loc(name), localisedValue);
+    }
+
+    // endregion
 }

@@ -1,0 +1,17 @@
+{
+  "name": "guidebook.enderio.machines.alloy_smelter.title",
+  "category": "enderio:machines",
+  "icon": "enderio:alloy_smelter",
+  "pages": [
+    {
+      "type": "text",
+      "text": "guidebook.enderio.machines.alloy_smelter.landing"
+    },
+    {
+      "type": "crafting",
+      "text": "guidebook.enderio.machines.alloy_smelter.crafting",
+      "recipe": "enderio:primitive_alloy_smelter",
+      "recipe2": "enderio:alloy_smelter"
+    }
+  ]
+}

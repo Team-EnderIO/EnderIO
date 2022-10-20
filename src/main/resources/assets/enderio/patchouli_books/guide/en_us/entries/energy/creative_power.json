@@ -1,0 +1,16 @@
+{
+  "name": "guidebook.enderio.energy.creative_power.title",
+  "category": "enderio:energy",
+  "icon": "enderio:creative_power",
+  "pages": [
+    {
+      "type": "text",
+      "text": "guidebook.enderio.energy.creative_power.landing"
+    },
+    {
+      "type": "crafting",
+      "text": "guidebook.enderio.energy.creative_power.crafting",
+      "recipe": "minecraft:furnace"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "guidebook.enderio.gear.coordinate_selector.title",
+  "category": "enderio:gear",
+  "icon": "enderio:coordinate_selector",
+  "pages": [
+    {
+      "type": "text",
+      "text": "guidebook.enderio.gear.coordinate_selector.landing"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "enderio:coordinate_selector",
+      "recipe2": "minecraft:paper"
+    }
+  ]
+}

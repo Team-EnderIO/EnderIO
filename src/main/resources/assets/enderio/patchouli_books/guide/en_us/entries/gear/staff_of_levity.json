@@ -1,0 +1,11 @@
+{
+  "name": "guidebook.enderio.gear.staff_of_levity.title",
+  "category": "enderio:gear",
+  "icon": "enderio:staff_of_levity",
+  "pages": [
+    {
+      "type": "text",
+      "text": "guidebook.enderio.gear.staff_of_levity.landing"
+    }
+  ]
+}

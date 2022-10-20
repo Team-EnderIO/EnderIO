@@ -1,0 +1,21 @@
+{
+  "name": "guidebook.enderio.misc.capacitors.title",
+  "category": "enderio:misc",
+  "icon": "enderio:basic_capacitor",
+  "pages": [
+    {
+      "type": "text",
+      "text": "guidebook.enderio.misc.capacitors.landing"
+    },
+    {
+      "type": "patchouli:crafting",
+      "text": "guidebook.enderio.misc.infinity_dust.crafting",
+      "recipe": "enderio:basic_capacitor"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "enderio:double_layer_capacitor",
+      "recipe2": "enderio:octadic_capacitor"
+    }
+  ]
+}

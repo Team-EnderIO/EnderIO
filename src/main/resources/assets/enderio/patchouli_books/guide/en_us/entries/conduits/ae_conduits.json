@@ -1,0 +1,16 @@
+{
+  "name": "guidebook.enderio.conduits.applied_energistics.title",
+  "category": "enderio:conduits",
+  "icon": "minecraft:conduit",
+  "pages": [
+    {
+      "type": "text",
+      "text": "guidebook.enderio.conduits.applied_energistics.landing"
+    },
+    {
+      "type": "crafting",
+      "text": "guidebook.enderio.conduits.applied_energistics.crafting",
+      "recipe": "minecraft:conduit"
+    }
+  ]
+}

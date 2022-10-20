@@ -1,0 +1,16 @@
+{
+  "name": "guidebook.enderio.gear.yeta_wrench.title",
+  "category": "enderio:gear",
+  "icon": "enderio:yeta_wrench",
+  "pages": [
+    {
+      "type": "text",
+      "text": "guidebook.enderio.gear.yeta_wrench.landing"
+    },
+    {
+      "type": "patchouli:crafting",
+      "text": "guidebook.enderio.gear.yeta_wrench.crafting",
+      "recipe": "enderio:yeta_wrench"
+    }
+  ]
+}

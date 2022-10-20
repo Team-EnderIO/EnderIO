@@ -1,0 +1,16 @@
+{
+  "name": "guidebook.enderio.conduits.item.title",
+  "category": "enderio:conduits",
+  "icon": "minecraft:conduit",
+  "pages": [
+    {
+      "type": "text",
+      "text": "guidebook.enderio.conduits.item.landing"
+    },
+    {
+      "type": "crafting",
+      "text": "guidebook.enderio.conduits.item.crafting",
+      "recipe": "minecraft:conduit"
+    }
+  ]
+}
