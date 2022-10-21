@@ -1021,6 +1021,7 @@
   "itemGroup.enderio.main": "EnderIO",
   "itemGroup.enderio.souls": "EnderIO Souls",
   "jei.enderio.alloy_smelting.title": "Alloy Smelting",
+  "jei.enderio.sag_milling.title": "Sag Milling",
   "message.enderio.grave.wrong_owner": "This grave is not yours! You cannot open it.",
   "message.enderio.soul_vial.error_blacklisted": "This entity has been blacklisted.",
   "message.enderio.soul_vial.error_boss": "Nice try. Bosses don't like bottles.",

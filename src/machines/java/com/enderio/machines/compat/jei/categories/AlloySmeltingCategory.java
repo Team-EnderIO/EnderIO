@@ -21,6 +21,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 
+import java.util.List;
+
 public class AlloySmeltingCategory implements IRecipeCategory<AlloySmeltingRecipe> {
     public static final RecipeType<AlloySmeltingRecipe> RECIPE_TYPE = RecipeType.create(EnderIO.MODID, "alloy_smelting", AlloySmeltingRecipe.class);
     public static final Component TITLE = MachineLang.JEI_ALLOY_SMELTING_TITLE;
@@ -77,13 +79,13 @@ public class AlloySmeltingCategory implements IRecipeCategory<AlloySmeltingRecip
         output.addItemStack(recipe.getResultStacks().get(0).getItem());
 
         IRecipeSlotBuilder input1 = builder.addSlot(RecipeIngredientRole.INPUT, 42, 11);
-        input1.addIngredients(recipe.getInputs().get(0).ingredient()); // TODO: Get ingredient count
+        input1.addItemStacks(List.of(recipe.getInputs().get(0).getItems()));
 
         IRecipeSlotBuilder input2 = builder.addSlot(RecipeIngredientRole.INPUT, 67, 1);
-        if (recipe.getInputs().size() >= 2) input2.addIngredients(recipe.getInputs().get(1).ingredient()); // TODO: Get Ingredient count
+        if (recipe.getInputs().size() >= 2) input2.addItemStacks(List.of(recipe.getInputs().get(1).getItems()));
 
         IRecipeSlotBuilder input3 = builder.addSlot(RecipeIngredientRole.INPUT, 91, 11);
-        if (recipe.getInputs().size() >= 3) input3.addIngredients(recipe.getInputs().get(2).ingredient()); // TODO: Get Ingredient count
+        if (recipe.getInputs().size() >= 3) input3.addItemStacks(List.of(recipe.getInputs().get(2).getItems()));
 
         IRecipeSlotBuilder capacitor = builder.addSlot(RecipeIngredientRole.RENDER_ONLY, 0, 55);
         capacitor.addIngredients(Ingredient.of(EIOItems.BASIC_CAPACITOR.get(), EIOItems.DOUBLE_LAYER_CAPACITOR.get(), EIOItems.OCTADIC_CAPACITOR.get()));

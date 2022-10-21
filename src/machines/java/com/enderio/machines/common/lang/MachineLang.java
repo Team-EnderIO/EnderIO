@@ -19,6 +19,7 @@ public class MachineLang {
     public static final Component TOOLTIP_ENERGY_EQUIVALENCE = REGISTRATE.addLang("gui", EnderIO.loc("energy_equivalence"), "A unit of energy, equivalent to FE.");
 
     public static final Component JEI_ALLOY_SMELTING_TITLE = REGISTRATE.addLang("jei", EnderIO.loc("alloy_smelting"), "title", "Alloy Smelting");
+    public static final Component JEI_SAG_MILLING_TITLE = REGISTRATE.addLang("jei", EnderIO.loc("sag_milling"), "title", "Sag Milling");
 
     public static void register() {}
 }
