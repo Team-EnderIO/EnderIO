@@ -4,7 +4,6 @@ import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.lang.MachineLang;
-import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
 import com.enderio.machines.common.recipe.SagMillingRecipe;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -18,12 +17,9 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
-
-import javax.annotation.ParametersAreNonnullByDefault;
 
 public class SagMillCategory implements IRecipeCategory<SagMillingRecipe> {
     public static final RecipeType<SagMillingRecipe> RECIPE_TYPE = RecipeType.create(EnderIO.MODID, "sag_mill", SagMillingRecipe.class);
@@ -36,7 +32,7 @@ public class SagMillCategory implements IRecipeCategory<SagMillingRecipe> {
     private final IDrawable icon;
 
     public SagMillCategory(IGuiHelper guiHelper) {
-        ResourceLocation location = new ResourceLocation(EnderIO.MODID, "textures/gui/jei/gui_machines.png");
+        ResourceLocation location = new ResourceLocation(EnderIO.MODID, "textures/gui/jei/jei_machines.png");
         background = guiHelper.createDrawable(location, 0, 92, 153, 69);
 
         IDrawableStatic arrowDrawable = guiHelper.createDrawable(location, 150, 14, 15, 23);
@@ -49,7 +45,6 @@ public class SagMillCategory implements IRecipeCategory<SagMillingRecipe> {
         IDrawableStatic energyDrawable = guiHelper.createDrawable(overlay, 0, 128, 9, 42);
         energy = guiHelper.createAnimatedDrawable(energyDrawable, 200, IDrawableAnimated.StartDirection.TOP, true);
 
-        ResourceLocation iconLocation = new ResourceLocation(EnderIO.MODID, "textures/gui/jei/icons/alloy_smelter.png");
         icon = guiHelper.createDrawableItemStack(MachineBlocks.ALLOY_SMELTER.asStack());
     }
 

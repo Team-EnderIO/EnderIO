@@ -33,7 +33,7 @@ public class AlloySmeltingCategory implements IRecipeCategory<AlloySmeltingRecip
     private final IDrawable icon;
 
     public AlloySmeltingCategory(IGuiHelper guiHelper) {
-        ResourceLocation location = new ResourceLocation(EnderIO.MODID, "textures/gui/jei/gui_machines.png");
+        ResourceLocation location = new ResourceLocation(EnderIO.MODID, "textures/gui/jei/jei_machines.png");
         background = guiHelper.createDrawable(location, 0, 0, 150, 74);
 
         IDrawableStatic flameDrawable = guiHelper.createDrawable(location, 150, 0, 14, 14);
