@@ -27,7 +27,7 @@ public class SagMillCategory implements IRecipeCategory<SagMillingRecipe> {
 
     private final IDrawableStatic background;
     private final IDrawableAnimated arrow;
-    private final IDrawableAnimated gindball;
+    private final IDrawableAnimated grindballDurability;
     private final IDrawableAnimated energy;
     private final IDrawable icon;
 
@@ -38,8 +38,8 @@ public class SagMillCategory implements IRecipeCategory<SagMillingRecipe> {
         IDrawableStatic arrowDrawable = guiHelper.createDrawable(location, 150, 14, 15, 23);
         arrow = guiHelper.createAnimatedDrawable(arrowDrawable, 200, IDrawableAnimated.StartDirection.TOP, true);
 
-        IDrawableStatic gindballDrawable = guiHelper.createDrawable(location, 150, 37, 4, 16);
-        gindball = guiHelper.createAnimatedDrawable(gindballDrawable, 200, IDrawableAnimated.StartDirection.TOP, true);
+        IDrawableStatic grindballDurabilityDrawable = guiHelper.createDrawable(location, 150, 37, 4, 16);
+        grindballDurability = guiHelper.createAnimatedDrawable(grindballDurabilityDrawable, 200, IDrawableAnimated.StartDirection.TOP, true);
 
         ResourceLocation overlay = new ResourceLocation(EnderIO.MODID, "textures/gui/overlay.png");
         IDrawableStatic energyDrawable = guiHelper.createDrawable(overlay, 0, 128, 9, 42);
@@ -71,7 +71,7 @@ public class SagMillCategory implements IRecipeCategory<SagMillingRecipe> {
     @Override
     public void draw(SagMillingRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
         arrow.draw(stack, 69, 21);
-        gindball.draw(stack, 130, 12);
+        grindballDurability.draw(stack, 130, 12);
         energy.draw(stack, 4, 3);
     }
 
@@ -94,9 +94,9 @@ public class SagMillCategory implements IRecipeCategory<SagMillingRecipe> {
 
         // Render Only
         IRecipeSlotBuilder capacitor = builder.addSlot(RecipeIngredientRole.RENDER_ONLY, 0, 49);
-        capacitor.addIngredients(Ingredient.of(EIOItems.BASIC_CAPACITOR.get(), EIOItems.DOUBLE_LAYER_CAPACITOR.get(), EIOItems.OCTADIC_CAPACITOR.get()));
+        capacitor.addIngredients(Ingredient.of(EIOItems.BASIC_CAPACITOR.get(), EIOItems.DOUBLE_LAYER_CAPACITOR.get(), EIOItems.OCTADIC_CAPACITOR.get())); // TODO: Use tags for capacitors
 
         IRecipeSlotBuilder grindball = builder.addSlot(RecipeIngredientRole.RENDER_ONLY, 110, 12);
-        grindball.addIngredients(Ingredient.of(EIOItems.SILICON.get())); // TODO: Replace with grindballs
+        grindball.addIngredients(Ingredient.of(EIOItems.SILICON.get())); // TODO: Replace with grindballs and use tags
     }
 }

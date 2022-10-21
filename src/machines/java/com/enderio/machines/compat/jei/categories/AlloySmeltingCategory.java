@@ -88,6 +88,6 @@ public class AlloySmeltingCategory implements IRecipeCategory<AlloySmeltingRecip
         if (recipe.getInputs().size() >= 3) input3.addItemStacks(List.of(recipe.getInputs().get(2).getItems()));
 
         IRecipeSlotBuilder capacitor = builder.addSlot(RecipeIngredientRole.RENDER_ONLY, 0, 55);
-        capacitor.addIngredients(Ingredient.of(EIOItems.BASIC_CAPACITOR.get(), EIOItems.DOUBLE_LAYER_CAPACITOR.get(), EIOItems.OCTADIC_CAPACITOR.get()));
+        capacitor.addIngredients(Ingredient.of(EIOItems.BASIC_CAPACITOR.get(), EIOItems.DOUBLE_LAYER_CAPACITOR.get(), EIOItems.OCTADIC_CAPACITOR.get())); // TODO: Use tags for capacitors
     }
 }

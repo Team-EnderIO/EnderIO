@@ -1023,6 +1023,7 @@
   "jei.enderio.alloy_smelting.title": "Alloy Smelting",
   "jei.enderio.enchanting.title": "Enchanting",
   "jei.enderio.sag_milling.title": "Sag Milling",
+  "jei.enderio.slicing.title": "Slicing n Splicing",
   "message.enderio.grave.wrong_owner": "This grave is not yours! You cannot open it.",
   "message.enderio.soul_vial.error_blacklisted": "This entity has been blacklisted.",
   "message.enderio.soul_vial.error_boss": "Nice try. Bosses don't like bottles.",

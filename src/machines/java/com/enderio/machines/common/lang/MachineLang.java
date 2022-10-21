@@ -21,6 +21,7 @@ public class MachineLang {
     public static final Component JEI_ALLOY_SMELTING_TITLE = REGISTRATE.addLang("jei", EnderIO.loc("alloy_smelting"), "title", "Alloy Smelting");
     public static final Component JEI_ENCHANTING_TITLE = REGISTRATE.addLang("jei", EnderIO.loc("enchanting"), "title", "Enchanting");
     public static final Component JEI_SAG_MILLING_TITLE = REGISTRATE.addLang("jei", EnderIO.loc("sag_milling"), "title", "Sag Milling");
+    public static final Component JEI_SLICING_TITLE = REGISTRATE.addLang("jei", EnderIO.loc("slicing"), "title", "Slicing n Splicing");
 
     public static void register() {}
 }

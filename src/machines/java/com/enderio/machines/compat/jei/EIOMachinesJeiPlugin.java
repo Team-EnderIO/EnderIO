@@ -6,11 +6,13 @@ import com.enderio.machines.EIOMachines;
 import com.enderio.machines.client.gui.screen.AlloySmelterScreen;
 import com.enderio.machines.client.gui.screen.EnchanterScreen;
 import com.enderio.machines.client.gui.screen.SagMillScreen;
+import com.enderio.machines.client.gui.screen.SlicerScreen;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.compat.jei.categories.AlloySmeltingCategory;
 import com.enderio.machines.compat.jei.categories.EnchanterCategory;
 import com.enderio.machines.compat.jei.categories.SagMillCategory;
+import com.enderio.machines.compat.jei.categories.SliceAndSpliceCategory;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
@@ -41,7 +43,7 @@ public class EIOMachinesJeiPlugin implements IModPlugin {
     public void registerCategories(IRecipeCategoryRegistration registration) {
         IGuiHelper guiHelper = registration.getJeiHelpers().getGuiHelper();
 
-        registration.addRecipeCategories(new AlloySmeltingCategory(guiHelper), new EnchanterCategory(guiHelper), new SagMillCategory(guiHelper));
+        registration.addRecipeCategories(new AlloySmeltingCategory(guiHelper), new EnchanterCategory(guiHelper), new SagMillCategory(guiHelper), new SliceAndSpliceCategory(guiHelper));
     }
 
     @Override
@@ -51,14 +53,16 @@ public class EIOMachinesJeiPlugin implements IModPlugin {
         registration.addRecipes(AlloySmeltingCategory.RECIPE_TYPE, recipeManager.getAllRecipesFor(MachineRecipes.ALLOY_SMELTING.type().get()));
         registration.addRecipes(EnchanterCategory.RECIPE_TYPE, recipeManager.getAllRecipesFor(MachineRecipes.ENCHANTING.type().get()));
         registration.addRecipes(SagMillCategory.RECIPE_TYPE, recipeManager.getAllRecipesFor(MachineRecipes.SAGMILLING.type().get()));
+        registration.addRecipes(SliceAndSpliceCategory.RECIPE_TYPE, recipeManager.getAllRecipesFor(MachineRecipes.SLICING.type().get()));
     }
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         registration.addRecipeCatalyst(MachineBlocks.ALLOY_SMELTER.asStack(), AlloySmeltingCategory.RECIPE_TYPE, RecipeTypes.SMELTING);
-        registration.addRecipeCatalyst(MachineBlocks.ENCHANTER.asStack(), EnchanterCategory.RECIPE_TYPE);
         registration.addRecipeCatalyst(MachineBlocks.PRIMITIVE_ALLOY_SMELTER.asStack(), AlloySmeltingCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(MachineBlocks.ENCHANTER.asStack(), EnchanterCategory.RECIPE_TYPE);
         registration.addRecipeCatalyst(MachineBlocks.SAG_MILL.asStack(), SagMillCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(MachineBlocks.SLICE_AND_SPLICE.asStack(), SliceAndSpliceCategory.RECIPE_TYPE);
     }
 
     @Override
@@ -66,5 +70,6 @@ public class EIOMachinesJeiPlugin implements IModPlugin {
         registration.addRecipeClickArea(AlloySmelterScreen.class, 78, 32, 18, 21, AlloySmeltingCategory.RECIPE_TYPE, RecipeTypes.SMELTING);
         registration.addRecipeClickArea(EnchanterScreen.class, 37, 34, 23, 18, EnchanterCategory.RECIPE_TYPE);
         registration.addRecipeClickArea(SagMillScreen.class, 79, 32, 18, 22, SagMillCategory.RECIPE_TYPE); // TODO: Move this as it is in the way of the progress tooltip
+        registration.addRecipeClickArea(SlicerScreen.class, 101, 48, 28, 18, SliceAndSpliceCategory.RECIPE_TYPE); // TODO: Move this as it is in the way of the progress tooltip
     }
 }
