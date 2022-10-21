@@ -17,13 +17,16 @@ public class AlloySmelterProcessor extends ARecipeProcessor<AlloySmeltingRecipe>
     public IVariable process(@NotNull String key) {
         if (recipe == null) return null;
 
+        final boolean twoPlus = recipe.getInputs().size() >= 2;
+        final boolean threePlus = recipe.getInputs().size() >= 3;
+
         return switch (key) {
             case "exp" -> IVariable.wrap(recipe.getExperience());
             case "energy" -> IVariable.wrap(recipe.getEnergyCost(null)); // Null should be fine, I presume
             case "result" -> recipe.getResultStacks().get(0).stack().left().map(IVariable::from).orElse(IVariable.empty());
             case "input1" -> processCountedIngredient(recipe.getInputs().get(0));
-            case "input2" -> Optional.ofNullable(recipe.getInputs().get(1)).map(ARecipeProcessor::processCountedIngredient).orElse(IVariable.empty());
-            case "input3" -> Optional.ofNullable(recipe.getInputs().get(2)).map(ARecipeProcessor::processCountedIngredient).orElse(IVariable.empty());
+            case "input2" -> twoPlus ? Optional.ofNullable(recipe.getInputs().get(1)).map(ARecipeProcessor::processCountedIngredient).orElse(IVariable.empty()) : IVariable.empty();
+            case "input3" -> threePlus ? Optional.ofNullable(recipe.getInputs().get(2)).map(ARecipeProcessor::processCountedIngredient).orElse(IVariable.empty()) : IVariable.empty();
             default -> null;
         };
     }
