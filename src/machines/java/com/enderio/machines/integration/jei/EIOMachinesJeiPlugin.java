@@ -1,30 +1,25 @@
-package com.enderio.machines.compat.jei;
+package com.enderio.machines.integration.jei;
 
 import com.enderio.EnderIO;
-import com.enderio.base.compat.jei.categories.FireCraftingCategory;
-import com.enderio.machines.EIOMachines;
 import com.enderio.machines.client.gui.screen.AlloySmelterScreen;
 import com.enderio.machines.client.gui.screen.EnchanterScreen;
 import com.enderio.machines.client.gui.screen.SagMillScreen;
 import com.enderio.machines.client.gui.screen.SlicerScreen;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.init.MachineRecipes;
-import com.enderio.machines.compat.jei.categories.AlloySmeltingCategory;
-import com.enderio.machines.compat.jei.categories.EnchanterCategory;
-import com.enderio.machines.compat.jei.categories.SagMillCategory;
-import com.enderio.machines.compat.jei.categories.SliceAndSpliceCategory;
+import com.enderio.machines.integration.jei.categories.AlloySmeltingCategory;
+import com.enderio.machines.integration.jei.categories.EnchanterCategory;
+import com.enderio.machines.integration.jei.categories.SagMillCategory;
+import com.enderio.machines.integration.jei.categories.SliceAndSpliceCategory;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
-import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.helpers.IJeiHelpers;
 import mezz.jei.api.helpers.IPlatformFluidHelper;
 import mezz.jei.api.registration.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.world.item.crafting.RecipeType;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -37,6 +32,21 @@ public class EIOMachinesJeiPlugin implements IModPlugin {
     @Override
     public @NotNull ResourceLocation getPluginUid() {
         return UID;
+    }
+
+    @Override
+    public void registerItemSubtypes(ISubtypeRegistration registration) {
+
+    }
+
+    @Override
+    public <T> void registerFluidSubtypes(ISubtypeRegistration registration, IPlatformFluidHelper<T> platformFluidHelper) {
+
+    }
+
+    @Override
+    public void registerIngredients(IModIngredientRegistration registration) {
+
     }
 
     @Override
@@ -54,6 +64,11 @@ public class EIOMachinesJeiPlugin implements IModPlugin {
         registration.addRecipes(EnchanterCategory.RECIPE_TYPE, recipeManager.getAllRecipesFor(MachineRecipes.ENCHANTING.type().get()));
         registration.addRecipes(SagMillCategory.RECIPE_TYPE, recipeManager.getAllRecipesFor(MachineRecipes.SAGMILLING.type().get()));
         registration.addRecipes(SliceAndSpliceCategory.RECIPE_TYPE, recipeManager.getAllRecipesFor(MachineRecipes.SLICING.type().get()));
+    }
+
+    @Override
+    public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
+        //registration.addRecipeTransferHandler();
     }
 
     @Override

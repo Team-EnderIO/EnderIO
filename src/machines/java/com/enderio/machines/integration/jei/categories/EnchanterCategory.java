@@ -1,4 +1,4 @@
-package com.enderio.machines.compat.jei.categories;
+package com.enderio.machines.integration.jei.categories;
 
 import com.enderio.EnderIO;
 import com.enderio.machines.common.init.MachineBlocks;
