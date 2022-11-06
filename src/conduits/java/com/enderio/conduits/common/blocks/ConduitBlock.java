@@ -90,6 +90,9 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
                 if (!(level.getBlockEntity(fromPos) instanceof ConduitBlockEntity)) {
                     ConduitBundle bundle = conduit.getBundle();
                     for (IConduitType<?> type : bundle.getTypes()) {
+                        if (type.getTicker().hasConnectionDelay()) {
+                            conduit.checkConnection = conduit.checkConnection.activate();
+                        }
                         IConnectionState connectionState = bundle.getConnection(direction).getConnectionState(type, bundle);
                         EnderIO.LOGGER.info("try connect " + ConduitTypes.getRegistry().getKey(type) + " because block @ " + pos.toShortString() + " was notified about a change @ " + fromPos.toShortString());
                         if (connectionState instanceof DynamicConnectionState dyn) {
@@ -233,7 +236,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
                 @Nullable
                 IConduitType<?> type = conduit.getShape().getConduit(event.getPos(), event.getHitVec());
                 if (type != null) {
-                    conduit.removeType(type, true);
+                    conduit.removeTypeAndDelete(type, true);
                     event.setCanceled(true);
                 }
             }

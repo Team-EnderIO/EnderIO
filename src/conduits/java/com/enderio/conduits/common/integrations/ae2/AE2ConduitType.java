@@ -51,6 +51,11 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
             private static boolean canConnectTo(IInWorldGridNodeHost host, Direction direction) {
                 return Optional.ofNullable(host.getGridNode(direction.getOpposite())).map(node -> node.isExposedOnSide(direction.getOpposite())).orElse(false);
             }
+
+            @Override
+            public boolean hasConnectionDelay() {
+                return true;
+            }
         };
     }
 

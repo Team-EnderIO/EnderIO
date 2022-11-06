@@ -64,7 +64,7 @@ public class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, IExtende
     void onSecurityBreach() {
         if (level.getBlockEntity(pos) instanceof ConduitBlockEntity conduit) {
             EnderIO.LOGGER.info("Security Breach @ " + conduit.getBlockPos().toShortString());
-            conduit.removeType(type, true);
+            conduit.removeTypeAndDelete(type, true);
         }
     }
 

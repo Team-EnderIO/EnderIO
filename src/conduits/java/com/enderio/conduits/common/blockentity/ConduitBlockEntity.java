@@ -29,6 +29,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -58,6 +59,8 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     private final ConduitBundle bundle;
     @UseOnly(LogicalSide.CLIENT)
     private ConduitBundle clientBundle;
+
+    public UpdateState checkConnection = UpdateState.NONE;
 
     public ConduitBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
@@ -111,6 +114,10 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
     public void everyTick() {
         serverTick();
+        checkConnection = checkConnection.next();
+        if (checkConnection.isInitialized()) {
+            getBlockState().getBlock().neighborChanged(getBlockState(), level, worldPosition, getBlockState().getBlock(), worldPosition.relative(Direction.UP), false);
+        }
     }
 
     @Override
@@ -208,6 +215,12 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                     .filter(streamDir -> getBundle().getConnection(streamDir).getConnectionState(type, bundle) != StaticConnectionStates.DISABLED)
                     .collect(Collectors.toSet()));
     }
+    public void removeTypeAndDelete(IConduitType<?> type, boolean shouldDrop) {
+        if (removeType(type, shouldDrop)) {
+            level.setBlock(getBlockPos(), getBlockState().getFluidState().createLegacyBlock(), level.isClientSide ? Block.UPDATE_ALL_IMMEDIATE : Block.UPDATE_ALL);
+        }
+    }
+
     public boolean removeType(IConduitType<?> type, boolean shouldDrop) {
         EnderIO.LOGGER.info("removed type " + ConduitTypes.getRegistry().getKey(type) + " @ " + getBlockPos().toShortString());
         if (shouldDrop && !level.isClientSide()) {
@@ -478,6 +491,31 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                     || (data.slotType() == SlotType.UPGRADE_EXTRACT && conduitData.hasUpgrade())) {
                 connection.setItem(data.slotType(), data.conduitIndex(), stack);
             }
+        }
+    }
+
+    public enum UpdateState {
+        NONE,
+        NEXT,
+        INITIALIZED,
+        MEXT_INITIALIZED;
+
+        public boolean isInitialized() {
+            return this == INITIALIZED || this == MEXT_INITIALIZED;
+        }
+
+        public UpdateState next() {
+            return switch (this) {
+                case NONE, INITIALIZED -> NONE;
+                case NEXT, MEXT_INITIALIZED -> INITIALIZED;
+            };
+        }
+
+        public UpdateState activate() {
+            return switch (this) {
+                case NONE, NEXT -> NEXT;
+                case INITIALIZED, MEXT_INITIALIZED -> MEXT_INITIALIZED;
+            };
         }
     }
 }

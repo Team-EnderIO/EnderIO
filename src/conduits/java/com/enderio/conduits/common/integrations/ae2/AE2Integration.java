@@ -1,4 +1,4 @@
-package com.enderio.conduits.common.integrations;
+package com.enderio.conduits.common.integrations.ae2;
 
 import appeng.api.implementations.items.IFacadeItem;
 import appeng.api.networking.IInWorldGridNodeHost;

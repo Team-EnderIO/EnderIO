@@ -20,4 +20,12 @@ public interface IConduitTicker {
     }
 
     boolean canConnectTo(Level level, BlockPos conduitPos, Direction direction);
+
+    /**
+     *
+     * @return if this is not always able to determine connectivity to it's neighbours at time of placement, but the tick later
+     */
+    default boolean hasConnectionDelay() {
+        return false;
+    }
 }
