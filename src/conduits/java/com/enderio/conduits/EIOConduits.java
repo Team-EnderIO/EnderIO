@@ -6,6 +6,8 @@ import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.conduits.common.init.*;
 import com.enderio.conduits.common.integrations.Integrations;
 import com.enderio.conduits.common.items.ConduitBlockItem;
+import com.enderio.conduits.data.ConduitTagProvider;
+import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -26,5 +28,10 @@ public class EIOConduits {
         ConduitItems.register();
         Integrations.register();
         ConduitItemFactory.setFactory((type, properties) -> new ConduitBlockItem(type, ConduitBlocks.CONDUIT.get(), properties));
+    }
+
+    @SubscribeEvent
+    public static void onData(GatherDataEvent event) {
+        event.getGenerator().addProvider(event.includeServer(), new ConduitTagProvider(event));
     }
 }
