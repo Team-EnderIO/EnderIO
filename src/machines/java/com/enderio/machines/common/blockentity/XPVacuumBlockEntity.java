@@ -4,7 +4,6 @@ import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.core.common.sync.IntegerDataSlot;
 import com.enderio.core.common.sync.SyncMode;
-import com.enderio.machines.common.MachineTier;
 import com.enderio.machines.common.blockentity.base.VacuumMachineEntity;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.menu.XPVacuumMenu;
@@ -85,10 +84,6 @@ public class XPVacuumBlockEntity extends VacuumMachineEntity<ExperienceOrb> {
         }
     }
 
-    @Override
-    public MachineTier getTier() {
-        return MachineTier.STANDARD;
-    }
 
     @NotNull
     @Override
