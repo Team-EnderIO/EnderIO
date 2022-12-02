@@ -3,7 +3,6 @@ package com.enderio.machines.common.blockentity;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.config.common.BaseCommonConfig;
 import com.enderio.machines.common.blockentity.base.VacuumMachineEntity;
-import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.MachineInventoryLayout.Builder;
 import com.enderio.machines.common.menu.VacuumChestMenu;
@@ -39,17 +38,6 @@ public class VacuumChestBlockEntity extends VacuumMachineEntity<ItemEntity> {
         return extractableGUISlot(MachineInventoryLayout.builder(), 27)
             .slot(slot -> slot.guiInsert().guiExtract().filter((i, s) -> false))
             .build(); //TODO add proper filter slot and predicate
-    }
-
-    @Override
-    protected MachineInventory createMachineInventory(MachineInventoryLayout layout) {
-        // TODO Auto-generated method stub
-        return new MachineInventory(getIOConfig(), layout) {
-            @Override
-            protected void onContentsChanged(int slot) {
-                setChanged();
-            }
-        };
     }
 
     @Override
