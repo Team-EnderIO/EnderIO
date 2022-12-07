@@ -11,8 +11,12 @@ import net.minecraft.world.item.ItemStack;
  * This item can be set or cleared in GUI but can never actually be "stolen" or deduct player resources.
  */
 public class GhostMachineSlot extends MachineSlot {
-    public GhostMachineSlot(MachineInventory itemHandler, int index, int xPosition, int yPosition) {
+
+    private final int stackLimit;
+
+    public GhostMachineSlot(MachineInventory itemHandler, int index, int xPosition, int yPosition, int stackLimit) {
         super(itemHandler, index, xPosition, yPosition);
+        this.stackLimit = stackLimit;
 
         // Check config, we need to get this right or bad stuff will happen.
         MachineInventoryLayout layout = itemHandler.getLayout();
@@ -27,6 +31,7 @@ public class GhostMachineSlot extends MachineSlot {
         // If this stack is valid, set the inventory slot value.
         if (!stack.isEmpty() && mayPlace(stack)) {
             ItemStack ghost = stack.copy();
+            ghost.setCount(Math.min(ghost.getCount(), stackLimit));
             set(ghost);
         }
 

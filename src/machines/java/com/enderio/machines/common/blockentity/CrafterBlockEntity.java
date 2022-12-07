@@ -32,6 +32,6 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
 
     @Override
     public MachineInventoryLayout getInventoryLayout() {
-        return MachineInventoryLayout.builder().capacitor().inputSlot(9).outputSlot(1).ghostSlot(10).build();
+        return MachineInventoryLayout.builder().capacitor().inputSlot(9).outputSlot(1).ghostSlot(9).previewSlot().build();
     }
 }

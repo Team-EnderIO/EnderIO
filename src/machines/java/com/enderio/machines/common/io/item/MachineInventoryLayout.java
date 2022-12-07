@@ -293,6 +293,28 @@ public class MachineInventoryLayout {
                 slot(slot -> slot.guiInsert().filter(filter).stackLimit(currentStackLimit));
             }
             return this;
+
+        }
+
+        /**
+         * Add a preview slot.
+         * This slot cannot be inserted to/extracted from.
+         */
+        public Builder previewSlot() {
+            return previewSlot(1);
+        }
+
+        /**
+         * Add a preview slot.
+         * This slot cannot be inserted to/extracted from.
+         *
+         * @param count The number of slots to add.
+         */
+        public Builder previewSlot(int count) {
+            for (int i = 0; i < count; i++) {
+                slot(slot -> slot.stackLimit(currentStackLimit));
+            }
+            return this;
         }
 
         public Builder capacitor() {
