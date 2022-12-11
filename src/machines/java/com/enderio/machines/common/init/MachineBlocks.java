@@ -130,7 +130,7 @@ public class MachineBlocks {
 
     public static BlockEntry<ProgressMachineBlock> POWERED_SPAWNER = REGISTRATE
         .block("powered_spawner", props -> new ProgressMachineBlock(props, MachineBlockEntities.POWERED_SPAWNER))
-        .loot(MachinesLootTable::copyNBT)
+        .loot((l,t) -> MachinesLootTable.copyNBTSingleCap(l, t, "EntityStorage"))
         .blockstate(MachineModelUtil::soulMachineBlock)
         .item(PoweredSpawnerItem::new)
         .tab(() -> EIOCreativeTabs.MACHINES)

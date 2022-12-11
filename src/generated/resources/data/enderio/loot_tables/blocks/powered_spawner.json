@@ -12,8 +12,28 @@
               "ops": [
                 {
                   "op": "replace",
-                  "source": "",
-                  "target": "BlockEntityTag"
+                  "source": "EntityStorage",
+                  "target": "BlockEntityTag.EntityStorage"
+                },
+                {
+                  "op": "replace",
+                  "source": "energy",
+                  "target": "BlockEntityTag.energy"
+                },
+                {
+                  "op": "replace",
+                  "source": "io_config",
+                  "target": "BlockEntityTag.io_config"
+                },
+                {
+                  "op": "replace",
+                  "source": "redstone",
+                  "target": "BlockEntityTag.redstone"
+                },
+                {
+                  "op": "replace",
+                  "source": "inventory",
+                  "target": "BlockEntityTag.inventory"
                 }
               ],
               "source": "block_entity"

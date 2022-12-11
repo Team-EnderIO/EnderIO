@@ -6,7 +6,7 @@ import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.core.client.item.IAdvancedTooltipProvider;
 import com.enderio.core.common.util.EntityUtil;
 import com.enderio.core.common.util.TooltipUtil;
-import com.enderio.machines.common.capability.EntityStorageBlockItemStack;
+import com.enderio.machines.common.capability.EntityStorageItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -36,7 +36,7 @@ public class PoweredSpawnerItem extends BlockItem implements IMultiCapabilityIte
 
     @Override
     public @Nullable MultiCapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt, MultiCapabilityProvider provider) {
-        provider.addSerialized(EIOCapabilities.ENTITY_STORAGE, LazyOptional.of(() -> new EntityStorageBlockItemStack(stack)));
+        provider.addSimple(EIOCapabilities.ENTITY_STORAGE, LazyOptional.of(() -> new EntityStorageItemStack(stack)));
         return provider;
     }
 }
