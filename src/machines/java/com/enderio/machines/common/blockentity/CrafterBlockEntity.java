@@ -4,6 +4,7 @@ import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.machines.common.blockentity.base.PoweredMachineEntity;
+import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.menu.CrafterMenu;
 import net.minecraft.core.BlockPos;
@@ -26,6 +27,8 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
     public static final QuadraticScalable ENERGY_TRANSFER = new QuadraticScalable(CapacitorModifier.ENERGY_TRANSFER, () -> 120f);
     public static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, () -> 10f);
     private static final int ENERGY_USAGE_PER_ITEM = 10;
+
+    private CraftingRecipe recipe;
 
     private static final CraftingContainer dummyCraftingContainer = new CraftingContainer(new AbstractContainerMenu(null, -1) {
         @Override
@@ -50,17 +53,31 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
 
     @Override
     public MachineInventoryLayout getInventoryLayout() {
-        return MachineInventoryLayout.builder().capacitor().inputSlot(9).outputSlot(1).ghostSlot(9).previewSlot().build();
+        return MachineInventoryLayout
+            .builder()
+            .capacitor()
+            .setStackLimit(1)
+            .inputSlot(9, this::acceptSlotInput)
+            .setStackLimit(64)
+            .outputSlot(1)
+            .ghostSlot(9)
+            .previewSlot()
+            .build();
+    }
+
+    private boolean acceptSlotInput(int slot, ItemStack stack) {
+        return this.getInventory().getStackInSlot(slot + 10).sameItem(stack);
     }
 
     @Override
     public void serverTick() {
         Optional<CraftingRecipe> opt = getRecipe();
         if (opt.isPresent()) {
-            CraftingRecipe recipe = opt.get();
-            this.getInventory().setStackInSlot(20, recipe.getResultItem());
-            if (shouldActTick()) {
-                //craft item
+            recipe = opt.get();
+            ItemStack result = recipe.getResultItem();
+            this.getInventory().setStackInSlot(20, result);
+            if (shouldActTick() && hasPowerToCraft() && canMergeOutput(result)) {
+                craftItem();
             }
         } else {
             this.getInventory().setStackInSlot(20, ItemStack.EMPTY);
@@ -68,20 +85,47 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
         super.serverTick();
     }
 
-    public boolean shouldActTick() {
+    private boolean shouldActTick() {
         return canAct() && level.getGameTime() % ticksForAction() == 0;
     }
 
-    public int ticksForAction() {
+    private int ticksForAction() {
         return 20;
     }
 
+    private boolean hasPowerToCraft() {
+        return this.energyStorage.consumeEnergy(ENERGY_USAGE_PER_ITEM, true) > 0;
+    }
+
     private Optional<CraftingRecipe> getRecipe() {
-        var inv = this.getInventory();
+        MachineInventory inv = this.getInventory();
         int start = 11;
         for (int i = 0; i < 9; i++) {
             dummyCraftingContainer.setItem(i, inv.getStackInSlot(start + i));
         }
         return getLevel().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, dummyCraftingContainer, getLevel());
+    }
+
+    private boolean canMergeOutput(ItemStack item) {
+        ItemStack output = this.getInventory().getStackInSlot(10);
+        return output.sameItem(item) && (output.getCount() + item.getCount() <= 64);
+    }
+
+    private void craftItem() {
+        boolean inputMatches = true;
+        MachineInventory inv = this.getInventory();
+        int start = 1;
+        for (int i = 0; i < 9; i++) {
+            inputMatches = inv.getStackInSlot(i).sameItem(inv.getStackInSlot(i + 10));
+        }
+        if (inputMatches) {
+            for (int i = 0; i < 9; i++) {
+                dummyCraftingContainer.setItem(i, inv.getStackInSlot(start + i));
+            }
+            if (recipe.matches(dummyCraftingContainer, getLevel())) {
+                //craft
+            }
+
+        }
     }
 }

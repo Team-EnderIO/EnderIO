@@ -15,7 +15,7 @@ public class CrafterMenu extends MachineMenu<CrafterBlockEntity> {
         super(blockEntity, inventory, MachineMenus.CRAFTER.get(), pContainerId);
         if (blockEntity != null) {
             //Total slots = 21
-            //Capactior slot [0]
+            //Capacitor slot [0]
             this.addSlot(new MachineSlot(blockEntity.getInventory(), 0, 6, 60));
             addInventorySlots(30, 84);
             // Main storage slots [1-9]

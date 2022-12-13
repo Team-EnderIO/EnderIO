@@ -14,6 +14,10 @@ public class GhostMachineSlot extends MachineSlot {
 
     private final int stackLimit;
 
+    public GhostMachineSlot(MachineInventory itemHandler, int index, int xPosition, int yPosition) {
+        this(itemHandler, index, xPosition, yPosition, 64);
+    }
+
     public GhostMachineSlot(MachineInventory itemHandler, int index, int xPosition, int yPosition, int stackLimit) {
         super(itemHandler, index, xPosition, yPosition);
         this.stackLimit = stackLimit;
