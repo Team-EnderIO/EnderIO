@@ -16,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 public class RangeParticle extends TextureSheetParticle {
 
     private final int range;
+    private final float offset = 0.01f;
 
     public RangeParticle(ClientLevel level, Vec3 pos, int range, float rCol, float gCol, float bCol) {
         super(level, pos.x, pos.y, pos.z);
@@ -39,9 +40,9 @@ public class RangeParticle extends TextureSheetParticle {
         float mappedZ = (float) (Mth.lerp(partialTicks, this.zo, this.z) - position.z());
 
         // Top face requires different z for some reason
-        Vector3f vec = new Vector3f(-range, -range, range + 1);
+        Vector3f vec = new Vector3f(-range - offset, -range - offset, range + 1 + offset);
         renderFace(consumer, remapPosition(calcPoints(Direction.UP, vec), mappedX, mappedY, mappedZ));
-        vec = new Vector3f(-range, -range, -range);
+        vec = new Vector3f(-range - offset, -range - offset, -range - offset);
         renderFace(consumer, remapPosition(calcPoints(Direction.SOUTH, vec), mappedX, mappedY, mappedZ));
         renderFace(consumer, remapPosition(calcPoints(Direction.EAST, vec), mappedX, mappedY, mappedZ));
         renderFace(consumer, remapPosition(calcPoints(Direction.UP, vec), mappedX, mappedY, mappedZ));
@@ -56,7 +57,7 @@ public class RangeParticle extends TextureSheetParticle {
     }
 
     public Vector3f[] calcPoints(Direction face, Vector3f vec) {
-        return calcPoints(face, vec.x(), vec.y(), vec.z(), 2 * range + 1, 2 * range + 1);
+        return calcPoints(face, vec.x(), vec.y(), vec.z(), 2 * range + 1 + (offset * 2), 2 * range + 1 + (offset * 2));
     }
 
     public Vector3f[] calcPoints(Direction face, float x, float y, float z, float w, float h) {
