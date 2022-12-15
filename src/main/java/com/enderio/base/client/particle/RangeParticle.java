@@ -28,8 +28,10 @@ public class RangeParticle extends TextureSheetParticle {
         //Note: Vanilla discards pieces from particles that are under the alpha of 0.1, due to floating point differences
         // of float and double if we set this to 0.1F, then it ends up getting discarded, so we just set this to 0.11F
         alpha = 0.11F;
-
-        setBoundingBox(new AABB(pos.x - range, pos.y - range, pos.z - range, pos.x + range, pos.y + range, pos.z + range));
+        double bb_offset = 0.5;
+        setBoundingBox(
+            new AABB(pos.x - range - bb_offset, pos.y - range - bb_offset, pos.z - range - bb_offset, pos.x + range + bb_offset, pos.y + range + bb_offset,
+                pos.z + range + bb_offset));
     }
 
     @Override
