@@ -32,7 +32,7 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
     private CraftingRecipe recipe;
     private NonNullList<ItemStack> outputBuffer = NonNullList.create();
 
-    private static final CraftingContainer dummyCraftingContainer = new CraftingContainer(new AbstractContainerMenu(null, -1) {
+    private static final CraftingContainer dummyCContainer = new CraftingContainer(new AbstractContainerMenu(null, -1) {
         @Override
         public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
             return ItemStack.EMPTY;
@@ -43,6 +43,7 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
             return false;
         }
     }, 3, 3);
+
 
     public CrafterBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_TRANSFER, ENERGY_USAGE, type, worldPosition, blockState);
@@ -73,12 +74,11 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
 
     @Override
     public void serverTick() {
-        tryClearOutputBuffer();
+        processOutputBuffer();
 
-        Optional<CraftingRecipe> opt = getRecipe();
+        Optional<ItemStack> opt = getRecipeResult();
         if (opt.isPresent()) {
-            recipe = opt.get();
-            ItemStack result = recipe.getResultItem();
+            ItemStack result = opt.get();
             this.getInventory().setStackInSlot(20, result);
             if (shouldActTick() && hasPowerToCraft() && canMergeOutput(result) && outputBuffer.isEmpty()) {
                 craftItem();
@@ -101,23 +101,37 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
         return this.energyStorage.consumeEnergy(ENERGY_USAGE_PER_ITEM, true) > 0;
     }
 
-    private void tryClearOutputBuffer() {
+    private void processOutputBuffer() {
         if (outputBuffer.isEmpty()) {
             return;
         }
+        // clean buffer
+        outputBuffer.removeIf(ItemStack::isEmpty);
+
+        // output
         if (canMergeOutput(outputBuffer.get(0))) {
-            getInventory().setStackInSlot(10, outputBuffer.get(0));
+            var stack = getInventory().getStackInSlot(10);
+            if (stack.isEmpty()) {
+                getInventory().setStackInSlot(10, outputBuffer.get(0).copy());
+            } else if (stack.sameItem(outputBuffer.get(0))) {
+                stack.grow(1);
+            }
             outputBuffer.remove(0);
         }
     }
 
-    private Optional<CraftingRecipe> getRecipe() {
+    private Optional<ItemStack> getRecipeResult() {
         MachineInventory inv = this.getInventory();
         int start = 11;
         for (int i = 0; i < 9; i++) {
-            dummyCraftingContainer.setItem(i, inv.getStackInSlot(start + i));
+            dummyCContainer.setItem(i, inv.getStackInSlot(start + i).copy());
         }
-        return getLevel().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, dummyCraftingContainer, getLevel());
+        Optional<CraftingRecipe> opt = getLevel().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, dummyCContainer, getLevel());
+        if (opt.isPresent()) {
+            recipe = opt.get();
+            return Optional.of(recipe.assemble(dummyCContainer));
+        }
+        return Optional.empty();
     }
 
     private boolean canMergeOutput(ItemStack item) {
@@ -133,15 +147,16 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
                 return;
             }
         }
+        //copy input items
         for (int i = 0; i < 9; i++) {
-            dummyCraftingContainer.setItem(i, inv.getStackInSlot(start + i));
+            dummyCContainer.setItem(i, inv.getStackInSlot(start + i).copy());
         }
         // double check necessary ?
-        if (recipe.matches(dummyCraftingContainer, getLevel())) {
+        if (recipe.matches(dummyCContainer, getLevel())) {
             //craft
             clearInput();
-            outputBuffer.add(recipe.getResultItem());
-            outputBuffer.addAll(recipe.getRemainingItems(dummyCraftingContainer));
+            outputBuffer.add(recipe.assemble(dummyCContainer));
+            outputBuffer.addAll(recipe.getRemainingItems(dummyCContainer));
         }
 
     }
