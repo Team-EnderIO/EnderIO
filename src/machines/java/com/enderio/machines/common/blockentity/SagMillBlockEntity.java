@@ -12,6 +12,7 @@ import com.enderio.machines.common.blockentity.task.PoweredCraftingTask;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.SagMillMenu;
 import com.enderio.machines.common.recipe.SagMillingRecipe;
 import net.minecraft.core.BlockPos;
@@ -38,6 +39,9 @@ public class SagMillBlockEntity extends PoweredCraftingMachine<SagMillingRecipe,
     private int grindingBallDamage;
 
     private final SagMillingRecipe.Container container;
+
+    private static final SingleSlotAccess inputSlotAccess = new SingleSlotAccess();
+    private static final SingleSlotAccess grindingBallSlotAccess = new SingleSlotAccess();
 
 
     public SagMillBlockEntity(BlockEntityType<?> type, BlockPos worldPosition,
@@ -79,8 +83,10 @@ public class SagMillBlockEntity extends PoweredCraftingMachine<SagMillingRecipe,
     public MachineInventoryLayout getInventoryLayout() {
         return MachineInventoryLayout.builder()
             .inputSlot()
+            .slotAccess(inputSlotAccess)
             .outputSlot(4)
             .inputSlot((slot, stack) -> GrindingBallManager.isGrindingBall(stack))
+            .slotAccess(grindingBallSlotAccess)
             .capacitor()
             .build();
     }
@@ -91,15 +97,15 @@ public class SagMillBlockEntity extends PoweredCraftingMachine<SagMillingRecipe,
             @Override
             protected void takeInputs(SagMillingRecipe recipe) {
                 MachineInventory inv = getInventory();
-                inv.getStackInSlot(0).shrink(1);
+                inputSlotAccess.getItemStack(inv).shrink(1);
 
                 // Claim any available grinding balls.
                 if (grindingBallData == IGrindingBallData.IDENTITY) {
-                    ItemStack ball = inv.getStackInSlot(5);
+                    ItemStack ball = grindingBallSlotAccess.getItemStack(inv);
                     if (!ball.isEmpty()) {
                         IGrindingBallData data = GrindingBallManager.getData(ball);
-                        if (data != null) {
-                            setGrindingBallData(data);
+                        setGrindingBallData(data);
+                        if (data != IGrindingBallData.IDENTITY) {
                             ball.shrink(1);
                         }
                     }
