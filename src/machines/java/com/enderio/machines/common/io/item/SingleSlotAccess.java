@@ -11,4 +11,8 @@ public class SingleSlotAccess {
     void init(int i) {
         index = i;
     }
+
+    public int getIndex() {
+        return index;
+    }
 }

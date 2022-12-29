@@ -12,6 +12,7 @@ import com.enderio.machines.common.blockentity.task.PoweredCraftingTask;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.SagMillMenu;
 import com.enderio.machines.common.recipe.SagMillingRecipe;
@@ -42,6 +43,7 @@ public class SagMillBlockEntity extends PoweredCraftingMachine<SagMillingRecipe,
 
     private static final SingleSlotAccess inputSlotAccess = new SingleSlotAccess();
     private static final SingleSlotAccess grindingBallSlotAccess = new SingleSlotAccess();
+    private static final MultiSlotAccess OUTPUT = new MultiSlotAccess();
 
 
     public SagMillBlockEntity(BlockEntityType<?> type, BlockPos worldPosition,
@@ -85,6 +87,7 @@ public class SagMillBlockEntity extends PoweredCraftingMachine<SagMillingRecipe,
             .inputSlot()
             .slotAccess(inputSlotAccess)
             .outputSlot(4)
+            .slotAccess(OUTPUT)
             .inputSlot((slot, stack) -> GrindingBallManager.isGrindingBall(stack))
             .slotAccess(grindingBallSlotAccess)
             .capacitor()
@@ -93,7 +96,7 @@ public class SagMillBlockEntity extends PoweredCraftingMachine<SagMillingRecipe,
 
     @Override
     protected PoweredCraftingTask<SagMillingRecipe, SagMillingRecipe.Container> createTask(@Nullable SagMillingRecipe recipe) {
-        return new PoweredCraftingTask<>(this, container, 1, 4, recipe) {
+        return new PoweredCraftingTask<>(this, container, OUTPUT, recipe) {
             @Override
             protected void takeInputs(SagMillingRecipe recipe) {
                 MachineInventory inv = getInventory();

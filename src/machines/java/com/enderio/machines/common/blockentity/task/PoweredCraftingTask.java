@@ -3,6 +3,8 @@ package com.enderio.machines.common.blockentity.task;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.blockentity.base.PoweredCraftingMachine;
 import com.enderio.machines.common.io.item.MachineInventory;
+import com.enderio.machines.common.io.item.SingleSlotAccess;
+import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.recipe.MachineRecipe;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -90,6 +92,12 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
 
     public PoweredCraftingTask(PoweredCraftingMachine<R, C> blockEntity, C container, int outputIndex, @Nullable R recipe) {
         this(blockEntity, container, outputIndex, 1, recipe);
+    }
+    public PoweredCraftingTask(PoweredCraftingMachine<R, C> blockEntity, C container, MultiSlotAccess output, @Nullable R recipe) {
+        this(blockEntity, container, output.getStartIndex(), output.size(), recipe);
+    }
+    public PoweredCraftingTask(PoweredCraftingMachine<R, C> blockEntity, C container, SingleSlotAccess output, @Nullable R recipe) {
+        this(blockEntity, container, output.getIndex(), recipe);
     }
 
     /**

@@ -10,9 +10,10 @@ public class MultiSlotAccess {
         List<SingleSlotAccess> accesses = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             SingleSlotAccess access = new SingleSlotAccess();
-            access.init(index + size);
+            access.init(i + index);
             accesses.add(access);
         }
+        this.accesses = accesses;
     }
 
     public int size() {
@@ -21,5 +22,9 @@ public class MultiSlotAccess {
 
     public SingleSlotAccess get(int index) {
         return accesses.get(index);
+    }
+
+    public int getStartIndex() {
+        return accesses.get(0).getIndex();
     }
 }
