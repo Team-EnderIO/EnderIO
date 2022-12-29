@@ -40,7 +40,7 @@ public class BrokenSpawnerItem extends Item implements IMultiCapabilityItem {
 
     @Override
     public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {
-        if (allowedIn(pCategory)) {
+        if (pCategory == getItemCategory()) {
             pItems.add(new ItemStack(this));
         } else if (pCategory == EIOCreativeTabs.SOULS) {
             // Register for every mob that can be captured.

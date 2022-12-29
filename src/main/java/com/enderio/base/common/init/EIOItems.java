@@ -305,7 +305,7 @@ public class EIOItems {
 
     // TODO: Will need sorted once we have added more.
 
-    public static final ItemEntry<SoulVialItem> EMPTY_SOUL_VIAL = groupedItem("empty_soul_vial", SoulVialItem::new, () -> EIOCreativeTabs.GEAR);
+    public static final ItemEntry<SoulVialItem> EMPTY_SOUL_VIAL = groupedItem("empty_soul_vial", SoulVialItem::new, () -> EIOCreativeTabs.SOULS);
 
     public static final ItemEntry<SoulVialItem> FILLED_SOUL_VIAL = REGISTRATE
         .item("filled_soul_vial", SoulVialItem::new)

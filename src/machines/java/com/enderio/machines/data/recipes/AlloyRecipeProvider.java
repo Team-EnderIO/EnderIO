@@ -129,6 +129,8 @@ public class AlloyRecipeProvider extends EnderRecipeProvider {
 
         build(new ItemStack(EIOItems.CLAYED_GLOWSTONE.get(), 2), List.of(CountedIngredient.of(Tags.Items.DUSTS_GLOWSTONE), CountedIngredient.of(Items.CLAY_BALL)), 5000, 0.3f, pFinishedRecipeConsumer);
 
+        build(new ItemStack(EIOBlocks.INDUSTRIAL_INSULATION.get()), List.of(CountedIngredient.of(EIOTags.Items.DUSTS_LAPIS), CountedIngredient.of(ItemTags.WOOL), CountedIngredient.of(EIOTags.Items.INSULATION_METAL)), 5000, 0.5f, pFinishedRecipeConsumer);
+
         // endregion
 
         machineFrames(pFinishedRecipeConsumer);
