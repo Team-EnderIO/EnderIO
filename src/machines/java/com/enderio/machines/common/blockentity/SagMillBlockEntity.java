@@ -41,8 +41,8 @@ public class SagMillBlockEntity extends PoweredCraftingMachine<SagMillingRecipe,
 
     private final SagMillingRecipe.Container container;
 
-    private static final SingleSlotAccess inputSlotAccess = new SingleSlotAccess();
-    private static final SingleSlotAccess grindingBallSlotAccess = new SingleSlotAccess();
+    public static final SingleSlotAccess INPUT = new SingleSlotAccess();
+    private static final SingleSlotAccess GRINDING_BALL = new SingleSlotAccess();
     private static final MultiSlotAccess OUTPUT = new MultiSlotAccess();
 
 
@@ -85,11 +85,11 @@ public class SagMillBlockEntity extends PoweredCraftingMachine<SagMillingRecipe,
     public MachineInventoryLayout getInventoryLayout() {
         return MachineInventoryLayout.builder()
             .inputSlot()
-            .slotAccess(inputSlotAccess)
+            .slotAccess(INPUT)
             .outputSlot(4)
             .slotAccess(OUTPUT)
             .inputSlot((slot, stack) -> GrindingBallManager.isGrindingBall(stack))
-            .slotAccess(grindingBallSlotAccess)
+            .slotAccess(GRINDING_BALL)
             .capacitor()
             .build();
     }
@@ -100,11 +100,11 @@ public class SagMillBlockEntity extends PoweredCraftingMachine<SagMillingRecipe,
             @Override
             protected void takeInputs(SagMillingRecipe recipe) {
                 MachineInventory inv = getInventory();
-                inputSlotAccess.getItemStack(inv).shrink(1);
+                INPUT.getItemStack(inv).shrink(1);
 
                 // Claim any available grinding balls.
                 if (grindingBallData == IGrindingBallData.IDENTITY) {
-                    ItemStack ball = grindingBallSlotAccess.getItemStack(inv);
+                    ItemStack ball = GRINDING_BALL.getItemStack(inv);
                     if (!ball.isEmpty()) {
                         IGrindingBallData data = GrindingBallManager.getData(ball);
                         setGrindingBallData(data);

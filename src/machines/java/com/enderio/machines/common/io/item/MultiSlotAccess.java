@@ -24,7 +24,13 @@ public class MultiSlotAccess {
         return accesses.get(index);
     }
 
-    public int getStartIndex() {
-        return accesses.get(0).getIndex();
+    public List<SingleSlotAccess> getAccesses() {
+        return accesses;
+    }
+
+    public static MultiSlotAccess wrap(SingleSlotAccess access) {
+        MultiSlotAccess multi = new MultiSlotAccess();
+        multi.accesses = List.of(access);
+        return multi;
     }
 }

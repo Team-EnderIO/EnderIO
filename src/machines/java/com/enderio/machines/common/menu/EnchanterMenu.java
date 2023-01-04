@@ -33,11 +33,11 @@ public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
                     Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.ENCHANTING.type().get(), blockEntity.getContainer(), level);
                     if (recipe.isPresent() && (pPlayer.experienceLevel > recipe.get().getXPCost(blockEntity.getContainer()) || pPlayer.isCreative())) {
                         int amount = recipe.get().getInputAmountConsumed(blockEntity.getContainer());
-                        int lapizForLevel = recipe.get().getLapisForLevel(recipe.get().getEnchantmentLevel(blockEntity.getInventory().getStackInSlot(1).getCount()));
+                        int lapizForLevel = recipe.get().getLapisForLevel(recipe.get().getEnchantmentLevel(EnchanterBlockEntity.CATALYST.getItemStack(blockEntity).getCount()));
                         pPlayer.giveExperienceLevels(-recipe.get().getXPCost(blockEntity.getContainer()));
-                        blockEntity.getInventory().getStackInSlot(0).shrink(1);
-                        blockEntity.getInventory().getStackInSlot(1).shrink(amount);
-                        blockEntity.getInventory().getStackInSlot(2).shrink(lapizForLevel);
+                        EnchanterBlockEntity.BOOK.getItemStack(blockEntity).shrink(1);
+                        EnchanterBlockEntity.CATALYST.getItemStack(blockEntity).shrink(amount);
+                        EnchanterBlockEntity.LAPIS.getItemStack(blockEntity).shrink(lapizForLevel);
                     }
                     super.onTake(pPlayer, pStack);
                 }
