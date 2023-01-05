@@ -15,9 +15,9 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class VacuumChestScreen extends EIOScreen<VacuumChestMenu> {
 
-    private static final ResourceLocation VACUMM_CHEST_BG = EnderIO.loc("textures/gui/vacuum_chest.png");
+    private static final ResourceLocation VACUUM_CHEST_BG = EnderIO.loc("textures/gui/vacuum_chest.png");
     private static final ResourceLocation BUTTONS = EnderIO.loc("textures/gui/icons/buttons.png");
-    private static final ResourceLocation WIDGETS = EnderIO.loc("textures/gui/40/widgetsv2.png");
+    private static final ResourceLocation RANGE_BTNS = EnderIO.loc("textures/gui/icons/range_buttons.png");
 
     public VacuumChestScreen(VacuumChestMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle, true);
@@ -29,7 +29,7 @@ public class VacuumChestScreen extends EIOScreen<VacuumChestMenu> {
         super.init();
         addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 14, topPos + 105 + 2, () -> menu.getBlockEntity().getRedstoneControl(),
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
-        addRenderableWidget(new ToggleImageButton<>(this, leftPos + imageWidth - 8 - 14 - 2 - 16, topPos + 105, 16, 16, 144, 176, 16, 0, WIDGETS,
+        addRenderableWidget(new ToggleImageButton<>(this, leftPos + imageWidth - 8 - 14 - 2 - 16, topPos + 105, 16, 16, 0, 0, 16, 0, RANGE_BTNS,
             () -> menu.getBlockEntity().isShowingRange(), state -> menu.getBlockEntity().shouldShowRange(state),
             () -> menu.getBlockEntity().isShowingRange() ? EIOLang.HIDE_RANGE : EIOLang.SHOW_RANGE));
         addRenderableWidget(new ImageButton(leftPos + imageWidth - 8 - 8, topPos + 86, 8, 8, 8, 0, 16, BUTTONS, (b) -> menu.getBlockEntity().increaseRange()));
@@ -38,7 +38,7 @@ public class VacuumChestScreen extends EIOScreen<VacuumChestMenu> {
 
     @Override
     protected ResourceLocation getBackgroundImage() {
-        return VACUMM_CHEST_BG;
+        return VACUUM_CHEST_BG;
     }
 
     @Override

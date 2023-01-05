@@ -18,7 +18,7 @@ public class XPVacuumScreen extends EIOScreen<XPVacuumMenu> {
 
     private static final ResourceLocation XP_VACUUM_BG = EnderIO.loc("textures/gui/xp_vacuum.png");
     private static final ResourceLocation BUTTONS = EnderIO.loc("textures/gui/icons/buttons.png");
-    private static final ResourceLocation WIDGETS = EnderIO.loc("textures/gui/40/widgetsv2.png");
+    private static final ResourceLocation RANGE_BTNS = EnderIO.loc("textures/gui/icons/range_buttons.png");
 
     public XPVacuumScreen(XPVacuumMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle, true);
@@ -31,7 +31,7 @@ public class XPVacuumScreen extends EIOScreen<XPVacuumMenu> {
         addRenderableOnly(new FluidStackStaticWidget(this, getMenu().getBlockEntity()::getFluidTank, leftPos + 27, topPos + 22, 32, 32));
         addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 14, topPos + 52, () -> menu.getBlockEntity().getRedstoneControl(),
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
-        addRenderableWidget(new ToggleImageButton<>(this, leftPos + imageWidth - 8 - 16, topPos + 34, 16, 16, 144, 176, 16, 0, WIDGETS,
+        addRenderableWidget(new ToggleImageButton<>(this, leftPos + imageWidth - 8 - 16, topPos + 34, 16, 16, 0, 0, 16, 0, RANGE_BTNS,
             () -> menu.getBlockEntity().isShowingRange(), state -> menu.getBlockEntity().shouldShowRange(state),
             () -> menu.getBlockEntity().isShowingRange() ? EIOLang.HIDE_RANGE : EIOLang.SHOW_RANGE));
         addRenderableWidget(
