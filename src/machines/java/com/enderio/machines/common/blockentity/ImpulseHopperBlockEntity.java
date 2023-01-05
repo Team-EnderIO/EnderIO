@@ -22,9 +22,9 @@ public class ImpulseHopperBlockEntity extends PoweredMachineEntity {
     public static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, () -> 16f);
     private static final int ENERGY_USAGE_PER_ITEM = 10;
 
-    private static final MultiSlotAccess INPUT = new MultiSlotAccess();
-    private static final MultiSlotAccess OUTPUT = new MultiSlotAccess();
-    private static final MultiSlotAccess GHOST = new MultiSlotAccess();
+    public static final MultiSlotAccess INPUT = new MultiSlotAccess();
+    public static final MultiSlotAccess OUTPUT = new MultiSlotAccess();
+    public static final MultiSlotAccess GHOST = new MultiSlotAccess();
 
     public ImpulseHopperBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_TRANSFER, ENERGY_USAGE, type, worldPosition, blockState);

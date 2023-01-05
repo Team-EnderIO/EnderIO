@@ -42,8 +42,8 @@ public class SagMillBlockEntity extends PoweredCraftingMachine<SagMillingRecipe,
     private final SagMillingRecipe.Container container;
 
     public static final SingleSlotAccess INPUT = new SingleSlotAccess();
-    private static final SingleSlotAccess GRINDING_BALL = new SingleSlotAccess();
-    private static final MultiSlotAccess OUTPUT = new MultiSlotAccess();
+    public static final SingleSlotAccess GRINDING_BALL = new SingleSlotAccess();
+    public static final MultiSlotAccess OUTPUT = new MultiSlotAccess();
 
 
     public SagMillBlockEntity(BlockEntityType<?> type, BlockPos worldPosition,

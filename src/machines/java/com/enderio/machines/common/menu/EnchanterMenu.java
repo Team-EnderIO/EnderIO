@@ -24,10 +24,10 @@ public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
         super(blockEntity, inventory, MachineMenus.ENCHANTER.get(), pContainerId);
         if (blockEntity != null) {
             this.level = blockEntity.getLevel();
-            addSlot(new MachineSlot(blockEntity.getInventory(), 0, 16, 35));
-            addSlot(new MachineSlot(blockEntity.getInventory(), 1, 65, 35));
-            addSlot(new MachineSlot(blockEntity.getInventory(), 2, 85, 35));
-            addSlot(new MachineSlot(blockEntity.getInventory(), 3, 144, 35) {
+            addSlot(new MachineSlot(blockEntity.getInventory(), EnchanterBlockEntity.BOOK, 16, 35));
+            addSlot(new MachineSlot(blockEntity.getInventory(), EnchanterBlockEntity.CATALYST, 65, 35));
+            addSlot(new MachineSlot(blockEntity.getInventory(), EnchanterBlockEntity.LAPIS, 85, 35));
+            addSlot(new MachineSlot(blockEntity.getInventory(), EnchanterBlockEntity.OUTPUT, 144, 35) {
                 @Override
                 public void onTake(Player pPlayer, ItemStack pStack) {
                     Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.ENCHANTING.type().get(), blockEntity.getContainer(), level);

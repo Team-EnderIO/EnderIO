@@ -59,10 +59,7 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltin
         // TODO: Currently smelts really slowly. Needs addressed when we deal with burn -> FE rates.
         private int burnTime;
         private int burnDuration;
-
-        public static final MultiSlotAccess INPUTS = new MultiSlotAccess();
         public static final SingleSlotAccess FUEL = new SingleSlotAccess();
-        public static final SingleSlotAccess OUTPUT = new SingleSlotAccess();
         @UseOnly(LogicalSide.CLIENT)
         private float clientBurnProgress;
 
@@ -75,26 +72,16 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltin
         protected boolean restrictedMode() {
             return true;
         }
-
-        @Override
-        protected MultiSlotAccess getInputs() {
-            return INPUTS;
-        }
-
-        @Override
-        protected SingleSlotAccess getOutput() {
-            return OUTPUT;
-        }
-
         @Override
         public MachineInventoryLayout getInventoryLayout() {
             return MachineInventoryLayout.builder()
                 .inputSlot(3, this::acceptSlotInput)
                 .slotAccess(INPUTS)
+                .outputSlot()
+                .slotAccess(OUTPUT)
                 .inputSlot(this::acceptSlotInput)
                 .slotAccess(FUEL)
-                .outputSlot()
-                .slotAccess(OUTPUT).build();
+                .build();
         }
 
         @Override
@@ -239,17 +226,8 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltin
         return MachineInventoryLayout.builder()
             .inputSlot(3, this::acceptSlotInput)
             .slotAccess(INPUTS)
-            .outputSlot()
-            .slotAccess(OUTPUT)
-            .capacitor()
-            .build();
-    }
-
-    protected MultiSlotAccess getInputs() {
-        return INPUTS;
-    }
-    protected SingleSlotAccess getOutput() {
-        return OUTPUT;
+            .outputSlot().slotAccess(OUTPUT)
+            .capacitor().build();
     }
 
     protected boolean acceptSlotInput(int slot, ItemStack stack) {
@@ -290,7 +268,7 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltin
 
     @Override
     protected PoweredCraftingTask<AlloySmeltingRecipe, AlloySmeltingRecipe.Container> createTask(@Nullable AlloySmeltingRecipe recipe) {
-        return createTask(recipe, getOutput());
+        return createTask(recipe, OUTPUT);
     }
 
     protected PoweredCraftingTask<AlloySmeltingRecipe, AlloySmeltingRecipe.Container> createTask(@Nullable AlloySmeltingRecipe recipe, SingleSlotAccess output) {
@@ -322,7 +300,7 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltin
 
                     // Iterate over the slots
                     for (int i = 0; i < 3; i++) {
-                        ItemStack stack = getInputs().get(i).getItemStack(inv);
+                        ItemStack stack = INPUTS.get(i).getItemStack(inv);
 
                         // Iterate over the inputs
                         for (int j = 0; j < 3; j++) {

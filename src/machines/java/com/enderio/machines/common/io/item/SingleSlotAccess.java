@@ -1,6 +1,5 @@
 package com.enderio.machines.common.io.item;
 
-import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -34,14 +33,18 @@ public class SingleSlotAccess {
     public boolean isSlot(int slot) {
         return this.index == slot;
     }
-    void init(int i) {
-        index = i;
-    }
 
     public int getIndex() {
         return index;
     }
 
+    void init(int i) {
+        if (index == Integer.MIN_VALUE) {
+            index = i;
+        } else if (index != i) {
+            throw new IllegalArgumentException("InventoryLayout changed dynamically from " + index + " to " + i + ", don't do that");
+        }
+    }
     public MultiSlotAccess wrapToMulti() {
         return MultiSlotAccess.wrap(this);
     }

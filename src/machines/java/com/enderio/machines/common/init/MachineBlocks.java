@@ -30,7 +30,7 @@ public class MachineBlocks {
 
     public static final BlockEntry<MachineBlock> FLUID_TANK = REGISTRATE
         .block("fluid_tank", props -> new MachineBlock(props, MachineBlockEntities.FLUID_TANK))
-        .properties(props -> props.strength(2.5f, 8).isViewBlocking((pState, pLevel, pPos) -> false))
+        .properties(props -> props.strength(2.5f, 8).isViewBlocking((pState, pLevel, pPos) -> false).noOcclusion())
         .loot(MachinesLootTable::copyNBT)
         .blockstate((ctx, prov) -> prov.horizontalBlock(ctx.get(), prov.models()
             .getBuilder(ctx.getName())
@@ -47,7 +47,7 @@ public class MachineBlocks {
 
     public static final BlockEntry<MachineBlock> PRESSURIZED_FLUID_TANK = REGISTRATE
         .block("pressurized_fluid_tank", props -> new MachineBlock(props, MachineBlockEntities.PRESSURIZED_FLUID_TANK))
-        .properties(props -> props.strength(2.5f, 8).isViewBlocking((pState, pLevel, pPos) -> false))
+        .properties(props -> props.strength(2.5f, 8).isViewBlocking((pState, pLevel, pPos) -> false).noOcclusion())
         .loot(MachinesLootTable::copyNBT)
         .blockstate((ctx, prov) -> prov.horizontalBlock(ctx.get(), prov.models()
                 .withExistingParent(ctx.getName(), prov.mcLoc("block/block"))
