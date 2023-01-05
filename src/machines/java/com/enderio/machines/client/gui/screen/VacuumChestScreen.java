@@ -21,7 +21,7 @@ public class VacuumChestScreen extends EIOScreen<VacuumChestMenu> {
 
     public VacuumChestScreen(VacuumChestMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle, true);
-        this.inventoryLabelY = this.imageHeight - 94;
+        inventoryLabelY = imageHeight - 94;
     }
 
     @Override
@@ -48,15 +48,15 @@ public class VacuumChestScreen extends EIOScreen<VacuumChestMenu> {
 
     @Override
     protected void renderLabels(PoseStack pPoseStack, int pMouseX, int pMouseY) {
-        this.font.draw(pPoseStack, EIOLang.FILTER, 8, 74, 4210752);
-        this.font.draw(pPoseStack, EIOLang.RANGE, this.imageWidth - 8 - this.font.width(EIOLang.RANGE), 74, 4210752);
+        font.draw(pPoseStack, EIOLang.FILTER, 8, 74, 4210752);
+        font.draw(pPoseStack, EIOLang.RANGE, imageWidth - 8 - font.width(EIOLang.RANGE), 74, 4210752);
         super.renderLabels(pPoseStack, pMouseX, pMouseY);
     }
 
     @Override
     public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
         super.render(pPoseStack, pMouseX, pMouseY, pPartialTicks);
-        font.draw(pPoseStack, this.getMenu().getBlockEntity().getRange() + "", leftPos + imageWidth - 8 - 8 - 10, topPos + 90, 0);
+        font.draw(pPoseStack, getMenu().getBlockEntity().getRange() + "", leftPos + imageWidth - 8 - 8 - 10, topPos + 90, 0);
     }
 
 }

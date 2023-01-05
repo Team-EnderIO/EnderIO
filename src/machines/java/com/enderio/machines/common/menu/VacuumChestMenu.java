@@ -7,8 +7,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.apache.logging.log4j.LogManager;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class VacuumChestMenu extends MachineMenu<VacuumChestBlockEntity> {
 
