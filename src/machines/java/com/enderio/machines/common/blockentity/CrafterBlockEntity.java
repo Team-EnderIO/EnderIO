@@ -8,7 +8,6 @@ import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.menu.CrafterMenu;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -19,7 +18,9 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.ArrayDeque;
 import java.util.Optional;
+import java.util.Queue;
 
 public class CrafterBlockEntity extends PoweredMachineEntity {
 
@@ -30,7 +31,7 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
     private static final int ENERGY_USAGE_PER_ITEM = 10;
 
     private CraftingRecipe recipe;
-    private NonNullList<ItemStack> outputBuffer = NonNullList.create();
+    private Queue<ItemStack> outputBuffer = new ArrayDeque<>();
 
     private static final CraftingContainer dummyCContainer = new CraftingContainer(new AbstractContainerMenu(null, -1) {
         @Override
@@ -110,14 +111,14 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
         }
 
         // output
-        if (canMergeOutput(outputBuffer.get(0))) {
+        if (canMergeOutput(outputBuffer.peek())) {
             var stack = getInventory().getStackInSlot(10);
             if (stack.isEmpty()) {
-                getInventory().setStackInSlot(10, outputBuffer.get(0).copy());
+                getInventory().setStackInSlot(10, outputBuffer.peek().copy());
             } else {
-                stack.grow(outputBuffer.get(0).getCount());
+                stack.grow(outputBuffer.peek().getCount());
             }
-            outputBuffer.remove(0);
+            outputBuffer.remove();
         }
     }
 
