@@ -220,7 +220,7 @@ public class MachineInventoryLayout {
         }
 
         /**
-         * Add a storage slot.
+         * Add some storage slots.
          * This slot can inserted to or extracted from via gui and externally.
          *
          * @param count The number of slots to add.
@@ -240,10 +240,10 @@ public class MachineInventoryLayout {
         }
 
         /**
-         * Add a storage slot.
+         * Add some storage slots.
          * This slot can inserted to or extracted from via gui and externally.
          *
-         * @param count The number of slots to add.
+         * @param count  The number of slots to add.
          * @param filter The filter predicate for the slot
          */
         public Builder storageSlot(int count, BiPredicate<Integer, ItemStack> filter) {
@@ -262,7 +262,7 @@ public class MachineInventoryLayout {
         }
 
         /**
-         * Add a ghost slot.
+         * Add some ghost slots.
          * This slot can only be interacted with via gui.
          *
          * @param count The number of slots to add.
@@ -282,7 +282,7 @@ public class MachineInventoryLayout {
         }
 
         /**
-         * Add a ghost slot.
+         * Add some ghost slots.
          * This slot can only be inserted to (or cleared as per implementation of GhostSlot).
          *
          * @param count The number of slots to add.
@@ -305,7 +305,7 @@ public class MachineInventoryLayout {
         }
 
         /**
-         * Add a preview slot.
+         * Add some preview slots.
          * This slot cannot be inserted to/extracted from.
          *
          * @param count The number of slots to add.
