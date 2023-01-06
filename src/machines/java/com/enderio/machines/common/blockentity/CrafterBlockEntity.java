@@ -74,8 +74,12 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
 
     @Override
     public void serverTick() {
+        tryCraft();
+        super.serverTick();
         processOutputBuffer();
+    }
 
+    private void tryCraft() {
         Optional<ItemStack> opt = getRecipeResult();
         if (opt.isPresent()) {
             ItemStack result = opt.get();
@@ -86,7 +90,6 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
         } else {
             this.getInventory().setStackInSlot(20, ItemStack.EMPTY);
         }
-        super.serverTick();
     }
 
     private boolean shouldActTick() {
@@ -105,16 +108,14 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
         if (outputBuffer.isEmpty()) {
             return;
         }
-        // clean buffer
-        outputBuffer.removeIf(ItemStack::isEmpty);
 
         // output
         if (canMergeOutput(outputBuffer.get(0))) {
             var stack = getInventory().getStackInSlot(10);
             if (stack.isEmpty()) {
                 getInventory().setStackInSlot(10, outputBuffer.get(0).copy());
-            } else if (stack.sameItem(outputBuffer.get(0))) {
-                stack.grow(1);
+            } else {
+                stack.grow(outputBuffer.get(0).getCount());
             }
             outputBuffer.remove(0);
         }
@@ -136,7 +137,7 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
 
     private boolean canMergeOutput(ItemStack item) {
         ItemStack output = this.getInventory().getStackInSlot(10);
-        return output.isEmpty() || (output.sameItem(item) && (output.getCount() + item.getCount() <= 64));
+        return output.isEmpty() || (ItemStack.isSameItemSameTags(output, item) && (output.getCount() + item.getCount() <= 64));
     }
 
     private void craftItem() {
@@ -151,13 +152,12 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
         for (int i = 0; i < 9; i++) {
             dummyCContainer.setItem(i, inv.getStackInSlot(start + i).copy());
         }
-        // double check necessary ?
-        if (recipe.matches(dummyCContainer, getLevel())) {
-            //craft
-            clearInput();
-            outputBuffer.add(recipe.assemble(dummyCContainer));
-            outputBuffer.addAll(recipe.getRemainingItems(dummyCContainer));
-        }
+        //craft
+        clearInput();
+        outputBuffer.add(recipe.assemble(dummyCContainer));
+        outputBuffer.addAll(recipe.getRemainingItems(dummyCContainer));
+        // clean buffer
+        outputBuffer.removeIf(ItemStack::isEmpty);
 
     }
 
