@@ -12,19 +12,19 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public abstract class SyncedMenu<T extends EnderBlockEntity> extends AbstractContainerMenu {
 
-    @Nullable
-    private final T blockEntity;
+    @Nullable private final T blockEntity;
     private final Inventory inventory;
 
     private final List<EnderDataSlot<?>> clientToServerSlots = new ArrayList<>();
+    private final List<Slot> playerInventorySlots = new ArrayList<>();
 
     protected SyncedMenu(@Nullable T blockEntity, Inventory inventory, @Nullable MenuType<?> pMenuType, int pContainerId) {
         super(pMenuType, pContainerId);
@@ -83,14 +83,29 @@ public abstract class SyncedMenu<T extends EnderBlockEntity> extends AbstractCon
     }
     
     public void addInventorySlots(int xPos, int yPos) {
+
+        // Hotbar
+        for (int x = 0; x < 9; x++) {
+            Slot ref = new Slot(inventory, x, xPos + x * 18, yPos + 58);
+            playerInventorySlots.add(ref);
+            this.addSlot(ref);
+        }
+
+        // Inventory
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 9; x++) {
-                this.addSlot(new Slot(inventory, x + y * 9 + 9, xPos + x * 18, yPos + y * 18));
+                Slot ref = new Slot(inventory, x + y * 9 + 9, xPos + x * 18, yPos + y * 18);
+                playerInventorySlots.add(ref);
+                this.addSlot(ref);
             }
         }
 
-        for (int x = 0; x < 9; x++) {
-            this.addSlot(new Slot(inventory, x, xPos + x * 18, yPos + 58));
+    }
+
+    public void hidePlayerSlots(boolean shouldHide) {
+        int offset = shouldHide ? 1000 : -1000;
+        for (int x = 0; x < 36; x++) {
+            playerInventorySlots.get(x).y += offset;
         }
     }
 }

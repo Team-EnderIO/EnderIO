@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class IOConfigWidget<U extends EIOScreen> extends AbstractWidget {
@@ -28,14 +29,16 @@ public class IOConfigWidget<U extends EIOScreen> extends AbstractWidget {
 
     private boolean isVisible = false;
     private final IOConfigRendererWidget rendererWidget;
+    private final Consumer<Boolean> hideInventory;
 
     // Rebase on ToggleButton if possible
-    public IOConfigWidget(U addedOn, int x, int y, int width, int height, int xTexStart, int yTexStart, ResourceLocation resourceLocation, Rect2i bounds) {
-        this(addedOn, x, y, width, height, xTexStart, yTexStart, resourceLocation, 256, 256, bounds);
+    public IOConfigWidget(U addedOn, int x, int y, int width, int height, int xTexStart, int yTexStart, ResourceLocation resourceLocation, Rect2i bounds,
+        Consumer<Boolean> hideInventory) {
+        this(addedOn, x, y, width, height, xTexStart, yTexStart, resourceLocation, 256, 256, bounds, hideInventory);
     }
 
     public IOConfigWidget(U addedOn, int x, int y, int width, int height, int xTexStart, int yTexStart, ResourceLocation resourceLocation, int textureWidth,
-        int textureHeight, Rect2i bounds) {
+        int textureHeight, Rect2i bounds, Consumer<Boolean> hideInventory) {
         super(x, y, width, height, Component.empty());
         this.addedOn = addedOn;
         this.xTexStart = xTexStart;
@@ -43,6 +46,7 @@ public class IOConfigWidget<U extends EIOScreen> extends AbstractWidget {
         this.resLoc = resourceLocation;
         this.textureWidth = textureWidth;
         this.textureHeight = textureHeight;
+        this.hideInventory = hideInventory;
         this.rendererWidget = new IOConfigRendererWidget(addedOn, bounds, () -> isVisible);
     }
 
@@ -79,6 +83,7 @@ public class IOConfigWidget<U extends EIOScreen> extends AbstractWidget {
     @Override
     public void onClick(double pMouseX, double pMouseY) {
         isVisible = !isVisible;
+        hideInventory.accept(isVisible);
     }
 
     public static Rect2i genRenderBox(int leftPos, int topPos, int imageWidth, int imageHeight) {
