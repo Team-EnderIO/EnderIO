@@ -135,10 +135,22 @@ public class EIOLang {
 
     // endregion
 
+    //region Filters
+
+    public static final Component FILTER = REGISTRATE.addLang("gui", EnderIO.loc("filter"), "Filter");
+
+    // endregion
+
     // region Graves
 
     public static final Component GRAVE_WRONG_OWNER = REGISTRATE.addLang("message", EnderIO.loc("grave.wrong_owner"), "This grave is not yours! You cannot open it.");
 
+    // endregion
+
+    // region GUI
+    public static final Component RANGE = REGISTRATE.addLang("gui", EnderIO.loc("range"), "Range");
+    public static final Component SHOW_RANGE = REGISTRATE.addLang("gui", EnderIO.loc("range.show"), "Show Range");
+    public static final Component HIDE_RANGE = REGISTRATE.addLang("gui", EnderIO.loc("range.hide"), "Hide Range");
     // endregion
 
     // region Misc Tooltips
