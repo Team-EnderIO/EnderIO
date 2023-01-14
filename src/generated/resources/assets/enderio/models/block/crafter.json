@@ -2,7 +2,7 @@
   "parent": "minecraft:block/block",
   "children": {
     "frame": {
-      "parent": "enderio:block/machine_frame"
+      "parent": "enderio:block/crafter_frame"
     },
     "front": {
       "parent": "enderio:block/crafter_front"
@@ -18,6 +18,6 @@
   ],
   "loader": "forge:composite",
   "textures": {
-    "particle": "enderio:block/machine_side"
+    "particle": "enderio:block/crafter_side"
   }
 }
