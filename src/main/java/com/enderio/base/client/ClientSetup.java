@@ -2,12 +2,12 @@ package com.enderio.base.client;
 
 import com.enderio.EnderIO;
 import com.enderio.base.client.particle.RangeParticle;
-import com.enderio.base.common.init.EIOParticles;
-import com.enderio.core.client.item.EnergyBarDecorator;
-import com.enderio.core.client.item.FluidBarDecorator;
 import com.enderio.base.client.renderer.item.GlassIconDecorator;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.common.init.EIOParticles;
+import com.enderio.core.client.item.EnergyBarDecorator;
+import com.enderio.core.client.item.FluidBarDecorator;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ModelEvent;
@@ -33,6 +33,7 @@ public class ClientSetup {
     public static void itemDecorators(RegisterItemDecorationsEvent event) {
         // Register tools
         event.register(EIOItems.LEVITATION_STAFF.get(), FluidBarDecorator.INSTANCE);
+        event.register(EIOItems.TRAVEL_STAFF.get(), EnergyBarDecorator.INSTANCE);
         event.register(EIOItems.DARK_STEEL_AXE.get(), EnergyBarDecorator.INSTANCE);
         event.register(EIOItems.DARK_STEEL_PICKAXE.get(), EnergyBarDecorator.INSTANCE);
 

@@ -39,6 +39,8 @@ public class MachineBlockEntities {
     public static final BlockEntityEntry<VacuumChestBlockEntity> VACUUM_CHEST = register("vacuum_chest", VacuumChestBlockEntity::new,
         MachineBlocks.VACUUM_CHEST);
     public static final BlockEntityEntry<XPVacuumBlockEntity> XP_VACUUM = register("xp_vacuum", XPVacuumBlockEntity::new, MachineBlocks.XP_VACUUM);
+    public static final BlockEntityEntry<TravelAnchorBlockEntity> TRAVEL_ANCHOR = register("travel_anchor", TravelAnchorBlockEntity::new,
+        MachineBlocks.TRAVEL_ANCHOR);
 
     @SafeVarargs
     private static <B extends BlockEntity> BlockEntityEntry<B> register(String name, BlockEntityBuilder.BlockEntityFactory<B> beFactory,

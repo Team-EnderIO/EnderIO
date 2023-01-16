@@ -19,6 +19,14 @@ public class ItemsConfig {
     public final ForgeConfigSpec.ConfigValue<Integer> LEVITATION_STAFF_ENERGY_USE;
     public final ForgeConfigSpec.ConfigValue<Integer> LEVITATION_STAFF_MAX_ENERGY;
 
+    public final ForgeConfigSpec.ConfigValue<Integer> TRAVELLING_BLINK_RANGE;
+    public final ForgeConfigSpec.ConfigValue<Integer> TRAVELLING_BLINK_DISABLED_TIME;
+    //    public final ForgeConfigSpec.ConfigValue<Integer> TRAVELLING_STAFF_ENERGY_USE;
+    //    public final ForgeConfigSpec.ConfigValue<Integer> TRAVELLING_STAFF_MAX_ENERGY;
+
+    public final ForgeConfigSpec.ConfigValue<Integer> TRAVELLING_TO_BLOCK_RANGE;
+    public final ForgeConfigSpec.ConfigValue<Integer> TRAVELLING_BLOCK_TO_BLOCK_RANGE;
+
     public final ForgeConfigSpec.ConfigValue<List<? extends String>> SOUL_VIAL_BLACKLIST;
 
     public ItemsConfig(ForgeConfigSpec.Builder builder) {
@@ -41,10 +49,21 @@ public class ItemsConfig {
         LEVITATION_STAFF_MAX_ENERGY = builder.define("maxEnergy", 1000);
         builder.pop();
 
+        builder.push("travelling");
+        TRAVELLING_BLINK_RANGE = builder.defineInRange("blinkRange", 24, 4, 16 * 32);
+        TRAVELLING_BLINK_DISABLED_TIME = builder.defineInRange("disabledTime", 5, 0, 20 * 60);
+        //        TRAVELLING_STAFF_ENERGY_USE = builder.define("energyUse", 1);
+        //        TRAVELLING_STAFF_MAX_ENERGY = builder.define("maxEnergy", 1000);
+        builder.comment("the following config values are only used if EIOMachines is loaded");
+        TRAVELLING_TO_BLOCK_RANGE = builder.defineInRange("itemToBlockRange", 256, 4, 16 * 32);
+        TRAVELLING_BLOCK_TO_BLOCK_RANGE = builder.defineInRange("blockToBlockRange", 96, 4, 16 * 32);
+        builder.pop();
+
         builder.push("soulvial");
-        SOUL_VIAL_BLACKLIST = builder.comment("A list of entities that cannot be captured in the soul vial.")
-            .defineList("denylist",
-                List.of(ForgeRegistries.ENTITY_TYPES.getKey(EntityType.WITHER).toString(),ForgeRegistries.ENTITY_TYPES.getKey(EntityType.ELDER_GUARDIAN).toString()),
+        SOUL_VIAL_BLACKLIST = builder
+            .comment("A list of entities that cannot be captured in the soul vial.")
+            .defineList("denylist", List.of(ForgeRegistries.ENTITY_TYPES.getKey(EntityType.WITHER).toString(),
+                    ForgeRegistries.ENTITY_TYPES.getKey(EntityType.ELDER_GUARDIAN).toString()),
                 value -> value instanceof String string && ResourceLocation.isValidResourceLocation(string));
         builder.pop();
 

@@ -1,12 +1,15 @@
 package com.enderio.machines;
 
 import com.enderio.EnderIO;
+import com.enderio.api.travel.TravelRegistry;
+import com.enderio.machines.client.rendering.travel.TravelAnchorRenderer;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.init.MachineMenus;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.lang.MachineLang;
+import com.enderio.machines.common.travel.AnchorTravelTarget;
 import com.enderio.machines.data.recipes.*;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.data.event.GatherDataEvent;
@@ -15,6 +18,8 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLConstructModEvent;
+
+import static com.enderio.EnderIO.loc;
 
 @Mod.EventBusSubscriber(modid = EnderIO.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class EIOMachines {
@@ -31,6 +36,8 @@ public class EIOMachines {
         MachineMenus.register();
         MachineLang.register();
         MachineRecipes.register();
+
+        TravelRegistry.addTravelEntry(loc("travel_anchor"), AnchorTravelTarget::new, TravelAnchorRenderer::new);
     }
 
     @SubscribeEvent

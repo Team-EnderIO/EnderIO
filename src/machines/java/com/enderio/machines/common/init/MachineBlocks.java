@@ -5,6 +5,7 @@ import com.enderio.base.common.item.EIOCreativeTabs;
 import com.enderio.core.data.model.EIOModel;
 import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.block.ProgressMachineBlock;
+import com.enderio.machines.common.block.TravelAnchorBlock;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.item.FluidTankItem;
 import com.enderio.machines.data.loot.MachinesLootTable;
@@ -15,7 +16,6 @@ import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraftforge.client.model.generators.BlockModelBuilder;
 import net.minecraftforge.client.model.generators.BlockModelBuilder.RootTransformBuilder.TransformOrigin;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
@@ -144,7 +144,18 @@ public class MachineBlocks {
         .build()
         .register();
 
-    private static BlockBuilder<ProgressMachineBlock, Registrate> standardMachine(String name, Supplier<BlockEntityEntry<? extends MachineBlockEntity>> blockEntityEntry) {
+    public static final BlockEntry<TravelAnchorBlock> TRAVEL_ANCHOR = REGISTRATE
+        .block("travel_anchor", TravelAnchorBlock::new)
+        .properties(props -> props.strength(2.5f, 8).noOcclusion())
+        .loot(MachinesLootTable::copyNBT)
+        .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIO.loc("block/travel_anchor"))))
+        .item()
+        .tab(() -> EIOCreativeTabs.MACHINES)
+        .build()
+        .register();
+
+    private static BlockBuilder<ProgressMachineBlock, Registrate> standardMachine(String name,
+        Supplier<BlockEntityEntry<? extends MachineBlockEntity>> blockEntityEntry) {
         return REGISTRATE
             .block(name, props -> new ProgressMachineBlock(props, blockEntityEntry.get()))
             .properties(props -> props.strength(2.5f, 8))

@@ -4,7 +4,6 @@ import com.enderio.EnderIO;
 import com.enderio.base.common.capacitor.DefaultCapacitorData;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.item.EIOCreativeTabs;
-import com.enderio.base.common.item.misc.LocationPrintoutItem;
 import com.enderio.base.common.item.capacitors.FixedCapacitorItem;
 import com.enderio.base.common.item.capacitors.LootCapacitorItem;
 import com.enderio.base.common.item.darksteel.DarkSteelAxeItem;
@@ -16,11 +15,7 @@ import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosivePenetr
 import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosivePenetrationUpgradeTier;
 import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosiveUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosiveUpgradeTier;
-import com.enderio.base.common.item.misc.EnderiosItem;
-import com.enderio.base.common.item.misc.EnderfaceItem;
-import com.enderio.base.common.item.misc.GearItem;
-import com.enderio.base.common.item.misc.MaterialItem;
-import com.enderio.base.common.item.misc.BrokenSpawnerItem;
+import com.enderio.base.common.item.misc.*;
 import com.enderio.base.common.item.tool.*;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.model.item.RotatingItemModel;
@@ -339,6 +334,12 @@ public class EIOItems {
 
     public static final ItemEntry<LevitationStaffItem> LEVITATION_STAFF = REGISTRATE
         .item("staff_of_levity", LevitationStaffItem::new)
+        .tab(() -> EIOCreativeTabs.GEAR)
+        .register();
+
+    public static final ItemEntry<TravelStaffItem> TRAVEL_STAFF = REGISTRATE
+        .item("staff_of_travelling", TravelStaffItem::new)
+        .properties(props -> props.stacksTo(1))
         .tab(() -> EIOCreativeTabs.GEAR)
         .register();
 
