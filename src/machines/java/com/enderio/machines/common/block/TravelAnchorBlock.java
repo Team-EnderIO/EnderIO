@@ -12,11 +12,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.WeakHashMap;
 
+@Mod.EventBusSubscriber
 public class TravelAnchorBlock extends Block implements EntityBlock {
     private static final WeakHashMap<Player, Pair<Boolean, Integer>> sneakCache = new WeakHashMap<>();
 
@@ -41,13 +43,10 @@ public class TravelAnchorBlock extends Block implements EntityBlock {
 
     @SubscribeEvent
     public static void sneak(TickEvent.PlayerTickEvent event) {
-        if (event.phase == TickEvent.Phase.END
-            && event.player instanceof ServerPlayer player
-            && player.level.getBlockState(player.blockPosition().below()).getBlock() instanceof TravelAnchorBlock) {
+        if (event.phase == TickEvent.Phase.END && event.player instanceof ServerPlayer player && player.level.getBlockState(player.blockPosition().below()).getBlock() instanceof TravelAnchorBlock) {
 
             Pair<Boolean, Integer> sneakEntry = sneakCache.getOrDefault(player, Pair.of(false, player.getLevel().getServer().getTickCount()-1));
-            if ((!sneakEntry.getLeft() || sneakEntry.getRight() != player.getLevel().getServer().getTickCount()-1)
-                && player.isShiftKeyDown()) {
+            if ((!sneakEntry.getLeft() || sneakEntry.getRight() != player.getLevel().getServer().getTickCount()-1) && player.isShiftKeyDown()) {
 
                 TeleportHandler.blockTeleport(player.level, player);
             }
