@@ -8,7 +8,7 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderLevelLastEvent;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -16,8 +16,9 @@ import net.minecraftforge.fml.common.Mod;
 public class RenderTeleportTargets {
 
     @SubscribeEvent
-    // TODO : DEPRECATED- REPLACE WITH RenderLevelStageEvent
-    public static void renderLevel(RenderLevelLastEvent event) {
+    public static void renderLevel(RenderLevelStageEvent event) {
+        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_PARTICLES)
+            return;
         TravelSavedData data = TravelSavedData.getTravelData(Minecraft.getInstance().level);
         for (ITravelTarget target : data.getTravelTargets()) {
             PoseStack poseStack = event.getPoseStack();
