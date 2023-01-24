@@ -45,7 +45,9 @@ public class PlayerMovementHandler {
             newDeltaMovement = newDeltaMovement.scale(AIR_FRICTION_COEFFICIENT);
             player.setDeltaMovement(newDeltaMovement);
             player.fallDistance = 0f;
-
+            if (!player.level.isClientSide()) {
+                player.hurtMarked = true;
+            }
         }
     }
     public static Optional<GliderMovementInfo> calculateGliderMovementInfo(Player player) {
