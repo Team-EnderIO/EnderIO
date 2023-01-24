@@ -1,0 +1,35 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "enderio:models/glider/agnor_glider",
+		"1": "enderio:models/glider/agnor_glider_handle"
+	},
+	"elements": [
+		{
+			"from": [-8, -3, 3],
+			"to": [24, 29, 3],
+			"rotation": {"angle": 0, "axis": "x", "origin": [8, 10, 3]},
+			"faces": {
+				"north": {"uv": [0, 16, 16, 0], "rotation": 180, "texture": "#0"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#0"}
+			}
+		},
+		{
+			"from": [-8, 10, -7],
+			"to": [24, 10, 3],
+			"rotation": {"angle": 0, "axis": "x", "origin": [8, 10, 3]},
+			"faces": {
+				"up": {"uv": [0, 5.5, 16, 10.5], "rotation": 180, "texture": "#1"},
+				"down": {"uv": [0, 5.5, 16, 10.5], "texture": "#1"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "bone",
+			"origin": [0, 0, 0],
+			"color": 0,
+			"children": [0, 1]
+		}
+	]
+}

@@ -1,7 +1,9 @@
 package com.enderio;
 
+import com.enderio.api.integration.IntegrationManager;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.init.*;
+import com.enderio.base.common.integrations.EnderIOSelfIntegration;
 import com.enderio.base.common.item.tool.SoulVialItem;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.tag.EIOTags;
@@ -82,6 +84,7 @@ public class EnderIO {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addListener(EventPriority.LOWEST, this::onGatherData);
         modEventBus.addListener(SoulVialItem::onCommonSetup);
+        IntegrationManager.addIntegration(new EnderIOSelfIntegration());
     }
 
     public void onGatherData(GatherDataEvent event) {

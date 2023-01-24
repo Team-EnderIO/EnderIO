@@ -1,12 +1,21 @@
 package com.enderio.base.client;
 
 import com.enderio.EnderIO;
+import com.enderio.base.client.renderer.glider.ActiveGliderRenderLayer;
 import com.enderio.core.client.item.EnergyBarDecorator;
 import com.enderio.core.client.item.FluidBarDecorator;
 import com.enderio.base.client.renderer.item.GlassIconDecorator;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.event.RegisterItemDecorationsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -23,6 +32,7 @@ public class ClientSetup {
         event.register(EnderIO.loc("item/energized_gear_helper"));
         event.register(EnderIO.loc("item/vibrant_gear_helper"));
         event.register(EnderIO.loc("item/dark_bimetal_gear_helper"));
+        event.register(EnderIO.loc("glider/glider_test_1"));
     }
 
     @SubscribeEvent
@@ -34,5 +44,22 @@ public class ClientSetup {
 
         // Register all glass blocks
         EIOBlocks.GLASS_BLOCKS.values().forEach(blocks -> blocks.getAllBlocks().forEach(block -> event.register(block.get(), GlassIconDecorator.INSTANCE)));
+    }
+
+    @SubscribeEvent
+    public static void addLayers(EntityRenderersEvent.AddLayers event) {
+        for (String skin : event.getSkins()) {
+            if (event.getSkin(skin) instanceof PlayerRenderer playerRenderer) {
+
+                playerRenderer.addLayer(new ActiveGliderRenderLayer(playerRenderer));
+            }
+        }
+    }
+
+    public static BakedModel glider;
+
+    @SubscribeEvent
+    public static void bakingCompleted(ModelEvent.BakingCompleted event) {
+        glider = event.getModels().get(EnderIO.loc("glider/glider_test_1"));
     }
 }

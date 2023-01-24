@@ -271,6 +271,8 @@ public class EIOItems {
     public static final ItemEntry<MaterialItem> DARK_STEEL_BALL = materialItem("dark_steel_grinding_ball").register();
     public static final ItemEntry<MaterialItem> END_STEEL_BALL = materialItem("end_steel_grinding_ball").register();
 
+    public static final ItemEntry<Item> PINK_GLIDER = dumbItem("pink_glider").tag(EIOTags.Items.GLIDER).register();
+
     // endregion
 
     // region Builders
@@ -488,6 +490,9 @@ public class EIOItems {
 
     public static <T extends Item> ItemEntry<T> dumbItem(String name, NonNullFunction<Item.Properties, T> factory) {
         return REGISTRATE.item(name, factory).register();
+    }
+    public static ItemBuilder<Item, Registrate> dumbItem(String name) {
+        return REGISTRATE.item(name, Item::new);
     }
 
     public static <T extends Item> ItemEntry<T> groupedItem(String name, NonNullFunction<Item.Properties, T> factory, NonNullSupplier<CreativeModeTab> tab) {
