@@ -1,6 +1,5 @@
 package com.enderio.machines.client.gui.widget;
 
-import com.enderio.EnderIO;
 import com.enderio.core.client.gui.screen.IEnderScreen;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -35,7 +34,6 @@ public class IOConfigRenderer<S extends Screen & IEnderScreen> {
     private float distance;
 
     private final @NotNull Vector3f origin;
-    private final @NotNull Vector4f eye = new Vector4f();
     private final @NotNull Matrix4f rotMat = new Matrix4f();
     private final List<BlockPos> configurables = new ArrayList<>();
     private final NonNullList<BlockPos> neighbours = NonNullList.create();
@@ -72,10 +70,6 @@ public class IOConfigRenderer<S extends Screen & IEnderScreen> {
         origin = new Vector3f(c.x(), c.y(), c.z());
         rotMat.setIdentity();
 
-        var player = Minecraft.getInstance().player;
-        //        pitch = -player.getXRot();
-        //        yaw = 180 - player.getYRot();
-
         distance = Math.max(Math.max(size.x(), size.y()), size.z()) + 4;
 
         configurables.forEach(pos -> {
@@ -95,48 +89,53 @@ public class IOConfigRenderer<S extends Screen & IEnderScreen> {
         updateCamera(pPartialTick, pPoseStack, vp);
     }
 
-    private boolean updateCamera(float partialTick, PoseStack ps, Rect2i vp) {
-        ps.pushPose();
+    private void updateCamera(float partialTick, PoseStack ps, Rect2i vp) {
+        int xPos = bounds.getX() + (bounds.getWidth() / 2);
+        int yPos = bounds.getY() + (bounds.getHeight() / 2);
+        float diag = (float) Math.sqrt(3 * 3 + 3 * 3); //change later
+        float scaleX = bounds.getWidth() / diag;
+        float scaleY = (float) bounds.getHeight() / 3;
+        float scale = -Math.min(scaleX, scaleY);
 
-        eye.set(0, 0, distance, 1);
+        ps.pushPose();
+        ps.translate(xPos, yPos, 100);
+        ps.scale(scale, scale, scale);
+        ps.translate(-3 / 2, -3 / 2, 0); //change later
+
+        Vector4f eye = new Vector4f(0, 0, -100, 1); //
         rotMat.setIdentity();
 
         // Camera orientation
-        ps.mulPose(Vector3f.XP.rotation(-pitch));
-        rotMat.multiply(Vector3f.XP.rotation(pitch));
-        ps.mulPose(Vector3f.YP.rotation(-yaw));
-        rotMat.multiply(Vector3f.YP.rotation(yaw));
+        pitch = 30;
+        yaw = 30;
+        ps.mulPose(Vector3f.XP.rotationDegrees(-pitch));
+        rotMat.multiply(Vector3f.XP.rotationDegrees(pitch));
+        ps.mulPose(Vector3f.YP.rotationDegrees(-yaw));
+        rotMat.multiply(Vector3f.YP.rotationDegrees(yaw));
 
         eye.transform(rotMat);
         eye.perspectiveDivide();
         renderWorld(ps, partialTick);
 
         ps.popPose();
-
-        return true;
     }
 
     private void renderWorld(PoseStack ms, float tick) {
+        MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
         ms.pushPose();
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-        MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
+        ms.translate(0, 0, -1);
 
-        ms.pushPose();
-        ms.translate(bounds.getX() + (bounds.getWidth() / 2), bounds.getY() + (bounds.getHeight() / 2), -10);
+        //        ms.translate(bounds.getX() + (bounds.getWidth() / 2), bounds.getY() + (bounds.getHeight() / 2), -10);
         var mc = Minecraft.getInstance();
         var level = mc.level;
         var bs = level.getBlockState(configurables.get(0));
         var renderer = mc.getBlockRenderer();
-        try {
-            renderer.renderSingleBlock(bs, ms, buffers, LightTexture.FULL_BLOCK, OverlayTexture.NO_OVERLAY);
-        } catch (Exception e) {
-            EnderIO.LOGGER.error("render fail", e);
-        }
+        renderer.renderSingleBlock(bs, ms, buffers, LightTexture.FULL_BLOCK, OverlayTexture.NO_OVERLAY);
 
         ms.popPose();
 
         buffers.endBatch();
-        ms.popPose();
     }
 
     private void applyCamera(float partialTick) {
