@@ -2,22 +2,26 @@ package com.enderio.machines.client.gui.widget;
 
 import com.enderio.core.client.gui.screen.IEnderScreen;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
+import net.minecraft.util.FastColor;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraftforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
+import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +38,10 @@ public class IOConfigRenderer<S extends Screen & IEnderScreen> {
     private float distance;
 
     private final @NotNull Vector3f origin;
+    private Vector3f size;
     private final @NotNull Matrix4f rotMat = new Matrix4f();
     private final List<BlockPos> configurables = new ArrayList<>();
-    private final NonNullList<BlockPos> neighbours = NonNullList.create();
+    private final List<BlockPos> neighbours = new ArrayList<>();
 
     public IOConfigRenderer(S addedOn, Rect2i bounds, MachineBlockEntity configurable) {
         this(addedOn, bounds, List.of(configurable.getBlockPos()));
@@ -48,7 +53,6 @@ public class IOConfigRenderer<S extends Screen & IEnderScreen> {
         this.configurables.addAll(_configurables);
 
         Vector3f c;
-        Vector3f size;
         if (configurables.size() == 1) {
             BlockPos bc = configurables.get(0);
             c = new Vector3f(bc.getX() + 0.5f, bc.getY() + 0.5f, bc.getZ() + 0.5f);
@@ -84,23 +88,26 @@ public class IOConfigRenderer<S extends Screen & IEnderScreen> {
     }
 
     public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick, Rect2i vp) {
-        GuiComponent.fill(pPoseStack, bounds.getX(), bounds.getY(), bounds.getX() + bounds.getWidth(), bounds.getY() + bounds.getHeight(), 0xFF000000);
+        //        GuiComponent.fill(pPoseStack, bounds.getX(), bounds.getY(), bounds.getX() + bounds.getWidth(), bounds.getY() + bounds.getHeight(), 0xFF000000);
 
-        updateCamera(pPartialTick, pPoseStack, vp);
+        renderScene(pPartialTick, pPoseStack, vp);
     }
 
-    private void updateCamera(float partialTick, PoseStack ps, Rect2i vp) {
+    private void renderScene(float partialTick, PoseStack ps, Rect2i vp) {
+        float sizeX = size.x() + 2;
+        float sizeY = size.y() + 2;
+        float sizeZ = size.z() + 2;
         int xPos = bounds.getX() + (bounds.getWidth() / 2);
         int yPos = bounds.getY() + (bounds.getHeight() / 2);
-        float diag = (float) Math.sqrt(3 * 3 + 3 * 3); //change later
+        float diag = (float) Math.sqrt(sizeX * sizeX + sizeZ * sizeZ); //change later
         float scaleX = bounds.getWidth() / diag;
-        float scaleY = (float) bounds.getHeight() / 3;
+        float scaleY = (float) bounds.getHeight() / sizeY;
         float scale = -Math.min(scaleX, scaleY);
 
         ps.pushPose();
         ps.translate(xPos, yPos, 100);
         ps.scale(scale, scale, scale);
-        ps.translate(-3 / 2, -3 / 2, 0); //change later
+        //        ps.translate(-sizeX / 2, -sizeY / 2, 0); //change later
 
         Vector4f eye = new Vector4f(0, 0, -100, 1); //
         rotMat.setIdentity();
@@ -123,31 +130,131 @@ public class IOConfigRenderer<S extends Screen & IEnderScreen> {
     private void renderWorld(PoseStack ms, float tick) {
         MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
         ms.pushPose();
+        RenderSystem.enableBlend();
+        RenderSystem.enableDepthTest();
+        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE,
+            GlStateManager.DestFactor.ZERO);
+        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-        ms.translate(0, 0, -1);
+        // Render configurables
+        //TODO: recheck when capacitor banks
+        for (var configurable : configurables) {
+            var pos = new Vector3f(configurable.getX() - origin.x(), configurable.getY() - origin.y(), configurable.getZ() - origin.z());
+            renderBlock(ms, configurable, pos, buffers);
+        }
 
-        //        ms.translate(bounds.getX() + (bounds.getWidth() / 2), bounds.getY() + (bounds.getHeight() / 2), -10);
-        var mc = Minecraft.getInstance();
-        var level = mc.level;
-        var bs = level.getBlockState(configurables.get(0));
-        var renderer = mc.getBlockRenderer();
-        renderer.renderSingleBlock(bs, ms, buffers, LightTexture.FULL_BLOCK, OverlayTexture.NO_OVERLAY);
+        // RenderNeighbours
+        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+        for (var neighbour : neighbours) {
+            var pos = new Vector3f(neighbour.getX() - origin.x(), neighbour.getY() - origin.y(), neighbour.getZ() - origin.z());
+            renderBlock(ms, neighbour, pos, buffers);
+        }
 
         ms.popPose();
-
         buffers.endBatch();
+        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
     }
 
-    private void applyCamera(float partialTick) {
-        //        Rect2i vp = camera.getViewport();
-        RenderSystem.viewport(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight());
-        //        final Matrix4d cameraViewMatrix = camera.getTransposeProjectionMatrix();
-        //        RenderSystem.setProjectionMatrix(cameraViewMatrix);
-        //        GL11.glMatrixMode(GL11.GL_MODELVIEW);
-        //        final Matrix4d cameraViewMatrix = camera.getTransposeViewMatrix();
-        //        if (cameraViewMatrix != null) {
-        //            RenderUtil.loadMatrix(cameraViewMatrix);
-        //        }
-        //        GL11.glTranslatef(-(float) eye.x, -(float) eye.y, -(float) eye.z);
+    private void renderBlock(PoseStack ms, BlockPos block, Vector3f pos, MultiBufferSource.BufferSource buffers) {
+        var mc = Minecraft.getInstance();
+        var level = mc.level;
+        ms.pushPose();
+        ms.translate(pos.x(), pos.y(), pos.z());
+        var bs = level.getBlockState(block);
+        var renderer = mc.getBlockRenderer();
+
+        var modelData = renderer.getBlockModel(bs);
+        var vertexConsumer = new GhostVertexConsumer(buffers.getBuffer(TransparentRenderType.TRANSPARENT), 150);
+        var blockColor = mc.getBlockColors().getColor(bs, null, null, 0);
+        var r = FastColor.ARGB32.red(blockColor) / 255F;
+        var g = FastColor.ARGB32.green(blockColor) / 255F;
+        var b = FastColor.ARGB32.blue(blockColor) / 255F;
+        //        for (RenderType rt : modelData.getRenderTypes(bs, RandomSource.create(42), ModelData.EMPTY)) renderer.getModelRenderer().renderModel(ms.last(),
+        //                buffers.getBuffer(renderType != null ? renderType : net.minecraftforge.client.RenderTypeHelper.getEntityRenderType(rt, false)), pState,
+        //                bakedmodel, f, f1, f2, pPackedLight, pPackedOverlay, modelData, rt);
+        //        break;
+        renderer
+            .getModelRenderer()
+            .renderModel(ms.last(), vertexConsumer, bs, modelData, r, g, b, LightTexture.FULL_BLOCK, OverlayTexture.NO_OVERLAY, ModelData.EMPTY,
+                TransparentRenderType.TRANSPARENT);
+        //        renderer.renderSingleBlock(bs, ms, buffers, LightTexture.FULL_BLOCK, OverlayTexture.NO_OVERLAY);
+        ms.popPose();
+    }
+
+    /**
+     * Thanks XFactHD/FramedBlocks and ApexStudios-Dev/FantasyFurniture/
+     * Modification to default {@link VertexConsumer} which overrides alpha to allow semi-transparent rendering
+     */
+    record GhostVertexConsumer(VertexConsumer delegate, int alpha) implements VertexConsumer {
+        @Override
+        public VertexConsumer vertex(double x, double y, double z) {
+            return delegate.vertex(x, y, z);
+        }
+
+        @Override
+        public VertexConsumer color(int red, int green, int blue, int alpha) {
+            return delegate.color(red, green, blue, (alpha * this.alpha) / 0xFF);
+        }
+
+        @Override
+        public VertexConsumer uv(float u, float v) {
+            return delegate.uv(u, v);
+        }
+
+        @Override
+        public VertexConsumer overlayCoords(int u, int v) {
+            return delegate.overlayCoords(u, v);
+        }
+
+        @Override
+        public VertexConsumer uv2(int u, int v) {
+            return delegate.uv2(u, v);
+        }
+
+        @Override
+        public VertexConsumer normal(float x, float y, float z) {
+            return delegate.normal(x, y, z);
+        }
+
+        @Override
+        public void endVertex() {
+            delegate.endVertex();
+        }
+
+        @Override
+        public void defaultColor(int defaultR, int defaultG, int defaultB, int defaultA) {
+            delegate.defaultColor(defaultR, defaultG, defaultB, defaultA);
+        }
+
+        @Override
+        public void unsetDefaultColor() {
+            delegate.unsetDefaultColor();
+        }
+    }
+
+    class TransparentRenderType extends RenderType {
+
+        public TransparentRenderType(String pName, VertexFormat pFormat, VertexFormat.Mode pMode, int pBufferSize, boolean pAffectsCrumbling,
+            boolean pSortOnUpload, Runnable pSetupState, Runnable pClearState) {
+            super(pName, pFormat, pMode, pBufferSize, pAffectsCrumbling, pSortOnUpload, pSetupState, pClearState);
+        }
+
+        public static final RenderType TRANSPARENT = create("enderio_ioconfig_transparent", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, false,
+            true, RenderType.CompositeState.builder()
+                // block texture
+                .setTextureState(new RenderStateShard.TextureStateShard(InventoryMenu.BLOCK_ATLAS, false, false))
+                // translucency
+                .setShaderState(RenderStateShard.RENDERTYPE_TRANSLUCENT_SHADER)
+                .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
+                .setOutputState(RenderStateShard.TRANSLUCENT_TARGET)
+                .setLightmapState(RenderStateShard.LIGHTMAP) // render with proper block lighting
+                //                .setOverlayState(new CustomOverlay()) // used for overlay color (red when invalid placement)
+
+                .setCullState(RenderStateShard.CULL)
+                // disable depth test (see through walls)
+                .setWriteMaskState(RenderStateShard.COLOR_WRITE)
+                .setDepthTestState(new RenderStateShard.DepthTestStateShard("enderio_not_equal", GL11.GL_NOTEQUAL))
+                .setLayeringState(RenderStateShard.POLYGON_OFFSET_LAYERING) // fixes z-fighting?, when in same space as other blocks
+                .createCompositeState(false));
     }
 }
