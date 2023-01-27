@@ -12,6 +12,7 @@ import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -19,7 +20,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraftforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
@@ -88,7 +88,7 @@ public class IOConfigRenderer<S extends Screen & IEnderScreen> {
     }
 
     public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick, Rect2i vp) {
-        //        GuiComponent.fill(pPoseStack, bounds.getX(), bounds.getY(), bounds.getX() + bounds.getWidth(), bounds.getY() + bounds.getHeight(), 0xFF000000);
+        GuiComponent.fill(pPoseStack, bounds.getX(), bounds.getY(), bounds.getX() + bounds.getWidth(), bounds.getY() + bounds.getHeight(), 0xFF000000);
 
         renderScene(pPartialTick, pPoseStack, vp);
     }
@@ -127,58 +127,82 @@ public class IOConfigRenderer<S extends Screen & IEnderScreen> {
         ps.popPose();
     }
 
-    private void renderWorld(PoseStack ms, float tick) {
+    private void renderWorld(PoseStack poseStack, float tick) {
         MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-        ms.pushPose();
+        poseStack.pushPose();
         RenderSystem.enableBlend();
         RenderSystem.enableDepthTest();
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE,
-            GlStateManager.DestFactor.ZERO);
+            GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+
         // Render configurables
         //TODO: recheck when capacitor banks
         for (var configurable : configurables) {
             var pos = new Vector3f(configurable.getX() - origin.x(), configurable.getY() - origin.y(), configurable.getZ() - origin.z());
-            renderBlock(ms, configurable, pos, buffers);
+            renderBlock(poseStack, configurable, pos, buffers);
         }
 
         // RenderNeighbours
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         for (var neighbour : neighbours) {
             var pos = new Vector3f(neighbour.getX() - origin.x(), neighbour.getY() - origin.y(), neighbour.getZ() - origin.z());
-            renderBlock(ms, neighbour, pos, buffers);
+            renderBlock(poseStack, neighbour, pos, buffers);
         }
 
-        ms.popPose();
+        poseStack.popPose();
         buffers.endBatch();
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
     }
 
-    private void renderBlock(PoseStack ms, BlockPos block, Vector3f pos, MultiBufferSource.BufferSource buffers) {
+    private void renderBlock(PoseStack poseStack, BlockPos blockPos, Vector3f renderPos, MultiBufferSource.BufferSource buffers) {
         var mc = Minecraft.getInstance();
         var level = mc.level;
-        ms.pushPose();
-        ms.translate(pos.x(), pos.y(), pos.z());
-        var bs = level.getBlockState(block);
+        poseStack.pushPose();
+        poseStack.translate(renderPos.x(), renderPos.y(), renderPos.z());
+        var blockState = level.getBlockState(blockPos);
         var renderer = mc.getBlockRenderer();
 
-        var modelData = renderer.getBlockModel(bs);
-        var vertexConsumer = new GhostVertexConsumer(buffers.getBuffer(TransparentRenderType.TRANSPARENT), 150);
-        var blockColor = mc.getBlockColors().getColor(bs, null, null, 0);
+        //        var bakedModel = renderer.getBlockModel(blockState);
+        //        var vertexConsumer = new GhostVertexConsumer(buffers.getBuffer(TransparentRenderType.TRANSPARENT), 255);
+        //        var modelData = level.getModelDataManager().getAt(blockPos);
+
+        //        renderer
+        //            .getModelRenderer()
+        //            .renderModel(poseStack.last(), vertexConsumer, blockState, bakedModel, r, g, b, LightTexture.FULL_BLOCK, OverlayTexture.NO_OVERLAY, ModelData.EMPTY,
+        //                TransparentRenderType.TRANSPARENT);
+        renderer.renderSingleBlock(blockState, poseStack, buffers, LightTexture.FULL_BLOCK, OverlayTexture.NO_OVERLAY);
+        poseStack.popPose();
+
+    }
+
+    private void renderBlockWithAlpha(PoseStack poseStack, BlockPos blockPos, Vector3f renderPos, MultiBufferSource.BufferSource buffers) {
+        var mc = Minecraft.getInstance();
+        var level = mc.level;
+        poseStack.pushPose();
+        poseStack.translate(renderPos.x(), renderPos.y(), renderPos.z());
+        var blockState = level.getBlockState(blockPos);
+        var renderer = mc.getBlockRenderer();
+
+        var bakedModel = renderer.getBlockModel(blockState);
+        var vertexConsumer = new GhostVertexConsumer(buffers.getBuffer(TransparentRenderType.TRANSPARENT), 240);
+        var modelData = level.getModelDataManager().getAt(blockPos);
+        var blockColor = mc.getBlockColors().getColor(blockState, level, blockPos, 0);
         var r = FastColor.ARGB32.red(blockColor) / 255F;
         var g = FastColor.ARGB32.green(blockColor) / 255F;
         var b = FastColor.ARGB32.blue(blockColor) / 255F;
-        //        for (RenderType rt : modelData.getRenderTypes(bs, RandomSource.create(42), ModelData.EMPTY)) renderer.getModelRenderer().renderModel(ms.last(),
-        //                buffers.getBuffer(renderType != null ? renderType : net.minecraftforge.client.RenderTypeHelper.getEntityRenderType(rt, false)), pState,
-        //                bakedmodel, f, f1, f2, pPackedLight, pPackedOverlay, modelData, rt);
-        //        break;
+
+        //        renderer
+        //            .getModelRenderer()
+        //            .tesselateWithoutAO(level, bakedModel, blockState, blockPos, poseStack, vertexConsumer, false, RandomSource.create(), blockState.getSeed(blockPos),
+        //                LightTexture.FULL_BLOCK, modelData, TransparentRenderType.TRANSPARENT);
         renderer
             .getModelRenderer()
-            .renderModel(ms.last(), vertexConsumer, bs, modelData, r, g, b, LightTexture.FULL_BLOCK, OverlayTexture.NO_OVERLAY, ModelData.EMPTY,
+            .renderModel(poseStack.last(), vertexConsumer, blockState, bakedModel, r, g, b, LightTexture.FULL_BLOCK, OverlayTexture.NO_OVERLAY, modelData,
                 TransparentRenderType.TRANSPARENT);
-        //        renderer.renderSingleBlock(bs, ms, buffers, LightTexture.FULL_BLOCK, OverlayTexture.NO_OVERLAY);
-        ms.popPose();
+        //                renderer.renderSingleBlock(bs, ms, buffers, LightTexture.FULL_BLOCK, OverlayTexture.NO_OVERLAY);
+        poseStack.popPose();
     }
 
     /**
@@ -239,20 +263,20 @@ public class IOConfigRenderer<S extends Screen & IEnderScreen> {
             super(pName, pFormat, pMode, pBufferSize, pAffectsCrumbling, pSortOnUpload, pSetupState, pClearState);
         }
 
-        public static final RenderType TRANSPARENT = create("enderio_ioconfig_transparent", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, false,
+        public static final RenderType TRANSPARENT = create("enderio_ioconfig_transparent", DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS, 256, false,
             true, RenderType.CompositeState.builder()
                 // block texture
                 .setTextureState(new RenderStateShard.TextureStateShard(InventoryMenu.BLOCK_ATLAS, false, false))
                 // translucency
-                .setShaderState(RenderStateShard.RENDERTYPE_TRANSLUCENT_SHADER)
-                .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
-                .setOutputState(RenderStateShard.TRANSLUCENT_TARGET)
+                .setShaderState(RenderStateShard.RENDERTYPE_TRANSLUCENT_SHADER).setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
+                //                .setOutputState(RenderStateShard.TRANSLUCENT_TARGET)
                 .setLightmapState(RenderStateShard.LIGHTMAP) // render with proper block lighting
                 //                .setOverlayState(new CustomOverlay()) // used for overlay color (red when invalid placement)
 
                 .setCullState(RenderStateShard.CULL)
                 // disable depth test (see through walls)
                 .setWriteMaskState(RenderStateShard.COLOR_WRITE)
+                //                .setDepthTestState(RenderStateShard.LEQUAL_DEPTH_TEST)
                 .setDepthTestState(new RenderStateShard.DepthTestStateShard("enderio_not_equal", GL11.GL_NOTEQUAL))
                 .setLayeringState(RenderStateShard.POLYGON_OFFSET_LAYERING) // fixes z-fighting?, when in same space as other blocks
                 .createCompositeState(false));
