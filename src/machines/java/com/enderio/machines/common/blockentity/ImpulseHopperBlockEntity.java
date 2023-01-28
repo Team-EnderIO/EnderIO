@@ -51,20 +51,23 @@ public class ImpulseHopperBlockEntity extends PoweredMachineEntity {
     }
 
     public boolean canPass(int slot) {
-        if (ItemStack.tagMatches(this.getInventory().getStackInSlot(slot), this.getInventory().getStackInSlot(slot + 6 + 6))) {
+        if (ItemStack.isSameItemSameTags(this.getInventory().getStackInSlot(slot), this.getInventory().getStackInSlot(slot + 6 + 6))) {
             return this.getInventory().getStackInSlot(slot).getCount() >= this.getInventory().getStackInSlot(slot + 6 + 6).getCount();
         }
         return false;
     }
 
-    public boolean canHold(int slot) {
-        return this.getInventory().getStackInSlot(slot + 6).getCount() + this.getInventory().getStackInSlot(slot + 6 + 6).getCount() <= 64;
+    public boolean canHoldAndMerge(int slot) {
+        // TODO: rewrite with slot access
+        boolean canHold = this.getInventory().getStackInSlot(slot + 6).getCount() + this.getInventory().getStackInSlot(slot + 6 + 6).getCount() <= 64;
+        boolean canMerge = ItemStack.isSameItemSameTags(this.getInventory().getStackInSlot(slot), this.getInventory().getStackInSlot(slot + 6));
+        return canHold && canMerge;
     }
 
     public boolean shouldPassItems() {
         int totalpower = 0;
         for (int i = 0; i < 6; i++) {
-            if (canPass(i) && canHold(i)) {
+            if (canPass(i) && canHoldAndMerge(i)) {
                 totalpower += this.getInventory().getStackInSlot(i + 6 + 6).getCount() * ENERGY_USAGE_PER_ITEM;
                 continue;
             }

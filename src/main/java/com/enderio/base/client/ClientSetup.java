@@ -2,6 +2,8 @@ package com.enderio.base.client;
 
 import com.enderio.EnderIO;
 import com.enderio.base.client.renderer.glider.ActiveGliderRenderLayer;
+import com.enderio.base.client.particle.RangeParticle;
+import com.enderio.base.common.init.EIOParticles;
 import com.enderio.core.client.item.EnergyBarDecorator;
 import com.enderio.core.client.item.FluidBarDecorator;
 import com.enderio.base.client.renderer.item.GlassIconDecorator;
@@ -14,16 +16,18 @@ import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.event.RegisterItemDecorationsEvent;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientSetup {
-    
+
     @SubscribeEvent
     public static void additionalModels(ModelEvent.RegisterAdditional event) {
         event.register(EnderIO.loc("item/wood_gear_helper"));
@@ -61,5 +65,9 @@ public class ClientSetup {
     @SubscribeEvent
     public static void bakingCompleted(ModelEvent.BakingCompleted event) {
         glider = event.getModels().get(EnderIO.loc("glider/glider_test_1"));
+    }
+
+    public static void registerParticleProviders(RegisterParticleProvidersEvent event) {
+        Minecraft.getInstance().particleEngine.register(EIOParticles.RANGE_PARTICLE.get(), RangeParticle.Provider::new);
     }
 }
