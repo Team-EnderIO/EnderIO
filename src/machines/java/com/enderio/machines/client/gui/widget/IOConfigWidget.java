@@ -24,11 +24,12 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
 
     private final ResourceLocation resLoc = EnderIO.loc("textures/gui/40/widgetsv2.png");
 
-    private boolean isRendererVisible = false;
+    private boolean rendererVisible = false;
     private final IOConfigRenderer<?> rendererWidget;
     private final Supplier<Boolean> playerSlotsHidden;
     private final Consumer<Boolean> shouldHidePlayerSlots;
-    private final Rect2i bounds;
+    private final Rect2i widgetBounds;
+    private final Rect2i rendererBounds;
 
     // Rebase on ToggleButton if possible
     public IOConfigWidget(U addedOn, int x, int y, int width, int height, MachineBlockEntity block, Supplier<Boolean> playerSlotsHidden,
@@ -36,23 +37,24 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
         super(x, y, width, height, Component.empty());
         this.addedOn = addedOn;
         this.playerSlotsHidden = playerSlotsHidden;
-        isRendererVisible = playerSlotsHidden.get();
+        rendererVisible = playerSlotsHidden.get();
         this.shouldHidePlayerSlots = shouldHidePlayerSlots;
-        this.bounds = calcRendererBounds(addedOn.getGuiLeft(), addedOn.getGuiTop(), addedOn.getXSize(), addedOn.getYSize());
-        this.rendererWidget = new IOConfigRenderer<>(addedOn, bounds, block);
+        this.widgetBounds = new Rect2i(x, y, width, height);
+        this.rendererBounds = calcRendererBounds(addedOn.getGuiLeft(), addedOn.getGuiTop(), addedOn.getXSize(), addedOn.getYSize());
+        this.rendererWidget = new IOConfigRenderer<>(addedOn, rendererBounds, block);
     }
 
     @Override
     public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
         super.render(pPoseStack, pMouseX, pMouseY, pPartialTick);
-        if (isRendererVisible) {
+        if (rendererVisible) {
             Minecraft mc = Minecraft.getInstance();
             Window window = mc.getWindow();
 
             int vpx = (int) ((addedOn.getGuiLeft() + 5) * window.getGuiScale());
             int vpy = (int) ((addedOn.getGuiTop() + 4) * window.getGuiScale());
-            int w = (int) (bounds.getWidth() * window.getGuiScale());
-            int h = (int) (bounds.getHeight() * window.getGuiScale());
+            int w = (int) (rendererBounds.getWidth() * window.getGuiScale());
+            int h = (int) (rendererBounds.getHeight() * window.getGuiScale());
             rendererWidget.render(pPoseStack, pMouseX, pMouseY, pPartialTick, new Rect2i(vpx, vpy, w, h));
         }
     }
@@ -76,13 +78,45 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     public void updateNarration(NarrationElementOutput pNarrationElementOutput) {}
 
     @Override
+    protected boolean clicked(double pMouseX, double pMouseY) {
+        var widgetClicked = mouseInBounds(pMouseX, pMouseY, widgetBounds);
+        var rendererClicked = rendererVisible && mouseInBounds(pMouseX, pMouseY, rendererBounds);
+        return this.active && this.visible && (widgetClicked || rendererClicked);
+    }
+
+    @Override
+    public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
+        // handle mouse button check here if need to
+        if (rendererVisible && this.isValidClickButton(pButton) && mouseInBounds(pMouseX, pMouseY, rendererBounds)) {
+            this.onDrag(pMouseX, pMouseY, pDragX, pDragY);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    protected void onDrag(double pMouseX, double pMouseY, double pDragX, double pDragY) {
+        rendererWidget.handleMouseDrag(pMouseX, pMouseY, pDragX, pDragY);
+    }
+
+    @Override
     public void onClick(double pMouseX, double pMouseY) {
-        shouldHidePlayerSlots.accept(!isRendererVisible);
-        isRendererVisible = playerSlotsHidden.get();
+        if (mouseInBounds(pMouseX, pMouseY, widgetBounds)) {
+            shouldHidePlayerSlots.accept(!rendererVisible);
+            rendererVisible = playerSlotsHidden.get();
+        } else {
+            rendererWidget.handleMouseClick(pMouseX, pMouseY);
+        }
     }
 
     private Rect2i calcRendererBounds(int leftPos, int topPos, int imageWidth, int imageHeight) {
         return new Rect2i(leftPos + 5, topPos + imageHeight - rendererHeight - 5, imageWidth - 10, rendererHeight);
+    }
+
+    private boolean mouseInBounds(double pMouseX, double pMouseY, Rect2i bounds) {
+        return pMouseX >= (double) bounds.getX() && pMouseY >= (double) bounds.getY() && pMouseX < (double) (bounds.getX() + bounds.getWidth())
+            && pMouseY < (double) (bounds.getY() + bounds.getHeight());
     }
 
 }

@@ -85,12 +85,27 @@ public class IOConfigRenderer<S extends Screen & IEnderScreen> {
             }
 
         });
+        pitch = 30;
+        yaw = 30;
     }
 
     public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick, Rect2i vp) {
         GuiComponent.fill(pPoseStack, bounds.getX(), bounds.getY(), bounds.getX() + bounds.getWidth(), bounds.getY() + bounds.getHeight(), 0xFF000000);
 
         renderScene(pPartialTick, pPoseStack, vp);
+    }
+
+    public void handleMouseClick(double pMouseX, double pMouseY) {
+        //        EnderIO.LOGGER.info("mouse click! " + pMouseX + " " + pMouseY);
+    }
+
+    public void handleMouseDrag(double pMouseX, double pMouseY, double pDragX, double pDragY) {
+        var screen = Minecraft.getInstance().screen;
+        double dx = pDragX / (double) screen.width;
+        double dy = pDragY / (double) screen.height;
+        yaw -= 4 * dx * 180;
+        pitch += 2 * dy * 180;
+        pitch = Math.min(80, Math.max(-80, pitch)); //clamp
     }
 
     private void renderScene(float partialTick, PoseStack ps, Rect2i vp) {
@@ -113,8 +128,6 @@ public class IOConfigRenderer<S extends Screen & IEnderScreen> {
         rotMat.setIdentity();
 
         // Camera orientation
-        pitch = 30;
-        yaw = 30;
         ps.mulPose(Vector3f.XP.rotationDegrees(-pitch));
         rotMat.multiply(Vector3f.XP.rotationDegrees(pitch));
         ps.mulPose(Vector3f.YP.rotationDegrees(-yaw));
