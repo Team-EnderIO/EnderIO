@@ -4,7 +4,6 @@ import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.machines.common.blockentity.base.PoweredMachineEntity;
-import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.menu.ImpulseHopperMenu;
@@ -38,7 +37,7 @@ public class ImpulseHopperBlockEntity extends PoweredMachineEntity {
     @Override
     public MachineInventoryLayout getInventoryLayout() {
         return MachineInventoryLayout.builder()
-            .inputSlot(6)
+            .inputSlot(6, (integer, itemStack) -> ItemStack.isSameItemSameTags(itemStack, GHOST.get(integer).getItemStack(this)))
             .slotAccess(INPUT)
             .outputSlot(6)
             .slotAccess(OUTPUT)
@@ -73,8 +72,7 @@ public class ImpulseHopperBlockEntity extends PoweredMachineEntity {
     }
 
     public boolean canHoldAndMerge(int slot) {
-        // TODO: rewrite with slot access
-        boolean canHold = OUTPUT.get(slot).getItemStack(this).getCount() + GHOST.get(slot).getItemStack(this).getCount() <= 64;
+        boolean canHold = OUTPUT.get(slot).getItemStack(this).getCount() + GHOST.get(slot).getItemStack(this).getCount() <= GHOST.get(slot).getItemStack(this).getMaxStackSize();
         boolean canMerge = ItemStack.isSameItemSameTags(INPUT.get(slot).getItemStack(this), GHOST.get(slot).getItemStack(this));
         return canHold && canMerge;
     }
