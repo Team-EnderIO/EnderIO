@@ -14,22 +14,18 @@ public class SagMillMenu extends MachineMenu<SagMillBlockEntity> {
         super(blockEntity, inventory, MachineMenus.SAG_MILL.get(), pContainerId);
 
         if (blockEntity != null) {
-            // Capacitor slot
             if (blockEntity.requiresCapacitor()) {
                 addSlot(new MachineSlot(blockEntity.getInventory(), blockEntity.getCapacitorSlot(), 12, 60));
             }
 
-            // Input
-            addSlot(new MachineSlot(blockEntity.getInventory(), 0, 80, 12));
+            addSlot(new MachineSlot(blockEntity.getInventory(), SagMillBlockEntity.INPUT, 80, 12));
 
-            // Outputs
-            addSlot(new MachineSlot(blockEntity.getInventory(), 1, 49, 59));
-            addSlot(new MachineSlot(blockEntity.getInventory(), 2, 70, 59));
-            addSlot(new MachineSlot(blockEntity.getInventory(), 3, 91, 59));
-            addSlot(new MachineSlot(blockEntity.getInventory(), 4, 112, 59));
+            addSlot(new MachineSlot(blockEntity.getInventory(), SagMillBlockEntity.OUTPUT.get(0), 49, 59));
+            addSlot(new MachineSlot(blockEntity.getInventory(), SagMillBlockEntity.OUTPUT.get(1), 70, 59));
+            addSlot(new MachineSlot(blockEntity.getInventory(), SagMillBlockEntity.OUTPUT.get(2), 91, 59));
+            addSlot(new MachineSlot(blockEntity.getInventory(), SagMillBlockEntity.OUTPUT.get(3), 112, 59));
 
-            // Grindingball slot
-            addSlot(new MachineSlot(blockEntity.getInventory(), 5, 122, 23));
+            addSlot(new MachineSlot(blockEntity.getInventory(), SagMillBlockEntity.GRINDING_BALL, 122, 23));
         }
         addInventorySlots(8,84);
     }

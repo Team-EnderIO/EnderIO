@@ -2,6 +2,7 @@ package com.enderio.machines.common.menu;
 
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import com.enderio.machines.common.io.item.SingleSlotAccess;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -20,6 +21,10 @@ public class GhostMachineSlot extends MachineSlot {
             throw new RuntimeException("Ghost slot can be externally modified!!");
         if (!layout.guiCanInsert(index))
             throw new RuntimeException("Ghost slot cannot be modified by the player!");
+    }
+
+    public GhostMachineSlot(MachineInventory itemHandler, SingleSlotAccess access, int xPosition, int yPosition) {
+        this(itemHandler, access.getIndex(), xPosition, yPosition);
     }
 
     @Override

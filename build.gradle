@@ -185,10 +185,6 @@ repositories {
 
     maven { url 'https://maven.blamejared.com' }
 
-    // Temporary for Registrate
-    maven {
-        url "https://maven.nerdthings.dev/snapshots"
-    }
 }
 
 jarJar.enable()

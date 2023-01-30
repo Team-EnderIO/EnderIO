@@ -14,6 +14,8 @@ import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import com.tterrag.registrate.util.entry.BlockEntry;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.predicate.BlockStatePredicate;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.client.model.generators.BlockModelBuilder;
 import net.minecraftforge.client.model.generators.BlockModelBuilder.RootTransformBuilder.TransformOrigin;
@@ -28,7 +30,7 @@ public class MachineBlocks {
 
     public static final BlockEntry<MachineBlock> FLUID_TANK = REGISTRATE
         .block("fluid_tank", props -> new MachineBlock(props, MachineBlockEntities.FLUID_TANK))
-        .properties(props -> props.strength(2.5f, 8))
+        .properties(props -> props.strength(2.5f, 8).isViewBlocking((pState, pLevel, pPos) -> false).noOcclusion())
         .loot(MachinesLootTable::copyNBT)
         .blockstate((ctx, prov) -> prov.horizontalBlock(ctx.get(), prov.models()
             .getBuilder(ctx.getName())
@@ -45,7 +47,7 @@ public class MachineBlocks {
 
     public static final BlockEntry<MachineBlock> PRESSURIZED_FLUID_TANK = REGISTRATE
         .block("pressurized_fluid_tank", props -> new MachineBlock(props, MachineBlockEntities.PRESSURIZED_FLUID_TANK))
-        .properties(props -> props.strength(2.5f, 8))
+        .properties(props -> props.strength(2.5f, 8).isViewBlocking((pState, pLevel, pPos) -> false).noOcclusion())
         .loot(MachinesLootTable::copyNBT)
         .blockstate((ctx, prov) -> prov.horizontalBlock(ctx.get(), prov.models()
                 .withExistingParent(ctx.getName(), prov.mcLoc("block/block"))
@@ -66,7 +68,7 @@ public class MachineBlocks {
 
     public static final BlockEntry<MachineBlock> ENCHANTER = REGISTRATE
         .block("enchanter", props -> new MachineBlock(props, MachineBlockEntities.ENCHANTER))
-        .properties(props -> props.strength(2.5f, 8))
+        .properties(props -> props.strength(2.5f, 8).noOcclusion().isViewBlocking((pState, pLevel, pPos) -> false))
         .loot(MachinesLootTable::copyNBT)
         .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models()
             .withExistingParent(ctx.getName(), prov.mcLoc("block/block"))
