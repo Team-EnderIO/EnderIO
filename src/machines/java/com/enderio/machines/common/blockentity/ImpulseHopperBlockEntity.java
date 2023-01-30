@@ -66,20 +66,23 @@ public class ImpulseHopperBlockEntity extends PoweredMachineEntity {
     public boolean canPass(int slot) {
         ItemStack input = INPUT.get(slot).getItemStack(this);
         ItemStack ghost = GHOST.get(slot).getItemStack(this);
-        if (ItemStack.tagMatches(input, ghost)) {
+        if (ItemStack.isSameItemSameTags(input, ghost)) {
             return input.getCount() >= ghost.getCount();
         }
         return false;
     }
 
-    public boolean canHold(int slot) {
-        return OUTPUT.get(slot).getItemStack(this).getCount() + GHOST.get(slot).getItemStack(this).getCount() <= GHOST.get(slot).getItemStack(this).getMaxStackSize();
+    public boolean canHoldAndMerge(int slot) {
+        // TODO: rewrite with slot access
+        boolean canHold = OUTPUT.get(slot).getItemStack(this).getCount() + GHOST.get(slot).getItemStack(this).getCount() <= 64;
+        boolean canMerge = ItemStack.isSameItemSameTags(INPUT.get(slot).getItemStack(this), GHOST.get(slot).getItemStack(this));
+        return canHold && canMerge;
     }
 
     public boolean shouldPassItems() {
         int totalpower = 0;
         for (int i = 0; i < 6; i++) {
-            if (canPass(i) && canHold(i)) {
+            if (canPass(i) && canHoldAndMerge(i)) {
                 totalpower += GHOST.get(i).getItemStack(this).getCount() * ENERGY_USAGE_PER_ITEM;
                 continue;
             }

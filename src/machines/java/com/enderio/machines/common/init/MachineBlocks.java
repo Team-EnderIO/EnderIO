@@ -126,6 +126,26 @@ public class MachineBlocks {
         .lang("Impulse Hopper")
         .register();
 
+    public static final BlockEntry<MachineBlock> VACUUM_CHEST = REGISTRATE
+        .block("vacuum_chest", p -> new MachineBlock(p, MachineBlockEntities.VACUUM_CHEST))
+        .properties(props -> props.strength(2.5f, 8).noOcclusion())
+        .loot(MachinesLootTable::copyNBT)
+        .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIO.loc("block/vacuum_chest"))))
+        .item()
+        .tab(() -> EIOCreativeTabs.MACHINES)
+        .build()
+        .register();
+
+    public static final BlockEntry<MachineBlock> XP_VACUUM = REGISTRATE
+        .block("xp_vacuum", p -> new MachineBlock(p, MachineBlockEntities.XP_VACUUM))
+        .properties(props -> props.strength(2.5f, 8).noOcclusion())
+        .loot(MachinesLootTable::copyNBT)
+        .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIO.loc("block/xp_vacuum"))))
+        .item()
+        .tab(() -> EIOCreativeTabs.MACHINES)
+        .build()
+        .register();
+
     private static BlockBuilder<ProgressMachineBlock, Registrate> standardMachine(String name, Supplier<BlockEntityEntry<? extends MachineBlockEntity>> blockEntityEntry) {
         return REGISTRATE
             .block(name, props -> new ProgressMachineBlock(props, blockEntityEntry.get()))
