@@ -21,19 +21,19 @@ public class CrafterMenu extends MachineMenu<CrafterBlockEntity> {
             // Main storage slots [1-9]
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
-                    this.addSlot(new MachineSlot(blockEntity.getInventory(), 1 + (3 * i) + j, 113 + (j * 18), 16 + (i * 18)));
+                    this.addSlot(new MachineSlot(blockEntity.getInventory(), CrafterBlockEntity.INPUT.get((3 * i) + j), 113 + (j * 18), 16 + (i * 18)));
                 }
             }
             // Main output slot [10]
-            this.addSlot(new MachineSlot(blockEntity.getInventory(), 10, 172, 34));
+            this.addSlot(new MachineSlot(blockEntity.getInventory(), CrafterBlockEntity.OUTPUT, 172, 34));
             // Recipe Display slots [11-19]
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
-                    this.addSlot(new GhostMachineSlot(blockEntity.getInventory(), 11 + (3 * i) + j, 31 + (j * 18), 16 + (i * 18), 1));
+                    this.addSlot(new GhostMachineSlot(blockEntity.getInventory(), CrafterBlockEntity.GHOST.get((3 * i) + j), 31 + (j * 18), 16 + (i * 18)));
                 }
             }
             // Recipe Output slot [20]
-            this.addSlot(new PreviewSlot(blockEntity.getInventory(), 20, 90, 34));
+            this.addSlot(new PreviewMachineSlot(blockEntity.getInventory(), CrafterBlockEntity.PREVIEW, 90, 34));
 
         }
     }

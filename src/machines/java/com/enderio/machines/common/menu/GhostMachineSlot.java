@@ -13,15 +13,9 @@ import net.minecraft.world.item.ItemStack;
  */
 public class GhostMachineSlot extends MachineSlot {
 
-    private final int stackLimit;
 
     public GhostMachineSlot(MachineInventory itemHandler, int index, int xPosition, int yPosition) {
-        this(itemHandler, index, xPosition, yPosition, 64);
-    }
-
-    public GhostMachineSlot(MachineInventory itemHandler, int index, int xPosition, int yPosition, int stackLimit) {
         super(itemHandler, index, xPosition, yPosition);
-        this.stackLimit = stackLimit;
 
         // Check config, we need to get this right or bad stuff will happen.
         MachineInventoryLayout layout = itemHandler.getLayout();
@@ -40,7 +34,7 @@ public class GhostMachineSlot extends MachineSlot {
         // If this stack is valid, set the inventory slot value.
         if (!stack.isEmpty() && mayPlace(stack)) {
             ItemStack ghost = stack.copy();
-            ghost.setCount(Math.min(ghost.getCount(), stackLimit));
+            ghost.setCount(Math.min(ghost.getCount(), this.getMaxStackSize()));
             set(ghost);
         }
 

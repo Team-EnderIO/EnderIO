@@ -322,9 +322,11 @@ public class MachineInventoryLayout {
          * @param count The number of slots to add.
          */
         public Builder previewSlot(int count) {
+            SlotAdditionInfo info = new SlotAdditionInfo(slots.size(), count);
             for (int i = 0; i < count; i++) {
                 slot(slot -> slot.stackLimit(currentStackLimit));
             }
+            additionInfo = info;
             return this;
         }
 

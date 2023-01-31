@@ -4,8 +4,9 @@ import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.machines.common.blockentity.base.PoweredMachineEntity;
-import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import com.enderio.machines.common.io.item.MultiSlotAccess;
+import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.CrafterMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
@@ -30,8 +31,13 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
     public static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, () -> 10f);
     private static final int ENERGY_USAGE_PER_ITEM = 10;
 
+    public static final MultiSlotAccess INPUT = new MultiSlotAccess();
+    public static final SingleSlotAccess OUTPUT = new SingleSlotAccess();
+    public static final MultiSlotAccess GHOST = new MultiSlotAccess();
+    public static final SingleSlotAccess PREVIEW = new SingleSlotAccess();
+
     private CraftingRecipe recipe;
-    private Queue<ItemStack> outputBuffer = new ArrayDeque<>();
+    private final Queue<ItemStack> outputBuffer = new ArrayDeque<>();
 
     private static final CraftingContainer dummyCContainer = new CraftingContainer(new AbstractContainerMenu(null, -1) {
         @Override
@@ -62,10 +68,15 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
             .capacitor()
             .setStackLimit(1)
             .inputSlot(9, this::acceptSlotInput)
+            .slotAccess(INPUT)
             .setStackLimit(64)
             .outputSlot(1)
+            .slotAccess(OUTPUT)
+            .setStackLimit(1)
             .ghostSlot(9)
+            .slotAccess(GHOST)
             .previewSlot()
+            .slotAccess(PREVIEW)
             .build();
     }
 
@@ -84,12 +95,12 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
         Optional<ItemStack> opt = getRecipeResult();
         if (opt.isPresent()) {
             ItemStack result = opt.get();
-            this.getInventory().setStackInSlot(20, result);
+            PREVIEW.setStackInSlot(this, result);
             if (shouldActTick() && hasPowerToCraft() && canMergeOutput(result) && outputBuffer.isEmpty()) {
                 craftItem();
             }
         } else {
-            this.getInventory().setStackInSlot(20, ItemStack.EMPTY);
+            PREVIEW.setStackInSlot(this, ItemStack.EMPTY);
         }
     }
 
@@ -112,9 +123,9 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
 
         // output
         if (canMergeOutput(outputBuffer.peek())) {
-            var stack = getInventory().getStackInSlot(10);
+            var stack = OUTPUT.getItemStack(this);
             if (stack.isEmpty()) {
-                getInventory().setStackInSlot(10, outputBuffer.peek().copy());
+                OUTPUT.setStackInSlot(this, outputBuffer.peek().copy());
             } else {
                 stack.grow(outputBuffer.peek().getCount());
             }
@@ -123,10 +134,8 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
     }
 
     private Optional<ItemStack> getRecipeResult() {
-        MachineInventory inv = this.getInventory();
-        int start = 11;
         for (int i = 0; i < 9; i++) {
-            dummyCContainer.setItem(i, inv.getStackInSlot(start + i).copy());
+            dummyCContainer.setItem(i, GHOST.get(i).getItemStack(this).copy());
         }
         Optional<CraftingRecipe> opt = getLevel().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, dummyCContainer, getLevel());
         if (opt.isPresent()) {
@@ -137,21 +146,19 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
     }
 
     private boolean canMergeOutput(ItemStack item) {
-        ItemStack output = this.getInventory().getStackInSlot(10);
+        ItemStack output = OUTPUT.getItemStack(this);
         return output.isEmpty() || (ItemStack.isSameItemSameTags(output, item) && (output.getCount() + item.getCount() <= 64));
     }
 
     private void craftItem() {
-        MachineInventory inv = this.getInventory();
-        int start = 1;
         for (int i = 0; i < 9; i++) {
-            if (!ItemStack.isSame(inv.getStackInSlot(i + start), (inv.getStackInSlot(i + start + 10)))) {
+            if (!ItemStack.isSame(INPUT.get(i).getItemStack(this), GHOST.get(i).getItemStack(this))) {
                 return;
             }
         }
         //copy input items
         for (int i = 0; i < 9; i++) {
-            dummyCContainer.setItem(i, inv.getStackInSlot(start + i).copy());
+            dummyCContainer.setItem(i, INPUT.get(i).getItemStack(this).copy());
         }
         //craft
         clearInput();
@@ -163,9 +170,8 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
     }
 
     private void clearInput() {
-        int start = 1;
         for (int i = 0; i < 9; i++) {
-            getInventory().setStackInSlot(start + i, ItemStack.EMPTY);
+            INPUT.get(i).setStackInSlot(this, ItemStack.EMPTY);
         }
     }
 }
