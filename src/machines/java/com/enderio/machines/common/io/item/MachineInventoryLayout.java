@@ -227,7 +227,7 @@ public class MachineInventoryLayout {
         }
 
         /**
-         * Add a storage slot.
+         * Add some storage slots.
          * This slot can be inserted to or extracted from via gui and externally.
          *
          * @param count The number of slots to add.
@@ -247,10 +247,10 @@ public class MachineInventoryLayout {
         }
 
         /**
-         * Add a storage slot.
+         * Add some storage slots.
          * This slot can be inserted to or extracted from via gui and externally.
          *
-         * @param count The number of slots to add.
+         * @param count  The number of slots to add.
          * @param filter The filter predicate for the slot
          */
         public Builder storageSlot(int count, BiPredicate<Integer, ItemStack> filter) {
@@ -271,7 +271,7 @@ public class MachineInventoryLayout {
         }
 
         /**
-         * Add a ghost slot.
+         * Add some ghost slots.
          * This slot can only be interacted with via gui.
          *
          * @param count The number of slots to add.
@@ -291,7 +291,7 @@ public class MachineInventoryLayout {
         }
 
         /**
-         * Add a ghost slot.
+         * Add some ghost slots.
          * This slot can only be inserted to (or cleared as per implementation of GhostSlot).
          *
          * @param count The number of slots to add.
@@ -301,6 +301,30 @@ public class MachineInventoryLayout {
             SlotAdditionInfo info = new SlotAdditionInfo(slots.size(), count);
             for (int i = 0; i < count; i++) {
                 slot(slot -> slot.guiInsert().filter(filter).stackLimit(currentStackLimit));
+            }
+            additionInfo = info;
+            return this;
+
+        }
+
+        /**
+         * Add a preview slot.
+         * This slot cannot be inserted to/extracted from.
+         */
+        public Builder previewSlot() {
+            return previewSlot(1);
+        }
+
+        /**
+         * Add some preview slots.
+         * This slot cannot be inserted to/extracted from.
+         *
+         * @param count The number of slots to add.
+         */
+        public Builder previewSlot(int count) {
+            SlotAdditionInfo info = new SlotAdditionInfo(slots.size(), count);
+            for (int i = 0; i < count; i++) {
+                slot(slot -> slot.stackLimit(currentStackLimit));
             }
             additionInfo = info;
             return this;
