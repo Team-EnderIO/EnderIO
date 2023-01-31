@@ -6,7 +6,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiPredicate;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 /**
  * Describes the slot configuration of an inventory.
@@ -105,10 +105,13 @@ public class MachineInventoryLayout {
         private int currentStackLimit = 64;
         private int capacitorSlot = -1;
 
+        private SlotAdditionInfo additionInfo = new SlotAdditionInfo(Integer.MIN_VALUE, Integer.MIN_VALUE);
+
         /**
          * Add a custom slot to the inventory layout.
          */
-        public Builder slot(Function<SlotBuilder, SlotBuilder> builder) {
+        public Builder slot(UnaryOperator<SlotBuilder> builder) {
+            additionInfo = new SlotAdditionInfo(slots.size(), 1);
             slots.add(builder.apply(new SlotBuilder()).build());
             return this;
         }
@@ -163,9 +166,11 @@ public class MachineInventoryLayout {
          * @param filter The filter predicate for the slot
          */
         public Builder inputSlot(int count, BiPredicate<Integer, ItemStack> filter) {
+            SlotAdditionInfo info = new SlotAdditionInfo(slots.size(), count);
             for (int i = 0; i < count; i++) {
                 slot(slot -> slot.guiInsert().guiExtract().insert().filter(filter).stackLimit(currentStackLimit));
             }
+            additionInfo = info;
             return this;
         }
 
@@ -205,15 +210,17 @@ public class MachineInventoryLayout {
          * @param filter The filter predicate for the slot
          */
         public Builder outputSlot(int count, BiPredicate<Integer, ItemStack> filter) {
+            SlotAdditionInfo info = new SlotAdditionInfo(slots.size(), count);
             for (int i = 0; i < count; i++) {
                 slot(slot -> slot.guiExtract().extract().filter(filter).stackLimit(currentStackLimit));
             }
+            additionInfo = info;
             return this;
         }
 
         /**
          * Add a storage slot.
-         * This slot can inserted to or extracted from via gui and externally.
+         * This slot can be inserted to or extracted from via gui and externally.
          */
         public Builder storageSlot() {
             return storageSlot(1, (i,s) -> true);
@@ -221,7 +228,7 @@ public class MachineInventoryLayout {
 
         /**
          * Add some storage slots.
-         * This slot can inserted to or extracted from via gui and externally.
+         * This slot can be inserted to or extracted from via gui and externally.
          *
          * @param count The number of slots to add.
          */
@@ -231,7 +238,7 @@ public class MachineInventoryLayout {
 
         /**
          * Add a storage slot.
-         * This slot can inserted to or extracted from via gui and externally.
+         * This slot can be inserted to or extracted from via gui and externally.
          *
          * @param filter The filter predicate for the slot
          */
@@ -241,15 +248,17 @@ public class MachineInventoryLayout {
 
         /**
          * Add some storage slots.
-         * This slot can inserted to or extracted from via gui and externally.
+         * This slot can be inserted to or extracted from via gui and externally.
          *
          * @param count  The number of slots to add.
          * @param filter The filter predicate for the slot
          */
         public Builder storageSlot(int count, BiPredicate<Integer, ItemStack> filter) {
+            SlotAdditionInfo info = new SlotAdditionInfo(slots.size(), count);
             for (int i = 0; i < count; i++) {
                 slot(slot -> slot.guiInsert().guiExtract().insert().extract().filter(filter).stackLimit(currentStackLimit));
             }
+            additionInfo = info;
             return this;
         }
 
@@ -289,9 +298,11 @@ public class MachineInventoryLayout {
          * @param filter The filter predicate for the slot
          */
         public Builder ghostSlot(int count, BiPredicate<Integer, ItemStack> filter) {
+            SlotAdditionInfo info = new SlotAdditionInfo(slots.size(), count);
             for (int i = 0; i < count; i++) {
                 slot(slot -> slot.guiInsert().filter(filter).stackLimit(currentStackLimit));
             }
+            additionInfo = info;
             return this;
 
         }
@@ -328,6 +339,24 @@ public class MachineInventoryLayout {
         }
 
         // endregion
+
+        public Builder slotAccess(SingleSlotAccess access) {
+            if (additionInfo.size == 1) {
+                access.init(additionInfo.index);
+            } else {
+                throw new IllegalStateException("try to get a single slot access for multiple slots");
+            }
+            return this;
+        }
+
+        public Builder slotAccess(MultiSlotAccess multiSlotAccess) {
+            if (additionInfo.size > 1) {
+                multiSlotAccess.init(additionInfo.index, additionInfo.size);
+            } else {
+                throw new IllegalStateException("try to get multi slot access for a single slot");
+            }
+            return this;
+        }
 
         /**
          * Build the inventory layout.
@@ -398,5 +427,6 @@ public class MachineInventoryLayout {
         }
     }
 
+    private record SlotAdditionInfo(int index, int size) {}
     private record SlotConfig(boolean insert, boolean extract, boolean guiInsert, boolean guiExtract, int stackLimit, BiPredicate<Integer, ItemStack> filter) {}
 }

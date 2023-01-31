@@ -1,6 +1,7 @@
 package com.enderio.machines.common.menu;
 
 import com.enderio.machines.common.io.item.MachineInventory;
+import com.enderio.machines.common.io.item.SingleSlotAccess;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.SlotItemHandler;
@@ -9,6 +10,10 @@ public class MachineSlot extends SlotItemHandler {
 
     public MachineSlot(MachineInventory itemHandler, int index, int xPosition, int yPosition) {
         super(itemHandler, index, xPosition, yPosition);
+    }
+
+    public MachineSlot(MachineInventory itemHandler, SingleSlotAccess access, int xPosition, int yPosition) {
+        super(itemHandler, access.getIndex(), xPosition, yPosition);
     }
 
     @Override
