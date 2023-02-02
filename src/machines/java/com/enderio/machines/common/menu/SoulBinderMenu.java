@@ -1,10 +1,13 @@
 package com.enderio.machines.common.menu;
 
+import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.machines.common.blockentity.SoulBinderBlockEntity;
 import com.enderio.machines.common.init.MachineMenus;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
@@ -20,9 +23,22 @@ public class SoulBinderMenu extends MachineMenu<SoulBinderBlockEntity> {
             }
             addSlot(new MachineSlot(blockEntity.getInventory(), 0, 38, 34));
             addSlot(new MachineSlot(blockEntity.getInventory(), 1, 59, 34));
-
             addSlot(new MachineSlot(blockEntity.getInventory(), 2, 112, 34));
-            addSlot(new MachineSlot(blockEntity.getInventory(), 3, 134, 34));
+            addSlot(new MachineSlot(blockEntity.getInventory(), 3, 134, 34) {
+
+                @Override
+                public boolean mayPickup(Player playerIn) {
+                    return playerIn.experienceLevel + ExperienceUtil.getLevelFromFluid(blockEntity.getFluidTank().getFluidAmount()) >=  blockEntity.getNeededXP();
+                }
+
+                @Override
+                public void onTake(Player pPlayer, ItemStack pStack) {
+                    if (blockEntity.getFluidTank().getFluidAmount() < blockEntity.getNeededXP()) {
+                        pPlayer.experienceLevel -= blockEntity.getNeededXP() - ExperienceUtil.getLevelFromFluid(blockEntity.getFluidTank().getFluidAmount());
+                    }
+                    super.onTake(pPlayer, pStack);
+                }
+            });
 
         }
 

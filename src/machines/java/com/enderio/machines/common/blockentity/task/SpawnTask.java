@@ -21,7 +21,7 @@ public class SpawnTask extends PoweredTask{
     public static final int maxSpawners = 2;
     public static final int spawnTries = 10;
     private boolean complete;
-    private int energyCost;
+    private int energyCost = 10;
     private int progress;
     private int maxProgress = 40;
     private final PoweredSpawnerBlockEntity blockEntity;

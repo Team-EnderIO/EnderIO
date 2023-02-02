@@ -3,6 +3,7 @@ package com.enderio.machines.common.recipe;
 import com.enderio.EnderIO;
 import com.enderio.api.capability.IEntityStorage;
 import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonArray;
@@ -80,9 +81,7 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
 
     @Override
     public boolean matches(SoulBindingRecipe.Container container, Level pLevel) {
-        if (container.getFluidTank().drain(exp, IFluidHandler.FluidAction.SIMULATE).getAmount() < exp) {
-            return false;
-        }
+        container.setNeededXP(0);
         for (int i = 0; i < inputs.size(); i++) { //Items match
             if (!inputs.get(i).test(container.getItem(i)))
                 return false;
@@ -92,11 +91,13 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
             return false;
         }
         if (entityType == null) { //type doesn't matter
-            return true;
+            container.setNeededXP(exp);
+            return ExperienceUtil.getLevelFromFluid(container.getFluidTank().getFluidAmount()) >= exp;
         }
         IEntityStorage storage = capability.resolve().get();
         if (storage.hasStoredEntity() && storage.getStoredEntityData().getEntityType().get().equals(entityType)) { //type matters
-            return true;
+            container.setNeededXP(exp);
+            return ExperienceUtil.getLevelFromFluid(container.getFluidTank().getFluidAmount()) >= exp;
         }
         return false;
     }
@@ -119,6 +120,7 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
     public static class Container extends RecipeWrapper {
 
         private final FluidTank fluidTank;
+        private int neededXP;
         public Container(IItemHandlerModifiable inv, FluidTank fluidTank) {
             super(inv);
             this.fluidTank = fluidTank;
@@ -126,6 +128,14 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
 
         public FluidTank getFluidTank() {
             return fluidTank;
+        }
+
+        public void setNeededXP(int neededXP) {
+            this.neededXP = neededXP;
+        }
+
+        public int getNeededXP() {
+            return neededXP;
         }
     }
 

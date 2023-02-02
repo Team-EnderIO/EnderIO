@@ -1,5 +1,6 @@
 package com.enderio.machines.client.gui.widget;
 
+import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.client.gui.widgets.EIOWidget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -34,21 +35,19 @@ public class ExperienceWidget extends EIOWidget {
         RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
         int k = 1;
         if (maxXP.get() > 0) {
-            k = (int) ((getFluid.get().getFluidAmount()/(float)maxXP.get()) * this.width);
+            k = (int) ((ExperienceUtil.getLevelFromFluid(getFluid.get().getFluidAmount(), 0, maxXP.get()) /(float)maxXP.get()) * this.width);
         }
         blit(pPoseStack, this.x, this.y, this.displayOn.getBlitOffset(), 0, 64, this.width-1, this.height, 256, 256);
         blit(pPoseStack, this.x + this.width-1, this.y, this.displayOn.getBlitOffset(), 181, 64, 1, this.height, 256, 256);
         blit(pPoseStack, this.x, this.y, this.displayOn.getBlitOffset(), 0, 69, k, this.height, 256, 256);
         blit(pPoseStack, this.x + this.width-1, this.y, this.displayOn.getBlitOffset(), 181, 64, k==this.width? 1 : 0, this.height, 256, 256);
 
-
         String s = "" + maxXP.get();
-        int i1 = (this.x - Minecraft.getInstance().font.width(s)) / 2;
-        Minecraft.getInstance().font.draw(pPoseStack, s, (float)(i1 + 1), (float)this.y, 0);
-        Minecraft.getInstance().font.draw(pPoseStack, s, (float)(i1 - 1), (float)this.y, 0);
-        Minecraft.getInstance().font.draw(pPoseStack, s, (float)i1, (float)(this.y + 1), 0);
-        Minecraft.getInstance().font.draw(pPoseStack, s, (float)i1, (float)(this.y - 1), 0);
-        Minecraft.getInstance().font.draw(pPoseStack, s, (float)i1, (float)this.y, 8453920);
+        Minecraft.getInstance().font.draw(pPoseStack, s, (this.x + this.width/2 + 1), (float)this.y - this.height - 3, 0);
+        Minecraft.getInstance().font.draw(pPoseStack, s, (this.x + this.width/2 - 1), (float)this.y - this.height - 3, 0);
+        Minecraft.getInstance().font.draw(pPoseStack, s, this.x + this.width/2, (float)(this.y - this.height - 3 + 1), 0);
+        Minecraft.getInstance().font.draw(pPoseStack, s, this.x + this.width/2, (float)(this.y - this.height - 3 - 1), 0);
+        Minecraft.getInstance().font.draw(pPoseStack, s, this.x + this.width/2, (float)this.y - this.height - 3, 8453920);
 
         RenderSystem.enableBlend();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
