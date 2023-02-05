@@ -21,7 +21,9 @@ public class MachineMenus {
     public static final MenuEntry<ImpulseHopperMenu> IMPULSE_HOPPER = REGISTRATE.menu("impulse_hopper", ImpulseHopperMenu::factory, () -> ImpulseHopperScreen::new).register();
     public static final MenuEntry<SoulBinderMenu> SOUL_BINDER = REGISTRATE.menu("soul_binder", SoulBinderMenu::factory, () -> SoulBinderScreen::new).register();
     public static final MenuEntry<PoweredSpawnerMenu> POWERED_SPAWNER = REGISTRATE.menu("powered_spawner", PoweredSpawnerMenu::factory, () -> PoweredSpawnerScreen::new).register();
-
+    public static final MenuEntry<VacuumChestMenu> VACUUM_CHEST = REGISTRATE.menu("vacuum_chest", VacuumChestMenu::factory, () -> VacuumChestScreen::new).register();
+    public static final MenuEntry<XPVacuumMenu> XP_VACUUM = REGISTRATE.menu("xp_vacuum", XPVacuumMenu::factory, () -> XPVacuumScreen::new).register();
+    public static final MenuEntry<CrafterMenu> CRAFTER = REGISTRATE.menu("crafter", CrafterMenu::factory, () -> CrafterScreen::new).register();
 
     public static void register() {}
 }

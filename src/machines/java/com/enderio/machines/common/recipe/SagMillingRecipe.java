@@ -4,6 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.api.grindingball.IGrindingBallData;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.core.common.util.TagUtil;
+import com.enderio.machines.common.blockentity.SagMillBlockEntity;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -117,7 +118,7 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
 
     @Override
     public boolean matches(Container container, Level level) {
-        return input.test(container.getItem(0));
+        return input.test(SagMillBlockEntity.INPUT.getItemStack(container));
     }
 
     @Override

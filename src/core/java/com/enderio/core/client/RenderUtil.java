@@ -10,6 +10,7 @@ import net.minecraft.core.Direction;
 import net.minecraftforge.client.model.IQuadTransformer;
 
 import static net.minecraftforge.client.model.IQuadTransformer.STRIDE;
+import static net.minecraftforge.client.model.IQuadTransformer.UV0;
 
 public class RenderUtil {
     /**

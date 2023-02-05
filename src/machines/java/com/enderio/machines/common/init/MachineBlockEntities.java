@@ -37,6 +37,11 @@ public class MachineBlockEntities {
 
     public static final BlockEntityEntry<ImpulseHopperBlockEntity> IMPULSE_HOPPER = register("impulse_hopper", ImpulseHopperBlockEntity::new,
         MachineBlocks.IMPULSE_HOPPER);
+    public static final BlockEntityEntry<VacuumChestBlockEntity> VACUUM_CHEST = register("vacuum_chest", VacuumChestBlockEntity::new,
+        MachineBlocks.VACUUM_CHEST);
+    public static final BlockEntityEntry<XPVacuumBlockEntity> XP_VACUUM = register("xp_vacuum", XPVacuumBlockEntity::new, MachineBlocks.XP_VACUUM);
+
+    public static final BlockEntityEntry<CrafterBlockEntity> CRAFTER = register("crafter", CrafterBlockEntity::new, MachineBlocks.CRAFTER);
 
     public static final BlockEntityEntry<SoulBinderBlockEntity> SOUL_BINDER = register("soul_binder", SoulBinderBlockEntity::new, MachineBlocks.SOUL_BINDER);
 

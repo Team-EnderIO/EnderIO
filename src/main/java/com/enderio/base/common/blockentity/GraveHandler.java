@@ -1,5 +1,6 @@
 package com.enderio.base.common.blockentity;
 
+import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOCapabilities;
 import net.minecraft.core.BlockPos.MutableBlockPos;
@@ -12,6 +13,7 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -21,13 +23,15 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 @EventBusSubscriber
 public class GraveHandler {
 
-    // TODO implementation with other mods and config?
+    private static final ForgeConfigSpec.ConfigValue<Boolean> enableGrave = BaseConfig.COMMON.GRAVE.ENABLE_GRAVE;
+
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void GraveDeath(LivingDropsEvent event) {
-        if (event.getEntity() == null || event.getEntity() instanceof FakePlayer || event.isCanceled()) {
-            return;
-        }
-        if (event.getEntity().level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
+        if (event.getEntity() == null
+            || event.getEntity() instanceof FakePlayer
+            || event.isCanceled()
+            || !enableGrave.get()
+            || event.getEntity().level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
             return;
         }
         if (event.getEntity() instanceof Player player) {

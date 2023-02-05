@@ -15,10 +15,10 @@ public class FluidTankMenu extends MachineMenu<FluidTankBlockEntity> {
     public FluidTankMenu(@Nullable FluidTankBlockEntity blockEntity, Inventory inventory, int pContainerId) {
         super(blockEntity, inventory, MachineMenus.FLUID_TANK.get(), pContainerId);
         if (blockEntity != null) {
-            addSlot(new MachineSlot(blockEntity.getInventory(), 0, 44, 21));
-            addSlot(new MachineSlot(blockEntity.getInventory(), 1, 44, 52));
-            addSlot(new MachineSlot(blockEntity.getInventory(), 2, 116, 21));
-            addSlot(new MachineSlot(blockEntity.getInventory(), 3, 116, 52));
+            addSlot(new MachineSlot(blockEntity.getInventory(), FluidTankBlockEntity.FLUID_FILL_INPUT, 44, 21));
+            addSlot(new MachineSlot(blockEntity.getInventory(), FluidTankBlockEntity.FLUID_FILL_OUTPUT, 44, 52));
+            addSlot(new MachineSlot(blockEntity.getInventory(), FluidTankBlockEntity.FLUID_DRAIN_INPUT, 116, 21));
+            addSlot(new MachineSlot(blockEntity.getInventory(), FluidTankBlockEntity.FLUID_DRAIN_OUTPUT, 116, 52));
         }
         addInventorySlots(8,84);
     }
