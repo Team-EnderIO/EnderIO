@@ -31,7 +31,7 @@ public class SoulBindingRecipeProvider extends EnderRecipeProvider {
 
     @Override
     protected void buildCraftingRecipes(Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
-        build(MachineBlocks.POWERED_SPAWNER.get().asItem(), List.of(Ingredient.of(EIOItems.FILLED_SOUL_VIAL.get()), Ingredient.of(EIOItems.BROKEN_SPAWNER.get())), 2000, 0, pFinishedRecipeConsumer);
+        build(MachineBlocks.POWERED_SPAWNER.get().asItem(), List.of(Ingredient.of(EIOItems.FILLED_SOUL_VIAL.get()), Ingredient.of(EIOItems.BROKEN_SPAWNER.get())), 2000, 10, pFinishedRecipeConsumer);
     }
 
     protected void build(Item output, List<Ingredient> inputs, int energy, int exp, EntityType<? extends Entity> entityType, Consumer<FinishedRecipe> finishedRecipeConsumer) {

@@ -21,7 +21,6 @@ public class SpawnTask extends PoweredTask{
     public static final int maxSpawners = 2;
     public static final int spawnTries = 10;
     private boolean complete;
-    private int energyCost = 10;
     private int progress;
     private int maxProgress = 40;
     private final PoweredSpawnerBlockEntity blockEntity;
@@ -43,7 +42,7 @@ public class SpawnTask extends PoweredTask{
         }
 
         if (complete) {
-            if (isAreaClear() && energyCost == energyStorage.consumeEnergy(energyCost, true)) {
+            if (isAreaClear() && energyStorage.getMaxEnergyUse() == energyStorage.consumeEnergy(energyStorage.getMaxEnergyUse(), true)) {
                 trySpawnEntity(blockEntity.getBlockPos(), (ServerLevel) blockEntity.getLevel());
                 complete = false;
                 progress = 0;
@@ -68,7 +67,6 @@ public class SpawnTask extends PoweredTask{
         CompoundTag nbt = new CompoundTag();
         nbt.putInt("Progress", progress);
         nbt.putBoolean("Complete", complete);
-        nbt.putInt("EnergyCost", energyCost);
         return nbt;
     }
 
@@ -76,7 +74,6 @@ public class SpawnTask extends PoweredTask{
     public void deserializeNBT(CompoundTag nbt) {
         progress = nbt.getInt("Progress");
         complete = nbt.getBoolean("Complete");
-        energyCost = nbt.getInt("EnergyCost");
 
     }
 
@@ -85,7 +82,7 @@ public class SpawnTask extends PoweredTask{
      * @return
      */
     public boolean isAreaClear() {
-        AABB range = blockEntity.getRange();
+        AABB range = new AABB(blockEntity.getBlockPos()).inflate(blockEntity.getRange());
         List<? extends Entity> entities = blockEntity.getLevel().getEntities(blockEntity.getEntityType(), range, p -> true);
         if (entities.size() >= maxEntities) { //TODO config? Max amount of entities.
             return false;
@@ -99,9 +96,9 @@ public class SpawnTask extends PoweredTask{
     public void trySpawnEntity(BlockPos pos, ServerLevel level) {
         for (int i = 0; i < spawnTries; i++) {
             RandomSource randomsource = level.getRandom();
-            double x = pos.getX() + (randomsource.nextDouble() - randomsource.nextDouble()) * (double)this.blockEntity.getRange().getXsize() + 0.5D;
+            double x = pos.getX() + (randomsource.nextDouble() - randomsource.nextDouble()) * (double)this.blockEntity.getRange() + 0.5D;
             double y = pos.getY() + randomsource.nextInt(3) - 1;
-            double z = pos.getZ() + (randomsource.nextDouble() - randomsource.nextDouble()) * (double)this.blockEntity.getRange().getZsize() + 0.5D;
+            double z = pos.getZ() + (randomsource.nextDouble() - randomsource.nextDouble()) * (double)this.blockEntity.getRange() + 0.5D;
             if (level.noCollision(blockEntity.getEntityType().getAABB(x, y, z))) {
 
                 Entity entity = EntityType.loadEntityRecursive(blockEntity.getEntityData().getEntityTag(), level, entity1 -> {
@@ -129,7 +126,7 @@ public class SpawnTask extends PoweredTask{
                     ((Mob)entity).spawnAnim();
                 }
 
-                energyStorage.consumeEnergy(energyCost, false);
+                energyStorage.consumeEnergy(energyStorage.getMaxEnergyUse(), false);
             }
         }
     }
