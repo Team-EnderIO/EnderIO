@@ -17,6 +17,7 @@ import com.enderio.machines.common.io.FixedIOConfig;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
+import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.SoulBinderMenu;
 import com.enderio.machines.common.recipe.SoulBindingRecipe;
 import net.minecraft.core.BlockPos;
@@ -33,12 +34,16 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import static com.enderio.base.common.util.ExperienceUtil.EXPTOFLUID;
+
 public class SoulBinderBlockEntity extends PoweredCraftingMachine<SoulBindingRecipe, SoulBindingRecipe.Container> {
 
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, () -> 100000f);
     public static final QuadraticScalable TRANSFER = new QuadraticScalable(CapacitorModifier.ENERGY_TRANSFER, () -> 120f);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, () -> 30f);
     private final SoulBindingRecipe.Container container;
+    public static final SingleSlotAccess INPUT_SOUL = new SingleSlotAccess();
+    public static final SingleSlotAccess INPUT_OTHER = new SingleSlotAccess();
     public static final MultiSlotAccess OUTPUT = new MultiSlotAccess();
     private final FluidTank fluidTank;
     private final MachineFluidHandler fluidHandler;
@@ -68,7 +73,9 @@ public class SoulBinderBlockEntity extends PoweredCraftingMachine<SoulBindingRec
         return MachineInventoryLayout.builder()
             .setStackLimit(1)
             .inputSlot((slot, stack) -> stack.getCapability(EIOCapabilities.ENTITY_STORAGE).isPresent())
+            .slotAccess(INPUT_SOUL)
             .inputSlot()
+            .slotAccess(INPUT_OTHER)
             .setStackLimit(64)
             .outputSlot(2)
             .slotAccess(OUTPUT)
@@ -85,8 +92,8 @@ public class SoulBinderBlockEntity extends PoweredCraftingMachine<SoulBindingRec
                 getInventory().getStackInSlot(0).shrink(1);
                 getInventory().getStackInSlot(1).shrink(1);
 
-                int leftover = ExperienceUtil.getLevelFromFluidWithLeftover(fluidTank.getFluidAmount(), 0, container.getNeededXP()).y() / 24;
-                fluidTank.drain(fluidTank.getFluidAmount()-leftover, IFluidHandler.FluidAction.EXECUTE);
+                int leftover = ExperienceUtil.getLevelFromFluidWithLeftover(fluidTank.getFluidAmount(), 0, container.getNeededXP()).y();
+                fluidTank.drain(fluidTank.getFluidAmount()-leftover*EXPTOFLUID, IFluidHandler.FluidAction.EXECUTE);
             }
 
             @Override
@@ -114,6 +121,7 @@ public class SoulBinderBlockEntity extends PoweredCraftingMachine<SoulBindingRec
         return new FluidTank(capacity) {
             @Override
             protected void onContentsChanged() {
+                newTaskAvailable();
                 setChanged();
             }
         };

@@ -25,6 +25,8 @@ import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static com.enderio.base.common.util.ExperienceUtil.EXPTOFLUID;
+
 public class XPVacuumBlockEntity extends VacuumMachineEntity<ExperienceOrb> {
     private final FluidTank fluidTank;
 
@@ -76,11 +78,11 @@ public class XPVacuumBlockEntity extends VacuumMachineEntity<ExperienceOrb> {
 
     @Override
     public void handleEntity(ExperienceOrb xpe) {
-        int filled = fluidTank.fill(new FluidStack(EIOFluids.XP_JUICE.get(), xpe.getValue() * 20), FluidAction.EXECUTE);
-        if (filled == xpe.getValue() * 20) {
+        int filled = fluidTank.fill(new FluidStack(EIOFluids.XP_JUICE.get(), xpe.getValue() * EXPTOFLUID), FluidAction.EXECUTE);
+        if (filled == xpe.getValue() * EXPTOFLUID) {
             xpe.discard();
         } else {
-            xpe.value -= filled / 20f;
+            xpe.value -= filled / ((float) EXPTOFLUID);
         }
     }
 

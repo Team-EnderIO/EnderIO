@@ -1,15 +1,13 @@
 package com.enderio.machines.common.blockentity.task;
 
 import com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity;
+import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 
@@ -17,7 +15,6 @@ import java.util.List;
 
 public class SpawnTask extends PoweredTask{
 
-    private static final int maxEntities = 2;
     public static final int maxSpawners = 2;
     public static final int spawnTries = 10;
     private boolean complete;
@@ -83,8 +80,8 @@ public class SpawnTask extends PoweredTask{
      */
     public boolean isAreaClear() {
         AABB range = new AABB(blockEntity.getBlockPos()).inflate(blockEntity.getRange());
-        List<? extends Entity> entities = blockEntity.getLevel().getEntities(blockEntity.getEntityType(), range, p -> true);
-        if (entities.size() >= maxEntities) { //TODO config? Max amount of entities.
+        List<? extends Entity> entities = blockEntity.getLevel().getEntities(blockEntity.getEntityType(), range, p -> p instanceof LivingEntity);
+        if (entities.size() >= MachinesConfig.COMMON.MAX_SPAWNER_ENTITIES.get()) { //TODO config? Max amount of entities.
             return false;
         }
         if (BlockPos.betweenClosedStream(range).filter(pos -> blockEntity.getLevel().getBlockEntity(pos) instanceof PoweredSpawnerBlockEntity).count() >= maxSpawners) { //TODO config? Max amount of spawners.
@@ -110,8 +107,7 @@ public class SpawnTask extends PoweredTask{
                     break;
                 }
 
-                if (entity instanceof Mob) {
-                    Mob mob = (Mob)entity;
+                if (entity instanceof Mob mob) {
                     net.minecraftforge.eventbus.api.Event.Result res = net.minecraftforge.event.ForgeEventFactory.canEntitySpawn(mob, level, (float)entity.getX(), (float)entity.getY(), (float)entity.getZ(), null, MobSpawnType.SPAWNER);
                     if (res == net.minecraftforge.eventbus.api.Event.Result.DENY) return;
                 }
@@ -122,8 +118,8 @@ public class SpawnTask extends PoweredTask{
 
                 level.levelEvent(2004, pos, 0);
                 level.gameEvent(entity, GameEvent.ENTITY_PLACE, new BlockPos(x, y, z));
-                if (entity instanceof Mob) {
-                    ((Mob)entity).spawnAnim();
+                if (entity instanceof Mob mob) {
+                    mob.spawnAnim();
                 }
 
                 energyStorage.consumeEnergy(energyStorage.getMaxEnergyUse(), false);

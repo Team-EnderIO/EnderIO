@@ -36,7 +36,10 @@ public class ExperienceWidget extends EIOWidget {
         RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
         int k = 1;
         if (maxXP.get() > 0) {
-            k = (int) ((ExperienceUtil.getLevelFromFluid(getFluid.get().getFluidAmount(), 0, maxXP.get()) /(float)maxXP.get()) * this.width)-1;
+            k = (int) (((getFluid.get().getFluidAmount() / ((float) ExperienceUtil.getFluidFromLevel(maxXP.get()))) * this.width)-1);
+            if (k > this.width-1) {
+                k = this.width-1;
+            }
         }
         blit(pPoseStack, this.x, this.y, this.displayOn.getBlitOffset(), 0, 64, this.width-1, this.height, 256, 256);
         blit(pPoseStack, this.x + this.width-1, this.y, this.displayOn.getBlitOffset(), 181, 64, 1, this.height, 256, 256);
@@ -58,7 +61,7 @@ public class ExperienceWidget extends EIOWidget {
 
     public void renderToolTip(PoseStack poseStack, int mouseX, int mouseY) {
         if (isHovered(mouseX, mouseY)) {
-            displayOn.renderTooltip(poseStack, Component.literal(getFluid.get().getFluidAmount() + " mb / " + maxXP.get() + " mb"), mouseX, mouseY);
+            displayOn.renderTooltip(poseStack, Component.literal(getFluid.get().getFluidAmount() + " mb / " + ExperienceUtil.getFluidFromLevel(maxXP.get()) + " mb"), mouseX, mouseY);
         }
     }
 

@@ -14,10 +14,8 @@ public class PoweredSpawnerMenu extends MachineMenu<PoweredSpawnerBlockEntity> {
     public PoweredSpawnerMenu(@Nullable PoweredSpawnerBlockEntity blockEntity, Inventory inventory, int pContainerId) {
         super(blockEntity, inventory, MachineMenus.POWERED_SPAWNER.get(), pContainerId);
 
-        if (blockEntity != null) {
-            if (blockEntity.requiresCapacitor()) {
-                addSlot(new MachineSlot(blockEntity.getInventory(), blockEntity.getCapacitorSlot(), 12, 60));
-            }
+        if (blockEntity != null && blockEntity.requiresCapacitor()) {
+            addSlot(new MachineSlot(blockEntity.getInventory(), blockEntity.getCapacitorSlot(), 12, 60));
         }
 
         addInventorySlots(8,84);
