@@ -17,9 +17,10 @@ public class SpawnTask extends PoweredTask{
 
     public static final int maxSpawners = 2;
     public static final int spawnTries = 10;
+    private boolean ready;
     private boolean complete;
-    private int progress;
-    private int maxProgress = 40;
+    private int energyCost = 2000;
+    private int energyConsumed = 0;
     private final PoweredSpawnerBlockEntity blockEntity;
 
     /**
@@ -34,24 +35,23 @@ public class SpawnTask extends PoweredTask{
 
     @Override
     public void tick() {
-        if (progress >= maxProgress) {
-            complete = true;
+        if (energyConsumed >= energyCost) {
+            ready = true;
+        } else {
+            energyConsumed += energyStorage.consumeEnergy(energyCost - energyConsumed, false);
         }
 
-        if (complete) {
-            if (isAreaClear() && energyStorage.getMaxEnergyUse() == energyStorage.consumeEnergy(energyStorage.getMaxEnergyUse(), true)) {
-                trySpawnEntity(blockEntity.getBlockPos(), (ServerLevel) blockEntity.getLevel());
-                complete = false;
-                progress = 0;
+        if (ready) {
+            if (isAreaClear()) {
+                complete = trySpawnEntity(blockEntity.getBlockPos(), (ServerLevel) blockEntity.getLevel()); //ready to spawn but blocked for a reason.
             }
         }
 
-        progress ++;
     }
 
     @Override
     public float getProgress() {
-        return progress / maxProgress;
+        return energyConsumed / ((float)energyCost);
     }
 
     @Override
@@ -62,15 +62,15 @@ public class SpawnTask extends PoweredTask{
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
-        nbt.putInt("Progress", progress);
-        nbt.putBoolean("Complete", complete);
+        nbt.putInt("EnergyConsumed", energyConsumed);
+        nbt.putBoolean("ready", ready);
         return nbt;
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        progress = nbt.getInt("Progress");
-        complete = nbt.getBoolean("Complete");
+        energyConsumed = nbt.getInt("EnergyConsumed");
+        ready = nbt.getBoolean("ready");
 
     }
 
@@ -81,7 +81,7 @@ public class SpawnTask extends PoweredTask{
     public boolean isAreaClear() {
         AABB range = new AABB(blockEntity.getBlockPos()).inflate(blockEntity.getRange());
         List<? extends Entity> entities = blockEntity.getLevel().getEntities(blockEntity.getEntityType(), range, p -> p instanceof LivingEntity);
-        if (entities.size() >= MachinesConfig.COMMON.MAX_SPAWNER_ENTITIES.get()) { //TODO config? Max amount of entities.
+        if (entities.size() >= MachinesConfig.COMMON.MAX_SPAWNER_ENTITIES.get()) {
             return false;
         }
         if (BlockPos.betweenClosedStream(range).filter(pos -> blockEntity.getLevel().getBlockEntity(pos) instanceof PoweredSpawnerBlockEntity).count() >= maxSpawners) { //TODO config? Max amount of spawners.
@@ -90,7 +90,7 @@ public class SpawnTask extends PoweredTask{
         return true;
     }
 
-    public void trySpawnEntity(BlockPos pos, ServerLevel level) {
+    public boolean trySpawnEntity(BlockPos pos, ServerLevel level) {
         for (int i = 0; i < spawnTries; i++) {
             RandomSource randomsource = level.getRandom();
             double x = pos.getX() + (randomsource.nextDouble() - randomsource.nextDouble()) * (double)this.blockEntity.getRange() + 0.5D;
@@ -109,11 +109,11 @@ public class SpawnTask extends PoweredTask{
 
                 if (entity instanceof Mob mob) {
                     net.minecraftforge.eventbus.api.Event.Result res = net.minecraftforge.event.ForgeEventFactory.canEntitySpawn(mob, level, (float)entity.getX(), (float)entity.getY(), (float)entity.getZ(), null, MobSpawnType.SPAWNER);
-                    if (res == net.minecraftforge.eventbus.api.Event.Result.DENY) return;
+                    if (res == net.minecraftforge.eventbus.api.Event.Result.DENY) return false;
                 }
 
                 if (!level.tryAddFreshEntityWithPassengers(entity)) {
-                    return;
+                    return false;
                 }
 
                 level.levelEvent(2004, pos, 0);
@@ -122,8 +122,11 @@ public class SpawnTask extends PoweredTask{
                     mob.spawnAnim();
                 }
 
-                energyStorage.consumeEnergy(energyStorage.getMaxEnergyUse(), false);
+                //Clear energy after spawn
+                energyConsumed = 0;
+                return true;
             }
         }
+        return false;
     }
 }
