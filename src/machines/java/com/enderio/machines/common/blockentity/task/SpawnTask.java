@@ -4,7 +4,9 @@ import com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.*;
@@ -12,14 +14,14 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 
 import java.util.List;
+import java.util.Optional;
 
 public class SpawnTask extends PoweredTask{
 
     public static final int maxSpawners = 2;
     public static final int spawnTries = 10;
-    private boolean ready;
     private boolean complete;
-    private int energyCost = 2000;
+    private int energyCost = 40000;
     private int energyConsumed = 0;
     private final PoweredSpawnerBlockEntity blockEntity;
 
@@ -36,15 +38,11 @@ public class SpawnTask extends PoweredTask{
     @Override
     public void tick() {
         if (energyConsumed >= energyCost) {
-            ready = true;
-        } else {
-            energyConsumed += energyStorage.consumeEnergy(energyCost - energyConsumed, false);
-        }
-
-        if (ready) {
             if (isAreaClear()) {
                 complete = trySpawnEntity(blockEntity.getBlockPos(), (ServerLevel) blockEntity.getLevel()); //ready to spawn but blocked for a reason.
             }
+        } else {
+            energyConsumed += energyStorage.consumeEnergy(energyCost - energyConsumed, false);
         }
 
     }
@@ -63,15 +61,12 @@ public class SpawnTask extends PoweredTask{
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
         nbt.putInt("EnergyConsumed", energyConsumed);
-        nbt.putBoolean("ready", ready);
         return nbt;
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
         energyConsumed = nbt.getInt("EnergyConsumed");
-        ready = nbt.getBoolean("ready");
-
     }
 
     /**
@@ -98,12 +93,22 @@ public class SpawnTask extends PoweredTask{
             double z = pos.getZ() + (randomsource.nextDouble() - randomsource.nextDouble()) * (double)this.blockEntity.getRange() + 0.5D;
             if (level.noCollision(blockEntity.getEntityType().getAABB(x, y, z))) {
 
-                Entity entity = EntityType.loadEntityRecursive(blockEntity.getEntityData().getEntityTag(), level, entity1 -> {
-                    entity1.moveTo(x, y, z, entity1.getYRot(), entity1.getXRot());
-                    return entity1;
-                });
+                Entity entity = null;
+                if (MachinesConfig.COMMON.SPAWN_TYPE.get() == SpawnType.COPY) {
+                    entity = EntityType.loadEntityRecursive(blockEntity.getEntityData().getEntityTag(), level, entity1 -> {
+                        entity1.moveTo(x, y, z, entity1.getYRot(), entity1.getXRot());
+                        return entity1;
+                    });
+                } else {
+                    Optional<EntityType<?>> id = Registry.ENTITY_TYPE.getOptional(new ResourceLocation(blockEntity.getEntityData().getEntityTag().getString("id")));
+                    if (id.isPresent()) {
+                        entity = id.get().create(level);
+                        entity.moveTo(x, y, z);
+                    }
+                }
 
-                if (entity == null) { //TODO Make default spawn tag
+
+                if (entity == null) { //TODO Make default spawn tag?
                     break;
                 }
 
@@ -128,5 +133,16 @@ public class SpawnTask extends PoweredTask{
             }
         }
         return false;
+    }
+
+    public enum SpawnType {
+        ENTITYTYPE("entitytype"),
+        COPY("copy");
+
+        private final String name;
+
+        SpawnType(String name) {
+            this.name = name;
+        }
     }
 }
