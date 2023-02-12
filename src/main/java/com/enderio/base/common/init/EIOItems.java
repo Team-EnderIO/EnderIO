@@ -281,7 +281,10 @@ public class EIOItems {
     // region Builders
 
     private static ItemBuilder<HangGliderItem, Registrate> gliderItem(String name) {
-        return dumbItem(name, HangGliderItem::new).tag(EIOTags.Items.GLIDER).model((ctx, prov) -> GliderItemModel.create(ctx.get(), prov));
+        return dumbItem(name, HangGliderItem::new)
+            .tag(EIOTags.Items.GLIDER)
+            .tab(() -> EIOCreativeTabs.MAIN)
+            .model((ctx, prov) -> GliderItemModel.create(ctx.get(), prov));
     }
 
     private static ItemBuilder<MaterialItem, Registrate> materialItem(String name) {

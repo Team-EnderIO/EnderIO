@@ -2,8 +2,10 @@ package com.enderio.base.common.hangglider;
 
 import com.enderio.api.glider.GliderMovementInfo;
 import com.enderio.api.integration.IntegrationManager;
+import com.enderio.base.common.advancement.UseGliderTrigger;
 import com.enderio.base.common.lang.EIOLang;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
@@ -49,6 +51,9 @@ public class PlayerMovementHandler {
             player.fallDistance = 0f;
             if (!player.level.isClientSide()) {
                 player.hurtMarked = true;
+            }
+            if (player instanceof ServerPlayer serverPlayer) {
+                UseGliderTrigger.USE_GLIDER.trigger(serverPlayer);
             }
             gliderMovementInfo.cause().onHangGliderTick(player);
         }

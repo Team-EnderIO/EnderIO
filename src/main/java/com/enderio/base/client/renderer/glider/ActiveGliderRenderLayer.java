@@ -48,5 +48,11 @@ public class ActiveGliderRenderLayer extends RenderLayer<AbstractClientPlayer, P
         player.animationSpeedOld = 0;
         poseStack.mulPose(Vector3f.ZN.rotationDegrees(Mth.clamp(player.yHeadRot - player.yBodyRot, -360, 360)));
         poseStack.mulPose(Vector3f.XP.rotationDegrees(-100));
+        player.xCloakO = 0;
+        player.xCloak = 0;
+        player.yCloakO = 0;
+        player.yCloak = 0;
+        player.zCloakO = 0;
+        player.zCloak = 0;
     }
 }
