@@ -5,7 +5,6 @@ import com.enderio.base.client.ClientSetup;
 import com.enderio.base.common.init.EIOItems;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
-import cpw.mods.modlauncher.EnumerationHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
@@ -14,18 +13,17 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.blockentity.BannerRenderer;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.levelgen.LegacyRandomSource;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 public class EnderIOSelfClientIntegration implements ClientIntegration {
@@ -39,12 +37,18 @@ public class EnderIOSelfClientIntegration implements ClientIntegration {
         posestack.pushPose();
         posestack.scale(1.5f,1.5f,1.5f);
         posestack.translate(0, -0.6f, 0.7f);
+        Optional<Item> activeGliderItem = EnderIOSelfIntegration.INSTANCE.getActiveGliderItem(player);
+        if (activeGliderItem.isEmpty())
+            return;
+        BakedModel bakedModel = ClientSetup.GLIDER_MODELS.get(activeGliderItem.get());
+        if (bakedModel == null)
+            return;
         if (player.isShiftKeyDown())
             posestack.translate(0, 0.05, 0);
-        Minecraft.getInstance().getItemRenderer().render(EIOItems.PINK_GLIDER.asStack(), ItemTransforms.TransformType.NONE, false, posestack, buffer, light, overlay, ClientSetup.glider);
+        Minecraft.getInstance().getItemRenderer().render(EIOItems.COLORED_HANG_GLIDERS.get(DyeColor.CYAN).asStack(), ItemTransforms.TransformType.NONE, false, posestack, buffer, light, overlay, bakedModel);
         posestack.scale(0.2f, 0.2f, 0.2f);
         posestack.translate(0, -1f, .5-0.06f);
-        for(int i = 0; i < 17 && i < PATTERNS.size() && i > 0; ++i) {
+        for (int i = 0; i < 17 && i < PATTERNS.size() && i > 0; ++i) {
             Pair<Holder<BannerPattern>, DyeColor> pair = PATTERNS.get(i);
             float[] afloat = pair.getSecond().getTextureDiffuseColors();
             pair.getFirst().unwrapKey().map(Sheets::getBannerMaterial)

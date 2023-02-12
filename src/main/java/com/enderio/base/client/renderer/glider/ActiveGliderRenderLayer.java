@@ -1,10 +1,8 @@
 package com.enderio.base.client.renderer.glider;
 
-import com.enderio.api.glider.GliderMovementInfo;
 import com.enderio.api.integration.ClientIntegration;
 import com.enderio.api.integration.Integration;
 import com.enderio.api.integration.IntegrationManager;
-import com.enderio.base.common.hangglider.PlayerMovementHandler;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import net.minecraft.client.model.PlayerModel;
@@ -19,7 +17,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.List;
-import java.util.Optional;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ActiveGliderRenderLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
@@ -31,7 +28,8 @@ public class ActiveGliderRenderLayer extends RenderLayer<AbstractClientPlayer, P
     @Override
     public void render(PoseStack posestack, MultiBufferSource pBuffer, int pPackedLight, AbstractClientPlayer player, float pLimbSwing, float pLimbSwingAmount,
         float pPartialTick, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
-        List<ClientIntegration> workingGliders = IntegrationManager.getIf(integration -> integration.getGliderMovementInfo(player).isPresent(),
+        List<ClientIntegration> workingGliders = IntegrationManager.getIf(
+             integration -> integration.getGliderMovementInfo(player).isPresent(),
             Integration::getClientIntegration);
         if (!workingGliders.isEmpty()) {
             posestack.pushPose();

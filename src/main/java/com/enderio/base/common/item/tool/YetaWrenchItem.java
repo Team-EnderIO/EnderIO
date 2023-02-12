@@ -30,14 +30,7 @@ public class YetaWrenchItem extends Item {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
-        return super.use(level, player, usedHand);
-    }
-
-    @Override
     public InteractionResult useOn(UseOnContext pContext) {
-        if (pContext.getLevel().isClientSide)
-            return InteractionResult.SUCCESS;
 
         Level level = pContext.getLevel();
         BlockPos pos = pContext.getClickedPos();
@@ -47,9 +40,11 @@ public class YetaWrenchItem extends Item {
         if (be != null) {
             LazyOptional<ISideConfig> optSideConfig = be.getCapability(EIOCapabilities.SIDE_CONFIG, pContext.getClickedFace());
             if (optSideConfig.isPresent()) {
+                if (level.isClientSide())
+                    return InteractionResult.sidedSuccess(true);
                 // Cycle state.
                 optSideConfig.ifPresent(ISideConfig::cycleMode);
-                return InteractionResult.SUCCESS;
+                return InteractionResult.sidedSuccess(false);
             }
         }
 
@@ -57,14 +52,12 @@ public class YetaWrenchItem extends Item {
         BlockState state = level.getBlockState(pContext.getClickedPos());
         Optional<Either<DirectionProperty, EnumProperty<Direction.Axis>>> property = getRotationProperty(state);
         if (property.isPresent()) {
-            if (pContext.getLevel().isClientSide)
-                return InteractionResult.SUCCESS;
-            state = getNextState(pContext, state, property.get());
+            BlockState newState = getNextState(pContext, state, property.get());
             pContext.getLevel().setBlock(
                 pContext.getClickedPos(),
-                state,
+                newState,
                 Block.UPDATE_NEIGHBORS + Block.UPDATE_CLIENTS);
-            return InteractionResult.CONSUME;
+            return InteractionResult.sidedSuccess(level.isClientSide());
         }
         return super.useOn(pContext);
     }

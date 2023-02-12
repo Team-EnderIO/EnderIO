@@ -1,6 +1,7 @@
 package com.enderio.api.integration;
 
 import com.enderio.api.glider.GliderMovementInfo;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -33,11 +34,18 @@ public interface Integration {
     }
 
     /**
-     * @param player The Player who want to activate the HangGlider
-     * @return if the HangGlider should be disabled, because of a no fly zone or something else
+     * @param player The Player who activates the HangGlider
+     * used for cunsuming energy or other things
      */
-    default boolean isHangGliderDisabled(Player player) {
-        return false;
+    default void onHangGliderTick(Player player) {
+    }
+
+    /**
+     * @param player The Player who want to activate the HangGlider
+     * @return if the HangGlider should be disabled return the Reason, if not, return an empty Optional
+     */
+    default Optional<Component> hangGliderDisabledReason(Player player) {
+        return Optional.empty();
     }
 
     /**

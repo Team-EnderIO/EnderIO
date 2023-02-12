@@ -2,6 +2,8 @@ package com.enderio.base.common.hangglider;
 
 import com.enderio.api.glider.GliderMovementInfo;
 import com.enderio.api.integration.IntegrationManager;
+import com.enderio.base.common.lang.EIOLang;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
@@ -24,7 +26,7 @@ public class PlayerMovementHandler {
     public static void onPlayerTick(TickEvent.PlayerTickEvent playerTickEvent) {
         Player player = playerTickEvent.player;
         if (playerTickEvent.phase == TickEvent.Phase.START) {
-            Optional<GliderMovementInfo> gliderMovementInfoOpt = calculateGliderMovementInfo(player);
+            Optional<GliderMovementInfo> gliderMovementInfoOpt = calculateGliderMovementInfo(player, true);
             if (gliderMovementInfoOpt.isEmpty())
                 return;
             GliderMovementInfo gliderMovementInfo = gliderMovementInfoOpt.get();
@@ -48,17 +50,22 @@ public class PlayerMovementHandler {
             if (!player.level.isClientSide()) {
                 player.hurtMarked = true;
             }
+            gliderMovementInfo.cause().onHangGliderTick(player);
         }
     }
-    public static Optional<GliderMovementInfo> calculateGliderMovementInfo(Player player) {
+    public static Optional<GliderMovementInfo> calculateGliderMovementInfo(Player player, boolean displayDisabledMessage) {
         if (!player.isOnGround()
             && player.getDeltaMovement().y() < 0
             && !player.isShiftKeyDown()
             && !player.isInWater()
-            && IntegrationManager.noneMatch(integration -> integration.isHangGliderDisabled(player))) {
-
+            && !player.isPassenger()) {
+            Optional<Component> disabledReason = IntegrationManager.getFirst(integration -> integration.hangGliderDisabledReason(player));
+            if (displayDisabledMessage && disabledReason.isPresent()) {
+                player.displayClientMessage(EIOLang.GLIDER_DISABLED.copy().append(disabledReason.get()), true);
+            }
             return IntegrationManager.getFirst(integration -> integration.getGliderMovementInfo(player));
         }
+
         return Optional.empty();
     }
 }

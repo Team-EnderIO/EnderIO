@@ -10,8 +10,8 @@
 			"to": [24, 29, 3],
 			"rotation": {"angle": 0, "axis": "x", "origin": [8, 10, 3]},
 			"faces": {
-				"north": {"uv": [0, 16, 16, 0], "rotation": 180, "texture": "#0"},
-				"south": {"uv": [0, 0, 16, 16], "texture": "#0"}
+				"north": {"uv": [0, 16, 16, 0], "rotation": 180, "texture": "#0", "emissivity": 15},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#0", "emissivity": 15}
 			}
 		},
 		{

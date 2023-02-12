@@ -84,7 +84,7 @@ public class EnderIO {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addListener(EventPriority.LOWEST, this::onGatherData);
         modEventBus.addListener(SoulVialItem::onCommonSetup);
-        IntegrationManager.addIntegration(new EnderIOSelfIntegration());
+        IntegrationManager.addIntegration(EnderIOSelfIntegration.INSTANCE);
     }
 
     public void onGatherData(GatherDataEvent event) {

@@ -19,8 +19,8 @@ public class GliderRotationMixin {
                 value = "INVOKE",
                 target = "Lcom/mojang/blaze3d/vertex/PoseStack;mulPose(Lcom/mojang/math/Quaternion;)V",
                 ordinal = 0, shift = At.Shift.AFTER))
-    public void onSetupAnim(LivingEntity pEntityLiving, PoseStack pMatrixStack, float pAgeInTicks, float pRotationYaw, float pPartialTicks, CallbackInfo ci) {
-        if (pEntityLiving instanceof Player player && PlayerMovementHandler.calculateGliderMovementInfo(player).isPresent()) {
+    public void enderio$rotatePlayerInGlider(LivingEntity pEntityLiving, PoseStack pMatrixStack, float pAgeInTicks, float pRotationYaw, float pPartialTicks, CallbackInfo ci) {
+        if (pEntityLiving instanceof Player player && PlayerMovementHandler.calculateGliderMovementInfo(player, false).isPresent()) {
             ActiveGliderRenderLayer.setupAnim(player, pMatrixStack);
         }
     }
