@@ -2,17 +2,19 @@ package com.enderio.base.client;
 
 import com.enderio.EnderIO;
 import com.enderio.base.client.particle.RangeParticle;
-import com.enderio.base.common.init.EIOParticles;
-import com.enderio.core.client.item.EnergyBarDecorator;
-import com.enderio.core.client.item.FluidBarDecorator;
 import com.enderio.base.client.renderer.item.GlassIconDecorator;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.common.init.EIOParticles;
+import com.enderio.core.client.item.EnergyBarDecorator;
+import com.enderio.core.client.item.FluidBarDecorator;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.event.RegisterItemDecorationsEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -43,5 +45,12 @@ public class ClientSetup {
     @SubscribeEvent
     public static void registerParticleProviders(RegisterParticleProvidersEvent event) {
         Minecraft.getInstance().particleEngine.register(EIOParticles.RANGE_PARTICLE.get(), RangeParticle.Provider::new);
+    }
+
+    @SubscribeEvent
+    public static void stitchTextures(TextureStitchEvent.Pre event) {
+        if (event.getAtlas().location() == InventoryMenu.BLOCK_ATLAS) {
+            event.addSprite(EnderIO.loc("block/overlay/selected_face"));
+        }
     }
 }

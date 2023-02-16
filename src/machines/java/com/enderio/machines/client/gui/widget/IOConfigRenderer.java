@@ -1,13 +1,12 @@
 package com.enderio.machines.client.gui.widget;
 
+import com.enderio.EnderIO;
+import com.enderio.core.client.RenderUtil;
 import com.enderio.core.client.gui.screen.IEnderScreen;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
@@ -16,11 +15,20 @@ import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -32,16 +40,20 @@ public class IOConfigRenderer<S extends Screen & IEnderScreen> {
     private final Rect2i bounds;
 
     // Camera Variables
-    private boolean dragging = false;
-    private float pitch = 0;
-    private float yaw = 0;
+    private float pitch;
+    private float yaw;
     private float distance;
 
     private final @NotNull Vector3f origin;
+    private Vector4f eyePosition = new Vector4f();
     private Vector3f size;
     private final @NotNull Matrix4f rotMat = new Matrix4f();
+
+    private @Nullable SelectedFace selection;
     private final List<BlockPos> configurables = new ArrayList<>();
     private final List<BlockPos> neighbours = new ArrayList<>();
+
+    private static final ResourceLocation SELECTED_ICON = EnderIO.loc("block/overlay/selected_face");
 
     public IOConfigRenderer(S addedOn, Rect2i bounds, MachineBlockEntity configurable) {
         this(addedOn, bounds, List.of(configurable.getBlockPos()));
@@ -90,9 +102,12 @@ public class IOConfigRenderer<S extends Screen & IEnderScreen> {
     }
 
     public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick, Rect2i vp) {
+        // render black bg
         GuiComponent.fill(pPoseStack, bounds.getX(), bounds.getY(), bounds.getX() + bounds.getWidth(), bounds.getY() + bounds.getHeight(), 0xFF000000);
 
         renderScene(pPartialTick, pPoseStack, vp);
+        //        renderSelection(pPoseStack);
+        //        renderOverlay();
     }
 
     public void handleMouseClick(double pMouseX, double pMouseY) {
@@ -108,23 +123,97 @@ public class IOConfigRenderer<S extends Screen & IEnderScreen> {
         pitch = Math.min(80, Math.max(-80, pitch)); //clamp
     }
 
-    private void renderScene(float partialTick, PoseStack ps, Rect2i vp) {
-        float sizeX = size.x() + 2;
-        float sizeY = size.y() + 2;
-        float sizeZ = size.z() + 2;
+    public void handleMouseMove(double pMouseX, double pMouseY) {
+        Vector3f rayStart = new Vector3f(eyePosition.x(), eyePosition.y(), eyePosition.z());
+        Vector3f rayEnd = new Vector3f();
+        var invProjMat = RenderSystem.getProjectionMatrix().copy();
+        invProjMat.invert();
+        //        var invViewMat = RenderSystem.getModelViewMatrix().copy();
+        var invViewMat = rotMat.copy();
+        invViewMat.setTranslation(eyePosition.x(), eyePosition.y(), eyePosition.z());
+        invViewMat.invert();
+        convertPixelToRay(bounds, invProjMat, invViewMat, pMouseX, pMouseY, rayEnd);
+
+        rayEnd.mul(100 * 2); //change later
+        rayEnd.add(rayStart);
+        rayEnd.add(0.5f, 0.5f, 0.5f); // offset to block center
+
+        //update Selection
+        var mc = Minecraft.getInstance();
+        rayStart.add(origin);
+        rayEnd.add(origin);
+        List<BlockHitResult> hits = new ArrayList<>();
+
+        // improve later
+        configurables.forEach(blockPos -> {
+            var blockState = mc.level.getBlockState(blockPos);
+            var voxelShape = ClipContext.Block.COLLIDER.get(blockState, mc.level, blockPos, CollisionContext.of(mc.player));
+            BlockHitResult hitResult = mc.level.clipWithInteractionOverride(new Vec3(rayStart), new Vec3(rayEnd), blockPos, voxelShape, blockState);
+            if (hitResult != null && hitResult.getType() != HitResult.Type.MISS) {
+                hits.add(hitResult);
+            }
+        });
+        var _origin = new Vec3(origin);
+        var opt = hits.stream().min((a, b) -> (int) (a.getBlockPos().distToCenterSqr(_origin) - b.getBlockPos().distToCenterSqr(_origin))); // minimum
+
+        if (opt.isPresent()) {
+            var closest = opt.get();
+            var face = closest.getDirection();
+            selection = new SelectedFace(closest.getBlockPos(), face);
+            EnderIO.LOGGER.info(face.getName());
+        }
+        EnderIO.LOGGER.info("end" + rayEnd);
+    }
+
+    private void renderSelection(PoseStack poseStack) {
+        if (selection == null) {
+            return;
+        }
+        BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
+        RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
+        RenderSystem.depthFunc(519);
+        RenderSystem.depthMask(false);
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.enableTexture();
+        var mc = Minecraft.getInstance();
+
+        // do I need a texture atlas ?
+        TextureAtlasSprite tex = mc.getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(SELECTED_ICON);
+        RenderSystem.setShaderTexture(0, tex.atlas().location());
+
+        poseStack.pushPose();
+        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
+        var blockPos = selection.block;
+        poseStack.translate(blockPos.getX(), blockPos.getY(), blockPos.getZ());
+        RenderUtil.getVerticesForFace(bufferbuilder, selection.face, new AABB(selection.block), tex.getU0(), tex.getU1(), tex.getV0(), tex.getV1());
+        BufferUploader.drawWithShader(bufferbuilder.end());
+        poseStack.popPose();
+
+        RenderSystem.disableBlend();
+        RenderSystem.depthMask(true);
+        RenderSystem.depthFunc(515);
+    }
+
+    private void renderScene(float partialTick, PoseStack ps, Rect2i scaledBounds) {
+        // TODO: Fix scaling issues
+        float sizeX = size.x();
+        float sizeY = size.y();
+        float sizeZ = size.z();
+        float diagonal = (float) Math.sqrt(sizeX * sizeX + sizeZ * sizeZ); //change later
+        float scaleX = scaledBounds.getWidth() / diagonal;
+        float scaleY = (float) scaledBounds.getHeight() / sizeY;
+        float scale = -Math.min(scaleX, scaleY);
+
         int xPos = bounds.getX() + (bounds.getWidth() / 2);
         int yPos = bounds.getY() + (bounds.getHeight() / 2);
-        float diag = (float) Math.sqrt(sizeX * sizeX + sizeZ * sizeZ); //change later
-        float scaleX = bounds.getWidth() / diag;
-        float scaleY = (float) bounds.getHeight() / sizeY;
-        float scale = -Math.min(scaleX, scaleY);
 
         ps.pushPose();
         ps.translate(xPos, yPos, 100);
         ps.scale(scale, scale, scale);
         //        ps.translate(-sizeX / 2, -sizeY / 2, 0); //change later
 
-        Vector4f eye = new Vector4f(0, 0, -100, 1); //
+        eyePosition = new Vector4f(0, 0, -100, 1); //
         rotMat.setIdentity();
 
         // Camera orientation
@@ -133,8 +222,8 @@ public class IOConfigRenderer<S extends Screen & IEnderScreen> {
         ps.mulPose(Vector3f.YP.rotationDegrees(-yaw));
         rotMat.multiply(Vector3f.YP.rotationDegrees(yaw));
 
-        eye.transform(rotMat);
-        eye.perspectiveDivide();
+        eyePosition.transform(rotMat);
+        eyePosition.perspectiveDivide();
         renderWorld(ps, partialTick);
 
         ps.popPose();
@@ -161,6 +250,7 @@ public class IOConfigRenderer<S extends Screen & IEnderScreen> {
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         for (var neighbour : neighbours) {
             var pos = new Vector3f(neighbour.getX() - origin.x(), neighbour.getY() - origin.y(), neighbour.getZ() - origin.z());
+            // switch to alpha later
             renderBlock(poseStack, neighbour, pos, buffers);
         }
 
@@ -177,15 +267,7 @@ public class IOConfigRenderer<S extends Screen & IEnderScreen> {
         var blockState = level.getBlockState(blockPos);
         var renderer = mc.getBlockRenderer();
 
-        //        var bakedModel = renderer.getBlockModel(blockState);
-        //        var vertexConsumer = new GhostVertexConsumer(buffers.getBuffer(TransparentRenderType.TRANSPARENT), 255);
-        //        var modelData = level.getModelDataManager().getAt(blockPos);
-
-        //        renderer
-        //            .getModelRenderer()
-        //            .renderModel(poseStack.last(), vertexConsumer, blockState, bakedModel, r, g, b, LightTexture.FULL_BLOCK, OverlayTexture.NO_OVERLAY, ModelData.EMPTY,
-        //                TransparentRenderType.TRANSPARENT);
-        renderer.renderSingleBlock(blockState, poseStack, buffers, LightTexture.FULL_BLOCK, OverlayTexture.NO_OVERLAY);
+        renderer.renderSingleBlock(blockState, poseStack, buffers, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
         poseStack.popPose();
 
     }
@@ -294,4 +376,52 @@ public class IOConfigRenderer<S extends Screen & IEnderScreen> {
                 .setLayeringState(RenderStateShard.POLYGON_OFFSET_LAYERING) // fixes z-fighting?, when in same space as other blocks
                 .createCompositeState(false));
     }
+
+    public void convertPixelToRay(Rect2i bounds, Matrix4f ipm, Matrix4f ivm, double x, double y, Vector3f normalOut) {
+
+        Matrix4f vpm = new Matrix4f();
+        vpm.load(ivm);
+        vpm.multiply(ipm);
+
+        // Calculate the pixel location in screen clip space (width and height from
+        // -1 to 1)
+        float screenX = (float) ((x - bounds.getX()) / bounds.getWidth());
+        float screenY = (float) ((y - bounds.getY()) / bounds.getHeight());
+        screenX = (float) ((screenX * 2.0) - 1.0);
+        screenY = (float) ((screenY * 2.0) - 1.0);
+
+        // Now calculate the XYZ location of this point on the near plane
+        Vector4f tmp = new Vector4f();
+        tmp.setX(screenX);
+        tmp.setY(screenY);
+        tmp.setZ(-1);
+        tmp.setW(1.0f);
+        tmp.transform(vpm);
+
+        float w = tmp.w();
+        Vector3f nearXYZ = new Vector3f(tmp.x() / w, tmp.y() / w, tmp.z() / w);
+
+        // and then on the far plane
+        tmp.setX(screenX);
+        tmp.setY(screenY);
+        tmp.setZ(1);
+        tmp.setW(1.0f);
+        tmp.transform(vpm);
+
+        w = tmp.w();
+        Vector3f farXYZ = new Vector3f(tmp.x() / w, tmp.y() / w, tmp.z() / w);
+
+        normalOut.load(farXYZ);
+        normalOut.sub(nearXYZ);
+        normalOut.normalize();
+    }
+
+    public record SelectedFace(@NotNull BlockPos block, @NotNull Direction face) {
+        @Override
+        public String toString() {
+            return "SelectedFace [config=" + block + ", face=" + face + "]";
+        }
+
+    }
+
 }

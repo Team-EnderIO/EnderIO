@@ -31,7 +31,6 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     private final Rect2i widgetBounds;
     private final Rect2i rendererBounds;
 
-    // Rebase on ToggleButton if possible
     public IOConfigWidget(U addedOn, int x, int y, int width, int height, MachineBlockEntity block, Supplier<Boolean> playerSlotsHidden,
         Consumer<Boolean> shouldHidePlayerSlots) {
         super(x, y, width, height, Component.empty());
@@ -51,11 +50,13 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
             Minecraft mc = Minecraft.getInstance();
             Window window = mc.getWindow();
 
-            int vpx = (int) ((addedOn.getGuiLeft() + 5) * window.getGuiScale());
-            int vpy = (int) ((addedOn.getGuiTop() + 4) * window.getGuiScale());
-            int w = (int) (rendererBounds.getWidth() * window.getGuiScale());
-            int h = (int) (rendererBounds.getHeight() * window.getGuiScale());
+            int vpx = (int) ((addedOn.getGuiLeft() + 5) / window.getGuiScale());
+            int vpy = (int) ((addedOn.getGuiTop() + 4) / window.getGuiScale());
+            int w = (int) (rendererBounds.getWidth() / window.getGuiScale());
+            int h = (int) (rendererBounds.getHeight() / window.getGuiScale());
+            //            RenderSystem.enableScissor(vpx, vpy, w, h);
             rendererWidget.render(pPoseStack, pMouseX, pMouseY, pPartialTick, new Rect2i(vpx, vpy, w, h));
+            //            RenderSystem.disableScissor();
         }
     }
 
@@ -87,7 +88,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     @Override
     public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
         // handle mouse button check here if need to
-        if (rendererVisible && this.isValidClickButton(pButton) && mouseInBounds(pMouseX, pMouseY, rendererBounds)) {
+        if (rendererVisible && this.isValidClickButton(pButton)) {
             this.onDrag(pMouseX, pMouseY, pDragX, pDragY);
             return true;
         } else {
@@ -107,6 +108,13 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
             rendererVisible = playerSlotsHidden.get();
         } else {
             rendererWidget.handleMouseClick(pMouseX, pMouseY);
+        }
+    }
+
+    @Override
+    public void mouseMoved(double pMouseX, double pMouseY) {
+        if (rendererVisible && mouseInBounds(pMouseX, pMouseY, rendererBounds)) {
+            rendererWidget.handleMouseMove(pMouseX, pMouseY);
         }
     }
 

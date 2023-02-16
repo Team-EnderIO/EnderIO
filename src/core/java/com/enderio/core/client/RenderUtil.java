@@ -1,5 +1,6 @@
 package com.enderio.core.client;
 
+import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
@@ -7,10 +8,10 @@ import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.client.model.IQuadTransformer;
 
 import static net.minecraftforge.client.model.IQuadTransformer.STRIDE;
-import static net.minecraftforge.client.model.IQuadTransformer.UV0;
 
 public class RenderUtil {
     /**
@@ -61,6 +62,7 @@ public class RenderUtil {
 
     /**
      * {@see net.minecraftforge.client.model.pipeline.QuadBakingVertexConsumer}
+     *
      * @return packedUV Data
      */
     public static int[] packUV(float u, float v) {
@@ -68,5 +70,46 @@ public class RenderUtil {
         quadData[0] = Float.floatToRawIntBits(u);
         quadData[1] = Float.floatToRawIntBits(v);
         return quadData;
+    }
+
+    public static void getVerticesForFace(BufferBuilder builder, Direction face, AABB aabb, float minU, float maxU, float minV, float maxV) {
+        switch (face) {
+        case NORTH -> {
+            builder.vertex(aabb.maxX, aabb.minY, aabb.minZ).normal(0, 0, -1).color(1F, 1F, 1F, 1F).uv(minU, minV).endVertex();
+            builder.vertex(aabb.minX, aabb.minY, aabb.minZ).normal(0, 0, -1).color(1F, 1F, 1F, 1F).uv(maxU, minV).endVertex();
+            builder.vertex(aabb.minX, aabb.maxY, aabb.minZ).normal(0, 0, -1).color(1F, 1F, 1F, 1F).uv(maxU, maxV).endVertex();
+            builder.vertex(aabb.maxX, aabb.maxY, aabb.minZ).normal(0, 0, -1).color(1F, 1F, 1F, 1F).uv(minU, maxV).endVertex();
+        }
+        case SOUTH -> {
+            builder.vertex(aabb.minX, aabb.minY, aabb.maxZ).normal(0, 0, 1).color(1F, 1F, 1F, 1F).uv(maxU, minV).endVertex();
+            builder.vertex(aabb.maxX, aabb.minY, aabb.maxZ).normal(0, 0, 1).color(1F, 1F, 1F, 1F).uv(minU, minV).endVertex();
+            builder.vertex(aabb.maxX, aabb.maxY, aabb.maxZ).normal(0, 0, 1).color(1F, 1F, 1F, 1F).uv(minU, maxV).endVertex();
+            builder.vertex(aabb.minX, aabb.maxY, aabb.maxZ).normal(0, 0, 1).color(1F, 1F, 1F, 1F).uv(maxU, maxV).endVertex();
+        }
+        case EAST -> {
+            builder.vertex(aabb.maxX, aabb.maxY, aabb.minZ).normal(1, 0, 0).color(1F, 1F, 1F, 1F).uv(maxU, maxV).endVertex();
+            builder.vertex(aabb.maxX, aabb.maxY, aabb.maxZ).normal(1, 0, 0).color(1F, 1F, 1F, 1F).uv(minU, maxV).endVertex();
+            builder.vertex(aabb.maxX, aabb.minY, aabb.maxZ).normal(1, 0, 0).color(1F, 1F, 1F, 1F).uv(minU, minV).endVertex();
+            builder.vertex(aabb.maxX, aabb.minY, aabb.minZ).normal(1, 0, 0).color(1F, 1F, 1F, 1F).uv(maxU, minV).endVertex();
+        }
+        case WEST -> {
+            builder.vertex(aabb.minX, aabb.minY, aabb.minZ).normal(-1, 0, 0).color(1F, 1F, 1F, 1F).uv(maxU, minV).endVertex();
+            builder.vertex(aabb.minX, aabb.minY, aabb.maxZ).normal(-1, 0, 0).color(1F, 1F, 1F, 1F).uv(minU, minV).endVertex();
+            builder.vertex(aabb.minX, aabb.maxY, aabb.maxZ).normal(-1, 0, 0).color(1F, 1F, 1F, 1F).uv(minU, maxV).endVertex();
+            builder.vertex(aabb.minX, aabb.maxY, aabb.minZ).normal(-1, 0, 0).color(1F, 1F, 1F, 1F).uv(maxU, maxV).endVertex();
+        }
+        case UP -> {
+            builder.vertex(aabb.maxX, aabb.maxY, aabb.maxZ).normal(0, 1, 0).color(1F, 1F, 1F, 1F).uv(minU, minV).endVertex();
+            builder.vertex(aabb.maxX, aabb.maxY, aabb.minZ).normal(0, 1, 0).color(1F, 1F, 1F, 1F).uv(minU, maxV).endVertex();
+            builder.vertex(aabb.minX, aabb.maxY, aabb.minZ).normal(0, 1, 0).color(1F, 1F, 1F, 1F).uv(maxU, maxV).endVertex();
+            builder.vertex(aabb.minX, aabb.maxY, aabb.maxZ).normal(0, 1, 0).color(1F, 1F, 1F, 1F).uv(maxU, minV).endVertex();
+        }
+        case DOWN -> {
+            builder.vertex(aabb.minX, aabb.minY, aabb.minZ).normal(0, -1, 0).color(1F, 1F, 1F, 1F).uv(maxU, maxV).endVertex();
+            builder.vertex(aabb.maxX, aabb.minY, aabb.minZ).normal(0, -1, 0).color(1F, 1F, 1F, 1F).uv(minU, maxV).endVertex();
+            builder.vertex(aabb.maxX, aabb.minY, aabb.maxZ).normal(0, -1, 0).color(1F, 1F, 1F, 1F).uv(minU, minV).endVertex();
+            builder.vertex(aabb.minX, aabb.minY, aabb.maxZ).normal(0, -1, 0).color(1F, 1F, 1F, 1F).uv(maxU, minV).endVertex();
+        }
+        }
     }
 }
