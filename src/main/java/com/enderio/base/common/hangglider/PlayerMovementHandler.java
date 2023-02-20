@@ -12,7 +12,9 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.Map;
 import java.util.Optional;
+import java.util.WeakHashMap;
 
 @Mod.EventBusSubscriber
 public class PlayerMovementHandler {
@@ -24,10 +26,20 @@ public class PlayerMovementHandler {
 
     private static final double MOVEMENT_CHANGE_EFFECT = 0.05d;
 
+    private static final Map<Player, Integer> TICKS_FALLING = new WeakHashMap<>();
+
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent playerTickEvent) {
         Player player = playerTickEvent.player;
         if (playerTickEvent.phase == TickEvent.Phase.START) {
+            int ticksFalling = TICKS_FALLING.computeIfAbsent(player, key -> 0);
+            if (player.getDeltaMovement().y() < 0) {
+                TICKS_FALLING.put(player, ticksFalling + 1);
+            } else {
+                TICKS_FALLING.put(player, 0);
+            }
+            if (player.isSpectator())
+                return;
             Optional<GliderMovementInfo> gliderMovementInfoOpt = calculateGliderMovementInfo(player, true);
             if (gliderMovementInfoOpt.isEmpty())
                 return;
@@ -63,12 +75,14 @@ public class PlayerMovementHandler {
             && player.getDeltaMovement().y() < 0
             && !player.isShiftKeyDown()
             && !player.isInWater()
-            && !player.isPassenger()) {
+            && !player.isPassenger()
+            && TICKS_FALLING.getOrDefault(player, 0) > 12) {
             Optional<Component> disabledReason = IntegrationManager.getFirst(integration -> integration.hangGliderDisabledReason(player));
-            if (displayDisabledMessage && disabledReason.isPresent()) {
+            Optional<GliderMovementInfo> gliderMovementInfo = IntegrationManager.getFirst(integration -> integration.getGliderMovementInfo(player));
+            if (displayDisabledMessage && disabledReason.isPresent() && gliderMovementInfo.isPresent()) {
                 player.displayClientMessage(EIOLang.GLIDER_DISABLED.copy().append(disabledReason.get()), true);
             }
-            return IntegrationManager.getFirst(integration -> integration.getGliderMovementInfo(player));
+            return gliderMovementInfo;
         }
 
         return Optional.empty();
