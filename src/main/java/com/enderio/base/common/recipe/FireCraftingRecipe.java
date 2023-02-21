@@ -3,6 +3,7 @@ package com.enderio.base.common.recipe;
 import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIORecipes;
 import com.enderio.core.common.recipes.EnderRecipe;
+import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -94,6 +95,10 @@ public class FireCraftingRecipe implements EnderRecipe<Container> {
     @Override
     public RecipeType<?> getType() {
         return EIORecipes.FIRE_CRAFTING.type().get();
+    }
+
+    public List<ResourceLocation> getValidDimensions() {
+        return ImmutableList.copyOf(dimensions);
     }
 
     public static class Serializer implements RecipeSerializer<FireCraftingRecipe> {
