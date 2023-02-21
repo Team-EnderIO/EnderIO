@@ -144,7 +144,6 @@ public class PlayerMovementHandler {
                 } else {
                     this.pitch = 1.0F;
                 }
-                volume *= 0.5;
             } else {
                 this.stop();
             }
