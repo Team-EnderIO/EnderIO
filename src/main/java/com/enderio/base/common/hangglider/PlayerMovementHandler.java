@@ -101,9 +101,16 @@ public class PlayerMovementHandler {
 
     private static class ClientClassLoadingProtection {
         private static void playSound(Player player) {
-            if (player instanceof LocalPlayer localPlayer && TICKS_FALLING.getOrDefault(player, 0) == 13) {
+            if (player instanceof LocalPlayer localPlayer && !isGliderPlaying()) {
                 Minecraft.getInstance().getSoundManager().play(new WindSoundInstance(localPlayer));
             }
+        }
+        private static boolean isGliderPlaying() {
+            for (SoundInstance soundInstance : Minecraft.getInstance().getSoundManager().soundEngine.instanceBySource.get(SoundSource.PLAYERS)) {
+                if (soundInstance instanceof WindSoundInstance)
+                    return true;
+            }
+            return false;
         }
     }
 
