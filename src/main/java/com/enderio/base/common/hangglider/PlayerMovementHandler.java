@@ -43,8 +43,8 @@ public class PlayerMovementHandler {
     public static void onPlayerTick(TickEvent.PlayerTickEvent playerTickEvent) {
         Player player = playerTickEvent.player;
         if (playerTickEvent.phase == TickEvent.Phase.START) {
-            int ticksFalling = TICKS_FALLING.computeIfAbsent(player, key -> 0);
-            if (player.getDeltaMovement().y() < 0) {
+            int ticksFalling = TICKS_FALLING.getOrDefault(player, 0);
+            if (player.isOnGround() != player.getDeltaMovement().y() < 0) {
                 TICKS_FALLING.put(player, ticksFalling + 1);
             } else {
                 TICKS_FALLING.put(player, 0);
