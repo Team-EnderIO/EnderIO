@@ -44,6 +44,7 @@ sourceSets {
     main {
         compileClasspath += sourceSets.api.output
         compileClasspath += sourceSets.core.output
+        ext.refMap = "mixins.enderio.refmap.json"
         resources { srcDir 'src/generated/resources' }
     }
 }
@@ -99,6 +100,10 @@ minecraft {
                     }
                 }
             }
+        }
+        clientRandom {
+            parent runs.client
+            args '--username', 'Dev##'
         }
 
         server {
@@ -223,6 +228,7 @@ dependencies {
 // MixinGradle Settings
 mixin {
     add sourceSets.core, "mixins.enderio.refmap.json"
+    add sourceSets.main, "mixins.enderio.refmap.json"
     config "mixins.enderio.json"
 }
 
@@ -238,7 +244,8 @@ jar {
                 "Implementation-Title"    : project.name,
                 "Implementation-Version"  : project.jar.archiveVersion,
                 "Implementation-Vendor"   : "SleepyTrousers",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                "MixinConfigs"            : "enderio.mixins.json"
         ])
     }
 
