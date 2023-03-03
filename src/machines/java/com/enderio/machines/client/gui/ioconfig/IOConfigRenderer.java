@@ -1,4 +1,4 @@
-package com.enderio.machines.client.gui.widget;
+package com.enderio.machines.client.gui.ioconfig;
 
 import com.enderio.EnderIO;
 import com.enderio.core.client.RenderUtil;
@@ -29,7 +29,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,7 +105,7 @@ public class IOConfigRenderer<S extends Screen & IEnderScreen> {
         GuiComponent.fill(pPoseStack, bounds.getX(), bounds.getY(), bounds.getX() + bounds.getWidth(), bounds.getY() + bounds.getHeight(), 0xFF000000);
 
         renderScene(pPartialTick, pPoseStack, vp);
-        //        renderSelection(pPoseStack);
+        //                renderSelection(pPoseStack);
         //        renderOverlay();
     }
 
@@ -126,17 +125,17 @@ public class IOConfigRenderer<S extends Screen & IEnderScreen> {
     public void handleMouseMove(double pMouseX, double pMouseY) {
         Vector3f rayStart = new Vector3f(eyePosition.x(), eyePosition.y(), eyePosition.z());
         Vector3f rayEnd = new Vector3f();
-        var invProjMat = RenderSystem.getProjectionMatrix().copy();
+        var invProjMat = Matrix4f.perspective(90.0D, 1.3333334F, 9.0F, 80.0F);
         invProjMat.invert();
         //        var invViewMat = RenderSystem.getModelViewMatrix().copy();
         var invViewMat = rotMat.copy();
-        invViewMat.setTranslation(eyePosition.x(), eyePosition.y(), eyePosition.z());
+        //        invViewMat.setTranslation(eyePosition.x(), eyePosition.y(), eyePosition.z());
         invViewMat.invert();
         convertPixelToRay(bounds, invProjMat, invViewMat, pMouseX, pMouseY, rayEnd);
 
-        rayEnd.mul(100 * 2); //change later
+        rayEnd.mul(100); //change later
         rayEnd.add(rayStart);
-        rayEnd.add(0.5f, 0.5f, 0.5f); // offset to block center
+        //        rayEnd.add(0.5f, 0.5f, 0.5f); // offset to block center
 
         //update Selection
         var mc = Minecraft.getInstance();
@@ -162,7 +161,9 @@ public class IOConfigRenderer<S extends Screen & IEnderScreen> {
             selection = new SelectedFace(closest.getBlockPos(), face);
             EnderIO.LOGGER.info(face.getName());
         }
-        EnderIO.LOGGER.info("end" + rayEnd);
+        var diff = rayEnd.copy();
+        diff.sub(rayStart);
+        EnderIO.LOGGER.info("start:" + rayStart + " end:" + rayEnd + "diff:" + diff);
     }
 
     private void renderSelection(PoseStack poseStack) {
@@ -251,7 +252,8 @@ public class IOConfigRenderer<S extends Screen & IEnderScreen> {
         for (var neighbour : neighbours) {
             var pos = new Vector3f(neighbour.getX() - origin.x(), neighbour.getY() - origin.y(), neighbour.getZ() - origin.z());
             // switch to alpha later
-            renderBlock(poseStack, neighbour, pos, buffers);
+            //            renderBlock(poseStack, neighbour, pos, buffers);
+            renderBlockWithAlpha(poseStack, neighbour, pos, buffers);
         }
 
         poseStack.popPose();
@@ -281,100 +283,19 @@ public class IOConfigRenderer<S extends Screen & IEnderScreen> {
         var renderer = mc.getBlockRenderer();
 
         var bakedModel = renderer.getBlockModel(blockState);
-        var vertexConsumer = new GhostVertexConsumer(buffers.getBuffer(TransparentRenderType.TRANSPARENT), 240);
+        RenderType renderType = Minecraft.useShaderTransparency() ? Sheets.translucentItemSheet() : Sheets.translucentCullBlockSheet();
+        var vertexConsumer = new GhostVertexConsumer(buffers.getBuffer(renderType), 100);
         var modelData = level.getModelDataManager().getAt(blockPos);
         var blockColor = mc.getBlockColors().getColor(blockState, level, blockPos, 0);
         var r = FastColor.ARGB32.red(blockColor) / 255F;
         var g = FastColor.ARGB32.green(blockColor) / 255F;
         var b = FastColor.ARGB32.blue(blockColor) / 255F;
 
-        //        renderer
-        //            .getModelRenderer()
-        //            .tesselateWithoutAO(level, bakedModel, blockState, blockPos, poseStack, vertexConsumer, false, RandomSource.create(), blockState.getSeed(blockPos),
-        //                LightTexture.FULL_BLOCK, modelData, TransparentRenderType.TRANSPARENT);
         renderer
             .getModelRenderer()
-            .renderModel(poseStack.last(), vertexConsumer, blockState, bakedModel, r, g, b, LightTexture.FULL_BLOCK, OverlayTexture.NO_OVERLAY, modelData,
-                TransparentRenderType.TRANSPARENT);
-        //                renderer.renderSingleBlock(bs, ms, buffers, LightTexture.FULL_BLOCK, OverlayTexture.NO_OVERLAY);
+            .renderModel(poseStack.last(), vertexConsumer, blockState, bakedModel, r, g, b, LightTexture.FULL_SKY, OverlayTexture.NO_OVERLAY, modelData,
+                renderType);
         poseStack.popPose();
-    }
-
-    /**
-     * Thanks XFactHD/FramedBlocks and ApexStudios-Dev/FantasyFurniture/
-     * Modification to default {@link VertexConsumer} which overrides alpha to allow semi-transparent rendering
-     */
-    record GhostVertexConsumer(VertexConsumer delegate, int alpha) implements VertexConsumer {
-        @Override
-        public VertexConsumer vertex(double x, double y, double z) {
-            return delegate.vertex(x, y, z);
-        }
-
-        @Override
-        public VertexConsumer color(int red, int green, int blue, int alpha) {
-            return delegate.color(red, green, blue, (alpha * this.alpha) / 0xFF);
-        }
-
-        @Override
-        public VertexConsumer uv(float u, float v) {
-            return delegate.uv(u, v);
-        }
-
-        @Override
-        public VertexConsumer overlayCoords(int u, int v) {
-            return delegate.overlayCoords(u, v);
-        }
-
-        @Override
-        public VertexConsumer uv2(int u, int v) {
-            return delegate.uv2(u, v);
-        }
-
-        @Override
-        public VertexConsumer normal(float x, float y, float z) {
-            return delegate.normal(x, y, z);
-        }
-
-        @Override
-        public void endVertex() {
-            delegate.endVertex();
-        }
-
-        @Override
-        public void defaultColor(int defaultR, int defaultG, int defaultB, int defaultA) {
-            delegate.defaultColor(defaultR, defaultG, defaultB, defaultA);
-        }
-
-        @Override
-        public void unsetDefaultColor() {
-            delegate.unsetDefaultColor();
-        }
-    }
-
-    class TransparentRenderType extends RenderType {
-
-        public TransparentRenderType(String pName, VertexFormat pFormat, VertexFormat.Mode pMode, int pBufferSize, boolean pAffectsCrumbling,
-            boolean pSortOnUpload, Runnable pSetupState, Runnable pClearState) {
-            super(pName, pFormat, pMode, pBufferSize, pAffectsCrumbling, pSortOnUpload, pSetupState, pClearState);
-        }
-
-        public static final RenderType TRANSPARENT = create("enderio_ioconfig_transparent", DefaultVertexFormat.BLOCK, VertexFormat.Mode.QUADS, 256, false,
-            true, RenderType.CompositeState.builder()
-                // block texture
-                .setTextureState(new RenderStateShard.TextureStateShard(InventoryMenu.BLOCK_ATLAS, false, false))
-                // translucency
-                .setShaderState(RenderStateShard.RENDERTYPE_TRANSLUCENT_SHADER).setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
-                //                .setOutputState(RenderStateShard.TRANSLUCENT_TARGET)
-                .setLightmapState(RenderStateShard.LIGHTMAP) // render with proper block lighting
-                //                .setOverlayState(new CustomOverlay()) // used for overlay color (red when invalid placement)
-
-                .setCullState(RenderStateShard.CULL)
-                // disable depth test (see through walls)
-                .setWriteMaskState(RenderStateShard.COLOR_WRITE)
-                //                .setDepthTestState(RenderStateShard.LEQUAL_DEPTH_TEST)
-                .setDepthTestState(new RenderStateShard.DepthTestStateShard("enderio_not_equal", GL11.GL_NOTEQUAL))
-                .setLayeringState(RenderStateShard.POLYGON_OFFSET_LAYERING) // fixes z-fighting?, when in same space as other blocks
-                .createCompositeState(false));
     }
 
     public void convertPixelToRay(Rect2i bounds, Matrix4f ipm, Matrix4f ivm, double x, double y, Vector3f normalOut) {

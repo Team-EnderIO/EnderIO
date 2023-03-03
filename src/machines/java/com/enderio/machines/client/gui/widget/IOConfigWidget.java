@@ -3,6 +3,7 @@ package com.enderio.machines.client.gui.widget;
 import com.enderio.EnderIO;
 import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.common.util.Vector2i;
+import com.enderio.machines.client.gui.ioconfig.IOConfigRenderer;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
