@@ -42,6 +42,8 @@ public class MachineBlockEntities {
     public static final BlockEntityEntry<TravelAnchorBlockEntity> TRAVEL_ANCHOR = register("travel_anchor", TravelAnchorBlockEntity::new,
         MachineBlocks.TRAVEL_ANCHOR);
 
+    public static final BlockEntityEntry<CrafterBlockEntity> CRAFTER = register("crafter", CrafterBlockEntity::new, MachineBlocks.CRAFTER);
+
     @SafeVarargs
     private static <B extends BlockEntity> BlockEntityEntry<B> register(String name, BlockEntityBuilder.BlockEntityFactory<B> beFactory,
         NonNullSupplier<? extends Block>... blocks) {

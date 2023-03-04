@@ -7,6 +7,8 @@ import com.enderio.machines.common.blockentity.task.PoweredCraftingTask;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import com.enderio.machines.common.io.item.MultiSlotAccess;
+import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.SlicerMenu;
 import com.enderio.machines.common.recipe.SlicingRecipe;
 import net.minecraft.core.BlockPos;
@@ -30,6 +32,10 @@ public class SlicerBlockEntity extends PoweredCraftingMachine<SlicingRecipe, Con
     public static final QuadraticScalable TRANSFER = new QuadraticScalable(CapacitorModifier.ENERGY_TRANSFER, () -> 120f);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, () -> 30f);
 
+    public static final SingleSlotAccess OUTPUT = new SingleSlotAccess();
+    public static final MultiSlotAccess INPUTS = new MultiSlotAccess();
+    public static final SingleSlotAccess AXE = new SingleSlotAccess();
+    public static final SingleSlotAccess SHEARS = new SingleSlotAccess();
     private final RecipeWrapper container;
 
     public SlicerBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
@@ -48,18 +54,22 @@ public class SlicerBlockEntity extends PoweredCraftingMachine<SlicingRecipe, Con
     public MachineInventoryLayout getInventoryLayout() {
         return MachineInventoryLayout.builder()
             .setStackLimit(1) // Force all input slots to have 1 output
-            .inputSlot(6) // Inputs
-            .inputSlot(this::validAxe) // Axe
-            .inputSlot((slot, stack) -> stack.getItem() instanceof ShearsItem) // Shears
+            .inputSlot(6)
+            .slotAccess(INPUTS)
+            .inputSlot(this::validAxe)
+            .slotAccess(AXE)
+            .inputSlot((slot, stack) -> stack.getItem() instanceof ShearsItem)
+            .slotAccess(SHEARS)
             .setStackLimit(64) // Reset stack limit
-            .outputSlot() // Result
+            .outputSlot()
+            .slotAccess(OUTPUT)
             .capacitor()
             .build();
     }
 
     private boolean validAxe(int slot, ItemStack stack) {
         if (stack.getItem() instanceof AxeItem axeItem) {
-            return axeItem.getTier().getLevel() > TierSortingRegistry.getSortedTiers().indexOf(Tiers.WOOD);
+            return TierSortingRegistry.getSortedTiers().indexOf(axeItem.getTier()) > TierSortingRegistry.getSortedTiers().indexOf(Tiers.WOOD);
         }
         return false;
     }
@@ -68,27 +78,24 @@ public class SlicerBlockEntity extends PoweredCraftingMachine<SlicingRecipe, Con
     @Override
     protected PoweredCraftingTask<SlicingRecipe, Container> getNewTask() {
         MachineInventory inv = getInventory();
-        if (inv.getStackInSlot(6).isEmpty() || inv.getStackInSlot(7).isEmpty())
+        if (AXE.getItemStack(inv).isEmpty() || SHEARS.getItemStack(inv).isEmpty())
             return null;
         return super.getNewTask();
     }
 
     @Override
     protected PoweredCraftingTask<SlicingRecipe, Container> createTask(@Nullable SlicingRecipe recipe) {
-        return new PoweredCraftingTask<>(this, getContainer(), 8, recipe) {
+        return new PoweredCraftingTask<>(this, getContainer(), OUTPUT, recipe) {
             @Override
             protected void takeInputs(SlicingRecipe recipe) {
                 // Deduct ingredients
                 MachineInventory inv = getInventory();
-                for (int i = 0; i < 6; i++) {
-                    inv.getStackInSlot(i).shrink(1);
+                for (SingleSlotAccess access : INPUTS.getAccesses()) {
+                    access.getItemStack(inv).shrink(1);
                 }
 
-                // Damage tools
-                for (int i = 6; i < 8; i++) {
-                    ItemStack stack = inv.getStackInSlot(i);
-                    stack.setDamageValue(stack.getDamageValue() + 1);
-                }
+                AXE.getItemStack(inv).hurt(1, level.getRandom(), null);
+                SHEARS.getItemStack(inv).hurt(1, level.getRandom(), null);
             }
         };
     }

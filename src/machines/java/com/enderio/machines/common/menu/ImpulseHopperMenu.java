@@ -14,13 +14,10 @@ public class ImpulseHopperMenu extends MachineMenu<ImpulseHopperBlockEntity> {
     public ImpulseHopperMenu(ImpulseHopperBlockEntity blockEntity, Inventory inventory, int pContainerId) {
         super(blockEntity, inventory, MachineMenus.IMPULSE_HOPPER.get(), pContainerId);
         if (blockEntity != null) {
-            for (int j = 0; j < 2; ++j) {
-                for (int k = 0; k < 6; ++k) {
-                    this.addSlot(new MachineSlot(blockEntity.getInventory(), k + j * 6, 8 + 36 + k * 18, 9 + j * 54));
-                }
-            }
-            for (int k = 0; k < 6; ++k) {
-                this.addSlot(new GhostMachineSlot(blockEntity.getInventory(), 12 + k, 8 + 36 + k * 18, 9 + 27));
+            for (int i = 0; i < 6; i++) {
+                this.addSlot(new MachineSlot(blockEntity.getInventory(), ImpulseHopperBlockEntity.INPUT.get(i), 8 + 36 + i * 18, 9));
+                this.addSlot(new GhostMachineSlot(blockEntity.getInventory(), ImpulseHopperBlockEntity.GHOST.get(i), 8 + 36 + i * 18, 9 + 27));
+                this.addSlot(new MachineSlot(blockEntity.getInventory(), ImpulseHopperBlockEntity.OUTPUT.get(i), 8 + 36 + i * 18, 9 + 54));
             }
             this.addSlot(new MachineSlot(blockEntity.getInventory(), 18, 11, 60));
         }

@@ -25,6 +25,10 @@ public class MachineModelUtil {
         machineBlock(ctx, prov, MachineModelUtil::soulMachineBody);
     }
 
+    public static void customMachineBlock(DataGenContext<Block, ? extends Block> ctx, RegistrateBlockstateProvider prov, String type) {
+        machineBlock(ctx, prov, (_prov, name, frontModel) -> MachineModelUtil.customMachineBody(_prov, name, frontModel, type));
+    }
+
     private static void machineBlock(DataGenContext<Block, ? extends Block> ctx, RegistrateBlockstateProvider prov, MachineBodyBuilder bodyBuilder) {
         // Create unpowered and powered bodies.
         String ns = ctx.getId().getNamespace();
@@ -62,6 +66,10 @@ public class MachineModelUtil {
 
     private static ModelFile soulMachineBody(RegistrateBlockstateProvider prov, String name, BlockModelBuilder frontModel) {
         return machineBodyModel(prov, name, frontModel, "soul_machine");
+    }
+
+    private static ModelFile customMachineBody(RegistrateBlockstateProvider prov, String name, BlockModelBuilder frontModel, String type) {
+        return machineBodyModel(prov, name, frontModel, type);
     }
 
     private static ModelFile machineBodyModel(RegistrateBlockstateProvider prov, String name, BlockModelBuilder frontModel, String type) {
