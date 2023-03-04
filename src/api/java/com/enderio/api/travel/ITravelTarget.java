@@ -13,4 +13,6 @@ public interface ITravelTarget {
     CompoundTag save();
 
     int getItem2BlockRange();
+
+    int getBlock2BlockRange();
 }

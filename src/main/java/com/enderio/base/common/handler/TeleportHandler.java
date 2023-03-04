@@ -1,5 +1,6 @@
 package com.enderio.base.common.handler;
 
+import com.enderio.api.integration.IntegrationManager;
 import com.enderio.api.travel.ITravelTarget;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.init.EIOItems;
@@ -29,10 +30,14 @@ import java.util.Optional;
 
 public class TeleportHandler {
     public static boolean canTeleport(Player player) {
-        return canTeleport(player, InteractionHand.MAIN_HAND) || canTeleport(player, InteractionHand.OFF_HAND);
+        return canItemTeleport(player) || canBlockTeleport(player);
     }
 
-    public static boolean canTeleport(Player player, InteractionHand hand) {
+    public static boolean canItemTeleport(Player player) {
+        return canItemTeleport(player, InteractionHand.MAIN_HAND) || canItemTeleport(player, InteractionHand.OFF_HAND);
+    }
+
+    public static boolean canItemTeleport(Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (stack.getItem() == EIOItems.TRAVEL_STAFF.get())
             return true;
@@ -42,9 +47,13 @@ public class TeleportHandler {
         return false;
     }
 
+    public static boolean canBlockTeleport(Player player) {
+        return IntegrationManager.anyMatch(integration -> integration.canBlockTeleport(player));
+    }
+
     public static boolean shortTeleport(Level level, Player player) {
         Optional<Vec3> pos = teleportPosition(level, player);
-        if (pos.isPresent()){
+        if (pos.isPresent()) {
             if (!level.isClientSide) {
                 Optional<Vec3> eventPos = teleportEvent(player, pos.get());
                 if (eventPos.isPresent()) {

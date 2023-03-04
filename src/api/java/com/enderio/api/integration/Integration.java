@@ -54,4 +54,12 @@ public interface Integration {
     default ClientIntegration getClientIntegration() {
         return ClientIntegration.NOOP;
     }
+
+    /**
+     * @param player The Player that wants to teleport
+     * @return whether the player can teleport to a nearby block
+     */
+    default boolean canBlockTeleport(Player player) {
+        return false;
+    }
 }

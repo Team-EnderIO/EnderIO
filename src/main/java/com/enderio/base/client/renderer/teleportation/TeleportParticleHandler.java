@@ -26,7 +26,7 @@ public class TeleportParticleHandler {
         LocalPlayer player = Minecraft.getInstance().player;
         if (e.phase == TickEvent.Phase.END && player != null) {
             tick++;
-            if (player.isShiftKeyDown() && TeleportHandler.canTeleport(player) && tick%3==0) {
+            if (player.isShiftKeyDown() && TeleportHandler.canTeleport(player) && tick % 3 == 0) {
                 Optional<Vec3> pos = TeleportHandler.teleportPosition(player.getLevel(), player);
                 if (pos.isPresent()) {
                     addTravelParticle(pos.get());

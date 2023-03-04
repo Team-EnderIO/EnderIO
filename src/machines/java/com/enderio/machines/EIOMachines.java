@@ -1,6 +1,7 @@
 package com.enderio.machines;
 
 import com.enderio.EnderIO;
+import com.enderio.api.integration.IntegrationManager;
 import com.enderio.api.travel.TravelRegistry;
 import com.enderio.machines.client.rendering.travel.TravelAnchorRenderer;
 import com.enderio.machines.common.config.MachinesConfig;
@@ -8,6 +9,7 @@ import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.init.MachineMenus;
 import com.enderio.machines.common.init.MachineRecipes;
+import com.enderio.machines.common.integrations.EnderIOMachinesSelfIntegration;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.travel.AnchorTravelTarget;
 import com.enderio.machines.data.recipes.*;
@@ -37,6 +39,7 @@ public class EIOMachines {
         MachineLang.register();
         MachineRecipes.register();
 
+        IntegrationManager.addIntegration(EnderIOMachinesSelfIntegration.INSTANCE);
         TravelRegistry.addTravelEntry(loc("travel_anchor"), AnchorTravelTarget::new, TravelAnchorRenderer::new);
     }
 

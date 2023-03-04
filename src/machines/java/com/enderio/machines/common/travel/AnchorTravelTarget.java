@@ -91,6 +91,11 @@ public class AnchorTravelTarget implements ITravelTarget {
     }
 
     @Override
+    public int getBlock2BlockRange() {
+        return BaseConfig.COMMON.ITEMS.TRAVELLING_BLOCK_TO_BLOCK_RANGE.get();
+    }
+
+    @Override
     public ResourceLocation getSerializationName() {
         return SERIALIZED_NAME;
     }
