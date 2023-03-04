@@ -33,7 +33,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class IOConfigRenderer<S extends Screen & IEnderScreen> {
+    public record SelectedFace(@NotNull BlockPos block, @NotNull Direction face) {}
 
     private final S addedOn;
     private final Rect2i bounds;
@@ -123,19 +125,13 @@ public class IOConfigRenderer<S extends Screen & IEnderScreen> {
     }
 
     public void handleMouseMove(double pMouseX, double pMouseY) {
-        Vector3f rayStart = new Vector3f(eyePosition.x(), eyePosition.y(), eyePosition.z());
-        Vector3f rayEnd = new Vector3f();
-        var invProjMat = Matrix4f.perspective(90.0D, 1.3333334F, 9.0F, 80.0F);
-        invProjMat.invert();
-        //        var invViewMat = RenderSystem.getModelViewMatrix().copy();
-        var invViewMat = rotMat.copy();
-        //        invViewMat.setTranslation(eyePosition.x(), eyePosition.y(), eyePosition.z());
-        invViewMat.invert();
-        convertPixelToRay(bounds, invProjMat, invViewMat, pMouseX, pMouseY, rayEnd);
+        Vector4f eye = new Vector4f(0, 0, -100, 0);
+        eye.transform(rotMat);
+        Vector3f rayStart = new Vector3f(eye);
 
+        Vector3f rayEnd = convertPixelToRay(bounds, pMouseX, pMouseY);
         rayEnd.mul(100); //change later
         rayEnd.add(rayStart);
-        //        rayEnd.add(0.5f, 0.5f, 0.5f); // offset to block center
 
         //update Selection
         var mc = Minecraft.getInstance();
@@ -161,9 +157,13 @@ public class IOConfigRenderer<S extends Screen & IEnderScreen> {
             selection = new SelectedFace(closest.getBlockPos(), face);
             EnderIO.LOGGER.info(face.getName());
         }
-        var diff = rayEnd.copy();
-        diff.sub(rayStart);
-        EnderIO.LOGGER.info("start:" + rayStart + " end:" + rayEnd + "diff:" + diff);
+
+        // debug stuff
+        //        EnderIO.LOGGER.debug(debugPixelToRay(bounds, 0, 0));
+        debugRenderRay(rayStart, rayEnd);
+        //        var diff = rayEnd.copy();
+        //        diff.sub(rayStart);
+        //        EnderIO.LOGGER.info("start:" + rayStart + " end:" + rayEnd + "diff:" + diff);
     }
 
     private void renderSelection(PoseStack poseStack) {
@@ -237,7 +237,6 @@ public class IOConfigRenderer<S extends Screen & IEnderScreen> {
         RenderSystem.enableDepthTest();
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE,
             GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 
         // Render configurables
@@ -251,8 +250,6 @@ public class IOConfigRenderer<S extends Screen & IEnderScreen> {
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         for (var neighbour : neighbours) {
             var pos = new Vector3f(neighbour.getX() - origin.x(), neighbour.getY() - origin.y(), neighbour.getZ() - origin.z());
-            // switch to alpha later
-            //            renderBlock(poseStack, neighbour, pos, buffers);
             renderBlockWithAlpha(poseStack, neighbour, pos, buffers);
         }
 
@@ -298,12 +295,7 @@ public class IOConfigRenderer<S extends Screen & IEnderScreen> {
         poseStack.popPose();
     }
 
-    public void convertPixelToRay(Rect2i bounds, Matrix4f ipm, Matrix4f ivm, double x, double y, Vector3f normalOut) {
-
-        Matrix4f vpm = new Matrix4f();
-        vpm.load(ivm);
-        vpm.multiply(ipm);
-
+    public Vector3f convertPixelToRay(Rect2i bounds, double x, double y) {
         // Calculate the pixel location in screen clip space (width and height from
         // -1 to 1)
         float screenX = (float) ((x - bounds.getX()) / bounds.getWidth());
@@ -311,38 +303,54 @@ public class IOConfigRenderer<S extends Screen & IEnderScreen> {
         screenX = (float) ((screenX * 2.0) - 1.0);
         screenY = (float) ((screenY * 2.0) - 1.0);
 
-        // Now calculate the XYZ location of this point on the near plane
-        Vector4f tmp = new Vector4f();
-        tmp.setX(screenX);
-        tmp.setY(screenY);
-        tmp.setZ(-1);
-        tmp.setW(1.0f);
-        tmp.transform(vpm);
+        Vector4f ray_clip = new Vector4f(screenX, screenY, -1, 1);
+        var proj = RenderSystem.getProjectionMatrix().copy();
+        proj.invert();
+        ray_clip.transform(proj);
 
-        float w = tmp.w();
-        Vector3f nearXYZ = new Vector3f(tmp.x() / w, tmp.y() / w, tmp.z() / w);
+        ray_clip = new Vector4f(ray_clip.x(), ray_clip.y(), -1, 0);
+        var view = rotMat.copy();
+        view.invert();
+        ray_clip.transform(view);
 
-        // and then on the far plane
-        tmp.setX(screenX);
-        tmp.setY(screenY);
-        tmp.setZ(1);
-        tmp.setW(1.0f);
-        tmp.transform(vpm);
-
-        w = tmp.w();
-        Vector3f farXYZ = new Vector3f(tmp.x() / w, tmp.y() / w, tmp.z() / w);
-
-        normalOut.load(farXYZ);
-        normalOut.sub(nearXYZ);
-        normalOut.normalize();
+        var world = new Vector3f(ray_clip);
+        world.normalize();
+        return world;
     }
 
-    public record SelectedFace(@NotNull BlockPos block, @NotNull Direction face) {
-        @Override
-        public String toString() {
-            return "SelectedFace [config=" + block + ", face=" + face + "]";
-        }
+    public Vector3f debugPixelToRay(Rect2i bounds, double x, double y) {
+        // Calculate the pixel location in screen clip space (width and height from
+        // -1 to 1)
+        float screenX = (float) ((x - bounds.getX()) / bounds.getWidth());
+        float screenY = (float) ((y - bounds.getY()) / bounds.getHeight());
+        screenX = (float) ((screenX * 2.0) - 1.0);
+        screenY = (float) ((screenY * 2.0) - 1.0);
 
+        Vector4f ray_clip = new Vector4f(screenX, screenY, -1, 1);
+        var proj = Matrix4f.orthographic(1, 1, 0.001f, 100);
+        proj.invert();
+        ray_clip.transform(proj);
+
+        ray_clip = new Vector4f(ray_clip.x(), ray_clip.y(), -1, 0);
+        var view = new Matrix4f();
+        view.setIdentity();
+        view.invert();
+        ray_clip.transform(view);
+
+        var world = new Vector3f(ray_clip);
+        world.normalize();
+        return world;
+    }
+
+    public void debugRenderRay(Vector3f start, Vector3f end) {
+        Tesselator tessellator = Tesselator.getInstance();
+        BufferBuilder bufferBuilder = tessellator.getBuilder();
+
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+        bufferBuilder.begin(VertexFormat.Mode.LINES, DefaultVertexFormat.POSITION_COLOR);
+        bufferBuilder.vertex(start.x(), start.y(), start.z()).color(255, 255, 255, 255).endVertex();
+        bufferBuilder.vertex(end.x(), end.y(), end.z()).color(255, 255, 255, 255).endVertex();
+        tessellator.end();
     }
 
 }
