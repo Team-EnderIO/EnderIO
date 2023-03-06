@@ -1,4 +1,4 @@
-package com.enderio.machines.client.gui.ioconfig;
+package com.enderio.machines.client.gui.widget.ioconfig;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
@@ -6,7 +6,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
  * Thanks XFactHD/FramedBlocks and ApexStudios-Dev/FantasyFurniture/
  * Modification to default {@link VertexConsumer} which overrides alpha to allow semi-transparent rendering
  */
-record GhostVertexConsumer(VertexConsumer delegate, int alpha) implements VertexConsumer {
+record TransparentVertexConsumer(VertexConsumer delegate, int alpha) implements VertexConsumer {
     @Override
     public VertexConsumer vertex(double x, double y, double z) {
         return delegate.vertex(x, y, z);
