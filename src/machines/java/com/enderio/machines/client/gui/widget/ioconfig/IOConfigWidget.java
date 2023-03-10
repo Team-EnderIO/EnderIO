@@ -5,7 +5,9 @@ import com.enderio.core.client.RenderUtil;
 import com.enderio.core.client.gui.screen.EIOScreen;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
@@ -15,6 +17,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
@@ -25,8 +28,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.EmptyBlockGetter;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -40,7 +45,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Thanks XFactHD for help and providing a demo a preview widget and raycast
+ * Thanks XFactHD for help and providing a demo for a preview widget and raycast example
  * <a href="https://gist.github.com/XFactHD/4b214f98a1b30a590c6e0de6bd84602a">Preview Widget Gist</a>
  */
 public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
@@ -48,8 +53,8 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     private static final float SCALE = 30;
     private static final Quaternion ROT_180_Z = Vector3f.ZP.rotation((float) Math.PI);
     private static final Vec3 RAY_ORIGIN = new Vec3(1.5, 1.5, 1.5);
-    private static final Vec3 START = new Vec3(1.5, 1.5, -1);
-    private static final Vec3 END = new Vec3(1.5, 1.5, 3);
+    private static final Vec3 RAY_START = new Vec3(1.5, 1.5, -1);
+    private static final Vec3 RAY_END = new Vec3(1.5, 1.5, 3);
     private static final BlockPos POS = new BlockPos(1, 1, 1);
     private static final int Z_OFFSET = 100;
     private static final ResourceLocation SELECTED_ICON = EnderIO.loc("block/overlay/selected_face");
@@ -112,8 +117,8 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
 
     private static BlockHitResult raycast(BlockState state, float diffX, float diffY, Matrix4f transform) {
         // Add mouse offset to start and end vectors
-        Vec3 start = START.add(diffX, diffY, 0);
-        Vec3 end = END.add(diffX, diffY, 0);
+        Vec3 start = RAY_START.add(diffX, diffY, 0);
+        Vec3 end = RAY_END.add(diffX, diffY, 0);
 
         // Rotate start and end vectors around the block
         start = transform(start, transform);
@@ -158,7 +163,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
             blockTransform.mul(rotYaw);
 
             // Draw block
-            renderWorld(poseStack, centerX, centerY, blockTransform);
+            renderWorld(poseStack, centerX, centerY, blockTransform, partialTick);
 
             // Build ray transformation matrix
             // Rotate 180 around Z, otherwise the block is upside down
@@ -176,6 +181,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
                 if (hit != null && hit.getType() != HitResult.Type.MISS) {
                     hits.add(hit);
                 }
+
             });
 
             Vec3 _origin = new Vec3(world_origin);
@@ -187,9 +193,10 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
                 BlockHitResult closest = opt.get();
                 Direction face = closest.getDirection();
                 selection = new SelectedFace(closest.getBlockPos(), face);
+                //                EnderIO.LOGGER.debug(selection.block);
             }
 
-            //                renderSelection(pPoseStack);
+            //            renderSelection(poseStack);
             //        renderOverlay();
 
         }
@@ -217,32 +224,37 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
         if (selection == null) {
             return;
         }
+        MultiBufferSource.BufferSource buffers = minecraft.renderBuffers().bufferSource();
         BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
         RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
-        RenderSystem.depthFunc(519);
-        RenderSystem.depthMask(false);
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.enableTexture();
-
-        // do I need a texture atlas ?
+        //        RenderSystem.depthFunc(519);
+        //        RenderSystem.depthMask(false);
+        //        RenderSystem.enableBlend();
+        //        RenderSystem.defaultBlendFunc();
+        //        RenderSystem.enableTexture();
+        //
+        //        // do I need a texture atlas ?
         TextureAtlasSprite tex = minecraft.getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(SELECTED_ICON);
         RenderSystem.setShaderTexture(0, tex.atlas().location());
-
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        //
         poseStack.pushPose();
-        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
-        var blockPos = selection.block;
-        poseStack.translate(blockPos.getX(), blockPos.getY(), blockPos.getZ());
-        RenderUtil.getVerticesForFace(bufferbuilder, selection.face, new AABB(selection.block), tex.getU0(), tex.getU1(), tex.getV0(), tex.getV1());
-        BufferUploader.drawWithShader(bufferbuilder.end());
+        //        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
+        BlockPos blockPos = selection.block;
+        //        poseStack.translate(blockPos.getX(), blockPos.getY(), blockPos.getZ());
+        PoseStack.Pose last = poseStack.last();
+        RenderUtil.renderFace(selection.face, last.pose(), last.normal(), buffers.getBuffer(RenderType.solid()), tex, blockPos.getX(), blockPos.getY(),
+            blockPos.getZ(), 1, 1, 0xFFFFFF);
+        //        RenderUtil.getVerticesForFace(bufferbuilder, selection.face, new AABB(selection.block), tex.getU0(), tex.getU1(), tex.getV0(), tex.getV1());
+        //        BufferUploader.drawWithShader(bufferbuilder.end());
         poseStack.popPose();
-
-        RenderSystem.disableBlend();
-        RenderSystem.depthMask(true);
-        RenderSystem.depthFunc(515);
+        //
+        //        RenderSystem.disableBlend();
+        //        RenderSystem.depthMask(true);
+        //        RenderSystem.depthFunc(515);
     }
 
-    private void renderWorld(PoseStack poseStack, int centerX, int centerY, Quaternion transform) {
+    private void renderWorld(PoseStack poseStack, int centerX, int centerY, Quaternion transform, float partialTick) {
         Lighting.setupForEntityInInventory();
         MultiBufferSource.BufferSource buffers = minecraft.renderBuffers().bufferSource();
         poseStack.pushPose();
@@ -260,7 +272,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
         //        // RenderNeighbours
         for (var neighbour : neighbours) {
             Vector3f pos = new Vector3f(neighbour.getX() - world_origin.x(), neighbour.getY() - world_origin.y(), neighbour.getZ() - world_origin.z());
-            renderBlockWithAlpha(poseStack, neighbour, pos, buffers);
+            renderBlockWithAlpha(poseStack, neighbour, pos, buffers, partialTick);
         }
         buffers.endBatch();
 
@@ -278,24 +290,45 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
 
     }
 
-    private void renderBlockWithAlpha(PoseStack poseStack, BlockPos blockPos, Vector3f renderPos, MultiBufferSource.BufferSource buffers) {
+    private void renderBlockWithAlpha(PoseStack poseStack, BlockPos blockPos, Vector3f renderPos, MultiBufferSource.BufferSource buffers, float partialTick) {
         poseStack.pushPose();
         poseStack.translate(renderPos.x(), renderPos.y(), renderPos.z());
-        BlockState blockState = minecraft.level.getBlockState(blockPos);
-        BlockRenderDispatcher renderer = minecraft.getBlockRenderer();
 
-        BakedModel bakedModel = renderer.getBlockModel(blockState);
         RenderType renderType = Minecraft.useShaderTransparency() ? Sheets.translucentItemSheet() : Sheets.translucentCullBlockSheet();
         TransparentVertexConsumer vertexConsumer = new TransparentVertexConsumer(buffers.getBuffer(renderType), NEIGHBOUR_TRANSPARENCY);
-        int blockColor = minecraft.getBlockColors().getColor(blockState, minecraft.level, blockPos, 0);
-        float r = FastColor.ARGB32.red(blockColor) / 255F;
-        float g = FastColor.ARGB32.green(blockColor) / 255F;
-        float b = FastColor.ARGB32.blue(blockColor) / 255F;
 
-        renderer
-            .getModelRenderer()
-            .renderModel(poseStack.last(), vertexConsumer, blockState, bakedModel, r, g, b, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY,
-                ModelData.EMPTY, renderType);
+        BlockState blockState = minecraft.level.getBlockState(blockPos);
+        RenderShape shape = blockState.getRenderShape();
+        if (shape == RenderShape.MODEL) {
+            BlockRenderDispatcher renderer = minecraft.getBlockRenderer();
+            BakedModel bakedModel = renderer.getBlockModel(blockState);
+            int blockColor = minecraft.getBlockColors().getColor(blockState, minecraft.level, blockPos, 0);
+            float r = FastColor.ARGB32.red(blockColor) / 255F;
+            float g = FastColor.ARGB32.green(blockColor) / 255F;
+            float b = FastColor.ARGB32.blue(blockColor) / 255F;
+
+            renderer
+                .getModelRenderer()
+                .renderModel(poseStack.last(), vertexConsumer, blockState, bakedModel, r, g, b, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY,
+                    ModelData.EMPTY, renderType);
+
+        } else if (shape != RenderShape.INVISIBLE) {
+            BlockEntityRenderDispatcher renderDispatcher = minecraft.getBlockEntityRenderDispatcher();
+            BlockEntity blockEntity = minecraft.level.getBlockEntity(blockPos);
+            Optional<RenderType> opt = checkSpecialBlockEntities(blockEntity.getType(), buffers);
+            if (opt.isPresent()) {
+                renderType = opt.get();
+            }
+            var renderer = renderDispatcher.getRenderer(blockEntity);
+            if (renderer != null) {
+                RenderType finalRenderType = renderType;
+                //                renderer.render(blockEntity, partialTick, poseStack, (type) -> type.format() == finalRenderType.format() ? finalVertexConsumer : buffers.getBuffer(type), LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+                renderer.render(blockEntity, partialTick, poseStack,
+                    (type) -> new TransparentVertexConsumer(buffers.getBuffer(finalRenderType), NEIGHBOUR_TRANSPARENCY), LightTexture.FULL_BRIGHT,
+                    OverlayTexture.NO_OVERLAY);
+            }
+
+        }
         poseStack.popPose();
     }
 
@@ -303,5 +336,20 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     public void updateNarration(NarrationElementOutput pNarrationElementOutput) {}
 
     public record SelectedFace(@NotNull BlockPos block, @NotNull Direction face) {}
+
+    private Optional<RenderType> checkSpecialBlockEntities(BlockEntityType<?> type, MultiBufferSource.BufferSource buffers) {
+        RenderType renderType;
+        if (type == BlockEntityType.CHEST) {
+            renderType = Sheets.chestSheet();
+        } else if (type == BlockEntityType.BED) {
+            renderType = Sheets.bedSheet();
+        } else if (type == BlockEntityType.SHULKER_BOX) {
+            renderType = Sheets.shulkerBoxSheet();
+        } else {
+            return Optional.empty();
+        }
+        return Optional.of(renderType);
+
+    }
 
 }
