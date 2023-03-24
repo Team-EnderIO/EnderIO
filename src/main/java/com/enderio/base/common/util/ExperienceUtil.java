@@ -4,7 +4,7 @@ import com.enderio.core.common.util.Vector2i;
 
 public class ExperienceUtil {
 
-    // 1 exp = 24 mb
+    // 1 exp = 20 mb
     public static int EXPTOFLUID = 20;
 
     /**

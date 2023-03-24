@@ -37,7 +37,7 @@ public class VacuumChestScreen extends EIOScreen<VacuumChestMenu> {
     }
 
     @Override
-    protected ResourceLocation getBackgroundImage() {
+    public ResourceLocation getBackgroundImage() {
         return VACUUM_CHEST_BG;
     }
 

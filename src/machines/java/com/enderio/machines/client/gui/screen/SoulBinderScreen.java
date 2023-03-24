@@ -36,7 +36,7 @@ public class SoulBinderScreen extends EIOScreen<SoulBinderMenu> {
     }
 
     @Override
-    protected ResourceLocation getBackgroundImage() {
+    public ResourceLocation getBackgroundImage() {
         return BG_TEXTURE;
     }
 

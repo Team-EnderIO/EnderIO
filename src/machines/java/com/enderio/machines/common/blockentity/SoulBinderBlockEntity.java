@@ -118,7 +118,7 @@ public class SoulBinderBlockEntity extends PoweredCraftingMachine<SoulBindingRec
     }
 
     private FluidTank createFluidTank(int capacity) {
-        return new FluidTank(capacity) {
+        return new FluidTank(capacity, f -> true) { //f.getFluid().is(EIOTags.Fluids.EXPERIENCE)
             @Override
             protected void onContentsChanged() {
                 newTaskAvailable();

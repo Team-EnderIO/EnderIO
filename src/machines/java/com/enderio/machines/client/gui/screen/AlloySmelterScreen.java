@@ -38,7 +38,7 @@ public class AlloySmelterScreen extends EIOScreen<AlloySmelterMenu> {
     }
 
     @Override
-    protected ResourceLocation getBackgroundImage() {
+    public ResourceLocation getBackgroundImage() {
         AlloySmelterBlockEntity be = getMenu().getBlockEntity();
         return switch (be.getMode()) {
             case ALL -> BG_TEXTURE_AUTO;

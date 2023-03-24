@@ -24,7 +24,7 @@ public class PrimitiveAlloySmelterScreen extends EIOScreen<PrimitiveAlloySmelter
     }
 
     @Override
-    protected ResourceLocation getBackgroundImage() {
+    public ResourceLocation getBackgroundImage() {
         return BG_TEXTURE;
     }
 

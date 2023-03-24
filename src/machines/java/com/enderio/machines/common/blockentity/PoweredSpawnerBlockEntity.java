@@ -5,6 +5,8 @@ import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.base.common.particle.RangeParticleData;
 import com.enderio.core.common.sync.BooleanDataSlot;
+import com.enderio.core.common.sync.EnumDataSlot;
+import com.enderio.core.common.sync.ResourceLocationDataSlot;
 import com.enderio.core.common.sync.SyncMode;
 import com.enderio.machines.common.blockentity.base.PoweredTaskMachineEntity;
 import com.enderio.machines.common.blockentity.task.SpawnTask;
@@ -15,18 +17,15 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
+import java.util.Optional;
 
 public class PoweredSpawnerBlockEntity extends PoweredTaskMachineEntity<SpawnTask> {
 
@@ -39,10 +38,13 @@ public class PoweredSpawnerBlockEntity extends PoweredTaskMachineEntity<SpawnTas
     protected float rCol = 1;
     protected float gCol = 0;
     protected float bCol = 0;
+    private SpawnerBlockedReason reason = SpawnerBlockedReason.NONE;
 
     public PoweredSpawnerBlockEntity(BlockEntityType type, BlockPos worldPosition, BlockState blockState) {
         super(CAPACITY, TRANSFER, USAGE, type, worldPosition, blockState);
         add2WayDataSlot(new BooleanDataSlot(this::isShowingRange, this::shouldShowRange, SyncMode.GUI));
+        addDataSlot(new ResourceLocationDataSlot(() -> this.getEntityType().orElse(new ResourceLocation("pig")),this::setEntityType, SyncMode.GUI));
+        addDataSlot(new EnumDataSlot<>(this::getReason, this::setReason, SyncMode.GUI));
     }
 
     @Nullable
@@ -100,8 +102,12 @@ public class PoweredSpawnerBlockEntity extends PoweredTaskMachineEntity<SpawnTas
         return range;
     }
 
-    public EntityType<? extends Entity> getEntityType() {
-        return Objects.requireNonNull(ForgeRegistries.ENTITY_TYPES.getValue(entityData.getEntityType().orElse(new ResourceLocation("pig"))));
+    public Optional<ResourceLocation> getEntityType() {
+        return entityData.getEntityType();
+    }
+
+    public void setEntityType(ResourceLocation entityType) {
+        entityData = StoredEntityData.of(entityType);
     }
 
     public StoredEntityData getEntityData() {
@@ -121,6 +127,27 @@ public class PoweredSpawnerBlockEntity extends PoweredTaskMachineEntity<SpawnTas
             for (ServerPlayer player : level.players()) {
                 level.sendParticles(player, data, true, pos.x, pos.y, pos.z, 1, 0, 0, 0, 0);
             }
+        }
+    }
+
+    public SpawnerBlockedReason getReason() {
+        return this.reason;
+    }
+
+    public void setReason(SpawnerBlockedReason reason) {
+        this.reason = reason;
+    }
+
+    public enum SpawnerBlockedReason {
+        TOO_MANY_MOB("mob"),
+        UNKOWN_MOB("unknown"),
+        OTHER_MOD("other"),
+        NONE("none");
+
+        private final String name;
+
+        SpawnerBlockedReason(String name) {
+            this.name = name;
         }
     }
 }

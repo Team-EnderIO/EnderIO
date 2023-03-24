@@ -75,8 +75,19 @@ public class SpawnTask extends PoweredTask{
      */
     public boolean isAreaClear() {
         AABB range = new AABB(blockEntity.getBlockPos()).inflate(blockEntity.getRange());
-        List<? extends Entity> entities = blockEntity.getLevel().getEntities(blockEntity.getEntityType(), range, p -> p instanceof LivingEntity);
+        Optional<ResourceLocation> rl = blockEntity.getEntityType();
+        if (rl.isEmpty()) {
+            blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
+            return false;
+        }
+        Optional<EntityType<?>> entity = Registry.ENTITY_TYPE.getOptional(rl.get());
+        if (entity.isEmpty()) {
+            blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
+            return false;
+        }
+        List<? extends Entity> entities = blockEntity.getLevel().getEntities(entity.get(), range, p -> p instanceof LivingEntity);
         if (entities.size() >= MachinesConfig.COMMON.MAX_SPAWNER_ENTITIES.get()) {
+            blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.TOO_MANY_MOB);
             return false;
         }
         if (BlockPos.betweenClosedStream(range).filter(pos -> blockEntity.getLevel().getBlockEntity(pos) instanceof PoweredSpawnerBlockEntity).count() >= maxSpawners) { //TODO config? Max amount of spawners.
@@ -91,33 +102,50 @@ public class SpawnTask extends PoweredTask{
             double x = pos.getX() + (randomsource.nextDouble() - randomsource.nextDouble()) * (double)this.blockEntity.getRange() + 0.5D;
             double y = pos.getY() + randomsource.nextInt(3) - 1;
             double z = pos.getZ() + (randomsource.nextDouble() - randomsource.nextDouble()) * (double)this.blockEntity.getRange() + 0.5D;
-            if (level.noCollision(blockEntity.getEntityType().getAABB(x, y, z))) {
+            Optional<ResourceLocation> rl = blockEntity.getEntityType();
+            if (rl.isEmpty()) {
+                blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
+                return false;
+            }
+            Optional<EntityType<?>> optionalEntity = Registry.ENTITY_TYPE.getOptional(rl.get());
+            if (optionalEntity.isEmpty()) {
+                blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
+                return false;
+            }
+            if (level.noCollision(optionalEntity.get().getAABB(x, y, z))) {
 
                 Entity entity = null;
-                if (MachinesConfig.COMMON.SPAWN_TYPE.get() == SpawnType.COPY) {
-                    entity = EntityType.loadEntityRecursive(blockEntity.getEntityData().getEntityTag(), level, entity1 -> {
-                        entity1.moveTo(x, y, z, entity1.getYRot(), entity1.getXRot());
-                        return entity1;
-                    });
-                } else {
-                    Optional<EntityType<?>> id = Registry.ENTITY_TYPE.getOptional(new ResourceLocation(blockEntity.getEntityData().getEntityTag().getString("id")));
-                    if (id.isPresent()) {
-                        entity = id.get().create(level);
-                        entity.moveTo(x, y, z);
+                switch (MachinesConfig.COMMON.SPAWN_TYPE.get()) {
+                    case COPY -> {
+                        entity = EntityType.loadEntityRecursive(blockEntity.getEntityData().getEntityTag(), level, entity1 -> {
+                            entity1.moveTo(x, y, z, entity1.getYRot(), entity1.getXRot());
+                            return entity1;
+                        });
+                    }
+                    case ENTITYTYPE -> {
+                        Optional<EntityType<?>> id = Registry.ENTITY_TYPE.getOptional(new ResourceLocation(blockEntity.getEntityData().getEntityTag().getString("id")));
+                        if (id.isPresent()) {
+                            entity = id.get().create(level);
+                            entity.moveTo(x, y, z);
+                        }
                     }
                 }
 
-
                 if (entity == null) { //TODO Make default spawn tag?
+                    blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
                     break;
                 }
 
                 if (entity instanceof Mob mob) {
                     net.minecraftforge.eventbus.api.Event.Result res = net.minecraftforge.event.ForgeEventFactory.canEntitySpawn(mob, level, (float)entity.getX(), (float)entity.getY(), (float)entity.getZ(), null, MobSpawnType.SPAWNER);
-                    if (res == net.minecraftforge.eventbus.api.Event.Result.DENY) return false;
+                    if (res == net.minecraftforge.eventbus.api.Event.Result.DENY) {
+                        blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.OTHER_MOD);
+                        return false;
+                    }
                 }
 
                 if (!level.tryAddFreshEntityWithPassengers(entity)) {
+                    blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.OTHER_MOD);
                     return false;
                 }
 
@@ -129,6 +157,7 @@ public class SpawnTask extends PoweredTask{
 
                 //Clear energy after spawn
                 energyConsumed = 0;
+                blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.NONE);
                 return true;
             }
         }
