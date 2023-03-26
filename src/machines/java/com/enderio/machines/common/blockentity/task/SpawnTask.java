@@ -21,7 +21,7 @@ public class SpawnTask extends PoweredTask{
     public static final int maxSpawners = 2;
     public static final int spawnTries = 10;
     private boolean complete;
-    private int energyCost = 40000;
+    private int energyCost = 40000;//TODO Custom Config/Json File
     private int energyConsumed = 0;
     private final PoweredSpawnerBlockEntity blockEntity;
 

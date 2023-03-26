@@ -10,6 +10,7 @@ import com.enderio.core.common.sync.ResourceLocationDataSlot;
 import com.enderio.core.common.sync.SyncMode;
 import com.enderio.machines.common.blockentity.base.PoweredTaskMachineEntity;
 import com.enderio.machines.common.blockentity.task.SpawnTask;
+import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.menu.PoweredSpawnerMenu;
 import net.minecraft.core.BlockPos;
@@ -35,9 +36,9 @@ public class PoweredSpawnerBlockEntity extends PoweredTaskMachineEntity<SpawnTas
     private StoredEntityData entityData = StoredEntityData.empty();
     private int range = 3;
     private boolean rangeVisible;
-    protected float rCol = 1;
-    protected float gCol = 0;
-    protected float bCol = 0;
+    protected float rCol;
+    protected float gCol;
+    protected float bCol;
     private SpawnerBlockedReason reason = SpawnerBlockedReason.NONE;
 
     public PoweredSpawnerBlockEntity(BlockEntityType type, BlockPos worldPosition, BlockState blockState) {
@@ -45,6 +46,11 @@ public class PoweredSpawnerBlockEntity extends PoweredTaskMachineEntity<SpawnTas
         add2WayDataSlot(new BooleanDataSlot(this::isShowingRange, this::shouldShowRange, SyncMode.GUI));
         addDataSlot(new ResourceLocationDataSlot(() -> this.getEntityType().orElse(new ResourceLocation("pig")),this::setEntityType, SyncMode.GUI));
         addDataSlot(new EnumDataSlot<>(this::getReason, this::setReason, SyncMode.GUI));
+
+        String color = MachinesConfig.CLIENT.BLOCKS.POWERED_SPAWNER_RANGE_COLOR.get();
+        this.rCol = (float)Integer.parseInt(color.substring(0,2), 16) / 255;
+        this.gCol = (float)Integer.parseInt(color.substring(2,4), 16) / 255;
+        this.bCol = (float)Integer.parseInt(color.substring(4,6), 16) / 255;
     }
 
     @Nullable
@@ -123,9 +129,9 @@ public class PoweredSpawnerBlockEntity extends PoweredTaskMachineEntity<SpawnTas
     }
 
     private void generateParticle(RangeParticleData data, Vec3 pos) {
-        if (!isClientSide() && level instanceof ServerLevel level) {
-            for (ServerPlayer player : level.players()) {
-                level.sendParticles(player, data, true, pos.x, pos.y, pos.z, 1, 0, 0, 0, 0);
+        if (!isClientSide() && level instanceof ServerLevel serverLevel) {
+            for (ServerPlayer player : serverLevel.players()) {
+                serverLevel.sendParticles(player, data, true, pos.x, pos.y, pos.z, 1, 0, 0, 0, 0);
             }
         }
     }

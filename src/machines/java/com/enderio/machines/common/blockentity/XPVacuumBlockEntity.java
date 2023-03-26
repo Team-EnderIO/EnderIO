@@ -5,6 +5,7 @@ import com.enderio.base.common.init.EIOFluids;
 import com.enderio.core.common.sync.IntegerDataSlot;
 import com.enderio.core.common.sync.SyncMode;
 import com.enderio.machines.common.blockentity.base.VacuumMachineEntity;
+import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.menu.XPVacuumMenu;
 import net.minecraft.core.BlockPos;
@@ -37,10 +38,10 @@ public class XPVacuumBlockEntity extends VacuumMachineEntity<ExperienceOrb> {
     public XPVacuumBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState, ExperienceOrb.class);
 
-        String color = BaseConfig.COMMON.BLOCKS.XP_VACUUM_RANGE_COLOR.get();
-        this.bCol = (float)Integer.parseInt(color.substring(0,2), 16) / 255;
+        String color = MachinesConfig.CLIENT.BLOCKS.XP_VACUUM_RANGE_COLOR.get();
+        this.rCol = (float)Integer.parseInt(color.substring(0,2), 16) / 255;
         this.gCol = (float)Integer.parseInt(color.substring(2,4), 16) / 255;
-        this.rCol = (float)Integer.parseInt(color.substring(4,6), 16) / 255;
+        this.bCol = (float)Integer.parseInt(color.substring(4,6), 16) / 255;
 
         // Create fluid tank.
         this.fluidTank = createFluidTank(Integer.MAX_VALUE);

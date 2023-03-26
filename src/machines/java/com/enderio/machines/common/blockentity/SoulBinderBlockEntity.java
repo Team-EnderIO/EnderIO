@@ -6,6 +6,8 @@ import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOFluids;
+import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.core.common.sync.IntegerDataSlot;
@@ -72,7 +74,7 @@ public class SoulBinderBlockEntity extends PoweredCraftingMachine<SoulBindingRec
     public MachineInventoryLayout getInventoryLayout() {
         return MachineInventoryLayout.builder()
             .setStackLimit(1)
-            .inputSlot((slot, stack) -> stack.getCapability(EIOCapabilities.ENTITY_STORAGE).isPresent())
+            .inputSlot((slot, stack) -> stack.is(EIOItems.FILLED_SOUL_VIAL.get()))
             .slotAccess(INPUT_SOUL)
             .inputSlot()
             .slotAccess(INPUT_OTHER)
@@ -118,11 +120,19 @@ public class SoulBinderBlockEntity extends PoweredCraftingMachine<SoulBindingRec
     }
 
     private FluidTank createFluidTank(int capacity) {
-        return new FluidTank(capacity, f -> true) { //f.getFluid().is(EIOTags.Fluids.EXPERIENCE)
+        return new FluidTank(capacity, f -> f.getFluid().is(EIOTags.Fluids.EXPERIENCE)) {
             @Override
             protected void onContentsChanged() {
                 newTaskAvailable();
                 setChanged();
+            }
+
+            @Override
+            public int fill(FluidStack resource, FluidAction action) {
+                if (!this.getFluid().getFluid().equals(EIOFluids.XP_JUICE.get()) && this.isFluidValid(resource)) { // Auto convert to own fluid type?
+                    resource = new FluidStack(EIOFluids.XP_JUICE.get(), resource.getAmount());
+                }
+                return super.fill(resource, action);
             }
         };
     }

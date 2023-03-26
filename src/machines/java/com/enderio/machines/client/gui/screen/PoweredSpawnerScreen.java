@@ -69,6 +69,5 @@ public class PoweredSpawnerScreen extends EIOScreen<PoweredSpawnerMenu> {
         if (getMenu().getBlockEntity().getReason() != PoweredSpawnerBlockEntity.SpawnerBlockedReason.NONE) {
             font.draw(pPoseStack, getMenu().getBlockEntity().getReason().name(), leftPos + imageWidth - 8 - 8 - 10, topPos + 98, 0);
         }
-
     }
 }

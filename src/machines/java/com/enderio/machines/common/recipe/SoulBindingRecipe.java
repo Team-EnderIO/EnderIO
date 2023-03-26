@@ -201,7 +201,7 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
                     buffer.writeResourceLocation(recipe.entityType);
                 }
             } catch (Exception ex) {
-                EnderIO.LOGGER.error("Error writing slicing recipe to packet.", ex);
+                EnderIO.LOGGER.error("Error writing soul binding recipe to packet.", ex);
                 throw ex;
             }
         }
