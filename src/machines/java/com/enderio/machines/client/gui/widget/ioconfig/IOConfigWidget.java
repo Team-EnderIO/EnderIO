@@ -253,13 +253,12 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
         bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
         BlockPos blockPos = selection.blockPos;
         poseStack.translate(blockPos.getX() - world_origin.x(), blockPos.getY() - world_origin.y(), blockPos.getZ() - world_origin.z());
-        Vec3[] vec = ModelRenderUtil.createQuadVerts(selection.direction, 0, 1, 0);
-        bufferbuilder.vertex(vec[0].x, vec[0].y, vec[0].z).color(1F, 1F, 1F, 1F).uv(tex.getU0(), tex.getV0()).endVertex();
-        bufferbuilder.vertex(vec[1].x, vec[1].y, vec[1].z).color(1F, 1F, 1F, 1F).uv(tex.getU0(), tex.getV1()).endVertex();
-        bufferbuilder.vertex(vec[2].x, vec[2].y, vec[2].z).color(1F, 1F, 1F, 1F).uv(tex.getU1(), tex.getV1()).endVertex();
-        bufferbuilder.vertex(vec[3].x, vec[3].y, vec[3].z).color(1F, 1F, 1F, 1F).uv(tex.getU1(), tex.getV0()).endVertex();
-        //            bufferbuilder.vertex(pose, ((float) vec.x), (float) vec.y, (float) vec.z).color(1F, 1F, 1F, 1F).endVertex();
-        //        RenderUtil.getVerticesForFace(pose, bufferbuilder, selection.face, new AABB(blockPos), tex.getU0(), tex.getU1(), tex.getV0(), tex.getV1());
+        Vector3f[] vec = Arrays.stream(ModelRenderUtil.createQuadVerts(selection.direction, 0, 1, 1)).map(Vector3f::new).toArray(Vector3f[]::new);
+        Matrix4f matrix4f = poseStack.last().pose();
+        bufferbuilder.vertex(matrix4f, vec[0].x(), vec[0].y(), vec[0].z()).color(1F, 1F, 1F, 1F).uv(tex.getU0(), tex.getV0()).endVertex();
+        bufferbuilder.vertex(matrix4f, vec[1].x(), vec[1].y(), vec[1].z()).color(1F, 1F, 1F, 1F).uv(tex.getU0(), tex.getV1()).endVertex();
+        bufferbuilder.vertex(matrix4f, vec[2].x(), vec[2].y(), vec[2].z()).color(1F, 1F, 1F, 1F).uv(tex.getU1(), tex.getV1()).endVertex();
+        bufferbuilder.vertex(matrix4f, vec[3].x(), vec[3].y(), vec[3].z()).color(1F, 1F, 1F, 1F).uv(tex.getU1(), tex.getV0()).endVertex();
         BufferUploader.drawWithShader(bufferbuilder.end());
 
         poseStack.popPose();
