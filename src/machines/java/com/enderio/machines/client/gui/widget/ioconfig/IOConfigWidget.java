@@ -1,13 +1,12 @@
 package com.enderio.machines.client.gui.widget.ioconfig;
 
 import com.enderio.EnderIO;
-import com.enderio.core.client.RenderUtil;
 import com.enderio.core.client.gui.screen.EIOScreen;
+import com.enderio.machines.client.rendering.model.ModelRenderUtil;
+import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
@@ -40,9 +39,7 @@ import net.minecraftforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Thanks XFactHD for help and providing a demo for a preview widget and raycast example
@@ -174,32 +171,48 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
             rayTransform.multiply(rotPitch);
 
             // Ray-cast hit on block shape
-            List<BlockHitResult> hits = new ArrayList<>();
+            Map<BlockHitResult, BlockPos> hits = new HashMap<>();
+            //            List<BlockHitResult> hits = new ArrayList<>();
             configurable.forEach(blockPos -> {
                 BlockState state = minecraft.level.getBlockState(blockPos);
                 BlockHitResult hit = raycast(state, diffX, diffY, rayTransform);
                 if (hit != null && hit.getType() != HitResult.Type.MISS) {
-                    hits.add(hit);
+                    hits.put(hit, blockPos);
                 }
 
             });
 
             Vec3 _origin = new Vec3(world_origin);
-            Optional<BlockHitResult> opt = hits
+            Optional<Map.Entry<BlockHitResult, BlockPos>> opt = hits
+                .entrySet()
                 .stream()
-                .min((a, b) -> (int) (a.getBlockPos().distToCenterSqr(_origin) - b.getBlockPos().distToCenterSqr(_origin))); // minimum
+                .min((a, b) -> (int) (a.getValue().distToCenterSqr(_origin) - b.getValue().distToCenterSqr(_origin))); // minimum
 
             if (opt.isPresent()) {
-                BlockHitResult closest = opt.get();
-                Direction face = closest.getDirection();
-                selection = new SelectedFace(closest.getBlockPos(), face);
-                //                EnderIO.LOGGER.debug(selection.block);
+                Map.Entry<BlockHitResult, BlockPos> closest = opt.get();
+                selection = new SelectedFace(closest.getValue(), closest.getKey().getDirection());
             }
 
-            //            renderSelection(poseStack);
-            //        renderOverlay();
+            renderSelection(poseStack, centerX, centerY, blockTransform);
 
         }
+    }
+
+    @Override
+    public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
+        if (this.active && this.visible) {
+            if (pButton == 1) {
+                if (selection != null) {
+                    BlockEntity entity = minecraft.level.getBlockEntity(selection.blockPos);
+                    if (entity instanceof MachineBlockEntity machine) {
+                        machine.getIOConfig().cycleMode(selection.direction);
+                        this.playDownSound(Minecraft.getInstance().getSoundManager());
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     @Override
@@ -220,39 +233,38 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
         return false;
     }
 
-    private void renderSelection(PoseStack poseStack) {
+    private void renderSelection(PoseStack poseStack, int centerX, int centerY, Quaternion transform) {
         if (selection == null) {
             return;
         }
-        MultiBufferSource.BufferSource buffers = minecraft.renderBuffers().bufferSource();
+        poseStack.pushPose();
+        poseStack.translate(centerX, centerY, Z_OFFSET);
+        poseStack.scale(SCALE, SCALE, -SCALE);
+        poseStack.mulPose(transform);
+
         BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
         RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
-        //        RenderSystem.depthFunc(519);
-        //        RenderSystem.depthMask(false);
-        //        RenderSystem.enableBlend();
-        //        RenderSystem.defaultBlendFunc();
-        //        RenderSystem.enableTexture();
         //
         //        // do I need a texture atlas ?
         TextureAtlasSprite tex = minecraft.getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(SELECTED_ICON);
         RenderSystem.setShaderTexture(0, tex.atlas().location());
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        //
-        poseStack.pushPose();
-        //        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
-        BlockPos blockPos = selection.block;
-        //        poseStack.translate(blockPos.getX(), blockPos.getY(), blockPos.getZ());
-        PoseStack.Pose last = poseStack.last();
-        RenderUtil.renderFace(selection.face, last.pose(), last.normal(), buffers.getBuffer(RenderType.solid()), tex, blockPos.getX(), blockPos.getY(),
-            blockPos.getZ(), 1, 1, 0xFFFFFF);
-        //        RenderUtil.getVerticesForFace(bufferbuilder, selection.face, new AABB(selection.block), tex.getU0(), tex.getU1(), tex.getV0(), tex.getV1());
-        //        BufferUploader.drawWithShader(bufferbuilder.end());
+
+        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
+        BlockPos blockPos = selection.blockPos;
+        poseStack.translate(blockPos.getX() - world_origin.x(), blockPos.getY() - world_origin.y(), blockPos.getZ() - world_origin.z());
+        Vec3[] vec = ModelRenderUtil.createQuadVerts(selection.direction, 0, 1, 0);
+        bufferbuilder.vertex(vec[0].x, vec[0].y, vec[0].z).color(1F, 1F, 1F, 1F).uv(tex.getU0(), tex.getV0()).endVertex();
+        bufferbuilder.vertex(vec[1].x, vec[1].y, vec[1].z).color(1F, 1F, 1F, 1F).uv(tex.getU0(), tex.getV1()).endVertex();
+        bufferbuilder.vertex(vec[2].x, vec[2].y, vec[2].z).color(1F, 1F, 1F, 1F).uv(tex.getU1(), tex.getV1()).endVertex();
+        bufferbuilder.vertex(vec[3].x, vec[3].y, vec[3].z).color(1F, 1F, 1F, 1F).uv(tex.getU1(), tex.getV0()).endVertex();
+        //            bufferbuilder.vertex(pose, ((float) vec.x), (float) vec.y, (float) vec.z).color(1F, 1F, 1F, 1F).endVertex();
+        //        RenderUtil.getVerticesForFace(pose, bufferbuilder, selection.face, new AABB(blockPos), tex.getU0(), tex.getU1(), tex.getV0(), tex.getV1());
+        BufferUploader.drawWithShader(bufferbuilder.end());
+
         poseStack.popPose();
-        //
-        //        RenderSystem.disableBlend();
-        //        RenderSystem.depthMask(true);
-        //        RenderSystem.depthFunc(515);
     }
+
 
     private void renderWorld(PoseStack poseStack, int centerX, int centerY, Quaternion transform, float partialTick) {
         Lighting.setupForEntityInInventory();
@@ -283,9 +295,13 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
         poseStack.pushPose();
         poseStack.translate(renderPos.x(), renderPos.y(), renderPos.z());
         BlockState blockState = minecraft.level.getBlockState(blockPos);
-        minecraft
-            .getBlockRenderer()
-            .renderSingleBlock(blockState, poseStack, buffers, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, ModelData.EMPTY, null);
+        BlockEntity blockEntity = minecraft.level.getBlockEntity(blockPos);
+        ModelData modelData = ModelData.EMPTY;
+        if (blockEntity instanceof MachineBlockEntity machine) {
+            modelData = machine.getModelData();
+        }
+        var renderer = minecraft.getBlockRenderer();
+        renderer.renderSingleBlock(blockState, poseStack, buffers, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, modelData, null);
         poseStack.popPose();
 
     }
@@ -302,6 +318,9 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
         if (shape == RenderShape.MODEL) {
             BlockRenderDispatcher renderer = minecraft.getBlockRenderer();
             BakedModel bakedModel = renderer.getBlockModel(blockState);
+            ModelData modelData = minecraft.level.getModelDataManager().getAt(blockPos);
+            if (modelData == null)
+                modelData = ModelData.EMPTY;
             int blockColor = minecraft.getBlockColors().getColor(blockState, minecraft.level, blockPos, 0);
             float r = FastColor.ARGB32.red(blockColor) / 255F;
             float g = FastColor.ARGB32.green(blockColor) / 255F;
@@ -309,8 +328,8 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
 
             renderer
                 .getModelRenderer()
-                .renderModel(poseStack.last(), vertexConsumer, blockState, bakedModel, r, g, b, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY,
-                    ModelData.EMPTY, renderType);
+                .renderModel(poseStack.last(), vertexConsumer, blockState, bakedModel, r, g, b, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, modelData,
+                    renderType);
 
         } else if (shape != RenderShape.INVISIBLE) {
             BlockEntityRenderDispatcher renderDispatcher = minecraft.getBlockEntityRenderDispatcher();
@@ -335,7 +354,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     @Override
     public void updateNarration(NarrationElementOutput pNarrationElementOutput) {}
 
-    public record SelectedFace(@NotNull BlockPos block, @NotNull Direction face) {}
+    public record SelectedFace(@NotNull BlockPos blockPos, @NotNull Direction direction) {}
 
     private Optional<RenderType> checkSpecialBlockEntities(BlockEntityType<?> type, MultiBufferSource.BufferSource buffers) {
         RenderType renderType;
