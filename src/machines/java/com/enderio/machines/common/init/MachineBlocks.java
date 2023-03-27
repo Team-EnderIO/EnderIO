@@ -14,8 +14,6 @@ import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import com.tterrag.registrate.util.entry.BlockEntry;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.predicate.BlockStatePredicate;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.client.model.generators.BlockModelBuilder.RootTransformBuilder.TransformOrigin;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
@@ -111,6 +109,15 @@ public class MachineBlocks {
         .register();
 
     public static final BlockEntry<ProgressMachineBlock> STIRLING_GENERATOR = standardMachine("stirling_generator", () -> MachineBlockEntities.STIRLING_GENERATOR)
+        .register();
+
+    public static final BlockEntry<ProgressMachineBlock> ZOMBIE_GENERATOR = standardMachine("zombie_generator", () -> MachineBlockEntities.ZOMBIE_GENERATOR)
+        .register();
+
+    public static final BlockEntry<ProgressMachineBlock> FRANKEN_ZOMBIE_GENERATOR = standardMachine("franken_zombie_generator", () -> MachineBlockEntities.FRANKEN_ZOMBIE_GENERATOR)
+        .register();
+
+    public static final BlockEntry<ProgressMachineBlock> ENDER_GENERATOR = standardMachine("ender_generator", () -> MachineBlockEntities.ENDER_GENERATOR)
         .register();
 
     public static final BlockEntry<ProgressMachineBlock> SAG_MILL = standardMachine("sag_mill", () -> MachineBlockEntities.SAG_MILL)

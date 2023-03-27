@@ -30,6 +30,15 @@ public class MachineBlockEntities {
         MachineBlocks.CREATIVE_POWER);
     public static final BlockEntityEntry<StirlingGeneratorBlockEntity> STIRLING_GENERATOR = register("stirling_generator",
         StirlingGeneratorBlockEntity::new, MachineBlocks.STIRLING_GENERATOR);
+
+    public static final BlockEntityEntry<ZombieGeneratorBlockEntity> ZOMBIE_GENERATOR = register("zombie_generator",
+        ZombieGeneratorBlockEntity::new, MachineBlocks.ZOMBIE_GENERATOR);
+
+    public static final BlockEntityEntry<ZombieGeneratorBlockEntity.FrankenZombieGeneratorBlockEntity> FRANKEN_ZOMBIE_GENERATOR = register("franken_zombie_generator",
+        ZombieGeneratorBlockEntity.FrankenZombieGeneratorBlockEntity::new, MachineBlocks.FRANKEN_ZOMBIE_GENERATOR);
+
+    public static final BlockEntityEntry<ZombieGeneratorBlockEntity.EnderGeneratorBlockEntity> ENDER_GENERATOR = register("ender_generator",
+        ZombieGeneratorBlockEntity.FrankenZombieGeneratorBlockEntity.EnderGeneratorBlockEntity::new, MachineBlocks.ENDER_GENERATOR);
     public static final BlockEntityEntry<SagMillBlockEntity> SAG_MILL = register("sag_mill", SagMillBlockEntity::new, MachineBlocks.SAG_MILL);
 
     public static final BlockEntityEntry<SlicerBlockEntity> SLICE_AND_SPLICE = register("slice_and_splice", SlicerBlockEntity::new,

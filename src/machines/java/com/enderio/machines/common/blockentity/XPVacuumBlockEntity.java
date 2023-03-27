@@ -66,7 +66,7 @@ public class XPVacuumBlockEntity extends VacuumMachineEntity<ExperienceOrb> {
     @Override
     public void load(CompoundTag pTag) {
         super.load(pTag);
-        fluidTank.readFromNBT(pTag.getCompound("Fluids"));
+        fluidTank.readFromNBT(pTag.getCompound("tank"));
     }
 
     @Override
