@@ -63,11 +63,11 @@ public class PoweredSpawnerScreen extends EIOScreen<PoweredSpawnerMenu> {
             Optional<EntityType<?>> typeOptional = Registry.ENTITY_TYPE.getOptional(rl.get());
             if (typeOptional.isPresent()) {
                 String name = typeOptional.get().getDescription().getString();
-                font.draw(pPoseStack, name, leftPos + imageWidth - 8 - 8 - 10, topPos + 90, 0);
+                font.draw(pPoseStack, name, leftPos + imageWidth/2f - font.width(name)/2f, topPos + 15, 0);
             }
         }
         if (getMenu().getBlockEntity().getReason() != PoweredSpawnerBlockEntity.SpawnerBlockedReason.NONE) {
-            font.draw(pPoseStack, getMenu().getBlockEntity().getReason().name(), leftPos + imageWidth - 8 - 8 - 10, topPos + 98, 0);
+            font.draw(pPoseStack, getMenu().getBlockEntity().getReason().name(), leftPos + imageWidth/2f - font.width(getMenu().getBlockEntity().getReason().name())/2f, topPos + 26, 0);
         }
     }
 }
