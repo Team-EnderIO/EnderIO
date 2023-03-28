@@ -221,12 +221,6 @@ public class EIOItems {
 
     // endregion
 
-    // region Machine Composites
-
-    public static final ItemEntry<MaterialItem> VOID_REAGENT = materialItem("void_reagent").register();
-
-    // endregion
-
     // region Misc Materials
 
     public static final ItemEntry<MaterialItem> PHOTOVOLTAIC_PLATE = materialItem("photovoltaic_plate")

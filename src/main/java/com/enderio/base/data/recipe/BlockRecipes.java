@@ -30,7 +30,6 @@ public class BlockRecipes extends RecipeProvider {
     protected void buildCraftingRecipes(Consumer<FinishedRecipe> recipeConsumer) {
         addPressurePlateRecipes(recipeConsumer);
         addLeverRecipes(recipeConsumer);
-        addChassisRecipes(recipeConsumer);
         addConstructionBlockRecipes(recipeConsumer);
     }
 
@@ -88,19 +87,6 @@ public class BlockRecipes extends RecipeProvider {
             .pattern("GBG")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GRAINS_OF_INFINITY.get()))
             .save(recipeConsumer);
-    }
-
-    private void addChassisRecipes(Consumer<FinishedRecipe> recipeConsumer) {
-        ShapedRecipeBuilder
-            .shaped(EIOBlocks.EMPTY_CHASSIS.get())
-            .define('B', Blocks.IRON_BARS)
-            .define('I', Tags.Items.INGOTS_IRON)
-            .pattern("BIB")
-            .pattern("I I")
-            .pattern("BIB")
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(new ItemPredicate(Tags.Items.INGOTS_IRON, null, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, EnchantmentPredicate.NONE, EnchantmentPredicate.NONE, null, NbtPredicate.ANY)))
-            .save(recipeConsumer);
-
     }
 
     private void addPressurePlateRecipes(Consumer<FinishedRecipe> recipeConsumer) {

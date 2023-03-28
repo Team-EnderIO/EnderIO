@@ -77,7 +77,7 @@ public class AlloyRecipeProvider extends EnderRecipeProvider {
 
         // TODO: Deal with chassis etc.
 //        build(new ItemStack(EIOBlocks.INDUSTRIAL_MACHINE_CHASSIS.get()), List.of(CountedIngredient.of(EIOBlocks.SIMPLE_MACHINE_CHASSIS.get()), CountedIngredient.of(EIOItems.DYE_INDUSTRIAL_BLEND.get())), 3600, 0.3f, pFinishedRecipeConsumer);
-//        build(new ItemStack(EIOBlocks.ENHANCED_MACHINE_CHASSIS.get()), List.of(CountedIngredient.of(EIOBlocks.END_STEEL_MACHINE_CHASSIS.get()), CountedIngredient.of(EIOItems.DYE_ENHANCED_BLEND.get())), 3600, 0.3f, pFinishedRecipeConsumer);
+        build(new ItemStack(EIOBlocks.ENHANCED_MACHINE_CHASSIS.get()), List.of(CountedIngredient.of(EIOBlocks.END_STEEL_MACHINE_CHASSIS.get()), CountedIngredient.of(EIOItems.DYE_ENHANCED_BLEND.get())), 3600, 0.3f, pFinishedRecipeConsumer);
 //        build(new ItemStack(EIOBlocks.SOUL_MACHINE_CHASSIS.get()), List.of(CountedIngredient.of(EIOBlocks.SIMPLE_MACHINE_CHASSIS.get()), CountedIngredient.of(EIOItems.DYE_SOUL_ATTUNED_BLEND.get())), 3600, 0.3f, pFinishedRecipeConsumer);
 
         // endregion
@@ -132,19 +132,6 @@ public class AlloyRecipeProvider extends EnderRecipeProvider {
         build(new ItemStack(EIOBlocks.INDUSTRIAL_INSULATION.get()), List.of(CountedIngredient.of(EIOTags.Items.DUSTS_LAPIS), CountedIngredient.of(ItemTags.WOOL), CountedIngredient.of(EIOTags.Items.INSULATION_METAL)), 5000, 0.5f, pFinishedRecipeConsumer);
 
         // endregion
-
-        machineFrames(pFinishedRecipeConsumer);
-    }
-
-    private void machineFrames(Consumer<FinishedRecipe> recipeConsumer) {
-        build(new ItemStack(EIOBlocks.VOID_CHASSIS.get()),
-            List.of(CountedIngredient.of(EIOBlocks.EMPTY_CHASSIS.get()), CountedIngredient.of(2, EIOItems.VOID_REAGENT.get())), 1600, 0.3f,
-            recipeConsumer);
-
-        // TODO: Preliminary
-        build(new ItemStack(EIOBlocks.REKINDLED_VOID_CHASSIS.get()),
-            List.of(CountedIngredient.of(EIOBlocks.VOID_CHASSIS.get()), CountedIngredient.of(Items.DRAGON_BREATH)), 5000, 0.3f,
-            recipeConsumer);
     }
 
     protected void glass(FusedQuartzBlock block, CountedIngredient input, int energy, float experience, Consumer<FinishedRecipe> recipeConsumer) {

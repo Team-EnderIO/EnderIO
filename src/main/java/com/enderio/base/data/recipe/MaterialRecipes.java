@@ -270,17 +270,6 @@ public class MaterialRecipes extends RecipeProvider {
         grindingBall(recipeConsumer, EIOItems.VIBRANT_ALLOY_BALL.get(), EIOItems.VIBRANT_ALLOY_INGOT.get());
         grindingBall(recipeConsumer, EIOItems.COPPER_ALLOY_BALL.get(), EIOItems.COPPER_ALLOY_INGOT.get());
         grindingBall(recipeConsumer, EIOItems.END_STEEL_BALL.get(), EIOItems.END_STEEL_INGOT.get());
-
-        machineReagents(recipeConsumer);
-    }
-
-    private void machineReagents(Consumer<FinishedRecipe> recipeConsumer) {
-        ShapelessRecipeBuilder
-            .shapeless(EIOItems.VOID_REAGENT.get(), 6)
-            .requires(Ingredient.of(Tags.Items.GEMS_LAPIS), 2)
-            .requires(EIOItems.GRAINS_OF_INFINITY.get(), 3)
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GRAINS_OF_INFINITY.get()))
-            .save(recipeConsumer);
     }
 
     private void makeMaterialRecipes(Consumer<FinishedRecipe> recipeConsumer, Item ingot, Item nugget, Block block) {
