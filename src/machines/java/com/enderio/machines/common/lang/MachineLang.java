@@ -21,5 +21,15 @@ public class MachineLang {
     public static final MutableComponent TOOLTIP_SAG_MILL_CHANCE_BALL = REGISTRATE.addLang("gui", EnderIO.loc("sag_mill_chance_ball"), "Chance: %s%% (modified by grinding ball)");
     public static final MutableComponent TOOLTIP_SAG_MILL_CHANCE = REGISTRATE.addLang("gui", EnderIO.loc("sag_mill_chance"), "Chance: %s%%");
 
+    // region JEI Categories
+
+    public static final MutableComponent CATEGORY_ALLOY_SMELTING = REGISTRATE.addLang("gui", EnderIO.loc("category.alloy_smelting"), "Alloy Smelting");
+    public static final MutableComponent CATEGORY_ENCHANTER = REGISTRATE.addLang("gui", EnderIO.loc("category.enchanter"), "Enchanting");
+    public static final MutableComponent CATEGORY_PRIMITIVE_ALLOY_SMELTING = REGISTRATE.addLang("gui", EnderIO.loc("category.primitive_alloy_smelting"), "Primitive Alloy Smelting");
+    public static final MutableComponent CATEGORY_SAG_MILL = REGISTRATE.addLang("gui", EnderIO.loc("category.sag_mill"), "SAG Mill");
+    public static final MutableComponent CATEGORY_SLICING = REGISTRATE.addLang("gui", EnderIO.loc("category.slicing"), "Slicing");
+
+    // endregion
+
     public static void register() {}
 }

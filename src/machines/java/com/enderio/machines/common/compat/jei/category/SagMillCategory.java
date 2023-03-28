@@ -48,7 +48,7 @@ public class SagMillCategory implements IRecipeCategory<SagMillingRecipe> {
 
     @Override
     public Component getTitle() {
-        return Component.literal("SAG Mill");
+        return MachineLang.CATEGORY_SAG_MILL;
     }
 
     @Override

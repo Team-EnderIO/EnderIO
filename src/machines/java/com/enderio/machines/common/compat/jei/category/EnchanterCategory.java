@@ -4,6 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.machines.client.gui.screen.EnchanterScreen;
 import com.enderio.machines.common.compat.jei.util.WrappedEnchanterRecipe;
 import com.enderio.machines.common.init.MachineBlocks;
+import com.enderio.machines.common.lang.MachineLang;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -42,7 +43,7 @@ public class EnchanterCategory implements IRecipeCategory<WrappedEnchanterRecipe
 
     @Override
     public Component getTitle() {
-        return Component.literal("Enchanting");
+        return MachineLang.CATEGORY_ENCHANTER;
     }
 
     @Override

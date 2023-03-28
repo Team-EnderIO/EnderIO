@@ -3,6 +3,7 @@ package com.enderio.machines.common.compat.jei.category;
 import com.enderio.EnderIO;
 import com.enderio.machines.client.gui.screen.SlicerScreen;
 import com.enderio.machines.common.init.MachineBlocks;
+import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.recipe.SlicingRecipe;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -39,7 +40,7 @@ public class SlicingRecipeCategory implements IRecipeCategory<SlicingRecipe> {
 
     @Override
     public Component getTitle() {
-        return Component.literal("Slicing");
+        return MachineLang.CATEGORY_SLICING;
     }
 
     @Override

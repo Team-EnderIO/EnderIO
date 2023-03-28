@@ -5,6 +5,7 @@ import com.enderio.core.common.recipes.CountedIngredient;
 import com.enderio.machines.client.gui.screen.PrimitiveAlloySmelterScreen;
 import com.enderio.machines.common.compat.jei.util.MachineCategory;
 import com.enderio.machines.common.init.MachineBlocks;
+import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -41,7 +42,7 @@ public class PrimitiveAlloySmeltingCategory extends MachineCategory<AlloySmeltin
 
     @Override
     public Component getTitle() {
-        return Component.literal("Primitive Alloy Smelting");
+        return MachineLang.CATEGORY_PRIMITIVE_ALLOY_SMELTING;
     }
 
     @Override

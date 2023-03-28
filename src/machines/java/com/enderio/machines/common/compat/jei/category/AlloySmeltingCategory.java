@@ -16,7 +16,6 @@ import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeType;
-import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -48,7 +47,7 @@ public class AlloySmeltingCategory extends MachineCategory<AlloySmeltingRecipe> 
 
     @Override
     public Component getTitle() {
-        return Component.literal("Alloy Smelting"); // TODO: Lang
+        return MachineLang.CATEGORY_ALLOY_SMELTING;
     }
 
     @Override
