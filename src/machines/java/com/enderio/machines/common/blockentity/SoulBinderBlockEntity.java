@@ -4,7 +4,6 @@ import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
-import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
@@ -53,7 +52,7 @@ public class SoulBinderBlockEntity extends PoweredCraftingMachine<SoulBindingRec
     public SoulBinderBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(MachineRecipes.SOUL_BINDING.type().get(), CAPACITY, TRANSFER, USAGE, type, worldPosition, blockState);
 
-        fluidTank = createFluidTank(10000); //Todo EXP tag?
+        fluidTank = createFluidTank(10000);
         container = new SoulBindingRecipe.Container(getInventory(), fluidTank);
 
         // Create fluid tank storage.
@@ -129,8 +128,8 @@ public class SoulBinderBlockEntity extends PoweredCraftingMachine<SoulBindingRec
 
             @Override
             public int fill(FluidStack resource, FluidAction action) {
-                if (!this.getFluid().getFluid().equals(EIOFluids.XP_JUICE.get()) && this.isFluidValid(resource)) { // Auto convert to own fluid type?
-                    resource = new FluidStack(EIOFluids.XP_JUICE.get(), resource.getAmount());
+                if (!this.getFluid().getFluid().equals(EIOFluids.XP_JUICE.getSource()) && this.isFluidValid(resource)) { // Auto convert to own fluid (source) type?
+                    resource = new FluidStack(EIOFluids.XP_JUICE.getSource(), resource.getAmount());
                 }
                 return super.fill(resource, action);
             }
