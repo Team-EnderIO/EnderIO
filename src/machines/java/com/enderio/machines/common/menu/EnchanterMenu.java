@@ -24,20 +24,20 @@ public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
         super(blockEntity, inventory, MachineMenus.ENCHANTER.get(), pContainerId);
         if (blockEntity != null) {
             this.level = blockEntity.getLevel();
-            addSlot(new MachineSlot(blockEntity.getInventory(), 0, 16, 35));
-            addSlot(new MachineSlot(blockEntity.getInventory(), 1, 65, 35));
-            addSlot(new MachineSlot(blockEntity.getInventory(), 2, 85, 35));
-            addSlot(new MachineSlot(blockEntity.getInventory(), 3, 144, 35) {
+            addSlot(new MachineSlot(blockEntity.getInventory(), EnchanterBlockEntity.BOOK, 16, 35));
+            addSlot(new MachineSlot(blockEntity.getInventory(), EnchanterBlockEntity.CATALYST, 65, 35));
+            addSlot(new MachineSlot(blockEntity.getInventory(), EnchanterBlockEntity.LAPIS, 85, 35));
+            addSlot(new MachineSlot(blockEntity.getInventory(), EnchanterBlockEntity.OUTPUT, 144, 35) {
                 @Override
                 public void onTake(Player pPlayer, ItemStack pStack) {
                     Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.ENCHANTING.type().get(), blockEntity.getContainer(), level);
                     if (recipe.isPresent() && (pPlayer.experienceLevel > recipe.get().getXPCost(blockEntity.getContainer()) || pPlayer.isCreative())) {
                         int amount = recipe.get().getInputAmountConsumed(blockEntity.getContainer());
-                        int lapizForLevel = recipe.get().getLapisForLevel(recipe.get().getEnchantmentLevel(blockEntity.getInventory().getStackInSlot(1).getCount()));
+                        int lapizForLevel = recipe.get().getLapisForLevel(recipe.get().getEnchantmentLevel(EnchanterBlockEntity.CATALYST.getItemStack(blockEntity).getCount()));
                         pPlayer.giveExperienceLevels(-recipe.get().getXPCost(blockEntity.getContainer()));
-                        blockEntity.getInventory().getStackInSlot(0).shrink(1);
-                        blockEntity.getInventory().getStackInSlot(1).shrink(amount);
-                        blockEntity.getInventory().getStackInSlot(2).shrink(lapizForLevel);
+                        EnchanterBlockEntity.BOOK.getItemStack(blockEntity).shrink(1);
+                        EnchanterBlockEntity.CATALYST.getItemStack(blockEntity).shrink(amount);
+                        EnchanterBlockEntity.LAPIS.getItemStack(blockEntity).shrink(lapizForLevel);
                     }
                     super.onTake(pPlayer, pStack);
                 }

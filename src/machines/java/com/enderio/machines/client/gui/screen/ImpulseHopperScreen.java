@@ -40,7 +40,7 @@ public class ImpulseHopperScreen extends EIOScreen<ImpulseHopperMenu> {
                 } else {
                     this.blit(pPoseStack, getGuiLeft() + 43 + (18 * i), getGuiTop() + 26, 200, 0, 18, 9);
                 }
-                if (getMenu().getBlockEntity().canHold(i)) {
+                if (getMenu().getBlockEntity().canHoldAndMerge(i)) {
                     this.blit(pPoseStack, getGuiLeft() + 43 + (18 * i), getGuiTop() + 53, 200, 9, 18, 9);
                 } else {
                     this.blit(pPoseStack, getGuiLeft() + 43 + (18 * i), getGuiTop() + 53, 200, 0, 18, 9);

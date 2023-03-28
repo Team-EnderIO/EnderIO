@@ -20,19 +20,13 @@ public class SlicerMenu extends MachineMenu<SlicerBlockEntity> {
             }
 
             // Tool inputs TODO: Shadow slots to show compatible tools?
-            addSlot(new MachineSlot(blockEntity.getInventory(), 6, 54, 16));
-            addSlot(new MachineSlot(blockEntity.getInventory(), 7, 72, 16));
+            addSlot(new MachineSlot(blockEntity.getInventory(), SlicerBlockEntity.AXE, 54, 16));
+            addSlot(new MachineSlot(blockEntity.getInventory(), SlicerBlockEntity.SHEARS, 72, 16));
 
-            // Item inputs
-            addSlot(new MachineSlot(blockEntity.getInventory(), 0, 44,  40));
-            addSlot(new MachineSlot(blockEntity.getInventory(), 1, 62, 40));
-            addSlot(new MachineSlot(blockEntity.getInventory(), 2, 80, 40));
-            addSlot(new MachineSlot(blockEntity.getInventory(), 3, 44, 58));
-            addSlot(new MachineSlot(blockEntity.getInventory(), 4, 62, 58));
-            addSlot(new MachineSlot(blockEntity.getInventory(), 5, 80, 58));
-
-            // Output
-            addSlot(new MachineSlot(blockEntity.getInventory(), 8, 134, 49));
+            for (int i = 0; i < 6; i++) {
+                addSlot(new MachineSlot(blockEntity.getInventory(), SlicerBlockEntity.INPUTS.get(i), 44 + 18 * (i % 3), i < 3 ? 40 : 58));
+            }
+            addSlot(new MachineSlot(blockEntity.getInventory(), SlicerBlockEntity.OUTPUT, 134, 49));
         }
 
         addInventorySlots(8,84);

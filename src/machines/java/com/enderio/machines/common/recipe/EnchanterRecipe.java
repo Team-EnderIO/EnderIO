@@ -2,6 +2,7 @@ package com.enderio.machines.common.recipe;
 
 import com.enderio.EnderIO;
 import com.enderio.core.common.recipes.EnderRecipe;
+import com.enderio.machines.common.blockentity.EnchanterBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonObject;
@@ -98,7 +99,7 @@ public class EnchanterRecipe implements EnderRecipe<Container> {
      */
     public int getInputAmountConsumed(Container container) {
         if (matches(container, null)) {
-            return getEnchantmentLevel(container.getItem(1).getCount()) * this.amountPerLevel;
+            return getEnchantmentLevel(EnchanterBlockEntity.CATALYST.getItemStack(container).getCount()) * this.amountPerLevel;
         }
         return 0;
     }
@@ -107,7 +108,7 @@ public class EnchanterRecipe implements EnderRecipe<Container> {
      * Get the XP level cost of the recipe.
      */
     public int getXPCost(Container container) {
-        int level = getEnchantmentLevel(container.getItem(1).getCount());
+        int level = getEnchantmentLevel(EnchanterBlockEntity.CATALYST.getItemStack(container).getCount());
         return getXPCostForLevel(level);
     }
 
@@ -147,19 +148,19 @@ public class EnchanterRecipe implements EnderRecipe<Container> {
 
     @Override
     public boolean matches(Container container, @Nullable Level level) {
-        if (!container.getItem(0).is(Items.WRITABLE_BOOK)) {
+        if (!EnchanterBlockEntity.BOOK.getItemStack(container).is(Items.WRITABLE_BOOK)) {
             return false;
         }
-        if (!input.test(container.getItem(1)) || container.getItem(1).getCount() < amountPerLevel) {
+        if (!input.test(EnchanterBlockEntity.CATALYST.getItemStack(container)) || EnchanterBlockEntity.CATALYST.getItemStack(container).getCount() < amountPerLevel) {
             return false;
         }
-        return container.getItem(2).is(Tags.Items.GEMS_LAPIS) && container.getItem(2).getCount() >= getLapisForLevel(
-            getEnchantmentLevel(container.getItem(1).getCount()));
+        return EnchanterBlockEntity.LAPIS.getItemStack(container).is(Tags.Items.GEMS_LAPIS) && EnchanterBlockEntity.LAPIS.getItemStack(container).getCount() >= getLapisForLevel(
+            getEnchantmentLevel(EnchanterBlockEntity.CATALYST.getItemStack(container).getCount()));
     }
 
     @Override
     public ItemStack assemble(Container container) {
-        return getBookForLevel(getEnchantmentLevel(container.getItem(1).getCount()));
+        return getBookForLevel(getEnchantmentLevel(EnchanterBlockEntity.CATALYST.getItemStack(container).getCount()));
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.enderio.core.common.sync.FloatDataSlot;
 import com.enderio.core.common.sync.SyncMode;
 import com.enderio.machines.common.blockentity.base.PowerGeneratingMachineEntity;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.StirlingGeneratorMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
@@ -26,6 +27,8 @@ public class StirlingGeneratorBlockEntity extends PowerGeneratingMachineEntity {
     public static final QuadraticScalable TRANSFER = new QuadraticScalable(CapacitorModifier.ENERGY_TRANSFER, () -> 120f);
     public static final FixedScalable USAGE = new FixedScalable(() -> 0f);
 
+    public static final SingleSlotAccess FUEL = new SingleSlotAccess();
+
     private int burnTime;
     private int burnDuration;
 
@@ -42,6 +45,7 @@ public class StirlingGeneratorBlockEntity extends PowerGeneratingMachineEntity {
     public MachineInventoryLayout getInventoryLayout() {
         return MachineInventoryLayout.builder()
             .inputSlot((slot, stack) -> ForgeHooks.getBurnTime(stack, RecipeType.SMELTING) > 0)
+            .slotAccess(FUEL)
             .capacitor()
             .build();
     }
@@ -56,7 +60,7 @@ public class StirlingGeneratorBlockEntity extends PowerGeneratingMachineEntity {
         // Only continue burning if redstone is enabled and the internal buffer has space.
         if (canAct() && !isGenerating() && getEnergyStorage().getEnergyStored() < getEnergyStorage().getMaxEnergyStored()) {
             // Get the fuel
-            ItemStack fuel = getInventory().getStackInSlot(0);
+            ItemStack fuel = FUEL.getItemStack(this);
             if (!fuel.isEmpty()) {
                 // Get the burn time.
                 int burningTime = ForgeHooks.getBurnTime(fuel, RecipeType.SMELTING);
@@ -67,7 +71,6 @@ public class StirlingGeneratorBlockEntity extends PowerGeneratingMachineEntity {
 
                     // Remove the fuel
                     fuel.shrink(1);
-                    getInventory().setStackInSlot(0, fuel);
                 }
             }
         }

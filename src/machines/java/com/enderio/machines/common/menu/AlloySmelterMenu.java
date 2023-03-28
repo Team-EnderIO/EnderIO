@@ -15,13 +15,13 @@ public class AlloySmelterMenu extends MachineMenu<AlloySmelterBlockEntity> {
         if (blockEntity != null) {
             // Capacitor slot
             if (blockEntity.requiresCapacitor()) {
-                addSlot(new MachineSlot(blockEntity.getInventory(), 4, 12, 60));
+                addSlot(new MachineSlot(blockEntity.getInventory(), blockEntity.getCapacitorSlot(), 12, 60));
             }
 
-            addSlot(new MachineSlot(blockEntity.getInventory(), 0, 54, 17));
-            addSlot(new MachineSlot(blockEntity.getInventory(), 1, 79, 7));
-            addSlot(new MachineSlot(blockEntity.getInventory(), 2, 103, 17));
-            addSlot(new MachineSlot(blockEntity.getInventory(), 3, 79, 58));
+            addSlot(new MachineSlot(blockEntity.getInventory(), AlloySmelterBlockEntity.INPUTS.get(0), 54, 17));
+            addSlot(new MachineSlot(blockEntity.getInventory(), AlloySmelterBlockEntity.INPUTS.get(1), 79, 7));
+            addSlot(new MachineSlot(blockEntity.getInventory(), AlloySmelterBlockEntity.INPUTS.get(2), 103, 17));
+            addSlot(new MachineSlot(blockEntity.getInventory(), AlloySmelterBlockEntity.OUTPUT, 79, 58));
         }
         addInventorySlots(8,84);
     }

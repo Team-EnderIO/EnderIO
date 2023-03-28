@@ -1,27 +1,57 @@
 package com.enderio.api.integration;
 
+import com.enderio.api.glider.GliderMovementInfo;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.IEventBus;
 
-public abstract class Integration implements IntegrationMethods {
+import java.util.Optional;
 
-    private String modid;
+/**
+ * These are all the methods a Integration can override or call.
+ * Please make sure that all methods only reference API of the integrated mod or Minecraft classes, so that this can be part of the API, after stable release
+ */
+public interface Integration {
 
-    /**
-     * @return the modid this integration was made for. Usage intended for datagen
-     */
-    public String getModid() {
-        return modid;
+    default void addEventListener(IEventBus modEventBus, IEventBus forgeEventBus) {
     }
 
     /**
-     * sets the modid for this integration. Usage intended for datagen and set by {@link IntegrationWrapper} in it's constructor for first party integrations
+     * @param stack The ItemStack used to mine the block
+     * @return if this ItemStack can mine blocks directly
      */
-    public void setModid(String modid) {
-        if (this.modid != null)
-            throw new IllegalCallerException("You are not allowed to set the modid of an integration");
-        this.modid = modid;
+    default boolean canMineWithDirect(ItemStack stack) {
+        return false;
     }
 
-    void addEventListener(IEventBus modEventBus, IEventBus forgeEventBus) {
+    /**
+     * @param player
+     * @return all the GliderMovementInfo this player currently has, or Optional#empty if the player isn't allowed to glide
+     */
+    default Optional<GliderMovementInfo> getGliderMovementInfo(Player player) {
+        return Optional.empty();
+    }
+
+    /**
+     * @param player The Player who activates the HangGlider
+     * used for cunsuming energy or other things
+     */
+    default void onHangGliderTick(Player player) {
+    }
+
+    /**
+     * @param player The Player who want to activate the HangGlider
+     * @return if the HangGlider should be disabled return the Reason, if not, return an empty Optional
+     */
+    default Optional<Component> hangGliderDisabledReason(Player player) {
+        return Optional.empty();
+    }
+
+    /**
+     * @return a ClientIntegration used for client only stuff like rendering
+     */
+    default ClientIntegration getClientIntegration() {
+        return ClientIntegration.NOOP;
     }
 }

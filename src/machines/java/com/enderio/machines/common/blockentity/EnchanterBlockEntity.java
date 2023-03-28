@@ -7,6 +7,7 @@ import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.FixedIOConfig;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.EnchanterMenu;
 import com.enderio.machines.common.recipe.EnchanterRecipe;
 import net.minecraft.core.BlockPos;
@@ -26,6 +27,11 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
 
     private final RecipeWrapper container;
 
+    public static final SingleSlotAccess BOOK = new SingleSlotAccess();
+    public static final SingleSlotAccess CATALYST = new SingleSlotAccess();
+    public static final SingleSlotAccess LAPIS = new SingleSlotAccess();
+    public static final SingleSlotAccess OUTPUT = new SingleSlotAccess();
+
     public EnchanterBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
         container = new RecipeWrapper(getInventory());
@@ -39,9 +45,13 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
     public MachineInventoryLayout getInventoryLayout() {
         return MachineInventoryLayout.builder()
             .inputSlot((slot, stack) -> stack.getItem() == Items.WRITABLE_BOOK)
+            .slotAccess(BOOK)
             .inputSlot()
+            .slotAccess(CATALYST)
             .inputSlot((slot, stack) -> stack.is(Tags.Items.GEMS_LAPIS))
+            .slotAccess(LAPIS)
             .outputSlot()
+            .slotAccess(OUTPUT)
             .build();
     }
 
@@ -70,12 +80,12 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
         // Custom behaviour as this works more like a crafting table than a machine.
         return new MachineInventory(getIOConfig(), layout) {
             protected void onContentsChanged(int slot) {
-                if (slot != 3) {
+                if (!OUTPUT.isSlot(slot)) {
                     Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.ENCHANTING.type().get(), container, level);
                     if (recipe.isPresent()) {
-                        getInventory().setStackInSlot(3, recipe.get().assemble(container));
+                        OUTPUT.setStackInSlot(this, recipe.get().assemble(container));
                     } else {
-                        getInventory().setStackInSlot(3, ItemStack.EMPTY);
+                        OUTPUT.setStackInSlot(this, ItemStack.EMPTY);
                     }
                 }
 
@@ -84,7 +94,7 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
             }
 
             public ItemStack extractItem(int slot, int amount, boolean simulate) {
-                if (slot == 3 && isClientSide()) {
+                if (OUTPUT.isSlot(slot) && isClientSide()) {
                     return ItemStack.EMPTY;
                 }
                 return super.extractItem(slot, amount, simulate);
