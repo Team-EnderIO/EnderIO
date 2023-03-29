@@ -204,24 +204,26 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
 
     // region Creative tabs
 
-    @Override
-    public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {
-        if (pCategory == getItemCategory()) {
-            pItems.add(EIOItems.EMPTY_SOUL_VIAL.get().getDefaultInstance());
-        } else if (pCategory == EIOCreativeTabs.SOULS) {
-            // Register for every mob that can be captured.
-            for (ResourceLocation entity : EntityCaptureUtils.getCapturableEntities()) {
-                ItemStack is = EIOItems.FILLED_SOUL_VIAL.get().getDefaultInstance();
-                setEntityType(is, entity);
-                pItems.add(is);
-            }
-        }
-    }
+    // TODO: 1.19.4: new item groups
 
-    @Override
-    public Collection<CreativeModeTab> getCreativeTabs() {
-        return Arrays.asList(getItemCategory(), EIOCreativeTabs.SOULS);
-    }
+//    @Override
+//    public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {
+//        if (pCategory == getItemCategory()) {
+//            pItems.add(EIOItems.EMPTY_SOUL_VIAL.get().getDefaultInstance());
+//        } else if (pCategory == EIOCreativeTabs.SOULS) {
+//            // Register for every mob that can be captured.
+//            for (ResourceLocation entity : EntityCaptureUtils.getCapturableEntities()) {
+//                ItemStack is = EIOItems.FILLED_SOUL_VIAL.get().getDefaultInstance();
+//                setEntityType(is, entity);
+//                pItems.add(is);
+//            }
+//        }
+//    }
+//
+//    @Override
+//    public Collection<CreativeModeTab> getCreativeTabs() {
+//        return Arrays.asList(getItemCategory(), EIOCreativeTabs.SOULS);
+//    }
 
     // endregion
 

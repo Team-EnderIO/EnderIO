@@ -107,20 +107,22 @@ public class ColdFireIgniter extends Item implements IMultiCapabilityItem {
         });
     }
 
-    @Override
-    public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {
-        if (allowedIn(pCategory)) {
-            ItemStack is = new ItemStack(this);
-            pItems.add(is.copy());
+    // TODO: 1.19.4: new item groups
 
-            getTankCap(is).ifPresent(handler -> {
-                if (handler instanceof AcceptingFluidItemHandler fluidHandler) {
-                    fluidHandler.setFluid(new FluidStack(EIOFluids.VAPOR_OF_LEVITY.get(), handler.getTankCapacity(0)));
-                    pItems.add(is);
-                }
-            });
-        }
-    }
+//    @Override
+//    public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {
+//        if (allowedIn(pCategory)) {
+//            ItemStack is = new ItemStack(this);
+//            pItems.add(is.copy());
+//
+//            getTankCap(is).ifPresent(handler -> {
+//                if (handler instanceof AcceptingFluidItemHandler fluidHandler) {
+//                    fluidHandler.setFluid(new FluidStack(EIOFluids.VAPOR_OF_LEVITY.get(), handler.getTankCapacity(0)));
+//                    pItems.add(is);
+//                }
+//            });
+//        }
+//    }
 
     @Nullable
     @Override

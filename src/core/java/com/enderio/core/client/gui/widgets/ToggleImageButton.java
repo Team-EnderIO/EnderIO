@@ -54,8 +54,8 @@ public class ToggleImageButton<U extends Screen & IEnderScreen> extends Abstract
     }
 
     @Override
-    public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float partialTick) {
-        Vector2i pos = new Vector2i(x, y);
+    public void renderWidget(PoseStack pPoseStack, int pMouseX, int pMouseY, float partialTick) {
+        Vector2i pos = new Vector2i(getX(), getY());
         addedOn.renderSimpleArea(pPoseStack, pos, pos.add(new Vector2i(width, height)));
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
@@ -70,14 +70,15 @@ public class ToggleImageButton<U extends Screen & IEnderScreen> extends Abstract
         }
 
         RenderSystem.enableDepthTest();
-        blit(pPoseStack, this.x, this.y, (float) xTex, (float) yTex, this.width, this.height, this.textureWidth, this.textureHeight);
+        blit(pPoseStack, getX(), getY(), (float) xTex, (float) yTex, this.width, this.height, this.textureWidth, this.textureHeight);
 
         if (this.isHovered) {
             renderToolTip(pPoseStack, pMouseX, pMouseY);
         }
     }
 
-    @Override
+    // TODO: 1.19.4: Convert to deferred tooltips
+//    @Override
     public void renderToolTip(PoseStack poseStack, int mouseX, int mouseY) {
         addedOn.renderTooltip(poseStack, this.tooltip.get().copy().withStyle(ChatFormatting.WHITE), mouseX, mouseY);
     }
@@ -88,6 +89,6 @@ public class ToggleImageButton<U extends Screen & IEnderScreen> extends Abstract
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
 }

@@ -166,12 +166,14 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem {
         return DarkSteelUpgradeable.hasUpgrade(pStack, EmpoweredUpgrade.NAME);
     }
 
-    @Override
-    public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {
-        if (allowedIn(pCategory)) {
-            addCreativeItems(pItems, this);
-        }
-    }
+    // TODO: 1.19.4: new item groups
+
+//    @Override
+//    public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {
+//        if (allowedIn(pCategory)) {
+//            addCreativeItems(pItems, this);
+//        }
+//    }
 
     // endregion
 

@@ -1,9 +1,0 @@
-{
-  "type": "enderio:enchanting",
-  "amount": 1,
-  "cost_multiplier": 1,
-  "enchantment": "minecraft:luck_of_the_sea",
-  "input": {
-    "tag": "forge:gems/lapis"
-  }
-}

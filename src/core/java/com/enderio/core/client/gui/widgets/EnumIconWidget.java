@@ -11,6 +11,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
@@ -61,10 +62,10 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
         Vector2i topLeft = Vector2i.MAX;
         Vector2i bottomRight = Vector2i.MIN;
         for (SelectionWidget widget : icons.values()) {
-            topLeft = topLeft.withX(Math.min(topLeft.x(), widget.x));
-            topLeft = topLeft.withY(Math.min(topLeft.y(), widget.y));
-            bottomRight = bottomRight.withX(Math.max(bottomRight.x(), widget.x + widget.getWidth()));
-            bottomRight = bottomRight.withY(Math.max(bottomRight.y(), widget.y + widget.getHeight()));
+            topLeft = topLeft.withX(Math.min(topLeft.x(), widget.getX()));
+            topLeft = topLeft.withY(Math.min(topLeft.y(), widget.getY()));
+            bottomRight = bottomRight.withX(Math.max(bottomRight.x(), widget.getX() + widget.getWidth()));
+            bottomRight = bottomRight.withY(Math.max(bottomRight.y(), widget.getY() + widget.getHeight()));
         }
         expandTopLeft = topLeft.expand(-SPACE_BETWEEN_ELEMENTS);
         expandBottomRight = bottomRight.expand(SPACE_BETWEEN_ELEMENTS);
@@ -114,14 +115,15 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
     }
 
     @Override
-    public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
+    public void renderWidget(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
         T icon = getter.get();
-        addedOn.renderIconBackground(pPoseStack, new Vector2i(x, y), icon);
-        IEnderScreen.renderIcon(pPoseStack, new Vector2i(x, y).expand(1), icon);
+        addedOn.renderIconBackground(pPoseStack, new Vector2i(getX(), getY()), icon);
+        IEnderScreen.renderIcon(pPoseStack, new Vector2i(getX(), getY()).expand(1), icon);
         renderToolTip(pPoseStack, pMouseX, pMouseY);
     }
 
-    @Override
+    // TODO: 1.19.4: Convert to deferred tooltips
+//    @Override
     public void renderToolTip(PoseStack poseStack, int mouseX, int mouseY) {
         if (isHovered && isActive()) {
             addedOn.renderTooltip(poseStack, List.of(optionName, getter.get().getTooltip().copy().withStyle(ChatFormatting.GRAY)), Optional.empty(), mouseX, mouseY);
@@ -129,7 +131,7 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput pNarrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {}
 
     @Override
     public void onGlobalClick(double mouseX, double mouseY) {
@@ -205,17 +207,17 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
         }
 
         @Override
-        public void updateNarration(NarrationElementOutput pNarrationElementOutput) {}
+        public void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {}
 
         @Override
-        public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
+        public void renderWidget(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
             if (getter.get() != value) {
-                selection.renderIconBackground(pPoseStack, new Vector2i(x, y), value);
+                selection.renderIconBackground(pPoseStack, new Vector2i(getX(), getY()), value);
             } else {
-                GuiComponent.fill(pPoseStack, x, y, x + width, y + height, 0xFF0020FF); //TODO: Client Config
-                GuiComponent.fill(pPoseStack, x + 1, y + 1, x + width - 1, y + height - 1, 0xFF8B8B8B);
+                GuiComponent.fill(pPoseStack, getX(), getY(), getX() + width, getY() + height, 0xFF0020FF); //TODO: Client Config
+                GuiComponent.fill(pPoseStack, getX() + 1, getY() + 1, getX() + width - 1, getY() + height - 1, 0xFF8B8B8B);
             }
-            IEnderScreen.renderIcon(pPoseStack, new Vector2i(x, y).expand(1), value);
+            IEnderScreen.renderIcon(pPoseStack, new Vector2i(getX(), getY()).expand(1), value);
 
             if (isMouseOver(pMouseX, pMouseY)) {
                 Component tooltip = value.getTooltip();

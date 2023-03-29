@@ -65,16 +65,17 @@ public abstract class PoweredToggledItem extends Item implements IMultiCapabilit
         return Toggled.isEnabled(pStack);
     }
 
-    @Override
-    public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {
-        if (allowedIn(pCategory)) {
-            ItemStack is = new ItemStack(this);
-            pItems.add(is.copy());
-
-            setFullCharge(is);
-            pItems.add(is);
-        }
-    }
+    // TODO: 1.19.4: new item groups
+//    @Override
+//    public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {
+//        if (allowedIn(pCategory)) {
+//            ItemStack is = new ItemStack(this);
+//            pItems.add(is.copy());
+//
+//            setFullCharge(is);
+//            pItems.add(is);
+//        }
+//    }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {

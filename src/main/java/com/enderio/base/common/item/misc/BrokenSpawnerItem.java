@@ -38,22 +38,23 @@ public class BrokenSpawnerItem extends Item implements IMultiCapabilityItem {
         return brokenSpawner;
     }
 
-    @Override
-    public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {
-        if (pCategory == getItemCategory()) {
-            pItems.add(new ItemStack(this));
-        } else if (pCategory == EIOCreativeTabs.SOULS) {
-            // Register for every mob that can be captured.
-            for (ResourceLocation entity : EntityCaptureUtils.getCapturableEntities()) {
-                pItems.add(forType(entity));
-            }
-        }
-    }
+    // TODO: 1.19.4: new item groups
+//    @Override
+//    public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {
+//        if (pCategory == getItemCategory()) {
+//            pItems.add(new ItemStack(this));
+//        } else if (pCategory == EIOCreativeTabs.SOULS) {
+//            // Register for every mob that can be captured.
+//            for (ResourceLocation entity : EntityCaptureUtils.getCapturableEntities()) {
+//                pItems.add(forType(entity));
+//            }
+//        }
+//    }
 
-    @Override
-    public Collection<CreativeModeTab> getCreativeTabs() {
-        return Arrays.asList(getItemCategory(), EIOCreativeTabs.SOULS);
-    }
+//    @Override
+//    public Collection<CreativeModeTab> getCreativeTabs() {
+//        return Arrays.asList(getItemCategory(), EIOCreativeTabs.SOULS);
+//    }
 
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {

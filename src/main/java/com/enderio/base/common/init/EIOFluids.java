@@ -7,6 +7,7 @@ import com.tterrag.registrate.builders.FluidBuilder;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateItemModelProvider;
 import com.tterrag.registrate.util.entry.FluidEntry;
+import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BucketItem;
@@ -69,7 +70,7 @@ public class EIOFluids {
         return baseFluid(name)
             .bucket()
             .model(EIOFluids::bucketModel)
-            .tab(() -> EIOCreativeTabs.MAIN)
+            .tab(NonNullSupplier.lazy(EIOCreativeTabs.MAIN))
             .build();
     }
 
@@ -77,7 +78,7 @@ public class EIOFluids {
         return baseFluid(name)
             .bucket()
             .model((ctx, prov) -> bucketModel(ctx, prov).flipGas(true))
-            .tab(() -> EIOCreativeTabs.MAIN)
+            .tab(NonNullSupplier.lazy(EIOCreativeTabs.MAIN))
             .build();
     }
 

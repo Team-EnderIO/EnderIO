@@ -2,40 +2,27 @@ package com.enderio.base.common.item;
 
 import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOItems;
+import com.tterrag.registrate.Registrate;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraftforge.fml.common.Mod;
 
-import java.util.Locale;
+import java.util.List;
 import java.util.function.Supplier;
 
-public class EIOCreativeTabs extends CreativeModeTab {
+@Mod.EventBusSubscriber(modid = EnderIO.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+public class EIOCreativeTabs {
     // TODO: Review creative tabs?
-    public static final EIOCreativeTabs MAIN = new EIOCreativeTabs("main", EIOItems.CREATIVE_ICON_NONE::get);
-    public static final EIOCreativeTabs GEAR = new EIOCreativeTabs("gear", EIOItems.CREATIVE_ICON_ITEMS::get);
-    public static final EIOCreativeTabs BLOCKS = new EIOCreativeTabs("blocks", EIOItems.CREATIVE_ICON_MATERIALS::get);
-    public static final EIOCreativeTabs MACHINES = new EIOCreativeTabs("machines", EIOItems.CREATIVE_ICON_MACHINES::get);
-    public static final EIOCreativeTabs SOULS = new EIOCreativeTabs("souls", EIOItems.CREATIVE_ICON_MOBS::get);
+    private static final Registrate REGISTRATE = EnderIO.registrate();
 
-    private final Supplier<Item> itemIcon;
+    public static final Supplier<CreativeModeTab> MAIN = REGISTRATE.buildCreativeModeTab("main", builder -> builder.icon(() -> new ItemStack(EIOItems.CREATIVE_ICON_NONE.get())), "Ender IO");
+    public static final Supplier<CreativeModeTab> GEAR = REGISTRATE.buildCreativeModeTab("gear", List.of(), List.of(EnderIO.loc("main")), builder -> builder.icon(() -> new ItemStack(EIOItems.CREATIVE_ICON_ITEMS.get())), "Ender IO Gear");
+    public static final Supplier<CreativeModeTab> BLOCKS = REGISTRATE.buildCreativeModeTab("blocks", List.of(), List.of(EnderIO.loc("gear")), builder -> builder.icon(() -> new ItemStack(EIOItems.CREATIVE_ICON_MATERIALS.get())), "Ender IO Blocks");
+    public static final Supplier<CreativeModeTab> MACHINES = REGISTRATE.buildCreativeModeTab("machines", List.of(), List.of(EnderIO.loc("blocks")), builder -> builder.icon(() -> new ItemStack(EIOItems.CREATIVE_ICON_MACHINES.get())), "Ender IO Machines");
+    public static final Supplier<CreativeModeTab> SOULS = REGISTRATE.buildCreativeModeTab("souls", List.of(), List.of(EnderIO.loc("machines")), builder -> builder.icon(() -> new ItemStack(EIOItems.CREATIVE_ICON_MOBS.get())), "Ender IO Souls");
 
-    public EIOCreativeTabs(String name, Supplier<Item> itemIcon) {
-        super("enderio." + name);
-        this.itemIcon = itemIcon;
-        EnderIO.registrate().addLang("itemGroup", EnderIO.loc(name), getEnglish(name));
-    }
 
-    protected String getEnglish(String name) {
-        if (name.equals("main"))
-            return "EnderIO";
-        return "EnderIO " + name.substring(0, 1).toUpperCase(Locale.ENGLISH) + name.substring(1);
-    }
-
-    @Override
-    public ItemStack makeIcon() {
-        if (itemIcon.get() == null)
-            return new ItemStack(Items.BARRIER);
-        return new ItemStack(itemIcon.get());
+    public static void register() {
+        REGISTRATE.creativeModeTab(null);
     }
 }

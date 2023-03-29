@@ -1,9 +1,0 @@
-{
-  "type": "enderio:enchanting",
-  "amount": 8,
-  "cost_multiplier": 1,
-  "enchantment": "minecraft:sweeping",
-  "input": {
-    "tag": "forge:ingots/iron"
-  }
-}

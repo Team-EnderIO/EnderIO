@@ -26,7 +26,7 @@ public class CoordinateMenuScreen extends EIOScreen<CoordinateMenu> {
     @Override
     protected void init() {
         super.init();
-        Minecraft.getInstance().keyboardHandler.setSendRepeatsToGui(true);
+//        Minecraft.getInstance().keyboardHandler.setSendRepeatsToGui(true); // TODO: 1.19.4
 
         EditBox name = new EditBox(this.font, leftPos + 43 + 4, topPos + 20 + 4, 92 - 12, 18, Component.literal("name"));
         name.setCanLoseFocus(false);
@@ -39,7 +39,10 @@ public class CoordinateMenuScreen extends EIOScreen<CoordinateMenu> {
         this.addRenderableWidget(name);
         this.setInitialFocus(name);
         name.setEditable(true);
-        this.addRenderableWidget(new Button(getGuiLeft() + imageWidth - 30, getGuiTop() + imageHeight - 30, 20, 20, Component.literal("Ok"), mouseButton -> Minecraft.getInstance().player.closeContainer())); //TOOD: translation
+        // TODO: Translation string
+        this.addRenderableWidget(new Button.Builder(Component.literal("Ok"), mouseButton -> Minecraft.getInstance().player.closeContainer())
+            .bounds(getGuiLeft() + imageWidth - 30, getGuiTop() + imageHeight - 30, 20, 20)
+            .build());
     }
 
     @Override

@@ -6,11 +6,8 @@ import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.data.DataGenerator;
-import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.data.PackOutput;
+import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -23,12 +20,12 @@ import net.minecraftforge.common.Tags;
 import java.util.function.Consumer;
 
 public class MaterialRecipes extends RecipeProvider {
-    public MaterialRecipes(DataGenerator pGenerator) {
-        super(pGenerator);
+    public MaterialRecipes(PackOutput packOutput) {
+        super(packOutput);
     }
 
     @Override
-    protected void buildCraftingRecipes(Consumer<FinishedRecipe> recipeConsumer) {
+    protected void buildRecipes(Consumer<FinishedRecipe> recipeConsumer) {
 //        ShapedRecipeBuilder
 //            .shaped(EIOBlocks.SIMPLE_MACHINE_CHASSIS.get().asItem())
 //            .pattern("BIB")
@@ -40,7 +37,7 @@ public class MaterialRecipes extends RecipeProvider {
 //            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GRAINS_OF_INFINITY::get))
 //            .save(recipeConsumer);
 
-        ShapedRecipeBuilder.shaped(Items.CAKE)
+        ShapedRecipeBuilder.shaped(RecipeCategory.FOOD, Items.CAKE)
             .pattern("MMM")
             .pattern("SCS")
             .define('M', Items.MILK_BUCKET)
@@ -49,14 +46,14 @@ public class MaterialRecipes extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CAKE_BASE.get()))
             .save(recipeConsumer, EnderIO.loc("cake"));
         
-        ShapelessRecipeBuilder.shapeless(EIOItems.PHOTOVOLTAIC_COMPOSITE.get())
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, EIOItems.PHOTOVOLTAIC_COMPOSITE.get())
             .requires(EIOTags.Items.DUSTS_LAPIS)
             .requires(EIOTags.Items.DUSTS_COAL)
             .requires(EIOTags.Items.SILICON)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.SILICON.get()))
             .save(recipeConsumer);
         
-        ShapedRecipeBuilder.shaped(EIOItems.EMPTY_SOUL_VIAL.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, EIOItems.EMPTY_SOUL_VIAL.get())
             .pattern(" S ")
             .pattern("Q Q")
             .pattern(" Q ")
@@ -65,7 +62,7 @@ public class MaterialRecipes extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.SOULARIUM_INGOT.get()))
             .save(recipeConsumer);
         
-        ShapedRecipeBuilder.shaped(EIOItems.UNFIRED_DEATH_URN.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.UNFIRED_DEATH_URN.get())
             .pattern("CPC")
             .pattern("C C")
             .pattern("CCC")
@@ -84,7 +81,7 @@ public class MaterialRecipes extends RecipeProvider {
         makeMaterialRecipes(recipeConsumer, EIOItems.SOULARIUM_INGOT.get(), EIOItems.SOULARIUM_NUGGET.get(), EIOBlocks.SOULARIUM_BLOCK.get());
         makeMaterialRecipes(recipeConsumer, EIOItems.END_STEEL_INGOT.get(), EIOItems.END_STEEL_NUGGET.get(), EIOBlocks.END_STEEL_BLOCK.get());
         
-        ShapedRecipeBuilder.shaped(EIOItems.CONDUIT_BINDER_COMPOSITE.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.CONDUIT_BINDER_COMPOSITE.get())
             .pattern("GCG")
             .pattern("SGS")
             .pattern("GCG")
@@ -96,7 +93,7 @@ public class MaterialRecipes extends RecipeProvider {
             .unlockedBy("has_ingredient_clay", InventoryChangeTrigger.TriggerInstance.hasItems(Items.CLAY_BALL))
             .save(recipeConsumer);
         
-        ShapedRecipeBuilder.shaped(EIOItems.PULSATING_CRYSTAL.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.PULSATING_CRYSTAL.get())
             .pattern("PPP")
             .pattern("PDP")
             .pattern("PPP")
@@ -105,7 +102,7 @@ public class MaterialRecipes extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PULSATING_ALLOY_NUGGET.get()))
             .save(recipeConsumer);
         
-        ShapedRecipeBuilder.shaped(EIOItems.VIBRANT_CRYSTAL.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.VIBRANT_CRYSTAL.get())
             .pattern("PPP")
             .pattern("PDP")
             .pattern("PPP")
@@ -114,7 +111,7 @@ public class MaterialRecipes extends RecipeProvider {
             .unlockedBy("has_ingredien", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.VIBRANT_ALLOY_NUGGET.get()))
             .save(recipeConsumer);
         
-        ShapedRecipeBuilder.shaped(EIOItems.DYE_INDUSTRIAL_BLEND.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.DYE_INDUSTRIAL_BLEND.get())
             .pattern("LQG")
             .pattern("QBQ")
             .pattern("GQL")
@@ -127,7 +124,7 @@ public class MaterialRecipes extends RecipeProvider {
             .unlockedBy("has_ingredient_lapis", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOTags.Items.DUSTS_LAPIS).build()))
             .save(recipeConsumer);
         
-        ShapedRecipeBuilder.shaped(EIOItems.DYE_ENHANCED_BLEND.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.DYE_ENHANCED_BLEND.get())
             .pattern("PQP")
             .pattern("QBQ")
             .pattern("PQP")
@@ -138,7 +135,7 @@ public class MaterialRecipes extends RecipeProvider {
             .unlockedBy("has_ingredient_powder", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PULSATING_POWDER.get()))
             .save(recipeConsumer);
         
-        ShapedRecipeBuilder.shaped(EIOItems.DYE_SOUL_ATTUNED_BLEND.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.DYE_SOUL_ATTUNED_BLEND.get())
             .pattern("SQS")
             .pattern("QBQ")
             .pattern("SQS")
@@ -149,7 +146,7 @@ public class MaterialRecipes extends RecipeProvider {
             .unlockedBy("has_ingredient_powder", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.SOUL_POWDER.get()))
             .save(recipeConsumer);
         
-        ShapedRecipeBuilder.shaped(EIOItems.GEAR_WOOD.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.GEAR_WOOD.get())
             .pattern(" S ")
             .pattern("S S")
             .pattern(" S ")
@@ -157,7 +154,7 @@ public class MaterialRecipes extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(Tags.Items.RODS_WOODEN).build()))
             .save(recipeConsumer);
         
-        ShapedRecipeBuilder.shaped(EIOItems.GEAR_WOOD.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.GEAR_WOOD.get())
             .pattern("S S")
             .pattern("   ")
             .pattern("S S")
@@ -165,7 +162,7 @@ public class MaterialRecipes extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(Tags.Items.RODS_WOODEN).build()))
             .save(recipeConsumer, new ResourceLocation(EnderIO.MODID, EIOItems.GEAR_WOOD.getId().getPath() + "_corner"));
         
-        ShapedRecipeBuilder.shaped(EIOItems.GEAR_STONE.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.GEAR_STONE.get())
             .pattern("NIN")
             .pattern("I I")
             .pattern("NIN")
@@ -174,7 +171,7 @@ public class MaterialRecipes extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(Tags.Items.COBBLESTONE).build()))
             .save(recipeConsumer);
         
-        ShapedRecipeBuilder.shaped(EIOItems.GEAR_STONE.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.GEAR_STONE.get())
             .pattern(" I ")
             .pattern("IGI")
             .pattern(" I ")
@@ -188,7 +185,7 @@ public class MaterialRecipes extends RecipeProvider {
         upgradeGear(recipeConsumer, EIOItems.GEAR_VIBRANT.get(), EIOItems.GEAR_ENERGIZED.get(), EIOItems.VIBRANT_ALLOY_INGOT.get(), EIOItems.VIBRANT_ALLOY_NUGGET.get());
         upgradeGear(recipeConsumer, EIOItems.GEAR_DARK_STEEL.get(), EIOItems.GEAR_ENERGIZED.get(), EIOItems.DARK_STEEL_INGOT.get(), EIOItems.DARK_STEEL_NUGGET.get());
 
-        ShapedRecipeBuilder.shaped(EIOItems.BASIC_CAPACITOR.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.BASIC_CAPACITOR.get())
             .pattern(" NG")
             .pattern("NIN")
             .pattern("GN ")
@@ -198,7 +195,7 @@ public class MaterialRecipes extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GRAINS_OF_INFINITY.get()))
             .save(recipeConsumer);
 
-        ShapedRecipeBuilder.shaped(EIOItems.DOUBLE_LAYER_CAPACITOR.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.DOUBLE_LAYER_CAPACITOR.get())
             .pattern(" I ")
             .pattern("CDC")
             .pattern(" I ")
@@ -208,7 +205,7 @@ public class MaterialRecipes extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.BASIC_CAPACITOR.get()))
             .save(recipeConsumer);
 
-        ShapedRecipeBuilder.shaped(EIOItems.OCTADIC_CAPACITOR.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.OCTADIC_CAPACITOR.get())
             .pattern(" I ")
             .pattern("CGC")
             .pattern(" I ")
@@ -218,7 +215,7 @@ public class MaterialRecipes extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DOUBLE_LAYER_CAPACITOR.get()))
             .save(recipeConsumer);
 
-        ShapedRecipeBuilder.shaped(EIOItems.WEATHER_CRYSTAL.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.WEATHER_CRYSTAL.get())
             .pattern(" P ")
             .pattern("VEV")
             .pattern(" P ")
@@ -228,7 +225,7 @@ public class MaterialRecipes extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PULSATING_CRYSTAL.get()))
             .save(recipeConsumer);
         
-        ShapelessRecipeBuilder.shapeless(EIOItems.ENDERIOS.get())
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, EIOItems.ENDERIOS.get())
             .requires(Items.BOWL)
             .requires(Items.MILK_BUCKET)
             .requires(Items.WHEAT)
@@ -236,7 +233,7 @@ public class MaterialRecipes extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Items.WHEAT))
             .save(recipeConsumer);
         
-        ShapedRecipeBuilder.shaped(Items.STICK, 16)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.STICK, 16)
             .pattern("W")
             .pattern("W")
             .define('W', ItemTags.LOGS)
@@ -255,22 +252,22 @@ public class MaterialRecipes extends RecipeProvider {
     }
 
 	private void makeMaterialRecipes(Consumer<FinishedRecipe> recipeConsumer, Item ingot, Item nugget, Block block ) {
-		ShapelessRecipeBuilder.shapeless(ingot, 9)
+		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ingot, 9)
 			.requires(block.asItem())
 			.unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(block.asItem()))
 			.save(recipeConsumer);
-		ShapelessRecipeBuilder.shapeless(nugget, 9)
+		ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, nugget, 9)
 			.requires(ingot)
 			.unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ingot))
 			.save(recipeConsumer);
-		ShapedRecipeBuilder.shaped(block)
+		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, block)
 			.pattern("III")
 	    	.pattern("III")
 	    	.pattern("III")
 	    	.define('I', ingot)
 	    	.unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(block.asItem()))
 	    	.save(recipeConsumer);
-		ShapedRecipeBuilder.shaped(ingot)
+		ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ingot)
 			.pattern("NNN")
     		.pattern("NNN")
     		.pattern("NNN")
@@ -279,7 +276,7 @@ public class MaterialRecipes extends RecipeProvider {
     		.save(recipeConsumer, nugget.toString() + "_to_ingot");
 }
     private void upgradeGear(Consumer<FinishedRecipe> recipeConsumer, Item resultGear, ItemLike inputGear, ItemLike cross, ItemLike corner) {
-        ShapedRecipeBuilder.shaped(resultGear)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, resultGear)
             .pattern("NIN")
             .pattern("IGI")
             .pattern("NIN")
@@ -291,7 +288,7 @@ public class MaterialRecipes extends RecipeProvider {
     }
     
     private void upgradeGear(Consumer<FinishedRecipe> recipeConsumer, Item resultGear, ItemLike inputGear, TagKey<Item> cross, TagKey<Item> corner) {
-        ShapedRecipeBuilder.shaped(resultGear)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, resultGear)
             .pattern("NIN")
             .pattern("IGI")
             .pattern("NIN")
@@ -303,7 +300,7 @@ public class MaterialRecipes extends RecipeProvider {
     }
     
     private void grindingBall(Consumer<FinishedRecipe> recipeConsumer, Item result, ItemLike input) {
-        ShapedRecipeBuilder.shaped(result, 24)
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, result, 24)
             .pattern(" I ")
             .pattern("III")
             .pattern(" I ")

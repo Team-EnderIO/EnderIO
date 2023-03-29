@@ -6,6 +6,7 @@ import com.enderio.base.common.tag.EIOTags;
 import com.google.common.collect.ImmutableMap;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.BlockEntry;
+import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -113,7 +114,7 @@ public class GlassBlocks {
                 .isSuffocating(GlassBlocks::never)
                 .isViewBlocking(GlassBlocks::never))
             .item()
-            .tab(() -> EIOCreativeTabs.BLOCKS)
+            .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
             .tag(glassIdentifier.explosion_resistance() ? EIOTags.Items.FUSED_QUARTZ : EIOTags.Items.CLEAR_GLASS)
             .tag(EIOTags.Items.GLASS_TAGS.get(glassIdentifier))
             .build()
@@ -140,7 +141,7 @@ public class GlassBlocks {
                 .isViewBlocking(GlassBlocks::never)
                 .color(color.getMaterialColor()))
             .item()
-            .tab(() -> EIOCreativeTabs.BLOCKS)
+            .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
             .tag(EIOTags.Items.GLASS_TAGS.get(glassIdentifier))
             .color(() -> () -> (ItemColor) (p_92672_, p_92673_) -> color.getMaterialColor().col)
             .build()

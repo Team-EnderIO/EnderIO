@@ -42,16 +42,18 @@ public class DarkSteelUpgradeItem extends Item implements IAdvancedTooltipProvid
         return DarkSteelUpgradeRegistry.instance().hasUpgrade(pStack);
     }
 
-    @Override
-    public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {
-        if (allowedIn(pCategory)) {
-            ItemStack is = new ItemStack(this);
-            pItems.add(is.copy());
+    // TODO: 1.19.4: new item groups
 
-            DarkSteelUpgradeRegistry.instance().writeUpgradeToItemStack(is, upgrade.get());
-            pItems.add(is);
-        }
-    }
+//    @Override
+//    public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {
+//        if (allowedIn(pCategory)) {
+//            ItemStack is = new ItemStack(this);
+//            pItems.add(is.copy());
+//
+//            DarkSteelUpgradeRegistry.instance().writeUpgradeToItemStack(is, upgrade.get());
+//            pItems.add(is);
+//        }
+//    }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {

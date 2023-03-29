@@ -6,18 +6,19 @@ import com.enderio.base.common.capability.DarkSteelUpgradeable;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIORecipes;
 import com.google.gson.JsonObject;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.LegacyUpgradeRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.UpgradeRecipe;
 import net.minecraft.world.level.Level;
 
 import java.util.Optional;
 
-public class DarkSteelUpgradeRecipe extends UpgradeRecipe {
+public class DarkSteelUpgradeRecipe extends LegacyUpgradeRecipe {
 
     public DarkSteelUpgradeRecipe(ResourceLocation pRecipeId) {
         super(pRecipeId, Ingredient.EMPTY,Ingredient.EMPTY,ItemStack.EMPTY);
@@ -36,10 +37,10 @@ public class DarkSteelUpgradeRecipe extends UpgradeRecipe {
     }
 
     @Override
-    public ItemStack assemble(Container pInv) {
-        ItemStack resultItem = pInv.getItem(0).copy();
+    public ItemStack assemble(Container pContainer, RegistryAccess pRegistryAccess) {
+        ItemStack resultItem = pContainer.getItem(0).copy();
         Optional<IDarkSteelUpgradable> target = getUpgradableFromItem(resultItem);
-        Optional<IDarkSteelUpgrade> upgrade = getUpgradeFromItem(pInv.getItem(1));
+        Optional<IDarkSteelUpgrade> upgrade = getUpgradeFromItem(pContainer.getItem(1));
         return target.map(upgradable -> upgrade.map(up -> DarkSteelUpgradeable.addUpgrade(resultItem, up)).orElse(ItemStack.EMPTY)).orElse(ItemStack.EMPTY);
     }
 
@@ -52,7 +53,7 @@ public class DarkSteelUpgradeRecipe extends UpgradeRecipe {
     }
 
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(RegistryAccess pRegistryAccess) {
         return ItemStack.EMPTY;
     }
 
