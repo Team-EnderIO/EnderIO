@@ -5,7 +5,7 @@ import com.enderio.base.common.block.ResettingLeverBlock;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
 import com.tterrag.registrate.util.entry.BlockEntry;
-import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.advancements.critereon.*;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
@@ -28,8 +28,8 @@ public class BlockRecipes extends RecipeProvider {
     protected void buildRecipes(Consumer<FinishedRecipe> recipeConsumer) {
         addPressurePlateRecipes(recipeConsumer);
         addLeverRecipes(recipeConsumer);
-        addChassisRecipes(recipeConsumer);
         addConstructionBlockRecipes(recipeConsumer);
+        addChassisRecipes(recipeConsumer);
     }
 
     private void addConstructionBlockRecipes(Consumer<FinishedRecipe> recipeConsumer) {

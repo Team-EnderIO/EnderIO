@@ -69,46 +69,46 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
             	output(EIOTags.Items.DUSTS_SULFUR, 1, 0.1f, true)),
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
         
-        build("coal_ore", Ingredient.of(COAL_ORE), List.of(
+        build("coal_ore", Ingredient.of(Tags.Items.ORES_COAL), List.of(
         		output(COAL, 3),
             	output(COAL_POWDER.get(), 0.6f),
             	output(DIAMOND, 0.005f),
             	output(COBBLESTONE, 0.15f)),
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
         
-        build("redstone_ore", Ingredient.of(REDSTONE_ORE), List.of(
+        build("redstone_ore", Ingredient.of(Tags.Items.ORES_REDSTONE), List.of(
         		output(REDSTONE, 8),
             	output(REDSTONE, 0.2f),
             	output(SILICON.get(), 0.8f),
             	output(COBBLESTONE, 0.15f)
             	), BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
         
-        build("diamond_ore", Ingredient.of(DIAMOND_ORE), List.of(
+        build("diamond_ore", Ingredient.of(Tags.Items.ORES_DIAMOND), List.of(
         		output(DIAMOND, 2),
             	output(DIAMOND, 0.25f),
             	output(COAL_POWDER.get(), 0.1f),
         		output(COBBLESTONE, 0.15f)
         		),BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
         
-        build("emerald_ore", Ingredient.of(EMERALD_ORE), List.of(
+        build("emerald_ore", Ingredient.of(Tags.Items.ORES_EMERALD), List.of(
         		output(EMERALD, 2),
             	output(EMERALD, 0.25f),
         		output(COBBLESTONE, 0.15f)
         		),BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
         
-        build("lapis_ore", Ingredient.of(LAPIS_ORE), List.of(
+        build("lapis_ore", Ingredient.of(Tags.Items.ORES_LAPIS), List.of(
         		output(LAPIS_LAZULI, 8),
             	output(LAPIS_LAZULI, 0.2f),
         		output(COBBLESTONE, 0.15f)
         		),BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
         
-        build("quartz_ore", Ingredient.of(NETHER_QUARTZ_ORE), List.of(
+        build("quartz_ore", Ingredient.of(Tags.Items.ORES_QUARTZ), List.of(
         		output(QUARTZ, 2),
             	output(QUARTZ_POWDER.get(), 0.1f),
         		output(NETHERRACK, 0.15f)
         		),BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
         
-        build("quartz", Ingredient.of(QUARTZ), List.of(
+        build("quartz", Ingredient.of(Tags.Items.GEMS_QUARTZ), List.of(
         		output(QUARTZ_POWDER.get(), 1),
             	output(QUARTZ_POWDER.get(), 0.1f)
         		),BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
@@ -283,7 +283,7 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
         build("prismarine_shard", Ingredient.of(PRISMARINE_SHARD), List.of(
         		output(PRISMARINE_CRYSTALS), 
         		output(PRISMARINE_CRYSTALS, 0.1f)),
-        		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
+        		BASE_ENERGY_PER_OPERATION, BonusType.NONE, finishedRecipeConsumer);
         
         build("soularium_block", Ingredient.of(EIOBlocks.SOULARIUM_BLOCK.get()), List.of(
         		output(SOUL_POWDER.get(), 9)

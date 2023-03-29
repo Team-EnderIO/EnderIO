@@ -1,9 +1,0 @@
-{
-  "type": "enderio:enchanting",
-  "amount": 16,
-  "cost_multiplier": 1,
-  "enchantment": "minecraft:blast_protection",
-  "input": {
-    "item": "minecraft:gunpowder"
-  }
-}

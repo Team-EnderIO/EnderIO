@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/door_top_left",
-  "render_type": "minecraft:cutout",
-  "textures": {
-    "bottom": "enderio:block/dark_steel_door_bottom",
-    "top": "enderio:block/dark_steel_door_top"
-  }
-}

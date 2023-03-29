@@ -1,4 +1,0 @@
-{
-  "parent": "minecraft:block/fire_floor1",
-  "render_type": "minecraft:cutout"
-}

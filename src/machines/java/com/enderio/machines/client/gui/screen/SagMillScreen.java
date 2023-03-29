@@ -19,10 +19,12 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class SagMillScreen extends EIOScreen<SagMillMenu> {
     public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/sagmill.png");
@@ -102,8 +104,26 @@ public class SagMillScreen extends EIOScreen<SagMillMenu> {
                 tooltipDataCache = data;
                 tooltipDuraCache = durability;
 
-                setTooltip(Tooltip.create(TooltipUtil.withArgs(MachineLang.SAG_MILL_GRINDINGBALL_TOOLTIP,
-                    (int) (durability * 100), (int) (data.getOutputMultiplier() * 100), (int) (data.getBonusMultiplier() * 100), (int) (data.getPowerUse() * 100))));
+                // Gather all parts of the tooltip
+                List<Component> tooltipComponents = List.of(
+                    TooltipUtil.styledWithArgs(MachineLang.SAG_MILL_GRINDINGBALL_REMAINING, (int) (durability * 100)),
+                    MachineLang.SAG_MILL_GRINDINGBALL_TITLE,
+                    TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_MAIN_OUTPUT, (int) (data.getOutputMultiplier() * 100)),
+                    TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_BONUS_OUTPUT, (int) (data.getBonusMultiplier() * 100)),
+                    TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_POWER_USE, (int) (data.getPowerUse() * 100))
+                );
+
+                // Build single component
+                MutableComponent tooltip = Component.empty().copy();
+                for (int i = 0; i < tooltipComponents.size(); i++) {
+                    tooltip.append(tooltipComponents.get(i));
+
+                    if (i + 1 < tooltipComponents.size())
+                        tooltip.append("\n");
+                }
+
+                // Set for display
+                setTooltip(Tooltip.create(tooltip));
             }
 
             poseStack.popPose();

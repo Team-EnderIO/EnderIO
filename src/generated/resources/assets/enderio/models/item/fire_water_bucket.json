@@ -1,5 +1,0 @@
-{
-  "parent": "forge:item/bucket",
-  "fluid": "enderio:fire_water",
-  "loader": "forge:fluid_container"
-}

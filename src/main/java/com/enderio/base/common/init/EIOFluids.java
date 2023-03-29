@@ -85,8 +85,8 @@ public class EIOFluids {
             EnderIO.loc("block/fluid_" + name + "_flowing"))
             //TODO: fix rendertype on server .renderType(() -> RenderType.translucent())
             .source(ForgeFlowingFluid.Source::new)
-            .block()
-            .build();
+//            .defaultBlock();
+        ;
     }
 
     private static DynamicFluidContainerModelBuilder<ItemModelBuilder> bucketModel(DataGenContext<Item, BucketItem> ctx, RegistrateItemModelProvider prov) {

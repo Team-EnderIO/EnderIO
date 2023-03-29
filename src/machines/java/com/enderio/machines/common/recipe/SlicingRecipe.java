@@ -52,6 +52,10 @@ public class SlicingRecipe implements MachineRecipe<Container> {
         return List.of(OutputStack.of(new ItemStack(output, 1)));
     }
 
+    public List<Ingredient> getInputs() {
+        return List.copyOf(inputs);
+    }
+
     @Override
     public boolean matches(Container container, Level level) {
         for (int i = 0; i < inputs.size(); i++) {
