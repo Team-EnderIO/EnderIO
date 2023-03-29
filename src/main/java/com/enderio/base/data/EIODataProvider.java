@@ -31,6 +31,6 @@ public class EIODataProvider implements DataProvider {
 
     @Override
     public String getName() {
-        return "Data for " + modid;
+        return "Ender IO Data (" + modid + ")";
     }
 }

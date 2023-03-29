@@ -1,0 +1,22 @@
+{
+  "type": "enderio:sagmilling",
+  "energy": 2400,
+  "input": {
+    "item": "minecraft:clay"
+  },
+  "outputs": [
+    {
+      "count": 2,
+      "item": "minecraft:clay_ball"
+    },
+    {
+      "chance": 0.1,
+      "item": "minecraft:clay_ball"
+    },
+    {
+      "chance": 0.8,
+      "count": 2,
+      "item": "enderio:silicon"
+    }
+  ]
+}

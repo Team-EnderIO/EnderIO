@@ -1,0 +1,16 @@
+{
+  "type": "enderio:alloy_smelting",
+  "energy": 5000,
+  "experience": 0.3,
+  "inputs": [
+    {
+      "count": 1,
+      "ingredient": {
+        "tag": "forge:storage_blocks/quartz"
+      }
+    }
+  ],
+  "result": {
+    "item": "enderio:fused_quartz"
+  }
+}

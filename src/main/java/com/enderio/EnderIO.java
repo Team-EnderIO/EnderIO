@@ -103,7 +103,7 @@ public class EnderIO {
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
 
-        EIODataProvider provider = new EIODataProvider(MODID);
+        EIODataProvider provider = new EIODataProvider("base");
 
         provider.addSubProvider(event.includeServer(), new MaterialRecipes(packOutput));
         provider.addSubProvider(event.includeServer(), new BlockRecipes(packOutput));

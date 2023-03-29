@@ -1,0 +1,22 @@
+{
+  "type": "enderio:alloy_smelting",
+  "energy": 10000,
+  "experience": 0.3,
+  "inputs": [
+    {
+      "count": 1,
+      "ingredient": {
+        "tag": "forge:dusts/redstone"
+      }
+    },
+    {
+      "count": 1,
+      "ingredient": {
+        "tag": "forge:silicon"
+      }
+    }
+  ],
+  "result": {
+    "item": "enderio:redstone_alloy_ingot"
+  }
+}

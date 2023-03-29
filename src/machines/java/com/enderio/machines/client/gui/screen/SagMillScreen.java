@@ -70,10 +70,10 @@ public class SagMillScreen extends EIOScreen<SagMillMenu> {
         }
 
         @Override
-        public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+        public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
         @Override
-        public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, SagMillScreen.BG_TEXTURE);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -84,7 +84,7 @@ public class SagMillScreen extends EIOScreen<SagMillMenu> {
             int height = (int) Math.ceil(this.height * durability);
 
             poseStack.pushPose();
-            blit(poseStack, x, y + yOffset, U, V + yOffset, width, height);
+            blit(poseStack, getX(), getY() + yOffset, U, V + yOffset, width, height);
 
             if (this.isHoveredOrFocused()) {
                 this.renderToolTip(poseStack, mouseX, mouseY);
@@ -93,7 +93,8 @@ public class SagMillScreen extends EIOScreen<SagMillMenu> {
             poseStack.popPose();
         }
 
-        @Override
+        // TODO: 1.19.4 new tooltip system
+//        @Override
         public void renderToolTip(PoseStack poseStack, int mouseX, int mouseY) {
             if (isHovered && isActive()) {
                 SagMillBlockEntity be = SagMillScreen.this.getMenu().getBlockEntity();

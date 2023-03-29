@@ -1,0 +1,16 @@
+{
+  "type": "enderio:sagmilling",
+  "energy": 2400,
+  "input": {
+    "item": "minecraft:quartz_slab"
+  },
+  "outputs": [
+    {
+      "item": "minecraft:quartz"
+    },
+    {
+      "chance": 0.25,
+      "item": "minecraft:quartz"
+    }
+  ]
+}

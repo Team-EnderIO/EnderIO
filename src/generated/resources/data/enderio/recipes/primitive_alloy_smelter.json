@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "D": {
+      "item": "minecraft:deepslate"
+    },
+    "F": {
+      "item": "minecraft:furnace"
+    },
+    "G": {
+      "item": "enderio:grains_of_infinity"
+    }
+  },
+  "pattern": [
+    "FFF",
+    "DGD",
+    "DDD"
+  ],
+  "result": {
+    "item": "enderio:primitive_alloy_smelter"
+  },
+  "show_notification": true
+}

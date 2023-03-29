@@ -7,6 +7,7 @@ import com.enderio.machines.common.blockentity.AlloySmelterBlockEntity;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -90,12 +91,12 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
     }
 
     @Override
-    public List<OutputStack> craft(Container container) {
+    public List<OutputStack> craft(Container container, RegistryAccess registryAccess) {
          return List.of(OutputStack.of(output.copy()));
     }
 
     @Override
-    public List<OutputStack> getResultStacks() {
+    public List<OutputStack> getResultStacks(RegistryAccess registryAccess) {
         return List.of(OutputStack.of(output.copy()));
     }
 

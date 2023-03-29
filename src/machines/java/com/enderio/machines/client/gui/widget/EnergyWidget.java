@@ -7,6 +7,7 @@ import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -31,7 +32,7 @@ public class EnergyWidget extends EIOWidget {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         // Don't bother if we have no energy capacity, protects from divide by zero's when there's no capacitor.
         IMachineEnergyStorage storage = storageSupplier.get();
         if (storage.getMaxEnergyStored() <= 0)
@@ -50,7 +51,7 @@ public class EnergyWidget extends EIOWidget {
         for (int i = 0; i < Math.ceil(renderableHeight / 16f); i++) {
             int drawingHeight = Math.min(16, renderableHeight - 16*i);
             int notDrawingHeight = 16 - drawingHeight;
-            blit(poseStack, x, y + notDrawingHeight, displayOn.getBlitOffset(), 0, 128 + notDrawingHeight, width, drawingHeight, 256, 256);
+            blit(poseStack, x, y + notDrawingHeight, 0, 0, 128 + notDrawingHeight, width, drawingHeight, 256, 256); // TODO: 1.19.4: CHeck blit offset
             poseStack.translate(0,-16, 0);
         }
 
@@ -58,6 +59,11 @@ public class EnergyWidget extends EIOWidget {
         poseStack.popPose();
 
         renderToolTip(poseStack, mouseX, mouseY);
+    }
+
+    @Override
+    protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
+
     }
 
     public void renderToolTip(PoseStack poseStack, int mouseX, int mouseY) {

@@ -7,6 +7,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.ResourceLocationException;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
@@ -42,12 +43,12 @@ public class SlicingRecipe implements MachineRecipe<Container> {
     }
 
     @Override
-    public List<OutputStack> craft(Container container) {
-        return getResultStacks();
+    public List<OutputStack> craft(Container container, RegistryAccess registryAccess) {
+        return getResultStacks(registryAccess);
     }
 
     @Override
-    public List<OutputStack> getResultStacks() {
+    public List<OutputStack> getResultStacks(RegistryAccess registryAccess) {
         return List.of(OutputStack.of(new ItemStack(output, 1)));
     }
 

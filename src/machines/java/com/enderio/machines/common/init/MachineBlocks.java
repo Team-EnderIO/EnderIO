@@ -1,7 +1,7 @@
 package com.enderio.machines.common.init;
 
 import com.enderio.EnderIO;
-import com.enderio.base.common.item.EIOCreativeTabs;
+import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.core.data.model.EIOModel;
 import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.block.ProgressMachineBlock;
@@ -9,18 +9,17 @@ import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.item.FluidTankItem;
 import com.enderio.machines.data.loot.MachinesLootTable;
 import com.enderio.machines.data.model.MachineModelUtil;
-import com.mojang.math.Vector3f;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import com.tterrag.registrate.util.entry.BlockEntry;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.predicate.BlockStatePredicate;
+import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.client.model.generators.BlockModelBuilder.RootTransformBuilder.TransformOrigin;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.loaders.CompositeModelBuilder;
+import org.joml.Vector3f;
 
 import java.util.function.Supplier;
 
@@ -40,7 +39,7 @@ public class MachineBlocks {
         ))
         .item(FluidTankItem::new)
         .model((ctx, prov) -> {})
-        .tab(() -> EIOCreativeTabs.MACHINES)
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.MACHINES))
         .build()
         .register();
 
@@ -61,7 +60,7 @@ public class MachineBlocks {
         ))
         .item(FluidTankItem::new)
         .model((ctx, prov) -> {})
-        .tab(() -> EIOCreativeTabs.MACHINES)
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.MACHINES))
         .build()
         .register();
 
@@ -83,7 +82,7 @@ public class MachineBlocks {
             .end()
         ))
         .item()
-        .tab(() -> EIOCreativeTabs.MACHINES)
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.MACHINES))
         .build()
         .register();
 
@@ -106,7 +105,7 @@ public class MachineBlocks {
     public static final BlockEntry<MachineBlock> CREATIVE_POWER = REGISTRATE
         .block("creative_power", props -> new MachineBlock(props, MachineBlockEntities.CREATIVE_POWER))
         .item()
-        .tab(() -> EIOCreativeTabs.MACHINES)
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.MACHINES))
         .build()
         .register();
 
@@ -131,7 +130,7 @@ public class MachineBlocks {
         .loot(MachinesLootTable::copyNBT)
         .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIO.loc("block/vacuum_chest"))))
         .item()
-        .tab(() -> EIOCreativeTabs.MACHINES)
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.MACHINES))
         .build()
         .register();
 
@@ -141,7 +140,7 @@ public class MachineBlocks {
         .loot(MachinesLootTable::copyNBT)
         .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIO.loc("block/xp_vacuum"))))
         .item()
-        .tab(() -> EIOCreativeTabs.MACHINES)
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.MACHINES))
         .build()
         .register();
 
@@ -158,7 +157,7 @@ public class MachineBlocks {
             .loot(MachinesLootTable::copyNBT)
             .blockstate(MachineModelUtil::machineBlock)
             .item()
-            .tab(() -> EIOCreativeTabs.MACHINES)
+            .tab(NonNullSupplier.lazy(EIOCreativeTabs.MACHINES))
             .build();
     }
 
@@ -169,7 +168,7 @@ public class MachineBlocks {
             .loot(MachinesLootTable::copyNBT)
             .blockstate(MachineModelUtil::soulMachineBlock)
             .item()
-            .tab(() -> EIOCreativeTabs.MACHINES)
+            .tab(NonNullSupplier.lazy(EIOCreativeTabs.MACHINES))
             .build();
     }
 
