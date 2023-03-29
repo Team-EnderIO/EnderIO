@@ -15,7 +15,7 @@ import net.minecraft.world.phys.AABB;
 
 import java.util.List;
 
-public class ElectromagnetItem extends PoweredToggledItem implements ITabVariants {
+public class ElectromagnetItem extends PoweredToggledItem {
 
     private static final double COLLISION_DISTANCE_SQ = 1.25 * 1.25;
     private static final double SPEED = 0.035;
@@ -79,11 +79,5 @@ public class ElectromagnetItem extends PoweredToggledItem implements ITabVariant
                 return;
             }
         }
-    }
-
-    @Override
-    public void addAllVariants(CreativeModeTabModifier modifier) {
-        modifier.accept(this);
-        modifier.accept(getCharged(this));
     }
 }

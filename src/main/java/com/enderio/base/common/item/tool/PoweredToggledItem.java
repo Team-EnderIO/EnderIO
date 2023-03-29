@@ -7,8 +7,10 @@ import com.enderio.base.common.capability.Toggled;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.item.IAdvancedTooltipProvider;
+import com.enderio.core.common.item.ITabVariants;
 import com.enderio.core.common.util.EnergyUtil;
 import com.enderio.core.common.util.TooltipUtil;
+import com.tterrag.registrate.util.CreativeModeTabModifier;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -27,7 +29,7 @@ import net.minecraftforge.energy.EnergyStorage;
 import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
-public abstract class PoweredToggledItem extends Item implements IMultiCapabilityItem, IAdvancedTooltipProvider {
+public abstract class PoweredToggledItem extends Item implements IMultiCapabilityItem, IAdvancedTooltipProvider, ITabVariants {
 
     public PoweredToggledItem(Properties pProperties) {
         super(pProperties.stacksTo(1));
@@ -69,6 +71,12 @@ public abstract class PoweredToggledItem extends Item implements IMultiCapabilit
         ItemStack is = new ItemStack(item);
         item.setFullCharge(is);
         return is;
+    }
+
+    @Override
+    public void addAllVariants(CreativeModeTabModifier modifier) {
+        modifier.accept(this);
+        modifier.accept(getCharged(this));
     }
 
     @Override

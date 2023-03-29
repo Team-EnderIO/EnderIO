@@ -353,7 +353,7 @@ public class EIOItems {
 
     public static final ItemEntry<LevitationStaffItem> LEVITATION_STAFF = REGISTRATE
         .item("staff_of_levity", LevitationStaffItem::new)
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR))
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR), modifier -> EIOItems.LEVITATION_STAFF.get().addAllVariants(modifier))
         .register();
 
     public static final ItemEntry<ElectromagnetItem> ELECTROMAGNET = REGISTRATE
@@ -403,61 +403,61 @@ public class EIOItems {
     public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_1 = REGISTRATE
         .item("dark_steel_upgrade_empowered_1",
             properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgradeTier.ONE.getActivationCost(), EmpoweredUpgradeTier.ONE.getFactory()))
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR))
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR), modifier -> EIOItems.DARK_STEEL_UPGRADE_EMPOWERED_1.get().addAllVariants(modifier))
         .lang("Empowered" + UPGRADE_TEXT)
         .register();
 
     public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_2 = REGISTRATE
         .item("dark_steel_upgrade_empowered_2",
             properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgradeTier.TWO.getActivationCost(), EmpoweredUpgradeTier.TWO.getFactory()))
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR))
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR), modifier -> EIOItems.DARK_STEEL_UPGRADE_EMPOWERED_2.get().addAllVariants(modifier))
         .lang("Empowered II" + UPGRADE_TEXT)
         .register();
 
     public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_3 = REGISTRATE
         .item("dark_steel_upgrade_empowered_3", 
             properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgradeTier.THREE.getActivationCost(), EmpoweredUpgradeTier.THREE.getFactory()))
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR))
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR), modifier -> EIOItems.DARK_STEEL_UPGRADE_EMPOWERED_3.get().addAllVariants(modifier))
         .lang("Empowered III" + UPGRADE_TEXT)
         .register();
 
     public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_4 = REGISTRATE
         .item("dark_steel_upgrade_empowered_4", 
             properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgradeTier.FOUR.getActivationCost(), EmpoweredUpgradeTier.FOUR.getFactory()))
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR))
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR), modifier -> EIOItems.DARK_STEEL_UPGRADE_EMPOWERED_4.get().addAllVariants(modifier))
         .lang("Empowered IV" + UPGRADE_TEXT)
         .register();
 
     public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_SPOON = REGISTRATE
         .item("dark_steel_upgrade_spoon", properties -> new DarkSteelUpgradeItem(properties, BaseConfig.COMMON.DARK_STEEL.SPOON_ACTIVATION_COST, SpoonUpgrade::new))
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR))
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR), modifier -> EIOItems.DARK_STEEL_UPGRADE_SPOON.get().addAllVariants(modifier))
         .lang("Spoon" + UPGRADE_TEXT)
         .register();
 
     public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_FORK = REGISTRATE
         .item("dark_steel_upgrade_fork", properties -> new DarkSteelUpgradeItem(properties, BaseConfig.COMMON.DARK_STEEL.FORK_ACTIVATION_COST, ForkUpgrade::new))
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR))
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR), modifier -> EIOItems.DARK_STEEL_UPGRADE_FORK.get().addAllVariants(modifier))
         .lang("Fork" + UPGRADE_TEXT)
         .register();
 
     public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_DIRECT = REGISTRATE
         .item("dark_steel_upgrade_direct",
             properties -> new DarkSteelUpgradeItem(properties, BaseConfig.COMMON.DARK_STEEL.DIRECT_ACTIVATION_COST, DirectUpgrade::new))
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR))
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR), modifier -> EIOItems.DARK_STEEL_UPGRADE_DIRECT.get().addAllVariants(modifier))
         .lang("Direct" + UPGRADE_TEXT)
         .register();
 
     public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_1 = REGISTRATE
         .item("dark_steel_upgrade_tnt", properties -> new DarkSteelUpgradeItem(properties, ExplosiveUpgradeTier.ONE.getActivationCost(),
             ExplosiveUpgradeTier.ONE.getFactory()))
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR))
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR), modifier -> EIOItems.DARK_STEEL_UPGRADE_EXPLOSIVE_1.get().addAllVariants(modifier))
         .lang("Explosive I" + UPGRADE_TEXT)
         .register();
 
     public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_2 = REGISTRATE
         .item("dark_steel_upgrade_tnt1", properties -> new DarkSteelUpgradeItem(properties, ExplosiveUpgradeTier.TWO.getActivationCost(),
             ExplosiveUpgradeTier.TWO.getFactory()))
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR))
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR), modifier -> EIOItems.DARK_STEEL_UPGRADE_EXPLOSIVE_2.get().addAllVariants(modifier))
         .lang("Explosive II" + UPGRADE_TEXT)
         .register();
 
@@ -465,14 +465,14 @@ public class EIOItems {
     public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_1 = REGISTRATE
         .item("dark_steel_upgrade_penetration_1", properties -> new DarkSteelUpgradeItem(properties, ExplosivePenetrationUpgradeTier.ONE.getActivationCost(),
             ExplosivePenetrationUpgradeTier.ONE.getFactory()))
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR))
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR), modifier -> EIOItems.DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_1.get().addAllVariants(modifier))
         .lang("Explosive Penetration I" + UPGRADE_TEXT)
         .register();
 
     public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_2 = REGISTRATE
         .item("dark_steel_upgrade_penetration_2", properties -> new DarkSteelUpgradeItem(properties, ExplosivePenetrationUpgradeTier.TWO.getActivationCost(),
             ExplosivePenetrationUpgradeTier.TWO.getFactory()))
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR))
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR), modifier -> EIOItems.DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_2.get().addAllVariants(modifier))
         .lang("Explosive Penetration II" + UPGRADE_TEXT)
         .register();
 

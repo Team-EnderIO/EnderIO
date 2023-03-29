@@ -4,7 +4,9 @@ import com.enderio.api.capability.IDarkSteelUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.item.IAdvancedTooltipProvider;
+import com.enderio.core.common.item.ITabVariants;
 import com.enderio.core.common.util.TooltipUtil;
+import com.tterrag.registrate.util.CreativeModeTabModifier;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
@@ -25,7 +27,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Supplier;
 
-public class DarkSteelUpgradeItem extends Item implements IAdvancedTooltipProvider {
+public class DarkSteelUpgradeItem extends Item implements IAdvancedTooltipProvider, ITabVariants {
 
     private final ForgeConfigSpec.ConfigValue<Integer> levelsRequired;
 
@@ -42,18 +44,14 @@ public class DarkSteelUpgradeItem extends Item implements IAdvancedTooltipProvid
         return DarkSteelUpgradeRegistry.instance().hasUpgrade(pStack);
     }
 
-    // TODO: 1.19.4: new item groups
+    @Override
+    public void addAllVariants(CreativeModeTabModifier modifier) {
+        modifier.accept(this);
 
-//    @Override
-//    public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {
-//        if (allowedIn(pCategory)) {
-//            ItemStack is = new ItemStack(this);
-//            pItems.add(is.copy());
-//
-//            DarkSteelUpgradeRegistry.instance().writeUpgradeToItemStack(is, upgrade.get());
-//            pItems.add(is);
-//        }
-//    }
+        ItemStack is = new ItemStack(this);
+        DarkSteelUpgradeRegistry.instance().writeUpgradeToItemStack(is, upgrade.get());
+        modifier.accept(is);
+    }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
