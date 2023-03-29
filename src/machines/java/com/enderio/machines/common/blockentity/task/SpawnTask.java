@@ -3,7 +3,7 @@ package com.enderio.machines.common.blockentity.task;
 import com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
-import com.enderio.machines.data.PoweredSpawnerSoul;
+import com.enderio.machines.common.souldata.PoweredSpawnerSoul;
 import com.mojang.serialization.DataResult;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
