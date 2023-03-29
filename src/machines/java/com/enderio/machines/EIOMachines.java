@@ -7,7 +7,10 @@ import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.init.MachineMenus;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.lang.MachineLang;
+import com.enderio.machines.common.network.PoweredSpawnerSoulPacket;
+import com.enderio.machines.common.souldata.PoweredSpawnerSoul;
 import com.enderio.machines.data.recipes.*;
+import com.enderio.machines.data.souldata.SoulDataProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -31,6 +34,8 @@ public class EIOMachines {
         MachineMenus.register();
         MachineLang.register();
         MachineRecipes.register();
+
+        PoweredSpawnerSoul.SPAWNER.subscribeAsSyncable(PoweredSpawnerSoulPacket::new);
     }
 
     @SubscribeEvent
@@ -42,6 +47,7 @@ public class EIOMachines {
         generator.addProvider(event.includeServer(), new SagMillRecipeProvider(generator));
         generator.addProvider(event.includeServer(), new SlicingRecipeProvider(generator));
         generator.addProvider(event.includeServer(), new SoulBindingRecipeProvider(generator));
+        generator.addProvider(event.includeServer(), new SoulDataProvider(generator));
 
     }
 }

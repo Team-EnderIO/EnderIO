@@ -1,4 +1,4 @@
-package com.enderio.machines.data;
+package com.enderio.machines.common.souldata;
 
 import com.enderio.core.data.CodecReloadListner;
 import com.enderio.machines.common.blockentity.task.SpawnTask;
@@ -16,7 +16,7 @@ public class PoweredSpawnerSoul {
 
     public record SoulData(ResourceLocation entitytype, int power, SpawnTask.SpawnType spawnType) {}
 
-    private static final Codec<SoulData> CODEC = RecordCodecBuilder.create(soulDataInstance ->
+    public static final Codec<SoulData> CODEC = RecordCodecBuilder.create(soulDataInstance ->
         soulDataInstance.group(ResourceLocation.CODEC.fieldOf("entity").forGetter(SoulData::entitytype),
             Codec.INT.optionalFieldOf("power", 40000).forGetter(SoulData::power),
             Codec.STRING.comapFlatMap(SpawnTask.SpawnType::byName, SpawnTask.SpawnType::name).stable().fieldOf("type").forGetter(SoulData::spawnType))

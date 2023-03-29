@@ -21,6 +21,8 @@ SOFTWARE.
 package com.enderio.core.data;
 
 import com.enderio.core.EnderCore;
+import com.enderio.core.common.network.CoreNetwork;
+import com.enderio.core.common.network.Packet;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.Codec;
@@ -33,7 +35,6 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.network.simple.SimpleChannel;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -98,25 +99,24 @@ public class CodecReloadListner<T> extends SimpleJsonResourceReloadListener {
     /**
      * This should be called at most once, during construction of your mod (static init of your main mod class is fine)
      * Calling this method automatically subscribes a packet-sender to {@link OnDatapackSyncEvent}.
-     * @param <PACKET> the packet type that will be sent on the given channel
-     * @param channel The networking channel of your mod
+     * @param <P> the packet type that will be sent on the given channel
      * @param packetFactory  A packet constructor or factory method that converts the given map to a packet object to send on the given channel
      * @return this manager object
      */
-    public <PACKET> CodecReloadListner<T> subscribeAsSyncable(final SimpleChannel channel,  final Function<Map<ResourceLocation, T>, PACKET> packetFactory) {
-        MinecraftForge.EVENT_BUS.addListener(this.getDatapackSyncListener(channel, packetFactory));
+    public <P extends Packet> CodecReloadListner<T> subscribeAsSyncable(final Function<Map<ResourceLocation, T>, P> packetFactory) {
+        MinecraftForge.EVENT_BUS.addListener(this.getDatapackSyncListener(packetFactory));
         return this;
     }
 
     /** Generate an event listener function for the on-datapack-sync event **/
-    private <PACKET> Consumer<OnDatapackSyncEvent> getDatapackSyncListener(final SimpleChannel channel, final Function<Map<ResourceLocation, T>, PACKET> packetFactory) {
+    private <P extends Packet> Consumer<OnDatapackSyncEvent> getDatapackSyncListener(final Function<Map<ResourceLocation, T>, P> packetFactory) {
         return event -> {
             ServerPlayer player = event.getPlayer();
-            PACKET packet = packetFactory.apply(this.map);
+            P packet = packetFactory.apply(this.map);
             PacketDistributor.PacketTarget target = player == null
                 ? PacketDistributor.ALL.noArg()
                 : PacketDistributor.PLAYER.with(() -> player);
-            channel.send(target, packet);
+            CoreNetwork.send(target, packet);
         };
     }
 
