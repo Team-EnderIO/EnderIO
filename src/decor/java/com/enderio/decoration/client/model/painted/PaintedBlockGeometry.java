@@ -35,16 +35,17 @@ public class PaintedBlockGeometry implements IUnbakedGeometry<PaintedBlockGeomet
     }
 
     @Override
-    public BakedModel bake(IGeometryBakingContext context, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform,
+    public BakedModel bake(IGeometryBakingContext context, ModelBaker baker, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState,
         ItemOverrides overrides, ResourceLocation modelLocation) {
         return new PaintedBlockModel(reference, rotateItemTo);
     }
 
-    @Override
-    public Collection<Material> getMaterials(IGeometryBakingContext context, Function<ResourceLocation, UnbakedModel> modelGetter,
-        Set<Pair<String, String>> missingTextureErrors) {
-        return Collections.singletonList(new Material(TextureAtlas.LOCATION_BLOCKS, new ResourceLocation("minecraft", "missingno")));
-    }
+    // TODO: 1.19.4 models
+    //    @Override
+//    public Collection<Material> getMaterials(IGeometryBakingContext context, Function<ResourceLocation, UnbakedModel> modelGetter,
+//        Set<Pair<String, String>> missingTextureErrors) {
+//        return Collections.singletonList(new Material(TextureAtlas.LOCATION_BLOCKS, new ResourceLocation("minecraft", "missingno")));
+//    }
 
     public static class Loader implements IGeometryLoader<PaintedBlockGeometry> {
         @Override

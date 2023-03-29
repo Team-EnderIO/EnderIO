@@ -7,12 +7,13 @@ import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 import org.jetbrains.annotations.Nullable;
 
 public class PaintedTrapDoorBlock extends TrapDoorBlock implements EntityBlock, IPaintedBlock {
 
     public PaintedTrapDoorBlock(Properties properties) {
-        super(properties);
+        super(properties, BlockSetType.OAK); // TODO: 1.19.4 Sensible?
     }
 
     @Nullable
