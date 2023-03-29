@@ -1,0 +1,21 @@
+{
+  "type": "enderio:sagmilling",
+  "energy": 2400,
+  "input": {
+    "tag": "forge:ores/emerald"
+  },
+  "outputs": [
+    {
+      "count": 2,
+      "item": "minecraft:emerald"
+    },
+    {
+      "chance": 0.25,
+      "item": "minecraft:emerald"
+    },
+    {
+      "chance": 0.15,
+      "item": "minecraft:cobblestone"
+    }
+  ]
+}

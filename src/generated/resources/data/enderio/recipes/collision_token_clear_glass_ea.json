@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "G": {
+      "item": "enderio:clear_glass_e"
+    },
+    "T": {
+      "item": "enderio:animal_token"
+    }
+  },
+  "pattern": [
+    "GGG",
+    "GTG",
+    "GGG"
+  ],
+  "result": {
+    "count": 8,
+    "item": "enderio:clear_glass_ea"
+  },
+  "show_notification": true
+}

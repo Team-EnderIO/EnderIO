@@ -1,0 +1,9 @@
+{
+  "type": "enderio:enchanting",
+  "amount": 4,
+  "cost_multiplier": 2,
+  "enchantment": "enderio:repellent",
+  "input": {
+    "item": "minecraft:ender_pearl"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "forge:item/bucket",
+  "flip_gas": true,
+  "fluid": "enderio:vapor_of_levity",
+  "loader": "forge:fluid_container"
+}

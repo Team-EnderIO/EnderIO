@@ -1,0 +1,5 @@
+{
+  "parent": "forge:item/bucket",
+  "fluid": "enderio:nutrient_distillation",
+  "loader": "forge:fluid_container"
+}

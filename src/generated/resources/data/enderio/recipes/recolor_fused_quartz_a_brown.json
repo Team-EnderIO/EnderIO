@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "tag": "enderio:fused_quartz_a"
+    },
+    {
+      "tag": "enderio:fused_quartz_a"
+    },
+    {
+      "tag": "enderio:fused_quartz_a"
+    },
+    {
+      "tag": "enderio:fused_quartz_a"
+    },
+    {
+      "tag": "enderio:fused_quartz_a"
+    },
+    {
+      "tag": "enderio:fused_quartz_a"
+    },
+    {
+      "tag": "enderio:fused_quartz_a"
+    },
+    {
+      "tag": "enderio:fused_quartz_a"
+    },
+    {
+      "tag": "forge:dyes/brown"
+    }
+  ],
+  "result": {
+    "count": 8,
+    "item": "enderio:fused_quartz_a_brown"
+  }
+}

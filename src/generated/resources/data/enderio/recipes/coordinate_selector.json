@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "C": {
+      "item": "minecraft:compass"
+    },
+    "E": {
+      "tag": "forge:ender_pearls"
+    },
+    "I": {
+      "item": "enderio:copper_alloy_ingot"
+    }
+  },
+  "pattern": [
+    "IEI",
+    " CI",
+    "  I"
+  ],
+  "result": {
+    "item": "enderio:coordinate_selector"
+  },
+  "show_notification": true
+}

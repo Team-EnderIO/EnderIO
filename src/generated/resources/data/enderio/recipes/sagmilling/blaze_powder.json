@@ -1,0 +1,13 @@
+{
+  "type": "enderio:sagmilling",
+  "energy": 2400,
+  "input": {
+    "item": "minecraft:blaze_rod"
+  },
+  "outputs": [
+    {
+      "count": 4,
+      "item": "minecraft:blaze_powder"
+    }
+  ]
+}

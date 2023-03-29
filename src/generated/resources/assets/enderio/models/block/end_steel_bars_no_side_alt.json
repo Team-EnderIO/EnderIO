@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_glass_pane_noside_alt",
+  "render_type": "minecraft:cutout_mipped",
+  "textures": {
+    "pane": "enderio:block/end_steel_bars"
+  }
+}

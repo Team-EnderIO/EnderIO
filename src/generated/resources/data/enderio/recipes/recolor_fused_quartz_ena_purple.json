@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "tag": "enderio:fused_quartz_ena"
+    },
+    {
+      "tag": "enderio:fused_quartz_ena"
+    },
+    {
+      "tag": "enderio:fused_quartz_ena"
+    },
+    {
+      "tag": "enderio:fused_quartz_ena"
+    },
+    {
+      "tag": "enderio:fused_quartz_ena"
+    },
+    {
+      "tag": "enderio:fused_quartz_ena"
+    },
+    {
+      "tag": "enderio:fused_quartz_ena"
+    },
+    {
+      "tag": "enderio:fused_quartz_ena"
+    },
+    {
+      "tag": "forge:dyes/purple"
+    }
+  ],
+  "result": {
+    "count": 8,
+    "item": "enderio:fused_quartz_ena_purple"
+  }
+}

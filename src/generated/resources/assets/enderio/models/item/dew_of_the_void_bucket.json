@@ -1,0 +1,5 @@
+{
+  "parent": "forge:item/bucket",
+  "fluid": "enderio:dew_of_the_void",
+  "loader": "forge:fluid_container"
+}

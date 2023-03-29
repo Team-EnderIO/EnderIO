@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "tag": "enderio:clear_glass_em"
+    },
+    {
+      "tag": "enderio:clear_glass_em"
+    },
+    {
+      "tag": "enderio:clear_glass_em"
+    },
+    {
+      "tag": "enderio:clear_glass_em"
+    },
+    {
+      "tag": "enderio:clear_glass_em"
+    },
+    {
+      "tag": "enderio:clear_glass_em"
+    },
+    {
+      "tag": "enderio:clear_glass_em"
+    },
+    {
+      "tag": "enderio:clear_glass_em"
+    },
+    {
+      "tag": "forge:dyes/lime"
+    }
+  ],
+  "result": {
+    "count": 8,
+    "item": "enderio:clear_glass_em_lime"
+  }
+}

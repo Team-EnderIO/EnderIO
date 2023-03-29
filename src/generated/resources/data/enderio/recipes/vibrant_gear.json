@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": {
+      "item": "enderio:energized_gear"
+    },
+    "I": {
+      "item": "enderio:vibrant_alloy_ingot"
+    },
+    "N": {
+      "item": "enderio:vibrant_alloy_nugget"
+    }
+  },
+  "pattern": [
+    "NIN",
+    "IGI",
+    "NIN"
+  ],
+  "result": {
+    "item": "enderio:vibrant_gear"
+  },
+  "show_notification": true
+}

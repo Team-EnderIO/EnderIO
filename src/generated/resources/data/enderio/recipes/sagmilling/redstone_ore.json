@@ -1,0 +1,25 @@
+{
+  "type": "enderio:sagmilling",
+  "energy": 2400,
+  "input": {
+    "tag": "forge:ores/redstone"
+  },
+  "outputs": [
+    {
+      "count": 8,
+      "item": "minecraft:redstone"
+    },
+    {
+      "chance": 0.2,
+      "item": "minecraft:redstone"
+    },
+    {
+      "chance": 0.8,
+      "item": "enderio:silicon"
+    },
+    {
+      "chance": 0.15,
+      "item": "minecraft:cobblestone"
+    }
+  ]
+}

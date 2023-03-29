@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "enderio:energetic_alloy_block"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "item": "enderio:energetic_alloy_ingot"
+  }
+}

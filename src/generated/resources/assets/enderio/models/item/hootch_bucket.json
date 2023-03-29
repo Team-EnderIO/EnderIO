@@ -1,0 +1,5 @@
+{
+  "parent": "forge:item/bucket",
+  "fluid": "enderio:hootch",
+  "loader": "forge:fluid_container"
+}

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "G": {
+      "item": "enderio:stone_gear"
+    },
+    "I": {
+      "item": "enderio:copper_alloy_ingot"
+    }
+  },
+  "pattern": [
+    "I I",
+    " G ",
+    " I "
+  ],
+  "result": {
+    "item": "enderio:yeta_wrench"
+  },
+  "show_notification": true
+}

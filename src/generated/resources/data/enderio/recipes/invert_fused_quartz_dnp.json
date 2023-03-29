@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "G": {
+      "item": "enderio:fused_quartz_dnp"
+    },
+    "T": {
+      "item": "minecraft:redstone_torch"
+    }
+  },
+  "pattern": [
+    "GGG",
+    "GTG",
+    "GGG"
+  ],
+  "result": {
+    "count": 8,
+    "item": "enderio:fused_quartz_dnp"
+  },
+  "show_notification": true
+}

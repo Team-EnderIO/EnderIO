@@ -1,0 +1,5 @@
+{
+  "parent": "forge:item/bucket",
+  "fluid": "enderio:cloud_seed",
+  "loader": "forge:fluid_container"
+}

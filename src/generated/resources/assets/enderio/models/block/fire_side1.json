@@ -1,0 +1,4 @@
+{
+  "parent": "minecraft:block/fire_side1",
+  "render_type": "minecraft:cutout"
+}

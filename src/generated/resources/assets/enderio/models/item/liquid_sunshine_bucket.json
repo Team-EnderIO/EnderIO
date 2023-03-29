@@ -1,0 +1,5 @@
+{
+  "parent": "forge:item/bucket",
+  "fluid": "enderio:liquid_sunshine",
+  "loader": "forge:fluid_container"
+}

@@ -1,0 +1,25 @@
+{
+  "type": "enderio:sagmilling",
+  "energy": 2400,
+  "input": {
+    "tag": "forge:ores/diamond"
+  },
+  "outputs": [
+    {
+      "count": 2,
+      "item": "minecraft:diamond"
+    },
+    {
+      "chance": 0.25,
+      "item": "minecraft:diamond"
+    },
+    {
+      "chance": 0.1,
+      "item": "enderio:coal_powder"
+    },
+    {
+      "chance": 0.15,
+      "item": "minecraft:cobblestone"
+    }
+  ]
+}
