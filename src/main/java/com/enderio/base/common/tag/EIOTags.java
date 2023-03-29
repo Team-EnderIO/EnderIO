@@ -30,6 +30,7 @@ public class EIOTags {
         private static void init() {}
     
         public static final TagKey<Item> WRENCH = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "tools/wrench"));
+        public static final TagKey<Item> GLIDER = ItemTags.create(EnderIO.loc("tools/glider"));
 
         public static final TagKey<Item> DUSTS_LAPIS = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "dusts/lapis"));
         public static final TagKey<Item> DUSTS_COAL = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "dusts/coal"));

@@ -21,7 +21,7 @@ public class SingleSlotAccess {
         return inventory.insertItem(index, itemStack, simulate);
     }
     public ItemStack insertItem(MachineBlockEntity machine, ItemStack itemStack, boolean simulate) {
-        return insertItem(machine, itemStack, simulate);
+        return insertItem(machine.getInventory(), itemStack, simulate);
     }
     public void setStackInSlot(MachineInventory inventory, ItemStack itemStack) {
         inventory.setStackInSlot(index, itemStack);
