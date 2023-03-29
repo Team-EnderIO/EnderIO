@@ -38,7 +38,7 @@ public class MachineBlockEntities {
         ZombieGeneratorBlockEntity.FrankenZombieGeneratorBlockEntity::new, MachineBlocks.FRANKEN_ZOMBIE_GENERATOR);
 
     public static final BlockEntityEntry<ZombieGeneratorBlockEntity.EnderGeneratorBlockEntity> ENDER_GENERATOR = register("ender_generator",
-        ZombieGeneratorBlockEntity.FrankenZombieGeneratorBlockEntity.EnderGeneratorBlockEntity::new, MachineBlocks.ENDER_GENERATOR);
+        ZombieGeneratorBlockEntity.EnderGeneratorBlockEntity::new, MachineBlocks.ENDER_GENERATOR);
     public static final BlockEntityEntry<SagMillBlockEntity> SAG_MILL = register("sag_mill", SagMillBlockEntity::new, MachineBlocks.SAG_MILL);
 
     public static final BlockEntityEntry<SlicerBlockEntity> SLICE_AND_SPLICE = register("slice_and_splice", SlicerBlockEntity::new,
