@@ -15,8 +15,11 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.network.chat.Component;
 
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -114,20 +117,27 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
         return index / ELEMENTS_IN_ROW;
     }
 
+    @Nullable
+    private T tooltipDisplayCache;
+
     @Override
     public void renderWidget(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
         T icon = getter.get();
         addedOn.renderIconBackground(pPoseStack, new Vector2i(getX(), getY()), icon);
         IEnderScreen.renderIcon(pPoseStack, new Vector2i(getX(), getY()).expand(1), icon);
-        renderToolTip(pPoseStack, pMouseX, pMouseY);
+
+        if (isHoveredOrFocused() && tooltipDisplayCache != getter.get()) {
+            // Cache the last value of the tooltip so we don't append strings over and over.
+            tooltipDisplayCache = getter.get();
+
+            // Update tooltip
+            setTooltip(Tooltip.create(optionName.copy().append("\n").append(getter.get().getTooltip().copy().withStyle(ChatFormatting.GRAY))));
+        }
     }
 
-    // TODO: 1.19.4: Convert to deferred tooltips
-//    @Override
-    public void renderToolTip(PoseStack poseStack, int mouseX, int mouseY) {
-        if (isHovered && isActive()) {
-            addedOn.renderTooltip(poseStack, List.of(optionName, getter.get().getTooltip().copy().withStyle(ChatFormatting.GRAY)), Optional.empty(), mouseX, mouseY);
-        }
+    @Override
+    protected ClientTooltipPositioner createTooltipPositioner() {
+        return DefaultTooltipPositioner.INSTANCE;
     }
 
     @Override

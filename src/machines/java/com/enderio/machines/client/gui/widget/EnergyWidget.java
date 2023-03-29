@@ -51,7 +51,7 @@ public class EnergyWidget extends EIOWidget {
         for (int i = 0; i < Math.ceil(renderableHeight / 16f); i++) {
             int drawingHeight = Math.min(16, renderableHeight - 16*i);
             int notDrawingHeight = 16 - drawingHeight;
-            blit(poseStack, x, y + notDrawingHeight, 0, 0, 128 + notDrawingHeight, width, drawingHeight, 256, 256); // TODO: 1.19.4: CHeck blit offset
+            blit(poseStack, x, y + notDrawingHeight, 0, 0, 128 + notDrawingHeight, width, drawingHeight, 256, 256);
             poseStack.translate(0,-16, 0);
         }
 

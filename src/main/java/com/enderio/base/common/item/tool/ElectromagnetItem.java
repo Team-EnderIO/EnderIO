@@ -3,6 +3,8 @@ package com.enderio.base.common.item.tool;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.AttractionUtil;
+import com.enderio.core.common.item.ITabVariants;
+import com.tterrag.registrate.util.CreativeModeTabModifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -13,7 +15,7 @@ import net.minecraft.world.phys.AABB;
 
 import java.util.List;
 
-public class ElectromagnetItem extends PoweredToggledItem {
+public class ElectromagnetItem extends PoweredToggledItem implements ITabVariants {
 
     private static final double COLLISION_DISTANCE_SQ = 1.25 * 1.25;
     private static final double SPEED = 0.035;
@@ -79,4 +81,9 @@ public class ElectromagnetItem extends PoweredToggledItem {
         }
     }
 
+    @Override
+    public void addAllVariants(CreativeModeTabModifier modifier) {
+        modifier.accept(this);
+        modifier.accept(getCharged(this));
+    }
 }

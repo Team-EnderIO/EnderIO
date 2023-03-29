@@ -358,16 +358,13 @@ public class EIOItems {
 
     public static final ItemEntry<ElectromagnetItem> ELECTROMAGNET = REGISTRATE
         .item("electromagnet", ElectromagnetItem::new)
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR), modifier -> {
-            modifier.accept(EIOItems.ELECTROMAGNET.get());
-            modifier.accept(PoweredToggledItem.getCharged(EIOItems.ELECTROMAGNET.get()));
-        })
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR), modifier -> EIOItems.ELECTROMAGNET.get().addAllVariants(modifier))
         .register();
 
     public static final ItemEntry<ColdFireIgniter> COLD_FIRE_IGNITER = REGISTRATE
         .item("cold_fire_igniter", ColdFireIgniter::new)
         .defaultModel()
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR))
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR), modifier -> EIOItems.COLD_FIRE_IGNITER.get().addAllVariants(modifier)) // TODO: Might PR this to Registrate so its nicer, but I like the footprint.
         .register();
 
     // endregion
@@ -380,10 +377,7 @@ public class EIOItems {
 
     public static final ItemEntry<DarkSteelPickaxeItem> DARK_STEEL_PICKAXE = REGISTRATE
         .item("dark_steel_pickaxe", DarkSteelPickaxeItem::new)
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR), modifier -> {
-            var i = EIOItems.DARK_STEEL_PICKAXE.get();
-            modifier.acceptAll(i.getCreativeItems(i));
-        })
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR), modifier -> EIOItems.DARK_STEEL_PICKAXE.get().addAllVariants(modifier))
         .onRegister(item -> DarkSteelUpgradeRegistry
             .instance()
             .addUpgradesForItem(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)), EmpoweredUpgrade.NAME, SpoonUpgrade.NAME, DirectUpgrade.NAME,
@@ -392,10 +386,7 @@ public class EIOItems {
 
     public static final ItemEntry<DarkSteelAxeItem> DARK_STEEL_AXE = REGISTRATE
         .item("dark_steel_axe", DarkSteelAxeItem::new)
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR), modifier -> {
-            var i = EIOItems.DARK_STEEL_AXE.get();
-            modifier.acceptAll(i.getCreativeItems(i));
-        })
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR), modifier -> EIOItems.DARK_STEEL_AXE.get().addAllVariants(modifier))
         .onRegister(item -> DarkSteelUpgradeRegistry
             .instance()
             .addUpgradesForItem(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)), EmpoweredUpgrade.NAME, ForkUpgrade.NAME, DirectUpgrade.NAME))

@@ -75,7 +75,6 @@ public class ModelRenderUtil {
         float ny = (float) normal.y;
         float nz = (float) normal.z;
 
-        // TODO: 1.19.4: Use of contents may be wrong across the codebase...
         int tw = sprite.contents().width();
         int th = sprite.contents().height();
 

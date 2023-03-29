@@ -6,12 +6,16 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
+import javax.annotation.Nullable;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -53,6 +57,9 @@ public class ToggleImageButton<U extends Screen & IEnderScreen> extends Abstract
         this.tooltip = tooltip;
     }
 
+    @Nullable
+    private Component tooltipCache;
+
     @Override
     public void renderWidget(PoseStack pPoseStack, int pMouseX, int pMouseY, float partialTick) {
         Vector2i pos = new Vector2i(getX(), getY());
@@ -72,15 +79,17 @@ public class ToggleImageButton<U extends Screen & IEnderScreen> extends Abstract
         RenderSystem.enableDepthTest();
         blit(pPoseStack, getX(), getY(), (float) xTex, (float) yTex, this.width, this.height, this.textureWidth, this.textureHeight);
 
-        if (this.isHovered) {
-            renderToolTip(pPoseStack, pMouseX, pMouseY);
+        if (this.isHovered && tooltipCache != tooltip.get()) {
+
+            tooltipCache = tooltip.get();
+
+            setTooltip(Tooltip.create(this.tooltip.get().copy().withStyle(ChatFormatting.WHITE)));
         }
     }
 
-    // TODO: 1.19.4: Convert to deferred tooltips
-//    @Override
-    public void renderToolTip(PoseStack poseStack, int mouseX, int mouseY) {
-        addedOn.renderTooltip(poseStack, this.tooltip.get().copy().withStyle(ChatFormatting.WHITE), mouseX, mouseY);
+    @Override
+    protected ClientTooltipPositioner createTooltipPositioner() {
+        return DefaultTooltipPositioner.INSTANCE;
     }
 
     @Override

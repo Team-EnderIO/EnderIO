@@ -40,13 +40,6 @@ public class PaintedBlockGeometry implements IUnbakedGeometry<PaintedBlockGeomet
         return new PaintedBlockModel(reference, rotateItemTo);
     }
 
-    // TODO: 1.19.4 models
-    //    @Override
-//    public Collection<Material> getMaterials(IGeometryBakingContext context, Function<ResourceLocation, UnbakedModel> modelGetter,
-//        Set<Pair<String, String>> missingTextureErrors) {
-//        return Collections.singletonList(new Material(TextureAtlas.LOCATION_BLOCKS, new ResourceLocation("minecraft", "missingno")));
-//    }
-
     public static class Loader implements IGeometryLoader<PaintedBlockGeometry> {
         @Override
         public PaintedBlockGeometry read(JsonObject jsonObject, JsonDeserializationContext deserializationContext) throws JsonParseException {

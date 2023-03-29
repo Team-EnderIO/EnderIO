@@ -129,18 +129,6 @@ public class IOOverlayBakedModel implements IDynamicBakedModel {
             ItemOverrides overrides, ResourceLocation modelLocation) {
             return new IOOverlayBakedModel(modelState);
         }
-
-        // TODO: 1.19.4. Do we need this?
-//        @Override
-//        public Collection<Material> getMaterials(IGeometryBakingContext context, Function<ResourceLocation, UnbakedModel> modelGetter,
-//            Set<Pair<String, String>> missingTextureErrors) {
-//            return List.of(
-//                new Material(InventoryMenu.BLOCK_ATLAS, EnderIO.loc("block/overlay/disabled")),
-//                new Material(InventoryMenu.BLOCK_ATLAS, EnderIO.loc("block/overlay/pull")),
-//                new Material(InventoryMenu.BLOCK_ATLAS, EnderIO.loc("block/overlay/push")),
-//                new Material(InventoryMenu.BLOCK_ATLAS, EnderIO.loc("block/overlay/push_pull"))
-//            );
-//        }
     }
 
     public static class Loader implements IGeometryLoader<Geometry> {
