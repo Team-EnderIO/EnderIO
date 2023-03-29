@@ -1,0 +1,8 @@
+{
+  "type": "enderio:grinding_ball",
+  "chance": 1.65,
+  "durability": 40000,
+  "grinding": 1.2,
+  "item": "enderio:copper_alloy_grinding_ball",
+  "power": 0.8
+}

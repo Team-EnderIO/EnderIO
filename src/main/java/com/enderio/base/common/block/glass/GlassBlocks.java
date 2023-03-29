@@ -1,7 +1,7 @@
 package com.enderio.base.common.block.glass;
 
 import com.enderio.EnderIO;
-import com.enderio.base.common.item.EIOCreativeTabs;
+import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.base.common.tag.EIOTags;
 import com.google.common.collect.ImmutableMap;
 import com.tterrag.registrate.Registrate;

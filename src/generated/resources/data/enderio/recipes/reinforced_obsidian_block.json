@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "B": {
+      "item": "enderio:dark_steel_bars"
+    },
+    "G": {
+      "item": "enderio:grains_of_infinity"
+    },
+    "O": {
+      "tag": "forge:obsidian"
+    }
+  },
+  "pattern": [
+    "GBG",
+    "BOB",
+    "GBG"
+  ],
+  "result": {
+    "item": "enderio:reinforced_obsidian_block"
+  },
+  "show_notification": true
+}

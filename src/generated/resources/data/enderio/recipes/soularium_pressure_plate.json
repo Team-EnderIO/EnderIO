@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "#": {
+      "item": "enderio:soularium_ingot"
+    }
+  },
+  "pattern": [
+    "##"
+  ],
+  "result": {
+    "item": "enderio:soularium_pressure_plate"
+  },
+  "show_notification": true
+}

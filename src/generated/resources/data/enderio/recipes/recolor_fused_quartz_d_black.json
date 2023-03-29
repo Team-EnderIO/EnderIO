@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "tag": "enderio:fused_quartz_d"
+    },
+    {
+      "tag": "enderio:fused_quartz_d"
+    },
+    {
+      "tag": "enderio:fused_quartz_d"
+    },
+    {
+      "tag": "enderio:fused_quartz_d"
+    },
+    {
+      "tag": "enderio:fused_quartz_d"
+    },
+    {
+      "tag": "enderio:fused_quartz_d"
+    },
+    {
+      "tag": "enderio:fused_quartz_d"
+    },
+    {
+      "tag": "enderio:fused_quartz_d"
+    },
+    {
+      "tag": "forge:dyes/black"
+    }
+  ],
+  "result": {
+    "count": 8,
+    "item": "enderio:fused_quartz_d_black"
+  }
+}

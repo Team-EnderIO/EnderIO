@@ -3,7 +3,6 @@ package com.enderio.base.common.init;
 import com.enderio.EnderIO;
 import com.enderio.base.common.capacitor.DefaultCapacitorData;
 import com.enderio.base.common.config.BaseConfig;
-import com.enderio.base.common.item.EIOCreativeTabs;
 import com.enderio.base.common.item.misc.*;
 import com.enderio.base.common.item.capacitors.FixedCapacitorItem;
 import com.enderio.base.common.item.capacitors.LootCapacitorItem;
@@ -30,6 +29,7 @@ import net.minecraft.Util;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.ForgeTier;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.TierSortingRegistry;
@@ -250,6 +250,7 @@ public class EIOItems {
         .item("broken_spawner", BrokenSpawnerItem::new)
         .model(EIOModel::fakeBlockModel)
         .tab(NonNullSupplier.lazy(EIOCreativeTabs.MAIN))
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.SOULS), modifier -> modifier.acceptAll(BrokenSpawnerItem.gePossibleStacks()))
         .register();
 
     // endregion
@@ -318,6 +319,7 @@ public class EIOItems {
     public static final ItemEntry<SoulVialItem> FILLED_SOUL_VIAL = REGISTRATE
         .item("filled_soul_vial", SoulVialItem::new)
         .properties(props -> props.stacksTo(1))
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.SOULS), modifier -> modifier.acceptAll(SoulVialItem.getAllFilled()))
         .register();
 
     public static final ItemEntry<EnderiosItem> ENDERIOS = REGISTRATE
@@ -356,7 +358,10 @@ public class EIOItems {
 
     public static final ItemEntry<ElectromagnetItem> ELECTROMAGNET = REGISTRATE
         .item("electromagnet", ElectromagnetItem::new)
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR))
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR), modifier -> {
+            modifier.accept(EIOItems.ELECTROMAGNET.get());
+            modifier.accept(PoweredToggledItem.getCharged(EIOItems.ELECTROMAGNET.get()));
+        })
         .register();
 
     public static final ItemEntry<ColdFireIgniter> COLD_FIRE_IGNITER = REGISTRATE
@@ -375,7 +380,10 @@ public class EIOItems {
 
     public static final ItemEntry<DarkSteelPickaxeItem> DARK_STEEL_PICKAXE = REGISTRATE
         .item("dark_steel_pickaxe", DarkSteelPickaxeItem::new)
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR))
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR), modifier -> {
+            var i = EIOItems.DARK_STEEL_PICKAXE.get();
+            modifier.acceptAll(i.getCreativeItems(i));
+        })
         .onRegister(item -> DarkSteelUpgradeRegistry
             .instance()
             .addUpgradesForItem(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)), EmpoweredUpgrade.NAME, SpoonUpgrade.NAME, DirectUpgrade.NAME,
@@ -384,7 +392,10 @@ public class EIOItems {
 
     public static final ItemEntry<DarkSteelAxeItem> DARK_STEEL_AXE = REGISTRATE
         .item("dark_steel_axe", DarkSteelAxeItem::new)
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR))
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR), modifier -> {
+            var i = EIOItems.DARK_STEEL_AXE.get();
+            modifier.acceptAll(i.getCreativeItems(i));
+        })
         .onRegister(item -> DarkSteelUpgradeRegistry
             .instance()
             .addUpgradesForItem(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)), EmpoweredUpgrade.NAME, ForkUpgrade.NAME, DirectUpgrade.NAME))

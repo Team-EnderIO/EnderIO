@@ -5,12 +5,12 @@ import com.enderio.base.common.advancement.UseGliderTrigger;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.init.*;
 import com.enderio.base.common.integrations.EnderIOSelfIntegration;
-import com.enderio.base.common.item.EIOCreativeTabs;
+import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.base.common.item.tool.SoulVialItem;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.tag.EIOTags;
+import com.enderio.base.data.EIODataProvider;
 import com.enderio.base.data.advancement.EIOAdvancementGenerator;
-import com.enderio.base.data.loot.FireCraftingLootProvider;
 import com.enderio.base.data.recipe.*;
 import com.enderio.base.data.tags.EIOBlockTagsProvider;
 import com.enderio.base.data.tags.EIOFluidTagsProvider;
@@ -98,24 +98,30 @@ public class EnderIO {
     }
 
     public void onGatherData(GatherDataEvent event) {
-//        DataGenerator generator = event.getGenerator();
-//        PackOutput packOutput = event.getGenerator().getPackOutput();
-//        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
-//
-//        generator.addProvider(event.includeServer(), new MaterialRecipes(packOutput));
-//        generator.addProvider(event.includeServer(), new BlockRecipes(packOutput));
-//        generator.addProvider(event.includeServer(), new ItemRecipes(packOutput));
-//        generator.addProvider(event.includeServer(), new GrindingBallRecipeProvider(packOutput));
-//        generator.addProvider(event.includeServer(), new GlassRecipes(packOutput));
-//        generator.addProvider(event.includeServer(), new FireCraftingRecipes(packOutput));
-//
+        DataGenerator generator = event.getGenerator();
+        PackOutput packOutput = event.getGenerator().getPackOutput();
+        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
+
+
+        EIODataProvider provider = new EIODataProvider(MODID);
+
+        provider.addSubProvider(event.includeServer(), new MaterialRecipes(packOutput));
+        provider.addSubProvider(event.includeServer(), new BlockRecipes(packOutput));
+        provider.addSubProvider(event.includeServer(), new ItemRecipes(packOutput));
+        provider.addSubProvider(event.includeServer(), new GrindingBallRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new GlassRecipes(packOutput));
+        provider.addSubProvider(event.includeServer(), new FireCraftingRecipes(packOutput));
+
 //        ForgeBlockTagsProvider b = new ForgeBlockTagsProvider(packOutput, lookupProvider, event.getExistingFileHelper());
-//        generator.addProvider(event.includeServer(), new EIOItemTagsProvider(packOutput, event.getLookupProvider(), b.contentsGetter(), event.getExistingFileHelper()));
-//        generator.addProvider(event.includeServer(), new EIOFluidTagsProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper()));
-//        generator.addProvider(event.includeServer(), new EIOBlockTagsProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper()));
-////        generator.addProvider(event.includeServer(), new FireCraftingLootProvider(packOutput)); TODO: 1.19.4
-//
-//        generator.addProvider(event.includeServer(), new ForgeAdvancementProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper(),
-//            List.of(new EIOAdvancementGenerator())));
+//        provider.addSubProvider(event.includeServer(), new EIOItemTagsProvider(packOutput, event.getLookupProvider(), b.contentsGetter(), event.getExistingFileHelper()));
+        provider.addSubProvider(event.includeServer(), new EIOFluidTagsProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper()));
+        provider.addSubProvider(event.includeServer(), new EIOBlockTagsProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper()));
+//        provider.addSubProvider(event.includeServer(), new FireCraftingLootProvider(packOutput)); TODO: 1.19.4
+
+        provider.addSubProvider(event.includeServer(), new ForgeAdvancementProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper(),
+            List.of(new EIOAdvancementGenerator())));
+
+
+        generator.addProvider(true, provider);
     }
 }

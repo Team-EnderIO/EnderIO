@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "enderio:vibrant_alloy_ingot"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "item": "enderio:vibrant_alloy_nugget"
+  }
+}

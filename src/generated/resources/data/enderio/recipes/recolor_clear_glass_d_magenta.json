@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "tag": "enderio:clear_glass_d"
+    },
+    {
+      "tag": "enderio:clear_glass_d"
+    },
+    {
+      "tag": "enderio:clear_glass_d"
+    },
+    {
+      "tag": "enderio:clear_glass_d"
+    },
+    {
+      "tag": "enderio:clear_glass_d"
+    },
+    {
+      "tag": "enderio:clear_glass_d"
+    },
+    {
+      "tag": "enderio:clear_glass_d"
+    },
+    {
+      "tag": "enderio:clear_glass_d"
+    },
+    {
+      "tag": "forge:dyes/magenta"
+    }
+  ],
+  "result": {
+    "count": 8,
+    "item": "enderio:clear_glass_d_magenta"
+  }
+}

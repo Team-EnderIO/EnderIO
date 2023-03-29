@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": {
+      "item": "enderio:iron_gear"
+    },
+    "I": {
+      "item": "enderio:energetic_alloy_ingot"
+    },
+    "N": {
+      "item": "enderio:energetic_alloy_nugget"
+    }
+  },
+  "pattern": [
+    "NIN",
+    "IGI",
+    "NIN"
+  ],
+  "result": {
+    "item": "enderio:energized_gear"
+  },
+  "show_notification": true
+}

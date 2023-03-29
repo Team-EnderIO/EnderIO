@@ -43,11 +43,12 @@ public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipPr
         return provider;
     }
 
-    default void addCreativeItems(NonNullList<ItemStack> pItems, Item item) {
+    default List<ItemStack> getCreativeItems(Item item) {
+        List<ItemStack> items = new ArrayList<>();
         ItemStack is = new ItemStack(item);
-        pItems.add(is.copy());
-        //All the upgrades
-        pItems.add(createFullyUpgradedStack(item));
+        items.add(is.copy());
+        items.add(createFullyUpgradedStack(item));
+        return items;
     }
 
     default ItemStack createFullyUpgradedStack(Item item) {

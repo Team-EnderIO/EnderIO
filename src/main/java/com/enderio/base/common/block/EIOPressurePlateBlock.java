@@ -50,7 +50,7 @@ public class EIOPressurePlateBlock extends PressurePlateBlock {
     private final Detector detector;
 
     public EIOPressurePlateBlock(Properties props, Detector detector, boolean silent) {
-        super(Sensitivity.MOBS, props, BlockSetType.IRON); // TODO: 1.19.4 create our own so we can silence this again.
+        super(Sensitivity.MOBS, props, silent ? EIOBlockSetType.SILENT : BlockSetType.IRON); // TODO: 1.19.4, option for dark steel or soularium blocksets with their own noises?
         this.detector = detector;
         this.silent = silent;
         this.registerDefaultState(this.stateDefinition.any().setValue(POWERED, false));
@@ -60,19 +60,4 @@ public class EIOPressurePlateBlock extends PressurePlateBlock {
     protected int getSignalStrength(Level pLevel, BlockPos pPos) {
         return detector.getSignalStrength(pLevel, pPos);
     }
-
-
-//    @Override
-//    protected void playOnSound(LevelAccessor pLevel, BlockPos pPos) {
-//        if (!silent) {
-//            pLevel.playSound(null, pPos, SoundEvents.METAL_PRESSURE_PLATE_CLICK_ON, SoundSource.BLOCKS, 0.3F, 0.90000004F);
-//        }
-//    }
-//
-//    @Override
-//    protected void playOffSound(LevelAccessor pLevel, BlockPos pPos) {
-//        if (!silent) {
-//            pLevel.playSound(null, pPos, SoundEvents.METAL_PRESSURE_PLATE_CLICK_OFF, SoundSource.BLOCKS, 0.3F, 0.75F);
-//        }
-//    }
 }

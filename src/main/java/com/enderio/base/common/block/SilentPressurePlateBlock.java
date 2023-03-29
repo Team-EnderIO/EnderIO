@@ -8,13 +8,7 @@ import net.minecraft.world.level.block.state.properties.BlockSetType;
 public class SilentPressurePlateBlock extends PressurePlateBlock {
 
     public SilentPressurePlateBlock(PressurePlateBlock wrapped) {
-        super(wrapped.sensitivity, Properties.copy(wrapped), BlockSetType.IRON); // TODO: 1.19.4 silence this.
+        super(wrapped.sensitivity, Properties.copy(wrapped), EIOBlockSetType.SILENT);
     }
-
-//    @Override
-//    protected void playOnSound(LevelAccessor pLevel, BlockPos pPos) {}
-//
-//    @Override
-//    protected void playOffSound(LevelAccessor pLevel, BlockPos pPos) {}
 
 }

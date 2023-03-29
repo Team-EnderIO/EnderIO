@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "P": {
+      "item": "minecraft:dark_oak_pressure_plate"
+    },
+    "W": {
+      "tag": "minecraft:wool"
+    }
+  },
+  "pattern": [
+    "W",
+    "P"
+  ],
+  "result": {
+    "item": "enderio:silent_dark_oak_pressure_plate"
+  },
+  "show_notification": true
+}

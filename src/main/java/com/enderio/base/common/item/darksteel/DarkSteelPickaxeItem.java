@@ -85,13 +85,15 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem 
     }
 
     @Override
-    public void addCreativeItems(NonNullList<ItemStack> pItems, Item item) {
-        IDarkSteelItem.super.addCreativeItems(pItems, item);
+    public List<ItemStack> getCreativeItems(Item item) {
+        List<ItemStack> items = IDarkSteelItem.super.getCreativeItems(item);
+
         //Include a fully upgraded version without explosive upgrades
         ItemStack itemStack = createFullyUpgradedStack(item);
         DarkSteelUpgradeable.removeUpgrade(itemStack, ExplosiveUpgrade.NAME);
         DarkSteelUpgradeable.removeUpgrade(itemStack, ExplosivePenetrationUpgrade.NAME);
-        pItems.add(itemStack);
+        items.add(itemStack);
+        return items;
     }
 
     private boolean canHarvest(ItemStack stack, BlockState state) {
@@ -126,15 +128,6 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem 
     public boolean isFoil(ItemStack pStack) {
         return DarkSteelUpgradeable.hasUpgrade(pStack, EmpoweredUpgrade.NAME);
     }
-
-    // TODO: 1.19.4: new item groups
-
-//    @Override
-//    public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {
-//        if (allowedIn(pCategory)) {
-//            addCreativeItems(pItems, this);
-//        }
-//    }
 
     // endregion
 
