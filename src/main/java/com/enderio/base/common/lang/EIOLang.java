@@ -5,8 +5,10 @@ import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.core.common.util.TooltipUtil;
 import com.tterrag.registrate.Registrate;
 import net.minecraft.ChatFormatting;
+import net.minecraft.ResourceLocationException;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 
 public class EIOLang {
     private static final Registrate REGISTRATE = EnderIO.registrate();
@@ -151,14 +153,28 @@ public class EIOLang {
 
     // endregion
 
+    // region Grinding balls
+
+    public static final MutableComponent GRINDINGBALL_MAIN_OUTPUT = REGISTRATE.addLang("tooltip", EnderIO.loc("grinding_ball_main_output"), "Main Output %s%%");
+    public static final MutableComponent GRINDINGBALL_BONUS_OUTPUT = REGISTRATE.addLang("tooltip", EnderIO.loc("grinding_ball_bonus_output"), "Bonus Output %s%%");
+    public static final MutableComponent GRINDINGBALL_POWER_USE = REGISTRATE.addLang("tooltip", EnderIO.loc("grinding_ball_power_use"), "Power Use %s%%");
+
+    // endregion
+
     // region GUI
+
     public static final Component RANGE = REGISTRATE.addLang("gui", EnderIO.loc("range"), "Range");
     public static final Component SHOW_RANGE = REGISTRATE.addLang("gui", EnderIO.loc("range.show"), "Show Range");
     public static final Component HIDE_RANGE = REGISTRATE.addLang("gui", EnderIO.loc("range.hide"), "Hide Range");
+
     // endregion
+
+    // region Glider
 
     public static final Component USE_GLIDER_ADVANCEMENT_TITLE = REGISTRATE.addLang("advancements", EnderIO.loc("use_glider.title"), "Majestic");
     public static final Component USE_GLIDER_ADVANCEMENT_DESCRIPTION = REGISTRATE.addLang("advancements", EnderIO.loc("use_glider.description"), "Do you really trust some leather?");
+
+    // endregion
 
     // region Misc Tooltips
 
@@ -172,6 +188,14 @@ public class EIOLang {
     public static final Component GUIDEBOOK_LANDING_TEXT = REGISTRATE.addLang("guidebook", EnderIO.loc("landing_text"), "Landing Text");
 
     //endregion
+
+    // region JEI
+
+    public static final Component JEI_FIRE_CRAFTING_TITLE = REGISTRATE.addLang("jei", EnderIO.loc("fire_crafting"), "title", "Fire Crafting");
+    public static final Component JEI_FIRE_CRAFTING_VALID_BLOCKS = REGISTRATE.addLang("jei", EnderIO.loc("fire_crafting"), "valid_blocks", "Valid Blocks:");
+    public static final Component JEI_FIRE_CRAFTING_VALID_DIMENSIONS = REGISTRATE.addLang("jei", EnderIO.loc("fire_crafting"), "valid_dimensions", "Valid Dimensions:");
+
+    // endregion
 
     public static void register() {}
 }

@@ -1,5 +1,6 @@
 package com.enderio.machines.data.recipes;
 
+import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.machines.common.init.MachineBlocks;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
@@ -7,6 +8,7 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 
 import java.util.function.Consumer;

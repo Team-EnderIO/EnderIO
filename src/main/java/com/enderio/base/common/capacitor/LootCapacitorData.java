@@ -42,6 +42,7 @@ public final class LootCapacitorData implements ICapacitorData {
         return modifiers.getOrDefault(modifier, getBase());
     }
 
+    @Override
     public Map<CapacitorModifier, Float> getAllModifiers() {
         return modifiers;
     }
