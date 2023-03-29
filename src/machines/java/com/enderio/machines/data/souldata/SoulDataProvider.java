@@ -4,8 +4,8 @@ import com.enderio.EnderIO;
 import com.enderio.machines.common.blockentity.task.SpawnTask;
 import com.enderio.machines.common.souldata.PoweredSpawnerSoul;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataGenerator;
@@ -32,10 +32,9 @@ public class SoulDataProvider implements DataProvider {
     }
 
     public <T> void addSoulData(Codec<T> codec, T data, String name, CachedOutput pOutput) {
-        JsonElement element = new JsonObject();
-        codec.encode(data, JsonOps.INSTANCE, element);
+        DataResult<JsonElement> element = codec.encodeStart(JsonOps.INSTANCE, data);
         try {
-            DataProvider.saveStable(pOutput, element, this.generator.json(new ResourceLocation(EnderIO.MODID, name)));
+            DataProvider.saveStable(pOutput, element.get().left().get(), this.generator.json(new ResourceLocation(EnderIO.MODID, name)));
         } catch (IOException ioexception) {
 
         }

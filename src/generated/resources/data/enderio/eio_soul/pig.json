@@ -1,1 +1,5 @@
-{}
+{
+  "type": "ENTITYTYPE",
+  "entity": "minecraft:pig",
+  "power": 1000
+}
