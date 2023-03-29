@@ -3,6 +3,8 @@ package com.enderio.machines.common.blockentity.task;
 import com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
+import com.enderio.machines.data.PoweredSpawnerSoul;
+import com.mojang.serialization.DataResult;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
@@ -21,9 +23,11 @@ public class SpawnTask extends PoweredTask{
     public static final int maxSpawners = 2;
     public static final int spawnTries = 10;
     private boolean complete;
-    private int energyCost = 40000;//TODO Custom Config/Json File
+    private int energyCost;
     private int energyConsumed = 0;
     private final PoweredSpawnerBlockEntity blockEntity;
+    private ResourceLocation entityRL;
+    private SpawnType spawnType;
 
     /**
      * Create a new powered task.
@@ -37,6 +41,9 @@ public class SpawnTask extends PoweredTask{
 
     @Override
     public void tick() {
+        if (!loadSoulData()) {
+            return;
+        }
         if (energyConsumed >= energyCost) {
             if (isAreaClear()) {
                 complete = trySpawnEntity(blockEntity.getBlockPos(), (ServerLevel) blockEntity.getLevel()); //ready to spawn but blocked for a reason.
@@ -95,6 +102,26 @@ public class SpawnTask extends PoweredTask{
         }
         return true;
     }
+    
+    private boolean loadSoulData() {
+        Optional<ResourceLocation> rl = blockEntity.getEntityType();
+        if (rl.isEmpty()) {
+            blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
+            return false;
+        }
+        Optional<PoweredSpawnerSoul.SoulData> opData = PoweredSpawnerSoul.SPAWNER.matches(rl.get());
+        if (opData.isEmpty()) { //Fallback
+            this.entityRL = rl.get();
+            this.energyCost = 40000;
+            this.spawnType = MachinesConfig.COMMON.SPAWN_TYPE.get();
+            return true;
+        }
+        PoweredSpawnerSoul.SoulData data = opData.get();
+        this.entityRL = data.entitytype();
+        this.energyCost =data.power();
+        this.spawnType = data.spawnType();
+        return true;
+    }
 
     public boolean trySpawnEntity(BlockPos pos, ServerLevel level) {
         for (int i = 0; i < spawnTries; i++) {
@@ -102,12 +129,7 @@ public class SpawnTask extends PoweredTask{
             double x = pos.getX() + (randomsource.nextDouble() - randomsource.nextDouble()) * (double)this.blockEntity.getRange() + 0.5D;
             double y = pos.getY() + randomsource.nextInt(3) - 1;
             double z = pos.getZ() + (randomsource.nextDouble() - randomsource.nextDouble()) * (double)this.blockEntity.getRange() + 0.5D;
-            Optional<ResourceLocation> rl = blockEntity.getEntityType();
-            if (rl.isEmpty()) {
-                blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
-                return false;
-            }
-            Optional<EntityType<?>> optionalEntity = Registry.ENTITY_TYPE.getOptional(rl.get());
+            Optional<EntityType<?>> optionalEntity = Registry.ENTITY_TYPE.getOptional(entityRL);
             if (optionalEntity.isEmpty()) {
                 blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
                 return false;
@@ -115,7 +137,7 @@ public class SpawnTask extends PoweredTask{
             if (level.noCollision(optionalEntity.get().getAABB(x, y, z))) {
 
                 Entity entity = null;
-                switch (MachinesConfig.COMMON.SPAWN_TYPE.get()) {
+                switch (spawnType) {
                     case COPY -> {
                         entity = EntityType.loadEntityRecursive(blockEntity.getEntityData().getEntityTag(), level, entity1 -> {
                             entity1.moveTo(x, y, z, entity1.getYRot(), entity1.getXRot());
@@ -172,6 +194,15 @@ public class SpawnTask extends PoweredTask{
 
         SpawnType(String name) {
             this.name = name;
+        }
+
+        public static DataResult<SpawnType> byName(String pTranslationKey) {
+            for(SpawnType type : values()) {
+                if (type.name.equals(pTranslationKey)) {
+                    return DataResult.success(type);
+                }
+            }
+            return DataResult.error("unkown type");
         }
     }
 }
