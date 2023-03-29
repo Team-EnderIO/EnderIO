@@ -26,8 +26,6 @@ public class CoordinateMenuScreen extends EIOScreen<CoordinateMenu> {
     @Override
     protected void init() {
         super.init();
-//        Minecraft.getInstance().keyboardHandler.setSendRepeatsToGui(true); // TODO: 1.19.4
-
         EditBox name = new EditBox(this.font, leftPos + 43 + 4, topPos + 20 + 4, 92 - 12, 18, Component.literal("name"));
         name.setCanLoseFocus(false);
         name.setTextColor(0xFFFFFFFF);

@@ -33,7 +33,7 @@ public class EIOFluids {
         .register();
 
     public static final FluidEntry<? extends ForgeFlowingFluid> VAPOR_OF_LEVITY = gasFluid("vapor_of_levity")
-        .properties(p -> p.density(-10).viscosity(100).temperature(5)) // TODO: 1.19: gaseous?
+        .properties(p -> p.density(-10).viscosity(100).temperature(5))
         .register();
 
     public static final FluidEntry<? extends ForgeFlowingFluid> HOOTCH = fluid("hootch")

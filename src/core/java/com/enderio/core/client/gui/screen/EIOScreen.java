@@ -86,10 +86,6 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
     @Override
     public void removed() {
         super.removed();
-        // TODO: 1.19.4: TEST
-//        if (!editBoxList.isEmpty()) {
-//            Minecraft.getInstance().keyboardHandler.setSendRepeatsToGui(false);
-//        }
     }
 
     @Override
@@ -125,8 +121,6 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
     protected <U extends GuiEventListener & NarratableEntry> U addWidget(U guiEventListener) {
         if (guiEventListener instanceof EditBox editBox) {
             editBoxList.add(editBox);
-            // TODO: 1.19.4: TEST
-//            Minecraft.getInstance().keyboardHandler.setSendRepeatsToGui(true);
         }
         return super.addWidget(guiEventListener);
     }

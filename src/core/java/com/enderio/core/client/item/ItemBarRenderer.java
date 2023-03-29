@@ -9,7 +9,6 @@ import org.joml.Matrix4f;
 public class ItemBarRenderer {
 
     public static void renderBar(PoseStack poseStack, float fillRatio, int xOffset, int yOffset, float blitOffset, int color) {
-//        RenderSystem.disableTexture(); TODO: 1.19.4: FIXME?
         RenderSystem.disableBlend();
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder bufferbuilder = tesselator.getBuilder();
@@ -19,7 +18,6 @@ public class ItemBarRenderer {
         fillRect(poseStack.last().pose(), bufferbuilder, xOffset + 2, yOffset + 12, blitOffset + 190, i, 1, FastColor.ARGB32.red(color), FastColor.ARGB32.green(color),
             FastColor.ARGB32.blue(color));
         RenderSystem.enableBlend();
-//        RenderSystem.enableTexture(); TODO: 1.19.4: FIXME?
     }
 
     private static void fillRect(Matrix4f matrix, BufferBuilder renderer, int x, int y, float z, int width, int height, int red, int green, int blue) {
