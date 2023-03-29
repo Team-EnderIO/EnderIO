@@ -17,6 +17,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -127,6 +129,11 @@ public class SagMillScreen extends EIOScreen<SagMillMenu> {
             }
 
             poseStack.popPose();
+        }
+
+        @Override
+        protected ClientTooltipPositioner createTooltipPositioner() {
+            return DefaultTooltipPositioner.INSTANCE;
         }
     }
 }
