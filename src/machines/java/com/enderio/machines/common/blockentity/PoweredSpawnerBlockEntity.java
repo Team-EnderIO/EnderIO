@@ -12,9 +12,11 @@ import com.enderio.machines.common.blockentity.base.PoweredTaskMachineEntity;
 import com.enderio.machines.common.blockentity.task.SpawnTask;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.menu.PoweredSpawnerMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -145,15 +147,20 @@ public class PoweredSpawnerBlockEntity extends PoweredTaskMachineEntity<SpawnTas
     }
 
     public enum SpawnerBlockedReason {
-        TOO_MANY_MOB("mob"),
-        UNKOWN_MOB("unknown"),
-        OTHER_MOD("other"),
-        NONE("none");
+        TOO_MANY_MOB("mob", MachineLang.TOO_MANY_MOB),
+        TOO_MANY_SPAWNER("spawner", MachineLang.TOO_MANY_SPAWNER),
+        UNKOWN_MOB("unknown", MachineLang.UNKNOWN),
+        OTHER_MOD("other", MachineLang.OTHER_MOD),
+        NONE("none", Component.literal("NONE"));
 
-        private final String name;
+        private final Component component;
 
-        SpawnerBlockedReason(String name) {
-            this.name = name;
+        SpawnerBlockedReason(String name, Component component) {
+            this.component = component;
+        }
+
+        public Component getComponent() {
+            return component;
         }
     }
 }

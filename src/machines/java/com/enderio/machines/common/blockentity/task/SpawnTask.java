@@ -18,12 +18,12 @@ import java.util.Optional;
 
 public class SpawnTask extends PoweredTask{
 
-    public static final int maxSpawners = 2;
     public static final int spawnTries = 10;
     private boolean complete;
     private int energyCost = 40000;//TODO Custom Config/Json File
     private int energyConsumed = 0;
     private final PoweredSpawnerBlockEntity blockEntity;
+    private float efficiency = 1;
 
     /**
      * Create a new powered task.
@@ -90,13 +90,18 @@ public class SpawnTask extends PoweredTask{
             blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.TOO_MANY_MOB);
             return false;
         }
-        if (BlockPos.betweenClosedStream(range).filter(pos -> blockEntity.getLevel().getBlockEntity(pos) instanceof PoweredSpawnerBlockEntity).count() >= maxSpawners) { //TODO config? Max amount of spawners.
-            return false;
+        long count = BlockPos.betweenClosedStream(range).filter(pos -> blockEntity.getLevel().getBlockEntity(pos) instanceof PoweredSpawnerBlockEntity).count();
+        if (count >= MachinesConfig.COMMON.MAX_SPAWNERS.get()) { //TODO config? Max amount of spawners.
+            this.efficiency = MachinesConfig.COMMON.MAX_SPAWNERS.get()/(float)count;
         }
         return true;
     }
 
     public boolean trySpawnEntity(BlockPos pos, ServerLevel level) {
+        if (this.efficiency < level.random.nextFloat()) {
+            blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.TOO_MANY_SPAWNER);
+            return false;
+        }
         for (int i = 0; i < spawnTries; i++) {
             RandomSource randomsource = level.getRandom();
             double x = pos.getX() + (randomsource.nextDouble() - randomsource.nextDouble()) * (double)this.blockEntity.getRange() + 0.5D;

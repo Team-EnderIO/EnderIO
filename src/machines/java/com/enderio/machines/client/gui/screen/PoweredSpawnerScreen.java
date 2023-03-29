@@ -67,7 +67,7 @@ public class PoweredSpawnerScreen extends EIOScreen<PoweredSpawnerMenu> {
             }
         }
         if (getMenu().getBlockEntity().getReason() != PoweredSpawnerBlockEntity.SpawnerBlockedReason.NONE) {
-            font.draw(pPoseStack, getMenu().getBlockEntity().getReason().name(), leftPos + imageWidth/2f - font.width(getMenu().getBlockEntity().getReason().name())/2f, topPos + 26, 0);
+            font.draw(pPoseStack, getMenu().getBlockEntity().getReason().getComponent().getString(), leftPos + imageWidth/2f - font.width(getMenu().getBlockEntity().getReason().getComponent().getString())/2f, topPos + 26, 0);
         }
     }
 }
