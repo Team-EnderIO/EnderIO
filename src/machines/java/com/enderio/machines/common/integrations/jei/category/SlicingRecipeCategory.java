@@ -1,11 +1,10 @@
-package com.enderio.machines.common.compat.jei.category;
+package com.enderio.machines.common.integrations.jei.category;
 
 import com.enderio.EnderIO;
 import com.enderio.machines.client.gui.screen.SlicerScreen;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.recipe.SlicingRecipe;
-import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.helpers.IGuiHelper;

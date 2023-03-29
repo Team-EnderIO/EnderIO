@@ -1,4 +1,4 @@
-package com.enderio.machines.common.compat.jei.subtype;
+package com.enderio.base.common.integrations.jei.subtype;
 
 import com.enderio.base.common.init.EIOCapabilities;
 import mezz.jei.api.ingredients.subtypes.IIngredientSubtypeInterpreter;

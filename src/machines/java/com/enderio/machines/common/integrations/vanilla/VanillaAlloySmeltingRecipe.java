@@ -1,4 +1,4 @@
-package com.enderio.machines.common.compat.vanilla;
+package com.enderio.machines.common.integrations.vanilla;
 
 import com.enderio.core.common.recipes.CountedIngredient;
 import com.enderio.core.common.recipes.OutputStack;

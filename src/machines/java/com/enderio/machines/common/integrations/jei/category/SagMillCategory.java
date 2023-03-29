@@ -1,4 +1,4 @@
-package com.enderio.machines.common.compat.jei.category;
+package com.enderio.machines.common.integrations.jei.category;
 
 import com.enderio.EnderIO;
 import com.enderio.api.grindingball.IGrindingBallData;
@@ -8,7 +8,6 @@ import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.machines.client.gui.screen.SagMillScreen;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.lang.MachineLang;
-import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
 import com.enderio.machines.common.recipe.SagMillingRecipe;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;

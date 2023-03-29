@@ -1,9 +1,9 @@
-package com.enderio.machines.common.compat.jei.category;
+package com.enderio.machines.common.integrations.jei.category;
 
 import com.enderio.EnderIO;
 import com.enderio.core.common.recipes.CountedIngredient;
 import com.enderio.machines.client.gui.screen.PrimitiveAlloySmelterScreen;
-import com.enderio.machines.common.compat.jei.util.MachineCategory;
+import com.enderio.machines.common.integrations.jei.util.MachineCategory;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.recipe.AlloySmeltingRecipe;

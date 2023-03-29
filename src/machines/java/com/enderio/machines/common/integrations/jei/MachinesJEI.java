@@ -1,17 +1,14 @@
-package com.enderio.machines.common.compat.jei;
+package com.enderio.machines.common.integrations.jei;
 
 import com.enderio.EnderIO;
-import com.enderio.base.common.init.EIOItems;
-import com.enderio.machines.common.compat.jei.category.*;
-import com.enderio.machines.common.compat.jei.subtype.SoulVialSubtypeInterpreter;
 import com.enderio.machines.common.init.MachineBlocks;
+import com.enderio.machines.common.integrations.jei.category.*;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
-import mezz.jei.api.registration.ISubtypeRegistration;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -49,10 +46,5 @@ public class MachinesJEI implements IModPlugin {
         registration.addRecipes(PrimitiveAlloySmeltingCategory.TYPE, recipes.getAlloySmeltingRecipes());
         registration.addRecipes(SagMillCategory.TYPE, recipes.getSagmillingRecipes());
         registration.addRecipes(SlicingRecipeCategory.TYPE, recipes.getSlicingRecipes());
-    }
-
-    @Override
-    public void registerItemSubtypes(ISubtypeRegistration registration) {
-        registration.registerSubtypeInterpreter(EIOItems.FILLED_SOUL_VIAL.get(), new SoulVialSubtypeInterpreter());
     }
 }

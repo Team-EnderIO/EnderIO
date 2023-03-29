@@ -1,4 +1,4 @@
-package com.enderio.machines.common.compat.jei.util;
+package com.enderio.machines.common.integrations.jei.util;
 
 import com.enderio.machines.common.recipe.EnchanterRecipe;
 import net.minecraft.resources.ResourceLocation;
