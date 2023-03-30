@@ -5,7 +5,7 @@ import com.enderio.base.common.block.ResettingLeverBlock;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
 import com.tterrag.registrate.util.entry.BlockEntry;
-import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.advancements.critereon.*;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
@@ -30,7 +30,6 @@ public class BlockRecipes extends RecipeProvider {
     protected void buildCraftingRecipes(Consumer<FinishedRecipe> recipeConsumer) {
         addPressurePlateRecipes(recipeConsumer);
         addLeverRecipes(recipeConsumer);
-        addChassisRecipes(recipeConsumer);
         addConstructionBlockRecipes(recipeConsumer);
     }
 
@@ -88,32 +87,6 @@ public class BlockRecipes extends RecipeProvider {
             .pattern("GBG")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GRAINS_OF_INFINITY.get()))
             .save(recipeConsumer);
-    }
-
-    private void addChassisRecipes(Consumer<FinishedRecipe> recipeConsumer) {
-
-//        ShapedRecipeBuilder
-//            .shaped(EIOBlocks.SIMPLE_MACHINE_CHASSIS.get())
-//            .define('B', Blocks.IRON_BARS)
-//            .define('G', EIOItems.GRAINS_OF_INFINITY.get())
-//            .define('I', Tags.Items.INGOTS_IRON)
-//            .pattern("BIB")
-//            .pattern("IGI")
-//            .pattern("BIB")
-//            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GRAINS_OF_INFINITY.get()))
-//            .save(recipeConsumer);
-
-        ShapedRecipeBuilder
-            .shaped(EIOBlocks.END_STEEL_MACHINE_CHASSIS.get())
-            .define('B', EIOBlocks.END_STEEL_BARS.get())
-            .define('G', EIOItems.GRAINS_OF_INFINITY.get())
-            .define('I', EIOItems.END_STEEL_INGOT.get())
-            .pattern("BIB")
-            .pattern("IGI")
-            .pattern("BIB")
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.END_STEEL_INGOT.get()))
-            .save(recipeConsumer);
-
     }
 
     private void addPressurePlateRecipes(Consumer<FinishedRecipe> recipeConsumer) {

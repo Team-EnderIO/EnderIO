@@ -14,9 +14,22 @@ public class MachineLang {
     public static final Component ALLOY_SMELTER_MODE_ALL = REGISTRATE.addLang("gui", EnderIO.loc("alloy_smelter.mode_all"), "Alloying and Smelting");
     public static final Component ALLOY_SMELTER_MODE_ALLOY = REGISTRATE.addLang("gui", EnderIO.loc("alloy_smelter.mode_alloy"), "Alloys Only");
     public static final Component ALLOY_SMELTER_MODE_FURNACE = REGISTRATE.addLang("gui", EnderIO.loc("alloy_smelter.mode_furnace"), "Furnace Only");
-    public static final MutableComponent SAG_MILL_GRINDINGBALL_TOOLTIP = REGISTRATE.addLang("gui", EnderIO.loc("grinding_ball"), "Remaining: %s%%\\nSAG Mill Grinding Ball\\nMain Output %s%%\\nBonus Output %s%%\\nPower Use %s%%");
+    public static final MutableComponent SAG_MILL_GRINDINGBALL_REMAINING = REGISTRATE.addLang("tooltip", EnderIO.loc("grinding_ball_remaining"), "Remaining: %s%%");
+    public static final MutableComponent SAG_MILL_GRINDINGBALL_TITLE = REGISTRATE.addLang("tooltip", EnderIO.loc("grinding_ball_title"), "SAG Mill Grinding Ball");
 
     public static final Component TOOLTIP_ENERGY_EQUIVALENCE = REGISTRATE.addLang("gui", EnderIO.loc("energy_equivalence"), "A unit of energy, equivalent to FE.");
+    public static final MutableComponent TOOLTIP_SAG_MILL_CHANCE_BALL = REGISTRATE.addLang("gui", EnderIO.loc("sag_mill_chance_ball"), "Chance: %s%% (modified by grinding ball)");
+    public static final MutableComponent TOOLTIP_SAG_MILL_CHANCE = REGISTRATE.addLang("gui", EnderIO.loc("sag_mill_chance"), "Chance: %s%%");
+
+    // region JEI Categories
+
+    public static final MutableComponent CATEGORY_ALLOY_SMELTING = REGISTRATE.addLang("gui", EnderIO.loc("category.alloy_smelting"), "Alloy Smelting");
+    public static final MutableComponent CATEGORY_ENCHANTER = REGISTRATE.addLang("gui", EnderIO.loc("category.enchanter"), "Enchanting");
+    public static final MutableComponent CATEGORY_PRIMITIVE_ALLOY_SMELTING = REGISTRATE.addLang("gui", EnderIO.loc("category.primitive_alloy_smelting"), "Primitive Alloy Smelting");
+    public static final MutableComponent CATEGORY_SAG_MILL = REGISTRATE.addLang("gui", EnderIO.loc("category.sag_mill"), "SAG Mill");
+    public static final MutableComponent CATEGORY_SLICING = REGISTRATE.addLang("gui", EnderIO.loc("category.slicing"), "Slicing");
+
+    // endregion
 
     public static final Component TOO_MANY_MOB = REGISTRATE.addLang("gui", EnderIO.loc("spawner.too_many_mob"), "Too many Mobs");
     public static final Component TOO_MANY_SPAWNER = REGISTRATE.addLang("gui", EnderIO.loc("spawner.too_many_spawner"), "Too many Spawners");

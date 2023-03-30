@@ -13,7 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public class StirlingGeneratorScreen extends EIOScreen<StirlingGeneratorMenu> {
-    private static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/stirling_generator.png");
+    public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/stirling_generator.png");
 
     public StirlingGeneratorScreen(StirlingGeneratorMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);

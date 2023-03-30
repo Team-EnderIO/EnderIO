@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public class PrimitiveAlloySmelterScreen extends EIOScreen<PrimitiveAlloySmelterMenu> {
-    private static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/primitive_alloy_smelter.png");
+    public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/primitive_alloy_smelter.png");
 
     public PrimitiveAlloySmelterScreen(PrimitiveAlloySmelterMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
