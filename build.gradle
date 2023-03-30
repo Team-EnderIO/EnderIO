@@ -1,3 +1,5 @@
+import java.util.function.Consumer
+
 buildscript {
     repositories {
         // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
@@ -169,56 +171,33 @@ processResources {
     }
 }
 
-repositories {
-    // Registrate
-    maven {
-        url "https://maven.tterrag.com/"
-        content {
-            includeGroup 'com.tterrag.registrate'
+// pupnewfster helpers for exclusive repos
+void exclusiveRepo(RepositoryHandler handler, String url, String... groups) {
+    exclusiveRepo(handler, url, filter -> {
+        for (def group : groups) {
+            filter.includeGroup(group)
         }
-    }
+    })
+}
 
-    maven {
-        // location of the maven that hosts JEI files
-        name "Progwml6 maven"
-        url "https://dvs1.progwml6.com/files/maven/"
-        content {
-            includeGroup 'mezz.jei'
-        }
+//Note: This cannot be static so that fg.repository can be properly accessed
+@SuppressWarnings('GrMethodMayBeStatic')
+void exclusiveRepo(RepositoryHandler handler, String url, Consumer<InclusiveRepositoryContentDescriptor> filterSetup) {
+    handler.exclusiveContent {
+        it.forRepositories(handler.maven {
+            setUrl(url)
+        }, fg.repository)//Add FG's repo so we make sure we are able to then find the mapped deps
+        it.filter { f -> filterSetup.accept(f) }
     }
-    maven {
-        // location of a maven mirror for JEI files, as a fallback
-        name "ModMaven"
-        url "https://modmaven.dev"
-        content {
-            includeGroup 'mezz.jei'
-        }
-    }
+}
 
-    // Temp for TOP, https://github.com/McJtyMods/TheOneProbe/issues/506
-    maven {
-        url "https://cursemaven.com"
-        content {
-            includeGroup "curse.maven"
-        }
-    }
-
-    maven {
-        url 'https://maven.blamejared.com'
-        content {
-            includeGroup 'vazkii.patchouli'
-        }
-    }
-
-    maven {
-        url 'https://maven.k-4u.nl'
-        content {
-            includeGroup 'mcjty.theoneprobe'
-        }
-    }
+repositories { RepositoryHandler handler ->
+    exclusiveRepo(handler, 'https://maven.tterrag.com/', 'com.tterrag.registrate')
+    exclusiveRepo(handler, 'https://modmaven.dev/', 'mezz.jei', 'mcjty.theoneprobe')
+    exclusiveRepo(handler, 'https://cursemaven.com', 'curse.maven')
+    exclusiveRepo(handler, 'https://maven.blamejared.com', 'vazkii.patchouli')
 
     mavenLocal()
-
 }
 
 jarJar.enable()
@@ -239,8 +218,14 @@ dependencies {
 //    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common:${jei_version}")
 //    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
 
-    // The One Probe TODO: Deobf breaks stuff :/
-//    runtimeOnly fg.deobf("mcjty.theoneprobe:theoneprobe:${top_version}")
+    // The One Probe
+    //TODO: Remove having to specify these as non transitive once https://github.com/McJtyMods/TheOneProbe/issues/548 is fixed. Thanks Mekanism!
+    compileOnly fg.deobf("mcjty.theoneprobe:theoneprobe:${top_version}:api") {
+        transitive = false
+    }
+    runtimeOnly fg.deobf("mcjty.theoneprobe:theoneprobe:${top_version}") {
+        transitive = false
+    }
 
     // Patchouli
     compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
