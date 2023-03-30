@@ -256,11 +256,15 @@ public class MaterialRecipes extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(ItemTags.LOGS).build()))
             .save(recipeConsumer, EnderIO.loc("stick"));
 
-        // TODO: Explore adding a custom serializer for smelting so we can do 1:2 again.
         MultipleCookingRecipeBuilder
-            .smelting(Ingredient.of(EIOItems.CONDUIT_BINDER_COMPOSITE.get()), new ItemStack(EIOItems.CONDUIT_BINDER.get(), 2), 0, 100)
+            .smelting(Ingredient.of(EIOItems.CONDUIT_BINDER_COMPOSITE.get()), new ItemStack(EIOItems.CONDUIT_BINDER.get(), 2), 0, 200)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER_COMPOSITE.get()))
-            .save(recipeConsumer);
+            .save(recipeConsumer, EIOItems.CONDUIT_BINDER.getId().getPath() + "_from_smelting");
+
+        MultipleCookingRecipeBuilder
+            .blasting(Ingredient.of(EIOItems.CONDUIT_BINDER_COMPOSITE.get()), new ItemStack(EIOItems.CONDUIT_BINDER.get(), 2), 0, 100)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER_COMPOSITE.get()))
+            .save(recipeConsumer, EIOItems.CONDUIT_BINDER.getId().getPath() + "_from_blasting");
 
         grindingBall(recipeConsumer, EIOItems.DARK_STEEL_BALL.get(), EIOItems.DARK_STEEL_INGOT.get());
         grindingBall(recipeConsumer, EIOItems.SOULARIUM_BALL.get(), EIOItems.SOULARIUM_INGOT.get());
