@@ -1,7 +1,7 @@
 {
-  "type": "minecraft:blasting",
+  "type": "minecraft:smelting",
   "category": "misc",
-  "cookingtime": 100,
+  "cookingtime": 200,
   "experience": 0.0,
   "ingredient": {
     "item": "enderio:conduit_binder_composite"
