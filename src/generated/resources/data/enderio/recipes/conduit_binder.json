@@ -5,5 +5,8 @@
   "ingredient": {
     "item": "enderio:conduit_binder_composite"
   },
-  "result": "enderio:conduit_binder"
+  "result": {
+    "count": 2,
+    "item": "enderio:conduit_binder"
+  }
 }
