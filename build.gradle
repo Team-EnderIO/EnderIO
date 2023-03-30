@@ -65,8 +65,6 @@ for (String set : subsets) {
 }
 
 minecraft {
-    mappings channel: "${mappings_channel}", version: "${mappings_version}"
-
     if (mappings_channel == "sugarcane") {
         mappings channel: 'sugarcane', version: "${mappings_version}-${minecraft_version}"
     } else if (mappings_channel == "parchment") {
@@ -173,17 +171,28 @@ processResources {
 
 repositories {
     // Registrate
-    maven { url "https://maven.tterrag.com/" }
+    maven {
+        url "https://maven.tterrag.com/"
+        content {
+            includeGroup 'com.tterrag.registrate'
+        }
+    }
 
     maven {
         // location of the maven that hosts JEI files
-        name = "Progwml6 maven"
-        url = "https://dvs1.progwml6.com/files/maven/"
+        name "Progwml6 maven"
+        url "https://dvs1.progwml6.com/files/maven/"
+        content {
+            includeGroup 'mezz.jei'
+        }
     }
     maven {
         // location of a maven mirror for JEI files, as a fallback
-        name = "ModMaven"
-        url = "https://modmaven.dev"
+        name "ModMaven"
+        url "https://modmaven.dev"
+        content {
+            includeGroup 'mezz.jei'
+        }
     }
 
     // Temp for TOP, https://github.com/McJtyMods/TheOneProbe/issues/506
@@ -194,7 +203,19 @@ repositories {
         }
     }
 
-    maven { url 'https://maven.blamejared.com' }
+    maven {
+        url 'https://maven.blamejared.com'
+        content {
+            includeGroup 'vazkii.patchouli'
+        }
+    }
+
+    maven {
+        url 'https://maven.k-4u.nl'
+        content {
+            includeGroup 'mcjty.theoneprobe'
+        }
+    }
 
     mavenLocal()
 
@@ -218,13 +239,12 @@ dependencies {
 //    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common:${jei_version}")
 //    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
 
-    // The One Probe
-//    implementation fg.deobf("mcjty.theoneprobe:TheOneProbe:${minecraft_version}-${top_version}")
-//    implementation fg.deobf("curse.maven:the-one-probe-245211:${top_version}")
+    // The One Probe TODO: Deobf breaks stuff :/
+//    runtimeOnly fg.deobf("mcjty.theoneprobe:theoneprobe:${top_version}")
 
     // Patchouli
-//    compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
-//    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
+    compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
+    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
 
     // While we don't have conduits etc.
 //    runtimeOnly fg.deobf("curse.maven:mekanism-268560:${mekanism_version}")
