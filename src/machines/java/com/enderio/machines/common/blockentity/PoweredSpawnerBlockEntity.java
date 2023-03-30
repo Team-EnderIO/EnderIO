@@ -35,6 +35,7 @@ public class PoweredSpawnerBlockEntity extends PoweredTaskMachineEntity<SpawnTas
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, () -> 100000f);
     public static final QuadraticScalable TRANSFER = new QuadraticScalable(CapacitorModifier.ENERGY_TRANSFER, () -> 200f);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, () -> 160f);
+    public static final ResourceLocation PIG = new ResourceLocation("pig");
     private StoredEntityData entityData = StoredEntityData.empty();
     private int range = 3;
     private boolean rangeVisible;
@@ -46,7 +47,7 @@ public class PoweredSpawnerBlockEntity extends PoweredTaskMachineEntity<SpawnTas
     public PoweredSpawnerBlockEntity(BlockEntityType type, BlockPos worldPosition, BlockState blockState) {
         super(CAPACITY, TRANSFER, USAGE, type, worldPosition, blockState);
         add2WayDataSlot(new BooleanDataSlot(this::isShowingRange, this::shouldShowRange, SyncMode.GUI));
-        addDataSlot(new ResourceLocationDataSlot(() -> this.getEntityType().orElse(new ResourceLocation("pig")),this::setEntityType, SyncMode.GUI));
+        addDataSlot(new ResourceLocationDataSlot(() -> this.getEntityType().orElse(PIG),this::setEntityType, SyncMode.GUI));
         addDataSlot(new EnumDataSlot<>(this::getReason, this::setReason, SyncMode.GUI));
 
         String color = MachinesConfig.CLIENT.BLOCKS.POWERED_SPAWNER_RANGE_COLOR.get();

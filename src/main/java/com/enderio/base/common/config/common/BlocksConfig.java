@@ -10,7 +10,7 @@ public class BlocksConfig {
     public BlocksConfig(ForgeConfigSpec.Builder builder) {
         builder.push("blocks");
 
-        builder.push("brokenSpawner"); //TODO is this push needed?
+        builder.push("brokenSpawner");
         BROKEN_SPAWNER_DROP_CHANCE = builder.comment("The chance of a spawner dropping a broken spawner.").define("dropChance", 1.0f);
         builder.pop();
 
