@@ -128,7 +128,7 @@ public class SoulBinderBlockEntity extends PoweredCraftingMachine<SoulBindingRec
 
             @Override
             public int fill(FluidStack resource, FluidAction action) {
-                if (!this.getFluid().getFluid().equals(EIOFluids.XP_JUICE.getSource()) && this.isFluidValid(resource)) { // Auto convert to own fluid (source) type?
+                if (!this.getFluid().getFluid().isSame(EIOFluids.XP_JUICE.getSource()) && this.isFluidValid(resource)) { // Auto convert to own fluid (source) type
                     resource = new FluidStack(EIOFluids.XP_JUICE.getSource(), resource.getAmount());
                 }
                 return super.fill(resource, action);

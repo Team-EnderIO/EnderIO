@@ -133,7 +133,7 @@ public class PoweredSpawnerBlockEntity extends PoweredTaskMachineEntity<SpawnTas
     }
 
     private void generateParticle(RangeParticleData data, Vec3 pos) {
-        if (!isClientSide() && level instanceof ServerLevel serverLevel) {
+        if (level instanceof ServerLevel serverLevel) {
             for (ServerPlayer player : serverLevel.players()) {
                 serverLevel.sendParticles(player, data, true, pos.x, pos.y, pos.z, 1, 0, 0, 0, 0);
             }
@@ -149,15 +149,15 @@ public class PoweredSpawnerBlockEntity extends PoweredTaskMachineEntity<SpawnTas
     }
 
     public enum SpawnerBlockedReason {
-        TOO_MANY_MOB("mob", MachineLang.TOO_MANY_MOB),
-        TOO_MANY_SPAWNER("spawner", MachineLang.TOO_MANY_SPAWNER),
-        UNKOWN_MOB("unknown", MachineLang.UNKNOWN),
-        OTHER_MOD("other", MachineLang.OTHER_MOD),
-        NONE("none", Component.literal("NONE"));
+        TOO_MANY_MOB(MachineLang.TOO_MANY_MOB),
+        TOO_MANY_SPAWNER(MachineLang.TOO_MANY_SPAWNER),
+        UNKOWN_MOB(MachineLang.UNKNOWN),
+        OTHER_MOD(MachineLang.OTHER_MOD),
+        NONE(Component.literal("NONE"));
 
         private final Component component;
 
-        SpawnerBlockedReason(String name, Component component) {
+        SpawnerBlockedReason(Component component) {
             this.component = component;
         }
 

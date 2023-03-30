@@ -113,7 +113,7 @@ public class SpawnTask extends PoweredTask{
                 return false;
             }
             Optional<EntityType<?>> optionalEntity = Registry.ENTITY_TYPE.getOptional(rl.get());
-            if (optionalEntity.isEmpty()) {
+            if (optionalEntity.isEmpty() || !Registry.ENTITY_TYPE.getKey(optionalEntity.get()).equals(rl.get())) { // check we don't get the default pig
                 blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
                 return false;
             }
