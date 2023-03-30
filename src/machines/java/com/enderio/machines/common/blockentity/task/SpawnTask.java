@@ -70,7 +70,7 @@ public class SpawnTask extends PoweredTask{
     }
 
     /**
-     * Check if the area has less spawners and mobs than the config.
+     * Check if the area has fewer spawners and mobs than the config.
      * @return
      */
     public boolean isAreaClear() {
@@ -81,7 +81,7 @@ public class SpawnTask extends PoweredTask{
             return false;
         }
         Optional<EntityType<?>> entity = Registry.ENTITY_TYPE.getOptional(rl.get());
-        if (entity.isEmpty()) {
+        if (entity.isEmpty() || !Registry.ENTITY_TYPE.getKey(entity.get()).equals(rl.get())) { // check we don't get the default pig
             blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
             return false;
         }
@@ -91,7 +91,7 @@ public class SpawnTask extends PoweredTask{
             return false;
         }
         long count = BlockPos.betweenClosedStream(range).filter(pos -> blockEntity.getLevel().getBlockEntity(pos) instanceof PoweredSpawnerBlockEntity).count();
-        if (count >= MachinesConfig.COMMON.MAX_SPAWNERS.get()) { //TODO config? Max amount of spawners.
+        if (count >= MachinesConfig.COMMON.MAX_SPAWNERS.get()) {
             this.efficiency = MachinesConfig.COMMON.MAX_SPAWNERS.get()/(float)count;
         }
         return true;

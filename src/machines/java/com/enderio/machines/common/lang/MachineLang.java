@@ -33,7 +33,7 @@ public class MachineLang {
 
     public static final Component TOO_MANY_MOB = REGISTRATE.addLang("gui", EnderIO.loc("spawner.too_many_mob"), "Too many mobs");
     public static final Component TOO_MANY_SPAWNER = REGISTRATE.addLang("gui", EnderIO.loc("spawner.too_many_spawner"), "Too many spawners");
-    public static final Component UNKNOWN = REGISTRATE.addLang("gui", EnderIO.loc("spawner.unknown"), "Unknown");
+    public static final Component UNKNOWN = REGISTRATE.addLang("gui", EnderIO.loc("spawner.unknown"), "Unknown mob");
     public static final Component OTHER_MOD = REGISTRATE.addLang("gui", EnderIO.loc("spawner.other_mod"), "Other mod");
 
 

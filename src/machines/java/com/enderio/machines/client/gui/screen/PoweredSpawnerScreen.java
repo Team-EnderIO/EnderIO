@@ -61,9 +61,11 @@ public class PoweredSpawnerScreen extends EIOScreen<PoweredSpawnerMenu> {
         Optional<ResourceLocation> rl = getMenu().getBlockEntity().getEntityType();
         if (rl.isPresent()) {
             Optional<EntityType<?>> typeOptional = Registry.ENTITY_TYPE.getOptional(rl.get());
-            if (typeOptional.isPresent()) {
+            if (typeOptional.isPresent() && Registry.ENTITY_TYPE.getKey(typeOptional.get()).equals(rl.get())) { // check we don't get the default pig
                 String name = typeOptional.get().getDescription().getString();
                 font.draw(pPoseStack, name, leftPos + imageWidth/2f - font.width(name)/2f, topPos + 15, 0);
+            } else {
+                font.draw(pPoseStack, rl.get().toString(), leftPos + imageWidth/2f - font.width(rl.get().toString())/2f, topPos + 15, 0);
             }
         }
         if (getMenu().getBlockEntity().getReason() != PoweredSpawnerBlockEntity.SpawnerBlockedReason.NONE) {
