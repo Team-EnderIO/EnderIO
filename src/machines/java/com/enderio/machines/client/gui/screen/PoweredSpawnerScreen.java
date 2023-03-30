@@ -56,20 +56,24 @@ public class PoweredSpawnerScreen extends EIOScreen<PoweredSpawnerMenu> {
     }
 
     @Override
-    public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
-        super.render(pPoseStack, pMouseX, pMouseY, pPartialTicks);
+    protected void renderLabels(PoseStack pPoseStack, int pMouseX, int pMouseY) {
         Optional<ResourceLocation> rl = getMenu().getBlockEntity().getEntityType();
         if (rl.isPresent()) {
             Optional<EntityType<?>> typeOptional = Registry.ENTITY_TYPE.getOptional(rl.get());
             if (typeOptional.isPresent() && Registry.ENTITY_TYPE.getKey(typeOptional.get()).equals(rl.get())) { // check we don't get the default pig
                 String name = typeOptional.get().getDescription().getString();
-                font.draw(pPoseStack, name, leftPos + imageWidth/2f - font.width(name)/2f, topPos + 15, 0);
+                font.draw(pPoseStack, name, leftPos + imageWidth/2f - font.width(name)/2f, topPos + 15, 4210752);
             } else {
-                font.draw(pPoseStack, rl.get().toString(), leftPos + imageWidth/2f - font.width(rl.get().toString())/2f, topPos + 15, 0);
+                font.draw(pPoseStack, rl.get().toString(), leftPos + imageWidth/2f - font.width(rl.get().toString())/2f, topPos + 15, 4210752);
             }
         }
         if (getMenu().getBlockEntity().getReason() != PoweredSpawnerBlockEntity.SpawnerBlockedReason.NONE) {
             font.draw(pPoseStack, getMenu().getBlockEntity().getReason().getComponent().getString(), leftPos + imageWidth/2f - font.width(getMenu().getBlockEntity().getReason().getComponent().getString())/2f, topPos + 26, 0);
         }
+    }
+
+    @Override
+    public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
+        super.render(pPoseStack, pMouseX, pMouseY, pPartialTicks);
     }
 }
