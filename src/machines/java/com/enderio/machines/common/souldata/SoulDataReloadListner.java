@@ -18,7 +18,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
 
-package com.enderio.core.data;
+package com.enderio.machines.common.souldata;
 
 import com.enderio.core.EnderCore;
 import com.enderio.core.common.network.CoreNetwork;
@@ -49,7 +49,7 @@ import java.util.function.Function;
  * to the forge events necessary for syncing datapack data to clients.
  * @param <T> The type of the objects that the codec is parsing jsons as
  */
-public class CodecReloadListner<T> extends SimpleJsonResourceReloadListener {
+public class SoulDataReloadListner<T extends ISoulData> extends SimpleJsonResourceReloadListener {
     private static Gson gson = new Gson();
     public Map<ResourceLocation,T> map = new HashMap<>();
     private Codec<T> codec;
@@ -64,7 +64,7 @@ public class CodecReloadListner<T> extends SimpleJsonResourceReloadListener {
      * @param gson A gson for parsing the raw json data into JsonElements. JsonElement-to-T conversion will be done by the codec,
      * so gson type adapters shouldn't be necessary here
      */
-    public CodecReloadListner(Gson gson, String folder, Codec<T> codec){
+    public SoulDataReloadListner(Gson gson, String folder, Codec<T> codec){
         super(gson, folder);
         this.codec = codec;
         this.folderName = folder;
@@ -77,7 +77,7 @@ public class CodecReloadListner<T> extends SimpleJsonResourceReloadListener {
      * folderName can include subfolders, e.g. "some_mod_that_adds_lots_of_data_loaders/cheeses"
      * @param codec A codec to deserialize the json into your T, see javadocs above class
      */
-    public CodecReloadListner(String folder, Codec<T> codec) {
+    public SoulDataReloadListner(String folder, Codec<T> codec) {
         this(gson, folder, codec);
     }
 
@@ -88,7 +88,7 @@ public class CodecReloadListner<T> extends SimpleJsonResourceReloadListener {
         for (Map.Entry<ResourceLocation, JsonElement> element: pObject.entrySet()) {
             codec.decode(JsonOps.INSTANCE, element.getValue())
                 .get()
-                .ifLeft(result -> newMap.put(element.getKey(), result.getFirst()))
+                .ifLeft(result -> newMap.put(result.getFirst().getKey(), result.getFirst()))
                 .ifRight(partial -> EnderCore.LOGGER.error("Failed to parse data json for {} due to: {}", element.getKey(), partial.message()));
         }
 
@@ -103,7 +103,7 @@ public class CodecReloadListner<T> extends SimpleJsonResourceReloadListener {
      * @param packetFactory  A packet constructor or factory method that converts the given map to a packet object to send on the given channel
      * @return this manager object
      */
-    public <P extends Packet> CodecReloadListner<T> subscribeAsSyncable(final Function<Map<ResourceLocation, T>, P> packetFactory) {
+    public <P extends Packet> SoulDataReloadListner<T> subscribeAsSyncable(final Function<Map<ResourceLocation, T>, P> packetFactory) {
         MinecraftForge.EVENT_BUS.addListener(this.getDatapackSyncListener(packetFactory));
         return this;
     }
@@ -121,6 +121,9 @@ public class CodecReloadListner<T> extends SimpleJsonResourceReloadListener {
     }
 
     public Optional<T> matches(ResourceLocation entitytype) {
+        if (map.containsKey(entitytype)) {
+            return Optional.of(map.get(entitytype));
+        }
         return Optional.empty();
     }
 
