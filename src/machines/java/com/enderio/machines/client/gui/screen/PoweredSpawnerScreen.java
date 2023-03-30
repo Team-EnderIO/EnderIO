@@ -33,8 +33,6 @@ public class PoweredSpawnerScreen extends EIOScreen<PoweredSpawnerMenu> {
     protected void init() {
         super.init();
 
-        addRenderableOnly(new ProgressWidget.BottomUp(this, () -> menu.getBlockEntity().getProgress(), getGuiLeft() + 82, getGuiTop() + 38, 14, 14, 176, 0));
-
         addRenderableOnly(new EnergyWidget(this, getMenu().getBlockEntity()::getEnergyStorage, 16 + leftPos, 14 + topPos, 9, 42));
 
         addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),
@@ -43,6 +41,9 @@ public class PoweredSpawnerScreen extends EIOScreen<PoweredSpawnerMenu> {
         addRenderableWidget(new ToggleImageButton<>(this, leftPos + imageWidth - 8 - 13, topPos + 20, 16, 16, 0, 0, 16, 0, RANGE_BUTTON_TEXTURE,
             () -> menu.getBlockEntity().isShowingRange(), state -> menu.getBlockEntity().shouldShowRange(state),
             () -> menu.getBlockEntity().isShowingRange() ? EIOLang.HIDE_RANGE : EIOLang.SHOW_RANGE));
+
+        addRenderableOnly(new ProgressWidget.BottomUp(this, () -> menu.getBlockEntity().getProgress(), getGuiLeft() + 82, getGuiTop() + 38, 14, 14, 176, 0));
+
     }
 
     @Override
@@ -62,18 +63,13 @@ public class PoweredSpawnerScreen extends EIOScreen<PoweredSpawnerMenu> {
             Optional<EntityType<?>> typeOptional = Registry.ENTITY_TYPE.getOptional(rl.get());
             if (typeOptional.isPresent() && Registry.ENTITY_TYPE.getKey(typeOptional.get()).equals(rl.get())) { // check we don't get the default pig
                 String name = typeOptional.get().getDescription().getString();
-                font.draw(pPoseStack, name, leftPos + imageWidth/2f - font.width(name)/2f, topPos + 15, 4210752);
+                font.draw(pPoseStack, name, imageWidth/2f - font.width(name)/2f, 15, 4210752);
             } else {
-                font.draw(pPoseStack, rl.get().toString(), leftPos + imageWidth/2f - font.width(rl.get().toString())/2f, topPos + 15, 4210752);
+                font.draw(pPoseStack, rl.get().toString(), imageWidth/2f - font.width(rl.get().toString())/2f, 15, 4210752);
             }
         }
         if (getMenu().getBlockEntity().getReason() != PoweredSpawnerBlockEntity.SpawnerBlockedReason.NONE) {
-            font.draw(pPoseStack, getMenu().getBlockEntity().getReason().getComponent().getString(), leftPos + imageWidth/2f - font.width(getMenu().getBlockEntity().getReason().getComponent().getString())/2f, topPos + 26, 0);
+            font.draw(pPoseStack, getMenu().getBlockEntity().getReason().getComponent().getString(), imageWidth/2f - font.width(getMenu().getBlockEntity().getReason().getComponent().getString())/2f, 26, 0);
         }
-    }
-
-    @Override
-    public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
-        super.render(pPoseStack, pMouseX, pMouseY, pPartialTicks);
     }
 }
