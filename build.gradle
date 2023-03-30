@@ -229,7 +229,7 @@ dependencies {
 
     // Registrate
     implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
-    jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: "${registrate_version_range}")
+    jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: "[${registrate_version}]")
 
     coreAnnotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
