@@ -18,7 +18,7 @@ jobs:
       - name: Hash generated data pre-run
         run: |
           HASH=$(tar cf - src/generated | sha1sum)
-          echo "pregen_hash=$HASH" >> $GITHUB_ENV]
+          echo "pregen_hash=$HASH" >> $GITHUB_ENV
       - name: Build # Build to catch Java errors first
         uses: gradle/gradle-build-action@v2
         with:
