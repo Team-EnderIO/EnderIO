@@ -21,6 +21,19 @@ public class MachinesLootTable {
                 LootItem.lootTableItem(block).apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY).copy("", "BlockEntityTag")))));
     }
 
+    public static <T extends Block> void copyNBTSingleCap(RegistrateBlockLootTables loot, T block, String name) {
+        loot.add(block, LootTable
+            .lootTable()
+            .withPool(new LootPool.Builder().add(
+                LootItem.lootTableItem(block).apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
+                    .copy(name, "BlockEntityTag." + name)
+                    .copy("energy", "BlockEntityTag.energy")
+                    .copy("io_config", "BlockEntityTag.io_config")
+                    .copy("redstone", "BlockEntityTag.redstone")
+                    .copy("inventory", "BlockEntityTag.inventory")
+                ))));
+    }
+
     // Ignores the top block.
     public static <T extends Block> void tallCopyNBT(RegistrateBlockLootTables loot, T block) {
         loot.add(block, LootTable

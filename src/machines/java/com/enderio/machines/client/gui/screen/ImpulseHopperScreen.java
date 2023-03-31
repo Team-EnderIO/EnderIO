@@ -50,7 +50,7 @@ public class ImpulseHopperScreen extends EIOScreen<ImpulseHopperMenu> {
     }
 
     @Override
-    protected ResourceLocation getBackgroundImage() {
+    public ResourceLocation getBackgroundImage() {
         return BG_TEXTURE;
     }
 

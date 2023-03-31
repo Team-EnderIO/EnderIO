@@ -46,7 +46,7 @@ public class SagMillScreen extends EIOScreen<SagMillMenu> {
     }
 
     @Override
-    protected ResourceLocation getBackgroundImage() {
+    public ResourceLocation getBackgroundImage() {
         return BG_TEXTURE;
     }
 
