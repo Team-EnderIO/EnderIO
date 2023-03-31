@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:conduit_binder"
+        "recipe": "enderio:conduit_binder_from_smelting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "enderio:conduit_binder"
+      "enderio:conduit_binder_from_smelting"
     ]
   }
 }

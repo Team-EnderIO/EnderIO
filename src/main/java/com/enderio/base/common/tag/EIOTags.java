@@ -109,5 +109,6 @@ public class EIOTags {
         private static TagKey<EntityType<?>> create(String pName) {
             return TagKey.create(Registry.ENTITY_TYPE_REGISTRY, EnderIO.loc(pName));
         }
+
     }
 }

@@ -37,6 +37,5 @@ public class MachineLang {
     public static final Component OTHER_MOD = REGISTRATE.addLang("gui", EnderIO.loc("spawner.other_mod"), "Other mod");
     public static final Component DISABLED = REGISTRATE.addLang("gui", EnderIO.loc("spawner.disabled"), "Disabled by config");
 
-
     public static void register() {}
 }

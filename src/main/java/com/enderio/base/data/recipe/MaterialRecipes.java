@@ -12,6 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -77,7 +78,7 @@ public class MaterialRecipes extends RecipeProvider {
         makeMaterialRecipes(recipeConsumer, EIOItems.END_STEEL_INGOT.get(), EIOItems.END_STEEL_NUGGET.get(), EIOBlocks.END_STEEL_BLOCK.get());
 
         ShapedRecipeBuilder
-            .shaped(EIOItems.CONDUIT_BINDER_COMPOSITE.get(), 16)
+            .shaped(EIOItems.CONDUIT_BINDER_COMPOSITE.get(), 8)
             .pattern("GCG")
             .pattern("SGS")
             .pattern("GCG")
@@ -255,11 +256,15 @@ public class MaterialRecipes extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(ItemTags.LOGS).build()))
             .save(recipeConsumer, EnderIO.loc("stick"));
 
-        // TODO: Explore adding a custom serializer for smelting so we can do 1:2 again.
-        SimpleCookingRecipeBuilder
-            .smelting(Ingredient.of(EIOItems.CONDUIT_BINDER_COMPOSITE.get()), EIOItems.CONDUIT_BINDER.get(), 0, 100)
+        MultipleCookingRecipeBuilder
+            .smelting(Ingredient.of(EIOItems.CONDUIT_BINDER_COMPOSITE.get()), new ItemStack(EIOItems.CONDUIT_BINDER.get(), 2), 0, 200)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER_COMPOSITE.get()))
-            .save(recipeConsumer);
+            .save(recipeConsumer, EnderIO.loc(EIOItems.CONDUIT_BINDER.getId().getPath() + "_from_smelting"));
+
+        MultipleCookingRecipeBuilder
+            .blasting(Ingredient.of(EIOItems.CONDUIT_BINDER_COMPOSITE.get()), new ItemStack(EIOItems.CONDUIT_BINDER.get(), 2), 0, 100)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER_COMPOSITE.get()))
+            .save(recipeConsumer, EnderIO.loc(EIOItems.CONDUIT_BINDER.getId().getPath() + "_from_blasting"));
 
         grindingBall(recipeConsumer, EIOItems.DARK_STEEL_BALL.get(), EIOItems.DARK_STEEL_INGOT.get());
         grindingBall(recipeConsumer, EIOItems.SOULARIUM_BALL.get(), EIOItems.SOULARIUM_INGOT.get());

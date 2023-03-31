@@ -17,6 +17,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 
+
 import java.util.List;
 import java.util.Optional;
 
@@ -144,7 +145,6 @@ public class SpawnTask extends PoweredTask{
             double y = pos.getY() + randomsource.nextInt(3) - 1;
             double z = pos.getZ() + (randomsource.nextDouble() - randomsource.nextDouble()) * (double)this.blockEntity.getRange() + 0.5D;
 
-
             if (level.noCollision(this.entityType.getAABB(x, y, z))) {
 
                 Entity entity = null;
@@ -156,8 +156,8 @@ public class SpawnTask extends PoweredTask{
                         });
                     }
                     case ENTITYTYPE -> {
-                            entity = this.entityType.create(level);
-                            entity.moveTo(x, y, z);
+                        entity = this.entityType.create(level);
+                        entity.moveTo(x, y, z);
                     }
                 }
 
