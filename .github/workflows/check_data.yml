@@ -38,7 +38,7 @@ jobs:
           files: "src/generated/resources/.cache/"
       - name: Compare generated resources
         run: |
-          diff -r --strip-trailing-cr -x '.cache/*' generatedBak src/generated
+          diff -r --strip-trailing-cr -x 'resources/.cache/*' generatedBak src/generated
           if [ $? -ne 0 ]; then
               echo "Mismatch between generated data and committed data, please re-run runDataProd and push those changes.";
               exit 1;
