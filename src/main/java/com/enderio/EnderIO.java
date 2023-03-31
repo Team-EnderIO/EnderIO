@@ -12,6 +12,7 @@ import com.enderio.base.data.advancement.EIOAdvancementProvider;
 import com.enderio.base.data.loot.FireCraftingLootProvider;
 import com.enderio.base.data.recipe.*;
 import com.enderio.base.data.tags.EIOBlockTagsProvider;
+import com.enderio.base.data.tags.EIOEntityTagsProvider;
 import com.enderio.base.data.tags.EIOFluidTagsProvider;
 import com.enderio.base.data.tags.EIOItemTagsProvider;
 import com.enderio.core.EnderCore;
@@ -104,6 +105,7 @@ public class EnderIO {
         generator.addProvider(event.includeServer(), new EIOItemTagsProvider(generator, b, event.getExistingFileHelper()));
         generator.addProvider(event.includeServer(), new EIOFluidTagsProvider(generator, event.getExistingFileHelper()));
         generator.addProvider(event.includeServer(), new EIOBlockTagsProvider(generator, event.getExistingFileHelper()));
+        generator.addProvider(event.includeServer(), new EIOEntityTagsProvider(generator, event.getExistingFileHelper()));
         generator.addProvider(event.includeServer(), new FireCraftingLootProvider(generator));
 
         generator.addProvider(event.includeServer(), new EIOAdvancementProvider(EnderIO.registrate(), generator, event.getExistingFileHelper()));

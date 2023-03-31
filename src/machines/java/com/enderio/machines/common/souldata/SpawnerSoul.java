@@ -9,7 +9,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
-public class PoweredSpawnerSoul {
+public class SpawnerSoul {
 
     public record SoulData(ResourceLocation entitytype, int power, SpawnTask.SpawnType spawnType) implements ISoulData {
         @Override

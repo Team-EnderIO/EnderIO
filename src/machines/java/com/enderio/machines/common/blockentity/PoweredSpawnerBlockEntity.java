@@ -74,7 +74,7 @@ public class PoweredSpawnerBlockEntity extends PoweredTaskMachineEntity<SpawnTas
     }
 
     private SpawnTask createTask() {
-        return new SpawnTask(this, this.getEnergyStorage());
+        return new SpawnTask(this, this.getEnergyStorage(), this.getEntityType());
     }
 
     @Override
