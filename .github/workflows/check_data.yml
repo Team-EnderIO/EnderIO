@@ -15,10 +15,8 @@ jobs:
           distribution: 'temurin'
       - name: Make gradlew executable
         run: chmod +x ./gradlew
-      - name: Hash generated data pre-run
-        run: |
-          HASH=$(tar cf - src/generated | sha1sum)
-          echo "pregen_hash=$HASH" >> $GITHUB_ENV
+      - name: Store committed data
+        run: cp src/generated generatedBak
       - name: Build # Build to catch Java errors first
         uses: gradle/gradle-build-action@v2
         with:
@@ -33,20 +31,16 @@ jobs:
         env:
           GRADLE_BUILD_ACTION_CACHE_DEBUG_ENABLED: true
       - name: Check data generated successfully # So we do this to ensure something was done, .cache will always be written
+        continue-on-error: false # reset
         id: check_files
         uses: andstor/file-existence-action@v1
         with:
           files: "src/generated/resources/.cache/"
-      - name: Purge generated cache
-        run: rm -rf src/generated/resources/.cache
-      - name: Hash generated data post-run
+      - name: Compare generated resources
         run: |
-          HASH=$(tar cf - src/generated | sha1sum)
-          echo "postgen_hash=$HASH" >> $GITHUB_ENV
-      # Thanks https://stackoverflow.com/a/68777117
-      - name: Check generated output equal
-        if: ${{ env.pregen_hash }} != ${{ env.postgen_hash }}
-        uses: actions/github-script@v3
-        with:
-          script: |
-              core.setFailed('Generated data differs on git versus runDataProd run, make sure you do this then commit it.')
+          diff --strip-trailing-cr -x '.cache/*' generatedBak src/generated
+          if [ $? -ne 0 ]; then
+              echo "Mismatch between generated data and committed data, please re-run runDataProd and push those changes.";
+              exit 1;
+          fi
+          echo "Passed data check";
