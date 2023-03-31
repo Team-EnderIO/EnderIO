@@ -16,7 +16,7 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
       - name: Store committed data
-        run: cp src/generated generatedBak
+        run: cp -r src/generated generatedBak
       - name: Build # Build to catch Java errors first
         uses: gradle/gradle-build-action@v2
         with:
