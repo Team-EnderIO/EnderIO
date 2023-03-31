@@ -1,6 +1,7 @@
 package com.enderio.machines.client.gui.widget.ioconfig;
 
 import com.enderio.EnderIO;
+import com.enderio.api.io.IOMode;
 import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.machines.client.rendering.model.ModelRenderUtil;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
@@ -12,6 +13,7 @@ import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.*;
@@ -23,13 +25,13 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.EmptyBlockGetter;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -37,7 +39,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -47,7 +48,7 @@ import java.util.*;
  */
 public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
 
-    private static final float SCALE = 30;
+    private static final float SCALE = 20;
     private static final Quaternion ROT_180_Z = Vector3f.ZP.rotation((float) Math.PI);
     private static final Vec3 RAY_ORIGIN = new Vec3(1.5, 1.5, 1.5);
     private static final Vec3 RAY_START = new Vec3(1.5, 1.5, -1);
@@ -55,6 +56,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     private static final BlockPos POS = new BlockPos(1, 1, 1);
     private static final int Z_OFFSET = 100;
     private static final ResourceLocation SELECTED_ICON = EnderIO.loc("block/overlay/selected_face");
+    private static final ResourceLocation IO_MODES = EnderIO.loc("textures/gui/icons/io_config.png");
     private static final int NEIGHBOUR_TRANSPARENCY = 100; // range 0-255
     private static final Minecraft minecraft = Minecraft.getInstance();
     private final U addedOn;
@@ -62,19 +64,22 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     private final Vector3f multiblock_size;
     private final List<BlockPos> configurable = new ArrayList<>();
     private final List<BlockPos> neighbours = new ArrayList<>();
+
+    private final Font font;
     // Camera Variables
     private float pitch;
     private float yaw;
-    private @Nullable SelectedFace selection;
+    private @NotNull Optional<SelectedFace> selection = Optional.empty();
 
-    public IOConfigWidget(U addedOn, int x, int y, int width, int height, BlockPos configurable) {
-        this(addedOn, x, y, width, height, List.of(configurable));
+    public IOConfigWidget(U addedOn, int x, int y, int width, int height, BlockPos configurable, Font font) {
+        this(addedOn, x, y, width, height, List.of(configurable), font);
     }
 
-    public IOConfigWidget(U addedOn, int x, int y, int width, int height, List<BlockPos> _configurable) {
+    public IOConfigWidget(U addedOn, int x, int y, int width, int height, List<BlockPos> _configurable, Font font) {
         super(x, y, width, height, CommonComponents.EMPTY);
         this.addedOn = addedOn;
         this.configurable.addAll(_configurable);
+        this.font = font;
 
         Vector3f c;
         if (configurable.size() == 1) {
@@ -108,8 +113,8 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
             }
 
         });
-        pitch = 30;
-        yaw = 30;
+        pitch = minecraft.player.getXRot();
+        yaw = minecraft.player.getYRot();
     }
 
     private static BlockHitResult raycast(BlockState state, float diffX, float diffY, Matrix4f transform) {
@@ -190,10 +195,13 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
 
             if (opt.isPresent()) {
                 Map.Entry<BlockHitResult, BlockPos> closest = opt.get();
-                selection = new SelectedFace(closest.getValue(), closest.getKey().getDirection());
+                selection = Optional.of(new SelectedFace(closest.getValue(), closest.getKey().getDirection()));
+            } else {
+                selection = Optional.empty();
             }
 
             renderSelection(poseStack, centerX, centerY, blockTransform);
+            renderOverlay(poseStack);
 
         }
     }
@@ -202,10 +210,11 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
         if (this.active && this.visible) {
             if (pButton == 1) {
-                if (selection != null) {
-                    BlockEntity entity = minecraft.level.getBlockEntity(selection.blockPos);
+                if (selection.isPresent()) {
+                    var selectedFace = selection.get();
+                    BlockEntity entity = minecraft.level.getBlockEntity(selectedFace.blockPos);
                     if (entity instanceof MachineBlockEntity machine) {
-                        machine.getIOConfig().cycleMode(selection.direction);
+                        machine.getIOConfig().cycleMode(selectedFace.side);
                         this.playDownSound(Minecraft.getInstance().getSoundManager());
                         return true;
                     }
@@ -233,8 +242,41 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
         return false;
     }
 
+    private void renderOverlay(PoseStack poseStack) {
+        if (selection.isPresent()) {
+            var selectedFace = selection.get();
+            BlockEntity entity = minecraft.level.getBlockEntity(selectedFace.blockPos);
+            if (entity instanceof MachineBlockEntity machine) {
+                var ioMode = machine.getIOConfig().getMode(selectedFace.side);
+                Component modeString;
+                Rect2i iconBounds;
+                if (ioMode == IOMode.PUSH) {
+                    modeString = IOModeMap.PUSH.getName();
+                    iconBounds = IOModeMap.PUSH.getRect();
+                } else if (ioMode == IOMode.PULL) {
+                    modeString = IOModeMap.PULL.getName();
+                    iconBounds = IOModeMap.PULL.getRect();
+                } else if (ioMode == IOMode.BOTH) {
+                    modeString = IOModeMap.PUSHPULL.getName();
+                    iconBounds = IOModeMap.PUSHPULL.getRect();
+                } else if (ioMode == IOMode.DISABLED) {
+                    modeString = IOModeMap.DISABLED.getName();
+                    iconBounds = IOModeMap.DISABLED.getRect();
+                } else {
+                    modeString = IOModeMap.NONE.getName();
+                    iconBounds = IOModeMap.NONE.getRect();
+                }
+
+                RenderSystem.setShaderTexture(0, IO_MODES);
+                font.draw(poseStack, modeString, x + 4, y + height - 2 - font.lineHeight, 0xFFFFFFFF);
+                blit(poseStack, x + 4, y + height - 4 - font.lineHeight - iconBounds.getHeight(), iconBounds.getX(), iconBounds.getY(), iconBounds.getWidth(),
+                    iconBounds.getHeight());
+            }
+        }
+    }
+
     private void renderSelection(PoseStack poseStack, int centerX, int centerY, Quaternion transform) {
-        if (selection == null) {
+        if (selection.isEmpty()) {
             return;
         }
         poseStack.pushPose();
@@ -251,9 +293,10 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
-        BlockPos blockPos = selection.blockPos;
+        var selectedFace = selection.get();
+        BlockPos blockPos = selectedFace.blockPos;
         poseStack.translate(blockPos.getX() - world_origin.x(), blockPos.getY() - world_origin.y(), blockPos.getZ() - world_origin.z());
-        Vector3f[] vec = Arrays.stream(ModelRenderUtil.createQuadVerts(selection.direction, 0, 1, 1)).map(Vector3f::new).toArray(Vector3f[]::new);
+        Vector3f[] vec = Arrays.stream(ModelRenderUtil.createQuadVerts(selectedFace.side, 0, 1, 1)).map(Vector3f::new).toArray(Vector3f[]::new);
         Matrix4f matrix4f = poseStack.last().pose();
         bufferbuilder.vertex(matrix4f, vec[0].x(), vec[0].y(), vec[0].z()).color(1F, 1F, 1F, 1F).uv(tex.getU0(), tex.getV0()).endVertex();
         bufferbuilder.vertex(matrix4f, vec[1].x(), vec[1].y(), vec[1].z()).color(1F, 1F, 1F, 1F).uv(tex.getU0(), tex.getV1()).endVertex();
@@ -263,7 +306,6 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
 
         poseStack.popPose();
     }
-
 
     private void renderWorld(PoseStack poseStack, int centerX, int centerY, Quaternion transform, float partialTick) {
         Lighting.setupForEntityInInventory();
@@ -333,17 +375,10 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
         } else if (shape != RenderShape.INVISIBLE) {
             BlockEntityRenderDispatcher renderDispatcher = minecraft.getBlockEntityRenderDispatcher();
             BlockEntity blockEntity = minecraft.level.getBlockEntity(blockPos);
-            Optional<RenderType> opt = checkSpecialBlockEntities(blockEntity.getType(), buffers);
-            if (opt.isPresent()) {
-                renderType = opt.get();
-            }
             var renderer = renderDispatcher.getRenderer(blockEntity);
             if (renderer != null) {
-                RenderType finalRenderType = renderType;
-                //                renderer.render(blockEntity, partialTick, poseStack, (type) -> type.format() == finalRenderType.format() ? finalVertexConsumer : buffers.getBuffer(type), LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
-                renderer.render(blockEntity, partialTick, poseStack,
-                    (type) -> new TransparentVertexConsumer(buffers.getBuffer(finalRenderType), NEIGHBOUR_TRANSPARENCY), LightTexture.FULL_BRIGHT,
-                    OverlayTexture.NO_OVERLAY);
+                renderer.render(blockEntity, partialTick, poseStack, (type) -> new TransparentVertexConsumer(buffers.getBuffer(type), NEIGHBOUR_TRANSPARENCY),
+                    LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
             }
 
         }
@@ -353,21 +388,6 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     @Override
     public void updateNarration(NarrationElementOutput pNarrationElementOutput) {}
 
-    public record SelectedFace(@NotNull BlockPos blockPos, @NotNull Direction direction) {}
-
-    private Optional<RenderType> checkSpecialBlockEntities(BlockEntityType<?> type, MultiBufferSource.BufferSource buffers) {
-        RenderType renderType;
-        if (type == BlockEntityType.CHEST) {
-            renderType = Sheets.chestSheet();
-        } else if (type == BlockEntityType.BED) {
-            renderType = Sheets.bedSheet();
-        } else if (type == BlockEntityType.SHULKER_BOX) {
-            renderType = Sheets.shulkerBoxSheet();
-        } else {
-            return Optional.empty();
-        }
-        return Optional.of(renderType);
-
-    }
+    public record SelectedFace(@NotNull BlockPos blockPos, @NotNull Direction side) {}
 
 }

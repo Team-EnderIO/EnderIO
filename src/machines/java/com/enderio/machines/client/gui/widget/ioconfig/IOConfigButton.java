@@ -5,6 +5,7 @@ import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.common.util.Vector2i;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -28,13 +29,13 @@ public class IOConfigButton<U extends EIOScreen<?>, T extends Widget & GuiEventL
     private final U addedOn;
 
     public IOConfigButton(U addedOn, int x, int y, int width, int height, BlockPos blockPos, Supplier<Boolean> playerSlotsHidden,
-        Consumer<Boolean> shouldHidePlayerSlots, Function<T, T> addRenderableWidget) {
+        Consumer<Boolean> shouldHidePlayerSlots, Function<T, T> addRenderableWidget, Font font) {
         super(x, y, width, height, Component.empty());
         this.addedOn = addedOn;
         this.playerSlotsHidden = playerSlotsHidden;
         this.shouldHidePlayerSlots = shouldHidePlayerSlots;
         configRenderer = new IOConfigWidget<>(addedOn, addedOn.getGuiLeft() + 5, addedOn.getGuiTop() + addedOn.getYSize() - RENDERER_HEIGHT - 5,
-            addedOn.getXSize() - 10, RENDERER_HEIGHT, blockPos);
+            addedOn.getXSize() - 10, RENDERER_HEIGHT, blockPos, font);
         configRenderer.visible = playerSlotsHidden.get();
         addRenderableWidget.apply((T) configRenderer);
     }

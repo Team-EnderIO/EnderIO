@@ -158,13 +158,23 @@ public class EIOLang {
     public static final MutableComponent SHOW_DETAIL_TOOLTIP = REGISTRATE.addLang("tooltip", EnderIO.loc("gui.show_advanced_tooltip"), "<Hold Shift>");
 
     // endregion
-    
+
     // region Guidebook
-    
+
     public static final Component GUIDEBOOK_TITLE = REGISTRATE.addLang("guidebook", EnderIO.loc("book_title"), "Book Title");
     public static final Component GUIDEBOOK_LANDING_TEXT = REGISTRATE.addLang("guidebook", EnderIO.loc("landing_text"), "Landing Text");
 
-    //endregion
+    // endregion
+
+    // region IO
+
+    public static final Component PUSH = REGISTRATE.addLang("io", EnderIO.loc("push"), "Push");
+    public static final Component PULL = REGISTRATE.addLang("io", EnderIO.loc("pull"), "Pull");
+    public static final Component PUSHPULL = REGISTRATE.addLang("io", EnderIO.loc("pushpull"), "Push / Pull");
+    public static final Component DISABLED = REGISTRATE.addLang("io", EnderIO.loc("disabled"), "Disabled");
+    public static final Component NONE = REGISTRATE.addLang("io", EnderIO.loc("none"), "None");
+
+    // endregion
 
     public static void register() {}
 }

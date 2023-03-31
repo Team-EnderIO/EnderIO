@@ -30,8 +30,7 @@ public class ImpulseHopperScreen extends EIOScreen<ImpulseHopperMenu> {
 
         addRenderableWidget(
             new IOConfigButton<>(this, leftPos + imageWidth - 8 - 16, topPos + 22, 16, 16, menu.getBlockEntity().getBlockPos(), menu::arePlayerSlotsHidden,
-                menu::hidePlayerSlots, this::addRenderableWidget));
-        //        addRenderableWidget(new BlockPreviewWidget(leftPos + 5, topPos + imageHeight - 80 - 5, imageWidth - 10, 80));
+                menu::hidePlayerSlots, this::addRenderableWidget, font));
     }
 
     @Override
