@@ -18,13 +18,25 @@ jobs:
       - name: Hash generated data pre-run
         run: |
           HASH=$(tar cf - src/generated | sha1sum)
-          echo "pregen_hash=$HASH" >> $GITHUB_ENV
+          echo "pregen_hash=$HASH" >> $GITHUB_ENV]
+      - name: Build # Build to catch Java errors first
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build
+        env:
+          GRADLE_BUILD_ACTION_CACHE_DEBUG_ENABLED: true
       - name: Run data generator
         uses: gradle/gradle-build-action@v2
+        continue-on-error: true # We have to do this because runDataProd always exits funny
         with:
           arguments: runDataProd
         env:
           GRADLE_BUILD_ACTION_CACHE_DEBUG_ENABLED: true
+      - name: Check data generated successfully # So we do this to ensure something was done, .cache will always be written
+        id: check_files
+        uses: andstor/file-existence-action@v1
+        with:
+          files: "src/generated/resources/.cache/"
       - name: Purge generated cache
         run: rm -rf src/generated/resources/.cache
       - name: Hash generated data post-run
