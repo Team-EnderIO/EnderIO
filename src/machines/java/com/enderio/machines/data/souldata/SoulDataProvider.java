@@ -46,23 +46,15 @@ public class SoulDataProvider implements DataProvider {
         return "souldata";
     }
 
-    public <T extends ISoulData> void buildSoulData(Consumer<FinshedSoulData<T>> finshedSoulDataConsumer) {
-        addSpawnerData(EntityType.PIG, 1000, SpawnTask.SpawnType.ENTITYTYPE, "pig", finshedSoulDataConsumer);
+    public void buildSoulData(Consumer<FinshedSoulData<?>> finshedSoulDataConsumer) {
+        addSpawnerData(EntityType.ALLAY, 1000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.PIG, 1000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
     }
 
-    private <T extends ISoulData> void addSpawnerData(EntityType<?> entityType, int power, SpawnTask.SpawnType type, String id, Consumer<FinshedSoulData<T>> finshedSoulDataConsumer) {
+    private void addSpawnerData(EntityType<?> entityType, int power, SpawnTask.SpawnType type, Consumer<FinshedSoulData<?>> finshedSoulDataConsumer) {
         ResourceLocation key = Registry.ENTITY_TYPE.getKey(entityType);
         PoweredSpawnerSoul.SoulData data = new PoweredSpawnerSoul.SoulData(key, power, type);
-        finshedSoulDataConsumer.accept(new FinshedSoulData<T>(PoweredSpawnerSoul.CODEC, data, id));
-    }
-
-
-    public <T extends ISoulData> void addSoulData(Codec<T> codec, T data, String id, Consumer<FinshedSoulData<T>> finshedSoulDataConsumer) {
-        finshedSoulDataConsumer.accept(new FinshedSoulData<>(codec, data, id));
-    }
-
-    public <T extends ISoulData> void addSoulData(Codec<T> codec, T data, ResourceLocation id, Consumer<FinshedSoulData<T>> finshedSoulDataConsumer) {
-        finshedSoulDataConsumer.accept(new FinshedSoulData<>(codec, data, id));
+        finshedSoulDataConsumer.accept(new FinshedSoulData<>(PoweredSpawnerSoul.CODEC, data, key.getPath()));
     }
 
     private static void saveRecipe(CachedOutput pOutput, JsonObject pSoulDataJson, Path pPath) {
