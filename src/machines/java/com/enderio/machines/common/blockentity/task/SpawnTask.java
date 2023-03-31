@@ -3,7 +3,7 @@ package com.enderio.machines.common.blockentity.task;
 import com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
-import com.enderio.machines.common.souldata.PoweredSpawnerSoul;
+import com.enderio.machines.common.souldata.SpawnerSoul;
 import com.mojang.serialization.DataResult;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
@@ -14,6 +14,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,22 +27,24 @@ public class SpawnTask extends PoweredTask{
     private int energyConsumed = 0;
     private final PoweredSpawnerBlockEntity blockEntity;
     private float efficiency = 1;
+    @Nullable
     private ResourceLocation entityRL;
-    private SpawnType spawnType;
+    private SpawnType spawnType = MachinesConfig.COMMON.SPAWN_TYPE.get();
 
     /**
      * Create a new powered task.
      *
      * @param energyStorage The energy storage used to power the task.
      */
-    public SpawnTask(PoweredSpawnerBlockEntity blockEntity, IMachineEnergyStorage energyStorage) {
+    public SpawnTask(PoweredSpawnerBlockEntity blockEntity, IMachineEnergyStorage energyStorage, Optional<ResourceLocation> rl) {
         super(energyStorage);
         this.blockEntity = blockEntity;
+        loadSoulData(rl);
     }
 
     @Override
     public void tick() {
-        if (!loadSoulData()) {
+        if (entityRL == null) {
             return;
         }
         if (energyConsumed >= energyCost) {
@@ -104,24 +107,21 @@ public class SpawnTask extends PoweredTask{
         return true;
     }
     
-    private boolean loadSoulData() {
-        Optional<ResourceLocation> rl = blockEntity.getEntityType();
+    private void loadSoulData(Optional<ResourceLocation> rl) {
         if (rl.isEmpty()) {
             blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
-            return false;
+            return;
         }
-        Optional<PoweredSpawnerSoul.SoulData> opData = PoweredSpawnerSoul.SPAWNER.matches(rl.get());
+        Optional<SpawnerSoul.SoulData> opData = SpawnerSoul.SPAWNER.matches(rl.get());
         if (opData.isEmpty()) { //Fallback
             this.entityRL = rl.get();
             this.energyCost = 40000;
-            this.spawnType = MachinesConfig.COMMON.SPAWN_TYPE.get();
-            return true;
+            return;
         }
-        PoweredSpawnerSoul.SoulData data = opData.get();
+        SpawnerSoul.SoulData data = opData.get();
         this.entityRL = data.entitytype();
         this.energyCost =data.power();
         this.spawnType = data.spawnType();
-        return true;
     }
 
     public boolean trySpawnEntity(BlockPos pos, ServerLevel level) {

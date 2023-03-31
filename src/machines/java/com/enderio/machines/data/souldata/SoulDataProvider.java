@@ -3,7 +3,7 @@ package com.enderio.machines.data.souldata;
 import com.enderio.EnderIO;
 import com.enderio.machines.common.blockentity.task.SpawnTask;
 import com.enderio.machines.common.souldata.ISoulData;
-import com.enderio.machines.common.souldata.PoweredSpawnerSoul;
+import com.enderio.machines.common.souldata.SpawnerSoul;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -29,6 +29,84 @@ public class SoulDataProvider implements DataProvider {
     public SoulDataProvider(DataGenerator pGenerator) {
         this.generator = pGenerator.createPathProvider(DataGenerator.Target.DATA_PACK, "eio_soul");
     }
+
+    public void buildSoulData(Consumer<FinshedSoulData<?>> finshedSoulDataConsumer) {
+        addSpawnerData(EntityType.ALLAY, 1000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.AXOLOTL, 1000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.BAT, 1000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.BEE, 1000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.BLAZE, 6000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.CAT, 1000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.CAVE_SPIDER, 3000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.CHICKEN, 1000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.COD, 1000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.COW, 1000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.CREEPER, 3000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.DOLPHIN, 1500, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.DONKEY, 3000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.DROWNED, 4000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.ELDER_GUARDIAN, 8000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.ENDERMAN, 6000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.ENDERMITE, 800, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.ENDER_DRAGON, 1000000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.EVOKER, 6000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.FOX, 1000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.FROG, 1000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.GHAST, 6000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.GIANT, 10000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.GOAT, 3000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.GUARDIAN, 5000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.HOGLIN, 6000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.HUSK, 4000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.HORSE, 3000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.ILLUSIONER, 6000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.IRON_GOLEM, 7000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.LLAMA, 3000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.MAGMA_CUBE, 3000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.MULE, 3000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.MOOSHROOM, 3000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.OCELOT, 1000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.PANDA, 3000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.PARROT, 1000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.PHANTOM, 5000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.PIG, 1000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.PIGLIN, 4000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.PIGLIN_BRUTE, 4500, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.PILLAGER, 4000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.POLAR_BEAR, 4000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.PUFFERFISH, 1000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.RABBIT, 1000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.RAVAGER, 8000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.SALMON, 1000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.SHEEP, 1000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.SHULKER, 6000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.SKELETON, 4000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.SILVERFISH, 1000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.SKELETON_HORSE, 3000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.SLIME, 2000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.SNOW_GOLEM, 3000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.SPIDER, 4000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.SQUID, 1000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.STRIDER, 3000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.TADPOLE, 1000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.TURTLE, 1000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.TRADER_LLAMA, 3000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.TROPICAL_FISH, 1000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.VEX, 1000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.VILLAGER, 4000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.VINDICATOR, 4000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.WARDEN, 100000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.WITCH, 4000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.WITHER, 100000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.WOLF, 4000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.ZOGLIN, 4000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.ZOMBIE, 4000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.ZOMBIE_HORSE, 3000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.ZOMBIE_VILLAGER, 4000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.ZOMBIFIED_PIGLIN, 4000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+
+    }
+
     @Override
     public void run(CachedOutput pOutput) throws IOException {
         Set<ResourceLocation> set = Sets.newHashSet();
@@ -46,15 +124,10 @@ public class SoulDataProvider implements DataProvider {
         return "souldata";
     }
 
-    public void buildSoulData(Consumer<FinshedSoulData<?>> finshedSoulDataConsumer) {
-        addSpawnerData(EntityType.ALLAY, 1000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
-        addSpawnerData(EntityType.PIG, 1000, SpawnTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
-    }
-
     private void addSpawnerData(EntityType<?> entityType, int power, SpawnTask.SpawnType type, Consumer<FinshedSoulData<?>> finshedSoulDataConsumer) {
         ResourceLocation key = Registry.ENTITY_TYPE.getKey(entityType);
-        PoweredSpawnerSoul.SoulData data = new PoweredSpawnerSoul.SoulData(key, power, type);
-        finshedSoulDataConsumer.accept(new FinshedSoulData<>(PoweredSpawnerSoul.CODEC, data, key.getPath()));
+        SpawnerSoul.SoulData data = new SpawnerSoul.SoulData(key, power, type);
+        finshedSoulDataConsumer.accept(new FinshedSoulData<>(SpawnerSoul.CODEC, data, key.getPath()));
     }
 
     private static void saveRecipe(CachedOutput pOutput, JsonObject pSoulDataJson, Path pPath) {

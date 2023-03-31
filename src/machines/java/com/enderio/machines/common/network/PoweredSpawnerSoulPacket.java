@@ -2,7 +2,7 @@ package com.enderio.machines.common.network;
 
 import com.enderio.core.common.network.Packet;
 import com.enderio.machines.common.blockentity.task.SpawnTask;
-import com.enderio.machines.common.souldata.PoweredSpawnerSoul;
+import com.enderio.machines.common.souldata.SpawnerSoul;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkDirection;
@@ -13,18 +13,18 @@ import java.util.Map;
 import java.util.Optional;
 
 public class PoweredSpawnerSoulPacket implements Packet {
-    public static Map<ResourceLocation, PoweredSpawnerSoul.SoulData> SYNCED_DATA = new HashMap<>();
+    public static Map<ResourceLocation, SpawnerSoul.SoulData> SYNCED_DATA = new HashMap<>();
 
-    private final Map<ResourceLocation, PoweredSpawnerSoul.SoulData> map;
+    private final Map<ResourceLocation, SpawnerSoul.SoulData> map;
 
-    public PoweredSpawnerSoulPacket(Map<ResourceLocation, PoweredSpawnerSoul.SoulData> map) {
+    public PoweredSpawnerSoulPacket(Map<ResourceLocation, SpawnerSoul.SoulData> map) {
         this.map = map;
     }
 
     public PoweredSpawnerSoulPacket(FriendlyByteBuf buf) {
-        Map<ResourceLocation, PoweredSpawnerSoul.SoulData> newMap = new HashMap<>();
+        Map<ResourceLocation, SpawnerSoul.SoulData> newMap = new HashMap<>();
         buf.readMap(FriendlyByteBuf::readResourceLocation, buff ->
-            new PoweredSpawnerSoul.SoulData(buff.readResourceLocation(), buff.readInt(), buff.readEnum(SpawnTask.SpawnType.class))
+            new SpawnerSoul.SoulData(buff.readResourceLocation(), buff.readInt(), buff.readEnum(SpawnTask.SpawnType.class))
         );
         this.map = newMap;
     }
