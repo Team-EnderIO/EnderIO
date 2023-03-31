@@ -17,9 +17,9 @@ jobs:
         run: chmod +x ./gradlew
       - name: Hash generated data pre-run
         run: |
-          HASH=$(tar cvf - src/generated | sha1sum)
+          HASH=$(tar cf - src/generated | sha1sum)
           echo "pregen_hash=$HASH" >> $GITHUB_ENV
-      - name: Build
+      - name: Run data generator
         uses: gradle/gradle-build-action@v2
         with:
           arguments: runDataProd
@@ -29,7 +29,7 @@ jobs:
         run: rm -rf src/generated/resources/.cache
       - name: Hash generated data post-run
         run: |
-          HASH=$(tar cvf - src/generated | sha1sum)
+          HASH=$(tar cf - src/generated | sha1sum)
           echo "postgen_hash=$HASH" >> $GITHUB_ENV
       # Thanks https://stackoverflow.com/a/68777117
       - name: Check generated output equal
