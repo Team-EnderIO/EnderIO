@@ -20,6 +20,7 @@ SOFTWARE.
 
 package com.enderio.machines.common.souldata;
 
+import com.enderio.EnderIO;
 import com.enderio.core.EnderCore;
 import com.enderio.core.common.network.CoreNetwork;
 import com.enderio.core.common.network.Packet;
@@ -50,10 +51,10 @@ import java.util.function.Function;
  * @param <T> The type of the objects that the codec is parsing jsons as
  */
 public class SoulDataReloadListner<T extends ISoulData> extends SimpleJsonResourceReloadListener {
-    private static Gson gson = new Gson();
+    private static final Gson GSON = new Gson();
     public Map<ResourceLocation,T> map = new HashMap<>();
-    private Codec<T> codec;
-    private String folderName;
+    private final Codec<T> codec;
+    private final String folderName;
 
     /**
      * Creates a data manager with a custom gson parser
@@ -78,7 +79,7 @@ public class SoulDataReloadListner<T extends ISoulData> extends SimpleJsonResour
      * @param codec A codec to deserialize the json into your T, see javadocs above class
      */
     public SoulDataReloadListner(String folder, Codec<T> codec) {
-        this(gson, folder, codec);
+        this(GSON, folder, codec);
     }
 
     @Override
@@ -88,12 +89,12 @@ public class SoulDataReloadListner<T extends ISoulData> extends SimpleJsonResour
         for (Map.Entry<ResourceLocation, JsonElement> element: pObject.entrySet()) {
             codec.decode(JsonOps.INSTANCE, element.getValue())
                 .get()
-                .ifLeft(result -> newMap.put(result.getFirst().getKey(), result.getFirst()))
-                .ifRight(partial -> EnderCore.LOGGER.error("Failed to parse data json for {} due to: {}", element.getKey(), partial.message()));
+                .ifLeft(result -> newMap.put(result.getFirst().getKey(), result.getFirst())) //store the key from the ISoulData interface. Makes the look faster.
+                .ifRight(partial -> EnderIO.LOGGER.error("Failed to parse data json for {} due to: {}", element.getKey(), partial.message()));
         }
 
         this.map = newMap;
-        EnderCore.LOGGER.info("Data loader for {} loaded {} jsons", this.folderName, this.map.size());
+        EnderIO.LOGGER.info("Data loader for {} loaded {} jsons", this.folderName, this.map.size());
     }
 
     /**
@@ -120,6 +121,9 @@ public class SoulDataReloadListner<T extends ISoulData> extends SimpleJsonResour
         };
     }
 
+    /**
+     * Returns an optional ISoulData implementation.
+     */
     public Optional<T> matches(ResourceLocation entitytype) {
         if (map.containsKey(entitytype)) {
             return Optional.of(map.get(entitytype));
