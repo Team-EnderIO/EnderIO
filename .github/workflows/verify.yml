@@ -1,6 +1,12 @@
-name: Check Data
+name: Verify Build and Generated Data
 
-on: [pull_request]
+# Run on any pull request commit or a push to a main branch.
+# If run on the primary branch, the gradle caches will be updated for all PRs to use.
+on: 
+  pull_request:
+  push:
+    branches:
+      - 'dev/*'
 
 jobs:
   verify:
