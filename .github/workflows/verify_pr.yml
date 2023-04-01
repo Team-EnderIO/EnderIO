@@ -3,7 +3,7 @@ name: Check Data
 on: [pull_request]
 
 jobs:
-  check:
+  verify:
     runs-on: ubuntu-latest
 
     steps:
