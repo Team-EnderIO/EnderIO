@@ -21,15 +21,11 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: build
-        env:
-          GRADLE_BUILD_ACTION_CACHE_DEBUG_ENABLED: true
       - name: Run data generator
         uses: gradle/gradle-build-action@v2
         continue-on-error: true # We have to do this because runDataProd always exits funny
         with:
           arguments: runDataProd
-        env:
-          GRADLE_BUILD_ACTION_CACHE_DEBUG_ENABLED: true
       - name: Check data generated successfully # So we do this to ensure something was done, .cache will always be written
         continue-on-error: false # reset
         id: check_files
