@@ -1,7 +1,6 @@
 package com.enderio.machines.client.gui.widget.ioconfig;
 
 import com.enderio.EnderIO;
-import com.enderio.api.io.IOMode;
 import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.machines.client.rendering.model.ModelRenderUtil;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
@@ -25,7 +24,6 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.CommonComponents;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -65,8 +63,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     private final List<BlockPos> configurable = new ArrayList<>();
     private final List<BlockPos> neighbours = new ArrayList<>();
 
-    private final Font font;
-    // Camera Variables
+    private final Font screen_font;
     private float pitch;
     private float yaw;
     private @NotNull Optional<SelectedFace> selection = Optional.empty();
@@ -79,7 +76,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
         super(x, y, width, height, CommonComponents.EMPTY);
         this.addedOn = addedOn;
         this.configurable.addAll(_configurable);
-        this.font = font;
+        this.screen_font = font;
 
         Vector3f c;
         if (configurable.size() == 1) {
@@ -248,29 +245,14 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
             BlockEntity entity = minecraft.level.getBlockEntity(selectedFace.blockPos);
             if (entity instanceof MachineBlockEntity machine) {
                 var ioMode = machine.getIOConfig().getMode(selectedFace.side);
-                Component modeString;
-                Rect2i iconBounds;
-                if (ioMode == IOMode.PUSH) {
-                    modeString = IOModeMap.PUSH.getName();
-                    iconBounds = IOModeMap.PUSH.getRect();
-                } else if (ioMode == IOMode.PULL) {
-                    modeString = IOModeMap.PULL.getName();
-                    iconBounds = IOModeMap.PULL.getRect();
-                } else if (ioMode == IOMode.BOTH) {
-                    modeString = IOModeMap.PUSHPULL.getName();
-                    iconBounds = IOModeMap.PUSHPULL.getRect();
-                } else if (ioMode == IOMode.DISABLED) {
-                    modeString = IOModeMap.DISABLED.getName();
-                    iconBounds = IOModeMap.DISABLED.getRect();
-                } else {
-                    modeString = IOModeMap.NONE.getName();
-                    iconBounds = IOModeMap.NONE.getRect();
-                }
-
+                IOModeMap map = IOModeMap.getMapFromMode(ioMode);
+                Rect2i iconBounds = map.getRect();
                 RenderSystem.setShaderTexture(0, IO_MODES);
-                font.draw(poseStack, modeString, x + 4, y + height - 2 - font.lineHeight, 0xFFFFFFFF);
-                blit(poseStack, x + 4, y + height - 4 - font.lineHeight - iconBounds.getHeight(), iconBounds.getX(), iconBounds.getY(), iconBounds.getWidth(),
-                    iconBounds.getHeight());
+                blit(poseStack, x + 4, y + height - 4 - screen_font.lineHeight - iconBounds.getHeight(), iconBounds.getX(), iconBounds.getY(),
+                    iconBounds.getWidth(), iconBounds.getHeight());
+                poseStack.pushPose();
+                screen_font.draw(poseStack, map.getComponent(), x + 4, y + height - 2 - screen_font.lineHeight, 0xFFFFFFFF);
+                poseStack.popPose();
             }
         }
     }

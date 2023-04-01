@@ -170,7 +170,7 @@ public class EIOLang {
 
     public static final Component PUSH = REGISTRATE.addLang("io", EnderIO.loc("push"), "Push");
     public static final Component PULL = REGISTRATE.addLang("io", EnderIO.loc("pull"), "Pull");
-    public static final Component PUSHPULL = REGISTRATE.addLang("io", EnderIO.loc("pushpull"), "Push / Pull");
+    public static final Component BOTH = REGISTRATE.addLang("io", EnderIO.loc("both"), "Push / Pull");
     public static final Component DISABLED = REGISTRATE.addLang("io", EnderIO.loc("disabled"), "Disabled");
     public static final Component NONE = REGISTRATE.addLang("io", EnderIO.loc("none"), "None");
 

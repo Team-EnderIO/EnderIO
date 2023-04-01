@@ -5,25 +5,34 @@ import com.enderio.base.common.lang.EIOLang;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
 
+import java.util.Arrays;
+import java.util.Comparator;
+
 public enum IOModeMap {
 
-    PUSH(IOMode.PUSH, EIOLang.PUSH, new Rect2i(0, 0, 16, 16)),
+    NONE(IOMode.NONE, EIOLang.NONE, new Rect2i(0, 0, 0, 0)),
 
-    PULL(IOMode.PULL, EIOLang.PULL, new Rect2i(16, 0, 16, 16)),
+    PUSH(IOMode.PUSH, EIOLang.PUSH, new Rect2i(16, 0, 16, 8)),
 
-    PUSHPULL(IOMode.BOTH, EIOLang.PUSHPULL, new Rect2i(0, 0, 32, 16)),
+    PULL(IOMode.PULL, EIOLang.PULL, new Rect2i(0, 0, 16, 8)),
 
-    DISABLED(IOMode.DISABLED, EIOLang.DISABLED, new Rect2i(32, 0, 16, 16)),
+    BOTH(IOMode.BOTH, EIOLang.BOTH, new Rect2i(0, 0, 32, 8)),
 
-    NONE(IOMode.NONE, EIOLang.NONE, new Rect2i(0, 0, 0, 0));
+    DISABLED(IOMode.DISABLED, EIOLang.DISABLED, new Rect2i(32, 0, 16, 16));
+
+    private static final IOModeMap[] BY_MODE = Arrays.stream(values()).sorted(Comparator.comparingInt(m -> m.mode.ordinal())).toArray(IOModeMap[]::new);
+
+    public static IOModeMap getMapFromMode(IOMode mode) {
+        return BY_MODE[mode.ordinal()];
+    }
 
     private final IOMode mode;
-    private final Component name;
+    private final Component component;
     private final Rect2i rect;
 
     IOModeMap(IOMode mode, Component name, Rect2i rect) {
         this.mode = mode;
-        this.name = name;
+        this.component = name;
         this.rect = rect;
     }
 
@@ -31,11 +40,12 @@ public enum IOModeMap {
         return mode;
     }
 
-    public Component getName() {
-        return name;
+    public Component getComponent() {
+        return component;
     }
 
     public Rect2i getRect() {
         return rect;
     }
+
 }
