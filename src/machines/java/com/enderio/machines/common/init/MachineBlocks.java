@@ -15,6 +15,7 @@ import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import com.tterrag.registrate.util.entry.BlockEntry;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.predicate.BlockStatePredicate;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -39,7 +40,7 @@ public class MachineBlocks {
                 .child("overlay", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/io_overlay")))
             .end()
         ))
-        .item(FluidTankItem::new)
+        .item((MachineBlock block, Item.Properties props) -> new FluidTankItem(block, props, 16000))
         .model((ctx, prov) -> {})
         .tab(() -> EIOCreativeTabs.MACHINES)
         .build()
@@ -58,9 +59,8 @@ public class MachineBlocks {
                             .texture("bottom", EnderIO.loc("block/enhanced_machine_bottom"))
                             .texture("top", EnderIO.loc("block/enhanced_machine_top")))
                     .child("overlay", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/io_overlay")))
-            .end()
+                .end()
         ))
-        .item(FluidTankItem::new)
         .model((ctx, prov) -> {})
         .tab(() -> EIOCreativeTabs.MACHINES)
         .build()

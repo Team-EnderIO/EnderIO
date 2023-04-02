@@ -4,21 +4,23 @@ import com.enderio.core.common.sync.FluidStackDataSlot;
 import com.enderio.core.common.sync.SyncMode;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
+import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.FluidTankMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.BucketItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.MobBucketItem;
+import net.minecraft.world.item.*;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
@@ -47,8 +49,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
         }
     }
 
-    private final FluidTank fluidTank;
-    private final MachineFluidHandler fluidHandler;
+    private final MachineFluidTank fluidTank;
 
     public static final SingleSlotAccess FLUID_FILL_INPUT = new SingleSlotAccess();
     public static final SingleSlotAccess FLUID_FILL_OUTPUT = new SingleSlotAccess();
@@ -59,24 +60,14 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
         super(type, worldPosition, blockState);
 
         // Create fluid tank.
-        this.fluidTank = createFluidTank(capacity);
+        this.fluidTank = new MachineFluidTank(capacity, this);
 
         // Create fluid tank storage.
-        this.fluidHandler = new MachineFluidHandler(getIOConfig(), fluidTank);
+        MachineFluidHandler fluidHandler = new MachineFluidHandler(getIOConfig(), fluidTank);
 
         // Add capability provider
         addCapabilityProvider(fluidHandler);
-
         addDataSlot(new FluidStackDataSlot(fluidTank::getFluid, fluidTank::setFluid, SyncMode.WORLD));
-    }
-
-    private FluidTank createFluidTank(int capacity) {
-        return new FluidTank(capacity) {
-            @Override
-            protected void onContentsChanged() {
-                setChanged();
-            }
-        };
     }
 
     @Override
@@ -115,6 +106,11 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
                 }
             }
         }
+    }
+
+    @Override
+    public InteractionResult onBlockEntityUsed(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        return fluidTank.onClickedWithPotentialFluidItem(player, hand);
     }
 
     private void drainInternal() {
