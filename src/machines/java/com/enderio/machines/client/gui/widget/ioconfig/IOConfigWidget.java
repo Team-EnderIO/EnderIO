@@ -46,7 +46,7 @@ import java.util.*;
  */
 public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
 
-    private static final float SCALE = 20;
+    private float SCALE = 20;
     private static final Quaternion ROT_180_Z = Vector3f.ZP.rotation((float) Math.PI);
     private static final Vec3 RAY_ORIGIN = new Vec3(1.5, 1.5, 1.5);
     private static final Vec3 RAY_START = new Vec3(1.5, 1.5, -1);
@@ -99,7 +99,8 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
 
         world_origin = new Vector3f(c.x(), c.y(), c.z());
 
-        var distance = Math.max(Math.max(multiblock_size.x(), multiblock_size.y()), multiblock_size.z()) + 4;
+        var radius = Math.max(Math.max(multiblock_size.x(), multiblock_size.y()), multiblock_size.z());
+        SCALE -= (radius - 1) * 3; //adjust later
 
         configurable.forEach(pos -> {
             for (Direction dir : Direction.values()) {
@@ -141,6 +142,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         if (visible) {
             // render black bg
+            enableScissor(x, y, x + width, y + height);
             fill(poseStack, x, y, x + width, y + height, 0xFF000000);
 
             // Calculate widget center
@@ -200,6 +202,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
             renderSelection(poseStack, centerX, centerY, blockTransform);
             renderOverlay(poseStack);
 
+            disableScissor();
         }
     }
 
@@ -235,6 +238,16 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
         if (visible) {
             return super.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean mouseScrolled(double pMouseX, double pMouseY, double pDelta) {
+        if (visible) {
+            SCALE -= pDelta;
+            SCALE = Math.min(40, Math.max(10, SCALE)); //clamp
+            return true;
         }
         return false;
     }
