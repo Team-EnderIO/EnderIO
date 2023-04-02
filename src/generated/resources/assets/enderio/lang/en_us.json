@@ -1080,6 +1080,8 @@
   "tooltip.enderio.collision.players_block": "Only solid to players",
   "tooltip.enderio.collision.players_pass": "Not solid to players",
   "tooltip.enderio.dark_steel_ladder.faster": "Faster than regular ladders",
+  "tooltip.enderio.fluid_tank.tank_empty_tooltip": "Empty tank",
+  "tooltip.enderio.fluid_tank.tank_tooltip": "%d/%d mb of %s",
   "tooltip.enderio.fused_quartz.blocks_light": "Blocks light",
   "tooltip.enderio.fused_quartz.emits_light": "Emits light",
   "tooltip.enderio.grinding_ball_bonus_output": "Bonus Output %s%%",

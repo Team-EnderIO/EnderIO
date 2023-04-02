@@ -29,9 +29,12 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import org.jetbrains.annotations.Nullable;
+
 import java.util.Optional;
 
 public abstract class FluidTankBlockEntity extends MachineBlockEntity {
+
+    public static final String FLUID_TAG_KEY = "fluid";
 
     public static class Standard extends FluidTankBlockEntity {
         public static final int CAPACITY = 16 * FluidType.BUCKET_VOLUME;
@@ -80,6 +83,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
         super.serverTick();
     }
 
+    //TODO: enable fluid tanks to receive stackable fluid containers
     private void fillInternal() {
         ItemStack inputItem = FLUID_FILL_INPUT.getItemStack(this);
         ItemStack outputItem = FLUID_FILL_OUTPUT.getItemStack(this);
@@ -113,6 +117,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
         return fluidTank.onClickedWithPotentialFluidItem(player, hand);
     }
 
+    //TODO: enable fluid tanks to receive stackable fluid containers
     private void drainInternal() {
         ItemStack inputItem = FLUID_DRAIN_INPUT.getItemStack(this);
         ItemStack outputItem = FLUID_DRAIN_OUTPUT.getItemStack(this);
@@ -178,7 +183,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     @Override
     public void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
-        pTag.put("fluid", fluidTank.writeToNBT(new CompoundTag()));
+        pTag.put(FLUID_TAG_KEY, fluidTank.writeToNBT(new CompoundTag()));
     }
 
     @Override

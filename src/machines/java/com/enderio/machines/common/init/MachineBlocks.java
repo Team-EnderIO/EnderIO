@@ -39,6 +39,7 @@ public class MachineBlocks {
                 .child("tank", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/fluid_tank_body")))
                 .child("overlay", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/io_overlay")))
             .end()
+            .texture("particle", EnderIO.loc("block/machine_side"))
         ))
         .item((MachineBlock block, Item.Properties props) -> new FluidTankItem(block, props, 16000))
         .model((ctx, prov) -> {})
@@ -60,7 +61,9 @@ public class MachineBlocks {
                             .texture("top", EnderIO.loc("block/enhanced_machine_top")))
                     .child("overlay", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/io_overlay")))
                 .end()
+                .texture("particle", EnderIO.loc("block/machine_side"))
         ))
+        .item((MachineBlock block, Item.Properties props) -> new FluidTankItem(block, props, 32000))
         .model((ctx, prov) -> {})
         .tab(() -> EIOCreativeTabs.MACHINES)
         .build()
@@ -164,10 +167,9 @@ public class MachineBlocks {
         .blockstate((ctx, prov) -> MachineModelUtil.customMachineBlock(ctx, prov, "crafter"))
         .register();
 
-    private static BlockBuilder<ProgressMachineBlock, Registrate> standardMachine(String name,
-        Supplier<BlockEntityEntry<? extends MachineBlockEntity>> blockEntityEntry) {
-        return REGISTRATE
-            .block(name, props -> new ProgressMachineBlock(props, blockEntityEntry.get()))
+    //used when single methods needs to be overridden in the block class
+    private static BlockBuilder<ProgressMachineBlock, Registrate> standardMachine(BlockBuilder<ProgressMachineBlock, Registrate> machineBlock) {
+        return machineBlock
             .properties(props -> props.strength(2.5f, 8))
             .loot(MachinesLootTable::copyNBT)
             .blockstate(MachineModelUtil::machineBlock)
@@ -175,6 +177,12 @@ public class MachineBlocks {
             .tab(() -> EIOCreativeTabs.MACHINES)
             .build();
     }
+
+    private static BlockBuilder<ProgressMachineBlock, Registrate> standardMachine(String name,
+        Supplier<BlockEntityEntry<? extends MachineBlockEntity>> blockEntityEntry) {
+        return standardMachine(REGISTRATE.block(name, props -> new ProgressMachineBlock(props, blockEntityEntry.get())));
+    }
+
 
     private static BlockBuilder<ProgressMachineBlock, Registrate> soulMachine(String name, Supplier<BlockEntityEntry<? extends MachineBlockEntity>> blockEntityEntry) {
         return REGISTRATE

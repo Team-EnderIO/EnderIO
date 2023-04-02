@@ -1,5 +1,6 @@
 package com.enderio.machines.common.blockentity.base;
 
+import com.enderio.api.UseOnly;
 import com.enderio.api.capability.ISideConfig;
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
@@ -10,6 +11,7 @@ import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.core.common.sync.EnumDataSlot;
 import com.enderio.core.common.sync.NBTSerializableDataSlot;
 import com.enderio.core.common.sync.SyncMode;
+import com.enderio.core.common.util.PlayerInteractionUtil;
 import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.io.IOConfig;
 import com.enderio.machines.common.io.item.MachineInventory;
@@ -23,7 +25,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -35,15 +36,14 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.items.IItemHandler;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
@@ -182,7 +182,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     }
 
     @Override
-    public @NotNull ModelData getModelData() {
+    public ModelData getModelData() {
         return getIOConfig().renderOverlay() ? modelData : ModelData.EMPTY;
     }
 
@@ -461,7 +461,9 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     }
 
     //called when a player uses the block entity, before menu is may open.
-    public InteractionResult onBlockEntityUsed(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit){return InteractionResult.PASS;}
+    public InteractionResult onBlockEntityUsed(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        return InteractionResult.PASS;
+    }
 
     public boolean stillValid(Player pPlayer) {
         if (this.level.getBlockEntity(this.worldPosition) != this)
@@ -477,26 +479,22 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         this.redstoneControl = redstoneControl;
     }
 
-    //only called on server
+    @UseOnly(LogicalSide.SERVER)
     @Override
     public InteractionResult onWrenched(UseOnContext context) {
         Player player = context.getPlayer();
-        if(player != null && level!= null && player.isSecondaryUseActive()) {//aka break block
-            BlockPos pos = context.getClickedPos();
-            BlockState state = context.getLevel().getBlockState(pos);
-            List<ItemStack> drops = Block.getDrops(state, (ServerLevel) level,pos, level.getBlockEntity(pos));//level is always ServerLevel since method only called on server.
+        if (player != null && level != null && player.isSecondaryUseActive() && level instanceof ServerLevel serverLevel) {//aka break block
+            BlockPos pos = getBlockPos();
+            BlockState state = getBlockState();
+            List<ItemStack> drops = Block.getDrops(state, serverLevel, pos, level.getBlockEntity(pos));
             level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL_IMMEDIATE);
             player.swing(InteractionHand.MAIN_HAND);
             //TODO: custom sound when sound manager is up and running??
             SoundType soundType = state.getBlock().getSoundType(state,level,pos,null);
             level.playSound(null, pos,soundType.getBreakSound(), SoundSource.BLOCKS,soundType.volume, soundType.pitch);
-            for (ItemStack drop: drops) {
-                if(!player.addItem(drop)){
-                    level.addFreshEntity(new ItemEntity(level, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, drop));
-                }
-            }
+            PlayerInteractionUtil.putStacksInInventoryFromWorldInteraction(player,pos, drops);
             return InteractionResult.CONSUME;
-        }else{
+        } else {
             // Check for side config capability
             LazyOptional<ISideConfig> optSideConfig = getCapability(EIOCapabilities.SIDE_CONFIG, context.getClickedFace());
             if (optSideConfig.isPresent()) {
