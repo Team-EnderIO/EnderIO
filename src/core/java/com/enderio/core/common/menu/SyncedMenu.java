@@ -25,7 +25,7 @@ public abstract class SyncedMenu<T extends EnderBlockEntity> extends AbstractCon
 
     private final List<EnderDataSlot<?>> clientToServerSlots = new ArrayList<>();
     private final List<Slot> playerInventorySlots = new ArrayList<>();
-    private boolean playerSlotsHidden = false;
+    private boolean playerInvVisible = true;
     protected SyncedMenu(@Nullable T blockEntity, Inventory inventory, @Nullable MenuType<?> pMenuType, int pContainerId) {
         super(pMenuType, pContainerId);
         this.blockEntity = blockEntity;
@@ -102,18 +102,18 @@ public abstract class SyncedMenu<T extends EnderBlockEntity> extends AbstractCon
 
     }
 
-    public boolean arePlayerSlotsHidden() {
-        return playerSlotsHidden;
+    public boolean getPlayerInvVisible() {
+        return playerInvVisible;
     }
 
-    public void hidePlayerSlots(boolean shouldHide) {
-        if (playerSlotsHidden == shouldHide) {
-            return;
+    public boolean setPlayerInvVisible(boolean visible) {
+        if (playerInvVisible != visible) {
+            playerInvVisible = visible;
+            int offset = playerInvVisible ? 1000 : -1000;
+            for (int i = 0; i < 36; i++) {
+                playerInventorySlots.get(i).y += offset;
+            }
         }
-        playerSlotsHidden = shouldHide;
-        int offset = playerSlotsHidden ? 1000 : -1000;
-        for (int i = 0; i < 36; i++) {
-            playerInventorySlots.get(i).y += offset;
-        }
+        return visible;
     }
 }

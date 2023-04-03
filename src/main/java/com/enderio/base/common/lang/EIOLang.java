@@ -143,7 +143,8 @@ public class EIOLang {
 
     // region Graves
 
-    public static final Component GRAVE_WRONG_OWNER = REGISTRATE.addLang("message", EnderIO.loc("grave.wrong_owner"), "This grave is not yours! You cannot open it.");
+    public static final Component GRAVE_WRONG_OWNER = REGISTRATE.addLang("message", EnderIO.loc("grave.wrong_owner"),
+        "This grave is not yours! You cannot open it.");
 
     // endregion
 
@@ -151,6 +152,15 @@ public class EIOLang {
     public static final Component RANGE = REGISTRATE.addLang("gui", EnderIO.loc("range"), "Range");
     public static final Component SHOW_RANGE = REGISTRATE.addLang("gui", EnderIO.loc("range.show"), "Show Range");
     public static final Component HIDE_RANGE = REGISTRATE.addLang("gui", EnderIO.loc("range.hide"), "Hide Range");
+
+    public static final Component IOCONFIG = REGISTRATE.addLang("gui", EnderIO.loc("ioconfig"), "IO Configuration");
+    public static final Component TOGGLE_NEIGHBOUR = REGISTRATE.addLang("gui", EnderIO.loc("ioconfig.neighbour"), "Show/Hide Neighbours");
+
+    public static final Component PUSH = REGISTRATE.addLang("gui", EnderIO.loc("ioconfig.push"), "Push");
+    public static final Component PULL = REGISTRATE.addLang("gui", EnderIO.loc("ioconfig.pull"), "Pull");
+    public static final Component BOTH = REGISTRATE.addLang("gui", EnderIO.loc("ioconfig.both"), "Push / Pull");
+    public static final Component DISABLED = REGISTRATE.addLang("gui", EnderIO.loc("ioconfig.disabled"), "Disabled");
+    public static final Component NONE = REGISTRATE.addLang("gui", EnderIO.loc("ioconfig.none"), "None");
     // endregion
 
     // region Misc Tooltips
@@ -163,16 +173,6 @@ public class EIOLang {
 
     public static final Component GUIDEBOOK_TITLE = REGISTRATE.addLang("guidebook", EnderIO.loc("book_title"), "Book Title");
     public static final Component GUIDEBOOK_LANDING_TEXT = REGISTRATE.addLang("guidebook", EnderIO.loc("landing_text"), "Landing Text");
-
-    // endregion
-
-    // region IO
-
-    public static final Component PUSH = REGISTRATE.addLang("io", EnderIO.loc("push"), "Push");
-    public static final Component PULL = REGISTRATE.addLang("io", EnderIO.loc("pull"), "Pull");
-    public static final Component BOTH = REGISTRATE.addLang("io", EnderIO.loc("both"), "Push / Pull");
-    public static final Component DISABLED = REGISTRATE.addLang("io", EnderIO.loc("disabled"), "Disabled");
-    public static final Component NONE = REGISTRATE.addLang("io", EnderIO.loc("none"), "None");
 
     // endregion
 

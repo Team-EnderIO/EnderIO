@@ -11,6 +11,7 @@ import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
+import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -23,7 +24,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -54,18 +55,19 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     private static final BlockPos POS = new BlockPos(1, 1, 1);
     private static final int Z_OFFSET = 100;
     private static final ResourceLocation SELECTED_ICON = EnderIO.loc("block/overlay/selected_face");
-    private static final ResourceLocation IO_MODES = EnderIO.loc("textures/gui/icons/io_config.png");
-    private static final int NEIGHBOUR_TRANSPARENCY = 100; // range 0-255
+    private static final float NEIGHBOUR_TRANSPARENCY = 0.4F; // range 0-1
     private static final Minecraft minecraft = Minecraft.getInstance();
+    private static MultiBufferSource.BufferSource ghostBuffers;
     private final U addedOn;
-    private final @NotNull Vector3f world_origin;
-    private final Vector3f multiblock_size;
+    private final @NotNull Vector3f worldOrigin;
+    private final Vector3f multiblockSize;
     private final List<BlockPos> configurable = new ArrayList<>();
     private final List<BlockPos> neighbours = new ArrayList<>();
 
-    private final Font screen_font;
+    private final Font screenFont;
     private float pitch;
     private float yaw;
+    private boolean neighbourVisible = true;
     private @NotNull Optional<SelectedFace> selection = Optional.empty();
 
     public IOConfigWidget(U addedOn, int x, int y, int width, int height, BlockPos configurable, Font font) {
@@ -73,16 +75,16 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     }
 
     public IOConfigWidget(U addedOn, int x, int y, int width, int height, List<BlockPos> _configurable, Font font) {
-        super(x, y, width, height, CommonComponents.EMPTY);
+        super(x, y, width, height, Component.empty());
         this.addedOn = addedOn;
         this.configurable.addAll(_configurable);
-        this.screen_font = font;
+        this.screenFont = font;
 
         Vector3f c;
         if (configurable.size() == 1) {
             BlockPos bc = configurable.get(0);
             c = new Vector3f(bc.getX() + 0.5f, bc.getY() + 0.5f, bc.getZ() + 0.5f);
-            multiblock_size = new Vector3f(1, 1, 1);
+            multiblockSize = new Vector3f(1, 1, 1);
         } else {
             Vector3f min = new Vector3f(Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
             Vector3f max = new Vector3f(-Float.MAX_VALUE, -Float.MAX_VALUE, -Float.MAX_VALUE);
@@ -90,16 +92,16 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
                 min.set(Math.min(bc.getX(), min.x()), Math.min(bc.getY(), min.y()), Math.min(bc.getZ(), min.z()));
                 max.set(Math.max(bc.getX(), max.x()), Math.max(bc.getY(), max.y()), Math.max(bc.getZ(), max.z()));
             }
-            multiblock_size = max;
-            multiblock_size.sub(min);
-            multiblock_size.mul(0.5f);
-            c = new Vector3f(min.x() + multiblock_size.x(), min.y() + multiblock_size.y(), min.z() + multiblock_size.z());
-            multiblock_size.mul(2);
+            multiblockSize = max;
+            multiblockSize.sub(min);
+            multiblockSize.mul(0.5f);
+            c = new Vector3f(min.x() + multiblockSize.x(), min.y() + multiblockSize.y(), min.z() + multiblockSize.z());
+            multiblockSize.mul(2);
         }
 
-        world_origin = new Vector3f(c.x(), c.y(), c.z());
+        worldOrigin = new Vector3f(c.x(), c.y(), c.z());
 
-        var radius = Math.max(Math.max(multiblock_size.x(), multiblock_size.y()), multiblock_size.z());
+        var radius = Math.max(Math.max(multiblockSize.x(), multiblockSize.y()), multiblockSize.z());
         SCALE -= (radius - 1) * 3; //adjust later
 
         configurable.forEach(pos -> {
@@ -113,29 +115,54 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
         });
         pitch = minecraft.player.getXRot();
         yaw = minecraft.player.getYRot();
+
+        ghostBuffers = initBuffers(minecraft.renderBuffers().bufferSource());
     }
 
-    private static BlockHitResult raycast(BlockState state, float diffX, float diffY, Matrix4f transform) {
-        // Add mouse offset to start and end vectors
-        Vec3 start = RAY_START.add(diffX, diffY, 0);
-        Vec3 end = RAY_END.add(diffX, diffY, 0);
-
-        // Rotate start and end vectors around the block
-        start = transform(start, transform);
-        end = transform(end, transform);
-
-        // Get block's shape and cast a ray through it
-        VoxelShape shape = state.getShape(EmptyBlockGetter.INSTANCE, BlockPos.ZERO);
-        return shape.clip(start, end, POS);
+    public void toggleNeighbourVisibility() {
+        neighbourVisible = !neighbourVisible;
     }
 
-    private static Vec3 transform(Vec3 vec, Matrix4f transform) {
-        // Move vector to a (0,0,0) origin as the transformation matrix expects
-        Vector4f vec4 = new Vector4f((float) (vec.x - RAY_ORIGIN.x), (float) (vec.y - RAY_ORIGIN.y), (float) (vec.z - RAY_ORIGIN.z), 1F);
-        // Apply the transformation matrix
-        vec4.transform(transform);
-        // Move transformed vector back to the actual origin
-        return new Vec3(vec4.x() + RAY_ORIGIN.x, vec4.y() + RAY_ORIGIN.y, vec4.z() + RAY_ORIGIN.z);
+    @Override
+    public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
+        if (this.active && this.visible) {
+            if (pButton == 1) {
+                if (selection.isPresent()) {
+                    var selectedFace = selection.get();
+                    BlockEntity entity = minecraft.level.getBlockEntity(selectedFace.blockPos);
+                    if (entity instanceof MachineBlockEntity machine) {
+                        machine.getIOConfig().cycleMode(selectedFace.side);
+                        this.playDownSound(Minecraft.getInstance().getSoundManager());
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
+        if (visible && isValidClickButton(pButton) && isMouseOver(pMouseX, pMouseY)) {
+            double dx = pDragX / (double) addedOn.width;
+            double dy = pDragY / (double) addedOn.height;
+            yaw += 4 * dx * 180;
+            pitch += 2 * dy * 180;
+
+            pitch = Math.min(80, Math.max(-80, pitch)); //clamp
+
+        }
+        return false;
+    }
+
+    @Override
+    public boolean mouseScrolled(double pMouseX, double pMouseY, double pDelta) {
+        if (visible) {
+            SCALE -= pDelta;
+            SCALE = Math.min(40, Math.max(10, SCALE)); //clamp
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -186,7 +213,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
 
             });
 
-            Vec3 _origin = new Vec3(world_origin);
+            Vec3 _origin = new Vec3(worldOrigin);
             Optional<Map.Entry<BlockHitResult, BlockPos>> opt = hits
                 .entrySet()
                 .stream()
@@ -206,105 +233,18 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
         }
     }
 
-    @Override
-    public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-        if (this.active && this.visible) {
-            if (pButton == 1) {
-                if (selection.isPresent()) {
-                    var selectedFace = selection.get();
-                    BlockEntity entity = minecraft.level.getBlockEntity(selectedFace.blockPos);
-                    if (entity instanceof MachineBlockEntity machine) {
-                        machine.getIOConfig().cycleMode(selectedFace.side);
-                        this.playDownSound(Minecraft.getInstance().getSoundManager());
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    @Override
-    protected void onDrag(double pMouseX, double pMouseY, double pDragX, double pDragY) {
-        double dx = pDragX / (double) addedOn.width;
-        double dy = pDragY / (double) addedOn.height;
-        yaw += 4 * dx * 180;
-        pitch += 2 * dy * 180;
-
-        pitch = Math.min(80, Math.max(-80, pitch)); //clamp
-    }
-
-    @Override
-    public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
-        if (visible) {
-            return super.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
-        }
-        return false;
-    }
-
-    @Override
-    public boolean mouseScrolled(double pMouseX, double pMouseY, double pDelta) {
-        if (visible) {
-            SCALE -= pDelta;
-            SCALE = Math.min(40, Math.max(10, SCALE)); //clamp
-            return true;
-        }
-        return false;
-    }
-
-    private void renderOverlay(PoseStack poseStack) {
-        if (selection.isPresent()) {
-            var selectedFace = selection.get();
-            BlockEntity entity = minecraft.level.getBlockEntity(selectedFace.blockPos);
-            if (entity instanceof MachineBlockEntity machine) {
-                var ioMode = machine.getIOConfig().getMode(selectedFace.side);
-                IOModeMap map = IOModeMap.getMapFromMode(ioMode);
-                Rect2i iconBounds = map.getRect();
-                RenderSystem.setShaderTexture(0, IO_MODES);
-                blit(poseStack, x + 4, y + height - 4 - screen_font.lineHeight - iconBounds.getHeight(), iconBounds.getX(), iconBounds.getY(),
-                    iconBounds.getWidth(), iconBounds.getHeight());
-                poseStack.pushPose();
-                screen_font.draw(poseStack, map.getComponent(), x + 4, y + height - 2 - screen_font.lineHeight, 0xFFFFFFFF);
-                poseStack.popPose();
-            }
-        }
-    }
-
-    private void renderSelection(PoseStack poseStack, int centerX, int centerY, Quaternion transform) {
-        if (selection.isEmpty()) {
-            return;
-        }
-        poseStack.pushPose();
-        poseStack.translate(centerX, centerY, Z_OFFSET);
-        poseStack.scale(SCALE, SCALE, -SCALE);
-        poseStack.mulPose(transform);
-
-        BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
-        RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
-        //
-        //        // do I need a texture atlas ?
-        TextureAtlasSprite tex = minecraft.getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(SELECTED_ICON);
-        RenderSystem.setShaderTexture(0, tex.atlas().location());
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-
-        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
-        var selectedFace = selection.get();
-        BlockPos blockPos = selectedFace.blockPos;
-        poseStack.translate(blockPos.getX() - world_origin.x(), blockPos.getY() - world_origin.y(), blockPos.getZ() - world_origin.z());
-        Vector3f[] vec = Arrays.stream(ModelRenderUtil.createQuadVerts(selectedFace.side, 0, 1, 1)).map(Vector3f::new).toArray(Vector3f[]::new);
-        Matrix4f matrix4f = poseStack.last().pose();
-        bufferbuilder.vertex(matrix4f, vec[0].x(), vec[0].y(), vec[0].z()).color(1F, 1F, 1F, 1F).uv(tex.getU0(), tex.getV0()).endVertex();
-        bufferbuilder.vertex(matrix4f, vec[1].x(), vec[1].y(), vec[1].z()).color(1F, 1F, 1F, 1F).uv(tex.getU0(), tex.getV1()).endVertex();
-        bufferbuilder.vertex(matrix4f, vec[2].x(), vec[2].y(), vec[2].z()).color(1F, 1F, 1F, 1F).uv(tex.getU1(), tex.getV1()).endVertex();
-        bufferbuilder.vertex(matrix4f, vec[3].x(), vec[3].y(), vec[3].z()).color(1F, 1F, 1F, 1F).uv(tex.getU1(), tex.getV0()).endVertex();
-        BufferUploader.drawWithShader(bufferbuilder.end());
-
-        poseStack.popPose();
+    private static Vec3 transform(Vec3 vec, Matrix4f transform) {
+        // Move vector to a (0,0,0) origin as the transformation matrix expects
+        Vector4f vec4 = new Vector4f((float) (vec.x - RAY_ORIGIN.x), (float) (vec.y - RAY_ORIGIN.y), (float) (vec.z - RAY_ORIGIN.z), 1F);
+        // Apply the transformation matrix
+        vec4.transform(transform);
+        // Move transformed vector back to the actual origin
+        return new Vec3(vec4.x() + RAY_ORIGIN.x, vec4.y() + RAY_ORIGIN.y, vec4.z() + RAY_ORIGIN.z);
     }
 
     private void renderWorld(PoseStack poseStack, int centerX, int centerY, Quaternion transform, float partialTick) {
         Lighting.setupForEntityInInventory();
-        MultiBufferSource.BufferSource buffers = minecraft.renderBuffers().bufferSource();
+        MultiBufferSource.BufferSource vanilla_buffers = minecraft.renderBuffers().bufferSource();
         poseStack.pushPose();
         poseStack.translate(centerX, centerY, Z_OFFSET);
         poseStack.scale(SCALE, SCALE, -SCALE);
@@ -313,16 +253,22 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
         // Render configurable
         //TODO: recheck when capacitor banks
         for (var configurable : configurable) {
-            Vector3f pos = new Vector3f(configurable.getX() - world_origin.x(), configurable.getY() - world_origin.y(), configurable.getZ() - world_origin.z());
-            renderBlock(poseStack, configurable, pos, buffers);
+            Vector3f pos = new Vector3f(configurable.getX() - worldOrigin.x(), configurable.getY() - worldOrigin.y(), configurable.getZ() - worldOrigin.z());
+            renderBlock(poseStack, configurable, pos, vanilla_buffers);
         }
+        //        vanilla_buffers.endBatch();
 
         //        // RenderNeighbours
-        for (var neighbour : neighbours) {
-            Vector3f pos = new Vector3f(neighbour.getX() - world_origin.x(), neighbour.getY() - world_origin.y(), neighbour.getZ() - world_origin.z());
-            renderBlockWithAlpha(poseStack, neighbour, pos, buffers, partialTick);
+        if (neighbourVisible) {
+            for (var neighbour : neighbours) {
+                Vector3f pos = new Vector3f(neighbour.getX() - worldOrigin.x(), neighbour.getY() - worldOrigin.y(), neighbour.getZ() - worldOrigin.z());
+                //                    renderBlock(poseStack, neighbour, pos, ghost_buffers);
+                renderBlockWithAlpha(poseStack, neighbour, pos, vanilla_buffers, partialTick);
+            }
+
         }
-        buffers.endBatch();
+        //                ghost_buffers.endBatch();
+        vanilla_buffers.endBatch();
 
         poseStack.popPose();
     }
@@ -347,7 +293,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
         poseStack.translate(renderPos.x(), renderPos.y(), renderPos.z());
 
         RenderType renderType = Minecraft.useShaderTransparency() ? Sheets.translucentItemSheet() : Sheets.translucentCullBlockSheet();
-        TransparentVertexConsumer vertexConsumer = new TransparentVertexConsumer(buffers.getBuffer(renderType), NEIGHBOUR_TRANSPARENCY);
+        TransparentVertexConsumer vertexConsumer = new TransparentVertexConsumer(buffers.getBuffer(renderType), 100);
 
         BlockState blockState = minecraft.level.getBlockState(blockPos);
         RenderShape shape = blockState.getRenderShape();
@@ -372,17 +318,129 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
             BlockEntity blockEntity = minecraft.level.getBlockEntity(blockPos);
             var renderer = renderDispatcher.getRenderer(blockEntity);
             if (renderer != null) {
-                renderer.render(blockEntity, partialTick, poseStack, (type) -> new TransparentVertexConsumer(buffers.getBuffer(type), NEIGHBOUR_TRANSPARENCY),
-                    LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+                renderer.render(blockEntity, partialTick, poseStack, buffers, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
             }
 
         }
         poseStack.popPose();
     }
 
+    private void renderSelection(PoseStack poseStack, int centerX, int centerY, Quaternion transform) {
+        if (selection.isEmpty()) {
+            return;
+        }
+        poseStack.pushPose();
+        poseStack.translate(centerX, centerY, Z_OFFSET);
+        poseStack.scale(SCALE, SCALE, -SCALE);
+        poseStack.mulPose(transform);
+
+        BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
+        RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
+
+        TextureAtlasSprite tex = minecraft.getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(SELECTED_ICON);
+        RenderSystem.setShaderTexture(0, tex.atlas().location());
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+
+        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
+        var selectedFace = selection.get();
+        BlockPos blockPos = selectedFace.blockPos;
+        poseStack.translate(blockPos.getX() - worldOrigin.x(), blockPos.getY() - worldOrigin.y(), blockPos.getZ() - worldOrigin.z());
+        Vector3f[] vec = Arrays.stream(ModelRenderUtil.createQuadVerts(selectedFace.side, 0, 1, 1)).map(Vector3f::new).toArray(Vector3f[]::new);
+        Matrix4f matrix4f = poseStack.last().pose();
+        bufferbuilder.vertex(matrix4f, vec[0].x(), vec[0].y(), vec[0].z()).color(1F, 1F, 1F, 1F).uv(tex.getU0(), tex.getV0()).endVertex();
+        bufferbuilder.vertex(matrix4f, vec[1].x(), vec[1].y(), vec[1].z()).color(1F, 1F, 1F, 1F).uv(tex.getU0(), tex.getV1()).endVertex();
+        bufferbuilder.vertex(matrix4f, vec[2].x(), vec[2].y(), vec[2].z()).color(1F, 1F, 1F, 1F).uv(tex.getU1(), tex.getV1()).endVertex();
+        bufferbuilder.vertex(matrix4f, vec[3].x(), vec[3].y(), vec[3].z()).color(1F, 1F, 1F, 1F).uv(tex.getU1(), tex.getV0()).endVertex();
+        BufferUploader.drawWithShader(bufferbuilder.end());
+
+        poseStack.popPose();
+    }
+
+    private static BlockHitResult raycast(BlockState state, float diffX, float diffY, Matrix4f transform) {
+        // Add mouse offset to start and end vectors
+        Vec3 start = RAY_START.add(diffX, diffY, 0);
+        Vec3 end = RAY_END.add(diffX, diffY, 0);
+
+        // Rotate start and end vectors around the block
+        start = transform(start, transform);
+        end = transform(end, transform);
+
+        // Get block's shape and cast a ray through it
+        VoxelShape shape = state.getShape(EmptyBlockGetter.INSTANCE, BlockPos.ZERO);
+        return shape.clip(start, end, POS);
+    }
+
+    private void renderOverlay(PoseStack poseStack) {
+        if (selection.isPresent()) {
+            var selectedFace = selection.get();
+            BlockEntity entity = minecraft.level.getBlockEntity(selectedFace.blockPos);
+            if (entity instanceof MachineBlockEntity machine) {
+                var ioMode = machine.getIOConfig().getMode(selectedFace.side);
+                IOModeMap map = IOModeMap.getMapFromMode(ioMode);
+                Rect2i iconBounds = map.getRect();
+                RenderSystem.setShaderTexture(0, IOConfigButton.IOCONFIG);
+                blit(poseStack, x + 4, y + height - 4 - screenFont.lineHeight - iconBounds.getHeight(), iconBounds.getX(), iconBounds.getY(),
+                    iconBounds.getWidth(), iconBounds.getHeight());
+                poseStack.pushPose();
+                screenFont.draw(poseStack, map.getComponent(), x + 4, y + height - 2 - screenFont.lineHeight, 0xFFFFFFFF);
+                poseStack.popPose();
+            }
+        }
+    }
+
     @Override
     public void updateNarration(NarrationElementOutput pNarrationElementOutput) {}
 
     public record SelectedFace(@NotNull BlockPos blockPos, @NotNull Direction side) {}
+
+    private static MultiBufferSource.BufferSource initBuffers(MultiBufferSource.BufferSource original) {
+        BufferBuilder fallback = original.builder;
+        Map<RenderType, BufferBuilder> layerBuffers = original.fixedBuffers;
+        Map<RenderType, BufferBuilder> remapped = new Object2ObjectLinkedOpenHashMap<>();
+        for (Map.Entry<RenderType, BufferBuilder> e : layerBuffers.entrySet()) {
+            remapped.put(GhostRenderLayer.remap(e.getKey()), e.getValue());
+        }
+        return new GhostBuffers(fallback, remapped);
+    }
+
+    private static class GhostBuffers extends MultiBufferSource.BufferSource {
+        protected GhostBuffers(BufferBuilder fallback, Map<RenderType, BufferBuilder> layerBuffers) {
+            super(fallback, layerBuffers);
+        }
+
+        @Override
+        public VertexConsumer getBuffer(RenderType type) {
+            return super.getBuffer(GhostRenderLayer.remap(type));
+        }
+    }
+
+    private static class GhostRenderLayer extends RenderType {
+        private static final Map<RenderType, RenderType> remappedTypes = new IdentityHashMap<>();
+
+        private GhostRenderLayer(RenderType original) {
+            super(String.format("%s_%s_ghost", original.toString(), EnderIO.MODID), original.format(), original.mode(), original.bufferSize(),
+                original.affectsCrumbling(), true, () -> {
+                    original.setupRenderState();
+
+                    RenderSystem.disableDepthTest();
+                    RenderSystem.enableBlend();
+                    RenderSystem.setShaderColor(1, 1, 1, NEIGHBOUR_TRANSPARENCY);
+                }, () -> {
+                    RenderSystem.setShaderColor(1, 1, 1, 1);
+                    RenderSystem.disableBlend();
+                    RenderSystem.enableDepthTest();
+
+                    original.clearRenderState();
+                });
+        }
+
+        public static RenderType remap(RenderType in) {
+            if (in instanceof GhostRenderLayer) {
+                return in;
+            } else {
+                return remappedTypes.computeIfAbsent(in, GhostRenderLayer::new);
+            }
+        }
+    }
 
 }
