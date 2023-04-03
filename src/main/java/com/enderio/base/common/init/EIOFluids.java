@@ -1,7 +1,6 @@
 package com.enderio.base.common.init;
 
 import com.enderio.EnderIO;
-import com.enderio.base.common.item.EIOCreativeTabs;
 import com.enderio.base.common.tag.EIOTags;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.FluidBuilder;

@@ -6,6 +6,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
@@ -27,7 +28,7 @@ public class ExperienceWidget extends EIOWidget {
     }
 
     @Override
-    public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
+    public void renderWidget(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.defaultBlendFunc();
@@ -41,10 +42,10 @@ public class ExperienceWidget extends EIOWidget {
                 k = this.width-1;
             }
         }
-        blit(pPoseStack, this.x, this.y, this.displayOn.getBlitOffset(), 0, 64, this.width-1, this.height, 256, 256);
-        blit(pPoseStack, this.x + this.width-1, this.y, this.displayOn.getBlitOffset(), 181, 64, 1, this.height, 256, 256);
-        blit(pPoseStack, this.x, this.y, this.displayOn.getBlitOffset(), 0, 69, k, this.height, 256, 256);
-        blit(pPoseStack, this.x + this.width-1, this.y, this.displayOn.getBlitOffset(), 181, 64, k==this.width-1? 1 : 0, this.height, 256, 256);
+        blit(pPoseStack, this.x, this.y, 0, 0, 64, this.width-1, this.height, 256, 256);
+        blit(pPoseStack, this.x + this.width-1, this.y, 0, 181, 64, 1, this.height, 256, 256);
+        blit(pPoseStack, this.x, this.y, 0, 0, 69, k, this.height, 256, 256);
+        blit(pPoseStack, this.x + this.width-1, this.y, 0, 181, 64, k==this.width-1? 1 : 0, this.height, 256, 256);
 
         String s = "" + maxXP.get();
         Minecraft.getInstance().font.draw(pPoseStack, s, (this.x + this.width/2 + 1), (float)this.y - this.height - 3, 0);
@@ -57,6 +58,10 @@ public class ExperienceWidget extends EIOWidget {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         renderToolTip(pPoseStack, pMouseX, pMouseY);
+    }
+
+    @Override
+    protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
     }
 
     public void renderToolTip(PoseStack poseStack, int mouseX, int mouseY) {

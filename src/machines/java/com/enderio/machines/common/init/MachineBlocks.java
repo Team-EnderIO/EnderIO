@@ -134,7 +134,7 @@ public class MachineBlocks {
         .loot((l,t) -> MachinesLootTable.copyNBTSingleCap(l, t, "EntityStorage"))
         .blockstate(MachineModelUtil::soulMachineBlock)
         .item(PoweredSpawnerItem::new)
-        .tab(() -> EIOCreativeTabs.MACHINES)
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.MACHINES))
         .build()
         .register();
 
