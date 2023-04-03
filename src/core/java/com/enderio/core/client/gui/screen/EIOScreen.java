@@ -113,7 +113,7 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
         }
     }
 
-    protected abstract ResourceLocation getBackgroundImage();
+    public abstract ResourceLocation getBackgroundImage();
 
     protected abstract Vector2i getBackgroundImageSize();
 

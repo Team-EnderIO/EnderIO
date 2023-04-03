@@ -41,7 +41,7 @@ public class XPVacuumScreen extends EIOScreen<XPVacuumMenu> {
     }
 
     @Override
-    protected ResourceLocation getBackgroundImage() {
+    public ResourceLocation getBackgroundImage() {
         return XP_VACUUM_BG;
     }
 

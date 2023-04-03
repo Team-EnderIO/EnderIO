@@ -59,7 +59,7 @@ public class CoordinateMenuScreen extends EIOScreen<CoordinateMenu> {
     }
 
     @Override
-    protected ResourceLocation getBackgroundImage() {
+    public ResourceLocation getBackgroundImage() {
         return BG_TEXTURE;
     }
 

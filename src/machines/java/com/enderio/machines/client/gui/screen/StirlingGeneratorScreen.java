@@ -32,7 +32,7 @@ public class StirlingGeneratorScreen extends EIOScreen<StirlingGeneratorMenu> {
     }
 
     @Override
-    protected ResourceLocation getBackgroundImage() {
+    public ResourceLocation getBackgroundImage() {
         return BG_TEXTURE;
     }
 

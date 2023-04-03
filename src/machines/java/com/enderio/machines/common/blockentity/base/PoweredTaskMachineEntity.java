@@ -83,11 +83,12 @@ public abstract class PoweredTaskMachineEntity<T extends PoweredTask> extends Po
             if (currentTask != null && currentTask.isComplete()) {
                 newTaskAvailable();
             }
+        }
 
-            // Update block state
-            if (getBlockState().getValue(ProgressMachineBlock.POWERED) != hasTask()) {
-                level.setBlock(getBlockPos(), getBlockState().setValue(ProgressMachineBlock.POWERED, hasTask()), Block.UPDATE_ALL);
-            }
+        // Update block state
+        boolean active = isActive();
+        if (getBlockState().getValue(ProgressMachineBlock.POWERED) != active) {
+            level.setBlock(getBlockPos(), getBlockState().setValue(ProgressMachineBlock.POWERED, active), Block.UPDATE_ALL);
         }
 
         super.serverTick();
@@ -125,6 +126,13 @@ public abstract class PoweredTaskMachineEntity<T extends PoweredTask> extends Po
      */
     protected boolean hasTask() {
         return currentTask != null;
+    }
+
+    /**
+     * Whether the machine is currently active.
+     */
+    protected boolean isActive() {
+        return canAct() && hasTask() && energyStorage.getEnergyStored() > 0;
     }
 
     /**

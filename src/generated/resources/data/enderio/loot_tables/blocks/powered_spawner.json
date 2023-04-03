@@ -1,0 +1,48 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:copy_nbt",
+              "ops": [
+                {
+                  "op": "replace",
+                  "source": "EntityStorage",
+                  "target": "BlockEntityTag.EntityStorage"
+                },
+                {
+                  "op": "replace",
+                  "source": "energy",
+                  "target": "BlockEntityTag.energy"
+                },
+                {
+                  "op": "replace",
+                  "source": "io_config",
+                  "target": "BlockEntityTag.io_config"
+                },
+                {
+                  "op": "replace",
+                  "source": "redstone",
+                  "target": "BlockEntityTag.redstone"
+                },
+                {
+                  "op": "replace",
+                  "source": "inventory",
+                  "target": "BlockEntityTag.inventory"
+                }
+              ],
+              "source": "block_entity"
+            }
+          ],
+          "name": "enderio:powered_spawner"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ]
+}

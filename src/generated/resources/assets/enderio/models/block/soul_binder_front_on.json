@@ -1,0 +1,6 @@
+{
+  "parent": "enderio:block/soul_binder_front",
+  "textures": {
+    "front": "enderio:block/soul_binder_front_on"
+  }
+}

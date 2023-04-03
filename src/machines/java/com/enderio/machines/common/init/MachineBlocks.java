@@ -7,6 +7,7 @@ import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.block.ProgressMachineBlock;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.item.FluidTankItem;
+import com.enderio.machines.common.item.PoweredSpawnerItem;
 import com.enderio.machines.data.loot.MachinesLootTable;
 import com.enderio.machines.data.model.MachineModelUtil;
 import com.tterrag.registrate.Registrate;
@@ -122,6 +123,19 @@ public class MachineBlocks {
 
     public static final BlockEntry<ProgressMachineBlock> IMPULSE_HOPPER = standardMachine("impulse_hopper", () -> MachineBlockEntities.IMPULSE_HOPPER)
         .lang("Impulse Hopper")
+        .register();
+
+    public static final BlockEntry<ProgressMachineBlock> SOUL_BINDER = soulMachine("soul_binder", () -> MachineBlockEntities.SOUL_BINDER)
+        .lang("Soul Binder")
+        .register();
+
+    public static BlockEntry<ProgressMachineBlock> POWERED_SPAWNER = REGISTRATE
+        .block("powered_spawner", props -> new ProgressMachineBlock(props, MachineBlockEntities.POWERED_SPAWNER))
+        .loot((l,t) -> MachinesLootTable.copyNBTSingleCap(l, t, "EntityStorage"))
+        .blockstate(MachineModelUtil::soulMachineBlock)
+        .item(PoweredSpawnerItem::new)
+        .tab(() -> EIOCreativeTabs.MACHINES)
+        .build()
         .register();
 
     public static final BlockEntry<MachineBlock> VACUUM_CHEST = REGISTRATE

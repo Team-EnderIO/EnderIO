@@ -49,5 +49,7 @@ public class EIOMachines {
         provider.addSubProvider(event.includeServer(), new SlicingRecipeProvider(packOutput));
 
         generator.addProvider(true, provider);
+
+        generator.addProvider(event.includeServer(), new SoulBindingRecipeProvider(generator));
     }
 }
