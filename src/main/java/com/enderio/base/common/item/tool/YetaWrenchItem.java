@@ -12,12 +12,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraftforge.common.util.LazyOptional;
 
 import java.util.Optional;
 
@@ -91,7 +89,6 @@ public class YetaWrenchItem extends Item {
             return handleProperty(pContext, state, directionProperty.get());
         if (axisProperty.isPresent())
             return handleProperty(pContext, state, axisProperty.get());
-
         throw new IllegalArgumentException("At least one Optional should be set");
     }
 
