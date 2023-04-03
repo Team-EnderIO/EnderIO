@@ -1,5 +1,6 @@
 package com.enderio.machines.common.item;
 
+import com.enderio.EnderIO;
 import com.enderio.core.client.item.ItemTooltip;
 import com.enderio.machines.client.rendering.item.FluidTankBEWLR;
 import com.enderio.machines.common.block.MachineBlock;
@@ -34,7 +35,7 @@ public class FluidTankItem extends BlockItem {
 
     @Override
     public int getMaxStackSize(ItemStack stack) {
-        return 1;//TODO: fix madness with tanks that stack.
+        return 1;//TODO: when fluid tank entity accepts item stacks of more than 1 in the internalDrain/fill. Remove this method to allow fluid tank items to stack to 64.
     }
 
     @Override
@@ -54,16 +55,19 @@ public class FluidTankItem extends BlockItem {
     public void appendHoverText(ItemStack stack, @Nullable Level pLevel, List<Component> tooltip, TooltipFlag pFlag) {
         ItemTooltip.addShiftKeyMessage(tooltip);
         Optional<IFluidHandlerItem> fluidHandler = stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
+        if (fluidHandler.isPresent()){
+            ItemTooltip.addFluidTankMessage(tooltip, fluidHandler.get().getFluidInTank(0), capacity);//always present
+        } else {
+            EnderIO.LOGGER.warn("No fluid handler capability on tank item, unable to complete tooltip");
+        }
 
-        ItemTooltip.addFluidTankMessage(tooltip, fluidHandler.get().getFluidInTank(0));//always present
         super.appendHoverText(stack, pLevel, tooltip, pFlag);
     }
-
+    @Nullable
     @Override
-    public @Nullable ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
         return new FluidItemStack(stack, capacity);
     }
-
 
     public class FluidItemStack extends FluidHandlerItemStack{
         private static final String BLOCK_ENTITY_TAG = "BlockEntityTag";
@@ -77,26 +81,22 @@ public class FluidTankItem extends BlockItem {
 
         @NotNull
         public FluidStack getFluid() {
-            CompoundTag tagCompound = container.getTag();
-            if(tagCompound == null) return FluidStack.EMPTY;
-            CompoundTag BETag = tagCompound.getCompound(BLOCK_ENTITY_TAG);
-            if (!BETag.contains("fluid")) return FluidStack.EMPTY;
-            else return FluidStack.loadFluidStackFromNBT(BETag.getCompound("fluid"));
+            Optional<CompoundTag> tagCompoundOptional = Optional.ofNullable(container.getTag());
+            return tagCompoundOptional.map(tagCompound -> tagCompound.getCompound(BLOCK_ENTITY_TAG))
+                .map(beTag -> beTag.getCompound("fluid"))
+                .map(FluidStack::loadFluidStackFromNBT)
+                .orElse(FluidStack.EMPTY);
         }
-        protected void setFluid(FluidStack fluid)
-        {
-            CompoundTag mainTag = container.getTag();
-            if (mainTag == null){
-                mainTag = new CompoundTag();
-                container.setTag(mainTag);//main tag
-            }
-            CompoundTag BETag = new CompoundTag();
-            mainTag.put(BLOCK_ENTITY_TAG, BETag);
+
+        protected void setFluid(FluidStack fluid) {
+            CompoundTag mainTag = container.getOrCreateTag();
+            CompoundTag beTag = new CompoundTag();
+            mainTag.put(BLOCK_ENTITY_TAG, beTag);
 
             CompoundTag fluidTag = new CompoundTag();
             fluid.writeToNBT(fluidTag);//rewrites the old value
             //TODO: externalize "fluid" into one global parameter.
-            BETag.put("fluid", fluidTag);
+            beTag.put("fluid", fluidTag);
         }
 
         @Override

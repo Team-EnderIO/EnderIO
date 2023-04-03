@@ -79,7 +79,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
 
         super.serverTick();
     }
-
+    //TODO: enable fluid tanks to receive stackable fluid containers
     private void fillInternal() {
         ItemStack inputItem = FLUID_FILL_INPUT.getItemStack(this);
         ItemStack outputItem = FLUID_FILL_OUTPUT.getItemStack(this);
@@ -113,6 +113,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
         return fluidTank.onClickedWithPotentialFluidItem(player, hand);
     }
 
+    //TODO: enable fluid tanks to receive stackable fluid containers
     private void drainInternal() {
         ItemStack inputItem = FLUID_DRAIN_INPUT.getItemStack(this);
         ItemStack outputItem = FLUID_DRAIN_OUTPUT.getItemStack(this);

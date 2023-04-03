@@ -47,7 +47,8 @@ public class MachineFluidTank extends FluidTank {
         this.parent = parent;
     }
 
-    /** This implementation only handles one tank, use multiple instances of this class in combination
+    /**
+     * This implementation only handles one tank, use multiple instances of this class in combination
      *      with a FluidTankHandler to use multiple tanks
      * @return - 1.
      */
@@ -56,7 +57,8 @@ public class MachineFluidTank extends FluidTank {
         return 1;
     }
 
-    /** Transfers fluid from a fluid handler to this tank.
+    /**
+     * Transfers fluid from a fluid handler to this tank.
      * @param from - fluid handler to transfer from
      * @param desiredAmount - The max amount to transfer if possible.
      * @param force - Force transfer even if 'allowInput' is false or validator prohibits fluid to enter. It respects the fluid types though
@@ -70,6 +72,7 @@ public class MachineFluidTank extends FluidTank {
     }
 
     /**
+     * Transfers fluid from a fluid handler to this tank.
      * @param to - The handler to transfer into.
      * @param desiredAmount - The max amount to transfer if possible.
      * @param force - Force transfer even if 'allowOutput' is false.
@@ -88,7 +91,8 @@ public class MachineFluidTank extends FluidTank {
 
 
 
-    /** Works like the FluidTank class of forge with some additions described below.
+    /**
+     * Works like the FluidTank class of forge with some additions described below.
      *
      * @param source - The source fluid stack. Tries to increase tank amount with entire source amount.
      *               WARNING! This method does not drain the source stack according to the forge FluidTank implementation.
@@ -101,9 +105,10 @@ public class MachineFluidTank extends FluidTank {
      * Credit: the Forge team, since the logic is their work.
      */
     public int fill(FluidStack source, FluidAction action, boolean force){
-        if (source.isEmpty() || (!fluid.isEmpty() && !fluid.isFluidEqual(source))) return 0;
-        else if (!allowInput && !force) return 0;//Continue filling if either allow input or force input
-        else if (!isFluidValid(source) && !force) return 0;
+        if (source.isEmpty()) return 0;
+        if (!fluid.isEmpty() && !fluid.isFluidEqual(source)) return 0;
+        if (!allowInput && !force) return 0;//Continue filling if either allow input or force input
+        if (!isFluidValid(source) && !force) return 0;
         else if (action.simulate()) {
             if (fluid.isEmpty()) return Math.min(capacity, source.getAmount());
             else return Math.min(capacity - fluid.getAmount(), source.getAmount());
@@ -127,10 +132,10 @@ public class MachineFluidTank extends FluidTank {
 
     //Same as parent behavior with the addition of this class capabilities, see method 'fill' above for details.
     public int fill(int desiredAmount, FluidAction action, boolean force){
-        if(fluid.isEmpty()){
+        if (fluid.isEmpty()) {
             EnderIO.LOGGER.error("No fluid in tank, can't contain an amount of unspecified fluid other than 0");
         }
-        return fill(new FluidStack(fluid.getFluid(),desiredAmount), action,force);
+        return fill(new FluidStack(fluid.getFluid(), desiredAmount), action, force);
     }
     //Same as parent behavior with the addition of this class capabilities, see method 'fill' above for details.
     @Override
@@ -138,15 +143,16 @@ public class MachineFluidTank extends FluidTank {
         return fill(source,action, false);
     }
 
-    /** drains fluid out of the tank.
+    /**
+     * Drains fluid out of the tank.
      * @param maxDrain - The maximal amount that you wish to draw in mb. In case of using a bucket it would be FluidType.BUCKET_VOLUME (1000)mb.
      * @param action - execute if the tank amount should be changed, simulate if not.
      * @param force - Force your way around the allow output flag. Usually used to drain a machine "input" tank from within the machine.
      * @return - The amount that was drained in case of action is execute and how much could be drawn in case of
      */
     public int drain(int maxDrain, FluidAction action, boolean force){
-        if(maxDrain <= 0) return 0;
-        if(!allowOutput && !force) return 0; // Continue draining only if either allow drain or force
+        if (maxDrain <= 0) return 0;
+        if (!allowOutput && !force) return 0; // Continue draining only if either allow drain or force
         int transferAmount = Math.min(maxDrain, fluid.getAmount());
         if(action == FluidAction.EXECUTE && transferAmount>0){
             fluid.shrink(transferAmount);
@@ -159,7 +165,7 @@ public class MachineFluidTank extends FluidTank {
     @Override
     public @NotNull FluidStack drain(FluidStack resource, FluidAction action) {
         if (resource.isEmpty() || !resource.isFluidEqual(fluid)) return FluidStack.EMPTY;
-        else return drain(resource.getAmount(),action);
+        return drain(resource.getAmount(), action);
     }
     //Same as parent behavior with the addition of this class capabilities, see method 'drain' above for details
 
@@ -168,17 +174,17 @@ public class MachineFluidTank extends FluidTank {
         int amount = drain(maxDrain, action, false);
         if (amount==0)
             return FluidStack.EMPTY;
-        else
-            return new FluidStack(fluid.getFluid(), amount);
+        return new FluidStack(fluid.getFluid(), amount);
     }
 
-    /** Checks whether the item in the players hand can deposit or take up fluids from this tank, and if so does the transfer
+    /**
+     * Checks whether the item in the players hand can deposit or take up fluids from this tank, and if so does the transfer
      * @param player - The player.
      * @param hand - The interaction hand.
      * @return - Consumed if interacted, success otherwise.
      */
     public InteractionResult onClickedWithPotentialFluidItem(Player player, InteractionHand hand){
-        if(!player.level.isClientSide() && player.hasItemInSlot(EquipmentSlot.MAINHAND) && hand == InteractionHand.MAIN_HAND) {
+        if (!player.level.isClientSide() && player.hasItemInSlot(EquipmentSlot.MAINHAND) && hand == InteractionHand.MAIN_HAND) {
             ItemStack heldStack = player.getMainHandItem();
             Optional<IFluidHandlerItem> heldItemFH = heldStack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
             if (heldStack.getItem() == Items.BUCKET && allowOutput) {
