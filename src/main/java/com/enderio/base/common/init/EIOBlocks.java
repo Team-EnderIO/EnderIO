@@ -51,20 +51,45 @@ public class EIOBlocks {
 
     // region Chassis
 
-    @Deprecated(forRemoval = true)
-    public static final BlockEntry<Block> INDUSTRIAL_MACHINE_CHASSIS = chassisBlock("industrial_machine_chassis").register();
+    // Iron tier
+    public static final BlockEntry<Block> VOID_CHASSIS = chassisBlock("void_chassis").register();
 
-    @Deprecated(forRemoval = true)
-    public static final BlockEntry<Block> END_STEEL_MACHINE_CHASSIS = chassisBlock("end_steel_machine_chassis").lang("End Steel Chassis").register();
+    // Void chassis + some kind of dragons breath derrived process
+    public static final BlockEntry<Block> REKINDLED_VOID_CHASSIS = chassisBlock("rekindled_void_chassis").register();
 
-    @Deprecated(forRemoval = true)
-    public static final BlockEntry<Block> SOUL_MACHINE_CHASSIS = chassisBlock("soul_machine_chassis").register();
+    // Soularium + soul/nether
+    public static final BlockEntry<Block> ENSNARED_CHASSIS = chassisBlock("ensouled_chassis").register();
 
-    @Deprecated(forRemoval = true)
-    public static final BlockEntry<Block> ENHANCED_MACHINE_CHASSIS = chassisBlock("enhanced_machine_chassis").register();
+    // Ensnared + Some kind of other material
+    // This is for machines that require a bound soul
+    public static final BlockEntry<Block> TRAPPED_CHASSIS = chassisBlock("trapped_chassis").register();
 
-    @Deprecated(forRemoval = true)
-    public static final BlockEntry<Block> SOULLESS_MACHINE_CHASSIS = chassisBlock("soulless_machine_chassis").register();
+    // Dark steel + sculk
+    public static final BlockEntry<Block> SCULK_CHASSIS = chassisBlock("sculk_chassis").register();
+
+
+    // endregion
+
+    // region Building Blocks
+
+    // region Dark Steel
+
+    // endregion
+
+    // region Miscellaneous
+
+    public static final BlockEntry<ChainBlock> SOUL_CHAIN = REGISTRATE.block("soul_chain", ChainBlock::new)
+        // TODO: Models and such
+        .initialProperties(Material.METAL, MaterialColor.NONE)
+        .properties(props -> props.requiresCorrectToolForDrops().strength(5.0F, 6.0F).sound(SoundType.CHAIN).noOcclusion())
+        .tag(BlockTags.NEEDS_IRON_TOOL)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .item()
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
+        .build()
+        .register();
+
+    // endregion
 
     // endregion
 

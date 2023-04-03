@@ -6,7 +6,7 @@
         "items": [
           {
             "items": [
-              "enderio:vibrant_alloy_nugget"
+              "enderio:pulsating_crystal"
             ]
           }
         ]
@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:vibrant_crystal"
+        "recipe": "enderio:vacuum_chest"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "enderio:vibrant_crystal"
+      "enderio:vacuum_chest"
     ]
   }
 }

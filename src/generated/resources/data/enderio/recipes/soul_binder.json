@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "enderio:ensouled_chassis"
+    },
+    "H": {
+      "tag": "forge:heads"
+    },
+    "I": {
+      "item": "enderio:soularium_ingot"
+    }
+  },
+  "pattern": [
+    "IHI",
+    "HCH",
+    "IHI"
+  ],
+  "result": {
+    "item": "enderio:soul_binder"
+  },
+  "show_notification": true
+}

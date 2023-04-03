@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "minecraft:stone_bricks"
+    },
+    "F": {
+      "item": "minecraft:furnace"
+    },
+    "G": {
+      "item": "enderio:dark_bimetal_gear"
+    },
+    "I": {
+      "item": "enderio:dark_steel_ingot"
+    },
+    "P": {
+      "item": "minecraft:piston"
+    },
+    "V": {
+      "item": "enderio:void_chassis"
+    }
+  },
+  "pattern": [
+    "BFB",
+    "IVI",
+    "GPG"
+  ],
+  "result": {
+    "item": "enderio:stirling_generator"
+  },
+  "show_notification": true
+}

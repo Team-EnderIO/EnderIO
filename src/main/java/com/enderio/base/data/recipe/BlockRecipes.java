@@ -4,6 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.base.common.block.ResettingLeverBlock;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.common.tag.EIOTags;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.data.DataGenerator;
@@ -29,7 +30,42 @@ public class BlockRecipes extends RecipeProvider {
         addPressurePlateRecipes(recipeConsumer);
         addLeverRecipes(recipeConsumer);
         addConstructionBlockRecipes(recipeConsumer);
-        addChassisRecipes(recipeConsumer);
+        buildChassisRecipes(recipeConsumer);
+        buildBuildingRecipes(recipeConsumer);
+    }
+
+    private void buildChassisRecipes(Consumer<FinishedRecipe> recipeConsumer) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOBlocks.VOID_CHASSIS.get())
+            .define('B', Blocks.IRON_BARS)
+            .define('G', EIOItems.GRAINS_OF_INFINITY.get())
+            .define('I', Tags.Items.INGOTS_IRON)
+            .pattern("BIB")
+            .pattern("IGI")
+            .pattern("BIB")
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GRAINS_OF_INFINITY.get()))
+            .save(recipeConsumer);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOBlocks.ENSNARED_CHASSIS.get())
+            .define('C', EIOBlocks.SOUL_CHAIN.get())
+            .define('Q', Tags.Items.GEMS_QUARTZ)
+            .define('I', EIOItems.SOULARIUM_INGOT.get())
+            .pattern("CIC")
+            .pattern("IQI")
+            .pattern("CIC")
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.SOULARIUM_INGOT.get()))
+            .save(recipeConsumer);
+    }
+
+    private void buildBuildingRecipes(Consumer<FinishedRecipe> recipeConsumer) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, EIOBlocks.SOUL_CHAIN.get(), 2)
+            .define('Q', EIOTags.Items.DUSTS_QUARTZ)
+            .define('N', EIOItems.SOULARIUM_NUGGET.get())
+            .define('I', EIOItems.SOULARIUM_INGOT.get())
+            .pattern(" N ")
+            .pattern("QIQ")
+            .pattern(" N ")
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.SOULARIUM_INGOT.get()))
+            .save(recipeConsumer);
     }
 
     private void addConstructionBlockRecipes(Consumer<FinishedRecipe> recipeConsumer) {
@@ -86,32 +122,6 @@ public class BlockRecipes extends RecipeProvider {
             .pattern("GBG")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GRAINS_OF_INFINITY.get()))
             .save(recipeConsumer);
-    }
-
-    private void addChassisRecipes(Consumer<FinishedRecipe> recipeConsumer) {
-
-//        ShapedRecipeBuilder
-//            .shaped(EIOBlocks.SIMPLE_MACHINE_CHASSIS.get())
-//            .define('B', Blocks.IRON_BARS)
-//            .define('G', EIOItems.GRAINS_OF_INFINITY.get())
-//            .define('I', Tags.Items.INGOTS_IRON)
-//            .pattern("BIB")
-//            .pattern("IGI")
-//            .pattern("BIB")
-//            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GRAINS_OF_INFINITY.get()))
-//            .save(recipeConsumer);
-
-        ShapedRecipeBuilder
-            .shaped(RecipeCategory.MISC, EIOBlocks.END_STEEL_MACHINE_CHASSIS.get())
-            .define('B', EIOBlocks.END_STEEL_BARS.get())
-            .define('G', EIOItems.GRAINS_OF_INFINITY.get())
-            .define('I', EIOItems.END_STEEL_INGOT.get())
-            .pattern("BIB")
-            .pattern("IGI")
-            .pattern("BIB")
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.END_STEEL_INGOT.get()))
-            .save(recipeConsumer);
-
     }
 
     private void addPressurePlateRecipes(Consumer<FinishedRecipe> recipeConsumer) {

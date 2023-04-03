@@ -78,7 +78,7 @@ public class AlloyRecipeProvider extends EnderRecipeProvider {
 
         // TODO: Deal with chassis etc.
 //        build(new ItemStack(EIOBlocks.INDUSTRIAL_MACHINE_CHASSIS.get()), List.of(CountedIngredient.of(EIOBlocks.SIMPLE_MACHINE_CHASSIS.get()), CountedIngredient.of(EIOItems.DYE_INDUSTRIAL_BLEND.get())), 3600, 0.3f, pFinishedRecipeConsumer);
-        build(new ItemStack(EIOBlocks.ENHANCED_MACHINE_CHASSIS.get()), List.of(CountedIngredient.of(EIOBlocks.END_STEEL_MACHINE_CHASSIS.get()), CountedIngredient.of(EIOItems.DYE_ENHANCED_BLEND.get())), 3600, 0.3f, pFinishedRecipeConsumer);
+//        build(new ItemStack(EIOBlocks.ENHANCED_MACHINE_CHASSIS.get()), List.of(CountedIngredient.of(EIOBlocks.END_STEEL_MACHINE_CHASSIS.get()), CountedIngredient.of(EIOItems.DYE_ENHANCED_BLEND.get())), 3600, 0.3f, pFinishedRecipeConsumer);
 //        build(new ItemStack(EIOBlocks.SOUL_MACHINE_CHASSIS.get()), List.of(CountedIngredient.of(EIOBlocks.SIMPLE_MACHINE_CHASSIS.get()), CountedIngredient.of(EIOItems.DYE_SOUL_ATTUNED_BLEND.get())), 3600, 0.3f, pFinishedRecipeConsumer);
 
         // endregion

@@ -37,7 +37,7 @@ public class SlicingRecipeProvider extends EnderRecipeProvider {
             Ingredient.of(EIOItems.SILICON.get()), Ingredient.of(EIOItems.BASIC_CAPACITOR.get()), Ingredient.of(EIOItems.SILICON.get())
         ), 20000, finishedRecipeConsumer);
 
-        build(EIOItems.ZOMBIE_CONTROLLER.get(), List.of(
+        build(EIOItems.Z_LOGIC_CONTROLLER.get(), List.of(
             Ingredient.of(EIOItems.SOULARIUM_INGOT.get()), Ingredient.of(Items.ZOMBIE_HEAD), Ingredient.of(EIOItems.SOULARIUM_INGOT.get()),
             Ingredient.of(EIOItems.SILICON.get()), Ingredient.of(Items.REDSTONE), Ingredient.of(EIOItems.SILICON.get())
         ), 20000, finishedRecipeConsumer);

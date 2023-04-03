@@ -43,7 +43,8 @@ import java.util.Objects;
 @SuppressWarnings("unused")
 public class EIOItems {
     private static final Registrate REGISTRATE = EnderIO.registrate();
-    // region Materials
+
+    // region Alloys
 
     public static final ItemEntry<MaterialItem> COPPER_ALLOY_INGOT = materialItem("copper_alloy_ingot").register();
     public static final ItemEntry<MaterialItem> ENERGETIC_ALLOY_INGOT = materialItem("energetic_alloy_ingot").register();
@@ -67,33 +68,30 @@ public class EIOItems {
     public static final ItemEntry<MaterialItem> END_STEEL_NUGGET = materialItem("end_steel_nugget").register();
     public static final ItemEntry<MaterialItem> IRON_ALLOY_NUGGET = materialItem("iron_alloy_nugget").tag(Tags.Items.NUGGETS_IRON).register();
 
-    // region Basic Materials
+    // endregion
 
-    public static final ItemEntry<MaterialItem> CONDUIT_BINDER = materialItem("conduit_binder").register();
+    // region Crafting Components
+
     public static final ItemEntry<MaterialItem> SILICON = materialItem("silicon").tag(EIOTags.Items.SILICON).register();
 
-    // endregion
+    public static final ItemEntry<MaterialItem> GRAINS_OF_INFINITY = materialItem("grains_of_infinity").lang("Grains of Infinity").register();
 
-    // region Components
+    public static final ItemEntry<MaterialItem> INFINITY_ROD = materialItem("infinity_rod").register();
 
-    // region Machine Parts
+    public static final ItemEntry<MaterialItem> CONDUIT_BINDER_COMPOSITE = materialItem("conduit_binder_composite").register();
 
-    // TODO: Deal with machine parts when we decide machine "tiers"
-//    public static final ItemEntry<MaterialItem> SIMPLE_MACHINE_PARTS = materialItem("simple_machine_parts").register();
-    public static final ItemEntry<MaterialItem> INDUSTRIAL_MACHINE_PARTS = materialItem("industrial_machine_parts").register();
-    public static final ItemEntry<MaterialItem> ENHANCED_MACHINE_PARTS = materialItem("enhanced_machine_parts").register();
+    public static final ItemEntry<MaterialItem> CONDUIT_BINDER = materialItem("conduit_binder").register();
 
-    // endregion
-
-    // region Circuits todo: better name
+    // TODO: 1.19.4: implement upgrade binder for dark steel upgrades
+    public static final ItemEntry<MaterialItem> UPGRADE_BINDER = materialItem("upgrade_binder").register();
 
     public static final ItemEntry<MaterialItem> ZOMBIE_ELECTRODE = materialItem("zombie_electrode").register();
 
-    public static final ItemEntry<MaterialItem> ZOMBIE_CONTROLLER = materialItem("zombie_controller").lang("Z-Logic Controller").register();
+    public static final ItemEntry<MaterialItem> Z_LOGIC_CONTROLLER = materialItem("z_logic_controller").lang("Z-Logic Controller").register();
 
-    public static final ItemEntry<MaterialItem> FRANKEN_ZOMBIE = materialItemGlinted("franken_zombie")
+    public static final ItemEntry<MaterialItem> FRANK_N_ZOMBIE = materialItemGlinted("frank_n_zombie")
         .lang("Frank'N'Zombie")
-        .model((ctx, prov) -> EIOModel.mimicItem(ctx, EIOItems.ZOMBIE_CONTROLLER, prov))
+        .model((ctx, prov) -> EIOModel.mimicItem(ctx, EIOItems.Z_LOGIC_CONTROLLER, prov))
         .register();
 
     public static final ItemEntry<MaterialItem> ENDER_RESONATOR = materialItem("ender_resonator").register();
@@ -107,7 +105,7 @@ public class EIOItems {
 
     // endregion
 
-    // region capacitors
+    // region Capacitors
 
     public static final ItemEntry<FixedCapacitorItem> BASIC_CAPACITOR = REGISTRATE
         .item("basic_capacitor", props -> new FixedCapacitorItem(DefaultCapacitorData.BASIC, props))
@@ -142,18 +140,9 @@ public class EIOItems {
 
     // endregion
 
-    // region Infinity
-
-    public static final ItemEntry<MaterialItem> GRAINS_OF_INFINITY = materialItem("grains_of_infinity").lang("Grains of Infinity").register();
-
-    public static final ItemEntry<MaterialItem> INFINITY_ROD = materialItem("infinity_rod").register();
-
-    // endregion
-
     // region Powders and Fragments
 
     public static final ItemEntry<MaterialItem> FLOUR = materialItem("flour").register();
-    public static final ItemEntry<MaterialItem> CONDUIT_BINDER_COMPOSITE = materialItem("conduit_binder_composite").register();
     public static final ItemEntry<MaterialItem> COAL_POWDER = materialItem("coal_powder").tag(EIOTags.Items.DUSTS_COAL).register();
     public static final ItemEntry<MaterialItem> IRON_POWDER = materialItem("iron_powder").tag(EIOTags.Items.DUSTS_IRON).register();
     public static final ItemEntry<MaterialItem> GOLD_POWDER = materialItem("gold_powder").tag(EIOTags.Items.DUSTS_GOLD).register();

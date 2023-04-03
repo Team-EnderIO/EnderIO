@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "enderio:ensouled_chassis"
+    },
+    "H": {
+      "tag": "forge:heads"
+    },
+    "I": {
+      "item": "enderio:conductive_alloy_ingot"
+    },
+    "V": {
+      "item": "enderio:vibrant_crystal"
+    },
+    "Z": {
+      "item": "enderio:z_logic_controller"
+    }
+  },
+  "pattern": [
+    "IHI",
+    "ICI",
+    "VZV"
+  ],
+  "result": {
+    "item": "enderio:powered_spawner"
+  },
+  "show_notification": true
+}

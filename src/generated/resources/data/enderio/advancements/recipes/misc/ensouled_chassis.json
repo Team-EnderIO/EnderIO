@@ -6,7 +6,7 @@
         "items": [
           {
             "items": [
-              "enderio:vibrant_alloy_nugget"
+              "enderio:soularium_ingot"
             ]
           }
         ]
@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:vibrant_crystal"
+        "recipe": "enderio:ensouled_chassis"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "enderio:vibrant_crystal"
+      "enderio:ensouled_chassis"
     ]
   }
 }
