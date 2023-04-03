@@ -336,7 +336,7 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
 
                 return new SagMillingRecipe(recipeId, input, outputs, energy, bonusType);
             } catch (Exception ex) {
-                EnderIO.LOGGER.error("Error reading allow smelting recipe to packet.", ex);
+                EnderIO.LOGGER.error("Error reading sag milling recipe to packet.", ex);
                 throw ex;
             }
         }
