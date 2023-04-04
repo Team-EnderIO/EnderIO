@@ -10,6 +10,7 @@ import net.minecraft.core.Direction;
 import net.minecraftforge.client.model.IQuadTransformer;
 
 import static net.minecraftforge.client.model.IQuadTransformer.STRIDE;
+import static net.minecraftforge.client.model.IQuadTransformer.UV0;
 
 public class RenderUtil {
     /**
@@ -60,7 +61,6 @@ public class RenderUtil {
 
     /**
      * {@see net.minecraftforge.client.model.pipeline.QuadBakingVertexConsumer}
-     *
      * @return packedUV Data
      */
     public static int[] packUV(float u, float v) {
