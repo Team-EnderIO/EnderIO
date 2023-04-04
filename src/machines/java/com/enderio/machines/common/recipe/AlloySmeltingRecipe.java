@@ -3,6 +3,7 @@ package com.enderio.machines.common.recipe;
 import com.enderio.EnderIO;
 import com.enderio.core.common.recipes.CountedIngredient;
 import com.enderio.core.common.recipes.OutputStack;
+import com.enderio.machines.common.blockentity.AlloySmelterBlockEntity;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -50,6 +51,13 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
         return experience;
     }
 
+    /**
+     * Helper for JEI
+     */
+    public int getBasicEnergyCost() {
+        return energy;
+    }
+
     @Override
     public int getEnergyCost(Container container) {
         return energy;
@@ -69,7 +77,7 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
 
                 if (j < inputs.size()) {
                     // If we expect an input, test we have a match for it.
-                    if (inputs.get(j).test(container.getItem(i))) {
+                    if (inputs.get(j).test(AlloySmelterBlockEntity.INPUTS.get(i).getItemStack(container))) {
                         matched[j] = true;
                     }
                 } else if (container.getItem(i) == ItemStack.EMPTY) {

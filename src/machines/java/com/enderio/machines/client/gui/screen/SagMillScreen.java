@@ -22,6 +22,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
+import java.util.List;
+import java.util.Optional;
+
 public class SagMillScreen extends EIOScreen<SagMillMenu> {
     public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/sagmill.png");
 
@@ -46,7 +49,7 @@ public class SagMillScreen extends EIOScreen<SagMillMenu> {
     }
 
     @Override
-    protected ResourceLocation getBackgroundImage() {
+    public ResourceLocation getBackgroundImage() {
         return BG_TEXTURE;
     }
 
@@ -102,8 +105,13 @@ public class SagMillScreen extends EIOScreen<SagMillMenu> {
                 SagMillBlockEntity be = SagMillScreen.this.getMenu().getBlockEntity();
                 float durability = be.getGrindingBallDamage();
                 IGrindingBallData dat = be.getGrindingBallData();
-                SagMillScreen.this.renderTooltip(poseStack, TooltipUtil.withArgs(MachineLang.SAG_MILL_GRINDINGBALL_TOOLTIP,
-                    (int) (durability * 100), (int) (dat.getOutputMultiplier() * 100), (int) (dat.getBonusMultiplier() * 100), (int) (dat.getPowerUse() * 100)), mouseX, mouseY);
+                SagMillScreen.this.renderTooltip(poseStack, List.of(
+                    TooltipUtil.styledWithArgs(MachineLang.SAG_MILL_GRINDINGBALL_REMAINING, (int) (durability * 100)),
+                    MachineLang.SAG_MILL_GRINDINGBALL_TITLE,
+                    TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_MAIN_OUTPUT, (int) (dat.getOutputMultiplier() * 100)),
+                    TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_BONUS_OUTPUT, (int) (dat.getBonusMultiplier() * 100)),
+                    TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_POWER_USE, (int) (dat.getPowerUse() * 100))
+                ), Optional.empty(), mouseX, mouseY);
             }
         }
     }

@@ -1,14 +1,12 @@
 package com.enderio.base.common.item.tool;
 
 import com.enderio.api.capability.ISideConfig;
+import com.enderio.base.common.blockentity.IWrenchable;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -30,23 +28,22 @@ public class YetaWrenchItem extends Item {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
-        return super.use(level, player, usedHand);
-    }
-
-    @Override
-    public InteractionResult useOn(UseOnContext pContext) {
-        if (pContext.getLevel().isClientSide)
+    public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext pContext) {
+        Level level = pContext.getLevel();
+        if (level.isClientSide())
             return InteractionResult.SUCCESS;
 
-        Level level = pContext.getLevel();
         BlockPos pos = pContext.getClickedPos();
-
+        if(level.getBlockEntity(pos) instanceof IWrenchable wrenchable)
+            return wrenchable.onWrenched(pContext);
+        
         // Check for side config capability
         BlockEntity be = level.getBlockEntity(pos);
         if (be != null) {
             LazyOptional<ISideConfig> optSideConfig = be.getCapability(EIOCapabilities.SIDE_CONFIG, pContext.getClickedFace());
             if (optSideConfig.isPresent()) {
+                if (level.isClientSide())
+                    return InteractionResult.sidedSuccess(true);
                 // Cycle state.
                 optSideConfig.ifPresent(ISideConfig::cycleMode);
                 return InteractionResult.SUCCESS;
@@ -57,16 +54,14 @@ public class YetaWrenchItem extends Item {
         BlockState state = level.getBlockState(pContext.getClickedPos());
         Optional<Either<DirectionProperty, EnumProperty<Direction.Axis>>> property = getRotationProperty(state);
         if (property.isPresent()) {
-            if (pContext.getLevel().isClientSide)
-                return InteractionResult.SUCCESS;
-            state = getNextState(pContext, state, property.get());
+            BlockState newState = getNextState(pContext, state, property.get());
             pContext.getLevel().setBlock(
                 pContext.getClickedPos(),
-                state,
+                newState,
                 Block.UPDATE_NEIGHBORS + Block.UPDATE_CLIENTS);
-            return InteractionResult.CONSUME;
+            return InteractionResult.SUCCESS;
         }
-        return super.useOn(pContext);
+        return super.onItemUseFirst(stack,pContext);
     }
 
     @SuppressWarnings("unchecked")
@@ -92,12 +87,12 @@ public class YetaWrenchItem extends Item {
     }
 
     private static BlockState handleProperties(UseOnContext pContext, BlockState state, Optional<DirectionProperty> directionProperty, Optional<EnumProperty<Direction.Axis>> axisProperty) {
-         if (directionProperty.isPresent())
-             return handleProperty(pContext, state, directionProperty.get());
-         if (axisProperty.isPresent())
-             return handleProperty(pContext, state, axisProperty.get());
+        if (directionProperty.isPresent())
+            return handleProperty(pContext, state, directionProperty.get());
+        if (axisProperty.isPresent())
+            return handleProperty(pContext, state, axisProperty.get());
 
-         throw new IllegalArgumentException("Atleast one Optional should be set");
+        throw new IllegalArgumentException("At least one Optional should be set");
     }
 
     private static <T extends Comparable<T>> BlockState handleProperty(UseOnContext pContext, BlockState state, Property<T> property) {

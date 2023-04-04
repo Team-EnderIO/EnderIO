@@ -35,7 +35,7 @@ public class SlicerScreen extends EIOScreen<SlicerMenu> {
     }
 
     @Override
-    protected ResourceLocation getBackgroundImage() {
+    public ResourceLocation getBackgroundImage() {
         return BG_TEXTURE;
     }
 

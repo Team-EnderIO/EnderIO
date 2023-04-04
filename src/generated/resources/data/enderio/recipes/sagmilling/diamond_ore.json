@@ -2,7 +2,7 @@
   "type": "enderio:sagmilling",
   "energy": 2400,
   "input": {
-    "item": "minecraft:diamond_ore"
+    "tag": "forge:ores/diamond"
   },
   "outputs": [
     {

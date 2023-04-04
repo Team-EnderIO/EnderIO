@@ -2,7 +2,7 @@
   "type": "enderio:sagmilling",
   "energy": 2400,
   "input": {
-    "item": "minecraft:redstone_ore"
+    "tag": "forge:ores/redstone"
   },
   "outputs": [
     {

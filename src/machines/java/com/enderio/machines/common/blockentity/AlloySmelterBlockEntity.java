@@ -11,11 +11,13 @@ import com.enderio.core.common.sync.FloatDataSlot;
 import com.enderio.core.common.sync.SyncMode;
 import com.enderio.machines.common.blockentity.base.PoweredCraftingMachine;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingTask;
-import com.enderio.machines.common.compat.VanillaAlloySmeltingRecipe;
+import com.enderio.machines.common.integrations.vanilla.VanillaAlloySmeltingRecipe;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import com.enderio.machines.common.io.item.MultiSlotAccess;
+import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.AlloySmelterMenu;
 import com.enderio.machines.common.menu.PrimitiveAlloySmelterMenu;
 import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
@@ -45,6 +47,9 @@ import java.util.function.Supplier;
 
 public class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltingRecipe, AlloySmeltingRecipe.Container> {
 
+    public static final MultiSlotAccess INPUTS = new MultiSlotAccess();
+    public static final SingleSlotAccess OUTPUT = new SingleSlotAccess();
+
     /**
      * The primitive variant of the alloy smelter burns coal instead of using an energy buffer.
      * In order to keep implementation logic together, we do some kinda hacky stuff to emulate an internal buffer.
@@ -54,7 +59,7 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltin
         // TODO: Currently smelts really slowly. Needs addressed when we deal with burn -> FE rates.
         private int burnTime;
         private int burnDuration;
-
+        public static final SingleSlotAccess FUEL = new SingleSlotAccess();
         @UseOnly(LogicalSide.CLIENT)
         private float clientBurnProgress;
 
@@ -67,15 +72,16 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltin
         protected boolean restrictedMode() {
             return true;
         }
-
         @Override
         public MachineInventoryLayout getInventoryLayout() {
-            return MachineInventoryLayout.builder().inputSlot(4, this::acceptSlotInput).outputSlot().build();
-        }
-
-        @Override
-        protected PoweredCraftingTask<AlloySmeltingRecipe, AlloySmeltingRecipe.Container> createTask(@Nullable AlloySmeltingRecipe recipe) {
-            return createTask(recipe, 4);
+            return MachineInventoryLayout.builder()
+                .inputSlot(3, this::acceptSlotInput)
+                .slotAccess(INPUTS)
+                .outputSlot()
+                .slotAccess(OUTPUT)
+                .inputSlot(this::acceptSlotInput)
+                .slotAccess(FUEL)
+                .build();
         }
 
         @Override
@@ -101,7 +107,7 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltin
             // Only continue burning if redstone is enabled and the internal buffer has space.
             if (canAct() && !isBurning() && hasTask() && !getCurrentTask().isComplete()) {
                 // Get the fuel
-                ItemStack fuel = getInventory().getStackInSlot(3);
+                ItemStack fuel = FUEL.getItemStack(this);
                 if (!fuel.isEmpty()) {
                     // Get the burn time.
                     int burningTime = ForgeHooks.getBurnTime(fuel, RecipeType.SMELTING);
@@ -113,7 +119,6 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltin
 
                         // Remove the fuel
                         fuel.shrink(1);
-                        getInventory().setStackInSlot(3, fuel);
                     }
                 }
             }
@@ -218,7 +223,11 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltin
 
     @Override
     public MachineInventoryLayout getInventoryLayout() {
-        return MachineInventoryLayout.builder().inputSlot(3, this::acceptSlotInput).outputSlot().capacitor().build();
+        return MachineInventoryLayout.builder()
+            .inputSlot(3, this::acceptSlotInput)
+            .slotAccess(INPUTS)
+            .outputSlot().slotAccess(OUTPUT)
+            .capacitor().build();
     }
 
     protected boolean acceptSlotInput(int slot, ItemStack stack) {
@@ -259,11 +268,11 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltin
 
     @Override
     protected PoweredCraftingTask<AlloySmeltingRecipe, AlloySmeltingRecipe.Container> createTask(@Nullable AlloySmeltingRecipe recipe) {
-        return createTask(recipe, 3);
+        return createTask(recipe, OUTPUT);
     }
 
-    protected PoweredCraftingTask<AlloySmeltingRecipe, AlloySmeltingRecipe.Container> createTask(@Nullable AlloySmeltingRecipe recipe, int outputIndex) {
-        return new PoweredCraftingTask<>(this, container, outputIndex, recipe) {
+    protected PoweredCraftingTask<AlloySmeltingRecipe, AlloySmeltingRecipe.Container> createTask(@Nullable AlloySmeltingRecipe recipe, SingleSlotAccess output) {
+        return new PoweredCraftingTask<>(this, container, output, recipe) {
             @Override
             protected void takeInputs(AlloySmeltingRecipe recipe) {
                 MachineInventory inv = getInventory();
@@ -272,6 +281,7 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltin
                     CountedIngredient input = recipe.getInputs().get(0);
 
                     // Iterate over the slots
+
                     int consumeCount = 0;
                     for (int i = 0; i < 3; i++) {
                         ItemStack stack = inv.getStackInSlot(i);
@@ -290,7 +300,7 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltin
 
                     // Iterate over the slots
                     for (int i = 0; i < 3; i++) {
-                        ItemStack stack = inv.getStackInSlot(i);
+                        ItemStack stack = INPUTS.get(i).getItemStack(inv);
 
                         // Iterate over the inputs
                         for (int j = 0; j < 3; j++) {

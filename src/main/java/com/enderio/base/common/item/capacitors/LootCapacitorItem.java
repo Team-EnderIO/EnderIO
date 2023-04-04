@@ -29,20 +29,6 @@ public class LootCapacitorItem extends Item implements IMultiCapabilityItem {
         super(pProperties);
     }
 
-    @Override
-    public void appendHoverText(ItemStack pStack, Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        pStack.getCapability(EIOCapabilities.CAPACITOR).ifPresent(data -> {
-            NumberFormat fmt = NumberFormat.getInstance(Locale.ENGLISH);
-            pTooltipComponents.add(TooltipUtil.styledWithArgs(EIOLang.CAPACITOR_TOOLTIP_BASE, fmt.format(data.getBase())));
-            if (data instanceof LootCapacitorData lootCapacitorData) {
-                for (Map.Entry<CapacitorModifier, Float> modifier : lootCapacitorData.getAllModifiers().entrySet()) {
-                    pTooltipComponents.add(TooltipUtil.styledWithArgs(new ResourceLocation("tooltip", modifier.getKey().id.toLanguageKey()), fmt.format(modifier.getValue())));
-                }
-            }
-        });
-    }
-
     @Nullable
     @Override
     public MultiCapabilityProvider initCapabilities(ItemStack stack, CompoundTag nbt, MultiCapabilityProvider provider) {

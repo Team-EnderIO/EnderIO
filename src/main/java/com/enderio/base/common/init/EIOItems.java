@@ -4,7 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.base.common.capacitor.DefaultCapacitorData;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.item.EIOCreativeTabs;
-import com.enderio.base.common.item.misc.LocationPrintoutItem;
+import com.enderio.base.common.item.misc.*;
 import com.enderio.base.common.item.capacitors.FixedCapacitorItem;
 import com.enderio.base.common.item.capacitors.LootCapacitorItem;
 import com.enderio.base.common.item.darksteel.DarkSteelAxeItem;
@@ -16,13 +16,9 @@ import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosivePenetr
 import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosivePenetrationUpgradeTier;
 import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosiveUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosiveUpgradeTier;
-import com.enderio.base.common.item.misc.EnderiosItem;
-import com.enderio.base.common.item.misc.EnderfaceItem;
-import com.enderio.base.common.item.misc.GearItem;
-import com.enderio.base.common.item.misc.MaterialItem;
-import com.enderio.base.common.item.misc.BrokenSpawnerItem;
 import com.enderio.base.common.item.tool.*;
 import com.enderio.base.common.tag.EIOTags;
+import com.enderio.base.data.model.item.GliderItemModel;
 import com.enderio.base.data.model.item.RotatingItemModel;
 import com.enderio.core.data.model.EIOModel;
 import com.tterrag.registrate.Registrate;
@@ -30,24 +26,23 @@ import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
+import net.minecraft.Util;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Tier;
-import net.minecraft.world.item.Tiers;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.ForgeTier;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.TierSortingRegistry;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @SuppressWarnings("unused")
 public class EIOItems {
     private static final Registrate REGISTRATE = EnderIO.registrate();
-
     // region Materials
 
     public static final ItemEntry<MaterialItem> COPPER_ALLOY_INGOT = materialItem("copper_alloy_ingot").register();
@@ -148,8 +143,6 @@ public class EIOItems {
     // endregion
 
     // region Infinity
-
-    public static final ItemEntry<MaterialItem> INFINITY_CRYSTAL = materialItem("infinity_crystal").register();
 
     public static final ItemEntry<MaterialItem> GRAINS_OF_INFINITY = materialItem("grains_of_infinity").lang("Grains of Infinity").register();
 
@@ -270,10 +263,27 @@ public class EIOItems {
     public static final ItemEntry<MaterialItem> COPPER_ALLOY_BALL = materialItem("copper_alloy_grinding_ball").register();
     public static final ItemEntry<MaterialItem> DARK_STEEL_BALL = materialItem("dark_steel_grinding_ball").register();
     public static final ItemEntry<MaterialItem> END_STEEL_BALL = materialItem("end_steel_grinding_ball").register();
+    public static final Map<DyeColor, ItemEntry<HangGliderItem>> COLORED_HANG_GLIDERS = Util.make(() -> {
+       Map<DyeColor, ItemEntry<HangGliderItem>> tempMap = new EnumMap<>(DyeColor.class);
+       for (DyeColor color: DyeColor.values()) {
+           var entry = gliderItem(color.getName() + "_glider");
+           tempMap.put(color, entry.register());
+       }
+       return tempMap;
+    });
+
+    public static final ItemEntry<HangGliderItem> GLIDER = gliderItem("glider").register();
 
     // endregion
 
     // region Builders
+
+    private static ItemBuilder<HangGliderItem, Registrate> gliderItem(String name) {
+        return dumbItem(name, HangGliderItem::new)
+            .tag(EIOTags.Items.GLIDER)
+            .tab(() -> EIOCreativeTabs.MAIN)
+            .model((ctx, prov) -> GliderItemModel.create(ctx.get(), prov));
+    }
 
     private static ItemBuilder<MaterialItem, Registrate> materialItem(String name) {
         return REGISTRATE.item(name, props -> new MaterialItem(props, false)).tab(() -> EIOCreativeTabs.MAIN);
@@ -474,20 +484,23 @@ public class EIOItems {
 
     // region Creative Tab Icons
 
-    public static final ItemEntry<EnderfaceItem> CREATIVE_ICON_NONE = dumbItem("enderface_none", EnderfaceItem::new);
-    public static final ItemEntry<EnderfaceItem> CREATIVE_ICON_ITEMS = dumbItem("enderface_items", EnderfaceItem::new);
-    public static final ItemEntry<EnderfaceItem> CREATIVE_ICON_MATERIALS = dumbItem("enderface_materials", EnderfaceItem::new);
-    public static final ItemEntry<EnderfaceItem> CREATIVE_ICON_MACHINES = dumbItem("enderface_machines", EnderfaceItem::new);
-    public static final ItemEntry<EnderfaceItem> CREATIVE_ICON_CONDUITS = dumbItem("enderface_conduits", EnderfaceItem::new);
-    public static final ItemEntry<EnderfaceItem> CREATIVE_ICON_MOBS = dumbItem("enderface_mobs", EnderfaceItem::new);
-    public static final ItemEntry<EnderfaceItem> CREATIVE_ICON_INVPANEL = dumbItem("enderface_invpanel", EnderfaceItem::new);
+    public static final ItemEntry<EnderfaceItem> CREATIVE_ICON_NONE = dumbItem("enderface_none", EnderfaceItem::new).register();
+    public static final ItemEntry<EnderfaceItem> CREATIVE_ICON_ITEMS = dumbItem("enderface_items", EnderfaceItem::new).register();
+    public static final ItemEntry<EnderfaceItem> CREATIVE_ICON_MATERIALS = dumbItem("enderface_materials", EnderfaceItem::new).register();
+    public static final ItemEntry<EnderfaceItem> CREATIVE_ICON_MACHINES = dumbItem("enderface_machines", EnderfaceItem::new).register();
+    public static final ItemEntry<EnderfaceItem> CREATIVE_ICON_CONDUITS = dumbItem("enderface_conduits", EnderfaceItem::new).register();
+    public static final ItemEntry<EnderfaceItem> CREATIVE_ICON_MOBS = dumbItem("enderface_mobs", EnderfaceItem::new).register();
+    public static final ItemEntry<EnderfaceItem> CREATIVE_ICON_INVPANEL = dumbItem("enderface_invpanel", EnderfaceItem::new).register();
 
     // endregion
 
     // region Helpers
 
-    public static <T extends Item> ItemEntry<T> dumbItem(String name, NonNullFunction<Item.Properties, T> factory) {
-        return REGISTRATE.item(name, factory).register();
+    public static <T extends Item> ItemBuilder<T, Registrate> dumbItem(String name, NonNullFunction<Item.Properties, T> factory) {
+        return REGISTRATE.item(name, factory);
+    }
+    public static ItemBuilder<Item, Registrate> dumbItem(String name) {
+        return REGISTRATE.item(name, Item::new);
     }
 
     public static <T extends Item> ItemEntry<T> groupedItem(String name, NonNullFunction<Item.Properties, T> factory, NonNullSupplier<CreativeModeTab> tab) {

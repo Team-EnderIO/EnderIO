@@ -2,7 +2,9 @@ package com.enderio.base.data.recipe;
 
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.item.darksteel.DarkSteelUpgradeItem;
+import com.enderio.base.common.item.misc.HangGliderItem;
 import com.enderio.base.common.item.misc.MaterialItem;
+import com.enderio.base.common.tag.EIOTags;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.data.DataGenerator;
@@ -10,10 +12,13 @@ import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.Tags;
 
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class ItemRecipes extends RecipeProvider {
@@ -27,6 +32,32 @@ public class ItemRecipes extends RecipeProvider {
         addTools(recipeConsumer);
         addDarkSteelTools(recipeConsumer);
         addDarkSteelUpgrades(recipeConsumer);
+        addGliders(recipeConsumer);
+    }
+
+    private void addGliders(Consumer<FinishedRecipe> recipeConsumer) {
+        ShapedRecipeBuilder.shaped(EIOItems.GLIDER_WING.get())
+            .pattern("  D")
+            .pattern(" DL")
+            .pattern("DLL")
+            .define('D', EIOItems.DARK_STEEL_INGOT.get())
+            .define('L', Tags.Items.LEATHER)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DARK_STEEL_INGOT.get()))
+            .save(recipeConsumer);
+        ShapedRecipeBuilder.shaped(EIOItems.GLIDER.get())
+            .pattern(" D ")
+            .pattern("WDW")
+            .define('D', EIOItems.DARK_STEEL_INGOT.get())
+            .define('W', EIOItems.GLIDER_WING.get())
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GLIDER_WING.get()))
+            .save(recipeConsumer);
+        for (Map.Entry<DyeColor, ItemEntry<HangGliderItem>> dyeColorItemEntryEntry : EIOItems.COLORED_HANG_GLIDERS.entrySet()) {
+            ShapelessRecipeBuilder.shapeless(dyeColorItemEntryEntry.getValue().get())
+                .requires(EIOItems.GLIDER.get())
+                .requires(dyeColorItemEntryEntry.getKey().getTag())
+                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GLIDER.get()))
+                .save(recipeConsumer);
+        }
     }
 
     private void addTools(Consumer<FinishedRecipe> recipeConsumer) {
