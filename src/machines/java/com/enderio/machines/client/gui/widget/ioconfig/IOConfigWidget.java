@@ -313,12 +313,16 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
                 .renderModel(poseStack.last(), vertexConsumer, blockState, bakedModel, r, g, b, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, modelData,
                     renderType);
 
-        } else if (shape != RenderShape.INVISIBLE) {
+        }
+        if (shape != RenderShape.INVISIBLE) {
             BlockEntityRenderDispatcher renderDispatcher = minecraft.getBlockEntityRenderDispatcher();
             BlockEntity blockEntity = minecraft.level.getBlockEntity(blockPos);
-            var renderer = renderDispatcher.getRenderer(blockEntity);
-            if (renderer != null) {
-                renderer.render(blockEntity, partialTick, poseStack, buffers, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+            if (blockEntity != null) {
+                var renderer = renderDispatcher.getRenderer(blockEntity);
+                if (renderer != null) {
+                    renderer.render(blockEntity, partialTick, poseStack, buffers, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+                }
+
             }
 
         }
