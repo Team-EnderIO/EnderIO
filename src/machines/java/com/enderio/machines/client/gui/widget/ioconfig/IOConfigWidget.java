@@ -17,19 +17,14 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.block.BlockRenderDispatcher;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.FastColor;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.EmptyBlockGetter;
-import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -248,12 +243,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
                 .stream()
                 .min((a, b) -> (int) (a.getValue().distToCenterSqr(_origin) - b.getValue().distToCenterSqr(_origin))); // minimum
 
-            if (opt.isPresent()) {
-                Map.Entry<BlockHitResult, BlockPos> closest = opt.get();
-                selection = Optional.of(new SelectedFace(closest.getValue(), closest.getKey().getDirection()));
-            } else {
-                selection = Optional.empty();
-            }
+            selection = opt.map(closest -> new SelectedFace(closest.getValue(), closest.getKey().getDirection()));
 
             renderSelection(poseStack, centerX, centerY, blockTransform);
             renderOverlay(poseStack);
@@ -298,9 +288,6 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
         BlockState blockState = blockEntity != null ? blockEntity.getBlockState() : minecraft.level.getBlockState(blockPos);
 
         ModelData modelData = minecraft.level.getModelDataManager().getAt(blockPos);
-        if (blockEntity instanceof MachineBlockEntity machine) {
-            modelData = machine.getModelData();
-        }
         modelData = modelData == null ? ModelData.EMPTY : modelData;
         var renderer = minecraft.getBlockRenderer();
         renderer.renderSingleBlock(blockState, poseStack, buffers, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, modelData, null);
