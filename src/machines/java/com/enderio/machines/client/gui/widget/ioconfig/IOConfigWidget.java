@@ -17,20 +17,29 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FastColor;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.EmptyBlockGetter;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.client.RenderTypeHelper;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
 
@@ -263,7 +272,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
         if (neighbourVisible) {
             for (var neighbour : neighbours) {
                 Vector3f pos = new Vector3f(neighbour.getX() - worldOrigin.x(), neighbour.getY() - worldOrigin.y(), neighbour.getZ() - worldOrigin.z());
-                renderBlock(poseStack, neighbour, pos, ghostBuffers);
+                renderBlock(poseStack, neighbour, pos, ghostBuffers, partialTick);
             }
 
         }
@@ -274,23 +283,48 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
         //TODO: recheck when capacitor banks
         for (var configurable : configurable) {
             Vector3f pos = new Vector3f(configurable.getX() - worldOrigin.x(), configurable.getY() - worldOrigin.y(), configurable.getZ() - worldOrigin.z());
-            renderBlock(poseStack, configurable, pos, normalBuffers);
+            renderBlock(poseStack, configurable, pos, normalBuffers, partialTick);
         }
         normalBuffers.endBatch();
 
         poseStack.popPose();
     }
 
-    private void renderBlock(PoseStack poseStack, BlockPos blockPos, Vector3f renderPos, MultiBufferSource.BufferSource buffers) {
+    private void renderBlock(PoseStack poseStack, BlockPos blockPos, Vector3f renderPos, MultiBufferSource.BufferSource buffers, float partialTick) {
         poseStack.pushPose();
         poseStack.translate(renderPos.x(), renderPos.y(), renderPos.z());
-        BlockEntity blockEntity = minecraft.level.getBlockEntity(blockPos);
-        BlockState blockState = blockEntity != null ? blockEntity.getBlockState() : minecraft.level.getBlockState(blockPos);
 
-        ModelData modelData = minecraft.level.getModelDataManager().getAt(blockPos);
-        modelData = modelData == null ? ModelData.EMPTY : modelData;
-        var renderer = minecraft.getBlockRenderer();
-        renderer.renderSingleBlock(blockState, poseStack, buffers, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, modelData, null);
+        ModelData modelData = Optional.ofNullable(minecraft.level.getModelDataManager().getAt(blockPos)).orElse(ModelData.EMPTY);
+
+        BlockState blockState = minecraft.level.getBlockState(blockPos);
+        RenderShape rendershape = blockState.getRenderShape();
+        if (rendershape != RenderShape.INVISIBLE) {
+            switch (rendershape) {
+            case MODEL -> {
+                var renderer = minecraft.getBlockRenderer();
+                BakedModel bakedmodel = renderer.getBlockModel(blockState);
+                int blockColor = minecraft.getBlockColors().getColor(blockState, minecraft.level, blockPos, 0);
+                float r = FastColor.ARGB32.red(blockColor) / 255F;
+                float g = FastColor.ARGB32.green(blockColor) / 255F;
+                float b = FastColor.ARGB32.blue(blockColor) / 255F;
+                for (RenderType rt : bakedmodel.getRenderTypes(blockState, RandomSource.create(42), modelData))
+                    renderer
+                        .getModelRenderer()
+                        .renderModel(poseStack.last(), buffers.getBuffer(RenderTypeHelper.getEntityRenderType(rt, false)), blockState, bakedmodel, r, g, b,
+                            LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, modelData, rt);
+            }
+            case ENTITYBLOCK_ANIMATED -> {
+                BlockEntity blockEntity = minecraft.level.getBlockEntity(blockPos);
+                if (blockEntity != null) {
+                    var renderer = minecraft.getBlockEntityRenderDispatcher().getRenderer(blockEntity);
+                    if (renderer != null) {
+                        renderer.render(blockEntity, partialTick, poseStack, buffers, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+                    }
+
+                }
+            }
+            }
+        }
         poseStack.popPose();
 
     }
