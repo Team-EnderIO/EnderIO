@@ -20,7 +20,8 @@ import java.util.Optional;
 
 public abstract class SyncedMenu<T extends EnderBlockEntity> extends AbstractContainerMenu {
 
-    @Nullable private final T blockEntity;
+    @Nullable
+    private final T blockEntity;
     private final Inventory inventory;
 
     private final List<EnderDataSlot<?>> clientToServerSlots = new ArrayList<>();

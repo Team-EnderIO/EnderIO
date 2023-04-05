@@ -105,20 +105,11 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
     public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
         for (GuiEventListener widget : children()) {
             if (widget instanceof AbstractWidget abstractWidget && abstractWidget.isActive()) {
-                abstractWidget.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
+                if (abstractWidget.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY))
+                    break;
             }
         }
         return super.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
-    }
-
-    @Override
-    public void mouseMoved(double pMouseX, double pMouseY) {
-        for (GuiEventListener widget : children()) {
-            if (widget instanceof AbstractWidget abstractWidget && abstractWidget.isActive()) {
-                abstractWidget.mouseMoved(pMouseX, pMouseY);
-            }
-        }
-        super.mouseMoved(pMouseX, pMouseY);
     }
 
     @Override
