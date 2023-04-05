@@ -38,7 +38,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.client.RenderTypeHelper;
 import net.minecraftforge.client.model.data.ModelData;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -55,7 +54,6 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     private static final BlockPos POS = new BlockPos(1, 1, 1);
     private static final int Z_OFFSET = 100;
     private static final ResourceLocation SELECTED_ICON = EnderIO.loc("block/overlay/selected_face");
-    private static final float NEIGHBOUR_TRANSPARENCY = MachinesConfig.CLIENT.IO_CONFIG_NEIGHBOUR_TRANSPARENCY.get();
     private static final Minecraft minecraft = Minecraft.getInstance();
     private static MultiBufferSource.BufferSource ghostBuffers;
     private final U addedOn;
@@ -199,6 +197,9 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         if (visible) {
             // render black bg
+            if (isMouseOver(mouseX, mouseY)){
+                addedOn.setFocused(this);
+            }
             enableScissor(x, y, x + width, y + height);
             fill(poseStack, x, y, x + width, y + height, 0xFF000000);
 
@@ -372,7 +373,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     @Override
     public void updateNarration(NarrationElementOutput pNarrationElementOutput) {}
 
-    private record SelectedFace(BlockPos blockPos, @NotNull Direction side) {}
+    private record SelectedFace(BlockPos blockPos,Direction side) {}
 
     private static class GhostBuffers extends MultiBufferSource.BufferSource {
         private GhostBuffers(BufferBuilder fallback, Map<RenderType, BufferBuilder> layerBuffers) {
@@ -395,7 +396,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
 
                     RenderSystem.disableDepthTest();
                     RenderSystem.enableBlend();
-                    RenderSystem.setShaderColor(1, 1, 1, NEIGHBOUR_TRANSPARENCY);
+                    RenderSystem.setShaderColor(1, 1, 1, MachinesConfig.CLIENT.IO_CONFIG_NEIGHBOUR_TRANSPARENCY.get());
                 },
                 () -> {
                     RenderSystem.setShaderColor(1, 1, 1, 1);

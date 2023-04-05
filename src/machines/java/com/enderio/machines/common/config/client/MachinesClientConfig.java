@@ -12,7 +12,7 @@ public class MachinesClientConfig {
         BLOCKS = new MachinesClientBlocksConfig(builder);
 
         builder.push("ioconfig");
-        IO_CONFIG_NEIGHBOUR_TRANSPARENCY = builder.comment("Neighbour Transparency [0-1]").define("machineParticles", 0.4F);
+        IO_CONFIG_NEIGHBOUR_TRANSPARENCY = builder.comment("Neighbour Transparency [0-1]").define("neighbourTransparency", 0.4F);
         builder.pop();
     }
 }

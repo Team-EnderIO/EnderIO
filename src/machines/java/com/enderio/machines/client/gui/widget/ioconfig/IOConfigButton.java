@@ -54,7 +54,7 @@ public class IOConfigButton<U extends EIOScreen<?>, T extends AbstractWidget> ex
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, IOCONFIG);
         RenderSystem.enableDepthTest();
-        blit(pPoseStack, this.x, this.y, 0, 0, this.width, this.height);
+        blit(pPoseStack, this.x, this.y, 0, 0, this.width, this.height, 48, 32);
 
         if (this.isHovered) {
             renderToolTip(pPoseStack, pMouseX, pMouseY);
