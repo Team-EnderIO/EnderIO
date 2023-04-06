@@ -130,7 +130,7 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
         		output(SAND, 2, 0.4f)), 
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
         
-        build("sand", Ingredient.of(SAND), List.of(
+        build("sand", Ingredient.of(Tags.Items.SAND), List.of(
         		output(EIOTags.Items.SILICON, 0.5f)
         		),BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
         
