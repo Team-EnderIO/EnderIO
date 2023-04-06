@@ -44,6 +44,8 @@ import java.util.*;
 /**
  * Thanks XFactHD for help and providing a demo for a preview widget and raycast example
  * <a href="https://gist.github.com/XFactHD/4b214f98a1b30a590c6e0de6bd84602a">Preview Widget Gist</a>
+ * <p>
+ * Definition  of {@link GhostBuffers}, {@link GhostRenderLayer} and initBuffers method are taken from Patchouli (License information: <a href="https://github.com/VazkiiMods/Patchouli">here</a>)
  */
 public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
 
@@ -197,7 +199,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         if (visible) {
             // render black bg
-            if (isMouseOver(mouseX, mouseY)){
+            if (isMouseOver(mouseX, mouseY)) {
                 addedOn.setFocused(this);
             }
             enableScissor(x, y, x + width, y + height);
@@ -373,7 +375,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     @Override
     public void updateNarration(NarrationElementOutput pNarrationElementOutput) {}
 
-    private record SelectedFace(BlockPos blockPos,Direction side) {}
+    private record SelectedFace(BlockPos blockPos, Direction side) {}
 
     private static class GhostBuffers extends MultiBufferSource.BufferSource {
         private GhostBuffers(BufferBuilder fallback, Map<RenderType, BufferBuilder> layerBuffers) {
