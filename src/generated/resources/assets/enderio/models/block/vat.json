@@ -1,0 +1,19 @@
+{
+  "parent": "minecraft:block/block",
+  "children": {
+    "overlay": {
+      "parent": "enderio:block/io_overlay"
+    },
+    "vat": {
+      "parent": "enderio:block/vat_body"
+    }
+  },
+  "item_render_order": [
+    "vat",
+    "overlay"
+  ],
+  "loader": "forge:composite",
+  "textures": {
+    "particle": "enderio:block/machine_side"
+  }
+}

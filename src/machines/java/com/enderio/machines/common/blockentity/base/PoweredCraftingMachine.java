@@ -17,6 +17,8 @@ import java.util.Optional;
  * Generic class for a machine that performs crafting recipes.
  */
 public abstract class PoweredCraftingMachine<R extends MachineRecipe<C>, C extends Container> extends PoweredTaskMachineEntity<PoweredCraftingTask<R, C>> {
+
+
     /**
      * The recipe type this machine can accept.
      */
@@ -74,4 +76,8 @@ public abstract class PoweredCraftingMachine<R extends MachineRecipe<C>, C exten
      * Get the container used for crafting.
      */
     protected abstract C getContainer();
+
+    public RecipeType<R> getRecipeType() {
+        return recipeType;
+    }
 }

@@ -1,0 +1,23 @@
+{
+  "type": "enderio:vatting",
+  "baseConversionRate": 1.0,
+  "energy": 10000,
+  "inputFluid": "enderio:flowing_hootch",
+  "leftInputs": [
+    {
+      "item": "minecraft:redstone"
+    }
+  ],
+  "leftMultipliers": [
+    1.0
+  ],
+  "outputFluid": "enderio:flowing_rocket_fuel",
+  "rightInputs": [
+    {
+      "item": "minecraft:gunpowder"
+    }
+  ],
+  "rightMultipliers": [
+    1.0
+  ]
+}

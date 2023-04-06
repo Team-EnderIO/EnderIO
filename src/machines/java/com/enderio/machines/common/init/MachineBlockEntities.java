@@ -35,6 +35,7 @@ public class MachineBlockEntities {
     public static final BlockEntityEntry<SlicerBlockEntity> SLICE_AND_SPLICE = register("slice_and_splice", SlicerBlockEntity::new,
         MachineBlocks.SLICE_AND_SPLICE);
 
+    public static final BlockEntityEntry<VatBlockEntity> THE_VAT = register("the_vat", VatBlockEntity::new, MachineBlocks.THE_VAT);
     public static final BlockEntityEntry<ImpulseHopperBlockEntity> IMPULSE_HOPPER = register("impulse_hopper", ImpulseHopperBlockEntity::new,
         MachineBlocks.IMPULSE_HOPPER);
     public static final BlockEntityEntry<VacuumChestBlockEntity> VACUUM_CHEST = register("vacuum_chest", VacuumChestBlockEntity::new,

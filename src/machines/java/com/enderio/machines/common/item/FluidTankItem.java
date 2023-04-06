@@ -104,7 +104,8 @@ public class FluidTankItem extends BlockItem {
             CompoundTag tagCompound = container.getTag();
             if(tagCompound != null){
                 CompoundTag BETag = tagCompound.getCompound(BLOCK_ENTITY_TAG);
-                if (BETag.contains("fluid"))BETag.remove("fluid");
+                if (BETag.contains("fluid"))
+                    BETag.remove("fluid");
             }
         }
     }

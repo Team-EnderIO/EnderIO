@@ -1,0 +1,49 @@
+package com.enderio.machines.client.gui.screen;
+
+import com.enderio.EnderIO;
+import com.enderio.base.common.lang.EIOLang;
+import com.enderio.core.client.gui.screen.EIOScreen;
+import com.enderio.core.client.gui.widgets.EnumIconWidget;
+import com.enderio.core.common.util.Vector2i;
+import com.enderio.machines.client.gui.widget.EnergyWidget;
+import com.enderio.machines.client.gui.widget.FluidStackWidget;
+import com.enderio.machines.client.gui.widget.ProgressWidget;
+import com.enderio.machines.common.menu.VatMenu;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
+
+import java.util.Objects;
+
+public class VatScreen extends EIOScreen<VatMenu> {
+
+    public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/vat.png");
+
+    public VatScreen(VatMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
+        super(pMenu, pPlayerInventory, pTitle);
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+
+        addRenderableOnly(new EnergyWidget(this, Objects.requireNonNull(getMenu().getBlockEntity())::getEnergyStorage, 12 + leftPos, 12 + topPos, 9, 42));
+
+        addRenderableOnly(new FluidStackWidget(this, getMenu().getBlockEntity()::getInputTank, 30 + leftPos, topPos + 12, 15, 47));
+        addRenderableOnly(new FluidStackWidget(this, getMenu().getBlockEntity()::getOutputTank, 132 + leftPos, topPos + 12, 15, 47));
+
+        //TODO:make the correct progressbar...
+        addRenderableOnly(new ProgressWidget.LeftRight(this, () -> menu.getBlockEntity().getProgress(), getGuiLeft() + 103, getGuiTop() + 49, 24, 17, 176, 14));
+        addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),
+            control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
+    }
+    @Override
+    public ResourceLocation getBackgroundImage() {
+        return BG_TEXTURE;
+    }
+
+    @Override
+    protected Vector2i getBackgroundImageSize() {
+        return new Vector2i(176, 166);
+    }
+}

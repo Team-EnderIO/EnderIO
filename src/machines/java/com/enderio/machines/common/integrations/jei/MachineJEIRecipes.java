@@ -6,6 +6,7 @@ import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
 import com.enderio.machines.common.recipe.SagMillingRecipe;
 import com.enderio.machines.common.recipe.SlicingRecipe;
+import com.enderio.machines.common.recipe.VatRecipe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -45,5 +46,9 @@ public class MachineJEIRecipes {
 
     public List<SagMillingRecipe> getSagmillingRecipes() {
         return recipeManager.getAllRecipesFor(MachineRecipes.SAGMILLING.type().get());
+    }
+
+    public List<VatRecipe> getVattingRecipes() {
+        return recipeManager.getAllRecipesFor(MachineRecipes.VATTING.type().get());
     }
 }

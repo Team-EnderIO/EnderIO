@@ -12,10 +12,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraftforge.common.util.LazyOptional;
 
 import java.util.Optional;
 
@@ -32,9 +34,9 @@ public class YetaWrenchItem extends Item {
             return InteractionResult.SUCCESS;
 
         BlockPos pos = pContext.getClickedPos();
-        if(level.getBlockEntity(pos) instanceof IWrenchable wrenchable)
+        if (level.getBlockEntity(pos) instanceof IWrenchable wrenchable)
             return wrenchable.onWrenched(pContext);
-        
+
         // Check for side config capability
         BlockEntity be = level.getBlockEntity(pos);
         if (be != null) {
@@ -53,26 +55,22 @@ public class YetaWrenchItem extends Item {
         Optional<Either<DirectionProperty, EnumProperty<Direction.Axis>>> property = getRotationProperty(state);
         if (property.isPresent()) {
             BlockState newState = getNextState(pContext, state, property.get());
-            pContext.getLevel().setBlock(
-                pContext.getClickedPos(),
-                newState,
-                Block.UPDATE_NEIGHBORS + Block.UPDATE_CLIENTS);
+            pContext.getLevel().setBlock(pContext.getClickedPos(), newState, Block.UPDATE_NEIGHBORS + Block.UPDATE_CLIENTS);
             return InteractionResult.SUCCESS;
         }
-        return super.onItemUseFirst(stack,pContext);
+        return super.onItemUseFirst(stack, pContext);
     }
 
     @SuppressWarnings("unchecked")
     private static Optional<Either<DirectionProperty, EnumProperty<Direction.Axis>>> getRotationProperty(BlockState state) {
         for (Property<?> property : state.getProperties()) {
-            if (property instanceof DirectionProperty directionProperty
-                && directionProperty.getName().equals("facing")) {
+            if (property instanceof DirectionProperty directionProperty && directionProperty.getName().equals("facing")) {
 
                 return Optional.of(Either.left(directionProperty));
             }
-            if (property instanceof EnumProperty enumProperty
-                && enumProperty.getName().equals("axis")
-                && enumProperty.getValueClass().equals(Direction.Axis.class)) {
+            if (property instanceof EnumProperty enumProperty && enumProperty.getName().equals("axis") && enumProperty
+                .getValueClass()
+                .equals(Direction.Axis.class)) {
 
                 return Optional.of(Either.right(enumProperty));
             }
@@ -84,7 +82,8 @@ public class YetaWrenchItem extends Item {
         return handleProperties(pContext, state, property.left(), property.right());
     }
 
-    private static BlockState handleProperties(UseOnContext pContext, BlockState state, Optional<DirectionProperty> directionProperty, Optional<EnumProperty<Direction.Axis>> axisProperty) {
+    private static BlockState handleProperties(UseOnContext pContext, BlockState state, Optional<DirectionProperty> directionProperty,
+        Optional<EnumProperty<Direction.Axis>> axisProperty) {
         if (directionProperty.isPresent())
             return handleProperty(pContext, state, directionProperty.get());
         if (axisProperty.isPresent())
@@ -97,14 +96,16 @@ public class YetaWrenchItem extends Item {
         do {
             state = getNextBlockState(state, property);
             noValidStateIndex++;
-        } while (noValidStateIndex != property.getPossibleValues().size()
-            && !state.getBlock().canSurvive(state, pContext.getLevel(), pContext.getClickedPos()));
+        } while (noValidStateIndex != property.getPossibleValues().size() && !state
+            .getBlock()
+            .canSurvive(state, pContext.getLevel(), pContext.getClickedPos()));
         return state;
     }
 
     private static <T extends Comparable<T>> BlockState getNextBlockState(BlockState currentState, Property<T> property) {
         return currentState.setValue(property, getNextValue(currentState.getValue(property), property));
     }
+
     private static <T extends Comparable<T>> T getNextValue(T value, Property<T> property) {
         boolean foundValid = false;
         for (T possibleValue : property.getPossibleValues()) {

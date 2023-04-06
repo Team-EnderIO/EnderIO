@@ -207,7 +207,8 @@ public class MachineFluidTank extends FluidTank {
                 FluidStack bucketContent = new FluidStack(filledBucket.getFluid(), FluidType.BUCKET_VOLUME);
                 if (fill(bucketContent, IFluidHandler.FluidAction.SIMULATE) == FluidType.BUCKET_VOLUME){//can fit entire bucket in tank?
                     fill(bucketContent, IFluidHandler.FluidAction.EXECUTE);
-                    player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.BUCKET, 1));
+                    if(!player.isCreative())
+                        player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.BUCKET, 1));
                     return InteractionResult.CONSUME;
                 }
             }else if(heldItemFH.isPresent()){//Player holding item capable of holding fluids that isn't a bucket

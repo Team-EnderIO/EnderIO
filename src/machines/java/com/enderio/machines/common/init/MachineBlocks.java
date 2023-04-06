@@ -124,13 +124,18 @@ public class MachineBlocks {
     public static final BlockEntry<ProgressMachineBlock> SLICE_AND_SPLICE = soulMachine("slice_and_splice", () -> MachineBlockEntities.SLICE_AND_SPLICE)
         .lang("Slice'N'Splice")
         .register();
+
     public static final BlockEntry<ProgressMachineBlock> THE_VAT = standardMachine("vat", () ->MachineBlockEntities.THE_VAT)
         .blockstate((ctx, prov) ->
             prov.horizontalBlock(
                 ctx.get(),
                 prov.models()
-                    .getExistingFile(EnderIO.loc("block/vat"))))
-
+                    .withExistingParent(ctx.getName(), prov.mcLoc("block/block"))
+                    .customLoader(CompositeModelBuilder::begin)
+                    .child("vat", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/vat_body")))
+                    .child("overlay", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/io_overlay")))
+                    .end()
+                    .texture("particle", EnderIO.loc("block/machine_side"))))
         .lang("The Vat")
         .register();
 
