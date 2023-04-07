@@ -364,7 +364,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
                 Rect2i iconBounds = map.getRect();
                 RenderSystem.setShaderTexture(0, IOConfigButton.IOCONFIG);
                 blit(poseStack, x + 4, y + height - 4 - screenFont.lineHeight - iconBounds.getHeight(), iconBounds.getX(), iconBounds.getY(),
-                    iconBounds.getWidth(), iconBounds.getHeight());
+                    iconBounds.getWidth(), iconBounds.getHeight(), 48, 32);
                 poseStack.pushPose();
                 screenFont.draw(poseStack, map.getComponent(), x + 4, y + height - 2 - screenFont.lineHeight, 0xFFFFFFFF);
                 poseStack.popPose();

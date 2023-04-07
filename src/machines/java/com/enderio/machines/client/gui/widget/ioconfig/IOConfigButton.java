@@ -40,7 +40,7 @@ public class IOConfigButton<U extends EIOScreen<?>, T extends AbstractWidget> ex
         addRenderableWidget.apply(configRenderer);
 
         neighbourButton = new ImageButton(addedOn.getGuiLeft() + addedOn.getXSize() - 5 - 16, addedOn.getGuiTop() + addedOn.getYSize() - 5 - 16, 16, 16, 16, 0,
-            0, IOCONFIG, 256, 256, (k) -> configRenderer.toggleNeighbourVisibility(),
+            0, IOCONFIG, 48, 32, (k) -> configRenderer.toggleNeighbourVisibility(),
             (k, pPoseStack, pMouseX, pMouseY) -> addedOn.renderTooltip(pPoseStack, EIOLang.TOGGLE_NEIGHBOUR, pMouseX, pMouseY), Component.empty());
         neighbourButton.visible = show;
         addRenderableWidget.apply(neighbourButton);
