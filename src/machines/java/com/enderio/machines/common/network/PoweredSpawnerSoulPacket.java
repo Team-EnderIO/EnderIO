@@ -39,7 +39,7 @@ public class PoweredSpawnerSoulPacket implements Packet {
 
     @Override
     public boolean isValid(NetworkEvent.Context context) {
-        return context.getDirection() == NetworkDirection.LOGIN_TO_CLIENT;
+        return context.getDirection() == NetworkDirection.PLAY_TO_CLIENT;
     }
 
     @Override
@@ -62,7 +62,7 @@ public class PoweredSpawnerSoulPacket implements Packet {
 
         @Override
         public Optional<NetworkDirection> getDirection() {
-            return Optional.of(NetworkDirection.LOGIN_TO_CLIENT);
+            return Optional.of(NetworkDirection.PLAY_TO_CLIENT);
         }
     }
 }

@@ -7,6 +7,9 @@ import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.init.MachineMenus;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.lang.MachineLang;
+import com.enderio.machines.common.network.MachineNetwork;
+import com.enderio.machines.common.network.PoweredSpawnerSoulPacket;
+import com.enderio.machines.common.souldata.SpawnerSoul;
 import com.enderio.machines.common.tag.MachineTags;
 import com.enderio.machines.data.recipes.*;
 import com.enderio.machines.data.souldata.SoulDataProvider;
@@ -35,8 +38,7 @@ public class EIOMachines {
         MachineLang.register();
         MachineRecipes.register();
         MachineTags.register();
-
-        //SpawnerSoul.SPAWNER.subscribeAsSyncable(PoweredSpawnerSoulPacket::new);
+        MachineNetwork.networkInit();
     }
 
     @SubscribeEvent
