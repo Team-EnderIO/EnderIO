@@ -26,7 +26,7 @@ public class FluidTankScreen extends EIOScreen<FluidTankMenu> {
     }
 
     @Override
-    protected ResourceLocation getBackgroundImage() {
+    public ResourceLocation getBackgroundImage() {
         return BG_TEXTURE;
     }
 

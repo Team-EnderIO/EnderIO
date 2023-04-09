@@ -10,6 +10,7 @@ import net.minecraft.world.level.ItemLike;
 
 import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -69,12 +70,12 @@ public record CountedIngredient(Ingredient ingredient, int count) implements Pre
         return new CountedIngredient(ingredient, count);
     }
 
-    public ItemStack[] getItems() {
+    public List<ItemStack> getItems() {
         ItemStack[] matchingStacks = ingredient.getItems();
         for (ItemStack matchingStack : matchingStacks) {
             matchingStack.setCount(count);
         }
-        return matchingStacks;
+        return List.of(matchingStacks);
     }
 
     @Override

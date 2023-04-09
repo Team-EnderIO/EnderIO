@@ -6,7 +6,7 @@
         "items": [
           {
             "items": [
-              "enderio:end_steel_ingot"
+              "enderio:conduit_binder_composite"
             ]
           }
         ]
@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:end_steel_machine_chassis"
+        "recipe": "enderio:conduit_binder_from_smelting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "enderio:end_steel_machine_chassis"
+      "enderio:conduit_binder_from_smelting"
     ]
   }
 }

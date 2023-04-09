@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=east,powered=false": {
+      "model": "enderio:block/soul_binder",
+      "y": 90
+    },
+    "facing=east,powered=true": {
+      "model": "enderio:block/soul_binder_on",
+      "y": 90
+    },
+    "facing=north,powered=false": {
+      "model": "enderio:block/soul_binder"
+    },
+    "facing=north,powered=true": {
+      "model": "enderio:block/soul_binder_on"
+    },
+    "facing=south,powered=false": {
+      "model": "enderio:block/soul_binder",
+      "y": 180
+    },
+    "facing=south,powered=true": {
+      "model": "enderio:block/soul_binder_on",
+      "y": 180
+    },
+    "facing=west,powered=false": {
+      "model": "enderio:block/soul_binder",
+      "y": 270
+    },
+    "facing=west,powered=true": {
+      "model": "enderio:block/soul_binder_on",
+      "y": 270
+    }
+  }
+}

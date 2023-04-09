@@ -35,7 +35,7 @@ public class CrafterScreen extends EIOScreen<CrafterMenu> {
     }
 
     @Override
-    protected ResourceLocation getBackgroundImage() {
+    public ResourceLocation getBackgroundImage() {
         return BG_TEXTURE;
     }
 

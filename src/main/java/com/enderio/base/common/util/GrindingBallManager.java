@@ -11,6 +11,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.HashMap;
+import java.util.List;
 
 @Mod.EventBusSubscriber(modid = EnderIO.MODID)
 public class GrindingBallManager {
@@ -25,6 +26,10 @@ public class GrindingBallManager {
     public static IGrindingBallData getData(ItemStack stack) {
         Item item = stack.getItem();
         return itemToData.getOrDefault(item, IGrindingBallData.IDENTITY);
+    }
+
+    public static List<Item> getGrindingBalls() {
+        return List.copyOf(itemToData.keySet());
     }
 
     public static IGrindingBallData getData(ResourceLocation dataId) {

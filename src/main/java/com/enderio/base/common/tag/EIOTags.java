@@ -95,6 +95,6 @@ public class EIOTags {
 
         public static final TagKey<Fluid> COLD_FIRE_IGNITER_FUEL = FluidTags.create(EnderIO.loc("fluid_fuel/cold_fire_igniter"));
         public static final TagKey<Fluid> STAFF_OF_LEVITY_FUEL = FluidTags.create(EnderIO.loc("fluid_fuel/staff_of_levity"));
-
+        public static final TagKey<Fluid> EXPERIENCE = FluidTags.create(new ResourceLocation("forge", "experience"));
     }
 }

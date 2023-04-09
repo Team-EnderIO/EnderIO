@@ -144,8 +144,6 @@ public class EIOItems {
 
     // region Infinity
 
-    public static final ItemEntry<MaterialItem> INFINITY_CRYSTAL = materialItem("infinity_crystal").register();
-
     public static final ItemEntry<MaterialItem> GRAINS_OF_INFINITY = materialItem("grains_of_infinity").lang("Grains of Infinity").register();
 
     public static final ItemEntry<MaterialItem> INFINITY_ROD = materialItem("infinity_rod").register();
