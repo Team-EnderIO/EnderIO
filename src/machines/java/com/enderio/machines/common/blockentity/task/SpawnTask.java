@@ -31,7 +31,7 @@ public class SpawnTask extends PoweredTask{
     private float efficiency = 1;
     private SpawnType spawnType = MachinesConfig.COMMON.SPAWN_TYPE.get();
     @Nullable
-    private EntityType<?> entityType;
+    private EntityType<? extends Entity> entityType;
 
     /**
      * Create a new powered task.
@@ -125,12 +125,15 @@ public class SpawnTask extends PoweredTask{
         Optional<SpawnerSoul.SoulData> opData = SpawnerSoul.SPAWNER.matches(rl.get());
         if (opData.isEmpty()) { //Fallback
             this.entityType = optionalEntity.get();
-            this.energyCost = 40000;
+            this.energyCost = 4000;
+            if (entityType.create(this.blockEntity.getLevel()) instanceof LivingEntity entity) { //Are we 100% guaranteed this is a living entity?
+                this.energyCost += entity.getMaxHealth()*50; //TODO actually balance based on health
+            }
             return;
         }
         SpawnerSoul.SoulData data = opData.get();
         this.entityType = optionalEntity.get();
-        this.energyCost =data.power();
+        this.energyCost = data.power();
         this.spawnType = data.spawnType();
     }
 
