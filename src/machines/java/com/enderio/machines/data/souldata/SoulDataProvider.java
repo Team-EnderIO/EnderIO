@@ -127,7 +127,7 @@ public class SoulDataProvider implements DataProvider {
     private void addSpawnerData(EntityType<?> entityType, int power, SpawnTask.SpawnType type, Consumer<FinshedSoulData<?>> finshedSoulDataConsumer) {
         ResourceLocation key = Registry.ENTITY_TYPE.getKey(entityType);
         SpawnerSoul.SoulData data = new SpawnerSoul.SoulData(key, power, type);
-        finshedSoulDataConsumer.accept(new FinshedSoulData<>(SpawnerSoul.CODEC, data, key.getNamespace() + "_" + key.getPath()));
+        finshedSoulDataConsumer.accept(new FinshedSoulData<>(SpawnerSoul.CODEC, data, "spawner/" + key.getNamespace() + "_" + key.getPath()));
     }
 
     private static void saveRecipe(CachedOutput pOutput, JsonObject pSoulDataJson, Path pPath) {
