@@ -33,7 +33,7 @@ public class SpawnerSoul {
     public static final Codec<SoulData> CODEC = RecordCodecBuilder.create(soulDataInstance ->
         soulDataInstance.group(ResourceLocation.CODEC.fieldOf("entity").forGetter(SoulData::entitytype),
             Codec.INT.fieldOf("power").forGetter(SoulData::power),
-            Codec.STRING.comapFlatMap(SpawnTask.SpawnType::byName, SpawnTask.SpawnType::name).stable().fieldOf("type").forGetter(SoulData::spawnType))
+            Codec.STRING.comapFlatMap(SpawnTask.SpawnType::byName, SpawnTask.SpawnType::getName).stable().fieldOf("type").forGetter(SoulData::spawnType))
             .apply(soulDataInstance, SoulData::new));
 
     //SoulData Manger for the spawner data

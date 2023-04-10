@@ -1,5 +1,5 @@
 {
-  "type": "ENTITYTYPE",
+  "type": "entitytype",
   "entity": "minecraft:squid",
   "power": 1000
 }

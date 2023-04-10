@@ -1,5 +1,5 @@
 {
-  "type": "ENTITYTYPE",
+  "type": "entitytype",
   "entity": "minecraft:polar_bear",
   "power": 4000
 }

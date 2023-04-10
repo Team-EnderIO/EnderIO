@@ -1,5 +1,5 @@
 {
-  "type": "ENTITYTYPE",
+  "type": "entitytype",
   "entity": "minecraft:allay",
   "power": 1000
 }

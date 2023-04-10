@@ -1,5 +1,5 @@
 {
-  "type": "ENTITYTYPE",
+  "type": "entitytype",
   "entity": "minecraft:blaze",
   "power": 6000
 }

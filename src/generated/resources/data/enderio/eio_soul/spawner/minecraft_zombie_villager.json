@@ -1,5 +1,5 @@
 {
-  "type": "ENTITYTYPE",
+  "type": "entitytype",
   "entity": "minecraft:zombie_villager",
   "power": 4000
 }

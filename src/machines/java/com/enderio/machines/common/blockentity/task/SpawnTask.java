@@ -207,6 +207,10 @@ public class SpawnTask extends PoweredTask{
             this.name = name;
         }
 
+        public String getName() {
+            return name;
+        }
+
         public static DataResult<SpawnType> byName(String pTranslationKey) {
             for(SpawnType type : values()) {
                 if (type.name.equals(pTranslationKey)) {
