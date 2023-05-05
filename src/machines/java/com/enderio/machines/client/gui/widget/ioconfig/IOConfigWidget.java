@@ -8,10 +8,7 @@ import com.enderio.machines.common.config.MachinesConfig;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
-import com.mojang.math.Vector4f;
+import com.mojang.math.Axis;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -38,6 +35,10 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.client.RenderTypeHelper;
 import net.minecraftforge.client.model.data.ModelData;
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import java.util.*;
 
@@ -49,7 +50,7 @@ import java.util.*;
  */
 public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
 
-    private static final Quaternion ROT_180_Z = Vector3f.ZP.rotation((float) Math.PI);
+    private static final Quaternionf ROT_180_Z = Axis.ZP.rotation((float) Math.PI);
     private static final Vec3 RAY_ORIGIN = new Vec3(1.5, 1.5, 1.5);
     private static final Vec3 RAY_START = new Vec3(1.5, 1.5, -1);
     private static final Vec3 RAY_END = new Vec3(1.5, 1.5, 3);
@@ -120,7 +121,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
         // Move vector to a (0,0,0) origin as the transformation matrix expects
         Vector4f vec4 = new Vector4f((float) (vec.x - RAY_ORIGIN.x), (float) (vec.y - RAY_ORIGIN.y), (float) (vec.z - RAY_ORIGIN.z), 1F);
         // Apply the transformation matrix
-        vec4.transform(transform);
+        vec4.mul(transform);
         // Move transformed vector back to the actual origin
         return new Vec3(vec4.x() + RAY_ORIGIN.x, vec4.y() + RAY_ORIGIN.y, vec4.z() + RAY_ORIGIN.z);
     }
@@ -196,28 +197,28 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         if (visible) {
             // render black bg
             if (isMouseOver(mouseX, mouseY)) {
                 addedOn.setFocused(this);
             }
-            enableScissor(x, y, x + width, y + height);
-            fill(poseStack, x, y, x + width, y + height, 0xFF000000);
+            enableScissor(getX(), getY(), getX() + width, getY() + height);
+            fill(poseStack, getX(), getY(), getX() + width, getY() + height, 0xFF000000);
 
             // Calculate widget center
-            int centerX = x + (width / 2);
-            int centerY = y + (height / 2);
+            int centerX = getX() + (width / 2);
+            int centerY = getY() + (height / 2);
             // Calculate mouse offset from center and scale to the block space
             float diffX = (mouseX - centerX) / SCALE;
             float diffY = (mouseY - centerY) / SCALE;
 
-            Quaternion rotPitch = Vector3f.XN.rotationDegrees(pitch);
-            Quaternion rotYaw = Vector3f.YP.rotationDegrees(yaw);
+            Quaternionf rotPitch = Axis.XN.rotationDegrees(pitch);
+            Quaternionf rotYaw = Axis.YP.rotationDegrees(yaw);
 
             // Build block transformation matrix
             // Rotate 180 around Z, otherwise the block is upside down
-            Quaternion blockTransform = new Quaternion(ROT_180_Z);
+            Quaternionf blockTransform = new Quaternionf(ROT_180_Z);
             // Rotate around X (pitch) in negative direction
             blockTransform.mul(rotPitch);
             // Rotate around Y (yaw)
@@ -228,11 +229,12 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
 
             // Build ray transformation matrix
             // Rotate 180 around Z, otherwise the block is upside down
-            Matrix4f rayTransform = new Matrix4f(ROT_180_Z);
+            Matrix4f rayTransform = new Matrix4f();
+            rayTransform.set(ROT_180_Z);
             // Rotate around Y (yaw)
-            rayTransform.multiply(rotYaw);
+            rayTransform.rotate(rotYaw);
             // Rotate around X (pitch) in negative direction
-            rayTransform.multiply(rotPitch);
+            rayTransform.rotate(rotPitch);
 
             // Ray-cast hit on block shape
             Map<BlockHitResult, BlockPos> hits = new HashMap<>();
@@ -260,7 +262,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
         }
     }
 
-    private void renderWorld(PoseStack poseStack, int centerX, int centerY, Quaternion transform, float partialTick) {
+    private void renderWorld(PoseStack poseStack, int centerX, int centerY, Quaternionf transform, float partialTick) {
         Lighting.setupForEntityInInventory();
         poseStack.pushPose();
         poseStack.translate(centerX, centerY, Z_OFFSET);
@@ -323,7 +325,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
 
     }
 
-    private void renderSelection(PoseStack poseStack, int centerX, int centerY, Quaternion transform) {
+    private void renderSelection(PoseStack poseStack, int centerX, int centerY, Quaternionf transform) {
         if (selection.isEmpty()) {
             return;
         }
@@ -336,14 +338,14 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
         RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
 
         TextureAtlasSprite tex = minecraft.getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(SELECTED_ICON);
-        RenderSystem.setShaderTexture(0, tex.atlas().location());
+        RenderSystem.setShaderTexture(0, tex.atlasLocation());
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
         var selectedFace = selection.get();
         BlockPos blockPos = selectedFace.blockPos;
         poseStack.translate(blockPos.getX() - worldOrigin.x(), blockPos.getY() - worldOrigin.y(), blockPos.getZ() - worldOrigin.z());
-        Vector3f[] vec = Arrays.stream(ModelRenderUtil.createQuadVerts(selectedFace.side, 0, 1, 1)).map(Vector3f::new).toArray(Vector3f[]::new);
+        Vector3f[] vec = Arrays.stream(ModelRenderUtil.createQuadVerts(selectedFace.side, 0, 1, 1)).map(Vec3::toVector3f).toArray(Vector3f[]::new);
         Matrix4f matrix4f = poseStack.last().pose();
         bufferbuilder.vertex(matrix4f, vec[0].x(), vec[0].y(), vec[0].z()).color(1F, 1F, 1F, 1F).uv(tex.getU0(), tex.getV0()).endVertex();
         bufferbuilder.vertex(matrix4f, vec[1].x(), vec[1].y(), vec[1].z()).color(1F, 1F, 1F, 1F).uv(tex.getU0(), tex.getV1()).endVertex();
@@ -363,17 +365,18 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
                 IOModeMap map = IOModeMap.getMapFromMode(ioMode);
                 Rect2i iconBounds = map.getRect();
                 RenderSystem.setShaderTexture(0, IOConfigButton.IOCONFIG);
-                blit(poseStack, x + 4, y + height - 4 - screenFont.lineHeight - iconBounds.getHeight(), iconBounds.getX(), iconBounds.getY(),
+                blit(poseStack, getX() + 4, getY() + height - 4 - screenFont.lineHeight - iconBounds.getHeight(), iconBounds.getX(), iconBounds.getY(),
                     iconBounds.getWidth(), iconBounds.getHeight(), 48, 32);
                 poseStack.pushPose();
-                screenFont.draw(poseStack, map.getComponent(), x + 4, y + height - 2 - screenFont.lineHeight, 0xFFFFFFFF);
+                screenFont.draw(poseStack, map.getComponent(), getX() + 4, getY() + height - 2 - screenFont.lineHeight, 0xFFFFFFFF);
                 poseStack.popPose();
             }
         }
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput pNarrationElementOutput) {}
+    protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
+    }
 
     private record SelectedFace(BlockPos blockPos, Direction side) {}
 
