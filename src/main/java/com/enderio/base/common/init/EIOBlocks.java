@@ -100,7 +100,7 @@ public class EIOBlocks {
 
     // TODO: Door drops itself in creative????
     public static final BlockEntry<DoorBlock> DARK_STEEL_DOOR = REGISTRATE
-        .block("dark_steel_door", Material.METAL, props -> new DoorBlock(props, BlockSetType.IRON)) // TODO: 1.19.4: our own BlockSetTypes
+        .block("dark_steel_door", Material.METAL, props -> new DoorBlock(props, BlockSetType.IRON))
         .properties(props -> props.strength(5.0f, 2000.0f).sound(SoundType.METAL).noOcclusion())
         .blockstate((ctx, prov) -> prov.doorBlockWithRenderType(ctx.get(), prov.modLoc("block/dark_steel_door_bottom"), prov.modLoc("block/dark_steel_door_top"), prov.mcLoc("cutout")))
         .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL, BlockTags.DOORS)
@@ -111,7 +111,7 @@ public class EIOBlocks {
         .register();
 
     public static final BlockEntry<TrapDoorBlock> DARK_STEEL_TRAPDOOR = REGISTRATE
-        .block("dark_steel_trapdoor", Material.METAL, props -> new TrapDoorBlock(props, BlockSetType.IRON)) // TODO: 1.19.4: our own BlockSetTypes
+        .block("dark_steel_trapdoor", Material.METAL, props -> new TrapDoorBlock(props, BlockSetType.IRON))
         .properties(props -> props.strength(5.0f, 2000.0f).sound(SoundType.METAL).noOcclusion())
         .blockstate((ctx, prov) -> prov.trapdoorBlockWithRenderType(ctx.get(), prov.modLoc("block/dark_steel_trapdoor"), true, prov.mcLoc("cutout")))
         .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL, BlockTags.TRAPDOORS)

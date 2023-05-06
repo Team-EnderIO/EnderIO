@@ -45,7 +45,7 @@ public class MultipleCookingRecipeBuilder implements RecipeBuilder {
     }
 
     public static MultipleCookingRecipeBuilder generic(Ingredient pIngredient, RecipeCategory pCategory, ItemStack pResult, float pExperience, int pCookingTime, RecipeSerializer<? extends AbstractCookingRecipe> pSerializer) {
-        return new MultipleCookingRecipeBuilder(pCategory, determineRecipeCategory(pSerializer, pResult), pResult, pIngredient, pExperience, pCookingTime, pSerializer);
+        return new MultipleCookingRecipeBuilder(pCategory, SimpleCookingRecipeBuilder.determineRecipeCategory(pSerializer, pResult.getItem()), pResult, pIngredient, pExperience, pCookingTime, pSerializer);
     }
 
     public static MultipleCookingRecipeBuilder campfireCooking(Ingredient pIngredient, RecipeCategory pCategory, ItemStack pResult, float pExperience, int pCookingTime) {
@@ -53,11 +53,11 @@ public class MultipleCookingRecipeBuilder implements RecipeBuilder {
     }
 
     public static MultipleCookingRecipeBuilder blasting(Ingredient pIngredient, RecipeCategory pCategory, ItemStack pResult, float pExperience, int pCookingTime) {
-        return new MultipleCookingRecipeBuilder(pCategory, determineBlastingRecipeCategory(pResult), pResult, pIngredient, pExperience, pCookingTime, RecipeSerializer.BLASTING_RECIPE);
+        return new MultipleCookingRecipeBuilder(pCategory, SimpleCookingRecipeBuilder.determineBlastingRecipeCategory(pResult.getItem()), pResult, pIngredient, pExperience, pCookingTime, RecipeSerializer.BLASTING_RECIPE);
     }
 
     public static MultipleCookingRecipeBuilder smelting(Ingredient pIngredient, RecipeCategory pCategory, ItemStack pResult, float pExperience, int pCookingTime) {
-        return new MultipleCookingRecipeBuilder(pCategory, determineSmeltingRecipeCategory(pResult), pResult, pIngredient, pExperience, pCookingTime, RecipeSerializer.SMELTING_RECIPE);
+        return new MultipleCookingRecipeBuilder(pCategory, SimpleCookingRecipeBuilder.determineSmeltingRecipeCategory(pResult.getItem()), pResult, pIngredient, pExperience, pCookingTime, RecipeSerializer.SMELTING_RECIPE);
     }
 
     public static MultipleCookingRecipeBuilder smoking(Ingredient pIngredient, RecipeCategory pCategory, ItemStack pResult, float pExperience, int pCookingTime) {
@@ -82,31 +82,6 @@ public class MultipleCookingRecipeBuilder implements RecipeBuilder {
         this.ensureValid(pRecipeId);
         this.advancement.parent(ROOT_RECIPE_ADVANCEMENT).addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(pRecipeId)).rewards(AdvancementRewards.Builder.recipe(pRecipeId)).requirements(RequirementsStrategy.OR);
         pFinishedRecipeConsumer.accept(new Result(pRecipeId, this.group == null ? "" : this.group, this.bookCategory, this.ingredient, this.result, this.experience, this.cookingTime, this.advancement, pRecipeId.withPrefix("recipes/" + this.category.getFolderName() + "/"), this.serializer));
-    }
-
-    // TODO: 1.19.4: ATs for this
-    private static CookingBookCategory determineSmeltingRecipeCategory(ItemStack pResult) {
-        if (pResult.getItem().isEdible()) {
-            return CookingBookCategory.FOOD;
-        } else {
-            return pResult.getItem() instanceof BlockItem ? CookingBookCategory.BLOCKS : CookingBookCategory.MISC;
-        }
-    }
-
-    private static CookingBookCategory determineBlastingRecipeCategory(ItemStack pResult) {
-        return pResult.getItem() instanceof BlockItem ? CookingBookCategory.BLOCKS : CookingBookCategory.MISC;
-    }
-
-    private static CookingBookCategory determineRecipeCategory(RecipeSerializer<? extends AbstractCookingRecipe> pSerializer, ItemStack pResult) {
-        if (pSerializer == RecipeSerializer.SMELTING_RECIPE) {
-            return determineSmeltingRecipeCategory(pResult);
-        } else if (pSerializer == RecipeSerializer.BLASTING_RECIPE) {
-            return determineBlastingRecipeCategory(pResult);
-        } else if (pSerializer != RecipeSerializer.SMOKING_RECIPE && pSerializer != RecipeSerializer.CAMPFIRE_COOKING_RECIPE) {
-            throw new IllegalStateException("Unknown cooking recipe type");
-        } else {
-            return CookingBookCategory.FOOD;
-        }
     }
 
     private void ensureValid(ResourceLocation pId) {

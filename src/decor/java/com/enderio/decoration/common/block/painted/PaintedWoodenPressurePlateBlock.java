@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 public class PaintedWoodenPressurePlateBlock extends PressurePlateBlock implements EntityBlock, IPaintedBlock {
 
     public PaintedWoodenPressurePlateBlock(Properties properties) {
-        super(Sensitivity.EVERYTHING, properties, BlockSetType.OAK); // TODO: 1.19.4 Sensible?
+        super(Sensitivity.EVERYTHING, properties, BlockSetType.OAK);
     }
 
     @Nullable
