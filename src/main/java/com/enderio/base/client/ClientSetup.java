@@ -13,12 +13,14 @@ import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.event.RegisterItemDecorationsEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -92,6 +94,13 @@ public class ClientSetup {
     @SubscribeEvent
     public static void registerParticleProviders(RegisterParticleProvidersEvent event) {
         Minecraft.getInstance().particleEngine.register(EIOParticles.RANGE_PARTICLE.get(), RangeParticle.Provider::new);
+    }
+
+    @SubscribeEvent
+    public static void stitchTextures(TextureStitchEvent.Pre event) {
+        if (event.getAtlas().location() == InventoryMenu.BLOCK_ATLAS) {
+            event.addSprite(EnderIO.loc("block/overlay/selected_face"));
+        }
     }
 
     private static Optional<Item> findGliderForModelRL(ResourceLocation rl) {

@@ -134,7 +134,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-            args '--mod', 'enderio', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            args '--mod', 'enderio', '--server', '--client', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
             mods {
                 enderio {
@@ -147,6 +147,12 @@ minecraft {
                     }
                 }
             }
+        }
+
+        dataProd {
+            parent runs.data
+
+            args '--all'
         }
     }
 }
@@ -190,6 +196,7 @@ repositories {
 
     maven { url 'https://maven.blamejared.com' }
 
+    mavenLocal()
 }
 
 jarJar.enable()
@@ -200,7 +207,7 @@ dependencies {
 
     // Registrate
     implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
-    jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: "${registrate_version_range}")
+    jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: "[${registrate_version}]")
 
     coreAnnotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 

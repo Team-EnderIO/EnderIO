@@ -6,6 +6,7 @@ import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.enderio.core.common.util.Vector2i;
 import com.enderio.machines.client.gui.widget.EnergyWidget;
+import com.enderio.machines.client.gui.widget.ioconfig.IOConfigButton;
 import com.enderio.machines.common.menu.ImpulseHopperMenu;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
@@ -26,6 +27,8 @@ public class ImpulseHopperScreen extends EIOScreen<ImpulseHopperMenu> {
 
         addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
+
+        addRenderableWidget(new IOConfigButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 22, 16, 16, menu, this::addRenderableWidget, font));
     }
 
     @Override
@@ -50,7 +53,7 @@ public class ImpulseHopperScreen extends EIOScreen<ImpulseHopperMenu> {
     }
 
     @Override
-    protected ResourceLocation getBackgroundImage() {
+    public ResourceLocation getBackgroundImage() {
         return BG_TEXTURE;
     }
 

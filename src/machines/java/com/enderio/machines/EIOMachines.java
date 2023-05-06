@@ -51,5 +51,7 @@ public class EIOMachines {
         generator.addProvider(event.includeServer(), new EnchanterRecipeProvider(generator));
         generator.addProvider(event.includeServer(), new SagMillRecipeProvider(generator));
         generator.addProvider(event.includeServer(), new SlicingRecipeProvider(generator));
+        generator.addProvider(event.includeServer(), new SoulBindingRecipeProvider(generator));
+
     }
 }

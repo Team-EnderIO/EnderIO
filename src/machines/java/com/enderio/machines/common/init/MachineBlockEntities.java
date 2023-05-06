@@ -34,6 +34,7 @@ public class MachineBlockEntities {
 
     public static final BlockEntityEntry<SlicerBlockEntity> SLICE_AND_SPLICE = register("slice_and_splice", SlicerBlockEntity::new,
         MachineBlocks.SLICE_AND_SPLICE);
+
     public static final BlockEntityEntry<ImpulseHopperBlockEntity> IMPULSE_HOPPER = register("impulse_hopper", ImpulseHopperBlockEntity::new,
         MachineBlocks.IMPULSE_HOPPER);
     public static final BlockEntityEntry<VacuumChestBlockEntity> VACUUM_CHEST = register("vacuum_chest", VacuumChestBlockEntity::new,
@@ -43,6 +44,10 @@ public class MachineBlockEntities {
         MachineBlocks.TRAVEL_ANCHOR);
 
     public static final BlockEntityEntry<CrafterBlockEntity> CRAFTER = register("crafter", CrafterBlockEntity::new, MachineBlocks.CRAFTER);
+
+    public static final BlockEntityEntry<SoulBinderBlockEntity> SOUL_BINDER = register("soul_binder", SoulBinderBlockEntity::new, MachineBlocks.SOUL_BINDER);
+
+    public static final BlockEntityEntry<PoweredSpawnerBlockEntity> POWERED_SPAWNER = register("powered_spanwer", PoweredSpawnerBlockEntity::new, MachineBlocks.POWERED_SPAWNER);
 
     @SafeVarargs
     private static <B extends BlockEntity> BlockEntityEntry<B> register(String name, BlockEntityBuilder.BlockEntityFactory<B> beFactory,

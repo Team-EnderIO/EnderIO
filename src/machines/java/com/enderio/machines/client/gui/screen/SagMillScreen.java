@@ -9,6 +9,7 @@ import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.core.common.util.Vector2i;
 import com.enderio.machines.client.gui.widget.EnergyWidget;
 import com.enderio.machines.client.gui.widget.ProgressWidget;
+import com.enderio.machines.client.gui.widget.ioconfig.IOConfigButton;
 import com.enderio.machines.common.blockentity.SagMillBlockEntity;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.menu.SagMillMenu;
@@ -20,6 +21,9 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+
+import java.util.List;
+import java.util.Optional;
 
 public class SagMillScreen extends EIOScreen<SagMillMenu> {
     public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/sagmill.png");
@@ -40,10 +44,12 @@ public class SagMillScreen extends EIOScreen<SagMillMenu> {
 
         addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
+
+        addRenderableWidget(new IOConfigButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 22, 16, 16, menu, this::addRenderableWidget, font));
     }
 
     @Override
-    protected ResourceLocation getBackgroundImage() {
+    public ResourceLocation getBackgroundImage() {
         return BG_TEXTURE;
     }
 
@@ -99,8 +105,13 @@ public class SagMillScreen extends EIOScreen<SagMillMenu> {
                 SagMillBlockEntity be = SagMillScreen.this.getMenu().getBlockEntity();
                 float durability = be.getGrindingBallDamage();
                 IGrindingBallData dat = be.getGrindingBallData();
-                SagMillScreen.this.renderTooltip(poseStack, TooltipUtil.withArgs(MachineLang.SAG_MILL_GRINDINGBALL_TOOLTIP,
-                    (int) (durability * 100), (int) (dat.getOutputMultiplier() * 100), (int) (dat.getBonusMultiplier() * 100), (int) (dat.getPowerUse() * 100)), mouseX, mouseY);
+                SagMillScreen.this.renderTooltip(poseStack, List.of(
+                    TooltipUtil.styledWithArgs(MachineLang.SAG_MILL_GRINDINGBALL_REMAINING, (int) (durability * 100)),
+                    MachineLang.SAG_MILL_GRINDINGBALL_TITLE,
+                    TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_MAIN_OUTPUT, (int) (dat.getOutputMultiplier() * 100)),
+                    TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_BONUS_OUTPUT, (int) (dat.getBonusMultiplier() * 100)),
+                    TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_POWER_USE, (int) (dat.getPowerUse() * 100))
+                ), Optional.empty(), mouseX, mouseY);
             }
         }
     }

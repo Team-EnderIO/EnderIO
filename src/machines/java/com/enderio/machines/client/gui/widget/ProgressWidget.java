@@ -1,11 +1,13 @@
 package com.enderio.machines.client.gui.widget;
 
+import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.machines.common.lang.MachineLang;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 
 import java.util.function.Supplier;
@@ -14,11 +16,11 @@ import java.util.function.Supplier;
 public abstract class ProgressWidget extends AbstractWidget {
 
     public static class BottomUp extends ProgressWidget {
-        public BottomUp(Screen screen, Supplier<Float> getter, int x, int y, int width, int height, int u, int v) {
+        public BottomUp(EIOScreen screen, Supplier<Float> getter, int x, int y, int width, int height, int u, int v) {
             super(screen, getter, x, y, width, height, u, v);
         }
 
-        public BottomUp(Screen screen, Supplier<Float> getter, int x, int y, int width, int height, int u, int v, boolean tooltip) {
+        public BottomUp(EIOScreen screen, Supplier<Float> getter, int x, int y, int width, int height, int u, int v, boolean tooltip) {
             super(screen, getter, x, y, width, height, u, v, tooltip);
         }
 
@@ -33,11 +35,11 @@ public abstract class ProgressWidget extends AbstractWidget {
     }
 
     public static class TopDown extends ProgressWidget {
-        public TopDown(Screen screen, Supplier<Float> getter, int x, int y, int width, int height, int u, int v, boolean tooltip) {
+        public TopDown(EIOScreen screen, Supplier<Float> getter, int x, int y, int width, int height, int u, int v, boolean tooltip) {
             super(screen, getter, x, y, width, height, u, v, tooltip);
         }
 
-        public TopDown(Screen screen, Supplier<Float> getter, int x, int y, int width, int height, int u, int v) {
+        public TopDown(EIOScreen screen, Supplier<Float> getter, int x, int y, int width, int height, int u, int v) {
             super(screen, getter, x, y, width, height, u, v);
         }
 
@@ -50,11 +52,11 @@ public abstract class ProgressWidget extends AbstractWidget {
     }
 
     public static class LeftRight extends ProgressWidget {
-        public LeftRight(Screen screen, Supplier<Float> getter, int x, int y, int width, int height, int u, int v, boolean tooltip) {
+        public LeftRight(EIOScreen screen, Supplier<Float> getter, int x, int y, int width, int height, int u, int v, boolean tooltip) {
             super(screen, getter, x, y, width, height, u, v, tooltip);
         }
 
-        public LeftRight(Screen screen, Supplier<Float> getter, int x, int y, int width, int height, int u, int v) {
+        public LeftRight(EIOScreen screen, Supplier<Float> getter, int x, int y, int width, int height, int u, int v) {
             super(screen, getter, x, y, width, height, u, v);
         }
 
@@ -68,12 +70,12 @@ public abstract class ProgressWidget extends AbstractWidget {
 
     protected final Supplier<Float> progressSupplier;
 
-    private final Screen screen;
+    private final EIOScreen screen;
     protected final int u;
     protected final int v;
     private final boolean tooltip;
 
-    protected ProgressWidget(Screen screen, Supplier<Float> progressSupplier, int x, int y, int width, int height, int u, int v, boolean tooltip) {
+    protected ProgressWidget(EIOScreen screen, Supplier<Float> progressSupplier, int x, int y, int width, int height, int u, int v, boolean tooltip) {
         super(x, y, width, height, Component.empty());
         this.screen = screen;
         this.progressSupplier = progressSupplier;
@@ -82,7 +84,7 @@ public abstract class ProgressWidget extends AbstractWidget {
         this.tooltip = tooltip;
     }
 
-    protected ProgressWidget(Screen screen, Supplier<Float> progressSupplier, int x, int y, int width, int height, int u, int v) {
+    protected ProgressWidget(EIOScreen screen, Supplier<Float> progressSupplier, int x, int y, int width, int height, int u, int v) {
         this(screen, progressSupplier, x, y, width, height, u, v, true);
     }
 
@@ -104,6 +106,9 @@ public abstract class ProgressWidget extends AbstractWidget {
 
     protected void render(PoseStack poseStack, int x, int y, int u, int v, int w, int h) {
         poseStack.pushPose();
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderTexture(0, screen.getBackgroundImage());
         blit(poseStack, x, y, u, v, w, h);
         poseStack.popPose();
     }
