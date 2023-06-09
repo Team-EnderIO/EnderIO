@@ -33,7 +33,7 @@ public class PaintedSandRenderer extends FallingBlockRenderer {
             Level level = pEntity.getLevel();
             if (blockstate != level.getBlockState(pEntity.blockPosition()) && blockstate.getRenderShape() != RenderShape.INVISIBLE) {
                 pMatrixStack.pushPose();
-                BlockPos blockpos = new BlockPos(pEntity.getX(), pEntity.getBoundingBox().maxY, pEntity.getZ());
+                BlockPos blockpos = new BlockPos((int) pEntity.getX(), (int) pEntity.getBoundingBox().maxY, (int) pEntity.getZ());
                 pMatrixStack.translate(-0.5D, 0.0D, -0.5D);
                 BlockRenderDispatcher blockrenderdispatcher = Minecraft.getInstance().getBlockRenderer();
                 BakedModel model = blockrenderdispatcher.getBlockModel(blockstate);

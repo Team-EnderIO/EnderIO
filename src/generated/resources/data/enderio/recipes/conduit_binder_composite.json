@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "C": {
       "item": "minecraft:clay_ball"
@@ -19,5 +20,6 @@
   "result": {
     "count": 8,
     "item": "enderio:conduit_binder_composite"
-  }
+  },
+  "show_notification": true
 }

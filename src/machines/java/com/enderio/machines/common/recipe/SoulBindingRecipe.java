@@ -10,6 +10,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.ResourceLocationException;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -30,16 +31,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Container>{
+public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Container> {
 
     private final ResourceLocation id;
     private final Item output;
     private final List<Ingredient> inputs;
     private final int exp;
-    @Nullable
-    private final ResourceLocation entityType;
+    @Nullable private final ResourceLocation entityType;
     private final int energy;
-
 
     public SoulBindingRecipe(ResourceLocation id, Item output, List<Ingredient> inputs, int energy, int exp, @Nullable ResourceLocation entityType) {
         this.id = id;
@@ -60,9 +59,9 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
     }
 
     @Override
-    public List<OutputStack> craft(SoulBindingRecipe.Container container) {
+    public List<OutputStack> craft(SoulBindingRecipe.Container container, RegistryAccess registryAccess) {
         ItemStack vial = container.getItem(0);
-        List<OutputStack> results = getResultStacks();
+        List<OutputStack> results = getResultStacks(registryAccess);
         results.forEach(o -> {
             ItemStack result = o.getItem(); //TODO will this auto update since the stack is updated?
             vial.getCapability(EIOCapabilities.ENTITY_STORAGE).ifPresent(inputEntity -> {
@@ -75,7 +74,7 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
     }
 
     @Override
-    public List<OutputStack> getResultStacks() {
+    public List<OutputStack> getResultStacks(RegistryAccess registryAccess) {
         return List.of(OutputStack.of(new ItemStack(output, 1)));
     }
 
@@ -121,6 +120,7 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
 
         private final FluidTank fluidTank;
         private int neededXP;
+
         public Container(IItemHandlerModifiable inv, FluidTank fluidTank) {
             super(inv);
             this.fluidTank = fluidTank;

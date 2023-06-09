@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "G": {
       "item": "enderio:wood_gear"
@@ -15,5 +16,6 @@
   ],
   "result": {
     "item": "enderio:stone_gear"
-  }
+  },
+  "show_notification": true
 }

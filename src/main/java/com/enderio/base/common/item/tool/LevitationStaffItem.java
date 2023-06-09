@@ -5,6 +5,7 @@ import com.enderio.base.common.capability.AcceptingFluidItemHandler;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.tag.EIOTags;
+import com.enderio.core.common.item.ITabVariants;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;

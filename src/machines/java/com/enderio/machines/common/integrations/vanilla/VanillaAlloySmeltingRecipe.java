@@ -3,6 +3,7 @@ package com.enderio.machines.common.integrations.vanilla;
 import com.enderio.core.common.recipes.CountedIngredient;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -52,15 +53,15 @@ public class VanillaAlloySmeltingRecipe extends AlloySmeltingRecipe {
     }
 
     @Override
-    public List<OutputStack> craft(Container container) {
-        ItemStack result = vanillaRecipe.assemble(container);
+    public List<OutputStack> craft(Container container, RegistryAccess registryAccess) {
+        ItemStack result = vanillaRecipe.assemble(container, registryAccess);
         result.setCount(result.getCount() * container.getInputsTaken());
         return List.of(OutputStack.of(result));
     }
 
     @Override
-    public List<OutputStack> getResultStacks() {
-        return List.of(OutputStack.of(vanillaRecipe.getResultItem()));
+    public List<OutputStack> getResultStacks(RegistryAccess registryAccess) {
+        return List.of(OutputStack.of(vanillaRecipe.getResultItem(registryAccess)));
     }
 
     /**

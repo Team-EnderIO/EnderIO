@@ -28,7 +28,7 @@ public class IOConfigButton<U extends EIOScreen<?>, T extends AbstractWidget> ex
     private final U addedOn;
 
     public IOConfigButton(U addedOn, int x, int y, int width, int height, MachineMenu<?> menu, Function<AbstractWidget, T> addRenderableWidget, Font font) {
-        super(x, y, width, height, Component.empty());
+        super(x, y, width, height, EIOLang.IOCONFIG);
         this.addedOn = addedOn;
         this.playerInvVisible = menu::getPlayerInvVisible;
         this.setPlayerInvVisible = menu::setPlayerInvVisible;
@@ -40,30 +40,21 @@ public class IOConfigButton<U extends EIOScreen<?>, T extends AbstractWidget> ex
         addRenderableWidget.apply(configRenderer);
 
         neighbourButton = new ImageButton(addedOn.getGuiLeft() + addedOn.getXSize() - 5 - 16, addedOn.getGuiTop() + addedOn.getYSize() - 5 - 16, 16, 16, 16, 0,
-            0, IOCONFIG, 48, 32, (k) -> configRenderer.toggleNeighbourVisibility(),
-            (k, pPoseStack, pMouseX, pMouseY) -> addedOn.renderTooltip(pPoseStack, EIOLang.TOGGLE_NEIGHBOUR, pMouseX, pMouseY), Component.empty());
+            0, IOCONFIG, 48, 32, (b) -> configRenderer.toggleNeighbourVisibility(), EIOLang.TOGGLE_NEIGHBOUR);
+
         neighbourButton.visible = show;
         addRenderableWidget.apply(neighbourButton);
     }
 
     @Override
-    public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-        Vector2i pos = new Vector2i(x, y);
+    public void renderWidget(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
+        Vector2i pos = new Vector2i(getX(), getY());
         addedOn.renderSimpleArea(pPoseStack, pos, pos.add(new Vector2i(width, height)));
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, IOCONFIG);
         RenderSystem.enableDepthTest();
-        blit(pPoseStack, this.x, this.y, 0, 0, this.width, this.height, 48, 32);
-
-        if (this.isHovered) {
-            renderToolTip(pPoseStack, pMouseX, pMouseY);
-        }
-    }
-
-    @Override
-    public void renderToolTip(PoseStack pPoseStack, int pMouseX, int pMouseY) {
-        addedOn.renderTooltip(pPoseStack, EIOLang.IOCONFIG, pMouseX, pMouseY);
+        blit(pPoseStack, this.getX(), this.getY(), 0, 0, this.width, this.height, 48, 32);
     }
 
     @Override
@@ -74,6 +65,6 @@ public class IOConfigButton<U extends EIOScreen<?>, T extends AbstractWidget> ex
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput pNarrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {}
 
 }

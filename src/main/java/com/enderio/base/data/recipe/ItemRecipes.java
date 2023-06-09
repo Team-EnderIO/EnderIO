@@ -8,10 +8,8 @@ import com.enderio.base.common.tag.EIOTags;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.data.PackOutput;
+import net.minecraft.data.recipes.*;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
@@ -23,12 +21,12 @@ import java.util.function.Consumer;
 
 public class ItemRecipes extends RecipeProvider {
 
-    public ItemRecipes(DataGenerator pGenerator) {
-        super(pGenerator);
+    public ItemRecipes(PackOutput packOutput) {
+        super(packOutput);
     }
 
     @Override
-    protected void buildCraftingRecipes(Consumer<FinishedRecipe> recipeConsumer) {
+    protected void buildRecipes(Consumer<FinishedRecipe> recipeConsumer) {
         addTools(recipeConsumer);
         addDarkSteelTools(recipeConsumer);
         addDarkSteelUpgrades(recipeConsumer);
@@ -36,7 +34,7 @@ public class ItemRecipes extends RecipeProvider {
     }
 
     private void addGliders(Consumer<FinishedRecipe> recipeConsumer) {
-        ShapedRecipeBuilder.shaped(EIOItems.GLIDER_WING.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, EIOItems.GLIDER_WING.get())
             .pattern("  D")
             .pattern(" DL")
             .pattern("DLL")
@@ -44,7 +42,7 @@ public class ItemRecipes extends RecipeProvider {
             .define('L', Tags.Items.LEATHER)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DARK_STEEL_INGOT.get()))
             .save(recipeConsumer);
-        ShapedRecipeBuilder.shaped(EIOItems.GLIDER.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, EIOItems.GLIDER.get())
             .pattern(" D ")
             .pattern("WDW")
             .define('D', EIOItems.DARK_STEEL_INGOT.get())
@@ -52,7 +50,7 @@ public class ItemRecipes extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GLIDER_WING.get()))
             .save(recipeConsumer);
         for (Map.Entry<DyeColor, ItemEntry<HangGliderItem>> dyeColorItemEntryEntry : EIOItems.COLORED_HANG_GLIDERS.entrySet()) {
-            ShapelessRecipeBuilder.shapeless(dyeColorItemEntryEntry.getValue().get())
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.TOOLS, dyeColorItemEntryEntry.getValue().get())
                 .requires(EIOItems.GLIDER.get())
                 .requires(dyeColorItemEntryEntry.getKey().getTag())
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GLIDER.get()))
@@ -62,7 +60,7 @@ public class ItemRecipes extends RecipeProvider {
 
     private void addTools(Consumer<FinishedRecipe> recipeConsumer) {
         ShapedRecipeBuilder
-            .shaped(EIOItems.YETA_WRENCH.get())
+            .shaped(RecipeCategory.TOOLS, EIOItems.YETA_WRENCH.get())
             .define('I', EIOItems.COPPER_ALLOY_INGOT.get())
             .define('G', EIOItems.GEAR_STONE.get())
             .pattern("I I")
@@ -72,14 +70,14 @@ public class ItemRecipes extends RecipeProvider {
             .save(recipeConsumer);
 
         ShapelessRecipeBuilder
-            .shapeless(EIOItems.COLD_FIRE_IGNITER.get())
+            .shapeless(RecipeCategory.TOOLS, EIOItems.COLD_FIRE_IGNITER.get())
             .requires(EIOItems.DARK_STEEL_INGOT.get())
             .requires(Items.FLINT)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DARK_STEEL_INGOT.get()))
             .save(recipeConsumer);
 
         ShapedRecipeBuilder
-            .shaped(EIOItems.COORDINATE_SELECTOR.get())
+            .shaped(RecipeCategory.TOOLS, EIOItems.COORDINATE_SELECTOR.get())
             .define('I', EIOItems.COPPER_ALLOY_INGOT.get())
             .define('C', Items.COMPASS)
             .define('E', Tags.Items.ENDER_PEARLS)
@@ -90,7 +88,7 @@ public class ItemRecipes extends RecipeProvider {
             .save(recipeConsumer);
 
         ShapedRecipeBuilder
-            .shaped(EIOItems.ELECTROMAGNET.get())
+            .shaped(RecipeCategory.TOOLS, EIOItems.ELECTROMAGNET.get())
             .define('V', EIOItems.VIBRANT_CRYSTAL.get())
             .define('C', EIOItems.CONDUCTIVE_ALLOY_INGOT.get())
             .define('E', EIOItems.COPPER_ALLOY_INGOT.get())
@@ -101,7 +99,7 @@ public class ItemRecipes extends RecipeProvider {
             .save(recipeConsumer);
 
         ShapedRecipeBuilder
-            .shaped(EIOItems.LEVITATION_STAFF.get())
+            .shaped(RecipeCategory.TOOLS, EIOItems.LEVITATION_STAFF.get())
             .define('C', EIOItems.PULSATING_CRYSTAL.get())
             .define('R', EIOItems.INFINITY_ROD.get())
             .pattern("  C")
@@ -115,7 +113,7 @@ public class ItemRecipes extends RecipeProvider {
         MaterialItem ingot = EIOItems.DARK_STEEL_INGOT.get();
 
         ShapedRecipeBuilder
-            .shaped(EIOItems.DARK_STEEL_PICKAXE.get())
+            .shaped(RecipeCategory.TOOLS, EIOItems.DARK_STEEL_PICKAXE.get())
             .define('I', ingot)
             .define('S', Tags.Items.RODS_WOODEN)
             .pattern("III")
@@ -125,7 +123,7 @@ public class ItemRecipes extends RecipeProvider {
             .save(recipeConsumer);
 
         ShapedRecipeBuilder
-            .shaped(EIOItems.DARK_STEEL_AXE.get())
+            .shaped(RecipeCategory.TOOLS, EIOItems.DARK_STEEL_AXE.get())
             .define('I', ingot)
             .define('S', Tags.Items.RODS_WOODEN)
             .pattern("II")
@@ -146,7 +144,7 @@ public class ItemRecipes extends RecipeProvider {
         addUpgrade(recipeConsumer, EIOItems.DARK_STEEL_UPGRADE_SPOON, Items.DIAMOND_SHOVEL);
 
         ShapedRecipeBuilder
-            .shaped(EIOItems.DARK_STEEL_UPGRADE_DIRECT.get())
+            .shaped(RecipeCategory.MISC, EIOItems.DARK_STEEL_UPGRADE_DIRECT.get())
             .define('I', EIOItems.VIBRANT_ALLOY_INGOT.get())
             .define('N', EIOItems.VIBRANT_ALLOY_NUGGET.get())
             .define('E', Tags.Items.ENDER_PEARLS)
@@ -168,7 +166,7 @@ public class ItemRecipes extends RecipeProvider {
 
     private void addUpgrade(Consumer<FinishedRecipe> recipeConsumer, ItemLike result, ItemLike upgradeItem) {
         ShapelessRecipeBuilder
-            .shapeless(result)
+            .shapeless(RecipeCategory.MISC, result)
             .requires(EIOItems.DARK_STEEL_UPGRADE_BLANK.get())
             .requires(upgradeItem)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DARK_STEEL_UPGRADE_BLANK.get()))

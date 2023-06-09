@@ -11,6 +11,7 @@ import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -28,12 +29,12 @@ import java.util.function.Consumer;
 
 public class AlloyRecipeProvider extends EnderRecipeProvider {
 
-    public AlloyRecipeProvider(DataGenerator dataGenerator) {
-        super(dataGenerator);
+    public AlloyRecipeProvider(PackOutput packOutput) {
+        super(packOutput);
     }
 
     @Override
-    protected void buildCraftingRecipes(Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
+    protected void buildRecipes(Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
         // TODO: Review all recipes and alloy compositions
         // TODO: Experience values need set properly, i just used a filler value off the top of my head
 

@@ -1,7 +1,6 @@
 package com.enderio.base.common.block;
 
 import com.enderio.base.common.config.BaseConfig;
-import com.mojang.math.Vector3f;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
@@ -12,6 +11,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 
 public class ReinforcedObsidianBlock extends Block {
 
@@ -37,7 +37,7 @@ public class ReinforcedObsidianBlock extends Block {
                 double z = pos.getZ() + zd;
 
                 int col = COLS[randomSource.nextInt(COLS.length)];
-                level.addParticle(new DustParticleOptions(new Vector3f(Vec3.fromRGB24(col)), 1.0F), x, y, z, 0.0D, 0.0D, 0.0D);
+                level.addParticle(new DustParticleOptions(Vec3.fromRGB24(col).toVector3f(), 1.0F), x, y, z, 0.0D, 0.0D, 0.0D);
             }
         }
     }

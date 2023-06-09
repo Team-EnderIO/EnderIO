@@ -1,6 +1,7 @@
 package com.enderio.machines.common.integrations.jei.util;
 
 import com.enderio.machines.common.recipe.EnchanterRecipe;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -58,7 +59,7 @@ public class WrappedEnchanterRecipe implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack assemble(Container container) {
+    public ItemStack assemble(Container container, RegistryAccess registryAccess) {
         return null;
     }
 
@@ -68,7 +69,7 @@ public class WrappedEnchanterRecipe implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(RegistryAccess registryAccess) {
         return null;
     }
 

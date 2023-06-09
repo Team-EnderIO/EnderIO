@@ -7,6 +7,7 @@ import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonObject;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -25,12 +26,13 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 public class EnchanterRecipeProvider extends EnderRecipeProvider {
-    public EnchanterRecipeProvider(DataGenerator dataGenerator) {
-        super(dataGenerator);
+
+    public EnchanterRecipeProvider(PackOutput packOutput) {
+        super(packOutput);
     }
 
     @Override
-    protected void buildCraftingRecipes(Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
+    protected void buildRecipes(Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
         //vanilla
         build(Enchantments.ALL_DAMAGE_PROTECTION, EIOItems.DARK_STEEL_INGOT.get(), 16, 1, pFinishedRecipeConsumer);
         build(Enchantments.FIRE_PROTECTION, Items.BLAZE_POWDER, 16, 1, pFinishedRecipeConsumer);

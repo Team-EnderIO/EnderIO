@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "D": {
       "tag": "forge:gems/emerald"
@@ -15,5 +16,6 @@
   ],
   "result": {
     "item": "enderio:vibrant_crystal"
-  }
+  },
+  "show_notification": true
 }

@@ -8,10 +8,8 @@ import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.data.PackOutput;
+import net.minecraft.data.recipes.*;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -20,12 +18,12 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.function.Consumer;
 
 public class GlassRecipes extends RecipeProvider {
-    public GlassRecipes(DataGenerator pGenerator) {
-        super(pGenerator);
+    public GlassRecipes(PackOutput pOutput) {
+        super(pOutput);
     }
 
     @Override
-    protected void buildCraftingRecipes(Consumer<FinishedRecipe> recipeConsumer) {
+    protected void buildRecipes(Consumer<FinishedRecipe> recipeConsumer) {
         for (GlassBlocks glassBlocks : EIOBlocks.GLASS_BLOCKS.values()) {
             recolor(glassBlocks, recipeConsumer);
             if (glassBlocks.getGlassIdentifier().collisionPredicate() == GlassCollisionPredicate.NONE) {
@@ -40,7 +38,7 @@ public class GlassRecipes extends RecipeProvider {
 
     private static void recolor(GlassBlocks blocks, Consumer<FinishedRecipe> recipeConsumer) {
         for (DyeColor color: DyeColor.values()) {
-            ShapelessRecipeBuilder builder = ShapelessRecipeBuilder.shapeless(blocks.COLORS.get(color).get(), 8);
+            ShapelessRecipeBuilder builder = ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, blocks.COLORS.get(color).get(), 8);
             for (int i = 0; i < 8; i++) {
                 builder.requires(EIOTags.Items.GLASS_TAGS.get(blocks.getGlassIdentifier()));
             }
@@ -56,7 +54,7 @@ public class GlassRecipes extends RecipeProvider {
             return;
         var output = EIOBlocks.GLASS_BLOCKS.get(blocks.getGlassIdentifier().withCollision(collision)).CLEAR.get();
 
-        ShapedRecipeBuilder.shaped(output, 8)
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, output, 8)
             .define('G', blocks.CLEAR.get())
             .define('T', token)
             .pattern("GGG")
@@ -72,7 +70,7 @@ public class GlassRecipes extends RecipeProvider {
             return;
         var output = EIOBlocks.GLASS_BLOCKS.get(blocks.getGlassIdentifier().withCollision(collision)).CLEAR.get();
 
-        ShapedRecipeBuilder.shaped(output, 8)
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, output, 8)
             .define('G', blocks.CLEAR.get())
             .define('T', Items.REDSTONE_TORCH)
             .pattern("GGG")
@@ -82,5 +80,4 @@ public class GlassRecipes extends RecipeProvider {
             .save(recipeConsumer, EnderIO.loc("invert_" + ForgeRegistries.BLOCKS.getKey(output).getPath()));
 
     }
-
 }

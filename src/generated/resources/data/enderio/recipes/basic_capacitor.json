@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "G": {
       "item": "enderio:grains_of_infinity"
@@ -18,5 +19,6 @@
   ],
   "result": {
     "item": "enderio:basic_capacitor"
-  }
+  },
+  "show_notification": true
 }

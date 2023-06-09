@@ -7,6 +7,7 @@ import com.enderio.core.common.recipes.EnderRecipe;
 import com.google.gson.JsonObject;
 import net.minecraft.ResourceLocationException;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
@@ -47,12 +48,12 @@ public class GrindingBallRecipe implements IGrindingBallData, EnderRecipe<Contai
     }
 
     @Override
-    public ItemStack assemble(Container container) {
-        return this.getResultItem();
+    public ItemStack assemble(Container container, RegistryAccess registryAccess) {
+        return this.getResultItem(registryAccess);
     }
 
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(RegistryAccess registryAccess) {
         return ItemStack.EMPTY;
     }
 

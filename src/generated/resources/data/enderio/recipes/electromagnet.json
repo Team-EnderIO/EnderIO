@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "equipment",
   "key": {
     "C": {
       "item": "enderio:conductive_alloy_ingot"
@@ -18,5 +19,6 @@
   ],
   "result": {
     "item": "enderio:electromagnet"
-  }
+  },
+  "show_notification": true
 }

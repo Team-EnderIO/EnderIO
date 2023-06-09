@@ -6,7 +6,11 @@ import com.enderio.machines.common.lang.MachineLang;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 
@@ -25,12 +29,12 @@ public abstract class ProgressWidget extends AbstractWidget {
         }
 
         @Override
-        public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
             float progress = progressSupplier.get();
             int yOffset = (int)(this.height * (1.0f - progress));
-            render(poseStack, x, y + yOffset, u, v + yOffset, width, (int) (this.height * progress));
+            render(poseStack, getX(), getY() + yOffset, u, v + yOffset, width, (int) (this.height * progress));
 
-            super.renderButton(poseStack, mouseX, mouseY, partialTick);
+            super.renderWidget(poseStack, mouseX, mouseY, partialTick);
         }
     }
 
@@ -44,10 +48,10 @@ public abstract class ProgressWidget extends AbstractWidget {
         }
 
         @Override
-        public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
             float progress = progressSupplier.get();
-            render(poseStack, x, y, u, v, width, (int) (this.height * progress));
-            super.renderButton(poseStack, mouseX, mouseY, partialTick);
+            render(poseStack, getX(), getY(), u, v, width, (int) (this.height * progress));
+            super.renderWidget(poseStack, mouseX, mouseY, partialTick);
         }
     }
 
@@ -61,10 +65,10 @@ public abstract class ProgressWidget extends AbstractWidget {
         }
 
         @Override
-        public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
             float progress = progressSupplier.get();
-            render(poseStack, x, y, u, v, (int) (this.width * progress), height);
-            super.renderButton(poseStack, mouseX, mouseY, partialTick);
+            render(poseStack, getX(), getY(), u, v, (int) (this.width * progress), height);
+            super.renderWidget(poseStack, mouseX, mouseY, partialTick);
         }
     }
 
@@ -95,13 +99,20 @@ public abstract class ProgressWidget extends AbstractWidget {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+    public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        // Update the contents of the tooltip whenever its hovered, don't waste any time doing it when not hovered.
+        // Should also mean when tooltip is false it never gets populated
         if (this.isHoveredOrFocused() && tooltip) {
-            this.renderToolTip(poseStack, mouseX, mouseY);
+            setTooltip(Tooltip.create(TooltipUtil.withArgs(MachineLang.PROGRESS_TOOLTIP, (int) (progressSupplier.get() * 100))));
         }
+    }
+
+    @Override
+    protected ClientTooltipPositioner createTooltipPositioner() {
+        return DefaultTooltipPositioner.INSTANCE;
     }
 
     protected void render(PoseStack poseStack, int x, int y, int u, int v, int w, int h) {
@@ -111,12 +122,5 @@ public abstract class ProgressWidget extends AbstractWidget {
         RenderSystem.setShaderTexture(0, screen.getBackgroundImage());
         blit(poseStack, x, y, u, v, w, h);
         poseStack.popPose();
-    }
-
-    @Override
-    public void renderToolTip(PoseStack poseStack, int mouseX, int mouseY) {
-        if (isHovered && isActive()) {
-            screen.renderTooltip(poseStack, TooltipUtil.withArgs(MachineLang.PROGRESS_TOOLTIP, (int) (progressSupplier.get() * 100)), mouseX, mouseY);
-        }
     }
 }
