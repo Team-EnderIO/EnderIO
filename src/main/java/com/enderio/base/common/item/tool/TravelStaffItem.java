@@ -79,11 +79,11 @@ public class TravelStaffItem extends Item implements IDarkSteelItem {
     }
 
     public boolean hasResources(ItemStack stack) {
-        return EnergyUtil.hasEnergy(stack, 1000);
+        return EnergyUtil.hasEnergy(stack, BaseConfig.COMMON.ITEMS.TRAVELLING_STAFF_ENERGY_USE.get());
     }
 
     public void consumeResources(ItemStack stack) {
-        EnergyUtil.extractEnergy(stack, 1000, false);
+        EnergyUtil.extractEnergy(stack, BaseConfig.COMMON.ITEMS.TRAVELLING_STAFF_ENERGY_USE.get(), false);
     }
 
     @Override

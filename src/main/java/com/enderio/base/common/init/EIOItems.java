@@ -358,6 +358,9 @@ public class EIOItems {
         .item("staff_of_travelling", TravelStaffItem::new)
         .properties(props -> props.stacksTo(1))
         .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR), modifier -> EIOItems.TRAVEL_STAFF.get().addAllVariants(modifier))
+        .onRegister(item -> DarkSteelUpgradeRegistry
+            .instance()
+            .addUpgradesForItem(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)), EmpoweredUpgrade.NAME))
         .register();
 
     public static final ItemEntry<ElectromagnetItem> ELECTROMAGNET = REGISTRATE
