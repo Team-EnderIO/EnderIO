@@ -99,7 +99,7 @@ public class TeleportHandler {
         double floorHeight = 0;
         for (double i = BaseConfig.COMMON.ITEMS.TRAVELLING_BLINK_RANGE.get(); i >= 2; i -= 0.5) {
             Vec3 v3d = targetVec.add(lookVec.scale(i));
-            target = new BlockPos(Math.round(v3d.x), Math.round(v3d.y), Math.round(v3d.z));
+            target = new BlockPos((int) Math.round(v3d.x), (int) Math.round(v3d.y), (int) Math.round(v3d.z));
             Optional<Double> ground = isTeleportPositionClear(level, target.below());
             if (ground.isPresent()) { //to use the same check as the anchors use the position below
                 floorHeight = ground.get();
@@ -117,7 +117,7 @@ public class TeleportHandler {
     private static Optional<ITravelTarget> getAnchorTarget(Player player) {
         Vec3 positionVec = player.position().add(0, player.getEyeHeight(), 0);
 
-        return TravelSavedData.getTravelData(player.getLevel()).getTravelTargetsInItemRange(new BlockPos(player.position()))
+        return TravelSavedData.getTravelData(player.getLevel()).getTravelTargetsInItemRange(player.blockPosition())
             .filter(target -> target.getPos().distToLowCornerSqr(player.getX(), player.getY(), player.getZ()) > 25) //only teleport to blocks not directly in range
             .filter(target -> Math.abs(getAngleRadians(positionVec, target.getPos(), player.getYRot(), player.getXRot())) <= Math.toRadians(15))
             .filter(target -> isTeleportPositionClear(player.getLevel(), target.getPos()).isPresent())

@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "I": {
       "item": "enderio:copper_alloy_ingot"
@@ -12,5 +13,6 @@
   ],
   "result": {
     "item": "enderio:copper_alloy_block"
-  }
+  },
+  "show_notification": true
 }

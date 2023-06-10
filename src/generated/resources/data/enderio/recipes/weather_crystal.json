@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "E": {
       "item": "enderio:ender_crystal"
@@ -18,5 +19,6 @@
   ],
   "result": {
     "item": "enderio:weather_crystal"
-  }
+  },
+  "show_notification": true
 }

@@ -55,7 +55,6 @@ public class SagMillBlockEntity extends PoweredCraftingMachine<SagMillingRecipe,
         addDataSlot(new ResourceLocationDataSlot(() -> grindingBallData.getId(), gId -> grindingBallData = GrindingBallManager.getData(gId), SyncMode.GUI));
     }
 
-    @Nullable
     public IGrindingBallData getGrindingBallData() {
         return grindingBallData;
     }

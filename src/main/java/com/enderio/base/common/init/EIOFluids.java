@@ -1,14 +1,13 @@
 package com.enderio.base.common.init;
 
 import com.enderio.EnderIO;
-import com.enderio.base.common.item.EIOCreativeTabs;
 import com.enderio.base.common.tag.EIOTags;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.FluidBuilder;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateItemModelProvider;
 import com.tterrag.registrate.util.entry.FluidEntry;
-import net.minecraft.client.renderer.RenderType;
+import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
@@ -35,7 +34,7 @@ public class EIOFluids {
         .register();
 
     public static final FluidEntry<? extends ForgeFlowingFluid> VAPOR_OF_LEVITY = gasFluid("vapor_of_levity")
-        .properties(p -> p.density(-10).viscosity(100).temperature(5)) // TODO: 1.19: gaseous?
+        .properties(p -> p.density(-10).viscosity(100).temperature(5))
         .register();
 
     public static final FluidEntry<? extends ForgeFlowingFluid> HOOTCH = fluid("hootch")
@@ -71,7 +70,7 @@ public class EIOFluids {
         return baseFluid(name)
             .bucket()
             .model(EIOFluids::bucketModel)
-            .tab(() -> EIOCreativeTabs.MAIN)
+            .tab(NonNullSupplier.lazy(EIOCreativeTabs.MAIN))
             .build();
     }
 
@@ -79,7 +78,7 @@ public class EIOFluids {
         return baseFluid(name)
             .bucket()
             .model((ctx, prov) -> bucketModel(ctx, prov).flipGas(true))
-            .tab(() -> EIOCreativeTabs.MAIN)
+            .tab(NonNullSupplier.lazy(EIOCreativeTabs.MAIN))
             .build();
     }
 

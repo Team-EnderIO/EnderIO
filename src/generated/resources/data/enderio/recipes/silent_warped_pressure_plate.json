@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "building",
   "key": {
     "P": {
       "item": "minecraft:warped_pressure_plate"
@@ -14,5 +15,6 @@
   ],
   "result": {
     "item": "enderio:silent_warped_pressure_plate"
-  }
+  },
+  "show_notification": true
 }

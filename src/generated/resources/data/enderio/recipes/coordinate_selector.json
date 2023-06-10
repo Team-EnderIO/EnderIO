@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "equipment",
   "key": {
     "C": {
       "item": "minecraft:compass"
@@ -18,5 +19,6 @@
   ],
   "result": {
     "item": "enderio:coordinate_selector"
-  }
+  },
+  "show_notification": true
 }

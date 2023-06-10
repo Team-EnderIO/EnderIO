@@ -11,6 +11,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.PressurePlateBlock;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 
 import java.util.List;
 
@@ -49,7 +50,7 @@ public class EIOPressurePlateBlock extends PressurePlateBlock {
     private final Detector detector;
 
     public EIOPressurePlateBlock(Properties props, Detector detector, boolean silent) {
-        super(Sensitivity.MOBS, props.sound(SoundType.METAL));
+        super(Sensitivity.MOBS, props, silent ? EIOBlockSetType.SILENT : BlockSetType.IRON);
         this.detector = detector;
         this.silent = silent;
         this.registerDefaultState(this.stateDefinition.any().setValue(POWERED, false));
@@ -58,20 +59,5 @@ public class EIOPressurePlateBlock extends PressurePlateBlock {
     @Override
     protected int getSignalStrength(Level pLevel, BlockPos pPos) {
         return detector.getSignalStrength(pLevel, pPos);
-    }
-
-
-    @Override
-    protected void playOnSound(LevelAccessor pLevel, BlockPos pPos) {
-        if (!silent) {
-            pLevel.playSound(null, pPos, SoundEvents.METAL_PRESSURE_PLATE_CLICK_ON, SoundSource.BLOCKS, 0.3F, 0.90000004F);
-        }
-    }
-
-    @Override
-    protected void playOffSound(LevelAccessor pLevel, BlockPos pPos) {
-        if (!silent) {
-            pLevel.playSound(null, pPos, SoundEvents.METAL_PRESSURE_PLATE_CLICK_OFF, SoundSource.BLOCKS, 0.3F, 0.75F);
-        }
     }
 }

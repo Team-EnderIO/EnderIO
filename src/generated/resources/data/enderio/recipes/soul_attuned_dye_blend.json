@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "B": {
       "item": "enderio:organic_black_dye"
@@ -18,5 +19,6 @@
   ],
   "result": {
     "item": "enderio:soul_attuned_dye_blend"
-  }
+  },
+  "show_notification": true
 }

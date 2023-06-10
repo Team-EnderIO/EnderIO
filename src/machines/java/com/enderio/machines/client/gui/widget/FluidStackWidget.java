@@ -4,6 +4,7 @@ import com.enderio.core.client.gui.widgets.EIOWidget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.AbstractTexture;
@@ -31,7 +32,7 @@ public class FluidStackWidget extends EIOWidget {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         Minecraft minecraft = Minecraft.getInstance();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.defaultBlendFunc();
@@ -61,15 +62,15 @@ public class FluidStackWidget extends EIOWidget {
                     int renderableHeight = (int)(filledVolume * height);
 
 
-                    int atlasWidth = (int)(sprite.getWidth() / (sprite.getU1() - sprite.getU0()));
-                    int atlasHeight = (int)(sprite.getHeight() / (sprite.getV1() - sprite.getV0()));
+                    int atlasWidth = (int)(sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
+                    int atlasHeight = (int)(sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
 
                     poseStack.pushPose();
                     poseStack.translate(0, height-16, 0);
                     for (int i = 0; i < Math.ceil(renderableHeight / 16f); i++) {
                         int drawingHeight = Math.min(16, renderableHeight - 16*i);
                         int notDrawingHeight = 16 - drawingHeight;
-                        blit(poseStack, x, y + notDrawingHeight, displayOn.getBlitOffset(), sprite.getU0()*atlasWidth, sprite.getV0()*atlasHeight + notDrawingHeight, sprite.getWidth(), drawingHeight, atlasWidth, atlasHeight);
+                        blit(poseStack, x, y + notDrawingHeight, 0, sprite.getU0()*atlasWidth, sprite.getV0()*atlasHeight + notDrawingHeight, sprite.contents().height(), drawingHeight, atlasWidth, atlasHeight);
                         poseStack.translate(0,-16, 0);
                     }
 
@@ -79,6 +80,11 @@ public class FluidStackWidget extends EIOWidget {
             }
             renderToolTip(poseStack, mouseX, mouseY);
         }
+    }
+
+    @Override
+    protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
+
     }
 
     public void renderToolTip(PoseStack poseStack, int mouseX, int mouseY) {

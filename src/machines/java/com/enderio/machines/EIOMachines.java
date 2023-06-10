@@ -1,6 +1,7 @@
 package com.enderio.machines;
 
 import com.enderio.EnderIO;
+import com.enderio.base.data.EIODataProvider;
 import com.enderio.api.integration.IntegrationManager;
 import com.enderio.api.travel.TravelRegistry;
 import com.enderio.machines.client.rendering.travel.TravelAnchorRenderer;
@@ -14,12 +15,16 @@ import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.travel.AnchorTravelTarget;
 import com.enderio.machines.data.recipes.*;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
+import net.minecraft.data.loot.LootTableProvider;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLConstructModEvent;
+
+import java.util.Collections;
 
 import static com.enderio.EnderIO.loc;
 
@@ -46,12 +51,17 @@ public class EIOMachines {
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
-        generator.addProvider(event.includeServer(), new MachineRecipeProvider(generator));
-        generator.addProvider(event.includeServer(), new AlloyRecipeProvider(generator));
-        generator.addProvider(event.includeServer(), new EnchanterRecipeProvider(generator));
-        generator.addProvider(event.includeServer(), new SagMillRecipeProvider(generator));
-        generator.addProvider(event.includeServer(), new SlicingRecipeProvider(generator));
-        generator.addProvider(event.includeServer(), new SoulBindingRecipeProvider(generator));
+        PackOutput packOutput = generator.getPackOutput();
 
+        EIODataProvider provider = new EIODataProvider("machines");
+
+        provider.addSubProvider(event.includeServer(), new MachineRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new AlloyRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new EnchanterRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new SagMillRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new SlicingRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new SoulBindingRecipeProvider(packOutput));
+
+        generator.addProvider(true, provider);
     }
 }

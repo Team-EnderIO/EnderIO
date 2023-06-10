@@ -6,17 +6,18 @@ import com.enderio.base.common.block.glass.GlassBlocks;
 import com.enderio.base.common.block.glass.GlassCollisionPredicate;
 import com.enderio.base.common.block.glass.GlassIdentifier;
 import com.enderio.base.common.block.glass.GlassLighting;
-import com.enderio.base.common.item.EIOCreativeTabs;
 import com.enderio.base.data.model.block.EIOBlockState;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.util.entry.BlockEntry;
+import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.AttachFace;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.client.model.generators.BlockModelProvider;
@@ -81,7 +82,7 @@ public class EIOBlocks {
         .tag(BlockTags.CLIMBABLE, BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
         .item()
         .model((ctx, prov) -> prov.generated(ctx, prov.modLoc("block/dark_steel_ladder")))
-        .tab(() -> EIOCreativeTabs.BLOCKS)
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
         .build()
         .register();
 
@@ -92,31 +93,31 @@ public class EIOBlocks {
         .tag(BlockTags.NEEDS_IRON_TOOL)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .item()
-        .tab(() -> EIOCreativeTabs.BLOCKS)
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
         .model((ctx, prov) -> prov.generated(ctx, prov.modLoc("block/dark_steel_bars")))
         .build()
         .register();
 
     // TODO: Door drops itself in creative????
     public static final BlockEntry<DoorBlock> DARK_STEEL_DOOR = REGISTRATE
-        .block("dark_steel_door", Material.METAL, DoorBlock::new)
+        .block("dark_steel_door", Material.METAL, props -> new DoorBlock(props, BlockSetType.IRON))
         .properties(props -> props.strength(5.0f, 2000.0f).sound(SoundType.METAL).noOcclusion())
         .blockstate((ctx, prov) -> prov.doorBlockWithRenderType(ctx.get(), prov.modLoc("block/dark_steel_door_bottom"), prov.modLoc("block/dark_steel_door_top"), prov.mcLoc("cutout")))
         .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL, BlockTags.DOORS)
         .item()
         .model((ctx, prov) -> prov.generated(ctx))
-        .tab(() -> EIOCreativeTabs.BLOCKS)
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
         .build()
         .register();
 
     public static final BlockEntry<TrapDoorBlock> DARK_STEEL_TRAPDOOR = REGISTRATE
-        .block("dark_steel_trapdoor", Material.METAL, TrapDoorBlock::new)
+        .block("dark_steel_trapdoor", Material.METAL, props -> new TrapDoorBlock(props, BlockSetType.IRON))
         .properties(props -> props.strength(5.0f, 2000.0f).sound(SoundType.METAL).noOcclusion())
         .blockstate((ctx, prov) -> prov.trapdoorBlockWithRenderType(ctx.get(), prov.modLoc("block/dark_steel_trapdoor"), true, prov.mcLoc("cutout")))
         .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL, BlockTags.TRAPDOORS)
         .item()
         .model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.modLoc("block/dark_steel_trapdoor_bottom")))
-        .tab(() -> EIOCreativeTabs.BLOCKS)
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
         .build()
         .register();
 
@@ -127,7 +128,7 @@ public class EIOBlocks {
         .tag(BlockTags.NEEDS_IRON_TOOL)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .item()
-        .tab(() -> EIOCreativeTabs.BLOCKS)
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
         .model((ctx, prov) -> prov.generated(ctx, prov.modLoc("block/end_steel_bars")))
         .build()
         .register();
@@ -139,7 +140,7 @@ public class EIOBlocks {
         .tag(BlockTags.NEEDS_DIAMOND_TOOL)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .item()
-        .tab(() -> EIOCreativeTabs.BLOCKS)
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
         .build()
         .register();
 
@@ -269,7 +270,7 @@ public class EIOBlocks {
         .register();
 
     public static <T extends Block> BlockBuilder<T, Registrate> simpleBlockBuilder(String name, T block) {
-        return REGISTRATE.block(name, p -> block).item().tab(() -> EIOCreativeTabs.BLOCKS).build();
+        return REGISTRATE.block(name, p -> block).item().tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS)).build();
     }
 
     private static BlockBuilder<Block, Registrate> metalBlock(String name) {
@@ -283,7 +284,7 @@ public class EIOBlocks {
             .tag(BlockTags.NEEDS_STONE_TOOL)
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .item()
-            .tab(() -> EIOCreativeTabs.BLOCKS)
+            .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
             .build();
     }
 
@@ -302,7 +303,7 @@ public class EIOBlocks {
             .tag(BlockTags.NEEDS_STONE_TOOL)
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .item()
-            .tab(() -> EIOCreativeTabs.BLOCKS)
+            .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
             .build();
     }
 
@@ -324,7 +325,7 @@ public class EIOBlocks {
         });
         bb.tag(BlockTags.NEEDS_STONE_TOOL, BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.PRESSURE_PLATES)
             .item()
-            .tab(() -> EIOCreativeTabs.BLOCKS)
+            .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
             .build();
         return bb.register();
     }
@@ -345,7 +346,7 @@ public class EIOBlocks {
 
         var itemBuilder = bb.item();
         itemBuilder.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), upModelLoc));
-        itemBuilder.tab(() -> EIOCreativeTabs.BLOCKS);
+        itemBuilder.tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS));
         bb = itemBuilder.build();
 
         return bb.register();
@@ -368,7 +369,7 @@ public class EIOBlocks {
 
         var itemBuilder = bb.item();
         itemBuilder.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), upModelLoc));
-        itemBuilder.tab(() -> EIOCreativeTabs.BLOCKS);
+        itemBuilder.tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS));
         bb = itemBuilder.build();
 
         return bb.register();
@@ -401,7 +402,7 @@ public class EIOBlocks {
             });
         });
 
-        var ib = bb.item().tab(() -> EIOCreativeTabs.BLOCKS);
+        var ib = bb.item().tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS));
         ib.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.mcLoc("item/lever")));
         bb = ib.build();
         return bb.register();
@@ -412,7 +413,7 @@ public class EIOBlocks {
         .initialProperties(() -> Blocks.SPONGE)
         .lang("Industrial Insulation")
         .item()
-        .tab(() -> EIOCreativeTabs.BLOCKS)
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
         .build()
         .register();
     public static void register() {}

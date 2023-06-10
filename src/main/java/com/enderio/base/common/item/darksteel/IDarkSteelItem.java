@@ -10,6 +10,7 @@ import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.item.IAdvancedTooltipProvider;
+import com.enderio.core.common.item.ITabVariants;
 import com.enderio.core.common.util.EnergyUtil;
 import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.ChatFormatting;
@@ -27,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipProvider {
+public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipProvider, ITabVariants {
 
     default Optional<EmpoweredUpgrade> getEmpoweredUpgrade(ItemStack stack) {
         return DarkSteelUpgradeable.getUpgradeAs(stack, EmpoweredUpgrade.NAME, EmpoweredUpgrade.class);
@@ -41,13 +42,6 @@ public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipPr
         provider.addSerialized(EIOCapabilities.DARK_STEEL_UPGRADABLE, LazyOptional.of(() -> new DarkSteelUpgradeable(forItem)));
         provider.addSimple(ForgeCapabilities.ENERGY, LazyOptional.of(() -> new EnergyDelegator(provider)));
         return provider;
-    }
-
-    default void addCreativeItems(NonNullList<ItemStack> pItems, Item item) {
-        ItemStack is = new ItemStack(item);
-        pItems.add(is.copy());
-        //All the upgrades
-        pItems.add(createFullyUpgradedStack(item));
     }
 
     default ItemStack createFullyUpgradedStack(Item item) {

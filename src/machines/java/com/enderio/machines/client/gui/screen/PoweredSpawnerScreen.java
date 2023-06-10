@@ -12,10 +12,12 @@ import com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity;
 import com.enderio.machines.common.menu.PoweredSpawnerMenu;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Optional;
 
@@ -60,9 +62,9 @@ public class PoweredSpawnerScreen extends EIOScreen<PoweredSpawnerMenu> {
     protected void renderLabels(PoseStack pPoseStack, int pMouseX, int pMouseY) {
         Optional<ResourceLocation> rl = getMenu().getBlockEntity().getEntityType();
         if (rl.isPresent()) {
-            Optional<EntityType<?>> typeOptional = Registry.ENTITY_TYPE.getOptional(rl.get());
-            if (typeOptional.isPresent() && Registry.ENTITY_TYPE.getKey(typeOptional.get()).equals(rl.get())) { // check we don't get the default pig
-                String name = typeOptional.get().getDescription().getString();
+            EntityType<?> type = ForgeRegistries.ENTITY_TYPES.getValue(rl.get());
+            if (type != null && ForgeRegistries.ENTITY_TYPES.getKey(type).equals(rl.get())) { // check we don't get the default pig
+                String name = type.getDescription().getString();
                 font.draw(pPoseStack, name, imageWidth/2f - font.width(name)/2f, 15, 4210752);
             } else {
                 font.draw(pPoseStack, rl.get().toString(), imageWidth/2f - font.width(rl.get().toString())/2f, 15, 4210752);

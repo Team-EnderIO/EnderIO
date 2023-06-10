@@ -6,6 +6,8 @@ import com.enderio.base.common.capability.AcceptingFluidItemHandler;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.tag.EIOTags;
+import com.enderio.core.common.item.ITabVariants;
+import com.tterrag.registrate.util.CreativeModeTabModifier;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -36,7 +38,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Optional;
 
-public class ColdFireIgniter extends Item implements IMultiCapabilityItem {
+public class ColdFireIgniter extends Item implements IMultiCapabilityItem, ITabVariants {
 
     public ColdFireIgniter(Properties properties) {
         super(properties);
@@ -108,18 +110,16 @@ public class ColdFireIgniter extends Item implements IMultiCapabilityItem {
     }
 
     @Override
-    public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {
-        if (allowedIn(pCategory)) {
-            ItemStack is = new ItemStack(this);
-            pItems.add(is.copy());
+    public void addAllVariants(CreativeModeTabModifier modifier) {
+        modifier.accept(this);
 
-            getTankCap(is).ifPresent(handler -> {
-                if (handler instanceof AcceptingFluidItemHandler fluidHandler) {
-                    fluidHandler.setFluid(new FluidStack(EIOFluids.VAPOR_OF_LEVITY.get(), handler.getTankCapacity(0)));
-                    pItems.add(is);
-                }
-            });
-        }
+        ItemStack is = new ItemStack(this);
+        getTankCap(is).ifPresent(handler -> {
+            if (handler instanceof AcceptingFluidItemHandler fluidItemHandler) {
+                fluidItemHandler.setFluid(new FluidStack(EIOFluids.VAPOR_OF_LEVITY.get(), handler.getTankCapacity(0)));
+                modifier.accept(is);
+            }
+        });
     }
 
     @Nullable

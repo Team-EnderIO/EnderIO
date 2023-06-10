@@ -16,14 +16,18 @@ import com.enderio.machines.common.menu.SagMillMenu;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
+import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Optional;
 
 public class SagMillScreen extends EIOScreen<SagMillMenu> {
     public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/sagmill.png");
@@ -76,43 +80,63 @@ public class SagMillScreen extends EIOScreen<SagMillMenu> {
         }
 
         @Override
-        public void updateNarration(NarrationElementOutput narrationElementOutput) {}
+        public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
+
+        @Nullable
+        private IGrindingBallData tooltipDataCache;
+        private float tooltipDuraCache;
 
         @Override
-        public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, SagMillScreen.BG_TEXTURE);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-            float durability = SagMillScreen.this.getMenu().getBlockEntity().getGrindingBallDamage();
+            SagMillBlockEntity be = SagMillScreen.this.getMenu().getBlockEntity();
+            if (be == null)
+                return;
+
+            float durability = be.getGrindingBallDamage();
+            IGrindingBallData data = be.getGrindingBallData();
 
             int yOffset = (int) Math.ceil(this.height * (1.0f - durability));
             int height = (int) Math.ceil(this.height * durability);
 
             poseStack.pushPose();
-            blit(poseStack, x, y + yOffset, U, V + yOffset, width, height);
+            blit(poseStack, getX(), getY() + yOffset, U, V + yOffset, width, height);
 
-            if (this.isHoveredOrFocused()) {
-                this.renderToolTip(poseStack, mouseX, mouseY);
+            if (this.isHoveredOrFocused() && (tooltipDataCache != data || tooltipDuraCache != durability)) {
+                tooltipDataCache = data;
+                tooltipDuraCache = durability;
+
+                // Gather all parts of the tooltip
+                List<Component> tooltipComponents = List.of(
+                    TooltipUtil.styledWithArgs(MachineLang.SAG_MILL_GRINDINGBALL_REMAINING, (int) (durability * 100)),
+                    MachineLang.SAG_MILL_GRINDINGBALL_TITLE,
+                    TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_MAIN_OUTPUT, (int) (data.getOutputMultiplier() * 100)),
+                    TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_BONUS_OUTPUT, (int) (data.getBonusMultiplier() * 100)),
+                    TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_POWER_USE, (int) (data.getPowerUse() * 100))
+                );
+
+                // Build single component
+                MutableComponent tooltip = Component.empty().copy();
+                for (int i = 0; i < tooltipComponents.size(); i++) {
+                    tooltip.append(tooltipComponents.get(i));
+
+                    if (i + 1 < tooltipComponents.size())
+                        tooltip.append("\n");
+                }
+
+                // Set for display
+                setTooltip(Tooltip.create(tooltip));
             }
 
             poseStack.popPose();
         }
 
         @Override
-        public void renderToolTip(PoseStack poseStack, int mouseX, int mouseY) {
-            if (isHovered && isActive()) {
-                SagMillBlockEntity be = SagMillScreen.this.getMenu().getBlockEntity();
-                float durability = be.getGrindingBallDamage();
-                IGrindingBallData dat = be.getGrindingBallData();
-                SagMillScreen.this.renderTooltip(poseStack, List.of(
-                    TooltipUtil.styledWithArgs(MachineLang.SAG_MILL_GRINDINGBALL_REMAINING, (int) (durability * 100)),
-                    MachineLang.SAG_MILL_GRINDINGBALL_TITLE,
-                    TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_MAIN_OUTPUT, (int) (dat.getOutputMultiplier() * 100)),
-                    TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_BONUS_OUTPUT, (int) (dat.getBonusMultiplier() * 100)),
-                    TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_POWER_USE, (int) (dat.getPowerUse() * 100))
-                ), Optional.empty(), mouseX, mouseY);
-            }
+        protected ClientTooltipPositioner createTooltipPositioner() {
+            return DefaultTooltipPositioner.INSTANCE;
         }
     }
 }

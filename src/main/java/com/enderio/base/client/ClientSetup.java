@@ -96,13 +96,6 @@ public class ClientSetup {
         Minecraft.getInstance().particleEngine.register(EIOParticles.RANGE_PARTICLE.get(), RangeParticle.Provider::new);
     }
 
-    @SubscribeEvent
-    public static void stitchTextures(TextureStitchEvent.Pre event) {
-        if (event.getAtlas().location() == InventoryMenu.BLOCK_ATLAS) {
-            event.addSprite(EnderIO.loc("block/overlay/selected_face"));
-        }
-    }
-
     private static Optional<Item> findGliderForModelRL(ResourceLocation rl) {
         String namespace = rl.getNamespace();
         String path = rl.getPath().substring("models/enderio_glider/".length(), rl.getPath().length() - 5);

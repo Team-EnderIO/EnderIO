@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "D": {
       "item": "minecraft:deepslate"
@@ -18,5 +19,6 @@
   ],
   "result": {
     "item": "enderio:primitive_alloy_smelter"
-  }
+  },
+  "show_notification": true
 }

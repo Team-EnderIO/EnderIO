@@ -59,8 +59,8 @@ public class IOOverlayBakedModel implements IDynamicBakedModel {
 
     private final Direction north;
 
-    public IOOverlayBakedModel(ModelState transform) {
-        this.north = Direction.rotate(transform.getRotation().getMatrix(), Direction.NORTH);
+    public IOOverlayBakedModel(ModelState modelState) {
+        this.north = Direction.rotate(modelState.getRotation().getMatrix(), Direction.NORTH);
     }
 
     @Override
@@ -125,20 +125,9 @@ public class IOOverlayBakedModel implements IDynamicBakedModel {
 
     public static class Geometry implements IUnbakedGeometry<Geometry> {
         @Override
-        public BakedModel bake(IGeometryBakingContext context, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform,
+        public BakedModel bake(IGeometryBakingContext context, ModelBaker baker, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState,
             ItemOverrides overrides, ResourceLocation modelLocation) {
-            return new IOOverlayBakedModel(modelTransform);
-        }
-
-        @Override
-        public Collection<Material> getMaterials(IGeometryBakingContext context, Function<ResourceLocation, UnbakedModel> modelGetter,
-            Set<Pair<String, String>> missingTextureErrors) {
-            return List.of(
-                new Material(InventoryMenu.BLOCK_ATLAS, EnderIO.loc("block/overlay/disabled")),
-                new Material(InventoryMenu.BLOCK_ATLAS, EnderIO.loc("block/overlay/pull")),
-                new Material(InventoryMenu.BLOCK_ATLAS, EnderIO.loc("block/overlay/push")),
-                new Material(InventoryMenu.BLOCK_ATLAS, EnderIO.loc("block/overlay/push_pull"))
-            );
+            return new IOOverlayBakedModel(modelState);
         }
     }
 

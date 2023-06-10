@@ -160,7 +160,7 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
         // Get the outputs list.
         if (!determinedOutputs) {
             determinedOutputs = true;
-            outputs = recipe.craft(container);
+            outputs = recipe.craft(container, blockEntity.getLevel().registryAccess());
 
             // TODO: Compact any items that are the same into singular stacks?
         }

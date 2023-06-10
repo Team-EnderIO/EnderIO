@@ -140,7 +140,7 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
         Optional<CraftingRecipe> opt = getLevel().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, dummyCContainer, getLevel());
         if (opt.isPresent()) {
             recipe = opt.get();
-            return Optional.of(recipe.assemble(dummyCContainer));
+            return Optional.of(recipe.assemble(dummyCContainer, getLevel().registryAccess()));
         }
         return Optional.empty();
     }
@@ -162,7 +162,7 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
         }
         //craft
         clearInput();
-        outputBuffer.add(recipe.assemble(dummyCContainer));
+        outputBuffer.add(recipe.assemble(dummyCContainer, getLevel().registryAccess()));
         outputBuffer.addAll(recipe.getRemainingItems(dummyCContainer));
         // clean buffer
         outputBuffer.removeIf(ItemStack::isEmpty);

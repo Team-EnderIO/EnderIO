@@ -75,8 +75,8 @@ public class ModelRenderUtil {
         float ny = (float) normal.y;
         float nz = (float) normal.z;
 
-        int tw = sprite.getWidth();
-        int th = sprite.getHeight();
+        int tw = sprite.contents().width();
+        int th = sprite.contents().height();
 
         float r = FastColor.ARGB32.red(color) / 255.0f;
         float g = FastColor.ARGB32.green(color) / 255.0f;
