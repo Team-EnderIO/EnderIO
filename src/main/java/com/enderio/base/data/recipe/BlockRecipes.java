@@ -124,32 +124,6 @@ public class BlockRecipes extends RecipeProvider {
             .save(recipeConsumer);
     }
 
-    private void addChassisRecipes(Consumer<FinishedRecipe> recipeConsumer) {
-
-//        ShapedRecipeBuilder
-//            .shaped(EIOBlocks.SIMPLE_MACHINE_CHASSIS.get())
-//            .define('B', Blocks.IRON_BARS)
-//            .define('G', EIOItems.GRAINS_OF_INFINITY.get())
-//            .define('I', Tags.Items.INGOTS_IRON)
-//            .pattern("BIB")
-//            .pattern("IGI")
-//            .pattern("BIB")
-//            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GRAINS_OF_INFINITY.get()))
-//            .save(recipeConsumer);
-
-        ShapedRecipeBuilder
-            .shaped(RecipeCategory.MISC, EIOBlocks.END_STEEL_MACHINE_CHASSIS.get())
-            .define('B', EIOBlocks.END_STEEL_BARS.get())
-            .define('G', EIOItems.GRAINS_OF_INFINITY.get())
-            .define('I', EIOItems.END_STEEL_INGOT.get())
-            .pattern("BIB")
-            .pattern("IGI")
-            .pattern("BIB")
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.END_STEEL_INGOT.get()))
-            .save(recipeConsumer);
-
-    }
-
     private void addPressurePlateRecipes(Consumer<FinishedRecipe> recipeConsumer) {
         //eio plates
         addPressurePlateRecipe(recipeConsumer, EIOBlocks.DARK_STEEL_PRESSURE_PLATE, EIOItems.DARK_STEEL_INGOT::get);
