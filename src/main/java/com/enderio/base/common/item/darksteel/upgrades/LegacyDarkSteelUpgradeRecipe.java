@@ -18,7 +18,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.Optional;
 
-@Deprecated(forRemoval = true)
+@Deprecated(forRemoval = true, since = "1.19.4")
 public class LegacyDarkSteelUpgradeRecipe extends LegacyUpgradeRecipe {
 
     public LegacyDarkSteelUpgradeRecipe(ResourceLocation pRecipeId) {

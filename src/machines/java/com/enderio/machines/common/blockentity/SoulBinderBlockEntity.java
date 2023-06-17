@@ -148,8 +148,4 @@ public class SoulBinderBlockEntity extends PoweredCraftingMachine<SoulBindingRec
         fluidTank.readFromNBT(pTag.getCompound("fluid"));
     }
 
-    @Override
-    protected IIOConfig createIOConfig() {
-        return new FixedIOConfig(IOMode.PULL);
-    }
 }

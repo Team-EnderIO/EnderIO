@@ -50,7 +50,7 @@ public class EIOPressurePlateBlock extends PressurePlateBlock {
     private final Detector detector;
 
     public EIOPressurePlateBlock(Properties props, Detector detector, boolean silent) {
-        super(Sensitivity.MOBS, props, silent ? EIOBlockSetType.SILENT : BlockSetType.IRON); // TODO: 1.19.4, option for dark steel or soularium blocksets with their own noises?
+        super(Sensitivity.MOBS, props, silent ? EIOBlockSetType.SILENT : BlockSetType.IRON);
         this.detector = detector;
         this.silent = silent;
         this.registerDefaultState(this.stateDefinition.any().setValue(POWERED, false));

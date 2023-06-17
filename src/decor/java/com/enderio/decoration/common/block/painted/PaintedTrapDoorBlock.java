@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 public class PaintedTrapDoorBlock extends TrapDoorBlock implements EntityBlock, IPaintedBlock {
 
     public PaintedTrapDoorBlock(Properties properties) {
-        super(properties, BlockSetType.OAK); // TODO: 1.19.4 Sensible?
+        super(properties, BlockSetType.OAK);
     }
 
     @Nullable

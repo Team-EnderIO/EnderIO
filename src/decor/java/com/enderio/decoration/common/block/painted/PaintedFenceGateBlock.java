@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 public class PaintedFenceGateBlock extends FenceGateBlock implements EntityBlock, IPaintedBlock {
 
     public PaintedFenceGateBlock(Properties properties) {
-        super(properties, WoodType.OAK); // TODO: 1.19.4: Sensible value?
+        super(properties, WoodType.OAK);
     }
 
     @Nullable

@@ -305,7 +305,32 @@ tasks.jarJar.configure {
 }
 build.dependsOn tasks.jarJar
 
-// TODO: 1.19: Modrinth publishing.
+// TODO: Should trigger automated publishes using GitHub actions when a release is made.
+
+if (modrinth_publish && (System.getenv("MODRINTH_TOKEN") != null || project.hasProperty('modrinthToken'))) {
+    modrinth {
+        token = System.getenv("MODRINTH_TOKEN") ?: project.findProperty("modrinthToken")
+        projectId = "${modrinth_projectId}"
+        versionNumber = project.version
+        versionType = release_type
+        uploadFile = tasks.jarJar
+        gameVersions = [minecraft_version]
+        loaders = ["forge"]
+
+        // TODO: Generate changelog based on diff since last time.
+//        changelog = ...
+
+        syncBodyFrom = rootProject.file("doc/modpages/modrinth/body.md").text
+
+        dependencies {
+            // Patchouli
+            optional.project "nU0bVIaL"
+
+            // JEI
+            optional.project "u6dRKJwZ"
+        }
+    }
+}
 
 publishing {
     publications {
