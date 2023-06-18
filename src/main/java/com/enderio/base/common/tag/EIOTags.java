@@ -30,6 +30,7 @@ public class EIOTags {
         private static void init() {}
     
         public static final TagKey<Item> WRENCH = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "tools/wrench"));
+        public static final TagKey<Item> GLIDER = ItemTags.create(EnderIO.loc("tools/glider"));
 
         public static final TagKey<Item> DUSTS_LAPIS = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "dusts/lapis"));
         public static final TagKey<Item> DUSTS_COAL = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "dusts/coal"));
@@ -43,6 +44,8 @@ public class EIOTags {
         public static final TagKey<Item> DUSTS_COBALT = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "dusts/cobalt"));
         public static final TagKey<Item> DUSTS_QUARTZ = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "dusts/quartz"));
         public static final TagKey<Item> DUSTS_SULFUR = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "dusts/sulfur"));
+
+        public static final TagKey<Item> INSULATION_METAL = ItemTags.create(EnderIO.loc("insulation_metals"));
         
         public static final TagKey<Item> SILICON = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "silicon"));
         public static final TagKey<Item> GEARS = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "gears"));
@@ -92,6 +95,6 @@ public class EIOTags {
 
         public static final TagKey<Fluid> COLD_FIRE_IGNITER_FUEL = FluidTags.create(EnderIO.loc("fluid_fuel/cold_fire_igniter"));
         public static final TagKey<Fluid> STAFF_OF_LEVITY_FUEL = FluidTags.create(EnderIO.loc("fluid_fuel/staff_of_levity"));
-
+        public static final TagKey<Fluid> EXPERIENCE = FluidTags.create(new ResourceLocation("forge", "experience"));
     }
 }

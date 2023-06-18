@@ -11,6 +11,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
@@ -110,7 +111,7 @@ public class FireCraftingHandler {
                 itemEntity.setDefaultPickUpDelay();
 
                 // Make it survive the fire for a bit
-                itemEntity.hurt(DamageSource.IN_FIRE, -100); // TODO: Do we just make it fireproof like netherite is?
+                itemEntity.hurt(itemEntity.damageSources().inFire(),  -100); // TODO: Do we just make it fireproof like netherite is?
 
                 // Actually set it on fire
                 itemEntity.setRemainingFireTicks(10);

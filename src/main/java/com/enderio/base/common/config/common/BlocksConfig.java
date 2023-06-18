@@ -4,9 +4,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 public class BlocksConfig {
     public final ForgeConfigSpec.ConfigValue<Float> BROKEN_SPAWNER_DROP_CHANCE;
-
     public final ForgeConfigSpec.ConfigValue<Float> EXPLOSION_RESISTANCE;
-
     public final ForgeConfigSpec.ConfigValue<Float> DARK_STEEL_LADDER_BOOST;
 
     public BlocksConfig(ForgeConfigSpec.Builder builder) {
@@ -19,7 +17,6 @@ public class BlocksConfig {
         EXPLOSION_RESISTANCE = builder.comment("The explosion resistance of explosion resistant blocks.").define("explosionResistance", 1200.0f);
 
         DARK_STEEL_LADDER_BOOST = builder.comment("The speed boost granted by the Dark Steel ladder.").define("darkSteelLadderBoost", 0.15f);
-
         builder.pop();
     }
 }

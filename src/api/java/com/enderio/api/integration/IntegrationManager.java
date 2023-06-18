@@ -1,6 +1,5 @@
 package com.enderio.api.integration;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -39,5 +38,25 @@ public class IntegrationManager {
 
     public static <T> Optional<T> findFirst(Function<Integration, Optional<T>> mapper) {
         return ALL_INTEGRATIONS.stream().map(mapper).filter(Optional::isPresent).findFirst().flatMap(opt -> opt);
+    }
+
+    public static <T> Optional<T> getFirst(Function<Integration, Optional<T>> mapper) {
+        return ALL_INTEGRATIONS.stream().map(mapper).flatMap(Optional::stream).findFirst();
+    }
+
+    public static void executeIf(Predicate<Integration> condition, Consumer<Integration> consumer) {
+        for (Integration integration : ALL_INTEGRATIONS) {
+            if (condition.test(integration))
+                consumer.accept(integration);
+        }
+    }
+    
+    public static <T> List<T> getIf(Predicate<Integration> condition, Function<Integration, T> mapper) {
+        List<T> list = new ArrayList<>();
+        for (Integration integration : ALL_INTEGRATIONS) {
+            if (condition.test(integration))
+                list.add(mapper.apply(integration));
+        }
+        return list;
     }
 }

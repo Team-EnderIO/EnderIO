@@ -4,10 +4,12 @@ import com.enderio.EnderIO;
 import com.enderio.api.grindingball.IGrindingBallData;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.core.common.util.TagUtil;
+import com.enderio.machines.common.blockentity.SagMillBlockEntity;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Either;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -51,7 +53,11 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
 
     @Override
     public int getEnergyCost(Container container) {
-        return (int) (energy * container.getGrindingBall().getPowerUse());
+        return getEnergyCost(container.getGrindingBall());
+    }
+
+    public int getEnergyCost(IGrindingBallData grindingBallData) {
+        return (int) (energy * grindingBallData.getPowerUse());
     }
 
     public BonusType getBonusType() {
@@ -59,7 +65,7 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
     }
 
     @Override
-    public List<OutputStack> craft(Container container) {
+    public List<OutputStack> craft(Container container, RegistryAccess registryAccess) {
         List<OutputStack> outputs = new ArrayList<>();
 
         // Iterate over the number of outputs
@@ -103,7 +109,7 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
     }
 
     @Override
-    public List<OutputStack> getResultStacks() {
+    public List<OutputStack> getResultStacks(RegistryAccess registryAccess) {
         // TODO: This logic seems dumb.
         // Gather guaranteed outputs (that are loaded)
         List<OutputStack> guaranteedOutputs = new ArrayList<>();
@@ -115,9 +121,13 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
         return guaranteedOutputs;
     }
 
+    public List<OutputItem> getOutputs() {
+        return outputs;
+    }
+
     @Override
     public boolean matches(Container container, Level level) {
-        return input.test(container.getItem(0));
+        return input.test(SagMillBlockEntity.INPUT.getItemStack(container));
     }
 
     @Override
@@ -191,6 +201,13 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
             return item.left().or(() -> TagUtil.getOptionalItem(item.right().get())).orElse(null);
         }
 
+        public ItemStack getItemStack() {
+            Item item = getItem();
+            if (item != null)
+                return new ItemStack(item, count);
+            return ItemStack.EMPTY;
+        }
+
         @Nullable
         public TagKey<Item> getTag() {
             if (!isTag())
@@ -246,7 +263,7 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
             // Get the bonus type.
             BonusType bonusType = BonusType.MULTIPLY_OUTPUT;
             if (serializedRecipe.has("bonus")) {
-                BonusType.valueOf(serializedRecipe.get("bonus").getAsString().toUpperCase());
+                bonusType = BonusType.valueOf(serializedRecipe.get("bonus").getAsString().toUpperCase());
             }
 
             // Load outputs
@@ -278,7 +295,7 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
                     ResourceLocation id = new ResourceLocation(obj.get("item").getAsString());
                     Item item = ForgeRegistries.ITEMS.getValue(id);
 
-                    // TODO: move these tests into OutputItem instead..
+                    // Check that the required item exists.
                     if (item == null && !optional) {
                         EnderIO.LOGGER.error("Sag milling recipe {} is missing a required output item {}", recipeId, id);
                         throw new RuntimeException("Sag milling recipe is missing a required output item.");
@@ -324,7 +341,7 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
                     } else {
                         Item item = ForgeRegistries.ITEMS.getValue(id);
 
-                        // TODO: move these tests into OutputItem instead..
+                        // Check the required items are present.
                         if (item == null && !optional) {
                             EnderIO.LOGGER.error("Sag milling recipe {} is missing a required output item {}", recipeId, id);
                             throw new RuntimeException("Sag milling recipe is missing a required output item.");

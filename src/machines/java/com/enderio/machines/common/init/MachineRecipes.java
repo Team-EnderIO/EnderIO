@@ -2,10 +2,7 @@ package com.enderio.machines.common.init;
 
 import com.enderio.EnderIO;
 import com.enderio.core.common.recipes.RecipeTypeSerializerPair;
-import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
-import com.enderio.machines.common.recipe.EnchanterRecipe;
-import com.enderio.machines.common.recipe.SagMillingRecipe;
-import com.enderio.machines.common.recipe.SlicingRecipe;
+import com.enderio.machines.common.recipe.*;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -26,6 +23,9 @@ public class MachineRecipes {
     public static final RecipeTypeSerializerPair<AlloySmeltingRecipe, AlloySmeltingRecipe.Serializer> ALLOY_SMELTING = register("alloy_smelting", AlloySmeltingRecipe.Serializer::new);
     public static final RecipeTypeSerializerPair<SagMillingRecipe, SagMillingRecipe.Serializer> SAGMILLING = register("sagmilling", SagMillingRecipe.Serializer::new);
     public static final RecipeTypeSerializerPair<SlicingRecipe, SlicingRecipe.Serializer> SLICING = register("slicing", SlicingRecipe.Serializer::new);
+
+    public static final RecipeTypeSerializerPair<SoulBindingRecipe, SoulBindingRecipe.Serializer> SOUL_BINDING = register("soul_binding", SoulBindingRecipe.Serializer::new);
+
 
 
     private static <I extends Recipe<?>> RegistryObject<RecipeType<I>> registerType(String name) {

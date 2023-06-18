@@ -2,7 +2,7 @@
   "type": "enderio:sagmilling",
   "energy": 2400,
   "input": {
-    "item": "minecraft:nether_quartz_ore"
+    "tag": "forge:ores/quartz"
   },
   "outputs": [
     {

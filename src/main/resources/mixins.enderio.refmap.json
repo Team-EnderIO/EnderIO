@@ -1,0 +1,11 @@
+{
+  "mappings": {
+    "com/enderio/base/mixin/GliderRotationMixin": {
+      "setupRotations": "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;m_7523_(Lnet/minecraft/world/entity/LivingEntity;Lcom/mojang/blaze3d/vertex/PoseStack;FFF)V",
+      "Lcom/mojang/blaze3d/vertex/PoseStack;mulPose(Lcom/mojang/math/Quaternion;)V": "Lcom/mojang/blaze3d/vertex/PoseStack;m_85845_(Lcom/mojang/math/Quaternion;)V"
+    },
+    "com/enderio/base/mixin/LivingEntityMixin": {
+      "getEquipmentSlotForItem": "Lnet/minecraft/world/entity/LivingEntity;m_147233_(Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/world/entity/EquipmentSlot"
+    }
+  }
+}

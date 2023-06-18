@@ -11,6 +11,7 @@ import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -28,12 +29,12 @@ import java.util.function.Consumer;
 
 public class AlloyRecipeProvider extends EnderRecipeProvider {
 
-    public AlloyRecipeProvider(DataGenerator dataGenerator) {
-        super(dataGenerator);
+    public AlloyRecipeProvider(PackOutput packOutput) {
+        super(packOutput);
     }
 
     @Override
-    protected void buildCraftingRecipes(Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
+    protected void buildRecipes(Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
         // TODO: Review all recipes and alloy compositions
         // TODO: Experience values need set properly, i just used a filler value off the top of my head
 
@@ -121,7 +122,6 @@ public class AlloyRecipeProvider extends EnderRecipeProvider {
 
         build(new ItemStack(Items.ENDER_PEARL), List.of(CountedIngredient.of(9, EIOTags.Items.DUSTS_ENDER)), 2000, 0.3f, pFinishedRecipeConsumer);
 
-        // TODO: Infinity reagent
 //        build(new ItemStack(), List.of(EnderIngredient.of(EIOItems.GRAINS_OF_INFINITY.get()), EnderIngredient.of(EIOTags.Items.DUSTS_COAL)), 5000, 0.3f, pFinishedRecipeConsumer);
 
         build(new ItemStack(Items.DEAD_BUSH), List.of(CountedIngredient.of(ItemTags.SAPLINGS)), 2000, 0.3f, pFinishedRecipeConsumer);
@@ -129,6 +129,8 @@ public class AlloyRecipeProvider extends EnderRecipeProvider {
         build(new ItemStack(EIOItems.DARK_STEEL_UPGRADE_BLANK.get()), List.of(CountedIngredient.of(EIOBlocks.DARK_STEEL_BARS.get()), CountedIngredient.of(Items.CLAY_BALL), CountedIngredient.of(4, Tags.Items.STRING)), 30000, 0.3f, pFinishedRecipeConsumer);
 
         build(new ItemStack(EIOItems.CLAYED_GLOWSTONE.get(), 2), List.of(CountedIngredient.of(Tags.Items.DUSTS_GLOWSTONE), CountedIngredient.of(Items.CLAY_BALL)), 5000, 0.3f, pFinishedRecipeConsumer);
+
+        build(new ItemStack(EIOBlocks.INDUSTRIAL_INSULATION.get()), List.of(CountedIngredient.of(EIOTags.Items.DUSTS_LAPIS), CountedIngredient.of(ItemTags.WOOL), CountedIngredient.of(EIOTags.Items.INSULATION_METAL)), 5000, 0.5f, pFinishedRecipeConsumer);
 
         // endregion
     }

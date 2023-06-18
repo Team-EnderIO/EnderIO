@@ -7,6 +7,7 @@ import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -22,12 +23,13 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 public class SlicingRecipeProvider extends EnderRecipeProvider {
-    public SlicingRecipeProvider(DataGenerator generator) {
-        super(generator);
+
+    public SlicingRecipeProvider(PackOutput packOutput) {
+        super(packOutput);
     }
 
     @Override
-    protected void buildCraftingRecipes(Consumer<FinishedRecipe> finishedRecipeConsumer) {
+    protected void buildRecipes(Consumer<FinishedRecipe> finishedRecipeConsumer) {
         // TODO: Tormented enderman head
 
         build(EIOItems.ZOMBIE_ELECTRODE.get(), List.of(

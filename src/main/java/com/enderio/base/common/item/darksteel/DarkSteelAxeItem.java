@@ -6,9 +6,11 @@ import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.ForkUpgrade;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.core.common.item.ITabVariants;
 import com.enderio.core.common.util.BlockUtil;
 import com.enderio.core.common.util.EnergyUtil;
 import com.enderio.core.common.util.TooltipUtil;
+import com.tterrag.registrate.util.CreativeModeTabModifier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
@@ -30,7 +32,7 @@ import net.minecraftforge.common.ToolActions;
 
 import java.util.*;
 
-public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem {
+public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem, ITabVariants {
 
     public DarkSteelAxeItem(Properties pProperties) {
         super(EIOItems.DARK_STEEL_TIER, 5, -3, pProperties);
@@ -167,10 +169,9 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem {
     }
 
     @Override
-    public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {
-        if (allowedIn(pCategory)) {
-            addCreativeItems(pItems, this);
-        }
+    public void addAllVariants(CreativeModeTabModifier modifier) {
+        modifier.accept(this);
+        modifier.accept(createFullyUpgradedStack(this));
     }
 
     // endregion

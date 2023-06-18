@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 100,
+  "experience": 0.0,
+  "ingredient": {
+    "item": "enderio:conduit_binder_composite"
+  },
+  "result": {
+    "count": 2,
+    "item": "enderio:conduit_binder"
+  }
+}

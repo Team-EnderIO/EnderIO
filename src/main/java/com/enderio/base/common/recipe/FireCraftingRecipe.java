@@ -3,10 +3,12 @@ package com.enderio.base.common.recipe;
 import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIORecipes;
 import com.enderio.core.common.recipes.EnderRecipe;
+import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.ResourceLocationException;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -66,18 +68,22 @@ public class FireCraftingRecipe implements EnderRecipe<Container> {
         return dimensions.contains(dimension.location());
     }
 
+    public List<ResourceLocation> getValidDimensions() {
+        return ImmutableList.copyOf(dimensions);
+    }
+
     @Override
     public boolean matches(Container container, Level level) {
         return false;
     }
 
     @Override
-    public ItemStack assemble(Container container) {
+    public ItemStack assemble(Container container, RegistryAccess registryAccess) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(RegistryAccess registryAccess) {
         return ItemStack.EMPTY;
     }
 

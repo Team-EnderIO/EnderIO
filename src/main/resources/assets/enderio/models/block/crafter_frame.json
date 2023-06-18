@@ -1,0 +1,8 @@
+{
+  "credit": "Made by luiq54",
+  "parent": "enderio:block/machine_frame",
+  "textures": {
+    "side": "enderio:block/crafter_side",
+    "top": "enderio:block/crafter_top"
+  }
+}

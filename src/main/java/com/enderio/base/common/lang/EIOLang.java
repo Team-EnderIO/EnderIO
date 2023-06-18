@@ -114,7 +114,11 @@ public class EIOLang {
     public static final MutableComponent CAPACITOR_TOOLTIP_ENERGY_CAPACITY = REGISTRATE.addLang("tooltip", CapacitorModifier.ENERGY_CAPACITY.id, "Energy Capacity Modifier: %s");
     public static final MutableComponent CAPACITOR_TOOLTIP_ENERGY_USE = REGISTRATE.addLang("tooltip", CapacitorModifier.ENERGY_USE.id, "Energy Use Modifier: %s");
     public static final MutableComponent CAPACITOR_TOOLTIP_ENERGY_TRANSFER = REGISTRATE.addLang("tooltip", CapacitorModifier.ENERGY_TRANSFER.id, "Energy Transfer Modifier: %s");
-    
+
+    public static final Component GLIDER_DISABLED = REGISTRATE.addLang("message", EnderIO.loc("glider.disable"), "Gliding is disabled: ");
+    public static final Component GLIDER_DISABLED_FALL_FLYING = REGISTRATE.addLang("message", EnderIO.loc("glider.disable.fall_flying"), "Elytra Flight");
+
+
     // endregion
 
     // region Enchantments
@@ -140,9 +144,47 @@ public class EIOLang {
 
     // endregion
 
+    //region Filters
+
+    public static final Component FILTER = REGISTRATE.addLang("gui", EnderIO.loc("filter"), "Filter");
+
+    // endregion
+
     // region Graves
 
     public static final Component GRAVE_WRONG_OWNER = REGISTRATE.addLang("message", EnderIO.loc("grave.wrong_owner"), "This grave is not yours! You cannot open it.");
+
+    // endregion
+
+    // region Grinding balls
+
+    public static final MutableComponent GRINDINGBALL_MAIN_OUTPUT = REGISTRATE.addLang("tooltip", EnderIO.loc("grinding_ball_main_output"), "Main Output %s%%");
+    public static final MutableComponent GRINDINGBALL_BONUS_OUTPUT = REGISTRATE.addLang("tooltip", EnderIO.loc("grinding_ball_bonus_output"), "Bonus Output %s%%");
+    public static final MutableComponent GRINDINGBALL_POWER_USE = REGISTRATE.addLang("tooltip", EnderIO.loc("grinding_ball_power_use"), "Power Use %s%%");
+
+    // endregion
+
+    // region GUI
+
+    public static final Component RANGE = REGISTRATE.addLang("gui", EnderIO.loc("range"), "Range");
+    public static final Component SHOW_RANGE = REGISTRATE.addLang("gui", EnderIO.loc("range.show"), "Show Range");
+    public static final Component HIDE_RANGE = REGISTRATE.addLang("gui", EnderIO.loc("range.hide"), "Hide Range");
+
+    public static final Component IOCONFIG = REGISTRATE.addLang("gui", EnderIO.loc("ioconfig"), "IO Configuration");
+    public static final Component TOGGLE_NEIGHBOUR = REGISTRATE.addLang("gui", EnderIO.loc("ioconfig.neighbour"), "Show/Hide Neighbours");
+
+    public static final Component PUSH = REGISTRATE.addLang("gui", EnderIO.loc("ioconfig.push"), "Push");
+    public static final Component PULL = REGISTRATE.addLang("gui", EnderIO.loc("ioconfig.pull"), "Pull");
+    public static final Component BOTH = REGISTRATE.addLang("gui", EnderIO.loc("ioconfig.both"), "Push / Pull");
+    public static final Component DISABLED = REGISTRATE.addLang("gui", EnderIO.loc("ioconfig.disabled"), "Disabled");
+    public static final Component NONE = REGISTRATE.addLang("gui", EnderIO.loc("ioconfig.none"), "None");
+
+    // endregion
+
+    // region Glider
+
+    public static final Component USE_GLIDER_ADVANCEMENT_TITLE = REGISTRATE.addLang("advancements", EnderIO.loc("use_glider.title"), "Majestic");
+    public static final Component USE_GLIDER_ADVANCEMENT_DESCRIPTION = REGISTRATE.addLang("advancements", EnderIO.loc("use_glider.description"), "Do you really trust some leather?");
 
     // endregion
 
@@ -158,6 +200,14 @@ public class EIOLang {
     public static final Component GUIDEBOOK_LANDING_TEXT = REGISTRATE.addLang("guidebook", EnderIO.loc("landing_text"), "Landing Text");
 
     //endregion
+
+    // region JEI
+
+    public static final Component JEI_FIRE_CRAFTING_TITLE = REGISTRATE.addLang("jei", EnderIO.loc("fire_crafting"), "title", "Fire Crafting");
+    public static final Component JEI_FIRE_CRAFTING_VALID_BLOCKS = REGISTRATE.addLang("jei", EnderIO.loc("fire_crafting"), "valid_blocks", "Valid Blocks:");
+    public static final Component JEI_FIRE_CRAFTING_VALID_DIMENSIONS = REGISTRATE.addLang("jei", EnderIO.loc("fire_crafting"), "valid_dimensions", "Valid Dimensions:");
+
+    // endregion
 
     public static void register() {
         ApiLang.REDSTONE_ACTIVE_WITH_SIGNAL = REDSTONE_ACTIVE_WITH_SIGNAL;

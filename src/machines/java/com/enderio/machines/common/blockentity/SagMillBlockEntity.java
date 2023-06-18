@@ -12,6 +12,8 @@ import com.enderio.machines.common.blockentity.task.PoweredCraftingTask;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import com.enderio.machines.common.io.item.MultiSlotAccess;
+import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.SagMillMenu;
 import com.enderio.machines.common.recipe.SagMillingRecipe;
 import net.minecraft.core.BlockPos;
@@ -39,6 +41,10 @@ public class SagMillBlockEntity extends PoweredCraftingMachine<SagMillingRecipe,
 
     private final SagMillingRecipe.Container container;
 
+    public static final SingleSlotAccess INPUT = new SingleSlotAccess();
+    public static final SingleSlotAccess GRINDING_BALL = new SingleSlotAccess();
+    public static final MultiSlotAccess OUTPUT = new MultiSlotAccess();
+
 
     public SagMillBlockEntity(BlockEntityType<?> type, BlockPos worldPosition,
         BlockState blockState) {
@@ -49,7 +55,6 @@ public class SagMillBlockEntity extends PoweredCraftingMachine<SagMillingRecipe,
         addDataSlot(new ResourceLocationDataSlot(() -> grindingBallData.getId(), gId -> grindingBallData = GrindingBallManager.getData(gId), SyncMode.GUI));
     }
 
-    @Nullable
     public IGrindingBallData getGrindingBallData() {
         return grindingBallData;
     }
@@ -79,27 +84,30 @@ public class SagMillBlockEntity extends PoweredCraftingMachine<SagMillingRecipe,
     public MachineInventoryLayout getInventoryLayout() {
         return MachineInventoryLayout.builder()
             .inputSlot()
+            .slotAccess(INPUT)
             .outputSlot(4)
+            .slotAccess(OUTPUT)
             .inputSlot((slot, stack) -> GrindingBallManager.isGrindingBall(stack))
+            .slotAccess(GRINDING_BALL)
             .capacitor()
             .build();
     }
 
     @Override
     protected PoweredCraftingTask<SagMillingRecipe, SagMillingRecipe.Container> createTask(@Nullable SagMillingRecipe recipe) {
-        return new PoweredCraftingTask<>(this, container, 1, 4, recipe) {
+        return new PoweredCraftingTask<>(this, container, OUTPUT, recipe) {
             @Override
             protected void takeInputs(SagMillingRecipe recipe) {
                 MachineInventory inv = getInventory();
-                inv.getStackInSlot(0).shrink(1);
+                INPUT.getItemStack(inv).shrink(1);
 
                 // Claim any available grinding balls.
                 if (grindingBallData == IGrindingBallData.IDENTITY) {
-                    ItemStack ball = inv.getStackInSlot(5);
+                    ItemStack ball = GRINDING_BALL.getItemStack(inv);
                     if (!ball.isEmpty()) {
                         IGrindingBallData data = GrindingBallManager.getData(ball);
-                        if (data != null) {
-                            setGrindingBallData(data);
+                        setGrindingBallData(data);
+                        if (data != IGrindingBallData.IDENTITY) {
                             ball.shrink(1);
                         }
                     }

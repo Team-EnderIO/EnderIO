@@ -83,9 +83,6 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
     @Override
     public void removed() {
         super.removed();
-        if (!editBoxList.isEmpty()) {
-            Minecraft.getInstance().keyboardHandler.setSendRepeatsToGui(false);
-        }
     }
 
     @Override
@@ -96,6 +93,13 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
             }
         }
         return super.mouseClicked(pMouseX, pMouseY, pButton);
+    }
+
+    @Override
+    public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
+        if (getFocused() instanceof AbstractWidget abstractWidget && abstractWidget.isActive()) {
+            return abstractWidget.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
+        } return super.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
     }
 
     @Override
@@ -113,7 +117,7 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
         }
     }
 
-    protected abstract ResourceLocation getBackgroundImage();
+    public abstract ResourceLocation getBackgroundImage();
 
     protected abstract Vector2i getBackgroundImageSize();
 
@@ -121,7 +125,6 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
     protected <U extends GuiEventListener & NarratableEntry> U addWidget(U guiEventListener) {
         if (guiEventListener instanceof EditBox editBox) {
             editBoxList.add(editBox);
-            Minecraft.getInstance().keyboardHandler.setSendRepeatsToGui(true);
         }
         return super.addWidget(guiEventListener);
     }

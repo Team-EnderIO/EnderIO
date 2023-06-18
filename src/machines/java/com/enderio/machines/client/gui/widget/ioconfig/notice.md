@@ -1,0 +1,1 @@
+Some parts of IOConfigWidget were taken from [Patchouli](https://github.com/VazkiiMods/Patchouli) namely the classes `GhostBuffers` and `GhostRenderLayer` and the method definition for `initBuffers()`. License information for them can be found [here](https://github.com/VazkiiMods/Patchouli#license-information)

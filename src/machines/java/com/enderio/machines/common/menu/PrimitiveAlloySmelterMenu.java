@@ -13,11 +13,11 @@ public class PrimitiveAlloySmelterMenu extends MachineMenu<AlloySmelterBlockEnti
     public PrimitiveAlloySmelterMenu(@Nullable AlloySmelterBlockEntity.Primitive blockEntity, Inventory inventory, int pContainerId) {
         super(blockEntity, inventory, MachineMenus.PRIMITIVE_ALLOY_SMELTER.get(), pContainerId);
         if (blockEntity != null) {
-            addSlot(new MachineSlot(blockEntity.getInventory(), 0, 20, 17));
-            addSlot(new MachineSlot(blockEntity.getInventory(), 1, 40, 17));
-            addSlot(new MachineSlot(blockEntity.getInventory(), 2, 60, 17));
-            addSlot(new MachineSlot(blockEntity.getInventory(), 3, 40, 53));
-            addSlot(new MachineSlot(blockEntity.getInventory(), 4, 116, 35));
+            addSlot(new MachineSlot(blockEntity.getInventory(), AlloySmelterBlockEntity.INPUTS.get(0), 20, 17));
+            addSlot(new MachineSlot(blockEntity.getInventory(), AlloySmelterBlockEntity.INPUTS.get(1), 40, 17));
+            addSlot(new MachineSlot(blockEntity.getInventory(), AlloySmelterBlockEntity.INPUTS.get(2), 60, 17));
+            addSlot(new MachineSlot(blockEntity.getInventory(), AlloySmelterBlockEntity.Primitive.FUEL, 40, 53));
+            addSlot(new MachineSlot(blockEntity.getInventory(), AlloySmelterBlockEntity.OUTPUT, 116, 35));
         }
         addInventorySlots(8,84);
     }

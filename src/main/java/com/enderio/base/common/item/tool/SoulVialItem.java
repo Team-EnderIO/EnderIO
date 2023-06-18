@@ -8,7 +8,6 @@ import com.enderio.api.capability.StoredEntityData;
 import com.enderio.base.common.capability.EntityStorage;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOItems;
-import com.enderio.base.common.item.EIOCreativeTabs;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.util.EntityCaptureUtils;
 import com.enderio.core.client.item.IAdvancedTooltipProvider;
@@ -17,7 +16,6 @@ import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -32,7 +30,6 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.horse.AbstractChestedHorse;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -47,8 +44,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
@@ -202,30 +198,16 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
 
     // endregion
 
-    // region Creative tabs
+    // region Utilities
 
-    @Override
-    public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {
-        //TODO: For alpha back to correct
-        if (true) {
-            //super.fillItemCategory(pCategory, pItems);
-            return;
+    public static List<ItemStack> getAllFilled() {
+        List<ItemStack> items = new ArrayList<>();
+        for (ResourceLocation entity : EntityCaptureUtils.getCapturableEntities()) {
+            ItemStack is = EIOItems.FILLED_SOUL_VIAL.get().getDefaultInstance();
+            setEntityType(is, entity);
+            items.add(is);
         }
-        if (pCategory == getItemCategory()) {
-            pItems.add(EIOItems.EMPTY_SOUL_VIAL.get().getDefaultInstance());
-        } else if (pCategory == EIOCreativeTabs.SOULS) {
-            // Register for every mob that can be captured.
-            for (ResourceLocation entity : EntityCaptureUtils.getCapturableEntities()) {
-                ItemStack is = EIOItems.FILLED_SOUL_VIAL.get().getDefaultInstance();
-                setEntityType(is, entity);
-                pItems.add(is);
-            }
-        }
-    }
-
-    @Override
-    public Collection<CreativeModeTab> getCreativeTabs() {
-        return Arrays.asList(getItemCategory(), EIOCreativeTabs.SOULS);
+        return items;
     }
 
     // endregion

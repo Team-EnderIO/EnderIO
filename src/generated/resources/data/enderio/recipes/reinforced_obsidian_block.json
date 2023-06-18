@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "building",
   "key": {
     "B": {
       "item": "enderio:dark_steel_bars"
@@ -18,5 +19,6 @@
   ],
   "result": {
     "item": "enderio:reinforced_obsidian_block"
-  }
+  },
+  "show_notification": true
 }

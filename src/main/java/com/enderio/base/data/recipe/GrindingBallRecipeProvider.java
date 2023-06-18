@@ -6,6 +6,7 @@ import com.enderio.base.common.init.EIORecipes;
 import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.google.gson.JsonObject;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -18,12 +19,12 @@ import java.util.function.Consumer;
 
 public class GrindingBallRecipeProvider extends EnderRecipeProvider {
 
-    public GrindingBallRecipeProvider(DataGenerator pGenerator) {
-        super(pGenerator);
+    public GrindingBallRecipeProvider(PackOutput packOutput) {
+        super(packOutput);
     }
     
     @Override
-    protected void buildCraftingRecipes(Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
+    protected void buildRecipes(Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
         build(Items.FLINT, 1.2F, 1.25F, 0.85F, 24000, pFinishedRecipeConsumer);
         build(EIOItems.DARK_STEEL_BALL.get(), 1.35F, 2.00F, 0.7F, 125000, pFinishedRecipeConsumer);
         build(EIOItems.COPPER_ALLOY_BALL.get(), 1.2F, 1.65F, 0.8F, 40000, pFinishedRecipeConsumer);

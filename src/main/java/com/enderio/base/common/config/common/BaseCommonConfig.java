@@ -6,6 +6,7 @@ public class BaseCommonConfig {
     public final BlocksConfig BLOCKS;
     public final EnchantmentsConfig ENCHANTMENTS;
     public final ItemsConfig ITEMS;
+    public final GraveConfig GRAVE;
     public final DarkSteelConfig DARK_STEEL;
     public final InfinityConfig INFINITY;
 
@@ -15,5 +16,6 @@ public class BaseCommonConfig {
         ITEMS = new ItemsConfig(builder);
         DARK_STEEL = new DarkSteelConfig(builder);
         INFINITY = new InfinityConfig(builder);
+        GRAVE = new GraveConfig(builder);
     }
 }

@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "B": {
       "item": "enderio:end_steel_bars"
@@ -18,5 +19,6 @@
   ],
   "result": {
     "item": "enderio:end_steel_machine_chassis"
-  }
+  },
+  "show_notification": true
 }

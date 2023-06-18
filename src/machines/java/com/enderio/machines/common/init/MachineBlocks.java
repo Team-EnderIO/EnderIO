@@ -1,25 +1,26 @@
 package com.enderio.machines.common.init;
 
 import com.enderio.EnderIO;
-import com.enderio.base.common.item.EIOCreativeTabs;
+import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.core.data.model.EIOModel;
 import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.block.ProgressMachineBlock;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.item.FluidTankItem;
+import com.enderio.machines.common.item.PoweredSpawnerItem;
 import com.enderio.machines.data.loot.MachinesLootTable;
 import com.enderio.machines.data.model.MachineModelUtil;
-import com.mojang.math.Vector3f;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import com.tterrag.registrate.util.entry.BlockEntry;
+import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraftforge.client.model.generators.BlockModelBuilder;
 import net.minecraftforge.client.model.generators.BlockModelBuilder.RootTransformBuilder.TransformOrigin;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.loaders.CompositeModelBuilder;
+import org.joml.Vector3f;
 
 import java.util.function.Supplier;
 
@@ -28,7 +29,7 @@ public class MachineBlocks {
 
     public static final BlockEntry<MachineBlock> FLUID_TANK = REGISTRATE
         .block("fluid_tank", props -> new MachineBlock(props, MachineBlockEntities.FLUID_TANK))
-        .properties(props -> props.strength(2.5f, 8))
+        .properties(props -> props.strength(2.5f, 8).isViewBlocking((pState, pLevel, pPos) -> false).noOcclusion())
         .loot(MachinesLootTable::copyNBT)
         .blockstate((ctx, prov) -> prov.horizontalBlock(ctx.get(), prov.models()
             .getBuilder(ctx.getName())
@@ -39,13 +40,13 @@ public class MachineBlocks {
         ))
         .item(FluidTankItem::new)
         .model((ctx, prov) -> {})
-        //.tab(() -> EIOCreativeTabs.MACHINES)
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.MACHINES))
         .build()
         .register();
 
     public static final BlockEntry<MachineBlock> PRESSURIZED_FLUID_TANK = REGISTRATE
         .block("pressurized_fluid_tank", props -> new MachineBlock(props, MachineBlockEntities.PRESSURIZED_FLUID_TANK))
-        .properties(props -> props.strength(2.5f, 8))
+        .properties(props -> props.strength(2.5f, 8).isViewBlocking((pState, pLevel, pPos) -> false).noOcclusion())
         .loot(MachinesLootTable::copyNBT)
         .blockstate((ctx, prov) -> prov.horizontalBlock(ctx.get(), prov.models()
                 .withExistingParent(ctx.getName(), prov.mcLoc("block/block"))
@@ -60,13 +61,13 @@ public class MachineBlocks {
         ))
         .item(FluidTankItem::new)
         .model((ctx, prov) -> {})
-        //.tab(() -> EIOCreativeTabs.MACHINES)
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.MACHINES))
         .build()
         .register();
 
     public static final BlockEntry<MachineBlock> ENCHANTER = REGISTRATE
         .block("enchanter", props -> new MachineBlock(props, MachineBlockEntities.ENCHANTER))
-        .properties(props -> props.strength(2.5f, 8))
+        .properties(props -> props.strength(2.5f, 8).noOcclusion().isViewBlocking((pState, pLevel, pPos) -> false))
         .loot(MachinesLootTable::copyNBT)
         .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models()
             .withExistingParent(ctx.getName(), prov.mcLoc("block/block"))
@@ -82,7 +83,7 @@ public class MachineBlocks {
             .end()
         ))
         .item()
-        //.tab(() -> EIOCreativeTabs.MACHINES)
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.MACHINES))
         .build()
         .register();
 
@@ -105,7 +106,7 @@ public class MachineBlocks {
     public static final BlockEntry<MachineBlock> CREATIVE_POWER = REGISTRATE
         .block("creative_power", props -> new MachineBlock(props, MachineBlockEntities.CREATIVE_POWER))
         .item()
-        //.tab(() -> EIOCreativeTabs.MACHINES)
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.MACHINES))
         .build()
         .register();
 
@@ -124,14 +125,53 @@ public class MachineBlocks {
         .lang("Impulse Hopper")
         .register();
 
-    private static BlockBuilder<ProgressMachineBlock, Registrate> standardMachine(String name, Supplier<BlockEntityEntry<? extends MachineBlockEntity>> blockEntityEntry) {
+    public static final BlockEntry<ProgressMachineBlock> SOUL_BINDER = soulMachine("soul_binder", () -> MachineBlockEntities.SOUL_BINDER)
+        .lang("Soul Binder")
+        .register();
+
+    public static BlockEntry<ProgressMachineBlock> POWERED_SPAWNER = REGISTRATE
+        .block("powered_spawner", props -> new ProgressMachineBlock(props, MachineBlockEntities.POWERED_SPAWNER))
+        .loot((l,t) -> MachinesLootTable.copyNBTSingleCap(l, t, "EntityStorage"))
+        .blockstate(MachineModelUtil::soulMachineBlock)
+        .item(PoweredSpawnerItem::new)
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.MACHINES))
+        .build()
+        .register();
+
+    public static final BlockEntry<MachineBlock> VACUUM_CHEST = REGISTRATE
+        .block("vacuum_chest", p -> new MachineBlock(p, MachineBlockEntities.VACUUM_CHEST))
+        .properties(props -> props.strength(2.5f, 8).noOcclusion())
+        .loot(MachinesLootTable::copyNBT)
+        .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIO.loc("block/vacuum_chest"))))
+        .item()
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.MACHINES))
+        .build()
+        .register();
+
+    public static final BlockEntry<MachineBlock> XP_VACUUM = REGISTRATE
+        .block("xp_vacuum", p -> new MachineBlock(p, MachineBlockEntities.XP_VACUUM))
+        .properties(props -> props.strength(2.5f, 8).noOcclusion())
+        .loot(MachinesLootTable::copyNBT)
+        .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIO.loc("block/xp_vacuum"))))
+        .item()
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.MACHINES))
+        .build()
+        .register();
+
+    public static final BlockEntry<ProgressMachineBlock> CRAFTER = standardMachine("crafter", () -> MachineBlockEntities.CRAFTER)
+        .lang("Crafter")
+        .blockstate((ctx, prov) -> MachineModelUtil.customMachineBlock(ctx, prov, "crafter"))
+        .register();
+
+    private static BlockBuilder<ProgressMachineBlock, Registrate> standardMachine(String name,
+        Supplier<BlockEntityEntry<? extends MachineBlockEntity>> blockEntityEntry) {
         return REGISTRATE
             .block(name, props -> new ProgressMachineBlock(props, blockEntityEntry.get()))
             .properties(props -> props.strength(2.5f, 8))
             .loot(MachinesLootTable::copyNBT)
             .blockstate(MachineModelUtil::machineBlock)
             .item()
-            //.tab(() -> EIOCreativeTabs.MACHINES)
+            .tab(NonNullSupplier.lazy(EIOCreativeTabs.MACHINES))
             .build();
     }
 
@@ -142,7 +182,7 @@ public class MachineBlocks {
             .loot(MachinesLootTable::copyNBT)
             .blockstate(MachineModelUtil::soulMachineBlock)
             .item()
-            //.tab(() -> EIOCreativeTabs.MACHINES)
+            .tab(NonNullSupplier.lazy(EIOCreativeTabs.MACHINES))
             .build();
     }
 

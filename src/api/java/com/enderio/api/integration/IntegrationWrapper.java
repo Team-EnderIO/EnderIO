@@ -21,7 +21,6 @@ public class IntegrationWrapper<T extends Integration> {
         this.modid = modid;
         value = ModList.get().isLoaded(modid) ? supplier.get() : null;
         ifPresent(integration -> {
-            integration.setModid(modid);
             IntegrationManager.addIntegration(integration);
             integration.addEventListener(FMLJavaModLoadingContext.get().getModEventBus(), MinecraftForge.EVENT_BUS);
         });

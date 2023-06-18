@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "D": {
       "tag": "forge:gems/diamond"
@@ -15,5 +16,6 @@
   ],
   "result": {
     "item": "enderio:pulsating_crystal"
-  }
+  },
+  "show_notification": true
 }

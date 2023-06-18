@@ -1,7 +1,7 @@
 package com.enderio.decoration.common.init;
 
 import com.enderio.EnderIO;
-import com.enderio.base.common.item.EIOCreativeTabs;
+import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.decoration.client.render.PaintedBlockColor;
 import com.enderio.decoration.common.block.light.Light;
 import com.enderio.decoration.common.block.light.LightNode;
@@ -139,7 +139,7 @@ public class DecorBlocks {
     			}))
     		.item()
     		.model((ctx, prov) -> prov.withExistingParent(name, "block/button_inventory"))
-    		//.tab(() -> EIOCreativeTabs.BLOCKS)
+    		.tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
     		.build()
     		.register();
     }

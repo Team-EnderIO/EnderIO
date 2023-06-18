@@ -3,9 +3,11 @@ package com.enderio.machines.common.recipe;
 import com.enderio.EnderIO;
 import com.enderio.core.common.recipes.CountedIngredient;
 import com.enderio.core.common.recipes.OutputStack;
+import com.enderio.machines.common.blockentity.AlloySmelterBlockEntity;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -50,6 +52,13 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
         return experience;
     }
 
+    /**
+     * Helper for JEI
+     */
+    public int getBasicEnergyCost() {
+        return energy;
+    }
+
     @Override
     public int getEnergyCost(Container container) {
         return energy;
@@ -69,7 +78,7 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
 
                 if (j < inputs.size()) {
                     // If we expect an input, test we have a match for it.
-                    if (inputs.get(j).test(container.getItem(i))) {
+                    if (inputs.get(j).test(AlloySmelterBlockEntity.INPUTS.get(i).getItemStack(container))) {
                         matched[j] = true;
                     }
                 } else if (container.getItem(i) == ItemStack.EMPTY) {
@@ -89,12 +98,12 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
     }
 
     @Override
-    public List<OutputStack> craft(Container container) {
+    public List<OutputStack> craft(Container container, RegistryAccess registryAccess) {
          return List.of(OutputStack.of(output.copy()));
     }
 
     @Override
-    public List<OutputStack> getResultStacks() {
+    public List<OutputStack> getResultStacks(RegistryAccess registryAccess) {
         return List.of(OutputStack.of(output.copy()));
     }
 

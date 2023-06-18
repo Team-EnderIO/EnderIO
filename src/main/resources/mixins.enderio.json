@@ -1,12 +1,13 @@
 {
   "required": true,
-  "package": "com.enderio.core.mixin",
+  "package": "com.enderio.base.mixin",
   "compatibilityLevel": "JAVA_17",
   "refmap": "mixins.enderio.refmap.json",
   "mixins": [
+    "LivingEntityMixin"
   ],
   "client": [
-
+    "GliderRotationMixin"
   ],
   "minVersion": "0.8"
 }

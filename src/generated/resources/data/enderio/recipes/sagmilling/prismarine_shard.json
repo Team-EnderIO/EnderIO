@@ -1,5 +1,6 @@
 {
   "type": "enderio:sagmilling",
+  "bonus": "none",
   "energy": 2400,
   "input": {
     "item": "minecraft:prismarine_shard"

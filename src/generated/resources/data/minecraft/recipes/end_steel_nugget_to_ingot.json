@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "N": {
       "item": "enderio:end_steel_nugget"
@@ -12,5 +13,6 @@
   ],
   "result": {
     "item": "enderio:end_steel_ingot"
-  }
+  },
+  "show_notification": true
 }

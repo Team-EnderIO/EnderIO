@@ -1,0 +1,23 @@
+{
+  "parent": "minecraft:block/block",
+  "children": {
+    "frame": {
+      "parent": "enderio:block/soul_machine_frame"
+    },
+    "front": {
+      "parent": "enderio:block/powered_spawner_front"
+    },
+    "overlay": {
+      "parent": "enderio:block/io_overlay"
+    }
+  },
+  "item_render_order": [
+    "frame",
+    "overlay",
+    "front"
+  ],
+  "loader": "forge:composite",
+  "textures": {
+    "particle": "enderio:block/soul_machine_side"
+  }
+}

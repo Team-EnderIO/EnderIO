@@ -3,6 +3,7 @@ package com.enderio.core.data.recipes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.resources.ResourceLocation;
@@ -20,8 +21,8 @@ import java.util.Set;
  * A base recipe provider, does nothing but contain {@link EnderFinishedRecipe}.
  */
 public abstract class EnderRecipeProvider extends RecipeProvider {
-    public EnderRecipeProvider(DataGenerator generator) {
-        super(generator);
+    public EnderRecipeProvider(PackOutput packOutput) {
+        super(packOutput);
     }
 
     /**
@@ -67,6 +68,10 @@ public abstract class EnderRecipeProvider extends RecipeProvider {
                 }
                 json.add("conditions", jsonConditions);
             }
+        }
+
+        public void addCondition(ICondition condition) {
+            conditions.add(condition);
         }
 
         @Nullable
