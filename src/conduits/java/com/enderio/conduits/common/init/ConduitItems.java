@@ -3,11 +3,12 @@ package com.enderio.conduits.common.init;
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitItemFactory;
 import com.enderio.api.conduit.IConduitType;
+import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.base.common.init.EIOItems;
-import com.enderio.base.common.item.EIOCreativeTabs;
 import com.enderio.conduits.common.items.ConduitBlockItem;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.ItemEntry;
+import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.event.CommandEvent;
@@ -47,7 +48,7 @@ public class ConduitItems {
     private static ItemEntry<Item> createConduitItem(Supplier<? extends IConduitType<?>> type, String itemName) {
         return REGISTRATE.item(itemName + "_conduit",
             properties -> ConduitItemFactory.build(type, properties))
-            .tab(() -> EIOCreativeTabs.CONDUITS)
+            .tab(NonNullSupplier.lazy(EIOCreativeTabs.CONDUITS))
             .model((ctx, prov) -> prov.withExistingParent(itemName+"_conduit", EnderIO.loc("item/conduit")).texture("0", type.get().getItemTexture()))
             .register();
     }

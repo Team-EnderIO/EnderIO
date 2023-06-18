@@ -22,8 +22,8 @@ public record PaintingQuadTransformer(BlockState paint, RenderType type) impleme
         TextureAtlasSprite sprite = getSpriteForDirection(quad.getDirection());
         for (int i = 0; i < 4; i++) {
             float[] uv0 = RenderUtil.unpackVertices(quad.getVertices(), i, IQuadTransformer.UV0, 2);
-            uv0[0] = (uv0[0] - quad.getSprite().getU0()) * sprite.getWidth() / quad.getSprite().getWidth() + sprite.getU0();
-            uv0[1] = (uv0[1] - quad.getSprite().getV0()) * sprite.getHeight() / quad.getSprite().getHeight() + sprite.getV0();
+            uv0[0] = (uv0[0] - quad.getSprite().getU0()) * sprite.contents().width() / quad.getSprite().contents().width() + sprite.getU0();
+            uv0[1] = (uv0[1] - quad.getSprite().getV0()) * sprite.contents().height() / quad.getSprite().contents().height() + sprite.getV0();
             int[] packedTextureData = RenderUtil.packUV(uv0[0], uv0[1]);
             quad.getVertices()[4 + i * STRIDE] = packedTextureData[0];
             quad.getVertices()[5 + i * STRIDE] = packedTextureData[1];

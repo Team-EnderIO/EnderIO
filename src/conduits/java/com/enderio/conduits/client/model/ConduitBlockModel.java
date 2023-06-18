@@ -12,9 +12,8 @@ import com.enderio.conduits.common.blockentity.OffsetHelper;
 import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
 import com.enderio.conduits.common.blockentity.connection.IConnectionState;
 import com.enderio.core.data.model.EIOModel;
-import com.mojang.math.Quaternion;
+import com.mojang.math.Axis;
 import com.mojang.math.Transformation;
-import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -34,6 +33,8 @@ import net.minecraftforge.client.model.QuadTransformers;
 import net.minecraftforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import java.util.*;
 
@@ -188,13 +189,13 @@ public class ConduitBlockModel implements IDynamicBakedModel {
     }
 
     public static Transformation rotateTransformation(Direction toDirection) {
-        Quaternion quaternion = Quaternion.ONE.copy();
+        Quaternionf quaternion = new Quaternionf();
         switch (toDirection) {
-            case UP -> quaternion.mul(Vector3f.ZP.rotationDegrees(180));
-            case NORTH -> quaternion.mul(Vector3f.XP.rotationDegrees(90));
-            case SOUTH -> quaternion.mul(Vector3f.XN.rotationDegrees(90));
-            case WEST -> quaternion.mul(Vector3f.ZN.rotationDegrees(90));
-            case EAST -> quaternion.mul(Vector3f.ZP.rotationDegrees(90));
+            case UP -> quaternion.mul(Axis.ZP.rotationDegrees(180));
+            case NORTH -> quaternion.mul(Axis.XP.rotationDegrees(90));
+            case SOUTH -> quaternion.mul(Axis.XN.rotationDegrees(90));
+            case WEST -> quaternion.mul(Axis.ZN.rotationDegrees(90));
+            case EAST -> quaternion.mul(Axis.ZP.rotationDegrees(90));
         }
         Transformation transformation = new Transformation(null, quaternion, null, null);
         return transformation.applyOrigin(new Vector3f(.5f, .5f, .5f));
@@ -207,8 +208,6 @@ public class ConduitBlockModel implements IDynamicBakedModel {
     private static Vector3f scale(Vec3i vector, float scaler) {
         return new Vector3f(vector.getX()*scaler, vector.getY()*scaler, vector.getZ()*scaler);
     }
-
-
 
     @Override
     public boolean useAmbientOcclusion() {

@@ -168,7 +168,7 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
     }
 
     @Override
-    protected ResourceLocation getBackgroundImage() {
+    public ResourceLocation getBackgroundImage() {
         return TEXTURE;
     }
 

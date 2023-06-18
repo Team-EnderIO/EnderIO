@@ -68,17 +68,6 @@ public class ConduitClientSetup {
     }
 
     @SubscribeEvent
-    public static void textureStich(TextureStitchEvent.Pre event) {
-        if (event.getAtlas().location() == InventoryMenu.BLOCK_ATLAS) {
-            for (IConduitType<?> type : ConduitTypes.getRegistry().getValues()) {
-                for (ResourceLocation texture : type.getTextures()) {
-                    event.addSprite(texture);
-                }
-            }
-        }
-    }
-
-    @SubscribeEvent
     public static void blockColors(RegisterColorHandlersEvent.Block block) {
         block.register(new ConduitBlockColor(), ConduitBlocks.CONDUIT.get());
     }

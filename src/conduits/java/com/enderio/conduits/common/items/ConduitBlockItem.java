@@ -28,13 +28,6 @@ public class ConduitBlockItem extends BlockItem {
         this.type = type;
     }
 
-    @Override
-    public void fillItemCategory(CreativeModeTab pGroup, NonNullList<ItemStack> pItems) {
-        if (this.allowedIn(pGroup)) {
-            pItems.add(getDefaultInstance());
-        }
-    }
-
     public String getDescriptionId() {
         return getOrCreateDescriptionId();
     }

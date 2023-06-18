@@ -3,8 +3,8 @@ package com.enderio.machines.common.blockentity.base;
 import com.enderio.api.capability.ISideConfig;
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
+import com.enderio.api.misc.RedstoneControl;
 import com.enderio.base.common.blockentity.IWrenchable;
-import com.enderio.base.common.blockentity.RedstoneControl;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.core.common.sync.EnumDataSlot;
@@ -20,6 +20,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
@@ -468,7 +469,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         if (this.level.getBlockEntity(this.worldPosition) != this)
             return false;
         return pPlayer.distanceToSqr(this.worldPosition.getX() + 0.5D, this.worldPosition.getY() + 0.5D, this.worldPosition.getZ() + 0.5D) <= Mth.square(pPlayer.getAttributeValue(
-            ForgeMod.REACH_DISTANCE.get()));
+            ForgeMod.BLOCK_REACH.get()));
     }
 
     public RedstoneControl getRedstoneControl() {

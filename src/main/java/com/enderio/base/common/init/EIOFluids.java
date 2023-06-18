@@ -8,6 +8,7 @@ import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateItemModelProvider;
 import com.tterrag.registrate.util.entry.FluidEntry;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
@@ -87,7 +88,7 @@ public class EIOFluids {
         var thing = REGISTRATE.fluid(name, EnderIO.loc("block/fluid_" + name + "_still"),
             EnderIO.loc("block/fluid_" + name + "_flowing"));
         if (FMLEnvironment.dist.isClient()) {
-            thing.renderType(() -> RenderType.translucent());
+            thing.renderType(RenderType::translucent);
         }
         return thing.source(ForgeFlowingFluid.Source::new)
             .block()

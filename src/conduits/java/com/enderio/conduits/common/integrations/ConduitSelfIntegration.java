@@ -7,7 +7,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Optional;
 
-public class ConduitSelfIntegration extends Integration {
+public class ConduitSelfIntegration implements Integration {
 
     @Override
     public Optional<BlockState> getFacadeOf(ItemStack stack) {

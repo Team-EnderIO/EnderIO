@@ -71,8 +71,8 @@ public class FluidClientData extends IClientConduitData.Simple<FluidExtendedData
                 .apply(clientExtension.getStillTexture());
             for (int i = 0; i < 4; i++) {
                 float[] uv0 = RenderUtil.unpackVertices(quad.getVertices(), i, IQuadTransformer.UV0, 2);
-                uv0[0] = (uv0[0] - quad.getSprite().getU0()) * sprite.getWidth() / quad.getSprite().getWidth() + sprite.getU0();
-                uv0[1] = (uv0[1] - quad.getSprite().getV0()) * sprite.getHeight() / quad.getSprite().getHeight() + sprite.getV0();
+                uv0[0] = (uv0[0] - quad.getSprite().getU0()) * sprite.contents().width() / quad.getSprite().contents().height() + sprite.getU0();
+                uv0[1] = (uv0[1] - quad.getSprite().getV0()) * sprite.contents().width() / quad.getSprite().contents().height() + sprite.getV0();
                 int[] packedTextureData = RenderUtil.packUV(uv0[0], uv0[1]);
                 quad.getVertices()[4 + i * STRIDE] = packedTextureData[0];
                 quad.getVertices()[5 + i * STRIDE] = packedTextureData[1];
@@ -93,20 +93,20 @@ public class FluidClientData extends IClientConduitData.Simple<FluidExtendedData
         }
 
         @Override
-        public void updateNarration(NarrationElementOutput pNarrationElementOutput) {
+        public void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
         }
 
         @Override
-        public void renderButton(PoseStack poseStack, int pMouseX, int pMouseY, float pPartialTick) {
-
-            renderToolTip(poseStack, pMouseX, pMouseY);
+        public void renderWidget(PoseStack poseStack, int pMouseX, int pMouseY, float pPartialTick) {
+            // TODO: CONDUITS 1.19.4 TOOLTIPS
+            //renderToolTip(poseStack, pMouseX, pMouseY);
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, WIDGET_TEXTURE);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
             RenderSystem.enableDepthTest();
-            blit(poseStack, x, y, 0, 0, this.width, this.height);
+            blit(poseStack, getX(), getY(), 0, 0, this.width, this.height);
             if (currentFluid.get() == null)
                 return;
             IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(currentFluid.get());
@@ -125,16 +125,17 @@ public class FluidClientData extends IClientConduitData.Simple<FluidExtendedData
                 RenderSystem.enableBlend();
 
 
-                int atlasWidth = (int)(sprite.getWidth() / (sprite.getU1() - sprite.getU0()));
-                int atlasHeight = (int)(sprite.getHeight() / (sprite.getV1() - sprite.getV0()));
+                int atlasWidth = (int)(sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
+                int atlasHeight = (int)(sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
 
-                blit(poseStack, x + 1, y + 1, getBlitOffset(), sprite.getU0()*atlasWidth, sprite.getV0()*atlasHeight, 12, 12, atlasWidth, atlasHeight);
+                blit(poseStack, getX() + 1, getY() + 1, 0, sprite.getU0()*atlasWidth, sprite.getV0()*atlasHeight, 12, 12, atlasWidth, atlasHeight);
 
                 RenderSystem.setShaderColor(1, 1, 1, 1);
             }
         }
 
-        @Override
+        // TODO: 1.19.4 CONDUITS: New tooltip system
+        /*@Override
         public void renderToolTip(PoseStack poseStack, int mouseX, int mouseY) {
             if (isHovered && isActive()) {
                 List<Component> components = new ArrayList<>();
@@ -145,7 +146,8 @@ public class FluidClientData extends IClientConduitData.Simple<FluidExtendedData
                 }
                 addedOn.renderTooltip(poseStack, components, Optional.empty(), mouseX, mouseY);
             }
-        }
+        }*/
+
         @Override
         public void onClick(double pMouseX, double pMouseY) {
             onPress.run();

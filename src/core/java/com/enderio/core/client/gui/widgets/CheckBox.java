@@ -32,7 +32,7 @@ public class CheckBox extends AbstractButton {
     }
 
     @Override
-    public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
+    public void renderWidget(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, texture);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
@@ -46,17 +46,16 @@ public class CheckBox extends AbstractButton {
         if (isMouseOver(pMouseX, pMouseY)) {
             textureX += 28;
         }
-        blit(pPoseStack, x, y, textureX, 0, this.width, this.height);
+        blit(pPoseStack, getX(), getY(), textureX, 0, this.width, this.height);
         if (getter.get()) {
-            blit(pPoseStack, x, y, this.width, this.height, 0, 14, width*2, height*2, 256, 256);
+            blit(pPoseStack, getX(), getY(), this.width, this.height, 0, 14, width*2, height*2, 256, 256);
         } else {
-            blit(pPoseStack, x, y, this.width, this.height, 28, 14, width*2, height*2,256, 256);
+            blit(pPoseStack, getX(), getY(), this.width, this.height, 28, 14, width*2, height*2,256, 256);
         }
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput pNarrationElementOutput) {
-    }
+    public void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {}
 
     @Override
     public void onPress() {

@@ -24,15 +24,9 @@ public class ConduitGeometry implements IUnbakedGeometry<ConduitGeometry> {
     }
 
     @Override
-    public BakedModel bake(IGeometryBakingContext context, ModelBakery bakery, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelTransform,
+    public BakedModel bake(IGeometryBakingContext context, ModelBaker baker, Function<Material, TextureAtlasSprite> spriteGetter, ModelState modelState,
         ItemOverrides overrides, ResourceLocation modelLocation) {
         return new ConduitBlockModel();
-    }
-
-    @Override
-    public Collection<Material> getMaterials(IGeometryBakingContext context, Function<ResourceLocation, UnbakedModel> modelGetter,
-        Set<Pair<String, String>> missingTextureErrors) {
-        return Collections.singletonList(new Material(TextureAtlas.LOCATION_BLOCKS, new ResourceLocation("minecraft", "missingno")));
     }
 
     public static class Loader implements IGeometryLoader<ConduitGeometry> {

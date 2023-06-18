@@ -35,7 +35,7 @@ public class ConduitSelectionButton extends AbstractButton {
     }
 
     @Override
-    public void renderButton(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
+    public void renderWidget(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, ConduitScreen.TEXTURE);
@@ -43,15 +43,15 @@ public class ConduitSelectionButton extends AbstractButton {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
-        blit(pPoseStack, x, y, 227, 0, this.width, this.height);
+        blit(pPoseStack, getX(), getY(), 227, 0, this.width, this.height);
         if (getter.get() == type) {
-            blit(pPoseStack, x-3, y, 224, 0, 3, this.height);
+            blit(pPoseStack, getX() - 3, getY(), 224, 0, 3, this.height);
         }
-        IEnderScreen.renderIcon(pPoseStack, new Vector2i(x, y).add(3, 6), type.getClientData());
+        IEnderScreen.renderIcon(pPoseStack, new Vector2i(getX(), getY()).add(3, 6), type.getClientData());
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput pNarrationElementOutput) {
+    protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
     }
 
     public IConduitType getType() {

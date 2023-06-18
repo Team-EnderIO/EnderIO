@@ -18,8 +18,8 @@ public record ConduitTextureEmissiveQuadTransformer(TextureAtlasSprite newSprite
             QuadTransformers.settingEmissivity(lightLevel).processInPlace(quad);
         for (int i = 0; i < 4; i++) {
             float[] uv0 = RenderUtil.unpackVertices(quad.getVertices(), i, IQuadTransformer.UV0, 2);
-            uv0[0] = (uv0[0] - quad.getSprite().getU0()) * newSprite.getWidth() / quad.getSprite().getWidth() + newSprite.getU0();
-            uv0[1] = (uv0[1] - quad.getSprite().getV0()) * newSprite.getHeight() / quad.getSprite().getHeight() + newSprite.getV0();
+            uv0[0] = (uv0[0] - quad.getSprite().getU0()) * newSprite.contents().width() / quad.getSprite().contents().width() + newSprite.getU0();
+            uv0[1] = (uv0[1] - quad.getSprite().getV0()) * newSprite.contents().height() / quad.getSprite().contents().height() + newSprite.getV0();
             int[] packedTextureData = RenderUtil.packUV(uv0[0], uv0[1]);
             quad.getVertices()[4 + i * 8] = packedTextureData[0];
             quad.getVertices()[5 + i * 8] = packedTextureData[1];

@@ -7,9 +7,9 @@ import com.enderio.api.conduit.ConduitItemFactory;
 import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.integration.Integration;
-import com.enderio.base.common.item.EIOCreativeTabs;
-import com.enderio.conduits.common.integrations.ae2.AE2ConduitType;
+import com.enderio.base.common.init.EIOCreativeTabs;
 import com.tterrag.registrate.util.entry.ItemEntry;
+import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
@@ -21,7 +21,7 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public class AE2Integration extends Integration {
+public class AE2Integration implements Integration {
 
     private final Capability<IInWorldGridNodeHost> IN_WORLD_GRID_NODE_HOST = CapabilityManager.get(new CapabilityToken<>() {});
 
@@ -48,7 +48,7 @@ public class AE2Integration extends Integration {
     private static ItemEntry<Item> createConduitItem(Supplier<? extends IConduitType<?>> type, String itemName) {
         return EnderIO.registrate().item(itemName + "_conduit",
                 properties -> ConduitItemFactory.build(type, properties))
-            .tab(() -> EIOCreativeTabs.CONDUITS)
+            .tab(NonNullSupplier.lazy(EIOCreativeTabs.CONDUITS))
             .model((ctx, prov) -> prov.withExistingParent(itemName+"_conduit", EnderIO.loc("item/conduit")).texture("0", type.get().getItemTexture()))
             .register();
     }
