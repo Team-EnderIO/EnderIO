@@ -1,9 +1,9 @@
 package com.enderio.core.client.gui.widgets;
 
-import com.enderio.core.client.gui.IIcon;
+import com.enderio.api.misc.IIcon;
 import com.enderio.core.client.gui.screen.IEnderScreen;
 import com.enderio.core.client.gui.screen.IFullScreenListener;
-import com.enderio.core.common.util.Vector2i;
+import com.enderio.api.misc.Vector2i;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -122,6 +122,11 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
 
     @Override
     public void renderWidget(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
+         if (isHovered && isActive()) {
+             addedOn.renderTooltipAfterEverything(pPoseStack, List.of(optionName, getter.get().getTooltip().copy().withStyle(ChatFormatting.GRAY)), pMouseX,
+                 pMouseY);
+         }
+
         T icon = getter.get();
         addedOn.renderIconBackground(pPoseStack, new Vector2i(getX(), getY()), icon);
         IEnderScreen.renderIcon(pPoseStack, new Vector2i(getX(), getY()).expand(1), icon);
@@ -163,7 +168,7 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
 
         @Override
         protected void init() {
-            addRenderableWidget(EnumIconWidget.this);
+            addWidget(EnumIconWidget.this);
             EnumIconWidget.this.icons.values().forEach(this::addRenderableWidget);
         }
 
@@ -175,7 +180,7 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
             super.render(pPoseStack, pMouseX, pMouseY, pPartialTicks);
 
             for (LateTooltipData tooltip : tooltips) {
-                renderTooltip(tooltip.getPoseStack(), tooltip.getText(), tooltip.getMouseX(), tooltip.getMouseY());
+                renderTooltip(tooltip.getPoseStack(), tooltip.getText(), Optional.empty(), tooltip.getMouseX(), tooltip.getMouseY());
             }
             RenderSystem.enableDepthTest();
         }
@@ -224,15 +229,15 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
             if (getter.get() != value) {
                 selection.renderIconBackground(pPoseStack, new Vector2i(getX(), getY()), value);
             } else {
-                GuiComponent.fill(pPoseStack, getX(), getY(), getX() + width, getY() + height, 0xFF0020FF); //TODO: Client Config
+                GuiComponent.fill(pPoseStack, getX(), getY(), getX() + width, getY() + height, 0xFF0020FF);
                 GuiComponent.fill(pPoseStack, getX() + 1, getY() + 1, getX() + width - 1, getY() + height - 1, 0xFF8B8B8B);
             }
             IEnderScreen.renderIcon(pPoseStack, new Vector2i(getX(), getY()).expand(1), value);
 
             if (isMouseOver(pMouseX, pMouseY)) {
                 Component tooltip = value.getTooltip();
-                if (tooltip != Component.empty()) {
-                    selection.renderTooltipAfterEverything(pPoseStack, tooltip, pMouseX, pMouseY);
+                if (tooltip != null && !Component.empty().equals(tooltip)) {
+                    selection.renderTooltipAfterEverything(pPoseStack, List.of(tooltip), pMouseX, pMouseY);
                 }
             }
         }

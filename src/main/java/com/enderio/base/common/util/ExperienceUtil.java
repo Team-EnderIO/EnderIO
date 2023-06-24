@@ -1,6 +1,6 @@
 package com.enderio.base.common.util;
 
-import com.enderio.core.common.util.Vector2i;
+import com.enderio.api.misc.Vector2i;
 
 public class ExperienceUtil {
 

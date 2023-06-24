@@ -20,7 +20,7 @@ public class EIOCreativeTabs {
     public static final Supplier<CreativeModeTab> BLOCKS = REGISTRATE.buildCreativeModeTab("blocks", List.of(), List.of(EnderIO.loc("gear")), builder -> builder.icon(() -> new ItemStack(EIOItems.CREATIVE_ICON_MATERIALS.get())), "Ender IO Blocks");
     public static final Supplier<CreativeModeTab> MACHINES = REGISTRATE.buildCreativeModeTab("machines", List.of(), List.of(EnderIO.loc("blocks")), builder -> builder.icon(() -> new ItemStack(EIOItems.CREATIVE_ICON_MACHINES.get())), "Ender IO Machines");
     public static final Supplier<CreativeModeTab> SOULS = REGISTRATE.buildCreativeModeTab("souls", List.of(), List.of(EnderIO.loc("machines")), builder -> builder.icon(() -> new ItemStack(EIOItems.CREATIVE_ICON_MOBS.get())), "Ender IO Souls");
-
+    public static final Supplier<CreativeModeTab> CONDUITS = REGISTRATE.buildCreativeModeTab("conduits", List.of(), List.of(EnderIO.loc("souls")), builder -> builder.icon(() -> new ItemStack(EIOItems.CREATIVE_ICON_CONDUITS.get())), "Ender IO Conduits");
 
     public static void register() {
         REGISTRATE.creativeModeTab(null);

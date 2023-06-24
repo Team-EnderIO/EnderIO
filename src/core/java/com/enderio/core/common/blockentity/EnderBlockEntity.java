@@ -41,6 +41,8 @@ public class EnderBlockEntity extends BlockEntity {
 
     private final List<EnderDataSlot<?>> clientDecidingDataSlots = new ArrayList<>();
 
+    private final List<Runnable> afterDataSync = new ArrayList<>();
+
     private final Map<Capability<?>, IEnderCapabilityProvider<?>> capabilityProviders = new HashMap<>();
 
     public EnderBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
@@ -130,6 +132,7 @@ public class EnderBlockEntity extends BlockEntity {
                 int dataSlotIndex = elementNBT.getInt("dataSlotIndex");
                 dataSlots.get(dataSlotIndex).handleNBT(elementNBT);
             }
+            afterDataSync.forEach(Runnable::run);
         }
     }
 
@@ -146,11 +149,15 @@ public class EnderBlockEntity extends BlockEntity {
         addClientDecidingDataSlot(slot);
     }
 
+    public void addAfterSyncRunnable(Runnable runnable) {
+        afterDataSync.add(runnable);
+    }
+
     /**
-     * Sync the BlockEntity to all tracking players.
+     * Sync the BlockEntity to all tracking players. Don't call this if you don't know what you do
      */
     @UseOnly(LogicalSide.SERVER)
-    private void sync() {
+    public void sync() {
         ClientboundBlockEntityDataPacket fullUpdate = createUpdatePacket(true, SyncMode.WORLD);
         ClientboundBlockEntityDataPacket partialUpdate = getUpdatePacket();
 

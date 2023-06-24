@@ -506,7 +506,9 @@ public class EIOItems {
     }
 
     public static <T extends Item> ItemEntry<T> groupedItem(String name, NonNullFunction<Item.Properties, T> factory, NonNullSupplier<CreativeModeTab> tab) {
-        return REGISTRATE.item(name, factory).tab(tab).register();
+        return REGISTRATE.item(name, factory)
+            //.tab(tab)
+            .register();
     }
 
     // endregion
