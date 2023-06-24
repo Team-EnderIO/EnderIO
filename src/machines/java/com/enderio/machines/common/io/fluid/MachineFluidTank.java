@@ -185,7 +185,7 @@ public class MachineFluidTank extends FluidTank {
      * @return Consumed if interacted, success otherwise.
      */
     public InteractionResult onClickedWithPotentialFluidItem(Player player, InteractionHand hand) {
-        if (!player.level.isClientSide() && player.hasItemInSlot(EquipmentSlot.MAINHAND) && hand == InteractionHand.MAIN_HAND) {
+        if (!player.level().isClientSide() && player.hasItemInSlot(EquipmentSlot.MAINHAND) && hand == InteractionHand.MAIN_HAND) {
             ItemStack heldStack = player.getMainHandItem();
             Optional<IFluidHandlerItem> heldItemFH = heldStack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
             if (heldStack.getItem() == Items.BUCKET && allowOutput) {
