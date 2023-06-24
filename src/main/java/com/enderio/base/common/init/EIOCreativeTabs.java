@@ -29,6 +29,7 @@ public class EIOCreativeTabs {
     public static final ResourceKey<CreativeModeTab> BLOCKS = ResourceKey.create(Registries.CREATIVE_MODE_TAB, new ResourceLocation(EnderIO.MODID, "blocks"));
     public static final ResourceKey<CreativeModeTab> MACHINES = ResourceKey.create(Registries.CREATIVE_MODE_TAB, new ResourceLocation(EnderIO.MODID, "machines"));
     public static final ResourceKey<CreativeModeTab> SOULS = ResourceKey.create(Registries.CREATIVE_MODE_TAB, new ResourceLocation(EnderIO.MODID, "souls"));
+    public static final ResourceKey<CreativeModeTab> CONDUITS = ResourceKey.create(Registries.CREATIVE_MODE_TAB, new ResourceLocation(EnderIO.MODID, "conduits"));
 
     public static final RegistryEntry<CreativeModeTab> MAIN_TAB = createTab(MAIN, "main",
         tab -> tab.icon(() -> new ItemStack(EIOItems.CREATIVE_ICON_NONE.get())).withTabsBefore(CreativeModeTabs.SPAWN_EGGS));
@@ -45,8 +46,10 @@ public class EIOCreativeTabs {
     public static final RegistryEntry<CreativeModeTab> SOULS_TAB = createTab(SOULS, "souls",
         tab -> tab.icon(() -> new ItemStack(EIOItems.CREATIVE_ICON_MOBS.get())).withTabsBefore(CreativeModeTabs.SPAWN_EGGS, MAIN, GEAR, BLOCKS, MACHINES));
 
+        public static final RegistryEntry<CreativeModeTab> CONDUITS_TAB = createTab(CONDUITS, "conduits",
+        tab -> tab.icon(() -> new ItemStack(EIOItems.CREATIVE_ICON_CONDUITS.get())).withTabsBefore(CreativeModeTabs.SPAWN_EGGS, MAIN, GEAR, BLOCKS, MACHINES, SOULS));
+
     private static RegistryEntry<CreativeModeTab> createTab(ResourceKey<CreativeModeTab> key, String name, Consumer<CreativeModeTab.Builder> config) {
-//        this.defaultCreativeModeTab = ResourceKey.create(Registries.CREATIVE_MODE_TAB, new ResourceLocation(this.modid, name));
         return REGISTRATE.generic(name, Registries.CREATIVE_MODE_TAB, () -> {
             var builder = CreativeModeTab.builder().title(REGISTRATE.addLang("itemGroup", key.location(), RegistrateLangProvider.toEnglishName(name)));
             config.accept(builder);

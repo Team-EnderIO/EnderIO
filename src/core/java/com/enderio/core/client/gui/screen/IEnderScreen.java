@@ -1,12 +1,14 @@
 package com.enderio.core.client.gui.screen;
 
-import com.enderio.core.client.gui.IIcon;
-import com.enderio.core.common.util.Vector2i;
+import com.enderio.api.misc.IIcon;
+import com.enderio.api.misc.Vector2i;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+
+import java.util.List;
 
 public interface IEnderScreen {
 
@@ -43,11 +45,11 @@ public interface IEnderScreen {
 
     class LateTooltipData {
         private final GuiGraphics guiGraphics;
-        private final Component text;
+        private final List<Component> text;
         private final int mouseX;
         private final int mouseY;
 
-        LateTooltipData(GuiGraphics guiGraphics, Component text, int mouseX, int mouseY) {
+        LateTooltipData(GuiGraphics guiGraphics, List<Component> text, int mouseX, int mouseY) {
             this.guiGraphics = guiGraphics;
             this.text = text;
             this.mouseX = mouseX;
@@ -58,7 +60,7 @@ public interface IEnderScreen {
             return guiGraphics;
         }
 
-        public Component getText() {
+        public List<Component> getText() {
             return text;
         }
 

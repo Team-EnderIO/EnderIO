@@ -1,7 +1,6 @@
-package com.enderio.core.client.gui;
+package com.enderio.api.misc;
 
 import com.enderio.api.UseOnly;
-import com.enderio.core.common.util.Vector2i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.LogicalSide;

@@ -1,6 +1,6 @@
 package com.enderio.core.client.gui.screen;
 
-import com.enderio.core.common.util.Vector2i;
+import com.enderio.api.misc.Vector2i;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -16,10 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class EIOScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> implements IEnderScreen {
 
@@ -58,7 +55,7 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
         super.render(guiGraphics, pMouseX, pMouseY, pPartialTicks);
         this.renderTooltip(guiGraphics, pMouseX, pMouseY);
         for (LateTooltipData tooltip : tooltips) {
-            tooltip.getGuiGraphics().renderTooltip(this.font, tooltip.getText(), tooltip.getMouseX(), tooltip.getMouseY());
+            tooltip.getGuiGraphics().renderTooltip(this.font, tooltip.getText(), Optional.empty(), tooltip.getMouseX(), tooltip.getMouseY());
         }
     }
 

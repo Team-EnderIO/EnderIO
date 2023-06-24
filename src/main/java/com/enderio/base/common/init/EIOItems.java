@@ -506,8 +506,9 @@ public class EIOItems {
         return REGISTRATE.item(name, Item::new);
     }
 
-    public static <T extends Item> ItemEntry<T> groupedItem(String name, NonNullFunction<Item.Properties, T> factory, ResourceKey<CreativeModeTab> tab) {
-        return REGISTRATE.item(name, factory).tab(tab)
+    public static <T extends Item> ItemEntry<T> groupedItem(String name, NonNullFunction<Item.Properties, T> factory, NonNullSupplier<CreativeModeTab> tab) {
+        return REGISTRATE.item(name, factory)
+            //.tab(tab)
             .register();
     }
 

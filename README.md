@@ -73,9 +73,8 @@ Download the latest JAR file from GitHub releases or from [CurseForge](https://w
 
 ### For Mod Developers
 
-EnderIO and it's modules are available via our maven.
-
-Update your `build.gradle` to contain the foillowing:
+EnderIO is available via our maven.
+Update your `build.gradle` to contain the following:
 
 ```groovy
 repositories {
@@ -93,7 +92,7 @@ dependencies {
     // ...
 }
 ```
-
+If you need any feature in the api, contact us.
 
 <!-- CONTRIBUTING -->
 ## Contributing

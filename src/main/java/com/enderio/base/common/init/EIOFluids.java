@@ -8,12 +8,14 @@ import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateItemModelProvider;
 import com.tterrag.registrate.util.entry.FluidEntry;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.client.model.generators.loaders.DynamicFluidContainerModelBuilder;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.versions.forge.ForgeVersion;
 
 // TODO: Fluid behaviours and some cleaning. https://github.com/SleepyTrousers/EnderIO-Rewrite/issues/34
@@ -83,12 +85,14 @@ public class EIOFluids {
     }
 
     private static FluidBuilder<? extends ForgeFlowingFluid, Registrate> baseFluid(String name) {
-        return REGISTRATE.fluid(name, EnderIO.loc("block/fluid_" + name + "_still"),
-            EnderIO.loc("block/fluid_" + name + "_flowing"))
-            //TODO: fix rendertype on server .renderType(() -> RenderType.translucent())
-            .source(ForgeFlowingFluid.Source::new)
-//            .defaultBlock();
-        ;
+        var thing = REGISTRATE.fluid(name, EnderIO.loc("block/fluid_" + name + "_still"),
+            EnderIO.loc("block/fluid_" + name + "_flowing"));
+        if (FMLEnvironment.dist.isClient()) {
+            thing.renderType(RenderType::translucent);
+        }
+        return thing.source(ForgeFlowingFluid.Source::new)
+            .block()
+            .build();
     }
 
     private static DynamicFluidContainerModelBuilder<ItemModelBuilder> bucketModel(DataGenContext<Item, BucketItem> ctx, RegistrateItemModelProvider prov) {
