@@ -954,6 +954,8 @@
   "tooltip.enderio.collision.players_block": "sɹǝʎɐןd oʇ pıןos ʎןuO",
   "tooltip.enderio.collision.players_pass": "sɹǝʎɐןd oʇ pıןos ʇoN",
   "tooltip.enderio.dark_steel_ladder.faster": "sɹǝppɐן ɹɐןnbǝɹ uɐɥʇ ɹǝʇsɐℲ",
+  "tooltip.enderio.fluid_tank.tank_empty_tooltip": "ʞuɐʇ ʎʇdɯƎ",
+  "tooltip.enderio.fluid_tank.tank_tooltip": "%s ɟo qɯ %d/%d",
   "tooltip.enderio.fused_quartz.blocks_light": "ʇɥbıן sʞɔoןᗺ",
   "tooltip.enderio.fused_quartz.emits_light": "ʇɥbıן sʇıɯƎ",
   "tooltip.enderio.grinding_ball_bonus_output": "%s%% ʇndʇnO snuoᗺ",

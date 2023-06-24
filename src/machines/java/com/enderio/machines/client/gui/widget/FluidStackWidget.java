@@ -69,7 +69,7 @@ public class FluidStackWidget extends EIOWidget {
                     for (int i = 0; i < Math.ceil(renderableHeight / 16f); i++) {
                         int drawingHeight = Math.min(16, renderableHeight - 16*i);
                         int notDrawingHeight = 16 - drawingHeight;
-                        guiGraphics.blit(TextureAtlas.LOCATION_BLOCKS, x, y + notDrawingHeight, 0, sprite.getU0()*atlasWidth, sprite.getV0()*atlasHeight + notDrawingHeight, sprite.contents().height(), drawingHeight, atlasWidth, atlasHeight);
+                        guiGraphics.blit(TextureAtlas.LOCATION_BLOCKS, x, y + notDrawingHeight, 0, sprite.getU0()*atlasWidth, sprite.getV0()*atlasHeight + notDrawingHeight, width, drawingHeight, atlasWidth, atlasHeight);
                         guiGraphics.pose().translate(0,-16, 0);
                     }
 
