@@ -113,29 +113,21 @@ public class EIOItems {
     public static final ItemEntry<FixedCapacitorItem> BASIC_CAPACITOR = REGISTRATE
         .item("basic_capacitor", props -> new FixedCapacitorItem(DefaultCapacitorData.BASIC, props))
         .tab(EIOCreativeTabs.MAIN)
-        // TODO: 1.20.1 TEMPORARY: REGISTRATE BUG?
-        .defaultModel()
         .register();
 
     public static final ItemEntry<FixedCapacitorItem> DOUBLE_LAYER_CAPACITOR = REGISTRATE
         .item("double_layer_capacitor", props -> new FixedCapacitorItem(DefaultCapacitorData.DOUBLE_LAYER, props))
         .tab(EIOCreativeTabs.MAIN)
-        // TODO: 1.20.1 TEMPORARY: REGISTRATE BUG?
-        .defaultModel()
         .register();
 
     public static final ItemEntry<FixedCapacitorItem> OCTADIC_CAPACITOR = REGISTRATE
         .item("octadic_capacitor", props -> new FixedCapacitorItem(DefaultCapacitorData.OCTADIC, props))
         .tab(EIOCreativeTabs.MAIN)
-        // TODO: 1.20.1 TEMPORARY: REGISTRATE BUG?
-        .defaultModel()
         .register();
 
     public static final ItemEntry<LootCapacitorItem> LOOT_CAPACITOR = REGISTRATE
         .item("loot_capacitor", LootCapacitorItem::new)
         .properties(p -> p.stacksTo(1))
-        // TODO: 1.20.1 TEMPORARY: REGISTRATE BUG?
-        .defaultModel()
         .register();
 
     // endregion
@@ -333,8 +325,6 @@ public class EIOItems {
         .item("filled_soul_vial", SoulVialItem::new)
         .properties(props -> props.stacksTo(1))
         .tab(EIOCreativeTabs.SOULS, modifier -> modifier.acceptAll(SoulVialItem.getAllFilled()))
-        // TODO: 1.20.1 TEMPORARY: REGISTRATE BUG?
-        .defaultModel()
         .register();
 
     public static final ItemEntry<EnderiosItem> ENDERIOS = REGISTRATE
@@ -342,8 +332,6 @@ public class EIOItems {
         .tab(EIOCreativeTabs.MAIN)
         .lang("\"Enderios\"")
         .properties(props -> props.stacksTo(1))
-        // TODO: 1.20.1 TEMPORARY: REGISTRATE BUG?
-        .defaultModel()
         .register();
 
     // endregion
@@ -354,46 +342,34 @@ public class EIOItems {
         .tab(EIOCreativeTabs.GEAR)
         .properties(props -> props.stacksTo(1))
         .tag(EIOTags.Items.WRENCH)
-        // TODO: 1.20.1 TEMPORARY: REGISTRATE BUG?
-        .defaultModel()
         .register();
 
     public static final ItemEntry<LocationPrintoutItem> LOCATION_PRINTOUT = REGISTRATE
         .item("location_printout", LocationPrintoutItem::new)
         .tab(EIOCreativeTabs.GEAR)
         .properties(props -> props.stacksTo(1))
-        // TODO: 1.20.1 TEMPORARY: REGISTRATE BUG?
-        .defaultModel()
         .register();
 
     public static final ItemEntry<CoordinateSelectorItem> COORDINATE_SELECTOR = REGISTRATE
         .item("coordinate_selector", CoordinateSelectorItem::new)
         .tab(EIOCreativeTabs.GEAR)
         .properties(props -> props.stacksTo(1))
-        // TODO: 1.20.1 TEMPORARY: REGISTRATE BUG?
-        .defaultModel()
         .register();
 
     public static final ItemEntry<LevitationStaffItem> LEVITATION_STAFF = REGISTRATE
         .item("staff_of_levity", LevitationStaffItem::new)
         .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.LEVITATION_STAFF.get().addAllVariants(modifier))
-        // TODO: 1.20.1 TEMPORARY: REGISTRATE BUG?
-        .defaultModel()
         .register();
 
     public static final ItemEntry<ElectromagnetItem> ELECTROMAGNET = REGISTRATE
         .item("electromagnet", ElectromagnetItem::new)
         .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.ELECTROMAGNET.get().addAllVariants(modifier))
-        // TODO: 1.20.1 TEMPORARY: REGISTRATE BUG?
-        .defaultModel()
         .register();
 
     public static final ItemEntry<ColdFireIgniter> COLD_FIRE_IGNITER = REGISTRATE
         .item("cold_fire_igniter", ColdFireIgniter::new)
         .defaultModel()
         .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.COLD_FIRE_IGNITER.get().addAllVariants(modifier)) // TODO: Might PR this to Registrate so its nicer, but I like the footprint.
-        // TODO: 1.20.1 TEMPORARY: REGISTRATE BUG?
-        .defaultModel()
         .register();
 
     // endregion
@@ -411,8 +387,6 @@ public class EIOItems {
             .instance()
             .addUpgradesForItem(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)), EmpoweredUpgrade.NAME, SpoonUpgrade.NAME, DirectUpgrade.NAME,
                 ExplosiveUpgrade.NAME, ExplosivePenetrationUpgrade.NAME))
-        // TODO: 1.20.1 TEMPORARY: REGISTRATE BUG?
-        .defaultModel()
         .register();
 
     public static final ItemEntry<DarkSteelAxeItem> DARK_STEEL_AXE = REGISTRATE
@@ -421,8 +395,6 @@ public class EIOItems {
         .onRegister(item -> DarkSteelUpgradeRegistry
             .instance()
             .addUpgradesForItem(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)), EmpoweredUpgrade.NAME, ForkUpgrade.NAME, DirectUpgrade.NAME))
-        // TODO: 1.20.1 TEMPORARY: REGISTRATE BUG?
-        .defaultModel()
         .register();
 
     private static final String UPGRADE_TEXT = " Upgrade";
@@ -431,8 +403,6 @@ public class EIOItems {
         .item("dark_steel_upgrade_blank", props -> new MaterialItem(props, false))
         .tab(EIOCreativeTabs.GEAR)
         .lang("Blank" + UPGRADE_TEXT)
-        // TODO: 1.20.1 TEMPORARY: REGISTRATE BUG?
-        .defaultModel()
         .register();
 
     public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_1 = REGISTRATE
@@ -440,8 +410,6 @@ public class EIOItems {
             properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgradeTier.ONE.getActivationCost(), EmpoweredUpgradeTier.ONE.getFactory()))
         .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_EMPOWERED_1.get().addAllVariants(modifier))
         .lang("Empowered" + UPGRADE_TEXT)
-        // TODO: 1.20.1 TEMPORARY: REGISTRATE BUG?
-        .defaultModel()
         .register();
 
     public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_2 = REGISTRATE
@@ -449,8 +417,6 @@ public class EIOItems {
             properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgradeTier.TWO.getActivationCost(), EmpoweredUpgradeTier.TWO.getFactory()))
         .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_EMPOWERED_2.get().addAllVariants(modifier))
         .lang("Empowered II" + UPGRADE_TEXT)
-        // TODO: 1.20.1 TEMPORARY: REGISTRATE BUG?
-        .defaultModel()
         .register();
 
     public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_3 = REGISTRATE
@@ -458,8 +424,6 @@ public class EIOItems {
             properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgradeTier.THREE.getActivationCost(), EmpoweredUpgradeTier.THREE.getFactory()))
         .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_EMPOWERED_3.get().addAllVariants(modifier))
         .lang("Empowered III" + UPGRADE_TEXT)
-        // TODO: 1.20.1 TEMPORARY: REGISTRATE BUG?
-        .defaultModel()
         .register();
 
     public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_4 = REGISTRATE
@@ -467,24 +431,18 @@ public class EIOItems {
             properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgradeTier.FOUR.getActivationCost(), EmpoweredUpgradeTier.FOUR.getFactory()))
         .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_EMPOWERED_4.get().addAllVariants(modifier))
         .lang("Empowered IV" + UPGRADE_TEXT)
-        // TODO: 1.20.1 TEMPORARY: REGISTRATE BUG?
-        .defaultModel()
         .register();
 
     public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_SPOON = REGISTRATE
         .item("dark_steel_upgrade_spoon", properties -> new DarkSteelUpgradeItem(properties, BaseConfig.COMMON.DARK_STEEL.SPOON_ACTIVATION_COST, SpoonUpgrade::new))
         .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_SPOON.get().addAllVariants(modifier))
         .lang("Spoon" + UPGRADE_TEXT)
-        // TODO: 1.20.1 TEMPORARY: REGISTRATE BUG?
-        .defaultModel()
         .register();
 
     public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_FORK = REGISTRATE
         .item("dark_steel_upgrade_fork", properties -> new DarkSteelUpgradeItem(properties, BaseConfig.COMMON.DARK_STEEL.FORK_ACTIVATION_COST, ForkUpgrade::new))
         .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_FORK.get().addAllVariants(modifier))
         .lang("Fork" + UPGRADE_TEXT)
-        // TODO: 1.20.1 TEMPORARY: REGISTRATE BUG?
-        .defaultModel()
         .register();
 
     public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_DIRECT = REGISTRATE
@@ -492,8 +450,6 @@ public class EIOItems {
             properties -> new DarkSteelUpgradeItem(properties, BaseConfig.COMMON.DARK_STEEL.DIRECT_ACTIVATION_COST, DirectUpgrade::new))
         .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_DIRECT.get().addAllVariants(modifier))
         .lang("Direct" + UPGRADE_TEXT)
-        // TODO: 1.20.1 TEMPORARY: REGISTRATE BUG?
-        .defaultModel()
         .register();
 
     public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_1 = REGISTRATE
@@ -501,8 +457,6 @@ public class EIOItems {
             ExplosiveUpgradeTier.ONE.getFactory()))
         .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_EXPLOSIVE_1.get().addAllVariants(modifier))
         .lang("Explosive I" + UPGRADE_TEXT)
-        // TODO: 1.20.1 TEMPORARY: REGISTRATE BUG?
-        .defaultModel()
         .register();
 
     public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_2 = REGISTRATE
@@ -510,8 +464,6 @@ public class EIOItems {
             ExplosiveUpgradeTier.TWO.getFactory()))
         .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_EXPLOSIVE_2.get().addAllVariants(modifier))
         .lang("Explosive II" + UPGRADE_TEXT)
-        // TODO: 1.20.1 TEMPORARY: REGISTRATE BUG?
-        .defaultModel()
         .register();
 
     //TODO: Textures for dark_steel_upgrade_penetration_1 and dark_steel_upgrade_penetration_2 needed
@@ -520,8 +472,6 @@ public class EIOItems {
             ExplosivePenetrationUpgradeTier.ONE.getFactory()))
         .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_1.get().addAllVariants(modifier))
         .lang("Explosive Penetration I" + UPGRADE_TEXT)
-        // TODO: 1.20.1 TEMPORARY: REGISTRATE BUG?
-        .defaultModel()
         .register();
 
     public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_2 = REGISTRATE
@@ -529,8 +479,6 @@ public class EIOItems {
             ExplosivePenetrationUpgradeTier.TWO.getFactory()))
         .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_2.get().addAllVariants(modifier))
         .lang("Explosive Penetration II" + UPGRADE_TEXT)
-        // TODO: 1.20.1 TEMPORARY: REGISTRATE BUG?
-        .defaultModel()
         .register();
 
     // endregion
