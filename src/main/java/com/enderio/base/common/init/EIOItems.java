@@ -288,18 +288,14 @@ public class EIOItems {
     }
 
     private static ItemBuilder<MaterialItem, Registrate> materialItem(String name) {
-        return REGISTRATE.item(name, props -> new MaterialItem(props, false)).tab(EIOCreativeTabs.MAIN)
-            // TODO: 1.20.1 TEMPORARY: REGISTRATE BUG?
-            .defaultModel();
+        return REGISTRATE.item(name, props -> new MaterialItem(props, false)).tab(EIOCreativeTabs.MAIN);
     }
 
     private static ItemBuilder<GearItem, Registrate> gearItem(String name, float tpr) {
         return REGISTRATE
             .item(name, props -> new GearItem(props, tpr))
             .model((ctx, cons) -> RotatingItemModel.create(ctx.get(), cons))
-            .tab(EIOCreativeTabs.MAIN)
-            // TODO: 1.20.1 TEMPORARY: REGISTRATE BUG?
-            .defaultModel();
+            .tab(EIOCreativeTabs.MAIN);
     }
 
     //  private static ItemBuilder<MaterialItem, Registrate> dependMaterialItem(String name, Tag<Item> dependency) {
@@ -308,9 +304,7 @@ public class EIOItems {
     //  }
 
     private static ItemBuilder<MaterialItem, Registrate> materialItemGlinted(String name) {
-        return REGISTRATE.item(name, props -> new MaterialItem(props, true)).tab(EIOCreativeTabs.MAIN)
-            // TODO: 1.20.1 TEMPORARY: REGISTRATE BUG?
-            .defaultModel();
+        return REGISTRATE.item(name, props -> new MaterialItem(props, true)).tab(EIOCreativeTabs.MAIN);
     }
 
     // endregion
@@ -506,20 +500,14 @@ public class EIOItems {
     // region Helpers
 
     public static <T extends Item> ItemBuilder<T, Registrate> dumbItem(String name, NonNullFunction<Item.Properties, T> factory) {
-        return REGISTRATE.item(name, factory)
-            // TODO: 1.20.1 TEMPORARY: REGISTRATE BUG?
-            .defaultModel();
+        return REGISTRATE.item(name, factory);
     }
     public static ItemBuilder<Item, Registrate> dumbItem(String name) {
-        return REGISTRATE.item(name, Item::new)
-            // TODO: 1.20.1 TEMPORARY: REGISTRATE BUG?
-            .defaultModel();
+        return REGISTRATE.item(name, Item::new);
     }
 
     public static <T extends Item> ItemEntry<T> groupedItem(String name, NonNullFunction<Item.Properties, T> factory, ResourceKey<CreativeModeTab> tab) {
         return REGISTRATE.item(name, factory).tab(tab)
-            // TODO: 1.20.1 TEMPORARY: REGISTRATE BUG?
-            .defaultModel()
             .register();
     }
 
