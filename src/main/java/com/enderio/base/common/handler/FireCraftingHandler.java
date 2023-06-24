@@ -102,7 +102,6 @@ public class FireCraftingHandler {
     }
 
     public static void spawnInfinityDrops(ServerLevel level, BlockPos pos, ResourceLocation lootTable) {
-        // TODO: 1.20.1: VERIFY NEW LOOT STUFF
         LootParams lootparams = (new LootParams.Builder(level)).withParameter(LootContextParams.ORIGIN, pos.getCenter()).create(
             LootContextParamSets.COMMAND);
 

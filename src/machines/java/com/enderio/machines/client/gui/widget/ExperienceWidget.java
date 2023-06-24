@@ -30,7 +30,6 @@ public class ExperienceWidget extends EIOWidget {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        // TODO: 1.20.1 is there a way to do this in GuiGraphics?
         RenderSystem.defaultBlendFunc();
         RenderSystem.disableBlend();
         RenderSystem.enableDepthTest();

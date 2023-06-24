@@ -39,7 +39,6 @@ public class EnergyWidget extends EIOWidget {
         if (storage.getMaxEnergyStored() <= 0)
             return;
 
-        // TODO: 1.20.1: review all rendersystem calls.
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
 

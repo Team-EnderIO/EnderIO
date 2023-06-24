@@ -21,7 +21,6 @@ import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(modid = EnderIO.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class EIOCreativeTabs {
-    // TODO: Review creative tabs?
     private static final Registrate REGISTRATE = EnderIO.registrate();
 
     public static final ResourceKey<CreativeModeTab> MAIN = ResourceKey.create(Registries.CREATIVE_MODE_TAB, new ResourceLocation(EnderIO.MODID, "main"));

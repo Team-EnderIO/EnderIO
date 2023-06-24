@@ -33,12 +33,6 @@ public class CrafterScreen extends EIOScreen<CrafterMenu> {
         addRenderableWidget(new IOConfigButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 22, 16, 16, menu, this::addRenderableWidget, font));
     }
 
-    // TODO: 1.20.1: What is this override for?
-    @Override
-    protected void renderBg(GuiGraphics guiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
-        super.renderBg(guiGraphics, pPartialTick, pMouseX, pMouseY);
-    }
-
     @Override
     public ResourceLocation getBackgroundImage() {
         return BG_TEXTURE;
