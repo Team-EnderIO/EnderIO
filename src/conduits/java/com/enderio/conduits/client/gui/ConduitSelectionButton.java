@@ -5,6 +5,7 @@ import com.enderio.api.misc.Vector2i;
 import com.enderio.core.client.gui.screen.IEnderScreen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.GameRenderer;
@@ -35,19 +36,18 @@ public class ConduitSelectionButton extends AbstractButton {
     }
 
     @Override
-    public void renderWidget(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
+    public void renderWidget(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
 
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, ConduitScreen.TEXTURE);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
-        blit(pPoseStack, getX(), getY(), 227, 0, this.width, this.height);
+        guiGraphics.blit(ConduitScreen.TEXTURE, getX(), getY(), 227, 0, this.width, this.height);
         if (getter.get() == type) {
-            blit(pPoseStack, getX() - 3, getY(), 224, 0, 3, this.height);
+            guiGraphics.blit(ConduitScreen.TEXTURE, getX() - 3, getY(), 224, 0, 3, this.height);
         }
-        IEnderScreen.renderIcon(pPoseStack, new Vector2i(getX(), getY()).add(3, 6), type.getClientData());
+        RenderSystem.disableBlend();
+        RenderSystem.disableDepthTest();
+        IEnderScreen.renderIcon(guiGraphics, new Vector2i(getX(), getY()).add(3, 6), type.getClientData());
     }
 
     @Override

@@ -355,7 +355,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
 
     @Override
     public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
-        HitResult hit = player.pick(player.getAttributeValue(ForgeMod.REACH_DISTANCE.get()) + 5,1,false);
+        HitResult hit = player.pick(player.getAttributeValue(ForgeMod.BLOCK_REACH.get()) + 5,1,false);
         BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof ConduitBlockEntity conduit) {
             EnderIO.LOGGER.info("Break block @ " + conduit.getBlockPos().toShortString());

@@ -17,6 +17,7 @@ import com.enderio.api.misc.Vector2i;
 import com.enderio.core.client.gui.widgets.CheckBox;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.network.chat.Component;
@@ -45,21 +46,21 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
     }
 
     @Override
-    protected void renderBg(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
-        super.renderBg(poseStack, partialTicks, mouseX, mouseY);
+    protected void renderBg(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
+        super.renderBg(guiGraphics, partialTicks, mouseX, mouseY);
 
         IConduitMenuData data = menu.getConduitType().getMenuData();
-        poseStack.pushPose();
-        poseStack.translate(getGuiLeft(), getGuiTop(), 0);
+        guiGraphics.pose().pushPose();
+        guiGraphics.pose().translate(getGuiLeft(), getGuiTop(), 0);
         if (data.showBarSeperator()) {
-            blit(poseStack, 102, 7, 255, 0, 1, 97);
+            guiGraphics.blit(getBackgroundImage(), 102, 7, 255, 0, 1, 97);
         }
         for (SlotType type: SlotType.values()) {
             if (type.isAvailableFor(data)) {
-                blit(poseStack, type.getX()-1, type.getY()-1, 206, 0, 18, 18);
+                guiGraphics.blit(getBackgroundImage(), type.getX()-1, type.getY()-1, 206, 0, 18, 18);
             }
         }
-        poseStack.popPose();
+        guiGraphics.pose().popPose();
     }
 
     private void updateConnectionWidgets(boolean forceUpdate) {
@@ -156,14 +157,14 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
     }
     
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         //close and don't render if someone removed the conduit we are looking at or similar
         if (!menu.stillValid(minecraft.player)) {
             minecraft.player.closeContainer();
         } else {
             updateConnectionWidgets(false);
             menu.getConduitSlots().forEach(ConduitSlot::updateVisibilityPosition);
-            super.render(poseStack, mouseX, mouseY, partialTicks);
+            super.render(guiGraphics, mouseX, mouseY, partialTicks);
         }
     }
 

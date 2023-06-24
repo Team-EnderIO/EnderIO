@@ -4,6 +4,7 @@ import com.enderio.api.misc.Vector2i;
 import com.enderio.core.EnderCore;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.GameRenderer;
@@ -32,10 +33,7 @@ public class CheckBox extends AbstractButton {
     }
 
     @Override
-    public void renderWidget(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, texture);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
+    public void renderWidget(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
@@ -46,12 +44,15 @@ public class CheckBox extends AbstractButton {
         if (isMouseOver(pMouseX, pMouseY)) {
             textureX += 28;
         }
-        blit(pPoseStack, getX(), getY(), textureX, 0, this.width, this.height);
+        guiGraphics.blit(texture, getX(), getY(), textureX, 0, this.width, this.height);
         if (getter.get()) {
-            blit(pPoseStack, getX(), getY(), this.width, this.height, 0, 14, width*2, height*2, 256, 256);
+            guiGraphics.blit(texture, getX(), getY(), this.width, this.height, 0, 14, width*2, height*2, 256, 256);
         } else {
-            blit(pPoseStack, getX(), getY(), this.width, this.height, 28, 14, width*2, height*2,256, 256);
+            guiGraphics.blit(texture, getX(), getY(), this.width, this.height, 28, 14, width*2, height*2,256, 256);
         }
+
+        RenderSystem.disableBlend();
+        RenderSystem.disableDepthTest();
     }
 
     @Override

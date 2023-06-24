@@ -123,7 +123,7 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
         if (isHovered && isActive()) {
-           addedOn.renderTooltipAfterEverything(pPoseStack, List.of(optionName, getter.get().getTooltip().copy().withStyle(ChatFormatting.GRAY)), pMouseX,
+           addedOn.renderTooltipAfterEverything(guiGraphics, List.of(optionName, getter.get().getTooltip().copy().withStyle(ChatFormatting.GRAY)), pMouseX,
                 pMouseY);
         }
 
@@ -237,7 +237,7 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
             if (isMouseOver(pMouseX, pMouseY)) {
                 Component tooltip = value.getTooltip();
                 if (tooltip != null && !Component.empty().equals(tooltip)) {
-                    selection.renderTooltipAfterEverything(pPoseStack, List.of(tooltip), pMouseX, pMouseY);
+                    selection.renderTooltipAfterEverything(guiGraphics, List.of(tooltip), pMouseX, pMouseY);
                 }
             }
         }

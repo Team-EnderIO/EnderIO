@@ -10,6 +10,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -99,7 +100,7 @@ public class FluidClientData extends IClientConduitData.Simple<FluidExtendedData
         }
 
         @Override
-        public void renderWidget(PoseStack poseStack, int pMouseX, int pMouseY, float pPartialTick) {
+        public void renderWidget(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
             if (isHoveredOrFocused()) {
                 MutableComponent tooltip = EIOLang.FLUID_CONDUIT_CHANGE_FLUID1.copy();
                 tooltip.append("\n").append(EIOLang.FLUID_CONDUIT_CHANGE_FLUID2);
@@ -109,13 +110,10 @@ public class FluidClientData extends IClientConduitData.Simple<FluidExtendedData
                 setTooltip(Tooltip.create(TooltipUtil.style(tooltip)));
             }
 
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.setShaderTexture(0, WIDGET_TEXTURE);
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
             RenderSystem.enableDepthTest();
-            blit(poseStack, getX(), getY(), 0, 0, this.width, this.height);
+            guiGraphics.blit(WIDGET_TEXTURE, getX(), getY(), 0, 0, this.width, this.height);
             if (currentFluid.get() == null)
                 return;
             IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(currentFluid.get());
@@ -123,7 +121,6 @@ public class FluidClientData extends IClientConduitData.Simple<FluidExtendedData
             AbstractTexture texture = Minecraft.getInstance().getTextureManager().getTexture(TextureAtlas.LOCATION_BLOCKS);
             if (texture instanceof TextureAtlas atlas) {
                 TextureAtlasSprite sprite = atlas.getSprite(still);
-                RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
 
                 int color = props.getTintColor();
                 RenderSystem.setShaderColor(
@@ -137,10 +134,13 @@ public class FluidClientData extends IClientConduitData.Simple<FluidExtendedData
                 int atlasWidth = (int)(sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
                 int atlasHeight = (int)(sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
 
-                blit(poseStack, getX() + 1, getY() + 1, 0, sprite.getU0()*atlasWidth, sprite.getV0()*atlasHeight, 12, 12, atlasWidth, atlasHeight);
+                guiGraphics.blit(TextureAtlas.LOCATION_BLOCKS, getX() + 1, getY() + 1, 0, sprite.getU0()*atlasWidth, sprite.getV0()*atlasHeight, 12, 12, atlasWidth, atlasHeight);
 
                 RenderSystem.setShaderColor(1, 1, 1, 1);
             }
+
+            RenderSystem.disableBlend();
+            RenderSystem.disableDepthTest();
         }
 
         @Override

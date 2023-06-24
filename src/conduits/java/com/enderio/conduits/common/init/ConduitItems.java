@@ -34,7 +34,7 @@ public class ConduitItems {
     private static ItemEntry<Item> createConduitItem(Supplier<? extends IConduitType<?>> type, String itemName) {
         return REGISTRATE.item(itemName + "_conduit",
             properties -> ConduitItemFactory.build(type, properties))
-            .tab(NonNullSupplier.lazy(EIOCreativeTabs.CONDUITS))
+            .tab(EIOCreativeTabs.CONDUITS)
             .model((ctx, prov) -> prov.withExistingParent(itemName+"_conduit", EnderIO.loc("item/conduit")).texture("0", type.get().getItemTexture()))
             .register();
     }

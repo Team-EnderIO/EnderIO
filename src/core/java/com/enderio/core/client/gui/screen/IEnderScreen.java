@@ -37,7 +37,7 @@ public interface IEnderScreen {
         renderSimpleArea(guiGraphics, pos, pos.add(icon.getRenderSize()).expand(2));
     }
 
-    default void renderTooltipAfterEverything(GuiGraphics guiGraphics, Component pText, int pMouseX, int pMouseY) {
+    default void renderTooltipAfterEverything(GuiGraphics guiGraphics, List<Component> pText, int pMouseX, int pMouseY) {
         addTooltip(new LateTooltipData(guiGraphics, pText, pMouseX, pMouseY));
     }
 
