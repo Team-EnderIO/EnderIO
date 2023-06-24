@@ -22,21 +22,22 @@ public class PowerConduitTicker extends ICapabilityAwareConduitTicker<IEnergySto
     }
 
     @Override
-    public void tickCapabilityGraph(IConduitType<?> type, List<CapabilityConnection> inserts, List<CapabilityConnection> extracts, ServerLevel level, Graph<Mergeable.Dummy> graph) {
+    public void tickCapabilityGraph(IConduitType<?> type, List<CapabilityConnection> inserts, List<CapabilityConnection> extracts, ServerLevel level,
+        Graph<Mergeable.Dummy> graph) {
 
         int availableForExtraction = 0;
-        for (IEnergyStorage extract: extracts.stream().map(e -> e.cap).toList()) {
+        for (IEnergyStorage extract : extracts.stream().map(e -> e.cap).toList()) {
             availableForExtraction += extract.extractEnergy(rfPerTickAction - availableForExtraction, true);
             if (availableForExtraction >= rfPerTickAction)
                 break;
         }
         int inserted = 0;
-        for (IEnergyStorage insert: inserts.stream().map(e -> e.cap).toList()) {
+        for (IEnergyStorage insert : inserts.stream().map(e -> e.cap).toList()) {
             inserted += insert.receiveEnergy(availableForExtraction - inserted, false);
             if (inserted == availableForExtraction)
                 break;
         }
-        for (IEnergyStorage extract: extracts.stream().map(e -> e.cap).toList()) {
+        for (IEnergyStorage extract : extracts.stream().map(e -> e.cap).toList()) {
             inserted -= extract.extractEnergy(inserted, false);
             if (inserted <= 0)
                 break;

@@ -38,14 +38,18 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
     public IConduitTicker getTicker() {
         return new IConduitTicker() {
             @Override
-            public void tickGraph(IConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level) { }
+            public void tickGraph(IConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level) {}
 
             @Override
             public boolean canConnectTo(Level level, BlockPos conduitPos, Direction direction) {
                 BlockEntity blockEntity = level.getBlockEntity(conduitPos.relative(direction));
                 if (blockEntity instanceof IInWorldGridNodeHost host && canConnectTo(host, direction))
                     return true;
-                return blockEntity != null && blockEntity.getCapability(getCapability(), direction.getOpposite()).resolve().map(node -> canConnectTo(node, direction)).orElse(false);
+                return blockEntity != null && blockEntity
+                    .getCapability(getCapability(), direction.getOpposite())
+                    .resolve()
+                    .map(node -> canConnectTo(node, direction))
+                    .orElse(false);
             }
 
             private static boolean canConnectTo(IInWorldGridNodeHost host, Direction direction) {
@@ -58,7 +62,6 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
             }
         };
     }
-
 
     @Override
     public IConduitMenuData getMenuData() {
@@ -96,6 +99,7 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
     private static final class ConduitMenuData implements IConduitMenuData {
 
         private static IConduitMenuData INSTANCE = new ConduitMenuData();
+
         @Override
         public boolean hasFilterInsert() {
             return false;

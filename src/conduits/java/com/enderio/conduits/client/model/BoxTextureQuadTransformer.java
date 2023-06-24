@@ -15,10 +15,11 @@ public class BoxTextureQuadTransformer implements IQuadTransformer {
     private final Vec3i toSize;
     private final IQuadTransformer scaling;
     private final IQuadTransformer moveToCenter;
+
     public BoxTextureQuadTransformer(Vec3i toSize) {
         this.toSize = toSize;
         scaling = QuadTransformers.applying(new Transformation(null, null, new Vector3f(toSize.getX(), toSize.getY(), toSize.getZ()), null));
-        moveToCenter = QuadTransformers.applying(new Transformation(new Vector3f(6.5f/16, 6.5f/16, 6.5f/16), null, null, null));
+        moveToCenter = QuadTransformers.applying(new Transformation(new Vector3f(6.5f / 16, 6.5f / 16, 6.5f / 16), null, null, null));
     }
 
     @Override

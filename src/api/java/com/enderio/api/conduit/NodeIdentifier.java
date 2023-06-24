@@ -15,11 +15,9 @@ import java.util.Optional;
 
 public class NodeIdentifier<T extends IExtendedConduitData<?>> implements GraphObject<Mergeable.Dummy> {
 
-
     private final BlockPos pos;
 
-    @Nullable
-    private Graph<Mergeable.Dummy> graph = null;
+    @Nullable private Graph<Mergeable.Dummy> graph = null;
 
     private final Map<Direction, IOState> ioStates = new EnumMap<>(Direction.class);
     private final T extendedConduitData;
@@ -40,7 +38,8 @@ public class NodeIdentifier<T extends IExtendedConduitData<?>> implements GraphO
         this.graph = graph;
     }
 
-    public void pushState(Direction direction, @Nullable ColorControl insert, @Nullable ColorControl extract, RedstoneControl control, ColorControl redstoneChannel) {
+    public void pushState(Direction direction, @Nullable ColorControl insert, @Nullable ColorControl extract, RedstoneControl control,
+        ColorControl redstoneChannel) {
         ioStates.put(direction, IOState.of(insert, extract, control, redstoneChannel));
     }
 
@@ -51,6 +50,7 @@ public class NodeIdentifier<T extends IExtendedConduitData<?>> implements GraphO
     public T getExtendedConduitData() {
         return extendedConduitData;
     }
+
     public void clearState(Direction direction) {
         ioStates.remove(direction);
     }
@@ -64,6 +64,7 @@ public class NodeIdentifier<T extends IExtendedConduitData<?>> implements GraphO
         public boolean isInsert() {
             return insert().isPresent();
         }
+
         public boolean isExtract() {
             return extract().isPresent();
         }

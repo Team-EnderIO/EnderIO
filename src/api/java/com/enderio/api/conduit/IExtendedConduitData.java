@@ -35,11 +35,12 @@ public interface IExtendedConduitData<T extends IExtendedConduitData<T>> extends
     }
 
     default void onCreated(IConduitType<?> type, Level level, BlockPos pos, @Nullable Player player) {}
+
     default void onRemoved(IConduitType<?> type, Level level, BlockPos pos) {}
+
     default void updateConnection(Set<Direction> connectedSides) {}
 
     /**
-     *
      * @return true if a node with this extradata can connect to a node with the otherData as extradata. this.canConnectTo(other) and other.canConnectTo(this) should be the same
      */
     default boolean canConnectTo(T otherData) {
@@ -48,13 +49,13 @@ public interface IExtendedConduitData<T extends IExtendedConduitData<T>> extends
 
     /**
      * This method is called after otherData is integrated into this network. change this or otherData accordingly if you want shared state for all nodes in a graph (like fluids in fluid conduits)
+     *
      * @param otherData
      */
     default void onConnectTo(T otherData) {
     }
 
     /**
-     *
      * @return true if this needs to be synced to the client. if this returns true, deepCopy has to be overriden, to create a copy
      */
     default boolean syncDataToClient() {
@@ -62,7 +63,6 @@ public interface IExtendedConduitData<T extends IExtendedConduitData<T>> extends
     }
 
     /**
-     *
      * @return synced renderdata
      */
     default CompoundTag serializeRenderNBT() {
@@ -70,7 +70,6 @@ public interface IExtendedConduitData<T extends IExtendedConduitData<T>> extends
     }
 
     /**
-     *
      * @return synced guidata
      */
     default CompoundTag serializeGuiNBT() {
@@ -81,9 +80,11 @@ public interface IExtendedConduitData<T extends IExtendedConduitData<T>> extends
     default T deepCopy() {
         return cast();
     }
+
     static Supplier<EmptyExtendedConduitData> dummy() {
         return EmptyExtendedConduitData::new;
     }
+
     default <Z extends IExtendedConduitData<Z>> Z cast() {
         return (Z) this;
     }

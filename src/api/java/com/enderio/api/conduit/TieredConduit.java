@@ -10,13 +10,12 @@ public abstract class TieredConduit<T extends IExtendedConduitData<T>> implement
     private final ResourceLocation type;
     private final int tier;
 
-    @UseOnly(LogicalSide.CLIENT)
-    protected IClientConduitData<T> clientConduitData;
+    @UseOnly(LogicalSide.CLIENT) protected IClientConduitData<T> clientConduitData;
 
     /**
      * @param texture
      * @param type
-     * @param tier The tier of the conduit. For Energy this should be it's transfer rate to easily add and compare conduit strength
+     * @param tier    The tier of the conduit. For Energy this should be it's transfer rate to easily add and compare conduit strength
      */
 
     public TieredConduit(ResourceLocation texture, ResourceLocation type, int tier, ResourceLocation iconTexture, Vector2i iconTexturePos) {
@@ -38,9 +37,8 @@ public abstract class TieredConduit<T extends IExtendedConduitData<T>> implement
 
     @Override
     public ResourceLocation[] getTextures() {
-        return new ResourceLocation[]{texture};
+        return new ResourceLocation[] { texture };
     }
-
 
     @Override
     public boolean canBeReplacedBy(IConduitType<?> other) {

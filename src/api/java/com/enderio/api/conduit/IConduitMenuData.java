@@ -1,6 +1,5 @@
 package com.enderio.api.conduit;
 
-
 public interface IConduitMenuData {
 
     IConduitMenuData REDSTONE = new Simple(true, true, false, true, true, false);
@@ -8,8 +7,11 @@ public interface IConduitMenuData {
     IConduitMenuData POWER = new Simple(false, false, false, false, false, true);
 
     boolean hasFilterInsert();
+
     boolean hasFilterExtract();
+
     boolean hasUpgrade();
+
     default boolean showBarSeperator() {
         return true;
     }
@@ -19,10 +21,11 @@ public interface IConduitMenuData {
     }
 
     boolean showColorInsert();
+
     boolean showColorExtract();
+
     boolean showRedstoneExtract();
 
-    record Simple(boolean hasFilterInsert, boolean hasFilterExtract, boolean hasUpgrade, boolean showColorInsert, boolean showColorExtract, boolean showRedstoneExtract) implements
-        IConduitMenuData {
-    }
+    record Simple(boolean hasFilterInsert, boolean hasFilterExtract, boolean hasUpgrade, boolean showColorInsert, boolean showColorExtract,
+                  boolean showRedstoneExtract) implements IConduitMenuData {}
 }

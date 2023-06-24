@@ -30,10 +30,9 @@ public interface IClientConduitData<T extends IExtendedConduitData<T>> extends I
     }
 
     /**
-     *
      * @param extendedConduitData the extendedconduitdata the widgets are fore, manipulate the state of it in the widgets
-     * @param direction the supplier to get the current direction for this extendedconduitdata
-     * @param widgetsStart the position on which widgets start
+     * @param direction           the supplier to get the current direction for this extendedconduitdata
+     * @param widgetsStart        the position on which widgets start
      * @return Widgets that manipulate the extended ConduitData, these changes are synced back to the server
      */
     default List<AbstractWidget> createWidgets(Screen screen, T extendedConduitData, Supplier<Direction> direction, Vector2i widgetsStart) {
@@ -41,24 +40,23 @@ public interface IClientConduitData<T extends IExtendedConduitData<T>> extends I
     }
 
     /**
-     *
      * @param extendedConduitData your data
-     * @param facing the quads facing that is queried
+     * @param facing              the quads facing that is queried
      * @param connectionDirection direction you connecto to
-     * @param rand random
-     * @param type RenderType to be used
+     * @param rand                random
+     * @param type                RenderType to be used
      * @return List of quads to be rendered. Those will be rotated in place
      */
-    default List<BakedQuad> createConnectionQuads(T extendedConduitData, @Nullable Direction facing, Direction connectionDirection, RandomSource rand, @Nullable RenderType type) {
+    default List<BakedQuad> createConnectionQuads(T extendedConduitData, @Nullable Direction facing, Direction connectionDirection, RandomSource rand,
+        @Nullable RenderType type) {
         return List.of();
     }
-
 
     default BakedModel getModel(ResourceLocation model) {
         return Minecraft.getInstance().getModelManager().getModel(model);
     }
+
     /**
-     *
      * @return a list that contains all models that should be baked
      */
     default List<ResourceLocation> modelsToLoad() {

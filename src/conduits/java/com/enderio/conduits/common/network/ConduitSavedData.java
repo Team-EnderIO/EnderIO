@@ -59,7 +59,6 @@ public class ConduitSavedData extends SavedData {
                     List<NodeIdentifier<?>> graphObjects = new ArrayList<>();
                     List<Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>>> connections = new ArrayList<>();
 
-
                     for (Tag tag2 : graphObjectsTag) {
                         CompoundTag nodeTag = (CompoundTag) tag2;
                         BlockPos pos = BlockPos.of((nodeTag.getLong("pos")));
@@ -69,7 +68,7 @@ public class ConduitSavedData extends SavedData {
                         putUnloadedNodeIdentifier(value, pos, node);
                     }
 
-                    for (Tag tag2: graphConnectionsTag) {
+                    for (Tag tag2 : graphConnectionsTag) {
                         CompoundTag connectionTag = (CompoundTag) tag2;
                         connections.add(new Pair<>(graphObjects.get(connectionTag.getInt("0")), graphObjects.get(connectionTag.getInt("1"))));
                     }
@@ -112,7 +111,7 @@ public class ConduitSavedData extends SavedData {
         EnderIO.LOGGER.info("Conduit network serialization started");
         long start = System.currentTimeMillis();
         ListTag graphsTag = new ListTag();
-        for (IConduitType<?> type: networks.keySet()) {
+        for (IConduitType<?> type : networks.keySet()) {
             List<Graph<Mergeable.Dummy>> graphs = networks.get(type);
             if (graphs.isEmpty())
                 continue;
@@ -122,7 +121,7 @@ public class ConduitSavedData extends SavedData {
 
             ListTag graphsForTypeTag = new ListTag();
 
-            for (Graph<Mergeable.Dummy> graph: graphs) {
+            for (Graph<Mergeable.Dummy> graph : graphs) {
                 if (graph.getObjects().isEmpty())
                     continue;
 
@@ -148,7 +147,7 @@ public class ConduitSavedData extends SavedData {
         ListTag graphObjectsTag = new ListTag();
         ListTag graphConnectionsTag = new ListTag();
 
-        for (GraphObject<Mergeable.Dummy> graphObject: graphObjects) {
+        for (GraphObject<Mergeable.Dummy> graphObject : graphObjects) {
             for (GraphObject<Mergeable.Dummy> neighbour : graph.getNeighbours(graphObject)) {
                 Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>> connection = new Pair<>(graphObject, neighbour);
                 if (!containsConnection(connections, connection)) {
@@ -183,8 +182,10 @@ public class ConduitSavedData extends SavedData {
 
     private void merge(GraphObject<Mergeable.Dummy> object, List<Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>>> connections) {
         var filteredConnections = connections.stream().filter(pair -> (pair.getFirst() == object || pair.getSecond() == object)).toList();
-        List<GraphObject<Mergeable.Dummy>> neighbors = filteredConnections.stream().map(pair -> pair.getFirst() == object ? pair.getSecond() : pair.getFirst()).toList();
-
+        List<GraphObject<Mergeable.Dummy>> neighbors = filteredConnections
+            .stream()
+            .map(pair -> pair.getFirst() == object ? pair.getSecond() : pair.getFirst())
+            .toList();
 
         for (GraphObject<Mergeable.Dummy> neighbor : neighbors) {
             Graph.connect(object, neighbor);
@@ -209,7 +210,7 @@ public class ConduitSavedData extends SavedData {
         if (typeMap.size() == 0)
             deserializedNodes.remove(type);
 
-        return (NodeIdentifier<T>)node;
+        return (NodeIdentifier<T>) node;
     }
 
     public void putUnloadedNodeIdentifier(IConduitType<?> type, BlockPos pos, NodeIdentifier<?> node) {
@@ -219,7 +220,8 @@ public class ConduitSavedData extends SavedData {
         chunkMap.put(pos, node);
     }
 
-    private static boolean containsConnection(List<Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>>> connections, Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>> connection) {
+    private static boolean containsConnection(List<Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>>> connections,
+        Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>> connection) {
         return connections.contains(connection) || connections.contains(connection.swap());
     }
 
@@ -234,13 +236,16 @@ public class ConduitSavedData extends SavedData {
 
     private void tick(ServerLevel serverLevel) {
         setDirty();
-        for (IConduitType<?> type: networks.keySet()) {
+        for (IConduitType<?> type : networks.keySet()) {
             List<Graph<Mergeable.Dummy>> graphs = networks.get(type);
             graphs.removeIf(graph -> graph.getObjects().isEmpty() || graph.getObjects().iterator().next().getGraph() != graph);
         }
         for (var entry : networks.entrySet()) {
             for (Graph<Mergeable.Dummy> graph : entry.getValue()) {
-                if (serverLevel.getGameTime() % entry.getKey().getTicker().getTickRate() == ConduitTypes.getRegistry().getID(entry.getKey()) % entry.getKey().getTicker().getTickRate()) {
+                if (serverLevel.getGameTime() % entry.getKey().getTicker().getTickRate() == ConduitTypes.getRegistry().getID(entry.getKey()) % entry
+                    .getKey()
+                    .getTicker()
+                    .getTickRate()) {
                     entry.getKey().getTicker().tickGraph(entry.getKey(), graph, serverLevel);
                 }
             }

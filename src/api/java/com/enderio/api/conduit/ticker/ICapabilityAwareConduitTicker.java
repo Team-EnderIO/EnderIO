@@ -17,10 +17,12 @@ import java.util.Optional;
 public abstract class ICapabilityAwareConduitTicker<T> implements IIOAwareConduitTicker {
 
     @Override
-    public final void tickColoredGraph(IConduitType<?> type, List<Connection> inserts, List<Connection> extracts, ServerLevel level, Graph<Mergeable.Dummy> graph) {
+    public final void tickColoredGraph(IConduitType<?> type, List<Connection> inserts, List<Connection> extracts, ServerLevel level,
+        Graph<Mergeable.Dummy> graph) {
         List<CapabilityConnection> insertCaps = new ArrayList<>();
         for (Connection insert : inserts) {
-            Optional.ofNullable(level.getBlockEntity(insert.move()))
+            Optional
+                .ofNullable(level.getBlockEntity(insert.move()))
                 .flatMap(b -> b.getCapability(getCapability(), insert.dir().getOpposite()).resolve())
                 .ifPresent(cap -> insertCaps.add(new CapabilityConnection(cap, insert.data(), insert.dir())));
         }
@@ -28,7 +30,8 @@ public abstract class ICapabilityAwareConduitTicker<T> implements IIOAwareCondui
             List<CapabilityConnection> extractCaps = new ArrayList<>();
 
             for (Connection extract : extracts) {
-                Optional.ofNullable(level.getBlockEntity(extract.move()))
+                Optional
+                    .ofNullable(level.getBlockEntity(extract.move()))
                     .flatMap(b -> b.getCapability(getCapability(), extract.dir().getOpposite()).resolve())
                     .ifPresent(cap -> extractCaps.add(new CapabilityConnection(cap, extract.data(), extract.dir())));
             }
@@ -40,16 +43,22 @@ public abstract class ICapabilityAwareConduitTicker<T> implements IIOAwareCondui
 
     @Override
     public boolean canConnectTo(Level level, BlockPos conduitPos, Direction direction) {
-        return Optional.ofNullable(level.getBlockEntity(conduitPos.relative(direction))).flatMap(be -> be.getCapability(getCapability(), direction.getOpposite()).resolve()).isPresent();
+        return Optional
+            .ofNullable(level.getBlockEntity(conduitPos.relative(direction)))
+            .flatMap(be -> be.getCapability(getCapability(), direction.getOpposite()).resolve())
+            .isPresent();
     }
 
-    protected abstract void tickCapabilityGraph(IConduitType<?> type, List<CapabilityConnection> inserts, List<CapabilityConnection> extracts, ServerLevel level, Graph<Mergeable.Dummy> graph);
+    protected abstract void tickCapabilityGraph(IConduitType<?> type, List<CapabilityConnection> inserts, List<CapabilityConnection> extracts,
+        ServerLevel level, Graph<Mergeable.Dummy> graph);
+
     protected abstract Capability<T> getCapability();
 
     public class CapabilityConnection {
         public final T cap;
         public final IExtendedConduitData<?> data;
         public final Direction direction;
+
         private CapabilityConnection(T cap, IExtendedConduitData<?> data, Direction direction) {
             this.cap = cap;
             this.data = data;

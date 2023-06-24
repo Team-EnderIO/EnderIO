@@ -37,7 +37,7 @@ public interface Integration {
 
     /**
      * @param player The Player who activates the HangGlider
-     * used for cunsuming energy or other things
+     *               used for cunsuming energy or other things
      */
     default void onHangGliderTick(Player player) {
     }

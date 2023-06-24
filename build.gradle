@@ -189,9 +189,6 @@ void exclusiveRepo(RepositoryHandler handler, String url, Consumer<InclusiveRepo
         }, fg.repository)//Add FG's repo so we make sure we are able to then find the mapped deps
         it.filter { f -> filterSetup.accept(f) }
     }
-    /*flatDir {
-        dir 'libs'
-    }*/
 }
 
 repositories { RepositoryHandler handler ->

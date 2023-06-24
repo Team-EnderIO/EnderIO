@@ -18,9 +18,9 @@ import java.util.Optional;
 
 public class FluidConduitTicker extends ICapabilityAwareConduitTicker<IFluidHandler> {
 
-
     private final boolean lockFluids;
     private final int fluidRate;
+
     public FluidConduitTicker(boolean lockFluids, int fluidRate) {
         this.lockFluids = lockFluids;
         this.fluidRate = fluidRate;
@@ -48,7 +48,7 @@ public class FluidConduitTicker extends ICapabilityAwareConduitTicker<IFluidHand
     protected void tickCapabilityGraph(IConduitType<?> type, List<ICapabilityAwareConduitTicker<IFluidHandler>.CapabilityConnection> inserts,
         List<ICapabilityAwareConduitTicker<IFluidHandler>.CapabilityConnection> extracts, ServerLevel level, Graph<Mergeable.Dummy> graph) {
 
-        for (CapabilityConnection extract: extracts) {
+        for (CapabilityConnection extract : extracts) {
             IFluidHandler extractHandler = extract.cap;
             FluidExtendedData fluidExtendedData = extract.data.castTo(FluidExtendedData.class);
             FluidStack extractedFluid = Optional
@@ -60,7 +60,8 @@ public class FluidConduitTicker extends ICapabilityAwareConduitTicker<IFluidHand
             int transferred = 0;
             for (int j = 0; j < inserts.size(); j++) {
                 FluidStack transferredFluid = fluidExtendedData.lockedFluid != null ?
-                    FluidUtil.tryFluidTransfer(inserts.get(j).cap, extractHandler, new FluidStack(fluidExtendedData.lockedFluid, fluidRate - transferred), true) :
+                    FluidUtil.tryFluidTransfer(inserts.get(j).cap, extractHandler, new FluidStack(fluidExtendedData.lockedFluid, fluidRate - transferred),
+                        true) :
                     FluidUtil.tryFluidTransfer(inserts.get(j).cap, extractHandler, fluidRate - transferred, true);
 
                 if (!transferredFluid.isEmpty()) {

@@ -19,9 +19,8 @@ public class ConduitTypes {
 
     public static ForgeRegistry<IConduitType<?>> getRegistry() {
         //should always be a forgeRegistry. Needed for IDs for networking/ordering
-        return (ForgeRegistry<IConduitType<?>>)REGISTRY.get();
+        return (ForgeRegistry<IConduitType<?>>) REGISTRY.get();
     }
-
 
     public static void register(IEventBus bus) {
         CONDUIT_TYPES.register(bus);

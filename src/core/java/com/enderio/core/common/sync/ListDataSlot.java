@@ -14,6 +14,7 @@ public class ListDataSlot<T, V extends Tag> extends EnderDataSlot<List<T>> {
 
     private final Function<T, V> serializer;
     private final Function<V, T> deSerializer;
+
     public ListDataSlot(Supplier<List<T>> getter, Consumer<List<T>> setter, Function<T, V> serializer, Function<V, T> deSerializer, SyncMode mode) {
         //I can put null here, because I override the only usage of the setter
         super(getter, setter, mode);
@@ -35,8 +36,8 @@ public class ListDataSlot<T, V extends Tag> extends EnderDataSlot<List<T>> {
     @Override
     protected List<T> fromNBT(CompoundTag nbt) {
         List<T> list = new ArrayList<>();
-        for (Tag tag: (ListTag)nbt.get("list")) {
-            list.add(deSerializer.apply((V)tag));
+        for (Tag tag : (ListTag) nbt.get("list")) {
+            list.add(deSerializer.apply((V) tag));
         }
         return list;
     }
