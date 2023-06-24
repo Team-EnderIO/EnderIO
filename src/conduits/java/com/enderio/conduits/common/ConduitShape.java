@@ -134,7 +134,6 @@ public class ConduitShape {
             }
         }
         for (IConduitType<?> toRender : rendered) {
-            //List<Vec3i> offsetsForType = offsets.get(toRender); already gotten
             if (box == null || !box.contains(offsetsForType.get(0)))
                 conduitShape = Shapes.join(conduitShape,
                     core.move(offsetsForType.get(0).getX() * 3f / 16f, offsetsForType.get(0).getY() * 3f / 16f, offsetsForType.get(0).getZ() * 3f / 16f),

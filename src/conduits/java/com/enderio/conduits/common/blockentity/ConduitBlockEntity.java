@@ -78,8 +78,6 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     }
 
     private void scheduleTick() {
-        //if (!level.isClientSide())
-        //    level.scheduleTick(getBlockPos(), ConduitBlocks.CONDUIT.get(), 0);
         setChanged();
     }
 
@@ -95,7 +93,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         if (this.level.getBlockEntity(this.worldPosition) != this)
             return false;
         return pPlayer.distanceToSqr(this.worldPosition.getX() + 0.5D, this.worldPosition.getY() + 0.5D, this.worldPosition.getZ() + 0.5D) <= Mth.square(
-            pPlayer.getAttributeValue(ForgeMod.REACH_DISTANCE.get()));
+            pPlayer.getAttributeValue(ForgeMod.BLOCK_REACH.get()));
     }
 
     @Override
