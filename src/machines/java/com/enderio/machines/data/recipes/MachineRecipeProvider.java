@@ -148,19 +148,19 @@ public class MachineRecipeProvider extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.ENSNARED_CHASSIS.get()))
             .save(finishedRecipeConsumer);
 
-        // TODO: Why was this commented?
-        ShapedRecipeBuilder
-            .shaped(RecipeCategory.MISC, MachineBlocks.POWERED_SPAWNER.get())
-            .define('I', EIOItems.CONDUCTIVE_ALLOY_INGOT.get())
-            .define('H', Tags.Items.HEADS)
-            .define('C', EIOBlocks.ENSNARED_CHASSIS.get())
-            .define('Z', EIOItems.Z_LOGIC_CONTROLLER.get())
-            .define('V', EIOItems.VIBRANT_CRYSTAL.get())
-            .pattern("IHI")
-            .pattern("ICI")
-            .pattern("VZV")
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.ENSNARED_CHASSIS.get()))
-            .save(finishedRecipeConsumer);
+        // TODO: NBT Crafting with a broken spawner.
+//        ShapedRecipeBuilder
+//            .shaped(RecipeCategory.MISC, MachineBlocks.POWERED_SPAWNER.get())
+//            .define('I', EIOItems.CONDUCTIVE_ALLOY_INGOT.get())
+//            .define('H', Tags.Items.HEADS)
+//            .define('C', EIOBlocks.ENSNARED_CHASSIS.get())
+//            .define('Z', EIOItems.Z_LOGIC_CONTROLLER.get())
+//            .define('V', EIOItems.VIBRANT_CRYSTAL.get())
+//            .pattern("IHI")
+//            .pattern("ICI")
+//            .pattern("VZV")
+//            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.ENSNARED_CHASSIS.get()))
+//            .save(finishedRecipeConsumer);
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.VACUUM_CHEST.get())
@@ -173,17 +173,16 @@ public class MachineRecipeProvider extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PULSATING_CRYSTAL.get()))
             .save(finishedRecipeConsumer);
 
-        // TODO: Need experience rod item.
-//        ShapedRecipeBuilder
-//            .shaped(RecipeCategory.MISC, MachineBlocks.XP_VACUUM.get())
-//            .define('I', Tags.Items.INGOTS_IRON)
-//            .define('C', Tags.Items.CHESTS)
-//            .define('P', EIOItems.PULSATING_CRYSTAL.get())
-//            .pattern("III")
-//            .pattern("ICI")
-//            .pattern("IPI")
-//            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PULSATING_CRYSTAL.get()))
-//            .save(finishedRecipeConsumer);
+        ShapedRecipeBuilder
+            .shaped(RecipeCategory.MISC, MachineBlocks.XP_VACUUM)
+            .pattern("III")
+            .pattern("IRI")
+            .pattern("IPI")
+            .define('I', Tags.Items.INGOTS_IRON)
+            .define('R', EIOItems.EXPERIENCE_ROD)
+            .define('P', EIOItems.PULSATING_CRYSTAL)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PULSATING_CRYSTAL.get()))
+            .save(finishedRecipeConsumer);
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.CRAFTER.get())

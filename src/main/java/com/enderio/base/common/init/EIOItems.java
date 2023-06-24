@@ -326,6 +326,11 @@ public class EIOItems {
         .properties(props -> props.stacksTo(1))
         .register();
 
+    public static final ItemEntry<ExperienceRodItem> EXPERIENCE_ROD = REGISTRATE
+        .item("experience_rod", ExperienceRodItem::new)
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR))
+        .register();
+
     public static final ItemEntry<LevitationStaffItem> LEVITATION_STAFF = REGISTRATE
         .item("staff_of_levity", LevitationStaffItem::new)
         .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR), modifier -> EIOItems.LEVITATION_STAFF.get().addAllVariants(modifier))

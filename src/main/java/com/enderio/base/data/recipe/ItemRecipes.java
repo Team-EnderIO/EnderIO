@@ -106,6 +106,16 @@ public class ItemRecipes extends RecipeProvider {
             .save(recipeConsumer);
 
         ShapedRecipeBuilder
+            .shaped(RecipeCategory.TOOLS, EIOItems.EXPERIENCE_ROD.get())
+            .pattern("  I")
+            .pattern(" E ")
+            .pattern("I  ")
+            .define('I', EIOItems.SOULARIUM_INGOT)
+            .define('E', EIOItems.ENERGETIC_ALLOY_INGOT)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.SOULARIUM_INGOT))
+            .save(recipeConsumer);
+
+        ShapedRecipeBuilder
             .shaped(RecipeCategory.TOOLS, EIOItems.LEVITATION_STAFF.get())
             .define('C', EIOItems.PULSATING_CRYSTAL.get())
             .define('R', EIOItems.INFINITY_ROD.get())
