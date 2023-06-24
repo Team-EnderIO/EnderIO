@@ -14,6 +14,7 @@ import com.enderio.base.data.advancement.EIOAdvancementGenerator;
 import com.enderio.base.data.recipe.*;
 import com.enderio.base.data.tags.EIOBlockTagsProvider;
 import com.enderio.base.data.tags.EIOFluidTagsProvider;
+import com.enderio.base.data.tags.EIOItemTagsProvider;
 import com.enderio.core.EnderCore;
 import com.enderio.core.common.network.CoreNetwork;
 import com.tterrag.registrate.Registrate;
@@ -111,10 +112,10 @@ public class EnderIO {
         provider.addSubProvider(event.includeServer(), new GlassRecipes(packOutput));
         provider.addSubProvider(event.includeServer(), new FireCraftingRecipes(packOutput));
 
-//        ForgeBlockTagsProvider b = new ForgeBlockTagsProvider(packOutput, lookupProvider, event.getExistingFileHelper());
-//        provider.addSubProvider(event.includeServer(), new EIOItemTagsProvider(packOutput, event.getLookupProvider(), b.contentsGetter(), event.getExistingFileHelper()));
+        var b = new EIOBlockTagsProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper());
+        provider.addSubProvider(event.includeServer(), b);
+        provider.addSubProvider(event.includeServer(), new EIOItemTagsProvider(packOutput, event.getLookupProvider(), b.contentsGetter(), event.getExistingFileHelper()));
         provider.addSubProvider(event.includeServer(), new EIOFluidTagsProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper()));
-        provider.addSubProvider(event.includeServer(), new EIOBlockTagsProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper()));
 //        provider.addSubProvider(event.includeServer(), new FireCraftingLootProvider(packOutput)); TODO: 1.19.4
 
         provider.addSubProvider(event.includeServer(), new ForgeAdvancementProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper(),

@@ -185,8 +185,8 @@ public class FireCraftingCategory implements IRecipeCategory<FireCraftingRecipe>
         Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, stack, buffers, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
 
         stack.popPose();
-        // TODO: Fire Water has no blockstate, wierd, probably just need a different renderer
-        BlockState fireState = !alternateFire ? Blocks.FIRE.defaultBlockState() : EIOFluids.FIRE_WATER.getBlock()/*.orElse(Blocks.FIRE)*/.get().defaultBlockState();
+        // TODO: Fire Water has no block. I think this is a registrate bug?
+        BlockState fireState = !alternateFire ? Blocks.FIRE.defaultBlockState() : EIOFluids.FIRE_WATER.getBlock().orElse(Blocks.FIRE).defaultBlockState();
 //        BlockState fireState = Blocks.FIRE.defaultBlockState();
         stack.pushPose();
         stack.translate(0, -0.5, 0);
