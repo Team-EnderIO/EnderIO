@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "building",
   "key": {
     "G": {
       "item": "enderio:clear_glass_dp"
@@ -16,5 +17,6 @@
   "result": {
     "count": 8,
     "item": "enderio:clear_glass_dp"
-  }
+  },
+  "show_notification": true
 }

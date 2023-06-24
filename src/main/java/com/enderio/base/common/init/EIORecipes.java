@@ -1,6 +1,7 @@
 package com.enderio.base.common.init;
 
 import com.enderio.EnderIO;
+import com.enderio.base.common.item.darksteel.upgrades.LegacyDarkSteelUpgradeRecipe;
 import com.enderio.base.common.item.darksteel.upgrades.DarkSteelUpgradeRecipe;
 import com.enderio.base.common.recipe.FireCraftingRecipe;
 import com.enderio.base.common.recipe.GrindingBallRecipe;
@@ -25,7 +26,8 @@ public class EIORecipes {
 
     public static final RecipeTypeSerializerPair<FireCraftingRecipe, FireCraftingRecipe.Serializer> FIRE_CRAFTING = register("fire_crafting", FireCraftingRecipe.Serializer::new);
 
-    public static final RegistryObject<DarkSteelUpgradeRecipe.Serializer> DARK_STEEL_UPGRADE = RECIPE_SERIALIZERS.register("dark_steel_upgrade", DarkSteelUpgradeRecipe.Serializer::new);
+    public static final RegistryObject<LegacyDarkSteelUpgradeRecipe.Serializer> DARK_STEEL_UPGRADE = RECIPE_SERIALIZERS.register("dark_steel_upgrade", LegacyDarkSteelUpgradeRecipe.Serializer::new);
+    public static final RegistryObject<DarkSteelUpgradeRecipe.Serializer> DARK_STEEL_UPGRADE_1_20 = RECIPE_SERIALIZERS.register("dark_steel_upgrade_1_20", DarkSteelUpgradeRecipe.Serializer::new);
 
     private static <R extends Recipe<?>, S extends RecipeSerializer<? extends R>> RecipeTypeSerializerPair<R, S> register(String name, Supplier<S> serializerFactory) {
         RegistryObject<RecipeType<R>> type = RECIPE_TYPES.register(name, () -> RecipeType.simple(EnderIO.loc(name)));

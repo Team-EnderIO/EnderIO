@@ -8,6 +8,7 @@ import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -25,12 +26,12 @@ import java.util.function.Consumer;
 
 public class SoulBindingRecipeProvider extends EnderRecipeProvider {
 
-    public SoulBindingRecipeProvider(DataGenerator generator) {
-        super(generator);
+    public SoulBindingRecipeProvider(PackOutput packOutput) {
+        super(packOutput);
     }
 
     @Override
-    protected void buildCraftingRecipes(Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
+    protected void buildRecipes(Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
         build(MachineBlocks.POWERED_SPAWNER.get().asItem(), List.of(Ingredient.of(EIOItems.FILLED_SOUL_VIAL.get()), Ingredient.of(EIOItems.BROKEN_SPAWNER.get())), 2000, 10, pFinishedRecipeConsumer);
     }
 

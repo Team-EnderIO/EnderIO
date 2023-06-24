@@ -4,6 +4,7 @@ import com.enderio.core.client.gui.widgets.EIOWidget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.AbstractTexture;
@@ -31,7 +32,7 @@ public class FluidStackStaticWidget extends EIOWidget {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         Minecraft minecraft = Minecraft.getInstance();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.defaultBlendFunc();
@@ -52,9 +53,9 @@ public class FluidStackStaticWidget extends EIOWidget {
                         FastColor.ARGB32.blue(color) / 255.0F, FastColor.ARGB32.alpha(color) / 255.0F);
                     RenderSystem.enableBlend();
 
-                    int atlasWidth = (int) (sprite.getWidth() / (sprite.getU1() - sprite.getU0()));
-                    int atlasHeight = (int) (sprite.getHeight() / (sprite.getV1() - sprite.getV0()));
-                    blit(poseStack, x, y, width, height, sprite.getU0() * atlasWidth, sprite.getV0() * atlasHeight, sprite.getWidth(), sprite.getHeight(),
+                    int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
+                    int atlasHeight = (int) (sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
+                    blit(poseStack, x, y, width, height, sprite.getU0() * atlasWidth, sprite.getV0() * atlasHeight, sprite.contents().width(), sprite.contents().height(),
                         atlasWidth, atlasHeight);
                     RenderSystem.setShaderColor(1, 1, 1, 1);
 
@@ -62,6 +63,11 @@ public class FluidStackStaticWidget extends EIOWidget {
             }
             renderToolTip(poseStack, mouseX, mouseY);
         }
+    }
+
+    @Override
+    protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
+
     }
 
     public void renderToolTip(PoseStack poseStack, int mouseX, int mouseY) {

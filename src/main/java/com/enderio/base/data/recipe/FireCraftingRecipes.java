@@ -6,6 +6,7 @@ import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -20,12 +21,12 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 public class FireCraftingRecipes extends EnderRecipeProvider {
-    public FireCraftingRecipes(DataGenerator generator) {
-        super(generator);
+    public FireCraftingRecipes(PackOutput packOutput) {
+        super(packOutput);
     }
 
     @Override
-    protected void buildCraftingRecipes(Consumer<FinishedRecipe> finishedRecipeConsumer) {
+    protected void buildRecipes(Consumer<FinishedRecipe> finishedRecipeConsumer) {
         finishedRecipeConsumer.accept(new FinishedFireRecipe(
             EnderIO.loc("fire_crafting/infinity"),
             EnderIO.loc("fire_crafting/infinity"),

@@ -7,12 +7,13 @@ import net.minecraft.world.level.block.FenceGateBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
+import net.minecraft.world.level.block.state.properties.WoodType;
 import org.jetbrains.annotations.Nullable;
 
 public class PaintedFenceGateBlock extends FenceGateBlock implements EntityBlock, IPaintedBlock {
 
     public PaintedFenceGateBlock(Properties properties) {
-        super(properties);
+        super(properties, WoodType.OAK);
     }
 
     @Nullable

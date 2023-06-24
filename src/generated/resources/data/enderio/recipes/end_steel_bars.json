@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "building",
   "key": {
     "I": {
       "item": "enderio:end_steel_ingot"
@@ -12,5 +13,6 @@
   "result": {
     "count": 12,
     "item": "enderio:end_steel_bars"
-  }
+  },
+  "show_notification": true
 }

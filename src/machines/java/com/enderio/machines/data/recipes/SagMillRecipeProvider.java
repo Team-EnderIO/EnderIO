@@ -10,6 +10,7 @@ import com.enderio.machines.common.recipe.SagMillingRecipe.BonusType;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -31,13 +32,13 @@ import static net.minecraft.world.item.Items.*;
 public class SagMillRecipeProvider extends EnderRecipeProvider {
 
     private static final int BASE_ENERGY_PER_OPERATION = 2400;
-	
-	public SagMillRecipeProvider(DataGenerator generator) {
-        super(generator);
+
+    public SagMillRecipeProvider(PackOutput packOutput) {
+        super(packOutput);
     }
 
     @Override
-    protected void buildCraftingRecipes(Consumer<FinishedRecipe> finishedRecipeConsumer) {
+    protected void buildRecipes(Consumer<FinishedRecipe> finishedRecipeConsumer) {
         
         build1toN("iron", Tags.Items.INGOTS_IRON, IRON_POWDER.get(), 1, finishedRecipeConsumer);
         build1toN("gold", Tags.Items.INGOTS_GOLD, GOLD_POWDER.get(), 1, finishedRecipeConsumer);

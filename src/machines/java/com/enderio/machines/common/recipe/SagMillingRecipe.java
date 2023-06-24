@@ -9,6 +9,7 @@ import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Either;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -64,7 +65,7 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
     }
 
     @Override
-    public List<OutputStack> craft(Container container) {
+    public List<OutputStack> craft(Container container, RegistryAccess registryAccess) {
         List<OutputStack> outputs = new ArrayList<>();
 
         // Iterate over the number of outputs
@@ -108,7 +109,7 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
     }
 
     @Override
-    public List<OutputStack> getResultStacks() {
+    public List<OutputStack> getResultStacks(RegistryAccess registryAccess) {
         // TODO: This logic seems dumb.
         // Gather guaranteed outputs (that are loaded)
         List<OutputStack> guaranteedOutputs = new ArrayList<>();

@@ -21,12 +21,12 @@ public final class DarkSteelUpgradeRegistry {
     private static final String UPGRADE_IN_STACK_KEY = "dark_steel_upgrade";
 
     static {
-        INST.registerUpgrade(EmpoweredUpgrade::new);
-        INST.registerUpgrade(SpoonUpgrade::new);
-        INST.registerUpgrade(ForkUpgrade::new);
-        INST.registerUpgrade(DirectUpgrade::new);
-        INST.registerUpgrade(ExplosiveUpgrade::new);
-        INST.registerUpgrade(ExplosivePenetrationUpgrade::new);
+        INST.registerUpgrade(EmpoweredUpgrade.NAME, EmpoweredUpgrade::new);
+        INST.registerUpgrade(SpoonUpgrade.NAME, SpoonUpgrade::new);
+        INST.registerUpgrade(ForkUpgrade.NAME, ForkUpgrade::new);
+        INST.registerUpgrade(DirectUpgrade.NAME, DirectUpgrade::new);
+        INST.registerUpgrade(ExplosiveUpgrade.NAME, ExplosiveUpgrade::new);
+        INST.registerUpgrade(ExplosivePenetrationUpgrade.NAME, ExplosivePenetrationUpgrade::new);
     }
 
     public static DarkSteelUpgradeRegistry instance() {return INST; }
@@ -39,8 +39,8 @@ public final class DarkSteelUpgradeRegistry {
 
     // region Upgrade register
 
-    public void registerUpgrade(Supplier<IDarkSteelUpgrade> upgrade) {
-        registeredUpgrades.put(upgrade.get().getSerializedName(), upgrade);
+    public void registerUpgrade(String upgradeName, Supplier<IDarkSteelUpgrade> upgrade) {
+        registeredUpgrades.put(upgradeName, upgrade);
     }
 
     public Optional<IDarkSteelUpgrade> createUpgrade(String name) {

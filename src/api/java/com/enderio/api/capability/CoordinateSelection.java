@@ -3,6 +3,7 @@ package com.enderio.api.capability;
 import com.enderio.api.UseOnly;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
@@ -45,6 +46,6 @@ public record CoordinateSelection(ResourceLocation level, BlockPos pos) {
     @Nullable
     @UseOnly(LogicalSide.SERVER)
     public Level getLevelInstance() {
-        return ServerLifecycleHooks.getCurrentServer().getLevel(ResourceKey.create(Registry.DIMENSION_REGISTRY, level()));
+        return ServerLifecycleHooks.getCurrentServer().getLevel(ResourceKey.create(Registries.DIMENSION, level()));
     }
 }

@@ -16,8 +16,11 @@ import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.levelgen.LegacyRandomSource;
 
@@ -32,6 +35,7 @@ public class EnderIOSelfClientIntegration implements ClientIntegration {
     private static final ModelPart FLAG = Minecraft.getInstance().getEntityModels().bakeLayer(ModelLayers.BANNER).getChild("flag");
 
     private static final List<Pair<Holder<BannerPattern>, DyeColor>> PATTERNS = createRandomPattern();
+
     @Override
     public void renderHangGlider(PoseStack posestack, MultiBufferSource buffer, int light, int overlay, AbstractClientPlayer player, float pPartialTick) {
         posestack.pushPose();
@@ -45,7 +49,7 @@ public class EnderIOSelfClientIntegration implements ClientIntegration {
             return;
         if (player.isShiftKeyDown())
             posestack.translate(0, 0.05, 0);
-        Minecraft.getInstance().getItemRenderer().render(EIOItems.COLORED_HANG_GLIDERS.get(DyeColor.CYAN).asStack(), ItemTransforms.TransformType.NONE, false, posestack, buffer, light, overlay, bakedModel);
+        Minecraft.getInstance().getItemRenderer().render(EIOItems.COLORED_HANG_GLIDERS.get(DyeColor.CYAN).asStack(), ItemDisplayContext.NONE, false, posestack, buffer, light, overlay, bakedModel);
         posestack.scale(0.2f, 0.2f, 0.2f);
         posestack.translate(0, -1f, .5-0.06f);
         for (int i = 0; i < 17 && i < PATTERNS.size() && i > 0; ++i) {
@@ -64,7 +68,7 @@ public class EnderIOSelfClientIntegration implements ClientIntegration {
         Random random = new Random();
         for (int i = random.nextInt(3); i < 6; i++) {
             patterns.add(new Pair<>(
-                Registry.BANNER_PATTERN.getRandom(new LegacyRandomSource(random.nextInt())).orElseThrow(), DyeColor.values()[random.nextInt(DyeColor.values().length)]));
+                BuiltInRegistries.BANNER_PATTERN.getRandom(new LegacyRandomSource(random.nextInt())).orElseThrow(), DyeColor.values()[random.nextInt(DyeColor.values().length)]));
         }
         return patterns;
     }

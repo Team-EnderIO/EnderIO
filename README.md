@@ -107,7 +107,7 @@ TODO: Contributing guidelines
 All code (excluding the bundled APIs from other mods, which are covered by their respective licenses) are released without restriction into the public domain under the CC0 1.0 license (http://creativecommons.org/publicdomain/zero/1.0/legalcode) FAQ (https://wiki.creativecommons.org/CC0_FAQ).
 Do what you want with it, as long as you smile while doing so. While it is not a requirement, it would be nice to know if it is being used and how, so send me hello to **crazypants.mc at gmail.com**.
 
-In addition to this, further licensing considerations are available to view [here](doc/license).
+Certain parts of the source code may be under a different license due to being part of other projects. Notice for the same can be found along with the said source files in the same directory. In addition to this, further licensing considerations are available to view [here](doc/license).
 
 ### Credits
 - CrazyPants

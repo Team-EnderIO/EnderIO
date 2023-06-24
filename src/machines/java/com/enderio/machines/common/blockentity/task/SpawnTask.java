@@ -12,6 +12,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 import java.util.Optional;
@@ -80,12 +81,12 @@ public class SpawnTask extends PoweredTask{
             blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
             return false;
         }
-        Optional<EntityType<?>> entity = Registry.ENTITY_TYPE.getOptional(rl.get());
-        if (entity.isEmpty() || !Registry.ENTITY_TYPE.getKey(entity.get()).equals(rl.get())) { // check we don't get the default pig
+        EntityType<?> entity = ForgeRegistries.ENTITY_TYPES.getValue(rl.get());
+        if (entity == null || !ForgeRegistries.ENTITY_TYPES.getKey(entity).equals(rl.get())) { // check we don't get the default pig
             blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
             return false;
         }
-        List<? extends Entity> entities = blockEntity.getLevel().getEntities(entity.get(), range, p -> p instanceof LivingEntity);
+        List<? extends Entity> entities = blockEntity.getLevel().getEntities(entity, range, p -> p instanceof LivingEntity);
         if (entities.size() >= MachinesConfig.COMMON.MAX_SPAWNER_ENTITIES.get()) {
             blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.TOO_MANY_MOB);
             return false;
@@ -112,12 +113,12 @@ public class SpawnTask extends PoweredTask{
                 blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
                 return false;
             }
-            Optional<EntityType<?>> optionalEntity = Registry.ENTITY_TYPE.getOptional(rl.get());
-            if (optionalEntity.isEmpty() || !Registry.ENTITY_TYPE.getKey(optionalEntity.get()).equals(rl.get())) { // check we don't get the default pig
+            EntityType<?> optionalEntity = ForgeRegistries.ENTITY_TYPES.getValue(rl.get());
+            if (optionalEntity == null || !ForgeRegistries.ENTITY_TYPES.getKey(optionalEntity).equals(rl.get())) { // check we don't get the default pig
                 blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
                 return false;
             }
-            if (level.noCollision(optionalEntity.get().getAABB(x, y, z))) {
+            if (level.noCollision(optionalEntity.getAABB(x, y, z))) {
 
                 Entity entity = null;
                 switch (MachinesConfig.COMMON.SPAWN_TYPE.get()) {
@@ -128,9 +129,9 @@ public class SpawnTask extends PoweredTask{
                         });
                     }
                     case ENTITYTYPE -> {
-                        Optional<EntityType<?>> id = Registry.ENTITY_TYPE.getOptional(new ResourceLocation(blockEntity.getEntityData().getEntityTag().getString("id")));
-                        if (id.isPresent()) {
-                            entity = id.get().create(level);
+                        EntityType<?> id = ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation(blockEntity.getEntityData().getEntityTag().getString("id")));
+                        if (id != null) {
+                            entity = id.create(level);
                             entity.moveTo(x, y, z);
                         }
                     }
@@ -142,8 +143,8 @@ public class SpawnTask extends PoweredTask{
                 }
 
                 if (entity instanceof Mob mob) {
-                    net.minecraftforge.eventbus.api.Event.Result res = net.minecraftforge.event.ForgeEventFactory.canEntitySpawn(mob, level, (float)entity.getX(), (float)entity.getY(), (float)entity.getZ(), null, MobSpawnType.SPAWNER);
-                    if (res == net.minecraftforge.eventbus.api.Event.Result.DENY) {
+                    SpawnGroupData res = net.minecraftforge.event.ForgeEventFactory.onFinalizeSpawn(mob, level, level.getCurrentDifficultyAt(pos), MobSpawnType.SPAWNER, null, null);
+                    if (res == null) {
                         blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.OTHER_MOD);
                         return false;
                     }
@@ -155,7 +156,7 @@ public class SpawnTask extends PoweredTask{
                 }
 
                 level.levelEvent(2004, pos, 0);
-                level.gameEvent(entity, GameEvent.ENTITY_PLACE, new BlockPos(x, y, z));
+                level.gameEvent(entity, GameEvent.ENTITY_PLACE, new BlockPos((int) x, (int) y, (int) z));
                 if (entity instanceof Mob mob) {
                     mob.spawnAnim();
                 }

@@ -9,8 +9,10 @@ import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosivePenetr
 import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosiveUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosiveUpgradeHandler;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.core.common.item.ITabVariants;
 import com.enderio.core.common.util.EnergyUtil;
 import com.enderio.core.common.util.TooltipUtil;
+import com.tterrag.registrate.util.CreativeModeTabModifier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
@@ -28,7 +30,7 @@ import net.minecraftforge.common.ToolActions;
 
 import java.util.List;
 
-public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem {
+public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem, ITabVariants {
 
     private final ForgeConfigSpec.ConfigValue<Integer> obsidianBreakPowerUse = BaseConfig.COMMON.DARK_STEEL.DARK_STEEL_PICKAXE_OBSIDIAN_ENERGY_COST;
 
@@ -85,13 +87,16 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem 
     }
 
     @Override
-    public void addCreativeItems(NonNullList<ItemStack> pItems, Item item) {
-        IDarkSteelItem.super.addCreativeItems(pItems, item);
+    public void addAllVariants(CreativeModeTabModifier modifier) {
+        modifier.accept(this);
+        modifier.accept(createFullyUpgradedStack(this));
+
         //Include a fully upgraded version without explosive upgrades
-        ItemStack itemStack = createFullyUpgradedStack(item);
+        ItemStack itemStack = createFullyUpgradedStack(this);
         DarkSteelUpgradeable.removeUpgrade(itemStack, ExplosiveUpgrade.NAME);
         DarkSteelUpgradeable.removeUpgrade(itemStack, ExplosivePenetrationUpgrade.NAME);
-        pItems.add(itemStack);
+        modifier.accept(itemStack);
+
     }
 
     private boolean canHarvest(ItemStack stack, BlockState state) {
@@ -125,13 +130,6 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem 
     @Override
     public boolean isFoil(ItemStack pStack) {
         return DarkSteelUpgradeable.hasUpgrade(pStack, EmpoweredUpgrade.NAME);
-    }
-
-    @Override
-    public void fillItemCategory(CreativeModeTab pCategory, NonNullList<ItemStack> pItems) {
-        if (allowedIn(pCategory)) {
-            addCreativeItems(pItems, this);
-        }
     }
 
     // endregion

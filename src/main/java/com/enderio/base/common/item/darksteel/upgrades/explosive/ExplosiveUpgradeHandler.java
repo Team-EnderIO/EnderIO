@@ -10,8 +10,6 @@ import com.enderio.core.common.util.BlockUtil;
 import com.enderio.core.common.util.EnergyUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3d;
-import com.mojang.math.Vector4f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
@@ -43,6 +41,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3d;
+import org.joml.Vector4f;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -198,8 +199,8 @@ public class ExplosiveUpgradeHandler {
     }
 
     private static void renderJoiningLines(PoseStack poseStack, VertexConsumer vertexConsumer, AABB refBounds, AABB miningBounds, Vector3d origin, Vector4f color) {
-        var fromCorners = getCorners(refBounds);
-        var toCorners = getCorners(miningBounds);
+        List<Vector3d> fromCorners = getCorners(refBounds);
+        List<Vector3d> toCorners = getCorners(miningBounds);
         for (int i=0;i<fromCorners.size();i++) {
             Vector3d from = fromCorners.get(i);
             Vector3d to = toCorners.get(i);
