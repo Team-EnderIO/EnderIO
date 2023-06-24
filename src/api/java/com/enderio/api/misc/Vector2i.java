@@ -1,10 +1,11 @@
-package com.enderio.core.common.util;
+package com.enderio.api.misc;
 
 import java.util.Objects;
 
 public record Vector2i(int x, int y) {
     public static final Vector2i MIN = new Vector2i(Integer.MIN_VALUE, Integer.MIN_VALUE);
     public static final Vector2i MAX = new Vector2i(Integer.MAX_VALUE, Integer.MAX_VALUE);
+    public static final Vector2i ZERO = new Vector2i(0, 0);
 
     public Vector2i add(Vector2i other) {
         return add(other.x, other.y);

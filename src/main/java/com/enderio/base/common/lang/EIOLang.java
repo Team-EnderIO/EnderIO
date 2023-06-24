@@ -2,6 +2,7 @@ package com.enderio.base.common.lang;
 
 import com.enderio.EnderIO;
 import com.enderio.api.capacitor.CapacitorModifier;
+import com.enderio.api.misc.ApiLang;
 import com.enderio.core.common.util.TooltipUtil;
 import com.tterrag.registrate.Registrate;
 import net.minecraft.ChatFormatting;
@@ -42,12 +43,18 @@ public class EIOLang {
     public static final Component COORDINATE_SELECTOR_NO_BLOCK = REGISTRATE.addLang("info", EnderIO.loc("coordinate_selector.no_block"), "No Block in Range");
 
 
+    public static final Component CHANNEL = REGISTRATE.addLang("gui", EnderIO.loc("channel"), "Channel");
     public static final Component REDSTONE_MODE = REGISTRATE.addLang("gui", EnderIO.loc("redstone.mode"), "Redstone Mode");
     public static final Component REDSTONE_ALWAYS_ACTIVE = REGISTRATE.addLang("gui", EnderIO.loc("redstone.always_active"), "Always active");
     public static final Component REDSTONE_ACTIVE_WITH_SIGNAL = REGISTRATE.addLang("gui", EnderIO.loc("redstone.active_with_signal"), "Active with signal");
     public static final Component REDSTONE_ACTIVE_WITHOUT_SIGNAL = REGISTRATE.addLang("gui", EnderIO.loc("redstone.active_without_signal"), "Active without signal");
     public static final Component REDSTONE_NEVER_ACTIVE = REGISTRATE.addLang("gui", EnderIO.loc("redstone.never_active"), "Never active");
+    public static final Component FLUID_CONDUIT_CHANGE_FLUID1 = REGISTRATE.addLang("gui", EnderIO.loc("fluid_conduit.change_fluid1"), "Locked Fluid:");
+    public static final Component FLUID_CONDUIT_CHANGE_FLUID2 = REGISTRATE.addLang("gui", EnderIO.loc("fluid_conduit.change_fluid2"), "Click to reset!");
+    public static final MutableComponent FLUID_CONDUIT_CHANGE_FLUID3 = REGISTRATE.addLang("gui", EnderIO.loc("fluid_conduit.change_fluid3"), "Fluid: %s");
 
+    public static final MutableComponent TANK_EMPTY_STRING = REGISTRATE.addLang("tooltip", EnderIO.loc("fluid_tank.tank_empty_tooltip"), "Empty tank");
+    public static final MutableComponent FLUID_TANK_TOOLTIP = REGISTRATE.addLang("tooltip", EnderIO.loc("fluid_tank.tank_tooltip"), "%d/%d mb of %s");//[amount]/[capacity] mb of [FluidName]
     // endregion
 
     // region Dark Steel
@@ -204,5 +211,10 @@ public class EIOLang {
 
     // endregion
 
-    public static void register() {}
+    public static void register() {
+        ApiLang.REDSTONE_ACTIVE_WITH_SIGNAL = REDSTONE_ACTIVE_WITH_SIGNAL;
+        ApiLang.REDSTONE_NEVER_ACTIVE = REDSTONE_NEVER_ACTIVE;
+        ApiLang.REDSTONE_ALWAYS_ACTIVE = REDSTONE_ALWAYS_ACTIVE;
+        ApiLang.REDSTONE_ACTIVE_WITHOUT_SIGNAL = REDSTONE_ACTIVE_WITHOUT_SIGNAL;
+    }
 }

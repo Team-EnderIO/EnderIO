@@ -103,7 +103,7 @@ minecraft {
         }
         clientRandom {
             parent runs.client
-            args '--username', 'Dev##'
+            args '--username', 'Dev####'
         }
 
         server {
@@ -134,7 +134,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-            args '--mod', 'enderio', '--server', '--client', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            args '--mod', 'enderio', '--server', '--client', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/'), '--existing', file('src/conduits/resources/')
 
             mods {
                 enderio {
@@ -193,9 +193,10 @@ void exclusiveRepo(RepositoryHandler handler, String url, Consumer<InclusiveRepo
 
 repositories { RepositoryHandler handler ->
     exclusiveRepo(handler, 'https://maven.tterrag.com/', 'com.tterrag.registrate')
-    exclusiveRepo(handler, 'https://modmaven.dev/', 'mezz.jei', 'mcjty.theoneprobe')
+    exclusiveRepo(handler, 'https://modmaven.dev/', 'mezz.jei', 'mcjty.theoneprobe', 'appeng')
     exclusiveRepo(handler, 'https://cursemaven.com', 'curse.maven')
     exclusiveRepo(handler, 'https://maven.blamejared.com', 'vazkii.patchouli')
+    exclusiveRepo(handler, 'https://dogforce-games.com/maven', 'dev.gigaherz.graph')
 
     mavenLocal()
 }
@@ -205,11 +206,16 @@ jarJar.enable()
 dependencies {
     // Forge
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-
+    //implementation fg.deobf("blank:Xycraft+Core:0.5.2")
+    //runtimeOnly fg.deobf("blank:Xycraft+Override:0.5.2")
+    //runtimeOnly fg.deobf("blank:Xycraft+World:0.5.2")
     // Registrate
     implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
     jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: "[${registrate_version}]")
 
+    // GraphLib
+    implementation implementation(fg.deobf("dev.gigaherz.graph:GraphLib3:${graphlib_version}"))
+    jarJar(group: 'dev.gigaherz.graph', name: 'GraphLib3', version: "${graphlib_version_range}")
     coreAnnotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     // JEI
@@ -217,6 +223,12 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
     runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common:${jei_version}")
     runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
+
+    // AE2
+    compileOnly "appeng:appliedenergistics2:${ae2_api_version}:api"
+
+    // TODO: Not available for 1.19.4
+    //runtimeOnly fg.deobf("appeng:appliedenergistics2-forge:${ae2_mod_version}")
 
     // The One Probe
     //TODO: Remove having to specify these as non transitive once https://github.com/McJtyMods/TheOneProbe/issues/548 is fixed. Thanks Mekanism!
