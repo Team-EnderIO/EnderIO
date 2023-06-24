@@ -236,7 +236,7 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
 
             if (isMouseOver(pMouseX, pMouseY)) {
                 Component tooltip = value.getTooltip();
-                if (tooltip != Component.empty()) { //TODO fix
+                if (tooltip != null && !Component.empty().equals(tooltip)) {
                     selection.renderTooltipAfterEverything(pPoseStack, List.of(tooltip), pMouseX, pMouseY);
                 }
             }
