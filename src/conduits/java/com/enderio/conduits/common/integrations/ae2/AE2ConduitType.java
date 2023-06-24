@@ -1,5 +1,6 @@
 package com.enderio.conduits.common.integrations.ae2;
 
+import appeng.api.networking.IGridConnection;
 import appeng.api.networking.IInWorldGridNodeHost;
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.IConduitMenuData;
@@ -53,7 +54,7 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
             }
 
             private static boolean canConnectTo(IInWorldGridNodeHost host, Direction direction) {
-                return Optional.ofNullable(host.getGridNode(direction.getOpposite())).map(node -> node.isExposedOnSide(direction.getOpposite())).orElse(false);
+                return Optional.ofNullable(host.getGridNode(direction.getOpposite())).map(node -> node.getConnectedSides().contains(direction.getOpposite())).orElse(false);
             }
 
             @Override

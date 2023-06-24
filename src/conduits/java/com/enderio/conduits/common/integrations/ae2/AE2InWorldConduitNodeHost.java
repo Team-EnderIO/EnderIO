@@ -1,6 +1,5 @@
 package com.enderio.conduits.common.integrations.ae2;
 
-import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.*;
 import appeng.api.util.AECableType;
 import com.enderio.EnderIO;
@@ -88,6 +87,6 @@ public class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, IExtende
 
     public boolean canPlayerModify(Player player) {
         //TODO add check
-        return mainNode.isReady() && mainNode.getGrid().getSecurityService().hasPermission(player, SecurityPermissions.BUILD);
+        return mainNode.isReady();
     }
 }

@@ -225,10 +225,8 @@ dependencies {
     runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
 
     // AE2
-    compileOnly "appeng:appliedenergistics2:${ae2_api_version}:api"
-
-    // TODO: Not available for 1.19.4
-    //runtimeOnly fg.deobf("appeng:appliedenergistics2-forge:${ae2_mod_version}")
+    compileOnly "appeng:appliedenergistics2-forge:${ae2_version}:api"
+    runtimeOnly fg.deobf("appeng:appliedenergistics2-forge:${ae2_version}")
 
     // The One Probe
     //TODO: Remove having to specify these as non transitive once https://github.com/McJtyMods/TheOneProbe/issues/548 is fixed. Thanks Mekanism!
