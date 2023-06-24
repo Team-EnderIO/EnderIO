@@ -29,5 +29,8 @@
     "plinth",
     "book"
   ],
-  "loader": "forge:composite"
+  "loader": "forge:composite",
+  "textures": {
+    "particle": "enderio:block/dark_steel_pressure_plate"
+  }
 }
