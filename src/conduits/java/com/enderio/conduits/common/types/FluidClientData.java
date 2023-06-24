@@ -11,6 +11,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
@@ -21,6 +22,7 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.RandomSource;
@@ -98,8 +100,15 @@ public class FluidClientData extends IClientConduitData.Simple<FluidExtendedData
 
         @Override
         public void renderWidget(PoseStack poseStack, int pMouseX, int pMouseY, float pPartialTick) {
-            // TODO: CONDUITS 1.19.4 TOOLTIPS
-            //renderToolTip(poseStack, pMouseX, pMouseY);
+            if (isHoveredOrFocused()) {
+                MutableComponent tooltip = EIOLang.FLUID_CONDUIT_CHANGE_FLUID1.copy();
+                tooltip.append("\n").append(EIOLang.FLUID_CONDUIT_CHANGE_FLUID2);
+                if (currentFluid.get() != null) {
+                    tooltip.append("\n").append(TooltipUtil.withArgs(EIOLang.FLUID_CONDUIT_CHANGE_FLUID3, currentFluid.get().getFluidType().getDescription()));
+                }
+                setTooltip(Tooltip.create(TooltipUtil.style(tooltip)));
+            }
+
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderTexture(0, WIDGET_TEXTURE);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
@@ -133,20 +142,6 @@ public class FluidClientData extends IClientConduitData.Simple<FluidExtendedData
                 RenderSystem.setShaderColor(1, 1, 1, 1);
             }
         }
-
-        // TODO: 1.19.4 CONDUITS: New tooltip system
-        /*@Override
-        public void renderToolTip(PoseStack poseStack, int mouseX, int mouseY) {
-            if (isHovered && isActive()) {
-                List<Component> components = new ArrayList<>();
-                components.add(EIOLang.FLUID_CONDUIT_CHANGE_FLUID1);
-                components.add(EIOLang.FLUID_CONDUIT_CHANGE_FLUID2);
-                if (currentFluid.get() != null) {
-                    components.add(TooltipUtil.withArgs(EIOLang.FLUID_CONDUIT_CHANGE_FLUID3, currentFluid.get().getFluidType().getDescription()));
-                }
-                addedOn.renderTooltip(poseStack, components, Optional.empty(), mouseX, mouseY);
-            }
-        }*/
 
         @Override
         public void onClick(double pMouseX, double pMouseY) {

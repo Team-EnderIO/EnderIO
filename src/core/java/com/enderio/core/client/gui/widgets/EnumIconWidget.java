@@ -122,10 +122,10 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
 
     @Override
     public void renderWidget(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
-        // TODO: CONDUITS 1.19.4 PORT:
-        /* if (isHovered && isActive()) {
-            addedOn.renderTooltipAfterEverything(poseStack, List.of(optionName, getter.get().getTooltip().copy().withStyle(ChatFormatting.GRAY)), mouseX, mouseY);
-        */
+         if (isHovered && isActive()) {
+             addedOn.renderTooltipAfterEverything(pPoseStack, List.of(optionName, getter.get().getTooltip().copy().withStyle(ChatFormatting.GRAY)), pMouseX,
+                 pMouseY);
+         }
 
         T icon = getter.get();
         addedOn.renderIconBackground(pPoseStack, new Vector2i(getX(), getY()), icon);
