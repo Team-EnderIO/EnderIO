@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:recolor_clear_glass_dp_purple"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

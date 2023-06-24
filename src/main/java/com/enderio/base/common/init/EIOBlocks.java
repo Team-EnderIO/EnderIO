@@ -18,8 +18,8 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.client.model.generators.BlockModelProvider;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
@@ -71,8 +71,8 @@ public class EIOBlocks {
     // region Dark Steel Building Blocks
 
     public static final BlockEntry<DarkSteelLadderBlock> DARK_STEEL_LADDER = REGISTRATE
-        .block("dark_steel_ladder", Material.METAL, DarkSteelLadderBlock::new)
-        .properties(props -> props.strength(0.4f).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion())
+        .block("dark_steel_ladder", DarkSteelLadderBlock::new)
+        .properties(props -> props.strength(0.4f).requiresCorrectToolForDrops().sound(SoundType.METAL).mapColor(MapColor.METAL).noOcclusion())
         .blockstate((ctx, prov) -> prov.horizontalBlock(ctx.get(), prov
             .models()
             .withExistingParent(ctx.getName(), prov.mcLoc("block/ladder"))
@@ -82,7 +82,7 @@ public class EIOBlocks {
         .tag(BlockTags.CLIMBABLE, BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
         .item()
         .model((ctx, prov) -> prov.generated(ctx, prov.modLoc("block/dark_steel_ladder")))
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
+        .tab(EIOCreativeTabs.BLOCKS)
         .build()
         .register();
 
@@ -93,31 +93,31 @@ public class EIOBlocks {
         .tag(BlockTags.NEEDS_IRON_TOOL)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .item()
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
+        .tab(EIOCreativeTabs.BLOCKS)
         .model((ctx, prov) -> prov.generated(ctx, prov.modLoc("block/dark_steel_bars")))
         .build()
         .register();
 
     // TODO: Door drops itself in creative????
     public static final BlockEntry<DoorBlock> DARK_STEEL_DOOR = REGISTRATE
-        .block("dark_steel_door", Material.METAL, props -> new DoorBlock(props, BlockSetType.IRON))
-        .properties(props -> props.strength(5.0f, 2000.0f).sound(SoundType.METAL).noOcclusion())
+        .block("dark_steel_door", props -> new DoorBlock(props, BlockSetType.IRON))
+        .properties(props -> props.strength(5.0f, 2000.0f).sound(SoundType.METAL).mapColor(MapColor.METAL).noOcclusion())
         .blockstate((ctx, prov) -> prov.doorBlockWithRenderType(ctx.get(), prov.modLoc("block/dark_steel_door_bottom"), prov.modLoc("block/dark_steel_door_top"), prov.mcLoc("cutout")))
         .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL, BlockTags.DOORS)
         .item()
         .model((ctx, prov) -> prov.generated(ctx))
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
+        .tab(EIOCreativeTabs.BLOCKS)
         .build()
         .register();
 
     public static final BlockEntry<TrapDoorBlock> DARK_STEEL_TRAPDOOR = REGISTRATE
-        .block("dark_steel_trapdoor", Material.METAL, props -> new TrapDoorBlock(props, BlockSetType.IRON))
-        .properties(props -> props.strength(5.0f, 2000.0f).sound(SoundType.METAL).noOcclusion())
+        .block("dark_steel_trapdoor", props -> new TrapDoorBlock(props, BlockSetType.IRON))
+        .properties(props -> props.strength(5.0f, 2000.0f).sound(SoundType.METAL).mapColor(MapColor.METAL).noOcclusion())
         .blockstate((ctx, prov) -> prov.trapdoorBlockWithRenderType(ctx.get(), prov.modLoc("block/dark_steel_trapdoor"), true, prov.mcLoc("cutout")))
         .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL, BlockTags.TRAPDOORS)
         .item()
         .model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.modLoc("block/dark_steel_trapdoor_bottom")))
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
+        .tab(EIOCreativeTabs.BLOCKS)
         .build()
         .register();
 
@@ -128,19 +128,24 @@ public class EIOBlocks {
         .tag(BlockTags.NEEDS_IRON_TOOL)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .item()
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
+        .tab(EIOCreativeTabs.BLOCKS)
         .model((ctx, prov) -> prov.generated(ctx, prov.modLoc("block/end_steel_bars")))
         .build()
         .register();
 
     public static final BlockEntry<ReinforcedObsidianBlock> REINFORCED_OBSIDIAN = REGISTRATE
-        .block("reinforced_obsidian_block", Material.STONE, ReinforcedObsidianBlock::new)
-        .properties(props -> props.sound(SoundType.STONE).strength(50, 2000).requiresCorrectToolForDrops().color(MaterialColor.COLOR_BLACK))
+        .block("reinforced_obsidian_block", ReinforcedObsidianBlock::new)
+        .properties(props -> props
+            .sound(SoundType.STONE)
+            .strength(50, 2000)
+            .requiresCorrectToolForDrops()
+            .mapColor(MapColor.COLOR_BLACK)
+            .instrument(NoteBlockInstrument.BASEDRUM))
         .tag(BlockTags.WITHER_IMMUNE)
         .tag(BlockTags.NEEDS_DIAMOND_TOOL)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .item()
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
+        .tab(EIOCreativeTabs.BLOCKS)
         .build()
         .register();
 
@@ -168,8 +173,8 @@ public class EIOBlocks {
     // region Misc
 
     public static final BlockEntry<GraveBlock> GRAVE = REGISTRATE
-        .block("grave", Material.STONE, GraveBlock::new)
-        .properties(props -> props.strength(-1.0F, 3600000.0F).noLootTable().noOcclusion())
+        .block("grave", GraveBlock::new)
+        .properties(props -> props.strength(-1.0F, 3600000.0F).noLootTable().noOcclusion().mapColor(MapColor.STONE))
         .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(ctx.getId())))
         .register();
 
@@ -270,27 +275,27 @@ public class EIOBlocks {
         .register();
 
     public static <T extends Block> BlockBuilder<T, Registrate> simpleBlockBuilder(String name, T block) {
-        return REGISTRATE.block(name, p -> block).item().tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS)).build();
+        return REGISTRATE.block(name, p -> block).item().tab(EIOCreativeTabs.BLOCKS).build();
     }
 
     private static BlockBuilder<Block, Registrate> metalBlock(String name) {
         return REGISTRATE
-            .block(name, Material.METAL, Block::new)
+            .block(name, Block::new)
             .properties(props -> props
                 .sound(SoundType.METAL)
-                .color(MaterialColor.METAL)
+                .mapColor(MapColor.METAL)
                 .strength(5, 6)
                 .requiresCorrectToolForDrops())
             .tag(BlockTags.NEEDS_STONE_TOOL)
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .item()
-            .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
+            .tab(EIOCreativeTabs.BLOCKS)
             .build();
     }
 
     private static BlockBuilder<Block, Registrate> chassisBlock(String name) {
         return REGISTRATE
-            .block(name, Material.METAL, Block::new)
+            .block(name, Block::new)
             .blockstate((ctx, prov) ->
                 prov.simpleBlock(ctx.get(), prov.models()
                     .cubeAll(ctx.getName(), prov.blockTexture(ctx.get()))
@@ -298,20 +303,20 @@ public class EIOBlocks {
             .properties(props -> props
                 .noOcclusion()
                 .sound(SoundType.METAL)
-                .color(MaterialColor.METAL)
+                .mapColor(MapColor.METAL)
                 .strength(5, 6))
             .tag(BlockTags.NEEDS_STONE_TOOL)
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .item()
-            .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
+            .tab(EIOCreativeTabs.BLOCKS)
             .build();
     }
 
     private static BlockEntry<EIOPressurePlateBlock> pressurePlateBlock(String name, ResourceLocation texture, EIOPressurePlateBlock.Detector type,
         boolean silent) {
 
-        BlockBuilder<EIOPressurePlateBlock, Registrate> bb = REGISTRATE.block(name, Material.METAL,
-            props -> new EIOPressurePlateBlock(props.strength(5, 6), type, silent));
+        BlockBuilder<EIOPressurePlateBlock, Registrate> bb = REGISTRATE.block(name,
+            props -> new EIOPressurePlateBlock(props.strength(5, 6).mapColor(MapColor.METAL), type, silent));
 
         bb.blockstate((ctx, prov) -> {
 
@@ -325,7 +330,7 @@ public class EIOBlocks {
         });
         bb.tag(BlockTags.NEEDS_STONE_TOOL, BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.PRESSURE_PLATES)
             .item()
-            .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
+            .tab(EIOCreativeTabs.BLOCKS)
             .build();
         return bb.register();
     }
@@ -335,7 +340,7 @@ public class EIOBlocks {
         ResourceLocation downModelLoc = new ResourceLocation(upModelLoc.getNamespace(), upModelLoc.getPath() + "_down");
 
         BlockBuilder<SilentPressurePlateBlock, Registrate> bb = REGISTRATE.block("silent_" + upModelLoc.getPath(),
-            block.getStateDefinition().any().getMaterial(), props -> new SilentPressurePlateBlock(block));
+            props -> new SilentPressurePlateBlock(block));
         bb.tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.PRESSURE_PLATES);
 
         bb.blockstate((ctx, prov) -> {
@@ -346,7 +351,7 @@ public class EIOBlocks {
 
         var itemBuilder = bb.item();
         itemBuilder.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), upModelLoc));
-        itemBuilder.tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS));
+        itemBuilder.tab(EIOCreativeTabs.BLOCKS);
         bb = itemBuilder.build();
 
         return bb.register();
@@ -369,7 +374,7 @@ public class EIOBlocks {
 
         var itemBuilder = bb.item();
         itemBuilder.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), upModelLoc));
-        itemBuilder.tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS));
+        itemBuilder.tab(EIOCreativeTabs.BLOCKS);
         bb = itemBuilder.build();
 
         return bb.register();
@@ -402,18 +407,18 @@ public class EIOBlocks {
             });
         });
 
-        var ib = bb.item().tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS));
+        var ib = bb.item().tab(EIOCreativeTabs.BLOCKS);
         ib.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.mcLoc("item/lever")));
         bb = ib.build();
         return bb.register();
     }
 
     public static final BlockEntry<IndustrialInsulationBlock> INDUSTRIAL_INSULATION = REGISTRATE
-        .block("industrial_insulation_block", Material.SPONGE, IndustrialInsulationBlock::new)
+        .block("industrial_insulation_block", IndustrialInsulationBlock::new)
         .initialProperties(() -> Blocks.SPONGE)
         .lang("Industrial Insulation")
         .item()
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
+        .tab(EIOCreativeTabs.BLOCKS)
         .build()
         .register();
     public static void register() {}

@@ -16,10 +16,11 @@ import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraftforge.client.model.generators.BlockModelBuilder.RootTransformBuilder.TransformOrigin;
+import net.minecraftforge.client.model.generators.BlockModelBuilder;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.loaders.CompositeModelBuilder;
+import net.minecraftforge.common.util.TransformationHelper;
 import org.joml.Vector3f;
 
 import java.util.function.Supplier;
@@ -40,7 +41,7 @@ public class MachineBlocks {
         ))
         .item(FluidTankItem::new)
         .model((ctx, prov) -> {})
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.MACHINES))
+        .tab(EIOCreativeTabs.MACHINES)
         .build()
         .register();
 
@@ -61,7 +62,7 @@ public class MachineBlocks {
         ))
         .item(FluidTankItem::new)
         .model((ctx, prov) -> {})
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.MACHINES))
+        .tab(EIOCreativeTabs.MACHINES)
         .build()
         .register();
 
@@ -74,16 +75,16 @@ public class MachineBlocks {
             .customLoader(CompositeModelBuilder::begin)
             .child("plinth", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/dialing_device"))
                 .texture("button", EnderIO.loc("block/dark_steel_pressure_plate")))
-            .child("book", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/enchanter_book"))
-                .rootTransform()
+            .child("book", (BlockModelBuilder) EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/enchanter_book"))
+                .rootTransforms()
                     .translation(new Vector3f(0, 11.25f / 16.0f, -3.5f / 16.0f))
                     .rotation(-22.5f, 0, 0, true)
-                    .origin(TransformOrigin.CENTER)
+                    .origin(TransformationHelper.TransformOrigin.CENTER)
                 .end())
             .end()
         ))
         .item()
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.MACHINES))
+        .tab(EIOCreativeTabs.MACHINES)
         .build()
         .register();
 
@@ -106,7 +107,7 @@ public class MachineBlocks {
     public static final BlockEntry<MachineBlock> CREATIVE_POWER = REGISTRATE
         .block("creative_power", props -> new MachineBlock(props, MachineBlockEntities.CREATIVE_POWER))
         .item()
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.MACHINES))
+        .tab(EIOCreativeTabs.MACHINES)
         .build()
         .register();
 
@@ -134,7 +135,7 @@ public class MachineBlocks {
         .loot((l,t) -> MachinesLootTable.copyNBTSingleCap(l, t, "EntityStorage"))
         .blockstate(MachineModelUtil::soulMachineBlock)
         .item(PoweredSpawnerItem::new)
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.MACHINES))
+        .tab(EIOCreativeTabs.MACHINES)
         .build()
         .register();
 
@@ -144,7 +145,7 @@ public class MachineBlocks {
         .loot(MachinesLootTable::copyNBT)
         .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIO.loc("block/vacuum_chest"))))
         .item()
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.MACHINES))
+        .tab(EIOCreativeTabs.MACHINES)
         .build()
         .register();
 
@@ -154,7 +155,7 @@ public class MachineBlocks {
         .loot(MachinesLootTable::copyNBT)
         .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIO.loc("block/xp_vacuum"))))
         .item()
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.MACHINES))
+        .tab(EIOCreativeTabs.MACHINES)
         .build()
         .register();
 
@@ -171,7 +172,7 @@ public class MachineBlocks {
             .loot(MachinesLootTable::copyNBT)
             .blockstate(MachineModelUtil::machineBlock)
             .item()
-            .tab(NonNullSupplier.lazy(EIOCreativeTabs.MACHINES))
+            .tab(EIOCreativeTabs.MACHINES)
             .build();
     }
 
@@ -182,7 +183,7 @@ public class MachineBlocks {
             .loot(MachinesLootTable::copyNBT)
             .blockstate(MachineModelUtil::soulMachineBlock)
             .item()
-            .tab(NonNullSupplier.lazy(EIOCreativeTabs.MACHINES))
+            .tab(EIOCreativeTabs.MACHINES)
             .build();
     }
 

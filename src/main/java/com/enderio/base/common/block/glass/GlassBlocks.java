@@ -114,7 +114,7 @@ public class GlassBlocks {
                 .isSuffocating(GlassBlocks::never)
                 .isViewBlocking(GlassBlocks::never))
             .item()
-            .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
+            .tab(EIOCreativeTabs.BLOCKS)
             .tag(glassIdentifier.explosion_resistance() ? EIOTags.Items.FUSED_QUARTZ : EIOTags.Items.CLEAR_GLASS)
             .tag(EIOTags.Items.GLASS_TAGS.get(glassIdentifier))
             .build()
@@ -129,7 +129,7 @@ public class GlassBlocks {
             .block(name, props -> new FusedQuartzBlock(props, glassIdentifier))
             .lang(english)
             .blockstate((con, prov) -> prov.simpleBlock(con.get(), prov.models().getExistingFile(getModelFile())))
-            .color(() -> () -> (p_92567_, p_92568_, p_92569_, p_92570_) -> color.getMaterialColor().col)
+            .color(() -> () -> (p_92567_, p_92568_, p_92569_, p_92570_) -> color.getMapColor().col)
             .properties(props -> props
                 .noOcclusion()
                 .strength(0.3F)
@@ -139,11 +139,11 @@ public class GlassBlocks {
                 .isRedstoneConductor(GlassBlocks::never)
                 .isSuffocating(GlassBlocks::never)
                 .isViewBlocking(GlassBlocks::never)
-                .color(color.getMaterialColor()))
+                .mapColor(color))
             .item()
-            .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
+            .tab(EIOCreativeTabs.BLOCKS)
             .tag(EIOTags.Items.GLASS_TAGS.get(glassIdentifier))
-            .color(() -> () -> (ItemColor) (p_92672_, p_92673_) -> color.getMaterialColor().col)
+            .color(() -> () -> (ItemColor) (p_92672_, p_92673_) -> color.getMapColor().col)
             .build()
             .register();
     }

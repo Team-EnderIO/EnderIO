@@ -6,6 +6,7 @@ import com.enderio.core.common.util.Vector2i;
 import com.enderio.machines.common.menu.EnchanterMenu;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -34,14 +35,14 @@ public class EnchanterScreen extends EIOScreen<EnchanterMenu> {
     }
     
     @Override
-    public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
-        super.render(pPoseStack, pMouseX, pMouseY, pPartialTicks);
+    public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
+        super.render(guiGraphics, pMouseX, pMouseY, pPartialTicks);
         if (this.getMenu().getCurrentCost() < 0) return;
         int colour = 8453920; //green
         MutableComponent component = Component.translatable("container.repair.cost", this.getMenu().getCurrentCost());
         if (Minecraft.getInstance().player.experienceLevel < this.getMenu().getCurrentCost() && !Minecraft.getInstance().player.isCreative()) {
             colour = 16736352; //red
         }
-        drawCenteredString(pPoseStack, this.font, component, (width-getXSize())/2 + getXSize()/2, (height-getYSize())/2 + 57, colour);
+        guiGraphics.drawCenteredString(this.font, component, (width-getXSize())/2 + getXSize()/2, (height-getYSize())/2 + 57, colour);
     }
 }

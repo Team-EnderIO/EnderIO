@@ -9,7 +9,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -121,10 +121,10 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
     private T tooltipDisplayCache;
 
     @Override
-    public void renderWidget(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
+    public void renderWidget(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
         T icon = getter.get();
-        addedOn.renderIconBackground(pPoseStack, new Vector2i(getX(), getY()), icon);
-        IEnderScreen.renderIcon(pPoseStack, new Vector2i(getX(), getY()).expand(1), icon);
+        addedOn.renderIconBackground(guiGraphics, new Vector2i(getX(), getY()), icon);
+        IEnderScreen.renderIcon(guiGraphics, new Vector2i(getX(), getY()).expand(1), icon);
 
         if (isHoveredOrFocused() && tooltipDisplayCache != getter.get()) {
             // Cache the last value of the tooltip so we don't append strings over and over.
@@ -168,14 +168,14 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
         }
 
         @Override
-        public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
+        public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
             RenderSystem.disableDepthTest();
             tooltips.clear();
-            renderSimpleArea(pPoseStack, expandTopLeft, expandBottomRight);
-            super.render(pPoseStack, pMouseX, pMouseY, pPartialTicks);
+            renderSimpleArea(guiGraphics, expandTopLeft, expandBottomRight);
+            super.render(guiGraphics, pMouseX, pMouseY, pPartialTicks);
 
             for (LateTooltipData tooltip : tooltips) {
-                renderTooltip(tooltip.getPoseStack(), tooltip.getText(), tooltip.getMouseX(), tooltip.getMouseY());
+                guiGraphics.renderTooltip(this.font, tooltip.getText(), tooltip.getMouseX(), tooltip.getMouseY());
             }
             RenderSystem.enableDepthTest();
         }
@@ -220,19 +220,19 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
         public void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {}
 
         @Override
-        public void renderWidget(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
+        public void renderWidget(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
             if (getter.get() != value) {
-                selection.renderIconBackground(pPoseStack, new Vector2i(getX(), getY()), value);
+                selection.renderIconBackground(guiGraphics, new Vector2i(getX(), getY()), value);
             } else {
-                GuiComponent.fill(pPoseStack, getX(), getY(), getX() + width, getY() + height, 0xFF0020FF); //TODO: Client Config
-                GuiComponent.fill(pPoseStack, getX() + 1, getY() + 1, getX() + width - 1, getY() + height - 1, 0xFF8B8B8B);
+                guiGraphics.fill(getX(), getY(), getX() + width, getY() + height, 0xFF0020FF); //TODO: Client Config
+                guiGraphics.fill(getX() + 1, getY() + 1, getX() + width - 1, getY() + height - 1, 0xFF8B8B8B);
             }
-            IEnderScreen.renderIcon(pPoseStack, new Vector2i(getX(), getY()).expand(1), value);
+            IEnderScreen.renderIcon(guiGraphics, new Vector2i(getX(), getY()).expand(1), value);
 
             if (isMouseOver(pMouseX, pMouseY)) {
                 Component tooltip = value.getTooltip();
-                if (tooltip != Component.empty()) {
-                    selection.renderTooltipAfterEverything(pPoseStack, tooltip, pMouseX, pMouseY);
+                if (!tooltip.equals(Component.empty())) {
+                    selection.renderTooltipAfterEverything(guiGraphics, tooltip, pMouseX, pMouseY);
                 }
             }
         }

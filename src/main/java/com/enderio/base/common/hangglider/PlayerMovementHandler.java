@@ -44,7 +44,7 @@ public class PlayerMovementHandler {
         Player player = playerTickEvent.player;
         if (playerTickEvent.phase == TickEvent.Phase.START) {
             int ticksFalling = TICKS_FALLING.getOrDefault(player, 0);
-            if (player.isOnGround() != player.getDeltaMovement().y() < 0) {
+            if (player.onGround() != player.getDeltaMovement().y() < 0) {
                 TICKS_FALLING.put(player, ticksFalling + 1);
             } else {
                 TICKS_FALLING.put(player, 0);
@@ -75,14 +75,14 @@ public class PlayerMovementHandler {
             if (player instanceof ServerPlayer serverPlayer) {
                 UseGliderTrigger.USE_GLIDER.trigger(serverPlayer);
                 player.hurtMarked = true;
-            } else if (player.getLevel().isClientSide()) {
+            } else if (player.level().isClientSide()) {
                 ClientClassLoadingProtection.playSound(player);
             }
             gliderMovementInfo.cause().onHangGliderTick(player);
         }
     }
     public static Optional<GliderMovementInfo> calculateGliderMovementInfo(Player player, boolean displayDisabledMessage) {
-        if (!player.isOnGround()
+        if (!player.onGround()
             && player.getDeltaMovement().y() < 0
             && !player.isShiftKeyDown()
             && !player.isInWater()

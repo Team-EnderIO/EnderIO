@@ -43,5 +43,6 @@
     "recipes": [
       "enderio:soul_attuned_dye_blend"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

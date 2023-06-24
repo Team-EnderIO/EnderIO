@@ -13,6 +13,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -39,7 +40,7 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
     private CraftingRecipe recipe;
     private final Queue<ItemStack> outputBuffer = new ArrayDeque<>();
 
-    private static final CraftingContainer dummyCContainer = new CraftingContainer(new AbstractContainerMenu(null, -1) {
+    private static final CraftingContainer dummyCContainer = new TransientCraftingContainer(new AbstractContainerMenu(null, -1) {
         @Override
         public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
             return ItemStack.EMPTY;
@@ -81,7 +82,7 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
     }
 
     private boolean acceptSlotInput(int slot, ItemStack stack) {
-        return this.getInventory().getStackInSlot(slot + 10).sameItem(stack);
+        return ItemStack.isSameItem(this.getInventory().getStackInSlot(slot + 10), stack);
     }
 
     @Override
@@ -152,7 +153,7 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
 
     private void craftItem() {
         for (int i = 0; i < 9; i++) {
-            if (!ItemStack.isSame(INPUT.get(i).getItemStack(this), GHOST.get(i).getItemStack(this))) {
+            if (!ItemStack.isSameItem(INPUT.get(i).getItemStack(this), GHOST.get(i).getItemStack(this))) {
                 return;
             }
         }

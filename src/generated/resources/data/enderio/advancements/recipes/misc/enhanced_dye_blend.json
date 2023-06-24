@@ -43,5 +43,6 @@
     "recipes": [
       "enderio:enhanced_dye_blend"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

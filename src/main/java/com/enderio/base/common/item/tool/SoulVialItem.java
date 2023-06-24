@@ -90,7 +90,7 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
 
     @Override
     public InteractionResult interactLivingEntity(ItemStack pStack, Player pPlayer, LivingEntity pInteractionTarget, InteractionHand pUsedHand) {
-        if (pPlayer.level.isClientSide) {
+        if (pPlayer.level().isClientSide) {
             return InteractionResult.FAIL;
         }
         return catchEntity(pStack, pInteractionTarget,

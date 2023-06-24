@@ -30,7 +30,7 @@ public class PaintedSandRenderer extends FallingBlockRenderer {
         Block block = pEntity instanceof PaintedSandEntity entity ? entity.getPaint() : null;
         BlockState blockstate = block != null ? block.defaultBlockState() : pEntity.getBlockState();
         if (blockstate.getRenderShape() == RenderShape.MODEL) {
-            Level level = pEntity.getLevel();
+            Level level = pEntity.level();
             if (blockstate != level.getBlockState(pEntity.blockPosition()) && blockstate.getRenderShape() != RenderShape.INVISIBLE) {
                 pMatrixStack.pushPose();
                 BlockPos blockpos = new BlockPos((int) pEntity.getX(), (int) pEntity.getBoundingBox().maxY, (int) pEntity.getZ());

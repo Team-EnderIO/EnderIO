@@ -8,6 +8,7 @@ import com.enderio.core.common.network.CoreNetwork;
 import com.enderio.core.common.util.Vector2i;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
@@ -44,18 +45,18 @@ public class CoordinateMenuScreen extends EIOScreen<CoordinateMenu> {
     }
 
     @Override
-    protected void renderBg(PoseStack pPoseStack, float pPartialTicks, int pMouseX, int pMouseY) {
-        super.renderBg(pPoseStack, pPartialTicks, pMouseX, pMouseY);
+    protected void renderBg(GuiGraphics guiGraphics, float pPartialTicks, int pMouseX, int pMouseY) {
+        super.renderBg(guiGraphics, pPartialTicks, pMouseX, pMouseY);
 
         int midX = this.width / 2;
         int y = topPos + 48;
         String txt = getMenu().getSelection().pos().toShortString();
         int x = midX - font.width(txt) / 2;
-        font.drawShadow(pPoseStack, txt, x, y, 0xFFFFFF);
+        guiGraphics.drawString(this.font, txt, x, y, 0xFFFFFF, true);
         txt = getMenu().getSelection().getLevelName();
         y += font.lineHeight + 4;
         x = midX - font.width(txt) / 2;
-        font.drawShadow(pPoseStack, txt, x, y, 0xFFFFFF);
+        guiGraphics.drawString(this.font, txt, x, y, 0xFFFFFF, true);
     }
 
     @Override

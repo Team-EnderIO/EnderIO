@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:coordinate_selector"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

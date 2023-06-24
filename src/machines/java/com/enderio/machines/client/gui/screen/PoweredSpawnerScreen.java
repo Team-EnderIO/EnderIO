@@ -11,6 +11,7 @@ import com.enderio.machines.client.gui.widget.ProgressWidget;
 import com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity;
 import com.enderio.machines.common.menu.PoweredSpawnerMenu;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -25,7 +26,6 @@ public class PoweredSpawnerScreen extends EIOScreen<PoweredSpawnerMenu> {
 
     public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/powered_spawner_spawn.png");
     private static final ResourceLocation RANGE_BUTTON_TEXTURE = EnderIO.loc("textures/gui/icons/range_buttons.png");
-
 
     public PoweredSpawnerScreen(PoweredSpawnerMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -59,19 +59,20 @@ public class PoweredSpawnerScreen extends EIOScreen<PoweredSpawnerMenu> {
     }
 
     @Override
-    protected void renderLabels(PoseStack pPoseStack, int pMouseX, int pMouseY) {
+    protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
         Optional<ResourceLocation> rl = getMenu().getBlockEntity().getEntityType();
         if (rl.isPresent()) {
             EntityType<?> type = ForgeRegistries.ENTITY_TYPES.getValue(rl.get());
             if (type != null && ForgeRegistries.ENTITY_TYPES.getKey(type).equals(rl.get())) { // check we don't get the default pig
                 String name = type.getDescription().getString();
-                font.draw(pPoseStack, name, imageWidth/2f - font.width(name)/2f, 15, 4210752);
+                guiGraphics.drawString(font, name, imageWidth / 2f - font.width(name) / 2f, 15, 4210752, false);
             } else {
-                font.draw(pPoseStack, rl.get().toString(), imageWidth/2f - font.width(rl.get().toString())/2f, 15, 4210752);
+                guiGraphics.drawString(font, rl.get().toString(), imageWidth / 2f - font.width(rl.get().toString()) / 2f, 15, 4210752, false);
             }
         }
         if (getMenu().getBlockEntity().getReason() != PoweredSpawnerBlockEntity.SpawnerBlockedReason.NONE) {
-            font.draw(pPoseStack, getMenu().getBlockEntity().getReason().getComponent().getString(), imageWidth/2f - font.width(getMenu().getBlockEntity().getReason().getComponent().getString())/2f, 26, 0);
+            guiGraphics.drawString(font, getMenu().getBlockEntity().getReason().getComponent().getString(),
+                imageWidth / 2f - font.width(getMenu().getBlockEntity().getReason().getComponent().getString()) / 2f, 26, 0, false);
         }
     }
 }

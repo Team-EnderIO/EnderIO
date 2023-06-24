@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:dark_steel_upgrade_empowered_3"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

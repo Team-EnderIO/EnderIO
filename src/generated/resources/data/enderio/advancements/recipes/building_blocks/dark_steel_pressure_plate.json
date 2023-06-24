@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:dark_steel_pressure_plate"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

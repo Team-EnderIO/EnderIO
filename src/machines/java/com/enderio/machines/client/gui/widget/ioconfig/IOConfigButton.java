@@ -8,6 +8,7 @@ import com.enderio.machines.common.menu.MachineMenu;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -47,14 +48,13 @@ public class IOConfigButton<U extends EIOScreen<?>, T extends AbstractWidget> ex
     }
 
     @Override
-    public void renderWidget(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
+    public void renderWidget(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         Vector2i pos = new Vector2i(getX(), getY());
-        addedOn.renderSimpleArea(pPoseStack, pos, pos.add(new Vector2i(width, height)));
+        addedOn.renderSimpleArea(guiGraphics, pos, pos.add(new Vector2i(width, height)));
 
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, IOCONFIG);
         RenderSystem.enableDepthTest();
-        blit(pPoseStack, this.getX(), this.getY(), 0, 0, this.width, this.height, 48, 32);
+        guiGraphics.blit(IOCONFIG, this.getX(), this.getY(), 0, 0, this.width, this.height, 48, 32);
+        RenderSystem.disableDepthTest();
     }
 
     @Override

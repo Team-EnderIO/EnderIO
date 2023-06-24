@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:end_steel_machine_chassis"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

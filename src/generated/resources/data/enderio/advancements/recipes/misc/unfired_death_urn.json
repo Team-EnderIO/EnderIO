@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:unfired_death_urn"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

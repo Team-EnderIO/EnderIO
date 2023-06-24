@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:yeta_wrench"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

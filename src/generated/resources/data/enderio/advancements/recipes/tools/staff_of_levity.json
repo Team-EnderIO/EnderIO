@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:staff_of_levity"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -9,6 +9,7 @@ import com.enderio.machines.client.gui.widget.EnergyWidget;
 import com.enderio.machines.client.gui.widget.ioconfig.IOConfigButton;
 import com.enderio.machines.common.menu.ImpulseHopperMenu;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -32,21 +33,21 @@ public class ImpulseHopperScreen extends EIOScreen<ImpulseHopperMenu> {
     }
 
     @Override
-    protected void renderBg(PoseStack pPoseStack, float pPartialTick, int pMouseX, int pMouseY) {
-        super.renderBg(pPoseStack, pPartialTick, pMouseX, pMouseY);
+    protected void renderBg(GuiGraphics guiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
+        super.renderBg(guiGraphics, pPartialTick, pMouseX, pMouseY);
 
         //for all ghost slots
         for (int i = 0; i < 6; i++) {
             if (getMenu().getBlockEntity().ghostSlotHasItem(i)) {
                 if (getMenu().getBlockEntity().canPass(i)) {
-                    this.blit(pPoseStack, getGuiLeft() + 43 + (18 * i), getGuiTop() + 26, 200, 9, 18, 9);
+                    guiGraphics.blit(getBackgroundImage(), getGuiLeft() + 43 + (18 * i), getGuiTop() + 26, 200, 9, 18, 9);
                 } else {
-                    this.blit(pPoseStack, getGuiLeft() + 43 + (18 * i), getGuiTop() + 26, 200, 0, 18, 9);
+                    guiGraphics.blit(getBackgroundImage(), getGuiLeft() + 43 + (18 * i), getGuiTop() + 26, 200, 0, 18, 9);
                 }
                 if (getMenu().getBlockEntity().canHoldAndMerge(i)) {
-                    this.blit(pPoseStack, getGuiLeft() + 43 + (18 * i), getGuiTop() + 53, 200, 9, 18, 9);
+                    guiGraphics.blit(getBackgroundImage(), getGuiLeft() + 43 + (18 * i), getGuiTop() + 53, 200, 9, 18, 9);
                 } else {
-                    this.blit(pPoseStack, getGuiLeft() + 43 + (18 * i), getGuiTop() + 53, 200, 0, 18, 9);
+                    guiGraphics.blit(getBackgroundImage(), getGuiLeft() + 43 + (18 * i), getGuiTop() + 53, 200, 0, 18, 9);
                 }
             }
         }

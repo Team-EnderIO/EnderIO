@@ -15,6 +15,7 @@ import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.menu.SagMillMenu;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -87,11 +88,7 @@ public class SagMillScreen extends EIOScreen<SagMillMenu> {
         private float tooltipDuraCache;
 
         @Override
-        public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.setShaderTexture(0, SagMillScreen.BG_TEXTURE);
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-
+        public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
             SagMillBlockEntity be = SagMillScreen.this.getMenu().getBlockEntity();
             if (be == null)
                 return;
@@ -102,8 +99,7 @@ public class SagMillScreen extends EIOScreen<SagMillMenu> {
             int yOffset = (int) Math.ceil(this.height * (1.0f - durability));
             int height = (int) Math.ceil(this.height * durability);
 
-            poseStack.pushPose();
-            blit(poseStack, getX(), getY() + yOffset, U, V + yOffset, width, height);
+            guiGraphics.blit(SagMillScreen.BG_TEXTURE, getX(), getY() + yOffset, U, V + yOffset, width, height);
 
             if (this.isHoveredOrFocused() && (tooltipDataCache != data || tooltipDuraCache != durability)) {
                 tooltipDataCache = data;
@@ -130,8 +126,6 @@ public class SagMillScreen extends EIOScreen<SagMillMenu> {
                 // Set for display
                 setTooltip(Tooltip.create(tooltip));
             }
-
-            poseStack.popPose();
         }
 
         @Override

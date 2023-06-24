@@ -54,5 +54,6 @@
     "recipes": [
       "enderio:industrial_dye_blend"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

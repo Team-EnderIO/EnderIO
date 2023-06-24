@@ -9,6 +9,7 @@ import com.enderio.core.common.util.Vector2i;
 import com.enderio.machines.client.gui.widget.FluidStackStaticWidget;
 import com.enderio.machines.common.menu.XPVacuumMenu;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -51,15 +52,15 @@ public class XPVacuumScreen extends EIOScreen<XPVacuumMenu> {
     }
 
     @Override
-    protected void renderLabels(PoseStack pPoseStack, int pMouseX, int pMouseY) {
-        this.font.draw(pPoseStack, EIOLang.RANGE, this.imageWidth - 8 - this.font.width(EIOLang.RANGE), 21, 4210752);
-        super.renderLabels(pPoseStack, pMouseX, pMouseY);
+    protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
+        guiGraphics.drawString(font, EIOLang.RANGE, this.imageWidth - 8 - this.font.width(EIOLang.RANGE), 21, 4210752);
+        super.renderLabels(guiGraphics, pMouseX, pMouseY);
     }
 
     @Override
-    public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
-        super.render(pPoseStack, pMouseX, pMouseY, pPartialTicks);
-        font.draw(pPoseStack, this.getMenu().getBlockEntity().getRange() + "", leftPos + imageWidth - 8 - 16 - 2 - 8 - 10, topPos + 38, 0);
+    public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
+        super.render(guiGraphics, pMouseX, pMouseY, pPartialTicks);
+        guiGraphics.drawString(font, this.getMenu().getBlockEntity().getRange() + "", leftPos + imageWidth - 8 - 16 - 2 - 8 - 10, topPos + 38, 0);
     }
 
 }

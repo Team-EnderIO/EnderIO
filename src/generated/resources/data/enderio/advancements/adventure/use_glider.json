@@ -25,5 +25,6 @@
     [
       "use_glider"
     ]
-  ]
+  ],
+  "sends_telemetry_event": true
 }

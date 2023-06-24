@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:lime_glider"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

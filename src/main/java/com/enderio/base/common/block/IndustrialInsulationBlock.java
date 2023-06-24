@@ -8,12 +8,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Material;
-import net.minecraftforge.common.Tags;
 
 import java.util.Queue;
 
+// TODO: 1.20.1, why does this do custom work?
 public class IndustrialInsulationBlock extends SpongeBlock {
     private static final int MAX_REPLACES = 64;
     private static final int MAX_RANGE = 6;
@@ -41,7 +39,6 @@ public class IndustrialInsulationBlock extends SpongeBlock {
                 BlockPos blockToCheckPos = blockpos.relative(direction);
                 BlockState blockToCheckState = level.getBlockState(blockToCheckPos);
                 Block blockToCheck = blockToCheckState.getBlock();
-                Material blockToReplaceMaterial = blockToCheckState.getMaterial();
 
                 if (blockToCheck instanceof BucketPickup bucketPickup && !bucketPickup.pickupBlock(level, blockToCheckPos, blockToCheckState).isEmpty()) {
                     ++checkedBlocksCount;
@@ -51,7 +48,7 @@ public class IndustrialInsulationBlock extends SpongeBlock {
                     }
 
                 } else if (blockToCheckState.getBlock() instanceof LiquidBlock) {
-                    if (blockToReplaceMaterial == Material.WATER_PLANT || blockToReplaceMaterial == Material.REPLACEABLE_WATER_PLANT) {
+                    if (blockToCheckState.is(Blocks.KELP) || blockToCheckState.is(Blocks.KELP_PLANT) || blockToCheckState.is(Blocks.SEAGRASS) || blockToCheckState.is(Blocks.TALL_SEAGRASS)) {
                         BlockEntity blockEntity = blockToCheckState.hasBlockEntity() ? level.getBlockEntity(blockToCheckPos) : null;
                         dropResources(blockToCheckState, level, blockToCheckPos, blockEntity);
                     }

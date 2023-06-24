@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:pulsating_alloy_grinding_ball"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -25,7 +25,7 @@ public class SoulBoundHandler {
         if (event.getEntity() == null || event.getEntity() instanceof FakePlayer || event.isCanceled()) {
             return;
         }
-        if (event.getEntity().level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
+        if (event.getEntity().level().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
             return;
         }
         ArrayList<ItemStack> soulItems = new ArrayList<>();

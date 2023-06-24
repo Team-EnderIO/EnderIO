@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:recolor_clear_glass_da_white"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

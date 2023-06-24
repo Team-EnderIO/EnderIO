@@ -24,8 +24,9 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -85,7 +86,7 @@ public class DecorBlocks {
     public static final BlockEntry<LightNode> LIGHT_NODE = REGISTRATE
     		.block("light_node", LightNode::new)
     		.blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().withExistingParent("light_node", "block/air")))
-    		.initialProperties(Material.AIR)
+    		.initialProperties(() -> Blocks.AIR)
     		.properties(p -> p.lightLevel(l -> 15).noLootTable().noCollission().noOcclusion())
     		.register();
     
@@ -130,8 +131,10 @@ public class DecorBlocks {
     	return REGISTRATE
     		.block(name, blockFactory)
     		.blockstate(DecorBlockState::lightBlock)
-    		.initialProperties(Material.METAL)
-    		.properties(p -> p.lightLevel(l -> {
+    		.properties(p -> p
+                .sound(SoundType.METAL)
+                .mapColor(MapColor.METAL)
+                .lightLevel(l -> {
     				if (l.getValue(Light.ENABLED)) {
     					return 15;
     				}
@@ -139,7 +142,7 @@ public class DecorBlocks {
     			}))
     		.item()
     		.model((ctx, prov) -> prov.withExistingParent(name, "block/button_inventory"))
-    		.tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
+    		.tab(EIOCreativeTabs.BLOCKS)
     		.build()
     		.register();
     }

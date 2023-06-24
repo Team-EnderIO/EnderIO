@@ -19,7 +19,7 @@ public class EIOAdvancementGenerator implements ForgeAdvancementProvider.Advance
     public void generate(HolderLookup.Provider registries, Consumer<Advancement> saver, ExistingFileHelper existingFileHelper) {
         Advancement.Builder builder = Advancement.Builder
             .advancement()
-            .parent(new Advancement(new ResourceLocation("adventure/root"), null, null, null, new HashMap<>(), null))
+            .parent(new Advancement(new ResourceLocation("adventure/root"), null, null, null, new HashMap<>(), null, false))
             .display(EIOItems.GLIDER.get(), EIOLang.USE_GLIDER_ADVANCEMENT_TITLE, EIOLang.USE_GLIDER_ADVANCEMENT_DESCRIPTION, null, FrameType.TASK, true,
                 true, false)
             .addCriterion("use_glider", new UseGliderTrigger.TriggerInstance());

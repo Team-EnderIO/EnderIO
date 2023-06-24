@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:brown_glider"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }
