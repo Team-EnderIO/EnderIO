@@ -31,27 +31,27 @@ public class EIOCreativeTabs {
     public static final ResourceKey<CreativeModeTab> SOULS = ResourceKey.create(Registries.CREATIVE_MODE_TAB, new ResourceLocation(EnderIO.MODID, "souls"));
     public static final ResourceKey<CreativeModeTab> CONDUITS = ResourceKey.create(Registries.CREATIVE_MODE_TAB, new ResourceLocation(EnderIO.MODID, "conduits"));
 
-    public static final RegistryEntry<CreativeModeTab> MAIN_TAB = createTab(MAIN, "main",
+    public static final RegistryEntry<CreativeModeTab> MAIN_TAB = createTab(MAIN, "main", "Ender IO",
         tab -> tab.icon(() -> new ItemStack(EIOItems.CREATIVE_ICON_NONE.get())).withTabsBefore(CreativeModeTabs.SPAWN_EGGS));
 
-    public static final RegistryEntry<CreativeModeTab> GEAR_TAB = createTab(GEAR, "gear",
+    public static final RegistryEntry<CreativeModeTab> GEAR_TAB = createTab(GEAR, "gear", "Ender IO Gear",
         tab -> tab.icon(() -> new ItemStack(EIOItems.CREATIVE_ICON_ITEMS.get())).withTabsBefore(CreativeModeTabs.SPAWN_EGGS, MAIN));
 
-    public static final RegistryEntry<CreativeModeTab> BLOCKS_TAB = createTab(BLOCKS, "blocks",
+    public static final RegistryEntry<CreativeModeTab> BLOCKS_TAB = createTab(BLOCKS, "blocks", "Ender IO Blocks",
         tab -> tab.icon(() -> new ItemStack(EIOItems.CREATIVE_ICON_MATERIALS.get())).withTabsBefore(CreativeModeTabs.SPAWN_EGGS, MAIN, GEAR));
 
-    public static final RegistryEntry<CreativeModeTab> MACHINES_TAB = createTab(MACHINES, "machines",
+    public static final RegistryEntry<CreativeModeTab> MACHINES_TAB = createTab(MACHINES, "machines", "Ender IO Machines",
         tab -> tab.icon(() -> new ItemStack(EIOItems.CREATIVE_ICON_MACHINES.get())).withTabsBefore(CreativeModeTabs.SPAWN_EGGS, MAIN, GEAR, BLOCKS));
 
-    public static final RegistryEntry<CreativeModeTab> SOULS_TAB = createTab(SOULS, "souls",
+    public static final RegistryEntry<CreativeModeTab> SOULS_TAB = createTab(SOULS, "souls", "Ender IO Souls",
         tab -> tab.icon(() -> new ItemStack(EIOItems.CREATIVE_ICON_MOBS.get())).withTabsBefore(CreativeModeTabs.SPAWN_EGGS, MAIN, GEAR, BLOCKS, MACHINES));
 
-        public static final RegistryEntry<CreativeModeTab> CONDUITS_TAB = createTab(CONDUITS, "conduits",
+        public static final RegistryEntry<CreativeModeTab> CONDUITS_TAB = createTab(CONDUITS, "conduits", "Ender IO Conduits",
         tab -> tab.icon(() -> new ItemStack(EIOItems.CREATIVE_ICON_CONDUITS.get())).withTabsBefore(CreativeModeTabs.SPAWN_EGGS, MAIN, GEAR, BLOCKS, MACHINES, SOULS));
 
-    private static RegistryEntry<CreativeModeTab> createTab(ResourceKey<CreativeModeTab> key, String name, Consumer<CreativeModeTab.Builder> config) {
+    private static RegistryEntry<CreativeModeTab> createTab(ResourceKey<CreativeModeTab> key, String name, String english, Consumer<CreativeModeTab.Builder> config) {
         return REGISTRATE.generic(name, Registries.CREATIVE_MODE_TAB, () -> {
-            var builder = CreativeModeTab.builder().title(REGISTRATE.addLang("itemGroup", key.location(), RegistrateLangProvider.toEnglishName(name)));
+            var builder = CreativeModeTab.builder().title(REGISTRATE.addLang("itemGroup", key.location(), english));
             config.accept(builder);
             return builder.build();
         }).register();
