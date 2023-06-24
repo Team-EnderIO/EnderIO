@@ -31,20 +31,6 @@ public class ConduitItems {
     public static final ItemEntry<Item> REDSTONE = createConduitItem(() -> EnderConduitTypes.REDSTONE.get(), "redstone");
     public static final ItemEntry<Item> ITEM = createConduitItem(() -> EnderConduitTypes.ITEM.get(), "item");
 
-    @SubscribeEvent
-    public static void onEntityJoinWorld(EntityJoinLevelEvent event) {
-        if (event.getEntity() instanceof ServerPlayer serverPlayer) {
-            ForgeRegistries.ITEMS.getValues().stream().filter(ConduitBlockItem.class::isInstance).forEach(item -> serverPlayer.addItem(item.getDefaultInstance()));
-            serverPlayer.addItem(EIOItems.YETA_WRENCH.get().getDefaultInstance());
-        }
-    }
-
-    @SubscribeEvent
-    public static void onCommand(CommandEvent event) {
-        if (event.getParseResults().getReader().getString().contains("enderio:"))
-            event.setCanceled(true);
-    }
-
     private static ItemEntry<Item> createConduitItem(Supplier<? extends IConduitType<?>> type, String itemName) {
         return REGISTRATE.item(itemName + "_conduit",
             properties -> ConduitItemFactory.build(type, properties))
