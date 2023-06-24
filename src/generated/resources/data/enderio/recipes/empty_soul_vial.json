@@ -2,17 +2,20 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "Q": {
-      "tag": "enderio:fused_quartz"
+    "G": {
+      "item": "enderio:grains_of_infinity"
+    },
+    "N": {
+      "item": "enderio:dark_steel_nugget"
     },
     "S": {
-      "item": "enderio:soularium_ingot"
+      "item": "minecraft:stick"
     }
   },
   "pattern": [
-    " S ",
-    "Q Q",
-    " Q "
+    " NG",
+    "NSN",
+    "GN "
   ],
   "result": {
     "item": "enderio:empty_soul_vial"

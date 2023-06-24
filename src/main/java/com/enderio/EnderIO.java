@@ -127,8 +127,7 @@ public class EnderIO {
 
         provider.addSubProvider(event.includeServer(), new ForgeAdvancementProvider(packOutput, lookupProvider, existingFileHelper,
             List.of(new EIOAdvancementGenerator())));
-
-
+        
         generator.addProvider(true, provider);
     }
 }

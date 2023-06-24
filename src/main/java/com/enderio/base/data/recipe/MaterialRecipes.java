@@ -45,11 +45,21 @@ public class MaterialRecipes extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.SILICON.get()))
             .save(recipeConsumer);
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, EIOItems.NUTRITIOUS_STICK.get())
+            .pattern(" NG")
+            .pattern("NSN")
+            .pattern("GN ")
+            .define('N', EIOItems.DARK_STEEL_NUGGET)
+            .define('G', EIOItems.GRAINS_OF_INFINITY)
+            .define('S', Items.STICK)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.SOULARIUM_INGOT.get()))
+            .save(recipeConsumer);
+
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, EIOItems.EMPTY_SOUL_VIAL.get())
             .pattern(" S ")
             .pattern("Q Q")
             .pattern(" Q ")
-            .define('S', EIOItems.SOULARIUM_INGOT.get())
+            .define('S', EIOItems.SOULARIUM_INGOT)
             .define('Q', EIOTags.Items.FUSED_QUARTZ)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.SOULARIUM_INGOT.get()))
             .save(recipeConsumer);
@@ -63,41 +73,20 @@ public class MaterialRecipes extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PULSATING_POWDER.get()))
             .save(recipeConsumer);
 
-        ShapedRecipeBuilder
-            .shaped(RecipeCategory.MISC, EIOItems.DYE_INDUSTRIAL_BLEND.get())
-            .pattern("LQG")
-            .pattern("QBQ")
-            .pattern("GQL")
-            .define('L', EIOTags.Items.DUSTS_LAPIS)
-            .define('Q', EIOTags.Items.DUSTS_QUARTZ)
-            .define('B', EIOItems.DYE_BLACK.get())
-            .define('G', EIOItems.DYE_GREEN.get())
-            .unlockedBy("has_ingredient_black", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DYE_BLACK.get()))
-            .unlockedBy("has_ingredient_green", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DYE_GREEN.get()))
-            .unlockedBy("has_ingredient_lapis",
-                InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOTags.Items.DUSTS_LAPIS).build()))
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, EIOItems.BLACK_PAPER)
+            .requires(Items.PAPER)
+            .requires(Tags.Items.DYES_BLACK)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Items.PAPER))
             .save(recipeConsumer);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.DYE_ENHANCED_BLEND.get())
-            .pattern("PQP")
-            .pattern("QBQ")
-            .pattern("PQP")
-            .define('Q', EIOTags.Items.DUSTS_QUARTZ)
-            .define('B', EIOItems.DYE_BLACK.get())
-            .define('P', EIOItems.PULSATING_POWDER.get())
-            .unlockedBy("has_ingredient_black", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DYE_BLACK.get()))
-            .unlockedBy("has_ingredient_powder", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PULSATING_POWDER.get()))
-            .save(recipeConsumer);
-
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.DYE_SOUL_ATTUNED_BLEND.get())
-            .pattern("SQS")
-            .pattern("QBQ")
-            .pattern("SQS")
-            .define('Q', EIOTags.Items.DUSTS_QUARTZ)
-            .define('B', EIOItems.DYE_BLACK.get())
-            .define('S', EIOItems.SOUL_POWDER.get())
-            .unlockedBy("has_ingredient_black", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DYE_BLACK.get()))
-            .unlockedBy("has_ingredient_powder", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.SOUL_POWDER.get()))
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.REDSTONE_FILTER_BASE)
+            .pattern("RPR")
+            .pattern("PIP")
+            .pattern("RPR")
+            .define('R', EIOItems.REDSTONE_ALLOY_INGOT)
+            .define('P', Ingredient.of(Items.PAPER, EIOItems.BLACK_PAPER))
+            .define('I', Tags.Items.INGOTS_IRON)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.REDSTONE_ALLOY_INGOT))
             .save(recipeConsumer);
 
         ShapelessRecipeBuilder
@@ -105,10 +94,9 @@ public class MaterialRecipes extends RecipeProvider {
             .requires(Items.BOWL)
             .requires(Items.MILK_BUCKET)
             .requires(Items.WHEAT)
-            .requires(EIOItems.ENDER_FRAGMENT.get())
+            .requires(EIOItems.POWDERED_ENDER_PEARL.get())
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Items.WHEAT))
             .save(recipeConsumer);
-
 
         // endregion
     }

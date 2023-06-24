@@ -7,6 +7,7 @@ import com.enderio.conduits.common.init.*;
 import com.enderio.conduits.common.integrations.Integrations;
 import com.enderio.conduits.common.items.ConduitBlockItem;
 import com.enderio.conduits.data.ConduitTagProvider;
+import com.enderio.conduits.data.recipe.ConduitRecipes;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -35,5 +36,6 @@ public class EIOConduits {
     public static void onData(GatherDataEvent event) {
         PackOutput packOutput = event.getGenerator().getPackOutput();
         event.getGenerator().addProvider(event.includeServer(), new ConduitTagProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper()));
+        event.getGenerator().addProvider(event.includeServer(), new ConduitRecipes(packOutput));
     }
 }

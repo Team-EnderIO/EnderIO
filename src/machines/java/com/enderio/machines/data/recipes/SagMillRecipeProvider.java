@@ -9,7 +9,6 @@ import com.enderio.machines.common.recipe.SagMillingRecipe;
 import com.enderio.machines.common.recipe.SagMillingRecipe.BonusType;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
@@ -40,38 +39,38 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
     @Override
     protected void buildRecipes(Consumer<FinishedRecipe> finishedRecipeConsumer) {
         
-        build1toN("iron", Tags.Items.INGOTS_IRON, IRON_POWDER.get(), 1, finishedRecipeConsumer);
-        build1toN("gold", Tags.Items.INGOTS_GOLD, GOLD_POWDER.get(), 1, finishedRecipeConsumer);
-        build1toN("obsidian", Tags.Items.OBSIDIAN, OBSIDIAN_POWDER.get(), 4, finishedRecipeConsumer);
+        build1toN("iron", Tags.Items.INGOTS_IRON, POWDERED_IRON.get(), 1, finishedRecipeConsumer);
+        build1toN("gold", Tags.Items.INGOTS_GOLD, POWDERED_GOLD.get(), 1, finishedRecipeConsumer);
+        build1toN("obsidian", Tags.Items.OBSIDIAN, POWDERED_OBSIDIAN.get(), 4, finishedRecipeConsumer);
         
-        build1toN("precient_crystal", PRECIENT_CRYSTAL.get(), PRECIENT_POWDER.get(), 1, finishedRecipeConsumer);
+        build1toN("precient_crystal", PRESCIENT_CRYSTAL.get(), PRESCIENT_POWDER.get(), 1, finishedRecipeConsumer);
         build1toN("vibrant_crystal", VIBRANT_CRYSTAL.get(), VIBRANT_POWDER.get(), 1, finishedRecipeConsumer);
         build1toN("pulsating_crystal", PULSATING_CRYSTAL.get(), PULSATING_POWDER.get(), 1, finishedRecipeConsumer);
         build1toN("ender_crystal", ENDER_CRYSTAL.get(), ENDER_CRYSTAL_POWDER.get(), 1, finishedRecipeConsumer);
         
-        build1toN("ender_pearl", ENDER_PEARL, ENDER_PEARL_POWDER.get(), 9, finishedRecipeConsumer);
+        build1toN("ender_pearl", ENDER_PEARL, POWDERED_ENDER_PEARL.get(), 9, finishedRecipeConsumer);
         build1toN("blaze_powder", BLAZE_ROD, BLAZE_POWDER, 4, finishedRecipeConsumer);
         build1toN("glass", GLASS, SAND, 1, finishedRecipeConsumer);
         build1toN("bone_block",BONE_BLOCK, BONE_MEAL, 9, finishedRecipeConsumer);
         build1toN("soularium", SOULARIUM_INGOT.get(), SOUL_POWDER.get(), 1, finishedRecipeConsumer);
         
-        buildOre("iron_ore", Ingredient.of(Tags.Items.ORES_IRON), IRON_POWDER.get(), finishedRecipeConsumer);
-        buildOre("gold_ore", Ingredient.of(Tags.Items.ORES_GOLD), GOLD_POWDER.get(), finishedRecipeConsumer);
+        buildOre("iron_ore", Ingredient.of(Tags.Items.ORES_IRON), POWDERED_IRON.get(), finishedRecipeConsumer);
+        buildOre("gold_ore", Ingredient.of(Tags.Items.ORES_GOLD), POWDERED_GOLD.get(), finishedRecipeConsumer);
         
-        build1toN("iron_block", Tags.Items.STORAGE_BLOCKS_IRON, IRON_POWDER.get(), 9, finishedRecipeConsumer);
-        build1toN("gold_block", Tags.Items.STORAGE_BLOCKS_GOLD, GOLD_POWDER.get(), 9, finishedRecipeConsumer);
-        build1toN("copper_block", Tags.Items.STORAGE_BLOCKS_COPPER, COPPER_POWDER.get(), 9, finishedRecipeConsumer);
-        build1toN("coal_block", Tags.Items.STORAGE_BLOCKS_COAL, COAL_POWDER.get(), 9, finishedRecipeConsumer);
+        build1toN("iron_block", Tags.Items.STORAGE_BLOCKS_IRON, POWDERED_IRON.get(), 9, finishedRecipeConsumer);
+        build1toN("gold_block", Tags.Items.STORAGE_BLOCKS_GOLD, POWDERED_GOLD.get(), 9, finishedRecipeConsumer);
+        build1toN("copper_block", Tags.Items.STORAGE_BLOCKS_COPPER, POWDERED_COPPER.get(), 9, finishedRecipeConsumer);
+        build1toN("coal_block", Tags.Items.STORAGE_BLOCKS_COAL, POWDERED_COAL.get(), 9, finishedRecipeConsumer);
         
         build("coal", Ingredient.of(COAL), List.of(
-        		output(COAL_POWDER.get()),
-            	output(COAL_POWDER.get(), 0.1f),
+        		output(POWDERED_COAL.get()),
+            	output(POWDERED_COAL.get(), 0.1f),
             	output(EIOTags.Items.DUSTS_SULFUR, 1, 0.1f, true)),
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
         
         build("coal_ore", Ingredient.of(Tags.Items.ORES_COAL), List.of(
         		output(COAL, 3),
-            	output(COAL_POWDER.get(), 0.6f),
+            	output(POWDERED_COAL.get(), 0.6f),
             	output(DIAMOND, 0.005f),
             	output(COBBLESTONE, 0.15f)),
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
@@ -86,7 +85,7 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
         build("diamond_ore", Ingredient.of(Tags.Items.ORES_DIAMOND), List.of(
         		output(DIAMOND, 2),
             	output(DIAMOND, 0.25f),
-            	output(COAL_POWDER.get(), 0.1f),
+            	output(POWDERED_COAL.get(), 0.1f),
         		output(COBBLESTONE, 0.15f)
         		),BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
         
@@ -104,13 +103,13 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
         
         build("quartz_ore", Ingredient.of(Tags.Items.ORES_QUARTZ), List.of(
         		output(QUARTZ, 2),
-            	output(QUARTZ_POWDER.get(), 0.1f),
+            	output(POWDERED_QUARTZ.get(), 0.1f),
         		output(NETHERRACK, 0.15f)
         		),BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
         
         build("quartz", Ingredient.of(Tags.Items.GEMS_QUARTZ), List.of(
-        		output(QUARTZ_POWDER.get(), 1),
-            	output(QUARTZ_POWDER.get(), 0.1f)
+        		output(POWDERED_QUARTZ.get(), 1),
+            	output(POWDERED_QUARTZ.get(), 0.1f)
         		),BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
         
         build("wheat", Ingredient.of(WHEAT), List.of(
@@ -277,7 +276,7 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
         		output(BRICK, 0.9f), 
         		output(BRICK, 0.3f),
         		output(PINK_DYE, 0.1f),
-        		output(COAL_POWDER.get(), 0.05f)),
+        		output(POWDERED_COAL.get(), 0.05f)),
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
         
         build("prismarine_shard", Ingredient.of(PRISMARINE_SHARD), List.of(

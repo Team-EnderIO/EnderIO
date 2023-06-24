@@ -6,11 +6,11 @@
   },
   "outputs": [
     {
-      "item": "enderio:gold_powder"
+      "item": "enderio:powdered_gold"
     },
     {
       "chance": 0.33,
-      "item": "enderio:gold_powder"
+      "item": "enderio:powdered_gold"
     },
     {
       "chance": 0.15,

@@ -214,7 +214,7 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
 
     // region Entity Storage
 
-    private static void setEntityType(ItemStack stack, ResourceLocation entityType) {
+    public static void setEntityType(ItemStack stack, ResourceLocation entityType) {
         stack
             .getCapability(EIOCapabilities.ENTITY_STORAGE)
             .ifPresent(storage ->

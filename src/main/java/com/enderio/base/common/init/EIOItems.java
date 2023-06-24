@@ -29,7 +29,6 @@ import net.minecraft.Util;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.ForgeTier;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.TierSortingRegistry;
@@ -136,26 +135,25 @@ public class EIOItems {
     public static final ItemEntry<MaterialItem> ENDER_CRYSTAL = materialItemGlinted("ender_crystal").register();
     public static final ItemEntry<MaterialItem> ENTICING_CRYSTAL = materialItemGlinted("enticing_crystal").register();
     public static final ItemEntry<MaterialItem> WEATHER_CRYSTAL = materialItemGlinted("weather_crystal").register();
-    public static final ItemEntry<MaterialItem> PRECIENT_CRYSTAL = materialItemGlinted("precient_crystal").register();
+    public static final ItemEntry<MaterialItem> PRESCIENT_CRYSTAL = materialItemGlinted("prescient_crystal").register();
 
     // endregion
 
     // region Powders and Fragments
 
     public static final ItemEntry<MaterialItem> FLOUR = materialItem("flour").register();
-    public static final ItemEntry<MaterialItem> COAL_POWDER = materialItem("coal_powder").tag(EIOTags.Items.DUSTS_COAL).register();
-    public static final ItemEntry<MaterialItem> IRON_POWDER = materialItem("iron_powder").tag(EIOTags.Items.DUSTS_IRON).register();
-    public static final ItemEntry<MaterialItem> GOLD_POWDER = materialItem("gold_powder").tag(EIOTags.Items.DUSTS_GOLD).register();
-    public static final ItemEntry<MaterialItem> COPPER_POWDER = materialItem("copper_powder").tag(EIOTags.Items.DUSTS_COPPER).register();
-    public static final ItemEntry<MaterialItem> TIN_POWDER = materialItem("tin_powder").tag(EIOTags.Items.DUSTS_TIN).register(); // TODO: hide if tin isn't present
-    public static final ItemEntry<MaterialItem> ENDER_PEARL_POWDER = materialItem("ender_pearl_powder").tag(EIOTags.Items.DUSTS_ENDER).register();
-    public static final ItemEntry<MaterialItem> OBSIDIAN_POWDER = materialItem("obsidian_powder").tag(EIOTags.Items.DUSTS_OBSIDIAN).register();
-    public static final ItemEntry<MaterialItem> ARDITE_POWDER = materialItem("ardite_powder").tag(EIOTags.Items.DUSTS_ARDITE).register(); // TODO: hide if ardite isnt present
-    public static final ItemEntry<MaterialItem> COBALT_POWDER = materialItem("cobalt_powder").tag(EIOTags.Items.DUSTS_COBALT).register(); // TODO: hide if cobalt isnt present
-    public static final ItemEntry<MaterialItem> LAPIS_LAZULI_POWDER = materialItem("lapis_lazuli_powder").tag(EIOTags.Items.DUSTS_LAPIS).register();
-    public static final ItemEntry<MaterialItem> QUARTZ_POWDER = materialItem("quartz_powder").tag(EIOTags.Items.DUSTS_QUARTZ).register();
+    public static final ItemEntry<MaterialItem> POWDERED_COAL = materialItem("powdered_coal").tag(EIOTags.Items.DUSTS_COAL).register();
+    public static final ItemEntry<MaterialItem> POWDERED_IRON = materialItem("powdered_iron").tag(EIOTags.Items.DUSTS_IRON).register();
+    public static final ItemEntry<MaterialItem> POWDERED_GOLD = materialItem("powdered_gold").tag(EIOTags.Items.DUSTS_GOLD).register();
+    public static final ItemEntry<MaterialItem> POWDERED_COPPER = materialItem("powdered_copper").tag(EIOTags.Items.DUSTS_COPPER).register();
+    public static final ItemEntry<MaterialItem> POWDERED_TIN = materialItem("powdered_tin").tag(EIOTags.Items.DUSTS_TIN).register(); // TODO: hide if tin isn't present
+    public static final ItemEntry<MaterialItem> POWDERED_ENDER_PEARL = materialItem("powdered_ender_pearl").tag(EIOTags.Items.DUSTS_ENDER).register();
+    public static final ItemEntry<MaterialItem> POWDERED_OBSIDIAN = materialItem("powdered_obsidian").tag(EIOTags.Items.DUSTS_OBSIDIAN).register();
+    public static final ItemEntry<MaterialItem> POWDERED_COBALT = materialItem("powdered_cobalt").tag(EIOTags.Items.DUSTS_COBALT).register(); // TODO: hide if cobalt isnt present
+    public static final ItemEntry<MaterialItem> POWDERED_LAPIS_LAZULI = materialItem("powdered_lapis_lazuli").tag(EIOTags.Items.DUSTS_LAPIS).register();
+    public static final ItemEntry<MaterialItem> POWDERED_QUARTZ = materialItem("powdered_quartz").tag(EIOTags.Items.DUSTS_QUARTZ).register();
 
-    public static final ItemEntry<MaterialItem> PRECIENT_POWDER = materialItemGlinted("precient_powder").lang("Grains of Prescience").register();
+    public static final ItemEntry<MaterialItem> PRESCIENT_POWDER = materialItemGlinted("prescient_powder").lang("Grains of Prescience").register();
 
     public static final ItemEntry<MaterialItem> VIBRANT_POWDER = materialItemGlinted("vibrant_powder").lang("Grains of Vibrancy").register();
 
@@ -167,7 +165,6 @@ public class EIOItems {
     public static final ItemEntry<MaterialItem> SOUL_POWDER = materialItem("soul_powder").register();
     public static final ItemEntry<MaterialItem> CONFUSION_POWDER = materialItem("confusing_powder").register();
     public static final ItemEntry<MaterialItem> WITHERING_POWDER = materialItem("withering_powder").register();
-    public static final ItemEntry<MaterialItem> ENDER_FRAGMENT = materialItem("ender_fragment").register();
 
     // endregion
 
@@ -197,12 +194,6 @@ public class EIOItems {
 
     public static final ItemEntry<MaterialItem> DYE_BLACK = materialItem("organic_black_dye").tag(Tags.Items.DYES_BLACK, Tags.Items.DYES).register();
 
-    public static final ItemEntry<MaterialItem> DYE_INDUSTRIAL_BLEND = materialItem("industrial_dye_blend").tag(Tags.Items.DYES).register();
-
-    public static final ItemEntry<MaterialItem> DYE_SOUL_ATTUNED_BLEND = materialItem("soul_attuned_dye_blend").tag(Tags.Items.DYES).register();
-
-    public static final ItemEntry<MaterialItem> DYE_ENHANCED_BLEND = materialItem("enhanced_dye_blend").tag(Tags.Items.DYES).register();
-
     // endregion
 
     // region Misc Materials
@@ -218,7 +209,6 @@ public class EIOItems {
     public static final ItemEntry<MaterialItem> PLANT_MATTER_BROWN = materialItem("plant_matter_brown").lang("Twigs and Prunings").register();
 
     public static final ItemEntry<MaterialItem> GLIDER_WING = materialItem("glider_wing").register();
-    public static final ItemEntry<MaterialItem> GLIDER_WINGS = materialItem("glider_wings").register();
 
     public static final ItemEntry<MaterialItem> ANIMAL_TOKEN = materialItemGlinted("animal_token").register();
     public static final ItemEntry<MaterialItem> MONSTER_TOKEN = materialItemGlinted("monster_token").register();
@@ -230,8 +220,6 @@ public class EIOItems {
     public static final ItemEntry<MaterialItem> CLAYED_GLOWSTONE = materialItem("clayed_glowstone").register();
     public static final ItemEntry<MaterialItem> NETHERCOTTA = materialItem("nethercotta").register();
     public static final ItemEntry<MaterialItem> REDSTONE_FILTER_BASE = materialItem("redstone_filter_base").register();
-    public static final ItemEntry<MaterialItem> REMOTE_AWARENESS_UPGRADE = materialItem("remote_awareness_upgrade").register();
-    public static final ItemEntry<MaterialItem> INGOT_ENDERIUM_BASE = materialItem("ingot_enderium_base").register(); // TODO: Depend on enderium ingot tag
 
     public static final ItemEntry<BrokenSpawnerItem> BROKEN_SPAWNER = REGISTRATE
         .item("broken_spawner", BrokenSpawnerItem::new)

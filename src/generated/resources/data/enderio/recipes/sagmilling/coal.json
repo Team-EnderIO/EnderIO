@@ -6,11 +6,11 @@
   },
   "outputs": [
     {
-      "item": "enderio:coal_powder"
+      "item": "enderio:powdered_coal"
     },
     {
       "chance": 0.1,
-      "item": "enderio:coal_powder"
+      "item": "enderio:powdered_coal"
     },
     {
       "chance": 0.1,

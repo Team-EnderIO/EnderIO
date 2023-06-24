@@ -26,6 +26,7 @@ public class MachinesJEI implements IModPlugin {
         registration.addRecipeCatalyst(new ItemStack(MachineBlocks.ENCHANTER.get()), EnchanterCategory.TYPE);
         registration.addRecipeCatalyst(new ItemStack(MachineBlocks.SAG_MILL.get()), SagMillCategory.TYPE);
         registration.addRecipeCatalyst(new ItemStack(MachineBlocks.SLICE_AND_SPLICE.get()), SlicingRecipeCategory.TYPE);
+        registration.addRecipeCatalyst(new ItemStack(MachineBlocks.SOUL_BINDER.get()), SoulBindingCategory.TYPE);
     }
 
     @Override
@@ -35,6 +36,7 @@ public class MachinesJEI implements IModPlugin {
         registration.addRecipeCategories(new PrimitiveAlloySmeltingCategory(registration.getJeiHelpers().getGuiHelper()));
         registration.addRecipeCategories(new SagMillCategory(registration.getJeiHelpers().getGuiHelper()));
         registration.addRecipeCategories(new SlicingRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
+        registration.addRecipeCategories(new SoulBindingCategory(registration.getJeiHelpers().getGuiHelper()));
     }
 
     @Override
@@ -46,5 +48,6 @@ public class MachinesJEI implements IModPlugin {
         registration.addRecipes(PrimitiveAlloySmeltingCategory.TYPE, recipes.getAlloySmeltingRecipes());
         registration.addRecipes(SagMillCategory.TYPE, recipes.getSagmillingRecipes());
         registration.addRecipes(SlicingRecipeCategory.TYPE, recipes.getSlicingRecipes());
+        registration.addRecipes(SoulBindingCategory.TYPE, recipes.getSoulBindingRecipes());
     }
 }

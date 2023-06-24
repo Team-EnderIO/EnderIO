@@ -6,6 +6,7 @@ import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
 import com.enderio.machines.common.recipe.SagMillingRecipe;
 import com.enderio.machines.common.recipe.SlicingRecipe;
+import com.enderio.machines.common.recipe.SoulBindingRecipe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -33,6 +34,10 @@ public class MachineJEIRecipes {
 
     public List<SlicingRecipe> getSlicingRecipes() {
         return recipeManager.getAllRecipesFor(MachineRecipes.SLICING.type().get());
+    }
+
+    public List<SoulBindingRecipe> getSoulBindingRecipes() {
+        return recipeManager.getAllRecipesFor(MachineRecipes.SOUL_BINDING.type().get());
     }
 
     public List<WrappedEnchanterRecipe> getEnchanterRecipes() {
