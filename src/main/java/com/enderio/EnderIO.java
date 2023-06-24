@@ -11,6 +11,7 @@ import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.EIODataProvider;
 import com.enderio.base.data.advancement.EIOAdvancementGenerator;
+import com.enderio.base.data.loot.FireCraftingLootProvider;
 import com.enderio.base.data.recipe.*;
 import com.enderio.base.data.tags.EIOBlockTagsProvider;
 import com.enderio.base.data.tags.EIOFluidTagsProvider;
@@ -21,7 +22,9 @@ import com.tterrag.registrate.Registrate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
+import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraftforge.common.data.ForgeAdvancementProvider;
 import net.minecraftforge.common.data.ForgeBlockTagsProvider;
 import net.minecraftforge.common.util.Lazy;
@@ -38,6 +41,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -116,7 +120,9 @@ public class EnderIO {
         provider.addSubProvider(event.includeServer(), b);
         provider.addSubProvider(event.includeServer(), new EIOItemTagsProvider(packOutput, event.getLookupProvider(), b.contentsGetter(), event.getExistingFileHelper()));
         provider.addSubProvider(event.includeServer(), new EIOFluidTagsProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper()));
-//        provider.addSubProvider(event.includeServer(), new FireCraftingLootProvider(packOutput)); TODO: 1.19.4
+        generator.addProvider(event.includeServer(), new LootTableProvider(
+            packOutput, Collections.emptySet(),
+            List.of(new LootTableProvider.SubProviderEntry(FireCraftingLootProvider::new, LootContextParamSets.EMPTY))));
 
         provider.addSubProvider(event.includeServer(), new ForgeAdvancementProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper(),
             List.of(new EIOAdvancementGenerator())));
