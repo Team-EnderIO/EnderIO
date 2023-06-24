@@ -92,29 +92,29 @@ public class FluidTankItem extends BlockItem implements IAdvancedTooltipProvider
             Optional<CompoundTag> tagCompoundOptional = Optional.ofNullable(container.getTag());
             return tagCompoundOptional
                 .map(tagCompound -> tagCompound.getCompound(BLOCK_ENTITY_TAG))
-                .map(beTag -> beTag.getCompound(FluidTankBlockEntity.FLUID_TAG_KEY))
+                .map(blockEntityTag -> blockEntityTag.getCompound(FluidTankBlockEntity.FLUID_TAG_KEY))
                 .map(FluidStack::loadFluidStackFromNBT)
                 .orElse(FluidStack.EMPTY);
         }
 
         protected void setFluid(FluidStack fluid) {
             CompoundTag mainTag = container.getOrCreateTag();
-            CompoundTag beTag = new CompoundTag();
-            mainTag.put(BLOCK_ENTITY_TAG, beTag);
+            CompoundTag blockEntityTag = new CompoundTag();
+            mainTag.put(BLOCK_ENTITY_TAG, blockEntityTag);
 
             CompoundTag fluidTag = new CompoundTag();
             fluid.writeToNBT(fluidTag);//rewrites the old value
             //TODO: externalize FluidTankBlockEntity.FLUID_TAG_KEY into one global parameter.
-            beTag.put(FluidTankBlockEntity.FLUID_TAG_KEY, fluidTag);
+            blockEntityTag.put(FluidTankBlockEntity.FLUID_TAG_KEY, fluidTag);
         }
 
         @Override
         protected void setContainerToEmpty() {
             CompoundTag tagCompound = container.getTag();
             if (tagCompound != null) {
-                CompoundTag BETag = tagCompound.getCompound(BLOCK_ENTITY_TAG);
-                if (BETag.contains(FluidTankBlockEntity.FLUID_TAG_KEY))
-                    BETag.remove(FluidTankBlockEntity.FLUID_TAG_KEY);
+                CompoundTag blockEntityTag = tagCompound.getCompound(BLOCK_ENTITY_TAG);
+                if (blockEntityTag.contains(FluidTankBlockEntity.FLUID_TAG_KEY))
+                    blockEntityTag.remove(FluidTankBlockEntity.FLUID_TAG_KEY);
             }
         }
     }

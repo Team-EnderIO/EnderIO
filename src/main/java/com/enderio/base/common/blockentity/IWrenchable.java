@@ -1,18 +1,15 @@
 package com.enderio.base.common.blockentity;
 
+import com.enderio.api.UseOnly;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraftforge.common.extensions.IForgeBlockEntity;
+import net.minecraftforge.fml.LogicalSide;
 
 /**
  * An interface that block entities may implement in order to implement special behaviours(other than to rotate the block) when right-clicked with the Yeta wrench.
  */
 public interface IWrenchable {
-    /**
-     * Only called on the logical server side, never on the client.
-     *
-     * @param context - source event context.
-     * @return - works exactly like the vanilla implementation.
-     */
+    @UseOnly(LogicalSide.CLIENT)
     InteractionResult onWrenched(UseOnContext context);
 }

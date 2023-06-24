@@ -47,17 +47,6 @@ public class MachineFluidTank extends FluidTank {
     }
 
     /**
-     * This implementation only handles one tank, use multiple instances of this class in combination
-     * with a FluidTankHandler to use multiple tanks
-     *
-     * @return - 1.
-     */
-    @Override
-    public int getTanks() {
-        return 1;
-    }
-
-    /**
      * Transfers fluid from a fluid handler to this tank.
      *
      * @param from          Fluid handler to transfer from
@@ -114,10 +103,7 @@ public class MachineFluidTank extends FluidTank {
         if (!isFluidValid(source) && !force)
             return 0;
         else if (action.simulate()) {
-            if (fluid.isEmpty())
-                return Math.min(capacity, source.getAmount());
-            else
-                return Math.min(capacity - fluid.getAmount(), source.getAmount());
+            return Math.min(capacity - fluid.getAmount(), source.getAmount());
         } else {
             if (fluid.isEmpty()) {
                 fluid = new FluidStack(source, Math.min(capacity, source.getAmount()));
@@ -140,6 +126,7 @@ public class MachineFluidTank extends FluidTank {
     public int fill(int desiredAmount, FluidAction action, boolean force) {
         if (fluid.isEmpty()) {
             EnderIO.LOGGER.error("No fluid in tank, can't contain an amount of unspecified fluid other than 0");
+            return 0;
         }
         return fill(new FluidStack(fluid.getFluid(), desiredAmount), action, force);
     }
