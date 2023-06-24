@@ -230,6 +230,12 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
             );
     }
 
+    public static Optional<StoredEntityData> getEntityData(ItemStack stack) {
+        return stack
+            .getCapability(EIOCapabilities.ENTITY_STORAGE)
+            .map(IEntityStorage::getStoredEntityData);
+    }
+
     @Nullable
     @Override
     public MultiCapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt, MultiCapabilityProvider provider) {

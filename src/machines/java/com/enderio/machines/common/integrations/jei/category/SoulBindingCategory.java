@@ -107,8 +107,30 @@ public class SoulBindingCategory implements IRecipeCategory<SoulBindingRecipe> {
 
         builder.addSlot(OUTPUT, 77, 4)
             .addItemStack(new ItemStack(EIOItems.EMPTY_SOUL_VIAL));
+
+        var resultStack = RecipeUtil.getResultStacks(recipe).get(0).getItem();
+        var results = new ArrayList<ItemStack>();
+
+        // If the output can take an entity type, then we add it
+        if (resultStack.getCapability(EIOCapabilities.ENTITY_STORAGE).isPresent()) {
+            for (ItemStack vial : vials) {
+                SoulVialItem.getEntityData(vial).flatMap(StoredEntityData::getEntityType).ifPresent(entityType -> {
+                    var result = resultStack.copy();
+                    result.getCapability(EIOCapabilities.ENTITY_STORAGE).ifPresent(storage -> {
+                        storage.setStoredEntityData(StoredEntityData.of(entityType));
+                        results.add(result);
+                    });
+                });
+            }
+        }
+
+        // Fallback :(
+        if (results.size() == 0) {
+            results.add(resultStack);
+        }
+
         builder.addSlot(OUTPUT, 99, 4)
-            .addItemStacks(List.of(RecipeUtil.getResultStacks(recipe).get(0).getItem()));
+            .addItemStacks(results);
     }
 
     @Override
