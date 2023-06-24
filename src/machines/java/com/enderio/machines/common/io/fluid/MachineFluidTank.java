@@ -169,10 +169,12 @@ public class MachineFluidTank extends FluidTank {
 
     @Override
     public @NotNull FluidStack drain(int maxDrain, FluidAction action) {
+        // Get this before the drain, otherwise it will forget what we had stored.
+        var storedFluid = fluid.getFluid();
         int amount = drain(maxDrain, action, false);
         if (amount == 0)
             return FluidStack.EMPTY;
-        return new FluidStack(fluid.getFluid(), amount);
+        return new FluidStack(storedFluid, amount);
     }
 
     /**
