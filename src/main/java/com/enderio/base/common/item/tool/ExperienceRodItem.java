@@ -77,6 +77,10 @@ public class ExperienceRodItem extends Item {
 
     private static boolean transferFromPlayerToBlock(Player player, Level level, BlockPos pos, Direction side) {
         try {
+            if (player.experienceLevel <= 0 && player.experienceProgress <= 0.0f) {
+                return false;
+            }
+
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity != null) {
                 return blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER, side).map(fluidHandler -> {
