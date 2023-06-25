@@ -4,14 +4,20 @@ import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.ExperienceUtil;
+import com.enderio.core.common.network.CoreNetwork;
+import com.enderio.core.common.network.EmitParticlePacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
@@ -40,11 +46,18 @@ public class ExperienceRodItem extends Item {
         }
 
         if (wasSuccess) {
-            // TODO: Particle and sound effect.
+            CoreNetwork.sendToTracking(level.getChunkAt(pos), new EmitParticlePacket(ParticleTypes.ENTITY_EFFECT, pos, 0.2, 0.8, 0.2));
+            level.playSound(null, pos, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.1f,
+                0.5F * ((level.random.nextFloat() - level.random.nextFloat()) * 0.7F + 1.8F));
             return InteractionResult.SUCCESS;
         }
 
         return InteractionResult.PASS;
+    }
+
+    @Override
+    public boolean doesSneakBypassUse(ItemStack stack, LevelReader level, BlockPos pos, Player player) {
+        return false;
     }
 
     private static boolean transferFromBlockToPlayer(Player player, Level level, BlockPos pos, Direction side) {
@@ -66,7 +79,7 @@ public class ExperienceRodItem extends Item {
                         }
                     }
 
-                    return true;
+                    return false;
                 }).orElse(false);
             }
         } catch (ArithmeticException ex) {
@@ -90,9 +103,10 @@ public class ExperienceRodItem extends Item {
                     int takenVolume = fluidHandler.fill(fs, IFluidHandler.FluidAction.EXECUTE);
                     if (takenVolume > 0) {
                         player.giveExperiencePoints(-takenVolume / ExperienceUtil.EXPTOFLUID);
+                        return true;
                     }
 
-                    return true;
+                    return false;
                 }).orElse(false);
             }
         } catch (ArithmeticException ex) {
