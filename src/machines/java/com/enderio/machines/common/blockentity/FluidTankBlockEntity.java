@@ -1,6 +1,7 @@
 package com.enderio.machines.common.blockentity;
 
 import com.enderio.base.common.init.EIOFluids;
+import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.sync.FluidStackDataSlot;
 import com.enderio.core.common.sync.SyncMode;
@@ -206,7 +207,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
 
     private void tryMendTool() {
         FluidStack fluid = fluidTank.getFluid();
-        if (!fluid.isEmpty() && fluid.getFluid().isSame(EIOFluids.XP_JUICE.getSource())) {
+        if (!fluid.isEmpty() && fluid.getFluid().is(EIOTags.Fluids.EXPERIENCE)) {
             ItemStack tool = FLUID_DRAIN_INPUT.getItemStack(this);
             if (tool.isDamageableItem() && tool.getEnchantmentLevel(Enchantments.MENDING) > 0) {
 

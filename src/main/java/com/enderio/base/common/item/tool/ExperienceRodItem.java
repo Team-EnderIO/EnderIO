@@ -2,6 +2,7 @@ package com.enderio.base.common.item.tool;
 
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.ExperienceUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -53,11 +54,11 @@ public class ExperienceRodItem extends Item {
                 return blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER, side).map(fluidHandler -> {
 
                     FluidStack availableFluid = fluidHandler.getFluidInTank(0);
-                    if (availableFluid.getFluid().isSame(EIOFluids.XP_JUICE.getSource()) && availableFluid.getAmount() > 0) {
+                    if (availableFluid.getFluid().is(EIOTags.Fluids.EXPERIENCE) && availableFluid.getAmount() > 0) {
                         int requiredXp = player.getXpNeededForNextLevel();
                         int fluidVolume = requiredXp * ExperienceUtil.EXPTOFLUID;
 
-                        FluidStack drained = fluidHandler.drain(new FluidStack(EIOFluids.XP_JUICE.getSource(), fluidVolume), IFluidHandler.FluidAction.EXECUTE);
+                        FluidStack drained = fluidHandler.drain(fluidVolume, IFluidHandler.FluidAction.EXECUTE);
 
                         if (!drained.isEmpty()) {
                             player.giveExperiencePoints(drained.getAmount() / ExperienceUtil.EXPTOFLUID);
