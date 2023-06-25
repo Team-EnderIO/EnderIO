@@ -20,7 +20,7 @@ public class EnderConduitTypes {
     public static final RegistryObject<FluidConduitType> FLUID2 = fluidConduit("pressurized_fluid_conduit", 100, false, new Vector2i(0, 120));
 
     public static final RegistryObject<FluidConduitType> FLUID3 = fluidConduit("ender_fluid_conduit", 200, true, new Vector2i(0, 144));
-    
+
 
     public static final RegistryObject<? extends IConduitType<?>> REDSTONE = ConduitTypes.CONDUIT_TYPES.register("redstone_conduit", RedstoneConduitType::new);
     public static final RegistryObject<? extends IConduitType<?>> ITEM = ConduitTypes.CONDUIT_TYPES.register("item_conduit",
