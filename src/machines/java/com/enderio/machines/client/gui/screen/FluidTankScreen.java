@@ -13,7 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public class FluidTankScreen extends EIOScreen<FluidTankMenu> {
-    private static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/tank.png");
+    public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/tank.png");
     public FluidTankScreen(FluidTankMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
     }

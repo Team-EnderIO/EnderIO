@@ -1,0 +1,10 @@
+{
+  "type": "enderio:soul_binding",
+  "energy": 150000,
+  "entity_type": "minecraft:enderman",
+  "exp": 6,
+  "input": {
+    "item": "enderio:vibrant_crystal"
+  },
+  "output": "enderio:ender_crystal"
+}

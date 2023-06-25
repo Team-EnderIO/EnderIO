@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "enderio:void_chassis"
+    },
+    "G": {
+      "item": "enderio:iron_gear"
+    },
+    "I": {
+      "tag": "forge:ingots/iron"
+    },
+    "S": {
+      "tag": "forge:silicon"
+    },
+    "T": {
+      "item": "minecraft:crafting_table"
+    }
+  },
+  "pattern": [
+    "SSS",
+    "ICI",
+    "GTG"
+  ],
+  "result": {
+    "item": "enderio:crafter"
+  },
+  "show_notification": true
+}
