@@ -11,7 +11,6 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Queue;
 
-// TODO: 1.20.1, why does this do custom work?
 public class IndustrialInsulationBlock extends SpongeBlock {
     private static final int MAX_REPLACES = 64;
     private static final int MAX_RANGE = 6;
