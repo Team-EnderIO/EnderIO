@@ -3,6 +3,7 @@ package com.enderio.conduits;
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitItemFactory;
 import com.enderio.api.conduit.ConduitTypes;
+import com.enderio.base.data.EIODataProvider;
 import com.enderio.conduits.common.init.*;
 import com.enderio.conduits.common.integrations.Integrations;
 import com.enderio.conduits.common.items.ConduitBlockItem;
@@ -35,7 +36,12 @@ public class EIOConduits {
     @SubscribeEvent
     public static void onData(GatherDataEvent event) {
         PackOutput packOutput = event.getGenerator().getPackOutput();
-        event.getGenerator().addProvider(event.includeServer(), new ConduitTagProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper()));
-        event.getGenerator().addProvider(event.includeServer(), new ConduitRecipes(packOutput));
+
+        EIODataProvider provider = new EIODataProvider("conduits");
+
+        provider.addSubProvider(event.includeServer(), new ConduitTagProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper()));
+        provider.addSubProvider(event.includeServer(), new ConduitRecipes(packOutput));
+
+        event.getGenerator().addProvider(true, provider);
     }
 }
