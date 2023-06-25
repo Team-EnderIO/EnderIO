@@ -15,6 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.common.Tags;
@@ -287,6 +288,15 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
         build("soularium_block", Ingredient.of(EIOBlocks.SOULARIUM_BLOCK.get()), List.of(
         		output(SOUL_POWDER.get(), 9)
         		), BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
+
+        build("wither_rose", Ingredient.of(WITHER_ROSE), List.of(
+            output(WITHERING_POWDER.get(), 1, 0.4f)
+        ), BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
+
+        build("wither_skull", Ingredient.of(WITHER_SKELETON_SKULL), List.of(
+            output(WITHERING_POWDER.get(), 2),
+            output(WITHERING_POWDER.get(), 1, 0.2f)
+        ), BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
     }
     
     private void buildOre(String name, Ingredient input, Item output, Consumer<FinishedRecipe> recipeConsumer) {

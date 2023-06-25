@@ -4,36 +4,18 @@ import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.recipe.ShapedEntityStorageRecipeBuilder;
-import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.enderio.machines.common.init.MachineBlocks;
-import com.enderio.machines.common.init.MachineRecipes;
-import com.google.gson.JsonObject;
-import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.AdvancementRewards;
-import net.minecraft.advancements.RequirementsStrategy;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.CraftingBookCategory;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.function.Consumer;
 
 public class MachineRecipeProvider extends RecipeProvider {
@@ -132,13 +114,13 @@ public class MachineRecipeProvider extends RecipeProvider {
             .shaped(RecipeCategory.MISC, MachineBlocks.SLICE_AND_SPLICE.get())
             .define('I', EIOItems.SOULARIUM_INGOT.get())
             .define('G', EIOItems.GEAR_ENERGIZED.get())
-            .define('C', EIOBlocks.ENSNARED_CHASSIS.get())
+            .define('C', EIOBlocks.ENSOULED_CHASSIS.get())
             .define('B', Items.IRON_BARS)
             .define('H', Tags.Items.HEADS)
             .pattern("IHI")
             .pattern("ICI")
             .pattern("GBG")
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.ENSNARED_CHASSIS.get()))
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.ENSOULED_CHASSIS.get()))
             .save(finishedRecipeConsumer);
 
         ShapedRecipeBuilder
@@ -158,25 +140,25 @@ public class MachineRecipeProvider extends RecipeProvider {
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.SOUL_BINDER.get())
             .define('I', EIOItems.SOULARIUM_INGOT.get())
-            .define('C', EIOBlocks.ENSNARED_CHASSIS.get())
+            .define('C', EIOBlocks.ENSOULED_CHASSIS.get())
             .define('H', Tags.Items.HEADS)
             .pattern("IHI")
             .pattern("HCH")
             .pattern("IHI")
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.ENSNARED_CHASSIS.get()))
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.ENSOULED_CHASSIS.get()))
             .save(finishedRecipeConsumer);
 
         ShapedEntityStorageRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.POWERED_SPAWNER)
             .define('I', EIOItems.CONDUCTIVE_ALLOY_INGOT)
             .define('B', EIOItems.BROKEN_SPAWNER)
-            .define('C', EIOBlocks.ENSNARED_CHASSIS)
+            .define('C', EIOBlocks.ENSOULED_CHASSIS)
             .define('Z', EIOItems.Z_LOGIC_CONTROLLER)
             .define('V', EIOItems.VIBRANT_CRYSTAL)
             .pattern("IBI")
             .pattern("ICI")
             .pattern("VZV")
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.ENSNARED_CHASSIS))
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.ENSOULED_CHASSIS))
             .save(finishedRecipeConsumer);
 
         ShapedRecipeBuilder

@@ -55,17 +55,17 @@ public class EIOBlocks {
     public static final BlockEntry<Block> VOID_CHASSIS = chassisBlock("void_chassis").register();
 
     // Void chassis + some kind of dragons breath derrived process
-    public static final BlockEntry<Block> REKINDLED_VOID_CHASSIS = chassisBlock("rekindled_void_chassis").register();
+//    public static final BlockEntry<Block> REKINDLED_VOID_CHASSIS = chassisBlock("rekindled_void_chassis").register();
 
     // Soularium + soul/nether
-    public static final BlockEntry<Block> ENSNARED_CHASSIS = chassisBlock("ensouled_chassis").register();
+    public static final BlockEntry<Block> ENSOULED_CHASSIS = chassisBlock("ensouled_chassis").register();
 
     // Ensnared + Some kind of other material
     // This is for machines that require a bound soul
-    public static final BlockEntry<Block> TRAPPED_CHASSIS = chassisBlock("trapped_chassis").register();
+//    public static final BlockEntry<Block> TRAPPED_CHASSIS = chassisBlock("trapped_chassis").register();
 
     // Dark steel + sculk
-    public static final BlockEntry<Block> SCULK_CHASSIS = chassisBlock("sculk_chassis").register();
+//    public static final BlockEntry<Block> SCULK_CHASSIS = chassisBlock("sculk_chassis").register();
 
 
     // endregion
@@ -79,12 +79,20 @@ public class EIOBlocks {
     // region Miscellaneous
 
     public static final BlockEntry<ChainBlock> SOUL_CHAIN = REGISTRATE.block("soul_chain", ChainBlock::new)
-        // TODO: Models and such
         .initialProperties(Material.METAL, MaterialColor.NONE)
         .properties(props -> props.requiresCorrectToolForDrops().strength(5.0F, 6.0F).sound(SoundType.CHAIN).noOcclusion())
         .tag(BlockTags.NEEDS_IRON_TOOL)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .blockstate((ctx, prov) -> {
+            var model = prov.models().withExistingParent(ctx.getName(), prov.mcLoc("block/chain"))
+                .renderType(prov.mcLoc("cutout_mipped"))
+                .texture("particle", prov.blockTexture(ctx.get()))
+                .texture("all", prov.blockTexture(ctx.get()));
+
+            prov.axisBlock(ctx.get(), model, model);
+        })
         .item()
+        .model((ctx, prov) -> prov.generated(ctx, prov.modLoc("item/soul_chain")))
         .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
         .build()
         .register();

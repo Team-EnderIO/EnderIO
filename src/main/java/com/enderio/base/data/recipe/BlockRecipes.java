@@ -7,7 +7,6 @@ import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.advancements.critereon.*;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.tags.ItemTags;
@@ -45,7 +44,7 @@ public class BlockRecipes extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GRAINS_OF_INFINITY.get()))
             .save(recipeConsumer);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOBlocks.ENSNARED_CHASSIS.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOBlocks.ENSOULED_CHASSIS.get())
             .define('C', EIOBlocks.SOUL_CHAIN.get())
             .define('Q', Tags.Items.GEMS_QUARTZ)
             .define('I', EIOItems.SOULARIUM_INGOT.get())

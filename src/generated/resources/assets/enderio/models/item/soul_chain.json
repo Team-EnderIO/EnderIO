@@ -1,3 +1,6 @@
 {
-  "parent": "enderio:block/soul_chain"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "enderio:item/soul_chain"
+  }
 }
