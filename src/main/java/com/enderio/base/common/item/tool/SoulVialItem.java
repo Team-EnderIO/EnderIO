@@ -214,7 +214,7 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
 
     // region Entity Storage
 
-    private static void setEntityType(ItemStack stack, ResourceLocation entityType) {
+    public static void setEntityType(ItemStack stack, ResourceLocation entityType) {
         stack
             .getCapability(EIOCapabilities.ENTITY_STORAGE)
             .ifPresent(storage ->
@@ -228,6 +228,12 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
             .ifPresent(storage ->
                 storage.setStoredEntityData(StoredEntityData.of(entity))
             );
+    }
+
+    public static Optional<StoredEntityData> getEntityData(ItemStack stack) {
+        return stack
+            .getCapability(EIOCapabilities.ENTITY_STORAGE)
+            .map(IEntityStorage::getStoredEntityData);
     }
 
     @Nullable

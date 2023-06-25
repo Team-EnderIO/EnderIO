@@ -22,6 +22,7 @@ import java.util.function.Supplier;
 public class ConduitItems {
     private static final Registrate REGISTRATE = EnderIO.registrate();
 
+    // TODO: 1.20.1 Remove POWER2 and 3, and rename to Energy.
     public static final ItemEntry<Item> POWER = createConduitItem(() -> EnderConduitTypes.POWER.get(), "power1");
     public static final ItemEntry<Item> POWER2 = createConduitItem(() -> EnderConduitTypes.POWER2.get(), "power2");
     public static final ItemEntry<Item> POWER3 = createConduitItem(() -> EnderConduitTypes.POWER3.get(), "power3");

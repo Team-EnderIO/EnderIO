@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "tag": "forge:chests"
+    },
+    "I": {
+      "tag": "forge:ingots/iron"
+    },
+    "P": {
+      "item": "enderio:pulsating_crystal"
+    }
+  },
+  "pattern": [
+    "III",
+    "ICI",
+    "IPI"
+  ],
+  "result": {
+    "item": "enderio:vacuum_chest"
+  },
+  "show_notification": true
+}

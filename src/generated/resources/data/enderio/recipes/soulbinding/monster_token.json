@@ -1,0 +1,10 @@
+{
+  "type": "enderio:soul_binding",
+  "energy": 25000,
+  "entity_type": "minecraft:ghast",
+  "exp": 1,
+  "input": {
+    "item": "enderio:soularium_grinding_ball"
+  },
+  "output": "enderio:monster_token"
+}

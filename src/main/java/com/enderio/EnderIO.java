@@ -11,10 +11,11 @@ import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.EIODataProvider;
 import com.enderio.base.data.advancement.EIOAdvancementGenerator;
-import com.enderio.base.data.loot.FireCraftingLootTableSubProvider;
+import com.enderio.base.data.loot.FireCraftingLootProvider;
 import com.enderio.base.data.recipe.*;
 import com.enderio.base.data.tags.EIOBlockTagsProvider;
 import com.enderio.base.data.tags.EIOFluidTagsProvider;
+import com.enderio.base.data.tags.EIOItemTagsProvider;
 import com.enderio.core.EnderCore;
 import com.enderio.core.common.network.CoreNetwork;
 import com.tterrag.registrate.Registrate;
@@ -24,7 +25,9 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.common.data.ForgeAdvancementProvider;
+import net.minecraftforge.common.data.ForgeBlockTagsProvider;
 import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -103,7 +106,7 @@ public class EnderIO {
         DataGenerator generator = event.getGenerator();
         PackOutput packOutput = event.getGenerator().getPackOutput();
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
-
+        ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
 
         EIODataProvider provider = new EIODataProvider("base");
 
@@ -114,20 +117,17 @@ public class EnderIO {
         provider.addSubProvider(event.includeServer(), new GlassRecipes(packOutput));
         provider.addSubProvider(event.includeServer(), new FireCraftingRecipes(packOutput));
 
-//        ForgeBlockTagsProvider b = new ForgeBlockTagsProvider(packOutput, lookupProvider, event.getExistingFileHelper());
-//        provider.addSubProvider(event.includeServer(), new EIOItemTagsProvider(packOutput, event.getLookupProvider(), b.contentsGetter(), event.getExistingFileHelper()));
-        provider.addSubProvider(event.includeServer(), new EIOFluidTagsProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper()));
-        provider.addSubProvider(event.includeServer(), new EIOBlockTagsProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper()));
-        provider.addSubProvider(event.includeServer(), new LootTableProvider(packOutput, Collections.emptySet(), List.of(
-            new LootTableProvider.SubProviderEntry(
-                FireCraftingLootTableSubProvider::new, LootContextParamSets.EMPTY
-            )
-        )));
+        var b = new EIOBlockTagsProvider(packOutput, lookupProvider, existingFileHelper);
+        provider.addSubProvider(event.includeServer(), b);
+        provider.addSubProvider(event.includeServer(), new EIOItemTagsProvider(packOutput, lookupProvider, b.contentsGetter(), existingFileHelper));
+        provider.addSubProvider(event.includeServer(), new EIOFluidTagsProvider(packOutput, lookupProvider, existingFileHelper));
+        generator.addProvider(event.includeServer(), new LootTableProvider(
+            packOutput, Collections.emptySet(),
+            List.of(new LootTableProvider.SubProviderEntry(FireCraftingLootProvider::new, LootContextParamSets.EMPTY))));
 
-        provider.addSubProvider(event.includeServer(), new ForgeAdvancementProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper(),
+        provider.addSubProvider(event.includeServer(), new ForgeAdvancementProvider(packOutput, lookupProvider, existingFileHelper,
             List.of(new EIOAdvancementGenerator())));
-
-
+        
         generator.addProvider(true, provider);
     }
 }

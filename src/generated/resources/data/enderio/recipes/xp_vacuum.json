@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": {
+      "tag": "forge:ingots/iron"
+    },
+    "P": {
+      "item": "enderio:pulsating_crystal"
+    },
+    "R": {
+      "item": "enderio:experience_rod"
+    }
+  },
+  "pattern": [
+    "III",
+    "IRI",
+    "IPI"
+  ],
+  "result": {
+    "item": "enderio:xp_vacuum"
+  },
+  "show_notification": true
+}

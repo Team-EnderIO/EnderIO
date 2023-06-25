@@ -19,7 +19,7 @@
     },
     {
       "chance": 0.05,
-      "item": "enderio:coal_powder"
+      "item": "enderio:powdered_coal"
     }
   ]
 }

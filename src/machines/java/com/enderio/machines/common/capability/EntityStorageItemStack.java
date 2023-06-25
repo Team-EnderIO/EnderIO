@@ -18,7 +18,7 @@ public class EntityStorageItemStack extends EntityStorage {
         CompoundTag tag = stack.getOrCreateTag();
         StoredEntityData entity = StoredEntityData.empty();
         if (tag.contains("BlockEntityTag")) {
-            CompoundTag entityTag = tag.getCompound("EntityStorage");
+            CompoundTag entityTag = tag.getCompound("BlockEntityTag").getCompound("EntityStorage");
             entity.deserializeNBT(entityTag);
         }
         return entity;

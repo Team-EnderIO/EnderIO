@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "enderio:dark_steel_bars"
+    },
+    "G": {
+      "tag": "enderio:fused_quartz"
+    },
+    "I": {
+      "item": "enderio:dark_steel_ingot"
+    }
+  },
+  "pattern": [
+    "IBI",
+    "BGB",
+    "IBI"
+  ],
+  "result": {
+    "item": "enderio:pressurized_fluid_tank"
+  },
+  "show_notification": true
+}

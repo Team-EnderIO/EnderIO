@@ -11,7 +11,6 @@ import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.data.recipes.*;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.loot.LootTableProvider;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -51,6 +50,7 @@ public class EIOMachines {
         provider.addSubProvider(event.includeServer(), new SagMillRecipeProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new SlicingRecipeProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new SoulBindingRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new TankRecipeProvider(packOutput));
 
         generator.addProvider(true, provider);
     }
