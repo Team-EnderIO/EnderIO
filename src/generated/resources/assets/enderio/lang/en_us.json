@@ -905,6 +905,7 @@
   "info.enderio.darksteel.upgrade.spoon.description": "Who needs a shovel when you have a spoon?",
   "info.enderio.durability.amount": "Durability %s",
   "info.enderio.energy.amount": "%s µI",
+  "info.enderio.too_many_levels": "You have more than 21862 levels, that's too much XP.",
   "item.enderio.animal_token": "Animal Token",
   "item.enderio.basic_capacitor": "Basic Capacitor",
   "item.enderio.black_glider": "Black Glider",

@@ -50,6 +50,7 @@ public class EIOMachines {
         provider.addSubProvider(event.includeServer(), new SagMillRecipeProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new SlicingRecipeProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new SoulBindingRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new TankRecipeProvider(packOutput));
 
         generator.addProvider(true, provider);
     }
