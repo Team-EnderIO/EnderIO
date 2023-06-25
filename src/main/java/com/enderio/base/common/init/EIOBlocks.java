@@ -70,35 +70,6 @@ public class EIOBlocks {
 
     // endregion
 
-    // region Building Blocks
-
-    // region Dark Steel
-
-    // endregion
-
-    // region Miscellaneous
-
-    public static final BlockEntry<ChainBlock> SOUL_CHAIN = REGISTRATE.block("soul_chain", ChainBlock::new)
-        .initialProperties(Material.METAL, MaterialColor.NONE)
-        .properties(props -> props.requiresCorrectToolForDrops().strength(5.0F, 6.0F).sound(SoundType.CHAIN).noOcclusion())
-        .tag(BlockTags.NEEDS_IRON_TOOL)
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
-        .blockstate((ctx, prov) -> {
-            var model = prov.models().withExistingParent(ctx.getName(), prov.mcLoc("block/chain"))
-                .renderType(prov.mcLoc("cutout_mipped"))
-                .texture("particle", prov.blockTexture(ctx.get()))
-                .texture("all", prov.blockTexture(ctx.get()));
-
-            prov.axisBlock(ctx.get(), model, model);
-        })
-        .item()
-        .model((ctx, prov) -> prov.generated(ctx, prov.modLoc("item/soul_chain")))
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
-        .build()
-        .register();
-
-    // endregion
-
     // endregion
 
     // region Dark Steel Building Blocks
@@ -198,12 +169,49 @@ public class EIOBlocks {
 
     // endregion
 
-    // region Misc
+    // region Miscellaneous
+
+    public static final BlockEntry<ChainBlock> SOUL_CHAIN = REGISTRATE.block("soul_chain", ChainBlock::new)
+        .initialProperties(Material.METAL, MaterialColor.NONE)
+        .properties(props -> props.requiresCorrectToolForDrops().strength(5.0F, 6.0F).sound(SoundType.CHAIN).noOcclusion())
+        .tag(BlockTags.NEEDS_IRON_TOOL)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .blockstate((ctx, prov) -> {
+            var model = prov.models().withExistingParent(ctx.getName(), prov.mcLoc("block/chain"))
+                .renderType(prov.mcLoc("cutout_mipped"))
+                .texture("particle", prov.blockTexture(ctx.get()))
+                .texture("all", prov.blockTexture(ctx.get()));
+
+            prov.axisBlock(ctx.get(), model, model);
+        })
+        .item()
+        .model((ctx, prov) -> prov.generated(ctx, prov.modLoc("item/soul_chain")))
+        .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
+        .build()
+        .register();
 
     public static final BlockEntry<GraveBlock> GRAVE = REGISTRATE
         .block("grave", Material.STONE, GraveBlock::new)
         .properties(props -> props.strength(-1.0F, 3600000.0F).noLootTable().noOcclusion())
         .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(ctx.getId())))
+        .register();
+
+    public static final BlockEntry<ColdFireBlock> COLD_FIRE = REGISTRATE
+        .block("cold_fire", ColdFireBlock::new)
+        .properties(props -> BlockBehaviour.Properties.copy(Blocks.FIRE).noLootTable())
+        .blockstate((ctx, prov) -> {
+            // This generates the models used for the blockstate in our resources.
+            // One day we may bother to datagen that file.
+            String[] toCopy = {
+                "fire_floor0", "fire_floor1",
+                "fire_side0", "fire_side1", "fire_side_alt0", "fire_side_alt1",
+                "fire_up0", "fire_up1", "fire_up_alt0", "fire_up_alt1"
+            };
+
+            for (String name : toCopy) {
+                prov.models().withExistingParent(name, prov.mcLoc(name)).renderType("cutout");
+            }
+        })
         .register();
 
     // endregion
@@ -283,24 +291,6 @@ public class EIOBlocks {
     public static final BlockEntry<ResettingLeverBlock> RESETTING_LEVER_THREE_HUNDRED_INV = resettingLeverBlock("resetting_lever_three_hundred_inv", 300, true);
 
     // endregion
-
-    public static final BlockEntry<ColdFireBlock> COLD_FIRE = REGISTRATE
-        .block("cold_fire", ColdFireBlock::new)
-        .properties(props -> BlockBehaviour.Properties.copy(Blocks.FIRE).noLootTable())
-        .blockstate((ctx, prov) -> {
-            // This generates the models used for the blockstate in our resources.
-            // One day we may bother to datagen that file.
-            String[] toCopy = {
-                "fire_floor0", "fire_floor1",
-                "fire_side0", "fire_side1", "fire_side_alt0", "fire_side_alt1",
-                "fire_up0", "fire_up1", "fire_up_alt0", "fire_up_alt1"
-            };
-
-            for (String name : toCopy) {
-                prov.models().withExistingParent(name, prov.mcLoc(name)).renderType("cutout");
-            }
-        })
-        .register();
 
     public static <T extends Block> BlockBuilder<T, Registrate> simpleBlockBuilder(String name, T block) {
         return REGISTRATE.block(name, p -> block).item().tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS)).build();
