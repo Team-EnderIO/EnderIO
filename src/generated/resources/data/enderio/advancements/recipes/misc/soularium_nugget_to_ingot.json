@@ -6,7 +6,7 @@
         "items": [
           {
             "items": [
-              "enderio:copper_alloy_ingot"
+              "enderio:soularium_ingot"
             ]
           }
         ]
@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:copper_alloy_nugget_to_ingot"
+        "recipe": "enderio:soularium_nugget_to_ingot"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:copper_alloy_nugget_to_ingot"
+      "enderio:soularium_nugget_to_ingot"
     ]
   }
 }

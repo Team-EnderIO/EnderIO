@@ -6,7 +6,7 @@
         "items": [
           {
             "items": [
-              "enderio:vibrant_alloy_ingot"
+              "enderio:end_steel_ingot"
             ]
           }
         ]
@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:vibrant_alloy_nugget_to_ingot"
+        "recipe": "enderio:end_steel_nugget_to_ingot"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:vibrant_alloy_nugget_to_ingot"
+      "enderio:end_steel_nugget_to_ingot"
     ]
   }
 }

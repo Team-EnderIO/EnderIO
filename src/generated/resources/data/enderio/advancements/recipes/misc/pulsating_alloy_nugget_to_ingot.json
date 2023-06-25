@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:pulsating_alloy_nugget_to_ingot"
+        "recipe": "enderio:pulsating_alloy_nugget_to_ingot"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:pulsating_alloy_nugget_to_ingot"
+      "enderio:pulsating_alloy_nugget_to_ingot"
     ]
   }
 }

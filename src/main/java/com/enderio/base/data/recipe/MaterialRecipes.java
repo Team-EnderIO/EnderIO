@@ -308,7 +308,7 @@ public class MaterialRecipes extends RecipeProvider {
     		.pattern("NNN")
     		.define('N', nugget)
     		.unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ingot))
-    		.save(recipeConsumer, nugget.toString() + "_to_ingot");
+    		.save(recipeConsumer, EnderIO.loc(nugget.toString() + "_to_ingot"));
     }
 
     private void upgradeGear(Consumer<FinishedRecipe> recipeConsumer, Item resultGear, ItemLike inputGear, ItemLike cross, ItemLike corner) {

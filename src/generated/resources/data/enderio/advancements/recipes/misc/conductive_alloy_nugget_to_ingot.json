@@ -6,7 +6,7 @@
         "items": [
           {
             "items": [
-              "enderio:end_steel_ingot"
+              "enderio:conductive_alloy_ingot"
             ]
           }
         ]
@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:end_steel_nugget_to_ingot"
+        "recipe": "enderio:conductive_alloy_nugget_to_ingot"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:end_steel_nugget_to_ingot"
+      "enderio:conductive_alloy_nugget_to_ingot"
     ]
   }
 }
