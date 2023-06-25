@@ -13,11 +13,11 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
-public class PowerConduitTicker extends ICapabilityAwareConduitTicker<IEnergyStorage> {
+public class EnergyConduitTicker extends ICapabilityAwareConduitTicker<IEnergyStorage> {
 
     private static final Logger LOGGER = LogManager.getLogger("enderio:api");
 
-    public PowerConduitTicker() {
+    public EnergyConduitTicker() {
     }
 
     @Override

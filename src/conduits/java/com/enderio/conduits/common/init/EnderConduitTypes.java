@@ -11,8 +11,8 @@ public class EnderConduitTypes {
 
     public static final ResourceLocation ICON_TEXTURE = EnderIO.loc("textures/gui/conduit_icon.png");
     public static final RegistryObject<SimpleConduitType<IExtendedConduitData.EmptyExtendedConduitData>> ENERGY =
-        ConduitTypes.CONDUIT_TYPES.register("energy_condit",
-            () -> new SimpleConduitType<>(EnderIO.loc("block/conduit/energy"), new PowerConduitTicker(), IExtendedConduitData.EmptyExtendedConduitData::new,
+        ConduitTypes.CONDUIT_TYPES.register("energy_conduit",
+            () -> new SimpleConduitType<>(EnderIO.loc("block/conduit/energy"), new EnergyConduitTicker(), IExtendedConduitData.EmptyExtendedConduitData::new,
                 new IClientConduitData.Simple<>(ICON_TEXTURE, new Vector2i(0, 24)), IConduitMenuData.ENERGY));
     public static final RegistryObject<FluidConduitType> FLUID = fluidConduit("fluid_conduit", 50, false, new Vector2i(0, 96));
     public static final RegistryObject<FluidConduitType> FLUID2 = fluidConduit("pressurized_fluid_conduit", 100, false, new Vector2i(0, 120));
