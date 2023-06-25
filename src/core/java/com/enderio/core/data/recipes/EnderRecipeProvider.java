@@ -28,7 +28,7 @@ public abstract class EnderRecipeProvider extends RecipeProvider {
     /**
      * Base class for a finished recipe.
      */
-    protected abstract static class EnderFinishedRecipe implements FinishedRecipe {
+    public abstract static class EnderFinishedRecipe implements FinishedRecipe {
         private final ResourceLocation id;
         private final List<ICondition> conditions = new ArrayList<>();
 

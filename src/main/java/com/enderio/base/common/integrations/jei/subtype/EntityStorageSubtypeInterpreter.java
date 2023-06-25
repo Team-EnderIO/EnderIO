@@ -6,7 +6,7 @@ import mezz.jei.api.ingredients.subtypes.UidContext;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
-public class SoulVialSubtypeInterpreter implements IIngredientSubtypeInterpreter<ItemStack> {
+public class EntityStorageSubtypeInterpreter implements IIngredientSubtypeInterpreter<ItemStack> {
     @Override
     public String apply(ItemStack itemStack, UidContext context) {
         return itemStack

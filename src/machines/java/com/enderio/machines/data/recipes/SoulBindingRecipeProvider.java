@@ -41,7 +41,6 @@ public class SoulBindingRecipeProvider extends EnderRecipeProvider {
         build(EIOItems.PLAYER_TOKEN, Ingredient.of(EIOItems.DARK_STEEL_BALL), 25000, 1, EntityType.VILLAGER, pFinishedRecipeConsumer);
         build(EIOItems.MONSTER_TOKEN, Ingredient.of(EIOItems.SOULARIUM_BALL), 25000, 1, EntityType.GHAST, pFinishedRecipeConsumer);
         build(EIOItems.ANIMAL_TOKEN, Ingredient.of(EIOItems.SOULARIUM_BALL), 25000, 1, MobCategory.CREATURE, pFinishedRecipeConsumer);
-        build(MachineBlocks.POWERED_SPAWNER, Ingredient.of(EIOItems.BROKEN_SPAWNER.get()), 2500000, 8, pFinishedRecipeConsumer);
     }
 
     protected void build(ItemLike output, Ingredient input, int energy, int exp, EntityType<? extends Entity> entityType, Consumer<FinishedRecipe> finishedRecipeConsumer) {

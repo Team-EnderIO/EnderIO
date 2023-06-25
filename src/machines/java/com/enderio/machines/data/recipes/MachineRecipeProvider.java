@@ -3,19 +3,37 @@ package com.enderio.machines.data.recipes;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
+import com.enderio.base.data.recipe.ShapedEntityStorageRecipeBuilder;
+import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.enderio.machines.common.init.MachineBlocks;
+import com.enderio.machines.common.init.MachineRecipes;
+import com.google.gson.JsonObject;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementRewards;
+import net.minecraft.advancements.RequirementsStrategy;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public class MachineRecipeProvider extends RecipeProvider {
@@ -148,19 +166,18 @@ public class MachineRecipeProvider extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.ENSNARED_CHASSIS.get()))
             .save(finishedRecipeConsumer);
 
-        // TODO: NBT Crafting with a broken spawner.
-//        ShapedRecipeBuilder
-//            .shaped(RecipeCategory.MISC, MachineBlocks.POWERED_SPAWNER.get())
-//            .define('I', EIOItems.CONDUCTIVE_ALLOY_INGOT.get())
-//            .define('H', Tags.Items.HEADS)
-//            .define('C', EIOBlocks.ENSNARED_CHASSIS.get())
-//            .define('Z', EIOItems.Z_LOGIC_CONTROLLER.get())
-//            .define('V', EIOItems.VIBRANT_CRYSTAL.get())
-//            .pattern("IHI")
-//            .pattern("ICI")
-//            .pattern("VZV")
-//            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.ENSNARED_CHASSIS.get()))
-//            .save(finishedRecipeConsumer);
+        ShapedEntityStorageRecipeBuilder
+            .shaped(RecipeCategory.MISC, MachineBlocks.POWERED_SPAWNER)
+            .define('I', EIOItems.CONDUCTIVE_ALLOY_INGOT)
+            .define('B', EIOItems.BROKEN_SPAWNER)
+            .define('C', EIOBlocks.ENSNARED_CHASSIS)
+            .define('Z', EIOItems.Z_LOGIC_CONTROLLER)
+            .define('V', EIOItems.VIBRANT_CRYSTAL)
+            .pattern("IBI")
+            .pattern("ICI")
+            .pattern("VZV")
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.ENSNARED_CHASSIS))
+            .save(finishedRecipeConsumer);
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.VACUUM_CHEST.get())
