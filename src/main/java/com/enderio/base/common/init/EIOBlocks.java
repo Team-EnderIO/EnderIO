@@ -177,8 +177,7 @@ public class EIOBlocks {
     // region Miscellaneous
 
     public static final BlockEntry<ChainBlock> SOUL_CHAIN = REGISTRATE.block("soul_chain", ChainBlock::new)
-        .initialProperties(Material.METAL, MaterialColor.NONE)
-        .properties(props -> props.requiresCorrectToolForDrops().strength(5.0F, 6.0F).sound(SoundType.CHAIN).noOcclusion())
+        .properties(props -> props.requiresCorrectToolForDrops().strength(5.0F, 6.0F).sound(SoundType.CHAIN).noOcclusion().sound(SoundType.METAL).mapColor(MapColor.NONE))
         .tag(BlockTags.NEEDS_IRON_TOOL)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .blockstate((ctx, prov) -> {
@@ -191,7 +190,7 @@ public class EIOBlocks {
         })
         .item()
         .model((ctx, prov) -> prov.generated(ctx, prov.modLoc("item/soul_chain")))
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
+        .tab(EIOCreativeTabs.BLOCKS)
         .build()
         .register();
 

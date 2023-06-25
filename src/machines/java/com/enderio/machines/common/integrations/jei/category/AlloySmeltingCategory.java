@@ -18,6 +18,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
@@ -82,10 +83,10 @@ public class AlloySmeltingCategory extends MachineCategory<AlloySmeltingRecipe> 
     }
 
     @Override
-    public void draw(AlloySmeltingRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
-        animatedFlame.draw(stack, 3, 29);
-        animatedFlame.draw(stack, 51, 29);
-        Minecraft.getInstance().font.draw(stack, getEnergyString(recipe), 60, 50, 0xff808080);
+    public void draw(AlloySmeltingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+        animatedFlame.draw(guiGraphics, 3, 29);
+        animatedFlame.draw(guiGraphics, 51, 29);
+        guiGraphics.drawString(Minecraft.getInstance().font, getEnergyString(recipe), 60, 50, 0xff808080);
     }
 
     @Override

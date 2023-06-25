@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:stirling_generator"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

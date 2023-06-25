@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:enchanter"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

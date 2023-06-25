@@ -329,7 +329,7 @@ public class EIOItems {
 
     public static final ItemEntry<ExperienceRodItem> EXPERIENCE_ROD = REGISTRATE
         .item("experience_rod", ExperienceRodItem::new)
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.GEAR))
+        .tab(EIOCreativeTabs.GEAR)
         .register();
 
     public static final ItemEntry<LevitationStaffItem> LEVITATION_STAFF = REGISTRATE

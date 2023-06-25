@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:vacuum_chest"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

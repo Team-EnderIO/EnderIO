@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:ensouled_chassis"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

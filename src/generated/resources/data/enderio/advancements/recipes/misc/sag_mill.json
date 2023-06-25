@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:sag_mill"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

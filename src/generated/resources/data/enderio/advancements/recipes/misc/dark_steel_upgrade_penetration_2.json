@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:dark_steel_upgrade_penetration_2"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

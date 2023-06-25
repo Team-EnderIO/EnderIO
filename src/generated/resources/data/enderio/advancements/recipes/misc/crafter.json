@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:crafter"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

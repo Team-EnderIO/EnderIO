@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:slice_and_splice"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

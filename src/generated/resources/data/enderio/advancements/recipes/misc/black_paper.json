@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:black_paper"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

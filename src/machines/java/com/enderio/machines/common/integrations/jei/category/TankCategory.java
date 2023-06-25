@@ -86,9 +86,4 @@ public class TankCategory implements IRecipeCategory<TankRecipe> {
                 .addItemStack(new ItemStack(recipe.getOutput()));
         }
     }
-
-    @Override
-    public void draw(TankRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
-
-    }
 }

@@ -19,6 +19,7 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -102,8 +103,8 @@ public class SagMillCategory implements IRecipeCategory<SagMillingRecipe> {
     }
 
     @Override
-    public void draw(SagMillingRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
-        Minecraft.getInstance().font.draw(stack, getEnergyString(recipe, recipeSlotsView), 83, 47, 0xff808080);
+    public void draw(SagMillingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+        guiGraphics.drawString(Minecraft.getInstance().font, getEnergyString(recipe, recipeSlotsView), 83, 47, 0xff808080);
     }
 
     @Override

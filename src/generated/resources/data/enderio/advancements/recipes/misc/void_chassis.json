@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:void_chassis"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

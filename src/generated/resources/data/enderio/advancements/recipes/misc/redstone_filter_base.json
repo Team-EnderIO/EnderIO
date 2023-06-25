@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:redstone_filter_base"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

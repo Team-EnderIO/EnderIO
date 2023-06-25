@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:redstone_conduit"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

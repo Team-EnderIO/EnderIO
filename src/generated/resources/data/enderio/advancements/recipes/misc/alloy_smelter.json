@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:alloy_smelter"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

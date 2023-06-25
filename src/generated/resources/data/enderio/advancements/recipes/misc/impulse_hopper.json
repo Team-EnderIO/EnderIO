@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:impulse_hopper"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:ender_fluid_conduit_upgrade"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

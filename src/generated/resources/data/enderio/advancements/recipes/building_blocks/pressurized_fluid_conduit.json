@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:pressurized_fluid_conduit"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

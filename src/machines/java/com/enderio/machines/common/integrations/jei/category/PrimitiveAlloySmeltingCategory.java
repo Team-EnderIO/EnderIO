@@ -15,6 +15,7 @@ import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeType;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
@@ -77,8 +78,8 @@ public class PrimitiveAlloySmeltingCategory extends MachineCategory<AlloySmeltin
     }
 
     @Override
-    public void draw(AlloySmeltingRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
-        animatedFlame.draw(stack, 22, 20);
+    public void draw(AlloySmeltingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+        animatedFlame.draw(guiGraphics, 22, 20);
 
         // TODO: Draw time to smelt
     }

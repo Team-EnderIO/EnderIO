@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:xp_vacuum"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }
