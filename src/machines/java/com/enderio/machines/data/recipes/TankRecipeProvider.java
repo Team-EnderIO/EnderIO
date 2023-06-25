@@ -30,9 +30,9 @@ public class TankRecipeProvider extends EnderRecipeProvider {
 
     @Override
     protected void buildRecipes(Consumer<FinishedRecipe> pWriter) {
-        // TODO: Review XP -> Bottle
-        buildEmptying(Ingredient.of(Items.EXPERIENCE_BOTTLE), Items.GLASS_BOTTLE, new FluidStack(EIOFluids.XP_JUICE.getSource(), 200), pWriter);
-        buildFilling(Ingredient.of(Items.GLASS_BOTTLE), Items.EXPERIENCE_BOTTLE, new FluidStack(EIOFluids.XP_JUICE.getSource(), 200), pWriter);
+        // TODO: Tag support for tank recipes.
+        buildEmptying(Ingredient.of(Items.EXPERIENCE_BOTTLE), Items.GLASS_BOTTLE, new FluidStack(EIOFluids.XP_JUICE.getSource(), 250), pWriter);
+        buildFilling(Ingredient.of(Items.GLASS_BOTTLE), Items.EXPERIENCE_BOTTLE, new FluidStack(EIOFluids.XP_JUICE.getSource(), 250), pWriter);
 
         buildEmptying(Ingredient.of(Items.WET_SPONGE), Items.SPONGE, new FluidStack(Fluids.WATER, 1000), pWriter);
         buildFilling(Ingredient.of(Items.SPONGE), Items.WET_SPONGE, new FluidStack(Fluids.WATER, 1000), pWriter);

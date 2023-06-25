@@ -1,7 +1,7 @@
 {
   "type": "enderio:tank",
   "fluid": {
-    "amount": 200,
+    "amount": 250,
     "fluid": "enderio:xp_juice"
   },
   "input": {
