@@ -10,9 +10,9 @@
   <h3 align="center">EnderIO</h3>
 
   <p align="center">
-    The full-fat tech mod for Minecraft 1.19.
+    The full-fat tech mod for Minecraft 1.20.1
     <br />
-    <a href="https://github.com/Rover656/EnderIO-Rewrite/wiki"><strong>Browse the Wiki »</strong></a>
+    <a href="https://github.com/SleepyTrousers/EnderIO-Rewrite/wiki"><strong>Browse the Wiki »</strong></a>
     <br />
     <br />
     <a href="https://www.curseforge.com/minecraft/mc-mods/ender-io">Curseforge</a>
@@ -21,9 +21,9 @@
     ·
     <a href="https://discord.gg/sgYk3Jr">Discord</a>
     ·
-    <a href="https://github.com/Rover656/EnderIO-Rewrite/issues/new?assignees=&labels=bug&template=bug_report.md&title=%5BBUG%5D+Short+problem+description">Report Bug</a>
+    <a href="https://github.com/SleepyTrousers/EnderIO-Rewrite/issues/new?assignees=&labels=bug&template=bug_report.md&title=%5BBUG%5D+Short+problem+description">Report Bug</a>
     ·
-    <a href="https://github.com/Rover656/EnderIO-Rewrite/issues/new?assignees=&labels=&template=feature_request.md&title=">Request Feature</a>
+    <a href="https://github.com/SleepyTrousers/EnderIO-Rewrite/issues/new?assignees=&labels=&template=feature_request.md&title=">Request Feature</a>
   </p>
 </p>
 
@@ -56,16 +56,16 @@
 
 [![EnderIO Logo](doc/img/logo.png)](https://www.curseforge.com/minecraft/mc-mods/ender-io)
 
-[![Gradle Build](https://github.com/Rover656/EnderIO-Rewrite/actions/workflows/gradle.yml/badge.svg)](https://github.com/Rover656/EnderIO-Rewrite/actions/workflows/gradle.yml)
+[![Build Status](https://ci.tterrag.com/job/EnderIO-Modules/job/EnderIO-Hourly/badge/icon)](https://ci.tterrag.com/job/EnderIO-Modules/job/EnderIO-Hourly/)
 
-TODO
+Ender IO is a full-featured tech mod. It has armor, tools, weapons, machines, conduits, inventory management, mobs, etc.
+
+Ender IO has been rewritten from the ground-up to support the latest version of Minecraft.
+Some features may be missing or work differently, however we are working to re-implement everything we know and love about the original.
 
 
 <!-- GETTING STARTED -->
 ## Getting Started
-
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
 
 ### For Players
 
@@ -82,14 +82,11 @@ repositories {
 }
 
 dependencies {
-    // Include Ender IO Base API
-    compileOnly fg.deobf("com.enderio:EnderIO-base:<VERSION>:api")
+    // Include Ender IO API for compilation
+    compileOnly fg.deobf("com.enderio:EnderIO:<VERSION>:api")
     
-    // Test with Ender IO in the mod:
-    runtimeOnly fg.deobf("com.enderio.EnderIO:<VERSION>") // For monolithic build
-    
-    runtimeOnly fg.deobf("com.enderio:EnderIO-<MODULE>:<VERSION>") // For individual modules
-    // ...
+    // Use EnderIO at runtime
+    runtimeOnly fg.deobf("com.enderio.EnderIO:<VERSION>")
 }
 ```
 If you need any feature in the api, contact us.
