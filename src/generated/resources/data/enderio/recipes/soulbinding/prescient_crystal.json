@@ -1,0 +1,10 @@
+{
+  "type": "enderio:soul_binding",
+  "energy": 200000,
+  "entity_type": "minecraft:shulker",
+  "exp": 8,
+  "input": {
+    "item": "enderio:vibrant_crystal"
+  },
+  "output": "enderio:prescient_crystal"
+}

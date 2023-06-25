@@ -17,25 +17,38 @@ public class EmitParticlePacket implements Packet {
     private final double x;
     private final double y;
     private final double z;
+    private final double xSpeed;
+    private final double ySpeed;
+    private final double zSpeed;
 
     private final ParticleOptions particleOptions;
 
-    public EmitParticlePacket(double x, double y,double z, ParticleOptions type) {
+    public EmitParticlePacket(ParticleOptions type, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+        this.particleOptions = type;
         this.x = x;
         this.y = y;
         this.z = z;
-        this.particleOptions = type;
+        this.xSpeed = xSpeed;
+        this.ySpeed = ySpeed;
+        this.zSpeed = zSpeed;
     }
 
-    public EmitParticlePacket(BlockPos pos, ParticleOptions type) {
-        this(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, type);
+    public EmitParticlePacket(ParticleOptions type, BlockPos pos) {
+        this(type, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0.0, 0.0, 0.0);
+    }
+
+    public EmitParticlePacket(ParticleOptions type, BlockPos pos, double xSpeed, double ySpeed, double zSpeed) {
+        this(type, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, xSpeed, ySpeed, zSpeed);
     }
 
     public EmitParticlePacket(FriendlyByteBuf buf) {
+        particleOptions = readParticle(buf, Objects.requireNonNull(ForgeRegistries.PARTICLE_TYPES.getValue(buf.readResourceLocation())));
         x = buf.readDouble();
         y = buf.readDouble();
         z = buf.readDouble();
-        particleOptions = readParticle(buf, Objects.requireNonNull(ForgeRegistries.PARTICLE_TYPES.getValue(buf.readResourceLocation())));
+        xSpeed = buf.readDouble();
+        ySpeed = buf.readDouble();
+        zSpeed = buf.readDouble();
     }
 
     private <T extends ParticleOptions> T readParticle(FriendlyByteBuf buf, ParticleType<T> type) {
@@ -48,16 +61,19 @@ public class EmitParticlePacket implements Packet {
     }
 
     protected void write(FriendlyByteBuf writeInto) {
+        writeInto.writeResourceLocation(Objects.requireNonNull(ForgeRegistries.PARTICLE_TYPES.getKey(particleOptions.getType())));
         writeInto.writeDouble(x);
         writeInto.writeDouble(y);
         writeInto.writeDouble(z);
-        writeInto.writeResourceLocation(Objects.requireNonNull(ForgeRegistries.PARTICLE_TYPES.getKey(particleOptions.getType())));
+        writeInto.writeDouble(xSpeed);
+        writeInto.writeDouble(ySpeed);
+        writeInto.writeDouble(zSpeed);
         particleOptions.writeToNetwork(writeInto);
     }
 
     @Override
     public void handle(NetworkEvent.Context context) {
-        Minecraft.getInstance().level.addParticle(particleOptions, x, y, z, 0.0D, 0.0D, 0.0D);
+        Minecraft.getInstance().level.addParticle(particleOptions, x, y, z, xSpeed, ySpeed, zSpeed);
     }
 
     public static class Handler extends PacketHandler<EmitParticlePacket> {

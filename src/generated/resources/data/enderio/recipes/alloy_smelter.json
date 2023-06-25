@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "minecraft:cauldron"
+    },
+    "F": {
+      "item": "minecraft:furnace"
+    },
+    "G": {
+      "item": "enderio:dark_bimetal_gear"
+    },
+    "I": {
+      "item": "enderio:dark_steel_ingot"
+    },
+    "V": {
+      "item": "enderio:void_chassis"
+    }
+  },
+  "pattern": [
+    "IFI",
+    "FVF",
+    "GCG"
+  ],
+  "result": {
+    "item": "enderio:alloy_smelter"
+  },
+  "show_notification": true
+}

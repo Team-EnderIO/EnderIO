@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_ingredien": {
+    "has_ingredient": {
       "conditions": {
         "items": [
           {
@@ -22,7 +22,7 @@
   },
   "requirements": [
     [
-      "has_ingredien",
+      "has_ingredient",
       "has_the_recipe"
     ]
   ],
