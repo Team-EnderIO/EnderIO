@@ -1,5 +1,7 @@
 package com.enderio.machines.common.blockentity;
 
+import com.enderio.base.common.init.EIOFluids;
+import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.sync.FluidStackDataSlot;
 import com.enderio.core.common.sync.SyncMode;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
@@ -18,6 +20,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -26,6 +29,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
@@ -93,6 +97,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
             fillInternal();
             drainInternal();
             tryTankRecipe();
+            tryMendTool();
         }
 
         super.serverTick();
@@ -197,6 +202,28 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
                 }
             }
         });
+    }
+
+    private void tryMendTool() {
+        FluidStack fluid = fluidTank.getFluid();
+        if (!fluid.isEmpty() && fluid.getFluid().isSame(EIOFluids.XP_JUICE.getSource())) {
+            ItemStack tool = FLUID_DRAIN_INPUT.getItemStack(this);
+            if (tool.isDamageableItem() && tool.getEnchantmentLevel(Enchantments.MENDING) > 0) {
+
+                ItemStack repairedTool = tool.copy();
+
+                int damage = tool.getDamageValue();
+                int xpAmount = (int) Math.floor(damage / tool.getXpRepairRatio());
+                int fluidAmount = xpAmount * ExperienceUtil.EXPTOFLUID;
+
+                FluidStack drainedXp = fluidTank.drain(fluidAmount, IFluidHandler.FluidAction.EXECUTE);
+                int repairAmount = (int) Math.floor(drainedXp.getAmount() * tool.getXpRepairRatio() / ExperienceUtil.EXPTOFLUID);
+                repairedTool.setDamageValue(Math.max(0, damage - repairAmount));
+
+                FLUID_DRAIN_INPUT.setStackInSlot(this, ItemStack.EMPTY);
+                FLUID_DRAIN_OUTPUT.setStackInSlot(this, repairedTool);
+            }
+        }
     }
 
     @Override
