@@ -1,6 +1,7 @@
-package com.enderio.api.conduit.ticker;
+package com.enderio.conduits.common.types;
 
 import com.enderio.api.conduit.IConduitType;
+import com.enderio.api.conduit.ticker.ICapabilityAwareConduitTicker;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.server.level.ServerLevel;
@@ -15,10 +16,8 @@ import java.util.List;
 public class PowerConduitTicker extends ICapabilityAwareConduitTicker<IEnergyStorage> {
 
     private static final Logger LOGGER = LogManager.getLogger("enderio:api");
-    private final int rfPerTickAction;
 
-    public PowerConduitTicker(int rfPerTickAction) {
-        this.rfPerTickAction = rfPerTickAction;
+    public PowerConduitTicker() {
     }
 
     @Override
@@ -27,9 +26,7 @@ public class PowerConduitTicker extends ICapabilityAwareConduitTicker<IEnergySto
 
         int availableForExtraction = 0;
         for (IEnergyStorage extract : extracts.stream().map(e -> e.cap).toList()) {
-            availableForExtraction += extract.extractEnergy(rfPerTickAction - availableForExtraction, true);
-            if (availableForExtraction >= rfPerTickAction)
-                break;
+            availableForExtraction += extract.extractEnergy(extract.getEnergyStored(), true);
         }
         int inserted = 0;
         for (IEnergyStorage insert : inserts.stream().map(e -> e.cap).toList()) {

@@ -4,7 +4,7 @@ public interface IConduitMenuData {
 
     IConduitMenuData REDSTONE = new Simple(true, true, false, true, true, false);
     IConduitMenuData ITEM = new Simple(true, true, true, true, true, true);
-    IConduitMenuData POWER = new Simple(false, false, false, false, false, true);
+    IConduitMenuData ENERGY = new Simple(false, false, false, false, false, true);
 
     boolean hasFilterInsert();
 

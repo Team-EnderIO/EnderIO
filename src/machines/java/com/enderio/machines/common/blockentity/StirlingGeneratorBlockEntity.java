@@ -24,7 +24,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class StirlingGeneratorBlockEntity extends PowerGeneratingMachineEntity {
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, () -> 100000f);
-    public static final QuadraticScalable TRANSFER = new QuadraticScalable(CapacitorModifier.ENERGY_TRANSFER, () -> 120f);
     public static final FixedScalable USAGE = new FixedScalable(() -> 0f);
 
     public static final SingleSlotAccess FUEL = new SingleSlotAccess();
@@ -37,7 +36,7 @@ public class StirlingGeneratorBlockEntity extends PowerGeneratingMachineEntity {
 
     public StirlingGeneratorBlockEntity(BlockEntityType<?> type, BlockPos worldPosition,
         BlockState blockState) {
-        super(CAPACITY, TRANSFER, USAGE, type, worldPosition, blockState);
+        super(CAPACITY, USAGE, type, worldPosition, blockState);
         addDataSlot(new FloatDataSlot(this::getBurnProgress, p -> clientBurnProgress = p, SyncMode.GUI));
     }
 

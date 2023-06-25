@@ -40,7 +40,6 @@ import static com.enderio.base.common.util.ExperienceUtil.EXPTOFLUID;
 public class SoulBinderBlockEntity extends PoweredCraftingMachine<SoulBindingRecipe, SoulBindingRecipe.Container> {
 
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, () -> 100000f);
-    public static final QuadraticScalable TRANSFER = new QuadraticScalable(CapacitorModifier.ENERGY_TRANSFER, () -> 120f);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, () -> 30f);
     private final SoulBindingRecipe.Container container;
     public static final SingleSlotAccess INPUT_SOUL = new SingleSlotAccess();
@@ -50,7 +49,7 @@ public class SoulBinderBlockEntity extends PoweredCraftingMachine<SoulBindingRec
     private final MachineFluidHandler fluidHandler;
 
     public SoulBinderBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
-        super(MachineRecipes.SOUL_BINDING.type().get(), CAPACITY, TRANSFER, USAGE, type, worldPosition, blockState);
+        super(MachineRecipes.SOUL_BINDING.type().get(), CAPACITY, USAGE, type, worldPosition, blockState);
 
         fluidTank = createFluidTank(10000);
         container = new SoulBindingRecipe.Container(getInventory(), fluidTank);
