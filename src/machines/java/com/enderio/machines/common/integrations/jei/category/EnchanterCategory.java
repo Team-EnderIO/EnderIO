@@ -77,7 +77,7 @@ public class EnchanterCategory implements IRecipeCategory<WrappedEnchanterRecipe
 
         Component title = recipe.getEnchantment().getFullname(recipe.getLevel());
 
-        guiGraphics.drawString(mc.font, title, 146 - mc.font.width(title), 0, 0xff8b8b8b);
+        guiGraphics.drawString(mc.font, title, 146 - mc.font.width(title), 0, 0xff8b8b8b, false);
 
         int cost = recipe.getCost();
         String costText = cost < 0 ? "err" : Integer.toString(cost);
