@@ -85,8 +85,4 @@ public class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, IExtende
         mainNode.destroy();
     }
 
-    public boolean canPlayerModify(Player player) {
-        //TODO add check
-        return mainNode.isReady();
-    }
 }

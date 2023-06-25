@@ -57,7 +57,7 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
         Vector2i elementDistance = values[0].getRenderSize().expand(SPACE_BETWEEN_ELEMENTS);
         for (int i = 0; i < values.length; i++) {
             T value = values[i];
-            Vector2i subWidgetPos = pos.add(getColumn(i) * elementDistance.x(), getRow(i)* elementDistance.y()).add(pX, pY);
+            Vector2i subWidgetPos = pos.add(getColumn(i) * elementDistance.x(), getRow(i) * elementDistance.y()).add(pX, pY);
             SelectionWidget widget = new SelectionWidget(subWidgetPos, value);
             icons.put(value, widget);
         }
@@ -78,8 +78,8 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
 
     private Vector2i calculateFirstPosition(T icon, int amount) {
         int maxColumns = Math.min(amount, ELEMENTS_IN_ROW);
-        int width = (maxColumns-1)*(icon.getRenderSize().x() + SPACE_BETWEEN_ELEMENTS);
-        return new Vector2i(-width/2, 2 * SPACE_BETWEEN_ELEMENTS + icon.getRenderSize().y());
+        int width = (maxColumns - 1) * (icon.getRenderSize().x() + SPACE_BETWEEN_ELEMENTS);
+        return new Vector2i(-width / 2, 2 * SPACE_BETWEEN_ELEMENTS + icon.getRenderSize().y());
     }
 
     @Override
@@ -106,25 +106,25 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
     private void selectNext(boolean isForward) {
         T[] values = getter.get().getDeclaringClass().getEnumConstants();
         int index = getter.get().ordinal() + (isForward ? 1 : -1) + values.length;
-        setter.accept(values[index%values.length]);
+        setter.accept(values[index % values.length]);
     }
 
     private static int getColumn(int index) {
-        return index%ELEMENTS_IN_ROW;
+        return index % ELEMENTS_IN_ROW;
     }
 
     private static int getRow(int index) {
         return index / ELEMENTS_IN_ROW;
     }
 
-    @Nullable
-    private T tooltipDisplayCache;
+    @Nullable private T tooltipDisplayCache;
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
         if (isHovered && isActive()) {
-           addedOn.renderTooltipAfterEverything(guiGraphics, List.of(optionName, getter.get().getTooltip().copy().withStyle(ChatFormatting.GRAY)), pMouseX,
-                pMouseY);
+            // @formatter:off
+           addedOn.renderTooltipAfterEverything(guiGraphics, List.of(optionName, getter.get().getTooltip().copy().withStyle(ChatFormatting.GRAY)), pMouseX, pMouseY);
+            // @formatter:on
         }
 
         T icon = getter.get();
@@ -150,9 +150,7 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
 
     @Override
     public void onGlobalClick(double mouseX, double mouseY) {
-        if (isExpanded &&
-            !(expandTopLeft.x() <= mouseX && expandBottomRight.x() >= mouseX
-            && expandTopLeft.y() <= mouseY && expandBottomRight.y() >= mouseY
+        if (isExpanded && !(expandTopLeft.x() <= mouseX && expandBottomRight.x() >= mouseX && expandTopLeft.y() <= mouseY && expandBottomRight.y() >= mouseY
             || isMouseOver(mouseX, mouseY))) {
             isExpanded = false;
             Minecraft.getInstance().popGuiLayer();
@@ -162,6 +160,7 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
     private class SelectionScreen extends Screen implements IEnderScreen {
 
         private final List<LateTooltipData> tooltips = new ArrayList<>();
+
         protected SelectionScreen() {
             super(Component.empty());
         }
@@ -187,7 +186,7 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
 
         @Override
         public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-            for (GuiEventListener widget: children()) {
+            for (GuiEventListener widget : children()) {
                 if (widget instanceof AbstractWidget abstractWidget && abstractWidget.isActive() && widget instanceof IFullScreenListener fullScreenListener) {
                     fullScreenListener.onGlobalClick(pMouseX, pMouseY);
                 }
