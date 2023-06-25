@@ -88,7 +88,8 @@ public class EnchanterCategory implements IRecipeCategory<WrappedEnchanterRecipe
 
         // Show red if the player doesn't have enough levels
         int mainColor = playerHasEnoughLevels(player, cost) ? 0xFF80FF20 : 0xFFFF6060;
-        drawRepairCost(minecraft, guiGraphics, text, mainColor);
+        int repairTextWidth = minecraft.font.width(text);
+        guiGraphics.drawString(minecraft.font, text, background.getWidth() - 2 - repairTextWidth, background.getHeight() - 8, mainColor);
     }
 
     private static boolean playerHasEnoughLevels(@Nullable LocalPlayer player, int cost) {
@@ -99,14 +100,5 @@ public class EnchanterCategory implements IRecipeCategory<WrappedEnchanterRecipe
             return true;
         }
         return cost < 40 && cost <= player.experienceLevel;
-    }
-
-    private void drawRepairCost(Minecraft minecraft, GuiGraphics guiGraphics, String text, int mainColor) {
-        int shadowColor = 0xFF000000 | (mainColor & 0xFCFCFC) >> 2;
-        int width = minecraft.font.width(text);
-        int x = background.getWidth() - 2 - width;
-        int y = background.getHeight() - 8;
-        guiGraphics.drawString(minecraft.font, text, x + 1, y + 1, shadowColor);
-        guiGraphics.drawString(minecraft.font, text, x, y, mainColor);
     }
 }

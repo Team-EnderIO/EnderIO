@@ -86,7 +86,7 @@ public class AlloySmeltingCategory extends MachineCategory<AlloySmeltingRecipe> 
     public void draw(AlloySmeltingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
         animatedFlame.draw(guiGraphics, 3, 29);
         animatedFlame.draw(guiGraphics, 51, 29);
-        guiGraphics.drawString(Minecraft.getInstance().font, getEnergyString(recipe), 60, 50, 0xff808080);
+        guiGraphics.drawString(Minecraft.getInstance().font, getEnergyString(recipe), 60, 50, 0xff808080, false);
     }
 
     @Override

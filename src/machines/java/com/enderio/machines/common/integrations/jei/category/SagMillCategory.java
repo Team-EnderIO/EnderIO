@@ -104,7 +104,7 @@ public class SagMillCategory implements IRecipeCategory<SagMillingRecipe> {
 
     @Override
     public void draw(SagMillingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
-        guiGraphics.drawString(Minecraft.getInstance().font, getEnergyString(recipe, recipeSlotsView), 83, 47, 0xff808080);
+        guiGraphics.drawString(Minecraft.getInstance().font, getEnergyString(recipe, recipeSlotsView), 83, 47, 0xff808080, false);
     }
 
     @Override

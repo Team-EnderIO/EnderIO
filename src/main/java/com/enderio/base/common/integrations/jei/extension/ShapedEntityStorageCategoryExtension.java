@@ -58,8 +58,6 @@ public class ShapedEntityStorageCategoryExtension implements ICraftingCategoryEx
             )
             .toList();
 
-        builder.setShapeless();
-
         craftingGridHelper.createAndSetOutputs(builder, results);
         craftingGridHelper.createAndSetInputs(builder, inputs, getWidth(), getHeight());
     }
