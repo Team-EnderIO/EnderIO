@@ -1,6 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "equipment",
+  "category": "misc",
   "key": {
     "G": {
       "item": "enderio:grains_of_infinity"
@@ -18,7 +18,7 @@
     "GN "
   ],
   "result": {
-    "item": "enderio:nutritious_stick"
+    "item": "enderio:infinity_rod"
   },
   "show_notification": true
 }

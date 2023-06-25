@@ -6,7 +6,7 @@
         "items": [
           {
             "items": [
-              "enderio:soularium_ingot"
+              "enderio:grains_of_infinity"
             ]
           }
         ]
@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:nutritious_stick"
+        "recipe": "enderio:infinity_rod"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "enderio:nutritious_stick"
+      "enderio:infinity_rod"
     ]
   }
 }

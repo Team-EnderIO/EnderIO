@@ -45,14 +45,14 @@ public class MaterialRecipes extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.SILICON.get()))
             .save(recipeConsumer);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, EIOItems.NUTRITIOUS_STICK.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.INFINITY_ROD.get())
             .pattern(" NG")
             .pattern("NSN")
             .pattern("GN ")
             .define('N', EIOItems.DARK_STEEL_NUGGET)
             .define('G', EIOItems.GRAINS_OF_INFINITY)
             .define('S', Items.STICK)
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.SOULARIUM_INGOT.get()))
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GRAINS_OF_INFINITY.get()))
             .save(recipeConsumer);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, EIOItems.EMPTY_SOUL_VIAL.get())
