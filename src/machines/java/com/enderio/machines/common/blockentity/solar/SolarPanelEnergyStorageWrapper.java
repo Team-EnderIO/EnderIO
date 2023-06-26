@@ -20,9 +20,8 @@ public class SolarPanelEnergyStorageWrapper extends MachineEnergyStorage {
 
     private final ISolarPanelTier tier;
 
-    public SolarPanelEnergyStorageWrapper(IIOConfig config, EnergyIOMode ioMode, Supplier<Integer> capacity, Supplier<Integer> transferRate,
-        Supplier<Integer> usageRate, ISolarPanelTier tier) {
-        super(config, ioMode, capacity, transferRate, usageRate);
+    public SolarPanelEnergyStorageWrapper(IIOConfig config, EnergyIOMode ioMode, Supplier<Integer> capacity, Supplier<Integer> usageRate, ISolarPanelTier tier) {
+        super(config, ioMode, capacity, usageRate);
         this.tier = tier;
     }
 

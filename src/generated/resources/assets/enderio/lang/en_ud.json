@@ -1,7 +1,9 @@
 {
   "advancements.enderio.use_glider.description": "¿ɹǝɥʇɐǝן ǝɯos ʇsnɹʇ ʎןןɐǝɹ noʎ oᗡ",
   "advancements.enderio.use_glider.title": "ɔıʇsǝظɐW",
+  "block.enderio.advanced_photovoltaic_cell": "ןןǝƆ ɔıɐʇןoʌoʇoɥԀ pǝɔuɐʌpⱯ",
   "block.enderio.alloy_smelter": "ɹǝʇןǝɯS ʎoןןⱯ",
+  "block.enderio.basic_photovoltaic_cell": "ןןǝƆ ɔıɐʇןoʌoʇoɥԀ ɔısɐᗺ",
   "block.enderio.clear_glass": "ssɐן⅁ ɹɐǝןƆ",
   "block.enderio.clear_glass_a": "ssɐן⅁ ɹɐǝןƆ",
   "block.enderio.clear_glass_a_black": "ssɐן⅁ ɹɐǝןƆ ʞɔɐןᗺ",
@@ -794,6 +796,7 @@
   "block.enderio.silent_spruce_pressure_plate": "ǝʇɐןԀ ǝɹnssǝɹԀ ǝɔnɹdS ʇuǝןıS",
   "block.enderio.silent_stone_pressure_plate": "ǝʇɐןԀ ǝɹnssǝɹԀ ǝuoʇS ʇuǝןıS",
   "block.enderio.silent_warped_pressure_plate": "ǝʇɐןԀ ǝɹnssǝɹԀ pǝdɹɐM ʇuǝןıS",
+  "block.enderio.simple_photovoltaic_cell": "ןןǝƆ ɔıɐʇןoʌoʇoɥԀ ǝןdɯıS",
   "block.enderio.slice_and_splice": "ǝɔıןdS,N,ǝɔıןS",
   "block.enderio.soul_binder": "ɹǝpuıᗺ ןnoS",
   "block.enderio.soul_chain": "uıɐɥƆ ןnoS",
@@ -803,6 +806,7 @@
   "block.enderio.vacuum_chest": "ʇsǝɥƆ ɯnnɔɐΛ",
   "block.enderio.vapor_of_levity": "ʎʇıʌǝꞀ ɟO ɹodɐΛ",
   "block.enderio.vibrant_alloy_block": "ʞɔoןᗺ ʎoןןⱯ ʇuɐɹqıΛ",
+  "block.enderio.vibrant_photovoltaic_cell": "ןןǝƆ ɔıɐʇןoʌoʇoɥԀ ʇuɐɹqıΛ",
   "block.enderio.void_chassis": "sıssɐɥƆ pıoΛ",
   "block.enderio.xp_juice": "ǝɔınſ dX",
   "block.enderio.xp_vacuum": "ɯnnɔɐΛ dX",
@@ -1102,5 +1106,9 @@
   "tooltip.enderio.grinding_ball_remaining": "%s%% :buıuıɐɯǝᴚ",
   "tooltip.enderio.grinding_ball_title": "ןןɐᗺ buıpuıɹ⅁ ןןıW ⅁ⱯS",
   "tooltip.enderio.gui.show_advanced_tooltip": ">ʇɟıɥS pןoH<",
+  "tooltip.enderio.photovoltaic_cell.advanced": "sɹnoɥ ʇɥbıןʎɐp buıɹnp ɹǝʍoԀ sǝɔnpoɹԀ",
+  "tooltip.enderio.photovoltaic_cell.advanced2": "ʎʞs ǝɥʇ oʇ ʇɥbıs ɟo ǝuıן ɹɐǝןɔ ɐ ǝʌɐɥ ʇsnW",
+  "tooltip.enderio.photovoltaic_cell.advanced3": " :ʇndʇnO xɐW",
+  "tooltip.enderio.photovoltaic_cell.main": "¡ɹǝʍoԀ ɹɐןoS",
   "tooltip.enderio.soul_vial.health": "%s/%s :ɥʇןɐǝH"
 }

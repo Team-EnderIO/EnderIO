@@ -32,9 +32,9 @@ public class SolarPanelBlockEntity extends PowerGeneratingMachineEntity {
     private final LazyOptional<SolarPanelEnergyStorageWrapper> mergedWrapper;
 
     public SolarPanelBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState, ISolarPanelTier tier) {
-        super(new FixedScalable(() -> (float)tier.getStorageCapacity()), new FixedScalable(() -> (float)tier.getStorageCapacity()), new FixedScalable(() -> (float)tier.getStorageCapacity()), type, worldPosition, blockState);
+        super(new FixedScalable(() -> (float)tier.getStorageCapacity()), new FixedScalable(() -> (float)tier.getStorageCapacity()), type, worldPosition, blockState);
         this.tier = tier;
-        mergedWrapper = LazyOptional.of(() -> new SolarPanelEnergyStorageWrapper(createIOConfig(), EnergyIOMode.Output, tier::getStorageCapacity, tier::getStorageCapacity, tier::getStorageCapacity, tier));
+        mergedWrapper = LazyOptional.of(() -> new SolarPanelEnergyStorageWrapper(createIOConfig(), EnergyIOMode.Output, tier::getStorageCapacity, tier::getStorageCapacity, tier));
 
         this.node = new SolarPanelNode(() -> energyStorage, () -> mergedWrapper.resolve().get());
     }
