@@ -19,17 +19,16 @@ public class CreativePowerBlockEntity extends PoweredMachineEntity {
 
     // Daft dummy values
     public static final FixedScalable CAPACITY = new FixedScalable(() -> 100000f);
-    public static final FixedScalable TRANSFER = new FixedScalable(() -> 120f);
     public static final FixedScalable USAGE = new FixedScalable(() -> 30f);
 
     public CreativePowerBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
-        super(EnergyIOMode.Output, CAPACITY, TRANSFER, USAGE, type, worldPosition, blockState);
+        super(EnergyIOMode.Output, CAPACITY, USAGE, type, worldPosition, blockState);
     }
 
     @Override
-    protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, Supplier<Integer> capacityKey, Supplier<Integer> transferKey,
+    protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, Supplier<Integer> capacityKey,
         Supplier<Integer> useKey) {
-        return new MachineEnergyStorage(getIOConfig(), energyIOMode, capacityKey, transferKey, useKey) {
+        return new MachineEnergyStorage(getIOConfig(), energyIOMode, capacityKey, useKey) {
             @Override
             public int getEnergyStored() {
                 return getMaxEnergyStored() / 2;

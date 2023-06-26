@@ -1,6 +1,5 @@
 package com.enderio.conduits.common.types;
 
-import com.enderio.api.conduit.IClientConduitData;
 import com.enderio.api.conduit.IConduitMenuData;
 import com.enderio.api.conduit.TieredConduit;
 import com.enderio.api.conduit.ticker.IConduitTicker;
