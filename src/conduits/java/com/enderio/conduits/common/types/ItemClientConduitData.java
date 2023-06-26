@@ -30,6 +30,6 @@ public class ItemClientConduitData implements IClientConduitData<ItemExtendedDat
 
     @Override
     public Vector2i getTexturePosition() {
-        return new Vector2i(0, 120);
+        return new Vector2i(0, 72);
     }
 }

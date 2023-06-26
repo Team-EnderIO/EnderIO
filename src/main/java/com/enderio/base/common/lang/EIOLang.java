@@ -116,7 +116,6 @@ public class EIOLang {
 
     public static final MutableComponent CAPACITOR_TOOLTIP_ENERGY_CAPACITY = REGISTRATE.addLang("tooltip", CapacitorModifier.ENERGY_CAPACITY.id, "Energy Capacity Modifier: %s");
     public static final MutableComponent CAPACITOR_TOOLTIP_ENERGY_USE = REGISTRATE.addLang("tooltip", CapacitorModifier.ENERGY_USE.id, "Energy Use Modifier: %s");
-    public static final MutableComponent CAPACITOR_TOOLTIP_ENERGY_TRANSFER = REGISTRATE.addLang("tooltip", CapacitorModifier.ENERGY_TRANSFER.id, "Energy Transfer Modifier: %s");
 
     public static final Component GLIDER_DISABLED = REGISTRATE.addLang("message", EnderIO.loc("glider.disable"), "Gliding is disabled: ");
     public static final Component GLIDER_DISABLED_FALL_FLYING = REGISTRATE.addLang("message", EnderIO.loc("glider.disable.fall_flying"), "Elytra Flight");

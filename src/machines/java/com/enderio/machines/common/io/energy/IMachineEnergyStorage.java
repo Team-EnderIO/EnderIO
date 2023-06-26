@@ -37,12 +37,6 @@ public interface IMachineEnergyStorage extends IEnergyStorage {
     int consumeEnergy(int energy, boolean simulate);
 
     /**
-     * Get the max energy transfer rate.
-     * Generally used for limiting external IO.
-     */
-    int getMaxEnergyTransfer();
-
-    /**
      * Get the maximum energy use rate for the storage.
      * Generally this is the consumption speed or generation speed.
      */

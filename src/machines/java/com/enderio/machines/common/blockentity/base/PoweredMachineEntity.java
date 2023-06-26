@@ -52,13 +52,12 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
     private ICapacitorData cachedCapacitorData = DefaultCapacitorData.NONE;
     private boolean capacitorCacheDirty;
 
-    public PoweredMachineEntity(EnergyIOMode energyIOMode, ICapacitorScalable capacity, ICapacitorScalable transferRate, ICapacitorScalable usageRate, BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
+    public PoweredMachineEntity(EnergyIOMode energyIOMode, ICapacitorScalable capacity, ICapacitorScalable usageRate, BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
 
         // Create energy storage
         this.energyStorage = createEnergyStorage(energyIOMode,
             capacity.scaleI(this::getCapacitorData),
-            transferRate.scaleI(this::getCapacitorData),
             usageRate.scaleI(this::getCapacitorData));
         this.energyStorageCap = LazyOptional.of(() -> energyStorage);
         addCapabilityProvider(energyStorage);
@@ -127,8 +126,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
                 if (otherHandler.isPresent()) {
                     // If the other handler can receive power transmit ours
                     if (otherHandler.get().canReceive()) {
-                        // Try to send as much as our transfer rate will allow
-                        int received = otherHandler.get().receiveEnergy(Math.min(selfHandler.getEnergyStored(), getEnergyStorage().getMaxEnergyTransfer()), false);
+                        int received = otherHandler.get().receiveEnergy(selfHandler.getEnergyStored(), false);
 
                         // Consume that energy from our buffer.
                         getEnergyStorage().takeEnergy(received);
@@ -142,8 +140,8 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
      * Create the energy storage medium
      * Override this to customise the behaviour of the energy storage.
      */
-    protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, Supplier<Integer> capacity, Supplier<Integer> transferRate, Supplier<Integer> usageRate) {
-        return new MachineEnergyStorage(getIOConfig(), energyIOMode, capacity, transferRate, usageRate) {
+    protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, Supplier<Integer> capacity, Supplier<Integer> usageRate) {
+        return new MachineEnergyStorage(getIOConfig(), energyIOMode, capacity, usageRate) {
             @Override
             protected void onContentsChanged() {
                 setChanged();
