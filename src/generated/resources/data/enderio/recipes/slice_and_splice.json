@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "minecraft:iron_bars"
+    },
+    "C": {
+      "item": "enderio:ensouled_chassis"
+    },
+    "G": {
+      "item": "enderio:energized_gear"
+    },
+    "H": {
+      "tag": "forge:heads"
+    },
+    "I": {
+      "item": "enderio:soularium_ingot"
+    }
+  },
+  "pattern": [
+    "IHI",
+    "ICI",
+    "GBG"
+  ],
+  "result": {
+    "item": "enderio:slice_and_splice"
+  },
+  "show_notification": true
+}

@@ -30,7 +30,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.ForgeTier;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.TierSortingRegistry;
@@ -44,7 +43,8 @@ import java.util.Objects;
 @SuppressWarnings("unused")
 public class EIOItems {
     private static final Registrate REGISTRATE = EnderIO.registrate();
-    // region Materials
+
+    // region Alloys
 
     public static final ItemEntry<MaterialItem> COPPER_ALLOY_INGOT = materialItem("copper_alloy_ingot").register();
     public static final ItemEntry<MaterialItem> ENERGETIC_ALLOY_INGOT = materialItem("energetic_alloy_ingot").register();
@@ -68,33 +68,30 @@ public class EIOItems {
     public static final ItemEntry<MaterialItem> END_STEEL_NUGGET = materialItem("end_steel_nugget").register();
     public static final ItemEntry<MaterialItem> IRON_ALLOY_NUGGET = materialItem("iron_alloy_nugget").tag(Tags.Items.NUGGETS_IRON).register();
 
-    // region Basic Materials
+    // endregion
 
-    public static final ItemEntry<MaterialItem> CONDUIT_BINDER = materialItem("conduit_binder").register();
+    // region Crafting Components
+
     public static final ItemEntry<MaterialItem> SILICON = materialItem("silicon").tag(EIOTags.Items.SILICON).register();
 
-    // endregion
+    public static final ItemEntry<MaterialItem> GRAINS_OF_INFINITY = materialItem("grains_of_infinity").lang("Grains of Infinity").register();
 
-    // region Components
+    public static final ItemEntry<MaterialItem> INFINITY_ROD = materialItem("infinity_rod").register();
 
-    // region Machine Parts
+    public static final ItemEntry<MaterialItem> CONDUIT_BINDER_COMPOSITE = materialItem("conduit_binder_composite").register();
 
-    // TODO: Deal with machine parts when we decide machine "tiers"
-//    public static final ItemEntry<MaterialItem> SIMPLE_MACHINE_PARTS = materialItem("simple_machine_parts").register();
-    public static final ItemEntry<MaterialItem> INDUSTRIAL_MACHINE_PARTS = materialItem("industrial_machine_parts").register();
-    public static final ItemEntry<MaterialItem> ENHANCED_MACHINE_PARTS = materialItem("enhanced_machine_parts").register();
+    public static final ItemEntry<MaterialItem> CONDUIT_BINDER = materialItem("conduit_binder").register();
 
-    // endregion
-
-    // region Circuits todo: better name
+    // TODO: 1.20.1: implement upgrade binder for dark steel upgrades
+//    public static final ItemEntry<MaterialItem> UPGRADE_BINDER = materialItem("upgrade_binder").register();
 
     public static final ItemEntry<MaterialItem> ZOMBIE_ELECTRODE = materialItem("zombie_electrode").register();
 
-    public static final ItemEntry<MaterialItem> ZOMBIE_CONTROLLER = materialItem("zombie_controller").lang("Z-Logic Controller").register();
+    public static final ItemEntry<MaterialItem> Z_LOGIC_CONTROLLER = materialItem("z_logic_controller").lang("Z-Logic Controller").register();
 
-    public static final ItemEntry<MaterialItem> FRANKEN_ZOMBIE = materialItemGlinted("franken_zombie")
+    public static final ItemEntry<MaterialItem> FRANK_N_ZOMBIE = materialItemGlinted("frank_n_zombie")
         .lang("Frank'N'Zombie")
-        .model((ctx, prov) -> EIOModel.mimicItem(ctx, EIOItems.ZOMBIE_CONTROLLER, prov))
+        .model((ctx, prov) -> EIOModel.mimicItem(ctx, EIOItems.Z_LOGIC_CONTROLLER, prov))
         .register();
 
     public static final ItemEntry<MaterialItem> ENDER_RESONATOR = materialItem("ender_resonator").register();
@@ -108,7 +105,7 @@ public class EIOItems {
 
     // endregion
 
-    // region capacitors
+    // region Capacitors
 
     public static final ItemEntry<FixedCapacitorItem> BASIC_CAPACITOR = REGISTRATE
         .item("basic_capacitor", props -> new FixedCapacitorItem(DefaultCapacitorData.BASIC, props))
@@ -139,35 +136,25 @@ public class EIOItems {
     public static final ItemEntry<MaterialItem> ENDER_CRYSTAL = materialItemGlinted("ender_crystal").register();
     public static final ItemEntry<MaterialItem> ENTICING_CRYSTAL = materialItemGlinted("enticing_crystal").register();
     public static final ItemEntry<MaterialItem> WEATHER_CRYSTAL = materialItemGlinted("weather_crystal").register();
-    public static final ItemEntry<MaterialItem> PRECIENT_CRYSTAL = materialItemGlinted("precient_crystal").register();
-
-    // endregion
-
-    // region Infinity
-
-    public static final ItemEntry<MaterialItem> GRAINS_OF_INFINITY = materialItem("grains_of_infinity").lang("Grains of Infinity").register();
-
-    public static final ItemEntry<MaterialItem> INFINITY_ROD = materialItem("infinity_rod").register();
+    public static final ItemEntry<MaterialItem> PRESCIENT_CRYSTAL = materialItemGlinted("prescient_crystal").register();
 
     // endregion
 
     // region Powders and Fragments
 
     public static final ItemEntry<MaterialItem> FLOUR = materialItem("flour").register();
-    public static final ItemEntry<MaterialItem> CONDUIT_BINDER_COMPOSITE = materialItem("conduit_binder_composite").register();
-    public static final ItemEntry<MaterialItem> COAL_POWDER = materialItem("coal_powder").tag(EIOTags.Items.DUSTS_COAL).register();
-    public static final ItemEntry<MaterialItem> IRON_POWDER = materialItem("iron_powder").tag(EIOTags.Items.DUSTS_IRON).register();
-    public static final ItemEntry<MaterialItem> GOLD_POWDER = materialItem("gold_powder").tag(EIOTags.Items.DUSTS_GOLD).register();
-    public static final ItemEntry<MaterialItem> COPPER_POWDER = materialItem("copper_powder").tag(EIOTags.Items.DUSTS_COPPER).register();
-    public static final ItemEntry<MaterialItem> TIN_POWDER = materialItem("tin_powder").tag(EIOTags.Items.DUSTS_TIN).register(); // TODO: hide if tin isn't present
-    public static final ItemEntry<MaterialItem> ENDER_PEARL_POWDER = materialItem("ender_pearl_powder").tag(EIOTags.Items.DUSTS_ENDER).register();
-    public static final ItemEntry<MaterialItem> OBSIDIAN_POWDER = materialItem("obsidian_powder").tag(EIOTags.Items.DUSTS_OBSIDIAN).register();
-    public static final ItemEntry<MaterialItem> ARDITE_POWDER = materialItem("ardite_powder").tag(EIOTags.Items.DUSTS_ARDITE).register(); // TODO: hide if ardite isnt present
-    public static final ItemEntry<MaterialItem> COBALT_POWDER = materialItem("cobalt_powder").tag(EIOTags.Items.DUSTS_COBALT).register(); // TODO: hide if cobalt isnt present
-    public static final ItemEntry<MaterialItem> LAPIS_LAZULI_POWDER = materialItem("lapis_lazuli_powder").tag(EIOTags.Items.DUSTS_LAPIS).register();
-    public static final ItemEntry<MaterialItem> QUARTZ_POWDER = materialItem("quartz_powder").tag(EIOTags.Items.DUSTS_QUARTZ).register();
+    public static final ItemEntry<MaterialItem> POWDERED_COAL = materialItem("powdered_coal").tag(EIOTags.Items.DUSTS_COAL).register();
+    public static final ItemEntry<MaterialItem> POWDERED_IRON = materialItem("powdered_iron").tag(EIOTags.Items.DUSTS_IRON).register();
+    public static final ItemEntry<MaterialItem> POWDERED_GOLD = materialItem("powdered_gold").tag(EIOTags.Items.DUSTS_GOLD).register();
+    public static final ItemEntry<MaterialItem> POWDERED_COPPER = materialItem("powdered_copper").tag(EIOTags.Items.DUSTS_COPPER).register();
+    public static final ItemEntry<MaterialItem> POWDERED_TIN = materialItem("powdered_tin").tag(EIOTags.Items.DUSTS_TIN).register(); // TODO: hide if tin isn't present
+    public static final ItemEntry<MaterialItem> POWDERED_ENDER_PEARL = materialItem("powdered_ender_pearl").tag(EIOTags.Items.DUSTS_ENDER).register();
+    public static final ItemEntry<MaterialItem> POWDERED_OBSIDIAN = materialItem("powdered_obsidian").tag(EIOTags.Items.DUSTS_OBSIDIAN).register();
+    public static final ItemEntry<MaterialItem> POWDERED_COBALT = materialItem("powdered_cobalt").tag(EIOTags.Items.DUSTS_COBALT).register(); // TODO: hide if cobalt isnt present
+    public static final ItemEntry<MaterialItem> POWDERED_LAPIS_LAZULI = materialItem("powdered_lapis_lazuli").tag(EIOTags.Items.DUSTS_LAPIS).register();
+    public static final ItemEntry<MaterialItem> POWDERED_QUARTZ = materialItem("powdered_quartz").tag(EIOTags.Items.DUSTS_QUARTZ).register();
 
-    public static final ItemEntry<MaterialItem> PRECIENT_POWDER = materialItemGlinted("precient_powder").lang("Grains of Prescience").register();
+    public static final ItemEntry<MaterialItem> PRESCIENT_POWDER = materialItemGlinted("prescient_powder").lang("Grains of Prescience").register();
 
     public static final ItemEntry<MaterialItem> VIBRANT_POWDER = materialItemGlinted("vibrant_powder").lang("Grains of Vibrancy").register();
 
@@ -179,7 +166,6 @@ public class EIOItems {
     public static final ItemEntry<MaterialItem> SOUL_POWDER = materialItem("soul_powder").register();
     public static final ItemEntry<MaterialItem> CONFUSION_POWDER = materialItem("confusing_powder").register();
     public static final ItemEntry<MaterialItem> WITHERING_POWDER = materialItem("withering_powder").register();
-    public static final ItemEntry<MaterialItem> ENDER_FRAGMENT = materialItem("ender_fragment").register();
 
     // endregion
 
@@ -209,12 +195,6 @@ public class EIOItems {
 
     public static final ItemEntry<MaterialItem> DYE_BLACK = materialItem("organic_black_dye").tag(Tags.Items.DYES_BLACK, Tags.Items.DYES).register();
 
-    public static final ItemEntry<MaterialItem> DYE_INDUSTRIAL_BLEND = materialItem("industrial_dye_blend").tag(Tags.Items.DYES).register();
-
-    public static final ItemEntry<MaterialItem> DYE_SOUL_ATTUNED_BLEND = materialItem("soul_attuned_dye_blend").tag(Tags.Items.DYES).register();
-
-    public static final ItemEntry<MaterialItem> DYE_ENHANCED_BLEND = materialItem("enhanced_dye_blend").tag(Tags.Items.DYES).register();
-
     // endregion
 
     // region Misc Materials
@@ -230,7 +210,6 @@ public class EIOItems {
     public static final ItemEntry<MaterialItem> PLANT_MATTER_BROWN = materialItem("plant_matter_brown").lang("Twigs and Prunings").register();
 
     public static final ItemEntry<MaterialItem> GLIDER_WING = materialItem("glider_wing").register();
-    public static final ItemEntry<MaterialItem> GLIDER_WINGS = materialItem("glider_wings").register();
 
     public static final ItemEntry<MaterialItem> ANIMAL_TOKEN = materialItemGlinted("animal_token").register();
     public static final ItemEntry<MaterialItem> MONSTER_TOKEN = materialItemGlinted("monster_token").register();
@@ -242,8 +221,6 @@ public class EIOItems {
     public static final ItemEntry<MaterialItem> CLAYED_GLOWSTONE = materialItem("clayed_glowstone").register();
     public static final ItemEntry<MaterialItem> NETHERCOTTA = materialItem("nethercotta").register();
     public static final ItemEntry<MaterialItem> REDSTONE_FILTER_BASE = materialItem("redstone_filter_base").register();
-    public static final ItemEntry<MaterialItem> REMOTE_AWARENESS_UPGRADE = materialItem("remote_awareness_upgrade").register();
-    public static final ItemEntry<MaterialItem> INGOT_ENDERIUM_BASE = materialItem("ingot_enderium_base").register(); // TODO: Depend on enderium ingot tag
 
     public static final ItemEntry<BrokenSpawnerItem> BROKEN_SPAWNER = REGISTRATE
         .item("broken_spawner", BrokenSpawnerItem::new)
@@ -348,6 +325,11 @@ public class EIOItems {
         .item("coordinate_selector", CoordinateSelectorItem::new)
         .tab(EIOCreativeTabs.GEAR)
         .properties(props -> props.stacksTo(1))
+        .register();
+
+    public static final ItemEntry<ExperienceRodItem> EXPERIENCE_ROD = REGISTRATE
+        .item("experience_rod", ExperienceRodItem::new)
+        .tab(EIOCreativeTabs.GEAR)
         .register();
 
     public static final ItemEntry<LevitationStaffItem> LEVITATION_STAFF = REGISTRATE
