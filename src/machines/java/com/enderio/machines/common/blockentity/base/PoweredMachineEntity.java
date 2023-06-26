@@ -95,7 +95,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
      * On client side, this will likely be an instance of {@link ImmutableMachineEnergyStorage}.
      * On server side, it will be an instance descended of {@link MachineEnergyStorage}.
      */
-    public final IMachineEnergyStorage getEnergyStorage() {
+    public IMachineEnergyStorage getEnergyStorage() {
         if (isClientSide()) {
             return clientEnergyStorage;
         }
@@ -273,6 +273,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
 
     @Override
     public void saveAdditional(CompoundTag pTag) {
+        //serialize internal field, don't fix it or you'll break solar panels
         pTag.put("energy", energyStorage.serializeNBT());
         super.saveAdditional(pTag);
     }
