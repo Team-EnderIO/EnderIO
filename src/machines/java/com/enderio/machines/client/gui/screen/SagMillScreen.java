@@ -9,6 +9,7 @@ import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.core.common.util.Vector2i;
 import com.enderio.machines.client.gui.widget.EnergyWidget;
 import com.enderio.machines.client.gui.widget.ProgressWidget;
+import com.enderio.machines.client.gui.widget.ioconfig.IOConfigButton;
 import com.enderio.machines.common.blockentity.SagMillBlockEntity;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.menu.SagMillMenu;
@@ -43,6 +44,8 @@ public class SagMillScreen extends EIOScreen<SagMillMenu> {
 
         addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
+
+        addRenderableWidget(new IOConfigButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 22, 16, 16, menu, this::addRenderableWidget, font));
     }
 
     @Override
