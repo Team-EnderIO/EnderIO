@@ -2,6 +2,7 @@ package com.enderio.machines.common.recipe;
 
 import com.enderio.EnderIO;
 import com.enderio.core.common.recipes.EnderRecipe;
+import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonObject;
 import net.minecraft.ResourceLocationException;
@@ -61,11 +62,11 @@ public class TankRecipe implements EnderRecipe<TankRecipe.Container> {
         if (isEmptying) {
             if (pContainer.getFluidTank().fill(fluid, IFluidHandler.FluidAction.SIMULATE) <= 0)
                 return false;
-            return input.test(pContainer.getItem(0));
+            return input.test(FluidTankBlockEntity.FLUID_FILL_INPUT.getItemStack(pContainer));
         }
         if (pContainer.getFluidTank().drain(fluid, IFluidHandler.FluidAction.SIMULATE).isEmpty())
             return false;
-        return input.test(pContainer.getItem(2));
+        return input.test(FluidTankBlockEntity.FLUID_DRAIN_INPUT.getItemStack(pContainer));
     }
 
     @Override
