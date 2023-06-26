@@ -10,7 +10,7 @@ import net.minecraftforge.registries.RegistryObject;
 public class EnderConduitTypes {
 
     public static final ResourceLocation ICON_TEXTURE = EnderIO.loc("textures/gui/conduit_icon.png");
-    public static final RegistryObject<SimpleConduitType<IExtendedConduitData.EmptyExtendedConduitData>> ENERGY = ConduitTypes.CONDUIT_TYPES.register(
+    public static final RegistryObject<SimpleConduitType<?>> ENERGY = ConduitTypes.CONDUIT_TYPES.register(
         "energy_conduit",
         () -> new SimpleConduitType<>(EnderIO.loc("block/conduit/energy"), new EnergyConduitTicker(), IExtendedConduitData.EmptyExtendedConduitData::new,
             new IClientConduitData.Simple<>(ICON_TEXTURE, new Vector2i(0, 24)), IConduitMenuData.ENERGY));
