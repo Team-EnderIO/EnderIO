@@ -46,8 +46,6 @@ public class RecipeDataUtil {
                         mods.add(itemId.getNamespace());
                     }
                 });
-            } else if (value instanceof Ingredient.TagValue tagValue) {
-                mods.add(tagValue.tag.location().getNamespace());
             }
         }
     }
