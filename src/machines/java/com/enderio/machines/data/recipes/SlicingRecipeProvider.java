@@ -2,6 +2,7 @@ package com.enderio.machines.data.recipes;
 
 import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.data.recipe.RecipeDataUtil;
 import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonArray;
@@ -89,9 +90,7 @@ public class SlicingRecipeProvider extends EnderRecipeProvider {
 
         @Override
         protected Set<String> getModDependencies() {
-            Set<String> mods = new HashSet<>();
-            // TODO: 1.19: Ingredient#getItems cannot be called during datagen. Needs a new solution.
-//            inputs.stream().map(ing -> Arrays.stream(ing.getItems()).map(item -> mods.add(ForgeRegistries.ITEMS.getKey(item.getItem()).getNamespace())));
+            Set<String> mods = new HashSet<>(RecipeDataUtil.getIngredientsModIds(inputs));
             mods.add(ForgeRegistries.ITEMS.getKey(output).getNamespace());
             return mods;
         }

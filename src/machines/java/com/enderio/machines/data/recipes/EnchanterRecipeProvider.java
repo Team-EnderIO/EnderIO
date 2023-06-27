@@ -3,6 +3,7 @@ package com.enderio.machines.data.recipes;
 import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOEnchantments;
 import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.data.recipe.RecipeDataUtil;
 import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonObject;
@@ -110,9 +111,7 @@ public class EnchanterRecipeProvider extends EnderRecipeProvider {
 
         @Override
         protected Set<String> getModDependencies() {
-            Set<String> mods = new HashSet<>();
-            // TODO: 1.19: Ingredient#getItems cannot be called during datagen. Needs a new solution.
-//            Arrays.stream(input.getItems()).forEach(item -> mods.add(ForgeRegistries.ITEMS.getKey(item.getItem()).getNamespace()));
+            Set<String> mods = new HashSet<>(RecipeDataUtil.getIngredientModIds(input));
             mods.add(ForgeRegistries.ENCHANTMENTS.getKey(enchantment).getNamespace());
             return mods;
         }
