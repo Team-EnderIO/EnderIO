@@ -4,6 +4,7 @@ import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.machines.common.io.FixedIOConfig;
 import org.apache.commons.lang3.NotImplementedException;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * An immutable machine energy storage.

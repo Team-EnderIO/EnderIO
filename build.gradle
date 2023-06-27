@@ -197,6 +197,7 @@ repositories { RepositoryHandler handler ->
     exclusiveRepo(handler, 'https://cursemaven.com', 'curse.maven')
     exclusiveRepo(handler, 'https://maven.blamejared.com', 'vazkii.patchouli')
     exclusiveRepo(handler, 'https://dogforce-games.com/maven', 'dev.gigaherz.graph')
+    exclusiveRepo(handler, 'https://api.modrinth.com/maven', 'maven.modrinth')
 
     mavenLocal()
 }
@@ -223,6 +224,11 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
     runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common:${jei_version}")
     runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
+
+    //RFTOOLS
+    runtimeOnly fg.deobf("maven.modrinth:rftools-power:f430rHkA")
+    runtimeOnly fg.deobf("maven.modrinth:mcjtylib:3LlgyvSh")
+    runtimeOnly fg.deobf("maven.modrinth:rftools-base:Uu1IkVMH")
 
     // AE2
     compileOnly "appeng:appliedenergistics2-forge:${ae2_version}:api"
