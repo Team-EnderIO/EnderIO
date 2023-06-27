@@ -23,7 +23,7 @@ public abstract class PowerGeneratingMachineEntity extends PoweredMachineEntity 
         }
 
         // Update block state
-        if (getBlockState().getValue(ProgressMachineBlock.POWERED) != isGenerating()) {
+        if (getBlockState().hasProperty(ProgressMachineBlock.POWERED) && getBlockState().getValue(ProgressMachineBlock.POWERED) != isGenerating()) {
             level.setBlock(getBlockPos(), getBlockState().setValue(ProgressMachineBlock.POWERED, isGenerating()), Block.UPDATE_ALL);
         }
 

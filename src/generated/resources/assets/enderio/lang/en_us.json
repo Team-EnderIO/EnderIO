@@ -1,7 +1,9 @@
 {
   "advancements.enderio.use_glider.description": "Do you really trust some leather?",
   "advancements.enderio.use_glider.title": "Majestic",
+  "block.enderio.advanced_photovoltaic_cell": "Advanced Photovoltaic Cell",
   "block.enderio.alloy_smelter": "Alloy Smelter",
+  "block.enderio.basic_photovoltaic_cell": "Basic Photovoltaic Cell",
   "block.enderio.clear_glass": "Clear Glass",
   "block.enderio.clear_glass_a": "Clear Glass",
   "block.enderio.clear_glass_a_black": "Black Clear Glass",
@@ -794,6 +796,7 @@
   "block.enderio.silent_spruce_pressure_plate": "Silent Spruce Pressure Plate",
   "block.enderio.silent_stone_pressure_plate": "Silent Stone Pressure Plate",
   "block.enderio.silent_warped_pressure_plate": "Silent Warped Pressure Plate",
+  "block.enderio.simple_photovoltaic_cell": "Simple Photovoltaic Cell",
   "block.enderio.slice_and_splice": "Slice'N'Splice",
   "block.enderio.soul_binder": "Soul Binder",
   "block.enderio.soul_chain": "Soul Chain",
@@ -803,6 +806,7 @@
   "block.enderio.vacuum_chest": "Vacuum Chest",
   "block.enderio.vapor_of_levity": "Vapor Of Levity",
   "block.enderio.vibrant_alloy_block": "Vibrant Alloy Block",
+  "block.enderio.vibrant_photovoltaic_cell": "Vibrant Photovoltaic Cell",
   "block.enderio.void_chassis": "Void Chassis",
   "block.enderio.xp_juice": "Xp Juice",
   "block.enderio.xp_vacuum": "Xp Vacuum",
@@ -1100,5 +1104,9 @@
   "tooltip.enderio.grinding_ball_remaining": "Remaining: %s%%",
   "tooltip.enderio.grinding_ball_title": "SAG Mill Grinding Ball",
   "tooltip.enderio.gui.show_advanced_tooltip": "<Hold Shift>",
+  "tooltip.enderio.photovoltaic_cell.advanced": "Produces Power during daylight hours",
+  "tooltip.enderio.photovoltaic_cell.advanced2": "Must have a clear line of sight to the sky",
+  "tooltip.enderio.photovoltaic_cell.advanced3": "Max Output: ",
+  "tooltip.enderio.photovoltaic_cell.main": "Solar Power!",
   "tooltip.enderio.soul_vial.health": "Health: %s/%s"
 }

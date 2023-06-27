@@ -1,0 +1,17 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"particle": "#side"
+	},
+	"elements": [
+		{
+			"from": [1, 2, 0],
+			"to": [15, 3, 1],
+			"faces": {
+				"north": {"uv": [0, 0, 14, 1], "texture": "#side"},
+				"south": {"uv": [0, 0, 14, 1], "texture": "#side"},
+				"up": {"uv": [0, 0, 14, 1], "texture": "#side"}
+			}
+		}
+	]
+}
