@@ -2,6 +2,7 @@ package com.enderio.machines.common.io.energy;
 
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.energy.EnergyIOMode;
+import com.enderio.machines.common.io.FixedIOConfig;
 import org.apache.commons.lang3.NotImplementedException;
 
 /**
@@ -43,15 +44,15 @@ public class ImmutableMachineEnergyStorage implements IMachineEnergyStorage {
         return maxEnergyUse;
     }
 
+    // This class is intended for internal use only, don't expose.
     @Override
     public IIOConfig getConfig() {
-        // TODO: Should this be implemented?
         throw new NotImplementedException();
     }
 
+    // This class is intended for internal use only, don't expose.
     @Override
     public EnergyIOMode getIOMode() {
-        // TODO: Should this be implemented?
         throw new NotImplementedException();
     }
 
