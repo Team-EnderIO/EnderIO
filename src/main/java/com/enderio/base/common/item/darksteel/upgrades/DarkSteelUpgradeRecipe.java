@@ -48,8 +48,7 @@ public class DarkSteelUpgradeRecipe extends SmithingTransformRecipe {
 
     @Override
     public boolean matches(Container pContainer, Level pLevel) {
-        // Check binder
-        // TODO: Upgrade binding or something.
+        // Check temporary binder
         if (!pContainer.getItem(2).is(EIOItems.CONDUIT_BINDER.get()))
             return false;
 
