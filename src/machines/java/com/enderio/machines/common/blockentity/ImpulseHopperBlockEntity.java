@@ -17,7 +17,6 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class ImpulseHopperBlockEntity extends PoweredMachineEntity {
     public static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, () -> 100000f);
-    public static final QuadraticScalable ENERGY_TRANSFER = new QuadraticScalable(CapacitorModifier.ENERGY_TRANSFER, () -> 120f);
     public static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, () -> 16f);
     private static final int ENERGY_USAGE_PER_ITEM = 10;
 
@@ -26,7 +25,7 @@ public class ImpulseHopperBlockEntity extends PoweredMachineEntity {
     public static final MultiSlotAccess GHOST = new MultiSlotAccess();
 
     public ImpulseHopperBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
-        super(EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_TRANSFER, ENERGY_USAGE, type, worldPosition, blockState);
+        super(EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE, type, worldPosition, blockState);
     }
 
     @Override

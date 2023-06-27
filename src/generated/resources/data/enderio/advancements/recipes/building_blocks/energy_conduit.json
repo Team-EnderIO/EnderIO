@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:power1_conduit"
+        "recipe": "enderio:energy_conduit"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "enderio:power1_conduit"
+      "enderio:energy_conduit"
     ]
   },
   "sends_telemetry_event": false

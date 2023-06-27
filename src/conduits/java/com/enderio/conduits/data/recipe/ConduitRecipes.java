@@ -77,7 +77,7 @@ public class ConduitRecipes extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ConduitItems.PRESSURIZED_FLUID))
             .save(pWriter, EnderIO.loc("ender_fluid_conduit_upgrade"));
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ConduitItems.POWER, 8)
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ConduitItems.ENERGY, 8)
             .pattern("BBB")
             .pattern("III")
             .pattern("BBB")

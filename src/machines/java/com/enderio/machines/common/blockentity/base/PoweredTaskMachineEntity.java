@@ -42,9 +42,9 @@ public abstract class PoweredTaskMachineEntity<T extends PoweredTask> extends Po
     @UseOnly(LogicalSide.CLIENT)
     private float clientProgress;
 
-    public PoweredTaskMachineEntity(ICapacitorScalable capacity, ICapacitorScalable transferRate, ICapacitorScalable usageRate,
+    public PoweredTaskMachineEntity(ICapacitorScalable capacity, ICapacitorScalable usageRate,
         BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
-        super(EnergyIOMode.Input, capacity, transferRate, usageRate, type, worldPosition, blockState);
+        super(EnergyIOMode.Input, capacity, usageRate, type, worldPosition, blockState);
         addDataSlot(new FloatDataSlot(this::getProgress, p -> clientProgress = p, SyncMode.GUI));
     }
 
