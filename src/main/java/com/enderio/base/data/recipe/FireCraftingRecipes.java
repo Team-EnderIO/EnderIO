@@ -52,8 +52,7 @@ public class FireCraftingRecipes extends EnderRecipeProvider {
 
         @Override
         protected Set<String> getModDependencies() {
-            // TODO: Do we care for this?
-            return Set.of();
+            return Set.of(lootTable.getNamespace());
         }
 
         @Override
