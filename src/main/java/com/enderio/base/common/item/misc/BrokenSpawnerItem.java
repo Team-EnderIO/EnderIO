@@ -3,6 +3,7 @@ package com.enderio.base.common.item.misc;
 import com.enderio.api.capability.IMultiCapabilityItem;
 import com.enderio.api.capability.MultiCapabilityProvider;
 import com.enderio.api.capability.StoredEntityData;
+import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.capability.EntityStorage;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOItems;
@@ -62,7 +63,7 @@ public class BrokenSpawnerItem extends Item implements IMultiCapabilityItem {
     @Nullable
     @Override
     public MultiCapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt, MultiCapabilityProvider provider) {
-        provider.addSerialized(EIOCapabilities.ENTITY_STORAGE, LazyOptional.of(EntityStorage::new));
+        provider.addSerialized(EIONBTKeys.ENTITY_STORAGE, EIOCapabilities.ENTITY_STORAGE, LazyOptional.of(EntityStorage::new));
         return provider;
     }
 

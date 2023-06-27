@@ -9,6 +9,7 @@ import com.enderio.core.common.recipes.CountedIngredient;
 import com.enderio.core.common.sync.EnumDataSlot;
 import com.enderio.core.common.sync.FloatDataSlot;
 import com.enderio.core.common.sync.SyncMode;
+import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.blockentity.base.PoweredCraftingMachine;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingTask;
 import com.enderio.machines.common.init.MachineRecipes;
@@ -350,9 +351,9 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltin
     @Override
     public void saveAdditional(CompoundTag pTag) {
         if (restrictedMode()) {
-            pTag.putInt("Mode", this.mode.ordinal());
+            pTag.putInt(MachineNBTKeys.MACHINE_MODE, this.mode.ordinal());
         }
-        pTag.putInt("InputsTaken", container.getInputsTaken());
+        pTag.putInt(MachineNBTKeys.PROCESSED_INPUTS, container.getInputsTaken());
         super.saveAdditional(pTag);
     }
 
@@ -360,12 +361,12 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltin
     public void load(CompoundTag pTag) {
         if (restrictedMode()) {
             try {
-                mode = AlloySmelterMode.values()[pTag.getInt("Mode")];
+                mode = AlloySmelterMode.values()[pTag.getInt(MachineNBTKeys.MACHINE_MODE)];
             } catch (IndexOutOfBoundsException ex) { // In case something happens in the future.
                 EnderIO.LOGGER.error("Invalid alloy smelter mode loaded from NBT. Ignoring.");
             }
         }
-        container.setInputsTaken(pTag.getInt("InputsTaken"));
+        container.setInputsTaken(pTag.getInt(MachineNBTKeys.PROCESSED_INPUTS));
         super.load(pTag);
     }
 

@@ -38,4 +38,11 @@ public abstract class PoweredTask implements INBTSerializable<CompoundTag> {
      * @return Whether the task is complete and can be replaced.
      */
     public abstract boolean isComplete();
+
+    // region Serialization
+
+    protected static final String KEY_ENERGY_CONSUMED = "EnergyConsumed";
+    protected static final String KEY_ENERGY_COST = "EnergyCost";
+
+    // endregion
 }

@@ -1,5 +1,6 @@
 package com.enderio.machines.common.blockentity;
 
+import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.sync.FluidStackDataSlot;
@@ -38,8 +39,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 public abstract class FluidTankBlockEntity extends MachineBlockEntity {
-
-    public static final String FLUID_TAG_KEY = "fluid";
 
     public static class Standard extends FluidTankBlockEntity {
         public static final int CAPACITY = 16 * FluidType.BUCKET_VOLUME;
@@ -272,13 +271,13 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     @Override
     public void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
-        pTag.put(FLUID_TAG_KEY, fluidTank.writeToNBT(new CompoundTag()));
+        pTag.put(EIONBTKeys.FLUID, fluidTank.writeToNBT(new CompoundTag()));
     }
 
     @Override
     public void load(CompoundTag pTag) {
         super.load(pTag);
-        fluidTank.readFromNBT(pTag.getCompound("fluid"));
+        fluidTank.readFromNBT(pTag.getCompound(EIONBTKeys.FLUID));
     }
 
     // endregion

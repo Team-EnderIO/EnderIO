@@ -28,7 +28,7 @@ import java.util.Map;
 
 @EventBusSubscriber
 public class XPBoostHandler {
-    private static final String NBT_KEY = "enderio:xpboost";
+    private static final String NBT_KEY = "EnderIOXpBoostLevel";
 
     @SubscribeEvent
     public static void handleExperienceDropEvent(LivingExperienceDropEvent event) {

@@ -6,6 +6,7 @@ import com.enderio.api.capacitor.ICapacitorData;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +14,7 @@ import java.util.Map;
 // TODO: Instead of loot capacitors having lists of specialized machines, have different loot capacitor items for different
 //       machine categories.
 // TODO: Loot capacitor types (Sculk, Soul) found in respective dungeons/structures.
-public final class LootCapacitorData implements ICapacitorData {
+public final class LootCapacitorData implements ICapacitorData, INBTSerializable<Tag> {
     private float base;
 
     private final Map<CapacitorModifier, Float> modifiers;
@@ -64,18 +65,23 @@ public final class LootCapacitorData implements ICapacitorData {
 
     // region Serialization
 
+    private static final String BASE_KEY = "Base";
+    private static final String MODIFIER_ARRAY_KEY = "Modifier";
+    private static final String MODIFIER_KEY = "Modifier";
+    private static final String LEVEL_KEY = "Level";
+
     @Override
     public Tag serializeNBT() {
         CompoundTag tag = new CompoundTag();
-        tag.putFloat("base", base);
+        tag.putFloat(BASE_KEY, base);
         ListTag list = new ListTag();
         modifiers.forEach((s, l) -> {
             CompoundTag entry = new CompoundTag();
-            entry.putInt("modifier", s.ordinal());
-            entry.putFloat("level", l);
+            entry.putInt(MODIFIER_KEY, s.ordinal());
+            entry.putFloat(LEVEL_KEY, l);
             list.add(entry);
         });
-        tag.put("modifiers", list);
+        tag.put(MODIFIER_ARRAY_KEY, list);
         return tag;
     }
 
@@ -83,12 +89,12 @@ public final class LootCapacitorData implements ICapacitorData {
     public void deserializeNBT(Tag nbt) {
         if (nbt instanceof CompoundTag tag) {
             this.modifiers.clear();
-            this.base = tag.getFloat("base");
-            ListTag list = tag.getList("modifiers", Tag.TAG_COMPOUND);
+            this.base = tag.getFloat(BASE_KEY);
+            ListTag list = tag.getList(MODIFIER_ARRAY_KEY, Tag.TAG_COMPOUND);
             for (int i = 0; i < list.size(); i++) {
                 CompoundTag listElement = list.getCompound(i);
                 try {
-                    addSpecialization(CapacitorModifier.values()[listElement.getInt("modifier")], listElement.getFloat("level"));
+                    addSpecialization(CapacitorModifier.values()[listElement.getInt(MODIFIER_KEY)], listElement.getFloat(LEVEL_KEY));
                 } catch (IndexOutOfBoundsException ex) { // In case something happens in the future.
                     EnderIO.LOGGER.error("Invalid capacitor modifier in loot capacitor NBT. Ignoring.");
                 }

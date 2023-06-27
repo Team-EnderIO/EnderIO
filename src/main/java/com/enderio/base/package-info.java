@@ -2,4 +2,4 @@
 @net.minecraft.MethodsReturnNonnullByDefault
 @com.tterrag.registrate.util.nullness.FieldsAreNonnullByDefault
 
-package com.enderio.machines.common.capability;
+package com.enderio.base;

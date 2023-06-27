@@ -5,6 +5,7 @@ import com.enderio.api.capability.ISideConfig;
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
 import com.enderio.api.misc.RedstoneControl;
+import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.blockentity.IWrenchable;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
@@ -12,6 +13,7 @@ import com.enderio.core.common.sync.EnumDataSlot;
 import com.enderio.core.common.sync.NBTSerializableDataSlot;
 import com.enderio.core.common.sync.SyncMode;
 import com.enderio.core.common.util.PlayerInteractionUtil;
+import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.io.IOConfig;
 import com.enderio.machines.common.io.item.MachineInventory;
@@ -420,29 +422,25 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         super.saveAdditional(pTag);
 
         // Save io config.
-        pTag.put("io_config", getIOConfig().serializeNBT());
+        pTag.put(MachineNBTKeys.IO_CONFIG, getIOConfig().serializeNBT());
 
         if (supportsRedstoneControl()) {
-            pTag.putInt("redstone", redstoneControl.ordinal());
+            pTag.putInt(MachineNBTKeys.REDSTONE_CONTROL, redstoneControl.ordinal());
         }
 
-        if (inventory != null) {
-            pTag.put("inventory", inventory.serializeNBT());
-        }
+        pTag.put(EIONBTKeys.ITEMS, inventory.serializeNBT());
     }
 
     @Override
     public void load(CompoundTag pTag) {
         // Load io config.
-        ioConfig.deserializeNBT(pTag.getCompound("io_config"));
+        ioConfig.deserializeNBT(pTag.getCompound(MachineNBTKeys.IO_CONFIG));
 
         if (supportsRedstoneControl()) {
-            redstoneControl = RedstoneControl.values()[pTag.getInt("redstone")];
+            redstoneControl = RedstoneControl.values()[pTag.getInt(MachineNBTKeys.REDSTONE_CONTROL)];
         }
 
-        if (inventory != null) {
-            inventory.deserializeNBT(pTag.getCompound("inventory"));
-        }
+        inventory.deserializeNBT(pTag.getCompound(EIONBTKeys.ITEMS));
 
         // For rendering io overlays after placed by an nbt filled block item
         if (level != null) {

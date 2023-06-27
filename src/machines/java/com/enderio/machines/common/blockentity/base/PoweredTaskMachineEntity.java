@@ -5,6 +5,7 @@ import com.enderio.api.capacitor.ICapacitorScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.sync.FloatDataSlot;
 import com.enderio.core.common.sync.SyncMode;
+import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.ProgressMachineBlock;
 import com.enderio.machines.common.blockentity.task.PoweredTask;
 import net.minecraft.core.BlockPos;
@@ -151,8 +152,9 @@ public abstract class PoweredTaskMachineEntity<T extends PoweredTask> extends Po
     public void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
 
-        if (currentTask != null)
-            pTag.put("Task", currentTask.serializeNBT());
+        if (currentTask != null) {
+            pTag.put(MachineNBTKeys.TASK, currentTask.serializeNBT());
+        }
     }
 
     @Override
@@ -160,7 +162,8 @@ public abstract class PoweredTaskMachineEntity<T extends PoweredTask> extends Po
         super.load(pTag);
 
         // Store the task for the onLoad() call
-        if (pTag.contains("Task"))
-            pendingTask = pTag.getCompound("Task").copy();
+        if (pTag.contains(MachineNBTKeys.TASK)) {
+            pendingTask = pTag.getCompound(MachineNBTKeys.TASK).copy();
+        }
     }
 }

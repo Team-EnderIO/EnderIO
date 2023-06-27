@@ -2,6 +2,7 @@ package com.enderio.base.common.item.tool;
 
 import com.enderio.api.capability.IMultiCapabilityItem;
 import com.enderio.api.capability.MultiCapabilityProvider;
+import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.capability.Toggled;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.lang.EIOLang;
@@ -107,8 +108,8 @@ public abstract class PoweredToggledItem extends Item implements IMultiCapabilit
     @Nullable
     @Override
     public MultiCapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt, MultiCapabilityProvider provider) {
-        provider.addSerialized(EIOCapabilities.TOGGLED, LazyOptional.of(Toggled::new));
-        provider.addSerialized("Energy", ForgeCapabilities.ENERGY, LazyOptional.of(() -> new EnergyStorage(getMaxEnergy())));
+        provider.addSerialized(EIONBTKeys.TOGGLE_STATE, EIOCapabilities.TOGGLED, LazyOptional.of(Toggled::new));
+        provider.addSerialized(EIONBTKeys.ENERGY, ForgeCapabilities.ENERGY, LazyOptional.of(() -> new EnergyStorage(getMaxEnergy())));
         return provider;
     }
 

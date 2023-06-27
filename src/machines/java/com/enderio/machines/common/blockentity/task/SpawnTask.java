@@ -60,13 +60,13 @@ public class SpawnTask extends PoweredTask{
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
-        nbt.putInt("EnergyConsumed", energyConsumed);
+        nbt.putInt(KEY_ENERGY_CONSUMED, energyConsumed);
         return nbt;
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        energyConsumed = nbt.getInt("EnergyConsumed");
+        energyConsumed = nbt.getInt(KEY_ENERGY_CONSUMED);
     }
 
     /**

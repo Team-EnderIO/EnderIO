@@ -14,12 +14,12 @@ public class ResourceLocationDataSlot extends EnderDataSlot<ResourceLocation> {
     @Override
     public CompoundTag toFullNBT() {
         CompoundTag tag = new CompoundTag();
-        tag.putString("rl", getter().get().toString());
+        tag.putString(KEY_VALUE, getter().get().toString());
         return tag;
     }
 
     @Override
     protected ResourceLocation fromNBT(CompoundTag nbt) {
-        return new ResourceLocation(nbt.getString("rl"));
+        return new ResourceLocation(nbt.getString(KEY_VALUE));
     }
 }

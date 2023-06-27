@@ -1,5 +1,6 @@
 package com.enderio.machines.common.item;
 
+import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.item.IAdvancedTooltipProvider;
 import com.enderio.core.common.util.TooltipUtil;
@@ -73,7 +74,6 @@ public class FluidTankItem extends BlockItem implements IAdvancedTooltipProvider
     }
 
     public class FluidItemStack extends FluidHandlerItemStack {
-        private static final String BLOCK_ENTITY_TAG = "BlockEntityTag";
 
         /**
          * @param container The container itemStack, data is stored on it directly as NBT.
@@ -88,7 +88,7 @@ public class FluidTankItem extends BlockItem implements IAdvancedTooltipProvider
             Optional<CompoundTag> tagCompoundOptional = Optional.ofNullable(container.getTag());
             return tagCompoundOptional
                 .map(tagCompound -> tagCompound.getCompound(BLOCK_ENTITY_TAG))
-                .map(blockEntityTag -> blockEntityTag.getCompound(FluidTankBlockEntity.FLUID_TAG_KEY))
+                .map(blockEntityTag -> blockEntityTag.getCompound(EIONBTKeys.FLUID))
                 .map(FluidStack::loadFluidStackFromNBT)
                 .orElse(FluidStack.EMPTY);
         }
@@ -100,8 +100,7 @@ public class FluidTankItem extends BlockItem implements IAdvancedTooltipProvider
 
             CompoundTag fluidTag = new CompoundTag();
             fluid.writeToNBT(fluidTag);//rewrites the old value
-            //TODO: externalize FluidTankBlockEntity.FLUID_TAG_KEY into one global parameter.
-            blockEntityTag.put(FluidTankBlockEntity.FLUID_TAG_KEY, fluidTag);
+            blockEntityTag.put(EIONBTKeys.FLUID, fluidTag);
         }
 
         @Override
@@ -109,8 +108,8 @@ public class FluidTankItem extends BlockItem implements IAdvancedTooltipProvider
             CompoundTag tagCompound = container.getTag();
             if (tagCompound != null) {
                 CompoundTag blockEntityTag = tagCompound.getCompound(BLOCK_ENTITY_TAG);
-                if (blockEntityTag.contains(FluidTankBlockEntity.FLUID_TAG_KEY))
-                    blockEntityTag.remove(FluidTankBlockEntity.FLUID_TAG_KEY);
+                if (blockEntityTag.contains(EIONBTKeys.FLUID))
+                    blockEntityTag.remove(EIONBTKeys.FLUID);
             }
         }
     }

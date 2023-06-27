@@ -1,6 +1,7 @@
 package com.enderio.base.common.blockentity;
 
 import com.enderio.api.capability.IOwner;
+import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.capability.Owner;
 import com.enderio.base.common.init.EIOCapabilities;
 import net.minecraft.core.BlockPos;
@@ -69,16 +70,16 @@ public class GraveBlockEntity extends BlockEntity {
 
     @Override
     public void load(CompoundTag pTag) {
-        owner.deserializeNBT(pTag.getCompound(owner.getSerializedName()));
-        itemHandler.deserializeNBT(pTag.getCompound("Items"));
+        owner.deserializeNBT(pTag.getCompound(EIONBTKeys.OWNER));
+        itemHandler.deserializeNBT(pTag.getCompound(EIONBTKeys.ITEMS));
         super.load(pTag);
     }
 
     @Override
     public void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
-        pTag.put(owner.getSerializedName(), owner.serializeNBT());
-        pTag.put("Items", itemHandler.serializeNBT());
+        pTag.put(EIONBTKeys.OWNER, owner.serializeNBT());
+        pTag.put(EIONBTKeys.ITEMS, itemHandler.serializeNBT());
     }
 
     // endregion

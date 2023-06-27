@@ -3,6 +3,7 @@ package com.enderio.machines.common.io.energy;
 import com.enderio.api.capability.IEnderCapabilityProvider;
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.energy.EnergyIOMode;
+import com.enderio.base.EIONBTKeys;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.Capability;
@@ -175,13 +176,13 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, IEnderCapabi
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
-        tag.putInt("stored", energyStored);
+        tag.putInt(EIONBTKeys.ENERGY_STORED, energyStored);
         return tag;
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        energyStored = nbt.getInt("stored");
+        energyStored = nbt.getInt(EIONBTKeys.ENERGY_STORED);
     }
 
     private static class Sided implements IEnergyStorage {

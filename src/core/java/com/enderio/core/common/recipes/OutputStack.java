@@ -69,15 +69,20 @@ public record OutputStack(Either<ItemStack, FluidStack> stack) {
         return true;
     }
 
+    // region Serialization
+
+    private static final String KEY_ITEM = "Item";
+    private static final String KEY_FLUID = "Fluid";
+
     /**
      * Write to NBT.
      */
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
         if (isItem()) {
-            tag.put("item", stack.left().get().serializeNBT());
+            tag.put(KEY_ITEM, stack.left().get().serializeNBT());
         } else if (isFluid()) {
-            tag.put("fluid", stack.right().get().writeToNBT(new CompoundTag()));
+            tag.put(KEY_FLUID, stack.right().get().writeToNBT(new CompoundTag()));
         }
         return tag;
     }
@@ -86,11 +91,13 @@ public record OutputStack(Either<ItemStack, FluidStack> stack) {
      * Read from NBT.
      */
     public static OutputStack fromNBT(CompoundTag tag) {
-        if (tag.contains("item")) {
-            return OutputStack.of(ItemStack.of(tag.getCompound("item")));
-        } else if (tag.contains("fluid")) {
-            return OutputStack.fromNBT(tag.getCompound("fluid"));
+        if (tag.contains(KEY_ITEM)) {
+            return OutputStack.of(ItemStack.of(tag.getCompound(KEY_ITEM)));
+        } else if (tag.contains(KEY_FLUID)) {
+            return OutputStack.fromNBT(tag.getCompound(KEY_FLUID));
         }
         return OutputStack.EMPTY;
     }
+
+    // endregion
 }

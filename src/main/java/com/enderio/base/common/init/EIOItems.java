@@ -463,13 +463,13 @@ public class EIOItems {
 
     // region Creative Tab Icons
 
-    public static final ItemEntry<EnderfaceItem> CREATIVE_ICON_NONE = dumbItem("enderface_none", EnderfaceItem::new).register();
-    public static final ItemEntry<EnderfaceItem> CREATIVE_ICON_ITEMS = dumbItem("enderface_items", EnderfaceItem::new).register();
-    public static final ItemEntry<EnderfaceItem> CREATIVE_ICON_MATERIALS = dumbItem("enderface_materials", EnderfaceItem::new).register();
-    public static final ItemEntry<EnderfaceItem> CREATIVE_ICON_MACHINES = dumbItem("enderface_machines", EnderfaceItem::new).register();
-    public static final ItemEntry<EnderfaceItem> CREATIVE_ICON_CONDUITS = dumbItem("enderface_conduits", EnderfaceItem::new).register();
-    public static final ItemEntry<EnderfaceItem> CREATIVE_ICON_MOBS = dumbItem("enderface_mobs", EnderfaceItem::new).register();
-    public static final ItemEntry<EnderfaceItem> CREATIVE_ICON_INVPANEL = dumbItem("enderface_invpanel", EnderfaceItem::new).register();
+    public static final ItemEntry<CreativeTabIconItem> CREATIVE_ICON_NONE = dumbItem("enderface_none", CreativeTabIconItem::new).register();
+    public static final ItemEntry<CreativeTabIconItem> CREATIVE_ICON_ITEMS = dumbItem("enderface_items", CreativeTabIconItem::new).register();
+    public static final ItemEntry<CreativeTabIconItem> CREATIVE_ICON_MATERIALS = dumbItem("enderface_materials", CreativeTabIconItem::new).register();
+    public static final ItemEntry<CreativeTabIconItem> CREATIVE_ICON_MACHINES = dumbItem("enderface_machines", CreativeTabIconItem::new).register();
+    public static final ItemEntry<CreativeTabIconItem> CREATIVE_ICON_CONDUITS = dumbItem("enderface_conduits", CreativeTabIconItem::new).register();
+    public static final ItemEntry<CreativeTabIconItem> CREATIVE_ICON_MOBS = dumbItem("enderface_mobs", CreativeTabIconItem::new).register();
+    public static final ItemEntry<CreativeTabIconItem> CREATIVE_ICON_INVPANEL = dumbItem("enderface_invpanel", CreativeTabIconItem::new).register();
 
     // endregion
 

@@ -1,5 +1,6 @@
 package com.enderio.machines.common.blockentity.sync;
 
+import com.enderio.base.EIONBTKeys;
 import com.enderio.core.common.sync.EnderDataSlot;
 import com.enderio.core.common.sync.SyncMode;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
@@ -22,17 +23,17 @@ public class MachineEnergyDataSlot extends EnderDataSlot<IMachineEnergyStorage> 
     public CompoundTag toFullNBT() {
         IMachineEnergyStorage storage = getter().get();
         CompoundTag tag = new CompoundTag();
-        tag.putInt("Energy", storage.getEnergyStored());
-        tag.putInt("MaxStored", storage.getMaxEnergyStored());
-        tag.putInt("MaxUse", storage.getMaxEnergyUse());
+        tag.putInt(EIONBTKeys.ENERGY_STORED, storage.getEnergyStored());
+        tag.putInt(EIONBTKeys.ENERGY_MAX_STORED, storage.getMaxEnergyStored());
+        tag.putInt(EIONBTKeys.ENERGY_MAX_USE, storage.getMaxEnergyUse());
         return tag;
     }
 
     @Override
     protected IMachineEnergyStorage fromNBT(CompoundTag nbt) {
-        int energy = nbt.getInt("Energy");
-        int maxStored = nbt.getInt("MaxStored");
-        int maxUse = nbt.getInt("MaxUse");
+        int energy = nbt.getInt(EIONBTKeys.ENERGY_STORED);
+        int maxStored = nbt.getInt(EIONBTKeys.ENERGY_MAX_STORED);
+        int maxUse = nbt.getInt(EIONBTKeys.ENERGY_MAX_USE);
         return new ImmutableMachineEnergyStorage(energy, maxStored, maxUse);
     }
 }

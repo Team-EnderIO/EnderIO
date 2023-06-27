@@ -5,8 +5,9 @@ import com.enderio.base.common.init.EIOCapabilities;
 import net.minecraft.nbt.ByteTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.util.INBTSerializable;
 
-public class Toggled implements IToggled {
+public class Toggled implements IToggled, INBTSerializable<Tag> {
 
     public static boolean isEnabled(ItemStack itemStack) {
         return itemStack.getCapability(EIOCapabilities.TOGGLED).map(IToggled::isEnabled).orElse(false);

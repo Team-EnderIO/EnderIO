@@ -1,5 +1,6 @@
 package com.enderio.conduits.common.types;
 
+import com.enderio.EnderIO;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.ticker.ICapabilityAwareConduitTicker;
 import dev.gigaherz.graph3.Graph;
@@ -14,8 +15,6 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 
 public class EnergyConduitTicker extends ICapabilityAwareConduitTicker<IEnergyStorage> {
-
-    private static final Logger LOGGER = LogManager.getLogger("enderio:api");
 
     public EnergyConduitTicker() {
     }
@@ -40,7 +39,7 @@ public class EnergyConduitTicker extends ICapabilityAwareConduitTicker<IEnergySt
                 break;
         }
         if (inserted > 0) {
-            LOGGER.info("didn't extract all energy that was inserted, investigate the dupebug");
+            EnderIO.LOGGER.info("didn't extract all energy that was inserted, investigate the dupebug");
         }
     }
 

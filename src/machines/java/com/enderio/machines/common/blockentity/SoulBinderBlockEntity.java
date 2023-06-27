@@ -2,6 +2,7 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
+import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
@@ -135,13 +136,13 @@ public class SoulBinderBlockEntity extends PoweredCraftingMachine<SoulBindingRec
     @Override
     public void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
-        pTag.put("fluid", fluidTank.writeToNBT(new CompoundTag()));
+        pTag.put(EIONBTKeys.FLUID, fluidTank.writeToNBT(new CompoundTag()));
     }
 
     @Override
     public void load(CompoundTag pTag) {
         super.load(pTag);
-        fluidTank.readFromNBT(pTag.getCompound("fluid"));
+        fluidTank.readFromNBT(pTag.getCompound(EIONBTKeys.FLUID));
     }
 
 }

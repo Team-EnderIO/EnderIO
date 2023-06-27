@@ -137,26 +137,33 @@ public class SagMillBlockEntity extends PoweredCraftingMachine<SagMillingRecipe,
         return container;
     }
 
+    // region Serialization
+
+    private static final String KEY_GRINDING_BALL_ID = "GrindingBallId";
+    private static final String KEY_GRINDING_BALL_DAMAGE = "GrindingBallDamage";
+
     @Override
     public void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
         if (grindingBallData != IGrindingBallData.IDENTITY) {
-            pTag.putString("GrindingBall", grindingBallData.getId().toString());
-            pTag.putInt("GrindingBallDamage", grindingBallDamage);
+            pTag.putString(KEY_GRINDING_BALL_ID, grindingBallData.getId().toString());
+            pTag.putInt(KEY_GRINDING_BALL_DAMAGE, grindingBallDamage);
         }
     }
 
     @Override
     public void load(CompoundTag pTag) {
         super.load(pTag);
-        if (pTag.contains("GrindingBall")) {
-            pendingGrindingBallId = new ResourceLocation(pTag.getString("GrindingBall"));
+        if (pTag.contains(KEY_GRINDING_BALL_ID)) {
+            pendingGrindingBallId = new ResourceLocation(pTag.getString(KEY_GRINDING_BALL_ID));
         }
 
-        if (pTag.contains("GrindingBallDamage")) {
-            grindingBallDamage = pTag.getInt("GrindingBallDamage");
+        if (pTag.contains(KEY_GRINDING_BALL_DAMAGE)) {
+            grindingBallDamage = pTag.getInt(KEY_GRINDING_BALL_DAMAGE);
         }
     }
+
+    // endregion
 
     @Nullable
     @Override

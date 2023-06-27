@@ -1,18 +1,12 @@
 package com.enderio.api.capability;
 
-import com.enderio.api.nbt.INamedNBTSerializable;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.nbt.CompoundTag;
 
 /**
  * A capability holding a game profile declaring the owner of something.
  */
-public interface IOwner extends INamedNBTSerializable<CompoundTag> {
-
-    @Override
-    default String getSerializedName() {
-        return "Owner";
-    }
+public interface IOwner {
 
     /**
      * Get the owner's profile.
