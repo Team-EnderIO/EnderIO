@@ -1,10 +1,7 @@
 package com.enderio.base.common.init;
 
 import com.enderio.EnderIO;
-import com.enderio.base.common.init.EIOItems;
 import com.tterrag.registrate.Registrate;
-import com.tterrag.registrate.providers.RegistrateLangProvider;
-import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -12,12 +9,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(modid = EnderIO.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class EIOCreativeTabs {

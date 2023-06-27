@@ -19,8 +19,8 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.util.Collection;
 
 public class GraveBlockEntity extends BlockEntity {
