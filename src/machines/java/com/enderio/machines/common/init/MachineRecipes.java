@@ -31,7 +31,6 @@ public class MachineRecipes {
         return RECIPE_TYPES.register(name, () -> RecipeType.simple(EnderIO.loc(name)));
     }
 
-    // TODO: Some way of generifying this code.
     private static <R extends Recipe<?>, S extends RecipeSerializer<? extends R>> RecipeTypeSerializerPair<R, S> register(String name, Supplier<S> serializerFactory) {
         RegistryObject<RecipeType<R>> type = RECIPE_TYPES.register(name, () -> RecipeType.simple(EnderIO.loc(name)));
         RegistryObject<S> serializer = RECIPE_SERIALIZERS.register(name, serializerFactory);

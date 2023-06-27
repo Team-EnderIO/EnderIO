@@ -63,7 +63,6 @@ public class SlicingRecipeCategory extends MachineRecipeCategory<SlicingRecipe> 
         builder.addSlot(CATALYST, 29, 1)
             .addIngredients(Ingredient.of(Tags.Items.SHEARS));
 
-        // TODO: Don't hardcode these indices. use a loop instead and store the x and y somehow
         builder.addSlot(INPUT, 1, 25)
             .addIngredients(recipe.getInputs().get(0));
         builder.addSlot(INPUT, 19, 25)

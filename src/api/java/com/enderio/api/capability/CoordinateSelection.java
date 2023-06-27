@@ -28,7 +28,6 @@ public record CoordinateSelection(ResourceLocation level, BlockPos pos) {
     /**
      * Get the name of the given level.
      */
-    // TODO: Does this belong here/need to be static?
     public static String getLevelName(ResourceLocation level) {
         return level.getNamespace().equals("minecraft") ? level.getPath() : level.toString();
     }
