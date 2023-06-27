@@ -10,6 +10,7 @@ import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.machines.client.gui.screen.SlicerScreen;
 import com.enderio.machines.client.gui.screen.SoulBinderScreen;
 import com.enderio.machines.common.init.MachineBlocks;
+import com.enderio.machines.common.integrations.jei.util.MachineRecipeCategory;
 import com.enderio.machines.common.integrations.jei.util.RecipeUtil;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
@@ -43,7 +44,7 @@ import java.util.Locale;
 import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
 import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
 
-public class SoulBindingCategory implements IRecipeCategory<SoulBindingRecipe> {
+public class SoulBindingCategory extends MachineRecipeCategory<SoulBindingRecipe> {
     public static final RecipeType<SoulBindingRecipe> TYPE = RecipeType.create(EnderIO.MODID, "soul_binding", SoulBindingRecipe.class);
 
     private final IDrawable background;
@@ -149,31 +150,16 @@ public class SoulBindingCategory implements IRecipeCategory<SoulBindingRecipe> {
         int mainColor = playerHasEnoughLevels(player, cost) ? 0xFF80FF20 : 0xFFFF6060;
         guiGraphics.drawString(minecraft.font, text, 5, 24, mainColor);
 
-        guiGraphics.drawString(Minecraft.getInstance().font, getEnergyString(recipe), 5, 34, 0xff808080, false);
+        guiGraphics.drawString(Minecraft.getInstance().font, getBasicEnergyString(recipe), 5, 34, 0xff808080, false);
     }
 
     @Override
     public List<Component> getTooltipStrings(SoulBindingRecipe recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
         Minecraft mc = Minecraft.getInstance();
-        if (mouseX > 5 && mouseY > 34 && mouseX < 5 + mc.font.width(getEnergyString(recipe)) && mouseY < 34 + mc.font.lineHeight) {
+        if (mouseX > 5 && mouseY > 34 && mouseX < 5 + mc.font.width(getBasicEnergyString(recipe)) && mouseY < 34 + mc.font.lineHeight) {
             return List.of(MachineLang.TOOLTIP_ENERGY_EQUIVALENCE);
         }
 
         return List.of();
-    }
-
-    private Component getEnergyString(SoulBindingRecipe recipe) {
-        return TooltipUtil.withArgs(EIOLang.ENERGY_AMOUNT, NumberFormat.getIntegerInstance(Locale.ENGLISH).format(recipe.getEnergyCost(null)));
-    }
-
-    // TODO: kinda stupid to write this twice..
-    private static boolean playerHasEnoughLevels(@Nullable LocalPlayer player, int cost) {
-        if (player == null) {
-            return true;
-        }
-        if (player.isCreative()) {
-            return true;
-        }
-        return cost < 40 && cost <= player.experienceLevel;
     }
 }

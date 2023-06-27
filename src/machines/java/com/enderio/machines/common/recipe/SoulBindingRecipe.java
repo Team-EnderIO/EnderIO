@@ -74,7 +74,7 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
     }
 
     @Override
-    public int getEnergyCost(SoulBindingRecipe.Container container) {
+    public int getBaseEnergyCost() {
         return energy;
     }
 

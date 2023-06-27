@@ -33,7 +33,7 @@ public class VanillaAlloySmeltingRecipe extends AlloySmeltingRecipe {
     }
 
     @Override
-    public int getBasicEnergyCost() {
+    public int getBaseEnergyCost() {
         return RF_PER_ITEM;
     }
 

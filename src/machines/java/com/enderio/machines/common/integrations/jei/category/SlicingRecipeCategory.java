@@ -3,6 +3,7 @@ package com.enderio.machines.common.integrations.jei.category;
 import com.enderio.EnderIO;
 import com.enderio.machines.client.gui.screen.SlicerScreen;
 import com.enderio.machines.common.init.MachineBlocks;
+import com.enderio.machines.common.integrations.jei.util.MachineRecipeCategory;
 import com.enderio.machines.common.integrations.jei.util.RecipeUtil;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.recipe.SlicingRecipe;
@@ -22,7 +23,7 @@ import java.util.List;
 
 import static mezz.jei.api.recipe.RecipeIngredientRole.*;
 
-public class SlicingRecipeCategory implements IRecipeCategory<SlicingRecipe> {
+public class SlicingRecipeCategory extends MachineRecipeCategory<SlicingRecipe> {
 
     public static final RecipeType<SlicingRecipe> TYPE = RecipeType.create(EnderIO.MODID, "slicing", SlicingRecipe.class);
 
