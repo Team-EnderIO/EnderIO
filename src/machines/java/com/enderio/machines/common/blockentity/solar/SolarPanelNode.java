@@ -13,7 +13,6 @@ public class SolarPanelNode implements GraphObject<Mergeable.Dummy> {
     @Nullable
     private Graph<Mergeable.Dummy> graph = null;
 
-
     private final Supplier<IEnergyStorage> internal;
     private final Supplier<SolarPanelEnergyStorageWrapper> wrapper;
 
@@ -21,6 +20,7 @@ public class SolarPanelNode implements GraphObject<Mergeable.Dummy> {
         this.internal = internal;
         this.wrapper = wrapper;
     }
+
     @Override
     @Nullable
     public Graph<Mergeable.Dummy> getGraph() {
@@ -36,6 +36,7 @@ public class SolarPanelNode implements GraphObject<Mergeable.Dummy> {
     public Supplier<IEnergyStorage> getInternal() {
         return internal;
     }
+
     public Supplier<SolarPanelEnergyStorageWrapper> getWrapper() {
         return wrapper;
     }

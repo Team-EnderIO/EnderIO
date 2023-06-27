@@ -2,7 +2,13 @@ package com.enderio.machines.common.io.energy;
 
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.energy.EnergyIOMode;
+import net.minecraft.core.Direction;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.IEnergyStorage;
 import org.apache.commons.lang3.NotImplementedException;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * An immutable machine energy storage.

@@ -18,10 +18,10 @@ public class SolarPanelEnergyStorageWrapper extends MachineEnergyStorage {
     @Nullable
     private Graph<Mergeable.Dummy> graph;
 
-    private final ISolarPanelTier tier;
+    private final Supplier<ISolarPanelTier> tier;
 
-    public SolarPanelEnergyStorageWrapper(IIOConfig config, EnergyIOMode ioMode, Supplier<Integer> capacity, Supplier<Integer> usageRate, ISolarPanelTier tier) {
-        super(config, ioMode, capacity, usageRate);
+    public SolarPanelEnergyStorageWrapper(IIOConfig config, EnergyIOMode ioMode, Supplier<ISolarPanelTier> tier) {
+        super(config, ioMode, () -> tier.get().getStorageCapacity(), () -> tier.get().getStorageCapacity());
         this.tier = tier;
     }
 
@@ -46,7 +46,7 @@ public class SolarPanelEnergyStorageWrapper extends MachineEnergyStorage {
     public int getMaxEnergyStored() {
         if (graph == null)
             return 0;
-        return graph.getObjects().size() * tier.getStorageCapacity();
+        return graph.getObjects().size() * tier.get().getStorageCapacity();
     }
 
 

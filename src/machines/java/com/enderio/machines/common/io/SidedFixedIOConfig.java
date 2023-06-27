@@ -13,8 +13,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Function;
 
 /**
- * Fixed IO Config.
- * Used when a block only has a single mode for all sides (or even wants to disable external IO altogether).
+ * Sided Fixed IO Config
+ * Used when a block only has a non changeable IOMode, but different sides have different Modes
  */
 public final class SidedFixedIOConfig implements IIOConfig {
     private final Function<Direction, IOMode> mode;

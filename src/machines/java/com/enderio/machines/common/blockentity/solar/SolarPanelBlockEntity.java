@@ -6,7 +6,7 @@ import com.enderio.api.io.IOMode;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.machines.common.blockentity.base.PowerGeneratingMachineEntity;
 import com.enderio.machines.common.io.SidedFixedIOConfig;
-import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
+import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import dev.gigaherz.graph3.Graph;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -16,9 +16,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -29,14 +26,10 @@ public class SolarPanelBlockEntity extends PowerGeneratingMachineEntity {
 
     private final SolarPanelNode node;
 
-    private final LazyOptional<SolarPanelEnergyStorageWrapper> mergedWrapper;
-
     public SolarPanelBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState, ISolarPanelTier tier) {
         super(new FixedScalable(() -> (float)tier.getStorageCapacity()), new FixedScalable(() -> (float)tier.getStorageCapacity()), type, worldPosition, blockState);
         this.tier = tier;
-        mergedWrapper = LazyOptional.of(() -> new SolarPanelEnergyStorageWrapper(createIOConfig(), EnergyIOMode.Output, tier::getStorageCapacity, tier::getStorageCapacity, tier));
-
-        this.node = new SolarPanelNode(() -> energyStorage, () -> mergedWrapper.resolve().get());
+        this.node = new SolarPanelNode(() -> energyStorage, () -> (SolarPanelEnergyStorageWrapper) getExposedEnergyStorage());
     }
 
     @Nullable
@@ -46,25 +39,12 @@ public class SolarPanelBlockEntity extends PowerGeneratingMachineEntity {
     }
 
     @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
-        if (cap == ForgeCapabilities.ENERGY) {
-            return mergedWrapper.cast();
-        }
-        return super.getCapability(cap, side);
-    }
-
-    @Override
-    public IMachineEnergyStorage getEnergyStorage() {
-        return mergedWrapper.resolve().get();
+    public @Nullable MachineEnergyStorage createExposedEnergyStorage() {
+        return new SolarPanelEnergyStorageWrapper(createIOConfig(), EnergyIOMode.Output, () -> tier);
     }
 
     @Override
     public void serverTick() {
-        // If we're generating energy, add it to the buffer.
-        if (isGenerating()) {
-            //this one is the internal, the method is overriden to provide the merged wrapper for all other functions
-            energyStorage.addEnergy(getGenerationRate());
-        }
         super.serverTick();
     }
 
@@ -127,5 +107,10 @@ public class SolarPanelBlockEntity extends PowerGeneratingMachineEntity {
     @Override
     protected IIOConfig createIOConfig() {
         return new SidedFixedIOConfig(dir -> dir == Direction.UP ? IOMode.NONE : IOMode.PUSH);
+    }
+
+    @Override
+    public boolean canOpenMenu() {
+        return false;
     }
 }
