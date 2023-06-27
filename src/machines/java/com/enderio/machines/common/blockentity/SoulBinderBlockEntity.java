@@ -2,8 +2,6 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
-import com.enderio.api.io.IIOConfig;
-import com.enderio.api.io.IOMode;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
@@ -14,7 +12,6 @@ import com.enderio.core.common.sync.SyncMode;
 import com.enderio.machines.common.blockentity.base.PoweredCraftingMachine;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingTask;
 import com.enderio.machines.common.init.MachineRecipes;
-import com.enderio.machines.common.io.FixedIOConfig;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
@@ -26,7 +23,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidStack;
@@ -36,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-import static com.enderio.base.common.util.ExperienceUtil.EXPTOFLUID;
+import static com.enderio.base.common.util.ExperienceUtil.EXP_TO_FLUID;
 
 public class SoulBinderBlockEntity extends PoweredCraftingMachine<SoulBindingRecipe, SoulBindingRecipe.Container> {
 
@@ -94,7 +90,7 @@ public class SoulBinderBlockEntity extends PoweredCraftingMachine<SoulBindingRec
                 getInventory().getStackInSlot(1).shrink(1);
 
                 int leftover = ExperienceUtil.getLevelFromFluidWithLeftover(fluidTank.getFluidAmount(), 0, container.getNeededXP()).y();
-                fluidTank.drain(fluidTank.getFluidAmount()-leftover*EXPTOFLUID, IFluidHandler.FluidAction.EXECUTE);
+                fluidTank.drain(fluidTank.getFluidAmount()-leftover* EXP_TO_FLUID, IFluidHandler.FluidAction.EXECUTE);
             }
 
             @Override

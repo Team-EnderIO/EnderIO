@@ -1,6 +1,5 @@
 package com.enderio.machines.common.blockentity;
 
-import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.core.common.sync.IntegerDataSlot;
 import com.enderio.core.common.sync.SyncMode;
@@ -26,7 +25,7 @@ import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static com.enderio.base.common.util.ExperienceUtil.EXPTOFLUID;
+import static com.enderio.base.common.util.ExperienceUtil.EXP_TO_FLUID;
 
 public class XPVacuumBlockEntity extends VacuumMachineEntity<ExperienceOrb> {
     private final FluidTank fluidTank;
@@ -79,11 +78,11 @@ public class XPVacuumBlockEntity extends VacuumMachineEntity<ExperienceOrb> {
 
     @Override
     public void handleEntity(ExperienceOrb xpe) {
-        int filled = fluidTank.fill(new FluidStack(EIOFluids.XP_JUICE.get(), xpe.getValue() * EXPTOFLUID), FluidAction.EXECUTE);
-        if (filled == xpe.getValue() * EXPTOFLUID) {
+        int filled = fluidTank.fill(new FluidStack(EIOFluids.XP_JUICE.get(), xpe.getValue() * EXP_TO_FLUID), FluidAction.EXECUTE);
+        if (filled == xpe.getValue() * EXP_TO_FLUID) {
             xpe.discard();
         } else {
-            xpe.value -= filled / ((float) EXPTOFLUID);
+            xpe.value -= filled / ((float) EXP_TO_FLUID);
         }
     }
 
