@@ -2,7 +2,6 @@ package com.enderio.machines.common.integrations.jei.util;
 
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.common.util.TooltipUtil;
-import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
 import com.enderio.machines.common.recipe.MachineRecipe;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.player.LocalPlayer;

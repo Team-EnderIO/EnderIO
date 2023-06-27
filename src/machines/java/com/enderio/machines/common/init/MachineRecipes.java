@@ -1,7 +1,6 @@
 package com.enderio.machines.common.init;
 
 import com.enderio.EnderIO;
-import com.enderio.base.common.recipe.ShapedEntityStorageRecipe;
 import com.enderio.core.common.recipes.RecipeTypeSerializerPair;
 import com.enderio.machines.common.recipe.*;
 import net.minecraft.world.item.crafting.Recipe;

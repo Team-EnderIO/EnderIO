@@ -2,11 +2,11 @@ package com.enderio.conduits.common.blockentity;
 
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.NodeIdentifier;
+import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
 import com.enderio.conduits.common.blockentity.connection.IConnectionState;
 import com.enderio.conduits.common.blockentity.connection.StaticConnectionStates;
-import com.enderio.api.misc.ColorControl;
 import net.minecraft.Util;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

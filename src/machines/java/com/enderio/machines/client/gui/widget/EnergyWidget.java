@@ -6,11 +6,9 @@ import com.enderio.core.client.gui.widgets.EIOWidget;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 
 import java.text.NumberFormat;

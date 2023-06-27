@@ -2,9 +2,9 @@ package com.enderio.machines.common.integrations.jei.category;
 
 import com.enderio.EnderIO;
 import com.enderio.machines.client.gui.screen.EnchanterScreen;
+import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.integrations.jei.util.MachineRecipeCategory;
 import com.enderio.machines.common.integrations.jei.util.WrappedEnchanterRecipe;
-import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.lang.MachineLang;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;

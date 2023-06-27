@@ -1,13 +1,11 @@
 package com.enderio.machines.common.integrations.jei.category;
 
 import com.enderio.EnderIO;
-import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.common.recipes.CountedIngredient;
-import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.machines.client.gui.screen.AlloySmelterScreen;
 import com.enderio.machines.client.gui.screen.StirlingGeneratorScreen;
-import com.enderio.machines.common.integrations.jei.util.MachineRecipeCategory;
 import com.enderio.machines.common.init.MachineBlocks;
+import com.enderio.machines.common.integrations.jei.util.MachineRecipeCategory;
 import com.enderio.machines.common.integrations.jei.util.RecipeUtil;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
@@ -24,9 +22,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
-import java.text.NumberFormat;
 import java.util.List;
-import java.util.Locale;
 
 import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
 import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;

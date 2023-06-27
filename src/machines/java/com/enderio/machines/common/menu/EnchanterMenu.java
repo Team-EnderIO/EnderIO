@@ -13,8 +13,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 import org.apache.logging.log4j.LogManager;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.util.Optional;
 
 public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {

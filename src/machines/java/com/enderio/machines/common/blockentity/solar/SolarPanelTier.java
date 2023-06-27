@@ -1,8 +1,6 @@
 package com.enderio.machines.common.blockentity.solar;
 
 import com.enderio.machines.common.config.MachinesConfig;
-import com.enderio.machines.common.config.common.MachinesCommonConfig;
-import com.enderio.machines.common.init.MachineRecipes;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public enum SolarPanelTier implements ISolarPanelTier {

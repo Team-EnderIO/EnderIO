@@ -4,7 +4,6 @@ import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.data.recipe.RecipeDataUtil;
 import com.enderio.core.data.recipes.EnderRecipeProvider;
-import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonObject;
 import net.minecraft.data.PackOutput;
