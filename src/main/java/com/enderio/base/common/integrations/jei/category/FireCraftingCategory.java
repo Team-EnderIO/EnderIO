@@ -45,7 +45,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * TODO: Finish and enable in 1.19.4.
  * @author TagnumElite
  */
 public class FireCraftingCategory implements IRecipeCategory<FireCraftingRecipe> {

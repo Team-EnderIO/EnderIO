@@ -88,8 +88,6 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
 
     // region Energy
 
-    // TODO: Machine efficiency features.
-
     /**
      * Get the machine's energy storage.
      * On client side, this will likely be an instance of {@link ImmutableMachineEnergyStorage}.

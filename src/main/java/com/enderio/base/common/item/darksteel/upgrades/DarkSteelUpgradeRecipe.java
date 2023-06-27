@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
+// TODO: Change this into a anvil recipe.
 public class DarkSteelUpgradeRecipe extends SmithingTransformRecipe {
     public DarkSteelUpgradeRecipe(ResourceLocation pId) {
         super(pId, Ingredient.EMPTY, Ingredient.EMPTY, Ingredient.EMPTY, ItemStack.EMPTY);

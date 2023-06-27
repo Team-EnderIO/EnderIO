@@ -82,9 +82,6 @@ public class EIOItems {
 
     public static final ItemEntry<MaterialItem> CONDUIT_BINDER = materialItem("conduit_binder").register();
 
-    // TODO: 1.20.1: implement upgrade binder for dark steel upgrades
-//    public static final ItemEntry<MaterialItem> UPGRADE_BINDER = materialItem("upgrade_binder").register();
-
     public static final ItemEntry<MaterialItem> ZOMBIE_ELECTRODE = materialItem("zombie_electrode").register();
 
     public static final ItemEntry<MaterialItem> Z_LOGIC_CONTROLLER = materialItem("z_logic_controller").lang("Z-Logic Controller").register();

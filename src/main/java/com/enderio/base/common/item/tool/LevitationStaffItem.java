@@ -61,7 +61,7 @@ public class LevitationStaffItem extends PoweredToggledItem {
 
     @Override
     protected void onTickWhenActive(Player player, ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
-        player.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 1)); // TODO: An upgrade to make it faster?
+        player.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 1));
     }
 
     @Nullable

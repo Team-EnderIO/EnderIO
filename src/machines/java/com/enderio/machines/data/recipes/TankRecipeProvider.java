@@ -55,8 +55,6 @@ public class TankRecipeProvider extends EnderRecipeProvider {
         buildFilling(Ingredient.of(Items.GREEN_CONCRETE_POWDER), Items.GREEN_CONCRETE, new FluidStack(Fluids.WATER, 1000), pWriter);
         buildFilling(Ingredient.of(Items.RED_CONCRETE_POWDER), Items.RED_CONCRETE, new FluidStack(Fluids.WATER, 1000), pWriter);
         buildFilling(Ingredient.of(Items.BLACK_CONCRETE_POWDER), Items.BLACK_CONCRETE, new FluidStack(Fluids.WATER, 1000), pWriter);
-
-        // TODO: Are we doing upgrade activation with XP, or changing for anvil?
     }
 
     protected void buildEmptying(Ingredient input, ItemLike output, FluidStack fluid, Consumer<FinishedRecipe> finishedRecipeConsumer) {

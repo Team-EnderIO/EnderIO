@@ -228,8 +228,7 @@ dependencies {
     compileOnly "appeng:appliedenergistics2-forge:${ae2_version}:api"
     runtimeOnly fg.deobf("appeng:appliedenergistics2-forge:${ae2_version}")
 
-    // The One Probe
-    //TODO: Remove having to specify these as non transitive once https://github.com/McJtyMods/TheOneProbe/issues/548 is fixed. Thanks Mekanism!
+    // The One Probe https://github.com/McJtyMods/TheOneProbe/issues/548
     compileOnly fg.deobf("mcjty.theoneprobe:theoneprobe:${top_version}:api") {
         transitive = false
     }

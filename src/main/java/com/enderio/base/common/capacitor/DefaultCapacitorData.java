@@ -9,7 +9,6 @@ import net.minecraft.nbt.Tag;
 import java.util.Map;
 
 public enum DefaultCapacitorData implements ICapacitorData {
-    // TODO: Add more capacitor types?
     NONE(0),
     BASIC(1.0f),
     DOUBLE_LAYER(2.0f),

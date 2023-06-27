@@ -117,7 +117,7 @@ public class FireCraftingHandler {
                 itemEntity.setDefaultPickUpDelay();
 
                 // Make it survive the fire for a bit
-                itemEntity.hurt(itemEntity.damageSources().inFire(),  -100); // TODO: Do we just make it fireproof like netherite is?
+                itemEntity.hurt(itemEntity.damageSources().inFire(),  -100);
 
                 // Actually set it on fire
                 itemEntity.setRemainingFireTicks(10);
