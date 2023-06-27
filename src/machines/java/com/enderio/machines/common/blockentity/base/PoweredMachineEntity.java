@@ -63,7 +63,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
             usageRate.scaleI(this::getCapacitorData));
         this.energyStorageCap = LazyOptional.of(this::getExposedEnergyStorage);
         this.exposedEnergyStorage = createExposedEnergyStorage();
-        addCapabilityProvider(energyStorage);
+        addCapabilityProvider(exposedEnergyStorage == null ? energyStorage : exposedEnergyStorage);
         // Mark capacitor cache as dirty
         capacitorCacheDirty = true;
 
