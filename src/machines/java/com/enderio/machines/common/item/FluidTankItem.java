@@ -1,12 +1,11 @@
 package com.enderio.machines.common.item;
 
-import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.item.IAdvancedTooltipProvider;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.machines.client.rendering.item.FluidTankBEWLR;
+import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.MachineBlock;
-import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -88,7 +87,7 @@ public class FluidTankItem extends BlockItem implements IAdvancedTooltipProvider
             Optional<CompoundTag> tagCompoundOptional = Optional.ofNullable(container.getTag());
             return tagCompoundOptional
                 .map(tagCompound -> tagCompound.getCompound(BLOCK_ENTITY_TAG))
-                .map(blockEntityTag -> blockEntityTag.getCompound(EIONBTKeys.FLUID))
+                .map(blockEntityTag -> blockEntityTag.getCompound(MachineNBTKeys.FLUID))
                 .map(FluidStack::loadFluidStackFromNBT)
                 .orElse(FluidStack.EMPTY);
         }
@@ -100,7 +99,7 @@ public class FluidTankItem extends BlockItem implements IAdvancedTooltipProvider
 
             CompoundTag fluidTag = new CompoundTag();
             fluid.writeToNBT(fluidTag);//rewrites the old value
-            blockEntityTag.put(EIONBTKeys.FLUID, fluidTag);
+            blockEntityTag.put(MachineNBTKeys.FLUID, fluidTag);
         }
 
         @Override
@@ -108,8 +107,8 @@ public class FluidTankItem extends BlockItem implements IAdvancedTooltipProvider
             CompoundTag tagCompound = container.getTag();
             if (tagCompound != null) {
                 CompoundTag blockEntityTag = tagCompound.getCompound(BLOCK_ENTITY_TAG);
-                if (blockEntityTag.contains(EIONBTKeys.FLUID))
-                    blockEntityTag.remove(EIONBTKeys.FLUID);
+                if (blockEntityTag.contains(MachineNBTKeys.FLUID))
+                    blockEntityTag.remove(MachineNBTKeys.FLUID);
             }
         }
     }

@@ -1,6 +1,5 @@
 package com.enderio.machines.common.entity;
 
-import com.enderio.base.EIONBTKeys;
 import com.enderio.machines.common.init.MachineEntities;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;

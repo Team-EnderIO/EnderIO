@@ -1,9 +1,9 @@
 package com.enderio.machines.common.blockentity;
 
-import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.core.common.sync.IntegerDataSlot;
 import com.enderio.core.common.sync.SyncMode;
+import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.blockentity.base.VacuumMachineEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
@@ -63,13 +63,13 @@ public class XPVacuumBlockEntity extends VacuumMachineEntity<ExperienceOrb> {
     @Override
     public void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
-        pTag.put(EIONBTKeys.FLUID, fluidTank.writeToNBT(new CompoundTag()));
+        pTag.put(MachineNBTKeys.FLUID, fluidTank.writeToNBT(new CompoundTag()));
     }
 
     @Override
     public void load(CompoundTag pTag) {
         super.load(pTag);
-        fluidTank.readFromNBT(pTag.getCompound(EIONBTKeys.FLUID));
+        fluidTank.readFromNBT(pTag.getCompound(MachineNBTKeys.FLUID));
     }
 
     @Override

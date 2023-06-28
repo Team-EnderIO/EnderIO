@@ -2,7 +2,6 @@ package com.enderio.conduits.common.types;
 
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.IExtendedConduitData;
-import com.enderio.base.EIONBTKeys;
 import com.enderio.conduits.ConduitNBTKeys;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -48,9 +47,9 @@ public class FluidExtendedData implements IExtendedConduitData<FluidExtendedData
         CompoundTag nbt = new CompoundTag();
         if (!isMultiFluid) {
             if (lockedFluid != null) {
-                nbt.putString(EIONBTKeys.FLUID, ForgeRegistries.FLUIDS.getKey(lockedFluid).toString());
+                nbt.putString(ConduitNBTKeys.FLUID, ForgeRegistries.FLUIDS.getKey(lockedFluid).toString());
             } else {
-                nbt.putString(EIONBTKeys.FLUID, "null");
+                nbt.putString(ConduitNBTKeys.FLUID, "null");
             }
         }
         return nbt;
@@ -69,8 +68,8 @@ public class FluidExtendedData implements IExtendedConduitData<FluidExtendedData
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        if (nbt.contains(EIONBTKeys.FLUID) && !isMultiFluid) {
-            String fluid = nbt.getString(EIONBTKeys.FLUID);
+        if (nbt.contains(ConduitNBTKeys.FLUID) && !isMultiFluid) {
+            String fluid = nbt.getString(ConduitNBTKeys.FLUID);
             if (fluid.equals("null")) {
                 setLockedFluid(null);
             } else {

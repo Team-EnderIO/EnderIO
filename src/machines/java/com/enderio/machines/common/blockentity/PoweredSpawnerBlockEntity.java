@@ -4,12 +4,12 @@ import com.enderio.EnderIO;
 import com.enderio.api.capability.StoredEntityData;
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
-import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.particle.RangeParticleData;
 import com.enderio.core.common.sync.BooleanDataSlot;
 import com.enderio.core.common.sync.EnumDataSlot;
 import com.enderio.core.common.sync.ResourceLocationDataSlot;
 import com.enderio.core.common.sync.SyncMode;
+import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.blockentity.base.PoweredTaskMachineEntity;
 import com.enderio.machines.common.blockentity.task.SpawnTask;
 import com.enderio.machines.common.config.MachinesConfig;
@@ -99,13 +99,13 @@ public class PoweredSpawnerBlockEntity extends PoweredTaskMachineEntity<SpawnTas
     @Override
     public void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
-        pTag.put(EIONBTKeys.ENTITY_STORAGE, entityData.serializeNBT());
+        pTag.put(MachineNBTKeys.ENTITY_STORAGE, entityData.serializeNBT());
     }
 
     @Override
     public void load(CompoundTag pTag) {
         super.load(pTag);
-        entityData.deserializeNBT(pTag.getCompound(EIONBTKeys.ENTITY_STORAGE));
+        entityData.deserializeNBT(pTag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
     }
 
     public int getRange() {

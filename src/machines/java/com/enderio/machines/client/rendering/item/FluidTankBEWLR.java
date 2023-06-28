@@ -1,7 +1,7 @@
 package com.enderio.machines.client.rendering.item;
 
-import com.enderio.base.EIONBTKeys;
 import com.enderio.machines.client.rendering.blockentity.FluidTankBER;
+import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -45,8 +45,8 @@ public class FluidTankBEWLR extends BlockEntityWithoutLevelRenderer {
         CompoundTag nbt = stack.getTag();
         if (nbt != null && nbt.contains(BlockItem.BLOCK_ENTITY_TAG)) {
             CompoundTag blockEntityTag = nbt.getCompound(BlockItem.BLOCK_ENTITY_TAG);
-            if (blockEntityTag.contains(EIONBTKeys.FLUID)) {
-                CompoundTag tank = blockEntityTag.getCompound(EIONBTKeys.FLUID);
+            if (blockEntityTag.contains(MachineNBTKeys.FLUID)) {
+                CompoundTag tank = blockEntityTag.getCompound(MachineNBTKeys.FLUID);
 
                 if (tank.contains("FluidName") && tank.contains("Amount")) {
                     Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(tank.getString("FluidName")));

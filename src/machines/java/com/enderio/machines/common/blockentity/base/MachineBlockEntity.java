@@ -5,7 +5,6 @@ import com.enderio.api.capability.ISideConfig;
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
 import com.enderio.api.misc.RedstoneControl;
-import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.blockentity.IWrenchable;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
@@ -428,7 +427,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             pTag.putInt(MachineNBTKeys.REDSTONE_CONTROL, redstoneControl.ordinal());
         }
 
-        pTag.put(EIONBTKeys.ITEMS, inventory.serializeNBT());
+        pTag.put(MachineNBTKeys.ITEMS, inventory.serializeNBT());
     }
 
     @Override
@@ -440,7 +439,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             redstoneControl = RedstoneControl.values()[pTag.getInt(MachineNBTKeys.REDSTONE_CONTROL)];
         }
 
-        inventory.deserializeNBT(pTag.getCompound(EIONBTKeys.ITEMS));
+        inventory.deserializeNBT(pTag.getCompound(MachineNBTKeys.ITEMS));
 
         // For rendering io overlays after placed by an nbt filled block item
         if (level != null) {

@@ -1,10 +1,10 @@
 package com.enderio.machines.common.blockentity;
 
-import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.sync.FluidStackDataSlot;
 import com.enderio.core.common.sync.SyncMode;
+import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
@@ -271,13 +271,13 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     @Override
     public void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
-        pTag.put(EIONBTKeys.FLUID, fluidTank.writeToNBT(new CompoundTag()));
+        pTag.put(MachineNBTKeys.FLUID, fluidTank.writeToNBT(new CompoundTag()));
     }
 
     @Override
     public void load(CompoundTag pTag) {
         super.load(pTag);
-        fluidTank.readFromNBT(pTag.getCompound(EIONBTKeys.FLUID));
+        fluidTank.readFromNBT(pTag.getCompound(MachineNBTKeys.FLUID));
     }
 
     // endregion

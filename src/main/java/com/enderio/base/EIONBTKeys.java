@@ -1,6 +1,6 @@
 package com.enderio.base;
 
-import com.enderio.api.capability.IOwner;
+import com.enderio.core.CoreNBTKeys;
 
 /**
  * Common NBT Keys.
@@ -9,20 +9,10 @@ import com.enderio.api.capability.IOwner;
  * NOTE: If you have a highly specific NBT tag, store the keys in the class.
  * For example LootCapacitorData does this.
  */
-public class EIONBTKeys {
-    // region Common Names
-
-    public static final String LEVEL = "Level";
-
-    public static final String BLOCK_POS = "BlockPos";
-
-    // endregion
+public class EIONBTKeys extends CoreNBTKeys {
 
     // region Capability Serialized Names
 
-    public static final String ITEMS = "Items";
-    public static final String FLUID = "Fluid";
-    public static final String ENERGY = "Energy";
     public static final String CAPACITOR_DATA = "CapacitorData";
     public static final String OWNER = "Owner";
     public static final String ENTITY_STORAGE = "EntityStorage";

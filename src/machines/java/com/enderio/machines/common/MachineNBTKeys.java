@@ -1,10 +1,12 @@
 package com.enderio.machines.common;
 
+import com.enderio.base.EIONBTKeys;
+
 /**
  * Common NBT Keys.
  * This helps us keep consistency.
  */
-public class MachineNBTKeys {
+public class MachineNBTKeys extends EIONBTKeys {
     public static final String TASK = "Task";
     
     public static final String IO_CONFIG = "IoConfig";

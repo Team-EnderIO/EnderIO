@@ -1,5 +1,7 @@
 package com.enderio.conduits;
 
-public class ConduitNBTKeys {
+import com.enderio.base.EIONBTKeys;
+
+public class ConduitNBTKeys extends EIONBTKeys {
     public static final String CONDUIT_BUNDLE = "ConduitBundle";
 }

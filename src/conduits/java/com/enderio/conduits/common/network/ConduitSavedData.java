@@ -5,7 +5,7 @@ import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.IExtendedConduitData;
 import com.enderio.api.conduit.NodeIdentifier;
-import com.enderio.base.EIONBTKeys;
+import com.enderio.conduits.ConduitNBTKeys;
 import com.mojang.datafixers.util.Pair;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
@@ -73,7 +73,7 @@ public class ConduitSavedData extends SavedData {
 
                     for (Tag tag2 : graphObjectsTag) {
                         CompoundTag nodeTag = (CompoundTag) tag2;
-                        BlockPos pos = BlockPos.of((nodeTag.getLong(EIONBTKeys.BLOCK_POS)));
+                        BlockPos pos = BlockPos.of((nodeTag.getLong(ConduitNBTKeys.BLOCK_POS)));
                         NodeIdentifier<?> node = new NodeIdentifier<>(pos, value.createExtendedConduitData(level, pos));
                         node.getExtendedConduitData().deserializeNBT(nodeTag.getCompound(KEY_DATA));
                         graphObjects.add(node);
@@ -169,7 +169,7 @@ public class ConduitSavedData extends SavedData {
 
             if (graphObject instanceof NodeIdentifier<?> nodeIdentifier) {
                 CompoundTag dataTag = new CompoundTag();
-                dataTag.putLong(EIONBTKeys.BLOCK_POS, nodeIdentifier.getPos().asLong());
+                dataTag.putLong(ConduitNBTKeys.BLOCK_POS, nodeIdentifier.getPos().asLong());
                 dataTag.put(KEY_DATA, nodeIdentifier.getExtendedConduitData().serializeNBT());
                 graphObjectsTag.add(dataTag);
             } else {
