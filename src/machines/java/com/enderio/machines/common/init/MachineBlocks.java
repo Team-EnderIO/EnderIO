@@ -15,9 +15,6 @@ import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.predicate.BlockStatePredicate;
-import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.client.model.generators.BlockModelBuilder;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
@@ -108,6 +105,9 @@ public class MachineBlocks {
         .register();
 
     public static final BlockEntry<ProgressMachineBlock> ALLOY_SMELTER = standardMachine("alloy_smelter", () -> MachineBlockEntities.ALLOY_SMELTER)
+        .register();
+
+    public static final BlockEntry<ProgressMachineBlock> PAINTING_MACHINE = standardMachine("painting_machine", () -> MachineBlockEntities.PAINTING_MACHINE)
         .register();
 
     public static final BlockEntry<MachineBlock> CREATIVE_POWER = REGISTRATE

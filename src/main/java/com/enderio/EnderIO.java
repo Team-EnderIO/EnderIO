@@ -1,6 +1,7 @@
 package com.enderio;
 
 import com.enderio.api.integration.IntegrationManager;
+import com.enderio.base.common.advancement.PaintingTrigger;
 import com.enderio.base.common.advancement.UseGliderTrigger;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.init.*;
@@ -8,6 +9,7 @@ import com.enderio.base.common.integrations.EnderIOSelfIntegration;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.base.common.item.tool.SoulVialItem;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.base.common.network.EnderDecorNetwork;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.EIODataProvider;
 import com.enderio.base.data.advancement.EIOAdvancementGenerator;
@@ -27,7 +29,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.common.data.ForgeAdvancementProvider;
-import net.minecraftforge.common.data.ForgeBlockTagsProvider;
 import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -100,6 +101,13 @@ public class EnderIO {
         modEventBus.addListener(SoulVialItem::onCommonSetup);
         IntegrationManager.addIntegration(EnderIOSelfIntegration.INSTANCE);
         new UseGliderTrigger().register();
+        new PaintingTrigger().register();
+
+        // Decor
+        DecorBlocks.register();
+        DecorBlockEntities.register();
+        DecorEntities.register();
+        EnderDecorNetwork.register();
     }
 
     public void onGatherData(GatherDataEvent event) {
