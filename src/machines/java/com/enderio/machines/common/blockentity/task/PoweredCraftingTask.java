@@ -83,6 +83,7 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
         this.container = container;
         this.blockEntity = blockEntity;
     }
+
     public PoweredCraftingTask(PoweredCraftingMachine<R, C> blockEntity, C container, SingleSlotAccess output, @Nullable R recipe) {
         this(blockEntity, container, output.wrapToMulti(), recipe);
     }
@@ -185,7 +186,7 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
         }
 
         // Try to consume as much energy as possible to finish the craft.
-        if (energyConsumed <= energyCost) {
+        if (energyConsumed < energyCost) {
             energyConsumed += consumeEnergy(energyCost - energyConsumed);
         }
 

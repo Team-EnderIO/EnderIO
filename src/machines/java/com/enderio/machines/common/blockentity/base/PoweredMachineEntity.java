@@ -64,10 +64,12 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
         this.energyStorageCap = LazyOptional.of(this::getExposedEnergyStorage);
         this.exposedEnergyStorage = createExposedEnergyStorage();
         addCapabilityProvider(exposedEnergyStorage == null ? energyStorage : exposedEnergyStorage);
+
         // Mark capacitor cache as dirty
         capacitorCacheDirty = true;
 
         // new new way of syncing energy storage.
+        // TODO: Need to verify this actually works as we expect during this rework.
         addDataSlot(new MachineEnergyDataSlot(this::getEnergyStorage, storage -> clientEnergyStorage = storage, SyncMode.GUI));
     }
 
