@@ -127,9 +127,9 @@ public class EIOLang {
 
     public static final Component AUTO_SMELT_DESC = enchantmentDescription("auto_smelt", "Automatically smelts whatever is mined");
 
-    public static final MutableComponent REPELLENT_DESC1 = enchantmentDescription("repellent1",
+    public static final Component REPELLENT_DESC1 = enchantmentDescription("repellent1",
         "Chance to teleport attackers away");
-    public static final MutableComponent REPELLENT_DESC2 = enchantmentDescription("repellent2",
+    public static final Component REPELLENT_DESC2 = enchantmentDescription("repellent2",
         "Higher levels teleport more often and farther");
 
     public static final Component SHIMMER_DESC1 = enchantmentDescription("shimmer1",
@@ -167,7 +167,7 @@ public class EIOLang {
 
     public static final Component XP_BOOST_DESC = enchantmentDescription("xp_boost", "Extra XP from mobs and blocks");
 
-    private static MutableComponent enchantmentDescription(String enchantmentname, String description) {
+    private static Component enchantmentDescription(String enchantmentname, String description) {
         return TooltipUtil.style(REGISTRATE.addLang("description", EnderIO.loc("enchantment." + enchantmentname), description));
     }
 
