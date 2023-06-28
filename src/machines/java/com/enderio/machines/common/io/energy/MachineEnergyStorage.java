@@ -115,7 +115,7 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, IEnderCapabi
     public int receiveEnergy(int maxReceive, boolean simulate) {
         if (!canReceive())
             return 0;
-        int energyReceived = Math.min(getMaxEnergyStored() - getEnergyStored(), maxReceive);
+        int energyReceived = Math.min(getMaxEnergyStored() - getEnergyStored(), Math.min(getMaxEnergyUse() * 2, maxReceive));
         if (!simulate) {
             addEnergy(energyReceived);
         }
