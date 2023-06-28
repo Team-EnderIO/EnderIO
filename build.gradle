@@ -134,7 +134,10 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-            args '--mod', 'enderio', '--server', '--client', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/'), '--existing', file('src/conduits/resources/')
+            args '--mod', 'enderio', '--server', '--client', '--output', file('src/generated/resources/'),
+                    '--existing', file('src/main/resources/'),
+                    '--existing', file('src/machines/resources/'),
+                    '--existing', file('src/conduits/resources/')
 
             mods {
                 enderio {
