@@ -427,7 +427,9 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             pTag.putInt(MachineNBTKeys.REDSTONE_CONTROL, redstoneControl.ordinal());
         }
 
-        pTag.put(MachineNBTKeys.ITEMS, inventory.serializeNBT());
+        if (this.inventory != null) {
+            pTag.put(MachineNBTKeys.ITEMS, inventory.serializeNBT());
+        }
     }
 
     @Override
@@ -439,7 +441,9 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             redstoneControl = RedstoneControl.values()[pTag.getInt(MachineNBTKeys.REDSTONE_CONTROL)];
         }
 
-        inventory.deserializeNBT(pTag.getCompound(MachineNBTKeys.ITEMS));
+        if (this.inventory != null) {
+            inventory.deserializeNBT(pTag.getCompound(MachineNBTKeys.ITEMS));
+        }
 
         // For rendering io overlays after placed by an nbt filled block item
         if (level != null) {
