@@ -54,9 +54,9 @@ public class MachineBlockEntities {
     public static final BlockEntityEntry<SoulBinderBlockEntity> SOUL_BINDER = register("soul_binder", SoulBinderBlockEntity::new, MachineBlocks.SOUL_BINDER);
 
     public static final BlockEntityEntry<PoweredSpawnerBlockEntity> POWERED_SPAWNER = register("powered_spanwer", PoweredSpawnerBlockEntity::new, MachineBlocks.POWERED_SPAWNER);
-
+  
     public static final BlockEntityEntry<WiredChargerBlockEntity> WIRED_CHARGER = register("wired_charger",
-        WiredChargerBlockEntity::new, MachineBlocks.WIRED_CHARGER);
+       WiredChargerBlockEntity::new, MachineBlocks.WIRED_CHARGER);
     public static final Map<SolarPanelTier, BlockEntityEntry<SolarPanelBlockEntity>> SOLAR_PANELS = Util.make(() -> {
        Map<SolarPanelTier, BlockEntityEntry<SolarPanelBlockEntity>> map = new HashMap<>();
        for (SolarPanelTier tier : SolarPanelTier.values()) {
