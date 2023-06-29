@@ -29,7 +29,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class SagMillBlockEntity extends PoweredCraftingMachine<SagMillingRecipe, SagMillingRecipe.Container> {
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, () -> 100000f);
-    public static final QuadraticScalable TRANSFER = new QuadraticScalable(CapacitorModifier.ENERGY_TRANSFER, () -> 120f);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, () -> 30f);
 
     private IGrindingBallData grindingBallData = IGrindingBallData.IDENTITY;
@@ -48,7 +47,7 @@ public class SagMillBlockEntity extends PoweredCraftingMachine<SagMillingRecipe,
 
     public SagMillBlockEntity(BlockEntityType<?> type, BlockPos worldPosition,
         BlockState blockState) {
-        super(MachineRecipes.SAGMILLING.type().get(), CAPACITY, TRANSFER, USAGE, type, worldPosition, blockState);
+        super(MachineRecipes.SAGMILLING.type().get(), CAPACITY, USAGE, type, worldPosition, blockState);
         container = new SagMillingRecipe.Container(getInventory(), this::getGrindingBallData);
 
         addDataSlot(new IntegerDataSlot(() -> grindingBallDamage, dmg -> grindingBallDamage = dmg, SyncMode.GUI));

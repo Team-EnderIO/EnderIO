@@ -94,6 +94,8 @@ public class MachineBlock extends BaseEntityBlock {
         //pass on the use command to corresponding block entity.
         InteractionResult result = ((MachineBlockEntity)entity).onBlockEntityUsed(state, level, pos, player, hand,hit);
         if (result != InteractionResult.CONSUME) {
+            if (level.getBlockEntity(pos) instanceof MachineBlockEntity machine && !machine.canOpenMenu())
+                return InteractionResult.PASS;
             MenuProvider menuprovider = this.getMenuProvider(state, level, pos);
             if (menuprovider != null && player instanceof ServerPlayer serverPlayer) {
                 NetworkHooks.openScreen(serverPlayer, menuprovider, buf -> buf.writeBlockPos(pos));

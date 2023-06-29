@@ -125,9 +125,8 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltin
         }
 
         @Override
-        protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, Supplier<Integer> capacity, Supplier<Integer> transferRate,
-            Supplier<Integer> usageRate) {
-            return new MachineEnergyStorage(getIOConfig(), energyIOMode, this::getBurnToFE, () -> 0, () -> 0) {
+        protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, Supplier<Integer> capacity, Supplier<Integer> usageRate) {
+            return new MachineEnergyStorage(getIOConfig(), energyIOMode, this::getBurnToFE, () -> 0) {
                 @Override
                 public int getEnergyStored() {
                     return getBurnToFE();
@@ -171,7 +170,6 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltin
     }
 
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, () -> 100000f);
-    public static final QuadraticScalable TRANSFER = new QuadraticScalable(CapacitorModifier.ENERGY_TRANSFER, () -> 120f);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, () -> 30f);
 
     /**
@@ -186,7 +184,7 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltin
     private final AlloySmeltingRecipe.Container container;
 
     public AlloySmelterBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-        super(MachineRecipes.ALLOY_SMELTING.type().get(), CAPACITY, TRANSFER, USAGE, pType, pWorldPosition, pBlockState);
+        super(MachineRecipes.ALLOY_SMELTING.type().get(), CAPACITY, USAGE, pType, pWorldPosition, pBlockState);
 
         // Create the crafting inventory. Used for context in the vanilla recipe wrapper.
         this.container = new AlloySmeltingRecipe.Container(getInventory());

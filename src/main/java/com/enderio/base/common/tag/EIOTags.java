@@ -56,6 +56,8 @@ public class EIOTags {
         public static final TagKey<Item> GEARS_DARK_STEEL = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "gears/dark_steel"));
 
         public static final TagKey<Item> FUSED_QUARTZ = ItemTags.create(EnderIO.loc("fused_quartz"));
+        public static final TagKey<Item> ENLIGHTENED_FUSED_QUARTZ = ItemTags.create(EnderIO.loc("enlighted_fused_quartz"));
+        public static final TagKey<Item> DARK_FUSED_QUARTZ = ItemTags.create(EnderIO.loc("dark_fused_quartz"));
         public static final TagKey<Item> CLEAR_GLASS = ItemTags.create(EnderIO.loc("clear_glass"));
 
         public static final TagKey<Item> BROKEN_SPAWNER_BLACKLIST = ItemTags.create(EnderIO.loc("blacklists/broken_spawner"));

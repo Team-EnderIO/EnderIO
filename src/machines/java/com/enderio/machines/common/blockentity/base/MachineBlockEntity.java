@@ -508,4 +508,8 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         }
         return InteractionResult.PASS;
     }
+
+    public boolean canOpenMenu() {
+        return true;
+    }
 }
