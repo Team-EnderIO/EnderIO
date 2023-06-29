@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:sag_mill"
+        "recipe": "enderio:wired_charger"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
