@@ -1,13 +1,14 @@
 package com.enderio.machines.common.blockentity.task;
 
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
+import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;
 
 /**
  * A task that performs an action by consuming energy.
  */
-public abstract class PoweredTask implements INBTSerializable<CompoundTag> {
+public abstract class PoweredTask implements IPoweredMachineTask {
     /**
      * The energy storage the task consumes from.
      */
@@ -38,4 +39,9 @@ public abstract class PoweredTask implements INBTSerializable<CompoundTag> {
      * @return Whether the task is complete and can be replaced.
      */
     public abstract boolean isComplete();
+
+    @Override
+    public IMachineEnergyStorage getEnergyStorage() {
+        return energyStorage;
+    }
 }

@@ -149,6 +149,12 @@ public class AlloySmelterBlockEntity extends PoweredCraftingMachine<AlloySmeltin
             };
         }
 
+        @Override
+        public @Nullable MachineEnergyStorage createExposedEnergyStorage() {
+            // Hide the power cap from other machines and TOP and such.
+            return null;
+        }
+
         public boolean isBurning() {
             return burnTime > 0;
         }

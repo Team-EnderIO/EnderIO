@@ -12,6 +12,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
     @Nullable private R recipe;
 
     /**
-     * The outputslots
+     * The output slots
      */
     private final MultiSlotAccess outputSlots;
 
@@ -55,7 +56,7 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
     private int energyCost;
 
     /**
-     * Whether or not inputs have been collected.
+     * Whether inputs have been collected.
      */
     private boolean collectedInputs;
 
@@ -68,7 +69,7 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
      * The outputs of the recipe.
      * These are determined after we take ingredients, as we don't want the outputs to change later.
      */
-    private List<OutputStack> outputs;
+    private List<OutputStack> outputs = List.of();
 
     /**
      * Whether the recipe craft is complete.
@@ -118,8 +119,11 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
 
         // Get outputs
         MachineInventory inv = blockEntity.getInventory();
+        if (inv == null) {
+            return false;
+        }
 
-        // See that we can add all of the outputs
+        // See that we can add all the outputs
         for (OutputStack output : outputs) {
             ItemStack item = output.getItem();
 
@@ -148,6 +152,12 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
 
     @Override
     public void tick() {
+        // If the level is null, wait
+        Level level = blockEntity.getLevel();
+        if (level == null) {
+            return;
+        }
+
         // If the recipe is done, don't let it tick.
         if (complete)
             return;
@@ -166,11 +176,11 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
             // TODO: Compact any items that are the same into singular stacks?
         }
 
-        // If we can't inputs or outputs, cancel the task. However if for some reason we can't output after the inputs are collected, don't.
-        if (!collectedInputs && (!placeOutputs(outputs, true) || !recipe.matches(container, blockEntity.getLevel()))) {
+        // If we can't input or output, cancel the task. However, if for some reason we can't output after the inputs are collected, don't.
+        if (!collectedInputs && (!placeOutputs(outputs, true) || !recipe.matches(container, level))) {
             complete = true;
-            // This means if a sagmill recipe outputs 2 it cancels the recipe, and the determined outputs are cleared. Its a weird behaviour but not necessarily a bug.
-            // We might want to review how this works in future, as right now we wait for an inventory change rather than the machine tick repeatedly.
+            // This means if a sag mill recipe outputs 2 it cancels the recipe, and the determined outputs are cleared. It's a weird behaviour but not necessarily a bug.
+            // We might want to review how this works in the future, as right now we wait for an inventory change rather than the machine tick repeatedly.
             return;
         }
 
@@ -181,7 +191,7 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
             collectedInputs = true;
 
             // Store the recipe energy cost.
-            // This is run afterwards as it allows container context changes after takeInputs()
+            // This is run afterward as it allows container context changes after takeInputs()
             energyCost = recipe.getEnergyCost(container);
         }
 
@@ -217,6 +227,12 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
+
+        // If the recipe is null, we aren't going to keep the task
+        if (recipe == null) {
+            return tag;
+        }
+
         tag.putString("RecipeId", recipe.getId().toString());
         tag.putInt("EnergyConsumed", energyConsumed);
         tag.putInt("EnergyCost", energyConsumed);
@@ -255,7 +271,13 @@ public abstract class PoweredCraftingTask<R extends MachineRecipe<C>, C extends 
 
     @Nullable
     protected R loadRecipe(ResourceLocation id) {
-        return (R) blockEntity.getLevel().getRecipeManager().byKey(id).orElse(null);
+        Level level = blockEntity.getLevel();
+        if (level == null) {
+            return null;
+        }
+
+        //noinspection unchecked
+        return (R) level.getRecipeManager().byKey(id).orElse(null);
     }
 
     // endregion

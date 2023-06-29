@@ -40,6 +40,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -49,9 +50,7 @@ import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
@@ -78,12 +77,10 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     @Nullable
     private final MachineInventory inventory;
 
-    // Caches for external block interaction
+    // region Caches for external block interaction
 
-    // TODO: I would like for these to be a nested map. One on direction and one on type.
-    //       This way you can register what types you listen to with a simple method.
-    private final EnumMap<Direction, LazyOptional<IItemHandler>> itemHandlerCache = new EnumMap<>(Direction.class);
-    private final EnumMap<Direction, LazyOptional<IFluidHandler>> fluidHandlerCache = new EnumMap<>(Direction.class);
+    private final List<Capability<?>> cachedCapabilityTypes = new ArrayList<>();
+    private final Map<Capability<?>, EnumMap<Direction, LazyOptional<?>>> cachedCapabilities = new HashMap<>();
     private boolean isCapabilityCacheDirty = false;
 
     // endregion
@@ -115,25 +112,6 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             }
         }));
     }
-
-    // region Per-machine config/features
-
-    /**
-     * Whether this block entity supports redstone control
-     */
-    public boolean supportsRedstoneControl() {
-        return true;
-    }
-
-    /**
-     * Get the block entity's inventory slot layout.
-     */
-    @Nullable
-    public MachineInventoryLayout getInventoryLayout() {
-        return null;
-    }
-
-    // endregion
 
     // region IO Config
 
@@ -215,7 +193,34 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     // endregion
 
+    // region Redstone Control
+
+    /**
+     * Whether this block entity supports redstone control
+     */
+    public boolean supportsRedstoneControl() {
+        return true;
+    }
+
+    public RedstoneControl getRedstoneControl() {
+        return redstoneControl;
+    }
+
+    public void setRedstoneControl(RedstoneControl redstoneControl) {
+        this.redstoneControl = redstoneControl;
+    }
+
+    // endregion
+
     // region Inventory
+
+    /**
+     * Get the block entity's inventory slot layout.
+     */
+    @Nullable
+    public MachineInventoryLayout getInventoryLayout() {
+        return null;
+    }
 
     @Nullable
     public final MachineInventory getInventory() {
@@ -301,7 +306,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         // Get our item handler.
         getCapability(ForgeCapabilities.ITEM_HANDLER, side).resolve().ifPresent(selfHandler -> {
             // Get neighboring item handler.
-            Optional<IItemHandler> otherHandler = getNeighboringItemHandler(side).resolve();
+            Optional<IItemHandler> otherHandler = getNeighbouringCapability(ForgeCapabilities.ITEM_HANDLER, side).resolve();
 
             if (otherHandler.isPresent()) {
                 // Get side config
@@ -345,7 +350,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         // Get our fluid handler
         getCapability(ForgeCapabilities.FLUID_HANDLER, side).resolve().ifPresent(selfHandler -> {
             // Get neighboring fluid handler.
-            Optional<IFluidHandler> otherHandler = getNeighboringFluidHandler(side).resolve();
+            Optional<IFluidHandler> otherHandler = getNeighbouringCapability(ForgeCapabilities.FLUID_HANDLER, side).resolve();
 
             if (otherHandler.isPresent()) {
                 // Get side config
@@ -382,32 +387,27 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     // region Neighboring Capabilities
 
-    protected LazyOptional<IItemHandler> getNeighboringItemHandler(Direction side) {
-        if (!itemHandlerCache.containsKey(side))
+    protected <T> LazyOptional<T> getNeighbouringCapability(Capability<T> capability, Direction side) {
+        if (level == null) {
             return LazyOptional.empty();
-        return itemHandlerCache.get(side);
-    }
+        }
 
-    protected LazyOptional<IFluidHandler> getNeighboringFluidHandler(Direction side) {
-        if (!fluidHandlerCache.containsKey(side))
+        if (!cachedCapabilityTypes.contains(capability)) {
+            // We've not seen this capability before, time to register it!
+            cachedCapabilityTypes.add(capability);
+            cachedCapabilities.put(capability, new EnumMap<>(Direction.class));
+
+            for (Direction direction : Direction.values()) {
+                BlockEntity neighbor = this.level.getBlockEntity(worldPosition.relative(direction));
+                populateCachesFor(direction, neighbor, capability);
+            }
+        }
+
+        if (!cachedCapabilities.get(capability).containsKey(side)) {
             return LazyOptional.empty();
-        return fluidHandlerCache.get(side);
-    }
+        }
 
-    /**
-     * Add invalidation handler to a capability to be notified if it is removed.
-     */
-    protected <T> LazyOptional<T> addInvalidationListener(LazyOptional<T> capability) {
-        if (capability.isPresent())
-            capability.addListener(this::markCapabilityCacheDirty);
-        return capability;
-    }
-
-    /**
-     * Mark the capability cache as dirty. Will be updated next tick.
-     */
-    private <T> void markCapabilityCacheDirty(LazyOptional<T> capability) {
-        isCapabilityCacheDirty = true;
+        return cachedCapabilities.get(capability).get(side).cast();
     }
 
     /**
@@ -426,19 +426,39 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         }
     }
 
-    // Override the next two to implement new capability caches on the machine.
-    protected void clearCaches() {
-        itemHandlerCache.clear();
-        fluidHandlerCache.clear();
+    /**
+     * Add invalidation handler to a capability to be notified if it is removed.
+     */
+    private <T> LazyOptional<T> addInvalidationListener(LazyOptional<T> capability) {
+        if (capability.isPresent())
+            capability.addListener(this::markCapabilityCacheDirty);
+        return capability;
     }
 
-    protected void populateCaches(Direction direction, @Nullable BlockEntity neighbor) {
+    /**
+     * Mark the capability cache as dirty. Will be updated next tick.
+     */
+    private <T> void markCapabilityCacheDirty(LazyOptional<T> capability) {
+        isCapabilityCacheDirty = true;
+    }
+
+    private void clearCaches() {
+        for (Capability<?> capability : cachedCapabilityTypes) {
+            cachedCapabilities.get(capability).clear();
+        }
+    }
+
+    private void populateCaches(Direction direction, @Nullable BlockEntity neighbor) {
+        for (Capability<?> capability : cachedCapabilityTypes) {
+            populateCachesFor(direction, neighbor, capability);
+        }
+    }
+
+    private void populateCachesFor(Direction direction, @Nullable BlockEntity neighbor, Capability<?> capability) {
         if (neighbor != null) {
-            itemHandlerCache.put(direction, addInvalidationListener(neighbor.getCapability(ForgeCapabilities.ITEM_HANDLER, direction.getOpposite())));
-            fluidHandlerCache.put(direction, addInvalidationListener(neighbor.getCapability(ForgeCapabilities.FLUID_HANDLER, direction.getOpposite())));
+            cachedCapabilities.get(capability).put(direction, addInvalidationListener(neighbor.getCapability(capability, direction.getOpposite())));
         } else {
-            itemHandlerCache.put(direction, LazyOptional.empty());
-            fluidHandlerCache.put(direction, LazyOptional.empty());
+            cachedCapabilities.get(capability).put(direction, LazyOptional.empty());
         }
     }
 
@@ -509,14 +529,6 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
         return pPlayer.distanceToSqr(this.worldPosition.getX() + 0.5D, this.worldPosition.getY() + 0.5D, this.worldPosition.getZ() + 0.5D) <=
             Mth.square(pPlayer.getAttributeValue(ForgeMod.BLOCK_REACH.get()));
-    }
-
-    public RedstoneControl getRedstoneControl() {
-        return redstoneControl;
-    }
-
-    public void setRedstoneControl(RedstoneControl redstoneControl) {
-        this.redstoneControl = redstoneControl;
     }
 
     @UseOnly(LogicalSide.SERVER)
