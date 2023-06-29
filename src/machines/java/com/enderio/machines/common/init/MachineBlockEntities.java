@@ -47,6 +47,9 @@ public class MachineBlockEntities {
 
     public static final BlockEntityEntry<PoweredSpawnerBlockEntity> POWERED_SPAWNER = register("powered_spanwer", PoweredSpawnerBlockEntity::new, MachineBlocks.POWERED_SPAWNER);
 
+    public static final BlockEntityEntry<WiredChargerBlockEntity> WIRED_CHARGER = register("wired_charger",
+        WiredChargerBlockEntity::new, MachineBlocks.WIRED_CHARGER);
+
     @SafeVarargs
     private static <B extends BlockEntity> BlockEntityEntry<B> register(String name, BlockEntityBuilder.BlockEntityFactory<B> beFactory,
         NonNullSupplier<? extends Block>... blocks) {

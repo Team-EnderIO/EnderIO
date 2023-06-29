@@ -117,6 +117,13 @@ public class MachineBlocks {
         .build()
         .register();
 
+    public static final BlockEntry<MachineBlock> WIRED_CHARGER = REGISTRATE
+        .block("wired_charger", props -> new MachineBlock(props, MachineBlockEntities.WIRED_CHARGER))
+        .item()
+        .tab(EIOCreativeTabs.MACHINES)
+        .build()
+        .register();
+
     public static final BlockEntry<ProgressMachineBlock> STIRLING_GENERATOR = standardMachine("stirling_generator", () -> MachineBlockEntities.STIRLING_GENERATOR)
         .register();
 
