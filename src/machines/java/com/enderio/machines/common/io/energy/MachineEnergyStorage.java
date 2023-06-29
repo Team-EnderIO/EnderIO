@@ -26,16 +26,15 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, IEnderCapabi
 
     private int energyStored;
 
-    private final Supplier<Integer> capacity, transferRate, usageRate;
+    private final Supplier<Integer> capacity, usageRate;
 
     private final EnumMap<Direction, LazyOptional<Sided>> sideCache = new EnumMap<>(Direction.class);
     private LazyOptional<MachineEnergyStorage> selfCache = LazyOptional.empty();
 
-    public MachineEnergyStorage(IIOConfig config, EnergyIOMode ioMode, Supplier<Integer> capacity, Supplier<Integer> transferRate, Supplier<Integer> usageRate) {
+    public MachineEnergyStorage(IIOConfig config, EnergyIOMode ioMode, Supplier<Integer> capacity, Supplier<Integer> usageRate) {
         this.config = config;
         this.ioMode = ioMode;
         this.capacity = capacity;
-        this.transferRate = transferRate;
         this.usageRate = usageRate;
     }
 
@@ -98,30 +97,25 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, IEnderCapabi
     }
 
     @Override
-    public int getMaxEnergyTransfer() {
-        return transferRate.get();
-    }
-
-    @Override
     public int getMaxEnergyUse() {
         return usageRate.get();
     }
 
     @Override
     public boolean canExtract() {
-        return getMaxEnergyTransfer() > 0 && ioMode.canOutput();
+        return ioMode.canOutput();
     }
 
     @Override
     public boolean canReceive() {
-        return getMaxEnergyTransfer() > 0 && ioMode.canInput();
+        return ioMode.canInput();
     }
 
     @Override
     public int receiveEnergy(int maxReceive, boolean simulate) {
         if (!canReceive())
             return 0;
-        int energyReceived = Math.min(getMaxEnergyStored() - getEnergyStored(), Math.min(getMaxEnergyTransfer(), maxReceive));
+        int energyReceived = Math.min(getMaxEnergyStored() - getEnergyStored(), maxReceive);
         if (!simulate) {
             addEnergy(energyReceived);
         }
@@ -132,7 +126,7 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, IEnderCapabi
     public int extractEnergy(int maxExtract, boolean simulate) {
         if (!canExtract())
             return 0;
-        int energyExtracted = Math.min(getEnergyStored(), Math.min(getMaxEnergyTransfer(), maxExtract));
+        int energyExtracted = Math.min(getEnergyStored(), maxExtract);
         if (!simulate) {
             addEnergy(-energyExtracted);
         }

@@ -29,7 +29,6 @@ import org.jetbrains.annotations.Nullable;
 public class SlicerBlockEntity extends PoweredCraftingMachine<SlicingRecipe, Container> {
 
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, () -> 100000f);
-    public static final QuadraticScalable TRANSFER = new QuadraticScalable(CapacitorModifier.ENERGY_TRANSFER, () -> 120f);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, () -> 30f);
 
     public static final SingleSlotAccess OUTPUT = new SingleSlotAccess();
@@ -39,7 +38,7 @@ public class SlicerBlockEntity extends PoweredCraftingMachine<SlicingRecipe, Con
     private final RecipeWrapper container;
 
     public SlicerBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
-        super(MachineRecipes.SLICING.type().get(), CAPACITY, TRANSFER, USAGE, type, worldPosition, blockState);
+        super(MachineRecipes.SLICING.type().get(), CAPACITY, USAGE, type, worldPosition, blockState);
 
         container = new RecipeWrapper(getInventory());
     }

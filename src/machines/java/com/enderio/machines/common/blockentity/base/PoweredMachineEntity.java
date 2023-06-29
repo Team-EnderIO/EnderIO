@@ -37,6 +37,8 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
      * This will be a mutable energy storage.
      */
     protected final MachineEnergyStorage energyStorage;
+    @Nullable
+    protected final MachineEnergyStorage exposedEnergyStorage;
 
     /**
      * The client value of the energy storage.
@@ -44,7 +46,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
      */
     private IMachineEnergyStorage clientEnergyStorage = ImmutableMachineEnergyStorage.EMPTY;
 
-    private final LazyOptional<MachineEnergyStorage> energyStorageCap;
+    private final LazyOptional<IMachineEnergyStorage> energyStorageCap;
 
     // Cache for external energy interaction
     private final EnumMap<Direction, LazyOptional<IEnergyStorage>> energyHandlerCache = new EnumMap<>(Direction.class);
@@ -52,17 +54,16 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
     private ICapacitorData cachedCapacitorData = DefaultCapacitorData.NONE;
     private boolean capacitorCacheDirty;
 
-    public PoweredMachineEntity(EnergyIOMode energyIOMode, ICapacitorScalable capacity, ICapacitorScalable transferRate, ICapacitorScalable usageRate, BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
+    public PoweredMachineEntity(EnergyIOMode energyIOMode, ICapacitorScalable capacity, ICapacitorScalable usageRate, BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
 
         // Create energy storage
         this.energyStorage = createEnergyStorage(energyIOMode,
             capacity.scaleI(this::getCapacitorData),
-            transferRate.scaleI(this::getCapacitorData),
             usageRate.scaleI(this::getCapacitorData));
-        this.energyStorageCap = LazyOptional.of(() -> energyStorage);
-        addCapabilityProvider(energyStorage);
-
+        this.energyStorageCap = LazyOptional.of(this::getExposedEnergyStorage);
+        this.exposedEnergyStorage = createExposedEnergyStorage();
+        addCapabilityProvider(exposedEnergyStorage == null ? energyStorage : exposedEnergyStorage);
         // Mark capacitor cache as dirty
         capacitorCacheDirty = true;
 
@@ -101,6 +102,19 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
         }
         return energyStorage;
     }
+    /**
+     * Get the machine's exposed energy storage. Will likely be the same as the normal energy storage, but sometimes might be different, if blocks want to expose a different energystorage (wrapper for combining photovoltaic cells or capacitor banks)
+     */
+    public final IMachineEnergyStorage getExposedEnergyStorage() {
+        if (exposedEnergyStorage != null)
+            return exposedEnergyStorage;
+        return getEnergyStorage();
+    }
+
+    @Nullable
+    public MachineEnergyStorage createExposedEnergyStorage() {
+        return null;
+    }
 
     public int getEnergyLeakPerSecond() {
         return 0;
@@ -111,7 +125,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
      */
     private void pushEnergy() {
         // Don't bother if our energy storage cannot output ever.
-        if (!getEnergyStorage().getIOMode().canOutput())
+        if (!getExposedEnergyStorage().getIOMode().canOutput())
             return;
 
         // Transmit power out all sides.
@@ -127,11 +141,10 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
                 if (otherHandler.isPresent()) {
                     // If the other handler can receive power transmit ours
                     if (otherHandler.get().canReceive()) {
-                        // Try to send as much as our transfer rate will allow
-                        int received = otherHandler.get().receiveEnergy(Math.min(selfHandler.getEnergyStored(), getEnergyStorage().getMaxEnergyTransfer()), false);
+                        int received = otherHandler.get().receiveEnergy(selfHandler.getEnergyStored(), false);
 
                         // Consume that energy from our buffer.
-                        getEnergyStorage().takeEnergy(received);
+                        getExposedEnergyStorage().takeEnergy(received);
                     }
                 }
             });
@@ -142,8 +155,8 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
      * Create the energy storage medium
      * Override this to customise the behaviour of the energy storage.
      */
-    protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, Supplier<Integer> capacity, Supplier<Integer> transferRate, Supplier<Integer> usageRate) {
-        return new MachineEnergyStorage(getIOConfig(), energyIOMode, capacity, transferRate, usageRate) {
+    protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, Supplier<Integer> capacity, Supplier<Integer> usageRate) {
+        return new MachineEnergyStorage(getIOConfig(), energyIOMode, capacity, usageRate) {
             @Override
             protected void onContentsChanged() {
                 setChanged();
@@ -273,13 +286,17 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
 
     @Override
     public void saveAdditional(CompoundTag pTag) {
-        pTag.put("energy", energyStorage.serializeNBT());
+        var energyStorage = getEnergyStorage();
+        if (energyStorage instanceof MachineEnergyStorage storage)
+            pTag.put("energy", storage.serializeNBT());
         super.saveAdditional(pTag);
     }
 
     @Override
     public void load(CompoundTag pTag) {
-        energyStorage.deserializeNBT(pTag.getCompound("energy"));
+        var energyStorage = getEnergyStorage();
+        if (energyStorage instanceof MachineEnergyStorage storage)
+            storage.deserializeNBT(pTag.getCompound("energy"));
         super.load(pTag);
     }
 

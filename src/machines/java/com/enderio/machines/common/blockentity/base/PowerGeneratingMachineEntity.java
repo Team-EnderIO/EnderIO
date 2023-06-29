@@ -10,9 +10,9 @@ import net.minecraft.world.level.block.state.BlockState;
 
 // TODO: Remaster power generation sometime.
 public abstract class PowerGeneratingMachineEntity extends PoweredMachineEntity {
-    public PowerGeneratingMachineEntity(ICapacitorScalable capacityKey, ICapacitorScalable transferKey, ICapacitorScalable consumptionKey, BlockEntityType<?> type, BlockPos worldPosition,
+    public PowerGeneratingMachineEntity(ICapacitorScalable capacityKey, ICapacitorScalable consumptionKey, BlockEntityType<?> type, BlockPos worldPosition,
         BlockState blockState) {
-        super(EnergyIOMode.Output, capacityKey, transferKey, consumptionKey, type, worldPosition, blockState);
+        super(EnergyIOMode.Output, capacityKey, consumptionKey, type, worldPosition, blockState);
     }
 
     @Override
@@ -23,7 +23,7 @@ public abstract class PowerGeneratingMachineEntity extends PoweredMachineEntity 
         }
 
         // Update block state
-        if (getBlockState().getValue(ProgressMachineBlock.POWERED) != isGenerating()) {
+        if (getBlockState().hasProperty(ProgressMachineBlock.POWERED) && getBlockState().getValue(ProgressMachineBlock.POWERED) != isGenerating()) {
             level.setBlock(getBlockPos(), getBlockState().setValue(ProgressMachineBlock.POWERED, isGenerating()), Block.UPDATE_ALL);
         }
 

@@ -99,7 +99,7 @@ public class GlassBlocks {
      * Register a non-colored glass
      */
     private BlockEntry<FusedQuartzBlock> register(Registrate registrate, String name, String english) {
-        return registrate
+        var builder =  registrate
             .block(name, props -> new FusedQuartzBlock(props, glassIdentifier))
             .tag(glassIdentifier.explosion_resistance() ? EIOTags.Blocks.FUSED_QUARTZ : EIOTags.Blocks.CLEAR_GLASS)
             .lang(english)
@@ -116,9 +116,12 @@ public class GlassBlocks {
             .item()
             .tab(EIOCreativeTabs.BLOCKS)
             .tag(glassIdentifier.explosion_resistance() ? EIOTags.Items.FUSED_QUARTZ : EIOTags.Items.CLEAR_GLASS)
-            .tag(EIOTags.Items.GLASS_TAGS.get(glassIdentifier))
-            .build()
-            .register();
+            .tag(EIOTags.Items.GLASS_TAGS.get(glassIdentifier));
+        if (glassIdentifier.lighting() == GlassLighting.EMITTING && glassIdentifier.explosion_resistance())
+            builder.tag(EIOTags.Items.ENLIGHTENED_FUSED_QUARTZ);
+        if (glassIdentifier.lighting() == GlassLighting.BLOCKING && glassIdentifier.explosion_resistance())
+            builder.tag(EIOTags.Items.DARK_FUSED_QUARTZ);
+        return builder.build().register();
     }
 
     /**

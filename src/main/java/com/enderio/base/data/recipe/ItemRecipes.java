@@ -117,7 +117,7 @@ public class ItemRecipes extends RecipeProvider {
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.TOOLS, EIOItems.LEVITATION_STAFF.get())
-            .define('C', EIOItems.PULSATING_CRYSTAL.get())
+            .define('C', EIOItems.PRESCIENT_CRYSTAL.get())
             .define('R', EIOItems.INFINITY_ROD.get())
             .pattern("  C")
             .pattern(" R ")
