@@ -47,6 +47,7 @@ public class SpawnTask extends PoweredTask{
     @Override
     public void tick() {
         if (entityType == null) {
+            complete = true;
             return;
         }
         if (energyConsumed >= energyCost) {
