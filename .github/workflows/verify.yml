@@ -1,0 +1,50 @@
+name: Verify Build and Generated Data
+
+# Run on any pull request commit or a push to a main branch.
+# If run on the primary branch, the gradle caches will be updated for all PRs to use.
+on: 
+  pull_request:
+  push:
+    branches:
+      - 'dev/*'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+      - name: Store committed data
+        run: cp -r src/generated generatedBak
+      - name: Build # Build to catch Java errors first
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build
+      - name: Run data generator
+        uses: gradle/gradle-build-action@v2
+        continue-on-error: true # We have to do this because runDataProd always exits funny
+        with:
+          arguments: runDataProd
+      - name: Check data generated successfully # So we do this to ensure something was done, .cache will always be written
+        continue-on-error: false # reset
+        id: check_files
+        uses: andstor/file-existence-action@v1
+        with:
+          files: "src/generated/resources/.cache/"
+      - name: Remove generation cache for comparison
+        run: rm -rf src/generated/resources/.cache
+      - name: Compare generated resources
+        run: |
+          diff -r --strip-trailing-cr --ignore-blank-lines generatedBak src/generated
+          if [ $? -ne 0 ]; then
+              echo "Mismatch between generated data and committed data, please re-run runDataProd and push those changes.";
+              exit 1;
+          fi
+          echo "Passed data check";

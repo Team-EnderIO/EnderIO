@@ -4,7 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.base.common.block.glass.GlassCollisionPredicate;
 import com.enderio.base.common.block.glass.GlassIdentifier;
 import com.enderio.base.common.block.glass.GlassLighting;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
@@ -43,7 +43,6 @@ public class EIOTags {
         public static final TagKey<Item> DUSTS_TIN = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "dusts/tin"));
         public static final TagKey<Item> DUSTS_ENDER = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "dusts/ender"));
         public static final TagKey<Item> DUSTS_OBSIDIAN = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "dusts/obsidian"));
-        public static final TagKey<Item> DUSTS_ARDITE = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "dusts/ardite"));
         public static final TagKey<Item> DUSTS_COBALT = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "dusts/cobalt"));
         public static final TagKey<Item> DUSTS_QUARTZ = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "dusts/quartz"));
         public static final TagKey<Item> DUSTS_SULFUR = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "dusts/sulfur"));
@@ -60,6 +59,8 @@ public class EIOTags {
         public static final TagKey<Item> GEARS_DARK_STEEL = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "gears/dark_steel"));
 
         public static final TagKey<Item> FUSED_QUARTZ = ItemTags.create(EnderIO.loc("fused_quartz"));
+        public static final TagKey<Item> ENLIGHTENED_FUSED_QUARTZ = ItemTags.create(EnderIO.loc("enlighted_fused_quartz"));
+        public static final TagKey<Item> DARK_FUSED_QUARTZ = ItemTags.create(EnderIO.loc("dark_fused_quartz"));
         public static final TagKey<Item> CLEAR_GLASS = ItemTags.create(EnderIO.loc("clear_glass"));
 
         public static final TagKey<Item> BROKEN_SPAWNER_BLACKLIST = ItemTags.create(EnderIO.loc("blacklists/broken_spawner"));
@@ -107,7 +108,7 @@ public class EIOTags {
         public static TagKey<EntityType<?>> SOUL_VIAL_BLACKLIST = create("soul_vial_blacklist");
 
         private static TagKey<EntityType<?>> create(String pName) {
-            return TagKey.create(Registry.ENTITY_TYPE_REGISTRY, EnderIO.loc(pName));
+            return TagKey.create(Registries.ENTITY_TYPE, EnderIO.loc(pName));
         }
 
     }

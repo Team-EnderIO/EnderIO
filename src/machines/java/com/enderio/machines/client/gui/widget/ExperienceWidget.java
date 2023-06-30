@@ -5,16 +5,18 @@ import com.enderio.core.client.gui.widgets.EIOWidget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 import java.util.function.Supplier;
 
 public class ExperienceWidget extends EIOWidget {
-
+    private static final ResourceLocation GUI_ICONS_LOCATION = new ResourceLocation("textures/gui/icons.png");
     private final Screen displayOn;
     private final Supplier<FluidTank> getFluid;
     private final Supplier<Integer> maxXP;
@@ -27,13 +29,10 @@ public class ExperienceWidget extends EIOWidget {
     }
 
     @Override
-    public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTick) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+    public void renderWidget(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         RenderSystem.defaultBlendFunc();
         RenderSystem.disableBlend();
         RenderSystem.enableDepthTest();
-        RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
         int k = 1;
         if (maxXP.get() > 0) {
             k = (int) (((getFluid.get().getFluidAmount() / ((float) ExperienceUtil.getFluidFromLevel(maxXP.get()))) * this.width)-1);
@@ -41,28 +40,32 @@ public class ExperienceWidget extends EIOWidget {
                 k = this.width-1;
             }
         }
-        blit(pPoseStack, this.x, this.y, this.displayOn.getBlitOffset(), 0, 64, this.width-1, this.height, 256, 256);
-        blit(pPoseStack, this.x + this.width-1, this.y, this.displayOn.getBlitOffset(), 181, 64, 1, this.height, 256, 256);
-        blit(pPoseStack, this.x, this.y, this.displayOn.getBlitOffset(), 0, 69, k, this.height, 256, 256);
-        blit(pPoseStack, this.x + this.width-1, this.y, this.displayOn.getBlitOffset(), 181, 64, k==this.width-1? 1 : 0, this.height, 256, 256);
+        guiGraphics.blit(GUI_ICONS_LOCATION, this.x, this.y, 0, 0, 64, this.width-1, this.height, 256, 256);
+        guiGraphics.blit(GUI_ICONS_LOCATION, this.x + this.width-1, this.y, 0, 181, 64, 1, this.height, 256, 256);
+        guiGraphics.blit(GUI_ICONS_LOCATION, this.x, this.y, 0, 0, 69, k, this.height, 256, 256);
+        guiGraphics.blit(GUI_ICONS_LOCATION, this.x + this.width-1, this.y, 0, 181, 64, k==this.width-1? 1 : 0, this.height, 256, 256);
 
+        var font = Minecraft.getInstance().font;
         String s = "" + maxXP.get();
-        Minecraft.getInstance().font.draw(pPoseStack, s, (this.x + this.width/2 + 1), (float)this.y - this.height - 3, 0);
-        Minecraft.getInstance().font.draw(pPoseStack, s, (this.x + this.width/2 - 1), (float)this.y - this.height - 3, 0);
-        Minecraft.getInstance().font.draw(pPoseStack, s, this.x + this.width/2, (float)(this.y - this.height - 3 + 1), 0);
-        Minecraft.getInstance().font.draw(pPoseStack, s, this.x + this.width/2, (float)(this.y - this.height - 3 - 1), 0);
-        Minecraft.getInstance().font.draw(pPoseStack, s, this.x + this.width/2, (float)this.y - this.height - 3, 8453920);
+        guiGraphics.drawString(font, s, (this.x + this.width/2 + 1), (float)this.y - this.height - 3, 0, false);
+        guiGraphics.drawString(font, s, (this.x + this.width/2 - 1), (float)this.y - this.height - 3, 0, false);
+        guiGraphics.drawString(font, s, this.x + this.width/2, (float)(this.y - this.height - 3 + 1), 0, false);
+        guiGraphics.drawString(font, s, this.x + this.width/2, (float)(this.y - this.height - 3 - 1), 0, false);
+        guiGraphics.drawString(font, s, this.x + this.width/2, (float)this.y - this.height - 3, 8453920, false);
 
         RenderSystem.enableBlend();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-        renderToolTip(pPoseStack, pMouseX, pMouseY);
+        renderToolTip(guiGraphics, pMouseX, pMouseY);
     }
 
-    public void renderToolTip(PoseStack poseStack, int mouseX, int mouseY) {
+    @Override
+    protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
+    }
+
+    public void renderToolTip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (isHovered(mouseX, mouseY)) {
-            displayOn.renderTooltip(poseStack, Component.literal(getFluid.get().getFluidAmount() + " mb / " + ExperienceUtil.getFluidFromLevel(maxXP.get()) + " mb"), mouseX, mouseY);
+            guiGraphics.renderTooltip(Minecraft.getInstance().font, Component.literal(getFluid.get().getFluidAmount() + " mb / " + ExperienceUtil.getFluidFromLevel(maxXP.get()) + " mb"), mouseX, mouseY);
         }
     }
-
 }

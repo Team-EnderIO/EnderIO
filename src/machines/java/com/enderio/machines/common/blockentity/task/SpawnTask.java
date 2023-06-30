@@ -7,6 +7,7 @@ import com.enderio.machines.common.souldata.SpawnerSoul;
 import com.enderio.machines.common.tag.MachineTags;
 import com.mojang.serialization.DataResult;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -15,8 +16,11 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 
 import java.util.List;
 import java.util.Optional;
@@ -93,12 +97,12 @@ public class SpawnTask extends PoweredTask{
             blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
             return false;
         }
-        Optional<EntityType<?>> entity = Registry.ENTITY_TYPE.getOptional(rl.get());
-        if (entity.isEmpty() || !Registry.ENTITY_TYPE.getKey(entity.get()).equals(rl.get())) { // check we don't get the default pig
+        EntityType<?> entity = ForgeRegistries.ENTITY_TYPES.getValue(rl.get());
+        if (entity == null || !ForgeRegistries.ENTITY_TYPES.getKey(entity).equals(rl.get())) { // check we don't get the default pig
             blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
             return false;
         }
-        List<? extends Entity> entities = blockEntity.getLevel().getEntities(entity.get(), range, p -> p instanceof LivingEntity);
+        List<? extends Entity> entities = blockEntity.getLevel().getEntities(entity, range, p -> p instanceof LivingEntity);
         if (entities.size() >= MachinesConfig.COMMON.MAX_SPAWNER_ENTITIES.get()) {
             blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.TOO_MANY_MOB);
             return false;
@@ -115,8 +119,8 @@ public class SpawnTask extends PoweredTask{
             blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
             return;
         }
-        Optional<EntityType<?>> optionalEntity = Registry.ENTITY_TYPE.getOptional(rl.get());
-        if (optionalEntity.isEmpty() || !Registry.ENTITY_TYPE.getKey(optionalEntity.get()).equals(rl.get())) {
+        Optional<Holder.Reference<EntityType<?>>> optionalEntity = ForgeRegistries.ENTITY_TYPES.getDelegate(rl.get());
+        if (optionalEntity.isEmpty() || ! ForgeRegistries.ENTITY_TYPES.getKey(optionalEntity.get().get()).equals(rl.get())) {
             blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
             return;
         }
@@ -125,7 +129,7 @@ public class SpawnTask extends PoweredTask{
         }
         Optional<SpawnerSoul.SoulData> opData = SpawnerSoul.SPAWNER.matches(rl.get());
         if (opData.isEmpty()) { //Fallback
-            this.entityType = optionalEntity.get();
+            this.entityType = optionalEntity.get().get();
             this.energyCost = 4000;
             if (entityType.create(this.blockEntity.getLevel()) instanceof LivingEntity entity) { //Are we 100% guaranteed this is a living entity?
                 this.energyCost += entity.getMaxHealth()*50; //TODO actually balance based on health
@@ -133,7 +137,7 @@ public class SpawnTask extends PoweredTask{
             return;
         }
         SpawnerSoul.SoulData data = opData.get();
-        this.entityType = optionalEntity.get();
+        this.entityType = optionalEntity.get().get();
         this.energyCost = data.power();
         this.spawnType = data.spawnType();
     }
@@ -149,7 +153,17 @@ public class SpawnTask extends PoweredTask{
             double y = pos.getY() + randomsource.nextInt(3) - 1;
             double z = pos.getZ() + (randomsource.nextDouble() - randomsource.nextDouble()) * (double)this.blockEntity.getRange() + 0.5D;
 
-            if (level.noCollision(this.entityType.getAABB(x, y, z))) {
+            Optional<ResourceLocation> rl = blockEntity.getEntityType();
+            if (rl.isEmpty()) {
+                blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
+                return false;
+            }
+            EntityType<?> optionalEntity = ForgeRegistries.ENTITY_TYPES.getValue(rl.get());
+            if (optionalEntity == null || !ForgeRegistries.ENTITY_TYPES.getKey(optionalEntity).equals(rl.get())) { // check we don't get the default pig
+                blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
+                return false;
+            }
+            if (level.noCollision(optionalEntity.getAABB(x, y, z))) {
 
                 Entity entity = null;
                 switch (spawnType) {
@@ -160,22 +174,25 @@ public class SpawnTask extends PoweredTask{
                         });
                     }
                     case ENTITYTYPE -> {
-                        entity = this.entityType.create(level);
-                        entity.moveTo(x, y, z);
+                        EntityType<?> id = ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation(blockEntity.getEntityData().getEntityTag().getString("id")));
+                        if (id != null) {
+                            entity = id.create(level);
+                            entity.moveTo(x, y, z);
+                        }
                     }
                 }
 
-                if (entity == null) { //TODO Make default spawn tag?
+                if (entity == null) {
                     blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
                     break;
                 }
 
                 if (entity instanceof Mob mob) {
-                    net.minecraftforge.eventbus.api.Event.Result res = net.minecraftforge.event.ForgeEventFactory.canEntitySpawn(mob, level, (float)entity.getX(), (float)entity.getY(), (float)entity.getZ(), null, MobSpawnType.SPAWNER);
-                    if (res == net.minecraftforge.eventbus.api.Event.Result.DENY) {
-                        blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.OTHER_MOD);
-                        return false;
-                    }
+//                    Event.Result res = ForgeEventFactory.onFinalizeSpawn(mob, level, (float) x, (float) y, (float) z, null, MobSpawnType.SPAWNER);
+//                    if (res == Event.Result.DENY) {
+//                        blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.OTHER_MOD);
+//                        return false;
+//                    }
                 }
 
                 if (!level.tryAddFreshEntityWithPassengers(entity)) {
@@ -184,7 +201,7 @@ public class SpawnTask extends PoweredTask{
                 }
 
                 level.levelEvent(2004, pos, 0);
-                level.gameEvent(entity, GameEvent.ENTITY_PLACE, new BlockPos(x, y, z));
+                level.gameEvent(entity, GameEvent.ENTITY_PLACE, new BlockPos((int) x, (int) y, (int) z));
                 if (entity instanceof Mob mob) {
                     mob.spawnAnim();
                 }
@@ -218,7 +235,7 @@ public class SpawnTask extends PoweredTask{
                     return DataResult.success(type);
                 }
             }
-            return DataResult.error("unkown type");
+            return DataResult.error(()->"unkown type");
         }
     }
 }

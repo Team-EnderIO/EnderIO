@@ -5,9 +5,10 @@ import com.enderio.base.common.menu.CoordinateMenu;
 import com.enderio.base.common.network.UpdateCoordinateSelectionNameMenuPacket;
 import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.common.network.CoreNetwork;
-import com.enderio.core.common.util.Vector2i;
+import com.enderio.api.misc.Vector2i;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
@@ -26,8 +27,6 @@ public class CoordinateMenuScreen extends EIOScreen<CoordinateMenu> {
     @Override
     protected void init() {
         super.init();
-        Minecraft.getInstance().keyboardHandler.setSendRepeatsToGui(true);
-
         EditBox name = new EditBox(this.font, leftPos + 43 + 4, topPos + 20 + 4, 92 - 12, 18, Component.literal("name"));
         name.setCanLoseFocus(false);
         name.setTextColor(0xFFFFFFFF);
@@ -39,22 +38,25 @@ public class CoordinateMenuScreen extends EIOScreen<CoordinateMenu> {
         this.addRenderableWidget(name);
         this.setInitialFocus(name);
         name.setEditable(true);
-        this.addRenderableWidget(new Button(getGuiLeft() + imageWidth - 30, getGuiTop() + imageHeight - 30, 20, 20, Component.literal("Ok"), mouseButton -> Minecraft.getInstance().player.closeContainer())); //TOOD: translation
+        // TODO: Translation string
+        this.addRenderableWidget(new Button.Builder(Component.literal("Ok"), mouseButton -> Minecraft.getInstance().player.closeContainer())
+            .bounds(getGuiLeft() + imageWidth - 30, getGuiTop() + imageHeight - 30, 20, 20)
+            .build());
     }
 
     @Override
-    protected void renderBg(PoseStack pPoseStack, float pPartialTicks, int pMouseX, int pMouseY) {
-        super.renderBg(pPoseStack, pPartialTicks, pMouseX, pMouseY);
+    protected void renderBg(GuiGraphics guiGraphics, float pPartialTicks, int pMouseX, int pMouseY) {
+        super.renderBg(guiGraphics, pPartialTicks, pMouseX, pMouseY);
 
         int midX = this.width / 2;
         int y = topPos + 48;
         String txt = getMenu().getSelection().pos().toShortString();
         int x = midX - font.width(txt) / 2;
-        font.drawShadow(pPoseStack, txt, x, y, 0xFFFFFF);
+        guiGraphics.drawString(this.font, txt, x, y, 0xFFFFFF, true);
         txt = getMenu().getSelection().getLevelName();
         y += font.lineHeight + 4;
         x = midX - font.width(txt) / 2;
-        font.drawShadow(pPoseStack, txt, x, y, 0xFFFFFF);
+        guiGraphics.drawString(this.font, txt, x, y, 0xFFFFFF, true);
     }
 
     @Override

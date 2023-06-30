@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shapeless",
+  "category": "misc",
   "ingredients": [
     {
       "item": "minecraft:bowl"
@@ -11,7 +12,7 @@
       "item": "minecraft:wheat"
     },
     {
-      "item": "enderio:ender_fragment"
+      "item": "enderio:powdered_ender_pearl"
     }
   ],
   "result": {

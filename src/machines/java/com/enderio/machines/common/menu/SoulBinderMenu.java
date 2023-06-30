@@ -29,7 +29,7 @@ public class SoulBinderMenu extends MachineMenu<SoulBinderBlockEntity> {
     }
 
     public static SoulBinderMenu factory(@Nullable MenuType<SoulBinderMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
-        BlockEntity entity = inventory.player.level.getBlockEntity(buf.readBlockPos());
+        BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
         if (entity instanceof SoulBinderBlockEntity castBlockEntity)
             return new SoulBinderMenu(castBlockEntity, inventory, pContainerId);
         LogManager.getLogger().warn("couldn't find BlockEntity");

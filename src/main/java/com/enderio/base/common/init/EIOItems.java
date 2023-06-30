@@ -3,7 +3,6 @@ package com.enderio.base.common.init;
 import com.enderio.EnderIO;
 import com.enderio.base.common.capacitor.DefaultCapacitorData;
 import com.enderio.base.common.config.BaseConfig;
-import com.enderio.base.common.item.EIOCreativeTabs;
 import com.enderio.base.common.item.misc.*;
 import com.enderio.base.common.item.capacitors.FixedCapacitorItem;
 import com.enderio.base.common.item.capacitors.LootCapacitorItem;
@@ -28,6 +27,7 @@ import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import net.minecraft.Util;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.ForgeTier;
@@ -43,7 +43,8 @@ import java.util.Objects;
 @SuppressWarnings("unused")
 public class EIOItems {
     private static final Registrate REGISTRATE = EnderIO.registrate();
-    // region Materials
+
+    // region Alloys
 
     public static final ItemEntry<MaterialItem> COPPER_ALLOY_INGOT = materialItem("copper_alloy_ingot").register();
     public static final ItemEntry<MaterialItem> ENERGETIC_ALLOY_INGOT = materialItem("energetic_alloy_ingot").register();
@@ -54,7 +55,6 @@ public class EIOItems {
     public static final ItemEntry<MaterialItem> DARK_STEEL_INGOT = materialItem("dark_steel_ingot").register();
     public static final ItemEntry<MaterialItem> SOULARIUM_INGOT = materialItem("soularium_ingot").register();
     public static final ItemEntry<MaterialItem> END_STEEL_INGOT = materialItem("end_steel_ingot").register();
-    public static final ItemEntry<MaterialItem> IRON_ALLOY_INGOT = materialItem("iron_alloy_ingot").tag(Tags.Items.INGOTS_IRON).register();
 
     public static final ItemEntry<MaterialItem> COPPER_ALLOY_NUGGET = materialItem("copper_alloy_nugget").register();
     public static final ItemEntry<MaterialItem> ENERGETIC_ALLOY_NUGGET = materialItem("energetic_alloy_nugget").register();
@@ -65,35 +65,31 @@ public class EIOItems {
     public static final ItemEntry<MaterialItem> DARK_STEEL_NUGGET = materialItem("dark_steel_nugget").register();
     public static final ItemEntry<MaterialItem> SOULARIUM_NUGGET = materialItem("soularium_nugget").register();
     public static final ItemEntry<MaterialItem> END_STEEL_NUGGET = materialItem("end_steel_nugget").register();
-    public static final ItemEntry<MaterialItem> IRON_ALLOY_NUGGET = materialItem("iron_alloy_nugget").tag(Tags.Items.NUGGETS_IRON).register();
 
-    // region Basic Materials
+    // endregion
 
-    public static final ItemEntry<MaterialItem> CONDUIT_BINDER = materialItem("conduit_binder").register();
+    // region Crafting Components
+
     public static final ItemEntry<MaterialItem> SILICON = materialItem("silicon").tag(EIOTags.Items.SILICON).register();
 
-    // endregion
+    public static final ItemEntry<MaterialItem> GRAINS_OF_INFINITY = materialItem("grains_of_infinity").lang("Grains of Infinity").register();
 
-    // region Components
+    public static final ItemEntry<MaterialItem> INFINITY_ROD = materialItem("infinity_rod").register();
 
-    // region Machine Parts
+    public static final ItemEntry<MaterialItem> CONDUIT_BINDER_COMPOSITE = materialItem("conduit_binder_composite").register();
 
-    // TODO: Deal with machine parts when we decide machine "tiers"
-//    public static final ItemEntry<MaterialItem> SIMPLE_MACHINE_PARTS = materialItem("simple_machine_parts").register();
-    public static final ItemEntry<MaterialItem> INDUSTRIAL_MACHINE_PARTS = materialItem("industrial_machine_parts").register();
-    public static final ItemEntry<MaterialItem> ENHANCED_MACHINE_PARTS = materialItem("enhanced_machine_parts").register();
+    public static final ItemEntry<MaterialItem> CONDUIT_BINDER = materialItem("conduit_binder").register();
 
-    // endregion
-
-    // region Circuits todo: better name
+    // TODO: 1.20.1: implement upgrade binder for dark steel upgrades
+//    public static final ItemEntry<MaterialItem> UPGRADE_BINDER = materialItem("upgrade_binder").register();
 
     public static final ItemEntry<MaterialItem> ZOMBIE_ELECTRODE = materialItem("zombie_electrode").register();
 
-    public static final ItemEntry<MaterialItem> ZOMBIE_CONTROLLER = materialItem("zombie_controller").lang("Z-Logic Controller").register();
+    public static final ItemEntry<MaterialItem> Z_LOGIC_CONTROLLER = materialItem("z_logic_controller").lang("Z-Logic Controller").register();
 
-    public static final ItemEntry<MaterialItem> FRANKEN_ZOMBIE = materialItemGlinted("franken_zombie")
+    public static final ItemEntry<MaterialItem> FRANK_N_ZOMBIE = materialItemGlinted("frank_n_zombie")
         .lang("Frank'N'Zombie")
-        .model((ctx, prov) -> EIOModel.mimicItem(ctx, EIOItems.ZOMBIE_CONTROLLER, prov))
+        .model((ctx, prov) -> EIOModel.mimicItem(ctx, EIOItems.Z_LOGIC_CONTROLLER, prov))
         .register();
 
     public static final ItemEntry<MaterialItem> ENDER_RESONATOR = materialItem("ender_resonator").register();
@@ -107,21 +103,21 @@ public class EIOItems {
 
     // endregion
 
-    // region capacitors
+    // region Capacitors
 
     public static final ItemEntry<FixedCapacitorItem> BASIC_CAPACITOR = REGISTRATE
         .item("basic_capacitor", props -> new FixedCapacitorItem(DefaultCapacitorData.BASIC, props))
-        .tab(() -> EIOCreativeTabs.MAIN)
+        .tab(EIOCreativeTabs.MAIN)
         .register();
 
     public static final ItemEntry<FixedCapacitorItem> DOUBLE_LAYER_CAPACITOR = REGISTRATE
         .item("double_layer_capacitor", props -> new FixedCapacitorItem(DefaultCapacitorData.DOUBLE_LAYER, props))
-        .tab(() -> EIOCreativeTabs.MAIN)
+        .tab(EIOCreativeTabs.MAIN)
         .register();
 
     public static final ItemEntry<FixedCapacitorItem> OCTADIC_CAPACITOR = REGISTRATE
         .item("octadic_capacitor", props -> new FixedCapacitorItem(DefaultCapacitorData.OCTADIC, props))
-        .tab(() -> EIOCreativeTabs.MAIN)
+        .tab(EIOCreativeTabs.MAIN)
         .register();
 
     public static final ItemEntry<LootCapacitorItem> LOOT_CAPACITOR = REGISTRATE
@@ -138,35 +134,25 @@ public class EIOItems {
     public static final ItemEntry<MaterialItem> ENDER_CRYSTAL = materialItemGlinted("ender_crystal").register();
     public static final ItemEntry<MaterialItem> ENTICING_CRYSTAL = materialItemGlinted("enticing_crystal").register();
     public static final ItemEntry<MaterialItem> WEATHER_CRYSTAL = materialItemGlinted("weather_crystal").register();
-    public static final ItemEntry<MaterialItem> PRECIENT_CRYSTAL = materialItemGlinted("precient_crystal").register();
-
-    // endregion
-
-    // region Infinity
-
-    public static final ItemEntry<MaterialItem> GRAINS_OF_INFINITY = materialItem("grains_of_infinity").lang("Grains of Infinity").register();
-
-    public static final ItemEntry<MaterialItem> INFINITY_ROD = materialItem("infinity_rod").register();
+    public static final ItemEntry<MaterialItem> PRESCIENT_CRYSTAL = materialItemGlinted("prescient_crystal").register();
 
     // endregion
 
     // region Powders and Fragments
 
     public static final ItemEntry<MaterialItem> FLOUR = materialItem("flour").register();
-    public static final ItemEntry<MaterialItem> CONDUIT_BINDER_COMPOSITE = materialItem("conduit_binder_composite").register();
-    public static final ItemEntry<MaterialItem> COAL_POWDER = materialItem("coal_powder").tag(EIOTags.Items.DUSTS_COAL).register();
-    public static final ItemEntry<MaterialItem> IRON_POWDER = materialItem("iron_powder").tag(EIOTags.Items.DUSTS_IRON).register();
-    public static final ItemEntry<MaterialItem> GOLD_POWDER = materialItem("gold_powder").tag(EIOTags.Items.DUSTS_GOLD).register();
-    public static final ItemEntry<MaterialItem> COPPER_POWDER = materialItem("copper_powder").tag(EIOTags.Items.DUSTS_COPPER).register();
-    public static final ItemEntry<MaterialItem> TIN_POWDER = materialItem("tin_powder").tag(EIOTags.Items.DUSTS_TIN).register(); // TODO: hide if tin isn't present
-    public static final ItemEntry<MaterialItem> ENDER_PEARL_POWDER = materialItem("ender_pearl_powder").tag(EIOTags.Items.DUSTS_ENDER).register();
-    public static final ItemEntry<MaterialItem> OBSIDIAN_POWDER = materialItem("obsidian_powder").tag(EIOTags.Items.DUSTS_OBSIDIAN).register();
-    public static final ItemEntry<MaterialItem> ARDITE_POWDER = materialItem("ardite_powder").tag(EIOTags.Items.DUSTS_ARDITE).register(); // TODO: hide if ardite isnt present
-    public static final ItemEntry<MaterialItem> COBALT_POWDER = materialItem("cobalt_powder").tag(EIOTags.Items.DUSTS_COBALT).register(); // TODO: hide if cobalt isnt present
-    public static final ItemEntry<MaterialItem> LAPIS_LAZULI_POWDER = materialItem("lapis_lazuli_powder").tag(EIOTags.Items.DUSTS_LAPIS).register();
-    public static final ItemEntry<MaterialItem> QUARTZ_POWDER = materialItem("quartz_powder").tag(EIOTags.Items.DUSTS_QUARTZ).register();
+    public static final ItemEntry<MaterialItem> POWDERED_COAL = materialItem("powdered_coal").tag(EIOTags.Items.DUSTS_COAL).register();
+    public static final ItemEntry<MaterialItem> POWDERED_IRON = materialItem("powdered_iron").tag(EIOTags.Items.DUSTS_IRON).register();
+    public static final ItemEntry<MaterialItem> POWDERED_GOLD = materialItem("powdered_gold").tag(EIOTags.Items.DUSTS_GOLD).register();
+    public static final ItemEntry<MaterialItem> POWDERED_COPPER = materialItem("powdered_copper").tag(EIOTags.Items.DUSTS_COPPER).register();
+    public static final ItemEntry<MaterialItem> POWDERED_TIN = materialItem("powdered_tin").tag(EIOTags.Items.DUSTS_TIN).register(); // TODO: hide if tin isn't present
+    public static final ItemEntry<MaterialItem> POWDERED_ENDER_PEARL = materialItem("powdered_ender_pearl").tag(EIOTags.Items.DUSTS_ENDER).register();
+    public static final ItemEntry<MaterialItem> POWDERED_OBSIDIAN = materialItem("powdered_obsidian").tag(EIOTags.Items.DUSTS_OBSIDIAN).register();
+    public static final ItemEntry<MaterialItem> POWDERED_COBALT = materialItem("powdered_cobalt").tag(EIOTags.Items.DUSTS_COBALT).register(); // TODO: hide if cobalt isnt present
+    public static final ItemEntry<MaterialItem> POWDERED_LAPIS_LAZULI = materialItem("powdered_lapis_lazuli").tag(EIOTags.Items.DUSTS_LAPIS).register();
+    public static final ItemEntry<MaterialItem> POWDERED_QUARTZ = materialItem("powdered_quartz").tag(EIOTags.Items.DUSTS_QUARTZ).register();
 
-    public static final ItemEntry<MaterialItem> PRECIENT_POWDER = materialItemGlinted("precient_powder").lang("Grains of Prescience").register();
+    public static final ItemEntry<MaterialItem> PRESCIENT_POWDER = materialItemGlinted("prescient_powder").lang("Grains of Prescience").register();
 
     public static final ItemEntry<MaterialItem> VIBRANT_POWDER = materialItemGlinted("vibrant_powder").lang("Grains of Vibrancy").register();
 
@@ -178,7 +164,6 @@ public class EIOItems {
     public static final ItemEntry<MaterialItem> SOUL_POWDER = materialItem("soul_powder").register();
     public static final ItemEntry<MaterialItem> CONFUSION_POWDER = materialItem("confusing_powder").register();
     public static final ItemEntry<MaterialItem> WITHERING_POWDER = materialItem("withering_powder").register();
-    public static final ItemEntry<MaterialItem> ENDER_FRAGMENT = materialItem("ender_fragment").register();
 
     // endregion
 
@@ -208,12 +193,6 @@ public class EIOItems {
 
     public static final ItemEntry<MaterialItem> DYE_BLACK = materialItem("organic_black_dye").tag(Tags.Items.DYES_BLACK, Tags.Items.DYES).register();
 
-    public static final ItemEntry<MaterialItem> DYE_INDUSTRIAL_BLEND = materialItem("industrial_dye_blend").tag(Tags.Items.DYES).register();
-
-    public static final ItemEntry<MaterialItem> DYE_SOUL_ATTUNED_BLEND = materialItem("soul_attuned_dye_blend").tag(Tags.Items.DYES).register();
-
-    public static final ItemEntry<MaterialItem> DYE_ENHANCED_BLEND = materialItem("enhanced_dye_blend").tag(Tags.Items.DYES).register();
-
     // endregion
 
     // region Misc Materials
@@ -229,7 +208,6 @@ public class EIOItems {
     public static final ItemEntry<MaterialItem> PLANT_MATTER_BROWN = materialItem("plant_matter_brown").lang("Twigs and Prunings").register();
 
     public static final ItemEntry<MaterialItem> GLIDER_WING = materialItem("glider_wing").register();
-    public static final ItemEntry<MaterialItem> GLIDER_WINGS = materialItem("glider_wings").register();
 
     public static final ItemEntry<MaterialItem> ANIMAL_TOKEN = materialItemGlinted("animal_token").register();
     public static final ItemEntry<MaterialItem> MONSTER_TOKEN = materialItemGlinted("monster_token").register();
@@ -241,13 +219,12 @@ public class EIOItems {
     public static final ItemEntry<MaterialItem> CLAYED_GLOWSTONE = materialItem("clayed_glowstone").register();
     public static final ItemEntry<MaterialItem> NETHERCOTTA = materialItem("nethercotta").register();
     public static final ItemEntry<MaterialItem> REDSTONE_FILTER_BASE = materialItem("redstone_filter_base").register();
-    public static final ItemEntry<MaterialItem> REMOTE_AWARENESS_UPGRADE = materialItem("remote_awareness_upgrade").register();
-    public static final ItemEntry<MaterialItem> INGOT_ENDERIUM_BASE = materialItem("ingot_enderium_base").register(); // TODO: Depend on enderium ingot tag
 
     public static final ItemEntry<BrokenSpawnerItem> BROKEN_SPAWNER = REGISTRATE
         .item("broken_spawner", BrokenSpawnerItem::new)
         .model(EIOModel::fakeBlockModel)
-        .tab(() -> EIOCreativeTabs.MAIN)
+        .tab(EIOCreativeTabs.MAIN)
+        .tab(EIOCreativeTabs.SOULS, modifier -> modifier.acceptAll(BrokenSpawnerItem.gePossibleStacks()))
         .register();
 
     // endregion
@@ -281,19 +258,19 @@ public class EIOItems {
     private static ItemBuilder<HangGliderItem, Registrate> gliderItem(String name) {
         return dumbItem(name, HangGliderItem::new)
             .tag(EIOTags.Items.GLIDER)
-            .tab(() -> EIOCreativeTabs.MAIN)
+            .tab(EIOCreativeTabs.MAIN)
             .model((ctx, prov) -> GliderItemModel.create(ctx.get(), prov));
     }
 
     private static ItemBuilder<MaterialItem, Registrate> materialItem(String name) {
-        return REGISTRATE.item(name, props -> new MaterialItem(props, false)).tab(() -> EIOCreativeTabs.MAIN);
+        return REGISTRATE.item(name, props -> new MaterialItem(props, false)).tab(EIOCreativeTabs.MAIN);
     }
 
     private static ItemBuilder<GearItem, Registrate> gearItem(String name, float tpr) {
         return REGISTRATE
             .item(name, props -> new GearItem(props, tpr))
             .model((ctx, cons) -> RotatingItemModel.create(ctx.get(), cons))
-            .tab(() -> EIOCreativeTabs.MAIN);
+            .tab(EIOCreativeTabs.MAIN);
     }
 
     //  private static ItemBuilder<MaterialItem, Registrate> dependMaterialItem(String name, Tag<Item> dependency) {
@@ -302,7 +279,7 @@ public class EIOItems {
     //  }
 
     private static ItemBuilder<MaterialItem, Registrate> materialItemGlinted(String name) {
-        return REGISTRATE.item(name, props -> new MaterialItem(props, true)).tab(() -> EIOCreativeTabs.MAIN);
+        return REGISTRATE.item(name, props -> new MaterialItem(props, true)).tab(EIOCreativeTabs.MAIN);
     }
 
     // endregion
@@ -311,16 +288,17 @@ public class EIOItems {
 
     // TODO: Will need sorted once we have added more.
 
-    public static final ItemEntry<SoulVialItem> EMPTY_SOUL_VIAL = groupedItem("empty_soul_vial", SoulVialItem::new, () -> EIOCreativeTabs.SOULS);
+    public static final ItemEntry<SoulVialItem> EMPTY_SOUL_VIAL = groupedItem("empty_soul_vial", SoulVialItem::new, EIOCreativeTabs.SOULS);
 
     public static final ItemEntry<SoulVialItem> FILLED_SOUL_VIAL = REGISTRATE
         .item("filled_soul_vial", SoulVialItem::new)
         .properties(props -> props.stacksTo(1))
+        .tab(EIOCreativeTabs.SOULS, modifier -> modifier.acceptAll(SoulVialItem.getAllFilled()))
         .register();
 
     public static final ItemEntry<EnderiosItem> ENDERIOS = REGISTRATE
         .item("enderios", EnderiosItem::new)
-        .tab(() -> EIOCreativeTabs.MAIN)
+        .tab(EIOCreativeTabs.MAIN)
         .lang("\"Enderios\"")
         .properties(props -> props.stacksTo(1))
         .register();
@@ -330,37 +308,42 @@ public class EIOItems {
     // region Tools
     public static final ItemEntry<YetaWrenchItem> YETA_WRENCH = REGISTRATE
         .item("yeta_wrench", YetaWrenchItem::new)
-        .tab(() -> EIOCreativeTabs.GEAR)
+        .tab(EIOCreativeTabs.GEAR)
         .properties(props -> props.stacksTo(1))
         .tag(EIOTags.Items.WRENCH)
         .register();
 
     public static final ItemEntry<LocationPrintoutItem> LOCATION_PRINTOUT = REGISTRATE
         .item("location_printout", LocationPrintoutItem::new)
-        .tab(() -> EIOCreativeTabs.GEAR)
+        .tab(EIOCreativeTabs.GEAR)
         .properties(props -> props.stacksTo(1))
         .register();
 
     public static final ItemEntry<CoordinateSelectorItem> COORDINATE_SELECTOR = REGISTRATE
         .item("coordinate_selector", CoordinateSelectorItem::new)
-        .tab(() -> EIOCreativeTabs.GEAR)
+        .tab(EIOCreativeTabs.GEAR)
         .properties(props -> props.stacksTo(1))
+        .register();
+
+    public static final ItemEntry<ExperienceRodItem> EXPERIENCE_ROD = REGISTRATE
+        .item("experience_rod", ExperienceRodItem::new)
+        .tab(EIOCreativeTabs.GEAR)
         .register();
 
     public static final ItemEntry<LevitationStaffItem> LEVITATION_STAFF = REGISTRATE
         .item("staff_of_levity", LevitationStaffItem::new)
-        .tab(() -> EIOCreativeTabs.GEAR)
+        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.LEVITATION_STAFF.get().addAllVariants(modifier))
         .register();
 
     public static final ItemEntry<ElectromagnetItem> ELECTROMAGNET = REGISTRATE
         .item("electromagnet", ElectromagnetItem::new)
-        .tab(() -> EIOCreativeTabs.GEAR)
+        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.ELECTROMAGNET.get().addAllVariants(modifier))
         .register();
 
     public static final ItemEntry<ColdFireIgniter> COLD_FIRE_IGNITER = REGISTRATE
         .item("cold_fire_igniter", ColdFireIgniter::new)
         .defaultModel()
-        .tab(() -> EIOCreativeTabs.GEAR)
+        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.COLD_FIRE_IGNITER.get().addAllVariants(modifier)) // TODO: Might PR this to Registrate so its nicer, but I like the footprint.
         .register();
 
     // endregion
@@ -373,7 +356,7 @@ public class EIOItems {
 
     public static final ItemEntry<DarkSteelPickaxeItem> DARK_STEEL_PICKAXE = REGISTRATE
         .item("dark_steel_pickaxe", DarkSteelPickaxeItem::new)
-        .tab(() -> EIOCreativeTabs.GEAR)
+        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_PICKAXE.get().addAllVariants(modifier))
         .onRegister(item -> DarkSteelUpgradeRegistry
             .instance()
             .addUpgradesForItem(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)), EmpoweredUpgrade.NAME, SpoonUpgrade.NAME, DirectUpgrade.NAME,
@@ -382,7 +365,7 @@ public class EIOItems {
 
     public static final ItemEntry<DarkSteelAxeItem> DARK_STEEL_AXE = REGISTRATE
         .item("dark_steel_axe", DarkSteelAxeItem::new)
-        .tab(() -> EIOCreativeTabs.GEAR)
+        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_AXE.get().addAllVariants(modifier))
         .onRegister(item -> DarkSteelUpgradeRegistry
             .instance()
             .addUpgradesForItem(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)), EmpoweredUpgrade.NAME, ForkUpgrade.NAME, DirectUpgrade.NAME))
@@ -392,68 +375,68 @@ public class EIOItems {
 
     public static final ItemEntry<MaterialItem> DARK_STEEL_UPGRADE_BLANK = REGISTRATE
         .item("dark_steel_upgrade_blank", props -> new MaterialItem(props, false))
-        .tab(() -> EIOCreativeTabs.GEAR)
+        .tab(EIOCreativeTabs.GEAR)
         .lang("Blank" + UPGRADE_TEXT)
         .register();
 
     public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_1 = REGISTRATE
         .item("dark_steel_upgrade_empowered_1",
             properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgradeTier.ONE.getActivationCost(), EmpoweredUpgradeTier.ONE.getFactory()))
-        .tab(() -> EIOCreativeTabs.GEAR)
+        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_EMPOWERED_1.get().addAllVariants(modifier))
         .lang("Empowered" + UPGRADE_TEXT)
         .register();
 
     public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_2 = REGISTRATE
         .item("dark_steel_upgrade_empowered_2",
             properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgradeTier.TWO.getActivationCost(), EmpoweredUpgradeTier.TWO.getFactory()))
-        .tab(() -> EIOCreativeTabs.GEAR)
+        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_EMPOWERED_2.get().addAllVariants(modifier))
         .lang("Empowered II" + UPGRADE_TEXT)
         .register();
 
     public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_3 = REGISTRATE
         .item("dark_steel_upgrade_empowered_3", 
             properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgradeTier.THREE.getActivationCost(), EmpoweredUpgradeTier.THREE.getFactory()))
-        .tab(() -> EIOCreativeTabs.GEAR)
+        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_EMPOWERED_3.get().addAllVariants(modifier))
         .lang("Empowered III" + UPGRADE_TEXT)
         .register();
 
     public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_4 = REGISTRATE
         .item("dark_steel_upgrade_empowered_4", 
             properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgradeTier.FOUR.getActivationCost(), EmpoweredUpgradeTier.FOUR.getFactory()))
-        .tab(() -> EIOCreativeTabs.GEAR)
+        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_EMPOWERED_4.get().addAllVariants(modifier))
         .lang("Empowered IV" + UPGRADE_TEXT)
         .register();
 
     public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_SPOON = REGISTRATE
         .item("dark_steel_upgrade_spoon", properties -> new DarkSteelUpgradeItem(properties, BaseConfig.COMMON.DARK_STEEL.SPOON_ACTIVATION_COST, SpoonUpgrade::new))
-        .tab(() -> EIOCreativeTabs.GEAR)
+        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_SPOON.get().addAllVariants(modifier))
         .lang("Spoon" + UPGRADE_TEXT)
         .register();
 
     public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_FORK = REGISTRATE
         .item("dark_steel_upgrade_fork", properties -> new DarkSteelUpgradeItem(properties, BaseConfig.COMMON.DARK_STEEL.FORK_ACTIVATION_COST, ForkUpgrade::new))
-        .tab(() -> EIOCreativeTabs.GEAR)
+        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_FORK.get().addAllVariants(modifier))
         .lang("Fork" + UPGRADE_TEXT)
         .register();
 
     public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_DIRECT = REGISTRATE
         .item("dark_steel_upgrade_direct",
             properties -> new DarkSteelUpgradeItem(properties, BaseConfig.COMMON.DARK_STEEL.DIRECT_ACTIVATION_COST, DirectUpgrade::new))
-        .tab(() -> EIOCreativeTabs.GEAR)
+        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_DIRECT.get().addAllVariants(modifier))
         .lang("Direct" + UPGRADE_TEXT)
         .register();
 
     public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_1 = REGISTRATE
         .item("dark_steel_upgrade_tnt", properties -> new DarkSteelUpgradeItem(properties, ExplosiveUpgradeTier.ONE.getActivationCost(),
             ExplosiveUpgradeTier.ONE.getFactory()))
-        .tab(() -> EIOCreativeTabs.GEAR)
+        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_EXPLOSIVE_1.get().addAllVariants(modifier))
         .lang("Explosive I" + UPGRADE_TEXT)
         .register();
 
     public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_2 = REGISTRATE
         .item("dark_steel_upgrade_tnt1", properties -> new DarkSteelUpgradeItem(properties, ExplosiveUpgradeTier.TWO.getActivationCost(),
             ExplosiveUpgradeTier.TWO.getFactory()))
-        .tab(() -> EIOCreativeTabs.GEAR)
+        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_EXPLOSIVE_2.get().addAllVariants(modifier))
         .lang("Explosive II" + UPGRADE_TEXT)
         .register();
 
@@ -461,14 +444,14 @@ public class EIOItems {
     public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_1 = REGISTRATE
         .item("dark_steel_upgrade_penetration_1", properties -> new DarkSteelUpgradeItem(properties, ExplosivePenetrationUpgradeTier.ONE.getActivationCost(),
             ExplosivePenetrationUpgradeTier.ONE.getFactory()))
-        .tab(() -> EIOCreativeTabs.GEAR)
+        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_1.get().addAllVariants(modifier))
         .lang("Explosive Penetration I" + UPGRADE_TEXT)
         .register();
 
     public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_2 = REGISTRATE
         .item("dark_steel_upgrade_penetration_2", properties -> new DarkSteelUpgradeItem(properties, ExplosivePenetrationUpgradeTier.TWO.getActivationCost(),
             ExplosivePenetrationUpgradeTier.TWO.getFactory()))
-        .tab(() -> EIOCreativeTabs.GEAR)
+        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_2.get().addAllVariants(modifier))
         .lang("Explosive Penetration II" + UPGRADE_TEXT)
         .register();
 
@@ -503,7 +486,7 @@ public class EIOItems {
         return REGISTRATE.item(name, Item::new);
     }
 
-    public static <T extends Item> ItemEntry<T> groupedItem(String name, NonNullFunction<Item.Properties, T> factory, NonNullSupplier<CreativeModeTab> tab) {
+    public static <T extends Item> ItemEntry<T> groupedItem(String name, NonNullFunction<Item.Properties, T> factory, ResourceKey<CreativeModeTab> tab) {
         return REGISTRATE.item(name, factory).tab(tab).register();
     }
 

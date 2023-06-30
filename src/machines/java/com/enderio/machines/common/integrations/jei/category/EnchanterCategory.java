@@ -14,6 +14,7 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -71,12 +72,12 @@ public class EnchanterCategory implements IRecipeCategory<WrappedEnchanterRecipe
     }
 
     @Override
-    public void draw(WrappedEnchanterRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
+    public void draw(WrappedEnchanterRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
         Minecraft mc = Minecraft.getInstance();
 
         Component title = recipe.getEnchantment().getFullname(recipe.getLevel());
 
-        mc.font.draw(stack, title, 146 - mc.font.width(title), 0, 0xff8b8b8b);
+        guiGraphics.drawString(mc.font, title, 146 - mc.font.width(title), 0, 0xff8b8b8b, false);
 
         int cost = recipe.getCost();
         String costText = cost < 0 ? "err" : Integer.toString(cost);
@@ -87,7 +88,8 @@ public class EnchanterCategory implements IRecipeCategory<WrappedEnchanterRecipe
 
         // Show red if the player doesn't have enough levels
         int mainColor = playerHasEnoughLevels(player, cost) ? 0xFF80FF20 : 0xFFFF6060;
-        drawRepairCost(minecraft, stack, text, mainColor);
+        int repairTextWidth = minecraft.font.width(text);
+        guiGraphics.drawString(minecraft.font, text, background.getWidth() - 2 - repairTextWidth, background.getHeight() - 8, mainColor);
     }
 
     private static boolean playerHasEnoughLevels(@Nullable LocalPlayer player, int cost) {
@@ -98,14 +100,5 @@ public class EnchanterCategory implements IRecipeCategory<WrappedEnchanterRecipe
             return true;
         }
         return cost < 40 && cost <= player.experienceLevel;
-    }
-
-    private void drawRepairCost(Minecraft minecraft, PoseStack poseStack, String text, int mainColor) {
-        int shadowColor = 0xFF000000 | (mainColor & 0xFCFCFC) >> 2;
-        int width = minecraft.font.width(text);
-        int x = background.getWidth() - 2 - width;
-        int y = background.getHeight() - 8;
-        minecraft.font.draw(poseStack, text, x + 1, y + 1, shadowColor);
-        minecraft.font.draw(poseStack, text, x, y, mainColor);
     }
 }

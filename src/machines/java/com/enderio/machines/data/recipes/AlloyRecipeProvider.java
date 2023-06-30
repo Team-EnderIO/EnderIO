@@ -10,7 +10,7 @@ import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -21,19 +21,22 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
-
 import org.jetbrains.annotations.Nullable;
-import java.util.*;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public class AlloyRecipeProvider extends EnderRecipeProvider {
 
-    public AlloyRecipeProvider(DataGenerator dataGenerator) {
-        super(dataGenerator);
+    public AlloyRecipeProvider(PackOutput packOutput) {
+        super(packOutput);
     }
 
     @Override
-    protected void buildCraftingRecipes(Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
+    protected void buildRecipes(Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
         // TODO: Review all recipes and alloy compositions
         // TODO: Experience values need set properly, i just used a filler value off the top of my head
 
@@ -70,15 +73,6 @@ public class AlloyRecipeProvider extends EnderRecipeProvider {
         build(new ItemStack(EIOItems.DYE_BLACK.get(), 2), "double", List.of(CountedIngredient.of(6, EIOTags.Items.DUSTS_COAL), CountedIngredient.of(Tags.Items.SLIMEBALLS)), 2000, 0.3f, pFinishedRecipeConsumer);
 
         build(new ItemStack(Items.RED_DYE, 12), List.of(CountedIngredient.of(Items.BEETROOT), CountedIngredient.of(3, Items.CLAY_BALL), CountedIngredient.of(6, Items.EGG)), 15000, 0.3f, pFinishedRecipeConsumer);
-
-        // endregion
-
-        // region Chassis
-
-        // TODO: Deal with chassis etc.
-//        build(new ItemStack(EIOBlocks.INDUSTRIAL_MACHINE_CHASSIS.get()), List.of(CountedIngredient.of(EIOBlocks.SIMPLE_MACHINE_CHASSIS.get()), CountedIngredient.of(EIOItems.DYE_INDUSTRIAL_BLEND.get())), 3600, 0.3f, pFinishedRecipeConsumer);
-        build(new ItemStack(EIOBlocks.ENHANCED_MACHINE_CHASSIS.get()), List.of(CountedIngredient.of(EIOBlocks.END_STEEL_MACHINE_CHASSIS.get()), CountedIngredient.of(EIOItems.DYE_ENHANCED_BLEND.get())), 3600, 0.3f, pFinishedRecipeConsumer);
-//        build(new ItemStack(EIOBlocks.SOUL_MACHINE_CHASSIS.get()), List.of(CountedIngredient.of(EIOBlocks.SIMPLE_MACHINE_CHASSIS.get()), CountedIngredient.of(EIOItems.DYE_SOUL_ATTUNED_BLEND.get())), 3600, 0.3f, pFinishedRecipeConsumer);
 
         // endregion
 

@@ -36,6 +36,10 @@ public class IntegrationManager {
         ALL_INTEGRATIONS.forEach(consumer);
     }
 
+    public static <T> Optional<T> findFirst(Function<Integration, Optional<T>> mapper) {
+        return ALL_INTEGRATIONS.stream().map(mapper).filter(Optional::isPresent).findFirst().flatMap(opt -> opt);
+    }
+
     public static <T> Optional<T> getFirst(Function<Integration, Optional<T>> mapper) {
         return ALL_INTEGRATIONS.stream().map(mapper).flatMap(Optional::stream).findFirst();
     }
@@ -46,6 +50,7 @@ public class IntegrationManager {
                 consumer.accept(integration);
         }
     }
+    
     public static <T> List<T> getIf(Predicate<Integration> condition, Function<Integration, T> mapper) {
         List<T> list = new ArrayList<>();
         for (Integration integration : ALL_INTEGRATIONS) {

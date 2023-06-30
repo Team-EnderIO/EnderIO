@@ -2,6 +2,7 @@ package com.enderio.machines.common.recipe;
 
 import com.enderio.core.common.recipes.EnderRecipe;
 import com.enderio.core.common.recipes.OutputStack;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 
@@ -18,20 +19,20 @@ public interface MachineRecipe<C extends Container> extends EnderRecipe<C> {
      * Craft outputs for this recipe.
      * @return An array of item and fluid outputs.
      */
-    List<OutputStack> craft(C container);
+    List<OutputStack> craft(C container, RegistryAccess registryAccess);
 
     /**
      * Get the results of this machine, for display or verification purposes only.
      * @return
      */
-    List<OutputStack> getResultStacks();
+    List<OutputStack> getResultStacks(RegistryAccess registryAccess);
 
     /**
      * @deprecated Replaced by {@link #craft(Container)} to support multiple outputs and output types.
      */
     @Deprecated
     @Override
-    default ItemStack assemble(C container) {
+    default ItemStack assemble(C container, RegistryAccess registryAccess) {
         // TODO: Logging..
         return ItemStack.EMPTY;
     }
@@ -41,7 +42,7 @@ public interface MachineRecipe<C extends Container> extends EnderRecipe<C> {
      */
     @Deprecated
     @Override
-    default ItemStack getResultItem() {
+    default ItemStack getResultItem(RegistryAccess registryAccess) {
         // TODO: Logging..
         return ItemStack.EMPTY;
     }

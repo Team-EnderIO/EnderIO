@@ -1,6 +1,7 @@
 package com.enderio.base.common.util;
 
-import com.enderio.core.common.util.Vector2i;
+import com.enderio.api.misc.Vector2i;
+import net.minecraft.world.entity.player.Player;
 
 public class ExperienceUtil {
 
@@ -88,6 +89,11 @@ public class ExperienceUtil {
      */
     public static int getFluidFromLevel(int level) {
         return getExpFromLevel(level)*EXPTOFLUID;
+    }
+
+    public static int getPlayerTotalXp(Player player) {
+        return ExperienceUtil.getExpFromLevel(player.experienceLevel) +
+            (int) Math.floor(player.experienceProgress * ExperienceUtil.getXpNeededForNextLevel(player.experienceLevel + 1));
     }
 
     /**

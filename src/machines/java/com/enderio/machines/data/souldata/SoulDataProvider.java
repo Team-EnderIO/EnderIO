@@ -5,29 +5,33 @@ import com.enderio.machines.common.blockentity.task.SpawnTask;
 import com.enderio.machines.common.souldata.ISoulData;
 import com.enderio.machines.common.souldata.SpawnerSoul;
 import com.google.common.collect.Sets;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
-import net.minecraft.core.Registry;
 import net.minecraft.data.CachedOutput;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
+import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
+import net.minecraftforge.registries.ForgeRegistries;
 
-import java.io.IOException;
-import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class SoulDataProvider implements DataProvider {
 
-    private final DataGenerator.PathProvider generator;
+    private final PackOutput.PathProvider souldataprovider;
+    private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
 
-    public SoulDataProvider(DataGenerator pGenerator) {
-        this.generator = pGenerator.createPathProvider(DataGenerator.Target.DATA_PACK, "eio_soul");
+    public SoulDataProvider(PackOutput packOutput) {
+        this.souldataprovider = packOutput.createPathProvider(PackOutput.Target.DATA_PACK, "eio_soul");
     }
 
     public void buildSoulData(Consumer<FinshedSoulData<?>> finshedSoulDataConsumer) {
@@ -108,15 +112,17 @@ public class SoulDataProvider implements DataProvider {
     }
 
     @Override
-    public void run(CachedOutput pOutput) throws IOException {
+    public CompletableFuture<?> run(CachedOutput cachedOutput) {
         Set<ResourceLocation> set = Sets.newHashSet();
-        buildSoulData(finshedSoulData -> {
+        List<CompletableFuture<?>> list = new ArrayList<>();
+        this.buildSoulData(finshedSoulData -> {
             if (!set.add(finshedSoulData.getId())) {
-                throw new IllegalStateException("Duplicate recipe " + finshedSoulData.getId());
+                throw new IllegalStateException("Duplicate recipe" + finshedSoulData.getId());
             } else {
-                saveRecipe(pOutput, finshedSoulData.serializeData(), this.generator.json(finshedSoulData.getId()));
+                list.add(DataProvider.saveStable(cachedOutput, finshedSoulData.serializeData(), this.souldataprovider.json(finshedSoulData.getId())));
             }
         });
+        return CompletableFuture.allOf(list.toArray((p_253414_) -> new CompletableFuture[p_253414_]));
     }
 
     @Override
@@ -125,18 +131,9 @@ public class SoulDataProvider implements DataProvider {
     }
 
     private void addSpawnerData(EntityType<?> entityType, int power, SpawnTask.SpawnType type, Consumer<FinshedSoulData<?>> finshedSoulDataConsumer) {
-        ResourceLocation key = Registry.ENTITY_TYPE.getKey(entityType);
+        ResourceLocation key = ForgeRegistries.ENTITY_TYPES.getKey(entityType);
         SpawnerSoul.SoulData data = new SpawnerSoul.SoulData(key, power, type);
         finshedSoulDataConsumer.accept(new FinshedSoulData<>(SpawnerSoul.CODEC, data, "spawner/" + key.getNamespace() + "_" + key.getPath()));
-    }
-
-    private static void saveRecipe(CachedOutput pOutput, JsonObject pSoulDataJson, Path pPath) {
-        try {
-            DataProvider.saveStable(pOutput, pSoulDataJson, pPath);
-        } catch (IOException ioexception) {
-            EnderIO.LOGGER.error("Couldn't save soul data {}", pPath, ioexception);
-        }
-
     }
 
     static class FinshedSoulData<T extends ISoulData> {

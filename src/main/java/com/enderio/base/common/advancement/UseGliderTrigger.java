@@ -17,7 +17,7 @@ public class UseGliderTrigger extends SimpleCriterionTrigger<UseGliderTrigger.Tr
     }
 
     @Override
-    protected TriggerInstance createInstance(JsonObject pJson, EntityPredicate.Composite pPlayer, DeserializationContext pContext) {
+    protected TriggerInstance createInstance(JsonObject pJson, ContextAwarePredicate player, DeserializationContext pContext) {
         return new TriggerInstance();
     }
 
@@ -31,7 +31,7 @@ public class UseGliderTrigger extends SimpleCriterionTrigger<UseGliderTrigger.Tr
     public static class TriggerInstance extends AbstractCriterionTriggerInstance {
 
         public TriggerInstance() {
-            super(UseGliderTrigger.ID, EntityPredicate.Composite.ANY);
+            super(UseGliderTrigger.ID, ContextAwarePredicate.ANY);
         }
     }
 }

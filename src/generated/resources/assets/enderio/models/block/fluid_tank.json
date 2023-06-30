@@ -11,5 +11,8 @@
     "tank",
     "overlay"
   ],
-  "loader": "forge:composite"
+  "loader": "forge:composite",
+  "textures": {
+    "particle": "enderio:block/machine_side"
+  }
 }

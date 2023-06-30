@@ -3,6 +3,7 @@ package com.enderio.machines.common.integrations.jei.category;
 import com.enderio.EnderIO;
 import com.enderio.machines.client.gui.screen.SlicerScreen;
 import com.enderio.machines.common.init.MachineBlocks;
+import com.enderio.machines.common.integrations.jei.util.RecipeUtil;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.recipe.SlicingRecipe;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -12,6 +13,7 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.network.chat.Component;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.Tags;
@@ -56,7 +58,7 @@ public class SlicingRecipeCategory implements IRecipeCategory<SlicingRecipe> {
     public void setRecipe(IRecipeLayoutBuilder builder, SlicingRecipe recipe, IFocusGroup focuses) {
         // Tool slots
         builder.addSlot(CATALYST, 11, 1)
-            .addIngredients(Ingredient.of(Tags.Items.TOOLS_AXES));
+            .addIngredients(Ingredient.of(ItemTags.AXES));
         builder.addSlot(CATALYST, 29, 1)
             .addIngredients(Ingredient.of(Tags.Items.SHEARS));
 
@@ -76,6 +78,6 @@ public class SlicingRecipeCategory implements IRecipeCategory<SlicingRecipe> {
 
         // Output
         builder.addSlot(OUTPUT, 91, 34)
-            .addItemStacks(List.of(recipe.getResultStacks().get(0).getItem()));
+            .addItemStacks(List.of(RecipeUtil.getResultStacks(recipe).get(0).getItem()));
     }
 }

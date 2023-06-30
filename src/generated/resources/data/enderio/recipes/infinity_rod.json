@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": {
+      "item": "enderio:grains_of_infinity"
+    },
+    "N": {
+      "item": "enderio:dark_steel_nugget"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    " NG",
+    "NSN",
+    "GN "
+  ],
+  "result": {
+    "item": "enderio:infinity_rod"
+  },
+  "show_notification": true
+}

@@ -9,6 +9,7 @@ import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Either;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -64,7 +65,7 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
     }
 
     @Override
-    public List<OutputStack> craft(Container container) {
+    public List<OutputStack> craft(Container container, RegistryAccess registryAccess) {
         List<OutputStack> outputs = new ArrayList<>();
 
         // Iterate over the number of outputs
@@ -108,7 +109,7 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
     }
 
     @Override
-    public List<OutputStack> getResultStacks() {
+    public List<OutputStack> getResultStacks(RegistryAccess registryAccess) {
         // TODO: This logic seems dumb.
         // Gather guaranteed outputs (that are loaded)
         List<OutputStack> guaranteedOutputs = new ArrayList<>();
@@ -281,6 +282,14 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
                     // Get tag
                     ResourceLocation id = new ResourceLocation(obj.get("tag").getAsString());
                     TagKey<Item> tag = ItemTags.create(id);
+
+                    // TODO: move these tests into OutputItem instead..
+                    // Check tag has entries if its required (although the point of a tag is generally this will be optional, its just in case
+                    //if (!optional) {
+                    //    EnderIO.LOGGER.error("Sag milling recipe {} is missing a required output tag {}", recipeId, id);
+                    //    throw new RuntimeException("Sag milling recipe is missing a required output tag.");
+                    //}
+
                     outputs.add(OutputItem.of(tag, count, chance, optional));
                 } else {
                     ResourceLocation id = new ResourceLocation(obj.get("item").getAsString());
@@ -320,6 +329,14 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
                     if (isTag) {
                         // Create tag
                         TagKey<Item> tag = ItemTags.create(id);
+
+                        // TODO: move these tests into OutputItem instead..
+                        // Check tag has entries if its required (although the point of a tag is generally this will be optional, its just in case
+                        //if (!optional && ForgeRegistries.ITEMS.tags().getTag(tag).isEmpty()) {
+                        //    EnderIO.LOGGER.error("Sag milling recipe {} is missing a required output tag {}", recipeId, id);
+                        //    throw new RuntimeException("Sag milling recipe is missing a required output tag.");
+                        //}
+
                         outputs.add(OutputItem.of(tag, count, chance, optional));
                     } else {
                         Item item = ForgeRegistries.ITEMS.getValue(id);
@@ -336,7 +353,7 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
 
                 return new SagMillingRecipe(recipeId, input, outputs, energy, bonusType);
             } catch (Exception ex) {
-                EnderIO.LOGGER.error("Error reading allow smelting recipe to packet.", ex);
+                EnderIO.LOGGER.error("Error reading sag milling recipe to packet.", ex);
                 throw ex;
             }
         }

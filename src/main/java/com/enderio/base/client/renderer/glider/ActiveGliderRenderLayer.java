@@ -4,7 +4,7 @@ import com.enderio.api.integration.ClientIntegration;
 import com.enderio.api.integration.Integration;
 import com.enderio.api.integration.IntegrationManager;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -15,6 +15,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.common.Mod;
+import org.joml.Vector3f;
 
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class ActiveGliderRenderLayer extends RenderLayer<AbstractClientPlayer, P
             Integration::getClientIntegration);
         if (!workingGliders.isEmpty()) {
             posestack.pushPose();
-            posestack.mulPose(Vector3f.ZP.rotationDegrees(180));
+            posestack.mulPose(Axis.ZP.rotationDegrees(180));
             posestack.translate(0, 0.5, -0.2);
             int overlay = LivingEntityRenderer.getOverlayCoords(player, 0.0F);
             workingGliders.forEach(workingGlider -> workingGlider.renderHangGlider(posestack, pBuffer, pPackedLight, overlay, player, pPartialTick));
@@ -43,11 +44,11 @@ public class ActiveGliderRenderLayer extends RenderLayer<AbstractClientPlayer, P
     public static void setupAnim(Player player, PoseStack poseStack) {
         player.oAttackAnim = 0;
         player.attackAnim = 0;
-        player.animationPosition = 0;
-        player.animationSpeed = 0;
-        player.animationSpeedOld = 0;
-        poseStack.mulPose(Vector3f.ZN.rotationDegrees(Mth.clamp(player.yHeadRot - player.yBodyRot, -360, 360)));
-        poseStack.mulPose(Vector3f.XP.rotationDegrees(-100));
+        player.walkAnimation.position(0);
+        player.walkAnimation.setSpeed(0);
+        player.walkAnimation.update(0, 0);
+        poseStack.mulPose(Axis.ZN.rotationDegrees(Mth.clamp(player.yHeadRot - player.yBodyRot, -360, 360)));
+        poseStack.mulPose(Axis.XP.rotationDegrees(-100));
         player.xCloakO = 0;
         player.xCloak = 0;
         player.yCloakO = 0;

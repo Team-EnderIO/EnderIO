@@ -1,3 +1,5 @@
+import java.util.function.Consumer
+
 buildscript {
     repositories {
         // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
@@ -65,8 +67,6 @@ for (String set : subsets) {
 }
 
 minecraft {
-    mappings channel: "${mappings_channel}", version: "${mappings_version}"
-
     if (mappings_channel == "sugarcane") {
         mappings channel: 'sugarcane', version: "${mappings_version}-${minecraft_version}"
     } else if (mappings_channel == "parchment") {
@@ -103,7 +103,7 @@ minecraft {
         }
         clientRandom {
             parent runs.client
-            args '--username', 'Dev##'
+            args '--username', 'Dev####'
         }
 
         server {
@@ -134,7 +134,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-            args '--mod', 'enderio', '--server', '--client', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            args '--mod', 'enderio', '--server', '--client', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/'), '--existing', file('src/conduits/resources/')
 
             mods {
                 enderio {
@@ -171,30 +171,33 @@ processResources {
     }
 }
 
-repositories {
-    // Registrate
-    maven { url "https://maven.tterrag.com/" }
-
-    maven {
-        // location of the maven that hosts JEI files
-        name = "Progwml6 maven"
-        url = "https://dvs1.progwml6.com/files/maven/"
-    }
-    maven {
-        // location of a maven mirror for JEI files, as a fallback
-        name = "ModMaven"
-        url = "https://modmaven.dev"
-    }
-
-    // Temp for TOP, https://github.com/McJtyMods/TheOneProbe/issues/506
-    maven {
-        url "https://cursemaven.com"
-        content {
-            includeGroup "curse.maven"
+// pupnewfster helpers for exclusive repos
+void exclusiveRepo(RepositoryHandler handler, String url, String... groups) {
+    exclusiveRepo(handler, url, filter -> {
+        for (def group : groups) {
+            filter.includeGroup(group)
         }
-    }
+    })
+}
 
-    maven { url 'https://maven.blamejared.com' }
+//Note: This cannot be static so that fg.repository can be properly accessed
+@SuppressWarnings('GrMethodMayBeStatic')
+void exclusiveRepo(RepositoryHandler handler, String url, Consumer<InclusiveRepositoryContentDescriptor> filterSetup) {
+    handler.exclusiveContent {
+        it.forRepositories(handler.maven {
+            setUrl(url)
+        }, fg.repository)//Add FG's repo so we make sure we are able to then find the mapped deps
+        it.filter { f -> filterSetup.accept(f) }
+    }
+}
+
+repositories { RepositoryHandler handler ->
+    exclusiveRepo(handler, 'https://maven.tterrag.com/', 'com.tterrag.registrate')
+    exclusiveRepo(handler, 'https://modmaven.dev/', 'mezz.jei', 'mcjty.theoneprobe', 'appeng')
+    exclusiveRepo(handler, 'https://cursemaven.com', 'curse.maven')
+    exclusiveRepo(handler, 'https://maven.blamejared.com', 'vazkii.patchouli')
+    exclusiveRepo(handler, 'https://dogforce-games.com/maven', 'dev.gigaherz.graph')
+    exclusiveRepo(handler, 'https://api.modrinth.com/maven', 'maven.modrinth')
 
     mavenLocal()
 }
@@ -204,11 +207,16 @@ jarJar.enable()
 dependencies {
     // Forge
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-
+    //implementation fg.deobf("blank:Xycraft+Core:0.5.2")
+    //runtimeOnly fg.deobf("blank:Xycraft+Override:0.5.2")
+    //runtimeOnly fg.deobf("blank:Xycraft+World:0.5.2")
     // Registrate
     implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
     jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: "[${registrate_version}]")
 
+    // GraphLib
+    implementation implementation(fg.deobf("dev.gigaherz.graph:GraphLib3:${graphlib_version}"))
+    jarJar(group: 'dev.gigaherz.graph', name: 'GraphLib3', version: "${graphlib_version_range}")
     coreAnnotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     // JEI
@@ -217,16 +225,30 @@ dependencies {
     runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common:${jei_version}")
     runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
 
+    //RFTOOLS
+    runtimeOnly fg.deobf("maven.modrinth:rftools-power:f430rHkA")
+    runtimeOnly fg.deobf("maven.modrinth:mcjtylib:3LlgyvSh")
+    runtimeOnly fg.deobf("maven.modrinth:rftools-base:Uu1IkVMH")
+
+    // AE2
+    compileOnly "appeng:appliedenergistics2-forge:${ae2_version}:api"
+    runtimeOnly fg.deobf("appeng:appliedenergistics2-forge:${ae2_version}")
+
     // The One Probe
-//    implementation fg.deobf("mcjty.theoneprobe:TheOneProbe:${minecraft_version}-${top_version}")
-    implementation fg.deobf("curse.maven:the-one-probe-245211:${top_version}")
+    //TODO: Remove having to specify these as non transitive once https://github.com/McJtyMods/TheOneProbe/issues/548 is fixed. Thanks Mekanism!
+    compileOnly fg.deobf("mcjty.theoneprobe:theoneprobe:${top_version}:api") {
+        transitive = false
+    }
+    runtimeOnly fg.deobf("mcjty.theoneprobe:theoneprobe:${top_version}") {
+        transitive = false
+    }
 
     // Patchouli
-    compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
-    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
+//    compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
+//    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
 
     // While we don't have conduits etc.
-    runtimeOnly fg.deobf("curse.maven:mekanism-268560:${mekanism_version}")
+//    runtimeOnly fg.deobf("curse.maven:mekanism-268560:${mekanism_version}")
 
     // Jetbrains annotations
     compileOnly 'org.jetbrains:annotations:23.0.0'
@@ -299,7 +321,32 @@ tasks.jarJar.configure {
 }
 build.dependsOn tasks.jarJar
 
-// TODO: 1.19: Modrinth publishing.
+// TODO: Should trigger automated publishes using GitHub actions when a release is made.
+
+if (modrinth_publish && (System.getenv("MODRINTH_TOKEN") != null || project.hasProperty('modrinthToken'))) {
+    modrinth {
+        token = System.getenv("MODRINTH_TOKEN") ?: project.findProperty("modrinthToken")
+        projectId = "${modrinth_projectId}"
+        versionNumber = project.version
+        versionType = release_type
+        uploadFile = tasks.jarJar
+        gameVersions = [minecraft_version]
+        loaders = ["forge"]
+
+        // TODO: Generate changelog based on diff since last time.
+//        changelog = ...
+
+        syncBodyFrom = rootProject.file("doc/modpages/modrinth/body.md").text
+
+        dependencies {
+            // Patchouli
+            optional.project "nU0bVIaL"
+
+            // JEI
+            optional.project "u6dRKJwZ"
+        }
+    }
+}
 
 publishing {
     publications {

@@ -5,6 +5,7 @@ import com.enderio.core.common.recipes.CountedIngredient;
 import com.enderio.machines.client.gui.screen.PrimitiveAlloySmelterScreen;
 import com.enderio.machines.common.integrations.jei.util.MachineCategory;
 import com.enderio.machines.common.init.MachineBlocks;
+import com.enderio.machines.common.integrations.jei.util.RecipeUtil;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -14,6 +15,7 @@ import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeType;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
@@ -72,12 +74,12 @@ public class PrimitiveAlloySmeltingCategory extends MachineCategory<AlloySmeltin
                 .addItemStacks(inputs.get(2).getItems());
 
         builder.addSlot(OUTPUT, 97, 19)
-            .addItemStacks(List.of(recipe.getResultStacks().get(0).getItem()));
+            .addItemStacks(List.of(RecipeUtil.getResultStacks(recipe).get(0).getItem()));
     }
 
     @Override
-    public void draw(AlloySmeltingRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
-        animatedFlame.draw(stack, 22, 20);
+    public void draw(AlloySmeltingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+        animatedFlame.draw(guiGraphics, 22, 20);
 
         // TODO: Draw time to smelt
     }

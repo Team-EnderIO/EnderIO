@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "building",
   "key": {
     "G": {
       "item": "enderio:fused_quartz"
@@ -16,5 +17,6 @@
   "result": {
     "count": 8,
     "item": "enderio:fused_quartz_m"
-  }
+  },
+  "show_notification": true
 }

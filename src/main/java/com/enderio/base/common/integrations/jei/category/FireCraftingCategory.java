@@ -7,9 +7,7 @@ import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.recipe.FireCraftingRecipe;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3f;
-import com.mojang.math.Vector4f;
+import com.mojang.math.Axis;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IIngredientAcceptor;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -22,11 +20,13 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
@@ -35,6 +35,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
+import net.minecraftforge.registries.ForgeRegistries;
+import org.joml.Matrix4f;
+import org.joml.Vector4f;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -129,7 +132,7 @@ public class FireCraftingCategory implements IRecipeCategory<FireCraftingRecipe>
     }
 
     @Override
-    public void draw(FireCraftingRecipe recipe, IRecipeSlotsView recipeSlotsView, PoseStack stack, double mouseX, double mouseY) {
+    public void draw(FireCraftingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
         if (!Screen.hasShiftDown() && timer.getValue() != changed) {
 //            EnderIO.LOGGER.debug("Block {} IDX: {}, ({} - {}) {}", recipe.getId(), blockIdx.get(recipe.getId()), timer.getValue(), changed, blockIdx);
 //            blockIdx.put(recipe.getId(), blockIdx.get(recipe.getId()) + 1);
@@ -144,66 +147,66 @@ public class FireCraftingCategory implements IRecipeCategory<FireCraftingRecipe>
         RenderSystem.enableBlend();
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 
-        stack.pushPose();
-        stack.translate(31, 31, 100);
-        stack.scale(20F, 20F, 20F);
+        guiGraphics.pose().pushPose();
+        guiGraphics.pose().translate(31, 31, 100);
+        guiGraphics.pose().scale(20F, 20F, 20F);
 
         // Initial eye pos somewhere off in the distance in the -Z direction
         Vector4f eye = new Vector4f(0, 0, -100, 1);
         Matrix4f rotMat = new Matrix4f();
-        rotMat.setIdentity();
+        rotMat.identity();
 
         // For each GL rotation done, track the opposite to keep the eye pos accurate
-        stack.mulPose(Vector3f.XP.rotationDegrees(-30F));
-        rotMat.multiply(Vector3f.XP.rotationDegrees(30F));
-        stack.mulPose(Vector3f.YP.rotationDegrees(-45F));
-        rotMat.multiply(Vector3f.YP.rotationDegrees(45F));
+        guiGraphics.pose().mulPose(Axis.XP.rotationDegrees(-30F));
+        rotMat.rotation(Axis.XP.rotationDegrees(30F));
+        guiGraphics.pose().mulPose(Axis.YP.rotationDegrees(-45F));
+        rotMat.rotation(Axis.YP.rotationDegrees(45F));
 
         // Finally apply the rotations
-        eye.transform(rotMat);
-        eye.perspectiveDivide();
+        eye.mul(rotMat);
+        eye.div(eye.w);
 
         // Block Render
-        renderBlock(stack, block);
+        renderBlock(guiGraphics, block);
 
-        stack.popPose();
+        guiGraphics.pose().popPose();
     }
 
-    private void renderBlock(PoseStack stack, Block block) {
-        stack.pushPose();
+    private void renderBlock(GuiGraphics guiGraphics, Block block) {
+        guiGraphics.pose().pushPose();
 
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-        stack.translate(0, 0, 0);
+        guiGraphics.pose().translate(0, 0, 0);
 
         MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
 
         BlockState state = block.defaultBlockState();
-        stack.pushPose();
-        stack.translate(0, 0.5, 0);
-        stack.scale(1f, -1f, 1f);
+        guiGraphics.pose().pushPose();
+        guiGraphics.pose().translate(0, 0.5, 0);
+        guiGraphics.pose().scale(1f, -1f, 1f);
 
-        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, stack, buffers, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+        Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, guiGraphics.pose(), buffers, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
 
-        stack.popPose();
-        // TODO: Fire Water has no blockstate, wierd, probably just need a different renderer
-        BlockState fireState = !alternateFire ? Blocks.FIRE.defaultBlockState() : EIOFluids.FIRE_WATER.getBlock()/*.orElse(Blocks.FIRE)*/.get().defaultBlockState();
+        guiGraphics.pose().popPose();
+        // TODO: Fire Water has no block. I think this is a registrate bug?
+        BlockState fireState = !alternateFire ? Blocks.FIRE.defaultBlockState() : EIOFluids.FIRE_WATER.getBlock().orElse(Blocks.FIRE).defaultBlockState();
 //        BlockState fireState = Blocks.FIRE.defaultBlockState();
-        stack.pushPose();
-        stack.translate(0, -0.5, 0);
-        stack.scale(1f, -1f, 1f);
+        guiGraphics.pose().pushPose();
+        guiGraphics.pose().translate(0, -0.5, 0);
+        guiGraphics.pose().scale(1f, -1f, 1f);
 
 //        if (alternateFire) {
 //            VertexConsumer vertex = buffers.getBuffer(RenderType.cutout());
 //            // TODO: Fixy this
 //            Minecraft.getInstance().getBlockRenderer().renderLiquid(BlockPos.ZERO, Minecraft.getInstance().level, vertex, fireState, EIOFluids.FIRE_WATER.get().defaultFluidState());
 //        } else {
-            Minecraft.getInstance().getBlockRenderer().renderSingleBlock(fireState, stack, buffers, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, ModelData.EMPTY, RenderType.cutout());
+            Minecraft.getInstance().getBlockRenderer().renderSingleBlock(fireState, guiGraphics.pose(), buffers, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, ModelData.EMPTY, RenderType.cutout());
 //        }
 
-        stack.popPose();
+        guiGraphics.pose().popPose();
 
         buffers.endBatch();
 
-        stack.popPose();
+        guiGraphics.pose().popPose();
     }
 }

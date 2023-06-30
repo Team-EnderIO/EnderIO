@@ -23,3 +23,9 @@ modId="forge"
 mandatory=true
 versionRange="${forge_version}"
 side="BOTH"
+
+[[dependencies.enderio]]
+modId="ae2"
+mandatory=false
+versionRange="[12.7.0,)"
+side="BOTH"

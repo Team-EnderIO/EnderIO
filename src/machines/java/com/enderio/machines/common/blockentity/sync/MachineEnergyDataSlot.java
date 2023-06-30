@@ -24,7 +24,6 @@ public class MachineEnergyDataSlot extends EnderDataSlot<IMachineEnergyStorage> 
         CompoundTag tag = new CompoundTag();
         tag.putInt("Energy", storage.getEnergyStored());
         tag.putInt("MaxStored", storage.getMaxEnergyStored());
-        tag.putInt("MaxTransfer", storage.getMaxEnergyTransfer());
         tag.putInt("MaxUse", storage.getMaxEnergyUse());
         return tag;
     }
@@ -33,8 +32,7 @@ public class MachineEnergyDataSlot extends EnderDataSlot<IMachineEnergyStorage> 
     protected IMachineEnergyStorage fromNBT(CompoundTag nbt) {
         int energy = nbt.getInt("Energy");
         int maxStored = nbt.getInt("MaxStored");
-        int maxTransfer = nbt.getInt("MaxTransfer");
         int maxUse = nbt.getInt("MaxUse");
-        return new ImmutableMachineEnergyStorage(energy, maxStored, maxTransfer, maxUse);
+        return new ImmutableMachineEnergyStorage(energy, maxStored, maxUse);
     }
 }

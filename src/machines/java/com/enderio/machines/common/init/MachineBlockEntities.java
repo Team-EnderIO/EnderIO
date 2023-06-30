@@ -2,12 +2,20 @@ package com.enderio.machines.common.init;
 
 import com.enderio.EnderIO;
 import com.enderio.machines.common.blockentity.*;
+import com.enderio.machines.common.blockentity.solar.SolarPanelBlockEntity;
+import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
+import com.google.common.collect.ImmutableMap;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.BlockEntityBuilder;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
+import net.minecraft.Util;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 public class MachineBlockEntities {
     private static final Registrate REGISTRATE = EnderIO.registrate();
@@ -46,6 +54,15 @@ public class MachineBlockEntities {
     public static final BlockEntityEntry<SoulBinderBlockEntity> SOUL_BINDER = register("soul_binder", SoulBinderBlockEntity::new, MachineBlocks.SOUL_BINDER);
 
     public static final BlockEntityEntry<PoweredSpawnerBlockEntity> POWERED_SPAWNER = register("powered_spanwer", PoweredSpawnerBlockEntity::new, MachineBlocks.POWERED_SPAWNER);
+
+    public static final Map<SolarPanelTier, BlockEntityEntry<SolarPanelBlockEntity>> SOLAR_PANELS = Util.make(() -> {
+       Map<SolarPanelTier, BlockEntityEntry<SolarPanelBlockEntity>> map = new HashMap<>();
+       for (SolarPanelTier tier : SolarPanelTier.values()) {
+           map.put(tier, register(tier.name().toLowerCase(Locale.ROOT) + "_photovoltaic_cell", (type, worldPosition,
+               blockState) -> new SolarPanelBlockEntity(type, worldPosition, blockState, tier), () -> MachineBlocks.SOLAR_PANELS.get(tier).get()));
+       }
+       return ImmutableMap.copyOf(map);
+    });
 
     @SafeVarargs
     private static <B extends BlockEntity> BlockEntityEntry<B> register(String name, BlockEntityBuilder.BlockEntityFactory<B> beFactory,

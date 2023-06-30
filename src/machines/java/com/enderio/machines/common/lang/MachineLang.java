@@ -28,6 +28,8 @@ public class MachineLang {
     public static final MutableComponent CATEGORY_PRIMITIVE_ALLOY_SMELTING = REGISTRATE.addLang("gui", EnderIO.loc("category.primitive_alloy_smelting"), "Primitive Alloy Smelting");
     public static final MutableComponent CATEGORY_SAG_MILL = REGISTRATE.addLang("gui", EnderIO.loc("category.sag_mill"), "SAG Mill");
     public static final MutableComponent CATEGORY_SLICING = REGISTRATE.addLang("gui", EnderIO.loc("category.slicing"), "Slicing");
+    public static final MutableComponent CATEGORY_SOUL_BINDING = REGISTRATE.addLang("gui", EnderIO.loc("category.soul_binding"), "Soul Binding");
+    public static final MutableComponent CATEGORY_TANK = REGISTRATE.addLang("gui", EnderIO.loc("category.tank"), "Fluid Tank");
 
     // endregion
 
@@ -36,6 +38,10 @@ public class MachineLang {
     public static final Component UNKNOWN = REGISTRATE.addLang("gui", EnderIO.loc("spawner.unknown"), "Unknown mob");
     public static final Component OTHER_MOD = REGISTRATE.addLang("gui", EnderIO.loc("spawner.other_mod"), "Other mod");
     public static final Component DISABLED = REGISTRATE.addLang("gui", EnderIO.loc("spawner.disabled"), "Disabled by config");
+    public static final Component PHOTOVOLTAIC_CELL = REGISTRATE.addLang("tooltip", EnderIO.loc("photovoltaic_cell/main"), "Solar Power!");
+    public static final Component PHOTOVOLTAIC_CELL_ADVANCED = REGISTRATE.addLang("tooltip", EnderIO.loc("photovoltaic_cell/advanced"), "Produces Power during daylight hours");
+    public static final Component PHOTOVOLTAIC_CELL_ADVANCED2 = REGISTRATE.addLang("tooltip", EnderIO.loc("photovoltaic_cell/advanced2"), "Must have a clear line of sight to the sky");
+    public static final MutableComponent PHOTOVOLTAIC_CELL_ADVANCED3 = REGISTRATE.addLang("tooltip", EnderIO.loc("photovoltaic_cell/advanced3"), "Max Output: ");
 
     public static void register() {}
 }

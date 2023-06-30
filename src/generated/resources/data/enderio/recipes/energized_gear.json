@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "G": {
       "item": "enderio:iron_gear"
@@ -18,5 +19,6 @@
   ],
   "result": {
     "item": "enderio:energized_gear"
-  }
+  },
+  "show_notification": true
 }

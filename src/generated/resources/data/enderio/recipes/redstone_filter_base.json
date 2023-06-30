@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": {
+      "tag": "forge:ingots/iron"
+    },
+    "P": [
+      {
+        "item": "minecraft:paper"
+      },
+      {
+        "item": "enderio:black_paper"
+      }
+    ],
+    "R": {
+      "item": "enderio:redstone_alloy_ingot"
+    }
+  },
+  "pattern": [
+    "RPR",
+    "PIP",
+    "RPR"
+  ],
+  "result": {
+    "item": "enderio:redstone_filter_base"
+  },
+  "show_notification": true
+}

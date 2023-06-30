@@ -7,6 +7,7 @@ import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -22,12 +23,13 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 public class SlicingRecipeProvider extends EnderRecipeProvider {
-    public SlicingRecipeProvider(DataGenerator generator) {
-        super(generator);
+
+    public SlicingRecipeProvider(PackOutput packOutput) {
+        super(packOutput);
     }
 
     @Override
-    protected void buildCraftingRecipes(Consumer<FinishedRecipe> finishedRecipeConsumer) {
+    protected void buildRecipes(Consumer<FinishedRecipe> finishedRecipeConsumer) {
         // TODO: Tormented enderman head
 
         build(EIOItems.ZOMBIE_ELECTRODE.get(), List.of(
@@ -35,7 +37,7 @@ public class SlicingRecipeProvider extends EnderRecipeProvider {
             Ingredient.of(EIOItems.SILICON.get()), Ingredient.of(EIOItems.BASIC_CAPACITOR.get()), Ingredient.of(EIOItems.SILICON.get())
         ), 20000, finishedRecipeConsumer);
 
-        build(EIOItems.ZOMBIE_CONTROLLER.get(), List.of(
+        build(EIOItems.Z_LOGIC_CONTROLLER.get(), List.of(
             Ingredient.of(EIOItems.SOULARIUM_INGOT.get()), Ingredient.of(Items.ZOMBIE_HEAD), Ingredient.of(EIOItems.SOULARIUM_INGOT.get()),
             Ingredient.of(EIOItems.SILICON.get()), Ingredient.of(Items.REDSTONE), Ingredient.of(EIOItems.SILICON.get())
         ), 20000, finishedRecipeConsumer);

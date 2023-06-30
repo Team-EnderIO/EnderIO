@@ -1,11 +1,12 @@
 package com.enderio.base.common.block.glass;
 
 import com.enderio.EnderIO;
-import com.enderio.base.common.item.EIOCreativeTabs;
+import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.base.common.tag.EIOTags;
 import com.google.common.collect.ImmutableMap;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.BlockEntry;
+import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -98,7 +99,7 @@ public class GlassBlocks {
      * Register a non-colored glass
      */
     private BlockEntry<FusedQuartzBlock> register(Registrate registrate, String name, String english) {
-        return registrate
+        var builder =  registrate
             .block(name, props -> new FusedQuartzBlock(props, glassIdentifier))
             .tag(glassIdentifier.explosion_resistance() ? EIOTags.Blocks.FUSED_QUARTZ : EIOTags.Blocks.CLEAR_GLASS)
             .lang(english)
@@ -113,11 +114,14 @@ public class GlassBlocks {
                 .isSuffocating(GlassBlocks::never)
                 .isViewBlocking(GlassBlocks::never))
             .item()
-            .tab(() -> EIOCreativeTabs.BLOCKS)
+            .tab(EIOCreativeTabs.BLOCKS)
             .tag(glassIdentifier.explosion_resistance() ? EIOTags.Items.FUSED_QUARTZ : EIOTags.Items.CLEAR_GLASS)
-            .tag(EIOTags.Items.GLASS_TAGS.get(glassIdentifier))
-            .build()
-            .register();
+            .tag(EIOTags.Items.GLASS_TAGS.get(glassIdentifier));
+        if (glassIdentifier.lighting() == GlassLighting.EMITTING && glassIdentifier.explosion_resistance())
+            builder.tag(EIOTags.Items.ENLIGHTENED_FUSED_QUARTZ);
+        if (glassIdentifier.lighting() == GlassLighting.BLOCKING && glassIdentifier.explosion_resistance())
+            builder.tag(EIOTags.Items.DARK_FUSED_QUARTZ);
+        return builder.build().register();
     }
 
     /**
@@ -128,7 +132,7 @@ public class GlassBlocks {
             .block(name, props -> new FusedQuartzBlock(props, glassIdentifier))
             .lang(english)
             .blockstate((con, prov) -> prov.simpleBlock(con.get(), prov.models().getExistingFile(getModelFile())))
-            .color(() -> () -> (p_92567_, p_92568_, p_92569_, p_92570_) -> color.getMaterialColor().col)
+            .color(() -> () -> (p_92567_, p_92568_, p_92569_, p_92570_) -> color.getMapColor().col)
             .properties(props -> props
                 .noOcclusion()
                 .strength(0.3F)
@@ -138,11 +142,11 @@ public class GlassBlocks {
                 .isRedstoneConductor(GlassBlocks::never)
                 .isSuffocating(GlassBlocks::never)
                 .isViewBlocking(GlassBlocks::never)
-                .color(color.getMaterialColor()))
+                .mapColor(color))
             .item()
-            .tab(() -> EIOCreativeTabs.BLOCKS)
+            .tab(EIOCreativeTabs.BLOCKS)
             .tag(EIOTags.Items.GLASS_TAGS.get(glassIdentifier))
-            .color(() -> () -> (ItemColor) (p_92672_, p_92673_) -> color.getMaterialColor().col)
+            .color(() -> () -> (ItemColor) (p_92672_, p_92673_) -> color.getMapColor().col)
             .build()
             .register();
     }

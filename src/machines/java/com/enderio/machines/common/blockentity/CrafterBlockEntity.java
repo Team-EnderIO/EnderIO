@@ -13,6 +13,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -27,7 +28,6 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
 
     //TODO Change values
     public static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, () -> 100000f);
-    public static final QuadraticScalable ENERGY_TRANSFER = new QuadraticScalable(CapacitorModifier.ENERGY_TRANSFER, () -> 120f);
     public static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, () -> 10f);
     private static final int ENERGY_USAGE_PER_ITEM = 10;
 
@@ -39,7 +39,7 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
     private CraftingRecipe recipe;
     private final Queue<ItemStack> outputBuffer = new ArrayDeque<>();
 
-    private static final CraftingContainer dummyCContainer = new CraftingContainer(new AbstractContainerMenu(null, -1) {
+    private static final CraftingContainer dummyCContainer = new TransientCraftingContainer(new AbstractContainerMenu(null, -1) {
         @Override
         public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
             return ItemStack.EMPTY;
@@ -53,7 +53,7 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
 
 
     public CrafterBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
-        super(EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_TRANSFER, ENERGY_USAGE, type, worldPosition, blockState);
+        super(EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE, type, worldPosition, blockState);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
     }
 
     private boolean acceptSlotInput(int slot, ItemStack stack) {
-        return this.getInventory().getStackInSlot(slot + 10).sameItem(stack);
+        return ItemStack.isSameItem(this.getInventory().getStackInSlot(slot + 10), stack);
     }
 
     @Override
@@ -140,7 +140,7 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
         Optional<CraftingRecipe> opt = getLevel().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, dummyCContainer, getLevel());
         if (opt.isPresent()) {
             recipe = opt.get();
-            return Optional.of(recipe.assemble(dummyCContainer));
+            return Optional.of(recipe.assemble(dummyCContainer, getLevel().registryAccess()));
         }
         return Optional.empty();
     }
@@ -152,7 +152,7 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
 
     private void craftItem() {
         for (int i = 0; i < 9; i++) {
-            if (!ItemStack.isSame(INPUT.get(i).getItemStack(this), GHOST.get(i).getItemStack(this))) {
+            if (!ItemStack.isSameItem(INPUT.get(i).getItemStack(this), GHOST.get(i).getItemStack(this))) {
                 return;
             }
         }
@@ -162,7 +162,7 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
         }
         //craft
         clearInput();
-        outputBuffer.add(recipe.assemble(dummyCContainer));
+        outputBuffer.add(recipe.assemble(dummyCContainer, getLevel().registryAccess()));
         outputBuffer.addAll(recipe.getRemainingItems(dummyCContainer));
         // clean buffer
         outputBuffer.removeIf(ItemStack::isEmpty);

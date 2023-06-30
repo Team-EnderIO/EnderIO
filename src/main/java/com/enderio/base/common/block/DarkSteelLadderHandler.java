@@ -19,7 +19,7 @@ public class DarkSteelLadderHandler {
     public static void onTick(TickEvent.PlayerTickEvent playerTickEvent) {
         if (playerTickEvent.phase == TickEvent.Phase.START && playerTickEvent.side == LogicalSide.CLIENT && playerTickEvent.player == Minecraft.getInstance().player) {
             LocalPlayer player = Minecraft.getInstance().player;
-            if (player.onClimbable() && player.level.getBlockState(player.blockPosition()).is(EIOBlocks.DARK_STEEL_LADDER.get())) {
+            if (player.onClimbable() && player.level().getBlockState(player.blockPosition()).is(EIOBlocks.DARK_STEEL_LADDER.get())) {
                 if (!Minecraft.getInstance().options.keyShift.isDown()) {
                     if (Minecraft.getInstance().options.keyUp.isDown()) {
                         player.move(MoverType.SELF, new Vec3(0, BaseConfig.COMMON.BLOCKS.DARK_STEEL_LADDER_BOOST.get(),0));

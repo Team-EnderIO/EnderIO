@@ -46,7 +46,7 @@ public class PaintedSandBlock extends SandBlock implements EntityBlock, IPainted
         if (blockEntity instanceof SinglePaintedBlockEntity paintedBlockEntity) {
             Block block = paintedBlockEntity.getPaint();
             if (block != null) {
-                return block.defaultMaterialColor().col;
+                return block.defaultMapColor().col;
             }
         }
         return 0;

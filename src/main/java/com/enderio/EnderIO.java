@@ -8,19 +8,24 @@ import com.enderio.base.common.integrations.EnderIOSelfIntegration;
 import com.enderio.base.common.item.tool.SoulVialItem;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.tag.EIOTags;
-import com.enderio.base.data.advancement.EIOAdvancementProvider;
+import com.enderio.base.data.EIODataProvider;
+import com.enderio.base.data.advancement.EIOAdvancementGenerator;
 import com.enderio.base.data.loot.FireCraftingLootProvider;
 import com.enderio.base.data.recipe.*;
 import com.enderio.base.data.tags.EIOBlockTagsProvider;
-import com.enderio.base.data.tags.EIOEntityTagsProvider;
 import com.enderio.base.data.tags.EIOFluidTagsProvider;
 import com.enderio.base.data.tags.EIOItemTagsProvider;
 import com.enderio.core.EnderCore;
 import com.enderio.core.common.network.CoreNetwork;
 import com.tterrag.registrate.Registrate;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
+import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.data.ForgeBlockTagsProvider;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.common.data.ForgeAdvancementProvider;
 import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -35,6 +40,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Mod(EnderIO.MODID)
 public class EnderIO {
@@ -70,6 +78,7 @@ public class EnderIO {
         CoreNetwork.networkInit();
 
         // Perform initialization and registration for everything so things are registered.
+        EIOCreativeTabs.register();
         EIOItems.register();
         EIOBlocks.register();
         EIOBlockEntities.register();
@@ -93,21 +102,30 @@ public class EnderIO {
 
     public void onGatherData(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
+        PackOutput packOutput = event.getGenerator().getPackOutput();
+        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
+        ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
 
-        generator.addProvider(event.includeServer(), new MaterialRecipes(generator));
-        generator.addProvider(event.includeServer(), new BlockRecipes(generator));
-        generator.addProvider(event.includeServer(), new ItemRecipes(generator));
-        generator.addProvider(event.includeServer(), new GrindingBallRecipeProvider(generator));
-        generator.addProvider(event.includeServer(), new GlassRecipes(generator));
-        generator.addProvider(event.includeServer(), new FireCraftingRecipes(generator));
+        EIODataProvider provider = new EIODataProvider("base");
 
-        ForgeBlockTagsProvider b = new ForgeBlockTagsProvider(generator, event.getExistingFileHelper());
-        generator.addProvider(event.includeServer(), new EIOItemTagsProvider(generator, b, event.getExistingFileHelper()));
-        generator.addProvider(event.includeServer(), new EIOFluidTagsProvider(generator, event.getExistingFileHelper()));
-        generator.addProvider(event.includeServer(), new EIOBlockTagsProvider(generator, event.getExistingFileHelper()));
-        generator.addProvider(event.includeServer(), new EIOEntityTagsProvider(generator, event.getExistingFileHelper()));
-        generator.addProvider(event.includeServer(), new FireCraftingLootProvider(generator));
+        provider.addSubProvider(event.includeServer(), new MaterialRecipes(packOutput));
+        provider.addSubProvider(event.includeServer(), new BlockRecipes(packOutput));
+        provider.addSubProvider(event.includeServer(), new ItemRecipes(packOutput));
+        provider.addSubProvider(event.includeServer(), new GrindingBallRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new GlassRecipes(packOutput));
+        provider.addSubProvider(event.includeServer(), new FireCraftingRecipes(packOutput));
 
-        generator.addProvider(event.includeServer(), new EIOAdvancementProvider(EnderIO.registrate(), generator, event.getExistingFileHelper()));
+        var b = new EIOBlockTagsProvider(packOutput, lookupProvider, existingFileHelper);
+        provider.addSubProvider(event.includeServer(), b);
+        provider.addSubProvider(event.includeServer(), new EIOItemTagsProvider(packOutput, lookupProvider, b.contentsGetter(), existingFileHelper));
+        provider.addSubProvider(event.includeServer(), new EIOFluidTagsProvider(packOutput, lookupProvider, existingFileHelper));
+        generator.addProvider(event.includeServer(), new LootTableProvider(
+            packOutput, Collections.emptySet(),
+            List.of(new LootTableProvider.SubProviderEntry(FireCraftingLootProvider::new, LootContextParamSets.EMPTY))));
+
+        provider.addSubProvider(event.includeServer(), new ForgeAdvancementProvider(packOutput, lookupProvider, existingFileHelper,
+            List.of(new EIOAdvancementGenerator())));
+
+        generator.addProvider(true, provider);
     }
 }

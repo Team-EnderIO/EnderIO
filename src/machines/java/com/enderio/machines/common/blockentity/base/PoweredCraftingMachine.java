@@ -22,9 +22,9 @@ public abstract class PoweredCraftingMachine<R extends MachineRecipe<C>, C exten
      */
     protected final RecipeType<R> recipeType;
 
-    public PoweredCraftingMachine(RecipeType<R> recipeType, ICapacitorScalable capacity, ICapacitorScalable transferRate, ICapacitorScalable usageRate,
+    public PoweredCraftingMachine(RecipeType<R> recipeType, ICapacitorScalable capacity, ICapacitorScalable usageRate,
         BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
-        super(capacity, transferRate, usageRate, type, worldPosition, blockState);
+        super(capacity, usageRate, type, worldPosition, blockState);
         this.recipeType = recipeType;
     }
 

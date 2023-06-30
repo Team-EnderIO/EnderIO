@@ -1,4 +1,5 @@
 {
+  "type": "minecraft:empty",
   "pools": [
     {
       "bonus_rolls": 0.0,
@@ -17,5 +18,6 @@
       "name": "infinity_in_world_crafting",
       "rolls": 1.0
     }
-  ]
+  ],
+  "random_sequence": "enderio:fire_crafting/infinity"
 }

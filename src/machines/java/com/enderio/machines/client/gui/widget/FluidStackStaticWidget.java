@@ -4,6 +4,8 @@ import com.enderio.core.client.gui.widgets.EIOWidget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.AbstractTexture;
@@ -31,9 +33,8 @@ public class FluidStackStaticWidget extends EIOWidget {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         Minecraft minecraft = Minecraft.getInstance();
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
         FluidTank fluidTank = getFluid.get();
@@ -45,28 +46,34 @@ public class FluidStackStaticWidget extends EIOWidget {
                 AbstractTexture texture = minecraft.getTextureManager().getTexture(TextureAtlas.LOCATION_BLOCKS);
                 if (texture instanceof TextureAtlas atlas) {
                     TextureAtlasSprite sprite = atlas.getSprite(still);
-                    RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
 
                     int color = props.getTintColor();
                     RenderSystem.setShaderColor(FastColor.ARGB32.red(color) / 255.0F, FastColor.ARGB32.green(color) / 255.0F,
                         FastColor.ARGB32.blue(color) / 255.0F, FastColor.ARGB32.alpha(color) / 255.0F);
                     RenderSystem.enableBlend();
 
-                    int atlasWidth = (int) (sprite.getWidth() / (sprite.getU1() - sprite.getU0()));
-                    int atlasHeight = (int) (sprite.getHeight() / (sprite.getV1() - sprite.getV0()));
-                    blit(poseStack, x, y, width, height, sprite.getU0() * atlasWidth, sprite.getV0() * atlasHeight, sprite.getWidth(), sprite.getHeight(),
+                    int atlasWidth = (int) (sprite.contents().width() / (sprite.getU1() - sprite.getU0()));
+                    int atlasHeight = (int) (sprite.contents().height() / (sprite.getV1() - sprite.getV0()));
+                    guiGraphics.blit(TextureAtlas.LOCATION_BLOCKS, x, y, width, height, sprite.getU0() * atlasWidth, sprite.getV0() * atlasHeight, sprite.contents().width(), sprite.contents().height(),
                         atlasWidth, atlasHeight);
                     RenderSystem.setShaderColor(1, 1, 1, 1);
 
                 }
             }
-            renderToolTip(poseStack, mouseX, mouseY);
+            renderToolTip(guiGraphics, mouseX, mouseY);
         }
+
+        RenderSystem.disableDepthTest();
     }
 
-    public void renderToolTip(PoseStack poseStack, int mouseX, int mouseY) {
+    @Override
+    protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
+
+    }
+
+    public void renderToolTip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (isHovered(mouseX, mouseY)) {
-            displayOn.renderTooltip(poseStack, Arrays.asList(getFluid.get().getFluid().getDisplayName().getVisualOrderText(),
+            guiGraphics.renderTooltip(displayOn.getMinecraft().font, Arrays.asList(getFluid.get().getFluid().getDisplayName().getVisualOrderText(),
                 Component.literal(getFluid.get().getFluidAmount() + "mB").getVisualOrderText()), mouseX, mouseY);
         }
     }

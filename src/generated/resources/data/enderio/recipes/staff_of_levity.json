@@ -1,8 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "equipment",
   "key": {
     "C": {
-      "item": "enderio:pulsating_crystal"
+      "item": "enderio:prescient_crystal"
     },
     "R": {
       "item": "enderio:infinity_rod"
@@ -15,5 +16,6 @@
   ],
   "result": {
     "item": "enderio:staff_of_levity"
-  }
+  },
+  "show_notification": true
 }

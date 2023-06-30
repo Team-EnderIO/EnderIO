@@ -1,9 +1,10 @@
 package com.enderio.core.client.gui.screen;
 
-import com.enderio.core.common.util.Vector2i;
+import com.enderio.api.misc.Vector2i;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -15,10 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class EIOScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> implements IEnderScreen {
 
@@ -52,22 +50,19 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
     }
 
     @Override
-    public void render(PoseStack pPoseStack, int pMouseX, int pMouseY, float pPartialTicks) {
-        renderBackground(pPoseStack);
-        super.render(pPoseStack, pMouseX, pMouseY, pPartialTicks);
-        this.renderTooltip(pPoseStack, pMouseX, pMouseY);
+    public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
+        renderBackground(guiGraphics);
+        super.render(guiGraphics, pMouseX, pMouseY, pPartialTicks);
+        this.renderTooltip(guiGraphics, pMouseX, pMouseY);
         for (LateTooltipData tooltip : tooltips) {
-            renderTooltip(tooltip.getPoseStack(), tooltip.getText(), tooltip.getMouseX(), tooltip.getMouseY());
+            tooltip.getGuiGraphics().renderTooltip(this.font, tooltip.getText(), Optional.empty(), tooltip.getMouseX(), tooltip.getMouseY());
         }
     }
 
     @Override
-    protected void renderBg(PoseStack pPoseStack, float pPartialTick, int pMouseX, int pMouseY) {
+    protected void renderBg(GuiGraphics guiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
         tooltips.clear();
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, getBackgroundImage());
-        blit(pPoseStack, getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight);
+        guiGraphics.blit(getBackgroundImage(), getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight);
     }
 
     @Override
@@ -86,9 +81,6 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
     @Override
     public void removed() {
         super.removed();
-        if (!editBoxList.isEmpty()) {
-            Minecraft.getInstance().keyboardHandler.setSendRepeatsToGui(false);
-        }
     }
 
     @Override
@@ -102,9 +94,16 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
     }
 
     @Override
-    protected void renderLabels(PoseStack pPoseStack, int pMouseX, int pMouseY) {
+    public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
+        if (getFocused() instanceof AbstractWidget abstractWidget && abstractWidget.isActive()) {
+            return abstractWidget.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
+        } return super.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
+    }
+
+    @Override
+    protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
         if (renderLabels) {
-            super.renderLabels(pPoseStack, pMouseX, pMouseY);
+            super.renderLabels(guiGraphics, pMouseX, pMouseY);
         }
     }
 
@@ -124,7 +123,6 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
     protected <U extends GuiEventListener & NarratableEntry> U addWidget(U guiEventListener) {
         if (guiEventListener instanceof EditBox editBox) {
             editBoxList.add(editBox);
-            Minecraft.getInstance().keyboardHandler.setSendRepeatsToGui(true);
         }
         return super.addWidget(guiEventListener);
     }

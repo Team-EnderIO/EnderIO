@@ -34,7 +34,6 @@ import java.util.Optional;
 public class PoweredSpawnerBlockEntity extends PoweredTaskMachineEntity<SpawnTask> {
 
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, () -> 100000f);
-    public static final QuadraticScalable TRANSFER = new QuadraticScalable(CapacitorModifier.ENERGY_TRANSFER, () -> 200f);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, () -> 160f);
     public static final ResourceLocation NO_MOB = EnderIO.loc("no_mob");
     private StoredEntityData entityData = StoredEntityData.empty();
@@ -46,7 +45,7 @@ public class PoweredSpawnerBlockEntity extends PoweredTaskMachineEntity<SpawnTas
     private SpawnerBlockedReason reason = SpawnerBlockedReason.NONE;
 
     public PoweredSpawnerBlockEntity(BlockEntityType type, BlockPos worldPosition, BlockState blockState) {
-        super(CAPACITY, TRANSFER, USAGE, type, worldPosition, blockState);
+        super(CAPACITY, USAGE, type, worldPosition, blockState);
         add2WayDataSlot(new BooleanDataSlot(this::isShowingRange, this::shouldShowRange, SyncMode.GUI));
         addDataSlot(new ResourceLocationDataSlot(() -> this.getEntityType().orElse(NO_MOB),this::setEntityType, SyncMode.GUI));
         addDataSlot(new EnumDataSlot<>(this::getReason, this::setReason, SyncMode.GUI));

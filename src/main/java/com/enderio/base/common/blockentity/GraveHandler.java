@@ -31,7 +31,7 @@ public class GraveHandler {
             || event.getEntity() instanceof FakePlayer
             || event.isCanceled()
             || !enableGrave.get()
-            || event.getEntity().level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
+            || event.getEntity().level().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
             return;
         }
         if (event.getEntity() instanceof Player player) {
@@ -39,11 +39,11 @@ public class GraveHandler {
             MutableBlockPos pos = new MutableBlockPos(player.getBlockX(), player.getBlockY(), player.getBlockZ());
             BlockPlaceContext pUseContext = new BlockPlaceContext(player, InteractionHand.MAIN_HAND, new ItemStack(EIOBlocks.GRAVE.get()),
                 new BlockHitResult(Vec3.atCenterOf(pos), Direction.NORTH, pos, true));
-            while (!player.level.getBlockState(pos).canBeReplaced(pUseContext)) {//check if a grave can be made
+            while (!player.level().getBlockState(pos).canBeReplaced(pUseContext)) {//check if a grave can be made
                 pos.move(0, 1, 0);
             }
-            player.level.setBlockAndUpdate(pos, EIOBlocks.GRAVE.getDefaultState());
-            BlockEntity be = player.level.getBlockEntity(pos);
+            player.level().setBlockAndUpdate(pos, EIOBlocks.GRAVE.getDefaultState());
+            BlockEntity be = player.level().getBlockEntity(pos);
             if (be instanceof GraveBlockEntity grave) {
                 grave.getCapability(EIOCapabilities.OWNER).ifPresent(owner -> {
                     owner.setProfile(player.getGameProfile(), prof -> grave.setChanged());

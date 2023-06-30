@@ -47,7 +47,7 @@ public class EIOEnchantments {
         .register();
 
     public static final RegistryEntry<WitherArrowEnchantment> WITHERING_BOLT = enchantmentBuilder("withering_bolt", new WitherArrowEnchantment())
-        .lang("Withering bolt")
+        .lang("Withering Bolt")
         .register();
 
     public static final RegistryEntry<XPBoostEnchantment> XP_BOOST = enchantmentBuilder("xp_boost", new XPBoostEnchantment()).lang("XP Boost").register();

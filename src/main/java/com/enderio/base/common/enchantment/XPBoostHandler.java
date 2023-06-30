@@ -36,7 +36,7 @@ public class XPBoostHandler {
         LivingEntity entity = event.getEntity();
         Entity killer = event.getSource().getDirectEntity();
 
-        if (!entity.level.isClientSide) {
+        if (!entity.level().isClientSide) {
             if (killer instanceof Player player) {
                 scheduleXP(entity, getXPBoost(entity, player));
             } else if (killer instanceof Arrow arrow) {
@@ -116,7 +116,7 @@ public class XPBoostHandler {
     }
 
     private static void scheduleXP(Entity entity, int boost) {
-        scheduleXP(entity.level, entity.getX(), entity.getY(), entity.getZ(), boost);
+        scheduleXP(entity.level(), entity.getX(), entity.getY(), entity.getZ(), boost);
     }
 
     private static void scheduleXP(Level world, double x, double y, double z, int boost) {

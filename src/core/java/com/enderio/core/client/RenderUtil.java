@@ -1,14 +1,15 @@
 package com.enderio.core.client;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix3f;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraftforge.client.model.IQuadTransformer;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
+import static net.minecraftforge.client.model.IQuadTransformer.COLOR;
 import static net.minecraftforge.client.model.IQuadTransformer.STRIDE;
 import static net.minecraftforge.client.model.IQuadTransformer.UV0;
 
@@ -30,10 +31,10 @@ public class RenderUtil {
     }
 
     private static void renderFace(Matrix4f pose, Matrix3f normal, VertexConsumer consumer, TextureAtlasSprite texture, int color, float x0, float x1, float y0, float y1, float z0, float z1, float z2, float z3, float u0, float u1, float v0, float v1) {
-        float minU = u0 * texture.getWidth();
-        float maxU = u1 * texture.getWidth();
-        float minV = v0 * texture.getHeight();
-        float maxV = v1 * texture.getHeight();
+        float minU = u0 * texture.getU0();
+        float maxU = u1 * texture.getU1();
+        float minV = v0 * texture.getV0();
+        float maxV = v1 * texture.getV1();
 
         consumer.vertex(pose, x0, y0, z0).color(color).uv(texture.getU(minU), texture.getV(minV)).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880).normal(normal, 0.0f, 0.0f, 0.0f).endVertex();
         consumer.vertex(pose, x1, y0, z1).color(color).uv(texture.getU(maxU), texture.getV(minV)).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880).normal(normal, 0.0f, 0.0f, 0.0f).endVertex();
@@ -68,5 +69,55 @@ public class RenderUtil {
         quadData[0] = Float.floatToRawIntBits(u);
         quadData[1] = Float.floatToRawIntBits(v);
         return quadData;
+    }
+
+    private static int[] getColorABGR(int[] vertices, int vertexIndex) {
+        int color = vertices[STRIDE * vertexIndex + COLOR];
+        int[] abgr = new int[4];
+        abgr[0] = color >> 24 & 0xFF;
+        abgr[1] = color >> 16 & 0xFF;
+        abgr[2] = color >> 8 & 0xFF;
+        abgr[3] = color & 0xFF;
+        return abgr;
+    }
+
+    private static int[] multiplyColor(int[] abgr1, int[] abgr2) {
+        return new int[] {
+            abgr1[0]*abgr2[0]/255,
+            abgr1[1]*abgr2[1]/255,
+            abgr1[2]*abgr2[2]/255,
+            abgr1[3]*abgr2[3]/255};
+    }
+
+    public static void multiplyColor(int[] vertices, int vertexIndex, int rgbBlockColor) {
+        int[] colorABGR = RenderUtil.getColorABGR(vertices, vertexIndex);
+        int[] blockColorABGR = new int[4];
+        blockColorABGR[0] = 0xFF | (rgbBlockColor >> 24 & 0xFF);
+        blockColorABGR[3] = rgbBlockColor >> 16 & 0xFF;
+        blockColorABGR[2] = rgbBlockColor >> 8 & 0xFF;
+        blockColorABGR[1] = rgbBlockColor & 0xFF;
+        int[] multipliedColor = RenderUtil.multiplyColor(colorABGR, blockColorABGR);
+        RenderUtil.putColorABGR(vertices, vertexIndex, multipliedColor);
+    }
+
+    public static void putColorABGR(int[] vertices, int vertexIndex, int[] abgr) {
+        int offset = vertexIndex * STRIDE + COLOR;
+        vertices[offset] = (abgr[0] << 24) |
+            (abgr[1] << 16) |
+            (abgr[2] << 8) |
+            abgr[3];
+    }
+    public static void putColorARGB(int[] vertices, int vertexIndex, int argb) {
+        int[] blockColorABGR = new int[4];
+        blockColorABGR[0] = 0xFF | (argb >> 24 & 0xFF);
+        blockColorABGR[3] = argb >> 16 & 0xFF;
+        blockColorABGR[2] = argb >> 8 & 0xFF;
+        blockColorABGR[1] = argb & 0xFF;
+
+        int offset = vertexIndex * STRIDE + COLOR;
+        vertices[offset] = (blockColorABGR[0] << 24) |
+            (blockColorABGR[1] << 16) |
+            (blockColorABGR[2] << 8) |
+            blockColorABGR[3];
     }
 }

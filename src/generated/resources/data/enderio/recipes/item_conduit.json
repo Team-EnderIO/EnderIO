@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "B": {
+      "item": "enderio:conduit_binder"
+    },
+    "P": {
+      "item": "enderio:pulsating_alloy_nugget"
+    }
+  },
+  "pattern": [
+    "BBB",
+    "PPP",
+    "BBB"
+  ],
+  "result": {
+    "count": 8,
+    "item": "enderio:item_conduit"
+  },
+  "show_notification": true
+}

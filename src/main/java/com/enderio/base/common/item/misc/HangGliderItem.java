@@ -38,6 +38,7 @@ public class HangGliderItem extends Item {
         }
         return super.useOn(pContext);
     }
+
     @Nullable
     public SoundEvent getEquipSound() {
         return SoundEvents.ARMOR_EQUIP_LEATHER;
