@@ -8,7 +8,6 @@ import com.enderio.machines.common.tag.MachineTags;
 import com.mojang.serialization.DataResult;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -17,9 +16,8 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.event.entity.living.MobSpawnEvent;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -187,12 +185,14 @@ public class SpawnTask extends PoweredTask{
                     break;
                 }
 
-                if (entity instanceof Mob mob) {
-//                    Event.Result res = ForgeEventFactory.onFinalizeSpawn(mob, level, (float) x, (float) y, (float) z, null, MobSpawnType.SPAWNER);
-//                    if (res == Event.Result.DENY) {
-//                        blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.OTHER_MOD);
-//                        return false;
-//                    }
+                if (entity instanceof Mob mob) { // based on vanilla spawner
+                    MobSpawnEvent.FinalizeSpawn event = ForgeEventFactory.onFinalizeSpawnSpawner(mob, level, level.getCurrentDifficultyAt(pos), null,  blockEntity.getEntityData().getEntityTag(), null);
+                    if (event == null || event.isSpawnCancelled()) {
+                        blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.OTHER_MOD);
+                        return false;
+                    } else {
+                        ForgeEventFactory.onFinalizeSpawn(mob, level, event.getDifficulty(), event.getSpawnType(), event.getSpawnData(), event.getSpawnTag());
+                    }
                 }
 
                 if (!level.tryAddFreshEntityWithPassengers(entity)) {

@@ -61,7 +61,7 @@ public class EntityCaptureUtils {
         if (!type.canSerialize() || type.getCategory() == MobCategory.MISC)
             return CapturableStatus.INCOMPATIBLE;
 
-        if (type.is(EIOTags.Entitytypes.SOUL_VIAL_BLACKLIST))
+        if (type.is(EIOTags.EntityTypes.SOUL_VIAL_BLACKLIST))
             return CapturableStatus.BLACKLISTED;
 
         return CapturableStatus.CAPTURABLE;

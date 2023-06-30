@@ -25,7 +25,7 @@ public class EIOTags {
         Items.init();
         Blocks.init();
         Fluids.init();
-        Entitytypes.init();
+        EntityTypes.init();
     }
 
     public static class Items {
@@ -102,7 +102,7 @@ public class EIOTags {
         public static final TagKey<Fluid> EXPERIENCE = FluidTags.create(new ResourceLocation("forge", "experience"));
     }
 
-    public static class Entitytypes {
+    public static class EntityTypes {
         private static void init() {}
 
         public static TagKey<EntityType<?>> SOUL_VIAL_BLACKLIST = create("soul_vial_blacklist");

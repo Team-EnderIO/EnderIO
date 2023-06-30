@@ -18,6 +18,6 @@ public class EIOEntityTagsProvider extends EntityTypeTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
-        this.tag(EIOTags.Entitytypes.SOUL_VIAL_BLACKLIST).addTag(Tags.EntityTypes.BOSSES);
+        this.tag(EIOTags.EntityTypes.SOUL_VIAL_BLACKLIST).addTag(Tags.EntityTypes.BOSSES);
     }
 }
