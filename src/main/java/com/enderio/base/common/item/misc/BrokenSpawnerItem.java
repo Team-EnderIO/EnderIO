@@ -3,7 +3,7 @@ package com.enderio.base.common.item.misc;
 import com.enderio.api.capability.IMultiCapabilityItem;
 import com.enderio.api.capability.MultiCapabilityProvider;
 import com.enderio.api.capability.StoredEntityData;
-import com.enderio.base.common.capability.EntityStorage;
+import com.enderio.base.common.capability.EntityStorageItemStack;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.util.EntityCaptureUtils;
@@ -17,7 +17,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.LazyOptional;
-
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -63,7 +62,7 @@ public class BrokenSpawnerItem extends Item implements IMultiCapabilityItem {
     @Nullable
     @Override
     public MultiCapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt, MultiCapabilityProvider provider) {
-        provider.addSerialized(EIOCapabilities.ENTITY_STORAGE, LazyOptional.of(EntityStorage::new));
+        provider.addSerialized(EIOCapabilities.ENTITY_STORAGE, LazyOptional.of(()-> new EntityStorageItemStack(stack)));
         return provider;
     }
 
