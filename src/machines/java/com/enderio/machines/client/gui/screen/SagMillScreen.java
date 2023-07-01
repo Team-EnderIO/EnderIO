@@ -41,7 +41,7 @@ public class SagMillScreen extends EIOScreen<SagMillMenu> {
     protected void init() {
         super.init();
 
-        addRenderableOnly(new ProgressWidget.TopDown(this, () -> menu.getBlockEntity().getProgress(), getGuiLeft() + 81, getGuiTop() + 31, 15, 23, 202, 0));
+        addRenderableOnly(new ProgressWidget.TopDown(this, () -> menu.getBlockEntity().getCraftingProgress(), getGuiLeft() + 81, getGuiTop() + 31, 15, 23, 202, 0));
 
         addRenderableOnly(new EnergyWidget(this, getMenu().getBlockEntity()::getEnergyStorage, 16 + leftPos, 14 + topPos, 9, 42));
 

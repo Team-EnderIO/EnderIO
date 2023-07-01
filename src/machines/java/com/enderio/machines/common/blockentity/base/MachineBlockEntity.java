@@ -14,6 +14,7 @@ import com.enderio.core.common.sync.SyncMode;
 import com.enderio.core.common.util.PlayerInteractionUtil;
 import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.io.IOConfig;
+import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import net.minecraft.core.BlockPos;
@@ -45,6 +46,7 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
@@ -77,6 +79,12 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     @Nullable
     private final MachineInventory inventory;
 
+    @Nullable
+    private final FluidTank fluidTank;
+
+    @Nullable
+    private final MachineFluidHandler fluidHandler;
+
     // region Caches for external block interaction
 
     private final List<Capability<?>> cachedCapabilityTypes = new ArrayList<>();
@@ -99,6 +107,17 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             addCapabilityProvider(inventory);
         } else {
             inventory = null;
+        }
+
+        // Create fluid storage
+        fluidTank = createFluidTank();
+        if (fluidTank != null) {
+            fluidHandler = createFluidHandler(fluidTank);
+            if (fluidHandler != null) {
+                addCapabilityProvider(fluidHandler);
+            }
+        } else {
+            fluidHandler = null;
         }
 
         if (supportsRedstoneControl()) {
@@ -228,6 +247,13 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     }
 
     /**
+     * Only call this if you're sure your machine has an inventory.
+     */
+    protected final MachineInventory getInventoryNN() {
+        return Objects.requireNonNull(inventory);
+    }
+
+    /**
      * Called to create an item handler if a slot layout is provided.
      */
     protected MachineInventory createMachineInventory(MachineInventoryLayout layout) {
@@ -244,6 +270,38 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
      * @apiNote Must call this on custom MachineInventory handlers!
      */
     protected void onInventoryContentsChanged(int slot) { }
+
+    // endregion
+
+    // region Fluid Storage
+
+    @Nullable
+    protected FluidTank createFluidTank() {
+        return null;
+    }
+
+    @Nullable
+    public final FluidTank getFluidTank() {
+        return fluidTank;
+    }
+
+    /**
+     * Only call this if you're sure your machine has a fluid tank.
+     */
+    protected final FluidTank getFluidTankNN() {
+        return Objects.requireNonNull(fluidTank);
+    }
+
+    @Nullable
+    protected MachineFluidHandler createFluidHandler(FluidTank fluidTank) {
+        // We can have a default here, as if createFluidTank returns null, this is never called.
+        return new MachineFluidHandler(getIOConfig(), fluidTank);
+    }
+
+    @Nullable
+    public MachineFluidHandler getFluidHandler() {
+        return fluidHandler;
+    }
 
     // endregion
 
@@ -480,6 +538,10 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         if (inventory != null) {
             pTag.put("inventory", inventory.serializeNBT());
         }
+
+        if (fluidTank != null) {
+            pTag.put("fluid", fluidTank.writeToNBT(new CompoundTag()));
+        }
     }
 
     @Override
@@ -493,6 +555,10 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
         if (inventory != null) {
             inventory.deserializeNBT(pTag.getCompound("inventory"));
+        }
+
+        if (fluidTank != null) {
+            fluidTank.readFromNBT(pTag.getCompound("fluid"));
         }
 
         // For rendering io overlays after placed by an nbt filled block item
