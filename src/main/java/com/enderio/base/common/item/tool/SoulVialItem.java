@@ -5,7 +5,7 @@ import com.enderio.api.capability.IEntityStorage;
 import com.enderio.api.capability.IMultiCapabilityItem;
 import com.enderio.api.capability.MultiCapabilityProvider;
 import com.enderio.api.capability.StoredEntityData;
-import com.enderio.base.common.capability.EntityStorage;
+import com.enderio.base.common.capability.EntityStorageItemStack;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.lang.EIOLang;
@@ -136,7 +136,9 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
                 }
 
                 // Get the entity type and verify it is allowed to be captured
-                EntityCaptureUtils.CapturableStatus status = EntityCaptureUtils.getCapturableStatus(entity.getType(),entity);
+                // We ignore the unchecked cast, as entity is LivingEntity
+                // noinspection unchecked
+                EntityCaptureUtils.CapturableStatus status = EntityCaptureUtils.getCapturableStatus((EntityType<? extends LivingEntity>)entity.getType(), entity);
                 if (status != EntityCaptureUtils.CapturableStatus.CAPTURABLE) {
                     displayCallback.accept(status.errorMessage());
                     return InteractionResult.FAIL;
@@ -239,7 +241,7 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
     @Nullable
     @Override
     public MultiCapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt, MultiCapabilityProvider provider) {
-        provider.addSerialized(EIOCapabilities.ENTITY_STORAGE, LazyOptional.of(EntityStorage::new));
+        provider.addSerialized(EIOCapabilities.ENTITY_STORAGE, LazyOptional.of(()-> new EntityStorageItemStack(stack)));
         return provider;
     }
 

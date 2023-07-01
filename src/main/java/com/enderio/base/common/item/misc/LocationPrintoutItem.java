@@ -26,8 +26,8 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.network.NetworkHooks;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -112,7 +112,7 @@ public class LocationPrintoutItem extends Item implements IMultiCapabilityItem {
     @Nullable
     @Override
     public MultiCapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt, MultiCapabilityProvider provider) {
-        provider.addSerialized(EIOCapabilities.COORDINATE_SELECTION_HOLDER, LazyOptional.of(CoordinateSelectionHolder::new));
+        provider.addSimple(EIOCapabilities.COORDINATE_SELECTION_HOLDER, LazyOptional.of(()-> new CoordinateSelectionHolder(stack)));
         return provider;
     }
 }
