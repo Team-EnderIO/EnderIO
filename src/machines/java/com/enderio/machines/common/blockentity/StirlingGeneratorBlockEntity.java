@@ -3,10 +3,13 @@ package com.enderio.machines.common.blockentity;
 import com.enderio.api.UseOnly;
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.FixedScalable;
+import com.enderio.api.capacitor.LinearScalable;
 import com.enderio.api.capacitor.QuadraticScalable;
+import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.sync.FloatDataSlot;
 import com.enderio.core.common.sync.SyncMode;
 import com.enderio.machines.common.blockentity.base.PowerGeneratingMachineEntity;
+import com.enderio.machines.common.blockentity.base.PoweredMachineEntity;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.StirlingGeneratorMenu;
@@ -22,9 +25,16 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.LogicalSide;
 import org.jetbrains.annotations.Nullable;
 
-public class StirlingGeneratorBlockEntity extends PowerGeneratingMachineEntity {
+public class StirlingGeneratorBlockEntity extends PoweredMachineEntity {
+
+    public static final int RF_PER_TICK = 40;
+
+
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, () -> 100000f);
     public static final FixedScalable USAGE = new FixedScalable(() -> 0f);
+
+    public static final LinearScalable BURN_SPEED = new LinearScalable(CapacitorModifier.FIXED, () -> 1.0f);
+    public static final LinearScalable GENERATION_SPEED = new LinearScalable(CapacitorModifier.FIXED, () -> (float) RF_PER_TICK);
 
     public static final SingleSlotAccess FUEL = new SingleSlotAccess();
 
@@ -36,8 +46,16 @@ public class StirlingGeneratorBlockEntity extends PowerGeneratingMachineEntity {
 
     public StirlingGeneratorBlockEntity(BlockEntityType<?> type, BlockPos worldPosition,
         BlockState blockState) {
-        super(CAPACITY, USAGE, type, worldPosition, blockState);
+        super(EnergyIOMode.Output, CAPACITY, USAGE, type, worldPosition, blockState);
         addDataSlot(new FloatDataSlot(this::getBurnProgress, p -> clientBurnProgress = p, SyncMode.GUI));
+    }
+
+    private int getBurnPerTick() {
+        return BURN_SPEED.scaleI(this::getCapacitorData).get();
+    }
+
+    public int getGenerationRate() {
+        return GENERATION_SPEED.scaleI(this::getCapacitorData).get();
     }
 
     @Override
@@ -51,25 +69,31 @@ public class StirlingGeneratorBlockEntity extends PowerGeneratingMachineEntity {
 
     @Override
     public void serverTick() {
-        // Tick burn time even if redstone activation has stopped.
+        // We ignore redstone control here.
         if (isGenerating()) {
-            burnTime--;
+            burnTime -= getBurnPerTick();
+
+            if (!requiresCapacitor() || isCapacitorInstalled()) {
+                energyStorage.addEnergy(getGenerationRate());
+            }
         }
 
-        // Only continue burning if redstone is enabled and the internal buffer has space.
-        if (canAct() && !isGenerating() && getEnergyStorage().getEnergyStored() < getEnergyStorage().getMaxEnergyStored()) {
-            // Get the fuel
-            ItemStack fuel = FUEL.getItemStack(this);
-            if (!fuel.isEmpty()) {
-                // Get the burn time.
-                int burningTime = ForgeHooks.getBurnTime(fuel, RecipeType.SMELTING);
+        // Taking more fuel is locked behind redstone control.
+        if (canAct()) {
+            if (!isGenerating() && getEnergyStorage().getEnergyStored() < getEnergyStorage().getMaxEnergyStored()) {
+                // Get the fuel
+                ItemStack fuel = FUEL.getItemStack(this);
+                if (!fuel.isEmpty()) {
+                    // Get the burn time.
+                    int burningTime = ForgeHooks.getBurnTime(fuel, RecipeType.SMELTING);
 
-                if (burningTime > 0) {
-                    burnTime = burningTime;
-                    burnDuration = burnTime;
+                    if (burningTime > 0) {
+                        burnTime = burningTime;
+                        burnDuration = burnTime;
 
-                    // Remove the fuel
-                    fuel.shrink(1);
+                        // Remove the fuel
+                        fuel.shrink(1);
+                    }
                 }
             }
         }
@@ -77,8 +101,9 @@ public class StirlingGeneratorBlockEntity extends PowerGeneratingMachineEntity {
         super.serverTick();
     }
 
-    @Override
     public boolean isGenerating() {
+        if (level == null)
+            return false;
         return burnTime > 0;
     }
 
@@ -88,15 +113,6 @@ public class StirlingGeneratorBlockEntity extends PowerGeneratingMachineEntity {
         if (burnDuration == 0)
             return 0;
         return burnTime / (float) burnDuration;
-    }
-
-    @Override
-    public int getGenerationRate() {
-        // Stirling generator produces 10 RF per tick of burn time.
-        // https://github.com/SleepyTrousers/EnderIO/blob/d6dfb9d3964946ceb9fd72a66a3cff197a51a1fe/enderio-base/src/main/java/crazypants/enderio/base/recipe/alloysmelter/VanillaSmeltingRecipe.java#L50
-        // TODO: Should maybe have a constants class for energy conversions.
-        // TODO: Implement efficiency!
-        return 10;
     }
 
     @Nullable
