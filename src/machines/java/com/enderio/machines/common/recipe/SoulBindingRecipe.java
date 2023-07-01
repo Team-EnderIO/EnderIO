@@ -218,18 +218,12 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
 
                 ResourceLocation entityType = null;
                 if (buffer.readBoolean()) {
-                    try { //fails if not present
-                        entityType = buffer.readResourceLocation();
-                    } catch (Exception ignored) {
-                    }
+                    entityType = buffer.readResourceLocation();
                 }
 
                 MobCategory mobCategory = null;
                 if (buffer.readBoolean()) {
-                    try { //fails if not present
-                        mobCategory = MobCategory.byName(buffer.readUtf());
-                    } catch (Exception ignored) {
-                    }
+                    mobCategory = MobCategory.byName(buffer.readUtf());
                 }
 
                 return new SoulBindingRecipe(recipeId, output, input, energy, exp, entityType, mobCategory);
