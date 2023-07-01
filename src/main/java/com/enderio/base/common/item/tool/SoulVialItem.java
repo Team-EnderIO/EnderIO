@@ -136,7 +136,9 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
                 }
 
                 // Get the entity type and verify it is allowed to be captured
-                EntityCaptureUtils.CapturableStatus status = EntityCaptureUtils.getCapturableStatus(entity.getType(),entity);
+                // We ignore the unchecked cast, as entity is LivingEntity
+                // noinspection unchecked
+                EntityCaptureUtils.CapturableStatus status = EntityCaptureUtils.getCapturableStatus((EntityType<? extends LivingEntity>)entity.getType(), entity);
                 if (status != EntityCaptureUtils.CapturableStatus.CAPTURABLE) {
                     displayCallback.accept(status.errorMessage());
                     return InteractionResult.FAIL;
