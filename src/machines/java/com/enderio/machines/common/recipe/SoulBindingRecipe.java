@@ -217,15 +217,19 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
                 int exp = buffer.readInt();
 
                 ResourceLocation entityType = null;
-                try { //fails if not present
-                    entityType = buffer.readResourceLocation();
-                } catch (Exception ignored) {
+                if (buffer.readBoolean()) {
+                    try { //fails if not present
+                        entityType = buffer.readResourceLocation();
+                    } catch (Exception ignored) {
+                    }
                 }
 
                 MobCategory mobCategory = null;
-                try { //fails if not present
-                    mobCategory = MobCategory.byName(buffer.readUtf());
-                } catch (Exception ignored) {
+                if (buffer.readBoolean()) {
+                    try { //fails if not present
+                        mobCategory = MobCategory.byName(buffer.readUtf());
+                    } catch (Exception ignored) {
+                    }
                 }
 
                 return new SoulBindingRecipe(recipeId, output, input, energy, exp, entityType, mobCategory);
@@ -242,9 +246,13 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
                 recipe.input.toNetwork(buffer);
                 buffer.writeInt(recipe.energy);
                 buffer.writeInt(recipe.exp);
+
+                buffer.writeBoolean(recipe.entityType != null);
                 if (recipe.entityType != null) { //don't write null
                     buffer.writeResourceLocation(recipe.entityType);
                 }
+
+                buffer.writeBoolean(recipe.mobCategory != null);
                 if (recipe.mobCategory != null) { //don't write null
                     buffer.writeUtf(recipe.mobCategory.getName());
                 }
