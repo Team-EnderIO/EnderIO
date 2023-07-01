@@ -157,7 +157,7 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
             // Load result, energy and experience.
             ItemStack result = CraftingHelper.getItemStack(serializedRecipe.getAsJsonObject("result"), false);
             int energy = serializedRecipe.get("energy").getAsInt();
-            float experience = serializedRecipe.get("experience").getAsInt();
+            float experience = serializedRecipe.get("experience").getAsFloat();
             return new AlloySmeltingRecipe(recipeId, inputs, result, energy, experience);
         }
 
