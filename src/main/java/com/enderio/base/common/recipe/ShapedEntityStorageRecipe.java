@@ -28,7 +28,7 @@ public class ShapedEntityStorageRecipe extends ShapedRecipe {
 
     public ShapedEntityStorageRecipe(ShapedRecipe recipe) {
         super(recipe.getId(), recipe.getGroup(), recipe.category(), recipe.getRecipeWidth(), recipe.getRecipeHeight(), recipe.getIngredients(),
-            recipe.getResultItem(Minecraft.getInstance().level != null ? Minecraft.getInstance().level.registryAccess() : null)); // Gross, but better than always passing null
+            recipe.result); // Gross, but better than always passing null
 
         REGISTERED_RECIPES.add(recipe.getId());
     }
