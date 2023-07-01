@@ -20,13 +20,13 @@ public class CraftingMachineTaskHost<R extends MachineRecipe<C>, C extends Conta
 
     private final RecipeType<R> recipeType;
     private final C container;
-    private final ICraftingMachineTaskFactory<CraftingMachineTask<R, C>, R, C> taskFactory;
+    private final ICraftingMachineTaskFactory<? extends CraftingMachineTask<R, C>, R, C> taskFactory;
 
     /**
      * This should be constructed in the constructor of your block entity.
      */
     public CraftingMachineTaskHost(EnderBlockEntity blockEntity, Supplier<Boolean> canAcceptNewTask, RecipeType<R> recipeType,
-        C container, ICraftingMachineTaskFactory<CraftingMachineTask<R, C>, R, C> taskFactory) {
+        C container, ICraftingMachineTaskFactory<? extends CraftingMachineTask<R, C>, R, C> taskFactory) {
         super(blockEntity, canAcceptNewTask);
         this.recipeType = recipeType;
         this.container = container;
@@ -35,6 +35,12 @@ public class CraftingMachineTaskHost<R extends MachineRecipe<C>, C extends Conta
 
     public final C getContainer() {
         return container;
+    }
+
+    @Nullable
+    public CraftingMachineTask<R, C> getCurrentTask() {
+        //noinspection unchecked
+        return (CraftingMachineTask<R, C>)super.getCurrentTask();
     }
 
     // region MachineTaskHost Implementation
@@ -61,7 +67,7 @@ public class CraftingMachineTaskHost<R extends MachineRecipe<C>, C extends Conta
 
     // endregion
 
-    private Optional<R> findRecipe() {
+    protected Optional<R> findRecipe() {
         Level level = getLevel();
         if (level == null) {
             return Optional.empty();

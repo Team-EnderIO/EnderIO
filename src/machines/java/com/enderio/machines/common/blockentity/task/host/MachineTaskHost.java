@@ -65,7 +65,7 @@ public abstract class MachineTaskHost {
     // region Task Handling
 
     @Nullable
-    public final IMachineTask getCurrentTask() {
+    public IMachineTask getCurrentTask() {
         return currentTask;
     }
 

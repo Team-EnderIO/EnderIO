@@ -3,6 +3,7 @@ package com.enderio.machines.common.blockentity.task;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
+import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.recipe.MachineRecipe;
 import net.minecraft.world.Container;
 import net.minecraft.world.level.Level;
@@ -17,6 +18,10 @@ public abstract class PoweredCraftingMachineTask<R extends MachineRecipe<C>, C e
     public PoweredCraftingMachineTask(@NotNull Level level, MachineInventory inventory, IMachineEnergyStorage energyStorage, C container, MultiSlotAccess outputSlots, @Nullable R recipe) {
         super(level, inventory, container, outputSlots, recipe);
         this.energyStorage = energyStorage;
+    }
+
+    public PoweredCraftingMachineTask(@NotNull Level level, MachineInventory inventory, IMachineEnergyStorage energyStorage, C container, SingleSlotAccess outputSlot, @Nullable R recipe) {
+        this(level, inventory, energyStorage, container, outputSlot.wrapToMulti(), recipe);
     }
 
     @Override
