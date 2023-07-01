@@ -16,6 +16,7 @@ import com.enderio.machines.common.blockentity.task.CraftingMachineTask;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingMachineTask;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingTask;
 import com.enderio.machines.common.blockentity.task.host.CraftingMachineTaskHost;
+import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.integrations.vanilla.VanillaAlloySmeltingRecipe;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
@@ -62,7 +63,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineEntity {
     /**
      * The primitive variant of the alloy smelter burns coal instead of using an energy buffer.
      * In order to keep implementation logic together, we do some kinda hacky stuff to emulate an internal buffer.
-     * This buffer cannot be accessed via external means however.
+     * This buffer cannot be accessed via external means, however.
      */
     public static class Primitive extends AlloySmelterBlockEntity {
         // TODO: Currently smelts really slowly. Needs addressed when we deal with burn -> FE rates.
@@ -185,8 +186,8 @@ public class AlloySmelterBlockEntity extends PoweredMachineEntity {
         }
     }
 
-    public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, () -> 100000f);
-    public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, () -> 30f);
+    public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.ALLOY_SMELTER_CAPACITY);
+    public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.ALLOY_SMELTER_USAGE);
 
     /**
      * The alloying mode for the machine.

@@ -27,7 +27,7 @@ public class SolarPanelBlockEntity extends PowerGeneratingMachineEntity {
     private final SolarPanelNode node;
 
     public SolarPanelBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState, ISolarPanelTier tier) {
-        super(new FixedScalable(() -> (float)tier.getStorageCapacity()), new FixedScalable(() -> (float)tier.getStorageCapacity()), type, worldPosition, blockState);
+        super(new FixedScalable(tier::getStorageCapacity), new FixedScalable(tier::getStorageCapacity), type, worldPosition, blockState);
         this.tier = tier;
         this.node = new SolarPanelNode(() -> energyStorage, () -> (SolarPanelEnergyStorageWrapper) getExposedEnergyStorage());
     }

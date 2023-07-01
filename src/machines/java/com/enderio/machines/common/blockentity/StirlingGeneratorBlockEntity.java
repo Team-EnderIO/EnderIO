@@ -10,6 +10,7 @@ import com.enderio.core.common.sync.FloatDataSlot;
 import com.enderio.core.common.sync.SyncMode;
 import com.enderio.machines.common.blockentity.base.PowerGeneratingMachineEntity;
 import com.enderio.machines.common.blockentity.base.PoweredMachineEntity;
+import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.StirlingGeneratorMenu;
@@ -27,14 +28,10 @@ import org.jetbrains.annotations.Nullable;
 
 public class StirlingGeneratorBlockEntity extends PoweredMachineEntity {
 
-    public static final int RF_PER_TICK = 40;
+    public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_CAPACITY);
 
-
-    public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, () -> 100000f);
-    public static final FixedScalable USAGE = new FixedScalable(() -> 0f);
-
-    public static final LinearScalable BURN_SPEED = new LinearScalable(CapacitorModifier.FIXED, () -> 1.0f);
-    public static final LinearScalable GENERATION_SPEED = new LinearScalable(CapacitorModifier.FIXED, () -> (float) RF_PER_TICK);
+    public static final LinearScalable BURN_SPEED = new LinearScalable(CapacitorModifier.FIXED, MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_BURN_SPEED);
+    public static final LinearScalable GENERATION_SPEED = new LinearScalable(CapacitorModifier.FIXED, MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_GENERATION);
 
     public static final SingleSlotAccess FUEL = new SingleSlotAccess();
 
@@ -46,12 +43,12 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineEntity {
 
     public StirlingGeneratorBlockEntity(BlockEntityType<?> type, BlockPos worldPosition,
         BlockState blockState) {
-        super(EnergyIOMode.Output, CAPACITY, USAGE, type, worldPosition, blockState);
+        super(EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO, type, worldPosition, blockState);
         addDataSlot(new FloatDataSlot(this::getBurnProgress, p -> clientBurnProgress = p, SyncMode.GUI));
     }
 
     private int getBurnPerTick() {
-        return BURN_SPEED.scaleI(this::getCapacitorData).get();
+        return Math.min(1, BURN_SPEED.scaleI(this::getCapacitorData).get());
     }
 
     public int getGenerationRate() {
