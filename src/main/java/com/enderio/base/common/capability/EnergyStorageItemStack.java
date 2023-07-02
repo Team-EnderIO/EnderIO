@@ -1,5 +1,6 @@
 package com.enderio.base.common.capability;
 
+import com.enderio.base.EIONBTKeys;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -16,22 +17,24 @@ public class EnergyStorageItemStack implements IEnergyStorage {
         this.stack = stack;
         CompoundTag tag = this.stack.getOrCreateTag();
         CompoundTag nbt = new CompoundTag();
-        if (!tag.contains("EnergyStorage")) {
-            nbt.putInt("Capacity", capacity);
-            nbt.putInt("MaxReceive", maxReceive);
-            nbt.putInt("MaxExtract", maxExtract);
-            nbt.putInt("Energy", energy);
-            tag.put("EnergyStorage", nbt);
+        if (!tag.contains(EIONBTKeys.ENERGY)) {
+            nbt.putInt(EIONBTKeys.ENERGY_MAX_STORED, capacity);
+            nbt.putInt(EIONBTKeys.ENERGY_MAX_RECEIVE, maxReceive);
+            nbt.putInt(EIONBTKeys.ENERGY_MAX_EXTRACT, maxExtract);
+            nbt.putInt(EIONBTKeys.ENERGY_STORED, energy);
+            tag.put(EIONBTKeys.ENERGY, nbt);
         }
     }
 
     @Override
     public int receiveEnergy(int maxReceive, boolean simulate) {
         CompoundTag tag = this.stack.getOrCreateTag();
-        if (tag.contains("EnergyStorage")) {
-            int capacity = tag.getCompound("EnergyStorage").getInt("Capacity");
-            int maxReceiveInternal = tag.getCompound("EnergyStorage").getInt("MaxReceive");
-            int energy = tag.getCompound("EnergyStorage").getInt("Energy");
+        if (tag.contains(EIONBTKeys.ENERGY)) {
+            var energyStorage = tag.getCompound(EIONBTKeys.ENERGY);
+            
+            int capacity = energyStorage.getInt(EIONBTKeys.ENERGY_MAX_STORED);
+            int maxReceiveInternal = energyStorage.getInt(EIONBTKeys.ENERGY_MAX_RECEIVE);
+            int energy = energyStorage.getInt(EIONBTKeys.ENERGY_STORED);
 
             if (maxReceiveInternal <= 0) {
                 return 0;
@@ -39,7 +42,7 @@ public class EnergyStorageItemStack implements IEnergyStorage {
             int energyReceived = Math.min(capacity - energy, Math.min(maxReceiveInternal, maxReceive));
             if (!simulate) {
                 energy += energyReceived;
-                tag.getCompound("EnergyStorage").putInt("Energy", energy);
+                energyStorage.putInt(EIONBTKeys.ENERGY_STORED, energy);
 
             }
             return energyReceived;
@@ -50,9 +53,11 @@ public class EnergyStorageItemStack implements IEnergyStorage {
     @Override
     public int extractEnergy(int maxExtract, boolean simulate) {
         CompoundTag tag = this.stack.getOrCreateTag();
-        if (tag.contains("EnergyStorage")) {
-            int maxExtractInternal = tag.getCompound("EnergyStorage").getInt("MaxExtract");
-            int energy = tag.getCompound("EnergyStorage").getInt("Energy");
+        if (tag.contains(EIONBTKeys.ENERGY)) {
+            var energyStorage = tag.getCompound(EIONBTKeys.ENERGY);
+            
+            int maxExtractInternal = energyStorage.getInt(EIONBTKeys.ENERGY_MAX_EXTRACT);
+            int energy = energyStorage.getInt(EIONBTKeys.ENERGY_STORED);
 
             if (maxExtractInternal <= 0) {
                 return 0;
@@ -60,7 +65,7 @@ public class EnergyStorageItemStack implements IEnergyStorage {
             int energyExtracted = Math.min(energy, Math.min(maxExtractInternal, maxExtract));
             if (!simulate) {
                 energy -= energyExtracted;
-                tag.getCompound("EnergyStorage").putInt("Energy", energy);
+                energyStorage.putInt(EIONBTKeys.ENERGY_STORED, energy);
             }
             return energyExtracted;
         }
@@ -70,8 +75,8 @@ public class EnergyStorageItemStack implements IEnergyStorage {
     @Override
     public int getEnergyStored() {
         CompoundTag tag = this.stack.getOrCreateTag();
-        if (tag.contains("EnergyStorage") && tag.getCompound("EnergyStorage").contains("Energy")) {
-            return tag.getCompound("EnergyStorage").getInt("Energy");
+        if (tag.contains(EIONBTKeys.ENERGY) && tag.getCompound(EIONBTKeys.ENERGY).contains(EIONBTKeys.ENERGY_STORED)) {
+            return tag.getCompound(EIONBTKeys.ENERGY).getInt(EIONBTKeys.ENERGY_STORED);
         }
         return 0;
     }
@@ -79,8 +84,8 @@ public class EnergyStorageItemStack implements IEnergyStorage {
     @Override
     public int getMaxEnergyStored() {
         CompoundTag tag = this.stack.getOrCreateTag();
-        if (tag.contains("EnergyStorage") && tag.getCompound("EnergyStorage").contains("Capacity")) {
-            return tag.getCompound("EnergyStorage").getInt("Capacity");
+        if (tag.contains(EIONBTKeys.ENERGY) && tag.getCompound(EIONBTKeys.ENERGY).contains(EIONBTKeys.ENERGY_MAX_STORED)) {
+            return tag.getCompound(EIONBTKeys.ENERGY).getInt(EIONBTKeys.ENERGY_MAX_STORED);
         }
         return 0;
     }
@@ -88,8 +93,8 @@ public class EnergyStorageItemStack implements IEnergyStorage {
     @Override
     public boolean canExtract() {
         CompoundTag tag = this.stack.getOrCreateTag();
-        if (tag.contains("EnergyStorage") && tag.getCompound("EnergyStorage").contains("MaxExtract")) {
-            return tag.getCompound("EnergyStorage").getInt("MaxExtract") > 0;
+        if (tag.contains(EIONBTKeys.ENERGY) && tag.getCompound(EIONBTKeys.ENERGY).contains(EIONBTKeys.ENERGY_MAX_EXTRACT)) {
+            return tag.getCompound(EIONBTKeys.ENERGY).getInt(EIONBTKeys.ENERGY_MAX_EXTRACT) > 0;
         }
         return false;
     }
@@ -97,8 +102,8 @@ public class EnergyStorageItemStack implements IEnergyStorage {
     @Override
     public boolean canReceive() {
         CompoundTag tag = this.stack.getOrCreateTag();
-        if (tag.contains("EnergyStorage") && tag.getCompound("EnergyStorage").contains("MaxReceive")) {
-            return tag.getCompound("EnergyStorage").getInt("MaxReceive") > 0;
+        if (tag.contains(EIONBTKeys.ENERGY) && tag.getCompound(EIONBTKeys.ENERGY).contains(EIONBTKeys.ENERGY_MAX_RECEIVE)) {
+            return tag.getCompound(EIONBTKeys.ENERGY).getInt(EIONBTKeys.ENERGY_MAX_RECEIVE) > 0;
         }
         return false;
     }

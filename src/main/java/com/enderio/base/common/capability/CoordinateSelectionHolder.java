@@ -21,8 +21,8 @@ public class CoordinateSelectionHolder implements ICoordinateSelectionHolder {
     @Override
     public CoordinateSelection getSelection() {
         CompoundTag tag = stack.getOrCreateTag();
-        if (tag.contains("Selection")) {
-            CompoundTag selectionnbt = tag.getCompound("Selection");
+        if (tag.contains(EIONBTKeys.COORDINATE_SELECTION)) {
+            CompoundTag selectionnbt = tag.getCompound(EIONBTKeys.COORDINATE_SELECTION);
             CoordinateSelection selection = new CoordinateSelection(new ResourceLocation(selectionnbt.getString(EIONBTKeys.LEVEL)),
                 NbtUtils.readBlockPos(selectionnbt.getCompound(EIONBTKeys.BLOCK_POS)));
             return selection;
@@ -37,7 +37,7 @@ public class CoordinateSelectionHolder implements ICoordinateSelectionHolder {
             selectionnbt.putString(EIONBTKeys.LEVEL, selection.level().toString());
             selectionnbt.put(EIONBTKeys.BLOCK_POS, NbtUtils.writeBlockPos(selection.pos()));
             CompoundTag stacktag = stack.getOrCreateTag();
-            stacktag.put("Selection", selectionnbt);
+            stacktag.put(EIONBTKeys.COORDINATE_SELECTION, selectionnbt);
         }
 
     }

@@ -1,6 +1,7 @@
 package com.enderio.base.common.capability;
 
 import com.enderio.api.capability.IToggled;
+import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.init.EIOCapabilities;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -29,8 +30,8 @@ public class Toggled implements IToggled {
     @Override
     public boolean isEnabled() {
         CompoundTag tag = this.stack.getOrCreateTag();
-        if (tag.contains("Toggled"))
-            return tag.getBoolean("Toggled");
+        if (tag.contains(EIONBTKeys.TOGGLE_STATE))
+            return tag.getBoolean(EIONBTKeys.TOGGLE_STATE);
         return false;
     }
 
@@ -42,6 +43,6 @@ public class Toggled implements IToggled {
     @Override
     public void setEnabled(boolean isEnabled) {
         CompoundTag tag = this.stack.getOrCreateTag();
-        tag.putBoolean("Toggled", isEnabled);
+        tag.putBoolean(EIONBTKeys.TOGGLE_STATE, isEnabled);
     }
 }

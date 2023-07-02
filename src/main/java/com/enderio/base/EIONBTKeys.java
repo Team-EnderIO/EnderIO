@@ -21,12 +21,4 @@ public class EIONBTKeys extends CoreNBTKeys {
     public static final String DARK_STEEL_UPGRADEABLE = "DarkSteelUpgradable";
 
     // endregion
-
-    // region Energy Storage
-
-    public static final String ENERGY_STORED = "EnergyStored";
-    public static final String ENERGY_MAX_STORED = "MaxEnergyStored";
-    public static final String ENERGY_MAX_USE = "MaxEnergyUse";
-
-    // endregion
 }

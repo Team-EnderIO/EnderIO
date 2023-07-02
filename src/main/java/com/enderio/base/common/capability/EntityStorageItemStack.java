@@ -1,12 +1,13 @@
 package com.enderio.base.common.capability;
 
+import com.enderio.api.capability.IEntityStorage;
 import com.enderio.api.capability.StoredEntityData;
 import com.enderio.base.EIONBTKeys;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 
-public class EntityStorageItemStack extends EntityStorage {
+public class EntityStorageItemStack implements IEntityStorage {
 
     private final ItemStack stack;
 
