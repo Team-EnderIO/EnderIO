@@ -1,7 +1,7 @@
 package com.enderio.base.common.util;
 
-import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.base.common.tag.EIOTags;
 import com.enderio.core.common.util.EntityUtil;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.network.chat.Component;
@@ -75,13 +75,13 @@ public class EntityCaptureUtils {
      */
     public static CapturableStatus getCapturableStatus(EntityType<? extends LivingEntity> type, @Nullable Entity entity) {
 
-        if (entity != null && isBlacklistedBoss(entity))
+        if (entity != null && isBlacklistedBoss(entity)) //Do we keep this special case?
             return CapturableStatus.BOSS;
 
         if (!type.canSerialize())
             return CapturableStatus.INCOMPATIBLE;
 
-        if (BaseConfig.COMMON.ITEMS.SOUL_VIAL_BLACKLIST.get().contains(ForgeRegistries.ENTITY_TYPES.getKey(type).toString())) {
+        if (type.is(EIOTags.EntityTypes.SOUL_VIAL_BLACKLIST)) {
             return CapturableStatus.BLACKLISTED;
         }
 

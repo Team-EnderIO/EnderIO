@@ -872,6 +872,7 @@
   "gui.enderio.redstone.never_active": "Never active",
   "gui.enderio.sag_mill_chance": "Chance: %s%%",
   "gui.enderio.sag_mill_chance_ball": "Chance: %s%% (modified by grinding ball)",
+  "gui.enderio.spawner.disabled": "Disabled by config",
   "gui.enderio.spawner.other_mod": "Other mod",
   "gui.enderio.spawner.too_many_mob": "Too many mobs",
   "gui.enderio.spawner.too_many_spawner": "Too many spawners",

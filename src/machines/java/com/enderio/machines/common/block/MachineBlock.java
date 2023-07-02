@@ -112,4 +112,5 @@ public class MachineBlock extends BaseEntityBlock {
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return blockEntityType.create(pPos, pState);
     }
+    
 }

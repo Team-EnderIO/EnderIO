@@ -196,6 +196,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
         TOO_MANY_SPAWNER(MachineLang.TOO_MANY_SPAWNER),
         UNKOWN_MOB(MachineLang.UNKNOWN),
         OTHER_MOD(MachineLang.OTHER_MOD),
+        DISABLED(MachineLang.DISABLED),
         NONE(Component.literal("NONE"));
 
         private final Component component;

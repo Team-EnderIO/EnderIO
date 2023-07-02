@@ -4,11 +4,13 @@ import com.enderio.EnderIO;
 import com.enderio.base.common.block.glass.GlassCollisionPredicate;
 import com.enderio.base.common.block.glass.GlassIdentifier;
 import com.enderio.base.common.block.glass.GlassLighting;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
@@ -23,6 +25,7 @@ public class EIOTags {
         Items.init();
         Blocks.init();
         Fluids.init();
+        EntityTypes.init();
     }
 
     public static class Items {
@@ -97,5 +100,16 @@ public class EIOTags {
         public static final TagKey<Fluid> COLD_FIRE_IGNITER_FUEL = FluidTags.create(EnderIO.loc("fluid_fuel/cold_fire_igniter"));
         public static final TagKey<Fluid> STAFF_OF_LEVITY_FUEL = FluidTags.create(EnderIO.loc("fluid_fuel/staff_of_levity"));
         public static final TagKey<Fluid> EXPERIENCE = FluidTags.create(new ResourceLocation("forge", "experience"));
+    }
+
+    public static class EntityTypes {
+        private static void init() {}
+
+        public static TagKey<EntityType<?>> SOUL_VIAL_BLACKLIST = create("soul_vial_blacklist");
+
+        private static TagKey<EntityType<?>> create(String pName) {
+            return TagKey.create(Registries.ENTITY_TYPE, EnderIO.loc(pName));
+        }
+
     }
 }

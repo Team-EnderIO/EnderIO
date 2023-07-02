@@ -39,6 +39,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.PushReaction;
@@ -384,6 +385,11 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
             && conduit.getBundle().getNodeFor(EnderConduitTypes.REDSTONE.get()) != null
             && conduit.getBundle().getNodeFor(EnderConduitTypes.REDSTONE.get()).getExtendedConduitData() instanceof RedstoneExtendedData redstoneExtendedData
             && redstoneExtendedData.isActive() ? 15 : 0;
+    }
+
+    @Override
+    public boolean canBeReplaced(BlockState pState, Fluid pFluid) {
+        return false;
     }
 
     private record OpenInformation(Direction direction, IConduitType<?> type) {
