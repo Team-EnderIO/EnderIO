@@ -13,6 +13,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.living.MobSpawnEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -152,12 +153,8 @@ public class SpawnTask implements IPoweredMachineTask {
                 }
 
                 if (entity instanceof Mob mob) {
-                    // We're doing this manually, so we can properly capture cancellation.
-                    // See ForgeEventFactory#onFinalizeSpawn
-                    var event = new MobSpawnEvent.FinalizeSpawn(mob, level, mob.getX(), mob.getY(), mob.getZ(), level.getCurrentDifficultyAt(pos), MobSpawnType.SPAWNER, null, null, null);
-                    boolean cancel = MinecraftForge.EVENT_BUS.post(event);
-
-                    if (cancel) {
+                    var event = ForgeEventFactory.onFinalizeSpawnSpawner(mob, level, level.getCurrentDifficultyAt(pos), null, null, null);
+                    if (event == null) {
                         blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.OTHER_MOD);
                         return false;
                     } else {
