@@ -23,6 +23,7 @@ public abstract class MachineTaskHost {
      */
     @Nullable
     private CompoundTag pendingTask;
+    private boolean hasLoaded;
 
     @UseOnly(LogicalSide.CLIENT)
     private float clientTaskProgress;
@@ -115,6 +116,11 @@ public abstract class MachineTaskHost {
     }
 
     public final void onLevelReady() {
+        // If load() hasn't been called yet, don't
+        if (!hasLoaded) {
+            return;
+        }
+
         // Load any pending tasks.
         if (pendingTask != null) {
             currentTask = loadTask(pendingTask);
@@ -140,8 +146,18 @@ public abstract class MachineTaskHost {
     }
 
     public void load(CompoundTag tag) {
-        if (tag.contains(KEY_TASK)) {
-            pendingTask = tag.getCompound(KEY_TASK).copy();
+        hasLoaded = true;
+
+        if (levelSupplier.get() == null) {
+            if (tag.contains(KEY_TASK)) {
+                pendingTask = tag.getCompound(KEY_TASK).copy();
+            }
+        } else {
+            if (tag.contains(KEY_TASK)) {
+                currentTask = loadTask(tag.getCompound(KEY_TASK));
+            } else {
+                currentTask = getNewTask();
+            }
         }
     }
 

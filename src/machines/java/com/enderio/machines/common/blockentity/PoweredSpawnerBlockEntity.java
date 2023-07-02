@@ -181,12 +181,14 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
     public void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
         pTag.put("EntityStorage", entityData.serializeNBT());
+        taskHost.save(pTag);
     }
 
     @Override
     public void load(CompoundTag pTag) {
         super.load(pTag);
         entityData.deserializeNBT(pTag.getCompound("EntityStorage"));
+        taskHost.load(pTag);
     }
 
     // endregion
