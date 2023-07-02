@@ -10,15 +10,12 @@ import com.enderio.core.common.recipes.CountedIngredient;
 import com.enderio.core.common.sync.EnumDataSlot;
 import com.enderio.core.common.sync.FloatDataSlot;
 import com.enderio.core.common.sync.SyncMode;
-import com.enderio.machines.common.blockentity.base.PoweredCraftingMachine;
 import com.enderio.machines.common.blockentity.base.PoweredMachineEntity;
-import com.enderio.machines.common.blockentity.task.CraftingMachineTask;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingMachineTask;
-import com.enderio.machines.common.blockentity.task.PoweredCraftingTask;
 import com.enderio.machines.common.blockentity.task.host.CraftingMachineTaskHost;
 import com.enderio.machines.common.config.MachinesConfig;
-import com.enderio.machines.common.integrations.vanilla.VanillaAlloySmeltingRecipe;
 import com.enderio.machines.common.init.MachineRecipes;
+import com.enderio.machines.common.integrations.vanilla.VanillaAlloySmeltingRecipe;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import com.enderio.machines.common.io.item.MachineInventory;
@@ -28,7 +25,6 @@ import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.AlloySmelterMenu;
 import com.enderio.machines.common.menu.PrimitiveAlloySmelterMenu;
 import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
-import com.enderio.machines.common.recipe.SoulBindingRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -272,7 +268,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineEntity {
         if (currentTask != null) {
             var currentRecipe = currentTask.getRecipe();
             if (currentRecipe != null) {
-                MachineInventory inventory = getInventory();
+                MachineInventory inventory = getInventoryNN();
                 ItemStack currentContents = inventory.getStackInSlot(slot);
                 inventory.setStackInSlot(slot, stack);
                 boolean accept = currentRecipe.matches(craftingTaskHost.getContainer(), level);

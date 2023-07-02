@@ -298,11 +298,6 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         return new MachineFluidHandler(getIOConfig(), fluidTank);
     }
 
-    @Nullable
-    public MachineFluidHandler getFluidHandler() {
-        return fluidHandler;
-    }
-
     // endregion
 
     // region Block Entity ticking

@@ -81,7 +81,7 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
     }
 
     private boolean acceptSlotInput(int slot, ItemStack stack) {
-        return ItemStack.isSameItem(this.getInventory().getStackInSlot(slot + 10), stack);
+        return ItemStack.isSameItem(this.getInventoryNN().getStackInSlot(slot + 10), stack);
     }
 
     @Override

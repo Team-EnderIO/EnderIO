@@ -125,7 +125,7 @@ public class SagMillBlockEntity extends PoweredMachineEntity {
     }
 
     protected PoweredCraftingMachineTask<SagMillingRecipe, SagMillingRecipe.Container> createTask(Level level, SagMillingRecipe.Container container, @Nullable SagMillingRecipe recipe) {
-        return new PoweredCraftingMachineTask<>(level, Objects.requireNonNull(getInventory()), getEnergyStorage(), container, OUTPUT, recipe) {
+        return new PoweredCraftingMachineTask<>(level, getInventoryNN(), getEnergyStorage(), container, OUTPUT, recipe) {
             @Override
             protected void consumeInputs(SagMillingRecipe recipe) {
                 MachineInventory inv = getInventory();
