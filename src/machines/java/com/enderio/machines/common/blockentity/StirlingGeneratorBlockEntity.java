@@ -50,7 +50,7 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     }
 
     private int getBurnPerTick() {
-        return Math.min(1, BURN_SPEED.scaleI(this::getCapacitorData).get());
+        return Math.max(1, BURN_SPEED.scaleI(this::getCapacitorData).get());
     }
 
     public int getGenerationRate() {
