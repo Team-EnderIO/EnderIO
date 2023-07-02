@@ -208,6 +208,9 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity {
      * Whether the machine has a capacitor installed.
      */
     public boolean isCapacitorInstalled() {
+        if (level != null && level.isClientSide) {
+            return !getCapacitorItem().isEmpty();
+        }
         if (capacitorCacheDirty)
             cacheCapacitorData();
         return cachedCapacitorData != DefaultCapacitorData.NONE;

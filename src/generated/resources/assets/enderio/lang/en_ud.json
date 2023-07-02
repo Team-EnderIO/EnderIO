@@ -861,6 +861,8 @@
   "gui.enderio.ioconfig.none": "ǝuoN",
   "gui.enderio.ioconfig.pull": "ןןnԀ",
   "gui.enderio.ioconfig.push": "ɥsnԀ",
+  "gui.enderio.nocap.desc": "¡ʞɹoʍ uɐɔ ǝuıɥɔɐɯ sıɥʇ \n os ɹoʇıɔɐdɐɔ ʎuɐ ʇɹǝsuI",
+  "gui.enderio.nocap.title": "buıssıW ɹoʇıɔɐdɐƆ",
   "gui.enderio.progress": "%s%% ssǝɹboɹԀ",
   "gui.enderio.range": "ǝbuɐᴚ",
   "gui.enderio.range.hide": "ǝbuɐᴚ ǝpıH",
