@@ -6,7 +6,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.INBTSerializable;
 
-public class Toggled implements IToggled, INBTSerializable<Tag> {
+public class Toggled implements IToggled {
 
     private final ItemStack stack;
 
