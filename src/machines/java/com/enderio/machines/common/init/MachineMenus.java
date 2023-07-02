@@ -24,6 +24,7 @@ public class MachineMenus {
     public static final MenuEntry<VacuumChestMenu> VACUUM_CHEST = REGISTRATE.menu("vacuum_chest", VacuumChestMenu::factory, () -> VacuumChestScreen::new).register();
     public static final MenuEntry<XPVacuumMenu> XP_VACUUM = REGISTRATE.menu("xp_vacuum", XPVacuumMenu::factory, () -> XPVacuumScreen::new).register();
     public static final MenuEntry<CrafterMenu> CRAFTER = REGISTRATE.menu("crafter", CrafterMenu::factory, () -> CrafterScreen::new).register();
+    public static final MenuEntry<CapacitorBankMenu> CAPACITOR_BANK = REGISTRATE.menu("capacitor_bank", CapacitorBankMenu::factory, () -> CapacitorBankScreen::new).register();
 
     public static void register() {}
 }

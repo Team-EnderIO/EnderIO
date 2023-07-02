@@ -3,12 +3,16 @@ package com.enderio.machines.common.init;
 import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.core.data.model.EIOModel;
+import com.enderio.machines.common.block.CapacitorBankBlock;
 import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.block.ProgressMachineBlock;
 import com.enderio.machines.common.block.SolarPanelBlock;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
+import com.enderio.machines.common.blockentity.capacitorbank.CapacitorBankBlockEntity;
+import com.enderio.machines.common.blockentity.capacitorbank.CapacitorTier;
 import com.enderio.machines.common.blockentity.solar.SolarPanelBlockEntity;
 import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
+import com.enderio.machines.common.item.CapacitorBankItem;
 import com.enderio.machines.common.item.FluidTankItem;
 import com.enderio.machines.common.item.PoweredSpawnerItem;
 import com.enderio.machines.data.loot.MachinesLootTable;
@@ -178,6 +182,13 @@ public class MachineBlocks {
         }
         return ImmutableMap.copyOf(panels);
     });
+    public static final Map<CapacitorTier, BlockEntry<CapacitorBankBlock>> CAPACITOR_BANKS = Util.make(() -> {
+        Map<CapacitorTier, BlockEntry<CapacitorBankBlock>> banks = new HashMap<>();
+        for (CapacitorTier tier: CapacitorTier.values()) {
+            banks.put(tier, capacitorBank(tier.name().toLowerCase(Locale.ROOT) + "_capacitor_bank", () -> MachineBlockEntities.CAPACITOR_BANKS.get(tier), tier).register());
+        }
+        return ImmutableMap.copyOf(banks);
+    });
     public static final BlockEntry<ProgressMachineBlock> CRAFTER = standardMachine("crafter", () -> MachineBlockEntities.CRAFTER)
         .lang("Crafter")
         .blockstate((ctx, prov) -> MachineModelUtil.customMachineBlock(ctx, prov, "crafter"))
@@ -217,8 +228,22 @@ public class MachineBlocks {
             .block(name, props -> new SolarPanelBlock(props, blockEntityEntry.get(), tier))
             .properties(props -> props.strength(2.5f, 8))
             .blockstate((ctx, prov) -> MachineModelUtil.solarPanel(ctx, prov, tier))
+            .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .item()
             .model((ctx, prov) -> MachineModelUtil.solarPanel(ctx, prov, tier))
+            .tab(EIOCreativeTabs.MACHINES)
+            .build();
+    }
+
+    private static BlockBuilder<CapacitorBankBlock, Registrate> capacitorBank(String name, Supplier<BlockEntityEntry<? extends CapacitorBankBlockEntity>> blockEntityEntry, CapacitorTier tier) {
+        return REGISTRATE
+            .block(name, props -> new CapacitorBankBlock(props, blockEntityEntry.get(), tier))
+            .properties(props -> props.strength(2.5f, 8))
+            .blockstate((ctx, prov) -> prov.simpleBlock(ctx.getEntry(), prov.models().getExistingFile(EnderIO.loc(ctx.getName()))))
+            .loot(MachinesLootTable::copyNBT)
+            .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+            .item(CapacitorBankItem::new)
+            .model((ctx, cons) -> {})
             .tab(EIOCreativeTabs.MACHINES)
             .build();
     }

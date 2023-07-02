@@ -1,24 +1,27 @@
-package com.enderio.machines.common.blockentity.solar;
+package com.enderio.machines.common.blockentity.multienergy;
 
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
 import dev.gigaherz.graph3.Mergeable;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
-public class SolarPanelNode implements GraphObject<Mergeable.Dummy> {
+public class MultiEnergyNode implements GraphObject<Mergeable.Dummy> {
 
     @Nullable
     private Graph<Mergeable.Dummy> graph = null;
 
     private final Supplier<IEnergyStorage> internal;
-    private final Supplier<SolarPanelEnergyStorageWrapper> wrapper;
+    private final Supplier<MultiEnergyStorageWrapper> wrapper;
 
-    public SolarPanelNode(Supplier<IEnergyStorage> internal, Supplier<SolarPanelEnergyStorageWrapper> wrapper) {
+    public final BlockPos pos;
+    public MultiEnergyNode(Supplier<IEnergyStorage> internal, Supplier<MultiEnergyStorageWrapper> wrapper, BlockPos pos) {
         this.internal = internal;
         this.wrapper = wrapper;
+        this.pos = pos;
     }
 
     @Override
@@ -37,7 +40,7 @@ public class SolarPanelNode implements GraphObject<Mergeable.Dummy> {
         return internal;
     }
 
-    public Supplier<SolarPanelEnergyStorageWrapper> getWrapper() {
+    public Supplier<MultiEnergyStorageWrapper> getWrapper() {
         return wrapper;
     }
 }

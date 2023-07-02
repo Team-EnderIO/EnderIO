@@ -67,8 +67,8 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
         // Mark capacitor cache as dirty
         capacitorCacheDirty = true;
 
-        // new new way of syncing energy storage.
-        addDataSlot(new MachineEnergyDataSlot(this::getEnergyStorage, storage -> clientEnergyStorage = storage, SyncMode.GUI));
+        // new new new way of syncing energy storage.
+        addDataSlot(new MachineEnergyDataSlot(this::getExposedEnergyStorage, storage -> clientEnergyStorage = storage, getEnergySyncMode()));
     }
 
     @Override
@@ -130,6 +130,8 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
 
         // Transmit power out all sides.
         for (Direction side : Direction.values()) {
+            if (!shouldPushEnergyTo(side))
+                continue;
             // Get our energy handler, this will handle all sidedness tests for us.
             getCapability(ForgeCapabilities.ENERGY, side).resolve().ifPresent(selfHandler -> {
                 // If we can't extract out this side, continue
@@ -149,6 +151,19 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
                 }
             });
         }
+    }
+
+    /**
+     * prevent pushing energy to other parts of the same energyMultiblock
+     * @param direction
+     * @return
+     */
+    protected boolean shouldPushEnergyTo(Direction direction) {
+        return true;
+    }
+
+    protected SyncMode getEnergySyncMode() {
+        return SyncMode.GUI;
     }
 
     /**

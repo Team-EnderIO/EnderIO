@@ -41,6 +41,13 @@
     "enderio:stirling_generator",
     "enderio:sag_mill",
     "enderio:impulse_hopper",
+    "enderio:simple_photovoltaic_cell",
+    "enderio:basic_photovoltaic_cell",
+    "enderio:advanced_photovoltaic_cell",
+    "enderio:vibrant_photovoltaic_cell",
+    "enderio:basic_capacitor_bank",
+    "enderio:advanced_capacitor_bank",
+    "enderio:vibrant_capacitor_bank",
     "enderio:crafter",
     "enderio:conduit"
   ]

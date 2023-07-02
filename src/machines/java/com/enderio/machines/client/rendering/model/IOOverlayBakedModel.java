@@ -6,7 +6,6 @@ import com.enderio.api.io.IOMode;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
-import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -41,7 +40,7 @@ public class IOOverlayBakedModel implements IDynamicBakedModel {
 
     static {
         for (Direction dir : Direction.values()) {
-            QUADS.put(dir, ModelRenderUtil.createQuadVerts(dir, 0.0625f, 1 - 0.0625f, 1));
+            QUADS.put(dir, ModelRenderUtil.createQuadVerts(dir, 0.0625f, 1 - 0.0625f, 1.0001));
         }
     }
 

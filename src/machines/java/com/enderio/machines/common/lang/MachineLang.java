@@ -41,7 +41,9 @@ public class MachineLang {
     public static final Component PHOTOVOLTAIC_CELL_ADVANCED = REGISTRATE.addLang("tooltip", EnderIO.loc("photovoltaic_cell/advanced"), "Produces Power during daylight hours");
     public static final Component PHOTOVOLTAIC_CELL_ADVANCED2 = REGISTRATE.addLang("tooltip", EnderIO.loc("photovoltaic_cell/advanced2"), "Must have a clear line of sight to the sky");
     public static final MutableComponent PHOTOVOLTAIC_CELL_ADVANCED3 = REGISTRATE.addLang("tooltip", EnderIO.loc("photovoltaic_cell/advanced3"), "Max Output: ");
-
+    public static final Component PLACE_CAPACITOR_BANK_ADVANCEMENT_TITLE = REGISTRATE.addLang("advancements", EnderIO.loc("place_capacitor_bank.title"), "Modular Power Storage");
+    public static final Component PLACE_CAPACITOR_BANK_ADVANCEMENT_DESCRIPTION = REGISTRATE.addLang("advancements", EnderIO.loc("place_capacitor_bank.description"), "Build a Capacitor Bank");
+    public static final Component MULTIBLOCK_CONNECTED_TEXTURES = REGISTRATE.addLang("hint", EnderIO.loc("connected_textures.text"), "If you are looking for connected textures on the capacitor bank, you might want to install Athena on your client");
 
     public static void register() {}
 }

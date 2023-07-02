@@ -8,9 +8,11 @@ import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.init.MachineMenus;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.lang.MachineLang;
+import com.enderio.machines.data.advancements.MachinesAdvancementGenerator;
 import com.enderio.machines.data.recipes.*;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
+import net.minecraftforge.common.data.ForgeAdvancementProvider;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -18,7 +20,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLConstructModEvent;
 
-import java.util.Collections;
+import java.util.List;
 
 @Mod.EventBusSubscriber(modid = EnderIO.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class EIOMachines {
@@ -53,5 +55,7 @@ public class EIOMachines {
         provider.addSubProvider(event.includeServer(), new TankRecipeProvider(packOutput));
 
         generator.addProvider(true, provider);
+        provider.addSubProvider(event.includeServer(), new ForgeAdvancementProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper(),
+            List.of(new MachinesAdvancementGenerator())));
     }
 }
