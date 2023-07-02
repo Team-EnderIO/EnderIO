@@ -19,7 +19,6 @@ public class EnumDataSlot<T extends Enum<T>> extends EnderDataSlot<T> {
         return tag;
     }
 
-    @Nullable
     @Override
     protected T fromNBT(CompoundTag nbt) {
         return getter().get().getDeclaringClass().getEnumConstants()[nbt.getInt("ordinal")];

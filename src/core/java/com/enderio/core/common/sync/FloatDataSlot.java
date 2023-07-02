@@ -19,7 +19,6 @@ public class FloatDataSlot extends EnderDataSlot<Float> {
         return tag;
     }
 
-    @Nullable
     @Override
     protected Float fromNBT(CompoundTag nbt) {
         return nbt.getFloat("value");

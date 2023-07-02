@@ -13,6 +13,9 @@ public abstract class EnderDataSlot<T> {
 
     private final SyncMode syncMode;
 
+    private int lastSentHash = 0;
+    private boolean hasDataChangedThisTick = false;
+
     public EnderDataSlot(Supplier<T> getter, Consumer<T> setter, SyncMode mode) {
         this.getter = getter;
         this.setter = setter;
@@ -31,6 +34,23 @@ public abstract class EnderDataSlot<T> {
         return setter;
     }
 
+    public void clearHasChangedFlag() {
+        hasDataChangedThisTick = false;
+    }
+
+    public Optional<CompoundTag> toOptionalNBT() {
+        int currentHash = getter().get().hashCode();
+        if (currentHash != lastSentHash) {
+            lastSentHash = currentHash;
+            hasDataChangedThisTick = true;
+        }
+
+        if (hasDataChangedThisTick) {
+            return Optional.of(toFullNBT());
+        }
+        return Optional.empty();
+    }
+
     /**
      * Make sure to always retain a valid state, even when this method throws an Exception and only throw an Exception if invalid data is sent, as Clients can have full control over incoming data
      * @param tag
@@ -44,6 +64,5 @@ public abstract class EnderDataSlot<T> {
 
     public abstract CompoundTag toFullNBT();
 
-    @Nullable
     protected abstract T fromNBT(CompoundTag nbt);
 }

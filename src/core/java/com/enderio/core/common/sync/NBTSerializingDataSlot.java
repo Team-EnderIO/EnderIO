@@ -22,7 +22,6 @@ public class NBTSerializingDataSlot<T> extends EnderDataSlot<T> {
         return toNBT.apply(getter().get());
     }
 
-    @Nullable
     @Override
     protected T fromNBT(CompoundTag nbt) {
         //I can return null here, because I override the only usage of this method

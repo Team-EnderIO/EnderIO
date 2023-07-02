@@ -18,7 +18,6 @@ public class BooleanDataSlot extends EnderDataSlot<Boolean> {
         return tag;
     }
 
-    @Nullable
     @Override
     protected Boolean fromNBT(CompoundTag nbt) {
         return nbt.getBoolean("value");

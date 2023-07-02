@@ -18,7 +18,6 @@ public class FluidStackDataSlot extends EnderDataSlot<FluidStack> {
         return getter().get().writeToNBT(new CompoundTag());
     }
 
-    @Nullable
     @Override
     public FluidStack fromNBT(CompoundTag nbt) {
         return FluidStack.loadFluidStackFromNBT(nbt);

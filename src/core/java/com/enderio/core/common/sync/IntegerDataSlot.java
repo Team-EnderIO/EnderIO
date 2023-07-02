@@ -19,7 +19,6 @@ public class IntegerDataSlot extends EnderDataSlot<Integer> {
         return tag;
     }
 
-    @Nullable
     @Override
     protected Integer fromNBT(CompoundTag nbt) {
         return nbt.getInt("value");

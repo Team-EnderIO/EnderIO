@@ -44,18 +44,18 @@ public abstract class SyncedMenu<T extends EnderBlockEntity> extends AbstractCon
     @Override
     public void broadcastChanges() {
         super.broadcastChanges();
-        sync();
+        sync(false);
     }
 
     @Override
     public void broadcastFullState() {
         super.broadcastFullState();
-        sync();
+        sync(true);
     }
 
-    private void sync() {
+    private void sync(boolean fullSync) {
         if (inventory.player instanceof ServerPlayer player && blockEntity != null) {
-            blockEntity.sendPacket(player, blockEntity.createUpdatePacket(SyncMode.GUI));
+            blockEntity.sendPacket(player, blockEntity.createUpdatePacket(fullSync, SyncMode.GUI));
         }
     }
 

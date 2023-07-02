@@ -19,7 +19,6 @@ public class ResourceLocationDataSlot extends EnderDataSlot<ResourceLocation> {
         return tag;
     }
 
-    @Nullable
     @Override
     protected ResourceLocation fromNBT(CompoundTag nbt) {
         return new ResourceLocation(nbt.getString("rl"));

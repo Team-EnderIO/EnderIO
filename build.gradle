@@ -239,9 +239,9 @@ dependencies {
     compileOnly fg.deobf("mcjty.theoneprobe:theoneprobe:${top_version}:api") {
         transitive = false
     }
-    runtimeOnly fg.deobf("mcjty.theoneprobe:theoneprobe:${top_version}") {
-        transitive = false
-    }
+//    runtimeOnly fg.deobf("mcjty.theoneprobe:theoneprobe:${top_version}") {
+//        transitive = false
+//    }
 
     // Patchouli
 //    compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")

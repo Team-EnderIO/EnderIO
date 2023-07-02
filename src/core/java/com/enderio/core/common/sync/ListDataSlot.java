@@ -34,7 +34,6 @@ public class ListDataSlot<T, V extends Tag> extends EnderDataSlot<List<T>> {
         return tag;
     }
 
-    @Nullable
     @Override
     protected List<T> fromNBT(CompoundTag nbt) {
         List<T> list = new ArrayList<>();
