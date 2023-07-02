@@ -19,7 +19,6 @@ public class VersionedDataSlot<T> extends EnderDataSlot<T> {
 
     @Override
     public CompoundTag toFullNBT() {
-        // When we're doing a get, we'll check the hash of the data
         var value = getter().get();
         if (value.hashCode() != lastValueHash) {
             timestamp = Instant.now().toEpochMilli();
