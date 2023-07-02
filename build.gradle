@@ -229,8 +229,9 @@ dependencies {
     runtimeOnly fg.deobf("maven.modrinth:rftools-power:f430rHkA")
     runtimeOnly fg.deobf("maven.modrinth:mcjtylib:3LlgyvSh")
     runtimeOnly fg.deobf("maven.modrinth:rftools-base:Uu1IkVMH")
-    //TODO pull from modrinth maven and not maven local in the future
-    //runtimeOnly fg.deobf("earth.terrarium.athena:athena-forge-1.20.1:3.0.0")
+
+    //Athena ctm
+    runtimeOnly fg.deobf("maven.modrinth:athena-ctm:X6GdUrpW")
 
     // AE2
     compileOnly "appeng:appliedenergistics2-forge:${ae2_version}:api"
