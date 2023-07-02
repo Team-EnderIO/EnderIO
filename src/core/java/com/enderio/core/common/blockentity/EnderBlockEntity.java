@@ -4,6 +4,7 @@ import com.enderio.api.UseOnly;
 import com.enderio.api.capability.IEnderCapabilityProvider;
 import com.enderio.core.common.sync.EnderDataSlot;
 import com.enderio.core.common.sync.SyncMode;
+import com.enderio.core.common.sync.VersionedDataSlot;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -90,28 +91,23 @@ public class EnderBlockEntity extends BlockEntity {
     @Nullable
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return createUpdatePacket(false, SyncMode.WORLD);
+        return createUpdatePacket(SyncMode.WORLD);
     }
 
     /**
      * create the ClientBoundBlockEntityDataPacket for this BlockEntity
-     * @param fullUpdate if this packet should send all information (this is used for players who started tracking this BlockEntity)
      * @return the UpdatePacket
      */
     @Nullable
-    public ClientboundBlockEntityDataPacket createUpdatePacket(boolean fullUpdate, SyncMode mode) {
+    public ClientboundBlockEntityDataPacket createUpdatePacket(SyncMode mode) {
         CompoundTag nbt = new CompoundTag();
         ListTag listNBT = new ListTag();
         for (int i = 0; i < this.dataSlots.size(); i++) {
             EnderDataSlot<?> dataSlot = this.dataSlots.get(i);
             if (dataSlot.getSyncMode() == mode) {
-                Optional<CompoundTag> optionalNBT = fullUpdate ? Optional.of(dataSlot.toFullNBT()) : dataSlot.toOptionalNBT();
-
-                if (optionalNBT.isPresent()) {
-                    CompoundTag elementNBT = optionalNBT.get();
-                    elementNBT.putInt("dataSlotIndex", i);
-                    listNBT.add(elementNBT);
-                }
+                CompoundTag elementNBT = dataSlot.toFullNBT();
+                elementNBT.putInt("dataSlotIndex", i);
+                listNBT.add(elementNBT);
             }
         }
 
@@ -145,8 +141,8 @@ public class EnderBlockEntity extends BlockEntity {
     }
 
     public void add2WayDataSlot(EnderDataSlot<?> slot) {
-        addDataSlot(slot);
-        addClientDecidingDataSlot(slot);
+        addDataSlot(new VersionedDataSlot<>(slot));
+        addClientDecidingDataSlot(new VersionedDataSlot<>(slot));
     }
 
     public void addAfterSyncRunnable(Runnable runnable) {
@@ -158,7 +154,7 @@ public class EnderBlockEntity extends BlockEntity {
      */
     @UseOnly(LogicalSide.SERVER)
     public void sync() {
-        ClientboundBlockEntityDataPacket fullUpdate = createUpdatePacket(true, SyncMode.WORLD);
+        ClientboundBlockEntityDataPacket fullUpdate = createUpdatePacket(SyncMode.WORLD);
         ClientboundBlockEntityDataPacket partialUpdate = getUpdatePacket();
 
         List<UUID> currentlyTracking = new ArrayList<>();

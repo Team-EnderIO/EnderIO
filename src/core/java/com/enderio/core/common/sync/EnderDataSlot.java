@@ -1,6 +1,7 @@
 package com.enderio.core.common.sync;
 
 import net.minecraft.nbt.CompoundTag;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -11,8 +12,6 @@ public abstract class EnderDataSlot<T> {
     private final Consumer<T> setter;
 
     private final SyncMode syncMode;
-
-    CompoundTag previousValue = new CompoundTag();
 
     public EnderDataSlot(Supplier<T> getter, Consumer<T> setter, SyncMode mode) {
         this.getter = getter;
@@ -28,13 +27,8 @@ public abstract class EnderDataSlot<T> {
         return getter;
     }
 
-    public Optional<CompoundTag> toOptionalNBT() {
-        CompoundTag newNBT = toFullNBT();
-        if (newNBT.equals(previousValue))
-            return Optional.empty();
-        //copy to prevent mismatched by adding the dataSlotIndex
-        previousValue = newNBT.copy();
-        return Optional.of(newNBT);
+    protected Consumer<T> setter() {
+        return setter;
     }
 
     /**
@@ -42,10 +36,14 @@ public abstract class EnderDataSlot<T> {
      * @param tag
      */
     public void handleNBT(CompoundTag tag) {
-        setter.accept(fromNBT(tag));
+        var value = fromNBT(tag);
+        if (value != null) {
+            setter.accept(value);
+        }
     }
 
     public abstract CompoundTag toFullNBT();
 
+    @Nullable
     protected abstract T fromNBT(CompoundTag nbt);
 }

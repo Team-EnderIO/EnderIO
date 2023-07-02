@@ -1,6 +1,7 @@
 package com.enderio.core.common.sync;
 
 import net.minecraft.nbt.CompoundTag;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -18,6 +19,7 @@ public class IntegerDataSlot extends EnderDataSlot<Integer> {
         return tag;
     }
 
+    @Nullable
     @Override
     protected Integer fromNBT(CompoundTag nbt) {
         return nbt.getInt("value");

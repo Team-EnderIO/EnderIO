@@ -1,6 +1,7 @@
 package com.enderio.core.common.sync;
 
 import net.minecraft.nbt.CompoundTag;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -18,6 +19,7 @@ public class EnumDataSlot<T extends Enum<T>> extends EnderDataSlot<T> {
         return tag;
     }
 
+    @Nullable
     @Override
     protected T fromNBT(CompoundTag nbt) {
         return getter().get().getDeclaringClass().getEnumConstants()[nbt.getInt("ordinal")];

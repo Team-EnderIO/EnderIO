@@ -2,6 +2,7 @@ package com.enderio.core.common.sync;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -18,6 +19,7 @@ public class ResourceLocationDataSlot extends EnderDataSlot<ResourceLocation> {
         return tag;
     }
 
+    @Nullable
     @Override
     protected ResourceLocation fromNBT(CompoundTag nbt) {
         return new ResourceLocation(nbt.getString("rl"));

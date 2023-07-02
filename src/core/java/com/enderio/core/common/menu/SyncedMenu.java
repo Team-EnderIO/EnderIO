@@ -27,6 +27,7 @@ public abstract class SyncedMenu<T extends EnderBlockEntity> extends AbstractCon
     private final List<EnderDataSlot<?>> clientToServerSlots = new ArrayList<>();
     private final List<Slot> playerInventorySlots = new ArrayList<>();
     private boolean playerInvVisible = true;
+
     protected SyncedMenu(@Nullable T blockEntity, Inventory inventory, @Nullable MenuType<?> pMenuType, int pContainerId) {
         super(pMenuType, pContainerId);
         this.blockEntity = blockEntity;
@@ -43,31 +44,27 @@ public abstract class SyncedMenu<T extends EnderBlockEntity> extends AbstractCon
     @Override
     public void broadcastChanges() {
         super.broadcastChanges();
-        sync(false);
+        sync();
     }
 
     @Override
     public void broadcastFullState() {
         super.broadcastFullState();
-        sync(true);
+        sync();
     }
 
-    private void sync(boolean fullSync) {
+    private void sync() {
         if (inventory.player instanceof ServerPlayer player && blockEntity != null) {
-            blockEntity.sendPacket(player, blockEntity.createUpdatePacket(fullSync, SyncMode.GUI));
+            blockEntity.sendPacket(player, blockEntity.createUpdatePacket(SyncMode.GUI));
         }
     }
 
     public void clientTick() {
         ListTag listNBT = new ListTag();
         for (int i = 0; i < clientToServerSlots.size(); i++) {
-            Optional<CompoundTag> optionalNBT = clientToServerSlots.get(i).toOptionalNBT();
-
-            if (optionalNBT.isPresent()) {
-                CompoundTag elementNBT = optionalNBT.get();
-                elementNBT.putInt("dataSlotIndex", i);
-                listNBT.add(elementNBT);
-            }
+            CompoundTag elementNBT = clientToServerSlots.get(i).toFullNBT();
+            elementNBT.putInt("dataSlotIndex", i);
+            listNBT.add(elementNBT);
         }
         if (!listNBT.isEmpty()) {
             CoreNetwork.sendToServer(new SyncClientToServerMenuPacket(containerId, listNBT));

@@ -3,6 +3,7 @@ package com.enderio.core.common.sync;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,7 @@ public class ListDataSlot<T, V extends Tag> extends EnderDataSlot<List<T>> {
         return tag;
     }
 
+    @Nullable
     @Override
     protected List<T> fromNBT(CompoundTag nbt) {
         List<T> list = new ArrayList<>();

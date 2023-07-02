@@ -1,6 +1,7 @@
 package com.enderio.core.common.sync;
 
 import net.minecraft.nbt.CompoundTag;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -17,6 +18,7 @@ public class BooleanDataSlot extends EnderDataSlot<Boolean> {
         return tag;
     }
 
+    @Nullable
     @Override
     protected Boolean fromNBT(CompoundTag nbt) {
         return nbt.getBoolean("value");
