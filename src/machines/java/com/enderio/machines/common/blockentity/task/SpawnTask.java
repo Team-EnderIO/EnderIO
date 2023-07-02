@@ -12,19 +12,23 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.MobSpawnEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 import java.util.Optional;
 
-public class SpawnTask extends PoweredTask{
+public class SpawnTask implements IPoweredMachineTask {
 
     public static final int spawnTries = 10;
     private boolean complete;
     private int energyCost = 40000;//TODO Custom Config/Json File
     private int energyConsumed = 0;
-    private final PoweredSpawnerBlockEntity blockEntity;
     private float efficiency = 1;
+
+    private final PoweredSpawnerBlockEntity blockEntity;
+    private final IMachineEnergyStorage energyStorage;
 
     /**
      * Create a new powered task.
@@ -32,8 +36,13 @@ public class SpawnTask extends PoweredTask{
      * @param energyStorage The energy storage used to power the task.
      */
     public SpawnTask(PoweredSpawnerBlockEntity blockEntity, IMachineEnergyStorage energyStorage) {
-        super(energyStorage);
         this.blockEntity = blockEntity;
+        this.energyStorage = energyStorage;
+    }
+
+    @Override
+    public IMachineEnergyStorage getEnergyStorage() {
+        return energyStorage;
     }
 
     @Override
@@ -143,10 +152,17 @@ public class SpawnTask extends PoweredTask{
                 }
 
                 if (entity instanceof Mob mob) {
-                    SpawnGroupData res = net.minecraftforge.event.ForgeEventFactory.onFinalizeSpawn(mob, level, level.getCurrentDifficultyAt(pos), MobSpawnType.SPAWNER, null, null);
-                    if (res == null) {
+                    // We're doing this manually, so we can properly capture cancellation.
+                    // See ForgeEventFactory#onFinalizeSpawn
+                    var event = new MobSpawnEvent.FinalizeSpawn(mob, level, mob.getX(), mob.getY(), mob.getZ(), level.getCurrentDifficultyAt(pos), MobSpawnType.SPAWNER, null, null, null);
+                    boolean cancel = MinecraftForge.EVENT_BUS.post(event);
+
+                    if (cancel) {
                         blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.OTHER_MOD);
                         return false;
+                    } else {
+                        //noinspection deprecation
+                        mob.finalizeSpawn(level, event.getDifficulty(), event.getSpawnType(), event.getSpawnData(), event.getSpawnTag());
                     }
                 }
 

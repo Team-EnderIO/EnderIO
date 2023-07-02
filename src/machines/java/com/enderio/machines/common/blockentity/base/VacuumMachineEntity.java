@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
 
+// TODO: I want to review the vacuum stuff too.
 public abstract class VacuumMachineEntity<T extends Entity> extends MachineBlockEntity {
     private static final double COLLISION_DISTANCE_SQ = 1 * 1;
     protected static final double SPEED = 0.025;

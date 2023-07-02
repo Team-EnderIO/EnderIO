@@ -7,7 +7,6 @@ import com.enderio.machines.common.blockentity.base.VacuumMachineEntity;
 import com.enderio.machines.common.config.client.MachinesClientConfig;
 import com.enderio.machines.common.menu.XPVacuumMenu;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
