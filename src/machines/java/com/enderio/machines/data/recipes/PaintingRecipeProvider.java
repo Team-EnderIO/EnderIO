@@ -1,7 +1,7 @@
 package com.enderio.machines.data.recipes;
 
 import com.enderio.EnderIO;
-import com.enderio.base.common.init.DecorBlocks;
+import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonObject;
@@ -26,16 +26,16 @@ public class PaintingRecipeProvider extends EnderRecipeProvider {
 
     @Override
     protected void buildRecipes(Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
-        build(DecorBlocks.PAINTED_FENCE, Ingredient.of(ItemTags.WOODEN_FENCES), pFinishedRecipeConsumer);
-        build(DecorBlocks.PAINTED_FENCE_GATE, Ingredient.of(ItemTags.FENCE_GATES), pFinishedRecipeConsumer);
-        build(DecorBlocks.PAINTED_SAND, Ingredient.of(ItemTags.SAND), pFinishedRecipeConsumer);
-        build(DecorBlocks.PAINTED_STAIRS, Ingredient.of(ItemTags.WOODEN_STAIRS), pFinishedRecipeConsumer);
-        build(DecorBlocks.PAINTED_CRAFTING_TABLE, Ingredient.of(Items.CRAFTING_TABLE), pFinishedRecipeConsumer);
-        build(DecorBlocks.PAINTED_REDSTONE_BLOCK, Ingredient.of(Items.REDSTONE_BLOCK), pFinishedRecipeConsumer);
-        build(DecorBlocks.PAINTED_TRAPDOOR, Ingredient.of(ItemTags.WOODEN_TRAPDOORS), pFinishedRecipeConsumer);
-        build(DecorBlocks.PAINTED_WOODEN_PRESSURE_PLATE, Ingredient.of(ItemTags.WOODEN_PRESSURE_PLATES), pFinishedRecipeConsumer);
-        build(DecorBlocks.PAINTED_SLAB, Ingredient.of(ItemTags.WOODEN_SLABS), pFinishedRecipeConsumer);
-        build(DecorBlocks.PAINTED_GLOWSTONE, Ingredient.of(Items.GLOWSTONE), pFinishedRecipeConsumer);
+        build(EIOBlocks.PAINTED_FENCE, Ingredient.of(ItemTags.WOODEN_FENCES), pFinishedRecipeConsumer);
+        build(EIOBlocks.PAINTED_FENCE_GATE, Ingredient.of(ItemTags.FENCE_GATES), pFinishedRecipeConsumer);
+        build(EIOBlocks.PAINTED_SAND, Ingredient.of(ItemTags.SAND), pFinishedRecipeConsumer);
+        build(EIOBlocks.PAINTED_STAIRS, Ingredient.of(ItemTags.WOODEN_STAIRS), pFinishedRecipeConsumer);
+        build(EIOBlocks.PAINTED_CRAFTING_TABLE, Ingredient.of(Items.CRAFTING_TABLE), pFinishedRecipeConsumer);
+        build(EIOBlocks.PAINTED_REDSTONE_BLOCK, Ingredient.of(Items.REDSTONE_BLOCK), pFinishedRecipeConsumer);
+        build(EIOBlocks.PAINTED_TRAPDOOR, Ingredient.of(ItemTags.WOODEN_TRAPDOORS), pFinishedRecipeConsumer);
+        build(EIOBlocks.PAINTED_WOODEN_PRESSURE_PLATE, Ingredient.of(ItemTags.WOODEN_PRESSURE_PLATES), pFinishedRecipeConsumer);
+        build(EIOBlocks.PAINTED_SLAB, Ingredient.of(ItemTags.WOODEN_SLABS), pFinishedRecipeConsumer);
+        build(EIOBlocks.PAINTED_GLOWSTONE, Ingredient.of(Items.GLOWSTONE), pFinishedRecipeConsumer);
     }
 
 

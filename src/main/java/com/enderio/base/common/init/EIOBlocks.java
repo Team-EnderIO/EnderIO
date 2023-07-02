@@ -503,7 +503,7 @@ public class EIOBlocks {
         .initialProperties(() -> Blocks.SPONGE)
         .lang("Industrial Insulation")
         .item()
-        .tab(EIOCreativeTabs.BLOCKS)EnderDecorNetwork
+        .tab(EIOCreativeTabs.BLOCKS)
         .build()
         .register();
     @SafeVarargs
