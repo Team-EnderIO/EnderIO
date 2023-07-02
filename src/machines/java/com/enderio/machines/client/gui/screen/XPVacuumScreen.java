@@ -52,14 +52,14 @@ public class XPVacuumScreen extends EIOScreen<XPVacuumMenu> {
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
-        guiGraphics.drawString(font, EIOLang.RANGE, this.imageWidth - 8 - this.font.width(EIOLang.RANGE), 21, 4210752);
+        guiGraphics.drawString(font, EIOLang.RANGE, this.imageWidth - 8 - this.font.width(EIOLang.RANGE), 21, 4210752, false);
         super.renderLabels(guiGraphics, pMouseX, pMouseY);
     }
 
     @Override
     public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
         super.render(guiGraphics, pMouseX, pMouseY, pPartialTicks);
-        guiGraphics.drawString(font, this.getMenu().getBlockEntity().getRange() + "", leftPos + imageWidth - 8 - 16 - 2 - 8 - 10, topPos + 38, 0);
+        guiGraphics.drawString(font, this.getMenu().getBlockEntity().getRange() + "", leftPos + imageWidth - 8 - 16 - 2 - 8 - 10, topPos + 38, 0, false);
     }
 
 }
