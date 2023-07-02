@@ -62,9 +62,13 @@ public abstract class SyncedMenu<T extends EnderBlockEntity> extends AbstractCon
     public void clientTick() {
         ListTag listNBT = new ListTag();
         for (int i = 0; i < clientToServerSlots.size(); i++) {
-            CompoundTag elementNBT = clientToServerSlots.get(i).toFullNBT();
-            elementNBT.putInt("dataSlotIndex", i);
-            listNBT.add(elementNBT);
+            Optional<CompoundTag> optionalNBT = clientToServerSlots.get(i).toOptionalNBT();
+
+            if (optionalNBT.isPresent()) {
+                CompoundTag elementNBT = optionalNBT.get();
+                elementNBT.putInt("dataSlotIndex", i);
+                listNBT.add(elementNBT);
+            }
         }
         if (!listNBT.isEmpty()) {
             CoreNetwork.sendToServer(new SyncClientToServerMenuPacket(containerId, listNBT));

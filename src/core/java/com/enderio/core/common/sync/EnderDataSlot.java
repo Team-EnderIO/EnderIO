@@ -1,7 +1,6 @@
 package com.enderio.core.common.sync;
 
 import net.minecraft.nbt.CompoundTag;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -56,10 +55,7 @@ public abstract class EnderDataSlot<T> {
      * @param tag
      */
     public void handleNBT(CompoundTag tag) {
-        var value = fromNBT(tag);
-        if (value != null) {
-            setter.accept(value);
-        }
+        setter.accept(fromNBT(tag));
     }
 
     public abstract CompoundTag toFullNBT();

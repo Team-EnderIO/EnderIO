@@ -148,8 +148,8 @@ public class EnderBlockEntity extends BlockEntity {
     }
 
     public void add2WayDataSlot(EnderDataSlot<?> slot) {
-        addDataSlot(new VersionedDataSlot<>(slot));
-        addClientDecidingDataSlot(new VersionedDataSlot<>(slot));
+        addDataSlot(slot);
+        addClientDecidingDataSlot(slot);
     }
 
     public void addAfterSyncRunnable(Runnable runnable) {

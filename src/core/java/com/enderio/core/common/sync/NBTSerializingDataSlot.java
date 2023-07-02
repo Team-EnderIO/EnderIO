@@ -1,7 +1,6 @@
 package com.enderio.core.common.sync;
 
 import net.minecraft.nbt.CompoundTag;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
