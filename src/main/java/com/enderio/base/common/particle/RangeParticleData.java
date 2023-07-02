@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
 
-public record RangeParticleData(int range, float rCol, float gCol, float bCol) implements ParticleOptions {
+public record RangeParticleData(int range, String colour) implements ParticleOptions {
     public static final Deserializer<RangeParticleData> DESERIALIZER = new Deserializer<>() {
 
         @NotNull
@@ -22,24 +22,19 @@ public record RangeParticleData(int range, float rCol, float gCol, float bCol) i
             reader.expect(' ');
             int range = reader.readInt();
             reader.expect(' ');
-            float rCol = reader.readFloat();
-            reader.expect(' ');
-            float gCol = reader.readFloat();
-            reader.expect(' ');
-            float bCol = reader.readFloat();
-            return new RangeParticleData(range, rCol, gCol, bCol);
+            String colour = reader.readString();
+            return new RangeParticleData(range, colour);
         }
 
         @Override
         @NotNull
         public RangeParticleData fromNetwork(@NotNull ParticleType<RangeParticleData> particleType, FriendlyByteBuf buffer) {
-            return new RangeParticleData(buffer.readInt(), buffer.readFloat(), buffer.readFloat(), buffer.readFloat());
+            return new RangeParticleData(buffer.readInt(), buffer.readUtf());
         }
     };
 
     public static Codec<RangeParticleData> CODEC = RecordCodecBuilder.create(val -> val
-        .group(Codec.INT.fieldOf("range").forGetter(data -> data.range), Codec.FLOAT.fieldOf("rCol").forGetter(data -> data.rCol),
-            Codec.FLOAT.fieldOf("gCol").forGetter(data -> data.gCol), Codec.FLOAT.fieldOf("bCol").forGetter(data -> data.bCol))
+        .group(Codec.INT.fieldOf("range").forGetter(data -> data.range), Codec.STRING.fieldOf("colour").forGetter(data -> data.colour))
         .apply(val, RangeParticleData::new));
 
     @NotNull
@@ -51,14 +46,12 @@ public record RangeParticleData(int range, float rCol, float gCol, float bCol) i
     @Override
     public void writeToNetwork(@NotNull FriendlyByteBuf buffer) {
         buffer.writeInt(range);
-        buffer.writeFloat(rCol);
-        buffer.writeFloat(gCol);
-        buffer.writeFloat(bCol);
+        buffer.writeUtf(colour);
     }
 
     @NotNull
     @Override
     public String writeToString() {
-        return String.format(Locale.ROOT, "%d %f %f %f ", ForgeRegistries.PARTICLE_TYPES.getKey(getType()), range, rCol, gCol, bCol);
+        return String.format(Locale.ROOT, "%s %d %s ", ForgeRegistries.PARTICLE_TYPES.getKey(getType()), range, colour);
     }
 }
