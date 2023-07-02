@@ -13,7 +13,7 @@ public class GliderItemModel {
         ResourceLocation registryName = ForgeRegistries.ITEMS.getKey(item);
         prov.getBuilder(registryName.getNamespace() + ":enderio_glider/" + registryName.getPath())
             .parent(prov.getExistingFile(EnderIO.loc("glider/glider3d")))
-            .texture("0", registryName.getNamespace() + ":models/glider/" + registryName.getPath());
+            .texture("0", registryName.getNamespace() + ":item/glider/" + registryName.getPath());
         prov.generated(() -> item);
     }
 }

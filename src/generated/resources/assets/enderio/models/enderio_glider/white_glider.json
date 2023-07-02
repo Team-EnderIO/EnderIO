@@ -1,6 +1,6 @@
 {
   "parent": "enderio:glider/glider3d",
   "textures": {
-    "0": "enderio:models/glider/white_glider"
+    "0": "enderio:item/glider/white_glider"
   }
 }

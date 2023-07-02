@@ -1,0 +1,9 @@
+{
+  "souces": [
+    {
+      "type": "directory",
+      "source": "enderio:item/glider",
+      "prefix": "enderio:item/glider/"
+    }
+  ]
+}
