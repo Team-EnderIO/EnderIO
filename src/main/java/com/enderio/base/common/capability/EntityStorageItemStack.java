@@ -1,7 +1,6 @@
-package com.enderio.machines.common.capability;
+package com.enderio.base.common.capability;
 
 import com.enderio.api.capability.StoredEntityData;
-import com.enderio.base.common.capability.EntityStorage;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 

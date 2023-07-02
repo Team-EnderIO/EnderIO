@@ -25,7 +25,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
-
 import org.jetbrains.annotations.Nullable;
 
 public class MachineBlock extends BaseEntityBlock {
@@ -104,4 +103,5 @@ public class MachineBlock extends BaseEntityBlock {
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return blockEntityType.create(pPos, pState);
     }
+    
 }

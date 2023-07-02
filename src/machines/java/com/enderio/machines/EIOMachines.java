@@ -9,10 +9,17 @@ import com.enderio.machines.common.init.MachineMenus;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.data.advancements.MachinesAdvancementGenerator;
+import com.enderio.machines.common.network.MachineNetwork;
+import com.enderio.machines.common.tag.MachineTags;
 import com.enderio.machines.data.recipes.*;
+import com.enderio.machines.data.souldata.SoulDataProvider;
+import com.enderio.machines.data.tag.MachineEntityTypeTagsProvider;
+import net.minecraft.Util;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.ForgeAdvancementProvider;
+import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -21,6 +28,7 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLConstructModEvent;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Mod.EventBusSubscriber(modid = EnderIO.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class EIOMachines {
@@ -37,12 +45,15 @@ public class EIOMachines {
         MachineMenus.register();
         MachineLang.register();
         MachineRecipes.register();
+        MachineTags.register();
+        MachineNetwork.networkInit();
     }
 
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
         PackOutput packOutput = generator.getPackOutput();
+        CompletableFuture<HolderLookup.Provider> completablefuture = CompletableFuture.supplyAsync(VanillaRegistries::createLookup, Util.backgroundExecutor());
 
         EIODataProvider provider = new EIODataProvider("machines");
 
@@ -53,6 +64,8 @@ public class EIOMachines {
         provider.addSubProvider(event.includeServer(), new SlicingRecipeProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new SoulBindingRecipeProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new TankRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new SoulDataProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new MachineEntityTypeTagsProvider(packOutput, completablefuture, event.getExistingFileHelper()));
 
         generator.addProvider(true, provider);
         provider.addSubProvider(event.includeServer(), new ForgeAdvancementProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper(),

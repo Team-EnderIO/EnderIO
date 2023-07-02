@@ -37,6 +37,7 @@ public class MachineLang {
     public static final Component TOO_MANY_SPAWNER = REGISTRATE.addLang("gui", EnderIO.loc("spawner.too_many_spawner"), "Too many spawners");
     public static final Component UNKNOWN = REGISTRATE.addLang("gui", EnderIO.loc("spawner.unknown"), "Unknown mob");
     public static final Component OTHER_MOD = REGISTRATE.addLang("gui", EnderIO.loc("spawner.other_mod"), "Other mod");
+    public static final Component DISABLED = REGISTRATE.addLang("gui", EnderIO.loc("spawner.disabled"), "Disabled by config");
     public static final Component PHOTOVOLTAIC_CELL = REGISTRATE.addLang("tooltip", EnderIO.loc("photovoltaic_cell/main"), "Solar Power!");
     public static final Component PHOTOVOLTAIC_CELL_ADVANCED = REGISTRATE.addLang("tooltip", EnderIO.loc("photovoltaic_cell/advanced"), "Produces Power during daylight hours");
     public static final Component PHOTOVOLTAIC_CELL_ADVANCED2 = REGISTRATE.addLang("tooltip", EnderIO.loc("photovoltaic_cell/advanced2"), "Must have a clear line of sight to the sky");
