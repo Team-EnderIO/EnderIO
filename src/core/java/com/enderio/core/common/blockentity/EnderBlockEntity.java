@@ -99,6 +99,7 @@ public class EnderBlockEntity extends BlockEntity {
 
     /**
      * create the ClientBoundBlockEntityDataPacket for this BlockEntity
+     * @param fullUpdate if this packet should send all information (this is used for players who started tracking this BlockEntity)
      * @return the UpdatePacket
      */
     @Nullable
