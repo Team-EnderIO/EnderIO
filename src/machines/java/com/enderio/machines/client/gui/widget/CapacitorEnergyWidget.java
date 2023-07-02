@@ -29,13 +29,16 @@ public class CapacitorEnergyWidget extends EnergyWidget{
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (!cap.get()) {
             renderCapacitor(guiGraphics);
-            renderCapacitorTooltip(guiGraphics);
+
+            if (isHoveredOrFocused()) {
+                renderCapacitorTooltip(guiGraphics, mouseX, mouseY);
+            }
             return;
         }
         super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
     }
 
-    public void renderCapacitorTooltip(GuiGraphics guiGraphics) {
+    public void renderCapacitorTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         List<Component> list = new ArrayList<>();
         list.add(EIOLang.NOCAP_TITLE.withStyle(ChatFormatting.DARK_AQUA));
         String[] split = EIOLang.NOCAP_DESC.getString().split("\n");
@@ -44,14 +47,23 @@ public class CapacitorEnergyWidget extends EnergyWidget{
         PoseStack pose = guiGraphics.pose();
         pose.pushPose();
         pose.translate(0,0,1);
-        guiGraphics.renderComponentTooltip(displayOn.getMinecraft().font, list, x + 4, y + 26);
+        guiGraphics.renderComponentTooltip(displayOn.getMinecraft().font, list, mouseX, mouseY);
         pose.popPose();
     }
 
     public void renderCapacitor(GuiGraphics guiGraphics) {
-        Long tick = Minecraft.getInstance().level.getGameTime() % 90;
-        guiGraphics.renderFakeItem(CAPACITOR, x - 4, y + height/2 - 4);
-        guiGraphics.blit(WIDGETS, x, y + height/2 + 6, 0, 160 + tick/10 * 9 , 128, width, height, 256, 256);
+        var level = Minecraft.getInstance().level;
+        if (level == null) {
+            return;
+        }
+        
+        long tick = level.getGameTime() % 90;
+
+        int heightModifier = (int) Math.round(Math.sin(level.getGameTime() * 0.05) * 12);
+        guiGraphics.renderFakeItem(CAPACITOR, x - 4, y + height/2 - 8 + heightModifier);
+
+        //noinspection IntegerDivisionInFloatingPointContext
+        guiGraphics.blit(WIDGETS, x, y + height/2 + 6, 0, 160 + tick / 10 * 9, 128, width, height, 256, 256);
         RenderSystem.setShaderColor(1,1,1, 100/255f);
         RenderSystem.enableBlend();
         guiGraphics.renderFakeItem(CAPACITOR, x - 4, y + height/2 + 25);
