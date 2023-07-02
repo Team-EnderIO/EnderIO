@@ -29,10 +29,6 @@ public abstract class EnderDataSlot<T> {
         return getter;
     }
 
-    protected Consumer<T> setter() {
-        return setter;
-    }
-
     public void clearHasChangedFlag() {
         hasDataChangedThisTick = false;
     }
