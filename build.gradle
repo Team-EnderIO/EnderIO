@@ -8,7 +8,7 @@ buildscript {
     }
     dependencies {
         classpath 'org.spongepowered:mixingradle:0.7.+'
-        classpath 'org.moddingx:ModGradle:3.0.+'
+        classpath 'org.moddingx:ModGradle:4.0.+'
     }
 }
 
@@ -16,7 +16,7 @@ plugins {
     id 'eclipse'
     id 'maven-publish'
     id "com.modrinth.minotaur" version "2.+"
-    id 'net.minecraftforge.gradle' version '5.1.+'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 }
 
@@ -295,14 +295,15 @@ jar {
     finalizedBy('reobfJar')
 }
 
-task apiJar(type: Jar) {
-    classifier 'api'
+tasks.register('apiJar', Jar) {
+    archiveClassifier = 'api'
     from sourceSets.api.output
 }
 build.dependsOn apiJar
 
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier 'sources'
+tasks.register('sourcesJar', Jar) {
+    dependsOn classes
+    archiveClassifier = 'sources'
 
     from sourceSets.api.allJava
     from sourceSets.main.allJava
