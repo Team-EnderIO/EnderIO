@@ -314,6 +314,7 @@ public class EIOItems {
         .item("filled_soul_vial", SoulVialItem::new)
         .properties(props -> props.stacksTo(1))
         .tab(EIOCreativeTabs.SOULS, modifier -> modifier.acceptAll(SoulVialItem.getAllFilled()))
+        .removeTab(CreativeModeTabs.SEARCH)
         .register();
 
     public static final ItemEntry<EnderiosItem> ENDERIOS = REGISTRATE
