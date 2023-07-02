@@ -3,19 +3,35 @@ package com.enderio.base.common.init;
 import com.enderio.EnderIO;
 import com.enderio.base.common.capacitor.DefaultCapacitorData;
 import com.enderio.base.common.config.BaseConfig;
-import com.enderio.base.common.item.misc.*;
 import com.enderio.base.common.item.capacitors.FixedCapacitorItem;
 import com.enderio.base.common.item.capacitors.LootCapacitorItem;
 import com.enderio.base.common.item.darksteel.DarkSteelAxeItem;
 import com.enderio.base.common.item.darksteel.DarkSteelPickaxeItem;
 import com.enderio.base.common.item.darksteel.DarkSteelUpgradeItem;
-import com.enderio.base.common.item.darksteel.upgrades.*;
+import com.enderio.base.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
+import com.enderio.base.common.item.darksteel.upgrades.EmpoweredUpgrade;
+import com.enderio.base.common.item.darksteel.upgrades.EmpoweredUpgradeTier;
+import com.enderio.base.common.item.darksteel.upgrades.ForkUpgrade;
+import com.enderio.base.common.item.darksteel.upgrades.SpoonUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.direct.DirectUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosivePenetrationUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosivePenetrationUpgradeTier;
 import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosiveUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosiveUpgradeTier;
-import com.enderio.base.common.item.tool.*;
+import com.enderio.base.common.item.misc.BrokenSpawnerItem;
+import com.enderio.base.common.item.misc.EnderfaceItem;
+import com.enderio.base.common.item.misc.EnderiosItem;
+import com.enderio.base.common.item.misc.GearItem;
+import com.enderio.base.common.item.misc.HangGliderItem;
+import com.enderio.base.common.item.misc.LocationPrintoutItem;
+import com.enderio.base.common.item.misc.MaterialItem;
+import com.enderio.base.common.item.tool.ColdFireIgniter;
+import com.enderio.base.common.item.tool.CoordinateSelectorItem;
+import com.enderio.base.common.item.tool.ElectromagnetItem;
+import com.enderio.base.common.item.tool.ExperienceRodItem;
+import com.enderio.base.common.item.tool.LevitationStaffItem;
+import com.enderio.base.common.item.tool.SoulVialItem;
+import com.enderio.base.common.item.tool.YetaWrenchItem;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.model.item.GliderItemModel;
 import com.enderio.base.data.model.item.RotatingItemModel;
@@ -24,11 +40,15 @@ import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
-import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import net.minecraft.Util;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.ForgeTier;
 import net.minecraftforge.common.Tags;
@@ -480,7 +500,7 @@ public class EIOItems {
     // region Helpers
 
     public static <T extends Item> ItemBuilder<T, Registrate> dumbItem(String name, NonNullFunction<Item.Properties, T> factory) {
-        return REGISTRATE.item(name, factory);
+        return REGISTRATE.item(name, factory).removeTab(CreativeModeTabs.SEARCH);
     }
     public static ItemBuilder<Item, Registrate> dumbItem(String name) {
         return REGISTRATE.item(name, Item::new);
