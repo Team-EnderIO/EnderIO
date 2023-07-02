@@ -75,7 +75,7 @@ public class MachineBlock extends BaseEntityBlock {
     private void updateBlockEntityCache(LevelReader level, BlockPos pos) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof MachineBlockEntity machineBlockEntity) {
-            machineBlockEntity.updateCapabilityCache();
+            machineBlockEntity.markCapabilityCacheDirty();
         }
     }
 

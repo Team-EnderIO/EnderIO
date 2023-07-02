@@ -464,9 +464,16 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     }
 
     /**
+     * Mark the capability cache as dirty. Will be updated next tick.
+     */
+    public void markCapabilityCacheDirty() {
+        isCapabilityCacheDirty = true;
+    }
+
+    /**
      * Update capability cache
      */
-    public void updateCapabilityCache() {
+    private void updateCapabilityCache() {
         if (this.level != null) {
             clearCaches();
 
@@ -475,7 +482,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
                 populateCaches(direction, neighbor);
             }
 
-            isCapabilityCacheDirty = true;
+            isCapabilityCacheDirty = false;
         }
     }
 
@@ -484,15 +491,8 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
      */
     private <T> LazyOptional<T> addInvalidationListener(LazyOptional<T> capability) {
         if (capability.isPresent())
-            capability.addListener(this::markCapabilityCacheDirty);
+            capability.addListener(c -> markCapabilityCacheDirty());
         return capability;
-    }
-
-    /**
-     * Mark the capability cache as dirty. Will be updated next tick.
-     */
-    private <T> void markCapabilityCacheDirty(LazyOptional<T> capability) {
-        isCapabilityCacheDirty = true;
     }
 
     private void clearCaches() {
