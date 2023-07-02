@@ -130,7 +130,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
     }
 
     private SpawnerMachineTask createTask() {
-        return new SpawnerMachineTask(this, this.getEnergyStorage());
+        return new SpawnerMachineTask(this, this.getEnergyStorage(), this.getEntityType());
     }
 
     // endregion
