@@ -11,7 +11,6 @@ import com.enderio.core.common.sync.EnumDataSlot;
 import com.enderio.core.common.sync.ResourceLocationDataSlot;
 import com.enderio.core.common.sync.SyncMode;
 import com.enderio.machines.common.blockentity.base.PoweredMachineEntity;
-import com.enderio.machines.common.blockentity.base.PoweredTaskMachineEntity;
 import com.enderio.machines.common.blockentity.task.IMachineTask;
 import com.enderio.machines.common.blockentity.task.SpawnTask;
 import com.enderio.machines.common.blockentity.task.host.MachineTaskHost;
