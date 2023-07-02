@@ -21,6 +21,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -122,6 +123,7 @@ public class DecorBlocks {
             .initialProperties(() -> copyFrom)
             .properties(BlockBehaviour.Properties::noOcclusion)
             .item(itemFactory)
+            .removeTab(CreativeModeTabs.SEARCH)
             .color(() -> PaintedBlockColor::new)
             .build()
             .tag(tags);
