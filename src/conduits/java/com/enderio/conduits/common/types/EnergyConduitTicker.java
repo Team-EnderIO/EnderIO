@@ -43,6 +43,15 @@ public class EnergyConduitTicker extends ICapabilityAwareConduitTicker<IEnergySt
         }
     }
 
+    /**
+     * This ensures consistent behaviour for FE/t caps and more.
+     * @return how often the conduit should tick. 1 is every tick, 5 is every 5th tick, so 4 times a second
+     */
+    @Override
+    public int getTickRate() {
+        return 1;
+    }
+
     @Override
     public Capability<IEnergyStorage> getCapability() {
         return ForgeCapabilities.ENERGY;

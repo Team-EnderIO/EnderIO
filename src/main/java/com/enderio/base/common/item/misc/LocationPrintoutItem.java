@@ -113,7 +113,7 @@ public class LocationPrintoutItem extends Item implements IMultiCapabilityItem {
     @Nullable
     @Override
     public MultiCapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt, MultiCapabilityProvider provider) {
-        provider.addSerialized(EIONBTKeys.COORDINATE_SELECTION, EIOCapabilities.COORDINATE_SELECTION_HOLDER, LazyOptional.of(CoordinateSelectionHolder::new));
+        provider.addSimple(EIOCapabilities.COORDINATE_SELECTION_HOLDER, LazyOptional.of(()-> new CoordinateSelectionHolder(stack)));
         return provider;
     }
 }

@@ -3,7 +3,11 @@ package com.enderio.machines.common.blockentity.task;
 import com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
+import com.enderio.machines.common.souldata.SpawnerSoul;
+import com.enderio.machines.common.tag.MachineTags;
+import com.mojang.serialization.DataResult;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -11,7 +15,10 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.event.entity.living.MobSpawnEvent;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,23 +27,31 @@ public class SpawnTask extends PoweredTask{
 
     public static final int spawnTries = 10;
     private boolean complete;
-    private int energyCost = 40000;//TODO Custom Config/Json File
+    private int energyCost;
     private int energyConsumed = 0;
     private final PoweredSpawnerBlockEntity blockEntity;
     private float efficiency = 1;
+    private SpawnType spawnType = MachinesConfig.COMMON.SPAWN_TYPE.get();
+    @Nullable
+    private EntityType<? extends Entity> entityType;
 
     /**
      * Create a new powered task.
      *
      * @param energyStorage The energy storage used to power the task.
      */
-    public SpawnTask(PoweredSpawnerBlockEntity blockEntity, IMachineEnergyStorage energyStorage) {
+    public SpawnTask(PoweredSpawnerBlockEntity blockEntity, IMachineEnergyStorage energyStorage, Optional<ResourceLocation> rl) {
         super(energyStorage);
         this.blockEntity = blockEntity;
+        loadSoulData(rl);
     }
 
     @Override
     public void tick() {
+        if (entityType == null) {
+            complete = true;
+            return;
+        }
         if (energyConsumed >= energyCost) {
             if (isAreaClear()) {
                 complete = trySpawnEntity(blockEntity.getBlockPos(), (ServerLevel) blockEntity.getLevel()); //ready to spawn but blocked for a reason.
@@ -96,6 +111,34 @@ public class SpawnTask extends PoweredTask{
         }
         return true;
     }
+    
+    private void loadSoulData(Optional<ResourceLocation> rl) {
+        if (rl.isEmpty()) {
+            blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
+            return;
+        }
+        Optional<Holder.Reference<EntityType<?>>> optionalEntity = ForgeRegistries.ENTITY_TYPES.getDelegate(rl.get());
+        if (optionalEntity.isEmpty() || ! ForgeRegistries.ENTITY_TYPES.getKey(optionalEntity.get().get()).equals(rl.get())) {
+            blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
+            return;
+        }
+        if (optionalEntity.get().is(MachineTags.EntityTypes.SPAWNER_BLACKLIST)) {
+            return;
+        }
+        Optional<SpawnerSoul.SoulData> opData = SpawnerSoul.SPAWNER.matches(rl.get());
+        if (opData.isEmpty()) { //Fallback
+            this.entityType = optionalEntity.get().get();
+            this.energyCost = 4000;
+            if (entityType.create(this.blockEntity.getLevel()) instanceof LivingEntity entity) { //Are we 100% guaranteed this is a living entity?
+                this.energyCost += entity.getMaxHealth()*50; //TODO actually balance based on health
+            }
+            return;
+        }
+        SpawnerSoul.SoulData data = opData.get();
+        this.entityType = optionalEntity.get().get();
+        this.energyCost = data.power();
+        this.spawnType = data.spawnType();
+    }
 
     public boolean trySpawnEntity(BlockPos pos, ServerLevel level) {
         if (this.efficiency < level.random.nextFloat()) {
@@ -107,6 +150,7 @@ public class SpawnTask extends PoweredTask{
             double x = pos.getX() + (randomsource.nextDouble() - randomsource.nextDouble()) * (double)this.blockEntity.getRange() + 0.5D;
             double y = pos.getY() + randomsource.nextInt(3) - 1;
             double z = pos.getZ() + (randomsource.nextDouble() - randomsource.nextDouble()) * (double)this.blockEntity.getRange() + 0.5D;
+
             Optional<ResourceLocation> rl = blockEntity.getEntityType();
             if (rl.isEmpty()) {
                 blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
@@ -120,7 +164,7 @@ public class SpawnTask extends PoweredTask{
             if (level.noCollision(optionalEntity.getAABB(x, y, z))) {
 
                 Entity entity = null;
-                switch (MachinesConfig.COMMON.SPAWN_TYPE.get()) {
+                switch (spawnType) {
                     case COPY -> {
                         entity = EntityType.loadEntityRecursive(blockEntity.getEntityData().getEntityTag(), level, entity1 -> {
                             entity1.moveTo(x, y, z, entity1.getYRot(), entity1.getXRot());
@@ -136,16 +180,18 @@ public class SpawnTask extends PoweredTask{
                     }
                 }
 
-                if (entity == null) { //TODO Make default spawn tag?
+                if (entity == null) {
                     blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
                     break;
                 }
 
-                if (entity instanceof Mob mob) {
-                    SpawnGroupData res = net.minecraftforge.event.ForgeEventFactory.onFinalizeSpawn(mob, level, level.getCurrentDifficultyAt(pos), MobSpawnType.SPAWNER, null, null);
-                    if (res == null) {
+                if (entity instanceof Mob mob) { // based on vanilla spawner
+                    MobSpawnEvent.FinalizeSpawn event = ForgeEventFactory.onFinalizeSpawnSpawner(mob, level, level.getCurrentDifficultyAt(pos), null,  blockEntity.getEntityData().getEntityTag(), null);
+                    if (event == null || event.isSpawnCancelled()) {
                         blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.OTHER_MOD);
                         return false;
+                    } else {
+                        ForgeEventFactory.onFinalizeSpawn(mob, level, event.getDifficulty(), event.getSpawnType(), event.getSpawnData(), event.getSpawnTag());
                     }
                 }
 
@@ -177,6 +223,19 @@ public class SpawnTask extends PoweredTask{
 
         SpawnType(String name) {
             this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public static DataResult<SpawnType> byName(String pTranslationKey) {
+            for(SpawnType type : values()) {
+                if (type.name.equals(pTranslationKey)) {
+                    return DataResult.success(type);
+                }
+            }
+            return DataResult.error(()->"unkown type");
         }
     }
 }
