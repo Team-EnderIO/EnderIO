@@ -3,7 +3,7 @@ package com.enderio.machines.common.blockentity;
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.machines.common.blockentity.base.PoweredMachineEntity;
+import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.task.CraftingMachineTask;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingMachineTask;
 import com.enderio.machines.common.blockentity.task.host.CraftingMachineTaskHost;
@@ -32,7 +32,7 @@ import net.minecraftforge.common.TierSortingRegistry;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 import org.jetbrains.annotations.Nullable;
 
-public class SlicerBlockEntity extends PoweredMachineEntity {
+public class SlicerBlockEntity extends PoweredMachineBlockEntity {
 
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.SLICER_CAPACITY);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.SLICER_USAGE);
@@ -48,7 +48,8 @@ public class SlicerBlockEntity extends PoweredMachineEntity {
     public SlicerBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Input, CAPACITY, USAGE, type, worldPosition, blockState);
 
-        craftingTaskHost = new CraftingMachineTaskHost<>(this, () -> energyStorage.getEnergyStored() > 0, MachineRecipes.SLICING.type().get(), new RecipeWrapper(getInventoryNN()), this::createTask) {
+        craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy, MachineRecipes.SLICING.type().get(),
+            new RecipeWrapper(getInventoryNN()), this::createTask) {
             @Override
             protected @Nullable CraftingMachineTask<SlicingRecipe, Container> getNewTask() {
                 MachineInventory inv = getInventoryNN();
@@ -118,6 +119,11 @@ public class SlicerBlockEntity extends PoweredMachineEntity {
 
     public float getCraftingProgress() {
         return craftingTaskHost.getProgress();
+    }
+
+    @Override
+    protected boolean isActive() {
+        return canAct() && hasEnergy() && craftingTaskHost.hasTask();
     }
 
     protected PoweredCraftingMachineTask<SlicingRecipe, Container> createTask(Level level, Container container, @Nullable SlicingRecipe recipe) {

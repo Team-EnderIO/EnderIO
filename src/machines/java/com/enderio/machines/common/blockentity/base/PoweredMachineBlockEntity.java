@@ -6,6 +6,7 @@ import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.base.common.capacitor.DefaultCapacitorData;
 import com.enderio.core.common.sync.SyncMode;
+import com.enderio.machines.common.block.ProgressMachineBlock;
 import com.enderio.machines.common.blockentity.sync.MachineEnergyDataSlot;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.ImmutableMachineEnergyStorage;
@@ -16,6 +17,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -28,7 +30,7 @@ import java.util.function.Supplier;
 /**
  * A machine that stores energy.
  */
-public abstract class PoweredMachineEntity extends MachineBlockEntity {
+public abstract class PoweredMachineBlockEntity extends MachineBlockEntity {
     /**
      * The energy storage medium for the block entity.
      * This will be a mutable energy storage.
@@ -46,7 +48,7 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
     private ICapacitorData cachedCapacitorData = DefaultCapacitorData.NONE;
     private boolean capacitorCacheDirty;
 
-    public PoweredMachineEntity(EnergyIOMode energyIOMode, ICapacitorScalable capacity, ICapacitorScalable usageRate, BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
+    public PoweredMachineBlockEntity(EnergyIOMode energyIOMode, ICapacitorScalable capacity, ICapacitorScalable usageRate, BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
 
         // Create energy storage
@@ -77,10 +79,24 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
             pushEnergy();
         }
 
+        if (level != null) {
+            BlockState blockState = getBlockState();
+            if (blockState.hasProperty(ProgressMachineBlock.POWERED) && blockState.getValue(ProgressMachineBlock.POWERED) != isActive()) {
+                level.setBlock(getBlockPos(), blockState.setValue(ProgressMachineBlock.POWERED, isActive()), Block.UPDATE_ALL);
+            }
+        }
+
         super.serverTick();
     }
 
     // region Energy
+
+    /**
+     * This should only be a test of if the machine has a "job" or "task".
+     * Not whether it is powered or it can act.
+     * @return Whether this machine is currently active.
+     */
+    protected abstract boolean isActive();
 
     /**
      * Get the machine's energy storage.
@@ -92,6 +108,12 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
             return clientEnergyStorage;
         }
         return energyStorage;
+    }
+
+    public final boolean hasEnergy() {
+        if (requiresCapacitor() && !isCapacitorInstalled())
+            return false;
+        return getEnergyStorage().getEnergyStored() > 0;
     }
 
     /**

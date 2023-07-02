@@ -8,7 +8,8 @@ import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.sync.FloatDataSlot;
 import com.enderio.core.common.sync.SyncMode;
-import com.enderio.machines.common.blockentity.base.PoweredMachineEntity;
+import com.enderio.machines.common.block.ProgressMachineBlock;
+import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
@@ -19,13 +20,14 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fml.LogicalSide;
 import org.jetbrains.annotations.Nullable;
 
-public class StirlingGeneratorBlockEntity extends PoweredMachineEntity {
+public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
 
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_CAPACITY);
 
@@ -95,6 +97,11 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineEntity {
         }
 
         super.serverTick();
+    }
+
+    @Override
+    protected boolean isActive() {
+        return canAct() && hasEnergy() && isGenerating();
     }
 
     public boolean isGenerating() {

@@ -93,19 +93,19 @@ public abstract class MachineTaskHost {
 
     public void tick() {
         // If we have no active task, get a new one
-        if ((currentTask == null || currentTask.isComplete()) && isNewTaskAvailable && canAcceptNewTask.get()) {
+        if ((currentTask == null || currentTask.isCompleted()) && isNewTaskAvailable && canAcceptNewTask.get()) {
             currentTask = getNewTask();
             isNewTaskAvailable = false;
         }
 
         // If we have an unfinished task, continue it.
-        if (currentTask != null && !currentTask.isComplete()) {
+        if (currentTask != null && !currentTask.isCompleted()) {
             currentTask.tick();
         }
 
         // If the task finished, next tick we'll try find a new one.
         // Just in case the task didn't perform an action that caused a task change.
-        if (currentTask != null && currentTask.isComplete()) {
+        if (currentTask != null && currentTask.isCompleted()) {
             newTaskAvailable();
         }
     }

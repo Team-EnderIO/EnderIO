@@ -10,7 +10,7 @@ import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.core.common.sync.IntegerDataSlot;
 import com.enderio.core.common.sync.SyncMode;
-import com.enderio.machines.common.blockentity.base.PoweredMachineEntity;
+import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingMachineTask;
 import com.enderio.machines.common.blockentity.task.host.CraftingMachineTaskHost;
 import com.enderio.machines.common.config.MachinesConfig;
@@ -34,11 +34,10 @@ import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Objects;
 
 import static com.enderio.base.common.util.ExperienceUtil.EXPTOFLUID;
 
-public class SoulBinderBlockEntity extends PoweredMachineEntity {
+public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
 
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.SOUL_BINDER_CAPACITY);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.SOUL_BINDER_USAGE);
@@ -57,8 +56,8 @@ public class SoulBinderBlockEntity extends PoweredMachineEntity {
             SyncMode.WORLD));
 
         // Create the crafting task host
-        craftingTaskHost = new CraftingMachineTaskHost<>(this, () -> energyStorage.getEnergyStored() > 0,
-            MachineRecipes.SOUL_BINDING.type().get(), new SoulBindingRecipe.Container(Objects.requireNonNull(getInventory()), getFluidTankNN()), this::createTask);
+        craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy,
+            MachineRecipes.SOUL_BINDING.type().get(), new SoulBindingRecipe.Container(getInventoryNN(), getFluidTankNN()), this::createTask);
 
         // Sync crafting container needed xp
         addDataSlot(new IntegerDataSlot(
@@ -139,6 +138,11 @@ public class SoulBinderBlockEntity extends PoweredMachineEntity {
 
     public float getCraftingProgress() {
         return craftingTaskHost.getProgress();
+    }
+
+    @Override
+    protected boolean isActive() {
+        return canAct() && hasEnergy() && craftingTaskHost.hasTask();
     }
 
     protected PoweredCraftingMachineTask<SoulBindingRecipe, SoulBindingRecipe.Container> createTask(Level level, SoulBindingRecipe.Container container, @Nullable SoulBindingRecipe recipe) {

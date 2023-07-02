@@ -8,7 +8,7 @@ import com.enderio.base.common.util.GrindingBallManager;
 import com.enderio.core.common.sync.IntegerDataSlot;
 import com.enderio.core.common.sync.ResourceLocationDataSlot;
 import com.enderio.core.common.sync.SyncMode;
-import com.enderio.machines.common.blockentity.base.PoweredMachineEntity;
+import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingMachineTask;
 import com.enderio.machines.common.blockentity.task.host.CraftingMachineTaskHost;
 import com.enderio.machines.common.config.MachinesConfig;
@@ -31,9 +31,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
-
-public class SagMillBlockEntity extends PoweredMachineEntity {
+public class SagMillBlockEntity extends PoweredMachineBlockEntity {
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.SAG_MILL_CAPACITY);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.SAG_MILL_USAGE);
 
@@ -55,7 +53,8 @@ public class SagMillBlockEntity extends PoweredMachineEntity {
         addDataSlot(new IntegerDataSlot(() -> grindingBallDamage, dmg -> grindingBallDamage = dmg, SyncMode.GUI));
         addDataSlot(new ResourceLocationDataSlot(() -> grindingBallData.getId(), gId -> grindingBallData = GrindingBallManager.getData(gId), SyncMode.GUI));
 
-        craftingTaskHost = new CraftingMachineTaskHost<>(this, () -> energyStorage.getEnergyStored() > 0, MachineRecipes.SAGMILLING.type().get(), new SagMillingRecipe.Container(getInventory(), this::getGrindingBallData), this::createTask);
+        craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy, MachineRecipes.SAGMILLING.type().get(),
+            new SagMillingRecipe.Container(getInventoryNN(), this::getGrindingBallData), this::createTask);
     }
 
     public IGrindingBallData getGrindingBallData() {
@@ -122,6 +121,11 @@ public class SagMillBlockEntity extends PoweredMachineEntity {
 
     public float getCraftingProgress() {
         return craftingTaskHost.getProgress();
+    }
+
+    @Override
+    protected boolean isActive() {
+        return canAct() && hasEnergy() && craftingTaskHost.hasTask();
     }
 
     protected PoweredCraftingMachineTask<SagMillingRecipe, SagMillingRecipe.Container> createTask(Level level, SagMillingRecipe.Container container, @Nullable SagMillingRecipe recipe) {

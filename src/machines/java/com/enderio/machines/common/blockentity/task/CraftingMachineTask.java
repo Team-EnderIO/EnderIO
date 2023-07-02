@@ -131,7 +131,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
     }
 
     @Override
-    public boolean isComplete() {
+    public boolean isCompleted() {
         return isComplete;
     }
 

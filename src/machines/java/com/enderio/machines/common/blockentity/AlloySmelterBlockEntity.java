@@ -1,32 +1,27 @@
 package com.enderio.machines.common.blockentity;
 
 import com.enderio.EnderIO;
-import com.enderio.api.UseOnly;
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.core.common.recipes.CountedIngredient;
 import com.enderio.core.common.sync.EnumDataSlot;
-import com.enderio.core.common.sync.FloatDataSlot;
 import com.enderio.core.common.sync.SyncMode;
-import com.enderio.machines.common.blockentity.base.PoweredMachineEntity;
+import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingMachineTask;
 import com.enderio.machines.common.blockentity.task.host.CraftingMachineTaskHost;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.integrations.vanilla.VanillaAlloySmeltingRecipe;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
-import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.AlloySmelterMenu;
-import com.enderio.machines.common.menu.PrimitiveAlloySmelterMenu;
 import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -38,10 +33,6 @@ import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.fml.LogicalSide;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,136 +42,10 @@ import java.util.function.Supplier;
 
 // TODO: Award XP
 
-public class AlloySmelterBlockEntity extends PoweredMachineEntity {
+public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
     public static final MultiSlotAccess INPUTS = new MultiSlotAccess();
     public static final SingleSlotAccess OUTPUT = new SingleSlotAccess();
-
-    /**
-     * The primitive variant of the alloy smelter burns coal instead of using an energy buffer.
-     * In order to keep implementation logic together, we do some kinda hacky stuff to emulate an internal buffer.
-     * This buffer cannot be accessed via external means, however.
-     */
-    public static class Primitive extends AlloySmelterBlockEntity {
-        // TODO: Currently smelts really slowly. Needs addressed when we deal with burn -> FE rates.
-        private int burnTime;
-        private int burnDuration;
-        public static final SingleSlotAccess FUEL = new SingleSlotAccess();
-        @UseOnly(LogicalSide.CLIENT)
-        private float clientBurnProgress;
-
-        public Primitive(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-            super(pType, pWorldPosition, pBlockState);
-            addDataSlot(new FloatDataSlot(this::getBurnProgress, p -> clientBurnProgress = p, SyncMode.GUI));
-        }
-
-        @Override
-        protected boolean restrictedMode() {
-            return true;
-        }
-
-        @Override
-        public MachineInventoryLayout getInventoryLayout() {
-            return MachineInventoryLayout.builder()
-                .inputSlot(3, this::acceptSlotInput)
-                .slotAccess(INPUTS)
-                .outputSlot()
-                .slotAccess(OUTPUT)
-                .inputSlot(this::acceptSlotInput)
-                .slotAccess(FUEL)
-                .build();
-        }
-
-        @Override
-        public AlloySmelterMode getMode() {
-            // Force alloys only
-            return AlloySmelterMode.ALLOYS;
-        }
-
-        @Override
-        public @Nullable AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-            return new PrimitiveAlloySmelterMenu(this, inventory, containerId);
-        }
-
-        @Override
-        public void serverTick() {
-            super.serverTick();
-
-            // Tick burn time even if redstone activation has stopped.
-            if (isBurning()) {
-                burnTime--;
-            }
-
-            // Only continue burning if redstone is enabled and the internal buffer has space.
-            if (canAct() && !isBurning() && craftingTaskHost.hasTask() && !craftingTaskHost.getCurrentTask().isComplete()) {
-                // Get the fuel
-                ItemStack fuel = FUEL.getItemStack(this);
-                if (!fuel.isEmpty()) {
-                    // Get the burn time.
-                    int burningTime = ForgeHooks.getBurnTime(fuel, RecipeType.SMELTING);
-
-                    // If this item can burn, burn it.
-                    if (burningTime > 0) {
-                        burnTime = burningTime;
-                        burnDuration = burnTime;
-
-                        // Remove the fuel
-                        fuel.shrink(1);
-                    }
-                }
-            }
-        }
-
-        @Override
-        protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, Supplier<Integer> capacity, Supplier<Integer> usageRate) {
-            return new MachineEnergyStorage(getIOConfig(), energyIOMode, this::getBurnToFE, () -> 0) {
-                @Override
-                public int getEnergyStored() {
-                    return getBurnToFE();
-                }
-
-                @Override
-                public int consumeEnergy(int energy, boolean simulate) {
-                    // We burn fuel, this energy storage is merely a wrapper now.
-                    if (isBurning()) {
-                        return getBurnToFE();
-                    }
-                    return 0;
-                }
-
-                // Stop things from connecting to the block.
-                @Override
-                public LazyOptional<IEnergyStorage> getCapability(@Nullable Direction side) {
-                    return LazyOptional.empty();
-                }
-            };
-        }
-
-        @Override
-        public @Nullable MachineEnergyStorage createExposedEnergyStorage() {
-            // Hide the power cap from other machines and TOP and such.
-            return null;
-        }
-
-        public boolean isBurning() {
-            return burnTime > 0;
-        }
-
-        public float getBurnProgress() {
-            if (level.isClientSide)
-                return clientBurnProgress;
-            if (burnDuration == 0)
-                return 0;
-            return burnTime / (float) burnDuration;
-        }
-
-        public int getBurnToFE() {
-            // TODO: TEMP, needs better solution.
-            // Stirling generator produces 10 RF per tick of burn time.
-            // https://github.com/SleepyTrousers/EnderIO/blob/d6dfb9d3964946ceb9fd72a66a3cff197a51a1fe/enderio-base/src/main/java/crazypants/enderio/base/recipe/alloysmelter/VanillaSmeltingRecipe.java#L50
-            return 10;
-        }
-    }
 
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.ALLOY_SMELTER_CAPACITY);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.ALLOY_SMELTER_USAGE);
@@ -197,7 +62,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineEntity {
         super(EnergyIOMode.Input, CAPACITY, USAGE, pType, pWorldPosition, pBlockState);
 
         // Crafting task host
-        craftingTaskHost = new AlloySmeltingMachineTaskHost(this, () -> energyStorage.getEnergyStored() > 0,
+        craftingTaskHost = new AlloySmeltingMachineTaskHost(this, this::hasEnergy,
             MachineRecipes.ALLOY_SMELTING.type().get(), new AlloySmeltingRecipe.Container(getInventoryNN()), this::createTask);
 
         // This can be changed by the gui for the normal and enhanced machines.
@@ -293,11 +158,16 @@ public class AlloySmelterBlockEntity extends PoweredMachineEntity {
         return craftingTaskHost.getProgress();
     }
 
+    @Override
+    protected boolean isActive() {
+        return canAct() && hasEnergy() && craftingTaskHost.hasTask();
+    }
+
     protected AlloySmeltingMachineTask createTask(Level level, AlloySmeltingRecipe.Container container, @Nullable AlloySmeltingRecipe recipe) {
         return new AlloySmeltingMachineTask(level, getInventoryNN(), getEnergyStorage(), container, OUTPUT, recipe);
     }
 
-    private static class AlloySmeltingMachineTask extends PoweredCraftingMachineTask<AlloySmeltingRecipe, AlloySmeltingRecipe.Container> {
+    protected static class AlloySmeltingMachineTask extends PoweredCraftingMachineTask<AlloySmeltingRecipe, AlloySmeltingRecipe.Container> {
         public AlloySmeltingMachineTask(@NotNull Level level, MachineInventory inventory, IMachineEnergyStorage energyStorage,
             AlloySmeltingRecipe.Container container, MultiSlotAccess outputSlots, @Nullable AlloySmeltingRecipe recipe) {
             super(level, inventory, energyStorage, container, outputSlots, recipe);
@@ -377,7 +247,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineEntity {
         }
     }
 
-    private class AlloySmeltingMachineTaskHost extends CraftingMachineTaskHost<AlloySmeltingRecipe, AlloySmeltingRecipe.Container> {
+    protected class AlloySmeltingMachineTaskHost extends CraftingMachineTaskHost<AlloySmeltingRecipe, AlloySmeltingRecipe.Container> {
         public AlloySmeltingMachineTaskHost(EnderBlockEntity blockEntity, Supplier<Boolean> canAcceptNewTask, RecipeType<AlloySmeltingRecipe> recipeType,
             AlloySmeltingRecipe.Container container,
             ICraftingMachineTaskFactory<AlloySmeltingMachineTask, AlloySmeltingRecipe, AlloySmeltingRecipe.Container> taskFactory) {

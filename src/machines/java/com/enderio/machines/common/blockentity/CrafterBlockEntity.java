@@ -3,7 +3,7 @@ package com.enderio.machines.common.blockentity;
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.machines.common.blockentity.base.PoweredMachineEntity;
+import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
@@ -25,7 +25,8 @@ import java.util.ArrayDeque;
 import java.util.Optional;
 import java.util.Queue;
 
-public class CrafterBlockEntity extends PoweredMachineEntity {
+// TODO: Might want to see if we can adapt this into a crafting task.
+public class CrafterBlockEntity extends PoweredMachineBlockEntity {
 
     public static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.CRAFTER_CAPACITY);
     public static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.CRAFTER_USAGE);
@@ -89,6 +90,12 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
         tryCraft();
         super.serverTick();
         processOutputBuffer();
+    }
+
+    @Override
+    protected boolean isActive() {
+        // TODO: How to determine active state beyond power.
+        return canAct() && hasEnergy();
     }
 
     private void tryCraft() {

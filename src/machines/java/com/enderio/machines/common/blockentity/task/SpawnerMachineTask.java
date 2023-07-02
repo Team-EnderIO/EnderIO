@@ -4,7 +4,6 @@ import com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -12,15 +11,13 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.event.entity.living.MobSpawnEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 import java.util.Optional;
 
-public class SpawnTask implements IPoweredMachineTask {
+public class SpawnerMachineTask implements IPoweredMachineTask {
 
     public static final int spawnTries = 10;
     private boolean complete;
@@ -36,7 +33,7 @@ public class SpawnTask implements IPoweredMachineTask {
      *
      * @param energyStorage The energy storage used to power the task.
      */
-    public SpawnTask(PoweredSpawnerBlockEntity blockEntity, IMachineEnergyStorage energyStorage) {
+    public SpawnerMachineTask(PoweredSpawnerBlockEntity blockEntity, IMachineEnergyStorage energyStorage) {
         this.blockEntity = blockEntity;
         this.energyStorage = energyStorage;
     }
@@ -64,7 +61,7 @@ public class SpawnTask implements IPoweredMachineTask {
     }
 
     @Override
-    public boolean isComplete() {
+    public boolean isCompleted() {
         return complete;
     }
 

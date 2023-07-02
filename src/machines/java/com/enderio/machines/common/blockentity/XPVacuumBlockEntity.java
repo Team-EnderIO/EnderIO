@@ -3,7 +3,7 @@ package com.enderio.machines.common.blockentity;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.core.common.sync.IntegerDataSlot;
 import com.enderio.core.common.sync.SyncMode;
-import com.enderio.machines.common.blockentity.base.VacuumMachineEntity;
+import com.enderio.machines.common.blockentity.base.VacuumMachineBlockEntity;
 import com.enderio.machines.common.config.client.MachinesClientConfig;
 import com.enderio.machines.common.menu.XPVacuumMenu;
 import net.minecraft.core.BlockPos;
@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import static com.enderio.base.common.util.ExperienceUtil.EXPTOFLUID;
 
-public class XPVacuumBlockEntity extends VacuumMachineEntity<ExperienceOrb> {
+public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb> {
     public XPVacuumBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState, ExperienceOrb.class);
 

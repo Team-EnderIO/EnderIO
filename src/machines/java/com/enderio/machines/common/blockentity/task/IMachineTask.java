@@ -8,6 +8,5 @@ public interface IMachineTask extends INBTSerializable<CompoundTag> {
 
     float getProgress();
 
-    // TODO: I want to rename it to isCompleted.
-    boolean isComplete();
+    boolean isCompleted();
 }

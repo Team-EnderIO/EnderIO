@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 // TODO: I want to review the vacuum stuff too.
-public abstract class VacuumMachineEntity<T extends Entity> extends MachineBlockEntity {
+public abstract class VacuumMachineBlockEntity<T extends Entity> extends MachineBlockEntity {
     private static final double COLLISION_DISTANCE_SQ = 1 * 1;
     protected static final double SPEED = 0.025;
     protected static final double SPEED_4 = SPEED * 4;
@@ -39,7 +39,7 @@ public abstract class VacuumMachineEntity<T extends Entity> extends MachineBlock
     private List<WeakReference<T>> entities = new ArrayList<>();
     private Class<T> clazz;
 
-    public VacuumMachineEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState, Class<T> clazz) {
+    public VacuumMachineBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState, Class<T> clazz) {
         super(pType, pWorldPosition, pBlockState);
         this.clazz = clazz;
         add2WayDataSlot(new IntegerDataSlot(this::getRange, this::setRange, SyncMode.GUI));
