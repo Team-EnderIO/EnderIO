@@ -1,13 +1,11 @@
 package com.enderio.machines.common.integrations.jei;
 
 import com.enderio.EnderIO;
-import com.enderio.machines.common.blockentity.AlloySmelterBlockEntity;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.init.MachineMenus;
-import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.integrations.jei.category.*;
+import com.enderio.machines.common.integrations.jei.transfer.CrafterRecipeTransferHandler;
 import com.enderio.machines.common.menu.*;
-import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
@@ -87,9 +85,6 @@ public class MachinesJEI implements IModPlugin {
             SoulBinderMenu.INPUTS_INDEX, SoulBinderMenu.INPUT_COUNT,
             SoulBinderMenu.LAST_INDEX + 1, 36);
 
-        // TODO: Needs its own transfer handler.
-//        registration.addRecipeTransferHandler(CrafterMenu.class, MachineMenus.CRAFTER.get(), RecipeTypes.CRAFTING,
-//            CrafterMenu.INPUTS_INDEX, CrafterMenu.INPUT_COUNT,
-//            CrafterMenu.LAST_INDEX + 1, 36);
+        registration.addRecipeTransferHandler(new CrafterRecipeTransferHandler(registration.getTransferHelper()), RecipeTypes.CRAFTING);
     }
 }

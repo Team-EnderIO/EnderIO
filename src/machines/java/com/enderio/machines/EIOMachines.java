@@ -3,10 +3,7 @@ package com.enderio.machines;
 import com.enderio.EnderIO;
 import com.enderio.base.data.EIODataProvider;
 import com.enderio.machines.common.config.MachinesConfig;
-import com.enderio.machines.common.init.MachineBlockEntities;
-import com.enderio.machines.common.init.MachineBlocks;
-import com.enderio.machines.common.init.MachineMenus;
-import com.enderio.machines.common.init.MachineRecipes;
+import com.enderio.machines.common.init.*;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.data.recipes.*;
 import net.minecraft.data.DataGenerator;
@@ -33,6 +30,8 @@ public class EIOMachines {
         MachineBlocks.register();
         MachineBlockEntities.register();
         MachineMenus.register();
+        MachinePackets.register();
+
         MachineLang.register();
         MachineRecipes.register();
     }

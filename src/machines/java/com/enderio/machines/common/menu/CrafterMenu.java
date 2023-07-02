@@ -11,9 +11,9 @@ import org.jetbrains.annotations.Nullable;
 
 public class CrafterMenu extends MachineMenu<CrafterBlockEntity> {
 
-    public static int INPUTS_INDEX = 1;
+    public static int INPUTS_INDEX = 11;
     public static int INPUT_COUNT = 9;
-    public static int LAST_INDEX = 10;
+    public static int LAST_INDEX = 20;
 
     public CrafterMenu(CrafterBlockEntity blockEntity, Inventory inventory, int pContainerId) {
         super(blockEntity, inventory, MachineMenus.CRAFTER.get(), pContainerId);
