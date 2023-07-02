@@ -861,6 +861,8 @@
   "gui.enderio.ioconfig.none": "None",
   "gui.enderio.ioconfig.pull": "Pull",
   "gui.enderio.ioconfig.push": "Push",
+  "gui.enderio.nocap.desc": "Insert any capacitor so \n this machine can work!",
+  "gui.enderio.nocap.title": "Capacitor Missing",
   "gui.enderio.progress": "Progress %s%%",
   "gui.enderio.range": "Range",
   "gui.enderio.range.hide": "Hide Range",
