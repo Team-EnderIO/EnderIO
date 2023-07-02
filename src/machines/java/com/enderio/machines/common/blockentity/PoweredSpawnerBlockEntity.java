@@ -77,7 +77,7 @@ public class PoweredSpawnerBlockEntity extends PoweredTaskMachineEntity<SpawnTas
     }
 
     private SpawnTask createTask() {
-        return new SpawnTask(this, this.getEnergyStorage());
+        return new SpawnTask(this, this.getEnergyStorage(), this.getEntityType());
     }
 
     @Override
@@ -152,6 +152,7 @@ public class PoweredSpawnerBlockEntity extends PoweredTaskMachineEntity<SpawnTas
         TOO_MANY_SPAWNER(MachineLang.TOO_MANY_SPAWNER),
         UNKOWN_MOB(MachineLang.UNKNOWN),
         OTHER_MOD(MachineLang.OTHER_MOD),
+        DISABLED(MachineLang.DISABLED),
         NONE(Component.literal("NONE"));
 
         private final Component component;

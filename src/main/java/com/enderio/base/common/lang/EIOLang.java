@@ -181,6 +181,10 @@ public class EIOLang {
     public static final Component DISABLED = REGISTRATE.addLang("gui", EnderIO.loc("ioconfig.disabled"), "Disabled");
     public static final Component NONE = REGISTRATE.addLang("gui", EnderIO.loc("ioconfig.none"), "None");
 
+    public static final MutableComponent NOCAP_TITLE = REGISTRATE.addLang("gui", EnderIO.loc("nocap.title"), "Capacitor Missing");
+    public static final MutableComponent NOCAP_DESC = REGISTRATE.addLang("gui", EnderIO.loc("nocap.desc"), "Insert any capacitor so \n this machine can work!");
+
+
     // endregion
 
     // region Glider

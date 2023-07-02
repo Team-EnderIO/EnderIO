@@ -1,0 +1,5 @@
+{
+  "type": "entitytype",
+  "entity": "minecraft:guardian",
+  "power": 5000
+}

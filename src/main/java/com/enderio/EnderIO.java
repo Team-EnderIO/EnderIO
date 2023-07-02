@@ -6,7 +6,6 @@ import com.enderio.base.common.advancement.UseGliderTrigger;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.init.*;
 import com.enderio.base.common.integrations.EnderIOSelfIntegration;
-import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.base.common.item.tool.SoulVialItem;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.network.BaseNetwork;
@@ -16,6 +15,7 @@ import com.enderio.base.data.advancement.EIOAdvancementGenerator;
 import com.enderio.base.data.loot.FireCraftingLootProvider;
 import com.enderio.base.data.recipe.*;
 import com.enderio.base.data.tags.EIOBlockTagsProvider;
+import com.enderio.base.data.tags.EIOEntityTagsProvider;
 import com.enderio.base.data.tags.EIOFluidTagsProvider;
 import com.enderio.base.data.tags.EIOItemTagsProvider;
 import com.enderio.core.EnderCore;
@@ -127,13 +127,14 @@ public class EnderIO {
         provider.addSubProvider(event.includeServer(), b);
         provider.addSubProvider(event.includeServer(), new EIOItemTagsProvider(packOutput, lookupProvider, b.contentsGetter(), existingFileHelper));
         provider.addSubProvider(event.includeServer(), new EIOFluidTagsProvider(packOutput, lookupProvider, existingFileHelper));
+        provider.addSubProvider(event.includeServer(), new EIOEntityTagsProvider(packOutput, lookupProvider, existingFileHelper));
         generator.addProvider(event.includeServer(), new LootTableProvider(
             packOutput, Collections.emptySet(),
             List.of(new LootTableProvider.SubProviderEntry(FireCraftingLootProvider::new, LootContextParamSets.EMPTY))));
 
         provider.addSubProvider(event.includeServer(), new ForgeAdvancementProvider(packOutput, lookupProvider, existingFileHelper,
             List.of(new EIOAdvancementGenerator())));
-        
+
         generator.addProvider(true, provider);
     }
 }

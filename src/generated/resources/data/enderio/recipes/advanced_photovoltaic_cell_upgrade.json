@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "enderio:basic_capacitor"
+    },
+    "E": {
+      "item": "enderio:energetic_alloy_ingot"
+    },
+    "F": {
+      "tag": "enderio:enlighted_fused_quartz"
+    },
+    "I": {
+      "item": "enderio:pulsating_alloy_ingot"
+    },
+    "P": {
+      "item": "enderio:powdered_coal"
+    },
+    "S": {
+      "item": "enderio:basic_photovoltaic_cell"
+    }
+  },
+  "pattern": [
+    "IFI",
+    "EPE",
+    "CSC"
+  ],
+  "result": {
+    "item": "enderio:advanced_photovoltaic_cell"
+  },
+  "show_notification": true
+}

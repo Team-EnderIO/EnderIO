@@ -114,10 +114,10 @@ public class EIOBlocks {
         .build()
         .register();
 
-    // TODO: Door drops itself in creative????
     public static final BlockEntry<DoorBlock> DARK_STEEL_DOOR = REGISTRATE
         .block("dark_steel_door", props -> new DoorBlock(props, BlockSetType.IRON))
         .properties(props -> props.strength(5.0f, 2000.0f).sound(SoundType.METAL).mapColor(MapColor.METAL).noOcclusion())
+        .loot((registrateBlockLootTables, doorBlock) -> registrateBlockLootTables.add(doorBlock, registrateBlockLootTables.createDoorTable(doorBlock)))
         .blockstate((ctx, prov) -> prov.doorBlockWithRenderType(ctx.get(), prov.modLoc("block/dark_steel_door_bottom"), prov.modLoc("block/dark_steel_door_top"), prov.mcLoc("cutout")))
         .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL, BlockTags.DOORS)
         .item()
@@ -503,7 +503,7 @@ public class EIOBlocks {
         .initialProperties(() -> Blocks.SPONGE)
         .lang("Industrial Insulation")
         .item()
-        .tab(EIOCreativeTabs.BLOCKS)
+        .tab(EIOCreativeTabs.BLOCKS)EnderDecorNetwork
         .build()
         .register();
     @SafeVarargs

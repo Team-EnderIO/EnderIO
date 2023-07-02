@@ -2,31 +2,29 @@ package com.enderio.base.common.item.tool;
 
 import com.enderio.api.capability.IMultiCapabilityItem;
 import com.enderio.api.capability.MultiCapabilityProvider;
-import com.enderio.core.client.item.EnergyBarDecorator;
+import com.enderio.base.common.capability.EnergyStorageItemStack;
 import com.enderio.base.common.capability.Toggled;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.core.client.item.EnergyBarDecorator;
 import com.enderio.core.client.item.IAdvancedTooltipProvider;
 import com.enderio.core.common.item.ITabVariants;
 import com.enderio.core.common.util.EnergyUtil;
 import com.enderio.core.common.util.TooltipUtil;
 import com.tterrag.registrate.util.CreativeModeTabModifier;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.EnergyStorage;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 
 public abstract class PoweredToggledItem extends Item implements IMultiCapabilityItem, IAdvancedTooltipProvider, ITabVariants {
@@ -109,8 +107,8 @@ public abstract class PoweredToggledItem extends Item implements IMultiCapabilit
     @Nullable
     @Override
     public MultiCapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt, MultiCapabilityProvider provider) {
-        provider.addSerialized(EIOCapabilities.TOGGLED, LazyOptional.of(Toggled::new));
-        provider.addSerialized("Energy", ForgeCapabilities.ENERGY, LazyOptional.of(() -> new EnergyStorage(getMaxEnergy())));
+        provider.addSimple(EIOCapabilities.TOGGLED, LazyOptional.of(() -> new Toggled(stack)));
+        provider.addSimple(ForgeCapabilities.ENERGY, LazyOptional.of(() -> new EnergyStorageItemStack(stack, getMaxEnergy())));
         return provider;
     }
 

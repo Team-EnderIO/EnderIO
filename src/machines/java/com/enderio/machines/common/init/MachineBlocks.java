@@ -14,11 +14,15 @@ import com.enderio.base.data.model.block.EIOBlockState;
 import com.enderio.core.data.model.EIOModel;
 import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.block.ProgressMachineBlock;
+import com.enderio.machines.common.block.SolarPanelBlock;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
+import com.enderio.machines.common.blockentity.solar.SolarPanelBlockEntity;
+import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
 import com.enderio.machines.common.item.FluidTankItem;
 import com.enderio.machines.common.item.PoweredSpawnerItem;
 import com.enderio.machines.data.loot.MachinesLootTable;
 import com.enderio.machines.data.model.MachineModelUtil;
+import com.google.common.collect.ImmutableMap;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
@@ -35,6 +39,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.Util;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.client.model.generators.BlockModelBuilder;
@@ -45,8 +52,9 @@ import net.minecraftforge.common.util.TransformationHelper;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public class MachineBlocks {
@@ -160,7 +168,7 @@ public class MachineBlocks {
         .lang("Soul Binder")
         .register();
 
-    public static BlockEntry<ProgressMachineBlock> POWERED_SPAWNER = REGISTRATE
+    public static final BlockEntry<ProgressMachineBlock> POWERED_SPAWNER = REGISTRATE
         .block("powered_spawner", props -> new ProgressMachineBlock(props, MachineBlockEntities.POWERED_SPAWNER))
         .loot((l,t) -> MachinesLootTable.copyNBTSingleCap(l, t, "EntityStorage"))
         .blockstate(MachineModelUtil::soulMachineBlock)
@@ -189,6 +197,13 @@ public class MachineBlocks {
         .build()
         .register();
 
+    public static final Map<SolarPanelTier, BlockEntry<SolarPanelBlock>> SOLAR_PANELS = Util.make(() -> {
+        Map<SolarPanelTier, BlockEntry<SolarPanelBlock>> panels = new HashMap<>();
+        for (SolarPanelTier tier: SolarPanelTier.values()) {
+            panels.put(tier, solarPanel(tier.name().toLowerCase(Locale.ROOT) + "_photovoltaic_cell", () -> MachineBlockEntities.SOLAR_PANELS.get(tier), tier).register());
+        }
+        return ImmutableMap.copyOf(panels);
+    });
     public static final BlockEntry<ProgressMachineBlock> CRAFTER = standardMachine("crafter", () -> MachineBlockEntities.CRAFTER)
         .lang("Crafter")
         .blockstate((ctx, prov) -> MachineModelUtil.customMachineBlock(ctx, prov, "crafter"))
@@ -199,6 +214,7 @@ public class MachineBlocks {
         return machineBlock
             .properties(props -> props.strength(2.5f, 8))
             .loot(MachinesLootTable::copyNBT)
+            .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
             .blockstate(MachineModelUtil::machineBlock)
             .item()
             .tab(EIOCreativeTabs.MACHINES)
@@ -218,6 +234,17 @@ public class MachineBlocks {
             .loot(MachinesLootTable::copyNBT)
             .blockstate(MachineModelUtil::soulMachineBlock)
             .item()
+            .tab(EIOCreativeTabs.MACHINES)
+            .build();
+    }
+
+    private static BlockBuilder<SolarPanelBlock, Registrate> solarPanel(String name, Supplier<BlockEntityEntry<? extends SolarPanelBlockEntity>> blockEntityEntry, SolarPanelTier tier) {
+        return REGISTRATE
+            .block(name, props -> new SolarPanelBlock(props, blockEntityEntry.get(), tier))
+            .properties(props -> props.strength(2.5f, 8))
+            .blockstate((ctx, prov) -> MachineModelUtil.solarPanel(ctx, prov, tier))
+            .item()
+            .model((ctx, prov) -> MachineModelUtil.solarPanel(ctx, prov, tier))
             .tab(EIOCreativeTabs.MACHINES)
             .build();
     }

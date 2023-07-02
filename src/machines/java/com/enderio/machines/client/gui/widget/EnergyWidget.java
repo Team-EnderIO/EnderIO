@@ -6,11 +6,9 @@ import com.enderio.core.client.gui.widgets.EIOWidget;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 
 import java.text.NumberFormat;
@@ -21,9 +19,9 @@ public class EnergyWidget extends EIOWidget {
 
     // TODO: Will need some way of displaying no tooltip and instead asking for a capacitor on non-simple machines.
 
-    private static final ResourceLocation WIDGETS = EnderIO.loc("textures/gui/widgets.png");
+    protected static final ResourceLocation WIDGETS = EnderIO.loc("textures/gui/widgets.png");
 
-    private final Screen displayOn;
+    protected final Screen displayOn;
     private final Supplier<IMachineEnergyStorage> storageSupplier;
 
     public EnergyWidget(Screen displayOn, Supplier<IMachineEnergyStorage> storageSupplier, int x, int y, int width, int height) {
@@ -74,5 +72,6 @@ public class EnergyWidget extends EIOWidget {
                 storage.getMaxEnergyStored())), mouseX, mouseY);
         }
     }
+
 }
 
