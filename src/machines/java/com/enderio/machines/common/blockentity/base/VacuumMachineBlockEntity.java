@@ -145,9 +145,9 @@ public abstract class VacuumMachineBlockEntity<T extends Entity> extends Machine
     }
 
     private void generateParticle(RangeParticleData data, Vec3 pos) {
-        if (!isClientSide() && level instanceof ServerLevel level) {
-            for (ServerPlayer player : level.players()) {
-                level.sendParticles(player, data, true, pos.x, pos.y, pos.z, 1, 0, 0, 0, 0);
+        if (level != null && !level.isClientSide() && level instanceof ServerLevel serverLevel) {
+            for (ServerPlayer player : serverLevel.players()) {
+                serverLevel.sendParticles(player, data, true, pos.x, pos.y, pos.z, 1, 0, 0, 0, 0);
             }
         }
     }

@@ -79,16 +79,6 @@ public class EnderBlockEntity extends BlockEntity {
 
     }
 
-    /**
-     * @deprecated This is a bad assumption, if level is null, you should do nothing, not pretend to be server.
-     */
-    @Deprecated(forRemoval = true)
-    public boolean isClientSide() {
-        if (level != null)
-            return level.isClientSide;
-        return false;
-    }
-
     // endregion
 
     // region Sync
