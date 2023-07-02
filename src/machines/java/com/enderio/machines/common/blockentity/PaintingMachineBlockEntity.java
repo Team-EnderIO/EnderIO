@@ -27,18 +27,19 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraftforge.items.wrapper.RecipeWrapper;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
 
-public class PaintingMachineBlockEntity extends PoweredCraftingMachine<PaintingRecipe, PaintingRecipe.Container> {
+public class PaintingMachineBlockEntity extends PoweredCraftingMachine<PaintingRecipe, RecipeWrapper> {
 
     public static final SingleSlotAccess INPUT = new SingleSlotAccess();
     public static final SingleSlotAccess PAINT = new SingleSlotAccess();
     public static final SingleSlotAccess OUTPUT = new SingleSlotAccess();
-    private final PaintingRecipe.Container container;
+    private final RecipeWrapper container;
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, () -> 100000f);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, () -> 30f);
 
@@ -47,17 +48,16 @@ public class PaintingMachineBlockEntity extends PoweredCraftingMachine<PaintingR
     public PaintingMachineBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(MachineRecipes.PAINTING.type().get(), CAPACITY, USAGE, type, worldPosition, blockState);
 
-        container = new PaintingRecipe.Container(getInventory(), this);
+        container = new RecipeWrapper(getInventory());
         area = AABB.ofSize(worldPosition.getCenter(), 10, 10, 10);
     }
 
     @Override
-    protected PoweredCraftingTask<PaintingRecipe, PaintingRecipe.Container> createTask(@Nullable PaintingRecipe recipe) {
+    protected PoweredCraftingTask<PaintingRecipe, RecipeWrapper> createTask(@Nullable PaintingRecipe recipe) {
         return new PoweredCraftingTask<>(this, getContainer(), OUTPUT, recipe) {
             @Override
             protected void takeInputs(PaintingRecipe recipe) {
-                MachineInventory inv = getInventory();
-                INPUT.getItemStack(inv).shrink(1);
+                INPUT.getItemStack(getInventory()).shrink(1);
             }
 
             @Override
@@ -118,7 +118,7 @@ public class PaintingMachineBlockEntity extends PoweredCraftingMachine<PaintingR
     }
 
     @Override
-    protected PaintingRecipe.Container getContainer() {
+    protected RecipeWrapper getContainer() {
         return container;
     }
 

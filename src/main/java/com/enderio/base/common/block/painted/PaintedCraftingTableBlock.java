@@ -1,7 +1,7 @@
 package com.enderio.base.common.block.painted;
 
-import com.enderio.base.common.init.DecorBlockEntities;
-import com.enderio.base.common.init.DecorBlocks;
+import com.enderio.base.common.init.EIOBlockEntities;
+import com.enderio.base.common.init.EIOBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
@@ -28,7 +28,7 @@ public class PaintedCraftingTableBlock extends CraftingTableBlock implements Ent
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return DecorBlockEntities.SINGLE_PAINTED.create(pos, state);
+        return EIOBlockEntities.SINGLE_PAINTED.create(pos, state);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class PaintedCraftingTableBlock extends CraftingTableBlock implements Ent
             @Override
             public boolean stillValid(Player pPlayer) {
                 try {
-                    return stillValid(access, pPlayer, DecorBlocks.PAINTED_CRAFTING_TABLE.get());
+                    return stillValid(access, pPlayer, EIOBlocks.PAINTED_CRAFTING_TABLE.get());
                 } catch (Exception e) {
                     return false;
                 }

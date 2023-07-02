@@ -1,7 +1,7 @@
 package com.enderio.base.common.block.light;
 
 import com.enderio.base.common.blockentity.LightNodeBlockEntity;
-import com.enderio.base.common.init.DecorBlockEntities;
+import com.enderio.base.common.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -32,7 +32,7 @@ public class LightNode extends Block implements EntityBlock{
 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return DecorBlockEntities.LIGHT_NODE.create(pos, state);
+		return EIOBlockEntities.LIGHT_NODE.create(pos, state);
 	}
 	
 	@Override

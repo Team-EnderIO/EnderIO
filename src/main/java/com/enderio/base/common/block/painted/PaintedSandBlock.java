@@ -2,7 +2,7 @@ package com.enderio.base.common.block.painted;
 
 import com.enderio.base.common.blockentity.SinglePaintedBlockEntity;
 import com.enderio.base.common.entity.PaintedSandEntity;
-import com.enderio.base.common.init.DecorBlockEntities;
+import com.enderio.base.common.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -24,7 +24,7 @@ public class PaintedSandBlock extends SandBlock implements EntityBlock, IPainted
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return DecorBlockEntities.SINGLE_PAINTED.create(pos, state);
+        return EIOBlockEntities.SINGLE_PAINTED.create(pos, state);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.enderio.base.common.block.painted;
 
 import com.enderio.base.common.blockentity.DoublePaintedBlockEntity;
-import com.enderio.base.common.init.DecorBlockEntities;
+import com.enderio.base.common.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
@@ -22,7 +22,7 @@ public class PaintedSlabBlock extends SlabBlock implements EntityBlock, IPainted
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return DecorBlockEntities.DOUBLE_PAINTED.create(pos, state);
+        return EIOBlockEntities.DOUBLE_PAINTED.create(pos, state);
     }
 
     @Override

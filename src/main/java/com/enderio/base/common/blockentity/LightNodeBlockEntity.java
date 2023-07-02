@@ -1,7 +1,7 @@
 package com.enderio.base.common.blockentity;
 
 import com.enderio.base.common.block.light.LightNode;
-import com.enderio.base.common.network.EnderDecorNetwork;
+import com.enderio.base.common.network.BaseNetwork;
 import com.enderio.base.common.network.ServerToClientLightUpdate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -41,14 +41,14 @@ public class LightNodeBlockEntity extends BlockEntity {
 		}
 		if (!(level.getBlockEntity(e.masterpos) instanceof PoweredLightBlockEntity)) {
             level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_NEIGHBORS);
-            EnderDecorNetwork.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(pos)), new ServerToClientLightUpdate(pos, Blocks.AIR.defaultBlockState())); //custom setblock packet to update light
+            BaseNetwork.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(pos)), new ServerToClientLightUpdate(pos, Blocks.AIR.defaultBlockState())); //custom setblock packet to update light
 			return;
 		}
 		if (PoweredLightBlockEntity.inSpreadZone(fromPos, e.masterpos)) {
 			PoweredLightBlockEntity master = (PoweredLightBlockEntity) level.getBlockEntity(e.masterpos);
 			if (!master.isActive()) {
 				level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_NEIGHBORS);
-				EnderDecorNetwork.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(pos)), new ServerToClientLightUpdate(pos, Blocks.AIR.defaultBlockState())); //custom setblock packet to update light
+				BaseNetwork.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(pos)), new ServerToClientLightUpdate(pos, Blocks.AIR.defaultBlockState())); //custom setblock packet to update light
 				return;
 			}
 			if (level.getBlockEntity(fromPos) instanceof LightNodeBlockEntity light) {

@@ -2,7 +2,7 @@ package com.enderio.base.common.blockentity;
 
 import com.enderio.base.common.block.light.Light;
 import com.enderio.base.common.block.light.PoweredLight;
-import com.enderio.base.common.init.DecorBlocks;
+import com.enderio.base.common.init.EIOBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -54,7 +54,7 @@ public class PoweredLightBlockEntity extends BlockEntity{
 	}
 
 	/**
-	 * Start the spreading algorithm by calling {@link PoweredLightBlockEntity.spreadNode} on each block recursively.
+	 * Start the spreading algorithm by calling {@link PoweredLightBlockEntity#spreadNode} on each block recursively.
 	 */
 	private static void createNodes(Level level, BlockPos center, BlockState state) {
 		ArrayList<BlockPos> start = new ArrayList<>();
@@ -83,19 +83,19 @@ public class PoweredLightBlockEntity extends BlockEntity{
 			if (!prev.contains(relative) && inSpreadZone(relative, center)) {
 				next.add(relative);
 				if (level.getBlockState(relative).isAir()) {
-					level.setBlock(relative, DecorBlocks.LIGHT_NODE.get().defaultBlockState(), Block.UPDATE_ALL);
+					level.setBlock(relative, EIOBlocks.LIGHT_NODE.get().defaultBlockState(), Block.UPDATE_ALL);
 					if (level.getBlockEntity(relative) instanceof LightNodeBlockEntity light) {
 						light.setMaster((PoweredLightBlockEntity) level.getBlockEntity(center));
 					}
 				}
 				boolean bl = false;
 				for (BlockPos blockedpos: blocked) {
-					if (isBlocked(relative, center, blockedpos) && level.getBlockState(relative).is(DecorBlocks.LIGHT_NODE.get())) {
+					if (isBlocked(relative, center, blockedpos) && level.getBlockState(relative).is(EIOBlocks.LIGHT_NODE.get())) {
 						level.setBlock(relative, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
 						bl = true;
 					}
 				}
-				if (!level.getBlockState(relative).isAir() && !level.getBlockState(relative).is(DecorBlocks.LIGHT_NODE.get()) && !bl) {
+				if (!level.getBlockState(relative).isAir() && !level.getBlockState(relative).is(EIOBlocks.LIGHT_NODE.get()) && !bl) {
 					blocked.add(relative);
 				}
 			}

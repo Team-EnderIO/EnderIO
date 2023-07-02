@@ -1,6 +1,6 @@
 package com.enderio.base.common.block.painted;
 
-import com.enderio.base.common.init.DecorBlockEntities;
+import com.enderio.base.common.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.FenceGateBlock;
@@ -19,7 +19,7 @@ public class PaintedFenceGateBlock extends FenceGateBlock implements EntityBlock
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return DecorBlockEntities.SINGLE_PAINTED.create(pos, state);
+        return EIOBlockEntities.SINGLE_PAINTED.create(pos, state);
     }
 
 }

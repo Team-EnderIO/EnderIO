@@ -1,6 +1,6 @@
 package com.enderio.base.common.block.painted;
 
-import com.enderio.base.common.init.DecorBlockEntities;
+import com.enderio.base.common.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
@@ -17,6 +17,6 @@ public class SinglePaintedBlock extends Block implements EntityBlock, IPaintedBl
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return DecorBlockEntities.SINGLE_PAINTED.create(pPos, pState);
+        return EIOBlockEntities.SINGLE_PAINTED.create(pPos, pState);
     }
 }

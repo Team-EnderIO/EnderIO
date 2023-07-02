@@ -1,6 +1,6 @@
 package com.enderio.base.common.entity;
 
-import com.enderio.base.common.init.DecorEntities;
+import com.enderio.base.common.init.EIOEntities;
 import com.enderio.base.common.util.PaintUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -39,7 +39,7 @@ public class PaintedSandEntity extends FallingBlockEntity implements IEntityAddi
 
     @Override
     public EntityType<?> getType() {
-        return DecorEntities.PAINTED_SAND.get();
+        return EIOEntities.PAINTED_SAND.get();
     }
 
     @Nullable

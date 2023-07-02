@@ -3,6 +3,7 @@ package com.enderio.machines.common.recipe;
 import com.enderio.EnderIO;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.blockentity.PaintingMachineBlockEntity;
+import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonObject;
 import net.minecraft.ResourceLocationException;
@@ -16,7 +17,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class PaintingRecipe implements MachineRecipe<PaintingRecipe.Container> {
+public class PaintingRecipe implements MachineRecipe<RecipeWrapper> {
     private final ResourceLocation id;
     private final Ingredient input;
     private final Item output;
@@ -37,17 +37,17 @@ public class PaintingRecipe implements MachineRecipe<PaintingRecipe.Container> {
     }
 
     @Override
-    public boolean matches(Container container, Level pLevel) {
+    public boolean matches(RecipeWrapper container, Level pLevel) {
         return input.test(PaintingMachineBlockEntity.INPUT.getItemStack(container)) && !PaintingMachineBlockEntity.PAINT.getItemStack(container).isEmpty();
     }
 
     @Override
-    public int getEnergyCost(Container container) {
-        return 2000;
+    public int getEnergyCost(RecipeWrapper container) {
+        return MachinesConfig.COMMON.PAINTING_MACHINE_ENERGY_COST.get();
     }
 
     @Override
-    public List<OutputStack> craft(Container container, RegistryAccess registryAccess) {
+    public List<OutputStack> craft(RecipeWrapper container, RegistryAccess registryAccess) {
         List<OutputStack> outputs = new ArrayList<>();
         ItemStack outputStack = new ItemStack(output);
         CompoundTag tag = outputStack.getOrCreateTag();
@@ -64,7 +64,7 @@ public class PaintingRecipe implements MachineRecipe<PaintingRecipe.Container> {
     }
 
     @Override
-    public ItemStack assemble(Container p_44001_, RegistryAccess p_267165_) {
+    public ItemStack assemble(RecipeWrapper p_44001_, RegistryAccess p_267165_) {
         return null;
     }
 
@@ -90,20 +90,6 @@ public class PaintingRecipe implements MachineRecipe<PaintingRecipe.Container> {
 
     public Ingredient getInput() {
         return input;
-    }
-
-    public static class Container extends RecipeWrapper {
-
-        private final PaintingMachineBlockEntity paintingMachine;
-
-        public Container(IItemHandlerModifiable inv, PaintingMachineBlockEntity paintingMachine) {
-            super(inv);
-            this.paintingMachine = paintingMachine;
-        }
-
-        public PaintingMachineBlockEntity getPaintingMachine() {
-            return paintingMachine;
-        }
     }
 
 

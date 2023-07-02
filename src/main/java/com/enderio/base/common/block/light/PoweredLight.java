@@ -1,8 +1,8 @@
 package com.enderio.base.common.block.light;
 
 import com.enderio.base.common.blockentity.PoweredLightBlockEntity;
-import com.enderio.base.common.init.DecorBlockEntities;
-import com.enderio.base.common.init.DecorBlocks;
+import com.enderio.base.common.init.EIOBlockEntities;
+import com.enderio.base.common.init.EIOBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -36,12 +36,12 @@ public class PoweredLight extends Light implements EntityBlock{
 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return DecorBlockEntities.POWERED_LIGHT.create(pos, state);
+		return EIOBlockEntities.POWERED_LIGHT.create(pos, state);
 	}
 
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-		return createTickerHelper(blockEntityType, DecorBlockEntities.POWERED_LIGHT.get(), PoweredLightBlockEntity::tick);
+		return createTickerHelper(blockEntityType, EIOBlockEntities.POWERED_LIGHT.get(), PoweredLightBlockEntity::tick);
 	}
 
 	@Nullable
@@ -51,7 +51,7 @@ public class PoweredLight extends Light implements EntityBlock{
 
 	@Override
 	public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
-		if (!level.getBlockState(fromPos).is(DecorBlocks.LIGHT_NODE.get())) {
+		if (!level.getBlockState(fromPos).is(EIOBlocks.LIGHT_NODE.get())) {
 			if(level.getBlockEntity(pos) instanceof PoweredLightBlockEntity light) {
 				light.needsUpdate();
 			}

@@ -8,7 +8,7 @@ import com.tterrag.registrate.util.entry.EntityEntry;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 
-public class DecorEntities {
+public class EIOEntities {
 
     private static final Registrate REGISTRATE = EnderIO.registrate();
 
