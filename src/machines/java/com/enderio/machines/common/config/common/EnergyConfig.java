@@ -19,7 +19,11 @@ public class EnergyConfig {
     public final ForgeConfigSpec.ConfigValue<Integer> SOUL_BINDER_USAGE;
     public final ForgeConfigSpec.ConfigValue<Integer> STIRLING_GENERATOR_CAPACITY;
     public final ForgeConfigSpec.ConfigValue<Integer> STIRLING_GENERATOR_BURN_SPEED;
-    public final ForgeConfigSpec.ConfigValue<Integer> STIRLING_GENERATOR_GENERATION;
+    public final ForgeConfigSpec.ConfigValue<Integer> STIRLING_GENERATOR_PRODUCTION;
+    public final ForgeConfigSpec.ConfigValue<Integer> SIMPLE_SOLAR_PANEL_MAX_PRODUCTION;
+    public final ForgeConfigSpec.ConfigValue<Integer> BASIC_SOLAR_PANEL_MAX_PRODUCTION;
+    public final ForgeConfigSpec.ConfigValue<Integer> ADVANCED_SOLAR_PANEL_MAX_PRODUCTION;
+    public final ForgeConfigSpec.ConfigValue<Integer> VIBRANT_SOLAR_PANEL_MAX_PRODUCTION;
 
     public EnergyConfig(ForgeConfigSpec.Builder builder) {
         builder.push("energy");
@@ -62,7 +66,15 @@ public class EnergyConfig {
         builder.push("stirlingGenerator");
         STIRLING_GENERATOR_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 100000, 1, Integer.MAX_VALUE);
         STIRLING_GENERATOR_BURN_SPEED = builder.comment("The base number of 'burn ticks' performed per machine tick.").defineInRange("burnSpeed", 1, 1, Integer.MAX_VALUE);
-        STIRLING_GENERATOR_GENERATION = builder.comment("The base amount of energy produced in uI/t.").defineInRange("generation", 40, 1, Integer.MAX_VALUE);
+        STIRLING_GENERATOR_PRODUCTION = builder.comment("The base amount of energy produced in uI/t.").defineInRange("generation", 40, 1, Integer.MAX_VALUE);
+        builder.pop();
+
+        builder.push("phtovoltaic_cell_rates");
+        builder.comment("Production rate at midday without rain or thunder");
+        SIMPLE_SOLAR_PANEL_MAX_PRODUCTION = builder.defineInRange("simple", 10, 1, Integer.MAX_VALUE);
+        BASIC_SOLAR_PANEL_MAX_PRODUCTION = builder.defineInRange("basic", 40, 1, Integer.MAX_VALUE);
+        ADVANCED_SOLAR_PANEL_MAX_PRODUCTION = builder.defineInRange("advanced", 80, 1, Integer.MAX_VALUE);
+        VIBRANT_SOLAR_PANEL_MAX_PRODUCTION = builder.defineInRange("vibrant", 160, 1, Integer.MAX_VALUE);
         builder.pop();
 
         builder.pop();

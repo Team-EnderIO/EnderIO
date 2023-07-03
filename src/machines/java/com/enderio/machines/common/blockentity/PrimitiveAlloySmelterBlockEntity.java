@@ -145,7 +145,7 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
     }
 
     public int getBurnToFE() {
-        return MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_GENERATION.get();
+        return MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_PRODUCTION.get();
     }
 
     @Override
