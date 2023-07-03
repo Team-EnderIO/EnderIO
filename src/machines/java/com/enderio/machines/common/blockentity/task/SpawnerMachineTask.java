@@ -23,27 +23,34 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Optional;
 
-public class SpawnTask extends PoweredTask{
+public class SpawnerMachineTask implements IPoweredMachineTask {
 
     public static final int spawnTries = 10;
     private boolean complete;
     private int energyCost;
     private int energyConsumed = 0;
-    private final PoweredSpawnerBlockEntity blockEntity;
     private float efficiency = 1;
     private SpawnType spawnType = MachinesConfig.COMMON.SPAWN_TYPE.get();
     @Nullable
     private EntityType<? extends Entity> entityType;
+
+    private final PoweredSpawnerBlockEntity blockEntity;
+    private final IMachineEnergyStorage energyStorage;
 
     /**
      * Create a new powered task.
      *
      * @param energyStorage The energy storage used to power the task.
      */
-    public SpawnTask(PoweredSpawnerBlockEntity blockEntity, IMachineEnergyStorage energyStorage, Optional<ResourceLocation> rl) {
-        super(energyStorage);
+    public SpawnerMachineTask(PoweredSpawnerBlockEntity blockEntity, IMachineEnergyStorage energyStorage, Optional<ResourceLocation> rl) {
         this.blockEntity = blockEntity;
+        this.energyStorage = energyStorage;
         loadSoulData(rl);
+    }
+
+    @Override
+    public IMachineEnergyStorage getEnergyStorage() {
+        return energyStorage;
     }
 
     @Override
@@ -68,7 +75,7 @@ public class SpawnTask extends PoweredTask{
     }
 
     @Override
-    public boolean isComplete() {
+    public boolean isCompleted() {
         return complete;
     }
 
@@ -215,6 +222,7 @@ public class SpawnTask extends PoweredTask{
         return false;
     }
 
+    // TODO: Might want to move this to its own file in future.
     public enum SpawnType {
         ENTITYTYPE("entitytype"),
         COPY("copy");

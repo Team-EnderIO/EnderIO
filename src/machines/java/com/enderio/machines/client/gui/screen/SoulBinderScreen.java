@@ -26,7 +26,7 @@ public class SoulBinderScreen extends EIOScreen<SoulBinderMenu> {
     protected void init() {
         super.init();
 
-        addRenderableOnly(new ProgressWidget.LeftRight(this, () -> menu.getBlockEntity().getProgress(), getGuiLeft() + 80, getGuiTop() + 34, 24, 17, 176, 14));
+        addRenderableOnly(new ProgressWidget.LeftRight(this, () -> menu.getBlockEntity().getCraftingProgress(), getGuiLeft() + 80, getGuiTop() + 34, 24, 17, 176, 14));
 
         addRenderableOnly(new CapacitorEnergyWidget(this, getMenu().getBlockEntity()::getEnergyStorage, getMenu().getBlockEntity()::isCapacitorInstalled, 16 + leftPos, 14 + topPos, 9, 42));
 

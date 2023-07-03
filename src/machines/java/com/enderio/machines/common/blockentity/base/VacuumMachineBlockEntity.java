@@ -22,7 +22,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
 
-public abstract class VacuumMachineEntity<T extends Entity> extends MachineBlockEntity {
+// TODO: I want to review the vacuum stuff too.
+public abstract class VacuumMachineBlockEntity<T extends Entity> extends MachineBlockEntity {
     private static final double COLLISION_DISTANCE_SQ = 1 * 1;
     protected static final double SPEED = 0.025;
     protected static final double SPEED_4 = SPEED * 4;
@@ -30,11 +31,11 @@ public abstract class VacuumMachineEntity<T extends Entity> extends MachineBlock
     private int range = 6;
     private boolean rangeVisible = false;
     private List<WeakReference<T>> entities = new ArrayList<>();
-    private Class<T> clazz;
+    private Class<T> targetClass;
 
-    public VacuumMachineEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState, Class<T> clazz) {
+    public VacuumMachineBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState, Class<T> targetClass) {
         super(pType, pWorldPosition, pBlockState);
-        this.clazz = clazz;
+        this.targetClass = targetClass;
         add2WayDataSlot(new IntegerDataSlot(this::getRange, this::setRange, SyncMode.GUI));
         add2WayDataSlot(new BooleanDataSlot(this::isShowingRange, this::shouldShowRange, SyncMode.GUI));
     }
@@ -98,7 +99,7 @@ public abstract class VacuumMachineEntity<T extends Entity> extends MachineBlock
     private void getEntities(Level level, BlockPos pos, int range, Predicate<T> filter) {
         this.entities.clear();
         AABB area = new AABB(pos).inflate(range);
-        for (T ie : level.getEntitiesOfClass(clazz, area, filter)) {
+        for (T ie : level.getEntitiesOfClass(targetClass, area, filter)) {
             this.entities.add(new WeakReference<>(ie));
         }
     }
@@ -140,7 +141,7 @@ public abstract class VacuumMachineEntity<T extends Entity> extends MachineBlock
     }
 
     private void generateParticle(RangeParticleData data, Vec3 pos) {
-        if (isClientSide() ) {
+        if (level != null && level.isClientSide()) {
             level.addAlwaysVisibleParticle(data, true, pos.x, pos.y, pos.z, 0, 0, 0);
         }
     }
