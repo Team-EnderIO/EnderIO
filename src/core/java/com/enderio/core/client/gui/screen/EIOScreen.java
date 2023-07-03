@@ -1,6 +1,7 @@
 package com.enderio.core.client.gui.screen;
 
 import com.enderio.api.misc.Vector2i;
+import com.enderio.core.common.menu.SyncedMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -48,6 +49,8 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
 
     @Override
     public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
+        if (menu instanceof SyncedMenu menu && menu.getBlockEntity() == null)
+            return;
         renderBackground(guiGraphics);
         super.render(guiGraphics, pMouseX, pMouseY, pPartialTicks);
         this.renderTooltip(guiGraphics, pMouseX, pMouseY);

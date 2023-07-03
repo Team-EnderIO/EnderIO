@@ -38,11 +38,6 @@ public class XPVacuumBlockEntity extends VacuumMachineEntity<ExperienceOrb> {
     public XPVacuumBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState, ExperienceOrb.class);
 
-        String color = MachinesConfig.CLIENT.BLOCKS.XP_VACUUM_RANGE_COLOR.get();
-        this.rCol = (float)Integer.parseInt(color.substring(0,2), 16) / 255;
-        this.gCol = (float)Integer.parseInt(color.substring(2,4), 16) / 255;
-        this.bCol = (float)Integer.parseInt(color.substring(4,6), 16) / 255;
-
         // Create fluid tank.
         this.fluidTank = createFluidTank(Integer.MAX_VALUE);
 
@@ -54,6 +49,11 @@ public class XPVacuumBlockEntity extends VacuumMachineEntity<ExperienceOrb> {
         addCapabilityProvider(fluidHandler);
         addDataSlot(new IntegerDataSlot(() -> fluidTank.getFluidInTank(0).getAmount(), (i) -> fluidTank.setFluid(new FluidStack(EIOFluids.XP_JUICE.get(), i)),
             SyncMode.WORLD));
+    }
+
+    @Override
+    public String getColor() {
+        return MachinesConfig.CLIENT.BLOCKS.XP_VACUUM_RANGE_COLOR.get();
     }
 
     public FluidTank getFluidTank() {

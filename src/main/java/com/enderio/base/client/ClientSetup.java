@@ -1,6 +1,8 @@
 package com.enderio.base.client;
 
 import com.enderio.EnderIO;
+import com.enderio.base.client.model.PaintedBlockGeometry;
+import com.enderio.base.client.renderer.glider.ActiveGliderRenderLayer;
 import com.enderio.base.client.particle.RangeParticle;
 import com.enderio.base.client.renderer.glider.ActiveGliderRenderLayer;
 import com.enderio.base.client.renderer.item.GlassIconDecorator;
@@ -13,6 +15,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -100,5 +103,9 @@ public class ClientSetup {
         String namespace = rl.getNamespace();
         String path = rl.getPath().substring("models/enderio_glider/".length(), rl.getPath().length() - 5);
         return Optional.ofNullable(ForgeRegistries.ITEMS.getValue(new ResourceLocation(namespace, path)));
+    }
+    @SubscribeEvent
+    public static void modelInit(ModelEvent.RegisterGeometryLoaders event) {
+        event.register("painted_block", new PaintedBlockGeometry.Loader());
     }
 }

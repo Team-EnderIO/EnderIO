@@ -61,6 +61,7 @@ public class EIOMachines {
         provider.addSubProvider(event.includeServer(), new SlicingRecipeProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new SoulBindingRecipeProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new TankRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new PaintingRecipeProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new SoulDataProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new MachineEntityTypeTagsProvider(packOutput, completablefuture, event.getExistingFileHelper()));
 

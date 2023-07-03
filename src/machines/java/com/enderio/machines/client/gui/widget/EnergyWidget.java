@@ -19,9 +19,9 @@ public class EnergyWidget extends EIOWidget {
 
     // TODO: Will need some way of displaying no tooltip and instead asking for a capacitor on non-simple machines.
 
-    private static final ResourceLocation WIDGETS = EnderIO.loc("textures/gui/widgets.png");
+    protected static final ResourceLocation WIDGETS = EnderIO.loc("textures/gui/widgets.png");
 
-    private final Screen displayOn;
+    protected final Screen displayOn;
     private final Supplier<IMachineEnergyStorage> storageSupplier;
 
     public EnergyWidget(Screen displayOn, Supplier<IMachineEnergyStorage> storageSupplier, int x, int y, int width, int height) {
@@ -72,5 +72,6 @@ public class EnergyWidget extends EIOWidget {
                 storage.getMaxEnergyStored())), mouseX, mouseY);
         }
     }
+
 }
 

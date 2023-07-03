@@ -9,8 +9,6 @@ import com.enderio.core.common.sync.IntegerDataSlot;
 import com.enderio.core.common.sync.SyncMode;
 import com.enderio.machines.common.io.FixedIOConfig;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -30,10 +28,6 @@ public abstract class VacuumMachineEntity<T extends Entity> extends MachineBlock
     protected static final double SPEED_4 = SPEED * 4;
     private static final int MAX_RANGE = 6;
     private int range = 6;
-    protected float rCol = 1;
-    protected float gCol = 0;
-    protected float bCol = 0;
-
     private boolean rangeVisible = false;
     private List<WeakReference<T>> entities = new ArrayList<>();
     private Class<T> clazz;
@@ -51,10 +45,6 @@ public abstract class VacuumMachineEntity<T extends Entity> extends MachineBlock
             this.attractEntities(this.getLevel(), this.getBlockPos(), this.range);
         }
 
-        if (this.isShowingRange()) {
-            generateParticle(new RangeParticleData(getRange(), this.rCol, this.gCol, this.bCol),
-                new Vec3(getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ()));
-        }
         super.serverTick();
     }
 
@@ -63,8 +53,14 @@ public abstract class VacuumMachineEntity<T extends Entity> extends MachineBlock
         if (this.getRedstoneControl().isActive(level.hasNeighborSignal(worldPosition))) {
             this.attractEntities(this.getLevel(), this.getBlockPos(), this.range);
         }
+        if (this.isShowingRange()) {
+            generateParticle(new RangeParticleData(getRange(), this.getColor()),
+                new Vec3(getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ()));
+        }
         super.clientTick();
     }
+
+    public abstract String getColor();
 
     @Override
     protected IIOConfig createIOConfig() {
@@ -144,10 +140,8 @@ public abstract class VacuumMachineEntity<T extends Entity> extends MachineBlock
     }
 
     private void generateParticle(RangeParticleData data, Vec3 pos) {
-        if (!isClientSide() && level instanceof ServerLevel level) {
-            for (ServerPlayer player : level.players()) {
-                level.sendParticles(player, data, true, pos.x, pos.y, pos.z, 1, 0, 0, 0, 0);
-            }
+        if (isClientSide() ) {
+            level.addAlwaysVisibleParticle(data, true, pos.x, pos.y, pos.z, 0, 0, 0);
         }
     }
 }

@@ -208,12 +208,21 @@ public class EIOLang {
     public static final Component DISABLED = REGISTRATE.addLang("gui", EnderIO.loc("ioconfig.disabled"), "Disabled");
     public static final Component NONE = REGISTRATE.addLang("gui", EnderIO.loc("ioconfig.none"), "None");
 
+    public static final MutableComponent NOCAP_TITLE = REGISTRATE.addLang("gui", EnderIO.loc("nocap.title"), "Capacitor Missing");
+    public static final MutableComponent NOCAP_DESC = REGISTRATE.addLang("gui", EnderIO.loc("nocap.desc"), "Insert any capacitor so \n this machine can work!");
+
+
     // endregion
 
     // region Glider
 
     public static final Component USE_GLIDER_ADVANCEMENT_TITLE = REGISTRATE.addLang("advancements", EnderIO.loc("use_glider.title"), "Majestic");
     public static final Component USE_GLIDER_ADVANCEMENT_DESCRIPTION = REGISTRATE.addLang("advancements", EnderIO.loc("use_glider.description"), "Do you really trust some leather?");
+
+    public static final Component RICH_ADVANCEMENT_TITLE = REGISTRATE.addLang("advancements", EnderIO.loc("rich.title"), "Don't tell the others");
+    public static final Component RICH_ADVANCEMENT_DESCRIPTION = REGISTRATE.addLang("advancements", EnderIO.loc("rich.description"), "Make others think you are rich");
+    public static final Component RICHER_ADVANCEMENT_TITLE = REGISTRATE.addLang("advancements", EnderIO.loc("richer.title"), "Is this real?");
+    public static final Component RICHER_ADVANCEMENT_DESCRIPTION = REGISTRATE.addLang("advancements", EnderIO.loc("richer.description"), "Make others think you are richer");
 
     // endregion
 

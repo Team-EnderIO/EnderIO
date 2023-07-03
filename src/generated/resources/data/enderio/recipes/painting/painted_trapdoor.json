@@ -1,0 +1,7 @@
+{
+  "type": "enderio:painting",
+  "input": {
+    "tag": "minecraft:wooden_trapdoors"
+  },
+  "output": "enderio:painted_trapdoor"
+}
