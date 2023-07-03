@@ -8,7 +8,7 @@ import com.enderio.base.common.init.*;
 import com.enderio.base.common.integrations.EnderIOSelfIntegration;
 import com.enderio.base.common.item.tool.SoulVialItem;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.base.common.network.BaseNetwork;
+import com.enderio.base.common.network.EIONetwork;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.EIODataProvider;
 import com.enderio.base.data.advancement.EIOAdvancementGenerator;
@@ -105,7 +105,7 @@ public class EnderIO {
         new PaintingTrigger().register();
 
         // Decor
-        BaseNetwork.register();
+        EIONetwork.register();
     }
 
     public void onGatherData(GatherDataEvent event) {
