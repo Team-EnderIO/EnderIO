@@ -192,6 +192,11 @@ public class EIOLang {
     public static final Component USE_GLIDER_ADVANCEMENT_TITLE = REGISTRATE.addLang("advancements", EnderIO.loc("use_glider.title"), "Majestic");
     public static final Component USE_GLIDER_ADVANCEMENT_DESCRIPTION = REGISTRATE.addLang("advancements", EnderIO.loc("use_glider.description"), "Do you really trust some leather?");
 
+    public static final Component RICH_ADVANCEMENT_TITLE = REGISTRATE.addLang("advancements", EnderIO.loc("rich.title"), "Don't tell the others");
+    public static final Component RICH_ADVANCEMENT_DESCRIPTION = REGISTRATE.addLang("advancements", EnderIO.loc("rich.description"), "Make others think you are rich");
+    public static final Component RICHER_ADVANCEMENT_TITLE = REGISTRATE.addLang("advancements", EnderIO.loc("richer.title"), "Is this real?");
+    public static final Component RICHER_ADVANCEMENT_DESCRIPTION = REGISTRATE.addLang("advancements", EnderIO.loc("richer.description"), "Make others think you are richer");
+
     // endregion
 
     // region Misc Tooltips

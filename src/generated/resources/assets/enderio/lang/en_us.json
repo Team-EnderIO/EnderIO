@@ -1,4 +1,8 @@
 {
+  "advancements.enderio.rich.description": "Make others think you are rich",
+  "advancements.enderio.rich.title": "Don't tell the others",
+  "advancements.enderio.richer.description": "Make others think you are richer",
+  "advancements.enderio.richer.title": "Is this real?",
   "advancements.enderio.use_glider.description": "Do you really trust some leather?",
   "advancements.enderio.use_glider.title": "Majestic",
   "block.enderio.advanced_photovoltaic_cell": "Advanced Photovoltaic Cell",
@@ -760,6 +764,7 @@
   "block.enderio.painted_stairs": "Painted Stairs",
   "block.enderio.painted_trapdoor": "Painted Trapdoor",
   "block.enderio.painted_wooden_pressure_plate": "Painted Wooden Pressure Plate",
+  "block.enderio.painting_machine": "Painting Machine",
   "block.enderio.powered_light": "Powered Light",
   "block.enderio.powered_light_inverted": "Powered Light Inverted",
   "block.enderio.powered_light_inverted_wireless": "Powered Light Inverted Wireless",

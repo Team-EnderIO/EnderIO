@@ -1,4 +1,8 @@
 {
+  "advancements.enderio.rich.description": "ɥɔıɹ ǝɹɐ noʎ ʞuıɥʇ sɹǝɥʇo ǝʞɐW",
+  "advancements.enderio.rich.title": "sɹǝɥʇo ǝɥʇ ןןǝʇ ʇ,uoᗡ",
+  "advancements.enderio.richer.description": "ɹǝɥɔıɹ ǝɹɐ noʎ ʞuıɥʇ sɹǝɥʇo ǝʞɐW",
+  "advancements.enderio.richer.title": "¿ןɐǝɹ sıɥʇ sI",
   "advancements.enderio.use_glider.description": "¿ɹǝɥʇɐǝן ǝɯos ʇsnɹʇ ʎןןɐǝɹ noʎ oᗡ",
   "advancements.enderio.use_glider.title": "ɔıʇsǝظɐW",
   "block.enderio.advanced_photovoltaic_cell": "ןןǝƆ ɔıɐʇןoʌoʇoɥԀ pǝɔuɐʌpⱯ",
@@ -760,6 +764,7 @@
   "block.enderio.painted_stairs": "sɹıɐʇS pǝʇuıɐԀ",
   "block.enderio.painted_trapdoor": "ɹoopdɐɹ⟘ pǝʇuıɐԀ",
   "block.enderio.painted_wooden_pressure_plate": "ǝʇɐןԀ ǝɹnssǝɹԀ uǝpooM pǝʇuıɐԀ",
+  "block.enderio.painting_machine": "ǝuıɥɔɐW buıʇuıɐԀ",
   "block.enderio.powered_light": "ʇɥbıꞀ pǝɹǝʍoԀ",
   "block.enderio.powered_light_inverted": "pǝʇɹǝʌuI ʇɥbıꞀ pǝɹǝʍoԀ",
   "block.enderio.powered_light_inverted_wireless": "ssǝןǝɹıM pǝʇɹǝʌuI ʇɥbıꞀ pǝɹǝʍoԀ",

@@ -7,8 +7,6 @@ import net.minecraft.advancements.critereon.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
-import java.util.function.Predicate;
-
 public class UseGliderTrigger extends SimpleCriterionTrigger<UseGliderTrigger.TriggerInstance> {
     static final ResourceLocation ID = EnderIO.loc("use_glider");
     public static final UseGliderTrigger USE_GLIDER = CriteriaTriggers.register(new UseGliderTrigger());

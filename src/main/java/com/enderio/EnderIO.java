@@ -1,12 +1,14 @@
 package com.enderio;
 
 import com.enderio.api.integration.IntegrationManager;
+import com.enderio.base.common.advancement.PaintingTrigger;
 import com.enderio.base.common.advancement.UseGliderTrigger;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.init.*;
 import com.enderio.base.common.integrations.EnderIOSelfIntegration;
 import com.enderio.base.common.item.tool.SoulVialItem;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.base.common.network.EIONetwork;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.EIODataProvider;
 import com.enderio.base.data.advancement.EIOAdvancementGenerator;
@@ -47,7 +49,7 @@ import java.util.concurrent.CompletableFuture;
 
 @Mod(EnderIO.MODID)
 public class EnderIO {
-    // The Mod ID. This is stored in EnderCore as its the furthest source away but it ensures that it is constant across all source sets.
+    // The Mod ID. This is stored in EnderCore as it's the furthest source away but it ensures that it is constant across all source sets.
     public static final String MODID = EnderCore.MODID;
 
     private static final Lazy<Registrate> REGISTRATE = Lazy.of(() -> Registrate.create(MODID));
@@ -92,6 +94,7 @@ public class EnderIO {
         EIORecipes.register();
         EIOLootModifiers.register();
         EIOParticles.register();
+        EIOEntities.register();
 
         // Run datagen after registrate is finished.
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -99,6 +102,10 @@ public class EnderIO {
         modEventBus.addListener(SoulVialItem::onCommonSetup);
         IntegrationManager.addIntegration(EnderIOSelfIntegration.INSTANCE);
         new UseGliderTrigger().register();
+        new PaintingTrigger().register();
+
+        // Decor
+        EIONetwork.register();
     }
 
     public void onGatherData(GatherDataEvent event) {
