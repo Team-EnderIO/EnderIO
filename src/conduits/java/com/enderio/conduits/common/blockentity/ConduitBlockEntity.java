@@ -509,8 +509,8 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
         public UpdateState next() {
             return switch (this) {
-                case NONE, INITIALIZED -> NONE;
-                case NEXT, MEXT_INITIALIZED -> INITIALIZED;
+                case NONE, INITIALIZED, MEXT_INITIALIZED -> NONE;
+                case NEXT -> INITIALIZED;
             };
         }
 
