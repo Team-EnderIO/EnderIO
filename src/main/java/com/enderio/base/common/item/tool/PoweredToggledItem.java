@@ -2,7 +2,6 @@ package com.enderio.base.common.item.tool;
 
 import com.enderio.api.capability.IMultiCapabilityItem;
 import com.enderio.api.capability.MultiCapabilityProvider;
-import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.capability.EnergyStorageItemStack;
 import com.enderio.base.common.capability.Toggled;
 import com.enderio.base.common.init.EIOCapabilities;
@@ -24,7 +23,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.EnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;

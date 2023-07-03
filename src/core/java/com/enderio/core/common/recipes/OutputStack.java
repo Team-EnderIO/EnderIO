@@ -1,5 +1,6 @@
 package com.enderio.core.common.recipes;
 
+import com.enderio.core.CoreNBTKeys;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
@@ -80,9 +81,9 @@ public record OutputStack(Either<ItemStack, FluidStack> stack) {
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
         if (isItem()) {
-            tag.put(KEY_ITEM, stack.left().get().serializeNBT());
+            tag.put(CoreNBTKeys.ITEM, stack.left().get().serializeNBT());
         } else if (isFluid()) {
-            tag.put(KEY_FLUID, stack.right().get().writeToNBT(new CompoundTag()));
+            tag.put(CoreNBTKeys.FLUID, stack.right().get().writeToNBT(new CompoundTag()));
         }
         return tag;
     }
@@ -91,10 +92,10 @@ public record OutputStack(Either<ItemStack, FluidStack> stack) {
      * Read from NBT.
      */
     public static OutputStack fromNBT(CompoundTag tag) {
-        if (tag.contains(KEY_ITEM)) {
-            return OutputStack.of(ItemStack.of(tag.getCompound(KEY_ITEM)));
-        } else if (tag.contains(KEY_FLUID)) {
-            return OutputStack.fromNBT(tag.getCompound(KEY_FLUID));
+        if (tag.contains(CoreNBTKeys.ITEM)) {
+            return OutputStack.of(ItemStack.of(tag.getCompound(CoreNBTKeys.ITEM)));
+        } else if (tag.contains(CoreNBTKeys.FLUID)) {
+            return OutputStack.fromNBT(tag.getCompound(CoreNBTKeys.FLUID));
         }
         return OutputStack.EMPTY;
     }
