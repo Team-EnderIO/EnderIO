@@ -220,7 +220,7 @@ dependencies {
     // GraphLib
     implementation implementation(fg.deobf("dev.gigaherz.graph:GraphLib3:${graphlib_version}"))
     jarJar(group: 'dev.gigaherz.graph', name: 'GraphLib3', version: "${graphlib_version_range}")
-    coreAnnotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     // JEI
     compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
