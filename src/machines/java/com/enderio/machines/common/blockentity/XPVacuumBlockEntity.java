@@ -51,7 +51,7 @@ public class XPVacuumBlockEntity extends VacuumMachineEntity<ExperienceOrb> {
     }
 
     @Override
-    public String getColour() {
+    public String getColor() {
         return MachinesConfig.CLIENT.BLOCKS.XP_VACUUM_RANGE_COLOR.get();
     }
 

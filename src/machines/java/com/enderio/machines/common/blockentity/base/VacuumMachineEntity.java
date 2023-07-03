@@ -28,10 +28,6 @@ public abstract class VacuumMachineEntity<T extends Entity> extends MachineBlock
     protected static final double SPEED_4 = SPEED * 4;
     private static final int MAX_RANGE = 6;
     private int range = 6;
-    protected float rCol = 1;
-    protected float gCol = 0;
-    protected float bCol = 0;
-
     private boolean rangeVisible = false;
     private List<WeakReference<T>> entities = new ArrayList<>();
     private Class<T> clazz;
@@ -58,13 +54,13 @@ public abstract class VacuumMachineEntity<T extends Entity> extends MachineBlock
             this.attractEntities(this.getLevel(), this.getBlockPos(), this.range);
         }
         if (this.isShowingRange()) {
-            generateParticle(new RangeParticleData(getRange(), this.getColour()),
+            generateParticle(new RangeParticleData(getRange(), this.getColor()),
                 new Vec3(getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ()));
         }
         super.clientTick();
     }
 
-    public abstract String getColour();
+    public abstract String getColor();
 
     @Override
     protected IIOConfig createIOConfig() {

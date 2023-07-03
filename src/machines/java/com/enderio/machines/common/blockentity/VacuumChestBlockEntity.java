@@ -48,7 +48,7 @@ public class VacuumChestBlockEntity extends VacuumMachineEntity<ItemEntity> {
     }
 
     @Override
-    public String getColour() {
+    public String getColor() {
         return MachinesConfig.CLIENT.BLOCKS.VACUUM_CHEST_RANGE_COLOR.get();
     }
 
