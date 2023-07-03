@@ -2,6 +2,7 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
+import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.advancement.PaintingTrigger;
 import com.enderio.base.common.block.painted.IPaintedBlock;
 import com.enderio.core.common.recipes.OutputStack;
@@ -70,10 +71,10 @@ public class PaintingMachineBlockEntity extends PoweredCraftingMachine<PaintingR
                     .findFirst()
                     .map(OutputStack::getItem)
                     .flatMap(item -> Optional.ofNullable(item.getTag()))
-                    .filter(nbt -> nbt.contains("BlockEntityTag", Tag.TAG_COMPOUND))
-                    .map(nbt -> nbt.getCompound("BlockEntityTag"))
-                    .filter(nbt -> nbt.contains("paint", Tag.TAG_STRING))
-                    .map(nbt -> nbt.getString("paint"));
+                    .filter(nbt -> nbt.contains(BlockItem.BLOCK_ENTITY_TAG, Tag.TAG_COMPOUND))
+                    .map(nbt -> nbt.getCompound(BlockItem.BLOCK_ENTITY_TAG))
+                    .filter(nbt -> nbt.contains(EIONBTKeys.PAINT, Tag.TAG_STRING))
+                    .map(nbt -> nbt.getString(EIONBTKeys.PAINT));
                 if (s.isPresent()) {
                     Block paint = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(s.get()));
                     for(Player player : level.players()) {

@@ -20,5 +20,14 @@ public class EIONBTKeys extends CoreNBTKeys {
     public static final String COORDINATE_SELECTION = "CoordinateSelection";
     public static final String DARK_STEEL_UPGRADEABLE = "DarkSteelUpgradable";
 
+    public static final String PAINT = "Paint";
+    public static final String PAINT_2 = "Paint2";
+
+    // endregion
+
+    // region Misc task
+
+    public static final String ACTIVE = "Active";
+
     // endregion
 }
