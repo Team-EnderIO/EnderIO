@@ -10,13 +10,15 @@ import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 
 public class SagMillMenu extends MachineMenu<SagMillBlockEntity> {
+    public static int INPUTS_INDEX = 1;
+    public static int INPUT_COUNT = 1;
+    public static int LAST_INDEX = 6;
+
     public SagMillMenu(@Nullable SagMillBlockEntity blockEntity, Inventory inventory, int pContainerId) {
         super(blockEntity, inventory, MachineMenus.SAG_MILL.get(), pContainerId);
 
         if (blockEntity != null) {
-            if (blockEntity.requiresCapacitor()) {
-                addSlot(new MachineSlot(blockEntity.getInventory(), blockEntity.getCapacitorSlot(), 12, 60));
-            }
+            addSlot(new MachineSlot(blockEntity.getInventory(), blockEntity.getCapacitorSlot(), 12, 60));
 
             addSlot(new MachineSlot(blockEntity.getInventory(), SagMillBlockEntity.INPUT, 80, 12));
 
