@@ -34,6 +34,8 @@ public class CapacitorBankBER implements BlockEntityRenderer<CapacitorBankBlockE
 
     private static final ResourceLocation IO_1x1 = EnderIO.loc("block/capacitor_additionals/1x1_full");
     private static final ResourceLocation IO_FULL = EnderIO.loc("block/capacitor_additionals/full");
+
+    private static final Direction[] HORIZONTAL_DIRECTIONS = new Direction[] {Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
     public CapacitorBankBER(BlockEntityRendererProvider.Context context) {
 
     }
@@ -43,7 +45,7 @@ public class CapacitorBankBER implements BlockEntityRenderer<CapacitorBankBlockE
         int packedOverlay) {
 
         if (blockEntity.getLevel() != null) {
-            for (Direction direction: new Direction[] {Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST}) {
+            for (Direction direction: HORIZONTAL_DIRECTIONS) {
                 BlockPos facingPos = blockEntity.getBlockPos().relative(direction);
                 if (Block.shouldRenderFace(blockEntity.getBlockState(), blockEntity.getLevel(), blockEntity.getBlockPos(), direction, facingPos)) {
                     DisplayMode mode = blockEntity.getDisplayMode(direction);
