@@ -22,8 +22,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -44,9 +42,6 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
     private StoredEntityData entityData = StoredEntityData.empty();
     private int range = 3;
     private boolean rangeVisible;
-    protected float rCol;
-    protected float gCol;
-    protected float bCol;
     private SpawnerBlockedReason reason = SpawnerBlockedReason.NONE;
 
     private final MachineTaskHost taskHost;
@@ -56,11 +51,6 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
         add2WayDataSlot(new BooleanDataSlot(this::isShowingRange, this::shouldShowRange, SyncMode.GUI));
         addDataSlot(new ResourceLocationDataSlot(() -> this.getEntityType().orElse(NO_MOB),this::setEntityType, SyncMode.GUI));
         addDataSlot(new EnumDataSlot<>(this::getReason, this::setReason, SyncMode.GUI));
-
-        String color = MachinesConfig.CLIENT.BLOCKS.POWERED_SPAWNER_RANGE_COLOR.get();
-        this.rCol = (float)Integer.parseInt(color.substring(0,2), 16) / 255;
-        this.gCol = (float)Integer.parseInt(color.substring(2,4), 16) / 255;
-        this.bCol = (float)Integer.parseInt(color.substring(4,6), 16) / 255;
 
         taskHost = new MachineTaskHost(this, this::hasEnergy) {
             @Override
@@ -90,9 +80,12 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
         if (canAct()) {
             taskHost.tick();
         }
+    }
 
+    public void clientTick() {
+        super.clientTick();
         if (this.isShowingRange()) {
-            generateParticle(new RangeParticleData(getRange(), this.rCol, this.gCol, this.bCol),
+            generateParticle(new RangeParticleData(getRange(), MachinesConfig.CLIENT.BLOCKS.POWERED_SPAWNER_RANGE_COLOR.get()),
                 new Vec3(getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ()));
         }
     }
@@ -160,10 +153,8 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
     }
 
     private void generateParticle(RangeParticleData data, Vec3 pos) {
-        if (level instanceof ServerLevel serverLevel) {
-            for (ServerPlayer player : serverLevel.players()) {
-                serverLevel.sendParticles(player, data, true, pos.x, pos.y, pos.z, 1, 0, 0, 0, 0);
-            }
+        if (isClientSide()) {
+            level.addAlwaysVisibleParticle(data, true, pos.x, pos.y, pos.z, 0, 0, 0);
         }
     }
 

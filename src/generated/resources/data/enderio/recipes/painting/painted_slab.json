@@ -1,0 +1,7 @@
+{
+  "type": "enderio:painting",
+  "input": {
+    "tag": "minecraft:wooden_slabs"
+  },
+  "output": "enderio:painted_slab"
+}

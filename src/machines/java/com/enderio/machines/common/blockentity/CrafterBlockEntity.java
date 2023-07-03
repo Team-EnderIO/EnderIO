@@ -173,6 +173,8 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
         outputBuffer.addAll(recipe.getRemainingItems(dummyCContainer));
         // clean buffer
         outputBuffer.removeIf(ItemStack::isEmpty);
+        // consume power
+        this.energyStorage.consumeEnergy(ENERGY_USAGE_PER_ITEM, false);
 
     }
 

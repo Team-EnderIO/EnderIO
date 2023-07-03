@@ -1,7 +1,7 @@
 package com.enderio.machines.common.blockentity;
 
-import com.enderio.machines.common.blockentity.base.VacuumMachineBlockEntity;
-import com.enderio.machines.common.config.client.MachinesClientConfig;
+import com.enderio.machines.common.blockentity.base.VacuumMachineEntity;
+import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.MachineInventoryLayout.Builder;
 import com.enderio.machines.common.menu.VacuumChestMenu;
@@ -20,11 +20,6 @@ public class VacuumChestBlockEntity extends VacuumMachineBlockEntity<ItemEntity>
 
     public VacuumChestBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState, ItemEntity.class);
-
-        String color = MachinesClientConfig.BLOCKS.VACUUM_CHEST_RANGE_COLOR.get();
-        this.rCol = (float)Integer.parseInt(color.substring(0,2), 16) / 255;
-        this.gCol = (float)Integer.parseInt(color.substring(2,4), 16) / 255;
-        this.bCol = (float)Integer.parseInt(color.substring(4,6), 16) / 255;
     }
 
     @Override
@@ -50,6 +45,11 @@ public class VacuumChestBlockEntity extends VacuumMachineBlockEntity<ItemEntity>
                 entity.getItem().setCount(reminder.getCount());
             }
         }
+    }
+
+    @Override
+    public String getColor() {
+        return MachinesConfig.CLIENT.BLOCKS.VACUUM_CHEST_RANGE_COLOR.get();
     }
 
     //TODO filter

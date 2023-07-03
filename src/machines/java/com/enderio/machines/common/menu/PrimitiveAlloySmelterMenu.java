@@ -11,6 +11,10 @@ import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 
 public class PrimitiveAlloySmelterMenu extends MachineMenu<PrimitiveAlloySmelterBlockEntity> {
+    public static int INPUTS_INDEX = 0;
+    public static int INPUT_COUNT = 3;
+    public static int LAST_INDEX = 4;
+    
     public PrimitiveAlloySmelterMenu(@Nullable PrimitiveAlloySmelterBlockEntity blockEntity, Inventory inventory, int pContainerId) {
         super(blockEntity, inventory, MachineMenus.PRIMITIVE_ALLOY_SMELTER.get(), pContainerId);
         if (blockEntity != null && blockEntity.getInventory() != null) {
