@@ -29,52 +29,52 @@ public class EnergyConfig {
         builder.push("energy");
 
         builder.push("alloySmelter");
-        ALLOY_SMELTER_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 100000, 1, Integer.MAX_VALUE);
-        ALLOY_SMELTER_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage", 30, 1, Integer.MAX_VALUE);
+            ALLOY_SMELTER_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 100000, 1, Integer.MAX_VALUE);
+            ALLOY_SMELTER_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage", 30, 1, Integer.MAX_VALUE);
         builder.pop();
 
         builder.push("crafter");
-        CRAFTER_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 100000, 1, Integer.MAX_VALUE);
-        CRAFTER_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage", 10, 1, Integer.MAX_VALUE);
+            CRAFTER_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 100000, 1, Integer.MAX_VALUE);
+            CRAFTER_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage", 10, 1, Integer.MAX_VALUE);
         builder.pop();
 
         builder.push("impulseHopper");
-        IMPULSE_HOPPER_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 100000, 1, Integer.MAX_VALUE);
-        IMPULSE_HOPPER_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage", 16, 1, Integer.MAX_VALUE);
+            IMPULSE_HOPPER_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 100000, 1, Integer.MAX_VALUE);
+            IMPULSE_HOPPER_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage", 16, 1, Integer.MAX_VALUE);
         builder.pop();
 
         builder.push("poweredSpawner");
-        POWERED_SPAWNER_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 100000, 1, Integer.MAX_VALUE);
-        POWERED_SPAWNER_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage", 160, 1, Integer.MAX_VALUE);
+            POWERED_SPAWNER_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 100000, 1, Integer.MAX_VALUE);
+            POWERED_SPAWNER_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage", 160, 1, Integer.MAX_VALUE);
         builder.pop();
 
         builder.push("sagMill");
-        SAG_MILL_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 100000, 1, Integer.MAX_VALUE);
-        SAG_MILL_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage", 30, 1, Integer.MAX_VALUE);
+            SAG_MILL_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 100000, 1, Integer.MAX_VALUE);
+            SAG_MILL_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage", 30, 1, Integer.MAX_VALUE);
         builder.pop();
 
         builder.push("slicer");
-        SLICER_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 100000, 1, Integer.MAX_VALUE);
-        SLICER_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage", 30, 1, Integer.MAX_VALUE);
+            SLICER_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 100000, 1, Integer.MAX_VALUE);
+            SLICER_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage", 30, 1, Integer.MAX_VALUE);
         builder.pop();
 
         builder.push("soulBinder");
-        SOUL_BINDER_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 100000, 1, Integer.MAX_VALUE);
-        SOUL_BINDER_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage", 30, 1, Integer.MAX_VALUE);
+            SOUL_BINDER_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 100000, 1, Integer.MAX_VALUE);
+            SOUL_BINDER_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage", 30, 1, Integer.MAX_VALUE);
         builder.pop();
 
         builder.push("stirlingGenerator");
-        STIRLING_GENERATOR_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 100000, 1, Integer.MAX_VALUE);
-        STIRLING_GENERATOR_BURN_SPEED = builder.comment("The base number of 'burn ticks' performed per machine tick.").defineInRange("burnSpeed", 1, 1, Integer.MAX_VALUE);
-        STIRLING_GENERATOR_PRODUCTION = builder.comment("The base amount of energy produced in uI/t.").defineInRange("generation", 40, 1, Integer.MAX_VALUE);
+            STIRLING_GENERATOR_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 100000, 1, Integer.MAX_VALUE);
+            STIRLING_GENERATOR_BURN_SPEED = builder.comment("The base number of 'burn ticks' performed per machine tick.").defineInRange("burnSpeed", 1, 1, Integer.MAX_VALUE);
+            STIRLING_GENERATOR_PRODUCTION = builder.comment("The base amount of energy produced in uI/t.").defineInRange("generation", 40, 1, Integer.MAX_VALUE);
         builder.pop();
 
         builder.push("phtovoltaic_cell_rates");
-        builder.comment("Production rate at midday without rain or thunder");
-        SIMPLE_SOLAR_PANEL_MAX_PRODUCTION = builder.defineInRange("simple", 10, 1, Integer.MAX_VALUE);
-        BASIC_SOLAR_PANEL_MAX_PRODUCTION = builder.defineInRange("basic", 40, 1, Integer.MAX_VALUE);
-        ADVANCED_SOLAR_PANEL_MAX_PRODUCTION = builder.defineInRange("advanced", 80, 1, Integer.MAX_VALUE);
-        VIBRANT_SOLAR_PANEL_MAX_PRODUCTION = builder.defineInRange("vibrant", 160, 1, Integer.MAX_VALUE);
+            builder.comment("Production rate at midday without rain or thunder");
+            SIMPLE_SOLAR_PANEL_MAX_PRODUCTION = builder.defineInRange("simple", 10, 1, Integer.MAX_VALUE);
+            BASIC_SOLAR_PANEL_MAX_PRODUCTION = builder.defineInRange("basic", 40, 1, Integer.MAX_VALUE);
+            ADVANCED_SOLAR_PANEL_MAX_PRODUCTION = builder.defineInRange("advanced", 80, 1, Integer.MAX_VALUE);
+            VIBRANT_SOLAR_PANEL_MAX_PRODUCTION = builder.defineInRange("vibrant", 160, 1, Integer.MAX_VALUE);
         builder.pop();
 
         builder.pop();
