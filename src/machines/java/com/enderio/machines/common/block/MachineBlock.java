@@ -87,15 +87,14 @@ public class MachineBlock extends BaseEntityBlock {
         }
 
         BlockEntity entity = level.getBlockEntity(pos);
-
-        if (entity == null) {
+        if (!(entity instanceof MachineBlockEntity machineBlockEntity)) { // This also covers nulls
             return InteractionResult.PASS;
         }
 
         //pass on the use command to corresponding block entity.
-        InteractionResult result = ((MachineBlockEntity)entity).onBlockEntityUsed(state, level, pos, player, hand,hit);
+        InteractionResult result = machineBlockEntity.onBlockEntityUsed(state, level, pos, player, hand,hit);
         if (result != InteractionResult.CONSUME) {
-            if (level.getBlockEntity(pos) instanceof MachineBlockEntity machine && !machine.canOpenMenu()) {
+            if (!machineBlockEntity.canOpenMenu()) {
                 return InteractionResult.PASS;
             }
 
