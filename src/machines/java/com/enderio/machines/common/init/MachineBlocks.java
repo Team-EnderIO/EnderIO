@@ -1,7 +1,16 @@
 package com.enderio.machines.common.init;
 
 import com.enderio.EnderIO;
+import com.enderio.base.client.renderer.PaintedBlockColor;
+import com.enderio.base.common.block.light.Light;
+import com.enderio.base.common.block.light.LightNode;
+import com.enderio.base.common.block.light.PoweredLight;
+import com.enderio.base.common.block.painted.*;
 import com.enderio.base.common.init.EIOCreativeTabs;
+import com.enderio.base.common.item.PaintedBlockItem;
+import com.enderio.base.common.item.PaintedSlabBlockItem;
+import com.enderio.base.data.loot.DecorLootTable;
+import com.enderio.base.data.model.block.EIOBlockState;
 import com.enderio.core.data.model.EIOModel;
 import com.enderio.machines.common.block.CapacitorBankBlock;
 import com.enderio.machines.common.block.MachineBlock;
@@ -22,15 +31,29 @@ import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import com.tterrag.registrate.util.entry.BlockEntry;
+import com.tterrag.registrate.util.nullness.NonNullBiFunction;
+import com.tterrag.registrate.util.nullness.NonNullFunction;
+import com.tterrag.registrate.util.nullness.NonNullSupplier;
+import net.minecraft.core.Direction;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.Util;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.client.model.generators.BlockModelBuilder;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.loaders.CompositeModelBuilder;
 import net.minecraftforge.common.util.TransformationHelper;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import java.util.HashMap;
@@ -118,6 +141,9 @@ public class MachineBlocks {
         .register();
 
     public static final BlockEntry<ProgressMachineBlock> ALLOY_SMELTER = standardMachine("alloy_smelter", () -> MachineBlockEntities.ALLOY_SMELTER)
+        .register();
+
+    public static final BlockEntry<ProgressMachineBlock> PAINTING_MACHINE = standardMachine("painting_machine", () -> MachineBlockEntities.PAINTING_MACHINE)
         .register();
 
     public static final BlockEntry<MachineBlock> CREATIVE_POWER = REGISTRATE
