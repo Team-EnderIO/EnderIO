@@ -44,4 +44,5 @@ public class PaintedCraftingTableBlock extends CraftingTableBlock implements Ent
             }
         }, CONTAINER_TITLE);
     }
+
 }
