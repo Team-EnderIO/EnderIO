@@ -83,6 +83,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
     @Override
     public void onLoad() {
+        updateShape();
         if (!level.isClientSide()) {
             sync();
             bundle.onLoad(level, getBlockPos());
