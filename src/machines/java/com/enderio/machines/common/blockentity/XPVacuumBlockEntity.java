@@ -4,6 +4,7 @@ import com.enderio.base.common.init.EIOFluids;
 import com.enderio.core.common.sync.IntegerDataSlot;
 import com.enderio.core.common.sync.SyncMode;
 import com.enderio.machines.common.blockentity.base.VacuumMachineBlockEntity;
+import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.config.client.MachinesClientConfig;
 import com.enderio.machines.common.menu.XPVacuumMenu;
 import net.minecraft.core.BlockPos;

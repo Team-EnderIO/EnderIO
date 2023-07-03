@@ -20,6 +20,9 @@ public class EnergyConfig {
     public final ForgeConfigSpec.ConfigValue<Integer> STIRLING_GENERATOR_CAPACITY;
     public final ForgeConfigSpec.ConfigValue<Integer> STIRLING_GENERATOR_BURN_SPEED;
     public final ForgeConfigSpec.ConfigValue<Integer> STIRLING_GENERATOR_PRODUCTION;
+    public final ForgeConfigSpec.ConfigValue<Integer> PAINTING_MACHINE_CAPACITY;
+    public final ForgeConfigSpec.ConfigValue<Integer> PAINTING_MACHINE_USAGE;
+    public final ForgeConfigSpec.ConfigValue<Integer> PAINTING_MACHINE_ENERGY_COST;
     public final ForgeConfigSpec.ConfigValue<Integer> SIMPLE_SOLAR_PANEL_MAX_PRODUCTION;
     public final ForgeConfigSpec.ConfigValue<Integer> BASIC_SOLAR_PANEL_MAX_PRODUCTION;
     public final ForgeConfigSpec.ConfigValue<Integer> ADVANCED_SOLAR_PANEL_MAX_PRODUCTION;
@@ -67,6 +70,13 @@ public class EnergyConfig {
             STIRLING_GENERATOR_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 100000, 1, Integer.MAX_VALUE);
             STIRLING_GENERATOR_BURN_SPEED = builder.comment("The base number of 'burn ticks' performed per machine tick.").defineInRange("burnSpeed", 1, 1, Integer.MAX_VALUE);
             STIRLING_GENERATOR_PRODUCTION = builder.comment("The base amount of energy produced in uI/t.").defineInRange("generation", 40, 1, Integer.MAX_VALUE);
+        builder.pop();
+
+        builder.push("paintingMachine");
+            PAINTING_MACHINE_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 100000, 1, Integer.MAX_VALUE);
+            PAINTING_MACHINE_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage", 30, 1, Integer.MAX_VALUE);
+            PAINTING_MACHINE_ENERGY_COST = builder.comment("The energy required for each painting operation")
+                .defineInRange("energyCost", 2000, 1, Integer.MAX_VALUE);
         builder.pop();
 
         builder.push("phtovoltaic_cell_rates");

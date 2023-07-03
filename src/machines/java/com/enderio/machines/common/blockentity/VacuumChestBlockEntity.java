@@ -1,6 +1,6 @@
 package com.enderio.machines.common.blockentity;
 
-import com.enderio.machines.common.blockentity.base.VacuumMachineEntity;
+import com.enderio.machines.common.blockentity.base.VacuumMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.MachineInventoryLayout.Builder;

@@ -4,7 +4,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 public class MachinesClientConfig {
 
-    public static MachinesClientBlocksConfig BLOCKS;
+    public final MachinesClientBlocksConfig BLOCKS;
 
     public final ForgeConfigSpec.ConfigValue<Float> IO_CONFIG_NEIGHBOUR_TRANSPARENCY;
 

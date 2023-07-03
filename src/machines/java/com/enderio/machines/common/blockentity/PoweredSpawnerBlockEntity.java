@@ -153,7 +153,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
     }
 
     private void generateParticle(RangeParticleData data, Vec3 pos) {
-        if (isClientSide()) {
+        if (level != null && level.isClientSide()) {
             level.addAlwaysVisibleParticle(data, true, pos.x, pos.y, pos.z, 0, 0, 0);
         }
     }
