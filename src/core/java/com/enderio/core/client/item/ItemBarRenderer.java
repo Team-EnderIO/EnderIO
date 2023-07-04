@@ -1,11 +1,7 @@
 package com.enderio.core.client.item;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.util.FastColor;
-import org.joml.Matrix4f;
 
 public class ItemBarRenderer {
 

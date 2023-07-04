@@ -3,14 +3,15 @@ package com.enderio.conduits.common.types;
 import com.enderio.api.UseOnly;
 import com.enderio.api.conduit.IClientConduitData;
 import com.enderio.api.conduit.IConduitMenuData;
+import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.IExtendedConduitData;
 import com.enderio.api.conduit.ticker.IConduitTicker;
-import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.misc.Vector2i;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.LogicalSide;
+
 import java.util.function.Supplier;
 
 /**

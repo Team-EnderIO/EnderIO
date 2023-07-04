@@ -7,9 +7,9 @@ import com.enderio.base.common.util.GrindingBallManager;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.machines.client.gui.screen.SagMillScreen;
 import com.enderio.machines.common.init.MachineBlocks;
+import com.enderio.machines.common.integrations.jei.util.MachineRecipeCategory;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.recipe.SagMillingRecipe;
-import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotTooltipCallback;
@@ -17,7 +17,6 @@ import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeType;
-import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -30,7 +29,7 @@ import java.util.Locale;
 
 import static mezz.jei.api.recipe.RecipeIngredientRole.*;
 
-public class SagMillCategory implements IRecipeCategory<SagMillingRecipe> {
+public class SagMillCategory extends MachineRecipeCategory<SagMillingRecipe> {
     public static final RecipeType<SagMillingRecipe> TYPE = RecipeType.create(EnderIO.MODID, "sagmilling", SagMillingRecipe.class);
 
     private final IDrawable background;

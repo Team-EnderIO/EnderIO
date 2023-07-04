@@ -1,5 +1,6 @@
 package com.enderio.base.common.blockentity;
 
+import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.block.light.LightNode;
 import com.enderio.base.common.network.EIONetwork;
 import com.enderio.base.common.network.ServerToClientLightUpdate;
@@ -65,14 +66,14 @@ public class LightNodeBlockEntity extends BlockEntity {
 	
 	@Override
 	protected void saveAdditional(CompoundTag tag) {
-		tag.put("masterpos", NbtUtils.writeBlockPos(this.masterpos));
+		tag.put(EIONBTKeys.BLOCK_POS, NbtUtils.writeBlockPos(this.masterpos));
 		super.saveAdditional(tag);
 	}
 	
 	@Override
 	public void load(CompoundTag tag) {
 		super.load(tag);
-		this.masterpos = NbtUtils.readBlockPos(tag.getCompound("masterpos"));
+		this.masterpos = NbtUtils.readBlockPos(tag.getCompound(EIONBTKeys.BLOCK_POS));
 	}
 	
 	@Override

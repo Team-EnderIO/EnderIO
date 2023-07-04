@@ -3,8 +3,6 @@ package com.enderio.base.common.item.tool;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.AttractionUtil;
-import com.enderio.core.common.item.ITabVariants;
-import com.tterrag.registrate.util.CreativeModeTabModifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.item.ItemEntity;

@@ -2,8 +2,8 @@ package com.enderio.conduits.common.init;
 
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.*;
-import com.enderio.conduits.common.types.*;
 import com.enderio.api.misc.Vector2i;
+import com.enderio.conduits.common.types.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.RegistryObject;
 

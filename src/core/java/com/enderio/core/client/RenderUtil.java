@@ -11,7 +11,6 @@ import org.joml.Vector3f;
 
 import static net.minecraftforge.client.model.IQuadTransformer.COLOR;
 import static net.minecraftforge.client.model.IQuadTransformer.STRIDE;
-import static net.minecraftforge.client.model.IQuadTransformer.UV0;
 
 public class RenderUtil {
     /**

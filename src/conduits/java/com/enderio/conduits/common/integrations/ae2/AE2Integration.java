@@ -9,7 +9,6 @@ import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.integration.Integration;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.tterrag.registrate.util.entry.ItemEntry;
-import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;

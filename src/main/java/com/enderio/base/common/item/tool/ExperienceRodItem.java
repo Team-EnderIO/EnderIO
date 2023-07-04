@@ -69,12 +69,12 @@ public class ExperienceRodItem extends Item {
                     FluidStack availableFluid = fluidHandler.getFluidInTank(0);
                     if (availableFluid.getFluid().is(EIOTags.Fluids.EXPERIENCE) && availableFluid.getAmount() > 0) {
                         int requiredXp = player.getXpNeededForNextLevel();
-                        int fluidVolume = requiredXp * ExperienceUtil.EXPTOFLUID;
+                        int fluidVolume = requiredXp * ExperienceUtil.EXP_TO_FLUID;
 
                         FluidStack drained = fluidHandler.drain(fluidVolume, IFluidHandler.FluidAction.EXECUTE);
 
                         if (!drained.isEmpty()) {
-                            player.giveExperiencePoints(drained.getAmount() / ExperienceUtil.EXPTOFLUID);
+                            player.giveExperiencePoints(drained.getAmount() / ExperienceUtil.EXP_TO_FLUID);
                             return true;
                         }
                     }
@@ -98,11 +98,11 @@ public class ExperienceRodItem extends Item {
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity != null) {
                 return blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER, side).map(fluidHandler -> {
-                    int fluidVolume = ExperienceUtil.getPlayerTotalXp(player) * ExperienceUtil.EXPTOFLUID;
+                    int fluidVolume = ExperienceUtil.getPlayerTotalXp(player) * ExperienceUtil.EXP_TO_FLUID;
                     FluidStack fs = new FluidStack(EIOFluids.XP_JUICE.getSource(), fluidVolume);
                     int takenVolume = fluidHandler.fill(fs, IFluidHandler.FluidAction.EXECUTE);
                     if (takenVolume > 0) {
-                        player.giveExperiencePoints(-takenVolume / ExperienceUtil.EXPTOFLUID);
+                        player.giveExperiencePoints(-takenVolume / ExperienceUtil.EXP_TO_FLUID);
                         return true;
                     }
 

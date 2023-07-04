@@ -6,6 +6,7 @@ import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.base.common.capacitor.DefaultCapacitorData;
 import com.enderio.core.common.sync.SyncMode;
+import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.ProgressMachineBlock;
 import com.enderio.machines.common.blockentity.sync.MachineEnergyDataSlot;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
@@ -275,15 +276,15 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity {
     public void saveAdditional(CompoundTag pTag) {
         var energyStorage = getEnergyStorage();
         if (energyStorage instanceof MachineEnergyStorage storage)
-            pTag.put("energy", storage.serializeNBT());
+            pTag.put(MachineNBTKeys.ENERGY, storage.serializeNBT());
         super.saveAdditional(pTag);
     }
 
     @Override
     public void load(CompoundTag pTag) {
         var energyStorage = getEnergyStorage();
-        if (energyStorage instanceof MachineEnergyStorage storage)
-            storage.deserializeNBT(pTag.getCompound("energy"));
+        if (energyStorage instanceof MachineEnergyStorage storage && pTag.contains(MachineNBTKeys.ENERGY))
+            storage.deserializeNBT(pTag.getCompound(MachineNBTKeys.ENERGY));
         super.load(pTag);
     }
 

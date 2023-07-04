@@ -1,7 +1,6 @@
 package com.enderio.conduits.common.init;
 
 import com.enderio.EnderIO;
-import com.enderio.base.client.renderer.blockentity.GraveRenderer;
 import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;

@@ -12,7 +12,6 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SandBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-
 import org.jetbrains.annotations.Nullable;
 
 public class PaintedSandBlock extends SandBlock implements EntityBlock, IPaintedBlock {

@@ -114,28 +114,36 @@ public class IOConfig implements IIOConfig {
         return Direction.SOUTH;
     }
 
+    // region Serialization
+
+    private static final String KEY_DIRECTION = "Direction";
+    private static final String KEY_STATE = "State";
+    private static final String KEY_DATA = "Data";
+
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
         ListTag listNbt = new ListTag();
         for (Map.Entry<Direction, IOMode> entry : config.entrySet()) {
             CompoundTag entryNbt = new CompoundTag();
-            entryNbt.putInt("direction", entry.getKey().ordinal());
-            entryNbt.putInt("state", entry.getValue().ordinal());
+            entryNbt.putInt(KEY_DIRECTION, entry.getKey().ordinal());
+            entryNbt.putInt(KEY_STATE, entry.getValue().ordinal());
             listNbt.add(entryNbt);
         }
-        nbt.put("data", listNbt);
+        nbt.put(KEY_DATA, listNbt);
         return nbt;
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        ListTag listNbt = nbt.getList("data", Tag.TAG_COMPOUND);
+        ListTag listNbt = nbt.getList(KEY_DATA, Tag.TAG_COMPOUND);
         for (Tag tag : listNbt) {
             CompoundTag entryNbt = (CompoundTag) tag;
-            config.put(Direction.values()[entryNbt.getInt("direction")], IOMode.values()[entryNbt.getInt("state")]);
+            config.put(Direction.values()[entryNbt.getInt(KEY_DIRECTION)], IOMode.values()[entryNbt.getInt(KEY_STATE)]);
         }
     }
+
+    // endregion
 
     // For providing sided access via a capability.
     private record SideAccess(IOConfig config, Direction side) implements ISideConfig {

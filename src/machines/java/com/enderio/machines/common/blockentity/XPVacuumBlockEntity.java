@@ -5,7 +5,6 @@ import com.enderio.core.common.sync.IntegerDataSlot;
 import com.enderio.core.common.sync.SyncMode;
 import com.enderio.machines.common.blockentity.base.VacuumMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
-import com.enderio.machines.common.config.client.MachinesClientConfig;
 import com.enderio.machines.common.menu.XPVacuumMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.ExperienceOrb;
@@ -19,7 +18,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.Nullable;
 
-import static com.enderio.base.common.util.ExperienceUtil.EXPTOFLUID;
+import static com.enderio.base.common.util.ExperienceUtil.EXP_TO_FLUID;
 
 public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb> {
     public XPVacuumBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
@@ -42,11 +41,11 @@ public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb>
 
     @Override
     public void handleEntity(ExperienceOrb xpe) {
-        int filled = getFluidTankNN().fill(new FluidStack(EIOFluids.XP_JUICE.get(), xpe.getValue() * EXPTOFLUID), FluidAction.EXECUTE);
-        if (filled == xpe.getValue() * EXPTOFLUID) {
+        int filled = getFluidTankNN().fill(new FluidStack(EIOFluids.XP_JUICE.get(), xpe.getValue() * EXP_TO_FLUID), FluidAction.EXECUTE);
+        if (filled == xpe.getValue() * EXP_TO_FLUID) {
             xpe.discard();
         } else {
-            xpe.value -= filled / ((float) EXPTOFLUID);
+            xpe.value -= filled / ((float) EXP_TO_FLUID);
         }
     }
 

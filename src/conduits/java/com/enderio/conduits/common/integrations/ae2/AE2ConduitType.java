@@ -1,13 +1,12 @@
 package com.enderio.conduits.common.integrations.ae2;
 
-import appeng.api.networking.IGridConnection;
 import appeng.api.networking.IInWorldGridNodeHost;
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.IConduitMenuData;
 import com.enderio.api.conduit.IConduitType;
+import com.enderio.api.conduit.TieredConduit;
 import com.enderio.api.conduit.ticker.IConduitTicker;
 import com.enderio.api.misc.Vector2i;
-import com.enderio.api.conduit.TieredConduit;
 import com.enderio.conduits.common.init.EnderConduitTypes;
 import com.enderio.conduits.common.integrations.Integrations;
 import dev.gigaherz.graph3.Graph;
