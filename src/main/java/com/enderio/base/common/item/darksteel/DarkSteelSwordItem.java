@@ -22,7 +22,7 @@ public class DarkSteelSwordItem extends SwordItem implements IAdvancedTooltipPro
 
     @Override
     public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
-        if (pTarget.isDeadOrDying() && pTarget.level().random.nextInt(100) < 7) {
+        if (pTarget.isDeadOrDying() && pTarget.level().random.nextFloat() < 0.07) {
             ItemStack skull = getSkull(pTarget);
             Containers.dropItemStack(pAttacker.level(), pAttacker.position().x, pAttacker.position().y, pAttacker.position().z, skull);
         }

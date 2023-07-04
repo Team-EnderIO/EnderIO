@@ -52,7 +52,7 @@ public class EnchanterRecipeProvider extends EnderRecipeProvider {
         build(Enchantments.BLOCK_EFFICIENCY, Tags.Items.DUSTS_REDSTONE, 12, 1, pFinishedRecipeConsumer);
         build(Enchantments.SILK_TOUCH, Tags.Items.SLIMEBALLS, 1, 1, pFinishedRecipeConsumer);
         build(Enchantments.UNBREAKING, Tags.Items.OBSIDIAN, 1, 1, pFinishedRecipeConsumer);
-        build(Enchantments.MENDING, EIOItems.EXPERIENCE_ROD.get(), 1, 1, pFinishedRecipeConsumer); //TODO "enderio:item_xp_transfer"
+        build(Enchantments.MENDING, EIOItems.EXPERIENCE_ROD.get(), 1, 1, pFinishedRecipeConsumer);
         build(Enchantments.BLOCK_FORTUNE, Tags.Items.GEMS_EMERALD, 1, 1, pFinishedRecipeConsumer);
         build(Enchantments.POWER_ARROWS, Items.FLINT, 12, 1, pFinishedRecipeConsumer);
         build(Enchantments.PUNCH_ARROWS, Tags.Items.STRING, 1, 1, pFinishedRecipeConsumer);
