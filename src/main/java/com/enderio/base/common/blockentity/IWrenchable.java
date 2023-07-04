@@ -3,7 +3,6 @@ package com.enderio.base.common.blockentity;
 import com.enderio.api.UseOnly;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraftforge.common.extensions.IForgeBlockEntity;
 import net.minecraftforge.fml.LogicalSide;
 
 /**

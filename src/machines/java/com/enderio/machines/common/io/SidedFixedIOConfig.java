@@ -50,8 +50,6 @@ public final class SidedFixedIOConfig implements IIOConfig {
         return new CompoundTag();
     }
 
-    // region Stubs
-
     @Override
     public void deserializeNBT(CompoundTag nbt) {
         // Not enabled.
@@ -72,6 +70,4 @@ public final class SidedFixedIOConfig implements IIOConfig {
 
     @Override
     public void invalidateCaps() {}
-
-    // endregion
 }

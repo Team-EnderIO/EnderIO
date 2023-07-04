@@ -8,6 +8,7 @@ import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.core.common.recipes.CountedIngredient;
 import com.enderio.core.common.sync.EnumDataSlot;
 import com.enderio.core.common.sync.SyncMode;
+import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingMachineTask;
 import com.enderio.machines.common.blockentity.task.host.CraftingMachineTaskHost;
@@ -285,32 +286,28 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
     @Override
     public void saveAdditional(CompoundTag pTag) {
-        super.saveAdditional(pTag);
-
         craftingTaskHost.save(pTag);
 
         if (restrictedMode()) {
-            pTag.putInt("Mode", this.mode.ordinal());
+            pTag.putInt(MachineNBTKeys.MACHINE_MODE, this.mode.ordinal());
         }
-
-        // TODO: Maybe a nicer way to serialize container stuff?
-        pTag.putInt("InputsTaken", craftingTaskHost.getContainer().getInputsTaken());
+        pTag.putInt(MachineNBTKeys.PROCESSED_INPUTS, craftingTaskHost.getContainer().getInputsTaken());
+        super.saveAdditional(pTag);
     }
 
     @Override
     public void load(CompoundTag pTag) {
-        super.load(pTag);
-
         craftingTaskHost.load(pTag);
 
         if (restrictedMode()) {
             try {
-                mode = AlloySmelterMode.values()[pTag.getInt("Mode")];
+                mode = AlloySmelterMode.values()[pTag.getInt(MachineNBTKeys.MACHINE_MODE)];
             } catch (IndexOutOfBoundsException ex) { // In case something happens in the future.
                 EnderIO.LOGGER.error("Invalid alloy smelter mode loaded from NBT. Ignoring.");
             }
         }
-        craftingTaskHost.getContainer().setInputsTaken(pTag.getInt("InputsTaken"));
+        craftingTaskHost.getContainer().setInputsTaken(pTag.getInt(MachineNBTKeys.PROCESSED_INPUTS));
+        super.load(pTag);
     }
 
     // endregion

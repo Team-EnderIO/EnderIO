@@ -1,7 +1,6 @@
 package com.enderio.base.common.network;
 
 import com.enderio.EnderIO;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
 

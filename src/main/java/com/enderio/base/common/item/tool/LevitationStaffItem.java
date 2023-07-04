@@ -5,7 +5,6 @@ import com.enderio.base.common.capability.AcceptingFluidItemHandler;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.tag.EIOTags;
-import com.enderio.core.common.item.ITabVariants;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -61,7 +60,7 @@ public class LevitationStaffItem extends PoweredToggledItem {
 
     @Override
     protected void onTickWhenActive(Player player, ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
-        player.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 1)); // TODO: An upgrade to make it faster?
+        player.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 1));
     }
 
     @Nullable

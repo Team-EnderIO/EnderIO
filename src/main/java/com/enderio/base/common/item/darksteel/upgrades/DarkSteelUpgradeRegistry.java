@@ -56,7 +56,7 @@ public final class DarkSteelUpgradeRegistry {
 
     public void writeUpgradeToItemStack(ItemStack stack, IDarkSteelUpgrade upgrade) {
         CompoundTag rootTag = new CompoundTag();
-        rootTag.putString("name", upgrade.getSerializedName());
+        rootTag.putString("name", upgrade.getName());
         rootTag.put("data", upgrade.serializeNBT());
         stack.getOrCreateTag().put(UPGRADE_IN_STACK_KEY, rootTag);
     }

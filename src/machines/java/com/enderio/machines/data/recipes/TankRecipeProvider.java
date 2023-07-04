@@ -3,6 +3,7 @@ package com.enderio.machines.data.recipes;
 import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.data.recipe.RecipeDataUtil;
 import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonObject;
@@ -15,7 +16,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -55,8 +55,6 @@ public class TankRecipeProvider extends EnderRecipeProvider {
         buildFilling(Ingredient.of(Items.GREEN_CONCRETE_POWDER), Items.GREEN_CONCRETE, new FluidStack(Fluids.WATER, 1000), pWriter);
         buildFilling(Ingredient.of(Items.RED_CONCRETE_POWDER), Items.RED_CONCRETE, new FluidStack(Fluids.WATER, 1000), pWriter);
         buildFilling(Ingredient.of(Items.BLACK_CONCRETE_POWDER), Items.BLACK_CONCRETE, new FluidStack(Fluids.WATER, 1000), pWriter);
-
-        // TODO: Are we doing upgrade activation with XP, or changing for anvil?
     }
 
     protected void buildEmptying(Ingredient input, ItemLike output, FluidStack fluid, Consumer<FinishedRecipe> finishedRecipeConsumer) {
@@ -99,9 +97,7 @@ public class TankRecipeProvider extends EnderRecipeProvider {
 
         @Override
         protected Set<String> getModDependencies() {
-            Set<String> mods = new HashSet<>();
-            // TODO: 1.19: Ingredient#getItems cannot be called during datagen. Needs a new solution.
-            //            inputs.stream().map(ing -> Arrays.stream(ing.getItems()).map(item -> mods.add(ForgeRegistries.ITEMS.getKey(item.getItem()).getNamespace())));
+            Set<String> mods = new HashSet<>(RecipeDataUtil.getIngredientModIds(input));
             mods.add(ForgeRegistries.ITEMS.getKey(output).getNamespace());
             mods.add(ForgeRegistries.FLUIDS.getKey(fluid.getFluid()).getNamespace());
             return mods;

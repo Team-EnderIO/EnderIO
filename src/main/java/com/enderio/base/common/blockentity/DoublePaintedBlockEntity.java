@@ -1,5 +1,6 @@
 package com.enderio.base.common.blockentity;
 
+import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.util.PaintUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -11,8 +12,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.registries.ForgeRegistries;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.util.Objects;
 
 public class DoublePaintedBlockEntity extends SinglePaintedBlockEntity {
@@ -62,8 +63,8 @@ public class DoublePaintedBlockEntity extends SinglePaintedBlockEntity {
     @Override
     protected void readPaint(CompoundTag tag) {
         super.readPaint(tag);
-        if (tag.contains("paint2")) {
-            paint2 = PaintUtils.getBlockFromRL(tag.getString("paint2"));
+        if (tag.contains(EIONBTKeys.PAINT_2)) {
+            paint2 = PaintUtils.getBlockFromRL(tag.getString(EIONBTKeys.PAINT_2));
             if (level != null) {
                 if (level.isClientSide) {
                     requestModelDataUpdate();
@@ -78,7 +79,7 @@ public class DoublePaintedBlockEntity extends SinglePaintedBlockEntity {
     protected void writePaint(CompoundTag tag) {
         super.writePaint(tag);
         if (paint2 != null) {
-            tag.putString("paint2", Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(paint2)).toString());
+            tag.putString(EIONBTKeys.PAINT_2, Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(paint2)).toString());
         }
     }
 }

@@ -14,12 +14,12 @@ public class FloatDataSlot extends EnderDataSlot<Float> {
     @Override
     public CompoundTag toFullNBT() {
         CompoundTag tag = new CompoundTag();
-        tag.putFloat("value", getter().get());
+        tag.putFloat(KEY_VALUE, getter().get());
         return tag;
     }
 
     @Override
     protected Float fromNBT(CompoundTag nbt) {
-        return nbt.getFloat("value");
+        return nbt.getFloat(KEY_VALUE);
     }
 }
