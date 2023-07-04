@@ -1,10 +1,12 @@
 package com.enderio.base.common.block.painted;
 
+import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.blockentity.DoublePaintedBlockEntity;
 import com.enderio.base.common.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
@@ -46,11 +48,11 @@ public class PaintedSlabBlock extends SlabBlock implements EntityBlock, IPainted
         if (level.getBlockEntity(pos) instanceof DoublePaintedBlockEntity paintedBlockEntity) {
             CompoundTag tag = new CompoundTag();
             if (target.getLocation().y - pos.getY() > 0.5) {
-                tag.putString("paint", ForgeRegistries.BLOCKS.getKey(paintedBlockEntity.getPaint2()).toString());
+                tag.putString(EIONBTKeys.PAINT, ForgeRegistries.BLOCKS.getKey(paintedBlockEntity.getPaint2()).toString());
             } else {
-                tag.putString("paint", ForgeRegistries.BLOCKS.getKey(paintedBlockEntity.getPaint()).toString());
+                tag.putString(EIONBTKeys.PAINT, ForgeRegistries.BLOCKS.getKey(paintedBlockEntity.getPaint()).toString());
             }
-            stack.getOrCreateTag().put("BlockEntityTag", tag);
+            stack.getOrCreateTag().put(BlockItem.BLOCK_ENTITY_TAG, tag);
         }
         return stack;
     }

@@ -3,6 +3,7 @@ package com.enderio.base.common.block.painted;
 import com.enderio.base.common.blockentity.SinglePaintedBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.BlockGetter;
@@ -57,7 +58,7 @@ public interface IPaintedBlock extends IForgeBlock {
         ItemStack stack = new ItemStack(itemLike);
         BlockEntity be = level.getBlockEntity(pos);
         if (be != null) {
-            stack.getOrCreateTag().put("BlockEntityTag", be.saveWithoutMetadata());
+            stack.getOrCreateTag().put(BlockItem.BLOCK_ENTITY_TAG, be.saveWithoutMetadata());
         }
         return stack;
     }
