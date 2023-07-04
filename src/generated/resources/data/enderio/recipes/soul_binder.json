@@ -5,8 +5,8 @@
     "C": {
       "item": "enderio:ensouled_chassis"
     },
-    "H": {
-      "tag": "forge:heads"
+    "G": {
+      "item": "enderio:energized_gear"
     },
     "I": {
       "item": "enderio:soularium_ingot"
@@ -19,8 +19,8 @@
     }
   },
   "pattern": [
-    "IHI",
-    "VCV",
+    "IVI",
+    "GCG",
     "IZI"
   ],
   "result": {
