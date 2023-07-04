@@ -2,7 +2,6 @@ package com.enderio.base.client;
 
 import com.enderio.EnderIO;
 import com.enderio.base.client.model.PaintedBlockGeometry;
-import com.enderio.base.client.renderer.glider.ActiveGliderRenderLayer;
 import com.enderio.base.client.particle.RangeParticle;
 import com.enderio.base.client.renderer.glider.ActiveGliderRenderLayer;
 import com.enderio.base.client.renderer.item.GlassIconDecorator;
@@ -15,7 +14,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;

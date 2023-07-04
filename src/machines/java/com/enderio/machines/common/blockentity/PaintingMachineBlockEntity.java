@@ -2,8 +2,8 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
-import com.enderio.base.EIONBTKeys;
 import com.enderio.api.io.energy.EnergyIOMode;
+import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.advancement.PaintingTrigger;
 import com.enderio.base.common.block.painted.IPaintedBlock;
 import com.enderio.core.common.recipes.OutputStack;

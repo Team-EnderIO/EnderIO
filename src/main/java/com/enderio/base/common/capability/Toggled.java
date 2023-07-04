@@ -5,7 +5,6 @@ import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.init.EIOCapabilities;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.util.INBTSerializable;
 
 public class Toggled implements IToggled {
 

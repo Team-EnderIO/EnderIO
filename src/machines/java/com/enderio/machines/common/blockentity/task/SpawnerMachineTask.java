@@ -12,7 +12,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.ForgeEventFactory;
@@ -77,18 +80,6 @@ public class SpawnerMachineTask implements IPoweredMachineTask {
     @Override
     public boolean isCompleted() {
         return complete;
-    }
-
-    @Override
-    public CompoundTag serializeNBT() {
-        CompoundTag nbt = new CompoundTag();
-        nbt.putInt(KEY_ENERGY_CONSUMED, energyConsumed);
-        return nbt;
-    }
-
-    @Override
-    public void deserializeNBT(CompoundTag nbt) {
-        energyConsumed = nbt.getInt(KEY_ENERGY_CONSUMED);
     }
 
     /**
@@ -221,6 +212,24 @@ public class SpawnerMachineTask implements IPoweredMachineTask {
         }
         return false;
     }
+
+    // region Serialization
+
+    private static final String KEY_ENERGY_CONSUMED = "EnergyConsumed";
+
+    @Override
+    public CompoundTag serializeNBT() {
+        CompoundTag nbt = new CompoundTag();
+        nbt.putInt(KEY_ENERGY_CONSUMED, energyConsumed);
+        return nbt;
+    }
+
+    @Override
+    public void deserializeNBT(CompoundTag nbt) {
+        energyConsumed = nbt.getInt(KEY_ENERGY_CONSUMED);
+    }
+
+    // endregion
 
     // TODO: Might want to move this to its own file in future.
     public enum SpawnType {

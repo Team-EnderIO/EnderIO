@@ -1,7 +1,5 @@
 package com.enderio.api.capacitor;
 
-import net.minecraft.nbt.Tag;
-
 import java.util.Map;
 
 // TODO: End game capacitor fabrication with mob fighting? Souls? Capacitor sacrifice?

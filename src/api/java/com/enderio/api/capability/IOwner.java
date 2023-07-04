@@ -1,7 +1,6 @@
 package com.enderio.api.capability;
 
 import com.mojang.authlib.GameProfile;
-import net.minecraft.nbt.CompoundTag;
 
 /**
  * A capability holding a game profile declaring the owner of something.

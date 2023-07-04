@@ -3,7 +3,6 @@ package com.enderio.base.common.item.misc;
 import com.enderio.api.capability.IMultiCapabilityItem;
 import com.enderio.api.capability.MultiCapabilityProvider;
 import com.enderio.api.capability.StoredEntityData;
-import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.capability.EntityStorageItemStack;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOItems;
