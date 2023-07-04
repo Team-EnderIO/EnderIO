@@ -126,7 +126,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .shaped(RecipeCategory.MISC, MachineBlocks.IMPULSE_HOPPER.get())
             .define('I', EIOItems.COPPER_ALLOY_INGOT.get())
             .define('R', EIOItems.REDSTONE_ALLOY_INGOT.get())
-            .define('G', EIOItems.GEAR_ENERGIZED.get())
+            .define('G', EIOItems.GEAR_IRON.get())
             .define('C', EIOBlocks.VOID_CHASSIS.get())
             .define('H', Items.HOPPER)
             .pattern("IHI")
@@ -141,15 +141,17 @@ public class MachineRecipeProvider extends RecipeProvider {
             .define('I', EIOItems.SOULARIUM_INGOT.get())
             .define('C', EIOBlocks.ENSOULED_CHASSIS.get())
             .define('H', Tags.Items.HEADS)
+            .define('Z', EIOItems.Z_LOGIC_CONTROLLER)
+            .define('V', EIOItems.EMPTY_SOUL_VIAL)
             .pattern("IHI")
-            .pattern("HCH")
-            .pattern("IHI")
+            .pattern("VCV")
+            .pattern("IZI")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.ENSOULED_CHASSIS.get()))
             .save(finishedRecipeConsumer);
 
         ShapedEntityStorageRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.POWERED_SPAWNER)
-            .define('I', EIOItems.CONDUCTIVE_ALLOY_INGOT)
+            .define('I', EIOItems.SOULARIUM_INGOT) //TODO Maybe also soulchains?
             .define('B', EIOItems.BROKEN_SPAWNER)
             .define('C', EIOBlocks.ENSOULED_CHASSIS)
             .define('Z', EIOItems.Z_LOGIC_CONTROLLER)

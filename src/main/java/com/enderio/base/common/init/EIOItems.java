@@ -7,6 +7,7 @@ import com.enderio.base.common.item.capacitors.FixedCapacitorItem;
 import com.enderio.base.common.item.capacitors.LootCapacitorItem;
 import com.enderio.base.common.item.darksteel.DarkSteelAxeItem;
 import com.enderio.base.common.item.darksteel.DarkSteelPickaxeItem;
+import com.enderio.base.common.item.darksteel.DarkSteelSwordItem;
 import com.enderio.base.common.item.darksteel.DarkSteelUpgradeItem;
 import com.enderio.base.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
 import com.enderio.base.common.item.darksteel.upgrades.EmpoweredUpgrade;
@@ -40,12 +41,10 @@ import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
-import net.minecraft.Util;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.Tiers;
@@ -55,9 +54,7 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.TierSortingRegistry;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 @SuppressWarnings("unused")
@@ -374,6 +371,12 @@ public class EIOItems {
     public static final Tier DARK_STEEL_TIER = TierSortingRegistry.registerTier(
         new ForgeTier(3, 2000, 8.0F, 3, 25, EIOTags.Blocks.DARK_STEEL_TIER, () -> Ingredient.of(EIOItems.DARK_STEEL_INGOT.get())),
         EnderIO.loc("dark_steel_tier"), List.of(Tiers.DIAMOND), List.of(Tiers.NETHERITE));
+
+    public static final ItemEntry<DarkSteelSwordItem> DARK_STEEL_SWORD = REGISTRATE
+        .item("dark_steel_sword", DarkSteelSwordItem::new)
+        .tab(EIOCreativeTabs.GEAR)
+        .lang("The Ender")
+        .register();
 
     public static final ItemEntry<DarkSteelPickaxeItem> DARK_STEEL_PICKAXE = REGISTRATE
         .item("dark_steel_pickaxe", DarkSteelPickaxeItem::new)

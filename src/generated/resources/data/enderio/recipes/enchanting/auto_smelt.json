@@ -2,8 +2,8 @@
   "type": "enderio:enchanting",
   "amount": 16,
   "cost_multiplier": 1,
-  "enchantment": "minecraft:fire_protection",
+  "enchantment": "enderio:auto_smelt",
   "input": {
-    "item": "minecraft:magma_cream"
+    "item": "minecraft:blaze_powder"
   }
 }

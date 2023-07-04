@@ -10,12 +10,18 @@
     },
     "I": {
       "item": "enderio:soularium_ingot"
+    },
+    "V": {
+      "item": "enderio:empty_soul_vial"
+    },
+    "Z": {
+      "item": "enderio:z_logic_controller"
     }
   },
   "pattern": [
     "IHI",
-    "HCH",
-    "IHI"
+    "VCV",
+    "IZI"
   ],
   "result": {
     "item": "enderio:soul_binder"
