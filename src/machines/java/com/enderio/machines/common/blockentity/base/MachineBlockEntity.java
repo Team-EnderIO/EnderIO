@@ -12,6 +12,7 @@ import com.enderio.core.common.sync.EnumDataSlot;
 import com.enderio.core.common.sync.NBTSerializableDataSlot;
 import com.enderio.core.common.sync.SyncMode;
 import com.enderio.core.common.util.PlayerInteractionUtil;
+import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.io.IOConfig;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
@@ -524,14 +525,14 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         super.saveAdditional(pTag);
 
         // Save io config.
-        pTag.put("io_config", getIOConfig().serializeNBT());
+        pTag.put(MachineNBTKeys.IO_CONFIG, getIOConfig().serializeNBT());
 
         if (supportsRedstoneControl()) {
-            pTag.putInt("redstone", redstoneControl.ordinal());
+            pTag.putInt(MachineNBTKeys.REDSTONE_CONTROL, redstoneControl.ordinal());
         }
 
-        if (inventory != null) {
-            pTag.put("inventory", inventory.serializeNBT());
+        if (this.inventory != null) {
+            pTag.put(MachineNBTKeys.ITEMS, inventory.serializeNBT());
         }
 
         if (fluidTank != null) {
@@ -542,14 +543,14 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     @Override
     public void load(CompoundTag pTag) {
         // Load io config.
-        ioConfig.deserializeNBT(pTag.getCompound("io_config"));
+        ioConfig.deserializeNBT(pTag.getCompound(MachineNBTKeys.IO_CONFIG));
 
         if (supportsRedstoneControl()) {
-            redstoneControl = RedstoneControl.values()[pTag.getInt("redstone")];
+            redstoneControl = RedstoneControl.values()[pTag.getInt(MachineNBTKeys.REDSTONE_CONTROL)];
         }
 
-        if (inventory != null) {
-            inventory.deserializeNBT(pTag.getCompound("inventory"));
+        if (this.inventory != null) {
+            inventory.deserializeNBT(pTag.getCompound(MachineNBTKeys.ITEMS));
         }
 
         if (fluidTank != null) {

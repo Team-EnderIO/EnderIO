@@ -1,9 +1,8 @@
 package com.enderio.base.common.integrations.jei.extension;
 
-import com.enderio.api.capability.IEntityStorage;
 import com.enderio.api.capability.StoredEntityData;
 import com.enderio.base.common.init.EIOCapabilities;
-import com.enderio.base.common.integrations.jei.util.RecipeUtil;
+import com.enderio.base.common.integrations.jei.EnderIOJEI;
 import com.enderio.base.common.recipe.ShapedEntityStorageRecipe;
 import com.enderio.base.common.util.EntityCaptureUtils;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -28,7 +27,7 @@ public class ShapedEntityStorageCategoryExtension implements ICraftingCategoryEx
 
         var allCapturableEntities = EntityCaptureUtils.getCapturableEntities();
 
-        ItemStack resultItem = RecipeUtil.getResultItem(recipe);
+        ItemStack resultItem = EnderIOJEI.getResultItem(recipe);
         List<ItemStack> results = allCapturableEntities.stream().map(e -> {
             ItemStack result = resultItem.copy();
 

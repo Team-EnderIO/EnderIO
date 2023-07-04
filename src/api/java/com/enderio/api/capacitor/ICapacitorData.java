@@ -1,8 +1,5 @@
 package com.enderio.api.capacitor;
 
-import com.enderio.api.nbt.INamedNBTSerializable;
-import net.minecraft.nbt.Tag;
-
 import java.util.Map;
 
 // TODO: End game capacitor fabrication with mob fighting? Souls? Capacitor sacrifice?
@@ -14,7 +11,7 @@ import java.util.Map;
  * This defines a capacitor that stores.
  * Can be attached to an item as a capability.
  */
-public interface ICapacitorData extends INamedNBTSerializable<Tag> {
+public interface ICapacitorData {
     /**
      * Get the base modifier of the capacitor.
      */
@@ -30,10 +27,4 @@ public interface ICapacitorData extends INamedNBTSerializable<Tag> {
      * @implNote When implementing this, only return modifiers that have been changed, don't return 1's as these will pollute tooltips.
      */
     Map<CapacitorModifier, Float> getAllModifiers();
-
-    // Allows the interface to be serialized as a capability.
-    @Override
-    default String getSerializedName() {
-        return "CapacitorData";
-    }
 }

@@ -2,9 +2,6 @@ package com.enderio.base.data.advancement;
 
 import com.enderio.EnderIO;
 import com.enderio.base.common.advancement.PaintingTrigger;
-import com.enderio.base.common.advancement.UseGliderAdvancementBenefit;
-import com.enderio.base.common.advancement.UseGliderTrigger;
-import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.lang.EIOLang;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.FrameType;

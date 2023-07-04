@@ -29,14 +29,14 @@ public class ListDataSlot<T, V extends Tag> extends EnderDataSlot<List<T>> {
         for (T t : getter().get()) {
             listTag.add(serializer.apply(t));
         }
-        tag.put("list", listTag);
+        tag.put(KEY_VALUE, listTag);
         return tag;
     }
 
     @Override
     protected List<T> fromNBT(CompoundTag nbt) {
         List<T> list = new ArrayList<>();
-        for (Tag tag : (ListTag) nbt.get("list")) {
+        for (Tag tag : (ListTag) nbt.get(KEY_VALUE)) {
             list.add(deSerializer.apply((V) tag));
         }
         return list;

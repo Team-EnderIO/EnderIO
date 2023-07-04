@@ -1,5 +1,6 @@
 package com.enderio.base.common.blockentity;
 
+import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.block.light.Light;
 import com.enderio.base.common.block.light.PoweredLight;
 import com.enderio.base.common.init.EIOBlocks;
@@ -184,14 +185,14 @@ public class PoweredLightBlockEntity extends BlockEntity{
 	
 	@Override
 	protected void saveAdditional(CompoundTag tag) {
-		tag.putBoolean("active", active);
+		tag.putBoolean(EIONBTKeys.ACTIVE, active);
 		super.saveAdditional(tag);
 	}
 	
 	@Override
 	public void load(CompoundTag tag) {
 		super.load(tag);
-		this.active = tag.getBoolean("active");
+		this.active = tag.getBoolean(EIONBTKeys.ACTIVE);
 	}
 	
 	@Override

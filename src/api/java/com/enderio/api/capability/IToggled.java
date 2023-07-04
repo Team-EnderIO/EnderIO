@@ -4,7 +4,6 @@ package com.enderio.api.capability;
  * Defines something that can be toggled, like an item.
  */
 public interface IToggled {
-
     /**
      * Get whether the toggleable is enabled.
      */

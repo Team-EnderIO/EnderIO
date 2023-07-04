@@ -35,7 +35,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-import static com.enderio.base.common.util.ExperienceUtil.EXPTOFLUID;
+import static com.enderio.base.common.util.ExperienceUtil.EXP_TO_FLUID;
 
 public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
 
@@ -155,7 +155,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
 
                 var fluidTank = getFluidTankNN();
                 int leftover = ExperienceUtil.getLevelFromFluidWithLeftover(fluidTank.getFluidAmount(), 0, craftingTaskHost.getContainer().getNeededXP()).y();
-                fluidTank.drain(fluidTank.getFluidAmount() - leftover * EXPTOFLUID, IFluidHandler.FluidAction.EXECUTE);
+                fluidTank.drain(fluidTank.getFluidAmount() - leftover * EXP_TO_FLUID, IFluidHandler.FluidAction.EXECUTE);
             }
 
             @Override

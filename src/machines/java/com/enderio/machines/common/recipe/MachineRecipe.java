@@ -10,10 +10,17 @@ import java.util.List;
 
 public interface MachineRecipe<C extends Container> extends EnderRecipe<C> {
     /**
+     * Gets the basic energy cost, irrespective of machine configuration.
+     */
+    int getBaseEnergyCost();
+
+    /**
      * Get the energy cost of a machine.
      * @param container Container/context. This is the state of the container *after* inputs are taken.
      */
-    int getEnergyCost(C container);
+    default int getEnergyCost(C container) {
+        return getBaseEnergyCost();
+    }
 
     /**
      * Craft outputs for this recipe.
@@ -28,22 +35,20 @@ public interface MachineRecipe<C extends Container> extends EnderRecipe<C> {
     List<OutputStack> getResultStacks(RegistryAccess registryAccess);
 
     /**
-     * @deprecated Replaced by {@link #craft(Container)} to support multiple outputs and output types.
+     * @deprecated Replaced by {@link #craft(Container, RegistryAccess)} to support multiple outputs and output types.
      */
     @Deprecated
     @Override
     default ItemStack assemble(C container, RegistryAccess registryAccess) {
-        // TODO: Logging..
         return ItemStack.EMPTY;
     }
 
     /**
-     * @deprecated Should not be used.
+     * @deprecated Should use {@link #getResultStacks(RegistryAccess)} instead.
      */
     @Deprecated
     @Override
     default ItemStack getResultItem(RegistryAccess registryAccess) {
-        // TODO: Logging..
         return ItemStack.EMPTY;
     }
 }

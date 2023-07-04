@@ -2,7 +2,6 @@ package com.enderio.conduits.common.blockentity;
 
 import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.IConduitType;
-import com.enderio.conduits.common.init.EnderConduitTypes;
 
 public sealed interface RightClickAction permits RightClickAction.Upgrade, RightClickAction.Blocked, RightClickAction.Insert{
      record Upgrade(IConduitType<?> notInConduit) implements RightClickAction {

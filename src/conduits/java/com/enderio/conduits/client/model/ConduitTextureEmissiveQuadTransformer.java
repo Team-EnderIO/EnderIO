@@ -1,6 +1,5 @@
 package com.enderio.conduits.client.model;
 
-import com.enderio.api.conduit.IConduitType;
 import com.enderio.core.client.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;

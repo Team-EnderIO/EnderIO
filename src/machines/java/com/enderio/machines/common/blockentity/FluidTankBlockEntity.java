@@ -18,7 +18,9 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -30,7 +32,6 @@ import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
-
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -38,8 +39,6 @@ import java.util.Optional;
 // TODO: Rewrite this with tasks?
 //       Could implement a task for each thing it currently has in the If's
 public abstract class FluidTankBlockEntity extends MachineBlockEntity {
-
-    public static final String FLUID_TAG_KEY = "fluid";
 
     public static class Standard extends FluidTankBlockEntity {
         public static final int CAPACITY = 16 * FluidType.BUCKET_VOLUME;
@@ -260,10 +259,10 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
 
                 int damage = tool.getDamageValue();
                 int xpAmount = (int) Math.floor(damage / tool.getXpRepairRatio());
-                int fluidAmount = xpAmount * ExperienceUtil.EXPTOFLUID;
+                int fluidAmount = xpAmount * ExperienceUtil.EXP_TO_FLUID;
 
                 FluidStack drainedXp = fluidTank.drain(fluidAmount, IFluidHandler.FluidAction.EXECUTE);
-                int repairAmount = (int) Math.floor(drainedXp.getAmount() * tool.getXpRepairRatio() / ExperienceUtil.EXPTOFLUID);
+                int repairAmount = (int) Math.floor(drainedXp.getAmount() * tool.getXpRepairRatio() / ExperienceUtil.EXP_TO_FLUID);
                 repairedTool.setDamageValue(Math.max(0, damage - repairAmount));
 
                 FLUID_DRAIN_INPUT.setStackInSlot(this, ItemStack.EMPTY);

@@ -173,6 +173,14 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
 
     // region Serialization
 
+    private static final String KEY_RECIPE_ID = "RecipeId";
+    private static final String KEY_PROGRESS_MADE = "ProgressMade";
+    private static final String KEY_PROGRESS_REQUIRED = "ProgressRequired";
+    private static final String KEY_HAS_COLLECTED_INPUTS = "HasCollectedInputs";
+    private static final String KEY_IS_COMPLETE = "IsComplete";
+    private static final String KEY_HAS_DETERMINED_OUTPUTS = "HasDeterminedOutputs";
+    private static final String KEY_OUTPUTS = "Outputs";
+
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
@@ -182,19 +190,19 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
             return tag;
         }
 
-        tag.putString("RecipeId", recipe.getId().toString());
-        tag.putInt("ProgressMade", progressMade);
-        tag.putInt("ProgressRequired", progressRequired);
-        tag.putBoolean("HasConsumedInputs", hasConsumedInputs);
-        tag.putBoolean("IsComplete", isComplete);
+        tag.putString(KEY_RECIPE_ID, recipe.getId().toString());
+        tag.putInt(KEY_PROGRESS_MADE, progressMade);
+        tag.putInt(KEY_PROGRESS_REQUIRED, progressRequired);
+        tag.putBoolean(KEY_HAS_COLLECTED_INPUTS, hasConsumedInputs);
+        tag.putBoolean(KEY_IS_COMPLETE, isComplete);
 
-        tag.putBoolean("HasDeterminedOutputs", hasDeterminedOutputs);
+        tag.putBoolean(KEY_HAS_DETERMINED_OUTPUTS, hasDeterminedOutputs);
         if (hasDeterminedOutputs) {
             ListTag outputsNbt = new ListTag();
             for (OutputStack stack : outputs) {
                 outputsNbt.add(stack.serializeNBT());
             }
-            tag.put("Outputs", outputsNbt);
+            tag.put(KEY_OUTPUTS, outputsNbt);
         }
 
         return tag;
@@ -202,15 +210,15 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        recipe = loadRecipe(new ResourceLocation(nbt.getString("RecipeId")));
-        progressMade = nbt.getInt("ProgressMade");
-        progressRequired = nbt.getInt("ProgressRequired");
-        hasConsumedInputs = nbt.getBoolean("HasConsumedInputs");
-        isComplete = nbt.getBoolean("IsComplete");
+        recipe = loadRecipe(new ResourceLocation(nbt.getString(KEY_RECIPE_ID)));
+        progressMade = nbt.getInt(KEY_PROGRESS_MADE);
+        progressRequired = nbt.getInt(KEY_PROGRESS_REQUIRED);
+        hasConsumedInputs = nbt.getBoolean(KEY_HAS_COLLECTED_INPUTS);
+        isComplete = nbt.getBoolean(KEY_IS_COMPLETE);
 
-        hasDeterminedOutputs = nbt.getBoolean("HasDeterminedOutputs");
+        hasDeterminedOutputs = nbt.getBoolean(KEY_HAS_DETERMINED_OUTPUTS);
         if (hasDeterminedOutputs) {
-            ListTag outputsNbt = nbt.getList("Outputs", Tag.TAG_COMPOUND);
+            ListTag outputsNbt = nbt.getList(KEY_OUTPUTS, Tag.TAG_COMPOUND);
             outputs = new ArrayList<>();
             for (Tag tag : outputsNbt) {
                 outputs.add(OutputStack.fromNBT((CompoundTag) tag));

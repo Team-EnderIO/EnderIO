@@ -14,7 +14,6 @@ import net.minecraft.world.level.block.CraftingTableBlock;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-
 import org.jetbrains.annotations.Nullable;
 
 public class PaintedCraftingTableBlock extends CraftingTableBlock implements EntityBlock, IPaintedBlock {

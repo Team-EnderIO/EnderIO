@@ -1,17 +1,9 @@
 package com.enderio.api.capability;
 
-import com.enderio.api.nbt.INamedNBTSerializable;
-import net.minecraft.nbt.Tag;
-
 import java.util.Collection;
 import java.util.Optional;
 
-public interface IDarkSteelUpgradable extends INamedNBTSerializable<Tag> {
-
-    @Override
-    default String getSerializedName() {
-        return "DarkSteelUpgradable";
-    }
+public interface IDarkSteelUpgradable {
 
     /**
      * Note that this will blindly apply the upgrade regardless of validity, call

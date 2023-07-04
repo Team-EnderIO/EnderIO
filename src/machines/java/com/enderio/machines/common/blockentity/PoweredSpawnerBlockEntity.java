@@ -10,6 +10,7 @@ import com.enderio.core.common.sync.BooleanDataSlot;
 import com.enderio.core.common.sync.EnumDataSlot;
 import com.enderio.core.common.sync.ResourceLocationDataSlot;
 import com.enderio.core.common.sync.SyncMode;
+import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.task.IMachineTask;
 import com.enderio.machines.common.blockentity.task.SpawnerMachineTask;
@@ -171,14 +172,14 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
     @Override
     public void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
-        pTag.put("EntityStorage", entityData.serializeNBT());
+        pTag.put(MachineNBTKeys.ENTITY_STORAGE, entityData.serializeNBT());
         taskHost.save(pTag);
     }
 
     @Override
     public void load(CompoundTag pTag) {
         super.load(pTag);
-        entityData.deserializeNBT(pTag.getCompound("EntityStorage"));
+        entityData.deserializeNBT(pTag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
         taskHost.load(pTag);
     }
 

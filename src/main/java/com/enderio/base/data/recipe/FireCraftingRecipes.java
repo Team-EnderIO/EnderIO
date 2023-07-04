@@ -5,7 +5,6 @@ import com.enderio.base.common.init.EIORecipes;
 import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
@@ -53,8 +52,7 @@ public class FireCraftingRecipes extends EnderRecipeProvider {
 
         @Override
         protected Set<String> getModDependencies() {
-            // TODO: Do we care for this?
-            return Set.of();
+            return Set.of(lootTable.getNamespace());
         }
 
         @Override

@@ -10,7 +10,6 @@ import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.SlabType;
-
 import org.jetbrains.annotations.Nullable;
 
 public class PaintedSlabBlock extends SlabBlock implements EntityBlock, IPaintedBlock {

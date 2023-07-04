@@ -14,12 +14,12 @@ public class IntegerDataSlot extends EnderDataSlot<Integer> {
     @Override
     public CompoundTag toFullNBT() {
         CompoundTag tag = new CompoundTag();
-        tag.putInt("value", getter().get());
+        tag.putInt(KEY_VALUE, getter().get());
         return tag;
     }
 
     @Override
     protected Integer fromNBT(CompoundTag nbt) {
-        return nbt.getInt("value");
+        return nbt.getInt(KEY_VALUE);
     }
 }

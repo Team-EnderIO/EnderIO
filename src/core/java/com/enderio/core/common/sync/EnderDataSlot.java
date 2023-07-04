@@ -37,6 +37,10 @@ public abstract class EnderDataSlot<T> {
         return Optional.of(newNBT);
     }
 
+    // region Serialization
+
+    protected static final String KEY_VALUE = "Value";
+
     /**
      * Make sure to always retain a valid state, even when this method throws an Exception and only throw an Exception if invalid data is sent, as Clients can have full control over incoming data
      * @param tag
@@ -48,4 +52,6 @@ public abstract class EnderDataSlot<T> {
     public abstract CompoundTag toFullNBT();
 
     protected abstract T fromNBT(CompoundTag nbt);
+
+    // endregion
 }

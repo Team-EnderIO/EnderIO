@@ -2,6 +2,7 @@ package com.enderio.core.common.blockentity;
 
 import com.enderio.api.UseOnly;
 import com.enderio.api.capability.IEnderCapabilityProvider;
+import com.enderio.core.CoreNBTKeys;
 import com.enderio.core.common.sync.EnderDataSlot;
 import com.enderio.core.common.sync.SyncMode;
 import net.minecraft.core.BlockPos;
@@ -105,7 +106,7 @@ public class EnderBlockEntity extends BlockEntity {
 
                 if (optionalNBT.isPresent()) {
                     CompoundTag elementNBT = optionalNBT.get();
-                    elementNBT.putInt("dataSlotIndex", i);
+                    elementNBT.putInt(CoreNBTKeys.SYNC_DATA_SLOT_INDEX, i);
                     listNBT.add(elementNBT);
                 }
             }
@@ -114,18 +115,18 @@ public class EnderBlockEntity extends BlockEntity {
         if (listNBT.isEmpty())
             return null;
 
-        nbt.put("data", listNBT);
+        nbt.put(CoreNBTKeys.SYNC_DATA, listNBT);
         return new ClientboundBlockEntityDataPacket(getBlockPos(), getType(), nbt);
     }
 
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         CompoundTag nbt = pkt.getTag();
-        if (nbt != null && nbt.contains("data", Tag.TAG_LIST)) {
-            ListTag listNBT = nbt.getList("data", Tag.TAG_COMPOUND);
+        if (nbt != null && nbt.contains(CoreNBTKeys.SYNC_DATA, Tag.TAG_LIST)) {
+            ListTag listNBT = nbt.getList(CoreNBTKeys.SYNC_DATA, Tag.TAG_COMPOUND);
             for (Tag tag : listNBT) {
                 CompoundTag elementNBT = (CompoundTag) tag;
-                int dataSlotIndex = elementNBT.getInt("dataSlotIndex");
+                int dataSlotIndex = elementNBT.getInt(CoreNBTKeys.SYNC_DATA_SLOT_INDEX);
                 dataSlots.get(dataSlotIndex).handleNBT(elementNBT);
             }
             afterDataSync.forEach(Runnable::run);
