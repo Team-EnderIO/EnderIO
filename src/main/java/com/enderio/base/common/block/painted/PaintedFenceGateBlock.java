@@ -28,13 +28,7 @@ public class PaintedFenceGateBlock extends FenceGateBlock implements EntityBlock
 
     @Override
     public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player) {
-        ItemStack stack = new ItemStack(this);
-        BlockEntity be = level.getBlockEntity(pos);
-        if (be != null) {
-
-            stack.getOrCreateTag().put("BlockEntityTag", be.saveWithoutMetadata());
-        }
-        return stack;
+        return getPaintedStack(level, pos, this);
     }
 
 }

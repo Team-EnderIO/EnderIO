@@ -3,12 +3,15 @@ package com.enderio.base.common.block.painted;
 import com.enderio.base.common.blockentity.SinglePaintedBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.common.extensions.IForgeBlock;
@@ -48,5 +51,14 @@ public interface IPaintedBlock extends IForgeBlock {
         }
         //sane default (definitely not air)
         return Blocks.OAK_PLANKS;
+    }
+
+    default ItemStack getPaintedStack(BlockGetter level, BlockPos pos, ItemLike itemLike) {
+        ItemStack stack = new ItemStack(itemLike);
+        BlockEntity be = level.getBlockEntity(pos);
+        if (be != null) {
+            stack.getOrCreateTag().put("BlockEntityTag", be.saveWithoutMetadata());
+        }
+        return stack;
     }
 }
