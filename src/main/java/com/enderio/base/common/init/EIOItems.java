@@ -245,16 +245,16 @@ public class EIOItems {
     public static final ItemEntry<MaterialItem> COPPER_ALLOY_BALL = materialItem("copper_alloy_grinding_ball").register();
     public static final ItemEntry<MaterialItem> DARK_STEEL_BALL = materialItem("dark_steel_grinding_ball").register();
     public static final ItemEntry<MaterialItem> END_STEEL_BALL = materialItem("end_steel_grinding_ball").register();
-    public static final Map<DyeColor, ItemEntry<HangGliderItem>> COLORED_HANG_GLIDERS = Util.make(() -> {
-       Map<DyeColor, ItemEntry<HangGliderItem>> tempMap = new EnumMap<>(DyeColor.class);
-       for (DyeColor color: DyeColor.values()) {
-           var entry = gliderItem(color.getName() + "_glider");
-           tempMap.put(color, entry.register());
-       }
-       return tempMap;
-    });
+//    public static final Map<DyeColor, ItemEntry<HangGliderItem>> COLORED_HANG_GLIDERS = Util.make(() -> {
+//       Map<DyeColor, ItemEntry<HangGliderItem>> tempMap = new EnumMap<>(DyeColor.class);
+//       for (DyeColor color: DyeColor.values()) {
+//           var entry = gliderItem(color.getName() + "_glider");
+//           tempMap.put(color, entry.register());
+//       }
+//       return tempMap;
+//    });
 
-    public static final ItemEntry<HangGliderItem> GLIDER = gliderItem("glider").register();
+//    public static final ItemEntry<HangGliderItem> GLIDER = gliderItem("glider").register();
 
     // endregion
 

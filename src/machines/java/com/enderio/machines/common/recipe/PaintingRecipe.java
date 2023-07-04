@@ -42,8 +42,8 @@ public class PaintingRecipe implements MachineRecipe<RecipeWrapper> {
     }
 
     @Override
-    public int getBaseEnergyCost() {
-        return MachinesConfig.COMMON.PAINTING_MACHINE_ENERGY_COST.get();
+    public int getBaseEnergyCost(RecipeWrapper container) {
+        return MachinesConfig.COMMON.ENERGY.PAINTING_MACHINE_ENERGY_COST.get();
     }
 
     @Override

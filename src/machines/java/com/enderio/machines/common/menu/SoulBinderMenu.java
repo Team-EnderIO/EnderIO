@@ -10,18 +10,21 @@ import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 
 public class SoulBinderMenu extends MachineMenu<SoulBinderBlockEntity> {
+    public static int INPUTS_INDEX = 1;
+    public static int INPUT_COUNT = 2;
+    public static int LAST_INDEX = 4;
+
 
     public SoulBinderMenu(@Nullable SoulBinderBlockEntity blockEntity, Inventory inventory, int pContainerId) {
         super(blockEntity, inventory, MachineMenus.SOUL_BINDER.get(), pContainerId);
 
         if (blockEntity != null) {
-            if (blockEntity.requiresCapacitor()) {
-                addSlot(new MachineSlot(blockEntity.getInventory(), blockEntity.getCapacitorSlot(), 12, 60));
-            }
-            addSlot(new MachineSlot(blockEntity.getInventory(), 0, 38, 34));
-            addSlot(new MachineSlot(blockEntity.getInventory(), 1, 59, 34));
-            addSlot(new MachineSlot(blockEntity.getInventory(), 2, 112, 34));
-            addSlot(new MachineSlot(blockEntity.getInventory(), 3, 134, 34));
+            addSlot(new MachineSlot(blockEntity.getInventory(), blockEntity.getCapacitorSlot(), 12, 60));
+
+            addSlot(new MachineSlot(blockEntity.getInventory(), SoulBinderBlockEntity.INPUT_SOUL, 38, 34));
+            addSlot(new MachineSlot(blockEntity.getInventory(), SoulBinderBlockEntity.INPUT_OTHER, 59, 34));
+            addSlot(new MachineSlot(blockEntity.getInventory(), SoulBinderBlockEntity.OUTPUT.get(0), 112, 34));
+            addSlot(new MachineSlot(blockEntity.getInventory(), SoulBinderBlockEntity.OUTPUT.get(1), 134, 34));
 
         }
 

@@ -4,6 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.api.capability.StoredEntityData;
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
+import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.base.common.particle.RangeParticleData;
 import com.enderio.core.common.sync.BooleanDataSlot;
 import com.enderio.core.common.sync.EnumDataSlot;
@@ -12,6 +13,10 @@ import com.enderio.core.common.sync.SyncMode;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.blockentity.base.PoweredTaskMachineEntity;
 import com.enderio.machines.common.blockentity.task.SpawnTask;
+import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
+import com.enderio.machines.common.blockentity.task.IMachineTask;
+import com.enderio.machines.common.blockentity.task.SpawnerMachineTask;
+import com.enderio.machines.common.blockentity.task.host.MachineTaskHost;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.lang.MachineLang;
@@ -30,21 +35,39 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class PoweredSpawnerBlockEntity extends PoweredTaskMachineEntity<SpawnTask> {
+// TODO: I want to revisit the powered spawner and task
+//       But there's not enough time before alpha, so just porting as-is.
+public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
 
-    public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, () -> 100000f);
-    public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, () -> 160f);
+    public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.POWERED_SPAWNER_CAPACITY);
+    public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.POWERED_SPAWNER_USAGE);
     public static final ResourceLocation NO_MOB = EnderIO.loc("no_mob");
     private StoredEntityData entityData = StoredEntityData.empty();
     private int range = 3;
     private boolean rangeVisible;
     private SpawnerBlockedReason reason = SpawnerBlockedReason.NONE;
 
+    private final MachineTaskHost taskHost;
+
     public PoweredSpawnerBlockEntity(BlockEntityType type, BlockPos worldPosition, BlockState blockState) {
-        super(CAPACITY, USAGE, type, worldPosition, blockState);
+        super(EnergyIOMode.Input, CAPACITY, USAGE, type, worldPosition, blockState);
         add2WayDataSlot(new BooleanDataSlot(this::isShowingRange, this::shouldShowRange, SyncMode.GUI));
         addDataSlot(new ResourceLocationDataSlot(() -> this.getEntityType().orElse(NO_MOB),this::setEntityType, SyncMode.GUI));
         addDataSlot(new EnumDataSlot<>(this::getReason, this::setReason, SyncMode.GUI));
+
+        taskHost = new MachineTaskHost(this, this::hasEnergy) {
+            @Override
+            protected @Nullable IMachineTask getNewTask() {
+                return createTask();
+            }
+
+            @Override
+            protected @Nullable IMachineTask loadTask(CompoundTag nbt) {
+                SpawnerMachineTask task = createTask();
+                task.deserializeNBT(nbt);
+                return task;
+            }
+        };
     }
 
     @Nullable
@@ -53,30 +76,15 @@ public class PoweredSpawnerBlockEntity extends PoweredTaskMachineEntity<SpawnTas
         return new PoweredSpawnerMenu(this, pPlayerInventory, pContainerId);
     }
 
-    @Nullable
     @Override
-    protected  SpawnTask getNewTask() {
-        return createTask();
+    public void serverTick() {
+        super.serverTick();
+
+        if (canAct()) {
+            taskHost.tick();
+        }
     }
 
-    @Nullable
-    @Override
-    protected SpawnTask loadTask(CompoundTag nbt) {
-        SpawnTask task = createTask();
-        task.deserializeNBT(nbt);
-        return task;
-    }
-
-    private SpawnTask createTask() {
-        return new SpawnTask(this, this.getEnergyStorage(), this.getEntityType());
-    }
-
-    @Override
-    public MachineInventoryLayout getInventoryLayout() {
-        return MachineInventoryLayout.builder().capacitor().build();
-    }
-
-    @Override
     public void clientTick() {
         super.clientTick();
         if (this.isShowingRange()) {
@@ -86,16 +94,42 @@ public class PoweredSpawnerBlockEntity extends PoweredTaskMachineEntity<SpawnTas
     }
 
     @Override
-    public void saveAdditional(CompoundTag pTag) {
-        super.saveAdditional(pTag);
-        pTag.put(MachineNBTKeys.ENTITY_STORAGE, entityData.serializeNBT());
+    public void onLoad() {
+        super.onLoad();
+        taskHost.onLevelReady();
+    }
+
+    // region Inventory
+
+    @Override
+    public MachineInventoryLayout getInventoryLayout() {
+        return MachineInventoryLayout.builder().capacitor().build();
     }
 
     @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
-        entityData.deserializeNBT(pTag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
+    protected void onInventoryContentsChanged(int slot) {
+        super.onInventoryContentsChanged(slot);
+        taskHost.newTaskAvailable();
     }
+
+    // endregion
+
+    // region Task
+
+    public float getSpawnProgress() {
+        return taskHost.getProgress();
+    }
+
+    @Override
+    protected boolean isActive() {
+        return canAct() && hasEnergy() && taskHost.hasTask();
+    }
+
+    private SpawnerMachineTask createTask() {
+        return new SpawnerMachineTask(this, this.getEnergyStorage(), this.getEntityType());
+    }
+
+    // endregion
 
     public int getRange() {
         return range;
@@ -122,7 +156,7 @@ public class PoweredSpawnerBlockEntity extends PoweredTaskMachineEntity<SpawnTas
     }
 
     private void generateParticle(RangeParticleData data, Vec3 pos) {
-        if (isClientSide()) {
+        if (level != null && level.isClientSide()) {
             level.addAlwaysVisibleParticle(data, true, pos.x, pos.y, pos.z, 0, 0, 0);
         }
     }
@@ -134,6 +168,24 @@ public class PoweredSpawnerBlockEntity extends PoweredTaskMachineEntity<SpawnTas
     public void setReason(SpawnerBlockedReason reason) {
         this.reason = reason;
     }
+
+    // region Serialization
+
+    @Override
+    public void saveAdditional(CompoundTag pTag) {
+        super.saveAdditional(pTag);
+        pTag.put(MachineNBTKeys.ENTITY_STORAGE, entityData.serializeNBT());
+        taskHost.save(pTag);
+    }
+
+    @Override
+    public void load(CompoundTag pTag) {
+        super.load(pTag);
+        entityData.deserializeNBT(pTag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
+        taskHost.load(pTag);
+    }
+
+    // endregion
 
     public enum SpawnerBlockedReason {
         TOO_MANY_MOB(MachineLang.TOO_MANY_MOB),

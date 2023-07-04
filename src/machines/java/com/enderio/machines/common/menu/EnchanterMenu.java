@@ -18,6 +18,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
+    public static int INPUTS_INDEX = 0;
+    public static int INPUT_COUNT = 3;
+    public static int LAST_INDEX = 3;
+
     private Level level;
 
     public EnchanterMenu(@Nullable EnchanterBlockEntity blockEntity, Inventory inventory, int pContainerId) {

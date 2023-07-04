@@ -80,6 +80,10 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
         // Custom behaviour as this works more like a crafting table than a machine.
         return new MachineInventory(getIOConfig(), layout) {
             protected void onContentsChanged(int slot) {
+                if (level == null) {
+                    return;
+                }
+
                 if (!OUTPUT.isSlot(slot)) {
                     Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.ENCHANTING.type().get(), container, level);
                     if (recipe.isPresent()) {
@@ -94,7 +98,11 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
             }
 
             public ItemStack extractItem(int slot, int amount, boolean simulate) {
-                if (OUTPUT.isSlot(slot) && isClientSide()) {
+                if (level == null) {
+                    return ItemStack.EMPTY;
+                }
+
+                if (OUTPUT.isSlot(slot) && level.isClientSide()) {
                     return ItemStack.EMPTY;
                 }
                 return super.extractItem(slot, amount, simulate);

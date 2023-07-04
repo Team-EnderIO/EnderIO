@@ -42,21 +42,21 @@ public class ItemRecipes extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DARK_STEEL_INGOT.get()))
             .save(recipeConsumer);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, EIOItems.GLIDER.get())
-            .pattern(" D ")
-            .pattern("WDW")
-            .define('D', EIOItems.DARK_STEEL_INGOT.get())
-            .define('W', EIOItems.GLIDER_WING.get())
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GLIDER_WING.get()))
-            .save(recipeConsumer);
-
-        for (Map.Entry<DyeColor, ItemEntry<HangGliderItem>> dyeColorItemEntryEntry : EIOItems.COLORED_HANG_GLIDERS.entrySet()) {
-            ShapelessRecipeBuilder.shapeless(RecipeCategory.TOOLS, dyeColorItemEntryEntry.getValue().get())
-                .requires(EIOItems.GLIDER.get())
-                .requires(dyeColorItemEntryEntry.getKey().getTag())
-                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GLIDER.get()))
-                .save(recipeConsumer);
-        }
+//        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, EIOItems.GLIDER.get())
+//            .pattern(" D ")
+//            .pattern("WDW")
+//            .define('D', EIOItems.DARK_STEEL_INGOT.get())
+//            .define('W', EIOItems.GLIDER_WING.get())
+//            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GLIDER_WING.get()))
+//            .save(recipeConsumer);
+//
+//        for (Map.Entry<DyeColor, ItemEntry<HangGliderItem>> dyeColorItemEntryEntry : EIOItems.COLORED_HANG_GLIDERS.entrySet()) {
+//            ShapelessRecipeBuilder.shapeless(RecipeCategory.TOOLS, dyeColorItemEntryEntry.getValue().get())
+//                .requires(EIOItems.GLIDER.get())
+//                .requires(dyeColorItemEntryEntry.getKey().getTag())
+//                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GLIDER.get()))
+//                .save(recipeConsumer);
+//        }
     }
 
     private void addTools(Consumer<FinishedRecipe> recipeConsumer) {

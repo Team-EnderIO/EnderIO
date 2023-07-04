@@ -24,7 +24,7 @@ public class SlicerScreen extends EIOScreen<SlicerMenu> {
     protected void init() {
         super.init();
 
-        addRenderableOnly(new ProgressWidget.LeftRight(this, () -> menu.getBlockEntity().getProgress(), getGuiLeft() + 103, getGuiTop() + 49, 24, 17, 176, 14));
+        addRenderableOnly(new ProgressWidget.LeftRight(this, () -> menu.getBlockEntity().getCraftingProgress(), getGuiLeft() + 103, getGuiTop() + 49, 24, 17, 176, 14));
 
         addRenderableOnly(new CapacitorEnergyWidget(this, getMenu().getBlockEntity()::getEnergyStorage, getMenu().getBlockEntity()::isCapacitorInstalled, 16 + leftPos, 14 + topPos, 9, 42));
 

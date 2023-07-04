@@ -24,6 +24,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.LogicalSide;
 import org.apache.logging.log4j.core.Core;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -53,6 +54,7 @@ public class EnderBlockEntity extends BlockEntity {
 
     // region Ticking
 
+    @SuppressWarnings("unused")
     public static void tick(Level level, BlockPos pos, BlockState state, EnderBlockEntity blockEntity) {
         if (level.isClientSide) {
             blockEntity.clientTick();
@@ -77,12 +79,6 @@ public class EnderBlockEntity extends BlockEntity {
      */
     public void clientTick() {
 
-    }
-
-    public boolean isClientSide() {
-        if (level != null)
-            return level.isClientSide;
-        return false;
     }
 
     // endregion
@@ -188,7 +184,9 @@ public class EnderBlockEntity extends BlockEntity {
      */
     @UseOnly(LogicalSide.SERVER)
     private List<ServerPlayer> getTrackingPlayers() {
-        return ((ServerChunkCache)level.getChunkSource()).chunkMap.getPlayers(new ChunkPos(worldPosition), false);
+        if (this.level == null)
+            return List.of();
+        return ((ServerChunkCache)this.level.getChunkSource()).chunkMap.getPlayers(new ChunkPos(worldPosition), false);
     }
 
     public List<EnderDataSlot<?>> getDataSlots() {
@@ -226,6 +224,7 @@ public class EnderBlockEntity extends BlockEntity {
         }
     }
 
+    @NotNull
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
         if (capabilityProviders.containsKey(cap)) {
