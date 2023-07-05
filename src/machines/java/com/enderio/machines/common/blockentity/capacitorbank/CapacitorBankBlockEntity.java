@@ -4,7 +4,7 @@ import com.enderio.api.capacitor.FixedScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.sync.*;
 import com.enderio.machines.common.blockentity.base.MultiConfigurable;
-import com.enderio.machines.common.blockentity.base.PoweredMachineEntity;
+import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.multienergy.ICapacityTier;
 import com.enderio.machines.common.blockentity.multienergy.MultiEnergyNode;
 import com.enderio.machines.common.blockentity.multienergy.MultiEnergyStorageWrapper;
@@ -35,7 +35,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
-public class CapacitorBankBlockEntity extends PoweredMachineEntity implements MultiConfigurable {
+public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implements MultiConfigurable {
 
     public final ICapacityTier tier;
 
@@ -55,7 +55,7 @@ public class CapacitorBankBlockEntity extends PoweredMachineEntity implements Mu
     });
 
     public CapacitorBankBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState, ICapacityTier tier) {
-        super(EnergyIOMode.Both, new FixedScalable(() -> (float)tier.getStorageCapacity()), new FixedScalable(() -> (float)tier.getStorageCapacity()), type, worldPosition, blockState);
+        super(EnergyIOMode.Both, new FixedScalable(tier::getStorageCapacity), new FixedScalable(tier::getStorageCapacity), type, worldPosition, blockState);
         this.tier = tier;
         this.node = new MultiEnergyNode(() -> energyStorage, () -> (MultiEnergyStorageWrapper) getExposedEnergyStorage(), worldPosition);
         addDataSlot(new LongDataSlot(() -> addedEnergy, syncAddedEnergy -> addedEnergy = syncAddedEnergy, SyncMode.WORLD));
@@ -162,6 +162,11 @@ public class CapacitorBankBlockEntity extends PoweredMachineEntity implements Mu
                 }
             }
         }
+    }
+
+    @Override
+    protected boolean isActive() {
+        return true;
     }
 
     @Override

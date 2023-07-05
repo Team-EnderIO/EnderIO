@@ -9,7 +9,6 @@ public class MachinesCommonConfig {
     public final ForgeConfigSpec.ConfigValue<Float> ENCHANTER_LEVEL_COST_FACTOR;
     public final ForgeConfigSpec.ConfigValue<Integer> ENCHANTER_BASE_LEVEL_COST;
     public final ForgeConfigSpec.ConfigValue<Integer> MAX_SPAWNER_ENTITIES;
-    public final ForgeConfigSpec.ConfigValue<SpawnTask.SpawnType> SPAWN_TYPE;
     public final ForgeConfigSpec.ConfigValue<Integer> MAX_SPAWNERS;
     public final ForgeConfigSpec.ConfigValue<SpawnerMachineTask.SpawnType> SPAWN_TYPE;
 

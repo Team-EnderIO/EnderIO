@@ -4,7 +4,7 @@ import com.enderio.api.capacitor.FixedScalable;
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
 import com.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.machines.common.blockentity.base.PowerGeneratingMachineEntity;
+import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.multienergy.MultiEnergyNode;
 import com.enderio.machines.common.blockentity.multienergy.MultiEnergyStorageWrapper;
 import com.enderio.machines.common.io.SidedFixedIOConfig;

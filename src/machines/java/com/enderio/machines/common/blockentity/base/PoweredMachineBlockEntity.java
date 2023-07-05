@@ -244,7 +244,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity {
      */
     public ICapacitorData getCapacitorData() {
         if (capacitorCacheDirty)
-            cacheCapacitorData();``
+            cacheCapacitorData();
         return cachedCapacitorData;
     }
 
