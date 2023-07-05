@@ -361,16 +361,24 @@ publisher {
         modrinth = System.getenv("MODRINTH_TOKEN")
     }
 
-    debug = true // When enabled, no files will actually be uploaded
+    debug = System.getenv("PUBLISH") ?: true
     curseID = curseforge_projectId
     modrinthID = modrinth_projectId
     versionType = release_type
-    changelog = ""
+    changelog = System.getenv("CHANGELOG") ?: "No changes found."
     version = "${getVersionString()}"
     displayName = "Ender IO - ${getVersionString()}"
     gameVersions = [minecraft_version]
     loaders = ["forge"]
     artifact = tasks.jarJar
+
+    curseDepends {
+        optional = ["jei", "patchouli"]
+    }
+
+    modrinthDepends {
+        optional = [modrinth_dep_patchouli, modrinth_dep_jei]
+    }
 }
 
 publishing {
