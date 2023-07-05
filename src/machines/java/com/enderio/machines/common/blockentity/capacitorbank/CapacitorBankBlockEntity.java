@@ -292,8 +292,10 @@ public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implemen
         }
     }
 
-    public boolean onShiftRightClick(Direction direction) {
+    public boolean onShiftRightClick(Direction direction, Player player) {
         if (direction.getAxis().getPlane() == Direction.Plane.VERTICAL)
+            return false;
+        if (player.getMainHandItem().is(getBlockState().getBlock().asItem()) || player.getOffhandItem().is(getBlockState().getBlock().asItem()))
             return false;
         displayModes.put(direction, DisplayMode.values()[(displayModes.get(direction).ordinal()+1)%DisplayMode.values().length]);
         return true;
