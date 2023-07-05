@@ -335,13 +335,21 @@ public class ConduitBlockEntity extends EnderBlockEntity {
      * @return true if a connection happens
      */
     private boolean connectTo(Direction direction, IConduitType<?> type, IExtendedConduitData<?> data, boolean forceMerge) {
-        if (!bundle.getTypes().contains(type))
+        if (!doTypesMatch(type))
             return false;
         if (!data.canConnectTo(bundle.getNodeFor(type).getExtendedConduitData().cast()))
             return false;
         if (forceMerge || bundle.getConnection(direction).getConnectionState(type, bundle) != StaticConnectionStates.DISABLED) {
             connect(direction, type);
             return true;
+        }
+        return false;
+    }
+
+    private boolean doTypesMatch(IConduitType<?> type) {
+        for (IConduitType<?> bundleType : bundle.getTypes()) {
+            if (bundleType.getTicker().canConnectTo(bundleType, type))
+                return true;
         }
         return false;
     }

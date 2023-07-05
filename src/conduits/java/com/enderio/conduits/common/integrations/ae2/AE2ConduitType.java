@@ -60,6 +60,11 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
             public boolean hasConnectionDelay() {
                 return true;
             }
+
+            @Override
+            public boolean canConnectTo(IConduitType<?> thisType, IConduitType<?> other) {
+                return other instanceof AE2ConduitType;
+            }
         };
     }
 
