@@ -361,11 +361,17 @@ publisher {
         modrinth = System.getenv("MODRINTH_TOKEN")
     }
 
+    def changelogFilename = System.getenv("CHANGELOG")
+    if (changelogFilename != null) {
+        changelog = new File(changelogFilename)
+    } else {
+        changelog = "No changes found."
+    }
+
     debug = System.getenv("PUBLISH") != "true"
     curseID = curseforge_projectId
     modrinthID = modrinth_projectId
     versionType = release_type
-    changelog = System.getenv("CHANGELOG") ?: "No changes found."
     version = "${getVersionString()}"
     displayName = "Ender IO - ${getVersionString()}"
     gameVersions = [minecraft_version]
