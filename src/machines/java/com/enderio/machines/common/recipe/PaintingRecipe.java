@@ -2,6 +2,7 @@ package com.enderio.machines.common.recipe;
 
 import com.enderio.EnderIO;
 import com.enderio.core.common.recipes.OutputStack;
+import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.blockentity.PaintingMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineRecipes;
@@ -11,6 +12,7 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -52,8 +54,8 @@ public class PaintingRecipe implements MachineRecipe<RecipeWrapper> {
         ItemStack outputStack = new ItemStack(output);
         CompoundTag tag = outputStack.getOrCreateTag();
         CompoundTag beTag = new CompoundTag();
-        tag.put("BlockEntityTag", beTag);
-        beTag.putString("paint", ForgeRegistries.ITEMS.getKey(PaintingMachineBlockEntity.PAINT.getItemStack(container).getItem()).toString());
+        tag.put(BlockItem.BLOCK_ENTITY_TAG, beTag);
+        beTag.putString(MachineNBTKeys.PAINT, ForgeRegistries.ITEMS.getKey(PaintingMachineBlockEntity.PAINT.getItemStack(container).getItem()).toString());
         outputs.add(OutputStack.of(outputStack));
         return outputs;
     }
