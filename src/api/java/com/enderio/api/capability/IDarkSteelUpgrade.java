@@ -1,18 +1,20 @@
 package com.enderio.api.capability;
 
-import com.enderio.api.nbt.INamedNBTSerializable;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.Collection;
 import java.util.Optional;
 
-public interface IDarkSteelUpgrade extends INamedNBTSerializable<Tag> {
+public interface IDarkSteelUpgrade extends INBTSerializable<Tag> {
 
     Component getDisplayName();
 
     Collection<Component> getDescription();
+
+    String getName();
 
     /**
      * Only one upgrade can be added for a slot. For example, if you had a jetpack and glider upgrade, both upgrades returning the same
@@ -20,7 +22,7 @@ public interface IDarkSteelUpgrade extends INamedNBTSerializable<Tag> {
      * @return the slot
      */
     default String getSlot() {
-        return getSerializedName();
+        return getName();
     }
 
     /**
@@ -50,7 +52,7 @@ public interface IDarkSteelUpgrade extends INamedNBTSerializable<Tag> {
 
     @Override
     default Tag serializeNBT() {
-        return StringTag.valueOf(getSerializedName());
+        return StringTag.valueOf(getName());
     }
 
     @Override

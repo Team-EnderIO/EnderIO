@@ -21,7 +21,6 @@ SOFTWARE.
 package com.enderio.machines.common.souldata;
 
 import com.enderio.EnderIO;
-import com.enderio.core.EnderCore;
 import com.enderio.core.common.network.CoreNetwork;
 import com.enderio.core.common.network.Packet;
 import com.google.gson.Gson;

@@ -5,6 +5,7 @@ import com.enderio.base.common.block.glass.*;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
+import com.enderio.base.data.recipe.RecipeDataUtil;
 import com.enderio.core.common.recipes.CountedIngredient;
 import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.enderio.machines.common.init.MachineRecipes;
@@ -192,9 +193,7 @@ public class AlloyRecipeProvider extends EnderRecipeProvider {
 
         @Override
         protected Set<String> getModDependencies() {
-            Set<String> mods = new HashSet<>();
-            // TODO: 1.19: Ingredient#getItems cannot be called during datagen. Needs a new solution.
-//            inputs.forEach(input -> Arrays.stream(input.getItems()).forEach(item -> mods.add(ForgeRegistries.ITEMS.getKey(item.getItem()).getNamespace())));
+            Set<String> mods = new HashSet<>(RecipeDataUtil.getCountedIngredientsModIds(inputs));
             mods.add(ForgeRegistries.ITEMS.getKey(output.getItem()).getNamespace());
             return mods;
         }

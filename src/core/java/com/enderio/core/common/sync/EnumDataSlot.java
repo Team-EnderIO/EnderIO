@@ -14,12 +14,12 @@ public class EnumDataSlot<T extends Enum<T>> extends EnderDataSlot<T> {
     @Override
     public CompoundTag toFullNBT() {
         CompoundTag tag = new CompoundTag();
-        tag.putInt("ordinal", getter().get().ordinal());
+        tag.putInt(KEY_VALUE, getter().get().ordinal());
         return tag;
     }
 
     @Override
     protected T fromNBT(CompoundTag nbt) {
-        return getter().get().getDeclaringClass().getEnumConstants()[nbt.getInt("ordinal")];
+        return getter().get().getDeclaringClass().getEnumConstants()[nbt.getInt(KEY_VALUE)];
     }
 }

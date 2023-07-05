@@ -3,6 +3,7 @@ package com.enderio.conduits.common.blockentity;
 import com.enderio.EnderIO;
 import com.enderio.api.UseOnly;
 import com.enderio.api.conduit.*;
+import com.enderio.conduits.ConduitNBTKeys;
 import com.enderio.conduits.common.ConduitShape;
 import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
 import com.enderio.conduits.common.blockentity.connection.IConnectionState;
@@ -123,13 +124,13 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     @Override
     protected void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        tag.put("conduit", bundle.serializeNBT());
+        tag.put(ConduitNBTKeys.CONDUIT_BUNDLE, bundle.serializeNBT());
     }
 
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        bundle.deserializeNBT(tag.getCompound("conduit"));
+        bundle.deserializeNBT(tag.getCompound(ConduitNBTKeys.CONDUIT_BUNDLE));
     }
 
     @Override

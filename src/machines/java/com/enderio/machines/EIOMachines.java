@@ -3,10 +3,7 @@ package com.enderio.machines;
 import com.enderio.EnderIO;
 import com.enderio.base.data.EIODataProvider;
 import com.enderio.machines.common.config.MachinesConfig;
-import com.enderio.machines.common.init.MachineBlockEntities;
-import com.enderio.machines.common.init.MachineBlocks;
-import com.enderio.machines.common.init.MachineMenus;
-import com.enderio.machines.common.init.MachineRecipes;
+import com.enderio.machines.common.init.*;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.network.MachineNetwork;
 import com.enderio.machines.common.tag.MachineTags;
@@ -40,6 +37,8 @@ public class EIOMachines {
         MachineBlocks.register();
         MachineBlockEntities.register();
         MachineMenus.register();
+        MachinePackets.register();
+
         MachineLang.register();
         MachineRecipes.register();
         MachineTags.register();
@@ -61,6 +60,7 @@ public class EIOMachines {
         provider.addSubProvider(event.includeServer(), new SlicingRecipeProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new SoulBindingRecipeProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new TankRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new PaintingRecipeProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new SoulDataProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new MachineEntityTypeTagsProvider(packOutput, completablefuture, event.getExistingFileHelper()));
 

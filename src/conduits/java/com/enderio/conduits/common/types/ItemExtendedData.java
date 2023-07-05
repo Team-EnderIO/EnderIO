@@ -60,28 +60,37 @@ public class ItemExtendedData implements IExtendedConduitData<ItemExtendedData> 
         public boolean selfFeed = false;
         public int priority = 0;
 
+        // region Serialization
+
+        private static final String KEY_ROTATING_INDEX = "RotatingIndex";
+        private static final String KEY_ROUND_ROBIN = "RoundRobin";
+        private static final String KEY_SELF_FEED = "SelfFeed";
+        private static final String KEY_PRIORITY = "Priority";
+
         private CompoundTag toNbt() {
             CompoundTag nbt = toGuiNbt();
-            nbt.putInt("rotating_index", rotatingIndex);
+            nbt.putInt(KEY_ROTATING_INDEX, rotatingIndex);
             return nbt;
         }
 
         private CompoundTag toGuiNbt() {
             CompoundTag nbt = new CompoundTag();
-            nbt.putBoolean("rr", roundRobin);
-            nbt.putBoolean("sf", selfFeed);
-            nbt.putInt("prio", priority);
+            nbt.putBoolean(KEY_ROUND_ROBIN, roundRobin);
+            nbt.putBoolean(KEY_SELF_FEED, selfFeed);
+            nbt.putInt(KEY_PRIORITY, priority);
             return nbt;
         }
 
         private static ItemSidedData fromNbt(CompoundTag nbt) {
             ItemSidedData sidedData = new ItemSidedData();
-            sidedData.roundRobin = nbt.getBoolean("rr");
-            sidedData.selfFeed = nbt.getBoolean("sf");
-            sidedData.priority= nbt.getInt("prio");
-            if (nbt.contains("rotating_index"))
-                sidedData.rotatingIndex= nbt.getInt("rotating_index");
+            sidedData.roundRobin = nbt.getBoolean(KEY_ROUND_ROBIN);
+            sidedData.selfFeed = nbt.getBoolean(KEY_SELF_FEED);
+            sidedData.priority= nbt.getInt(KEY_PRIORITY);
+            if (nbt.contains(KEY_ROTATING_INDEX))
+                sidedData.rotatingIndex= nbt.getInt(KEY_ROTATING_INDEX);
             return sidedData;
         }
+
+        // endregion
     }
 }

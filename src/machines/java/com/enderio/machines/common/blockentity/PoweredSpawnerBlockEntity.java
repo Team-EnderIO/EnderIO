@@ -4,13 +4,17 @@ import com.enderio.EnderIO;
 import com.enderio.api.capability.StoredEntityData;
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
+import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.base.common.particle.RangeParticleData;
 import com.enderio.core.common.sync.BooleanDataSlot;
 import com.enderio.core.common.sync.EnumDataSlot;
 import com.enderio.core.common.sync.ResourceLocationDataSlot;
 import com.enderio.core.common.sync.SyncMode;
-import com.enderio.machines.common.blockentity.base.PoweredTaskMachineEntity;
-import com.enderio.machines.common.blockentity.task.SpawnTask;
+import com.enderio.machines.common.MachineNBTKeys;
+import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
+import com.enderio.machines.common.blockentity.task.IMachineTask;
+import com.enderio.machines.common.blockentity.task.SpawnerMachineTask;
+import com.enderio.machines.common.blockentity.task.host.MachineTaskHost;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.lang.MachineLang;
@@ -19,8 +23,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -31,29 +33,39 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class PoweredSpawnerBlockEntity extends PoweredTaskMachineEntity<SpawnTask> {
+// TODO: I want to revisit the powered spawner and task
+//       But there's not enough time before alpha, so just porting as-is.
+public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
 
-    public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, () -> 100000f);
-    public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, () -> 160f);
+    public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.POWERED_SPAWNER_CAPACITY);
+    public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.POWERED_SPAWNER_USAGE);
     public static final ResourceLocation NO_MOB = EnderIO.loc("no_mob");
     private StoredEntityData entityData = StoredEntityData.empty();
     private int range = 3;
     private boolean rangeVisible;
-    protected float rCol;
-    protected float gCol;
-    protected float bCol;
     private SpawnerBlockedReason reason = SpawnerBlockedReason.NONE;
 
+    private final MachineTaskHost taskHost;
+
     public PoweredSpawnerBlockEntity(BlockEntityType type, BlockPos worldPosition, BlockState blockState) {
-        super(CAPACITY, USAGE, type, worldPosition, blockState);
+        super(EnergyIOMode.Input, CAPACITY, USAGE, type, worldPosition, blockState);
         add2WayDataSlot(new BooleanDataSlot(this::isShowingRange, this::shouldShowRange, SyncMode.GUI));
         addDataSlot(new ResourceLocationDataSlot(() -> this.getEntityType().orElse(NO_MOB),this::setEntityType, SyncMode.GUI));
         addDataSlot(new EnumDataSlot<>(this::getReason, this::setReason, SyncMode.GUI));
 
-        String color = MachinesConfig.CLIENT.BLOCKS.POWERED_SPAWNER_RANGE_COLOR.get();
-        this.rCol = (float)Integer.parseInt(color.substring(0,2), 16) / 255;
-        this.gCol = (float)Integer.parseInt(color.substring(2,4), 16) / 255;
-        this.bCol = (float)Integer.parseInt(color.substring(4,6), 16) / 255;
+        taskHost = new MachineTaskHost(this, this::hasEnergy) {
+            @Override
+            protected @Nullable IMachineTask getNewTask() {
+                return createTask();
+            }
+
+            @Override
+            protected @Nullable IMachineTask loadTask(CompoundTag nbt) {
+                SpawnerMachineTask task = createTask();
+                task.deserializeNBT(nbt);
+                return task;
+            }
+        };
     }
 
     @Nullable
@@ -62,23 +74,30 @@ public class PoweredSpawnerBlockEntity extends PoweredTaskMachineEntity<SpawnTas
         return new PoweredSpawnerMenu(this, pPlayerInventory, pContainerId);
     }
 
-    @Nullable
     @Override
-    protected  SpawnTask getNewTask() {
-        return createTask();
+    public void serverTick() {
+        super.serverTick();
+
+        if (canAct()) {
+            taskHost.tick();
+        }
     }
 
-    @Nullable
-    @Override
-    protected SpawnTask loadTask(CompoundTag nbt) {
-        SpawnTask task = createTask();
-        task.deserializeNBT(nbt);
-        return task;
+    public void clientTick() {
+        super.clientTick();
+        if (this.isShowingRange()) {
+            generateParticle(new RangeParticleData(getRange(), MachinesConfig.CLIENT.BLOCKS.POWERED_SPAWNER_RANGE_COLOR.get()),
+                new Vec3(getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ()));
+        }
     }
 
-    private SpawnTask createTask() {
-        return new SpawnTask(this, this.getEnergyStorage(), this.getEntityType());
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        taskHost.onLevelReady();
     }
+
+    // region Inventory
 
     @Override
     public MachineInventoryLayout getInventoryLayout() {
@@ -86,26 +105,29 @@ public class PoweredSpawnerBlockEntity extends PoweredTaskMachineEntity<SpawnTas
     }
 
     @Override
-    public void serverTick() {
-        super.serverTick();
+    protected void onInventoryContentsChanged(int slot) {
+        super.onInventoryContentsChanged(slot);
+        taskHost.newTaskAvailable();
+    }
 
-        if (this.isShowingRange()) {
-            generateParticle(new RangeParticleData(getRange(), this.rCol, this.gCol, this.bCol),
-                new Vec3(getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ()));
-        }
+    // endregion
+
+    // region Task
+
+    public float getSpawnProgress() {
+        return taskHost.getProgress();
     }
 
     @Override
-    public void saveAdditional(CompoundTag pTag) {
-        super.saveAdditional(pTag);
-        pTag.put("EntityStorage", entityData.serializeNBT());
+    protected boolean isActive() {
+        return canAct() && hasEnergy() && taskHost.hasTask();
     }
 
-    @Override
-    public void load(CompoundTag pTag) {
-        super.load(pTag);
-        entityData.deserializeNBT(pTag.getCompound("EntityStorage"));
+    private SpawnerMachineTask createTask() {
+        return new SpawnerMachineTask(this, this.getEnergyStorage(), this.getEntityType());
     }
+
+    // endregion
 
     public int getRange() {
         return range;
@@ -132,10 +154,8 @@ public class PoweredSpawnerBlockEntity extends PoweredTaskMachineEntity<SpawnTas
     }
 
     private void generateParticle(RangeParticleData data, Vec3 pos) {
-        if (level instanceof ServerLevel serverLevel) {
-            for (ServerPlayer player : serverLevel.players()) {
-                serverLevel.sendParticles(player, data, true, pos.x, pos.y, pos.z, 1, 0, 0, 0, 0);
-            }
+        if (level != null && level.isClientSide()) {
+            level.addAlwaysVisibleParticle(data, true, pos.x, pos.y, pos.z, 0, 0, 0);
         }
     }
 
@@ -146,6 +166,24 @@ public class PoweredSpawnerBlockEntity extends PoweredTaskMachineEntity<SpawnTas
     public void setReason(SpawnerBlockedReason reason) {
         this.reason = reason;
     }
+
+    // region Serialization
+
+    @Override
+    public void saveAdditional(CompoundTag pTag) {
+        super.saveAdditional(pTag);
+        pTag.put(MachineNBTKeys.ENTITY_STORAGE, entityData.serializeNBT());
+        taskHost.save(pTag);
+    }
+
+    @Override
+    public void load(CompoundTag pTag) {
+        super.load(pTag);
+        entityData.deserializeNBT(pTag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
+        taskHost.load(pTag);
+    }
+
+    // endregion
 
     public enum SpawnerBlockedReason {
         TOO_MANY_MOB(MachineLang.TOO_MANY_MOB),

@@ -4,18 +4,11 @@ import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitItemFactory;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.base.common.init.EIOCreativeTabs;
-import com.enderio.base.common.init.EIOItems;
-import com.enderio.conduits.common.items.ConduitBlockItem;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.ItemEntry;
-import com.tterrag.registrate.util.nullness.NonNullSupplier;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.event.CommandEvent;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
+
 import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber

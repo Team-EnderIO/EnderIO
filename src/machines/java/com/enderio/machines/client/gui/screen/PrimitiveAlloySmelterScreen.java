@@ -1,8 +1,8 @@
 package com.enderio.machines.client.gui.screen;
 
 import com.enderio.EnderIO;
-import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.api.misc.Vector2i;
+import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.machines.client.gui.widget.ProgressWidget;
 import com.enderio.machines.common.menu.PrimitiveAlloySmelterMenu;
 import net.minecraft.network.chat.Component;
@@ -20,7 +20,7 @@ public class PrimitiveAlloySmelterScreen extends EIOScreen<PrimitiveAlloySmelter
     protected void init() {
         super.init();
         addRenderableOnly(new ProgressWidget.BottomUp(this, () -> menu.getBlockEntity().getBurnProgress(), getGuiLeft() + 41, getGuiTop() + 37, 14, 14, 176, 0, false));
-        addRenderableOnly(new ProgressWidget.LeftRight(this, () -> menu.getBlockEntity().getProgress(), getGuiLeft() + 79, getGuiTop() + 35, 24, 17, 176, 14));
+        addRenderableOnly(new ProgressWidget.LeftRight(this, () -> menu.getBlockEntity().getCraftingProgress(), getGuiLeft() + 79, getGuiTop() + 35, 24, 17, 176, 14));
     }
 
     @Override

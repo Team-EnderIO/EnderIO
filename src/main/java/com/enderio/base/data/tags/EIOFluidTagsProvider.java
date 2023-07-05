@@ -4,7 +4,6 @@ import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.tag.EIOTags;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.FluidTagsProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;

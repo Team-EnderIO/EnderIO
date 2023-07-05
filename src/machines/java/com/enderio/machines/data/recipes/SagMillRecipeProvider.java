@@ -3,6 +3,7 @@ package com.enderio.machines.data.recipes;
 import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.tag.EIOTags;
+import com.enderio.base.data.recipe.RecipeDataUtil;
 import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.recipe.SagMillingRecipe;
@@ -15,13 +16,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.crafting.conditions.NotCondition;
 import net.minecraftforge.common.crafting.conditions.TagEmptyCondition;
 import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -435,8 +437,14 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
 
         @Override
         protected Set<String> getModDependencies() {
-            // TODO
-            return Set.of();
+            Set<String> mods = new HashSet<>(RecipeDataUtil.getIngredientModIds(input));
+            outputs.stream().forEach(outputItem -> {
+                var itemId = ForgeRegistries.ITEMS.getKey(outputItem.getItem());
+                if (itemId != null) {
+                    mods.add(itemId.getNamespace());
+                }
+            });
+            return mods;
         }
 
         @Override

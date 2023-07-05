@@ -2,6 +2,7 @@ package com.enderio.base.common.capability;
 
 import com.enderio.api.capability.CoordinateSelection;
 import com.enderio.api.capability.ICoordinateSelectionHolder;
+import com.enderio.base.EIONBTKeys;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceLocation;
@@ -20,10 +21,10 @@ public class CoordinateSelectionHolder implements ICoordinateSelectionHolder {
     @Override
     public CoordinateSelection getSelection() {
         CompoundTag tag = stack.getOrCreateTag();
-        if (tag.contains("Selection")) {
-            CompoundTag selectionnbt = tag.getCompound("Selection");
-            CoordinateSelection selection = new CoordinateSelection(new ResourceLocation(selectionnbt.getString("level")),
-                NbtUtils.readBlockPos(selectionnbt.getCompound("pos")));
+        if (tag.contains(EIONBTKeys.COORDINATE_SELECTION)) {
+            CompoundTag selectionnbt = tag.getCompound(EIONBTKeys.COORDINATE_SELECTION);
+            CoordinateSelection selection = new CoordinateSelection(new ResourceLocation(selectionnbt.getString(EIONBTKeys.LEVEL)),
+                NbtUtils.readBlockPos(selectionnbt.getCompound(EIONBTKeys.BLOCK_POS)));
             return selection;
         }
         return null;
@@ -33,10 +34,10 @@ public class CoordinateSelectionHolder implements ICoordinateSelectionHolder {
     public void setSelection(CoordinateSelection selection) {
         if (hasSelection()) {
             CompoundTag selectionnbt = new CompoundTag();
-            selectionnbt.putString("level", selection.level().toString());
-            selectionnbt.put("pos", NbtUtils.writeBlockPos(selection.pos()));
+            selectionnbt.putString(EIONBTKeys.LEVEL, selection.level().toString());
+            selectionnbt.put(EIONBTKeys.BLOCK_POS, NbtUtils.writeBlockPos(selection.pos()));
             CompoundTag stacktag = stack.getOrCreateTag();
-            stacktag.put("Selection", selectionnbt);
+            stacktag.put(EIONBTKeys.COORDINATE_SELECTION, selectionnbt);
         }
 
     }

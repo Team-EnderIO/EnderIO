@@ -2,8 +2,12 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
-import com.enderio.machines.common.blockentity.base.PoweredCraftingMachine;
-import com.enderio.machines.common.blockentity.task.PoweredCraftingTask;
+import com.enderio.api.io.energy.EnergyIOMode;
+import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
+import com.enderio.machines.common.blockentity.task.CraftingMachineTask;
+import com.enderio.machines.common.blockentity.task.PoweredCraftingMachineTask;
+import com.enderio.machines.common.blockentity.task.host.CraftingMachineTaskHost;
+import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
@@ -12,6 +16,7 @@ import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.SlicerMenu;
 import com.enderio.machines.common.recipe.SlicingRecipe;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -20,27 +25,39 @@ import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShearsItem;
 import net.minecraft.world.item.Tiers;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.TierSortingRegistry;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 import org.jetbrains.annotations.Nullable;
 
-public class SlicerBlockEntity extends PoweredCraftingMachine<SlicingRecipe, Container> {
+public class SlicerBlockEntity extends PoweredMachineBlockEntity {
 
-    public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, () -> 100000f);
-    public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, () -> 30f);
+    public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.SLICER_CAPACITY);
+    public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.SLICER_USAGE);
+
 
     public static final SingleSlotAccess OUTPUT = new SingleSlotAccess();
     public static final MultiSlotAccess INPUTS = new MultiSlotAccess();
     public static final SingleSlotAccess AXE = new SingleSlotAccess();
     public static final SingleSlotAccess SHEARS = new SingleSlotAccess();
-    private final RecipeWrapper container;
+
+    private final CraftingMachineTaskHost<SlicingRecipe, Container> craftingTaskHost;
 
     public SlicerBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
-        super(MachineRecipes.SLICING.type().get(), CAPACITY, USAGE, type, worldPosition, blockState);
+        super(EnergyIOMode.Input, CAPACITY, USAGE, type, worldPosition, blockState);
 
-        container = new RecipeWrapper(getInventory());
+        craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy, MachineRecipes.SLICING.type().get(),
+            new RecipeWrapper(getInventoryNN()), this::createTask) {
+            @Override
+            protected @Nullable CraftingMachineTask<SlicingRecipe, Container> getNewTask() {
+                MachineInventory inv = getInventoryNN();
+                if (AXE.getItemStack(inv).isEmpty() || SHEARS.getItemStack(inv).isEmpty())
+                    return null;
+                return super.getNewTask();
+            }
+        };
     }
 
     @Nullable
@@ -48,6 +65,23 @@ public class SlicerBlockEntity extends PoweredCraftingMachine<SlicingRecipe, Con
     public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
         return new SlicerMenu(this, inventory, containerId);
     }
+
+    @Override
+    public void serverTick() {
+        super.serverTick();
+
+        if (canAct()) {
+            craftingTaskHost.tick();
+        }
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        craftingTaskHost.onLevelReady();
+    }
+
+    // region Inventory
 
     @Override
     public MachineInventoryLayout getInventoryLayout() {
@@ -73,20 +107,29 @@ public class SlicerBlockEntity extends PoweredCraftingMachine<SlicingRecipe, Con
         return false;
     }
 
-    @Nullable
     @Override
-    protected PoweredCraftingTask<SlicingRecipe, Container> getNewTask() {
-        MachineInventory inv = getInventory();
-        if (AXE.getItemStack(inv).isEmpty() || SHEARS.getItemStack(inv).isEmpty())
-            return null;
-        return super.getNewTask();
+    protected void onInventoryContentsChanged(int slot) {
+        super.onInventoryContentsChanged(slot);
+        craftingTaskHost.newTaskAvailable();
+    }
+
+    // endregion
+
+    // region Crafting Task
+
+    public float getCraftingProgress() {
+        return craftingTaskHost.getProgress();
     }
 
     @Override
-    protected PoweredCraftingTask<SlicingRecipe, Container> createTask(@Nullable SlicingRecipe recipe) {
-        return new PoweredCraftingTask<>(this, getContainer(), OUTPUT, recipe) {
+    protected boolean isActive() {
+        return canAct() && hasEnergy() && craftingTaskHost.hasTask();
+    }
+
+    protected PoweredCraftingMachineTask<SlicingRecipe, Container> createTask(Level level, Container container, @Nullable SlicingRecipe recipe) {
+        return new PoweredCraftingMachineTask<>(level, getInventoryNN(), getEnergyStorage(), container, OUTPUT, recipe) {
             @Override
-            protected void takeInputs(SlicingRecipe recipe) {
+            protected void consumeInputs(SlicingRecipe recipe) {
                 // Deduct ingredients
                 MachineInventory inv = getInventory();
                 for (SingleSlotAccess access : INPUTS.getAccesses()) {
@@ -99,8 +142,21 @@ public class SlicerBlockEntity extends PoweredCraftingMachine<SlicingRecipe, Con
         };
     }
 
+    // endregion
+
+    // region Serialization
+
     @Override
-    protected Container getContainer() {
-        return container;
+    public void saveAdditional(CompoundTag pTag) {
+        super.saveAdditional(pTag);
+        craftingTaskHost.save(pTag);
     }
+
+    @Override
+    public void load(CompoundTag pTag) {
+        super.load(pTag);
+        craftingTaskHost.load(pTag);
+    }
+
+    // endregion
 }

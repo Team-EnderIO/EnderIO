@@ -3,7 +3,8 @@ package com.enderio.machines.common.blockentity;
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.machines.common.blockentity.base.PoweredMachineEntity;
+import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
+import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
@@ -24,11 +25,11 @@ import java.util.ArrayDeque;
 import java.util.Optional;
 import java.util.Queue;
 
-public class CrafterBlockEntity extends PoweredMachineEntity {
+// TODO: Might want to see if we can adapt this into a crafting task.
+public class CrafterBlockEntity extends PoweredMachineBlockEntity {
 
-    //TODO Change values
-    public static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, () -> 100000f);
-    public static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, () -> 10f);
+    public static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.CRAFTER_CAPACITY);
+    public static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.CRAFTER_USAGE);
     private static final int ENERGY_USAGE_PER_ITEM = 10;
 
     public static final MultiSlotAccess INPUT = new MultiSlotAccess();
@@ -81,7 +82,7 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
     }
 
     private boolean acceptSlotInput(int slot, ItemStack stack) {
-        return ItemStack.isSameItem(this.getInventory().getStackInSlot(slot + 10), stack);
+        return ItemStack.isSameItem(this.getInventoryNN().getStackInSlot(slot + 10), stack);
     }
 
     @Override
@@ -89,6 +90,12 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
         tryCraft();
         super.serverTick();
         processOutputBuffer();
+    }
+
+    @Override
+    protected boolean isActive() {
+        // TODO: How to determine active state beyond power.
+        return canAct() && hasEnergy();
     }
 
     private void tryCraft() {
@@ -166,6 +173,8 @@ public class CrafterBlockEntity extends PoweredMachineEntity {
         outputBuffer.addAll(recipe.getRemainingItems(dummyCContainer));
         // clean buffer
         outputBuffer.removeIf(ItemStack::isEmpty);
+        // consume power
+        this.energyStorage.consumeEnergy(ENERGY_USAGE_PER_ITEM, false);
 
     }
 

@@ -1,26 +1,22 @@
 package com.enderio.machines.common.item;
 
-import com.enderio.EnderIO;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.item.IAdvancedTooltipProvider;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.machines.client.rendering.item.FluidTankBEWLR;
+import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.MachineBlock;
-import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.NonNullLazy;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -77,7 +73,6 @@ public class FluidTankItem extends BlockItem implements IAdvancedTooltipProvider
     }
 
     public class FluidItemStack extends FluidHandlerItemStack {
-        private static final String BLOCK_ENTITY_TAG = "BlockEntityTag";
 
         /**
          * @param container The container itemStack, data is stored on it directly as NBT.
@@ -92,7 +87,7 @@ public class FluidTankItem extends BlockItem implements IAdvancedTooltipProvider
             Optional<CompoundTag> tagCompoundOptional = Optional.ofNullable(container.getTag());
             return tagCompoundOptional
                 .map(tagCompound -> tagCompound.getCompound(BLOCK_ENTITY_TAG))
-                .map(blockEntityTag -> blockEntityTag.getCompound(FluidTankBlockEntity.FLUID_TAG_KEY))
+                .map(blockEntityTag -> blockEntityTag.getCompound(MachineNBTKeys.FLUID))
                 .map(FluidStack::loadFluidStackFromNBT)
                 .orElse(FluidStack.EMPTY);
         }
@@ -104,8 +99,7 @@ public class FluidTankItem extends BlockItem implements IAdvancedTooltipProvider
 
             CompoundTag fluidTag = new CompoundTag();
             fluid.writeToNBT(fluidTag);//rewrites the old value
-            //TODO: externalize FluidTankBlockEntity.FLUID_TAG_KEY into one global parameter.
-            blockEntityTag.put(FluidTankBlockEntity.FLUID_TAG_KEY, fluidTag);
+            blockEntityTag.put(MachineNBTKeys.FLUID, fluidTag);
         }
 
         @Override
@@ -113,8 +107,8 @@ public class FluidTankItem extends BlockItem implements IAdvancedTooltipProvider
             CompoundTag tagCompound = container.getTag();
             if (tagCompound != null) {
                 CompoundTag blockEntityTag = tagCompound.getCompound(BLOCK_ENTITY_TAG);
-                if (blockEntityTag.contains(FluidTankBlockEntity.FLUID_TAG_KEY))
-                    blockEntityTag.remove(FluidTankBlockEntity.FLUID_TAG_KEY);
+                if (blockEntityTag.contains(MachineNBTKeys.FLUID))
+                    blockEntityTag.remove(MachineNBTKeys.FLUID);
             }
         }
     }

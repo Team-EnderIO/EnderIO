@@ -116,6 +116,9 @@ public class MachineBlocks {
     public static final BlockEntry<ProgressMachineBlock> ALLOY_SMELTER = standardMachine("alloy_smelter", () -> MachineBlockEntities.ALLOY_SMELTER)
         .register();
 
+    public static final BlockEntry<ProgressMachineBlock> PAINTING_MACHINE = standardMachine("painting_machine", () -> MachineBlockEntities.PAINTING_MACHINE)
+        .register();
+
     public static final BlockEntry<MachineBlock> CREATIVE_POWER = REGISTRATE
         .block("creative_power", props -> new MachineBlock(props, MachineBlockEntities.CREATIVE_POWER))
         .item()

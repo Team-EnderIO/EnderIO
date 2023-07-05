@@ -45,12 +45,8 @@ public final class FixedIOConfig implements IIOConfig {
 
     @Override
     public CompoundTag serializeNBT() {
-        CompoundTag tag = new CompoundTag();
-        tag.putInt("Mode", mode.ordinal());
-        return tag;
+        return new CompoundTag();
     }
-
-    // region Stubs
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
@@ -72,6 +68,4 @@ public final class FixedIOConfig implements IIOConfig {
 
     @Override
     public void invalidateCaps() {}
-
-    // endregion
 }

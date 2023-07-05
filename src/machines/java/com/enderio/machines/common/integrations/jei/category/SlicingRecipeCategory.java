@@ -3,6 +3,7 @@ package com.enderio.machines.common.integrations.jei.category;
 import com.enderio.EnderIO;
 import com.enderio.machines.client.gui.screen.SlicerScreen;
 import com.enderio.machines.common.init.MachineBlocks;
+import com.enderio.machines.common.integrations.jei.util.MachineRecipeCategory;
 import com.enderio.machines.common.integrations.jei.util.RecipeUtil;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.recipe.SlicingRecipe;
@@ -11,7 +12,6 @@ import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeType;
-import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemStack;
@@ -22,7 +22,7 @@ import java.util.List;
 
 import static mezz.jei.api.recipe.RecipeIngredientRole.*;
 
-public class SlicingRecipeCategory implements IRecipeCategory<SlicingRecipe> {
+public class SlicingRecipeCategory extends MachineRecipeCategory<SlicingRecipe> {
 
     public static final RecipeType<SlicingRecipe> TYPE = RecipeType.create(EnderIO.MODID, "slicing", SlicingRecipe.class);
 
@@ -62,7 +62,6 @@ public class SlicingRecipeCategory implements IRecipeCategory<SlicingRecipe> {
         builder.addSlot(CATALYST, 29, 1)
             .addIngredients(Ingredient.of(Tags.Items.SHEARS));
 
-        // TODO: Don't hardcode these indices. use a loop instead and store the x and y somehow
         builder.addSlot(INPUT, 1, 25)
             .addIngredients(recipe.getInputs().get(0));
         builder.addSlot(INPUT, 19, 25)
