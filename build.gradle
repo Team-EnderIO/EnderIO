@@ -47,7 +47,6 @@ sourceSets {
     main {
         compileClasspath += sourceSets.api.output
         compileClasspath += sourceSets.core.output
-        //ext.refMap = "mixins.enderio.refmap.json"
         resources { srcDir 'src/generated/resources' }
     }
 }
