@@ -116,21 +116,21 @@ public class ConduitBlockEntity extends EnderBlockEntity {
             serverTick();
             checkConnection = checkConnection.next();
             if (checkConnection.isInitialized()) {
-                updateConnections(getBlockState(), level, worldPosition, worldPosition.relative(Direction.UP), false, false);
+                updateConnections(getBlockState(), level, worldPosition, null, false, false);
             }
         }
     }
 
-    public void updateConnections(BlockState state, Level level, BlockPos pos, BlockPos fromPos, boolean isMoving, boolean shouldActivate) {
+    public void updateConnections(BlockState state, Level level, BlockPos pos, @Nullable BlockPos fromPos, boolean isMoving, boolean shouldActivate) {
         for (Direction direction: Direction.values()) {
-            if (!(level.getBlockEntity(fromPos) instanceof ConduitBlockEntity)) {
+            if (fromPos == null || !(level.getBlockEntity(fromPos) instanceof ConduitBlockEntity)) {
                 ConduitBundle bundle = getBundle();
                 for (IConduitType<?> type : bundle.getTypes()) {
                     if (shouldActivate && type.getTicker().hasConnectionDelay()) {
                         checkConnection = checkConnection.activate();
                     }
                     IConnectionState connectionState = bundle.getConnection(direction).getConnectionState(type, bundle);
-                    EnderIO.LOGGER.info("try connect " + ConduitTypes.getRegistry().getKey(type) + " because block @ " + pos.toShortString() + " was notified about a change @ " + fromPos.toShortString());
+                    EnderIO.LOGGER.info("try connect " + ConduitTypes.getRegistry().getKey(type) + " because block @ " + pos.toShortString() + " was notified about a change @ " + (fromPos != null ? fromPos.toShortString() : "delayed connection"));
                     if (connectionState instanceof DynamicConnectionState dyn) {
                         if (!type.getTicker().canConnectTo(level, pos, direction)) {
                             getBundle().getNodeFor(type).clearState(direction);

@@ -131,6 +131,9 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
                 interactionResult = handleFacade(conduit, player, player.getItemInHand(hand), hit, level.isClientSide());
                 if (interactionResult.isPresent())
                     return interactionResult.get();
+                if (player.getItemInHand(hand).getItem() instanceof ConduitBlockItem) {
+                    return super.use(state, level, pos, player, hand, hit);
+                }
             }
             Optional<InteractionResult> interactionResult = handleScreen(conduit, player, hit, level.isClientSide());
             if (interactionResult.isPresent())
