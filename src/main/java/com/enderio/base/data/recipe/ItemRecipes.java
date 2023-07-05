@@ -120,6 +120,16 @@ public class ItemRecipes extends RecipeProvider {
         MaterialItem ingot = EIOItems.DARK_STEEL_INGOT.get();
 
         ShapedRecipeBuilder
+            .shaped(RecipeCategory.TOOLS, EIOItems.DARK_STEEL_SWORD.get())
+            .define('I', ingot)
+            .define('S', Tags.Items.RODS_WOODEN)
+            .pattern(" I ")
+            .pattern(" I ")
+            .pattern(" S ")
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ingot))
+            .save(recipeConsumer);
+
+        ShapedRecipeBuilder
             .shaped(RecipeCategory.TOOLS, EIOItems.DARK_STEEL_PICKAXE.get())
             .define('I', ingot)
             .define('S', Tags.Items.RODS_WOODEN)

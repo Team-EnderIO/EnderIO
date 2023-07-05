@@ -5,17 +5,23 @@
     "C": {
       "item": "enderio:ensouled_chassis"
     },
-    "H": {
-      "tag": "forge:heads"
+    "G": {
+      "item": "enderio:energized_gear"
     },
     "I": {
       "item": "enderio:soularium_ingot"
+    },
+    "V": {
+      "item": "enderio:empty_soul_vial"
+    },
+    "Z": {
+      "item": "enderio:z_logic_controller"
     }
   },
   "pattern": [
-    "IHI",
-    "HCH",
-    "IHI"
+    "IVI",
+    "GCG",
+    "IZI"
   ],
   "result": {
     "item": "enderio:soul_binder"

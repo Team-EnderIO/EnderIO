@@ -1,7 +1,7 @@
 package com.enderio.conduits.data;
 
 import com.enderio.EnderIO;
-import com.enderio.conduits.common.ConduitTags;
+import com.enderio.conduits.common.tag.ConduitTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
@@ -20,7 +20,7 @@ public class ConduitTagProvider extends BlockTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
-        tag(ConduitTags.REDSTONE_CONNECTABLE)
+        tag(ConduitTags.Blocks.REDSTONE_CONNECTABLE)
             .add(Blocks.PISTON, Blocks.STICKY_PISTON, Blocks.REDSTONE_LAMP, Blocks.NOTE_BLOCK, Blocks.DISPENSER, Blocks.DROPPER,
                 Blocks.POWERED_RAIL, Blocks.ACTIVATOR_RAIL)
             .addTags(BlockTags.DOORS, BlockTags.TRAPDOORS, BlockTags.REDSTONE_ORES);

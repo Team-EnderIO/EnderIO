@@ -6,7 +6,7 @@
         "items": [
           {
             "items": [
-              "enderio:iron_gear"
+              "enderio:dark_steel_ingot"
             ]
           }
         ]
@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:dark_bimetal_gear"
+        "recipe": "enderio:dark_steel_sword"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "enderio:dark_bimetal_gear"
+      "enderio:dark_steel_sword"
     ]
   },
   "sends_telemetry_event": false
