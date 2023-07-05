@@ -9,7 +9,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -49,6 +48,7 @@ public class MachineBlock extends BaseEntityBlock {
         return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public RenderShape getRenderShape(BlockState pState) {
         return RenderShape.MODEL;
@@ -60,6 +60,7 @@ public class MachineBlock extends BaseEntityBlock {
         return createTickerHelper(pBlockEntityType, blockEntityType.get(), MachineBlockEntity::tick);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pBlock, BlockPos pFromPos, boolean pIsMoving) {
         super.neighborChanged(pState, pLevel, pPos, pBlock, pFromPos, pIsMoving);
@@ -75,21 +76,29 @@ public class MachineBlock extends BaseEntityBlock {
     private void updateBlockEntityCache(LevelReader level, BlockPos pos) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof MachineBlockEntity machineBlockEntity) {
-            machineBlockEntity.updateCapabilityCache();
+            machineBlockEntity.markCapabilityCacheDirty();
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (level.isClientSide() || hand != InteractionHand.MAIN_HAND){
             return InteractionResult.SUCCESS;
         }
+
         BlockEntity entity = level.getBlockEntity(pos);
+        if (!(entity instanceof MachineBlockEntity machineBlockEntity)) { // This also covers nulls
+            return InteractionResult.PASS;
+        }
+
         //pass on the use command to corresponding block entity.
-        InteractionResult result = ((MachineBlockEntity)entity).onBlockEntityUsed(state, level, pos, player, hand,hit);
+        InteractionResult result = machineBlockEntity.onBlockEntityUsed(state, level, pos, player, hand,hit);
         if (result != InteractionResult.CONSUME) {
-            if (level.getBlockEntity(pos) instanceof MachineBlockEntity machine && !machine.canOpenMenu())
+            if (!machineBlockEntity.canOpenMenu()) {
                 return InteractionResult.PASS;
+            }
+
             MenuProvider menuprovider = this.getMenuProvider(state, level, pos);
             if (menuprovider != null && player instanceof ServerPlayer serverPlayer) {
                 NetworkHooks.openScreen(serverPlayer, menuprovider, buf -> buf.writeBlockPos(pos));

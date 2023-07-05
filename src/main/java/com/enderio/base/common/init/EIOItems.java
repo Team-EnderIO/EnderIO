@@ -7,31 +7,16 @@ import com.enderio.base.common.item.capacitors.FixedCapacitorItem;
 import com.enderio.base.common.item.capacitors.LootCapacitorItem;
 import com.enderio.base.common.item.darksteel.DarkSteelAxeItem;
 import com.enderio.base.common.item.darksteel.DarkSteelPickaxeItem;
+import com.enderio.base.common.item.darksteel.DarkSteelSwordItem;
 import com.enderio.base.common.item.darksteel.DarkSteelUpgradeItem;
-import com.enderio.base.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
-import com.enderio.base.common.item.darksteel.upgrades.EmpoweredUpgrade;
-import com.enderio.base.common.item.darksteel.upgrades.EmpoweredUpgradeTier;
-import com.enderio.base.common.item.darksteel.upgrades.ForkUpgrade;
-import com.enderio.base.common.item.darksteel.upgrades.SpoonUpgrade;
+import com.enderio.base.common.item.darksteel.upgrades.*;
 import com.enderio.base.common.item.darksteel.upgrades.direct.DirectUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosivePenetrationUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosivePenetrationUpgradeTier;
 import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosiveUpgrade;
 import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosiveUpgradeTier;
-import com.enderio.base.common.item.misc.BrokenSpawnerItem;
-import com.enderio.base.common.item.misc.EnderfaceItem;
-import com.enderio.base.common.item.misc.EnderiosItem;
-import com.enderio.base.common.item.misc.GearItem;
-import com.enderio.base.common.item.misc.HangGliderItem;
-import com.enderio.base.common.item.misc.LocationPrintoutItem;
-import com.enderio.base.common.item.misc.MaterialItem;
-import com.enderio.base.common.item.tool.ColdFireIgniter;
-import com.enderio.base.common.item.tool.CoordinateSelectorItem;
-import com.enderio.base.common.item.tool.ElectromagnetItem;
-import com.enderio.base.common.item.tool.ExperienceRodItem;
-import com.enderio.base.common.item.tool.LevitationStaffItem;
-import com.enderio.base.common.item.tool.SoulVialItem;
-import com.enderio.base.common.item.tool.YetaWrenchItem;
+import com.enderio.base.common.item.misc.*;
+import com.enderio.base.common.item.tool.*;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.model.item.GliderItemModel;
 import com.enderio.base.data.model.item.RotatingItemModel;
@@ -40,24 +25,16 @@ import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
-import net.minecraft.Util;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Tier;
-import net.minecraft.world.item.Tiers;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.ForgeTier;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.TierSortingRegistry;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 @SuppressWarnings("unused")
@@ -99,9 +76,6 @@ public class EIOItems {
     public static final ItemEntry<MaterialItem> CONDUIT_BINDER_COMPOSITE = materialItem("conduit_binder_composite").register();
 
     public static final ItemEntry<MaterialItem> CONDUIT_BINDER = materialItem("conduit_binder").register();
-
-    // TODO: 1.20.1: implement upgrade binder for dark steel upgrades
-//    public static final ItemEntry<MaterialItem> UPGRADE_BINDER = materialItem("upgrade_binder").register();
 
     public static final ItemEntry<MaterialItem> ZOMBIE_ELECTRODE = materialItem("zombie_electrode").register();
 
@@ -375,6 +349,12 @@ public class EIOItems {
         new ForgeTier(3, 2000, 8.0F, 3, 25, EIOTags.Blocks.DARK_STEEL_TIER, () -> Ingredient.of(EIOItems.DARK_STEEL_INGOT.get())),
         EnderIO.loc("dark_steel_tier"), List.of(Tiers.DIAMOND), List.of(Tiers.NETHERITE));
 
+    public static final ItemEntry<DarkSteelSwordItem> DARK_STEEL_SWORD = REGISTRATE
+        .item("dark_steel_sword", DarkSteelSwordItem::new)
+        .tab(EIOCreativeTabs.GEAR)
+        .lang("The Ender")
+        .register();
+
     public static final ItemEntry<DarkSteelPickaxeItem> DARK_STEEL_PICKAXE = REGISTRATE
         .item("dark_steel_pickaxe", DarkSteelPickaxeItem::new)
         .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_PICKAXE.get().addAllVariants(modifier))
@@ -488,13 +468,13 @@ public class EIOItems {
 
     // region Creative Tab Icons
 
-    public static final ItemEntry<EnderfaceItem> CREATIVE_ICON_NONE = dumbItem("enderface_none", EnderfaceItem::new).register();
-    public static final ItemEntry<EnderfaceItem> CREATIVE_ICON_ITEMS = dumbItem("enderface_items", EnderfaceItem::new).register();
-    public static final ItemEntry<EnderfaceItem> CREATIVE_ICON_MATERIALS = dumbItem("enderface_materials", EnderfaceItem::new).register();
-    public static final ItemEntry<EnderfaceItem> CREATIVE_ICON_MACHINES = dumbItem("enderface_machines", EnderfaceItem::new).register();
-    public static final ItemEntry<EnderfaceItem> CREATIVE_ICON_CONDUITS = dumbItem("enderface_conduits", EnderfaceItem::new).register();
-    public static final ItemEntry<EnderfaceItem> CREATIVE_ICON_MOBS = dumbItem("enderface_mobs", EnderfaceItem::new).register();
-    public static final ItemEntry<EnderfaceItem> CREATIVE_ICON_INVPANEL = dumbItem("enderface_invpanel", EnderfaceItem::new).register();
+    public static final ItemEntry<CreativeTabIconItem> CREATIVE_ICON_NONE = dumbItem("enderface_none", CreativeTabIconItem::new).register();
+    public static final ItemEntry<CreativeTabIconItem> CREATIVE_ICON_ITEMS = dumbItem("enderface_items", CreativeTabIconItem::new).register();
+    public static final ItemEntry<CreativeTabIconItem> CREATIVE_ICON_MATERIALS = dumbItem("enderface_materials", CreativeTabIconItem::new).register();
+    public static final ItemEntry<CreativeTabIconItem> CREATIVE_ICON_MACHINES = dumbItem("enderface_machines", CreativeTabIconItem::new).register();
+    public static final ItemEntry<CreativeTabIconItem> CREATIVE_ICON_CONDUITS = dumbItem("enderface_conduits", CreativeTabIconItem::new).register();
+    public static final ItemEntry<CreativeTabIconItem> CREATIVE_ICON_MOBS = dumbItem("enderface_mobs", CreativeTabIconItem::new).register();
+    public static final ItemEntry<CreativeTabIconItem> CREATIVE_ICON_INVPANEL = dumbItem("enderface_invpanel", CreativeTabIconItem::new).register();
 
     // endregion
 

@@ -1,12 +1,12 @@
 package com.enderio.base.client.model;
 
-import com.enderio.core.client.RenderUtil;
-import com.enderio.core.data.model.EIOModel;
 import com.enderio.base.client.renderer.PaintedBlockColor;
 import com.enderio.base.common.blockentity.DoublePaintedBlockEntity;
 import com.enderio.base.common.blockentity.IPaintableBlockEntity;
 import com.enderio.base.common.blockentity.SinglePaintedBlockEntity;
 import com.enderio.base.common.util.PaintUtils;
+import com.enderio.core.client.RenderUtil;
+import com.enderio.core.data.model.EIOModel;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.Minecraft;

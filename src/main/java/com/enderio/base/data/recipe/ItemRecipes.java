@@ -1,27 +1,17 @@
 package com.enderio.base.data.recipe;
 
 import com.enderio.base.common.init.EIOItems;
-import com.enderio.base.common.item.darksteel.DarkSteelUpgradeItem;
-import com.enderio.base.common.item.misc.HangGliderItem;
 import com.enderio.base.common.item.misc.MaterialItem;
 import com.enderio.base.common.tag.EIOTags;
-import com.tterrag.registrate.util.entry.ItemEntry;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.data.recipes.ShapelessRecipeBuilder;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.Tags;
 
-import java.util.Map;
 import java.util.function.Consumer;
 
 public class ItemRecipes extends RecipeProvider {
@@ -128,6 +118,16 @@ public class ItemRecipes extends RecipeProvider {
 
     private void addDarkSteelTools(Consumer<FinishedRecipe> recipeConsumer) {
         MaterialItem ingot = EIOItems.DARK_STEEL_INGOT.get();
+
+        ShapedRecipeBuilder
+            .shaped(RecipeCategory.TOOLS, EIOItems.DARK_STEEL_SWORD.get())
+            .define('I', ingot)
+            .define('S', Tags.Items.RODS_WOODEN)
+            .pattern(" I ")
+            .pattern(" I ")
+            .pattern(" S ")
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ingot))
+            .save(recipeConsumer);
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.TOOLS, EIOItems.DARK_STEEL_PICKAXE.get())

@@ -1,0 +1,9 @@
+{
+  "type": "enderio:enchanting",
+  "amount": 16,
+  "cost_multiplier": 1,
+  "enchantment": "enderio:auto_smelt",
+  "input": {
+    "item": "minecraft:blaze_powder"
+  }
+}

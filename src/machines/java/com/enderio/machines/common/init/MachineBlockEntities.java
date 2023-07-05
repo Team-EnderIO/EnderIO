@@ -30,7 +30,7 @@ public class MachineBlockEntities {
 
     public static final BlockEntityEntry<EnchanterBlockEntity> ENCHANTER = register("enchanter", EnchanterBlockEntity::new, MachineBlocks.ENCHANTER);
 
-    public static final BlockEntityEntry<AlloySmelterBlockEntity.Primitive> PRIMITIVE_ALLOY_SMELTER = register("primitive_alloy_smelter", AlloySmelterBlockEntity.Primitive::new,
+    public static final BlockEntityEntry<PrimitiveAlloySmelterBlockEntity> PRIMITIVE_ALLOY_SMELTER = register("primitive_alloy_smelter", PrimitiveAlloySmelterBlockEntity::new,
         MachineBlocks.PRIMITIVE_ALLOY_SMELTER);
 
     public static final BlockEntityEntry<AlloySmelterBlockEntity> ALLOY_SMELTER = register("alloy_smelter", AlloySmelterBlockEntity::new,

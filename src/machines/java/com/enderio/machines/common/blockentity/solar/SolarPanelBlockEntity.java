@@ -24,14 +24,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class SolarPanelBlockEntity extends PowerGeneratingMachineEntity {
+public class SolarPanelBlockEntity extends PoweredMachineBlockEntity {
 
     private final ISolarPanelTier tier;
 
     private final MultiEnergyNode node;
 
     public SolarPanelBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState, ISolarPanelTier tier) {
-        super(new FixedScalable(() -> (float)tier.getStorageCapacity()), new FixedScalable(() -> (float)tier.getStorageCapacity()), type, worldPosition, blockState);
+        super(EnergyIOMode.Output, new FixedScalable(tier::getStorageCapacity), new FixedScalable(tier::getStorageCapacity), type, worldPosition, blockState);
         this.tier = tier;
         this.node = new MultiEnergyNode(() -> energyStorage, () -> (MultiEnergyStorageWrapper) getExposedEnergyStorage(), worldPosition);
     }
@@ -48,6 +48,19 @@ public class SolarPanelBlockEntity extends PowerGeneratingMachineEntity {
     }
 
     @Override
+    public void serverTick() {
+        if (isGenerating()) {
+            getEnergyStorage().addEnergy(getGenerationRate());
+        }
+
+        super.serverTick();
+    }
+
+    @Override
+    protected boolean isActive() {
+        return canAct() && hasEnergy() && isGenerating();
+    }
+
     public boolean isGenerating() {
         if (level == null || level.getHeight(Heightmap.Types.WORLD_SURFACE, worldPosition.getX(), worldPosition.getZ()) != worldPosition.getY() + 1)
             return false;
@@ -55,7 +68,6 @@ public class SolarPanelBlockEntity extends PowerGeneratingMachineEntity {
         return getGenerationRate() > 0;
     }
 
-    @Override
     public int getGenerationRate() {
         int minuteInTicks = 20 * 60;
         if (level == null)

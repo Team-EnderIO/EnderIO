@@ -1,5 +1,6 @@
 package com.enderio.core.common.network;
 
+import com.enderio.core.CoreNBTKeys;
 import com.enderio.core.common.menu.SyncedMenu;
 import com.enderio.core.common.sync.EnderDataSlot;
 import net.minecraft.nbt.CompoundTag;
@@ -21,7 +22,7 @@ public class SyncClientToServerMenuPacket extends ClientToServerMenuPacket<Synce
     public SyncClientToServerMenuPacket(int containerID, ListTag list) {
         super(SyncedMenu.class, containerID);
         data = new CompoundTag();
-        data.put("list", list);
+        data.put(CoreNBTKeys.SYNC_DATA, list);
     }
 
     public SyncClientToServerMenuPacket(FriendlyByteBuf buf) {
@@ -37,13 +38,13 @@ public class SyncClientToServerMenuPacket extends ClientToServerMenuPacket<Synce
 
     @Override
     public void handle(NetworkEvent.Context context) {
-        ListTag list = data.getList("list", Tag.TAG_COMPOUND);
+        ListTag list = data.getList(CoreNBTKeys.SYNC_DATA, Tag.TAG_COMPOUND);
         List<EnderDataSlot<?>> clientToServerSlots = getMenu(context).getClientToServerSlots();
         List<Pair<Integer, CompoundTag>> dataSlots = new ArrayList<>();
         boolean encounteredError = false;
         for (Tag tag: list) {
             if (tag instanceof CompoundTag compound) {
-                Tag indexTag = compound.get("dataSlotIndex");
+                Tag indexTag = compound.get(CoreNBTKeys.SYNC_DATA_SLOT_INDEX);
                 if (indexTag instanceof IntTag intTag) {
                     int index = intTag.getAsInt();
                     if (index >= 0 && index < clientToServerSlots.size()) {

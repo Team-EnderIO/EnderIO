@@ -1,5 +1,6 @@
 package com.enderio.base.common.blockentity;
 
+import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.util.PaintUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -73,8 +74,8 @@ public class SinglePaintedBlockEntity extends BlockEntity implements IPaintableB
 
     // TODO: HOUSEKEEPING?: This should probably be converted to a capability.
     protected void readPaint(CompoundTag tag) {
-        if (tag.contains("paint")) {
-            paint = PaintUtils.getBlockFromRL(tag.getString("paint"));
+        if (tag.contains(EIONBTKeys.PAINT)) {
+            paint = PaintUtils.getBlockFromRL(tag.getString(EIONBTKeys.PAINT));
             if (level != null) {
                 if (level.isClientSide) {
                     requestModelDataUpdate();
@@ -93,7 +94,7 @@ public class SinglePaintedBlockEntity extends BlockEntity implements IPaintableB
 
     protected void writePaint(CompoundTag tag) {
         if (paint != null) {
-            tag.putString("paint", Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(paint)).toString());
+            tag.putString(EIONBTKeys.PAINT, Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(paint)).toString());
         }
     }
 }

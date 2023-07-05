@@ -1,16 +1,20 @@
 package com.enderio.conduits.common.network;
 
+import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.IExtendedConduitData;
 import com.enderio.api.conduit.NodeIdentifier;
-import com.enderio.EnderIO;
+import com.enderio.conduits.ConduitNBTKeys;
 import com.mojang.datafixers.util.Pair;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
 import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
@@ -38,32 +42,40 @@ public class ConduitSavedData extends SavedData {
 
     }
 
+    // region Serialization
+
+    private static final String KEY_GRAPHS = "Graphs";
+    private static final String KEY_TYPE = "Type";
+    private static final String KEY_GRAPH_OBJECTS = "GraphObjects";
+    private static final String KEY_GRAPH_CONNECTIONS = "GraphConnections";
+    private static final String KEY_DATA = "Data";
+
     // Deserialization
     private ConduitSavedData(Level level, CompoundTag nbt) {
         EnderIO.LOGGER.info("Conduit network deserialization started");
         long start = System.currentTimeMillis();
-        ListTag graphsTag = nbt.getList("graphs", Tag.TAG_COMPOUND);
+        ListTag graphsTag = nbt.getList(KEY_GRAPHS, Tag.TAG_COMPOUND);
         for (Tag tag : graphsTag) {
             CompoundTag typedGraphTag = (CompoundTag) tag;
-            ResourceLocation type = new ResourceLocation(typedGraphTag.getString("type"));
+            ResourceLocation type = new ResourceLocation(typedGraphTag.getString(KEY_TYPE));
 
             if (ConduitTypes.getRegistry().containsKey(type)) {
                 IConduitType<?> value = Objects.requireNonNull(ConduitTypes.getRegistry().getValue(type));
-                ListTag graphsForTypeTag = typedGraphTag.getList("graphs", Tag.TAG_COMPOUND);
+                ListTag graphsForTypeTag = typedGraphTag.getList(KEY_GRAPHS, Tag.TAG_COMPOUND);
                 for (Tag tag1 : graphsForTypeTag) {
                     CompoundTag graphTag = (CompoundTag) tag1;
 
-                    ListTag graphObjectsTag = graphTag.getList("graphObjects", Tag.TAG_COMPOUND);
-                    ListTag graphConnectionsTag = graphTag.getList("graphConnections", Tag.TAG_COMPOUND);
+                    ListTag graphObjectsTag = graphTag.getList(KEY_GRAPH_OBJECTS, Tag.TAG_COMPOUND);
+                    ListTag graphConnectionsTag = graphTag.getList(KEY_GRAPH_CONNECTIONS, Tag.TAG_COMPOUND);
 
                     List<NodeIdentifier<?>> graphObjects = new ArrayList<>();
                     List<Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>>> connections = new ArrayList<>();
 
                     for (Tag tag2 : graphObjectsTag) {
                         CompoundTag nodeTag = (CompoundTag) tag2;
-                        BlockPos pos = BlockPos.of((nodeTag.getLong("pos")));
+                        BlockPos pos = BlockPos.of((nodeTag.getLong(ConduitNBTKeys.BLOCK_POS)));
                         NodeIdentifier<?> node = new NodeIdentifier<>(pos, value.createExtendedConduitData(level, pos));
-                        node.getExtendedConduitData().deserializeNBT(nodeTag.getCompound("data"));
+                        node.getExtendedConduitData().deserializeNBT(nodeTag.getCompound(KEY_DATA));
                         graphObjects.add(node);
                         putUnloadedNodeIdentifier(value, pos, node);
                     }
@@ -117,7 +129,7 @@ public class ConduitSavedData extends SavedData {
                 continue;
 
             CompoundTag typedGraphTag = new CompoundTag();
-            typedGraphTag.putString("type", ConduitTypes.getRegistry().getKey(type).toString());
+            typedGraphTag.putString(KEY_TYPE, ConduitTypes.getRegistry().getKey(type).toString());
 
             ListTag graphsForTypeTag = new ListTag();
 
@@ -128,12 +140,12 @@ public class ConduitSavedData extends SavedData {
                 graphsForTypeTag.add(serializeGraph(graph));
             }
             if (!graphsForTypeTag.isEmpty()) {
-                typedGraphTag.put("graphs", graphsForTypeTag);
+                typedGraphTag.put(KEY_GRAPHS, graphsForTypeTag);
                 graphsTag.add(typedGraphTag);
             }
         }
 
-        nbt.put("graphs", graphsTag);
+        nbt.put(KEY_GRAPHS, graphsTag);
         EnderIO.LOGGER.info("Conduit network serialization finished, took {}ms", System.currentTimeMillis() - start);
         return nbt;
     }
@@ -157,8 +169,8 @@ public class ConduitSavedData extends SavedData {
 
             if (graphObject instanceof NodeIdentifier<?> nodeIdentifier) {
                 CompoundTag dataTag = new CompoundTag();
-                dataTag.putLong("pos", nodeIdentifier.getPos().asLong());
-                dataTag.put("data", nodeIdentifier.getExtendedConduitData().serializeNBT());
+                dataTag.putLong(ConduitNBTKeys.BLOCK_POS, nodeIdentifier.getPos().asLong());
+                dataTag.put(KEY_DATA, nodeIdentifier.getExtendedConduitData().serializeNBT());
                 graphObjectsTag.add(dataTag);
             } else {
                 throw new ClassCastException("graphObject was not of type nodeIdentifier");
@@ -174,11 +186,13 @@ public class ConduitSavedData extends SavedData {
             graphConnectionsTag.add(connectionTag);
         }
 
-        graphTag.put("graphObjects", graphObjectsTag);
-        graphTag.put("graphConnections", graphConnectionsTag);
+        graphTag.put(KEY_GRAPH_OBJECTS, graphObjectsTag);
+        graphTag.put(KEY_GRAPH_CONNECTIONS, graphConnectionsTag);
 
         return graphTag;
     }
+
+    // endregion
 
     private void merge(GraphObject<Mergeable.Dummy> object, List<Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>>> connections) {
         var filteredConnections = connections.stream().filter(pair -> (pair.getFirst() == object || pair.getSecond() == object)).toList();

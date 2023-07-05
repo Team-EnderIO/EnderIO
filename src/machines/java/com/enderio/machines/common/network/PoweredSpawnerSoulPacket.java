@@ -1,7 +1,7 @@
 package com.enderio.machines.common.network;
 
 import com.enderio.core.common.network.Packet;
-import com.enderio.machines.common.blockentity.task.SpawnTask;
+import com.enderio.machines.common.blockentity.task.SpawnerMachineTask;
 import com.enderio.machines.common.souldata.SpawnerSoul;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -24,7 +24,7 @@ public class PoweredSpawnerSoulPacket implements Packet {
     public PoweredSpawnerSoulPacket(FriendlyByteBuf buf) {
         Map<ResourceLocation, SpawnerSoul.SoulData> newMap = new HashMap<>();
         buf.readMap(FriendlyByteBuf::readResourceLocation, buff ->
-            new SpawnerSoul.SoulData(buff.readResourceLocation(), buff.readInt(), buff.readEnum(SpawnTask.SpawnType.class))
+            new SpawnerSoul.SoulData(buff.readResourceLocation(), buff.readInt(), buff.readEnum(SpawnerMachineTask.SpawnType.class))
         );
         this.map = newMap;
     }

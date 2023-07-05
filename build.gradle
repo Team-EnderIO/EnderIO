@@ -8,7 +8,7 @@ buildscript {
     }
     dependencies {
         classpath 'org.spongepowered:mixingradle:0.7.+'
-        classpath 'org.moddingx:ModGradle:3.0.+'
+        classpath 'org.moddingx:ModGradle:4.0.+'
     }
 }
 
@@ -16,7 +16,7 @@ plugins {
     id 'eclipse'
     id 'maven-publish'
     id "com.modrinth.minotaur" version "2.+"
-    id 'net.minecraftforge.gradle' version '5.1.+'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 }
 
@@ -34,8 +34,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 // TODO: 1.19: Tidy the divisions and what goes where.
 def subsets = [
         'conduits',
-        'machines',
-        'decor'
+        'machines'
 ]
 
 sourceSets {
@@ -240,21 +239,23 @@ dependencies {
     compileOnly "appeng:appliedenergistics2-forge:${ae2_version}:api"
     runtimeOnly fg.deobf("appeng:appliedenergistics2-forge:${ae2_version}")
 
-    // The One Probe
-    //TODO: Remove having to specify these as non transitive once https://github.com/McJtyMods/TheOneProbe/issues/548 is fixed. Thanks Mekanism!
-    compileOnly fg.deobf("mcjty.theoneprobe:theoneprobe:${top_version}:api") {
-        transitive = false
-    }
-    runtimeOnly fg.deobf("mcjty.theoneprobe:theoneprobe:${top_version}") {
-        transitive = false
-    }
+    // The One Probe https://github.com/McJtyMods/TheOneProbe/issues/548
+//    compileOnly fg.deobf("mcjty.theoneprobe:theoneprobe:${top_version}:api") {
+//        transitive = false
+//    }
+//    runtimeOnly fg.deobf("mcjty.theoneprobe:theoneprobe:${top_version}") {
+//        transitive = false
+//    }
+
+    // Jade
+    runtimeOnly fg.deobf("curse.maven:jade-324717:${jade_cf_id}")
 
     // Patchouli
 //    compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
 //    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
 
     // While we don't have conduits etc.
-//    runtimeOnly fg.deobf("curse.maven:mekanism-268560:${mekanism_version}")
+//    runtimeOnly fg.deobf("curse.maven:mekanism-268560:${mekanism_cf_id}")
 
     // Jetbrains annotations
     compileOnly 'org.jetbrains:annotations:23.0.0'
@@ -296,14 +297,15 @@ jar {
     finalizedBy('reobfJar')
 }
 
-task apiJar(type: Jar) {
-    classifier 'api'
+tasks.register('apiJar', Jar) {
+    archiveClassifier = 'api'
     from sourceSets.api.output
 }
 build.dependsOn apiJar
 
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier 'sources'
+tasks.register('sourcesJar', Jar) {
+    dependsOn classes
+    archiveClassifier = 'sources'
 
     from sourceSets.api.allJava
     from sourceSets.main.allJava

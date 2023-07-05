@@ -1,6 +1,6 @@
 package com.enderio.machines.common.souldata;
 
-import com.enderio.machines.common.blockentity.task.SpawnTask;
+import com.enderio.machines.common.blockentity.task.SpawnerMachineTask;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
@@ -20,7 +20,7 @@ public class SpawnerSoul {
      * @param power powercost of the spawner
      * @param spawnType way to spawn the mob
      */
-    public record SoulData(ResourceLocation entitytype, int power, SpawnTask.SpawnType spawnType) implements ISoulData {
+    public record SoulData(ResourceLocation entitytype, int power, SpawnerMachineTask.SpawnType spawnType) implements ISoulData {
         @Override
         public ResourceLocation getKey() {
             return entitytype();
@@ -33,7 +33,7 @@ public class SpawnerSoul {
     public static final Codec<SoulData> CODEC = RecordCodecBuilder.create(soulDataInstance ->
         soulDataInstance.group(ResourceLocation.CODEC.fieldOf("entity").forGetter(SoulData::entitytype),
             Codec.INT.fieldOf("power").forGetter(SoulData::power),
-            Codec.STRING.comapFlatMap(SpawnTask.SpawnType::byName, SpawnTask.SpawnType::getName).stable().fieldOf("type").forGetter(SoulData::spawnType))
+            Codec.STRING.comapFlatMap(SpawnerMachineTask.SpawnType::byName, SpawnerMachineTask.SpawnType::getName).stable().fieldOf("type").forGetter(SoulData::spawnType))
             .apply(soulDataInstance, SoulData::new));
 
     //SoulData Manger for the spawner data

@@ -51,6 +51,14 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
         return input;
     }
 
+    /**
+     * JEI for sag mill will not use this, it'll use a capacitor data.
+     */
+    @Override
+    public int getBaseEnergyCost() {
+        return energy;
+    }
+
     @Override
     public int getEnergyCost(Container container) {
         return getEnergyCost(container.getGrindingBall());

@@ -1,10 +1,10 @@
 package com.enderio.base.common.block.glass;
 
 import com.enderio.EnderIO;
-import com.enderio.base.common.init.EIOItems;
-import com.enderio.base.common.lang.EIOLang;
 import com.enderio.api.misc.IIcon;
 import com.enderio.api.misc.Vector2i;
+import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.common.lang.EIOLang;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Mob;
@@ -12,8 +12,8 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.util.Optional;
 import java.util.function.Predicate;
 

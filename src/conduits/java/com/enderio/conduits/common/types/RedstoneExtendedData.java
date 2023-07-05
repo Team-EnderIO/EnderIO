@@ -7,17 +7,23 @@ public class RedstoneExtendedData implements IExtendedConduitData<RedstoneExtend
 
     private boolean isActive = false;
 
+    // region Serialization
+
+    private static final String KEY_ACTIVE = "Active";
+
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
-        nbt.putBoolean("active", isActive);
+        nbt.putBoolean(KEY_ACTIVE, isActive);
         return nbt;
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        isActive = nbt.getBoolean("active");
+        isActive = nbt.getBoolean(KEY_ACTIVE);
     }
+
+    // endregion
 
     @Override
     public boolean syncDataToClient() {

@@ -13,7 +13,7 @@ public class DirectUpgrade implements IDarkSteelUpgrade {
     public static final String NAME = DarkSteelUpgradeRegistry.UPGRADE_PREFIX + "direct";
 
     @Override
-    public String getSerializedName() {
+    public String getName() {
         return NAME;
     }
 

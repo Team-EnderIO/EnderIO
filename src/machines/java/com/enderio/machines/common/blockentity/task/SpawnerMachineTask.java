@@ -12,7 +12,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.ForgeEventFactory;
@@ -23,27 +26,34 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Optional;
 
-public class SpawnTask extends PoweredTask{
+public class SpawnerMachineTask implements IPoweredMachineTask {
 
     public static final int spawnTries = 10;
     private boolean complete;
     private int energyCost;
     private int energyConsumed = 0;
-    private final PoweredSpawnerBlockEntity blockEntity;
     private float efficiency = 1;
     private SpawnType spawnType = MachinesConfig.COMMON.SPAWN_TYPE.get();
     @Nullable
     private EntityType<? extends Entity> entityType;
+
+    private final PoweredSpawnerBlockEntity blockEntity;
+    private final IMachineEnergyStorage energyStorage;
 
     /**
      * Create a new powered task.
      *
      * @param energyStorage The energy storage used to power the task.
      */
-    public SpawnTask(PoweredSpawnerBlockEntity blockEntity, IMachineEnergyStorage energyStorage, Optional<ResourceLocation> rl) {
-        super(energyStorage);
+    public SpawnerMachineTask(PoweredSpawnerBlockEntity blockEntity, IMachineEnergyStorage energyStorage, Optional<ResourceLocation> rl) {
         this.blockEntity = blockEntity;
+        this.energyStorage = energyStorage;
         loadSoulData(rl);
+    }
+
+    @Override
+    public IMachineEnergyStorage getEnergyStorage() {
+        return energyStorage;
     }
 
     @Override
@@ -68,20 +78,8 @@ public class SpawnTask extends PoweredTask{
     }
 
     @Override
-    public boolean isComplete() {
+    public boolean isCompleted() {
         return complete;
-    }
-
-    @Override
-    public CompoundTag serializeNBT() {
-        CompoundTag nbt = new CompoundTag();
-        nbt.putInt("EnergyConsumed", energyConsumed);
-        return nbt;
-    }
-
-    @Override
-    public void deserializeNBT(CompoundTag nbt) {
-        energyConsumed = nbt.getInt("EnergyConsumed");
     }
 
     /**
@@ -215,6 +213,25 @@ public class SpawnTask extends PoweredTask{
         return false;
     }
 
+    // region Serialization
+
+    private static final String KEY_ENERGY_CONSUMED = "EnergyConsumed";
+
+    @Override
+    public CompoundTag serializeNBT() {
+        CompoundTag nbt = new CompoundTag();
+        nbt.putInt(KEY_ENERGY_CONSUMED, energyConsumed);
+        return nbt;
+    }
+
+    @Override
+    public void deserializeNBT(CompoundTag nbt) {
+        energyConsumed = nbt.getInt(KEY_ENERGY_CONSUMED);
+    }
+
+    // endregion
+
+    // TODO: Might want to move this to its own file in future.
     public enum SpawnType {
         ENTITYTYPE("entitytype"),
         COPY("copy");

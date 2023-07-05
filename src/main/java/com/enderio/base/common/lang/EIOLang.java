@@ -39,8 +39,8 @@ public class EIOLang {
     public static final Component SOUL_VIAL_ERROR_DEAD = REGISTRATE.addLang("message", EnderIO.loc("soul_vial.error_dead"), "Cannot capture a dead mob!");
     public static final MutableComponent SOUL_VIAL_TOOLTIP_HEALTH = REGISTRATE.addLang("tooltip", EnderIO.loc("soul_vial.health"), "Health: %s/%s");
 
-    public static final Component COORDINATE_SELECTOR_NO_PAPER = REGISTRATE.addLang("info", EnderIO.loc("coordinate_selector.no_paper"), "No Paper in Inventory");
-    public static final Component COORDINATE_SELECTOR_NO_BLOCK = REGISTRATE.addLang("info", EnderIO.loc("coordinate_selector.no_block"), "No Block in Range");
+    public static final Component COORDINATE_SELECTOR_NO_PAPER = REGISTRATE.addLang("info", EnderIO.loc("coordinate_selector.no_paper"), "No paper in inventory");
+    public static final Component COORDINATE_SELECTOR_NO_BLOCK = REGISTRATE.addLang("info", EnderIO.loc("coordinate_selector.no_block"), "No block in range");
     public static final Component TOO_MANY_LEVELS = REGISTRATE.addLang("info", EnderIO.loc("too_many_levels"), "You have more than 21862 levels, that's too much XP.");
 
 
@@ -60,6 +60,7 @@ public class EIOLang {
 
     // region Dark Steel
 
+    public static final MutableComponent HEAD_DROP_CHANCE = REGISTRATE.addLang("info", EnderIO.loc("headchance"), "%s%% chance to drop a mob head");
     public static final MutableComponent ENERGY_AMOUNT = REGISTRATE.addLang("info", EnderIO.loc("energy.amount"), "%s \u00B5I");
     public static final MutableComponent DURABILITY_AMOUNT = REGISTRATE.addLang("info", EnderIO.loc("durability.amount"), "Durability %s");
 
@@ -125,19 +126,46 @@ public class EIOLang {
 
     // region Enchantments
 
-    public static final Component AUTO_SMELT_DESC = enchantmentDescription("auto_smelt", "Automatically smeltes whatever is mined");
-    public static final Component REPELLENT_DESC = enchantmentDescription("repellent",
-        "Chance to teleport attackers away\nHigher levels teleport more often and farther");
-    public static final Component SHIMMER_DESC = enchantmentDescription("shimmer",
-        "Makes the item shimmer as if it was enchanted.\nThat's all.\nReally.\nNothing more.\nYes, it is useless.\nI know.");
-    public static final Component SOULBOUND_DESC = enchantmentDescription("soulbound",
-        "Prevents item from being lost on death.\nNote: Most gravestone mods are stupid and prevent this from working!");
-    public static final Component WITHERING_BLADE_DESC = enchantmentDescription("withering_blade",
-        "Applies wither to the target\nApplies to bladed weapons");
-    public static final Component WITHERING_ARROW_DESC = enchantmentDescription("withering_arrow",
-        "Applies wither to the target\nApplies to bows.");
-    public static final Component WITHERING_BOLT_DESC = enchantmentDescription("withering_bolt",
-        "Applies wither to the target\nApplies to crossbows.");
+    public static final Component AUTO_SMELT_DESC = enchantmentDescription("auto_smelt", "Automatically smelts whatever is mined");
+
+    public static final Component REPELLENT_DESC1 = enchantmentDescription("repellent1",
+        "Chance to teleport attackers away");
+    public static final Component REPELLENT_DESC2 = enchantmentDescription("repellent2",
+        "Higher levels teleport more often and farther");
+
+    public static final Component SHIMMER_DESC1 = enchantmentDescription("shimmer1",
+        "Makes the item shimmer as if it was enchanted.");
+    public static final Component SHIMMER_DESC2 = enchantmentDescription("shimmer2",
+        "That's all.");
+    public static final Component SHIMMER_DESC3 = enchantmentDescription("shimmer3",
+        "Really.");
+    public static final Component SHIMMER_DESC4 = enchantmentDescription("shimmer4",
+        "Nothing more.");
+    public static final Component SHIMMER_DESC5 = enchantmentDescription("shimmer5",
+        "Yes, it is useless.");
+    public static final Component SHIMMER_DESC6 = enchantmentDescription("shimmer6",
+        "I know.");
+
+    public static final Component SOULBOUND_DESC1 = enchantmentDescription("soulbound1",
+        "Prevents item from being lost on death.");
+    public static final Component SOULBOUND_DESC2 = enchantmentDescription("soulbound2",
+        "Note: Most gravestone mods are stupid and prevent this from working!");
+
+    public static final Component WITHERING_BLADE_DESC1 = enchantmentDescription("withering_blade1",
+        "Applies wither to the target");
+    public static final Component WITHERING_BLADE_DESC2 = enchantmentDescription("withering_blade2",
+        "Applies to bladed weapons");
+
+    public static final Component WITHERING_ARROW_DESC1 = enchantmentDescription("withering_arrow1",
+        "Applies wither to the target");
+    public static final Component WITHERING_ARROW_DESC2 = enchantmentDescription("withering_arrow2",
+        "Applies to bows.");
+
+    public static final Component WITHERING_BOLT_DESC1 = enchantmentDescription("withering_bolt1",
+        "Applies wither to the target");
+    public static final Component WITHERING_BOLT_DESC2 = enchantmentDescription("withering_bolt2",
+        "Applies to crossbows.");
+
     public static final Component XP_BOOST_DESC = enchantmentDescription("xp_boost", "Extra XP from mobs and blocks");
 
     private static Component enchantmentDescription(String enchantmentname, String description) {

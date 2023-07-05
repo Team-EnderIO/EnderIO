@@ -1,5 +1,6 @@
 package com.enderio.core.common.menu;
 
+import com.enderio.core.CoreNBTKeys;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.core.common.network.CoreNetwork;
 import com.enderio.core.common.network.SyncClientToServerMenuPacket;
@@ -65,7 +66,7 @@ public abstract class SyncedMenu<T extends EnderBlockEntity> extends AbstractCon
 
             if (optionalNBT.isPresent()) {
                 CompoundTag elementNBT = optionalNBT.get();
-                elementNBT.putInt("dataSlotIndex", i);
+                elementNBT.putInt(CoreNBTKeys.SYNC_DATA_SLOT_INDEX, i);
                 listNBT.add(elementNBT);
             }
         }

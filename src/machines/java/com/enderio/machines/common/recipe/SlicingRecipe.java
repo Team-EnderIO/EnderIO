@@ -38,7 +38,7 @@ public class SlicingRecipe implements MachineRecipe<Container> {
     }
 
     @Override
-    public int getEnergyCost(Container container) {
+    public int getBaseEnergyCost() {
         return energy;
     }
 

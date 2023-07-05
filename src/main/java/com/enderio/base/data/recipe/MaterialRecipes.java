@@ -268,7 +268,7 @@ public class MaterialRecipes extends RecipeProvider {
             EIOItems.ENERGETIC_ALLOY_NUGGET.get());
         upgradeGear(recipeConsumer, EIOItems.GEAR_VIBRANT.get(), EIOItems.GEAR_ENERGIZED.get(), EIOItems.VIBRANT_ALLOY_INGOT.get(),
             EIOItems.VIBRANT_ALLOY_NUGGET.get());
-        upgradeGear(recipeConsumer, EIOItems.GEAR_DARK_STEEL.get(), EIOItems.GEAR_ENERGIZED.get(), EIOItems.DARK_STEEL_INGOT.get(),
+        upgradeGear(recipeConsumer, EIOItems.GEAR_DARK_STEEL.get(), EIOItems.GEAR_IRON.get(), EIOItems.DARK_STEEL_INGOT.get(),
             EIOItems.DARK_STEEL_NUGGET.get());
     }
 

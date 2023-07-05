@@ -6,7 +6,6 @@ import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.recipe.FireCraftingRecipe;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IIngredientAcceptor;
@@ -26,7 +25,6 @@ import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
@@ -35,7 +33,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
@@ -45,7 +42,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * TODO: Finish and enable in 1.19.4.
  * @author TagnumElite
  */
 public class FireCraftingCategory implements IRecipeCategory<FireCraftingRecipe> {

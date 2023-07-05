@@ -22,7 +22,6 @@ public class NBTSerializableDataSlot<T extends INBTSerializable<CompoundTag>> ex
         this.setterCallback = setterCallback;
     }
 
-
     @Override
     public void handleNBT(CompoundTag tag) {
         super.handleNBT(tag);

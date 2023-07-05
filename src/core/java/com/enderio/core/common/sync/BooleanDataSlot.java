@@ -13,12 +13,12 @@ public class BooleanDataSlot extends EnderDataSlot<Boolean> {
     @Override
     public CompoundTag toFullNBT() {
         CompoundTag tag = new CompoundTag();
-        tag.putBoolean("value", getter().get());
+        tag.putBoolean(KEY_VALUE, getter().get());
         return tag;
     }
 
     @Override
     protected Boolean fromNBT(CompoundTag nbt) {
-        return nbt.getBoolean("value");
+        return nbt.getBoolean(KEY_VALUE);
     }
 }

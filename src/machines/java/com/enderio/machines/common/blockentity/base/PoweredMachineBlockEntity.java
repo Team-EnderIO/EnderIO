@@ -6,32 +6,32 @@ import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.base.common.capacitor.DefaultCapacitorData;
 import com.enderio.core.common.sync.SyncMode;
+import com.enderio.machines.common.MachineNBTKeys;
+import com.enderio.machines.common.block.ProgressMachineBlock;
 import com.enderio.machines.common.blockentity.sync.MachineEnergyDataSlot;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.ImmutableMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
+import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.EnumMap;
 import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
  * A machine that stores energy.
  */
-public abstract class PoweredMachineEntity extends MachineBlockEntity {
+public abstract class PoweredMachineBlockEntity extends MachineBlockEntity {
     /**
      * The energy storage medium for the block entity.
      * This will be a mutable energy storage.
@@ -46,24 +46,24 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
      */
     private IMachineEnergyStorage clientEnergyStorage = ImmutableMachineEnergyStorage.EMPTY;
 
-    private final LazyOptional<IMachineEnergyStorage> energyStorageCap;
-
-    // Cache for external energy interaction
-    private final EnumMap<Direction, LazyOptional<IEnergyStorage>> energyHandlerCache = new EnumMap<>(Direction.class);
-
     private ICapacitorData cachedCapacitorData = DefaultCapacitorData.NONE;
     private boolean capacitorCacheDirty;
 
-    public PoweredMachineEntity(EnergyIOMode energyIOMode, ICapacitorScalable capacity, ICapacitorScalable usageRate, BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
+    public PoweredMachineBlockEntity(EnergyIOMode energyIOMode, ICapacitorScalable capacity, ICapacitorScalable usageRate, BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
 
         // Create energy storage
         this.energyStorage = createEnergyStorage(energyIOMode,
             capacity.scaleI(this::getCapacitorData),
             usageRate.scaleI(this::getCapacitorData));
-        this.energyStorageCap = LazyOptional.of(this::getExposedEnergyStorage);
+
+        // Create exposed energy storage.
+        // Default is that createExposedEnergyStorage returns the existing energy storage.
         this.exposedEnergyStorage = createExposedEnergyStorage();
-        addCapabilityProvider(exposedEnergyStorage == null ? energyStorage : exposedEnergyStorage);
+        if (exposedEnergyStorage != null) {
+            addCapabilityProvider(exposedEnergyStorage);
+        }
+
         // Mark capacitor cache as dirty
         capacitorCacheDirty = true;
 
@@ -73,15 +73,17 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
 
     @Override
     public void serverTick() {
-        // Leak energy once per second
-        if (level.getGameTime() % 20 == 0) {
-            energyStorage.takeEnergy(getEnergyLeakPerSecond());
-        }
-
         // If redstone config is not enabled.
         if (canAct()) {
             // Push energy to other blocks.
             pushEnergy();
+        }
+
+        if (level != null) {
+            BlockState blockState = getBlockState();
+            if (blockState.hasProperty(ProgressMachineBlock.POWERED) && blockState.getValue(ProgressMachineBlock.POWERED) != isActive()) {
+                level.setBlock(getBlockPos(), blockState.setValue(ProgressMachineBlock.POWERED, isActive()), Block.UPDATE_ALL);
+            }
         }
 
         super.serverTick();
@@ -89,7 +91,12 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
 
     // region Energy
 
-    // TODO: Machine efficiency features.
+    /**
+     * This should only be a test of if the machine has a "job" or "task".
+     * Not whether it is powered or it can act.
+     * @return Whether this machine is currently active.
+     */
+    protected abstract boolean isActive();
 
     /**
      * Get the machine's energy storage.
@@ -97,13 +104,22 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
      * On server side, it will be an instance descended of {@link MachineEnergyStorage}.
      */
     public final IMachineEnergyStorage getEnergyStorage() {
-        if (isClientSide()) {
+        if (level != null && level.isClientSide()) {
             return clientEnergyStorage;
         }
         return energyStorage;
     }
+
+    public final boolean hasEnergy() {
+        if (requiresCapacitor() && !isCapacitorInstalled())
+            return false;
+        return getEnergyStorage().getEnergyStored() > 0;
+    }
+
     /**
-     * Get the machine's exposed energy storage. Will likely be the same as the normal energy storage, but sometimes might be different, if blocks want to expose a different energystorage (wrapper for combining photovoltaic cells or capacitor banks)
+     * Get the machine's exposed energy storage.
+     * Will likely be the same as the normal energy storage, but sometimes might expose a different energy storage.
+     * For example a wrapper for combining photovoltaic cells or capacitor banks
      */
     public final IMachineEnergyStorage getExposedEnergyStorage() {
         if (exposedEnergyStorage != null)
@@ -111,13 +127,15 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
         return getEnergyStorage();
     }
 
+    /**
+     * Create the exposed energy storage.
+     * Default behaviour returns the existing energy storage included with the class.
+     * Override this and return null to disable exposing energy capability.
+     * Override this and return a new energy storage to add a different energy capability.
+     */
     @Nullable
     public MachineEnergyStorage createExposedEnergyStorage() {
-        return null;
-    }
-
-    public int getEnergyLeakPerSecond() {
-        return 0;
+        return energyStorage;
     }
 
     /**
@@ -134,13 +152,14 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
                 continue;
             // Get our energy handler, this will handle all sidedness tests for us.
             getCapability(ForgeCapabilities.ENERGY, side).resolve().ifPresent(selfHandler -> {
-                // If we can't extract out this side, continue
-                if (selfHandler.getEnergyStored() <= 0 || !selfHandler.canExtract())
-                    return;
-
                 // Get the other energy handler
-                Optional<IEnergyStorage> otherHandler = getNeighboringEnergyHandler(side).resolve();
+                Optional<IEnergyStorage> otherHandler = getNeighbouringCapability(ForgeCapabilities.ENERGY, side).resolve();
                 if (otherHandler.isPresent()) {
+                    // Don't insert into self. (Solar panels)
+                    if (selfHandler == otherHandler.get()) {
+                        return;
+                    }
+
                     // If the other handler can receive power transmit ours
                     if (otherHandler.get().canReceive()) {
                         int received = otherHandler.get().receiveEnergy(selfHandler.getEnergyStored(), false);
@@ -181,46 +200,19 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
 
     // endregion
 
-    // region Neighboring Capabilities
-
-    @Override
-    protected void clearCaches() {
-        super.clearCaches();
-        energyHandlerCache.clear();
-    }
-
-    @Override
-    protected void populateCaches(Direction direction, @Nullable BlockEntity neighbor) {
-        super.populateCaches(direction, neighbor);
-
-        if (neighbor != null) {
-            energyHandlerCache.put(direction, addInvalidationListener(neighbor.getCapability(ForgeCapabilities.ENERGY, direction.getOpposite())));
-        } else {
-            energyHandlerCache.put(direction, LazyOptional.empty());
-        }
-    }
-
-    protected LazyOptional<IEnergyStorage> getNeighboringEnergyHandler(Direction side) {
-        if (!energyHandlerCache.containsKey(side))
-            return LazyOptional.empty();
-        return energyHandlerCache.get(side);
-    }
-
-    // endregion
-
     // region Capacitors
 
     /**
      * Whether the machine requires a capacitor to operate.
      */
-    public boolean requiresCapacitor() {
+    public final boolean requiresCapacitor() {
         MachineInventoryLayout layout = getInventoryLayout();
         if (layout == null)
             return false;
         return layout.supportsCapacitor();
     }
 
-    public int getCapacitorSlot() {
+    public final int getCapacitorSlot() {
         MachineInventoryLayout layout = getInventoryLayout();
         if (layout == null)
             return -1;
@@ -240,10 +232,11 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
     }
 
     public ItemStack getCapacitorItem() {
+        MachineInventory inventory = getInventory();
         MachineInventoryLayout layout = getInventoryLayout();
-        if (layout == null)
+        if (inventory == null || layout == null)
             return ItemStack.EMPTY;
-        return getInventory().getStackInSlot(layout.getCapacitorSlot());
+        return inventory.getStackInSlot(layout.getCapacitorSlot());
     }
 
     /**
@@ -251,23 +244,28 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
      */
     public ICapacitorData getCapacitorData() {
         if (capacitorCacheDirty)
-            cacheCapacitorData();
+            cacheCapacitorData();``
         return cachedCapacitorData;
     }
 
     @Override
     protected void onInventoryContentsChanged(int slot) {
-        if (getInventoryLayout().getCapacitorSlot() == slot) {
+        MachineInventoryLayout inventoryLayout = getInventoryLayout();
+        if (inventoryLayout != null && inventoryLayout.getCapacitorSlot() == slot) {
             capacitorCacheDirty = true;
         }
         super.onInventoryContentsChanged(slot);
     }
 
     private void cacheCapacitorData() {
+        if (level == null) {
+            return;
+        }
+
         capacitorCacheDirty = false;
 
         // Don't do this on client side, client waits for the sync packet.
-        if (isClientSide()) {
+        if (level.isClientSide()) {
             return;
         }
 
@@ -286,35 +284,21 @@ public abstract class PoweredMachineEntity extends MachineBlockEntity {
 
     // endregion
 
-    // region Capabilities and Serialization
-
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
-        if (cap == ForgeCapabilities.ENERGY && side == null) {
-            return energyStorageCap.cast();
-        }
-        return super.getCapability(cap, side);
-    }
-
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-        energyStorageCap.invalidate();
-    }
+    // region Serialization
 
     @Override
     public void saveAdditional(CompoundTag pTag) {
         var energyStorage = getEnergyStorage();
         if (energyStorage instanceof MachineEnergyStorage storage)
-            pTag.put("energy", storage.serializeNBT());
+            pTag.put(MachineNBTKeys.ENERGY, storage.serializeNBT());
         super.saveAdditional(pTag);
     }
 
     @Override
     public void load(CompoundTag pTag) {
         var energyStorage = getEnergyStorage();
-        if (energyStorage instanceof MachineEnergyStorage storage)
-            storage.deserializeNBT(pTag.getCompound("energy"));
+        if (energyStorage instanceof MachineEnergyStorage storage && pTag.contains(MachineNBTKeys.ENERGY))
+            storage.deserializeNBT(pTag.getCompound(MachineNBTKeys.ENERGY));
         super.load(pTag);
     }
 
