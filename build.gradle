@@ -18,6 +18,7 @@ plugins {
     id "com.modrinth.minotaur" version "2.+"
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+    id "me.hypherionmc.modutils.modpublisher" version "1.+"
 }
 
 apply plugin: 'org.spongepowered.mixin'
@@ -328,7 +329,7 @@ build.dependsOn tasks.jarJar
 
 // TODO: Should trigger automated publishes using GitHub actions when a release is made.
 
-if (modrinth_publish && (System.getenv("MODRINTH_TOKEN") != null || project.hasProperty('modrinthToken'))) {
+/*if (modrinth_publish && (System.getenv("MODRINTH_TOKEN") != null || project.hasProperty('modrinthToken'))) {
     modrinth {
         token = System.getenv("MODRINTH_TOKEN") ?: project.findProperty("modrinthToken")
         projectId = "${modrinth_projectId}"
@@ -350,6 +351,33 @@ if (modrinth_publish && (System.getenv("MODRINTH_TOKEN") != null || project.hasP
             // JEI
             optional.project "u6dRKJwZ"
         }
+    }
+}*/
+
+
+publisher {
+    apiKeys {
+        curseforge = System.getenv("CURSEFORGE_TOKEN")
+        modrinth = System.getenv("MODRINTH_TOKEN")
+    }
+
+    debug = System.getenv("PUBLISH") ?: true
+    curseID = curseforge_projectId
+    modrinthID = modrinth_projectId
+    versionType = release_type
+    changelog = System.getenv("CHANGELOG") ?: "No changes found."
+    version = "${getVersionString()}"
+    displayName = "Ender IO - ${getVersionString()}"
+    gameVersions = [minecraft_version]
+    loaders = ["forge"]
+    artifact = tasks.jarJar
+
+    curseDepends {
+        optional = ["jei", "patchouli"]
+    }
+
+    modrinthDepends {
+        optional = [modrinth_dep_patchouli, modrinth_dep_jei]
     }
 }
 
@@ -416,6 +444,10 @@ tasks.withType(JavaCompile).configureEach {
 //   * enderio-1.19.1-6.2.1-nightly-4      :: nightly build no. 4 for version 6.2.1
 //   * enderio-1.19.1-6.5.1-dev-c91c8ee6e  :: dev (local) build for commit c91c8ee6e
 String getVersionString() {
+    // We've configured TeamCity to give us build numbers;
+    if (System.getenv('TEAMCITY_VERSION') != null)
+        return "${System.getenv('BUILD_NUMBER')}-${project.release_type}"
+
     def build_server = System.getenv('CI') != null || System.getenv('BUILD_NUMBER') != null
 
     def version_patch_lc = project.version_patch
