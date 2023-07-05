@@ -112,12 +112,38 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     }
 
     public void everyTick() {
-        serverTick();
-        checkConnection = checkConnection.next();
-        if (checkConnection.isInitialized()) {
-            getBlockState()
-                .getBlock()
-                .neighborChanged(getBlockState(), level, worldPosition, getBlockState().getBlock(), worldPosition.relative(Direction.UP), false);
+        if (level != null && !level.isClientSide) {
+            serverTick();
+            checkConnection = checkConnection.next();
+            if (checkConnection.isInitialized()) {
+                updateConnections(getBlockState(), level, worldPosition, worldPosition.relative(Direction.UP), false, false);
+            }
+        }
+    }
+
+    public void updateConnections(BlockState state, Level level, BlockPos pos, BlockPos fromPos, boolean isMoving, boolean shouldActivate) {
+        for (Direction direction: Direction.values()) {
+            if (!(level.getBlockEntity(fromPos) instanceof ConduitBlockEntity)) {
+                ConduitBundle bundle = getBundle();
+                for (IConduitType<?> type : bundle.getTypes()) {
+                    if (shouldActivate && type.getTicker().hasConnectionDelay()) {
+                        checkConnection = checkConnection.activate();
+                    }
+                    IConnectionState connectionState = bundle.getConnection(direction).getConnectionState(type, bundle);
+                    EnderIO.LOGGER.info("try connect " + ConduitTypes.getRegistry().getKey(type) + " because block @ " + pos.toShortString() + " was notified about a change @ " + fromPos.toShortString());
+                    if (connectionState instanceof DynamicConnectionState dyn) {
+                        if (!type.getTicker().canConnectTo(level, pos, direction)) {
+                            getBundle().getNodeFor(type).clearState(direction);
+                            dropConnection(dyn);
+                            getBundle().getConnection(direction).setConnectionState(type, getBundle(), StaticConnectionStates.DISCONNECTED);
+                            updateShape();
+                            updateConnectionToData(type);
+                        }
+                    } else if (connectionState == StaticConnectionStates.DISCONNECTED) {
+                        tryConnectTo(direction, type, true, true);
+                    }
+                }
+            }
         }
     }
 
@@ -502,24 +528,22 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     }
 
     public enum UpdateState {
-        NONE, NEXT, INITIALIZED, MEXT_INITIALIZED;
+        NONE, NEXT_NEXT, NEXT, INITIALIZED;
 
         public boolean isInitialized() {
-            return this == INITIALIZED || this == MEXT_INITIALIZED;
+            return this == INITIALIZED;
         }
 
         public UpdateState next() {
             return switch (this) {
-                case NONE, INITIALIZED, MEXT_INITIALIZED -> NONE;
+                case NONE, INITIALIZED -> NONE;
+                case NEXT_NEXT -> NEXT;
                 case NEXT -> INITIALIZED;
             };
         }
 
         public UpdateState activate() {
-            return switch (this) {
-                case NONE, NEXT -> NEXT;
-                case INITIALIZED, MEXT_INITIALIZED -> MEXT_INITIALIZED;
-            };
+            return NEXT_NEXT;
         }
     }
 }

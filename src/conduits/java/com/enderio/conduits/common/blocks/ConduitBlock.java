@@ -87,29 +87,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
     @Override
     public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
         if (level.getBlockEntity(pos) instanceof ConduitBlockEntity conduit) {
-            for (Direction direction: Direction.values()) {
-                if (!(level.getBlockEntity(fromPos) instanceof ConduitBlockEntity)) {
-                    ConduitBundle bundle = conduit.getBundle();
-                    for (IConduitType<?> type : bundle.getTypes()) {
-                        if (type.getTicker().hasConnectionDelay()) {
-                            conduit.checkConnection = conduit.checkConnection.activate();
-                        }
-                        IConnectionState connectionState = bundle.getConnection(direction).getConnectionState(type, bundle);
-                        EnderIO.LOGGER.info("try connect " + ConduitTypes.getRegistry().getKey(type) + " because block @ " + pos.toShortString() + " was notified about a change @ " + fromPos.toShortString());
-                        if (connectionState instanceof DynamicConnectionState dyn) {
-                            if (!type.getTicker().canConnectTo(level, pos, direction)) {
-                                conduit.getBundle().getNodeFor(type).clearState(direction);
-                                conduit.dropConnection(dyn);
-                                conduit.getBundle().getConnection(direction).setConnectionState(type, conduit.getBundle(), StaticConnectionStates.DISCONNECTED);
-                                conduit.updateShape();
-                                conduit.updateConnectionToData(type);
-                            }
-                        } else if (connectionState == StaticConnectionStates.DISCONNECTED) {
-                            conduit.tryConnectTo(direction, type, true, true);
-                        }
-                    }
-                }
-            }
+            conduit.updateConnections(state, level, pos, fromPos, isMoving, true);
         }
         super.neighborChanged(state, level, pos, block, fromPos, isMoving);
     }
@@ -329,8 +307,8 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
     public static boolean canBeValidConnection(ConduitBlockEntity conduit, IConduitType<?> type, Direction direction) {
         IConnectionState connectionState = conduit.getBundle().getConnection(direction).getConnectionState(type, conduit.getBundle());
         return connectionState instanceof StaticConnectionStates state
-                && state == StaticConnectionStates.DISABLED
-                && !(conduit.getLevel().getBlockEntity(conduit.getBlockPos().relative(direction)) instanceof ConduitBlockEntity);
+            && state == StaticConnectionStates.DISABLED
+            && !(conduit.getLevel().getBlockEntity(conduit.getBlockPos().relative(direction)) instanceof ConduitBlockEntity);
     }
 
     @Override
