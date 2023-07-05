@@ -46,6 +46,8 @@ public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implemen
     public static final int AVERAGE_IO_OVER_X_TICKS = 10;
     private final List<BlockPos> clientConfigurables = new ArrayList<>();
 
+    private static final String DISPLAY_MODES = "displaymodes";
+
     private final Map<Direction, DisplayMode> displayModes = Util.make(() -> {
        Map<Direction, DisplayMode> map = new EnumMap<>(Direction.class);
        for (Direction direction: new Direction[] {Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST}) {
@@ -172,7 +174,7 @@ public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implemen
     @Override
     public void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
-        pTag.put("displaymodes", saveDisplayModes());
+        pTag.put(DISPLAY_MODES, saveDisplayModes());
     }
 
     public CompoundTag saveDisplayModes() {
@@ -186,8 +188,8 @@ public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implemen
     @Override
     public void load(CompoundTag pTag) {
         super.load(pTag);
-        if (pTag.contains("displaymodes", Tag.TAG_COMPOUND))
-            loadDisplayModes(pTag.getCompound("displaymodes"));
+        if (pTag.contains(DISPLAY_MODES, Tag.TAG_COMPOUND))
+            loadDisplayModes(pTag.getCompound(DISPLAY_MODES));
     }
 
     public void loadDisplayModes(CompoundTag nbt) {

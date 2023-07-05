@@ -1,5 +1,6 @@
 package com.enderio.machines.common.item;
 
+import com.enderio.core.CoreNBTKeys;
 import com.enderio.machines.common.block.CapacitorBankBlock;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -17,6 +18,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 public class CapacitorBankItem extends BlockItem {
+
+    private static final String STORED = "stored";
     public CapacitorBankItem(CapacitorBankBlock pBlock, Properties pProperties) {
         super(pBlock, pProperties);
     }
@@ -58,32 +61,32 @@ public class CapacitorBankItem extends BlockItem {
         @Override
         public int getEnergyStored() {
             return Optional.ofNullable(container.getTag())
-                .filter(nbt -> nbt.contains("BlockEntityTag", Tag.TAG_COMPOUND))
-                .map(nbt -> nbt.getCompound("BlockEntityTag"))
-                .filter(nbt -> nbt.contains("energy", Tag.TAG_COMPOUND))
-                .map(nbt -> nbt.getCompound("energy"))
-                .filter(nbt -> nbt.contains("stored", Tag.TAG_INT))
-                .map(nbt -> nbt.getInt("stored"))
+                .filter(nbt -> nbt.contains(BLOCK_ENTITY_TAG, Tag.TAG_COMPOUND))
+                .map(nbt -> nbt.getCompound(BLOCK_ENTITY_TAG))
+                .filter(nbt -> nbt.contains(CoreNBTKeys.ENERGY, Tag.TAG_COMPOUND))
+                .map(nbt -> nbt.getCompound(CoreNBTKeys.ENERGY))
+                .filter(nbt -> nbt.contains(STORED, Tag.TAG_INT))
+                .map(nbt -> nbt.getInt(STORED))
                 .orElse(0);
         }
 
         public void setEnergyStored(int stored) {
             CompoundTag nbt = container.getOrCreateTag();
             CompoundTag blockEntityTag = null;
-            if (nbt.contains("BlockEntityTag", Tag.TAG_COMPOUND)) {
-                blockEntityTag = nbt.getCompound("BlockEntityTag");
+            if (nbt.contains(BLOCK_ENTITY_TAG, Tag.TAG_COMPOUND)) {
+                blockEntityTag = nbt.getCompound(BLOCK_ENTITY_TAG);
             } else {
                 blockEntityTag = new CompoundTag();
-                nbt.put("BlockEntityTag", blockEntityTag);
+                nbt.put(BLOCK_ENTITY_TAG, blockEntityTag);
             }
             CompoundTag energyTag = null;
-            if (blockEntityTag.contains("energy", Tag.TAG_COMPOUND)) {
-                energyTag = blockEntityTag.getCompound("energy");
+            if (blockEntityTag.contains(CoreNBTKeys.ENERGY, Tag.TAG_COMPOUND)) {
+                energyTag = blockEntityTag.getCompound(CoreNBTKeys.ENERGY);
             } else {
                 energyTag = new CompoundTag();
-                nbt.put("energy", energyTag);
+                nbt.put(CoreNBTKeys.ENERGY, energyTag);
             }
-            energyTag.putInt("stored", stored);
+            energyTag.putInt(STORED, stored);
         }
 
         @Override

@@ -9,6 +9,7 @@ public class CoreNBTKeys {
     public static final String ITEMS = "Items";
     public static final String FLUID = "Fluid";
     public static final String ENERGY = "Energy";
+    public static final String BLOCK_ENTITY_TAG = "BlockEntityTag";
 
     // endregion
 
