@@ -73,7 +73,7 @@ public class ConduitBlockModel implements IDynamicBakedModel {
                     if (connection.isEnd()) {
                         quads.addAll(rotationTranslation.process(modelOf(CONDUIT_CONNECTION_BOX).getQuads(state, preRotation, rand, extraData, renderType)));
 
-                        IConnectionState connectionState = connection.getConnectionState(i);
+                        IConnectionState connectionState = connection.getConnectionState(type, conduitBundle);
                         if (connectionState instanceof DynamicConnectionState dyn) {
                             IQuadTransformer color = rotationTranslation.andThen(new ColorQuadTransformer(dyn.insert(), dyn.extract()));
                             BakedModel model = null;

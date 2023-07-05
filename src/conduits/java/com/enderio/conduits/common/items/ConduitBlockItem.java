@@ -35,6 +35,19 @@ public class ConduitBlockItem extends BlockItem {
         Level level = context.getLevel();
         @Nullable
         Player player = context.getPlayer();
+        BlockPos blockpos = context.getClickedPos();
+        ItemStack itemstack = context.getItemInHand();
+
+        if (level.getBlockEntity(blockpos) instanceof ConduitBlockEntity conduit) {
+            conduit.addType(type.get(), player);
+            if (level.isClientSide()) {
+                conduit.updateClient();
+            }
+            if (!player.getAbilities().instabuild) {
+                itemstack.shrink(1);
+            }
+            return InteractionResult.sidedSuccess(level.isClientSide());
+        }
 
         if (!context.canPlace()) {
             return InteractionResult.FAIL;
@@ -45,8 +58,6 @@ public class ConduitBlockItem extends BlockItem {
             } else if (!this.placeBlock(context, blockstate)) {
                 return InteractionResult.FAIL;
             } else {
-                BlockPos blockpos = context.getClickedPos();
-                ItemStack itemstack = context.getItemInHand();
                 BlockState blockstate1 = level.getBlockState(blockpos);
 
                 level.gameEvent(GameEvent.BLOCK_PLACE, blockpos, GameEvent.Context.of(player, blockstate1));
