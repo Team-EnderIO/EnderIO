@@ -2,6 +2,7 @@ package com.enderio.machines.common.blockentity.multienergy;
 
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.energy.EnergyIOMode;
+import com.enderio.machines.common.io.energy.ILargeMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
@@ -13,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class MultiEnergyStorageWrapper extends MachineEnergyStorage {
+public class MultiEnergyStorageWrapper extends MachineEnergyStorage implements ILargeMachineEnergyStorage {
 
     @Nullable
     private Graph<Mergeable.Dummy> graph;
@@ -22,8 +23,6 @@ public class MultiEnergyStorageWrapper extends MachineEnergyStorage {
 
     private long addedEnergy = 0;
     private long removedEnergy = 0;
-    private long prevAddedEnergy = 0;
-    private long prevRemovedEnergy = 0;
 
     private long lastResetTime = 0;
 
@@ -38,9 +37,15 @@ public class MultiEnergyStorageWrapper extends MachineEnergyStorage {
 
     @Override
     public int getEnergyStored() {
+        return (int)Math.min(Integer.MAX_VALUE, getLargeEnergyStored());
+    }
+
+
+    @Override
+    public long getLargeEnergyStored() {
         if (graph == null)
             return 0;
-        int cumulativeEnergy = 0;
+        long cumulativeEnergy = 0;
         for (GraphObject<Mergeable.Dummy> object : graph.getObjects()) {
             if (object instanceof MultiEnergyNode panelNode) {
                 cumulativeEnergy += panelNode.getInternal().get().getEnergyStored();
@@ -48,14 +53,18 @@ public class MultiEnergyStorageWrapper extends MachineEnergyStorage {
         }
         return cumulativeEnergy;
     }
-
     @Override
     public int getMaxEnergyStored() {
-        if (graph == null)
-            return 0;
-        return graph.getObjects().size() * tier.get().getStorageCapacity();
+        return (int)(Math.min(getLargeMaxEnergyStored(), Integer.MAX_VALUE));
     }
 
+
+    @Override
+    public long getLargeMaxEnergyStored() {
+        if (graph == null)
+            return 0;
+        return graph.getObjects().size() * (long)tier.get().getStorageCapacity();
+    }
 
     @Override
     public int takeEnergy(int energy) {
@@ -106,14 +115,6 @@ public class MultiEnergyStorageWrapper extends MachineEnergyStorage {
             removedEnergy = 0;
             lastResetTime = gameTime;
         }
-    }
-
-    public long getPrevAddedEnergy() {
-        return prevAddedEnergy;
-    }
-
-    public long getPrevRemovedEnergy() {
-        return prevRemovedEnergy;
     }
 
     public long getLastResetTime() {
