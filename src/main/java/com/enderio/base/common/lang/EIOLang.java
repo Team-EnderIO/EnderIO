@@ -60,7 +60,7 @@ public class EIOLang {
 
     // region Dark Steel
 
-    public static final MutableComponent HEAD_DROP_CHANCE = REGISTRATE.addLang("info", EnderIO.loc("headchance"), "%s % chance to drop a mob head");
+    public static final MutableComponent HEAD_DROP_CHANCE = REGISTRATE.addLang("info", EnderIO.loc("headchance"), "%s%% chance to drop a mob head");
     public static final MutableComponent ENERGY_AMOUNT = REGISTRATE.addLang("info", EnderIO.loc("energy.amount"), "%s \u00B5I");
     public static final MutableComponent DURABILITY_AMOUNT = REGISTRATE.addLang("info", EnderIO.loc("durability.amount"), "Durability %s");
 
