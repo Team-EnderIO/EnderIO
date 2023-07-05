@@ -80,7 +80,7 @@ public class CapacitorBankBlock extends MachineBlock implements IAdvancedTooltip
     @SubscribeEvent
     public static void rightClickBlock(PlayerInteractEvent.RightClickBlock event) {
         if (!event.getLevel().isClientSide && event.getEntity().isShiftKeyDown() && event.getLevel().getBlockEntity(event.getHitVec().getBlockPos()) instanceof CapacitorBankBlockEntity capacitorBank) {
-            if (capacitorBank.onShiftRightClick(event.getHitVec().getDirection())) {
+            if (capacitorBank.onShiftRightClick(event.getHitVec().getDirection(), event.getEntity())) {
                 event.setCanceled(true);
             }
         }
