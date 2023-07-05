@@ -6,12 +6,15 @@ import com.enderio.base.common.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SandBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 
 public class PaintedSandBlock extends SandBlock implements EntityBlock, IPaintedBlock {
@@ -35,6 +38,7 @@ public class PaintedSandBlock extends SandBlock implements EntityBlock, IPainted
             BlockEntity be = pLevel.getBlockEntity(pPos);
             if (be != null)
                 paintedSandEntity.blockData = be.saveWithoutMetadata();
+            pLevel.setBlock(pPos, pLevel.getBlockState(pPos).getFluidState().createLegacyBlock(), 3);
             pLevel.addFreshEntity(paintedSandEntity);
         }
     }
@@ -49,5 +53,10 @@ public class PaintedSandBlock extends SandBlock implements EntityBlock, IPainted
             }
         }
         return 0;
+    }
+
+    @Override
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player) {
+        return getPaintedStack(level, pos, this);
     }
 }
