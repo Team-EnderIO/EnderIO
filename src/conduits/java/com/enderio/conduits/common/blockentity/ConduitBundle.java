@@ -59,7 +59,8 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         if (first.isPresent()) {
             int index = types.indexOf(first.get());
             types.set(index, type);
-            var prevNode = nodes.put(type, node);
+            var prevNode = nodes.remove(first.get());
+            nodes.put(type, node);
             if (prevNode != null) {
                 prevNode.getExtendedConduitData().onRemoved(type, level, pos);
                 if (!level.isClientSide() && prevNode.getGraph() != null) {
@@ -290,7 +291,6 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
     }
 
     //TODO, make this method more useable
-
     public void connectTo(Direction direction, IConduitType<?> type, boolean end) {
         getConnection(direction).connectTo(getNodeFor(type), direction, getTypeIndex(type), end);
         scheduleSync.run();
@@ -305,6 +305,10 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
             }
         }
         return false;
+    }
+
+    public NodeIdentifier<?> getNodeForTypeExact(IConduitType<?> type) {
+        return nodes.get(type);
     }
 
     public NodeIdentifier<?> getNodeFor(IConduitType<?> type) {

@@ -184,7 +184,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                 tryConnectTo(dir, type, false, false).ifPresent(nodes::add);
             }
             if (level instanceof ServerLevel serverLevel) {
-                NodeIdentifier<?> thisNode = bundle.getNodeFor(type);
+                NodeIdentifier<?> thisNode = bundle.getNodeForTypeExact(type);
                 Graph.integrate(thisNode, nodes);
                 for (GraphObject<Mergeable.Dummy> object : thisNode.getGraph().getObjects()) {
                     if (object instanceof NodeIdentifier<?> node) {
@@ -193,7 +193,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                 }
                 ConduitSavedData.addPotentialGraph(type, Objects.requireNonNull(thisNode.getGraph()), serverLevel);
             }
-            if (action instanceof RightClickAction.Upgrade upgrade) {
+            if (action instanceof RightClickAction.Upgrade upgrade && !upgrade.getNotInConduit().getTicker().canConnectTo(upgrade.getNotInConduit(), type)) {
                 removeNeighborConnections(upgrade.notInConduit());
             }
             updateShape();
