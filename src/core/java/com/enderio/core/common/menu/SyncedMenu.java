@@ -28,6 +28,7 @@ public abstract class SyncedMenu<T extends EnderBlockEntity> extends AbstractCon
     private final List<EnderDataSlot<?>> clientToServerSlots = new ArrayList<>();
     private final List<Slot> playerInventorySlots = new ArrayList<>();
     private boolean playerInvVisible = true;
+
     protected SyncedMenu(@Nullable T blockEntity, Inventory inventory, @Nullable MenuType<?> pMenuType, int pContainerId) {
         super(pMenuType, pContainerId);
         this.blockEntity = blockEntity;
