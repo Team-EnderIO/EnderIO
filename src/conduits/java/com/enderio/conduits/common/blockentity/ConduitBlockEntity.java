@@ -61,12 +61,13 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     @UseOnly(LogicalSide.CLIENT) private ConduitBundle clientBundle;
 
     public UpdateState checkConnection = UpdateState.NONE;
+    public final NBTSerializableDataSlot<ConduitBundle> slot = new NBTSerializableDataSlot<>(this::getBundle, SyncMode.WORLD);
 
     public ConduitBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
         bundle = new ConduitBundle(this::scheduleTick, worldPosition);
         clientBundle = bundle.deepCopy();
-        add2WayDataSlot(new NBTSerializableDataSlot<>(this::getBundle, SyncMode.WORLD));
+        add2WayDataSlot(slot);
         add2WayDataSlot(new NBTSerializingDataSlot<>(this::getBundle, ConduitBundle::serializeGuiNBT, ConduitBundle::deserializeGuiNBT, SyncMode.GUI));
         addAfterSyncRunnable(this::updateClient);
     }
@@ -112,12 +113,13 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     }
 
     public void everyTick() {
-        if (level != null && !level.isClientSide) {
-            serverTick();
+        if (level != null) {
             checkConnection = checkConnection.next();
             if (checkConnection.isInitialized()) {
                 updateConnections(getBlockState(), level, worldPosition, null, false, false);
             }
+            if (!level.isClientSide())
+                serverTick();
         }
     }
 
@@ -268,7 +270,11 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         }
         boolean shouldRemove = bundle.removeType(level, type);
         removeNeighborConnections(type);
-        updateShape();
+        if (level != null && level.isClientSide()) {
+            updateClient();
+        } else {
+            updateShape();
+        }
         return shouldRemove;
     }
 

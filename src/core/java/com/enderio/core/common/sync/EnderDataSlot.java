@@ -32,6 +32,9 @@ public abstract class EnderDataSlot<T> {
     public void clearHasChangedFlag() {
         hasDataChangedThisTick = false;
     }
+    public void markChanged() {
+        hasDataChangedThisTick = true;
+    }
 
     public Optional<CompoundTag> toOptionalNBT() {
         int currentHash = getter().get().hashCode();

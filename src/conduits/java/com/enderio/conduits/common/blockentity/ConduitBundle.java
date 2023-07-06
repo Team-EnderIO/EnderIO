@@ -316,7 +316,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
             if (entry.getKey().getTicker().canConnectTo(entry.getKey(), type))
                 return nodes.get(entry.getKey());
         }
-        throw new IllegalStateException("no node matching original type");
+        return null;
     }
 
     public void setNodeFor(IConduitType<?> type, NodeIdentifier<?> node) {
