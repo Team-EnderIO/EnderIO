@@ -2,12 +2,15 @@ package com.enderio.base.common.block.painted;
 
 import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.blockentity.DoublePaintedBlockEntity;
+import com.enderio.base.common.blockentity.SinglePaintedBlockEntity;
 import com.enderio.base.common.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
@@ -55,5 +58,23 @@ public class PaintedSlabBlock extends SlabBlock implements EntityBlock, IPainted
             stack.getOrCreateTag().put(BlockItem.BLOCK_ENTITY_TAG, tag);
         }
         return stack;
+    }
+
+    @Override
+    public BlockState getAppearance(BlockState state, BlockAndTintGetter level, BlockPos pos, Direction side, @Nullable BlockState queryState,
+        @Nullable BlockPos queryPos) {
+        if (level.getBlockEntity(pos) instanceof DoublePaintedBlockEntity painted) {
+            var paint1 = painted.getPaint();
+            var paint2 = painted.getPaint2();
+            if (side == Direction.UP && paint2 != null)
+                return paint2.defaultBlockState();
+            if (side == Direction.DOWN && paint1 != null)
+                return paint1.defaultBlockState();
+            if (paint1 != null)
+                return paint1.defaultBlockState();
+            if (paint2 != null)
+                return paint2.defaultBlockState();
+        }
+        return super.getAppearance(state, level, pos, side, queryState, queryPos);
     }
 }

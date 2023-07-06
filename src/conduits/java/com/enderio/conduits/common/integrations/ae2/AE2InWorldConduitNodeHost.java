@@ -60,10 +60,12 @@ public class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, IExtende
 
     @Override
     public void onCreated(IConduitType<?> type, Level level, BlockPos pos, @Nullable Player player) {
-        if (player != null) {
-            mainNode.setOwningPlayer(player);
+        if (!mainNode.isReady()) {
+            if (player != null) {
+                mainNode.setOwningPlayer(player);
+            }
+            mainNode.create(level, pos);
         }
-        mainNode.create(level, pos);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.enderio.base.common.entity;
 
+import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.init.EIOEntities;
 import com.enderio.base.common.util.PaintUtils;
 import net.minecraft.nbt.CompoundTag;
@@ -45,7 +46,7 @@ public class PaintedSandEntity extends FallingBlockEntity implements IEntityAddi
     @Nullable
     public Block getPaint() {
         if (blockData != null) {
-            return PaintUtils.getBlockFromRL(blockData.getString("paint"));
+            return PaintUtils.getBlockFromRL(blockData.getString(EIONBTKeys.PAINT));
         }
         return null;
     }
@@ -53,7 +54,7 @@ public class PaintedSandEntity extends FallingBlockEntity implements IEntityAddi
     public void setPaint(Block block) {
         if (blockData == null)
             blockData = new CompoundTag();
-        blockData.putString("paint", Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(block)).toString());
+        blockData.putString(EIONBTKeys.PAINT, Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(block)).toString());
     }
 
     @Override
