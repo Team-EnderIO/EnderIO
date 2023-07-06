@@ -24,9 +24,12 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
@@ -324,6 +327,16 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
 
     @Override
     public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player) {
+        if (level instanceof Level realLevel && state.getOptionalValue(BlockStateProperties.WATERLOGGED).orElse(false)) {
+            var hitResult = Item.getPlayerPOVHitResult(realLevel, player, ClipContext.Fluid.NONE);
+            if (hitResult.getType() == HitResult.Type.MISS)
+                return Items.AIR.getDefaultInstance();
+            if (hitResult.getBlockPos().equals(pos)) {
+                target = hitResult;
+            } else {
+                return level.getBlockState(hitResult.getBlockPos()).getCloneItemStack(hitResult, level, hitResult.getBlockPos(), player);
+            }
+        }
         if (level.getBlockEntity(pos) instanceof ConduitBlockEntity conduit) {
             @Nullable
             IConduitType<?> type = conduit.getShape().getConduit(pos, target);
