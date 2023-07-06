@@ -35,7 +35,8 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 // TODO: 1.19: Tidy the divisions and what goes where.
 def subsets = [
         'conduits',
-        'machines'
+        'machines',
+        'armory'
 ]
 
 sourceSets {
@@ -46,7 +47,6 @@ sourceSets {
     main {
         compileClasspath += sourceSets.api.output
         compileClasspath += sourceSets.core.output
-        ext.refMap = "mixins.enderio.refmap.json"
         resources { srcDir 'src/generated/resources' }
     }
 }
@@ -261,7 +261,6 @@ dependencies {
 
 // MixinGradle Settings
 mixin {
-    add sourceSets.core, "mixins.enderio.refmap.json"
     add sourceSets.main, "mixins.enderio.refmap.json"
     config "mixins.enderio.json"
 }
