@@ -70,6 +70,10 @@ public class EnderBlockEntity extends BlockEntity {
         if (level != null && !level.isClientSide) {
             sync();
             setChanged();
+
+            for (var dataSlot : dataSlots) {
+                dataSlot.clearHasChangedFlag();
+            }
         }
     }
 

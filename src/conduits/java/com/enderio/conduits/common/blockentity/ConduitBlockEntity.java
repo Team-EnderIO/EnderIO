@@ -84,6 +84,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
     @Override
     public void onLoad() {
+        updateShape();
         if (!level.isClientSide()) {
             sync();
             bundle.onLoad(level, getBlockPos());
@@ -111,12 +112,38 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     }
 
     public void everyTick() {
-        serverTick();
-        checkConnection = checkConnection.next();
-        if (checkConnection.isInitialized()) {
-            getBlockState()
-                .getBlock()
-                .neighborChanged(getBlockState(), level, worldPosition, getBlockState().getBlock(), worldPosition.relative(Direction.UP), false);
+        if (level != null && !level.isClientSide) {
+            serverTick();
+            checkConnection = checkConnection.next();
+            if (checkConnection.isInitialized()) {
+                updateConnections(getBlockState(), level, worldPosition, null, false, false);
+            }
+        }
+    }
+
+    public void updateConnections(BlockState state, Level level, BlockPos pos, @Nullable BlockPos fromPos, boolean isMoving, boolean shouldActivate) {
+        for (Direction direction: Direction.values()) {
+            if (fromPos == null || !(level.getBlockEntity(fromPos) instanceof ConduitBlockEntity)) {
+                ConduitBundle bundle = getBundle();
+                for (IConduitType<?> type : bundle.getTypes()) {
+                    if (shouldActivate && type.getTicker().hasConnectionDelay()) {
+                        checkConnection = checkConnection.activate();
+                    }
+                    IConnectionState connectionState = bundle.getConnection(direction).getConnectionState(type, bundle);
+                    EnderIO.LOGGER.info("try connect " + ConduitTypes.getRegistry().getKey(type) + " because block @ " + pos.toShortString() + " was notified about a change @ " + (fromPos != null ? fromPos.toShortString() : "delayed connection"));
+                    if (connectionState instanceof DynamicConnectionState dyn) {
+                        if (!type.getTicker().canConnectTo(level, pos, direction)) {
+                            getBundle().getNodeFor(type).clearState(direction);
+                            dropConnection(dyn);
+                            getBundle().getConnection(direction).setConnectionState(type, getBundle(), StaticConnectionStates.DISCONNECTED);
+                            updateShape();
+                            updateConnectionToData(type);
+                        }
+                    } else if (connectionState == StaticConnectionStates.DISCONNECTED) {
+                        tryConnectTo(direction, type, true, true);
+                    }
+                }
+            }
         }
     }
 
@@ -157,7 +184,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                 tryConnectTo(dir, type, false, false).ifPresent(nodes::add);
             }
             if (level instanceof ServerLevel serverLevel) {
-                NodeIdentifier<?> thisNode = bundle.getNodeFor(type);
+                NodeIdentifier<?> thisNode = bundle.getNodeForTypeExact(type);
                 Graph.integrate(thisNode, nodes);
                 for (GraphObject<Mergeable.Dummy> object : thisNode.getGraph().getObjects()) {
                     if (object instanceof NodeIdentifier<?> node) {
@@ -166,7 +193,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                 }
                 ConduitSavedData.addPotentialGraph(type, Objects.requireNonNull(thisNode.getGraph()), serverLevel);
             }
-            if (action instanceof RightClickAction.Upgrade upgrade) {
+            if (action instanceof RightClickAction.Upgrade upgrade && !upgrade.getNotInConduit().getTicker().canConnectTo(upgrade.getNotInConduit(), type)) {
                 removeNeighborConnections(upgrade.notInConduit());
             }
             updateShape();
@@ -308,13 +335,21 @@ public class ConduitBlockEntity extends EnderBlockEntity {
      * @return true if a connection happens
      */
     private boolean connectTo(Direction direction, IConduitType<?> type, IExtendedConduitData<?> data, boolean forceMerge) {
-        if (!bundle.getTypes().contains(type))
+        if (!doTypesMatch(type))
             return false;
         if (!data.canConnectTo(bundle.getNodeFor(type).getExtendedConduitData().cast()))
             return false;
         if (forceMerge || bundle.getConnection(direction).getConnectionState(type, bundle) != StaticConnectionStates.DISABLED) {
             connect(direction, type);
             return true;
+        }
+        return false;
+    }
+
+    private boolean doTypesMatch(IConduitType<?> type) {
+        for (IConduitType<?> bundleType : bundle.getTypes()) {
+            if (bundleType.getTicker().canConnectTo(bundleType, type))
+                return true;
         }
         return false;
     }
@@ -501,24 +536,22 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     }
 
     public enum UpdateState {
-        NONE, NEXT, INITIALIZED, MEXT_INITIALIZED;
+        NONE, NEXT_NEXT, NEXT, INITIALIZED;
 
         public boolean isInitialized() {
-            return this == INITIALIZED || this == MEXT_INITIALIZED;
+            return this == INITIALIZED;
         }
 
         public UpdateState next() {
             return switch (this) {
                 case NONE, INITIALIZED -> NONE;
-                case NEXT, MEXT_INITIALIZED -> INITIALIZED;
+                case NEXT_NEXT -> NEXT;
+                case NEXT -> INITIALIZED;
             };
         }
 
         public UpdateState activate() {
-            return switch (this) {
-                case NONE, NEXT -> NEXT;
-                case INITIALIZED, MEXT_INITIALIZED -> MEXT_INITIALIZED;
-            };
+            return NEXT_NEXT;
         }
     }
 }

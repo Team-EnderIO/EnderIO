@@ -2,29 +2,26 @@ package com.enderio.conduits.common.integrations.ae2;
 
 import appeng.api.networking.*;
 import appeng.api.util.AECableType;
-import com.enderio.EnderIO;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.IExtendedConduitData;
-import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
 public class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, IExtendedConduitData<AE2InWorldConduitNodeHost> {
 
-    private final Level level;
-    private final BlockPos pos;
     private final AE2ConduitType type;
     private final IManagedGridNode mainNode;
 
-    public AE2InWorldConduitNodeHost(Level level, BlockPos pos, AE2ConduitType type) {
-        this.level = level;
-        this.pos = pos;
+    final LazyOptional<AE2InWorldConduitNodeHost> selfCap = LazyOptional.of(() -> this);
+
+    public AE2InWorldConduitNodeHost(AE2ConduitType type) {
         this.type = type;
         mainNode = GridHelper.createManagedNode(this, new GridNodeListener())
             .setVisualRepresentation(type.getConduitItem())
@@ -33,6 +30,7 @@ public class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, IExtende
         if (type.isDense()) {
             mainNode.setFlags(GridFlags.DENSE_CAPACITY);
         }
+        mainNode.setIdlePowerUsage(type.isDense() ? 2 : 0.5d);
     }
 
     @Nullable
@@ -60,13 +58,6 @@ public class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, IExtende
         mainNode.loadFromNBT(nbt);
     }
 
-    void onSecurityBreach() {
-        if (level.getBlockEntity(pos) instanceof ConduitBlockEntity conduit) {
-            EnderIO.LOGGER.info("Security Breach @ " + conduit.getBlockPos().toShortString());
-            conduit.removeTypeAndDelete(type, true);
-        }
-    }
-
     @Override
     public void onCreated(IConduitType<?> type, Level level, BlockPos pos, @Nullable Player player) {
         if (player != null) {
@@ -83,6 +74,7 @@ public class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, IExtende
     @Override
     public void onRemoved(IConduitType<?> type, Level level, BlockPos pos) {
         mainNode.destroy();
+        selfCap.invalidate();
     }
 
 }

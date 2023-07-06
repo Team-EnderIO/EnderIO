@@ -59,7 +59,8 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         if (first.isPresent()) {
             int index = types.indexOf(first.get());
             types.set(index, type);
-            var prevNode = nodes.put(type, node);
+            var prevNode = nodes.remove(first.get());
+            nodes.put(type, node);
             if (prevNode != null) {
                 prevNode.getExtendedConduitData().onRemoved(type, level, pos);
                 if (!level.isClientSide() && prevNode.getGraph() != null) {
@@ -290,23 +291,32 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
     }
 
     //TODO, make this method more useable
-
     public void connectTo(Direction direction, IConduitType<?> type, boolean end) {
-        getConnection(direction).connectTo(nodes.get(type), direction, types.indexOf(type), end);
+        getConnection(direction).connectTo(getNodeFor(type), direction, getTypeIndex(type), end);
         scheduleSync.run();
     }
 
     public boolean disconnectFrom(Direction direction, IConduitType<?> type) {
-        if (types.contains(type)) {
-            getConnection(direction).disconnectFrom(types.indexOf(type));
-            scheduleSync.run();
-            return true;
+        for (int i = 0; i < types.size(); i++) {
+            if (type.getTicker().canConnectTo(type, types.get(i))) {
+                getConnection(direction).disconnectFrom(i);
+                scheduleSync.run();
+                return true;
+            }
         }
         return false;
     }
 
-    public NodeIdentifier<?> getNodeFor(IConduitType<?> type) {
+    public NodeIdentifier<?> getNodeForTypeExact(IConduitType<?> type) {
         return nodes.get(type);
+    }
+
+    public NodeIdentifier<?> getNodeFor(IConduitType<?> type) {
+        for (var entry : nodes.entrySet()) {
+            if (entry.getKey().getTicker().canConnectTo(entry.getKey(), type))
+                return nodes.get(entry.getKey());
+        }
+        throw new IllegalStateException("no node matching original type");
     }
 
     public void setNodeFor(IConduitType<?> type, NodeIdentifier<?> node) {
@@ -331,6 +341,15 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
             node.getGraph().remove(node);
         }
         nodes.remove(type);
+    }
+
+    public int getTypeIndex(IConduitType<?> type) {
+        for (int i = 0; i < types.size(); i++) {
+            if (types.get(i).getTicker().canConnectTo(types.get(i), type)) {
+                return i;
+            }
+        }
+        throw new IllegalStateException("no conduit matching type in bundle");
     }
 
     @UseOnly(LogicalSide.CLIENT)
