@@ -120,7 +120,7 @@ public class AlloyRecipeProvider extends EnderRecipeProvider {
 
         build(new ItemStack(Items.DEAD_BUSH), List.of(CountedIngredient.of(ItemTags.SAPLINGS)), 2000, 0.3f, pFinishedRecipeConsumer);
 
-        build(new ItemStack(EIOItems.DARK_STEEL_UPGRADE_BLANK.get()), List.of(CountedIngredient.of(EIOBlocks.DARK_STEEL_BARS.get()), CountedIngredient.of(Items.CLAY_BALL), CountedIngredient.of(4, Tags.Items.STRING)), 30000, 0.3f, pFinishedRecipeConsumer);
+//        build(new ItemStack(EIOItems.DARK_STEEL_UPGRADE_BLANK.get()), List.of(CountedIngredient.of(EIOBlocks.DARK_STEEL_BARS.get()), CountedIngredient.of(Items.CLAY_BALL), CountedIngredient.of(4, Tags.Items.STRING)), 30000, 0.3f, pFinishedRecipeConsumer);
 
         build(new ItemStack(EIOItems.CLAYED_GLOWSTONE.get(), 2), List.of(CountedIngredient.of(Tags.Items.DUSTS_GLOWSTONE), CountedIngredient.of(Items.CLAY_BALL)), 5000, 0.3f, pFinishedRecipeConsumer);
 

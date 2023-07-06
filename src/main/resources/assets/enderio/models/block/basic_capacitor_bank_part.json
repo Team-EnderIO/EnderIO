@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "render_type": "solid",
+  "textures": {
+    "all": "enderio:block/basic_capacitor_bank"
+  }
+}

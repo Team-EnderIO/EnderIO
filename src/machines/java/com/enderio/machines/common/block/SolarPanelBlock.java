@@ -13,12 +13,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -94,10 +90,5 @@ public class SolarPanelBlock extends MachineBlock implements IAdvancedTooltipPro
         tooltips.add(MachineLang.PHOTOVOLTAIC_CELL_ADVANCED);
         tooltips.add(MachineLang.PHOTOVOLTAIC_CELL_ADVANCED2);
         tooltips.add(MachineLang.PHOTOVOLTAIC_CELL_ADVANCED3.copy().append(TooltipUtil.withArgs(EIOLang.ENERGY_AMOUNT, tier.getProductionRate())));
-    }
-
-    @Override
-    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return super.getTicker(pLevel, pState, pBlockEntityType);
     }
 }

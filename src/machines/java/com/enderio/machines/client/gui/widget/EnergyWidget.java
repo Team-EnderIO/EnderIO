@@ -4,6 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.gui.widgets.EIOWidget;
 import com.enderio.core.common.util.TooltipUtil;
+import com.enderio.machines.common.io.energy.ILargeMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
@@ -40,7 +41,7 @@ public class EnergyWidget extends EIOWidget {
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
 
-        float filledVolume = storage.getEnergyStored() / (float) storage.getMaxEnergyStored();
+        float filledVolume = (float)(getEnergyStored(storage) / (double) getMaxEnergyStored(storage));
         int renderableHeight = (int)(filledVolume * height);
 
         guiGraphics.pose().pushPose();
@@ -68,10 +69,22 @@ public class EnergyWidget extends EIOWidget {
             IMachineEnergyStorage storage = storageSupplier.get();
 
             NumberFormat fmt = NumberFormat.getInstance(Locale.ENGLISH);
-            guiGraphics.renderTooltip(displayOn.getMinecraft().font, TooltipUtil.withArgs(EIOLang.ENERGY_AMOUNT, fmt.format(storage.getEnergyStored()) + "/" + fmt.format(
-                storage.getMaxEnergyStored())), mouseX, mouseY);
+            guiGraphics.renderTooltip(displayOn.getMinecraft().font, TooltipUtil.withArgs(EIOLang.ENERGY_AMOUNT, fmt.format(getEnergyStored(storage)) + "/" + fmt.format(
+               getMaxEnergyStored(storage))), mouseX, mouseY);
         }
     }
 
+    private static long getEnergyStored(IMachineEnergyStorage storage) {
+        if (storage instanceof ILargeMachineEnergyStorage largeStorage)
+            return largeStorage.getLargeEnergyStored();
+        return storage.getEnergyStored();
+    }
+
+    private static long getMaxEnergyStored(IMachineEnergyStorage storage) {
+        if (storage instanceof ILargeMachineEnergyStorage largeStorage) {
+            return largeStorage.getLargeMaxEnergyStored();
+        }
+        return storage.getMaxEnergyStored();
+    }
 }
 

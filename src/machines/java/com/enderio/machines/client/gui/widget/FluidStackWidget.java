@@ -70,6 +70,7 @@ public class FluidStackWidget extends EIOWidget {
                         guiGraphics.blit(TextureAtlas.LOCATION_BLOCKS, x, y + notDrawingHeight, 0, sprite.getU0()*atlasWidth, sprite.getV0()*atlasHeight + notDrawingHeight, width, drawingHeight, atlasWidth, atlasHeight);
                         guiGraphics.pose().translate(0,-16, 0);
                     }
+                    RenderSystem.setShaderColor(1, 1, 1, 1);
 
                     guiGraphics.pose().popPose();
                 }

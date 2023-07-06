@@ -35,7 +35,8 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 // TODO: 1.19: Tidy the divisions and what goes where.
 def subsets = [
         'conduits',
-        'machines'
+        'machines',
+        'armory'
 ]
 
 sourceSets {
@@ -46,7 +47,6 @@ sourceSets {
     main {
         compileClasspath += sourceSets.api.output
         compileClasspath += sourceSets.core.output
-        ext.refMap = "mixins.enderio.refmap.json"
         resources { srcDir 'src/generated/resources' }
     }
 }
@@ -233,6 +233,9 @@ dependencies {
     runtimeOnly fg.deobf("maven.modrinth:mcjtylib:3LlgyvSh")
     runtimeOnly fg.deobf("maven.modrinth:rftools-base:Uu1IkVMH")
 
+    //Athena ctm
+    runtimeOnly fg.deobf("maven.modrinth:athena-ctm:X6GdUrpW")
+
     // AE2
     compileOnly "appeng:appliedenergistics2-forge:${ae2_version}:api"
     runtimeOnly fg.deobf("appeng:appliedenergistics2-forge:${ae2_version}")
@@ -261,7 +264,6 @@ dependencies {
 
 // MixinGradle Settings
 mixin {
-    add sourceSets.core, "mixins.enderio.refmap.json"
     add sourceSets.main, "mixins.enderio.refmap.json"
     config "mixins.enderio.json"
 }

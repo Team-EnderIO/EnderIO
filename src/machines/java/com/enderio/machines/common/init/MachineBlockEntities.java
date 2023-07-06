@@ -2,6 +2,8 @@ package com.enderio.machines.common.init;
 
 import com.enderio.EnderIO;
 import com.enderio.machines.common.blockentity.*;
+import com.enderio.machines.common.blockentity.capacitorbank.CapacitorBankBlockEntity;
+import com.enderio.machines.common.blockentity.capacitorbank.CapacitorTier;
 import com.enderio.machines.common.blockentity.solar.SolarPanelBlockEntity;
 import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
 import com.google.common.collect.ImmutableMap;
@@ -62,6 +64,14 @@ public class MachineBlockEntities {
        for (SolarPanelTier tier : SolarPanelTier.values()) {
            map.put(tier, register(tier.name().toLowerCase(Locale.ROOT) + "_photovoltaic_cell", (type, worldPosition,
                blockState) -> new SolarPanelBlockEntity(type, worldPosition, blockState, tier), () -> MachineBlocks.SOLAR_PANELS.get(tier).get()));
+       }
+       return ImmutableMap.copyOf(map);
+    });
+    public static final Map<CapacitorTier, BlockEntityEntry<CapacitorBankBlockEntity>> CAPACITOR_BANKS = Util.make(() -> {
+       Map<CapacitorTier, BlockEntityEntry<CapacitorBankBlockEntity>> map = new HashMap<>();
+       for (CapacitorTier tier : CapacitorTier.values()) {
+           map.put(tier, register(tier.name().toLowerCase(Locale.ROOT) + "_capacitor_bank", (type, worldPosition,
+               blockState) -> new CapacitorBankBlockEntity(type, worldPosition, blockState, tier), () -> MachineBlocks.CAPACITOR_BANKS.get(tier).get()));
        }
        return ImmutableMap.copyOf(map);
     });

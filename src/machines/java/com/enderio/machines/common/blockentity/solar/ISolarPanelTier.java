@@ -1,6 +1,7 @@
 package com.enderio.machines.common.blockentity.solar;
 
-public interface ISolarPanelTier {
+import com.enderio.machines.common.blockentity.multienergy.ICapacityTier;
+
+public interface ISolarPanelTier extends ICapacityTier {
     int getProductionRate();
-    int getStorageCapacity();
 }

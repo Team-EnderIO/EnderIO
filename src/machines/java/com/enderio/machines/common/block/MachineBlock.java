@@ -33,7 +33,8 @@ public class MachineBlock extends BaseEntityBlock {
     public MachineBlock(Properties properties, BlockEntityEntry<? extends MachineBlockEntity> blockEntityType) {
         super(properties);
         this.blockEntityType = blockEntityType;
-        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
+        BlockState any = this.getStateDefinition().any();
+        this.registerDefaultState(any.hasProperty(FACING) ? any.setValue(FACING, Direction.NORTH) : any);
     }
 
     @Override
