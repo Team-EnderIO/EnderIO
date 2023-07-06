@@ -12,8 +12,7 @@ public abstract class EnderDataSlot<T> {
 
     private final SyncMode syncMode;
 
-    private int lastSentHash = 0;
-    private boolean hasDataChangedThisTick = false;
+    CompoundTag previousValue = new CompoundTag();
 
     public EnderDataSlot(Supplier<T> getter, Consumer<T> setter, SyncMode mode) {
         this.getter = getter;
@@ -29,21 +28,13 @@ public abstract class EnderDataSlot<T> {
         return getter;
     }
 
-    public void clearHasChangedFlag() {
-        hasDataChangedThisTick = false;
-    }
-
     public Optional<CompoundTag> toOptionalNBT() {
-        int currentHash = getter().get().hashCode();
-        if (currentHash != lastSentHash) {
-            lastSentHash = currentHash;
-            hasDataChangedThisTick = true;
-        }
-
-        if (hasDataChangedThisTick) {
-            return Optional.of(toFullNBT());
-        }
-        return Optional.empty();
+        CompoundTag newNBT = toFullNBT();
+        if (newNBT.equals(previousValue))
+            return Optional.empty();
+        //copy to prevent mismatched by adding the dataSlotIndex
+        previousValue = newNBT.copy();
+        return Optional.of(newNBT);
     }
 
     // region Serialization
