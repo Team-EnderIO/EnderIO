@@ -20,6 +20,11 @@ public abstract class EnderDataSlot<T> {
         this.syncMode = mode;
     }
 
+    public void markChanged() {
+        // Temp to keep this fix working.
+        previousValue = new CompoundTag();
+    }
+
     public SyncMode getSyncMode() {
         return syncMode;
     }
