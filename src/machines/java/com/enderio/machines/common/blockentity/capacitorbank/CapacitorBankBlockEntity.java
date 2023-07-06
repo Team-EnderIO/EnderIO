@@ -75,7 +75,7 @@ public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implemen
                     continue;
                 if (level.getBlockEntity(pos) instanceof CapacitorBankBlockEntity capacitorBank) {
                     CompoundTag e = capacitorBank.getIOConfig().serializeNBT();
-                    e.putLong("capPos", pos.asLong());
+                    e.putLong("p", pos.asLong());
                     listNbt.add(e);
                 }
             }
@@ -88,9 +88,9 @@ public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implemen
                 ListTag listNbt = nbt.getList("list", Tag.TAG_COMPOUND);
                 for (Tag tag: listNbt) {
                     if (tag instanceof CompoundTag e) {
-                        if (!e.contains("capPos", Tag.TAG_LONG))
+                        if (!e.contains("p", Tag.TAG_LONG))
                             continue;
-                        BlockPos pos = BlockPos.of(e.getLong("capPos"));
+                        BlockPos pos = BlockPos.of(e.getLong("p"));
                         if (pos.equals(worldPosition))
                             continue;
                         if (!node.getGraph().getObjects().stream().map(MultiEnergyNode.class::cast).map(node -> node.pos).toList().contains(pos))
