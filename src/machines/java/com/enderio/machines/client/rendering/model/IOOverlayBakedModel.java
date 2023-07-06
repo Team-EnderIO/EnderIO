@@ -46,7 +46,7 @@ public class IOOverlayBakedModel implements IDynamicBakedModel {
 
     static {
         for (Direction dir : Direction.values()) {
-            QUADS.put(dir, ModelRenderUtil.createQuadVerts(dir, 0.0625f, 1 - 0.0625f, 1));
+            QUADS.put(dir, ModelRenderUtil.createQuadVerts(dir, 0.0625f, 1 - 0.0625f, 1.0001));
         }
     }
 

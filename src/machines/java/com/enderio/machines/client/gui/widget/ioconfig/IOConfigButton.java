@@ -4,6 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.gui.screen.EIOScreen;
+import com.enderio.machines.common.blockentity.base.MultiConfigurable;
 import com.enderio.machines.common.menu.MachineMenu;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.Font;
@@ -11,8 +12,10 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -32,8 +35,10 @@ public class IOConfigButton<U extends EIOScreen<?>, T extends AbstractWidget> ex
         this.setPlayerInvVisible = menu::setPlayerInvVisible;
 
         var show = !playerInvVisible.get();
+        List<BlockPos> configurables = menu.getBlockEntity() instanceof MultiConfigurable multiConfigurable
+            ? multiConfigurable.getConfigurables() : List.of(menu.getBlockEntity().getBlockPos());
         configRenderer = new IOConfigWidget<>(addedOn, addedOn.getGuiLeft() + 5, addedOn.getGuiTop() + addedOn.getYSize() - RENDERER_HEIGHT - 5,
-            addedOn.getXSize() - 10, RENDERER_HEIGHT, menu.getBlockEntity().getBlockPos(), font);
+            addedOn.getXSize() - 10, RENDERER_HEIGHT, configurables, font);
         configRenderer.visible = show;
         addRenderableWidget.apply(configRenderer);
 

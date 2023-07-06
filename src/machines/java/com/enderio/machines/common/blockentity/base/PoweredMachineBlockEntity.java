@@ -5,6 +5,7 @@ import com.enderio.api.capacitor.ICapacitorScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.base.common.capacitor.DefaultCapacitorData;
+import com.enderio.core.common.sync.EnderDataSlot;
 import com.enderio.core.common.sync.SyncMode;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.ProgressMachineBlock;
@@ -17,6 +18,7 @@ import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -44,7 +46,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity {
      * The client value of the energy storage.
      * This will be an instance of {@link ImmutableMachineEnergyStorage}.
      */
-    private IMachineEnergyStorage clientEnergyStorage = ImmutableMachineEnergyStorage.EMPTY;
+    protected IMachineEnergyStorage clientEnergyStorage = ImmutableMachineEnergyStorage.EMPTY;
 
     private ICapacitorData cachedCapacitorData = DefaultCapacitorData.NONE;
     private boolean capacitorCacheDirty;
@@ -67,9 +69,13 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity {
         // Mark capacitor cache as dirty
         capacitorCacheDirty = true;
 
-        // new new new way of syncing energy storage.
-        // TODO: Need to verify this actually works as we expect during this rework.
-        addDataSlot(new MachineEnergyDataSlot(this::getEnergyStorage, storage -> clientEnergyStorage = storage, SyncMode.GUI));
+        // new new new new way of syncing energy storage.
+        addDataSlot(createEnergyDataSlot());
+    }
+
+    public EnderDataSlot<?> createEnergyDataSlot() {
+        return new MachineEnergyDataSlot(this::getExposedEnergyStorage, storage -> clientEnergyStorage = storage, getEnergySyncMode());
+
     }
 
     @Override
@@ -149,7 +155,9 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity {
 
         // Transmit power out all sides.
         for (Direction side : Direction.values()) {
-            // Get our energy handler, this will handle all sided tests for us.
+            if (!shouldPushEnergyTo(side))
+                continue;
+            // Get our energy handler, this will handle all sidedness tests for us.
             getCapability(ForgeCapabilities.ENERGY, side).resolve().ifPresent(selfHandler -> {
                 // Get the other energy handler
                 Optional<IEnergyStorage> otherHandler = getNeighbouringCapability(ForgeCapabilities.ENERGY, side).resolve();
@@ -169,6 +177,19 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity {
                 }
             });
         }
+    }
+
+    /**
+     * prevent pushing energy to other parts of the same energyMultiblock
+     * @param direction
+     * @return
+     */
+    protected boolean shouldPushEnergyTo(Direction direction) {
+        return true;
+    }
+
+    protected SyncMode getEnergySyncMode() {
+        return SyncMode.GUI;
     }
 
     /**

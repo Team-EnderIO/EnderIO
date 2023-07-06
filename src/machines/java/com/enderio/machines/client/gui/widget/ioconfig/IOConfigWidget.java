@@ -36,6 +36,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.client.RenderTypeHelper;
 import net.minecraftforge.client.model.data.ModelData;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -127,7 +128,8 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
         return new Vec3(vec4.x() + RAY_ORIGIN.x, vec4.y() + RAY_ORIGIN.y, vec4.z() + RAY_ORIGIN.z);
     }
 
-    private static BlockHitResult raycast(BlockState state, float diffX, float diffY, Matrix4f transform) {
+    @Nullable
+    private BlockHitResult raycast(BlockPos pos, BlockState state, float diffX, float diffY, Matrix4f transform) {
         // Add mouse offset to start and end vectors
         Vec3 start = RAY_START.add(diffX, diffY, 0);
         Vec3 end = RAY_END.add(diffX, diffY, 0);
@@ -138,6 +140,8 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
 
         // Get block's shape and cast a ray through it
         VoxelShape shape = state.getShape(EmptyBlockGetter.INSTANCE, BlockPos.ZERO);
+        Vector3f centerPos = new Vector3f(pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f).sub(worldOrigin);
+        shape = shape.move(centerPos.x(), centerPos.y(), centerPos.z());
         return shape.clip(start, end, POS);
     }
 
@@ -241,19 +245,18 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
             Map<BlockHitResult, BlockPos> hits = new HashMap<>();
             configurable.forEach(blockPos -> {
                 BlockState state = minecraft.level.getBlockState(blockPos);
-                BlockHitResult hit = raycast(state, diffX, diffY, rayTransform);
+                BlockHitResult hit = raycast(blockPos, state, diffX, diffY, rayTransform);
                 if (hit != null && hit.getType() != HitResult.Type.MISS) {
                     hits.put(hit, blockPos);
                 }
 
             });
 
-            // TODO: Test for multiblocks
-            Vec3 eyePosition = transform(RAY_START, rayTransform);
+            Vec3 eyePosition = transform(RAY_START, rayTransform).add(worldOrigin.x, worldOrigin.y, worldOrigin.z);
             selection = hits
                 .entrySet()
                 .stream()
-                .min(Comparator.comparingDouble(entry -> entry.getKey().getBlockPos().distToCenterSqr(eyePosition))) // find closest to eye
+                .min(Comparator.comparingDouble(entry -> entry.getValue().distToCenterSqr(eyePosition))) // find closest to eye
                 .map(closest -> new SelectedFace(closest.getValue(), closest.getKey().getDirection()));
 
             renderSelection(guiGraphics, centerX, centerY, blockTransform);
@@ -282,7 +285,6 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
 
         // Render configurable
         MultiBufferSource.BufferSource normalBuffers = minecraft.renderBuffers().bufferSource();
-        //TODO: recheck when capacitor banks
         for (var configurable : configurable) {
             Vector3f pos = new Vector3f(configurable.getX() - worldOrigin.x(), configurable.getY() - worldOrigin.y(), configurable.getZ() - worldOrigin.z());
             renderBlock(guiGraphics, configurable, pos, normalBuffers, partialTick);
@@ -303,6 +305,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
         if (rendershape != RenderShape.INVISIBLE) {
             var renderer = minecraft.getBlockRenderer();
             BakedModel bakedmodel = renderer.getBlockModel(blockState);
+            modelData = bakedmodel.getModelData(minecraft.level, blockPos, blockState, modelData);
             int blockColor = minecraft.getBlockColors().getColor(blockState, minecraft.level, blockPos, 0);
             float r = FastColor.ARGB32.red(blockColor) / 255F;
             float g = FastColor.ARGB32.green(blockColor) / 255F;

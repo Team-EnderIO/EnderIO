@@ -5,6 +5,7 @@ import com.enderio.base.data.EIODataProvider;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.*;
 import com.enderio.machines.common.lang.MachineLang;
+import com.enderio.machines.data.advancements.MachinesAdvancementGenerator;
 import com.enderio.machines.common.network.MachineNetwork;
 import com.enderio.machines.common.tag.MachineTags;
 import com.enderio.machines.data.recipes.*;
@@ -14,6 +15,7 @@ import net.minecraft.Util;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
+import net.minecraftforge.common.data.ForgeAdvancementProvider;
 import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -22,6 +24,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLConstructModEvent;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Mod.EventBusSubscriber(modid = EnderIO.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -65,5 +68,7 @@ public class EIOMachines {
         provider.addSubProvider(event.includeServer(), new MachineEntityTypeTagsProvider(packOutput, completablefuture, event.getExistingFileHelper()));
 
         generator.addProvider(true, provider);
+        provider.addSubProvider(event.includeServer(), new ForgeAdvancementProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper(),
+            List.of(new MachinesAdvancementGenerator())));
     }
 }
