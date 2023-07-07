@@ -21,6 +21,7 @@ import java.util.function.Supplier;
 public class ItemClientConduitData implements IClientConduitData<ItemExtendedData> {
     @Override
     public List<AbstractWidget> createWidgets(Screen screen, Supplier<BlockPos> blockPos, Supplier<IConduitType<?>> type, ItemExtendedData extendedConduitData, Supplier<Direction> direction, Vector2i widgetsStart) {
+        // TODO: Method of doing sync that does not require CoreNetwork in API.
         List<AbstractWidget> widgets = new ArrayList<>();
         widgets.add(new CheckBox(EnderIO.loc("textures/gui/round_robin.png"), widgetsStart.add(110, 20), () -> extendedConduitData.get(direction.get()).roundRobin, bool -> {
             extendedConduitData.compute(direction.get()).roundRobin = bool;

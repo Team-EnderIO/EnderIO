@@ -338,10 +338,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         NodeIdentifier<?> node = nodes.get(type);
         node.getExtendedConduitData().onRemoved(type, level, pos);
         if (node.getGraph() != null) {
-            if (node.getGraph().contains(node))
-                node.getGraph().remove(node);
-            else
-                node.setGraph(null);
+            node.getGraph().remove(node);
         }
         nodes.remove(type);
     }
