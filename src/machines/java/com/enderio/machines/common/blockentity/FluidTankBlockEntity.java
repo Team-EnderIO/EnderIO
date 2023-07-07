@@ -2,8 +2,7 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.ExperienceUtil;
-import com.enderio.core.common.sync.FluidStackDataSlot;
-import com.enderio.core.common.sync.SyncMode;
+import com.enderio.core.common.network.slot.FluidStackNetworkDataSlot;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
@@ -78,7 +77,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
         super(type, worldPosition, blockState);
 
         // Sync fluid for model
-        addDataSlot(new FluidStackDataSlot(getFluidTankNN()::getFluid, getFluidTankNN()::setFluid, SyncMode.WORLD));
+        addDataSlot(new FluidStackNetworkDataSlot(getFluidTankNN()::getFluid, getFluidTankNN()::setFluid));
 
         // Wrap container for fluid recipes
         container = new TankRecipe.Container(getInventoryNN(), getFluidTankNN());

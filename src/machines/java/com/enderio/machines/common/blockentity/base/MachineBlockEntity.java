@@ -8,9 +8,8 @@ import com.enderio.api.misc.RedstoneControl;
 import com.enderio.base.common.blockentity.IWrenchable;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
-import com.enderio.core.common.sync.EnumDataSlot;
-import com.enderio.core.common.sync.NBTSerializableDataSlot;
-import com.enderio.core.common.sync.SyncMode;
+import com.enderio.core.common.network.slot.EnumNetworkDataSlot;
+import com.enderio.core.common.network.slot.NBTSerializableNetworkDataSlot;
 import com.enderio.core.common.util.PlayerInteractionUtil;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.MachineBlock;
@@ -94,6 +93,13 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     // endregion
 
+    // region Common Dataslots
+
+    private final EnumNetworkDataSlot<RedstoneControl> redstoneControlDataSlot;
+    private final NBTSerializableNetworkDataSlot<IIOConfig> ioConfigDataSlot;
+
+    // endregion
+
     public MachineBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
 
@@ -122,15 +128,20 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         }
 
         if (supportsRedstoneControl()) {
-            add2WayDataSlot(new EnumDataSlot<>(this::getRedstoneControl, this::setRedstoneControl, SyncMode.GUI));
+            redstoneControlDataSlot = new EnumNetworkDataSlot<>(RedstoneControl.class,
+                this::getRedstoneControl, e -> redstoneControl = e);
+            addDataSlot(redstoneControlDataSlot);
+        } else {
+            redstoneControlDataSlot = null;
         }
 
         // Register sync slot for ioConfig and setup model data.
-        add2WayDataSlot(new NBTSerializableDataSlot<>(this::getIOConfig, SyncMode.WORLD, () -> {
+        ioConfigDataSlot = new NBTSerializableNetworkDataSlot<>(this::getIOConfig, () -> {
             if (level != null && level.isClientSide()) {
                 onIOConfigChanged();
             }
-        }));
+        });
+        addDataSlot(ioConfigDataSlot);
     }
 
     // region IO Config
@@ -144,7 +155,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         return new IOConfig() {
             @Override
             protected void onChanged(Direction side, IOMode oldMode, IOMode newMode) {
-                if (MachineBlockEntity.this.level == null) {
+                if (level == null) {
                     return;
                 }
 
@@ -157,7 +168,10 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
                 }
 
                 // Notify neighbors of update
-                MachineBlockEntity.this.level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
+                level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
+
+                // Mark change
+                onIOConfigChanged(side, oldMode, newMode);
             }
 
             @Override
@@ -175,6 +189,12 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
                 return supportsIOMode(side, mode);
             }
         };
+    }
+
+    protected void onIOConfigChanged(Direction side, IOMode oldMode, IOMode newMode) {
+        if (level != null && level.isClientSide()) {
+            clientUpdateSlot(ioConfigDataSlot, getIOConfig());
+        }
     }
 
     /**
@@ -227,7 +247,9 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     }
 
     public void setRedstoneControl(RedstoneControl redstoneControl) {
-        this.redstoneControl = redstoneControl;
+        if (level != null && level.isClientSide()) {
+            clientUpdateSlot(redstoneControlDataSlot, redstoneControl);
+        } else this.redstoneControl = redstoneControl;
     }
 
     // endregion

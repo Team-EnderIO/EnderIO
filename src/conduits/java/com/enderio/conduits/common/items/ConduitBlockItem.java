@@ -39,43 +39,28 @@ public class ConduitBlockItem extends BlockItem {
         ItemStack itemstack = context.getItemInHand();
 
         if (level.getBlockEntity(blockpos) instanceof ConduitBlockEntity conduit) {
+            if (conduit.hasType(type.get())) {
+                // Pass through to block
+                return level.getBlockState(blockpos).use(level, player, context.getHand(), context.getHitResult());
+            }
+
             conduit.addType(type.get(), player);
             if (level.isClientSide()) {
                 conduit.updateClient();
             }
+
+            BlockState blockState = level.getBlockState(blockpos);
+            SoundType soundtype = blockState.getSoundType(level, blockpos, context.getPlayer());
+            level.playSound(player, blockpos, this.getPlaceSound(blockState, level, blockpos, context.getPlayer()), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+            level.gameEvent(GameEvent.BLOCK_PLACE, blockpos, GameEvent.Context.of(player, blockState));
+
             if (!player.getAbilities().instabuild) {
                 itemstack.shrink(1);
             }
             return InteractionResult.sidedSuccess(level.isClientSide());
         }
 
-        if (!context.canPlace()) {
-            return InteractionResult.FAIL;
-        } else {
-            BlockState blockstate = this.getPlacementState(context);
-            if (blockstate == null) {
-                return InteractionResult.FAIL;
-            } else if (!this.placeBlock(context, blockstate)) {
-                return InteractionResult.FAIL;
-            } else {
-                BlockState blockstate1 = level.getBlockState(blockpos);
-
-                level.gameEvent(GameEvent.BLOCK_PLACE, blockpos, GameEvent.Context.of(player, blockstate1));
-                SoundType soundtype = blockstate1.getSoundType(level, blockpos, context.getPlayer());
-                level.playSound(player, blockpos, this.getPlaceSound(blockstate1, level, blockpos, player), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-                if (level.getBlockEntity(blockpos) instanceof ConduitBlockEntity conduit) {
-                    conduit.addType(type.get(), player);
-                    if (level.isClientSide()) {
-                        conduit.updateClient();
-                    }
-                }
-                if (!player.getAbilities().instabuild) {
-                    itemstack.shrink(1);
-                }
-                return InteractionResult.sidedSuccess(level.isClientSide());
-            }
-
-        }
+        return super.place(context);
     }
 
     public IConduitType<?> getType() {

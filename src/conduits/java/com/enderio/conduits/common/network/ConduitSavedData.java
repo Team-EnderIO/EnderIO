@@ -150,6 +150,11 @@ public class ConduitSavedData extends SavedData {
         return nbt;
     }
 
+    @Override
+    public boolean isDirty() {
+        return true;
+    }
+
     private static CompoundTag serializeGraph(Graph<Mergeable.Dummy> graph) {
         List<GraphObject<Mergeable.Dummy>> graphObjects = new ArrayList<>(graph.getObjects());
         List<Pair<GraphObject<Mergeable.Dummy>, GraphObject<Mergeable.Dummy>>> connections = new ArrayList<>();

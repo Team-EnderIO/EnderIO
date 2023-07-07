@@ -2,14 +2,15 @@ package com.enderio.machines.common.blockentity.capacitorbank;
 
 import com.enderio.api.capacitor.FixedScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.core.common.sync.*;
+import com.enderio.core.common.network.slot.LongNetworkDataSlot;
+import com.enderio.core.common.network.slot.NBTSerializingNetworkDataSlot;
+import com.enderio.core.common.network.slot.NetworkDataSlot;
 import com.enderio.machines.common.blockentity.base.MultiConfigurable;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.multienergy.ICapacityTier;
 import com.enderio.machines.common.blockentity.multienergy.MultiEnergyNode;
 import com.enderio.machines.common.blockentity.multienergy.MultiEnergyStorageWrapper;
 import com.enderio.machines.common.blockentity.sync.LargeMachineEnergyDataSlot;
-import com.enderio.machines.common.blockentity.sync.MachineEnergyDataSlot;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import com.enderio.machines.common.menu.CapacitorBankMenu;
 import dev.gigaherz.graph3.Graph;
@@ -62,51 +63,15 @@ public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implemen
         super(EnergyIOMode.Both, new FixedScalable(tier::getStorageCapacity), new FixedScalable(tier::getStorageCapacity), type, worldPosition, blockState);
         this.tier = tier;
         this.node = new MultiEnergyNode(() -> energyStorage, () -> (MultiEnergyStorageWrapper) getExposedEnergyStorage(), worldPosition);
-        addDataSlot(new LongDataSlot(() -> addedEnergy, syncAddedEnergy -> addedEnergy = syncAddedEnergy, SyncMode.WORLD));
-        addDataSlot(new LongDataSlot(() -> removedEnergy, syncRemovedEnergy-> removedEnergy = syncRemovedEnergy, SyncMode.WORLD));
-        addDataSlot(new ConfigurablesDataSlot(SyncMode.WORLD));
-        addDataSlot(new NBTSerializingDataSlot<>(() -> displayModes, modes -> saveDisplayModes(), (modes, nbt) -> loadDisplayModes(nbt), SyncMode.WORLD));
-
-        addClientDecidingDataSlot(new NBTSerializingDataSlot<>(this::getConfigurables, list -> {
-            CompoundTag nbt = new CompoundTag();
-            ListTag listNbt = new ListTag();
-            for (BlockPos pos: list) {
-                if (pos.equals(worldPosition))
-                    continue;
-                if (level.getBlockEntity(pos) instanceof CapacitorBankBlockEntity capacitorBank) {
-                    CompoundTag e = capacitorBank.getIOConfig().serializeNBT();
-                    e.putLong("capPos", pos.asLong());
-                    listNbt.add(e);
-                }
-            }
-            nbt.put("list", listNbt);
-            return nbt;
-        }, (list, nbt) -> {
-            if (node.getGraph() == null)
-                return;
-            if (nbt.contains("list", Tag.TAG_LIST)) {
-                ListTag listNbt = nbt.getList("list", Tag.TAG_COMPOUND);
-                for (Tag tag: listNbt) {
-                    if (tag instanceof CompoundTag e) {
-                        if (!e.contains("capPos", Tag.TAG_LONG))
-                            continue;
-                        BlockPos pos = BlockPos.of(e.getLong("capPos"));
-                        if (pos.equals(worldPosition))
-                            continue;
-                        if (!node.getGraph().getObjects().stream().map(MultiEnergyNode.class::cast).map(node -> node.pos).toList().contains(pos))
-                            continue;
-                        if (level.getBlockEntity(pos) instanceof CapacitorBankBlockEntity capacitorBank) {
-                            capacitorBank.getIOConfig().deserializeNBT(e);
-                        }
-                    }
-                }
-            }
-        }, SyncMode.GUI));
+        addDataSlot(new LongNetworkDataSlot(() -> addedEnergy, syncAddedEnergy -> addedEnergy = syncAddedEnergy));
+        addDataSlot(new LongNetworkDataSlot(() -> removedEnergy, syncRemovedEnergy-> removedEnergy = syncRemovedEnergy));
+        addDataSlot(new ConfigurablesDataSlot());
+        addDataSlot(new NBTSerializingNetworkDataSlot<>(() -> displayModes, modes -> saveDisplayModes(), (modes, nbt) -> loadDisplayModes(nbt)));
     }
 
     @Override
-    public EnderDataSlot<?> createEnergyDataSlot() {
-        return new LargeMachineEnergyDataSlot(this::getExposedEnergyStorage, storge -> clientEnergyStorage = storge, getEnergySyncMode());
+    public NetworkDataSlot<?> createEnergyDataSlot() {
+        return new LargeMachineEnergyDataSlot(this::getExposedEnergyStorage, storage -> clientEnergyStorage = storage);
     }
 
     @Nullable
@@ -214,19 +179,10 @@ public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implemen
     protected boolean shouldPushEnergyTo(Direction direction) {
         if (node.getGraph() == null)
             return true;
-        for (GraphObject<Mergeable.Dummy> neighbour : node.getGraph().getObjects()) {
-            if (neighbour instanceof MultiEnergyNode node) {
-                if (node.pos.equals(worldPosition.relative(direction))) {
-                    return false;
-                }
-            }
+        if (level.getBlockEntity(worldPosition.relative(direction)) instanceof CapacitorBankBlockEntity capacitorBank) {
+            return capacitorBank.node.getGraph() != node.getGraph();
         }
         return true;
-    }
-
-    @Override
-    protected SyncMode getEnergySyncMode() {
-        return SyncMode.WORLD;
     }
 
     @Override
@@ -269,33 +225,32 @@ public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implemen
         return positions;
     }
 
-    private class ConfigurablesDataSlot extends EnderDataSlot<List<BlockPos>> {
+    private class ConfigurablesDataSlot extends NetworkDataSlot<List<BlockPos>> {
 
-        public ConfigurablesDataSlot(SyncMode mode) {
-            super(CapacitorBankBlockEntity.this::getPositions, CapacitorBankBlockEntity.this::setPositions, mode);
+        public ConfigurablesDataSlot() {
+            super(CapacitorBankBlockEntity.this::getPositions, CapacitorBankBlockEntity.this::setPositions);
         }
 
         @Override
-        public CompoundTag toFullNBT() {
-            CompoundTag nbt = new CompoundTag();
+        public Tag serializeValueNBT(List<BlockPos> value) {
             ListTag list = new ListTag();
-            getter().get().forEach(pos -> list.add(LongTag.valueOf(pos.asLong())));
-            nbt.put("positions", list);
-            return nbt;
+            getter.get().forEach(pos -> list.add(LongTag.valueOf(pos.asLong())));
+            return list;
         }
 
         @Override
-        protected List<BlockPos> fromNBT(CompoundTag nbt) {
-            if (!nbt.contains("positions", Tag.TAG_LIST))
-                return List.of();
-            ListTag list = nbt.getList("positions", Tag.TAG_LONG);
-            List<BlockPos> positions = new ArrayList<>();
-            for (Tag tag: list) {
-                if (tag instanceof LongTag longTag) {
-                    positions.add(BlockPos.of(longTag.getAsLong()));
+        protected List<BlockPos> valueFromNBT(Tag nbt) {
+            if (nbt instanceof ListTag listTag) {
+                List<BlockPos> positions = new ArrayList<>();
+                for (Tag tag: listTag) {
+                    if (tag instanceof LongTag longTag) {
+                        positions.add(BlockPos.of(longTag.getAsLong()));
+                    }
                 }
+                return positions;
+            } else {
+                throw new IllegalStateException("Invalid list tag was passed over the network.");
             }
-            return positions;
         }
     }
 

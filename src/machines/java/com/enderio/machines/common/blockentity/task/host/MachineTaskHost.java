@@ -2,8 +2,7 @@ package com.enderio.machines.common.blockentity.task.host;
 
 import com.enderio.api.UseOnly;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
-import com.enderio.core.common.sync.FloatDataSlot;
-import com.enderio.core.common.sync.SyncMode;
+import com.enderio.core.common.network.slot.FloatNetworkDataSlot;
 import com.enderio.machines.common.blockentity.task.IMachineTask;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
@@ -39,7 +38,8 @@ public abstract class MachineTaskHost {
         this.canAcceptNewTask = canAcceptNewTask;
 
         // Add sync data slot for crafting progress
-        blockEntity.addDataSlot(new FloatDataSlot(this::getProgress, p -> clientTaskProgress = p, SyncMode.GUI));
+//        blockEntity.addDataSlot(new FloatDataSlot(this::getProgress, p -> clientTaskProgress = p, SyncMode.GUI));
+        blockEntity.addDataSlot(new FloatNetworkDataSlot(this::getProgress, p -> clientTaskProgress = p));
     }
 
     @Nullable

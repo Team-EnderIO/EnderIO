@@ -6,10 +6,9 @@ import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.base.common.particle.RangeParticleData;
-import com.enderio.core.common.sync.BooleanDataSlot;
-import com.enderio.core.common.sync.EnumDataSlot;
-import com.enderio.core.common.sync.ResourceLocationDataSlot;
-import com.enderio.core.common.sync.SyncMode;
+import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
+import com.enderio.core.common.network.slot.EnumNetworkDataSlot;
+import com.enderio.core.common.network.slot.ResourceLocationNetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.task.IMachineTask;
@@ -47,11 +46,19 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
 
     private final MachineTaskHost taskHost;
 
+    private final BooleanNetworkDataSlot rangeDataSlot;
+
     public PoweredSpawnerBlockEntity(BlockEntityType type, BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Input, CAPACITY, USAGE, type, worldPosition, blockState);
-        add2WayDataSlot(new BooleanDataSlot(this::isShowingRange, this::shouldShowRange, SyncMode.GUI));
-        addDataSlot(new ResourceLocationDataSlot(() -> this.getEntityType().orElse(NO_MOB),this::setEntityType, SyncMode.GUI));
-        addDataSlot(new EnumDataSlot<>(this::getReason, this::setReason, SyncMode.GUI));
+
+        rangeDataSlot = new BooleanNetworkDataSlot(this::isShowingRange, b -> rangeVisible = b);
+        addDataSlot(rangeDataSlot);
+
+        addDataSlot(new ResourceLocationNetworkDataSlot(() -> this.getEntityType().orElse(NO_MOB), rl -> {
+            setEntityType(rl);
+            EnderIO.LOGGER.info("UPDATED ENTITY TYPE.");
+        }));
+        addDataSlot(new EnumNetworkDataSlot<>(SpawnerBlockedReason.class, this::getReason, this::setReason));
 
         taskHost = new MachineTaskHost(this, this::hasEnergy) {
             @Override
@@ -150,7 +157,9 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
     }
 
     public void shouldShowRange(Boolean show) {
-        this.rangeVisible = show;
+        if (level != null && level.isClientSide()) {
+            clientUpdateSlot(rangeDataSlot, show);
+        } else this.rangeVisible = show;
     }
 
     private void generateParticle(RangeParticleData data, Vec3 pos) {

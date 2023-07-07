@@ -5,9 +5,8 @@ import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.grindingball.IGrindingBallData;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.base.common.util.GrindingBallManager;
-import com.enderio.core.common.sync.IntegerDataSlot;
-import com.enderio.core.common.sync.ResourceLocationDataSlot;
-import com.enderio.core.common.sync.SyncMode;
+import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
+import com.enderio.core.common.network.slot.ResourceLocationNetworkDataSlot;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingMachineTask;
 import com.enderio.machines.common.blockentity.task.host.CraftingMachineTaskHost;
@@ -50,8 +49,8 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
         BlockState blockState) {
         super(EnergyIOMode.Input, CAPACITY, USAGE, type, worldPosition, blockState);
 
-        addDataSlot(new IntegerDataSlot(() -> grindingBallDamage, dmg -> grindingBallDamage = dmg, SyncMode.GUI));
-        addDataSlot(new ResourceLocationDataSlot(() -> grindingBallData.getId(), gId -> grindingBallData = GrindingBallManager.getData(gId), SyncMode.GUI));
+        addDataSlot(new IntegerNetworkDataSlot(() -> grindingBallDamage, i -> grindingBallDamage = i));
+        addDataSlot(new ResourceLocationNetworkDataSlot(() -> grindingBallData.getId(), gId -> grindingBallData = GrindingBallManager.getData(gId)));
 
         craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy, MachineRecipes.SAGMILLING.type().get(),
             new SagMillingRecipe.Container(getInventoryNN(), this::getGrindingBallData), this::createTask);
