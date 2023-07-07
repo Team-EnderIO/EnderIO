@@ -1,8 +1,6 @@
 package com.enderio.machines.common.blockentity.sync;
 
 import com.enderio.core.common.network.slot.NetworkDataSlot;
-import com.enderio.core.common.sync.EnderDataSlot;
-import com.enderio.core.common.sync.SyncMode;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.io.energy.ILargeMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;

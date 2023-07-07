@@ -4,8 +4,8 @@
     "compatibilityLevel" : "JAVA_17",
     "refmap" : "mixins.enderio.refmap.json",
     "mixins" : [
-        "LivingEntityMixin",
-        "ItemStackMixin"
+        "ItemStackMixin",
+        "LivingEntityMixin"
     ],
     "client" : [
         "GliderRotationMixin"
