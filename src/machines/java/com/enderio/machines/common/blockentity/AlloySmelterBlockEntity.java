@@ -5,9 +5,8 @@ import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
+import com.enderio.core.common.network.slot.EnumNetworkDataSlot;
 import com.enderio.core.common.recipes.CountedIngredient;
-import com.enderio.core.common.sync.EnumDataSlot;
-import com.enderio.core.common.sync.SyncMode;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingMachineTask;
@@ -59,6 +58,9 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
     protected final AlloySmeltingMachineTaskHost craftingTaskHost;
 
+    @Nullable
+    private final EnumNetworkDataSlot<AlloySmelterMode> modeDataSlot;
+
     public AlloySmelterBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(EnergyIOMode.Input, CAPACITY, USAGE, pType, pWorldPosition, pBlockState);
 
@@ -68,7 +70,13 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
         // This can be changed by the gui for the normal and enhanced machines.
         if (!restrictedMode()) {
-            add2WayDataSlot(new EnumDataSlot<>(this::getMode, this::setMode, SyncMode.GUI));
+            modeDataSlot = new EnumNetworkDataSlot<>(AlloySmelterMode.class, this::getMode, m -> {
+                mode = m;
+                craftingTaskHost.newTaskAvailable();
+            });
+            addDataSlot(modeDataSlot);
+        } else {
+            modeDataSlot = null;
         }
     }
 
@@ -84,8 +92,12 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
      * Calling on a simple tier machine does nothing.
      */
     public void setMode(AlloySmelterMode mode) {
-        this.mode = mode;
-        craftingTaskHost.newTaskAvailable();
+        if (level != null && level.isClientSide()) {
+            clientUpdateSlot(modeDataSlot, mode);
+        } else {
+            this.mode = mode;
+            craftingTaskHost.newTaskAvailable();
+        }
     }
 
     /**

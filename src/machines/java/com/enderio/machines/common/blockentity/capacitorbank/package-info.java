@@ -2,4 +2,4 @@
 @net.minecraft.MethodsReturnNonnullByDefault
 @com.tterrag.registrate.util.nullness.FieldsAreNonnullByDefault
 
-package com.enderio.core.common.sync;
+package com.enderio.machines.common.blockentity.capacitorbank;

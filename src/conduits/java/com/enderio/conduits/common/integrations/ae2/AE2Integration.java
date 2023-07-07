@@ -26,8 +26,8 @@ public class AE2Integration implements Integration {
 
     private static final RegistryObject<AE2ConduitType> DENSE = ConduitTypes.CONDUIT_TYPES.register("dense_me", () -> new AE2ConduitType(true));
     private static final RegistryObject<AE2ConduitType> NORMAL = ConduitTypes.CONDUIT_TYPES.register("me", () -> new AE2ConduitType(false));
-    public static final ItemEntry<Item> DENSE_ITEM = createConduitItem(DENSE, "dense_me");
-    public static final ItemEntry<Item> NORMAL_ITEM = createConduitItem(NORMAL, "me");
+    public static final ItemEntry<Item> DENSE_ITEM = createConduitItem(DENSE, "dense_me", "Dense ME Conduit");
+    public static final ItemEntry<Item> NORMAL_ITEM = createConduitItem(NORMAL, "me", "ME Conduit");
 
     @Override
     public void onModConstruct() {
@@ -44,10 +44,11 @@ public class AE2Integration implements Integration {
         return IN_WORLD_GRID_NODE_HOST;
     }
 
-    private static ItemEntry<Item> createConduitItem(Supplier<? extends IConduitType<?>> type, String itemName) {
+    private static ItemEntry<Item> createConduitItem(Supplier<? extends IConduitType<?>> type, String itemName, String english) {
         return EnderIO.registrate().item(itemName + "_conduit",
                 properties -> ConduitItemFactory.build(type, properties))
             .tab(EIOCreativeTabs.CONDUITS)
+            .lang(english)
             .model((ctx, prov) -> prov.withExistingParent(itemName+"_conduit", EnderIO.loc("item/conduit")).texture("0", type.get().getItemTexture()))
             .register();
     }

@@ -7,15 +7,18 @@ import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
 import com.enderio.conduits.common.blockentity.ConduitBundle;
 import com.enderio.conduits.common.blockentity.SlotType;
 import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
 import com.enderio.conduits.common.blockentity.connection.IConnectionState;
 import com.enderio.conduits.common.menu.ConduitMenu;
 import com.enderio.conduits.common.menu.ConduitSlot;
+import com.enderio.conduits.common.network.C2SSetConduitConnectionState;
 import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.client.gui.widgets.CheckBox;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
+import com.enderio.core.common.network.CoreNetwork;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -108,7 +111,7 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
             }
             menu.getConduitType()
                 .getClientData()
-                .createWidgets(this, getBundle().getNodeFor(menu.getConduitType()).getExtendedConduitData().cast(), menu::getDirection, new Vector2i(22, 7).add(getGuiLeft(), getGuiTop()))
+                .createWidgets(this, () -> menu.getBlockEntity().getBlockPos(), menu::getConduitType, getBundle().getNodeFor(menu.getConduitType()).getExtendedConduitData().cast(), menu::getDirection, new Vector2i(22, 7).add(getGuiLeft(), getGuiTop()))
                 .forEach(this::addTypedButton);
         }
         List<IConduitType<?>> validConnections = new ArrayList<>();
@@ -133,9 +136,15 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
         addRenderableWidget(button);
     }
 
-    private void actOnDynamic(Function<DynamicConnectionState, IConnectionState> map) {
-        if (getConnectionState() instanceof DynamicConnectionState dyn)
-            setConnectionState(map.apply(dyn));
+    private void actOnDynamic(Function<DynamicConnectionState, DynamicConnectionState> map) {
+        if (getConnectionState() instanceof DynamicConnectionState dyn) {
+            CoreNetwork.sendToServer(new C2SSetConduitConnectionState(
+                getMenu().getBlockEntity().getBlockPos(),
+                getMenu().getDirection(),
+                getMenu().getConduitType(),
+                map.apply(dyn)
+            ));
+        }
     }
     private <T> T getOnDynamic(Function<DynamicConnectionState, T> map, T defaultValue) {
         return getConnectionState() instanceof DynamicConnectionState dyn ? map.apply(dyn) : defaultValue;

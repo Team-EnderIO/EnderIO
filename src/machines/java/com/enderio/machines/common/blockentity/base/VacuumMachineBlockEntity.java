@@ -4,9 +4,8 @@ import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
 import com.enderio.base.common.particle.RangeParticleData;
 import com.enderio.base.common.util.AttractionUtil;
-import com.enderio.core.common.sync.BooleanDataSlot;
-import com.enderio.core.common.sync.IntegerDataSlot;
-import com.enderio.core.common.sync.SyncMode;
+import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
+import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
 import com.enderio.machines.common.io.FixedIOConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
@@ -33,11 +32,18 @@ public abstract class VacuumMachineBlockEntity<T extends Entity> extends Machine
     private List<WeakReference<T>> entities = new ArrayList<>();
     private Class<T> targetClass;
 
+    private IntegerNetworkDataSlot rangeDataSlot;
+    private BooleanNetworkDataSlot rangeVisibleDataSlot;
+
     public VacuumMachineBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState, Class<T> targetClass) {
         super(pType, pWorldPosition, pBlockState);
         this.targetClass = targetClass;
-        add2WayDataSlot(new IntegerDataSlot(this::getRange, this::setRange, SyncMode.GUI));
-        add2WayDataSlot(new BooleanDataSlot(this::isShowingRange, this::shouldShowRange, SyncMode.GUI));
+
+        rangeDataSlot = new IntegerNetworkDataSlot(this::getRange, r -> range = r);
+        addDataSlot(rangeDataSlot);
+
+        rangeVisibleDataSlot = new BooleanNetworkDataSlot(this::isShowingRange, b -> rangeVisible = b);
+        addDataSlot(rangeVisibleDataSlot);
     }
 
     @Override
@@ -109,7 +115,9 @@ public abstract class VacuumMachineBlockEntity<T extends Entity> extends Machine
     }
 
     public void setRange(int range) {
-        this.range = range;
+        if (level != null && level.isClientSide()) {
+            clientUpdateSlot(rangeDataSlot, range);
+        } else this.range = range;
     }
 
     public boolean isShowingRange() {
@@ -117,7 +125,9 @@ public abstract class VacuumMachineBlockEntity<T extends Entity> extends Machine
     }
 
     public void shouldShowRange(boolean show) {
-        this.rangeVisible = show;
+        if (level != null && level.isClientSide()) {
+            clientUpdateSlot(rangeVisibleDataSlot, show);
+        } else this.rangeVisible = show;
     }
 
     public void decreaseRange() {

@@ -5,11 +5,10 @@ import com.enderio.api.capacitor.ICapacitorScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.base.common.capacitor.DefaultCapacitorData;
-import com.enderio.core.common.sync.EnderDataSlot;
-import com.enderio.core.common.sync.SyncMode;
+import com.enderio.core.common.network.slot.NetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.ProgressMachineBlock;
-import com.enderio.machines.common.blockentity.sync.MachineEnergyDataSlot;
+import com.enderio.machines.common.blockentity.sync.MachineEnergyNetworkDataSlot;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.ImmutableMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
@@ -72,9 +71,8 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity {
         addDataSlot(createEnergyDataSlot());
     }
 
-    public EnderDataSlot<?> createEnergyDataSlot() {
-        return new MachineEnergyDataSlot(this::getExposedEnergyStorage, storage -> clientEnergyStorage = storage, getEnergySyncMode());
-
+    public NetworkDataSlot<?> createEnergyDataSlot() {
+        return new MachineEnergyNetworkDataSlot(this::getExposedEnergyStorage, storage -> clientEnergyStorage = storage);
     }
 
     @Override
@@ -187,10 +185,6 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity {
         return true;
     }
 
-    protected SyncMode getEnergySyncMode() {
-        return SyncMode.GUI;
-    }
-
     /**
      * Create the energy storage medium
      * Override this to customise the behaviour of the energy storage.
@@ -200,6 +194,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity {
             @Override
             protected void onContentsChanged() {
                 setChanged();
+
             }
         };
     }

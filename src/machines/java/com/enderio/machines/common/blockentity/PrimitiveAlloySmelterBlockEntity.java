@@ -2,8 +2,7 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.api.UseOnly;
 import com.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.core.common.sync.FloatDataSlot;
-import com.enderio.core.common.sync.SyncMode;
+import com.enderio.core.common.network.slot.FloatNetworkDataSlot;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
@@ -41,7 +40,7 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
 
     public PrimitiveAlloySmelterBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);
-        addDataSlot(new FloatDataSlot(this::getBurnProgress, p -> clientBurnProgress = p, SyncMode.GUI));
+        addDataSlot(new FloatNetworkDataSlot(this::getBurnProgress, p -> clientBurnProgress = p));
     }
 
     @Override
