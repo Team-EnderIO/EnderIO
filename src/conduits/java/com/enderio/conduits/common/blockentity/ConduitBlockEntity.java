@@ -59,15 +59,12 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
     public UpdateState checkConnection = UpdateState.NONE;
 
-    public final ConduitBundleNetworkDataSlot bundleDataSlot;
-
     public ConduitBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
         bundle = new ConduitBundle(this::scheduleTick, worldPosition);
         clientBundle = bundle.deepCopy();
 
-        bundleDataSlot = new ConduitBundleNetworkDataSlot(this::getBundle);
-        addDataSlot(bundleDataSlot);
+        addDataSlot(new ConduitBundleNetworkDataSlot(this::getBundle));
         addAfterSyncRunnable(this::updateClient);
     }
 
