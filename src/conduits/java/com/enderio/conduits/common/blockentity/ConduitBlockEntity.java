@@ -59,6 +59,8 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
     public UpdateState checkConnection = UpdateState.NONE;
 
+    private final Map<IConduitType<?>,NodeIdentifier<?>> lazyNodes = new HashMap<>();
+
     public ConduitBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
         bundle = new ConduitBundle(this::scheduleTick, worldPosition);
@@ -102,8 +104,22 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     @Override
     public void onLoad() {
         updateShape();
-        if (!level.isClientSide()) {
+        if (level instanceof ServerLevel serverLevel) {
             sync();
+            for (var entry: lazyNodes.entrySet()) {
+                NodeIdentifier<?> node = entry.getValue();
+                IExtendedConduitData<?> data = node.getExtendedConduitData();
+                data.onCreated(entry.getKey(), level, worldPosition, null);
+                for (Direction dir : Direction.values()) {
+                    tryConnectTo(dir, entry.getKey(), false, false).ifPresent(otherNode -> Graph.connect(node, otherNode));
+                }
+                for (GraphObject<Mergeable.Dummy> object : node.getGraph().getObjects()) {
+                    if (object instanceof NodeIdentifier<?> otherNode) {
+                        node.getExtendedConduitData().onConnectTo(otherNode.getExtendedConduitData().cast());
+                    }
+                }
+                ConduitSavedData.addPotentialGraph(entry.getKey(), Objects.requireNonNull(node.getGraph()), serverLevel);
+            }
             bundle.onLoad(level, getBlockPos());
         }
     }
@@ -205,7 +221,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                 tryConnectTo(dir, type, false, false).ifPresent(nodes::add);
             }
             if (level instanceof ServerLevel serverLevel) {
-                NodeIdentifier<?> thisNode = bundle.getNodeForTypeExact(type);
+                NodeIdentifier<?> thisNode = Objects.requireNonNull(bundle.getNodeForTypeExact(type), "no node found in conduit");
                 Graph.integrate(thisNode, nodes);
                 for (GraphObject<Mergeable.Dummy> object : thisNode.getGraph().getObjects()) {
                     if (object instanceof NodeIdentifier<?> node) {
@@ -342,12 +358,16 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         ConduitSavedData savedData = ConduitSavedData.get(serverLevel);
         for (IConduitType<?> type : bundle.getTypes()) {
             NodeIdentifier<?> node = savedData.takeUnloadedNodeIdentifier(type, this.worldPosition);
-            bundle.setNodeFor(type, node);
+            if (node == null && bundle.getNodeForTypeExact(type) == null) {
+                IExtendedConduitData<?> data = type.createExtendedConduitData(level, worldPosition);
+                node = new NodeIdentifier<>(worldPosition, data);
+                Graph.integrate(node, List.of());
+                bundle.setNodeFor(type, node);
+                lazyNodes.put(type, node);
+            } else if (node != null){
+                bundle.setNodeFor(type, node);
+            }
         }
-    }
-
-    public static boolean isDifferent(IConduitType<?> first, IConduitType<?> second) {
-        return first != second;
     }
 
     /**
