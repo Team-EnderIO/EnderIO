@@ -6,6 +6,7 @@ import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.IExtendedConduitData;
 import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.conduits.ConduitNBTKeys;
+import com.enderio.conduits.EIOConduits;
 import com.mojang.datafixers.util.Pair;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
@@ -23,6 +24,7 @@ import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -211,12 +213,21 @@ public class ConduitSavedData extends SavedData {
         }
     }
 
+    @Nullable
     public <T extends IExtendedConduitData<T>> NodeIdentifier<T> takeUnloadedNodeIdentifier(IConduitType<T> type, BlockPos pos) {
         ChunkPos chunkPos = new ChunkPos(pos);
 
-        Map<ChunkPos, Map<BlockPos, NodeIdentifier<?>>> typeMap = Objects.requireNonNull(deserializedNodes.get(type), "Conduit data is missing!");
-        Map<BlockPos, NodeIdentifier<?>> chunkMap = Objects.requireNonNull(typeMap.get(chunkPos), "Conduit data is missing!");
-        NodeIdentifier<?> node = Objects.requireNonNull(chunkMap.get(pos), "Conduit data is missing!");
+        Map<ChunkPos, Map<BlockPos, NodeIdentifier<?>>> typeMap = deserializedNodes.get(type);
+        if (typeMap == null) {
+            EnderIO.LOGGER.warn("Conduit data is missing!");
+            return null;
+        }
+        Map<BlockPos, NodeIdentifier<?>> chunkMap = typeMap.get(chunkPos);
+        if (chunkMap == null) {
+            EnderIO.LOGGER.warn("Conduit data is missing!");
+            return null;
+        }
+        NodeIdentifier<?> node = chunkMap.get(pos);
 
         chunkMap.remove(pos);
         if (chunkMap.size() == 0)

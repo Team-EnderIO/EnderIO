@@ -17,6 +17,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.fml.util.thread.EffectiveSide;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -307,6 +308,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         return false;
     }
 
+    @Nullable
     public NodeIdentifier<?> getNodeForTypeExact(IConduitType<?> type) {
         return nodes.get(type);
     }
