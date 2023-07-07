@@ -2,11 +2,9 @@ package com.enderio.base.data.recipe;
 
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.item.misc.MaterialItem;
-import com.enderio.base.common.tag.EIOTags;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;

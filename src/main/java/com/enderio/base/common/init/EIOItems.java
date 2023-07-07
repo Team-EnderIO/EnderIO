@@ -2,19 +2,9 @@ package com.enderio.base.common.init;
 
 import com.enderio.EnderIO;
 import com.enderio.base.common.capacitor.DefaultCapacitorData;
-import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.item.capacitors.FixedCapacitorItem;
 import com.enderio.base.common.item.capacitors.LootCapacitorItem;
-import com.enderio.base.common.item.darksteel.DarkSteelAxeItem;
-import com.enderio.base.common.item.darksteel.DarkSteelPickaxeItem;
 import com.enderio.base.common.item.darksteel.DarkSteelSwordItem;
-import com.enderio.base.common.item.darksteel.DarkSteelUpgradeItem;
-import com.enderio.base.common.item.darksteel.upgrades.*;
-import com.enderio.base.common.item.darksteel.upgrades.direct.DirectUpgrade;
-import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosivePenetrationUpgrade;
-import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosivePenetrationUpgradeTier;
-import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosiveUpgrade;
-import com.enderio.base.common.item.darksteel.upgrades.explosive.ExplosiveUpgradeTier;
 import com.enderio.base.common.item.misc.*;
 import com.enderio.base.common.item.tool.*;
 import com.enderio.base.common.tag.EIOTags;
@@ -32,10 +22,8 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.ForgeTier;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.TierSortingRegistry;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
-import java.util.Objects;
 
 @SuppressWarnings("unused")
 public class EIOItems {
