@@ -26,7 +26,6 @@ public class CoreNetwork {
             .simpleChannel();
 
         // Register core packets.
-        registerPacket(new ClientToServerMenuPacket.Handler<>(SyncClientToServerMenuPacket::new), SyncClientToServerMenuPacket.class);
         registerPacket(new EmitParticlePacket.Handler(), EmitParticlePacket.class);
         registerPacket(new EmitParticlesPacket.Handler(), EmitParticlesPacket.class);
         registerPacket(new S2CDataSlotUpdate.Handler(), S2CDataSlotUpdate.class);
