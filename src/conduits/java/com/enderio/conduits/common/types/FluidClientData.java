@@ -2,9 +2,13 @@ package com.enderio.conduits.common.types;
 
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.IClientConduitData;
+import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
+import com.enderio.conduits.common.network.C2SSetConduitExtendedData;
 import com.enderio.core.client.RenderUtil;
+import com.enderio.core.common.network.CoreNetwork;
 import com.enderio.core.common.util.TooltipUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
@@ -18,6 +22,7 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -26,6 +31,7 @@ import net.minecraft.util.FastColor;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.client.model.IQuadTransformer;
@@ -52,8 +58,11 @@ public class FluidClientData extends IClientConduitData.Simple<FluidExtendedData
     }
 
     @Override
-    public List<AbstractWidget> createWidgets(Screen screen, FluidExtendedData extendedConduitData, Supplier<Direction> direction, Vector2i widgetsStart) {
-        return List.of(new FluidWidget(screen, widgetsStart.add(0, 20), () -> extendedConduitData.lockedFluid, () -> extendedConduitData.shouldReset = true));
+    public List<AbstractWidget> createWidgets(Screen screen, Supplier<BlockPos> blockPos, Supplier<IConduitType<?>> type, FluidExtendedData extendedConduitData, Supplier<Direction> direction, Vector2i widgetsStart) {
+        return List.of(new FluidWidget(screen, widgetsStart.add(0, 20), () -> extendedConduitData.lockedFluid, () -> {
+            extendedConduitData.shouldReset = true;
+            CoreNetwork.sendToServer(new C2SSetConduitExtendedData(blockPos.get(), type.get(), extendedConduitData));
+        }));
     }
 
     @Override
