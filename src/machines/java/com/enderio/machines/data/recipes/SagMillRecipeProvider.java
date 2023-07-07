@@ -103,6 +103,14 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
             	output(LAPIS_LAZULI, 0.2f),
         		output(COBBLESTONE, 0.15f)
         		),BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
+
+        build("lapis", Ingredient.of(Tags.Items.GEMS_LAPIS), List.of(
+            output(POWDERED_LAPIS_LAZULI.get(), 1)
+        ),BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
+
+        build("lapis_block", Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS), List.of(
+            output(POWDERED_LAPIS_LAZULI.get(), 9)
+        ), 3600, finishedRecipeConsumer);
         
         build("quartz_ore", Ingredient.of(Tags.Items.ORES_QUARTZ), List.of(
         		output(QUARTZ, 2),
