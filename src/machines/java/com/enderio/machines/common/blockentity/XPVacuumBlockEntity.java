@@ -1,8 +1,7 @@
 package com.enderio.machines.common.blockentity;
 
 import com.enderio.base.common.init.EIOFluids;
-import com.enderio.core.common.sync.IntegerDataSlot;
-import com.enderio.core.common.sync.SyncMode;
+import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
 import com.enderio.machines.common.blockentity.base.VacuumMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.menu.XPVacuumMenu;
@@ -25,8 +24,10 @@ public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb>
         super(pType, pWorldPosition, pBlockState, ExperienceOrb.class);
 
         // Sync fluid level.
-        addDataSlot(new IntegerDataSlot(() -> getFluidTankNN().getFluidInTank(0).getAmount(), (i) -> getFluidTankNN().setFluid(new FluidStack(EIOFluids.XP_JUICE.get(), i)),
-            SyncMode.WORLD));
+        addDataSlot(new IntegerNetworkDataSlot(
+            () -> getFluidTankNN().getFluidInTank(0).getAmount(),
+            i -> getFluidTankNN().setFluid(new FluidStack(EIOFluids.XP_JUICE.get(), i))
+        ));
     }
 
     @Override

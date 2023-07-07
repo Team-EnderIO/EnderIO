@@ -38,46 +38,46 @@ public class SyncClientToServerMenuPacket extends ClientToServerMenuPacket<Synce
 
     @Override
     public void handle(NetworkEvent.Context context) {
-        ListTag list = data.getList(CoreNBTKeys.SYNC_DATA, Tag.TAG_COMPOUND);
-        List<EnderDataSlot<?>> clientToServerSlots = getMenu(context).getClientToServerSlots();
-        List<Pair<Integer, CompoundTag>> dataSlots = new ArrayList<>();
-        boolean encounteredError = false;
-        for (Tag tag: list) {
-            if (tag instanceof CompoundTag compound) {
-                Tag indexTag = compound.get(CoreNBTKeys.SYNC_DATA_SLOT_INDEX);
-                if (indexTag instanceof IntTag intTag) {
-                    int index = intTag.getAsInt();
-                    if (index >= 0 && index < clientToServerSlots.size()) {
-                        dataSlots.add(Pair.of(intTag.getAsInt(), compound));
-                    } else {
-                        encounteredError = true;
-                        Packet.logPacketError(context, "Index " + index + " is out of range for " + clientToServerSlots.size() + " dataslots", this);
-                    }
-                } else {
-                    encounteredError = true;
-                    if (indexTag == null) {
-                        Packet.logPacketError(context, "There is no IndexTag in (" + tag.getAsString() + ")", this);
-                    } else {
-                        Packet.logPacketError(context, "IndexTag is not an IntTag (" + indexTag.getAsString() + ")", this);
-                    }
-                }
-            }
-        }
-        if (!encounteredError) {
-            for (Pair<Integer, CompoundTag> dataSlot : dataSlots) {
-                try {
-                    clientToServerSlots.get(dataSlot.getKey()).handleNBT(dataSlot.getRight());
-                } catch (Exception e) {
-                    Packet.logPacketError(context, "An exception has been caught during handling of dataslot " + dataSlot.getKey()
-                        + " with data " + dataSlot.getRight().getAsString()
-                        + " in menu " + getMenu(context).getClass(), this);
-                    LogManager.getLogger().warn(e);
-                    encounteredError = true;
-                }
-            }
-        }
-        if (encounteredError) {
-            handleWrongPlayer(context);
-        }
+//        ListTag list = data.getList(CoreNBTKeys.SYNC_DATA, Tag.TAG_COMPOUND);
+//        List<EnderDataSlot<?>> clientToServerSlots = getMenu(context).getClientToServerSlots();
+//        List<Pair<Integer, CompoundTag>> dataSlots = new ArrayList<>();
+//        boolean encounteredError = false;
+//        for (Tag tag: list) {
+//            if (tag instanceof CompoundTag compound) {
+//                Tag indexTag = compound.get(CoreNBTKeys.SYNC_DATA_SLOT_INDEX);
+//                if (indexTag instanceof IntTag intTag) {
+//                    int index = intTag.getAsInt();
+//                    if (index >= 0 && index < clientToServerSlots.size()) {
+//                        dataSlots.add(Pair.of(intTag.getAsInt(), compound));
+//                    } else {
+//                        encounteredError = true;
+//                        Packet.logPacketError(context, "Index " + index + " is out of range for " + clientToServerSlots.size() + " dataslots", this);
+//                    }
+//                } else {
+//                    encounteredError = true;
+//                    if (indexTag == null) {
+//                        Packet.logPacketError(context, "There is no IndexTag in (" + tag.getAsString() + ")", this);
+//                    } else {
+//                        Packet.logPacketError(context, "IndexTag is not an IntTag (" + indexTag.getAsString() + ")", this);
+//                    }
+//                }
+//            }
+//        }
+//        if (!encounteredError) {
+//            for (Pair<Integer, CompoundTag> dataSlot : dataSlots) {
+//                try {
+//                    clientToServerSlots.get(dataSlot.getKey()).handleNBT(dataSlot.getRight());
+//                } catch (Exception e) {
+//                    Packet.logPacketError(context, "An exception has been caught during handling of dataslot " + dataSlot.getKey()
+//                        + " with data " + dataSlot.getRight().getAsString()
+//                        + " in menu " + getMenu(context).getClass(), this);
+//                    LogManager.getLogger().warn(e);
+//                    encounteredError = true;
+//                }
+//            }
+//        }
+//        if (encounteredError) {
+//            handleWrongPlayer(context);
+//        }
     }
 }

@@ -29,6 +29,8 @@ public class CoreNetwork {
         registerPacket(new ClientToServerMenuPacket.Handler<>(SyncClientToServerMenuPacket::new), SyncClientToServerMenuPacket.class);
         registerPacket(new EmitParticlePacket.Handler(), EmitParticlePacket.class);
         registerPacket(new EmitParticlesPacket.Handler(), EmitParticlesPacket.class);
+        registerPacket(new S2CDataSlotUpdate.Handler(), S2CDataSlotUpdate.class);
+        registerPacket(new C2SDataSlotChange.Handler(), C2SDataSlotChange.class);
     }
 
     public static <P extends Packet> void sendToServer(P packet) {

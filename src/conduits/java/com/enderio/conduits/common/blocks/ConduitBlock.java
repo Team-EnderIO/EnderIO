@@ -21,8 +21,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -32,6 +34,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -39,6 +42,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
@@ -150,18 +154,34 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         if (!(action instanceof RightClickAction.Blocked)) {
             conduit.getLevel().setBlockAndUpdate(conduit.getBlockPos(), conduit.getBlockState());
         }
+
+        Optional<InteractionResult> result;
+
         if (action instanceof RightClickAction.Upgrade upgradeAction) {
             if (!player.getAbilities().instabuild) {
                 stack.shrink(1);
                 player.getInventory().placeItemBackInInventory(upgradeAction.getNotInConduit().getConduitItem().getDefaultInstance());
             }
-            return Optional.of(InteractionResult.sidedSuccess(isClientSide));
+            result = Optional.of(InteractionResult.sidedSuccess(isClientSide));
         } else if (action instanceof RightClickAction.Insert) {
             if (!player.getAbilities().instabuild)
                 stack.shrink(1);
-            return Optional.of(InteractionResult.sidedSuccess(isClientSide));
+            result = Optional.of(InteractionResult.sidedSuccess(isClientSide));
+        } else {
+            result = Optional.empty();
         }
-        return Optional.empty();
+
+        if (result.isPresent()) {
+            Level level = conduit.getLevel();
+            BlockPos blockpos = conduit.getBlockPos();
+
+            BlockState blockState = level.getBlockState(blockpos);
+            SoundType soundtype = blockState.getSoundType(level, blockpos, player);
+            level.playSound(player, blockpos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+            level.gameEvent(GameEvent.BLOCK_PLACE, blockpos, GameEvent.Context.of(player, blockState));
+        }
+
+        return result;
     }
 
     private Optional<InteractionResult> handleYeta(ConduitBlockEntity conduit, Player player, ItemStack stack, BlockHitResult hit, boolean isClientSide) {
@@ -336,6 +356,19 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
     }
 
     @Override
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        ConduitBlockItem item = (ConduitBlockItem) stack.getItem();
+        if (placer instanceof Player player) {
+            if (level.getBlockEntity(pos) instanceof ConduitBlockEntity conduit) {
+                conduit.addType(item.getType(), player);
+                if (!level.isClientSide()) {
+                    conduit.updateClient();
+                }
+            }
+        }
+    }
+
+    @Override
     public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
         HitResult hit = player.pick(player.getAttributeValue(ForgeMod.BLOCK_REACH.get()) + 5,1,false);
         BlockEntity be = level.getBlockEntity(pos);
@@ -345,9 +378,17 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
             IConduitType<?> conduitType = conduit.getShape().getConduit(((BlockHitResult)hit).getBlockPos(), hit);
             if (conduitType == null || conduit.removeType(conduitType, !player.getAbilities().instabuild)) {
                 return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
+            } else {
+                // Play sound anyway, good feedback for player
+                SoundType soundtype = state.getSoundType(level, pos, player);
+                level.playSound(player, pos, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+                level.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(player, state));
+                return false;
             }
         }
-        return false;
+
+        // No block entity, get rid of it immediately
+        return true;
     }
 
     @Override

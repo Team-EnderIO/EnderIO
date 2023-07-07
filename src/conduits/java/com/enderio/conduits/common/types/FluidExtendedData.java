@@ -9,6 +9,8 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
+
 public class FluidExtendedData implements IExtendedConduitData<FluidExtendedData> {
 
     public final boolean isMultiFluid;

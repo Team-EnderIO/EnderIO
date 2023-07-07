@@ -7,9 +7,8 @@ import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.ExperienceUtil;
+import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
 import com.enderio.core.common.recipes.OutputStack;
-import com.enderio.core.common.sync.IntegerDataSlot;
-import com.enderio.core.common.sync.SyncMode;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingMachineTask;
 import com.enderio.machines.common.blockentity.task.host.CraftingMachineTaskHost;
@@ -52,18 +51,20 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
         super(EnergyIOMode.Input, CAPACITY, USAGE, type, worldPosition, blockState);
 
         // Sync fluid amount to client.
-        addDataSlot(new IntegerDataSlot(() -> getFluidTankNN().getFluidInTank(0).getAmount(), (i) -> getFluidTankNN().setFluid(new FluidStack(EIOFluids.XP_JUICE.get(), i)),
-            SyncMode.WORLD));
+        addDataSlot(new IntegerNetworkDataSlot(
+            () -> getFluidTankNN().getFluidInTank(0).getAmount(),
+            i -> getFluidTankNN().setFluid(new FluidStack(EIOFluids.XP_JUICE.get(), i))
+        ));
 
         // Create the crafting task host
         craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy,
             MachineRecipes.SOUL_BINDING.type().get(), new SoulBindingRecipe.Container(getInventoryNN(), getFluidTankNN()), this::createTask);
 
         // Sync crafting container needed xp
-        addDataSlot(new IntegerDataSlot(
+        addDataSlot(new IntegerNetworkDataSlot(
             () -> craftingTaskHost.getContainer().getNeededXP(),
-            (i) -> craftingTaskHost.getContainer().setNeededXP(i),
-            SyncMode.GUI));
+            i -> craftingTaskHost.getContainer().setNeededXP(i)
+        ));
     }
 
     @Override

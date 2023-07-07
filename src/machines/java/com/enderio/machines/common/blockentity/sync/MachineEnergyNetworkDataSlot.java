@@ -1,13 +1,9 @@
 package com.enderio.machines.common.blockentity.sync;
 
 import com.enderio.core.common.network.slot.NetworkDataSlot;
-import com.enderio.core.common.sync.EnderDataSlot;
-import com.enderio.core.common.sync.SyncMode;
 import com.enderio.machines.common.MachineNBTKeys;
-import com.enderio.machines.common.io.energy.ILargeMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.ImmutableMachineEnergyStorage;
-import com.enderio.machines.common.io.energy.LargeImmutableMachineEnergyStorage;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 
@@ -18,26 +14,27 @@ import java.util.function.Supplier;
  * Data slot for syncing an instance of {@link IMachineEnergyStorage} using a data slot.
  * @apiNote Sends a {@link ImmutableMachineEnergyStorage} to the receiver.
  */
-public class LargeMachineEnergyDataSlot extends NetworkDataSlot<IMachineEnergyStorage> {
-    public LargeMachineEnergyDataSlot(Supplier<IMachineEnergyStorage> getter, Consumer<IMachineEnergyStorage> setter) {
+public class MachineEnergyNetworkDataSlot extends NetworkDataSlot<IMachineEnergyStorage> {
+    public MachineEnergyNetworkDataSlot(Supplier<IMachineEnergyStorage> getter, Consumer<IMachineEnergyStorage> setter) {
         super(getter, setter);
     }
 
     @Override
     public Tag serializeValueNBT(IMachineEnergyStorage value) {
-        ILargeMachineEnergyStorage storage = (ILargeMachineEnergyStorage) getter.get();
         CompoundTag tag = new CompoundTag();
-        tag.putLong(MachineNBTKeys.ENERGY_STORED, storage.getLargeEnergyStored());
-        tag.putLong(MachineNBTKeys.ENERGY_MAX_STORED, storage.getLargeMaxEnergyStored());
+        tag.putInt(MachineNBTKeys.ENERGY_STORED, value.getEnergyStored());
+        tag.putInt(MachineNBTKeys.ENERGY_MAX_STORED, value.getMaxEnergyStored());
+        tag.putInt(MachineNBTKeys.ENERGY_MAX_USE, value.getMaxEnergyUse());
         return tag;
     }
 
     @Override
     protected IMachineEnergyStorage valueFromNBT(Tag nbt) {
         if (nbt instanceof CompoundTag compoundTag) {
-            long energy = compoundTag.getLong(MachineNBTKeys.ENERGY_STORED);
-            long maxStored = compoundTag.getLong(MachineNBTKeys.ENERGY_MAX_STORED);
-            return new LargeImmutableMachineEnergyStorage(energy, maxStored);
+            int energy = compoundTag.getInt(MachineNBTKeys.ENERGY_STORED);
+            int maxStored = compoundTag.getInt(MachineNBTKeys.ENERGY_MAX_STORED);
+            int maxUse = compoundTag.getInt(MachineNBTKeys.ENERGY_MAX_USE);
+            return new ImmutableMachineEnergyStorage(energy, maxStored, maxUse);
         } else {
             throw new IllegalStateException("Invalid compound tag was passed over the network.");
         }
@@ -45,10 +42,9 @@ public class LargeMachineEnergyDataSlot extends NetworkDataSlot<IMachineEnergySt
 
     @Override
     protected int hashCode(IMachineEnergyStorage value) {
-        var largeStorage = (ILargeMachineEnergyStorage)value;
         int code = 1;
-        code = 31 * code + Long.hashCode(largeStorage.getLargeEnergyStored());
-        code = 31 * code + Long.hashCode(largeStorage.getLargeMaxEnergyStored());
+        code = 31 * code + value.getEnergyStored();
+        code = 31 * code + value.getMaxEnergyStored();
         return code;
     }
 }

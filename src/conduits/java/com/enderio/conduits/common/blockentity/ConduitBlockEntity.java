@@ -11,9 +11,6 @@ import com.enderio.conduits.common.blockentity.connection.StaticConnectionStates
 import com.enderio.conduits.common.menu.ConduitMenu;
 import com.enderio.conduits.common.network.ConduitSavedData;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
-import com.enderio.core.common.sync.NBTSerializableDataSlot;
-import com.enderio.core.common.sync.NBTSerializingDataSlot;
-import com.enderio.core.common.sync.SyncMode;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
 import dev.gigaherz.graph3.Mergeable;
@@ -62,12 +59,15 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
     public UpdateState checkConnection = UpdateState.NONE;
 
+    public final ConduitBundleNetworkDataSlot bundleDataSlot;
+
     public ConduitBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
         bundle = new ConduitBundle(this::scheduleTick, worldPosition);
         clientBundle = bundle.deepCopy();
-        add2WayDataSlot(new NBTSerializableDataSlot<>(this::getBundle, SyncMode.WORLD));
-        add2WayDataSlot(new NBTSerializingDataSlot<>(this::getBundle, ConduitBundle::serializeGuiNBT, ConduitBundle::deserializeGuiNBT, SyncMode.GUI));
+
+        bundleDataSlot = new ConduitBundleNetworkDataSlot(this::getBundle);
+        addDataSlot(bundleDataSlot);
         addAfterSyncRunnable(this::updateClient);
     }
 
@@ -76,6 +76,26 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         updateShape();
         requestModelDataUpdate();
         level.setBlocksDirty(getBlockPos(), Blocks.AIR.defaultBlockState(), getBlockState());
+    }
+
+    public void handleConnectionStateUpdate(Direction direction, IConduitType<?> conduitType, DynamicConnectionState connectionState) {
+        var bundle = getBundle();
+        var connection = bundle.getConnection(direction);
+        if (connection.getConnectionState(conduitType, bundle) instanceof DynamicConnectionState) {
+            connection.setConnectionState(conduitType, bundle, connectionState);
+
+            bundle.getNodeFor(conduitType).pushState(direction,
+                connectionState.isInsert() ? connectionState.insert() : null,
+                connectionState.isExtract() ? connectionState.extract() : null,
+                connectionState.control(),
+                connectionState.redstoneChannel());
+        }
+        updateShape();
+        updateConnectionToData(conduitType);
+    }
+
+    public void handleExtendedDataUpdate(IConduitType<?> conduitType, CompoundTag compoundTag) {
+        getBundle().getNodeFor(conduitType).getExtendedConduitData().deserializeNBT(compoundTag);
     }
 
     private void scheduleTick() {
@@ -171,6 +191,10 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     @Override
     public ModelData getModelData() {
         return ModelData.builder().with(BUNDLE_MODEL_PROPERTY, clientBundle).with(POS, worldPosition).build();
+    }
+
+    public boolean hasType(IConduitType<?> type) {
+        return bundle.hasType(type);
     }
 
     public RightClickAction addType(IConduitType<?> type, Player player) {
@@ -294,16 +318,18 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                 }
             }
         }
-        if (level instanceof ServerLevel serverLevel) {
 
+        if (level instanceof ServerLevel serverLevel) {
             for (Direction dir : Direction.values()) {
                 BlockEntity blockEntity = level.getBlockEntity(getBlockPos().relative(dir));
                 if (blockEntity instanceof ConduitBlockEntity conduit) {
-                    Optional
-                        .ofNullable(conduit.bundle.getNodeFor(type))
-                        .map(NodeIdentifier::getGraph)
-                        .filter(Objects::nonNull)
-                        .ifPresent(graph -> ConduitSavedData.addPotentialGraph(type, graph, serverLevel));
+                    if (conduit.hasType(type)) {
+                        Optional
+                            .ofNullable(conduit.bundle.getNodeFor(type))
+                            .map(NodeIdentifier::getGraph)
+                            .filter(Objects::nonNull)
+                            .ifPresent(graph -> ConduitSavedData.addPotentialGraph(type, graph, serverLevel));
+                    }
                 }
             }
         }

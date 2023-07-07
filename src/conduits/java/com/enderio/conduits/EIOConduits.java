@@ -7,6 +7,7 @@ import com.enderio.base.data.EIODataProvider;
 import com.enderio.conduits.common.init.*;
 import com.enderio.conduits.common.integrations.Integrations;
 import com.enderio.conduits.common.items.ConduitBlockItem;
+import com.enderio.conduits.common.network.ConduitNetwork;
 import com.enderio.conduits.data.ConduitTagProvider;
 import com.enderio.conduits.data.recipe.ConduitRecipes;
 import net.minecraft.data.PackOutput;
@@ -30,6 +31,7 @@ public class EIOConduits {
         ConduitBlocks.register();
         ConduitItems.register();
         Integrations.register();
+        ConduitNetwork.register();
         ConduitItemFactory.setFactory((type, properties) -> new ConduitBlockItem(type, ConduitBlocks.CONDUIT.get(), properties));
     }
 

@@ -6,8 +6,7 @@ import com.enderio.api.capacitor.FixedScalable;
 import com.enderio.api.capacitor.LinearScalable;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.core.common.sync.FloatDataSlot;
-import com.enderio.core.common.sync.SyncMode;
+import com.enderio.core.common.network.slot.FloatNetworkDataSlot;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
@@ -44,7 +43,7 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     public StirlingGeneratorBlockEntity(BlockEntityType<?> type, BlockPos worldPosition,
         BlockState blockState) {
         super(EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO, type, worldPosition, blockState);
-        addDataSlot(new FloatDataSlot(this::getBurnProgress, p -> clientBurnProgress = p, SyncMode.GUI));
+        addDataSlot(new FloatNetworkDataSlot(this::getBurnProgress, p -> clientBurnProgress = p));
     }
 
     private int getBurnPerTick() {

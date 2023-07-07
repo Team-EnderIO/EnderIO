@@ -8,9 +8,11 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -34,7 +36,7 @@ public interface IClientConduitData<T extends IExtendedConduitData<T>> extends I
      * @param widgetsStart        the position on which widgets start
      * @return Widgets that manipulate the extended ConduitData, these changes are synced back to the server
      */
-    default List<AbstractWidget> createWidgets(Screen screen, T extendedConduitData, Supplier<Direction> direction, Vector2i widgetsStart) {
+    default List<AbstractWidget> createWidgets(Screen screen, Supplier<BlockPos> blockPos, Supplier<IConduitType<?>> conduitType, T extendedConduitData, Supplier<Direction> direction, Vector2i widgetsStart) {
         return List.of();
     }
 

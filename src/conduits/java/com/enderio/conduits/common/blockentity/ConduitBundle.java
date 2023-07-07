@@ -338,9 +338,21 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         NodeIdentifier<?> node = nodes.get(type);
         node.getExtendedConduitData().onRemoved(type, level, pos);
         if (node.getGraph() != null) {
-            node.getGraph().remove(node);
+            if (node.getGraph().contains(node))
+                node.getGraph().remove(node);
+            else
+                node.setGraph(null);
         }
         nodes.remove(type);
+    }
+
+    public boolean hasType(IConduitType<?> type) {
+        for (IConduitType<?> iConduitType : types) {
+            if (iConduitType.getTicker().canConnectTo(iConduitType, type)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public int getTypeIndex(IConduitType<?> type) {

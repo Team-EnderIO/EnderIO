@@ -25,63 +25,17 @@ public abstract class SyncedMenu<T extends EnderBlockEntity> extends AbstractCon
     private final T blockEntity;
     private final Inventory inventory;
 
-    private final List<EnderDataSlot<?>> clientToServerSlots = new ArrayList<>();
     private final List<Slot> playerInventorySlots = new ArrayList<>();
     private boolean playerInvVisible = true;
     protected SyncedMenu(@Nullable T blockEntity, Inventory inventory, @Nullable MenuType<?> pMenuType, int pContainerId) {
         super(pMenuType, pContainerId);
         this.blockEntity = blockEntity;
         this.inventory = inventory;
-        if (blockEntity != null) {
-            clientToServerSlots.addAll(blockEntity.getClientDecidingDataSlots());
-        }
-    }
-
-    protected void addClientDecidingDataSlot(EnderDataSlot<?> dataSlot) {
-        clientToServerSlots.add(dataSlot);
-    }
-
-    @Override
-    public void broadcastChanges() {
-        super.broadcastChanges();
-        sync(false);
-    }
-
-    @Override
-    public void broadcastFullState() {
-        super.broadcastFullState();
-        sync(true);
-    }
-
-    private void sync(boolean fullSync) {
-        if (inventory.player instanceof ServerPlayer player && blockEntity != null) {
-            blockEntity.sendPacket(player, blockEntity.createUpdatePacket(fullSync, SyncMode.GUI));
-        }
-    }
-
-    public void clientTick() {
-        ListTag listNBT = new ListTag();
-        for (int i = 0; i < clientToServerSlots.size(); i++) {
-            Optional<CompoundTag> optionalNBT = clientToServerSlots.get(i).toOptionalNBT();
-
-            if (optionalNBT.isPresent()) {
-                CompoundTag elementNBT = optionalNBT.get();
-                elementNBT.putInt(CoreNBTKeys.SYNC_DATA_SLOT_INDEX, i);
-                listNBT.add(elementNBT);
-            }
-        }
-        if (!listNBT.isEmpty()) {
-            CoreNetwork.sendToServer(new SyncClientToServerMenuPacket(containerId, listNBT));
-        }
     }
 
     @Nullable
     public T getBlockEntity() {
         return blockEntity;
-    }
-
-    public List<EnderDataSlot<?>> getClientToServerSlots() {
-        return clientToServerSlots;
     }
     
     public void addInventorySlots(int xPos, int yPos) {
