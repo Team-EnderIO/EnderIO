@@ -3,17 +3,23 @@ package com.enderio.base.common.integrations.jei.category;
 import com.enderio.EnderIO;
 import com.enderio.base.common.integrations.jei.helper.FakeGrindingRecipe;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.core.common.util.TooltipUtil;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.ingredient.IRecipeSlotTooltipCallback;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+
+import java.text.NumberFormat;
+import java.util.Locale;
 
 public class GrindingCategory implements IRecipeCategory<FakeGrindingRecipe> {
     public static final RecipeType<FakeGrindingRecipe> TYPE = RecipeType.create(EnderIO.MODID, "grinding", FakeGrindingRecipe.class);
@@ -53,9 +59,17 @@ public class GrindingCategory implements IRecipeCategory<FakeGrindingRecipe> {
         builder.addSlot(RecipeIngredientRole.INPUT, 21, 6)
             .addItemStacks(recipe.topInput.getItems());
         if (recipe.bottomInput != null) {
-            builder.addSlot(RecipeIngredientRole.INPUT, 21, 27).addItemStacks(recipe.bottomInput.getItems());
+            builder.addSlot(RecipeIngredientRole.INPUT, 21, 27)
+                .addItemStacks(recipe.bottomInput.getItems())
+                .addTooltipCallback(chanceTooltip());
         }
         builder.addSlot(RecipeIngredientRole.OUTPUT, 101, 21)
             .addItemStack(recipe.result);
+    }
+
+    private IRecipeSlotTooltipCallback chanceTooltip() {
+        return (recipeSlotView, tooltip) -> {
+            tooltip.add(TooltipUtil.style(EIOLang.JEI_GRINDING_CONSUME_CHANCE));
+        };
     }
 }
