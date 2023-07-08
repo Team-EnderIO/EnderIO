@@ -2,11 +2,11 @@ package com.enderio.machines.common.item;
 
 import com.enderio.api.capability.IMultiCapabilityItem;
 import com.enderio.api.capability.MultiCapabilityProvider;
+import com.enderio.base.common.capability.EntityStorageItemStack;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.core.client.item.IAdvancedTooltipProvider;
 import com.enderio.core.common.util.EntityUtil;
 import com.enderio.core.common.util.TooltipUtil;
-import com.enderio.machines.common.capability.EntityStorageItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;

@@ -16,7 +16,7 @@ public class ForkUpgrade implements IDarkSteelUpgrade {
     }
 
     @Override
-    public String getSerializedName() {
+    public String getName() {
         return NAME;
     }
 

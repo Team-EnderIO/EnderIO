@@ -2,11 +2,11 @@ package com.enderio.conduits.common.blockentity;
 
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.NodeIdentifier;
+import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
 import com.enderio.conduits.common.blockentity.connection.IConnectionState;
 import com.enderio.conduits.common.blockentity.connection.StaticConnectionStates;
-import com.enderio.api.misc.ColorControl;
 import net.minecraft.Util;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -89,24 +89,35 @@ public class ConduitConnection implements INBTSerializable<CompoundTag> {
         return connected;
     }
 
+    // region Serialization
+
+    private static final String KEY_STATIC = "Static";
+    private static final String KEY_INDEX = "Index";
+    private static final String KEY_IS_EXTRACT = "IsExtract";
+    private static final String KEY_EXTRACT = "Extract";
+    private static final String KEY_IS_INSERT = "IsInsert";
+    private static final String KEY_INSERT = "Insert";
+    private static final String KEY_REDSTONE_CONTROL = "RedstoneControl";
+    private static final String KEY_REDSTONE_CHANNEL = "Channel"; // TODO: Should this be called Redstone channel?
+
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
         for (int i = 0; i < MAX_CONDUIT_TYPES; i++) {
             CompoundTag element = new CompoundTag();
             IConnectionState state = connectionStates[i];
-            element.putBoolean("static", state instanceof StaticConnectionStates);
+            element.putBoolean(KEY_STATIC, state instanceof StaticConnectionStates);
             if (state instanceof StaticConnectionStates staticState) {
-                element.putInt("index", staticState.ordinal());
+                element.putInt(KEY_INDEX, staticState.ordinal());
             } else if (state instanceof DynamicConnectionState dynamicState) {
-                element.putBoolean("isExtract", dynamicState.isExtract());
-                element.putInt("extract", dynamicState.extract().ordinal());
-                element.putBoolean("isInsert", dynamicState.isInsert());
-                element.putInt("insert", dynamicState.insert().ordinal());
-                element.putInt("redControl", dynamicState.control().ordinal());
-                element.putInt("redChannel", dynamicState.redstoneChannel().ordinal());
+                element.putBoolean(KEY_IS_EXTRACT, dynamicState.isExtract());
+                element.putInt(KEY_EXTRACT, dynamicState.extract().ordinal());
+                element.putBoolean(KEY_IS_INSERT, dynamicState.isInsert());
+                element.putInt(KEY_INSERT, dynamicState.insert().ordinal());
+                element.putInt(KEY_REDSTONE_CONTROL, dynamicState.control().ordinal());
+                element.putInt(KEY_REDSTONE_CHANNEL, dynamicState.redstoneChannel().ordinal());
             }
-            tag.put(i + "", element);
+            tag.put(String.valueOf(i), element);
         }
         return tag;
     }
@@ -114,16 +125,16 @@ public class ConduitConnection implements INBTSerializable<CompoundTag> {
     @Override
     public void deserializeNBT(CompoundTag tag) {
         for (int i = 0; i < MAX_CONDUIT_TYPES; i++) {
-            CompoundTag nbt = tag.getCompound(i + "");
-            if (nbt.getBoolean("static")) {
-                connectionStates[i] = StaticConnectionStates.values()[nbt.getInt("index")];
+            CompoundTag nbt = tag.getCompound(String.valueOf(i));
+            if (nbt.getBoolean(KEY_STATIC)) {
+                connectionStates[i] = StaticConnectionStates.values()[nbt.getInt(KEY_INDEX)];
             } else {
-                var isInsert = nbt.getBoolean("isInsert");
-                var insertIndex = nbt.getInt("insert");
-                var isExtract = nbt.getBoolean("isExtract");
-                var extractIndex = nbt.getInt("extract");
-                var redControl = nbt.getInt("redControl");
-                var redChannel = nbt.getInt("redChannel");
+                var isExtract = nbt.getBoolean(KEY_IS_EXTRACT);
+                var extractIndex = nbt.getInt(KEY_EXTRACT);
+                var isInsert = nbt.getBoolean(KEY_IS_INSERT);
+                var insertIndex = nbt.getInt(KEY_INSERT);
+                var redControl = nbt.getInt(KEY_REDSTONE_CONTROL);
+                var redChannel = nbt.getInt(KEY_REDSTONE_CHANNEL);
                 IConnectionState prev = connectionStates[i];
                 Optional<DynamicConnectionState> dyn = Optional.ofNullable(prev instanceof DynamicConnectionState dynState ? dynState : null);
                 connectionStates[i] = new DynamicConnectionState(
@@ -141,6 +152,8 @@ public class ConduitConnection implements INBTSerializable<CompoundTag> {
         }
     }
 
+    // endregion
+
     public ConduitConnection deepCopy() {
         ConduitConnection connection = new ConduitConnection();
         //connectionstates are not mutable (enum/record), so reference is fine
@@ -152,10 +165,10 @@ public class ConduitConnection implements INBTSerializable<CompoundTag> {
         return connectionStates[index];
     }
     public IConnectionState getConnectionState(IConduitType type, ConduitBundle on) {
-        return connectionStates[on.getTypes().indexOf(type)];
+        return connectionStates[on.getTypeIndex(type)];
     }
     public void setConnectionState(IConduitType type, ConduitBundle on, IConnectionState state) {
-        connectionStates[on.getTypes().indexOf(type)] = state;
+        connectionStates[on.getTypeIndex(type)] = state;
     }
 
     public ItemStack getItem(SlotType type, int conduitIndex) {

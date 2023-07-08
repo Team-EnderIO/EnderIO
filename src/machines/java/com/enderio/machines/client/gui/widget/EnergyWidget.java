@@ -4,13 +4,12 @@ import com.enderio.EnderIO;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.gui.widgets.EIOWidget;
 import com.enderio.core.common.util.TooltipUtil;
+import com.enderio.machines.common.io.energy.ILargeMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 
 import java.text.NumberFormat;
@@ -21,9 +20,9 @@ public class EnergyWidget extends EIOWidget {
 
     // TODO: Will need some way of displaying no tooltip and instead asking for a capacitor on non-simple machines.
 
-    private static final ResourceLocation WIDGETS = EnderIO.loc("textures/gui/widgets.png");
+    protected static final ResourceLocation WIDGETS = EnderIO.loc("textures/gui/widgets.png");
 
-    private final Screen displayOn;
+    protected final Screen displayOn;
     private final Supplier<IMachineEnergyStorage> storageSupplier;
 
     public EnergyWidget(Screen displayOn, Supplier<IMachineEnergyStorage> storageSupplier, int x, int y, int width, int height) {
@@ -42,7 +41,7 @@ public class EnergyWidget extends EIOWidget {
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
 
-        float filledVolume = storage.getEnergyStored() / (float) storage.getMaxEnergyStored();
+        float filledVolume = (float)(getEnergyStored(storage) / (double) getMaxEnergyStored(storage));
         int renderableHeight = (int)(filledVolume * height);
 
         guiGraphics.pose().pushPose();
@@ -70,9 +69,22 @@ public class EnergyWidget extends EIOWidget {
             IMachineEnergyStorage storage = storageSupplier.get();
 
             NumberFormat fmt = NumberFormat.getInstance(Locale.ENGLISH);
-            guiGraphics.renderTooltip(displayOn.getMinecraft().font, TooltipUtil.withArgs(EIOLang.ENERGY_AMOUNT, fmt.format(storage.getEnergyStored()) + "/" + fmt.format(
-                storage.getMaxEnergyStored())), mouseX, mouseY);
+            guiGraphics.renderTooltip(displayOn.getMinecraft().font, TooltipUtil.withArgs(EIOLang.ENERGY_AMOUNT, fmt.format(getEnergyStored(storage)) + "/" + fmt.format(
+               getMaxEnergyStored(storage))), mouseX, mouseY);
         }
+    }
+
+    private static long getEnergyStored(IMachineEnergyStorage storage) {
+        if (storage instanceof ILargeMachineEnergyStorage largeStorage)
+            return largeStorage.getLargeEnergyStored();
+        return storage.getEnergyStored();
+    }
+
+    private static long getMaxEnergyStored(IMachineEnergyStorage storage) {
+        if (storage instanceof ILargeMachineEnergyStorage largeStorage) {
+            return largeStorage.getLargeMaxEnergyStored();
+        }
+        return storage.getMaxEnergyStored();
     }
 }
 

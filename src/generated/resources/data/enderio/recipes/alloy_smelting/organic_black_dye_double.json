@@ -4,7 +4,7 @@
   "experience": 0.3,
   "inputs": [
     {
-      "count": 6,
+      "count": 2,
       "ingredient": {
         "tag": "forge:dusts/coal"
       }

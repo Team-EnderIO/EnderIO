@@ -2,8 +2,8 @@ package com.enderio.conduits.client.model;
 
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.IExtendedConduitData;
-import com.enderio.base.client.model.PaintingQuadTransformer;
 import com.enderio.api.misc.RedstoneControl;
+import com.enderio.base.client.model.PaintingQuadTransformer;
 import com.enderio.conduits.common.Area;
 import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
 import com.enderio.conduits.common.blockentity.ConduitBundle;
@@ -73,7 +73,7 @@ public class ConduitBlockModel implements IDynamicBakedModel {
                     if (connection.isEnd()) {
                         quads.addAll(rotationTranslation.process(modelOf(CONDUIT_CONNECTION_BOX).getQuads(state, preRotation, rand, extraData, renderType)));
 
-                        IConnectionState connectionState = connection.getConnectionState(i);
+                        IConnectionState connectionState = connection.getConnectionState(type, conduitBundle);
                         if (connectionState instanceof DynamicConnectionState dyn) {
                             IQuadTransformer color = rotationTranslation.andThen(new ColorQuadTransformer(dyn.insert(), dyn.extract()));
                             BakedModel model = null;

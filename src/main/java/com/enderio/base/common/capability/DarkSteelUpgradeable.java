@@ -11,11 +11,12 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.*;
 
 @SuppressWarnings("unused")
-public class DarkSteelUpgradeable implements IDarkSteelUpgradable {
+public class DarkSteelUpgradeable implements IDarkSteelUpgradable, INBTSerializable<Tag> {
 
     // region Utils
 
@@ -53,6 +54,8 @@ public class DarkSteelUpgradeable implements IDarkSteelUpgradable {
 
     // region Class Impl
 
+    // TODO: I would move this to EIONBTKeys but unsure what it does
+    //       its fine for now, upgrades will be seeing breaking changes anyway
     private static final String ON_ITEM_KEY = "onItem";
 
     private final Map<String, IDarkSteelUpgrade> upgrades = new HashMap<>();
@@ -73,7 +76,7 @@ public class DarkSteelUpgradeable implements IDarkSteelUpgradable {
     @Override
     public void addUpgrade(IDarkSteelUpgrade upgrade) {
         removeUpgradeInSlot(upgrade.getSlot());
-        upgrades.put(upgrade.getSerializedName(), upgrade);
+        upgrades.put(upgrade.getName(), upgrade);
     }
 
     @Override
@@ -93,17 +96,17 @@ public class DarkSteelUpgradeable implements IDarkSteelUpgradable {
     @Override
     public boolean canApplyUpgrade(IDarkSteelUpgrade upgrade) {
         if (upgrades.isEmpty()) {
-            return EmpoweredUpgrade.NAME.equals(upgrade.getSerializedName()) && upgrade.isBaseTier();
+            return EmpoweredUpgrade.NAME.equals(upgrade.getName()) && upgrade.isBaseTier();
         }
 
-        Optional<IDarkSteelUpgrade> existing = getUpgrade(upgrade.getSerializedName());
+        Optional<IDarkSteelUpgrade> existing = getUpgrade(upgrade.getName());
         if (existing.isPresent()) {
             return existing.get().isValidUpgrade(upgrade);
         }
         if (!upgrade.isBaseTier()) {
             return false;
         }
-        return DarkSteelUpgradeRegistry.instance().getUpgradesForItem(onItem).contains(upgrade.getSerializedName());
+        return DarkSteelUpgradeRegistry.instance().getUpgradesForItem(onItem).contains(upgrade.getName());
     }
 
     @Override
@@ -130,7 +133,7 @@ public class DarkSteelUpgradeable implements IDarkSteelUpgradable {
         upgrades.values().forEach(upgrade -> upgrade.getNextTier().ifPresent(result::add));
 
         getAllPossibleUpgrades().forEach(upgrade -> {
-            if (!hasUpgrade(upgrade.getSerializedName())) {
+            if (!hasUpgrade(upgrade.getName())) {
                 result.add(upgrade);
             }
         });

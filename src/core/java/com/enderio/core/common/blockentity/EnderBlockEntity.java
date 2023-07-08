@@ -2,19 +2,15 @@ package com.enderio.core.common.blockentity;
 
 import com.enderio.api.UseOnly;
 import com.enderio.api.capability.IEnderCapabilityProvider;
-import com.enderio.core.common.sync.EnderDataSlot;
-import com.enderio.core.common.sync.SyncMode;
+import com.enderio.core.common.network.C2SDataSlotChange;
+import com.enderio.core.common.network.CoreNetwork;
+import com.enderio.core.common.network.S2CDataSlotUpdate;
+import com.enderio.core.common.network.slot.NetworkDataSlot;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.network.Connection;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.server.level.ServerChunkCache;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -22,6 +18,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.LogicalSide;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -31,15 +28,8 @@ import java.util.*;
  * Handles data slot syncing and capability providers.
  */
 public class EnderBlockEntity extends BlockEntity {
-    /**
-     * This list is needed to send a full update packet to Players who started tracking this BlockEntity.
-     * The Clients only receive changed data to reduce the amount of Data sent to the client.
-     */
-    private final List<UUID> lastSyncedToPlayers = new ArrayList<>();
 
-    private final List<EnderDataSlot<?>> dataSlots = new ArrayList<>();
-
-    private final List<EnderDataSlot<?>> clientDecidingDataSlots = new ArrayList<>();
+    private final List<NetworkDataSlot<?>> dataSlots = new ArrayList<>();
 
     private final List<Runnable> afterDataSync = new ArrayList<>();
 
@@ -51,6 +41,7 @@ public class EnderBlockEntity extends BlockEntity {
 
     // region Ticking
 
+    @SuppressWarnings("unused")
     public static void tick(Level level, BlockPos pos, BlockState state, EnderBlockEntity blockEntity) {
         if (level.isClientSide) {
             blockEntity.clientTick();
@@ -77,76 +68,54 @@ public class EnderBlockEntity extends BlockEntity {
 
     }
 
-    public boolean isClientSide() {
-        if (level != null)
-            return level.isClientSide;
-        return false;
-    }
-
     // endregion
 
     // region Sync
 
-    @Nullable
+    /**
+     * This is the initial packet sent to a client loading the block (or when it is placed).
+     */
     @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return createUpdatePacket(false, SyncMode.WORLD);
+    public CompoundTag getUpdateTag() {
+        return createDataSlotUpdate(true);
     }
 
     /**
-     * create the ClientBoundBlockEntityDataPacket for this BlockEntity
-     * @param fullUpdate if this packet should send all information (this is used for players who started tracking this BlockEntity)
-     * @return the UpdatePacket
+     * This is the client handling the tag above.
+     * @param tag The {@link CompoundTag} sent from {@link BlockEntity#getUpdateTag()}
      */
-    @Nullable
-    public ClientboundBlockEntityDataPacket createUpdatePacket(boolean fullUpdate, SyncMode mode) {
-        CompoundTag nbt = new CompoundTag();
-        ListTag listNBT = new ListTag();
-        for (int i = 0; i < this.dataSlots.size(); i++) {
-            EnderDataSlot<?> dataSlot = this.dataSlots.get(i);
-            if (dataSlot.getSyncMode() == mode) {
-                Optional<CompoundTag> optionalNBT = fullUpdate ? Optional.of(dataSlot.toFullNBT()) : dataSlot.toOptionalNBT();
-
-                if (optionalNBT.isPresent()) {
-                    CompoundTag elementNBT = optionalNBT.get();
-                    elementNBT.putInt("dataSlotIndex", i);
-                    listNBT.add(elementNBT);
-                }
-            }
-        }
-
-        if (listNBT.isEmpty())
-            return null;
-
-        nbt.put("data", listNBT);
-        return new ClientboundBlockEntityDataPacket(getBlockPos(), getType(), nbt);
-    }
-
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        CompoundTag nbt = pkt.getTag();
-        if (nbt != null && nbt.contains("data", Tag.TAG_LIST)) {
-            ListTag listNBT = nbt.getList("data", Tag.TAG_COMPOUND);
-            for (Tag tag : listNBT) {
-                CompoundTag elementNBT = (CompoundTag) tag;
-                int dataSlotIndex = elementNBT.getInt("dataSlotIndex");
-                dataSlots.get(dataSlotIndex).handleNBT(elementNBT);
-            }
-            afterDataSync.forEach(Runnable::run);
+    public void handleUpdateTag(CompoundTag tag) {
+        clientHandleDataSync(tag);
+    }
+
+    @Nullable
+    private CompoundTag createDataSlotUpdate(boolean fullUpdate) {
+        ListTag dataList = new ListTag();
+        for (int i = 0; i < dataSlots.size(); i++) {
+            var slot = dataSlots.get(i);
+            var nbt = slot.serializeNBT(fullUpdate);
+            if (nbt == null)
+                continue;
+
+            CompoundTag slotTag = new CompoundTag();
+            slotTag.putInt("Index", i);
+            slotTag.put("Data", nbt);
+
+            dataList.add(slotTag);
         }
+
+        if (!fullUpdate && dataList.isEmpty()) {
+            return null;
+        }
+
+        CompoundTag data = new CompoundTag();
+        data.put("Data", dataList);
+        return data;
     }
 
-    public void addDataSlot(EnderDataSlot<?> slot) {
+    public void addDataSlot(NetworkDataSlot<?> slot) {
         dataSlots.add(slot);
-    }
-
-    public void addClientDecidingDataSlot(EnderDataSlot<?> slot) {
-        clientDecidingDataSlots.add(slot);
-    }
-
-    public void add2WayDataSlot(EnderDataSlot<?> slot) {
-        addDataSlot(slot);
-        addClientDecidingDataSlot(slot);
     }
 
     public void addAfterSyncRunnable(Runnable runnable) {
@@ -154,47 +123,57 @@ public class EnderBlockEntity extends BlockEntity {
     }
 
     /**
+     * Fire this when you change the value of a {@link NetworkDataSlot} on the client side.
+     */
+    @UseOnly(LogicalSide.CLIENT)
+    public <T> void clientUpdateSlot(@Nullable NetworkDataSlot<T> slot, T value) {
+        if (slot == null) {
+            return;
+        }
+
+        if (dataSlots.contains(slot)) {
+            CompoundTag updateData = new CompoundTag();
+            updateData.putInt("Index", dataSlots.indexOf(slot));
+            updateData.put("Data", slot.serializeValueNBT(value));
+            CoreNetwork.sendToServer(new C2SDataSlotChange(getBlockPos(), updateData));
+        }
+    }
+
+    /**
      * Sync the BlockEntity to all tracking players. Don't call this if you don't know what you do
      */
     @UseOnly(LogicalSide.SERVER)
     public void sync() {
-        ClientboundBlockEntityDataPacket fullUpdate = createUpdatePacket(true, SyncMode.WORLD);
-        ClientboundBlockEntityDataPacket partialUpdate = getUpdatePacket();
+        var syncData = createDataSlotUpdate(false);
+        if (syncData != null) {
+            CoreNetwork.sendToTracking(level.getChunkAt(getBlockPos()), new S2CDataSlotUpdate(getBlockPos(), syncData));
+        }
+    }
 
-        List<UUID> currentlyTracking = new ArrayList<>();
+    @UseOnly(LogicalSide.CLIENT)
+    public void clientHandleDataSync(CompoundTag syncData) {
+        if (syncData.contains("Data", Tag.TAG_LIST)) {
+            ListTag dataList = syncData.getList("Data", Tag.TAG_COMPOUND);
 
-        getTrackingPlayers().forEach(serverPlayer -> {
-            currentlyTracking.add(serverPlayer.getUUID());
-            if (lastSyncedToPlayers.contains(serverPlayer.getUUID())) {
-                sendPacket(serverPlayer, partialUpdate);
-            } else {
-                sendPacket(serverPlayer, fullUpdate);
+            for (Tag dataEntry : dataList) {
+                if (dataEntry instanceof CompoundTag slotData) {
+                    int slotIdx = slotData.getInt("Index");
+                    dataSlots.get(slotIdx).fromNBT(slotData.get("Data"));
+                }
             }
-        });
-        lastSyncedToPlayers.clear();
-        lastSyncedToPlayers.addAll(currentlyTracking);
+
+            for (Runnable task : afterDataSync) {
+                task.run();
+            }
+        }
     }
 
-    public void sendPacket(ServerPlayer player, @Nullable Packet<?> packet) {
-        if (packet != null)
-            player.connection.send(packet);
-    }
-
-    /**
-     * never call this on client
-     * @return all ServerPlayers tracking this BlockEntity
-     */
     @UseOnly(LogicalSide.SERVER)
-    private List<ServerPlayer> getTrackingPlayers() {
-        return ((ServerChunkCache)level.getChunkSource()).chunkMap.getPlayers(new ChunkPos(worldPosition), false);
-    }
-
-    public List<EnderDataSlot<?>> getDataSlots() {
-        return dataSlots;
-    }
-
-    public List<EnderDataSlot<?>> getClientDecidingDataSlots() {
-        return clientDecidingDataSlots;
+    public void serverHandleDataChange(CompoundTag data) {
+        if (data.contains("Index", Tag.TAG_INT) && data.contains("Data")) {
+            int slotIdx = data.getInt("Index");
+            dataSlots.get(slotIdx).fromNBT(data.get("Data"));
+        }
     }
 
     // endregion
@@ -224,6 +203,7 @@ public class EnderBlockEntity extends BlockEntity {
         }
     }
 
+    @NotNull
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
         if (capabilityProviders.containsKey(cap)) {

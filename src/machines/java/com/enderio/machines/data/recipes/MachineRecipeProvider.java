@@ -1,8 +1,6 @@
 package com.enderio.machines.data.recipes;
 
 import com.enderio.EnderIO;
-import com.enderio.base.common.block.glass.GlassIdentifier;
-import com.enderio.base.common.block.glass.GlassLighting;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
@@ -13,8 +11,6 @@ import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
@@ -130,7 +126,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .shaped(RecipeCategory.MISC, MachineBlocks.IMPULSE_HOPPER.get())
             .define('I', EIOItems.COPPER_ALLOY_INGOT.get())
             .define('R', EIOItems.REDSTONE_ALLOY_INGOT.get())
-            .define('G', EIOItems.GEAR_ENERGIZED.get())
+            .define('G', EIOItems.GEAR_IRON.get())
             .define('C', EIOBlocks.VOID_CHASSIS.get())
             .define('H', Items.HOPPER)
             .pattern("IHI")
@@ -144,16 +140,18 @@ public class MachineRecipeProvider extends RecipeProvider {
             .shaped(RecipeCategory.MISC, MachineBlocks.SOUL_BINDER.get())
             .define('I', EIOItems.SOULARIUM_INGOT.get())
             .define('C', EIOBlocks.ENSOULED_CHASSIS.get())
-            .define('H', Tags.Items.HEADS)
-            .pattern("IHI")
-            .pattern("HCH")
-            .pattern("IHI")
+            .define('G', EIOItems.GEAR_ENERGIZED)
+            .define('Z', EIOItems.Z_LOGIC_CONTROLLER)
+            .define('V', EIOItems.EMPTY_SOUL_VIAL)
+            .pattern("IVI")
+            .pattern("GCG")
+            .pattern("IZI")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.ENSOULED_CHASSIS.get()))
             .save(finishedRecipeConsumer);
 
         ShapedEntityStorageRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.POWERED_SPAWNER)
-            .define('I', EIOItems.CONDUCTIVE_ALLOY_INGOT)
+            .define('I', EIOItems.SOULARIUM_INGOT) //TODO Maybe also soulchains?
             .define('B', EIOItems.BROKEN_SPAWNER)
             .define('C', EIOBlocks.ENSOULED_CHASSIS)
             .define('Z', EIOItems.Z_LOGIC_CONTROLLER)

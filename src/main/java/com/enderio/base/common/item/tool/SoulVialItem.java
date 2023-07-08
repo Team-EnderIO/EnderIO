@@ -5,7 +5,7 @@ import com.enderio.api.capability.IEntityStorage;
 import com.enderio.api.capability.IMultiCapabilityItem;
 import com.enderio.api.capability.MultiCapabilityProvider;
 import com.enderio.api.capability.StoredEntityData;
-import com.enderio.base.common.capability.EntityStorage;
+import com.enderio.base.common.capability.EntityStorageItemStack;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.lang.EIOLang;
@@ -50,7 +50,6 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
-
 @Mod.EventBusSubscriber(modid = EnderIO.MODID)
 public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvancedTooltipProvider {
     public SoulVialItem(Properties pProperties) {
@@ -93,20 +92,17 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
         if (pPlayer.level().isClientSide) {
             return InteractionResult.FAIL;
         }
-        return catchEntity(pStack, pInteractionTarget,
-            filledVial -> {
-                ItemStack hand = pPlayer.getItemInHand(pUsedHand);
-                if (hand.isEmpty()) {
-                    hand.setCount(1); // Forge will fire the destroyItemEvent and vanilla replaces it to ItemStack.EMPTY if this isn't done
-                    pPlayer.setItemInHand(pUsedHand, filledVial);
-                } else {
-                    if (!pPlayer.addItem(filledVial)) {
-                        pPlayer.drop(filledVial, false);
-                    }
+        return catchEntity(pStack, pInteractionTarget, filledVial -> {
+            ItemStack hand = pPlayer.getItemInHand(pUsedHand);
+            if (hand.isEmpty()) {
+                hand.setCount(1); // Forge will fire the destroyItemEvent and vanilla replaces it to ItemStack.EMPTY if this isn't done
+                pPlayer.setItemInHand(pUsedHand, filledVial);
+            } else {
+                if (!pPlayer.addItem(filledVial)) {
+                    pPlayer.drop(filledVial, false);
                 }
-            },
-            component -> pPlayer.displayClientMessage(component, true)
-        );
+            }
+        }, component -> pPlayer.displayClientMessage(component, true));
     }
 
     @Override
@@ -125,8 +121,8 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
             emptyVial -> player.setItemInHand(pContext.getHand(), emptyVial));
     }
 
-
-    private static InteractionResult catchEntity(ItemStack soulVial, LivingEntity entity, Consumer<ItemStack> filledVialInsertion, Consumer<Component> displayCallback) {
+    private static InteractionResult catchEntity(ItemStack soulVial, LivingEntity entity, Consumer<ItemStack> filledVialInsertion,
+        Consumer<Component> displayCallback) {
         return soulVial.getCapability(EIOCapabilities.ENTITY_STORAGE).map(entityStorage -> {
             if (!entityStorage.hasStoredEntity()) {
 
@@ -136,7 +132,10 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
                 }
 
                 // Get the entity type and verify it is allowed to be captured
-                EntityCaptureUtils.CapturableStatus status = EntityCaptureUtils.getCapturableStatus(entity.getType(),entity);
+                // We ignore the unchecked cast, as entity is LivingEntity
+                // noinspection unchecked
+                EntityCaptureUtils.CapturableStatus status = EntityCaptureUtils.getCapturableStatus((EntityType<? extends LivingEntity>) entity.getType(),
+                    entity);
                 if (status != EntityCaptureUtils.CapturableStatus.CAPTURABLE) {
                     displayCallback.accept(status.errorMessage());
                     return InteractionResult.FAIL;
@@ -177,9 +176,7 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
                 double spawnZ = pos.getZ() + face.getStepZ() + 0.5;
 
                 // Get a random rotation for the entity.
-                float rotation = Mth.wrapDegrees(level
-                    .getRandom()
-                    .nextFloat() * 360.0f);
+                float rotation = Mth.wrapDegrees(level.getRandom().nextFloat() * 360.0f);
 
                 // Try to get the entity NBT from the item.
                 Optional<Entity> entity = EntityType.create(entityData.getEntityTag(), level);
@@ -215,31 +212,21 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
     // region Entity Storage
 
     public static void setEntityType(ItemStack stack, ResourceLocation entityType) {
-        stack
-            .getCapability(EIOCapabilities.ENTITY_STORAGE)
-            .ifPresent(storage ->
-                storage.setStoredEntityData(StoredEntityData.of(entityType))
-            );
+        stack.getCapability(EIOCapabilities.ENTITY_STORAGE).ifPresent(storage -> storage.setStoredEntityData(StoredEntityData.of(entityType)));
     }
 
     private static void setEntityData(ItemStack stack, LivingEntity entity) {
-        stack
-            .getCapability(EIOCapabilities.ENTITY_STORAGE)
-            .ifPresent(storage ->
-                storage.setStoredEntityData(StoredEntityData.of(entity))
-            );
+        stack.getCapability(EIOCapabilities.ENTITY_STORAGE).ifPresent(storage -> storage.setStoredEntityData(StoredEntityData.of(entity)));
     }
 
     public static Optional<StoredEntityData> getEntityData(ItemStack stack) {
-        return stack
-            .getCapability(EIOCapabilities.ENTITY_STORAGE)
-            .map(IEntityStorage::getStoredEntityData);
+        return stack.getCapability(EIOCapabilities.ENTITY_STORAGE).map(IEntityStorage::getStoredEntityData);
     }
 
     @Nullable
     @Override
     public MultiCapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt, MultiCapabilityProvider provider) {
-        provider.addSerialized(EIOCapabilities.ENTITY_STORAGE, LazyOptional.of(EntityStorage::new));
+        provider.addSimple(EIOCapabilities.ENTITY_STORAGE, LazyOptional.of(() -> new EntityStorageItemStack(stack)));
         return provider;
     }
 
@@ -278,7 +265,9 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
     private static class FillSoulVialDispenseBehavior extends OptionalDispenseItemBehavior {
         protected ItemStack execute(BlockSource source, ItemStack stack) {
             BlockPos blockpos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
-            for (LivingEntity livingentity : source.getLevel().getEntitiesOfClass(LivingEntity.class, new AABB(blockpos), living -> !(living instanceof Player))) {
+            for (LivingEntity livingentity : source
+                .getLevel()
+                .getEntitiesOfClass(LivingEntity.class, new AABB(blockpos), living -> !(living instanceof Player))) {
                 AtomicReference<ItemStack> filledVial = new AtomicReference<>();
                 if (catchEntity(stack, livingentity, filledVial::set, component -> {}) == InteractionResult.SUCCESS && filledVial.get() != null) {
                     //push filledvial back into dispenser

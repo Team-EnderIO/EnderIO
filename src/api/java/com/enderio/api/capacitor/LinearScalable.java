@@ -8,7 +8,7 @@ import java.util.function.Supplier;
  * A value that is scaled linearly.
  * (base, level) => base * level
  */
-public record LinearScalable(CapacitorModifier modifier, Supplier<Float> base) implements ICapacitorScalable {
+public record LinearScalable(CapacitorModifier modifier, Supplier<Integer> base) implements ICapacitorScalable {
 
     @Override
     public Supplier<Float> scaleF(NonNullSupplier<ICapacitorData> data) {
@@ -20,7 +20,7 @@ public record LinearScalable(CapacitorModifier modifier, Supplier<Float> base) i
         return () -> Math.round(scale(base.get(), data.get().getModifier(modifier)));
     }
 
-    private static float scale(float base, float level) {
+    private static float scale(int base, float level) {
         return base * level;
     }
 }

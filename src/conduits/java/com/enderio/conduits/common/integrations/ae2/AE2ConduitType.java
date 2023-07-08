@@ -1,13 +1,12 @@
 package com.enderio.conduits.common.integrations.ae2;
 
-import appeng.api.networking.IGridConnection;
 import appeng.api.networking.IInWorldGridNodeHost;
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.IConduitMenuData;
 import com.enderio.api.conduit.IConduitType;
+import com.enderio.api.conduit.TieredConduit;
 import com.enderio.api.conduit.ticker.IConduitTicker;
 import com.enderio.api.misc.Vector2i;
-import com.enderio.api.conduit.TieredConduit;
 import com.enderio.conduits.common.init.EnderConduitTypes;
 import com.enderio.conduits.common.integrations.Integrations;
 import dev.gigaherz.graph3.Graph;
@@ -61,6 +60,11 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
             public boolean hasConnectionDelay() {
                 return true;
             }
+
+            @Override
+            public boolean canConnectTo(IConduitType<?> thisType, IConduitType<?> other) {
+                return other instanceof AE2ConduitType;
+            }
         };
     }
 
@@ -71,13 +75,13 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
 
     @Override
     public AE2InWorldConduitNodeHost createExtendedConduitData(Level level, BlockPos pos) {
-        return new AE2InWorldConduitNodeHost(level, pos, this);
+        return new AE2InWorldConduitNodeHost(this);
     }
 
     @Override
     public <K> Optional<LazyOptional<K>> proxyCapability(Capability<K> cap, AE2InWorldConduitNodeHost extendedConduitData, @Nullable Direction direction) {
         if (getCapability() == cap) {
-            return Optional.of(LazyOptional.of(() -> extendedConduitData).cast());
+            return Optional.of(extendedConduitData.selfCap.cast());
         }
         return Optional.empty();
     }

@@ -1,10 +1,9 @@
 package com.enderio.machines.client.gui.screen;
 
 import com.enderio.EnderIO;
-import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.api.misc.Vector2i;
+import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.machines.common.menu.EnchanterMenu;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;

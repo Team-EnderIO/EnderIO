@@ -4,10 +4,14 @@ import com.enderio.api.capacitor.FixedScalable;
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
 import com.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.machines.common.blockentity.base.PowerGeneratingMachineEntity;
+import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
+import com.enderio.machines.common.blockentity.multienergy.MultiEnergyNode;
+import com.enderio.machines.common.blockentity.multienergy.MultiEnergyStorageWrapper;
 import com.enderio.machines.common.io.SidedFixedIOConfig;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import dev.gigaherz.graph3.Graph;
+import dev.gigaherz.graph3.GraphObject;
+import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Inventory;
@@ -20,16 +24,16 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class SolarPanelBlockEntity extends PowerGeneratingMachineEntity {
+public class SolarPanelBlockEntity extends PoweredMachineBlockEntity {
 
     private final ISolarPanelTier tier;
 
-    private final SolarPanelNode node;
+    private final MultiEnergyNode node;
 
     public SolarPanelBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState, ISolarPanelTier tier) {
-        super(new FixedScalable(() -> (float)tier.getStorageCapacity()), new FixedScalable(() -> (float)tier.getStorageCapacity()), type, worldPosition, blockState);
+        super(EnergyIOMode.Output, new FixedScalable(tier::getStorageCapacity), new FixedScalable(tier::getStorageCapacity), type, worldPosition, blockState);
         this.tier = tier;
-        this.node = new SolarPanelNode(() -> energyStorage, () -> (SolarPanelEnergyStorageWrapper) getExposedEnergyStorage());
+        this.node = new MultiEnergyNode(() -> energyStorage, () -> (MultiEnergyStorageWrapper) getExposedEnergyStorage(), worldPosition);
     }
 
     @Nullable
@@ -40,15 +44,23 @@ public class SolarPanelBlockEntity extends PowerGeneratingMachineEntity {
 
     @Override
     public @Nullable MachineEnergyStorage createExposedEnergyStorage() {
-        return new SolarPanelEnergyStorageWrapper(createIOConfig(), EnergyIOMode.Output, () -> tier);
+        return new MultiEnergyStorageWrapper(createIOConfig(), EnergyIOMode.Output, () -> tier);
     }
 
     @Override
     public void serverTick() {
+        if (isGenerating()) {
+            getEnergyStorage().addEnergy(getGenerationRate());
+        }
+
         super.serverTick();
     }
 
     @Override
+    protected boolean isActive() {
+        return canAct() && hasEnergy() && isGenerating();
+    }
+
     public boolean isGenerating() {
         if (level == null || level.getHeight(Heightmap.Types.WORLD_SURFACE, worldPosition.getX(), worldPosition.getZ()) != worldPosition.getY() + 1)
             return false;
@@ -56,7 +68,6 @@ public class SolarPanelBlockEntity extends PowerGeneratingMachineEntity {
         return getGenerationRate() > 0;
     }
 
-    @Override
     public int getGenerationRate() {
         int minuteInTicks = 20 * 60;
         if (level == null)
@@ -76,6 +87,20 @@ public class SolarPanelBlockEntity extends PowerGeneratingMachineEntity {
         if (easing < 0)
             return 0;
         return (int) (easing * tier.getProductionRate());
+    }
+
+    @Override
+    protected boolean shouldPushEnergyTo(Direction direction) {
+        if (node.getGraph() == null)
+            return true;
+        for (GraphObject<Mergeable.Dummy> neighbour : node.getGraph().getNeighbours(node)) {
+            if (neighbour instanceof MultiEnergyNode node) {
+                if (node.pos.equals(worldPosition.relative(direction))) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     @Override

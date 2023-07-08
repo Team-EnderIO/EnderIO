@@ -52,15 +52,8 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
         return experience;
     }
 
-    /**
-     * Helper for JEI
-     */
-    public int getBasicEnergyCost() {
-        return energy;
-    }
-
     @Override
-    public int getEnergyCost(Container container) {
+    public int getBaseEnergyCost() {
         return energy;
     }
 
@@ -157,7 +150,7 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
             // Load result, energy and experience.
             ItemStack result = CraftingHelper.getItemStack(serializedRecipe.getAsJsonObject("result"), false);
             int energy = serializedRecipe.get("energy").getAsInt();
-            float experience = serializedRecipe.get("experience").getAsInt();
+            float experience = serializedRecipe.get("experience").getAsFloat();
             return new AlloySmeltingRecipe(recipeId, inputs, result, energy, experience);
         }
 

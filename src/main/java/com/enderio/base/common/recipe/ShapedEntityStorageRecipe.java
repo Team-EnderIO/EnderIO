@@ -4,7 +4,6 @@ import com.enderio.api.capability.IEntityStorage;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIORecipes;
 import com.google.gson.JsonObject;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -28,7 +27,7 @@ public class ShapedEntityStorageRecipe extends ShapedRecipe {
 
     public ShapedEntityStorageRecipe(ShapedRecipe recipe) {
         super(recipe.getId(), recipe.getGroup(), recipe.category(), recipe.getRecipeWidth(), recipe.getRecipeHeight(), recipe.getIngredients(),
-            recipe.getResultItem(Minecraft.getInstance().level != null ? Minecraft.getInstance().level.registryAccess() : null)); // Gross, but better than always passing null
+            recipe.result); // Gross, but better than always passing null
 
         REGISTERED_RECIPES.add(recipe.getId());
     }

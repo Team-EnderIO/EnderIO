@@ -10,14 +10,16 @@ import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 
 public class SlicerMenu extends MachineMenu<SlicerBlockEntity> {
+    public static int INPUTS_INDEX = 3;
+    public static int INPUT_COUNT = 6;
+    public static int LAST_INDEX = 9;
+
     public SlicerMenu(@Nullable SlicerBlockEntity blockEntity, Inventory inventory, int pContainerId) {
         super(blockEntity, inventory, MachineMenus.SLICE_N_SPLICE.get(), pContainerId);
         
         if (blockEntity != null) {
             // Capacitor slot
-            if (blockEntity.requiresCapacitor()) {
-                addSlot(new MachineSlot(blockEntity.getInventory(), blockEntity.getCapacitorSlot(), 12, 60));
-            }
+            addSlot(new MachineSlot(blockEntity.getInventory(), blockEntity.getCapacitorSlot(), 12, 60));
 
             // Tool inputs TODO: Shadow slots to show compatible tools?
             addSlot(new MachineSlot(blockEntity.getInventory(), SlicerBlockEntity.AXE, 54, 16));

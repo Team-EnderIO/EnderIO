@@ -3,7 +3,7 @@ package com.enderio.base.common.item.darksteel;
 import com.enderio.api.capability.IDarkSteelUpgrade;
 import com.enderio.api.capability.IMultiCapabilityItem;
 import com.enderio.api.capability.MultiCapabilityProvider;
-import com.enderio.api.nbt.INamedNBTSerializable;
+import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.capability.DarkSteelUpgradeable;
 import com.enderio.base.common.capability.EnergyDelegator;
 import com.enderio.base.common.init.EIOCapabilities;
@@ -14,7 +14,6 @@ import com.enderio.core.common.item.ITabVariants;
 import com.enderio.core.common.util.EnergyUtil;
 import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -24,8 +23,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.registries.ForgeRegistries;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.util.*;
 
 public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipProvider, ITabVariants {
@@ -39,7 +38,7 @@ public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipPr
     }
 
     default MultiCapabilityProvider initDarkSteelCapabilities(MultiCapabilityProvider provider, ResourceLocation forItem) {
-        provider.addSerialized(EIOCapabilities.DARK_STEEL_UPGRADABLE, LazyOptional.of(() -> new DarkSteelUpgradeable(forItem)));
+        provider.addSerialized(EIONBTKeys.DARK_STEEL_UPGRADEABLE, EIOCapabilities.DARK_STEEL_UPGRADABLE, LazyOptional.of(() -> new DarkSteelUpgradeable(forItem)));
         provider.addSimple(ForgeCapabilities.ENERGY, LazyOptional.of(() -> new EnergyDelegator(provider)));
         return provider;
     }
@@ -89,7 +88,7 @@ public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipPr
         var upgrades = DarkSteelUpgradeable.getUpgrades(itemStack);
         upgrades
             .stream()
-            .sorted(Comparator.comparing(INamedNBTSerializable::getSerializedName))
+            .sorted(Comparator.comparing(IDarkSteelUpgrade::getName))
             .forEach(upgrade -> tooltips.add(1, upgrade.getDisplayName().copy().withStyle(ChatFormatting.DARK_AQUA)));
     }
 
@@ -99,7 +98,7 @@ public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipPr
             tooltips.add(EIOLang.DS_UPGRADE_AVAILABLE.copy().withStyle(ChatFormatting.YELLOW));
             availUpgrades
                 .stream()
-                .sorted(Comparator.comparing(INamedNBTSerializable::getSerializedName))
+                .sorted(Comparator.comparing(IDarkSteelUpgrade::getName))
                 .forEach(upgrade -> tooltips.add(
                     Component.literal(" " + upgrade.getDisplayName().getString()).withStyle(ChatFormatting.DARK_AQUA, ChatFormatting.ITALIC)));
         }

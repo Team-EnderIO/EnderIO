@@ -1,12 +1,18 @@
 package com.enderio.base.common.capability;
 
 import com.enderio.api.capability.IToggled;
+import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.init.EIOCapabilities;
-import net.minecraft.nbt.ByteTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 
 public class Toggled implements IToggled {
+
+    private final ItemStack stack;
+
+    public Toggled(ItemStack stack) {
+        this.stack = stack;
+    }
 
     public static boolean isEnabled(ItemStack itemStack) {
         return itemStack.getCapability(EIOCapabilities.TOGGLED).map(IToggled::isEnabled).orElse(false);
@@ -20,32 +26,22 @@ public class Toggled implements IToggled {
         itemStack.getCapability(EIOCapabilities.TOGGLED).ifPresent( iToggled -> iToggled.setEnabled(enabled));
     }
 
-    private boolean enabled = false;
-
     @Override
     public boolean isEnabled() {
-        return enabled;
+        CompoundTag tag = this.stack.getOrCreateTag();
+        if (tag.contains(EIONBTKeys.TOGGLE_STATE))
+            return tag.getBoolean(EIONBTKeys.TOGGLE_STATE);
+        return false;
     }
 
     @Override
     public void toggle() {
-        enabled = !enabled;
+        setEnabled(!isEnabled());
     }
 
     @Override
     public void setEnabled(boolean isEnabled) {
-        enabled = isEnabled;
-    }
-
-    @Override
-    public Tag serializeNBT() {
-        return ByteTag.valueOf(enabled);
-    }
-
-    @Override
-    public void deserializeNBT(Tag nbt) {
-        if (!(nbt instanceof ByteTag byteTag))
-            throw new IllegalArgumentException("Incorrect NBT data read!");
-        enabled = byteTag.getAsByte() != 0;
+        CompoundTag tag = this.stack.getOrCreateTag();
+        tag.putBoolean(EIONBTKeys.TOGGLE_STATE, isEnabled);
     }
 }

@@ -3,10 +3,10 @@ package com.enderio.machines.data.recipes;
 import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOEnchantments;
 import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.data.recipe.RecipeDataUtil;
 import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonObject;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
@@ -35,7 +35,7 @@ public class EnchanterRecipeProvider extends EnderRecipeProvider {
     protected void buildRecipes(Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
         //vanilla
         build(Enchantments.ALL_DAMAGE_PROTECTION, EIOItems.DARK_STEEL_INGOT.get(), 16, 1, pFinishedRecipeConsumer);
-        build(Enchantments.FIRE_PROTECTION, Items.BLAZE_POWDER, 16, 1, pFinishedRecipeConsumer);
+        build(Enchantments.FIRE_PROTECTION, Items.MAGMA_CREAM, 16, 1, pFinishedRecipeConsumer); //TODO
         build(Enchantments.FALL_PROTECTION, Tags.Items.FEATHERS, 1, 1, pFinishedRecipeConsumer);
         build(Enchantments.BLAST_PROTECTION, Items.GUNPOWDER, 16, 1, pFinishedRecipeConsumer);
         build(Enchantments.PROJECTILE_PROTECTION, Tags.Items.LEATHER, 16, 1, pFinishedRecipeConsumer);//change arrow->leather?
@@ -53,7 +53,7 @@ public class EnchanterRecipeProvider extends EnderRecipeProvider {
         build(Enchantments.BLOCK_EFFICIENCY, Tags.Items.DUSTS_REDSTONE, 12, 1, pFinishedRecipeConsumer);
         build(Enchantments.SILK_TOUCH, Tags.Items.SLIMEBALLS, 1, 1, pFinishedRecipeConsumer);
         build(Enchantments.UNBREAKING, Tags.Items.OBSIDIAN, 1, 1, pFinishedRecipeConsumer);
-        //build(Enchantments.MENDING, EIOItems.xp, 12, 1, pFinishedRecipeConsumer); //TODO "enderio:item_xp_transfer"
+        build(Enchantments.MENDING, EIOItems.EXPERIENCE_ROD.get(), 1, 1, pFinishedRecipeConsumer);
         build(Enchantments.BLOCK_FORTUNE, Tags.Items.GEMS_EMERALD, 1, 1, pFinishedRecipeConsumer);
         build(Enchantments.POWER_ARROWS, Items.FLINT, 12, 1, pFinishedRecipeConsumer);
         build(Enchantments.PUNCH_ARROWS, Tags.Items.STRING, 1, 1, pFinishedRecipeConsumer);
@@ -79,6 +79,7 @@ public class EnchanterRecipeProvider extends EnderRecipeProvider {
         //build(EIOEnchantments.WITHERING_BOLT.get(), witherpotion, 1, 1, pFinishedRecipeConsumer); //TODO Another recipe for bolts
         build(EIOEnchantments.WITHERING_BLADE.get(), EIOItems.WITHERING_POWDER.get(), 4, 1, pFinishedRecipeConsumer);
         build(EIOEnchantments.REPELLENT.get(), Items.ENDER_PEARL, 4, 2, pFinishedRecipeConsumer);
+        build(EIOEnchantments.AUTO_SMELT.get(), Items.BLAZE_POWDER, 16, 1, pFinishedRecipeConsumer); //TODO
     }
 
     protected void build(Enchantment enchantment, Item input, int amountPerLevel, int levelModifier, Consumer<FinishedRecipe> recipeConsumer) {
@@ -110,9 +111,7 @@ public class EnchanterRecipeProvider extends EnderRecipeProvider {
 
         @Override
         protected Set<String> getModDependencies() {
-            Set<String> mods = new HashSet<>();
-            // TODO: 1.19: Ingredient#getItems cannot be called during datagen. Needs a new solution.
-//            Arrays.stream(input.getItems()).forEach(item -> mods.add(ForgeRegistries.ITEMS.getKey(item.getItem()).getNamespace()));
+            Set<String> mods = new HashSet<>(RecipeDataUtil.getIngredientModIds(input));
             mods.add(ForgeRegistries.ENCHANTMENTS.getKey(enchantment).getNamespace());
             return mods;
         }

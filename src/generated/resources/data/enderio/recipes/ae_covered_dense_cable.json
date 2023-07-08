@@ -1,0 +1,35 @@
+{
+  "type": "forge:conditional",
+  "recipes": [
+    {
+      "conditions": [
+        {
+          "type": "forge:mod_loaded",
+          "modid": "ae2"
+        }
+      ],
+      "recipe": {
+        "type": "minecraft:crafting_shaped",
+        "category": "building",
+        "key": {
+          "B": {
+            "item": "enderio:conduit_binder"
+          },
+          "I": {
+            "tag": "ae2:covered_dense_cable"
+          }
+        },
+        "pattern": [
+          "BBB",
+          "III",
+          "BBB"
+        ],
+        "result": {
+          "count": 3,
+          "item": "enderio:dense_me_conduit"
+        },
+        "show_notification": true
+      }
+    }
+  ]
+}

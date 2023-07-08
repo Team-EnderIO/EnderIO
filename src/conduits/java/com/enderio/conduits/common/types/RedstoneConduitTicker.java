@@ -3,8 +3,8 @@ package com.enderio.conduits.common.types;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.api.conduit.ticker.IIOAwareConduitTicker;
-import com.enderio.conduits.common.ConduitTags;
 import com.enderio.conduits.common.init.ConduitBlocks;
+import com.enderio.conduits.common.tag.ConduitTags;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
 import dev.gigaherz.graph3.Mergeable;
@@ -24,7 +24,7 @@ public class RedstoneConduitTicker implements IIOAwareConduitTicker {
     public boolean canConnectTo(Level level, BlockPos conduitPos, Direction direction) {
         BlockPos neighbor = conduitPos.relative(direction);
         BlockState blockState = level.getBlockState(neighbor);
-        return blockState.is(ConduitTags.REDSTONE_CONNECTABLE) || blockState.canRedstoneConnectTo(level, neighbor, direction);
+        return blockState.is(ConduitTags.Blocks.REDSTONE_CONNECTABLE) || blockState.canRedstoneConnectTo(level, neighbor, direction);
     }
 
     @Override

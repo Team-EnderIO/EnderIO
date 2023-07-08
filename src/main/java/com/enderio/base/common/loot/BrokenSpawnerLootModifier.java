@@ -1,5 +1,6 @@
 package com.enderio.base.common.loot;
 
+import com.enderio.api.capability.StoredEntityData;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.item.misc.BrokenSpawnerItem;
 import com.enderio.base.common.tag.EIOTags;
@@ -42,8 +43,8 @@ public class BrokenSpawnerLootModifier extends LootModifier {
                     BaseSpawner spawner = spawnerBlockEntity.getSpawner();
                     CompoundTag entityTag = spawner.nextSpawnData.getEntityToSpawn();
 
-                    if (entityTag.contains("id")) {
-                        ResourceLocation type = new ResourceLocation(entityTag.getString("id"));
+                    if (entityTag.contains(StoredEntityData.KEY_ID)) {
+                        ResourceLocation type = new ResourceLocation(entityTag.getString(StoredEntityData.KEY_ID));
                         ItemStack brokenSpawner = BrokenSpawnerItem.forType(type);
                         generatedLoot.add(brokenSpawner);
                     }

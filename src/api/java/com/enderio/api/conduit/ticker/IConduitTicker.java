@@ -28,4 +28,11 @@ public interface IConduitTicker {
     default boolean hasConnectionDelay() {
         return false;
     }
+
+    /**
+     * return true if both types are similar and share the same extended conduit data
+     */
+    default boolean canConnectTo(IConduitType<?> thisType, IConduitType<?> other) {
+        return thisType == other;
+    }
 }

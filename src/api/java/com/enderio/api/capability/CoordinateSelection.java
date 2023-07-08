@@ -2,14 +2,12 @@ package com.enderio.api.capability;
 
 import com.enderio.api.UseOnly;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.server.ServerLifecycleHooks;
-
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -28,7 +26,6 @@ public record CoordinateSelection(ResourceLocation level, BlockPos pos) {
     /**
      * Get the name of the given level.
      */
-    // TODO: Does this belong here/need to be static?
     public static String getLevelName(ResourceLocation level) {
         return level.getNamespace().equals("minecraft") ? level.getPath() : level.toString();
     }

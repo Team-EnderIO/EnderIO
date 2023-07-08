@@ -114,28 +114,59 @@ public class IOConfig implements IIOConfig {
         return Direction.SOUTH;
     }
 
+    // region Serialization
+
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
-        ListTag listNbt = new ListTag();
         for (Map.Entry<Direction, IOMode> entry : config.entrySet()) {
-            CompoundTag entryNbt = new CompoundTag();
-            entryNbt.putInt("direction", entry.getKey().ordinal());
-            entryNbt.putInt("state", entry.getValue().ordinal());
-            listNbt.add(entryNbt);
+            nbt.putByte(entry.getKey().get3DDataValue() + "", (byte)entry.getValue().ordinal());
         }
-        nbt.put("data", listNbt);
         return nbt;
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        ListTag listNbt = nbt.getList("data", Tag.TAG_COMPOUND);
-        for (Tag tag : listNbt) {
-            CompoundTag entryNbt = (CompoundTag) tag;
-            config.put(Direction.values()[entryNbt.getInt("direction")], IOMode.values()[entryNbt.getInt("state")]);
+        for (String key: nbt.getAllKeys()) {
+            if (nbt.contains(key, Tag.TAG_BYTE)) {
+                try {
+                    int i = Integer.parseInt(key);
+                    if (i >= 0 && i < Direction.values().length) {
+                        Direction direction = Direction.from3DDataValue(i);
+                        byte ioModeIndex = nbt.getByte(key);
+                        if (ioModeIndex >= 0 && ioModeIndex < IOMode.values().length) {
+                            config.put(direction, IOMode.values()[ioModeIndex]);
+                        }
+                    }
+                } catch (NumberFormatException ignored) {
+
+                }
+            }
         }
     }
+
+    // endregion
+
+    // region Hashing
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        IOConfig ioConfig = (IOConfig) o;
+
+        return config.equals(ioConfig.config);
+    }
+
+    @Override
+    public int hashCode() {
+        return config.hashCode();
+    }
+
+    // endregion
 
     // For providing sided access via a capability.
     private record SideAccess(IOConfig config, Direction side) implements ISideConfig {

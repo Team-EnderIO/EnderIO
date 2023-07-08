@@ -1,12 +1,11 @@
 package com.enderio.core.client.gui.widgets;
 
 import com.enderio.api.misc.IIcon;
+import com.enderio.api.misc.Vector2i;
 import com.enderio.core.client.gui.screen.IEnderScreen;
 import com.enderio.core.client.gui.screen.IFullScreenListener;
-import com.enderio.api.misc.Vector2i;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -202,6 +201,13 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
         @Override
         public void addTooltip(LateTooltipData data) {
             tooltips.add(data);
+        }
+
+        @Override
+        public void onClose() {
+            EnumIconWidget.this.setFocused(false);
+            EnumIconWidget.this.isExpanded = false;
+            super.onClose();
         }
     }
 
