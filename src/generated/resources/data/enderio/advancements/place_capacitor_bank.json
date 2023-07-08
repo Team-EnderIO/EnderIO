@@ -8,7 +8,7 @@
             "condition": "minecraft:any_of",
             "terms": [
               {
-                "block": "enderio:vibrant_capacitor_bank",
+                "block": "enderio:advanced_capacitor_bank",
                 "condition": "minecraft:block_state_property"
               },
               {
@@ -16,7 +16,7 @@
                 "condition": "minecraft:block_state_property"
               },
               {
-                "block": "enderio:advanced_capacitor_bank",
+                "block": "enderio:vibrant_capacitor_bank",
                 "condition": "minecraft:block_state_property"
               }
             ]

@@ -17,7 +17,9 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePrope
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.common.data.ForgeAdvancementProvider;
+import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
@@ -29,7 +31,8 @@ public class MachinesAdvancementGenerator implements ForgeAdvancementProvider.Ad
             .parent(new Advancement(new ResourceLocation("adventure/root"), null, null, null, new HashMap<>(), null, false))
             .display(MachineBlocks.CAPACITOR_BANKS.get(CapacitorTier.BASIC), MachineLang.PLACE_CAPACITOR_BANK_ADVANCEMENT_TITLE, MachineLang.PLACE_CAPACITOR_BANK_ADVANCEMENT_DESCRIPTION, null, FrameType.TASK, true,
                 true, false)
-            .addCriterion("place_capacitor_bank", placedBlock(MachineBlocks.CAPACITOR_BANKS.values().stream().map(RegistryEntry::get).toArray(CapacitorBankBlock[]::new)));
+            .addCriterion("place_capacitor_bank", placedBlock(MachineBlocks.CAPACITOR_BANKS.values().stream().map(RegistryEntry::get)
+                .sorted(Comparator.comparing(ForgeRegistries.BLOCKS::getKey)).toArray(CapacitorBankBlock[]::new)));
 
         builder.save(saver, CapacitorBankBlock.PLACE_ADVANCEMENT_ID.toString());
     }
