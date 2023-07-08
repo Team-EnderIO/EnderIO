@@ -50,7 +50,7 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
         super(EnergyIOMode.Input, CAPACITY, USAGE, type, worldPosition, blockState);
 
         addDataSlot(new IntegerNetworkDataSlot(() -> grindingBallDamage, i -> grindingBallDamage = i));
-        addDataSlot(new ResourceLocationNetworkDataSlot(() -> grindingBallData.getId(), gId -> grindingBallData = GrindingBallManager.getData(gId)));
+        addDataSlot(new ResourceLocationNetworkDataSlot(() -> grindingBallData.getGrindingBallId(), gId -> grindingBallData = GrindingBallManager.getData(gId)));
 
         craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy, MachineRecipes.SAGMILLING.type().get(),
             new SagMillingRecipe.Container(getInventoryNN(), this::getGrindingBallData), this::createTask);
@@ -180,7 +180,7 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
         super.saveAdditional(pTag);
         craftingTaskHost.save(pTag);
         if (grindingBallData != IGrindingBallData.IDENTITY) {
-            pTag.putString(KEY_GRINDING_BALL_ID, grindingBallData.getId().toString());
+            pTag.putString(KEY_GRINDING_BALL_ID, grindingBallData.getGrindingBallId().toString());
             pTag.putInt(KEY_GRINDING_BALL_DAMAGE, grindingBallDamage);
         }
     }
