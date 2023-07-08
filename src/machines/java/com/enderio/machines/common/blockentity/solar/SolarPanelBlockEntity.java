@@ -1,5 +1,6 @@
 package com.enderio.machines.common.blockentity.solar;
 
+import com.enderio.EnderIO;
 import com.enderio.api.capacitor.FixedScalable;
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
@@ -62,7 +63,7 @@ public class SolarPanelBlockEntity extends PoweredMachineBlockEntity {
     }
 
     public boolean isGenerating() {
-        if (level == null || level.getHeight(Heightmap.Types.WORLD_SURFACE, worldPosition.getX(), worldPosition.getZ()) != worldPosition.getY() + 1)
+        if (level == null || !this.level.canSeeSky(getBlockPos().above()))
             return false;
 
         return getGenerationRate() > 0;
