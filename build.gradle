@@ -387,6 +387,7 @@ publisher {
     }
 
     modrinthDepends {
+        optional = [/*modrinth_dep_patchouli, */modrinth_dep_jei, modrinth_dep_athena, modrinth_dep_ae2]
     }
 }
 
