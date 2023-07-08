@@ -1,6 +1,5 @@
 package com.enderio.machines.common.blockentity.solar;
 
-import com.enderio.EnderIO;
 import com.enderio.api.capacitor.FixedScalable;
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
@@ -20,7 +19,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.Heightmap;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
