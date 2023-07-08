@@ -48,6 +48,7 @@ public class GrindingBallManager {
 
     @SubscribeEvent
     public static void registerReloadListener(AddReloadListenerEvent event) {
+        //Fired on datapack reload
         clearCache = true;
     }
     @SubscribeEvent
