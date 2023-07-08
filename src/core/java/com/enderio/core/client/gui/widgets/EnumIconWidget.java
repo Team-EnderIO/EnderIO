@@ -202,6 +202,13 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
         public void addTooltip(LateTooltipData data) {
             tooltips.add(data);
         }
+
+        @Override
+        public void onClose() {
+            EnumIconWidget.this.setFocused(false);
+            EnumIconWidget.this.isExpanded = false;
+            super.onClose();
+        }
     }
 
     private class SelectionWidget extends AbstractWidget {
