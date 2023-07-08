@@ -10,11 +10,14 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = EnderIO.MODID)
-public class InfinityGrindingHandler {
+public class GrindingHandler {
     @SubscribeEvent
     public static void onGrindstonePlace(GrindstoneEvent.OnPlaceItem event) {
         if ((event.getTopItem().is(Items.DEEPSLATE) || event.getTopItem().is(Items.COBBLED_DEEPSLATE)) && event.getBottomItem().is(Items.FLINT)) {
             event.setOutput(new ItemStack(EIOItems.GRAINS_OF_INFINITY.get(), 1));
+            event.setXp(0);
+        } else if (event.getTopItem().is(Items.COAL) && event.getTopItem().getCount() >= 3 && event.getBottomItem().isEmpty()) {
+            event.setOutput(new ItemStack(EIOItems.POWDERED_COAL.get(), 1));
             event.setXp(0);
         }
     }
@@ -34,6 +37,12 @@ public class InfinityGrindingHandler {
 
             event.setNewTopItem(top);
             event.setNewBottomItem(bottom);
+        } else if (event.getTopItem().is(Items.COAL) && event.getTopItem().getCount() >= 3 && event.getBottomItem().isEmpty()) {
+            ItemStack top = event.getTopItem().copy();
+
+            top.shrink(3);
+
+            event.setNewTopItem(top);
         }
     }
 }
