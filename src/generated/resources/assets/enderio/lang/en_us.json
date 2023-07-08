@@ -1070,6 +1070,7 @@
   "jei.enderio.fire_crafting.title": "Fire Crafting",
   "jei.enderio.fire_crafting.valid_blocks": "Valid Blocks:",
   "jei.enderio.fire_crafting.valid_dimensions": "Valid Dimensions:",
+  "jei.enderio.grinding.title": "Grinding",
   "message.enderio.glider.disable": "Gliding is disabled: ",
   "message.enderio.glider.disable.fall_flying": "Elytra Flight",
   "message.enderio.grave.wrong_owner": "This grave is not yours! You cannot open it.",
