@@ -558,7 +558,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         }
 
         if (fluidTank != null) {
-            pTag.put("fluid", fluidTank.writeToNBT(new CompoundTag()));
+            pTag.put(MachineNBTKeys.FLUID, fluidTank.writeToNBT(new CompoundTag()));
         }
     }
 
@@ -576,7 +576,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         }
 
         if (fluidTank != null) {
-            fluidTank.readFromNBT(pTag.getCompound("fluid"));
+            fluidTank.readFromNBT(pTag.getCompound(MachineNBTKeys.FLUID));
         }
 
         // For rendering io overlays after placed by an nbt filled block item
