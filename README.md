@@ -68,7 +68,7 @@ Some features may be missing or work differently, however we are working to re-i
 
 [![Akliz Official Partner](doc/img/akliz_banner_enderio.png)](https://www.akliz.net/enderio)
 
-The Ender IO Team are official Akliz partners. Akliz provides high-performance game hosting for games like Minecraft, Valheim, Satisfactory, ARK and more! Use our [coupon code](https://www.akliz.net/enderio) for 20% off your first month!
+The Ender IO Team are official Akliz partners! Akliz provides high-performance game hosting for games like Minecraft, Valheim, Satisfactory, ARK and more! Use our [coupon code](https://www.akliz.net/enderio) for 20% off your first month!
 
 <!-- GETTING STARTED -->
 ## Getting Started
