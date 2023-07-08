@@ -383,11 +383,10 @@ publisher {
     artifact = tasks.jarJar
 
     curseDepends {
-        optional = ["jei", /*"patchouli",*/ "athena"]
+        optional = ["jei", /*"patchouli",*/ "athena", "applied-energistics-2"]
     }
 
     modrinthDepends {
-        optional = [/*modrinth_dep_patchouli, */modrinth_dep_jei, modrinth_dep_athena]
     }
 }
 
