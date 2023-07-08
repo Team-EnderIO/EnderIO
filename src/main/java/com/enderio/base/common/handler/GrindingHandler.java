@@ -16,7 +16,7 @@ public class GrindingHandler {
         if ((event.getTopItem().is(Items.DEEPSLATE) || event.getTopItem().is(Items.COBBLED_DEEPSLATE)) && event.getBottomItem().is(Items.FLINT)) {
             event.setOutput(new ItemStack(EIOItems.GRAINS_OF_INFINITY.get(), 1));
             event.setXp(0);
-        } else if (event.getTopItem().is(Items.COAL) && event.getTopItem().getCount() >= 3 && event.getBottomItem().isEmpty()) {
+        } else if (event.getTopItem().is(Items.COAL) && event.getTopItem().getCount() >= 3 && event.getBottomItem().is(Items.FLINT)) {
             event.setOutput(new ItemStack(EIOItems.POWDERED_COAL.get(), 1));
             event.setXp(0);
         }
@@ -37,12 +37,19 @@ public class GrindingHandler {
 
             event.setNewTopItem(top);
             event.setNewBottomItem(bottom);
-        } else if (event.getTopItem().is(Items.COAL) && event.getTopItem().getCount() >= 3 && event.getBottomItem().isEmpty()) {
+        } else if (event.getTopItem().is(Items.COAL) && event.getTopItem().getCount() >= 3 && event.getBottomItem().is(Items.FLINT)) {
             ItemStack top = event.getTopItem().copy();
+            ItemStack bottom = event.getBottomItem().copy();
 
             top.shrink(3);
 
+            // 33% chance to destroy the flint
+            if (RandomSource.create().nextInt(3) == 0) {
+                bottom.shrink(1);
+            }
+
             event.setNewTopItem(top);
+            event.setNewBottomItem(bottom);
         }
     }
 }

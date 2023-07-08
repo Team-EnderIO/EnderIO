@@ -36,7 +36,7 @@ public class EnderIOJEIRecipes {
                 new ItemStack(EIOItems.GRAINS_OF_INFINITY)),
             new FakeGrindingRecipe(
                 CountedIngredient.of(3, Items.COAL),
-                null,
+                CountedIngredient.of(Items.FLINT),
                 new ItemStack(EIOItems.POWDERED_COAL))
         );
     }
