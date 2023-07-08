@@ -129,7 +129,7 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, IEnderCapabi
             return 0;
         int energyExtracted = Math.min(getEnergyStored(), maxExtract);
         if (!simulate) {
-            addEnergy(-energyExtracted);
+            takeEnergy(energyExtracted);
         }
         return energyExtracted;
     }
