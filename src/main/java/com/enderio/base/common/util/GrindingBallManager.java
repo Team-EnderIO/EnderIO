@@ -47,7 +47,7 @@ public class GrindingBallManager {
             .getAllRecipesFor(EIORecipes.GRINDING_BALL.type().get())
             .forEach(grindingBallRecipe -> {
                     itemToData.put(grindingBallRecipe.getItem(), grindingBallRecipe);
-                    idToData.put(grindingBallRecipe.getId(), grindingBallRecipe);
+                    idToData.put(grindingBallRecipe.getGrindingBallId(), grindingBallRecipe);
                 });
     }
 }
