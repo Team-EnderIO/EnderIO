@@ -1,5 +1,5 @@
 {
-  "souces": [
+  "sources": [
     {
       "type": "directory",
       "source": "enderio:block/overlay",
