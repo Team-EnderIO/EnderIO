@@ -77,6 +77,8 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         level.setBlocksDirty(getBlockPos(), Blocks.AIR.defaultBlockState(), getBlockState());
     }
 
+    // region Network Sync
+
     /**
      * Handle a connection state update from the client.
      */
@@ -103,6 +105,8 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     public void handleExtendedDataUpdate(IConduitType<?> conduitType, CompoundTag compoundTag) {
         getBundle().getNodeFor(conduitType).getExtendedConduitData().deserializeNBT(compoundTag);
     }
+
+    // endregion
 
     private void scheduleTick() {
         setChanged();
