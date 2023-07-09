@@ -2,10 +2,14 @@ package com.enderio.base.common.handler;
 
 import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOItems;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.inventory.GrindstoneMenu;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.event.GrindstoneEvent;
+import net.minecraftforge.event.ItemStackedOnOtherEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -51,5 +55,19 @@ public class GrindingHandler {
             event.setNewTopItem(top);
             event.setNewBottomItem(bottom);
         }
+    }
+
+    @SubscribeEvent
+    public static void onBundlePlayer(ItemStackedOnOtherEvent hackyEvent) {
+        if (hackyEvent.getPlayer() instanceof ServerPlayer && hackyEvent.getPlayer().containerMenu instanceof GrindstoneMenu grindStoneMenu && hackyEvent.getSlot().container == grindStoneMenu.repairSlots && isItemValid(hackyEvent.getStackedOnItem())) {
+            ItemStack stack = hackyEvent.getSlot().getItem();
+            hackyEvent.getSlot().set(hackyEvent.getStackedOnItem());
+            hackyEvent.getCarriedSlotAccess().set(stack);
+            hackyEvent.setCanceled(true);
+        }
+    }
+
+    private static boolean isItemValid(ItemStack stack) {
+        return stack.is(Items.FLINT) || stack.is(Items.COBBLED_DEEPSLATE) || stack.is(Items.COAL);
     }
 }
