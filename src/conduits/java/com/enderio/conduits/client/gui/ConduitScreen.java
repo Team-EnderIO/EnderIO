@@ -13,6 +13,7 @@ import com.enderio.conduits.common.blockentity.ConduitBundle;
 import com.enderio.conduits.common.blockentity.SlotType;
 import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
 import com.enderio.conduits.common.blockentity.connection.IConnectionState;
+import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.conduits.common.menu.ConduitMenu;
 import com.enderio.conduits.common.menu.ConduitSlot;
 import com.enderio.conduits.common.network.C2SSetConduitConnectionState;
@@ -65,6 +66,19 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
             }
         }
         guiGraphics.pose().popPose();
+    }
+
+    @Override
+    protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
+        super.renderLabels(guiGraphics, pMouseX, pMouseY);
+
+        IConduitMenuData data = menu.getConduitType().getMenuData();
+
+        guiGraphics.drawString(this.font, ConduitLang.CONDUIT_INSERT,  22 + 16,  7 + 4, 4210752, false);
+
+        if (data.showBothEnable()) {
+            guiGraphics.drawString(this.font, ConduitLang.CONDUIT_EXTRACT, 112 + 16, 7 + 4, 4210752, false);
+        }
     }
 
     private void updateConnectionWidgets(boolean forceUpdate) {

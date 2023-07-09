@@ -869,6 +869,8 @@
   "gui.enderio.category.soul_binding": "Soul Binding",
   "gui.enderio.category.tank": "Fluid Tank",
   "gui.enderio.channel": "Channel",
+  "gui.enderio.conduit.extract": "Extract",
+  "gui.enderio.conduit.insert": "Insert",
   "gui.enderio.energy_equivalence": "A unit of energy, equivalent to FE.",
   "gui.enderio.filter": "Filter",
   "gui.enderio.fluid_conduit.change_fluid1": "Locked Fluid:",
