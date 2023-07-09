@@ -55,7 +55,7 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
             .slotAccess(INPUTS)
             .outputSlot()
             .slotAccess(OUTPUT)
-            .inputSlot(this::acceptSlotInput)
+            .inputSlot()
             .slotAccess(FUEL)
             .build();
     }
@@ -80,7 +80,7 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
             burnTime--;
         }
 
-        // Only continue burning if redstone is enabled and the internal buffer has space.
+        // Only continue burning if redstone is enabled
         if (canAct() && !isBurning() && craftingTaskHost.hasTask() && !craftingTaskHost.getCurrentTask().isCompleted()) {
             // Get the fuel
             ItemStack fuel = FUEL.getItemStack(this);
@@ -94,10 +94,19 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
                     burnDuration = burnTime;
 
                     // Remove the fuel
-                    fuel.shrink(1);
+                    if (fuel.hasCraftingRemainingItem()) {
+                        FUEL.setStackInSlot(this, fuel.getCraftingRemainingItem());
+                    } else {
+                        fuel.shrink(1);
+                    }
                 }
             }
         }
+    }
+
+    @Override
+    protected boolean canAcceptTask() {
+        return super.canAcceptTask() || !FUEL.getItemStack(this).isEmpty();
     }
 
     @Override
@@ -105,7 +114,10 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
         return new MachineEnergyStorage(getIOConfig(), energyIOMode, this::getBurnToFE, () -> 0) {
             @Override
             public int getEnergyStored() {
-                return getBurnToFE();
+                if (isBurning()) {
+                    return getBurnToFE();
+                }
+                return 0;
             }
 
             @Override

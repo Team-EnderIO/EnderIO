@@ -194,8 +194,6 @@ public class EIOItems {
     public static final ItemEntry<MaterialItem> ANIMAL_TOKEN = materialItemGlinted("animal_token").register();
     public static final ItemEntry<MaterialItem> MONSTER_TOKEN = materialItemGlinted("monster_token").register();
     public static final ItemEntry<MaterialItem> PLAYER_TOKEN = materialItemGlinted("player_token").register();
-
-    public static final ItemEntry<MaterialItem> UNFIRED_DEATH_URN = materialItem("unfired_death_urn").register();
     public static final ItemEntry<MaterialItem> CAKE_BASE = materialItem("cake_base").register();
     public static final ItemEntry<MaterialItem> BLACK_PAPER = materialItem("black_paper").register();
     public static final ItemEntry<MaterialItem> CLAYED_GLOWSTONE = materialItem("clayed_glowstone").register();
