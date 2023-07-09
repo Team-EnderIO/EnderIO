@@ -7,11 +7,14 @@
 ### Changed
 
 ### Removed
+- Removed the grave system
+- Removed the unfired urn
 
 ### Fixed
 - Solar panels are no longer blocked by transparent blocks.
 - Fixed sugar cane and flower pot sag mill recipes.
 - Fixed solar panels not draining energy from their buffer.
+- Fixed XP fluid inconsistency
 
 ## [6.0.3-alpha] - 2023-07-08
 
