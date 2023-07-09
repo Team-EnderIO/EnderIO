@@ -3,6 +3,7 @@ package com.enderio.conduits.client.gui;
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.IConduitMenuData;
 import com.enderio.api.conduit.IConduitType;
+import com.enderio.api.conduit.IExtendedConduitData;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.api.misc.Vector2i;
@@ -15,6 +16,7 @@ import com.enderio.conduits.common.blockentity.connection.IConnectionState;
 import com.enderio.conduits.common.menu.ConduitMenu;
 import com.enderio.conduits.common.menu.ConduitSlot;
 import com.enderio.conduits.common.network.C2SSetConduitConnectionState;
+import com.enderio.conduits.common.network.C2SSetConduitExtendedData;
 import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.client.gui.widgets.CheckBox;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
@@ -111,7 +113,9 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
             }
             menu.getConduitType()
                 .getClientData()
-                .createWidgets(this, () -> menu.getBlockEntity().getBlockPos(), menu::getConduitType, getBundle().getNodeFor(menu.getConduitType()).getExtendedConduitData().cast(), menu::getDirection, new Vector2i(22, 7).add(getGuiLeft(), getGuiTop()))
+                .createWidgets(this, getBundle().getNodeFor(menu.getConduitType()).getExtendedConduitData().cast(),
+                    (mapper) -> sendExtendedConduitUpdate((Function<IExtendedConduitData<?>, IExtendedConduitData<?>>) mapper), menu::getDirection,
+                    new Vector2i(22, 7).add(getGuiLeft(), getGuiTop()))
                 .forEach(this::addTypedButton);
         }
         List<IConduitType<?>> validConnections = new ArrayList<>();
@@ -131,6 +135,13 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
             }
         }
     }
+
+    private void sendExtendedConduitUpdate(Function<IExtendedConduitData<?>, IExtendedConduitData<?>> map) {
+        var currentData = getBundle().getNodeFor(menu.getConduitType()).getExtendedConduitData().cast();
+        var menu = getMenu();
+        CoreNetwork.sendToServer(new C2SSetConduitExtendedData(menu.getBlockEntity().getBlockPos(), menu.getConduitType(), map.apply(currentData)));
+    }
+
     private void addTypedButton(AbstractWidget button) {
         typedButtons.add(button);
         addRenderableWidget(button);
