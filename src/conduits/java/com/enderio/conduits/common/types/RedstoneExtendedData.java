@@ -33,6 +33,7 @@ public class RedstoneExtendedData implements IExtendedConduitData<RedstoneExtend
     public boolean isActive() {
         return isActive;
     }
+
     public void setActive(boolean active) {
         isActive = active;
     }

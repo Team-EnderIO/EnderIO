@@ -1,7 +1,7 @@
 package com.enderio.conduits.common.types;
 
 import com.enderio.api.conduit.IConduitType;
-import com.enderio.api.conduit.ticker.ICapabilityAwareConduitTicker;
+import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.server.level.ServerLevel;
@@ -13,7 +13,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.List;
 
-public class ItemConduitTicker extends ICapabilityAwareConduitTicker<IItemHandler> {
+public class ItemConduitTicker extends CapabilityAwareConduitTicker<IItemHandler> {
 
     @Override
     protected void tickCapabilityGraph(IConduitType<?> type, List<CapabilityConnection> inserts, List<CapabilityConnection> extracts, ServerLevel level, Graph<Mergeable.Dummy> graph) {

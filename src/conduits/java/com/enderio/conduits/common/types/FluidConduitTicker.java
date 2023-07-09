@@ -2,7 +2,7 @@ package com.enderio.conduits.common.types;
 
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.NodeIdentifier;
-import com.enderio.api.conduit.ticker.ICapabilityAwareConduitTicker;
+import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
 import dev.gigaherz.graph3.Mergeable;
@@ -16,7 +16,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import java.util.List;
 import java.util.Optional;
 
-public class FluidConduitTicker extends ICapabilityAwareConduitTicker<IFluidHandler> {
+public class FluidConduitTicker extends CapabilityAwareConduitTicker<IFluidHandler> {
 
     private final boolean lockFluids;
     private final int fluidRate;
@@ -45,8 +45,8 @@ public class FluidConduitTicker extends ICapabilityAwareConduitTicker<IFluidHand
     }
 
     @Override
-    protected void tickCapabilityGraph(IConduitType<?> type, List<ICapabilityAwareConduitTicker<IFluidHandler>.CapabilityConnection> inserts,
-        List<ICapabilityAwareConduitTicker<IFluidHandler>.CapabilityConnection> extracts, ServerLevel level, Graph<Mergeable.Dummy> graph) {
+    protected void tickCapabilityGraph(IConduitType<?> type, List<CapabilityAwareConduitTicker<IFluidHandler>.CapabilityConnection> inserts,
+                                       List<CapabilityAwareConduitTicker<IFluidHandler>.CapabilityConnection> extracts, ServerLevel level, Graph<Mergeable.Dummy> graph) {
 
         for (CapabilityConnection extract : extracts) {
             IFluidHandler extractHandler = extract.cap;
@@ -55,8 +55,10 @@ public class FluidConduitTicker extends ICapabilityAwareConduitTicker<IFluidHand
                 .ofNullable(fluidExtendedData.lockedFluid)
                 .map(fluid -> extractHandler.drain(new FluidStack(fluid, fluidRate), IFluidHandler.FluidAction.SIMULATE))
                 .orElseGet(() -> extractHandler.drain(fluidRate, IFluidHandler.FluidAction.SIMULATE));
+
             if (extractedFluid.isEmpty())
                 continue;
+
             int transferred = 0;
             for (int j = 0; j < inserts.size(); j++) {
                 FluidStack transferredFluid = fluidExtendedData.lockedFluid != null ?
@@ -73,6 +75,7 @@ public class FluidConduitTicker extends ICapabilityAwareConduitTicker<IFluidHand
                             }
                         }
                     }
+
                     if (transferred > fluidRate)
                         break;
                 }

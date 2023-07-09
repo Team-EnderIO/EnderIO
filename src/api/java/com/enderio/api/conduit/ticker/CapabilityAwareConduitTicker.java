@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class ICapabilityAwareConduitTicker<T> implements IIOAwareConduitTicker {
+public abstract class CapabilityAwareConduitTicker<T> implements IIOAwareConduitTicker {
 
     @Override
     public final void tickColoredGraph(IConduitType<?> type, List<Connection> inserts, List<Connection> extracts, ServerLevel level,

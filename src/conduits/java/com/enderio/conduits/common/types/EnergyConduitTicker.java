@@ -2,7 +2,7 @@ package com.enderio.conduits.common.types;
 
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.IConduitType;
-import com.enderio.api.conduit.ticker.ICapabilityAwareConduitTicker;
+import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.server.level.ServerLevel;
@@ -12,7 +12,7 @@ import net.minecraftforge.energy.IEnergyStorage;
 
 import java.util.List;
 
-public class EnergyConduitTicker extends ICapabilityAwareConduitTicker<IEnergyStorage> {
+public class EnergyConduitTicker extends CapabilityAwareConduitTicker<IEnergyStorage> {
 
     public EnergyConduitTicker() {
     }
@@ -25,19 +25,22 @@ public class EnergyConduitTicker extends ICapabilityAwareConduitTicker<IEnergySt
         for (IEnergyStorage extract : extracts.stream().map(e -> e.cap).toList()) {
             availableForExtraction += extract.extractEnergy(extract.getEnergyStored(), true);
         }
+
         int inserted = 0;
         for (IEnergyStorage insert : inserts.stream().map(e -> e.cap).toList()) {
             inserted += insert.receiveEnergy(availableForExtraction - inserted, false);
             if (inserted == availableForExtraction)
                 break;
         }
+
         for (IEnergyStorage extract : extracts.stream().map(e -> e.cap).toList()) {
             inserted -= extract.extractEnergy(inserted, false);
             if (inserted <= 0)
                 break;
         }
+
         if (inserted > 0) {
-            EnderIO.LOGGER.info("didn't extract all energy that was inserted, investigate the dupebug");
+            EnderIO.LOGGER.info("didn't extract all energy that was inserted, investigate the dupe bug");
         }
     }
 
