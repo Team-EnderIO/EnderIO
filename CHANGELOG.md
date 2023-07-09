@@ -5,6 +5,8 @@
 ### Added
 
 ### Changed
+- Loot capacitors have a small chance of generating with more than one modifier.
+- Loot capacitor modifier distribution is now normal rather than uniform.
 
 ### Removed
 - Removed the grave system
@@ -18,6 +20,8 @@
 - Fixed the deletion of a bucket when using bucketed fuel in a smelting machine.
 - Fixed inability to add fuel to active primitive alloy smelter.
 - Fixed the output calculations for vanilla smelting in the alloy smelter.
+- Stopped "Fixed" capacitor modifiers from being generated as loot.
+- Fixed loot capacitors not storing stats on multiplayer (Breaking: old loot capacitors will reset).
 
 ## [6.0.3-alpha] - 2023-07-08
 
