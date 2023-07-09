@@ -8,6 +8,7 @@ import com.google.common.base.Suppliers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
@@ -52,22 +53,28 @@ public class CapacitorLootModifier extends LootModifier {
         ItemStack capacitor = new ItemStack(EIOItems.LOOT_CAPACITOR.get());
         capacitor.getCapability(EIOCapabilities.CAPACITOR).ifPresent(cap -> {
             if (cap instanceof LootCapacitorData lootCap) {
-                lootCap.setBase(UniformGenerator.between(min, max).getFloat(context));
-                lootCap.addNewModifier(CapacitorUtil.getRandomModifier(context.getRandom()), UniformGenerator.between(0.2f, 4.5f).getFloat(context));
+                lootCap.setBase(getModifierValue(context.getRandom(), min, max));
+                lootCap.addNewModifier(CapacitorUtil.getRandomModifier(context.getRandom()), getModifierValue(context.getRandom(), min, max));
 
                 // 15% chance of a secondary modifier
                 if (context.getRandom().nextFloat() < 0.15f) {
-                    lootCap.addModifier(CapacitorUtil.getRandomModifier(context.getRandom()), UniformGenerator.between(0.2f, 4.5f).getFloat(context));
+                    lootCap.addModifier(CapacitorUtil.getRandomModifier(context.getRandom()), getModifierValue(context.getRandom(), min, max));
                 }
 
                 // 2% change of a third
                 if (context.getRandom().nextFloat() < 0.02f) {
-                    lootCap.addModifier(CapacitorUtil.getRandomModifier(context.getRandom()), UniformGenerator.between(0.2f, 4.5f).getFloat(context));
+                    lootCap.addModifier(CapacitorUtil.getRandomModifier(context.getRandom()), getModifierValue(context.getRandom(), min, max));
                 }
             }
         });
         generatedLoot.add(capacitor);
         return generatedLoot;
+    }
+
+    private float getModifierValue(RandomSource random, float min, float max) {
+        float mean = min + (max - min) * 0.5f;
+        float stdDev = (max - min) * 0.25f;
+        return Math.max(min, Math.min(max, (float) random.nextGaussian() * stdDev + mean));
     }
 
     @Override
