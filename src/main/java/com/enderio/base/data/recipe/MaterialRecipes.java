@@ -64,15 +64,6 @@ public class MaterialRecipes extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.SOULARIUM_INGOT.get()))
             .save(recipeConsumer);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOItems.UNFIRED_DEATH_URN.get())
-            .pattern("CPC")
-            .pattern("C C")
-            .pattern("CCC")
-            .define('C', Items.CLAY_BALL)
-            .define('P', EIOItems.PULSATING_POWDER.get())
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PULSATING_POWDER.get()))
-            .save(recipeConsumer);
-
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, EIOItems.BLACK_PAPER)
             .requires(Items.PAPER)
             .requires(Tags.Items.DYES_BLACK)
