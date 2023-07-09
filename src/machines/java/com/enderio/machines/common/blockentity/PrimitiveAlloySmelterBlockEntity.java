@@ -55,7 +55,7 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
             .slotAccess(INPUTS)
             .outputSlot()
             .slotAccess(OUTPUT)
-            .inputSlot(this::acceptSlotInput)
+            .inputSlot()
             .slotAccess(FUEL)
             .build();
     }
@@ -105,7 +105,10 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
         return new MachineEnergyStorage(getIOConfig(), energyIOMode, this::getBurnToFE, () -> 0) {
             @Override
             public int getEnergyStored() {
-                return getBurnToFE();
+                if (isBurning()) {
+                    return getBurnToFE();
+                }
+                return 0;
             }
 
             @Override
