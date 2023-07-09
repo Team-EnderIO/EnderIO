@@ -1,4 +1,6 @@
 import java.util.function.Consumer
+import org.jetbrains.changelog.Changelog
+import org.jetbrains.changelog.ExtensionsKt
 
 buildscript {
     repositories {
@@ -19,10 +21,12 @@ plugins {
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
     id "me.hypherionmc.modutils.modpublisher" version "1.+"
+    id 'org.jetbrains.changelog' version '2.+'
 }
 
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'org.moddingx.modgradle.mapping'
+apply plugin: 'org.jetbrains.changelog'
 
 version = getVersionString()
 group = 'com.enderio'
@@ -331,64 +335,47 @@ tasks.jarJar.configure {
 }
 build.dependsOn tasks.jarJar
 
-// TODO: Should trigger automated publishes using GitHub actions when a release is made.
+changelog {
+    path = file("CHANGELOG.md").canonicalPath
+    header = "[${-> version.get()}] - ${ExtensionsKt.date("yyyy-MM-dd")}"
+    itemPrefix = "-"
+    keepUnreleasedSection = true
+    unreleasedTerm = "[Unreleased]"
+    groups = ["Added", "Changed", "Removed", "Fixed"]
+    lineSeparator = "\n"
+    combinePreReleases = false // TODO: Decide if we want to do this or not.
+}
 
-/*if (modrinth_publish && (System.getenv("MODRINTH_TOKEN") != null || project.hasProperty('modrinthToken'))) {
-    modrinth {
-        token = System.getenv("MODRINTH_TOKEN") ?: project.findProperty("modrinthToken")
-        projectId = "${modrinth_projectId}"
-        versionNumber = project.version
+if (changelog.has(getVersionString())) {
+    print("This version has a valid changelog, publishing is enabled.")
+
+    publisher {
+        apiKeys {
+            curseforge = System.getenv("CURSEFORGE_TOKEN")
+            modrinth = System.getenv("MODRINTH_TOKEN")
+        }
+
+        debug = System.getenv("PUBLISH") != "true"
+        curseID = curseforge_projectId
+        modrinthID = modrinth_projectId
         versionType = release_type
-        uploadFile = tasks.jarJar
+        version = "${getVersionString()}"
+        displayName = "Ender IO - ${getVersionString()}"
+        changelog = project.changelog.renderItem(project.changelog.get(getVersionString()), Changelog.OutputType.MARKDOWN)
         gameVersions = [minecraft_version]
         loaders = ["forge"]
+        artifact = tasks.jarJar
 
-        // TODO: Generate changelog based on diff since last time.
-//        changelog = ...
+        curseDepends {
+            optional = ["jei", /*"patchouli",*/ "athena", "applied-energistics-2"]
+        }
 
-        syncBodyFrom = rootProject.file("doc/modpages/modrinth/body.md").text
-
-        dependencies {
-            // Patchouli
-            optional.project "nU0bVIaL"
-
-            // JEI
-            optional.project "u6dRKJwZ"
+        modrinthDepends {
+            optional = [/*modrinth_dep_patchouli, */modrinth_dep_jei, modrinth_dep_athena, modrinth_dep_ae2]
         }
     }
-}*/
-
-
-publisher {
-    apiKeys {
-        curseforge = System.getenv("CURSEFORGE_TOKEN")
-        modrinth = System.getenv("MODRINTH_TOKEN")
-    }
-
-    def changelogFilename = System.getenv("CHANGELOG")
-    if (changelogFilename != null) {
-        changelog = new File(changelogFilename)
-    } else {
-        changelog = "No changes found."
-    }
-
-    debug = System.getenv("PUBLISH") != "true"
-    curseID = curseforge_projectId
-    modrinthID = modrinth_projectId
-    versionType = release_type
-    version = "${getVersionString()}"
-    displayName = "Ender IO - ${getVersionString()}"
-    gameVersions = [minecraft_version]
-    loaders = ["forge"]
-    artifact = tasks.jarJar
-
-    curseDepends {
-        optional = ["jei", /*"patchouli",*/ "athena", "applied-energistics-2"]
-    }
-
-    modrinthDepends {
-        optional = [/*modrinth_dep_patchouli, */modrinth_dep_jei, modrinth_dep_athena, modrinth_dep_ae2]
-    }
+} else {
+    print("Publishing disabled - a changelog has not yet been prepared for this release. Add an entry for ${project.version} to enable.")
 }
 
 publishing {
