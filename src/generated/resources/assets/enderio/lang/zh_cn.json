@@ -1070,6 +1070,8 @@
   "jei.enderio.fire_crafting.title": "火中合成",
   "jei.enderio.fire_crafting.valid_blocks": "方块需求：",
   "jei.enderio.fire_crafting.valid_dimensions": "维度需求：",
+  "jei.enderio.grinding.consume_chance": "有33%的概率被消耗 ",
+  "jei.enderio.grinding.title": "磨制",
   "message.enderio.glider.disable": "滑翔已被禁用：",
   "message.enderio.glider.disable.fall_flying": "鞘翅飞行",
   "message.enderio.grave.wrong_owner": "这个墓碑不是你的！你打不开它。",
