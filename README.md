@@ -34,9 +34,9 @@
   <ol>
     <li>
       <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
+    </li>
+      <li>
+      <a href="#looking-for-a-server">Looking for a Server?</a>
     </li>
     <li>
       <a href="#getting-started">Getting Started</a>
@@ -63,6 +63,12 @@ Ender IO is a full-featured tech mod. It has armor, tools, weapons, machines, co
 Ender IO has been rewritten from the ground-up to support the latest version of Minecraft.
 Some features may be missing or work differently, however we are working to re-implement everything we know and love about the original.
 
+<!-- PARTNER BANNER -->
+## Looking for a Server?
+
+[![Akliz Official Partner](doc/img/akliz_banner_enderio.png)](https://www.akliz.net/enderio)
+
+The Ender IO Team are official Akliz partners! Akliz provides high-performance game hosting for games like Minecraft, Valheim, Satisfactory, ARK and more! Use our [coupon code](https://www.akliz.net/enderio) for 20% off your first month!
 
 <!-- GETTING STARTED -->
 ## Getting Started

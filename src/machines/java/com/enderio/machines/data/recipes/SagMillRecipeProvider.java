@@ -277,16 +277,16 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
         
         build("sugar_canes", Ingredient.of(SUGAR_CANE), List.of(
-        		output(PINK_DYE, 2, 0.8f), 
-        		output(PINK_DYE, 0.6f),
-        		output(PINK_DYE, 2, 0.3f),
+        		output(SUGAR),
+        		output(SUGAR, 0.5f),
+        		output(SUGAR, 2, 0.5f),
         		output(PLANT_MATTER_GREEN.get(), 0.2f)),
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
         
         build("flower_pot", Ingredient.of(FLOWER_POT), List.of(
         		output(BRICK, 0.9f), 
         		output(BRICK, 0.3f),
-        		output(PINK_DYE, 0.1f),
+        		output(BRICK, 0.1f),
         		output(POWDERED_COAL.get(), 0.05f)),
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
         

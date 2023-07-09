@@ -14,7 +14,7 @@ public abstract class ItemStackMixin implements IForgeItemStack {
 
     @Override
     public boolean canGrindstoneRepair() {
-        if (getItem() == Items.DEEPSLATE || getItem() == Items.COBBLED_DEEPSLATE || getItem() == Items.FLINT) {
+        if (getItem() == Items.DEEPSLATE || getItem() == Items.COBBLED_DEEPSLATE || getItem() == Items.FLINT || getItem() == Items.COAL) {
             return true;
         }
 
