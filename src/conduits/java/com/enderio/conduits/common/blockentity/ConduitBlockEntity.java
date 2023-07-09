@@ -77,9 +77,15 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         level.setBlocksDirty(getBlockPos(), Blocks.AIR.defaultBlockState(), getBlockState());
     }
 
+    /**
+     * Handle a connection state update from the client.
+     */
+    @UseOnly(LogicalSide.SERVER)
     public void handleConnectionStateUpdate(Direction direction, IConduitType<?> conduitType, DynamicConnectionState connectionState) {
         var bundle = getBundle();
         var connection = bundle.getConnection(direction);
+
+        // Sanity check, the client shouldn't do this, but just to make sure there's no confusion.
         if (connection.getConnectionState(conduitType, bundle) instanceof DynamicConnectionState) {
             connection.setConnectionState(conduitType, bundle, connectionState);
 
@@ -89,10 +95,11 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                 connectionState.control(),
                 connectionState.redstoneChannel());
         }
-        updateShape();
+        updateClient();
         updateConnectionToData(conduitType);
     }
 
+    @UseOnly(LogicalSide.SERVER)
     public void handleExtendedDataUpdate(IConduitType<?> conduitType, CompoundTag compoundTag) {
         getBundle().getNodeFor(conduitType).getExtendedConduitData().deserializeNBT(compoundTag);
     }
