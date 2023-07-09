@@ -6,9 +6,11 @@ import net.minecraft.resources.ResourceLocation;
  * Capacitor key types, for use in loot capacitors for targeting increases to general stats.
  */
 public enum CapacitorModifier {
-    ENERGY_CAPACITY, ENERGY_USE,
+    ENERGY_CAPACITY,
+    ENERGY_USE,
 
     /**
+     * This should always go last as the loot picker will exclude the final item in this enum
      * @apiNote Capacitors should never multiply the FIXED modifiers...
      */
     FIXED;
