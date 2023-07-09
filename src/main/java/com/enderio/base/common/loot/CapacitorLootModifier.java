@@ -53,7 +53,17 @@ public class CapacitorLootModifier extends LootModifier {
         capacitor.getCapability(EIOCapabilities.CAPACITOR).ifPresent(cap -> {
             if (cap instanceof LootCapacitorData lootCap) {
                 lootCap.setBase(UniformGenerator.between(min, max).getFloat(context));
-                lootCap.addNewModifier(CapacitorUtil.getRandomModifier(context.getRandom()), UniformGenerator.between(0.0F, 4.5F).getFloat(context));
+                lootCap.addNewModifier(CapacitorUtil.getRandomModifier(context.getRandom()), UniformGenerator.between(0.2f, 4.5f).getFloat(context));
+
+                // 15% chance of a secondary modifier
+                if (context.getRandom().nextFloat() < 0.15f) {
+                    lootCap.addModifier(CapacitorUtil.getRandomModifier(context.getRandom()), UniformGenerator.between(0.2f, 4.5f).getFloat(context));
+                }
+
+                // 2% change of a third
+                if (context.getRandom().nextFloat() < 0.02f) {
+                    lootCap.addModifier(CapacitorUtil.getRandomModifier(context.getRandom()), UniformGenerator.between(0.2f, 4.5f).getFloat(context));
+                }
             }
         });
         generatedLoot.add(capacitor);
