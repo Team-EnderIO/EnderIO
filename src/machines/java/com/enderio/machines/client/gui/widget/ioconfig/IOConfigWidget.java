@@ -103,6 +103,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
 
         var radius = Math.max(Math.max(multiblockSize.x(), multiblockSize.y()), multiblockSize.z());
         SCALE -= (radius - 1) * 3; //adjust later
+        SCALE = Math.min(40, Math.max(10, SCALE)); //clamp
 
         configurable.forEach(pos -> {
             for (Direction dir : Direction.values()) {
