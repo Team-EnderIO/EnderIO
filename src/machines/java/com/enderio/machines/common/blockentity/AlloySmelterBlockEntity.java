@@ -65,7 +65,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         super(EnergyIOMode.Input, CAPACITY, USAGE, pType, pWorldPosition, pBlockState);
 
         // Crafting task host
-        craftingTaskHost = new AlloySmeltingMachineTaskHost(this, this::hasEnergy,
+        craftingTaskHost = new AlloySmeltingMachineTaskHost(this, this::canAcceptTask,
             MachineRecipes.ALLOY_SMELTING.type().get(), new AlloySmeltingRecipe.Container(getInventoryNN()), this::createTask);
 
         // This can be changed by the gui for the normal and enhanced machines.
@@ -78,6 +78,10 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         } else {
             modeDataSlot = null;
         }
+    }
+
+    protected boolean canAcceptTask() {
+        return hasEnergy();
     }
 
     /**

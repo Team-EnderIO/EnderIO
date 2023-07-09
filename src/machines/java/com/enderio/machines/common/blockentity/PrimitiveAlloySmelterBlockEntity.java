@@ -80,7 +80,7 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
             burnTime--;
         }
 
-        // Only continue burning if redstone is enabled and the internal buffer has space.
+        // Only continue burning if redstone is enabled
         if (canAct() && !isBurning() && craftingTaskHost.hasTask() && !craftingTaskHost.getCurrentTask().isCompleted()) {
             // Get the fuel
             ItemStack fuel = FUEL.getItemStack(this);
@@ -98,6 +98,11 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
                 }
             }
         }
+    }
+
+    @Override
+    protected boolean canAcceptTask() {
+        return super.canAcceptTask() || !FUEL.getItemStack(this).isEmpty();
     }
 
     @Override
