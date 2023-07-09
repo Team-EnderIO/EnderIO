@@ -4,103 +4,112 @@ import com.enderio.EnderIO;
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.ICapacitorData;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
-import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import static com.enderio.base.EIONBTKeys.CAPACITOR_DATA;
 
 // TODO: Instead of loot capacitors having lists of specialized machines, have different loot capacitor items for different
 //       machine categories.
 // TODO: Loot capacitor types (Sculk, Soul) found in respective dungeons/structures.
-public final class LootCapacitorData implements ICapacitorData, INBTSerializable<Tag> {
-    private float base;
+public final class LootCapacitorData implements ICapacitorData {
+    private final ItemStack stack;
 
-    private final Map<CapacitorModifier, Float> modifiers;
+//    private final Map<CapacitorModifier, Float> modifiers;
 
-    public LootCapacitorData() {
-        this.base = 1.0f;
-        this.modifiers = new HashMap<>();
+    private static final String KEY_BASE = "Base";
+    private static final String KEY_MODIFIER_ARRAY = "Modifiers";
+
+    public LootCapacitorData(ItemStack stack) {
+        this(stack, 1.0f, new HashMap<>());
     }
 
-    public LootCapacitorData(float base, Map<CapacitorModifier, Float> specializations) {
-        this.base = base;
-        this.modifiers = specializations;
+    public LootCapacitorData(ItemStack stack, float base, Map<CapacitorModifier, Float> specializations) {
+        this.stack = stack;
+
+        CompoundTag tag = this.stack.getOrCreateTag();
+        CompoundTag nbt = new CompoundTag();
+        if (!tag.contains(CAPACITOR_DATA)) {
+            nbt.putFloat(KEY_BASE, base);
+
+            CompoundTag modifiers = new CompoundTag();
+            specializations.forEach((s, l) -> modifiers.putFloat(s.name(), l));
+            nbt.put(KEY_MODIFIER_ARRAY, modifiers);
+
+            tag.put(CAPACITOR_DATA, nbt);
+        }
     }
 
     @Override
     public float getBase() {
-        return base;
+        var tag = this.stack.getOrCreateTag();
+        if (tag.contains(CAPACITOR_DATA) && tag.getCompound(CAPACITOR_DATA).contains(KEY_BASE)) {
+            return tag.getCompound(CAPACITOR_DATA).getFloat(KEY_BASE);
+        }
+        return 0.0f;
     }
 
     public void setBase(float base) {
-        this.base = base;
+        var tag = this.stack.getOrCreateTag();
+        if (tag.contains(CAPACITOR_DATA)) {
+            tag.getCompound(CAPACITOR_DATA).putFloat(KEY_BASE, base);
+        }
     }
 
     @Override
     public float getModifier(CapacitorModifier modifier) {
-        return modifiers.getOrDefault(modifier, getBase());
+        var tag = this.stack.getOrCreateTag();
+
+        if (tag.contains(CAPACITOR_DATA) && tag.getCompound(CAPACITOR_DATA).contains(KEY_MODIFIER_ARRAY) &&
+            tag.getCompound(CAPACITOR_DATA).getCompound(KEY_MODIFIER_ARRAY).contains(modifier.name())) {
+            return tag.getCompound(CAPACITOR_DATA).getCompound(KEY_MODIFIER_ARRAY).getFloat(modifier.name());
+        }
+
+        return getBase();
     }
 
     @Override
     public Map<CapacitorModifier, Float> getAllModifiers() {
-        return modifiers;
+        var tag = this.stack.getOrCreateTag();
+
+        if (tag.contains(CAPACITOR_DATA) && tag.getCompound(CAPACITOR_DATA).contains(KEY_MODIFIER_ARRAY)) {
+            var modifiers = tag.getCompound(CAPACITOR_DATA).getCompound(KEY_MODIFIER_ARRAY);
+
+            try {
+                return modifiers.getAllKeys().stream().collect(Collectors.toMap(CapacitorModifier::valueOf, modifiers::getFloat));
+            } catch (NumberFormatException ex) {
+                EnderIO.LOGGER.error("Loaded an invalid capacitor modifier key from item NBT! Capacitor reset.");
+            }
+        }
+
+        return Map.of();
     }
 
-    public void addSpecialization(CapacitorModifier modifier, float level) {
-        this.modifiers.put(modifier, level);
+    public void addModifier(CapacitorModifier modifier, float level) {
+        var tag = this.stack.getOrCreateTag();
+
+        if (tag.contains(CAPACITOR_DATA) && tag.getCompound(CAPACITOR_DATA).contains(KEY_MODIFIER_ARRAY)) {
+            tag.getCompound(CAPACITOR_DATA).getCompound(KEY_MODIFIER_ARRAY).putFloat(modifier.name(), level);
+        }
     }
 
     public void addNewModifier(CapacitorModifier modifier, float level) {
-        this.modifiers.clear();
-        addSpecialization(modifier, level);
+        var tag = this.stack.getOrCreateTag();
+
+        if (tag.contains(CAPACITOR_DATA)) {
+            tag.getCompound(CAPACITOR_DATA).put(KEY_MODIFIER_ARRAY, new CompoundTag());
+        }
+
+        addModifier(modifier, level);
     }
 
     public void addAllModifiers(Map<CapacitorModifier, Float> specializations) {
         for (Map.Entry<CapacitorModifier, Float> entry : specializations.entrySet()) {
-            addSpecialization(entry.getKey(), entry.getValue());
+            addModifier(entry.getKey(), entry.getValue());
         }
     }
 
-    // region Serialization
-
-    private static final String BASE_KEY = "Base";
-    private static final String MODIFIER_ARRAY_KEY = "Modifier";
-    private static final String MODIFIER_KEY = "Modifier";
-    private static final String LEVEL_KEY = "Level";
-
-    @Override
-    public Tag serializeNBT() {
-        CompoundTag tag = new CompoundTag();
-        tag.putFloat(BASE_KEY, base);
-        ListTag list = new ListTag();
-        modifiers.forEach((s, l) -> {
-            CompoundTag entry = new CompoundTag();
-            entry.putInt(MODIFIER_KEY, s.ordinal());
-            entry.putFloat(LEVEL_KEY, l);
-            list.add(entry);
-        });
-        tag.put(MODIFIER_ARRAY_KEY, list);
-        return tag;
-    }
-
-    @Override
-    public void deserializeNBT(Tag nbt) {
-        if (nbt instanceof CompoundTag tag) {
-            this.modifiers.clear();
-            this.base = tag.getFloat(BASE_KEY);
-            ListTag list = tag.getList(MODIFIER_ARRAY_KEY, Tag.TAG_COMPOUND);
-            for (int i = 0; i < list.size(); i++) {
-                CompoundTag listElement = list.getCompound(i);
-                try {
-                    addSpecialization(CapacitorModifier.values()[listElement.getInt(MODIFIER_KEY)], listElement.getFloat(LEVEL_KEY));
-                } catch (IndexOutOfBoundsException ex) { // In case something happens in the future.
-                    EnderIO.LOGGER.error("Invalid capacitor modifier in loot capacitor NBT. Ignoring.");
-                }
-            }
-        }
-    }
-
-    // endregion
 }
