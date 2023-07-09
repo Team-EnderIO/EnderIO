@@ -5,10 +5,11 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.UnaryOperator;
 public enum RedstoneControl implements IIcon {
-    ALWAYS_ACTIVE(bool -> true, ApiLang.REDSTONE_ALWAYS_ACTIVE),
-    ACTIVE_WITH_SIGNAL(bool -> bool, ApiLang.REDSTONE_ACTIVE_WITH_SIGNAL),
     ACTIVE_WITHOUT_SIGNAL(bool -> !bool, ApiLang.REDSTONE_ACTIVE_WITHOUT_SIGNAL),
+    ACTIVE_WITH_SIGNAL(bool -> bool, ApiLang.REDSTONE_ACTIVE_WITH_SIGNAL),
+    ALWAYS_ACTIVE(bool -> true, ApiLang.REDSTONE_ALWAYS_ACTIVE),
     NEVER_ACTIVE(bool -> false, ApiLang.REDSTONE_NEVER_ACTIVE);
+
     private static final ResourceLocation TEXTURE = new ResourceLocation("enderio", "textures/gui/icons/redstone_control.png");
     private static final Vector2i SIZE = new Vector2i(12, 12);
 
