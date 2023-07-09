@@ -9,6 +9,9 @@
 ### Removed
 
 ### Fixed
+- Solar panels are no longer blocked by transparent blocks.
+- Fixed sugar cane and flower pot sag mill recipes.
+- Fixed solar panels not draining energy from their buffer.
 
 ## [6.0.3-alpha] - 2023-07-08
 
