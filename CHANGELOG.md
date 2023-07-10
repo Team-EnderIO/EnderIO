@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Added
+- Added missing tooltips for IO Config button and Neighbour button.
 
 ### Changed
 
@@ -11,6 +12,7 @@
 - Removed the unfired urn
 
 ### Fixed
+
 - Solar panels are no longer blocked by transparent blocks.
 - Fixed sugar cane and flower pot sag mill recipes.
 - Fixed solar panels not draining energy from their buffer.
@@ -18,6 +20,8 @@
 - Fixed the deletion of a bucket when using bucketed fuel in a smelting machine.
 - Fixed inability to add fuel to active primitive alloy smelter.
 - Fixed the output calculations for vanilla smelting in the alloy smelter.
+- Fixed IO Config Overlay text rendering. Text has a Z-offset now.
+- Fixed negative scale for IO Config for multi blocks
 
 ## [6.0.3-alpha] - 2023-07-08
 
