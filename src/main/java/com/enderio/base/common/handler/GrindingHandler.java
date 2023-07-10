@@ -8,6 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -17,17 +18,17 @@ public class GrindingHandler {
     @SubscribeEvent
     public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
         //Server Side Only
-        if(!event.getSide().isServer())
+        if (!event.getSide().isServer())
             return;
         Player player = event.getEntity();
         if (!player.isCrouching())
             return;
         BlockState target = event.getLevel().getBlockState(event.getPos());
-        if(!(target.is(Blocks.GRINDSTONE) || target.is(Blocks.OBSIDIAN) || target.is(Blocks.CRYING_OBSIDIAN)))
+        if (!(target.is(Blocks.GRINDSTONE) || target.is(Tags.Blocks.OBSIDIAN)))
             return;
         ItemStack mainhand = player.getMainHandItem();
         ItemStack offhand = player.getOffhandItem();
-        if(!offhand.is(Items.FLINT))
+        if (!offhand.is(Items.FLINT))
             return;
         if (mainhand.is(Items.DEEPSLATE) || mainhand.is(Items.COBBLED_DEEPSLATE)) {
             mainhand.shrink(1);
