@@ -65,7 +65,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         super(EnergyIOMode.Input, CAPACITY, USAGE, pType, pWorldPosition, pBlockState);
 
         // Crafting task host
-        craftingTaskHost = new AlloySmeltingMachineTaskHost(this, this::hasEnergy,
+        craftingTaskHost = new AlloySmeltingMachineTaskHost(this, this::canAcceptTask,
             MachineRecipes.ALLOY_SMELTING.type().get(), new AlloySmeltingRecipe.Container(getInventoryNN()), this::createTask);
 
         // This can be changed by the gui for the normal and enhanced machines.
@@ -78,6 +78,10 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         } else {
             modeDataSlot = null;
         }
+    }
+
+    protected boolean canAcceptTask() {
+        return hasEnergy();
     }
 
     /**
@@ -192,57 +196,67 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         }
 
         @Override
+        protected void onDetermineOutputs(AlloySmeltingRecipe recipe) {
+            // This handles the output multiplication for vanilla smelting recipes.
+            if (recipe instanceof VanillaAlloySmeltingRecipe) {
+                CountedIngredient input = recipe.getInputs().get(0);
+
+                int inputCount = 0;
+                for (SingleSlotAccess slot : INPUTS.getAccesses()) {
+                    if (input.test(slot.getItemStack(getInventory()))) {
+                        inputCount++;
+                    }
+                }
+
+                container.setInputsTaken(inputCount);
+            } else {
+                container.setInputsTaken(1);
+            }
+        }
+
+        @Override
         protected void consumeInputs(AlloySmeltingRecipe recipe) {
             MachineInventory inv = getInventory();
 
             if (recipe instanceof VanillaAlloySmeltingRecipe) {
                 CountedIngredient input = recipe.getInputs().get(0);
 
-                // Iterate over the slots
-                int consumeCount = 0;
-                for (int i = 0; i < 3; i++) {
-                    ItemStack stack = inv.getStackInSlot(i);
-
+                for (SingleSlotAccess slot : INPUTS.getAccesses()) {
+                    ItemStack stack = slot.getItemStack(getInventory());
                     if (input.test(stack)) {
                         stack.shrink(input.count());
-                        consumeCount++;
                     }
                 }
-
-                container.setInputsTaken(consumeCount);
             } else {
                 // Track which ingredients have been consumed
                 List<CountedIngredient> inputs = recipe.getInputs();
                 boolean[] consumed = new boolean[3];
 
                 // Iterate over the slots
-                for (int i = 0; i < 3; i++) {
-                    ItemStack stack = INPUTS.get(i).getItemStack(inv);
+                for (SingleSlotAccess slot : INPUTS.getAccesses()) {
+                    ItemStack stack = slot.getItemStack(inv);
 
                     // Iterate over the inputs
-                    for (int j = 0; j < 3; j++) {
+                    for (int i = 0; i < 3; i++) {
 
                         // If this ingredient has been matched already, continue
-                        if (consumed[j])
+                        if (consumed[i])
                             continue;
 
-                        if (j < inputs.size()) {
+                        if (i < inputs.size()) {
                             // If we expect an input, test we have a match for it.
-                            CountedIngredient input = inputs.get(j);
+                            CountedIngredient input = inputs.get(i);
 
                             if (input.test(stack)) {
-                                consumed[j] = true;
+                                consumed[i] = true;
                                 stack.shrink(input.count());
                             }
                         } else if (stack.isEmpty()) {
                             // If we don't expect an input, make sure we have a blank for it.
-                            consumed[j] = true;
+                            consumed[i] = true;
                         }
                     }
                 }
-
-                // Only accepted *1* times inputs.
-                container.setInputsTaken(1);
             }
         }
 
