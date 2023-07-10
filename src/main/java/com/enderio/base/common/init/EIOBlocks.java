@@ -206,12 +206,6 @@ public class EIOBlocks {
         .build()
         .register();
 
-    public static final BlockEntry<GraveBlock> GRAVE = REGISTRATE
-        .block("grave", GraveBlock::new)
-        .properties(props -> props.strength(-1.0F, 3600000.0F).noLootTable().noOcclusion().mapColor(MapColor.STONE))
-        .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(ctx.getId())))
-        .register();
-
     public static final BlockEntry<ColdFireBlock> COLD_FIRE = REGISTRATE
         .block("cold_fire", ColdFireBlock::new)
         .properties(props -> BlockBehaviour.Properties.copy(Blocks.FIRE).noLootTable())
