@@ -26,7 +26,7 @@ public class C2SDataSlotChange implements Packet {
 
     public C2SDataSlotChange(FriendlyByteBuf buf) {
         pos = buf.readBlockPos();
-        updateData = new FriendlyByteBuf(buf);
+        updateData = new FriendlyByteBuf(buf.copy());
     }
 
     @Override

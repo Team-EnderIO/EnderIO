@@ -27,7 +27,7 @@ public class S2CDataSlotUpdate implements Packet {
 
     public S2CDataSlotUpdate(FriendlyByteBuf buf) {
         pos = buf.readBlockPos();
-        slotData = new FriendlyByteBuf(buf);
+        slotData = new FriendlyByteBuf(buf.copy());
     }
 
     @Override

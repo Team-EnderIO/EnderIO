@@ -202,6 +202,10 @@ public class EnderBlockEntity extends BlockEntity {
             }
             dataSlots.get(index).fromBuffer(buf);
         }
+
+        for (Runnable task : afterDataSync) {
+            task.run();
+        }
     }
 
     @UseOnly(LogicalSide.SERVER)
