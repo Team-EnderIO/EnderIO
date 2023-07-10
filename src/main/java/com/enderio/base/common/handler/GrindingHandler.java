@@ -16,14 +16,18 @@ import net.minecraftforge.fml.common.Mod;
 public class GrindingHandler {
     @SubscribeEvent
     public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
+        //Server Side Only
+        if(!event.getSide().isServer())
+            return;
         Player player = event.getEntity();
         if (!player.isCrouching())
             return;
         BlockState target = event.getLevel().getBlockState(event.getPos());
+        if(!(target.is(Blocks.GRINDSTONE) || target.is(Blocks.OBSIDIAN) || target.is(Blocks.CRYING_OBSIDIAN)))
+            return;
         ItemStack mainhand = player.getMainHandItem();
         ItemStack offhand = player.getOffhandItem();
-        if(!offhand.is(Items.FLINT) &&
-            (mainhand.is(Items.DEEPSLATE) || mainhand.is(Items.COBBLED_DEEPSLATE) || mainhand.is(Items.COAL)))
+        if(!(offhand.is(Items.FLINT) && (mainhand.is(Items.DEEPSLATE) || mainhand.is(Items.COBBLED_DEEPSLATE) || mainhand.is(Items.COAL)) ))
             return;
         if (mainhand.is(Items.DEEPSLATE) || mainhand.is(Items.COBBLED_DEEPSLATE)) {
             mainhand.shrink(1);
@@ -50,7 +54,7 @@ public class GrindingHandler {
                 offhand.shrink(1);
             }
             player.addItem(new ItemStack(EIOItems.POWDERED_COAL.get(), 1));
+            event.setCanceled(true);
         }
-        event.setCanceled(true);
     }
 }
