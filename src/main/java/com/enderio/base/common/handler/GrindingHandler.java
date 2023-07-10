@@ -3,53 +3,54 @@ package com.enderio.base.common.handler;
 import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOItems;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.event.GrindstoneEvent;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = EnderIO.MODID)
 public class GrindingHandler {
-    @SubscribeEvent
-    public static void onGrindstonePlace(GrindstoneEvent.OnPlaceItem event) {
-        if ((event.getTopItem().is(Items.DEEPSLATE) || event.getTopItem().is(Items.COBBLED_DEEPSLATE)) && event.getBottomItem().is(Items.FLINT)) {
-            event.setOutput(new ItemStack(EIOItems.GRAINS_OF_INFINITY.get(), 1));
-            event.setXp(0);
-        } else if (event.getTopItem().is(Items.COAL) && event.getTopItem().getCount() >= 3 && event.getBottomItem().is(Items.FLINT)) {
-            event.setOutput(new ItemStack(EIOItems.POWDERED_COAL.get(), 1));
-            event.setXp(0);
-        }
-    }
 
     @SubscribeEvent
-    public static void onGrindstoneResult(GrindstoneEvent.OnTakeItem event) {
-        if ((event.getTopItem().is(Items.DEEPSLATE) || event.getTopItem().is(Items.COBBLED_DEEPSLATE)) && event.getBottomItem().is(Items.FLINT)) {
-            ItemStack top = event.getTopItem().copy();
-            ItemStack bottom = event.getBottomItem().copy();
-
-            top.shrink(1);
-
-            // 33% chance to destroy the flint
-            if (RandomSource.create().nextInt(3) == 0) {
-                bottom.shrink(1);
+    public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event)
+    {
+        Player player = event.getEntity();
+        Block target = event.getLevel().getBlockState(event.getPos()).getBlock();
+        if(!(player.isCrouching()) || (target != Blocks.OBSIDIAN && target != Blocks.GRINDSTONE && target != Blocks.CRYING_OBSIDIAN)) return;
+        ItemStack mainhand = player.getMainHandItem();
+        ItemStack offhand = player.getOffhandItem();
+        if(!(offhand.is(Items.FLINT))) return;
+        if(mainhand.is(Items.DEEPSLATE) || mainhand.is(Items.COBBLED_DEEPSLATE))
+        {
+            mainhand.shrink(1);
+            if (target != Blocks.OBSIDIAN && target != Blocks.CRYING_OBSIDIAN && RandomSource.create().nextInt(3) == 0) {
+                offhand.shrink(1);
             }
-
-            event.setNewTopItem(top);
-            event.setNewBottomItem(bottom);
-        } else if (event.getTopItem().is(Items.COAL) && event.getTopItem().getCount() >= 3 && event.getBottomItem().is(Items.FLINT)) {
-            ItemStack top = event.getTopItem().copy();
-            ItemStack bottom = event.getBottomItem().copy();
-
-            top.shrink(3);
-
-            // 33% chance to destroy the flint
-            if (RandomSource.create().nextInt(3) == 0) {
-                bottom.shrink(1);
+            int output = 1;
+            if(target == Blocks.CRYING_OBSIDIAN && RandomSource.create().nextInt(3) == 0)
+            {
+                output = 2;
             }
-
-            event.setNewTopItem(top);
-            event.setNewBottomItem(bottom);
+            player.addItem(new ItemStack(EIOItems.GRAINS_OF_INFINITY.get(), output));
+            event.setCanceled(true);
         }
+        else if(mainhand.is(Items.COAL) && mainhand.getCount() >= 3)
+        {
+            int cost = 3;
+            if(target == Blocks.CRYING_OBSIDIAN && RandomSource.create().nextInt(3) == 0)
+            {
+                cost = 1;
+            }
+            mainhand.shrink(cost);
+            if (target != Blocks.OBSIDIAN && target != Blocks.CRYING_OBSIDIAN && RandomSource.create().nextInt(3) == 0) {
+                offhand.shrink(1);
+            }
+            player.addItem(new ItemStack(EIOItems.POWDERED_COAL.get(), 1));
+        }
+        event.setCanceled(true);
     }
 }
