@@ -27,7 +27,7 @@ public class GrindingHandler {
             return;
         ItemStack mainhand = player.getMainHandItem();
         ItemStack offhand = player.getOffhandItem();
-        if(!(offhand.is(Items.FLINT) && (mainhand.is(Items.DEEPSLATE) || mainhand.is(Items.COBBLED_DEEPSLATE) || mainhand.is(Items.COAL)) ))
+        if(!offhand.is(Items.FLINT))
             return;
         if (mainhand.is(Items.DEEPSLATE) || mainhand.is(Items.COBBLED_DEEPSLATE)) {
             mainhand.shrink(1);
