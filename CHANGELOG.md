@@ -5,6 +5,7 @@
 ### Added
 
 ### Changed
+- Lowered minimum Forge version to 47.0.34.
 
 ### Removed
 - Removed the grave system
