@@ -29,6 +29,12 @@ public abstract class NetworkDataSlot<T> {
         return serializeValueNBT(value);
     }
 
+    public final void writeBuffer(FriendlyByteBuf buf) {
+        T value = getter.get();
+        cachedHash = hashCode(value);
+        toBuffer(buf, value);
+    }
+
     public void fromNBT(Tag nbt) {
         setter.accept(valueFromNBT(nbt));
     }
@@ -43,6 +49,15 @@ public abstract class NetworkDataSlot<T> {
     public abstract void toBuffer(FriendlyByteBuf buf, T value);
 
     public abstract T valueFromBuffer(FriendlyByteBuf buf);
+
+    public boolean needsUpdate() {
+        T value = getter.get();
+        int hash = hashCode(value);
+        if (cachedHash == hash) {
+            return false;
+        }
+        return true;
+    }
 
     protected int hashCode(T value) {
         return value.hashCode();

@@ -4,7 +4,6 @@ import com.enderio.core.common.blockentity.EnderBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkDirection;
@@ -19,16 +18,16 @@ public class S2CDataSlotUpdate implements Packet {
 
     // You shouldn't really send null, but its "technically" valid.
     @Nullable
-    private final CompoundTag slotData;
+    private final FriendlyByteBuf slotData;
 
-    public S2CDataSlotUpdate(BlockPos pos, CompoundTag slotData) {
+    public S2CDataSlotUpdate(BlockPos pos, FriendlyByteBuf buf) {
         this.pos = pos;
-        this.slotData = slotData;
+        this.slotData = buf;
     }
 
     public S2CDataSlotUpdate(FriendlyByteBuf buf) {
         pos = buf.readBlockPos();
-        slotData = buf.readNbt();
+        slotData = new FriendlyByteBuf(buf);
     }
 
     @Override
@@ -42,14 +41,14 @@ public class S2CDataSlotUpdate implements Packet {
         if (level != null) {
             BlockEntity be = level.getBlockEntity(pos);
             if (be instanceof EnderBlockEntity enderBlockEntity) {
-                enderBlockEntity.clientHandleDataSync(slotData);
+                enderBlockEntity.clientHandleBufferSync(slotData);
             }
         }
     }
 
     protected void write(FriendlyByteBuf writeInto) {
         writeInto.writeBlockPos(pos);
-        writeInto.writeNbt(slotData);
+        writeInto.writeBytes(slotData);
     }
 
     public static class Handler extends PacketHandler<S2CDataSlotUpdate> {
