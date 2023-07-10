@@ -24,7 +24,7 @@ public class GrindingHandler {
         if (!player.isCrouching())
             return;
         BlockState target = event.getLevel().getBlockState(event.getPos());
-        if (!(target.is(Blocks.GRINDSTONE) || target.is(Tags.Blocks.OBSIDIAN)))
+        if (!(target.is(Blocks.GRINDSTONE) || target.is(Tags.Blocks.OBSIDIAN) || target.is(Blocks.CRYING_OBSIDIAN)))
             return;
         ItemStack mainhand = player.getMainHandItem();
         ItemStack offhand = player.getOffhandItem();
