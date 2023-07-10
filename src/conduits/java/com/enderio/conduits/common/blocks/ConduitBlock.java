@@ -244,9 +244,8 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
                 @Nullable
                 IConduitType<?> type = conduit.getShape().getConduit(event.getPos(), event.getHitVec());
                 if (type != null) {
-                    List<ItemStack> drops = Collections.singletonList(new ItemStack(type.getConduitItem()));
                     conduit.removeTypeAndDelete(type, false);
-                    PlayerInteractionUtil.putStacksInInventoryFromWorldInteraction(event.getEntity(), event.getPos(), drops);
+                    PlayerInteractionUtil.putItemInInventoryFromWorldInteraction(event.getEntity(), event.getPos(), new ItemStack(type.getConduitItem()));
                     event.setCanceled(true);
                 }
             }
