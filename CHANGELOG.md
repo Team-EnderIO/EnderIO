@@ -12,7 +12,6 @@
 - Removed the unfired urn
 
 ### Fixed
-
 - Solar panels are no longer blocked by transparent blocks.
 - Fixed sugar cane and flower pot sag mill recipes.
 - Fixed solar panels not draining energy from their buffer.

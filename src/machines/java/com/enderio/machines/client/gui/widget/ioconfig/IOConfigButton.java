@@ -15,10 +15,8 @@ import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -31,9 +29,6 @@ public class IOConfigButton<U extends EIOScreen<?>, T extends AbstractWidget> ex
     private final Supplier<Boolean> playerInvVisible;
     private final Function<Boolean, Boolean> setPlayerInvVisible;
     private final U addedOn;
-
-    @Nullable
-    private Component tooltipCache;
 
     public IOConfigButton(U addedOn, int x, int y, int width, int height, MachineMenu<?> menu, Function<AbstractWidget, T> addRenderableWidget, Font font) {
         super(x, y, width, height, EIOLang.IOCONFIG);
