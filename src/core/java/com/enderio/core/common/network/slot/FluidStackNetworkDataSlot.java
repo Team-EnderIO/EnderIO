@@ -37,15 +37,15 @@ public class FluidStackNetworkDataSlot extends NetworkDataSlot<FluidStack> {
 
     @Override
     public void toBuffer(FriendlyByteBuf buf, FluidStack value) {
-        buf.writeNbt(value.writeToNBT(new CompoundTag()));
+        value.writeToPacket(buf);
     }
 
     @Override
     public FluidStack valueFromBuffer(FriendlyByteBuf buf) {
         try {
-            return FluidStack.loadFluidStackFromNBT(buf.readNbt());
+            return FluidStack.readFromPacket(buf);
         } catch (Exception e) {
-            throw new IllegalStateException("Invalid fluidstack/compound tag buffer was passed over the network.");
+            throw new IllegalStateException("Invalid fluidstack buffer was passed over the network.");
         }
     }
 }

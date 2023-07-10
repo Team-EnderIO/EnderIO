@@ -14,6 +14,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -159,6 +160,7 @@ public class EnderBlockEntity extends BlockEntity {
             buf.writeInt(dataSlots.indexOf(slot));
             slot.toBuffer(buf, value);
             CoreNetwork.sendToServer(new C2SDataSlotChange(getBlockPos(), buf));
+            level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_NEIGHBORS);
         }
     }
 

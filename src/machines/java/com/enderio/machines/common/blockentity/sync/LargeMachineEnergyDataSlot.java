@@ -17,22 +17,21 @@ import java.util.function.Supplier;
  * Data slot for syncing an instance of {@link IMachineEnergyStorage} using a data slot.
  * @apiNote Sends a {@link ImmutableMachineEnergyStorage} to the receiver.
  */
-public class LargeMachineEnergyDataSlot extends NetworkDataSlot<IMachineEnergyStorage> {
-    public LargeMachineEnergyDataSlot(Supplier<IMachineEnergyStorage> getter, Consumer<IMachineEnergyStorage> setter) {
+public class LargeMachineEnergyDataSlot extends NetworkDataSlot<ILargeMachineEnergyStorage> {
+    public LargeMachineEnergyDataSlot(Supplier<ILargeMachineEnergyStorage> getter, Consumer<ILargeMachineEnergyStorage> setter) {
         super(getter, setter);
     }
 
     @Override
-    public Tag serializeValueNBT(IMachineEnergyStorage value) {
-        ILargeMachineEnergyStorage storage = (ILargeMachineEnergyStorage) getter.get(); //why the getter?
+    public Tag serializeValueNBT(ILargeMachineEnergyStorage value) {
         CompoundTag tag = new CompoundTag();
-        tag.putLong(MachineNBTKeys.ENERGY_STORED, storage.getLargeEnergyStored());
-        tag.putLong(MachineNBTKeys.ENERGY_MAX_STORED, storage.getLargeMaxEnergyStored());
+        tag.putLong(MachineNBTKeys.ENERGY_STORED, value.getLargeEnergyStored());
+        tag.putLong(MachineNBTKeys.ENERGY_MAX_STORED, value.getLargeMaxEnergyStored());
         return tag;
     }
 
     @Override
-    protected IMachineEnergyStorage valueFromNBT(Tag nbt) {
+    protected ILargeMachineEnergyStorage valueFromNBT(Tag nbt) {
         if (nbt instanceof CompoundTag compoundTag) {
             long energy = compoundTag.getLong(MachineNBTKeys.ENERGY_STORED);
             long maxStored = compoundTag.getLong(MachineNBTKeys.ENERGY_MAX_STORED);
@@ -43,14 +42,13 @@ public class LargeMachineEnergyDataSlot extends NetworkDataSlot<IMachineEnergySt
     }
 
     @Override
-    public void toBuffer(FriendlyByteBuf buf, IMachineEnergyStorage value) {
-        ILargeMachineEnergyStorage storage = (ILargeMachineEnergyStorage) getter.get(); //why the getter?
-        buf.writeLong(storage.getLargeEnergyStored());
-        buf.writeLong(storage.getLargeMaxEnergyStored());
+    public void toBuffer(FriendlyByteBuf buf, ILargeMachineEnergyStorage value) {
+        buf.writeLong(value.getLargeEnergyStored());
+        buf.writeLong(value.getLargeMaxEnergyStored());
     }
 
     @Override
-    public IMachineEnergyStorage valueFromBuffer(FriendlyByteBuf buf) {
+    public ILargeMachineEnergyStorage valueFromBuffer(FriendlyByteBuf buf) {
         try {
             long energy = buf.readLong();
             long maxStored = buf.readLong();
@@ -61,11 +59,10 @@ public class LargeMachineEnergyDataSlot extends NetworkDataSlot<IMachineEnergySt
     }
 
     @Override
-    protected int hashCode(IMachineEnergyStorage value) {
-        var largeStorage = (ILargeMachineEnergyStorage)value; //why the cast?
+    protected int hashCode(ILargeMachineEnergyStorage value) {
         int code = 1;
-        code = 31 * code + Long.hashCode(largeStorage.getLargeEnergyStored());
-        code = 31 * code + Long.hashCode(largeStorage.getLargeMaxEnergyStored());
+        code = 31 * code + Long.hashCode(value.getLargeEnergyStored());
+        code = 31 * code + Long.hashCode(value.getLargeMaxEnergyStored());
         return code;
     }
 }

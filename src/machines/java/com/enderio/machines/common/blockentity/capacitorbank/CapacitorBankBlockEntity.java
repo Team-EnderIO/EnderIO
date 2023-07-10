@@ -13,6 +13,8 @@ import com.enderio.machines.common.blockentity.multienergy.ICapacityTier;
 import com.enderio.machines.common.blockentity.multienergy.MultiEnergyNode;
 import com.enderio.machines.common.blockentity.multienergy.MultiEnergyStorageWrapper;
 import com.enderio.machines.common.blockentity.sync.LargeMachineEnergyDataSlot;
+import com.enderio.machines.common.io.energy.ILargeMachineEnergyStorage;
+import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import com.enderio.machines.common.menu.CapacitorBankMenu;
 import dev.gigaherz.graph3.Graph;
@@ -75,7 +77,7 @@ public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implemen
 
     @Override
     public NetworkDataSlot<?> createEnergyDataSlot() {
-        return new LargeMachineEnergyDataSlot(this::getExposedEnergyStorage, storage -> clientEnergyStorage = storage);
+        return new LargeMachineEnergyDataSlot(() -> (ILargeMachineEnergyStorage) getExposedEnergyStorage(), storage -> clientEnergyStorage = (IMachineEnergyStorage) storage);
     }
 
     @Nullable
