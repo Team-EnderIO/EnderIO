@@ -1,6 +1,7 @@
 package com.enderio.core.common.network.slot;
 
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.FriendlyByteBuf;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -32,8 +33,16 @@ public abstract class NetworkDataSlot<T> {
         setter.accept(valueFromNBT(nbt));
     }
 
+    public void fromBuffer(FriendlyByteBuf buf) {
+        setter.accept(valueFromBuffer(buf));
+    }
+
     public abstract Tag serializeValueNBT(T value);
     protected abstract T valueFromNBT(Tag nbt);
+
+    public abstract void toBuffer(FriendlyByteBuf buf, T value);
+
+    public abstract T valueFromBuffer(FriendlyByteBuf buf);
 
     protected int hashCode(T value) {
         return value.hashCode();

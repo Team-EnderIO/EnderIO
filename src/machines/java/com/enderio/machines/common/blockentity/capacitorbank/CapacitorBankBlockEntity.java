@@ -2,9 +2,11 @@ package com.enderio.machines.common.blockentity.capacitorbank;
 
 import com.enderio.api.capacitor.FixedScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
+import com.enderio.core.common.network.slot.ListNetworkDataSlot;
 import com.enderio.core.common.network.slot.LongNetworkDataSlot;
 import com.enderio.core.common.network.slot.NBTSerializingNetworkDataSlot;
 import com.enderio.core.common.network.slot.NetworkDataSlot;
+import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.blockentity.base.MultiConfigurable;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.multienergy.ICapacityTier;
@@ -20,8 +22,6 @@ import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.LongTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -66,7 +66,11 @@ public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implemen
         addDataSlot(new LongNetworkDataSlot(() -> addedEnergy, syncAddedEnergy -> addedEnergy = syncAddedEnergy));
         addDataSlot(new LongNetworkDataSlot(() -> removedEnergy, syncRemovedEnergy-> removedEnergy = syncRemovedEnergy));
         addDataSlot(new ConfigurablesDataSlot());
-        addDataSlot(new NBTSerializingNetworkDataSlot<>(() -> displayModes, modes -> saveDisplayModes(), (modes, nbt) -> loadDisplayModes(nbt)));
+        addDataSlot(new NBTSerializingNetworkDataSlot<>(() -> displayModes, modes -> saveDisplayModes(), (modes, nbt) -> loadDisplayModes(nbt), (modes, friendlyByteBuf) -> friendlyByteBuf.writeNbt(saveDisplayModes()), friendlyByteBuf -> {
+            CompoundTag tag = friendlyByteBuf.readNbt();
+            loadDisplayModes(tag);
+            return displayModes;
+        } ));
     }
 
     @Override
@@ -225,32 +229,15 @@ public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implemen
         return positions;
     }
 
-    private class ConfigurablesDataSlot extends NetworkDataSlot<List<BlockPos>> {
+    private class ConfigurablesDataSlot extends ListNetworkDataSlot<BlockPos, CompoundTag> {
 
         public ConfigurablesDataSlot() {
-            super(CapacitorBankBlockEntity.this::getPositions, CapacitorBankBlockEntity.this::setPositions);
-        }
-
-        @Override
-        public Tag serializeValueNBT(List<BlockPos> value) {
-            ListTag list = new ListTag();
-            getter.get().forEach(pos -> list.add(LongTag.valueOf(pos.asLong())));
-            return list;
-        }
-
-        @Override
-        protected List<BlockPos> valueFromNBT(Tag nbt) {
-            if (nbt instanceof ListTag listTag) {
-                List<BlockPos> positions = new ArrayList<>();
-                for (Tag tag: listTag) {
-                    if (tag instanceof LongTag longTag) {
-                        positions.add(BlockPos.of(longTag.getAsLong()));
-                    }
-                }
-                return positions;
-            } else {
-                throw new IllegalStateException("Invalid list tag was passed over the network.");
-            }
+            super(CapacitorBankBlockEntity.this::getPositions, CapacitorBankBlockEntity.this::setPositions, blockPos -> {
+                CompoundTag tag = new CompoundTag();
+                tag.putLong(MachineNBTKeys.BLOCK_POS, blockPos.asLong());
+                return tag;
+            }, compoundTag -> BlockPos.of(compoundTag.getLong(MachineNBTKeys.BLOCK_POS)), (blockPos, friendlyByteBuf) -> friendlyByteBuf.writeLong(blockPos.asLong()),
+                friendlyByteBuf -> BlockPos.of(friendlyByteBuf.readLong()));
         }
     }
 
