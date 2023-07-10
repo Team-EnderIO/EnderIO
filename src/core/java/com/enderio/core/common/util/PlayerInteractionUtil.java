@@ -17,11 +17,8 @@ public class PlayerInteractionUtil {
      * @param drops - The list of drops that comes from the event.
      */
     public static void putStacksInInventoryFromWorldInteraction(Player player, BlockPos interactionPosition, List<ItemStack> drops){
-        Level level = player.level();
         for (ItemStack drop: drops) {
-            if(!player.addItem(drop)){
-                level.addFreshEntity(new ItemEntity(level, interactionPosition.getX()+0.5, interactionPosition.getY()+0.5, interactionPosition.getZ()+0.5, drop));
-            }
+            putItemInInventoryFromWorldInteraction(player, interactionPosition, drop);
         }
     }
 
