@@ -2,6 +2,7 @@ package com.enderio.machines.common.integrations.vanilla;
 
 import com.enderio.core.common.recipes.CountedIngredient;
 import com.enderio.core.common.recipes.OutputStack;
+import com.enderio.machines.common.blockentity.AlloySmelterBlockEntity;
 import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.ItemStack;
@@ -38,7 +39,7 @@ public class VanillaAlloySmeltingRecipe extends AlloySmeltingRecipe {
     }
 
     @Override
-    public int getEnergyCost(Container container) {
+    public int getEnergyCost(ContainerWrapper container) {
         return RF_PER_ITEM * container.getInputsTaken();
     }
 
@@ -48,12 +49,16 @@ public class VanillaAlloySmeltingRecipe extends AlloySmeltingRecipe {
     }
 
     @Override
-    public boolean matches(Container container, Level level) {
-        return vanillaRecipe.matches(container, level);
+    public boolean matches(ContainerWrapper container, Level level) {
+        for (int i = 0; i < AlloySmelterBlockEntity.INPUTS.size(); i++) {
+            if (vanillaRecipe.matches(new AlloySmelterBlockEntity.ContainerSubWrapper(container, i), level))
+                return true;
+        }
+        return false;
     }
 
     @Override
-    public List<OutputStack> craft(Container container, RegistryAccess registryAccess) {
+    public List<OutputStack> craft(ContainerWrapper container, RegistryAccess registryAccess) {
         ItemStack result = vanillaRecipe.assemble(container, registryAccess);
         result.setCount(result.getCount() * container.getInputsTaken());
         return List.of(OutputStack.of(result));

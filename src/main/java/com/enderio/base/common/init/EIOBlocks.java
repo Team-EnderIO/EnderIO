@@ -57,7 +57,6 @@ public class EIOBlocks {
     public static final BlockEntry<Block> DARK_STEEL_BLOCK = metalBlock("dark_steel_block").register();
     public static final BlockEntry<Block> SOULARIUM_BLOCK = metalBlock("soularium_block").register();
     public static final BlockEntry<Block> END_STEEL_BLOCK = metalBlock("end_steel_block").register();
-    public static final BlockEntry<Block> IRON_ALLOY_BLOCK = metalBlock("iron_alloy_block").register();
 
     // endregion
 
