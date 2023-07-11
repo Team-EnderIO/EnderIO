@@ -7,10 +7,12 @@ import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.machines.common.blockentity.base.MultiConfigurable;
 import com.enderio.machines.common.menu.MachineMenu;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -33,6 +35,7 @@ public class IOConfigButton<U extends EIOScreen<?>, T extends AbstractWidget> ex
         this.addedOn = addedOn;
         this.playerInvVisible = menu::getPlayerInvVisible;
         this.setPlayerInvVisible = menu::setPlayerInvVisible;
+        setTooltip(Tooltip.create(EIOLang.IOCONFIG.copy().withStyle(ChatFormatting.WHITE)));
 
         var show = !playerInvVisible.get();
         List<BlockPos> configurables = menu.getBlockEntity() instanceof MultiConfigurable multiConfigurable
@@ -44,7 +47,7 @@ public class IOConfigButton<U extends EIOScreen<?>, T extends AbstractWidget> ex
 
         neighbourButton = new ImageButton(addedOn.getGuiLeft() + addedOn.getXSize() - 5 - 16, addedOn.getGuiTop() + addedOn.getYSize() - 5 - 16, 16, 16, 16, 0,
             0, IOCONFIG, 48, 32, (b) -> configRenderer.toggleNeighbourVisibility(), EIOLang.TOGGLE_NEIGHBOUR);
-
+        neighbourButton.setTooltip(Tooltip.create(EIOLang.TOGGLE_NEIGHBOUR.copy().withStyle(ChatFormatting.WHITE)));
         neighbourButton.visible = show;
         addRenderableWidget.apply(neighbourButton);
     }

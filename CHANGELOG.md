@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Added
+- Added missing tooltips for IO Config button and Neighbour button.
 - Better multismelting support for the alloy smelter
 
 ### Changed
@@ -21,6 +22,8 @@
 - Fixed the deletion of a bucket when using bucketed fuel in a smelting machine.
 - Fixed inability to add fuel to active primitive alloy smelter.
 - Fixed the output calculations for vanilla smelting in the alloy smelter.
+- Fixed IO Config Overlay text rendering. Text has a Z-offset now.
+- Fixed negative scale for IO Config for multi blocks
 - Fixed Primitive Alloy Smelter not serializing burn time
 - Fixed linking between conduit connector shape and selected conduit.
 
