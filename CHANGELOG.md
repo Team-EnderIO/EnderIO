@@ -11,6 +11,7 @@
 ### Removed
 - Removed the grave system
 - Removed the unfired urn
+- Removed Iron Alloy Block
 
 ### Fixed
 - Solar panels are no longer blocked by transparent blocks.
