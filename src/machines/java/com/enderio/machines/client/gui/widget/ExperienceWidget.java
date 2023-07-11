@@ -5,6 +5,7 @@ import com.enderio.core.client.gui.widgets.EIOWidget;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -29,8 +30,8 @@ public class ExperienceWidget extends EIOWidget {
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         RenderSystem.defaultBlendFunc();
-        RenderSystem.disableBlend();
         RenderSystem.enableDepthTest();
+
         int k = 1;
         if (maxXP.get() > 0) {
             k = (int) (((getFluid.get().getFluidAmount() / ((float) ExperienceUtil.getFluidFromLevel(maxXP.get()))) * this.width)-1);
@@ -51,9 +52,6 @@ public class ExperienceWidget extends EIOWidget {
         guiGraphics.drawString(font, s, this.x + this.width/2, (float)(this.y - this.height - 3 - 1), 0, false);
         guiGraphics.drawString(font, s, this.x + this.width/2, (float)this.y - this.height - 3, 8453920, false);
 
-        RenderSystem.enableBlend();
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-
         renderToolTip(guiGraphics, pMouseX, pMouseY);
     }
 
@@ -61,9 +59,10 @@ public class ExperienceWidget extends EIOWidget {
     protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
     }
 
+
     public void renderToolTip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (isHovered(mouseX, mouseY)) {
-            guiGraphics.renderTooltip(Minecraft.getInstance().font, Component.literal(getFluid.get().getFluidAmount() + " mb / " + ExperienceUtil.getFluidFromLevel(maxXP.get()) + " mb"), mouseX, mouseY);
+            setTooltip(Tooltip.create(Component.literal(getFluid.get().getFluidAmount() + " mb / " + ExperienceUtil.getFluidFromLevel(maxXP.get()) + " mb")));
         }
     }
 }
