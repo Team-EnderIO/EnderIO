@@ -1068,7 +1068,7 @@
   "jei.enderio.fire_crafting.valid_blocks": "Valid Blocks:",
   "jei.enderio.fire_crafting.valid_dimensions": "Valid Dimensions:",
   "jei.enderio.grinding.consume_chance": "33% chance to be consumed",
-  "jei.enderio.grinding.hand_grinding_coal": "Hold some flint in your offhand and some coal in your main hand, then shift right-click a block of obsidian, crying obsidian or a grindstone to produce early powdered coal.",
+  "jei.enderio.grinding.hand_grinding_coal": "Hold some flint in your offhand and 3 or more coal in your main hand, then shift right-click a block of obsidian, crying obsidian or a grindstone to produce early powdered coal.",
   "jei.enderio.grinding.hand_grinding_infinity": "Hold some flint in your offhand and some deepslate or cobbled deepslate in your main hand, then shift right-click a block of obsidian, crying obsidian or a grindstone to produce early grains of infinity.",
   "jei.enderio.grinding.title": "Grinding",
   "message.enderio.glider.disable": "Gliding is disabled: ",

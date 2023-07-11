@@ -253,7 +253,7 @@ public class EIOLang {
         "Hold some flint in your offhand and some deepslate or cobbled deepslate in your main hand, then shift right-click a block of obsidian, crying obsidian or a grindstone to produce early grains of infinity.");
 
     public static final MutableComponent JEI_COAL_HAND_GRIND = REGISTRATE.addLang("jei", EnderIO.loc("grinding"), "hand_grinding_coal",
-        "Hold some flint in your offhand and some coal in your main hand, then shift right-click a block of obsidian, crying obsidian or a grindstone to produce early powdered coal.");
+        "Hold some flint in your offhand and 3 or more coal in your main hand, then shift right-click a block of obsidian, crying obsidian or a grindstone to produce early powdered coal.");
 
     // endregion
 

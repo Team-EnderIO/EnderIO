@@ -10,7 +10,12 @@
 
 ### Fixed
 
-## [6.0.4-alpha] - 2023-07-11
+## [6.0.5-alpha] - 2023-07-11
+
+### Fixed
+- Made information for grinding up coal with flint and obsidian/grindstone more clear.
+
+## 6.0.4-alpha - 2023-07-11
 
 ### Added
 - Added missing tooltips for IO Config button and Neighbour button.
