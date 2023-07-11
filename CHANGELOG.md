@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Added
+- Recipes for the capacitor banks.
 
 ### Changed
 
