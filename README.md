@@ -110,7 +110,7 @@ If you need any feature in the api, contact us.
 1. Follow any other relevant Forge setup [for your IDE](https://docs.minecraftforge.net/en/latest/gettingstarted/#from-zero-to-modding).
 1. Work on your feature or fix, try to commit for each major thing you do.
 1. Create a draft pull request early for big changes to receive early feedback.
-1. Ensure you update the `CHANGELOG.md` file each time you make a noticable change.
+1. Ensure you update the `CHANGELOG.md` file each time you make a noticeable change.
 
 
 <!-- LICENSE -->
