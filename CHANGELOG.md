@@ -3,6 +3,16 @@
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Removed
+
+### Fixed
+
+## [6.0.4-alpha] - 2023-07-11
+
+### Added
 - Added missing tooltips for IO Config button and Neighbour button.
 - Better multismelting support for the alloy smelter
 
@@ -30,7 +40,7 @@
 - Fixed linking between conduit connector shape and selected conduit.
 - Fixed redstone control icons, consistent with 1.12 now.
 
-## [6.0.3-alpha] - 2023-07-08
+## 6.0.3-alpha - 2023-07-08
 
 ### Fixed
 - Fixed grinding balls on multiplayer
