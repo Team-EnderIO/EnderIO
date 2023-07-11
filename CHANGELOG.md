@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Added
+- Added tooltips to Conduit round-robin and self feed buttons
 
 ### Changed
 - Gave CheckBox widgets the ability to have tooltips
