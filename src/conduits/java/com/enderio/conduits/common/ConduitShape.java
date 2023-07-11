@@ -83,7 +83,7 @@ public class ConduitShape {
         Map<IConduitType<?>, List<Vec3i>> offsets = new HashMap<>();
         for (Direction direction : Direction.values()) {
             VoxelShape directionShape = directionShapes.getOrDefault(direction, Shapes.empty());
-            if (conduitBundle.getConnection(direction).isEnd()) {
+            if (conduitBundle.getConnection(direction).isEnd() && conduitBundle.getConnection(direction).getConnectionState(conduitBundle.getTypeIndex(conduitType)).isConnection()) {
                 VoxelShape connectorShape = rotateVoxelShape(connector, direction);
                 directionShape = Shapes.join(directionShape, connectorShape, BooleanOp.OR);
                 conduitShape = Shapes.join(conduitShape, connectorShape, BooleanOp.OR);

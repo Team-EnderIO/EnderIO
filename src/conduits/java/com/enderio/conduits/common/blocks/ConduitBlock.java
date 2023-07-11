@@ -17,6 +17,7 @@ import com.enderio.conduits.common.init.EnderConduitTypes;
 import com.enderio.conduits.common.items.ConduitBlockItem;
 import com.enderio.conduits.common.network.ConduitSavedData;
 import com.enderio.conduits.common.types.RedstoneExtendedData;
+import com.enderio.core.common.util.PlayerInteractionUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -62,6 +63,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Mod.EventBusSubscriber
@@ -241,7 +244,8 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
                 @Nullable
                 IConduitType<?> type = conduit.getShape().getConduit(event.getPos(), event.getHitVec());
                 if (type != null) {
-                    conduit.removeTypeAndDelete(type, true);
+                    conduit.removeTypeAndDelete(type);
+                    PlayerInteractionUtil.putItemInInventoryFromWorldInteraction(event.getEntity(), event.getPos(), new ItemStack(type.getConduitItem()));
                     event.setCanceled(true);
                 }
             }
