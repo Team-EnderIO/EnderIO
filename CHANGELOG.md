@@ -3,8 +3,10 @@
 ## [Unreleased]
 
 ### Added
+- Better multismelting support for the alloy smelter
 
 ### Changed
+- Conduits are now placed in your inventory when shift right clicked with the Yeta Wrench
 
 ### Removed
 - Removed the grave system
@@ -18,6 +20,7 @@
 - Fixed the deletion of a bucket when using bucketed fuel in a smelting machine.
 - Fixed inability to add fuel to active primitive alloy smelter.
 - Fixed the output calculations for vanilla smelting in the alloy smelter.
+- Fixed Primitive Alloy Smelter not serializing burn time
 
 ## [6.0.3-alpha] - 2023-07-08
 
