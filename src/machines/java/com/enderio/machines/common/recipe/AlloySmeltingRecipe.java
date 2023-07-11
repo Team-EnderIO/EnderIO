@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Container> {
+public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.ContainerWrapper> {
 
     private final ResourceLocation id;
     private final List<CountedIngredient> inputs;
@@ -58,7 +58,7 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
     }
 
     @Override
-    public boolean matches(Container container, Level level) {
+    public boolean matches(ContainerWrapper container, Level level) {
         boolean[] matched = new boolean[3];
 
         // Iterate over the slots
@@ -91,7 +91,7 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
     }
 
     @Override
-    public List<OutputStack> craft(Container container, RegistryAccess registryAccess) {
+    public List<OutputStack> craft(ContainerWrapper container, RegistryAccess registryAccess) {
          return List.of(OutputStack.of(output.copy()));
     }
 
@@ -119,11 +119,11 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
      * The recipe container.
      * This acts as additional context.
      */
-    public static class Container extends RecipeWrapper {
+    public static class ContainerWrapper extends RecipeWrapper {
 
         private int inputsTaken;
 
-        public Container(IItemHandlerModifiable inv) {
+        public ContainerWrapper(IItemHandlerModifiable inv) {
             super(inv);
         }
 

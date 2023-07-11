@@ -5,6 +5,7 @@ import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.recipe.ShapedEntityStorageRecipeBuilder;
+import com.enderio.machines.common.blockentity.capacitorbank.CapacitorTier;
 import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
 import com.enderio.machines.common.init.MachineBlocks;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
@@ -25,6 +26,62 @@ public class MachineRecipeProvider extends RecipeProvider {
 
     @Override
     protected void buildRecipes(Consumer<FinishedRecipe> finishedRecipeConsumer) {
+        ShapedRecipeBuilder
+            .shaped(RecipeCategory.MISC, MachineBlocks.CAPACITOR_BANKS.get(CapacitorTier.BASIC).get())
+            .define('I', Tags.Items.INGOTS_IRON)
+            .define('C', EIOItems.BASIC_CAPACITOR.get())
+            .define('R', Tags.Items.STORAGE_BLOCKS_REDSTONE)
+            .pattern("ICI")
+            .pattern("CRC")
+            .pattern("ICI")
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOItems.BASIC_CAPACITOR).build()))
+            .save(finishedRecipeConsumer);
+
+        ShapedRecipeBuilder
+            .shaped(RecipeCategory.MISC, MachineBlocks.CAPACITOR_BANKS.get(CapacitorTier.ADVANCED).get())
+            .define('A', EIOItems.COPPER_ALLOY_INGOT.get())
+            .define('C', EIOItems.DOUBLE_LAYER_CAPACITOR.get())
+            .define('R', Tags.Items.STORAGE_BLOCKS_REDSTONE)
+            .pattern("ACA")
+            .pattern("CRC")
+            .pattern("ACA")
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOItems.BASIC_CAPACITOR).build()))
+            .save(finishedRecipeConsumer);
+
+        ShapedRecipeBuilder
+            .shaped(RecipeCategory.MISC, MachineBlocks.CAPACITOR_BANKS.get(CapacitorTier.ADVANCED).get())
+            .define('E', EIOItems.ENERGETIC_ALLOY_INGOT)
+            .define('C', EIOItems.DOUBLE_LAYER_CAPACITOR.get())
+            .define('B', MachineBlocks.CAPACITOR_BANKS.get(CapacitorTier.BASIC).get())
+            .pattern("EEE")
+            .pattern("BCB")
+            .pattern("EEE")
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOItems.DOUBLE_LAYER_CAPACITOR).build()))
+            .save(finishedRecipeConsumer, EnderIO.loc("advanced_capacitor_bank_upgrade"));
+
+        ShapedRecipeBuilder
+            .shaped(RecipeCategory.MISC, MachineBlocks.CAPACITOR_BANKS.get(CapacitorTier.VIBRANT).get())
+            .define('V', EIOItems.VIBRANT_ALLOY_INGOT)
+            .define('O', EIOItems.OCTADIC_CAPACITOR.get())
+            .define('C', EIOItems.VIBRANT_CRYSTAL.get())
+            .define('B', MachineBlocks.CAPACITOR_BANKS.get(CapacitorTier.ADVANCED).get())
+            .pattern("VOV")
+            .pattern("BCB")
+            .pattern("VOV")
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOItems.OCTADIC_CAPACITOR).build()))
+            .save(finishedRecipeConsumer);
+
+        ShapedRecipeBuilder
+            .shaped(RecipeCategory.MISC, MachineBlocks.CAPACITOR_BANKS.get(CapacitorTier.VIBRANT).get())
+            .define('A', EIOItems.COPPER_ALLOY_INGOT.get())
+            .define('O', EIOItems.OCTADIC_CAPACITOR.get())
+            .define('C', EIOItems.VIBRANT_CRYSTAL.get())
+            .pattern("AOA")
+            .pattern("OCO")
+            .pattern("AOA")
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOItems.BASIC_CAPACITOR).build()))
+            .save(finishedRecipeConsumer, EnderIO.loc("vibrant_capacitor_bank_upgrade"));
+
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.FLUID_TANK.get())
             .define('I', Tags.Items.INGOTS_IRON)
