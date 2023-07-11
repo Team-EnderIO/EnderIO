@@ -28,6 +28,7 @@
 - Fixed negative scale for IO Config for multi blocks
 - Fixed Primitive Alloy Smelter not serializing burn time
 - Fixed linking between conduit connector shape and selected conduit.
+- Fixed redstone control icons, consistent with 1.12 now.
 
 ## [6.0.3-alpha] - 2023-07-08
 
