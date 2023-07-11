@@ -2,17 +2,17 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "E": {
-      "item": "enderio:electrical_steel_ingot"
+    "D": {
+      "item": "enderio:dark_steel_ingot"
     },
     "V": {
       "item": "enderio:void_chassis"
     }
   },
   "pattern": [
-    "EEE",
-    "EVE",
-    "EEE"
+    "DDD",
+    "DVD",
+    "DDD"
   ],
   "result": {
     "item": "enderio:wired_charger"

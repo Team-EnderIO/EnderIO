@@ -3,9 +3,9 @@ package com.enderio.machines.common.blockentity;
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.core.common.sync.FloatDataSlot;
-import com.enderio.core.common.sync.SyncMode;
-import com.enderio.machines.common.blockentity.base.PoweredMachineEntity;
+import com.enderio.core.common.network.slot.FloatNetworkDataSlot;
+import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
+import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.WiredChargerMenu;
@@ -22,10 +22,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class WiredChargerBlockEntity extends PoweredMachineEntity {
+public class WiredChargerBlockEntity extends PoweredMachineBlockEntity {
 
-    public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, () -> 100000f);
-    public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, () -> 100f);
+    public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.WIRED_CHARGER_CAPACITY);
+    public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.WIRED_CHARGER_USAGE);
 
     public static final SingleSlotAccess ITEM_TO_CHARGE = new SingleSlotAccess();
     public static final SingleSlotAccess ITEM_CHARGED = new SingleSlotAccess();
@@ -34,7 +34,7 @@ public class WiredChargerBlockEntity extends PoweredMachineEntity {
 
     public WiredChargerBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Input, CAPACITY, USAGE, type, worldPosition, blockState);
-        addDataSlot(new FloatDataSlot(this::getProgress, p -> progress = p, SyncMode.GUI));
+        addDataSlot(new FloatNetworkDataSlot(this::getProgress, p -> progress = p));
     }
 
     @Override
@@ -65,6 +65,11 @@ public class WiredChargerBlockEntity extends PoweredMachineEntity {
         }
     }
 
+    @Override
+    protected boolean isActive() {
+        return canAct();
+    }
+
     public boolean acceptItem(ItemStack item) {
         Optional<IEnergyStorage> energyHandlerCap = item.getCapability(ForgeCapabilities.ENERGY).resolve();
         return energyHandlerCap.isPresent();
@@ -87,6 +92,7 @@ public class WiredChargerBlockEntity extends PoweredMachineEntity {
                 ITEM_CHARGED.setStackInSlot(this, chargeable);
                 ITEM_TO_CHARGE.setStackInSlot(this, ItemStack.EMPTY);
             } else {
+                //todo energy balancing
                 // The energyExtracted per tick should increase if the charged item has more energy and with the tier of the capacitor installed
                 int energyExtracted = itemEnergyStorage.getMaxEnergyStored() / (1000-this.energyStorage.getMaxEnergyUse());
 

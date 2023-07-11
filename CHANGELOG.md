@@ -4,6 +4,7 @@
 
 ### Added
 - Better multismelting support for the alloy smelter
+- Wired Charger
 
 ### Changed
 - Conduits are now placed in your inventory when shift right clicked with the Yeta Wrench

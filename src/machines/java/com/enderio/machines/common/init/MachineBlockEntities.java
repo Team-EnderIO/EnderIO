@@ -55,8 +55,6 @@ public class MachineBlockEntities {
 
     public static final BlockEntityEntry<SoulBinderBlockEntity> SOUL_BINDER = register("soul_binder", SoulBinderBlockEntity::new, MachineBlocks.SOUL_BINDER);
 
-    public static final BlockEntityEntry<PoweredSpawnerBlockEntity> POWERED_SPAWNER = register("powered_spanwer", PoweredSpawnerBlockEntity::new, MachineBlocks.POWERED_SPAWNER);
-  
     public static final BlockEntityEntry<WiredChargerBlockEntity> WIRED_CHARGER = register("wired_charger",
        WiredChargerBlockEntity::new, MachineBlocks.WIRED_CHARGER);
 
