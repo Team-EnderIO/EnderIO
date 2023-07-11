@@ -24,6 +24,7 @@ import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -66,7 +67,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
         // Crafting task host
         craftingTaskHost = new AlloySmeltingMachineTaskHost(this, this::canAcceptTask,
-            MachineRecipes.ALLOY_SMELTING.type().get(), new AlloySmeltingRecipe.Container(getInventoryNN()), this::createTask);
+            MachineRecipes.ALLOY_SMELTING.type().get(), new AlloySmeltingRecipe.ContainerWrapper(getInventoryNN()), this::createTask);
 
         // This can be changed by the gui for the normal and enhanced machines.
         if (!restrictedMode()) {
@@ -180,18 +181,18 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         return canAct() && hasEnergy() && craftingTaskHost.hasTask();
     }
 
-    protected AlloySmeltingMachineTask createTask(Level level, AlloySmeltingRecipe.Container container, @Nullable AlloySmeltingRecipe recipe) {
+    protected AlloySmeltingMachineTask createTask(Level level, AlloySmeltingRecipe.ContainerWrapper container, @Nullable AlloySmeltingRecipe recipe) {
         return new AlloySmeltingMachineTask(level, getInventoryNN(), getEnergyStorage(), container, OUTPUT, recipe);
     }
 
-    protected static class AlloySmeltingMachineTask extends PoweredCraftingMachineTask<AlloySmeltingRecipe, AlloySmeltingRecipe.Container> {
+    protected static class AlloySmeltingMachineTask extends PoweredCraftingMachineTask<AlloySmeltingRecipe, AlloySmeltingRecipe.ContainerWrapper> {
         public AlloySmeltingMachineTask(@NotNull Level level, MachineInventory inventory, IMachineEnergyStorage energyStorage,
-            AlloySmeltingRecipe.Container container, MultiSlotAccess outputSlots, @Nullable AlloySmeltingRecipe recipe) {
+            AlloySmeltingRecipe.ContainerWrapper container, MultiSlotAccess outputSlots, @Nullable AlloySmeltingRecipe recipe) {
             super(level, inventory, energyStorage, container, outputSlots, recipe);
         }
 
         public AlloySmeltingMachineTask(@NotNull Level level, MachineInventory inventory, IMachineEnergyStorage energyStorage,
-            AlloySmeltingRecipe.Container container, SingleSlotAccess outputSlot, @Nullable AlloySmeltingRecipe recipe) {
+            AlloySmeltingRecipe.ContainerWrapper container, SingleSlotAccess outputSlot, @Nullable AlloySmeltingRecipe recipe) {
             super(level, inventory, energyStorage, container, outputSlot, recipe);
         }
 
@@ -202,12 +203,12 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
                 CountedIngredient input = recipe.getInputs().get(0);
 
                 int inputCount = 0;
-                for (SingleSlotAccess slot : INPUTS.getAccesses()) {
-                    if (input.test(slot.getItemStack(getInventory()))) {
-                        inputCount++;
+                for (int i = INPUTS.size() - 1; i >= 0; i--) {
+                    ItemStack itemStack = INPUTS.get(i).getItemStack(getInventory());
+                    if (input.test(itemStack)) {
+                        inputCount += Math.min(3 - inputCount, itemStack.getCount());
                     }
                 }
-
                 container.setInputsTaken(inputCount);
             } else {
                 container.setInputsTaken(1);
@@ -221,10 +222,13 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
             if (recipe instanceof VanillaAlloySmeltingRecipe) {
                 CountedIngredient input = recipe.getInputs().get(0);
 
-                for (SingleSlotAccess slot : INPUTS.getAccesses()) {
-                    ItemStack stack = slot.getItemStack(getInventory());
-                    if (input.test(stack)) {
-                        stack.shrink(input.count());
+                int consumed = 0;
+                for (int i = INPUTS.size() - 1; i >= 0; i--) {
+                    ItemStack itemStack = INPUTS.get(i).getItemStack(getInventory());
+                    if (input.test(itemStack)) {
+                        int consumedNow = Math.min(container.getInputsTaken() - consumed, itemStack.getCount());
+                        itemStack.shrink(consumedNow);
+                        consumed += consumedNow;
                     }
                 }
             } else {
@@ -274,10 +278,10 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         }
     }
 
-    protected class AlloySmeltingMachineTaskHost extends CraftingMachineTaskHost<AlloySmeltingRecipe, AlloySmeltingRecipe.Container> {
+    protected class AlloySmeltingMachineTaskHost extends CraftingMachineTaskHost<AlloySmeltingRecipe, AlloySmeltingRecipe.ContainerWrapper> {
         public AlloySmeltingMachineTaskHost(EnderBlockEntity blockEntity, Supplier<Boolean> canAcceptNewTask, RecipeType<AlloySmeltingRecipe> recipeType,
-            AlloySmeltingRecipe.Container container,
-            ICraftingMachineTaskFactory<AlloySmeltingMachineTask, AlloySmeltingRecipe, AlloySmeltingRecipe.Container> taskFactory) {
+            AlloySmeltingRecipe.ContainerWrapper container,
+            ICraftingMachineTaskFactory<AlloySmeltingMachineTask, AlloySmeltingRecipe, AlloySmeltingRecipe.ContainerWrapper> taskFactory) {
             super(blockEntity, canAcceptNewTask, recipeType, container, taskFactory);
         }
 
@@ -297,10 +301,12 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
             // Get vanilla smelting recipe.
             if (getMode().canSmelt()) {
-                var recipe = level.getRecipeManager()
-                    .getRecipeFor(RecipeType.SMELTING, getContainer(), level);
-                if (recipe.isPresent())
-                    return Optional.of(new VanillaAlloySmeltingRecipe(recipe.get()));
+                for (int i = 0; i < AlloySmelterBlockEntity.INPUTS.size(); i++) {
+                    var recipe = level.getRecipeManager()
+                        .getRecipeFor(RecipeType.SMELTING, new ContainerSubWrapper(getContainer(), i), level);
+                    if (recipe.isPresent())
+                        return Optional.of(new VanillaAlloySmeltingRecipe(recipe.get()));
+                }
             }
             return Optional.empty();
         }
@@ -335,6 +341,51 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         craftingTaskHost.getContainer().setInputsTaken(pTag.getInt(MachineNBTKeys.PROCESSED_INPUTS));
         super.load(pTag);
     }
+    public record ContainerSubWrapper(AlloySmeltingRecipe.ContainerWrapper wrapper, int index) implements Container {
 
+        @Override
+        public int getContainerSize() {
+            return 1;
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return AlloySmelterBlockEntity.INPUTS.get(index).getItemStack(wrapper).isEmpty();
+        }
+
+        @Override
+        public ItemStack getItem(int slot) {
+            if (slot != 0)
+                return ItemStack.EMPTY;
+            return AlloySmelterBlockEntity.INPUTS.get(index).getItemStack(wrapper);
+        }
+
+        @Override
+        public ItemStack removeItem(int slot, int amount) {
+            return ItemStack.EMPTY;
+        }
+
+        @Override
+        public ItemStack removeItemNoUpdate(int slot) {
+            return ItemStack.EMPTY;
+        }
+
+        @Override
+        public void setItem(int slot, ItemStack stack) {
+        }
+
+        @Override
+        public void setChanged() {
+        }
+
+        @Override
+        public boolean stillValid(Player player) {
+            return false;
+        }
+
+        @Override
+        public void clearContent() {
+        }
+    }
     // endregion
 }

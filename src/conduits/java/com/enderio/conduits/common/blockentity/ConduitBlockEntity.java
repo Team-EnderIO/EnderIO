@@ -286,8 +286,8 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                     .collect(Collectors.toSet()));
     }
 
-    public void removeTypeAndDelete(IConduitType<?> type, boolean shouldDrop) {
-        if (removeType(type, shouldDrop)) {
+    public void removeTypeAndDelete(IConduitType<?> type) {
+        if (removeType(type, false)) {
             level.setBlock(getBlockPos(), getBlockState().getFluidState().createLegacyBlock(),
                 level.isClientSide ? Block.UPDATE_ALL_IMMEDIATE : Block.UPDATE_ALL);
         }
