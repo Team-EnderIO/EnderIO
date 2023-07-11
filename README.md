@@ -105,7 +105,8 @@ If you need any feature in the api, contact us.
 > If you are planning on contributing something that isn't tracked, consider either making an issue to discuss your proposal, or pushing a very early draft PR for discussion
 
 1. Ensure you meet the [Forge prerequisites](https://docs.minecraftforge.net/en/latest/gettingstarted/#prerequisites).
-1. Clone down the repository using a git client or cli.
+2. Fork this repository under your own profile, this will mean you can push your changes to GitHub for Pull Requests later.
+1. Clone down the forked repository using a git client or cli.
 1. Open the project in your preferred IDE and wait for the gradle import.
 1. Follow any other relevant Forge setup [for your IDE](https://docs.minecraftforge.net/en/latest/gettingstarted/#from-zero-to-modding).
 1. Work on your feature or fix, try to commit for each major thing you do.
