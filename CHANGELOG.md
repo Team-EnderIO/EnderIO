@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Added
+- Better multismelting support for the alloy smelter
 
 ### Changed
 
