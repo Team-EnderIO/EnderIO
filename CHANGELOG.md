@@ -7,6 +7,7 @@
 - Better multismelting support for the alloy smelter
 
 ### Changed
+- Lowered minimum Forge version to 47.0.42.
 - Conduits are now placed in your inventory when shift right clicked with the Yeta Wrench
 
 ### Removed
