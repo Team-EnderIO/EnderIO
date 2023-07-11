@@ -3,13 +3,18 @@
 ## [Unreleased]
 
 ### Added
+- Added missing tooltips for IO Config button and Neighbour button.
+- Better multismelting support for the alloy smelter
 
 ### Changed
 - Grindstone crafting for grains of infinity and powdered coal now uses an in-world craft by right-clicking with flint in the off-hand and the ingredient in the main-hand. Also works with obsidian and crying obsidian (the latter of which has a chance to give a better rate of return on the craft).
+- Lowered minimum Forge version to 47.0.42.
+- Conduits are now placed in your inventory when shift right clicked with the Yeta Wrench
 
 ### Removed
 - Removed the grave system
 - Removed the unfired urn
+- Removed Iron Alloy Block
 
 ### Fixed
 - Solar panels are no longer blocked by transparent blocks.
@@ -19,6 +24,10 @@
 - Fixed the deletion of a bucket when using bucketed fuel in a smelting machine.
 - Fixed inability to add fuel to active primitive alloy smelter.
 - Fixed the output calculations for vanilla smelting in the alloy smelter.
+- Fixed IO Config Overlay text rendering. Text has a Z-offset now.
+- Fixed negative scale for IO Config for multi blocks
+- Fixed Primitive Alloy Smelter not serializing burn time
+- Fixed linking between conduit connector shape and selected conduit.
 
 ## [6.0.3-alpha] - 2023-07-08
 

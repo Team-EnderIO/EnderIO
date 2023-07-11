@@ -100,7 +100,17 @@ If you need any feature in the api, contact us.
 <!-- CONTRIBUTING -->
 ## Contributing
 
-TODO: Contributing guidelines
+> **Note**
+> Before selecting a task from the tracker to do, make sure to comment to say that you are working on it so other's don't do the same thing!
+> If you are planning on contributing something that isn't tracked, consider either making an issue to discuss your proposal, or pushing a very early draft PR for discussion
+
+1. Ensure you meet the [Forge prerequisites](https://docs.minecraftforge.net/en/latest/gettingstarted/#prerequisites).
+1. Clone down the repository using a git client or cli.
+1. Open the project in your preferred IDE and wait for the gradle import.
+1. Follow any other relevant Forge setup [for your IDE](https://docs.minecraftforge.net/en/latest/gettingstarted/#from-zero-to-modding).
+1. Work on your feature or fix, try to commit for each major thing you do.
+1. Create a draft pull request early for big changes to receive early feedback.
+1. Ensure you update the `CHANGELOG.md` file each time you make a noticeable change.
 
 
 <!-- LICENSE -->
@@ -122,7 +132,7 @@ Certain parts of the source code may be under a different license due to being p
 - HypherionSA
 - agnor99
 - ferriarnus
-- luiq54
+- mystchonky
 - and our Contributors
 
 ### Sound Credits

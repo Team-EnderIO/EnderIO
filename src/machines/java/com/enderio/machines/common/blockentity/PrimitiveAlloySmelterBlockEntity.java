@@ -3,6 +3,7 @@ package com.enderio.machines.common.blockentity;
 import com.enderio.api.UseOnly;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.network.slot.FloatNetworkDataSlot;
+import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
@@ -10,6 +11,7 @@ import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.PrimitiveAlloySmelterMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -163,5 +165,19 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
     protected boolean isActive() {
         // Ignores power.
         return canAct() && craftingTaskHost.hasTask();
+    }
+
+    @Override
+    public void saveAdditional(CompoundTag pTag) {
+        pTag.putInt(MachineNBTKeys.BURN_TIME, burnTime);
+        pTag.putInt(MachineNBTKeys.BURN_DURATION, burnDuration);
+        super.saveAdditional(pTag);
+    }
+
+    @Override
+    public void load(CompoundTag pTag) {
+        burnTime = pTag.getInt(MachineNBTKeys.BURN_TIME);
+        burnDuration = pTag.getInt(MachineNBTKeys.BURN_DURATION);
+        super.load(pTag);
     }
 }
