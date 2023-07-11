@@ -24,8 +24,6 @@ public class CheckBox extends AbstractButton {
     private final ResourceLocation texture;
     private static final ResourceLocation TEXTURE = EnderCore.loc("textures/gui/checkbox.png");
 
-    private Boolean enabledCache;
-
     public CheckBox(Vector2i pos, Supplier<Boolean> getter, Consumer<Boolean> setter) {
         this(TEXTURE, pos, getter, setter, () -> null, () -> null);
     }
@@ -41,7 +39,6 @@ public class CheckBox extends AbstractButton {
         this.texture = texture;
         this.enabledTooltip = enabledTooltip;
         this.disabledTooltip = disabledTooltip;
-        this.enabledCache = !this.getter.get();
     }
 
     @Override
@@ -66,8 +63,7 @@ public class CheckBox extends AbstractButton {
         RenderSystem.disableBlend();
         RenderSystem.disableDepthTest();
 
-        if (enabledTooltip.get() != null && disabledTooltip.get() != null && this.isHovered && enabledCache != getter.get()) {
-            enabledCache = getter.get();
+        if (this.isHovered && enabledTooltip.get() != null && disabledTooltip.get() != null) {
             setTooltip(Tooltip.create((getter.get() ? enabledTooltip : disabledTooltip).get().copy().withStyle(ChatFormatting.WHITE)));
         }
     }
