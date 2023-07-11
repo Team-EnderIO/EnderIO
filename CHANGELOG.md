@@ -11,6 +11,7 @@
 ### Removed
 - Removed the grave system
 - Removed the unfired urn
+- Removed Iron Alloy Block
 
 ### Fixed
 - Solar panels are no longer blocked by transparent blocks.
@@ -21,6 +22,7 @@
 - Fixed inability to add fuel to active primitive alloy smelter.
 - Fixed the output calculations for vanilla smelting in the alloy smelter.
 - Fixed Primitive Alloy Smelter not serializing burn time
+- Fixed linking between conduit connector shape and selected conduit.
 
 ## [6.0.3-alpha] - 2023-07-08
 
