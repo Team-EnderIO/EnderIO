@@ -67,6 +67,16 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
 
     // endregion
 
+    // region Overridable Events
+
+    /**
+     * This is fired right before recipe outputs are determined for the task.
+     */
+    protected void onDetermineOutputs(R recipe) {
+    }
+
+    // endregion
+
     // region Task Implementation
 
     @Override
@@ -84,6 +94,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
         // Get the outputs list.
         if (!hasDeterminedOutputs) {
             hasDeterminedOutputs = true;
+            onDetermineOutputs(recipe);
             outputs = recipe.craft(container, level.registryAccess());
 
             // TODO: Compact any items that are the same into singular stacks?
