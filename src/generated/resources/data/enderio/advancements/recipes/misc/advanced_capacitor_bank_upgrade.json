@@ -6,7 +6,7 @@
         "items": [
           {
             "items": [
-              "enderio:basic_capacitor"
+              "enderio:double_layer_capacitor"
             ]
           }
         ]
@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:advanced_capacitor_bank"
+        "recipe": "enderio:advanced_capacitor_bank_upgrade"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:advanced_capacitor_bank"
+      "enderio:advanced_capacitor_bank_upgrade"
     ]
   },
   "sends_telemetry_event": false

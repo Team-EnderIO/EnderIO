@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:vibrant_capacitor_bank_upgrade"
+        "recipe": "enderio:advanced_capacitor_bank"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:vibrant_capacitor_bank_upgrade"
+      "enderio:advanced_capacitor_bank"
     ]
   },
   "sends_telemetry_event": false

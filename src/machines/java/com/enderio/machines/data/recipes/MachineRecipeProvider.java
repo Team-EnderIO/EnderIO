@@ -46,7 +46,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("CRC")
             .pattern("ACA")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOItems.BASIC_CAPACITOR).build()))
-            .save(finishedRecipeConsumer, "advanced_capacitor_bank");
+            .save(finishedRecipeConsumer);
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.CAPACITOR_BANKS.get(CapacitorTier.ADVANCED).get())
@@ -57,7 +57,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("BCB")
             .pattern("EEE")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOItems.DOUBLE_LAYER_CAPACITOR).build()))
-            .save(finishedRecipeConsumer, "advanced_capacitor_bank_upgrade");
+            .save(finishedRecipeConsumer, EnderIO.loc("advanced_capacitor_bank_upgrade"));
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.CAPACITOR_BANKS.get(CapacitorTier.VIBRANT).get())
@@ -69,7 +69,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("BCB")
             .pattern("VOV")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOItems.OCTADIC_CAPACITOR).build()))
-            .save(finishedRecipeConsumer, "vibrant_capacitor_bank");
+            .save(finishedRecipeConsumer);
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.CAPACITOR_BANKS.get(CapacitorTier.VIBRANT).get())
@@ -80,7 +80,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("OCO")
             .pattern("AOA")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOItems.BASIC_CAPACITOR).build()))
-            .save(finishedRecipeConsumer, "vibrant_capacitor_bank_upgrade");
+            .save(finishedRecipeConsumer, EnderIO.loc("vibrant_capacitor_bank_upgrade"));
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.FLUID_TANK.get())
