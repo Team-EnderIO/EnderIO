@@ -17,7 +17,7 @@ Closes #(issue) <!-- Follow this exact pattern for every issue you've fixed to h
 - [ ] I have performed a self-review of my own code.
 - [ ] I have commented my code in areas it may be challenging to understand. <!-- (Although we prefer code that is readable instead of over-commented) -->
 - [ ] I have made corresponding changes to the documentation.
-- [ ] I have added relevant player-facing changes to the `CHANGELOG.md` file.
+- [ ] I have documented my changes in the `CHANGELOG.md` file.
 - [ ] My changes are ready for review from a contributor.
 
 <!-- Thanks to: https://embeddedartistry.com/blog/2017/08/04/a-github-pull-request-template-for-your-projects/ for the building blocks of this template -->
