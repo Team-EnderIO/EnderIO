@@ -23,6 +23,7 @@
 - Fixed the output calculations for vanilla smelting in the alloy smelter.
 - Fixed Primitive Alloy Smelter not serializing burn time
 - Fixed linking between conduit connector shape and selected conduit.
+- Added FriendlyByteBuffer to networkslots.
 
 ## [6.0.3-alpha] - 2023-07-08
 

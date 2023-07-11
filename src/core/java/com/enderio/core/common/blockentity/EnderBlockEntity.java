@@ -83,7 +83,7 @@ public class EnderBlockEntity extends BlockEntity {
      */
     @Override
     public CompoundTag getUpdateTag() {
-        return createDataSlotUpdate(true);
+        return createDataSlotUpdate();
     }
 
     /**
@@ -95,12 +95,11 @@ public class EnderBlockEntity extends BlockEntity {
         clientHandleDataSync(tag);
     }
 
-    @Nullable
-    private CompoundTag createDataSlotUpdate(boolean fullUpdate) {
+    private CompoundTag createDataSlotUpdate() {
         ListTag dataList = new ListTag();
         for (int i = 0; i < dataSlots.size(); i++) {
             var slot = dataSlots.get(i);
-            var nbt = slot.serializeNBT(fullUpdate);
+            var nbt = slot.serializeNBT(true);
             if (nbt == null)
                 continue;
 
@@ -109,10 +108,6 @@ public class EnderBlockEntity extends BlockEntity {
             slotTag.put("Data", nbt);
 
             dataList.add(slotTag);
-        }
-
-        if (!fullUpdate && dataList.isEmpty()) {
-            return null;
         }
 
         CompoundTag data = new CompoundTag();
@@ -195,26 +190,20 @@ public class EnderBlockEntity extends BlockEntity {
 
     @UseOnly(LogicalSide.CLIENT)
     public void clientHandleBufferSync(FriendlyByteBuf buf) {
-        while (true) { //read until we can't
+        boolean hasdata = true;
+        while (hasdata) { //read until we can't
             int index = -1;
             try {
                 index = buf.readInt();
             } catch (Exception e) {
-                break;
+                hasdata = false;
+                continue;
             }
             dataSlots.get(index).fromBuffer(buf);
         }
 
         for (Runnable task : afterDataSync) {
             task.run();
-        }
-    }
-
-    @UseOnly(LogicalSide.SERVER)
-    public void serverHandleDataChange(CompoundTag data) {
-        if (data.contains("Index", Tag.TAG_INT) && data.contains("Data")) {
-            int slotIdx = data.getInt("Index");
-            dataSlots.get(slotIdx).fromNBT(data.get("Data"));
         }
     }
 
