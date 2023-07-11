@@ -5,6 +5,7 @@
 ### Added
 
 ### Changed
+- Gave CheckBox widgets the ability to have tooltips
 
 ### Removed
 - Removed the grave system
