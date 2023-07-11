@@ -249,6 +249,12 @@ public class EIOLang {
     public static final Component JEI_GRINDING_CRAFTING_TITLE = REGISTRATE.addLang("jei", EnderIO.loc("grinding"), "title", "Grinding");
     public static final MutableComponent JEI_GRINDING_CONSUME_CHANCE = REGISTRATE.addLang("jei", EnderIO.loc("grinding"), "consume_chance", "33% chance to be consumed");
 
+    public static final MutableComponent JEI_GRAINS_HAND_GRIND = REGISTRATE.addLang("jei", EnderIO.loc("grinding"), "hand_grinding_infinity",
+        "Hold some flint in your offhand and some deepslate or cobbled deepslate in your main hand, then shift right-click a block of obsidian, crying obsidian or a grindstone to produce early grains of infinity.");
+
+    public static final MutableComponent JEI_COAL_HAND_GRIND = REGISTRATE.addLang("jei", EnderIO.loc("grinding"), "hand_grinding_coal",
+        "Hold some flint in your offhand and some coal in your main hand, then shift right-click a block of obsidian, crying obsidian or a grindstone to produce early powdered coal.");
+
     // endregion
 
     public static void register() {
