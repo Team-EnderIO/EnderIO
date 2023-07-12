@@ -52,17 +52,12 @@ public class ExperienceWidget extends EIOWidget {
         guiGraphics.drawString(font, s, this.x + this.width/2, (float)(this.y - this.height - 3 - 1), 0, false);
         guiGraphics.drawString(font, s, this.x + this.width/2, (float)this.y - this.height - 3, 8453920, false);
 
-        renderToolTip(guiGraphics, pMouseX, pMouseY);
+        if (isHovered(pMouseX, pMouseY)) {
+            setTooltip(Tooltip.create(Component.literal(getFluid.get().getFluidAmount() + " mb / " + ExperienceUtil.getFluidFromLevel(maxXP.get()) + " mb")));
+        }
     }
 
     @Override
     protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
-    }
-
-
-    public void renderToolTip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        if (isHovered(mouseX, mouseY)) {
-            setTooltip(Tooltip.create(Component.literal(getFluid.get().getFluidAmount() + " mb / " + ExperienceUtil.getFluidFromLevel(maxXP.get()) + " mb")));
-        }
     }
 }
