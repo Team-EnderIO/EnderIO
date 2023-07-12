@@ -103,6 +103,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
 
         var radius = Math.max(Math.max(multiblockSize.x(), multiblockSize.y()), multiblockSize.z());
         SCALE -= (radius - 1) * 3; //adjust later
+        SCALE = Math.min(40, Math.max(10, SCALE)); //clamp
 
         configurable.forEach(pos -> {
             for (Direction dir : Direction.values()) {
@@ -370,6 +371,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
                 guiGraphics.blit(IOConfigButton.IOCONFIG, getX() + 4, getY() + height - 4 - screenFont.lineHeight - iconBounds.getHeight(), iconBounds.getX(), iconBounds.getY(),
                     iconBounds.getWidth(), iconBounds.getHeight(), 48, 32);
                 guiGraphics.pose().pushPose();
+                guiGraphics.pose().translate(0, 0, 1000); // to ensure that string is drawn on top
                 guiGraphics.drawString(screenFont, map.getComponent(), getX() + 4, getY() + height - 2 - screenFont.lineHeight, 0xFFFFFFFF);
                 guiGraphics.pose().popPose();
             }
