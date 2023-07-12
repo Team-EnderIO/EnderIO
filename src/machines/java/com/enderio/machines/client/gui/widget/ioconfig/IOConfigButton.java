@@ -24,6 +24,7 @@ import java.util.function.Supplier;
 public class IOConfigButton<U extends EIOScreen<?>, T extends AbstractWidget> extends AbstractWidget {
     private static final int RENDERER_HEIGHT = 80;
     public static final ResourceLocation IOCONFIG = EnderIO.loc("textures/gui/icons/io_config.png");
+    private static final Inset INSET_ZERO = new Inset(0, 0, 0, 0);
     private final IOConfigWidget<U> configRenderer;
     private final ImageButton neighbourButton;
     private final Supplier<Boolean> playerInvVisible;
@@ -31,6 +32,11 @@ public class IOConfigButton<U extends EIOScreen<?>, T extends AbstractWidget> ex
     private final U addedOn;
 
     public IOConfigButton(U addedOn, int x, int y, int width, int height, MachineMenu<?> menu, Function<AbstractWidget, T> addRenderableWidget, Font font) {
+        this(addedOn, x, y, width, height, menu, addRenderableWidget, font, INSET_ZERO);
+    }
+
+    public IOConfigButton(U addedOn, int x, int y, int width, int height, MachineMenu<?> menu, Function<AbstractWidget, T> addRenderableWidget, Font font,
+        Inset inset) {
         super(x, y, width, height, EIOLang.IOCONFIG);
         this.addedOn = addedOn;
         this.playerInvVisible = menu::getPlayerInvVisible;
@@ -38,10 +44,12 @@ public class IOConfigButton<U extends EIOScreen<?>, T extends AbstractWidget> ex
         setTooltip(Tooltip.create(EIOLang.IOCONFIG.copy().withStyle(ChatFormatting.WHITE)));
 
         var show = !playerInvVisible.get();
-        List<BlockPos> configurables = menu.getBlockEntity() instanceof MultiConfigurable multiConfigurable
-            ? multiConfigurable.getConfigurables() : List.of(menu.getBlockEntity().getBlockPos());
-        configRenderer = new IOConfigWidget<>(addedOn, addedOn.getGuiLeft() + 5, addedOn.getGuiTop() + addedOn.getYSize() - RENDERER_HEIGHT - 5,
-            addedOn.getXSize() - 10, RENDERER_HEIGHT, configurables, font);
+        List<BlockPos> configurables = menu.getBlockEntity() instanceof MultiConfigurable multiConfigurable ?
+            multiConfigurable.getConfigurables() :
+            List.of(menu.getBlockEntity().getBlockPos());
+        configRenderer = new IOConfigWidget<>(addedOn, addedOn.getGuiLeft() + 5 + inset.left,
+            addedOn.getGuiTop() + addedOn.getYSize() - RENDERER_HEIGHT - 5 + inset.top, addedOn.getXSize() - 10 - inset.left - inset.right,
+            RENDERER_HEIGHT - inset.top - inset.bottom, configurables, font);
         configRenderer.visible = show;
         addRenderableWidget.apply(configRenderer);
 
@@ -71,5 +79,7 @@ public class IOConfigButton<U extends EIOScreen<?>, T extends AbstractWidget> ex
 
     @Override
     public void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {}
+
+    public record Inset(int left, int right, int top, int bottom) {}
 
 }
