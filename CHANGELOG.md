@@ -10,6 +10,7 @@
 ### Removed
 
 ### Fixed
+- Fixed Soul Binder tooltip when IOConfig is open.
 
 ## [6.0.5-alpha] - 2023-07-11
 
