@@ -71,10 +71,10 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
 
                 if (j < inputs.size()) {
                     // If we expect an input, test we have a match for it.
-                    if (inputs.get(j).test(AlloySmelterBlockEntity.INPUTS.get(i).getItemStack(container))) {
+                    if (inputs.get(j).test(container.getItem(i))) {
                         matched[j] = true;
                     }
-                } else if (container.getItem(i) == ItemStack.EMPTY) {
+                } else if (container.getItem(i).isEmpty()) {
                     // If we don't expect an input, make sure we have a blank for it.
                     matched[j] = true;
                 }
