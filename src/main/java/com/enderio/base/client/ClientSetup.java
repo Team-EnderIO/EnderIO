@@ -8,7 +8,6 @@ import com.enderio.base.client.renderer.item.GlassIconDecorator;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.init.EIOParticles;
-import com.enderio.core.client.item.EnergyBarDecorator;
 import com.enderio.core.client.item.FluidBarDecorator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
@@ -64,7 +63,6 @@ public class ClientSetup {
         event.register(EIOItems.LEVITATION_STAFF.get(), FluidBarDecorator.INSTANCE);
         //        event.register(EIOItems.DARK_STEEL_AXE.get(), EnergyBarDecorator.INSTANCE);
         //        event.register(EIOItems.DARK_STEEL_PICKAXE.get(), EnergyBarDecorator.INSTANCE);
-        event.register(EIOItems.TRAVEL_STAFF.get(), EnergyBarDecorator.INSTANCE);
 
         // Register all glass blocks
         EIOBlocks.GLASS_BLOCKS.values().forEach(blocks -> blocks.getAllBlocks().forEach(block -> event.register(block.get(), GlassIconDecorator.INSTANCE)));

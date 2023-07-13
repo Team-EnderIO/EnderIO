@@ -1,14 +1,19 @@
 package com.enderio.base.common.item.tool;
 
+import com.enderio.api.capability.IMultiCapabilityItem;
 import com.enderio.api.capability.MultiCapabilityProvider;
+import com.enderio.base.common.capability.EnergyStorageItemStack;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.handler.TeleportHandler;
-import com.enderio.base.common.init.EIOCapabilities;
-import com.enderio.base.common.item.darksteel.IDarkSteelItem;
-import com.enderio.base.common.item.darksteel.upgrades.EmpoweredUpgradeTier;
+import com.enderio.base.common.lang.EIOLang;
+import com.enderio.core.client.item.EnergyBarDecorator;
+import com.enderio.core.client.item.IAdvancedTooltipProvider;
+import com.enderio.core.common.item.ITabVariants;
 import com.enderio.core.common.util.EnergyUtil;
+import com.enderio.core.common.util.TooltipUtil;
 import com.tterrag.registrate.util.CreativeModeTabModifier;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -17,9 +22,13 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.Nullable;
 
-public class TravelStaffItem extends Item implements IDarkSteelItem {
+import java.util.List;
+
+public class TravelStaffItem extends Item implements IMultiCapabilityItem, IAdvancedTooltipProvider, ITabVariants {
     public TravelStaffItem(Properties properties) {
         super(properties);
     }
@@ -27,9 +36,10 @@ public class TravelStaffItem extends Item implements IDarkSteelItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         ItemStack stack = player.getItemInHand(usedHand);
-        if (getActivationStatus(stack).isAir()) {if (tryPerformAction(level, player, stack)) {
-            return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
-        }
+        if (getActivationStatus(stack).isAir()) {
+            if (tryPerformAction(level, player, stack)) {
+                return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
+            }
             return InteractionResultHolder.fail(stack);
         }
         return super.use(level, player, usedHand);
@@ -76,6 +86,10 @@ public class TravelStaffItem extends Item implements IDarkSteelItem {
         return false;
     }
 
+    public int getMaxEnergy() {
+        return BaseConfig.COMMON.ITEMS.TRAVELLING_STAFF_MAX_ENERGY.get();
+    }
+
     public boolean hasResources(ItemStack stack) {
         return EnergyUtil.hasEnergy(stack, BaseConfig.COMMON.ITEMS.TRAVELLING_STAFF_ENERGY_USE.get());
     }
@@ -86,11 +100,7 @@ public class TravelStaffItem extends Item implements IDarkSteelItem {
 
     @Override
     public MultiCapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt, MultiCapabilityProvider provider) {
-
-        IDarkSteelItem.super.initCapabilities(stack, nbt, provider);
-        //Staff of Travelling always has Empowered I
-        provider.getCapability(EIOCapabilities.DARK_STEEL_UPGRADABLE).ifPresent(
-            cap -> cap.addUpgrade(EmpoweredUpgradeTier.ONE.getFactory().get()));
+        provider.addSimple(ForgeCapabilities.ENERGY, LazyOptional.of(() -> new EnergyStorageItemStack(stack, getMaxEnergy())));
         return provider;
     }
 
@@ -106,10 +116,32 @@ public class TravelStaffItem extends Item implements IDarkSteelItem {
         modifier.accept(is);
     }
 
+    @Override
+    public boolean isBarVisible(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public int getBarWidth(ItemStack stack) {
+        return stack
+            .getCapability(ForgeCapabilities.ENERGY)
+            .map(energyStorage -> Math.round(energyStorage.getEnergyStored() * 13.0F / energyStorage.getMaxEnergyStored()))
+            .orElse(0);
+    }
+
+    @Override
+    public int getBarColor(ItemStack pStack) {
+        return EnergyBarDecorator.BAR_COLOR;
+    }
+
+    @Override
+    public void addCommonTooltips(ItemStack itemStack, @org.jetbrains.annotations.Nullable Player player, List<Component> tooltips) {
+        String energy = String.format("%,d", EnergyUtil.getEnergyStored(itemStack)) + "/" + String.format("%,d", EnergyUtil.getMaxEnergyStored(itemStack));
+        tooltips.add(TooltipUtil.styledWithArgs(EIOLang.ENERGY_AMOUNT, energy));
+    }
+
     protected enum ActivationStatus {
-        BLOCK(true, false),
-        AIR(false, true),
-        ALL(true, true);
+        BLOCK(true, false), AIR(false, true), ALL(true, true);
 
         private final boolean isBlock, isAir;
 
