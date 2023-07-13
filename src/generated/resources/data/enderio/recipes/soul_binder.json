@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "enderio:ensouled_chassis"
+    },
+    "G": {
+      "item": "enderio:energized_gear"
+    },
+    "I": {
+      "item": "enderio:soularium_ingot"
+    },
+    "V": {
+      "item": "enderio:empty_soul_vial"
+    },
+    "Z": {
+      "item": "enderio:z_logic_controller"
+    }
+  },
+  "pattern": [
+    "IVI",
+    "GCG",
+    "IZI"
+  ],
+  "result": {
+    "item": "enderio:soul_binder"
+  },
+  "show_notification": true
+}

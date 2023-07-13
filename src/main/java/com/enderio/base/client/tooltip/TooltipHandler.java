@@ -1,10 +1,8 @@
 package com.enderio.base.client.tooltip;
 
 import com.enderio.api.capacitor.CapacitorModifier;
-import com.enderio.api.capacitor.ICapacitorData;
 import com.enderio.api.grindingball.IGrindingBallData;
 import com.enderio.base.common.capacitor.CapacitorUtil;
-import com.enderio.base.common.capacitor.LootCapacitorData;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.util.GrindingBallManager;
 import com.enderio.core.client.item.IAdvancedTooltipProvider;
@@ -21,7 +19,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-
 import org.jetbrains.annotations.Nullable;
 
 import java.text.NumberFormat;

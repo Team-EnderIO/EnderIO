@@ -7,11 +7,11 @@ import java.util.function.Consumer;
 
 public class GearItem extends MaterialItem implements IRotatingItem {
 
-    private final float tpr;
+    private final float ticksPerRotation;
 
-    public GearItem(Properties props, float tpr) {
+    public GearItem(Properties props, float ticksPerRotation) {
         super(props, false);
-        this.tpr = tpr;
+        this.ticksPerRotation = ticksPerRotation;
     }
 
     // enables the use of a BEWLR
@@ -22,6 +22,6 @@ public class GearItem extends MaterialItem implements IRotatingItem {
 
     @Override
     public float getTicksPerRotation() {
-        return tpr;
+        return ticksPerRotation;
     }
 }

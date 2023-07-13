@@ -1,11 +1,6 @@
 package com.enderio.base.common.config.common;
 
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.registries.ForgeRegistries;
-
-import java.util.List;
 
 public class ItemsConfig {
     public final ForgeConfigSpec.ConfigValue<Float> ENDERIOS_CHANCE;
@@ -26,8 +21,6 @@ public class ItemsConfig {
 
     public final ForgeConfigSpec.ConfigValue<Integer> TRAVELLING_TO_BLOCK_RANGE;
     public final ForgeConfigSpec.ConfigValue<Integer> TRAVELLING_BLOCK_TO_BLOCK_RANGE;
-
-    public final ForgeConfigSpec.ConfigValue<List<? extends String>> SOUL_VIAL_BLACKLIST;
 
     public ItemsConfig(ForgeConfigSpec.Builder builder) {
         builder.push("items");
@@ -57,14 +50,6 @@ public class ItemsConfig {
         builder.comment("the following config values are only used if EIOMachines is loaded");
         TRAVELLING_TO_BLOCK_RANGE = builder.defineInRange("itemToBlockRange", 256, 4, 16 * 32);
         TRAVELLING_BLOCK_TO_BLOCK_RANGE = builder.defineInRange("blockToBlockRange", 96, 4, 16 * 32);
-        builder.pop();
-
-        builder.push("soulvial");
-        SOUL_VIAL_BLACKLIST = builder
-            .comment("A list of entities that cannot be captured in the soul vial.")
-            .defineList("denylist", List.of(ForgeRegistries.ENTITY_TYPES.getKey(EntityType.WITHER).toString(),
-                    ForgeRegistries.ENTITY_TYPES.getKey(EntityType.ELDER_GUARDIAN).toString()),
-                value -> value instanceof String string && ResourceLocation.isValidResourceLocation(string));
         builder.pop();
 
         builder.pop();

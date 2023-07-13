@@ -3,15 +3,12 @@ package com.enderio.machines.client.gui.widget;
 import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.machines.common.lang.MachineLang;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 
 import java.util.function.Supplier;
@@ -29,12 +26,12 @@ public abstract class ProgressWidget extends AbstractWidget {
         }
 
         @Override
-        public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
             float progress = progressSupplier.get();
             int yOffset = (int)(this.height * (1.0f - progress));
-            render(poseStack, getX(), getY() + yOffset, u, v + yOffset, width, (int) (this.height * progress));
+            render(guiGraphics, getX(), getY() + yOffset, u, v + yOffset, width, (int) (this.height * progress));
 
-            super.renderWidget(poseStack, mouseX, mouseY, partialTick);
+            super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
         }
     }
 
@@ -48,10 +45,10 @@ public abstract class ProgressWidget extends AbstractWidget {
         }
 
         @Override
-        public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
             float progress = progressSupplier.get();
-            render(poseStack, getX(), getY(), u, v, width, (int) (this.height * progress));
-            super.renderWidget(poseStack, mouseX, mouseY, partialTick);
+            render(guiGraphics, getX(), getY(), u, v, width, (int) (this.height * progress));
+            super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
         }
     }
 
@@ -65,10 +62,10 @@ public abstract class ProgressWidget extends AbstractWidget {
         }
 
         @Override
-        public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
             float progress = progressSupplier.get();
-            render(poseStack, getX(), getY(), u, v, (int) (this.width * progress), height);
-            super.renderWidget(poseStack, mouseX, mouseY, partialTick);
+            render(guiGraphics, getX(), getY(), u, v, (int) (this.width * progress), height);
+            super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
         }
     }
 
@@ -102,7 +99,7 @@ public abstract class ProgressWidget extends AbstractWidget {
     public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     @Override
-    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         // Update the contents of the tooltip whenever its hovered, don't waste any time doing it when not hovered.
         // Should also mean when tooltip is false it never gets populated
         if (this.isHoveredOrFocused() && tooltip) {
@@ -115,12 +112,7 @@ public abstract class ProgressWidget extends AbstractWidget {
         return DefaultTooltipPositioner.INSTANCE;
     }
 
-    protected void render(PoseStack poseStack, int x, int y, int u, int v, int w, int h) {
-        poseStack.pushPose();
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, screen.getBackgroundImage());
-        blit(poseStack, x, y, u, v, w, h);
-        poseStack.popPose();
+    protected void render(GuiGraphics guiGraphics, int x, int y, int u, int v, int w, int h) {
+        guiGraphics.blit(screen.getBackgroundImage(), x, y, u, v, w, h);
     }
 }

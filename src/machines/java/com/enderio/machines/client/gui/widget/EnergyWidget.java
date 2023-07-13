@@ -4,12 +4,12 @@ import com.enderio.EnderIO;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.gui.widgets.EIOWidget;
 import com.enderio.core.common.util.TooltipUtil;
+import com.enderio.machines.common.io.energy.ILargeMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 
 import java.text.NumberFormat;
@@ -20,9 +20,9 @@ public class EnergyWidget extends EIOWidget {
 
     // TODO: Will need some way of displaying no tooltip and instead asking for a capacitor on non-simple machines.
 
-    private static final ResourceLocation WIDGETS = EnderIO.loc("textures/gui/widgets.png");
+    protected static final ResourceLocation WIDGETS = EnderIO.loc("textures/gui/widgets.png");
 
-    private final Screen displayOn;
+    protected final Screen displayOn;
     private final Supplier<IMachineEnergyStorage> storageSupplier;
 
     public EnergyWidget(Screen displayOn, Supplier<IMachineEnergyStorage> storageSupplier, int x, int y, int width, int height) {
@@ -32,33 +32,31 @@ public class EnergyWidget extends EIOWidget {
     }
 
     @Override
-    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         // Don't bother if we have no energy capacity, protects from divide by zero's when there's no capacitor.
         IMachineEnergyStorage storage = storageSupplier.get();
         if (storage.getMaxEnergyStored() <= 0)
             return;
 
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
-        RenderSystem.setShaderTexture(0, WIDGETS);
 
-        float filledVolume = storage.getEnergyStored() / (float) storage.getMaxEnergyStored();
+        float filledVolume = (float)(getEnergyStored(storage) / (double) getMaxEnergyStored(storage));
         int renderableHeight = (int)(filledVolume * height);
 
-        poseStack.pushPose();
-        poseStack.translate(0, height-16, 0);
+        guiGraphics.pose().pushPose();
+        guiGraphics.pose().translate(0, height-16, 0);
         for (int i = 0; i < Math.ceil(renderableHeight / 16f); i++) {
             int drawingHeight = Math.min(16, renderableHeight - 16*i);
             int notDrawingHeight = 16 - drawingHeight;
-            blit(poseStack, x, y + notDrawingHeight, 0, 0, 128 + notDrawingHeight, width, drawingHeight, 256, 256);
-            poseStack.translate(0,-16, 0);
+            guiGraphics.blit(WIDGETS, x, y + notDrawingHeight, 0, 0, 128 + notDrawingHeight, width, drawingHeight, 256, 256);
+            guiGraphics.pose().translate(0,-16, 0);
         }
 
-        RenderSystem.setShaderColor(1, 1, 1, 1);
-        poseStack.popPose();
+        RenderSystem.disableDepthTest();
+        guiGraphics.pose().popPose();
 
-        renderToolTip(poseStack, mouseX, mouseY);
+        renderToolTip(guiGraphics, mouseX, mouseY);
     }
 
     @Override
@@ -66,14 +64,27 @@ public class EnergyWidget extends EIOWidget {
 
     }
 
-    public void renderToolTip(PoseStack poseStack, int mouseX, int mouseY) {
+    public void renderToolTip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (isHovered(mouseX, mouseY)) {
             IMachineEnergyStorage storage = storageSupplier.get();
 
             NumberFormat fmt = NumberFormat.getInstance(Locale.ENGLISH);
-            displayOn.renderTooltip(poseStack, TooltipUtil.withArgs(EIOLang.ENERGY_AMOUNT, fmt.format(storage.getEnergyStored()) + "/" + fmt.format(
-                storage.getMaxEnergyStored())), mouseX, mouseY);
+            guiGraphics.renderTooltip(displayOn.getMinecraft().font, TooltipUtil.withArgs(EIOLang.ENERGY_AMOUNT, fmt.format(getEnergyStored(storage)) + "/" + fmt.format(
+               getMaxEnergyStored(storage))), mouseX, mouseY);
         }
+    }
+
+    private static long getEnergyStored(IMachineEnergyStorage storage) {
+        if (storage instanceof ILargeMachineEnergyStorage largeStorage)
+            return largeStorage.getLargeEnergyStored();
+        return storage.getEnergyStored();
+    }
+
+    private static long getMaxEnergyStored(IMachineEnergyStorage storage) {
+        if (storage instanceof ILargeMachineEnergyStorage largeStorage) {
+            return largeStorage.getLargeMaxEnergyStored();
+        }
+        return storage.getMaxEnergyStored();
     }
 }
 

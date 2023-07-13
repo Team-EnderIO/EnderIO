@@ -28,5 +28,6 @@
     "recipes": [
       "enderio:wood_gear_corner"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

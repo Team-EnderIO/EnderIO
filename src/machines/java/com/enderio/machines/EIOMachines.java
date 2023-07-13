@@ -6,17 +6,26 @@ import com.enderio.api.integration.IntegrationManager;
 import com.enderio.api.travel.TravelRegistry;
 import com.enderio.machines.client.rendering.travel.TravelAnchorRenderer;
 import com.enderio.machines.common.config.MachinesConfig;
+import com.enderio.machines.common.init.*;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.init.MachineMenus;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.integrations.EnderIOMachinesSelfIntegration;
 import com.enderio.machines.common.lang.MachineLang;
+import com.enderio.machines.common.network.MachineNetwork;
+import com.enderio.machines.common.tag.MachineTags;
+import com.enderio.machines.data.advancements.MachinesAdvancementGenerator;
 import com.enderio.machines.common.travel.AnchorTravelTarget;
 import com.enderio.machines.data.recipes.*;
+import com.enderio.machines.data.souldata.SoulDataProvider;
+import com.enderio.machines.data.tag.MachineEntityTypeTagsProvider;
+import net.minecraft.Util;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.data.registries.VanillaRegistries;
+import net.minecraftforge.common.data.ForgeAdvancementProvider;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -24,7 +33,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLConstructModEvent;
 
-import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static com.enderio.EnderIO.loc;
 
@@ -41,8 +51,12 @@ public class EIOMachines {
         MachineBlocks.register();
         MachineBlockEntities.register();
         MachineMenus.register();
+        MachinePackets.register();
+
         MachineLang.register();
         MachineRecipes.register();
+        MachineTags.register();
+        MachineNetwork.networkInit();
 
         IntegrationManager.addIntegration(EnderIOMachinesSelfIntegration.INSTANCE);
         TravelRegistry.addTravelEntry(loc("travel_anchor"), AnchorTravelTarget::new, TravelAnchorRenderer::new);
@@ -52,6 +66,7 @@ public class EIOMachines {
     public static void gatherData(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
         PackOutput packOutput = generator.getPackOutput();
+        CompletableFuture<HolderLookup.Provider> completablefuture = CompletableFuture.supplyAsync(VanillaRegistries::createLookup, Util.backgroundExecutor());
 
         EIODataProvider provider = new EIODataProvider("machines");
 
@@ -61,7 +76,13 @@ public class EIOMachines {
         provider.addSubProvider(event.includeServer(), new SagMillRecipeProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new SlicingRecipeProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new SoulBindingRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new TankRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new PaintingRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new SoulDataProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new MachineEntityTypeTagsProvider(packOutput, completablefuture, event.getExistingFileHelper()));
 
         generator.addProvider(true, provider);
+        provider.addSubProvider(event.includeServer(), new ForgeAdvancementProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper(),
+            List.of(new MachinesAdvancementGenerator())));
     }
 }

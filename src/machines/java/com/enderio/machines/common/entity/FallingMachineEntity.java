@@ -7,6 +7,7 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -38,7 +39,7 @@ public class FallingMachineEntity extends FallingBlockEntity {
         // Add block entity NBT to item stack
         if (!stack.isEmpty() && blockData != null) {
             CompoundTag itemNbt = new CompoundTag();
-            itemNbt.put("BlockEntityTag", blockData);
+            itemNbt.put(BlockItem.BLOCK_ENTITY_TAG, blockData);
             stack.setTag(itemNbt);
         }
         return super.spawnAtLocation(stack, offsetY);

@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
+// TODO: Change this into a anvil recipe.
 public class DarkSteelUpgradeRecipe extends SmithingTransformRecipe {
     public DarkSteelUpgradeRecipe(ResourceLocation pId) {
         super(pId, Ingredient.EMPTY, Ingredient.EMPTY, Ingredient.EMPTY, ItemStack.EMPTY);
@@ -47,8 +48,7 @@ public class DarkSteelUpgradeRecipe extends SmithingTransformRecipe {
 
     @Override
     public boolean matches(Container pContainer, Level pLevel) {
-        // Check binder
-        // TODO: Upgrade binding or something.
+        // Check temporary binder
         if (!pContainer.getItem(2).is(EIOItems.CONDUIT_BINDER.get()))
             return false;
 

@@ -10,13 +10,15 @@ import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 
 public class SagMillMenu extends MachineMenu<SagMillBlockEntity> {
+    public static int INPUTS_INDEX = 1;
+    public static int INPUT_COUNT = 1;
+    public static int LAST_INDEX = 6;
+
     public SagMillMenu(@Nullable SagMillBlockEntity blockEntity, Inventory inventory, int pContainerId) {
         super(blockEntity, inventory, MachineMenus.SAG_MILL.get(), pContainerId);
 
         if (blockEntity != null) {
-            if (blockEntity.requiresCapacitor()) {
-                addSlot(new MachineSlot(blockEntity.getInventory(), blockEntity.getCapacitorSlot(), 12, 60));
-            }
+            addSlot(new MachineSlot(blockEntity.getInventory(), blockEntity.getCapacitorSlot(), 12, 60));
 
             addSlot(new MachineSlot(blockEntity.getInventory(), SagMillBlockEntity.INPUT, 80, 12));
 
@@ -31,7 +33,7 @@ public class SagMillMenu extends MachineMenu<SagMillBlockEntity> {
     }
 
     public static SagMillMenu factory(@Nullable MenuType<SagMillMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
-        BlockEntity entity = inventory.player.level.getBlockEntity(buf.readBlockPos());
+        BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
         if (entity instanceof SagMillBlockEntity castBlockEntity)
             return new SagMillMenu(castBlockEntity, inventory, pContainerId);
         LogManager.getLogger().warn("couldn't find BlockEntity");

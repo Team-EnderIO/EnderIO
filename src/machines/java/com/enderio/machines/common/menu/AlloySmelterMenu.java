@@ -10,13 +10,15 @@ import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 
 public class AlloySmelterMenu extends MachineMenu<AlloySmelterBlockEntity> {
+    public static int INPUTS_INDEX = 1;
+    public static int INPUT_COUNT = 3;
+    public static int LAST_INDEX = 4;
+
     public AlloySmelterMenu(@Nullable AlloySmelterBlockEntity blockEntity, Inventory inventory, int pContainerId) {
         super(blockEntity, inventory, MachineMenus.ALLOY_SMELTER.get(), pContainerId);
         if (blockEntity != null) {
             // Capacitor slot
-            if (blockEntity.requiresCapacitor()) {
-                addSlot(new MachineSlot(blockEntity.getInventory(), blockEntity.getCapacitorSlot(), 12, 60));
-            }
+            addSlot(new MachineSlot(blockEntity.getInventory(), blockEntity.getCapacitorSlot(), 12, 60));
 
             addSlot(new MachineSlot(blockEntity.getInventory(), AlloySmelterBlockEntity.INPUTS.get(0), 54, 17));
             addSlot(new MachineSlot(blockEntity.getInventory(), AlloySmelterBlockEntity.INPUTS.get(1), 79, 7));
@@ -27,7 +29,7 @@ public class AlloySmelterMenu extends MachineMenu<AlloySmelterBlockEntity> {
     }
 
     public static AlloySmelterMenu factory(@Nullable MenuType<AlloySmelterMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
-        BlockEntity entity = inventory.player.level.getBlockEntity(buf.readBlockPos());
+        BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
         if (entity instanceof AlloySmelterBlockEntity castBlockEntity)
             return new AlloySmelterMenu(castBlockEntity, inventory, pContainerId);
         LogManager.getLogger().warn("couldn't find BlockEntity");

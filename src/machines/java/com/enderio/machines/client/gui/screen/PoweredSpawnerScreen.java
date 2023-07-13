@@ -1,18 +1,16 @@
 package com.enderio.machines.client.gui.screen;
 
 import com.enderio.EnderIO;
+import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.enderio.core.client.gui.widgets.ToggleImageButton;
-import com.enderio.core.common.util.Vector2i;
-import com.enderio.machines.client.gui.widget.EnergyWidget;
+import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
 import com.enderio.machines.client.gui.widget.ProgressWidget;
 import com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity;
 import com.enderio.machines.common.menu.PoweredSpawnerMenu;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -26,7 +24,6 @@ public class PoweredSpawnerScreen extends EIOScreen<PoweredSpawnerMenu> {
     public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/powered_spawner_spawn.png");
     private static final ResourceLocation RANGE_BUTTON_TEXTURE = EnderIO.loc("textures/gui/icons/range_buttons.png");
 
-
     public PoweredSpawnerScreen(PoweredSpawnerMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
     }
@@ -35,7 +32,7 @@ public class PoweredSpawnerScreen extends EIOScreen<PoweredSpawnerMenu> {
     protected void init() {
         super.init();
 
-        addRenderableOnly(new EnergyWidget(this, getMenu().getBlockEntity()::getEnergyStorage, 16 + leftPos, 14 + topPos, 9, 42));
+        addRenderableOnly(new CapacitorEnergyWidget(this, getMenu().getBlockEntity()::getEnergyStorage, getMenu().getBlockEntity()::isCapacitorInstalled, 16 + leftPos, 14 + topPos, 9, 42));
 
         addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
@@ -44,7 +41,7 @@ public class PoweredSpawnerScreen extends EIOScreen<PoweredSpawnerMenu> {
             () -> menu.getBlockEntity().isShowingRange(), state -> menu.getBlockEntity().shouldShowRange(state),
             () -> menu.getBlockEntity().isShowingRange() ? EIOLang.HIDE_RANGE : EIOLang.SHOW_RANGE));
 
-        addRenderableOnly(new ProgressWidget.BottomUp(this, () -> menu.getBlockEntity().getProgress(), getGuiLeft() + 82, getGuiTop() + 38, 14, 14, 176, 0));
+        addRenderableOnly(new ProgressWidget.BottomUp(this, () -> menu.getBlockEntity().getSpawnProgress(), getGuiLeft() + 82, getGuiTop() + 38, 14, 14, 176, 0));
 
     }
 
@@ -59,19 +56,20 @@ public class PoweredSpawnerScreen extends EIOScreen<PoweredSpawnerMenu> {
     }
 
     @Override
-    protected void renderLabels(PoseStack pPoseStack, int pMouseX, int pMouseY) {
+    protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
         Optional<ResourceLocation> rl = getMenu().getBlockEntity().getEntityType();
         if (rl.isPresent()) {
             EntityType<?> type = ForgeRegistries.ENTITY_TYPES.getValue(rl.get());
             if (type != null && ForgeRegistries.ENTITY_TYPES.getKey(type).equals(rl.get())) { // check we don't get the default pig
                 String name = type.getDescription().getString();
-                font.draw(pPoseStack, name, imageWidth/2f - font.width(name)/2f, 15, 4210752);
+                guiGraphics.drawString(font, name, imageWidth / 2f - font.width(name) / 2f, 15, 4210752, false);
             } else {
-                font.draw(pPoseStack, rl.get().toString(), imageWidth/2f - font.width(rl.get().toString())/2f, 15, 4210752);
+                guiGraphics.drawString(font, rl.get().toString(), imageWidth / 2f - font.width(rl.get().toString()) / 2f, 15, 4210752, false);
             }
         }
         if (getMenu().getBlockEntity().getReason() != PoweredSpawnerBlockEntity.SpawnerBlockedReason.NONE) {
-            font.draw(pPoseStack, getMenu().getBlockEntity().getReason().getComponent().getString(), imageWidth/2f - font.width(getMenu().getBlockEntity().getReason().getComponent().getString())/2f, 26, 0);
+            guiGraphics.drawString(font, getMenu().getBlockEntity().getReason().getComponent().getString(),
+                imageWidth / 2f - font.width(getMenu().getBlockEntity().getReason().getComponent().getString()) / 2f, 26, 0, false);
         }
     }
 }

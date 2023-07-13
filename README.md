@@ -10,9 +10,9 @@
   <h3 align="center">EnderIO</h3>
 
   <p align="center">
-    The full-fat tech mod for Minecraft 1.19.
+    The full-fat tech mod for Minecraft 1.20.1
     <br />
-    <a href="https://github.com/Rover656/EnderIO-Rewrite/wiki"><strong>Browse the Wiki »</strong></a>
+    <a href="https://github.com/SleepyTrousers/EnderIO-Rewrite/wiki"><strong>Browse the Wiki »</strong></a>
     <br />
     <br />
     <a href="https://www.curseforge.com/minecraft/mc-mods/ender-io">Curseforge</a>
@@ -21,9 +21,9 @@
     ·
     <a href="https://discord.gg/sgYk3Jr">Discord</a>
     ·
-    <a href="https://github.com/Rover656/EnderIO-Rewrite/issues/new?assignees=&labels=bug&template=bug_report.md&title=%5BBUG%5D+Short+problem+description">Report Bug</a>
+    <a href="https://github.com/SleepyTrousers/EnderIO-Rewrite/issues/new?assignees=&labels=bug&template=bug_report.md&title=%5BBUG%5D+Short+problem+description">Report Bug</a>
     ·
-    <a href="https://github.com/Rover656/EnderIO-Rewrite/issues/new?assignees=&labels=&template=feature_request.md&title=">Request Feature</a>
+    <a href="https://github.com/SleepyTrousers/EnderIO-Rewrite/issues/new?assignees=&labels=&template=feature_request.md&title=">Request Feature</a>
   </p>
 </p>
 
@@ -34,9 +34,9 @@
   <ol>
     <li>
       <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
+    </li>
+      <li>
+      <a href="#looking-for-a-server">Looking for a Server?</a>
     </li>
     <li>
       <a href="#getting-started">Getting Started</a>
@@ -56,16 +56,22 @@
 
 [![EnderIO Logo](doc/img/logo.png)](https://www.curseforge.com/minecraft/mc-mods/ender-io)
 
-[![Gradle Build](https://github.com/Rover656/EnderIO-Rewrite/actions/workflows/gradle.yml/badge.svg)](https://github.com/Rover656/EnderIO-Rewrite/actions/workflows/gradle.yml)
+[![Build Status](https://ci.tterrag.com/job/EnderIO-Modules/job/EnderIO-Hourly/badge/icon)](https://ci.tterrag.com/job/EnderIO-Modules/job/EnderIO-Hourly/)
 
-TODO
+Ender IO is a full-featured tech mod. It has armor, tools, weapons, machines, conduits, inventory management, mobs, etc.
 
+Ender IO has been rewritten from the ground-up to support the latest version of Minecraft.
+Some features may be missing or work differently, however we are working to re-implement everything we know and love about the original.
+
+<!-- PARTNER BANNER -->
+## Looking for a Server?
+
+[![Akliz Official Partner](doc/img/akliz_banner_enderio.png)](https://www.akliz.net/enderio)
+
+The Ender IO Team are official Akliz partners! Akliz provides high-performance game hosting for games like Minecraft, Valheim, Satisfactory, ARK and more! Use our [coupon code](https://www.akliz.net/enderio) for 20% off your first month!
 
 <!-- GETTING STARTED -->
 ## Getting Started
-
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
 
 ### For Players
 
@@ -73,9 +79,8 @@ Download the latest JAR file from GitHub releases or from [CurseForge](https://w
 
 ### For Mod Developers
 
-EnderIO and it's modules are available via our maven.
-
-Update your `build.gradle` to contain the foillowing:
+EnderIO is available via our maven.
+Update your `build.gradle` to contain the following:
 
 ```groovy
 repositories {
@@ -83,22 +88,29 @@ repositories {
 }
 
 dependencies {
-    // Include Ender IO Base API
-    compileOnly fg.deobf("com.enderio:EnderIO-base:<VERSION>:api")
+    // Include Ender IO API for compilation
+    compileOnly fg.deobf("com.enderio:EnderIO:<VERSION>:api")
     
-    // Test with Ender IO in the mod:
-    runtimeOnly fg.deobf("com.enderio.EnderIO:<VERSION>") // For monolithic build
-    
-    runtimeOnly fg.deobf("com.enderio:EnderIO-<MODULE>:<VERSION>") // For individual modules
-    // ...
+    // Use EnderIO at runtime
+    runtimeOnly fg.deobf("com.enderio.EnderIO:<VERSION>")
 }
 ```
-
+If you need any feature in the api, contact us.
 
 <!-- CONTRIBUTING -->
 ## Contributing
 
-TODO: Contributing guidelines
+> **Note**
+> Before selecting a task from the tracker to do, make sure to comment to say that you are working on it so other's don't do the same thing!
+> If you are planning on contributing something that isn't tracked, consider either making an issue to discuss your proposal, or pushing a very early draft PR for discussion
+
+1. Ensure you meet the [Forge prerequisites](https://docs.minecraftforge.net/en/latest/gettingstarted/#prerequisites).
+1. Fork this repository under your own profile, this will mean you can push your changes to GitHub for Pull Requests later.
+1. Clone down the forked repository using a git client or cli.
+1. Open the project in your preferred IDE and wait for the gradle import.
+1. Follow any other relevant Forge setup [for your IDE](https://docs.minecraftforge.net/en/latest/gettingstarted/#from-zero-to-modding).
+1. Work on your feature or fix, try to commit for each major thing you do.
+1. Create a draft pull request early for big changes to receive early feedback.
 
 
 <!-- LICENSE -->
@@ -120,6 +132,8 @@ Certain parts of the source code may be under a different license due to being p
 - HypherionSA
 - agnor99
 - ferriarnus
+- mystchonky
+- and our Contributors
 
 ### Sound Credits
 

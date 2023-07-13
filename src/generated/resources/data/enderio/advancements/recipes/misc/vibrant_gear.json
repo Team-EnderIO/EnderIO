@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:vibrant_gear"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

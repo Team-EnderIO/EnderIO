@@ -1,4 +1,6 @@
 import java.util.function.Consumer
+import org.jetbrains.changelog.Changelog
+import org.jetbrains.changelog.ExtensionsKt
 
 buildscript {
     repositories {
@@ -8,7 +10,7 @@ buildscript {
     }
     dependencies {
         classpath 'org.spongepowered:mixingradle:0.7.+'
-        classpath 'org.moddingx:ModGradle:3.0.+'
+        classpath 'org.moddingx:ModGradle:4.0.+'
     }
 }
 
@@ -16,12 +18,15 @@ plugins {
     id 'eclipse'
     id 'maven-publish'
     id "com.modrinth.minotaur" version "2.+"
-    id 'net.minecraftforge.gradle' version '5.1.+'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+    id "me.hypherionmc.modutils.modpublisher" version "1.+"
+    id 'org.jetbrains.changelog' version '2.+'
 }
 
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'org.moddingx.modgradle.mapping'
+apply plugin: 'org.jetbrains.changelog'
 
 version = getVersionString()
 group = 'com.enderio'
@@ -35,7 +40,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 def subsets = [
         'conduits',
         'machines',
-        'decor'
+        'armory'
 ]
 
 sourceSets {
@@ -103,11 +108,11 @@ minecraft {
         }
         clientRandom {
             parent runs.client
-            args '--username', 'Dev##'
+            args '--username', 'Dev####'
         }
 
         server {
-            workingDirectory project.file('run')
+            workingDirectory project.file('run-server')
 
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
@@ -134,7 +139,10 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-            args '--mod', 'enderio', '--server', '--client', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            args '--mod', 'enderio', '--server', '--client', '--output', file('src/generated/resources/'),
+                    '--existing', file('src/main/resources/'),
+                    '--existing', file('src/machines/resources/'),
+                    '--existing', file('src/conduits/resources/')
 
             mods {
                 enderio {
@@ -193,9 +201,11 @@ void exclusiveRepo(RepositoryHandler handler, String url, Consumer<InclusiveRepo
 
 repositories { RepositoryHandler handler ->
     exclusiveRepo(handler, 'https://maven.tterrag.com/', 'com.tterrag.registrate')
-    exclusiveRepo(handler, 'https://modmaven.dev/', 'mezz.jei', 'mcjty.theoneprobe')
+    exclusiveRepo(handler, 'https://modmaven.dev/', 'mezz.jei', 'mcjty.theoneprobe', 'appeng')
     exclusiveRepo(handler, 'https://cursemaven.com', 'curse.maven')
     exclusiveRepo(handler, 'https://maven.blamejared.com', 'vazkii.patchouli')
+    exclusiveRepo(handler, 'https://dogforce-games.com/maven', 'dev.gigaherz.graph')
+    exclusiveRepo(handler, 'https://api.modrinth.com/maven', 'maven.modrinth')
 
     mavenLocal()
 }
@@ -205,12 +215,17 @@ jarJar.enable()
 dependencies {
     // Forge
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-
+    //implementation fg.deobf("blank:Xycraft+Core:0.5.2")
+    //runtimeOnly fg.deobf("blank:Xycraft+Override:0.5.2")
+    //runtimeOnly fg.deobf("blank:Xycraft+World:0.5.2")
     // Registrate
     implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
     jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: "[${registrate_version}]")
 
-    coreAnnotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    // GraphLib
+    implementation implementation(fg.deobf("dev.gigaherz.graph:GraphLib3:${graphlib_version}"))
+    jarJar(group: 'dev.gigaherz.graph', name: 'GraphLib3', version: "${graphlib_version_range}")
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     // JEI
     compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
@@ -218,21 +233,36 @@ dependencies {
     runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common:${jei_version}")
     runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
 
-    // The One Probe
-    //TODO: Remove having to specify these as non transitive once https://github.com/McJtyMods/TheOneProbe/issues/548 is fixed. Thanks Mekanism!
-    compileOnly fg.deobf("mcjty.theoneprobe:theoneprobe:${top_version}:api") {
-        transitive = false
-    }
-    runtimeOnly fg.deobf("mcjty.theoneprobe:theoneprobe:${top_version}") {
-        transitive = false
-    }
+    //RFTOOLS
+    runtimeOnly fg.deobf("maven.modrinth:rftools-power:f430rHkA")
+    runtimeOnly fg.deobf("maven.modrinth:mcjtylib:3LlgyvSh")
+    runtimeOnly fg.deobf("maven.modrinth:rftools-base:Uu1IkVMH")
+    runtimeOnly fg.deobf("maven.modrinth:spark:Yp6s4wsw")
+
+    //Athena ctm
+    runtimeOnly fg.deobf("maven.modrinth:athena-ctm:X6GdUrpW")
+
+    // AE2
+    compileOnly "appeng:appliedenergistics2-forge:${ae2_version}:api"
+    runtimeOnly fg.deobf("appeng:appliedenergistics2-forge:${ae2_version}")
+
+    // The One Probe https://github.com/McJtyMods/TheOneProbe/issues/548
+//    compileOnly fg.deobf("mcjty.theoneprobe:theoneprobe:${top_version}:api") {
+//        transitive = false
+//    }
+//    runtimeOnly fg.deobf("mcjty.theoneprobe:theoneprobe:${top_version}") {
+//        transitive = false
+//    }
+
+    // Jade
+    runtimeOnly fg.deobf("curse.maven:jade-324717:${jade_cf_id}")
 
     // Patchouli
 //    compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
 //    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
 
     // While we don't have conduits etc.
-//    runtimeOnly fg.deobf("curse.maven:mekanism-268560:${mekanism_version}")
+//    runtimeOnly fg.deobf("curse.maven:mekanism-268560:${mekanism_cf_id}")
 
     // Jetbrains annotations
     compileOnly 'org.jetbrains:annotations:23.0.0'
@@ -240,7 +270,6 @@ dependencies {
 
 // MixinGradle Settings
 mixin {
-    add sourceSets.core, "mixins.enderio.refmap.json"
     add sourceSets.main, "mixins.enderio.refmap.json"
     config "mixins.enderio.json"
 }
@@ -274,14 +303,15 @@ jar {
     finalizedBy('reobfJar')
 }
 
-task apiJar(type: Jar) {
-    classifier 'api'
+tasks.register('apiJar', Jar) {
+    archiveClassifier = 'api'
     from sourceSets.api.output
 }
 build.dependsOn apiJar
 
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier 'sources'
+tasks.register('sourcesJar', Jar) {
+    dependsOn classes
+    archiveClassifier = 'sources'
 
     from sourceSets.api.allJava
     from sourceSets.main.allJava
@@ -305,31 +335,47 @@ tasks.jarJar.configure {
 }
 build.dependsOn tasks.jarJar
 
-// TODO: Should trigger automated publishes using GitHub actions when a release is made.
+changelog {
+    path = file("CHANGELOG.md").canonicalPath
+    header = "[${-> version.get()}] - ${ExtensionsKt.date("yyyy-MM-dd")}"
+    itemPrefix = "-"
+    keepUnreleasedSection = true
+    unreleasedTerm = "[Unreleased]"
+    groups = ["Added", "Changed", "Removed", "Fixed"]
+    lineSeparator = "\n"
+    combinePreReleases = false // TODO: Decide if we want to do this or not.
+}
 
-if (modrinth_publish && (System.getenv("MODRINTH_TOKEN") != null || project.hasProperty('modrinthToken'))) {
-    modrinth {
-        token = System.getenv("MODRINTH_TOKEN") ?: project.findProperty("modrinthToken")
-        projectId = "${modrinth_projectId}"
-        versionNumber = project.version
+if (changelog.has(getVersionString())) {
+    print("This version has a valid changelog, publishing is enabled.")
+
+    publisher {
+        apiKeys {
+            curseforge = System.getenv("CURSEFORGE_TOKEN")
+            modrinth = System.getenv("MODRINTH_TOKEN")
+        }
+
+        debug = System.getenv("PUBLISH") != "true"
+        curseID = curseforge_projectId
+        modrinthID = modrinth_projectId
         versionType = release_type
-        uploadFile = tasks.jarJar
+        version = "${getVersionString()}"
+        displayName = "Ender IO - ${getVersionString()}"
+        changelog = project.changelog.renderItem(project.changelog.get(getVersionString()), Changelog.OutputType.MARKDOWN)
         gameVersions = [minecraft_version]
         loaders = ["forge"]
+        artifact = tasks.jarJar
 
-        // TODO: Generate changelog based on diff since last time.
-//        changelog = ...
+        curseDepends {
+            optional = ["jei", /*"patchouli",*/ "athena", "applied-energistics-2"]
+        }
 
-        syncBodyFrom = rootProject.file("doc/modpages/modrinth/body.md").text
-
-        dependencies {
-            // Patchouli
-            optional.project "nU0bVIaL"
-
-            // JEI
-            optional.project "u6dRKJwZ"
+        modrinthDepends {
+            optional = [/*modrinth_dep_patchouli, */modrinth_dep_jei, modrinth_dep_athena, modrinth_dep_ae2]
         }
     }
+} else {
+    print("Publishing disabled - a changelog has not yet been prepared for this release. Add an entry for ${project.version} to enable.")
 }
 
 publishing {
@@ -395,6 +441,10 @@ tasks.withType(JavaCompile).configureEach {
 //   * enderio-1.19.1-6.2.1-nightly-4      :: nightly build no. 4 for version 6.2.1
 //   * enderio-1.19.1-6.5.1-dev-c91c8ee6e  :: dev (local) build for commit c91c8ee6e
 String getVersionString() {
+    // We've configured TeamCity to give us build numbers;
+    if (System.getenv('TEAMCITY_VERSION') != null)
+        return "${System.getenv('BUILD_NUMBER')}-${project.release_type}"
+
     def build_server = System.getenv('CI') != null || System.getenv('BUILD_NUMBER') != null
 
     def version_patch_lc = project.version_patch

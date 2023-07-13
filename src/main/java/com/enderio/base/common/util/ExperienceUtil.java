@@ -1,11 +1,12 @@
 package com.enderio.base.common.util;
 
-import com.enderio.core.common.util.Vector2i;
+import com.enderio.api.misc.Vector2i;
+import net.minecraft.world.entity.player.Player;
 
 public class ExperienceUtil {
 
     // 1 exp = 20 mb
-    public static int EXPTOFLUID = 20;
+    public static int EXP_TO_FLUID = 20;
 
     /**
      * Fills the experience bar just like a player, starting from a certain level, with a possible maximum.
@@ -33,8 +34,8 @@ public class ExperienceUtil {
      * @return
      */
     public static Vector2i getLevelFromFluidWithLeftover(int fluidAmount, int startLevel, int stopLevel) {
-        Vector2i res = getLevelForExpWithLeftover(fluidAmount/EXPTOFLUID, startLevel, stopLevel);
-        return res.add(fluidAmount % EXPTOFLUID, 0); //add leftover
+        Vector2i res = getLevelForExpWithLeftover(fluidAmount/ EXP_TO_FLUID, startLevel, stopLevel);
+        return res.add(fluidAmount % EXP_TO_FLUID, 0); //add leftover
     }
 
     /**
@@ -44,7 +45,7 @@ public class ExperienceUtil {
      * @return
      */
     public static Vector2i getLevelFromFluidWithLeftover(int fluidAmount) {
-        return getLevelForExpWithLeftover(fluidAmount/EXPTOFLUID, 0, Integer.MAX_VALUE);
+        return getLevelForExpWithLeftover(fluidAmount/ EXP_TO_FLUID, 0, Integer.MAX_VALUE);
     }
 
     /**
@@ -87,7 +88,12 @@ public class ExperienceUtil {
      * @return
      */
     public static int getFluidFromLevel(int level) {
-        return getExpFromLevel(level)*EXPTOFLUID;
+        return getExpFromLevel(level)* EXP_TO_FLUID;
+    }
+
+    public static int getPlayerTotalXp(Player player) {
+        return ExperienceUtil.getExpFromLevel(player.experienceLevel) +
+            (int) Math.floor(player.experienceProgress * ExperienceUtil.getXpNeededForNextLevel(player.experienceLevel + 1));
     }
 
     /**

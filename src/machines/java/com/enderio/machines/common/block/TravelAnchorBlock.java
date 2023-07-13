@@ -34,10 +34,10 @@ public class TravelAnchorBlock extends Block implements EntityBlock {
 
     @SubscribeEvent
     public static void jump(LivingEvent.LivingJumpEvent jumpEvent) {
-        if (!jumpEvent.getEntity().level.isClientSide && jumpEvent.getEntity() instanceof Player player) {
+        if (!jumpEvent.getEntity().level().isClientSide && jumpEvent.getEntity() instanceof Player player) {
             // TODO: Change
-            if (player.level.getBlockState(player.blockPosition().below()).getBlock() instanceof TravelAnchorBlock) {
-                TeleportHandler.blockTeleport(player.level, player);
+            if (player.level().getBlockState(player.blockPosition().below()).getBlock() instanceof TravelAnchorBlock) {
+                TeleportHandler.blockTeleport(player.level(), player);
             }
         }
     }
@@ -45,16 +45,17 @@ public class TravelAnchorBlock extends Block implements EntityBlock {
     @SubscribeEvent
     public static void sneak(TickEvent.PlayerTickEvent event) {
         // TODO: Change
-        if (event.phase == TickEvent.Phase.END && event.player instanceof ServerPlayer player && player.level
+        if (event.phase == TickEvent.Phase.END && event.player instanceof ServerPlayer player && player
+            .level()
             .getBlockState(player.blockPosition().below())
             .getBlock() instanceof TravelAnchorBlock) {
 
-            Pair<Boolean, Integer> sneakEntry = sneakCache.getOrDefault(player, Pair.of(false, player.getLevel().getServer().getTickCount() - 1));
-            if ((!sneakEntry.getLeft() || sneakEntry.getRight() != player.getLevel().getServer().getTickCount() - 1) && player.isShiftKeyDown()) {
+            Pair<Boolean, Integer> sneakEntry = sneakCache.getOrDefault(player, Pair.of(false, player.level().getServer().getTickCount() - 1));
+            if ((!sneakEntry.getLeft() || sneakEntry.getRight() != player.level().getServer().getTickCount() - 1) && player.isShiftKeyDown()) {
 
-                TeleportHandler.blockTeleport(player.level, player);
+                TeleportHandler.blockTeleport(player.level(), player);
             }
-            sneakCache.put(player, Pair.of(player.isShiftKeyDown(), player.getLevel().getServer().getTickCount()));
+            sneakCache.put(player, Pair.of(player.isShiftKeyDown(), player.level().getServer().getTickCount()));
         }
     }
 

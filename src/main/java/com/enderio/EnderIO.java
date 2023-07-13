@@ -1,20 +1,23 @@
 package com.enderio;
 
 import com.enderio.api.integration.IntegrationManager;
+import com.enderio.base.common.advancement.PaintingTrigger;
 import com.enderio.base.common.advancement.UseGliderTrigger;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.init.*;
 import com.enderio.base.common.integrations.EnderIOSelfIntegration;
-import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.base.common.item.tool.SoulVialItem;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.base.common.network.EIONetwork;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.EIODataProvider;
 import com.enderio.base.data.advancement.EIOAdvancementGenerator;
-import com.enderio.base.data.loot.FireCraftingLootTableSubProvider;
+import com.enderio.base.data.loot.FireCraftingLootProvider;
 import com.enderio.base.data.recipe.*;
 import com.enderio.base.data.tags.EIOBlockTagsProvider;
+import com.enderio.base.data.tags.EIOEntityTagsProvider;
 import com.enderio.base.data.tags.EIOFluidTagsProvider;
+import com.enderio.base.data.tags.EIOItemTagsProvider;
 import com.enderio.core.EnderCore;
 import com.enderio.core.common.network.CoreNetwork;
 import com.tterrag.registrate.Registrate;
@@ -24,6 +27,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.common.data.ForgeAdvancementProvider;
 import net.minecraftforge.common.util.Lazy;
 import net.minecraftforge.data.event.GatherDataEvent;
@@ -45,7 +49,7 @@ import java.util.concurrent.CompletableFuture;
 
 @Mod(EnderIO.MODID)
 public class EnderIO {
-    // The Mod ID. This is stored in EnderCore as its the furthest source away but it ensures that it is constant across all source sets.
+    // The Mod ID. This is stored in EnderCore as it's the furthest source away but it ensures that it is constant across all source sets.
     public static final String MODID = EnderCore.MODID;
 
     private static final Lazy<Registrate> REGISTRATE = Lazy.of(() -> Registrate.create(MODID));
@@ -90,6 +94,7 @@ public class EnderIO {
         EIORecipes.register();
         EIOLootModifiers.register();
         EIOParticles.register();
+        EIOEntities.register();
 
         // Run datagen after registrate is finished.
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -97,13 +102,17 @@ public class EnderIO {
         modEventBus.addListener(SoulVialItem::onCommonSetup);
         IntegrationManager.addIntegration(EnderIOSelfIntegration.INSTANCE);
         new UseGliderTrigger().register();
+        new PaintingTrigger().register();
+
+        // Decor
+        EIONetwork.register();
     }
 
     public void onGatherData(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
         PackOutput packOutput = event.getGenerator().getPackOutput();
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
-
+        ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
 
         EIODataProvider provider = new EIODataProvider("base");
 
@@ -114,20 +123,16 @@ public class EnderIO {
         provider.addSubProvider(event.includeServer(), new GlassRecipes(packOutput));
         provider.addSubProvider(event.includeServer(), new FireCraftingRecipes(packOutput));
 
-//        ForgeBlockTagsProvider b = new ForgeBlockTagsProvider(packOutput, lookupProvider, event.getExistingFileHelper());
-//        provider.addSubProvider(event.includeServer(), new EIOItemTagsProvider(packOutput, event.getLookupProvider(), b.contentsGetter(), event.getExistingFileHelper()));
-        provider.addSubProvider(event.includeServer(), new EIOFluidTagsProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper()));
-        provider.addSubProvider(event.includeServer(), new EIOBlockTagsProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper()));
-        provider.addSubProvider(event.includeServer(), new LootTableProvider(packOutput, Collections.emptySet(), List.of(
-            new LootTableProvider.SubProviderEntry(
-                FireCraftingLootTableSubProvider::new, LootContextParamSets.EMPTY
-            )
-        )));
-
-        provider.addSubProvider(event.includeServer(), new ForgeAdvancementProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper(),
+        var b = new EIOBlockTagsProvider(packOutput, lookupProvider, existingFileHelper);
+        provider.addSubProvider(event.includeServer(), b);
+        provider.addSubProvider(event.includeServer(), new EIOItemTagsProvider(packOutput, lookupProvider, b.contentsGetter(), existingFileHelper));
+        provider.addSubProvider(event.includeServer(), new EIOFluidTagsProvider(packOutput, lookupProvider, existingFileHelper));
+        provider.addSubProvider(event.includeServer(), new EIOEntityTagsProvider(packOutput, lookupProvider, existingFileHelper));
+        provider.addSubProvider(event.includeServer(), new ForgeAdvancementProvider(packOutput, lookupProvider, existingFileHelper,
             List.of(new EIOAdvancementGenerator())));
-
-
+        generator.addProvider(event.includeServer(), new LootTableProvider(
+            packOutput, Collections.emptySet(),
+            List.of(new LootTableProvider.SubProviderEntry(FireCraftingLootProvider::new, LootContextParamSets.EMPTY))));
         generator.addProvider(true, provider);
     }
 }

@@ -4,20 +4,11 @@ import com.enderio.api.capability.IMultiCapabilityItem;
 import com.enderio.api.capability.MultiCapabilityProvider;
 import com.enderio.api.capacitor.ICapacitorData;
 import com.enderio.base.common.init.EIOCapabilities;
-import com.enderio.base.common.lang.EIOLang;
-import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.Nullable;
-
-import java.text.NumberFormat;
-import java.util.List;
-import java.util.Locale;
 
 /**
  * A capacitor item that has fixed capacitor data attached.

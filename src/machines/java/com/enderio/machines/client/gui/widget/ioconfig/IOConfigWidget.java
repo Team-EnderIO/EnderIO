@@ -12,6 +12,7 @@ import com.mojang.math.Axis;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.*;
@@ -35,6 +36,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.client.RenderTypeHelper;
 import net.minecraftforge.client.model.data.ModelData;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -101,6 +103,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
 
         var radius = Math.max(Math.max(multiblockSize.x(), multiblockSize.y()), multiblockSize.z());
         SCALE -= (radius - 1) * 3; //adjust later
+        SCALE = Math.min(40, Math.max(10, SCALE)); //clamp
 
         configurable.forEach(pos -> {
             for (Direction dir : Direction.values()) {
@@ -126,7 +129,8 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
         return new Vec3(vec4.x() + RAY_ORIGIN.x, vec4.y() + RAY_ORIGIN.y, vec4.z() + RAY_ORIGIN.z);
     }
 
-    private static BlockHitResult raycast(BlockState state, float diffX, float diffY, Matrix4f transform) {
+    @Nullable
+    private BlockHitResult raycast(BlockPos pos, BlockState state, float diffX, float diffY, Matrix4f transform) {
         // Add mouse offset to start and end vectors
         Vec3 start = RAY_START.add(diffX, diffY, 0);
         Vec3 end = RAY_END.add(diffX, diffY, 0);
@@ -137,6 +141,8 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
 
         // Get block's shape and cast a ray through it
         VoxelShape shape = state.getShape(EmptyBlockGetter.INSTANCE, BlockPos.ZERO);
+        Vector3f centerPos = new Vector3f(pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f).sub(worldOrigin);
+        shape = shape.move(centerPos.x(), centerPos.y(), centerPos.z());
         return shape.clip(start, end, POS);
     }
 
@@ -197,14 +203,14 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     }
 
     @Override
-    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (visible) {
             // render black bg
             if (isMouseOver(mouseX, mouseY)) {
                 addedOn.setFocused(this);
             }
-            enableScissor(getX(), getY(), getX() + width, getY() + height);
-            fill(poseStack, getX(), getY(), getX() + width, getY() + height, 0xFF000000);
+            guiGraphics.enableScissor(getX(), getY(), getX() + width, getY() + height);
+            guiGraphics.fill(getX(), getY(), getX() + width, getY() + height, 0xFF000000);
 
             // Calculate widget center
             int centerX = getX() + (width / 2);
@@ -225,7 +231,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
             blockTransform.mul(rotYaw);
 
             // Draw block
-            renderWorld(poseStack, centerX, centerY, blockTransform, partialTick);
+            renderWorld(guiGraphics, centerX, centerY, blockTransform, partialTick);
 
             // Build ray transformation matrix
             // Rotate 180 around Z, otherwise the block is upside down
@@ -240,40 +246,39 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
             Map<BlockHitResult, BlockPos> hits = new HashMap<>();
             configurable.forEach(blockPos -> {
                 BlockState state = minecraft.level.getBlockState(blockPos);
-                BlockHitResult hit = raycast(state, diffX, diffY, rayTransform);
+                BlockHitResult hit = raycast(blockPos, state, diffX, diffY, rayTransform);
                 if (hit != null && hit.getType() != HitResult.Type.MISS) {
                     hits.put(hit, blockPos);
                 }
 
             });
 
-            // TODO: Test for multiblocks
-            Vec3 eyePosition = transform(RAY_START, rayTransform);
+            Vec3 eyePosition = transform(RAY_START, rayTransform).add(worldOrigin.x, worldOrigin.y, worldOrigin.z);
             selection = hits
                 .entrySet()
                 .stream()
-                .min(Comparator.comparingDouble(entry -> entry.getKey().getBlockPos().distToCenterSqr(eyePosition))) // find closest to eye
+                .min(Comparator.comparingDouble(entry -> entry.getValue().distToCenterSqr(eyePosition))) // find closest to eye
                 .map(closest -> new SelectedFace(closest.getValue(), closest.getKey().getDirection()));
 
-            renderSelection(poseStack, centerX, centerY, blockTransform);
-            renderOverlay(poseStack);
+            renderSelection(guiGraphics, centerX, centerY, blockTransform);
+            renderOverlay(guiGraphics);
 
-            disableScissor();
+            guiGraphics.disableScissor();
         }
     }
 
-    private void renderWorld(PoseStack poseStack, int centerX, int centerY, Quaternionf transform, float partialTick) {
+    private void renderWorld(GuiGraphics guiGraphics, int centerX, int centerY, Quaternionf transform, float partialTick) {
         Lighting.setupForEntityInInventory();
-        poseStack.pushPose();
-        poseStack.translate(centerX, centerY, Z_OFFSET);
-        poseStack.scale(SCALE, SCALE, -SCALE);
-        poseStack.mulPose(transform);
+        guiGraphics.pose().pushPose();
+        guiGraphics.pose().translate(centerX, centerY, Z_OFFSET);
+        guiGraphics.pose().scale(SCALE, SCALE, -SCALE);
+        guiGraphics.pose().mulPose(transform);
 
         // RenderNeighbours
         if (neighbourVisible) {
             for (var neighbour : neighbours) {
                 Vector3f pos = new Vector3f(neighbour.getX() - worldOrigin.x(), neighbour.getY() - worldOrigin.y(), neighbour.getZ() - worldOrigin.z());
-                renderBlock(poseStack, neighbour, pos, ghostBuffers, partialTick);
+                renderBlock(guiGraphics, neighbour, pos, ghostBuffers, partialTick);
             }
 
         }
@@ -281,19 +286,18 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
 
         // Render configurable
         MultiBufferSource.BufferSource normalBuffers = minecraft.renderBuffers().bufferSource();
-        //TODO: recheck when capacitor banks
         for (var configurable : configurable) {
             Vector3f pos = new Vector3f(configurable.getX() - worldOrigin.x(), configurable.getY() - worldOrigin.y(), configurable.getZ() - worldOrigin.z());
-            renderBlock(poseStack, configurable, pos, normalBuffers, partialTick);
+            renderBlock(guiGraphics, configurable, pos, normalBuffers, partialTick);
         }
         normalBuffers.endBatch();
 
-        poseStack.popPose();
+        guiGraphics.pose().popPose();
     }
 
-    private void renderBlock(PoseStack poseStack, BlockPos blockPos, Vector3f renderPos, MultiBufferSource.BufferSource buffers, float partialTick) {
-        poseStack.pushPose();
-        poseStack.translate(renderPos.x(), renderPos.y(), renderPos.z());
+    private void renderBlock(GuiGraphics guiGraphics, BlockPos blockPos, Vector3f renderPos, MultiBufferSource.BufferSource buffers, float partialTick) {
+        guiGraphics.pose().pushPose();
+        guiGraphics.pose().translate(renderPos.x(), renderPos.y(), renderPos.z());
 
         ModelData modelData = Optional.ofNullable(minecraft.level.getModelDataManager().getAt(blockPos)).orElse(ModelData.EMPTY);
 
@@ -302,6 +306,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
         if (rendershape != RenderShape.INVISIBLE) {
             var renderer = minecraft.getBlockRenderer();
             BakedModel bakedmodel = renderer.getBlockModel(blockState);
+            modelData = bakedmodel.getModelData(minecraft.level, blockPos, blockState, modelData);
             int blockColor = minecraft.getBlockColors().getColor(blockState, minecraft.level, blockPos, 0);
             float r = FastColor.ARGB32.red(blockColor) / 255F;
             float g = FastColor.ARGB32.green(blockColor) / 255F;
@@ -309,30 +314,29 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
             for (RenderType renderType : bakedmodel.getRenderTypes(blockState, RandomSource.create(42), modelData)) {
                 renderer
                     .getModelRenderer()
-                    .renderModel(poseStack.last(), buffers.getBuffer(RenderTypeHelper.getEntityRenderType(renderType, false)), blockState, bakedmodel, r, g, b,
+                    .renderModel(guiGraphics.pose().last(), buffers.getBuffer(RenderTypeHelper.getEntityRenderType(renderType, false)), blockState, bakedmodel, r, g, b,
                         LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, modelData, renderType);
             }
             BlockEntity blockEntity = minecraft.level.getBlockEntity(blockPos);
             if (blockEntity != null) {
                 var beRenderer = minecraft.getBlockEntityRenderDispatcher().getRenderer(blockEntity);
                 if (beRenderer != null) {
-                    beRenderer.render(blockEntity, partialTick, poseStack, buffers, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+                    beRenderer.render(blockEntity, partialTick, guiGraphics.pose(), buffers, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
                 }
 
             }
         }
-        poseStack.popPose();
-
+        guiGraphics.pose().popPose();
     }
 
-    private void renderSelection(PoseStack poseStack, int centerX, int centerY, Quaternionf transform) {
+    private void renderSelection(GuiGraphics guiGraphics, int centerX, int centerY, Quaternionf transform) {
         if (selection.isEmpty()) {
             return;
         }
-        poseStack.pushPose();
-        poseStack.translate(centerX, centerY, Z_OFFSET);
-        poseStack.scale(SCALE, SCALE, -SCALE);
-        poseStack.mulPose(transform);
+        guiGraphics.pose().pushPose();
+        guiGraphics.pose().translate(centerX, centerY, Z_OFFSET);
+        guiGraphics.pose().scale(SCALE, SCALE, -SCALE);
+        guiGraphics.pose().mulPose(transform);
 
         BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
         RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
@@ -344,19 +348,19 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
         bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
         var selectedFace = selection.get();
         BlockPos blockPos = selectedFace.blockPos;
-        poseStack.translate(blockPos.getX() - worldOrigin.x(), blockPos.getY() - worldOrigin.y(), blockPos.getZ() - worldOrigin.z());
+        guiGraphics.pose().translate(blockPos.getX() - worldOrigin.x(), blockPos.getY() - worldOrigin.y(), blockPos.getZ() - worldOrigin.z());
         Vector3f[] vec = Arrays.stream(ModelRenderUtil.createQuadVerts(selectedFace.side, 0, 1, 1)).map(Vec3::toVector3f).toArray(Vector3f[]::new);
-        Matrix4f matrix4f = poseStack.last().pose();
+        Matrix4f matrix4f = guiGraphics.pose().last().pose();
         bufferbuilder.vertex(matrix4f, vec[0].x(), vec[0].y(), vec[0].z()).color(1F, 1F, 1F, 1F).uv(tex.getU0(), tex.getV0()).endVertex();
         bufferbuilder.vertex(matrix4f, vec[1].x(), vec[1].y(), vec[1].z()).color(1F, 1F, 1F, 1F).uv(tex.getU0(), tex.getV1()).endVertex();
         bufferbuilder.vertex(matrix4f, vec[2].x(), vec[2].y(), vec[2].z()).color(1F, 1F, 1F, 1F).uv(tex.getU1(), tex.getV1()).endVertex();
         bufferbuilder.vertex(matrix4f, vec[3].x(), vec[3].y(), vec[3].z()).color(1F, 1F, 1F, 1F).uv(tex.getU1(), tex.getV0()).endVertex();
         BufferUploader.drawWithShader(bufferbuilder.end());
 
-        poseStack.popPose();
+        guiGraphics.pose().popPose();
     }
 
-    private void renderOverlay(PoseStack poseStack) {
+    private void renderOverlay(GuiGraphics guiGraphics) {
         if (selection.isPresent()) {
             var selectedFace = selection.get();
             BlockEntity entity = minecraft.level.getBlockEntity(selectedFace.blockPos);
@@ -364,12 +368,12 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
                 var ioMode = machine.getIOConfig().getMode(selectedFace.side);
                 IOModeMap map = IOModeMap.getMapFromMode(ioMode);
                 Rect2i iconBounds = map.getRect();
-                RenderSystem.setShaderTexture(0, IOConfigButton.IOCONFIG);
-                blit(poseStack, getX() + 4, getY() + height - 4 - screenFont.lineHeight - iconBounds.getHeight(), iconBounds.getX(), iconBounds.getY(),
+                guiGraphics.blit(IOConfigButton.IOCONFIG, getX() + 4, getY() + height - 4 - screenFont.lineHeight - iconBounds.getHeight(), iconBounds.getX(), iconBounds.getY(),
                     iconBounds.getWidth(), iconBounds.getHeight(), 48, 32);
-                poseStack.pushPose();
-                screenFont.draw(poseStack, map.getComponent(), getX() + 4, getY() + height - 2 - screenFont.lineHeight, 0xFFFFFFFF);
-                poseStack.popPose();
+                guiGraphics.pose().pushPose();
+                guiGraphics.pose().translate(0, 0, 1000); // to ensure that string is drawn on top
+                guiGraphics.drawString(screenFont, map.getComponent(), getX() + 4, getY() + height - 2 - screenFont.lineHeight, 0xFFFFFFFF);
+                guiGraphics.pose().popPose();
             }
         }
     }

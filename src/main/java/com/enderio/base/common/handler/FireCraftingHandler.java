@@ -10,8 +10,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
@@ -19,9 +17,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FireBlock;
-import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootDataType;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.level.BlockEvent;
@@ -98,11 +98,13 @@ public class FireCraftingHandler {
     }
 
     public static void spawnInfinityDrops(ServerLevel level, BlockPos pos, ResourceLocation lootTable) {
-        LootContext ctx = (new LootContext.Builder(level)).create(LootContextParamSet.builder().build());
-        LootTable table = ctx.getLootTable(lootTable);
+        LootParams lootparams = (new LootParams.Builder(level)).withParameter(LootContextParams.ORIGIN, pos.getCenter()).create(
+            LootContextParamSets.COMMAND);
 
-        if (table != LootTable.EMPTY) {
-            for (ItemStack item : table.getRandomItems(ctx)) {
+        LootTable table = level.getServer().getLootData().getElement(LootDataType.TABLE, lootTable);
+
+        if (table != null && table != LootTable.EMPTY) {
+            for (ItemStack item : table.getRandomItems(lootparams)) {
                 // Get random offset
                 double x = RANDOM.nextFloat() * 0.5f + 0.25f;
                 double y = RANDOM.nextFloat() * 0.5f + 0.25f;
@@ -111,7 +113,7 @@ public class FireCraftingHandler {
                 itemEntity.setDefaultPickUpDelay();
 
                 // Make it survive the fire for a bit
-                itemEntity.hurt(itemEntity.damageSources().inFire(),  -100); // TODO: Do we just make it fireproof like netherite is?
+                itemEntity.hurt(itemEntity.damageSources().inFire(),  -100);
 
                 // Actually set it on fire
                 itemEntity.setRemainingFireTicks(10);

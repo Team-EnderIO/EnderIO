@@ -11,7 +11,7 @@
   ],
   "energy": 2400,
   "input": {
-    "item": "minecraft:sand"
+    "tag": "forge:sand"
   },
   "outputs": [
     {

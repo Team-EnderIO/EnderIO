@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:primitive_alloy_smelter"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

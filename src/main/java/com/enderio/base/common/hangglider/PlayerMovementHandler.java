@@ -7,15 +7,12 @@ import com.enderio.base.common.lang.EIOLang;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
-import net.minecraft.client.resources.sounds.ElytraOnPlayerSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
@@ -24,7 +21,6 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
 import java.util.WeakHashMap;
 
 @Mod.EventBusSubscriber
@@ -44,7 +40,7 @@ public class PlayerMovementHandler {
         Player player = playerTickEvent.player;
         if (playerTickEvent.phase == TickEvent.Phase.START) {
             int ticksFalling = TICKS_FALLING.getOrDefault(player, 0);
-            if (player.isOnGround() != player.getDeltaMovement().y() < 0) {
+            if (player.onGround() != player.getDeltaMovement().y() < 0) {
                 TICKS_FALLING.put(player, ticksFalling + 1);
             } else {
                 TICKS_FALLING.put(player, 0);
@@ -75,14 +71,14 @@ public class PlayerMovementHandler {
             if (player instanceof ServerPlayer serverPlayer) {
                 UseGliderTrigger.USE_GLIDER.trigger(serverPlayer);
                 player.hurtMarked = true;
-            } else if (player.getLevel().isClientSide()) {
+            } else if (player.level().isClientSide()) {
                 ClientClassLoadingProtection.playSound(player);
             }
             gliderMovementInfo.cause().onHangGliderTick(player);
         }
     }
     public static Optional<GliderMovementInfo> calculateGliderMovementInfo(Player player, boolean displayDisabledMessage) {
-        if (!player.isOnGround()
+        if (!player.onGround()
             && player.getDeltaMovement().y() < 0
             && !player.isShiftKeyDown()
             && !player.isInWater()

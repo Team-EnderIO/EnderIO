@@ -5,8 +5,8 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullConsumer;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -44,5 +44,13 @@ public class IntegrationWrapper<T extends Integration> {
     public void ifPresent(Consumer<? super T> consumer) {
         if (isPresent())
             consumer.accept(value);
+    }
+
+    /**
+     * Only call when you are in code that is running if the Integration is Present
+     * @return
+     */
+    public T expectPresent() {
+        return value;
     }
 }

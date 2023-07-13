@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:glider_wing"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

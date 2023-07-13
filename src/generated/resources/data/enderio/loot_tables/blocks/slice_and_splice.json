@@ -24,5 +24,6 @@
       ],
       "rolls": 1.0
     }
-  ]
+  ],
+  "random_sequence": "enderio:blocks/slice_and_splice"
 }

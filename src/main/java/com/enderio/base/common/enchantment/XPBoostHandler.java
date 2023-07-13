@@ -5,6 +5,7 @@ import com.google.common.base.Throwables;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.LivingEntity;
@@ -18,7 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
 import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -27,31 +28,35 @@ import java.util.Map;
 
 @EventBusSubscriber
 public class XPBoostHandler {
-    private static final String NBT_KEY = "enderio:xpboost";
-
-    // TODO: Use LivingExperienceDropEvent instead.
+    private static final String NBT_KEY = "EnderIOXpBoostLevel";
 
     @SubscribeEvent
-    public static void handleEntityKill(LivingDeathEvent event) {
-        LivingEntity entity = event.getEntity();
-        Entity killer = event.getSource().getDirectEntity();
+    public static void handleExperienceDropEvent(LivingExperienceDropEvent event) {
+        if (event.getAttackingPlayer() != null) {
+            DamageSource lastDamageSource = event.getEntity().getLastDamageSource();
 
-        if (!entity.level.isClientSide) {
-            if (killer instanceof Player player) {
-                scheduleXP(entity, getXPBoost(entity, player));
-            } else if (killer instanceof Arrow arrow) {
-                CompoundTag tag = killer.getPersistentData();
+            int xpBoost = 0;
+            if (lastDamageSource != null && lastDamageSource.getDirectEntity() instanceof Arrow arrow) {
+                CompoundTag tag = arrow.getPersistentData();
                 if (tag.contains(NBT_KEY) && tag.getInt(NBT_KEY) >= 0) {
                     int level = tag.getInt(NBT_KEY);
-                    scheduleXP(entity, getXPBoost(entity, (Player) arrow.getOwner(), level));
+
+                    // This makes the safe assumption that the attacking player is the one who dealt the last bow shot.
+                    xpBoost = getXPBoost(event.getEntity(), level);
                 }
+            } else {
+                xpBoost = getXPBoost(event.getEntity(), event.getAttackingPlayer());
+            }
+
+            if (xpBoost > 0) {
+                event.setDroppedExperience(event.getDroppedExperience() + xpBoost);
             }
         }
     }
 
     @SubscribeEvent
     public static void handleArrowFire(EntityJoinLevelEvent event) {
-        if (event.getEntity() instanceof Arrow arrow) {
+        if (event.getEntity() instanceof Arrow arrow && arrow.getOwner() != null) {
             arrow.getPersistentData().putInt(NBT_KEY, getXPBoostLevel(arrow.getOwner()));
         }
     }
@@ -73,10 +78,10 @@ public class XPBoostHandler {
     }
 
     private static int getXPBoost(LivingEntity killed, Player player) {
-        return getXPBoost(killed, player, getXPBoostLevel(player));
+        return getXPBoost(killed, getXPBoostLevel(player));
     }
 
-    private static int getXPBoost(LivingEntity killed, Player player, int level) {
+    private static int getXPBoost(LivingEntity killed, int level) {
         if (level >= 0) {
             try {
                 int xp = killed.getExperienceReward();
@@ -93,7 +98,6 @@ public class XPBoostHandler {
     }
 
     private static int getXPBoostLevel(Entity entity) {
-
         if (entity instanceof Player player && !(player instanceof FakePlayer)) {
             ItemStack weapon = player.getMainHandItem();
             if (weapon.isEmpty()) {
@@ -113,14 +117,5 @@ public class XPBoostHandler {
             return result;
         }
         return -1;
-    }
-
-    private static void scheduleXP(Entity entity, int boost) {
-        scheduleXP(entity.level, entity.getX(), entity.getY(), entity.getZ(), boost);
-    }
-
-    private static void scheduleXP(Level world, double x, double y, double z, int boost) {
-        if (boost > 0)
-            world.addFreshEntity(new ExperienceOrb(world, x, y, z, boost));
     }
 }

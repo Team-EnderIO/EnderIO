@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:recolor_clear_glass_dnm_red"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

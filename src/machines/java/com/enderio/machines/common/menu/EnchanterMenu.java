@@ -13,11 +13,15 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 import org.apache.logging.log4j.LogManager;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.util.Optional;
 
 public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
+    public static int INPUTS_INDEX = 0;
+    public static int INPUT_COUNT = 3;
+    public static int LAST_INDEX = 3;
+
     private Level level;
 
     public EnchanterMenu(@Nullable EnchanterBlockEntity blockEntity, Inventory inventory, int pContainerId) {
@@ -56,7 +60,7 @@ public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
     }
 
     public static EnchanterMenu factory(@Nullable MenuType<EnchanterMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
-        BlockEntity entity = inventory.player.level.getBlockEntity(buf.readBlockPos());
+        BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
         if (entity instanceof EnchanterBlockEntity castBlockEntity)
             return new EnchanterMenu(castBlockEntity, inventory, pContainerId);
         LogManager.getLogger().warn("couldn't find BlockEntity");

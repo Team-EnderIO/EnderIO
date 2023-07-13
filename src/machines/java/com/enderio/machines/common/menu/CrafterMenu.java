@@ -11,13 +11,17 @@ import org.jetbrains.annotations.Nullable;
 
 public class CrafterMenu extends MachineMenu<CrafterBlockEntity> {
 
+    public static int INPUTS_INDEX = 11;
+    public static int INPUT_COUNT = 9;
+    public static int LAST_INDEX = 20;
+
     public CrafterMenu(CrafterBlockEntity blockEntity, Inventory inventory, int pContainerId) {
         super(blockEntity, inventory, MachineMenus.CRAFTER.get(), pContainerId);
         if (blockEntity != null) {
             //Total slots = 21
             //Capacitor slot [0]
             this.addSlot(new MachineSlot(blockEntity.getInventory(), 0, 6, 60));
-            addInventorySlots(30, 84);
+
             // Main storage slots [1-9]
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
@@ -35,11 +39,12 @@ public class CrafterMenu extends MachineMenu<CrafterBlockEntity> {
             // Recipe Output slot [20]
             this.addSlot(new PreviewMachineSlot(blockEntity.getInventory(), CrafterBlockEntity.PREVIEW, 90, 34));
 
+            addInventorySlots(30, 84);
         }
     }
 
     public static CrafterMenu factory(@Nullable MenuType<CrafterMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
-        BlockEntity entity = inventory.player.level.getBlockEntity(buf.readBlockPos());
+        BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
         if (entity instanceof CrafterBlockEntity castBlockEntity)
             return new CrafterMenu(castBlockEntity, inventory, pContainerId);
         LogManager.getLogger().warn("couldn't find BlockEntity");

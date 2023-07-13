@@ -32,7 +32,9 @@ public class EIOEnchantments {
         .lang("Repellent")
         .register();
 
-    public static final RegistryEntry<ShimmerEnchantment> SHIMMER = enchantmentBuilder("shimmer", new ShimmerEnchantment()).lang("Shimmer").register();
+    public static final RegistryEntry<ShimmerEnchantment> SHIMMER = enchantmentBuilder("shimmer", new ShimmerEnchantment())
+        .lang("Shimmer")
+        .register();
 
     public static final RegistryEntry<SoulBoundEnchantment> SOULBOUND = enchantmentBuilder("soulbound", new SoulBoundEnchantment())
         .lang("Soulbound")
@@ -47,7 +49,7 @@ public class EIOEnchantments {
         .register();
 
     public static final RegistryEntry<WitherArrowEnchantment> WITHERING_BOLT = enchantmentBuilder("withering_bolt", new WitherArrowEnchantment())
-        .lang("Withering bolt")
+        .lang("Withering Bolt")
         .register();
 
     public static final RegistryEntry<XPBoostEnchantment> XP_BOOST = enchantmentBuilder("xp_boost", new XPBoostEnchantment()).lang("XP Boost").register();
@@ -60,11 +62,13 @@ public class EIOEnchantments {
         return REGISTRATE.enchantment(name, enchantment.getCategory(), (r, c, s) -> enchantment);
     }
     
-    private static void addTooltip(ItemTooltipEvent event, Map<Enchantment, Integer> enchantments, List<Component> toolTip, Enchantment enchantment, Component component) {
+    private static void addTooltip(ItemTooltipEvent event, Map<Enchantment, Integer> enchantments, List<Component> toolTip, Enchantment enchantment, Component... components) {
         if (enchantments.containsKey(enchantment)) {
             toolTip.stream().forEach(c -> {
                 if(c.equals(enchantment.getFullname(enchantments.get(enchantment)))) {
-                    event.getToolTip().add(event.getToolTip().indexOf(c)+1, component);
+                    for (int i = 0; i < components.length; i++) {
+                        event.getToolTip().add(event.getToolTip().indexOf(c)+i+1, components[i]);
+                    }
                 }
             });
         }
@@ -79,12 +83,12 @@ public class EIOEnchantments {
         List<Component> toolTip = new ArrayList<>(event.getToolTip());
         if (!enchantments.isEmpty()) {
             addTooltip(event, enchantments, toolTip, AUTO_SMELT.get(), EIOLang.AUTO_SMELT_DESC);
-            addTooltip(event, enchantments, toolTip, REPELLENT.get(), EIOLang.REPELLENT_DESC);
-            addTooltip(event, enchantments, toolTip, SHIMMER.get(), EIOLang.SHIMMER_DESC);
-            addTooltip(event, enchantments, toolTip, SOULBOUND.get(), EIOLang.SOULBOUND_DESC);
-            addTooltip(event, enchantments, toolTip, WITHERING_BLADE.get(), EIOLang.WITHERING_BLADE_DESC);
-            addTooltip(event, enchantments, toolTip, WITHERING_ARROW.get(), EIOLang.WITHERING_ARROW_DESC);
-            addTooltip(event, enchantments, toolTip, WITHERING_BOLT.get(), EIOLang.WITHERING_BOLT_DESC);
+            addTooltip(event, enchantments, toolTip, REPELLENT.get(), EIOLang.REPELLENT_DESC1, EIOLang.REPELLENT_DESC2);
+            addTooltip(event, enchantments, toolTip, SHIMMER.get(), EIOLang.SHIMMER_DESC1, EIOLang.SHIMMER_DESC2, EIOLang.SHIMMER_DESC3, EIOLang.SHIMMER_DESC4, EIOLang.SHIMMER_DESC5, EIOLang.SHIMMER_DESC6);
+            addTooltip(event, enchantments, toolTip, SOULBOUND.get(), EIOLang.SOULBOUND_DESC1, EIOLang.SOULBOUND_DESC2);
+            addTooltip(event, enchantments, toolTip, WITHERING_BLADE.get(), EIOLang.WITHERING_BLADE_DESC1, EIOLang.WITHERING_BLADE_DESC2);
+            addTooltip(event, enchantments, toolTip, WITHERING_ARROW.get(), EIOLang.WITHERING_ARROW_DESC1, EIOLang.WITHERING_ARROW_DESC2);
+            addTooltip(event, enchantments, toolTip, WITHERING_BOLT.get(), EIOLang.WITHERING_BOLT_DESC1, EIOLang.WITHERING_BOLT_DESC2);
             addTooltip(event, enchantments, toolTip, XP_BOOST.get(), EIOLang.XP_BOOST_DESC);
         }
     }

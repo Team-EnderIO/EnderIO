@@ -1,9 +1,8 @@
 package com.enderio.machines.common.blockentity;
 
 import com.enderio.base.common.travel.TravelSavedData;
-import com.enderio.core.common.sync.ItemDataSlot;
-import com.enderio.core.common.sync.StringDataSlot;
-import com.enderio.core.common.sync.SyncMode;
+import com.enderio.core.common.network.slot.ResourceLocationNetworkDataSlot;
+import com.enderio.core.common.network.slot.StringNetworkDataSlot;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.travel.AnchorTravelTarget;
 import net.minecraft.core.BlockPos;
@@ -14,6 +13,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -26,8 +26,8 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
 
     public TravelAnchorBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);
-        add2WayDataSlot(new StringDataSlot(this::getName, this::setName, SyncMode.GUI));
-        add2WayDataSlot(new ItemDataSlot(this::getIcon, this::setIcon, SyncMode.GUI));
+        addDataSlot(new StringNetworkDataSlot(() -> getName(), name -> setName(name)));
+        addDataSlot(new ResourceLocationNetworkDataSlot(() -> ForgeRegistries.ITEMS.getKey(getIcon()), (loc) -> setIcon(ForgeRegistries.ITEMS.getValue(loc))));
         name = ('a' + new Random().nextInt(26)) + "";
     }
 

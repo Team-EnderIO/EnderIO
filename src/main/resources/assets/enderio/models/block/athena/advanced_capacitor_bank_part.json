@@ -1,0 +1,11 @@
+{
+    "loader" : "athena:athena",
+    "athena:loader" : "athena:ctm",
+    "ctm_textures" : {
+        "center" : "enderio:block/ctm/advanced_capacitor_bank_center",
+        "empty" : "enderio:block/ctm/advanced_capacitor_bank_empty",
+        "horizontal" : "enderio:block/ctm/advanced_capacitor_bank_horizontal",
+        "particle" : "enderio:block/advanced_capacitor_bank",
+        "vertical" : "enderio:block/ctm/advanced_capacitor_bank_vertical"
+    }
+}

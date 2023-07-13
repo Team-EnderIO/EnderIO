@@ -56,5 +56,6 @@
     "recipes": [
       "enderio:conduit_binder_composite"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

@@ -16,5 +16,6 @@
       ],
       "rolls": 1.0
     }
-  ]
+  ],
+  "random_sequence": "enderio:blocks/silent_polished_blackstone_pressure_plate"
 }

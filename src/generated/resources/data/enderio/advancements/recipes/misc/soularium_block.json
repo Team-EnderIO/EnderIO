@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:soularium_block"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

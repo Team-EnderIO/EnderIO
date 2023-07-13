@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:invert_clear_glass_na"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

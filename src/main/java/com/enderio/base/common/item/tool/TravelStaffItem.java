@@ -8,13 +8,11 @@ import com.enderio.base.common.item.darksteel.IDarkSteelItem;
 import com.enderio.base.common.item.darksteel.upgrades.EmpoweredUpgradeTier;
 import com.enderio.core.common.util.EnergyUtil;
 import com.tterrag.registrate.util.CreativeModeTabModifier;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -103,7 +101,9 @@ public class TravelStaffItem extends Item implements IDarkSteelItem {
     @Override
     public void addAllVariants(CreativeModeTabModifier modifier) {
         modifier.accept(this);
-        modifier.accept(createFullyUpgradedStack(this));
+        ItemStack is = new ItemStack(this);
+        EnergyUtil.setFull(is);
+        modifier.accept(is);
     }
 
     protected enum ActivationStatus {

@@ -1,0 +1,36 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"1": "enderio:block/item_conduit_in"
+	},
+	"elements": [
+		{
+			"from": [6.5, 0, 6.4998],
+			"to": [9.5, 3, 6.4998],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#1", "tintindex": 1}
+			}
+		},
+		{
+			"from": [9.5002, 0, 6.5],
+			"to": [9.5002, 3, 9.5],
+			"faces": {
+				"east": {"uv": [0, 0, 16, 16], "texture": "#1", "tintindex": 1}
+			}
+		},
+		{
+			"from": [6.5, 0, 9.5002],
+			"to": [9.5, 3, 9.5002],
+			"faces": {
+				"south": {"uv": [0, 0, 16, 16], "texture": "#1", "tintindex": 1}
+			}
+		},
+		{
+			"from": [6.4998, 0, 6.5],
+			"to": [6.4998, 3, 9.5],
+			"faces": {
+				"west": {"uv": [0, 0, 16, 16], "texture": "#1", "tintindex": 1}
+			}
+		}
+	]
+}

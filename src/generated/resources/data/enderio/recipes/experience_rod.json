@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "E": {
+      "item": "enderio:energetic_alloy_ingot"
+    },
+    "I": {
+      "item": "enderio:soularium_ingot"
+    }
+  },
+  "pattern": [
+    "  I",
+    " E ",
+    "I  "
+  ],
+  "result": {
+    "item": "enderio:experience_rod"
+  },
+  "show_notification": true
+}

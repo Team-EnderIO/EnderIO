@@ -12,22 +12,20 @@ public class ImmutableMachineEnergyStorage implements IMachineEnergyStorage {
     /**
      * A default value, storing no energy.
      */
-    public static final ImmutableMachineEnergyStorage EMPTY = new ImmutableMachineEnergyStorage(0, 0, 0, 0);
+    public static final ImmutableMachineEnergyStorage EMPTY = new ImmutableMachineEnergyStorage(0, 0, 0);
 
     private final int energyStored;
     private final int maxEnergyStored;
-    private final int maxEnergyTransfer;
     private final int maxEnergyUse;
 
-    public ImmutableMachineEnergyStorage(int energyStored, int maxEnergyStored, int maxEnergyTransfer, int maxEnergyUse) {
+    public ImmutableMachineEnergyStorage(int energyStored, int maxEnergyStored, int maxEnergyUse) {
         this.energyStored = energyStored;
         this.maxEnergyStored = maxEnergyStored;
-        this.maxEnergyTransfer = maxEnergyTransfer;
         this.maxEnergyUse = maxEnergyUse;
     }
 
     public ImmutableMachineEnergyStorage(IMachineEnergyStorage storage) {
-        this(storage.getEnergyStored(), storage.getMaxEnergyStored(), storage.getMaxEnergyTransfer(), storage.getMaxEnergyUse());
+        this(storage.getEnergyStored(), storage.getMaxEnergyStored(), storage.getMaxEnergyUse());
     }
 
     @Override
@@ -41,24 +39,19 @@ public class ImmutableMachineEnergyStorage implements IMachineEnergyStorage {
     }
 
     @Override
-    public int getMaxEnergyTransfer() {
-        return maxEnergyTransfer;
-    }
-
-    @Override
     public int getMaxEnergyUse() {
         return maxEnergyUse;
     }
 
+    // This class is intended for internal use only, don't expose.
     @Override
     public IIOConfig getConfig() {
-        // TODO: Should this be implemented?
         throw new NotImplementedException();
     }
 
+    // This class is intended for internal use only, don't expose.
     @Override
     public EnergyIOMode getIOMode() {
-        // TODO: Should this be implemented?
         throw new NotImplementedException();
     }
 

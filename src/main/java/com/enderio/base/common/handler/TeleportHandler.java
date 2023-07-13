@@ -73,13 +73,13 @@ public class TeleportHandler {
     public static boolean blockTeleport(Level level, Player player) {
         Optional<ITravelTarget> target = getAnchorTarget(player);
         if (target.isPresent()) {
-            if (!player.getLevel().isClientSide) {
+            if (!player.level().isClientSide) {
                 Optional<Double> height = isTeleportPositionClear(level, target.get().getPos());
                 if (height.isEmpty()) {
                     return false;
                 }
                 BlockPos blockPos = target.get().getPos();
-                Vec3 teleportPosition = new Vec3(blockPos.getX() + 0.5f, blockPos.getY()+height.get()+1, blockPos.getZ() + 0.5f);
+                Vec3 teleportPosition = new Vec3(blockPos.getX() + 0.5f, blockPos.getY() + height.get() + 1, blockPos.getZ() + 0.5f);
                 teleportPosition = teleportEvent(player, teleportPosition).orElse(null);
                 if (teleportPosition != null) {
                     player.fallDistance = 0;
@@ -117,13 +117,14 @@ public class TeleportHandler {
     private static Optional<ITravelTarget> getAnchorTarget(Player player) {
         Vec3 positionVec = player.position().add(0, player.getEyeHeight(), 0);
 
-        return TravelSavedData.getTravelData(player.getLevel()).getTravelTargetsInItemRange(player.blockPosition())
-            .filter(target -> target.getPos().distToLowCornerSqr(player.getX(), player.getY(), player.getZ()) > 25) //only teleport to blocks not directly in range
+        return TravelSavedData
+            .getTravelData(player.level())
+            .getTravelTargetsInItemRange(player.blockPosition())
+            .filter(
+                target -> target.getPos().distToLowCornerSqr(player.getX(), player.getY(), player.getZ()) > 25) //only teleport to blocks not directly in range
             .filter(target -> Math.abs(getAngleRadians(positionVec, target.getPos(), player.getYRot(), player.getXRot())) <= Math.toRadians(15))
-            .filter(target -> isTeleportPositionClear(player.getLevel(), target.getPos()).isPresent())
-            .min(Comparator.comparingDouble(target ->
-                Math.abs(getAngleRadians(positionVec, target.getPos(), player.getYRot(), player.getXRot()))
-            ));
+            .filter(target -> isTeleportPositionClear(player.level(), target.getPos()).isPresent())
+            .min(Comparator.comparingDouble(target -> Math.abs(getAngleRadians(positionVec, target.getPos(), player.getYRot(), player.getXRot()))));
     }
 
 

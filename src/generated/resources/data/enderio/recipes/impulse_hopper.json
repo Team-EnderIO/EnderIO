@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "enderio:void_chassis"
+    },
+    "G": {
+      "item": "enderio:iron_gear"
+    },
+    "H": {
+      "item": "minecraft:hopper"
+    },
+    "I": {
+      "item": "enderio:copper_alloy_ingot"
+    },
+    "R": {
+      "item": "enderio:redstone_alloy_ingot"
+    }
+  },
+  "pattern": [
+    "IHI",
+    "GCG",
+    "IRI"
+  ],
+  "result": {
+    "item": "enderio:impulse_hopper"
+  },
+  "show_notification": true
+}

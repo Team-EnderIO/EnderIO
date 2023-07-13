@@ -1,34 +1,46 @@
 package com.enderio.base.common.init;
 
 import com.enderio.EnderIO;
+import com.enderio.base.client.renderer.PaintedBlockColor;
 import com.enderio.base.common.block.*;
 import com.enderio.base.common.block.glass.GlassBlocks;
 import com.enderio.base.common.block.glass.GlassCollisionPredicate;
 import com.enderio.base.common.block.glass.GlassIdentifier;
 import com.enderio.base.common.block.glass.GlassLighting;
+import com.enderio.base.common.block.light.Light;
+import com.enderio.base.common.block.light.LightNode;
+import com.enderio.base.common.block.light.PoweredLight;
+import com.enderio.base.common.block.painted.*;
+import com.enderio.base.common.item.PaintedBlockItem;
+import com.enderio.base.common.item.PaintedSlabBlockItem;
+import com.enderio.base.data.loot.DecorLootTable;
 import com.enderio.base.data.model.block.EIOBlockState;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.util.entry.BlockEntry;
+import com.tterrag.registrate.util.nullness.NonNullBiFunction;
+import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.client.model.generators.BlockModelProvider;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.VariantBlockStateBuilder;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @SuppressWarnings("unused")
 public class EIOBlocks {
@@ -45,34 +57,37 @@ public class EIOBlocks {
     public static final BlockEntry<Block> DARK_STEEL_BLOCK = metalBlock("dark_steel_block").register();
     public static final BlockEntry<Block> SOULARIUM_BLOCK = metalBlock("soularium_block").register();
     public static final BlockEntry<Block> END_STEEL_BLOCK = metalBlock("end_steel_block").register();
-    public static final BlockEntry<Block> IRON_ALLOY_BLOCK = metalBlock("iron_alloy_block").register();
 
     // endregion
 
     // region Chassis
 
-    @Deprecated(forRemoval = true)
-    public static final BlockEntry<Block> INDUSTRIAL_MACHINE_CHASSIS = chassisBlock("industrial_machine_chassis").register();
+    // Iron tier
+    public static final BlockEntry<Block> VOID_CHASSIS = chassisBlock("void_chassis").register();
 
-    @Deprecated(forRemoval = true)
-    public static final BlockEntry<Block> END_STEEL_MACHINE_CHASSIS = chassisBlock("end_steel_machine_chassis").lang("End Steel Chassis").register();
+    // Void chassis + some kind of dragons breath derrived process
+//    public static final BlockEntry<Block> REKINDLED_VOID_CHASSIS = chassisBlock("rekindled_void_chassis").register();
 
-    @Deprecated(forRemoval = true)
-    public static final BlockEntry<Block> SOUL_MACHINE_CHASSIS = chassisBlock("soul_machine_chassis").register();
+    // Soularium + soul/nether
+    public static final BlockEntry<Block> ENSOULED_CHASSIS = chassisBlock("ensouled_chassis").register();
 
-    @Deprecated(forRemoval = true)
-    public static final BlockEntry<Block> ENHANCED_MACHINE_CHASSIS = chassisBlock("enhanced_machine_chassis").register();
+    // Ensnared + Some kind of other material
+    // This is for machines that require a bound soul
+//    public static final BlockEntry<Block> TRAPPED_CHASSIS = chassisBlock("trapped_chassis").register();
 
-    @Deprecated(forRemoval = true)
-    public static final BlockEntry<Block> SOULLESS_MACHINE_CHASSIS = chassisBlock("soulless_machine_chassis").register();
+    // Dark steel + sculk
+//    public static final BlockEntry<Block> SCULK_CHASSIS = chassisBlock("sculk_chassis").register();
+
+
+    // endregion
 
     // endregion
 
     // region Dark Steel Building Blocks
 
     public static final BlockEntry<DarkSteelLadderBlock> DARK_STEEL_LADDER = REGISTRATE
-        .block("dark_steel_ladder", Material.METAL, DarkSteelLadderBlock::new)
-        .properties(props -> props.strength(0.4f).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion())
+        .block("dark_steel_ladder", DarkSteelLadderBlock::new)
+        .properties(props -> props.strength(0.4f).requiresCorrectToolForDrops().sound(SoundType.METAL).mapColor(MapColor.METAL).noOcclusion())
         .blockstate((ctx, prov) -> prov.horizontalBlock(ctx.get(), prov
             .models()
             .withExistingParent(ctx.getName(), prov.mcLoc("block/ladder"))
@@ -82,7 +97,7 @@ public class EIOBlocks {
         .tag(BlockTags.CLIMBABLE, BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
         .item()
         .model((ctx, prov) -> prov.generated(ctx, prov.modLoc("block/dark_steel_ladder")))
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
+        .tab(EIOCreativeTabs.BLOCKS)
         .build()
         .register();
 
@@ -93,31 +108,31 @@ public class EIOBlocks {
         .tag(BlockTags.NEEDS_IRON_TOOL)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .item()
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
+        .tab(EIOCreativeTabs.BLOCKS)
         .model((ctx, prov) -> prov.generated(ctx, prov.modLoc("block/dark_steel_bars")))
         .build()
         .register();
 
-    // TODO: Door drops itself in creative????
     public static final BlockEntry<DoorBlock> DARK_STEEL_DOOR = REGISTRATE
-        .block("dark_steel_door", Material.METAL, props -> new DoorBlock(props, BlockSetType.IRON))
-        .properties(props -> props.strength(5.0f, 2000.0f).sound(SoundType.METAL).noOcclusion())
+        .block("dark_steel_door", props -> new DoorBlock(props, BlockSetType.IRON))
+        .properties(props -> props.strength(5.0f, 2000.0f).sound(SoundType.METAL).mapColor(MapColor.METAL).noOcclusion())
+        .loot((registrateBlockLootTables, doorBlock) -> registrateBlockLootTables.add(doorBlock, registrateBlockLootTables.createDoorTable(doorBlock)))
         .blockstate((ctx, prov) -> prov.doorBlockWithRenderType(ctx.get(), prov.modLoc("block/dark_steel_door_bottom"), prov.modLoc("block/dark_steel_door_top"), prov.mcLoc("cutout")))
         .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL, BlockTags.DOORS)
         .item()
         .model((ctx, prov) -> prov.generated(ctx))
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
+        .tab(EIOCreativeTabs.BLOCKS)
         .build()
         .register();
 
     public static final BlockEntry<TrapDoorBlock> DARK_STEEL_TRAPDOOR = REGISTRATE
-        .block("dark_steel_trapdoor", Material.METAL, props -> new TrapDoorBlock(props, BlockSetType.IRON))
-        .properties(props -> props.strength(5.0f, 2000.0f).sound(SoundType.METAL).noOcclusion())
+        .block("dark_steel_trapdoor", props -> new TrapDoorBlock(props, BlockSetType.IRON))
+        .properties(props -> props.strength(5.0f, 2000.0f).sound(SoundType.METAL).mapColor(MapColor.METAL).noOcclusion())
         .blockstate((ctx, prov) -> prov.trapdoorBlockWithRenderType(ctx.get(), prov.modLoc("block/dark_steel_trapdoor"), true, prov.mcLoc("cutout")))
         .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL, BlockTags.TRAPDOORS)
         .item()
         .model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.modLoc("block/dark_steel_trapdoor_bottom")))
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
+        .tab(EIOCreativeTabs.BLOCKS)
         .build()
         .register();
 
@@ -128,19 +143,24 @@ public class EIOBlocks {
         .tag(BlockTags.NEEDS_IRON_TOOL)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .item()
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
+        .tab(EIOCreativeTabs.BLOCKS)
         .model((ctx, prov) -> prov.generated(ctx, prov.modLoc("block/end_steel_bars")))
         .build()
         .register();
 
     public static final BlockEntry<ReinforcedObsidianBlock> REINFORCED_OBSIDIAN = REGISTRATE
-        .block("reinforced_obsidian_block", Material.STONE, ReinforcedObsidianBlock::new)
-        .properties(props -> props.sound(SoundType.STONE).strength(50, 2000).requiresCorrectToolForDrops().color(MaterialColor.COLOR_BLACK))
+        .block("reinforced_obsidian_block", ReinforcedObsidianBlock::new)
+        .properties(props -> props
+            .sound(SoundType.STONE)
+            .strength(50, 2000)
+            .requiresCorrectToolForDrops()
+            .mapColor(MapColor.COLOR_BLACK)
+            .instrument(NoteBlockInstrument.BASEDRUM))
         .tag(BlockTags.WITHER_IMMUNE)
         .tag(BlockTags.NEEDS_DIAMOND_TOOL)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .item()
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
+        .tab(EIOCreativeTabs.BLOCKS)
         .build()
         .register();
 
@@ -165,12 +185,42 @@ public class EIOBlocks {
 
     // endregion
 
-    // region Misc
+    // region Miscellaneous
 
-    public static final BlockEntry<GraveBlock> GRAVE = REGISTRATE
-        .block("grave", Material.STONE, GraveBlock::new)
-        .properties(props -> props.strength(-1.0F, 3600000.0F).noLootTable().noOcclusion())
-        .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(ctx.getId())))
+    public static final BlockEntry<ChainBlock> SOUL_CHAIN = REGISTRATE.block("soul_chain", ChainBlock::new)
+        .properties(props -> props.requiresCorrectToolForDrops().strength(5.0F, 6.0F).sound(SoundType.CHAIN).noOcclusion().sound(SoundType.METAL).mapColor(MapColor.NONE))
+        .tag(BlockTags.NEEDS_IRON_TOOL)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .blockstate((ctx, prov) -> {
+            var model = prov.models().withExistingParent(ctx.getName(), prov.mcLoc("block/chain"))
+                .renderType(prov.mcLoc("cutout_mipped"))
+                .texture("particle", prov.blockTexture(ctx.get()))
+                .texture("all", prov.blockTexture(ctx.get()));
+
+            prov.axisBlock(ctx.get(), model, model);
+        })
+        .item()
+        .model((ctx, prov) -> prov.generated(ctx, prov.modLoc("item/soul_chain")))
+        .tab(EIOCreativeTabs.BLOCKS)
+        .build()
+        .register();
+
+    public static final BlockEntry<ColdFireBlock> COLD_FIRE = REGISTRATE
+        .block("cold_fire", ColdFireBlock::new)
+        .properties(props -> BlockBehaviour.Properties.copy(Blocks.FIRE).noLootTable())
+        .blockstate((ctx, prov) -> {
+            // This generates the models used for the blockstate in our resources.
+            // One day we may bother to datagen that file.
+            String[] toCopy = {
+                "fire_floor0", "fire_floor1",
+                "fire_side0", "fire_side1", "fire_side_alt0", "fire_side_alt1",
+                "fire_up0", "fire_up1", "fire_up_alt0", "fire_up_alt1"
+            };
+
+            for (String name : toCopy) {
+                prov.models().withExistingParent(name, prov.mcLoc(name)).renderType("cutout");
+            }
+        })
         .register();
 
     // endregion
@@ -251,46 +301,79 @@ public class EIOBlocks {
 
     // endregion
 
-    public static final BlockEntry<ColdFireBlock> COLD_FIRE = REGISTRATE
-        .block("cold_fire", ColdFireBlock::new)
-        .properties(props -> BlockBehaviour.Properties.copy(Blocks.FIRE).noLootTable())
-        .blockstate((ctx, prov) -> {
-            // This generates the models used for the blockstate in our resources.
-            // One day we may bother to datagen that file.
-            String[] toCopy = {
-                "fire_floor0", "fire_floor1",
-                "fire_side0", "fire_side1", "fire_side_alt0", "fire_side_alt1",
-                "fire_up0", "fire_up1", "fire_up_alt0", "fire_up_alt1"
-            };
+    private static final List<NonNullSupplier<? extends Block>> painted = new ArrayList<>();
 
-            for (String name : toCopy) {
-                prov.models().withExistingParent(name, prov.mcLoc(name)).renderType("cutout");
-            }
-        })
+    public static final BlockEntry<PaintedFenceBlock> PAINTED_FENCE = paintedBlock("painted_fence", PaintedFenceBlock::new, Blocks.OAK_FENCE,
+        BlockTags.WOODEN_FENCES, BlockTags.MINEABLE_WITH_AXE).register();
+
+    public static final BlockEntry<PaintedFenceGateBlock> PAINTED_FENCE_GATE = paintedBlock("painted_fence_gate", PaintedFenceGateBlock::new,
+        Blocks.OAK_FENCE_GATE, BlockTags.FENCE_GATES, BlockTags.MINEABLE_WITH_AXE).register();
+
+    public static final BlockEntry<PaintedSandBlock> PAINTED_SAND = paintedBlock("painted_sand", PaintedSandBlock::new, Blocks.SAND, BlockTags.SAND,
+        BlockTags.MINEABLE_WITH_SHOVEL).register();
+
+    public static final BlockEntry<PaintedStairBlock> PAINTED_STAIRS = paintedBlock("painted_stairs", PaintedStairBlock::new, Blocks.OAK_STAIRS,
+        Direction.WEST,BlockTags.WOODEN_STAIRS, BlockTags.MINEABLE_WITH_AXE).register();
+
+    public static final BlockEntry<PaintedCraftingTableBlock> PAINTED_CRAFTING_TABLE = paintedBlock("painted_crafting_table", PaintedCraftingTableBlock::new,
+        Blocks.CRAFTING_TABLE, BlockTags.MINEABLE_WITH_AXE).register();
+
+    public static final BlockEntry<PaintedRedstoneBlock> PAINTED_REDSTONE_BLOCK = paintedBlock("painted_redstone_block", PaintedRedstoneBlock::new,
+        Blocks.REDSTONE_BLOCK, BlockTags.MINEABLE_WITH_PICKAXE).register();
+
+    public static final BlockEntry<PaintedTrapDoorBlock> PAINTED_TRAPDOOR = paintedBlock("painted_trapdoor", PaintedTrapDoorBlock::new, Blocks.OAK_TRAPDOOR,
+        BlockTags.WOODEN_TRAPDOORS, BlockTags.MINEABLE_WITH_AXE).register();
+
+    public static final BlockEntry<PaintedWoodenPressurePlateBlock> PAINTED_WOODEN_PRESSURE_PLATE = paintedBlock("painted_wooden_pressure_plate",
+        PaintedWoodenPressurePlateBlock::new, Blocks.OAK_PRESSURE_PLATE, BlockTags.WOODEN_PRESSURE_PLATES, BlockTags.MINEABLE_WITH_AXE).register();
+
+    public static final BlockEntry<PaintedSlabBlock> PAINTED_SLAB = paintedBlock("painted_slab",
+        PaintedSlabBlock::new, PaintedSlabBlockItem::new, Blocks.OAK_SLAB, BlockTags.WOODEN_SLABS, BlockTags.MINEABLE_WITH_AXE)
+        .loot(DecorLootTable::paintedSlab)
+        .register();
+
+    public static final BlockEntry<SinglePaintedBlock> PAINTED_GLOWSTONE = paintedBlock("painted_glowstone", SinglePaintedBlock::new, Blocks.GLOWSTONE).register();
+
+    // endregion
+
+    // region Light
+
+    public static final BlockEntry<Light> LIGHT = lightBlock("light", s -> new Light(s, false));
+    public static final BlockEntry<Light> LIGHT_INVERTED = lightBlock("light_inverted", s -> new Light(s, true));
+    public static final BlockEntry<PoweredLight> POWERED_LIGHT = lightBlock("powered_light", s -> new PoweredLight(s, false, false));
+    public static final BlockEntry<PoweredLight> POWERED_LIGHT_INVERTED = lightBlock("powered_light_inverted", s -> new PoweredLight(s, true, false));
+    public static final BlockEntry<PoweredLight> POWERED_LIGHT_WIRELESS = lightBlock("powered_light_wireless", s -> new PoweredLight(s, false, true));
+    public static final BlockEntry<PoweredLight> POWERED_LIGHT_INVERTED_WIRELESS = lightBlock("powered_light_inverted_wireless", s -> new PoweredLight(s, true, true));
+
+    public static final BlockEntry<LightNode> LIGHT_NODE = REGISTRATE
+        .block("light_node", LightNode::new)
+        .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().withExistingParent("light_node", "block/air")))
+        .initialProperties(() -> Blocks.AIR)
+        .properties(p -> p.lightLevel(l -> 15).noLootTable().noCollission().noOcclusion())
         .register();
 
     public static <T extends Block> BlockBuilder<T, Registrate> simpleBlockBuilder(String name, T block) {
-        return REGISTRATE.block(name, p -> block).item().tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS)).build();
+        return REGISTRATE.block(name, p -> block).item().tab(EIOCreativeTabs.BLOCKS).build();
     }
 
     private static BlockBuilder<Block, Registrate> metalBlock(String name) {
         return REGISTRATE
-            .block(name, Material.METAL, Block::new)
+            .block(name, Block::new)
             .properties(props -> props
                 .sound(SoundType.METAL)
-                .color(MaterialColor.METAL)
+                .mapColor(MapColor.METAL)
                 .strength(5, 6)
                 .requiresCorrectToolForDrops())
             .tag(BlockTags.NEEDS_STONE_TOOL)
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .item()
-            .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
+            .tab(EIOCreativeTabs.BLOCKS)
             .build();
     }
 
     private static BlockBuilder<Block, Registrate> chassisBlock(String name) {
         return REGISTRATE
-            .block(name, Material.METAL, Block::new)
+            .block(name, Block::new)
             .blockstate((ctx, prov) ->
                 prov.simpleBlock(ctx.get(), prov.models()
                     .cubeAll(ctx.getName(), prov.blockTexture(ctx.get()))
@@ -298,20 +381,20 @@ public class EIOBlocks {
             .properties(props -> props
                 .noOcclusion()
                 .sound(SoundType.METAL)
-                .color(MaterialColor.METAL)
+                .mapColor(MapColor.METAL)
                 .strength(5, 6))
             .tag(BlockTags.NEEDS_STONE_TOOL)
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .item()
-            .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
+            .tab(EIOCreativeTabs.BLOCKS)
             .build();
     }
 
     private static BlockEntry<EIOPressurePlateBlock> pressurePlateBlock(String name, ResourceLocation texture, EIOPressurePlateBlock.Detector type,
         boolean silent) {
 
-        BlockBuilder<EIOPressurePlateBlock, Registrate> bb = REGISTRATE.block(name, Material.METAL,
-            props -> new EIOPressurePlateBlock(props.strength(5, 6), type, silent));
+        BlockBuilder<EIOPressurePlateBlock, Registrate> bb = REGISTRATE.block(name,
+            props -> new EIOPressurePlateBlock(props.strength(5, 6).mapColor(MapColor.METAL), type, silent));
 
         bb.blockstate((ctx, prov) -> {
 
@@ -325,7 +408,7 @@ public class EIOBlocks {
         });
         bb.tag(BlockTags.NEEDS_STONE_TOOL, BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.PRESSURE_PLATES)
             .item()
-            .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
+            .tab(EIOCreativeTabs.BLOCKS)
             .build();
         return bb.register();
     }
@@ -335,7 +418,7 @@ public class EIOBlocks {
         ResourceLocation downModelLoc = new ResourceLocation(upModelLoc.getNamespace(), upModelLoc.getPath() + "_down");
 
         BlockBuilder<SilentPressurePlateBlock, Registrate> bb = REGISTRATE.block("silent_" + upModelLoc.getPath(),
-            block.getStateDefinition().any().getMaterial(), props -> new SilentPressurePlateBlock(block));
+            props -> new SilentPressurePlateBlock(block));
         bb.tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.PRESSURE_PLATES);
 
         bb.blockstate((ctx, prov) -> {
@@ -346,7 +429,7 @@ public class EIOBlocks {
 
         var itemBuilder = bb.item();
         itemBuilder.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), upModelLoc));
-        itemBuilder.tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS));
+        itemBuilder.tab(EIOCreativeTabs.BLOCKS);
         bb = itemBuilder.build();
 
         return bb.register();
@@ -369,7 +452,7 @@ public class EIOBlocks {
 
         var itemBuilder = bb.item();
         itemBuilder.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), upModelLoc));
-        itemBuilder.tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS));
+        itemBuilder.tab(EIOCreativeTabs.BLOCKS);
         bb = itemBuilder.build();
 
         return bb.register();
@@ -402,23 +485,74 @@ public class EIOBlocks {
             });
         });
 
-        var ib = bb.item().tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS));
+        var ib = bb.item().tab(EIOCreativeTabs.BLOCKS);
         ib.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.mcLoc("item/lever")));
         bb = ib.build();
         return bb.register();
     }
 
     public static final BlockEntry<IndustrialInsulationBlock> INDUSTRIAL_INSULATION = REGISTRATE
-        .block("industrial_insulation_block", Material.SPONGE, IndustrialInsulationBlock::new)
+        .block("industrial_insulation_block", IndustrialInsulationBlock::new)
         .initialProperties(() -> Blocks.SPONGE)
         .lang("Industrial Insulation")
         .item()
-        .tab(NonNullSupplier.lazy(EIOCreativeTabs.BLOCKS))
+        .tab(EIOCreativeTabs.BLOCKS)
         .build()
         .register();
+    @SafeVarargs
+    private static <T extends Block> BlockBuilder<T, Registrate> paintedBlock(String name, NonNullFunction<BlockBehaviour.Properties, T> blockFactory, Block copyFrom,
+        TagKey<Block>... tags) {
+        return paintedBlock(name, blockFactory, copyFrom, null, tags);
+    }
+
+    @SafeVarargs
+    private static <T extends Block> BlockBuilder<T, Registrate> paintedBlock(String name, NonNullFunction<BlockBehaviour.Properties, T> blockFactory, Block copyFrom,
+        @Nullable Direction itemTextureRotation, TagKey<Block>... tags) {
+        return paintedBlock(name, blockFactory, PaintedBlockItem::new, copyFrom, itemTextureRotation, tags);
+    }
+
+    @SafeVarargs
+    private static <T extends Block> BlockBuilder<T, Registrate> paintedBlock(String name, NonNullFunction<BlockBehaviour.Properties, T> blockFactory,
+        NonNullBiFunction<? super T, Item.Properties, ? extends BlockItem> itemFactory, Block copyFrom, TagKey<Block>... tags) {
+        return paintedBlock(name, blockFactory, itemFactory, copyFrom, null, tags);
+    }
+
+    @SafeVarargs
+    private static <T extends Block> BlockBuilder<T, Registrate> paintedBlock(String name, NonNullFunction<BlockBehaviour.Properties, T> blockFactory,
+        NonNullBiFunction<? super T, Item.Properties, ? extends BlockItem> itemFactory, Block copyFrom,
+        @Nullable Direction itemTextureRotation, TagKey<Block>... tags) {
+        return REGISTRATE
+            .block(name, blockFactory)
+            .blockstate((ctx, cons) -> EIOBlockState.paintedBlock(ctx, cons, copyFrom, itemTextureRotation))
+            .color(() -> PaintedBlockColor::new)
+            .loot(DecorLootTable::withPaint)
+            .initialProperties(() -> copyFrom)
+            .properties(BlockBehaviour.Properties::noOcclusion)
+            .item(itemFactory)
+            .color(() -> PaintedBlockColor::new)
+            .build()
+            .tag(tags);
+    }
+
+    public static <T extends Block> BlockEntry<T> lightBlock(String name, NonNullFunction<BlockBehaviour.Properties, T> blockFactory) {
+        return REGISTRATE
+            .block(name, blockFactory)
+            .blockstate(EIOBlockState::lightBlock)
+            .properties(p -> p
+                .sound(SoundType.METAL)
+                .mapColor(MapColor.METAL)
+                .lightLevel(l -> {
+                    if (l.getValue(Light.ENABLED)) {
+                        return 15;
+                    }
+                    return 0;
+                }))
+            .item()
+            .model((ctx, prov) -> prov.withExistingParent(name, "block/button_inventory"))
+            .tab(EIOCreativeTabs.BLOCKS)
+            .build()
+            .register();
+    }
     public static void register() {}
 
-    public static void clientInit() {
-
-    }
 }

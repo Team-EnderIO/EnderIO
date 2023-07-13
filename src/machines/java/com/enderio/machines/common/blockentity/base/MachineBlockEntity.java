@@ -1,17 +1,20 @@
 package com.enderio.machines.common.blockentity.base;
 
+import com.enderio.api.UseOnly;
 import com.enderio.api.capability.ISideConfig;
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
+import com.enderio.api.misc.RedstoneControl;
 import com.enderio.base.common.blockentity.IWrenchable;
-import com.enderio.base.common.blockentity.RedstoneControl;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
-import com.enderio.core.common.sync.EnumDataSlot;
-import com.enderio.core.common.sync.NBTSerializableDataSlot;
-import com.enderio.core.common.sync.SyncMode;
+import com.enderio.core.common.network.slot.EnumNetworkDataSlot;
+import com.enderio.core.common.network.slot.NBTSerializableNetworkDataSlot;
+import com.enderio.core.common.util.PlayerInteractionUtil;
+import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.io.IOConfig;
+import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import net.minecraft.core.BlockPos;
@@ -20,10 +23,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -35,20 +38,21 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
+import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
@@ -72,12 +76,27 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     // region Items and Fluids
 
+    @Nullable
     private final MachineInventory inventory;
 
-    // Caches for external block interaction
-    private final EnumMap<Direction, LazyOptional<IItemHandler>> itemHandlerCache = new EnumMap<>(Direction.class);
-    private final EnumMap<Direction, LazyOptional<IFluidHandler>> fluidHandlerCache = new EnumMap<>(Direction.class);
-    private boolean isCacheDirty = false;
+    @Nullable
+    private final FluidTank fluidTank;
+
+    @Nullable
+    private final MachineFluidHandler fluidHandler;
+
+    // region Caches for external block interaction
+
+    private final List<Capability<?>> cachedCapabilityTypes = new ArrayList<>();
+    private final Map<Capability<?>, EnumMap<Direction, LazyOptional<?>>> cachedCapabilities = new HashMap<>();
+    private boolean isCapabilityCacheDirty = false;
+
+    // endregion
+
+    // region Common Dataslots
+
+    private final EnumNetworkDataSlot<RedstoneControl> redstoneControlDataSlot;
+    private final NBTSerializableNetworkDataSlot<IIOConfig> ioConfigDataSlot;
 
     // endregion
 
@@ -97,49 +116,49 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             inventory = null;
         }
 
+        // Create fluid storage
+        fluidTank = createFluidTank();
+        if (fluidTank != null) {
+            fluidHandler = createFluidHandler(fluidTank);
+            if (fluidHandler != null) {
+                addCapabilityProvider(fluidHandler);
+            }
+        } else {
+            fluidHandler = null;
+        }
+
         if (supportsRedstoneControl()) {
-            // Register sync slot for redstone control.
-            add2WayDataSlot(new EnumDataSlot<>(this::getRedstoneControl, this::setRedstoneControl, SyncMode.GUI));
+            redstoneControlDataSlot = new EnumNetworkDataSlot<>(RedstoneControl.class,
+                this::getRedstoneControl, e -> redstoneControl = e);
+            addDataSlot(redstoneControlDataSlot);
+        } else {
+            redstoneControlDataSlot = null;
         }
 
         // Register sync slot for ioConfig and setup model data.
-        add2WayDataSlot(new NBTSerializableDataSlot<>(this::getIOConfig, SyncMode.WORLD, () -> {
-            if (level.isClientSide) {
+        ioConfigDataSlot = new NBTSerializableNetworkDataSlot<>(this::getIOConfig, () -> {
+            if (level != null && level.isClientSide()) {
                 onIOConfigChanged();
             }
-        }));
+        });
+        addDataSlot(ioConfigDataSlot);
     }
-
-    // region Per-machine config/features
-
-    /**
-     * Whether this block entity supports redstone control
-     */
-    public boolean supportsRedstoneControl() {
-        return true;
-    }
-
-    /**
-     * Get the block entity's inventory slot layout.
-     */
-    public MachineInventoryLayout getInventoryLayout() {
-        return null;
-    }
-
-    // endregion
 
     // region IO Config
 
     /**
      * Create the IO Config.
      * Override and return FixedIOConfig to stop it from being configurable.
-     *
      * Must never be null!
      */
     protected IIOConfig createIOConfig() {
         return new IOConfig() {
             @Override
             protected void onChanged(Direction side, IOMode oldMode, IOMode newMode) {
+                if (level == null) {
+                    return;
+                }
+
                 // Mark entity as changed.
                 setChanged();
 
@@ -150,13 +169,18 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
                 // Notify neighbors of update
                 level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
+
+                // Mark change
+                onIOConfigChanged(side, oldMode, newMode);
             }
 
             @Override
             protected Direction getBlockFacing() {
                 BlockState state = getBlockState();
-                if (state.hasProperty(MachineBlock.FACING))
+                if (state.hasProperty(MachineBlock.FACING)) {
                     return getBlockState().getValue(MachineBlock.FACING);
+                }
+
                 return super.getBlockFacing();
             }
 
@@ -165,6 +189,12 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
                 return supportsIOMode(side, mode);
             }
         };
+    }
+
+    protected void onIOConfigChanged(Direction side, IOMode oldMode, IOMode newMode) {
+        if (level != null && level.isClientSide()) {
+            clientUpdateSlot(ioConfigDataSlot, getIOConfig());
+        }
     }
 
     /**
@@ -177,29 +207,73 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     /**
      * Override to declare custom constraints on IOMode's for sides of blocks.
      */
+    @SuppressWarnings("unused")
     protected boolean supportsIOMode(Direction side, IOMode mode) {
         return true;
     }
 
+    @NotNull
     @Override
-    public @NotNull ModelData getModelData() {
+    public ModelData getModelData() {
         return getIOConfig().renderOverlay() ? modelData : ModelData.EMPTY;
     }
 
     private void onIOConfigChanged() {
-        if (level.isClientSide && ioConfig.renderOverlay()) {
+        if (this.level == null) {
+            return;
+        }
+
+        if (ioConfig.renderOverlay()) {
             modelData = modelData.derive().with(IO_CONFIG_PROPERTY, ioConfig).build();
             requestModelDataUpdate();
         }
-        level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+
+        this.level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+    }
+
+    // endregion
+
+    // region Redstone Control
+
+    /**
+     * Whether this block entity supports redstone control
+     */
+    public boolean supportsRedstoneControl() {
+        return true;
+    }
+
+    public RedstoneControl getRedstoneControl() {
+        return redstoneControl;
+    }
+
+    public void setRedstoneControl(RedstoneControl redstoneControl) {
+        if (level != null && level.isClientSide()) {
+            clientUpdateSlot(redstoneControlDataSlot, redstoneControl);
+        } else this.redstoneControl = redstoneControl;
     }
 
     // endregion
 
     // region Inventory
 
+    /**
+     * Get the block entity's inventory slot layout.
+     */
+    @Nullable
+    public MachineInventoryLayout getInventoryLayout() {
+        return null;
+    }
+
+    @Nullable
     public final MachineInventory getInventory() {
         return inventory;
+    }
+
+    /**
+     * Only call this if you're sure your machine has an inventory.
+     */
+    protected final MachineInventory getInventoryNN() {
+        return Objects.requireNonNull(inventory);
     }
 
     /**
@@ -222,11 +296,38 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     // endregion
 
+    // region Fluid Storage
+
+    @Nullable
+    protected FluidTank createFluidTank() {
+        return null;
+    }
+
+    @Nullable
+    public final FluidTank getFluidTank() {
+        return fluidTank;
+    }
+
+    /**
+     * Only call this if you're sure your machine has a fluid tank.
+     */
+    protected final FluidTank getFluidTankNN() {
+        return Objects.requireNonNull(fluidTank);
+    }
+
+    @Nullable
+    protected MachineFluidHandler createFluidHandler(FluidTank fluidTank) {
+        // We can have a default here, as if createFluidTank returns null, this is never called.
+        return new MachineFluidHandler(getIOConfig(), fluidTank);
+    }
+
+    // endregion
+
     // region Block Entity ticking
 
     @Override
     public void serverTick() {
-        if (isCacheDirty) {
+        if (isCapabilityCacheDirty) {
             updateCapabilityCache();
         }
 
@@ -238,14 +339,23 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     }
 
     public boolean canAct() {
-        if (supportsRedstoneControl())
-            return redstoneControl.isActive(level.hasNeighborSignal(worldPosition));
+        if (this.level == null) {
+            return false;
+        }
+
+        if (supportsRedstoneControl()) {
+            return redstoneControl.isActive(this.level.hasNeighborSignal(worldPosition));
+        }
+
         return true;
     }
 
     public boolean canActSlow() {
-        return canAct()
-            && level.getGameTime() % 5 == 0;
+        if (this.level == null) {
+            return false;
+        }
+
+        return canAct() && this.level.getGameTime() % 5 == 0;
     }
 
     // endregion
@@ -272,7 +382,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         // Get our item handler.
         getCapability(ForgeCapabilities.ITEM_HANDLER, side).resolve().ifPresent(selfHandler -> {
             // Get neighboring item handler.
-            Optional<IItemHandler> otherHandler = getNeighboringItemHandler(side).resolve();
+            Optional<IItemHandler> otherHandler = getNeighbouringCapability(ForgeCapabilities.ITEM_HANDLER, side).resolve();
 
             if (otherHandler.isPresent()) {
                 // Get side config
@@ -316,7 +426,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         // Get our fluid handler
         getCapability(ForgeCapabilities.FLUID_HANDLER, side).resolve().ifPresent(selfHandler -> {
             // Get neighboring fluid handler.
-            Optional<IFluidHandler> otherHandler = getNeighboringFluidHandler(side).resolve();
+            Optional<IFluidHandler> otherHandler = getNeighbouringCapability(ForgeCapabilities.FLUID_HANDLER, side).resolve();
 
             if (otherHandler.isPresent()) {
                 // Get side config
@@ -353,59 +463,78 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     // region Neighboring Capabilities
 
-    protected LazyOptional<IItemHandler> getNeighboringItemHandler(Direction side) {
-        if (!itemHandlerCache.containsKey(side))
+    protected <T> LazyOptional<T> getNeighbouringCapability(Capability<T> capability, Direction side) {
+        if (level == null) {
             return LazyOptional.empty();
-        return itemHandlerCache.get(side);
-    }
+        }
 
-    protected LazyOptional<IFluidHandler> getNeighboringFluidHandler(Direction side) {
-        if (!fluidHandlerCache.containsKey(side))
+        if (!cachedCapabilityTypes.contains(capability)) {
+            // We've not seen this capability before, time to register it!
+            cachedCapabilityTypes.add(capability);
+            cachedCapabilities.put(capability, new EnumMap<>(Direction.class));
+
+            for (Direction direction : Direction.values()) {
+                BlockEntity neighbor = this.level.getBlockEntity(worldPosition.relative(direction));
+                populateCachesFor(direction, neighbor, capability);
+            }
+        }
+
+        if (!cachedCapabilities.get(capability).containsKey(side)) {
             return LazyOptional.empty();
-        return fluidHandlerCache.get(side);
-    }
+        }
 
-    /**
-     * Add invalidation handler to a capability to be notified if it is removed.
-     */
-    protected <T> LazyOptional<T> addInvalidationListener(LazyOptional<T> capability) {
-        if (capability.isPresent())
-            capability.addListener(this::markCapabilityCacheDirty);
-        return capability;
+        return cachedCapabilities.get(capability).get(side).cast();
     }
 
     /**
      * Mark the capability cache as dirty. Will be updated next tick.
      */
-    private <T> void markCapabilityCacheDirty(LazyOptional<T> capability) {
-        isCacheDirty = true;
+    public void markCapabilityCacheDirty() {
+        isCapabilityCacheDirty = true;
     }
 
     /**
      * Update capability cache
      */
-    public void updateCapabilityCache() {
-        // Refresh capability cache.
-        clearCaches();
-        for (Direction direction : Direction.values()) {
-            BlockEntity neighbor = level.getBlockEntity(worldPosition.relative(direction));
-            populateCaches(direction, neighbor);
+    private void updateCapabilityCache() {
+        if (this.level != null) {
+            clearCaches();
+
+            for (Direction direction : Direction.values()) {
+                BlockEntity neighbor = this.level.getBlockEntity(worldPosition.relative(direction));
+                populateCaches(direction, neighbor);
+            }
+
+            isCapabilityCacheDirty = false;
         }
     }
 
-    // Override the next two to implement new capability caches on the machine.
-    protected void clearCaches() {
-        itemHandlerCache.clear();
-        fluidHandlerCache.clear();
+    /**
+     * Add invalidation handler to a capability to be notified if it is removed.
+     */
+    private <T> LazyOptional<T> addInvalidationListener(LazyOptional<T> capability) {
+        if (capability.isPresent())
+            capability.addListener(c -> markCapabilityCacheDirty());
+        return capability;
     }
 
-    protected void populateCaches(Direction direction, @Nullable BlockEntity neighbor) {
+    private void clearCaches() {
+        for (Capability<?> capability : cachedCapabilityTypes) {
+            cachedCapabilities.get(capability).clear();
+        }
+    }
+
+    private void populateCaches(Direction direction, @Nullable BlockEntity neighbor) {
+        for (Capability<?> capability : cachedCapabilityTypes) {
+            populateCachesFor(direction, neighbor, capability);
+        }
+    }
+
+    private void populateCachesFor(Direction direction, @Nullable BlockEntity neighbor, Capability<?> capability) {
         if (neighbor != null) {
-            itemHandlerCache.put(direction, addInvalidationListener(neighbor.getCapability(ForgeCapabilities.ITEM_HANDLER, direction.getOpposite())));
-            fluidHandlerCache.put(direction, addInvalidationListener(neighbor.getCapability(ForgeCapabilities.FLUID_HANDLER, direction.getOpposite())));
+            cachedCapabilities.get(capability).put(direction, addInvalidationListener(neighbor.getCapability(capability, direction.getOpposite())));
         } else {
-            itemHandlerCache.put(direction, LazyOptional.empty());
-            fluidHandlerCache.put(direction, LazyOptional.empty());
+            cachedCapabilities.get(capability).put(direction, LazyOptional.empty());
         }
     }
 
@@ -418,37 +547,45 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         super.saveAdditional(pTag);
 
         // Save io config.
-        pTag.put("io_config", getIOConfig().serializeNBT());
+        pTag.put(MachineNBTKeys.IO_CONFIG, getIOConfig().serializeNBT());
 
         if (supportsRedstoneControl()) {
-            pTag.putInt("redstone", redstoneControl.ordinal());
+            pTag.putInt(MachineNBTKeys.REDSTONE_CONTROL, redstoneControl.ordinal());
         }
 
-        if (inventory != null) {
-            pTag.put("inventory", inventory.serializeNBT());
+        if (this.inventory != null) {
+            pTag.put(MachineNBTKeys.ITEMS, inventory.serializeNBT());
+        }
+
+        if (fluidTank != null) {
+            pTag.put(MachineNBTKeys.FLUID, fluidTank.writeToNBT(new CompoundTag()));
         }
     }
 
     @Override
     public void load(CompoundTag pTag) {
         // Load io config.
-        ioConfig.deserializeNBT(pTag.getCompound("io_config"));
+        ioConfig.deserializeNBT(pTag.getCompound(MachineNBTKeys.IO_CONFIG));
 
         if (supportsRedstoneControl()) {
-            redstoneControl = RedstoneControl.values()[pTag.getInt("redstone")];
+            redstoneControl = RedstoneControl.values()[pTag.getInt(MachineNBTKeys.REDSTONE_CONTROL)];
         }
 
-        if (inventory != null) {
-            inventory.deserializeNBT(pTag.getCompound("inventory"));
+        if (this.inventory != null) {
+            inventory.deserializeNBT(pTag.getCompound(MachineNBTKeys.ITEMS));
+        }
+
+        if (fluidTank != null) {
+            fluidTank.readFromNBT(pTag.getCompound(MachineNBTKeys.FLUID));
         }
 
         // For rendering io overlays after placed by an nbt filled block item
-        if (level != null) {
+        if (this.level != null) {
             onIOConfigChanged();
         }
 
         // Mark capability cache dirty
-        isCacheDirty = true;
+        isCapabilityCacheDirty = true;
 
         super.load(pTag);
     }
@@ -461,42 +598,39 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     }
 
     //called when a player uses the block entity, before menu is may open.
-    public InteractionResult onBlockEntityUsed(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit){return InteractionResult.PASS;}
+    public InteractionResult onBlockEntityUsed(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        return InteractionResult.PASS;
+    }
 
     public boolean stillValid(Player pPlayer) {
-        if (this.level.getBlockEntity(this.worldPosition) != this)
+        if (this.level == null) {
             return false;
-        return pPlayer.distanceToSqr(this.worldPosition.getX() + 0.5D, this.worldPosition.getY() + 0.5D, this.worldPosition.getZ() + 0.5D) <= 64.0D;
+        }
+
+        if (this.level.getBlockEntity(this.worldPosition) != this) {
+            return false;
+        }
+
+        return pPlayer.distanceToSqr(this.worldPosition.getX() + 0.5D, this.worldPosition.getY() + 0.5D, this.worldPosition.getZ() + 0.5D) <=
+            Mth.square(pPlayer.getAttributeValue(ForgeMod.BLOCK_REACH.get()));
     }
 
-    public RedstoneControl getRedstoneControl() {
-        return redstoneControl;
-    }
-
-    public void setRedstoneControl(RedstoneControl redstoneControl) {
-        this.redstoneControl = redstoneControl;
-    }
-
-    //only called on server
+    @UseOnly(LogicalSide.SERVER)
     @Override
     public InteractionResult onWrenched(UseOnContext context) {
         Player player = context.getPlayer();
-        if(player != null && level!= null && player.isSecondaryUseActive()) {//aka break block
-            BlockPos pos = context.getClickedPos();
-            BlockState state = context.getLevel().getBlockState(pos);
-            List<ItemStack> drops = Block.getDrops(state, (ServerLevel) level,pos, level.getBlockEntity(pos));//level is always ServerLevel since method only called on server.
+        if (player != null && level != null && player.isSecondaryUseActive() && level instanceof ServerLevel serverLevel) {//aka break block
+            BlockPos pos = getBlockPos();
+            BlockState state = getBlockState();
+            List<ItemStack> drops = Block.getDrops(state, serverLevel, pos, level.getBlockEntity(pos));
             level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL_IMMEDIATE);
             player.swing(InteractionHand.MAIN_HAND);
             //TODO: custom sound when sound manager is up and running??
             SoundType soundType = state.getBlock().getSoundType(state,level,pos,null);
             level.playSound(null, pos,soundType.getBreakSound(), SoundSource.BLOCKS,soundType.volume, soundType.pitch);
-            for (ItemStack drop: drops) {
-                if(!player.addItem(drop)){
-                    level.addFreshEntity(new ItemEntity(level, pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, drop));
-                }
-            }
+            PlayerInteractionUtil.putStacksInInventoryFromWorldInteraction(player,pos, drops);
             return InteractionResult.CONSUME;
-        }else{
+        } else {
             // Check for side config capability
             LazyOptional<ISideConfig> optSideConfig = getCapability(EIOCapabilities.SIDE_CONFIG, context.getClickedFace());
             if (optSideConfig.isPresent()) {
@@ -506,5 +640,9 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             }
         }
         return InteractionResult.PASS;
+    }
+
+    public boolean canOpenMenu() {
+        return true;
     }
 }

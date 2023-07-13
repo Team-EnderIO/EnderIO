@@ -1,17 +1,16 @@
 package com.enderio.core.client.gui.widgets;
 
+import com.enderio.api.misc.Vector2i;
 import com.enderio.core.client.gui.screen.IEnderScreen;
-import com.enderio.core.common.util.Vector2i;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -61,12 +60,10 @@ public class ToggleImageButton<U extends Screen & IEnderScreen> extends Abstract
     private Component tooltipCache;
 
     @Override
-    public void renderWidget(PoseStack pPoseStack, int pMouseX, int pMouseY, float partialTick) {
+    public void renderWidget(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float partialTick) {
         Vector2i pos = new Vector2i(getX(), getY());
-        addedOn.renderSimpleArea(pPoseStack, pos, pos.add(new Vector2i(width, height)));
+        addedOn.renderSimpleArea(guiGraphics, pos, pos.add(new Vector2i(width, height)));
 
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, this.resourceLocation);
         // Coordinates based on whether toggledOn or not
         int xTex = this.xTexStart;
         int yTex = this.yTexStart;
@@ -77,7 +74,7 @@ public class ToggleImageButton<U extends Screen & IEnderScreen> extends Abstract
         }
 
         RenderSystem.enableDepthTest();
-        blit(pPoseStack, getX(), getY(), (float) xTex, (float) yTex, this.width, this.height, this.textureWidth, this.textureHeight);
+        guiGraphics.blit(this.resourceLocation, getX(), getY(), (float) xTex, (float) yTex, this.width, this.height, this.textureWidth, this.textureHeight);
 
         if (this.isHovered && tooltipCache != tooltip.get()) {
 

@@ -1,31 +1,33 @@
 package com.enderio.base.client;
 
 import com.enderio.EnderIO;
-import com.enderio.base.client.renderer.glider.ActiveGliderRenderLayer;
+import com.enderio.base.client.model.PaintedBlockGeometry;
 import com.enderio.base.client.particle.RangeParticle;
-import com.enderio.base.common.init.EIOParticles;
-import com.enderio.core.client.item.EnergyBarDecorator;
-import com.enderio.core.client.item.FluidBarDecorator;
+import com.enderio.base.client.renderer.glider.ActiveGliderRenderLayer;
 import com.enderio.base.client.renderer.item.GlassIconDecorator;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.common.init.EIOParticles;
+import com.enderio.core.client.item.EnergyBarDecorator;
+import com.enderio.core.client.item.FluidBarDecorator;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.client.Minecraft;
-import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.event.RegisterItemDecorationsEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
-import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientSetup {
@@ -60,9 +62,9 @@ public class ClientSetup {
     public static void itemDecorators(RegisterItemDecorationsEvent event) {
         // Register tools
         event.register(EIOItems.LEVITATION_STAFF.get(), FluidBarDecorator.INSTANCE);
+        //        event.register(EIOItems.DARK_STEEL_AXE.get(), EnergyBarDecorator.INSTANCE);
+        //        event.register(EIOItems.DARK_STEEL_PICKAXE.get(), EnergyBarDecorator.INSTANCE);
         event.register(EIOItems.TRAVEL_STAFF.get(), EnergyBarDecorator.INSTANCE);
-        event.register(EIOItems.DARK_STEEL_AXE.get(), EnergyBarDecorator.INSTANCE);
-        event.register(EIOItems.DARK_STEEL_PICKAXE.get(), EnergyBarDecorator.INSTANCE);
 
         // Register all glass blocks
         EIOBlocks.GLASS_BLOCKS.values().forEach(blocks -> blocks.getAllBlocks().forEach(block -> event.register(block.get(), GlassIconDecorator.INSTANCE)));
@@ -100,5 +102,10 @@ public class ClientSetup {
         String namespace = rl.getNamespace();
         String path = rl.getPath().substring("models/enderio_glider/".length(), rl.getPath().length() - 5);
         return Optional.ofNullable(ForgeRegistries.ITEMS.getValue(new ResourceLocation(namespace, path)));
+    }
+
+    @SubscribeEvent
+    public static void modelInit(ModelEvent.RegisterGeometryLoaders event) {
+        event.register("painted_block", new PaintedBlockGeometry.Loader());
     }
 }

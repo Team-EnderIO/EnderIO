@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:enderios"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

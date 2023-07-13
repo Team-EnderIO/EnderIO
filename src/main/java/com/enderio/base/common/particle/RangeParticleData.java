@@ -9,56 +9,44 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
 
-public record RangeParticleData(int range, float rCol, float gCol, float bCol) implements ParticleOptions {
+public record RangeParticleData(int range, String color) implements ParticleOptions {
     public static final Deserializer<RangeParticleData> DESERIALIZER = new Deserializer<>() {
 
-        @NotNull
         @Override
-        public RangeParticleData fromCommand(@NotNull ParticleType<RangeParticleData> type, @NotNull StringReader reader) throws CommandSyntaxException {
+        public RangeParticleData fromCommand(ParticleType<RangeParticleData> type, StringReader reader) throws CommandSyntaxException {
             reader.expect(' ');
             int range = reader.readInt();
             reader.expect(' ');
-            float rCol = reader.readFloat();
-            reader.expect(' ');
-            float gCol = reader.readFloat();
-            reader.expect(' ');
-            float bCol = reader.readFloat();
-            return new RangeParticleData(range, rCol, gCol, bCol);
+            String color = reader.readString();
+            return new RangeParticleData(range, color);
         }
 
         @Override
-        @NotNull
-        public RangeParticleData fromNetwork(@NotNull ParticleType<RangeParticleData> particleType, FriendlyByteBuf buffer) {
-            return new RangeParticleData(buffer.readInt(), buffer.readFloat(), buffer.readFloat(), buffer.readFloat());
+        public RangeParticleData fromNetwork(ParticleType<RangeParticleData> particleType, FriendlyByteBuf buffer) {
+            return new RangeParticleData(buffer.readInt(), buffer.readUtf());
         }
     };
 
     public static Codec<RangeParticleData> CODEC = RecordCodecBuilder.create(val -> val
-        .group(Codec.INT.fieldOf("range").forGetter(data -> data.range), Codec.FLOAT.fieldOf("rCol").forGetter(data -> data.rCol),
-            Codec.FLOAT.fieldOf("gCol").forGetter(data -> data.gCol), Codec.FLOAT.fieldOf("bCol").forGetter(data -> data.bCol))
+        .group(Codec.INT.fieldOf("range").forGetter(data -> data.range), Codec.STRING.fieldOf("color").forGetter(data -> data.color))
         .apply(val, RangeParticleData::new));
 
-    @NotNull
     @Override
     public ParticleType<?> getType() {
         return EIOParticles.RANGE_PARTICLE.get();
     }
 
     @Override
-    public void writeToNetwork(@NotNull FriendlyByteBuf buffer) {
+    public void writeToNetwork(FriendlyByteBuf buffer) {
         buffer.writeInt(range);
-        buffer.writeFloat(rCol);
-        buffer.writeFloat(gCol);
-        buffer.writeFloat(bCol);
+        buffer.writeUtf(color);
     }
 
-    @NotNull
     @Override
     public String writeToString() {
-        return String.format(Locale.ROOT, "%d %f %f %f ", ForgeRegistries.PARTICLE_TYPES.getKey(getType()), range, rCol, gCol, bCol);
+        return String.format(Locale.ROOT, "%s %d %s ", ForgeRegistries.PARTICLE_TYPES.getKey(getType()), range, color);
     }
 }

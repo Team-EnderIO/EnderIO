@@ -1,8 +1,8 @@
 package com.enderio.core.client.item;
 
 import com.enderio.core.common.util.EnergyUtil;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.IItemDecorator;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -14,7 +14,7 @@ public class EnergyBarDecorator implements IItemDecorator {
     public static final int BAR_COLOR = 0x00B168E4;
 
     @Override
-    public boolean render(PoseStack poseStack, Font font, ItemStack stack, int xOffset, int yOffset) {
+    public boolean render(GuiGraphics guiGraphics, Font font, ItemStack stack, int xOffset, int yOffset) {
         // Hide bar if no energy
         if (EnergyUtil.getMaxEnergyStored(stack) <= 0) {
             return false;
@@ -27,7 +27,7 @@ public class EnergyBarDecorator implements IItemDecorator {
             .orElse(0f);
 
         // Render the bar overlay
-        ItemBarRenderer.renderBar(poseStack, fillRatio, xOffset, yOffset, 0, BAR_COLOR);
+        ItemBarRenderer.renderBar(guiGraphics, fillRatio, xOffset, yOffset, 0, BAR_COLOR);
         return false;
     }
 }

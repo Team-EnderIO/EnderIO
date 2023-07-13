@@ -10,6 +10,6 @@ public class EnderIOMachinesSelfIntegration implements Integration {
 
     @Override
     public boolean canBlockTeleport(Player player) {
-        return player.level.getBlockState(player.blockPosition().below()).getBlock() instanceof TravelAnchorBlock;
+        return player.level().getBlockState(player.blockPosition().below()).getBlock() instanceof TravelAnchorBlock;
     }
 }

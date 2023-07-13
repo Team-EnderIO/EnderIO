@@ -1,22 +1,15 @@
 package com.enderio.base.data.recipe;
 
 import com.enderio.base.common.init.EIOItems;
-import com.enderio.base.common.item.darksteel.DarkSteelUpgradeItem;
-import com.enderio.base.common.item.misc.HangGliderItem;
 import com.enderio.base.common.item.misc.MaterialItem;
-import com.enderio.base.common.tag.EIOTags;
-import com.tterrag.registrate.util.entry.ItemEntry;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.Tags;
 
-import java.util.Map;
 import java.util.function.Consumer;
 
 public class ItemRecipes extends RecipeProvider {
@@ -42,20 +35,22 @@ public class ItemRecipes extends RecipeProvider {
             .define('L', Tags.Items.LEATHER)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DARK_STEEL_INGOT.get()))
             .save(recipeConsumer);
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, EIOItems.GLIDER.get())
-            .pattern(" D ")
-            .pattern("WDW")
-            .define('D', EIOItems.DARK_STEEL_INGOT.get())
-            .define('W', EIOItems.GLIDER_WING.get())
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GLIDER_WING.get()))
-            .save(recipeConsumer);
-        for (Map.Entry<DyeColor, ItemEntry<HangGliderItem>> dyeColorItemEntryEntry : EIOItems.COLORED_HANG_GLIDERS.entrySet()) {
-            ShapelessRecipeBuilder.shapeless(RecipeCategory.TOOLS, dyeColorItemEntryEntry.getValue().get())
-                .requires(EIOItems.GLIDER.get())
-                .requires(dyeColorItemEntryEntry.getKey().getTag())
-                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GLIDER.get()))
-                .save(recipeConsumer);
-        }
+
+//        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, EIOItems.GLIDER.get())
+//            .pattern(" D ")
+//            .pattern("WDW")
+//            .define('D', EIOItems.DARK_STEEL_INGOT.get())
+//            .define('W', EIOItems.GLIDER_WING.get())
+//            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GLIDER_WING.get()))
+//            .save(recipeConsumer);
+//
+//        for (Map.Entry<DyeColor, ItemEntry<HangGliderItem>> dyeColorItemEntryEntry : EIOItems.COLORED_HANG_GLIDERS.entrySet()) {
+//            ShapelessRecipeBuilder.shapeless(RecipeCategory.TOOLS, dyeColorItemEntryEntry.getValue().get())
+//                .requires(EIOItems.GLIDER.get())
+//                .requires(dyeColorItemEntryEntry.getKey().getTag())
+//                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GLIDER.get()))
+//                .save(recipeConsumer);
+//        }
     }
 
     private void addTools(Consumer<FinishedRecipe> recipeConsumer) {
@@ -99,8 +94,18 @@ public class ItemRecipes extends RecipeProvider {
             .save(recipeConsumer);
 
         ShapedRecipeBuilder
+            .shaped(RecipeCategory.TOOLS, EIOItems.EXPERIENCE_ROD.get())
+            .pattern("  I")
+            .pattern(" E ")
+            .pattern("I  ")
+            .define('I', EIOItems.SOULARIUM_INGOT)
+            .define('E', EIOItems.ENERGETIC_ALLOY_INGOT)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.SOULARIUM_INGOT))
+            .save(recipeConsumer);
+
+        ShapedRecipeBuilder
             .shaped(RecipeCategory.TOOLS, EIOItems.LEVITATION_STAFF.get())
-            .define('C', EIOItems.PULSATING_CRYSTAL.get())
+            .define('C', EIOItems.PRESCIENT_CRYSTAL.get())
             .define('R', EIOItems.INFINITY_ROD.get())
             .pattern("  C")
             .pattern(" R ")
@@ -113,63 +118,75 @@ public class ItemRecipes extends RecipeProvider {
         MaterialItem ingot = EIOItems.DARK_STEEL_INGOT.get();
 
         ShapedRecipeBuilder
-            .shaped(RecipeCategory.TOOLS, EIOItems.DARK_STEEL_PICKAXE.get())
+            .shaped(RecipeCategory.TOOLS, EIOItems.DARK_STEEL_SWORD.get())
             .define('I', ingot)
             .define('S', Tags.Items.RODS_WOODEN)
-            .pattern("III")
-            .pattern(" S ")
+            .pattern(" I ")
+            .pattern(" I ")
             .pattern(" S ")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ingot))
             .save(recipeConsumer);
 
-        ShapedRecipeBuilder
-            .shaped(RecipeCategory.TOOLS, EIOItems.DARK_STEEL_AXE.get())
-            .define('I', ingot)
-            .define('S', Tags.Items.RODS_WOODEN)
-            .pattern("II")
-            .pattern("IS")
-            .pattern(" S")
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ingot))
-            .save(recipeConsumer);
+//        ShapedRecipeBuilder
+//            .shaped(RecipeCategory.TOOLS, EIOItems.DARK_STEEL_PICKAXE.get())
+//            .define('I', ingot)
+//            .define('S', Tags.Items.RODS_WOODEN)
+//            .pattern("III")
+//            .pattern(" S ")
+//            .pattern(" S ")
+//            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ingot))
+//            .save(recipeConsumer);
+//
+//        ShapedRecipeBuilder
+//            .shaped(RecipeCategory.TOOLS, EIOItems.DARK_STEEL_AXE.get())
+//            .define('I', ingot)
+//            .define('S', Tags.Items.RODS_WOODEN)
+//            .pattern("II")
+//            .pattern("IS")
+//            .pattern(" S")
+//            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ingot))
+//            .save(recipeConsumer);
     }
 
     private void addDarkSteelUpgrades(Consumer<FinishedRecipe> recipeConsumer) {
 
-        addUpgrade(recipeConsumer, EIOItems.DARK_STEEL_UPGRADE_EMPOWERED_1, EIOItems.VIBRANT_CRYSTAL);
-        addUpgrade(recipeConsumer, EIOItems.DARK_STEEL_UPGRADE_EMPOWERED_2, EIOItems.BASIC_CAPACITOR);
-        addUpgrade(recipeConsumer, EIOItems.DARK_STEEL_UPGRADE_EMPOWERED_3, EIOItems.DOUBLE_LAYER_CAPACITOR);
-        addUpgrade(recipeConsumer, EIOItems.DARK_STEEL_UPGRADE_EMPOWERED_4, EIOItems.OCTADIC_CAPACITOR);
-
-        addUpgrade(recipeConsumer, EIOItems.DARK_STEEL_UPGRADE_FORK, Items.DIAMOND_HOE);
-        addUpgrade(recipeConsumer, EIOItems.DARK_STEEL_UPGRADE_SPOON, Items.DIAMOND_SHOVEL);
-
-        ShapedRecipeBuilder
-            .shaped(RecipeCategory.MISC, EIOItems.DARK_STEEL_UPGRADE_DIRECT.get())
-            .define('I', EIOItems.VIBRANT_ALLOY_INGOT.get())
-            .define('N', EIOItems.VIBRANT_ALLOY_NUGGET.get())
-            .define('E', Tags.Items.ENDER_PEARLS)
-            .define('B', EIOItems.DARK_STEEL_UPGRADE_BLANK.get())
-            .pattern("NIN")
-            .pattern("IEI")
-            .pattern("NBN")
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DARK_STEEL_UPGRADE_BLANK.get()))
-            .save(recipeConsumer);
+//        addUpgrade(recipeConsumer, EIOItems.DARK_STEEL_UPGRADE_EMPOWERED_1, Ingredient.of(EIOItems.VIBRANT_CRYSTAL));
+//        addUpgrade(recipeConsumer, EIOItems.DARK_STEEL_UPGRADE_EMPOWERED_2, Ingredient.of(EIOItems.BASIC_CAPACITOR));
+//        addUpgrade(recipeConsumer, EIOItems.DARK_STEEL_UPGRADE_EMPOWERED_3, Ingredient.of(EIOItems.DOUBLE_LAYER_CAPACITOR));
+//        addUpgrade(recipeConsumer, EIOItems.DARK_STEEL_UPGRADE_EMPOWERED_4, Ingredient.of(EIOItems.OCTADIC_CAPACITOR));
+//
+//        addUpgrade(recipeConsumer, EIOItems.DARK_STEEL_UPGRADE_FORK, Ingredient.of(Items.DIAMOND_HOE));
+//        addUpgrade(recipeConsumer, EIOItems.DARK_STEEL_UPGRADE_SPOON, Ingredient.of(Items.DIAMOND_SHOVEL));
+//
+//        ShapedRecipeBuilder
+//            .shaped(RecipeCategory.MISC, EIOItems.DARK_STEEL_UPGRADE_DIRECT.get())
+//            .define('I', EIOItems.VIBRANT_ALLOY_INGOT.get())
+//            .define('N', EIOItems.VIBRANT_ALLOY_NUGGET.get())
+//            .define('E', Tags.Items.ENDER_PEARLS)
+//            .define('B', EIOItems.DARK_STEEL_UPGRADE_BLANK.get())
+//            .pattern("NIN")
+//            .pattern("IEI")
+//            .pattern("NBN")
+//            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DARK_STEEL_UPGRADE_BLANK.get()))
+//            .save(recipeConsumer);
+//
+//        // TODO: These are how they are in 1.12. When we redo dark steel upgrades this needs consideration again..
+//        addUpgrade(recipeConsumer, EIOItems.DARK_STEEL_UPGRADE_EXPLOSIVE_1, Ingredient.of(Items.TNT), Ingredient.of(EIOTags.Items.GEARS_WOOD));
+//        addUpgrade(recipeConsumer, EIOItems.DARK_STEEL_UPGRADE_EXPLOSIVE_2, Ingredient.of(Items.TNT), Ingredient.of(EIOTags.Items.GEARS_STONE));
+//        addUpgrade(recipeConsumer, EIOItems.DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_1, Ingredient.of(Items.CREEPER_HEAD));
+//        addUpgrade(recipeConsumer, EIOItems.DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_2, Ingredient.of(ItemTags.WOOL_CARPETS));
     }
 
-    private void addUpgrade(Consumer<FinishedRecipe> recipeConsumer, ItemEntry<DarkSteelUpgradeItem> result, ItemEntry<?> upgradeItem) {
-        addUpgrade(recipeConsumer, result.get(), upgradeItem.get());
-    }
-
-    private void addUpgrade(Consumer<FinishedRecipe> recipeConsumer, ItemEntry<DarkSteelUpgradeItem> result, ItemLike upgradeItem) {
-        addUpgrade(recipeConsumer, result.get(), upgradeItem);
-    }
-
-    private void addUpgrade(Consumer<FinishedRecipe> recipeConsumer, ItemLike result, ItemLike upgradeItem) {
-        ShapelessRecipeBuilder
-            .shapeless(RecipeCategory.MISC, result)
-            .requires(EIOItems.DARK_STEEL_UPGRADE_BLANK.get())
-            .requires(upgradeItem)
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DARK_STEEL_UPGRADE_BLANK.get()))
-            .save(recipeConsumer);
+    private void addUpgrade(Consumer<FinishedRecipe> recipeConsumer, ItemLike result, Ingredient... upgradeItems) {
+//        var builder = ShapelessRecipeBuilder
+//            .shapeless(RecipeCategory.MISC, result)
+//            .requires(EIOItems.DARK_STEEL_UPGRADE_BLANK.get());
+//
+//        for (Ingredient i : upgradeItems) {
+//            builder.requires(i);
+//        }
+//
+//        builder.unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DARK_STEEL_UPGRADE_BLANK.get()))
+//            .save(recipeConsumer);
     }
 }

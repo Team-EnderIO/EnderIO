@@ -5,12 +5,12 @@ import com.enderio.base.common.block.glass.*;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
+import com.enderio.base.data.recipe.RecipeDataUtil;
 import com.enderio.core.common.recipes.CountedIngredient;
 import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
@@ -22,9 +22,12 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
-
 import org.jetbrains.annotations.Nullable;
-import java.util.*;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public class AlloyRecipeProvider extends EnderRecipeProvider {
@@ -57,29 +60,20 @@ public class AlloyRecipeProvider extends EnderRecipeProvider {
 
         // region Dyes
 
-        build(new ItemStack(EIOItems.DYE_GREEN.get()), List.of(CountedIngredient.of(Tags.Items.DYES_GREEN), CountedIngredient.of(Items.EGG), CountedIngredient.of(EIOTags.Items.DUSTS_COAL)), 1500, 0.3f, pFinishedRecipeConsumer);
-        build(new ItemStack(EIOItems.DYE_GREEN.get(), 2), "double", List.of(CountedIngredient.of(2, Tags.Items.DYES_GREEN), CountedIngredient.of(Tags.Items.SLIMEBALLS), CountedIngredient.of(2, EIOTags.Items.DUSTS_COAL)), 2000, 0.3f, pFinishedRecipeConsumer);
+        //build(new ItemStack(EIOItems.DYE_GREEN.get()), List.of(CountedIngredient.of(Tags.Items.DYES_GREEN), CountedIngredient.of(Items.EGG), CountedIngredient.of(EIOTags.Items.DUSTS_COAL)), 1500, 0.3f, pFinishedRecipeConsumer);
+        //build(new ItemStack(EIOItems.DYE_GREEN.get(), 2), "double", List.of(CountedIngredient.of(2, Tags.Items.DYES_GREEN), CountedIngredient.of(Tags.Items.SLIMEBALLS), CountedIngredient.of(2, EIOTags.Items.DUSTS_COAL)), 2000, 0.3f, pFinishedRecipeConsumer);
         build(new ItemStack(EIOItems.DYE_GREEN.get()), "clippings", List.of(CountedIngredient.of(6, EIOItems.PLANT_MATTER_GREEN.get()), CountedIngredient.of(Items.EGG)), 1500, 0.3f, pFinishedRecipeConsumer);
         build(new ItemStack(EIOItems.DYE_GREEN.get(), 2), "double_clippings", List.of(CountedIngredient.of(12, EIOItems.PLANT_MATTER_GREEN.get()), CountedIngredient.of(Tags.Items.SLIMEBALLS)), 2000, 0.3f, pFinishedRecipeConsumer);
 
-        build(new ItemStack(EIOItems.DYE_BROWN.get()), List.of(CountedIngredient.of(Items.BROWN_DYE), CountedIngredient.of(Items.EGG), CountedIngredient.of(EIOTags.Items.DUSTS_COAL)), 1500, 0.3f, pFinishedRecipeConsumer);
-        build(new ItemStack(EIOItems.DYE_BROWN.get(), 2), "double", List.of(CountedIngredient.of(2, Items.BROWN_DYE), CountedIngredient.of(Tags.Items.SLIMEBALLS), CountedIngredient.of(2, EIOTags.Items.DUSTS_COAL)), 2000, 0.3f, pFinishedRecipeConsumer);
+        //build(new ItemStack(EIOItems.DYE_BROWN.get()), List.of(CountedIngredient.of(Items.BROWN_DYE), CountedIngredient.of(Items.EGG), CountedIngredient.of(EIOTags.Items.DUSTS_COAL)), 1500, 0.3f, pFinishedRecipeConsumer);
+        //build(new ItemStack(EIOItems.DYE_BROWN.get(), 2), "double", List.of(CountedIngredient.of(2, Items.BROWN_DYE), CountedIngredient.of(Tags.Items.SLIMEBALLS), CountedIngredient.of(2, EIOTags.Items.DUSTS_COAL)), 2000, 0.3f, pFinishedRecipeConsumer);
         build(new ItemStack(EIOItems.DYE_BROWN.get()), "twigs", List.of(CountedIngredient.of(6, EIOItems.PLANT_MATTER_BROWN.get()), CountedIngredient.of(Items.EGG)), 1500, 0.3f, pFinishedRecipeConsumer);
         build(new ItemStack(EIOItems.DYE_BROWN.get(), 2), "twigs_double", List.of(CountedIngredient.of(12, EIOItems.PLANT_MATTER_BROWN.get()), CountedIngredient.of(Tags.Items.SLIMEBALLS)), 2000, 0.3f, pFinishedRecipeConsumer);
 
-        build(new ItemStack(EIOItems.DYE_BLACK.get()), List.of(CountedIngredient.of(3, EIOTags.Items.DUSTS_COAL), CountedIngredient.of(Items.EGG)), 1500, 0.3f, pFinishedRecipeConsumer);
-        build(new ItemStack(EIOItems.DYE_BLACK.get(), 2), "double", List.of(CountedIngredient.of(6, EIOTags.Items.DUSTS_COAL), CountedIngredient.of(Tags.Items.SLIMEBALLS)), 2000, 0.3f, pFinishedRecipeConsumer);
+        build(new ItemStack(EIOItems.DYE_BLACK.get()), List.of(CountedIngredient.of(1, EIOTags.Items.DUSTS_COAL), CountedIngredient.of(Items.EGG)), 1500, 0.3f, pFinishedRecipeConsumer);
+        build(new ItemStack(EIOItems.DYE_BLACK.get(), 2), "double", List.of(CountedIngredient.of(2, EIOTags.Items.DUSTS_COAL), CountedIngredient.of(Tags.Items.SLIMEBALLS)), 2000, 0.3f, pFinishedRecipeConsumer);
 
         build(new ItemStack(Items.RED_DYE, 12), List.of(CountedIngredient.of(Items.BEETROOT), CountedIngredient.of(3, Items.CLAY_BALL), CountedIngredient.of(6, Items.EGG)), 15000, 0.3f, pFinishedRecipeConsumer);
-
-        // endregion
-
-        // region Chassis
-
-        // TODO: Deal with chassis etc.
-//        build(new ItemStack(EIOBlocks.INDUSTRIAL_MACHINE_CHASSIS.get()), List.of(CountedIngredient.of(EIOBlocks.SIMPLE_MACHINE_CHASSIS.get()), CountedIngredient.of(EIOItems.DYE_INDUSTRIAL_BLEND.get())), 3600, 0.3f, pFinishedRecipeConsumer);
-        build(new ItemStack(EIOBlocks.ENHANCED_MACHINE_CHASSIS.get()), List.of(CountedIngredient.of(EIOBlocks.END_STEEL_MACHINE_CHASSIS.get()), CountedIngredient.of(EIOItems.DYE_ENHANCED_BLEND.get())), 3600, 0.3f, pFinishedRecipeConsumer);
-//        build(new ItemStack(EIOBlocks.SOUL_MACHINE_CHASSIS.get()), List.of(CountedIngredient.of(EIOBlocks.SIMPLE_MACHINE_CHASSIS.get()), CountedIngredient.of(EIOItems.DYE_SOUL_ATTUNED_BLEND.get())), 3600, 0.3f, pFinishedRecipeConsumer);
 
         // endregion
 
@@ -126,7 +120,7 @@ public class AlloyRecipeProvider extends EnderRecipeProvider {
 
         build(new ItemStack(Items.DEAD_BUSH), List.of(CountedIngredient.of(ItemTags.SAPLINGS)), 2000, 0.3f, pFinishedRecipeConsumer);
 
-        build(new ItemStack(EIOItems.DARK_STEEL_UPGRADE_BLANK.get()), List.of(CountedIngredient.of(EIOBlocks.DARK_STEEL_BARS.get()), CountedIngredient.of(Items.CLAY_BALL), CountedIngredient.of(4, Tags.Items.STRING)), 30000, 0.3f, pFinishedRecipeConsumer);
+//        build(new ItemStack(EIOItems.DARK_STEEL_UPGRADE_BLANK.get()), List.of(CountedIngredient.of(EIOBlocks.DARK_STEEL_BARS.get()), CountedIngredient.of(Items.CLAY_BALL), CountedIngredient.of(4, Tags.Items.STRING)), 30000, 0.3f, pFinishedRecipeConsumer);
 
         build(new ItemStack(EIOItems.CLAYED_GLOWSTONE.get(), 2), List.of(CountedIngredient.of(Tags.Items.DUSTS_GLOWSTONE), CountedIngredient.of(Items.CLAY_BALL)), 5000, 0.3f, pFinishedRecipeConsumer);
 
@@ -199,9 +193,7 @@ public class AlloyRecipeProvider extends EnderRecipeProvider {
 
         @Override
         protected Set<String> getModDependencies() {
-            Set<String> mods = new HashSet<>();
-            // TODO: 1.19: Ingredient#getItems cannot be called during datagen. Needs a new solution.
-//            inputs.forEach(input -> Arrays.stream(input.getItems()).forEach(item -> mods.add(ForgeRegistries.ITEMS.getKey(item.getItem()).getNamespace())));
+            Set<String> mods = new HashSet<>(RecipeDataUtil.getCountedIngredientsModIds(inputs));
             mods.add(ForgeRegistries.ITEMS.getKey(output.getItem()).getNamespace());
             return mods;
         }

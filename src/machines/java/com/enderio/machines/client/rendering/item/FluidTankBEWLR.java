@@ -1,6 +1,7 @@
 package com.enderio.machines.client.rendering.item;
 
 import com.enderio.machines.client.rendering.blockentity.FluidTankBER;
+import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -11,12 +12,12 @@ import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
@@ -42,10 +43,10 @@ public class FluidTankBEWLR extends BlockEntityWithoutLevelRenderer {
 
         // Read the fluid from the NBT, if it has fluid, then we render it.
         CompoundTag nbt = stack.getTag();
-        if (nbt != null && nbt.contains("BlockEntityTag")) {
-            CompoundTag blockEntityTag = nbt.getCompound("BlockEntityTag");
-            if (blockEntityTag.contains("fluid")) {
-                CompoundTag tank = blockEntityTag.getCompound("fluid");
+        if (nbt != null && nbt.contains(BlockItem.BLOCK_ENTITY_TAG)) {
+            CompoundTag blockEntityTag = nbt.getCompound(BlockItem.BLOCK_ENTITY_TAG);
+            if (blockEntityTag.contains(MachineNBTKeys.FLUID)) {
+                CompoundTag tank = blockEntityTag.getCompound(MachineNBTKeys.FLUID);
 
                 if (tank.contains("FluidName") && tank.contains("Amount")) {
                     Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(tank.getString("FluidName")));

@@ -35,12 +35,16 @@ public class EmitParticlesPacket implements Packet {
         particles.add(particlePacket);
     }
 
-    public void add(double x, double y,double z, ParticleOptions type) {
-        add(new EmitParticlePacket(x, y, z, type));
+    public void add(ParticleOptions type, double x, double y, double z) {
+        add(type, x, y, z, 0, 0, 0);
+    }
+
+    public void add(ParticleOptions type, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+        add(new EmitParticlePacket(type, x, y, z, xSpeed, ySpeed, zSpeed));
     }
 
     public void add(BlockPos pos, ParticleOptions type) {
-        add(new EmitParticlePacket(pos, type));
+        add(new EmitParticlePacket(type, pos));
     }
 
     @Override

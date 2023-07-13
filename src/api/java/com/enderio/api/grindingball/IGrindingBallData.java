@@ -11,7 +11,7 @@ public interface IGrindingBallData {
      * The grinding ball ID used to find it in the manager.
      * This will be the recipe ID.
      */
-    ResourceLocation getId();
+    ResourceLocation getGrindingBallId();
 
     /**
      * Get the chance of doubling all outputs.
@@ -42,7 +42,7 @@ public interface IGrindingBallData {
      */
     IGrindingBallData IDENTITY = new IGrindingBallData() {
         @Override
-        public ResourceLocation getId() {
+        public ResourceLocation getGrindingBallId() {
             // ID isn't actually mapped anywhere.
             return new ResourceLocation("enderio", "grindingball/identity");
         }

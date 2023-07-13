@@ -6,7 +6,7 @@
         "items": [
           {
             "items": [
-              "enderio:energized_gear"
+              "enderio:iron_gear"
             ]
           }
         ]
@@ -30,5 +30,6 @@
     "recipes": [
       "enderio:dark_bimetal_gear"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }

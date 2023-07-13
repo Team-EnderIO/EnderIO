@@ -17,23 +17,23 @@
                 },
                 {
                   "op": "replace",
-                  "source": "energy",
-                  "target": "BlockEntityTag.energy"
+                  "source": "Energy",
+                  "target": "BlockEntityTag.Energy"
                 },
                 {
                   "op": "replace",
-                  "source": "io_config",
-                  "target": "BlockEntityTag.io_config"
+                  "source": "IoConfig",
+                  "target": "BlockEntityTag.IoConfig"
                 },
                 {
                   "op": "replace",
-                  "source": "redstone",
-                  "target": "BlockEntityTag.redstone"
+                  "source": "RedstoneControl",
+                  "target": "BlockEntityTag.RedstoneControl"
                 },
                 {
                   "op": "replace",
-                  "source": "inventory",
-                  "target": "BlockEntityTag.inventory"
+                  "source": "Items",
+                  "target": "BlockEntityTag.Items"
                 }
               ],
               "source": "block_entity"
@@ -44,5 +44,6 @@
       ],
       "rolls": 1.0
     }
-  ]
+  ],
+  "random_sequence": "enderio:blocks/powered_spawner"
 }

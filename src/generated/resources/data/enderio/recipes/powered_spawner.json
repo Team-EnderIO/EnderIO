@@ -1,0 +1,30 @@
+{
+  "type": "enderio:shaped_entity_storage",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "enderio:broken_spawner"
+    },
+    "C": {
+      "item": "enderio:ensouled_chassis"
+    },
+    "I": {
+      "item": "enderio:soularium_ingot"
+    },
+    "V": {
+      "item": "enderio:vibrant_crystal"
+    },
+    "Z": {
+      "item": "enderio:z_logic_controller"
+    }
+  },
+  "pattern": [
+    "IBI",
+    "ICI",
+    "VZV"
+  ],
+  "result": {
+    "item": "enderio:powered_spawner"
+  },
+  "show_notification": true
+}
