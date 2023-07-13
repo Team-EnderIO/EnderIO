@@ -32,7 +32,8 @@ public class WiredChargerScreen extends EIOScreen<WiredChargerMenu> {
         addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
 
-        addRenderableWidget(new IOConfigButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 22, 16, 16, menu, this::addRenderableWidget, font));
+        var inset = new IOConfigButton.Inset(21,0, 0, 0);
+        addRenderableWidget(new IOConfigButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 22, 16, 16, menu, this::addRenderableWidget, font, inset));
     }
 
     @Override
@@ -42,6 +43,6 @@ public class WiredChargerScreen extends EIOScreen<WiredChargerMenu> {
 
     @Override
     protected Vector2i getBackgroundImageSize() {
-        return new Vector2i(195, 166);
+        return new Vector2i(197, 166);
     }
 }

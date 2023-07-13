@@ -94,7 +94,7 @@ public class WiredChargerBlockEntity extends PoweredMachineBlockEntity {
             } else {
                 //todo energy balancing
                 // The energyExtracted per tick should increase if the charged item has more energy and with the tier of the capacitor installed
-                int energyExtracted = itemEnergyStorage.getMaxEnergyStored() / (1000-this.energyStorage.getMaxEnergyUse());
+                int energyExtracted = itemEnergyStorage.getMaxEnergyStored() / ((int)getCapacitorData().getModifier(CapacitorModifier.ENERGY_USE)*333 -this.energyStorage.getMaxEnergyUse());
 
                 if (this.energyStorage.getEnergyStored() >= energyExtracted) {
                     itemEnergyStorage.receiveEnergy(energyExtracted, false);
