@@ -12,6 +12,7 @@
 
 ### Fixed
 - Fixed Soul Binder tooltip when IOConfig is open.
+- Properly fixed bucketed fuel in the primitive alloy smelter.
 
 ## [6.0.5-alpha] - 2023-07-11
 
