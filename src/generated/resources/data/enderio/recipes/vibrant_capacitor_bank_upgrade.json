@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "enderio:copper_alloy_ingot"
+    },
+    "C": {
+      "item": "enderio:vibrant_crystal"
+    },
+    "O": {
+      "item": "enderio:octadic_capacitor"
+    }
+  },
+  "pattern": [
+    "AOA",
+    "OCO",
+    "AOA"
+  ],
+  "result": {
+    "item": "enderio:vibrant_capacitor_bank"
+  },
+  "show_notification": true
+}
