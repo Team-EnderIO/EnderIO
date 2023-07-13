@@ -4,6 +4,7 @@
 
 ### Added
 - Recipes for the capacitor banks.
+- IO config widget insets to support non-standard gui shapes.
 
 ### Changed
 
