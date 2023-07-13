@@ -89,21 +89,28 @@ public abstract class MachineMenu<T extends MachineBlockEntity> extends SyncedMe
                 }
 
                 Slot slot = this.slots.get(i);
+
+                // Do not insert into ghost slots
                 if (!(slot instanceof GhostMachineSlot)) {
-                    ItemStack itemstack = slot.getItem();
-                    if (!itemstack.isEmpty() && ItemStack.isSameItemSameTags(stack, itemstack)) {
-                        int j = itemstack.getCount() + stack.getCount();
-                        int maxSize = Math.min(slot.getMaxStackSize(), stack.getMaxStackSize());
-                        if (j <= maxSize) {
-                            stack.setCount(0);
-                            itemstack.setCount(j);
-                            slot.setChanged();
-                            flag = true;
-                        } else if (itemstack.getCount() < maxSize) {
-                            stack.shrink(maxSize - itemstack.getCount());
-                            itemstack.setCount(maxSize);
-                            slot.setChanged();
-                            flag = true;
+
+                    // Do not insert into a slot that cannot be inserted into normally.
+                    if (!(slot instanceof MachineSlot machineSlot) || machineSlot.canQuickInsertStack()) {
+
+                        ItemStack itemstack = slot.getItem();
+                        if (!itemstack.isEmpty() && ItemStack.isSameItemSameTags(stack, itemstack)) {
+                            int j = itemstack.getCount() + stack.getCount();
+                            int maxSize = Math.min(slot.getMaxStackSize(), stack.getMaxStackSize());
+                            if (j <= maxSize) {
+                                stack.setCount(0);
+                                itemstack.setCount(j);
+                                slot.setChanged();
+                                flag = true;
+                            } else if (itemstack.getCount() < maxSize) {
+                                stack.shrink(maxSize - itemstack.getCount());
+                                itemstack.setCount(maxSize);
+                                slot.setChanged();
+                                flag = true;
+                            }
                         }
                     }
                 }

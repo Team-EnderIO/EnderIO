@@ -4,7 +4,9 @@ import com.enderio.EnderIO;
 import com.enderio.core.common.recipes.CountedIngredient;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.blockentity.AlloySmelterBlockEntity;
+import com.enderio.machines.common.blockentity.PrimitiveAlloySmelterBlockEntity;
 import com.enderio.machines.common.init.MachineRecipes;
+import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.core.RegistryAccess;
@@ -60,6 +62,7 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
     @Override
     public boolean matches(ContainerWrapper container, Level level) {
         boolean[] matched = new boolean[3];
+        var slotAccess = container.getSlotAccess();
 
         // Iterate over the slots
         for (int i = 0; i < 3; i++) {
@@ -69,12 +72,14 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
                 if (matched[j])
                     continue;
 
+                var slotItem = slotAccess.get(i).getItemStack(container);
+
                 if (j < inputs.size()) {
                     // If we expect an input, test we have a match for it.
-                    if (inputs.get(j).test(container.getItem(i))) {
+                    if (inputs.get(j).test(slotItem)) {
                         matched[j] = true;
                     }
-                } else if (container.getItem(i).isEmpty()) {
+                } else if (slotItem.isEmpty()) {
                     // If we don't expect an input, make sure we have a blank for it.
                     matched[j] = true;
                 }
@@ -121,10 +126,17 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
      */
     public static class ContainerWrapper extends RecipeWrapper {
 
+        private final boolean isPrimitive;
         private int inputsTaken;
 
-        public ContainerWrapper(IItemHandlerModifiable inv) {
+        public ContainerWrapper(boolean isPrimitive, IItemHandlerModifiable inv) {
             super(inv);
+            this.isPrimitive = isPrimitive;
+        }
+
+        public MultiSlotAccess getSlotAccess() {
+            // Instead of a bool we could just pass the slot accesses, but a bool is probably cheaper to do.
+            return isPrimitive ? PrimitiveAlloySmelterBlockEntity.INPUTS : AlloySmelterBlockEntity.INPUTS;
         }
 
         public int getInputsTaken() {
