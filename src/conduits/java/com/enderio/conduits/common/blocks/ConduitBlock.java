@@ -21,6 +21,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -411,15 +413,20 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         if (be instanceof ConduitBlockEntity conduit) {
             EnderIO.LOGGER.info("Break block @ " + conduit.getBlockPos().toShortString());
             @Nullable IConduitType<?> conduitType = conduit.getShape().getConduit(((BlockHitResult) hit).getBlockPos(), hit);
-            if (conduitType == null || conduit.removeType(conduitType, !player.getAbilities().instabuild)) {
-                return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
-            } else {
-                // Play sound anyway, good feedback for player
-                SoundType soundtype = state.getSoundType(level, pos, player);
-                level.playSound(player, pos, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-                level.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(player, state));
-                return false;
+            if (conduitType == null) {
+                if (!conduit.getBundle().getTypes().isEmpty()) {
+                    level.playSound(player, pos, SoundEvents.GENERIC_SMALL_FALL, SoundSource.BLOCKS, 1F, 1F);
+                    return false;
+                }
+                return true;
             }
+            if (conduit.removeType(conduitType, !player.getAbilities().instabuild)) {
+                return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
+            }
+            SoundType soundtype = state.getSoundType(level, pos, player);
+            level.playSound(player, pos, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+            level.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(player, state));
+            return false;
         }
 
         // No block entity, get rid of it immediately
@@ -430,29 +437,26 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
 
     // region Redstone
 
+    //@formatter:off
     @Override
     public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos, @Nullable Direction direction) {
-        return direction != null && level.getBlockEntity(pos) instanceof ConduitBlockEntity conduit && conduit
-            .getBundle()
-            .getTypes()
-            .contains(EnderConduitTypes.REDSTONE.get()) && conduit
-            .getBundle()
-            .getConnection(direction.getOpposite())
-            .getConnectionState(EnderConduitTypes.REDSTONE.get(), conduit.getBundle()) instanceof DynamicConnectionState;
+        return direction != null
+            && level.getBlockEntity(pos) instanceof ConduitBlockEntity conduit
+            && conduit.getBundle().getTypes().contains(EnderConduitTypes.REDSTONE.get())
+            && conduit.getBundle().getConnection(direction.getOpposite()).getConnectionState(EnderConduitTypes.REDSTONE.get(), conduit.getBundle()) instanceof DynamicConnectionState;
     }
 
     @SuppressWarnings("deprecation")
     public int getSignal(BlockState pBlockState, BlockGetter level, BlockPos pos, Direction direction) {
-        return level.getBlockEntity(pos) instanceof ConduitBlockEntity conduit && conduit.getBundle().getTypes().contains(EnderConduitTypes.REDSTONE.get())
-            && conduit
-            .getBundle()
-            .getConnection(direction.getOpposite())
-            .getConnectionState(EnderConduitTypes.REDSTONE.get(), conduit.getBundle()) instanceof DynamicConnectionState dyn && dyn.isInsert()
-                && conduit.getBundle().getNodeFor(EnderConduitTypes.REDSTONE.get()) != null && conduit
-            .getBundle()
-            .getNodeFor(EnderConduitTypes.REDSTONE.get())
-            .getExtendedConduitData() instanceof RedstoneExtendedData redstoneExtendedData && redstoneExtendedData.isActive() ? 15 : 0;
+        return level.getBlockEntity(pos) instanceof ConduitBlockEntity conduit
+            && conduit.getBundle().getTypes().contains(EnderConduitTypes.REDSTONE.get())
+            && conduit.getBundle().getConnection(direction.getOpposite()).getConnectionState(EnderConduitTypes.REDSTONE.get(), conduit.getBundle()) instanceof DynamicConnectionState dyn
+            && dyn.isInsert()
+            && conduit.getBundle().getNodeFor(EnderConduitTypes.REDSTONE.get()) != null
+            && conduit.getBundle().getNodeFor(EnderConduitTypes.REDSTONE.get()).getExtendedConduitData() instanceof RedstoneExtendedData redstoneExtendedData
+            && redstoneExtendedData.isActive() ? 15 : 0;
     }
+    //@formatter:on
 
     // endregion
 
