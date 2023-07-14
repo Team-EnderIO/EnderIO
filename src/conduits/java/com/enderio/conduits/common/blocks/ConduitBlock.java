@@ -454,7 +454,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
             && dyn.isInsert()
             && conduit.getBundle().getNodeFor(EnderConduitTypes.REDSTONE.get()) != null
             && conduit.getBundle().getNodeFor(EnderConduitTypes.REDSTONE.get()).getExtendedConduitData() instanceof RedstoneExtendedData redstoneExtendedData
-            && redstoneExtendedData.isActive() ? 15 : 0;
+            && redstoneExtendedData.isActive(dyn.insert()) ? 15 : 0;
     }
     //@formatter:on
 

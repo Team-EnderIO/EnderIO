@@ -2,6 +2,7 @@ package com.enderio.api.conduit.ticker;
 
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.IExtendedConduitData;
+import com.enderio.api.misc.ColorControl;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
@@ -9,6 +10,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
+import org.apache.commons.lang3.function.TriFunction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +19,8 @@ import java.util.Optional;
 public abstract class CapabilityAwareConduitTicker<T> implements IIOAwareConduitTicker {
 
     @Override
-    public final void tickColoredGraph(IConduitType<?> type, List<Connection> inserts, List<Connection> extracts, ServerLevel level,
-        Graph<Mergeable.Dummy> graph) {
+    public final void tickColoredGraph(IConduitType<?> type, List<Connection> inserts, List<Connection> extracts, ColorControl color, ServerLevel level,
+        Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
         List<CapabilityConnection> insertCaps = new ArrayList<>();
         for (Connection insert : inserts) {
             Optional
@@ -36,7 +38,7 @@ public abstract class CapabilityAwareConduitTicker<T> implements IIOAwareConduit
                     .ifPresent(cap -> extractCaps.add(new CapabilityConnection(cap, extract.data(), extract.dir())));
             }
             if (!extractCaps.isEmpty()) {
-                tickCapabilityGraph(type, insertCaps, extractCaps, level, graph);
+                tickCapabilityGraph(type, insertCaps, extractCaps, level, graph, isRedstoneActive);
             }
         }
     }
@@ -50,7 +52,7 @@ public abstract class CapabilityAwareConduitTicker<T> implements IIOAwareConduit
     }
 
     protected abstract void tickCapabilityGraph(IConduitType<?> type, List<CapabilityConnection> inserts, List<CapabilityConnection> extracts,
-        ServerLevel level, Graph<Mergeable.Dummy> graph);
+        ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive );
 
     protected abstract Capability<T> getCapability();
 

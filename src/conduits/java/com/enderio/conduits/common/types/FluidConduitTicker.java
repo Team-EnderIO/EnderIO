@@ -3,15 +3,18 @@ package com.enderio.conduits.common.types;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
+import com.enderio.api.misc.ColorControl;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
 import dev.gigaherz.graph3.Mergeable;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import org.apache.commons.lang3.function.TriFunction;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +30,7 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<IFluidHandl
     }
 
     @Override
-    public void tickGraph(IConduitType<?> type, List<NodeIdentifier<?>> loadedNodes, ServerLevel level, Graph<Mergeable.Dummy> graph) {
+    public void tickGraph(IConduitType<?> type, List<NodeIdentifier<?>> loadedNodes, ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
         boolean shouldReset = false;
         for (NodeIdentifier<?> loadedNode : loadedNodes) {
             FluidExtendedData fluidExtendedData = loadedNode.getExtendedConduitData().castTo(FluidExtendedData.class);
@@ -41,12 +44,12 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<IFluidHandl
                 loadedNode.getExtendedConduitData().castTo(FluidExtendedData.class).lockedFluid = null;
             }
         }
-        super.tickGraph(type, loadedNodes, level, graph);
+        super.tickGraph(type, loadedNodes, level, graph, isRedstoneActive);
     }
 
     @Override
     protected void tickCapabilityGraph(IConduitType<?> type, List<CapabilityAwareConduitTicker<IFluidHandler>.CapabilityConnection> inserts,
-                                       List<CapabilityAwareConduitTicker<IFluidHandler>.CapabilityConnection> extracts, ServerLevel level, Graph<Mergeable.Dummy> graph) {
+                                       List<CapabilityAwareConduitTicker<IFluidHandler>.CapabilityConnection> extracts, ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
 
         for (CapabilityConnection extract : extracts) {
             IFluidHandler extractHandler = extract.cap;

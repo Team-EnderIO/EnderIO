@@ -3,12 +3,15 @@ package com.enderio.conduits.common.types;
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
+import com.enderio.api.misc.ColorControl;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.Mergeable;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
+import org.apache.commons.lang3.function.TriFunction;
 
 import java.util.List;
 
@@ -19,7 +22,7 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<IEnergySto
 
     @Override
     public void tickCapabilityGraph(IConduitType<?> type, List<CapabilityConnection> inserts, List<CapabilityConnection> extracts, ServerLevel level,
-        Graph<Mergeable.Dummy> graph) {
+        Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
 
         int availableForExtraction = 0;
         for (IEnergyStorage extract : extracts.stream().map(e -> e.cap).toList()) {

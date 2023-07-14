@@ -5,8 +5,12 @@ import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.IExtendedConduitData;
 import com.enderio.api.conduit.NodeIdentifier;
+import com.enderio.api.misc.ColorControl;
 import com.enderio.conduits.ConduitNBTKeys;
 import com.enderio.conduits.EIOConduits;
+import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
+import com.enderio.conduits.common.init.EnderConduitTypes;
+import com.enderio.conduits.common.types.RedstoneExtendedData;
 import com.mojang.datafixers.util.Pair;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
@@ -276,12 +280,22 @@ public class ConduitSavedData extends SavedData {
                     .getKey()
                     .getTicker()
                     .getTickRate()) {
-                    entry.getKey().getTicker().tickGraph(entry.getKey(), graph, serverLevel);
+                    entry.getKey().getTicker().tickGraph(entry.getKey(), graph, serverLevel, ConduitSavedData::isRedstoneActive);
                 }
             }
         }
     }
 
+    private static boolean isRedstoneActive(ServerLevel serverLevel, BlockPos pos, ColorControl color) {
+        if (!serverLevel.isLoaded(pos) || !serverLevel.shouldTickBlocksAt(pos))
+            return false;
+        if (!(serverLevel.getBlockEntity(pos) instanceof ConduitBlockEntity conduit))
+            return false;
+        if (!conduit.getBundle().getTypes().contains(EnderConduitTypes.REDSTONE.get()))
+            return false;
+        RedstoneExtendedData data = conduit.getBundle().getNodeFor(EnderConduitTypes.REDSTONE.get()).getExtendedConduitData().cast();
+        return data.isActive(color);
+    }
     public static void addPotentialGraph(IConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level) {
         get(level).addPotentialGraph(type, graph);
     }

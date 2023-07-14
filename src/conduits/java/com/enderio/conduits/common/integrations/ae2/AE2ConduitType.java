@@ -6,6 +6,7 @@ import com.enderio.api.conduit.IConduitMenuData;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.TieredConduit;
 import com.enderio.api.conduit.ticker.IConduitTicker;
+import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.conduits.common.init.EnderConduitTypes;
 import com.enderio.conduits.common.integrations.Integrations;
@@ -20,6 +21,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import org.apache.commons.lang3.function.TriFunction;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -38,7 +40,7 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
     public IConduitTicker getTicker() {
         return new IConduitTicker() {
             @Override
-            public void tickGraph(IConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level) {
+            public void tickGraph(IConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
                 //ae2 graphs don't actually do anything, that's all done by ae2
             }
 
