@@ -51,6 +51,10 @@ public record DynamicConnectionState(boolean isInsert, ColorControl insert, bool
         return new DynamicConnectionState(isInsert, insert, isExtract, extract, control, value, filterInsert, filterExtract, upgradeExtract);
     }
 
+    public boolean isEmpty() {
+        return !isInsert && !isExtract;
+    }
+
     public void toNetwork(FriendlyByteBuf buf) {
         buf.writeBoolean(isInsert);
         buf.writeEnum(insert);

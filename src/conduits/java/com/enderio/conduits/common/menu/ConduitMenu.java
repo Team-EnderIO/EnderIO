@@ -121,4 +121,15 @@ public class ConduitMenu extends SyncedMenu<ConduitBlockEntity> {
     public void setDirection(Direction direction) {
         this.direction = direction;
     }
+
+    @Override
+    public void removed(Player player) {
+        super.removed(player);
+        if (getBlockEntity() != null
+            && player instanceof ServerPlayer serverPlayer
+            && serverPlayer.serverLevel().players().stream().filter(p -> p != player).noneMatch(p -> p.containerMenu instanceof ConduitMenu)) {
+
+                getBlockEntity().updateEmptyDynConnection();
+        }
+    }
 }
