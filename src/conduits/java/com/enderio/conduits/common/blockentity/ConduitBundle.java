@@ -24,7 +24,7 @@ import java.util.*;
 public final class ConduitBundle implements INBTSerializable<CompoundTag> {
 
     //Do not change this value unless you fix the OffsetHelper
-    public static final int MAX_CONDUIT_TYPES = 9;
+    public static final int MAX_CONDUIT_TYPES = 4;
 
     private final Map<Direction, ConduitConnection> connections = new EnumMap<>(Direction.class);
 
@@ -198,7 +198,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         ListTag typesTag = nbt.getList(KEY_TYPES, Tag.TAG_STRING);
         //this is used to shift connections back if a ConduitType was removed from
         List<Integer> invalidTypes = new ArrayList<>();
-        for (int i = 0; i < typesTag.size(); i++) {
+        for (int i = 0; i < typesTag.size() && i < MAX_CONDUIT_TYPES; i++) {
             StringTag stringTag = (StringTag) typesTag.get(i);
             IConduitType<?> type = ConduitTypes.getRegistry().getValue(ResourceLocation.tryParse(stringTag.getAsString()));
             if (type == null) {
