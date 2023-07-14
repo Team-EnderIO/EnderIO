@@ -20,8 +20,6 @@ public interface IConduitType<T extends IExtendedConduitData<T>> {
     ResourceLocation getTexture(T extendedData);
     ResourceLocation getItemTexture();
 
-    ResourceLocation[] getTextures();
-
     /**
      * Override this method if your conduit type and your conduit item registry name don't match
      * @return the conduit item that holds this type

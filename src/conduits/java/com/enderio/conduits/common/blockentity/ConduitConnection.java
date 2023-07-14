@@ -169,7 +169,10 @@ public class ConduitConnection implements INBTSerializable<CompoundTag> {
         return connectionStates[on.getTypeIndex(type)];
     }
     public void setConnectionState(IConduitType type, ConduitBundle on, IConnectionState state) {
-        connectionStates[on.getTypeIndex(type)] = state;
+        setConnectionState(on.getTypeIndex(type),state);
+    }
+    public void setConnectionState(int i, IConnectionState state) {
+        connectionStates[i] = state;
     }
 
     public ItemStack getItem(SlotType type, int conduitIndex) {

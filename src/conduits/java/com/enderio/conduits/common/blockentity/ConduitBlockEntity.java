@@ -335,7 +335,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
             for (int i = 0; i < ConduitBundle.MAX_CONDUIT_TYPES; i++) {
                 if (connection.getConnectionState(i) instanceof DynamicConnectionState dynState && dynState.isEmpty()) {
                     dropConnection(dynState);
-                    connection.clearType(i);
+                    connection.setConnectionState(i, StaticConnectionStates.DISABLED);
                 }
             }
         }

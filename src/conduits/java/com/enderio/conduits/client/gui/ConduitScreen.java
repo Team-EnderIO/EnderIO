@@ -8,7 +8,6 @@ import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
 import com.enderio.conduits.common.blockentity.ConduitBundle;
 import com.enderio.conduits.common.blockentity.SlotType;
 import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
@@ -177,9 +176,6 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
 
     private IConnectionState getConnectionState() {
         return getConnectionState(menu.getConduitType());
-    }
-    private void setConnectionState(IConnectionState state) {
-        getBundle().getConnection(menu.getDirection()).setConnectionState(menu.getConduitType(), getBundle(), state);
     }
     private IConnectionState getConnectionState(IConduitType<?> type) {
         return getBundle().getConnection(menu.getDirection()).getConnectionState(type, getBundle());
