@@ -17,6 +17,8 @@ import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -60,6 +62,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     public UpdateState checkConnection = UpdateState.NONE;
 
     private final Map<IConduitType<?>,NodeIdentifier<?>> lazyNodes = new HashMap<>();
+    private ListTag lazyNodeNBT = new ListTag();
 
     public ConduitBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
@@ -91,11 +94,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         if (connection.getConnectionState(conduitType, bundle) instanceof DynamicConnectionState) {
             connection.setConnectionState(conduitType, bundle, connectionState);
 
-            bundle.getNodeFor(conduitType).pushState(direction,
-                connectionState.isInsert() ? connectionState.insert() : null,
-                connectionState.isExtract() ? connectionState.extract() : null,
-                connectionState.control(),
-                connectionState.redstoneChannel());
+            pushIOState(direction, bundle.getNodeFor(conduitType), connectionState);
         }
         updateClient();
         updateConnectionToData(conduitType);
@@ -195,12 +194,19 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     protected void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
         tag.put(ConduitNBTKeys.CONDUIT_BUNDLE, bundle.serializeNBT());
+        ListTag listTag = new ListTag();
+        for (IConduitType<?> type : bundle.getTypes()) {
+            IExtendedConduitData<?> data = bundle.getNodeFor(type).getExtendedConduitData();
+            listTag.add(data.serializeNBT());
+        }
+        tag.put(ConduitNBTKeys.CONDUIT_EXTRA_DATA, listTag);
     }
 
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
         bundle.deserializeNBT(tag.getCompound(ConduitNBTKeys.CONDUIT_BUNDLE));
+        lazyNodeNBT = tag.getList(ConduitNBTKeys.CONDUIT_EXTRA_DATA, Tag.TAG_COMPOUND);
     }
 
     @Override
@@ -379,11 +385,20 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         if (!(level instanceof ServerLevel serverLevel))
             return;
         ConduitSavedData savedData = ConduitSavedData.get(serverLevel);
-        for (IConduitType<?> type : bundle.getTypes()) {
+        for (int typeIndex = 0; typeIndex < bundle.getTypes().size(); typeIndex++) {
+            IConduitType<?> type = bundle.getTypes().get(typeIndex);
             NodeIdentifier<?> node = savedData.takeUnloadedNodeIdentifier(type, this.worldPosition);
             if (node == null && bundle.getNodeForTypeExact(type) == null) {
                 IExtendedConduitData<?> data = type.createExtendedConduitData(level, worldPosition);
+                if (typeIndex < lazyNodeNBT.size()) {
+                    data.deserializeNBT(lazyNodeNBT.getCompound(typeIndex));
+                }
                 node = new NodeIdentifier<>(worldPosition, data);
+                for (Direction direction : Direction.values()) {
+                    if (bundle.getConnection(direction).getConnectionState(type, bundle) instanceof DynamicConnectionState connectionState) {
+                        pushIOState(direction, node, connectionState);
+                    }
+                }
                 Graph.integrate(node, List.of());
                 bundle.setNodeFor(type, node);
                 lazyNodes.put(type, node);
@@ -391,6 +406,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                 bundle.setNodeFor(type, node);
             }
         }
+        lazyNodeNBT.clear();
     }
 
     /**
@@ -486,6 +502,11 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
     public IItemHandler getConduitItemHandler() {
         return new ConduitItemHandler();
+    }
+
+    public static void pushIOState(Direction direction, NodeIdentifier<?> node, DynamicConnectionState connectionState) {
+        node.pushState(direction, connectionState.isInsert() ? connectionState.insert() : null,
+            connectionState.isExtract() ? connectionState.extract() : null, connectionState.control(), connectionState.redstoneChannel());
     }
 
     private class ConduitItemHandler implements IItemHandlerModifiable {

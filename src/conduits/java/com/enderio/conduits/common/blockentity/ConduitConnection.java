@@ -49,7 +49,7 @@ public class ConduitConnection implements INBTSerializable<CompoundTag> {
             // TODO: Get default connection for given type. Will need a rejig of the API.
             var state = DynamicConnectionState.defaultConnection();
             connectionStates[typeIndex] = state;
-            nodeIdentifier.pushState(direction, state.isInsert() ? state.insert() : null, state.isExtract() ? state.extract() : null, state.control(), state.redstoneChannel());
+            ConduitBlockEntity.pushIOState(direction, nodeIdentifier, state);
         } else {
             connectionStates[typeIndex] = StaticConnectionStates.CONNECTED;
         }

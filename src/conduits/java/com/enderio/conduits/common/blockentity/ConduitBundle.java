@@ -135,6 +135,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
     private static final String KEY_NODE_TYPE = "NodeType";
     private static final String KEY_NODE_DATA = "NodeData";
     private static final String KEY_NODES = "Nodes";
+    private static final String KEY_DATA = "ExtendedDataBackup";
 
     @Override
     public CompoundTag serializeNBT() {
@@ -235,10 +236,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
                 if (nodes.containsKey(type)) {
                     for (Direction direction : Direction.values()) {
                         if (getConnection(direction).getConnectionState(type, this) instanceof DynamicConnectionState dyn) {
-                            nodes
-                                .get(type)
-                                .pushState(direction, dyn.isInsert() ? dyn.insert() : null, dyn.isExtract() ? dyn.extract() : null, dyn.control(),
-                                    dyn.redstoneChannel());
+                            ConduitBlockEntity.pushIOState(direction, nodes.get(type), dyn);
                         }
                     }
                 }
@@ -329,8 +327,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
             if (index >= 0) {
                 var state = connection.getConnectionState(index);
                 if (state instanceof DynamicConnectionState dynamicState) {
-                    node.pushState(direction, dynamicState.isInsert() ? dynamicState.insert() : null, dynamicState.isExtract() ? dynamicState.extract() : null,
-                        dynamicState.control(), dynamicState.redstoneChannel());
+                    ConduitBlockEntity.pushIOState(direction, node, dynamicState);
                 }
             }
         }

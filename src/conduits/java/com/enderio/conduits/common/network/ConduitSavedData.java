@@ -30,6 +30,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.util.*;
 
 @Mod.EventBusSubscriber
@@ -303,6 +304,25 @@ public class ConduitSavedData extends SavedData {
     private void addPotentialGraph(IConduitType<?> type, Graph<Mergeable.Dummy> graph) {
         if (!networks.computeIfAbsent(type, unused -> new ArrayList<>()).contains(graph)) {
             networks.get(type).add(graph);
+        }
+    }
+
+    @Override
+    public void save(File file) {
+        if (isDirty()) {
+            //This is an exact copy of Mekanism MekanismSavedData's system which is loosely based on
+            // Refined Storage's RSSavedData's system of saving first to a temp file
+            // to reduce the odds of corruption if the user's computer crashes while the file is being written
+
+            //Thanks pupnewster
+            File tempFile = file.toPath().getParent().resolve(file.getName() + ".tmp").toFile();
+            super.save(tempFile);
+            if (file.exists() && !file.delete()) {
+                EnderIO.LOGGER.error("Failed to delete " + file.getName());
+            }
+            if (!tempFile.renameTo(file)) {
+                EnderIO.LOGGER.error("Failed to rename " + tempFile.getName());
+            }
         }
     }
 }
