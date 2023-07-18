@@ -13,6 +13,7 @@ import com.enderio.base.common.block.light.PoweredLight;
 import com.enderio.base.common.block.painted.*;
 import com.enderio.base.common.item.PaintedBlockItem;
 import com.enderio.base.common.item.PaintedSlabBlockItem;
+import com.enderio.base.common.item.misc.EnderSkullBlockItem;
 import com.enderio.base.data.loot.DecorLootTable;
 import com.enderio.base.data.model.block.EIOBlockState;
 import com.tterrag.registrate.Registrate;
@@ -33,6 +34,7 @@ import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.client.model.generators.BlockModelProvider;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
@@ -350,6 +352,22 @@ public class EIOBlocks {
         .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().withExistingParent("light_node", "block/air")))
         .initialProperties(() -> Blocks.AIR)
         .properties(p -> p.lightLevel(l -> 15).noLootTable().noCollission().noOcclusion())
+        .register();
+
+    public static final BlockEntry<EnderSkullBlock> ENDER_SKULL = REGISTRATE
+        .block("ender_skull", EnderSkullBlock::new)
+        .properties(properties -> properties.instrument(NoteBlockInstrument.SKELETON).strength(1.0F).pushReaction(PushReaction.DESTROY))
+        .blockstate((ctx, prov) -> prov.models().mcLoc("block/skull"))
+        .item((enderSkullBlock, properties) -> new EnderSkullBlockItem(enderSkullBlock, properties, Direction.DOWN))
+        .tab(EIOCreativeTabs.MAIN)
+        .model((ctx, prov) -> prov.withExistingParent("ender_skull", "item/template_skull"))
+        .build()
+        .register();
+
+    public static final BlockEntry<WallEnderSkullBlock> WALL_ENDER_SKULL = REGISTRATE
+        .block("wall_ender_skull", WallEnderSkullBlock::new)
+        .properties(properties -> properties.strength(1.0F).lootFrom(ENDER_SKULL).pushReaction(PushReaction.DESTROY))
+        .blockstate((ctx, prov) -> prov.models().mcLoc("block/skull"))
         .register();
 
     public static <T extends Block> BlockBuilder<T, Registrate> simpleBlockBuilder(String name, T block) {

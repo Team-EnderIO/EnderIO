@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "enderio:redstone_alloy_ingot"
+    },
+    "B": {
+      "tag": "forge:dyes/black"
+    },
+    "C": {
+      "item": "enderio:void_chassis"
+    },
+    "G": {
+      "tag": "forge:dyes/green"
+    },
+    "I": {
+      "item": "enderio:copper_alloy_ingot"
+    },
+    "M": {
+      "item": "enderio:iron_gear"
+    },
+    "R": {
+      "tag": "forge:dyes/red"
+    }
+  },
+  "pattern": [
+    "RGB",
+    "ICI",
+    "MAM"
+  ],
+  "result": {
+    "item": "enderio:painting_machine"
+  },
+  "show_notification": true
+}
