@@ -77,7 +77,7 @@ public class PaintedSandEntity extends FallingBlockEntity implements IEntityAddi
         // Add block entity NBT to item stack
         if (!stack.isEmpty() && blockData != null) {
             CompoundTag itemNbt = new CompoundTag();
-            itemNbt.put("BlockEntityTag", blockData);
+            itemNbt.put(EIONBTKeys.BLOCK_ENTITY_TAG, blockData);
             stack.setTag(itemNbt);
         }
         return super.spawnAtLocation(stack, offsetY);
