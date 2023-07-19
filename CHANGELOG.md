@@ -4,6 +4,7 @@
 
 ### Added
 - Recipes for the capacitor banks.
+- IO config widget insets to support non-standard gui shapes.
 
 ### Changed
 
@@ -11,6 +12,7 @@
 
 ### Fixed
 - Fixed Soul Binder tooltip when IOConfig is open.
+- Properly fixed bucketed fuel in the primitive alloy smelter.
 
 ## [6.0.5-alpha] - 2023-07-11
 
