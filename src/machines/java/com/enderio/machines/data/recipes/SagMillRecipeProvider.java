@@ -25,6 +25,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -414,7 +415,7 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
             json.add("input", input.toJson());
             json.addProperty("energy", energy);
             if (bonusType != BonusType.MULTIPLY_OUTPUT) {
-                json.addProperty("bonus", bonusType.toString().toLowerCase());
+                json.addProperty("bonus", bonusType.toString().toLowerCase(Locale.ROOT));
             }
 
             JsonArray outputJson = new JsonArray();

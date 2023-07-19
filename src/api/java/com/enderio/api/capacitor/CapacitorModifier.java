@@ -2,6 +2,8 @@ package com.enderio.api.capacitor;
 
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.Locale;
+
 /**
  * Capacitor key types, for use in loot capacitors for targeting increases to general stats.
  */
@@ -16,6 +18,6 @@ public enum CapacitorModifier {
     public final ResourceLocation id;
 
     CapacitorModifier() {
-        this.id = new ResourceLocation("enderio", "capacitor." + name().toLowerCase());
+        this.id = new ResourceLocation("enderio", "capacitor." + name().toLowerCase(Locale.ROOT));
     }
 }
