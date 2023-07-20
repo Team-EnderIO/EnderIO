@@ -107,8 +107,8 @@ public abstract class PoweredToggledItem extends Item implements IMultiCapabilit
     @Nullable
     @Override
     public MultiCapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt, MultiCapabilityProvider provider) {
-        provider.addSimple(EIOCapabilities.TOGGLED, LazyOptional.of(() -> new Toggled(stack)));
-        provider.addSimple(ForgeCapabilities.ENERGY, LazyOptional.of(() -> new EnergyStorageItemStack(stack, getMaxEnergy())));
+        provider.add(EIOCapabilities.TOGGLED, LazyOptional.of(() -> new Toggled(stack)));
+        provider.add(ForgeCapabilities.ENERGY, LazyOptional.of(() -> new EnergyStorageItemStack(stack, getMaxEnergy())));
         return provider;
     }
 

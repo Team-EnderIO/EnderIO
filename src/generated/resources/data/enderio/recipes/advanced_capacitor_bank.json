@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "enderio:copper_alloy_ingot"
+    },
+    "C": {
+      "item": "enderio:double_layer_capacitor"
+    },
+    "R": {
+      "tag": "forge:storage_blocks/redstone"
+    }
+  },
+  "pattern": [
+    "ACA",
+    "CRC",
+    "ACA"
+  ],
+  "result": {
+    "item": "enderio:advanced_capacitor_bank"
+  },
+  "show_notification": true
+}

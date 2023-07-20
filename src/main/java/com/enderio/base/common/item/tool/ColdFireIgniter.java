@@ -123,7 +123,7 @@ public class ColdFireIgniter extends Item implements IMultiCapabilityItem, ITabV
     @Nullable
     @Override
     public MultiCapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt, MultiCapabilityProvider provider) {
-        provider.addSimple(ForgeCapabilities.FLUID_HANDLER_ITEM,
+        provider.add(ForgeCapabilities.FLUID_HANDLER_ITEM,
             new AcceptingFluidItemHandler(stack, 1000, EIOTags.Fluids.COLD_FIRE_IGNITER_FUEL)
                 .getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM));
         return provider;

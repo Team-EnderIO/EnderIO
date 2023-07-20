@@ -24,8 +24,8 @@
               "ops": [
                 {
                   "op": "replace",
-                  "source": "paint",
-                  "target": "BlockEntityTag.paint"
+                  "source": "Paint",
+                  "target": "BlockEntityTag.Paint"
                 }
               ],
               "source": "block_entity"
@@ -59,8 +59,8 @@
               "ops": [
                 {
                   "op": "replace",
-                  "source": "paint2",
-                  "target": "BlockEntityTag.paint"
+                  "source": "Paint2",
+                  "target": "BlockEntityTag.Paint2"
                 }
               ],
               "source": "block_entity"

@@ -1,5 +1,6 @@
 package com.enderio.base.client.renderer;
 
+import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.block.painted.IPaintedBlock;
 import com.enderio.base.common.blockentity.DoublePaintedBlockEntity;
 import com.enderio.base.common.blockentity.IPaintableBlockEntity;
@@ -65,10 +66,10 @@ public class PaintedBlockColor implements BlockColor, ItemColor {
 
     @Override
     public int getColor(ItemStack itemStack, int tintIndex) {
-        if (itemStack.getTag() != null && itemStack.getTag().contains("BlockEntityTag")) {
-            CompoundTag blockEntityTag = itemStack.getTag().getCompound("BlockEntityTag");
-            if (blockEntityTag.contains("paint")) {
-                Block paint = PaintUtils.getBlockFromRL(blockEntityTag.getString("paint"));
+        if (itemStack.getTag() != null && itemStack.getTag().contains(EIONBTKeys.BLOCK_ENTITY_TAG)) {
+            CompoundTag blockEntityTag = itemStack.getTag().getCompound(EIONBTKeys.BLOCK_ENTITY_TAG);
+            if (blockEntityTag.contains(EIONBTKeys.PAINT)) {
+                Block paint = PaintUtils.getBlockFromRL(blockEntityTag.getString(EIONBTKeys.PAINT));
                 if (paint == null)
                     return 0;
                 return Minecraft.getInstance().getItemColors().getColor(paint.asItem().getDefaultInstance(), tintIndex);

@@ -51,7 +51,11 @@ public class SoulBoundHandler {
     public static void reviveHandler(PlayerEvent.Clone event) {
         if (!event.getOriginal().isDeadOrDying()) {
             return;
-        }//TODO More detailed and better item recovery.
+        }
+        if (event.getEntity().level().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
+            return;
+        }
+        //TODO More detailed and better item recovery.
         event.getOriginal().getInventory().items.forEach(item -> event.getEntity().addItem(item));
         event.getOriginal().getInventory().armor.forEach(armor -> event.getEntity().addItem(armor));
         event.getOriginal().getInventory().offhand.forEach(offhand -> event.getEntity().addItem(offhand));
