@@ -35,6 +35,8 @@ import java.util.Map;
  */
 public class EnderBlockEntity extends BlockEntity {
 
+    public static final String DATA = "Data";
+    public static final String INDEX = "Index";
     private final List<NetworkDataSlot<?>> dataSlots = new ArrayList<>();
 
     private final List<Runnable> afterDataSync = new ArrayList<>();
@@ -91,14 +93,14 @@ public class EnderBlockEntity extends BlockEntity {
                 continue;
 
             CompoundTag slotTag = new CompoundTag();
-            slotTag.putInt("Index", i);
-            slotTag.put("Data", nbt);
+            slotTag.putInt(INDEX, i);
+            slotTag.put(DATA, nbt);
 
             dataList.add(slotTag);
         }
 
         CompoundTag data = new CompoundTag();
-        data.put("Data", dataList);
+        data.put(DATA, dataList);
         return data;
     }
 
@@ -108,13 +110,13 @@ public class EnderBlockEntity extends BlockEntity {
      */
     @Override
     public void handleUpdateTag(CompoundTag syncData) {
-        if (syncData.contains("Data", Tag.TAG_LIST)) {
-            ListTag dataList = syncData.getList("Data", Tag.TAG_COMPOUND);
+        if (syncData.contains(DATA, Tag.TAG_LIST)) {
+            ListTag dataList = syncData.getList(DATA, Tag.TAG_COMPOUND);
 
             for (Tag dataEntry : dataList) {
                 if (dataEntry instanceof CompoundTag slotData) {
-                    int slotIdx = slotData.getInt("Index");
-                    dataSlots.get(slotIdx).fromNBT(slotData.get("Data"));
+                    int slotIdx = slotData.getInt(INDEX);
+                    dataSlots.get(slotIdx).fromNBT(slotData.get(DATA));
                 }
             }
 
