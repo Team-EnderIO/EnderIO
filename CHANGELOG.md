@@ -5,6 +5,7 @@
 ### Added
 - Recipes for the capacitor banks.
 - IO config widget insets to support non-standard gui shapes.
+- You can now repaint painted blocks in the painting machine!
 
 ### Changed
 
@@ -16,6 +17,7 @@
 - Fix keepInventory gamerule not being respected properly.
 - Remove some old item capability logic, fixing AE2 capacitor autocrafting in the process.
 - Fix game crash when running in Turkish locale.
+- Painted blocks will now drop correctly.
 
 ## [6.0.5-alpha] - 2023-07-11
 
