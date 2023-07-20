@@ -15,6 +15,7 @@
 - Properly fixed bucketed fuel in the primitive alloy smelter.
 - Fix keepInventory gamerule not being respected properly.
 - Remove some old item capability logic, fixing AE2 capacitor autocrafting in the process.
+- Fix game crash when running in Turkish locale.
 
 ## [6.0.5-alpha] - 2023-07-11
 
