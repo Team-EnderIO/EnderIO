@@ -3,7 +3,6 @@ package com.enderio.base.common.item.darksteel;
 import com.enderio.api.capability.IDarkSteelUpgrade;
 import com.enderio.api.capability.IMultiCapabilityItem;
 import com.enderio.api.capability.MultiCapabilityProvider;
-import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.capability.DarkSteelUpgradeable;
 import com.enderio.base.common.capability.EnergyDelegator;
 import com.enderio.base.common.init.EIOCapabilities;
@@ -38,7 +37,7 @@ public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipPr
     }
 
     default MultiCapabilityProvider initDarkSteelCapabilities(MultiCapabilityProvider provider, ResourceLocation forItem) {
-        provider.addSerialized(EIONBTKeys.DARK_STEEL_UPGRADEABLE, EIOCapabilities.DARK_STEEL_UPGRADABLE, LazyOptional.of(() -> new DarkSteelUpgradeable(forItem)));
+        provider.addSimple(EIOCapabilities.DARK_STEEL_UPGRADABLE, LazyOptional.of(() -> new DarkSteelUpgradeable(forItem))); //TODO This cap is probably broken now
         provider.addSimple(ForgeCapabilities.ENERGY, LazyOptional.of(() -> new EnergyDelegator(provider)));
         return provider;
     }

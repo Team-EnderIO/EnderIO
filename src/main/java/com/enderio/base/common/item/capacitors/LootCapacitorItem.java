@@ -2,7 +2,6 @@ package com.enderio.base.common.item.capacitors;
 
 import com.enderio.api.capability.IMultiCapabilityItem;
 import com.enderio.api.capability.MultiCapabilityProvider;
-import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.capacitor.LootCapacitorData;
 import com.enderio.base.common.init.EIOCapabilities;
 import net.minecraft.nbt.CompoundTag;
@@ -20,7 +19,7 @@ public class LootCapacitorItem extends Item implements IMultiCapabilityItem {
     @Nullable
     @Override
     public MultiCapabilityProvider initCapabilities(ItemStack stack, CompoundTag nbt, MultiCapabilityProvider provider) {
-        provider.addSerialized(EIONBTKeys.CAPACITOR_DATA, EIOCapabilities.CAPACITOR, LazyOptional.of(LootCapacitorData::new));
+        provider.addSimple(EIOCapabilities.CAPACITOR, LazyOptional.of(LootCapacitorData::new));
         return provider;
     }
 }
