@@ -37,8 +37,8 @@ public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipPr
     }
 
     default MultiCapabilityProvider initDarkSteelCapabilities(MultiCapabilityProvider provider, ResourceLocation forItem) {
-        provider.addSimple(EIOCapabilities.DARK_STEEL_UPGRADABLE, LazyOptional.of(() -> new DarkSteelUpgradeable(forItem))); //TODO This cap is probably broken now
-        provider.addSimple(ForgeCapabilities.ENERGY, LazyOptional.of(() -> new EnergyDelegator(provider)));
+        provider.add(EIOCapabilities.DARK_STEEL_UPGRADABLE, LazyOptional.of(() -> new DarkSteelUpgradeable(forItem))); //TODO This cap is probably broken now
+        provider.add(ForgeCapabilities.ENERGY, LazyOptional.of(() -> new EnergyDelegator(provider)));
         return provider;
     }
 

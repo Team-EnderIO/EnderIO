@@ -20,7 +20,7 @@ public class MultiCapabilityProvider implements ICapabilityProvider {
         capabilities = new HashMap<>();
     }
 
-    public <T> void addSimple(Capability<T> cap, LazyOptional<?> optional) {
+    public <T> void add(Capability<T> cap, LazyOptional<?> optional) {
         capabilities.putIfAbsent(cap, optional);
     }
 
