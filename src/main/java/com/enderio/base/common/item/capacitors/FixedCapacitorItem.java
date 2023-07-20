@@ -24,7 +24,7 @@ public class FixedCapacitorItem extends Item implements IMultiCapabilityItem {
     @Nullable
     @Override
     public MultiCapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt, MultiCapabilityProvider provider) {
-        provider.addSimple(EIOCapabilities.CAPACITOR, LazyOptional.of(() -> data));
+        provider.add(EIOCapabilities.CAPACITOR, LazyOptional.of(() -> data));
         return provider;
     }
 }
