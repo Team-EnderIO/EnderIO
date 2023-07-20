@@ -83,19 +83,6 @@ public class EnderBlockEntity extends BlockEntity {
      */
     @Override
     public CompoundTag getUpdateTag() {
-        return createDataSlotUpdate();
-    }
-
-    /**
-     * This is the client handling the tag above.
-     * @param tag The {@link CompoundTag} sent from {@link BlockEntity#getUpdateTag()}
-     */
-    @Override
-    public void handleUpdateTag(CompoundTag tag) {
-        clientHandleDataSync(tag);
-    }
-
-    private CompoundTag createDataSlotUpdate() {
         ListTag dataList = new ListTag();
         for (int i = 0; i < dataSlots.size(); i++) {
             var slot = dataSlots.get(i);
@@ -115,22 +102,47 @@ public class EnderBlockEntity extends BlockEntity {
         return data;
     }
 
+    /**
+     * This is the client handling the tag above.
+     * @param syncData The {@link CompoundTag} sent from {@link BlockEntity#getUpdateTag()}
+     */
+    @Override
+    public void handleUpdateTag(CompoundTag syncData) {
+        if (syncData.contains("Data", Tag.TAG_LIST)) {
+            ListTag dataList = syncData.getList("Data", Tag.TAG_COMPOUND);
+
+            for (Tag dataEntry : dataList) {
+                if (dataEntry instanceof CompoundTag slotData) {
+                    int slotIdx = slotData.getInt("Index");
+                    dataSlots.get(slotIdx).fromNBT(slotData.get("Data"));
+                }
+            }
+
+            for (Runnable task : afterDataSync) {
+                task.run();
+            }
+        }
+    }
+
     @Nullable
     private FriendlyByteBuf createBufferSlotUpdate() {
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
-        boolean empty = true;
+        int amount = 0;
         for (int i = 0; i < dataSlots.size(); i++) {
             NetworkDataSlot<?> networkDataSlot = dataSlots.get(i);
             if (networkDataSlot.needsUpdate()) {
-                empty = false;
+                amount ++;
                 buf.writeInt(i);
                 networkDataSlot.writeBuffer(buf);
             }
         }
-        if (empty) {
+        if (amount == 0) {
             return null;
         }
-        return buf;
+        FriendlyByteBuf result = new FriendlyByteBuf(Unpooled.buffer()); //Use 2 buffers to be able to write the amount of data
+        result.writeInt(amount);
+        result.writeBytes(buf.copy());
+        return result;
     }
 
     public void addDataSlot(NetworkDataSlot<?> slot) {
@@ -171,34 +183,10 @@ public class EnderBlockEntity extends BlockEntity {
     }
 
     @UseOnly(LogicalSide.CLIENT)
-    public void clientHandleDataSync(CompoundTag syncData) {
-        if (syncData.contains("Data", Tag.TAG_LIST)) {
-            ListTag dataList = syncData.getList("Data", Tag.TAG_COMPOUND);
-
-            for (Tag dataEntry : dataList) {
-                if (dataEntry instanceof CompoundTag slotData) {
-                    int slotIdx = slotData.getInt("Index");
-                    dataSlots.get(slotIdx).fromNBT(slotData.get("Data"));
-                }
-            }
-
-            for (Runnable task : afterDataSync) {
-                task.run();
-            }
-        }
-    }
-
-    @UseOnly(LogicalSide.CLIENT)
     public void clientHandleBufferSync(FriendlyByteBuf buf) {
-        boolean hasdata = true;
-        while (hasdata) { //read until we can't
-            int index = -1;
-            try {
-                index = buf.readInt();
-            } catch (Exception e) {
-                hasdata = false;
-                continue;
-            }
+        int amount = buf.readInt();
+        for (; amount>0; amount--) { //read until we can't
+            int index = buf.readInt();
             dataSlots.get(index).fromBuffer(buf);
         }
 
