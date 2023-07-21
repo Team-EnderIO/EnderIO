@@ -56,7 +56,7 @@ public class SlicingRecipeProvider extends EnderRecipeProvider {
         ), 20000, finishedRecipeConsumer);
 
         build(EIOItems.ENDER_RESONATOR.get(), List.of(
-            Ingredient.of(EIOItems.SOULARIUM_INGOT.get()), Ingredient.of(EIOBlocks.ENDER_SKULL), Ingredient.of(EIOItems.SOULARIUM_INGOT.get()), //TODO EnderSkull
+            Ingredient.of(EIOItems.SOULARIUM_INGOT.get()), Ingredient.of(EIOBlocks.ENDERMAN_SKULL), Ingredient.of(EIOItems.SOULARIUM_INGOT.get()), //TODO EnderSkull
             Ingredient.of(EIOItems.SILICON.get()), Ingredient.of(EIOItems.VIBRANT_ALLOY_INGOT.get()), Ingredient.of(EIOItems.SILICON.get())
         ), 20000, finishedRecipeConsumer);
 

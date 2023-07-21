@@ -60,7 +60,7 @@ public class EnderSkullRenderer implements BlockEntityRenderer<EnderSkullBlockEn
             f1 = (float) (Mth.atan2(position.z - blockEntity.getBlockPos().getZ() - 0.5D, position.x - blockEntity.getBlockPos().getX() - 0.5D) * 180.0f / Math.PI + 90);
             f1 += player.getRandom().nextGaussian() * 2;
             int rotation = RotationSegment.convertToSegment(f1);
-            if (player.level().getBlockEntity(blockEntity.getBlockPos()) == blockEntity && blockstate.is(EIOBlocks.ENDER_SKULL.get())) {
+            if (player.level().getBlockEntity(blockEntity.getBlockPos()) == blockEntity && blockstate.is(EIOBlocks.ENDERMAN_SKULL.get())) {
                 player.level().setBlock(blockEntity.getBlockPos(), blockstate.setValue(SkullBlock.ROTATION, rotation), 3);
             }
         }

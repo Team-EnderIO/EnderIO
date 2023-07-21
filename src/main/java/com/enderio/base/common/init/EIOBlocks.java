@@ -354,7 +354,7 @@ public class EIOBlocks {
         .properties(p -> p.lightLevel(l -> 15).noLootTable().noCollission().noOcclusion())
         .register();
 
-    public static final BlockEntry<EnderSkullBlock> ENDER_SKULL = REGISTRATE
+    public static final BlockEntry<EnderSkullBlock> ENDERMAN_SKULL = REGISTRATE
         .block("ender_skull", EnderSkullBlock::new)
         .properties(properties -> properties.instrument(NoteBlockInstrument.SKELETON).strength(1.0F).pushReaction(PushReaction.DESTROY))
         .blockstate((ctx, prov) -> prov.models().mcLoc("block/skull"))
@@ -364,9 +364,9 @@ public class EIOBlocks {
         .build()
         .register();
 
-    public static final BlockEntry<WallEnderSkullBlock> WALL_ENDER_SKULL = REGISTRATE
+    public static final BlockEntry<WallEnderSkullBlock> WALL_ENDERMAN_SKULL = REGISTRATE
         .block("wall_ender_skull", WallEnderSkullBlock::new)
-        .properties(properties -> properties.strength(1.0F).lootFrom(ENDER_SKULL).pushReaction(PushReaction.DESTROY))
+        .properties(properties -> properties.strength(1.0F).lootFrom(ENDERMAN_SKULL).pushReaction(PushReaction.DESTROY))
         .blockstate((ctx, prov) -> prov.models().mcLoc("block/skull"))
         .register();
 
