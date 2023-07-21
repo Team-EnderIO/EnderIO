@@ -135,6 +135,12 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
         		output(SAND, 0.1f), 
         		output(FLINT, 0.05f)), 
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
+
+        build("gravel", Ingredient.of(Tags.Items.GRAVEL), List.of(
+        		output(SAND, 0.7f), 
+        		output(SAND, 0.3f), 
+        		output(FLINT, 0.1f)), 
+        		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
         
         build("sandstone", Ingredient.of(Tags.Items.SANDSTONE), List.of(
         		output(SAND, 2), 
