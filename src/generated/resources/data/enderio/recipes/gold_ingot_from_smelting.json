@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 0.7,
+  "ingredient": {
+    "item": "enderio:powdered_gold"
+  },
+  "result": {
+    "count": 1,
+    "item": "minecraft:gold_ingot"
+  }
+}
