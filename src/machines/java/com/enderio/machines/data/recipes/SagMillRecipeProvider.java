@@ -57,24 +57,27 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
         build1toN("glass", GLASS, SAND, 1, finishedRecipeConsumer);
         build1toN("bone_block",BONE_BLOCK, BONE_MEAL, 9, finishedRecipeConsumer);
         build1toN("soularium", SOULARIUM_INGOT.get(), SOUL_POWDER.get(), 1, finishedRecipeConsumer);
-        
+
         buildOre("iron_ore", Ingredient.of(Tags.Items.ORES_IRON), POWDERED_IRON.get(), finishedRecipeConsumer);
         buildOre("gold_ore", Ingredient.of(Tags.Items.ORES_GOLD), POWDERED_GOLD.get(), finishedRecipeConsumer);
-        
+        buildOre("copper_ore", Ingredient.of(Tags.Items.ORES_COPPER), POWDERED_COPPER.get(), finishedRecipeConsumer);
+
         build1toN("iron_block", Tags.Items.STORAGE_BLOCKS_IRON, POWDERED_IRON.get(), 9, finishedRecipeConsumer);
         build1toN("gold_block", Tags.Items.STORAGE_BLOCKS_GOLD, POWDERED_GOLD.get(), 9, finishedRecipeConsumer);
         build1toN("copper_block", Tags.Items.STORAGE_BLOCKS_COPPER, POWDERED_COPPER.get(), 9, finishedRecipeConsumer);
         build1toN("coal_block", Tags.Items.STORAGE_BLOCKS_COAL, POWDERED_COAL.get(), 9, finishedRecipeConsumer);
-        
+
+        build1toN("stone", STONE, COBBLESTONE, 1, finishedRecipeConsumer);
+
         build("coal", Ingredient.of(COAL), List.of(
-        		output(POWDERED_COAL.get()),
-            	output(POWDERED_COAL.get(), 0.1f),
-            	output(EIOTags.Items.DUSTS_SULFUR, 1, 0.1f, true)),
-        		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-        
+                output(POWDERED_COAL.get()),
+                output(POWDERED_COAL.get(), 0.1f),
+                output(EIOTags.Items.DUSTS_SULFUR, 1, 0.1f, true)),
+                BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
+
         build("coal_ore", Ingredient.of(Tags.Items.ORES_COAL), List.of(
-        		output(COAL, 3),
-            	output(POWDERED_COAL.get(), 0.6f),
+                output(COAL, 3),
+                output(POWDERED_COAL.get(), 0.6f),
             	output(DIAMOND, 0.005f),
             	output(COBBLESTONE, 0.15f)),
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
