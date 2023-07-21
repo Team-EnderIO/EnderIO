@@ -7,7 +7,7 @@ import net.minecraft.world.item.context.UseOnContext;
 /**
  * An interface that block entities may implement in order to support item right-click behaviour. Used for auto-equipping capacitors on supported machines.
  */
-public interface IAutoEquippable {
+public interface IAutoEquiping {
 
     InteractionResult tryItemAutoEquip(ItemStack stack, UseOnContext context);
 }

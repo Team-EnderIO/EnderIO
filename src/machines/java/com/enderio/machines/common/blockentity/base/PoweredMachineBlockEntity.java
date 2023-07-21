@@ -3,10 +3,10 @@ package com.enderio.machines.common.blockentity.base;
 import com.enderio.api.capacitor.ICapacitorData;
 import com.enderio.api.capacitor.ICapacitorScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.base.common.blockentity.IAutoEquippable;
+import com.enderio.base.common.blockentity.IAutoEquiping;
 import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.base.common.capacitor.DefaultCapacitorData;
-import com.enderio.base.common.item.capacitors.FixedCapacitorItem;
+import com.enderio.base.common.item.capacitors.BaseCapacitorItem;
 import com.enderio.core.common.network.slot.NetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.ProgressMachineBlock;
@@ -35,7 +35,7 @@ import java.util.function.Supplier;
 /**
  * A machine that stores energy.
  */
-public abstract class PoweredMachineBlockEntity extends MachineBlockEntity implements IAutoEquippable {
+public abstract class PoweredMachineBlockEntity extends MachineBlockEntity implements IAutoEquiping {
     /**
      * The energy storage medium for the block entity.
      * This will be a mutable energy storage.
@@ -211,7 +211,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
      */
     @Override
     public InteractionResult tryItemAutoEquip(ItemStack stack, UseOnContext context) {
-        if (stack.getItem() instanceof FixedCapacitorItem && requiresCapacitor() && !isCapacitorInstalled()) {
+        if (stack.getItem() instanceof BaseCapacitorItem && requiresCapacitor() && !isCapacitorInstalled()) {
             MachineInventory inventory = getInventory();
             MachineInventoryLayout layout = getInventoryLayout();
             if (inventory != null && layout != null) {
