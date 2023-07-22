@@ -23,6 +23,8 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
+import java.util.Properties;
+
 public class ExperienceRodItem extends Item {
     public ExperienceRodItem(Properties pProperties) {
         super(pProperties.stacksTo(1));
@@ -98,7 +100,8 @@ public class ExperienceRodItem extends Item {
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity != null) {
                 return blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER, side).map(fluidHandler -> {
-                    int fluidVolume = ExperienceUtil.getPlayerTotalXp(player) * ExperienceUtil.EXP_TO_FLUID;
+                    long fluidVolumeLong = ExperienceUtil.getPlayerTotalXp(player) * ExperienceUtil.EXP_TO_FLUID;
+                    int fluidVolume = (int) Math.min(Integer.MAX_VALUE, fluidVolumeLong);
                     FluidStack fs = new FluidStack(EIOFluids.XP_JUICE.getSource(), fluidVolume);
                     int takenVolume = fluidHandler.fill(fs, IFluidHandler.FluidAction.EXECUTE);
                     if (takenVolume > 0) {

@@ -16,14 +16,27 @@ public class ExperienceUtil {
      * @param stopLevel
      * @return
      */
-    public static Vector2i getLevelForExpWithLeftover(int experience, int startLevel, int stopLevel) {
-        int expNeeded = getXpNeededForNextLevel(startLevel);
-        if (expNeeded < experience && startLevel < stopLevel) {
-            experience -= expNeeded;
-            startLevel +=1;
-            return getLevelForExpWithLeftover(experience, startLevel, stopLevel);
+    public static Vector2i getLevelForExpWithLeftover(long experience, int startLevel, int stopLevel) {
+        long startXp = getExpFromLevel(startLevel);
+        long totalXp = startXp + experience;
+        long xpNeededToStop = getExpFromLevel(stopLevel);
+        if (totalXp >= xpNeededToStop) {
+            int leftoverXP = (int) Math.min(totalXp - xpNeededToStop, Integer.MAX_VALUE);
+            return new Vector2i(stopLevel, leftoverXP);
         }
-        return new Vector2i(startLevel, experience);
+
+        // Binary search
+        while (startLevel < stopLevel) {
+            int mid = startLevel + (stopLevel - startLevel + 1) / 2;
+            if (getExpFromLevel(mid) <= totalXp) {
+                startLevel = mid;
+            } else {
+                stopLevel = mid - 1;
+            }
+        }
+
+        int leftoverXP = (int) Math.min(totalXp - getExpFromLevel(startLevel), Integer.MAX_VALUE);
+        return new Vector2i(startLevel, leftoverXP);
     }
 
     /**
@@ -73,13 +86,20 @@ public class ExperienceUtil {
     }
 
     /**
-     * Get the Experience amount from a level.
+     * Vanilla way of calculating how much total xp is needed to reach given level
+     *
      * @param level
      * @return
      */
-    public static int getExpFromLevel(int level) {
-        int leftover = getLevelForExpWithLeftover(Integer.MAX_VALUE, 0, level).y();
-        return Integer.MAX_VALUE - leftover;
+    public static long getExpFromLevel(long level) {
+        if (level <= 14) {
+            return (level * level) + (6L * level);
+        }
+        if (level <= 30) {
+            return (10 * (level * level) - 162 * level + 1440) / 4;
+        }
+        level -= 30;
+        return (9 * (level * level) + 215 * level + 2790) / 2;
     }
 
     /**
@@ -88,10 +108,10 @@ public class ExperienceUtil {
      * @return
      */
     public static int getFluidFromLevel(int level) {
-        return getExpFromLevel(level)* EXP_TO_FLUID;
+        return (int) Math.min(getExpFromLevel(level) * EXP_TO_FLUID, Integer.MAX_VALUE);
     }
 
-    public static int getPlayerTotalXp(Player player) {
+    public static long getPlayerTotalXp(Player player) {
         return ExperienceUtil.getExpFromLevel(player.experienceLevel) +
             (int) Math.floor(player.experienceProgress * ExperienceUtil.getXpNeededForNextLevel(player.experienceLevel + 1));
     }
