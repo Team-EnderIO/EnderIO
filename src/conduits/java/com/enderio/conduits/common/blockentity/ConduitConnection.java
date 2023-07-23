@@ -28,6 +28,12 @@ public class ConduitConnection implements INBTSerializable<CompoundTag> {
         return states;
     });
 
+    private final ConduitBundle on;
+
+    public ConduitConnection(ConduitBundle on) {
+        this.on = on;
+    }
+
     /**
      * shift all behind that one to the back and set that index to null
      * @param index
@@ -39,11 +45,6 @@ public class ConduitConnection implements INBTSerializable<CompoundTag> {
         connectionStates[index] = StaticConnectionStates.DISCONNECTED;
     }
 
-    /**
-     * I know this method isn't perfect, but will do that once more conduits exist
-     * @param typeIndex
-     * @param end
-     */
     public void connectTo(NodeIdentifier<?> nodeIdentifier, Direction direction, IConduitType<?> type, int typeIndex, boolean end) {
         if (end) {
             var state = DynamicConnectionState.defaultConnection(type);
@@ -54,7 +55,7 @@ public class ConduitConnection implements INBTSerializable<CompoundTag> {
         }
     }
 
-    public void disconnectFrom(int typeIndex) {
+    public void tryDisconnect(int typeIndex) {
         if (connectionStates[typeIndex] != StaticConnectionStates.DISABLED)
             connectionStates[typeIndex] = StaticConnectionStates.DISCONNECTED;
     }
@@ -71,15 +72,19 @@ public class ConduitConnection implements INBTSerializable<CompoundTag> {
         connectionStates[MAX_CONDUIT_TYPES-1] = StaticConnectionStates.DISCONNECTED;
     }
 
-    public void clearType(int index) {
+    public void disconnectType(int index) {
         connectionStates[index] = StaticConnectionStates.DISCONNECTED;
+    }
+
+    public void disableType(int index) {
+        connectionStates[index] = StaticConnectionStates.DISABLED;
     }
 
     public boolean isEnd() {
         return Arrays.stream(connectionStates).anyMatch(DynamicConnectionState.class::isInstance);
     }
 
-    public List<IConduitType<?>> getConnectedTypes(ConduitBundle on) {
+    public List<IConduitType<?>> getConnectedTypes() {
         List<IConduitType<?>> connected = new ArrayList<>();
         for (int i = 0; i < connectionStates.length; i++) {
             if (connectionStates[i].isConnection()) {
@@ -98,7 +103,7 @@ public class ConduitConnection implements INBTSerializable<CompoundTag> {
     private static final String KEY_IS_INSERT = "IsInsert";
     private static final String KEY_INSERT = "Insert";
     private static final String KEY_REDSTONE_CONTROL = "RedstoneControl";
-    private static final String KEY_REDSTONE_CHANNEL = "Channel"; // TODO: Should this be called Redstone channel?
+    private static final String KEY_REDSTONE_CHANNEL = "Channel";
 
     @Override
     public CompoundTag serializeNBT() {
@@ -154,8 +159,8 @@ public class ConduitConnection implements INBTSerializable<CompoundTag> {
 
     // endregion
 
-    public ConduitConnection deepCopy() {
-        ConduitConnection connection = new ConduitConnection();
+    public ConduitConnection deepCopy(ConduitBundle on) {
+        ConduitConnection connection = new ConduitConnection(on);
         //connectionstates are not mutable (enum/record), so reference is fine
         System.arraycopy(connectionStates, 0, connection.connectionStates, 0, MAX_CONDUIT_TYPES);
         return connection;
@@ -164,13 +169,13 @@ public class ConduitConnection implements INBTSerializable<CompoundTag> {
     public IConnectionState getConnectionState(int index) {
         return connectionStates[index];
     }
-    public IConnectionState getConnectionState(IConduitType type, ConduitBundle on) {
+    public IConnectionState getConnectionState(IConduitType<?> type) {
         return connectionStates[on.getTypeIndex(type)];
     }
-    public void setConnectionState(IConduitType type, ConduitBundle on, IConnectionState state) {
+    public void setConnectionState(IConduitType<?> type, IConnectionState state) {
         setConnectionState(on.getTypeIndex(type),state);
     }
-    public void setConnectionState(int i, IConnectionState state) {
+    private void setConnectionState(int i, IConnectionState state) {
         connectionStates[i] = state;
     }
 

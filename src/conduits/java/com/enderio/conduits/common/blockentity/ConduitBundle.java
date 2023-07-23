@@ -40,14 +40,14 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
     public ConduitBundle(Runnable scheduleSync, BlockPos pos) {
         this.scheduleSync = scheduleSync;
         for (Direction value : Direction.values()) {
-            connections.put(value, new ConduitConnection());
+            connections.put(value, new ConduitConnection(this));
         }
         this.pos = pos;
     }
 
     /**
      * @param type
-     * @return the type that is now not in this bundle
+     * @return an action containing the type that is now not in this bundle
      */
     public RightClickAction addType(Level level, IConduitType<?> type, Player player) {
         if (types.size() == MAX_CONDUIT_TYPES)
@@ -69,7 +69,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
                 }
             }
             node.getExtendedConduitData().onCreated(type, level, pos, player);
-            connections.values().forEach(connection -> connection.clearType(index));
+            connections.values().forEach(connection -> connection.disconnectType(index));
             scheduleSync.run();
             return new RightClickAction.Upgrade(first.get());
         }
@@ -235,7 +235,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
             for (IConduitType<?> type : types) {
                 if (nodes.containsKey(type)) {
                     for (Direction direction : Direction.values()) {
-                        if (getConnection(direction).getConnectionState(type, this) instanceof DynamicConnectionState dyn) {
+                        if (getConnection(direction).getConnectionState(type) instanceof DynamicConnectionState dyn) {
                             ConduitBlockEntity.pushIOState(direction, nodes.get(type), dyn);
                         }
                     }
@@ -261,14 +261,6 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
 
     // endregion
 
-    //TODO: RFC
-
-    /**
-     * IMO this should only be used on the client, as this exposes renderinformation, for gamelogic: helper should be created here imo.
-     *
-     * @param direction
-     * @return
-     */
     public ConduitConnection getConnection(Direction direction) {
         return connections.get(direction);
     }
@@ -289,7 +281,6 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         facadeTextures.put(direction, facade);
     }
 
-    //TODO, make this method more useable
     public void connectTo(Direction direction, IConduitType<?> type, boolean end) {
         getConnection(direction).connectTo(getNodeFor(type), direction, type, getTypeIndex(type), end);
         scheduleSync.run();
@@ -298,7 +289,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
     public boolean disconnectFrom(Direction direction, IConduitType<?> type) {
         for (int i = 0; i < types.size(); i++) {
             if (type.getTicker().canConnectTo(type, types.get(i))) {
-                getConnection(direction).disconnectFrom(i);
+                getConnection(direction).tryDisconnect(i);
                 scheduleSync.run();
                 return true;
             }
@@ -323,7 +314,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         nodes.put(type, node);
         for (var direction : Direction.values()) {
             ConduitConnection connection = connections.get(direction);
-            int index = connection.getConnectedTypes(this).indexOf(type);
+            int index = connection.getConnectedTypes().indexOf(type);
             if (index >= 0) {
                 var state = connection.getConnectionState(index);
                 if (state instanceof DynamicConnectionState dynamicState) {
@@ -364,7 +355,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
     public ConduitBundle deepCopy() {
         var bundle = new ConduitBundle(() -> {}, pos);
         bundle.types.addAll(types);
-        connections.forEach((dir, connection) -> bundle.connections.put(dir, connection.deepCopy()));
+        connections.forEach((dir, connection) -> bundle.connections.put(dir, connection.deepCopy(bundle)));
         bundle.facadeTextures.putAll(facadeTextures);
         nodes.forEach((type, node) -> bundle.setNodeFor(type, new NodeIdentifier<>(node.getPos(), node.getExtendedConduitData().deepCopy())));
         return bundle;

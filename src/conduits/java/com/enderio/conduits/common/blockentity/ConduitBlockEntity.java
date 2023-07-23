@@ -1,6 +1,5 @@
 package com.enderio.conduits.common.blockentity;
 
-import com.enderio.EnderIO;
 import com.enderio.api.UseOnly;
 import com.enderio.api.conduit.*;
 import com.enderio.conduits.ConduitNBTKeys;
@@ -59,7 +58,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     private final ConduitBundle bundle;
     @UseOnly(LogicalSide.CLIENT) private ConduitBundle clientBundle;
 
-    public UpdateState checkConnection = UpdateState.NONE;
+    private UpdateState checkConnection = UpdateState.NONE;
 
     private final Map<IConduitType<?>,NodeIdentifier<?>> lazyNodes = new HashMap<>();
     private ListTag lazyNodeNBT = new ListTag();
@@ -87,12 +86,11 @@ public class ConduitBlockEntity extends EnderBlockEntity {
      */
     @UseOnly(LogicalSide.SERVER)
     public void handleConnectionStateUpdate(Direction direction, IConduitType<?> conduitType, DynamicConnectionState connectionState) {
-        var bundle = getBundle();
         var connection = bundle.getConnection(direction);
 
         // Sanity check, the client shouldn't do this, but just to make sure there's no confusion.
-        if (connection.getConnectionState(conduitType, bundle) instanceof DynamicConnectionState) {
-            connection.setConnectionState(conduitType, bundle, connectionState);
+        if (connection.getConnectionState(conduitType) instanceof DynamicConnectionState) {
+            connection.setConnectionState(conduitType, connectionState);
 
             pushIOState(direction, bundle.getNodeFor(conduitType), connectionState);
         }
@@ -159,25 +157,24 @@ public class ConduitBlockEntity extends EnderBlockEntity {
             serverTick();
             checkConnection = checkConnection.next();
             if (checkConnection.isInitialized()) {
-                updateConnections(getBlockState(), level, worldPosition, null, false, false);
+                updateConnections(level, worldPosition, null, false);
             }
         }
     }
 
-    public void updateConnections(BlockState state, Level level, BlockPos pos, @Nullable BlockPos fromPos, boolean isMoving, boolean shouldActivate) {
+    public void updateConnections(Level level, BlockPos pos, @Nullable BlockPos fromPos, boolean shouldActivate) {
         for (Direction direction: Direction.values()) {
             if (fromPos == null || !(level.getBlockEntity(fromPos) instanceof ConduitBlockEntity)) {
                 for (IConduitType<?> type : bundle.getTypes()) {
                     if (shouldActivate && type.getTicker().hasConnectionDelay()) {
                         checkConnection = checkConnection.activate();
                     }
-                    IConnectionState connectionState = bundle.getConnection(direction).getConnectionState(type, bundle);
-                    EnderIO.LOGGER.info("try connect " + ConduitTypes.getRegistry().getKey(type) + " because block @ " + pos.toShortString() + " was notified about a change @ " + (fromPos != null ? fromPos.toShortString() : "delayed connection"));
+                    IConnectionState connectionState = bundle.getConnection(direction).getConnectionState(type);
                     if (connectionState instanceof DynamicConnectionState dyn) {
                         if (!type.getTicker().canConnectTo(level, pos, direction)) {
                             getBundle().getNodeFor(type).clearState(direction);
                             dropConnection(dyn);
-                            getBundle().getConnection(direction).setConnectionState(type, getBundle(), StaticConnectionStates.DISCONNECTED);
+                            getBundle().getConnection(direction).setConnectionState(type, StaticConnectionStates.DISCONNECTED);
                             updateShape();
                             updateConnectionToData(type);
                         }
@@ -227,9 +224,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     }
 
     public RightClickAction addType(IConduitType<?> type, Player player) {
-        EnderIO.LOGGER.info("try to add type " + ConduitTypes.getRegistry().getKey(type) + "@ " + getBlockPos().toShortString());
         RightClickAction action = bundle.addType(level, type, player);
-        EnderIO.LOGGER.info("Action " + action + " was taken");
         //something has changed
         if (action.hasChanged()) {
             List<GraphObject<Mergeable.Dummy>> nodes = new ArrayList<>();
@@ -255,9 +250,8 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     }
 
     public Optional<GraphObject<Mergeable.Dummy>> tryConnectTo(Direction dir, IConduitType<?> type, boolean forceMerge, boolean shouldMergeGraph) {
-        BlockEntity other = level.getBlockEntity(getBlockPos().relative(dir));
-        if (other instanceof ConduitBlockEntity conduit && conduit.connectTo(dir.getOpposite(), type, bundle.getNodeFor(type).getExtendedConduitData(),
-            forceMerge)) {
+        if (level.getBlockEntity(getBlockPos().relative(dir)) instanceof ConduitBlockEntity conduit
+            && conduit.connectTo(dir.getOpposite(), type, bundle.getNodeFor(type).getExtendedConduitData(), forceMerge)) {
             connect(dir, type);
             updateConnectionToData(type);
             conduit.updateConnectionToData(type);
@@ -278,9 +272,6 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                     }
                 }
             }
-            EnderIO.LOGGER.info("connect " + ConduitTypes.getRegistry().getKey(type) + " @ " + getBlockPos().toShortString() + " with " + conduit
-                .getBlockPos()
-                .toShortString());
             if (shouldMergeGraph) {
                 Graph.connect(bundle.getNodeFor(type), conduit.bundle.getNodeFor(type));
             }
@@ -298,9 +289,13 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                 .getExtendedConduitData()
                 .updateConnection(Arrays
                     .stream(Direction.values())
-                    .filter(streamDir -> getBundle().getConnection(streamDir).getConnectionState(type, bundle) != StaticConnectionStates.DISABLED)
+                    .filter(streamDir -> getBundle().getConnection(streamDir).getConnectionState(type) != StaticConnectionStates.DISABLED)
                     .collect(Collectors.toSet()));
     }
+
+    /**
+     * sets block to air if this is the last conduit
+     */
 
     public void removeTypeAndDelete(IConduitType<?> type, boolean shouldDrop) {
         if (removeType(type, shouldDrop)) {
@@ -310,11 +305,10 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     }
 
     public boolean removeType(IConduitType<?> type, boolean shouldDrop) {
-        EnderIO.LOGGER.info("removed type " + ConduitTypes.getRegistry().getKey(type) + " @ " + getBlockPos().toShortString());
         if (shouldDrop && !level.isClientSide()) {
             dropItem(type.getConduitItem().getDefaultInstance());
             for (Direction dir : Direction.values()) {
-                if (getBundle().getConnection(dir).getConnectionState(type, getBundle()) instanceof DynamicConnectionState dyn) {
+                if (getBundle().getConnection(dir).getConnectionState(type) instanceof DynamicConnectionState dyn) {
                     dropConnection(dyn);
                 }
             }
@@ -323,6 +317,18 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         removeNeighborConnections(type);
         updateShape();
         return shouldRemove;
+    }
+
+    public void updateEmptyDynConnection() {
+        for (Direction dir : Direction.values()) {
+            ConduitConnection connection = bundle.getConnection(dir);
+            for (int i = 0; i < ConduitBundle.MAX_CONDUIT_TYPES; i++) {
+                if (connection.getConnectionState(i) instanceof DynamicConnectionState dynState && dynState.isEmpty()) {
+                    dropConnection(dynState);
+                    connection.disableType(i);
+                }
+            }
+        }
     }
 
     public void dropConnection(DynamicConnectionState dyn) {
@@ -334,43 +340,26 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         }
     }
 
-    public void updateEmptyDynConnection() {
-        for (Direction dir : Direction.values()) {
-            ConduitConnection connection = bundle.getConnection(dir);
-            for (int i = 0; i < ConduitBundle.MAX_CONDUIT_TYPES; i++) {
-                if (connection.getConnectionState(i) instanceof DynamicConnectionState dynState && dynState.isEmpty()) {
-                    dropConnection(dynState);
-                    connection.setConnectionState(i, StaticConnectionStates.DISABLED);
-                }
-            }
-        }
-    }
-
     private void dropItem(ItemStack stack) {
         level.addFreshEntity(new ItemEntity(level, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), stack));
     }
 
     public void removeNeighborConnections(IConduitType<?> type) {
         for (Direction dir : Direction.values()) {
-            BlockEntity blockEntity = level.getBlockEntity(getBlockPos().relative(dir));
-            if (blockEntity instanceof ConduitBlockEntity conduit) {
-                if (conduit.disconnect(dir.getOpposite(), type)) {
-                    conduit.updateShape();
-                }
+            if (level.getBlockEntity(getBlockPos().relative(dir)) instanceof ConduitBlockEntity conduit) {
+                conduit.disconnect(dir.getOpposite(), type);
             }
         }
 
         if (level instanceof ServerLevel serverLevel) {
             for (Direction dir : Direction.values()) {
                 BlockEntity blockEntity = level.getBlockEntity(getBlockPos().relative(dir));
-                if (blockEntity instanceof ConduitBlockEntity conduit) {
-                    if (conduit.hasType(type)) {
-                        Optional
-                            .ofNullable(conduit.bundle.getNodeFor(type))
-                            .map(NodeIdentifier::getGraph)
-                            .filter(Objects::nonNull)
-                            .ifPresent(graph -> ConduitSavedData.addPotentialGraph(type, graph, serverLevel));
-                    }
+                if (blockEntity instanceof ConduitBlockEntity conduit && conduit.hasType(type)) {
+                    Optional
+                        .of(conduit.bundle.getNodeFor(type))
+                        .map(NodeIdentifier::getGraph)
+                        .filter(Objects::nonNull)
+                        .ifPresent(graph -> ConduitSavedData.addPotentialGraph(type, graph, serverLevel));
                 }
             }
         }
@@ -394,7 +383,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                 }
                 node = new NodeIdentifier<>(worldPosition, data);
                 for (Direction direction : Direction.values()) {
-                    if (bundle.getConnection(direction).getConnectionState(type, bundle) instanceof DynamicConnectionState connectionState) {
+                    if (bundle.getConnection(direction).getConnectionState(type) instanceof DynamicConnectionState connectionState) {
                         pushIOState(direction, node, connectionState);
                     }
                 }
@@ -420,7 +409,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
             return false;
         if (!data.canConnectTo(bundle.getNodeFor(type).getExtendedConduitData().cast()))
             return false;
-        if (forceMerge || bundle.getConnection(direction).getConnectionState(type, bundle) != StaticConnectionStates.DISABLED) {
+        if (forceMerge || bundle.getConnection(direction).getConnectionState(type) != StaticConnectionStates.DISABLED) {
             connect(direction, type);
             return true;
         }
@@ -445,12 +434,10 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         updateClient();
     }
 
-    private boolean disconnect(Direction direction, IConduitType<?> type) {
+    private void disconnect(Direction direction, IConduitType<?> type) {
         if (bundle.disconnectFrom(direction, type)) {
             updateClient();
-            return true;
         }
-        return false;
     }
 
     public ConduitBundle getBundle() {
