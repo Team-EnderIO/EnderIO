@@ -65,6 +65,17 @@ public class CraftingMachineTaskHost<R extends MachineRecipe<C>, C extends Conta
         return task;
     }
 
+    @Override
+    protected boolean shouldStartNewTask() {
+        if (super.shouldStartNewTask()) {
+            return true;
+        }
+
+        // If recipe has changed
+        var currentRecipe = findRecipe();
+        return currentRecipe.map(r -> r != getCurrentTask().getRecipe()).orElse(true);
+    }
+
     // endregion
 
     protected Optional<R> findRecipe() {
