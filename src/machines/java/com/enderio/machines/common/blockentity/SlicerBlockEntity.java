@@ -14,6 +14,7 @@ import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.SlicerMenu;
+import com.enderio.machines.common.recipe.RecipeCaches;
 import com.enderio.machines.common.recipe.SlicingRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -31,6 +32,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.TierSortingRegistry;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class SlicerBlockEntity extends PoweredMachineBlockEntity {
 
@@ -87,7 +90,7 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
     public MachineInventoryLayout getInventoryLayout() {
         return MachineInventoryLayout.builder()
             .setStackLimit(1) // Force all input slots to have 1 output
-            .inputSlot(6)
+            .inputSlot(6, this::isValidInput)
             .slotAccess(INPUTS)
             .inputSlot(this::validAxe)
             .slotAccess(AXE)
@@ -98,6 +101,10 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
             .slotAccess(OUTPUT)
             .capacitor()
             .build();
+    }
+
+    private boolean isValidInput(int index, ItemStack stack) {
+        return RecipeCaches.SLICING.hasRecipe(List.of(stack));
     }
 
     private boolean validAxe(int slot, ItemStack stack) {

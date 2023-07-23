@@ -17,6 +17,7 @@ import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.SagMillMenu;
+import com.enderio.machines.common.recipe.RecipeCaches;
 import com.enderio.machines.common.recipe.SagMillingRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -29,6 +30,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class SagMillBlockEntity extends PoweredMachineBlockEntity {
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.SAG_MILL_CAPACITY);
@@ -100,7 +103,7 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
     @Override
     public MachineInventoryLayout getInventoryLayout() {
         return MachineInventoryLayout.builder()
-            .inputSlot()
+            .inputSlot(this::isValidInput)
             .slotAccess(INPUT)
             .outputSlot(4)
             .slotAccess(OUTPUT)
@@ -108,6 +111,10 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
             .slotAccess(GRINDING_BALL)
             .capacitor()
             .build();
+    }
+
+    private boolean isValidInput(int index, ItemStack stack) {
+        return RecipeCaches.SAGMILLING.hasRecipe(List.of(stack));
     }
 
     @Override

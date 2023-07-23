@@ -16,7 +16,7 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public abstract class RecipeInputCache<C extends Container, T extends MachineRecipe<C>> {
+public class RecipeInputCache<C extends Container, T extends MachineRecipe<C>> {
     private final Supplier<RecipeType<T>> recipeType;
     private final HashMap<Item, HashSet<T>> itemToRecipesCache;
     private final HashMap<T, List<Ingredient>> recipeToIngredientCache;
@@ -60,7 +60,7 @@ public abstract class RecipeInputCache<C extends Container, T extends MachineRec
         return hasRecipe(currentItems);
     }
 
-    private boolean hasRecipe(List<ItemStack> inputs) {
+    public boolean hasRecipe(List<ItemStack> inputs) {
         checkCacheRebuild();
 
         Set<T> possibleMatches = null;
@@ -126,8 +126,6 @@ public abstract class RecipeInputCache<C extends Container, T extends MachineRec
         }
     }
 
-    protected abstract List<Item> getRecipeItems(T recipe);
-
     public void rebuildCache(RecipeManager recipeManager) {
         itemToRecipesCache.clear();
         recipeToIngredientCache.clear();
@@ -135,7 +133,11 @@ public abstract class RecipeInputCache<C extends Container, T extends MachineRec
         var recipeType = this.recipeType.get();
         recipeManager.getAllRecipesFor(recipeType)
             .forEach(recipe -> {
-                var items = getRecipeItems(recipe);
+                var items = recipe.getIngredients().stream()
+                    .flatMap(ingredient -> Arrays.stream(ingredient.getItems()))
+                    .map(ItemStack::getItem)
+                    .toList();
+
                 recipeToIngredientCache.put(recipe, recipe.getIngredients());
                 for (Item item : items) {
                     itemToRecipesCache.computeIfAbsent(item, (i) -> new HashSet<>())
