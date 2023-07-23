@@ -25,7 +25,7 @@ public class MachinesJEI implements IModPlugin {
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-        registration.addRecipeCatalyst(new ItemStack(MachineBlocks.PRIMITIVE_ALLOY_SMELTER.get()), PrimitiveAlloySmeltingCategory.TYPE, RecipeTypes.SMELTING);
+        registration.addRecipeCatalyst(new ItemStack(MachineBlocks.PRIMITIVE_ALLOY_SMELTER.get()), PrimitiveAlloySmeltingCategory.TYPE);
         registration.addRecipeCatalyst(new ItemStack(MachineBlocks.ALLOY_SMELTER.get()), AlloySmeltingCategory.TYPE, RecipeTypes.SMELTING);
         registration.addRecipeCatalyst(new ItemStack(MachineBlocks.ENCHANTER.get()), EnchanterCategory.TYPE);
         registration.addRecipeCatalyst(new ItemStack(MachineBlocks.SAG_MILL.get()), SagMillCategory.TYPE);
