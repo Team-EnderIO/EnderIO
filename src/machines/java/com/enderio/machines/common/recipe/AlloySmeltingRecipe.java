@@ -9,10 +9,12 @@ import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -23,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.ContainerWrapper> {
 
@@ -57,6 +60,11 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
     @Override
     public int getBaseEnergyCost() {
         return energy;
+    }
+
+    @Override
+    public NonNullList<Ingredient> getIngredients() {
+        return NonNullList.of(Ingredient.EMPTY, inputs.stream().map(CountedIngredient::ingredient).toArray(Ingredient[]::new));
     }
 
     @Override

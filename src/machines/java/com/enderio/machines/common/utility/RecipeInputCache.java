@@ -6,6 +6,7 @@ import com.enderio.machines.common.recipe.MachineRecipe;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.fml.util.thread.EffectiveSide;
@@ -17,13 +18,13 @@ import java.util.stream.Collectors;
 
 public abstract class RecipeInputCache<C extends Container, T extends MachineRecipe<C>> {
     private final Supplier<RecipeType<T>> recipeType;
-    private final HashMap<Item, HashSet<T>> ingredientToItemCache;
-    private final HashMap<T, List<Item>> recipeToIngredientCache;
+    private final HashMap<Item, HashSet<T>> itemToRecipesCache;
+    private final HashMap<T, List<Ingredient>> recipeToIngredientCache;
     private boolean isDirty;
 
     public RecipeInputCache(Supplier<RecipeType<T>> recipeType) {
         this.recipeType = recipeType;
-        this.ingredientToItemCache = new HashMap<>();
+        this.itemToRecipesCache = new HashMap<>();
         this.recipeToIngredientCache = new HashMap<>();
     }
 
@@ -32,7 +33,7 @@ public abstract class RecipeInputCache<C extends Container, T extends MachineRec
      */
     public boolean hasValidRecipeIf(MachineInventory inventory, MultiSlotAccess inputs, int slot, ItemStack toAdd) {
         // Collect the list of items that the recipe will match against
-        var currentItems = new ArrayList<Item>();
+        var currentItems = new ArrayList<ItemStack>();
 
         // This defines whether toAdd is being added as a new discrete ingredient or joining another
         var isNewIngredient = true;
@@ -46,33 +47,29 @@ public abstract class RecipeInputCache<C extends Container, T extends MachineRec
                         isNewIngredient = false;
                     }
                 }
-                currentItems.add(invStack.getItem());
+                currentItems.add(invStack);
             }
         }
 
         // If it wouldn't join an existing input, its a new one.
         if (isNewIngredient) {
-            currentItems.add(toAdd.getItem());
+            currentItems.add(toAdd);
         }
 
         // Try and match the items list
         return hasRecipe(currentItems);
     }
 
-    private boolean hasRecipe(List<Item> inputs) {
+    private boolean hasRecipe(List<ItemStack> inputs) {
         checkCacheRebuild();
 
         Set<T> possibleMatches = null;
 
-        Set<Item> distinctInputs = new HashSet<>();
-
         for (var input : inputs) {
-            var matches = ingredientToItemCache.get(input);
+            var matches = itemToRecipesCache.get(input.getItem());
             if (matches == null) {
                 return false;
             }
-
-            distinctInputs.add(input);
 
             if (possibleMatches == null) {
                 possibleMatches = matches;
@@ -82,17 +79,35 @@ public abstract class RecipeInputCache<C extends Container, T extends MachineRec
                     .collect(Collectors.toSet());
             }
 
-            // Check for duplicates
+            if (possibleMatches.size() == 0) {
+                return false;
+            }
+
+            boolean anyMatches = false;
             for (var match : possibleMatches) {
-                var items = recipeToIngredientCache.get(match);
-                for (var in : distinctInputs) {
-                    if (Collections.frequency(inputs, in) > Collections.frequency(items, in)) {
-                        return false;
+                var ingredients = recipeToIngredientCache.get(match);
+                var checked = new boolean[inputs.size()];
+                int matchCount = 0;
+
+                for (Ingredient ingredient : ingredients) {
+                    for (int i = 0; i < inputs.size(); i++) {
+                        if (checked[i])
+                            continue;
+
+                        if (ingredient.test(inputs.get(i))) {
+                            checked[i] = true;
+                            matchCount++;
+                            break;
+                        }
                     }
+                }
+
+                if (matchCount >= inputs.size()) {
+                    anyMatches = true;
                 }
             }
 
-            if (possibleMatches.size() == 0) {
+            if (!anyMatches) {
                 return false;
             }
         }
@@ -114,16 +129,16 @@ public abstract class RecipeInputCache<C extends Container, T extends MachineRec
     protected abstract List<Item> getRecipeItems(T recipe);
 
     public void rebuildCache(RecipeManager recipeManager) {
-        ingredientToItemCache.clear();
+        itemToRecipesCache.clear();
         recipeToIngredientCache.clear();
 
         var recipeType = this.recipeType.get();
         recipeManager.getAllRecipesFor(recipeType)
             .forEach(recipe -> {
                 var items = getRecipeItems(recipe);
-                recipeToIngredientCache.put(recipe, items);
+                recipeToIngredientCache.put(recipe, recipe.getIngredients());
                 for (Item item : items) {
-                    ingredientToItemCache.computeIfAbsent(item, (i) -> new HashSet<>())
+                    itemToRecipesCache.computeIfAbsent(item, (i) -> new HashSet<>())
                         .add(recipe);
                 }
             });
