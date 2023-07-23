@@ -234,6 +234,7 @@ dependencies {
     runtimeOnly fg.deobf("maven.modrinth:mcjtylib:3LlgyvSh")
     runtimeOnly fg.deobf("maven.modrinth:rftools-base:Uu1IkVMH")
     runtimeOnly fg.deobf("maven.modrinth:spark:Yp6s4wsw")
+    runtimeOnly fg.deobf("maven.modrinth:torchmaster:gw94H8MZ")
 
     //Athena ctm
     runtimeOnly fg.deobf("maven.modrinth:athena-ctm:X6GdUrpW")
