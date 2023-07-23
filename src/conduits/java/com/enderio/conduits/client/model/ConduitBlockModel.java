@@ -61,7 +61,7 @@ public class ConduitBlockModel implements IDynamicBakedModel {
                 var connectedTypes = connection.getConnectedTypes(conduitBundle);
                 for (int i = 0; i < connectedTypes.size(); i++) {
                     IConduitType<?> type = connectedTypes.get(i);
-                    Vec3i offset = OffsetHelper.translationFor(direction.getAxis(), OffsetHelper.offsetConduit(i));
+                    Vec3i offset = OffsetHelper.translationFor(direction.getAxis(), OffsetHelper.offsetConduit(i, connectedTypes.size()));
                     offsets.computeIfAbsent(type, ignored -> new ArrayList<>()).add(offset);
                     IQuadTransformer rotationTranslation = rotation.andThen(QuadTransformers.applying(translateTransformation(offset)));
                     quads.addAll(new ConduitTextureEmissiveQuadTransformer(sprite(type, conduitBundle.getNodeFor(type).getExtendedConduitData()), 0)
@@ -147,26 +147,28 @@ public class ConduitBlockModel implements IDynamicBakedModel {
                         .andThen(QuadTransformers.applying(translateTransformation(offsetsForType.get(0))))
                         .process(modelOf(CONDUIT_CORE).getQuads(state, side, rand, extraData, renderType)));
             }
-            for (Map.Entry<IConduitType<?>, Integer> notRenderedEntry : notRendered.entrySet()) {
-                Vec3i offset = OffsetHelper.translationFor(axis, OffsetHelper.offsetConduit(notRenderedEntry.getValue()));
-                offsets.put(notRenderedEntry.getKey(), List.of(offset));
-                if (box == null || !box.contains(offset))
-                    quads.addAll(new ConduitTextureEmissiveQuadTransformer(
-                        sprite(notRenderedEntry.getKey(), conduitBundle.getNodeFor(notRenderedEntry.getKey()).getExtendedConduitData()), 0)
-                        .andThen(QuadTransformers.applying(translateTransformation(offset)))
-                        .process(modelOf(CONDUIT_CORE).getQuads(state, side, rand, extraData, renderType)));
-                if (!duplicateFinder.add(offset)) {
-                    if (box == null) {
-                        box = new Area(offset);
-                    } else {
-                        box.makeContain(offset);
-                    }
-                }
-            }
+
             if (box != null) {
+                for (Map.Entry<IConduitType<?>, Integer> notRenderedEntry : notRendered.entrySet()) {
+                    Vec3i offset = OffsetHelper.translationFor(axis, OffsetHelper.offsetConduit(notRenderedEntry.getValue(), allTypes.size()));
+                    if (!box.contains(offset))
+                        quads.addAll(new ConduitTextureEmissiveQuadTransformer(
+                            sprite(notRenderedEntry.getKey(), conduitBundle.getNodeFor(notRenderedEntry.getKey()).getExtendedConduitData()), 0)
+                            .andThen(QuadTransformers.applying(translateTransformation(offset)))
+                            .process(modelOf(CONDUIT_CORE).getQuads(state, side, rand, extraData, renderType)));
+                }
+
                 quads.addAll(new BoxTextureQuadTransformer(box.size())
                     .andThen(QuadTransformers.applying(translateTransformation(box.getMin())))
                     .process(modelOf(BOX).getQuads(state, side, rand, extraData, renderType)));
+            } else {
+                for (Map.Entry<IConduitType<?>, Integer> notRenderedEntry : notRendered.entrySet()) {
+                    quads.addAll(new ConduitTextureEmissiveQuadTransformer(
+                        sprite(notRenderedEntry.getKey(), conduitBundle.getNodeFor(notRenderedEntry.getKey()).getExtendedConduitData()), 0)
+                        .andThen(QuadTransformers.applying(translateTransformation(
+                            OffsetHelper.translationFor(axis, OffsetHelper.offsetConduit(notRenderedEntry.getValue(), allTypes.size())))))
+                        .process(modelOf(CONDUIT_CORE).getQuads(state, side, rand, extraData, renderType)));
+                }
             }
         }
         return quads;
@@ -194,11 +196,11 @@ public class ConduitBlockModel implements IDynamicBakedModel {
     public static Transformation rotateTransformation(Direction toDirection) {
         Quaternionf quaternion = new Quaternionf();
         switch (toDirection) {
-            case UP -> quaternion.mul(Axis.ZP.rotationDegrees(180));
-            case NORTH -> quaternion.mul(Axis.XP.rotationDegrees(90));
-            case SOUTH -> quaternion.mul(Axis.XN.rotationDegrees(90));
-            case WEST -> quaternion.mul(Axis.ZN.rotationDegrees(90));
-            case EAST -> quaternion.mul(Axis.ZP.rotationDegrees(90));
+        case UP -> quaternion.mul(Axis.ZP.rotationDegrees(180));
+        case NORTH -> quaternion.mul(Axis.XP.rotationDegrees(90));
+        case SOUTH -> quaternion.mul(Axis.XN.rotationDegrees(90));
+        case WEST -> quaternion.mul(Axis.ZN.rotationDegrees(90));
+        case EAST -> quaternion.mul(Axis.ZP.rotationDegrees(90));
         }
         Transformation transformation = new Transformation(null, quaternion, null, null);
         return transformation.applyOrigin(new Vector3f(.5f, .5f, .5f));
@@ -249,5 +251,9 @@ public class ConduitBlockModel implements IDynamicBakedModel {
 
     private static TextureAtlasSprite sprite(IConduitType<?> type, IExtendedConduitData<?> data) {
         return Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS).getSprite(type.getTexture(data.cast()));
+    }
+
+    private static boolean isMissingModel(BakedModel model) {
+        return model == Minecraft.getInstance().getModelManager().getMissingModel();
     }
 }

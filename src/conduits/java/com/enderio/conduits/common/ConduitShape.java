@@ -92,7 +92,7 @@ public class ConduitShape {
             var connectedTypes = conduitBundle.getConnection(direction).getConnectedTypes(conduitBundle);
             if (connectedTypes.contains(conduitType)) {
                 Vec3i offset = OffsetHelper.translationFor(direction.getAxis(),
-                    OffsetHelper.offsetConduit(connectedTypes.indexOf(conduitType)));
+                    OffsetHelper.offsetConduit(connectedTypes.indexOf(conduitType), connectedTypes.size()));
                 offsets.computeIfAbsent(conduitType, ignored -> new ArrayList<>()).add(offset);
                 VoxelShape connectionShape = rotateVoxelShape(connection, direction).move(offset.getX() * 3f / 16f, offset.getY() * 3f / 16f,
                     offset.getZ() * 3f / 16f);
@@ -143,7 +143,7 @@ public class ConduitShape {
 
         if (box != null) {
             for (Map.Entry<IConduitType<?>, Integer> notRenderedEntry : notRendered.entrySet()) {
-                Vec3i offset = OffsetHelper.translationFor(axis, OffsetHelper.offsetConduit(notRenderedEntry.getValue()));
+                Vec3i offset = OffsetHelper.translationFor(axis, OffsetHelper.offsetConduit(notRenderedEntry.getValue(), allTypes.size()));
                 if (!box.contains(offset))
                     conduitShape = Shapes.join(conduitShape, core.move(offset.getX() * 3f / 16f, offset.getY() * 3f / 16f, offset.getZ() * 3f / 16f),
                         BooleanOp.OR);
@@ -152,7 +152,7 @@ public class ConduitShape {
                 BooleanOp.OR);
         } else {
             for (Map.Entry<IConduitType<?>, Integer> notRenderedEntry : notRendered.entrySet()) {
-                Vec3i offset = OffsetHelper.translationFor(axis, OffsetHelper.offsetConduit(notRenderedEntry.getValue()));
+                Vec3i offset = OffsetHelper.translationFor(axis, OffsetHelper.offsetConduit(notRenderedEntry.getValue(), allTypes.size()));
                 conduitShape = Shapes.join(conduitShape, core.move(offset.getX() * 3f / 16f, offset.getY() * 3f / 16f, offset.getZ() * 3f / 16f), BooleanOp.OR);
             }
         }
