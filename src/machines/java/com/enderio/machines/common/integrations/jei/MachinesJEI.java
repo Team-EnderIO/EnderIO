@@ -50,7 +50,7 @@ public class MachinesJEI implements IModPlugin {
     public void registerRecipes(IRecipeRegistration registration) {
         MachineJEIRecipes recipes = new MachineJEIRecipes();
 
-        registration.addRecipes(AlloySmeltingCategory.TYPE, recipes.getAlloySmeltingRecipes());
+        registration.addRecipes(AlloySmeltingCategory.TYPE, recipes.getAlloySmeltingRecipesWithSmelting());
         registration.addRecipes(EnchanterCategory.TYPE, recipes.getEnchanterRecipes());
         registration.addRecipes(PrimitiveAlloySmeltingCategory.TYPE, recipes.getAlloySmeltingRecipes());
         registration.addRecipes(SagMillCategory.TYPE, recipes.getSagmillingRecipes());
