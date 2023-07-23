@@ -51,7 +51,7 @@ public abstract class RecipeInputCache<C extends Container, T extends MachineRec
         }
 
         // If it wouldn't join an existing input, its a new one.
-        if (!isNewIngredient) {
+        if (isNewIngredient) {
             currentItems.add(toAdd.getItem());
         }
 
