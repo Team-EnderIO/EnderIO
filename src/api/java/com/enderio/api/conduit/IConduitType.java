@@ -2,6 +2,7 @@ package com.enderio.api.conduit;
 
 import com.enderio.api.UseOnly;
 import com.enderio.api.conduit.ticker.IConduitTicker;
+import com.enderio.api.misc.ColorControl;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -47,4 +48,10 @@ public interface IConduitType<T extends IExtendedConduitData<T>> {
     default <K> Optional<LazyOptional<K>> proxyCapability(Capability<K> cap, T extendedConduitData, @Nullable Direction direction) {
         return Optional.empty();
     }
+
+    default ConduitConnectionData getDefaultConnection() {
+        return new ConduitConnectionData(false, true);
+    }
+
+    record ConduitConnectionData(boolean isInsert, boolean isExtract) {}
 }
