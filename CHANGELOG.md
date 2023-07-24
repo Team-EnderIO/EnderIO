@@ -14,10 +14,12 @@
 - Added recipes for SAG Milling stone to cobblestone and gravel to sand.
 - Added recipe for SAG Milling copper ore into powder.
 - Added recipes to smelt vanilla powders into ingots.
+- Added support for NBT on outputs for alloy smelting.
 
 ### Changed
 - Gave CheckBox widgets the ability to have tooltips
 - Conduits backend and API received some tweaks and cleaning ready for some new functionality.
+- Recipe locking is now more intelligent and should result in less friction for players.
 
 ### Removed
 
@@ -34,6 +36,10 @@
 - Fixed conduit not displaying disconnection from GUI.
 - Fixed incorrect GUI showing when accessing a connected conduit.
 - Fixed redstone conduit resetting when a piston is activated.
+- Fix JEI showing smelting recipes for the primitive alloy smelter.
+- Primtive alloy smelter shift r-click works as expected.
+- Fixed slot problems for the Alloy Smelter.
+- Fixed recipe locking, resulting in abnormal slot behaviours.
 
 ## [6.0.5-alpha] - 2023-07-11
 
