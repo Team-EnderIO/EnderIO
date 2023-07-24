@@ -3,7 +3,7 @@ package com.enderio.machines.common.blockentity.base;
 import com.enderio.api.capacitor.ICapacitorData;
 import com.enderio.api.capacitor.ICapacitorScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.base.common.blockentity.IAutoEquiping;
+import com.enderio.base.common.blockentity.IMachineInstall;
 import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.base.common.capacitor.DefaultCapacitorData;
 import com.enderio.base.common.item.capacitors.BaseCapacitorItem;
@@ -35,7 +35,7 @@ import java.util.function.Supplier;
 /**
  * A machine that stores energy.
  */
-public abstract class PoweredMachineBlockEntity extends MachineBlockEntity implements IAutoEquiping {
+public abstract class PoweredMachineBlockEntity extends MachineBlockEntity implements IMachineInstall {
     /**
      * The energy storage medium for the block entity.
      * This will be a mutable energy storage.
@@ -210,7 +210,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
      * Handles right click auto equip for capacitors
      */
     @Override
-    public InteractionResult tryItemAutoEquip(ItemStack stack, UseOnContext context) {
+    public InteractionResult tryItemInstall(ItemStack stack, UseOnContext context) {
         if (stack.getItem() instanceof BaseCapacitorItem && requiresCapacitor() && !isCapacitorInstalled()) {
             MachineInventory inventory = getInventory();
             MachineInventoryLayout layout = getInventoryLayout();
