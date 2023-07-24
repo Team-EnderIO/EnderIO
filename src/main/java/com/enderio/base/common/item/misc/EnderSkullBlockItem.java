@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 public class EnderSkullBlockItem extends StandingAndWallBlockItem {
 
     public EnderSkullBlockItem(Block block, Properties properties, Direction attachmentDirection) {
-        super(block, EIOBlocks.WALL_ENDERMAN_SKULL.get(), properties, attachmentDirection);
+        super(block, EIOBlocks.WALL_ENDERMAN_HEAD.get(), properties, attachmentDirection);
     }
 
     @Override

@@ -52,7 +52,7 @@ public class DarkSteelSwordItem extends SwordItem implements IAdvancedTooltipPro
             stack = new ItemStack(Items.DRAGON_HEAD);
         }
         if (pTarget.getType() == EntityType.ENDERMAN) {
-            stack = new ItemStack(EIOBlocks.ENDERMAN_SKULL);
+            stack = new ItemStack(EIOBlocks.ENDERMAN_HEAD);
         }
         if (pTarget.getType() == EntityType.PIGLIN || pTarget.getType() == EntityType.PIGLIN_BRUTE || pTarget.getType() == EntityType.ZOMBIFIED_PIGLIN) {
             stack = new ItemStack(Items.PIGLIN_HEAD);

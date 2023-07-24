@@ -40,7 +40,7 @@ public class EIOBlockEntities {
 
     public static final BlockEntityEntry<EnderSkullBlockEntity> ENDER_SKULL = REGISTRATE
         .blockEntity("ender_skull", EnderSkullBlockEntity::new)
-        .validBlocks(EIOBlocks.WALL_ENDERMAN_SKULL, EIOBlocks.ENDERMAN_SKULL)
+        .validBlocks(EIOBlocks.WALL_ENDERMAN_HEAD, EIOBlocks.ENDERMAN_HEAD)
         .register();
     public static void register() {}
 }

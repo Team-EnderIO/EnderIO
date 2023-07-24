@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "enderio:enderman_skull"
+          "name": "enderio:enderman_head"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "enderio:blocks/enderman_skull"
+  "random_sequence": "enderio:blocks/enderman_head"
 }

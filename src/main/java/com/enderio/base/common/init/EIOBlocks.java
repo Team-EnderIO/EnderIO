@@ -357,19 +357,19 @@ public class EIOBlocks {
         .properties(p -> p.lightLevel(l -> 15).noLootTable().noCollission().noOcclusion())
         .register();
 
-    public static final BlockEntry<EnderSkullBlock> ENDERMAN_SKULL = REGISTRATE
-        .block("enderman_skull", EnderSkullBlock::new)
+    public static final BlockEntry<EnderSkullBlock> ENDERMAN_HEAD = REGISTRATE
+        .block("enderman_head", EnderSkullBlock::new)
         .properties(properties -> properties.instrument(NoteBlockInstrument.SKELETON).strength(1.0F).pushReaction(PushReaction.DESTROY))
         .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(prov.mcLoc("block/skull"))))
         .item((enderSkullBlock, properties) -> new EnderSkullBlockItem(enderSkullBlock, properties, Direction.DOWN))
         .tab(EIOCreativeTabs.MAIN)
-        .model((ctx, prov) -> prov.withExistingParent("enderman_skull", "item/template_skull"))
+        .model((ctx, prov) -> prov.withExistingParent(ctx.getName(), "item/template_skull"))
         .build()
         .register();
 
-    public static final BlockEntry<WallEnderSkullBlock> WALL_ENDERMAN_SKULL = REGISTRATE
-        .block("wall_enderman_skull", WallEnderSkullBlock::new)
-        .properties(properties -> properties.strength(1.0F).lootFrom(ENDERMAN_SKULL).pushReaction(PushReaction.DESTROY))
+    public static final BlockEntry<WallEnderSkullBlock> WALL_ENDERMAN_HEAD = REGISTRATE
+        .block("wall_enderman_head", WallEnderSkullBlock::new)
+        .properties(properties -> properties.strength(1.0F).lootFrom(ENDERMAN_HEAD).pushReaction(PushReaction.DESTROY))
         .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(prov.mcLoc("block/skull"))))
         .setData(LANG, noop())
         .register();
