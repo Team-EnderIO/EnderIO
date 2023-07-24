@@ -15,11 +15,11 @@ public class EnderConduitTypes {
         () -> new SimpleConduitType<>(EnderIO.loc("block/conduit/energy"), new EnergyConduitTicker(), IExtendedConduitData.EmptyExtendedConduitData::new,
             new IClientConduitData.Simple<>(ICON_TEXTURE, new Vector2i(0, 24)), IConduitMenuData.ENERGY));
 
-    public static final RegistryObject<FluidConduitType> FLUID = fluidConduit("fluid_conduit", 50, false, new Vector2i(0, 96));
+    public static final RegistryObject<FluidConduitType> FLUID = fluidConduit("fluid_conduit", 50, false, new Vector2i(0, 120));
 
-    public static final RegistryObject<FluidConduitType> FLUID2 = fluidConduit("pressurized_fluid_conduit", 100, false, new Vector2i(0, 120));
+    public static final RegistryObject<FluidConduitType> FLUID2 = fluidConduit("pressurized_fluid_conduit", 100, false, new Vector2i(0, 144));
 
-    public static final RegistryObject<FluidConduitType> FLUID3 = fluidConduit("ender_fluid_conduit", 200, true, new Vector2i(0, 144));
+    public static final RegistryObject<FluidConduitType> FLUID3 = fluidConduit("ender_fluid_conduit", 200, true, new Vector2i(0, 168));
 
 
     public static final RegistryObject<? extends IConduitType<?>> REDSTONE = ConduitTypes.CONDUIT_TYPES.register("redstone_conduit", RedstoneConduitType::new);

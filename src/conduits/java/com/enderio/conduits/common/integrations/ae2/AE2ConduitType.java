@@ -6,6 +6,7 @@ import com.enderio.api.conduit.IConduitMenuData;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.TieredConduit;
 import com.enderio.api.conduit.ticker.IConduitTicker;
+import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.conduits.common.init.EnderConduitTypes;
 import com.enderio.conduits.common.integrations.Integrations;
@@ -20,17 +21,18 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import org.apache.commons.lang3.function.TriFunction;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
 public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
 
-    private boolean dense;
+    private final boolean dense;
 
     public AE2ConduitType(boolean dense) {
         super(EnderIO.loc("block/conduit/" + (dense ? "dense_me" : "me")), new ResourceLocation("ae2", "me_cable"), dense ? 32 : 8,
-            EnderConduitTypes.ICON_TEXTURE, new Vector2i(0, dense ? 120 : 96));
+            EnderConduitTypes.ICON_TEXTURE, new Vector2i(0, dense ? 72 : 48));
         this.dense = dense;
     }
 
@@ -38,7 +40,9 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
     public IConduitTicker getTicker() {
         return new IConduitTicker() {
             @Override
-            public void tickGraph(IConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level) {}
+            public void tickGraph(IConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
+                //ae2 graphs don't actually do anything, that's all done by ae2
+            }
 
             @Override
             public boolean canConnectTo(Level level, BlockPos conduitPos, Direction direction) {
@@ -89,8 +93,8 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
     @Override
     public Item getConduitItem() {
         if (isDense())
-            return Integrations.ae2Integration.expectPresent().DENSE_ITEM.get();
-        return Integrations.ae2Integration.expectPresent().NORMAL_ITEM.get();
+            return AE2Integration.DENSE_ITEM.get();
+        return AE2Integration.NORMAL_ITEM.get();
     }
 
     public boolean isDense() {
@@ -103,7 +107,7 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
 
     private static final class ConduitMenuData implements IConduitMenuData {
 
-        private static IConduitMenuData INSTANCE = new ConduitMenuData();
+        private static final IConduitMenuData INSTANCE = new ConduitMenuData();
 
         @Override
         public boolean hasFilterInsert() {
