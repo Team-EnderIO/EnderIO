@@ -30,6 +30,7 @@ public class MaterialRecipes extends RecipeProvider {
     protected void buildRecipes(Consumer<FinishedRecipe> recipeConsumer) {
         addVanilla(recipeConsumer);
         addAlloys(recipeConsumer);
+        addIngots(recipeConsumer);
         addCraftingComponents(recipeConsumer);
         addCapacitors(recipeConsumer);
         addCrystals(recipeConsumer);
@@ -123,6 +124,38 @@ public class MaterialRecipes extends RecipeProvider {
         makeMaterialRecipes(recipeConsumer, EIOItems.DARK_STEEL_INGOT.get(), EIOItems.DARK_STEEL_NUGGET.get(), EIOBlocks.DARK_STEEL_BLOCK.get());
         makeMaterialRecipes(recipeConsumer, EIOItems.SOULARIUM_INGOT.get(), EIOItems.SOULARIUM_NUGGET.get(), EIOBlocks.SOULARIUM_BLOCK.get());
         makeMaterialRecipes(recipeConsumer, EIOItems.END_STEEL_INGOT.get(), EIOItems.END_STEEL_NUGGET.get(), EIOBlocks.END_STEEL_BLOCK.get());
+    }
+
+    private void addIngots(Consumer<FinishedRecipe> recipeConsumer) {
+        SimpleCookingRecipeBuilder
+            .smelting(Ingredient.of(EIOItems.POWDERED_IRON.get()), RecipeCategory.MISC, Items.IRON_INGOT, 0, 200)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.POWDERED_IRON.get()))
+            .save(recipeConsumer, EnderIO.loc(Items.IRON_INGOT + "_from_smelting"));
+
+        SimpleCookingRecipeBuilder
+            .blasting(Ingredient.of(EIOItems.POWDERED_IRON.get()), RecipeCategory.MISC, Items.IRON_INGOT, 0, 100)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.POWDERED_IRON.get()))
+            .save(recipeConsumer, EnderIO.loc(Items.IRON_INGOT + "_from_blasting"));
+
+        SimpleCookingRecipeBuilder
+            .smelting(Ingredient.of(EIOItems.POWDERED_GOLD.get()), RecipeCategory.MISC, Items.GOLD_INGOT, 0, 200)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.POWDERED_GOLD.get()))
+            .save(recipeConsumer, EnderIO.loc(Items.GOLD_INGOT + "_from_smelting"));
+
+        SimpleCookingRecipeBuilder
+            .blasting(Ingredient.of(EIOItems.POWDERED_GOLD.get()), RecipeCategory.MISC, Items.GOLD_INGOT, 0, 100)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.POWDERED_GOLD.get()))
+            .save(recipeConsumer, EnderIO.loc(Items.GOLD_INGOT + "_from_blasting"));
+
+        SimpleCookingRecipeBuilder
+            .smelting(Ingredient.of(EIOItems.POWDERED_COPPER.get()), RecipeCategory.MISC, Items.COPPER_INGOT,  0, 200)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.POWDERED_COPPER.get()))
+            .save(recipeConsumer, EnderIO.loc(Items.COPPER_INGOT + "_from_smelting"));
+
+        SimpleCookingRecipeBuilder
+            .blasting(Ingredient.of(EIOItems.POWDERED_COPPER.get()), RecipeCategory.MISC, Items.COPPER_INGOT, 0, 100)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.POWDERED_COPPER.get()))
+            .save(recipeConsumer, EnderIO.loc(Items.COPPER_INGOT + "_from_blasting"));
     }
 
     private void addCraftingComponents(Consumer<FinishedRecipe> recipeConsumer) {
