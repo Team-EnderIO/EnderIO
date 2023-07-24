@@ -9,6 +9,8 @@ import dev.gigaherz.graph3.GraphObject;
 import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
@@ -74,7 +76,10 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<IFluidHandl
                     if (lockFluids) {
                         for (GraphObject<Mergeable.Dummy> graphObject : graph.getObjects()) {
                             if (graphObject instanceof NodeIdentifier<?> node) {
-                                node.getExtendedConduitData().castTo(FluidExtendedData.class).lockedFluid = transferredFluid.getFluid();
+                                Fluid fluid = transferredFluid.getFluid();
+                                if (fluid instanceof FlowingFluid flowing)
+                                    fluid = flowing.getSource();
+                                node.getExtendedConduitData().castTo(FluidExtendedData.class).lockedFluid = fluid;
                             }
                         }
                     }

@@ -3,12 +3,13 @@ package com.enderio.base.common.integrations.jei;
 import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.integrations.jei.category.FireCraftingCategory;
-import com.enderio.base.common.integrations.jei.category.GrindingCategory;
 import com.enderio.base.common.integrations.jei.extension.ShapedEntityStorageCategoryExtension;
 import com.enderio.base.common.integrations.jei.subtype.EntityStorageSubtypeInterpreter;
+import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.recipe.ShapedEntityStorageRecipe;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.registration.*;
 import net.minecraft.client.Minecraft;
@@ -32,7 +33,6 @@ public class EnderIOJEI implements IModPlugin {
         IGuiHelper guiHelper = registration.getJeiHelpers().getGuiHelper();
 
         registration.addRecipeCategories(new FireCraftingCategory(guiHelper));
-        registration.addRecipeCategories(new GrindingCategory(guiHelper));
     }
 
     @Override
@@ -44,12 +44,9 @@ public class EnderIOJEI implements IModPlugin {
     public void registerRecipes(IRecipeRegistration registration) {
         EnderIOJEIRecipes recipes = new EnderIOJEIRecipes();
         registration.addRecipes(FireCraftingCategory.TYPE, recipes.getAllFireCraftingRecipes());
-        registration.addRecipes(GrindingCategory.TYPE, recipes.getAllGrindingRecipes());
-    }
 
-    @Override
-    public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-        registration.addRecipeCatalyst(new ItemStack(Items.GRINDSTONE), GrindingCategory.TYPE);
+        registration.addIngredientInfo(EIOItems.GRAINS_OF_INFINITY.asStack(), VanillaTypes.ITEM_STACK, EIOLang.JEI_GRAINS_HAND_GRIND);
+        registration.addIngredientInfo(EIOItems.POWDERED_COAL.asStack(), VanillaTypes.ITEM_STACK, EIOLang.JEI_COAL_HAND_GRIND);
     }
 
     @Override

@@ -1,0 +1,7 @@
+{
+  "type": "enderio:painting",
+  "input": {
+    "item": "enderio:painted_crafting_table"
+  },
+  "output": "enderio:painted_crafting_table"
+}

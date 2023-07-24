@@ -5,7 +5,6 @@ import com.enderio.api.capability.MultiCapabilityProvider;
 import com.enderio.api.capacitor.ICapacitorData;
 import com.enderio.base.common.init.EIOCapabilities;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.Nullable;
@@ -13,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * A capacitor item that has fixed capacitor data attached.
  */
-public class FixedCapacitorItem extends Item implements IMultiCapabilityItem {
+public class FixedCapacitorItem extends BaseCapacitorItem implements IMultiCapabilityItem {
     private final ICapacitorData data;
 
     public FixedCapacitorItem(ICapacitorData data, Properties properties) {
@@ -24,7 +23,8 @@ public class FixedCapacitorItem extends Item implements IMultiCapabilityItem {
     @Nullable
     @Override
     public MultiCapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt, MultiCapabilityProvider provider) {
-        provider.addSimple(EIOCapabilities.CAPACITOR, LazyOptional.of(() -> data));
+        provider.add(EIOCapabilities.CAPACITOR, LazyOptional.of(() -> data));
         return provider;
     }
+
 }

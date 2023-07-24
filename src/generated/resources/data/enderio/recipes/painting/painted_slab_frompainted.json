@@ -1,0 +1,7 @@
+{
+  "type": "enderio:painting",
+  "input": {
+    "item": "enderio:painted_slab"
+  },
+  "output": "enderio:painted_slab"
+}

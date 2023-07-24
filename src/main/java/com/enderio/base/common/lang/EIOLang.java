@@ -50,6 +50,10 @@ public class EIOLang {
     public static final Component REDSTONE_ACTIVE_WITH_SIGNAL = REGISTRATE.addLang("gui", EnderIO.loc("redstone.active_with_signal"), "Active with signal");
     public static final Component REDSTONE_ACTIVE_WITHOUT_SIGNAL = REGISTRATE.addLang("gui", EnderIO.loc("redstone.active_without_signal"), "Active without signal");
     public static final Component REDSTONE_NEVER_ACTIVE = REGISTRATE.addLang("gui", EnderIO.loc("redstone.never_active"), "Never active");
+    public static final Component ROUND_ROBIN_ENABLED = REGISTRATE.addLang("gui", EnderIO.loc("round_robin.enabled"), "Round Robin Enabled");
+    public static final Component ROUND_ROBIN_DISABLED = REGISTRATE.addLang("gui", EnderIO.loc("round_robin.disabled"), "Round Robin Disabled");
+    public static final Component SELF_FEED_ENABLED = REGISTRATE.addLang("gui", EnderIO.loc("self_feed.enabled"), "Self Feed Enabled");
+    public static final Component SELF_FEED_DISABLED = REGISTRATE.addLang("gui", EnderIO.loc("self_feed.disabled"), "Self Feed Disabled");
     public static final Component FLUID_CONDUIT_CHANGE_FLUID1 = REGISTRATE.addLang("gui", EnderIO.loc("fluid_conduit.change_fluid1"), "Locked Fluid:");
     public static final Component FLUID_CONDUIT_CHANGE_FLUID2 = REGISTRATE.addLang("gui", EnderIO.loc("fluid_conduit.change_fluid2"), "Click to reset!");
     public static final MutableComponent FLUID_CONDUIT_CHANGE_FLUID3 = REGISTRATE.addLang("gui", EnderIO.loc("fluid_conduit.change_fluid3"), "Fluid: %s");
@@ -248,6 +252,12 @@ public class EIOLang {
 
     public static final Component JEI_GRINDING_CRAFTING_TITLE = REGISTRATE.addLang("jei", EnderIO.loc("grinding"), "title", "Grinding");
     public static final MutableComponent JEI_GRINDING_CONSUME_CHANCE = REGISTRATE.addLang("jei", EnderIO.loc("grinding"), "consume_chance", "33% chance to be consumed");
+
+    public static final MutableComponent JEI_GRAINS_HAND_GRIND = REGISTRATE.addLang("jei", EnderIO.loc("grinding"), "hand_grinding_infinity",
+        "Hold some flint in your offhand and some deepslate or cobbled deepslate in your main hand, then shift right-click a block of obsidian, crying obsidian or a grindstone to produce early grains of infinity.");
+
+    public static final MutableComponent JEI_COAL_HAND_GRIND = REGISTRATE.addLang("jei", EnderIO.loc("grinding"), "hand_grinding_coal",
+        "Hold some flint in your offhand and 3 or more coal in your main hand, then shift right-click a block of obsidian, crying obsidian or a grindstone to produce early powdered coal.");
 
     // endregion
 

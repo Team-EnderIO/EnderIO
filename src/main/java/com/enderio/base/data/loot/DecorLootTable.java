@@ -1,5 +1,6 @@
 package com.enderio.base.data.loot;
 
+import com.enderio.base.EIONBTKeys;
 import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.world.level.block.Block;
@@ -19,7 +20,7 @@ public class DecorLootTable {
         loot.add(block, LootTable
             .lootTable()
             .withPool(new LootPool.Builder().add(
-                LootItem.lootTableItem(block).apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY).copy("paint", "BlockEntityTag.paint")))));
+                LootItem.lootTableItem(block).apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY).copy(EIONBTKeys.PAINT, EIONBTKeys.BLOCK_ENTITY_TAG + "." + EIONBTKeys.PAINT)))));
     }
 
     public static <T extends Block> void paintedSlab(RegistrateBlockLootTables loot, T block) {
@@ -27,12 +28,12 @@ public class DecorLootTable {
             .lootTable()
             .withPool(new LootPool.Builder().add(LootItem
                 .lootTableItem(block)
-                .apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY).copy("paint", "BlockEntityTag.paint"))
+                .apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY).copy(EIONBTKeys.PAINT, EIONBTKeys.BLOCK_ENTITY_TAG + "." + EIONBTKeys.PAINT))
                 .when(InvertedLootItemCondition.invert(new LootItemBlockStatePropertyCondition.Builder(block).setProperties(
                     StatePropertiesPredicate.Builder.properties().hasProperty(SlabBlock.TYPE, SlabType.TOP))))))
             .withPool(new LootPool.Builder().add(LootItem
                 .lootTableItem(block)
-                .apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY).copy("paint2", "BlockEntityTag.paint"))
+                .apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY).copy(EIONBTKeys.PAINT_2, EIONBTKeys.BLOCK_ENTITY_TAG + "." + EIONBTKeys.PAINT_2))
                 .when(InvertedLootItemCondition.invert(new LootItemBlockStatePropertyCondition.Builder(block).setProperties(
                     StatePropertiesPredicate.Builder.properties().hasProperty(SlabBlock.TYPE, SlabType.BOTTOM)))))));
     }

@@ -6,7 +6,7 @@
         "items": [
           {
             "items": [
-              "enderio:pulsating_powder"
+              "enderio:basic_capacitor"
             ]
           }
         ]
@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:unfired_death_urn"
+        "recipe": "enderio:basic_capacitor_bank"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "enderio:unfired_death_urn"
+      "enderio:basic_capacitor_bank"
     ]
   },
   "sends_telemetry_event": false

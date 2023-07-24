@@ -57,7 +57,6 @@ public class EIOBlocks {
     public static final BlockEntry<Block> DARK_STEEL_BLOCK = metalBlock("dark_steel_block").register();
     public static final BlockEntry<Block> SOULARIUM_BLOCK = metalBlock("soularium_block").register();
     public static final BlockEntry<Block> END_STEEL_BLOCK = metalBlock("end_steel_block").register();
-    public static final BlockEntry<Block> IRON_ALLOY_BLOCK = metalBlock("iron_alloy_block").register();
 
     // endregion
 
@@ -204,12 +203,6 @@ public class EIOBlocks {
         .model((ctx, prov) -> prov.generated(ctx, prov.modLoc("item/soul_chain")))
         .tab(EIOCreativeTabs.BLOCKS)
         .build()
-        .register();
-
-    public static final BlockEntry<GraveBlock> GRAVE = REGISTRATE
-        .block("grave", GraveBlock::new)
-        .properties(props -> props.strength(-1.0F, 3600000.0F).noLootTable().noOcclusion().mapColor(MapColor.STONE))
-        .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(ctx.getId())))
         .register();
 
     public static final BlockEntry<ColdFireBlock> COLD_FIRE = REGISTRATE

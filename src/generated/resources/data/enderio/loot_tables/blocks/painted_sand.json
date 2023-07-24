@@ -12,8 +12,8 @@
               "ops": [
                 {
                   "op": "replace",
-                  "source": "paint",
-                  "target": "BlockEntityTag.paint"
+                  "source": "Paint",
+                  "target": "BlockEntityTag.Paint"
                 }
               ],
               "source": "block_entity"
