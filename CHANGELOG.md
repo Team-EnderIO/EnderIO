@@ -11,6 +11,9 @@
 - Recipe for the painting machine.
 - The Enderman Head block, can be acquired using The Ender.
 - Added recipe for the ender resonator.
+- Added recipes for SAG Milling stone to cobblestone and gravel to sand.
+- Added recipe for SAG Milling copper ore into powder.
+- Added recipes to smelt vanilla powders into ingots.
 
 ### Changed
 - Gave CheckBox widgets the ability to have tooltips
