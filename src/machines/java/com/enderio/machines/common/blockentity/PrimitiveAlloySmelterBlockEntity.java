@@ -7,6 +7,7 @@ import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.PrimitiveAlloySmelterMenu;
 import net.minecraft.core.BlockPos;
@@ -37,6 +38,8 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
     private int burnTime;
     private int burnDuration;
     public static final SingleSlotAccess FUEL = new SingleSlotAccess();
+    public static final MultiSlotAccess INPUTS = new MultiSlotAccess();
+    public static final SingleSlotAccess OUTPUT = new SingleSlotAccess();
     @UseOnly(LogicalSide.CLIENT)
     private float clientBurnProgress;
 
@@ -46,19 +49,29 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
     }
 
     @Override
-    protected boolean restrictedMode() {
+    protected boolean isPrimitiveSmelter() {
         return true;
+    }
+
+    @Override
+    protected MultiSlotAccess getInputsSlotAccess() {
+        return INPUTS;
+    }
+
+    @Override
+    protected SingleSlotAccess getOutputSlotAccess() {
+        return OUTPUT;
     }
 
     @Override
     public MachineInventoryLayout getInventoryLayout() {
         return MachineInventoryLayout.builder()
+            .inputSlot((s, i) -> ForgeHooks.getBurnTime(i, RecipeType.SMELTING) > 0)
+            .slotAccess(FUEL)
             .inputSlot(3, this::acceptSlotInput)
             .slotAccess(INPUTS)
             .outputSlot()
             .slotAccess(OUTPUT)
-            .inputSlot()
-            .slotAccess(FUEL)
             .build();
     }
 

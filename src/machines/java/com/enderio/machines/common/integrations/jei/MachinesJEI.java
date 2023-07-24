@@ -25,7 +25,7 @@ public class MachinesJEI implements IModPlugin {
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-        registration.addRecipeCatalyst(new ItemStack(MachineBlocks.PRIMITIVE_ALLOY_SMELTER.get()), PrimitiveAlloySmeltingCategory.TYPE, RecipeTypes.SMELTING);
+        registration.addRecipeCatalyst(new ItemStack(MachineBlocks.PRIMITIVE_ALLOY_SMELTER.get()), PrimitiveAlloySmeltingCategory.TYPE);
         registration.addRecipeCatalyst(new ItemStack(MachineBlocks.ALLOY_SMELTER.get()), AlloySmeltingCategory.TYPE, RecipeTypes.SMELTING);
         registration.addRecipeCatalyst(new ItemStack(MachineBlocks.ENCHANTER.get()), EnchanterCategory.TYPE);
         registration.addRecipeCatalyst(new ItemStack(MachineBlocks.SAG_MILL.get()), SagMillCategory.TYPE);
@@ -50,7 +50,7 @@ public class MachinesJEI implements IModPlugin {
     public void registerRecipes(IRecipeRegistration registration) {
         MachineJEIRecipes recipes = new MachineJEIRecipes();
 
-        registration.addRecipes(AlloySmeltingCategory.TYPE, recipes.getAlloySmeltingRecipes());
+        registration.addRecipes(AlloySmeltingCategory.TYPE, recipes.getAlloySmeltingRecipesWithSmelting());
         registration.addRecipes(EnchanterCategory.TYPE, recipes.getEnchanterRecipes());
         registration.addRecipes(PrimitiveAlloySmeltingCategory.TYPE, recipes.getAlloySmeltingRecipes());
         registration.addRecipes(SagMillCategory.TYPE, recipes.getSagmillingRecipes());

@@ -21,6 +21,7 @@ import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.AlloySmelterMenu;
 import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
+import com.enderio.machines.common.recipe.RecipeCaches;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -67,10 +68,10 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
         // Crafting task host
         craftingTaskHost = new AlloySmeltingMachineTaskHost(this, this::canAcceptTask,
-            MachineRecipes.ALLOY_SMELTING.type().get(), new AlloySmeltingRecipe.ContainerWrapper(getInventoryNN()), this::createTask);
+            MachineRecipes.ALLOY_SMELTING.type().get(), new AlloySmeltingRecipe.ContainerWrapper(isPrimitiveSmelter(), getInventoryNN()), this::createTask);
 
         // This can be changed by the gui for the normal and enhanced machines.
-        if (!restrictedMode()) {
+        if (!isPrimitiveSmelter()) {
             modeDataSlot = new EnumNetworkDataSlot<>(AlloySmelterMode.class, this::getMode, m -> {
                 mode = m;
                 craftingTaskHost.newTaskAvailable();
@@ -105,14 +106,6 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         }
     }
 
-    /**
-     * Whether the mode is restricted.
-     * Used to disable serialization of the mode and sync of the slot when this is the primitive variant.
-     */
-    protected boolean restrictedMode() {
-        return false;
-    }
-
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
@@ -134,6 +127,26 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         craftingTaskHost.onLevelReady();
     }
 
+    // region Primitive Smelter Shims
+
+    /**
+     * Whether the mode is restricted.
+     * Used to disable serialization of the mode and sync of the slot when this is the primitive variant.
+     */
+    protected boolean isPrimitiveSmelter() {
+        return false;
+    }
+
+    protected MultiSlotAccess getInputsSlotAccess() {
+        return INPUTS;
+    }
+
+    protected SingleSlotAccess getOutputSlotAccess() {
+        return OUTPUT;
+    }
+
+    // endregion
+
     // region Inventory
 
     @Override
@@ -141,25 +154,13 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         return MachineInventoryLayout.builder()
             .inputSlot(3, this::acceptSlotInput)
             .slotAccess(INPUTS)
-            .outputSlot().slotAccess(OUTPUT)
+            .outputSlot()
+            .slotAccess(OUTPUT)
             .capacitor().build();
     }
 
     protected boolean acceptSlotInput(int slot, ItemStack stack) {
-        // Ensure we don't break automation by inserting items that'll break the current recipe.
-        var currentTask = craftingTaskHost.getCurrentTask();
-        if (currentTask != null) {
-            var currentRecipe = currentTask.getRecipe();
-            if (currentRecipe != null) {
-                MachineInventory inventory = getInventoryNN();
-                ItemStack currentContents = inventory.getStackInSlot(slot);
-                inventory.setStackInSlot(slot, stack);
-                boolean accept = currentRecipe.matches(craftingTaskHost.getContainer(), level);
-                inventory.setStackInSlot(slot, currentContents);
-                return accept;
-            }
-        }
-        return true;
+        return RecipeCaches.ALLOY_SMELTING.hasValidRecipeIf(getInventoryNN(), getInputsSlotAccess(), slot, stack);
     }
 
     @Override
@@ -182,7 +183,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     }
 
     protected AlloySmeltingMachineTask createTask(Level level, AlloySmeltingRecipe.ContainerWrapper container, @Nullable AlloySmeltingRecipe recipe) {
-        return new AlloySmeltingMachineTask(level, getInventoryNN(), getEnergyStorage(), container, OUTPUT, recipe);
+        return new AlloySmeltingMachineTask(level, getInventoryNN(), getEnergyStorage(), container, getOutputSlotAccess(), recipe);
     }
 
     protected static class AlloySmeltingMachineTask extends PoweredCraftingMachineTask<AlloySmeltingRecipe, AlloySmeltingRecipe.ContainerWrapper> {
@@ -320,7 +321,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     public void saveAdditional(CompoundTag pTag) {
         craftingTaskHost.save(pTag);
 
-        if (restrictedMode()) {
+        if (isPrimitiveSmelter()) {
             pTag.putInt(MachineNBTKeys.MACHINE_MODE, this.mode.ordinal());
         }
         pTag.putInt(MachineNBTKeys.PROCESSED_INPUTS, craftingTaskHost.getContainer().getInputsTaken());
@@ -331,7 +332,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     public void load(CompoundTag pTag) {
         craftingTaskHost.load(pTag);
 
-        if (restrictedMode()) {
+        if (isPrimitiveSmelter()) {
             try {
                 mode = AlloySmelterMode.values()[pTag.getInt(MachineNBTKeys.MACHINE_MODE)];
             } catch (IndexOutOfBoundsException ex) { // In case something happens in the future.
