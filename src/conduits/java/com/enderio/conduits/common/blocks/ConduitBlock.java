@@ -176,7 +176,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
     private Optional<InteractionResult> addConduit(ConduitBlockEntity conduit, Player player, ItemStack stack, boolean isClientSide) {
         if (!(stack.getItem() instanceof ConduitBlockItem conduitBlockItem))
             return Optional.empty();
-       RightClickAction action = conduit.addType(conduitBlockItem.getType(), player);
+        RightClickAction action = conduit.addType(conduitBlockItem.getType(), player);
         if (!(action instanceof RightClickAction.Blocked)) {
             conduit.getLevel().setBlockAndUpdate(conduit.getBlockPos(), conduit.getBlockState());
         }
