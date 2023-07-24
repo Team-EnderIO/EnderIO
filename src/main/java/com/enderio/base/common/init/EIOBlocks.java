@@ -44,6 +44,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+import static com.tterrag.registrate.providers.ProviderType.LANG;
+import static com.tterrag.registrate.util.nullness.NonNullBiConsumer.noop;
+
 @SuppressWarnings("unused")
 public class EIOBlocks {
     private static final Registrate REGISTRATE = EnderIO.registrate();
@@ -355,19 +358,20 @@ public class EIOBlocks {
         .register();
 
     public static final BlockEntry<EnderSkullBlock> ENDERMAN_SKULL = REGISTRATE
-        .block("ender_skull", EnderSkullBlock::new)
+        .block("enderman_skull", EnderSkullBlock::new)
         .properties(properties -> properties.instrument(NoteBlockInstrument.SKELETON).strength(1.0F).pushReaction(PushReaction.DESTROY))
-        .blockstate((ctx, prov) -> prov.models().mcLoc("block/skull"))
+        .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(prov.mcLoc("block/skull"))))
         .item((enderSkullBlock, properties) -> new EnderSkullBlockItem(enderSkullBlock, properties, Direction.DOWN))
         .tab(EIOCreativeTabs.MAIN)
-        .model((ctx, prov) -> prov.withExistingParent("ender_skull", "item/template_skull"))
+        .model((ctx, prov) -> prov.withExistingParent("enderman_skull", "item/template_skull"))
         .build()
         .register();
 
     public static final BlockEntry<WallEnderSkullBlock> WALL_ENDERMAN_SKULL = REGISTRATE
-        .block("wall_ender_skull", WallEnderSkullBlock::new)
+        .block("wall_enderman_skull", WallEnderSkullBlock::new)
         .properties(properties -> properties.strength(1.0F).lootFrom(ENDERMAN_SKULL).pushReaction(PushReaction.DESTROY))
-        .blockstate((ctx, prov) -> prov.models().mcLoc("block/skull"))
+        .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(prov.mcLoc("block/skull"))))
+        .setData(LANG, noop())
         .register();
 
     public static <T extends Block> BlockBuilder<T, Registrate> simpleBlockBuilder(String name, T block) {

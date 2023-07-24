@@ -28,9 +28,4 @@ public class EnderSkullBlockItem extends StandingAndWallBlockItem {
             }
         });
     }
-
-    @Override
-    public String getDescriptionId() {
-        return super.getDescriptionId() + "_wall";
-    }
 }
