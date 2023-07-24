@@ -59,8 +59,6 @@ public class ConduitSavedData extends SavedData {
 
     // Deserialization
     private ConduitSavedData(Level level, CompoundTag nbt) {
-        EnderIO.LOGGER.info("Conduit network deserialization started");
-        long start = System.currentTimeMillis();
         ListTag graphsTag = nbt.getList(KEY_GRAPHS, Tag.TAG_COMPOUND);
         for (Tag tag : graphsTag) {
             CompoundTag typedGraphTag = (CompoundTag) tag;
@@ -100,7 +98,6 @@ public class ConduitSavedData extends SavedData {
                 }
             }
         }
-        EnderIO.LOGGER.info("Conduit network deserialization finished, took {}ms", System.currentTimeMillis() - start);
     }
 
     // Serialization
@@ -127,8 +124,6 @@ public class ConduitSavedData extends SavedData {
     // Serialization
     @Override
     public CompoundTag save(CompoundTag nbt) {
-        EnderIO.LOGGER.info("Conduit network serialization started");
-        long start = System.currentTimeMillis();
         ListTag graphsTag = new ListTag();
         for (IConduitType<?> type : networks.keySet()) {
             List<Graph<Mergeable.Dummy>> graphs = networks.get(type);
@@ -153,7 +148,6 @@ public class ConduitSavedData extends SavedData {
         }
 
         nbt.put(KEY_GRAPHS, graphsTag);
-        EnderIO.LOGGER.info("Conduit network serialization finished, took {}ms", System.currentTimeMillis() - start);
         return nbt;
     }
 
