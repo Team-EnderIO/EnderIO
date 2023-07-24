@@ -11,6 +11,7 @@
 
 ### Changed
 - Gave CheckBox widgets the ability to have tooltips
+- Conduits backend and API received some tweaks and cleaning ready for some new functionality.
 
 ### Removed
 
@@ -21,6 +22,12 @@
 - Remove some old item capability logic, fixing AE2 capacitor autocrafting in the process.
 - Fix game crash when running in Turkish locale.
 - Painted blocks will now drop correctly.
+- Fixed problems with conduits needing updating to work.
+- Fixed conduit channels for redstone conduits.
+- Fixed using FTB Ultimine on conduits.
+- Fixed conduit not displaying disconnection from GUI.
+- Fixed incorrect GUI showing when accessing a connected conduit.
+- Fixed redstone conduit resetting when a piston is activated.
 
 ## [6.0.5-alpha] - 2023-07-11
 
