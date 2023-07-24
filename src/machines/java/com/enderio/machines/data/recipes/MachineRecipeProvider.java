@@ -340,5 +340,20 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("CPC")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.ADVANCED)))
             .save(finishedRecipeConsumer, EnderIO.loc(RecipeBuilder.getDefaultRecipeId(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.VIBRANT)).getPath() + "_upgrade"));
+
+        ShapedRecipeBuilder
+            .shaped(RecipeCategory.MISC, MachineBlocks.PAINTING_MACHINE.get())
+            .pattern("RGB")
+            .pattern("ICI")
+            .pattern("MAM")
+            .define('R', Tags.Items.DYES_RED)
+            .define('G', Tags.Items.DYES_GREEN)
+            .define('B', Tags.Items.DYES_BLACK)
+            .define('I', EIOItems.COPPER_ALLOY_INGOT)
+            .define('C', EIOBlocks.VOID_CHASSIS)
+            .define('M', EIOItems.GEAR_IRON)
+            .define('A', EIOItems.REDSTONE_ALLOY_INGOT)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.VOID_CHASSIS))
+            .save(finishedRecipeConsumer);
     }
 }
