@@ -31,5 +31,5 @@
       "enderio:copper_ingot_from_smelting"
     ]
   },
-  "sends_telemetry_event": true
+  "sends_telemetry_event": false
 }

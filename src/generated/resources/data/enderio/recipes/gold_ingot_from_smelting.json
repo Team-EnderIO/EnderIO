@@ -6,8 +6,5 @@
   "ingredient": {
     "item": "enderio:powdered_gold"
   },
-  "result": {
-    "count": 1,
-    "item": "minecraft:gold_ingot"
-  }
+  "result": "minecraft:gold_ingot"
 }

@@ -6,8 +6,5 @@
   "ingredient": {
     "item": "enderio:powdered_iron"
   },
-  "result": {
-    "count": 1,
-    "item": "minecraft:iron_ingot"
-  }
+  "result": "minecraft:iron_ingot"
 }
