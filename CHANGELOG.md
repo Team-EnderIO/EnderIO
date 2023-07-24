@@ -3,6 +3,16 @@
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Removed
+
+### Fixed
+
+## [6.0.6-alpha] - 2023-07-24
+
+### Added
 - Recipes for the capacitor banks.
 - IO config widget insets to support non-standard gui shapes.
 - You can now repaint painted blocks in the painting machine!
@@ -20,8 +30,6 @@
 - Gave CheckBox widgets the ability to have tooltips
 - Conduits backend and API received some tweaks and cleaning ready for some new functionality.
 - Recipe locking is now more intelligent and should result in less friction for players.
-
-### Removed
 
 ### Fixed
 - Fixed Soul Binder tooltip when IOConfig is open.
@@ -41,7 +49,7 @@
 - Fixed slot problems for the Alloy Smelter.
 - Fixed recipe locking, resulting in abnormal slot behaviours.
 
-## [6.0.5-alpha] - 2023-07-11
+## 6.0.5-alpha - 2023-07-11
 
 ### Fixed
 - Made information for grinding up coal with flint and obsidian/grindstone more clear.
