@@ -7,6 +7,7 @@
 - IO config widget insets to support non-standard gui shapes.
 - You can now repaint painted blocks in the painting machine!
 - Added tooltips to Conduit round-robin and self feed buttons
+- You can now right click on a machine to insert a capacitor.
 
 ### Changed
 - Gave CheckBox widgets the ability to have tooltips
