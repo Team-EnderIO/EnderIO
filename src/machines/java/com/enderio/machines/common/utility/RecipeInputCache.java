@@ -36,25 +36,14 @@ public class RecipeInputCache<C extends Container, T extends Recipe<C>> {
         // Collect the list of items that the recipe will match against
         var currentItems = new ArrayList<ItemStack>();
 
-        // This defines whether toAdd is being added as a new discrete ingredient or joining another
-        var isNewIngredient = true;
-
+        // Build the new inventory state after the addition
         for (int i = 0; i < inputs.size(); i++) {
             var invStack = inputs.get(i).getItemStack(inventory);
-            if (!invStack.isEmpty()) {
-                if (i == slot && invStack.is(toAdd.getItem())) {
-                    // Just test if it could actually take any more at all
-                    if (invStack.getCount() + 1 <= invStack.getMaxStackSize()) {
-                        isNewIngredient = false;
-                    }
-                }
+            if (i == slot) {
+                currentItems.add(toAdd);
+            } else if (!invStack.isEmpty()) {
                 currentItems.add(invStack);
             }
-        }
-
-        // If it wouldn't join an existing input, its a new one.
-        if (isNewIngredient) {
-            currentItems.add(toAdd);
         }
 
         // Try and match the items list

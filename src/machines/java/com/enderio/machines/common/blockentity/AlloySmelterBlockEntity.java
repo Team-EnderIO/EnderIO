@@ -167,8 +167,16 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         }
 
         if (getMode().canSmelt()) {
-            if (RecipeCaches.SMELTING.hasRecipe(List.of(stack))) {
-                return true;
+            // Check all items are the same, or will be
+            var currentStacks = getInputsSlotAccess().getAccesses().stream()
+                .map(i -> i.isSlot(slot) ? stack : i.getItemStack(getInventoryNN()))
+                .filter(i -> !i.isEmpty())
+                .toList();
+
+            if (currentStacks.stream().allMatch(i -> i.is(stack.getItem())) || currentStacks.size() == 1) {
+                if (RecipeCaches.SMELTING.hasRecipe(List.of(stack))) {
+                    return true;
+                }
             }
         }
 
