@@ -1,10 +1,13 @@
 package com.enderio.machines.common.recipe;
 
 import com.enderio.machines.common.init.MachineRecipes;
+import com.enderio.machines.common.integrations.vanilla.VanillaAlloySmeltingRecipe;
 import com.enderio.machines.common.utility.RecipeInputCache;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -18,6 +21,9 @@ import java.util.stream.Collectors;
 public class RecipeCaches {
     public static final RecipeInputCache<AlloySmeltingRecipe.ContainerWrapper, AlloySmeltingRecipe> ALLOY_SMELTING
         = new RecipeInputCache<>(MachineRecipes.ALLOY_SMELTING.type());
+
+    public static final RecipeInputCache<Container, SmeltingRecipe> SMELTING
+        = new RecipeInputCache<>(() -> RecipeType.SMELTING);
 
     public static final RecipeInputCache<RecipeWrapper, PaintingRecipe> PAINTING
         = new RecipeInputCache<>(MachineRecipes.PAINTING.type());
@@ -34,6 +40,7 @@ public class RecipeCaches {
     @SubscribeEvent
     public static void registerReloadListener(AddReloadListenerEvent event) {
         ALLOY_SMELTING.markCacheDirty();
+        SMELTING.markCacheDirty();
         PAINTING.markCacheDirty();
         SAGMILLING.markCacheDirty();
         SLICING.markCacheDirty();
@@ -43,6 +50,7 @@ public class RecipeCaches {
     @SubscribeEvent
     public static void onRecipesUpdated(RecipesUpdatedEvent event) {
         ALLOY_SMELTING.rebuildCache(event.getRecipeManager());
+        SMELTING.rebuildCache(event.getRecipeManager());
         PAINTING.rebuildCache(event.getRecipeManager());
         SAGMILLING.rebuildCache(event.getRecipeManager());
         SLICING.rebuildCache(event.getRecipeManager());
