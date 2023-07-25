@@ -817,6 +817,7 @@
   "block.enderio.vibrant_capacitor_bank": "Vibrant Capacitor Bank",
   "block.enderio.vibrant_photovoltaic_cell": "Vibrant Photovoltaic Cell",
   "block.enderio.void_chassis": "Void Chassis",
+  "block.enderio.wired_charger": "Wired Charger",
   "block.enderio.xp_juice": "Xp Juice",
   "block.enderio.xp_vacuum": "Xp Vacuum",
   "description.enderio.enchantment.auto_smelt": "Automatically smelts whatever is mined",

@@ -27,6 +27,8 @@ public class EnergyConfig {
     public final ForgeConfigSpec.ConfigValue<Integer> BASIC_SOLAR_PANEL_MAX_PRODUCTION;
     public final ForgeConfigSpec.ConfigValue<Integer> ADVANCED_SOLAR_PANEL_MAX_PRODUCTION;
     public final ForgeConfigSpec.ConfigValue<Integer> VIBRANT_SOLAR_PANEL_MAX_PRODUCTION;
+    public final ForgeConfigSpec.ConfigValue<Integer> WIRED_CHARGER_CAPACITY;
+    public final ForgeConfigSpec.ConfigValue<Integer> WIRED_CHARGER_USAGE;
 
     public EnergyConfig(ForgeConfigSpec.Builder builder) {
         builder.push("energy");
@@ -85,6 +87,11 @@ public class EnergyConfig {
             BASIC_SOLAR_PANEL_MAX_PRODUCTION = builder.defineInRange("basic", 40, 1, Integer.MAX_VALUE);
             ADVANCED_SOLAR_PANEL_MAX_PRODUCTION = builder.defineInRange("advanced", 80, 1, Integer.MAX_VALUE);
             VIBRANT_SOLAR_PANEL_MAX_PRODUCTION = builder.defineInRange("vibrant", 160, 1, Integer.MAX_VALUE);
+        builder.pop();
+
+        builder.push("wiredCharger");
+            WIRED_CHARGER_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 1000000, 1, Integer.MAX_VALUE);
+            WIRED_CHARGER_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage", 100, 1, Integer.MAX_VALUE);
         builder.pop();
 
         builder.pop();

@@ -59,6 +59,7 @@
 ### Added
 - Added missing tooltips for IO Config button and Neighbour button.
 - Better multismelting support for the alloy smelter
+- Wired Charger
 
 ### Changed
 - Grindstone crafting for grains of infinity and powdered coal now uses an in-world craft by right-clicking with flint in the off-hand and the ingredient in the main-hand. Also works with obsidian and crying obsidian (the latter of which has a chance to give a better rate of return on the craft).
