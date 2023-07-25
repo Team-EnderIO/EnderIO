@@ -11,7 +11,20 @@
 
 ### Fixed
 
-## [6.0.6-alpha] - 2023-07-24
+## [6.0.7-alpha] - 2023-07-25
+
+### Changed
+- Changed the input locking system to allow quick swapping stacks.
+
+### Removed
+- An old piece of broken code that was supposed to already be gone due to its issues
+
+### Fixed
+- Fixed using the alloy smelter for normal smelting.
+- Fixed the primitive alloy smelter crash.
+- Fixed the crash related to the removed portion of code.
+
+## 6.0.6-alpha - 2023-07-24
 
 ### Added
 - Recipes for the capacitor banks.
