@@ -8,9 +8,12 @@ import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 import org.apache.commons.lang3.function.TriFunction;
 
 import java.util.List;
@@ -24,26 +27,37 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<IEnergySto
     public void tickCapabilityGraph(IConduitType<?> type, List<CapabilityConnection> inserts, List<CapabilityConnection> extracts, ServerLevel level,
         Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
 
-        int availableForExtraction = 0;
-        for (IEnergyStorage extract : extracts.stream().map(e -> e.cap).toList()) {
-            availableForExtraction += extract.extractEnergy(extract.getEnergyStored(), true);
-        }
+        toNextExtract:
+        for (CapabilityConnection extract : extracts) {
+            IEnergyStorage extractHandler = extract.cap;
+            int availableForExtraction = extractHandler.extractEnergy(Integer.MAX_VALUE, true);
+            if (availableForExtraction <= 0)
+                continue;
+            EnergyExtendedData.EnergySidedData sidedExtractData = extract.data.castTo(EnergyExtendedData.class).compute(extract.direction);
 
-        int inserted = 0;
-        for (IEnergyStorage insert : inserts.stream().map(e -> e.cap).toList()) {
-            inserted += insert.receiveEnergy(availableForExtraction - inserted, false);
-            if (inserted == availableForExtraction)
-                break;
-        }
+            if (inserts.size() <= sidedExtractData.rotatingIndex) {
+                sidedExtractData.rotatingIndex = 0;
+            }
 
-        for (IEnergyStorage extract : extracts.stream().map(e -> e.cap).toList()) {
-            inserted -= extract.extractEnergy(inserted, false);
-            if (inserted <= 0)
-                break;
-        }
+            for (int j = 0; j < sidedExtractData.rotatingIndex; j++) {
+                //empty lists are verified in ICapabilityAwareConduitTicker
+                //this moves the first element to the back to give a new cap the next time this is called
+                inserts.add(inserts.remove(0));
+            }
 
-        if (inserted > 0) {
-            EnderIO.LOGGER.info("didn't extract all energy that was inserted, investigate the dupe bug");
+            for (int j = 0; j < inserts.size(); j++) {
+                CapabilityConnection insert = inserts.get(j);
+
+                int inserted = insert.cap.receiveEnergy(availableForExtraction, false);
+                extractHandler.extractEnergy(inserted, false);
+
+                if (inserted == availableForExtraction) {
+                    sidedExtractData.rotatingIndex += j + 1;
+                    continue toNextExtract;
+                }
+
+                availableForExtraction -= inserted;
+            }
         }
     }
 
