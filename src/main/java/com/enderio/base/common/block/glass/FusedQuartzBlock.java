@@ -26,30 +26,22 @@ public class FusedQuartzBlock extends AbstractGlassBlock {
     private final GlassCollisionPredicate collisionPredicate;
     private final GlassLighting glassLighting;
     private final boolean explosionResistant;
-
-    @Nullable
-    private final DyeColor color;
-
-    @Nullable
-    private String descriptionId;
+    private final String descriptionId;
 
     public FusedQuartzBlock(Properties pProps, GlassIdentifier glassIdentifier, @Nullable DyeColor color) {
         super(pProps);
         this.collisionPredicate = glassIdentifier.collisionPredicate();
         this.glassLighting = glassIdentifier.lighting();
         this.explosionResistant = glassIdentifier.explosion_resistance();
-        this.color = color;
+
+        String baseName = explosionResistant ? "fused_quartz" : "clear_glass";
+        String lightingName = glassLighting != GlassLighting.NONE ? "_" + glassLighting.shortName() : "";
+        String colorName = color != null ? "_" + color.getName() : "";
+        descriptionId = "block.enderio." + baseName + lightingName + colorName;
     }
 
     @Override
     public String getDescriptionId() {
-        if (descriptionId == null) {
-            String baseName = explosionResistant ? "fused_quartz" : "clear_glass";
-            String lightingName = glassLighting != GlassLighting.NONE ? "_" + glassLighting.shortName() : "";
-            String colorName = color != null ? "_" + color.getName() : "";
-            descriptionId = "block.enderio." + baseName + lightingName + colorName;
-        }
-
         return descriptionId;
     }
 
