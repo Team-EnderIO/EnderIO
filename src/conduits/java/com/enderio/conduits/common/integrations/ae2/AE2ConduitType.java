@@ -30,27 +30,6 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
 
     private final boolean dense;
 
-    private final IConduitTicker ticker = new IConduitTicker() {
-        @Override
-        public void tickGraph(IConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
-            //ae2 graphs don't actually do anything, that's all done by ae2
-        }
-
-        @Override
-        public boolean canConnectTo(Level level, BlockPos conduitPos, Direction direction) {
-            return GridHelper.getExposedNode(level, conduitPos.relative(direction), direction.getOpposite()) != null;
-        }
-
-        @Override
-        public boolean hasConnectionDelay() {
-            return true;
-        }
-
-        @Override
-        public boolean canConnectTo(IConduitType<?> thisType, IConduitType<?> other) {
-            return other instanceof AE2ConduitType;
-        }
-    };
     public AE2ConduitType(boolean dense) {
         super(EnderIO.loc("block/conduit/" + (dense ? "dense_me" : "me")), new ResourceLocation("ae2", "me_cable"), dense ? 32 : 8,
             EnderConduitTypes.ICON_TEXTURE, new Vector2i(0, dense ? 72 : 48));
@@ -59,7 +38,7 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
 
     @Override
     public IConduitTicker getTicker() {
-        return ticker;
+        return Ticker.INSTANCE;
     }
 
     @Override
@@ -137,6 +116,30 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
         @Override
         public boolean showRedstoneExtract() {
             return false;
+        }
+    }
+
+    private static final class Ticker implements IConduitTicker {
+
+        private static final Ticker INSTANCE = new Ticker();
+        @Override
+        public void tickGraph(IConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
+            //ae2 graphs don't actually do anything, that's all done by ae2
+        }
+
+        @Override
+        public boolean canConnectTo(Level level, BlockPos conduitPos, Direction direction) {
+            return GridHelper.getExposedNode(level, conduitPos.relative(direction), direction.getOpposite()) != null;
+        }
+
+        @Override
+        public boolean hasConnectionDelay() {
+            return true;
+        }
+
+        @Override
+        public boolean canConnectTo(IConduitType<?> thisType, IConduitType<?> other) {
+            return other instanceof AE2ConduitType;
         }
     }
 }
