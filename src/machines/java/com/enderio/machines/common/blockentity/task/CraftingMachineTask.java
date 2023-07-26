@@ -104,7 +104,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
         }
 
         // If we can't input or output, cancel the task. However, if for some reason we can't output after the inputs are collected, don't.
-        if ((!placeOutputs(outputs, true) || !recipe.matches(container, level))) {
+        if (!placeOutputs(outputs, true) || !recipe.matches(container, level)) {
             isComplete = true;
             return;
         }
