@@ -1,6 +1,7 @@
 package com.enderio.machines.data.souldata;
 
 import com.enderio.EnderIO;
+import com.enderio.base.common.init.EIOFluids;
 import com.enderio.machines.common.blockentity.task.SpawnerMachineTask;
 import com.enderio.machines.common.souldata.GeneratorSoul;
 import com.enderio.machines.common.souldata.ISoulData;
@@ -113,6 +114,11 @@ public class SoulDataProvider implements DataProvider {
         addSpawnerData(EntityType.ZOMBIFIED_PIGLIN, 4000, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
 
         addGeneratorData(EntityType.BLAZE, Fluids.LAVA, 800, 20, finshedSoulDataConsumer);
+        addGeneratorData(EntityType.ZOMBIE, EIOFluids.NUTRIENT_DISTILLATION.get(), 900, 20, finshedSoulDataConsumer);
+        addGeneratorData(EntityType.ZOMBIE_VILLAGER, EIOFluids.NUTRIENT_DISTILLATION.get(), 900, 20, finshedSoulDataConsumer);
+        addGeneratorData(EntityType.HUSK, EIOFluids.NUTRIENT_DISTILLATION.get(), 900, 20, finshedSoulDataConsumer);
+        addGeneratorData(EntityType.ENDERMAN, EIOFluids.DEW_OF_THE_VOID.get(), 2000, 10, finshedSoulDataConsumer);
+        addGeneratorData(EntityType.SHULKER, EIOFluids.VAPOR_OF_LEVITY.get(), 1500, 20, finshedSoulDataConsumer);
 
     }
 
