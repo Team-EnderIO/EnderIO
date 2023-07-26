@@ -1,6 +1,6 @@
 {
   "parent": "enderio:block/wired_charger_front",
   "textures": {
-    "front": "enderio:block/wired_charger_front"
+    "front": "enderio:block/wired_charger_front_on"
   }
 }

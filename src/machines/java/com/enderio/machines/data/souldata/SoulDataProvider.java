@@ -2,6 +2,7 @@ package com.enderio.machines.data.souldata;
 
 import com.enderio.EnderIO;
 import com.enderio.machines.common.blockentity.task.SpawnerMachineTask;
+import com.enderio.machines.common.souldata.GeneratorSoul;
 import com.enderio.machines.common.souldata.ISoulData;
 import com.enderio.machines.common.souldata.SpawnerSoul;
 import com.google.common.collect.Sets;
@@ -17,6 +18,8 @@ import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
@@ -109,6 +112,8 @@ public class SoulDataProvider implements DataProvider {
         addSpawnerData(EntityType.ZOMBIE_VILLAGER, 4000, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
         addSpawnerData(EntityType.ZOMBIFIED_PIGLIN, 4000, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
 
+        addGeneratorData(EntityType.BLAZE, Fluids.LAVA, 800, 20, finshedSoulDataConsumer);
+
     }
 
     @Override
@@ -134,6 +139,13 @@ public class SoulDataProvider implements DataProvider {
         ResourceLocation key = ForgeRegistries.ENTITY_TYPES.getKey(entityType);
         SpawnerSoul.SoulData data = new SpawnerSoul.SoulData(key, power, type);
         finshedSoulDataConsumer.accept(new FinshedSoulData<>(SpawnerSoul.CODEC, data, "spawner/" + key.getNamespace() + "_" + key.getPath()));
+    }
+
+    private void addGeneratorData(EntityType<?> entityType, Fluid fluid, int powerpermb, int tickpermb, Consumer<FinshedSoulData<?>> finshedSoulDataConsumer) {
+        ResourceLocation entityRL = ForgeRegistries.ENTITY_TYPES.getKey(entityType);
+        ResourceLocation fluidRL = ForgeRegistries.FLUIDS.getKey(fluid);
+        GeneratorSoul.SoulData data = new GeneratorSoul.SoulData(entityRL, fluidRL, powerpermb, tickpermb);
+        finshedSoulDataConsumer.accept(new FinshedSoulData<>(GeneratorSoul.CODEC, data, "generator/" + entityRL.getNamespace() + "_" + entityRL.getPath()));
     }
 
     static class FinshedSoulData<T extends ISoulData> {

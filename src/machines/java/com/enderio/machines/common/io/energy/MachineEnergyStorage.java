@@ -68,10 +68,18 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, IEnderCapabi
 
     @Override
     public int addEnergy(int energy) {
+        return addEnergy(energy, false);
+    }
+
+    @Override
+    public int addEnergy(int energy, boolean simulate) {
         int energyBefore = energyStored;
-        energyStored = Math.min(energyStored + energy, getMaxEnergyStored());
-        onContentsChanged();
-        return energyStored - energyBefore;
+        int newEnergyStored = Math.min(energyStored + energy, getMaxEnergyStored());
+        if (!simulate) {
+            energyStored = newEnergyStored;
+            onContentsChanged();
+        }
+        return newEnergyStored - energyBefore;
     }
 
     @Override

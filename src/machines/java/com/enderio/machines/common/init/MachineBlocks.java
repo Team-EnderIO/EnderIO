@@ -3,6 +3,7 @@ package com.enderio.machines.common.init;
 import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.core.data.model.EIOModel;
+import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.CapacitorBankBlock;
 import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.block.ProgressMachineBlock;
@@ -14,7 +15,7 @@ import com.enderio.machines.common.blockentity.solar.SolarPanelBlockEntity;
 import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
 import com.enderio.machines.common.item.CapacitorBankItem;
 import com.enderio.machines.common.item.FluidTankItem;
-import com.enderio.machines.common.item.PoweredSpawnerItem;
+import com.enderio.machines.common.item.SoulBoundItem;
 import com.enderio.machines.data.loot.MachinesLootTable;
 import com.enderio.machines.data.model.MachineModelUtil;
 import com.google.common.collect.ImmutableMap;
@@ -154,9 +155,9 @@ public class MachineBlocks {
 
     public static final BlockEntry<ProgressMachineBlock> POWERED_SPAWNER = REGISTRATE
         .block("powered_spawner", props -> new ProgressMachineBlock(props, MachineBlockEntities.POWERED_SPAWNER))
-        .loot((l,t) -> MachinesLootTable.copyNBTSingleCap(l, t, "EntityStorage"))
+        .loot((l,t) -> MachinesLootTable.copyNBTSingleCap(l, t, MachineNBTKeys.ENTITY_STORAGE))
         .blockstate(MachineModelUtil::soulMachineBlock)
-        .item(PoweredSpawnerItem::new)
+        .item(SoulBoundItem::new)
         .tab(EIOCreativeTabs.MACHINES)
         .build()
         .register();
@@ -188,6 +189,7 @@ public class MachineBlocks {
         }
         return ImmutableMap.copyOf(panels);
     });
+
     public static final Map<CapacitorTier, BlockEntry<CapacitorBankBlock>> CAPACITOR_BANKS = Util.make(() -> {
         Map<CapacitorTier, BlockEntry<CapacitorBankBlock>> banks = new HashMap<>();
         for (CapacitorTier tier: CapacitorTier.values()) {
@@ -195,6 +197,16 @@ public class MachineBlocks {
         }
         return ImmutableMap.copyOf(banks);
     });
+
+    public static final BlockEntry<ProgressMachineBlock> MOB_GENERATOR = REGISTRATE
+        .block("mob_generator", props -> new ProgressMachineBlock(props, MachineBlockEntities.MOB_GENERATOR))
+        .loot((l,t) -> MachinesLootTable.copyNBTSingleCap(l, t, MachineNBTKeys.ENTITY_STORAGE))
+        .blockstate(MachineModelUtil::soulMachineBlock)
+        .item(SoulBoundItem::new)
+        .tab(EIOCreativeTabs.MACHINES)
+        .build()
+        .register();
+
     public static final BlockEntry<ProgressMachineBlock> CRAFTER = standardMachine("crafter", () -> MachineBlockEntities.CRAFTER)
         .lang("Crafter")
         .blockstate((ctx, prov) -> MachineModelUtil.customMachineBlock(ctx, prov, "crafter"))

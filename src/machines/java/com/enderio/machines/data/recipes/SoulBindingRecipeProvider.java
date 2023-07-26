@@ -4,6 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.data.recipe.RecipeDataUtil;
 import com.enderio.core.data.recipes.EnderRecipeProvider;
+import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonObject;
 import net.minecraft.data.PackOutput;
@@ -41,6 +42,7 @@ public class SoulBindingRecipeProvider extends EnderRecipeProvider {
         build(EIOItems.PLAYER_TOKEN, Ingredient.of(EIOItems.DARK_STEEL_BALL), 25000, 1, EntityType.VILLAGER, pFinishedRecipeConsumer);
         build(EIOItems.MONSTER_TOKEN, Ingredient.of(EIOItems.SOULARIUM_BALL), 25000, 1, EntityType.GHAST, pFinishedRecipeConsumer);
         build(EIOItems.ANIMAL_TOKEN, Ingredient.of(EIOItems.SOULARIUM_BALL), 25000, 1, MobCategory.CREATURE, pFinishedRecipeConsumer);
+        build(MachineBlocks.MOB_GENERATOR, Ingredient.of(MachineBlocks.MOB_GENERATOR), 25000, 1, pFinishedRecipeConsumer);
     }
 
     protected void build(ItemLike output, Ingredient input, int energy, int exp, EntityType<? extends Entity> entityType, Consumer<FinishedRecipe> finishedRecipeConsumer) {
