@@ -25,7 +25,8 @@ public class GeneratorSoul {
            Codec.INT.fieldOf("tick/mb").forGetter(SoulData::tickpermb))
            .apply(soulDataInstance, SoulData::new));
 
-    public static final SoulDataReloadListner<SoulData> GENERATOR = new SoulDataReloadListner<>("eio_soul/generator", CODEC);
+    public static final String NAME = "generator";
+    public static final SoulDataReloadListener<SoulData> GENERATOR = new SoulDataReloadListener<>(NAME, CODEC);
 
     @SubscribeEvent
     static void addResource(AddReloadListenerEvent event) {

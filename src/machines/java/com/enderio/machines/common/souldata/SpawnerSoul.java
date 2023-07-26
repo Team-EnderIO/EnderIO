@@ -36,8 +36,9 @@ public class SpawnerSoul {
             Codec.STRING.comapFlatMap(SpawnerMachineTask.SpawnType::byName, SpawnerMachineTask.SpawnType::getName).stable().fieldOf("type").forGetter(SoulData::spawnType))
             .apply(soulDataInstance, SoulData::new));
 
+    public static final String NAME = "spawner";
     //SoulData Manger for the spawner data
-    public static final SoulDataReloadListner<SoulData> SPAWNER = new SoulDataReloadListner<>("eio_soul/spawner", CODEC);
+    public static final SoulDataReloadListener<SoulData> SPAWNER = new SoulDataReloadListener<>(NAME, CODEC);
 
     @SubscribeEvent
     static void addResource(AddReloadListenerEvent event) {

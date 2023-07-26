@@ -6,6 +6,7 @@ import com.enderio.base.data.recipe.RecipeDataUtil;
 import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.init.MachineRecipes;
+import com.enderio.machines.common.souldata.GeneratorSoul;
 import com.google.gson.JsonObject;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
@@ -38,23 +39,27 @@ public class SoulBindingRecipeProvider extends EnderRecipeProvider {
         build(EIOItems.PRESCIENT_CRYSTAL, Ingredient.of(EIOItems.VIBRANT_CRYSTAL), 200000, 8, EntityType.SHULKER, pFinishedRecipeConsumer);
         build(EIOItems.FRANK_N_ZOMBIE, Ingredient.of(EIOItems.Z_LOGIC_CONTROLLER), 100000, 4, EntityType.ZOMBIE, pFinishedRecipeConsumer);
         build(EIOItems.SENTIENT_ENDER, Ingredient.of(EIOItems.ENDER_RESONATOR), 100000, 4, EntityType.WITCH, pFinishedRecipeConsumer);
-        build(EIOItems.BROKEN_SPAWNER, Ingredient.of(EIOItems.BROKEN_SPAWNER), 2500000, 8, pFinishedRecipeConsumer);
+        build(EIOItems.BROKEN_SPAWNER, Ingredient.of(EIOItems.BROKEN_SPAWNER), 2500000, 8, pFinishedRecipeConsumer); //TODO if we add SpawnerSoul.NAME, no modded mob will work without a config
         build(EIOItems.PLAYER_TOKEN, Ingredient.of(EIOItems.DARK_STEEL_BALL), 25000, 1, EntityType.VILLAGER, pFinishedRecipeConsumer);
         build(EIOItems.MONSTER_TOKEN, Ingredient.of(EIOItems.SOULARIUM_BALL), 25000, 1, EntityType.GHAST, pFinishedRecipeConsumer);
         build(EIOItems.ANIMAL_TOKEN, Ingredient.of(EIOItems.SOULARIUM_BALL), 25000, 1, MobCategory.CREATURE, pFinishedRecipeConsumer);
-        build(MachineBlocks.MOB_GENERATOR, Ingredient.of(MachineBlocks.MOB_GENERATOR), 25000, 1, pFinishedRecipeConsumer);
+        build(MachineBlocks.MOB_GENERATOR, Ingredient.of(MachineBlocks.MOB_GENERATOR), 25000, 1, GeneratorSoul.NAME, pFinishedRecipeConsumer);
     }
 
     protected void build(ItemLike output, Ingredient input, int energy, int exp, EntityType<? extends Entity> entityType, Consumer<FinishedRecipe> finishedRecipeConsumer) {
-        finishedRecipeConsumer.accept(new FinishedSoulBindingRecipe(EnderIO.loc("soulbinding/" + ForgeRegistries.ITEMS.getKey(output.asItem()).getPath()), output, input, energy, exp, ForgeRegistries.ENTITY_TYPES.getKey(entityType), null));
+        finishedRecipeConsumer.accept(new FinishedSoulBindingRecipe(EnderIO.loc("soulbinding/" + ForgeRegistries.ITEMS.getKey(output.asItem()).getPath()), output, input, energy, exp, ForgeRegistries.ENTITY_TYPES.getKey(entityType), null, null));
     }
 
     protected void build(ItemLike output, Ingredient input, int energy, int exp, MobCategory mobCategory, Consumer<FinishedRecipe> finishedRecipeConsumer) {
-        finishedRecipeConsumer.accept(new FinishedSoulBindingRecipe(EnderIO.loc("soulbinding/" + ForgeRegistries.ITEMS.getKey(output.asItem()).getPath()), output, input, energy, exp, null, mobCategory));
+        finishedRecipeConsumer.accept(new FinishedSoulBindingRecipe(EnderIO.loc("soulbinding/" + ForgeRegistries.ITEMS.getKey(output.asItem()).getPath()), output, input, energy, exp, null, mobCategory, null));
+    }
+
+    protected void build(ItemLike output, Ingredient input, int energy, int exp, String souldata, Consumer<FinishedRecipe> finishedRecipeConsumer) {
+        finishedRecipeConsumer.accept(new FinishedSoulBindingRecipe(EnderIO.loc("soulbinding/" + ForgeRegistries.ITEMS.getKey(output.asItem()).getPath()), output, input, energy, exp, null, null, souldata));
     }
 
     protected void build(ItemLike output, Ingredient input, int energy, int exp, Consumer<FinishedRecipe> finishedRecipeConsumer) {
-        finishedRecipeConsumer.accept(new FinishedSoulBindingRecipe(EnderIO.loc("soulbinding/" + ForgeRegistries.ITEMS.getKey(output.asItem()).getPath()), output, input, energy, exp, null, null));
+        finishedRecipeConsumer.accept(new FinishedSoulBindingRecipe(EnderIO.loc("soulbinding/" + ForgeRegistries.ITEMS.getKey(output.asItem()).getPath()), output, input, energy, exp, null, null, null));
     }
 
     protected static class FinishedSoulBindingRecipe extends EnderFinishedRecipe {
@@ -67,8 +72,10 @@ public class SoulBindingRecipeProvider extends EnderRecipeProvider {
         private final ResourceLocation entityType;
         @Nullable
         private final MobCategory mobCategory;
+        @Nullable
+        private final String souldata;
 
-        public FinishedSoulBindingRecipe(ResourceLocation id, ItemLike output, Ingredient input, int energy, int exp, @Nullable ResourceLocation entityType, @Nullable MobCategory mobCategory) {
+        public FinishedSoulBindingRecipe(ResourceLocation id, ItemLike output, Ingredient input, int energy, int exp, @Nullable ResourceLocation entityType, @Nullable MobCategory mobCategory, @Nullable String souldata) {
             super(id);
             this.output = output.asItem();
             this.input = input;
@@ -81,6 +88,7 @@ public class SoulBindingRecipeProvider extends EnderRecipeProvider {
 
             this.entityType = entityType;
             this.mobCategory = mobCategory;
+            this.souldata = souldata;
         }
 
         @Override
@@ -97,6 +105,10 @@ public class SoulBindingRecipeProvider extends EnderRecipeProvider {
 
             if (mobCategory != null) {
                 json.addProperty("mob_category", mobCategory.getName());
+            }
+
+            if (souldata != null) {
+                json.addProperty("souldata", souldata);
             }
 
             super.serializeRecipeData(json);

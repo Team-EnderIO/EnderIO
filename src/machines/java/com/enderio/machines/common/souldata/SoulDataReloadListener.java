@@ -49,11 +49,12 @@ import java.util.function.Function;
  * to the forge events necessary for syncing datapack data to clients.
  * @param <T> The type of the objects that the codec is parsing jsons as
  */
-public class SoulDataReloadListner<T extends ISoulData> extends SimpleJsonResourceReloadListener {
+public class SoulDataReloadListener<T extends ISoulData> extends SimpleJsonResourceReloadListener {
     private static final Gson GSON = new Gson();
     public Map<ResourceLocation,T> map = new HashMap<>();
     private final Codec<T> codec;
     private final String folderName;
+    private static final Map<String, SoulDataReloadListener<? extends ISoulData>> loadedSoulData = new HashMap<>();
 
     /**
      * Creates a data manager with a custom gson parser
@@ -64,10 +65,11 @@ public class SoulDataReloadListner<T extends ISoulData> extends SimpleJsonResour
      * @param gson A gson for parsing the raw json data into JsonElements. JsonElement-to-T conversion will be done by the codec,
      * so gson type adapters shouldn't be necessary here
      */
-    public SoulDataReloadListner(Gson gson, String folder, Codec<T> codec){
-        super(gson, folder);
+    public SoulDataReloadListener(Gson gson, String folder, Codec<T> codec){
+        super(gson, "eio_soul/" + folder);
         this.codec = codec;
-        this.folderName = folder;
+        this.folderName = "eio_soul/" + folder;
+        loadedSoulData.put(folder, this);
     }
 
     /**
@@ -77,7 +79,7 @@ public class SoulDataReloadListner<T extends ISoulData> extends SimpleJsonResour
      * folderName can include subfolders, e.g. "some_mod_that_adds_lots_of_data_loaders/cheeses"
      * @param codec A codec to deserialize the json into your T, see javadocs above class
      */
-    public SoulDataReloadListner(String folder, Codec<T> codec) {
+    public SoulDataReloadListener(String folder, Codec<T> codec) {
         this(GSON, folder, codec);
     }
 
@@ -103,7 +105,7 @@ public class SoulDataReloadListner<T extends ISoulData> extends SimpleJsonResour
      * @param packetFactory  A packet constructor or factory method that converts the given map to a packet object to send on the given channel
      * @return this manager object
      */
-    public <P extends Packet> SoulDataReloadListner<T> subscribeAsSyncable(final Function<Map<ResourceLocation, T>, P> packetFactory) {
+    public <P extends Packet> SoulDataReloadListener<T> subscribeAsSyncable(final Function<Map<ResourceLocation, T>, P> packetFactory) {
         MinecraftForge.EVENT_BUS.addListener(this.getDatapackSyncListener(packetFactory));
         return this;
     }
@@ -128,6 +130,10 @@ public class SoulDataReloadListner<T extends ISoulData> extends SimpleJsonResour
             return Optional.of(map.get(entitytype));
         }
         return Optional.empty();
+    }
+
+    public static SoulDataReloadListener<? extends ISoulData> fromString(String name) {
+        return loadedSoulData.get(name);
     }
 
 }

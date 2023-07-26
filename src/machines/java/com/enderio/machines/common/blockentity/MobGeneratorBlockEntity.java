@@ -61,11 +61,12 @@ public class MobGeneratorBlockEntity extends PoweredMachineBlockEntity {
     public void serverTick() {
         if (entityData != StoredEntityData.empty() && entityData.getEntityType().isPresent()) {
             Optional<GeneratorSoul.SoulData> op = GeneratorSoul.GENERATOR.matches(entityData.getEntityType().get());
-            op.ifPresent(data -> soulData = data);
-
-            if (isActive()) {
-                producePower();
-            }
+            op.ifPresent(data -> {
+                soulData = data;
+                if (isActive()) {
+                    producePower();
+                }
+            });
         }
 
         super.serverTick();
