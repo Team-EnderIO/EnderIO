@@ -243,18 +243,19 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
                 int energy = buffer.readInt();
                 int exp = buffer.readInt();
                 int mode = buffer.readInt();
+
                 ResourceLocation entityType = null;
-                if (mode == 0) {
+                if (mode == 1) {
                     entityType = buffer.readResourceLocation();
                 }
 
                 MobCategory mobCategory = null;
-                if (mode == 1) {
+                if (mode == 2) {
                     mobCategory = MobCategory.byName(buffer.readUtf());
                 }
 
                 String souldata = null;
-                if (mode == 2) {
+                if (mode == 3) {
                     souldata = buffer.readUtf();
                 }
 
@@ -274,18 +275,16 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
                 buffer.writeInt(recipe.exp);
 
                 if (recipe.entityType != null) { //don't write null
-                    buffer.writeInt(0);
-                    buffer.writeResourceLocation(recipe.entityType);
-                }
-
-                if (recipe.mobCategory != null) { //don't write null
                     buffer.writeInt(1);
-                    buffer.writeUtf(recipe.mobCategory.getName());
-                }
-
-                if (recipe.souldata != null) { //don't write null
+                    buffer.writeResourceLocation(recipe.entityType);
+                } else if (recipe.mobCategory != null) { //don't write null
                     buffer.writeInt(2);
+                    buffer.writeUtf(recipe.mobCategory.getName());
+                } else if (recipe.souldata != null) { //don't write null
+                    buffer.writeInt(3);
                     buffer.writeUtf(recipe.souldata);
+                } else {
+                    buffer.writeInt(0);
                 }
             } catch (Exception ex) {
                 EnderIO.LOGGER.error("Error writing soul binding recipe to packet.", ex);

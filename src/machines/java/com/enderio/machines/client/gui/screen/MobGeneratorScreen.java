@@ -6,6 +6,7 @@ import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
+import com.enderio.machines.client.gui.widget.FluidStackWidget;
 import com.enderio.machines.client.gui.widget.ioconfig.IOConfigButton;
 import com.enderio.machines.common.menu.MobGeneratorMenu;
 import net.minecraft.network.chat.Component;
@@ -14,7 +15,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class MobGeneratorScreen extends EIOScreen<MobGeneratorMenu>{
 
-    public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/alloy_smelter_auto.png");
+    public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/mob_generator.png");
 
     public MobGeneratorScreen(MobGeneratorMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -29,7 +30,10 @@ public class MobGeneratorScreen extends EIOScreen<MobGeneratorMenu>{
         addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
 
+        addRenderableOnly(new FluidStackWidget(this, getMenu().getBlockEntity()::getFluidTank, 80 + leftPos, 21 + topPos, 16, 47));
+
         addRenderableWidget(new IOConfigButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 22, 16, 16, menu, this::addRenderableWidget, font));
+
     }
 
     @Override

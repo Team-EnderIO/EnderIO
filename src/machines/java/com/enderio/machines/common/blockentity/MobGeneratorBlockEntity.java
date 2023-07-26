@@ -5,6 +5,7 @@ import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.FixedScalable;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
+import com.enderio.core.common.network.slot.FluidStackNetworkDataSlot;
 import com.enderio.core.common.network.slot.ResourceLocationNetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
@@ -37,10 +38,10 @@ import static com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity.
 
 public class MobGeneratorBlockEntity extends PoweredMachineBlockEntity {
 
-    public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.MOB_GENERATOR_CAPACITY);
-    public static final String BURNED_TICKS = "burnedTicks";
+    private static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.MOB_GENERATOR_CAPACITY);
+    private static final String BURNED_TICKS = "burnedTicks";
     private StoredEntityData entityData = StoredEntityData.empty();
-    public static final int FLUID_CAPACITY = 16 * FluidType.BUCKET_VOLUME;
+    private static final int FLUID_CAPACITY = 2 * FluidType.BUCKET_VOLUME;
     private GeneratorSoul.SoulData soulData;
     private int burnedTicks = 0;
 
@@ -48,6 +49,7 @@ public class MobGeneratorBlockEntity extends PoweredMachineBlockEntity {
         BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO, type, worldPosition, blockState);
         addDataSlot(new ResourceLocationNetworkDataSlot(() -> this.getEntityType().orElse(NO_MOB),this::setEntityType));
+        addDataSlot(new FluidStackNetworkDataSlot(getFluidTankNN()::getFluid, getFluidTankNN()::setFluid));
     }
 
     @Override
