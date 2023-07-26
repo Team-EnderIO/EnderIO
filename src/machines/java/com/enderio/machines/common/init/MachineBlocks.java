@@ -200,7 +200,7 @@ public class MachineBlocks {
 
     public static final BlockEntry<ProgressMachineBlock> MOB_GENERATOR = REGISTRATE
         .block("mob_generator", props -> new ProgressMachineBlock(props, MachineBlockEntities.MOB_GENERATOR))
-        .loot((l,t) -> MachinesLootTable.copyNBTSingleCap(l, t, MachineNBTKeys.ENTITY_STORAGE))
+        .loot(MachinesLootTable::copyNBT)
         .blockstate(MachineModelUtil::soulMachineBlock)
         .item(SoulBoundItem::new)
         .tab(EIOCreativeTabs.MACHINES)

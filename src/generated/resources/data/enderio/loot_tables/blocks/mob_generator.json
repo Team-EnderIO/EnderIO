@@ -12,28 +12,8 @@
               "ops": [
                 {
                   "op": "replace",
-                  "source": "EntityStorage",
-                  "target": "BlockEntityTag.EntityStorage"
-                },
-                {
-                  "op": "replace",
-                  "source": "Energy",
-                  "target": "BlockEntityTag.Energy"
-                },
-                {
-                  "op": "replace",
-                  "source": "IoConfig",
-                  "target": "BlockEntityTag.IoConfig"
-                },
-                {
-                  "op": "replace",
-                  "source": "RedstoneControl",
-                  "target": "BlockEntityTag.RedstoneControl"
-                },
-                {
-                  "op": "replace",
-                  "source": "Items",
-                  "target": "BlockEntityTag.Items"
+                  "source": "",
+                  "target": "BlockEntityTag"
                 }
               ],
               "source": "block_entity"

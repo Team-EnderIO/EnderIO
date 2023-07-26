@@ -69,6 +69,8 @@ public class MobGeneratorBlockEntity extends PoweredMachineBlockEntity {
         if (isActive()) {
             producePower();
         }
+
+        super.serverTick();
     }
 
     public Optional<ResourceLocation> getEntityType() {
