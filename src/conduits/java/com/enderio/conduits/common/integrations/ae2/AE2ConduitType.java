@@ -1,5 +1,6 @@
 package com.enderio.conduits.common.integrations.ae2;
 
+import appeng.api.networking.GridHelper;
 import appeng.api.networking.IInWorldGridNodeHost;
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.IConduitMenuData;
@@ -18,7 +19,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import org.apache.commons.lang3.function.TriFunction;
@@ -30,6 +30,27 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
 
     private final boolean dense;
 
+    private final IConduitTicker ticker = new IConduitTicker() {
+        @Override
+        public void tickGraph(IConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
+            //ae2 graphs don't actually do anything, that's all done by ae2
+        }
+
+        @Override
+        public boolean canConnectTo(Level level, BlockPos conduitPos, Direction direction) {
+            return GridHelper.getExposedNode(level, conduitPos.relative(direction), direction.getOpposite()) != null;
+        }
+
+        @Override
+        public boolean hasConnectionDelay() {
+            return true;
+        }
+
+        @Override
+        public boolean canConnectTo(IConduitType<?> thisType, IConduitType<?> other) {
+            return other instanceof AE2ConduitType;
+        }
+    };
     public AE2ConduitType(boolean dense) {
         super(EnderIO.loc("block/conduit/" + (dense ? "dense_me" : "me")), new ResourceLocation("ae2", "me_cable"), dense ? 32 : 8,
             EnderConduitTypes.ICON_TEXTURE, new Vector2i(0, dense ? 72 : 48));
@@ -38,38 +59,7 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
 
     @Override
     public IConduitTicker getTicker() {
-        return new IConduitTicker() {
-            @Override
-            public void tickGraph(IConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
-                //ae2 graphs don't actually do anything, that's all done by ae2
-            }
-
-            @Override
-            public boolean canConnectTo(Level level, BlockPos conduitPos, Direction direction) {
-                BlockEntity blockEntity = level.getBlockEntity(conduitPos.relative(direction));
-                if (blockEntity instanceof IInWorldGridNodeHost host && canConnectTo(host, direction))
-                    return true;
-                return blockEntity != null && blockEntity
-                    .getCapability(getCapability(), direction.getOpposite())
-                    .resolve()
-                    .map(node -> canConnectTo(node, direction))
-                    .orElse(false);
-            }
-
-            private static boolean canConnectTo(IInWorldGridNodeHost host, Direction direction) {
-                return Optional.ofNullable(host.getGridNode(direction.getOpposite())).map(node -> node.getConnectedSides().contains(direction.getOpposite())).orElse(false);
-            }
-
-            @Override
-            public boolean hasConnectionDelay() {
-                return true;
-            }
-
-            @Override
-            public boolean canConnectTo(IConduitType<?> thisType, IConduitType<?> other) {
-                return other instanceof AE2ConduitType;
-            }
-        };
+        return ticker;
     }
 
     @Override
