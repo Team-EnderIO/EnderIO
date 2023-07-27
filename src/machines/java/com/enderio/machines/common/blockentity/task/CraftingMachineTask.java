@@ -101,7 +101,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
         }
 
         // If we can't input or output, cancel the task. However, if for some reason we can't output after the inputs are collected, don't.
-        if (!hasConsumedInputs && (!placeOutputs(outputs, true) || !recipe.matches(container, level))) {
+        if (!hasConsumedInputs && (!placeOutputs(outputs, true) || !recipe.matches(container, level) || !canStart(recipe))) {
             isComplete = true;
             // This means if a sag mill recipe outputs 2 it cancels the recipe, and the determined outputs are cleared. It's a weird behaviour but not necessarily a bug.
             // We might want to review how this works in the future, as right now we wait for an inventory change rather than the machine tick repeatedly.
@@ -132,6 +132,10 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
                 isComplete = true;
             }
         }
+    }
+
+    public boolean canStart(R recipe) {
+        return true;
     }
 
     @Override

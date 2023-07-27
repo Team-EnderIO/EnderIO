@@ -1,5 +1,6 @@
 package com.enderio.machines.common.blockentity;
 
+import com.enderio.api.UseOnly;
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
@@ -8,8 +9,8 @@ import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
-import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
+import com.enderio.machines.common.blockentity.task.CraftingMachineTask;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingMachineTask;
 import com.enderio.machines.common.blockentity.task.host.CraftingMachineTaskHost;
 import com.enderio.machines.common.config.MachinesConfig;
@@ -32,6 +33,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.minecraftforge.fml.LogicalSide;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -47,6 +49,9 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
     public static final SingleSlotAccess INPUT_OTHER = new SingleSlotAccess();
     public static final MultiSlotAccess OUTPUT = new MultiSlotAccess();
 
+    @UseOnly(LogicalSide.CLIENT)
+    private int clientExp = 0;
+
     private final CraftingMachineTaskHost<SoulBindingRecipe, SoulBindingRecipe.Container> craftingTaskHost;
 
     public SoulBinderBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
@@ -60,13 +65,20 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
 
         // Create the crafting task host
         craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy,
-            MachineRecipes.SOUL_BINDING.type().get(), new SoulBindingRecipe.Container(getInventoryNN(), getFluidTankNN()), this::createTask);
+            MachineRecipes.SOUL_BINDING.type().get(), new SoulBindingRecipe.Container(getInventoryNN()), this::createTask);
 
         // Sync crafting container needed xp
-        addDataSlot(new IntegerNetworkDataSlot(
-            () -> craftingTaskHost.getContainer().getNeededXP(),
-            i -> craftingTaskHost.getContainer().setNeededXP(i)
-        ));
+        addDataSlot(new IntegerNetworkDataSlot(() -> {
+            CraftingMachineTask<SoulBindingRecipe, SoulBindingRecipe.Container> currentTask = craftingTaskHost.getCurrentTask();
+            if (currentTask == null || currentTask.getProgress() > 0) {
+                return 0;
+            }
+            SoulBindingRecipe recipe = currentTask.getRecipe();
+            if (recipe == null) {
+                return 0;
+            }
+            return recipe.getExpCost();
+        }, i -> clientExp = i));
     }
 
     @Override
@@ -118,6 +130,11 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
 
     // endregion
 
+    @UseOnly(LogicalSide.CLIENT)
+    public int getClientExp() {
+        return clientExp;
+    }
+
     // region Fluid Storage
 
     @Override
@@ -161,24 +178,15 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
                 INPUT_OTHER.getItemStack(getInventory()).shrink(1);
 
                 var fluidTank = getFluidTankNN();
-                int leftover = ExperienceUtil.getLevelFromFluidWithLeftover(fluidTank.getFluidAmount(), 0, craftingTaskHost.getContainer().getNeededXP()).y();
+                int leftover = ExperienceUtil.getLevelFromFluidWithLeftover(fluidTank.getFluidAmount(), 0, recipe.getExpCost()).y();
                 fluidTank.drain(fluidTank.getFluidAmount() - leftover * EXP_TO_FLUID, IFluidHandler.FluidAction.EXECUTE);
             }
 
             @Override
-            protected boolean placeOutputs(List<OutputStack> outputs, boolean simulate) {
-                craftingTaskHost.getContainer().setNeededXP(0);
-                return super.placeOutputs(outputs, simulate);
+            public boolean canStart(SoulBindingRecipe recipe) {
+                return ExperienceUtil.getLevelFromFluid(getFluidTankNN().getFluidAmount()) >= recipe.getExpCost();
             }
         };
-    }
-
-    // endregion
-
-    // region Fluid Tank
-
-    public int getNeededXP() {
-        return craftingTaskHost.getContainer().getNeededXP();
     }
 
     // endregion
