@@ -76,9 +76,4 @@ public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
         }
         return -1;
     }
-
-    @Override
-    public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
-        return super.quickMoveStack(pPlayer, pIndex);
-    }
 }
