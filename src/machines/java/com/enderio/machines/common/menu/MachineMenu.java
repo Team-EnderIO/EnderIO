@@ -64,6 +64,11 @@ public abstract class MachineMenu<T extends MachineBlockEntity> extends SyncedMe
             } else {
                 slot.setChanged();
             }
+
+            slot.onTake(pPlayer, itemstack1);
+            if (pIndex == 0) {
+                pPlayer.drop(itemstack1, false);
+            }
         }
 
         return itemstack;

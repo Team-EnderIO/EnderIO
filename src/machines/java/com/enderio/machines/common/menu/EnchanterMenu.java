@@ -13,6 +13,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 import org.apache.logging.log4j.LogManager;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -49,10 +50,15 @@ public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
                 @Override
                 public boolean mayPickup(Player playerIn) {
                     Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.ENCHANTING.type().get(), blockEntity.getContainer(), level);
-                    if (recipe.isPresent() && (playerIn.experienceLevel > recipe.get().getXPCost(blockEntity.getContainer()) || playerIn.isCreative()) && blockEntity.canAct()) {
+                    if (recipe.isPresent() && (playerIn.experienceLevel >= recipe.get().getXPCost(blockEntity.getContainer()) || playerIn.isCreative()) && blockEntity.canAct()) {
                         return super.mayPickup(playerIn);
                     }
                     return false;
+                }
+
+                @Override
+                public void onQuickCraft(@NotNull ItemStack oldStackIn, @NotNull ItemStack newStackIn) {
+                    super.onQuickCraft(oldStackIn, newStackIn);
                 }
             });
         }
@@ -75,5 +81,10 @@ public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
             }
         }
         return -1;
+    }
+
+    @Override
+    public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
+        return super.quickMoveStack(pPlayer, pIndex);
     }
 }
