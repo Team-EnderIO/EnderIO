@@ -1,17 +1,14 @@
 package com.enderio.base.common.init;
 
 import com.enderio.EnderIO;
-import com.enderio.base.common.enchantment.AutoSmeltEnchantment;
 import com.enderio.base.common.enchantment.AutoSmeltModifier;
 import com.enderio.base.common.item.darksteel.upgrades.direct.DirectUpgradeLootCondition;
 import com.enderio.base.common.item.darksteel.upgrades.direct.DirectUpgradeLootModifier;
 import com.enderio.base.common.loot.BrokenSpawnerLootModifier;
-import com.enderio.base.common.loot.CapacitorLootModifier;
 import com.enderio.base.common.loot.ChestLootModifier;
 import com.enderio.base.common.loot.SetLootCapacitorFunction;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
@@ -29,7 +26,6 @@ public class EIOLootModifiers {
     private final static DeferredRegister<LootItemFunctionType> FUNCTIONS = DeferredRegister.create(Registries.LOOT_FUNCTION_TYPE, EnderIO.MODID);
 
     public static RegistryObject<Codec<AutoSmeltModifier>> AUTO_SMELT = SERIALIZERS.register("auto_smelt", AutoSmeltModifier.CODEC);
-    public static RegistryObject<Codec<CapacitorLootModifier>> CAPACITOR_SERIALIZER = SERIALIZERS.register("capacitor_loot", CapacitorLootModifier.CODEC);
     public static RegistryObject<Codec<BrokenSpawnerLootModifier>> BROKEN_SPAWNER_SERIALIZER = SERIALIZERS.register("broken_spawner", BrokenSpawnerLootModifier.CODEC);
     public static RegistryObject<Codec<DirectUpgradeLootModifier>> DIRECT_UPGRADE_SERIALIZER = SERIALIZERS.register("direct_upgrade", DirectUpgradeLootModifier.CODEC);
     public static RegistryObject<Codec<ChestLootModifier>> CHEST_LOOT = SERIALIZERS.register("chest_loot", ChestLootModifier.CODEC);

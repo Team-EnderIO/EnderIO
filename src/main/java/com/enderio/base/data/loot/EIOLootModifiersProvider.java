@@ -6,7 +6,6 @@ import com.enderio.base.common.init.EIOEnchantments;
 import com.enderio.base.common.item.darksteel.upgrades.direct.DirectUpgradeLootCondition;
 import com.enderio.base.common.item.darksteel.upgrades.direct.DirectUpgradeLootModifier;
 import com.enderio.base.common.loot.BrokenSpawnerLootModifier;
-import com.enderio.base.common.loot.CapacitorLootModifier;
 import com.enderio.base.common.loot.ChestLootModifier;
 import net.minecraft.advancements.critereon.EnchantmentPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate;
@@ -14,13 +13,10 @@ import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.storage.loot.entries.AlternativesEntry;
 import net.minecraft.world.level.storage.loot.predicates.*;
 import net.minecraftforge.common.data.GlobalLootModifierProvider;
 import net.minecraftforge.common.loot.LootTableIdCondition;
 
-import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class EIOLootModifiersProvider extends GlobalLootModifierProvider {
