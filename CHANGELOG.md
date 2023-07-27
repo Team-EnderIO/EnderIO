@@ -12,6 +12,8 @@
 
 ### Fixed
 - Allow redstone to connect to machines.
+- Fixed enchanter shift-click duplication.
+- Fixed enchanter needing slightly more XP than listed.
 
 ## [6.0.7-alpha] - 2023-07-25
 
