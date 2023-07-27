@@ -1,6 +1,7 @@
 package com.enderio.machines.data.recipes;
 
 import com.enderio.EnderIO;
+import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.data.recipe.RecipeDataUtil;
 import com.enderio.core.data.recipes.EnderRecipeProvider;
@@ -53,6 +54,12 @@ public class SlicingRecipeProvider extends EnderRecipeProvider {
             Ingredient.of(EIOItems.ENERGETIC_ALLOY_INGOT.get()), Ingredient.of(Tags.Items.DUSTS_PRISMARINE), Ingredient.of(EIOItems.ENERGETIC_ALLOY_INGOT.get()),
             Ingredient.of(Tags.Items.GEMS_PRISMARINE), Ingredient.of(EIOItems.BASIC_CAPACITOR.get()), Ingredient.of(Tags.Items.GEMS_PRISMARINE)
         ), 20000, finishedRecipeConsumer);
+
+        build(EIOItems.ENDER_RESONATOR.get(), List.of(
+            Ingredient.of(EIOItems.SOULARIUM_INGOT.get()), Ingredient.of(EIOBlocks.ENDERMAN_HEAD), Ingredient.of(EIOItems.SOULARIUM_INGOT.get()), //TODO EnderSkull
+            Ingredient.of(EIOItems.SILICON.get()), Ingredient.of(EIOItems.VIBRANT_ALLOY_INGOT.get()), Ingredient.of(EIOItems.SILICON.get())
+        ), 20000, finishedRecipeConsumer);
+
     }
 
     protected void build(Item output, List<Ingredient> inputs, int energy, Consumer<FinishedRecipe> finishedRecipeConsumer) {

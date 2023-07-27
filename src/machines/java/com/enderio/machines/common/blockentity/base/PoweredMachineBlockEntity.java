@@ -3,8 +3,10 @@ package com.enderio.machines.common.blockentity.base;
 import com.enderio.api.capacitor.ICapacitorData;
 import com.enderio.api.capacitor.ICapacitorScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
+import com.enderio.base.common.blockentity.IMachineInstall;
 import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.base.common.capacitor.DefaultCapacitorData;
+import com.enderio.base.common.item.capacitors.BaseCapacitorItem;
 import com.enderio.core.common.network.slot.NetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.ProgressMachineBlock;
@@ -17,7 +19,9 @@ import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -31,14 +35,13 @@ import java.util.function.Supplier;
 /**
  * A machine that stores energy.
  */
-public abstract class PoweredMachineBlockEntity extends MachineBlockEntity {
+public abstract class PoweredMachineBlockEntity extends MachineBlockEntity implements IMachineInstall {
     /**
      * The energy storage medium for the block entity.
      * This will be a mutable energy storage.
      */
     protected final MachineEnergyStorage energyStorage;
-    @Nullable
-    protected final MachineEnergyStorage exposedEnergyStorage;
+    @Nullable protected final MachineEnergyStorage exposedEnergyStorage;
 
     /**
      * The client value of the energy storage.
@@ -202,6 +205,23 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity {
     // endregion
 
     // region Capacitors
+
+    /**
+     * Handles right click auto equip for capacitors
+     */
+    @Override
+    public InteractionResult tryItemInstall(ItemStack stack, UseOnContext context) {
+        if (stack.getItem() instanceof BaseCapacitorItem && requiresCapacitor() && !isCapacitorInstalled()) {
+            MachineInventory inventory = getInventory();
+            MachineInventoryLayout layout = getInventoryLayout();
+            if (inventory != null && layout != null) {
+                inventory.setStackInSlot(layout.getCapacitorSlot(), stack.copyWithCount(1));
+                stack.shrink(1);
+                return InteractionResult.sidedSuccess(context.getLevel().isClientSide());
+            }
+        }
+        return InteractionResult.PASS;
+    }
 
     /**
      * Whether the machine requires a capacitor to operate.

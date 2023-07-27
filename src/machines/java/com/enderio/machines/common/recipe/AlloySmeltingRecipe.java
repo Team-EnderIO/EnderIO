@@ -4,13 +4,17 @@ import com.enderio.EnderIO;
 import com.enderio.core.common.recipes.CountedIngredient;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.blockentity.AlloySmelterBlockEntity;
+import com.enderio.machines.common.blockentity.PrimitiveAlloySmelterBlockEntity;
 import com.enderio.machines.common.init.MachineRecipes;
+import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -21,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.ContainerWrapper> {
 
@@ -58,8 +63,14 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
     }
 
     @Override
+    public NonNullList<Ingredient> getIngredients() {
+        return NonNullList.of(Ingredient.EMPTY, inputs.stream().map(CountedIngredient::ingredient).toArray(Ingredient[]::new));
+    }
+
+    @Override
     public boolean matches(ContainerWrapper container, Level level) {
         boolean[] matched = new boolean[3];
+        var slotAccess = container.getSlotAccess();
 
         // Iterate over the slots
         for (int i = 0; i < 3; i++) {
@@ -69,12 +80,14 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
                 if (matched[j])
                     continue;
 
+                var slotItem = slotAccess.get(i).getItemStack(container);
+
                 if (j < inputs.size()) {
                     // If we expect an input, test we have a match for it.
-                    if (inputs.get(j).test(AlloySmelterBlockEntity.INPUTS.get(i).getItemStack(container))) {
+                    if (inputs.get(j).test(slotItem)) {
                         matched[j] = true;
                     }
-                } else if (container.getItem(i) == ItemStack.EMPTY) {
+                } else if (slotItem.isEmpty()) {
                     // If we don't expect an input, make sure we have a blank for it.
                     matched[j] = true;
                 }
@@ -121,10 +134,17 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
      */
     public static class ContainerWrapper extends RecipeWrapper {
 
+        private final boolean isPrimitive;
         private int inputsTaken;
 
-        public ContainerWrapper(IItemHandlerModifiable inv) {
+        public ContainerWrapper(boolean isPrimitive, IItemHandlerModifiable inv) {
             super(inv);
+            this.isPrimitive = isPrimitive;
+        }
+
+        public MultiSlotAccess getSlotAccess() {
+            // Instead of a bool we could just pass the slot accesses, but a bool is probably cheaper to do.
+            return isPrimitive ? PrimitiveAlloySmelterBlockEntity.INPUTS : AlloySmelterBlockEntity.INPUTS;
         }
 
         public int getInputsTaken() {
@@ -148,7 +168,7 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
             }
 
             // Load result, energy and experience.
-            ItemStack result = CraftingHelper.getItemStack(serializedRecipe.getAsJsonObject("result"), false);
+            ItemStack result = CraftingHelper.getItemStack(serializedRecipe.getAsJsonObject("result"), true);
             int energy = serializedRecipe.get("energy").getAsInt();
             float experience = serializedRecipe.get("experience").getAsFloat();
             return new AlloySmeltingRecipe(recipeId, inputs, result, energy, experience);

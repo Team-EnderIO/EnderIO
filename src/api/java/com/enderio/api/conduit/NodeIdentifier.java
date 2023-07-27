@@ -7,6 +7,7 @@ import dev.gigaherz.graph3.GraphObject;
 import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
@@ -22,6 +23,7 @@ public class NodeIdentifier<T extends IExtendedConduitData<?>> implements GraphO
     private final Map<Direction, IOState> ioStates = new EnumMap<>(Direction.class);
     private final T extendedConduitData;
 
+    @ApiStatus.Internal
     public NodeIdentifier(BlockPos pos, T extendedConduitData) {
         this.pos = pos;
         this.extendedConduitData = extendedConduitData;
@@ -29,15 +31,18 @@ public class NodeIdentifier<T extends IExtendedConduitData<?>> implements GraphO
 
     @Nullable
     @Override
+    @ApiStatus.Internal
     public Graph<Mergeable.Dummy> getGraph() {
         return graph;
     }
 
     @Override
+    @ApiStatus.Internal
     public void setGraph(Graph<Mergeable.Dummy> graph) {
         this.graph = graph;
     }
 
+    @ApiStatus.Internal
     public void pushState(Direction direction, @Nullable ColorControl insert, @Nullable ColorControl extract, RedstoneControl control,
         ColorControl redstoneChannel) {
         ioStates.put(direction, IOState.of(insert, extract, control, redstoneChannel));
@@ -51,6 +56,7 @@ public class NodeIdentifier<T extends IExtendedConduitData<?>> implements GraphO
         return extendedConduitData;
     }
 
+    @ApiStatus.Internal
     public void clearState(Direction direction) {
         ioStates.remove(direction);
     }

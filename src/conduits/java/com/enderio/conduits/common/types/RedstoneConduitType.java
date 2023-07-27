@@ -19,9 +19,4 @@ public class RedstoneConduitType extends SimpleConduitType<RedstoneExtendedData>
     public ResourceLocation getTexture(RedstoneExtendedData extendedData) {
         return extendedData.isActive() ? active : inactive;
     }
-
-    @Override
-    public ResourceLocation[] getTextures() {
-        return new ResourceLocation[] {active, inactive};
-    }
 }

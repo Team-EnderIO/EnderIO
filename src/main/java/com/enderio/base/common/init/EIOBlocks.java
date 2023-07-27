@@ -13,6 +13,7 @@ import com.enderio.base.common.block.light.PoweredLight;
 import com.enderio.base.common.block.painted.*;
 import com.enderio.base.common.item.PaintedBlockItem;
 import com.enderio.base.common.item.PaintedSlabBlockItem;
+import com.enderio.base.common.item.misc.EnderSkullBlockItem;
 import com.enderio.base.data.loot.DecorLootTable;
 import com.enderio.base.data.model.block.EIOBlockState;
 import com.tterrag.registrate.Registrate;
@@ -33,6 +34,7 @@ import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.client.model.generators.BlockModelProvider;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
@@ -41,6 +43,9 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+
+import static com.tterrag.registrate.providers.ProviderType.LANG;
+import static com.tterrag.registrate.util.nullness.NonNullBiConsumer.noop;
 
 @SuppressWarnings("unused")
 public class EIOBlocks {
@@ -350,6 +355,23 @@ public class EIOBlocks {
         .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().withExistingParent("light_node", "block/air")))
         .initialProperties(() -> Blocks.AIR)
         .properties(p -> p.lightLevel(l -> 15).noLootTable().noCollission().noOcclusion())
+        .register();
+
+    public static final BlockEntry<EnderSkullBlock> ENDERMAN_HEAD = REGISTRATE
+        .block("enderman_head", EnderSkullBlock::new)
+        .properties(properties -> properties.instrument(NoteBlockInstrument.SKELETON).strength(1.0F).pushReaction(PushReaction.DESTROY))
+        .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(prov.mcLoc("block/skull"))))
+        .item((enderSkullBlock, properties) -> new EnderSkullBlockItem(enderSkullBlock, properties, Direction.DOWN))
+        .tab(EIOCreativeTabs.MAIN)
+        .model((ctx, prov) -> prov.withExistingParent(ctx.getName(), "item/template_skull"))
+        .build()
+        .register();
+
+    public static final BlockEntry<WallEnderSkullBlock> WALL_ENDERMAN_HEAD = REGISTRATE
+        .block("wall_enderman_head", WallEnderSkullBlock::new)
+        .properties(properties -> properties.strength(1.0F).lootFrom(ENDERMAN_HEAD).pushReaction(PushReaction.DESTROY))
+        .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(prov.mcLoc("block/skull"))))
+        .setData(LANG, noop())
         .register();
 
     public static <T extends Block> BlockBuilder<T, Registrate> simpleBlockBuilder(String name, T block) {

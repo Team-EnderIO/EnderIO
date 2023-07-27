@@ -1,0 +1,9 @@
+{
+  "entries": [
+    "enderio:capacitor_loot",
+    "enderio:direct_upgrade",
+    "enderio:broken_spawner",
+    "enderio:auto_smelt"
+  ],
+  "replace": false
+}

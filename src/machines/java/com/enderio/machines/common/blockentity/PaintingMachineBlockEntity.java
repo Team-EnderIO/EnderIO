@@ -16,6 +16,7 @@ import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.PaintingMachineMenu;
 import com.enderio.machines.common.recipe.PaintingRecipe;
+import com.enderio.machines.common.recipe.RecipeCaches;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -97,9 +98,7 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
     }
 
     private boolean isValidInput(int index, ItemStack stack) {
-        if (level == null)
-            return false;
-        return level.getRecipeManager().getAllRecipesFor(MachineRecipes.PAINTING.type().get()).stream().map(PaintingRecipe::getInput).anyMatch(ingredient -> ingredient.test(stack));
+        return RecipeCaches.PAINTING.hasRecipe(List.of(stack));
     }
 
     private boolean isValidPaint(int index, ItemStack stack) {

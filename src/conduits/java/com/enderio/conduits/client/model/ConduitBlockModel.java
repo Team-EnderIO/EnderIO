@@ -58,7 +58,7 @@ public class ConduitBlockModel implements IDynamicBakedModel {
                 if (connection.isEnd()) {
                     quads.addAll(rotation.process(modelOf(CONDUIT_CONNECTOR).getQuads(state, preRotation, rand, extraData, renderType)));
                 }
-                var connectedTypes = connection.getConnectedTypes(conduitBundle);
+                var connectedTypes = connection.getConnectedTypes();
                 for (int i = 0; i < connectedTypes.size(); i++) {
                     IConduitType<?> type = connectedTypes.get(i);
                     Vec3i offset = OffsetHelper.translationFor(direction.getAxis(), OffsetHelper.offsetConduit(i, connectedTypes.size()));
@@ -73,7 +73,7 @@ public class ConduitBlockModel implements IDynamicBakedModel {
                     if (connection.isEnd()) {
                         quads.addAll(rotationTranslation.process(modelOf(CONDUIT_CONNECTION_BOX).getQuads(state, preRotation, rand, extraData, renderType)));
 
-                        IConnectionState connectionState = connection.getConnectionState(type, conduitBundle);
+                        IConnectionState connectionState = connection.getConnectionState(type);
                         if (connectionState instanceof DynamicConnectionState dyn) {
                             IQuadTransformer color = rotationTranslation.andThen(new ColorQuadTransformer(dyn.insert(), dyn.extract()));
                             BakedModel model = null;

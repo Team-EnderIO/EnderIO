@@ -39,7 +39,7 @@ public class CapacitorLootModifier extends LootModifier {
      *
      * @param conditionsIn the ILootConditions that need to be matched before the loot is modified.
      */
-    protected CapacitorLootModifier(LootItemCondition[] conditionsIn, float min, float max) {
+    public CapacitorLootModifier(LootItemCondition[] conditionsIn, float min, float max) {
         super(conditionsIn);
         this.min = min;
         this.max = max;

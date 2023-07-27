@@ -206,6 +206,16 @@ public class MachineRecipeProvider extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.ENSOULED_CHASSIS.get()))
             .save(finishedRecipeConsumer);
 
+        ShapedRecipeBuilder
+            .shaped(RecipeCategory.MISC, MachineBlocks.WIRED_CHARGER.get())
+            .define('C', EIOItems.COPPER_ALLOY_INGOT.get())
+            .define('V', EIOBlocks.VOID_CHASSIS.get())
+            .pattern("CCC")
+            .pattern("CVC")
+            .pattern("CCC")
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.VOID_CHASSIS.get()))
+            .save(finishedRecipeConsumer);
+
         ShapedEntityStorageRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.POWERED_SPAWNER)
             .define('I', EIOItems.SOULARIUM_INGOT) //TODO Maybe also soulchains?
@@ -279,6 +289,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("CDC")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PHOTOVOLTAIC_PLATE.get()))
             .save(finishedRecipeConsumer);
+
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.BASIC))
             .define('E', EIOItems.ENERGETIC_ALLOY_INGOT)
@@ -291,6 +302,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("CDC")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.SIMPLE)))
             .save(finishedRecipeConsumer, EnderIO.loc(RecipeBuilder.getDefaultRecipeId(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.BASIC)).getPath() + "_upgrade"));
+
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.ADVANCED))
             .define('I', EIOItems.PULSATING_ALLOY_INGOT)
@@ -303,6 +315,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("CDC")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PHOTOVOLTAIC_PLATE))
             .save(finishedRecipeConsumer);
+
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.ADVANCED))
             .define('I', EIOItems.PULSATING_ALLOY_INGOT)
@@ -316,6 +329,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("CSC")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.BASIC)))
             .save(finishedRecipeConsumer, EnderIO.loc(RecipeBuilder.getDefaultRecipeId(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.ADVANCED)).getPath() + "_upgrade"));
+
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.VIBRANT))
             .define('I', EIOItems.VIBRANT_ALLOY_INGOT)
@@ -328,6 +342,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("CDC")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PHOTOVOLTAIC_PLATE))
             .save(finishedRecipeConsumer);
+
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.VIBRANT))
             .define('I', EIOItems.VIBRANT_ALLOY_INGOT)
@@ -340,5 +355,20 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("CPC")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.ADVANCED)))
             .save(finishedRecipeConsumer, EnderIO.loc(RecipeBuilder.getDefaultRecipeId(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.VIBRANT)).getPath() + "_upgrade"));
+
+        ShapedRecipeBuilder
+            .shaped(RecipeCategory.MISC, MachineBlocks.PAINTING_MACHINE.get())
+            .pattern("RGB")
+            .pattern("ICI")
+            .pattern("MAM")
+            .define('R', Tags.Items.DYES_RED)
+            .define('G', Tags.Items.DYES_GREEN)
+            .define('B', Tags.Items.DYES_BLACK)
+            .define('I', EIOItems.COPPER_ALLOY_INGOT)
+            .define('C', EIOBlocks.VOID_CHASSIS)
+            .define('M', EIOItems.GEAR_IRON)
+            .define('A', EIOItems.REDSTONE_ALLOY_INGOT)
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.VOID_CHASSIS))
+            .save(finishedRecipeConsumer);
     }
 }

@@ -3,11 +3,15 @@ package com.enderio.base.common.lang;
 import com.enderio.EnderIO;
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.misc.ApiLang;
+import com.enderio.base.common.block.glass.GlassLighting;
 import com.enderio.core.common.util.TooltipUtil;
 import com.tterrag.registrate.Registrate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.item.DyeColor;
+
+import java.util.Locale;
 
 public class EIOLang {
     private static final Registrate REGISTRATE = EnderIO.registrate();
@@ -50,6 +54,10 @@ public class EIOLang {
     public static final Component REDSTONE_ACTIVE_WITH_SIGNAL = REGISTRATE.addLang("gui", EnderIO.loc("redstone.active_with_signal"), "Active with signal");
     public static final Component REDSTONE_ACTIVE_WITHOUT_SIGNAL = REGISTRATE.addLang("gui", EnderIO.loc("redstone.active_without_signal"), "Active without signal");
     public static final Component REDSTONE_NEVER_ACTIVE = REGISTRATE.addLang("gui", EnderIO.loc("redstone.never_active"), "Never active");
+    public static final Component ROUND_ROBIN_ENABLED = REGISTRATE.addLang("gui", EnderIO.loc("round_robin.enabled"), "Round Robin Enabled");
+    public static final Component ROUND_ROBIN_DISABLED = REGISTRATE.addLang("gui", EnderIO.loc("round_robin.disabled"), "Round Robin Disabled");
+    public static final Component SELF_FEED_ENABLED = REGISTRATE.addLang("gui", EnderIO.loc("self_feed.enabled"), "Self Feed Enabled");
+    public static final Component SELF_FEED_DISABLED = REGISTRATE.addLang("gui", EnderIO.loc("self_feed.disabled"), "Self Feed Disabled");
     public static final Component FLUID_CONDUIT_CHANGE_FLUID1 = REGISTRATE.addLang("gui", EnderIO.loc("fluid_conduit.change_fluid1"), "Locked Fluid:");
     public static final Component FLUID_CONDUIT_CHANGE_FLUID2 = REGISTRATE.addLang("gui", EnderIO.loc("fluid_conduit.change_fluid2"), "Click to reset!");
     public static final MutableComponent FLUID_CONDUIT_CHANGE_FLUID3 = REGISTRATE.addLang("gui", EnderIO.loc("fluid_conduit.change_fluid3"), "Fluid: %s");
@@ -257,10 +265,55 @@ public class EIOLang {
 
     // endregion
 
+    // region Glass Names
+
+    private static void registerGlassLang() {
+        for (var lighting : GlassLighting.values()) {
+            String lightingName = lighting != GlassLighting.NONE ? lighting.englishName() + " " : "";
+            String lightingKeyName = lighting != GlassLighting.NONE ? "_" + lighting.shortName() : "";
+
+            REGISTRATE.addLang("block", EnderIO.loc("clear_glass" + lightingKeyName),
+                lightingName + "Clear Glass");
+            REGISTRATE.addLang("block", EnderIO.loc("fused_quartz" + lightingKeyName),
+                lightingName + "Fused Quartz");
+
+            for (var color : DyeColor.values()) {
+                String colorName = createEnglishPrefix(color);
+
+                REGISTRATE.addLang("block", EnderIO.loc("clear_glass" + lightingKeyName + "_" + color.getName().toLowerCase(Locale.ROOT)),
+                    colorName + lightingName + "Clear Glass");
+                REGISTRATE.addLang("block", EnderIO.loc("fused_quartz" + lightingKeyName + "_" + color.getName().toLowerCase(Locale.ROOT)),
+                    colorName + lightingName + "Fused Quartz");
+            }
+        }
+    }
+
+    private static String createEnglishPrefix(DyeColor color) {
+        StringBuilder builder = new StringBuilder();
+        boolean nextUpper = true;
+        for (char c : color.getName().replace("_", " ").toCharArray()) {
+            if (nextUpper) {
+                builder.append(Character.toUpperCase(c));
+                nextUpper = false;
+                continue;
+            }
+            if (c == ' ') {
+                nextUpper = true;
+            }
+            builder.append(c);
+        }
+        builder.append(" ");
+        return builder.toString();
+    }
+
+    // endregion
+
     public static void register() {
         ApiLang.REDSTONE_ACTIVE_WITH_SIGNAL = REDSTONE_ACTIVE_WITH_SIGNAL;
         ApiLang.REDSTONE_NEVER_ACTIVE = REDSTONE_NEVER_ACTIVE;
         ApiLang.REDSTONE_ALWAYS_ACTIVE = REDSTONE_ALWAYS_ACTIVE;
         ApiLang.REDSTONE_ACTIVE_WITHOUT_SIGNAL = REDSTONE_ACTIVE_WITHOUT_SIGNAL;
+
+        registerGlassLang();
     }
 }

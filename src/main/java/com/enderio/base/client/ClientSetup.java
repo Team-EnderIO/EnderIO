@@ -3,8 +3,10 @@ package com.enderio.base.client;
 import com.enderio.EnderIO;
 import com.enderio.base.client.model.PaintedBlockGeometry;
 import com.enderio.base.client.particle.RangeParticle;
+import com.enderio.base.client.renderer.block.EnderSkullRenderer;
 import com.enderio.base.client.renderer.glider.ActiveGliderRenderLayer;
 import com.enderio.base.client.renderer.item.GlassIconDecorator;
+import com.enderio.base.common.init.EIOBlockEntities;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.init.EIOParticles;
@@ -104,5 +106,15 @@ public class ClientSetup {
     @SubscribeEvent
     public static void modelInit(ModelEvent.RegisterGeometryLoaders event) {
         event.register("painted_block", new PaintedBlockGeometry.Loader());
+    }
+
+    @SubscribeEvent
+    public static void modelRenderer(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerBlockEntityRenderer(EIOBlockEntities.ENDER_SKULL.get(), EnderSkullRenderer::new);
+    }
+
+    @SubscribeEvent
+    public static void registerModelLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        event.registerLayerDefinition(EnderSkullRenderer.ENDER_SKULL, EnderSkullRenderer.EnderSkullModel::createMobHeadLayer);
     }
 }

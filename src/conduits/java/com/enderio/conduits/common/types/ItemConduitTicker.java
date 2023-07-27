@@ -1,22 +1,25 @@
 package com.enderio.conduits.common.types;
 
 import com.enderio.api.conduit.IConduitType;
-import com.enderio.api.conduit.ticker.ICapabilityAwareConduitTicker;
+import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
+import com.enderio.api.misc.ColorControl;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.Mergeable;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import org.apache.commons.lang3.function.TriFunction;
 
 import java.util.List;
 
-public class ItemConduitTicker extends ICapabilityAwareConduitTicker<IItemHandler> {
+public class ItemConduitTicker extends CapabilityAwareConduitTicker<IItemHandler> {
 
     @Override
-    protected void tickCapabilityGraph(IConduitType<?> type, List<CapabilityConnection> inserts, List<CapabilityConnection> extracts, ServerLevel level, Graph<Mergeable.Dummy> graph) {
+    protected void tickCapabilityGraph(IConduitType<?> type, List<CapabilityConnection> inserts, List<CapabilityConnection> extracts, ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
         toNextExtract:
         for (CapabilityConnection extract: extracts) {
             IItemHandler extractHandler = extract.cap;
