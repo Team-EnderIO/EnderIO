@@ -11,6 +11,7 @@
 ### Removed
 
 ### Fixed
+- Allow redstone to connect to machines.
 
 ## [6.0.7-alpha] - 2023-07-25
 
