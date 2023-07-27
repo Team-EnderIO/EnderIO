@@ -291,7 +291,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     }
 
     public String getColor(){
-        return "";
+        return "000000";
     }
 
     // endregion

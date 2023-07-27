@@ -2,7 +2,6 @@ package com.enderio.machines.common.blockentity.base;
 
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
-import com.enderio.base.common.particle.RangeParticleData;
 import com.enderio.base.common.util.AttractionUtil;
 import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
 import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
@@ -13,7 +12,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -110,11 +108,5 @@ public abstract class VacuumMachineBlockEntity<T extends Entity> extends Machine
             getEntities(getLevel(), getBlockPos(), getRange(), getFilter());
         }
         super.onLoad();
-    }
-
-    private void generateParticle(RangeParticleData data, Vec3 pos) {
-        if (level != null && level.isClientSide()) {
-            level.addAlwaysVisibleParticle(data, true, pos.x, pos.y, pos.z, 0, 0, 0);
-        }
     }
 }
