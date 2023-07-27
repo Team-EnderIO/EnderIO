@@ -74,9 +74,9 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     // region range
 
-    private int range = 3;
+    protected int range = 3;
     protected IntegerNetworkDataSlot rangeDataSlot;
-    private boolean rangeVisible = false;
+    protected boolean rangeVisible = false;
     protected BooleanNetworkDataSlot rangeVisibleDataSlot;
 
     // endregion
@@ -274,17 +274,13 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     public void decreaseRange() {
         if (this.range > 0) {
-            if (level != null && level.isClientSide()) {
-                clientUpdateSlot(rangeDataSlot, range);
-            } else this.range--;
+            this.range--;
         }
     }
 
     public void increaseRange() {
         if (this.range < getMaxRange()) {
-            if (level != null && level.isClientSide()) {
-                clientUpdateSlot(rangeDataSlot, range);
-            } else this.range++;
+            this.range++;
         }
     }
 

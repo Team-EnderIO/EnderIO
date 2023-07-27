@@ -33,10 +33,10 @@ public abstract class VacuumMachineBlockEntity<T extends Entity> extends Machine
         super(pType, pWorldPosition, pBlockState);
         this.targetClass = targetClass;
 
-        rangeDataSlot = new IntegerNetworkDataSlot(this::getRange, this::setRange);
+        rangeDataSlot = new IntegerNetworkDataSlot(this::getRange, r -> this.range = r);
         addDataSlot(rangeDataSlot);
 
-        rangeVisibleDataSlot = new BooleanNetworkDataSlot(this::isRangeVisible, this::setRangeVisible);
+        rangeVisibleDataSlot = new BooleanNetworkDataSlot(this::isRangeVisible, b -> this.rangeVisible = b);
         addDataSlot(rangeVisibleDataSlot);
     }
 
