@@ -12,6 +12,7 @@ import com.enderio.base.common.network.EIONetwork;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.EIODataProvider;
 import com.enderio.base.data.advancement.EIOAdvancementGenerator;
+import com.enderio.base.data.loot.EIOLootModifiersProvider;
 import com.enderio.base.data.loot.FireCraftingLootProvider;
 import com.enderio.base.data.recipe.*;
 import com.enderio.base.data.tags.EIOBlockTagsProvider;
@@ -122,6 +123,7 @@ public class EnderIO {
         provider.addSubProvider(event.includeServer(), new GrindingBallRecipeProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new GlassRecipes(packOutput));
         provider.addSubProvider(event.includeServer(), new FireCraftingRecipes(packOutput));
+        provider.addSubProvider(event.includeServer(), new EIOLootModifiersProvider(packOutput));
 
         var b = new EIOBlockTagsProvider(packOutput, lookupProvider, existingFileHelper);
         provider.addSubProvider(event.includeServer(), b);
