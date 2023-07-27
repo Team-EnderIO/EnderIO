@@ -7,8 +7,11 @@ import com.enderio.api.io.IOMode;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.base.common.blockentity.IWrenchable;
 import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.base.common.particle.RangeParticleData;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
+import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
 import com.enderio.core.common.network.slot.EnumNetworkDataSlot;
+import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
 import com.enderio.core.common.network.slot.NBTSerializableNetworkDataSlot;
 import com.enderio.core.common.util.PlayerInteractionUtil;
 import com.enderio.machines.common.MachineNBTKeys;
@@ -38,6 +41,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.ForgeMod;
@@ -65,6 +69,15 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     public static final ModelProperty<IIOConfig> IO_CONFIG_PROPERTY = new ModelProperty<>();
 
     private ModelData modelData = ModelData.EMPTY;
+
+    // endregion
+
+    // region range
+
+    private int range = 3;
+    protected IntegerNetworkDataSlot rangeDataSlot;
+    private boolean rangeVisible = false;
+    protected BooleanNetworkDataSlot rangeVisibleDataSlot;
 
     // endregion
 
@@ -233,6 +246,56 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     // endregion
 
+    // region range
+
+    public boolean isRangeVisible() {
+        return rangeVisible;
+    }
+
+    public void setRangeVisible(boolean visible) {
+        if (level != null && level.isClientSide()) {
+            clientUpdateSlot(rangeVisibleDataSlot, visible);
+        } else this.rangeVisible = visible;
+    }
+
+    public int getMaxRange() {
+        return 0;
+    }
+
+    public int getRange() {
+        return range;
+    }
+
+    public void setRange(int range) {
+        if (level != null && level.isClientSide()) {
+            clientUpdateSlot(rangeDataSlot, range);
+        } else this.range = range;
+    }
+
+    public void decreaseRange() {
+        if (this.range > 0) {
+            this.range--;
+        }
+    }
+
+    public void increaseRange() {
+        if (this.range < getMaxRange()) {
+            this.range++;
+        }
+    }
+
+    private void generateParticle(RangeParticleData data, Vec3 pos) {
+        if (level != null && level.isClientSide()) {
+            level.addAlwaysVisibleParticle(data, true, pos.x, pos.y, pos.z, 0, 0, 0);
+        }
+    }
+
+    public String getColor(){
+        return "";
+    }
+
+    // endregion
+
     // region Redstone Control
 
     /**
@@ -336,6 +399,16 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         }
 
         super.serverTick();
+    }
+
+    @Override
+    public void clientTick() {
+        if (this.isRangeVisible()) {
+            generateParticle(new RangeParticleData(getRange(), this.getColor()),
+                new Vec3(getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ()));
+        }
+
+        super.clientTick();
     }
 
     public boolean canAct() {
@@ -560,6 +633,11 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         if (fluidTank != null) {
             pTag.put(MachineNBTKeys.FLUID, fluidTank.writeToNBT(new CompoundTag()));
         }
+
+        if (getMaxRange() > 0) {
+            pTag.putInt(MachineNBTKeys.RANGE, getRange());
+            pTag.putBoolean(MachineNBTKeys.RANGE_VISIBLE, isRangeVisible());
+        }
     }
 
     @Override
@@ -583,6 +661,15 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         if (this.level != null) {
             onIOConfigChanged();
         }
+
+        if (pTag.contains(MachineNBTKeys.RANGE)) {
+            this.range = pTag.getInt(MachineNBTKeys.RANGE);
+        }
+
+        if (pTag.contains(MachineNBTKeys.RANGE_VISIBLE)) {
+            this.rangeVisible = pTag.getBoolean(MachineNBTKeys.RANGE_VISIBLE);
+        }
+
 
         // Mark capability cache dirty
         isCapabilityCacheDirty = true;

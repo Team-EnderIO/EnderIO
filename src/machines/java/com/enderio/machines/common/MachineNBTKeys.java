@@ -19,4 +19,6 @@ public class MachineNBTKeys extends EIONBTKeys {
     // TODO: If the previous TODO is carried out, these should probably be moved to PrimitiveAlloySmelterBlockEntity
     public static final String BURN_TIME = "BurnTime";
     public static final String BURN_DURATION = "BurnDuration";
+    public static final String RANGE = "Range";
+    public static final String RANGE_VISIBLE = "RangeVisible";
 }

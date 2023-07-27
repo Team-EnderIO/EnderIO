@@ -38,8 +38,8 @@ public class PoweredSpawnerScreen extends EIOScreen<PoweredSpawnerMenu> {
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
 
         addRenderableWidget(new ToggleImageButton<>(this, leftPos + imageWidth - 8 - 13, topPos + 20, 16, 16, 0, 0, 16, 0, RANGE_BUTTON_TEXTURE,
-            () -> menu.getBlockEntity().isShowingRange(), state -> menu.getBlockEntity().shouldShowRange(state),
-            () -> menu.getBlockEntity().isShowingRange() ? EIOLang.HIDE_RANGE : EIOLang.SHOW_RANGE));
+            () -> menu.getBlockEntity().isRangeVisible(), state -> menu.getBlockEntity().setRangeVisible(state),
+            () -> menu.getBlockEntity().isRangeVisible() ? EIOLang.HIDE_RANGE : EIOLang.SHOW_RANGE));
 
         addRenderableOnly(new ProgressWidget.BottomUp(this, () -> menu.getBlockEntity().getSpawnProgress(), getGuiLeft() + 82, getGuiTop() + 38, 14, 14, 176, 0));
 
