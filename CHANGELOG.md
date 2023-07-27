@@ -6,6 +6,7 @@
 - Wired Charger
 
 ### Changed
+- Reusing lang keys for different types of glass, should reduce burden on translators.
 
 ### Removed
 
