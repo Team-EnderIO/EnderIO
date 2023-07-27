@@ -3,7 +3,7 @@
   "category": "building",
   "key": {
     "G": {
-      "item": "enderio:clear_glass_enp"
+      "item": "enderio:clear_glass_ep"
     },
     "T": {
       "item": "minecraft:redstone_torch"
