@@ -15,6 +15,7 @@
 - Fixed enchanter shift-click duplication.
 - Fixed enchanter needing slightly more XP than listed.
 - Fixed autosmelt causing incorrect behaviour, notably when breaking conduits.
+- Fixed broken inverted glass recipes.
 
 ## [6.0.7-alpha] - 2023-07-25
 
