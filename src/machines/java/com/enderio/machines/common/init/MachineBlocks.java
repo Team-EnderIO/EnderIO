@@ -200,6 +200,10 @@ public class MachineBlocks {
         .blockstate((ctx, prov) -> MachineModelUtil.customMachineBlock(ctx, prov, "crafter"))
         .register();
 
+    public static final BlockEntry<ProgressMachineBlock> DRAIN = standardMachine("drain", () -> MachineBlockEntities.DRAIN)
+        .lang("Drain")
+        .register();
+
     //used when single methods needs to be overridden in the block class
     private static BlockBuilder<ProgressMachineBlock, Registrate> standardMachine(BlockBuilder<ProgressMachineBlock, Registrate> machineBlock) {
         return machineBlock
