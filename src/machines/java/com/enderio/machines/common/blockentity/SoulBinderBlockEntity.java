@@ -131,10 +131,13 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
 
             @Override
             public int fill(FluidStack resource, FluidAction action) {
-                if (!this.getFluid().getFluid().isSame(EIOFluids.XP_JUICE.getSource()) && this.isFluidValid(resource)) { // Auto convert to own fluid (source) type
-                    resource = new FluidStack(EIOFluids.XP_JUICE.getSource(), resource.getAmount());
+                // Convert into XP Juice
+                if (this.isFluidValid(resource)) {
+                    return super.fill(new FluidStack(EIOFluids.XP_JUICE.getSource(), resource.getAmount()), action);
                 }
-                return super.fill(resource, action);
+
+                // Non-XP is not allowed.
+                return 0;
             }
         };
     }
