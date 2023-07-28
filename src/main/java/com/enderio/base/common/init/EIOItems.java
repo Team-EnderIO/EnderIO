@@ -339,6 +339,7 @@ public class EIOItems {
         .item("dark_steel_sword", DarkSteelSwordItem::new)
         .tab(EIOCreativeTabs.GEAR)
         .lang("The Ender")
+        .model((ctx, prov) -> prov.handheld(ctx))
         .register();
 
     // TODO: Bring these back when they are finished.
