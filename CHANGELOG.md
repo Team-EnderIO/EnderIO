@@ -17,6 +17,7 @@
 - Fixed autosmelt causing incorrect behaviour, notably when breaking conduits.
 - Fixed broken inverted glass recipes.
 - Fixed mob token recipe.
+- Fixed 'The Ender' item model.
 
 ## [6.0.7-alpha] - 2023-07-25
 
