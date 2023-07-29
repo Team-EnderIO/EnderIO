@@ -1,6 +1,5 @@
 {
   "type": "enderio:direct_upgrade",
-
   "conditions": [
     {
       "condition": "enderio:has_direct_upgrade"

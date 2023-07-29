@@ -206,6 +206,16 @@ public class MachineRecipeProvider extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.ENSOULED_CHASSIS.get()))
             .save(finishedRecipeConsumer);
 
+        ShapedRecipeBuilder
+            .shaped(RecipeCategory.MISC, MachineBlocks.WIRED_CHARGER.get())
+            .define('C', EIOItems.COPPER_ALLOY_INGOT.get())
+            .define('V', EIOBlocks.VOID_CHASSIS.get())
+            .pattern("CCC")
+            .pattern("CVC")
+            .pattern("CCC")
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.VOID_CHASSIS.get()))
+            .save(finishedRecipeConsumer);
+
         ShapedEntityStorageRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.POWERED_SPAWNER)
             .define('I', EIOItems.SOULARIUM_INGOT) //TODO Maybe also soulchains?

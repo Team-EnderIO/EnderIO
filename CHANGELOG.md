@@ -3,14 +3,37 @@
 ## [Unreleased]
 
 ### Added
+- Wired Charger
 
 ### Changed
+- Reusing lang keys for different types of glass, should reduce burden on translators.
+- Energy conduits now round-robin.
 
 ### Removed
 
 ### Fixed
+- Allow redstone to connect to machines.
+- Fixed enchanter shift-click duplication.
+- Fixed enchanter needing slightly more XP than listed.
+- Fixed autosmelt causing incorrect behaviour, notably when breaking conduits.
+- Fixed broken inverted glass recipes.
+- Fixed mob token recipe.
+- Fixed 'The Ender' item model.
 
-## [6.0.6-alpha] - 2023-07-24
+## [6.0.7-alpha] - 2023-07-25
+
+### Changed
+- Changed the input locking system to allow quick swapping stacks.
+
+### Removed
+- An old piece of broken code that was supposed to already be gone due to its issues
+
+### Fixed
+- Fixed using the alloy smelter for normal smelting.
+- Fixed the primitive alloy smelter crash.
+- Fixed the crash related to the removed portion of code.
+
+## 6.0.6-alpha - 2023-07-24
 
 ### Added
 - Recipes for the capacitor banks.

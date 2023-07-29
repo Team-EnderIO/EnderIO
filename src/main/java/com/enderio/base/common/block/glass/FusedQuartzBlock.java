@@ -1,9 +1,12 @@
 package com.enderio.base.common.block.glass;
 
+import com.enderio.EnderIO;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.lang.EIOLang;
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
@@ -23,12 +26,23 @@ public class FusedQuartzBlock extends AbstractGlassBlock {
     private final GlassCollisionPredicate collisionPredicate;
     private final GlassLighting glassLighting;
     private final boolean explosionResistant;
+    private final String descriptionId;
 
-    public FusedQuartzBlock(Properties pProps, GlassIdentifier glassIdentifier) {
+    public FusedQuartzBlock(Properties pProps, GlassIdentifier glassIdentifier, @Nullable DyeColor color) {
         super(pProps);
         this.collisionPredicate = glassIdentifier.collisionPredicate();
         this.glassLighting = glassIdentifier.lighting();
         this.explosionResistant = glassIdentifier.explosion_resistance();
+
+        String baseName = explosionResistant ? "fused_quartz" : "clear_glass";
+        String lightingName = glassLighting != GlassLighting.NONE ? "_" + glassLighting.shortName() : "";
+        String colorName = color != null ? "_" + color.getName() : "";
+        descriptionId = "block.enderio." + baseName + lightingName + colorName;
+    }
+
+    @Override
+    public String getDescriptionId() {
+        return descriptionId;
     }
 
     @Override

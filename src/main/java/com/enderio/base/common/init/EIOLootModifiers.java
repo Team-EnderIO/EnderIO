@@ -1,6 +1,8 @@
 package com.enderio.base.common.init;
 
 import com.enderio.EnderIO;
+import com.enderio.base.common.enchantment.AutoSmeltEnchantment;
+import com.enderio.base.common.enchantment.AutoSmeltModifier;
 import com.enderio.base.common.item.darksteel.upgrades.direct.DirectUpgradeLootCondition;
 import com.enderio.base.common.item.darksteel.upgrades.direct.DirectUpgradeLootModifier;
 import com.enderio.base.common.loot.BrokenSpawnerLootModifier;
@@ -21,6 +23,7 @@ public class EIOLootModifiers {
 
     private final static DeferredRegister<LootItemConditionType> CONDITIONS = DeferredRegister.create(Registries.LOOT_CONDITION_TYPE, EnderIO.MODID);
 
+    public static RegistryObject<Codec<AutoSmeltModifier>> AUTO_SMELT = SERIALIZERS.register("auto_smelt", AutoSmeltModifier.CODEC);
     public static RegistryObject<Codec<CapacitorLootModifier>> CAPACITOR_SERIALIZER = SERIALIZERS.register("capacitor_loot", CapacitorLootModifier.CODEC);
     public static RegistryObject<Codec<BrokenSpawnerLootModifier>> BROKEN_SPAWNER_SERIALIZER = SERIALIZERS.register("broken_spawner", BrokenSpawnerLootModifier.CODEC);
     public static RegistryObject<Codec<DirectUpgradeLootModifier>> DIRECT_UPGRADE_SERIALIZER = SERIALIZERS.register("direct_upgrade", DirectUpgradeLootModifier.CODEC);
