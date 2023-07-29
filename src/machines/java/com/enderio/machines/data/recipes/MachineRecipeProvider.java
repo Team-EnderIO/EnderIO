@@ -255,91 +255,45 @@ public class MachineRecipeProvider extends RecipeProvider {
             .save(finishedRecipeConsumer);
 
         ShapedRecipeBuilder
-            .shaped(RecipeCategory.MISC, MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.SIMPLE))
-            .define('C', EIOItems.COPPER_ALLOY_INGOT)
-            .define('F', EIOTags.Items.CLEAR_GLASS)
+            .shaped(RecipeCategory.MISC, MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.ENERGETIC))
+            .define('E', EIOItems.ENERGETIC_ALLOY_INGOT)
+            .define('F', EIOTags.Items.FUSED_QUARTZ)
             .define('P', EIOItems.PHOTOVOLTAIC_PLATE)
-            .define('I', EIOItems.GRAINS_OF_INFINITY)
-            .define('G', EIOItems.GEAR_IRON)
-            .pattern("CFC")
+            .define('C', EIOItems.BASIC_CAPACITOR)
+            .define('D', Items.DAYLIGHT_DETECTOR)
+            .pattern("EFE")
             .pattern("PPP")
-            .pattern("IGI")
+            .pattern("CDC")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PHOTOVOLTAIC_PLATE.get()))
             .save(finishedRecipeConsumer);
 
         ShapedRecipeBuilder
-            .shaped(RecipeCategory.MISC, MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.BASIC))
-            .define('E', EIOItems.ENERGETIC_ALLOY_INGOT)
-            .define('F', EIOTags.Items.FUSED_QUARTZ)
-            .define('P', EIOItems.PHOTOVOLTAIC_PLATE)
-            .define('C', EIOItems.BASIC_CAPACITOR)
-            .define('D', Items.DAYLIGHT_DETECTOR)
-            .pattern("EFE")
-            .pattern("PPP")
-            .pattern("CDC")
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PHOTOVOLTAIC_PLATE.get()))
-            .save(finishedRecipeConsumer);
-        ShapedRecipeBuilder
-            .shaped(RecipeCategory.MISC, MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.BASIC))
-            .define('E', EIOItems.ENERGETIC_ALLOY_INGOT)
-            .define('F', EIOTags.Items.FUSED_QUARTZ)
-            .define('P', MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.SIMPLE))
-            .define('C', EIOItems.BASIC_CAPACITOR)
-            .define('D', Items.DAYLIGHT_DETECTOR)
-            .pattern("EFE")
-            .pattern(" P ")
-            .pattern("CDC")
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.SIMPLE)))
-            .save(finishedRecipeConsumer, EnderIO.loc(RecipeBuilder.getDefaultRecipeId(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.BASIC)).getPath() + "_upgrade"));
-        ShapedRecipeBuilder
-            .shaped(RecipeCategory.MISC, MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.ADVANCED))
+            .shaped(RecipeCategory.MISC, MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING))
             .define('I', EIOItems.PULSATING_ALLOY_INGOT)
             .define('F', EIOTags.Items.ENLIGHTENED_FUSED_QUARTZ)
             .define('P', EIOItems.PHOTOVOLTAIC_PLATE)
+            .define('D', EIOItems.POWDERED_COAL)
             .define('C', EIOItems.DOUBLE_LAYER_CAPACITOR)
-            .define('D', Items.DAYLIGHT_DETECTOR)
+            .define('S', MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.ENERGETIC))
             .pattern("IFI")
-            .pattern("PPP")
-            .pattern("CDC")
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PHOTOVOLTAIC_PLATE))
-            .save(finishedRecipeConsumer);
-        ShapedRecipeBuilder
-            .shaped(RecipeCategory.MISC, MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.ADVANCED))
-            .define('I', EIOItems.PULSATING_ALLOY_INGOT)
-            .define('F', EIOTags.Items.ENLIGHTENED_FUSED_QUARTZ)
-            .define('E', EIOItems.ENERGETIC_ALLOY_INGOT)
-            .define('P', EIOItems.POWDERED_COAL)
-            .define('C', EIOItems.BASIC_CAPACITOR)
-            .define('S', MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.BASIC))
-            .pattern("IFI")
-            .pattern("EPE")
+            .pattern("PDP")
             .pattern("CSC")
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.BASIC)))
-            .save(finishedRecipeConsumer, EnderIO.loc(RecipeBuilder.getDefaultRecipeId(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.ADVANCED)).getPath() + "_upgrade"));
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.ENERGETIC)))
+            .save(finishedRecipeConsumer, EnderIO.loc(RecipeBuilder.getDefaultRecipeId(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING)).getPath()));
+
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.VIBRANT))
             .define('I', EIOItems.VIBRANT_ALLOY_INGOT)
             .define('F', EIOTags.Items.DARK_FUSED_QUARTZ)
             .define('P', EIOItems.PHOTOVOLTAIC_PLATE)
-            .define('C', EIOItems.OCTADIC_CAPACITOR)
-            .define('D', Items.DAYLIGHT_DETECTOR)
-            .pattern("IFI")
-            .pattern("PPP")
-            .pattern("CDC")
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PHOTOVOLTAIC_PLATE))
-            .save(finishedRecipeConsumer);
-        ShapedRecipeBuilder
-            .shaped(RecipeCategory.MISC, MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.VIBRANT))
-            .define('I', EIOItems.VIBRANT_ALLOY_INGOT)
-            .define('F', EIOTags.Items.DARK_FUSED_QUARTZ)
             .define('G', Items.GLOWSTONE)
-            .define('C', EIOItems.DOUBLE_LAYER_CAPACITOR)
-            .define('P', MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.ADVANCED))
+            .define('C', EIOItems.OCTADIC_CAPACITOR)
+            .define('S', MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING))
             .pattern("IFI")
-            .pattern("IGI")
-            .pattern("CPC")
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.ADVANCED)))
-            .save(finishedRecipeConsumer, EnderIO.loc(RecipeBuilder.getDefaultRecipeId(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.VIBRANT)).getPath() + "_upgrade"));
+            .pattern("PGP")
+            .pattern("CSC")
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING)))
+            .save(finishedRecipeConsumer, EnderIO.loc(RecipeBuilder.getDefaultRecipeId(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.VIBRANT)).getPath()));
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.PAINTING_MACHINE.get())

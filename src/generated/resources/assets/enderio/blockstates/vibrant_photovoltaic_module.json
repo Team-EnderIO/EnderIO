@@ -2,12 +2,12 @@
   "multipart": [
     {
       "apply": {
-        "model": "enderio:block/vibrant_photovoltaic_cell_base"
+        "model": "enderio:block/vibrant_photovoltaic_module_base"
       }
     },
     {
       "apply": {
-        "model": "enderio:block/vibrant_photovoltaic_cell_side"
+        "model": "enderio:block/vibrant_photovoltaic_module_side"
       },
       "when": {
         "north": "true"
@@ -15,7 +15,7 @@
     },
     {
       "apply": {
-        "model": "enderio:block/vibrant_photovoltaic_cell_side",
+        "model": "enderio:block/vibrant_photovoltaic_module_side",
         "y": 90
       },
       "when": {
@@ -24,7 +24,7 @@
     },
     {
       "apply": {
-        "model": "enderio:block/vibrant_photovoltaic_cell_side",
+        "model": "enderio:block/vibrant_photovoltaic_module_side",
         "y": 180
       },
       "when": {
@@ -33,7 +33,7 @@
     },
     {
       "apply": {
-        "model": "enderio:block/vibrant_photovoltaic_cell_side",
+        "model": "enderio:block/vibrant_photovoltaic_module_side",
         "y": 270
       },
       "when": {
@@ -42,7 +42,7 @@
     },
     {
       "apply": {
-        "model": "enderio:block/vibrant_photovoltaic_cell_corner"
+        "model": "enderio:block/vibrant_photovoltaic_module_corner"
       },
       "when": {
         "north_east": "true"
@@ -50,7 +50,7 @@
     },
     {
       "apply": {
-        "model": "enderio:block/vibrant_photovoltaic_cell_corner",
+        "model": "enderio:block/vibrant_photovoltaic_module_corner",
         "y": 90
       },
       "when": {
@@ -59,7 +59,7 @@
     },
     {
       "apply": {
-        "model": "enderio:block/vibrant_photovoltaic_cell_corner",
+        "model": "enderio:block/vibrant_photovoltaic_module_corner",
         "y": 180
       },
       "when": {
@@ -68,7 +68,7 @@
     },
     {
       "apply": {
-        "model": "enderio:block/vibrant_photovoltaic_cell_corner",
+        "model": "enderio:block/vibrant_photovoltaic_module_corner",
         "y": 270
       },
       "when": {

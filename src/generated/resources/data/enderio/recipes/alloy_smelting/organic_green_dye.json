@@ -1,28 +1,28 @@
 {
   "type": "enderio:alloy_smelting",
-  "energy": 7600,
+  "energy": 1500,
   "experience": 0.3,
   "inputs": [
     {
       "count": 1,
       "ingredient": {
-        "tag": "forge:ingots/nether_brick"
+        "tag": "forge:dyes/green"
       }
     },
     {
-      "count": 4,
+      "count": 1,
       "ingredient": {
-        "item": "minecraft:nether_wart"
+        "item": "minecraft:egg"
       }
     },
     {
-      "count": 6,
+      "count": 1,
       "ingredient": {
-        "item": "minecraft:clay_ball"
+        "tag": "forge:dusts/coal"
       }
     }
   ],
   "result": {
-    "item": "enderio:nethercotta"
+    "item": "enderio:organic_green_dye"
   }
 }

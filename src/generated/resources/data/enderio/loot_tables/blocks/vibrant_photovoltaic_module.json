@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "enderio:advanced_photovoltaic_cell"
+          "name": "enderio:vibrant_photovoltaic_module"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "enderio:blocks/advanced_photovoltaic_cell"
+  "random_sequence": "enderio:blocks/vibrant_photovoltaic_module"
 }

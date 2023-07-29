@@ -3,10 +3,10 @@
   "category": "misc",
   "key": {
     "C": {
-      "item": "enderio:basic_capacitor"
+      "item": "enderio:double_layer_capacitor"
     },
-    "E": {
-      "item": "enderio:energetic_alloy_ingot"
+    "D": {
+      "item": "enderio:powdered_coal"
     },
     "F": {
       "tag": "enderio:enlighted_fused_quartz"
@@ -15,19 +15,19 @@
       "item": "enderio:pulsating_alloy_ingot"
     },
     "P": {
-      "item": "enderio:powdered_coal"
+      "item": "enderio:photovoltaic_plate"
     },
     "S": {
-      "item": "enderio:basic_photovoltaic_cell"
+      "item": "enderio:energetic_photovoltaic_module"
     }
   },
   "pattern": [
     "IFI",
-    "EPE",
+    "PDP",
     "CSC"
   ],
   "result": {
-    "item": "enderio:advanced_photovoltaic_cell"
+    "item": "enderio:pulsating_photovoltaic_module"
   },
   "show_notification": true
 }

@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "enderio:basic_photovoltaic_cell"
+          "name": "enderio:energetic_photovoltaic_module"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "enderio:blocks/basic_photovoltaic_cell"
+  "random_sequence": "enderio:blocks/energetic_photovoltaic_module"
 }

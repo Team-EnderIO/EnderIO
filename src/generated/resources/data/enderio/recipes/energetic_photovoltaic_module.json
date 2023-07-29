@@ -15,16 +15,16 @@
       "tag": "enderio:fused_quartz"
     },
     "P": {
-      "item": "enderio:simple_photovoltaic_cell"
+      "item": "enderio:photovoltaic_plate"
     }
   },
   "pattern": [
     "EFE",
-    " P ",
+    "PPP",
     "CDC"
   ],
   "result": {
-    "item": "enderio:basic_photovoltaic_cell"
+    "item": "enderio:energetic_photovoltaic_module"
   },
   "show_notification": true
 }

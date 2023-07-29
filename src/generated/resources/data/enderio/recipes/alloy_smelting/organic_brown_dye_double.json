@@ -1,28 +1,29 @@
 {
   "type": "enderio:alloy_smelting",
-  "energy": 6400,
+  "energy": 2000,
   "experience": 0.3,
   "inputs": [
     {
-      "count": 1,
+      "count": 2,
       "ingredient": {
-        "tag": "forge:end_stones"
+        "item": "minecraft:brown_dye"
       }
     },
     {
       "count": 1,
       "ingredient": {
-        "item": "enderio:dark_steel_ingot"
+        "tag": "forge:slimeballs"
       }
     },
     {
-      "count": 1,
+      "count": 2,
       "ingredient": {
-        "tag": "forge:obsidian"
+        "tag": "forge:dusts/coal"
       }
     }
   ],
   "result": {
-    "item": "enderio:end_steel_ingot"
+    "count": 2,
+    "item": "enderio:organic_brown_dye"
   }
 }
