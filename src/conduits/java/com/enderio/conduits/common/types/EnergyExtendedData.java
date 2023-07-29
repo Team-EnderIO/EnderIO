@@ -3,6 +3,7 @@ package com.enderio.conduits.common.types;
 import com.enderio.api.conduit.IExtendedConduitData;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
@@ -26,6 +27,7 @@ public class EnergyExtendedData implements IExtendedConduitData<EnergyExtendedDa
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
+        energySidedData.clear();
         for (Direction direction: Direction.values()) {
             if (nbt.contains(direction.name())) {
                 energySidedData.put(direction, EnergySidedData.fromNbt(nbt.getCompound(direction.name())));
@@ -33,9 +35,6 @@ public class EnergyExtendedData implements IExtendedConduitData<EnergyExtendedDa
         }
     }
 
-    public EnergySidedData get(Direction direction) {
-        return energySidedData.getOrDefault(direction, new EnergySidedData());
-    }
     public EnergySidedData compute(Direction direction) {
         return energySidedData.computeIfAbsent(direction, dir -> new EnergySidedData());
     }
@@ -55,8 +54,8 @@ public class EnergyExtendedData implements IExtendedConduitData<EnergyExtendedDa
 
         private static EnergySidedData fromNbt(CompoundTag nbt) {
             EnergySidedData sidedData = new EnergySidedData();
-            if (nbt.contains(KEY_ROTATING_INDEX))
-                sidedData.rotatingIndex= nbt.getInt(KEY_ROTATING_INDEX);
+            if (nbt.contains(KEY_ROTATING_INDEX, Tag.TAG_INT))
+                sidedData.rotatingIndex = nbt.getInt(KEY_ROTATING_INDEX);
             return sidedData;
         }
 
