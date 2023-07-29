@@ -32,14 +32,14 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<IItemHandler
                     if (inserts.size() <= sidedExtractData.rotatingIndex) {
                         sidedExtractData.rotatingIndex = 0;
                     }
-                    for (int j = 0; j < sidedExtractData.rotatingIndex; j++) {
-                        //empty lists are verified in ICapabilityAwareConduitTicker
-                        //this moves the first element to the back to give a new cap the next time this is called
-                        inserts.add(inserts.remove(0));
-                    }
+                } else {
+                    sidedExtractData.rotatingIndex = 0;
                 }
-                for (int j = 0; j < inserts.size(); j++) {
-                    CapabilityConnection insert = inserts.get(j);
+
+                for (int j = sidedExtractData.rotatingIndex; j < sidedExtractData.rotatingIndex + inserts.size(); j++) {
+                    int insertIndex = j % inserts.size();
+                    CapabilityConnection insert = inserts.get(insertIndex);
+
                     if (!sidedExtractData.selfFeed
                         && extract.direction == insert.direction
                         && extract.data == insert.data)
@@ -48,7 +48,7 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<IItemHandler
                     if (notInserted.getCount() < extractedItem.getCount()) {
                         extractHandler.extractItem(i, extractedItem.getCount() - notInserted.getCount(), false);
                         if (sidedExtractData.roundRobin) {
-                            sidedExtractData.rotatingIndex += j + 1;
+                            sidedExtractData.rotatingIndex += insertIndex + 1;
                         }
                         continue toNextExtract;
                     }
