@@ -1,0 +1,23 @@
+{
+  "type": "enderio:chest_loot",
+  "conditions": [
+    {
+      "condition": "minecraft:any_of",
+      "terms": [
+        {
+          "condition": "forge:loot_table_id",
+          "loot_table_id": "minecraft:chests/village/village_armorer"
+        },
+        {
+          "condition": "forge:loot_table_id",
+          "loot_table_id": "minecraft:chests/village/village_toolsmith"
+        },
+        {
+          "condition": "forge:loot_table_id",
+          "loot_table_id": "minecraft:chests/village/village_weaponsmith"
+        }
+      ]
+    }
+  ],
+  "loot_table": "enderio:chests/alloy_loot"
+}
