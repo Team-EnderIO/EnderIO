@@ -10,7 +10,6 @@ import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
-import com.enderio.machines.common.blockentity.task.CraftingMachineTask;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingMachineTask;
 import com.enderio.machines.common.blockentity.task.host.CraftingMachineTaskHost;
 import com.enderio.machines.common.config.MachinesConfig;
@@ -48,7 +47,9 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
     public static final SingleSlotAccess INPUT_SOUL = new SingleSlotAccess();
     public static final SingleSlotAccess INPUT_OTHER = new SingleSlotAccess();
     public static final MultiSlotAccess OUTPUT = new MultiSlotAccess();
-
+    private final SoulBindingRecipe.Container fakeContainer = new SoulBindingRecipe.Container(getInventoryNN(), () -> Integer.MAX_VALUE);
+    @Nullable
+    private SoulBindingRecipe recipe;
     @UseOnly(LogicalSide.CLIENT)
     private int clientExp = 0;
 
@@ -65,20 +66,10 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
 
         // Create the crafting task host
         craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy,
-            MachineRecipes.SOUL_BINDING.type().get(), new SoulBindingRecipe.Container(getInventoryNN()), this::createTask);
+            MachineRecipes.SOUL_BINDING.type().get(), new SoulBindingRecipe.Container(getInventoryNN(), getFluidTankNN()::getFluidAmount), this::createTask);
 
         // Sync crafting container needed xp
-        addDataSlot(new IntegerNetworkDataSlot(() -> {
-            CraftingMachineTask<SoulBindingRecipe, SoulBindingRecipe.Container> currentTask = craftingTaskHost.getCurrentTask();
-            if (currentTask == null || currentTask.getProgress() > 0) {
-                return 0;
-            }
-            SoulBindingRecipe recipe = currentTask.getRecipe();
-            if (recipe == null) {
-                return 0;
-            }
-            return recipe.getExpCost();
-        }, i -> clientExp = i));
+        addDataSlot(new IntegerNetworkDataSlot(() -> recipe == null ? 0: recipe.getExpCost(), i -> clientExp = i));
     }
 
     @Override
@@ -125,6 +116,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
     @Override
     protected void onInventoryContentsChanged(int slot) {
         super.onInventoryContentsChanged(slot);
+        recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.SOUL_BINDING.type().get(), fakeContainer, level).orElse(null);
         craftingTaskHost.newTaskAvailable();
     }
 
@@ -143,6 +135,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
             @Override
             protected void onContentsChanged() {
                 craftingTaskHost.newTaskAvailable();
+                recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.SOUL_BINDING.type().get(), fakeContainer, level).orElse(null);
                 setChanged();
             }
 
@@ -180,11 +173,6 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
                 var fluidTank = getFluidTankNN();
                 int leftover = ExperienceUtil.getLevelFromFluidWithLeftover(fluidTank.getFluidAmount(), 0, recipe.getExpCost()).y();
                 fluidTank.drain(fluidTank.getFluidAmount() - leftover * EXP_TO_FLUID, IFluidHandler.FluidAction.EXECUTE);
-            }
-
-            @Override
-            public boolean canStart(SoulBindingRecipe recipe) {
-                return ExperienceUtil.getLevelFromFluid(getFluidTankNN().getFluidAmount()) >= recipe.getExpCost();
             }
         };
     }

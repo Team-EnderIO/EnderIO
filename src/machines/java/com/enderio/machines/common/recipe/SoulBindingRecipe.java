@@ -4,6 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.api.capability.IEntityStorage;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonObject;
@@ -27,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Container> {
 
@@ -113,7 +115,7 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
             return false;
         }
         if (entityType == null && mobCategory == null) { //type doesn't matter
-            return true;
+            return ExperienceUtil.getLevelFromFluid(container.fluid.get()) >= exp;
         }
         IEntityStorage storage = capability.resolve().get();
         if (storage.hasStoredEntity()) {
@@ -126,11 +128,14 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
                 return false;
 
             if (entityType.getCategory().equals(mobCategory)) {
-                return true;
+                return ExperienceUtil.getLevelFromFluid(container.fluid.get()) >= exp;
             }
         }
         //type matters
-        return storage.hasStoredEntity() && storage.getStoredEntityData().getEntityType().get().equals(entityType);
+        if (storage.hasStoredEntity() && storage.getStoredEntityData().getEntityType().get().equals(entityType)) {
+            return ExperienceUtil.getLevelFromFluid(container.fluid.get()) >= exp;
+        }
+        return false;
     }
 
     @Override
@@ -150,8 +155,11 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
 
     public static class Container extends RecipeWrapper {
 
-        public Container(IItemHandlerModifiable inv) {
+        private final Supplier<Integer> fluid;
+
+        public Container(IItemHandlerModifiable inv, Supplier<Integer> fluid) {
             super(inv);
+            this.fluid = fluid;
         }
     }
 
