@@ -73,7 +73,7 @@ public class CraftingMachineTaskHost<R extends MachineRecipe<C>, C extends Conta
 
         // If recipe has changed
         var currentRecipe = findRecipe();
-        return currentRecipe.map(r -> r != getCurrentTask().getRecipe()).orElse(true);
+        return currentRecipe.map(r -> !r.equals(getCurrentTask().getRecipe())).orElse(true);
     }
 
     // endregion
