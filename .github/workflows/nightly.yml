@@ -12,7 +12,7 @@ on:
       - 'feature/nightly-actions'
 
 jobs:
-  verify:
+  build:
     runs-on: ubuntu-latest
 
     steps:

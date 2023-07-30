@@ -12,7 +12,7 @@ on:
       - 'feature/nightly-actions'
 
 jobs:
-  verify:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -44,6 +44,9 @@ jobs:
 
       - name: Publish to CurseForge and Modrinth
         uses: gradle/gradle-build-action@v2
+        env:
+          CURSEFORGE_TOKEN: 'TEST'
+          MODRINTH_TOKEN: 'TEST''
         with:
           arguments: publishMod
 
