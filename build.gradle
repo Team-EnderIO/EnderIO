@@ -411,24 +411,6 @@ tasks.withType(JavaCompile).configureEach {
 // Utilities
 // ============
 
-// This is the new version format:
-// artifact name
-//   enderio-<mc-version>-<version>
-// version:
-//   <major>.<minor>.<patch>-<cls>-<hash>
-// patch:
-//   defaults to 'version_patch'
-//   overriten by CI / build server
-// cls (classifier):
-//   * nightly
-//   * dev
-//   * ci
-//   * snapshot
-//   * etc.
-// hash:
-//   if on a dev machine - the current commit hash
-
-// Examples:
 //   * enderio-1.19.1-6.0.1-alpha.jar :: release version 6.0.1-alpha for mc 1.19.1
 //   * enderio-1.19.1-nightly-4       :: nightly build no. 4 for mc 1.19.1
 //   * enderio-1.19.1-dev-c91c8ee6e   :: dev (local) build for commit c91c8ee6e
