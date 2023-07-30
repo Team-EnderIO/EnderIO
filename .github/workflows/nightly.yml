@@ -1,4 +1,4 @@
-name: Verify Build and Generated Data
+name: Nightly Build
 env:
   CI: true
   BUILD_NUMBER: ${{ github.run_number }}
