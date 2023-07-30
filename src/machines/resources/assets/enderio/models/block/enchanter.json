@@ -1,0 +1,36 @@
+{
+  "parent": "minecraft:block/block",
+  "children": {
+    "book": {
+      "parent": "enderio:block/enchanter_book",
+      "transform": {
+        "origin": "center",
+        "rotation": [
+          -0.19509032,
+          0.0,
+          0.0,
+          0.98078525
+        ],
+        "translation": [
+          0.0,
+          0.703125,
+          -0.21875
+        ]
+      }
+    },
+    "plinth": {
+      "parent": "enderio:block/dialing_device",
+      "textures": {
+        "button": "enderio:block/dark_steel_pressure_plate"
+      }
+    }
+  },
+  "item_render_order": [
+    "plinth",
+    "book"
+  ],
+  "loader": "forge:composite",
+  "textures": {
+    "particle": "enderio:block/dark_steel_pressure_plate"
+  }
+}
