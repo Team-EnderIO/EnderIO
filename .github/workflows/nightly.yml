@@ -42,7 +42,7 @@ jobs:
           name: nightly-build
           path: build/libs/*.jar
 
-      - name: Discord Notification
+      - name: Discord Notification Success
         uses: tsickert/discord-webhook@v5.3.0
         with:
           webhook-url: ${{ secrets.NIGHTLY_DISCORD_WEBHOOK }}
@@ -52,3 +52,17 @@ jobs:
           username: Ender IO Nightowl
           embed-footer-text: Build number ${{ github.run_number }}
           embed-url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          embed-color: 5763719
+
+      - name: Discord Notification Failure
+        if: failure()
+        uses: tsickert/discord-webhook@v5.3.0
+        with:
+          webhook-url: ${{ secrets.NIGHTLY_DISCORD_WEBHOOK }}
+          embed-title: Nightly Build Failed
+          embed-description: The nightly build failed to compile at this commit. ```${{ github.event.head_commit.message }}```
+          avatar-url: https://raw.githubusercontent.com/Team-EnderIO/EnderIO/dev/1.20.1/doc/img/gray-enderface.png
+          username: Ender IO Nightowl
+          embed-footer-text: Build number ${{ github.run_number }}
+          embed-url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          embed-color: 15548997

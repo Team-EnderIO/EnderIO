@@ -64,7 +64,7 @@ jobs:
           stringToTruncate: ${{ github.event.release.body }}
           maxLength: 1000
 
-      - name: Discord Notification
+      - name: Discord Notification Success
         uses: tsickert/discord-webhook@v5.3.0
         with:
           webhook-url: ${{ secrets.RELEASE_DISCORD_WEBHOOK }}
@@ -73,4 +73,18 @@ jobs:
           avatar-url: https://raw.githubusercontent.com/Team-EnderIO/EnderIO/dev/1.20.1/doc/img/enderface.png
           username: Ender IO Releases
           embed-footer-text: ${{ github.event.release.tag_name }}
+          embed-url: ${{ github.event.release.url }}
+          embed-color: 5763719
+
+      - name: Discord Notification Failure
+        if: failure()
+        uses: tsickert/discord-webhook@v5.3.0
+        with:
+          webhook-url: ${{ secrets.PRIVATE_DISCORD_WEBHOOK }}
+          embed-title: ${{ github.event.release.tag_name }} build failed
+          embed-description: The release build is failing at this commit. ```${{ github.event.head_commit.message }}```
+          avatar-url: https://raw.githubusercontent.com/Team-EnderIO/EnderIO/dev/1.20.1/doc/img/gray-enderface.png
+          username: Ender IO Release Failure
+          embed-footer-text: ${{ github.event.release.tag_name }}
           embed-url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          embed-color: 15548997
