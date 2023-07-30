@@ -73,7 +73,7 @@ jobs:
           avatar-url: https://raw.githubusercontent.com/Team-EnderIO/EnderIO/dev/1.20.1/doc/img/enderface.png
           username: Ender IO Releases
           embed-footer-text: ${{ github.event.release.tag_name }}
-          embed-url: ${{ github.event.release.url }}
+          embed-url: ${{ github.event.release.html_url }}
           embed-color: 5763719
 
       - name: Discord Notification Failure
