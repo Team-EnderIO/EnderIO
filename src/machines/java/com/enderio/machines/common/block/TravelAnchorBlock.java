@@ -5,8 +5,6 @@ import com.enderio.machines.common.init.MachineBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.TickEvent;
@@ -19,11 +17,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.WeakHashMap;
 
 @Mod.EventBusSubscriber
-public class TravelAnchorBlock extends Block implements EntityBlock {
+public class TravelAnchorBlock extends MachineBlock {
     private static final WeakHashMap<Player, Pair<Boolean, Integer>> sneakCache = new WeakHashMap<>();
 
     public TravelAnchorBlock(Properties props) {
-        super(props);
+        super(props, MachineBlockEntities.TRAVEL_ANCHOR);
     }
 
     @Nullable

@@ -4,6 +4,9 @@ import com.enderio.base.common.travel.TravelSavedData;
 import com.enderio.core.common.network.slot.ResourceLocationNetworkDataSlot;
 import com.enderio.core.common.network.slot.StringNetworkDataSlot;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
+import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import com.enderio.machines.common.io.item.SingleSlotAccess;
+import com.enderio.machines.common.menu.TravelAnchorMenu;
 import com.enderio.machines.common.travel.AnchorTravelTarget;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
@@ -23,12 +26,24 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
 
     private String name = "";
     private Item icon = Items.AIR;
+    public static final SingleSlotAccess GHOST = new SingleSlotAccess();
 
     public TravelAnchorBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);
         addDataSlot(new StringNetworkDataSlot(() -> getName(), name -> setName(name)));
         addDataSlot(new ResourceLocationNetworkDataSlot(() -> ForgeRegistries.ITEMS.getKey(getIcon()), (loc) -> setIcon(ForgeRegistries.ITEMS.getValue(loc))));
         name = ('a' + new Random().nextInt(26)) + "";
+    }
+
+    @Nullable
+    @Override
+    public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
+        return new TravelAnchorMenu(this, inventory, containerId);
+    }
+
+    @Override
+    public @Nullable MachineInventoryLayout getInventoryLayout() {
+        return MachineInventoryLayout.builder().setStackLimit(1).ghostSlot().slotAccess(GHOST).build();
     }
 
     @Nullable
@@ -86,9 +101,4 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
         return TravelSavedData.getTravelData(level);
     }
 
-    @Nullable
-    @Override
-    public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
-        return null;
-    }
 }
