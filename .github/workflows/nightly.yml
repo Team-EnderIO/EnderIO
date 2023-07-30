@@ -35,3 +35,14 @@ jobs:
         with:
           name: nightly-build
           path: build/libs/*.jar
+
+      - name: Discord Notification
+        uses: tsickert/discord-webhook@v5.3.0
+        with:
+          webhook-url: ${{ secrets.NIGHTLY_DISCORD_WEBHOOK }}
+          embed-title: New Nightly Build
+          embed-description: A new nightly build of Ender IO has been built. If you use this, please remember to report issues!
+          avatar-url: https://raw.githubusercontent.com/Team-EnderIO/EnderIO/dev/1.20.1/doc/img/enderface.png
+          username: Ender IO Nightowl
+          embed-footer-text: Build number ${{ github.run_number }}
+          embed-url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
