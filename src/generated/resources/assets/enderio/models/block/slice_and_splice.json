@@ -1,23 +1,12 @@
 {
-  "parent": "minecraft:block/block",
-  "children": {
-    "frame": {
-      "parent": "enderio:block/soul_machine_frame"
-    },
-    "front": {
-      "parent": "enderio:block/slice_and_splice_front"
-    },
-    "overlay": {
-      "parent": "enderio:block/io_overlay"
-    }
-  },
-  "item_render_order": [
-    "frame",
-    "overlay",
-    "front"
-  ],
-  "loader": "forge:composite",
+  "parent": "minecraft:block/cube",
   "textures": {
-    "particle": "enderio:block/soul_machine_side"
+    "down": "enderio:block/soul_machine_bottom",
+    "east": "enderio:block/soul_machine_side",
+    "north": "enderio:block/slice_and_splice_front",
+    "particle": "enderio:block/slice_and_splice_front",
+    "south": "enderio:block/soul_machine_back",
+    "up": "enderio:block/soul_machine_top",
+    "west": "enderio:block/soul_machine_side"
   }
 }

@@ -1,6 +1,0 @@
-{
-  "parent": "enderio:block/stirling_generator_front",
-  "textures": {
-    "front": "enderio:block/stirling_generator_front_on"
-  }
-}

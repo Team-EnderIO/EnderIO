@@ -2,12 +2,12 @@
   "parent": "minecraft:block/block",
   "children": {
     "frame": {
-      "parent": "enderio:block/machine_frame"
+      "parent": "enderio:block/soul_machine_frame"
     },
     "front": {
-      "parent": "enderio:block/sag_mill_front",
+      "parent": "enderio:block/powered_spawner_front",
       "textures": {
-        "front": "enderio:block/sag_mill_front_on"
+        "front": "enderio:block/powered_spawner_front_active"
       }
     },
     "overlay": {
@@ -21,6 +21,6 @@
   ],
   "loader": "forge:composite",
   "textures": {
-    "particle": "enderio:block/machine_side"
+    "particle": "enderio:block/soul_machine_side"
   }
 }
