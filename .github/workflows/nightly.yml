@@ -9,7 +9,8 @@ env:
 on:
   push:
     branches:
-      - 'dev/*'
+#      - 'dev/*'
+      - 'feature/nightly-actions'
 
 jobs:
   verify:
