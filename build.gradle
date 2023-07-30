@@ -353,6 +353,7 @@ if (getReleaseType() != null) {
         displayName = "Ender IO - ${getVersionString()}"
         // TODO: Feed this from GitHub actions.
         //changelog = project.changelog.renderItem(project.changelog.get(getVersionString()), Changelog.OutputType.MARKDOWN)
+        changelog = 'todo'
         gameVersions = [minecraft_version]
         loaders = ["forge"]
         artifact = tasks.jarJar
