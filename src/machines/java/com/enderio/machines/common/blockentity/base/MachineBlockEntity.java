@@ -41,7 +41,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import net.minecraftforge.common.ForgeMod;
@@ -284,9 +283,13 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         }
     }
 
-    private void generateParticle(RangeParticleData data, Vec3 pos) {
+    public BlockPos getParticleLocation() {
+        return getBlockPos();
+    }
+
+    private void generateParticle(RangeParticleData data, BlockPos pos) {
         if (level != null && level.isClientSide()) {
-            level.addAlwaysVisibleParticle(data, true, pos.x, pos.y, pos.z, 0, 0, 0);
+            level.addAlwaysVisibleParticle(data, true, pos.getX(), pos.getY(), pos.getZ(), 0, 0, 0);
         }
     }
 
@@ -404,8 +407,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     @Override
     public void clientTick() {
         if (this.isRangeVisible()) {
-            generateParticle(new RangeParticleData(getRange(), this.getColor()),
-                new Vec3(getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ()));
+            generateParticle(new RangeParticleData(getRange(), this.getColor()), getParticleLocation());
         }
 
         super.clientTick();
