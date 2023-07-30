@@ -3,7 +3,7 @@ env:
   CI: true
   BUILD_VERSION: ${{ github.event.release.tag_name }}
   CHANGELOG: ${{ github.event.release.body }}
-  PUBLISH: false
+  PUBLISH: true
 
 # Run when release is created on GitHub
 on:
