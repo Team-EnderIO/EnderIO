@@ -10,6 +10,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
@@ -87,10 +88,6 @@ public class EntityCaptureUtils {
     }
 
     public static boolean isBlacklistedBoss(Entity entity) {
-        return EntityUtil.getEntityTypeRL(entity)
-            .map(resourceLocation ->
-                EntityUtil.isBoss(entity)
-                && !"minecraft".equals(resourceLocation.getNamespace()))
-            .orElse(false);
+        return entity.getType().is(Tags.EntityTypes.BOSSES);
     }
 }

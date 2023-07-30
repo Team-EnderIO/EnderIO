@@ -3,7 +3,7 @@
   "category": "building",
   "key": {
     "G": {
-      "item": "enderio:fused_quartz_nm"
+      "item": "enderio:fused_quartz_m"
     },
     "T": {
       "item": "minecraft:redstone_torch"

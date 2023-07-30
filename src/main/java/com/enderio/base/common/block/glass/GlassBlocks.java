@@ -19,6 +19,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static com.tterrag.registrate.providers.ProviderType.LANG;
+import static com.tterrag.registrate.util.nullness.NonNullBiConsumer.noop;
+
 /**
  * Container helper for the fused glass/quartz blocks as theres a lot, and this will tidy stuff up.
  */
@@ -34,14 +37,11 @@ public class GlassBlocks {
     public GlassBlocks(Registrate registrate, GlassIdentifier identifier) {
         glassIdentifier = identifier;
         String name = identifier.glassName();
-        String english = createEnglishGlassName(identifier);
-        CLEAR = register(registrate, name, english);
+        CLEAR = register(registrate, name);
         Map<DyeColor, BlockEntry<FusedQuartzBlock>> tempMap = new HashMap<>();
         for (DyeColor color: DyeColor.values()) {
             tempMap.put(color,
-                register(registrate, name.concat("_").concat(color.getName()),
-                    createEnglishPrefix(color).concat(english),
-                    color)
+                register(registrate, name.concat("_").concat(color.getName()), color)
             );
         }
         COLORS = ImmutableMap.copyOf(tempMap);
@@ -55,36 +55,6 @@ public class GlassBlocks {
         return glassIdentifier.explosion_resistance() ? EnderIO.loc("block/fused_quartz") : EnderIO.loc("block/clear_glass");
     }
 
-    private static String createEnglishPrefix(DyeColor color) {
-        StringBuilder builder = new StringBuilder();
-        boolean nextUpper = true;
-        for (char c : color.getName().replace("_", " ").toCharArray()) {
-            if (nextUpper) {
-                builder.append(Character.toUpperCase(c));
-                nextUpper = false;
-                continue;
-            }
-            if (c == ' ') {
-                nextUpper = true;
-            }
-            builder.append(c);
-        }
-        builder.append(" ");
-        return builder.toString();
-    }
-    private static String createEnglishGlassName(GlassIdentifier identifier) {
-        StringBuilder main = new StringBuilder();
-        if (identifier.lighting() != GlassLighting.NONE) {
-            main.append(identifier.lighting().englishName());
-            main.append(" ");
-        }
-        if (identifier.explosion_resistance()) {
-            main.append("Fused Quartz");
-        } else {
-            main.append("Clear Glass");
-        }
-        return main.toString();
-    }
     // Dirty dirty. TODO: Just access transforms for these in Blocks??
     private static boolean never(BlockState p_50806_, BlockGetter p_50807_, BlockPos p_50808_) {
         return false;
@@ -97,11 +67,11 @@ public class GlassBlocks {
     /**
      * Register a non-colored glass
      */
-    private BlockEntry<FusedQuartzBlock> register(Registrate registrate, String name, String english) {
+    private BlockEntry<FusedQuartzBlock> register(Registrate registrate, String name) {
         var builder =  registrate
-            .block(name, props -> new FusedQuartzBlock(props, glassIdentifier))
+            .block(name, props -> new FusedQuartzBlock(props, glassIdentifier, null))
             .tag(glassIdentifier.explosion_resistance() ? EIOTags.Blocks.FUSED_QUARTZ : EIOTags.Blocks.CLEAR_GLASS)
-            .lang(english)
+            .setData(LANG, noop())
             .blockstate((con, prov) -> prov.simpleBlock(con.get(), prov.models().getExistingFile(getModelFile())))
             .properties(props -> props
                 .noOcclusion()
@@ -126,10 +96,10 @@ public class GlassBlocks {
     /**
      * Register a colored glass.
      */
-    private BlockEntry<FusedQuartzBlock> register(Registrate registrate, String name, String english, DyeColor color) {
+    private BlockEntry<FusedQuartzBlock> register(Registrate registrate, String name, DyeColor color) {
         return registrate
-            .block(name, props -> new FusedQuartzBlock(props, glassIdentifier))
-            .lang(english)
+            .block(name, props -> new FusedQuartzBlock(props, glassIdentifier, color))
+            .setData(LANG, noop())
             .blockstate((con, prov) -> prov.simpleBlock(con.get(), prov.models().getExistingFile(getModelFile())))
             .color(() -> () -> (p_92567_, p_92568_, p_92569_, p_92570_) -> color.getMapColor().col)
             .properties(props -> props

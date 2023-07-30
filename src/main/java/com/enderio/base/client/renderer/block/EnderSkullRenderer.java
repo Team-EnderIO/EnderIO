@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -26,8 +26,6 @@ import net.minecraft.world.level.block.state.properties.RotationSegment;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-
-import javax.annotation.Nullable;
 
 public class EnderSkullRenderer implements BlockEntityRenderer<EnderSkullBlockEntity> {
 
@@ -64,23 +62,7 @@ public class EnderSkullRenderer implements BlockEntityRenderer<EnderSkullBlockEn
                 player.level().setBlock(blockEntity.getBlockPos(), blockstate.setValue(SkullBlock.ROTATION, rotation), 3);
             }
         }
-        renderSkull(direction, f1, f, poseStack, buffer, packedLight, skullmodelbase, RENDERTYPE);
-    }
-
-    public static void renderSkull(@Nullable Direction direction, float yRot, float mouthAnimation, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, SkullModelBase model, RenderType renderType) {
-        poseStack.pushPose();
-        if (direction == null) {
-            poseStack.translate(0.5F, 0.0F, 0.5F);
-        } else {
-            float f = 0.25F;
-            poseStack.translate(0.5F - (float)direction.getStepX() * 0.25F, 0.25F, 0.5F - (float)direction.getStepZ() * 0.25F);
-        }
-
-        poseStack.scale(-1.0F, -1.0F, 1.0F);
-        VertexConsumer vertexconsumer = bufferSource.getBuffer(renderType);
-        model.setupAnim(mouthAnimation, yRot, 0.0F);
-        model.renderToBuffer(poseStack, vertexconsumer, packedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
-        poseStack.popPose();
+        SkullBlockRenderer.renderSkull(direction, f1, f, poseStack, buffer, packedLight, skullmodelbase, RENDERTYPE);
     }
 
     public static class EnderSkullModel extends SkullModelBase {

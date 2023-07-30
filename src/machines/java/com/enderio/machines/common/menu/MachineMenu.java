@@ -64,6 +64,8 @@ public abstract class MachineMenu<T extends MachineBlockEntity> extends SyncedMe
             } else {
                 slot.setChanged();
             }
+
+            slot.onTake(pPlayer, itemstack1);
         }
 
         return itemstack;

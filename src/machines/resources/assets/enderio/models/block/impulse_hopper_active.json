@@ -1,0 +1,6 @@
+{
+  "parent": "enderio:block/impulse_hopper",
+  "textures": {
+    "north": "enderio:block/impulse_hopper_front_active"
+  }
+}

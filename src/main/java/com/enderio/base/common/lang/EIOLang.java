@@ -3,11 +3,15 @@ package com.enderio.base.common.lang;
 import com.enderio.EnderIO;
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.misc.ApiLang;
+import com.enderio.base.common.block.glass.GlassLighting;
 import com.enderio.core.common.util.TooltipUtil;
 import com.tterrag.registrate.Registrate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.item.DyeColor;
+
+import java.util.Locale;
 
 public class EIOLang {
     private static final Registrate REGISTRATE = EnderIO.registrate();
@@ -261,10 +265,55 @@ public class EIOLang {
 
     // endregion
 
+    // region Glass Names
+
+    private static void registerGlassLang() {
+        for (var lighting : GlassLighting.values()) {
+            String lightingName = lighting != GlassLighting.NONE ? lighting.englishName() + " " : "";
+            String lightingKeyName = lighting != GlassLighting.NONE ? "_" + lighting.shortName() : "";
+
+            REGISTRATE.addLang("block", EnderIO.loc("clear_glass" + lightingKeyName),
+                lightingName + "Clear Glass");
+            REGISTRATE.addLang("block", EnderIO.loc("fused_quartz" + lightingKeyName),
+                lightingName + "Fused Quartz");
+
+            for (var color : DyeColor.values()) {
+                String colorName = createEnglishPrefix(color);
+
+                REGISTRATE.addLang("block", EnderIO.loc("clear_glass" + lightingKeyName + "_" + color.getName().toLowerCase(Locale.ROOT)),
+                    colorName + lightingName + "Clear Glass");
+                REGISTRATE.addLang("block", EnderIO.loc("fused_quartz" + lightingKeyName + "_" + color.getName().toLowerCase(Locale.ROOT)),
+                    colorName + lightingName + "Fused Quartz");
+            }
+        }
+    }
+
+    private static String createEnglishPrefix(DyeColor color) {
+        StringBuilder builder = new StringBuilder();
+        boolean nextUpper = true;
+        for (char c : color.getName().replace("_", " ").toCharArray()) {
+            if (nextUpper) {
+                builder.append(Character.toUpperCase(c));
+                nextUpper = false;
+                continue;
+            }
+            if (c == ' ') {
+                nextUpper = true;
+            }
+            builder.append(c);
+        }
+        builder.append(" ");
+        return builder.toString();
+    }
+
+    // endregion
+
     public static void register() {
         ApiLang.REDSTONE_ACTIVE_WITH_SIGNAL = REDSTONE_ACTIVE_WITH_SIGNAL;
         ApiLang.REDSTONE_NEVER_ACTIVE = REDSTONE_NEVER_ACTIVE;
         ApiLang.REDSTONE_ALWAYS_ACTIVE = REDSTONE_ALWAYS_ACTIVE;
         ApiLang.REDSTONE_ACTIVE_WITHOUT_SIGNAL = REDSTONE_ACTIVE_WITHOUT_SIGNAL;
+
+        registerGlassLang();
     }
 }
