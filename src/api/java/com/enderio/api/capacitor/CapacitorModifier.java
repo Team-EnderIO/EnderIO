@@ -2,6 +2,7 @@ package com.enderio.api.capacitor;
 
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -18,6 +19,11 @@ public enum CapacitorModifier {
     FIXED;
 
     public final ResourceLocation id;
+
+    public static final List<CapacitorModifier> SELECTABLE_MODIFIERS = List.of(
+        ENERGY_CAPACITY,
+        ENERGY_USE
+    );
 
     CapacitorModifier() {
         this.id = new ResourceLocation("enderio", "capacitor." + name().toLowerCase(Locale.ROOT));
