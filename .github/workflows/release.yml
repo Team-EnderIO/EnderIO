@@ -1,14 +1,14 @@
-name: Nightly Build
+name: Release Build
 env:
   CI: true
-  BUILD_NUMBER: ${{ github.run_number }}
-  NIGHTLY: true
+  BUILD_VERSION: 'v6.0.8-alpha' # TODO: Get from release tag.
+  PUBLISH: false
 
-# Run on all develop pushes
+# Run when release is created on GitHub
 on:
   push:
     branches:
-#      - 'dev/*'
+      #      - 'dev/*'
       - 'feature/nightly-actions'
 
 jobs:
@@ -27,6 +27,11 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
+      - name: Clean
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: clean
+
       - name: Build
         uses: gradle/gradle-build-action@v2
         with:
@@ -34,5 +39,12 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with:
-          name: nightly-build
+          name: release-build
           path: build/libs/*.jar
+
+      - name: Publish to CurseForge and Modrinth
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: publishMod
+
+      # TODO: Publish to maven.

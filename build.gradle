@@ -277,6 +277,8 @@ reobf.create('jarJar')
 
 // Example for how to get properties into the manifest for reading at runtime.
 jar {
+    archiveClassifier = "partial"
+
     manifest {
         attributes([
                 "Specification-Title"     : "EnderIO",
@@ -324,6 +326,8 @@ build.dependsOn sourcesJar
 
 // Add other source sets to jarJar
 tasks.jarJar.configure {
+    archiveClassifier = ""
+
     from sourceSets.api.output
     from sourceSets.core.output
     for (String set : subsets) {
@@ -334,34 +338,34 @@ tasks.jarJar.configure {
 }
 build.dependsOn tasks.jarJar
 
-//if (getReleaseType() != null) {
-//    publisher {
-//        apiKeys {
-//            curseforge = System.getenv("CURSEFORGE_TOKEN")
-//            modrinth = System.getenv("MODRINTH_TOKEN")
-//        }
-//
-//        debug = System.getenv("PUBLISH") != "true"
-//        curseID = curseforge_projectId
-//        modrinthID = modrinth_projectId
-//        versionType = getReleaseType()
-//        version = "${getVersionString()}"
-//        displayName = "Ender IO - ${getVersionString()}"
-//        // TODO: Feed this from GitHub actions.
-//        //changelog = project.changelog.renderItem(project.changelog.get(getVersionString()), Changelog.OutputType.MARKDOWN)
-//        gameVersions = [minecraft_version]
-//        loaders = ["forge"]
-//        artifact = tasks.jarJar
-//
-//        curseDepends {
-//            optional = ["jei", /*"patchouli",*/ "athena", "applied-energistics-2"]
-//        }
-//
-//        modrinthDepends {
-//            optional = [/*modrinth_dep_patchouli, */ modrinth_dep_jei, modrinth_dep_athena, modrinth_dep_ae2]
-//        }
-//    }
-//}
+if (getReleaseType() != null) {
+    publisher {
+        apiKeys {
+            curseforge = System.getenv("CURSEFORGE_TOKEN")
+            modrinth = System.getenv("MODRINTH_TOKEN")
+        }
+
+        debug = System.getenv("PUBLISH") != "true"
+        curseID = curseforge_projectId
+        modrinthID = modrinth_projectId
+        versionType = getReleaseType()
+        version = "${getVersionString()}"
+        displayName = "Ender IO - ${getVersionString()}"
+        // TODO: Feed this from GitHub actions.
+        //changelog = project.changelog.renderItem(project.changelog.get(getVersionString()), Changelog.OutputType.MARKDOWN)
+        gameVersions = [minecraft_version]
+        loaders = ["forge"]
+        artifact = tasks.jarJar
+
+        curseDepends {
+            optional = ["jei", /*"patchouli",*/ "athena", "applied-energistics-2"]
+        }
+
+        modrinthDepends {
+            optional = [/*modrinth_dep_patchouli, */ modrinth_dep_jei, modrinth_dep_athena, modrinth_dep_ae2]
+        }
+    }
+}
 
 publishing {
     publications {
