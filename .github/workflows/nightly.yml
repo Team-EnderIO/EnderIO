@@ -8,8 +8,7 @@ env:
 on:
   push:
     branches:
-#      - 'dev/*'
-      - 'feature/nightly-actions'
+      - 'dev/*'
 
 jobs:
   build:

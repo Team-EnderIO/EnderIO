@@ -339,32 +339,34 @@ tasks.jarJar.configure {
 build.dependsOn tasks.jarJar
 
 if (getReleaseType() != null) {
-    publisher {
-        apiKeys {
-            curseforge = System.getenv("CURSEFORGE_TOKEN")
-            modrinth = System.getenv("MODRINTH_TOKEN")
-        }
+    if (System.getenv("CHANGELOG") != null) {
+        publisher {
+            apiKeys {
+                curseforge = System.getenv("CURSEFORGE_TOKEN")
+                modrinth = System.getenv("MODRINTH_TOKEN")
+            }
 
-        debug = System.getenv("PUBLISH") != "true"
-        curseID = curseforge_projectId
-        modrinthID = modrinth_projectId
-        versionType = getReleaseType()
-        version = "${getVersionString()}"
-        displayName = "Ender IO - ${getVersionString()}"
-        // TODO: Feed this from GitHub actions.
-        //changelog = project.changelog.renderItem(project.changelog.get(getVersionString()), Changelog.OutputType.MARKDOWN)
-        changelog = 'todo'
-        gameVersions = [minecraft_version]
-        loaders = ["forge"]
-        artifact = tasks.jarJar
+            debug = System.getenv("PUBLISH") != "true"
+            curseID = curseforge_projectId
+            modrinthID = modrinth_projectId
+            versionType = getReleaseType()
+            version = "${getVersionString()}"
+            displayName = "Ender IO - ${getVersionString()}"
+            changelog = System.getenv("CHANGELOG")
+            gameVersions = [minecraft_version]
+            loaders = ["forge"]
+            artifact = tasks.jarJar
 
-        curseDepends {
-            optional = ["jei", /*"patchouli",*/ "athena", "applied-energistics-2"]
-        }
+            curseDepends {
+                optional = ["jei", /*"patchouli",*/ "athena", "applied-energistics-2"]
+            }
 
-        modrinthDepends {
-            optional = [/*modrinth_dep_patchouli, */ modrinth_dep_jei, modrinth_dep_athena, modrinth_dep_ae2]
+            modrinthDepends {
+                optional = [/*modrinth_dep_patchouli, */ modrinth_dep_jei, modrinth_dep_athena, modrinth_dep_ae2]
+            }
         }
+    } else {
+        println("Release disabled, no changelog found in environment");
     }
 }
 
@@ -467,9 +469,9 @@ String getReleaseType() {
     if (System.getenv('BUILD_VERSION') != null) {
         def version_string = System.getenv('BUILD_VERSION')
 
-        if (version_string.endsWith("-alpha")) {
+        if (version_string.toLowerCase(Locale.ROOT).contains("alpha")) {
             return 'alpha'
-        } else if (version_string.endsWith("-beta")) {
+        } else if (version_string.toLowerCase(Locale.ROOT).contains("beta")) {
             return 'beta'
         }
 

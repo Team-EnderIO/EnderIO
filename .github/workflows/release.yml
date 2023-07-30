@@ -1,15 +1,14 @@
 name: Release Build
 env:
   CI: true
-  BUILD_VERSION: 'v6.0.8-alpha' # TODO: Get from release tag.
+  BUILD_VERSION: ${{ github.event.release.tag_name }}
+  CHANGELOG: ${{ github.event.release.body }}
   PUBLISH: false
 
 # Run when release is created on GitHub
 on:
-  push:
-    branches:
-      #      - 'dev/*'
-      - 'feature/nightly-actions'
+  release:
+    types: [ published ]
 
 jobs:
   build:
@@ -45,9 +44,15 @@ jobs:
       - name: Publish to CurseForge and Modrinth
         uses: gradle/gradle-build-action@v2
         env:
-          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
-          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          CURSEFORGE_TOKEN: ${{ secrets.TOKEN_CURSEFORGE }}
+          MODRINTH_TOKEN: ${{ secrets.TOKEN_MODRINTH }}
         with:
           arguments: publishMod
 
       # TODO: Publish to maven.
+
+      - name: Upload to GitHub Releases
+        uses: softprops/action-gh-release@v1
+        with:
+          token: ${{ secrets.TOKEN_GITHUB }}
+          files: build/libs/*.jar
