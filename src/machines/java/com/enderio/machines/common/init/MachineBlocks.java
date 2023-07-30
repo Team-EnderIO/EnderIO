@@ -20,11 +20,15 @@ import com.enderio.machines.data.model.MachineModelUtil;
 import com.google.common.collect.ImmutableMap;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.BlockBuilder;
+import com.tterrag.registrate.providers.DataGenContext;
+import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import com.tterrag.registrate.util.entry.BlockEntry;
+import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import net.minecraft.Util;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.client.model.generators.BlockModelBuilder;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
@@ -104,7 +108,7 @@ public class MachineBlocks {
         .build()
         .register();
 
-    public static final BlockEntry<ProgressMachineBlock> PRIMITIVE_ALLOY_SMELTER = standardMachine("primitive_alloy_smelter", () -> MachineBlockEntities.PRIMITIVE_ALLOY_SMELTER)
+    public static final BlockEntry<ProgressMachineBlock> PRIMITIVE_ALLOY_SMELTER = voidProgressMachine("primitive_alloy_smelter", () -> MachineBlockEntities.PRIMITIVE_ALLOY_SMELTER)
         .blockstate((ctx, prov) -> {
             ModelFile model = prov.models().withExistingParent(ctx.getName(), prov.mcLoc("furnace")).texture("front", EnderIO.loc("block/primitive_alloy_smelter_front"));
             prov
@@ -117,13 +121,13 @@ public class MachineBlocks {
         })
         .register();
 
-    public static final BlockEntry<ProgressMachineBlock> ALLOY_SMELTER = standardMachine("alloy_smelter", () -> MachineBlockEntities.ALLOY_SMELTER)
+    public static final BlockEntry<ProgressMachineBlock> ALLOY_SMELTER = voidProgressMachine("alloy_smelter", () -> MachineBlockEntities.ALLOY_SMELTER)
         .register();
 
-    public static final BlockEntry<ProgressMachineBlock> PAINTING_MACHINE = standardMachine("painting_machine", () -> MachineBlockEntities.PAINTING_MACHINE)
+    public static final BlockEntry<ProgressMachineBlock> PAINTING_MACHINE = voidProgressMachine("painting_machine", () -> MachineBlockEntities.PAINTING_MACHINE)
         .register();
 
-    public static final BlockEntry<ProgressMachineBlock> WIRED_CHARGER = standardMachine("wired_charger", () -> MachineBlockEntities.WIRED_CHARGER)
+    public static final BlockEntry<MachineBlock> WIRED_CHARGER = voidMachine("wired_charger", () -> MachineBlockEntities.WIRED_CHARGER)
         .register();
 
     public static final BlockEntry<MachineBlock> CREATIVE_POWER = REGISTRATE
@@ -133,22 +137,22 @@ public class MachineBlocks {
         .build()
         .register();
 
-    public static final BlockEntry<ProgressMachineBlock> STIRLING_GENERATOR = standardMachine("stirling_generator", () -> MachineBlockEntities.STIRLING_GENERATOR)
+    public static final BlockEntry<ProgressMachineBlock> STIRLING_GENERATOR = voidProgressMachine("stirling_generator", () -> MachineBlockEntities.STIRLING_GENERATOR)
         .register();
 
-    public static final BlockEntry<ProgressMachineBlock> SAG_MILL = standardMachine("sag_mill", () -> MachineBlockEntities.SAG_MILL)
+    public static final BlockEntry<ProgressMachineBlock> SAG_MILL = voidProgressMachine("sag_mill", () -> MachineBlockEntities.SAG_MILL)
         .lang("SAG Mill")
         .register();
 
-    public static final BlockEntry<ProgressMachineBlock> SLICE_AND_SPLICE = soulMachine("slice_and_splice", () -> MachineBlockEntities.SLICE_AND_SPLICE)
+    public static final BlockEntry<ProgressMachineBlock> SLICE_AND_SPLICE = ensouledProgressMachine("slice_and_splice", () -> MachineBlockEntities.SLICE_AND_SPLICE)
         .lang("Slice'N'Splice")
         .register();
 
-    public static final BlockEntry<ProgressMachineBlock> IMPULSE_HOPPER = standardMachine("impulse_hopper", () -> MachineBlockEntities.IMPULSE_HOPPER)
+    public static final BlockEntry<ProgressMachineBlock> IMPULSE_HOPPER = voidProgressMachine("impulse_hopper", () -> MachineBlockEntities.IMPULSE_HOPPER)
         .lang("Impulse Hopper")
         .register();
 
-    public static final BlockEntry<ProgressMachineBlock> SOUL_BINDER = soulMachine("soul_binder", () -> MachineBlockEntities.SOUL_BINDER)
+    public static final BlockEntry<ProgressMachineBlock> SOUL_BINDER = ensouledProgressMachine("soul_binder", () -> MachineBlockEntities.SOUL_BINDER)
         .lang("Soul Binder")
         .register();
 
@@ -195,38 +199,44 @@ public class MachineBlocks {
         }
         return ImmutableMap.copyOf(banks);
     });
-    public static final BlockEntry<ProgressMachineBlock> CRAFTER = standardMachine("crafter", () -> MachineBlockEntities.CRAFTER)
-        .lang("Crafter")
-        .blockstate((ctx, prov) -> MachineModelUtil.customMachineBlock(ctx, prov, "crafter"))
+    public static final BlockEntry<ProgressMachineBlock> CRAFTER = voidProgressMachine("crafter", () -> MachineBlockEntities.CRAFTER)
+        .blockstate((ctx, prov) ->
+            MachineModelUtil.customProgressMachineBlock(ctx, prov, MachineModelUtil.VOID_MACHINE_BOTTOM, EnderIO.loc(String.format("block/%s_top", ctx.getName())),
+                MachineModelUtil.VOID_MACHINE_BACK, EnderIO.loc(String.format("block/%s_side", ctx.getName())))
+        )
         .register();
 
     //used when single methods needs to be overridden in the block class
-    private static BlockBuilder<ProgressMachineBlock, Registrate> standardMachine(BlockBuilder<ProgressMachineBlock, Registrate> machineBlock) {
+    private static <T extends MachineBlock> BlockBuilder<T, Registrate> baseMachine(BlockBuilder<T, Registrate> machineBlock,
+        NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> blockStateProvider) {
         return machineBlock
             .properties(props -> props.strength(2.5f, 8))
             .loot(MachinesLootTable::copyNBT)
             .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
-            .blockstate(MachineModelUtil::machineBlock)
+            .blockstate(blockStateProvider)
             .item()
             .tab(EIOCreativeTabs.MACHINES)
             .build();
     }
 
-    private static BlockBuilder<ProgressMachineBlock, Registrate> standardMachine(String name,
+    private static BlockBuilder<MachineBlock, Registrate> voidMachine(String name,
         Supplier<BlockEntityEntry<? extends MachineBlockEntity>> blockEntityEntry) {
-        return standardMachine(REGISTRATE.block(name, props -> new ProgressMachineBlock(props, blockEntityEntry.get())));
+        return baseMachine(REGISTRATE.block(name, props -> new MachineBlock(props, blockEntityEntry.get())), MachineModelUtil::voidMachineBlock);
     }
 
+    private static BlockBuilder<ProgressMachineBlock, Registrate> voidProgressMachine(String name,
+        Supplier<BlockEntityEntry<? extends MachineBlockEntity>> blockEntityEntry) {
+        return baseMachine(REGISTRATE.block(name, props -> new ProgressMachineBlock(props, blockEntityEntry.get())), MachineModelUtil::voidProgressMachineBlock);
+    }
 
-    private static BlockBuilder<ProgressMachineBlock, Registrate> soulMachine(String name, Supplier<BlockEntityEntry<? extends MachineBlockEntity>> blockEntityEntry) {
-        return REGISTRATE
-            .block(name, props -> new ProgressMachineBlock(props, blockEntityEntry.get()))
-            .properties(props -> props.strength(2.5f, 8))
-            .loot(MachinesLootTable::copyNBT)
-            .blockstate(MachineModelUtil::soulMachineBlock)
-            .item()
-            .tab(EIOCreativeTabs.MACHINES)
-            .build();
+    private static BlockBuilder<MachineBlock, Registrate> ensouledMachine(String name,
+        Supplier<BlockEntityEntry<? extends MachineBlockEntity>> blockEntityEntry) {
+        return baseMachine(REGISTRATE.block(name, props -> new MachineBlock(props, blockEntityEntry.get())), MachineModelUtil::ensouledMachineBlock);
+    }
+
+    private static BlockBuilder<ProgressMachineBlock, Registrate> ensouledProgressMachine(String name,
+        Supplier<BlockEntityEntry<? extends MachineBlockEntity>> blockEntityEntry) {
+        return baseMachine(REGISTRATE.block(name, props -> new ProgressMachineBlock(props, blockEntityEntry.get())), MachineModelUtil::ensouledProgressMachineBlock);
     }
 
     private static BlockBuilder<SolarPanelBlock, Registrate> solarPanel(String name, Supplier<BlockEntityEntry<? extends SolarPanelBlockEntity>> blockEntityEntry, SolarPanelTier tier) {

@@ -1,0 +1,6 @@
+{
+  "parent": "enderio:block/painting_machine",
+  "textures": {
+    "north": "enderio:block/painting_machine_front_active"
+  }
+}

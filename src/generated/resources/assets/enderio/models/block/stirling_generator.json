@@ -1,23 +1,12 @@
 {
-  "parent": "minecraft:block/block",
-  "children": {
-    "frame": {
-      "parent": "enderio:block/machine_frame"
-    },
-    "front": {
-      "parent": "enderio:block/stirling_generator_front"
-    },
-    "overlay": {
-      "parent": "enderio:block/io_overlay"
-    }
-  },
-  "item_render_order": [
-    "frame",
-    "overlay",
-    "front"
-  ],
-  "loader": "forge:composite",
+  "parent": "minecraft:block/cube",
   "textures": {
-    "particle": "enderio:block/machine_side"
+    "down": "enderio:block/machine_bottom",
+    "east": "enderio:block/machine_side",
+    "north": "enderio:block/stirling_generator_front",
+    "particle": "enderio:block/stirling_generator_front",
+    "south": "enderio:block/machine_back",
+    "up": "enderio:block/machine_top",
+    "west": "enderio:block/machine_side"
   }
 }
