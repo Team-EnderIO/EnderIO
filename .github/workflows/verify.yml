@@ -4,9 +4,6 @@ name: Verify Build and Generated Data
 # If run on the primary branch, the gradle caches will be updated for all PRs to use.
 on: 
   pull_request:
-  push:
-    branches:
-      - 'dev/*'
 
 jobs:
   verify:

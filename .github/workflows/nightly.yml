@@ -1,0 +1,54 @@
+name: Nightly Build
+env:
+  CI: true
+  BUILD_NUMBER: ${{ github.run_number }}
+  NIGHTLY: true
+
+# Run on all develop pushes
+on:
+  push:
+    branches:
+      - 'dev/*'
+
+# Cancel if a new push is sent
+# https://stackoverflow.com/a/70972844
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Build
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: nightly-build
+          path: build/libs/*.jar
+
+      - name: Discord Notification
+        uses: tsickert/discord-webhook@v5.3.0
+        with:
+          webhook-url: ${{ secrets.NIGHTLY_DISCORD_WEBHOOK }}
+          embed-title: New Nightly Build
+          embed-description: A new nightly build of Ender IO has been built from the following commit. If you play with this, please remember to report issues! ```${{ github.event.head_commit.message }}```
+          avatar-url: https://raw.githubusercontent.com/Team-EnderIO/EnderIO/dev/1.20.1/doc/img/enderface.png
+          username: Ender IO Nightowl
+          embed-footer-text: Build number ${{ github.run_number }}
+          embed-url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
