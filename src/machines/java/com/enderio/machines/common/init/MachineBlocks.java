@@ -52,7 +52,7 @@ public class MachineBlocks {
         .blockstate((ctx, prov) -> prov.horizontalBlock(ctx.get(), prov.models()
             .getBuilder(ctx.getName())
             .customLoader(CompositeModelBuilder::begin)
-                .child("tank", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/fluid_tank_body")))
+                .child("tank", EIOModel.getExistingParent(prov.models(), EnderIO.loc(String.format("block/%s_body", ctx.getName()))))
                 .child("overlay", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/io_overlay")))
             .end()
             .texture("particle", EnderIO.loc("block/machine_side"))
@@ -70,11 +70,7 @@ public class MachineBlocks {
         .blockstate((ctx, prov) -> prov.horizontalBlock(ctx.get(), prov.models()
                 .withExistingParent(ctx.getName(), prov.mcLoc("block/block"))
                 .customLoader(CompositeModelBuilder::begin)
-                    .child("tank", EIOModel
-                        .getExistingParent(prov.models(), EnderIO.loc("block/fluid_tank_body"))
-                            .texture("tank", EnderIO.loc("block/pressurized_fluid_tank"))
-                            .texture("bottom", EnderIO.loc("block/enhanced_machine_bottom"))
-                            .texture("top", EnderIO.loc("block/enhanced_machine_top")))
+            .child("tank", EIOModel.getExistingParent(prov.models(), EnderIO.loc(String.format("block/%s_body", ctx.getName()))))
                     .child("overlay", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/io_overlay")))
                 .end()
                 .texture("particle", EnderIO.loc("block/machine_side"))
@@ -89,45 +85,22 @@ public class MachineBlocks {
         .block("enchanter", props -> new MachineBlock(props, MachineBlockEntities.ENCHANTER))
         .properties(props -> props.strength(2.5f, 8).noOcclusion().isViewBlocking((pState, pLevel, pPos) -> false))
         .loot(MachinesLootTable::copyNBT)
-        .blockstate((ctx, prov) -> prov.horizontalBlock(ctx.get(), prov.models()
-            .withExistingParent(ctx.getName(), prov.mcLoc("block/block"))
-            .texture("particle", EnderIO.loc("block/dark_steel_pressure_plate"))
-            .customLoader(CompositeModelBuilder::begin)
-            .child("plinth", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/dialing_device"))
-                .texture("button", EnderIO.loc("block/dark_steel_pressure_plate")))
-            .child("book", (BlockModelBuilder) EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/enchanter_book"))
-                .rootTransforms()
-                    .translation(new Vector3f(0, 11.25f / 16.0f, -3.5f / 16.0f))
-                    .rotation(-22.5f, 0, 0, true)
-                    .origin(TransformationHelper.TransformOrigin.CENTER)
-                .end())
-            .end()
-        ))
+        .blockstate(MachineModelUtil::machineBlock)
         .item()
         .tab(EIOCreativeTabs.MACHINES)
         .build()
         .register();
 
-    public static final BlockEntry<ProgressMachineBlock> PRIMITIVE_ALLOY_SMELTER = voidProgressMachine("primitive_alloy_smelter", () -> MachineBlockEntities.PRIMITIVE_ALLOY_SMELTER)
-        .blockstate((ctx, prov) -> {
-            ModelFile model = prov.models().withExistingParent(ctx.getName(), prov.mcLoc("furnace")).texture("front", EnderIO.loc("block/primitive_alloy_smelter_front"));
-            prov
-                .getVariantBuilder(ctx.get())
-                .forAllStates(state -> ConfiguredModel
-                    .builder()
-                    .modelFile(model)
-                    .rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + 180) % 360)
-                    .build());
-        })
+    public static final BlockEntry<ProgressMachineBlock> PRIMITIVE_ALLOY_SMELTER = progressMachine("primitive_alloy_smelter", () -> MachineBlockEntities.PRIMITIVE_ALLOY_SMELTER)
         .register();
 
-    public static final BlockEntry<ProgressMachineBlock> ALLOY_SMELTER = voidProgressMachine("alloy_smelter", () -> MachineBlockEntities.ALLOY_SMELTER)
+    public static final BlockEntry<ProgressMachineBlock> ALLOY_SMELTER = progressMachine("alloy_smelter", () -> MachineBlockEntities.ALLOY_SMELTER)
         .register();
 
-    public static final BlockEntry<ProgressMachineBlock> PAINTING_MACHINE = voidProgressMachine("painting_machine", () -> MachineBlockEntities.PAINTING_MACHINE)
+    public static final BlockEntry<ProgressMachineBlock> PAINTING_MACHINE = progressMachine("painting_machine", () -> MachineBlockEntities.PAINTING_MACHINE)
         .register();
 
-    public static final BlockEntry<MachineBlock> WIRED_CHARGER = voidMachine("wired_charger", () -> MachineBlockEntities.WIRED_CHARGER)
+    public static final BlockEntry<MachineBlock> WIRED_CHARGER = machine("wired_charger", () -> MachineBlockEntities.WIRED_CHARGER)
         .register();
 
     public static final BlockEntry<MachineBlock> CREATIVE_POWER = REGISTRATE
@@ -137,29 +110,27 @@ public class MachineBlocks {
         .build()
         .register();
 
-    public static final BlockEntry<ProgressMachineBlock> STIRLING_GENERATOR = voidProgressMachine("stirling_generator", () -> MachineBlockEntities.STIRLING_GENERATOR)
+    public static final BlockEntry<ProgressMachineBlock> STIRLING_GENERATOR = progressMachine("stirling_generator", () -> MachineBlockEntities.STIRLING_GENERATOR)
         .register();
 
-    public static final BlockEntry<ProgressMachineBlock> SAG_MILL = voidProgressMachine("sag_mill", () -> MachineBlockEntities.SAG_MILL)
+    public static final BlockEntry<ProgressMachineBlock> SAG_MILL = progressMachine("sag_mill", () -> MachineBlockEntities.SAG_MILL)
         .lang("SAG Mill")
         .register();
 
-    public static final BlockEntry<ProgressMachineBlock> SLICE_AND_SPLICE = ensouledProgressMachine("slice_and_splice", () -> MachineBlockEntities.SLICE_AND_SPLICE)
+    public static final BlockEntry<ProgressMachineBlock> SLICE_AND_SPLICE = progressMachine("slice_and_splice", () -> MachineBlockEntities.SLICE_AND_SPLICE)
         .lang("Slice'N'Splice")
         .register();
 
-    public static final BlockEntry<ProgressMachineBlock> IMPULSE_HOPPER = voidProgressMachine("impulse_hopper", () -> MachineBlockEntities.IMPULSE_HOPPER)
+    public static final BlockEntry<ProgressMachineBlock> IMPULSE_HOPPER = progressMachine("impulse_hopper", () -> MachineBlockEntities.IMPULSE_HOPPER)
         .lang("Impulse Hopper")
         .register();
 
-    public static final BlockEntry<ProgressMachineBlock> SOUL_BINDER = ensouledProgressMachine("soul_binder", () -> MachineBlockEntities.SOUL_BINDER)
+    public static final BlockEntry<ProgressMachineBlock> SOUL_BINDER = progressMachine("soul_binder", () -> MachineBlockEntities.SOUL_BINDER)
         .lang("Soul Binder")
         .register();
 
-    public static final BlockEntry<ProgressMachineBlock> POWERED_SPAWNER = REGISTRATE
-        .block("powered_spawner", props -> new ProgressMachineBlock(props, MachineBlockEntities.POWERED_SPAWNER))
+    public static final BlockEntry<ProgressMachineBlock> POWERED_SPAWNER = progressMachine("powered_spawner", () -> MachineBlockEntities.POWERED_SPAWNER)
         .loot((l,t) -> MachinesLootTable.copyNBTSingleCap(l, t, "EntityStorage"))
-        .blockstate(MachineModelUtil::soulMachineBlock)
         .item(PoweredSpawnerItem::new)
         .tab(EIOCreativeTabs.MACHINES)
         .build()
@@ -169,7 +140,7 @@ public class MachineBlocks {
         .block("vacuum_chest", p -> new MachineBlock(p, MachineBlockEntities.VACUUM_CHEST))
         .properties(props -> props.strength(2.5f, 8).noOcclusion())
         .loot(MachinesLootTable::copyNBT)
-        .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIO.loc("block/vacuum_chest"))))
+        .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName()))))
         .item()
         .tab(EIOCreativeTabs.MACHINES)
         .build()
@@ -179,7 +150,7 @@ public class MachineBlocks {
         .block("xp_vacuum", p -> new MachineBlock(p, MachineBlockEntities.XP_VACUUM))
         .properties(props -> props.strength(2.5f, 8).noOcclusion())
         .loot(MachinesLootTable::copyNBT)
-        .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIO.loc("block/xp_vacuum"))))
+        .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName()))))
         .item()
         .tab(EIOCreativeTabs.MACHINES)
         .build()
@@ -199,11 +170,7 @@ public class MachineBlocks {
         }
         return ImmutableMap.copyOf(banks);
     });
-    public static final BlockEntry<ProgressMachineBlock> CRAFTER = voidProgressMachine("crafter", () -> MachineBlockEntities.CRAFTER)
-        .blockstate((ctx, prov) ->
-            MachineModelUtil.customProgressMachineBlock(ctx, prov, MachineModelUtil.VOID_MACHINE_BOTTOM, EnderIO.loc(String.format("block/%s_top", ctx.getName())),
-                MachineModelUtil.VOID_MACHINE_BACK, EnderIO.loc(String.format("block/%s_side", ctx.getName())))
-        )
+    public static final BlockEntry<ProgressMachineBlock> CRAFTER = progressMachine("crafter", () -> MachineBlockEntities.CRAFTER)
         .register();
 
     //used when single methods needs to be overridden in the block class
@@ -219,24 +186,14 @@ public class MachineBlocks {
             .build();
     }
 
-    private static BlockBuilder<MachineBlock, Registrate> voidMachine(String name,
+    private static BlockBuilder<MachineBlock, Registrate> machine(String name,
         Supplier<BlockEntityEntry<? extends MachineBlockEntity>> blockEntityEntry) {
-        return baseMachine(REGISTRATE.block(name, props -> new MachineBlock(props, blockEntityEntry.get())), MachineModelUtil::voidMachineBlock);
+        return baseMachine(REGISTRATE.block(name, props -> new MachineBlock(props, blockEntityEntry.get())), MachineModelUtil::machineBlock);
     }
 
-    private static BlockBuilder<ProgressMachineBlock, Registrate> voidProgressMachine(String name,
+    private static BlockBuilder<ProgressMachineBlock, Registrate> progressMachine(String name,
         Supplier<BlockEntityEntry<? extends MachineBlockEntity>> blockEntityEntry) {
-        return baseMachine(REGISTRATE.block(name, props -> new ProgressMachineBlock(props, blockEntityEntry.get())), MachineModelUtil::voidProgressMachineBlock);
-    }
-
-    private static BlockBuilder<MachineBlock, Registrate> ensouledMachine(String name,
-        Supplier<BlockEntityEntry<? extends MachineBlockEntity>> blockEntityEntry) {
-        return baseMachine(REGISTRATE.block(name, props -> new MachineBlock(props, blockEntityEntry.get())), MachineModelUtil::ensouledMachineBlock);
-    }
-
-    private static BlockBuilder<ProgressMachineBlock, Registrate> ensouledProgressMachine(String name,
-        Supplier<BlockEntityEntry<? extends MachineBlockEntity>> blockEntityEntry) {
-        return baseMachine(REGISTRATE.block(name, props -> new ProgressMachineBlock(props, blockEntityEntry.get())), MachineModelUtil::ensouledProgressMachineBlock);
+        return baseMachine(REGISTRATE.block(name, props -> new ProgressMachineBlock(props, blockEntityEntry.get())), MachineModelUtil::progressMachineBlock);
     }
 
     private static BlockBuilder<SolarPanelBlock, Registrate> solarPanel(String name, Supplier<BlockEntityEntry<? extends SolarPanelBlockEntity>> blockEntityEntry, SolarPanelTier tier) {
