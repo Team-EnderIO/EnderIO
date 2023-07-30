@@ -1,0 +1,38 @@
+name: Verify Build and Generated Data
+env:
+  CI: true
+  BUILD_NUMBER: ${{ github.run_number }}
+  NIGHTLY: true
+
+# Run on any pull request commit or a push to a main branch.
+# If run on the primary branch, the gradle caches will be updated for all PRs to use.
+on:
+  push:
+    branches:
+      - 'dev/*'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Build # Build to catch Java errors first
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: nightly-build
+          path: build/libs/*.jar
