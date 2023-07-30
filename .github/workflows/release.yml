@@ -45,8 +45,8 @@ jobs:
       - name: Publish to CurseForge and Modrinth
         uses: gradle/gradle-build-action@v2
         env:
-          CURSEFORGE_TOKEN: 'TEST'
-          MODRINTH_TOKEN: 'TEST'
+          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
         with:
           arguments: publishMod
 
