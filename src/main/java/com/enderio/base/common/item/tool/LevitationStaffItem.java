@@ -66,7 +66,7 @@ public class LevitationStaffItem extends PoweredToggledItem {
     @Nullable
     @Override
     public MultiCapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt, MultiCapabilityProvider provider) {
-        provider.addSimple(ForgeCapabilities.FLUID_HANDLER_ITEM,
+        provider.add(ForgeCapabilities.FLUID_HANDLER_ITEM,
             new AcceptingFluidItemHandler(stack, 1000, EIOTags.Fluids.STAFF_OF_LEVITY_FUEL).getCapability(
                 ForgeCapabilities.FLUID_HANDLER_ITEM));
         return super.initCapabilities(stack, nbt, provider);

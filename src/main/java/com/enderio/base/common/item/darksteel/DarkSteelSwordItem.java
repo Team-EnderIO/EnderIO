@@ -1,5 +1,6 @@
 package com.enderio.base.common.item.darksteel;
 
+import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.item.IAdvancedTooltipProvider;
@@ -12,6 +13,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.PlayerHeadItem;
 import net.minecraft.world.item.SwordItem;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,13 +51,16 @@ public class DarkSteelSwordItem extends SwordItem implements IAdvancedTooltipPro
         if (pTarget.getType() == EntityType.ENDER_DRAGON) {
             stack = new ItemStack(Items.DRAGON_HEAD);
         }
+        if (pTarget.getType() == EntityType.ENDERMAN) {
+            stack = new ItemStack(EIOBlocks.ENDERMAN_HEAD);
+        }
         if (pTarget.getType() == EntityType.PIGLIN || pTarget.getType() == EntityType.PIGLIN_BRUTE || pTarget.getType() == EntityType.ZOMBIFIED_PIGLIN) {
             stack = new ItemStack(Items.PIGLIN_HEAD);
         }
         if (pTarget instanceof Player player) {
             stack = new ItemStack(Items.PLAYER_HEAD);
             CompoundTag compoundtag = stack.getOrCreateTag();
-            compoundtag.putString("SkullOwner", player.getDisplayName().getString());
+            compoundtag.putString(PlayerHeadItem.TAG_SKULL_OWNER, player.getDisplayName().getString());
         }
         return stack;
     }

@@ -9,6 +9,7 @@ import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonObject;
 import net.minecraft.ResourceLocationException;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -96,6 +97,11 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
     @Override
     public List<OutputStack> getResultStacks(RegistryAccess registryAccess) {
         return List.of(OutputStack.of(new ItemStack(output, 1)));
+    }
+
+    @Override
+    public NonNullList<Ingredient> getIngredients() {
+        return NonNullList.of(Ingredient.EMPTY, input);
     }
 
     @Override

@@ -3,16 +3,76 @@
 ## [Unreleased]
 
 ### Added
-- Recipes for the capacitor banks.
+- Wired Charger
 
 ### Changed
+- Reusing lang keys for different types of glass, should reduce burden on translators.
+- Energy conduits now round-robin.
 
 ### Removed
 
 ### Fixed
-- Fixed Soul Binder tooltip when IOConfig is open.
+- Allow redstone to connect to machines.
+- Fixed enchanter shift-click duplication.
+- Fixed enchanter needing slightly more XP than listed.
+- Fixed autosmelt causing incorrect behaviour, notably when breaking conduits.
+- Fixed broken inverted glass recipes.
+- Fixed mob token recipe.
+- Fixed 'The Ender' item model.
 
-## [6.0.5-alpha] - 2023-07-11
+## [6.0.7-alpha] - 2023-07-25
+
+### Changed
+- Changed the input locking system to allow quick swapping stacks.
+
+### Removed
+- An old piece of broken code that was supposed to already be gone due to its issues
+
+### Fixed
+- Fixed using the alloy smelter for normal smelting.
+- Fixed the primitive alloy smelter crash.
+- Fixed the crash related to the removed portion of code.
+
+## 6.0.6-alpha - 2023-07-24
+
+### Added
+- Recipes for the capacitor banks.
+- IO config widget insets to support non-standard gui shapes.
+- You can now repaint painted blocks in the painting machine!
+- Added tooltips to Conduit round-robin and self feed buttons
+- You can now right click on a machine to insert a capacitor.
+- Recipe for the painting machine.
+- The Enderman Head block, can be acquired using The Ender.
+- Added recipe for the ender resonator.
+- Added recipes for SAG Milling stone to cobblestone and gravel to sand.
+- Added recipe for SAG Milling copper ore into powder.
+- Added recipes to smelt vanilla powders into ingots.
+- Added support for NBT on outputs for alloy smelting.
+
+### Changed
+- Gave CheckBox widgets the ability to have tooltips
+- Conduits backend and API received some tweaks and cleaning ready for some new functionality.
+- Recipe locking is now more intelligent and should result in less friction for players.
+
+### Fixed
+- Fixed Soul Binder tooltip when IOConfig is open.
+- Properly fixed bucketed fuel in the primitive alloy smelter.
+- Fix keepInventory gamerule not being respected properly.
+- Remove some old item capability logic, fixing AE2 capacitor autocrafting in the process.
+- Fix game crash when running in Turkish locale.
+- Painted blocks will now drop correctly.
+- Fixed problems with conduits needing updating to work.
+- Fixed conduit channels for redstone conduits.
+- Fixed using FTB Ultimine on conduits.
+- Fixed conduit not displaying disconnection from GUI.
+- Fixed incorrect GUI showing when accessing a connected conduit.
+- Fixed redstone conduit resetting when a piston is activated.
+- Fix JEI showing smelting recipes for the primitive alloy smelter.
+- Primtive alloy smelter shift r-click works as expected.
+- Fixed slot problems for the Alloy Smelter.
+- Fixed recipe locking, resulting in abnormal slot behaviours.
+
+## 6.0.5-alpha - 2023-07-11
 
 ### Fixed
 - Made information for grinding up coal with flint and obsidian/grindstone more clear.

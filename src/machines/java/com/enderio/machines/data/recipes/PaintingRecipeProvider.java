@@ -37,11 +37,26 @@ public class PaintingRecipeProvider extends EnderRecipeProvider {
         build(EIOBlocks.PAINTED_WOODEN_PRESSURE_PLATE, Ingredient.of(ItemTags.WOODEN_PRESSURE_PLATES), pFinishedRecipeConsumer);
         build(EIOBlocks.PAINTED_SLAB, Ingredient.of(ItemTags.WOODEN_SLABS), pFinishedRecipeConsumer);
         build(EIOBlocks.PAINTED_GLOWSTONE, Ingredient.of(Items.GLOWSTONE), pFinishedRecipeConsumer);
+        //Painted block to painted block
+        build(EIOBlocks.PAINTED_FENCE, Ingredient.of(EIOBlocks.PAINTED_FENCE), "_frompainted", pFinishedRecipeConsumer);
+        build(EIOBlocks.PAINTED_FENCE_GATE, Ingredient.of(EIOBlocks.PAINTED_FENCE_GATE), "_frompainted", pFinishedRecipeConsumer);
+        build(EIOBlocks.PAINTED_SAND, Ingredient.of(EIOBlocks.PAINTED_SAND), "_frompainted", pFinishedRecipeConsumer);
+        build(EIOBlocks.PAINTED_STAIRS, Ingredient.of(EIOBlocks.PAINTED_STAIRS), "_frompainted", pFinishedRecipeConsumer);
+        build(EIOBlocks.PAINTED_CRAFTING_TABLE, Ingredient.of(EIOBlocks.PAINTED_CRAFTING_TABLE), "_frompainted", pFinishedRecipeConsumer);
+        build(EIOBlocks.PAINTED_REDSTONE_BLOCK, Ingredient.of(EIOBlocks.PAINTED_REDSTONE_BLOCK), "_frompainted", pFinishedRecipeConsumer);
+        build(EIOBlocks.PAINTED_TRAPDOOR, Ingredient.of(EIOBlocks.PAINTED_TRAPDOOR), "_frompainted", pFinishedRecipeConsumer);
+        build(EIOBlocks.PAINTED_WOODEN_PRESSURE_PLATE, Ingredient.of(EIOBlocks.PAINTED_WOODEN_PRESSURE_PLATE), "_frompainted", pFinishedRecipeConsumer);
+        build(EIOBlocks.PAINTED_SLAB, Ingredient.of(EIOBlocks.PAINTED_SLAB), "_frompainted", pFinishedRecipeConsumer);
+        build(EIOBlocks.PAINTED_GLOWSTONE, Ingredient.of(EIOBlocks.PAINTED_GLOWSTONE), "_frompainted", pFinishedRecipeConsumer);
     }
 
 
     protected void build(ItemLike output, Ingredient input, Consumer<FinishedRecipe> recipeConsumer) {
-        recipeConsumer.accept(new FinishedPaintingRecipe(EnderIO.loc("painting/" + ForgeRegistries.ITEMS.getKey(output.asItem()).getPath()), input, output.asItem()));
+        build(output, input, "", recipeConsumer);
+    }
+
+    protected void build(ItemLike output, Ingredient input, String suffix, Consumer<FinishedRecipe> recipeConsumer) {
+        recipeConsumer.accept(new FinishedPaintingRecipe(EnderIO.loc("painting/" + ForgeRegistries.ITEMS.getKey(output.asItem()).getPath() + suffix), input, output.asItem()));
     }
 
     protected static class FinishedPaintingRecipe extends EnderFinishedRecipe {

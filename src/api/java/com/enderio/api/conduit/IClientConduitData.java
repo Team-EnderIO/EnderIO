@@ -8,17 +8,20 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public interface IClientConduitData<T extends IExtendedConduitData<T>> extends IIcon {
+
+    interface UpdateExtendedData<T extends IExtendedConduitData<T>> {
+        void update(Function<T, T> mapper);
+    }
 
     @Override
     default Vector2i getIconSize() {
@@ -31,12 +34,13 @@ public interface IClientConduitData<T extends IExtendedConduitData<T>> extends I
     }
 
     /**
-     * @param extendedConduitData the extendedconduitdata the widgets are fore, manipulate the state of it in the widgets
-     * @param direction           the supplier to get the current direction for this extendedconduitdata
-     * @param widgetsStart        the position on which widgets start
+     * @param extendedConduitData       the extendedconduitdata the widgets are fore, manipulate the state of it in the widgets
+     * @param updateExtendedConduitData call this to modify the extended conduit data.
+     * @param direction                 the supplier to get the current direction for this extendedconduitdata
+     * @param widgetsStart              the position on which widgets start
      * @return Widgets that manipulate the extended ConduitData, these changes are synced back to the server
      */
-    default List<AbstractWidget> createWidgets(Screen screen, Supplier<BlockPos> blockPos, Supplier<IConduitType<?>> conduitType, T extendedConduitData, Supplier<Direction> direction, Vector2i widgetsStart) {
+    default List<AbstractWidget> createWidgets(Screen screen, T extendedConduitData, UpdateExtendedData<T> updateExtendedConduitData, Supplier<Direction> direction, Vector2i widgetsStart) {
         return List.of();
     }
 

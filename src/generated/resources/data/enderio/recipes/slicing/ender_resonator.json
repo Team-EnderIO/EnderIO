@@ -1,0 +1,25 @@
+{
+  "type": "enderio:slicing",
+  "energy": 20000,
+  "inputs": [
+    {
+      "item": "enderio:soularium_ingot"
+    },
+    {
+      "item": "enderio:enderman_head"
+    },
+    {
+      "item": "enderio:soularium_ingot"
+    },
+    {
+      "item": "enderio:silicon"
+    },
+    {
+      "item": "enderio:vibrant_alloy_ingot"
+    },
+    {
+      "item": "enderio:silicon"
+    }
+  ],
+  "output": "enderio:ender_resonator"
+}

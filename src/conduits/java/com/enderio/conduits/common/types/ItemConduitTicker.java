@@ -1,22 +1,25 @@
 package com.enderio.conduits.common.types;
 
 import com.enderio.api.conduit.IConduitType;
-import com.enderio.api.conduit.ticker.ICapabilityAwareConduitTicker;
+import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
+import com.enderio.api.misc.ColorControl;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.Mergeable;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
+import org.apache.commons.lang3.function.TriFunction;
 
 import java.util.List;
 
-public class ItemConduitTicker extends ICapabilityAwareConduitTicker<IItemHandler> {
+public class ItemConduitTicker extends CapabilityAwareConduitTicker<IItemHandler> {
 
     @Override
-    protected void tickCapabilityGraph(IConduitType<?> type, List<CapabilityConnection> inserts, List<CapabilityConnection> extracts, ServerLevel level, Graph<Mergeable.Dummy> graph) {
+    protected void tickCapabilityGraph(IConduitType<?> type, List<CapabilityConnection> inserts, List<CapabilityConnection> extracts, ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
         toNextExtract:
         for (CapabilityConnection extract: extracts) {
             IItemHandler extractHandler = extract.cap;
@@ -29,14 +32,14 @@ public class ItemConduitTicker extends ICapabilityAwareConduitTicker<IItemHandle
                     if (inserts.size() <= sidedExtractData.rotatingIndex) {
                         sidedExtractData.rotatingIndex = 0;
                     }
-                    for (int j = 0; j < sidedExtractData.rotatingIndex; j++) {
-                        //empty lists are verified in ICapabilityAwareConduitTicker
-                        //this moves the first element to the back to give a new cap the next time this is called
-                        inserts.add(inserts.remove(0));
-                    }
+                } else {
+                    sidedExtractData.rotatingIndex = 0;
                 }
-                for (int j = 0; j < inserts.size(); j++) {
-                    CapabilityConnection insert = inserts.get(j);
+
+                for (int j = sidedExtractData.rotatingIndex; j < sidedExtractData.rotatingIndex + inserts.size(); j++) {
+                    int insertIndex = j % inserts.size();
+                    CapabilityConnection insert = inserts.get(insertIndex);
+
                     if (!sidedExtractData.selfFeed
                         && extract.direction == insert.direction
                         && extract.data == insert.data)
@@ -45,7 +48,7 @@ public class ItemConduitTicker extends ICapabilityAwareConduitTicker<IItemHandle
                     if (notInserted.getCount() < extractedItem.getCount()) {
                         extractHandler.extractItem(i, extractedItem.getCount() - notInserted.getCount(), false);
                         if (sidedExtractData.roundRobin) {
-                            sidedExtractData.rotatingIndex += j + 1;
+                            sidedExtractData.rotatingIndex += insertIndex + 1;
                         }
                         continue toNextExtract;
                     }

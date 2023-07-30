@@ -30,4 +30,8 @@ public class MachineSlot extends SlotItemHandler {
     public boolean mayPickup(Player playerIn) {
         return getItemHandler().getLayout().guiCanExtract(this.getSlotIndex()) && super.mayPickup(playerIn);
     }
+
+    public boolean canQuickInsertStack() {
+        return getItemHandler().getLayout().guiCanInsert(getSlotIndex());
+    }
 }

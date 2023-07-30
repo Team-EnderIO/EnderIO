@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "enderio:copper_alloy_ingot"
+    },
+    "V": {
+      "item": "enderio:void_chassis"
+    }
+  },
+  "pattern": [
+    "CCC",
+    "CVC",
+    "CCC"
+  ],
+  "result": {
+    "item": "enderio:wired_charger"
+  },
+  "show_notification": true
+}

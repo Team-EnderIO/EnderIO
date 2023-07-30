@@ -3,18 +3,20 @@ package com.enderio.conduits.client.gui;
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.IConduitMenuData;
 import com.enderio.api.conduit.IConduitType;
+import com.enderio.api.conduit.IExtendedConduitData;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
 import com.enderio.conduits.common.blockentity.ConduitBundle;
 import com.enderio.conduits.common.blockentity.SlotType;
 import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
 import com.enderio.conduits.common.blockentity.connection.IConnectionState;
+import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.conduits.common.menu.ConduitMenu;
 import com.enderio.conduits.common.menu.ConduitSlot;
 import com.enderio.conduits.common.network.C2SSetConduitConnectionState;
+import com.enderio.conduits.common.network.C2SSetConduitExtendedData;
 import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.client.gui.widgets.CheckBox;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
@@ -65,6 +67,19 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
         guiGraphics.pose().popPose();
     }
 
+    @Override
+    protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
+        super.renderLabels(guiGraphics, pMouseX, pMouseY);
+
+        IConduitMenuData data = menu.getConduitType().getMenuData();
+
+        guiGraphics.drawString(this.font, ConduitLang.CONDUIT_INSERT,  22 + 16,  7 + 4, 4210752, false);
+
+        if (data.showBothEnable()) {
+            guiGraphics.drawString(this.font, ConduitLang.CONDUIT_EXTRACT, 112 + 16, 7 + 4, 4210752, false);
+        }
+    }
+
     private void updateConnectionWidgets(boolean forceUpdate) {
         if (forceUpdate || recalculateTypedButtons) {
             recalculateTypedButtons = false;
@@ -111,7 +126,9 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
             }
             menu.getConduitType()
                 .getClientData()
-                .createWidgets(this, () -> menu.getBlockEntity().getBlockPos(), menu::getConduitType, getBundle().getNodeFor(menu.getConduitType()).getExtendedConduitData().cast(), menu::getDirection, new Vector2i(22, 7).add(getGuiLeft(), getGuiTop()))
+                .createWidgets(this, getBundle().getNodeFor(menu.getConduitType()).getExtendedConduitData().cast(),
+                    (mapper) -> sendExtendedConduitUpdate((Function<IExtendedConduitData<?>, IExtendedConduitData<?>>) mapper), menu::getDirection,
+                    new Vector2i(22, 7).add(getGuiLeft(), getGuiTop()))
                 .forEach(this::addTypedButton);
         }
         List<IConduitType<?>> validConnections = new ArrayList<>();
@@ -131,6 +148,13 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
             }
         }
     }
+
+    private void sendExtendedConduitUpdate(Function<IExtendedConduitData<?>, IExtendedConduitData<?>> map) {
+        var currentData = getBundle().getNodeFor(menu.getConduitType()).getExtendedConduitData().cast();
+        var menu = getMenu();
+        CoreNetwork.sendToServer(new C2SSetConduitExtendedData(menu.getBlockEntity().getBlockPos(), menu.getConduitType(), map.apply(currentData)));
+    }
+
     private void addTypedButton(AbstractWidget button) {
         typedButtons.add(button);
         addRenderableWidget(button);
@@ -153,11 +177,8 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
     private IConnectionState getConnectionState() {
         return getConnectionState(menu.getConduitType());
     }
-    private void setConnectionState(IConnectionState state) {
-        getBundle().getConnection(menu.getDirection()).setConnectionState(menu.getConduitType(), getBundle(), state);
-    }
     private IConnectionState getConnectionState(IConduitType<?> type) {
-        return getBundle().getConnection(menu.getDirection()).getConnectionState(type, getBundle());
+        return getBundle().getConnection(menu.getDirection()).getConnectionState(type);
     }
 
     private ConduitBundle getBundle() {

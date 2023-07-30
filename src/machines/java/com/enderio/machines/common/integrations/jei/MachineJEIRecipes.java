@@ -23,6 +23,10 @@ public class MachineJEIRecipes {
     }
 
     public List<AlloySmeltingRecipe> getAlloySmeltingRecipes() {
+        return new ArrayList<>(recipeManager.getAllRecipesFor(MachineRecipes.ALLOY_SMELTING.type().get()));
+    }
+
+    public List<AlloySmeltingRecipe> getAlloySmeltingRecipesWithSmelting() {
         List<AlloySmeltingRecipe> recipes = new ArrayList<>();
         recipes.addAll(recipeManager.getAllRecipesFor(MachineRecipes.ALLOY_SMELTING.type().get()));
         recipes.addAll(recipeManager.getAllRecipesFor(RecipeType.SMELTING).stream().map(VanillaAlloySmeltingRecipe::new).toList());
