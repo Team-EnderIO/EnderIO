@@ -41,7 +41,7 @@ jobs:
         with:
           webhook-url: ${{ secrets.NIGHTLY_DISCORD_WEBHOOK }}
           embed-title: New Nightly Build
-          embed-description: A new nightly build of Ender IO has been built. If you use this, please remember to report issues!
+          embed-description: A new nightly build of Ender IO has been built from the following commit. If you play with this, please remember to report issues! ```${{ github.event.head_commit.message }}```
           avatar-url: https://raw.githubusercontent.com/Team-EnderIO/EnderIO/dev/1.20.1/doc/img/enderface.png
           username: Ender IO Nightowl
           embed-footer-text: Build number ${{ github.run_number }}
