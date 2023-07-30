@@ -471,7 +471,7 @@
   "message.enderio.glider.disable.fall_flying": "鞘翅飞行",
   "message.enderio.grave.wrong_owner": "这个墓碑不是你的！你打不开它。",
   "message.enderio.soul_vial.error_blacklisted": "该实体已被列入黑名单。",
-  "message.enderio.soul_vial.error_boss": "想得美，Boss可不喜欢瓶子。",
+  "message.enderio.soul_vial.error_boss": "想得美。Boss可不喜欢瓶子。",
   "message.enderio.soul_vial.error_dead": "不能捕获死了的生物！",
   "message.enderio.soul_vial.error_failed": "该实体无法捕获。",
   "message.enderio.soul_vial.error_player": "玩家装不进瓶子！",
