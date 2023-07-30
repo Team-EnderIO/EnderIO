@@ -251,7 +251,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         return rangeVisible;
     }
 
-    public void setRangeVisible(boolean visible) {
+    public void setIsRangeVisible(boolean visible) {
         if (level != null && level.isClientSide()) {
             clientUpdateSlot(rangeVisibleDataSlot, visible);
         } else this.rangeVisible = visible;
