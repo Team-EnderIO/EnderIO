@@ -1,0 +1,6 @@
+{
+  "parent": "enderio:block/sag_mill",
+  "textures": {
+    "north": "enderio:block/sag_mill_front_active"
+  }
+}

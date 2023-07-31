@@ -5,21 +5,21 @@
       "y": 90
     },
     "facing=east,powered=true": {
-      "model": "enderio:block/painting_machine_on",
+      "model": "enderio:block/painting_machine_active",
       "y": 90
     },
     "facing=north,powered=false": {
       "model": "enderio:block/painting_machine"
     },
     "facing=north,powered=true": {
-      "model": "enderio:block/painting_machine_on"
+      "model": "enderio:block/painting_machine_active"
     },
     "facing=south,powered=false": {
       "model": "enderio:block/painting_machine",
       "y": 180
     },
     "facing=south,powered=true": {
-      "model": "enderio:block/painting_machine_on",
+      "model": "enderio:block/painting_machine_active",
       "y": 180
     },
     "facing=west,powered=false": {
@@ -27,7 +27,7 @@
       "y": 270
     },
     "facing=west,powered=true": {
-      "model": "enderio:block/painting_machine_on",
+      "model": "enderio:block/painting_machine_active",
       "y": 270
     }
   }

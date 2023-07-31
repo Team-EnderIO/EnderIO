@@ -81,4 +81,15 @@ public class VanillaAlloySmeltingRecipe extends AlloySmeltingRecipe {
     public RecipeType<?> getType() {
         return vanillaRecipe.getType();
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof SmeltingRecipe recipe && recipe.equals(vanillaRecipe)) {
+            return true;
+        }
+        if (obj instanceof VanillaAlloySmeltingRecipe alloySmeltingRecipe && vanillaRecipe.equals(alloySmeltingRecipe.vanillaRecipe)){
+            return true;
+        }
+        return super.equals(obj);
+    }
 }
