@@ -1,6 +1,0 @@
-{
-  "parent": "enderio:block/impulse_hopper_front",
-  "textures": {
-    "front": "enderio:block/impulse_hopper_front_on"
-  }
-}

@@ -64,7 +64,7 @@ public class GlassRecipes extends RecipeProvider {
 
     }
     private static void invert(GlassBlocks blocks, Consumer<FinishedRecipe> recipeConsumer) {
-        var collision = blocks.getGlassIdentifier().collisionPredicate();
+        var collision = GlassCollisionPredicate.invert(blocks.getGlassIdentifier().collisionPredicate());
         if (collision == GlassCollisionPredicate.NONE)
             return;
         var output = EIOBlocks.GLASS_BLOCKS.get(blocks.getGlassIdentifier().withCollision(collision)).CLEAR.get();

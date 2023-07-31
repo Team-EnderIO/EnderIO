@@ -79,6 +79,6 @@ public class CapacitorUtil {
     }
 
     public static CapacitorModifier getRandomModifier(RandomSource randomSource) {
-        return CapacitorModifier.values()[randomSource.nextInt(CapacitorModifier.values().length)];
+        return CapacitorModifier.SELECTABLE_MODIFIERS.get(randomSource.nextInt(CapacitorModifier.SELECTABLE_MODIFIERS.size()));
     }
 }
