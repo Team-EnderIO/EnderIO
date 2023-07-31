@@ -17,21 +17,18 @@ public class EnergyTextboxWidget extends EditBox {
         this.maxEnergy = maxEnergy;
         setCanLoseFocus(true);
     }
-	
-	@Override
-    public void setCanLoseFocus(boolean canLoseFocus) {
-        super.setCanLoseFocus(canLoseFocus);
-    }
 
-    //Input only accepts numerals
+    //Input only accepts digits (0, 1, ..., 9)
     @Override
     public boolean charTyped(char codePoint, int modifiers) {
 
         if (codePoint >= 48 && codePoint <= 57) {
             int cursorPos = getCursorPosition() + 1;
-            super.charTyped(codePoint, modifiers);
+            boolean res = super.charTyped(codePoint, modifiers);
             setValue(formatEnergy(getValue()));
             moveCursorTo(cursorPos);
+
+            return res;
         }
 
         return false;
@@ -39,7 +36,7 @@ public class EnergyTextboxWidget extends EditBox {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        super.keyPressed(keyCode, scanCode, modifiers);
+        boolean res = super.keyPressed(keyCode, scanCode, modifiers);
 
         if (keyCode == 259) {
             int cursorPos = getCursorPosition();
@@ -52,7 +49,7 @@ public class EnergyTextboxWidget extends EditBox {
             }
         }
 
-        return false;
+        return res;
     }
 
     @Override
@@ -60,6 +57,13 @@ public class EnergyTextboxWidget extends EditBox {
 
         if (mouseX >= getX() && mouseX <= getX() + width && mouseY >= getY() && mouseY <= getY() + height) {
             super.mouseClicked(mouseX, mouseY, button);
+
+            //Clear content on right click
+            if (button == 1) {
+                setValue("0");
+                moveCursorTo(1);
+            }
+
             return true;
         } else {
             setFocused(false);
