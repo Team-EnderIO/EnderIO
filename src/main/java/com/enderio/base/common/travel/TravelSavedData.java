@@ -10,7 +10,6 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
-import net.minecraftforge.fml.util.thread.EffectiveSide;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -20,22 +19,32 @@ import java.util.stream.Stream;
 
 public class TravelSavedData extends SavedData {
 
-    private static TravelSavedData clientInstance;
+    private static final TravelSavedData INSTANCE = new TravelSavedData();
 
-    private Map<BlockPos, ITravelTarget> travelTargets = new HashMap<>();
+    private final Map<BlockPos, ITravelTarget> travelTargets = new HashMap<>();
+
+    public TravelSavedData() {
+
+    }
+
+    public TravelSavedData(CompoundTag nbt) {
+        ListTag targets = nbt.getList("targets", Tag.TAG_COMPOUND);
+        targets.stream().map(anchorData -> (CompoundTag)anchorData)
+            .map(TravelRegistry::deserialize)
+            .flatMap(Optional::stream)
+            .forEach(target -> travelTargets.put(target.getPos(), target));
+    }
 
     public static TravelSavedData getTravelData(Level level) {
         if (level instanceof ServerLevel serverLevel) {
-            return serverLevel.getDataStorage().computeIfAbsent(TravelSavedData::load, TravelSavedData::new, "enderio_traveldata");
+            return serverLevel.getDataStorage().computeIfAbsent(TravelSavedData::new, TravelSavedData::new, "enderio_traveldata");
         } else {
-            if (clientInstance == null) {
-                clientInstance = new TravelSavedData();
-            }
-            return clientInstance;
+            return INSTANCE;
         }
     }
 
     public Optional<ITravelTarget> getTravelTarget(BlockPos pos) {
+        boolean test = travelTargets.keySet().contains(pos);
         return Optional.ofNullable(travelTargets.get(pos));
     }
 
@@ -69,23 +78,8 @@ public class TravelSavedData extends SavedData {
         return nbt;
     }
 
-    private static TravelSavedData load(CompoundTag nbt) {
-        TravelSavedData data = new TravelSavedData();
-        data.load(nbt.getList("targets", Tag.TAG_COMPOUND));
-        return data;
-    }
-
-    private void load(ListTag nbt) {
-        nbt.stream().map(anchorData -> (CompoundTag)anchorData)
-            .map(TravelRegistry::deserialize)
-            .flatMap(Optional::stream)
-            .forEach(target -> travelTargets.put(target.getPos(), target));
-    }
-
-    // Always save this data
     @Override
     public boolean isDirty() {
-        return EffectiveSide.get().isServer();
+        return true;
     }
-
 }

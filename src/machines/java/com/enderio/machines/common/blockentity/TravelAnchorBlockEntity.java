@@ -1,5 +1,6 @@
 package com.enderio.machines.common.blockentity;
 
+import com.enderio.api.travel.ITravelTarget;
 import com.enderio.base.common.travel.TravelSavedData;
 import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
 import com.enderio.core.common.network.slot.StringNetworkDataSlot;
@@ -31,11 +32,22 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
 
     public TravelAnchorBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);
-        nameDataSlot = new StringNetworkDataSlot(() -> getName(), name -> setName(name));
-        visibilityDataSlot = new BooleanNetworkDataSlot(() -> getVisibility(), visible -> setVisibility(visible));
+        nameDataSlot = new StringNetworkDataSlot(this::getName, name -> target.setName(name));
+        visibilityDataSlot = new BooleanNetworkDataSlot(this::getVisibility, visible -> target.setVisibility(visible));
         addDataSlot(nameDataSlot);
         addDataSlot(visibilityDataSlot);
-        target = getOrCreateTravelTarget();
+    }
+
+    public void remove() {
+        getTravelData().removeTravelTargetAt(worldPosition);
+    }
+
+    @Override
+    public void setRemoved() {
+        if (level != null && level.isClientSide) {
+            remove();
+        }
+        super.setRemoved();
     }
 
     @Nullable
@@ -64,7 +76,6 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
     }
 
     public void setName(String name) {
-        setChanged();
         if (level != null && level.isClientSide()) {
             clientUpdateSlot(nameDataSlot, name);
         } else {
@@ -77,7 +88,6 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
     }
 
     public void setIcon(Item icon) {
-        setChanged();
         target.setIcon(icon != Items.AIR ? icon : null);
     }
 
@@ -86,7 +96,6 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
     }
 
     public void setVisibility(boolean visible) {
-        setChanged();
         if (level != null && level.isClientSide()) {
             clientUpdateSlot(visibilityDataSlot, visible);
         } else {
@@ -100,22 +109,14 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
         super.onLoad();
     }
 
-    @Override
-    public void setRemoved() {
-        getTravelData().removeTravelTargetAt(worldPosition);
-        super.setRemoved();
-    }
-
-    private AnchorTravelTarget createTravelTarget() {
-        return new AnchorTravelTarget(worldPosition, "", Items.AIR, true);
-    }
-
-    private Optional<AnchorTravelTarget> getTravelTarget() {
-        return getTravelData().getTravelTarget(worldPosition).filter(target -> target instanceof AnchorTravelTarget).map(target -> (AnchorTravelTarget) target);
-    }
-
     private AnchorTravelTarget getOrCreateTravelTarget() {
-        return getTravelTarget().orElse(createTravelTarget());
+        Optional<ITravelTarget> travelTarget = getTravelData().getTravelTarget(worldPosition);
+        if (travelTarget.isPresent() && travelTarget.get() instanceof AnchorTravelTarget anchorTravelTarget) {
+            return anchorTravelTarget;
+        }
+        AnchorTravelTarget anchorTravelTarget = new AnchorTravelTarget(worldPosition, "", Items.AIR, true);
+        getTravelData().addTravelTarget(anchorTravelTarget);
+        return anchorTravelTarget;
     }
 
     private TravelSavedData getTravelData() {
