@@ -1,6 +1,8 @@
 package com.enderio.machines.common.blockentity;
 
 import com.enderio.base.common.travel.TravelSavedData;
+import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
+import com.enderio.core.common.network.slot.StringNetworkDataSlot;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
@@ -18,20 +20,22 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
-import java.util.Random;
 
 public class TravelAnchorBlockEntity extends MachineBlockEntity {
 
-    private String name = "";
-    private Item icon = Items.AIR;
-    private boolean visible = true;
+    AnchorTravelTarget target;
     public static final SingleSlotAccess GHOST = new SingleSlotAccess();
+
+    private final StringNetworkDataSlot nameDataSlot;
+    private final BooleanNetworkDataSlot visibilityDataSlot;
 
     public TravelAnchorBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);
-        //        addDataSlot(new StringNetworkDataSlot(() -> getName(), name -> setName(name)));
-        //        addDataSlot(new ResourceLocationNetworkDataSlot(() -> ForgeRegistries.ITEMS.getKey(getIcon()), (loc) -> setIcon(ForgeRegistries.ITEMS.getValue(loc))));
-        name = ('a' + new Random().nextInt(26)) + "";
+        nameDataSlot = new StringNetworkDataSlot(() -> getName(), name -> setName(name));
+        visibilityDataSlot = new BooleanNetworkDataSlot(() -> getVisibility(), visible -> setVisibility(visible));
+        addDataSlot(nameDataSlot);
+        addDataSlot(visibilityDataSlot);
+        target = getOrCreateTravelTarget();
     }
 
     @Nullable
@@ -56,44 +60,43 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
 
     @Nullable
     public String getName() {
-        return name;
+        return target.getName();
     }
 
     public void setName(String name) {
-        this.name = name;
-        AnchorTravelTarget target = getOrCreateTravelTarget();
-        target.setName(name);
+        setChanged();
+        if (level != null && level.isClientSide()) {
+            clientUpdateSlot(nameDataSlot, name);
+        } else {
+            target.setName(name);
+        }
     }
 
     public Item getIcon() {
-        setChanged();
-        return icon;
+        return target.getIcon();
     }
 
     public void setIcon(Item icon) {
         setChanged();
-        this.icon = icon;
-        AnchorTravelTarget target = getOrCreateTravelTarget();
         target.setIcon(icon != Items.AIR ? icon : null);
     }
 
     public boolean getVisibility() {
-        return visible;
+        return target.getVisibility();
     }
 
     public void setVisibility(boolean visible) {
         setChanged();
-        this.visible = visible;
-        AnchorTravelTarget target = getOrCreateTravelTarget();
-        target.setVisibility(visible);
+        if (level != null && level.isClientSide()) {
+            clientUpdateSlot(visibilityDataSlot, visible);
+        } else {
+            target.setVisibility(visible);
+        }
     }
 
     @Override
     public void onLoad() {
-        AnchorTravelTarget target = getOrCreateTravelTarget();
-        setName(target.getName());
-        setIcon(target.getIcon());
-        setVisibility(target.getVisibility());
+        target = getOrCreateTravelTarget();
         super.onLoad();
     }
 
@@ -104,7 +107,7 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
     }
 
     private AnchorTravelTarget createTravelTarget() {
-        return new AnchorTravelTarget(worldPosition, getName(), getIcon() == Items.AIR ? null : getIcon(), getVisibility());
+        return new AnchorTravelTarget(worldPosition, "", Items.AIR, true);
     }
 
     private Optional<AnchorTravelTarget> getTravelTarget() {

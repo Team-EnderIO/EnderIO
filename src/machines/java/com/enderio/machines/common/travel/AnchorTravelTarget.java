@@ -9,7 +9,6 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -19,11 +18,11 @@ public class AnchorTravelTarget implements ITravelTarget {
 
     private final BlockPos pos;
     private String name;
-    @Nullable private Item icon;
+    private Item icon;
 
     private boolean visible;
 
-    public AnchorTravelTarget(BlockPos pos, String name, @Nullable Item icon, boolean visible) {
+    public AnchorTravelTarget(BlockPos pos, String name, Item icon, boolean visible) {
         this.pos = pos;
         this.name = name;
         this.icon = icon;
@@ -79,12 +78,11 @@ public class AnchorTravelTarget implements ITravelTarget {
         this.name = name;
     }
 
-    @Nullable
     public Item getIcon() {
         return icon;
     }
 
-    public void setIcon(@Nullable Item icon) {
+    public void setIcon(Item icon) {
         this.icon = icon;
     }
 
