@@ -90,7 +90,10 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
 
     @Override
     public void onLoad() {
-        getTravelData().addTravelTarget(createTravelTarget());
+        AnchorTravelTarget target = getOrCreateTravelTarget();
+        setName(target.getName());
+        setIcon(target.getIcon());
+        setVisibility(target.getVisibility());
         super.onLoad();
     }
 

@@ -26,7 +26,7 @@ public class TravelSavedData extends SavedData {
 
     public static TravelSavedData getTravelData(Level level) {
         if (level instanceof ServerLevel serverLevel) {
-            return serverLevel.getDataStorage().computeIfAbsent(TravelSavedData::load, TravelSavedData::new, "enderio_machines:traveldata");
+            return serverLevel.getDataStorage().computeIfAbsent(TravelSavedData::load, TravelSavedData::new, "enderio_traveldata");
         } else {
             if (clientInstance == null) {
                 clientInstance = new TravelSavedData();
