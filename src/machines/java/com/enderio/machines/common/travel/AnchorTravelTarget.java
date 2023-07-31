@@ -97,6 +97,11 @@ public class AnchorTravelTarget implements ITravelTarget {
     }
 
     @Override
+    public boolean canTravelTo() {
+        return getVisibility();
+    }
+
+    @Override
     public int getItem2BlockRange() {
         return BaseConfig.COMMON.ITEMS.TRAVELLING_TO_BLOCK_RANGE.get();
     }

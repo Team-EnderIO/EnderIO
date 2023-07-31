@@ -15,4 +15,8 @@ public interface ITravelTarget {
     int getItem2BlockRange();
 
     int getBlock2BlockRange();
+
+    default boolean canTravelTo() {
+        return true;
+    }
 }
