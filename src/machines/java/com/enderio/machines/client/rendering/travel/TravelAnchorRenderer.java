@@ -12,6 +12,8 @@ import net.minecraft.world.level.block.Blocks;
 public class TravelAnchorRenderer  implements TeleportationRenderer<AnchorTravelTarget> {
     @Override
     public void render(AnchorTravelTarget travelData, LevelRenderer levelRenderer, PoseStack poseStack) {
+        if (!travelData.getVisibility())
+            return;
         poseStack.pushPose();
         poseStack.translate(travelData.getPos().getX(), travelData.getPos().getY(), travelData.getPos().getZ());
         //TODO: Render the Travel Anchor name icon and do some other stuff, pls Crazy, be a rendering genius

@@ -12,6 +12,9 @@ import org.jetbrains.annotations.Nullable;
 public class TravelAnchorMenu extends MachineMenu<TravelAnchorBlockEntity> {
     public TravelAnchorMenu(@Nullable TravelAnchorBlockEntity blockEntity, Inventory inventory, int pContainerId) {
         super(blockEntity, inventory, MachineMenus.TRAVEL_ANCHOR.get(), pContainerId);
+        if (blockEntity != null) {
+            addSlot(new GhostMachineSlot(blockEntity.getInventory(), TravelAnchorBlockEntity.GHOST, 125, 10));
+        }
         addInventorySlots(8, 103);
     }
 

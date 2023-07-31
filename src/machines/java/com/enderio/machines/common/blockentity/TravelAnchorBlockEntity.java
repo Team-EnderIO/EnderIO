@@ -1,8 +1,6 @@
 package com.enderio.machines.common.blockentity;
 
 import com.enderio.base.common.travel.TravelSavedData;
-import com.enderio.core.common.network.slot.ResourceLocationNetworkDataSlot;
-import com.enderio.core.common.network.slot.StringNetworkDataSlot;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
@@ -13,10 +11,10 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -26,12 +24,13 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
 
     private String name = "";
     private Item icon = Items.AIR;
+    private boolean visible = true;
     public static final SingleSlotAccess GHOST = new SingleSlotAccess();
 
     public TravelAnchorBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);
-        addDataSlot(new StringNetworkDataSlot(() -> getName(), name -> setName(name)));
-        addDataSlot(new ResourceLocationNetworkDataSlot(() -> ForgeRegistries.ITEMS.getKey(getIcon()), (loc) -> setIcon(ForgeRegistries.ITEMS.getValue(loc))));
+        //        addDataSlot(new StringNetworkDataSlot(() -> getName(), name -> setName(name)));
+        //        addDataSlot(new ResourceLocationNetworkDataSlot(() -> ForgeRegistries.ITEMS.getKey(getIcon()), (loc) -> setIcon(ForgeRegistries.ITEMS.getValue(loc))));
         name = ('a' + new Random().nextInt(26)) + "";
     }
 
@@ -46,6 +45,15 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
         return MachineInventoryLayout.builder().setStackLimit(1).ghostSlot().slotAccess(GHOST).build();
     }
 
+    @Override
+    protected void onInventoryContentsChanged(int slot) {
+        super.onInventoryContentsChanged(slot);
+        ItemStack stack = GHOST.getItemStack(getInventory());
+        if (!stack.isEmpty()) {
+            setIcon(stack.getItem());
+        }
+    }
+
     @Nullable
     public String getName() {
         return name;
@@ -53,12 +61,8 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
 
     public void setName(String name) {
         this.name = name;
-        Optional<AnchorTravelTarget> target = getTravelTarget();
-        if (target.isPresent()) {
-            target.get().setName(name);
-        } else {
-            getTravelData().addTravelTarget(createTravelTarget());
-        }
+        AnchorTravelTarget target = getOrCreateTravelTarget();
+        target.setName(name);
     }
 
     public Item getIcon() {
@@ -69,12 +73,19 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
     public void setIcon(Item icon) {
         setChanged();
         this.icon = icon;
-        Optional<AnchorTravelTarget> target = getTravelTarget();
-        if (target.isPresent()) {
-            target.get().setIcon(icon != Items.AIR ? icon : null);
-        } else {
-            getTravelData().addTravelTarget(createTravelTarget());
-        }
+        AnchorTravelTarget target = getOrCreateTravelTarget();
+        target.setIcon(icon != Items.AIR ? icon : null);
+    }
+
+    public boolean getVisibility() {
+        return visible;
+    }
+
+    public void setVisibility(boolean visible) {
+        setChanged();
+        this.visible = visible;
+        AnchorTravelTarget target = getOrCreateTravelTarget();
+        target.setVisibility(visible);
     }
 
     @Override
@@ -90,11 +101,15 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
     }
 
     private AnchorTravelTarget createTravelTarget() {
-        return new AnchorTravelTarget(worldPosition, getName(), getIcon() == Items.AIR ? null: getIcon());
+        return new AnchorTravelTarget(worldPosition, getName(), getIcon() == Items.AIR ? null : getIcon(), getVisibility());
     }
 
     private Optional<AnchorTravelTarget> getTravelTarget() {
-        return getTravelData().getTravelTarget(worldPosition).filter(target -> target instanceof AnchorTravelTarget).map(target -> (AnchorTravelTarget)target);
+        return getTravelData().getTravelTarget(worldPosition).filter(target -> target instanceof AnchorTravelTarget).map(target -> (AnchorTravelTarget) target);
+    }
+
+    private AnchorTravelTarget getOrCreateTravelTarget() {
+        return getTravelTarget().orElse(createTravelTarget());
     }
 
     private TravelSavedData getTravelData() {

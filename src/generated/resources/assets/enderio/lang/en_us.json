@@ -294,6 +294,8 @@
   "gui.enderio.spawner.too_many_mob": "Too many mobs",
   "gui.enderio.spawner.too_many_spawner": "Too many spawners",
   "gui.enderio.spawner.unknown": "Unknown mob",
+  "gui.enderio.visible.false": "Hidden",
+  "gui.enderio.visible.true": "Visible",
   "guidebook.enderio.book_title": "Book Title",
   "guidebook.enderio.landing_text": "Landing Text",
   "hint.enderio.connected_textures.text": "If you are looking for connected textures on the capacitor bank, you might want to install Athena on your client",

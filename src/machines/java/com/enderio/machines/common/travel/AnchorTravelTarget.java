@@ -19,13 +19,15 @@ public class AnchorTravelTarget implements ITravelTarget {
 
     private final BlockPos pos;
     private String name;
-    @Nullable
-    private Item icon;
+    @Nullable private Item icon;
 
-    public AnchorTravelTarget(BlockPos pos, String name, @Nullable Item icon) {
+    private boolean visible;
+
+    public AnchorTravelTarget(BlockPos pos, String name, @Nullable Item icon, boolean visible) {
         this.pos = pos;
         this.name = name;
         this.icon = icon;
+        this.visible = visible;
     }
 
     public AnchorTravelTarget(CompoundTag tag) {
@@ -33,6 +35,7 @@ public class AnchorTravelTarget implements ITravelTarget {
         name = tag.getString("name");
         String iconName = tag.getString("icon");
         icon = iconName.equals("") ? null : ForgeRegistries.ITEMS.getValue(new ResourceLocation(iconName));
+        visible = tag.getBoolean("visible");
     }
 
     @Override
@@ -42,6 +45,7 @@ public class AnchorTravelTarget implements ITravelTarget {
         nbt.putString("name", name);
         if (icon != null)
             nbt.putString("icon", String.valueOf(ForgeRegistries.ITEMS.getKey(icon)));
+        nbt.putBoolean("visible", visible);
         return nbt;
     }
 
@@ -53,9 +57,8 @@ public class AnchorTravelTarget implements ITravelTarget {
             return true;
         if (!(o instanceof AnchorTravelTarget other))
             return false;
-        return pos.equals(other.pos)
-            && name.equals(other.name)
-            && Objects.equals(icon, other.icon);
+        return pos.equals(other.pos) && name.equals(other.name) && visible == (other.visible) && Objects.equals(icon, other.icon);
+
     }
 
     @Override
@@ -83,6 +86,14 @@ public class AnchorTravelTarget implements ITravelTarget {
 
     public void setIcon(@Nullable Item icon) {
         this.icon = icon;
+    }
+
+    public boolean getVisibility() {
+        return visible;
+    }
+
+    public void setVisibility(boolean visible) {
+        this.visible = visible;
     }
 
     @Override
