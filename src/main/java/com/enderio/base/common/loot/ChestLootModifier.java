@@ -41,7 +41,7 @@ public class ChestLootModifier extends LootModifier {
 
         // Ignore deprecation, we're inside a modifier, don't loop them
         //noinspection deprecation
-        loot.getRandomItems(context, generatedLoot::add);
+        loot.getRandomItemsRaw(context, generatedLoot::add);
         return generatedLoot;
     }
 
