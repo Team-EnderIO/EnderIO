@@ -16,14 +16,17 @@ import com.enderio.machines.common.menu.MobGeneratorMenu;
 import com.enderio.machines.common.souldata.GeneratorSoul;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -42,6 +45,7 @@ public class MobGeneratorBlockEntity extends PoweredMachineBlockEntity {
     private static final String BURNED_TICKS = "burnedTicks";
     private StoredEntityData entityData = StoredEntityData.empty();
     private static final int FLUID_CAPACITY = 2 * FluidType.BUCKET_VOLUME;
+    @Nullable
     private GeneratorSoul.SoulData soulData;
     private int burnedTicks = 0;
 
@@ -105,20 +109,44 @@ public class MobGeneratorBlockEntity extends PoweredMachineBlockEntity {
             @Override
             protected void onContentsChanged() {
                 super.onContentsChanged();
+                setChanged();
+            }
+
+            @Override
+            public int fill(FluidStack resource, FluidAction action) {
+                // Convert into tagged fluid
+                if (this.isFluidValid(resource)) {
+                    var currentFluid = this.getFluid().getFluid();
+                    if (currentFluid == Fluids.EMPTY || resource.getFluid().isSame(currentFluid)) {
+                        return super.fill(resource, action);
+                    } else {
+                        return super.fill(new FluidStack(currentFluid, resource.getAmount()), action);
+                    }
+                }
+
+                // Non-tagged fluid.
+                return 0;
             }
         };
     }
 
-    //TODO add tag support
     private Predicate<FluidStack> isFluidValid() {
         return fluidStack -> {
             if (soulData == null)  {
                 return false;
             }
-            ResourceLocation fluid = soulData.fluid();
-            Optional<Holder.Reference<Fluid>> delegate = ForgeRegistries.FLUIDS.getDelegate(fluid);
-            if (delegate.isPresent()) {
-                return fluidStack.getFluid().isSame(delegate.get().get());
+            String fluid = soulData.fluid();
+            if (fluid.startsWith("#")) { //We have a fluid tag instead
+                TagKey<Fluid> tag = TagKey.create(Registries.FLUID, new ResourceLocation(fluid.substring(1)));
+                Optional<Fluid> optional = ForgeRegistries.FLUIDS.tags().getTag(tag).stream().findFirst();
+                if (optional.isPresent()) {
+                    return fluidStack.getFluid().isSame(optional.get());
+                }
+            } else {
+                Optional<Holder.Reference<Fluid>> delegate = ForgeRegistries.FLUIDS.getDelegate(new ResourceLocation(fluid));
+                if (delegate.isPresent()) {
+                    return fluidStack.getFluid().isSame(delegate.get().get());
+                }
             }
             return false;
         };

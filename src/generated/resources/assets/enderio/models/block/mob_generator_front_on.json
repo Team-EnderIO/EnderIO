@@ -1,6 +1,0 @@
-{
-  "parent": "enderio:block/mob_generator_front",
-  "textures": {
-    "front": "enderio:block/mob_generator_front_on"
-  }
-}

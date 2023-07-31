@@ -7,8 +7,6 @@ import com.enderio.machines.common.souldata.GeneratorSoul;
 import com.enderio.machines.common.souldata.ISoulData;
 import com.enderio.machines.common.souldata.SpawnerSoul;
 import com.google.common.collect.Sets;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
@@ -18,10 +16,12 @@ import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +32,6 @@ import java.util.function.Consumer;
 public class SoulDataProvider implements DataProvider {
 
     private final PackOutput.PathProvider souldataprovider;
-    private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
-
     public SoulDataProvider(PackOutput packOutput) {
         this.souldataprovider = packOutput.createPathProvider(PackOutput.Target.DATA_PACK, "eio_soul");
     }
@@ -113,12 +111,11 @@ public class SoulDataProvider implements DataProvider {
         addSpawnerData(EntityType.ZOMBIE_VILLAGER, 4000, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
         addSpawnerData(EntityType.ZOMBIFIED_PIGLIN, 4000, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
 
-        addGeneratorData(EntityType.BLAZE, Fluids.LAVA, 800, 20, finshedSoulDataConsumer);
+        addGeneratorData(EntityType.BLAZE, FluidTags.LAVA, 800, 20, finshedSoulDataConsumer);
         addGeneratorData(EntityType.ZOMBIE, EIOFluids.NUTRIENT_DISTILLATION.get(), 900, 20, finshedSoulDataConsumer);
         addGeneratorData(EntityType.ZOMBIE_VILLAGER, EIOFluids.NUTRIENT_DISTILLATION.get(), 900, 20, finshedSoulDataConsumer);
         addGeneratorData(EntityType.HUSK, EIOFluids.NUTRIENT_DISTILLATION.get(), 900, 20, finshedSoulDataConsumer);
         addGeneratorData(EntityType.ENDERMAN, EIOFluids.DEW_OF_THE_VOID.get(), 2000, 10, finshedSoulDataConsumer);
-        addGeneratorData(EntityType.SHULKER, EIOFluids.VAPOR_OF_LEVITY.get(), 1500, 20, finshedSoulDataConsumer);
 
     }
 
@@ -136,6 +133,7 @@ public class SoulDataProvider implements DataProvider {
         return CompletableFuture.allOf(list.toArray((p_253414_) -> new CompletableFuture[p_253414_]));
     }
 
+    @NotNull
     @Override
     public String getName() {
         return "Souldata";
@@ -150,6 +148,13 @@ public class SoulDataProvider implements DataProvider {
     private void addGeneratorData(EntityType<?> entityType, Fluid fluid, int powerpermb, int tickpermb, Consumer<FinshedSoulData<?>> finshedSoulDataConsumer) {
         ResourceLocation entityRL = ForgeRegistries.ENTITY_TYPES.getKey(entityType);
         ResourceLocation fluidRL = ForgeRegistries.FLUIDS.getKey(fluid);
+        GeneratorSoul.SoulData data = new GeneratorSoul.SoulData(entityRL, fluidRL.toString(), powerpermb, tickpermb);
+        finshedSoulDataConsumer.accept(new FinshedSoulData<>(GeneratorSoul.CODEC, data, "generator/" + entityRL.getNamespace() + "_" + entityRL.getPath()));
+    }
+
+    private void addGeneratorData(EntityType<?> entityType, TagKey<Fluid> fluid, int powerpermb, int tickpermb, Consumer<FinshedSoulData<?>> finshedSoulDataConsumer) {
+        ResourceLocation entityRL = ForgeRegistries.ENTITY_TYPES.getKey(entityType);
+        String fluidRL = "#" + fluid.location();
         GeneratorSoul.SoulData data = new GeneratorSoul.SoulData(entityRL, fluidRL, powerpermb, tickpermb);
         finshedSoulDataConsumer.accept(new FinshedSoulData<>(GeneratorSoul.CODEC, data, "generator/" + entityRL.getNamespace() + "_" + entityRL.getPath()));
     }

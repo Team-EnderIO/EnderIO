@@ -53,6 +53,7 @@
     "enderio:advanced_capacitor_bank",
     "enderio:vibrant_capacitor_bank",
     "enderio:crafter",
+    "enderio:mob_generator",
     "enderio:conduit"
   ]
 }

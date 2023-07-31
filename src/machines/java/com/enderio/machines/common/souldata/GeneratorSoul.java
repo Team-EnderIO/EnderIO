@@ -10,8 +10,7 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class GeneratorSoul {
 
-    //TODO add tag support for fluids
-    public record SoulData(ResourceLocation entitytype, ResourceLocation fluid, int powerpermb, int tickpermb) implements ISoulData {
+    public record SoulData(ResourceLocation entitytype, String fluid, int powerpermb, int tickpermb) implements ISoulData {
         @Override
         public ResourceLocation getKey() {
             return entitytype();
@@ -20,7 +19,7 @@ public class GeneratorSoul {
 
     public static final Codec<SoulData> CODEC = RecordCodecBuilder.create(soulDataInstance ->
        soulDataInstance.group(ResourceLocation.CODEC.fieldOf("entity").forGetter(SoulData::entitytype),
-           ResourceLocation.CODEC.fieldOf("fluid").forGetter(SoulData::fluid),
+           Codec.STRING.fieldOf("fluid").forGetter(SoulData::fluid),
            Codec.INT.fieldOf("power/mb").forGetter(SoulData::powerpermb),
            Codec.INT.fieldOf("tick/mb").forGetter(SoulData::tickpermb))
            .apply(soulDataInstance, SoulData::new));

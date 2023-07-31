@@ -30,13 +30,7 @@ import net.minecraft.Util;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraftforge.client.model.generators.BlockModelBuilder;
-import net.minecraftforge.client.model.generators.ConfiguredModel;
-import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.loaders.CompositeModelBuilder;
-import net.minecraftforge.common.util.TransformationHelper;
-import org.joml.Vector3f;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -130,10 +124,8 @@ public class MachineBlocks {
         .lang("Soul Binder")
         .register();
 
-    public static final BlockEntry<ProgressMachineBlock> POWERED_SPAWNER = REGISTRATE
-        .block("powered_spawner", props -> new ProgressMachineBlock(props, MachineBlockEntities.POWERED_SPAWNER))
+    public static final BlockEntry<ProgressMachineBlock> POWERED_SPAWNER = progressMachine("powered_spawner", () -> MachineBlockEntities.POWERED_SPAWNER)
         .loot((l,t) -> MachinesLootTable.copyNBTSingleCap(l, t, MachineNBTKeys.ENTITY_STORAGE))
-        .blockstate(MachineModelUtil::soulMachineBlock)
         .item(SoulBoundItem::new)
         .tab(EIOCreativeTabs.MACHINES)
         .build()
@@ -175,18 +167,13 @@ public class MachineBlocks {
         return ImmutableMap.copyOf(banks);
     });
 
-    public static final BlockEntry<ProgressMachineBlock> MOB_GENERATOR = REGISTRATE
-        .block("mob_generator", props -> new ProgressMachineBlock(props, MachineBlockEntities.MOB_GENERATOR))
-        .loot(MachinesLootTable::copyNBT)
-        .blockstate(MachineModelUtil::soulMachineBlock)
+    public static final BlockEntry<ProgressMachineBlock> CRAFTER = progressMachine("crafter", () -> MachineBlockEntities.CRAFTER)
+        .register();
+
+    public static final BlockEntry<ProgressMachineBlock> MOB_GENERATOR = progressMachine("mob_generator", () -> MachineBlockEntities.MOB_GENERATOR)
         .item(SoulBoundItem::new)
         .tab(EIOCreativeTabs.MACHINES)
         .build()
-        .register();
-
-    public static final BlockEntry<ProgressMachineBlock> CRAFTER = standardMachine("crafter", () -> MachineBlockEntities.CRAFTER)
-        .lang("Crafter")
-        .blockstate((ctx, prov) -> MachineModelUtil.customMachineBlock(ctx, prov, "crafter"))
         .register();
 
     //used when single methods needs to be overridden in the block class

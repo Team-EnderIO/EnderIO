@@ -1,6 +1,0 @@
-{
-  "entity": "minecraft:shulker",
-  "fluid": "enderio:flowing_vapor_of_levity",
-  "power/mb": 1500,
-  "tick/mb": 20
-}
