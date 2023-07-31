@@ -1,6 +1,5 @@
 package com.enderio.conduits.common.types;
 
-import com.enderio.EnderIO;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.ticker.CapabilityAwareConduitTicker;
 import com.enderio.api.misc.ColorControl;
@@ -24,26 +23,32 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<IEnergySto
     public void tickCapabilityGraph(IConduitType<?> type, List<CapabilityConnection> inserts, List<CapabilityConnection> extracts, ServerLevel level,
         Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
 
-        int availableForExtraction = 0;
-        for (IEnergyStorage extract : extracts.stream().map(e -> e.cap).toList()) {
-            availableForExtraction += extract.extractEnergy(extract.getEnergyStored(), true);
-        }
+        toNextExtract:
+        for (CapabilityConnection extract : extracts) {
+            IEnergyStorage extractHandler = extract.cap;
+            int availableForExtraction = extractHandler.extractEnergy(Integer.MAX_VALUE, true);
+            if (availableForExtraction <= 0)
+                continue;
+            EnergyExtendedData.EnergySidedData sidedExtractData = extract.data.castTo(EnergyExtendedData.class).compute(extract.direction);
 
-        int inserted = 0;
-        for (IEnergyStorage insert : inserts.stream().map(e -> e.cap).toList()) {
-            inserted += insert.receiveEnergy(availableForExtraction - inserted, false);
-            if (inserted == availableForExtraction)
-                break;
-        }
+            if (inserts.size() <= sidedExtractData.rotatingIndex) {
+                sidedExtractData.rotatingIndex = 0;
+            }
 
-        for (IEnergyStorage extract : extracts.stream().map(e -> e.cap).toList()) {
-            inserted -= extract.extractEnergy(inserted, false);
-            if (inserted <= 0)
-                break;
-        }
+            for (int j = sidedExtractData.rotatingIndex; j < sidedExtractData.rotatingIndex + inserts.size(); j++) {
+                int insertIndex = j % inserts.size();
+                CapabilityConnection insert = inserts.get(insertIndex);
 
-        if (inserted > 0) {
-            EnderIO.LOGGER.info("didn't extract all energy that was inserted, investigate the dupe bug");
+                int inserted = insert.cap.receiveEnergy(availableForExtraction, false);
+                extractHandler.extractEnergy(inserted, false);
+
+                if (inserted == availableForExtraction) {
+                    sidedExtractData.rotatingIndex += (insertIndex) + 1;
+                    continue toNextExtract;
+                }
+
+                availableForExtraction -= inserted;
+            }
         }
     }
 

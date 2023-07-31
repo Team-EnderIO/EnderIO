@@ -12,6 +12,8 @@ import com.enderio.base.common.network.EIONetwork;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.EIODataProvider;
 import com.enderio.base.data.advancement.EIOAdvancementGenerator;
+import com.enderio.base.data.loot.EIOLootModifiersProvider;
+import com.enderio.base.data.loot.ChestLootProvider;
 import com.enderio.base.data.loot.FireCraftingLootProvider;
 import com.enderio.base.data.recipe.*;
 import com.enderio.base.data.tags.EIOBlockTagsProvider;
@@ -122,17 +124,18 @@ public class EnderIO {
         provider.addSubProvider(event.includeServer(), new GrindingBallRecipeProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new GlassRecipes(packOutput));
         provider.addSubProvider(event.includeServer(), new FireCraftingRecipes(packOutput));
+        provider.addSubProvider(event.includeServer(), new EIOLootModifiersProvider(packOutput));
 
         var b = new EIOBlockTagsProvider(packOutput, lookupProvider, existingFileHelper);
         provider.addSubProvider(event.includeServer(), b);
         provider.addSubProvider(event.includeServer(), new EIOItemTagsProvider(packOutput, lookupProvider, b.contentsGetter(), existingFileHelper));
         provider.addSubProvider(event.includeServer(), new EIOFluidTagsProvider(packOutput, lookupProvider, existingFileHelper));
         provider.addSubProvider(event.includeServer(), new EIOEntityTagsProvider(packOutput, lookupProvider, existingFileHelper));
-        provider.addSubProvider(event.includeServer(), new ForgeAdvancementProvider(packOutput, lookupProvider, existingFileHelper,
-            List.of(new EIOAdvancementGenerator())));
-        generator.addProvider(event.includeServer(), new LootTableProvider(
-            packOutput, Collections.emptySet(),
-            List.of(new LootTableProvider.SubProviderEntry(FireCraftingLootProvider::new, LootContextParamSets.EMPTY))));
+        provider.addSubProvider(event.includeServer(),
+            new ForgeAdvancementProvider(packOutput, lookupProvider, existingFileHelper, List.of(new EIOAdvancementGenerator())));
+        generator.addProvider(event.includeServer(), new LootTableProvider(packOutput, Collections.emptySet(),
+            List.of(new LootTableProvider.SubProviderEntry(FireCraftingLootProvider::new, LootContextParamSets.EMPTY),
+                new LootTableProvider.SubProviderEntry(ChestLootProvider::new, LootContextParamSets.CHEST))));
         generator.addProvider(true, provider);
     }
 }

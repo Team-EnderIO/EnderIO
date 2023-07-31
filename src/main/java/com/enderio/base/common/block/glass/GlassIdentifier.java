@@ -9,7 +9,6 @@ public record GlassIdentifier(GlassLighting lighting, GlassCollisionPredicate co
         return new GlassIdentifier(lighting, collisionPredicate, explosion_resistance);
     }
 
-
     public String glassName() {
         StringBuilder main = new StringBuilder();
         if (explosion_resistance()) {

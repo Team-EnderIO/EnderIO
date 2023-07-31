@@ -1,0 +1,6 @@
+{
+  "parent": "enderio:block/crafter",
+  "textures": {
+    "north": "enderio:block/crafter_front_active"
+  }
+}

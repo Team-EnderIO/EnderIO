@@ -1,0 +1,10 @@
+{
+  "entries": [
+    "enderio:alloy_loot",
+    "enderio:direct_upgrade",
+    "enderio:broken_spawner",
+    "enderio:auto_smelt",
+    "enderio:common_loot"
+  ],
+  "replace": false
+}

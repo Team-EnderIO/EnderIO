@@ -41,7 +41,7 @@ public class SoulBindingRecipeProvider extends EnderRecipeProvider {
         build(EIOItems.SENTIENT_ENDER, Ingredient.of(EIOItems.ENDER_RESONATOR), 100000, 4, EntityType.WITCH, pFinishedRecipeConsumer);
         build(EIOItems.BROKEN_SPAWNER, Ingredient.of(EIOItems.BROKEN_SPAWNER), 2500000, 8, pFinishedRecipeConsumer); //TODO if we add SpawnerSoul.NAME, no modded mob will work without a config
         build(EIOItems.PLAYER_TOKEN, Ingredient.of(EIOItems.DARK_STEEL_BALL), 25000, 1, EntityType.VILLAGER, pFinishedRecipeConsumer);
-        build(EIOItems.MONSTER_TOKEN, Ingredient.of(EIOItems.SOULARIUM_BALL), 25000, 1, EntityType.GHAST, pFinishedRecipeConsumer);
+        build(EIOItems.MONSTER_TOKEN, Ingredient.of(EIOItems.SOULARIUM_BALL), 25000, 1, MobCategory.MONSTER, pFinishedRecipeConsumer);
         build(EIOItems.ANIMAL_TOKEN, Ingredient.of(EIOItems.SOULARIUM_BALL), 25000, 1, MobCategory.CREATURE, pFinishedRecipeConsumer);
         build(MachineBlocks.MOB_GENERATOR, Ingredient.of(MachineBlocks.MOB_GENERATOR), 25000, 1, GeneratorSoul.NAME, pFinishedRecipeConsumer);
     }
