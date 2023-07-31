@@ -26,7 +26,7 @@ apply plugin: 'org.moddingx.modgradle.mapping'
 
 version = getVersionString()
 group = 'com.enderio'
-archivesBaseName = 'EnderIO'
+archivesBaseName = "EnderIO-${minecraft_version}"
 
 println("Building Ender IO version ${version}")
 println("Release type: ${getReleaseType()}")
@@ -423,7 +423,7 @@ String getVersionString() {
             version_number = version_number.substring(1)
         }
 
-        return "${minecraft_version}-${version_number}"
+        return "${version_number}"
     }
 
     if (System.getenv('NIGHTLY') != null) {
@@ -432,7 +432,7 @@ String getVersionString() {
             version_patch_lc = System.getenv('BUILD_NUMBER')
         }
 
-        return "${minecraft_version}-nightly-${version_patch_lc}"
+        return "${mod_version_series}-nightly-${version_patch_lc}"
     }
 
     def version_hash = ''
@@ -443,7 +443,7 @@ String getVersionString() {
         }
     }
 
-    return "${minecraft_version}-dev-${version_hash}"
+    return "${mod_version_series}-dev-${version_hash}"
 }
 
 String getReleaseType() {
