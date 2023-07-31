@@ -1,7 +1,10 @@
 package com.enderio.conduits.common.blockentity;
 
 import com.enderio.api.UseOnly;
-import com.enderio.api.conduit.*;
+import com.enderio.api.conduit.IConduitMenuData;
+import com.enderio.api.conduit.IConduitType;
+import com.enderio.api.conduit.IExtendedConduitData;
+import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.conduits.ConduitNBTKeys;
 import com.enderio.conduits.common.ConduitShape;
 import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
@@ -35,7 +38,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
-import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.LogicalSide;
@@ -136,7 +138,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         if (this.level.getBlockEntity(this.worldPosition) != this)
             return false;
         return pPlayer.distanceToSqr(this.worldPosition.getX() + 0.5D, this.worldPosition.getY() + 0.5D, this.worldPosition.getZ() + 0.5D) <= Mth.square(
-            pPlayer.getAttributeValue(ForgeMod.BLOCK_REACH.get()));
+            pPlayer.getBlockReach() + 3);
     }
 
     @Override

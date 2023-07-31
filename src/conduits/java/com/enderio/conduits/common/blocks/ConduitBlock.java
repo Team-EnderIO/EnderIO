@@ -1,6 +1,5 @@
 package com.enderio.conduits.common.blocks;
 
-import com.enderio.EnderIO;
 import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.NodeIdentifier;
@@ -57,15 +56,12 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 @Mod.EventBusSubscriber
@@ -409,7 +405,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
 
     @Override
     public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
-        HitResult hit = player.pick(player.getAttributeValue(ForgeMod.BLOCK_REACH.get()) + 5, 1, false);
+        HitResult hit = player.pick(player.getBlockReach() + 5, 1, false);
         BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof ConduitBlockEntity conduit) {
             @Nullable IConduitType<?> conduitType = conduit.getShape().getConduit(((BlockHitResult) hit).getBlockPos(), hit);
