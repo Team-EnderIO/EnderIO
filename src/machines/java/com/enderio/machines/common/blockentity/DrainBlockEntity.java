@@ -3,7 +3,9 @@ package com.enderio.machines.common.blockentity;
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
+import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
 import com.enderio.core.common.network.slot.FluidStackNetworkDataSlot;
+import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
@@ -43,6 +45,19 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
         BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE, type, worldPosition, blockState);
         addDataSlot(new FluidStackNetworkDataSlot(getFluidTankNN()::getFluid, getFluidTankNN()::setFluid));
+
+        this.range = 5;
+
+        rangeDataSlot = new IntegerNetworkDataSlot(this::getRange, r -> this.range = r) {
+            @Override
+            public void updateServerCallback() {
+                updateLocations();
+            }
+        };
+        addDataSlot(rangeDataSlot);
+
+        rangeVisibleDataSlot = new BooleanNetworkDataSlot(this::isRangeVisible, b -> this.rangeVisible = b);
+        addDataSlot(rangeVisibleDataSlot);
     }
 
     @Override
@@ -73,7 +88,6 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
         return getFluidTankNN().fill(new FluidStack(fluidState.getType(), FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.SIMULATE) == FluidType.BUCKET_VOLUME;
     }
 
-    //TODO logic for ending on the block below the drain. That should be the last one to go.
     public void drainFluids() {
         for (int i = currentIndex; i < Math.min(currentIndex + 3, positions.size()); i++) {
             currentIndex = i;
@@ -114,10 +128,35 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
+    public int getMaxRange() {
+        return 10;
+    }
+
+    @Override
+    public String getColor() {
+        return MachinesConfig.CLIENT.BLOCKS.DRAIN_RANGE_COLOR.get();
+    }
+
+    @Override
+    public BlockPos getParticleLocation() {
+        return worldPosition.below(range + 1);
+    }
+
+    @Override
+    public void setRange(int range) {
+        super.setRange(range);
+        updateLocations();
+    }
+
+    @Override
     public void onLoad() {
         super.onLoad();
+        updateLocations();
+    }
+
+    private void updateLocations() {
         positions = new ArrayList<>();
-        for (BlockPos pos : BlockPos.betweenClosed(worldPosition.offset(-10,-21,-10), worldPosition.offset(10,-1,10))) {
+        for (BlockPos pos : BlockPos.betweenClosed(worldPosition.offset(-range,-range*2 - 1,-range), worldPosition.offset(range,-1,range))) {
             positions.add(pos.immutable()); //Need to make it immutable
         }
     }

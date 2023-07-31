@@ -173,6 +173,7 @@ public class EnderBlockEntity extends BlockEntity {
         if (data.contains("Index", Tag.TAG_INT) && data.contains("Data")) {
             int slotIdx = data.getInt("Index");
             dataSlots.get(slotIdx).fromNBT(data.get("Data"));
+            dataSlots.get(slotIdx).updateServerCallback();
         }
     }
 

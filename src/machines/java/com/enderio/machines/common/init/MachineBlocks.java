@@ -29,13 +29,7 @@ import net.minecraft.Util;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraftforge.client.model.generators.BlockModelBuilder;
-import net.minecraftforge.client.model.generators.ConfiguredModel;
-import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.loaders.CompositeModelBuilder;
-import net.minecraftforge.common.util.TransformationHelper;
-import org.joml.Vector3f;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -173,8 +167,7 @@ public class MachineBlocks {
     public static final BlockEntry<ProgressMachineBlock> CRAFTER = progressMachine("crafter", () -> MachineBlockEntities.CRAFTER)
         .register();
 
-    public static final BlockEntry<ProgressMachineBlock> DRAIN = standardMachine("drain", () -> MachineBlockEntities.DRAIN)
-        .lang("Drain")
+    public static final BlockEntry<ProgressMachineBlock> DRAIN = progressMachine("drain", () -> MachineBlockEntities.DRAIN)
         .register();
 
     //used when single methods needs to be overridden in the block class

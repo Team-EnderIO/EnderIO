@@ -16,6 +16,7 @@
     "enderio:impulse_hopper",
     "enderio:soul_binder",
     "enderio:powered_spawner",
-    "enderio:crafter"
+    "enderio:crafter",
+    "enderio:drain"
   ]
 }
