@@ -124,8 +124,12 @@ public class MachineBlocks {
         .lang("Soul Binder")
         .register();
 
-    public static final BlockEntry<ProgressMachineBlock> POWERED_SPAWNER = progressMachine("powered_spawner", () -> MachineBlockEntities.POWERED_SPAWNER)
+    public static final BlockEntry<ProgressMachineBlock> POWERED_SPAWNER = REGISTRATE
+        .block("powered_spawner", p -> new ProgressMachineBlock(p, MachineBlockEntities.POWERED_SPAWNER))
+        .properties(props -> props.strength(2.5f, 8).noOcclusion())
         .loot((l,t) -> MachinesLootTable.copyNBTSingleCap(l, t, MachineNBTKeys.ENTITY_STORAGE))
+        .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+        .blockstate(MachineModelUtil::progressMachineBlock)
         .item(SoulBoundItem::new)
         .tab(EIOCreativeTabs.MACHINES)
         .build()
@@ -170,7 +174,12 @@ public class MachineBlocks {
     public static final BlockEntry<ProgressMachineBlock> CRAFTER = progressMachine("crafter", () -> MachineBlockEntities.CRAFTER)
         .register();
 
-    public static final BlockEntry<ProgressMachineBlock> MOB_GENERATOR = progressMachine("mob_generator", () -> MachineBlockEntities.MOB_GENERATOR)
+    public static final BlockEntry<ProgressMachineBlock> MOB_GENERATOR = REGISTRATE
+        .block("mob_generator", p -> new ProgressMachineBlock(p, MachineBlockEntities.MOB_GENERATOR))
+        .properties(props -> props.strength(2.5f, 8).noOcclusion())
+        .loot(MachinesLootTable::copyNBT)
+        .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+        .blockstate(MachineModelUtil::progressMachineBlock)
         .item(SoulBoundItem::new)
         .tab(EIOCreativeTabs.MACHINES)
         .build()
