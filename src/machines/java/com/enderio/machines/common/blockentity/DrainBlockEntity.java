@@ -109,7 +109,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
 
             //Not a valid fluid
             FluidState fluidState = level.getFluidState(pos);
-            if (fluidState.isEmpty() || !fluidState.isSource() || getFluidTankNN().getFluid().getFluid().isSame(fluidState.getType())) {
+            if (fluidState.isEmpty() || !fluidState.isSource() || !getFluidTankNN().getFluid().getFluid().isSame(fluidState.getType())) {
                 continue;
             }
 
