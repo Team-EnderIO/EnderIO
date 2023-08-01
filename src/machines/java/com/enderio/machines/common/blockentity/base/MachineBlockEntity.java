@@ -283,7 +283,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         if (this.range < getMaxRange()) {
             if (level != null && level.isClientSide()) {
                 clientUpdateSlot(rangeDataSlot, range+1);
-            } this.range++;
+            } else this.range++;
         }
     }
 
