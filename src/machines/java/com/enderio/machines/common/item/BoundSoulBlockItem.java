@@ -18,9 +18,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class SoulBoundItem extends BlockItem implements IMultiCapabilityItem, IAdvancedTooltipProvider {
+public class BoundSoulBlockItem extends BlockItem implements IMultiCapabilityItem, IAdvancedTooltipProvider {
 
-    public SoulBoundItem(Block pBlock, Properties pProperties) {
+    public BoundSoulBlockItem(Block pBlock, Properties pProperties) {
         super(pBlock, pProperties);
     }
 

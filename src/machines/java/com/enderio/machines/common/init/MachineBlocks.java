@@ -15,7 +15,7 @@ import com.enderio.machines.common.blockentity.solar.SolarPanelBlockEntity;
 import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
 import com.enderio.machines.common.item.CapacitorBankItem;
 import com.enderio.machines.common.item.FluidTankItem;
-import com.enderio.machines.common.item.SoulBoundItem;
+import com.enderio.machines.common.item.BoundSoulBlockItem;
 import com.enderio.machines.data.loot.MachinesLootTable;
 import com.enderio.machines.data.model.MachineModelUtil;
 import com.google.common.collect.ImmutableMap;
@@ -130,7 +130,7 @@ public class MachineBlocks {
         .loot((l,t) -> MachinesLootTable.copyNBTSingleCap(l, t, MachineNBTKeys.ENTITY_STORAGE))
         .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
         .blockstate(MachineModelUtil::progressMachineBlock)
-        .item(SoulBoundItem::new)
+        .item(BoundSoulBlockItem::new)
         .tab(EIOCreativeTabs.MACHINES)
         .build()
         .register();
@@ -180,7 +180,7 @@ public class MachineBlocks {
         .loot(MachinesLootTable::copyNBT)
         .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
         .blockstate(MachineModelUtil::progressMachineBlock)
-        .item(SoulBoundItem::new)
+        .item(BoundSoulBlockItem::new)
         .tab(EIOCreativeTabs.MACHINES)
         .build()
         .register();
