@@ -3,6 +3,7 @@ package com.enderio.machines.common.blockentity;
 import com.enderio.api.travel.ITravelTarget;
 import com.enderio.base.common.travel.TravelSavedData;
 import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
+import com.enderio.core.common.network.slot.ResourceLocationNetworkDataSlot;
 import com.enderio.core.common.network.slot.StringNetworkDataSlot;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
@@ -18,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -29,13 +31,17 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
 
     private final StringNetworkDataSlot nameDataSlot;
     private final BooleanNetworkDataSlot visibilityDataSlot;
+    private final ResourceLocationNetworkDataSlot iconDataSlot;
 
     public TravelAnchorBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);
         nameDataSlot = new StringNetworkDataSlot(this::getName, name -> target.setName(name));
         visibilityDataSlot = new BooleanNetworkDataSlot(this::getVisibility, visible -> target.setVisibility(visible));
+        iconDataSlot = new ResourceLocationNetworkDataSlot(() -> ForgeRegistries.ITEMS.getKey(getIcon()),
+            loc -> target.setIcon(ForgeRegistries.ITEMS.getValue(loc)));
         addDataSlot(nameDataSlot);
         addDataSlot(visibilityDataSlot);
+        addDataSlot(iconDataSlot);
     }
 
     public void remove() {
@@ -88,7 +94,12 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
     }
 
     public void setIcon(Item icon) {
-        target.setIcon(icon != Items.AIR ? icon : null);
+        if (level != null && level.isClientSide()) {
+            clientUpdateSlot(iconDataSlot, ForgeRegistries.ITEMS.getKey(icon));
+        } else {
+            target.setIcon(icon);
+        }
+
     }
 
     public boolean getVisibility() {
