@@ -1,4 +1,4 @@
-package com.enderio.base.client.renderer.teleportation;
+package com.enderio.base.client.renderer.travel;
 
 import com.enderio.api.travel.ITravelTarget;
 import com.enderio.api.travel.TravelRegistry;
@@ -16,7 +16,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
-public class RenderTeleportTargets {
+public class RenderTravelTargets {
 
     @SubscribeEvent
     public static void renderLevel(RenderLevelStageEvent event) {

@@ -1,4 +1,4 @@
-package com.enderio.base.client.renderer.teleportation;
+package com.enderio.base.client.renderer.travel;
 
 import com.enderio.base.common.handler.TeleportHandler;
 import net.minecraft.client.Minecraft;

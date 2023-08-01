@@ -13,10 +13,10 @@ import java.util.function.Function;
 @ApiStatus.Internal
 public class TravelRegistry {
 
-
     private static final Map<ResourceLocation, TravelEntry<?>> registry = new HashMap<>();
 
-    public static <T extends ITravelTarget> void addTravelEntry(ResourceLocation serializationName, Function<CompoundTag, T> constructor, Lazy<TeleportationRenderer<T>> renderer) {
+    public static <T extends ITravelTarget> void addTravelEntry(ResourceLocation serializationName, Function<CompoundTag, T> constructor,
+        Lazy<TravelRenderer<T>> renderer) {
         registry.put(serializationName, new TravelEntry<>(serializationName, constructor, renderer));
     }
 
@@ -24,8 +24,8 @@ public class TravelRegistry {
         registry.put(travelEntry.serializationName(), travelEntry);
     }
 
-    public static <T extends ITravelTarget> TeleportationRenderer<T> getRenderer(T entry) {
-        return (TeleportationRenderer<T>) registry.get(entry.getSerializationName()).renderer().get();
+    public static <T extends ITravelTarget> TravelRenderer<T> getRenderer(T entry) {
+        return (TravelRenderer<T>) registry.get(entry.getSerializationName()).renderer().get();
     }
 
     public static Optional<ITravelTarget> deserialize(CompoundTag nbt) {
