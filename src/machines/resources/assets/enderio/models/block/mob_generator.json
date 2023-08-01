@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:block/cube",
   "textures": {
-    "down": "enderio:block/machine_bottom",
-    "east": "enderio:block/machine_side",
+    "down": "enderio:block/soul_machine_bottom",
+    "east": "enderio:block/soul_machine_side",
     "north": "enderio:block/stirling_generator_front",
     "particle": "enderio:block/stirling_generator_front",
-    "south": "enderio:block/machine_back",
-    "up": "enderio:block/machine_top",
-    "west": "enderio:block/machine_side"
+    "south": "enderio:block/soul_machine_back",
+    "up": "enderio:block/soul_machine_top",
+    "west": "enderio:block/soul_machine_side"
   }
 }
