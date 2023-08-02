@@ -36,7 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DrainBlockEntity extends PoweredMachineBlockEntity {
-    public static final String CONSUMED = "consumed";
+    public static final String CONSUMED = "Consumed";
     private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.DRAIN_CAPACITY);
     private static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.DRAIN_USAGE);
     private static final int CAPACITY = 3 * FluidType.BUCKET_VOLUME;
