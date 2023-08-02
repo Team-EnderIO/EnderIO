@@ -176,7 +176,9 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
 
             @Override
             protected boolean placeOutputs(List<OutputStack> outputs, boolean simulate) {
-                craftingTaskHost.getContainer().setNeededXP(0);
+                if (!simulate) {
+                    craftingTaskHost.getContainer().setNeededXP(0);
+                }
                 return super.placeOutputs(outputs, simulate);
             }
         };

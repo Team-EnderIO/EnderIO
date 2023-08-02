@@ -125,12 +125,12 @@ public class MachineBlocks {
         .register();
 
     public static final BlockEntry<ProgressMachineBlock> POWERED_SPAWNER = REGISTRATE
-        .block("powered_spawner", p -> new ProgressMachineBlock(p, MachineBlockEntities.POWERED_SPAWNER))
-        .properties(props -> props.strength(2.5f, 8).noOcclusion())
-        .loot((l,t) -> MachinesLootTable.copyNBTSingleCap(l, t, MachineNBTKeys.ENTITY_STORAGE))
-        .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+        .block("powered_spawner", properties -> new ProgressMachineBlock(properties, MachineBlockEntities.POWERED_SPAWNER))
+        .loot((l,t) -> MachinesLootTable.copyNBTSingleCap(l, t, "EntityStorage"))
+        .properties(props -> props.strength(2.5f, 8))
         .blockstate(MachineModelUtil::progressMachineBlock)
-        .item(BoundSoulBlockItem::new)
+        .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+        .item(PoweredSpawnerItem::new)
         .tab(EIOCreativeTabs.MACHINES)
         .build()
         .register();
