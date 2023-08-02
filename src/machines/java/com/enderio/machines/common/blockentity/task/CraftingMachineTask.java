@@ -103,7 +103,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
             progressRequired = getProgressRequired(recipe);
         }
 
-        // If we can't input or output, cancel the task. However, if for some reason we can't output after the inputs are collected, don't.
+        // If we don't have a recipe match, complete the task and wait for a new one.
         if (!recipe.matches(container, level)) {
             isComplete = true;
             return;
