@@ -57,8 +57,8 @@ public class MobGeneratorScreen extends EIOScreen<MobGeneratorMenu>{
             }
             GeneratorSoul.SoulData data = MobGeneratorSoulPacket.SYNCED_DATA.get(rl.get());
             if (data != null) {
-                guiGraphics.drawString(font, data.tickpermb() + " t/mb", imageWidth / 2f + 20 - font.width(data.tickpermb() + "") / 2f, 50, 4210752, false);
-                guiGraphics.drawString(font, data.powerpermb() + " µI/mb", imageWidth / 2f + 20 - font.width(data.powerpermb() + "") / 2f, 60, 4210752, false);
+                guiGraphics.drawString(font, data.tickpermb() + " t/mb", imageWidth / 2f + 20 - font.width(data.tickpermb() + "") / 2f, 40, 4210752, false);
+                guiGraphics.drawString(font, data.powerpermb() + " µI/mb", imageWidth / 2f + 20 - font.width(data.powerpermb() + "") / 2f, 50, 4210752, false);
 
             }
         }
