@@ -135,5 +135,4 @@ public class SoulDataReloadListener<T extends ISoulData> extends SimpleJsonResou
     public static SoulDataReloadListener<? extends ISoulData> fromString(String name) {
         return loadedSoulData.get(name);
     }
-
 }
