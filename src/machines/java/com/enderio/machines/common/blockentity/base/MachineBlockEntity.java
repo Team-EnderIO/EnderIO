@@ -699,8 +699,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             return false;
         }
 
-        return pPlayer.distanceToSqr(this.worldPosition.getX() + 0.5D, this.worldPosition.getY() + 0.5D, this.worldPosition.getZ() + 0.5D) <=
-            Mth.square(pPlayer.getBlockReach() + 3);
+        return pPlayer.canReach(this.worldPosition, 1.5);
     }
 
     @UseOnly(LogicalSide.SERVER)
