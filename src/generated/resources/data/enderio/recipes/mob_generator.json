@@ -1,0 +1,30 @@
+{
+  "type": "enderio:shaped_entity_storage",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "minecraft:bucket"
+    },
+    "C": {
+      "item": "enderio:ensouled_chassis"
+    },
+    "G": {
+      "tag": "enderio:fused_quartz"
+    },
+    "I": {
+      "item": "enderio:soularium_ingot"
+    },
+    "Z": {
+      "item": "enderio:zombie_electrode"
+    }
+  },
+  "pattern": [
+    "IGI",
+    "BCB",
+    "IZI"
+  ],
+  "result": {
+    "item": "enderio:mob_generator"
+  },
+  "show_notification": true
+}
