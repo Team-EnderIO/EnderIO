@@ -6,13 +6,13 @@
       "item": "enderio:basic_capacitor"
     },
     "D": {
-      "item": "minecraft:daylight_detector"
+      "item": "minecraft:redstone"
     },
     "E": {
-      "item": "enderio:energetic_alloy_ingot"
+      "tag": "forge:ingots/gold"
     },
     "F": {
-      "tag": "enderio:fused_quartz"
+      "tag": "forge:glass"
     },
     "P": {
       "item": "enderio:photovoltaic_plate"

@@ -1,6 +1,6 @@
 {
   "type": "enderio:sagmilling",
-  "energy": 3600,
+  "energy": 14400,
   "input": {
     "tag": "forge:storage_blocks/lapis"
   },
