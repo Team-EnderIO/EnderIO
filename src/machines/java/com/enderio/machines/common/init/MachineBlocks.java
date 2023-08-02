@@ -128,7 +128,7 @@ public class MachineBlocks {
         .loot((l,t) -> MachinesLootTable.copyNBTSingleCap(l, t, "EntityStorage"))
         .properties(props -> props.strength(2.5f, 8))
         .blockstate(MachineModelUtil::progressMachineBlock)
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
         .item(PoweredSpawnerItem::new)
         .tab(EIOCreativeTabs.MACHINES)
         .build()
