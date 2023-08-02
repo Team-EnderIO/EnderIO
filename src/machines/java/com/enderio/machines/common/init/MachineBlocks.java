@@ -3,7 +3,6 @@ package com.enderio.machines.common.init;
 import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.core.data.model.EIOModel;
-import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.CapacitorBankBlock;
 import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.block.ProgressMachineBlock;
@@ -13,9 +12,9 @@ import com.enderio.machines.common.blockentity.capacitorbank.CapacitorBankBlockE
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorTier;
 import com.enderio.machines.common.blockentity.solar.SolarPanelBlockEntity;
 import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
+import com.enderio.machines.common.item.BoundSoulBlockItem;
 import com.enderio.machines.common.item.CapacitorBankItem;
 import com.enderio.machines.common.item.FluidTankItem;
-import com.enderio.machines.common.item.BoundSoulBlockItem;
 import com.enderio.machines.data.loot.MachinesLootTable;
 import com.enderio.machines.data.model.MachineModelUtil;
 import com.google.common.collect.ImmutableMap;
@@ -130,7 +129,7 @@ public class MachineBlocks {
         .properties(props -> props.strength(2.5f, 8))
         .blockstate(MachineModelUtil::progressMachineBlock)
         .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
-        .item(PoweredSpawnerItem::new)
+        .item(BoundSoulBlockItem::new)
         .tab(EIOCreativeTabs.MACHINES)
         .build()
         .register();
