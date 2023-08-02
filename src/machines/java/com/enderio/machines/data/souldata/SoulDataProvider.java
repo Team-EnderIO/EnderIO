@@ -35,6 +35,7 @@ public class SoulDataProvider implements DataProvider {
     }
 
     public void buildSoulData(Consumer<FinshedSoulData<?>> finshedSoulDataConsumer) {
+        // TODO: Energy values might need reviewing.
         addSpawnerData(EntityType.ALLAY, 1000, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
         addSpawnerData(EntityType.AXOLOTL, 1000, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
         addSpawnerData(EntityType.BAT, 1000, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
