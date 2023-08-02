@@ -27,7 +27,7 @@ public class ExperienceUtil {
 
         // Binary search
         while (startLevel < stopLevel) {
-            int mid = startLevel + (stopLevel - startLevel + 1) / 2;
+            int mid = (int) (startLevel + (stopLevel - startLevel + 1L) / 2);
             if (getExpFromLevel(mid) <= totalXp) {
                 startLevel = mid;
             } else {
@@ -91,15 +91,20 @@ public class ExperienceUtil {
      * @param level
      * @return
      */
-    public static long getExpFromLevel(long level) {
-        if (level <= 14) {
-            return (level * level) + (6L * level);
+    public static long getExpFromLevel(int level) {
+        int maxLevel = 960383883; // to avoid overflow on 10 * (level * level)
+        if (level > maxLevel) {
+            return Long.MAX_VALUE; // consider throwing errors instead?
         }
-        if (level <= 30) {
-            return (10 * (level * level) - 162 * level + 1440) / 4;
+        long lvl = level;
+        if (lvl <= 14) {
+            return (lvl * lvl) + (6L * lvl);
         }
-        level -= 30;
-        return (9 * (level * level) + 215 * level + 2790) / 2;
+        if (lvl <= 30) {
+            return (10 * (lvl * lvl) - 162 * lvl + 1440) / 4;
+        }
+        lvl -= 30;
+        return (9 * (lvl * lvl) + 215 * lvl + 2790) / 2;
     }
 
     /**
