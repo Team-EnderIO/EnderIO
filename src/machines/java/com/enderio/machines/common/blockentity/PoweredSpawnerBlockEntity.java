@@ -54,6 +54,8 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
         }));
         addDataSlot(new EnumNetworkDataSlot<>(SpawnerBlockedReason.class, this::getReason, this::setReason));
 
+        range = 4;
+
         taskHost = new MachineTaskHost(this, this::hasEnergy) {
             @Override
             protected @Nullable IMachineTask getNewTask() {
