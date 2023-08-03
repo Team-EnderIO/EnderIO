@@ -59,7 +59,7 @@ public class EnergyConfig {
         builder.pop();
 
         builder.push("poweredSpawner");
-            POWERED_SPAWNER_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 64000, 1, Integer.MAX_VALUE);
+            POWERED_SPAWNER_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 100000, 1, Integer.MAX_VALUE);
             POWERED_SPAWNER_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage", 20, 1, Integer.MAX_VALUE);
         builder.pop();
 
