@@ -3,6 +3,7 @@ package com.enderio.conduits.common.blockentity;
 import com.enderio.core.common.network.slot.NetworkDataSlot;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.FriendlyByteBuf;
 
 import java.util.function.Supplier;
 
@@ -21,7 +22,7 @@ public class ConduitBundleNetworkDataSlot extends NetworkDataSlot<ConduitBundle>
         if (nbt instanceof CompoundTag compoundTag) {
             getter.get().deserializeNBT(compoundTag);
         } else {
-            throw new IllegalStateException("Invalid compound tag was passed over the network.");
+            throw new IllegalStateException("Invalid conduit/compound tag was passed over the network.");
         }
     }
 
@@ -35,5 +36,21 @@ public class ConduitBundleNetworkDataSlot extends NetworkDataSlot<ConduitBundle>
         // TODO: This is slow as shit
         int code = value.serializeNBT().hashCode();
         return code;
+    }
+
+    @Override
+    public void toBuffer(FriendlyByteBuf buf, ConduitBundle value) {
+        buf.writeNbt(value.serializeNBT());
+    }
+
+    @Override
+    public ConduitBundle valueFromBuffer(FriendlyByteBuf buf) {
+        try {
+            ConduitBundle conduitBundle = getter.get();
+            conduitBundle.deserializeNBT(buf.readNbt());
+            return conduitBundle;
+        } catch (Exception e) {
+            throw new IllegalStateException("Invalid conduit/compound tag buffer was passed over the network.");
+        }
     }
 }
