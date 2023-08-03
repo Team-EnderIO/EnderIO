@@ -1,6 +1,6 @@
 package com.enderio.base.client.renderer.travel;
 
-import com.enderio.base.common.handler.TeleportHandler;
+import com.enderio.base.common.handler.TravelHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.player.LocalPlayer;
@@ -26,11 +26,9 @@ public class TeleportParticleHandler {
         LocalPlayer player = Minecraft.getInstance().player;
         if (e.phase == TickEvent.Phase.END && player != null) {
             tick++;
-            if (player.isShiftKeyDown() && TeleportHandler.canTeleport(player) && tick % 3 == 0) {
-                Optional<Vec3> pos = TeleportHandler.teleportPosition(player.level(), player);
-                if (pos.isPresent()) {
-                    addTravelParticle(pos.get());
-                }
+            if (player.isShiftKeyDown() && TravelHandler.canItemTeleport(player) && tick % 3 == 0) {
+                Optional<Vec3> pos = TravelHandler.teleportPosition(player.level(), player);
+                pos.ifPresent(TeleportParticleHandler::addTravelParticle);
             }
         }
     }

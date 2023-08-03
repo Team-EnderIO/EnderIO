@@ -2,7 +2,7 @@ package com.enderio.base.client.renderer.travel;
 
 import com.enderio.api.travel.ITravelTarget;
 import com.enderio.api.travel.TravelRegistry;
-import com.enderio.base.common.handler.TeleportHandler;
+import com.enderio.base.common.handler.TravelHandler;
 import com.enderio.base.common.travel.TravelSavedData;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Camera;
@@ -26,11 +26,11 @@ public class RenderTravelTargets {
         LocalPlayer player = Minecraft.getInstance().player;
         if (level == null || player == null || event.getStage() != RenderLevelStageEvent.Stage.AFTER_TRIPWIRE_BLOCKS)
             return;
-        if (!TeleportHandler.canTeleport(player))
+        if (!TravelHandler.canTeleport(player))
             return;
-        boolean itemTeleport = TeleportHandler.canItemTeleport(player);
+        boolean itemTeleport = TravelHandler.canItemTeleport(player);
         TravelSavedData data = TravelSavedData.getTravelData(Minecraft.getInstance().level);
-        Optional<ITravelTarget> activeTarget = TeleportHandler.getAnchorTarget(player);
+        Optional<ITravelTarget> activeTarget = TravelHandler.getAnchorTarget(player);
         for (ITravelTarget target : data.getTravelTargets()) {
             double range = itemTeleport ? target.getItem2BlockRange() : target.getBlock2BlockRange();
             double distanceSquared = target.getPos().distToCenterSqr(player.position());

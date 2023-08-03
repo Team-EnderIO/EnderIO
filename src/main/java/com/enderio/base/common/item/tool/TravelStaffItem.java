@@ -4,7 +4,7 @@ import com.enderio.api.capability.IMultiCapabilityItem;
 import com.enderio.api.capability.MultiCapabilityProvider;
 import com.enderio.base.common.capability.EnergyStorageItemStack;
 import com.enderio.base.common.config.BaseConfig;
-import com.enderio.base.common.handler.TeleportHandler;
+import com.enderio.base.common.handler.TravelHandler;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.item.EnergyBarDecorator;
 import com.enderio.core.client.item.IAdvancedTooltipProvider;
@@ -73,12 +73,12 @@ public class TravelStaffItem extends Item implements IMultiCapabilityItem, IAdva
      */
     public boolean performAction(Level level, Player player, ItemStack stack) {
         if (player.isShiftKeyDown()) {
-            if (TeleportHandler.shortTeleport(level, player)) {
+            if (TravelHandler.shortTeleport(level, player)) {
                 player.getCooldowns().addCooldown(this, BaseConfig.COMMON.ITEMS.TRAVELLING_BLINK_DISABLED_TIME.get());
                 return true;
             }
         } else {
-            if (TeleportHandler.blockTeleport(level, player)) {
+            if (TravelHandler.blockTeleport(level, player)) {
                 player.getCooldowns().addCooldown(this, BaseConfig.COMMON.ITEMS.TRAVELLING_BLINK_DISABLED_TIME.get());
                 return true;
             }

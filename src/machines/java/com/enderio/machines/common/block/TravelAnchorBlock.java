@@ -1,6 +1,6 @@
 package com.enderio.machines.common.block;
 
-import com.enderio.base.common.handler.TeleportHandler;
+import com.enderio.base.common.handler.TravelHandler;
 import com.enderio.machines.common.blockentity.TravelAnchorBlockEntity;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import net.minecraft.core.BlockPos;
@@ -37,7 +37,7 @@ public class TravelAnchorBlock extends MachineBlock {
         if (!jumpEvent.getEntity().level().isClientSide && jumpEvent.getEntity() instanceof Player player) {
             // TODO: Change
             if (player.level().getBlockState(player.blockPosition().below()).getBlock() instanceof TravelAnchorBlock) {
-                TeleportHandler.blockTeleport(player.level(), player);
+                TravelHandler.blockTeleport(player.level(), player);
             }
         }
     }
@@ -53,7 +53,7 @@ public class TravelAnchorBlock extends MachineBlock {
             Pair<Boolean, Integer> sneakEntry = sneakCache.getOrDefault(player, Pair.of(false, player.level().getServer().getTickCount() - 1));
             if ((!sneakEntry.getLeft() || sneakEntry.getRight() != player.level().getServer().getTickCount() - 1) && player.isShiftKeyDown()) {
 
-                TeleportHandler.blockTeleport(player.level(), player);
+                TravelHandler.blockTeleport(player.level(), player);
             }
             sneakCache.put(player, Pair.of(player.isShiftKeyDown(), player.level().getServer().getTickCount()));
         }

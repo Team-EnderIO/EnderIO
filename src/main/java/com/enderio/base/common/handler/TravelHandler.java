@@ -28,7 +28,7 @@ import java.util.Optional;
  * For their agreements look at doc/license/castcrafter/travel-anchors/license.md in the repo root
  */
 
-public class TeleportHandler {
+public class TravelHandler {
     public static boolean canTeleport(Player player) {
         return canItemTeleport(player) || canBlockTeleport(player);
     }
