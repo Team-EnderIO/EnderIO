@@ -14,6 +14,9 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FastColor;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
 import org.joml.Matrix4f;
 
@@ -27,7 +30,7 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             return;
         poseStack.pushPose();
         poseStack.translate(travelData.getPos().getX(), travelData.getPos().getY(), travelData.getPos().getZ());
-        Minecraft mc = Minecraft.getInstance();
+        Minecraft minecraft = Minecraft.getInstance();
         OutlineBuffer buffer = OutlineBuffer.INSTANCE;
         int color = 0xFFFFFF;
         if (active) {
@@ -35,10 +38,13 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
         }
 
         // Render Model
-        BlockState blockState = mc.level.getBlockState(travelData.getPos());
-        BakedModel blockModel = mc.getBlockRenderer().getBlockModel(blockState);
+        BlockState blockState = minecraft.level.getBlockState(travelData.getPos());
+        BakedModel blockModel = minecraft.getBlockRenderer().getBlockModel(blockState);
         VertexConsumer solid = buffer.getBuffer(RenderType.solid());
-        mc.getBlockRenderer().getModelRenderer().renderModel(poseStack.last(), solid, blockState, blockModel, 1, 1, 1, 0xF000F0, OverlayTexture.NO_OVERLAY);
+        minecraft
+            .getBlockRenderer()
+            .getModelRenderer()
+            .renderModel(poseStack.last(), solid, blockState, blockModel, 1, 1, 1, 0xF000F0, OverlayTexture.NO_OVERLAY);
 
         // Render line
         RenderType lineType;
@@ -53,7 +59,7 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
         LevelRenderer.renderLineBox(poseStack, lines, 0, 0, 0, 1, 1, 1, FastColor.ARGB32.red(color) / 255F, FastColor.ARGB32.green(color) / 255F,
             FastColor.ARGB32.blue(color) / 255F, 1);
 
-        //Render Text
+        // Render Text
         if (!travelData.getName().trim().isEmpty()) {
             double doubleScale = Math.sqrt(0.0035 * Math.sqrt(distanceSquared));
             if (doubleScale < 0.1f) {
@@ -71,19 +77,32 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             poseStack.scale(-scale, -scale, scale);
 
             Matrix4f matrix4f = poseStack.last().pose();
+
             Component tc = Component.literal(travelData.getName().trim());
 
-            float textOpacitySetting = Minecraft.getInstance().options.getBackgroundOpacity(0.5f);
+            float textOpacitySetting = minecraft.options.getBackgroundOpacity(0.5f);
             int alpha = (int) (textOpacitySetting * 255) << 24;
-            float halfWidth = (float) (-Minecraft.getInstance().font.width(tc) / 2);
+            float halfWidth = (float) (-minecraft.font.width(tc) / 2);
 
-            Minecraft.getInstance().font.drawInBatch(tc, halfWidth, 0, color, false, matrix4f, buffer, Font.DisplayMode.SEE_THROUGH, alpha,
-                LightTexture.pack(15, 15));
-            Minecraft.getInstance().font.drawInBatch(tc, halfWidth, 0, color, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, LightTexture.pack(15, 15));
+            minecraft.font.drawInBatch(tc, halfWidth, 0, color, false, matrix4f, buffer, Font.DisplayMode.SEE_THROUGH, alpha, LightTexture.pack(15, 15));
+            minecraft.font.drawInBatch(tc, halfWidth, 0, color, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, LightTexture.pack(15, 15));
             poseStack.popPose();
         }
+
+        // Render Icon
+        if (travelData.getIcon() != Items.AIR) {
+            poseStack.pushPose();
+            poseStack.mulPose(minecraft.getEntityRenderDispatcher().cameraOrientation());
+            ItemStack stack = new ItemStack(travelData.getIcon());
+            BakedModel bakedmodel = minecraft.getItemRenderer().getModel(stack, minecraft.level, null, 0);
+            minecraft
+                .getItemRenderer()
+                .render(stack, ItemDisplayContext.GUI, false, poseStack, OutlineBuffer.INSTANCE, 15728880, OverlayTexture.NO_OVERLAY, bakedmodel);
+            poseStack.popPose();
+        }
+
         poseStack.popPose();
-        mc.renderBuffers().bufferSource().endBatch();
+        minecraft.renderBuffers().bufferSource().endBatch();
 
     }
 }

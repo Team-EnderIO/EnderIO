@@ -18,7 +18,7 @@ import java.util.Calendar;
 import java.util.Optional;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
-public class TeleportParticleHandler {
+public class TravelParticleHandler {
     private static int tick = 0;
 
     @SubscribeEvent
@@ -26,9 +26,9 @@ public class TeleportParticleHandler {
         LocalPlayer player = Minecraft.getInstance().player;
         if (e.phase == TickEvent.Phase.END && player != null) {
             tick++;
-            if (player.isShiftKeyDown() && TravelHandler.canItemTeleport(player) && tick % 3 == 0) {
+            if (player.isShiftKeyDown() && player.onGround() && TravelHandler.canItemTeleport(player) && tick % 3 == 0) {
                 Optional<Vec3> pos = TravelHandler.teleportPosition(player.level(), player);
-                pos.ifPresent(TeleportParticleHandler::addTravelParticle);
+                pos.ifPresent(TravelParticleHandler::addTravelParticle);
             }
         }
     }
