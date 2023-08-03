@@ -29,13 +29,7 @@ import net.minecraft.Util;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraftforge.client.model.generators.BlockModelBuilder;
-import net.minecraftforge.client.model.generators.ConfiguredModel;
-import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.loaders.CompositeModelBuilder;
-import net.minecraftforge.common.util.TransformationHelper;
-import org.joml.Vector3f;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -49,6 +43,7 @@ public class MachineBlocks {
         .block("fluid_tank", props -> new MachineBlock(props, MachineBlockEntities.FLUID_TANK))
         .properties(props -> props.strength(2.5f, 8).isViewBlocking((pState, pLevel, pPos) -> false).noOcclusion())
         .loot(MachinesLootTable::copyNBT)
+        .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
         .blockstate((ctx, prov) -> prov.horizontalBlock(ctx.get(), prov.models()
             .getBuilder(ctx.getName())
             .customLoader(CompositeModelBuilder::begin)
@@ -67,6 +62,7 @@ public class MachineBlocks {
         .block("pressurized_fluid_tank", props -> new MachineBlock(props, MachineBlockEntities.PRESSURIZED_FLUID_TANK))
         .properties(props -> props.strength(2.5f, 8).isViewBlocking((pState, pLevel, pPos) -> false).noOcclusion())
         .loot(MachinesLootTable::copyNBT)
+        .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
         .blockstate((ctx, prov) -> prov.horizontalBlock(ctx.get(), prov.models()
                 .withExistingParent(ctx.getName(), prov.mcLoc("block/block"))
                 .customLoader(CompositeModelBuilder::begin)
@@ -85,6 +81,7 @@ public class MachineBlocks {
         .block("enchanter", props -> new MachineBlock(props, MachineBlockEntities.ENCHANTER))
         .properties(props -> props.strength(2.5f, 8).noOcclusion().isViewBlocking((pState, pLevel, pPos) -> false))
         .loot(MachinesLootTable::copyNBT)
+        .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
         .blockstate(MachineModelUtil::machineBlock)
         .item()
         .tab(EIOCreativeTabs.MACHINES)
@@ -129,8 +126,12 @@ public class MachineBlocks {
         .lang("Soul Binder")
         .register();
 
-    public static final BlockEntry<ProgressMachineBlock> POWERED_SPAWNER = progressMachine("powered_spawner", () -> MachineBlockEntities.POWERED_SPAWNER)
+    public static final BlockEntry<ProgressMachineBlock> POWERED_SPAWNER = REGISTRATE
+        .block("powered_spawner", properties -> new ProgressMachineBlock(properties, MachineBlockEntities.POWERED_SPAWNER))
         .loot((l,t) -> MachinesLootTable.copyNBTSingleCap(l, t, "EntityStorage"))
+        .properties(props -> props.strength(2.5f, 8))
+        .blockstate(MachineModelUtil::progressMachineBlock)
+        .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
         .item(PoweredSpawnerItem::new)
         .tab(EIOCreativeTabs.MACHINES)
         .build()
@@ -139,6 +140,7 @@ public class MachineBlocks {
     public static final BlockEntry<MachineBlock> VACUUM_CHEST = REGISTRATE
         .block("vacuum_chest", p -> new MachineBlock(p, MachineBlockEntities.VACUUM_CHEST))
         .properties(props -> props.strength(2.5f, 8).noOcclusion())
+        .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
         .loot(MachinesLootTable::copyNBT)
         .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName()))))
         .item()
@@ -149,6 +151,7 @@ public class MachineBlocks {
     public static final BlockEntry<MachineBlock> XP_VACUUM = REGISTRATE
         .block("xp_vacuum", p -> new MachineBlock(p, MachineBlockEntities.XP_VACUUM))
         .properties(props -> props.strength(2.5f, 8).noOcclusion())
+        .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
         .loot(MachinesLootTable::copyNBT)
         .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName()))))
         .item()
