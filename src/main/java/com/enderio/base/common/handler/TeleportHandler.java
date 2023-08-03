@@ -114,10 +114,13 @@ public class TeleportHandler {
         return Optional.of(Vec3.atBottomCenterOf(target).add(0, floorHeight, 0));
     }
 
-    private static Optional<ITravelTarget> getAnchorTarget(Player player) {
+    public static Optional<ITravelTarget> getAnchorTarget(Player player) {
         Vec3 positionVec = player.position().add(0, player.getEyeHeight(), 0);
 
-        return TravelSavedData.getTravelData(player.level()).getTravelTargetsInItemRange(player.blockPosition()).filter(target -> target.canTravelTo())
+        return TravelSavedData
+            .getTravelData(player.level())
+            .getTravelTargetsInItemRange(player.blockPosition())
+            .filter(target -> target.canTravelTo())
             .filter(
                 target -> target.getPos().distToLowCornerSqr(player.getX(), player.getY(), player.getZ()) > 25) //only teleport to blocks not directly in range
             .filter(target -> Math.abs(getAngleRadians(positionVec, target.getPos(), player.getYRot(), player.getXRot())) <= Math.toRadians(15))
