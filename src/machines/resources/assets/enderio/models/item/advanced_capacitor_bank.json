@@ -36,5 +36,18 @@
 				"east": {"uv": [0, 8, 16, 16], "texture": "#1"}
 			}
 		}
-	]
+	],
+    "connects": [
+        {
+            "type": "self"
+        },
+        {
+            "type": "tag",
+            "tag": "minecraft:planks"
+        },
+        {
+            "type": "block",
+            "tag": "minecraft:respawn_anchor"
+        }
+    ]
 }
