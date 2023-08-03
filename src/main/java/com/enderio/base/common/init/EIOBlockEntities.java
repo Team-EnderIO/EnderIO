@@ -37,5 +37,10 @@ public class EIOBlockEntities {
         .blockEntity("light_node", LightNodeBlockEntity::new)
         .validBlock(EIOBlocks.LIGHT_NODE)
         .register();
+
+    public static final BlockEntityEntry<EnderSkullBlockEntity> ENDER_SKULL = REGISTRATE
+        .blockEntity("ender_skull", EnderSkullBlockEntity::new)
+        .validBlocks(EIOBlocks.WALL_ENDERMAN_HEAD, EIOBlocks.ENDERMAN_HEAD)
+        .register();
     public static void register() {}
 }

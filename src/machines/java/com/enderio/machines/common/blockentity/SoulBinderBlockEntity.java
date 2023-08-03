@@ -18,15 +18,18 @@ import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.SoulBinderMenu;
+import com.enderio.machines.common.recipe.RecipeCaches;
 import com.enderio.machines.common.recipe.SoulBindingRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
@@ -95,13 +98,17 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
             .setStackLimit(1)
             .inputSlot((slot, stack) -> stack.is(EIOItems.FILLED_SOUL_VIAL.get()))
             .slotAccess(INPUT_SOUL)
-            .inputSlot()
+            .inputSlot(this::isValidInput)
             .slotAccess(INPUT_OTHER)
             .setStackLimit(64)
             .outputSlot(2)
             .slotAccess(OUTPUT)
             .capacitor()
             .build();
+    }
+
+    private boolean isValidInput(int index, ItemStack stack) {
+        return RecipeCaches.SOUL_BINDING.hasRecipe(List.of(stack));
     }
 
     @Override
@@ -125,10 +132,18 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
 
             @Override
             public int fill(FluidStack resource, FluidAction action) {
-                if (!this.getFluid().getFluid().isSame(EIOFluids.XP_JUICE.getSource()) && this.isFluidValid(resource)) { // Auto convert to own fluid (source) type
-                    resource = new FluidStack(EIOFluids.XP_JUICE.getSource(), resource.getAmount());
+                // Convert into XP Juice
+                if (this.isFluidValid(resource)) {
+                    var currentFluid = this.getFluid().getFluid();
+                    if (currentFluid == Fluids.EMPTY || resource.getFluid().isSame(currentFluid)) {
+                        return super.fill(resource, action);
+                    } else {
+                        return super.fill(new FluidStack(currentFluid, resource.getAmount()), action);
+                    }
                 }
-                return super.fill(resource, action);
+
+                // Non-XP is not allowed.
+                return 0;
             }
         };
     }
@@ -161,7 +176,9 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
 
             @Override
             protected boolean placeOutputs(List<OutputStack> outputs, boolean simulate) {
-                craftingTaskHost.getContainer().setNeededXP(0);
+                if (!simulate) {
+                    craftingTaskHost.getContainer().setNeededXP(0);
+                }
                 return super.placeOutputs(outputs, simulate);
             }
         };

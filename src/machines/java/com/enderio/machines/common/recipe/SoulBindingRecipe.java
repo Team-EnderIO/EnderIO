@@ -9,6 +9,7 @@ import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonObject;
 import net.minecraft.ResourceLocationException;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -82,12 +83,10 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
     public List<OutputStack> craft(SoulBindingRecipe.Container container, RegistryAccess registryAccess) {
         ItemStack vial = container.getItem(0);
         List<OutputStack> results = getResultStacks(registryAccess);
-        results.forEach(o -> {
-            ItemStack result = o.getItem(); //TODO will this auto update since the stack is updated?
-            vial.getCapability(EIOCapabilities.ENTITY_STORAGE).ifPresent(inputEntity -> {
-                result.getCapability(EIOCapabilities.ENTITY_STORAGE).ifPresent(resultEntity -> {
-                    resultEntity.setStoredEntityData(inputEntity.getStoredEntityData());
-                });
+        ItemStack result = results.get(0).getItem(); //TODO will this auto update since the stack is updated?
+        vial.getCapability(EIOCapabilities.ENTITY_STORAGE).ifPresent(inputEntity -> {
+            result.getCapability(EIOCapabilities.ENTITY_STORAGE).ifPresent(resultEntity -> {
+                resultEntity.setStoredEntityData(inputEntity.getStoredEntityData());
             });
         });
         return results;
@@ -95,7 +94,12 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
 
     @Override
     public List<OutputStack> getResultStacks(RegistryAccess registryAccess) {
-        return List.of(OutputStack.of(new ItemStack(output, 1)));
+        return List.of(OutputStack.of(new ItemStack(output, 1)), OutputStack.of(new ItemStack(EIOItems.EMPTY_SOUL_VIAL, 1)));
+    }
+
+    @Override
+    public NonNullList<Ingredient> getIngredients() {
+        return NonNullList.of(Ingredient.EMPTY, input);
     }
 
     @Override

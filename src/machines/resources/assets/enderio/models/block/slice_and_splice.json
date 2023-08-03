@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "enderio:block/soul_machine_bottom",
+    "east": "enderio:block/soul_machine_side",
+    "north": "enderio:block/slice_and_splice_front",
+    "particle": "enderio:block/slice_and_splice_front",
+    "south": "enderio:block/soul_machine_back",
+    "up": "enderio:block/soul_machine_top",
+    "west": "enderio:block/soul_machine_side"
+  }
+}

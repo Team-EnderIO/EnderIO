@@ -1,6 +1,0 @@
-{
-  "parent": "enderio:block/crafter_front",
-  "textures": {
-    "front": "enderio:block/crafter_front_on"
-  }
-}

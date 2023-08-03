@@ -3,6 +3,7 @@ package com.enderio.machines.common.blockentity.capacitorbank;
 import com.enderio.api.capacitor.FixedScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.network.slot.ListNetworkDataSlot;
+import com.enderio.base.common.tag.EIOTags;
 import com.enderio.core.common.network.slot.LongNetworkDataSlot;
 import com.enderio.core.common.network.slot.NBTSerializingNetworkDataSlot;
 import com.enderio.core.common.network.slot.NetworkDataSlot;
@@ -248,6 +249,9 @@ public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implemen
             return false;
         if (player.getMainHandItem().is(getBlockState().getBlock().asItem()) || player.getOffhandItem().is(getBlockState().getBlock().asItem()))
             return false;
+        if (player.getMainHandItem().is(EIOTags.Items.WRENCH)) {
+            return false;
+        }
         displayModes.put(direction, DisplayMode.values()[(displayModes.get(direction).ordinal()+1)%DisplayMode.values().length]);
         return true;
     }

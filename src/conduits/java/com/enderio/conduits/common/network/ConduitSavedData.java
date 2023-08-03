@@ -5,8 +5,12 @@ import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.IExtendedConduitData;
 import com.enderio.api.conduit.NodeIdentifier;
+import com.enderio.api.misc.ColorControl;
 import com.enderio.conduits.ConduitNBTKeys;
 import com.enderio.conduits.EIOConduits;
+import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
+import com.enderio.conduits.common.init.EnderConduitTypes;
+import com.enderio.conduits.common.types.RedstoneExtendedData;
 import com.mojang.datafixers.util.Pair;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
@@ -26,6 +30,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.util.*;
 
 @Mod.EventBusSubscriber
@@ -54,8 +59,6 @@ public class ConduitSavedData extends SavedData {
 
     // Deserialization
     private ConduitSavedData(Level level, CompoundTag nbt) {
-        EnderIO.LOGGER.info("Conduit network deserialization started");
-        long start = System.currentTimeMillis();
         ListTag graphsTag = nbt.getList(KEY_GRAPHS, Tag.TAG_COMPOUND);
         for (Tag tag : graphsTag) {
             CompoundTag typedGraphTag = (CompoundTag) tag;
@@ -95,7 +98,6 @@ public class ConduitSavedData extends SavedData {
                 }
             }
         }
-        EnderIO.LOGGER.info("Conduit network deserialization finished, took {}ms", System.currentTimeMillis() - start);
     }
 
     // Serialization
@@ -122,8 +124,6 @@ public class ConduitSavedData extends SavedData {
     // Serialization
     @Override
     public CompoundTag save(CompoundTag nbt) {
-        EnderIO.LOGGER.info("Conduit network serialization started");
-        long start = System.currentTimeMillis();
         ListTag graphsTag = new ListTag();
         for (IConduitType<?> type : networks.keySet()) {
             List<Graph<Mergeable.Dummy>> graphs = networks.get(type);
@@ -148,7 +148,6 @@ public class ConduitSavedData extends SavedData {
         }
 
         nbt.put(KEY_GRAPHS, graphsTag);
-        EnderIO.LOGGER.info("Conduit network serialization finished, took {}ms", System.currentTimeMillis() - start);
         return nbt;
     }
 
@@ -276,12 +275,22 @@ public class ConduitSavedData extends SavedData {
                     .getKey()
                     .getTicker()
                     .getTickRate()) {
-                    entry.getKey().getTicker().tickGraph(entry.getKey(), graph, serverLevel);
+                    entry.getKey().getTicker().tickGraph(entry.getKey(), graph, serverLevel, ConduitSavedData::isRedstoneActive);
                 }
             }
         }
     }
 
+    private static boolean isRedstoneActive(ServerLevel serverLevel, BlockPos pos, ColorControl color) {
+        if (!serverLevel.isLoaded(pos) || !serverLevel.shouldTickBlocksAt(pos))
+            return false;
+        if (!(serverLevel.getBlockEntity(pos) instanceof ConduitBlockEntity conduit))
+            return false;
+        if (!conduit.getBundle().getTypes().contains(EnderConduitTypes.REDSTONE.get()))
+            return false;
+        RedstoneExtendedData data = conduit.getBundle().getNodeFor(EnderConduitTypes.REDSTONE.get()).getExtendedConduitData().cast();
+        return data.isActive(color);
+    }
     public static void addPotentialGraph(IConduitType<?> type, Graph<Mergeable.Dummy> graph, ServerLevel level) {
         get(level).addPotentialGraph(type, graph);
     }
@@ -289,6 +298,25 @@ public class ConduitSavedData extends SavedData {
     private void addPotentialGraph(IConduitType<?> type, Graph<Mergeable.Dummy> graph) {
         if (!networks.computeIfAbsent(type, unused -> new ArrayList<>()).contains(graph)) {
             networks.get(type).add(graph);
+        }
+    }
+
+    @Override
+    public void save(File file) {
+        if (isDirty()) {
+            //This is an exact copy of Mekanism MekanismSavedData's system which is loosely based on
+            // Refined Storage's RSSavedData's system of saving first to a temp file
+            // to reduce the odds of corruption if the user's computer crashes while the file is being written
+
+            //Thanks pupnewster
+            File tempFile = file.toPath().getParent().resolve(file.getName() + ".tmp").toFile();
+            super.save(tempFile);
+            if (file.exists() && !file.delete()) {
+                EnderIO.LOGGER.error("Failed to delete " + file.getName());
+            }
+            if (!tempFile.renameTo(file)) {
+                EnderIO.LOGGER.error("Failed to rename " + tempFile.getName());
+            }
         }
     }
 }

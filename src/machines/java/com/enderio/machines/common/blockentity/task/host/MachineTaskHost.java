@@ -71,7 +71,11 @@ public abstract class MachineTaskHost {
     }
 
     public final boolean hasTask() {
-        return currentTask != null;
+        return currentTask != null && !currentTask.isCompleted();
+    }
+
+    protected boolean shouldStartNewTask() {
+        return (currentTask == null || currentTask.isCompleted());
     }
 
     public final float getProgress() {
@@ -94,7 +98,7 @@ public abstract class MachineTaskHost {
 
     public void tick() {
         // If we have no active task, get a new one
-        if ((currentTask == null || currentTask.isCompleted()) && isNewTaskAvailable && canAcceptNewTask.get()) {
+        if (isNewTaskAvailable && canAcceptNewTask.get() && shouldStartNewTask()) {
             currentTask = getNewTask();
             isNewTaskAvailable = false;
         }

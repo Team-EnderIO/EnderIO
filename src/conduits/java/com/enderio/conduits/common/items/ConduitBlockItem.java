@@ -21,16 +21,22 @@ import java.util.function.Supplier;
 public class ConduitBlockItem extends BlockItem {
 
     private final Supplier<? extends IConduitType<?>> type;
+
     public ConduitBlockItem(Supplier<? extends IConduitType<?>> type, Block block, Properties properties) {
         super(block, properties);
         this.type = type;
     }
 
+    public IConduitType<?> getType() {
+        return type.get();
+    }
+
+    @Override
     public String getDescriptionId() {
         return getOrCreateDescriptionId();
     }
 
-    //MC: See original minified to only use stuff we actually need
+    @Override
     public InteractionResult place(BlockPlaceContext context) {
         Level level = context.getLevel();
         @Nullable
@@ -38,6 +44,7 @@ public class ConduitBlockItem extends BlockItem {
         BlockPos blockpos = context.getClickedPos();
         ItemStack itemstack = context.getItemInHand();
 
+        // Handle placing into an existing block
         if (level.getBlockEntity(blockpos) instanceof ConduitBlockEntity conduit) {
             if (conduit.hasType(type.get())) {
                 // Pass through to block
@@ -61,9 +68,5 @@ public class ConduitBlockItem extends BlockItem {
         }
 
         return super.place(context);
-    }
-
-    public IConduitType<?> getType() {
-        return type.get();
     }
 }

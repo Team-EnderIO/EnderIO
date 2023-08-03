@@ -18,7 +18,7 @@ public class DirectUpgradeLootModifier extends LootModifier {
 
     public static final Supplier<Codec<DirectUpgradeLootModifier>> CODEC = Suppliers.memoize(() -> RecordCodecBuilder.create(inst -> codecStart(inst).apply(inst, DirectUpgradeLootModifier::new)));
 
-    protected DirectUpgradeLootModifier(LootItemCondition[] conditionsIn) {
+    public DirectUpgradeLootModifier(LootItemCondition[] conditionsIn) {
         super(conditionsIn);
     }
 

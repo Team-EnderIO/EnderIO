@@ -1,6 +1,4 @@
 import java.util.function.Consumer
-import org.jetbrains.changelog.Changelog
-import org.jetbrains.changelog.ExtensionsKt
 
 buildscript {
     repositories {
@@ -21,16 +19,17 @@ plugins {
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
     id "me.hypherionmc.modutils.modpublisher" version "1.+"
-    id 'org.jetbrains.changelog' version '2.+'
 }
 
 apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'org.moddingx.modgradle.mapping'
-apply plugin: 'org.jetbrains.changelog'
 
 version = getVersionString()
 group = 'com.enderio'
-archivesBaseName = 'EnderIO'
+archivesBaseName = "EnderIO-${minecraft_version}"
+
+println("Building Ender IO version ${version}")
+println("Release type: ${getReleaseType()}")
 
 // Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
@@ -278,6 +277,8 @@ reobf.create('jarJar')
 
 // Example for how to get properties into the manifest for reading at runtime.
 jar {
+    archiveClassifier = "partial"
+
     manifest {
         attributes([
                 "Specification-Title"     : "EnderIO",
@@ -325,6 +326,8 @@ build.dependsOn sourcesJar
 
 // Add other source sets to jarJar
 tasks.jarJar.configure {
+    archiveClassifier = ""
+
     from sourceSets.api.output
     from sourceSets.core.output
     for (String set : subsets) {
@@ -335,47 +338,36 @@ tasks.jarJar.configure {
 }
 build.dependsOn tasks.jarJar
 
-changelog {
-    path = file("CHANGELOG.md").canonicalPath
-    header = "[${-> version.get()}] - ${ExtensionsKt.date("yyyy-MM-dd")}"
-    itemPrefix = "-"
-    keepUnreleasedSection = true
-    unreleasedTerm = "[Unreleased]"
-    groups = ["Added", "Changed", "Removed", "Fixed"]
-    lineSeparator = "\n"
-    combinePreReleases = false // TODO: Decide if we want to do this or not.
-}
+if (getReleaseType() != null) {
+    if (System.getenv("CHANGELOG") != null) {
+        publisher {
+            apiKeys {
+                curseforge = System.getenv("CURSEFORGE_TOKEN")
+                modrinth = System.getenv("MODRINTH_TOKEN")
+            }
 
-if (changelog.has(getVersionString())) {
-    print("This version has a valid changelog, publishing is enabled.")
+            debug = System.getenv("PUBLISH") != "true"
+            curseID = curseforge_projectId
+            modrinthID = modrinth_projectId
+            versionType = getReleaseType()
+            version = "${getVersionString()}"
+            displayName = "Ender IO - ${getVersionString()}"
+            changelog = System.getenv("CHANGELOG")
+            gameVersions = [minecraft_version]
+            loaders = ["forge"]
+            artifact = tasks.jarJar
 
-    publisher {
-        apiKeys {
-            curseforge = System.getenv("CURSEFORGE_TOKEN")
-            modrinth = System.getenv("MODRINTH_TOKEN")
+            curseDepends {
+                optional = ["jei", /*"patchouli",*/ "athena", "applied-energistics-2"]
+            }
+
+            modrinthDepends {
+                optional = [/*modrinth_dep_patchouli, */ modrinth_dep_jei, modrinth_dep_athena, modrinth_dep_ae2]
+            }
         }
-
-        debug = System.getenv("PUBLISH") != "true"
-        curseID = curseforge_projectId
-        modrinthID = modrinth_projectId
-        versionType = release_type
-        version = "${getVersionString()}"
-        displayName = "Ender IO - ${getVersionString()}"
-        changelog = project.changelog.renderItem(project.changelog.get(getVersionString()), Changelog.OutputType.MARKDOWN)
-        gameVersions = [minecraft_version]
-        loaders = ["forge"]
-        artifact = tasks.jarJar
-
-        curseDepends {
-            optional = ["jei", /*"patchouli",*/ "athena", "applied-energistics-2"]
-        }
-
-        modrinthDepends {
-            optional = [/*modrinth_dep_patchouli, */modrinth_dep_jei, modrinth_dep_athena, modrinth_dep_ae2]
-        }
+    } else {
+        println("Release disabled, no changelog found in environment");
     }
-} else {
-    print("Publishing disabled - a changelog has not yet been prepared for this release. Add an entry for ${project.version} to enable.")
 }
 
 publishing {
@@ -419,43 +411,29 @@ tasks.withType(JavaCompile).configureEach {
 // Utilities
 // ============
 
-// This is the new version format:
-// artifact name
-//   enderio-<mc-version>-<version>
-// version:
-//   <major>.<minor>.<patch>-<cls>-<hash>
-// patch:
-//   defaults to 'version_patch'
-//   overriten by CI / build server
-// cls (classifier):
-//   * nightly
-//   * dev
-//   * ci
-//   * snapshot
-//   * etc.
-// hash:
-//   if on a dev machine - the current commit hash
-
-// Examples:
-//   * enderio-1.19.1-6.0.1.jar            :: release version 6.0.1 for mc 1.19.1
-//   * enderio-1.19.1-6.2.1-nightly-4      :: nightly build no. 4 for version 6.2.1
-//   * enderio-1.19.1-6.5.1-dev-c91c8ee6e  :: dev (local) build for commit c91c8ee6e
+//   * enderio-1.19.1-6.0.1-alpha.jar :: release version 6.0.1-alpha for mc 1.19.1
+//   * enderio-1.19.1-nightly-4       :: nightly build no. 4 for mc 1.19.1
+//   * enderio-1.19.1-dev-c91c8ee6e   :: dev (local) build for commit c91c8ee6e
 String getVersionString() {
-    // We've configured TeamCity to give us build numbers;
-    if (System.getenv('TEAMCITY_VERSION') != null)
-        return "${System.getenv('BUILD_NUMBER')}-${project.release_type}"
-
     def build_server = System.getenv('CI') != null || System.getenv('BUILD_NUMBER') != null
 
-    def version_patch_lc = project.version_patch
-    if (System.getenv('BUILD_NUMBER') != null)
-        version_patch_lc = System.getenv('BUILD_NUMBER')
+    if (System.getenv('BUILD_VERSION') != null) {
+        def version_number = System.getenv('BUILD_VERSION')
+        if (version_number.startsWith("v")) {
+            version_number = version_number.substring(1)
+        }
 
-    def version_classifier = ''
-    if (System.getenv('VERSION_CLS') != null)
-        version_classifier = System.getenv('VERSION_CLS')
-    else if (System.getenv('NIGHTLY') != null)
-        version_classifier = 'nightly'
+        return "${version_number}"
+    }
+
+    if (System.getenv('NIGHTLY') != null) {
+        def version_patch_lc = '0'
+        if (System.getenv('BUILD_NUMBER') != null) {
+            version_patch_lc = System.getenv('BUILD_NUMBER')
+        }
+
+        return "${mod_version_series}-nightly-${version_patch_lc}"
+    }
 
     def version_hash = ''
     if (!build_server) {
@@ -465,10 +443,24 @@ String getVersionString() {
         }
     }
 
-    def version_base = "${project.version_major}.${project.version_minor}.${version_patch_lc}-${project.release_type}"
-    def version_parts = ([version_base, version_classifier, version_hash]).findAll { p -> p != '' }
+    return "${mod_version_series}-dev-${version_hash}"
+}
 
-    return String.join('-', version_parts)
+String getReleaseType() {
+    // If we're doing a proper build
+    if (System.getenv('BUILD_VERSION') != null) {
+        def version_string = System.getenv('BUILD_VERSION')
+
+        if (version_string.toLowerCase(Locale.ROOT).contains("alpha")) {
+            return 'alpha'
+        } else if (version_string.toLowerCase(Locale.ROOT).contains("beta")) {
+            return 'beta'
+        }
+
+        return 'release'
+    }
+
+    return null
 }
 
 // Thanks to Mekanism for the base implementations here.

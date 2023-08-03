@@ -32,6 +32,7 @@ public class EIOConduits {
         ConduitItems.register();
         Integrations.register();
         ConduitNetwork.register();
+        ConduitLang.register();
         ConduitItemFactory.setFactory((type, properties) -> new ConduitBlockItem(type, ConduitBlocks.CONDUIT.get(), properties));
     }
 

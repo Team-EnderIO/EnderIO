@@ -21,19 +21,19 @@ public class OffsetHelper {
      * @param typeIndex of the type you want to query
      * @param maxTypes for that Direction
      * @return the offset
-     *
+     * <p>
      *  ###
      *  #1#
      *  ###
-     *
+     * <p>
      *  #1#
      *  ###
      *  #2#
-     *
+     * <p>
      *  1##
      *  #2#
      *  ##3
-     *
+     * <p>
      *  all after 3:
      *  615
      *  294
@@ -95,7 +95,7 @@ public class OffsetHelper {
     public static Direction.Axis findMainAxis(ConduitBundle bundle) {
         List<Direction> connectedDirs = new ArrayList<>();
         for (Direction dir: Direction.values()) {
-            if (!bundle.getConnection(dir).getConnectedTypes(bundle).isEmpty())
+            if (!bundle.getConnection(dir).getConnectedTypes().isEmpty())
                 connectedDirs.add(dir);
         }
         if (connectedDirs.isEmpty())
