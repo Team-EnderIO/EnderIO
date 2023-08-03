@@ -30,7 +30,8 @@ public class RenderTravelTargets {
         TravelSavedData data = TravelSavedData.getTravelData(Minecraft.getInstance().level);
         for (ITravelTarget target : data.getTravelTargets()) {
             double range = itemTeleport ? target.getItem2BlockRange() : target.getBlock2BlockRange();
-            if (range * range < target.getPos().distToCenterSqr(player.position()))
+            double distanceSquared = target.getPos().distToCenterSqr(player.position());
+            if (range * range < distanceSquared || distanceSquared < 25)
                 continue;
             PoseStack poseStack = event.getPoseStack();
             poseStack.pushPose();
@@ -38,9 +39,7 @@ public class RenderTravelTargets {
             Vec3 projectedView = mainCamera.getPosition();
             poseStack.translate(-projectedView.x, -projectedView.y, -projectedView.z);
 
-            //TODO: Scale, View Bobbing, (FOV/Creative Flight offset stuff)
-            // pls Crazy, be a rendering genius
-            TravelRegistry.getRenderer(target).render(target, event.getLevelRenderer(), poseStack);
+            TravelRegistry.getRenderer(target).render(target, event.getLevelRenderer(), poseStack, distanceSquared);
             poseStack.popPose();
         }
     }
