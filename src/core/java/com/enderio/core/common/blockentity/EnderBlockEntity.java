@@ -186,8 +186,7 @@ public class EnderBlockEntity extends BlockEntity {
 
     @UseOnly(LogicalSide.CLIENT)
     public void clientHandleBufferSync(FriendlyByteBuf buf) {
-        int amount = buf.readInt();
-        for (; amount>0; amount--) { //read until we can't
+        for (int amount = buf.readInt(); amount > 0; amount--) {
             int index = buf.readInt();
             dataSlots.get(index).fromBuffer(buf);
         }
