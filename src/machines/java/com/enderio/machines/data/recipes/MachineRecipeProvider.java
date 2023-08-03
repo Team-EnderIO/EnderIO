@@ -144,7 +144,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .define('B', Blocks.STONE_BRICKS)
             .define('F', Blocks.FURNACE)
             .define('I', EIOItems.DARK_STEEL_INGOT.get())
-            .define('G', EIOItems.GEAR_DARK_STEEL.get())
+            .define('G', EIOItems.GEAR_IRON.get())
             .define('V', EIOBlocks.VOID_CHASSIS.get())
             .define('P', Items.PISTON)
             .pattern("BFB")

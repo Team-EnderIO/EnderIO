@@ -1,7 +1,6 @@
 package com.enderio.machines.data.recipes;
 
 import com.enderio.EnderIO;
-import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.recipe.RecipeDataUtil;
 import com.enderio.core.data.recipes.EnderRecipeProvider;
@@ -61,11 +60,6 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
         buildOre("iron_ore", Ingredient.of(Tags.Items.ORES_IRON), POWDERED_IRON.get(), finishedRecipeConsumer);
         buildOre("gold_ore", Ingredient.of(Tags.Items.ORES_GOLD), POWDERED_GOLD.get(), finishedRecipeConsumer);
         buildOre("copper_ore", Ingredient.of(Tags.Items.ORES_COPPER), POWDERED_COPPER.get(), finishedRecipeConsumer);
-
-        build1toN("iron_block", Tags.Items.STORAGE_BLOCKS_IRON, POWDERED_IRON.get(), 9, finishedRecipeConsumer);
-        build1toN("gold_block", Tags.Items.STORAGE_BLOCKS_GOLD, POWDERED_GOLD.get(), 9, finishedRecipeConsumer);
-        build1toN("copper_block", Tags.Items.STORAGE_BLOCKS_COPPER, POWDERED_COPPER.get(), 9, finishedRecipeConsumer);
-        build1toN("coal_block", Tags.Items.STORAGE_BLOCKS_COAL, POWDERED_COAL.get(), 9, finishedRecipeConsumer);
 
         build1toN("stone", STONE, COBBLESTONE, 1, finishedRecipeConsumer);
 
@@ -300,10 +294,6 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
         		output(PRISMARINE_CRYSTALS), 
         		output(PRISMARINE_CRYSTALS, 0.1f)),
         		BASE_ENERGY_PER_OPERATION, BonusType.NONE, finishedRecipeConsumer);
-        
-        build("soularium_block", Ingredient.of(EIOBlocks.SOULARIUM_BLOCK.get()), List.of(
-        		output(SOUL_POWDER.get(), 9)
-        		), BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
 
         build("wither_rose", Ingredient.of(WITHER_ROSE), List.of(
             output(WITHERING_POWDER.get(), 1, 0.4f)
