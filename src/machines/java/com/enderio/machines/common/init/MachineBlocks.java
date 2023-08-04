@@ -154,6 +154,17 @@ public class MachineBlocks {
         .build()
         .register();
 
+    public static final BlockEntry<TravelAnchorBlock> TRAVEL_ANCHOR = REGISTRATE
+        .block("travel_anchor", TravelAnchorBlock::new)
+        .properties(props -> props.strength(2.5f, 8).noOcclusion())
+        .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+        .loot(MachinesLootTable::copyNBT)
+        .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName()))))
+        .item()
+        .tab(EIOCreativeTabs.MACHINES)
+        .build()
+        .register();
+
     public static final Map<SolarPanelTier, BlockEntry<SolarPanelBlock>> SOLAR_PANELS = Util.make(() -> {
         Map<SolarPanelTier, BlockEntry<SolarPanelBlock>> panels = new HashMap<>();
         for (SolarPanelTier tier : SolarPanelTier.values()) {
@@ -172,15 +183,6 @@ public class MachineBlocks {
     });
     public static final BlockEntry<ProgressMachineBlock> CRAFTER = progressMachine("crafter", () -> MachineBlockEntities.CRAFTER).register();
 
-    public static final BlockEntry<TravelAnchorBlock> TRAVEL_ANCHOR = REGISTRATE
-        .block("travel_anchor", TravelAnchorBlock::new)
-        .properties(props -> props.strength(2.5f, 8).noOcclusion())
-        .loot(MachinesLootTable::copyNBT)
-        .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIO.loc("block/travel_anchor"))))
-        .item()
-        .tab(EIOCreativeTabs.MACHINES)
-        .build()
-        .register();
 
     //used when single methods needs to be overridden in the block class
     private static <T extends MachineBlock> BlockBuilder<T, Registrate> baseMachine(BlockBuilder<T, Registrate> machineBlock,
