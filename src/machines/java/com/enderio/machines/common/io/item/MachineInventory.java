@@ -12,7 +12,6 @@ import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
-import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 
 /**
@@ -26,7 +25,7 @@ public class MachineInventory extends ItemStackHandler implements IEnderCapabili
     private final EnumMap<Direction, LazyOptional<Wrapped>> sideCache = new EnumMap<>(Direction.class);
     private LazyOptional<Wrapped> selfCache = LazyOptional.empty();
 
-    private Consumer<Integer> changeListener = i -> {};
+    private IntConsumer changeListener = i -> {};
 
     /**
      * Create a new machine inventory.
@@ -37,10 +36,7 @@ public class MachineInventory extends ItemStackHandler implements IEnderCapabili
         this.layout = layout;
     }
     public void addSlotChangedCallback(IntConsumer callback) {
-        changeListener = i -> {
-            changeListener.accept(i);
-            callback.accept(i);
-        };
+        changeListener = changeListener.andThen(callback);
     }
 
     /**
