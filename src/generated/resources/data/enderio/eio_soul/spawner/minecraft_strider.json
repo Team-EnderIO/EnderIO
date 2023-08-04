@@ -1,5 +1,5 @@
 {
   "type": "entitytype",
   "entity": "minecraft:strider",
-  "power": 3000
+  "power": 15000
 }

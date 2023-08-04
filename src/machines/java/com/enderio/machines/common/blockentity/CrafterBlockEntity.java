@@ -32,8 +32,6 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
 
     public static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.CRAFTER_CAPACITY);
     public static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.CRAFTER_USAGE);
-    private static final int ENERGY_USAGE_PER_ITEM = 10;
-
     public static final MultiSlotAccess INPUT = new MultiSlotAccess();
     public static final SingleSlotAccess OUTPUT = new SingleSlotAccess();
     public static final MultiSlotAccess GHOST = new MultiSlotAccess();
@@ -149,7 +147,7 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
     }
 
     private boolean hasPowerToCraft() {
-        return this.energyStorage.consumeEnergy(ENERGY_USAGE_PER_ITEM, true) > 0;
+        return this.energyStorage.consumeEnergy(MachinesConfig.COMMON.ENERGY.CRAFTING_RECIPE_COST.get(), true) > 0;
     }
 
     private void processOutputBuffer() {
@@ -198,8 +196,8 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
         // clean buffer
         outputBuffer.removeIf(ItemStack::isEmpty);
         // consume power
-        this.energyStorage.consumeEnergy(ENERGY_USAGE_PER_ITEM, false);
-        //ceck resource reload
+        this.energyStorage.consumeEnergy(MachinesConfig.COMMON.ENERGY.CRAFTING_RECIPE_COST.get(), false);
+        //check resource reload
         if (level.getRecipeManager().byKey(recipe.getId()).orElse(null) != recipe) {
             recipe = null;
         }

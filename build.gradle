@@ -440,14 +440,21 @@ String getVersionString() {
     }
 
     def version_hash = ''
+    def branch_name = ''
     if (!build_server) {
         try {
-            version_hash = "git rev-parse --short HEAD".execute().text.trim()
+            version_hash = "-" + "git rev-parse --short HEAD".execute().text.trim()
+        } catch (ignored) {
+        }
+
+        try {
+            branch_name = "git rev-parse --abbrev-ref HEAD".execute().text.trim()
+            branch_name = "-" + branch_name.substring(branch_name.lastIndexOf('/') + 1)
         } catch (ignored) {
         }
     }
 
-    return "${mod_version_series}-dev-${version_hash}"
+    return "${mod_version_series}-dev${branch_name}${version_hash}"
 }
 
 String getReleaseType() {

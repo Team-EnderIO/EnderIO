@@ -6,7 +6,7 @@
         "items": [
           {
             "items": [
-              "enderio:advanced_photovoltaic_cell"
+              "enderio:photovoltaic_plate"
             ]
           }
         ]
@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:vibrant_photovoltaic_cell_upgrade"
+        "recipe": "enderio:energetic_photovoltaic_module"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "enderio:vibrant_photovoltaic_cell_upgrade"
+      "enderio:energetic_photovoltaic_module"
     ]
   },
   "sends_telemetry_event": false

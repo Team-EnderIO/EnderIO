@@ -162,7 +162,7 @@ public class MachineBlocks {
     public static final Map<SolarPanelTier, BlockEntry<SolarPanelBlock>> SOLAR_PANELS = Util.make(() -> {
         Map<SolarPanelTier, BlockEntry<SolarPanelBlock>> panels = new HashMap<>();
         for (SolarPanelTier tier: SolarPanelTier.values()) {
-            panels.put(tier, solarPanel(tier.name().toLowerCase(Locale.ROOT) + "_photovoltaic_cell", () -> MachineBlockEntities.SOLAR_PANELS.get(tier), tier).register());
+            panels.put(tier, solarPanel(tier.name().toLowerCase(Locale.ROOT) + "_photovoltaic_module", () -> MachineBlockEntities.SOLAR_PANELS.get(tier), tier).register());
         }
         return ImmutableMap.copyOf(panels);
     });
