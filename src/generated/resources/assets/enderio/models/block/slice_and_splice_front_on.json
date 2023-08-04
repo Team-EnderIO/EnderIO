@@ -1,6 +1,0 @@
-{
-  "parent": "enderio:block/slice_and_splice_front",
-  "textures": {
-    "front": "enderio:block/slice_and_splice_front_on"
-  }
-}

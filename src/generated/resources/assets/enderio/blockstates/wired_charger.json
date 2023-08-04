@@ -1,33 +1,18 @@
 {
   "variants": {
-    "facing=east,powered=false": {
+    "facing=east": {
       "model": "enderio:block/wired_charger",
       "y": 90
     },
-    "facing=east,powered=true": {
-      "model": "enderio:block/wired_charger_on",
-      "y": 90
-    },
-    "facing=north,powered=false": {
+    "facing=north": {
       "model": "enderio:block/wired_charger"
     },
-    "facing=north,powered=true": {
-      "model": "enderio:block/wired_charger_on"
-    },
-    "facing=south,powered=false": {
+    "facing=south": {
       "model": "enderio:block/wired_charger",
       "y": 180
     },
-    "facing=south,powered=true": {
-      "model": "enderio:block/wired_charger_on",
-      "y": 180
-    },
-    "facing=west,powered=false": {
+    "facing=west": {
       "model": "enderio:block/wired_charger",
-      "y": 270
-    },
-    "facing=west,powered=true": {
-      "model": "enderio:block/wired_charger_on",
       "y": 270
     }
   }

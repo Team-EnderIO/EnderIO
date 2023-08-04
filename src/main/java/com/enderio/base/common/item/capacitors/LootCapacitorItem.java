@@ -18,7 +18,7 @@ public class LootCapacitorItem extends BaseCapacitorItem implements IMultiCapabi
     @Nullable
     @Override
     public MultiCapabilityProvider initCapabilities(ItemStack stack, CompoundTag nbt, MultiCapabilityProvider provider) {
-        provider.add(EIOCapabilities.CAPACITOR, LazyOptional.of(LootCapacitorData::new));
+        provider.add(EIOCapabilities.CAPACITOR, LazyOptional.of(() -> new LootCapacitorData(stack)));
         return provider;
     }
 }

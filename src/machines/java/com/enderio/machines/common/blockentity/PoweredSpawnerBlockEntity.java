@@ -5,7 +5,6 @@ import com.enderio.api.capability.StoredEntityData;
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.base.common.particle.RangeParticleData;
 import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
 import com.enderio.core.common.network.slot.EnumNetworkDataSlot;
 import com.enderio.core.common.network.slot.ResourceLocationNetworkDataSlot;
@@ -27,7 +26,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -40,25 +38,23 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.POWERED_SPAWNER_USAGE);
     public static final ResourceLocation NO_MOB = EnderIO.loc("no_mob");
     private StoredEntityData entityData = StoredEntityData.empty();
-    private int range = 3;
-    private boolean rangeVisible;
     private SpawnerBlockedReason reason = SpawnerBlockedReason.NONE;
-
     private final MachineTaskHost taskHost;
 
-    private final BooleanNetworkDataSlot rangeDataSlot;
 
     public PoweredSpawnerBlockEntity(BlockEntityType type, BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Input, CAPACITY, USAGE, type, worldPosition, blockState);
 
-        rangeDataSlot = new BooleanNetworkDataSlot(this::isShowingRange, b -> rangeVisible = b);
-        addDataSlot(rangeDataSlot);
+        rangeVisibleDataSlot = new BooleanNetworkDataSlot(this::isRangeVisible, b -> this.rangeVisible = b);
+        addDataSlot(rangeVisibleDataSlot);
 
         addDataSlot(new ResourceLocationNetworkDataSlot(() -> this.getEntityType().orElse(NO_MOB), rl -> {
             setEntityType(rl);
             EnderIO.LOGGER.info("UPDATED ENTITY TYPE.");
         }));
         addDataSlot(new EnumNetworkDataSlot<>(SpawnerBlockedReason.class, this::getReason, this::setReason));
+
+        range = 4;
 
         taskHost = new MachineTaskHost(this, this::hasEnergy) {
             @Override
@@ -90,14 +86,6 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
         }
     }
 
-    public void clientTick() {
-        super.clientTick();
-        if (this.isShowingRange()) {
-            generateParticle(new RangeParticleData(getRange(), MachinesConfig.CLIENT.BLOCKS.POWERED_SPAWNER_RANGE_COLOR.get()),
-                new Vec3(getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ()));
-        }
-    }
-
     @Override
     public void onLoad() {
         super.onLoad();
@@ -119,6 +107,16 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
 
     // endregion
 
+    @Override
+    public String getColor() {
+        return MachinesConfig.CLIENT.BLOCKS.POWERED_SPAWNER_RANGE_COLOR.get();
+    }
+
+    @Override
+    public int getMaxRange() {
+        return 3;
+    }
+
     // region Task
 
     public float getSpawnProgress() {
@@ -136,10 +134,6 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
 
     // endregion
 
-    public int getRange() {
-        return range;
-    }
-
     public Optional<ResourceLocation> getEntityType() {
         return entityData.getEntityType();
     }
@@ -150,22 +144,6 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
 
     public StoredEntityData getEntityData() {
         return entityData;
-    }
-
-    public boolean isShowingRange() {
-        return this.rangeVisible;
-    }
-
-    public void shouldShowRange(Boolean show) {
-        if (level != null && level.isClientSide()) {
-            clientUpdateSlot(rangeDataSlot, show);
-        } else this.rangeVisible = show;
-    }
-
-    private void generateParticle(RangeParticleData data, Vec3 pos) {
-        if (level != null && level.isClientSide()) {
-            level.addAlwaysVisibleParticle(data, true, pos.x, pos.y, pos.z, 0, 0, 0);
-        }
     }
 
     public SpawnerBlockedReason getReason() {

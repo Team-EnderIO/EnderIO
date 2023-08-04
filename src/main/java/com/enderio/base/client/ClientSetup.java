@@ -6,12 +6,14 @@ import com.enderio.base.client.particle.RangeParticle;
 import com.enderio.base.client.renderer.block.EnderSkullRenderer;
 import com.enderio.base.client.renderer.glider.ActiveGliderRenderLayer;
 import com.enderio.base.client.renderer.item.GlassIconDecorator;
+import com.enderio.base.common.block.EnderSkullBlock;
 import com.enderio.base.common.init.EIOBlockEntities;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.init.EIOParticles;
 import com.enderio.core.client.item.FluidBarDecorator;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
@@ -117,5 +119,11 @@ public class ClientSetup {
     @SubscribeEvent
     public static void registerModelLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(EnderSkullRenderer.ENDER_SKULL, EnderSkullRenderer.EnderSkullModel::createMobHeadLayer);
+    }
+
+    @SubscribeEvent
+    public static void registerEnderSkulls(EntityRenderersEvent.CreateSkullModels event) {
+        event.registerSkullModel(EnderSkullBlock.EIOSkulls.ENDERMAN, new EnderSkullRenderer.EnderSkullModel(event.getEntityModelSet().bakeLayer(EnderSkullRenderer.ENDER_SKULL)));
+        SkullBlockRenderer.SKIN_BY_TYPE.put(EnderSkullBlock.EIOSkulls.ENDERMAN, new ResourceLocation("textures/entity/enderman/enderman.png"));
     }
 }

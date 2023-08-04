@@ -1,0 +1,6 @@
+{
+  "parent": "enderio:block/powered_spawner_front",
+  "textures": {
+    "front": "enderio:block/powered_spawner_front_active"
+  }
+}
