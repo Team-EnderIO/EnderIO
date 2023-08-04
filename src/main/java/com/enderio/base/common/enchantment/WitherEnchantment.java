@@ -8,10 +8,10 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 
-public class WitherArrowEnchantment extends EIOBaseEnchantment {
+public class WitherEnchantment extends EIOBaseEnchantment {
 
-    public WitherArrowEnchantment() {
-        super(Rarity.UNCOMMON, EIOEnchantmentCategories.ARROW, new EquipmentSlot[] { EquipmentSlot.MAINHAND }, () -> true);
+    public WitherEnchantment() {
+        super(Rarity.UNCOMMON, EIOEnchantmentCategories.WEAPON, new EquipmentSlot[] { EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND }, () -> true);
     }
 
     @Override
@@ -21,17 +21,19 @@ public class WitherArrowEnchantment extends EIOBaseEnchantment {
 
     @Override
     public int getMaxCost(int pLevel) {
-        return BaseConfig.COMMON.ENCHANTMENTS.WITHERING_ARROW_MAX_COST.get();
+        return BaseConfig.COMMON.ENCHANTMENTS.WITHERING_BLADE_MAX_COST.get();
     }
 
     @Override
     public int getMinCost(int pLevel) {
-        return BaseConfig.COMMON.ENCHANTMENTS.WITHERING_ARROW_MIN_COST.get();
+        return BaseConfig.COMMON.ENCHANTMENTS.WITHERING_BLADE_MIN_COST.get();
     }
 
     @Override
     public void doPostAttack(LivingEntity pAttacker, Entity pTarget, int pLevel) {
-        if (pTarget instanceof LivingEntity target && EnchantmentHelper.getEnchantments(pAttacker.getMainHandItem()).containsKey(this)) {
+        if (pTarget instanceof LivingEntity target && EnchantmentHelper
+            .getEnchantments(pAttacker.getMainHandItem())
+            .containsKey(this)) {
             target.addEffect(new MobEffectInstance(MobEffects.WITHER, 200));
         }
     }

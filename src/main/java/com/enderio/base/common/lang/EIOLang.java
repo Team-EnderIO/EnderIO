@@ -146,23 +146,11 @@ public class EIOLang {
     public static final Component SOULBOUND_DESC = enchantmentDescription("soulbound", "desc",
         "Prevents item from being lost on death. Note: Most gravestone mods are stupid and prevent this from working!");
 
-    public static final Component WITHERING_BLADE_DESC = enchantmentDescription("withering_blade", "desc",
+    public static final Component WITHERING_DESC = enchantmentDescription("withering", "desc",
         "Applies wither to the target.");
 
-    public static final Component WITHERING_BLADE_TYPES = enchantmentDescription("withering_blade", "type",
-        "Applies to bladed weapons.");
-
-    public static final Component WITHERING_ARROW_DESC = enchantmentDescription("withering_arrow", "desc",
-        "Applies wither to the target.");
-
-    public static final Component WITHERING_ARROW_TYPES = enchantmentDescription("withering_arrow", "type",
-        "Applies to bows.");
-
-    public static final Component WITHERING_BOLT_DESC = enchantmentDescription("withering_bolt", "desc",
-        "Applies wither to the target.");
-
-    public static final Component WITHERING_BOLT_TYPES = enchantmentDescription("withering_bolt", "type",
-        "Applies to crossbows.");
+    public static final Component WITHERING_TYPES = enchantmentDescription("withering", "type",
+        "Applies to bladed weapons, bows and crossbows.");
 
     public static final Component XP_BOOST_DESC = enchantmentDescription("xp_boost", "desc",
         "Extra XP from mobs and blocks");

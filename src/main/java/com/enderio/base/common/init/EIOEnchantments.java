@@ -41,16 +41,8 @@ public class EIOEnchantments {
         .lang("Soulbound")
         .register();
 
-    public static final RegistryEntry<WitherBladeEnchantment> WITHERING_BLADE = enchantmentBuilder("withering_blade", new WitherBladeEnchantment())
-        .lang("Withering Blade")
-        .register();
-
-    public static final RegistryEntry<WitherArrowEnchantment> WITHERING_ARROW = enchantmentBuilder("withering_arrow", new WitherArrowEnchantment())
-        .lang("Withering Arrow")
-        .register();
-
-    public static final RegistryEntry<WitherArrowEnchantment> WITHERING_BOLT = enchantmentBuilder("withering_bolt", new WitherArrowEnchantment())
-        .lang("Withering Bolt")
+    public static final RegistryEntry<WitherEnchantment> WITHERING = enchantmentBuilder("withering", new WitherEnchantment())
+        .lang("Withering")
         .register();
 
     public static final RegistryEntry<XPBoostEnchantment> XP_BOOST = enchantmentBuilder("xp_boost", new XPBoostEnchantment()).lang("XP Boost").register();
@@ -84,12 +76,11 @@ public class EIOEnchantments {
             Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(event.getItemStack());
             List<Component> toolTip = new ArrayList<>(event.getToolTip());
             if (!enchantments.isEmpty()) {
-                addTooltip(event, enchantments, toolTip, WITHERING_BLADE.get(), EIOLang.WITHERING_BLADE_TYPES);
-                addTooltip(event, enchantments, toolTip, WITHERING_ARROW.get(), EIOLang.WITHERING_ARROW_TYPES);
-                addTooltip(event, enchantments, toolTip, WITHERING_BOLT.get(), EIOLang.WITHERING_BOLT_TYPES);
+                addTooltip(event, enchantments, toolTip, WITHERING.get(), EIOLang.WITHERING_TYPES);
             }
         }
     }
 
     public static void register() {}
+
 }
