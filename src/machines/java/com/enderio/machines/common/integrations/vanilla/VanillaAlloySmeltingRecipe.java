@@ -7,12 +7,10 @@ import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.ForgeHooks;
 
 import java.util.List;
 
@@ -39,7 +37,7 @@ public class VanillaAlloySmeltingRecipe extends AlloySmeltingRecipe {
 
     @Override
     public int getEnergyCost(ContainerWrapper container) {
-        return MachinesConfig.COMMON.ENERGY.ALLOY_SMELTER_VANILLA_ITEM_ENERGY.get() * container.getInputsTaken();
+        return getBaseEnergyCost() * container.getInputsTaken();
     }
 
     @Override

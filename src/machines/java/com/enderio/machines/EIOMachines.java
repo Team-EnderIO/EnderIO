@@ -79,6 +79,7 @@ public class EIOMachines {
             List.of(new MachinesAdvancementGenerator())));
     }
 
+    //TODO Remove later on when during beta/release.
     public static void missingMappings(MissingMappingsEvent event) {
         event.getMappings(Registries.BLOCK, EnderIO.MODID).forEach(mapping -> {
             if (mapping.getKey().equals(EnderIO.loc("simple_photovoltaic_cell"))) {

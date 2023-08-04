@@ -53,7 +53,7 @@ public class SoulDataProvider implements DataProvider {
         addSpawnerData(EntityType.ENDERMAN, 60_000, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
         addSpawnerData(EntityType.ENDERMITE, 51_200, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
         addSpawnerData(EntityType.ENDER_DRAGON, 1_000_000, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
-        addSpawnerData(EntityType.EVOKER, 51_200, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.EVOKER, 200_000, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
         addSpawnerData(EntityType.FOX, 12_000, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
         addSpawnerData(EntityType.FROG, 12_000, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
         addSpawnerData(EntityType.GHAST, 51_200, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
@@ -64,7 +64,7 @@ public class SoulDataProvider implements DataProvider {
         addSpawnerData(EntityType.HUSK, 51_200, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
         addSpawnerData(EntityType.HORSE, 15_000, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
         addSpawnerData(EntityType.ILLUSIONER, 51_200, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
-        addSpawnerData(EntityType.IRON_GOLEM, 60_000, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.IRON_GOLEM, 100_000, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
         addSpawnerData(EntityType.LLAMA, 15_000, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
         addSpawnerData(EntityType.MAGMA_CUBE, 51_200, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
         addSpawnerData(EntityType.MULE, 15_000, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
@@ -83,7 +83,7 @@ public class SoulDataProvider implements DataProvider {
         addSpawnerData(EntityType.RAVAGER, 60_000, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
         addSpawnerData(EntityType.SALMON, 12_000, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
         addSpawnerData(EntityType.SHEEP, 12_000, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
-        addSpawnerData(EntityType.SHULKER, 51_200, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.SHULKER, 200_000, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
         addSpawnerData(EntityType.SKELETON, 51_200, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
         addSpawnerData(EntityType.SILVERFISH, 12_000, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
         addSpawnerData(EntityType.SKELETON_HORSE, 18_000, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
@@ -100,7 +100,7 @@ public class SoulDataProvider implements DataProvider {
         addSpawnerData(EntityType.VILLAGER, 51_200, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
         addSpawnerData(EntityType.VINDICATOR, 51_200, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
         addSpawnerData(EntityType.WARDEN, 1_000_000, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
-        addSpawnerData(EntityType.WITCH, 51200, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
+        addSpawnerData(EntityType.WITCH, 51_200, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
         addSpawnerData(EntityType.WITHER, 1_000_000, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
         addSpawnerData(EntityType.WOLF, 18_000, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
         addSpawnerData(EntityType.ZOGLIN, 51_200, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
