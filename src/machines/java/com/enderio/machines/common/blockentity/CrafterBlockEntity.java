@@ -10,6 +10,7 @@ import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.CrafterMenu;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -20,6 +21,7 @@ import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayDeque;
 import java.util.Optional;
@@ -37,6 +39,7 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
     public static final MultiSlotAccess GHOST = new MultiSlotAccess();
     public static final SingleSlotAccess PREVIEW = new SingleSlotAccess();
 
+    @Nullable
     private CraftingRecipe recipe;
     private final Queue<ItemStack> outputBuffer = new ArrayDeque<>();
 
@@ -55,6 +58,25 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
 
     public CrafterBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE, type, worldPosition, blockState);
+        getInventoryNN().addSlotChangedCallback(this::onSlotChanged);
+    }
+
+    private void onSlotChanged(int slot) {
+        if (GHOST.contains(slot)) {
+            updateRecipe();
+        }
+    }
+
+    private void updateRecipe() {
+        for (int i = 0; i < 9; i++) {
+            dummyCContainer.setItem(i, GHOST.get(i).getItemStack(this).copy());
+        }
+        recipe = getLevel()
+            .getRecipeManager()
+            .getRecipeFor(RecipeType.CRAFTING, dummyCContainer, getLevel()).orElse(null);
+        PREVIEW.setStackInSlot(this, ItemStack.EMPTY);
+        if (recipe != null)
+            PREVIEW.setStackInSlot(this, recipe.getResultItem(getLevel().registryAccess()));
     }
 
     @Override
@@ -86,6 +108,19 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
+    public void onLoad() {
+        super.onLoad();
+        updateRecipe();
+    }
+
+    @Override
+    public void load(CompoundTag pTag) {
+        super.load(pTag);
+        if (level != null && !level.isClientSide())
+            updateRecipe();
+    }
+
+    @Override
     public void serverTick() {
         tryCraft();
         super.serverTick();
@@ -94,21 +129,15 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
 
     @Override
     protected boolean isActive() {
-        // TODO: How to determine active state beyond power.
         return canAct() && hasEnergy();
     }
 
     private void tryCraft() {
-        Optional<ItemStack> opt = getRecipeResult();
-        if (opt.isPresent()) {
-            ItemStack result = opt.get();
-            PREVIEW.setStackInSlot(this, result);
+        getRecipeResult().ifPresent(result -> {
             if (shouldActTick() && hasPowerToCraft() && canMergeOutput(result) && outputBuffer.isEmpty()) {
                 craftItem();
             }
-        } else {
-            PREVIEW.setStackInSlot(this, ItemStack.EMPTY);
-        }
+        });
     }
 
     private boolean shouldActTick() {
@@ -141,12 +170,7 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
     }
 
     private Optional<ItemStack> getRecipeResult() {
-        for (int i = 0; i < 9; i++) {
-            dummyCContainer.setItem(i, GHOST.get(i).getItemStack(this).copy());
-        }
-        Optional<CraftingRecipe> opt = getLevel().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, dummyCContainer, getLevel());
-        if (opt.isPresent()) {
-            recipe = opt.get();
+        if (recipe != null) {
             return Optional.of(recipe.assemble(dummyCContainer, getLevel().registryAccess()));
         }
         return Optional.empty();
@@ -175,7 +199,10 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
         outputBuffer.removeIf(ItemStack::isEmpty);
         // consume power
         this.energyStorage.consumeEnergy(ENERGY_USAGE_PER_ITEM, false);
-
+        //ceck resource reload
+        if (level.getRecipeManager().byKey(recipe.getId()).orElse(null) != recipe) {
+            recipe = null;
+        }
     }
 
     private void clearInput() {
