@@ -6,6 +6,7 @@ import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.ImmutableMachineEnergyStorage;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.FriendlyByteBuf;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -36,7 +37,26 @@ public class MachineEnergyNetworkDataSlot extends NetworkDataSlot<IMachineEnergy
             int maxUse = compoundTag.getInt(MachineNBTKeys.ENERGY_MAX_USE);
             return new ImmutableMachineEnergyStorage(energy, maxStored, maxUse);
         } else {
-            throw new IllegalStateException("Invalid compound tag was passed over the network.");
+            throw new IllegalStateException("Invalid IMachineEnergyStorage tag was passed over the network.");
+        }
+    }
+
+    @Override
+    public void toBuffer(FriendlyByteBuf buf, IMachineEnergyStorage value) {
+        buf.writeInt(value.getEnergyStored());
+        buf.writeInt(value.getMaxEnergyStored());
+        buf.writeInt(value.getMaxEnergyUse());
+    }
+
+    @Override
+    public IMachineEnergyStorage valueFromBuffer(FriendlyByteBuf buf) {
+        try {
+            int energy = buf.readInt();
+            int maxStored = buf.readInt();
+            int maxUse = buf.readInt();
+            return new ImmutableMachineEnergyStorage(energy, maxStored, maxUse);
+        } catch (Exception e) {
+            throw new IllegalStateException("Invalid IMachineEnergyStorage buffer was passed over the network.");
         }
     }
 

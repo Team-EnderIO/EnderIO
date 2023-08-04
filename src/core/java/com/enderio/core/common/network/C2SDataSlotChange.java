@@ -1,13 +1,9 @@
 package com.enderio.core.common.network;
 
 import com.enderio.core.common.blockentity.EnderBlockEntity;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
@@ -21,16 +17,16 @@ public class C2SDataSlotChange implements Packet {
 
     // You shouldn't really send null, but its "technically" valid.
     @Nullable
-    private final CompoundTag updateData;
+    private final FriendlyByteBuf updateData;
 
-    public C2SDataSlotChange(BlockPos pos, CompoundTag updateData) {
+    public C2SDataSlotChange(BlockPos pos, FriendlyByteBuf updateData) {
         this.pos = pos;
         this.updateData = updateData;
     }
 
     public C2SDataSlotChange(FriendlyByteBuf buf) {
         pos = buf.readBlockPos();
-        updateData = buf.readNbt();
+        updateData = new FriendlyByteBuf(buf.copy());
     }
 
     @Override
@@ -44,13 +40,13 @@ public class C2SDataSlotChange implements Packet {
 
         BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof EnderBlockEntity enderBlockEntity) {
-            enderBlockEntity.serverHandleDataChange(updateData);
+            enderBlockEntity.serverHandleBufferChange(updateData);
         }
     }
 
     protected void write(FriendlyByteBuf writeInto) {
         writeInto.writeBlockPos(pos);
-        writeInto.writeNbt(updateData);
+        writeInto.writeBytes(updateData);
     }
 
     public static class Handler extends PacketHandler<C2SDataSlotChange> {
