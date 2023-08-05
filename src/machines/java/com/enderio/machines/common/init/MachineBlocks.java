@@ -41,14 +41,14 @@ public class MachineBlocks {
         .properties(props -> props.strength(2.5f, 8).isViewBlocking((pState, pLevel, pPos) -> false).noOcclusion())
         .loot(MachinesLootTable::copyNBT)
         .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
-        .blockstate((ctx, prov) -> prov.horizontalBlock(ctx.get(), prov
-            .models()
+        .blockstate((ctx, prov) -> prov.horizontalBlock(ctx.get(), prov.models()
             .getBuilder(ctx.getName())
             .customLoader(CompositeModelBuilder::begin)
-            .child("tank", EIOModel.getExistingParent(prov.models(), EnderIO.loc(String.format("block/%s_body", ctx.getName()))))
-            .child("overlay", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/io_overlay")))
+                .child("tank", EIOModel.getExistingParent(prov.models(), EnderIO.loc(String.format("block/%s_body", ctx.getName()))))
+                .child("overlay", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/io_overlay")))
             .end()
-            .texture("particle", EnderIO.loc("block/machine_side"))))
+            .texture("particle", EnderIO.loc("block/machine_side"))
+        ))
         .item((MachineBlock block, Item.Properties props) -> new FluidTankItem(block, props, 16000))
         .model((ctx, prov) -> {})
         .tab(EIOCreativeTabs.MACHINES)
@@ -60,14 +60,14 @@ public class MachineBlocks {
         .properties(props -> props.strength(2.5f, 8).isViewBlocking((pState, pLevel, pPos) -> false).noOcclusion())
         .loot(MachinesLootTable::copyNBT)
         .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
-        .blockstate((ctx, prov) -> prov.horizontalBlock(ctx.get(), prov
-            .models()
-            .withExistingParent(ctx.getName(), prov.mcLoc("block/block"))
-            .customLoader(CompositeModelBuilder::begin)
+        .blockstate((ctx, prov) -> prov.horizontalBlock(ctx.get(), prov.models()
+                .withExistingParent(ctx.getName(), prov.mcLoc("block/block"))
+                .customLoader(CompositeModelBuilder::begin)
             .child("tank", EIOModel.getExistingParent(prov.models(), EnderIO.loc(String.format("block/%s_body", ctx.getName()))))
-            .child("overlay", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/io_overlay")))
-            .end()
-            .texture("particle", EnderIO.loc("block/machine_side"))))
+                    .child("overlay", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/io_overlay")))
+                .end()
+                .texture("particle", EnderIO.loc("block/machine_side"))
+        ))
         .item((MachineBlock block, Item.Properties props) -> new FluidTankItem(block, props, 32000))
         .model((ctx, prov) -> {})
         .tab(EIOCreativeTabs.MACHINES)
@@ -85,15 +85,17 @@ public class MachineBlocks {
         .build()
         .register();
 
-    public static final BlockEntry<ProgressMachineBlock> PRIMITIVE_ALLOY_SMELTER = progressMachine("primitive_alloy_smelter",
-        () -> MachineBlockEntities.PRIMITIVE_ALLOY_SMELTER).register();
+    public static final BlockEntry<ProgressMachineBlock> PRIMITIVE_ALLOY_SMELTER = progressMachine("primitive_alloy_smelter", () -> MachineBlockEntities.PRIMITIVE_ALLOY_SMELTER)
+        .register();
 
-    public static final BlockEntry<ProgressMachineBlock> ALLOY_SMELTER = progressMachine("alloy_smelter", () -> MachineBlockEntities.ALLOY_SMELTER).register();
+    public static final BlockEntry<ProgressMachineBlock> ALLOY_SMELTER = progressMachine("alloy_smelter", () -> MachineBlockEntities.ALLOY_SMELTER)
+        .register();
 
-    public static final BlockEntry<ProgressMachineBlock> PAINTING_MACHINE = progressMachine("painting_machine",
-        () -> MachineBlockEntities.PAINTING_MACHINE).register();
+    public static final BlockEntry<ProgressMachineBlock> PAINTING_MACHINE = progressMachine("painting_machine", () -> MachineBlockEntities.PAINTING_MACHINE)
+        .register();
 
-    public static final BlockEntry<MachineBlock> WIRED_CHARGER = machine("wired_charger", () -> MachineBlockEntities.WIRED_CHARGER).register();
+    public static final BlockEntry<MachineBlock> WIRED_CHARGER = machine("wired_charger", () -> MachineBlockEntities.WIRED_CHARGER)
+        .register();
 
     public static final BlockEntry<MachineBlock> CREATIVE_POWER = REGISTRATE
         .block("creative_power", props -> new MachineBlock(props, MachineBlockEntities.CREATIVE_POWER))
@@ -102,8 +104,8 @@ public class MachineBlocks {
         .build()
         .register();
 
-    public static final BlockEntry<ProgressMachineBlock> STIRLING_GENERATOR = progressMachine("stirling_generator",
-        () -> MachineBlockEntities.STIRLING_GENERATOR).register();
+    public static final BlockEntry<ProgressMachineBlock> STIRLING_GENERATOR = progressMachine("stirling_generator", () -> MachineBlockEntities.STIRLING_GENERATOR)
+        .register();
 
     public static final BlockEntry<ProgressMachineBlock> SAG_MILL = progressMachine("sag_mill", () -> MachineBlockEntities.SAG_MILL)
         .lang("SAG Mill")
@@ -123,7 +125,7 @@ public class MachineBlocks {
 
     public static final BlockEntry<ProgressMachineBlock> POWERED_SPAWNER = REGISTRATE
         .block("powered_spawner", properties -> new ProgressMachineBlock(properties, MachineBlockEntities.POWERED_SPAWNER))
-        .loot((l, t) -> MachinesLootTable.copyNBTSingleCap(l, t, "EntityStorage"))
+        .loot((l,t) -> MachinesLootTable.copyNBTSingleCap(l, t, "EntityStorage"))
         .properties(props -> props.strength(2.5f, 8))
         .blockstate(MachineModelUtil::progressMachineBlock)
         .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
@@ -167,22 +169,20 @@ public class MachineBlocks {
 
     public static final Map<SolarPanelTier, BlockEntry<SolarPanelBlock>> SOLAR_PANELS = Util.make(() -> {
         Map<SolarPanelTier, BlockEntry<SolarPanelBlock>> panels = new HashMap<>();
-        for (SolarPanelTier tier : SolarPanelTier.values()) {
-            panels.put(tier,
-                solarPanel(tier.name().toLowerCase(Locale.ROOT) + "_photovoltaic_cell", () -> MachineBlockEntities.SOLAR_PANELS.get(tier), tier).register());
+        for (SolarPanelTier tier: SolarPanelTier.values()) {
+            panels.put(tier, solarPanel(tier.name().toLowerCase(Locale.ROOT) + "_photovoltaic_module", () -> MachineBlockEntities.SOLAR_PANELS.get(tier), tier).register());
         }
         return ImmutableMap.copyOf(panels);
     });
     public static final Map<CapacitorTier, BlockEntry<CapacitorBankBlock>> CAPACITOR_BANKS = Util.make(() -> {
         Map<CapacitorTier, BlockEntry<CapacitorBankBlock>> banks = new HashMap<>();
-        for (CapacitorTier tier : CapacitorTier.values()) {
-            banks.put(tier,
-                capacitorBank(tier.name().toLowerCase(Locale.ROOT) + "_capacitor_bank", () -> MachineBlockEntities.CAPACITOR_BANKS.get(tier), tier).register());
+        for (CapacitorTier tier: CapacitorTier.values()) {
+            banks.put(tier, capacitorBank(tier.name().toLowerCase(Locale.ROOT) + "_capacitor_bank", () -> MachineBlockEntities.CAPACITOR_BANKS.get(tier), tier).register());
         }
         return ImmutableMap.copyOf(banks);
     });
-    public static final BlockEntry<ProgressMachineBlock> CRAFTER = progressMachine("crafter", () -> MachineBlockEntities.CRAFTER).register();
-
+    public static final BlockEntry<ProgressMachineBlock> CRAFTER = progressMachine("crafter", () -> MachineBlockEntities.CRAFTER)
+        .register();
 
     //used when single methods needs to be overridden in the block class
     private static <T extends MachineBlock> BlockBuilder<T, Registrate> baseMachine(BlockBuilder<T, Registrate> machineBlock,
@@ -197,7 +197,8 @@ public class MachineBlocks {
             .build();
     }
 
-    private static BlockBuilder<MachineBlock, Registrate> machine(String name, Supplier<BlockEntityEntry<? extends MachineBlockEntity>> blockEntityEntry) {
+    private static BlockBuilder<MachineBlock, Registrate> machine(String name,
+        Supplier<BlockEntityEntry<? extends MachineBlockEntity>> blockEntityEntry) {
         return baseMachine(REGISTRATE.block(name, props -> new MachineBlock(props, blockEntityEntry.get())), MachineModelUtil::machineBlock);
     }
 
@@ -206,8 +207,7 @@ public class MachineBlocks {
         return baseMachine(REGISTRATE.block(name, props -> new ProgressMachineBlock(props, blockEntityEntry.get())), MachineModelUtil::progressMachineBlock);
     }
 
-    private static BlockBuilder<SolarPanelBlock, Registrate> solarPanel(String name,
-        Supplier<BlockEntityEntry<? extends SolarPanelBlockEntity>> blockEntityEntry, SolarPanelTier tier) {
+    private static BlockBuilder<SolarPanelBlock, Registrate> solarPanel(String name, Supplier<BlockEntityEntry<? extends SolarPanelBlockEntity>> blockEntityEntry, SolarPanelTier tier) {
         return REGISTRATE
             .block(name, props -> new SolarPanelBlock(props, blockEntityEntry.get(), tier))
             .properties(props -> props.strength(2.5f, 8))
@@ -219,8 +219,7 @@ public class MachineBlocks {
             .build();
     }
 
-    private static BlockBuilder<CapacitorBankBlock, Registrate> capacitorBank(String name,
-        Supplier<BlockEntityEntry<? extends CapacitorBankBlockEntity>> blockEntityEntry, CapacitorTier tier) {
+    private static BlockBuilder<CapacitorBankBlock, Registrate> capacitorBank(String name, Supplier<BlockEntityEntry<? extends CapacitorBankBlockEntity>> blockEntityEntry, CapacitorTier tier) {
         return REGISTRATE
             .block(name, props -> new CapacitorBankBlock(props, blockEntityEntry.get(), tier))
             .properties(props -> props.strength(2.5f, 8))

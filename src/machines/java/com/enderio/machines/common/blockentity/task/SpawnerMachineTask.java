@@ -126,7 +126,7 @@ public class SpawnerMachineTask implements IPoweredMachineTask {
         Optional<SpawnerSoul.SoulData> opData = SpawnerSoul.SPAWNER.matches(rl.get());
         if (opData.isEmpty()) { //Fallback
             this.entityType = optionalEntity.get().get();
-            this.energyCost = 4000;
+            this.energyCost = 50000;
             if (entityType.create(this.blockEntity.getLevel()) instanceof LivingEntity entity) { //Are we 100% guaranteed this is a living entity?
                 this.energyCost += entity.getMaxHealth()*50; //TODO actually balance based on health
             }

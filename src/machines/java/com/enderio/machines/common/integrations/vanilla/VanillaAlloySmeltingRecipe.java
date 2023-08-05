@@ -3,21 +3,18 @@ package com.enderio.machines.common.integrations.vanilla;
 import com.enderio.core.common.recipes.CountedIngredient;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.blockentity.AlloySmelterBlockEntity;
+import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.ForgeHooks;
 
 import java.util.List;
 
 public class VanillaAlloySmeltingRecipe extends AlloySmeltingRecipe {
-    public static final int RF_PER_ITEM = ForgeHooks.getBurnTime(new ItemStack(Items.COAL, 1), RecipeType.SMELTING) * 10 / 8;
-
     private final SmeltingRecipe vanillaRecipe;
 
     public VanillaAlloySmeltingRecipe(SmeltingRecipe vanillaRecipe) {
@@ -35,12 +32,12 @@ public class VanillaAlloySmeltingRecipe extends AlloySmeltingRecipe {
 
     @Override
     public int getBaseEnergyCost() {
-        return RF_PER_ITEM;
+        return MachinesConfig.COMMON.ENERGY.ALLOY_SMELTER_VANILLA_ITEM_ENERGY.get();
     }
 
     @Override
     public int getEnergyCost(ContainerWrapper container) {
-        return RF_PER_ITEM * container.getInputsTaken();
+        return getBaseEnergyCost() * container.getInputsTaken();
     }
 
     @Override

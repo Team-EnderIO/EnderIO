@@ -1,6 +1,6 @@
 {
   "type": "enderio:soul_binding",
-  "energy": 150000,
+  "energy": 76800,
   "entity_type": "minecraft:enderman",
   "exp": 6,
   "input": {

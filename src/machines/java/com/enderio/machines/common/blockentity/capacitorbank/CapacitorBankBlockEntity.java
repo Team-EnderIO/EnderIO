@@ -2,8 +2,8 @@ package com.enderio.machines.common.blockentity.capacitorbank;
 
 import com.enderio.api.capacitor.FixedScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.core.common.network.slot.ListNetworkDataSlot;
 import com.enderio.base.common.tag.EIOTags;
+import com.enderio.core.common.network.slot.ListNetworkDataSlot;
 import com.enderio.core.common.network.slot.LongNetworkDataSlot;
 import com.enderio.core.common.network.slot.NBTSerializingNetworkDataSlot;
 import com.enderio.core.common.network.slot.NetworkDataSlot;
@@ -29,6 +29,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -245,10 +246,12 @@ public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implemen
     }
 
     public boolean onShiftRightClick(Direction direction, Player player) {
-        if (direction.getAxis().getPlane() == Direction.Plane.VERTICAL)
+        if (direction.getAxis().getPlane() == Direction.Plane.VERTICAL) {
             return false;
-        if (player.getMainHandItem().is(getBlockState().getBlock().asItem()) || player.getOffhandItem().is(getBlockState().getBlock().asItem()))
+        }
+        if (player.getMainHandItem().getItem() instanceof BlockItem || player.getOffhandItem().getItem() instanceof BlockItem) {
             return false;
+        }
         if (player.getMainHandItem().is(EIOTags.Items.WRENCH)) {
             return false;
         }
