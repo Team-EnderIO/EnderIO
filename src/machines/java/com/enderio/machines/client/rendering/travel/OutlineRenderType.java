@@ -24,9 +24,11 @@ public class OutlineRenderType extends RenderType {
         this.parent = parent;
     }
 
-    public static OutlineRenderType get(RenderType parent) {
-        if (parent instanceof OutlineRenderType) {
-            return (OutlineRenderType) parent;
+    public static RenderType get(RenderType parent) {
+        if (parent.name.contains("glint")) {
+            return parent;
+        } else if (parent instanceof OutlineRenderType) {
+            return parent;
         } else {
             if (!TYPES.containsKey(parent)) {
                 TYPES.put(parent, new OutlineRenderType(parent));
