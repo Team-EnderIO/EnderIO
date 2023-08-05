@@ -48,7 +48,7 @@ public abstract class NetworkDataSlot<T> {
 
     public abstract void toBuffer(FriendlyByteBuf buf, T value);
 
-    public abstract T valueFromBuffer(FriendlyByteBuf buf);
+    protected abstract T valueFromBuffer(FriendlyByteBuf buf);
 
     public boolean needsUpdate() {
         T value = getter.get();

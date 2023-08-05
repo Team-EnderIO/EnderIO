@@ -28,7 +28,7 @@ public class MachineModelUtil {
         // Create unpowered and powered bodies.
         String ns = ctx.getId().getNamespace();
         String path = ctx.getId().getPath();
-        machineBlock(ctx, prov, new ResourceLocation(ns, "block/" + path));
+        machineBlock(ctx, prov, wrapMachineModel(ctx, prov, new ResourceLocation(ns, "block/" + path)));
     }
 
     public static void progressMachineBlock(DataGenContext<Block, ? extends Block> ctx, RegistrateBlockstateProvider prov) {
@@ -37,7 +37,10 @@ public class MachineModelUtil {
         String path = ctx.getId().getPath();
         var unpowered = new ResourceLocation(ns, "block/" + path);
         var powered = new ResourceLocation(ns, "block/" + path + "_active");
-        progressMachineBlock(ctx, prov, unpowered, powered);
+
+        var unpoweredModel = wrapMachineModel(ctx, prov, unpowered);
+        var poweredModel = wrapMachineModel(ctx, prov, powered);
+        progressMachineBlock(ctx, prov, unpoweredModel, poweredModel);
     }
 
     public static void solarPanel(DataGenContext<Block, ? extends Block> ctx, RegistrateBlockstateProvider prov, SolarPanelTier tier) {
@@ -62,25 +65,33 @@ public class MachineModelUtil {
         prov.withExistingParent(ctx.getName(), EnderIO.loc("item/photovoltaic_cell")).texture("side", "block/" + tierName + "_side").texture("panel", "block/" + tierName + "_top");
     }
 
-    private static void machineBlock(DataGenContext<Block, ? extends Block> ctx, RegistrateBlockstateProvider prov, ResourceLocation model) {
+    private static void machineBlock(DataGenContext<Block, ? extends Block> ctx, RegistrateBlockstateProvider prov, ModelFile model) {
         prov
             .getVariantBuilder(ctx.get())
             .forAllStates(state -> ConfiguredModel
                 .builder()
-                .modelFile(prov.models().getExistingFile(model))
+                .modelFile(model)
                 .rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + 180) % 360)
                 .build());
     }
 
-    private static void progressMachineBlock(DataGenContext<Block, ? extends Block> ctx, RegistrateBlockstateProvider prov, ResourceLocation unpowered,
-        ResourceLocation powered) {
+    private static void progressMachineBlock(DataGenContext<Block, ? extends Block> ctx, RegistrateBlockstateProvider prov, ModelFile unpowered,
+        ModelFile powered) {
         prov
             .getVariantBuilder(ctx.get())
             .forAllStates(state -> ConfiguredModel
                 .builder()
-                .modelFile(state.getValue(ProgressMachineBlock.POWERED) ? prov.models().getExistingFile(powered) : prov.models().getExistingFile(unpowered))
+                .modelFile(state.getValue(ProgressMachineBlock.POWERED) ? powered : unpowered)
                 .rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + 180) % 360)
                 .build());
+    }
+
+    private static ModelFile wrapMachineModel(DataGenContext<Block, ? extends Block> ctx, RegistrateBlockstateProvider prov, ResourceLocation model) {
+        return prov.models().withExistingParent(ctx.getName() + "_combined", prov.mcLoc("block/block"))
+            .customLoader(CompositeModelBuilder::begin)
+            .child("machine", EIOModel.getExistingParent(prov.models(), model))
+            .child("overlay", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/io_overlay")))
+            .end();
     }
 
     // endregion

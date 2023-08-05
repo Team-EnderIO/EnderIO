@@ -48,11 +48,16 @@ public class NBTSerializingNetworkDataSlot<T> extends NetworkDataSlot<T> {
     }
 
     @Override
-    public T valueFromBuffer(FriendlyByteBuf buf) {
+    public void fromBuffer(FriendlyByteBuf buf) {
         try {
-            return fromBuffer.apply(buf);
+            fromBuffer.apply(buf);
         } catch (Exception e) {
             throw new IllegalStateException("Invalid compound tag buffer was passed over the network.");
         }
+    }
+
+    @Override
+    protected T valueFromBuffer(FriendlyByteBuf buf) {
+        return null;
     }
 }
