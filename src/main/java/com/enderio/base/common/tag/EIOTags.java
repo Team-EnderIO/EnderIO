@@ -47,6 +47,26 @@ public class EIOTags {
         public static final TagKey<Item> DUSTS_QUARTZ = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "dusts/quartz"));
         public static final TagKey<Item> DUSTS_SULFUR = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "dusts/sulfur"));
 
+        public static final TagKey<Item> INGOTS_CONDUCTIVE_ALLOY = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "ingots/conductive_alloy"));
+        public static final TagKey<Item> INGOTS_COPPER_ALLOY = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "ingots/copper_alloy"));
+        public static final TagKey<Item> INGOTS_DARK_STEEL = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "ingots/dark_steel"));
+        public static final TagKey<Item> INGOTS_END_STEEL = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "ingots/end_steel"));
+        public static final TagKey<Item> INGOTS_ENERGETIC_ALLOY = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "ingots/energetic_alloy"));
+        public static final TagKey<Item> INGOTS_PULSATING_ALLOY = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "ingots/pulsating_alloy"));
+        public static final TagKey<Item> INGOTS_REDSTONE_ALLOY = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "ingots/redstone_alloy"));
+        public static final TagKey<Item> INGOTS_SOULARIUM = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "ingots/soularium"));
+        public static final TagKey<Item> INGOTS_VIBRANT_ALLOY = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "ingots/vibrant_alloy"));
+
+        public static final TagKey<Item> NUGGETS_CONDUCTIVE_ALLOY = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "nuggets/conductive_alloy"));
+        public static final TagKey<Item> NUGGETS_COPPER_ALLOY = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "nuggets/copper_alloy"));
+        public static final TagKey<Item> NUGGETS_DARK_STEEL = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "nuggets/dark_steel"));
+        public static final TagKey<Item> NUGGETS_END_STEEL = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "nuggets/end_steel"));
+        public static final TagKey<Item> NUGGETS_ENERGETIC_ALLOY = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "nuggets/energetic_alloy"));
+        public static final TagKey<Item> NUGGETS_PULSATING_ALLOY = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "nuggets/pulsating_alloy"));
+        public static final TagKey<Item> NUGGETS_REDSTONE_ALLOY = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "nuggets/redstone_alloy"));
+        public static final TagKey<Item> NUGGETS_SOULARIUM = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "nuggets/soularium"));
+        public static final TagKey<Item> NUGGETS_VIBRANT_ALLOY = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "nuggets/vibrant_alloy"));
+
         public static final TagKey<Item> INSULATION_METAL = ItemTags.create(EnderIO.loc("insulation_metals"));
         
         public static final TagKey<Item> SILICON = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "silicon"));
