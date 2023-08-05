@@ -5,9 +5,8 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 public enum SolarPanelTier implements ISolarPanelTier {
 
-    SIMPLE(MachinesConfig.COMMON.ENERGY.SIMPLE_SOLAR_PANEL_MAX_PRODUCTION),
-    BASIC(MachinesConfig.COMMON.ENERGY.BASIC_SOLAR_PANEL_MAX_PRODUCTION),
-    ADVANCED(MachinesConfig.COMMON.ENERGY.ADVANCED_SOLAR_PANEL_MAX_PRODUCTION),
+    ENERGETIC(MachinesConfig.COMMON.ENERGY.ENERGETIC_SOLAR_PANEL_MAX_PRODUCTION),
+    PULSATING(MachinesConfig.COMMON.ENERGY.PULSATING_SOLAR_PANEL_MAX_PRODUCTION),
     VIBRANT(MachinesConfig.COMMON.ENERGY.VIBRANT_SOLAR_PANEL_MAX_PRODUCTION);
 
     private final ForgeConfigSpec.ConfigValue<Integer> productionRate;

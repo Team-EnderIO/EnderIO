@@ -7,6 +7,10 @@ public class EIOEnchantmentCategories {
     public static final EnchantmentCategory XPBOOST = EnchantmentCategory.create("EIO_XPBOOST",
         t -> new ItemStack(t).isDamageableItem() && !(t instanceof ArmorItem) && !(t instanceof FishingRodItem));
 
-    public static final EnchantmentCategory ARROW = EnchantmentCategory.create("EIO_ARROW", t -> t instanceof BowItem);
-    public static final EnchantmentCategory BOLT = EnchantmentCategory.create("EIO_BOLT", t -> t instanceof CrossbowItem);
+    public static final EnchantmentCategory PROJECTILE = EnchantmentCategory.create("EIO_PROJECTILE",
+        t -> EnchantmentCategory.BOW.canEnchant(t) || EnchantmentCategory.CROSSBOW.canEnchant(t));
+
+    public static final EnchantmentCategory WEAPON = EnchantmentCategory.create("EIO_PROJECTILE",
+        t -> EnchantmentCategory.BOW.canEnchant(t) || EnchantmentCategory.CROSSBOW.canEnchant(t) || EnchantmentCategory.WEAPON.canEnchant(t));
+
 }

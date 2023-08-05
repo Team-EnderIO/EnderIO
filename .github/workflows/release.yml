@@ -54,7 +54,7 @@ jobs:
       - name: Upload to GitHub Releases
         uses: softprops/action-gh-release@v1
         with:
-          token: ${{ secrets.TOKEN_GITHUB }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           files: build/libs/*.jar
 
       - name: Truncate Build Notes
@@ -73,7 +73,7 @@ jobs:
           avatar-url: https://raw.githubusercontent.com/Team-EnderIO/EnderIO/dev/1.20.1/doc/img/enderface.png
           username: Ender IO Releases
           embed-footer-text: ${{ github.event.release.tag_name }}
-          embed-url: ${{ github.event.release.url }}
+          embed-url: ${{ github.event.release.html_url }}
           embed-color: 5763719
 
       - name: Discord Notification Failure
@@ -88,3 +88,29 @@ jobs:
           embed-footer-text: ${{ github.event.release.tag_name }}
           embed-url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           embed-color: 15548997
+
+  updateReleaseBranch:
+    needs: [release]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Get Minecraft Version
+        uses: madhead/read-java-properties@latest
+        id: mc_version
+        with:
+          file: gradle.properties
+          property: minecraft_version
+
+      - uses: actions/checkout@v3
+        with:
+          ref: release/${{ steps.mc_version.outputs.value }}
+          fetch-depth: 0
+
+      - run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git merge ${{ github.event.release.tag_name }}
+          git push

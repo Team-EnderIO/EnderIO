@@ -1,6 +1,6 @@
 {
   "type": "enderio:soul_binding",
-  "energy": 25000,
+  "energy": 12800,
   "entity_type": "minecraft:villager",
   "exp": 1,
   "input": {

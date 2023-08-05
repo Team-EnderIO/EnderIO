@@ -1,6 +1,6 @@
 {
   "type": "enderio:alloy_smelting",
-  "energy": 2000,
+  "energy": 500,
   "experience": 0.3,
   "inputs": [
     {

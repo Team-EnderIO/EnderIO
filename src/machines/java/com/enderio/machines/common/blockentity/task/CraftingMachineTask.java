@@ -98,25 +98,15 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
             outputs = recipe.craft(container, level.registryAccess());
 
             // TODO: Compact any items that are the same into singular stacks?
-        }
-
-        // If we can't input or output, cancel the task. However, if for some reason we can't output after the inputs are collected, don't.
-        if (!hasConsumedInputs && (!placeOutputs(outputs, true) || !recipe.matches(container, level))) {
-            isComplete = true;
-            // This means if a sag mill recipe outputs 2 it cancels the recipe, and the determined outputs are cleared. It's a weird behaviour but not necessarily a bug.
-            // We might want to review how this works in the future, as right now we wait for an inventory change rather than the machine tick repeatedly.
-            return;
-        }
-
-        // If we haven't done so already, consume inputs for the recipe.
-        if (!hasConsumedInputs) {
-            // Consume inputs for the recipe.
-            consumeInputs(recipe);
-            hasConsumedInputs = true;
 
             // Store the recipe energy cost.
-            // This is run afterward as it allows container context changes after takeInputs()
             progressRequired = getProgressRequired(recipe);
+        }
+
+        // If we don't have a recipe match, complete the task and wait for a new one.
+        if (!recipe.matches(container, level)) {
+            isComplete = true;
+            return;
         }
 
         // Try to consume as much energy as possible to finish the craft.
@@ -128,6 +118,9 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
         if (progressMade >= progressRequired) {
             // Attempt to complete the craft
             if (placeOutputs(outputs, false)) {
+                // Take the inputs
+                consumeInputs(recipe);
+
                 // The receiver was able to take the outputs, task complete.
                 isComplete = true;
             }

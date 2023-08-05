@@ -1,5 +1,5 @@
 {
   "type": "entitytype",
   "entity": "minecraft:wither",
-  "power": 100000
+  "power": 1000000
 }

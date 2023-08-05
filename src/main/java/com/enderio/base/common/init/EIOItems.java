@@ -337,6 +337,7 @@ public class EIOItems {
 
     public static final ItemEntry<DarkSteelSwordItem> DARK_STEEL_SWORD = REGISTRATE
         .item("dark_steel_sword", DarkSteelSwordItem::new)
+        .properties(p -> p.durability(2000))
         .tab(EIOCreativeTabs.GEAR)
         .lang("The Ender")
         .model((ctx, prov) -> prov.handheld(ctx))

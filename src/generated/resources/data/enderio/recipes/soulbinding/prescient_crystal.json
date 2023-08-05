@@ -1,6 +1,6 @@
 {
   "type": "enderio:soul_binding",
-  "energy": 200000,
+  "energy": 100000,
   "entity_type": "minecraft:shulker",
   "exp": 8,
   "input": {

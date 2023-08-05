@@ -19,7 +19,6 @@ import java.util.Optional;
 
 public class CapacitorBankItem extends BlockItem {
 
-    private static final String STORED = "stored";
     public CapacitorBankItem(CapacitorBankBlock pBlock, Properties pProperties) {
         super(pBlock, pProperties);
     }
@@ -65,8 +64,8 @@ public class CapacitorBankItem extends BlockItem {
                 .map(nbt -> nbt.getCompound(BLOCK_ENTITY_TAG))
                 .filter(nbt -> nbt.contains(CoreNBTKeys.ENERGY, Tag.TAG_COMPOUND))
                 .map(nbt -> nbt.getCompound(CoreNBTKeys.ENERGY))
-                .filter(nbt -> nbt.contains(STORED, Tag.TAG_INT))
-                .map(nbt -> nbt.getInt(STORED))
+                .filter(nbt -> nbt.contains(CoreNBTKeys.ENERGY_STORED, Tag.TAG_INT))
+                .map(nbt -> nbt.getInt(CoreNBTKeys.ENERGY_STORED))
                 .orElse(0);
         }
 
@@ -86,7 +85,7 @@ public class CapacitorBankItem extends BlockItem {
                 energyTag = new CompoundTag();
                 nbt.put(CoreNBTKeys.ENERGY, energyTag);
             }
-            energyTag.putInt(STORED, stored);
+            energyTag.putInt(CoreNBTKeys.ENERGY_STORED, stored);
         }
 
         @Override
