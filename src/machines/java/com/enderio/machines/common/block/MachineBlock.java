@@ -125,7 +125,7 @@ public class MachineBlock extends BaseEntityBlock {
 
     @Override
     public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
-        if (level.getBlockEntity(pos) instanceof FluidTankBlockEntity fluidTank) {
+        if (level.getExistingBlockEntity(pos) instanceof FluidTankBlockEntity fluidTank) {
             return fluidTank.getFluidTank().getFluid().getFluid().getFluidType().getLightLevel();
         }
         return super.getLightEmission(state, level, pos);
