@@ -314,7 +314,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         nodes.put(type, node);
         for (var direction : Direction.values()) {
             ConduitConnection connection = connections.get(direction);
-            int index = connection.getConnectedTypes().indexOf(type);
+            int index = types.indexOf(type);
             if (index >= 0) {
                 var state = connection.getConnectionState(index);
                 if (state instanceof DynamicConnectionState dynamicState) {
