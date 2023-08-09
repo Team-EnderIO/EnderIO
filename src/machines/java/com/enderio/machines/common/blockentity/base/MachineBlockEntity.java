@@ -203,7 +203,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     }
 
     protected void onIOConfigChanged(Direction side, IOMode oldMode, IOMode newMode) {
-        if (level != null && !level.isClientSide()) {
+        if (level != null && level.isClientSide()) {
             clientUpdateSlot(ioConfigDataSlot, getIOConfig());
         }
     }
