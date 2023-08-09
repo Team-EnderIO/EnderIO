@@ -8,7 +8,6 @@ import com.enderio.api.capability.StoredEntityData;
 import com.enderio.base.common.capability.EntityStorageItemStack;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOItems;
-import com.enderio.base.common.item.misc.EnderiosItem;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.util.EntityCaptureUtils;
 import com.enderio.core.client.item.IAdvancedTooltipProvider;
