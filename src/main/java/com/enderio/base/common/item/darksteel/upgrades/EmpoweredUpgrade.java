@@ -23,7 +23,8 @@ public class EmpoweredUpgrade extends TieredUpgrade<EmpoweredUpgradeTier> {
 
     private final ForgeConfigSpec.ConfigValue<Integer> powerUsePerDamagePoint = BaseConfig.COMMON.DARK_STEEL.EMPOWERED_ENERGY_PER_DAMAGE;
 
-    @Nullable private EnergyStorage storage;
+    @Nullable
+    private EnergyStorage storage;
 
     public EmpoweredUpgrade() {
         this(EmpoweredUpgradeTier.ONE);

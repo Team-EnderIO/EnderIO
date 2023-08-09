@@ -31,7 +31,7 @@ public class AnchorTravelTarget implements ITravelTarget {
     }
 
     public AnchorTravelTarget(CompoundTag tag) {
-        pos = NbtUtils.readBlockPos(tag.getCompound(CoreNBTKeys.ANCHOR_POS));
+        pos = NbtUtils.readBlockPos(tag.getCompound(CoreNBTKeys.BLOCK_POS));
         name = tag.getString(CoreNBTKeys.ANCHOR_NAME);
         String iconName = tag.getString(CoreNBTKeys.ANCHOR_ICON);
         icon = iconName.equals("") ? null : ForgeRegistries.ITEMS.getValue(new ResourceLocation(iconName));
@@ -41,7 +41,7 @@ public class AnchorTravelTarget implements ITravelTarget {
     @Override
     public CompoundTag save() {
         CompoundTag nbt = new CompoundTag();
-        nbt.put(CoreNBTKeys.ANCHOR_POS, NbtUtils.writeBlockPos(pos));
+        nbt.put(CoreNBTKeys.BLOCK_POS, NbtUtils.writeBlockPos(pos));
         nbt.putString(CoreNBTKeys.ANCHOR_NAME, name);
         if (icon != null)
             nbt.putString(CoreNBTKeys.ANCHOR_ICON, String.valueOf(ForgeRegistries.ITEMS.getKey(icon)));

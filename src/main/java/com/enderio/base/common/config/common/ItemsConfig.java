@@ -46,9 +46,9 @@ public class ItemsConfig {
         TRAVELLING_BLINK_RANGE = builder.defineInRange("blinkRange", 24, 4, 16 * 32);
         TRAVELLING_BLINK_DISABLED_TIME = builder.defineInRange("disabledTime", 5, 0, 20 * 60);
         TRAVELLING_STAFF_ENERGY_USE = builder.define("energyUse", 1000);
-        TRAVELLING_STAFF_MAX_ENERGY = builder.define("maxEnergy", 100000); // TODO: CHECK VALUES
+        TRAVELLING_STAFF_MAX_ENERGY = builder.define("maxEnergy", 100000);
         builder.comment("the following config values are only used if EIOMachines is loaded");
-        TRAVELLING_TO_BLOCK_RANGE = builder.defineInRange("itemToBlockRange", 256, 4, 16 * 32);
+        TRAVELLING_TO_BLOCK_RANGE = builder.defineInRange("itemToBlockRange", 192, 4, 16 * 32);
         TRAVELLING_BLOCK_TO_BLOCK_RANGE = builder.defineInRange("blockToBlockRange", 96, 4, 16 * 32);
         builder.pop();
 

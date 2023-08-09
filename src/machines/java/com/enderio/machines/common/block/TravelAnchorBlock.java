@@ -13,14 +13,14 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
 import java.util.WeakHashMap;
 
 @Mod.EventBusSubscriber
 public class TravelAnchorBlock extends MachineBlock {
-    private static final WeakHashMap<Player, Pair<Boolean, Integer>> sneakCache = new WeakHashMap<>();
+    private static final Map<Player, PlayerSneakEntry> sneakCache = new WeakHashMap<>();
 
     public TravelAnchorBlock(Properties props) {
         super(props, MachineBlockEntities.TRAVEL_ANCHOR);
@@ -48,12 +48,11 @@ public class TravelAnchorBlock extends MachineBlock {
             .getBlockState(player.blockPosition().below())
             .getBlock() instanceof TravelAnchorBlock) {
 
-            Pair<Boolean, Integer> sneakEntry = sneakCache.getOrDefault(player, Pair.of(false, player.level().getServer().getTickCount() - 1));
-            if ((!sneakEntry.getLeft() || sneakEntry.getRight() != player.level().getServer().getTickCount() - 1) && player.isShiftKeyDown()) {
-
+            PlayerSneakEntry sneakEntry = getLastSneakEntry(player);
+            if ((!sneakEntry.isSneaking() || sneakEntry.atTime() != player.level().getServer().getTickCount() - 1) && player.isShiftKeyDown()) {
                 TravelHandler.blockTeleport(player.level(), player);
             }
-            sneakCache.put(player, Pair.of(player.isShiftKeyDown(), player.level().getServer().getTickCount()));
+            sneakCache.put(player, new PlayerSneakEntry(player.isShiftKeyDown(), player.level().getServer().getTickCount()));
         }
     }
 
@@ -64,4 +63,10 @@ public class TravelAnchorBlock extends MachineBlock {
         }
         super.onRemove(state, level, pos, newState, movedByPiston);
     }
+
+    private static PlayerSneakEntry getLastSneakEntry(ServerPlayer player){
+        return sneakCache.getOrDefault(player, new PlayerSneakEntry(false, player.level().getServer().getTickCount() - 1));
+    }
+
+    private record PlayerSneakEntry(boolean isSneaking, int atTime){}
 }
