@@ -44,18 +44,6 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
         addDataSlot(iconDataSlot);
     }
 
-    public void remove() {
-        getTravelData().removeTravelTargetAt(worldPosition);
-    }
-
-    @Override
-    public void setRemoved() {
-        if (level != null && level.isClientSide) {
-            remove();
-        }
-        super.setRemoved();
-    }
-
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
@@ -74,6 +62,18 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
         if (!stack.isEmpty()) {
             setIcon(stack.getItem());
         }
+    }
+
+    @Override
+    public void setRemoved() {
+        getTravelData().removeTravelTargetAt(worldPosition);
+        super.setRemoved();
+    }
+
+    @Override
+    public void onLoad() {
+        target = getOrCreateTravelTarget();
+        super.onLoad();
     }
 
     @Nullable
@@ -112,12 +112,6 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
         } else {
             target.setVisibility(visible);
         }
-    }
-
-    @Override
-    public void onLoad() {
-        target = getOrCreateTravelTarget();
-        super.onLoad();
     }
 
     private AnchorTravelTarget getOrCreateTravelTarget() {

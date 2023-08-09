@@ -14,8 +14,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-
-import java.util.Optional;
+import org.jetbrains.annotations.Nullable;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class RenderTravelTargets {
@@ -30,7 +29,8 @@ public class RenderTravelTargets {
             return;
         boolean itemTeleport = TravelHandler.canItemTeleport(player);
         TravelSavedData data = TravelSavedData.getTravelData(Minecraft.getInstance().level);
-        Optional<ITravelTarget> activeTarget = TravelHandler.getAnchorTarget(player);
+        @Nullable
+        ITravelTarget activeTarget = TravelHandler.getAnchorTarget(player).orElse(null);
         for (ITravelTarget target : data.getTravelTargets()) {
             double range = itemTeleport ? target.getItem2BlockRange() : target.getBlock2BlockRange();
             double distanceSquared = target.getPos().distToCenterSqr(player.position());
@@ -42,7 +42,7 @@ public class RenderTravelTargets {
             Vec3 projectedView = mainCamera.getPosition();
             poseStack.translate(-projectedView.x, -projectedView.y, -projectedView.z);
 
-            boolean active = activeTarget.map(act -> act == target).orElse(false);
+            boolean active = activeTarget == target;
             TravelRegistry.getRenderer(target).render(target, event.getLevelRenderer(), poseStack, distanceSquared, active);
             poseStack.popPose();
         }
