@@ -29,6 +29,8 @@ import java.util.Optional;
  */
 
 public class TravelHandler {
+
+    public static final int MIN_TELEPORTATION_DISTANCE_SQUARED = 25;
     public static boolean canTeleport(Player player) {
         return canItemTeleport(player) || canBlockTeleport(player);
     }
@@ -37,7 +39,7 @@ public class TravelHandler {
         return canItemTeleport(player, InteractionHand.MAIN_HAND) || canItemTeleport(player, InteractionHand.OFF_HAND);
     }
 
-    public static boolean canItemTeleport(Player player, InteractionHand hand) {
+    private static boolean canItemTeleport(Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (stack.getItem() == EIOItems.TRAVEL_STAFF.get())
             return true;
@@ -122,7 +124,7 @@ public class TravelHandler {
             .getTravelTargetsInItemRange(player.blockPosition())
             .filter(target -> target.canTravelTo())
             .filter(
-                target -> target.getPos().distToLowCornerSqr(player.getX(), player.getY(), player.getZ()) > 25) //only teleport to blocks not directly in range
+                target -> target.getPos().distToLowCornerSqr(player.getX(), player.getY(), player.getZ()) > MIN_TELEPORTATION_DISTANCE_SQUARED)
             .filter(target -> Math.abs(getAngleRadians(positionVec, target.getPos(), player.getYRot(), player.getXRot())) <= Math.toRadians(15))
             .filter(target -> isTeleportPositionClear(player.level(), target.getPos()).isPresent())
             .min(Comparator.comparingDouble(target -> Math.abs(getAngleRadians(positionVec, target.getPos(), player.getYRot(), player.getXRot()))));
@@ -139,7 +141,7 @@ public class TravelHandler {
      *
      * @param level
      * @param target
-     * @return Optional.empty if it can't teleport and the height where to place the player. This is so you can tp ontop of carpets up to a whole block
+     * @return Optional.empty if it can't teleport and the height where to place the player. This is so you can tp on top of carpets up to a whole block
      */
     private static Optional<Double> isTeleportPositionClear(BlockGetter level, BlockPos target) {
         if (level.isOutsideBuildHeight(target))

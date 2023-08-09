@@ -26,7 +26,7 @@ import java.util.Optional;
 
 public class TravelAnchorBlockEntity extends MachineBlockEntity {
 
-    AnchorTravelTarget target;
+    private AnchorTravelTarget target;
     public static final SingleSlotAccess GHOST = new SingleSlotAccess();
 
     private final StringNetworkDataSlot nameDataSlot;

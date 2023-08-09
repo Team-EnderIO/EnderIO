@@ -35,7 +35,6 @@ public class TravelAnchorBlock extends MachineBlock {
     @SubscribeEvent
     public static void jump(LivingEvent.LivingJumpEvent jumpEvent) {
         if (!jumpEvent.getEntity().level().isClientSide && jumpEvent.getEntity() instanceof Player player) {
-            // TODO: Change
             if (player.level().getBlockState(player.blockPosition().below()).getBlock() instanceof TravelAnchorBlock) {
                 TravelHandler.blockTeleport(player.level(), player);
             }
@@ -44,7 +43,6 @@ public class TravelAnchorBlock extends MachineBlock {
 
     @SubscribeEvent
     public static void sneak(TickEvent.PlayerTickEvent event) {
-        // TODO: Change
         if (event.phase == TickEvent.Phase.END && event.player instanceof ServerPlayer player && player
             .level()
             .getBlockState(player.blockPosition().below())

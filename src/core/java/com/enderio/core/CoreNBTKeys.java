@@ -31,4 +31,13 @@ public class CoreNBTKeys {
     public static final String SYNC_DATA = "Data";
 
     // endregion
+
+    //region Travel Target
+
+    public static final String ANCHOR_NAME = "AnchorName";
+    public static final String ANCHOR_POS = "AnchorPosition";
+    public static final String ANCHOR_ICON = "AnchorIcon";
+    public static final String ANCHOR_VISIBILITY = "AnchorVisibility";
+
+    //endregion
 }

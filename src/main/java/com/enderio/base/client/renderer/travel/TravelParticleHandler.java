@@ -15,7 +15,6 @@ import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Calendar;
-import java.util.Optional;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT)
 public class TravelParticleHandler {
@@ -26,9 +25,8 @@ public class TravelParticleHandler {
         LocalPlayer player = Minecraft.getInstance().player;
         if (e.phase == TickEvent.Phase.END && player != null) {
             tick++;
-            if (player.isShiftKeyDown() && player.onGround() && TravelHandler.canItemTeleport(player) && tick % 3 == 0) {
-                Optional<Vec3> pos = TravelHandler.teleportPosition(player.level(), player);
-                pos.ifPresent(TravelParticleHandler::addTravelParticle);
+            if (tick % 3 == 0 && player.onGround() && player.isShiftKeyDown() && TravelHandler.canItemTeleport(player)) {
+                TravelHandler.teleportPosition(player.level(), player).ifPresent(TravelParticleHandler::addTravelParticle);
             }
         }
     }
