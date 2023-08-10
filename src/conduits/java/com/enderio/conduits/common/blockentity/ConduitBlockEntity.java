@@ -1,6 +1,5 @@
 package com.enderio.conduits.common.blockentity;
 
-import appeng.api.networking.GridHelper;
 import com.enderio.api.UseOnly;
 import com.enderio.api.conduit.IConduitMenuData;
 import com.enderio.api.conduit.IConduitType;
