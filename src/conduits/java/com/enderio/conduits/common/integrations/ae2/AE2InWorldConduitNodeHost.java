@@ -64,7 +64,7 @@ public class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, IExtende
             if (player != null) {
                 mainNode.setOwningPlayer(player);
             }
-            mainNode.create(level, pos);
+            GridHelper.onFirstTick(level.getBlockEntity(pos), blockEntity -> mainNode.create(level, pos));
         }
     }
 

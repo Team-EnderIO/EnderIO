@@ -115,22 +115,18 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         updateShape();
         if (level instanceof ServerLevel serverLevel) {
             sync();
-            if (checkConnection.isInitialized()) {
-                for (var entry: lazyNodes.entrySet()) {
-                    NodeIdentifier<?> node = entry.getValue();
-                    IExtendedConduitData<?> data = node.getExtendedConduitData();
-                    data.onCreated(entry.getKey(), level, worldPosition, null);
-                    for (Direction dir : Direction.values()) {
-                        tryConnectTo(dir, entry.getKey(), false, false).ifPresent(otherNode -> Graph.connect(node, otherNode));
-                    }
-                    for (GraphObject<Mergeable.Dummy> object : node.getGraph().getObjects()) {
-                        if (object instanceof NodeIdentifier<?> otherNode) {
-                            node.getExtendedConduitData().onConnectTo(otherNode.getExtendedConduitData().cast());
-                        }
-                    }
-                    ConduitSavedData.addPotentialGraph(entry.getKey(), Objects.requireNonNull(node.getGraph()), serverLevel);
+            bundle.onLoad(level, getBlockPos());
+            for (var entry: lazyNodes.entrySet()) {
+                NodeIdentifier<?> node = entry.getValue();
+                for (Direction dir : Direction.values()) {
+                    tryConnectTo(dir, entry.getKey(), false, false).ifPresent(otherNode -> Graph.connect(node, otherNode));
                 }
-                bundle.onLoad(level, getBlockPos());
+                for (GraphObject<Mergeable.Dummy> object : node.getGraph().getObjects()) {
+                    if (object instanceof NodeIdentifier<?> otherNode) {
+                        node.getExtendedConduitData().onConnectTo(otherNode.getExtendedConduitData().cast());
+                    }
+                }
+                ConduitSavedData.addPotentialGraph(entry.getKey(), Objects.requireNonNull(node.getGraph()), serverLevel);
             }
         }
     }
