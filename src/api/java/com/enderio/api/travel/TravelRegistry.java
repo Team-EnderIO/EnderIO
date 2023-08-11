@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 @ApiStatus.Internal
 public class TravelRegistry {
@@ -16,7 +17,7 @@ public class TravelRegistry {
     private static final Map<ResourceLocation, TravelEntry<?>> registry = new HashMap<>();
 
     public static <T extends ITravelTarget> void addTravelEntry(ResourceLocation serializationName, Function<CompoundTag, T> constructor,
-        Lazy<TravelRenderer<T>> renderer) {
+        Supplier<Lazy<TravelRenderer<T>>> renderer) {
         registry.put(serializationName, new TravelEntry<>(serializationName, constructor, renderer));
     }
 
@@ -25,7 +26,7 @@ public class TravelRegistry {
     }
 
     public static <T extends ITravelTarget> TravelRenderer<T> getRenderer(T entry) {
-        return (TravelRenderer<T>) registry.get(entry.getSerializationName()).renderer().get();
+        return (TravelRenderer<T>) registry.get(entry.getSerializationName()).renderer().get().get();
     }
 
     public static Optional<ITravelTarget> deserialize(CompoundTag nbt) {
