@@ -319,5 +319,16 @@ public class MachineRecipeProvider extends RecipeProvider {
             .define('A', EIOItems.REDSTONE_ALLOY_INGOT)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.VOID_CHASSIS))
             .save(finishedRecipeConsumer);
+
+        ShapedRecipeBuilder
+            .shaped(RecipeCategory.MISC, MachineBlocks.TRAVEL_ANCHOR.get())
+            .define('I', Tags.Items.INGOTS_IRON)
+            .define('C', EIOItems.PULSATING_CRYSTAL.get())
+            .define('B', EIOItems.CONDUIT_BINDER)
+            .pattern("IBI")
+            .pattern("BCB")
+            .pattern("IBI")
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOItems.PULSATING_CRYSTAL).build()))
+            .save(finishedRecipeConsumer);
     }
 }
