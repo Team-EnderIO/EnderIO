@@ -64,7 +64,7 @@ public class EIOMachines {
         MinecraftForge.EVENT_BUS.addListener(EIOMachines::missingMappings);
 
         IntegrationManager.addIntegration(EnderIOMachinesSelfIntegration.INSTANCE);
-        TravelRegistry.addTravelEntry(EnderIO.loc("travel_anchor"), AnchorTravelTarget::new, TravelAnchorRenderer::new);
+        TravelRegistry.addTravelEntry(EnderIO.loc("travel_anchor"), AnchorTravelTarget::new, () -> TravelAnchorRenderer::new);
     }
 
     @SubscribeEvent
