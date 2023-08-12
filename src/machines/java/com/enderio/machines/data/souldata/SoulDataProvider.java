@@ -111,11 +111,11 @@ public class SoulDataProvider implements DataProvider {
         addSpawnerData(EntityType.ZOMBIE_VILLAGER, 51_200, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
         addSpawnerData(EntityType.ZOMBIFIED_PIGLIN, 51_200, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
 
-        addGeneratorData(EntityType.BLAZE, FluidTags.LAVA, 800, 20, finshedSoulDataConsumer);
-        addGeneratorData(EntityType.ZOMBIE, EIOFluids.NUTRIENT_DISTILLATION.get(), 900, 20, finshedSoulDataConsumer);
-        addGeneratorData(EntityType.ZOMBIE_VILLAGER, EIOFluids.NUTRIENT_DISTILLATION.get(), 900, 20, finshedSoulDataConsumer);
-        addGeneratorData(EntityType.HUSK, EIOFluids.NUTRIENT_DISTILLATION.get(), 900, 20, finshedSoulDataConsumer);
-        addGeneratorData(EntityType.ENDERMAN, EIOFluids.DEW_OF_THE_VOID.get(), 2000, 10, finshedSoulDataConsumer);
+        addGeneratorData(EntityType.BLAZE, FluidTags.LAVA, 300, 15, finshedSoulDataConsumer);
+        addGeneratorData(EntityType.ZOMBIE, EIOFluids.NUTRIENT_DISTILLATION.get(), 500, 15, finshedSoulDataConsumer);
+        addGeneratorData(EntityType.ZOMBIE_VILLAGER, EIOFluids.NUTRIENT_DISTILLATION.get(), 500, 15, finshedSoulDataConsumer);
+        addGeneratorData(EntityType.HUSK, EIOFluids.NUTRIENT_DISTILLATION.get(), 500, 15, finshedSoulDataConsumer);
+        addGeneratorData(EntityType.ENDERMAN, EIOFluids.DEW_OF_THE_VOID.get(), 900, 10, finshedSoulDataConsumer);
 
     }
 
