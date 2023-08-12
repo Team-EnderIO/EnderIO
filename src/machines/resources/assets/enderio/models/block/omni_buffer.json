@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "enderio:block/omni_buffer",
+    "east": "enderio:block/omni_buffer",
+    "north": "enderio:block/omni_buffer",
+    "particle": "enderio:block/omni_buffer",
+    "south": "enderio:block/omni_buffer",
+    "up": "enderio:block/omni_buffer",
+    "west": "enderio:block/omni_buffer"
+  }
+}
