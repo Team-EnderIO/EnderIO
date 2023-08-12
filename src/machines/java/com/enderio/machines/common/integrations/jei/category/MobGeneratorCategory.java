@@ -1,6 +1,9 @@
 package com.enderio.machines.common.integrations.jei.category;
 
 import com.enderio.EnderIO;
+import com.enderio.api.capability.StoredEntityData;
+import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.base.common.init.EIOItems;
 import com.enderio.machines.client.gui.screen.MobGeneratorScreen;
 import com.enderio.machines.common.blockentity.MobGeneratorBlockEntity;
 import com.enderio.machines.common.init.MachineBlocks;
@@ -26,6 +29,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -78,6 +82,20 @@ public class MobGeneratorCategory implements IRecipeCategory<GeneratorSoul.SoulD
         builder.addSlot(RecipeIngredientRole.INPUT, 39, 3)
             .addIngredients(ForgeTypes.FLUID_STACK, list)
             .setFluidRenderer(MobGeneratorBlockEntity.FLUID_CAPACITY, false, 16, 47);
+
+        EntityType<?> value = ForgeRegistries.ENTITY_TYPES.getValue(recipe.entitytype());
+        if (recipe.getKey().equals(ForgeRegistries.ENTITY_TYPES.getKey(value))) {
+            if (ForgeSpawnEggItem.fromEntityType(value) != null) {
+                builder.addInvisibleIngredients(RecipeIngredientRole.INPUT)
+                    .addItemStack(new ItemStack(ForgeSpawnEggItem.fromEntityType(value)));
+            }
+
+            ItemStack stack = new ItemStack(EIOItems.FILLED_SOUL_VIAL);
+            stack.getCapability(EIOCapabilities.ENTITY_STORAGE).ifPresent(c -> c.setStoredEntityData(StoredEntityData.of(recipe.entitytype())));
+            builder.addInvisibleIngredients(RecipeIngredientRole.INPUT)
+                .addItemStack(stack);
+        }
+
     }
 
     @Override
