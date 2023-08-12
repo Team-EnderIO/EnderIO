@@ -66,7 +66,9 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
 
     @Override
     public void setRemoved() {
-        getTravelData().removeTravelTargetAt(worldPosition);
+        if (level == null || level.isClientSide) {
+            getTravelData().removeTravelTargetAt(worldPosition);
+        }
         super.setRemoved();
     }
 

@@ -8,8 +8,12 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -17,9 +21,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class TravelSavedData extends SavedData {
 
-    private static final TravelSavedData INSTANCE = new TravelSavedData();
+    private static TravelSavedData INSTANCE = new TravelSavedData();
 
     private final Map<BlockPos, ITravelTarget> travelTargets = new HashMap<>();
 
@@ -44,7 +49,6 @@ public class TravelSavedData extends SavedData {
     }
 
     public Optional<ITravelTarget> getTravelTarget(BlockPos pos) {
-        boolean test = travelTargets.keySet().contains(pos);
         return Optional.ofNullable(travelTargets.get(pos));
     }
 
@@ -81,5 +85,12 @@ public class TravelSavedData extends SavedData {
     @Override
     public boolean isDirty() {
         return true;
+    }
+
+    @SubscribeEvent
+    static void resetClient(EntityJoinLevelEvent event) {
+        if (event.getEntity().level().isClientSide && event.getEntity() instanceof Player) {
+            INSTANCE = new TravelSavedData();
+        }
     }
 }
