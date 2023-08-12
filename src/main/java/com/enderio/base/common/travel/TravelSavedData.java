@@ -7,13 +7,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -21,10 +18,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class TravelSavedData extends SavedData {
 
-    private static TravelSavedData INSTANCE = new TravelSavedData();
+    private static final Map<ResourceKey<Level>, TravelSavedData> CLIENT_DATA = new HashMap<>();
 
     private final Map<BlockPos, ITravelTarget> travelTargets = new HashMap<>();
 
@@ -44,7 +40,12 @@ public class TravelSavedData extends SavedData {
         if (level instanceof ServerLevel serverLevel) {
             return serverLevel.getDataStorage().computeIfAbsent(TravelSavedData::new, TravelSavedData::new, "enderio_traveldata");
         } else {
-            return INSTANCE;
+            if (CLIENT_DATA.containsKey(level.dimension())) {
+                return CLIENT_DATA.get(level.dimension());
+            }
+            TravelSavedData data = new TravelSavedData();
+            CLIENT_DATA.put(level.dimension(), data);
+            return data;
         }
     }
 
@@ -85,12 +86,5 @@ public class TravelSavedData extends SavedData {
     @Override
     public boolean isDirty() {
         return true;
-    }
-
-    @SubscribeEvent
-    static void resetClient(EntityJoinLevelEvent event) {
-        if (event.getEntity().level().isClientSide && event.getEntity() instanceof Player) {
-            INSTANCE = new TravelSavedData();
-        }
     }
 }
