@@ -11,6 +11,9 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraftforge.event.server.ServerStoppedEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -18,9 +21,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class TravelSavedData extends SavedData {
 
-    private static final Map<ResourceKey<Level>, TravelSavedData> CLIENT_DATA = new HashMap<>();
+    private static Map<ResourceKey<Level>, TravelSavedData> CLIENT_DATA = new HashMap<>();
 
     private final Map<BlockPos, ITravelTarget> travelTargets = new HashMap<>();
 
@@ -86,5 +90,10 @@ public class TravelSavedData extends SavedData {
     @Override
     public boolean isDirty() {
         return true;
+    }
+
+    @SubscribeEvent
+    public static void reset(ServerStoppedEvent event) {
+        CLIENT_DATA = new HashMap<>();
     }
 }
