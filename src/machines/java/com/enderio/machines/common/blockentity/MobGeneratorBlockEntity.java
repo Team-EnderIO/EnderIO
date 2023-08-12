@@ -44,7 +44,7 @@ public class MobGeneratorBlockEntity extends PoweredMachineBlockEntity {
     private static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.MOB_GENERATOR_CAPACITY);
     private static final String BURNED_TICKS = "burnedTicks";
     private StoredEntityData entityData = StoredEntityData.empty();
-    private static final int FLUID_CAPACITY = 2 * FluidType.BUCKET_VOLUME;
+    public static final int FLUID_CAPACITY = 2 * FluidType.BUCKET_VOLUME;
     @Nullable
     private GeneratorSoul.SoulData soulData;
     private int burnedTicks = 0;
