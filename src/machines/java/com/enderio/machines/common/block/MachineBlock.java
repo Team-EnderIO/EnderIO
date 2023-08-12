@@ -1,5 +1,6 @@
 package com.enderio.machines.common.block;
 
+import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import net.minecraft.core.BlockPos;
@@ -120,5 +121,13 @@ public class MachineBlock extends BaseEntityBlock {
             return machineBlock.supportsRedstoneControl();
         }
         return super.canConnectRedstone(state, level, pos, direction);
+    }
+
+    @Override
+    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
+        if (level.getExistingBlockEntity(pos) instanceof FluidTankBlockEntity fluidTank) {
+            return fluidTank.getFluidTank().getFluid().getFluid().getFluidType().getLightLevel();
+        }
+        return super.getLightEmission(state, level, pos);
     }
 }

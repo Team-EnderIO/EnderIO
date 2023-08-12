@@ -3,10 +3,7 @@ package com.enderio.api.integration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
+import java.util.function.*;
 
 public class IntegrationManager {
 
@@ -50,7 +47,7 @@ public class IntegrationManager {
                 consumer.accept(integration);
         }
     }
-    
+
     public static <T> List<T> getIf(Predicate<Integration> condition, Function<Integration, T> mapper) {
         List<T> list = new ArrayList<>();
         for (Integration integration : ALL_INTEGRATIONS) {
@@ -58,5 +55,12 @@ public class IntegrationManager {
                 list.add(mapper.apply(integration));
         }
         return list;
+    }
+
+    public static <T> T collectAll(T empty, Function<Integration, T> function, BiConsumer<T, T> merge) {
+        for (Integration integration : ALL_INTEGRATIONS) {
+            merge.accept(empty, function.apply(integration));
+        }
+        return empty;
     }
 }

@@ -1,0 +1,6 @@
+{
+  "parent": "enderio:block/photovoltaic_cell_side",
+  "textures": {
+    "side": "enderio:block/pulsating_side"
+  }
+}

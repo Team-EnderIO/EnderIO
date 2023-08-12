@@ -34,16 +34,15 @@ public class SoulBindingRecipeProvider extends EnderRecipeProvider {
 
     @Override
     protected void buildRecipes(Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
-        build(EIOItems.ENTICING_CRYSTAL, Ingredient.of(Items.EMERALD), 100000, 4, EntityType.VILLAGER, pFinishedRecipeConsumer);
-        build(EIOItems.ENDER_CRYSTAL, Ingredient.of(EIOItems.VIBRANT_CRYSTAL), 150000, 6, EntityType.ENDERMAN, pFinishedRecipeConsumer);
-        build(EIOItems.PRESCIENT_CRYSTAL, Ingredient.of(EIOItems.VIBRANT_CRYSTAL), 200000, 8, EntityType.SHULKER, pFinishedRecipeConsumer);
-        build(EIOItems.FRANK_N_ZOMBIE, Ingredient.of(EIOItems.Z_LOGIC_CONTROLLER), 100000, 4, EntityType.ZOMBIE, pFinishedRecipeConsumer);
-        build(EIOItems.SENTIENT_ENDER, Ingredient.of(EIOItems.ENDER_RESONATOR), 100000, 4, EntityType.WITCH, pFinishedRecipeConsumer);
-        build(EIOItems.BROKEN_SPAWNER, Ingredient.of(EIOItems.BROKEN_SPAWNER), 2500000, 8, pFinishedRecipeConsumer); //TODO if we add SpawnerSoul.NAME, no modded mob will work without a config
-        build(EIOItems.PLAYER_TOKEN, Ingredient.of(EIOItems.DARK_STEEL_BALL), 25000, 1, EntityType.VILLAGER, pFinishedRecipeConsumer);
-        build(EIOItems.MONSTER_TOKEN, Ingredient.of(EIOItems.SOULARIUM_BALL), 25000, 1, MobCategory.MONSTER, pFinishedRecipeConsumer);
-        build(EIOItems.ANIMAL_TOKEN, Ingredient.of(EIOItems.SOULARIUM_BALL), 25000, 1, MobCategory.CREATURE, pFinishedRecipeConsumer);
-        build(MachineBlocks.MOB_GENERATOR, Ingredient.of(MachineBlocks.MOB_GENERATOR), 25000, 1, GeneratorSoul.NAME, pFinishedRecipeConsumer);
+        build(EIOItems.ENTICING_CRYSTAL, Ingredient.of(Items.EMERALD), 51200, 4, EntityType.VILLAGER, pFinishedRecipeConsumer);
+        build(EIOItems.ENDER_CRYSTAL, Ingredient.of(EIOItems.VIBRANT_CRYSTAL), 76800, 6, EntityType.ENDERMAN, pFinishedRecipeConsumer);
+        build(EIOItems.PRESCIENT_CRYSTAL, Ingredient.of(EIOItems.VIBRANT_CRYSTAL), 100000, 8, EntityType.SHULKER, pFinishedRecipeConsumer);
+        build(EIOItems.FRANK_N_ZOMBIE, Ingredient.of(EIOItems.Z_LOGIC_CONTROLLER), 51200, 4, EntityType.ZOMBIE, pFinishedRecipeConsumer);
+        build(EIOItems.SENTIENT_ENDER, Ingredient.of(EIOItems.ENDER_RESONATOR), 51200, 4, EntityType.WITCH, pFinishedRecipeConsumer);
+        build(EIOItems.BROKEN_SPAWNER, Ingredient.of(EIOItems.BROKEN_SPAWNER), 288000, 8, pFinishedRecipeConsumer);
+        build(EIOItems.PLAYER_TOKEN, Ingredient.of(EIOItems.DARK_STEEL_BALL), 12800, 1, EntityType.VILLAGER, pFinishedRecipeConsumer);
+        build(EIOItems.MONSTER_TOKEN, Ingredient.of(EIOItems.SOULARIUM_BALL), 12800, 1, MobCategory.MONSTER, pFinishedRecipeConsumer);
+        build(EIOItems.ANIMAL_TOKEN, Ingredient.of(EIOItems.SOULARIUM_BALL), 12800, 1, MobCategory.CREATURE, pFinishedRecipeConsumer);
     }
 
     protected void build(ItemLike output, Ingredient input, int energy, int exp, EntityType<? extends Entity> entityType, Consumer<FinishedRecipe> finishedRecipeConsumer) {

@@ -29,7 +29,7 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_CAPACITY);
 
     // TODO: Capacitor modifiers for efficiency and output rates.
-    public static final LinearScalable BURN_SPEED = new LinearScalable(CapacitorModifier.FIXED, MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_BURN_SPEED);
+    public static final LinearScalable BURN_SPEED = new LinearScalable(CapacitorModifier.FIXED, () -> 1);
     public static final LinearScalable GENERATION_SPEED = new LinearScalable(CapacitorModifier.FIXED, MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_PRODUCTION);
 
     public static final SingleSlotAccess FUEL = new SingleSlotAccess();
@@ -84,7 +84,7 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
                     int burningTime = ForgeHooks.getBurnTime(fuel, RecipeType.SMELTING);
 
                     if (burningTime > 0) {
-                        burnTime = burningTime;
+                        burnTime = (int) Math.floor(burningTime * MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_BURN_SPEED.get());
                         burnDuration = burnTime;
 
                         // Remove the fuel

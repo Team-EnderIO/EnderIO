@@ -67,8 +67,19 @@ public class MultiEnergyStorageWrapper extends MachineEnergyStorage implements I
     }
 
     @Override
+    public int receiveEnergy(int maxReceive, boolean simulate) {
+        if (!canReceive())
+            return 0;
+        int energyReceived = (int) Math.min(getLargeMaxEnergyStored() - getLargeEnergyStored(), Math.min(getMaxEnergyUse() * 2, maxReceive));
+        if (!simulate) {
+            addEnergy(energyReceived);
+        }
+        return energyReceived;
+    }
+
+    @Override
     public int takeEnergy(int energy) {
-        if (graph == null)
+        if (graph == null || energy == 0)
             return 0;
 
         int cumulativeEnergy = 0;
@@ -78,6 +89,9 @@ public class MultiEnergyStorageWrapper extends MachineEnergyStorage implements I
         for (GraphObject<Mergeable.Dummy> object : nodes) {
             if (object instanceof MultiEnergyNode node) {
                 cumulativeEnergy += node.getInternal().get().extractEnergy(energy - cumulativeEnergy, false);
+                if (energy - cumulativeEnergy <= 0) {
+                    break;
+                }
             }
         }
         removedEnergy += cumulativeEnergy;
@@ -86,7 +100,7 @@ public class MultiEnergyStorageWrapper extends MachineEnergyStorage implements I
 
     @Override
     public int addEnergy(int energy) {
-        if (graph == null)
+        if (graph == null || energy == 0)
             return 0;
 
         int cumulativeEnergy = 0;
@@ -96,6 +110,9 @@ public class MultiEnergyStorageWrapper extends MachineEnergyStorage implements I
         for (GraphObject<Mergeable.Dummy> object : nodes) {
             if (object instanceof MultiEnergyNode node) {
                 cumulativeEnergy += node.getInternal().get().receiveEnergy(energy - cumulativeEnergy, false);
+                if (energy - cumulativeEnergy <= 0) {
+                    break;
+                }
             }
         }
         addedEnergy += cumulativeEnergy;
