@@ -3,16 +3,18 @@ package com.enderio.base.common.travel;
 import com.enderio.EnderIO;
 import com.enderio.api.travel.ITravelTarget;
 import com.enderio.api.travel.TravelRegistry;
+import com.enderio.base.common.network.SyncTravelDataPacket;
+import com.enderio.core.common.network.CoreNetwork;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -25,8 +27,7 @@ import java.util.stream.Stream;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class TravelSavedData extends SavedData {
 
-    private static final Map<ResourceKey<Level>, TravelSavedData> CLIENT_DATA = new HashMap<>();
-
+    private static final TravelSavedData CLIENT_INSTANCE = new TravelSavedData();
     private final Map<BlockPos, ITravelTarget> travelTargets = new HashMap<>();
 
     public TravelSavedData() {
@@ -34,24 +35,25 @@ public class TravelSavedData extends SavedData {
     }
 
     public TravelSavedData(CompoundTag nbt) {
-        ListTag targets = nbt.getList("targets", Tag.TAG_COMPOUND);
-        targets.stream().map(anchorData -> (CompoundTag)anchorData)
-            .map(TravelRegistry::deserialize)
-            .flatMap(Optional::stream)
-            .forEach(target -> travelTargets.put(target.getPos(), target));
+        this();
+        this.loadNBT(nbt);
     }
 
     public static TravelSavedData getTravelData(Level level) {
         if (level instanceof ServerLevel serverLevel) {
             return serverLevel.getDataStorage().computeIfAbsent(TravelSavedData::new, TravelSavedData::new, "enderio_traveldata");
         } else {
-            if (CLIENT_DATA.containsKey(level.dimension())) {
-                return CLIENT_DATA.get(level.dimension());
-            }
-            TravelSavedData data = new TravelSavedData();
-            CLIENT_DATA.put(level.dimension(), data);
-            return data;
+            return CLIENT_INSTANCE;
         }
+    }
+
+    public void loadNBT(CompoundTag nbt){
+        this.travelTargets.clear();
+        ListTag targets = nbt.getList("targets", Tag.TAG_COMPOUND);
+        targets.stream().map(anchorData -> (CompoundTag)anchorData)
+            .map(TravelRegistry::deserialize)
+            .flatMap(Optional::stream)
+            .forEach(target -> travelTargets.put(target.getPos(), target));
     }
 
     public Optional<ITravelTarget> getTravelTarget(BlockPos pos) {
@@ -68,16 +70,31 @@ public class TravelSavedData extends SavedData {
             .map(Map.Entry::getValue);
     }
 
-    public void addTravelTarget(ITravelTarget target) {
+    public void addTravelTarget(Level level, ITravelTarget target) {
+        if(level.isClientSide)
+            return;
         if (TravelRegistry.isRegistered(target)) {
             travelTargets.put(target.getPos(), target);
+            syncData(level);
         } else {
             EnderIO.LOGGER.warn("Tried to add a not registered TravelTarget to the TravelSavedData with name " + target);
         }
     }
 
-    public void removeTravelTargetAt(BlockPos pos) {
+    public void updateTravelTarget(Level level, ITravelTarget target){
+        if(level.isClientSide)
+            return;
+        if(travelTargets.containsKey(target.getPos())){
+            travelTargets.replace(target.getPos(), target);
+            syncData(level);
+        }
+    }
+
+    public void removeTravelTargetAt(Level level, BlockPos pos) {
+        if(level.isClientSide)
+            return;
         travelTargets.remove(pos);
+        syncData(level);
     }
 
     @Override
@@ -93,10 +110,22 @@ public class TravelSavedData extends SavedData {
         return true;
     }
 
+    private void syncData(Level level){
+        CoreNetwork.sendToDimension(level.dimension(), new SyncTravelDataPacket(save(new CompoundTag())));
+    }
     @SubscribeEvent
-    public static void onDimensionChange(EntityJoinLevelEvent event) {
-        if (event.getLevel().isClientSide && event.getEntity() instanceof Player) {
-            CLIENT_DATA.put(event.getLevel().dimension(), new TravelSavedData());
+    public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
+        Player player = event.getEntity();
+        if (!player.getCommandSenderWorld().isClientSide && player instanceof ServerPlayer serverPlayer) {
+            CoreNetwork.sendToPlayer(serverPlayer, new SyncTravelDataPacket(TravelSavedData.getTravelData(player.getCommandSenderWorld()).save(new CompoundTag())));
+        }
+    }
+
+    @SubscribeEvent
+    public static void onDimensionChange(PlayerEvent.PlayerChangedDimensionEvent event) {
+        Player player = event.getEntity();
+        if (!player.getCommandSenderWorld().isClientSide && player instanceof ServerPlayer serverPlayer) {
+            CoreNetwork.sendToPlayer(serverPlayer, new SyncTravelDataPacket(TravelSavedData.getTravelData(player.getCommandSenderWorld()).save(new CompoundTag())));
         }
     }
 }

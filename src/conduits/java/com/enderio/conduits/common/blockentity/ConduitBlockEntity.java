@@ -75,6 +75,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
 
     public void updateClient() {
         clientBundle = bundle.deepCopy();
+        addAfterSyncRunnable(this::updateClient);
         updateShape();
         requestModelDataUpdate();
         level.setBlocksDirty(getBlockPos(), Blocks.AIR.defaultBlockState(), getBlockState());

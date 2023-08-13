@@ -26,19 +26,18 @@ import java.util.Optional;
 
 public class TravelAnchorBlockEntity extends MachineBlockEntity {
 
-    private AnchorTravelTarget target;
     public static final SingleSlotAccess GHOST = new SingleSlotAccess();
-
     private final StringNetworkDataSlot nameDataSlot;
     private final BooleanNetworkDataSlot visibilityDataSlot;
     private final ResourceLocationNetworkDataSlot iconDataSlot;
+    private AnchorTravelTarget target;
 
     public TravelAnchorBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);
-        nameDataSlot = new StringNetworkDataSlot(this::getName, name -> target.setName(name));
-        visibilityDataSlot = new BooleanNetworkDataSlot(this::getVisibility, visible -> target.setVisibility(visible));
+        nameDataSlot = new StringNetworkDataSlot(this::getName, this::setName);
+        visibilityDataSlot = new BooleanNetworkDataSlot(this::getVisibility, this::setVisibility);
         iconDataSlot = new ResourceLocationNetworkDataSlot(() -> ForgeRegistries.ITEMS.getKey(getIcon()),
-            loc -> target.setIcon(ForgeRegistries.ITEMS.getValue(loc)));
+            loc -> setIcon(ForgeRegistries.ITEMS.getValue(loc)));
         addDataSlot(nameDataSlot);
         addDataSlot(visibilityDataSlot);
         addDataSlot(iconDataSlot);
@@ -66,9 +65,7 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
 
     @Override
     public void setRemoved() {
-        if (level == null || level.isClientSide) {
-            getTravelData().removeTravelTargetAt(worldPosition);
-        }
+        getTravelData().removeTravelTargetAt(level, worldPosition);
         super.setRemoved();
     }
 
@@ -88,7 +85,9 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
             clientUpdateSlot(nameDataSlot, name);
         } else {
             target.setName(name);
+            updateTravelData();
         }
+
     }
 
     public Item getIcon() {
@@ -100,6 +99,7 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
             clientUpdateSlot(iconDataSlot, ForgeRegistries.ITEMS.getKey(icon));
         } else {
             target.setIcon(icon);
+            updateTravelData();
         }
 
     }
@@ -113,7 +113,13 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
             clientUpdateSlot(visibilityDataSlot, visible);
         } else {
             target.setVisibility(visible);
+            updateTravelData();
         }
+
+    }
+
+    public void updateTravelData() {
+        getTravelData().updateTravelTarget(level, target);
     }
 
     private AnchorTravelTarget getOrCreateTravelTarget() {
@@ -122,7 +128,7 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
             return anchorTravelTarget;
         }
         AnchorTravelTarget anchorTravelTarget = new AnchorTravelTarget(worldPosition, "", Items.AIR, true);
-        getTravelData().addTravelTarget(anchorTravelTarget);
+        getTravelData().addTravelTarget(level, anchorTravelTarget);
         return anchorTravelTarget;
     }
 
