@@ -22,7 +22,7 @@ public class OmniBufferBlockEntity extends PowerBufferBlockEntity {
     public @Nullable MachineInventoryLayout getInventoryLayout() {
         return MachineInventoryLayout
             .builder()
-            .inputSlot(9)
+            .storageSlot(9)
             .capacitor()
             .build();
     }

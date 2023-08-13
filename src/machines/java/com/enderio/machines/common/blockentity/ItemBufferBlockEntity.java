@@ -19,7 +19,7 @@ public class ItemBufferBlockEntity extends MachineBlockEntity {
     @Override
     public @Nullable MachineInventoryLayout getInventoryLayout() {
         return MachineInventoryLayout.builder()
-            .inputSlot(9)
+            .storageSlot(9)
             .build();
     }
 
