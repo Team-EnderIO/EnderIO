@@ -9,9 +9,10 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
-import net.minecraftforge.event.server.ServerStoppedEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -24,7 +25,7 @@ import java.util.stream.Stream;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class TravelSavedData extends SavedData {
 
-    private static Map<ResourceKey<Level>, TravelSavedData> CLIENT_DATA = new HashMap<>();
+    private static final Map<ResourceKey<Level>, TravelSavedData> CLIENT_DATA = new HashMap<>();
 
     private final Map<BlockPos, ITravelTarget> travelTargets = new HashMap<>();
 
@@ -93,7 +94,9 @@ public class TravelSavedData extends SavedData {
     }
 
     @SubscribeEvent
-    public static void reset(ServerStoppedEvent event) {
-        CLIENT_DATA = new HashMap<>();
+    public static void onDimensionChange(EntityJoinLevelEvent event) {
+        if (event.getLevel().isClientSide && event.getEntity() instanceof Player) {
+            CLIENT_DATA.put(event.getLevel().dimension(), new TravelSavedData());
+        }
     }
 }
