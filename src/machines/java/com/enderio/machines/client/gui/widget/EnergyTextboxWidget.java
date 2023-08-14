@@ -5,6 +5,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -99,16 +100,6 @@ public class EnergyTextboxWidget extends EditBox {
             return "0";
         }
     }
-	
-	public int getInteger() {
-        String integer = getValue().replace(",", "");
-
-        try {
-            return Integer.parseInt(integer);
-        } catch(Exception e) {
-            return 0;
-        }
-    }
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
@@ -117,7 +108,7 @@ public class EnergyTextboxWidget extends EditBox {
     }
 
     public void renderToolTip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        if (mouseX >= getX() && mouseX <= getX() + width && mouseY >= getY() && mouseY <= getY() + height && !isFocused()) {
+        if (mouseX >= getX() && mouseX <= getX() + width && mouseY >= getY() && mouseY <= getY() + height && !isFocused() && maxEnergy.get() != 0) {
             guiGraphics.renderTooltip(displayOn.getMinecraft().font, Component.literal(formatEnergy(getValue()) +"/" +formatEnergy(Integer.toString(maxEnergy.get()))  +" µI"), mouseX, mouseY);
         }
     }

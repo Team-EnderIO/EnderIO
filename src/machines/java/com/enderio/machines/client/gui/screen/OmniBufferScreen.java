@@ -37,10 +37,12 @@ public class OmniBufferScreen extends EIOScreen<OmniBufferMenu> {
         addRenderableWidget(new IOConfigButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 22, 16, 16, menu, this::addRenderableWidget, font));
 
         input = new EnergyTextboxWidget(this, () -> this.getMenu().getBlockEntity().getEnergyStorage().getMaxEnergyUse(), this.font, leftPos + 33, topPos + 18, 49, this.font.lineHeight + 2, Component.empty());
-        input.setValue(input.formatEnergy(Integer.toString(this.getMenu().getBlockEntity().getMaxInput())));
+        input.setResponder(getMenu().getBlockEntity()::setMaxInput);
+        input.setValue(Integer.toString(this.getMenu().getBlockEntity().getMaxInput()));
         addRenderableWidget(input);
 
         output = new EnergyTextboxWidget(this, () -> this.getMenu().getBlockEntity().getEnergyStorage().getMaxEnergyUse(), this.font, leftPos + 33, topPos + 48, 49, this.font.lineHeight + 2, Component.empty());
+        output.setResponder(getMenu().getBlockEntity()::setMaxOutput);
         output.setValue(output.formatEnergy(Integer.toString(this.getMenu().getBlockEntity().getMaxOutput())));
         addRenderableWidget(output);
 
@@ -60,27 +62,17 @@ public class OmniBufferScreen extends EIOScreen<OmniBufferMenu> {
     public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
         super.render(guiGraphics, pMouseX, pMouseY, pPartialTicks);
         PowerBufferBlockEntity be = this.getMenu().getBlockEntity();
-        guiGraphics.drawString(font, "Input:", leftPos + 33, topPos + 18 - font.lineHeight - 2, 1, false);
-        guiGraphics.drawString(font, "Output:", leftPos + 33, topPos + 48 - font.lineHeight - 2, 1, false);
+        guiGraphics.drawString(font, EIOLang.INPUT.getString() + ":", leftPos + 33, topPos + 18 - font.lineHeight - 2, 1, false);
+        guiGraphics.drawString(font, EIOLang.OUTPUT.getString() + ":", leftPos + 33, topPos + 48 - font.lineHeight - 2, 1, false);
     }
 
-
-    //Reset values if no capacitor, else display the value stored in the power buffer
     @Override
     protected void containerTick() {
         super.containerTick();
         PowerBufferBlockEntity be = this.getMenu().getBlockEntity();
         if (be != null) {
-            if (be.requiresCapacitor() && be.isCapacitorInstalled()) {
-                be.setMaxInput(input.getInteger());
-                be.setMaxOutput(output.getInteger());
-            } else {
-                be.setMaxInput(0);
-                input.setValue("0");
-
-                be.setMaxOutput(0);
-                output.setValue("0");
-            }
+            input.setValue(input.formatEnergy(Integer.toString(be.getMaxInput())));
+            output.setValue(output.formatEnergy(Integer.toString(be.getMaxOutput())));
         }
     }
 }

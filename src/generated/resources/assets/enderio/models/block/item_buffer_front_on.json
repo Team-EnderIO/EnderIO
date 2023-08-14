@@ -1,6 +1,0 @@
-{
-  "parent": "enderio:block/item_buffer_front",
-  "textures": {
-    "front": "enderio:block/item_buffer_front_on"
-  }
-}

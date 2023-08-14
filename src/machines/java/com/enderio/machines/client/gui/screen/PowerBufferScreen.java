@@ -37,10 +37,12 @@ public class PowerBufferScreen extends EIOScreen<PowerBufferMenu> {
         addRenderableWidget(new IOConfigButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 22, 16, 16, menu, this::addRenderableWidget, font));
 
         input = new EnergyTextboxWidget(this, () -> this.getMenu().getBlockEntity().getEnergyStorage().getMaxEnergyUse(), this.font, leftPos + 40, topPos + 18, 95, this.font.lineHeight + 2, Component.empty());
+        input.setResponder(getMenu().getBlockEntity()::setMaxInput);
         input.setValue(Integer.toString(this.getMenu().getBlockEntity().getMaxInput()));
         addRenderableWidget(input);
 
         output = new EnergyTextboxWidget(this, () -> this.getMenu().getBlockEntity().getEnergyStorage().getMaxEnergyUse(), this.font, leftPos + 40, topPos + 48, 95, this.font.lineHeight + 2, Component.empty());
+        output.setResponder(getMenu().getBlockEntity()::setMaxOutput);
         output.setValue(output.formatEnergy(Integer.toString(this.getMenu().getBlockEntity().getMaxOutput())));
         addRenderableWidget(output);
 
@@ -60,31 +62,18 @@ public class PowerBufferScreen extends EIOScreen<PowerBufferMenu> {
     public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
         super.render(guiGraphics, pMouseX, pMouseY, pPartialTicks);
         PowerBufferBlockEntity be = this.getMenu().getBlockEntity();
-        guiGraphics.drawString(font, "Input:", leftPos + 33, topPos + 18 - font.lineHeight - 2, 1, false);
-        guiGraphics.drawString(font, "Output:", leftPos + 33, topPos + 48 - font.lineHeight - 2, 1, false);
+        guiGraphics.drawString(font, EIOLang.INPUT.getString() +":", leftPos + 40, topPos + 18 - font.lineHeight - 2, 1, false);
+        guiGraphics.drawString(font, EIOLang.OUTPUT.getString() +":", leftPos + 40, topPos + 48 - font.lineHeight - 2, 1, false);
     }
 
-
-    //Reset values if no capacitor, else display the value stored in the power buffer
-    //There is probably a better way of setting the energy is the block entity
+    //Syncronize the block entity values with what is displayed to the player
     @Override
     protected void containerTick() {
         super.containerTick();
         PowerBufferBlockEntity be = this.getMenu().getBlockEntity();
         if (be != null) {
-            if (be.requiresCapacitor() && be.isCapacitorInstalled()) {
-                if (!input.isFocused())
-                    be.setMaxInput(input.getInteger());
-
-                if (!output.isFocused())
-                    be.setMaxOutput(output.getInteger());
-            } else {
-                be.setMaxInput(0);
-                input.setValue("0");
-
-                be.setMaxOutput(0);
-                output.setValue("0");
-            }
+            input.setValue(input.formatEnergy(Integer.toString(be.getMaxInput())));
+            output.setValue(output.formatEnergy(Integer.toString(be.getMaxOutput())));
         }
     }
 }

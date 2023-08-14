@@ -1,9 +1,12 @@
 package com.enderio.machines.common.blockentity;
 
+import com.enderio.EnderIO;
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
+import com.enderio.core.CoreNBTKeys;
 import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
+import com.enderio.core.common.util.NumberUtils;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
@@ -28,11 +31,9 @@ import java.util.function.Supplier;
 public class PowerBufferBlockEntity extends PoweredMachineBlockEntity {
     int maxInput = 0;
     protected IntegerNetworkDataSlot inputDataSlot;
-    private final String NBT_INPUT = "BufferMaxInput";
 
     int maxOutput = 0;
     protected IntegerNetworkDataSlot outputDataSlot;
-    private final String NBT_OUTPUT = "BufferMaxOutput";
 
 
     //todo: energy balancing
@@ -67,14 +68,14 @@ public class PowerBufferBlockEntity extends PoweredMachineBlockEntity {
     public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
         return new PowerBufferMenu(this, playerInventory, containerId);
     }
-	
-    public void setMaxOutput(int maxOutput) {
-        this.maxOutput = maxOutput;
+
+    public void setMaxOutput(String pMaxOutput) {
+        this.maxOutput = NumberUtils.getInteger(pMaxOutput);
         clientUpdateSlot(outputDataSlot, maxOutput);
     }
 
-    public void setMaxInput(int maxInput) {
-        this.maxInput = maxInput;
+    public void setMaxInput(String pMaxInput) {
+        this.maxInput = NumberUtils.getInteger(pMaxInput);
         clientUpdateSlot(inputDataSlot, maxInput);
     }
 
@@ -115,6 +116,11 @@ public class PowerBufferBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
+    protected boolean shouldPushEnergyTo(Direction direction) {
+        return getIOConfig().getMode(direction).canPush();
+    }
+
+    @Override
     protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, Supplier<Integer> capacity, Supplier<Integer> usageRate) {
         return new MachineEnergyStorage(getIOConfig(), energyIOMode, capacity, usageRate) {
 
@@ -144,14 +150,31 @@ public class PowerBufferBlockEntity extends PoweredMachineBlockEntity {
     @Override
     public void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
-        pTag.putInt(NBT_INPUT, maxInput);
-        pTag.putInt(NBT_OUTPUT, maxOutput);
+        pTag.putInt(CoreNBTKeys.BUFFER_MAX_INPUT, maxInput);
+        pTag.putInt(CoreNBTKeys.BUFFER_MAX_OUTPUT, maxOutput);
     }
 
     @Override
     public void load(CompoundTag pTag) {
         super.load(pTag);
-        maxInput = pTag.getInt(NBT_INPUT);
-        maxOutput = pTag.getInt(NBT_OUTPUT);
+        maxInput = pTag.getInt(CoreNBTKeys.BUFFER_MAX_INPUT);
+        maxOutput = pTag.getInt(CoreNBTKeys.BUFFER_MAX_OUTPUT);
     }
+
+    //Reset values if capacitor is added/removed and transmit it to the textbox
+
+//    @Override
+//    protected void onInventoryContentsChanged(int slot) {
+//        super.onInventoryContentsChanged(slot);
+//        MachineInventoryLayout inventoryLayout = getInventoryLayout();
+//        if (inventoryLayout != null && inventoryLayout.getCapacitorSlot() == slot) {
+//            if (requiresCapacitor() && isCapacitorInstalled()) {
+//                setMaxInput(getEnergyStorage().getMaxEnergyUse());
+//                setMaxOutput(getEnergyStorage().getMaxEnergyUse());
+//            } else {
+//                setMaxInput(0);
+//                setMaxOutput(0);
+//            }
+//        }
+//    }
 }
