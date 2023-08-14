@@ -5,17 +5,19 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.Nullable;
 
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.Locale;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class EnergyTextboxWidget extends EditBox {
     private final Supplier<Integer> maxEnergy;
 
     protected final Screen displayOn;
-    
+    @Nullable
+    private Consumer<String> focusResponder;
+
     public EnergyTextboxWidget(Screen displayOn, Supplier<Integer> maxEnergy, Font font, int x, int y, int width, int height, Component message) {
         super(font, x, y, width, height, message);
         this.maxEnergy = maxEnergy;
@@ -26,7 +28,6 @@ public class EnergyTextboxWidget extends EditBox {
     //Input only accepts digits (0, 1, ..., 9)
     @Override
     public boolean charTyped(char codePoint, int modifiers) {
-
         if (codePoint >= 48 && codePoint <= 57) {
             int cursorPos = getCursorPosition() + 1;
             boolean res = super.charTyped(codePoint, modifiers);
@@ -35,7 +36,6 @@ public class EnergyTextboxWidget extends EditBox {
 
             return res;
         }
-
         return false;
     }
 
@@ -46,12 +46,7 @@ public class EnergyTextboxWidget extends EditBox {
         if (keyCode == 259) {
             int cursorPos = getCursorPosition();
             setValue(formatEnergy(getValue()));
-
-            if (getValue().equals("0")) {
-                moveCursorTo(1);
-            } else {
-                moveCursorTo(cursorPos);
-            }
+            moveCursorTo(cursorPos);
         }
 
         return res;
@@ -59,30 +54,29 @@ public class EnergyTextboxWidget extends EditBox {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-
         if (mouseX >= getX() && mouseX <= getX() + width && mouseY >= getY() && mouseY <= getY() + height) {
             super.mouseClicked(mouseX, mouseY, button);
 
             //Clear content on right click
             if (button == 1) {
-                setValue("0");
                 moveCursorTo(1);
             }
-
             return true;
         } else {
+            if (getValue().isEmpty()) {
+                setValue("0");
+            }
             setFocused(false);
             return false;
         }
     }
 
     public String formatEnergy(String value) {
-
         if (value.isEmpty()) {
-            return "0";
+            return "";
         }
 
-        int energy = 0;
+        int energy;
         value = value.replace(",", "");
 
         try {
@@ -93,7 +87,7 @@ public class EnergyTextboxWidget extends EditBox {
         }
 
         try {
-            DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance(Locale.ROOT);
+            DecimalFormat decimalFormat = new DecimalFormat();
             decimalFormat.applyPattern("#,###");
             return decimalFormat.format(energy);
         } catch (NumberFormatException e) {
@@ -111,5 +105,22 @@ public class EnergyTextboxWidget extends EditBox {
         if (mouseX >= getX() && mouseX <= getX() + width && mouseY >= getY() && mouseY <= getY() + height && !isFocused() && maxEnergy.get() != 0) {
             guiGraphics.renderTooltip(displayOn.getMinecraft().font, Component.literal(formatEnergy(getValue()) +"/" +formatEnergy(Integer.toString(maxEnergy.get()))  +" µI"), mouseX, mouseY);
         }
+    }
+
+    public void OnFocusStoppedResponder(Consumer<String> responder) {
+        this.focusResponder = responder;
+    }
+
+    @Override
+    public void setValue(String text) {
+        super.setValue(text);
+    }
+
+    @Override
+    public void setFocused(boolean focused) {
+        if (!focused && focusResponder != null) {
+            focusResponder.accept(getValue());
+        }
+        super.setFocused(focused);
     }
 }

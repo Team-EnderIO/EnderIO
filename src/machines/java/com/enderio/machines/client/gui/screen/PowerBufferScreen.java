@@ -38,13 +38,13 @@ public class PowerBufferScreen extends EIOScreen<PowerBufferMenu> {
         addRenderableWidget(new IOConfigButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 22, 16, 16, menu, this::addRenderableWidget, font));
 
         input = new EnergyTextboxWidget(this, () -> this.getMenu().getBlockEntity().getEnergyStorage().getMaxEnergyUse(), this.font, leftPos + 40, topPos + 18, 95, this.font.lineHeight + 2, Component.empty());
-        input.setValue(Integer.toString(this.getMenu().getBlockEntity().getMaxInput()));
-        input.setResponder(this::updateInput);
+        input.setValue(input.formatEnergy(Integer.toString(this.getMenu().getBlockEntity().getMaxInput())));
+        input.OnFocusStoppedResponder(this::updateInput);
         addRenderableWidget(input);
 
         output = new EnergyTextboxWidget(this, () -> this.getMenu().getBlockEntity().getEnergyStorage().getMaxEnergyUse(), this.font, leftPos + 40, topPos + 48, 95, this.font.lineHeight + 2, Component.empty());
         output.setValue(output.formatEnergy(Integer.toString(this.getMenu().getBlockEntity().getMaxOutput())));
-        output.setResponder(this::updateOutput);
+        output.OnFocusStoppedResponder(this::updateOutput);
         addRenderableWidget(output);
 
     }
@@ -62,7 +62,6 @@ public class PowerBufferScreen extends EIOScreen<PowerBufferMenu> {
     @Override
     public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
         super.render(guiGraphics, pMouseX, pMouseY, pPartialTicks);
-        PowerBufferBlockEntity be = this.getMenu().getBlockEntity();
         guiGraphics.drawString(font, EIOLang.INPUT.getString() +":", leftPos + 40, topPos + 18 - font.lineHeight - 2, 1, false);
         guiGraphics.drawString(font, EIOLang.OUTPUT.getString() +":", leftPos + 40, topPos + 48 - font.lineHeight - 2, 1, false);
     }

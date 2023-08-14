@@ -40,9 +40,8 @@ public class PowerBufferBlockEntity extends PoweredMachineBlockEntity {
     public PowerBufferBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Both, CAPACITY, USAGE, type, worldPosition, blockState);
 
-        //Networing in modding is very fun :)
-        inputDataSlot = new IntegerNetworkDataSlot(() -> maxInput, input -> maxInput = input);
-        outputDataSlot = new IntegerNetworkDataSlot(() -> maxOutput, output -> maxOutput = output);
+        inputDataSlot = new IntegerNetworkDataSlot(this::getMaxInput, input -> maxInput = input);
+        outputDataSlot = new IntegerNetworkDataSlot(this::getMaxOutput, output -> maxOutput = output);
         addDataSlot(inputDataSlot);
         addDataSlot(outputDataSlot);
     }
@@ -67,13 +66,15 @@ public class PowerBufferBlockEntity extends PoweredMachineBlockEntity {
     }
 
     public void setMaxOutput(int pMaxOutput) {
-        this.maxOutput = pMaxOutput;
-        clientUpdateSlot(outputDataSlot, maxOutput);
+        if (level != null && level.isClientSide) {
+            clientUpdateSlot(outputDataSlot, pMaxOutput);
+        } else this.maxOutput = pMaxOutput;
     }
 
     public void setMaxInput(int pMaxInput) {
-        this.maxInput = pMaxInput;
-        clientUpdateSlot(inputDataSlot, maxInput);
+        if (level != null && level.isClientSide) {
+            clientUpdateSlot(inputDataSlot, pMaxInput);
+        } else this.maxInput = pMaxInput;
     }
 
     public int getMaxInput() {
@@ -101,9 +102,9 @@ public class PowerBufferBlockEntity extends PoweredMachineBlockEntity {
                 if (otherHandler.isPresent()) {
 
                     // If the other handler can receive power transmit ours and there is enough energy stored
-                    if (otherHandler.get().canReceive() && getExposedEnergyStorage().getEnergyStored() - maxOutput >= 0) {
+                    if (otherHandler.get().canReceive() && getExposedEnergyStorage().getEnergyStored() - getMaxOutput() >= 0) {
 
-                        int received = otherHandler.get().receiveEnergy(maxOutput, false);
+                        int received = otherHandler.get().receiveEnergy(getMaxOutput(), false);
                         // Consume that energy from our buffer.
                         getExposedEnergyStorage().extractEnergy(received, false);
                     }
@@ -157,21 +158,4 @@ public class PowerBufferBlockEntity extends PoweredMachineBlockEntity {
         maxInput = pTag.getInt(CoreNBTKeys.BUFFER_MAX_INPUT);
         maxOutput = pTag.getInt(CoreNBTKeys.BUFFER_MAX_OUTPUT);
     }
-
-    //Reset values if capacitor is added/removed and transmit it to the textbox
-
-//    @Override
-//    protected void onInventoryContentsChanged(int slot) {
-//        super.onInventoryContentsChanged(slot);
-//        MachineInventoryLayout inventoryLayout = getInventoryLayout();
-//        if (inventoryLayout != null && inventoryLayout.getCapacitorSlot() == slot) {
-//            if (requiresCapacitor() && isCapacitorInstalled()) {
-//                setMaxInput(getEnergyStorage().getMaxEnergyUse());
-//                setMaxOutput(getEnergyStorage().getMaxEnergyUse());
-//            } else {
-//                setMaxInput(0);
-//                setMaxOutput(0);
-//            }
-//        }
-//    }
 }
