@@ -30,6 +30,7 @@ import java.util.stream.Stream;
 public class TravelSavedData extends SavedData {
 
     private static final TravelSavedData CLIENT_INSTANCE = new TravelSavedData();
+    public static final String TARGETS = "targets";
     private final Map<BlockPos, ITravelTarget> travelTargets = new HashMap<>();
 
     public TravelSavedData() {
@@ -50,7 +51,7 @@ public class TravelSavedData extends SavedData {
 
     public void loadNBT(CompoundTag nbt){
         this.travelTargets.clear();
-        ListTag targets = nbt.getList("targets", Tag.TAG_COMPOUND);
+        ListTag targets = nbt.getList(TARGETS, Tag.TAG_COMPOUND);
         targets.stream().map(anchorData -> (CompoundTag)anchorData)
             .map(TravelRegistry::deserialize)
             .flatMap(Optional::stream)
@@ -93,7 +94,7 @@ public class TravelSavedData extends SavedData {
     public CompoundTag save(CompoundTag nbt) {
         ListTag tag = new ListTag();
         tag.addAll(travelTargets.values().stream().map(TravelRegistry::serialize).toList());
-        nbt.put("targets", tag);
+        nbt.put(TARGETS, tag);
         return nbt;
     }
 
