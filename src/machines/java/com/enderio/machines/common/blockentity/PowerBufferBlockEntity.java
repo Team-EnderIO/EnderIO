@@ -1,12 +1,10 @@
 package com.enderio.machines.common.blockentity;
 
-import com.enderio.EnderIO;
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.CoreNBTKeys;
 import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
-import com.enderio.core.common.util.NumberUtils;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
@@ -22,7 +20,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
-
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -69,13 +66,13 @@ public class PowerBufferBlockEntity extends PoweredMachineBlockEntity {
         return new PowerBufferMenu(this, playerInventory, containerId);
     }
 
-    public void setMaxOutput(String pMaxOutput) {
-        this.maxOutput = NumberUtils.getInteger(pMaxOutput);
+    public void setMaxOutput(int pMaxOutput) {
+        this.maxOutput = pMaxOutput;
         clientUpdateSlot(outputDataSlot, maxOutput);
     }
 
-    public void setMaxInput(String pMaxInput) {
-        this.maxInput = NumberUtils.getInteger(pMaxInput);
+    public void setMaxInput(int pMaxInput) {
+        this.maxInput = pMaxInput;
         clientUpdateSlot(inputDataSlot, maxInput);
     }
 

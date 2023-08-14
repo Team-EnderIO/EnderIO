@@ -5,6 +5,7 @@ import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
+import com.enderio.core.common.util.NumberUtils;
 import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
 import com.enderio.machines.client.gui.widget.EnergyTextboxWidget;
 import com.enderio.machines.client.gui.widget.ioconfig.IOConfigButton;
@@ -37,13 +38,13 @@ public class PowerBufferScreen extends EIOScreen<PowerBufferMenu> {
         addRenderableWidget(new IOConfigButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 22, 16, 16, menu, this::addRenderableWidget, font));
 
         input = new EnergyTextboxWidget(this, () -> this.getMenu().getBlockEntity().getEnergyStorage().getMaxEnergyUse(), this.font, leftPos + 40, topPos + 18, 95, this.font.lineHeight + 2, Component.empty());
-        input.setResponder(getMenu().getBlockEntity()::setMaxInput);
         input.setValue(Integer.toString(this.getMenu().getBlockEntity().getMaxInput()));
+        input.setResponder(this::updateInput);
         addRenderableWidget(input);
 
         output = new EnergyTextboxWidget(this, () -> this.getMenu().getBlockEntity().getEnergyStorage().getMaxEnergyUse(), this.font, leftPos + 40, topPos + 48, 95, this.font.lineHeight + 2, Component.empty());
-        output.setResponder(getMenu().getBlockEntity()::setMaxOutput);
         output.setValue(output.formatEnergy(Integer.toString(this.getMenu().getBlockEntity().getMaxOutput())));
+        output.setResponder(this::updateOutput);
         addRenderableWidget(output);
 
     }
@@ -66,14 +67,20 @@ public class PowerBufferScreen extends EIOScreen<PowerBufferMenu> {
         guiGraphics.drawString(font, EIOLang.OUTPUT.getString() +":", leftPos + 40, topPos + 48 - font.lineHeight - 2, 1, false);
     }
 
-    //Syncronize the block entity values with what is displayed to the player
-    @Override
-    protected void containerTick() {
-        super.containerTick();
+    private void updateInput(String val){
+        int amount = NumberUtils.getInteger(val);
         PowerBufferBlockEntity be = this.getMenu().getBlockEntity();
         if (be != null) {
-            input.setValue(input.formatEnergy(Integer.toString(be.getMaxInput())));
-            output.setValue(output.formatEnergy(Integer.toString(be.getMaxOutput())));
+            amount = Math.max(0, Math.min(amount, be.getEnergyStorage().getMaxEnergyUse()));
+            be.setMaxInput(amount);
+        }
+    }
+    private void updateOutput(String val){
+        int amount = NumberUtils.getInteger(val);
+        PowerBufferBlockEntity be = this.getMenu().getBlockEntity();
+        if (be != null) {
+            amount = Math.max(0, Math.min(amount, be.getEnergyStorage().getMaxEnergyUse()));
+            be.setMaxOutput(amount);
         }
     }
 }
