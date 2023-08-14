@@ -78,6 +78,7 @@ public class ConduitConnection implements INBTSerializable<CompoundTag> {
 
     public void disableType(int index) {
         connectionStates[index] = StaticConnectionStates.DISABLED;
+        on.incrementDataVersion();
     }
 
     public boolean isEnd() {
@@ -174,9 +175,11 @@ public class ConduitConnection implements INBTSerializable<CompoundTag> {
     }
     public void setConnectionState(IConduitType<?> type, IConnectionState state) {
         setConnectionState(on.getTypeIndex(type),state);
+        on.incrementDataVersion();
     }
     private void setConnectionState(int i, IConnectionState state) {
         connectionStates[i] = state;
+        on.incrementDataVersion();
     }
 
     public ItemStack getItem(SlotType type, int conduitIndex) {
