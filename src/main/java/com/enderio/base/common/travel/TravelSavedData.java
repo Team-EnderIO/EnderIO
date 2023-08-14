@@ -3,6 +3,8 @@ package com.enderio.base.common.travel;
 import com.enderio.EnderIO;
 import com.enderio.api.travel.ITravelTarget;
 import com.enderio.api.travel.TravelRegistry;
+import com.enderio.base.common.network.AddTravelTargetPacket;
+import com.enderio.base.common.network.RemoveTravelTargetPacket;
 import com.enderio.base.common.network.SyncTravelDataPacket;
 import com.enderio.core.common.network.CoreNetwork;
 import net.minecraft.core.BlockPos;
@@ -35,7 +37,6 @@ public class TravelSavedData extends SavedData {
     }
 
     public TravelSavedData(CompoundTag nbt) {
-        this();
         this.loadNBT(nbt);
     }
 
@@ -71,30 +72,21 @@ public class TravelSavedData extends SavedData {
     }
 
     public void addTravelTarget(Level level, ITravelTarget target) {
-        if(level.isClientSide)
-            return;
+        if (!level.isClientSide) {
+            CoreNetwork.sendToDimension(level.dimension(), new AddTravelTargetPacket(target));
+        }
         if (TravelRegistry.isRegistered(target)) {
             travelTargets.put(target.getPos(), target);
-            syncData(level);
         } else {
             EnderIO.LOGGER.warn("Tried to add a not registered TravelTarget to the TravelSavedData with name " + target);
         }
     }
 
-    public void updateTravelTarget(Level level, ITravelTarget target){
-        if(level.isClientSide)
-            return;
-        if(travelTargets.containsKey(target.getPos())){
-            travelTargets.replace(target.getPos(), target);
-            syncData(level);
-        }
-    }
-
     public void removeTravelTargetAt(Level level, BlockPos pos) {
-        if(level.isClientSide)
-            return;
+        if (!level.isClientSide) {
+            CoreNetwork.sendToDimension(level.dimension(), new RemoveTravelTargetPacket(pos));
+        }
         travelTargets.remove(pos);
-        syncData(level);
     }
 
     @Override
@@ -110,22 +102,19 @@ public class TravelSavedData extends SavedData {
         return true;
     }
 
-    private void syncData(Level level){
-        CoreNetwork.sendToDimension(level.dimension(), new SyncTravelDataPacket(save(new CompoundTag())));
-    }
     @SubscribeEvent
     public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         Player player = event.getEntity();
-        if (!player.getCommandSenderWorld().isClientSide && player instanceof ServerPlayer serverPlayer) {
-            CoreNetwork.sendToPlayer(serverPlayer, new SyncTravelDataPacket(TravelSavedData.getTravelData(player.getCommandSenderWorld()).save(new CompoundTag())));
+        if (player instanceof ServerPlayer serverPlayer) {
+            CoreNetwork.sendToPlayer(serverPlayer, new SyncTravelDataPacket(TravelSavedData.getTravelData(serverPlayer.level()).save(new CompoundTag())));
         }
     }
 
     @SubscribeEvent
     public static void onDimensionChange(PlayerEvent.PlayerChangedDimensionEvent event) {
         Player player = event.getEntity();
-        if (!player.getCommandSenderWorld().isClientSide && player instanceof ServerPlayer serverPlayer) {
-            CoreNetwork.sendToPlayer(serverPlayer, new SyncTravelDataPacket(TravelSavedData.getTravelData(player.getCommandSenderWorld()).save(new CompoundTag())));
+        if (player instanceof ServerPlayer serverPlayer) {
+            CoreNetwork.sendToPlayer(serverPlayer, new SyncTravelDataPacket(TravelSavedData.getTravelData(serverPlayer.level()).save(new CompoundTag())));
         }
     }
 }

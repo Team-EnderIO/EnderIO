@@ -1,6 +1,8 @@
 package com.enderio.machines.common.block;
 
 import com.enderio.base.common.handler.TravelHandler;
+import com.enderio.base.common.travel.TravelSavedData;
+import com.enderio.machines.common.blockentity.TravelAnchorBlockEntity;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -63,9 +65,9 @@ public class TravelAnchorBlock extends MachineBlock {
 
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
-//        if (level.getBlockEntity(pos) instanceof TravelAnchorBlockEntity anchorBlock) {
-//            TravelSavedData.getTravelData(level).removeTravelTargetAt(pos);
-//        }
+        if (level.getBlockEntity(pos) instanceof TravelAnchorBlockEntity anchorBlock) {
+            TravelSavedData.getTravelData(level).removeTravelTargetAt(level, pos);
+        }
         super.onRemove(state, level, pos, newState, movedByPiston);
     }
 }

@@ -2,7 +2,6 @@ package com.enderio.base.common.network;
 
 import com.enderio.base.common.travel.TravelSavedData;
 import com.enderio.core.common.network.Packet;
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkDirection;
@@ -31,8 +30,8 @@ public class SyncTravelDataPacket implements Packet {
 
     @Override
     public void handle(NetworkEvent.Context context) {
-        context.enqueueWork(() -> TravelSavedData.getTravelData(Minecraft.getInstance().level).loadNBT(this.data.copy()));
-        context.setPacketHandled(true);
+        TravelSavedData travelData = TravelSavedData.getTravelData(null);
+        travelData.loadNBT(this.data);
     }
 
     public static class Handler extends PacketHandler<SyncTravelDataPacket>{
