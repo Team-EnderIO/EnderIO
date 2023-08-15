@@ -76,7 +76,7 @@ public class SlicerRecipeManager {
         for (SlicingRecipe slicingRecipe : manager.getAllRecipesFor(MachineRecipes.SLICING.type().get())) {
             for (int i = 0; i < 6; i++) {
                 Ingredient ingredient = slicingRecipe.getInputs().get(i);
-                if (ingredient.getClass() == Ingredient.class) {
+                if (ingredient.isSimple()) {
                     Set<Item> itemset = items.get(i);
                     Arrays.stream(ingredient.getItems()).map(ItemStack::getItem).forEach(itemset::add);
                 } else {
