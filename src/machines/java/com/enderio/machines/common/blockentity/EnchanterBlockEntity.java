@@ -20,13 +20,13 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
-
-import java.util.Optional;
+import org.jetbrains.annotations.Nullable;
 
 public class EnchanterBlockEntity extends MachineBlockEntity {
 
     private final RecipeWrapper container;
-    private Optional<EnchanterRecipe> currentRecipe;
+    @Nullable
+    private EnchanterRecipe currentRecipe;
     public static final SingleSlotAccess BOOK = new SingleSlotAccess();
     public static final SingleSlotAccess CATALYST = new SingleSlotAccess();
     public static final SingleSlotAccess LAPIS = new SingleSlotAccess();
@@ -84,10 +84,10 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
                 if (level == null) {
                     return;
                 }
-                currentRecipe = level.getRecipeManager().getRecipeFor(MachineRecipes.ENCHANTING.type().get(), container, level);
+                currentRecipe = level.getRecipeManager().getRecipeFor(MachineRecipes.ENCHANTING.type().get(), container, level).orElse(null);
                 if (!OUTPUT.isSlot(slot)) {
-                    if (currentRecipe.isPresent()) {
-                        OUTPUT.setStackInSlot(this, currentRecipe.get().assemble(container, level.registryAccess()));
+                    if (currentRecipe != null) {
+                        OUTPUT.setStackInSlot(this, currentRecipe.assemble(container, level.registryAccess()));
                     } else {
                         OUTPUT.setStackInSlot(this, ItemStack.EMPTY);
                     }
@@ -110,7 +110,8 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
         };
     }
 
-    public Optional<EnchanterRecipe> getCurrentRecipe() {
+    @Nullable
+    public EnchanterRecipe getCurrentRecipe() {
         return currentRecipe;
     }
 }
