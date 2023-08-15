@@ -65,7 +65,7 @@ public class EnderBlockEntity extends BlockEntity {
         // Perform syncing.
         if (level != null && !level.isClientSide) {
             sync();
-            setChanged();
+            level.blockEntityChanged(worldPosition);
         }
     }
 
