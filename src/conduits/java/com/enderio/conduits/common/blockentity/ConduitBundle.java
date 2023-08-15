@@ -287,8 +287,8 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         dataVersion++;
     }
 
-    public void connectTo(Direction direction, IConduitType<?> type, boolean end) {
-        getConnection(direction).connectTo(getNodeFor(type), direction, type, getTypeIndex(type), end);
+    public void connectTo(Level level, BlockPos pos, Direction direction, IConduitType<?> type, boolean end) {
+        getConnection(direction).connectTo(level, pos, getNodeFor(type), direction, type, getTypeIndex(type), end);
         scheduleSync.run();
         dataVersion++;
     }

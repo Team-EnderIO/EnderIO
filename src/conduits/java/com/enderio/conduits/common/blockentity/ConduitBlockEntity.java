@@ -424,12 +424,12 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     }
 
     private void connect(Direction direction, IConduitType<?> type) {
-        bundle.connectTo(direction, type, false);
+        bundle.connectTo(level, worldPosition, direction, type, false);
         updateClient();
     }
 
     private void connectEnd(Direction direction, IConduitType<?> type) {
-        bundle.connectTo(direction, type, true);
+        bundle.connectTo(level, worldPosition, direction, type, true);
         updateClient();
     }
 
