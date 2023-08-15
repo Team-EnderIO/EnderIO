@@ -103,14 +103,14 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
                     new EnumIconWidget<>(this, pos.x(), pos.y() + 20,
                         () -> getOnDynamic(dyn -> dyn.insert(), ColorControl.GREEN),
                         color -> actOnDynamic(dyn -> dyn.withColor(false, color)),
-                    EIOLang.CHANNEL));
+                    EIOLang.CONDUIT_CHANNEL));
             }
             if (data.showColorExtract()) {
                 addTypedButton(
                     new EnumIconWidget<>(this, pos.x() + 90, pos.y() + 20,
                         () -> getOnDynamic(dyn -> dyn.extract(), ColorControl.GREEN),
                         color -> actOnDynamic(dyn -> dyn.withColor(true, color)),
-                        EIOLang.CHANNEL));
+                        EIOLang.CONDUIT_CHANNEL));
             }
             if (data.showRedstoneExtract()) {
                 addTypedButton(
@@ -122,7 +122,7 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
                     new EnumIconWidget<>(this, pos.x() + 90 + 20, pos.y() + 40,
                         () -> getOnDynamic(dyn -> dyn.redstoneChannel(), ColorControl.GREEN),
                         color -> actOnDynamic(dyn -> dyn.withRedstoneChannel(color)),
-                        EIOLang.CHANNEL));
+                        EIOLang.REDSTONE_CHANNEL));
             }
             menu.getConduitType()
                 .getClientData()
