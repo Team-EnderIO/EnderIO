@@ -12,11 +12,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraftforge.client.model.generators.BlockModelBuilder;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.loaders.CompositeModelBuilder;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
 
@@ -87,7 +85,8 @@ public class MachineModelUtil {
     }
 
     private static ModelFile wrapMachineModel(DataGenContext<Block, ? extends Block> ctx, RegistrateBlockstateProvider prov, ResourceLocation model) {
-        return prov.models().withExistingParent(ctx.getName() + "_combined", prov.mcLoc("block/block"))
+        return prov.models().withExistingParent(model.getPath() + "_combined", prov.mcLoc("block/block"))
+            .texture("particle", ctx.getName().equals("enchanter")? EnderIO.loc("block/dark_steel_pressure_plate") : new ResourceLocation(model.getNamespace(),"block/" + ctx.getName() + "_front"))
             .customLoader(CompositeModelBuilder::begin)
             .child("machine", EIOModel.getExistingParent(prov.models(), model))
             .child("overlay", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/io_overlay")))
