@@ -1,6 +1,5 @@
 package com.enderio.machines.common.block;
 
-import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import net.minecraft.core.BlockPos;
@@ -125,8 +124,8 @@ public class MachineBlock extends BaseEntityBlock {
 
     @Override
     public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
-        if (level.getExistingBlockEntity(pos) instanceof FluidTankBlockEntity fluidTank) {
-            return fluidTank.getFluidTank().getFluid().getFluid().getFluidType().getLightLevel();
+        if (level.getExistingBlockEntity(pos) instanceof MachineBlockEntity machineBlock) {
+            return machineBlock.getLightEmission();
         }
         return super.getLightEmission(state, level, pos);
     }
