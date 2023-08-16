@@ -2,7 +2,7 @@
   "parent": "minecraft:block/block",
   "children": {
     "machine": {
-      "parent": "enderio:block/impulse_hopper_active"
+      "parent": "enderio:block/impulse_hopper"
     },
     "overlay": {
       "parent": "enderio:block/io_overlay"

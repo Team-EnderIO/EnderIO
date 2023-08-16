@@ -2,7 +2,7 @@
   "parent": "minecraft:block/block",
   "children": {
     "machine": {
-      "parent": "enderio:block/painting_machine_active"
+      "parent": "enderio:block/painting_machine"
     },
     "overlay": {
       "parent": "enderio:block/io_overlay"

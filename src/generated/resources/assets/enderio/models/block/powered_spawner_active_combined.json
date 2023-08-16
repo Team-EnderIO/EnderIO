@@ -2,7 +2,7 @@
   "parent": "minecraft:block/block",
   "children": {
     "machine": {
-      "parent": "enderio:block/primitive_alloy_smelter"
+      "parent": "enderio:block/powered_spawner_active"
     },
     "overlay": {
       "parent": "enderio:block/io_overlay"

@@ -5,21 +5,21 @@
       "y": 90
     },
     "facing=east,powered=true": {
-      "model": "enderio:block/sag_mill_combined",
+      "model": "enderio:block/sag_mill_active_combined",
       "y": 90
     },
     "facing=north,powered=false": {
       "model": "enderio:block/sag_mill_combined"
     },
     "facing=north,powered=true": {
-      "model": "enderio:block/sag_mill_combined"
+      "model": "enderio:block/sag_mill_active_combined"
     },
     "facing=south,powered=false": {
       "model": "enderio:block/sag_mill_combined",
       "y": 180
     },
     "facing=south,powered=true": {
-      "model": "enderio:block/sag_mill_combined",
+      "model": "enderio:block/sag_mill_active_combined",
       "y": 180
     },
     "facing=west,powered=false": {
@@ -27,7 +27,7 @@
       "y": 270
     },
     "facing=west,powered=true": {
-      "model": "enderio:block/sag_mill_combined",
+      "model": "enderio:block/sag_mill_active_combined",
       "y": 270
     }
   }

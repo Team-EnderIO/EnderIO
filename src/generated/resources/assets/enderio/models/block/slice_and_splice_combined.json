@@ -2,7 +2,7 @@
   "parent": "minecraft:block/block",
   "children": {
     "machine": {
-      "parent": "enderio:block/slice_and_splice_active"
+      "parent": "enderio:block/slice_and_splice"
     },
     "overlay": {
       "parent": "enderio:block/io_overlay"

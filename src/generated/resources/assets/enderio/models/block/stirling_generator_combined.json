@@ -2,7 +2,7 @@
   "parent": "minecraft:block/block",
   "children": {
     "machine": {
-      "parent": "enderio:block/stirling_generator_active"
+      "parent": "enderio:block/stirling_generator"
     },
     "overlay": {
       "parent": "enderio:block/io_overlay"
