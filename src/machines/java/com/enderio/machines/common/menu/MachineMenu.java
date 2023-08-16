@@ -105,12 +105,12 @@ public abstract class MachineMenu<T extends MachineBlockEntity> extends SyncedMe
                             if (j <= maxSize) {
                                 stack.setCount(0);
                                 itemstack.setCount(j);
-                                slot.setChanged();
+                                slot.set(itemstack);
                                 flag = true;
                             } else if (itemstack.getCount() < maxSize) {
                                 stack.shrink(maxSize - itemstack.getCount());
                                 itemstack.setCount(maxSize);
-                                slot.setChanged();
+                                slot.set(itemstack);
                                 flag = true;
                             }
                         }
