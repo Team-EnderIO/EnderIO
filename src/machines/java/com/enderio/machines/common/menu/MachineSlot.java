@@ -34,4 +34,9 @@ public class MachineSlot extends SlotItemHandler {
     public boolean canQuickInsertStack() {
         return getItemHandler().getLayout().guiCanInsert(getSlotIndex());
     }
+
+    @Override
+    public void setChanged() {
+        getItemHandler().setStackInSlot(this.getSlotIndex(), this.getItem());
+    }
 }
