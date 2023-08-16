@@ -86,6 +86,7 @@ public class MachineModelUtil {
 
     private static ModelFile wrapMachineModel(DataGenContext<Block, ? extends Block> ctx, RegistrateBlockstateProvider prov, ResourceLocation model) {
         return prov.models().withExistingParent(model.getPath() + "_combined", prov.mcLoc("block/block"))
+            .texture("particle", new ResourceLocation(model.getNamespace(),"block/" + ctx.getName() + "_front"))
             .customLoader(CompositeModelBuilder::begin)
             .child("machine", EIOModel.getExistingParent(prov.models(), model))
             .child("overlay", EIOModel.getExistingParent(prov.models(), EnderIO.loc("block/io_overlay")))

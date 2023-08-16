@@ -12,5 +12,8 @@
     "machine",
     "overlay"
   ],
-  "loader": "forge:composite"
+  "loader": "forge:composite",
+  "textures": {
+    "particle": "enderio:block/enchanter_front"
+  }
 }
