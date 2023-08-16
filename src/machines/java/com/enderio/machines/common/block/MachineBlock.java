@@ -1,5 +1,6 @@
 package com.enderio.machines.common.block;
 
+import com.enderio.core.common.compat.FlywheelCompat;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import net.minecraft.core.BlockPos;
@@ -24,6 +25,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
@@ -124,7 +126,13 @@ public class MachineBlock extends BaseEntityBlock {
 
     @Override
     public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
-        if (level.getExistingBlockEntity(pos) instanceof MachineBlockEntity machineBlock) {
+        BlockEntity existingBlockEntity;
+        if (ModList.get().isLoaded("flywheel")) {
+            existingBlockEntity =  FlywheelCompat.getExistingBlockEntity(level, pos);
+        } else {
+            existingBlockEntity = level.getExistingBlockEntity(pos);
+        }
+        if (existingBlockEntity instanceof MachineBlockEntity machineBlock) {
             return machineBlock.getLightEmission();
         }
         return super.getLightEmission(state, level, pos);
