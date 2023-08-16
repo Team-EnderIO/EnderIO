@@ -120,7 +120,7 @@ public class SpawnerMachineTask implements IPoweredMachineTask {
             blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
             return;
         }
-        if (optionalEntity.get().is(MachineTags.EntityTypes.SPAWNER_BLACKLIST)) {
+        if (optionalEntity.get().get().is(MachineTags.EntityTypes.SPAWNER_BLACKLIST)) {
             return;
         }
         Optional<SpawnerSoul.SoulData> opData = SpawnerSoul.SPAWNER.matches(rl.get());
