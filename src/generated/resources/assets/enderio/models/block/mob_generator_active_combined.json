@@ -2,7 +2,7 @@
   "parent": "minecraft:block/block",
   "children": {
     "machine": {
-      "parent": "enderio:block/mob_generator"
+      "parent": "enderio:block/mob_generator_active"
     },
     "overlay": {
       "parent": "enderio:block/io_overlay"

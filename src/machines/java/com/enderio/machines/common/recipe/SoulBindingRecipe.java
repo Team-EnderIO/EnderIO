@@ -82,6 +82,11 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
         return mobCategory;
     }
 
+    @Nullable
+    public String getSouldata() {
+        return souldata;
+    }
+
     @Override
     public int getBaseEnergyCost() {
         return energy;
