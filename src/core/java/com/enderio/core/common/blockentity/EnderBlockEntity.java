@@ -205,6 +205,7 @@ public class EnderBlockEntity extends BlockEntity {
             throw new IllegalStateException("Invalid buffer was passed over the network to the server.");
         }
         dataSlots.get(index).fromBuffer(buf);
+        dataSlots.get(index).updateServerCallback();
     }
 
     // endregion

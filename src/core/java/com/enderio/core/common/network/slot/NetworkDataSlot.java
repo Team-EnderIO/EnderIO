@@ -65,5 +65,6 @@ public abstract class NetworkDataSlot<T> {
 
     //Called after the server is updated with the new data
     public void updateServerCallback() {
+
     }
 }
