@@ -177,7 +177,7 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
     @Override
     protected boolean isActive() {
         // Ignores power.
-        return canAct() && craftingTaskHost.hasTask();
+        return canAct() && isBurning();
     }
 
     @Override

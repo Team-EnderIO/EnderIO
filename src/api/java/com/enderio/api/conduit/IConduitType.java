@@ -2,7 +2,7 @@ package com.enderio.api.conduit;
 
 import com.enderio.api.UseOnly;
 import com.enderio.api.conduit.ticker.IConduitTicker;
-import com.enderio.api.misc.ColorControl;
+import com.enderio.api.misc.RedstoneControl;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -49,9 +49,15 @@ public interface IConduitType<T extends IExtendedConduitData<T>> {
         return Optional.empty();
     }
 
-    default ConduitConnectionData getDefaultConnection() {
-        return new ConduitConnectionData(false, true);
+    /**
+     * @param level the level
+     * @param pos conduit position
+     * @param direction direction the conduit connects to
+     * @return the connectiondata that should be set on connection based on context
+     */
+    default ConduitConnectionData getDefaultConnection(Level level, BlockPos pos, Direction direction) {
+        return new ConduitConnectionData(false, true, RedstoneControl.NEVER_ACTIVE);
     }
 
-    record ConduitConnectionData(boolean isInsert, boolean isExtract) {}
+    record ConduitConnectionData(boolean isInsert, boolean isExtract, RedstoneControl control) {}
 }

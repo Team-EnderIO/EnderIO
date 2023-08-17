@@ -48,7 +48,8 @@ public class EIOLang {
     public static final Component TOO_MANY_LEVELS = REGISTRATE.addLang("info", EnderIO.loc("too_many_levels"), "You have more than 21862 levels, that's too much XP.");
 
 
-    public static final Component CHANNEL = REGISTRATE.addLang("gui", EnderIO.loc("channel"), "Channel");
+    public static final Component CONDUIT_CHANNEL = REGISTRATE.addLang("gui", EnderIO.loc("conduit_channel"), "Conduit-Channel");
+    public static final Component REDSTONE_CHANNEL = REGISTRATE.addLang("gui", EnderIO.loc("redstone_channel"), "Redstone-Channel");
     public static final Component REDSTONE_MODE = REGISTRATE.addLang("gui", EnderIO.loc("redstone.mode"), "Redstone Mode");
     public static final Component REDSTONE_ALWAYS_ACTIVE = REGISTRATE.addLang("gui", EnderIO.loc("redstone.always_active"), "Always active");
     public static final Component REDSTONE_ACTIVE_WITH_SIGNAL = REGISTRATE.addLang("gui", EnderIO.loc("redstone.active_with_signal"), "Active with signal");

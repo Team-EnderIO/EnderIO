@@ -30,7 +30,7 @@ public class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, IExtende
         if (type.isDense()) {
             mainNode.setFlags(GridFlags.DENSE_CAPACITY);
         }
-        mainNode.setIdlePowerUsage(type.isDense() ? 2 : 0.5d);
+        mainNode.setIdlePowerUsage(type.isDense() ? 0.4d : 0.1d);
     }
 
     @Nullable

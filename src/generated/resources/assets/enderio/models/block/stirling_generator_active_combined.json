@@ -2,7 +2,7 @@
   "parent": "minecraft:block/block",
   "children": {
     "machine": {
-      "parent": "enderio:block/alloy_smelter"
+      "parent": "enderio:block/stirling_generator_active"
     },
     "overlay": {
       "parent": "enderio:block/io_overlay"
@@ -14,6 +14,6 @@
   ],
   "loader": "forge:composite",
   "textures": {
-    "particle": "enderio:block/alloy_smelter_front"
+    "particle": "enderio:block/stirling_generator_front"
   }
 }
