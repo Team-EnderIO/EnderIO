@@ -31,7 +31,7 @@ public class EnergyTextboxWidget extends EditBox {
         if (codePoint >= 48 && codePoint <= 57) {
             int cursorPos = getCursorPosition() + 1;
             boolean res = super.charTyped(codePoint, modifiers);
-            setValue(formatEnergy(getValue()));
+            setValue(getValue());
             moveCursorTo(cursorPos);
 
             return res;
@@ -103,7 +103,7 @@ public class EnergyTextboxWidget extends EditBox {
 
     public void renderToolTip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (mouseX >= getX() && mouseX <= getX() + width && mouseY >= getY() && mouseY <= getY() + height && !isFocused() && maxEnergy.get() != 0) {
-            guiGraphics.renderTooltip(displayOn.getMinecraft().font, Component.literal(formatEnergy(getValue()) +"/" +formatEnergy(Integer.toString(maxEnergy.get()))  +" µI"), mouseX, mouseY);
+            guiGraphics.renderTooltip(displayOn.getMinecraft().font, Component.literal(getValue() +"/" + maxEnergy.get()  +" µI"), mouseX, mouseY);
         }
     }
 
@@ -113,12 +113,15 @@ public class EnergyTextboxWidget extends EditBox {
 
     @Override
     public void setValue(String text) {
-        super.setValue(text);
+        super.setValue(formatEnergy(text));
     }
 
     @Override
     public void setFocused(boolean focused) {
         if (!focused && focusResponder != null) {
+            if (getValue().isEmpty()) {
+                setValue("0");
+            }
             focusResponder.accept(getValue());
         }
         super.setFocused(focused);

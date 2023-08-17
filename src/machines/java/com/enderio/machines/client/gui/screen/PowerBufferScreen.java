@@ -38,12 +38,12 @@ public class PowerBufferScreen extends EIOScreen<PowerBufferMenu> {
         addRenderableWidget(new IOConfigButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 22, 16, 16, menu, this::addRenderableWidget, font));
 
         input = new EnergyTextboxWidget(this, () -> this.getMenu().getBlockEntity().getEnergyStorage().getMaxEnergyUse(), this.font, leftPos + 40, topPos + 18, 95, this.font.lineHeight + 2, Component.empty());
-        input.setValue(input.formatEnergy(Integer.toString(this.getMenu().getBlockEntity().getMaxInput())));
+        input.setValue(Integer.toString(this.getMenu().getBlockEntity().getMaxInput()));
         input.OnFocusStoppedResponder(this::updateInput);
         addRenderableWidget(input);
 
         output = new EnergyTextboxWidget(this, () -> this.getMenu().getBlockEntity().getEnergyStorage().getMaxEnergyUse(), this.font, leftPos + 40, topPos + 48, 95, this.font.lineHeight + 2, Component.empty());
-        output.setValue(output.formatEnergy(Integer.toString(this.getMenu().getBlockEntity().getMaxOutput())));
+        output.setValue(Integer.toString(this.getMenu().getBlockEntity().getMaxOutput()));
         output.OnFocusStoppedResponder(this::updateOutput);
         addRenderableWidget(output);
 
