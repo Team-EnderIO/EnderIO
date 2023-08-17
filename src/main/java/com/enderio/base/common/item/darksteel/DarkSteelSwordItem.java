@@ -18,6 +18,7 @@ import net.minecraft.world.item.SwordItem;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 public class DarkSteelSwordItem extends SwordItem implements IAdvancedTooltipProvider {
     public DarkSteelSwordItem(Properties pProperties) {
@@ -27,42 +28,45 @@ public class DarkSteelSwordItem extends SwordItem implements IAdvancedTooltipPro
     @Override
     public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
         if (pTarget.isDeadOrDying() && pTarget.level().random.nextFloat() < 0.07) {
-            ItemStack skull = getSkull(pTarget);
-            Containers.dropItemStack(pAttacker.level(), pAttacker.position().x, pAttacker.position().y, pAttacker.position().z, skull);
+            Optional<ItemStack> skull = getSkull(pTarget);
+            skull.ifPresent(itemStack ->
+                Containers.dropItemStack(pAttacker.level(), pAttacker.position().x,
+                    pAttacker.position().y, pAttacker.position().z, itemStack)
+            );
         }
         return super.hurtEnemy(pStack, pTarget, pAttacker);
     }
 
     //TODO Quick and dirty. Not using instanceof cause of possible mod oddities
-    public static ItemStack getSkull(LivingEntity pTarget) {
-        ItemStack stack = new ItemStack(Items.SKELETON_SKULL);
+    public static Optional<ItemStack> getSkull(LivingEntity pTarget) {
         if (pTarget.getType() == EntityType.SKELETON || pTarget.getType() == EntityType.STRAY) {
-            stack = new ItemStack(Items.SKELETON_SKULL);
+            return Optional.of(new ItemStack(Items.SKELETON_SKULL));
         }
         if (pTarget.getType() == EntityType.ZOMBIE || pTarget.getType() == EntityType.DROWNED || pTarget.getType() == EntityType.HUSK || pTarget.getType() == EntityType.ZOMBIE_VILLAGER) {
-            stack = new ItemStack(Items.ZOMBIE_HEAD);
+            return Optional.of(new ItemStack(Items.ZOMBIE_HEAD));
         }
         if (pTarget.getType() == EntityType.WITHER_SKELETON) {
-            stack = new ItemStack(Items.WITHER_SKELETON_SKULL);
+            return Optional.of(new ItemStack(Items.WITHER_SKELETON_SKULL));
         }
         if (pTarget.getType() == EntityType.CREEPER) {
-            stack = new ItemStack(Items.CREEPER_HEAD);
+            return Optional.of(new ItemStack(Items.CREEPER_HEAD));
         }
         if (pTarget.getType() == EntityType.ENDER_DRAGON) {
-            stack = new ItemStack(Items.DRAGON_HEAD);
+            return Optional.of(new ItemStack(Items.DRAGON_HEAD));
         }
         if (pTarget.getType() == EntityType.ENDERMAN) {
-            stack = new ItemStack(EIOBlocks.ENDERMAN_HEAD);
+            return Optional.of(new ItemStack(EIOBlocks.ENDERMAN_HEAD));
         }
         if (pTarget.getType() == EntityType.PIGLIN || pTarget.getType() == EntityType.PIGLIN_BRUTE || pTarget.getType() == EntityType.ZOMBIFIED_PIGLIN) {
-            stack = new ItemStack(Items.PIGLIN_HEAD);
+            return Optional.of(new ItemStack(Items.PIGLIN_HEAD));
         }
         if (pTarget instanceof Player player) {
-            stack = new ItemStack(Items.PLAYER_HEAD);
+            ItemStack stack = new ItemStack(Items.PLAYER_HEAD);
             CompoundTag compoundtag = stack.getOrCreateTag();
             compoundtag.putString(PlayerHeadItem.TAG_SKULL_OWNER, player.getDisplayName().getString());
+            return Optional.of(stack);
         }
-        return stack;
+        return Optional.empty();
     }
 
     //TODO remove when doing tools

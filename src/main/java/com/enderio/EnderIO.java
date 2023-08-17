@@ -24,11 +24,13 @@ import com.enderio.core.EnderCore;
 import com.enderio.core.common.network.CoreNetwork;
 import com.tterrag.registrate.Registrate;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.common.data.ForgeAdvancementProvider;
 import net.minecraftforge.common.util.Lazy;
@@ -40,6 +42,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
+import net.minecraftforge.registries.MissingMappingsEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -108,6 +111,9 @@ public class EnderIO {
 
         // Decor
         EIONetwork.register();
+
+        // Remap
+        MinecraftForge.EVENT_BUS.addListener(EnderIO::missingMappings);
     }
 
     public void onGatherData(GatherDataEvent event) {
@@ -137,5 +143,18 @@ public class EnderIO {
             List.of(new LootTableProvider.SubProviderEntry(FireCraftingLootProvider::new, LootContextParamSets.EMPTY),
                 new LootTableProvider.SubProviderEntry(ChestLootProvider::new, LootContextParamSets.CHEST))));
         generator.addProvider(true, provider);
+    }
+
+    //TODO Remove later on when during beta/release.
+    public static void missingMappings(MissingMappingsEvent event) {
+        event.getMappings(Registries.ENCHANTMENT, EnderIO.MODID).forEach(mapping -> {
+            if (mapping.getKey().equals(EnderIO.loc("withering_blade"))) {
+                mapping.remap(EIOEnchantments.WITHERING.get());
+            } else if (mapping.getKey().equals(EnderIO.loc("withering_arrow"))) {
+                mapping.remap(EIOEnchantments.WITHERING.get());
+            } else if (mapping.getKey().equals(EnderIO.loc("withering_bold"))) {
+                mapping.remap(EIOEnchantments.WITHERING.get());
+            }
+        });
     }
 }

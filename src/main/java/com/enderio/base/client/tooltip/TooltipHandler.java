@@ -28,7 +28,7 @@ import java.util.*;
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class TooltipHandler {
 
-    private static final Component DETAIL_TOOLTIP = EIOLang.SHOW_DETAIL_TOOLTIP.copy().withStyle(ChatFormatting.WHITE, ChatFormatting.ITALIC);
+    private static final Component DETAIL_TOOLTIP = EIOLang.SHOW_DETAIL_TOOLTIP.copy().withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC);
 
     @SubscribeEvent
     public static void addAdvancedTooltips(ItemTooltipEvent evt) {
@@ -49,15 +49,13 @@ public class TooltipHandler {
 
     private static void addCapacitorTooltips(ItemStack itemStack, List<Component> components, boolean showAdvanced) {
         if (CapacitorUtil.isCapacitor(itemStack)) {
-            if (showAdvanced) {
-                CapacitorUtil.getCapacitorData(itemStack).ifPresent(data -> {
-                    NumberFormat fmt = NumberFormat.getInstance(Locale.ENGLISH);
-                    components.add(TooltipUtil.styledWithArgs(EIOLang.CAPACITOR_TOOLTIP_BASE, fmt.format(data.getBase())));
-                    for (Map.Entry<CapacitorModifier, Float> modifier : data.getAllModifiers().entrySet()) {
-                        components.add(TooltipUtil.styledWithArgs(new ResourceLocation("tooltip", modifier.getKey().id.toLanguageKey()), fmt.format(modifier.getValue())));
-                    }
-                });
-            } else addShowDetailsTooltip(components);
+            CapacitorUtil.getCapacitorData(itemStack).ifPresent(data -> {
+                NumberFormat fmt = NumberFormat.getInstance(Locale.ENGLISH);
+                components.add(TooltipUtil.styledWithArgs(EIOLang.CAPACITOR_TOOLTIP_BASE, fmt.format(data.getBase())));
+                for (Map.Entry<CapacitorModifier, Float> modifier : data.getAllModifiers().entrySet()) {
+                    components.add(TooltipUtil.styledWithArgs(new ResourceLocation("tooltip", modifier.getKey().id.toLanguageKey()), fmt.format(modifier.getValue())));
+                }
+            });
         }
     }
 

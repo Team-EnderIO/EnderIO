@@ -12,6 +12,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
+import java.util.function.IntConsumer;
 
 /**
  * A machine inventory.
@@ -24,6 +25,8 @@ public class MachineInventory extends ItemStackHandler implements IEnderCapabili
     private final EnumMap<Direction, LazyOptional<Wrapped>> sideCache = new EnumMap<>(Direction.class);
     private LazyOptional<Wrapped> selfCache = LazyOptional.empty();
 
+    private IntConsumer changeListener = i -> {};
+
     /**
      * Create a new machine inventory.
      */
@@ -31,6 +34,9 @@ public class MachineInventory extends ItemStackHandler implements IEnderCapabili
         super(layout.getSlotCount());
         this.config = config;
         this.layout = layout;
+    }
+    public void addSlotChangedCallback(IntConsumer callback) {
+        changeListener = changeListener.andThen(callback);
     }
 
     /**
@@ -63,7 +69,7 @@ public class MachineInventory extends ItemStackHandler implements IEnderCapabili
     }
 
     @Override
-    public LazyOptional<IItemHandler> getCapability(Direction side) {
+    public LazyOptional<IItemHandler> getCapability(@Nullable Direction side) {
         if (side == null) {
             // Create own cache if its been invalidated or not created yet.
             if (!selfCache.isPresent())
@@ -77,7 +83,7 @@ public class MachineInventory extends ItemStackHandler implements IEnderCapabili
     }
 
     @Override
-    public void invalidateSide(Direction side) {
+    public void invalidateSide(@Nullable Direction side) {
         if (side != null) {
             if (sideCache.containsKey(side)) {
                 sideCache.get(side).invalidate();
@@ -93,6 +99,31 @@ public class MachineInventory extends ItemStackHandler implements IEnderCapabili
         for (LazyOptional<Wrapped> access : sideCache.values()) {
             access.invalidate();
         }
+    }
+
+    @Override
+    public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+        boolean wasEmpty = !simulate && getStackInSlot(slot).isEmpty();
+        ItemStack itemStack = super.insertItem(slot, stack, simulate);
+        if (wasEmpty && itemStack.getCount() != stack.getCount())
+            changeListener.accept(slot);
+        return itemStack;
+    }
+
+    @Override
+    public ItemStack extractItem(int slot, int amount, boolean simulate) {
+        ItemStack itemStack = super.extractItem(slot, amount, simulate);
+        if (!itemStack.isEmpty() && !simulate && getStackInSlot(slot).isEmpty())
+            changeListener.accept(slot);
+        return itemStack;
+    }
+
+    @Override
+    public void setStackInSlot(int slot, ItemStack stack) {
+        boolean changed = stack.getItem() != getStackInSlot(slot).getItem();
+        super.setStackInSlot(slot, stack);
+        if (changed)
+            this.changeListener.accept(slot);
     }
 
     private record Wrapped(MachineInventory master, @Nullable Direction side) implements IItemHandler {

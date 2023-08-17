@@ -27,7 +27,12 @@ public class MachineMenus {
     public static final MenuEntry<DrainMenu> DRAIN = REGISTRATE.menu("crafter", DrainMenu::factory, () -> DrainScreen::new).register();
     public static final MenuEntry<WiredChargerMenu> WIRED_CHARGER = REGISTRATE.menu("wired_charger", WiredChargerMenu::factory, () -> WiredChargerScreen::new).register();
     public static final MenuEntry<PaintingMachineMenu> PAINTING_MACHINE = REGISTRATE.menu("painting_machine", PaintingMachineMenu::factory, () -> PaintingMachineScreen::new).register();
-    public static final MenuEntry<CapacitorBankMenu> CAPACITOR_BANK = REGISTRATE.menu("capacitor_bank", CapacitorBankMenu::factory, () -> CapacitorBankScreen::new).register();
+    public static final MenuEntry<CapacitorBankMenu> CAPACITOR_BANK = REGISTRATE
+        .menu("capacitor_bank", CapacitorBankMenu::factory, () -> CapacitorBankScreen::new)
+        .register();
+    public static final MenuEntry<TravelAnchorMenu> TRAVEL_ANCHOR = REGISTRATE
+        .menu("travel_anchor", TravelAnchorMenu::factory, () -> TravelAnchorScreen::new)
+        .register();
 
     public static void register() {}
 }

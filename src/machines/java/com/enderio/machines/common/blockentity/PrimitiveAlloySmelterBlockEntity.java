@@ -171,13 +171,13 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
     }
 
     public int getBurnToFE() {
-        return MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_PRODUCTION.get();
+        return MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_PRODUCTION.get() / 4;
     }
 
     @Override
     protected boolean isActive() {
         // Ignores power.
-        return canAct() && craftingTaskHost.hasTask();
+        return canAct() && isBurning();
     }
 
     @Override

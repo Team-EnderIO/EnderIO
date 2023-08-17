@@ -48,7 +48,8 @@ public class EIOLang {
     public static final Component TOO_MANY_LEVELS = REGISTRATE.addLang("info", EnderIO.loc("too_many_levels"), "You have more than 21862 levels, that's too much XP.");
 
 
-    public static final Component CHANNEL = REGISTRATE.addLang("gui", EnderIO.loc("channel"), "Channel");
+    public static final Component CONDUIT_CHANNEL = REGISTRATE.addLang("gui", EnderIO.loc("conduit_channel"), "Conduit-Channel");
+    public static final Component REDSTONE_CHANNEL = REGISTRATE.addLang("gui", EnderIO.loc("redstone_channel"), "Redstone-Channel");
     public static final Component REDSTONE_MODE = REGISTRATE.addLang("gui", EnderIO.loc("redstone.mode"), "Redstone Mode");
     public static final Component REDSTONE_ALWAYS_ACTIVE = REGISTRATE.addLang("gui", EnderIO.loc("redstone.always_active"), "Always active");
     public static final Component REDSTONE_ACTIVE_WITH_SIGNAL = REGISTRATE.addLang("gui", EnderIO.loc("redstone.active_with_signal"), "Active with signal");
@@ -134,50 +135,29 @@ public class EIOLang {
 
     // region Enchantments
 
-    public static final Component AUTO_SMELT_DESC = enchantmentDescription("auto_smelt", "Automatically smelts whatever is mined");
+    public static final Component AUTO_SMELT_DESC = enchantmentDescription("auto_smelt", "desc",
+        "Automatically smelts whatever is mined.");
 
-    public static final Component REPELLENT_DESC1 = enchantmentDescription("repellent1",
-        "Chance to teleport attackers away");
-    public static final Component REPELLENT_DESC2 = enchantmentDescription("repellent2",
-        "Higher levels teleport more often and farther");
+    public static final Component REPELLENT_DESC = enchantmentDescription("repellent", "desc",
+        "Chance to teleport attackers away. Higher levels teleport more often and farther.");
 
-    public static final Component SHIMMER_DESC1 = enchantmentDescription("shimmer1",
-        "Makes the item shimmer as if it was enchanted.");
-    public static final Component SHIMMER_DESC2 = enchantmentDescription("shimmer2",
-        "That's all.");
-    public static final Component SHIMMER_DESC3 = enchantmentDescription("shimmer3",
-        "Really.");
-    public static final Component SHIMMER_DESC4 = enchantmentDescription("shimmer4",
-        "Nothing more.");
-    public static final Component SHIMMER_DESC5 = enchantmentDescription("shimmer5",
-        "Yes, it is useless.");
-    public static final Component SHIMMER_DESC6 = enchantmentDescription("shimmer6",
-        "I know.");
+    public static final Component SHIMMER_DESC = enchantmentDescription("shimmer", "desc",
+        "Makes the item shimmer as if it was enchanted... That's all... Really...");
 
-    public static final Component SOULBOUND_DESC1 = enchantmentDescription("soulbound1",
-        "Prevents item from being lost on death.");
-    public static final Component SOULBOUND_DESC2 = enchantmentDescription("soulbound2",
-        "Note: Most gravestone mods are stupid and prevent this from working!");
+    public static final Component SOULBOUND_DESC = enchantmentDescription("soulbound", "desc",
+        "Prevents item from being lost on death. Note: Most gravestone mods are stupid and prevent this from working!");
 
-    public static final Component WITHERING_BLADE_DESC1 = enchantmentDescription("withering_blade1",
-        "Applies wither to the target");
-    public static final Component WITHERING_BLADE_DESC2 = enchantmentDescription("withering_blade2",
-        "Applies to bladed weapons");
+    public static final Component WITHERING_DESC = enchantmentDescription("withering", "desc",
+        "Applies wither to the target.");
 
-    public static final Component WITHERING_ARROW_DESC1 = enchantmentDescription("withering_arrow1",
-        "Applies wither to the target");
-    public static final Component WITHERING_ARROW_DESC2 = enchantmentDescription("withering_arrow2",
-        "Applies to bows.");
+    public static final Component WITHERING_TYPES = enchantmentDescription("withering", "type",
+        "Applies to bladed weapons, bows and crossbows.");
 
-    public static final Component WITHERING_BOLT_DESC1 = enchantmentDescription("withering_bolt1",
-        "Applies wither to the target");
-    public static final Component WITHERING_BOLT_DESC2 = enchantmentDescription("withering_bolt2",
-        "Applies to crossbows.");
+    public static final Component XP_BOOST_DESC = enchantmentDescription("xp_boost", "desc",
+        "Extra XP from mobs and blocks");
 
-    public static final Component XP_BOOST_DESC = enchantmentDescription("xp_boost", "Extra XP from mobs and blocks");
-
-    private static Component enchantmentDescription(String enchantmentname, String description) {
-        return TooltipUtil.style(REGISTRATE.addLang("description", EnderIO.loc("enchantment." + enchantmentname), description));
+    private static Component enchantmentDescription(String enchantmentName, String suffix, String description) {
+        return TooltipUtil.style(REGISTRATE.addLang("enchantment", EnderIO.loc(String.format("%s.%s", enchantmentName, suffix)), description));
     }
 
     // endregion
@@ -220,18 +200,23 @@ public class EIOLang {
     public static final MutableComponent NOCAP_TITLE = REGISTRATE.addLang("gui", EnderIO.loc("nocap.title"), "Capacitor Missing");
     public static final MutableComponent NOCAP_DESC = REGISTRATE.addLang("gui", EnderIO.loc("nocap.desc"), "Insert any capacitor so \n this machine can work!");
 
+    public static Component VISIBLE = REGISTRATE.addLang("gui", EnderIO.loc("visible.true"), "Visible");
+    public static Component NOT_VISIBLE = REGISTRATE.addLang("gui", EnderIO.loc("visible.false"), "Hidden");
 
     // endregion
 
     // region Glider
 
     public static final Component USE_GLIDER_ADVANCEMENT_TITLE = REGISTRATE.addLang("advancements", EnderIO.loc("use_glider.title"), "Majestic");
-    public static final Component USE_GLIDER_ADVANCEMENT_DESCRIPTION = REGISTRATE.addLang("advancements", EnderIO.loc("use_glider.description"), "Do you really trust some leather?");
+    public static final Component USE_GLIDER_ADVANCEMENT_DESCRIPTION = REGISTRATE.addLang("advancements", EnderIO.loc("use_glider.description"),
+        "Do you really trust some leather?");
 
     public static final Component RICH_ADVANCEMENT_TITLE = REGISTRATE.addLang("advancements", EnderIO.loc("rich.title"), "Don't tell the others");
-    public static final Component RICH_ADVANCEMENT_DESCRIPTION = REGISTRATE.addLang("advancements", EnderIO.loc("rich.description"), "Make others think you are rich");
+    public static final Component RICH_ADVANCEMENT_DESCRIPTION = REGISTRATE.addLang("advancements", EnderIO.loc("rich.description"),
+        "Make others think you are rich");
     public static final Component RICHER_ADVANCEMENT_TITLE = REGISTRATE.addLang("advancements", EnderIO.loc("richer.title"), "Is this real?");
-    public static final Component RICHER_ADVANCEMENT_DESCRIPTION = REGISTRATE.addLang("advancements", EnderIO.loc("richer.description"), "Make others think you are richer");
+    public static final Component RICHER_ADVANCEMENT_DESCRIPTION = REGISTRATE.addLang("advancements", EnderIO.loc("richer.description"),
+        "Make others think you are richer");
 
     // endregion
 

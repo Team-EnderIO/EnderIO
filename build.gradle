@@ -202,7 +202,7 @@ repositories { RepositoryHandler handler ->
     exclusiveRepo(handler, 'https://maven.tterrag.com/', 'com.tterrag.registrate')
     exclusiveRepo(handler, 'https://modmaven.dev/', 'mezz.jei', 'mcjty.theoneprobe', 'appeng')
     exclusiveRepo(handler, 'https://cursemaven.com', 'curse.maven')
-    exclusiveRepo(handler, 'https://maven.blamejared.com', 'vazkii.patchouli')
+    exclusiveRepo(handler, 'https://maven.blamejared.com', 'vazkii.patchouli', 'net.darkhax.bookshelf', 'net.darkhax.enchdesc')
     exclusiveRepo(handler, 'https://dogforce-games.com/maven', 'dev.gigaherz.graph')
     exclusiveRepo(handler, 'https://api.modrinth.com/maven', 'maven.modrinth')
 
@@ -244,6 +244,10 @@ dependencies {
     // AE2
     compileOnly "appeng:appliedenergistics2-forge:${ae2_version}:api"
     runtimeOnly fg.deobf("appeng:appliedenergistics2-forge:${ae2_version}")
+
+    // Enchantment descriptions
+    runtimeOnly fg.deobf("net.darkhax.bookshelf:Bookshelf-Forge-${minecraft_version}:${bookshelf_version}")
+    runtimeOnly fg.deobf("net.darkhax.enchdesc:EnchantmentDescriptions-Forge-${minecraft_version}:${ench_desc_version}")
 
     // The One Probe https://github.com/McJtyMods/TheOneProbe/issues/548
 //    compileOnly fg.deobf("mcjty.theoneprobe:theoneprobe:${top_version}:api") {
@@ -436,14 +440,21 @@ String getVersionString() {
     }
 
     def version_hash = ''
+    def branch_name = ''
     if (!build_server) {
         try {
-            version_hash = "git rev-parse --short HEAD".execute().text.trim()
+            version_hash = "-" + "git rev-parse --short HEAD".execute().text.trim()
+        } catch (ignored) {
+        }
+
+        try {
+            branch_name = "git rev-parse --abbrev-ref HEAD".execute().text.trim()
+            branch_name = "-" + branch_name.substring(branch_name.lastIndexOf('/') + 1)
         } catch (ignored) {
         }
     }
 
-    return "${mod_version_series}-dev-${version_hash}"
+    return "${mod_version_series}-dev${branch_name}${version_hash}"
 }
 
 String getReleaseType() {

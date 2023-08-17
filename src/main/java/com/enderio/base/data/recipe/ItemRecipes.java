@@ -112,6 +112,16 @@ public class ItemRecipes extends RecipeProvider {
             .pattern("R  ")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PULSATING_CRYSTAL.get()))
             .save(recipeConsumer);
+
+        ShapedRecipeBuilder
+            .shaped(RecipeCategory.TOOLS, EIOItems.TRAVEL_STAFF.get())
+            .define('C', EIOItems.ENDER_CRYSTAL.get())
+            .define('I', EIOItems.DARK_STEEL_INGOT.get())
+            .pattern("  C")
+            .pattern(" I ")
+            .pattern("I  ")
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.ENDER_CRYSTAL.get()))
+            .save(recipeConsumer);
     }
 
     private void addDarkSteelTools(Consumer<FinishedRecipe> recipeConsumer) {

@@ -1,0 +1,9 @@
+{
+  "credit": "Made with Blockbench by luiq54",
+  "parent": "enderio:block/hollow_core_frame",
+  "textures": {
+    "frame": "enderio:block/hollow_core_frame",
+    "inner": "enderio:block/hollow_core_frame_inner",
+    "core": "enderio:block/ender_still"
+  }
+}

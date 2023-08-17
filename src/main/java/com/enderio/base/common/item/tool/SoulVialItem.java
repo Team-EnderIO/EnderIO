@@ -92,7 +92,9 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
         if (pPlayer.level().isClientSide) {
             return InteractionResult.FAIL;
         }
-        return catchEntity(pStack, pInteractionTarget, filledVial -> {
+        Optional<ItemStack> itemStack = catchEntity(pStack, pInteractionTarget, component -> pPlayer.displayClientMessage(component, true));
+        if (itemStack.isPresent()) {
+            ItemStack filledVial = itemStack.get();
             ItemStack hand = pPlayer.getItemInHand(pUsedHand);
             if (hand.isEmpty()) {
                 hand.setCount(1); // Forge will fire the destroyItemEvent and vanilla replaces it to ItemStack.EMPTY if this isn't done
@@ -102,7 +104,9 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
                     pPlayer.drop(filledVial, false);
                 }
             }
-        }, component -> pPlayer.displayClientMessage(component, true));
+            return InteractionResult.SUCCESS;
+        }
+        return InteractionResult.FAIL;
     }
 
     @Override
@@ -121,48 +125,36 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
             emptyVial -> player.setItemInHand(pContext.getHand(), emptyVial));
     }
 
-    private static InteractionResult catchEntity(ItemStack soulVial, LivingEntity entity, Consumer<ItemStack> filledVialInsertion,
-        Consumer<Component> displayCallback) {
-        return soulVial.getCapability(EIOCapabilities.ENTITY_STORAGE).map(entityStorage -> {
-            if (!entityStorage.hasStoredEntity()) {
+    /**
+     * @return the filled vial
+     */
+    private static Optional<ItemStack> catchEntity(ItemStack soulVial, LivingEntity entity, Consumer<Component> displayCallback) {
 
-                if (entity instanceof Player) {
-                    displayCallback.accept(EIOLang.SOUL_VIAL_ERROR_PLAYER);
-                    return InteractionResult.FAIL;
-                }
+        if (entity instanceof Player) {
+            displayCallback.accept(EIOLang.SOUL_VIAL_ERROR_PLAYER);
+            return Optional.empty();
+        }
+        EntityCaptureUtils.CapturableStatus status = EntityCaptureUtils.getCapturableStatus((EntityType<? extends LivingEntity>) entity.getType(), entity);
+        if (status != EntityCaptureUtils.CapturableStatus.CAPTURABLE) {
+            displayCallback.accept(status.errorMessage());
+            return Optional.empty();
+        }
 
-                // Get the entity type and verify it is allowed to be captured
-                // We ignore the unchecked cast, as entity is LivingEntity
-                // noinspection unchecked
-                EntityCaptureUtils.CapturableStatus status = EntityCaptureUtils.getCapturableStatus((EntityType<? extends LivingEntity>) entity.getType(),
-                    entity);
-                if (status != EntityCaptureUtils.CapturableStatus.CAPTURABLE) {
-                    displayCallback.accept(status.errorMessage());
-                    return InteractionResult.FAIL;
-                }
+        if (!entity.isAlive()) {
+            displayCallback.accept(EIOLang.SOUL_VIAL_ERROR_DEAD);
+            return Optional.empty();
+        }
+        // Create a filled vial and put the entity's NBT inside.
+        if (entity instanceof Mob mob && mob.getLeashHolder() != null) {
+            mob.dropLeash(true, true);
+        }
+        soulVial.shrink(1);
+        ItemStack filledVial = EIOItems.FILLED_SOUL_VIAL.get().getDefaultInstance();
+        setEntityData(filledVial, entity);
 
-                if (!entity.isAlive()) {
-                    displayCallback.accept(EIOLang.SOUL_VIAL_ERROR_DEAD);
-                    return InteractionResult.FAIL;
-                }
-
-                soulVial.shrink(1);
-
-                // Create a filled vial and put the entity's NBT inside.
-                if (entity instanceof Mob mob && mob.getLeashHolder() != null) {
-                    mob.dropLeash(true, true);
-                }
-                ItemStack filledVial = EIOItems.FILLED_SOUL_VIAL.get().getDefaultInstance();
-                setEntityData(filledVial, entity);
-
-                // give back the filled vial
-                filledVialInsertion.accept(filledVial);
-
-                // Remove the captured mob.
-                entity.discard();
-            }
-            return InteractionResult.SUCCESS;
-        }).orElse(InteractionResult.SUCCESS);
+        // Remove the captured mob.
+        entity.discard();
+        return Optional.of(filledVial);
     }
 
     private static InteractionResult releaseEntity(Level level, ItemStack filledVial, Direction face, BlockPos pos, Consumer<ItemStack> emptyVialSetter) {
@@ -226,7 +218,9 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
     @Nullable
     @Override
     public MultiCapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt, MultiCapabilityProvider provider) {
-        provider.add(EIOCapabilities.ENTITY_STORAGE, LazyOptional.of(() -> new EntityStorageItemStack(stack)));
+        if (this == EIOItems.FILLED_SOUL_VIAL.get()) {
+            provider.add(EIOCapabilities.ENTITY_STORAGE, LazyOptional.of(() -> new EntityStorageItemStack(stack)));
+        }
         return provider;
     }
 
@@ -247,7 +241,7 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
         ItemStack stack = event.getItemStack();
         if (stack.is(EIOItems.EMPTY_SOUL_VIAL.get())) {
             if (event.getTarget() instanceof AbstractChestedHorse || event.getTarget() instanceof Villager) {
-                stack.getItem().interactLivingEntity(stack, event.getEntity(), (LivingEntity) event.getTarget(), event.getHand());
+                stack.interactLivingEntity(event.getEntity(), (LivingEntity) event.getTarget(), event.getHand());
             }
         }
     }
@@ -268,8 +262,8 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
             for (LivingEntity livingentity : source
                 .getLevel()
                 .getEntitiesOfClass(LivingEntity.class, new AABB(blockpos), living -> !(living instanceof Player))) {
-                AtomicReference<ItemStack> filledVial = new AtomicReference<>();
-                if (catchEntity(stack, livingentity, filledVial::set, component -> {}) == InteractionResult.SUCCESS && filledVial.get() != null) {
+                Optional<ItemStack> filledVial = catchEntity(stack, livingentity, component -> {});
+                if (filledVial.isPresent()) {
                     //push filledvial back into dispenser
                     source.getEntity().getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
                         for (int i = 0; i < handler.getSlots(); i++) {

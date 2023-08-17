@@ -6,6 +6,9 @@
     "enderio:dark_steel_trapdoor",
     "enderio:end_steel_bars",
     "enderio:soul_chain",
+    "enderio:fluid_tank",
+    "enderio:pressurized_fluid_tank",
+    "enderio:enchanter",
     "enderio:primitive_alloy_smelter",
     "enderio:alloy_smelter",
     "enderio:painting_machine",
@@ -16,7 +19,9 @@
     "enderio:impulse_hopper",
     "enderio:soul_binder",
     "enderio:powered_spawner",
-    "enderio:crafter",
-    "enderio:drain"
+    "enderio:vacuum_chest",
+    "enderio:xp_vacuum",
+    "enderio:travel_anchor",
+    "enderio:crafter"
   ]
 }

@@ -3,10 +3,7 @@ package com.enderio.machines.common.init;
 import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.core.data.model.EIOModel;
-import com.enderio.machines.common.block.CapacitorBankBlock;
-import com.enderio.machines.common.block.MachineBlock;
-import com.enderio.machines.common.block.ProgressMachineBlock;
-import com.enderio.machines.common.block.SolarPanelBlock;
+import com.enderio.machines.common.block.*;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorBankBlockEntity;
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorTier;
@@ -43,6 +40,7 @@ public class MachineBlocks {
         .block("fluid_tank", props -> new MachineBlock(props, MachineBlockEntities.FLUID_TANK))
         .properties(props -> props.strength(2.5f, 8).isViewBlocking((pState, pLevel, pPos) -> false).noOcclusion())
         .loot(MachinesLootTable::copyNBT)
+        .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
         .blockstate((ctx, prov) -> prov.horizontalBlock(ctx.get(), prov.models()
             .getBuilder(ctx.getName())
             .customLoader(CompositeModelBuilder::begin)
@@ -61,6 +59,7 @@ public class MachineBlocks {
         .block("pressurized_fluid_tank", props -> new MachineBlock(props, MachineBlockEntities.PRESSURIZED_FLUID_TANK))
         .properties(props -> props.strength(2.5f, 8).isViewBlocking((pState, pLevel, pPos) -> false).noOcclusion())
         .loot(MachinesLootTable::copyNBT)
+        .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
         .blockstate((ctx, prov) -> prov.horizontalBlock(ctx.get(), prov.models()
                 .withExistingParent(ctx.getName(), prov.mcLoc("block/block"))
                 .customLoader(CompositeModelBuilder::begin)
@@ -79,6 +78,7 @@ public class MachineBlocks {
         .block("enchanter", props -> new MachineBlock(props, MachineBlockEntities.ENCHANTER))
         .properties(props -> props.strength(2.5f, 8).noOcclusion().isViewBlocking((pState, pLevel, pPos) -> false))
         .loot(MachinesLootTable::copyNBT)
+        .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
         .blockstate(MachineModelUtil::machineBlock)
         .item()
         .tab(EIOCreativeTabs.MACHINES)
@@ -123,8 +123,12 @@ public class MachineBlocks {
         .lang("Soul Binder")
         .register();
 
-    public static final BlockEntry<ProgressMachineBlock> POWERED_SPAWNER = progressMachine("powered_spawner", () -> MachineBlockEntities.POWERED_SPAWNER)
+    public static final BlockEntry<ProgressMachineBlock> POWERED_SPAWNER = REGISTRATE
+        .block("powered_spawner", properties -> new ProgressMachineBlock(properties, MachineBlockEntities.POWERED_SPAWNER))
         .loot((l,t) -> MachinesLootTable.copyNBTSingleCap(l, t, "EntityStorage"))
+        .properties(props -> props.strength(2.5f, 8))
+        .blockstate(MachineModelUtil::progressMachineBlock)
+        .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
         .item(PoweredSpawnerItem::new)
         .tab(EIOCreativeTabs.MACHINES)
         .build()
@@ -133,6 +137,7 @@ public class MachineBlocks {
     public static final BlockEntry<MachineBlock> VACUUM_CHEST = REGISTRATE
         .block("vacuum_chest", p -> new MachineBlock(p, MachineBlockEntities.VACUUM_CHEST))
         .properties(props -> props.strength(2.5f, 8).noOcclusion())
+        .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
         .loot(MachinesLootTable::copyNBT)
         .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName()))))
         .item()
@@ -143,6 +148,18 @@ public class MachineBlocks {
     public static final BlockEntry<MachineBlock> XP_VACUUM = REGISTRATE
         .block("xp_vacuum", p -> new MachineBlock(p, MachineBlockEntities.XP_VACUUM))
         .properties(props -> props.strength(2.5f, 8).noOcclusion())
+        .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+        .loot(MachinesLootTable::copyNBT)
+        .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName()))))
+        .item()
+        .tab(EIOCreativeTabs.MACHINES)
+        .build()
+        .register();
+
+    public static final BlockEntry<TravelAnchorBlock> TRAVEL_ANCHOR = REGISTRATE
+        .block("travel_anchor", TravelAnchorBlock::new)
+        .properties(props -> props.strength(2.5f, 8).noOcclusion())
+        .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
         .loot(MachinesLootTable::copyNBT)
         .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName()))))
         .item()
@@ -153,7 +170,7 @@ public class MachineBlocks {
     public static final Map<SolarPanelTier, BlockEntry<SolarPanelBlock>> SOLAR_PANELS = Util.make(() -> {
         Map<SolarPanelTier, BlockEntry<SolarPanelBlock>> panels = new HashMap<>();
         for (SolarPanelTier tier: SolarPanelTier.values()) {
-            panels.put(tier, solarPanel(tier.name().toLowerCase(Locale.ROOT) + "_photovoltaic_cell", () -> MachineBlockEntities.SOLAR_PANELS.get(tier), tier).register());
+            panels.put(tier, solarPanel(tier.name().toLowerCase(Locale.ROOT) + "_photovoltaic_module", () -> MachineBlockEntities.SOLAR_PANELS.get(tier), tier).register());
         }
         return ImmutableMap.copyOf(panels);
     });

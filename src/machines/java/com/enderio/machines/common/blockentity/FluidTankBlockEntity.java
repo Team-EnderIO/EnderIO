@@ -275,6 +275,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
             if (!level.isClientSide()) {
                 currentRecipe = level.getRecipeManager().getRecipeFor(MachineRecipes.TANK.type().get(), container, level);
             }
+            level.getLightEngine().checkBlock(worldPosition);
         }
     }
 
