@@ -59,19 +59,19 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
         LevelRenderer.renderLineBox(poseStack, lines, 0, 0, 0, 1, 1, 1, FastColor.ARGB32.red(color) / 255F, FastColor.ARGB32.green(color) / 255F,
             FastColor.ARGB32.blue(color) / 255F, 1);
 
-        // Scale for rendering
-        double doubleScale = Math.sqrt(0.0035 * Math.sqrt(distanceSquared));
-        if (doubleScale < 0.1f) {
-            doubleScale = 0.1f;
-        }
-        doubleScale = doubleScale * (Math.sin(Math.toRadians(Minecraft.getInstance().options.fov().get() / 4d)));
-        if (active) {
-            doubleScale *= 1.3;
-        }
-        float scale = (float) doubleScale;
 
         // Render Text
         if (!travelData.getName().trim().isEmpty()) {
+            // Scale for rendering
+            double doubleScale = Math.sqrt(0.0035 * Math.sqrt(distanceSquared));
+            if (doubleScale < 0.1f) {
+                doubleScale = 0.1f;
+            }
+            doubleScale = doubleScale * (Math.sin(Math.toRadians(Minecraft.getInstance().options.fov().get() / 4d)));
+            if (active) {
+                doubleScale *= 1.3;
+            }
+            float scale = (float) doubleScale;
 
             poseStack.pushPose();
             poseStack.translate(0.5, 1.05 + (doubleScale * Minecraft.getInstance().font.lineHeight), 0.5);
@@ -92,9 +92,18 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
 
         //         Render Icon
         if (travelData.getIcon() != Items.AIR) {
+            // Scale for rendering
+            double doubleScale = Math.sqrt(Math.sqrt(distanceSquared));
+            doubleScale = doubleScale * (Math.sin(Math.toRadians(Minecraft.getInstance().options.fov().get() / 4d)));
+            if (active) {
+                doubleScale *= 1.3;
+            }
+            float scale = (float) doubleScale;
             poseStack.pushPose();
-            poseStack.translate(0.5, 2.5, 0.5);
+            poseStack.translate(0.5, 0.5, 0.5);
             poseStack.mulPose(minecraft.getEntityRenderDispatcher().cameraOrientation());
+            poseStack.translate(0, 0, -1);
+            poseStack.scale(scale, scale, scale);
             ItemStack stack = new ItemStack(travelData.getIcon());
             BakedModel bakedmodel = minecraft.getItemRenderer().getModel(stack, minecraft.level, null, 0);
             minecraft
