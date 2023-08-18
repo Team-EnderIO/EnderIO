@@ -82,7 +82,7 @@ public class MachineBlockEntities {
        return ImmutableMap.copyOf(map);
     });
 
-    public static final BlockEntityEntry<MobGeneratorBlockEntity> MOB_GENERATOR = register("mob_generator", MobGeneratorBlockEntity::new, MachineBlocks.MOB_GENERATOR);
+    public static final BlockEntityEntry<SoulEngineBlockEntity> SOUL_ENGINE = register("soul_engine", SoulEngineBlockEntity::new, MachineBlocks.SOUL_ENGINE);
 
     @SafeVarargs
     private static <B extends BlockEntity> BlockEntityEntry<B> register(String name, BlockEntityBuilder.BlockEntityFactory<B> beFactory,

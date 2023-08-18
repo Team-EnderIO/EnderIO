@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "enderio:mob_generator"
+        "recipe": "enderio:soul_engine"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -28,7 +28,7 @@
   ],
   "rewards": {
     "recipes": [
-      "enderio:mob_generator"
+      "enderio:soul_engine"
     ]
   },
   "sends_telemetry_event": false

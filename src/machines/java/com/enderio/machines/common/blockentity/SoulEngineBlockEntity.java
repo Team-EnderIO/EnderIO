@@ -12,8 +12,8 @@ import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
-import com.enderio.machines.common.menu.MobGeneratorMenu;
-import com.enderio.machines.common.souldata.GeneratorSoul;
+import com.enderio.machines.common.menu.SoulEngineMenu;
+import com.enderio.machines.common.souldata.EngineSoul;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
@@ -39,17 +39,17 @@ import java.util.function.Predicate;
 
 import static com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity.NO_MOB;
 
-public class MobGeneratorBlockEntity extends PoweredMachineBlockEntity {
+public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
 
-    private static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.MOB_GENERATOR_CAPACITY);
+    private static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.SOUL_ENGINE_CAPACITY);
     private static final String BURNED_TICKS = "burnedTicks";
     private StoredEntityData entityData = StoredEntityData.empty();
     public static final int FLUID_CAPACITY = 2 * FluidType.BUCKET_VOLUME;
     @Nullable
-    private GeneratorSoul.SoulData soulData;
+    private EngineSoul.SoulData soulData;
     private int burnedTicks = 0;
 
-    public MobGeneratorBlockEntity(BlockEntityType<?> type,
+    public SoulEngineBlockEntity(BlockEntityType<?> type,
         BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO, type, worldPosition, blockState);
         addDataSlot(new ResourceLocationNetworkDataSlot(() -> this.getEntityType().orElse(NO_MOB),this::setEntityType));
@@ -66,7 +66,7 @@ public class MobGeneratorBlockEntity extends PoweredMachineBlockEntity {
     @Override
     public void serverTick() {
         if (entityData != StoredEntityData.empty() && entityData.getEntityType().isPresent()) {
-            Optional<GeneratorSoul.SoulData> op = GeneratorSoul.GENERATOR.matches(entityData.getEntityType().get());
+            Optional<EngineSoul.SoulData> op = EngineSoul.ENGINE.matches(entityData.getEntityType().get());
             op.ifPresent(data -> {
                 soulData = data;
                 if (isActive()) {
@@ -156,7 +156,7 @@ public class MobGeneratorBlockEntity extends PoweredMachineBlockEntity {
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
-        return new MobGeneratorMenu(this, playerInventory, containerId);
+        return new SoulEngineMenu(this, playerInventory, containerId);
     }
 
     @Override

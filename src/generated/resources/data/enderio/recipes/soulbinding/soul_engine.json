@@ -3,8 +3,8 @@
   "energy": 188000,
   "exp": 5,
   "input": {
-    "item": "enderio:mob_generator"
+    "item": "enderio:soul_engine"
   },
-  "output": "enderio:mob_generator",
+  "output": "enderio:soul_engine",
   "souldata": "generator"
 }

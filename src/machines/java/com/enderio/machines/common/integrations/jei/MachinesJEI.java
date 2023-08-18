@@ -34,7 +34,7 @@ public class MachinesJEI implements IModPlugin {
         registration.addRecipeCatalyst(new ItemStack(MachineBlocks.FLUID_TANK.get()), TankCategory.TYPE);
         registration.addRecipeCatalyst(new ItemStack(MachineBlocks.PRESSURIZED_FLUID_TANK.get()), TankCategory.TYPE);
 
-        registration.addRecipeCatalyst(new ItemStack(MachineBlocks.MOB_GENERATOR.get()), MobGeneratorCategory.TYPE);
+        registration.addRecipeCatalyst(new ItemStack(MachineBlocks.SOUL_ENGINE.get()), SoulEngineCategory.TYPE);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class MachinesJEI implements IModPlugin {
         registration.addRecipeCategories(new SoulBindingCategory(registration.getJeiHelpers().getGuiHelper()));
         registration.addRecipeCategories(new TankCategory(registration.getJeiHelpers().getGuiHelper()));
 
-        registration.addRecipeCategories(new MobGeneratorCategory(registration.getJeiHelpers().getGuiHelper()));
+        registration.addRecipeCategories(new SoulEngineCategory(registration.getJeiHelpers().getGuiHelper()));
     }
 
     @Override
@@ -62,7 +62,7 @@ public class MachinesJEI implements IModPlugin {
         registration.addRecipes(SoulBindingCategory.TYPE, recipes.getSoulBindingRecipes());
         registration.addRecipes(TankCategory.TYPE, recipes.getTankRecipes());
 
-        registration.addRecipes(MobGeneratorCategory.TYPE, recipes.getMobGeneratorRecipes());
+        registration.addRecipes(SoulEngineCategory.TYPE, recipes.getMobGeneratorRecipes());
     }
 
     @Override

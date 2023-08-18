@@ -19,11 +19,11 @@
               "source": "block_entity"
             }
           ],
-          "name": "enderio:mob_generator"
+          "name": "enderio:soul_engine"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "enderio:blocks/mob_generator"
+  "random_sequence": "enderio:blocks/soul_engine"
 }

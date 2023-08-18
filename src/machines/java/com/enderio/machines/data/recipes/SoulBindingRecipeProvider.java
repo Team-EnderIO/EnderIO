@@ -6,7 +6,7 @@ import com.enderio.base.data.recipe.RecipeDataUtil;
 import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.init.MachineRecipes;
-import com.enderio.machines.common.souldata.GeneratorSoul;
+import com.enderio.machines.common.souldata.EngineSoul;
 import com.google.gson.JsonObject;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
@@ -40,7 +40,7 @@ public class SoulBindingRecipeProvider extends EnderRecipeProvider {
         build(EIOItems.FRANK_N_ZOMBIE, Ingredient.of(EIOItems.Z_LOGIC_CONTROLLER), 51200, 4, EntityType.ZOMBIE, pFinishedRecipeConsumer);
         build(EIOItems.SENTIENT_ENDER, Ingredient.of(EIOItems.ENDER_RESONATOR), 51200, 4, EntityType.WITCH, pFinishedRecipeConsumer);
         build(EIOItems.BROKEN_SPAWNER, Ingredient.of(EIOItems.BROKEN_SPAWNER), 288000, 8, pFinishedRecipeConsumer);
-        build(MachineBlocks.MOB_GENERATOR, Ingredient.of(MachineBlocks.MOB_GENERATOR), 188000, 5, GeneratorSoul.NAME, pFinishedRecipeConsumer);
+        build(MachineBlocks.SOUL_ENGINE, Ingredient.of(MachineBlocks.SOUL_ENGINE), 188000, 5, EngineSoul.NAME, pFinishedRecipeConsumer);
         build(EIOItems.PLAYER_TOKEN, Ingredient.of(EIOItems.DARK_STEEL_BALL), 12800, 1, EntityType.VILLAGER, pFinishedRecipeConsumer);
         build(EIOItems.MONSTER_TOKEN, Ingredient.of(EIOItems.SOULARIUM_BALL), 12800, 1, MobCategory.MONSTER, pFinishedRecipeConsumer);
         build(EIOItems.ANIMAL_TOKEN, Ingredient.of(EIOItems.SOULARIUM_BALL), 12800, 1, MobCategory.CREATURE, pFinishedRecipeConsumer);

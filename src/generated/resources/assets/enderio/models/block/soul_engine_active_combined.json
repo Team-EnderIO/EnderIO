@@ -2,7 +2,7 @@
   "parent": "minecraft:block/block",
   "children": {
     "machine": {
-      "parent": "enderio:block/mob_generator"
+      "parent": "enderio:block/soul_engine_active"
     },
     "overlay": {
       "parent": "enderio:block/io_overlay"
@@ -14,6 +14,6 @@
   ],
   "loader": "forge:composite",
   "textures": {
-    "particle": "enderio:block/mob_generator_front"
+    "particle": "enderio:block/soul_engine_front"
   }
 }

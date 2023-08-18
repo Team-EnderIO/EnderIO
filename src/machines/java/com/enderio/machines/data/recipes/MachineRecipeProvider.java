@@ -230,7 +230,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .save(finishedRecipeConsumer);
 
         ShapedEntityStorageRecipeBuilder
-            .shaped(RecipeCategory.MISC, MachineBlocks.MOB_GENERATOR)
+            .shaped(RecipeCategory.MISC, MachineBlocks.SOUL_ENGINE)
             .define('I', EIOItems.SOULARIUM_INGOT) //TODO Maybe also soulchains?
             .define('B', Items.BUCKET)
             .define('C', EIOBlocks.ENSOULED_CHASSIS)

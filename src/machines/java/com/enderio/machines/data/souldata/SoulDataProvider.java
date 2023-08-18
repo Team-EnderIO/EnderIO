@@ -3,7 +3,7 @@ package com.enderio.machines.data.souldata;
 import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.machines.common.blockentity.task.SpawnerMachineTask;
-import com.enderio.machines.common.souldata.GeneratorSoul;
+import com.enderio.machines.common.souldata.EngineSoul;
 import com.enderio.machines.common.souldata.ISoulData;
 import com.enderio.machines.common.souldata.SpawnerSoul;
 import com.google.common.collect.Sets;
@@ -148,15 +148,15 @@ public class SoulDataProvider implements DataProvider {
     private void addGeneratorData(EntityType<?> entityType, Fluid fluid, int powerpermb, int tickpermb, Consumer<FinshedSoulData<?>> finshedSoulDataConsumer) {
         ResourceLocation entityRL = ForgeRegistries.ENTITY_TYPES.getKey(entityType);
         ResourceLocation fluidRL = ForgeRegistries.FLUIDS.getKey(fluid);
-        GeneratorSoul.SoulData data = new GeneratorSoul.SoulData(entityRL, fluidRL.toString(), powerpermb, tickpermb);
-        finshedSoulDataConsumer.accept(new FinshedSoulData<>(GeneratorSoul.CODEC, data, "generator/" + entityRL.getNamespace() + "_" + entityRL.getPath()));
+        EngineSoul.SoulData data = new EngineSoul.SoulData(entityRL, fluidRL.toString(), powerpermb, tickpermb);
+        finshedSoulDataConsumer.accept(new FinshedSoulData<>(EngineSoul.CODEC, data, "generator/" + entityRL.getNamespace() + "_" + entityRL.getPath()));
     }
 
     private void addGeneratorData(EntityType<?> entityType, TagKey<Fluid> fluid, int powerpermb, int tickpermb, Consumer<FinshedSoulData<?>> finshedSoulDataConsumer) {
         ResourceLocation entityRL = ForgeRegistries.ENTITY_TYPES.getKey(entityType);
         String fluidRL = "#" + fluid.location();
-        GeneratorSoul.SoulData data = new GeneratorSoul.SoulData(entityRL, fluidRL, powerpermb, tickpermb);
-        finshedSoulDataConsumer.accept(new FinshedSoulData<>(GeneratorSoul.CODEC, data, "generator/" + entityRL.getNamespace() + "_" + entityRL.getPath()));
+        EngineSoul.SoulData data = new EngineSoul.SoulData(entityRL, fluidRL, powerpermb, tickpermb);
+        finshedSoulDataConsumer.accept(new FinshedSoulData<>(EngineSoul.CODEC, data, "generator/" + entityRL.getNamespace() + "_" + entityRL.getPath()));
     }
 
     static class FinshedSoulData<T extends ISoulData> {

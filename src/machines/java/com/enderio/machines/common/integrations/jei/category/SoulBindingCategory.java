@@ -105,11 +105,11 @@ public class SoulBindingCategory extends MachineRecipeCategory<SoulBindingRecipe
             vials = new ArrayList<>();
             SoulDataReloadListener<? extends ISoulData> soulDataReloadListener = SoulDataReloadListener.fromString(recipe.getSouldata());
 
-            var allEntitiesOfCategory = ForgeRegistries.ENTITY_TYPES.getKeys().stream()
+            var allEntitiesOfSoulData = ForgeRegistries.ENTITY_TYPES.getKeys().stream()
                 .filter(r -> soulDataReloadListener.map.containsKey(r))
                 .toList();
 
-            for (ResourceLocation entity : allEntitiesOfCategory) {
+            for (ResourceLocation entity : allEntitiesOfSoulData) {
                 var item = new ItemStack(EIOItems.FILLED_SOUL_VIAL);
                 SoulVialItem.setEntityType(item, entity);
                 vials.add(item);

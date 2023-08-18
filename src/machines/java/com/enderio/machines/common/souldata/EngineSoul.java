@@ -8,7 +8,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
-public class GeneratorSoul {
+public class EngineSoul {
 
     public record SoulData(ResourceLocation entitytype, String fluid, int powerpermb, int tickpermb) implements ISoulData {
         @Override
@@ -25,10 +25,10 @@ public class GeneratorSoul {
            .apply(soulDataInstance, SoulData::new));
 
     public static final String NAME = "generator";
-    public static final SoulDataReloadListener<SoulData> GENERATOR = new SoulDataReloadListener<>(NAME, CODEC);
+    public static final SoulDataReloadListener<SoulData> ENGINE = new SoulDataReloadListener<>(NAME, CODEC);
 
     @SubscribeEvent
     static void addResource(AddReloadListenerEvent event) {
-        event.addListener(GENERATOR);
+        event.addListener(ENGINE);
     }
 }

@@ -8,9 +8,8 @@ import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
 import com.enderio.machines.client.gui.widget.FluidStackWidget;
 import com.enderio.machines.client.gui.widget.ioconfig.IOConfigButton;
-import com.enderio.machines.common.menu.MobGeneratorMenu;
-import com.enderio.machines.common.network.MobGeneratorSoulPacket;
-import com.enderio.machines.common.souldata.GeneratorSoul;
+import com.enderio.machines.common.menu.SoulEngineMenu;
+import com.enderio.machines.common.souldata.EngineSoul;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -20,11 +19,11 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Optional;
 
-public class MobGeneratorScreen extends EIOScreen<MobGeneratorMenu>{
+public class SoulEngineScreen extends EIOScreen<SoulEngineMenu>{
 
-    public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/mob_generator.png");
+    public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/soul_engine.png");
 
-    public MobGeneratorScreen(MobGeneratorMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
+    public SoulEngineScreen(SoulEngineMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
     }
 
@@ -55,7 +54,7 @@ public class MobGeneratorScreen extends EIOScreen<MobGeneratorMenu>{
             } else {
                 guiGraphics.drawString(font, rl.get().toString(), imageWidth / 2f - font.width(rl.get().toString()) / 2f, 10, 4210752, false);
             }
-            GeneratorSoul.SoulData data = MobGeneratorSoulPacket.SYNCED_DATA.get(rl.get());
+            EngineSoul.SoulData data = EngineSoul.ENGINE.map.get(rl.get());
             if (data != null) {
                 guiGraphics.drawString(font, data.tickpermb() + " t/mb", imageWidth / 2f + 20 - font.width(data.tickpermb() + "") / 2f, 40, 4210752, false);
                 guiGraphics.drawString(font, data.powerpermb() + " µI/mb", imageWidth / 2f + 20 - font.width(data.powerpermb() + "") / 2f, 50, 4210752, false);

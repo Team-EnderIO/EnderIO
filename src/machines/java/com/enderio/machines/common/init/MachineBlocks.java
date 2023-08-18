@@ -186,8 +186,8 @@ public class MachineBlocks {
     public static final BlockEntry<ProgressMachineBlock> CRAFTER = progressMachine("crafter", () -> MachineBlockEntities.CRAFTER)
         .register();
 
-    public static final BlockEntry<ProgressMachineBlock> MOB_GENERATOR = REGISTRATE
-        .block("mob_generator", p -> new ProgressMachineBlock(p, MachineBlockEntities.MOB_GENERATOR))
+    public static final BlockEntry<ProgressMachineBlock> SOUL_ENGINE = REGISTRATE
+        .block("soul_engine", p -> new ProgressMachineBlock(p, MachineBlockEntities.SOUL_ENGINE))
         .properties(props -> props.strength(2.5f, 8).noOcclusion())
         .loot(MachinesLootTable::copyNBT)
         .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)

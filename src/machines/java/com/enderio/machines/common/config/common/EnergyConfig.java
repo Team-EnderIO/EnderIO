@@ -33,7 +33,7 @@ public class EnergyConfig {
     public final ForgeConfigSpec.ConfigValue<Integer> VIBRANT_CAPACITOR_BANK_CAPACITY;
     public final ForgeConfigSpec.ConfigValue<Integer> WIRED_CHARGER_CAPACITY;
     public final ForgeConfigSpec.ConfigValue<Integer> WIRED_CHARGER_USAGE;
-    public final ForgeConfigSpec.ConfigValue<Integer> MOB_GENERATOR_CAPACITY;
+    public final ForgeConfigSpec.ConfigValue<Integer> SOUL_ENGINE_CAPACITY;
 
     public EnergyConfig(ForgeConfigSpec.Builder builder) {
         builder.push("energy");
@@ -115,7 +115,7 @@ public class EnergyConfig {
         builder.pop();
 
         builder.push("mob_generator");
-            MOB_GENERATOR_CAPACITY = builder.defineInRange("capacity",100000, 1, Integer.MAX_VALUE);
+            SOUL_ENGINE_CAPACITY = builder.defineInRange("capacity",100000, 1, Integer.MAX_VALUE);
         builder.pop();
 
         builder.pop();

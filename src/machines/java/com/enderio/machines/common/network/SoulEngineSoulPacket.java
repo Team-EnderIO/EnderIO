@@ -1,29 +1,26 @@
 package com.enderio.machines.common.network;
 
 import com.enderio.core.common.network.Packet;
-import com.enderio.machines.common.souldata.GeneratorSoul;
+import com.enderio.machines.common.souldata.EngineSoul;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class MobGeneratorSoulPacket implements Packet {
+public class SoulEngineSoulPacket implements Packet {
 
-    public static Map<ResourceLocation, GeneratorSoul.SoulData> SYNCED_DATA = new HashMap<>();
+    private final Map<ResourceLocation, EngineSoul.SoulData> map;
 
-    private final Map<ResourceLocation, GeneratorSoul.SoulData> map;
-
-    public MobGeneratorSoulPacket(Map<ResourceLocation, GeneratorSoul.SoulData> map) {
+    public SoulEngineSoulPacket(Map<ResourceLocation, EngineSoul.SoulData> map) {
         this.map = map;
     }
 
-    public MobGeneratorSoulPacket(FriendlyByteBuf buf) {
+    public SoulEngineSoulPacket(FriendlyByteBuf buf) {
         this.map = buf.readMap(FriendlyByteBuf::readResourceLocation, buff ->
-            new GeneratorSoul.SoulData(buff.readResourceLocation(), buff.readUtf(), buff.readInt(), buff.readInt())
+            new EngineSoul.SoulData(buff.readResourceLocation(), buff.readUtf(), buff.readInt(), buff.readInt())
         );
     }
 
@@ -42,19 +39,19 @@ public class MobGeneratorSoulPacket implements Packet {
 
     @Override
     public void handle(NetworkEvent.Context context) {
-        context.enqueueWork(() -> SYNCED_DATA = this.map);
+        context.enqueueWork(() -> EngineSoul.ENGINE.map = this.map);
         context.setPacketHandled(true);
     }
 
-    public static class Handler extends PacketHandler<MobGeneratorSoulPacket> {
+    public static class Handler extends PacketHandler<SoulEngineSoulPacket> {
 
         @Override
-        public MobGeneratorSoulPacket fromNetwork(FriendlyByteBuf buf) {
-            return new MobGeneratorSoulPacket(buf);
+        public SoulEngineSoulPacket fromNetwork(FriendlyByteBuf buf) {
+            return new SoulEngineSoulPacket(buf);
         }
 
         @Override
-        public void toNetwork(MobGeneratorSoulPacket packet, FriendlyByteBuf buf) {
+        public void toNetwork(SoulEngineSoulPacket packet, FriendlyByteBuf buf) {
             packet.write(buf);
         }
 

@@ -1,6 +1,6 @@
 package com.enderio.machines.common.menu;
 
-import com.enderio.machines.common.blockentity.MobGeneratorBlockEntity;
+import com.enderio.machines.common.blockentity.SoulEngineBlockEntity;
 import com.enderio.machines.common.init.MachineMenus;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -9,10 +9,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 
-public class MobGeneratorMenu extends MachineMenu<MobGeneratorBlockEntity>{
+public class SoulEngineMenu extends MachineMenu<SoulEngineBlockEntity>{
 
-    public MobGeneratorMenu(@Nullable MobGeneratorBlockEntity blockEntity, Inventory inventory, int pContainerId) {
-        super(blockEntity, inventory, MachineMenus.MOB_GENERATOR.get(), pContainerId);
+    public SoulEngineMenu(@Nullable SoulEngineBlockEntity blockEntity, Inventory inventory, int pContainerId) {
+        super(blockEntity, inventory, MachineMenus.SOUL_ENGINE.get(), pContainerId);
         if (blockEntity != null) {
             // Capacitor slot
             if (blockEntity.requiresCapacitor()) {
@@ -22,11 +22,11 @@ public class MobGeneratorMenu extends MachineMenu<MobGeneratorBlockEntity>{
         addInventorySlots(8, 84);
     }
 
-    public static MobGeneratorMenu factory(@Nullable MenuType<MobGeneratorMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
+    public static SoulEngineMenu factory(@Nullable MenuType<SoulEngineMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
-        if (entity instanceof MobGeneratorBlockEntity castBlockEntity)
-            return new MobGeneratorMenu(castBlockEntity, inventory, pContainerId);
+        if (entity instanceof SoulEngineBlockEntity castBlockEntity)
+            return new SoulEngineMenu(castBlockEntity, inventory, pContainerId);
         LogManager.getLogger().warn("couldn't find BlockEntity");
-        return new MobGeneratorMenu(null, inventory, pContainerId);
+        return new SoulEngineMenu(null, inventory, pContainerId);
     }
 }
