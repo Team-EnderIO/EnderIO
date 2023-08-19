@@ -88,11 +88,7 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
                         burnDuration = burnTime;
 
                         // Remove the fuel
-                        if (fuel.hasCraftingRemainingItem()) {
-                            FUEL.setStackInSlot(this, fuel.getCraftingRemainingItem());
-                        } else {
-                            fuel.shrink(1);
-                        }
+                        fuel.shrink(1);
                     }
                 }
             }
