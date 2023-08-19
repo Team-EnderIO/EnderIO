@@ -123,6 +123,9 @@ public class MachineBlocks {
         .lang("Soul Binder")
         .register();
 
+    public static final BlockEntry<MachineBlock> FARMING_STATION = machine("farming_station", () -> MachineBlockEntities.FARMING_STATION)
+        .register();
+
     public static final BlockEntry<ProgressMachineBlock> POWERED_SPAWNER = REGISTRATE
         .block("powered_spawner", properties -> new ProgressMachineBlock(properties, MachineBlockEntities.POWERED_SPAWNER))
         .loot((l,t) -> MachinesLootTable.copyNBTSingleCap(l, t, "EntityStorage"))
