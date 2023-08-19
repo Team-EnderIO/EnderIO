@@ -56,8 +56,8 @@ public class SoulEngineScreen extends EIOScreen<SoulEngineMenu>{
             }
             EngineSoul.SoulData data = EngineSoul.ENGINE.map.get(rl.get());
             if (data != null) {
-                guiGraphics.drawString(font, data.tickpermb() + " t/mb", imageWidth / 2f + 20 - font.width(data.tickpermb() + "") / 2f, 40, 4210752, false);
-                guiGraphics.drawString(font, data.powerpermb() + " µI/mb", imageWidth / 2f + 20 - font.width(data.powerpermb() + "") / 2f, 50, 4210752, false);
+                guiGraphics.drawString(font, data.tickpermb() + " t/mb", imageWidth / 2f + 12 , 40, 4210752, false);
+                guiGraphics.drawString(font, data.powerpermb() + " µI/mb", imageWidth / 2f + 12 , 50, 4210752, false);
 
             }
         }
