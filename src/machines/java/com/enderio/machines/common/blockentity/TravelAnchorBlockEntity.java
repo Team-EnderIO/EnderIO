@@ -26,19 +26,16 @@ import java.util.Optional;
 
 public class TravelAnchorBlockEntity extends MachineBlockEntity {
 
-    private AnchorTravelTarget target;
     public static final SingleSlotAccess GHOST = new SingleSlotAccess();
-
     private final StringNetworkDataSlot nameDataSlot;
     private final BooleanNetworkDataSlot visibilityDataSlot;
     private final ResourceLocationNetworkDataSlot iconDataSlot;
-
     public TravelAnchorBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);
-        nameDataSlot = new StringNetworkDataSlot(this::getName, name -> target.setName(name));
-        visibilityDataSlot = new BooleanNetworkDataSlot(this::getVisibility, visible -> target.setVisibility(visible));
+        nameDataSlot = new StringNetworkDataSlot(this::getName, name -> getOrCreateTravelTarget().setName(name));
+        visibilityDataSlot = new BooleanNetworkDataSlot(this::getVisibility, vis -> getOrCreateTravelTarget().setVisibility(vis));
         iconDataSlot = new ResourceLocationNetworkDataSlot(() -> ForgeRegistries.ITEMS.getKey(getIcon()),
-            loc -> target.setIcon(ForgeRegistries.ITEMS.getValue(loc)));
+            loc -> getOrCreateTravelTarget().setIcon(ForgeRegistries.ITEMS.getValue(loc)));
         addDataSlot(nameDataSlot);
         addDataSlot(visibilityDataSlot);
         addDataSlot(iconDataSlot);
@@ -59,58 +56,43 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
     protected void onInventoryContentsChanged(int slot) {
         super.onInventoryContentsChanged(slot);
         ItemStack stack = GHOST.getItemStack(getInventory());
-        if (!stack.isEmpty()) {
-            setIcon(stack.getItem());
-        }
-    }
-
-    @Override
-    public void setRemoved() {
-        getTravelData().removeTravelTargetAt(worldPosition);
-        super.setRemoved();
-    }
-
-    @Override
-    public void onLoad() {
-        target = getOrCreateTravelTarget();
-        super.onLoad();
+        setIcon(stack.getItem());
     }
 
     @Nullable
     public String getName() {
-        return target.getName();
+        return getOrCreateTravelTarget().getName();
     }
 
     public void setName(String name) {
         if (level != null && level.isClientSide()) {
             clientUpdateSlot(nameDataSlot, name);
         } else {
-            target.setName(name);
+            getOrCreateTravelTarget().setName(name);
         }
     }
 
     public Item getIcon() {
-        return target.getIcon();
+        return getOrCreateTravelTarget().getIcon();
     }
 
     public void setIcon(Item icon) {
         if (level != null && level.isClientSide()) {
             clientUpdateSlot(iconDataSlot, ForgeRegistries.ITEMS.getKey(icon));
         } else {
-            target.setIcon(icon);
+            getOrCreateTravelTarget().setIcon(icon);
         }
-
     }
 
     public boolean getVisibility() {
-        return target.getVisibility();
+        return getOrCreateTravelTarget().getVisibility();
     }
 
     public void setVisibility(boolean visible) {
         if (level != null && level.isClientSide()) {
             clientUpdateSlot(visibilityDataSlot, visible);
         } else {
-            target.setVisibility(visible);
+            getOrCreateTravelTarget().setVisibility(visible);
         }
     }
 
@@ -120,7 +102,7 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
             return anchorTravelTarget;
         }
         AnchorTravelTarget anchorTravelTarget = new AnchorTravelTarget(worldPosition, "", Items.AIR, true);
-        getTravelData().addTravelTarget(anchorTravelTarget);
+        getTravelData().addTravelTarget(level, anchorTravelTarget);
         return anchorTravelTarget;
     }
 
