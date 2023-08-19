@@ -116,8 +116,8 @@ public class EnergyConfig {
         builder.pop();
 
         builder.push("drain");
-            DRAIN_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 1000000, 1, Integer.MAX_VALUE);
-            DRAIN_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage", 100, 1, Integer.MAX_VALUE);
+            DRAIN_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 64_000, 1, Integer.MAX_VALUE);
+            DRAIN_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage",  10, 1, Integer.MAX_VALUE);
         builder.pop();
 
         builder.pop();

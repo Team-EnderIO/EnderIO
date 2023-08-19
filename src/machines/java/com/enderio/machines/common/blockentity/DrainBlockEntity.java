@@ -40,7 +40,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
     private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.DRAIN_CAPACITY);
     private static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.DRAIN_USAGE);
     private static final int CAPACITY = 3 * FluidType.BUCKET_VOLUME;
-    private static final int ENERGY_PER_BUCKET = 16000; //TODO balance
+    private static final int ENERGY_PER_BUCKET = 1_500;
     private List<BlockPos> positions;
     private int currentIndex = 0;
     private boolean fluidFound = false;
@@ -101,10 +101,13 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
     }
 
     public void drainFluids() {
+        if (currentIndex >= positions.size()) {
+            currentIndex--;
+        }
         BlockPos pos = positions.get(currentIndex);
 
         //Skip, as this is the last checked block
-        if (pos.equals(worldPosition.below())) {
+        if (pos.equals(worldPosition.below()) && positions.size() != 1) {
             currentIndex++;
             return;
         }
@@ -169,10 +172,10 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
 
     private void updateLocations() {
         positions = new ArrayList<>();
+        currentIndex = 0;
         for (BlockPos pos : BlockPos.betweenClosed(worldPosition.offset(-range,-range*2 - 1,-range), worldPosition.offset(range,-1,range))) {
             positions.add(pos.immutable()); //Need to make it immutable
         }
-        currentIndex = 0;
     }
 
     @Override
