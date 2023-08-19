@@ -55,6 +55,8 @@ public class MachineBlockEntities {
 
     public static final BlockEntityEntry<CrafterBlockEntity> CRAFTER = register("crafter", CrafterBlockEntity::new, MachineBlocks.CRAFTER);
 
+    public static final BlockEntityEntry<DrainBlockEntity> DRAIN = register("drain", DrainBlockEntity::new, MachineBlocks.DRAIN);
+
     public static final BlockEntityEntry<SoulBinderBlockEntity> SOUL_BINDER = register("soul_binder", SoulBinderBlockEntity::new, MachineBlocks.SOUL_BINDER);
 
     public static final BlockEntityEntry<WiredChargerBlockEntity> WIRED_CHARGER = register("wired_charger",

@@ -10,11 +10,6 @@ import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.*;
 import com.enderio.machines.common.integrations.EnderIOMachinesSelfIntegration;
 import com.enderio.machines.common.lang.MachineLang;
-import com.enderio.machines.common.menu.EnchanterMenu;
-import com.enderio.machines.common.menu.GhostMachineSlot;
-import com.enderio.machines.common.menu.MachineSlot;
-import com.enderio.machines.common.menu.PreviewMachineSlot;
-import com.enderio.machines.common.network.MachineNetwork;
 import com.enderio.machines.common.tag.MachineTags;
 import com.enderio.machines.common.travel.AnchorTravelTarget;
 import com.enderio.machines.data.advancements.MachinesAdvancementGenerator;
@@ -60,7 +55,6 @@ public class EIOMachines {
         MachineLang.register();
         MachineRecipes.register();
         MachineTags.register();
-        MachineNetwork.networkInit();
 
         // Remap
         MinecraftForge.EVENT_BUS.addListener(EIOMachines::missingMappings);

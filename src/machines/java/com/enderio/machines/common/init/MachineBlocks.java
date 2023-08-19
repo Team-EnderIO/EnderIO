@@ -184,6 +184,9 @@ public class MachineBlocks {
     public static final BlockEntry<ProgressMachineBlock> CRAFTER = progressMachine("crafter", () -> MachineBlockEntities.CRAFTER)
         .register();
 
+    public static final BlockEntry<ProgressMachineBlock> DRAIN = progressMachine("drain", () -> MachineBlockEntities.DRAIN)
+        .register();
+
     //used when single methods needs to be overridden in the block class
     private static <T extends MachineBlock> BlockBuilder<T, Registrate> baseMachine(BlockBuilder<T, Registrate> machineBlock,
         NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> blockStateProvider) {

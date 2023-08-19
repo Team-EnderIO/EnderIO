@@ -33,6 +33,8 @@ public class EnergyConfig {
     public final ForgeConfigSpec.ConfigValue<Integer> VIBRANT_CAPACITOR_BANK_CAPACITY;
     public final ForgeConfigSpec.ConfigValue<Integer> WIRED_CHARGER_CAPACITY;
     public final ForgeConfigSpec.ConfigValue<Integer> WIRED_CHARGER_USAGE;
+    public final ForgeConfigSpec.ConfigValue<Integer> DRAIN_CAPACITY;
+    public final ForgeConfigSpec.ConfigValue<Integer> DRAIN_USAGE;
 
     public EnergyConfig(ForgeConfigSpec.Builder builder) {
         builder.push("energy");
@@ -111,6 +113,11 @@ public class EnergyConfig {
         builder.push("wiredCharger");
             WIRED_CHARGER_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 128_000, 1, Integer.MAX_VALUE);
             WIRED_CHARGER_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage", 64, 1, Integer.MAX_VALUE);
+        builder.pop();
+
+        builder.push("drain");
+            DRAIN_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 64_000, 1, Integer.MAX_VALUE);
+            DRAIN_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage",  10, 1, Integer.MAX_VALUE);
         builder.pop();
 
         builder.pop();
