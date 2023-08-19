@@ -10,6 +10,10 @@ import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.*;
 import com.enderio.machines.common.integrations.EnderIOMachinesSelfIntegration;
 import com.enderio.machines.common.lang.MachineLang;
+import com.enderio.machines.common.menu.EnchanterMenu;
+import com.enderio.machines.common.menu.GhostMachineSlot;
+import com.enderio.machines.common.menu.MachineSlot;
+import com.enderio.machines.common.menu.PreviewMachineSlot;
 import com.enderio.machines.common.tag.MachineTags;
 import com.enderio.machines.common.travel.AnchorTravelTarget;
 import com.enderio.machines.data.advancements.MachinesAdvancementGenerator;
@@ -26,10 +30,12 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.data.ForgeAdvancementProvider;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLConstructModEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.registries.MissingMappingsEvent;
 
 import java.util.List;
@@ -59,6 +65,14 @@ public class EIOMachines {
 
         IntegrationManager.addIntegration(EnderIOMachinesSelfIntegration.INSTANCE);
         TravelRegistry.addTravelEntry(EnderIO.loc("travel_anchor"), AnchorTravelTarget::new, () -> TravelAnchorRenderer::new);
+    }
+
+    @SubscribeEvent
+    public static void sendIMC(InterModEnqueueEvent event) {
+        InterModComms.sendTo("inventorysorter", "slotblacklist", MachineSlot.class::getName);
+        InterModComms.sendTo("inventorysorter", "slotblacklist", GhostMachineSlot.class::getName);
+        InterModComms.sendTo("inventorysorter", "slotblacklist", PreviewMachineSlot.class::getName);
+        InterModComms.sendTo("inventorysorter", "slotblacklist", EnchanterMenu.EnchanterOutputMachineSlot.class::getName);
     }
 
     @SubscribeEvent
