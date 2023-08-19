@@ -1,5 +1,5 @@
 {
-  "type": "enderio:shaped_entity_storage",
+  "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
     "B": {

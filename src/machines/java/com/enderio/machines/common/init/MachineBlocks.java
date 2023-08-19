@@ -3,6 +3,7 @@ package com.enderio.machines.common.init;
 import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.core.data.model.EIOModel;
+import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.*;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorBankBlockEntity;
@@ -125,7 +126,7 @@ public class MachineBlocks {
 
     public static final BlockEntry<ProgressMachineBlock> POWERED_SPAWNER = REGISTRATE
         .block("powered_spawner", properties -> new ProgressMachineBlock(properties, MachineBlockEntities.POWERED_SPAWNER))
-        .loot((l,t) -> MachinesLootTable.copyNBTSingleCap(l, t, "EntityStorage"))
+        .loot((l,t) -> MachinesLootTable.copyNBTSingleCap(l, t, MachineNBTKeys.ENTITY_STORAGE))
         .properties(props -> props.strength(2.5f, 8))
         .blockstate(MachineModelUtil::progressMachineBlock)
         .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)

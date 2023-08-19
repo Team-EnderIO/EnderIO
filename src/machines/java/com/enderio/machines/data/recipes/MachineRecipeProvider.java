@@ -229,7 +229,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.ENSOULED_CHASSIS))
             .save(finishedRecipeConsumer);
 
-        ShapedEntityStorageRecipeBuilder
+        ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.SOUL_ENGINE)
             .define('I', EIOItems.SOULARIUM_INGOT) //TODO Maybe also soulchains?
             .define('B', Items.BUCKET)
