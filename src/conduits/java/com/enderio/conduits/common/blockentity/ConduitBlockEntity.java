@@ -23,7 +23,6 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.Mth;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
@@ -116,10 +115,9 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         updateShape();
         if (level instanceof ServerLevel serverLevel) {
             sync();
+            bundle.onLoad(level, getBlockPos());
             for (var entry: lazyNodes.entrySet()) {
                 NodeIdentifier<?> node = entry.getValue();
-                IExtendedConduitData<?> data = node.getExtendedConduitData();
-                data.onCreated(entry.getKey(), level, worldPosition, null);
                 for (Direction dir : Direction.values()) {
                     tryConnectTo(dir, entry.getKey(), false, false).ifPresent(otherNode -> Graph.connect(node, otherNode));
                 }
@@ -130,7 +128,6 @@ public class ConduitBlockEntity extends EnderBlockEntity {
                 }
                 ConduitSavedData.addPotentialGraph(entry.getKey(), Objects.requireNonNull(node.getGraph()), serverLevel);
             }
-            bundle.onLoad(level, getBlockPos());
         }
     }
 
@@ -427,12 +424,12 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     }
 
     private void connect(Direction direction, IConduitType<?> type) {
-        bundle.connectTo(direction, type, false);
+        bundle.connectTo(level, worldPosition, direction, type, false);
         updateClient();
     }
 
     private void connectEnd(Direction direction, IConduitType<?> type) {
-        bundle.connectTo(direction, type, true);
+        bundle.connectTo(level, worldPosition, direction, type, true);
         updateClient();
     }
 

@@ -275,6 +275,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
             if (!level.isClientSide()) {
                 currentRecipe = level.getRecipeManager().getRecipeFor(MachineRecipes.TANK.type().get(), container, level);
             }
+            level.getLightEngine().checkBlock(worldPosition);
         }
     }
 
@@ -283,6 +284,11 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
         return new FluidTankMenu(this, pInventory, pContainerId);
     }
 
+    @Override
+    public int getLightEmission() {
+        return getFluidTank().getFluid().getFluid().getFluidType().getLightLevel();
+    }
+    
     // region Serialization
 
     @Override

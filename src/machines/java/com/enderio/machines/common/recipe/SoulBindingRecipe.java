@@ -6,6 +6,7 @@ import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.recipes.OutputStack;
+import com.enderio.machines.common.blockentity.SoulBinderBlockEntity;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonObject;
 import net.minecraft.ResourceLocationException;
@@ -81,20 +82,18 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
 
     @Override
     public List<OutputStack> craft(SoulBindingRecipe.Container container, RegistryAccess registryAccess) {
-        ItemStack vial = container.getItem(0);
+        ItemStack vial = SoulBinderBlockEntity.INPUT_SOUL.getItemStack(container);
         List<OutputStack> results = getResultStacks(registryAccess);
-        ItemStack result = results.get(0).getItem(); //TODO will this auto update since the stack is updated?
-        vial.getCapability(EIOCapabilities.ENTITY_STORAGE).ifPresent(inputEntity -> {
-            result.getCapability(EIOCapabilities.ENTITY_STORAGE).ifPresent(resultEntity -> {
-                resultEntity.setStoredEntityData(inputEntity.getStoredEntityData());
-            });
-        });
+        ItemStack result = results.get(0).getItem();
+        vial.getCapability(EIOCapabilities.ENTITY_STORAGE)
+            .ifPresent(inputEntity -> result.getCapability(EIOCapabilities.ENTITY_STORAGE)
+                .ifPresent(resultEntity -> resultEntity.setStoredEntityData(inputEntity.getStoredEntityData())));
         return results;
     }
 
     @Override
     public List<OutputStack> getResultStacks(RegistryAccess registryAccess) {
-        return List.of(OutputStack.of(new ItemStack(output, 1)), OutputStack.of(new ItemStack(EIOItems.EMPTY_SOUL_VIAL, 1)));
+        return List.of(OutputStack.of(output.getDefaultInstance()), OutputStack.of(EIOItems.EMPTY_SOUL_VIAL.asStack()));
     }
 
     @Override
@@ -105,11 +104,12 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
     @Override
     public boolean matches(SoulBindingRecipe.Container container, Level pLevel) {
         container.setNeededXP(0);
-        if (!container.getItem(0).is(EIOItems.FILLED_SOUL_VIAL.get()))
+        ItemStack inputSoul = SoulBinderBlockEntity.INPUT_SOUL.getItemStack(container);
+        if (!inputSoul.is(EIOItems.FILLED_SOUL_VIAL.get()))
             return false;
-        if (!input.test(container.getItem(1)))
+        if (!input.test(SoulBinderBlockEntity.INPUT_OTHER.getItemStack(container)))
             return false;
-        LazyOptional<IEntityStorage> capability = container.getItem(0).getCapability(EIOCapabilities.ENTITY_STORAGE);
+        LazyOptional<IEntityStorage> capability = inputSoul.getCapability(EIOCapabilities.ENTITY_STORAGE);
         if (!capability.isPresent()) { //vial (or other entity storage
             return false;
         }
@@ -120,7 +120,7 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
         IEntityStorage storage = capability.resolve().get();
         if (storage.hasStoredEntity()) {
             var type = storage.getStoredEntityData().getEntityType();
-            if (!type.isPresent())
+            if (type.isEmpty())
                 return false;
 
             var entityType = ForgeRegistries.ENTITY_TYPES.getValue(type.get());

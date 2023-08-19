@@ -37,6 +37,8 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
 
     private final Map<Direction, BlockState> facadeTextures = new EnumMap<>(Direction.class);
 
+    private int dataVersion = Integer.MIN_VALUE;
+
     public ConduitBundle(Runnable scheduleSync, BlockPos pos) {
         this.scheduleSync = scheduleSync;
         for (Direction value : Direction.values()) {
@@ -71,6 +73,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
             node.getExtendedConduitData().onCreated(type, level, pos, player);
             connections.values().forEach(connection -> connection.disconnectType(index));
             scheduleSync.run();
+            dataVersion++;
             return new RightClickAction.Upgrade(first.get());
         }
         //some conduit says no (like higher energy conduit)
@@ -93,6 +96,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
             node.getExtendedConduitData().onCreated(type, level, pos, player);
         }
         scheduleSync.run();
+        dataVersion++;
         return new RightClickAction.Insert();
     }
 
@@ -124,6 +128,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
             removeNodeFor(level, type);
         types.remove(index);
         scheduleSync.run();
+        dataVersion++;
         return types.isEmpty();
     }
 
@@ -279,11 +284,13 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
 
     public void setFacade(BlockState facade, Direction direction) {
         facadeTextures.put(direction, facade);
+        dataVersion++;
     }
 
-    public void connectTo(Direction direction, IConduitType<?> type, boolean end) {
-        getConnection(direction).connectTo(getNodeFor(type), direction, type, getTypeIndex(type), end);
+    public void connectTo(Level level, BlockPos pos, Direction direction, IConduitType<?> type, boolean end) {
+        getConnection(direction).connectTo(level, pos, getNodeFor(type), direction, type, getTypeIndex(type), end);
         scheduleSync.run();
+        dataVersion++;
     }
 
     public boolean disconnectFrom(Direction direction, IConduitType<?> type) {
@@ -291,6 +298,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
             if (type.getTicker().canConnectTo(type, types.get(i))) {
                 getConnection(direction).tryDisconnect(i);
                 scheduleSync.run();
+                dataVersion++;
                 return true;
             }
         }
@@ -314,7 +322,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         nodes.put(type, node);
         for (var direction : Direction.values()) {
             ConduitConnection connection = connections.get(direction);
-            int index = connection.getConnectedTypes().indexOf(type);
+            int index = types.indexOf(type);
             if (index >= 0) {
                 var state = connection.getConnectionState(index);
                 if (state instanceof DynamicConnectionState dynamicState) {
@@ -322,6 +330,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
                 }
             }
         }
+        dataVersion++;
     }
 
     public void removeNodeFor(Level level, IConduitType<?> type) {
@@ -331,6 +340,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
             node.getGraph().remove(node);
         }
         nodes.remove(type);
+        dataVersion++;
     }
 
     public boolean hasType(IConduitType<?> type) {
@@ -349,6 +359,14 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
             }
         }
         throw new IllegalStateException("no conduit matching type in bundle");
+    }
+
+    public int getDataVersion() {
+        return dataVersion;
+    }
+
+    public void incrementDataVersion() {
+        dataVersion++;
     }
 
     @UseOnly(LogicalSide.CLIENT)
