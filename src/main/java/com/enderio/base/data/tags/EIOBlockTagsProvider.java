@@ -13,8 +13,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class EIOBlockTagsProvider extends BlockTagsProvider {
 
-    public EIOBlockTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider,
-        @Nullable ExistingFileHelper existingFileHelper) {
+    public EIOBlockTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper existingFileHelper) {
         super(output, lookupProvider, EnderIO.MODID, existingFileHelper);
     }
 
@@ -23,6 +22,15 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
         tag(EIOTags.Blocks.DARK_STEEL_EXPLODABLE_ALLOW_LIST);
         tag(EIOTags.Blocks.DARK_STEEL_EXPLODABLE_DENY_LIST);
 
-        tag(Tags.Blocks.STORAGE_BLOCKS).addTag(EIOTags.Blocks.BLOCKS_CONDUCTIVE_ALLOY).addTag(EIOTags.Blocks.BLOCKS_COPPER_ALLOY).addTag(EIOTags.Blocks.BLOCKS_DARK_STEEL).addTag(EIOTags.Blocks.BLOCKS_END_STEEL).addTag(EIOTags.Blocks.BLOCKS_ENERGETIC_ALLOY).addTag(EIOTags.Blocks.BLOCKS_PULSATING_ALLOY).addTag(EIOTags.Blocks.BLOCKS_REDSTONE_ALLOY).addTag(EIOTags.Blocks.BLOCKS_SOULARIUM).addTag(EIOTags.Blocks.BLOCKS_VIBRANT_ALLOY);
+        tag(Tags.Blocks.STORAGE_BLOCKS)
+            .addTag(EIOTags.Blocks.BLOCKS_CONDUCTIVE_ALLOY)
+            .addTag(EIOTags.Blocks.BLOCKS_COPPER_ALLOY)
+            .addTag(EIOTags.Blocks.BLOCKS_DARK_STEEL)
+            .addTag(EIOTags.Blocks.BLOCKS_END_STEEL)
+            .addTag(EIOTags.Blocks.BLOCKS_ENERGETIC_ALLOY)
+            .addTag(EIOTags.Blocks.BLOCKS_PULSATING_ALLOY)
+            .addTag(EIOTags.Blocks.BLOCKS_REDSTONE_ALLOY)
+            .addTag(EIOTags.Blocks.BLOCKS_SOULARIUM)
+            .addTag(EIOTags.Blocks.BLOCKS_VIBRANT_ALLOY);
     }
 }
