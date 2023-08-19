@@ -18,6 +18,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -49,7 +50,7 @@ public class FluidTankBEWLR extends BlockEntityWithoutLevelRenderer {
                     Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(tank.getString("FluidName")));
                     int amount = tank.getInt("Amount");
 
-                    if (fluid != null && amount > 0) {
+                    if (fluid != null && fluid != Fluids.EMPTY && amount > 0) {
                         // Get the preferred render buffer
                         VertexConsumer fluidBuffer = buffer.getBuffer(Sheets.translucentCullBlockSheet());
 

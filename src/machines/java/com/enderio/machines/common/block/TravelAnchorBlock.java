@@ -1,10 +1,13 @@
 package com.enderio.machines.common.block;
 
 import com.enderio.base.common.handler.TravelHandler;
+import com.enderio.base.common.travel.TravelSavedData;
+import com.enderio.machines.common.blockentity.TravelAnchorBlockEntity;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.TickEvent;
@@ -59,4 +62,12 @@ public class TravelAnchorBlock extends MachineBlock {
     }
 
     private record PlayerSneakEntry(boolean isSneaking, int atTime){}
+
+    @Override
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if (level.getBlockEntity(pos) instanceof TravelAnchorBlockEntity anchorBlock) {
+            TravelSavedData.getTravelData(level).removeTravelTargetAt(level, pos);
+        }
+        super.onRemove(state, level, pos, newState, movedByPiston);
+    }
 }

@@ -254,6 +254,19 @@ public class MachineRecipeProvider extends RecipeProvider {
             .save(finishedRecipeConsumer);
 
         ShapedRecipeBuilder
+            .shaped(RecipeCategory.MISC, MachineBlocks.DRAIN.get())
+            .define('I', EIOItems.COPPER_ALLOY_INGOT)
+            .define('V', EIOBlocks.VOID_CHASSIS)
+            .define('C', EIOTags.Items.CLEAR_GLASS)
+            .define('G', EIOItems.GEAR_IRON)
+            .define('B', Items.BUCKET)
+            .pattern("ICI")
+            .pattern("IVI")
+            .pattern("GBG")
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOBlocks.VOID_CHASSIS).build()))
+            .save(finishedRecipeConsumer);
+
+        ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.XP_VACUUM)
             .pattern("III")
             .pattern("IRI")

@@ -31,25 +31,25 @@ public class EIOItems {
 
     // region Alloys
 
-    public static final ItemEntry<MaterialItem> COPPER_ALLOY_INGOT = materialItem("copper_alloy_ingot").register();
-    public static final ItemEntry<MaterialItem> ENERGETIC_ALLOY_INGOT = materialItem("energetic_alloy_ingot").register();
-    public static final ItemEntry<MaterialItem> VIBRANT_ALLOY_INGOT = materialItem("vibrant_alloy_ingot").register();
-    public static final ItemEntry<MaterialItem> REDSTONE_ALLOY_INGOT = materialItem("redstone_alloy_ingot").register();
-    public static final ItemEntry<MaterialItem> CONDUCTIVE_ALLOY_INGOT = materialItem("conductive_alloy_ingot").register();
-    public static final ItemEntry<MaterialItem> PULSATING_ALLOY_INGOT = materialItem("pulsating_alloy_ingot").register();
-    public static final ItemEntry<MaterialItem> DARK_STEEL_INGOT = materialItem("dark_steel_ingot").register();
-    public static final ItemEntry<MaterialItem> SOULARIUM_INGOT = materialItem("soularium_ingot").register();
-    public static final ItemEntry<MaterialItem> END_STEEL_INGOT = materialItem("end_steel_ingot").register();
+    public static final ItemEntry<MaterialItem> COPPER_ALLOY_INGOT = materialItem("copper_alloy_ingot").tag(EIOTags.Items.INGOTS_COPPER_ALLOY).register();
+    public static final ItemEntry<MaterialItem> ENERGETIC_ALLOY_INGOT = materialItem("energetic_alloy_ingot").tag(EIOTags.Items.INGOTS_ENERGETIC_ALLOY).register();
+    public static final ItemEntry<MaterialItem> VIBRANT_ALLOY_INGOT = materialItem("vibrant_alloy_ingot").tag(EIOTags.Items.INGOTS_VIBRANT_ALLOY).register();
+    public static final ItemEntry<MaterialItem> REDSTONE_ALLOY_INGOT = materialItem("redstone_alloy_ingot").tag(EIOTags.Items.INGOTS_REDSTONE_ALLOY).register();
+    public static final ItemEntry<MaterialItem> CONDUCTIVE_ALLOY_INGOT = materialItem("conductive_alloy_ingot").tag(EIOTags.Items.INGOTS_CONDUCTIVE_ALLOY).register();
+    public static final ItemEntry<MaterialItem> PULSATING_ALLOY_INGOT = materialItem("pulsating_alloy_ingot").tag(EIOTags.Items.INGOTS_PULSATING_ALLOY).register();
+    public static final ItemEntry<MaterialItem> DARK_STEEL_INGOT = materialItem("dark_steel_ingot").tag(EIOTags.Items.INGOTS_DARK_STEEL).register();
+    public static final ItemEntry<MaterialItem> SOULARIUM_INGOT = materialItem("soularium_ingot").tag(EIOTags.Items.INGOTS_SOULARIUM).register();
+    public static final ItemEntry<MaterialItem> END_STEEL_INGOT = materialItem("end_steel_ingot").tag(EIOTags.Items.INGOTS_END_STEEL).register();
 
-    public static final ItemEntry<MaterialItem> COPPER_ALLOY_NUGGET = materialItem("copper_alloy_nugget").register();
-    public static final ItemEntry<MaterialItem> ENERGETIC_ALLOY_NUGGET = materialItem("energetic_alloy_nugget").register();
-    public static final ItemEntry<MaterialItem> VIBRANT_ALLOY_NUGGET = materialItem("vibrant_alloy_nugget").register();
-    public static final ItemEntry<MaterialItem> REDSTONE_ALLOY_NUGGET = materialItem("redstone_alloy_nugget").register();
-    public static final ItemEntry<MaterialItem> CONDUCTIVE_ALLOY_NUGGET = materialItem("conductive_alloy_nugget").register();
-    public static final ItemEntry<MaterialItem> PULSATING_ALLOY_NUGGET = materialItem("pulsating_alloy_nugget").register();
-    public static final ItemEntry<MaterialItem> DARK_STEEL_NUGGET = materialItem("dark_steel_nugget").register();
-    public static final ItemEntry<MaterialItem> SOULARIUM_NUGGET = materialItem("soularium_nugget").register();
-    public static final ItemEntry<MaterialItem> END_STEEL_NUGGET = materialItem("end_steel_nugget").register();
+    public static final ItemEntry<MaterialItem> COPPER_ALLOY_NUGGET = materialItem("copper_alloy_nugget").tag(EIOTags.Items.NUGGETS_COPPER_ALLOY).register();
+    public static final ItemEntry<MaterialItem> ENERGETIC_ALLOY_NUGGET = materialItem("energetic_alloy_nugget").tag(EIOTags.Items.NUGGETS_ENERGETIC_ALLOY).register();
+    public static final ItemEntry<MaterialItem> VIBRANT_ALLOY_NUGGET = materialItem("vibrant_alloy_nugget").tag(EIOTags.Items.NUGGETS_VIBRANT_ALLOY).register();
+    public static final ItemEntry<MaterialItem> REDSTONE_ALLOY_NUGGET = materialItem("redstone_alloy_nugget").tag(EIOTags.Items.NUGGETS_REDSTONE_ALLOY).register();
+    public static final ItemEntry<MaterialItem> CONDUCTIVE_ALLOY_NUGGET = materialItem("conductive_alloy_nugget").tag(EIOTags.Items.NUGGETS_CONDUCTIVE_ALLOY).register();
+    public static final ItemEntry<MaterialItem> PULSATING_ALLOY_NUGGET = materialItem("pulsating_alloy_nugget").tag(EIOTags.Items.NUGGETS_PULSATING_ALLOY).register();
+    public static final ItemEntry<MaterialItem> DARK_STEEL_NUGGET = materialItem("dark_steel_nugget").tag(EIOTags.Items.NUGGETS_DARK_STEEL).register();
+    public static final ItemEntry<MaterialItem> SOULARIUM_NUGGET = materialItem("soularium_nugget").tag(EIOTags.Items.NUGGETS_SOULARIUM).register();
+    public static final ItemEntry<MaterialItem> END_STEEL_NUGGET = materialItem("end_steel_nugget").tag(EIOTags.Items.NUGGETS_END_STEEL).register();
 
     // endregion
 
@@ -57,7 +57,7 @@ public class EIOItems {
 
     public static final ItemEntry<MaterialItem> SILICON = materialItem("silicon").tag(EIOTags.Items.SILICON).register();
 
-    public static final ItemEntry<MaterialItem> GRAINS_OF_INFINITY = materialItem("grains_of_infinity").lang("Grains of Infinity").register();
+    public static final ItemEntry<MaterialItem> GRAINS_OF_INFINITY = materialItem("grains_of_infinity").tag(EIOTags.Items.DUSTS_GRAINS_OF_INFINITY).lang("Grains of Infinity").register();
 
     public static final ItemEntry<MaterialItem> INFINITY_ROD = materialItem("infinity_rod").register();
 
@@ -138,13 +138,13 @@ public class EIOItems {
     public static final ItemEntry<MaterialItem> POWDERED_LAPIS_LAZULI = materialItem("powdered_lapis_lazuli").tag(EIOTags.Items.DUSTS_LAPIS).register();
     public static final ItemEntry<MaterialItem> POWDERED_QUARTZ = materialItem("powdered_quartz").tag(EIOTags.Items.DUSTS_QUARTZ).register();
 
-    public static final ItemEntry<MaterialItem> PRESCIENT_POWDER = materialItemGlinted("prescient_powder").lang("Grains of Prescience").register();
+    public static final ItemEntry<MaterialItem> PRESCIENT_POWDER = materialItemGlinted("prescient_powder").tag(EIOTags.Items.DUSTS_GRAINS_OF_PRESCIENCE).lang("Grains of Prescience").register();
 
-    public static final ItemEntry<MaterialItem> VIBRANT_POWDER = materialItemGlinted("vibrant_powder").lang("Grains of Vibrancy").register();
+    public static final ItemEntry<MaterialItem> VIBRANT_POWDER = materialItemGlinted("vibrant_powder").tag(EIOTags.Items.DUSTS_GRAINS_OF_VIBRANCY).lang("Grains of Vibrancy").register();
 
-    public static final ItemEntry<MaterialItem> PULSATING_POWDER = materialItemGlinted("pulsating_powder").lang("Grains of Piezallity").register();
+    public static final ItemEntry<MaterialItem> PULSATING_POWDER = materialItemGlinted("pulsating_powder").tag(EIOTags.Items.DUSTS_GRAINS_OF_PIZEALLITY).lang("Grains of Piezallity").register();
 
-    public static final ItemEntry<MaterialItem> ENDER_CRYSTAL_POWDER = materialItemGlinted("ender_crystal_powder").lang("Grains of the End").register();
+    public static final ItemEntry<MaterialItem> ENDER_CRYSTAL_POWDER = materialItemGlinted("ender_crystal_powder").tag(EIOTags.Items.DUSTS_GRAINS_OF_THE_END).lang("Grains of the End").register();
 
     public static final ItemEntry<MaterialItem> PHOTOVOLTAIC_COMPOSITE = materialItem("photovoltaic_composite").register();
     public static final ItemEntry<MaterialItem> SOUL_POWDER = materialItem("soul_powder").register();

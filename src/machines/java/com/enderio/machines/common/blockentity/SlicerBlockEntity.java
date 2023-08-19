@@ -104,7 +104,7 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
     }
 
     private boolean isValidInput(int index, ItemStack stack) {
-        return RecipeCaches.SLICING.hasRecipe(List.of(stack));
+        return SlicerRecipeManager.isSlicerValid(stack, index);
     }
 
     private boolean validAxe(int slot, ItemStack stack) {

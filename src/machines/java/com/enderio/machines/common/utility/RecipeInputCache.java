@@ -2,7 +2,6 @@ package com.enderio.machines.common.utility;
 
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
-import com.enderio.machines.common.recipe.MachineRecipe;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -69,7 +68,7 @@ public class RecipeInputCache<C extends Container, T extends Recipe<C>> {
                     .collect(Collectors.toSet());
             }
 
-            if (possibleMatches.size() == 0) {
+            if (possibleMatches.isEmpty()) {
                 return false;
             }
 
@@ -119,9 +118,7 @@ public class RecipeInputCache<C extends Container, T extends Recipe<C>> {
     public void rebuildCache(RecipeManager recipeManager) {
         itemToRecipesCache.clear();
         recipeToIngredientCache.clear();
-
-        var recipeType = this.recipeType.get();
-        recipeManager.getAllRecipesFor(recipeType)
+        recipeManager.getAllRecipesFor(recipeType.get())
             .forEach(recipe -> {
                 var items = recipe.getIngredients().stream()
                     .flatMap(ingredient -> Arrays.stream(ingredient.getItems()))
