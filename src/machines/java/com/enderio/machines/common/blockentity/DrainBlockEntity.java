@@ -132,13 +132,13 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
         //Fluid found, try to consume it
         fluidFound = true;
         if (getFluidTankNN().fill(new FluidStack(fluidState.getType(), FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.SIMULATE) == FluidType.BUCKET_VOLUME) {
-            if (consumed == ENERGY_PER_BUCKET) {
+            if (consumed <= ENERGY_PER_BUCKET) {
                 level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
                 getFluidTankNN().fill(new FluidStack(fluidState.getType(), FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.EXECUTE);
-                consumed = 0;
+                consumed -= ENERGY_PER_BUCKET;
                 currentIndex++;
             } else {
-                consumed += getEnergyStorage().consumeEnergy(ENERGY_PER_BUCKET-consumed, false);
+                consumed += getEnergyStorage().consumeEnergy(ENERGY_PER_BUCKET - consumed, false);
             }
         }
     }
