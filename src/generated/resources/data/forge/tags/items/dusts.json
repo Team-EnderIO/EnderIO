@@ -9,6 +9,11 @@
     "#forge:dusts/tin",
     "#forge:dusts/ender",
     "#forge:dusts/obsidian",
-    "#forge:dusts/cobalt"
+    "#forge:dusts/cobalt",
+    "#forge:dusts/grains_of_infinity",
+    "#forge:dusts/grains_of_prescience",
+    "#forge:dusts/grains_of_vibrancy",
+    "#forge:dusts/grains_of_pizeallity",
+    "#forge:dusts/grains_of_the_end"
   ]
 }
