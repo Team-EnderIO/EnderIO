@@ -27,10 +27,13 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraftforge.client.event.RecipesUpdatedEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,15 +42,18 @@ import java.util.function.Predicate;
 
 import static com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity.NO_MOB;
 
+@Mod.EventBusSubscriber
 public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
 
     private static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.SOUL_ENGINE_CAPACITY);
-    private static final String BURNED_TICKS = "burnedTicks";
+    private static final String BURNED_TICKS = "BurnedTicks";
     private StoredEntityData entityData = StoredEntityData.empty();
     public static final int FLUID_CAPACITY = 2 * FluidType.BUCKET_VOLUME;
     @Nullable
     private EngineSoul.SoulData soulData;
     private int burnedTicks = 0;
+    private static boolean reload = false;
+    private boolean reloadCache = !reload;
 
     public SoulEngineBlockEntity(BlockEntityType<?> type,
         BlockPos worldPosition, BlockState blockState) {
@@ -65,14 +71,13 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
 
     @Override
     public void serverTick() {
-        if (entityData != StoredEntityData.empty() && entityData.getEntityType().isPresent()) {
+        if (reloadCache != reload && entityData != StoredEntityData.empty() && entityData.getEntityType().isPresent()) {
             Optional<EngineSoul.SoulData> op = EngineSoul.ENGINE.matches(entityData.getEntityType().get());
-            op.ifPresent(data -> {
-                soulData = data;
-                if (isActive()) {
-                    producePower();
-                }
-            });
+            op.ifPresent(data -> soulData = data);
+            reloadCache = reload;
+        }
+        if (soulData != null && isActive()) {
+            producePower();
         }
 
         super.serverTick();
@@ -171,5 +176,10 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
         super.load(pTag);
         burnedTicks = pTag.getInt(BURNED_TICKS);
         entityData.deserializeNBT(pTag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
+    }
+
+    @SubscribeEvent
+    static void onReload(RecipesUpdatedEvent event) {
+        reload = !reload;
     }
 }
