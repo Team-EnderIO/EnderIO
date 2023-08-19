@@ -24,7 +24,7 @@ public class EngineSoul {
            Codec.INT.fieldOf("tick/mb").forGetter(SoulData::tickpermb))
            .apply(soulDataInstance, SoulData::new));
 
-    public static final String NAME = "generator";
+    public static final String NAME = "engine";
     public static final SoulDataReloadListener<SoulData> ENGINE = new SoulDataReloadListener<>(NAME, CODEC);
 
     @SubscribeEvent

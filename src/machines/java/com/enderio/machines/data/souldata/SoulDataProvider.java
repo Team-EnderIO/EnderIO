@@ -111,11 +111,11 @@ public class SoulDataProvider implements DataProvider {
         addSpawnerData(EntityType.ZOMBIE_VILLAGER, 51_200, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
         addSpawnerData(EntityType.ZOMBIFIED_PIGLIN, 51_200, SpawnerMachineTask.SpawnType.ENTITYTYPE, finshedSoulDataConsumer);
 
-        addGeneratorData(EntityType.BLAZE, FluidTags.LAVA, 300, 15, finshedSoulDataConsumer);
-        addGeneratorData(EntityType.ZOMBIE, EIOFluids.NUTRIENT_DISTILLATION.get(), 500, 15, finshedSoulDataConsumer);
-        addGeneratorData(EntityType.ZOMBIE_VILLAGER, EIOFluids.NUTRIENT_DISTILLATION.get(), 500, 15, finshedSoulDataConsumer);
-        addGeneratorData(EntityType.HUSK, EIOFluids.NUTRIENT_DISTILLATION.get(), 500, 15, finshedSoulDataConsumer);
-        addGeneratorData(EntityType.ENDERMAN, EIOFluids.DEW_OF_THE_VOID.get(), 900, 10, finshedSoulDataConsumer);
+        addEngineData(EntityType.BLAZE, FluidTags.LAVA, 300, 15, finshedSoulDataConsumer);
+        addEngineData(EntityType.ZOMBIE, EIOFluids.NUTRIENT_DISTILLATION.get(), 500, 15, finshedSoulDataConsumer);
+        addEngineData(EntityType.ZOMBIE_VILLAGER, EIOFluids.NUTRIENT_DISTILLATION.get(), 500, 15, finshedSoulDataConsumer);
+        addEngineData(EntityType.HUSK, EIOFluids.NUTRIENT_DISTILLATION.get(), 500, 15, finshedSoulDataConsumer);
+        addEngineData(EntityType.ENDERMAN, EIOFluids.DEW_OF_THE_VOID.get(), 900, 10, finshedSoulDataConsumer);
 
     }
 
@@ -142,21 +142,21 @@ public class SoulDataProvider implements DataProvider {
     private void addSpawnerData(EntityType<?> entityType, int power, SpawnerMachineTask.SpawnType type, Consumer<FinshedSoulData<?>> finshedSoulDataConsumer) {
         ResourceLocation key = ForgeRegistries.ENTITY_TYPES.getKey(entityType);
         SpawnerSoul.SoulData data = new SpawnerSoul.SoulData(key, power, type);
-        finshedSoulDataConsumer.accept(new FinshedSoulData<>(SpawnerSoul.CODEC, data, "spawner/" + key.getNamespace() + "_" + key.getPath()));
+        finshedSoulDataConsumer.accept(new FinshedSoulData<>(SpawnerSoul.CODEC, data, SpawnerSoul.NAME + "/" + key.getNamespace() + "_" + key.getPath()));
     }
 
-    private void addGeneratorData(EntityType<?> entityType, Fluid fluid, int powerpermb, int tickpermb, Consumer<FinshedSoulData<?>> finshedSoulDataConsumer) {
+    private void addEngineData(EntityType<?> entityType, Fluid fluid, int powerpermb, int tickpermb, Consumer<FinshedSoulData<?>> finshedSoulDataConsumer) {
         ResourceLocation entityRL = ForgeRegistries.ENTITY_TYPES.getKey(entityType);
         ResourceLocation fluidRL = ForgeRegistries.FLUIDS.getKey(fluid);
         EngineSoul.SoulData data = new EngineSoul.SoulData(entityRL, fluidRL.toString(), powerpermb, tickpermb);
-        finshedSoulDataConsumer.accept(new FinshedSoulData<>(EngineSoul.CODEC, data, "generator/" + entityRL.getNamespace() + "_" + entityRL.getPath()));
+        finshedSoulDataConsumer.accept(new FinshedSoulData<>(EngineSoul.CODEC, data, EngineSoul.NAME + "/" + entityRL.getNamespace() + "_" + entityRL.getPath()));
     }
 
-    private void addGeneratorData(EntityType<?> entityType, TagKey<Fluid> fluid, int powerpermb, int tickpermb, Consumer<FinshedSoulData<?>> finshedSoulDataConsumer) {
+    private void addEngineData(EntityType<?> entityType, TagKey<Fluid> fluid, int powerpermb, int tickpermb, Consumer<FinshedSoulData<?>> finshedSoulDataConsumer) {
         ResourceLocation entityRL = ForgeRegistries.ENTITY_TYPES.getKey(entityType);
         String fluidRL = "#" + fluid.location();
         EngineSoul.SoulData data = new EngineSoul.SoulData(entityRL, fluidRL, powerpermb, tickpermb);
-        finshedSoulDataConsumer.accept(new FinshedSoulData<>(EngineSoul.CODEC, data, "generator/" + entityRL.getNamespace() + "_" + entityRL.getPath()));
+        finshedSoulDataConsumer.accept(new FinshedSoulData<>(EngineSoul.CODEC, data, EngineSoul.NAME + "/" + entityRL.getNamespace() + "_" + entityRL.getPath()));
     }
 
     static class FinshedSoulData<T extends ISoulData> {
