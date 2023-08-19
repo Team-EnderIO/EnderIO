@@ -63,25 +63,6 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
 
         build1toN("stone", STONE, COBBLESTONE, 1, finishedRecipeConsumer);
 
-        build("raw_iron", Ingredient.of(Tags.Items.RAW_MATERIALS_IRON), List.of(
-            output(POWDERED_IRON.get(), 1),
-            output(POWDERED_IRON.get(), .25f), // This number is temporarily being borrowed from Thermal
-            output(POWDERED_TIN.get(), .05f) // This is borrowed from Ender IO 1.12.2
-            // Ideally there would be a line here with a 10% chance for Powdered Nickel
-        ), BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-
-        build("raw_gold", Ingredient.of(Tags.Items.RAW_MATERIALS_GOLD), List.of(
-            output(POWDERED_GOLD.get(), 1),
-            output(POWDERED_GOLD.get(), .25f), // This number is temporarily being borrowed from Thermal
-            output(POWDERED_COPPER.get(), .2f) // This is borrowed from Ender IO 1.12.2
-        ), BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-
-        build("raw_copper", Ingredient.of(Tags.Items.RAW_MATERIALS_COPPER), List.of(
-            output(POWDERED_COPPER.get(), 1),
-            output(POWDERED_COPPER.get(), .25f), // This number is temporarily being borrowed from Thermal
-            output(POWDERED_GOLD.get(), .12f) // This is borrowed from Ender IO 1.12.2
-        ), BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-
         build("coal", Ingredient.of(COAL), List.of(
                 output(POWDERED_COAL.get()),
                 output(POWDERED_COAL.get(), 0.1f),

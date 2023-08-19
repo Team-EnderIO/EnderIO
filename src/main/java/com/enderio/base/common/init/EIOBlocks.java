@@ -14,6 +14,7 @@ import com.enderio.base.common.block.painted.*;
 import com.enderio.base.common.item.PaintedBlockItem;
 import com.enderio.base.common.item.PaintedSlabBlockItem;
 import com.enderio.base.common.item.misc.EnderSkullBlockItem;
+import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.loot.DecorLootTable;
 import com.enderio.base.data.model.block.EIOBlockState;
 import com.tterrag.registrate.Registrate;
@@ -53,15 +54,15 @@ public class EIOBlocks {
 
     // region Alloy Blocks
 
-    public static final BlockEntry<Block> COPPER_ALLOY_BLOCK = metalBlock("copper_alloy_block").register();
-    public static final BlockEntry<Block> ENERGETIC_ALLOY_BLOCK = metalBlock("energetic_alloy_block").register();
-    public static final BlockEntry<Block> VIBRANT_ALLOY_BLOCK = metalBlock("vibrant_alloy_block").register();
-    public static final BlockEntry<Block> REDSTONE_ALLOY_BLOCK = metalBlock("redstone_alloy_block").register();
-    public static final BlockEntry<Block> CONDUCTIVE_ALLOY_BLOCK = metalBlock("conductive_alloy_block").register();
-    public static final BlockEntry<Block> PULSATING_ALLOY_BLOCK = metalBlock("pulsating_alloy_block").register();
-    public static final BlockEntry<Block> DARK_STEEL_BLOCK = metalBlock("dark_steel_block").register();
-    public static final BlockEntry<Block> SOULARIUM_BLOCK = metalBlock("soularium_block").register();
-    public static final BlockEntry<Block> END_STEEL_BLOCK = metalBlock("end_steel_block").register();
+    public static final BlockEntry<Block> COPPER_ALLOY_BLOCK = metalBlock("copper_alloy_block").tag(EIOTags.Blocks.BLOCKS_COPPER_ALLOY).register();
+    public static final BlockEntry<Block> ENERGETIC_ALLOY_BLOCK = metalBlock("energetic_alloy_block").tag(EIOTags.Blocks.BLOCKS_ENERGETIC_ALLOY).register();
+    public static final BlockEntry<Block> VIBRANT_ALLOY_BLOCK = metalBlock("vibrant_alloy_block").tag(EIOTags.Blocks.BLOCKS_VIBRANT_ALLOY).register();
+    public static final BlockEntry<Block> REDSTONE_ALLOY_BLOCK = metalBlock("redstone_alloy_block").tag(EIOTags.Blocks.BLOCKS_REDSTONE_ALLOY).register();
+    public static final BlockEntry<Block> CONDUCTIVE_ALLOY_BLOCK = metalBlock("conductive_alloy_block").tag(EIOTags.Blocks.BLOCKS_CONDUCTIVE_ALLOY).register();
+    public static final BlockEntry<Block> PULSATING_ALLOY_BLOCK = metalBlock("pulsating_alloy_block").tag(EIOTags.Blocks.BLOCKS_PULSATING_ALLOY).register();
+    public static final BlockEntry<Block> DARK_STEEL_BLOCK = metalBlock("dark_steel_block").tag(EIOTags.Blocks.BLOCKS_DARK_STEEL).register();
+    public static final BlockEntry<Block> SOULARIUM_BLOCK = metalBlock("soularium_block").tag(EIOTags.Blocks.BLOCKS_SOULARIUM).register();
+    public static final BlockEntry<Block> END_STEEL_BLOCK = metalBlock("end_steel_block").tag(EIOTags.Blocks.BLOCKS_END_STEEL).register();
 
     // endregion
 
