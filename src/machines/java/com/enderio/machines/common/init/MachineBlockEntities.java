@@ -74,6 +74,7 @@ public class MachineBlockEntities {
        }
        return ImmutableMap.copyOf(map);
     });
+
     public static final Map<CapacitorTier, BlockEntityEntry<CapacitorBankBlockEntity>> CAPACITOR_BANKS = Util.make(() -> {
        Map<CapacitorTier, BlockEntityEntry<CapacitorBankBlockEntity>> map = new HashMap<>();
        for (CapacitorTier tier : CapacitorTier.values()) {
@@ -82,6 +83,8 @@ public class MachineBlockEntities {
        }
        return ImmutableMap.copyOf(map);
     });
+
+    public static final BlockEntityEntry<SoulEngineBlockEntity> SOUL_ENGINE = register("soul_engine", SoulEngineBlockEntity::new, MachineBlocks.SOUL_ENGINE);
 
     @SafeVarargs
     private static <B extends BlockEntity> BlockEntityEntry<B> register(String name, BlockEntityBuilder.BlockEntityFactory<B> beFactory,

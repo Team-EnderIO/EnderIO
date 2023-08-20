@@ -230,6 +230,19 @@ public class MachineRecipeProvider extends RecipeProvider {
             .save(finishedRecipeConsumer);
 
         ShapedRecipeBuilder
+            .shaped(RecipeCategory.MISC, MachineBlocks.SOUL_ENGINE)
+            .define('I', EIOItems.SOULARIUM_INGOT) //TODO Maybe also soulchains?
+            .define('B', Items.BUCKET)
+            .define('C', EIOBlocks.ENSOULED_CHASSIS)
+            .define('Z', EIOItems.ZOMBIE_ELECTRODE)
+            .define('G', EIOTags.Items.FUSED_QUARTZ)
+            .pattern("IGI")
+            .pattern("BCB")
+            .pattern("IZI")
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.ENSOULED_CHASSIS))
+            .save(finishedRecipeConsumer);
+
+        ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.VACUUM_CHEST.get())
             .define('I', Tags.Items.INGOTS_IRON)
             .define('C', Tags.Items.CHESTS)

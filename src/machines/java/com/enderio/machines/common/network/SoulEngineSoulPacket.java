@@ -1,8 +1,7 @@
 package com.enderio.machines.common.network;
 
 import com.enderio.core.common.network.Packet;
-import com.enderio.machines.common.blockentity.task.SpawnerMachineTask;
-import com.enderio.machines.common.souldata.SpawnerSoul;
+import com.enderio.machines.common.souldata.EngineSoul;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkDirection;
@@ -11,27 +10,28 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.Map;
 import java.util.Optional;
 
-public class PoweredSpawnerSoulPacket implements Packet {
-    private final Map<ResourceLocation, SpawnerSoul.SoulData> map;
+public class SoulEngineSoulPacket implements Packet {
 
-    public PoweredSpawnerSoulPacket(Map<ResourceLocation, SpawnerSoul.SoulData> map) {
+    private final Map<ResourceLocation, EngineSoul.SoulData> map;
+
+    public SoulEngineSoulPacket(Map<ResourceLocation, EngineSoul.SoulData> map) {
         this.map = map;
     }
 
-    public PoweredSpawnerSoulPacket(FriendlyByteBuf buf) {
+    public SoulEngineSoulPacket(FriendlyByteBuf buf) {
         this.map = buf.readMap(FriendlyByteBuf::readResourceLocation, buff ->
-            new SpawnerSoul.SoulData(buff.readResourceLocation(), buff.readInt(), buff.readEnum(SpawnerMachineTask.SpawnType.class))
+            new EngineSoul.SoulData(buff.readResourceLocation(), buff.readUtf(), buff.readInt(), buff.readInt())
         );
     }
 
     protected void write(FriendlyByteBuf writeInto) {
         writeInto.writeMap(map, FriendlyByteBuf::writeResourceLocation, (buf, soulData) -> {
             buf.writeResourceLocation(soulData.entitytype());
-            buf.writeInt(soulData.power());
-            buf.writeEnum(soulData.spawnType());
+            buf.writeUtf(soulData.fluid());
+            buf.writeInt(soulData.powerpermb());
+            buf.writeInt(soulData.tickpermb());
         });
     }
-
     @Override
     public boolean isValid(NetworkEvent.Context context) {
         return context.getDirection() == NetworkDirection.PLAY_TO_CLIENT;
@@ -39,19 +39,19 @@ public class PoweredSpawnerSoulPacket implements Packet {
 
     @Override
     public void handle(NetworkEvent.Context context) {
-        context.enqueueWork(() -> SpawnerSoul.SPAWNER.map = this.map);
+        context.enqueueWork(() -> EngineSoul.ENGINE.map = this.map);
         context.setPacketHandled(true);
     }
 
-    public static class Handler extends PacketHandler<PoweredSpawnerSoulPacket> {
+    public static class Handler extends PacketHandler<SoulEngineSoulPacket> {
 
         @Override
-        public PoweredSpawnerSoulPacket fromNetwork(FriendlyByteBuf buf) {
-            return new PoweredSpawnerSoulPacket(buf);
+        public SoulEngineSoulPacket fromNetwork(FriendlyByteBuf buf) {
+            return new SoulEngineSoulPacket(buf);
         }
 
         @Override
-        public void toNetwork(PoweredSpawnerSoulPacket packet, FriendlyByteBuf buf) {
+        public void toNetwork(SoulEngineSoulPacket packet, FriendlyByteBuf buf) {
             packet.write(buf);
         }
 

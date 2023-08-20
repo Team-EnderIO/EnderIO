@@ -1,0 +1,6 @@
+{
+  "parent": "enderio:block/stirling_generator",
+  "textures": {
+    "north": "enderio:block/soul_engine_front_active"
+  }
+}
