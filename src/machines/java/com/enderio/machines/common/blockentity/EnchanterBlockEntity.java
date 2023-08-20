@@ -20,13 +20,13 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
-
-import java.util.Optional;
+import org.jetbrains.annotations.Nullable;
 
 public class EnchanterBlockEntity extends MachineBlockEntity {
 
     private final RecipeWrapper container;
-
+    @Nullable
+    private EnchanterRecipe currentRecipe;
     public static final SingleSlotAccess BOOK = new SingleSlotAccess();
     public static final SingleSlotAccess CATALYST = new SingleSlotAccess();
     public static final SingleSlotAccess LAPIS = new SingleSlotAccess();
@@ -79,15 +79,15 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
     protected MachineInventory createMachineInventory(MachineInventoryLayout layout) {
         // Custom behaviour as this works more like a crafting table than a machine.
         return new MachineInventory(getIOConfig(), layout) {
+
             protected void onContentsChanged(int slot) {
                 if (level == null) {
                     return;
                 }
-
+                currentRecipe = level.getRecipeManager().getRecipeFor(MachineRecipes.ENCHANTING.type().get(), container, level).orElse(null);
                 if (!OUTPUT.isSlot(slot)) {
-                    Optional<EnchanterRecipe> recipe = level.getRecipeManager().getRecipeFor(MachineRecipes.ENCHANTING.type().get(), container, level);
-                    if (recipe.isPresent()) {
-                        OUTPUT.setStackInSlot(this, recipe.get().assemble(container, level.registryAccess()));
+                    if (currentRecipe != null) {
+                        OUTPUT.setStackInSlot(this, currentRecipe.assemble(container, level.registryAccess()));
                     } else {
                         OUTPUT.setStackInSlot(this, ItemStack.EMPTY);
                     }
@@ -109,5 +109,9 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
             }
         };
     }
-    
+
+    @Nullable
+    public EnchanterRecipe getCurrentRecipe() {
+        return currentRecipe;
+    }
 }
