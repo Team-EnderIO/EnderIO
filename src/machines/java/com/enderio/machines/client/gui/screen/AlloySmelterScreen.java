@@ -5,6 +5,7 @@ import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
+import com.enderio.machines.client.gui.widget.ActiveWidget;
 import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
 import com.enderio.machines.client.gui.widget.ProgressWidget;
 import com.enderio.machines.client.gui.widget.ioconfig.IOConfigButton;
@@ -35,7 +36,9 @@ public class AlloySmelterScreen extends EIOScreen<AlloySmelterMenu> {
         addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
 
-        addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 6 + 16 * 3, () -> menu.getBlockEntity().getMode(), mode -> menu.getBlockEntity().setMode(mode), MachineLang.ALLOY_SMELTER_MODE));
+        addRenderableWidget(new ActiveWidget(this, menu.getBlockEntity()::getBlockedReason, leftPos + imageWidth - 6 - 16, topPos + 16*4));
+
+        addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 16 * 3, () -> menu.getBlockEntity().getMode(), mode -> menu.getBlockEntity().setMode(mode), MachineLang.ALLOY_SMELTER_MODE));
 
         addRenderableWidget(new IOConfigButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 22, 16, 16, menu, this::addRenderableWidget, font));
     }

@@ -6,6 +6,7 @@ import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.enderio.core.client.gui.widgets.ToggleImageButton;
+import com.enderio.machines.client.gui.widget.ActiveWidget;
 import com.enderio.machines.client.gui.widget.FluidStackStaticWidget;
 import com.enderio.machines.common.menu.XPVacuumMenu;
 import net.minecraft.client.gui.GuiGraphics;
@@ -29,8 +30,10 @@ public class XPVacuumScreen extends EIOScreen<XPVacuumMenu> {
     protected void init() {
         super.init();
         addRenderableOnly(new FluidStackStaticWidget(this, getMenu().getBlockEntity()::getFluidTank, leftPos + 27, topPos + 22, 32, 32));
+
         addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 14, topPos + 52, () -> menu.getBlockEntity().getRedstoneControl(),
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
+
         addRenderableWidget(new ToggleImageButton<>(this, leftPos + imageWidth - 8 - 16, topPos + 34, 16, 16, 0, 0, 16, 0, RANGE_BUTTON_TEXTURE,
             () -> menu.getBlockEntity().isRangeVisible(), state -> menu.getBlockEntity().setIsRangeVisible(state),
             () -> menu.getBlockEntity().isRangeVisible() ? EIOLang.HIDE_RANGE : EIOLang.SHOW_RANGE));
@@ -38,6 +41,9 @@ public class XPVacuumScreen extends EIOScreen<XPVacuumMenu> {
             new ImageButton(leftPos + imageWidth - 8 - 8 - 2 - 16, topPos + 34, 8, 8, 8, 0, 16, BUTTONS, (b) -> this.menu.getBlockEntity().increaseRange()));
         addRenderableWidget(
             new ImageButton(leftPos + imageWidth - 8 - 8 - 2 - 16, topPos + 42, 8, 8, 8, 8, 16, BUTTONS, (b) -> this.menu.getBlockEntity().decreaseRange()));
+
+        addRenderableWidget(new ActiveWidget(this, menu.getBlockEntity()::getBlockedReason, leftPos + imageWidth - 6 - 16, topPos + 16*4));
+
     }
 
     @Override

@@ -20,6 +20,7 @@ import com.enderio.machines.common.menu.PoweredSpawnerMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -172,6 +173,18 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
 
     // endregion
 
+    @Override
+    public MutableComponent getBlockedReason() {
+        MutableComponent superComp = super.getBlockedReason();
+        if (!superComp.equals(MachineLang.TOOLTIP_ACTIVE)) {
+            return superComp;
+        }
+        if (reason != SpawnerBlockedReason.NONE) {
+            return reason.component;
+        }
+        return MachineLang.TOOLTIP_ACTIVE;
+    }
+
     public enum SpawnerBlockedReason {
         TOO_MANY_MOB(MachineLang.TOO_MANY_MOB),
         TOO_MANY_SPAWNER(MachineLang.TOO_MANY_SPAWNER),
@@ -180,13 +193,13 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
         DISABLED(MachineLang.DISABLED),
         NONE(Component.literal("NONE"));
 
-        private final Component component;
+        private final MutableComponent component;
 
-        SpawnerBlockedReason(Component component) {
+        SpawnerBlockedReason(MutableComponent component) {
             this.component = component;
         }
 
-        public Component getComponent() {
+        public MutableComponent getComponent() {
             return component;
         }
     }

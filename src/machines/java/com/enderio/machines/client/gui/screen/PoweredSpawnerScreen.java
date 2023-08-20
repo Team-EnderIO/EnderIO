@@ -6,6 +6,7 @@ import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.enderio.core.client.gui.widgets.ToggleImageButton;
+import com.enderio.machines.client.gui.widget.ActiveWidget;
 import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
 import com.enderio.machines.client.gui.widget.ProgressWidget;
 import com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity;
@@ -40,6 +41,8 @@ public class PoweredSpawnerScreen extends EIOScreen<PoweredSpawnerMenu> {
         addRenderableWidget(new ToggleImageButton<>(this, leftPos + imageWidth - 8 - 13, topPos + 20, 16, 16, 0, 0, 16, 0, RANGE_BUTTON_TEXTURE,
             () -> menu.getBlockEntity().isRangeVisible(), state -> menu.getBlockEntity().setIsRangeVisible(state),
             () -> menu.getBlockEntity().isRangeVisible() ? EIOLang.HIDE_RANGE : EIOLang.SHOW_RANGE));
+
+        addRenderableWidget(new ActiveWidget(this, menu.getBlockEntity()::getBlockedReason, leftPos + imageWidth - 6 - 16, topPos + 16*4));
 
         addRenderableOnly(new ProgressWidget.BottomUp(this, () -> menu.getBlockEntity().getSpawnProgress(), getGuiLeft() + 82, getGuiTop() + 38, 14, 14, 176, 0));
 
