@@ -6,6 +6,7 @@ import com.enderio.conduits.ConduitNBTKeys;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
@@ -70,7 +71,7 @@ public class FluidExtendedData implements IExtendedConduitData<FluidExtendedData
     public void deserializeNBT(CompoundTag nbt) {
         if (nbt.contains(ConduitNBTKeys.FLUID) && !isMultiFluid) {
             String fluid = nbt.getString(ConduitNBTKeys.FLUID);
-            if (fluid.equals("null")) {
+            if (fluid.equals("null") || ForgeRegistries.FLUIDS.getValue(new ResourceLocation(fluid)) == Fluids.EMPTY) {
                 setLockedFluid(null);
             } else {
                 setLockedFluid(ForgeRegistries.FLUIDS.getValue(new ResourceLocation(fluid)));

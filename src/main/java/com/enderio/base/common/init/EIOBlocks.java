@@ -14,6 +14,7 @@ import com.enderio.base.common.block.painted.*;
 import com.enderio.base.common.item.PaintedBlockItem;
 import com.enderio.base.common.item.PaintedSlabBlockItem;
 import com.enderio.base.common.item.misc.EnderSkullBlockItem;
+import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.loot.DecorLootTable;
 import com.enderio.base.data.model.block.EIOBlockState;
 import com.tterrag.registrate.Registrate;
@@ -53,15 +54,24 @@ public class EIOBlocks {
 
     // region Alloy Blocks
 
-    public static final BlockEntry<Block> COPPER_ALLOY_BLOCK = metalBlock("copper_alloy_block").register();
-    public static final BlockEntry<Block> ENERGETIC_ALLOY_BLOCK = metalBlock("energetic_alloy_block").register();
-    public static final BlockEntry<Block> VIBRANT_ALLOY_BLOCK = metalBlock("vibrant_alloy_block").register();
-    public static final BlockEntry<Block> REDSTONE_ALLOY_BLOCK = metalBlock("redstone_alloy_block").register();
-    public static final BlockEntry<Block> CONDUCTIVE_ALLOY_BLOCK = metalBlock("conductive_alloy_block").register();
-    public static final BlockEntry<Block> PULSATING_ALLOY_BLOCK = metalBlock("pulsating_alloy_block").register();
-    public static final BlockEntry<Block> DARK_STEEL_BLOCK = metalBlock("dark_steel_block").register();
-    public static final BlockEntry<Block> SOULARIUM_BLOCK = metalBlock("soularium_block").register();
-    public static final BlockEntry<Block> END_STEEL_BLOCK = metalBlock("end_steel_block").register();
+    public static final BlockEntry<Block> COPPER_ALLOY_BLOCK = metalBlock("copper_alloy_block",
+            EIOTags.Blocks.BLOCKS_COPPER_ALLOY, EIOTags.Items.BLOCKS_COPPER_ALLOY).register();
+    public static final BlockEntry<Block> ENERGETIC_ALLOY_BLOCK = metalBlock("energetic_alloy_block",
+            EIOTags.Blocks.BLOCKS_ENERGETIC_ALLOY, EIOTags.Items.BLOCKS_ENERGETIC_ALLOY).register();
+    public static final BlockEntry<Block> VIBRANT_ALLOY_BLOCK = metalBlock("vibrant_alloy_block",
+            EIOTags.Blocks.BLOCKS_VIBRANT_ALLOY, EIOTags.Items.BLOCKS_VIBRANT_ALLOY).register();
+    public static final BlockEntry<Block> REDSTONE_ALLOY_BLOCK = metalBlock("redstone_alloy_block",
+            EIOTags.Blocks.BLOCKS_REDSTONE_ALLOY, EIOTags.Items.BLOCKS_REDSTONE_ALLOY).register();
+    public static final BlockEntry<Block> CONDUCTIVE_ALLOY_BLOCK = metalBlock("conductive_alloy_block",
+            EIOTags.Blocks.BLOCKS_CONDUCTIVE_ALLOY, EIOTags.Items.BLOCKS_CONDUCTIVE_ALLOY).register();
+    public static final BlockEntry<Block> PULSATING_ALLOY_BLOCK = metalBlock("pulsating_alloy_block",
+            EIOTags.Blocks.BLOCKS_PULSATING_ALLOY, EIOTags.Items.BLOCKS_PULSATING_ALLOY).register();
+    public static final BlockEntry<Block> DARK_STEEL_BLOCK = metalBlock("dark_steel_block",
+            EIOTags.Blocks.BLOCKS_DARK_STEEL, EIOTags.Items.BLOCKS_DARK_STEEL).register();
+    public static final BlockEntry<Block> SOULARIUM_BLOCK = metalBlock("soularium_block",
+            EIOTags.Blocks.BLOCKS_SOULARIUM, EIOTags.Items.BLOCKS_SOULARIUM).register();
+    public static final BlockEntry<Block> END_STEEL_BLOCK = metalBlock("end_steel_block",
+            EIOTags.Blocks.BLOCKS_END_STEEL, EIOTags.Items.BLOCKS_END_STEEL).register();
 
     // endregion
 
@@ -378,19 +388,21 @@ public class EIOBlocks {
         return REGISTRATE.block(name, p -> block).item().tab(EIOCreativeTabs.BLOCKS).build();
     }
 
-    private static BlockBuilder<Block, Registrate> metalBlock(String name) {
+    private static BlockBuilder<Block, Registrate> metalBlock(String name, TagKey<Block> blockTag, TagKey<Item> itemTag) {
         return REGISTRATE
-            .block(name, Block::new)
-            .properties(props -> props
-                .sound(SoundType.METAL)
-                .mapColor(MapColor.METAL)
-                .strength(5, 6)
-                .requiresCorrectToolForDrops())
-            .tag(BlockTags.NEEDS_STONE_TOOL)
-            .tag(BlockTags.MINEABLE_WITH_PICKAXE)
-            .item()
-            .tab(EIOCreativeTabs.BLOCKS)
-            .build();
+                .block(name, Block::new)
+                .properties(props -> props
+                        .sound(SoundType.METAL)
+                        .mapColor(MapColor.METAL)
+                        .strength(5, 6)
+                        .requiresCorrectToolForDrops())
+                .tag(BlockTags.NEEDS_STONE_TOOL)
+                .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+                .tag(blockTag)
+                .item()
+                .tab(EIOCreativeTabs.BLOCKS)
+                .tag(itemTag)
+                .build();
     }
 
     private static BlockBuilder<Block, Registrate> chassisBlock(String name) {

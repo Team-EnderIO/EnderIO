@@ -50,8 +50,12 @@ public class MachineBlockEntities {
     public static final BlockEntityEntry<VacuumChestBlockEntity> VACUUM_CHEST = register("vacuum_chest", VacuumChestBlockEntity::new,
         MachineBlocks.VACUUM_CHEST);
     public static final BlockEntityEntry<XPVacuumBlockEntity> XP_VACUUM = register("xp_vacuum", XPVacuumBlockEntity::new, MachineBlocks.XP_VACUUM);
+    public static final BlockEntityEntry<TravelAnchorBlockEntity> TRAVEL_ANCHOR = register("travel_anchor", TravelAnchorBlockEntity::new,
+        MachineBlocks.TRAVEL_ANCHOR);
 
     public static final BlockEntityEntry<CrafterBlockEntity> CRAFTER = register("crafter", CrafterBlockEntity::new, MachineBlocks.CRAFTER);
+
+    public static final BlockEntityEntry<DrainBlockEntity> DRAIN = register("drain", DrainBlockEntity::new, MachineBlocks.DRAIN);
 
     public static final BlockEntityEntry<SoulBinderBlockEntity> SOUL_BINDER = register("soul_binder", SoulBinderBlockEntity::new, MachineBlocks.SOUL_BINDER);
 
@@ -70,6 +74,7 @@ public class MachineBlockEntities {
        }
        return ImmutableMap.copyOf(map);
     });
+
     public static final Map<CapacitorTier, BlockEntityEntry<CapacitorBankBlockEntity>> CAPACITOR_BANKS = Util.make(() -> {
        Map<CapacitorTier, BlockEntityEntry<CapacitorBankBlockEntity>> map = new HashMap<>();
        for (CapacitorTier tier : CapacitorTier.values()) {
@@ -78,6 +83,8 @@ public class MachineBlockEntities {
        }
        return ImmutableMap.copyOf(map);
     });
+
+    public static final BlockEntityEntry<SoulEngineBlockEntity> SOUL_ENGINE = register("soul_engine", SoulEngineBlockEntity::new, MachineBlocks.SOUL_ENGINE);
 
     @SafeVarargs
     private static <B extends BlockEntity> BlockEntityEntry<B> register(String name, BlockEntityBuilder.BlockEntityFactory<B> beFactory,

@@ -8,6 +8,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.energy.EnergyStorage;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -22,6 +23,7 @@ public class EmpoweredUpgrade extends TieredUpgrade<EmpoweredUpgradeTier> {
 
     private final ForgeConfigSpec.ConfigValue<Integer> powerUsePerDamagePoint = BaseConfig.COMMON.DARK_STEEL.EMPOWERED_ENERGY_PER_DAMAGE;
 
+    @Nullable
     private EnergyStorage storage;
 
     public EmpoweredUpgrade() {
@@ -30,11 +32,11 @@ public class EmpoweredUpgrade extends TieredUpgrade<EmpoweredUpgradeTier> {
 
     public EmpoweredUpgrade(EmpoweredUpgradeTier tier) {
         super(tier, NAME);
-        storage = new EnergyStorage(tier.getMaxStorage());
+        storage = null;
     }
 
     public float adjustDestroySpeed(float speed) {
-        if (storage.getEnergyStored() > 0) {
+        if (getStorage().getEnergyStored() > 0) {
             speed += speedBoostWhenPowered.get();
         }
         return speed;
@@ -42,16 +44,17 @@ public class EmpoweredUpgrade extends TieredUpgrade<EmpoweredUpgradeTier> {
 
     public int adjustDamage(int oldDamage, int newDamage) {
         int damageTaken = newDamage - oldDamage;
-        if (damageTaken > 0 && storage.getEnergyStored() > 0 && RANDOM.nextDouble() < tier.getDamageAbsorptionChance()) {
-            storage.extractEnergy(damageTaken * powerUsePerDamagePoint.get(), false);
+        if (damageTaken > 0 && getStorage().getEnergyStored() > 0 && RANDOM.nextDouble() < tier.getDamageAbsorptionChance()) {
+            getStorage().extractEnergy(damageTaken * powerUsePerDamagePoint.get(), false);
             return oldDamage;
         }
         return newDamage;
     }
 
     public EnergyStorage getStorage() {
-        return storage;
+        return storage != null ? storage : new EnergyStorage(tier.getMaxStorage());
     }
+
 
     @Override
     public Collection<Component> getDescription() {
@@ -78,7 +81,7 @@ public class EmpoweredUpgrade extends TieredUpgrade<EmpoweredUpgradeTier> {
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag nbt = super.serializeNBT();
-        nbt.put(STORAGE_KEY, storage.serializeNBT());
+        nbt.put(STORAGE_KEY, getStorage().serializeNBT());
         return nbt;
     }
 

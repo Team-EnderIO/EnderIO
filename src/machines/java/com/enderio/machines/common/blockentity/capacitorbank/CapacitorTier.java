@@ -6,9 +6,9 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 public enum CapacitorTier implements ICapacityTier {
 
-    BASIC(MachinesConfig.COMMON.BASIC_CAPACITOR_BANK_CAPACITY),
-    ADVANCED(MachinesConfig.COMMON.ADVANCED_CAPACITOR_BANK_CAPACITY),
-    VIBRANT(MachinesConfig.COMMON.VIBRANT_CAPACITOR_BANK_CAPACITY);
+    BASIC(MachinesConfig.COMMON.ENERGY.BASIC_CAPACITOR_BANK_CAPACITY),
+    ADVANCED(MachinesConfig.COMMON.ENERGY.ADVANCED_CAPACITOR_BANK_CAPACITY),
+    VIBRANT(MachinesConfig.COMMON.ENERGY.VIBRANT_CAPACITOR_BANK_CAPACITY);
 
     private final ForgeConfigSpec.ConfigValue<Integer> capacity;
 

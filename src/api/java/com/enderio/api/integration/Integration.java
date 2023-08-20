@@ -71,4 +71,12 @@ public interface Integration {
     default Optional<BlockState> getFacadeOf(ItemStack stack) {
         return Optional.empty();
     }
+
+    /**
+     * @param player The Player that wants to teleport
+     * @return whether the player can teleport to a nearby block
+     */
+    default boolean canBlockTeleport(Player player) {
+        return false;
+    }
 }

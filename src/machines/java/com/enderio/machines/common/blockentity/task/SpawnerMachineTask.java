@@ -19,13 +19,17 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.event.TagsUpdatedEvent;
 import net.minecraftforge.event.entity.living.MobSpawnEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
 
+@Mod.EventBusSubscriber
 public class SpawnerMachineTask implements IPoweredMachineTask {
 
     public static final int spawnTries = 10;
@@ -36,7 +40,8 @@ public class SpawnerMachineTask implements IPoweredMachineTask {
     private SpawnType spawnType = MachinesConfig.COMMON.SPAWN_TYPE.get();
     @Nullable
     private EntityType<? extends Entity> entityType;
-
+    private static boolean reload = false;
+    private boolean reloadCache = reload;
     private final PoweredSpawnerBlockEntity blockEntity;
     private final IMachineEnergyStorage energyStorage;
 
@@ -59,7 +64,10 @@ public class SpawnerMachineTask implements IPoweredMachineTask {
     @Override
     public void tick() {
         if (entityType == null) {
-            complete = true;
+            if (reload != reloadCache) {
+                reloadCache = reload;
+                complete = true;
+            }
             return;
         }
         if (energyConsumed >= energyCost) {
@@ -120,13 +128,14 @@ public class SpawnerMachineTask implements IPoweredMachineTask {
             blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
             return;
         }
-        if (optionalEntity.get().is(MachineTags.EntityTypes.SPAWNER_BLACKLIST)) {
+        if (optionalEntity.get().get().is(MachineTags.EntityTypes.SPAWNER_BLACKLIST)) {
+            blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.DISABLED);
             return;
         }
         Optional<SpawnerSoul.SoulData> opData = SpawnerSoul.SPAWNER.matches(rl.get());
         if (opData.isEmpty()) { //Fallback
             this.entityType = optionalEntity.get().get();
-            this.energyCost = 4000;
+            this.energyCost = 50000;
             if (entityType.create(this.blockEntity.getLevel()) instanceof LivingEntity entity) { //Are we 100% guaranteed this is a living entity?
                 this.energyCost += entity.getMaxHealth()*50; //TODO actually balance based on health
             }
@@ -230,6 +239,11 @@ public class SpawnerMachineTask implements IPoweredMachineTask {
     }
 
     // endregion
+
+    @SubscribeEvent
+    static void reloadTags(TagsUpdatedEvent event) {
+        reload = !reload;
+    }
 
     // TODO: Might want to move this to its own file in future.
     public enum SpawnType {

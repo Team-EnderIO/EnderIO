@@ -339,7 +339,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     public void saveAdditional(CompoundTag pTag) {
         craftingTaskHost.save(pTag);
 
-        if (isPrimitiveSmelter()) {
+        if (!isPrimitiveSmelter()) {
             pTag.putInt(MachineNBTKeys.MACHINE_MODE, this.mode.ordinal());
         }
         pTag.putInt(MachineNBTKeys.PROCESSED_INPUTS, craftingTaskHost.getContainer().getInputsTaken());
@@ -350,7 +350,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
     public void load(CompoundTag pTag) {
         craftingTaskHost.load(pTag);
 
-        if (isPrimitiveSmelter()) {
+        if (!isPrimitiveSmelter()) {
             try {
                 mode = AlloySmelterMode.values()[pTag.getInt(MachineNBTKeys.MACHINE_MODE)];
             } catch (IndexOutOfBoundsException ex) { // In case something happens in the future.

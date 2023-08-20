@@ -28,6 +28,10 @@ public class MultiSlotAccess {
         return accesses;
     }
 
+    public boolean contains(int slotIndex) {
+        return slotIndex >= accesses.get(0).getIndex() && slotIndex <= accesses.get(accesses.size() - 1).getIndex();
+    }
+
     public static MultiSlotAccess wrap(SingleSlotAccess access) {
         MultiSlotAccess multi = new MultiSlotAccess();
         multi.accesses = List.of(access);

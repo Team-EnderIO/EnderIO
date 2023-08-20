@@ -30,6 +30,7 @@ public class MachineLang {
     public static final MutableComponent CATEGORY_SLICING = REGISTRATE.addLang("gui", EnderIO.loc("category.slicing"), "Slicing");
     public static final MutableComponent CATEGORY_SOUL_BINDING = REGISTRATE.addLang("gui", EnderIO.loc("category.soul_binding"), "Soul Binding");
     public static final MutableComponent CATEGORY_TANK = REGISTRATE.addLang("gui", EnderIO.loc("category.tank"), "Fluid Tank");
+    public static final MutableComponent CATEGORY_SOUL_ENGINE = REGISTRATE.addLang("gui", EnderIO.loc("category.soul_engine"), "Soul Engine");
 
     // endregion
 

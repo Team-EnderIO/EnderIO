@@ -48,7 +48,7 @@ public abstract class NetworkDataSlot<T> {
 
     public abstract void toBuffer(FriendlyByteBuf buf, T value);
 
-    public abstract T valueFromBuffer(FriendlyByteBuf buf);
+    protected abstract T valueFromBuffer(FriendlyByteBuf buf);
 
     public boolean needsUpdate() {
         T value = getter.get();
@@ -61,5 +61,10 @@ public abstract class NetworkDataSlot<T> {
 
     protected int hashCode(T value) {
         return value.hashCode();
+    }
+
+    //Called after the server is updated with the new data
+    public void updateServerCallback() {
+
     }
 }

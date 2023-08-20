@@ -8,9 +8,11 @@ import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState
 import com.enderio.conduits.common.blockentity.connection.IConnectionState;
 import com.enderio.conduits.common.blockentity.connection.StaticConnectionStates;
 import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.ArrayList;
@@ -45,9 +47,9 @@ public class ConduitConnection implements INBTSerializable<CompoundTag> {
         connectionStates[index] = StaticConnectionStates.DISCONNECTED;
     }
 
-    public void connectTo(NodeIdentifier<?> nodeIdentifier, Direction direction, IConduitType<?> type, int typeIndex, boolean end) {
+    public void connectTo(Level level, BlockPos pos, NodeIdentifier<?> nodeIdentifier, Direction direction, IConduitType<?> type, int typeIndex, boolean end) {
         if (end) {
-            var state = DynamicConnectionState.defaultConnection(type);
+            var state = DynamicConnectionState.defaultConnection(level, pos, direction, type);
             connectionStates[typeIndex] = state;
             ConduitBlockEntity.pushIOState(direction, nodeIdentifier, state);
         } else {
@@ -78,6 +80,7 @@ public class ConduitConnection implements INBTSerializable<CompoundTag> {
 
     public void disableType(int index) {
         connectionStates[index] = StaticConnectionStates.DISABLED;
+        on.incrementDataVersion();
     }
 
     public boolean isEnd() {
@@ -174,9 +177,11 @@ public class ConduitConnection implements INBTSerializable<CompoundTag> {
     }
     public void setConnectionState(IConduitType<?> type, IConnectionState state) {
         setConnectionState(on.getTypeIndex(type),state);
+        on.incrementDataVersion();
     }
     private void setConnectionState(int i, IConnectionState state) {
         connectionStates[i] = state;
+        on.incrementDataVersion();
     }
 
     public ItemStack getItem(SlotType type, int conduitIndex) {
