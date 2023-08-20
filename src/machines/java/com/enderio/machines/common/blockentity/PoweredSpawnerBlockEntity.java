@@ -188,7 +188,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
     public enum SpawnerBlockedReason {
         TOO_MANY_MOB(MachineLang.TOO_MANY_MOB),
         TOO_MANY_SPAWNER(MachineLang.TOO_MANY_SPAWNER),
-        UNKOWN_MOB(MachineLang.UNKNOWN),
+        UNKNOWN_MOB(MachineLang.UNKNOWN),
         OTHER_MOD(MachineLang.OTHER_MOD),
         DISABLED(MachineLang.DISABLED),
         NONE(Component.literal("NONE"));
