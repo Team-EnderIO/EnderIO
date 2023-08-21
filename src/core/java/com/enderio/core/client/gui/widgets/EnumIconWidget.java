@@ -128,7 +128,7 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
 
         T icon = getter.get();
         addedOn.renderIconBackground(guiGraphics, new Vector2i(getX(), getY()), icon);
-        IEnderScreen.renderIcon(guiGraphics, new Vector2i(getX(), getY()).expand(1), icon);
+        IEnderScreen.renderIcon(guiGraphics, new Vector2i(getX(), getY()), icon);
 
         if (isHoveredOrFocused() && tooltipDisplayCache != getter.get()) {
             // Cache the last value of the tooltip so we don't append strings over and over.
@@ -234,10 +234,10 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
             if (getter.get() != value) {
                 selection.renderIconBackground(guiGraphics, new Vector2i(getX(), getY()), value);
             } else {
-                guiGraphics.fill(getX(), getY(), getX() + width, getY() + height, 0xFF0020FF);
-                guiGraphics.fill(getX() + 1, getY() + 1, getX() + width - 1, getY() + height - 1, 0xFF8B8B8B);
+                guiGraphics.fill(getX(), getY(),getX() + width - 2,getY() + height - 2, 0xFF0020FF);
+                guiGraphics.fill(getX() +1, getY()+1, getX() + width - 3, getY() + height - 3, 0xFF8B8B8B);
             }
-            IEnderScreen.renderIcon(guiGraphics, new Vector2i(getX(), getY()).expand(1), value);
+            IEnderScreen.renderIcon(guiGraphics, new Vector2i(getX(), getY()), value);
 
             if (isMouseOver(pMouseX, pMouseY)) {
                 Component tooltip = value.getTooltip();

@@ -33,7 +33,7 @@ public interface IEnderScreen {
     }
 
     default void renderIconBackground(GuiGraphics guiGraphics, Vector2i pos, IIcon icon) {
-        renderSimpleArea(guiGraphics, pos, pos.add(icon.getRenderSize()).expand(2));
+        renderSimpleArea(guiGraphics, pos, pos.add(icon.getRenderSize()));
     }
 
     default void renderTooltipAfterEverything(GuiGraphics guiGraphics, List<Component> pText, int pMouseX, int pMouseY) {
