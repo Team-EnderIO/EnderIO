@@ -37,6 +37,8 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
 
     private boolean isExpanded = false;
 
+    private boolean expandNext = false;
+
     private int mouseButton = 0;
 
     private final U addedOn;
@@ -120,6 +122,11 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
+        if (expandNext && Minecraft.getInstance().screen == addedOn) {
+            Minecraft.getInstance().pushGuiLayer(selection);
+            expandNext = false;
+            isExpanded = true;
+        }
         if (isHovered && isActive()) {
             // @formatter:off
            addedOn.renderTooltipAfterEverything(guiGraphics, List.of(optionName, getter.get().getTooltip().copy().withStyle(ChatFormatting.GRAY)), pMouseX, pMouseY);
@@ -154,6 +161,19 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
             isExpanded = false;
             Minecraft.getInstance().popGuiLayer();
         }
+    }
+
+    public boolean isExpanded() {
+        return isExpanded;
+    }
+
+    public void setExpanded(Boolean expanded) {
+        expandNext = expanded;
+        isExpanded = expanded;
+    }
+
+    public Component getOptionName() {
+        return optionName;
     }
 
     private class SelectionScreen extends Screen implements IEnderScreen {
@@ -208,6 +228,11 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
             EnumIconWidget.this.setFocused(false);
             EnumIconWidget.this.isExpanded = false;
             super.onClose();
+        }
+
+        @Override
+        public void resize(Minecraft minecraft, int width, int height) {
+            minecraft.popGuiLayer();
         }
     }
 
