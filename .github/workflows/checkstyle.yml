@@ -1,4 +1,4 @@
-name: reviewdog
+name: Code Style Scan
 on: [pull_request]
 jobs:
   checkstyle:
