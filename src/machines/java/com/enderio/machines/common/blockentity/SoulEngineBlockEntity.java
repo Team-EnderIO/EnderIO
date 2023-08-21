@@ -12,12 +12,14 @@ import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.menu.SoulEngineMenu;
 import com.enderio.machines.common.souldata.EngineSoul;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Inventory;
@@ -181,5 +183,28 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
     @SubscribeEvent
     static void onReload(RecipesUpdatedEvent event) {
         reload = !reload;
+    }
+
+    @Override
+    public MutableComponent getBlockedReason() {
+        if (isActive()) {
+            return MachineLang.TOOLTIP_ACTIVE;
+        }
+        if (entityData.equals(StoredEntityData.empty()) || entityData.getEntityType().isEmpty() || entityData.getEntityType().get().equals(NO_MOB)) {
+            return MachineLang.UNKNOWN;
+        }
+        if (supportsRedstoneControl() && !getRedstoneControl().isActive(this.level.hasNeighborSignal(worldPosition))) {
+            return MachineLang.TOOLTIP_BLOCKED_RESTONE;
+        }
+        if (requiresCapacitor() && !isCapacitorInstalled()) {
+            return MachineLang.TOOLTIP_NO_CAPACITOR;
+        }
+        if (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored()) {
+            return MachineLang.TOOLTIP_FULL_POWER;
+        }
+        if (getFluidTankNN().isEmpty()) {
+            return MachineLang.TOOLTIP_EMPTY_TANK;
+        }
+        return MachineLang.TOOLTIP_ACTIVE;
     }
 }

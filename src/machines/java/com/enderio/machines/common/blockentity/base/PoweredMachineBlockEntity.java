@@ -16,9 +16,11 @@ import com.enderio.machines.common.io.energy.ImmutableMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import com.enderio.machines.common.lang.MachineLang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -324,4 +326,22 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
     }
 
     // endregion
+
+    @Override
+    public MutableComponent getBlockedReason() {
+        MutableComponent superComp = super.getBlockedReason();
+        if (!superComp.equals(MachineLang.TOOLTIP_ACTIVE)) {
+            return superComp;
+        }
+        if (isActive()) {
+            return MachineLang.TOOLTIP_ACTIVE;
+        }
+        if (requiresCapacitor() && !isCapacitorInstalled()) {
+            return MachineLang.TOOLTIP_NO_CAPACITOR;
+        }
+        if (getEnergyStorage().getEnergyStored() <= 0) {
+            return MachineLang.TOOLTIP_NO_POWER;
+        }
+        return MachineLang.TOOLTIP_ACTIVE;
+    }
 }

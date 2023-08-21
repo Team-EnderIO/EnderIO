@@ -13,9 +13,11 @@ import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.FixedIOConfig;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.menu.DrainMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -199,5 +201,21 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
     public void load(CompoundTag pTag) {
         super.load(pTag);
         consumed = pTag.getInt(CONSUMED);
+    }
+
+    @Override
+    public MutableComponent getBlockedReason() {
+        MutableComponent superComp = super.getBlockedReason();
+        if (!superComp.equals(MachineLang.TOOLTIP_ACTIVE)) {
+            return superComp;
+        }
+        if (level == null || level.getFluidState(getBlockPos().below()).isEmpty() || !level.getFluidState(getBlockPos().below()).isSource()) {
+            return MachineLang.TOOLTIP_NO_SOURCE;
+        }
+        if (getFluidTankNN().getFluidAmount() >= getFluidTankNN().getCapacity()) {
+            return MachineLang.TOOLTIP_FULL_TANK;
+
+        }
+        return MachineLang.TOOLTIP_ACTIVE;
     }
 }

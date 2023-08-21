@@ -20,10 +20,12 @@ import com.enderio.machines.common.io.IOConfig;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import com.enderio.machines.common.lang.MachineLang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -738,5 +740,12 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     public int getLightEmission() {
         return getBlockState().getLightEmission();
+    }
+
+    public MutableComponent getBlockedReason() {
+        if (supportsRedstoneControl() && !redstoneControl.isActive(this.level.hasNeighborSignal(worldPosition))) {
+            return MachineLang.TOOLTIP_BLOCKED_RESTONE;
+        }
+        return MachineLang.TOOLTIP_ACTIVE;
     }
 }
