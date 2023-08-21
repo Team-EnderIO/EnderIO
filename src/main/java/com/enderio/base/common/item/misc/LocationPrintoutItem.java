@@ -64,8 +64,9 @@ public class LocationPrintoutItem extends Item implements IMultiCapabilityItem {
     }
 
     private static void handleRightClick(ServerPlayer serverPlayer, @Nullable CoordinateSelection selection, ItemStack printout) {
-        if (selection != null)
+        if (selection != null) {
             openMenu(serverPlayer, selection, printout.getHoverName().getString());
+        }
     }
 
     private static void openMenu(ServerPlayer player, CoordinateSelection selection, String name) {

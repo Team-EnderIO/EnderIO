@@ -22,8 +22,9 @@ public class TagUtil {
 
         // Search for an EnderIO item
         Optional<Item> enderItem = tag.stream().filter(item -> ForgeRegistries.ITEMS.getKey(item).getNamespace().equals(EnderCore.MODID)).findFirst();
-        if (enderItem.isPresent())
+        if (enderItem.isPresent()) {
             return enderItem;
+        }
 
         // TODO: Search based on config precedence
 

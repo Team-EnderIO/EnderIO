@@ -2,7 +2,13 @@ package com.enderio.machines.common.init;
 
 import com.enderio.EnderIO;
 import com.enderio.core.common.recipes.RecipeTypeSerializerPair;
-import com.enderio.machines.common.recipe.*;
+import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
+import com.enderio.machines.common.recipe.EnchanterRecipe;
+import com.enderio.machines.common.recipe.PaintingRecipe;
+import com.enderio.machines.common.recipe.SagMillingRecipe;
+import com.enderio.machines.common.recipe.SlicingRecipe;
+import com.enderio.machines.common.recipe.SoulBindingRecipe;
+import com.enderio.machines.common.recipe.TankRecipe;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;

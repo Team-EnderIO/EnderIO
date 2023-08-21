@@ -53,8 +53,10 @@ public enum GlassCollisionPredicate implements IIcon {
     }
 
     public Optional<Component> getDescription() {
-        if (description != null)
+        if (description != null) {
             return Optional.of(description);
+        }
+
         return Optional.empty();
     }
 
@@ -107,12 +109,18 @@ public enum GlassCollisionPredicate implements IIcon {
      */
     @Nullable
     public static GlassCollisionPredicate fromToken(Item token) {
-        if (token == EIOItems.PLAYER_TOKEN.get())
+        if (token == EIOItems.PLAYER_TOKEN.get()) {
             return PLAYERS_PASS;
-        if (token == EIOItems.ANIMAL_TOKEN.get())
+        }
+
+        if (token == EIOItems.ANIMAL_TOKEN.get()) {
             return ANIMALS_PASS;
-        if (token == EIOItems.MONSTER_TOKEN.get())
+        }
+
+        if (token == EIOItems.MONSTER_TOKEN.get()) {
             return MOBS_PASS;
+        }
+
         return null;
     }
 

@@ -18,31 +18,31 @@ import java.util.List;
 
 @Mod.EventBusSubscriber
 public class GrindingBallManager {
-    private static final HashMap<Item, IGrindingBallData> itemToData = new HashMap<>();
-    private static final HashMap<ResourceLocation, IGrindingBallData> idToData = new HashMap<>();
+    private static final HashMap<Item, IGrindingBallData> ITEM_TO_DATA = new HashMap<>();
+    private static final HashMap<ResourceLocation, IGrindingBallData> ID_TO_DATA = new HashMap<>();
 
     private static boolean clearCache = false;
 
     public static boolean isGrindingBall(ItemStack stack) {
         checkCacheRebuild();
         return !stack.isEmpty()
-            && itemToData.containsKey(stack.getItem());
+            && ITEM_TO_DATA.containsKey(stack.getItem());
     }
 
     public static IGrindingBallData getData(ItemStack stack) {
         checkCacheRebuild();
         Item item = stack.getItem();
-        return itemToData.getOrDefault(item, IGrindingBallData.IDENTITY);
+        return ITEM_TO_DATA.getOrDefault(item, IGrindingBallData.IDENTITY);
     }
 
     public static List<Item> getGrindingBalls() {
         checkCacheRebuild();
-        return List.copyOf(itemToData.keySet());
+        return List.copyOf(ITEM_TO_DATA.keySet());
     }
 
     public static IGrindingBallData getData(ResourceLocation dataId) {
         checkCacheRebuild();
-        return idToData.getOrDefault(dataId, IGrindingBallData.IDENTITY);
+        return ID_TO_DATA.getOrDefault(dataId, IGrindingBallData.IDENTITY);
     }
 
 
@@ -66,14 +66,14 @@ public class GrindingBallManager {
     private static void rebuildCache(RecipeManager manager) {
 
         // Wipe the lookup table
-        itemToData.clear();
-        idToData.clear();
+        ITEM_TO_DATA.clear();
+        ID_TO_DATA.clear();
 
         // Discover all grindingballs again.
         manager.getAllRecipesFor(EIORecipes.GRINDING_BALL.type().get())
             .forEach(grindingBallRecipe -> {
-                itemToData.put(grindingBallRecipe.getItem(), grindingBallRecipe);
-                idToData.put(grindingBallRecipe.getGrindingBallId(), grindingBallRecipe);
+                ITEM_TO_DATA.put(grindingBallRecipe.getItem(), grindingBallRecipe);
+                ID_TO_DATA.put(grindingBallRecipe.getGrindingBallId(), grindingBallRecipe);
             });
     }
 }

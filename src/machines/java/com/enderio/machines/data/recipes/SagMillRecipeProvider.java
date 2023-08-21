@@ -28,8 +28,93 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import static com.enderio.base.common.init.EIOItems.*;
-import static net.minecraft.world.item.Items.*;
+import static com.enderio.base.common.init.EIOItems.ENDER_CRYSTAL;
+import static com.enderio.base.common.init.EIOItems.ENDER_CRYSTAL_POWDER;
+import static com.enderio.base.common.init.EIOItems.FLOUR;
+import static com.enderio.base.common.init.EIOItems.PLANT_MATTER_BROWN;
+import static com.enderio.base.common.init.EIOItems.PLANT_MATTER_GREEN;
+import static com.enderio.base.common.init.EIOItems.POWDERED_COAL;
+import static com.enderio.base.common.init.EIOItems.POWDERED_COPPER;
+import static com.enderio.base.common.init.EIOItems.POWDERED_ENDER_PEARL;
+import static com.enderio.base.common.init.EIOItems.POWDERED_GOLD;
+import static com.enderio.base.common.init.EIOItems.POWDERED_IRON;
+import static com.enderio.base.common.init.EIOItems.POWDERED_LAPIS_LAZULI;
+import static com.enderio.base.common.init.EIOItems.POWDERED_OBSIDIAN;
+import static com.enderio.base.common.init.EIOItems.POWDERED_QUARTZ;
+import static com.enderio.base.common.init.EIOItems.PRESCIENT_CRYSTAL;
+import static com.enderio.base.common.init.EIOItems.PRESCIENT_POWDER;
+import static com.enderio.base.common.init.EIOItems.PULSATING_CRYSTAL;
+import static com.enderio.base.common.init.EIOItems.PULSATING_POWDER;
+import static com.enderio.base.common.init.EIOItems.SILICON;
+import static com.enderio.base.common.init.EIOItems.SOULARIUM_INGOT;
+import static com.enderio.base.common.init.EIOItems.SOUL_POWDER;
+import static com.enderio.base.common.init.EIOItems.VIBRANT_CRYSTAL;
+import static com.enderio.base.common.init.EIOItems.VIBRANT_POWDER;
+import static com.enderio.base.common.init.EIOItems.WITHERING_POWDER;
+import static net.minecraft.world.item.Items.ALLIUM;
+import static net.minecraft.world.item.Items.AZURE_BLUET;
+import static net.minecraft.world.item.Items.BLAZE_POWDER;
+import static net.minecraft.world.item.Items.BLAZE_ROD;
+import static net.minecraft.world.item.Items.BLUE_ORCHID;
+import static net.minecraft.world.item.Items.BONE;
+import static net.minecraft.world.item.Items.BONE_BLOCK;
+import static net.minecraft.world.item.Items.BONE_MEAL;
+import static net.minecraft.world.item.Items.BRICK;
+import static net.minecraft.world.item.Items.CACTUS;
+import static net.minecraft.world.item.Items.CLAY;
+import static net.minecraft.world.item.Items.CLAY_BALL;
+import static net.minecraft.world.item.Items.COAL;
+import static net.minecraft.world.item.Items.COBBLESTONE;
+import static net.minecraft.world.item.Items.COBWEB;
+import static net.minecraft.world.item.Items.DANDELION;
+import static net.minecraft.world.item.Items.DEAD_BUSH;
+import static net.minecraft.world.item.Items.DIAMOND;
+import static net.minecraft.world.item.Items.EMERALD;
+import static net.minecraft.world.item.Items.ENDER_PEARL;
+import static net.minecraft.world.item.Items.FERN;
+import static net.minecraft.world.item.Items.FLINT;
+import static net.minecraft.world.item.Items.FLOWER_POT;
+import static net.minecraft.world.item.Items.GLASS;
+import static net.minecraft.world.item.Items.GLOWSTONE;
+import static net.minecraft.world.item.Items.GLOWSTONE_DUST;
+import static net.minecraft.world.item.Items.GRASS;
+import static net.minecraft.world.item.Items.GRAVEL;
+import static net.minecraft.world.item.Items.LAPIS_LAZULI;
+import static net.minecraft.world.item.Items.LARGE_FERN;
+import static net.minecraft.world.item.Items.LIGHT_BLUE_DYE;
+import static net.minecraft.world.item.Items.LIGHT_GRAY_DYE;
+import static net.minecraft.world.item.Items.LILY_PAD;
+import static net.minecraft.world.item.Items.MAGENTA_DYE;
+import static net.minecraft.world.item.Items.NETHERRACK;
+import static net.minecraft.world.item.Items.ORANGE_DYE;
+import static net.minecraft.world.item.Items.ORANGE_TULIP;
+import static net.minecraft.world.item.Items.OXEYE_DAISY;
+import static net.minecraft.world.item.Items.PEONY;
+import static net.minecraft.world.item.Items.PINK_DYE;
+import static net.minecraft.world.item.Items.PINK_TULIP;
+import static net.minecraft.world.item.Items.POPPY;
+import static net.minecraft.world.item.Items.PRISMARINE_CRYSTALS;
+import static net.minecraft.world.item.Items.PRISMARINE_SHARD;
+import static net.minecraft.world.item.Items.QUARTZ;
+import static net.minecraft.world.item.Items.QUARTZ_SLAB;
+import static net.minecraft.world.item.Items.QUARTZ_STAIRS;
+import static net.minecraft.world.item.Items.REDSTONE;
+import static net.minecraft.world.item.Items.RED_DYE;
+import static net.minecraft.world.item.Items.RED_TULIP;
+import static net.minecraft.world.item.Items.ROSE_BUSH;
+import static net.minecraft.world.item.Items.SAND;
+import static net.minecraft.world.item.Items.STONE;
+import static net.minecraft.world.item.Items.STRING;
+import static net.minecraft.world.item.Items.SUGAR;
+import static net.minecraft.world.item.Items.SUGAR_CANE;
+import static net.minecraft.world.item.Items.TALL_GRASS;
+import static net.minecraft.world.item.Items.VINE;
+import static net.minecraft.world.item.Items.WHEAT;
+import static net.minecraft.world.item.Items.WHITE_DYE;
+import static net.minecraft.world.item.Items.WHITE_TULIP;
+import static net.minecraft.world.item.Items.WITHER_ROSE;
+import static net.minecraft.world.item.Items.WITHER_SKELETON_SKULL;
+import static net.minecraft.world.item.Items.YELLOW_DYE;
 
 public class SagMillRecipeProvider extends EnderRecipeProvider {
 
@@ -423,14 +508,17 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
                     obj.addProperty("item", ForgeRegistries.ITEMS.getKey(item.getItem()).toString());
                 }
 
-                if (item.getCount() != 1)
+                if (item.getCount() != 1) {
                     obj.addProperty("count", item.getCount());
+                }
 
-                if (item.getChance() < 1.0f)
+                if (item.getChance() < 1.0f) {
                     obj.addProperty("chance", item.getChance());
+                }
 
-                if (item.isOptional())
+                if (item.isOptional()) {
                     obj.addProperty("optional", item.isOptional());
+                }
 
                 outputJson.add(obj);
             }

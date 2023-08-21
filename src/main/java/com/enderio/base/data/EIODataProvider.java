@@ -16,8 +16,9 @@ public class EIODataProvider implements DataProvider {
     }
 
     public void addSubProvider(boolean include, DataProvider provider) {
-        if (include)
+        if (include) {
             subProviders.add(provider);
+        }
     }
 
     @Override

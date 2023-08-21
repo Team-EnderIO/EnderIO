@@ -8,7 +8,11 @@ import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.*;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -49,8 +53,10 @@ public class GlassRecipes extends RecipeProvider {
 
     private static void addCollisionToken(GlassBlocks blocks, Item token, Consumer<FinishedRecipe> recipeConsumer) {
         GlassCollisionPredicate collision = GlassCollisionPredicate.fromToken(token);
-        if (collision == null)
+        if (collision == null) {
             return;
+        }
+
         var output = EIOBlocks.GLASS_BLOCKS.get(blocks.getGlassIdentifier().withCollision(collision)).CLEAR.get();
 
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, output, 8)
@@ -65,8 +71,10 @@ public class GlassRecipes extends RecipeProvider {
     }
     private static void invert(GlassBlocks blocks, Consumer<FinishedRecipe> recipeConsumer) {
         var collision = GlassCollisionPredicate.invert(blocks.getGlassIdentifier().collisionPredicate());
-        if (collision == GlassCollisionPredicate.NONE)
+        if (collision == GlassCollisionPredicate.NONE) {
             return;
+        }
+
         var output = EIOBlocks.GLASS_BLOCKS.get(blocks.getGlassIdentifier().withCollision(collision)).CLEAR.get();
 
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, output, 8)

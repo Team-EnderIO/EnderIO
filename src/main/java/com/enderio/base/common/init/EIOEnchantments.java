@@ -1,7 +1,13 @@
 package com.enderio.base.common.init;
 
 import com.enderio.EnderIO;
-import com.enderio.base.common.enchantment.*;
+import com.enderio.base.common.enchantment.AutoSmeltEnchantment;
+import com.enderio.base.common.enchantment.EIOBaseEnchantment;
+import com.enderio.base.common.enchantment.RepellentEnchantment;
+import com.enderio.base.common.enchantment.ShimmerEnchantment;
+import com.enderio.base.common.enchantment.SoulBoundEnchantment;
+import com.enderio.base.common.enchantment.WitherEnchantment;
+import com.enderio.base.common.enchantment.XPBoostEnchantment;
 import com.enderio.base.common.lang.EIOLang;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.EnchantmentBuilder;

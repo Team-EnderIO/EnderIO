@@ -28,7 +28,11 @@ import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 @SuppressWarnings("unused")
 @Mod.EventBusSubscriber(modid = EnderIO.MODID)
@@ -77,8 +81,9 @@ public class FireCraftingHandler {
                 }
             }
 
-            if (matchingRecipe == null)
+            if (matchingRecipe == null) {
                 return;
+            }
 
             if (isFire) {
                 // If we're tracking lots of fire, look at culling the herd.

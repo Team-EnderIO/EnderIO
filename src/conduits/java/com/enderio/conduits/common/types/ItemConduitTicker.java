@@ -25,8 +25,10 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<IItemHandler
             IItemHandler extractHandler = extract.cap;
             for (int i = 0; i < extractHandler.getSlots(); i++) {
                 ItemStack extractedItem = extractHandler.extractItem(i, 4, true);
-                if (extractedItem.isEmpty())
+                if (extractedItem.isEmpty()) {
                     continue;
+                }
+
                 ItemExtendedData.ItemSidedData sidedExtractData = extract.data.castTo(ItemExtendedData.class).compute(extract.direction);
                 if (sidedExtractData.roundRobin) {
                     if (inserts.size() <= sidedExtractData.rotatingIndex) {
@@ -42,8 +44,10 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<IItemHandler
 
                     if (!sidedExtractData.selfFeed
                         && extract.direction == insert.direction
-                        && extract.data == insert.data)
+                        && extract.data == insert.data) {
                         continue;
+                    }
+
                     ItemStack notInserted = ItemHandlerHelper.insertItem(insert.cap, extractedItem, false);
                     if (notInserted.getCount() < extractedItem.getCount()) {
                         extractHandler.extractItem(i, extractedItem.getCount() - notInserted.getCount(), false);

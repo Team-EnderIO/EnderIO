@@ -27,8 +27,10 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<IEnergySto
         for (CapabilityConnection extract : extracts) {
             IEnergyStorage extractHandler = extract.cap;
             int availableForExtraction = extractHandler.extractEnergy(Integer.MAX_VALUE, true);
-            if (availableForExtraction <= 0)
+            if (availableForExtraction <= 0) {
                 continue;
+            }
+
             EnergyExtendedData.EnergySidedData sidedExtractData = extract.data.castTo(EnergyExtendedData.class).compute(extract.direction);
 
             if (inserts.size() <= sidedExtractData.rotatingIndex) {
