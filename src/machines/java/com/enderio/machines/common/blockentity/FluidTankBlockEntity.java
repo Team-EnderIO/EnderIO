@@ -97,15 +97,25 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
 
     // region Inventory
 
+    public boolean acceptItemFill(ItemStack item) {
+        Optional<IFluidHandlerItem> fluidHandlerCap = item.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
+        return fluidHandlerCap.isPresent();
+    }
+
+    public boolean acceptItemDrain(ItemStack item) {
+        Optional<IFluidHandlerItem> fluidHandlerCap = item.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
+        return fluidHandlerCap.isPresent();
+    }
+
     @Override
     public MachineInventoryLayout getInventoryLayout() {
         return MachineInventoryLayout
             .builder()
-            .inputSlot()
+            .inputSlot((slot, stack) -> acceptItemFill(stack))
             .slotAccess(FLUID_FILL_INPUT)
             .outputSlot()
             .slotAccess(FLUID_FILL_OUTPUT)
-            .inputSlot()
+            .inputSlot((slot, stack) -> acceptItemDrain(stack))
             .slotAccess(FLUID_DRAIN_INPUT)
             .outputSlot()
             .slotAccess(FLUID_DRAIN_OUTPUT)
