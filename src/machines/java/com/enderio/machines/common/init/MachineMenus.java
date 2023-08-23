@@ -30,6 +30,7 @@ public class MachineMenus {
     public static final MenuEntry<CapacitorBankMenu> CAPACITOR_BANK = REGISTRATE.menu("capacitor_bank", CapacitorBankMenu::factory, () -> CapacitorBankScreen::new).register();
     public static final MenuEntry<SoulEngineMenu> SOUL_ENGINE = REGISTRATE.menu("soul_engine", SoulEngineMenu::factory, () -> SoulEngineScreen::new).register();
     public static final MenuEntry<TravelAnchorMenu> TRAVEL_ANCHOR = REGISTRATE.menu("travel_anchor", TravelAnchorMenu::factory, () -> TravelAnchorScreen::new).register();
+    public static final MenuEntry<XPObeliskMenu> XP_OBELISK = REGISTRATE.menu("xp_obelisk", XPObeliskMenu::factory, () -> XPObeliskScreen::new).register();
 
     public static void register() {}
 }

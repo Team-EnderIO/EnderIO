@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static net.minecraft.world.inventory.InventoryMenu.*;
-import static net.minecraft.world.inventory.InventoryMenu.EMPTY_ARMOR_SLOT_HELMET;
 
 public abstract class SyncedMenu<T extends EnderBlockEntity> extends AbstractContainerMenu {
 
@@ -91,9 +90,9 @@ public abstract class SyncedMenu<T extends EnderBlockEntity> extends AbstractCon
         if (playerInvVisible != visible) {
             playerInvVisible = visible;
             int offset = playerInvVisible ? 1000 : -1000;
-            for (int i = 0; i < 36; i++) {
-                playerInventorySlots.get(i).y += offset;
-            }
+            // use `forEach` instead of `for-loop` to make sure to avoid cases where screen
+            // has no Player Inventory and slot references are not stored.
+            playerInventorySlots.forEach(slot -> slot.y += offset);
         }
         return visible;
     }
