@@ -5,6 +5,7 @@ import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
+import com.enderio.machines.client.gui.widget.ExperienceWidget;
 import com.enderio.machines.client.gui.widget.ioconfig.IOConfigButton;
 import com.enderio.machines.common.menu.XPObeliskMenu;
 import net.minecraft.network.chat.Component;
@@ -23,6 +24,8 @@ public class XPObeliskScreen extends EIOScreen<XPObeliskMenu> {
         super.init();
         addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 14, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
+        addRenderableOnly(new ExperienceWidget(this, getMenu().getBlockEntity()::getFluidTank,  leftPos + (imageWidth/2) - 55 , topPos + 55 , 110, 5));
+        //TODO: add proper io config offsets
         addRenderableWidget(new IOConfigButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 24, 16, 16, menu, this::addRenderableWidget, font));
     }
 
