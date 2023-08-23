@@ -38,12 +38,13 @@ public class ExperienceWidget extends EIOWidget {
         guiGraphics.blit(GUI_ICONS_LOCATION, this.x + this.width-1, this.y, 0, 181, 64, fill==this.width-1? 1 : 0, this.height, 256, 256);
 
         var font = Minecraft.getInstance().font;
-        String s = "" + level.x();
-        guiGraphics.drawString(font, s, (this.x + this.width/2 + 1), (float)this.y - this.height - 3, 0, false);
-        guiGraphics.drawString(font, s, (this.x + this.width/2 - 1), (float)this.y - this.height - 3, 0, false);
-        guiGraphics.drawString(font, s, this.x + this.width/2, (float)(this.y - this.height - 3 + 1), 0, false);
-        guiGraphics.drawString(font, s, this.x + this.width/2, (float)(this.y - this.height - 3 - 1), 0, false);
-        guiGraphics.drawString(font, s, this.x + this.width/2, (float)this.y - this.height - 3, 8453920, false);
+        String text = "" + level.x();
+        int xOffset = font.width(text) / 2 ;
+        guiGraphics.drawString(font, text, (this.x + this.width/2 + 1) - xOffset, (float)this.y - this.height - 3, 0, false);
+        guiGraphics.drawString(font, text, (this.x + this.width/2 - 1) - xOffset, (float)this.y - this.height - 3, 0, false);
+        guiGraphics.drawString(font, text, this.x + this.width/2 - xOffset, (float)(this.y - this.height - 3 + 1), 0, false);
+        guiGraphics.drawString(font, text, this.x + this.width/2 - xOffset, (float)(this.y - this.height - 3 - 1), 0, false);
+        guiGraphics.drawString(font, text, this.x + this.width/2 - xOffset, (float)this.y - this.height - 3, 8453920, false);
 
     }
 
