@@ -14,6 +14,7 @@ import com.enderio.core.common.network.slot.EnumNetworkDataSlot;
 import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
 import com.enderio.core.common.network.slot.NBTSerializableNetworkDataSlot;
 import com.enderio.core.common.util.PlayerInteractionUtil;
+import com.enderio.machines.client.gui.widget.ActiveWidget;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.io.IOConfig;
@@ -111,6 +112,8 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     private final NBTSerializableNetworkDataSlot<IIOConfig> ioConfigDataSlot;
 
     // endregion
+
+    private Map<ActiveWidget.MachineState, List<MutableComponent>> blocked_reason = new HashMap<>();
 
     public MachineBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
@@ -742,10 +745,25 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         return getBlockState().getLightEmission();
     }
 
-    public MutableComponent getBlockedReason() {
-        if (supportsRedstoneControl() && !redstoneControl.isActive(this.level.hasNeighborSignal(worldPosition))) {
-            return MachineLang.TOOLTIP_BLOCKED_RESTONE;
+    public Map<ActiveWidget.MachineState, List<MutableComponent>> getBlockedReason() {
+        if (level == null || !level.isClientSide) {
+            return Map.of();
         }
-        return MachineLang.TOOLTIP_ACTIVE;
+        if (supportsRedstoneControl()) {
+            updateBlockedReason(ActiveWidget.MachineState.STOPPED, MachineLang.TOOLTIP_BLOCKED_RESTONE, !redstoneControl.isActive(this.level.hasNeighborSignal(worldPosition)));
+        }
+        return blocked_reason;
+    }
+
+    public void updateBlockedReason(ActiveWidget.MachineState state, MutableComponent component, boolean add) {
+        List<MutableComponent> list = blocked_reason.getOrDefault(state, new ArrayList<>());
+        if (add) {
+            if (!list.contains(component)) {
+                list.add(component);
+            }
+        } else {
+            list.remove(component);
+        }
+        blocked_reason.put(state, list);
     }
 }

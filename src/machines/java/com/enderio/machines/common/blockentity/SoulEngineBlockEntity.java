@@ -6,9 +6,12 @@ import com.enderio.api.capacitor.FixedScalable;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.network.slot.FluidStackNetworkDataSlot;
+import com.enderio.core.common.network.slot.NetworkDataSlot;
 import com.enderio.core.common.network.slot.ResourceLocationNetworkDataSlot;
+import com.enderio.machines.client.gui.widget.ActiveWidget;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
+import com.enderio.machines.common.blockentity.sync.MachineEnergyNetworkDataSlot;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
@@ -19,7 +22,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Inventory;
@@ -72,6 +74,14 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
+    public NetworkDataSlot<?> createEnergyDataSlot() {
+        return new MachineEnergyNetworkDataSlot(this::getExposedEnergyStorage, storage -> {
+            clientEnergyStorage = storage;
+            updateBlockedReason(ActiveWidget.MachineState.ERROR, MachineLang.TOOLTIP_NO_POWER, storage.getEnergyStored() >= storage.getMaxEnergyStored());
+        });
+    }
+
+    @Override
     public void serverTick() {
         if (reloadCache != reload && entityData != StoredEntityData.empty() && entityData.getEntityType().isPresent()) {
             Optional<EngineSoul.SoulData> op = EngineSoul.ENGINE.matches(entityData.getEntityType().get());
@@ -117,6 +127,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
             protected void onContentsChanged() {
                 super.onContentsChanged();
                 setChanged();
+                updateBlockedReason(ActiveWidget.MachineState.ERROR, MachineLang.TOOLTIP_EMPTY_TANK, isEmpty());
             }
 
             @Override
@@ -183,28 +194,5 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
     @SubscribeEvent
     static void onReload(RecipesUpdatedEvent event) {
         reload = !reload;
-    }
-
-    @Override
-    public MutableComponent getBlockedReason() {
-        if (isActive()) {
-            return MachineLang.TOOLTIP_ACTIVE;
-        }
-        if (entityData.equals(StoredEntityData.empty()) || entityData.getEntityType().isEmpty() || entityData.getEntityType().get().equals(NO_MOB)) {
-            return MachineLang.UNKNOWN;
-        }
-        if (supportsRedstoneControl() && !getRedstoneControl().isActive(this.level.hasNeighborSignal(worldPosition))) {
-            return MachineLang.TOOLTIP_BLOCKED_RESTONE;
-        }
-        if (requiresCapacitor() && !isCapacitorInstalled()) {
-            return MachineLang.TOOLTIP_NO_CAPACITOR;
-        }
-        if (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored()) {
-            return MachineLang.TOOLTIP_FULL_POWER;
-        }
-        if (getFluidTankNN().isEmpty()) {
-            return MachineLang.TOOLTIP_EMPTY_TANK;
-        }
-        return MachineLang.TOOLTIP_ACTIVE;
     }
 }

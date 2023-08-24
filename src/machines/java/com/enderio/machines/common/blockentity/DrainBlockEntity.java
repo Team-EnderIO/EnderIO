@@ -8,6 +8,7 @@ import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
 import com.enderio.core.common.network.slot.FluidStackNetworkDataSlot;
 import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
+import com.enderio.machines.client.gui.widget.ActiveWidget;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.FixedIOConfig;
@@ -36,6 +37,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class DrainBlockEntity extends PoweredMachineBlockEntity {
     public static final String CONSUMED = "Consumed";
@@ -96,6 +98,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
         }
         FluidState fluidState = level.getFluidState(worldPosition.below());
         if (fluidState.isEmpty() || !fluidState.isSource()) {
+            updateBlockedReason(ActiveWidget.MachineState.ERROR, MachineLang.TOOLTIP_NO_SOURCE, false);
             return false;
         }
         type = fluidState.getType();
@@ -182,7 +185,13 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
 
     @Override
     protected @Nullable FluidTank createFluidTank() {
-        return new MachineFluidTank(CAPACITY, f-> type.isSame(f.getFluid()),this);
+        return new MachineFluidTank(CAPACITY, f-> type.isSame(f.getFluid()),this) {
+            @Override
+            protected void onContentsChanged() {
+                setChanged();
+                updateBlockedReason(ActiveWidget.MachineState.ERROR, MachineLang.TOOLTIP_FULL_TANK, getFluidAmount() >= getCapacity());
+            }
+        };
     }
 
     @Nullable
@@ -204,18 +213,10 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
-    public MutableComponent getBlockedReason() {
-        MutableComponent superComp = super.getBlockedReason();
-        if (!superComp.equals(MachineLang.TOOLTIP_ACTIVE)) {
-            return superComp;
+    public Map<ActiveWidget.MachineState, List<MutableComponent>> getBlockedReason() {
+        if (level == null || !level.isClientSide) {
+            updateBlockedReason(ActiveWidget.MachineState.ERROR, MachineLang.TOOLTIP_NO_SOURCE, getFluidTankNN().fill(new FluidStack(type, FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.SIMULATE) == FluidType.BUCKET_VOLUME);
         }
-        if (level == null || level.getFluidState(getBlockPos().below()).isEmpty() || !level.getFluidState(getBlockPos().below()).isSource()) {
-            return MachineLang.TOOLTIP_NO_SOURCE;
-        }
-        if (getFluidTankNN().getFluidAmount() >= getFluidTankNN().getCapacity()) {
-            return MachineLang.TOOLTIP_FULL_TANK;
-
-        }
-        return MachineLang.TOOLTIP_ACTIVE;
+        return super.getBlockedReason();
     }
 }

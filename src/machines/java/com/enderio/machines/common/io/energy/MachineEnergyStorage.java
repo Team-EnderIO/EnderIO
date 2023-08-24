@@ -64,6 +64,7 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, IEnderCapabi
      */
     public void setEnergyStored(int energy) {
         energyStored = Math.min(energy, getMaxEnergyStored());
+        onContentsChanged();
     }
 
     @Override

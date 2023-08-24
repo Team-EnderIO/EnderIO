@@ -2,12 +2,12 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
+import com.enderio.machines.client.gui.widget.ActiveWidget;
 import com.enderio.machines.common.blockentity.base.VacuumMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.menu.XPVacuumMenu;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -59,23 +59,11 @@ public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb>
         return new FluidTank(Integer.MAX_VALUE) {
             @Override
             protected void onContentsChanged() {
-                super.onContentsChanged();
                 setChanged();
+                updateBlockedReason(ActiveWidget.MachineState.ERROR, MachineLang.TOOLTIP_FULL_TANK, getFluidAmount() >= getCapacity());
             }
         };
     }
 
     // endregion
-
-    @Override
-    public MutableComponent getBlockedReason() {
-        MutableComponent superComp = super.getBlockedReason();
-        if (!superComp.equals(MachineLang.TOOLTIP_ACTIVE)) {
-            return superComp;
-        }
-        if (getFluidTankNN().getFluidAmount() >= getFluidTankNN().getCapacity()) {
-            return MachineLang.TOOLTIP_FULL_TANK;
-        }
-        return MachineLang.TOOLTIP_ACTIVE;
-    }
 }

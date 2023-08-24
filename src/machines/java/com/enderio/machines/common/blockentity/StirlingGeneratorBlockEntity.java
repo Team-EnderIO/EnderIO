@@ -7,14 +7,16 @@ import com.enderio.api.capacitor.LinearScalable;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.network.slot.FloatNetworkDataSlot;
+import com.enderio.core.common.network.slot.NetworkDataSlot;
+import com.enderio.machines.client.gui.widget.ActiveWidget;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
+import com.enderio.machines.common.blockentity.sync.MachineEnergyNetworkDataSlot;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.menu.StirlingGeneratorMenu;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -46,6 +48,14 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
         BlockState blockState) {
         super(EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO, type, worldPosition, blockState);
         addDataSlot(new FloatNetworkDataSlot(this::getBurnProgress, p -> clientBurnProgress = p));
+    }
+
+    @Override
+    public NetworkDataSlot<?> createEnergyDataSlot() {
+        return new MachineEnergyNetworkDataSlot(this::getExposedEnergyStorage, storage -> {
+            clientEnergyStorage = storage;
+            updateBlockedReason(ActiveWidget.MachineState.ERROR, MachineLang.TOOLTIP_NO_POWER, storage.getEnergyStored() >= storage.getMaxEnergyStored());
+        });
     }
 
     private int getBurnPerTick() {
@@ -122,22 +132,5 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     @Override
     public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
         return new StirlingGeneratorMenu(this, pInventory, pContainerId);
-    }
-
-    @Override
-    public MutableComponent getBlockedReason() {
-        if (isActive()) {
-            return MachineLang.TOOLTIP_ACTIVE;
-        }
-        if (supportsRedstoneControl() && !getRedstoneControl().isActive(this.level.hasNeighborSignal(worldPosition))) {
-            return MachineLang.TOOLTIP_BLOCKED_RESTONE;
-        }
-        if (requiresCapacitor() && !isCapacitorInstalled()) {
-            return MachineLang.TOOLTIP_NO_CAPACITOR;
-        }
-        if (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored()) {
-            return MachineLang.TOOLTIP_FULL_POWER;
-        }
-        return MachineLang.TOOLTIP_ACTIVE;
     }
 }

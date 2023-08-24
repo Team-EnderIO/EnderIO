@@ -8,6 +8,7 @@ import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.base.common.capacitor.DefaultCapacitorData;
 import com.enderio.base.common.item.capacitors.BaseCapacitorItem;
 import com.enderio.core.common.network.slot.NetworkDataSlot;
+import com.enderio.machines.client.gui.widget.ActiveWidget;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.ProgressMachineBlock;
 import com.enderio.machines.common.blockentity.sync.MachineEnergyNetworkDataSlot;
@@ -20,7 +21,6 @@ import com.enderio.machines.common.lang.MachineLang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -77,7 +77,10 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
     }
 
     public NetworkDataSlot<?> createEnergyDataSlot() {
-        return new MachineEnergyNetworkDataSlot(this::getExposedEnergyStorage, storage -> clientEnergyStorage = storage);
+        return new MachineEnergyNetworkDataSlot(this::getExposedEnergyStorage, storage -> {
+            clientEnergyStorage = storage;
+            updateBlockedReason(ActiveWidget.MachineState.ERROR, MachineLang.TOOLTIP_NO_POWER, storage.getEnergyStored() <= 0);
+        });
     }
 
     @Override
@@ -199,7 +202,6 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
             @Override
             protected void onContentsChanged() {
                 setChanged();
-
             }
         };
     }
@@ -275,7 +277,10 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
     protected void onInventoryContentsChanged(int slot) {
         MachineInventoryLayout inventoryLayout = getInventoryLayout();
         if (inventoryLayout != null && inventoryLayout.getCapacitorSlot() == slot) {
-            capacitorCacheDirty = true;
+            if (requiresCapacitor()) {
+                updateBlockedReason(ActiveWidget.MachineState.ERROR, MachineLang.TOOLTIP_NO_CAPACITOR, getCapacitorItem().isEmpty());
+                capacitorCacheDirty = true;
+            }
         }
         super.onInventoryContentsChanged(slot);
     }
@@ -326,22 +331,4 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
     }
 
     // endregion
-
-    @Override
-    public MutableComponent getBlockedReason() {
-        MutableComponent superComp = super.getBlockedReason();
-        if (!superComp.equals(MachineLang.TOOLTIP_ACTIVE)) {
-            return superComp;
-        }
-        if (isActive()) {
-            return MachineLang.TOOLTIP_ACTIVE;
-        }
-        if (requiresCapacitor() && !isCapacitorInstalled()) {
-            return MachineLang.TOOLTIP_NO_CAPACITOR;
-        }
-        if (getEnergyStorage().getEnergyStored() <= 0) {
-            return MachineLang.TOOLTIP_NO_POWER;
-        }
-        return MachineLang.TOOLTIP_ACTIVE;
-    }
 }

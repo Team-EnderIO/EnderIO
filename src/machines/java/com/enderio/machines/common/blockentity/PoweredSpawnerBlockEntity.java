@@ -8,6 +8,7 @@ import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
 import com.enderio.core.common.network.slot.EnumNetworkDataSlot;
 import com.enderio.core.common.network.slot.ResourceLocationNetworkDataSlot;
+import com.enderio.machines.client.gui.widget.ActiveWidget;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.task.IMachineTask;
@@ -30,7 +31,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
-
 // TODO: I want to revisit the powered spawner and task
 //       But there's not enough time before alpha, so just porting as-is.
 public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
@@ -152,6 +152,13 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
     }
 
     public void setReason(SpawnerBlockedReason reason) {
+        if (reason != SpawnerBlockedReason.NONE) {
+            updateBlockedReason(ActiveWidget.MachineState.ERROR, reason.component, true);
+        } else {
+            for (SpawnerBlockedReason reasons : SpawnerBlockedReason.values()) {
+                updateBlockedReason(ActiveWidget.MachineState.ERROR, reasons.component, true);
+            }
+        }
         this.reason = reason;
     }
 
@@ -172,18 +179,6 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
     }
 
     // endregion
-
-    @Override
-    public MutableComponent getBlockedReason() {
-        MutableComponent superComp = super.getBlockedReason();
-        if (!superComp.equals(MachineLang.TOOLTIP_ACTIVE)) {
-            return superComp;
-        }
-        if (reason != SpawnerBlockedReason.NONE) {
-            return reason.component;
-        }
-        return MachineLang.TOOLTIP_ACTIVE;
-    }
 
     public enum SpawnerBlockedReason {
         TOO_MANY_MOB(MachineLang.TOO_MANY_MOB),

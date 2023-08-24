@@ -360,6 +360,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         craftingTaskHost.getContainer().setInputsTaken(pTag.getInt(MachineNBTKeys.PROCESSED_INPUTS));
         super.load(pTag);
     }
+
     public record ContainerSubWrapper(AlloySmeltingRecipe.ContainerWrapper wrapper, int index) implements Container {
 
         @Override
