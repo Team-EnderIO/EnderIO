@@ -35,14 +35,14 @@ public class XPObeliskScreen extends EIOScreen<XPObeliskMenu> {
         int padding = 16;
         int offset = size + padding;
         Vector2i midLeft = new Vector2i(leftPos + imageWidth / 2 - size / 2 - offset, topPos + 58);
-        addRenderableWidget(new ImageButton(midLeft.x(), midLeft.y() - offset, size, size, 0, 0, 0, XP_BTNS, 48, 32, (press) -> addXP(1)));
-        addRenderableWidget(new ImageButton(midLeft.x(), midLeft.y() + padding, size, size, 0, 16, 0, XP_BTNS, 48, 32, (press) -> addXP(-1)));
+        addRenderableWidget(new ImageButton(midLeft.x(), midLeft.y() - offset, size, size, 0, 0, 0, XP_BTNS, 48, 32, (press) -> handlePress(0)));
+        addRenderableWidget(new ImageButton(midLeft.x(), midLeft.y() + padding, size, size, 0, 16, 0, XP_BTNS, 48, 32, (press) -> handlePress(1)));
         midLeft = midLeft.add(offset, 0);
-        addRenderableWidget(new ImageButton(midLeft.x(), midLeft.y() - offset, size, size, 16, 0, 0, XP_BTNS, 48, 32, (press) -> addXP(10)));
-        addRenderableWidget(new ImageButton(midLeft.x(), midLeft.y() + padding, size, size, 16, 16, 0, XP_BTNS, 48, 32, (press) -> addXP(-10)));
+        addRenderableWidget(new ImageButton(midLeft.x(), midLeft.y() - offset, size, size, 16, 0, 0, XP_BTNS, 48, 32, (press) -> handlePress(2)));
+        addRenderableWidget(new ImageButton(midLeft.x(), midLeft.y() + padding, size, size, 16, 16, 0, XP_BTNS, 48, 32, (press) -> handlePress(3)));
         midLeft = midLeft.add(offset, 0);
-        addRenderableWidget(new ImageButton(midLeft.x(), midLeft.y() - offset, size, size, 32, 0, 0, XP_BTNS, 48, 32, (press) -> addXP(Integer.MAX_VALUE)));
-        addRenderableWidget(new ImageButton(midLeft.x(), midLeft.y() + padding, size, size, 32, 16, 0, XP_BTNS, 48, 32, (press) -> addXP(- Integer.MAX_VALUE)));
+        addRenderableWidget(new ImageButton(midLeft.x(), midLeft.y() - offset, size, size, 32, 0, 0, XP_BTNS, 48, 32, (press) -> handlePress(4)));
+        addRenderableWidget(new ImageButton(midLeft.x(), midLeft.y() + padding, size, size, 32, 16, 0, XP_BTNS, 48, 32, (press) -> handlePress(5)));
 
     }
 
@@ -55,8 +55,8 @@ public class XPObeliskScreen extends EIOScreen<XPObeliskMenu> {
     protected Vector2i getBackgroundImageSize() {
         return new Vector2i(176, 116);
     }
-    private void addXP(int levelDiff) {
-        getMenu().addLevelToPlayer(levelDiff);
+    private void handlePress(int id) {
+        this.getMinecraft().gameMode.handleInventoryButtonClick(getMenu().containerId, id);
     }
 
 }
