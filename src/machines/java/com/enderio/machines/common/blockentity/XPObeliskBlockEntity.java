@@ -24,7 +24,8 @@ public class XPObeliskBlockEntity extends MachineBlockEntity {
     public XPObeliskBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
 
-        this.xpTankDataSlot = new IntegerNetworkDataSlot(() -> getFluidTankNN().getFluidAmount(), this::updateTankContents);
+        this.xpTankDataSlot = new IntegerNetworkDataSlot(() -> getFluidTankNN().getFluidAmount(),
+            amount -> getFluidTankNN().setFluid(new FluidStack(EIOFluids.XP_JUICE.getSource(), amount)));
         addDataSlot(xpTankDataSlot);
     }
 
