@@ -1,6 +1,7 @@
 package com.enderio.machines.common.init;
 
 import com.enderio.core.common.network.CoreNetwork;
+import com.enderio.machines.common.network.PlayerExperiencePacket;
 import com.enderio.machines.common.network.PoweredSpawnerSoulPacket;
 import com.enderio.machines.common.network.SoulEngineSoulPacket;
 import com.enderio.machines.common.network.UpdateCrafterTemplatePacket;
@@ -17,5 +18,6 @@ public class MachinePackets {
         CoreNetwork.registerPacket(new UpdateCrafterTemplatePacket.Handler(), UpdateCrafterTemplatePacket.class);
         CoreNetwork.registerPacket(new PoweredSpawnerSoulPacket.Handler(), PoweredSpawnerSoulPacket.class);
         CoreNetwork.registerPacket(new SoulEngineSoulPacket.Handler(), SoulEngineSoulPacket.class);
+        CoreNetwork.registerPacket(new PlayerExperiencePacket.Handler(), PlayerExperiencePacket.class);
     }
 }

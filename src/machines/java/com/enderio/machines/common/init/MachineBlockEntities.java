@@ -1,7 +1,6 @@
 package com.enderio.machines.common.init;
 
 import com.enderio.EnderIO;
-import com.enderio.machines.common.block.XPObeliskBlockEntity;
 import com.enderio.machines.common.blockentity.*;
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorBankBlockEntity;
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorTier;
