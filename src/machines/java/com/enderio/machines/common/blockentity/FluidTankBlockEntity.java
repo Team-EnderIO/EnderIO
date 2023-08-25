@@ -103,8 +103,20 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     }
 
     public boolean acceptItemDrain(ItemStack item) {
+
         Optional<IFluidHandlerItem> fluidHandlerCap = item.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
-        return fluidHandlerCap.isPresent();
+        if (fluidHandlerCap.isPresent()) {
+            return true;
+        }
+
+        FluidTank fluidTank = getFluidTankNN();
+        FluidStack fluid = fluidTank.getFluid();
+
+        if (!fluid.isEmpty() && fluid.getFluid().is(EIOTags.Fluids.EXPERIENCE)) {
+            return item.isDamageableItem() && item.getEnchantmentLevel(Enchantments.MENDING) > 0;
+        }
+
+        return false;
     }
 
     @Override
