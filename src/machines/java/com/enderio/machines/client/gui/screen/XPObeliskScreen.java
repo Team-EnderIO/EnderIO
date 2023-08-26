@@ -44,7 +44,7 @@ public class XPObeliskScreen extends EIOScreen<XPObeliskMenu> {
         addRenderableWidget(makeButton(midLeft.x(), midLeft.y() - offset, size,  32, 0, 4, MachineLang.RETRIEVE_ALL));
         addRenderableWidget(makeButton(midLeft.x(), midLeft.y() + padding, size,  32, 16, 5, MachineLang.STORE_ALL));
 
-        IOConfigButton.Inset insets = new IOConfigButton.Inset(0, 22, -40,0);
+        IOConfigButton.Inset insets = new IOConfigButton.Inset(0, 22, -26,0);
         addRenderableWidget(new IOConfigButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 24, 16, 16, menu, this::addRenderableWidget, font, insets));
 
     }
