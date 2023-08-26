@@ -1,9 +1,11 @@
 {
 	"credit": "Made with Blockbench",
+    "parent": "minecraft:block/block",
 	"textures": {
 		"bottom": "enderio:block/soul_machine_bottom",
 		"side": "enderio:block/soul_machine_side",
-		"top": "enderio:block/soul_machine_top"
+		"top": "enderio:block/soul_machine_top",
+		"particle": "enderio:block/soul_machine_bottom"
 	},
 	"elements": [
 		{
