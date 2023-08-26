@@ -209,6 +209,7 @@
   "block.enderio.void_chassis": "Void Chassis",
   "block.enderio.wired_charger": "Wired Charger",
   "block.enderio.xp_juice": "Xp Juice",
+  "block.enderio.xp_obelisk": "Xp Obelisk",
   "block.enderio.xp_vacuum": "Xp Vacuum",
   "enchantment.enderio.auto_smelt": "Auto Smelt",
   "enchantment.enderio.auto_smelt.desc": "Automatically smelts whatever is mined.",
