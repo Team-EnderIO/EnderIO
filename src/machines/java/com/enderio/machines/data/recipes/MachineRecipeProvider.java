@@ -356,5 +356,16 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("IBI")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOItems.PULSATING_CRYSTAL).build()))
             .save(finishedRecipeConsumer);
+
+        ShapedRecipeBuilder
+            .shaped(RecipeCategory.MISC, MachineBlocks.XP_OBELISK.get())
+            .define('R', EIOItems.EXPERIENCE_ROD)
+            .define('I', EIOItems.SOULARIUM_INGOT)
+            .define('C', EIOBlocks.ENSOULED_CHASSIS)
+            .pattern(" R ")
+            .pattern(" I ")
+            .pattern("ICI")
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOItems.EXPERIENCE_ROD).build()))
+            .save(finishedRecipeConsumer);
     }
 }
