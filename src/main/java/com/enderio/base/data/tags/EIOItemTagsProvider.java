@@ -23,6 +23,7 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
     protected void addTags(HolderLookup.Provider pProvider) {
         //copy(EIOTags.Blocks.CLEAR_GLASS, EIOTags.Items.CLEAR_GLASS);
         //copy(EIOTags.Blocks.FUSED_QUARTZ, EIOTags.Items.FUSED_QUARTZ);
+
         tag(Tags.Items.DUSTS)
             .addTag(EIOTags.Items.DUSTS_COAL)
             .addTag(EIOTags.Items.DUSTS_LAPIS)
@@ -81,7 +82,6 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
             .addTag(EIOTags.Items.GEMS_WEATHER_CRYSTAL)
             .addTag(EIOTags.Items.GEMS_PRESCIENT_CRYSTAL);
 
-        tag(EIOTags.Items.GEARS).addTag(EIOTags.Items.GEARS_WOOD).addTag(EIOTags.Items.GEARS_STONE).addTag(EIOTags.Items.GEARS_IRON).addTag(EIOTags.Items.GEARS_VIBRANT).addTag(EIOTags.Items.GEARS_ENERGIZED).addTag(EIOTags.Items.GEARS_DARK_STEEL);
         tag(EIOTags.Items.GEARS)
             .addTag(EIOTags.Items.GEARS_WOOD)
             .addTag(EIOTags.Items.GEARS_STONE)
