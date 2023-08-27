@@ -73,6 +73,15 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
             .addTag(EIOTags.Items.BLOCKS_SOULARIUM)
             .addTag(EIOTags.Items.BLOCKS_VIBRANT_ALLOY);
 
+        tag(Tags.Items.GEMS)
+            .addTag(EIOTags.Items.GEMS_PULSATING_CRYSTAL)
+            .addTag(EIOTags.Items.GEMS_VIBRANT_CRYSTAL)
+            .addTag(EIOTags.Items.GEMS_ENDER_CRYSTAL)
+            .addTag(EIOTags.Items.GEMS_ENTICING_CRYSTAL)
+            .addTag(EIOTags.Items.GEMS_WEATHER_CRYSTAL)
+            .addTag(EIOTags.Items.GEMS_PRESCIENT_CRYSTAL);
+
+        tag(EIOTags.Items.GEARS).addTag(EIOTags.Items.GEARS_WOOD).addTag(EIOTags.Items.GEARS_STONE).addTag(EIOTags.Items.GEARS_IRON).addTag(EIOTags.Items.GEARS_VIBRANT).addTag(EIOTags.Items.GEARS_ENERGIZED).addTag(EIOTags.Items.GEARS_DARK_STEEL);
         tag(EIOTags.Items.GEARS)
             .addTag(EIOTags.Items.GEARS_WOOD)
             .addTag(EIOTags.Items.GEARS_STONE)
