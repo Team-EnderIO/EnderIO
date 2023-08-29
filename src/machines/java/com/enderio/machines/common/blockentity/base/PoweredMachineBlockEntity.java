@@ -8,16 +8,15 @@ import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.base.common.capacitor.DefaultCapacitorData;
 import com.enderio.base.common.item.capacitors.BaseCapacitorItem;
 import com.enderio.core.common.network.slot.NetworkDataSlot;
-import com.enderio.machines.client.gui.widget.ActiveWidget;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.ProgressMachineBlock;
+import com.enderio.machines.common.blockentity.MachineState;
 import com.enderio.machines.common.blockentity.sync.MachineEnergyNetworkDataSlot;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.ImmutableMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
-import com.enderio.machines.common.lang.MachineLang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -77,10 +76,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
     }
 
     public NetworkDataSlot<?> createEnergyDataSlot() {
-        return new MachineEnergyNetworkDataSlot(this::getExposedEnergyStorage, storage -> {
-            clientEnergyStorage = storage;
-            updateBlockedReason(ActiveWidget.MachineState.ERROR, MachineLang.TOOLTIP_NO_POWER, storage.getEnergyStored() <= 0);
-        });
+        return new MachineEnergyNetworkDataSlot(this::getExposedEnergyStorage, storage -> clientEnergyStorage = storage);
     }
 
     @Override
@@ -202,6 +198,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
             @Override
             protected void onContentsChanged() {
                 setChanged();
+                updateMachineState(MachineState.NO_POWER, getEnergyStored() <= 0);
             }
         };
     }
@@ -278,7 +275,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
         MachineInventoryLayout inventoryLayout = getInventoryLayout();
         if (inventoryLayout != null && inventoryLayout.getCapacitorSlot() == slot) {
             if (requiresCapacitor()) {
-                updateBlockedReason(ActiveWidget.MachineState.ERROR, MachineLang.TOOLTIP_NO_CAPACITOR, getCapacitorItem().isEmpty());
+                updateMachineState(MachineState.NO_CAP, getCapacitorItem().isEmpty());
                 capacitorCacheDirty = true;
             }
         }

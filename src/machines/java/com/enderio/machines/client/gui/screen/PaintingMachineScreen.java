@@ -28,7 +28,7 @@ public class PaintingMachineScreen extends EIOScreen<PaintingMachineMenu> {
         addRenderableOnly(addRenderableOnly(new CapacitorEnergyWidget(this, getMenu().getBlockEntity()::getEnergyStorage, getMenu().getBlockEntity()::isCapacitorInstalled, 16 + leftPos, 14 + topPos, 9, 42)));
         addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 14, topPos + 52, () -> menu.getBlockEntity().getRedstoneControl(),
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
-        addRenderableWidget(new ActiveWidget(this, menu.getBlockEntity()::getBlockedReason, leftPos + imageWidth - 6 - 16, topPos + 16*4));
+        addRenderableWidget(new ActiveWidget(this, menu.getBlockEntity()::getMachineStates, leftPos + imageWidth - 6 - 16, topPos + 16*4));
 
         addRenderableOnly(new ProgressWidget.LeftRight(this, () -> menu.getBlockEntity().getCraftingProgress(), getGuiLeft() + 89, getGuiTop() + 35, 22, 16, 177, 14));
     }

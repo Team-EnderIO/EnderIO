@@ -9,24 +9,19 @@ import com.enderio.base.common.blockentity.IWrenchable;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.particle.RangeParticleData;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
-import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
-import com.enderio.core.common.network.slot.EnumNetworkDataSlot;
-import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
-import com.enderio.core.common.network.slot.NBTSerializableNetworkDataSlot;
+import com.enderio.core.common.network.slot.*;
 import com.enderio.core.common.util.PlayerInteractionUtil;
-import com.enderio.machines.client.gui.widget.ActiveWidget;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.MachineBlock;
+import com.enderio.machines.common.blockentity.MachineState;
 import com.enderio.machines.common.io.IOConfig;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
-import com.enderio.machines.common.lang.MachineLang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -113,7 +108,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     // endregion
 
-    private Map<ActiveWidget.MachineState, List<MutableComponent>> blocked_reason = new HashMap<>();
+    private Set<MachineState> states = new HashSet<>();
 
     public MachineBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
@@ -157,6 +152,12 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             }
         });
         addDataSlot(ioConfigDataSlot);
+
+        addDataSlot(new SetNetworkDataSlot<>(this::getMachineStates, l -> states = l, v -> {
+            CompoundTag tag = new CompoundTag();
+            tag.putString("MachineState", v.name());
+            return tag;
+        }, c -> MachineState.valueOf(c.getString("MachineState")), (v, b) -> b.writeUtf(v.name()), b -> MachineState.valueOf(b.readUtf())));
     }
 
     // region IO Config
@@ -359,6 +360,11 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
                 onInventoryContentsChanged(slot);
                 setChanged();
             }
+
+            @Override
+            public void updateMachineState(MachineState state, boolean add) {
+                MachineBlockEntity.this.updateMachineState(state, add);
+            }
         };
     }
 
@@ -426,7 +432,9 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         }
 
         if (supportsRedstoneControl()) {
-            return redstoneControl.isActive(this.level.hasNeighborSignal(worldPosition));
+            boolean active = redstoneControl.isActive(this.level.hasNeighborSignal(worldPosition));
+            updateMachineState(MachineState.REDSTONE, !active);
+            return active;
         }
 
         return true;
@@ -745,25 +753,15 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         return getBlockState().getLightEmission();
     }
 
-    public Map<ActiveWidget.MachineState, List<MutableComponent>> getBlockedReason() {
-        if (level == null || !level.isClientSide) {
-            return Map.of();
-        }
-        if (supportsRedstoneControl()) {
-            updateBlockedReason(ActiveWidget.MachineState.STOPPED, MachineLang.TOOLTIP_BLOCKED_RESTONE, !redstoneControl.isActive(this.level.hasNeighborSignal(worldPosition)));
-        }
-        return blocked_reason;
+    public Set<MachineState> getMachineStates() {
+        return states;
     }
 
-    public void updateBlockedReason(ActiveWidget.MachineState state, MutableComponent component, boolean add) {
-        List<MutableComponent> list = blocked_reason.getOrDefault(state, new ArrayList<>());
+    public void updateMachineState(MachineState state, boolean add) {
         if (add) {
-            if (!list.contains(component)) {
-                list.add(component);
-            }
+            states.add(state);
         } else {
-            list.remove(component);
+            states.remove(state);
         }
-        blocked_reason.put(state, list);
     }
 }

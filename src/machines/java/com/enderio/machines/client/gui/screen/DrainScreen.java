@@ -42,7 +42,7 @@ public class DrainScreen extends EIOScreen<DrainMenu> {
         addRenderableWidget(new ImageButton(leftPos + imageWidth - 2*16, topPos + 16*2, 8, 8, 8, 0, 16, BUTTONS, (b) -> menu.getBlockEntity().increaseRange()));
         addRenderableWidget(new ImageButton(leftPos + imageWidth - 2*16, topPos + 16*2 + 8, 8, 8, 8, 8, 16, BUTTONS, (b) -> menu.getBlockEntity().decreaseRange()));
 
-        addRenderableWidget(new ActiveWidget(this, menu.getBlockEntity()::getBlockedReason, leftPos + imageWidth - 6 - 16, topPos + 16*4));
+        addRenderableWidget(new ActiveWidget(this, menu.getBlockEntity()::getMachineStates, leftPos + imageWidth - 6 - 16, topPos + 16*4));
     }
 
     @Override

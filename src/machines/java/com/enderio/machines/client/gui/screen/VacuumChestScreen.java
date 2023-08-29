@@ -38,7 +38,7 @@ public class VacuumChestScreen extends EIOScreen<VacuumChestMenu> {
         addRenderableWidget(new ImageButton(leftPos + imageWidth - 8 - 8, topPos + 86, 8, 8, 8, 0, 16, BUTTONS, (b) -> menu.getBlockEntity().increaseRange()));
         addRenderableWidget(new ImageButton(leftPos + imageWidth - 8 - 8, topPos + 94, 8, 8, 8, 8, 16, BUTTONS, (b) -> menu.getBlockEntity().decreaseRange()));
 
-        addRenderableWidget(new ActiveWidget(this, menu.getBlockEntity()::getBlockedReason, leftPos + imageWidth - 6 - 16, topPos + 16*4));
+        addRenderableWidget(new ActiveWidget(this, menu.getBlockEntity()::getMachineStates, leftPos + imageWidth - 6 - 16, topPos + 16*4));
 
     }
 

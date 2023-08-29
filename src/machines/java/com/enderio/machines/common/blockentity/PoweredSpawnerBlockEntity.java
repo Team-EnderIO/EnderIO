@@ -8,7 +8,6 @@ import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
 import com.enderio.core.common.network.slot.EnumNetworkDataSlot;
 import com.enderio.core.common.network.slot.ResourceLocationNetworkDataSlot;
-import com.enderio.machines.client.gui.widget.ActiveWidget;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.task.IMachineTask;
@@ -152,13 +151,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
     }
 
     public void setReason(SpawnerBlockedReason reason) {
-        if (reason != SpawnerBlockedReason.NONE) {
-            updateBlockedReason(ActiveWidget.MachineState.ERROR, reason.component, true);
-        } else {
-            for (SpawnerBlockedReason reasons : SpawnerBlockedReason.values()) {
-                updateBlockedReason(ActiveWidget.MachineState.ERROR, reasons.component, true);
-            }
-        }
+        updateMachineState(MachineState.NO_SOUL, reason == SpawnerBlockedReason.UNKNOWN_MOB);
         this.reason = reason;
     }
 

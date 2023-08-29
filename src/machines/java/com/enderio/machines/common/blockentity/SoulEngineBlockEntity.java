@@ -6,16 +6,12 @@ import com.enderio.api.capacitor.FixedScalable;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.network.slot.FluidStackNetworkDataSlot;
-import com.enderio.core.common.network.slot.NetworkDataSlot;
 import com.enderio.core.common.network.slot.ResourceLocationNetworkDataSlot;
-import com.enderio.machines.client.gui.widget.ActiveWidget;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
-import com.enderio.machines.common.blockentity.sync.MachineEnergyNetworkDataSlot;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
-import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.menu.SoulEngineMenu;
 import com.enderio.machines.common.souldata.EngineSoul;
 import net.minecraft.core.BlockPos;
@@ -74,14 +70,6 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
-    public NetworkDataSlot<?> createEnergyDataSlot() {
-        return new MachineEnergyNetworkDataSlot(this::getExposedEnergyStorage, storage -> {
-            clientEnergyStorage = storage;
-            updateBlockedReason(ActiveWidget.MachineState.ERROR, MachineLang.TOOLTIP_NO_POWER, storage.getEnergyStored() >= storage.getMaxEnergyStored());
-        });
-    }
-
-    @Override
     public void serverTick() {
         if (reloadCache != reload && entityData != StoredEntityData.empty() && entityData.getEntityType().isPresent()) {
             Optional<EngineSoul.SoulData> op = EngineSoul.ENGINE.matches(entityData.getEntityType().get());
@@ -127,7 +115,6 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
             protected void onContentsChanged() {
                 super.onContentsChanged();
                 setChanged();
-                updateBlockedReason(ActiveWidget.MachineState.ERROR, MachineLang.TOOLTIP_EMPTY_TANK, isEmpty());
             }
 
             @Override

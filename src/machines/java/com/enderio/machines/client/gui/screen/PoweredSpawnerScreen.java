@@ -42,7 +42,7 @@ public class PoweredSpawnerScreen extends EIOScreen<PoweredSpawnerMenu> {
             () -> menu.getBlockEntity().isRangeVisible(), state -> menu.getBlockEntity().setIsRangeVisible(state),
             () -> menu.getBlockEntity().isRangeVisible() ? EIOLang.HIDE_RANGE : EIOLang.SHOW_RANGE));
 
-        addRenderableWidget(new ActiveWidget(this, menu.getBlockEntity()::getBlockedReason, leftPos + imageWidth - 6 - 16, topPos + 16*4));
+        addRenderableWidget(new ActiveWidget(this, menu.getBlockEntity()::getMachineStates, leftPos + imageWidth - 6 - 16, topPos + 16*4));
 
         addRenderableOnly(new ProgressWidget.BottomUp(this, () -> menu.getBlockEntity().getSpawnProgress(), getGuiLeft() + 82, getGuiTop() + 38, 14, 14, 176, 0));
 

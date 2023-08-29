@@ -39,7 +39,7 @@ public class SoulEngineScreen extends EIOScreen<SoulEngineMenu>{
 
         addRenderableOnly(new FluidStackWidget(this, getMenu().getBlockEntity()::getFluidTank, 80 + leftPos, 21 + topPos, 16, 47));
 
-        addRenderableWidget(new ActiveWidget(this, menu.getBlockEntity()::getBlockedReason, leftPos + imageWidth - 6 - 16, topPos + 16*4));
+        addRenderableWidget(new ActiveWidget(this, menu.getBlockEntity()::getMachineStates, leftPos + imageWidth - 6 - 16, topPos + 16*4));
 
         addRenderableWidget(new IOConfigButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 22, 16, 16, menu, this::addRenderableWidget, font));
 

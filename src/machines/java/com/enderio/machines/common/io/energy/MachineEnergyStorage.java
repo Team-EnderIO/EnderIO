@@ -37,6 +37,7 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, IEnderCapabi
         this.ioMode = ioMode;
         this.capacity = capacity;
         this.usageRate = usageRate;
+        onContentsChanged();
     }
 
     @Override

@@ -36,7 +36,7 @@ public class SoulBinderScreen extends EIOScreen<SoulBinderMenu> {
 
         addRenderableOnly(new ExperienceWidget(this, getMenu().getBlockEntity()::getFluidTank, () -> getMenu().getBlockEntity().getNeededXP(), 56 + leftPos, 68 + topPos, 65, 5));
 
-        addRenderableWidget(new ActiveWidget(this, menu.getBlockEntity()::getBlockedReason, leftPos + imageWidth - 6 - 16, topPos + 16*4));
+        addRenderableWidget(new ActiveWidget(this, menu.getBlockEntity()::getMachineStates, leftPos + imageWidth - 6 - 16, topPos + 16*4));
 
         addRenderableWidget(new IOConfigButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 22, 16, 16, menu, this::addRenderableWidget, font));
     }

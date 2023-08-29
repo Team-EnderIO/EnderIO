@@ -1,6 +1,7 @@
 package com.enderio.machines.common.blockentity.task;
 
 import com.enderio.core.common.recipes.OutputStack;
+import com.enderio.machines.common.blockentity.MachineState;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
@@ -46,6 +47,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
         this.container = container;
         this.outputSlots = outputSlots;
         this.recipe = recipe;
+        inventory.updateMachineState(MachineState.OUTPUT_FULL, false);
     }
 
     public MachineInventory getInventory() {
@@ -117,7 +119,9 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
         // If the recipe has been crafted, attempt to put it into storage
         if (progressMade >= progressRequired) {
             // Attempt to complete the craft
-            if (placeOutputs(outputs, false)) {
+            boolean placeOutputs = placeOutputs(outputs, false);
+            inventory.updateMachineState(MachineState.OUTPUT_FULL, !placeOutputs);
+            if (placeOutputs) {
                 // Take the inputs
                 consumeInputs(recipe);
 

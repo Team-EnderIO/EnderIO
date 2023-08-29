@@ -42,7 +42,7 @@ public class XPVacuumScreen extends EIOScreen<XPVacuumMenu> {
         addRenderableWidget(
             new ImageButton(leftPos + imageWidth - 8 - 8 - 2 - 16, topPos + 42, 8, 8, 8, 8, 16, BUTTONS, (b) -> this.menu.getBlockEntity().decreaseRange()));
 
-        addRenderableWidget(new ActiveWidget(this, menu.getBlockEntity()::getBlockedReason, leftPos + imageWidth - 6 - 16, topPos + 16*4));
+        addRenderableWidget(new ActiveWidget(this, menu.getBlockEntity()::getMachineStates, leftPos + imageWidth - 6 - 16, topPos + 16*4));
 
     }
 

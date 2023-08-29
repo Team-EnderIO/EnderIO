@@ -2,6 +2,7 @@ package com.enderio.machines.common.io.item;
 
 import com.enderio.api.capability.IEnderCapabilityProvider;
 import com.enderio.api.io.IIOConfig;
+import com.enderio.machines.common.blockentity.MachineState;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
@@ -124,6 +125,10 @@ public class MachineInventory extends ItemStackHandler implements IEnderCapabili
         super.setStackInSlot(slot, stack);
         if (changed)
             this.changeListener.accept(slot);
+    }
+
+    public void updateMachineState(MachineState state, boolean add) {
+
     }
 
     private record Wrapped(MachineInventory master, @Nullable Direction side) implements IItemHandler {

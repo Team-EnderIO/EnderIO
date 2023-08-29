@@ -8,17 +8,14 @@ import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
 import com.enderio.core.common.network.slot.FluidStackNetworkDataSlot;
 import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
-import com.enderio.machines.client.gui.widget.ActiveWidget;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.FixedIOConfig;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
-import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.menu.DrainMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -37,7 +34,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class DrainBlockEntity extends PoweredMachineBlockEntity {
     public static final String CONSUMED = "Consumed";
@@ -98,9 +94,10 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
         }
         FluidState fluidState = level.getFluidState(worldPosition.below());
         if (fluidState.isEmpty() || !fluidState.isSource()) {
-            updateBlockedReason(ActiveWidget.MachineState.ERROR, MachineLang.TOOLTIP_NO_SOURCE, false);
+            updateMachineState(MachineState.NO_SOURCE, true);
             return false;
         }
+        updateMachineState(MachineState.NO_SOURCE, false);
         type = fluidState.getType();
         return getFluidTankNN().fill(new FluidStack(type, FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.SIMULATE) == FluidType.BUCKET_VOLUME;
     }
@@ -183,13 +180,12 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
         }
     }
 
-    @Override
     protected @Nullable FluidTank createFluidTank() {
         return new MachineFluidTank(CAPACITY, f-> type.isSame(f.getFluid()),this) {
             @Override
             protected void onContentsChanged() {
                 setChanged();
-                updateBlockedReason(ActiveWidget.MachineState.ERROR, MachineLang.TOOLTIP_FULL_TANK, getFluidAmount() >= getCapacity());
+                updateMachineState(MachineState.FULL_TANK, getFluidAmount() >= getCapacity());
             }
         };
     }
@@ -210,13 +206,5 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
     public void load(CompoundTag pTag) {
         super.load(pTag);
         consumed = pTag.getInt(CONSUMED);
-    }
-
-    @Override
-    public Map<ActiveWidget.MachineState, List<MutableComponent>> getBlockedReason() {
-        if (level == null || !level.isClientSide) {
-            updateBlockedReason(ActiveWidget.MachineState.ERROR, MachineLang.TOOLTIP_NO_SOURCE, getFluidTankNN().fill(new FluidStack(type, FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.SIMULATE) == FluidType.BUCKET_VOLUME);
-        }
-        return super.getBlockedReason();
     }
 }
