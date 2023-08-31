@@ -30,6 +30,7 @@ public class MachineLang {
     public static final MutableComponent TOOLTIP_FULL_TANK = REGISTRATE.addLang("gui", EnderIO.loc("full_tank"), "The tank is full");
     public static final MutableComponent TOOLTIP_BLOCKED_RESTONE = REGISTRATE.addLang("gui", EnderIO.loc("blocked_redstone"), "The machine is blocked by redstone");
     public static final MutableComponent TOOLTIP_OUTPUT_FULL = REGISTRATE.addLang("gui", EnderIO.loc("output_full"), "There is not enough room for the output");
+    public static final MutableComponent TOOLTIP_INPUT_EMPTY = REGISTRATE.addLang("gui", EnderIO.loc("input_empty"), "There is no item in the input");
 
 
     // region JEI Categories

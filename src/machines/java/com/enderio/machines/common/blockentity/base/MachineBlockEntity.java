@@ -758,6 +758,9 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     }
 
     public void updateMachineState(MachineState state, boolean add) {
+        if (level != null && level.isClientSide) {
+            return;
+        }
         if (add) {
             states.add(state);
         } else {

@@ -69,6 +69,8 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
                 return task;
             }
         };
+
+        updateMachineState(MachineState.NO_SOUL, reason == SpawnerBlockedReason.UNKNOWN_MOB);
     }
 
     @Nullable

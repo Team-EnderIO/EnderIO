@@ -127,6 +127,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
             @Override
             protected void onContentsChanged() {
                 craftingTaskHost.newTaskAvailable();
+                updateMachineState(MachineState.EMPTY_TANK, getFluidAmount() <= 0);
                 setChanged();
             }
 

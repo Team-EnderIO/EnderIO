@@ -6,7 +6,6 @@ import net.minecraft.network.chat.MutableComponent;
 public enum MachineState {
     ACTIVE(MachineLang.TOOLTIP_ACTIVE, 0),
 
-    NO_CAP(MachineLang.TOOLTIP_NO_CAPACITOR, 1),
     NO_POWER(MachineLang.TOOLTIP_NO_POWER, 1),
     FULL_POWER(MachineLang.TOOLTIP_FULL_POWER, 1),
     NO_SOURCE(MachineLang.TOOLTIP_NO_SOURCE, 1),
@@ -16,8 +15,10 @@ public enum MachineState {
     NO_INPUT(MachineLang.TOOLTIP_NO_SOULBOUND, 1),
     FULL_OUTPUT(MachineLang.TOOLTIP_NO_SOULBOUND, 1),
 
+    NO_CAP(MachineLang.TOOLTIP_NO_CAPACITOR, 2),
     REDSTONE(MachineLang.TOOLTIP_BLOCKED_RESTONE, 2),
-    OUTPUT_FULL(MachineLang.TOOLTIP_OUTPUT_FULL, 2);
+    OUTPUT_FULL(MachineLang.TOOLTIP_OUTPUT_FULL, 2),
+    INPUT_EMPTY(MachineLang.TOOLTIP_INPUT_EMPTY, 2);
 
 
     private final MutableComponent tooltip;

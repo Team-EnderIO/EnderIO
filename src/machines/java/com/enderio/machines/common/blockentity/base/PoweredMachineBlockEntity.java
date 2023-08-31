@@ -73,6 +73,9 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
 
         // new new new new way of syncing energy storage.
         addDataSlot(createEnergyDataSlot());
+
+        updateMachineState(MachineState.NO_POWER, getEnergyStorage().getEnergyStored() <= 0);
+        updateMachineState(MachineState.NO_CAP, getCapacitorItem().isEmpty());
     }
 
     public NetworkDataSlot<?> createEnergyDataSlot() {
