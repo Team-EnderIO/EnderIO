@@ -12,6 +12,7 @@ import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
+import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.menu.StirlingGeneratorMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
@@ -48,9 +49,9 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
         super(EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO, type, worldPosition, blockState);
         addDataSlot(new FloatNetworkDataSlot(this::getBurnProgress, p -> clientBurnProgress = p));
 
-        updateMachineState(MachineState.NO_POWER, false);
-        updateMachineState(MachineState.FULL_POWER, (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored()) && isCapacitorInstalled());
-        updateMachineState(MachineState.INPUT_EMPTY, FUEL.getItemStack(getInventoryNN()).isEmpty());
+        updateMachineState(new MachineState(MachineStateType.ERROR, MachineLang.TOOLTIP_NO_POWER), false);
+        updateMachineState(new MachineState(MachineStateType.ERROR, MachineLang.TOOLTIP_FULL_POWER), (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored()) && isCapacitorInstalled());
+        updateMachineState(new MachineState(MachineStateType.USER_INPUT, MachineLang.TOOLTIP_INPUT_EMPTY), FUEL.getItemStack(getInventoryNN()).isEmpty());
     }
 
     private int getBurnPerTick() {
@@ -133,7 +134,7 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     protected void onInventoryContentsChanged(int slot) {
         super.onInventoryContentsChanged(slot);
         if (FUEL.isSlot(slot)) {
-            updateMachineState(MachineState.INPUT_EMPTY, FUEL.getItemStack(getInventoryNN()).isEmpty());
+            updateMachineState(new MachineState(MachineStateType.USER_INPUT, MachineLang.TOOLTIP_INPUT_EMPTY), FUEL.getItemStack(getInventoryNN()).isEmpty());
         }
     }
 
@@ -142,7 +143,7 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
             @Override
             protected void onContentsChanged() {
                 setChanged();
-                updateMachineState(MachineState.FULL_POWER, (getEnergyStored() >= getMaxEnergyStored()) && isCapacitorInstalled());
+                updateMachineState(new MachineState(MachineStateType.ERROR, MachineLang.TOOLTIP_FULL_POWER), (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored()) && isCapacitorInstalled());
             }
         };
     }

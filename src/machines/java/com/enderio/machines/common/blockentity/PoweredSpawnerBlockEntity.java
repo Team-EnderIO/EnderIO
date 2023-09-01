@@ -70,7 +70,7 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
             }
         };
 
-        updateMachineState(MachineState.NO_SOUL, reason == SpawnerBlockedReason.UNKNOWN_MOB);
+        updateMachineState(new MachineState(MachineStateType.ERROR, this.reason.component), false);
     }
 
     @Nullable
@@ -153,7 +153,8 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
     }
 
     public void setReason(SpawnerBlockedReason reason) {
-        updateMachineState(MachineState.NO_SOUL, reason == SpawnerBlockedReason.UNKNOWN_MOB);
+        updateMachineState(new MachineState(MachineStateType.ERROR, this.reason.component), false);
+        updateMachineState(new MachineState(MachineStateType.ERROR, reason.component), true);
         this.reason = reason;
     }
 

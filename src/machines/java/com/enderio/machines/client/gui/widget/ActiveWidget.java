@@ -3,6 +3,7 @@ package com.enderio.machines.client.gui.widget;
 import com.enderio.EnderIO;
 import com.enderio.core.client.gui.widgets.EIOWidget;
 import com.enderio.machines.common.blockentity.MachineState;
+import com.enderio.machines.common.lang.MachineLang;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -33,11 +34,11 @@ public class ActiveWidget extends EIOWidget {
         RenderSystem.enableDepthTest();
         MachineState prio = null;
         for (MachineState machineState: state.get()) {
-            if (prio == null || machineState.getIndex() > prio.getIndex()) {
+            if (prio == null || machineState.type().getPriority() > prio.type().getPriority()) {
                 prio = machineState;
             }
         }
-        guiGraphics.blit(WIDGETS, x, y, 0, prio == null ? 0 : prio.getIndex()*16, 28*16, width, height, 256, 256);
+        guiGraphics.blit(WIDGETS, x, y, 0, prio == null ? 0 : prio.type().getPriority()*16, 28*16, width, height, 256, 256);
 
         //Stopped
         //guiGraphics.blit(WIDGETS, x, y, 0, 4*16, 28*16, width, height, 256, 256);
@@ -52,9 +53,9 @@ public class ActiveWidget extends EIOWidget {
 
     private void renderToolTip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (isHovered(mouseX, mouseY)) {
-            List<Component> list = state.get().stream().map(s -> (Component) s.getTooltip()).toList();
+            List<Component> list = state.get().stream().map(s -> (Component) s.component()).toList();
             if (list.isEmpty()){
-                list = List.of(MachineState.ACTIVE.getTooltip());
+                list = List.of(MachineLang.TOOLTIP_ACTIVE);
             }
             guiGraphics.renderTooltip(displayOn.getMinecraft().font, list, Optional.empty(), mouseX, mouseY);
         }

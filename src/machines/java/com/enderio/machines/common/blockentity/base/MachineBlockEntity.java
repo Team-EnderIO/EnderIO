@@ -14,10 +14,12 @@ import com.enderio.core.common.util.PlayerInteractionUtil;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.blockentity.MachineState;
+import com.enderio.machines.common.blockentity.MachineStateType;
 import com.enderio.machines.common.io.IOConfig;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import com.enderio.machines.common.lang.MachineLang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -153,11 +155,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         });
         addDataSlot(ioConfigDataSlot);
 
-        addDataSlot(new SetNetworkDataSlot<>(this::getMachineStates, l -> states = l, v -> {
-            CompoundTag tag = new CompoundTag();
-            tag.putString("MachineState", v.name());
-            return tag;
-        }, c -> MachineState.valueOf(c.getString("MachineState")), (v, b) -> b.writeUtf(v.name()), b -> MachineState.valueOf(b.readUtf())));
+        addDataSlot(new SetNetworkDataSlot<>(this::getMachineStates, l -> states = l, MachineState::toNBT , MachineState::fromNBT, MachineState::toBuffer, MachineState::fromBuffer ));
     }
 
     // region IO Config
@@ -433,7 +431,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
         if (supportsRedstoneControl()) {
             boolean active = redstoneControl.isActive(this.level.hasNeighborSignal(worldPosition));
-            updateMachineState(MachineState.REDSTONE, !active);
+            updateMachineState(new MachineState(MachineStateType.USER_INPUT, MachineLang.TOOLTIP_BLOCKED_RESTONE), !active);
             return active;
         }
 

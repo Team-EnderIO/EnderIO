@@ -2,9 +2,11 @@ package com.enderio.machines.common.blockentity.task;
 
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.blockentity.MachineState;
+import com.enderio.machines.common.blockentity.MachineStateType;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
+import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.recipe.MachineRecipe;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -47,7 +49,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
         this.container = container;
         this.outputSlots = outputSlots;
         this.recipe = recipe;
-        inventory.updateMachineState(MachineState.OUTPUT_FULL, false);
+        inventory.updateMachineState(new MachineState(MachineStateType.USER_INPUT, MachineLang.TOOLTIP_OUTPUT_FULL), false);
     }
 
     public MachineInventory getInventory() {
@@ -120,7 +122,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
         if (progressMade >= progressRequired) {
             // Attempt to complete the craft
             boolean placeOutputs = placeOutputs(outputs, false);
-            inventory.updateMachineState(MachineState.OUTPUT_FULL, !placeOutputs);
+            inventory.updateMachineState(new MachineState(MachineStateType.USER_INPUT, MachineLang.TOOLTIP_OUTPUT_FULL), !placeOutputs);
             if (placeOutputs) {
                 // Take the inputs
                 consumeInputs(recipe);

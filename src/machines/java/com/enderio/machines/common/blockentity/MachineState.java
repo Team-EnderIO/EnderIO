@@ -1,39 +1,58 @@
 package com.enderio.machines.common.blockentity;
 
 import com.enderio.machines.common.lang.MachineLang;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
-public enum MachineState {
-    ACTIVE(MachineLang.TOOLTIP_ACTIVE, 0),
+public record MachineState(MachineStateType type, MutableComponent component) {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
-    NO_POWER(MachineLang.TOOLTIP_NO_POWER, 1),
-    FULL_POWER(MachineLang.TOOLTIP_FULL_POWER, 1),
-    NO_SOURCE(MachineLang.TOOLTIP_NO_SOURCE, 1),
-    EMPTY_TANK(MachineLang.TOOLTIP_EMPTY_TANK, 1),
-    FULL_TANK(MachineLang.TOOLTIP_FULL_TANK, 1),
-    NO_SOUL(MachineLang.TOOLTIP_NO_SOULBOUND, 1),
-    NO_INPUT(MachineLang.TOOLTIP_NO_SOULBOUND, 1),
-    FULL_OUTPUT(MachineLang.TOOLTIP_NO_SOULBOUND, 1),
+        MachineState that = (MachineState) o;
 
-    NO_CAP(MachineLang.TOOLTIP_NO_CAPACITOR, 2),
-    REDSTONE(MachineLang.TOOLTIP_BLOCKED_RESTONE, 2),
-    OUTPUT_FULL(MachineLang.TOOLTIP_OUTPUT_FULL, 2),
-    INPUT_EMPTY(MachineLang.TOOLTIP_INPUT_EMPTY, 2);
-
-
-    private final MutableComponent tooltip;
-    private final int index;
-
-    MachineState(MutableComponent tooltip, int index) {
-        this.tooltip = tooltip;
-        this.index = index;
+        if (type != that.type)
+            return false;
+        return component.equals(that.component);
     }
 
-    public MutableComponent getTooltip() {
-        return tooltip;
+    @Override
+    public int hashCode() {
+        int result = type.hashCode();
+        result = 31 * result + component.hashCode();
+        return result;
     }
 
-    public int getIndex() {
-        return index;
+    public CompoundTag toNBT() {
+        CompoundTag tag = new CompoundTag();
+        CompoundTag nbt = new CompoundTag();
+        nbt.putString("Type", type.name());
+        nbt.putString("Compound", component.getString());
+        tag.put("MachineState", nbt);
+        return tag;
+    }
+
+    public static MachineState fromNBT(CompoundTag tag) {
+        if (tag.contains("MachineState")) {
+            CompoundTag nbt = tag.getCompound("MachineState");
+            if (nbt.contains("Type") && nbt.contains("Compound")) {
+                return new MachineState(MachineStateType.valueOf(nbt.getString("Type")), Component.translatable(nbt.getString("Compound")));
+            }
+        }
+        return new MachineState(MachineStateType.READY, MachineLang.TOOLTIP_ACTIVE);
+    }
+
+    public void toBuffer(FriendlyByteBuf buf) {
+        buf.writeUtf(type.name());
+        buf.writeUtf(component.getString());
+    }
+
+    public static MachineState fromBuffer(FriendlyByteBuf buf) {
+        return new MachineState(MachineStateType.valueOf(buf.readUtf()), Component.translatable(buf.readUtf()));
     }
 }

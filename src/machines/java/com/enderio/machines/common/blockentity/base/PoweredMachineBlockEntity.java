@@ -11,12 +11,14 @@ import com.enderio.core.common.network.slot.NetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.ProgressMachineBlock;
 import com.enderio.machines.common.blockentity.MachineState;
+import com.enderio.machines.common.blockentity.MachineStateType;
 import com.enderio.machines.common.blockentity.sync.MachineEnergyNetworkDataSlot;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.ImmutableMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import com.enderio.machines.common.lang.MachineLang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -74,8 +76,8 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
         // new new new new way of syncing energy storage.
         addDataSlot(createEnergyDataSlot());
 
-        updateMachineState(MachineState.NO_POWER, getEnergyStorage().getEnergyStored() <= 0);
-        updateMachineState(MachineState.NO_CAP, getCapacitorItem().isEmpty());
+        updateMachineState(new MachineState(MachineStateType.ERROR, MachineLang.TOOLTIP_NO_POWER), getEnergyStorage().getEnergyStored() <= 0);
+        updateMachineState(new MachineState(MachineStateType.USER_INPUT, MachineLang.TOOLTIP_NO_CAPACITOR), getCapacitorItem().isEmpty());
     }
 
     public NetworkDataSlot<?> createEnergyDataSlot() {
@@ -201,7 +203,8 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
             @Override
             protected void onContentsChanged() {
                 setChanged();
-                updateMachineState(MachineState.NO_POWER, getEnergyStored() <= 0);
+                updateMachineState(new MachineState(MachineStateType.ERROR, MachineLang.TOOLTIP_NO_POWER), getEnergyStorage().getEnergyStored() <= 0);
+
             }
         };
     }
@@ -278,7 +281,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
         MachineInventoryLayout inventoryLayout = getInventoryLayout();
         if (inventoryLayout != null && inventoryLayout.getCapacitorSlot() == slot) {
             if (requiresCapacitor()) {
-                updateMachineState(MachineState.NO_CAP, getCapacitorItem().isEmpty());
+                updateMachineState(new MachineState(MachineStateType.USER_INPUT, MachineLang.TOOLTIP_NO_CAPACITOR), getCapacitorItem().isEmpty());
                 capacitorCacheDirty = true;
             }
         }

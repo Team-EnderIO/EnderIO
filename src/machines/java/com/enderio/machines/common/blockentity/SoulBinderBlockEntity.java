@@ -17,6 +17,7 @@ import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
+import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.menu.SoulBinderMenu;
 import com.enderio.machines.common.recipe.RecipeCaches;
 import com.enderio.machines.common.recipe.SoulBindingRecipe;
@@ -127,7 +128,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
             @Override
             protected void onContentsChanged() {
                 craftingTaskHost.newTaskAvailable();
-                updateMachineState(MachineState.EMPTY_TANK, getFluidAmount() <= 0);
+                updateMachineState(new MachineState(MachineStateType.USER_INPUT, MachineLang.TOOLTIP_EMPTY_TANK), getFluidAmount() <= 0);
                 setChanged();
             }
 

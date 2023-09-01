@@ -13,6 +13,7 @@ import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.menu.SoulEngineMenu;
 import com.enderio.machines.common.souldata.EngineSoul;
 import net.minecraft.core.BlockPos;
@@ -63,8 +64,8 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
         addDataSlot(new ResourceLocationNetworkDataSlot(() -> this.getEntityType().orElse(NO_MOB),this::setEntityType));
         addDataSlot(new FluidStackNetworkDataSlot(getFluidTankNN()::getFluid, getFluidTankNN()::setFluid));
 
-        updateMachineState(MachineState.NO_POWER, false);
-        updateMachineState(MachineState.FULL_POWER, (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored()) && isCapacitorInstalled());
+        updateMachineState(new MachineState(MachineStateType.ERROR, MachineLang.TOOLTIP_NO_POWER), false);
+        updateMachineState(new MachineState(MachineStateType.ERROR, MachineLang.TOOLTIP_FULL_POWER), (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored()) && isCapacitorInstalled());
     }
 
     @Override
@@ -85,7 +86,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
             producePower();
         }
 
-        updateMachineState(MachineState.NO_SOUL, soulData == null || entityData.getEntityType().isEmpty());
+        updateMachineState(new MachineState(MachineStateType.USER_INPUT, MachineLang.TOOLTIP_NO_SOULBOUND), soulData == null || entityData.getEntityType().isEmpty());
         super.serverTick();
     }
 
@@ -120,7 +121,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
             @Override
             protected void onContentsChanged() {
                 super.onContentsChanged();
-                updateMachineState(MachineState.EMPTY_TANK, getFluidAmount() <= 0);
+                updateMachineState(new MachineState(MachineStateType.USER_INPUT, MachineLang.TOOLTIP_EMPTY_TANK), getFluidAmount() <= 0);
                 setChanged();
             }
 
@@ -176,7 +177,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
             @Override
             protected void onContentsChanged() {
                 setChanged();
-                updateMachineState(MachineState.FULL_POWER, (getEnergyStored() >= getMaxEnergyStored()) && isCapacitorInstalled());
+                updateMachineState(new MachineState(MachineStateType.ERROR, MachineLang.TOOLTIP_FULL_POWER), (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored()) && isCapacitorInstalled());
             }
         };
     }
