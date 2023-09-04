@@ -7,6 +7,21 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 public record MachineState(MachineStateType type, MutableComponent component) {
+
+    public static final MachineState ACTIVE = new MachineState(MachineStateType.ACTIVE, MachineLang.TOOLTIP_ACTIVE);
+    public static final MachineState IDLE = new MachineState(MachineStateType.IDLE, MachineLang.TOOLTIP_IDLE);
+    public static final MachineState EMPTY_INPUT = new MachineState(MachineStateType.IDLE, MachineLang.TOOLTIP_INPUT_EMPTY);
+    public static final MachineState NO_SOURCE = new MachineState(MachineStateType.ERROR, MachineLang.TOOLTIP_NO_SOURCE);
+    public static final MachineState EMPTY_TANK = new MachineState(MachineStateType.ERROR, MachineLang.TOOLTIP_EMPTY_TANK);
+    public static final MachineState FULL_TANK = new MachineState(MachineStateType.ERROR, MachineLang.TOOLTIP_FULL_TANK);
+    public static final MachineState NO_POWER = new MachineState(MachineStateType.ERROR, MachineLang.TOOLTIP_NO_POWER);
+    public static final MachineState FULL_POWER = new MachineState(MachineStateType.ERROR, MachineLang.TOOLTIP_FULL_POWER);
+    public static final MachineState NO_CAPACITOR = new MachineState(MachineStateType.ERROR, MachineLang.TOOLTIP_NO_CAPACITOR);
+    public static final MachineState NOT_SOULBOUND = new MachineState(MachineStateType.ERROR, MachineLang.TOOLTIP_NO_SOULBOUND);
+    public static final MachineState FULL_OUTPUT = new MachineState(MachineStateType.ERROR, MachineLang.TOOLTIP_OUTPUT_FULL);
+    public static final MachineState REDSTONE = new MachineState(MachineStateType.DISSABLED, MachineLang.TOOLTIP_BLOCKED_RESTONE);
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -44,7 +59,7 @@ public record MachineState(MachineStateType type, MutableComponent component) {
                 return new MachineState(MachineStateType.valueOf(nbt.getString("Type")), Component.translatable(nbt.getString("Compound")));
             }
         }
-        return new MachineState(MachineStateType.READY, MachineLang.TOOLTIP_ACTIVE);
+        return new MachineState(MachineStateType.ACTIVE, MachineLang.TOOLTIP_ACTIVE);
     }
 
     public void toBuffer(FriendlyByteBuf buf) {

@@ -38,7 +38,7 @@ public class ActiveWidget extends EIOWidget {
                 prio = machineState;
             }
         }
-        guiGraphics.blit(WIDGETS, x, y, 0, prio == null ? 0 : prio.type().getPriority()*16, 28*16, width, height, 256, 256);
+        guiGraphics.blit(WIDGETS, x, y, 0, prio == null ? 16 : prio.type().getPriority()*16, 28*16, width, height, 256, 256);
 
         //Stopped
         //guiGraphics.blit(WIDGETS, x, y, 0, 4*16, 28*16, width, height, 256, 256);
@@ -55,7 +55,7 @@ public class ActiveWidget extends EIOWidget {
         if (isHovered(mouseX, mouseY)) {
             List<Component> list = state.get().stream().map(s -> (Component) s.component()).toList();
             if (list.isEmpty()){
-                list = List.of(MachineLang.TOOLTIP_ACTIVE);
+                list = List.of(MachineLang.TOOLTIP_IDLE);
             }
             guiGraphics.renderTooltip(displayOn.getMinecraft().font, list, Optional.empty(), mouseX, mouseY);
         }

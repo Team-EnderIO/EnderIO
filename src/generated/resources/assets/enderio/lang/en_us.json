@@ -259,6 +259,7 @@
   "gui.enderio.fluid_conduit.change_fluid3": "Fluid: %s",
   "gui.enderio.full_power": "The energy storage is full",
   "gui.enderio.full_tank": "The tank is full",
+  "gui.enderio.idle": "The machine is ready to work",
   "gui.enderio.input_empty": "There is no item in the input",
   "gui.enderio.ioconfig": "IO Configuration",
   "gui.enderio.ioconfig.both": "Push / Pull",

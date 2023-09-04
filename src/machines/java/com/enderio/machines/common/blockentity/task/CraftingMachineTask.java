@@ -2,11 +2,9 @@ package com.enderio.machines.common.blockentity.task;
 
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.blockentity.MachineState;
-import com.enderio.machines.common.blockentity.MachineStateType;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
-import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.recipe.MachineRecipe;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -49,7 +47,8 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
         this.container = container;
         this.outputSlots = outputSlots;
         this.recipe = recipe;
-        inventory.updateMachineState(new MachineState(MachineStateType.USER_INPUT, MachineLang.TOOLTIP_OUTPUT_FULL), false);
+        inventory.updateMachineState(MachineState.FULL_OUTPUT, false);
+        inventory.updateMachineState(MachineState.EMPTY_INPUT, true);
     }
 
     public MachineInventory getInventory() {
@@ -109,9 +108,11 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
 
         // If we don't have a recipe match, complete the task and wait for a new one.
         if (!recipe.matches(container, level)) {
+            inventory.updateMachineState(MachineState.EMPTY_INPUT, true);
             isComplete = true;
             return;
         }
+        inventory.updateMachineState(MachineState.EMPTY_INPUT, false);
 
         // Try to consume as much energy as possible to finish the craft.
         if (progressMade < progressRequired) {
@@ -122,7 +123,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
         if (progressMade >= progressRequired) {
             // Attempt to complete the craft
             boolean placeOutputs = placeOutputs(outputs, false);
-            inventory.updateMachineState(new MachineState(MachineStateType.USER_INPUT, MachineLang.TOOLTIP_OUTPUT_FULL), !placeOutputs);
+            inventory.updateMachineState(MachineState.FULL_OUTPUT, !placeOutputs);
             if (placeOutputs) {
                 // Take the inputs
                 consumeInputs(recipe);

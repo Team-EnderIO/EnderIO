@@ -22,6 +22,8 @@ public class MachineLang {
     public static final MutableComponent TOOLTIP_SAG_MILL_CHANCE = REGISTRATE.addLang("gui", EnderIO.loc("sag_mill_chance"), "Chance: %s%%");
     public static final MutableComponent TOOLTIP_NO_SOULBOUND = REGISTRATE.addLang("gui", EnderIO.loc("no_soulbound"), "Bind a soul to the item to be able to use it");
     public static final MutableComponent TOOLTIP_ACTIVE = REGISTRATE.addLang("gui", EnderIO.loc("active"), "The machine is active");
+    public static final MutableComponent TOOLTIP_IDLE = REGISTRATE.addLang("gui", EnderIO.loc("idle"), "The machine is ready to work");
+
     public static final MutableComponent TOOLTIP_NO_CAPACITOR = REGISTRATE.addLang("gui", EnderIO.loc("no_capacitor"), "Install a capacitor to be able to use the machine");
     public static final MutableComponent TOOLTIP_NO_POWER = REGISTRATE.addLang("gui", EnderIO.loc("no_power"), "There is not enough power to use the machine");
     public static final MutableComponent TOOLTIP_FULL_POWER = REGISTRATE.addLang("gui", EnderIO.loc("full_power"), "The energy storage is full");

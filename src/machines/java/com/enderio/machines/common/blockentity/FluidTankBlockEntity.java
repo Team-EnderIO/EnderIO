@@ -8,7 +8,6 @@ import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
-import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.menu.FluidTankMenu;
 import com.enderio.machines.common.recipe.TankRecipe;
 import net.minecraft.core.BlockPos;
@@ -133,7 +132,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
             @Override
             protected void onContentsChanged() {
                 onTankContentsChanged();
-                updateMachineState(new MachineState(MachineStateType.USER_INPUT, MachineLang.TOOLTIP_EMPTY_TANK), getFluidAmount() <= 0);
+                updateMachineState(MachineState.EMPTY_TANK, getFluidAmount() <= 0);
                 super.onContentsChanged();
             }
         };
