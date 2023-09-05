@@ -1,4 +1,4 @@
-package com.enderio.machines.common.blockentity;
+-package com.enderio.machines.common.blockentity;
 
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.ExperienceUtil;
@@ -109,7 +109,9 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
         // fill recipes
         if (level != null) {
            List<TankRecipe> allRecipes = level.getRecipeManager().getAllRecipesFor(MachineRecipes.TANK.type().get());
-           return allRecipes.stream().anyMatch((recipe) -> recipe.isEmptying() && recipe.getInput().test(item));
+           if (allRecipes.stream().anyMatch((recipe) -> recipe.isEmptying() && recipe.getInput().test(item))) {
+            return true;
+           }
         }
 
         return false;
@@ -128,13 +130,17 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
         FluidStack fluid = fluidTank.getFluid();
 
         if (item.isDamageableItem() && !fluid.isEmpty() && fluid.getFluid().is(EIOTags.Fluids.EXPERIENCE)) {
-            return item.getEnchantmentLevel(Enchantments.MENDING) > 0;
+            if (item.getEnchantmentLevel(Enchantments.MENDING) > 0) {
+                return true;
+            }
         }
 
         // drain recipes
         if (level != null) {
             List<TankRecipe> allRecipes = level.getRecipeManager().getAllRecipesFor(MachineRecipes.TANK.type().get());
-            return allRecipes.stream().anyMatch((recipe) -> !recipe.isEmptying() && recipe.getInput().test(item));
+            if (allRecipes.stream().anyMatch((recipe) -> !recipe.isEmptying() && recipe.getInput().test(item))) {
+                return true;
+            }
         }
 
         return false;
