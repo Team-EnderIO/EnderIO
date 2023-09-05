@@ -33,6 +33,7 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Optional;
 
 // TODO: Rewrite this with tasks?
@@ -98,22 +99,42 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     // region Inventory
 
     public boolean acceptItemFill(ItemStack item) {
+        // bucket types
         Optional<IFluidHandlerItem> fluidHandlerCap = item.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
-        return fluidHandlerCap.isPresent();
-    }
 
-    public boolean acceptItemDrain(ItemStack item) {
-
-        Optional<IFluidHandlerItem> fluidHandlerCap = item.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
         if (fluidHandlerCap.isPresent()) {
             return true;
         }
 
+        // fill recipes
+        if (level != null) {
+           List<TankRecipe> allRecipes = level.getRecipeManager().getAllRecipesFor(MachineRecipes.TANK.type().get());
+           return allRecipes.stream().anyMatch((recipe) -> recipe.isEmptying() && recipe.getInput().test(item));
+        }
+
+        return false;
+    }
+
+    public boolean acceptItemDrain(ItemStack item) {
+        // bucket types
+        Optional<IFluidHandlerItem> fluidHandlerCap = item.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
+
+        if (fluidHandlerCap.isPresent()) {
+            return true;
+        }
+
+        // Mending
         FluidTank fluidTank = getFluidTankNN();
         FluidStack fluid = fluidTank.getFluid();
 
-        if (!fluid.isEmpty() && fluid.getFluid().is(EIOTags.Fluids.EXPERIENCE)) {
-            return item.isDamageableItem() && item.getEnchantmentLevel(Enchantments.MENDING) > 0;
+        if (item.isDamageableItem() && !fluid.isEmpty() && fluid.getFluid().is(EIOTags.Fluids.EXPERIENCE)) {
+            return item.getEnchantmentLevel(Enchantments.MENDING) > 0;
+        }
+
+        // drain recipes
+        if (level != null) {
+            List<TankRecipe> allRecipes = level.getRecipeManager().getAllRecipesFor(MachineRecipes.TANK.type().get());
+            return allRecipes.stream().anyMatch((recipe) -> !recipe.isEmptying() && recipe.getInput().test(item));
         }
 
         return false;
