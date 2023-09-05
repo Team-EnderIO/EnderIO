@@ -110,12 +110,12 @@ public class EIOItems {
 
     // region Crystals
 
-    public static final ItemEntry<MaterialItem> PULSATING_CRYSTAL = materialItemGlinted("pulsating_crystal").register();
-    public static final ItemEntry<MaterialItem> VIBRANT_CRYSTAL = materialItemGlinted("vibrant_crystal").register();
-    public static final ItemEntry<MaterialItem> ENDER_CRYSTAL = materialItemGlinted("ender_crystal").register();
-    public static final ItemEntry<MaterialItem> ENTICING_CRYSTAL = materialItemGlinted("enticing_crystal").register();
-    public static final ItemEntry<MaterialItem> WEATHER_CRYSTAL = materialItemGlinted("weather_crystal").register();
-    public static final ItemEntry<MaterialItem> PRESCIENT_CRYSTAL = materialItemGlinted("prescient_crystal").register();
+    public static final ItemEntry<MaterialItem> PULSATING_CRYSTAL = materialItemGlinted("pulsating_crystal").tag(EIOTags.Items.GEMS_PULSATING_CRYSTAL).register();
+    public static final ItemEntry<MaterialItem> VIBRANT_CRYSTAL = materialItemGlinted("vibrant_crystal").tag(EIOTags.Items.GEMS_VIBRANT_CRYSTAL).register();
+    public static final ItemEntry<MaterialItem> ENDER_CRYSTAL = materialItemGlinted("ender_crystal").tag(EIOTags.Items.GEMS_ENDER_CRYSTAL).register();
+    public static final ItemEntry<MaterialItem> ENTICING_CRYSTAL = materialItemGlinted("enticing_crystal").tag(EIOTags.Items.GEMS_ENTICING_CRYSTAL).register();
+    public static final ItemEntry<MaterialItem> WEATHER_CRYSTAL = materialItemGlinted("weather_crystal").tag(EIOTags.Items.GEMS_WEATHER_CRYSTAL).register();
+    public static final ItemEntry<MaterialItem> PRESCIENT_CRYSTAL = materialItemGlinted("prescient_crystal").tag(EIOTags.Items.GEMS_PRESCIENT_CRYSTAL).register();
 
     // endregion
 

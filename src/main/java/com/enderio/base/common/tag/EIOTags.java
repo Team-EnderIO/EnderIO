@@ -54,6 +54,13 @@ public class EIOTags {
         public static final TagKey<Item> DUSTS_GRAINS_OF_PIZEALLITY = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "dusts/grains_of_pizeallity"));
         public static final TagKey<Item> DUSTS_GRAINS_OF_THE_END = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "dusts/grains_of_the_end"));
 
+        public static final TagKey<Item> GEMS_PULSATING_CRYSTAL = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "gems/pulsating_crystal"));
+        public static final TagKey<Item> GEMS_VIBRANT_CRYSTAL = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "gems/vibrant_crystal"));
+        public static final TagKey<Item> GEMS_ENDER_CRYSTAL = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "gems/ender_crystal"));
+        public static final TagKey<Item> GEMS_ENTICING_CRYSTAL = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "gems/enticing_crystal"));
+        public static final TagKey<Item> GEMS_WEATHER_CRYSTAL = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "gems/weather_crystal"));
+        public static final TagKey<Item> GEMS_PRESCIENT_CRYSTAL = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "gems/prescient_crystal"));
+
         public static final TagKey<Item> INGOTS_CONDUCTIVE_ALLOY = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "ingots/conductive_alloy"));
         public static final TagKey<Item> INGOTS_COPPER_ALLOY = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "ingots/copper_alloy"));
         public static final TagKey<Item> INGOTS_DARK_STEEL = ItemTags.create(new ResourceLocation(ForgeVersion.MOD_ID, "ingots/dark_steel"));
