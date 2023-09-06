@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class FireCraftingRecipes extends EnderRecipeProvider {
-    public FireCraftingRecipes(PackOutput packOutput) {
+public class FireCraftingRecipeProvider extends EnderRecipeProvider {
+    public FireCraftingRecipeProvider(PackOutput packOutput) {
         super(packOutput);
     }
 

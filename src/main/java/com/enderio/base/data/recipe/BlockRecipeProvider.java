@@ -19,8 +19,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
-public class BlockRecipes extends RecipeProvider {
-    public BlockRecipes(PackOutput packOutput) {
+public class BlockRecipeProvider extends RecipeProvider {
+    public BlockRecipeProvider(PackOutput packOutput) {
         super(packOutput);
     }
 

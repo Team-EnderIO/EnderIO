@@ -21,8 +21,8 @@ import net.minecraftforge.common.Tags;
 
 import java.util.function.Consumer;
 
-public class MaterialRecipes extends RecipeProvider {
-    public MaterialRecipes(PackOutput packOutput) {
+public class MaterialRecipeProvider extends RecipeProvider {
+    public MaterialRecipeProvider(PackOutput packOutput) {
         super(packOutput);
     }
 

@@ -16,8 +16,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.Consumer;
 
-public class GlassRecipes extends RecipeProvider {
-    public GlassRecipes(PackOutput pOutput) {
+public class GlassRecipeProvider extends RecipeProvider {
+    public GlassRecipeProvider(PackOutput pOutput) {
         super(pOutput);
     }
 

@@ -12,9 +12,9 @@ import net.minecraftforge.common.Tags;
 
 import java.util.function.Consumer;
 
-public class ItemRecipes extends RecipeProvider {
+public class ItemRecipeProvider extends RecipeProvider {
 
-    public ItemRecipes(PackOutput packOutput) {
+    public ItemRecipeProvider(PackOutput packOutput) {
         super(packOutput);
     }
 
