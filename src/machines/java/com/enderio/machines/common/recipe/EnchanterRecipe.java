@@ -1,6 +1,7 @@
 package com.enderio.machines.common.recipe;
 
 import com.enderio.EnderIO;
+import com.enderio.core.common.recipes.CountedIngredient;
 import com.enderio.core.common.recipes.EnderRecipe;
 import com.enderio.machines.common.blockentity.EnchanterBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
@@ -14,7 +15,6 @@ import net.minecraft.world.Container;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -34,14 +34,12 @@ public class EnchanterRecipe implements EnderRecipe<Container> {
     private final ResourceLocation id;
     private final Enchantment enchantment;
     private final int costMultiplier;
-    private final Ingredient input;
-    private final int amountPerLevel;
+    private final CountedIngredient input;
 
-    public EnchanterRecipe(ResourceLocation id, Ingredient input, Enchantment enchantment, int amountPerLevel, int costMultiplier) {
+    public EnchanterRecipe(ResourceLocation id, CountedIngredient input, Enchantment enchantment, int costMultiplier) {
         this.id = id;
         this.input = input;
         this.enchantment = enchantment;
-        this.amountPerLevel = amountPerLevel;
         this.costMultiplier = costMultiplier;
     }
 
@@ -50,7 +48,7 @@ public class EnchanterRecipe implements EnderRecipe<Container> {
     /**
      * Get the input ingredient.
      */
-    public Ingredient getInput() {
+    public CountedIngredient getInput() {
         return input;
     }
 
@@ -59,13 +57,6 @@ public class EnchanterRecipe implements EnderRecipe<Container> {
      */
     public int getCostMultiplier() {
         return costMultiplier;
-    }
-
-    /**
-     * Get the input amount per level.
-     */
-    public int getAmountPerLevel() {
-        return amountPerLevel;
     }
 
     /**
@@ -83,7 +74,7 @@ public class EnchanterRecipe implements EnderRecipe<Container> {
      * Get the enchantment level based on the number of the input ingredient.
      */
     public int getEnchantmentLevel(int ingredientCount) {
-        return Math.min(ingredientCount / amountPerLevel, enchantment.getMaxLevel());
+        return Math.min(ingredientCount / input.count(), enchantment.getMaxLevel());
     }
 
     /**
@@ -100,7 +91,7 @@ public class EnchanterRecipe implements EnderRecipe<Container> {
      */
     public int getInputAmountConsumed(Container container) {
         if (matches(container, null)) {
-            return getEnchantmentLevel(EnchanterBlockEntity.CATALYST.getItemStack(container).getCount()) * this.amountPerLevel;
+            return getEnchantmentLevel(EnchanterBlockEntity.CATALYST.getItemStack(container).getCount()) * input.count();
         }
         return 0;
     }
@@ -152,7 +143,7 @@ public class EnchanterRecipe implements EnderRecipe<Container> {
         if (!EnchanterBlockEntity.BOOK.getItemStack(container).is(Items.WRITABLE_BOOK)) {
             return false;
         }
-        if (!input.test(EnchanterBlockEntity.CATALYST.getItemStack(container)) || EnchanterBlockEntity.CATALYST.getItemStack(container).getCount() < amountPerLevel) {
+        if (!input.test(EnchanterBlockEntity.CATALYST.getItemStack(container)) || EnchanterBlockEntity.CATALYST.getItemStack(container).getCount() < input.count()) {
             return false;
         }
         return EnchanterBlockEntity.LAPIS.getItemStack(container).is(Tags.Items.GEMS_LAPIS) && EnchanterBlockEntity.LAPIS.getItemStack(container).getCount() >= getLapisForLevel(
@@ -188,28 +179,26 @@ public class EnchanterRecipe implements EnderRecipe<Container> {
 
         @Override
         public EnchanterRecipe fromJson(ResourceLocation recipeId, JsonObject serializedRecipe) {
-            Ingredient ingredient = Ingredient.fromJson(serializedRecipe.get("input").getAsJsonObject());
+            CountedIngredient input = CountedIngredient.fromJson(serializedRecipe.get("input").getAsJsonObject());
             Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(serializedRecipe.get("enchantment").getAsString()));
             if (enchantment == null) {
                 throw new ResourceLocationException("The enchantment in " + recipeId + " does not exist");
             }
-            int amountPerLevel = serializedRecipe.get("amount").getAsInt();
             int costMultiplier = serializedRecipe.get("cost_multiplier").getAsInt();
-            return new EnchanterRecipe(recipeId, ingredient, enchantment, amountPerLevel, costMultiplier);
+            return new EnchanterRecipe(recipeId, input, enchantment, costMultiplier);
         }
 
         @Nullable
         @Override
         public EnchanterRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
             try {
-                Ingredient ingredient = Ingredient.fromNetwork(buffer);
+                CountedIngredient input = CountedIngredient.fromNetwork(buffer);
                 Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(buffer.readResourceLocation());
                 if (enchantment == null) {
                     throw new ResourceLocationException("The enchantment in " + recipeId + " does not exist");
                 }
-                int amount = buffer.readInt();
                 int level = buffer.readInt();
-                return new EnchanterRecipe(recipeId, ingredient, enchantment, amount, level);
+                return new EnchanterRecipe(recipeId, input, enchantment, level);
             } catch (Exception ex) {
                 EnderIO.LOGGER.error("Error reading enchanter recipe from packet.", ex);
                 throw ex;
@@ -221,7 +210,6 @@ public class EnchanterRecipe implements EnderRecipe<Container> {
             try {
                 recipe.getInput().toNetwork(buffer);
                 buffer.writeResourceLocation(Objects.requireNonNull(ForgeRegistries.ENCHANTMENTS.getKey(recipe.getEnchantment())));
-                buffer.writeInt(recipe.getAmountPerLevel());
                 buffer.writeInt(recipe.getCostMultiplier());
             } catch (Exception ex) {
                 EnderIO.LOGGER.error("Error writing enchanter recipe to packet.", ex);
