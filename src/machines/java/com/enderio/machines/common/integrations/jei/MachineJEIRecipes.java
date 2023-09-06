@@ -54,8 +54,8 @@ public class MachineJEIRecipes {
         }).toList();
     }
 
-    public List<SagMillingRecipe> getSagmillingRecipes() {
-        return recipeManager.getAllRecipesFor(MachineRecipes.SAGMILLING.type().get());
+    public List<SagMillingRecipe> getSagMillingRecipes() {
+        return recipeManager.getAllRecipesFor(MachineRecipes.SAG_MILLING.type().get());
     }
 
     public List<EngineSoul.SoulData> getMobGeneratorRecipes() {
