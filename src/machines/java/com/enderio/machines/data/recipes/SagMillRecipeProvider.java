@@ -331,11 +331,11 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
     }
     
     protected void build(String name, Ingredient input, List<SagMillingRecipe.OutputItem> outputs, int energy, Consumer<FinishedRecipe> recipeConsumer) {
-        build(EnderIO.loc("sagmilling/" + name), input, outputs, energy, BonusType.MULTIPLY_OUTPUT, recipeConsumer);
+        build(EnderIO.loc("sag_milling/" + name), input, outputs, energy, BonusType.MULTIPLY_OUTPUT, recipeConsumer);
     }
 
     protected void build(String name, Ingredient input, List<SagMillingRecipe.OutputItem> outputs, int energy, BonusType bonusType, Consumer<FinishedRecipe> recipeConsumer) {
-        build(EnderIO.loc("sagmilling/" + name), input, outputs, energy, bonusType, recipeConsumer);
+        build(EnderIO.loc("sag_milling/" + name), input, outputs, energy, bonusType, recipeConsumer);
     }
 
     protected void build(ResourceLocation id, Ingredient input, List<SagMillingRecipe.OutputItem> outputs, int energy, BonusType bonusType, Consumer<FinishedRecipe> recipeConsumer) {
@@ -453,7 +453,7 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
 
         @Override
         public RecipeSerializer<?> getType() {
-            return MachineRecipes.SAGMILLING.serializer().get();
+            return MachineRecipes.SAG_MILLING.serializer().get();
         }
     }
 }

@@ -55,7 +55,7 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
         addDataSlot(new IntegerNetworkDataSlot(() -> grindingBallDamage, i -> grindingBallDamage = i));
         addDataSlot(new ResourceLocationNetworkDataSlot(() -> grindingBallData.getGrindingBallId(), gId -> grindingBallData = GrindingBallManager.getData(gId)));
 
-        craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy, MachineRecipes.SAGMILLING.type().get(),
+        craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy, MachineRecipes.SAG_MILLING.type().get(),
             new SagMillingRecipe.Container(getInventoryNN(), this::getGrindingBallData), this::createTask);
     }
 
@@ -114,7 +114,7 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
     }
 
     private boolean isValidInput(int index, ItemStack stack) {
-        return RecipeCaches.SAGMILLING.hasRecipe(List.of(stack));
+        return RecipeCaches.SAG_MILLING.hasRecipe(List.of(stack));
     }
 
     @Override

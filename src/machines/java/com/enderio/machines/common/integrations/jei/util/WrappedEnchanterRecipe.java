@@ -26,10 +26,10 @@ public class WrappedEnchanterRecipe implements Recipe<Container> {
     }
 
     public List<ItemStack> getInputs() {
-        return Arrays.stream(recipe.getInput().getItems()).map(item -> {
-            var i = item.copy();
-            i.setCount(recipe.getAmountPerLevel() * level);
-            return i;
+        return recipe.getInput().getItems().stream().map(item -> {
+            var copy = item.copy();
+            copy.setCount(copy.getCount() * level);
+            return copy;
         }).toList();
     }
 
