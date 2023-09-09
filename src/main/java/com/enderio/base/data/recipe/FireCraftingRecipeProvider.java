@@ -29,6 +29,7 @@ public class FireCraftingRecipeProvider extends EnderRecipeProvider {
         finishedRecipeConsumer.accept(new FinishedFireRecipe(
             EnderIO.loc("fire_crafting/infinity"),
             EnderIO.loc("fire_crafting/infinity"),
+            1,
             List.of(Blocks.BEDROCK),
             List.of(),
             List.of(Level.OVERWORLD.location())));
@@ -37,14 +38,16 @@ public class FireCraftingRecipeProvider extends EnderRecipeProvider {
     protected static class FinishedFireRecipe extends EnderFinishedRecipe {
 
         private final ResourceLocation lootTable;
+        private final int maxItemDrops;
         private final List<Block> bases;
         private final List<TagKey<Block>> baseTags;
         private final List<ResourceLocation> dimensions;
 
-        public FinishedFireRecipe(ResourceLocation id, ResourceLocation lootTable, List<Block> bases, List<TagKey<Block>> baseTags,
+        public FinishedFireRecipe(ResourceLocation id, ResourceLocation lootTable, int maxItemDrops, List<Block> bases, List<TagKey<Block>> baseTags,
             List<ResourceLocation> dimensions) {
             super(id);
             this.lootTable = lootTable;
+            this.maxItemDrops = maxItemDrops;
             this.bases = bases;
             this.baseTags = baseTags;
             this.dimensions = dimensions;
@@ -75,6 +78,7 @@ public class FireCraftingRecipeProvider extends EnderRecipeProvider {
             }
 
             json.addProperty("loot_table", lootTable.toString());
+            json.addProperty("max_item_drops", maxItemDrops);
             json.add("base_blocks", basesJson);
             json.add("dimensions", dimensionsJson);
 
