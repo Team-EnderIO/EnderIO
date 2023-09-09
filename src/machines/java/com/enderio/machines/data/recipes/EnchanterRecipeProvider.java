@@ -3,6 +3,7 @@ package com.enderio.machines.data.recipes;
 import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOEnchantments;
 import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.recipe.RecipeDataUtil;
 import com.enderio.core.common.recipes.CountedIngredient;
 import com.enderio.core.data.recipes.EnderRecipeProvider;
@@ -32,7 +33,7 @@ public class EnchanterRecipeProvider extends EnderRecipeProvider {
     @Override
     protected void buildRecipes(Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
         //vanilla
-        build(Enchantments.ALL_DAMAGE_PROTECTION, CountedIngredient.of(16, EIOItems.DARK_STEEL_INGOT.get()), 1, pFinishedRecipeConsumer);
+        build(Enchantments.ALL_DAMAGE_PROTECTION, CountedIngredient.of(16, EIOTags.Items.INGOTS_DARK_STEEL), 1, pFinishedRecipeConsumer);
         build(Enchantments.FIRE_PROTECTION, CountedIngredient.of(16, Items.MAGMA_CREAM), 1, pFinishedRecipeConsumer); //TODO
         build(Enchantments.FALL_PROTECTION, CountedIngredient.of(Tags.Items.FEATHERS), 1, pFinishedRecipeConsumer);
         build(Enchantments.BLAST_PROTECTION, CountedIngredient.of(16, Items.GUNPOWDER), 1, pFinishedRecipeConsumer);
@@ -56,7 +57,7 @@ public class EnchanterRecipeProvider extends EnderRecipeProvider {
         build(Enchantments.POWER_ARROWS, CountedIngredient.of(12, Items.FLINT), 1, pFinishedRecipeConsumer);
         build(Enchantments.PUNCH_ARROWS, CountedIngredient.of(Tags.Items.STRING), 1, pFinishedRecipeConsumer);
         build(Enchantments.FLAMING_ARROWS, CountedIngredient.of(Tags.Items.NETHERRACK), 1, pFinishedRecipeConsumer);
-        build(Enchantments.INFINITY_ARROWS, CountedIngredient.of(EIOItems.GRAINS_OF_INFINITY.get()), 1, pFinishedRecipeConsumer);
+        build(Enchantments.INFINITY_ARROWS, CountedIngredient.of(EIOTags.Items.DUSTS_GRAINS_OF_INFINITY), 1, pFinishedRecipeConsumer);
         build(Enchantments.FISHING_LUCK, CountedIngredient.of(Tags.Items.GEMS_LAPIS), 1, pFinishedRecipeConsumer);
         build(Enchantments.FISHING_SPEED, CountedIngredient.of(ItemTags.FISHES), 1, pFinishedRecipeConsumer);
         build(Enchantments.SWEEPING_EDGE, CountedIngredient.of(8, Tags.Items.INGOTS_IRON), 1, pFinishedRecipeConsumer);
@@ -72,7 +73,7 @@ public class EnchanterRecipeProvider extends EnderRecipeProvider {
 
 
         //enderio
-        build(EIOEnchantments.SOULBOUND.get(), CountedIngredient.of(EIOItems.ENDER_CRYSTAL.get()), 1, pFinishedRecipeConsumer);
+        build(EIOEnchantments.SOULBOUND.get(), CountedIngredient.of(EIOTags.Items.GEMS_ENDER_CRYSTAL), 1, pFinishedRecipeConsumer);
         build(EIOEnchantments.WITHERING.get(), CountedIngredient.of(4, EIOItems.WITHERING_POWDER.get()), 1, pFinishedRecipeConsumer);
         build(EIOEnchantments.REPELLENT.get(), CountedIngredient.of(4, Items.ENDER_PEARL), 2, pFinishedRecipeConsumer);
         build(EIOEnchantments.AUTO_SMELT.get(), CountedIngredient.of(16, Items.BLAZE_POWDER), 1, pFinishedRecipeConsumer); //TODO

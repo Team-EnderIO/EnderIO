@@ -46,24 +46,24 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
         build1toN("gold", Tags.Items.INGOTS_GOLD, POWDERED_GOLD.get(), 1, finishedRecipeConsumer);
         build1toN("obsidian", Tags.Items.OBSIDIAN, POWDERED_OBSIDIAN.get(), 4, finishedRecipeConsumer);
         
-        build1toN("precient_crystal", PRESCIENT_CRYSTAL.get(), PRESCIENT_POWDER.get(), 1, finishedRecipeConsumer);
-        build1toN("vibrant_crystal", VIBRANT_CRYSTAL.get(), VIBRANT_POWDER.get(), 1, finishedRecipeConsumer);
-        build1toN("pulsating_crystal", PULSATING_CRYSTAL.get(), PULSATING_POWDER.get(), 1, finishedRecipeConsumer);
-        build1toN("ender_crystal", ENDER_CRYSTAL.get(), ENDER_CRYSTAL_POWDER.get(), 1, finishedRecipeConsumer);
+        build1toN("precient_crystal", EIOTags.Items.GEMS_PRESCIENT_CRYSTAL, PRESCIENT_POWDER.get(), 1, finishedRecipeConsumer);
+        build1toN("vibrant_crystal", EIOTags.Items.GEMS_VIBRANT_CRYSTAL, VIBRANT_POWDER.get(), 1, finishedRecipeConsumer);
+        build1toN("pulsating_crystal", EIOTags.Items.GEMS_PULSATING_CRYSTAL, PULSATING_POWDER.get(), 1, finishedRecipeConsumer);
+        build1toN("ender_crystal", EIOTags.Items.GEMS_ENDER_CRYSTAL, ENDER_CRYSTAL_POWDER.get(), 1, finishedRecipeConsumer);
         
-        build1toN("ender_pearl", ENDER_PEARL, POWDERED_ENDER_PEARL.get(), 9, finishedRecipeConsumer);
-        build1toN("blaze_powder", BLAZE_ROD, BLAZE_POWDER, 4, finishedRecipeConsumer);
-        build1toN("glass", GLASS, SAND, 1, finishedRecipeConsumer);
-        build1toN("bone_block",BONE_BLOCK, BONE_MEAL, 9, finishedRecipeConsumer);
-        build1toN("soularium", SOULARIUM_INGOT.get(), SOUL_POWDER.get(), 1, finishedRecipeConsumer);
+        build1toN("ender_pearl", Tags.Items.ENDER_PEARLS, POWDERED_ENDER_PEARL.get(), 9, finishedRecipeConsumer);
+        build1toN("blaze_powder", Tags.Items.RODS_BLAZE, BLAZE_POWDER, 4, finishedRecipeConsumer);
+        build1toN("glass", Tags.Items.GLASS, SAND, 1, finishedRecipeConsumer);
+        build1toN("bone_block", BONE_BLOCK, BONE_MEAL, 9, finishedRecipeConsumer);
+        build1toN("soularium", EIOTags.Items.INGOTS_SOULARIUM, SOUL_POWDER.get(), 1, finishedRecipeConsumer);
 
         buildOre("iron_ore", Ingredient.of(Tags.Items.ORES_IRON), POWDERED_IRON.get(), finishedRecipeConsumer);
         buildOre("gold_ore", Ingredient.of(Tags.Items.ORES_GOLD), POWDERED_GOLD.get(), finishedRecipeConsumer);
         buildOre("copper_ore", Ingredient.of(Tags.Items.ORES_COPPER), POWDERED_COPPER.get(), finishedRecipeConsumer);
 
-        build1toN("stone", STONE, COBBLESTONE, 1, finishedRecipeConsumer);
+        build1toN("stone", Tags.Items.STONE, COBBLESTONE, 1, finishedRecipeConsumer);
 
-        build("coal", Ingredient.of(COAL), List.of(
+        build("coal", Ingredient.of(ItemTags.COALS), List.of(
                 output(POWDERED_COAL.get()),
                 output(POWDERED_COAL.get(), 0.1f),
                 output(EIOTags.Items.DUSTS_SULFUR, 1, 0.1f, true)),
@@ -117,7 +117,7 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
             	output(POWDERED_QUARTZ.get(), 0.1f)
         		),BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
         
-        build("wheat", Ingredient.of(WHEAT), List.of(
+        build("wheat", Ingredient.of(Tags.Items.CROPS_WHEAT), List.of(
         		output(FLOUR.get()),
         		output(Tags.Items.SEEDS_WHEAT, 1, 0.2f, true)),
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
@@ -149,7 +149,7 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
         		output(GLOWSTONE_DUST, 0.8f)), 
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
         
-        build("bone", Ingredient.of(BONE), List.of(
+        build("bone", Ingredient.of(Tags.Items.BONES), List.of(
         		output(BONE_MEAL, 6), 
         		output(BONE_MEAL, 2, 0.1f)), 
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);

@@ -50,8 +50,8 @@ public class MaterialRecipeProvider extends RecipeProvider {
             .pattern(" NG")
             .pattern("NSN")
             .pattern("GN ")
-            .define('N', EIOItems.DARK_STEEL_NUGGET)
-            .define('G', EIOItems.GRAINS_OF_INFINITY)
+            .define('N', EIOTags.Items.NUGGETS_DARK_STEEL)
+            .define('G', EIOTags.Items.DUSTS_GRAINS_OF_INFINITY)
             .define('S', Items.STICK)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GRAINS_OF_INFINITY.get()))
             .save(recipeConsumer);
@@ -60,7 +60,7 @@ public class MaterialRecipeProvider extends RecipeProvider {
             .pattern(" S ")
             .pattern("Q Q")
             .pattern(" Q ")
-            .define('S', EIOItems.SOULARIUM_INGOT)
+            .define('S', EIOTags.Items.INGOTS_SOULARIUM)
             .define('Q', EIOTags.Items.FUSED_QUARTZ)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.SOULARIUM_INGOT.get()))
             .save(recipeConsumer);
@@ -75,7 +75,7 @@ public class MaterialRecipeProvider extends RecipeProvider {
             .pattern("RPR")
             .pattern("PIP")
             .pattern("RPR")
-            .define('R', EIOItems.REDSTONE_ALLOY_INGOT)
+            .define('R', EIOTags.Items.INGOTS_REDSTONE_ALLOY)
             .define('P', Ingredient.of(Items.PAPER, EIOItems.BLACK_PAPER))
             .define('I', Tags.Items.INGOTS_IRON)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.REDSTONE_ALLOY_INGOT))
@@ -190,7 +190,7 @@ public class MaterialRecipeProvider extends RecipeProvider {
             .pattern("NIN")
             .pattern("GN ")
             .define('N', Tags.Items.NUGGETS_GOLD)
-            .define('G', EIOItems.GRAINS_OF_INFINITY.get())
+            .define('G', EIOTags.Items.DUSTS_GRAINS_OF_INFINITY)
             .define('I', Tags.Items.INGOTS_COPPER)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GRAINS_OF_INFINITY.get()))
             .save(recipeConsumer);
@@ -200,7 +200,7 @@ public class MaterialRecipeProvider extends RecipeProvider {
             .pattern(" I ")
             .pattern("CDC")
             .pattern(" I ")
-            .define('I', EIOItems.ENERGETIC_ALLOY_INGOT.get())
+            .define('I', EIOTags.Items.INGOTS_ENERGETIC_ALLOY)
             .define('C', EIOItems.BASIC_CAPACITOR.get())
             .define('D', EIOTags.Items.DUSTS_COAL)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.BASIC_CAPACITOR.get()))
@@ -211,7 +211,7 @@ public class MaterialRecipeProvider extends RecipeProvider {
             .pattern(" I ")
             .pattern("CGC")
             .pattern(" I ")
-            .define('I', EIOItems.VIBRANT_ALLOY_INGOT.get())
+            .define('I', EIOTags.Items.INGOTS_VIBRANT_ALLOY)
             .define('C', EIOItems.DOUBLE_LAYER_CAPACITOR.get())
             .define('G', Items.GLOWSTONE)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DOUBLE_LAYER_CAPACITOR.get()))
@@ -224,7 +224,7 @@ public class MaterialRecipeProvider extends RecipeProvider {
             .pattern("PPP")
             .pattern("PDP")
             .pattern("PPP")
-            .define('P', EIOItems.PULSATING_ALLOY_NUGGET.get())
+            .define('P', EIOTags.Items.INGOTS_PULSATING_ALLOY)
             .define('D', Tags.Items.GEMS_DIAMOND)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PULSATING_ALLOY_NUGGET.get()))
             .save(recipeConsumer);
@@ -234,7 +234,7 @@ public class MaterialRecipeProvider extends RecipeProvider {
             .pattern("PPP")
             .pattern("PDP")
             .pattern("PPP")
-            .define('P', EIOItems.VIBRANT_ALLOY_NUGGET.get())
+            .define('P', EIOTags.Items.INGOTS_VIBRANT_ALLOY)
             .define('D', Tags.Items.GEMS_EMERALD)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.VIBRANT_ALLOY_NUGGET.get()))
             .save(recipeConsumer);
@@ -244,9 +244,9 @@ public class MaterialRecipeProvider extends RecipeProvider {
             .pattern(" P ")
             .pattern("VEV")
             .pattern(" P ")
-            .define('P', EIOItems.PULSATING_CRYSTAL.get())
-            .define('V', EIOItems.VIBRANT_CRYSTAL.get())
-            .define('E', EIOItems.ENDER_CRYSTAL.get())
+            .define('P', EIOTags.Items.GEMS_PULSATING_CRYSTAL)
+            .define('V', EIOTags.Items.GEMS_VIBRANT_CRYSTAL)
+            .define('E', EIOTags.Items.GEMS_ENDER_CRYSTAL)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PULSATING_CRYSTAL.get()))
             .save(recipeConsumer);
     }
@@ -283,7 +283,7 @@ public class MaterialRecipeProvider extends RecipeProvider {
             .pattern("IGI")
             .pattern(" I ")
             .define('I', Tags.Items.COBBLESTONE)
-            .define('G', EIOItems.GEAR_WOOD.get())
+            .define('G', EIOTags.Items.GEARS_WOOD)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GEAR_WOOD.get()))
             .save(recipeConsumer, new ResourceLocation(EnderIO.MODID, EIOItems.GEAR_STONE.getId().getPath() + "_upgrade"));
 
@@ -297,15 +297,15 @@ public class MaterialRecipeProvider extends RecipeProvider {
     }
 
     private void addGrindingBalls(Consumer<FinishedRecipe> recipeConsumer) {
-        grindingBall(recipeConsumer, EIOItems.DARK_STEEL_BALL.get(), EIOItems.DARK_STEEL_INGOT.get());
-        grindingBall(recipeConsumer, EIOItems.SOULARIUM_BALL.get(), EIOItems.SOULARIUM_INGOT.get());
-        grindingBall(recipeConsumer, EIOItems.CONDUCTIVE_ALLOY_BALL.get(), EIOItems.CONDUCTIVE_ALLOY_INGOT.get());
-        grindingBall(recipeConsumer, EIOItems.PULSATING_ALLOY_BALL.get(), EIOItems.PULSATING_ALLOY_INGOT.get());
-        grindingBall(recipeConsumer, EIOItems.REDSTONE_ALLOY_BALL.get(), EIOItems.REDSTONE_ALLOY_INGOT.get());
-        grindingBall(recipeConsumer, EIOItems.ENERGETIC_ALLOY_BALL.get(), EIOItems.ENERGETIC_ALLOY_INGOT.get());
-        grindingBall(recipeConsumer, EIOItems.VIBRANT_ALLOY_BALL.get(), EIOItems.VIBRANT_ALLOY_INGOT.get());
-        grindingBall(recipeConsumer, EIOItems.COPPER_ALLOY_BALL.get(), EIOItems.COPPER_ALLOY_INGOT.get());
-        grindingBall(recipeConsumer, EIOItems.END_STEEL_BALL.get(), EIOItems.END_STEEL_INGOT.get());
+        grindingBall(recipeConsumer, EIOItems.DARK_STEEL_BALL.get(), EIOTags.Items.INGOTS_DARK_STEEL, EIOItems.DARK_STEEL_INGOT.get());
+        grindingBall(recipeConsumer, EIOItems.SOULARIUM_BALL.get(), EIOTags.Items.INGOTS_SOULARIUM, EIOItems.SOULARIUM_INGOT.get());
+        grindingBall(recipeConsumer, EIOItems.CONDUCTIVE_ALLOY_BALL.get(), EIOTags.Items.INGOTS_CONDUCTIVE_ALLOY, EIOItems.CONDUCTIVE_ALLOY_INGOT.get());
+        grindingBall(recipeConsumer, EIOItems.PULSATING_ALLOY_BALL.get(), EIOTags.Items.INGOTS_PULSATING_ALLOY, EIOItems.PULSATING_ALLOY_INGOT.get());
+        grindingBall(recipeConsumer, EIOItems.REDSTONE_ALLOY_BALL.get(), EIOTags.Items.INGOTS_REDSTONE_ALLOY, EIOItems.REDSTONE_ALLOY_INGOT.get());
+        grindingBall(recipeConsumer, EIOItems.ENERGETIC_ALLOY_BALL.get(), EIOTags.Items.INGOTS_ENERGETIC_ALLOY, EIOItems.ENERGETIC_ALLOY_INGOT.get());
+        grindingBall(recipeConsumer, EIOItems.VIBRANT_ALLOY_BALL.get(), EIOTags.Items.INGOTS_VIBRANT_ALLOY, EIOItems.VIBRANT_ALLOY_INGOT.get());
+        grindingBall(recipeConsumer, EIOItems.COPPER_ALLOY_BALL.get(), EIOTags.Items.INGOTS_COPPER_ALLOY, EIOItems.COPPER_ALLOY_INGOT.get());
+        grindingBall(recipeConsumer, EIOItems.END_STEEL_BALL.get(), EIOTags.Items.INGOTS_END_STEEL, EIOItems.END_STEEL_INGOT.get());
     }
 
     // region Helpers
@@ -359,13 +359,13 @@ public class MaterialRecipeProvider extends RecipeProvider {
             .save(recipeConsumer);
     }
 
-    private void grindingBall(Consumer<FinishedRecipe> recipeConsumer, Item result, ItemLike input) {
+    private void grindingBall(Consumer<FinishedRecipe> recipeConsumer, Item result, TagKey<Item> input, ItemLike trigger) {
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, result, 24)
             .pattern(" I ")
             .pattern("III")
             .pattern(" I ")
             .define('I', input)
-            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(input))
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(trigger))
             .save(recipeConsumer);
     }
 

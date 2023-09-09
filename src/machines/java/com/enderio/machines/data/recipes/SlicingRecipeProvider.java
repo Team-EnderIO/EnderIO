@@ -3,6 +3,7 @@ package com.enderio.machines.data.recipes;
 import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.recipe.RecipeDataUtil;
 import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.enderio.machines.common.init.MachineRecipes;
@@ -34,30 +35,30 @@ public class SlicingRecipeProvider extends EnderRecipeProvider {
         // TODO: Tormented enderman head
 
         build(EIOItems.ZOMBIE_ELECTRODE.get(), List.of(
-            Ingredient.of(EIOItems.ENERGETIC_ALLOY_INGOT.get()), Ingredient.of(Items.ZOMBIE_HEAD), Ingredient.of(EIOItems.ENERGETIC_ALLOY_INGOT.get()),
-            Ingredient.of(EIOItems.SILICON.get()), Ingredient.of(EIOItems.BASIC_CAPACITOR.get()), Ingredient.of(EIOItems.SILICON.get())
+            Ingredient.of(EIOTags.Items.INGOTS_ENERGETIC_ALLOY), Ingredient.of(Items.ZOMBIE_HEAD), Ingredient.of(EIOTags.Items.INGOTS_ENERGETIC_ALLOY),
+            Ingredient.of(EIOTags.Items.SILICON), Ingredient.of(EIOItems.BASIC_CAPACITOR.get()), Ingredient.of(EIOTags.Items.SILICON)
         ), 20000, finishedRecipeConsumer);
 
         build(EIOItems.Z_LOGIC_CONTROLLER.get(), List.of(
-            Ingredient.of(EIOItems.SOULARIUM_INGOT.get()), Ingredient.of(Items.ZOMBIE_HEAD), Ingredient.of(EIOItems.SOULARIUM_INGOT.get()),
-            Ingredient.of(EIOItems.SILICON.get()), Ingredient.of(Items.REDSTONE), Ingredient.of(EIOItems.SILICON.get())
+            Ingredient.of(EIOTags.Items.INGOTS_SOULARIUM), Ingredient.of(Items.ZOMBIE_HEAD), Ingredient.of(EIOTags.Items.INGOTS_SOULARIUM),
+            Ingredient.of(EIOTags.Items.SILICON), Ingredient.of(Items.REDSTONE), Ingredient.of(EIOTags.Items.SILICON)
         ), 20000, finishedRecipeConsumer);
 
         // TODO: Ender resonator
 
         build(EIOItems.SKELETAL_CONTRACTOR.get(), List.of(
-            Ingredient.of(EIOItems.SOULARIUM_INGOT.get()), Ingredient.of(Items.SKELETON_SKULL), Ingredient.of(EIOItems.SOULARIUM_INGOT.get()),
+            Ingredient.of(EIOTags.Items.INGOTS_SOULARIUM), Ingredient.of(Items.SKELETON_SKULL), Ingredient.of(EIOTags.Items.INGOTS_SOULARIUM),
             Ingredient.of(Items.ROTTEN_FLESH), Ingredient.of(EIOItems.BASIC_CAPACITOR.get()), Ingredient.of(Items.ROTTEN_FLESH)
         ), 20000, finishedRecipeConsumer);
 
         build(EIOItems.GUARDIAN_DIODE.get(), List.of(
-            Ingredient.of(EIOItems.ENERGETIC_ALLOY_INGOT.get()), Ingredient.of(Tags.Items.DUSTS_PRISMARINE), Ingredient.of(EIOItems.ENERGETIC_ALLOY_INGOT.get()),
+            Ingredient.of(EIOTags.Items.INGOTS_ENERGETIC_ALLOY), Ingredient.of(Tags.Items.DUSTS_PRISMARINE), Ingredient.of(EIOTags.Items.INGOTS_ENERGETIC_ALLOY),
             Ingredient.of(Tags.Items.GEMS_PRISMARINE), Ingredient.of(EIOItems.BASIC_CAPACITOR.get()), Ingredient.of(Tags.Items.GEMS_PRISMARINE)
         ), 20000, finishedRecipeConsumer);
 
         build(EIOItems.ENDER_RESONATOR.get(), List.of(
-            Ingredient.of(EIOItems.SOULARIUM_INGOT.get()), Ingredient.of(EIOBlocks.ENDERMAN_HEAD), Ingredient.of(EIOItems.SOULARIUM_INGOT.get()), //TODO EnderSkull
-            Ingredient.of(EIOItems.SILICON.get()), Ingredient.of(EIOItems.VIBRANT_ALLOY_INGOT.get()), Ingredient.of(EIOItems.SILICON.get())
+            Ingredient.of(EIOTags.Items.INGOTS_SOULARIUM), Ingredient.of(EIOBlocks.ENDERMAN_HEAD), Ingredient.of(EIOTags.Items.INGOTS_SOULARIUM), //TODO EnderSkull
+            Ingredient.of(EIOTags.Items.SILICON), Ingredient.of(EIOItems.VIBRANT_ALLOY_INGOT.get()), Ingredient.of(EIOTags.Items.SILICON)
         ), 20000, finishedRecipeConsumer);
 
     }

@@ -10,6 +10,8 @@ import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
@@ -36,7 +38,7 @@ public class BlockRecipeProvider extends RecipeProvider {
     private void buildChassisRecipes(Consumer<FinishedRecipe> recipeConsumer) {
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOBlocks.VOID_CHASSIS.get())
             .define('B', Blocks.IRON_BARS)
-            .define('G', EIOItems.GRAINS_OF_INFINITY.get())
+            .define('G', EIOTags.Items.DUSTS_GRAINS_OF_INFINITY)
             .define('I', Tags.Items.INGOTS_IRON)
             .pattern("BIB")
             .pattern("IGI")
@@ -47,7 +49,7 @@ public class BlockRecipeProvider extends RecipeProvider {
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EIOBlocks.ENSOULED_CHASSIS.get())
             .define('C', EIOBlocks.SOUL_CHAIN.get())
             .define('Q', Tags.Items.GEMS_QUARTZ)
-            .define('I', EIOItems.SOULARIUM_INGOT.get())
+            .define('I', EIOTags.Items.INGOTS_SOULARIUM)
             .pattern("CIC")
             .pattern("IQI")
             .pattern("CIC")
@@ -58,8 +60,8 @@ public class BlockRecipeProvider extends RecipeProvider {
     private void buildBuildingRecipes(Consumer<FinishedRecipe> recipeConsumer) {
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, EIOBlocks.SOUL_CHAIN.get(), 2)
             .define('Q', EIOTags.Items.DUSTS_QUARTZ)
-            .define('N', EIOItems.SOULARIUM_NUGGET.get())
-            .define('I', EIOItems.SOULARIUM_INGOT.get())
+            .define('N', EIOTags.Items.NUGGETS_SOULARIUM)
+            .define('I', EIOTags.Items.INGOTS_SOULARIUM)
             .pattern(" N ")
             .pattern("QIQ")
             .pattern(" N ")
@@ -71,7 +73,7 @@ public class BlockRecipeProvider extends RecipeProvider {
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.BUILDING_BLOCKS, EIOBlocks.DARK_STEEL_LADDER.get(), 12)
-            .define('I', EIOItems.DARK_STEEL_INGOT.get())
+            .define('I', EIOTags.Items.INGOTS_DARK_STEEL)
             .pattern(" I ")
             .pattern(" I ")
             .pattern(" I ")
@@ -80,23 +82,23 @@ public class BlockRecipeProvider extends RecipeProvider {
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.BUILDING_BLOCKS, EIOBlocks.DARK_STEEL_BARS.get(), 16)
-            .define('I', EIOItems.DARK_STEEL_INGOT.get())
+            .define('I', EIOTags.Items.INGOTS_DARK_STEEL)
             .pattern("III")
             .pattern("III")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DARK_STEEL_INGOT.get()))
             .save(recipeConsumer);
 
         ShapedRecipeBuilder
-            .shaped(RecipeCategory.BUILDING_BLOCKS, EIOBlocks.DARK_STEEL_TRAPDOOR.get(), 1)
-            .define('I', EIOItems.DARK_STEEL_INGOT.get())
+            .shaped(RecipeCategory.BUILDING_BLOCKS, EIOBlocks.DARK_STEEL_TRAPDOOR, 1)
+            .define('I', EIOTags.Items.INGOTS_DARK_STEEL)
             .pattern("II")
             .pattern("II")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DARK_STEEL_INGOT.get()))
             .save(recipeConsumer);
 
         ShapedRecipeBuilder
-            .shaped(RecipeCategory.BUILDING_BLOCKS, EIOBlocks.DARK_STEEL_DOOR.get(), 3)
-            .define('I', EIOItems.DARK_STEEL_INGOT.get())
+            .shaped(RecipeCategory.BUILDING_BLOCKS, EIOBlocks.DARK_STEEL_DOOR, 3)
+            .define('I', EIOTags.Items.INGOTS_DARK_STEEL)
             .pattern("II")
             .pattern("II")
             .pattern("II")
@@ -104,8 +106,8 @@ public class BlockRecipeProvider extends RecipeProvider {
             .save(recipeConsumer);
 
         ShapedRecipeBuilder
-            .shaped(RecipeCategory.BUILDING_BLOCKS, EIOBlocks.END_STEEL_BARS.get(), 12)
-            .define('I', EIOItems.END_STEEL_INGOT.get())
+            .shaped(RecipeCategory.BUILDING_BLOCKS, EIOBlocks.END_STEEL_BARS, 12)
+            .define('I', EIOTags.Items.INGOTS_END_STEEL)
             .pattern("III")
             .pattern("III")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.END_STEEL_INGOT.get()))
@@ -113,8 +115,8 @@ public class BlockRecipeProvider extends RecipeProvider {
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.BUILDING_BLOCKS, EIOBlocks.REINFORCED_OBSIDIAN.get())
-            .define('B', EIOBlocks.DARK_STEEL_BARS.get())
-            .define('G', EIOItems.GRAINS_OF_INFINITY.get())
+            .define('B', EIOBlocks.DARK_STEEL_BARS)
+            .define('G', EIOTags.Items.DUSTS_GRAINS_OF_INFINITY)
             .define('O', Tags.Items.OBSIDIAN)
             .pattern("GBG")
             .pattern("BOB")
@@ -125,10 +127,10 @@ public class BlockRecipeProvider extends RecipeProvider {
 
     private void addPressurePlateRecipes(Consumer<FinishedRecipe> recipeConsumer) {
         //eio plates
-        addPressurePlateRecipe(recipeConsumer, EIOBlocks.DARK_STEEL_PRESSURE_PLATE, EIOItems.DARK_STEEL_INGOT::get);
+        addPressurePlateRecipe(recipeConsumer, EIOBlocks.DARK_STEEL_PRESSURE_PLATE, EIOTags.Items.INGOTS_DARK_STEEL, EIOItems.DARK_STEEL_INGOT);
         addSilentPressurePlateRecipe(recipeConsumer, EIOBlocks.SILENT_DARK_STEEL_PRESSURE_PLATE, EIOBlocks.DARK_STEEL_PRESSURE_PLATE.get());
-        addPressurePlateRecipe(recipeConsumer, EIOBlocks.SOULARIUM_PRESSURE_PLATE, EIOItems.SOULARIUM_INGOT::get);
-        addSilentPressurePlateRecipe(recipeConsumer, EIOBlocks.SILENT_SOULARIUM_PRESSURE_PLATE, EIOBlocks.SOULARIUM_PRESSURE_PLATE.get());
+        addPressurePlateRecipe(recipeConsumer, EIOBlocks.SOULARIUM_PRESSURE_PLATE, EIOTags.Items.INGOTS_SOULARIUM, EIOItems.SOULARIUM_INGOT);
+        addSilentPressurePlateRecipe(recipeConsumer, EIOBlocks.SILENT_SOULARIUM_PRESSURE_PLATE, EIOBlocks.SOULARIUM_PRESSURE_PLATE);
         //wooden silent plates
         addSilentPressurePlateRecipe(recipeConsumer, EIOBlocks.SILENT_OAK_PRESSURE_PLATE, Blocks.OAK_PRESSURE_PLATE);
         addSilentPressurePlateRecipe(recipeConsumer, EIOBlocks.SILENT_ACACIA_PRESSURE_PLATE, Blocks.ACACIA_PRESSURE_PLATE);
@@ -144,6 +146,15 @@ public class BlockRecipeProvider extends RecipeProvider {
         //wighted silent plates
         addSilentPressurePlateRecipe(recipeConsumer, EIOBlocks.SILENT_HEAVY_WEIGHTED_PRESSURE_PLATE, Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE);
         addSilentPressurePlateRecipe(recipeConsumer, EIOBlocks.SILENT_LIGHT_WEIGHTED_PRESSURE_PLATE, Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE);
+    }
+
+    private void addPressurePlateRecipe(Consumer<FinishedRecipe> recipeConsumer, BlockEntry<? extends Block> result, TagKey<Item> ingredient, ItemLike trigger) {
+        ShapedRecipeBuilder
+            .shaped(RecipeCategory.BUILDING_BLOCKS, result.get().asItem())
+            .define('#', ingredient)
+            .pattern("##")
+            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(trigger))
+            .save(recipeConsumer);
     }
 
     private void addPressurePlateRecipe(Consumer<FinishedRecipe> recipeConsumer, BlockEntry<? extends Block> result, ItemLike ingredient) {
