@@ -8,5 +8,5 @@
   "dimensions": [
     "minecraft:overworld"
   ],
-  "lootTable": "enderio:fire_crafting/infinity"
+  "loot_table": "enderio:fire_crafting/infinity"
 }

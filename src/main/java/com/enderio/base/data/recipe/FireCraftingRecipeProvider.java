@@ -74,7 +74,7 @@ public class FireCraftingRecipeProvider extends EnderRecipeProvider {
                 dimensionsJson.add(dimension.toString());
             }
 
-            json.addProperty("lootTable", lootTable.toString());
+            json.addProperty("loot_table", lootTable.toString());
             json.add("base_blocks", basesJson);
             json.add("dimensions", dimensionsJson);
 

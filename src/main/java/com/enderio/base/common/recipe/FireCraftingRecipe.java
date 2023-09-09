@@ -106,7 +106,7 @@ public class FireCraftingRecipe implements EnderRecipe<Container> {
 
         @Override
         public FireCraftingRecipe fromJson(ResourceLocation recipeId, JsonObject serializedRecipe) {
-            ResourceLocation lootTable = new ResourceLocation(serializedRecipe.get("lootTable").getAsString());
+            ResourceLocation lootTable = new ResourceLocation(serializedRecipe.get("loot_table").getAsString());
 
             List<Block> baseBlocks = new ArrayList<>();
             List<TagKey<Block>> baseTags = new ArrayList<>();
