@@ -2,7 +2,7 @@
   "type": "enderio:sag_milling",
   "energy": 2400,
   "input": {
-    "item": "enderio:prescient_crystal"
+    "tag": "forge:gems/prescient_crystal"
   },
   "outputs": [
     {
