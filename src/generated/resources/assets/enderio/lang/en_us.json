@@ -454,6 +454,8 @@
   "itemGroup.enderio.machines": "Ender IO Machines",
   "itemGroup.enderio.main": "Ender IO",
   "itemGroup.enderio.souls": "Ender IO Souls",
+  "jei.enderio.fire_crafting.loot_table": "Loot Table:",
+  "jei.enderio.fire_crafting.max_drops": "Max Item Drops:",
   "jei.enderio.fire_crafting.title": "Fire Crafting",
   "jei.enderio.fire_crafting.valid_blocks": "Valid Blocks:",
   "jei.enderio.fire_crafting.valid_dimensions": "Valid Dimensions:",

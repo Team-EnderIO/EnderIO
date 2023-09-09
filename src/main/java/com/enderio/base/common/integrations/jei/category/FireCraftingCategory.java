@@ -26,6 +26,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -120,7 +121,15 @@ public class FireCraftingCategory implements IRecipeCategory<FireCraftingRecipe>
         block.addIngredients(Ingredient.of(recipe.getBases().toArray(Block[]::new)));
 
         // TODO: Get and display chance
-        IRecipeSlotBuilder output = builder.addSlot(RecipeIngredientRole.OUTPUT, 88, 39);
+        IRecipeSlotBuilder output = builder.addSlot(RecipeIngredientRole.OUTPUT, 88, 39).addTooltipCallback((slowView, tooltip) -> {
+            Component lootTableComponent = MutableComponent.create(EIOLang.JEI_FIRE_CRAFTING_LOOT_TABLE.getContents())
+                .append(Component.literal(" " + recipe.getLootTable()));
+            Component maxDropsComponent = MutableComponent.create(EIOLang.JEI_FIRE_CRAFTING_MAX_DROPS.getContents())
+                .append(Component.literal(" " + recipe.getMaxItemDrops()));
+            tooltip.clear();
+            tooltip.add(lootTableComponent);
+            tooltip.add(maxDropsComponent);
+        });
         output.addItemStack(EIOItems.GRAINS_OF_INFINITY.asStack()); // TODO: Fetch the output from the loot table instead...
 
         IRecipeSlotBuilder catalyst = builder.addSlot(RecipeIngredientRole.CATALYST, 88, 8).setSlotName("catalyst");
