@@ -1,8 +1,9 @@
 package com.enderio.machines.common.menu;
 
-import com.enderio.machines.common.blockentity.FarmingStationBlockEntity;
+import com.enderio.machines.common.blockentity.farming.FarmingStationBlockEntity;
 import com.enderio.machines.common.init.MachineMenus;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -10,15 +11,26 @@ import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 
 public class FarmingStationMenu extends MachineMenu<FarmingStationBlockEntity> {
+
+    public static final ResourceLocation BLOCK_ATLAS = new ResourceLocation("textures/atlas/blocks.png");
+    public static final ResourceLocation EMPTY_HOE = new ResourceLocation("item/empty_slot_hoe");
+    public static final ResourceLocation EMPTY_AXE = new ResourceLocation("item/empty_slot_axe");
+    public static final ResourceLocation EMPTY_SHEARS = new ResourceLocation("item/empty_slot_shears");
     public FarmingStationMenu(@Nullable FarmingStationBlockEntity blockEntity, Inventory inventory, int pContainerId) {
         super(blockEntity, inventory, MachineMenus.FARMING_STATION.get(), pContainerId);
         if (blockEntity != null) {
+
             addSlot(new MachineSlot(blockEntity.getInventory(), blockEntity.getCapacitorSlot(), 12 + 42, 60));
 
             //Tool slots
-            addSlot(new MachineSlot(blockEntity.getInventory(), FarmingStationBlockEntity.HOE, 44 + 42, 19));
-            addSlot(new MachineSlot(blockEntity.getInventory(), FarmingStationBlockEntity.AXE, 62 + 42, 19));
+            addSlot(new MachineSlot(blockEntity.getInventory(), FarmingStationBlockEntity.HOE, 44 + 42, 19)
+                .setBackground(BLOCK_ATLAS, EMPTY_HOE));
+
+            addSlot(new MachineSlot(blockEntity.getInventory(), FarmingStationBlockEntity.AXE, 62 + 42, 19)
+                .setBackground(BLOCK_ATLAS, EMPTY_AXE));
+
             addSlot(new MachineSlot(blockEntity.getInventory(), FarmingStationBlockEntity.SHEARS, 80 + 42, 19));
+
 
             //Bonemeal slots
             for (int i = 0; i < 2; i++) {

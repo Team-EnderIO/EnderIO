@@ -4,6 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.machines.common.blockentity.*;
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorBankBlockEntity;
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorTier;
+import com.enderio.machines.common.blockentity.farming.FarmingStationBlockEntity;
 import com.enderio.machines.common.blockentity.solar.SolarPanelBlockEntity;
 import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
 import com.google.common.collect.ImmutableMap;
