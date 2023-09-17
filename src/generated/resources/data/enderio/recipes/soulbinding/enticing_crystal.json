@@ -4,7 +4,7 @@
   "entity_type": "minecraft:villager",
   "exp": 4,
   "input": {
-    "item": "minecraft:emerald"
+    "tag": "forge:gems/emerald"
   },
   "output": "enderio:enticing_crystal"
 }

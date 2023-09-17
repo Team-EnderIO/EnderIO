@@ -6,13 +6,13 @@
       "item": "enderio:advanced_capacitor_bank"
     },
     "C": {
-      "item": "enderio:vibrant_crystal"
+      "tag": "forge:gems/vibrant_crystal"
     },
     "O": {
       "item": "enderio:octadic_capacitor"
     },
     "V": {
-      "item": "enderio:vibrant_alloy_ingot"
+      "tag": "forge:ingots/vibrant_alloy"
     }
   },
   "pattern": [

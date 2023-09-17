@@ -2,7 +2,7 @@
   "type": "enderio:sag_milling",
   "energy": 2400,
   "input": {
-    "item": "enderio:ender_crystal"
+    "tag": "forge:gems/ender_crystal"
   },
   "outputs": [
     {

@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "G": {
-      "item": "enderio:wood_gear"
+      "tag": "forge:gears/wood"
     },
     "I": {
       "tag": "forge:cobblestone"

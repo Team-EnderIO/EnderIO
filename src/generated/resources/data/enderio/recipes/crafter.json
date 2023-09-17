@@ -6,7 +6,7 @@
       "item": "enderio:void_chassis"
     },
     "G": {
-      "item": "enderio:iron_gear"
+      "tag": "forge:gears/stone"
     },
     "I": {
       "tag": "forge:ingots/iron"

@@ -5,7 +5,7 @@
   "input": {
     "count": 1,
     "ingredient": {
-      "item": "enderio:ender_crystal"
+      "tag": "forge:gems/ender_crystal"
     }
   }
 }

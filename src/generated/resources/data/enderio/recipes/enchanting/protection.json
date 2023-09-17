@@ -5,7 +5,7 @@
   "input": {
     "count": 16,
     "ingredient": {
-      "item": "enderio:dark_steel_ingot"
+      "tag": "forge:ingots/dark_steel"
     }
   }
 }

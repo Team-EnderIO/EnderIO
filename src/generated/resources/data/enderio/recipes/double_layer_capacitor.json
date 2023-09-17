@@ -9,7 +9,7 @@
       "tag": "forge:dusts/coal"
     },
     "I": {
-      "item": "enderio:energetic_alloy_ingot"
+      "tag": "forge:ingots/energetic_alloy"
     }
   },
   "pattern": [

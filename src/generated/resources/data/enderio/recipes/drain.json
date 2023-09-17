@@ -9,10 +9,10 @@
       "tag": "enderio:clear_glass"
     },
     "G": {
-      "item": "enderio:iron_gear"
+      "tag": "forge:gears/stone"
     },
     "I": {
-      "item": "enderio:copper_alloy_ingot"
+      "tag": "forge:ingots/copper_alloy"
     },
     "V": {
       "item": "enderio:void_chassis"

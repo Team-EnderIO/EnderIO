@@ -9,7 +9,7 @@
       "tag": "enderio:fused_quartz"
     },
     "I": {
-      "item": "enderio:dark_steel_ingot"
+      "tag": "forge:ingots/dark_steel"
     }
   },
   "pattern": [

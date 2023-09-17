@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "I": {
-      "item": "enderio:soularium_ingot"
+      "tag": "forge:ingots/soularium"
     }
   },
   "pattern": [

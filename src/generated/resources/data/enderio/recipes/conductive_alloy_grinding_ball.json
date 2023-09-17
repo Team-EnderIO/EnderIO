@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "I": {
-      "item": "enderio:conductive_alloy_ingot"
+      "tag": "forge:ingots/conductive_alloy"
     }
   },
   "pattern": [

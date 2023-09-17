@@ -3,7 +3,7 @@
   "category": "building",
   "key": {
     "#": {
-      "item": "enderio:soularium_ingot"
+      "tag": "forge:ingots/soularium"
     }
   },
   "pattern": [

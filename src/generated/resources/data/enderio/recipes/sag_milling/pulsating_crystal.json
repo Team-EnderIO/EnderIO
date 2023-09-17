@@ -2,7 +2,7 @@
   "type": "enderio:sag_milling",
   "energy": 2400,
   "input": {
-    "item": "enderio:pulsating_crystal"
+    "tag": "forge:gems/pulsating_crystal"
   },
   "outputs": [
     {

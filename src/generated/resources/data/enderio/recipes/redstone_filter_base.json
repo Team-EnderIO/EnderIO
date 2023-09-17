@@ -14,7 +14,7 @@
       }
     ],
     "R": {
-      "item": "enderio:redstone_alloy_ingot"
+      "tag": "forge:ingots/redstone_alloy"
     }
   },
   "pattern": [
