@@ -2,4 +2,4 @@
 @net.minecraft.MethodsReturnNonnullByDefault
 @com.tterrag.registrate.util.nullness.FieldsAreNonnullByDefault
 
-package com.enderio.conduits.common.integrations;
+package com.enderio.core.common.integration;
