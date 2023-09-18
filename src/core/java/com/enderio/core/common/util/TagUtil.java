@@ -1,7 +1,7 @@
 package com.enderio.core.common.util;
 
 import com.enderio.core.EnderCore;
-import com.enderio.core.common.compat.AlmostUnifiedCompat;
+import com.enderio.core.common.integration.Integrations;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -20,7 +20,7 @@ public class TagUtil {
      * - If we found nothing in our specified lists, we will pick the first present item.
      */
     public static Optional<Item> getOptionalItem(TagKey<Item> tagKey) {
-        Item preferredItem = AlmostUnifiedCompat.getPreferredItemForTag(tagKey);
+        Item preferredItem = Integrations.almostUnifiedIntegration.expectPresent().getPreferredItemForTag(tagKey);
         if (preferredItem != null)
             return Optional.of(preferredItem);
 
