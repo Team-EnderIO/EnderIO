@@ -30,12 +30,14 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 @SuppressWarnings("unused")
 @Mod.EventBusSubscriber(modid = EnderIO.MODID)
 public class FireCraftingHandler {
     private static final Random RANDOM = new Random();
-    private static final Map<FireIndex, Long> FIRE_TRACKER = new HashMap<>();
+    private static final ConcurrentMap<FireIndex, Long> FIRE_TRACKER = new ConcurrentHashMap<>();
 
     private static List<FireCraftingRecipe> cachedRecipes;
     private static boolean recipesCached = false;
