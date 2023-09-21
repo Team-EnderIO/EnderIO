@@ -1,4 +1,4 @@
--package com.enderio.machines.common.blockentity;
+package com.enderio.machines.common.blockentity;
 
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.ExperienceUtil;
