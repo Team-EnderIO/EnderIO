@@ -23,8 +23,8 @@ import com.enderio.base.common.network.EIONetwork;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.EIODataProvider;
 import com.enderio.base.data.advancement.EIOAdvancementGenerator;
-import com.enderio.base.data.loot.EIOLootModifiersProvider;
 import com.enderio.base.data.loot.ChestLootProvider;
+import com.enderio.base.data.loot.EIOLootModifiersProvider;
 import com.enderio.base.data.loot.FireCraftingLootProvider;
 import com.enderio.base.data.recipe.BlockRecipes;
 import com.enderio.base.data.recipe.FireCraftingRecipes;
@@ -140,12 +140,12 @@ public class EnderIO {
 
         EIODataProvider provider = new EIODataProvider("base");
 
-        provider.addSubProvider(event.includeServer(), new MaterialRecipes(packOutput));
-        provider.addSubProvider(event.includeServer(), new BlockRecipes(packOutput));
-        provider.addSubProvider(event.includeServer(), new ItemRecipes(packOutput));
+        provider.addSubProvider(event.includeServer(), new MaterialRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new BlockRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new ItemRecipeProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new GrindingBallRecipeProvider(packOutput));
-        provider.addSubProvider(event.includeServer(), new GlassRecipes(packOutput));
-        provider.addSubProvider(event.includeServer(), new FireCraftingRecipes(packOutput));
+        provider.addSubProvider(event.includeServer(), new GlassRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new FireCraftingRecipeProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new EIOLootModifiersProvider(packOutput));
 
         var b = new EIOBlockTagsProvider(packOutput, lookupProvider, existingFileHelper);

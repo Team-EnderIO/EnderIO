@@ -3,7 +3,7 @@
   "category": "building",
   "key": {
     "I": {
-      "item": "enderio:end_steel_ingot"
+      "tag": "forge:ingots/end_steel"
     }
   },
   "pattern": [

@@ -4,6 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.init.EIORecipes;
 import com.enderio.base.common.recipe.FireCraftingRecipe;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -95,21 +96,26 @@ public class FireCraftingHandler {
                 FIRE_TRACKER.putIfAbsent(fireIndex, gameTime + BaseConfig.COMMON.INFINITY.FIRE_MIN_AGE.get());
             } else if (FIRE_TRACKER.containsKey(fireIndex)) {
                 if (level.getBlockState(pos).isAir() && gameTime > FIRE_TRACKER.get(fireIndex)) {
-                    spawnInfinityDrops(level, pos, matchingRecipe.getLootTable());
+                    spawnInfinityDrops(level, pos, matchingRecipe.getLootTable(), matchingRecipe.getMaxItemDrops());
                 }
                 FIRE_TRACKER.remove(fireIndex);
             }
         }
     }
 
-    public static void spawnInfinityDrops(ServerLevel level, BlockPos pos, ResourceLocation lootTable) {
+    public static void spawnInfinityDrops(ServerLevel level, BlockPos pos, ResourceLocation lootTable, int maxItemDrops) {
         LootParams lootparams = (new LootParams.Builder(level)).withParameter(LootContextParams.ORIGIN, pos.getCenter()).create(
             LootContextParamSets.COMMAND);
 
         LootTable table = level.getServer().getLootData().getElement(LootDataType.TABLE, lootTable);
 
         if (table != null && table != LootTable.EMPTY) {
-            for (ItemStack item : table.getRandomItems(lootparams)) {
+            ObjectArrayList<ItemStack> randomItems = table.getRandomItems(lootparams);
+            for (int i = 0; i < randomItems.size(); i++) {
+                if (i >= maxItemDrops)
+                    break;
+                ItemStack item = randomItems.get(i);
+
                 // Get random offset
                 double x = RANDOM.nextFloat() * 0.5f + 0.25f;
                 double y = RANDOM.nextFloat() * 0.5f + 0.25f;

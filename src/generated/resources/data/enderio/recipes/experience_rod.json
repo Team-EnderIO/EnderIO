@@ -3,10 +3,10 @@
   "category": "equipment",
   "key": {
     "E": {
-      "item": "enderio:energetic_alloy_ingot"
+      "tag": "forge:ingots/energetic_alloy"
     },
     "I": {
-      "item": "enderio:soularium_ingot"
+      "tag": "forge:ingots/soularium"
     }
   },
   "pattern": [

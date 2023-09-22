@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class SagMillScreen extends EIOScreen<SagMillMenu> {
-    public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/sagmill.png");
+    public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/sag_mill.png");
 
     public SagMillScreen(SagMillMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);

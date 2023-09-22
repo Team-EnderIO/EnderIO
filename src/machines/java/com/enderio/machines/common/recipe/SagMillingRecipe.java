@@ -152,12 +152,12 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return MachineRecipes.SAGMILLING.serializer().get();
+        return MachineRecipes.SAG_MILLING.serializer().get();
     }
 
     @Override
     public RecipeType<?> getType() {
-        return MachineRecipes.SAGMILLING.type().get();
+        return MachineRecipes.SAG_MILLING.type().get();
     }
 
     public enum BonusType {

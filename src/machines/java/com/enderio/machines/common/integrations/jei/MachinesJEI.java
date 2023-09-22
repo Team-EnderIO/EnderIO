@@ -69,7 +69,7 @@ public class MachinesJEI implements IModPlugin {
         registration.addRecipes(AlloySmeltingCategory.TYPE, recipes.getAlloySmeltingRecipesWithSmelting());
         registration.addRecipes(EnchanterCategory.TYPE, recipes.getEnchanterRecipes());
         registration.addRecipes(PrimitiveAlloySmeltingCategory.TYPE, recipes.getAlloySmeltingRecipes());
-        registration.addRecipes(SagMillCategory.TYPE, recipes.getSagmillingRecipes());
+        registration.addRecipes(SagMillCategory.TYPE, recipes.getSagMillingRecipes());
         registration.addRecipes(SlicingRecipeCategory.TYPE, recipes.getSlicingRecipes());
         registration.addRecipes(SoulBindingCategory.TYPE, recipes.getSoulBindingRecipes());
         registration.addRecipes(TankCategory.TYPE, recipes.getTankRecipes());

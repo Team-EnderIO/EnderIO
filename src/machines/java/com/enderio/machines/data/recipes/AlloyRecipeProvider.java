@@ -49,13 +49,13 @@ public class AlloyRecipeProvider extends EnderRecipeProvider {
 
         build(new ItemStack(EIOItems.ENERGETIC_ALLOY_INGOT.get()), List.of(CountedIngredient.of(Tags.Items.DUSTS_REDSTONE), CountedIngredient.of(Tags.Items.INGOTS_GOLD), CountedIngredient.of(Tags.Items.DUSTS_GLOWSTONE)), 4800, 0.3f, pFinishedRecipeConsumer);
         build(new ItemStack(EIOItems.COPPER_ALLOY_INGOT.get()), List.of(CountedIngredient.of(Tags.Items.INGOTS_COPPER), CountedIngredient.of(EIOTags.Items.SILICON)), 3200, 0.3f, pFinishedRecipeConsumer);
-        build(new ItemStack(EIOItems.VIBRANT_ALLOY_INGOT.get()), List.of(CountedIngredient.of(EIOItems.ENERGETIC_ALLOY_INGOT.get()), CountedIngredient.of(Tags.Items.ENDER_PEARLS)), 4800, 0.3f, pFinishedRecipeConsumer);
+        build(new ItemStack(EIOItems.VIBRANT_ALLOY_INGOT.get()), List.of(CountedIngredient.of(EIOTags.Items.INGOTS_ENERGETIC_ALLOY), CountedIngredient.of(Tags.Items.ENDER_PEARLS)), 4800, 0.3f, pFinishedRecipeConsumer);
         build(new ItemStack(EIOItems.REDSTONE_ALLOY_INGOT.get()), List.of(CountedIngredient.of(Tags.Items.DUSTS_REDSTONE), CountedIngredient.of(EIOTags.Items.SILICON)), 3200, 0.3f, pFinishedRecipeConsumer);
-        build(new ItemStack(EIOItems.CONDUCTIVE_ALLOY_INGOT.get()), List.of(CountedIngredient.of(EIOItems.COPPER_ALLOY_INGOT.get()), CountedIngredient.of(Tags.Items.INGOTS_IRON), CountedIngredient.of(Tags.Items.DUSTS_REDSTONE)), 4800, 0.3f, pFinishedRecipeConsumer);
+        build(new ItemStack(EIOItems.CONDUCTIVE_ALLOY_INGOT.get()), List.of(CountedIngredient.of(EIOTags.Items.INGOTS_COPPER_ALLOY), CountedIngredient.of(Tags.Items.INGOTS_IRON), CountedIngredient.of(Tags.Items.DUSTS_REDSTONE)), 4800, 0.3f, pFinishedRecipeConsumer);
         build(new ItemStack(EIOItems.PULSATING_ALLOY_INGOT.get()), List.of(CountedIngredient.of(Tags.Items.INGOTS_IRON), CountedIngredient.of(Tags.Items.ENDER_PEARLS)), 4800, 0.3f, pFinishedRecipeConsumer);
         build(new ItemStack(EIOItems.DARK_STEEL_INGOT.get()), List.of(CountedIngredient.of(Tags.Items.INGOTS_IRON), CountedIngredient.of(EIOTags.Items.DUSTS_COAL), CountedIngredient.of(Tags.Items.OBSIDIAN)), 6400, 0.3f, pFinishedRecipeConsumer);
         build(new ItemStack(EIOItems.SOULARIUM_INGOT.get()), List.of(CountedIngredient.of(Items.SOUL_SAND, Items.SOUL_SOIL), CountedIngredient.of(Tags.Items.INGOTS_GOLD)), 5600, 0.3f, pFinishedRecipeConsumer);
-        build(new ItemStack(EIOItems.END_STEEL_INGOT.get()), List.of(CountedIngredient.of(Tags.Items.END_STONES), CountedIngredient.of(EIOItems.DARK_STEEL_INGOT.get()), CountedIngredient.of(Tags.Items.OBSIDIAN)), 6400, 0.3f, pFinishedRecipeConsumer);
+        build(new ItemStack(EIOItems.END_STEEL_INGOT.get()), List.of(CountedIngredient.of(Tags.Items.END_STONES), CountedIngredient.of(EIOTags.Items.INGOTS_DARK_STEEL), CountedIngredient.of(Tags.Items.OBSIDIAN)), 6400, 0.3f, pFinishedRecipeConsumer);
 
         // endregion
 
