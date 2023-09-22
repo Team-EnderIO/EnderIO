@@ -46,24 +46,31 @@ public class TravelStaffItem extends Item implements IMultiCapabilityItem, IAdva
     }
 
     @Override
-    public InteractionResult useOn(UseOnContext context) {if (getActivationStatus(context.getItemInHand()).isBlock()) {
-        if (context.getPlayer() != null && tryPerformAction(context.getLevel(), context.getPlayer(), context.getItemInHand())) {
-            return InteractionResult.sidedSuccess(context.getLevel().isClientSide());
+    public InteractionResult useOn(UseOnContext context) {
+        if (getActivationStatus(context.getItemInHand()).isBlock()) {
+            if (context.getPlayer() != null && tryPerformAction(context.getLevel(), context.getPlayer(), context.getItemInHand())) {
+                return InteractionResult.sidedSuccess(context.getLevel().isClientSide());
+            }
+
+            return InteractionResult.FAIL;
         }
-        return InteractionResult.FAIL;
-    }
+
         return super.useOn(context);
     }
 
     private boolean tryPerformAction(Level level, Player player, ItemStack stack) {
         if (hasResources(stack)) {
             if (performAction(level, player,stack)) {
-                if (!level.isClientSide())
+                if (!level.isClientSide()) {
                     consumeResources(stack);
+                }
+
                 return true;
             }
+
             return false;
         }
+
         return false;
     }
 
@@ -143,7 +150,8 @@ public class TravelStaffItem extends Item implements IMultiCapabilityItem, IAdva
     protected enum ActivationStatus {
         BLOCK(true, false), AIR(false, true), ALL(true, true);
 
-        private final boolean isBlock, isAir;
+        private final boolean isBlock;
+        private final boolean isAir;
 
         ActivationStatus(boolean isBlock, boolean isAir) {
             this.isBlock = isBlock;

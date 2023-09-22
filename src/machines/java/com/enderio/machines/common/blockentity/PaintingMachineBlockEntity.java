@@ -104,8 +104,10 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
     private boolean isValidPaint(int index, ItemStack stack) {
         if (stack.getItem() instanceof BlockItem blockItem) {
             Block block = blockItem.getBlock();
-            if (block instanceof IPaintedBlock)
+            if (block instanceof IPaintedBlock) {
                 return false;
+            }
+
             return block.defaultBlockState().getOcclusionShape(level, getBlockPos()) == Shapes.block();
         }
         return false;
@@ -139,8 +141,9 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
 
             @Override
             protected boolean placeOutputs(List<OutputStack> outputs, boolean simulate) {
-                if (getLevel() == null || getLevel().isClientSide)
+                if (getLevel() == null || getLevel().isClientSide) {
                     return super.placeOutputs(outputs, simulate);
+                }
 
                 Optional<String> s = outputs
                     .stream()

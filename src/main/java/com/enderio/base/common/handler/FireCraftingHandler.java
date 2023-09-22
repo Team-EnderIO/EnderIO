@@ -29,7 +29,10 @@ import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -80,8 +83,9 @@ public class FireCraftingHandler {
                 }
             }
 
-            if (matchingRecipe == null)
+            if (matchingRecipe == null) {
                 return;
+            }
 
             if (isFire) {
                 // If we're tracking lots of fire, look at culling the herd.
@@ -101,16 +105,17 @@ public class FireCraftingHandler {
     }
 
     public static void spawnInfinityDrops(ServerLevel level, BlockPos pos, ResourceLocation lootTable, int maxItemDrops) {
-        LootParams lootparams = (new LootParams.Builder(level)).withParameter(LootContextParams.ORIGIN, pos.getCenter()).create(
-            LootContextParamSets.COMMAND);
+        LootParams lootparams = (new LootParams.Builder(level)).withParameter(LootContextParams.ORIGIN, pos.getCenter()).create(LootContextParamSets.COMMAND);
 
         LootTable table = level.getServer().getLootData().getElement(LootDataType.TABLE, lootTable);
 
         if (table != null && table != LootTable.EMPTY) {
             ObjectArrayList<ItemStack> randomItems = table.getRandomItems(lootparams);
             for (int i = 0; i < randomItems.size(); i++) {
-                if (i >= maxItemDrops)
+                if (i >= maxItemDrops) {
                     break;
+                }
+
                 ItemStack item = randomItems.get(i);
 
                 // Get random offset
@@ -121,7 +126,7 @@ public class FireCraftingHandler {
                 itemEntity.setDefaultPickUpDelay();
 
                 // Make it survive the fire for a bit
-                itemEntity.hurt(itemEntity.damageSources().inFire(),  -100);
+                itemEntity.hurt(itemEntity.damageSources().inFire(), -100);
 
                 // Actually set it on fire
                 itemEntity.setRemainingFireTicks(10);

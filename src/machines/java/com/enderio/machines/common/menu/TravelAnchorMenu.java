@@ -20,8 +20,10 @@ public class TravelAnchorMenu extends MachineMenu<TravelAnchorBlockEntity> {
 
     public static TravelAnchorMenu factory(@Nullable MenuType<TravelAnchorMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
-        if (entity instanceof TravelAnchorBlockEntity castBlockEntity)
+        if (entity instanceof TravelAnchorBlockEntity castBlockEntity) {
             return new TravelAnchorMenu(castBlockEntity, inventory, pContainerId);
+        }
+
         LogManager.getLogger().warn("couldn't find BlockEntity");
         return new TravelAnchorMenu(null, inventory, pContainerId);
     }

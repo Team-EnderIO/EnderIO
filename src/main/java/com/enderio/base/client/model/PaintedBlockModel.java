@@ -24,14 +24,24 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.*;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.block.state.properties.SlabType;
 import net.minecraftforge.client.ChunkRenderTypeSet;
 import net.minecraftforge.client.model.IDynamicBakedModel;
 import net.minecraftforge.client.model.IQuadTransformer;
 import net.minecraftforge.client.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 public class PaintedBlockModel implements IDynamicBakedModel {
 
@@ -130,8 +140,9 @@ public class PaintedBlockModel implements IDynamicBakedModel {
         if (paint != null) {
             BakedModel model = getModel(paint.defaultBlockState());
             TextureAtlasSprite sprite = model.getParticleIcon(ModelData.EMPTY);
-            if (!sprite.contents().name().getPath().equals("missingno"))
+            if (!sprite.contents().name().getPath().equals("missingno")) {
                 return sprite;
+            }
         }
 
         if (data.has(DoublePaintedBlockEntity.PAINT2)) {
@@ -220,16 +231,22 @@ public class PaintedBlockModel implements IDynamicBakedModel {
      */
     private BlockState replicateState(@Nullable BlockState selfState) {
         BlockState toState = reference.defaultBlockState();
-        if (selfState == null)
+        if (selfState == null) {
             return toState;
+        }
+
         for (Property<?> property : selfState.getProperties()) {
             if (property instanceof BooleanProperty booleanProperty && toState.hasProperty(booleanProperty)) {
                 toState = toState.setValue(booleanProperty, selfState.getValue(booleanProperty));
             }
+
+            //noinspection rawtypes,unchecked
             if (property instanceof EnumProperty enumProperty && toState.hasProperty(enumProperty)) {
+                //noinspection unchecked
                 toState = toState.setValue(enumProperty, selfState.getValue(enumProperty));
             }
         }
+
         return toState;
     }
 

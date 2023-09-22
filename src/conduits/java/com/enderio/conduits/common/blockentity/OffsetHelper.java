@@ -59,25 +59,40 @@ public class OffsetHelper {
             EnderIO.LOGGER.warn(ThrowableUtil.addStackTrace(new IndexOutOfBoundsException("higher index than existing types")));
             return Vector2i.ZERO;
         }
+
         if (typeIndex < 0) {
             EnderIO.LOGGER.warn(ThrowableUtil.addStackTrace(new IndexOutOfBoundsException("negative index")));
             return Vector2i.ZERO;
         }
-        if (maxTypes == 1)
+
+        if (maxTypes == 1) {
             return Vector2i.ZERO;
-        if (maxTypes == 2)
+        }
+
+        if (maxTypes == 2) {
             return typeIndex == 0 ? new Vector2i(0, -1) : new Vector2i(0, 1);
+        }
+
         if (maxTypes == 3) {
             switch (typeIndex) {
-                case 0: return new Vector2i(-1, -1);
-                case 1: return Vector2i.ZERO;
-                case 2: return new Vector2i(1, 1);
+                case 0 -> {
+                    return new Vector2i(-1, -1);
+                }
+                case 1 -> {
+                    return Vector2i.ZERO;
+                }
+                case 2 -> {
+                    return new Vector2i(1, 1);
+                }
+                default -> throw new IllegalStateException();
             }
         }
+
         if (maxTypes < 9) {
             Vector2i vector2i = positions.get(typeIndex + 1);
-            if (vector2i != null)
+            if (vector2i != null) {
                 return vector2i;
+            }
         }
 
         EnderIO.LOGGER.warn(ThrowableUtil.addStackTrace(new IndexOutOfBoundsException("fallback was applied")));
@@ -95,11 +110,15 @@ public class OffsetHelper {
     public static Direction.Axis findMainAxis(ConduitBundle bundle) {
         List<Direction> connectedDirs = new ArrayList<>();
         for (Direction dir: Direction.values()) {
-            if (!bundle.getConnection(dir).getConnectedTypes().isEmpty())
+            if (!bundle.getConnection(dir).getConnectedTypes().isEmpty()) {
                 connectedDirs.add(dir);
+            }
         }
-        if (connectedDirs.isEmpty())
+
+        if (connectedDirs.isEmpty()) {
             return Direction.Axis.Z;
+        }
+
         //get Last as MainAxis, because those are the horizontal ones
         return connectedDirs.get(connectedDirs.size()-1).getAxis();
     }

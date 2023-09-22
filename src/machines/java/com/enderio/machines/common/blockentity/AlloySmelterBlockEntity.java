@@ -264,8 +264,9 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
                     for (int i = 0; i < 3; i++) {
 
                         // If this ingredient has been matched already, continue
-                        if (consumed[i])
+                        if (consumed[i]) {
                             continue;
+                        }
 
                         if (i < inputs.size()) {
                             // If we expect an input, test we have a match for it.
@@ -315,8 +316,9 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
             // Get alloy smelting recipe (Default)
             if (getMode().canAlloy()) {
                 var recipe = super.findRecipe();
-                if (recipe.isPresent())
+                if (recipe.isPresent()) {
                     return recipe;
+                }
             }
 
             // Get vanilla smelting recipe.
@@ -324,8 +326,9 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
                 for (int i = 0; i < AlloySmelterBlockEntity.INPUTS.size(); i++) {
                     var recipe = level.getRecipeManager()
                         .getRecipeFor(RecipeType.SMELTING, new ContainerSubWrapper(getContainer(), i), level);
-                    if (recipe.isPresent() && IntegrationManager.allMatch(integration -> integration.acceptSmeltingRecipe(recipe.get())))
+                    if (recipe.isPresent() && IntegrationManager.allMatch(integration -> integration.acceptSmeltingRecipe(recipe.get()))) {
                         return Optional.of(new VanillaAlloySmeltingRecipe(recipe.get()));
+                    }
                 }
             }
             return Optional.empty();
@@ -375,8 +378,10 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
         @Override
         public ItemStack getItem(int slot) {
-            if (slot != 0)
+            if (slot != 0) {
                 return ItemStack.EMPTY;
+            }
+
             return AlloySmelterBlockEntity.INPUTS.get(index).getItemStack(wrapper);
         }
 

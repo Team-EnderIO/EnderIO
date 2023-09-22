@@ -36,10 +36,11 @@ public class WiredChargerMenu extends MachineMenu<WiredChargerBlockEntity> {
     public static WiredChargerMenu factory(@Nullable MenuType<WiredChargerMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
 
-        if (entity instanceof WiredChargerBlockEntity castBlockEntity)
+        if (entity instanceof WiredChargerBlockEntity castBlockEntity) {
             return new WiredChargerMenu(castBlockEntity, inventory, pContainerId);
-        LogManager.getLogger().warn("couldn't find BlockEntity");
+        }
 
+        LogManager.getLogger().warn("couldn't find BlockEntity");
         return new WiredChargerMenu(null, inventory, pContainerId);
     }
 }

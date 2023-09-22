@@ -27,7 +27,9 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
-import static mezz.jei.api.recipe.RecipeIngredientRole.*;
+import static mezz.jei.api.recipe.RecipeIngredientRole.CATALYST;
+import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
+import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
 
 public class SagMillCategory extends MachineRecipeCategory<SagMillingRecipe> {
     public static final RecipeType<SagMillingRecipe> TYPE = RecipeType.create(EnderIO.MODID, "sagmilling", SagMillingRecipe.class);
@@ -70,22 +72,29 @@ public class SagMillCategory extends MachineRecipeCategory<SagMillingRecipe> {
             .addItemStacks(GrindingBallManager.getGrindingBalls().stream().map(ItemStack::new).toList());
 
         List<SagMillingRecipe.OutputItem> results = recipe.getOutputs();
-        if (results.size() > 0)
+        if (!results.isEmpty()) {
             builder.addSlot(OUTPUT, 1, 48)
                 .addItemStack(results.get(0).getItemStack())
                 .addTooltipCallback(chanceTooltip(recipe, results.get(0)));
-        if (results.size() > 1)
+        }
+
+        if (results.size() > 1) {
             builder.addSlot(OUTPUT, 22, 48)
                 .addItemStack(results.get(1).getItemStack())
                 .addTooltipCallback(chanceTooltip(recipe, results.get(1)));
-        if (results.size() > 2)
+        }
+
+        if (results.size() > 2) {
             builder.addSlot(OUTPUT, 43, 48)
                 .addItemStack(results.get(2).getItemStack())
                 .addTooltipCallback(chanceTooltip(recipe, results.get(2)));
-        if (results.size() > 3)
+        }
+
+        if (results.size() > 3) {
             builder.addSlot(OUTPUT, 64, 48)
                 .addItemStack(results.get(3).getItemStack())
                 .addTooltipCallback(chanceTooltip(recipe, results.get(3)));
+        }
     }
 
     private IRecipeSlotTooltipCallback chanceTooltip(SagMillingRecipe recipe, SagMillingRecipe.OutputItem item) {

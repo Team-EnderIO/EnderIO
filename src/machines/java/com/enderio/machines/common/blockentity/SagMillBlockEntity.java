@@ -69,8 +69,10 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
     }
 
     public float getGrindingBallDamage() {
-        if (grindingBallData.getDurability() <= 0)
+        if (grindingBallData.getDurability() <= 0) {
             return 0.0f;
+        }
+
         return 1.0f - (grindingBallDamage / (float) grindingBallData.getDurability());
     }
 

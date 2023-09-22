@@ -54,8 +54,10 @@ public class EnergyExtendedData implements IExtendedConduitData<EnergyExtendedDa
 
         private static EnergySidedData fromNbt(CompoundTag nbt) {
             EnergySidedData sidedData = new EnergySidedData();
-            if (nbt.contains(KEY_ROTATING_INDEX, Tag.TAG_INT))
+            if (nbt.contains(KEY_ROTATING_INDEX, Tag.TAG_INT)) {
                 sidedData.rotatingIndex = nbt.getInt(KEY_ROTATING_INDEX);
+            }
+
             return sidedData;
         }
 

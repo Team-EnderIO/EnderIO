@@ -64,8 +64,9 @@ public class FireCraftingRecipe implements EnderRecipe<Container> {
 
     public boolean isBaseValid(Block block) {
         for (TagKey<Block> tag : baseTags) {
-            if (block.defaultBlockState().is(tag))
+            if (block.defaultBlockState().is(tag)) {
                 return true;
+            }
         }
         return bases.contains(block);
     }
@@ -125,7 +126,9 @@ public class FireCraftingRecipe implements EnderRecipe<Container> {
                         Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(id));
                         if (block == null) {
                             throw new ResourceLocationException("Missing block " + id + " for fire crafting recipe " + recipeId);
-                        } else baseBlocks.add(block);
+                        } else {
+                            baseBlocks.add(block);
+                        }
                     } else if (obj.has("tag")) {
                         baseTags.add(BlockTags.create(new ResourceLocation(obj.get("tag").getAsString())));
                     } else {

@@ -38,9 +38,11 @@ public class PaintedSlabBlock extends SlabBlock implements EntityBlock, IPainted
         if (level.getBlockState(pos).getValue(SlabBlock.TYPE) != SlabType.BOTTOM
             && level.getExistingBlockEntity(pos) instanceof DoublePaintedBlockEntity paintedBlockEntity) {
             Block paint = paintedBlockEntity.getPaint2();
-            if (paint != null)
+            if (paint != null) {
                 return paint;
+            }
         }
+
         return IPaintedBlock.super.getPaint(level, pos);
     }
 
@@ -65,15 +67,23 @@ public class PaintedSlabBlock extends SlabBlock implements EntityBlock, IPainted
         if (level.getBlockEntity(pos) instanceof DoublePaintedBlockEntity painted) {
             var paint1 = painted.getPaint();
             var paint2 = painted.getPaint2();
-            if (side == Direction.UP && paint2 != null)
+            if (side == Direction.UP && paint2 != null) {
                 return paint2.defaultBlockState();
-            if (side == Direction.DOWN && paint1 != null)
+            }
+
+            if (side == Direction.DOWN && paint1 != null) {
                 return paint1.defaultBlockState();
-            if (paint1 != null)
+            }
+
+            if (paint1 != null) {
                 return paint1.defaultBlockState();
-            if (paint2 != null)
+            }
+
+            if (paint2 != null) {
                 return paint2.defaultBlockState();
+            }
         }
+
         return super.getAppearance(state, level, pos, side, queryState, queryPos);
     }
 }

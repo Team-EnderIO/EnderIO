@@ -69,7 +69,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
 
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-    private static final boolean enableFacades = false;
+    private static final boolean ENABLE_FACADES = false;
 
     public ConduitBlock(Properties properties) {
         super(properties);
@@ -153,28 +153,39 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         if (be instanceof ConduitBlockEntity conduit) {
             if (!player.getItemInHand(hand).isEmpty()) {
                 Optional<InteractionResult> interactionResult = addConduit(conduit, player, player.getItemInHand(hand), level.isClientSide());
-                if (interactionResult.isPresent())
+                if (interactionResult.isPresent()) {
                     return interactionResult.get();
+                }
+
                 interactionResult = handleYeta(conduit, player, player.getItemInHand(hand), hit, level.isClientSide());
-                if (interactionResult.isPresent())
+                if (interactionResult.isPresent()) {
                     return interactionResult.get();
+                }
+
                 interactionResult = handleFacade(conduit, player, player.getItemInHand(hand), hit, level.isClientSide());
-                if (interactionResult.isPresent())
+                if (interactionResult.isPresent()) {
                     return interactionResult.get();
+                }
+
                 if (player.getItemInHand(hand).getItem() instanceof ConduitBlockItem) {
                     return super.use(state, level, pos, player, hand, hit);
                 }
             }
             Optional<InteractionResult> interactionResult = handleScreen(conduit, player, hit, level.isClientSide());
-            if (interactionResult.isPresent())
+
+            if (interactionResult.isPresent()) {
                 return interactionResult.get();
+            }
         }
+
         return super.use(state, level, pos, player, hand, hit);
     }
 
     private Optional<InteractionResult> addConduit(ConduitBlockEntity conduit, Player player, ItemStack stack, boolean isClientSide) {
-        if (!(stack.getItem() instanceof ConduitBlockItem conduitBlockItem))
+        if (!(stack.getItem() instanceof ConduitBlockItem conduitBlockItem)) {
             return Optional.empty();
+        }
+
         RightClickAction action = conduit.addType(conduitBlockItem.getType(), player);
         if (!(action instanceof RightClickAction.Blocked)) {
             conduit.getLevel().setBlockAndUpdate(conduit.getBlockPos(), conduit.getBlockState());
@@ -189,8 +200,10 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
             }
             result = Optional.of(InteractionResult.sidedSuccess(isClientSide));
         } else if (action instanceof RightClickAction.Insert) {
-            if (!player.getAbilities().instabuild)
+            if (!player.getAbilities().instabuild) {
                 stack.shrink(1);
+            }
+
             result = Optional.of(InteractionResult.sidedSuccess(isClientSide));
         } else {
             result = Optional.empty();
@@ -214,10 +227,14 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         if (stack.is(EIOTags.Items.WRENCH)) {
             @Nullable IConduitType<?> type = conduit.getShape().getConduit(hit.getBlockPos(), hit);
             @Nullable Direction direction = conduit.getShape().getDirection(hit.getBlockPos(), hit);
-            if (type == null)
+            if (type == null) {
                 return Optional.empty();
-            if (isClientSide)
+            }
+
+            if (isClientSide) {
                 return Optional.of(InteractionResult.sidedSuccess(isClientSide));
+            }
+
             if (direction != null) {
                 IConnectionState connectionState = conduit.getBundle().getConnection(direction).getConnectionState(type);
                 if (connectionState instanceof DynamicConnectionState dyn) {
@@ -230,6 +247,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
                     conduit.getBundle().getConnection(direction).setConnectionState(type, StaticConnectionStates.DISABLED);
                     conduit.updateShape();
                     conduit.updateConnectionToData(type);
+
                     if (conduit.getLevel().getBlockEntity(conduit.getBlockPos().relative(direction)) instanceof ConduitBlockEntity other) {
                         other.getBundle().getConnection(direction.getOpposite()).setConnectionState(type, StaticConnectionStates.DISABLED);
                         other.updateShape();
@@ -248,8 +266,10 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
                     conduit.tryConnectTo(hit.getDirection(), type, true, true);
                 }
             }
+
             return Optional.of(InteractionResult.sidedSuccess(isClientSide));
         }
+
         return Optional.empty();
     }
 
@@ -270,15 +290,19 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
 
     private Optional<InteractionResult> handleFacade(ConduitBlockEntity conduit, Player player, ItemStack stack, BlockHitResult hit, boolean isClientSide) {
         Optional<BlockState> facade = IntegrationManager.findFirst(integration -> integration.getFacadeOf(stack));
-        if (facade.isPresent() && enableFacades) {
+        if (facade.isPresent() && ENABLE_FACADES) {
             if (conduit.getBundle().hasFacade(hit.getDirection())) {
                 return Optional.of(InteractionResult.FAIL);
             }
+
             conduit.getBundle().setFacade(facade.get(), hit.getDirection());
-            if (!player.getAbilities().instabuild)
+            if (!player.getAbilities().instabuild) {
                 stack.shrink(1);
+            }
+
             return Optional.of(InteractionResult.sidedSuccess(isClientSide));
         }
+
         return Optional.empty();
     }
 
@@ -292,8 +316,10 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
                     buf.writeInt(ConduitTypes.getRegistry().getID(openInformation.get().type()));
                 });
             }
+
             return Optional.of(InteractionResult.sidedSuccess(isClientSide));
         }
+
         return Optional.empty();
     }
 
@@ -315,8 +341,9 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         }
         if (type != null) {
             for (Direction potential : Direction.values()) {
-                if (canBeValidConnection(conduit, type, potential))
+                if (canBeValidConnection(conduit, type, potential)) {
                     return Optional.of(new OpenInformation(potential, type));
+                }
             }
         }
         ConduitBundle bundle = conduit.getBundle();
@@ -324,8 +351,9 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         for (Direction potential : Direction.values()) {
             if (bundle.getConnection(potential).isEnd()) {
                 for (IConduitType<?> potentialType : bundle.getTypes()) {
-                    if (bundle.getConnection(potential).getConnectionState(potentialType) instanceof DynamicConnectionState)
+                    if (bundle.getConnection(potential).getConnectionState(potentialType) instanceof DynamicConnectionState) {
                         return Optional.of(new OpenInformation(potential, potentialType));
+                    }
                 }
                 throw new IllegalStateException("couldn't find connection even though it should be present");
             }
@@ -361,8 +389,10 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
     public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player) {
         if (level instanceof Level realLevel && state.getOptionalValue(BlockStateProperties.WATERLOGGED).orElse(false)) {
             var hitResult = Item.getPlayerPOVHitResult(realLevel, player, ClipContext.Fluid.NONE);
-            if (hitResult.getType() == HitResult.Type.MISS)
+            if (hitResult.getType() == HitResult.Type.MISS) {
                 return Items.AIR.getDefaultInstance();
+            }
+
             if (hitResult.getBlockPos().equals(pos)) {
                 target = hitResult;
             } else {
@@ -383,8 +413,9 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
         return (level1, pos, state1, blockEntity) -> {
-            if (blockEntity instanceof ConduitBlockEntity conduitBlockEntity)
+            if (blockEntity instanceof ConduitBlockEntity conduitBlockEntity) {
                 conduitBlockEntity.everyTick();
+            }
         };
     }
 

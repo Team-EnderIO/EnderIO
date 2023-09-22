@@ -28,10 +28,14 @@ public record DynamicConnectionState(boolean isInsert, ColorControl insert, bool
     }
 
     public ItemStack getItem(SlotType slotType) {
-        if (slotType == SlotType.FILTER_EXTRACT)
+        if (slotType == SlotType.FILTER_EXTRACT) {
             return filterExtract;
-        if (slotType == SlotType.FILTER_INSERT)
+        }
+
+        if (slotType == SlotType.FILTER_INSERT) {
             return filterInsert;
+        }
+
         return upgradeExtract;
     }
 

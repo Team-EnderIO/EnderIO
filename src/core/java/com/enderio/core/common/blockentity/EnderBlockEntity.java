@@ -89,8 +89,9 @@ public class EnderBlockEntity extends BlockEntity {
         for (int i = 0; i < dataSlots.size(); i++) {
             var slot = dataSlots.get(i);
             var nbt = slot.serializeNBT(true);
-            if (nbt == null)
+            if (nbt == null) {
                 continue;
+            }
 
             CompoundTag slotTag = new CompoundTag();
             slotTag.putInt(INDEX, i);

@@ -20,18 +20,20 @@ public class TagUtil {
      * - If we found nothing in our specified lists, we will pick the first present item.
      */
     public static Optional<Item> getOptionalItem(TagKey<Item> tagKey) {
-        if (Integrations.almostUnifiedIntegration.isPresent()) {
-            Item preferredItem = Integrations.almostUnifiedIntegration.expectPresent().getPreferredItemForTag(tagKey);
-            if (preferredItem != null)
+        if (Integrations.ALMOST_UNIFIED_INTEGRATION.isPresent()) {
+            Item preferredItem = Integrations.ALMOST_UNIFIED_INTEGRATION.expectPresent().getPreferredItemForTag(tagKey);
+            if (preferredItem != null) {
                 return Optional.of(preferredItem);
+            }
         }
 
         ITag<Item> tag = ForgeRegistries.ITEMS.tags().getTag(tagKey);
 
         // Search for an EnderIO item
         Optional<Item> enderItem = tag.stream().filter(item -> ForgeRegistries.ITEMS.getKey(item).getNamespace().equals(EnderCore.MODID)).findFirst();
-        if (enderItem.isPresent())
+        if (enderItem.isPresent()) {
             return enderItem;
+        }
 
         // TODO: Search based on config precedence
 

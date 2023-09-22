@@ -68,17 +68,20 @@ public class AlloySmeltingCategory extends MachineRecipeCategory<AlloySmeltingRe
     public void setRecipe(IRecipeLayoutBuilder builder, AlloySmeltingRecipe recipe, IFocusGroup focuses) {
         List<CountedIngredient> inputs = recipe.getInputs();
 
-        if (inputs.size() > 0)
+        if (!inputs.isEmpty()) {
             builder.addSlot(INPUT, 1, 11)
                 .addItemStacks(inputs.get(0).getItems());
+        }
 
-        if (inputs.size() > 1)
+        if (inputs.size() > 1) {
             builder.addSlot(INPUT, 26, 1)
                .addItemStacks(inputs.get(1).getItems());
+        }
 
-        if (inputs.size() > 2)
+        if (inputs.size() > 2) {
             builder.addSlot(INPUT, 50, 11)
                 .addItemStacks(inputs.get(2).getItems());
+        }
 
         builder.addSlot(OUTPUT, 26, 52)
             .addItemStacks(List.of(RecipeUtil.getResultStacks(recipe).get(0).getItem()));

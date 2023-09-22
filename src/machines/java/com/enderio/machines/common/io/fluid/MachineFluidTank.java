@@ -22,8 +22,11 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public class MachineFluidTank extends FluidTank {
-    public boolean allowInput = true, allowOutput = true;
-    private @Nullable BlockEntity parent = null;
+    public boolean allowInput = true;
+    public boolean allowOutput = true;
+
+    @Nullable
+    private final BlockEntity parent;
 
     public MachineFluidTank(int capacity, BlockEntity parent) {
         super(capacity, (FluidStack stack) -> true);
@@ -94,15 +97,21 @@ public class MachineFluidTank extends FluidTank {
      * Credit: the Forge team, since the logic is their work.
      */
     public int fill(FluidStack source, FluidAction action, boolean force) {
-        if (source.isEmpty())
+        if (source.isEmpty()) {
             return 0;
-        if (!fluid.isEmpty() && !fluid.isFluidEqual(source))
+        }
+
+        if (!fluid.isEmpty() && !fluid.isFluidEqual(source)) {
             return 0;
-        if (!allowInput && !force)
+        }
+
+        if (!allowInput && !force) {
             return 0;//Continue filling if either allow input or force input
-        if (!isFluidValid(source) && !force)
+        }
+
+        if (!isFluidValid(source) && !force) {
             return 0;
-        else if (action.simulate()) {
+        } else if (action.simulate()) {
             return Math.min(capacity - fluid.getAmount(), source.getAmount());
         } else {
             if (fluid.isEmpty()) {
@@ -115,8 +124,10 @@ public class MachineFluidTank extends FluidTank {
                 int transferAmount = Math.min(availableSpace, sourceAmount);
                 fluid.grow(transferAmount);
                 //according to the parent implementation the source shall not be drained
-                if (transferAmount > 0)
+                if (transferAmount > 0) {
                     onContentsChanged();
+                }
+
                 return transferAmount;
             }
         }
@@ -146,23 +157,30 @@ public class MachineFluidTank extends FluidTank {
      * @return The amount that was drained in case of action is execute and how much could be drawn in case of
      */
     public int drain(int maxDrain, FluidAction action, boolean force) {
-        if (maxDrain <= 0)
+        if (maxDrain <= 0) {
             return 0;
-        if (!allowOutput && !force)
+        }
+
+        if (!allowOutput && !force) {
             return 0; // Continue draining only if either allow drain or force
+        }
+
         int transferAmount = Math.min(maxDrain, fluid.getAmount());
         if (action == FluidAction.EXECUTE && transferAmount > 0) {
             fluid.shrink(transferAmount);
             onContentsChanged();
         }
+
         return transferAmount;
     }
 
     //Same as parent behavior with the addition of this class capabilities, see method 'drain' above for details.
     @Override
     public @NotNull FluidStack drain(FluidStack resource, FluidAction action) {
-        if (resource.isEmpty() || !resource.isFluidEqual(fluid))
+        if (resource.isEmpty() || !resource.isFluidEqual(fluid)) {
             return FluidStack.EMPTY;
+        }
+
         return drain(resource.getAmount(), action);
     }
     //Same as parent behavior with the addition of this class capabilities, see method 'drain' above for details
@@ -172,8 +190,10 @@ public class MachineFluidTank extends FluidTank {
         // Get this before the drain, otherwise it will forget what we had stored.
         var storedFluid = fluid.getFluid();
         int amount = drain(maxDrain, action, false);
-        if (amount == 0)
+        if (amount == 0) {
             return FluidStack.EMPTY;
+        }
+
         return new FluidStack(storedFluid, amount);
     }
 
@@ -245,7 +265,8 @@ public class MachineFluidTank extends FluidTank {
     @Override
     protected void onContentsChanged() {
         super.onContentsChanged();
-        if (parent != null)
+        if (parent != null) {
             parent.setChanged();
+        }
     }
 }
