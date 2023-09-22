@@ -6,9 +6,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Run check style
-        uses: nikitasavinov/checkstyle-action@master
+      - uses: dbelyaev/action-checkstyle@v0.9.5
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          reporter: 'github-pr-review'
-          checkstyle_config: 'config/checkstyle/checkstyle.xml'
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-review
+          level: error
+          checkstyle_config: config/checkstyle/checkstyle.xml
