@@ -150,9 +150,8 @@ public class FireCraftingHandler {
                 if (gameTime > fire.getValue()) {
                     if (event.level.getBlockState(pos).getBlock() instanceof FireBlock) {
                         blocksToClear.add(pos);
-                    } else {
+                    } else
                         FIRE_TRACKER.remove(fire.getKey());
-                    }
                 }
             }
 
