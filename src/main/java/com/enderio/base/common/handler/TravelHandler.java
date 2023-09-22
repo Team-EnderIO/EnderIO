@@ -4,7 +4,6 @@ import com.enderio.api.integration.IntegrationManager;
 import com.enderio.api.travel.ITravelTarget;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.init.EIOItems;
-import com.enderio.base.common.item.darksteel.IDarkSteelItem;
 import com.enderio.base.common.travel.TravelSavedData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

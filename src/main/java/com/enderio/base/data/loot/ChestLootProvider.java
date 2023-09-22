@@ -16,12 +16,19 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.BiConsumer;
 
 public class ChestLootProvider implements LootTableSubProvider {
     @Override
     public void generate(BiConsumer<ResourceLocation, LootTable.Builder> writer) {
+        // TODO: This is a gross bodge
+        var darkSteelSword = ForgeRegistries.ITEMS.getValue(EnderIO.loc("dark_steel_sword"));
+        if (darkSteelSword == null) {
+            throw new NullPointerException("Dark steel sword was missing. Remove from loot tables or enable armory module.");
+        }
+
         writer.accept(EnderIO.loc("chests/common_loot"), LootTable
             .lootTable()
             .withPool(LootPool
@@ -36,7 +43,7 @@ public class ChestLootProvider implements LootTableSubProvider {
                     .when(LootItemRandomChanceCondition.randomChance(0.3f))
                     .apply(SetItemCountFunction.setCount(ConstantValue.exactly(1.0f)))
                 )
-                .add(LootItem.lootTableItem(EIOItems.DARK_STEEL_SWORD.get())
+                .add(LootItem.lootTableItem(darkSteelSword)
                     .when(LootItemRandomChanceCondition.randomChance(0.1f))
                     .apply(SetItemDamageFunction.setDamage(UniformGenerator.between(1.0f, 2000.0f)))
                     // TODO: When upgrades are done, set energy and upgrade
