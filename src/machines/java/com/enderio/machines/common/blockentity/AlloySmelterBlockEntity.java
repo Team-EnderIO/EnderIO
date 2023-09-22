@@ -326,8 +326,9 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
                 for (int i = 0; i < AlloySmelterBlockEntity.INPUTS.size(); i++) {
                     var recipe = level.getRecipeManager()
                         .getRecipeFor(RecipeType.SMELTING, new ContainerSubWrapper(getContainer(), i), level);
-                    if (recipe.isPresent() && IntegrationManager.allMatch(integration -> integration.acceptSmeltingRecipe(recipe.get())))
+                    if (recipe.isPresent() && IntegrationManager.allMatch(integration -> integration.acceptSmeltingRecipe(recipe.get()))) {
                         return Optional.of(new VanillaAlloySmeltingRecipe(recipe.get()));
+                    }
                 }
             }
             return Optional.empty();

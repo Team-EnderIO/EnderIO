@@ -112,8 +112,10 @@ public class FireCraftingHandler {
         if (table != null && table != LootTable.EMPTY) {
             ObjectArrayList<ItemStack> randomItems = table.getRandomItems(lootparams);
             for (int i = 0; i < randomItems.size(); i++) {
-                if (i >= maxItemDrops)
+                if (i >= maxItemDrops) {
                     break;
+                }
+
                 ItemStack item = randomItems.get(i);
 
                 // Get random offset
@@ -150,8 +152,9 @@ public class FireCraftingHandler {
                 if (gameTime > fire.getValue()) {
                     if (event.level.getBlockState(pos).getBlock() instanceof FireBlock) {
                         blocksToClear.add(pos);
-                    } else
+                    } else {
                         FIRE_TRACKER.remove(fire.getKey());
+                    }
                 }
             }
 
