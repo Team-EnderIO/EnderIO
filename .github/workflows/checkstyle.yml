@@ -5,10 +5,10 @@ jobs:
     name: runner / checkstyle
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: dbelyaev/action-checkstyle@v0.8.4
+      - uses: actions/checkout@v4
+      - uses: dbelyaev/action-checkstyle@v0.9.5
         with:
-          github_token: ${{ secrets.github_token }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-pr-review
-          level: warning
+          level: error
           checkstyle_config: config/checkstyle/checkstyle.xml
