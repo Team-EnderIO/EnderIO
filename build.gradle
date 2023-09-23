@@ -142,7 +142,8 @@ minecraft {
             args '--mod', 'enderio', '--server', '--client', '--output', file('src/generated/resources/'),
                     '--existing', file('src/main/resources/'),
                     '--existing', file('src/machines/resources/'),
-                    '--existing', file('src/conduits/resources/')
+                    '--existing', file('src/conduits/resources/'),
+                    '--existing', file('src/armory/resources/')
 
             mods {
                 enderio {
