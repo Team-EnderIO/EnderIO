@@ -30,7 +30,7 @@ public abstract class CapabilityAwareConduitTicker<T> implements IIOAwareConduit
                 LazyOptional<T> capability = blockEntity.getCapability(getCapability(), insert.dir().getOpposite());
                 try {
                     capability.resolve().ifPresent(cap -> insertCaps.add(new CapabilityConnection(cap, insert.data(), insert.dir())));
-                } catch (NullPointerException npe) {
+                } catch (IllegalStateException npe) {
                     throw new RuntimeException("blockentity provided broken capability: " + blockEntity.getClass() + " for type:" + getCapability().getName(), npe);
                 }
             }
