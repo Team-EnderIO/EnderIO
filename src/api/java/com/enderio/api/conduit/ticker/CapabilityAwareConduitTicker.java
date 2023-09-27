@@ -9,7 +9,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import org.apache.commons.lang3.function.TriFunction;
 
 import java.util.ArrayList;
@@ -23,10 +25,15 @@ public abstract class CapabilityAwareConduitTicker<T> implements IIOAwareConduit
         Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
         List<CapabilityConnection> insertCaps = new ArrayList<>();
         for (Connection insert : inserts) {
-            Optional
-                .ofNullable(level.getBlockEntity(insert.move()))
-                .flatMap(b -> b.getCapability(getCapability(), insert.dir().getOpposite()).resolve())
-                .ifPresent(cap -> insertCaps.add(new CapabilityConnection(cap, insert.data(), insert.dir())));
+            BlockEntity blockEntity = level.getBlockEntity(insert.move());
+            if (blockEntity != null) {
+                LazyOptional<T> capability = blockEntity.getCapability(getCapability(), insert.dir().getOpposite());
+                try {
+                    capability.resolve().ifPresent(cap -> insertCaps.add(new CapabilityConnection(cap, insert.data(), insert.dir())));
+                } catch (NullPointerException npe) {
+                    throw new RuntimeException("blockentity provided broken capability: " + blockEntity.getClass() + " for type:" + getCapability().getName(), npe);
+                }
+            }
         }
         if (!insertCaps.isEmpty()) {
             List<CapabilityConnection> extractCaps = new ArrayList<>();
