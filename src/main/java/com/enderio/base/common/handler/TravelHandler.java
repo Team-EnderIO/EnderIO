@@ -74,8 +74,11 @@ public class TravelHandler {
         }
     }
 
-    public static boolean blockTeleport(Level level, Player player) {
+    public static boolean blockTeleport(Level level, Player player, int elevatorScanDirection) {
         Optional<ITravelTarget> target = getAnchorTarget(player);
+        if (target.isEmpty() && elevatorScanDirection != 0) {
+            target = getElevatorAnchorTarget(player, elevatorScanDirection);
+        }
         if (target.isPresent()) {
             if (!player.level().isClientSide) {
                 Optional<Double> height = isTeleportPositionClear(level, target.get().getPos());
@@ -130,6 +133,34 @@ public class TravelHandler {
             .filter(target -> Math.abs(getAngleRadians(positionVec, target.getPos(), player.getYRot(), player.getXRot())) <= Math.toRadians(15))
             .filter(target -> isTeleportPositionClear(player.level(), target.getPos()).isPresent())
             .min(Comparator.comparingDouble(target -> Math.abs(getAngleRadians(positionVec, target.getPos(), player.getYRot(), player.getXRot()))));
+    }
+
+    public static Optional<ITravelTarget> getElevatorAnchorTarget(Player player, int elevatorScanDirection) {
+        int anchorRange = BaseConfig.COMMON.ITEMS.TRAVELLING_BLOCK_TO_BLOCK_RANGE.get();
+        var anchorPos = player.blockPosition().below();
+
+        var anchorX = anchorPos.getX();
+        var anchorY = anchorPos.getY();
+        var anchorZ = anchorPos.getZ();
+
+        int upperY, lowerY;
+        if (elevatorScanDirection > 0) {
+            upperY = anchorY + elevatorScanDirection * anchorRange + 1;
+            lowerY = anchorY + 1;
+        } else {
+            upperY = anchorY - 1;
+            lowerY = anchorY + elevatorScanDirection * anchorRange - 1;
+        }
+
+        return TravelSavedData
+            .getTravelData(player.level())
+            .getTravelTargets()
+            .stream()
+            .filter(target -> target.getPos().getX() == anchorX && target.getPos().getZ() == anchorZ)
+            .filter(target -> target.getPos().getY() > lowerY && target.getPos().getY() < upperY)
+            .filter(target -> target.canTravelTo())
+            .filter(target -> isTeleportPositionClear(player.level(), target.getPos()).isPresent())
+            .min(Comparator.comparingDouble(target -> Math.abs(target.getPos().getY() - anchorY)));
     }
 
 

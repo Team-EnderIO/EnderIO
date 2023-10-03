@@ -85,7 +85,7 @@ public class TravelStaffItem extends Item implements IMultiCapabilityItem, IAdva
                 return true;
             }
         } else {
-            if (TravelHandler.blockTeleport(level, player)) {
+            if (TravelHandler.blockTeleport(level, player, 0)) {
                 player.getCooldowns().addCooldown(this, BaseConfig.COMMON.ITEMS.TRAVELLING_BLINK_DISABLED_TIME.get());
                 return true;
             }

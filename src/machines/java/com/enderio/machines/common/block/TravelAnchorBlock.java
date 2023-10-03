@@ -37,7 +37,7 @@ public class TravelAnchorBlock extends MachineBlock {
     public static void jump(LivingEvent.LivingJumpEvent jumpEvent) {
         if (!jumpEvent.getEntity().level().isClientSide && jumpEvent.getEntity() instanceof Player player) {
             if (player.level().getBlockState(player.blockPosition().below()).getBlock() instanceof TravelAnchorBlock) {
-                TravelHandler.blockTeleport(player.level(), player);
+                TravelHandler.blockTeleport(player.level(), player, 1);
             }
         }
     }
@@ -51,7 +51,7 @@ public class TravelAnchorBlock extends MachineBlock {
 
             PlayerSneakEntry sneakEntry = getLastSneakEntry(player);
             if ((!sneakEntry.isSneaking() || sneakEntry.atTime() != player.level().getServer().getTickCount() - 1) && player.isShiftKeyDown()) {
-                TravelHandler.blockTeleport(player.level(), player);
+                TravelHandler.blockTeleport(player.level(), player, -1);
             }
             SNEAK_CACHE.put(player, new PlayerSneakEntry(player.isShiftKeyDown(), player.level().getServer().getTickCount()));
         }
