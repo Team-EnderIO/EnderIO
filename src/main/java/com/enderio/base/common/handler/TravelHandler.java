@@ -74,6 +74,10 @@ public class TravelHandler {
         }
     }
 
+    public static boolean blockTeleport(Level level, Player player) {
+        return blockTeleport(level, player, 0);
+    }
+
     public static boolean blockTeleport(Level level, Player player, int direction) {
         Optional<ITravelTarget> target = getAnchorTarget(player);
         if (target.isEmpty() && direction != 0) {
