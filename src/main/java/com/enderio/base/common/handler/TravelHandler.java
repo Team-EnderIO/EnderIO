@@ -74,10 +74,10 @@ public class TravelHandler {
         }
     }
 
-    public static boolean blockTeleport(Level level, Player player, int elevatorScanDirection) {
+    public static boolean blockTeleport(Level level, Player player, int direction) {
         Optional<ITravelTarget> target = getAnchorTarget(player);
-        if (target.isEmpty() && elevatorScanDirection != 0) {
-            target = getElevatorAnchorTarget(player, elevatorScanDirection);
+        if (target.isEmpty() && direction != 0) {
+            target = getElevatorAnchorTarget(player, direction);
         }
         if (target.isPresent()) {
             if (!player.level().isClientSide) {
@@ -135,21 +135,22 @@ public class TravelHandler {
             .min(Comparator.comparingDouble(target -> Math.abs(getAngleRadians(positionVec, target.getPos(), player.getYRot(), player.getXRot()))));
     }
 
-    public static Optional<ITravelTarget> getElevatorAnchorTarget(Player player, int elevatorScanDirection) {
+    public static Optional<ITravelTarget> getElevatorAnchorTarget(Player player, int direction) {
         int anchorRange = BaseConfig.COMMON.ITEMS.TRAVELLING_BLOCK_TO_BLOCK_RANGE.get();
-        var anchorPos = player.blockPosition().below();
+        BlockPos anchorPos = player.blockPosition().below();
 
-        var anchorX = anchorPos.getX();
-        var anchorY = anchorPos.getY();
-        var anchorZ = anchorPos.getZ();
+
+        int anchorX = anchorPos.getX();
+        int anchorY = anchorPos.getY();
+        int anchorZ = anchorPos.getZ();
 
         int upperY, lowerY;
-        if (elevatorScanDirection > 0) {
-            upperY = anchorY + elevatorScanDirection * anchorRange + 1;
+        if (direction > 0) {
+            upperY = anchorY + direction * anchorRange + 1;
             lowerY = anchorY + 1;
         } else {
             upperY = anchorY - 1;
-            lowerY = anchorY + elevatorScanDirection * anchorRange - 1;
+            lowerY = anchorY + direction * anchorRange - 1;
         }
 
         return TravelSavedData
