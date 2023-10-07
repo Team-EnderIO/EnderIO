@@ -148,7 +148,8 @@ public class TravelHandler {
         int anchorY = anchorPos.getY();
         int anchorZ = anchorPos.getZ();
 
-        int upperY, lowerY;
+        int upperY;
+        int lowerY;
         if (direction > 0) {
             upperY = anchorY + direction * anchorRange + 1;
             lowerY = anchorY + 1;
