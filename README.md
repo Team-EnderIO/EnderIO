@@ -84,7 +84,7 @@ Update your `build.gradle` to contain the following:
 
 ```groovy
 repositories {
-    maven { url 'https://maven.tterrag.com' }
+    maven { url 'https://maven.rover656.dev/releases' }
 }
 
 dependencies {
@@ -92,7 +92,7 @@ dependencies {
     compileOnly fg.deobf("com.enderio:EnderIO:<VERSION>:api")
     
     // Use EnderIO at runtime
-    runtimeOnly fg.deobf("com.enderio.EnderIO:<VERSION>")
+    runtimeOnly fg.deobf("com.enderio:EnderIO:<VERSION>")
 }
 ```
 If you need any feature in the api, contact us.
