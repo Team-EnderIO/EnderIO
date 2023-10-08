@@ -60,12 +60,17 @@ public class TankRecipe implements EnderRecipe<TankRecipe.Container> {
     @Override
     public boolean matches(Container pContainer, Level pLevel) {
         if (isEmptying) {
-            if (pContainer.getFluidTank().fill(fluid, IFluidHandler.FluidAction.SIMULATE) <= 0)
+            if (pContainer.getFluidTank().fill(fluid, IFluidHandler.FluidAction.SIMULATE) <= 0) {
                 return false;
+            }
+
             return input.test(FluidTankBlockEntity.FLUID_FILL_INPUT.getItemStack(pContainer));
         }
-        if (pContainer.getFluidTank().drain(fluid, IFluidHandler.FluidAction.SIMULATE).isEmpty())
+
+        if (pContainer.getFluidTank().drain(fluid, IFluidHandler.FluidAction.SIMULATE).isEmpty()) {
             return false;
+        }
+
         return input.test(FluidTankBlockEntity.FLUID_DRAIN_INPUT.getItemStack(pContainer));
     }
 

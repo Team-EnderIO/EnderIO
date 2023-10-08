@@ -54,7 +54,7 @@ public class SoulDataReloadListener<T extends ISoulData> extends SimpleJsonResou
     public Map<ResourceLocation,T> map = new HashMap<>();
     private final Codec<T> codec;
     private final String folderName;
-    private static final Map<String, SoulDataReloadListener<? extends ISoulData>> loadedSoulData = new HashMap<>();
+    private static final Map<String, SoulDataReloadListener<? extends ISoulData>> LOADED_SOUL_DATA = new HashMap<>();
 
     /**
      * Creates a data manager with a custom gson parser
@@ -69,7 +69,7 @@ public class SoulDataReloadListener<T extends ISoulData> extends SimpleJsonResou
         super(gson, "eio_soul/" + folder);
         this.codec = codec;
         this.folderName = "eio_soul/" + folder;
-        loadedSoulData.put(folder, this);
+        LOADED_SOUL_DATA.put(folder, this);
     }
 
     /**
@@ -133,6 +133,6 @@ public class SoulDataReloadListener<T extends ISoulData> extends SimpleJsonResou
     }
 
     public static SoulDataReloadListener<? extends ISoulData> fromString(String name) {
-        return loadedSoulData.get(name);
+        return LOADED_SOUL_DATA.get(name);
     }
 }

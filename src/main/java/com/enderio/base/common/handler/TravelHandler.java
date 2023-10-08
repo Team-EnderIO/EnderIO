@@ -41,11 +41,13 @@ public class TravelHandler {
 
     private static boolean canItemTeleport(Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (stack.getItem() == EIOItems.TRAVEL_STAFF.get())
+        if (stack.getItem() == EIOItems.TRAVEL_STAFF.get()) {
             return true;
-        if (stack.getItem() instanceof IDarkSteelItem darkSteelItem) {
-            //TODO: Check for upgrade;
         }
+
+        //if (stack.getItem() instanceof IDarkSteelItem darkSteelItem) {
+            //TODO: Check for upgrade;
+        //}
         return false;
     }
 
@@ -144,8 +146,10 @@ public class TravelHandler {
      * @return Optional.empty if it can't teleport and the height where to place the player. This is so you can tp on top of carpets up to a whole block
      */
     private static Optional<Double> isTeleportPositionClear(BlockGetter level, BlockPos target) {
-        if (level.isOutsideBuildHeight(target))
+        if (level.isOutsideBuildHeight(target)) {
             return Optional.empty();
+        }
+
         if (!level.getBlockState(target.above(2)).canOcclude()) {
             BlockPos above = target.above();
             double height = level.getBlockState(above).getCollisionShape(level, above).max(Direction.Axis.Y);
@@ -153,9 +157,11 @@ public class TravelHandler {
                 if (height == Double.NEGATIVE_INFINITY) {
                     height = 0;
                 }
+
                 return Optional.of(height);
             }
         }
+
         return Optional.empty();
     }
 
@@ -164,6 +170,7 @@ public class TravelHandler {
         if (MinecraftForge.EVENT_BUS.post(event)) {
             return Optional.empty();
         }
+
         return Optional.of(new Vec3(event.getTargetX(), event.getTargetY(), event.getTargetZ()));
     }
 }

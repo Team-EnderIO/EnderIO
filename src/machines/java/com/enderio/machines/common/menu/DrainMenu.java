@@ -23,8 +23,10 @@ public class DrainMenu extends MachineMenu<DrainBlockEntity> {
     public static DrainMenu factory(@Nullable MenuType<DrainMenu> pMenuType, int pContainerId, Inventory inventory,
         FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
-        if (entity instanceof DrainBlockEntity castBlockEntity)
+        if (entity instanceof DrainBlockEntity castBlockEntity) {
             return new DrainMenu(castBlockEntity, inventory, pContainerId);
+        }
+
         LogManager.getLogger().warn("couldn't find BlockEntity");
         return new DrainMenu(null, inventory, pContainerId);
     }

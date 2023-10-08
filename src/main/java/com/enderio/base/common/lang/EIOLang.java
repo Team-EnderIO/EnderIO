@@ -238,6 +238,8 @@ public class EIOLang {
     public static final Component JEI_FIRE_CRAFTING_TITLE = REGISTRATE.addLang("jei", EnderIO.loc("fire_crafting"), "title", "Fire Crafting");
     public static final Component JEI_FIRE_CRAFTING_VALID_BLOCKS = REGISTRATE.addLang("jei", EnderIO.loc("fire_crafting"), "valid_blocks", "Valid Blocks:");
     public static final Component JEI_FIRE_CRAFTING_VALID_DIMENSIONS = REGISTRATE.addLang("jei", EnderIO.loc("fire_crafting"), "valid_dimensions", "Valid Dimensions:");
+    public static final Component JEI_FIRE_CRAFTING_LOOT_TABLE = REGISTRATE.addLang("jei", EnderIO.loc("fire_crafting"), "loot_table", "Loot Table:");
+    public static final Component JEI_FIRE_CRAFTING_MAX_DROPS = REGISTRATE.addLang("jei", EnderIO.loc("fire_crafting"), "max_drops", "Max Item Drops:");
 
     public static final Component JEI_GRINDING_CRAFTING_TITLE = REGISTRATE.addLang("jei", EnderIO.loc("grinding"), "title", "Grinding");
     public static final MutableComponent JEI_GRINDING_CONSUME_CHANCE = REGISTRATE.addLang("jei", EnderIO.loc("grinding"), "consume_chance", "33% chance to be consumed");

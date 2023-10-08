@@ -24,7 +24,9 @@ public enum EnergyIOMode {
      */
     Both(true, true, true);
 
-    private final boolean input, output, respectIOConfig;
+    private final boolean input;
+    private final boolean output;
+    private final boolean respectIOConfig;
 
     EnergyIOMode(boolean input, boolean output, boolean respectIOConfig) {
         this.input = input;

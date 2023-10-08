@@ -36,12 +36,16 @@ public class EnchanterScreen extends EIOScreen<EnchanterMenu> {
     @Override
     public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
         super.render(guiGraphics, pMouseX, pMouseY, pPartialTicks);
-        if (this.getMenu().getCurrentCost() < 0) return;
+        if (this.getMenu().getCurrentCost() < 0) {
+            return;
+        }
+
         int colour = 8453920; //green
         MutableComponent component = Component.translatable("container.repair.cost", this.getMenu().getCurrentCost());
         if (Minecraft.getInstance().player.experienceLevel < this.getMenu().getCurrentCost() && !Minecraft.getInstance().player.isCreative()) {
             colour = 16736352; //red
         }
+
         guiGraphics.drawCenteredString(this.font, component, (width-getXSize())/2 + getXSize()/2, (height-getYSize())/2 + 57, colour);
     }
 }

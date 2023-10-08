@@ -10,7 +10,7 @@ import net.minecraft.world.level.Level;
 
 public class FluidConduitType extends TieredConduit<FluidExtendedData> {
 
-    public static final IConduitMenuData menuData = new IConduitMenuData.Simple(false, false, false, false, false, true);
+    public static final IConduitMenuData MENU_DATA = new IConduitMenuData.Simple(false, false, false, false, false, true);
     private final boolean isMultiFluid;
     private final int transferRate;
 
@@ -28,7 +28,7 @@ public class FluidConduitType extends TieredConduit<FluidExtendedData> {
 
     @Override
     public IConduitMenuData getMenuData() {
-        return menuData;
+        return MENU_DATA;
     }
 
     @Override

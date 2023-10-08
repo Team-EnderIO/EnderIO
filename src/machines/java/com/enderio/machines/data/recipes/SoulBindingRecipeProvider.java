@@ -2,6 +2,7 @@ package com.enderio.machines.data.recipes;
 
 import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.recipe.RecipeDataUtil;
 import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.enderio.machines.common.init.MachineBlocks;
@@ -11,6 +12,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -19,6 +21,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,9 +37,9 @@ public class SoulBindingRecipeProvider extends EnderRecipeProvider {
 
     @Override
     protected void buildRecipes(Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
-        build(EIOItems.ENTICING_CRYSTAL, Ingredient.of(Items.EMERALD), 51200, 4, EntityType.VILLAGER, pFinishedRecipeConsumer);
-        build(EIOItems.ENDER_CRYSTAL, Ingredient.of(EIOItems.VIBRANT_CRYSTAL), 76800, 6, EntityType.ENDERMAN, pFinishedRecipeConsumer);
-        build(EIOItems.PRESCIENT_CRYSTAL, Ingredient.of(EIOItems.VIBRANT_CRYSTAL), 100000, 8, EntityType.SHULKER, pFinishedRecipeConsumer);
+        build(EIOItems.ENTICING_CRYSTAL, Ingredient.of(Tags.Items.GEMS_EMERALD), 51200, 4, EntityType.VILLAGER, pFinishedRecipeConsumer);
+        build(EIOItems.ENDER_CRYSTAL, Ingredient.of(EIOTags.Items.GEMS_VIBRANT_CRYSTAL), 76800, 6, EntityType.ENDERMAN, pFinishedRecipeConsumer);
+        build(EIOItems.PRESCIENT_CRYSTAL, Ingredient.of(EIOTags.Items.GEMS_VIBRANT_CRYSTAL), 100000, 8, EntityType.SHULKER, pFinishedRecipeConsumer);
         build(EIOItems.FRANK_N_ZOMBIE, Ingredient.of(EIOItems.Z_LOGIC_CONTROLLER), 51200, 4, EntityType.ZOMBIE, pFinishedRecipeConsumer);
         build(EIOItems.SENTIENT_ENDER, Ingredient.of(EIOItems.ENDER_RESONATOR), 51200, 4, EntityType.WITCH, pFinishedRecipeConsumer);
         build(EIOItems.BROKEN_SPAWNER, Ingredient.of(EIOItems.BROKEN_SPAWNER), 288000, 8, pFinishedRecipeConsumer);

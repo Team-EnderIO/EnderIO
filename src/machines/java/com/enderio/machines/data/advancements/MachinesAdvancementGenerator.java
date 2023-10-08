@@ -42,10 +42,14 @@ public class MachinesAdvancementGenerator implements ForgeAdvancementProvider.Ad
     }
 
     public static LootItemCondition placedBlockCondition(Block... blocks) {
-        if (blocks.length == 0)
+        if (blocks.length == 0) {
             throw new IllegalArgumentException("No valid blocks");
-        if (blocks.length == 1)
+        }
+
+        if (blocks.length == 1) {
             return LootItemBlockStatePropertyCondition.hasBlockStateProperties(blocks[0]).build();
+        }
+
         LootItemCondition.Builder mainBuilder = null;
         for (Block block: blocks) {
             var builder = LootItemBlockStatePropertyCondition.hasBlockStateProperties(block);

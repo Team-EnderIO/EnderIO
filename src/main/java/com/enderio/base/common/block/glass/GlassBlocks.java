@@ -86,10 +86,15 @@ public class GlassBlocks {
             .tab(EIOCreativeTabs.BLOCKS)
             .tag(glassIdentifier.explosion_resistance() ? EIOTags.Items.FUSED_QUARTZ : EIOTags.Items.CLEAR_GLASS)
             .tag(EIOTags.Items.GLASS_TAGS.get(glassIdentifier));
-        if (glassIdentifier.lighting() == GlassLighting.EMITTING && glassIdentifier.explosion_resistance())
+
+        if (glassIdentifier.lighting() == GlassLighting.EMITTING && glassIdentifier.explosion_resistance()) {
             builder.tag(EIOTags.Items.ENLIGHTENED_FUSED_QUARTZ);
-        if (glassIdentifier.lighting() == GlassLighting.BLOCKING && glassIdentifier.explosion_resistance())
+        }
+
+        if (glassIdentifier.lighting() == GlassLighting.BLOCKING && glassIdentifier.explosion_resistance()) {
             builder.tag(EIOTags.Items.DARK_FUSED_QUARTZ);
+        }
+
         return builder.build().register();
     }
 

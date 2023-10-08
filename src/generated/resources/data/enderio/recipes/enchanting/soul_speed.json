@@ -1,9 +1,11 @@
 {
   "type": "enderio:enchanting",
-  "amount": 16,
   "cost_multiplier": 1,
   "enchantment": "minecraft:soul_speed",
   "input": {
-    "item": "minecraft:soul_soil"
+    "count": 16,
+    "ingredient": {
+      "item": "minecraft:soul_soil"
+    }
   }
 }

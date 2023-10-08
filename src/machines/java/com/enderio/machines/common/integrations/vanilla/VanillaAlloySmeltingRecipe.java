@@ -48,9 +48,11 @@ public class VanillaAlloySmeltingRecipe extends AlloySmeltingRecipe {
     @Override
     public boolean matches(ContainerWrapper container, Level level) {
         for (int i = 0; i < AlloySmelterBlockEntity.INPUTS.size(); i++) {
-            if (vanillaRecipe.matches(new AlloySmelterBlockEntity.ContainerSubWrapper(container, i), level))
+            if (vanillaRecipe.matches(new AlloySmelterBlockEntity.ContainerSubWrapper(container, i), level)) {
                 return true;
+            }
         }
+
         return false;
     }
 

@@ -6,7 +6,7 @@
     {
       "count": 1,
       "ingredient": {
-        "item": "enderio:energetic_alloy_ingot"
+        "tag": "forge:ingots/energetic_alloy"
       }
     },
     {

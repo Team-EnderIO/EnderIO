@@ -26,5 +26,7 @@ public class SpoonUpgrade implements IDarkSteelUpgrade {
     }
 
     @Override
-    public Collection<Component> getDescription() { return List.of(EIOLang.DS_UPGRADE_SPOON_DESCRIPTION); }
+    public Collection<Component> getDescription() {
+        return List.of(EIOLang.DS_UPGRADE_SPOON_DESCRIPTION);
+    }
 }

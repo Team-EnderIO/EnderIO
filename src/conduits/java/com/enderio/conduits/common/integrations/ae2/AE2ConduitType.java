@@ -61,8 +61,10 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
 
     @Override
     public Item getConduitItem() {
-        if (isDense())
+        if (isDense()) {
             return AE2Integration.DENSE_ITEM.get();
+        }
+
         return AE2Integration.NORMAL_ITEM.get();
     }
 
@@ -71,7 +73,7 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
     }
 
     protected final Capability<IInWorldGridNodeHost> getCapability() {
-        return Integrations.ae2Integration.expectPresent().getInWorldGridNodeHost();
+        return Integrations.AE2_INTEGRATION.expectPresent().getInWorldGridNodeHost();
     }
 
     private static final class ConduitMenuData implements IConduitMenuData {

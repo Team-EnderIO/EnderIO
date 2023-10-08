@@ -31,7 +31,6 @@ import java.util.Optional;
 
 @Mod.EventBusSubscriber
 public class SpawnerMachineTask implements IPoweredMachineTask {
-
     private boolean complete;
     private int energyCost;
     private int energyConsumed = 0;
@@ -185,6 +184,7 @@ public class SpawnerMachineTask implements IPoweredMachineTask {
                             entity.moveTo(x, y, z);
                         }
                     }
+                    default -> throw new IllegalStateException("Unexpected value: " + spawnType);
                 }
 
                 if (entity == null) {

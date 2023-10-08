@@ -61,15 +61,16 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<IFluidHandl
                 .map(fluid -> extractHandler.drain(new FluidStack(fluid, fluidRate), IFluidHandler.FluidAction.SIMULATE))
                 .orElseGet(() -> extractHandler.drain(fluidRate, IFluidHandler.FluidAction.SIMULATE));
 
-            if (extractedFluid.isEmpty())
+            if (extractedFluid.isEmpty()) {
                 continue;
+            }
 
             int transferred = 0;
-            for (int j = 0; j < inserts.size(); j++) {
+            for (CapabilityAwareConduitTicker<IFluidHandler>.CapabilityConnection insert : inserts) {
                 FluidStack transferredFluid = fluidExtendedData.lockedFluid != null ?
-                    FluidUtil.tryFluidTransfer(inserts.get(j).cap, extractHandler, new FluidStack(fluidExtendedData.lockedFluid, fluidRate - transferred),
+                    FluidUtil.tryFluidTransfer(insert.cap, extractHandler, new FluidStack(fluidExtendedData.lockedFluid, fluidRate - transferred),
                         true) :
-                    FluidUtil.tryFluidTransfer(inserts.get(j).cap, extractHandler, fluidRate - transferred, true);
+                    FluidUtil.tryFluidTransfer(insert.cap, extractHandler, fluidRate - transferred, true);
 
                 if (!transferredFluid.isEmpty()) {
                     transferred += transferredFluid.getAmount();
@@ -77,15 +78,18 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<IFluidHandl
                         for (GraphObject<Mergeable.Dummy> graphObject : graph.getObjects()) {
                             if (graphObject instanceof NodeIdentifier<?> node) {
                                 Fluid fluid = transferredFluid.getFluid();
-                                if (fluid instanceof FlowingFluid flowing)
+                                if (fluid instanceof FlowingFluid flowing) {
                                     fluid = flowing.getSource();
+                                }
+
                                 node.getExtendedConduitData().castTo(FluidExtendedData.class).lockedFluid = fluid;
                             }
                         }
                     }
 
-                    if (transferred > fluidRate)
+                    if (transferred > fluidRate) {
                         break;
+                    }
                 }
             }
         }

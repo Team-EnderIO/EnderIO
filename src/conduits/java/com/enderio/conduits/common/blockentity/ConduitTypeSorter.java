@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ConduitTypeSorter {
-    private static final List<IConduitType<?>> sortedTypes = new ArrayList<>();
+    private static final List<IConduitType<?>> SORTED_TYPES = new ArrayList<>();
 
     @SubscribeEvent
     public static void afterRegistryFreeze(FMLCommonSetupEvent event) {
@@ -38,7 +38,7 @@ public class ConduitTypeSorter {
                 }
             }
             typesInType.sort(Comparator.comparing(registry::getKey));
-            sortedTypes.addAll(typesInType);
+            SORTED_TYPES.addAll(typesInType);
         }
         List<IConduitType<?>> unadded = new ArrayList<>();
         for (IConduitType<?> type: registry.getValues()) {
@@ -47,10 +47,10 @@ public class ConduitTypeSorter {
             }
         }
         unadded.sort(Comparator.comparing(registry::getKey));
-        sortedTypes.addAll(unadded);
+        SORTED_TYPES.addAll(unadded);
     }
 
     public static int getSortIndex(IConduitType<?> type) {
-        return sortedTypes.indexOf(type);
+        return SORTED_TYPES.indexOf(type);
     }
 }

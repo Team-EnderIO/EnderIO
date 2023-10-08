@@ -55,8 +55,9 @@ public abstract class EnderRecipeProvider extends RecipeProvider {
             Set<String> modDeps = getModDependencies();
             for (String mod : modDeps) {
                 // Exclude always-present mods :)
-                if (!StringUtils.equalsAny(mod, "minecraft", "forge", "enderio", getId().getNamespace()))
+                if (!StringUtils.equalsAny(mod, "minecraft", "forge", "enderio", getId().getNamespace())) {
                     conditions.add(new ModLoadedCondition(mod));
+                }
             }
 
             // Write to json

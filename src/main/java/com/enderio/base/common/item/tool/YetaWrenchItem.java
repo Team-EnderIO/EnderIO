@@ -30,20 +30,24 @@ public class YetaWrenchItem extends Item {
     @Override
     public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext pContext) {
         Level level = pContext.getLevel();
-        if (level.isClientSide())
+        if (level.isClientSide()) {
             return InteractionResult.SUCCESS;
+        }
 
         BlockPos pos = pContext.getClickedPos();
-        if(level.getBlockEntity(pos) instanceof IWrenchable wrenchable)
+        if(level.getBlockEntity(pos) instanceof IWrenchable wrenchable) {
             return wrenchable.onWrenched(pContext);
+        }
         
         // Check for side config capability
         BlockEntity be = level.getBlockEntity(pos);
         if (be != null) {
             LazyOptional<ISideConfig> optSideConfig = be.getCapability(EIOCapabilities.SIDE_CONFIG, pContext.getClickedFace());
             if (optSideConfig.isPresent()) {
-                if (level.isClientSide())
+                if (level.isClientSide()) {
                     return InteractionResult.sidedSuccess(true);
+                }
+
                 // Cycle state.
                 optSideConfig.ifPresent(ISideConfig::cycleMode);
                 return InteractionResult.SUCCESS;
@@ -87,10 +91,13 @@ public class YetaWrenchItem extends Item {
     }
 
     private static BlockState handleProperties(UseOnContext pContext, BlockState state, Optional<DirectionProperty> directionProperty, Optional<EnumProperty<Direction.Axis>> axisProperty) {
-        if (directionProperty.isPresent())
+        if (directionProperty.isPresent()) {
             return handleProperty(pContext, state, directionProperty.get());
-        if (axisProperty.isPresent())
+        }
+
+        if (axisProperty.isPresent()) {
             return handleProperty(pContext, state, axisProperty.get());
+        }
 
         throw new IllegalArgumentException("At least one Optional should be set");
     }
@@ -102,19 +109,24 @@ public class YetaWrenchItem extends Item {
             noValidStateIndex++;
         } while (noValidStateIndex != property.getPossibleValues().size()
             && !state.getBlock().canSurvive(state, pContext.getLevel(), pContext.getClickedPos()));
+
         return state;
     }
 
     private static <T extends Comparable<T>> BlockState getNextBlockState(BlockState currentState, Property<T> property) {
         return currentState.setValue(property, getNextValue(currentState.getValue(property), property));
     }
+
     private static <T extends Comparable<T>> T getNextValue(T value, Property<T> property) {
         boolean foundValid = false;
         for (T possibleValue : property.getPossibleValues()) {
-            if (foundValid)
+            if (foundValid) {
                 return possibleValue;
+            }
+
             foundValid = possibleValue == value;
         }
+
         return property.getPossibleValues().iterator().next();
     }
 

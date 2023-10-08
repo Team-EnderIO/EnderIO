@@ -12,7 +12,12 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.fml.util.thread.EffectiveSide;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -80,8 +85,9 @@ public class RecipeInputCache<C extends Container, T extends Recipe<C>> {
 
                 for (Ingredient ingredient : ingredients) {
                     for (int i = 0; i < inputs.size(); i++) {
-                        if (checked[i])
+                        if (checked[i]) {
                             continue;
+                        }
 
                         if (ingredient.test(inputs.get(i))) {
                             checked[i] = true;
