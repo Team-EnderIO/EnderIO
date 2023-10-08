@@ -56,8 +56,10 @@ public class SoulEngineScreen extends EIOScreen<SoulEngineMenu>{
             }
             EngineSoul.SoulData data = EngineSoul.ENGINE.map.get(rl.get());
             if (data != null) {
-                guiGraphics.drawString(font, data.tickpermb() + " t/mb", imageWidth / 2f + 12 , 40, 4210752, false);
-                guiGraphics.drawString(font, data.powerpermb() + " µI/mb", imageWidth / 2f + 12 , 50, 4210752, false);
+                double burnRate = menu.getBlockEntity().getBurnRate();
+                float genRate = menu.getBlockEntity().getGenerationRate();
+                guiGraphics.drawString(font, data.tickpermb()/ burnRate + " t/mb", imageWidth / 2f + 12 , 40, 4210752, false);
+                guiGraphics.drawString(font, (int) (data.powerpermb() * genRate) + " µI/mb", imageWidth / 2f + 12 , 50, 4210752, false);
 
             }
         }
