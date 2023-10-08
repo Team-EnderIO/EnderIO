@@ -1,8 +1,8 @@
 package com.enderio.armory.common.item.darksteel.upgrades.explosive;
 
 import com.enderio.api.capability.IDarkSteelUpgrade;
+import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.item.darksteel.upgrades.IUpgradeTier;
-import com.enderio.base.common.config.BaseConfig;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.ForgeConfigSpec;
 
@@ -13,9 +13,9 @@ import static com.enderio.base.common.lang.EIOLang.DS_UPGRADE_EXPLOSIVE_PENETRAT
 
 public enum ExplosivePenetrationUpgradeTier implements IUpgradeTier {
 
-    ONE(BaseConfig.COMMON.DARK_STEEL.EXPLOSIVE_PENETRATION_I, BaseConfig.COMMON.DARK_STEEL.EXPLOSIVE_PENETRATION_ACTIVATION_COST_I,
+    ONE(ArmoryConfig.COMMON.EXPLOSIVE_PENETRATION_I, ArmoryConfig.COMMON.EXPLOSIVE_PENETRATION_ACTIVATION_COST_I,
         DS_UPGRADE_EXPLOSIVE_PENETRATION_I),
-    TWO(BaseConfig.COMMON.DARK_STEEL.EXPLOSIVE_PENETRATION_II, BaseConfig.COMMON.DARK_STEEL.EXPLOSIVE_PENETRATION_ACTIVATION_COST_II,
+    TWO(ArmoryConfig.COMMON.EXPLOSIVE_PENETRATION_II, ArmoryConfig.COMMON.EXPLOSIVE_PENETRATION_ACTIVATION_COST_II,
         DS_UPGRADE_EXPLOSIVE_PENETRATION_II);
 
     private final Supplier<IDarkSteelUpgrade> factory;

@@ -1,9 +1,9 @@
 package com.enderio.armory.common.item.darksteel.upgrades.explosive;
 
+import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.item.darksteel.upgrades.SpoonUpgrade;
 import com.enderio.armory.common.capability.DarkSteelUpgradeable;
-import com.enderio.base.common.config.BaseConfig;
-import com.enderio.base.common.tag.EIOTags;
+import com.enderio.armory.common.tag.ArmoryTags;
 import com.enderio.core.common.network.CoreNetwork;
 import com.enderio.core.common.network.EmitParticlesPacket;
 import com.enderio.core.common.util.BlockUtil;
@@ -50,7 +50,7 @@ import java.util.Random;
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ExplosiveUpgradeHandler {
 
-    private static final ForgeConfigSpec.ConfigValue<Integer> EXPLOSIVE_BREAK_POWER_USE = BaseConfig.COMMON.DARK_STEEL.EXPLOSIVE_ENERGY_PER_EXPLODED_BLOCK;
+    private static final ForgeConfigSpec.ConfigValue<Integer> EXPLOSIVE_BREAK_POWER_USE = ArmoryConfig.COMMON.EXPLOSIVE_ENERGY_PER_EXPLODED_BLOCK;
 
     private static final Random RAND = new Random();
 
@@ -104,10 +104,10 @@ public class ExplosiveUpgradeHandler {
     }
 
     private static boolean canExplode(ItemStack itemStack, BlockState blockState, @Nullable BlockEntity blockEntity) {
-        if (blockState.is(EIOTags.Blocks.DARK_STEEL_EXPLODABLE_ALLOW_LIST)) {
+        if (blockState.is(ArmoryTags.Blocks.DARK_STEEL_EXPLODABLE_ALLOW_LIST)) {
             return true;
         }
-        if (blockState.is(EIOTags.Blocks.DARK_STEEL_EXPLODABLE_DENY_LIST) || blockEntity != null) {
+        if (blockState.is(ArmoryTags.Blocks.DARK_STEEL_EXPLODABLE_DENY_LIST) || blockEntity != null) {
             return false;
         }
         return Items.STONE_PICKAXE.isCorrectToolForDrops(blockState) ||

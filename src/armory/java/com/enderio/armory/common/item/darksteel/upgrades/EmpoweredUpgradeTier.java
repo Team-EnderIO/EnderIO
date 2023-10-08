@@ -1,7 +1,7 @@
 package com.enderio.armory.common.item.darksteel.upgrades;
 
 import com.enderio.api.capability.IDarkSteelUpgrade;
-import com.enderio.base.common.config.BaseConfig;
+import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.base.common.lang.EIOLang;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -10,21 +10,21 @@ import java.util.function.Supplier;
 
 public enum EmpoweredUpgradeTier implements IUpgradeTier {
 
-    ONE(BaseConfig.COMMON.DARK_STEEL.EMPOWERED_MAX_ENERGY_I,
-        BaseConfig.COMMON.DARK_STEEL.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_I,
-        BaseConfig.COMMON.DARK_STEEL.EMPOWERED_ACTIVATION_COST_I,
+    ONE(ArmoryConfig.COMMON.EMPOWERED_MAX_ENERGY_I,
+        ArmoryConfig.COMMON.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_I,
+        ArmoryConfig.COMMON.EMPOWERED_ACTIVATION_COST_I,
         EIOLang.DS_UPGRADE_EMPOWERED_I),
-    TWO(BaseConfig.COMMON.DARK_STEEL.EMPOWERED_MAX_ENERGY_II,
-        BaseConfig.COMMON.DARK_STEEL.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_II,
-        BaseConfig.COMMON.DARK_STEEL.EMPOWERED_ACTIVATION_COST_II,
+    TWO(ArmoryConfig.COMMON.EMPOWERED_MAX_ENERGY_II,
+        ArmoryConfig.COMMON.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_II,
+        ArmoryConfig.COMMON.EMPOWERED_ACTIVATION_COST_II,
         EIOLang.DS_UPGRADE_EMPOWERED_II),
-    THREE(BaseConfig.COMMON.DARK_STEEL.EMPOWERED_MAX_ENERGY_III,
-        BaseConfig.COMMON.DARK_STEEL.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_III,
-        BaseConfig.COMMON.DARK_STEEL.EMPOWERED_ACTIVATION_COST_III,
+    THREE(ArmoryConfig.COMMON.EMPOWERED_MAX_ENERGY_III,
+        ArmoryConfig.COMMON.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_III,
+        ArmoryConfig.COMMON.EMPOWERED_ACTIVATION_COST_III,
         EIOLang.DS_UPGRADE_EMPOWERED_III),
-    FOUR(BaseConfig.COMMON.DARK_STEEL.EMPOWERED_MAX_ENERGY_IV,
-        BaseConfig.COMMON.DARK_STEEL.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_IV,
-        BaseConfig.COMMON.DARK_STEEL.EMPOWERED_ACTIVATION_COST_IV,
+    FOUR(ArmoryConfig.COMMON.EMPOWERED_MAX_ENERGY_IV,
+        ArmoryConfig.COMMON.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_IV,
+        ArmoryConfig.COMMON.EMPOWERED_ACTIVATION_COST_IV,
         EIOLang.DS_UPGRADE_EMPOWERED_IV);
 
     private final Supplier<IDarkSteelUpgrade> factory;

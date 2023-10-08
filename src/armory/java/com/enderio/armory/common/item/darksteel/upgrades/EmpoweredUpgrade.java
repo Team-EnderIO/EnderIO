@@ -1,5 +1,6 @@
 package com.enderio.armory.common.item.darksteel.upgrades;
 
+import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.common.util.TooltipUtil;
@@ -23,9 +24,9 @@ public class EmpoweredUpgrade extends TieredUpgrade<EmpoweredUpgradeTier> {
 
     private static final Random RANDOM = new Random();
 
-    private final ForgeConfigSpec.ConfigValue<Integer> speedBoostWhenPowered = BaseConfig.COMMON.DARK_STEEL.EMPOWERED_EFFICIENCY_BOOST;
+    private final ForgeConfigSpec.ConfigValue<Integer> speedBoostWhenPowered = ArmoryConfig.COMMON.EMPOWERED_EFFICIENCY_BOOST;
 
-    private final ForgeConfigSpec.ConfigValue<Integer> powerUsePerDamagePoint = BaseConfig.COMMON.DARK_STEEL.EMPOWERED_ENERGY_PER_DAMAGE;
+    private final ForgeConfigSpec.ConfigValue<Integer> powerUsePerDamagePoint = ArmoryConfig.COMMON.EMPOWERED_ENERGY_PER_DAMAGE;
 
     @Nullable
     private EnergyStorage storage;

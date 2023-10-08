@@ -1,5 +1,6 @@
 package com.enderio.armory.common.item.darksteel;
 
+import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.init.ArmoryItems;
 import com.enderio.armory.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.ForkUpgrade;
@@ -62,7 +63,7 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem, ITabVar
                 collectTreeBlocks(pLevel, pPos, new HashSet<>(), chopCandidates, maxSearchSize, pState.getBlock());
                 chopCandidates.remove(pPos); // don't double harvest this guy
 
-                int energyPerBlock = BaseConfig.COMMON.DARK_STEEL.DARK_STEEL_AXE_ENERGY_PER_FELLED_LOG.get();
+                int energyPerBlock = ArmoryConfig.COMMON.DARK_STEEL_AXE_ENERGY_PER_FELLED_LOG.get();
                 int maxBlocks = EnergyUtil.getEnergyStored(pStack)/energyPerBlock;
 
                 Collection<BlockPos> toChop = chopCandidates;
@@ -158,7 +159,7 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem, ITabVar
     @Override
     public void addCurrentUpgradeTooltips(ItemStack itemStack, List<Component> tooltips, boolean isDetailed) {
         if(isDetailed && getEmpoweredUpgrade(itemStack).isPresent()) {
-            tooltips.add(TooltipUtil.withArgs(EIOLang.DS_UPGRADE_EMPOWERED_EFFICIENCY, BaseConfig.COMMON.DARK_STEEL.EMPOWERED_EFFICIENCY_BOOST.get()));
+            tooltips.add(TooltipUtil.withArgs(EIOLang.DS_UPGRADE_EMPOWERED_EFFICIENCY, ArmoryConfig.COMMON.EMPOWERED_EFFICIENCY_BOOST.get()));
         }
         IDarkSteelItem.super.addCurrentUpgradeTooltips(itemStack, tooltips, isDetailed);
     }

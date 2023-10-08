@@ -2,9 +2,9 @@ package com.enderio.armory.common.init;
 
 import com.enderio.EnderIO;
 import com.enderio.armory.common.item.darksteel.DarkSteelSwordItem;
+import com.enderio.armory.common.tag.ArmoryTags;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.base.common.init.EIOItems;
-import com.enderio.base.common.tag.EIOTags;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import net.minecraft.world.item.Tier;
@@ -20,7 +20,7 @@ public class ArmoryItems {
     private static final Registrate REGISTRATE = EnderIO.registrate();
 
     public static final Tier DARK_STEEL_TIER = TierSortingRegistry.registerTier(
-        new ForgeTier(3, 2000, 8.0F, 3, 25, EIOTags.Blocks.DARK_STEEL_TIER, () -> Ingredient.of(EIOItems.DARK_STEEL_INGOT.get())),
+        new ForgeTier(3, 2000, 8.0F, 3, 25, ArmoryTags.Blocks.DARK_STEEL_TIER, () -> Ingredient.of(EIOItems.DARK_STEEL_INGOT.get())),
         EnderIO.loc("dark_steel_tier"), List.of(Tiers.DIAMOND), List.of(Tiers.NETHERITE));
 
     public static final ItemEntry<DarkSteelSwordItem> DARK_STEEL_SWORD = REGISTRATE

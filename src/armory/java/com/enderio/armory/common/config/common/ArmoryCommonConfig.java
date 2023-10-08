@@ -1,8 +1,8 @@
-package com.enderio.base.common.config.common;
+package com.enderio.armory.common.config.common;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 
-public class DarkSteelConfig {
+public class ArmoryCommonConfig {
 
     public final ForgeConfigSpec.ConfigValue<Integer> DARK_STEEL_AXE_ENERGY_PER_FELLED_LOG;
     public final ForgeConfigSpec.ConfigValue<Integer> DARK_STEEL_PICKAXE_OBSIDIAN_ENERGY_COST;
@@ -38,7 +38,7 @@ public class DarkSteelConfig {
     public final ForgeConfigSpec.ConfigValue<Integer> FORK_ACTIVATION_COST;
     public final ForgeConfigSpec.ConfigValue<Integer> DIRECT_ACTIVATION_COST;
 
-    public DarkSteelConfig(ForgeConfigSpec.Builder builder) {
+    public ArmoryCommonConfig(ForgeConfigSpec.Builder builder) {
         builder.push("darksteel");
 
         builder.push("darksteelaxe");
