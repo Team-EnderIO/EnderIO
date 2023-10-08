@@ -6,6 +6,7 @@ import com.enderio.api.capability.MultiCapabilityProvider;
 import com.enderio.armory.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.armory.common.capability.DarkSteelUpgradeable;
 import com.enderio.armory.common.capability.EnergyDelegator;
+import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.item.IAdvancedTooltipProvider;
@@ -81,7 +82,7 @@ public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipPr
     default void addDurabilityTooltips(ItemStack itemStack,  List<Component> tooltips) {
         if (itemStack.isDamageableItem()) {
             String durability = (itemStack.getMaxDamage() - itemStack.getDamageValue()) + "/" + itemStack.getMaxDamage();
-            tooltips.add(TooltipUtil.withArgs(EIOLang.DURABILITY_AMOUNT, durability).withStyle(ChatFormatting.GRAY));
+            tooltips.add(TooltipUtil.withArgs(ArmoryLang.DURABILITY_AMOUNT, durability).withStyle(ChatFormatting.GRAY));
         }
         if (DarkSteelUpgradeable.hasUpgrade(itemStack, EmpoweredUpgrade.NAME)) {
             String energy = String.format("%,d", EnergyUtil.getEnergyStored(itemStack)) + "/" + String.format("%,d", EnergyUtil.getMaxEnergyStored(itemStack));
@@ -100,7 +101,7 @@ public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipPr
     default void addAvailableUpgradesTooltips(ItemStack itemStack, List<Component> tooltips) {
         var availUpgrades = DarkSteelUpgradeable.getUpgradesApplicable(itemStack);
         if(!availUpgrades.isEmpty()) {
-            tooltips.add(EIOLang.DS_UPGRADE_AVAILABLE.copy().withStyle(ChatFormatting.YELLOW));
+            tooltips.add(ArmoryLang.DS_UPGRADE_AVAILABLE.copy().withStyle(ChatFormatting.YELLOW));
             availUpgrades
                 .stream()
                 .sorted(Comparator.comparing(IDarkSteelUpgrade::getName))

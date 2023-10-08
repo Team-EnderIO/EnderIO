@@ -2,7 +2,7 @@ package com.enderio.armory.common.item.darksteel;
 
 import com.enderio.api.capability.IDarkSteelUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
-import com.enderio.base.common.lang.EIOLang;
+import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.core.client.item.IAdvancedTooltipProvider;
 import com.enderio.core.common.item.ITabVariants;
 import com.enderio.core.common.util.TooltipUtil;
@@ -62,7 +62,7 @@ public class DarkSteelUpgradeItem extends Item implements IAdvancedTooltipProvid
                 DarkSteelUpgradeRegistry.instance().writeUpgradeToItemStack(stack, upgrade.get());
                 pLevel.playSound(pPlayer, pPlayer.getOnPos(), SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 1.0F, new Random().nextFloat() * 0.1F + 0.9F);
             } else if (pLevel.isClientSide){
-                pPlayer.sendSystemMessage(EIOLang.DS_UPGRADE_ITEM_NO_XP);
+                pPlayer.sendSystemMessage(ArmoryLang.DS_UPGRADE_ITEM_NO_XP);
             }
             return InteractionResultHolder.consume(stack);
         }
@@ -76,8 +76,8 @@ public class DarkSteelUpgradeItem extends Item implements IAdvancedTooltipProvid
             tooltips.add(component.copy().withStyle(ChatFormatting.GRAY));
         }
         if (!DarkSteelUpgradeRegistry.instance().hasUpgrade(itemStack)) {
-            tooltips.add(TooltipUtil.withArgs(EIOLang.DS_UPGRADE_XP_COST, levelsRequired.get()).withStyle(ChatFormatting.DARK_PURPLE));
-            tooltips.add(EIOLang.DS_UPGRADE_ACTIVATE.copy().withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
+            tooltips.add(TooltipUtil.withArgs(ArmoryLang.DS_UPGRADE_XP_COST, levelsRequired.get()).withStyle(ChatFormatting.DARK_PURPLE));
+            tooltips.add(ArmoryLang.DS_UPGRADE_ACTIVATE.copy().withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
         }
     }
 }

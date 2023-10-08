@@ -2,7 +2,7 @@ package com.enderio.armory.common.item.darksteel.upgrades.direct;
 
 import com.enderio.api.capability.IDarkSteelUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
-import com.enderio.base.common.lang.EIOLang;
+import com.enderio.armory.common.lang.ArmoryLang;
 import net.minecraft.network.chat.Component;
 
 import java.util.Collection;
@@ -19,11 +19,11 @@ public class DirectUpgrade implements IDarkSteelUpgrade {
 
     @Override
     public Component getDisplayName() {
-        return EIOLang.DS_UPGRADE_DIRECT;
+        return ArmoryLang.DS_UPGRADE_DIRECT;
     }
 
     @Override
     public Collection<Component> getDescription() {
-        return List.of(EIOLang.DS_UPGRADE_DIRECT_DESCRIPTION);
+        return List.of(ArmoryLang.DS_UPGRADE_DIRECT_DESCRIPTION);
     }
 }

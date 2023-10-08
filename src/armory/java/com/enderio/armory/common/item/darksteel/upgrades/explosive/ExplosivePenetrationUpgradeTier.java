@@ -3,20 +3,18 @@ package com.enderio.armory.common.item.darksteel.upgrades.explosive;
 import com.enderio.api.capability.IDarkSteelUpgrade;
 import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.item.darksteel.upgrades.IUpgradeTier;
+import com.enderio.armory.common.lang.ArmoryLang;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.function.Supplier;
 
-import static com.enderio.base.common.lang.EIOLang.DS_UPGRADE_EXPLOSIVE_PENETRATION_I;
-import static com.enderio.base.common.lang.EIOLang.DS_UPGRADE_EXPLOSIVE_PENETRATION_II;
-
 public enum ExplosivePenetrationUpgradeTier implements IUpgradeTier {
 
     ONE(ArmoryConfig.COMMON.EXPLOSIVE_PENETRATION_I, ArmoryConfig.COMMON.EXPLOSIVE_PENETRATION_ACTIVATION_COST_I,
-        DS_UPGRADE_EXPLOSIVE_PENETRATION_I),
+        ArmoryLang.DS_UPGRADE_EXPLOSIVE_PENETRATION_I),
     TWO(ArmoryConfig.COMMON.EXPLOSIVE_PENETRATION_II, ArmoryConfig.COMMON.EXPLOSIVE_PENETRATION_ACTIVATION_COST_II,
-        DS_UPGRADE_EXPLOSIVE_PENETRATION_II);
+        ArmoryLang.DS_UPGRADE_EXPLOSIVE_PENETRATION_II);
 
     private final Supplier<IDarkSteelUpgrade> factory;
     private final ForgeConfigSpec.ConfigValue<Integer> magnitude;

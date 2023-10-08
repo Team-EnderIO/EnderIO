@@ -1,9 +1,8 @@
 package com.enderio.armory.common.item.darksteel;
 
 import com.enderio.armory.common.init.ArmoryItems;
+import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.base.common.init.EIOBlocks;
-import com.enderio.base.common.init.EIOItems;
-import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.item.IAdvancedTooltipProvider;
 import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.nbt.CompoundTag;
@@ -78,6 +77,6 @@ public class DarkSteelSwordItem extends SwordItem implements IAdvancedTooltipPro
 
     @Override
     public void addDetailedTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
-        tooltips.add(TooltipUtil.withArgs(EIOLang.HEAD_DROP_CHANCE, 7));
+        tooltips.add(TooltipUtil.withArgs(ArmoryLang.HEAD_DROP_CHANCE, 7));
     }
 }

@@ -2,7 +2,7 @@ package com.enderio.armory.common.item.darksteel.upgrades;
 
 import com.enderio.api.capability.IDarkSteelUpgrade;
 import com.enderio.armory.common.config.ArmoryConfig;
-import com.enderio.base.common.lang.EIOLang;
+import com.enderio.armory.common.lang.ArmoryLang;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.ForgeConfigSpec;
 
@@ -13,19 +13,19 @@ public enum EmpoweredUpgradeTier implements IUpgradeTier {
     ONE(ArmoryConfig.COMMON.EMPOWERED_MAX_ENERGY_I,
         ArmoryConfig.COMMON.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_I,
         ArmoryConfig.COMMON.EMPOWERED_ACTIVATION_COST_I,
-        EIOLang.DS_UPGRADE_EMPOWERED_I),
+        ArmoryLang.DS_UPGRADE_EMPOWERED_I),
     TWO(ArmoryConfig.COMMON.EMPOWERED_MAX_ENERGY_II,
         ArmoryConfig.COMMON.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_II,
         ArmoryConfig.COMMON.EMPOWERED_ACTIVATION_COST_II,
-        EIOLang.DS_UPGRADE_EMPOWERED_II),
+        ArmoryLang.DS_UPGRADE_EMPOWERED_II),
     THREE(ArmoryConfig.COMMON.EMPOWERED_MAX_ENERGY_III,
         ArmoryConfig.COMMON.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_III,
         ArmoryConfig.COMMON.EMPOWERED_ACTIVATION_COST_III,
-        EIOLang.DS_UPGRADE_EMPOWERED_III),
+        ArmoryLang.DS_UPGRADE_EMPOWERED_III),
     FOUR(ArmoryConfig.COMMON.EMPOWERED_MAX_ENERGY_IV,
         ArmoryConfig.COMMON.EMPOWERED_DAMAGE_ABSORPTION_CHANCE_IV,
         ArmoryConfig.COMMON.EMPOWERED_ACTIVATION_COST_IV,
-        EIOLang.DS_UPGRADE_EMPOWERED_IV);
+        ArmoryLang.DS_UPGRADE_EMPOWERED_IV);
 
     private final Supplier<IDarkSteelUpgrade> factory;
     private final ForgeConfigSpec.ConfigValue<Integer> maxStorage;

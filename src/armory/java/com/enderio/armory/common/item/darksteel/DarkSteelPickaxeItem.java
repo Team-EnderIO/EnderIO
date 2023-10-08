@@ -8,7 +8,7 @@ import com.enderio.armory.common.capability.DarkSteelUpgradeable;
 import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosivePenetrationUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosiveUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.explosive.ExplosiveUpgradeHandler;
-import com.enderio.base.common.lang.EIOLang;
+import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.core.common.item.ITabVariants;
 import com.enderio.core.common.util.EnergyUtil;
 import com.enderio.core.common.util.TooltipUtil;
@@ -120,8 +120,8 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem,
     @Override
     public void addCurrentUpgradeTooltips(ItemStack itemStack, List<Component> tooltips, boolean isDetailed) {
         if(isDetailed && getEmpoweredUpgrade(itemStack).isPresent()) {
-            tooltips.add(TooltipUtil.withArgs(EIOLang.DS_UPGRADE_EMPOWERED_EFFICIENCY, ArmoryConfig.COMMON.EMPOWERED_EFFICIENCY_BOOST.get()));
-            tooltips.add(TooltipUtil.withArgs(EIOLang.DS_UPGRADE_EMPOWERED_OBSIDIAM_EFFICIENCY, speedBoostWhenObsidian.get()));
+            tooltips.add(TooltipUtil.withArgs(ArmoryLang.DS_UPGRADE_EMPOWERED_EFFICIENCY, ArmoryConfig.COMMON.EMPOWERED_EFFICIENCY_BOOST.get()));
+            tooltips.add(TooltipUtil.withArgs(ArmoryLang.DS_UPGRADE_EMPOWERED_OBSIDIAM_EFFICIENCY, speedBoostWhenObsidian.get()));
         }
         IDarkSteelItem.super.addCurrentUpgradeTooltips(itemStack, tooltips, isDetailed);
     }

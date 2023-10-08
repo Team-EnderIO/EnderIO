@@ -5,8 +5,7 @@ import com.enderio.armory.common.init.ArmoryItems;
 import com.enderio.armory.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.armory.common.item.darksteel.upgrades.ForkUpgrade;
 import com.enderio.armory.common.capability.DarkSteelUpgradeable;
-import com.enderio.base.common.config.BaseConfig;
-import com.enderio.base.common.lang.EIOLang;
+import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.core.common.item.ITabVariants;
 import com.enderio.core.common.util.BlockUtil;
 import com.enderio.core.common.util.EnergyUtil;
@@ -159,7 +158,7 @@ public class DarkSteelAxeItem extends AxeItem implements IDarkSteelItem, ITabVar
     @Override
     public void addCurrentUpgradeTooltips(ItemStack itemStack, List<Component> tooltips, boolean isDetailed) {
         if(isDetailed && getEmpoweredUpgrade(itemStack).isPresent()) {
-            tooltips.add(TooltipUtil.withArgs(EIOLang.DS_UPGRADE_EMPOWERED_EFFICIENCY, ArmoryConfig.COMMON.EMPOWERED_EFFICIENCY_BOOST.get()));
+            tooltips.add(TooltipUtil.withArgs(ArmoryLang.DS_UPGRADE_EMPOWERED_EFFICIENCY, ArmoryConfig.COMMON.EMPOWERED_EFFICIENCY_BOOST.get()));
         }
         IDarkSteelItem.super.addCurrentUpgradeTooltips(itemStack, tooltips, isDetailed);
     }

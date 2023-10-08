@@ -2,7 +2,7 @@ package com.enderio.armory.common.item.darksteel.upgrades.explosive;
 
 import com.enderio.armory.common.item.darksteel.upgrades.DarkSteelUpgradeRegistry;
 import com.enderio.armory.common.item.darksteel.upgrades.TieredUpgrade;
-import com.enderio.base.common.lang.EIOLang;
+import com.enderio.armory.common.lang.ArmoryLang;
 import net.minecraft.network.chat.Component;
 
 import java.util.Collection;
@@ -27,7 +27,7 @@ public class ExplosiveUpgrade extends TieredUpgrade<ExplosiveUpgradeTier> {
 
     @Override
     public Collection<Component> getDescription() {
-        return List.of(EIOLang.DS_UPGRADE_EXPLOSIVE_DESCRIPTION);
+        return List.of(ArmoryLang.DS_UPGRADE_EXPLOSIVE_DESCRIPTION);
     }
 
     @Override

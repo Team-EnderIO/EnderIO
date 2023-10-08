@@ -1,8 +1,7 @@
 package com.enderio.armory.common.item.darksteel.upgrades;
 
 import com.enderio.armory.common.config.ArmoryConfig;
-import com.enderio.base.common.config.BaseConfig;
-import com.enderio.base.common.lang.EIOLang;
+import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -64,9 +63,9 @@ public class EmpoweredUpgrade extends TieredUpgrade<EmpoweredUpgradeTier> {
     @Override
     public Collection<Component> getDescription() {
         List<Component> result = new ArrayList<>();
-        result.add(EIOLang.DS_UPGRADE_EMPOWERED_DESCRIPTION);
-        result.add(TooltipUtil.withArgs(EIOLang.DS_UPGRADE_EMPOWERED_STORAGE, String.format("%,d", tier.getMaxStorage())));
-        result.add(TooltipUtil.withArgs(EIOLang.DS_UPGRADE_EMPOWERED_DAMAGE_ABSORPTION, (int)(tier.getDamageAbsorptionChance() * 100)));
+        result.add(ArmoryLang.DS_UPGRADE_EMPOWERED_DESCRIPTION);
+        result.add(TooltipUtil.withArgs(ArmoryLang.DS_UPGRADE_EMPOWERED_STORAGE, String.format("%,d", tier.getMaxStorage())));
+        result.add(TooltipUtil.withArgs(ArmoryLang.DS_UPGRADE_EMPOWERED_DAMAGE_ABSORPTION, (int)(tier.getDamageAbsorptionChance() * 100)));
         return result;
     }
 
