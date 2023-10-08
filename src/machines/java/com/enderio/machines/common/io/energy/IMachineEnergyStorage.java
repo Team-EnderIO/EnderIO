@@ -25,7 +25,7 @@ public interface IMachineEnergyStorage extends IEnergyStorage {
      *
      * @return Amount of energy added.
      */
-    public int addEnergy(int energy, boolean simulate);
+     int addEnergy(int energy, boolean simulate);
 
     /**
      * Remove energy from storage.

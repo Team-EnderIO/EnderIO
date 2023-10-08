@@ -6,7 +6,7 @@
       "item": "enderio:conduit_binder"
     },
     "C": {
-      "item": "enderio:pulsating_crystal"
+      "tag": "forge:gems/pulsating_crystal"
     },
     "I": {
       "tag": "forge:ingots/iron"

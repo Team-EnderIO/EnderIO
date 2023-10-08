@@ -6,16 +6,16 @@
       "item": "enderio:void_chassis"
     },
     "G": {
-      "item": "enderio:iron_gear"
+      "tag": "forge:gears/stone"
     },
     "H": {
       "item": "minecraft:hopper"
     },
     "I": {
-      "item": "enderio:copper_alloy_ingot"
+      "tag": "forge:ingots/copper_alloy"
     },
     "R": {
-      "item": "enderio:redstone_alloy_ingot"
+      "tag": "forge:ingots/redstone_alloy"
     }
   },
   "pattern": [

@@ -32,8 +32,10 @@ public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
 
     public static EnchanterMenu factory(@Nullable MenuType<EnchanterMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
-        if (entity instanceof EnchanterBlockEntity castBlockEntity)
+        if (entity instanceof EnchanterBlockEntity castBlockEntity) {
             return new EnchanterMenu(castBlockEntity, inventory, pContainerId);
+        }
+
         LogManager.getLogger().warn("couldn't find BlockEntity");
         return new EnchanterMenu(null, inventory, pContainerId);
     }

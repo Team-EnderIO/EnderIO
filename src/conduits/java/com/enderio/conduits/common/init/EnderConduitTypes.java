@@ -1,9 +1,17 @@
 package com.enderio.conduits.common.init;
 
 import com.enderio.EnderIO;
-import com.enderio.api.conduit.*;
+import com.enderio.api.conduit.ConduitTypes;
+import com.enderio.api.conduit.IConduitMenuData;
+import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.misc.Vector2i;
-import com.enderio.conduits.common.types.*;
+import com.enderio.conduits.common.types.EnergyConduitType;
+import com.enderio.conduits.common.types.FluidConduitType;
+import com.enderio.conduits.common.types.ItemClientConduitData;
+import com.enderio.conduits.common.types.ItemConduitTicker;
+import com.enderio.conduits.common.types.ItemExtendedData;
+import com.enderio.conduits.common.types.RedstoneConduitType;
+import com.enderio.conduits.common.types.SimpleConduitType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.RegistryObject;
 

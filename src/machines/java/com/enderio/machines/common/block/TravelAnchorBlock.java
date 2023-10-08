@@ -21,7 +21,7 @@ import java.util.WeakHashMap;
 
 @Mod.EventBusSubscriber
 public class TravelAnchorBlock extends MachineBlock {
-    private static final Map<Player, PlayerSneakEntry> sneakCache = new WeakHashMap<>();
+    private static final Map<Player, PlayerSneakEntry> SNEAK_CACHE = new WeakHashMap<>();
 
     public TravelAnchorBlock(Properties props) {
         super(props, MachineBlockEntities.TRAVEL_ANCHOR);
@@ -53,12 +53,12 @@ public class TravelAnchorBlock extends MachineBlock {
             if ((!sneakEntry.isSneaking() || sneakEntry.atTime() != player.level().getServer().getTickCount() - 1) && player.isShiftKeyDown()) {
                 TravelHandler.blockTeleport(player.level(), player);
             }
-            sneakCache.put(player, new PlayerSneakEntry(player.isShiftKeyDown(), player.level().getServer().getTickCount()));
+            SNEAK_CACHE.put(player, new PlayerSneakEntry(player.isShiftKeyDown(), player.level().getServer().getTickCount()));
         }
     }
 
     private static PlayerSneakEntry getLastSneakEntry(ServerPlayer player){
-        return sneakCache.getOrDefault(player, new PlayerSneakEntry(false, player.level().getServer().getTickCount() - 1));
+        return SNEAK_CACHE.getOrDefault(player, new PlayerSneakEntry(false, player.level().getServer().getTickCount() - 1));
     }
 
     private record PlayerSneakEntry(boolean isSneaking, int atTime){}

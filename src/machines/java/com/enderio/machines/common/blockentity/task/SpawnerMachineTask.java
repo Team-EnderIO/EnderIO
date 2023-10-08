@@ -32,7 +32,7 @@ import java.util.Optional;
 @Mod.EventBusSubscriber
 public class SpawnerMachineTask implements IPoweredMachineTask {
 
-    public static final int spawnTries = 10;
+    public static final int SPAWN_TRIES = 10;
     private boolean complete;
     private int energyCost;
     private int energyConsumed = 0;
@@ -152,7 +152,7 @@ public class SpawnerMachineTask implements IPoweredMachineTask {
             blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.TOO_MANY_SPAWNER);
             return false;
         }
-        for (int i = 0; i < spawnTries; i++) {
+        for (int i = 0; i < SPAWN_TRIES; i++) {
             RandomSource randomsource = level.getRandom();
             double x = pos.getX() + (randomsource.nextDouble() - randomsource.nextDouble()) * (double)this.blockEntity.getRange() + 0.5D;
             double y = pos.getY() + randomsource.nextInt(3) - 1;
@@ -185,6 +185,7 @@ public class SpawnerMachineTask implements IPoweredMachineTask {
                             entity.moveTo(x, y, z);
                         }
                     }
+                    default -> throw new IllegalStateException("Unexpected value: " + spawnType);
                 }
 
                 if (entity == null) {

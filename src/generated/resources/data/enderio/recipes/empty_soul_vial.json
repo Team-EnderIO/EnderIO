@@ -6,7 +6,7 @@
       "tag": "enderio:fused_quartz"
     },
     "S": {
-      "item": "enderio:soularium_ingot"
+      "tag": "forge:ingots/soularium"
     }
   },
   "pattern": [

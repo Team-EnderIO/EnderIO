@@ -3,13 +3,13 @@
   "energy": 20000,
   "inputs": [
     {
-      "item": "enderio:soularium_ingot"
+      "tag": "forge:ingots/soularium"
     },
     {
       "item": "minecraft:skeleton_skull"
     },
     {
-      "item": "enderio:soularium_ingot"
+      "tag": "forge:ingots/soularium"
     },
     {
       "item": "minecraft:rotten_flesh"

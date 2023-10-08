@@ -73,12 +73,14 @@ public class EntityCaptureUtils {
      * @return the status on how this entity should be handled for capture
      */
     public static CapturableStatus getCapturableStatus(EntityType<? extends LivingEntity> type, @Nullable Entity entity) {
-
-        if (entity != null && isBlacklistedBoss(entity)) //Do we keep this special case?
+        //Do we keep this special case?
+        if (entity != null && isBlacklistedBoss(entity)) {
             return CapturableStatus.BOSS;
+        }
 
-        if (!type.canSerialize())
+        if (!type.canSerialize()) {
             return CapturableStatus.INCOMPATIBLE;
+        }
 
         if (type.is(EIOTags.EntityTypes.SOUL_VIAL_BLACKLIST)) {
             return CapturableStatus.BLACKLISTED;

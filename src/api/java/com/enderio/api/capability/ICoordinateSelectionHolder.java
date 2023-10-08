@@ -1,9 +1,12 @@
 package com.enderio.api.capability;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.function.Consumer;
 
 public interface ICoordinateSelectionHolder {
 
+    @Nullable
     CoordinateSelection getSelection();
 
     void setSelection(CoordinateSelection selection);
@@ -13,7 +16,8 @@ public interface ICoordinateSelectionHolder {
     }
 
     default void ifSelectionPresent(Consumer<CoordinateSelection> cons) {
-        if (hasSelection())
+        if (hasSelection()) {
             cons.accept(getSelection());
+        }
     }
 }

@@ -9,7 +9,7 @@
       "tag": "forge:gems/diamond"
     },
     "I": {
-      "item": "enderio:dark_steel_ingot"
+      "tag": "forge:ingots/dark_steel"
     }
   },
   "pattern": [

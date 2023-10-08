@@ -6,7 +6,7 @@
       "item": "enderio:soul_chain"
     },
     "I": {
-      "item": "enderio:soularium_ingot"
+      "tag": "forge:ingots/soularium"
     },
     "Q": {
       "tag": "forge:gems/quartz"

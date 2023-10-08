@@ -121,46 +121,58 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
     public boolean matches(SoulBindingRecipe.Container container, Level pLevel) {
         container.setNeededXP(0);
         ItemStack inputSoul = SoulBinderBlockEntity.INPUT_SOUL.getItemStack(container);
-        if (!inputSoul.is(EIOItems.FILLED_SOUL_VIAL.get()))
+        if (!inputSoul.is(EIOItems.FILLED_SOUL_VIAL.get())) {
             return false;
-        if (!input.test(SoulBinderBlockEntity.INPUT_OTHER.getItemStack(container)))
+        }
+
+        if (!input.test(SoulBinderBlockEntity.INPUT_OTHER.getItemStack(container))) {
             return false;
+        }
+
         LazyOptional<IEntityStorage> capability = inputSoul.getCapability(EIOCapabilities.ENTITY_STORAGE);
         if (!capability.isPresent()) { //vial (or other entity storage
             return false;
         }
+
         if (souldata != null) { //is in the selected souldata
             if (SoulDataReloadListener.fromString(souldata).matches(
                 container.getItem(0).getCapability(EIOCapabilities.ENTITY_STORAGE).resolve().get()
                     .getStoredEntityData().getEntityType().get()).isEmpty()) {
                 return false;
-            };
+            }
+
             container.setNeededXP(exp);
             return ExperienceUtil.getLevelFromFluid(container.getFluidTank().getFluidAmount()) >= exp;
         }
+
         if (mobCategory == null && entityType == null) { //No souldata, entity type or mob category
             container.setNeededXP(exp);
             return ExperienceUtil.getLevelFromFluid(container.getFluidTank().getFluidAmount()) >= exp;
         }
+
         IEntityStorage storage = capability.resolve().get();
         if (storage.hasStoredEntity()) {
             var type = storage.getStoredEntityData().getEntityType();
-            if (type.isEmpty())
+            if (type.isEmpty()) {
                 return false;
+            }
 
             var entityType = ForgeRegistries.ENTITY_TYPES.getValue(type.get());
-            if (entityType == null)
+            if (entityType == null) {
                 return false;
+            }
 
             if (entityType.getCategory().equals(mobCategory)) {
                 container.setNeededXP(exp);
                 return ExperienceUtil.getLevelFromFluid(container.getFluidTank().getFluidAmount()) >= exp;
             }
         }
+
         if (storage.hasStoredEntity() && storage.getStoredEntityData().getEntityType().get().equals(entityType)) { //type matters
             container.setNeededXP(exp);
             return ExperienceUtil.getLevelFromFluid(container.getFluidTank().getFluidAmount()) >= exp;
         }
+
         return false;
     }
 

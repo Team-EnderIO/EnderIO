@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class SagMillScreen extends EIOScreen<SagMillMenu> {
-    public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/sagmill.png");
+    public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/sag_mill.png");
 
     public SagMillScreen(SagMillMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -66,7 +66,7 @@ public class SagMillScreen extends EIOScreen<SagMillMenu> {
         private static final int WIDTH = 4;
         private static final int HEIGHT = 16;
 
-        public GrindingBallWidget(int x, int y) {
+        GrindingBallWidget(int x, int y) {
             super(x, y, WIDTH, HEIGHT, Component.empty());
         }
 
@@ -87,8 +87,9 @@ public class SagMillScreen extends EIOScreen<SagMillMenu> {
         @Override
         public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
             SagMillBlockEntity be = SagMillScreen.this.getMenu().getBlockEntity();
-            if (be == null)
+            if (be == null) {
                 return;
+            }
 
             float durability = be.getGrindingBallDamage();
             IGrindingBallData data = be.getGrindingBallData();
@@ -116,8 +117,9 @@ public class SagMillScreen extends EIOScreen<SagMillMenu> {
                 for (int i = 0; i < tooltipComponents.size(); i++) {
                     tooltip.append(tooltipComponents.get(i));
 
-                    if (i + 1 < tooltipComponents.size())
+                    if (i + 1 < tooltipComponents.size()) {
                         tooltip.append("\n");
+                    }
                 }
 
                 // Set for display

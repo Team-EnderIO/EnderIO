@@ -33,8 +33,10 @@ public class CoordinateSelectorItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
         ItemStack itemstack = pPlayer.getItemInHand(pHand);
-        if (!checkPaper(pPlayer))
+        if (!checkPaper(pPlayer)) {
             return super.use(pLevel, pPlayer, pHand);
+        }
+
         BlockHitResult hitResult = pLevel.clip(
             new ClipContext(
                 pPlayer.getEyePosition(),
@@ -43,23 +45,32 @@ public class CoordinateSelectorItem extends Item {
                 ClipContext.Fluid.ANY,
                 pPlayer)
         );
+
         if (hitResult.getType() == HitResult.Type.MISS) {
-            if (pPlayer instanceof LocalPlayer)
+            if (pPlayer instanceof LocalPlayer) {
                 pPlayer.displayClientMessage(EIOLang.COORDINATE_SELECTOR_NO_BLOCK, true);
+            }
+
             return super.use(pLevel, pPlayer, pHand);
         }
-        if (pPlayer instanceof ServerPlayer serverPlayer)
+
+        if (pPlayer instanceof ServerPlayer serverPlayer) {
             openMenu(serverPlayer, pLevel, hitResult.getBlockPos());
+        }
+
         return InteractionResultHolder.sidedSuccess(itemstack, pLevel.isClientSide);
     }
 
     @Override
     public InteractionResult useOn(UseOnContext pContext) {
         if (pContext.getPlayer() != null && checkPaper(pContext.getPlayer())) {
-            if (pContext.getPlayer() instanceof ServerPlayer serverPlayer)
+            if (pContext.getPlayer() instanceof ServerPlayer serverPlayer) {
                 openMenu(serverPlayer, pContext.getLevel(), pContext.getClickedPos());
+            }
+
             return InteractionResult.sidedSuccess(pContext.getLevel().isClientSide);
         }
+
         return super.useOn(pContext);
     }
 
@@ -80,10 +91,14 @@ public class CoordinateSelectorItem extends Item {
     }
 
     private static boolean checkPaper(Player player) {
-        if (player.getInventory().contains(Items.PAPER.getDefaultInstance()))
+        if (player.getInventory().contains(Items.PAPER.getDefaultInstance())) {
             return true;
-        if (player instanceof LocalPlayer)
+        }
+
+        if (player instanceof LocalPlayer) {
             player.displayClientMessage(EIOLang.COORDINATE_SELECTOR_NO_PAPER, true);
+        }
+
         return false;
     }
 }

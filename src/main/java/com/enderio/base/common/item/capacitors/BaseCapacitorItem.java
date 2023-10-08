@@ -20,8 +20,10 @@ public class BaseCapacitorItem extends Item {
     public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
         Level level = context.getLevel();
         BlockPos pos = context.getClickedPos();
-        if (level.getBlockEntity(pos) instanceof IMachineInstall equippable)
+        if (level.getBlockEntity(pos) instanceof IMachineInstall equippable) {
             return equippable.tryItemInstall(stack, context);
+        }
+
         return super.onItemUseFirst(stack, context);
     }
 }

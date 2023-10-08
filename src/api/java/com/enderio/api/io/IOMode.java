@@ -38,7 +38,10 @@ public enum IOMode {
      */
     DISABLED(false, false, false, false);
 
-    private final boolean input, output, force, canConnect;
+    private final boolean input;
+    private final boolean output;
+    private final boolean force;
+    private final boolean canConnect;
 
     IOMode(boolean input, boolean output, boolean force, boolean canConnect) {
         this.input = input;

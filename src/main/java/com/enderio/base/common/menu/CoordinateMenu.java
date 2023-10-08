@@ -82,8 +82,9 @@ public class CoordinateMenu extends AbstractContainerMenu {
             paper.get().shrink(1);
             ItemStack itemstack = EIOItems.LOCATION_PRINTOUT.get().getDefaultInstance();
             LocationPrintoutItem.setSelection(itemstack, selection);
-            if (!StringUtils.isBlank(name))
+            if (!StringUtils.isBlank(name)) {
                 itemstack.setHoverName(Component.literal(name).withStyle(ChatFormatting.AQUA));
+            }
 
             if (severPlayer.isAlive() && !severPlayer.hasDisconnected()) {
                 severPlayer.getInventory().placeItemBackInInventory(itemstack);
@@ -95,13 +96,17 @@ public class CoordinateMenu extends AbstractContainerMenu {
 
     private static Optional<ItemStack> findPaper(Player player) {
         for (ItemStack stack: player.getInventory().items) {
-            if (stack.getItem() == Items.PAPER)
+            if (stack.getItem() == Items.PAPER) {
                 return Optional.of(stack);
+            }
         }
+
         for (ItemStack stack: player.getInventory().offhand) {
-            if (stack.getItem() == Items.PAPER)
+            if (stack.getItem() == Items.PAPER) {
                 return Optional.of(stack);
+            }
         }
+
         return Optional.empty();
     }
 
