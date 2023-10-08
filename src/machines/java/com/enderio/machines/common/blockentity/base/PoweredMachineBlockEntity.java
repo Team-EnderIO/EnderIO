@@ -307,7 +307,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
 
         // Don't do this on client side, client waits for the sync packet.
         if (level.isClientSide()) {
-            //return;
+            //return; TODO Do we want to sync with a packet cause right now we don't
         }
 
         MachineInventoryLayout layout = getInventoryLayout();

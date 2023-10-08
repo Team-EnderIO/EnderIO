@@ -48,7 +48,8 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
 
     private static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.SOUL_ENGINE_CAPACITY);
     public static final LinearScalable BURN_SPEED = new LinearScalable(CapacitorModifier.FIXED, MachinesConfig.COMMON.ENERGY.SOUL_ENGINE_BURN_SPEED);
-    public static final LinearScalable GENERATION_SPEED = new LinearScalable(CapacitorModifier.FIXED, MachinesConfig.COMMON.ENERGY.SOUL_ENGINE_BURN_SPEED);
+    //TODO capacitor increase efficiency
+    public static final LinearScalable GENERATION_SPEED = new LinearScalable(CapacitorModifier.FIXED, () -> 1);
 
     private static final String BURNED_TICKS = "BurnedTicks";
     private StoredEntityData entityData = StoredEntityData.empty();
@@ -118,7 +119,8 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
     }
 
     public float getGenerationRate() {
-        return GENERATION_SPEED.scaleF(this::getCapacitorData).get();
+        //TODO return GENERATION_SPEED.scaleF(this::getCapacitorData).get();
+        return MachinesConfig.COMMON.ENERGY.SOUL_ENGINE_BURN_SPEED.get();
     }
 
     @Override
