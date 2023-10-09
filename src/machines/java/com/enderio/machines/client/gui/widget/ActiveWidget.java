@@ -54,7 +54,7 @@ public class ActiveWidget extends EIOWidget {
 
     private void renderToolTip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (isHovered(mouseX, mouseY)) {
-            List<Component> list = state.get().stream().filter(s -> state.get().size() <= 0 || s.type() != MachineStateType.ACTIVE).map(s -> (Component) s.component()).toList();
+            List<Component> list = state.get().stream().filter(s -> state.get().size() <= 1 || s.type() != MachineStateType.ACTIVE).map(s -> (Component) s.component()).toList();
             if (list.isEmpty()){
                 list = List.of(MachineLang.TOOLTIP_IDLE);
             }
