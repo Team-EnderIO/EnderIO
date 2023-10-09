@@ -27,7 +27,8 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, IEnderCapabi
 
     private int energyStored;
 
-    private final Supplier<Integer> capacity, usageRate;
+    private final Supplier<Integer> capacity;
+    private final Supplier<Integer> usageRate;
 
     private final EnumMap<Direction, LazyOptional<Sided>> sideCache = new EnumMap<>(Direction.class);
     private LazyOptional<MachineEnergyStorage> selfCache = LazyOptional.empty();
@@ -123,23 +124,29 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, IEnderCapabi
 
     @Override
     public int receiveEnergy(int maxReceive, boolean simulate) {
-        if (!canReceive())
+        if (!canReceive()) {
             return 0;
+        }
+
         int energyReceived = Math.min(getMaxEnergyStored() - getEnergyStored(), Math.min(getMaxEnergyUse() * 2, maxReceive));
         if (!simulate) {
             addEnergy(energyReceived);
         }
+
         return energyReceived;
     }
 
     @Override
     public int extractEnergy(int maxExtract, boolean simulate) {
-        if (!canExtract())
+        if (!canExtract()) {
             return 0;
+        }
+
         int energyExtracted = Math.min(getEnergyStored(), maxExtract);
         if (!simulate) {
             takeEnergy(energyExtracted);
         }
+
         return energyExtracted;
     }
 
@@ -151,14 +158,18 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, IEnderCapabi
     @Override
     public LazyOptional<IEnergyStorage> getCapability(@Nullable Direction side) {
         if (side == null) {
-            // Create own cache if its been invalidated or not created yet.
-            if (!selfCache.isPresent())
+            // Create own cache if it has been invalidated or not created yet.
+            if (!selfCache.isPresent()) {
                 selfCache = LazyOptional.of(() -> this);
+            }
+
             return selfCache.cast();
         }
 
-        if (!config.getMode(side).canConnect())
+        if (!config.getMode(side).canConnect()) {
             return LazyOptional.empty();
+        }
+
         return sideCache.computeIfAbsent(side, dir -> LazyOptional.of(() -> new Sided(this, dir))).cast();
     }
 
@@ -199,7 +210,7 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, IEnderCapabi
         private final MachineEnergyStorage wrapped;
         private final Direction side;
 
-        public Sided(MachineEnergyStorage wrapped, Direction side) {
+        Sided(MachineEnergyStorage wrapped, Direction side) {
             this.wrapped = wrapped;
             this.side = side;
         }
@@ -216,29 +227,37 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, IEnderCapabi
 
         @Override
         public int receiveEnergy(int maxReceive, boolean simulate) {
-            if (!canReceive())
+            if (!canReceive()) {
                 return 0;
+            }
+
             return wrapped.receiveEnergy(maxReceive, simulate);
         }
 
         @Override
         public int extractEnergy(int maxExtract, boolean simulate) {
-            if (!canExtract())
+            if (!canExtract()) {
                 return 0;
+            }
+
             return wrapped.extractEnergy(maxExtract, simulate);
         }
 
         @Override
         public boolean canExtract() {
-            if (wrapped.getIOMode().respectIOConfig() && !wrapped.getConfig().getMode(side).canOutput())
+            if (wrapped.getIOMode().respectIOConfig() && !wrapped.getConfig().getMode(side).canOutput()) {
                 return false;
+            }
+
             return wrapped.canExtract();
         }
 
         @Override
         public boolean canReceive() {
-            if (wrapped.getIOMode().respectIOConfig() && !wrapped.getConfig().getMode(side).canInput())
+            if (wrapped.getIOMode().respectIOConfig() && !wrapped.getConfig().getMode(side).canInput()) {
                 return false;
+            }
+
             return wrapped.canReceive();
         }
     }

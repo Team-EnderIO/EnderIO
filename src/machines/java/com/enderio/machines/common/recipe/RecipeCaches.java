@@ -23,8 +23,8 @@ public class RecipeCaches {
     public static final RecipeInputCache<RecipeWrapper, PaintingRecipe> PAINTING
         = new RecipeInputCache<>(MachineRecipes.PAINTING.type());
 
-    public static final RecipeInputCache<SagMillingRecipe.Container, SagMillingRecipe> SAGMILLING
-        = new RecipeInputCache<>(MachineRecipes.SAGMILLING.type());
+    public static final RecipeInputCache<SagMillingRecipe.Container, SagMillingRecipe> SAG_MILLING
+        = new RecipeInputCache<>(MachineRecipes.SAG_MILLING.type());
 
     public static final RecipeInputCache<SoulBindingRecipe.Container, SoulBindingRecipe> SOUL_BINDING
         = new RecipeInputCache<>(MachineRecipes.SOUL_BINDING.type());
@@ -34,7 +34,7 @@ public class RecipeCaches {
         ALLOY_SMELTING.markCacheDirty();
         SMELTING.markCacheDirty();
         PAINTING.markCacheDirty();
-        SAGMILLING.markCacheDirty();
+        SAG_MILLING.markCacheDirty();
         SOUL_BINDING.markCacheDirty();
     }
 
@@ -43,7 +43,7 @@ public class RecipeCaches {
         ALLOY_SMELTING.rebuildCache(event.getRecipeManager());
         SMELTING.rebuildCache(event.getRecipeManager());
         PAINTING.rebuildCache(event.getRecipeManager());
-        SAGMILLING.rebuildCache(event.getRecipeManager());
+        SAG_MILLING.rebuildCache(event.getRecipeManager());
         SOUL_BINDING.rebuildCache(event.getRecipeManager());
     }
 }

@@ -43,14 +43,17 @@ public class MultiEnergyStorageWrapper extends MachineEnergyStorage implements I
 
     @Override
     public long getLargeEnergyStored() {
-        if (graph == null)
+        if (graph == null) {
             return 0;
+        }
+
         long cumulativeEnergy = 0;
         for (GraphObject<Mergeable.Dummy> object : graph.getObjects()) {
             if (object instanceof MultiEnergyNode panelNode) {
                 cumulativeEnergy += panelNode.getInternal().get().getEnergyStored();
             }
         }
+
         return cumulativeEnergy;
     }
     @Override
@@ -61,26 +64,32 @@ public class MultiEnergyStorageWrapper extends MachineEnergyStorage implements I
 
     @Override
     public long getLargeMaxEnergyStored() {
-        if (graph == null)
+        if (graph == null) {
             return 0;
+        }
+
         return graph.getObjects().size() * (long)tier.get().getStorageCapacity();
     }
 
     @Override
     public int receiveEnergy(int maxReceive, boolean simulate) {
-        if (!canReceive())
+        if (!canReceive()) {
             return 0;
+        }
+
         int energyReceived = (int) Math.min(getLargeMaxEnergyStored() - getLargeEnergyStored(), Math.min(getMaxEnergyUse() * 2, maxReceive));
         if (!simulate) {
             addEnergy(energyReceived);
         }
+
         return energyReceived;
     }
 
     @Override
     public int takeEnergy(int energy) {
-        if (graph == null || energy == 0)
+        if (graph == null || energy == 0) {
             return 0;
+        }
 
         int cumulativeEnergy = 0;
         List<GraphObject<Mergeable.Dummy>> nodes = new ArrayList<>(graph.getObjects());
@@ -100,8 +109,9 @@ public class MultiEnergyStorageWrapper extends MachineEnergyStorage implements I
 
     @Override
     public int addEnergy(int energy) {
-        if (graph == null || energy == 0)
+        if (graph == null || energy == 0) {
             return 0;
+        }
 
         int cumulativeEnergy = 0;
         List<GraphObject<Mergeable.Dummy>> nodes = new ArrayList<>(graph.getObjects());

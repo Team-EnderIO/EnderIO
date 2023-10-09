@@ -51,7 +51,13 @@ import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
@@ -254,7 +260,9 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     public void setIsRangeVisible(boolean visible) {
         if (level != null && level.isClientSide()) {
             clientUpdateSlot(rangeVisibleDataSlot, visible);
-        } else this.rangeVisible = visible;
+        } else {
+            this.rangeVisible = visible;
+        }
     }
 
     public int getMaxRange() {
@@ -268,14 +276,18 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     public void setRange(int range) {
         if (level != null && level.isClientSide()) {
             clientUpdateSlot(rangeDataSlot, range);
-        } else this.range = range;
+        } else {
+            this.range = range;
+        }
     }
 
     public void decreaseRange() {
         if (this.range > 0) {
             if (level != null && level.isClientSide()) {
                 clientUpdateSlot(rangeDataSlot, range - 1);
-            } else this.range--;
+            } else {
+                this.range--;
+            }
         }
     }
 
@@ -283,7 +295,9 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         if (this.range < getMaxRange()) {
             if (level != null && level.isClientSide()) {
                 clientUpdateSlot(rangeDataSlot, range + 1);
-            } else this.range++;
+            } else {
+                this.range++;
+            }
         }
     }
 
@@ -319,7 +333,9 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     public void setRedstoneControl(RedstoneControl redstoneControl) {
         if (level != null && level.isClientSide()) {
             clientUpdateSlot(redstoneControlDataSlot, redstoneControl);
-        } else this.redstoneControl = redstoneControl;
+        } else {
+            this.redstoneControl = redstoneControl;
+        }
     }
 
     // endregion
@@ -599,8 +615,10 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
      * Add invalidation handler to a capability to be notified if it is removed.
      */
     private <T> LazyOptional<T> addInvalidationListener(LazyOptional<T> capability) {
-        if (capability.isPresent())
+        if (capability.isPresent()) {
             capability.addListener(c -> markCapabilityCacheDirty());
+        }
+
         return capability;
     }
 

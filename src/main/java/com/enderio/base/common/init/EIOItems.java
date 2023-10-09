@@ -5,11 +5,22 @@ import com.enderio.base.common.capacitor.DefaultCapacitorData;
 import com.enderio.base.common.item.capacitors.FixedCapacitorItem;
 import com.enderio.base.common.item.capacitors.LootCapacitorItem;
 import com.enderio.base.common.item.darksteel.DarkSteelSwordItem;
-import com.enderio.base.common.item.misc.*;
-import com.enderio.base.common.item.tool.*;
+import com.enderio.base.common.item.misc.BrokenSpawnerItem;
+import com.enderio.base.common.item.misc.CreativeTabIconItem;
+import com.enderio.base.common.item.misc.EnderiosItem;
+import com.enderio.base.common.item.misc.HangGliderItem;
+import com.enderio.base.common.item.misc.LocationPrintoutItem;
+import com.enderio.base.common.item.misc.MaterialItem;
+import com.enderio.base.common.item.tool.ColdFireIgniter;
+import com.enderio.base.common.item.tool.CoordinateSelectorItem;
+import com.enderio.base.common.item.tool.ElectromagnetItem;
+import com.enderio.base.common.item.tool.ExperienceRodItem;
+import com.enderio.base.common.item.tool.LevitationStaffItem;
+import com.enderio.base.common.item.tool.SoulVialItem;
+import com.enderio.base.common.item.tool.TravelStaffItem;
+import com.enderio.base.common.item.tool.YetaWrenchItem;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.model.item.GliderItemModel;
-import com.enderio.base.data.model.item.RotatingItemModel;
 import com.enderio.core.data.model.EIOModel;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.ItemBuilder;
@@ -17,7 +28,11 @@ import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.ForgeTier;
 import net.minecraftforge.common.Tags;
@@ -111,12 +126,12 @@ public class EIOItems {
 
     // region Crystals
 
-    public static final ItemEntry<MaterialItem> PULSATING_CRYSTAL = materialItemGlinted("pulsating_crystal").register();
-    public static final ItemEntry<MaterialItem> VIBRANT_CRYSTAL = materialItemGlinted("vibrant_crystal").register();
-    public static final ItemEntry<MaterialItem> ENDER_CRYSTAL = materialItemGlinted("ender_crystal").register();
-    public static final ItemEntry<MaterialItem> ENTICING_CRYSTAL = materialItemGlinted("enticing_crystal").register();
-    public static final ItemEntry<MaterialItem> WEATHER_CRYSTAL = materialItemGlinted("weather_crystal").register();
-    public static final ItemEntry<MaterialItem> PRESCIENT_CRYSTAL = materialItemGlinted("prescient_crystal").register();
+    public static final ItemEntry<MaterialItem> PULSATING_CRYSTAL = materialItemGlinted("pulsating_crystal").tag(EIOTags.Items.GEMS_PULSATING_CRYSTAL).register();
+    public static final ItemEntry<MaterialItem> VIBRANT_CRYSTAL = materialItemGlinted("vibrant_crystal").tag(EIOTags.Items.GEMS_VIBRANT_CRYSTAL).register();
+    public static final ItemEntry<MaterialItem> ENDER_CRYSTAL = materialItemGlinted("ender_crystal").tag(EIOTags.Items.GEMS_ENDER_CRYSTAL).register();
+    public static final ItemEntry<MaterialItem> ENTICING_CRYSTAL = materialItemGlinted("enticing_crystal").tag(EIOTags.Items.GEMS_ENTICING_CRYSTAL).register();
+    public static final ItemEntry<MaterialItem> WEATHER_CRYSTAL = materialItemGlinted("weather_crystal").tag(EIOTags.Items.GEMS_WEATHER_CRYSTAL).register();
+    public static final ItemEntry<MaterialItem> PRESCIENT_CRYSTAL = materialItemGlinted("prescient_crystal").tag(EIOTags.Items.GEMS_PRESCIENT_CRYSTAL).register();
 
     // endregion
 
@@ -157,17 +172,17 @@ public class EIOItems {
 
     // region Gears
 
-    public static final ItemEntry<GearItem> GEAR_WOOD = gearItem("wood_gear", 360).lang("Wooden Gear").tag(EIOTags.Items.GEARS_WOOD).register();
+    public static final ItemEntry<MaterialItem> GEAR_WOOD = materialItem("wood_gear").lang("Wooden Gear").tag(EIOTags.Items.GEARS_WOOD).register();
 
-    public static final ItemEntry<GearItem> GEAR_STONE = gearItem("stone_gear", 300).lang("Stone Compound Gear").tag(EIOTags.Items.GEARS_STONE).register();
+    public static final ItemEntry<MaterialItem> GEAR_STONE = materialItem("stone_gear").lang("Stone Compound Gear").tag(EIOTags.Items.GEARS_STONE).register();
 
-    public static final ItemEntry<GearItem> GEAR_IRON = gearItem("iron_gear", 240).lang("Infinity Bimetal Gear").tag(EIOTags.Items.GEARS_IRON).register();
+    public static final ItemEntry<MaterialItem> GEAR_IRON = materialItem("iron_gear").lang("Infinity Bimetal Gear").tag(EIOTags.Items.GEARS_IRON).register();
 
-    public static final ItemEntry<GearItem> GEAR_ENERGIZED = gearItem("energized_gear", 180).lang("Energized Bimetal Gear").tag(EIOTags.Items.GEARS_ENERGIZED).register();
+    public static final ItemEntry<MaterialItem> GEAR_ENERGIZED = materialItem("energized_gear").lang("Energized Bimetal Gear").tag(EIOTags.Items.GEARS_ENERGIZED).register();
 
-    public static final ItemEntry<GearItem> GEAR_VIBRANT = gearItem("vibrant_gear", 120).lang("Vibrant Bimetal Gear").tag(EIOTags.Items.GEARS_VIBRANT).register();
+    public static final ItemEntry<MaterialItem> GEAR_VIBRANT = materialItem("vibrant_gear").lang("Vibrant Bimetal Gear").tag(EIOTags.Items.GEARS_VIBRANT).register();
 
-    public static final ItemEntry<GearItem> GEAR_DARK_STEEL = gearItem("dark_bimetal_gear", 60).lang("Dark Bimetal Gear").tag(EIOTags.Items.GEARS_DARK_STEEL).register();
+    public static final ItemEntry<MaterialItem> GEAR_DARK_STEEL = materialItem("dark_bimetal_gear").lang("Dark Bimetal Gear").tag(EIOTags.Items.GEARS_DARK_STEEL).register();
 
     // endregion
 
@@ -248,13 +263,6 @@ public class EIOItems {
 
     private static ItemBuilder<MaterialItem, Registrate> materialItem(String name) {
         return REGISTRATE.item(name, props -> new MaterialItem(props, false)).tab(EIOCreativeTabs.MAIN);
-    }
-
-    private static ItemBuilder<GearItem, Registrate> gearItem(String name, float tpr) {
-        return REGISTRATE
-            .item(name, props -> new GearItem(props, tpr))
-            .model((ctx, cons) -> RotatingItemModel.create(ctx.get(), cons))
-            .tab(EIOCreativeTabs.MAIN);
     }
 
     //  private static ItemBuilder<MaterialItem, Registrate> dependMaterialItem(String name, Tag<Item> dependency) {

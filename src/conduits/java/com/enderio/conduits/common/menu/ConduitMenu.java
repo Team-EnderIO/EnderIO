@@ -100,8 +100,10 @@ public class ConduitMenu extends SyncedMenu<ConduitBlockEntity> {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
         Direction direction = buf.readEnum(Direction.class);
         IConduitType<?> type = ConduitTypes.getRegistry().getValue(buf.readInt());
-        if (entity instanceof ConduitBlockEntity castBlockEntity)
+        if (entity instanceof ConduitBlockEntity castBlockEntity) {
             return new ConduitMenu(castBlockEntity, inventory, pContainerId, direction, type);
+        }
+
         LogManager.getLogger().warn("couldn't find BlockEntity");
         return new ConduitMenu(null, inventory, pContainerId, direction, type);
     }
@@ -128,8 +130,7 @@ public class ConduitMenu extends SyncedMenu<ConduitBlockEntity> {
         if (getBlockEntity() != null
             && player instanceof ServerPlayer serverPlayer
             && serverPlayer.serverLevel().players().stream().filter(p -> p != player).noneMatch(p -> p.containerMenu instanceof ConduitMenu)) {
-
-                getBlockEntity().updateEmptyDynConnection();
+            getBlockEntity().updateEmptyDynConnection();
         }
     }
 }

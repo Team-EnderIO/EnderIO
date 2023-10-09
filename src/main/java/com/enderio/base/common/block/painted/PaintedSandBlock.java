@@ -38,8 +38,10 @@ public class PaintedSandBlock extends SandBlock implements EntityBlock, IPainted
                 pLevel.getBlockState(pPos));
             this.falling(paintedSandEntity);
             BlockEntity be = pLevel.getBlockEntity(pPos);
-            if (be != null)
+            if (be != null) {
                 paintedSandEntity.blockData = be.saveWithoutMetadata();
+            }
+
             pLevel.setBlock(pPos, pLevel.getBlockState(pPos).getFluidState().createLegacyBlock(), 3);
             pLevel.addFreshEntity(paintedSandEntity);
         }

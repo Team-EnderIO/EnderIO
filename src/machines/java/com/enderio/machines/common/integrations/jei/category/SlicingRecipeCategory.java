@@ -20,7 +20,9 @@ import net.minecraftforge.common.Tags;
 
 import java.util.List;
 
-import static mezz.jei.api.recipe.RecipeIngredientRole.*;
+import static mezz.jei.api.recipe.RecipeIngredientRole.CATALYST;
+import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
+import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
 
 public class SlicingRecipeCategory extends MachineRecipeCategory<SlicingRecipe> {
 

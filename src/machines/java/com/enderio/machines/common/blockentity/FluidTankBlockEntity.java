@@ -33,6 +33,7 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Optional;
 
 // TODO: Rewrite this with tasks?
@@ -97,15 +98,63 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
 
     // region Inventory
 
+    public boolean acceptItemFill(ItemStack item) {
+        // bucket types
+        Optional<IFluidHandlerItem> fluidHandlerCap = item.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
+
+        if (fluidHandlerCap.isPresent()) {
+            return true;
+        }
+
+        // fill recipes
+        if (level != null) {
+           List<TankRecipe> allRecipes = level.getRecipeManager().getAllRecipesFor(MachineRecipes.TANK.type().get());
+           if (allRecipes.stream().anyMatch((recipe) -> recipe.isEmptying() && recipe.getInput().test(item))) {
+            return true;
+           }
+        }
+
+        return false;
+    }
+
+    public boolean acceptItemDrain(ItemStack item) {
+        // bucket types
+        Optional<IFluidHandlerItem> fluidHandlerCap = item.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
+
+        if (fluidHandlerCap.isPresent()) {
+            return true;
+        }
+
+        // Mending
+        FluidTank fluidTank = getFluidTankNN();
+        FluidStack fluid = fluidTank.getFluid();
+
+        if (item.isDamageableItem() && !fluid.isEmpty() && fluid.getFluid().is(EIOTags.Fluids.EXPERIENCE)) {
+            if (item.getEnchantmentLevel(Enchantments.MENDING) > 0) {
+                return true;
+            }
+        }
+
+        // drain recipes
+        if (level != null) {
+            List<TankRecipe> allRecipes = level.getRecipeManager().getAllRecipesFor(MachineRecipes.TANK.type().get());
+            if (allRecipes.stream().anyMatch((recipe) -> !recipe.isEmptying() && recipe.getInput().test(item))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     @Override
     public MachineInventoryLayout getInventoryLayout() {
         return MachineInventoryLayout
             .builder()
-            .inputSlot()
+            .inputSlot((slot, stack) -> acceptItemFill(stack))
             .slotAccess(FLUID_FILL_INPUT)
             .outputSlot()
             .slotAccess(FLUID_FILL_OUTPUT)
-            .inputSlot()
+            .inputSlot((slot, stack) -> acceptItemDrain(stack))
             .slotAccess(FLUID_DRAIN_INPUT)
             .outputSlot()
             .slotAccess(FLUID_DRAIN_OUTPUT)

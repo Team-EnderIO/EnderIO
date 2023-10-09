@@ -6,10 +6,10 @@
       "item": "enderio:ensouled_chassis"
     },
     "G": {
-      "item": "enderio:energized_gear"
+      "tag": "forge:gears/energized"
     },
     "I": {
-      "item": "enderio:soularium_ingot"
+      "tag": "forge:ingots/soularium"
     },
     "V": {
       "item": "enderio:empty_soul_vial"

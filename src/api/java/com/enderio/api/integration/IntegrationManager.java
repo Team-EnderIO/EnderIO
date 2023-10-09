@@ -3,7 +3,11 @@ package com.enderio.api.integration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.*;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public class IntegrationManager {
 
@@ -43,16 +47,18 @@ public class IntegrationManager {
 
     public static void executeIf(Predicate<Integration> condition, Consumer<Integration> consumer) {
         for (Integration integration : ALL_INTEGRATIONS) {
-            if (condition.test(integration))
+            if (condition.test(integration)) {
                 consumer.accept(integration);
+            }
         }
     }
 
     public static <T> List<T> getIf(Predicate<Integration> condition, Function<Integration, T> mapper) {
         List<T> list = new ArrayList<>();
         for (Integration integration : ALL_INTEGRATIONS) {
-            if (condition.test(integration))
+            if (condition.test(integration)) {
                 list.add(mapper.apply(integration));
+            }
         }
         return list;
     }

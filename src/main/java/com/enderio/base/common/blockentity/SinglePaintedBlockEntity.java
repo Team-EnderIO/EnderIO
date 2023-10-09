@@ -48,8 +48,10 @@ public class SinglePaintedBlockEntity extends BlockEntity implements IPaintableB
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         Block oldPaint = paint;
         CompoundTag tag = pkt.getTag();
-        if (tag == null)
+        if (tag == null) {
             return;
+        }
+
         handleUpdateTag(tag);
         if (oldPaint != paint) {
             requestModelDataUpdate();

@@ -22,7 +22,11 @@ import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 
 import java.text.NumberFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
 
 // TODO: 1.19: Move to core. Need to work out what to do about the shift lang key. Will now need decoupled from the capacitor and grindingball logic.
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -66,7 +70,9 @@ public class TooltipHandler {
                 components.add(TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_MAIN_OUTPUT, (int) (data.getOutputMultiplier() * 100)));
                 components.add(TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_BONUS_OUTPUT, (int) (data.getBonusMultiplier() * 100)));
                 components.add(TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_POWER_USE, (int) (data.getPowerUse() * 100)));
-            } else addShowDetailsTooltip(components);
+            } else {
+                addShowDetailsTooltip(components);
+            }
         }
     }
 
@@ -75,10 +81,14 @@ public class TooltipHandler {
     // region Advanced Tooltips
 
     private static Optional<IAdvancedTooltipProvider> getAdvancedProvider(Item item) {
-        if (item instanceof IAdvancedTooltipProvider provider)
+        if (item instanceof IAdvancedTooltipProvider provider) {
             return Optional.of(provider);
-        if (item instanceof BlockItem blockItem && blockItem.getBlock() instanceof IAdvancedTooltipProvider provider)
+        }
+
+        if (item instanceof BlockItem blockItem && blockItem.getBlock() instanceof IAdvancedTooltipProvider provider) {
             return Optional.of(provider);
+        }
+
         return Optional.empty();
     }
 
@@ -97,8 +107,9 @@ public class TooltipHandler {
     // endregion
 
     private static void addShowDetailsTooltip(List<Component> components) {
-        if (!components.contains(DETAIL_TOOLTIP))
+        if (!components.contains(DETAIL_TOOLTIP)) {
             components.add(DETAIL_TOOLTIP);
+        }
     }
 
     private static boolean hasDetailedTooltip(IAdvancedTooltipProvider tooltipProvider, ItemStack stack, @Nullable Player player) {

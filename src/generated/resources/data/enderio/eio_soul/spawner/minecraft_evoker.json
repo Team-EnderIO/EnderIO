@@ -1,5 +1,5 @@
 {
   "type": "entitytype",
   "entity": "minecraft:evoker",
-  "power": 200000
+  "power": 100000
 }

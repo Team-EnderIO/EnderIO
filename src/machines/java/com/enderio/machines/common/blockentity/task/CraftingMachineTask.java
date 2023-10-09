@@ -85,8 +85,9 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
     @Override
     public void tick() {
         // If the recipe is done, don't let it tick.
-        if (isComplete)
+        if (isComplete) {
             return;
+        }
 
         // If the recipe failed to load somehow, cancel
         if (recipe == null) {
@@ -136,8 +137,10 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
 
     @Override
     public float getProgress() {
-        if (recipe == null)
+        if (recipe == null) {
             return 0.0f;
+        }
+
         return progressMade / (float) progressRequired;
     }
 
@@ -162,8 +165,9 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
             }
 
             // If we fail, say we can't accept these outputs
-            if (!item.isEmpty())
+            if (!item.isEmpty()) {
                 return false;
+            }
         }
 
         // If we're not simulating, go for it

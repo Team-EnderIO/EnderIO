@@ -12,7 +12,7 @@
       "tag": "enderio:fused_quartz"
     },
     "I": {
-      "item": "enderio:soularium_ingot"
+      "tag": "forge:ingots/soularium"
     },
     "Z": {
       "item": "enderio:zombie_electrode"

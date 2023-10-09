@@ -108,17 +108,23 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     }
 
     public boolean isGenerating() {
-        if (level == null)
+        if (level == null) {
             return false;
+        }
+
         return burnTime > 0;
     }
 
     public float getBurnProgress() {
-        if (level.isClientSide)
+        if (level.isClientSide) {
             return clientBurnProgress;
-        if (burnDuration == 0)
-            return 0;
-        return burnTime / (float) burnDuration;
+        }
+
+        if (burnDuration != 0) {
+            return burnTime / (float) burnDuration;
+        }
+
+        return 0;
     }
 
     @Nullable

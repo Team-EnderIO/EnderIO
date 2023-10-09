@@ -31,8 +31,10 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
 
     @Override
     public void render(AnchorTravelTarget travelData, LevelRenderer levelRenderer, PoseStack poseStack, double distanceSquared, boolean active) {
-        if (!travelData.getVisibility())
+        if (!travelData.getVisibility()) {
             return;
+        }
+
         poseStack.pushPose();
         poseStack.translate(travelData.getPos().getX(), travelData.getPos().getY(), travelData.getPos().getZ());
         Minecraft minecraft = Minecraft.getInstance();

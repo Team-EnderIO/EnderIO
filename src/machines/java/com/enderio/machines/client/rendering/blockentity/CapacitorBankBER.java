@@ -33,7 +33,7 @@ public class CapacitorBankBER implements BlockEntityRenderer<CapacitorBankBlockE
     private static final ResourceLocation END_BAR = EnderIO.loc("block/capacitor_additionals/capacitor_bank_bar_end");
     private static final ResourceLocation ENERGY_BAR = EnderIO.loc("block/capacitor_additionals/capacitor_bank_bar_energy");
 
-    private static final ResourceLocation IO_1x1 = EnderIO.loc("block/capacitor_additionals/1x1_full");
+    private static final ResourceLocation IO_1X1 = EnderIO.loc("block/capacitor_additionals/1x1_full");
     private static final ResourceLocation IO_FULL = EnderIO.loc("block/capacitor_additionals/full");
 
     private static final Direction[] HORIZONTAL_DIRECTIONS = new Direction[] {Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
@@ -87,8 +87,10 @@ public class CapacitorBankBER implements BlockEntityRenderer<CapacitorBankBlockE
             float f = blockEntity.getEnergyStorage().getEnergyStored() / (float) blockEntity.getEnergyStorage().getMaxEnergyStored();
             int filledPixels = Math.round(f * (10 + (length-1)*16));
             for (int i = length - 1; i >= 0; i--) {
-                if (filledPixels <= 0)
+                if (filledPixels <= 0) {
                     break;
+                }
+
                 poseStack.pushPose();
                 poseStack.translate(0, -i, 0);
                 VertexConsumer buffer = bufferSource.getBuffer(RenderType.cutout());
@@ -102,8 +104,10 @@ public class CapacitorBankBER implements BlockEntityRenderer<CapacitorBankBlockE
     }
     private static void renderIO(CapacitorBankBlockEntity capacitorBank, PoseStack poseStack, MultiBufferSource bufferSource, Direction facing) {
         int light = LightTexture.FULL_BRIGHT;
-        if (capacitorBank.getLevel() != null)
+        if (capacitorBank.getLevel() != null) {
             light = LevelRenderer.getLightColor(capacitorBank.getLevel(), capacitorBank.getBlockPos().relative(facing));
+        }
+
         Size size = findSize(capacitorBank, facing);
         renderTexture(poseStack.last().pose(), poseStack.last().normal(), bufferSource.getBuffer(RenderType.cutout()), facing, size.getTexture(), light);
         if ((-size.x0 == size.x1 || -size.x0 +1 == size.x1)
@@ -129,10 +133,14 @@ public class CapacitorBankBER implements BlockEntityRenderer<CapacitorBankBlockE
                 poseStack.pushPose();
                 long energySurplus = capacitorBank.getAddedEnergy() - capacitorBank.getRemovedEnergy();
                 int color = 0;
-                if (energySurplus > 0)
+                if (energySurplus > 0) {
                     color = 0xFF00FF00;
-                if (energySurplus < 0)
+                }
+
+                if (energySurplus < 0) {
                     color = 0xFFFF0000;
+                }
+
                 poseStack.translate(-font.width(String.valueOf(energySurplus)) / 2f, font.lineHeight * 0.5f, 0);
                 font.drawInBatch(String.valueOf(energySurplus), 0, 0, color, false, poseStack.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, light, false);
                 poseStack.popPose();
@@ -163,8 +171,10 @@ public class CapacitorBankBER implements BlockEntityRenderer<CapacitorBankBlockE
      * relative is bottom-right positive
      */
     private static DisplayMode getDisplayModeRelative(CapacitorBankBlockEntity blockEntity, Direction horizontalFacing, Vector2i relative) {
-        if (blockEntity.getLevel() == null)
+        if (blockEntity.getLevel() == null) {
             return DisplayMode.NONE;
+        }
+
         return getDisplayModeRelative(blockEntity.getLevel(), horizontalFacing, blockEntity.getBlockPos(), relative, blockEntity.tier);
     }
     private static DisplayMode getDisplayModeRelative(Level level, Direction horizontalFacing, BlockPos pos, Vector2i relative, ICapacityTier tier) {
@@ -209,14 +219,18 @@ public class CapacitorBankBER implements BlockEntityRenderer<CapacitorBankBlockE
         int y1 = 0;
         //expand right
         for (int i = 1; i < 16; i++) {
-            if (getDisplayModeRelative(capacitorBank, facing, new Vector2i(i, 0)) != DisplayMode.IO)
+            if (getDisplayModeRelative(capacitorBank, facing, new Vector2i(i, 0)) != DisplayMode.IO) {
                 break;
+            }
+
             x1 = i;
         }
         //expand left
         for (int i = 1; i < 16 - x1; i++) {
-            if (getDisplayModeRelative(capacitorBank, facing, new Vector2i(-i, 0)) != DisplayMode.IO)
+            if (getDisplayModeRelative(capacitorBank, facing, new Vector2i(-i, 0)) != DisplayMode.IO) {
                 break;
+            }
+
             x0 = -i;
         }
         //expand down
@@ -227,8 +241,10 @@ public class CapacitorBankBER implements BlockEntityRenderer<CapacitorBankBlockE
                 if (getDisplayModeRelative(capacitorBank, facing, new Vector2i(x, i)) == DisplayMode.IO) {
                     checked++;
                 } else {
-                    if (checked > 0)
+                    if (checked > 0) {
                         return new Size(0,0,0,0);
+                    }
+
                     break downSearch;
                 }
             }
@@ -243,8 +259,10 @@ public class CapacitorBankBER implements BlockEntityRenderer<CapacitorBankBlockE
                 if (getDisplayModeRelative(capacitorBank, facing, new Vector2i(x, -i)) == DisplayMode.IO) {
                     checked++;
                 } else {
-                    if (checked > 0)
+                    if (checked > 0) {
                         return new Size(0,0,0,0);
+                    }
+
                     break upSearch;
                 }
             }
@@ -257,17 +275,25 @@ public class CapacitorBankBER implements BlockEntityRenderer<CapacitorBankBlockE
 
     private static Size validateSize(Size size, CapacitorBankBlockEntity capacitorBank, Direction facing) {
         for (int x = size.x0; x <= size.x1; x++) {
-            if (getDisplayModeRelative(capacitorBank, facing, new Vector2i(x, size.y0-1)) == DisplayMode.IO)
+            if (getDisplayModeRelative(capacitorBank, facing, new Vector2i(x, size.y0-1)) == DisplayMode.IO) {
                 return new Size(0,0, 0, 0);
-            if (getDisplayModeRelative(capacitorBank, facing, new Vector2i(x, size.y1+1)) == DisplayMode.IO)
+            }
+
+            if (getDisplayModeRelative(capacitorBank, facing, new Vector2i(x, size.y1+1)) == DisplayMode.IO) {
                 return new Size(0,0, 0, 0);
+            }
         }
+
         for (int y = size.y0; y <= size.y1; y++) {
-            if (getDisplayModeRelative(capacitorBank, facing, new Vector2i(size.x0-1, y)) == DisplayMode.IO)
+            if (getDisplayModeRelative(capacitorBank, facing, new Vector2i(size.x0-1, y)) == DisplayMode.IO) {
                 return new Size(0,0, 0, 0);
-            if (getDisplayModeRelative(capacitorBank, facing, new Vector2i(size.x1+1, y)) == DisplayMode.IO)
+            }
+
+            if (getDisplayModeRelative(capacitorBank, facing, new Vector2i(size.x1+1, y)) == DisplayMode.IO) {
                 return new Size(0,0, 0, 0);
+            }
         }
+
         return size;
     }
 
@@ -279,40 +305,67 @@ public class CapacitorBankBER implements BlockEntityRenderer<CapacitorBankBlockE
             boolean isUp = y0 == 0;
             boolean isDown = y1 == 0;
             boolean isSmallY = isUp && isDown;
-            if (isSmallX && isSmallY)
-                return IO_1x1;
+
+            if (isSmallX && isSmallY) {
+                return IO_1X1;
+            }
+
             if (isSmallY) {
-                if (isLeft)
+                if (isLeft) {
                     return EnderIO.loc("block/capacitor_additionals/small_r");
-                if (isRight)
+                }
+
+                if (isRight) {
                     return EnderIO.loc("block/capacitor_additionals/small_l");
+                }
+
                 return EnderIO.loc("block/capacitor_additionals/small_lr");
             }
+
             if (isSmallX) {
-                if (isUp)
+                if (isUp) {
                     return EnderIO.loc("block/capacitor_additionals/small_u");
-                if (isDown)
+                }
+
+                if (isDown) {
                     return EnderIO.loc("block/capacitor_additionals/small_d");
+                }
+
                 return EnderIO.loc("block/capacitor_additionals/small_ud");
             }
+
             if (isUp) {
-                if (isLeft)
+                if (isLeft) {
                     return EnderIO.loc("block/capacitor_additionals/corner_tr");
-                if (isRight)
+                }
+
+                if (isRight) {
                     return EnderIO.loc("block/capacitor_additionals/corner_tl");
+                }
+                
                 return EnderIO.loc("block/capacitor_additionals/side_t");
             }
+
             if (isDown) {
-                if (isLeft)
+                if (isLeft) {
                     return EnderIO.loc("block/capacitor_additionals/corner_br");
-                if (isRight)
+                }
+
+                if (isRight) {
                     return EnderIO.loc("block/capacitor_additionals/corner_bl");
+                }
+
                 return EnderIO.loc("block/capacitor_additionals/side_b");
             }
-            if (isLeft)
+
+            if (isLeft) {
                 return EnderIO.loc("block/capacitor_additionals/side_r");
-            if (isRight)
+            }
+
+            if (isRight) {
                 return EnderIO.loc("block/capacitor_additionals/side_l");
+            }
+
             return IO_FULL;
         }
     }
