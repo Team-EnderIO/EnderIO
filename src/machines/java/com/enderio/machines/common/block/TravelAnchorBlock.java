@@ -5,6 +5,7 @@ import com.enderio.base.common.travel.TravelSavedData;
 import com.enderio.machines.common.blockentity.TravelAnchorBlockEntity;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -36,8 +37,8 @@ public class TravelAnchorBlock extends MachineBlock {
     @SubscribeEvent
     public static void jump(LivingEvent.LivingJumpEvent jumpEvent) {
         if (!jumpEvent.getEntity().level().isClientSide && jumpEvent.getEntity() instanceof Player player) {
-            if (player.level().getBlockState(player.blockPosition().below()).getBlock() instanceof TravelAnchorBlock) {
-                TravelHandler.blockTeleport(player.level(), player, 1);
+            if (TravelHandler.canBlockTeleport(player)) {
+                TravelHandler.blockTeleport(player.level(), player, Direction.UP);
             }
         }
     }
@@ -51,7 +52,7 @@ public class TravelAnchorBlock extends MachineBlock {
 
             PlayerSneakEntry sneakEntry = getLastSneakEntry(player);
             if ((!sneakEntry.isSneaking() || sneakEntry.atTime() != player.level().getServer().getTickCount() - 1) && player.isShiftKeyDown()) {
-                TravelHandler.blockTeleport(player.level(), player, -1);
+                TravelHandler.blockTeleport(player.level(), player, Direction.DOWN);
             }
             SNEAK_CACHE.put(player, new PlayerSneakEntry(player.isShiftKeyDown(), player.level().getServer().getTickCount()));
         }

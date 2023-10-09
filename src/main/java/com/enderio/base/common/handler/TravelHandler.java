@@ -75,12 +75,12 @@ public class TravelHandler {
     }
 
     public static boolean blockTeleport(Level level, Player player) {
-        return blockTeleport(level, player, 0);
+        return blockTeleport(level, player, null);
     }
 
-    public static boolean blockTeleport(Level level, Player player, int direction) {
+    public static boolean blockTeleport(Level level, Player player, @Nullable Direction direction) {
         Optional<ITravelTarget> target = getAnchorTarget(player);
-        if (target.isEmpty() && direction != 0) {
+        if (target.isEmpty() && direction != null && direction.getStepY() != 0) {
             target = getElevatorAnchorTarget(player, direction);
         }
         if (target.isPresent()) {
@@ -139,7 +139,7 @@ public class TravelHandler {
             .min(Comparator.comparingDouble(target -> Math.abs(getAngleRadians(positionVec, target.getPos(), player.getYRot(), player.getXRot()))));
     }
 
-    public static Optional<ITravelTarget> getElevatorAnchorTarget(Player player, int direction) {
+    public static Optional<ITravelTarget> getElevatorAnchorTarget(Player player, Direction direction) {
         int anchorRange = BaseConfig.COMMON.ITEMS.TRAVELLING_BLOCK_TO_BLOCK_RANGE.get();
         BlockPos anchorPos = player.blockPosition().below();
 
@@ -150,12 +150,12 @@ public class TravelHandler {
 
         int upperY;
         int lowerY;
-        if (direction > 0) {
-            upperY = anchorY + direction * anchorRange + 1;
+        if (direction == Direction.UP) {
+            upperY = anchorY + anchorRange + 1;
             lowerY = anchorY + 1;
         } else {
             upperY = anchorY - 1;
-            lowerY = anchorY + direction * anchorRange - 1;
+            lowerY = anchorY - anchorRange - 1;
         }
 
         return TravelSavedData
