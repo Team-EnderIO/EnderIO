@@ -19,7 +19,7 @@ public record MachineState(MachineStateType type, MutableComponent component) {
     public static final MachineState NO_CAPACITOR = new MachineState(MachineStateType.ERROR, MachineLang.TOOLTIP_NO_CAPACITOR);
     public static final MachineState NOT_SOULBOUND = new MachineState(MachineStateType.ERROR, MachineLang.TOOLTIP_NO_SOULBOUND);
     public static final MachineState FULL_OUTPUT = new MachineState(MachineStateType.ERROR, MachineLang.TOOLTIP_OUTPUT_FULL);
-    public static final MachineState REDSTONE = new MachineState(MachineStateType.DISSABLED, MachineLang.TOOLTIP_BLOCKED_RESTONE);
+    public static final MachineState REDSTONE = new MachineState(MachineStateType.DISABLED, MachineLang.TOOLTIP_BLOCKED_RESTONE);
 
 
     @Override
