@@ -22,7 +22,7 @@ import java.util.WeakHashMap;
 
 @Mod.EventBusSubscriber
 public class TravelAnchorBlock extends MachineBlock {
-    private static final Map<Player, PlayerSneakEntry> SNEAK_CACHE = new WeakHashMap<>();
+    private static final Map<Player, PlayerSneakJumpEntry> SNEAK_JUMP_CACHE = new WeakHashMap<>();
 
     public TravelAnchorBlock(Properties props) {
         super(props, MachineBlockEntities.TRAVEL_ANCHOR);
@@ -38,31 +38,34 @@ public class TravelAnchorBlock extends MachineBlock {
     public static void jump(LivingEvent.LivingJumpEvent jumpEvent) {
         if (!jumpEvent.getEntity().level().isClientSide && jumpEvent.getEntity() instanceof Player player) {
             if (TravelHandler.canBlockTeleport(player)) {
-                TravelHandler.blockTeleport(player.level(), player, Direction.UP);
+                SNEAK_JUMP_CACHE.put(player, new PlayerSneakJumpEntry(player.isShiftKeyDown(), true, player.level().getServer().getTickCount()));
             }
         }
     }
 
     @SubscribeEvent
-    public static void sneak(TickEvent.PlayerTickEvent event) {
+    public static void playerTick(TickEvent.PlayerTickEvent event) {
         if (event.phase == TickEvent.Phase.END && event.player instanceof ServerPlayer player && player
             .level()
             .getBlockState(player.blockPosition().below())
             .getBlock() instanceof TravelAnchorBlock) {
 
-            PlayerSneakEntry sneakEntry = getLastSneakEntry(player);
+            PlayerSneakJumpEntry sneakEntry = getLastSneakJumpEntry(player);
             if ((!sneakEntry.isSneaking() || sneakEntry.atTime() != player.level().getServer().getTickCount() - 1) && player.isShiftKeyDown()) {
                 TravelHandler.blockTeleport(player.level(), player, Direction.DOWN);
             }
-            SNEAK_CACHE.put(player, new PlayerSneakEntry(player.isShiftKeyDown(), player.level().getServer().getTickCount()));
+            if (sneakEntry.isJumping()) {
+                TravelHandler.blockTeleport(player.level(), player, Direction.UP);
+            }
+            SNEAK_JUMP_CACHE.put(player, new PlayerSneakJumpEntry(player.isShiftKeyDown(), false, player.level().getServer().getTickCount()));
         }
     }
 
-    private static PlayerSneakEntry getLastSneakEntry(ServerPlayer player){
-        return SNEAK_CACHE.getOrDefault(player, new PlayerSneakEntry(false, player.level().getServer().getTickCount() - 1));
+    private static PlayerSneakJumpEntry getLastSneakJumpEntry(ServerPlayer player){
+        return SNEAK_JUMP_CACHE.getOrDefault(player, new PlayerSneakJumpEntry(false, false, player.level().getServer().getTickCount() - 1));
     }
 
-    private record PlayerSneakEntry(boolean isSneaking, int atTime){}
+    private record PlayerSneakJumpEntry(boolean isSneaking, boolean isJumping, int atTime){}
 
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
