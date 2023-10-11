@@ -8,6 +8,7 @@ import com.enderio.base.common.item.darksteel.IDarkSteelItem;
 import com.enderio.base.common.travel.TravelSavedData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -84,7 +85,7 @@ public class TravelHandler {
             target = getElevatorAnchorTarget(player, direction);
         }
         if (target.isPresent()) {
-            if (!player.level().isClientSide) {
+            if (player instanceof ServerPlayer serverPlayer) {
                 Optional<Double> height = isTeleportPositionClear(level, target.get().getPos());
                 if (height.isEmpty()) {
                     return false;
@@ -95,6 +96,8 @@ public class TravelHandler {
                 if (teleportPosition != null) {
                     player.fallDistance = 0;
                     player.teleportTo(teleportPosition.x(), teleportPosition.y(), teleportPosition.z());
+                    // Stop "moved too quickly" warnings
+                    serverPlayer.connection.resetPosition();
                     player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
                     return true;
                 }
