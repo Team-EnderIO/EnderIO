@@ -15,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
 public class XPObeliskBER implements BlockEntityRenderer<XPObeliskBlockEntity> {
+
     public XPObeliskBER(BlockEntityRendererProvider.Context context) {
 
     }

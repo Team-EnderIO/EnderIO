@@ -12,7 +12,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class XPObeliskMenu extends MachineMenu<XPObeliskBlockEntity> {
 
-
     public XPObeliskMenu(@Nullable XPObeliskBlockEntity blockEntity, Inventory inventory,  int pContainerId) {
         super(blockEntity, inventory, MachineMenus.XP_OBELISK.get(), pContainerId);
     }

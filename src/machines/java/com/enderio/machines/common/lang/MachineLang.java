@@ -48,8 +48,7 @@ public class MachineLang {
     public static final Component MULTIBLOCK_CONNECTED_TEXTURES = REGISTRATE.addLang("hint", EnderIO.loc("connected_textures.text"), "If you are looking for connected textures on the capacitor bank, you might want to install Athena on your client");
 
    // GUI BUTTONS
-
-   public static final Component RETRIEVE_1 = REGISTRATE.addLang("gui", EnderIO.loc("button.retrieve_1_level"), "Retrieve 1 level of XP");
+    public static final Component RETRIEVE_1 = REGISTRATE.addLang("gui", EnderIO.loc("button.retrieve_1_level"), "Retrieve 1 level of XP");
     public static final Component RETRIEVE_10 = REGISTRATE.addLang("gui", EnderIO.loc("button.retrieve_10_level"), "Retrieve 10 levels of XP");
     public static final Component RETRIEVE_ALL = REGISTRATE.addLang("gui", EnderIO.loc("button.retrieve_all_level"), "Retrieve all levels of XP");
     public static final Component STORE_1 = REGISTRATE.addLang("gui", EnderIO.loc("button.store_1_level"), "Store 1 level of XP");

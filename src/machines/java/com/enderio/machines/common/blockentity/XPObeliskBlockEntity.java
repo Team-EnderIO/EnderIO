@@ -12,6 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
@@ -37,12 +38,27 @@ public class XPObeliskBlockEntity extends MachineBlockEntity {
 
     @Override
     protected @Nullable FluidTank createFluidTank() {
-        // What happens when some other fluid with same tag is inserted ?
         return new FluidTank(Integer.MAX_VALUE, fluidStack -> fluidStack.getFluid().is(EIOTags.Fluids.EXPERIENCE)) {
             @Override
             protected void onContentsChanged() {
                 super.onContentsChanged();
                 setChanged();
+            }
+
+            @Override
+            public int fill(FluidStack resource, FluidAction action) {
+                // Convert into XP Juice
+                if (this.isFluidValid(resource)) {
+                    var currentFluid = this.getFluid().getFluid();
+                    if (currentFluid == Fluids.EMPTY || resource.getFluid().isSame(currentFluid)) {
+                        return super.fill(resource, action);
+                    } else {
+                        return super.fill(new FluidStack(currentFluid, resource.getAmount()), action);
+                    }
+                }
+
+                // Non-XP is not allowed.
+                return 0;
             }
         };
     }
@@ -70,8 +86,8 @@ public class XPObeliskBlockEntity extends MachineBlockEntity {
 
     public void awardXP(int exp, Player player) {
         player.giveExperiencePoints(exp);
-        int volume = -exp * ExperienceUtil.EXP_TO_FLUID; // negative to perform reverse action on tank
-        updateTankContents(volume);
+        int volumeToRemove = exp * ExperienceUtil.EXP_TO_FLUID;
+        updateTankContents(-volumeToRemove); // negative to perform remove from tank
     }
 
     private void updateTankContents(int amount) {
