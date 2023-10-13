@@ -68,8 +68,10 @@ public class CapacitorUtil {
     public static Optional<ICapacitorData> getCapacitorData(ItemStack itemStack) {
         // Search for an ICapacitorData capability
         LazyOptional<ICapacitorData> capacitorDataCap = itemStack.getCapability(EIOCapabilities.CAPACITOR);
-        if (capacitorDataCap.isPresent())
+        if (capacitorDataCap.isPresent()) {
             return Optional.of(capacitorDataCap.orElseThrow(NullPointerException::new));
+        }
+
         return Optional.empty();
     }
 

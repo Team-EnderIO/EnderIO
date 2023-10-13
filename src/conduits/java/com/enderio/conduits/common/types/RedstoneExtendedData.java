@@ -2,7 +2,10 @@ package com.enderio.conduits.common.types;
 
 import com.enderio.api.conduit.IExtendedConduitData;
 import com.enderio.api.misc.ColorControl;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +42,10 @@ public class RedstoneExtendedData implements IExtendedConduitData<RedstoneExtend
             for (Tag tag : list) {
                 if (tag instanceof IntTag intTag) {
                     int intValue = intTag.getAsInt();
-                    if (intValue < 0 || intValue >= ColorControl.values().length)
+                    if (intValue < 0 || intValue >= ColorControl.values().length) {
                         continue;
+                    }
+
                     activeColors.add(ColorControl.values()[intValue]);
                 }
             }
@@ -68,8 +73,10 @@ public class RedstoneExtendedData implements IExtendedConduitData<RedstoneExtend
     }
 
     public void setActiveColor(ColorControl color) {
-        if (activeColors.contains(color))
+        if (activeColors.contains(color)) {
             return;
+        }
+
         isActive = true;
         activeColors.add(color);
     }

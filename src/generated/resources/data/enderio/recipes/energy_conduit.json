@@ -6,7 +6,7 @@
       "item": "enderio:conduit_binder"
     },
     "I": {
-      "item": "enderio:conductive_alloy_ingot"
+      "tag": "forge:ingots/conductive_alloy"
     }
   },
   "pattern": [

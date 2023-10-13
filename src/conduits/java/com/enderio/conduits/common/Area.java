@@ -5,7 +5,8 @@ import net.minecraft.core.Vec3i;
 import java.util.Arrays;
 
 public class Area {
-    private Vec3i min, max;
+    private final Vec3i min;
+    private final Vec3i max;
 
     public Area(Vec3i... targets) {
         this(new Vec3i(
@@ -52,12 +53,14 @@ public class Area {
     }
 
     public boolean contains(Vec3i vector) {
-        if (min.getX() > vector.getX()  || vector.getX() > max.getX())
+        if (min.getX() > vector.getX()  || vector.getX() > max.getX()) {
             return false;
-        if (min.getY() > vector.getY()  || vector.getY() > max.getY())
+        }
+
+        if (min.getY() > vector.getY()  || vector.getY() > max.getY()) {
             return false;
-        if (min.getZ() > vector.getZ()  || vector.getZ() > max.getZ())
-            return false;
-        return true;
+        }
+
+        return min.getZ() <= vector.getZ() && vector.getZ() <= max.getZ();
     }
 }

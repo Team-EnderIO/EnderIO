@@ -31,8 +31,9 @@ public class ExperienceRodItem extends Item {
     @Override
     public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
         Level level = context.getLevel();
-        if (level.isClientSide())
+        if (level.isClientSide()) {
             return InteractionResult.SUCCESS;
+        }
 
         Player player = context.getPlayer();
         BlockPos pos = context.getClickedPos();

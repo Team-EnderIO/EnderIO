@@ -52,8 +52,10 @@ public class PaintedSandEntity extends FallingBlockEntity implements IEntityAddi
     }
 
     public void setPaint(Block block) {
-        if (blockData == null)
+        if (blockData == null) {
             blockData = new CompoundTag();
+        }
+
         blockData.putString(EIONBTKeys.PAINT, Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(block)).toString());
     }
 
@@ -67,8 +69,9 @@ public class PaintedSandEntity extends FallingBlockEntity implements IEntityAddi
     public void readSpawnData(FriendlyByteBuf additionalData) {
         ResourceLocation rl = additionalData.readResourceLocation();
         Block block = ForgeRegistries.BLOCKS.getValue(rl);
-        if (block != Blocks.AIR)
+        if (block != null && block != Blocks.AIR) {
             setPaint(block);
+        }
     }
 
     @Nullable

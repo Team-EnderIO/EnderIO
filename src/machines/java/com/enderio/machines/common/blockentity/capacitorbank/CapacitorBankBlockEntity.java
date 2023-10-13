@@ -60,6 +60,7 @@ public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implemen
        for (Direction direction: new Direction[] {Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST}) {
            map.put(direction, DisplayMode.NONE);
        }
+
        return map;
     });
 
@@ -108,6 +109,7 @@ public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implemen
                         graphNode.getWrapper().get().resetEnergyStats(level.getGameTime());
                     }
                 }
+
                 //Sync it back to other capacitor bank in this graph, only one can do this calculation, because each node is reset at once
                 for (GraphObject<Mergeable.Dummy> object : nodes) {
                     if (object instanceof MultiEnergyNode graphNode && level.getBlockEntity(graphNode.pos) instanceof CapacitorBankBlockEntity capacitorBank) {
@@ -117,6 +119,7 @@ public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implemen
                 }
             }
         }
+
         if (level.getGameTime() % 200 == hashCode() % 200 && node.getGraph() != null && List.copyOf(node.getGraph().getObjects()).indexOf(node) == 0) {
             long cumulativeEnergy = 0;
             for (GraphObject<Mergeable.Dummy> object : node.getGraph().getObjects()) {
@@ -124,6 +127,7 @@ public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implemen
                     cumulativeEnergy += otherNode.getInternal().get().getEnergyStored();
                 }
             }
+
             int energyPerNode = (int)(cumulativeEnergy / node.getGraph().getObjects().size());
 
             for (GraphObject<Mergeable.Dummy> object : node.getGraph().getObjects()) {
@@ -132,15 +136,19 @@ public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implemen
                     cumulativeEnergy-=energyPerNode;
                 }
             }
+
             int remainingEnergy = (int)cumulativeEnergy;
-            if (remainingEnergy <= 0)
+            if (remainingEnergy <= 0) {
                 return;
+            }
+
             for (GraphObject<Mergeable.Dummy> object : node.getGraph().getObjects()) {
                 if (object instanceof MultiEnergyNode otherNode) {
                     int received = otherNode.getInternal().get().receiveEnergy(remainingEnergy, false);
                     remainingEnergy-=received;
-                    if (remainingEnergy <= 0)
+                    if (remainingEnergy <= 0) {
                         return;
+                    }
                 }
             }
         }
@@ -162,14 +170,16 @@ public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implemen
         for (var entry : displayModes.entrySet()) {
             nbt.putInt(entry.getKey().getName(), entry.getValue().ordinal());
         }
+
         return nbt;
     }
 
     @Override
     public void load(CompoundTag pTag) {
         super.load(pTag);
-        if (pTag.contains(DISPLAY_MODES, Tag.TAG_COMPOUND))
+        if (pTag.contains(DISPLAY_MODES, Tag.TAG_COMPOUND)) {
             loadDisplayModes(pTag.getCompound(DISPLAY_MODES));
+        }
     }
 
     public void loadDisplayModes(CompoundTag nbt) {
@@ -185,26 +195,33 @@ public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implemen
 
     @Override
     protected boolean shouldPushEnergyTo(Direction direction) {
-        if (node.getGraph() == null)
+        if (node.getGraph() == null) {
             return true;
+        }
+
         if (level.getBlockEntity(worldPosition.relative(direction)) instanceof CapacitorBankBlockEntity capacitorBank) {
             return capacitorBank.node.getGraph() != node.getGraph();
         }
+
         return true;
     }
 
     @Override
     public void setRemoved() {
-        if (node.getGraph() != null)
+        if (node.getGraph() != null) {
             node.getGraph().remove(node);
+        }
+
         super.setRemoved();
     }
 
     @Override
     public void onLoad() {
         super.onLoad();
-        if (node.getGraph() == null)
+        if (node.getGraph() == null) {
             Graph.integrate(node, List.of());
+        }
+
         for (Direction direction: Direction.values()) {
             if (level.getBlockEntity(worldPosition.relative(direction)) instanceof CapacitorBankBlockEntity capacitor && capacitor.tier == tier) {
                 Graph.connect(node, capacitor.node);
@@ -222,8 +239,10 @@ public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implemen
     }
 
     private List<BlockPos> getPositions() {
-        if (node.getGraph() == null)
+        if (node.getGraph() == null) {
             return List.of();
+        }
+
         List<BlockPos> positions = new ArrayList<>();
         for (GraphObject<Mergeable.Dummy> object : node.getGraph().getObjects()) {
             if (object instanceof MultiEnergyNode otherNode) {
@@ -234,8 +253,7 @@ public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implemen
     }
 
     private class ConfigurablesDataSlot extends ListNetworkDataSlot<BlockPos, CompoundTag> {
-
-        public ConfigurablesDataSlot() {
+        ConfigurablesDataSlot() {
             super(CapacitorBankBlockEntity.this::getPositions, CapacitorBankBlockEntity.this::setPositions, blockPos -> {
                 CompoundTag tag = new CompoundTag();
                 tag.putLong(MachineNBTKeys.BLOCK_POS, blockPos.asLong());
@@ -249,12 +267,15 @@ public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implemen
         if (direction.getAxis().getPlane() == Direction.Plane.VERTICAL) {
             return false;
         }
+
         if (player.getMainHandItem().getItem() instanceof BlockItem || player.getOffhandItem().getItem() instanceof BlockItem) {
             return false;
         }
+
         if (player.getMainHandItem().is(EIOTags.Items.WRENCH)) {
             return false;
         }
+
         displayModes.put(direction, DisplayMode.values()[(displayModes.get(direction).ordinal()+1)%DisplayMode.values().length]);
         return true;
     }
@@ -268,8 +289,10 @@ public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implemen
     }
 
     public DisplayMode getDisplayMode(Direction direction) {
-        if (getLevel() == null || !Block.shouldRenderFace(getBlockState(), getLevel(), worldPosition, direction, worldPosition.relative(direction)))
+        if (getLevel() == null || !Block.shouldRenderFace(getBlockState(), getLevel(), worldPosition, direction, worldPosition.relative(direction))) {
             return DisplayMode.NONE;
+        }
+
         return displayModes.get(direction);
     }
     public void setDisplayMode(Direction direction, DisplayMode mode) {

@@ -10,7 +10,11 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.energy.EnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 
 public class EmpoweredUpgrade extends TieredUpgrade<EmpoweredUpgradeTier> {
 

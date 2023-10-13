@@ -24,16 +24,20 @@ public abstract class MachineMenu<T extends MachineBlockEntity> extends SyncedMe
     // Stop clearing ghost slot when double clicking.
     @Override
     public boolean canTakeItemForPickAll(ItemStack stack, Slot slot) {
-        if (slot instanceof GhostMachineSlot)
+        if (slot instanceof GhostMachineSlot) {
             return false;
+        }
+
         return super.canTakeItemForPickAll(stack, slot);
     }
 
     // Stop drag-splitting into a ghost slot.
     @Override
     public boolean canDragTo(Slot slot) {
-        if (slot instanceof GhostMachineSlot)
+        if (slot instanceof GhostMachineSlot) {
             return false;
+        }
+
         return super.canDragTo(slot);
     }
 

@@ -61,8 +61,9 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
     @Override
     public int fill(FluidStack resource, FluidAction action) {
         // Don't waste any time.
-        if (resource.isEmpty())
+        if (resource.isEmpty()) {
             return 0;
+        }
 
         // Copy the fluid stack and prepare to distribute it across all tanks
         FluidStack resourceLeft = resource.copy();
@@ -75,8 +76,9 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
             totalFilled += filled;
 
             // If we used up all the resource, stop trying.
-            if (resourceLeft.isEmpty())
+            if (resourceLeft.isEmpty()) {
                 break;
+            }
         }
 
         return totalFilled;
@@ -113,13 +115,17 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
     public LazyOptional<IFluidHandler> getCapability(@Nullable Direction side) {
         if (side == null) {
             // Create own cache if its been invalidated or not created yet.
-            if (!selfCache.isPresent())
+            if (!selfCache.isPresent()) {
                 selfCache = LazyOptional.of(() -> this);
+            }
+
             return selfCache.cast();
         }
 
-        if (!config.getMode(side).canConnect())
+        if (!config.getMode(side).canConnect()) {
             return LazyOptional.empty();
+        }
+
         return sideCache.computeIfAbsent(side, dir -> LazyOptional.of(() -> new Sided(this, dir))).cast();
     }
 
@@ -149,7 +155,7 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
         private final MachineFluidHandler master;
         private final Direction direction;
 
-        public Sided(MachineFluidHandler master, Direction direction) {
+        Sided(MachineFluidHandler master, Direction direction) {
             this.master = master;
             this.direction = direction;
         }
@@ -176,22 +182,28 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
 
         @Override
         public int fill(FluidStack resource, FluidAction action) {
-            if (master.getConfig().getMode(direction).canInput())
+            if (master.getConfig().getMode(direction).canInput()) {
                 return master.fill(resource, action);
+            }
+
             return 0;
         }
 
         @Override
         public FluidStack drain(FluidStack resource, FluidAction action) {
-            if (master.getConfig().getMode(direction).canOutput())
+            if (master.getConfig().getMode(direction).canOutput()) {
                 return master.drain(resource, action);
+            }
+
             return FluidStack.EMPTY;
         }
 
         @Override
         public FluidStack drain(int maxDrain, FluidAction action) {
-            if (master.getConfig().getMode(direction).canOutput())
+            if (master.getConfig().getMode(direction).canOutput()) {
                 return master.drain(maxDrain, action);
+            }
+
             return FluidStack.EMPTY;
         }
     }

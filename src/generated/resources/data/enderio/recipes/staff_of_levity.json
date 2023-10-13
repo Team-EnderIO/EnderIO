@@ -3,7 +3,7 @@
   "category": "equipment",
   "key": {
     "C": {
-      "item": "enderio:prescient_crystal"
+      "tag": "forge:gems/prescient_crystal"
     },
     "R": {
       "item": "enderio:infinity_rod"

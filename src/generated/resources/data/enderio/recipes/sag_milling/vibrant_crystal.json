@@ -1,0 +1,12 @@
+{
+  "type": "enderio:sag_milling",
+  "energy": 2400,
+  "input": {
+    "tag": "forge:gems/vibrant_crystal"
+  },
+  "outputs": [
+    {
+      "item": "enderio:vibrant_powder"
+    }
+  ]
+}

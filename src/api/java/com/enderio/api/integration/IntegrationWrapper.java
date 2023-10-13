@@ -42,8 +42,9 @@ public class IntegrationWrapper<T extends Integration> {
      * @throws NullPointerException if {@code consumer} is null and this {@link LazyOptional} is non-empty
      */
     public void ifPresent(Consumer<? super T> consumer) {
-        if (isPresent())
+        if (isPresent()) {
             consumer.accept(value);
+        }
     }
 
     /**

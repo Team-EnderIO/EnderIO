@@ -3,10 +3,10 @@
   "category": "misc",
   "key": {
     "A": {
-      "item": "enderio:copper_alloy_ingot"
+      "tag": "forge:ingots/copper_alloy"
     },
     "C": {
-      "item": "enderio:vibrant_crystal"
+      "tag": "forge:gems/vibrant_crystal"
     },
     "O": {
       "item": "enderio:octadic_capacitor"

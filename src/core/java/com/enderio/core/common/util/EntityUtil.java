@@ -20,8 +20,10 @@ public class EntityUtil {
      */
     public static String getEntityDescriptionId(ResourceLocation entityType) {
         EntityType<?> type = ForgeRegistries.ENTITY_TYPES.getValue(entityType);
-        if (type == null)
+        if (type == null) {
             return "error"; // TODO: Proper key
+        }
+
         return type.getDescriptionId();
     }
 
