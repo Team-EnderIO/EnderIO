@@ -59,10 +59,11 @@ public class TravelHandler {
     public static boolean shortTeleport(Level level, Player player) {
         Optional<Vec3> pos = teleportPosition(level, player);
         if (pos.isPresent()) {
-            if (!level.isClientSide) {
+            if (player instanceof ServerPlayer serverPlayer) {
                 Optional<Vec3> eventPos = teleportEvent(player, pos.get());
                 if (eventPos.isPresent()) {
                     player.teleportTo(eventPos.get().x(), eventPos.get().y(), eventPos.get().z());
+                    serverPlayer.connection.resetPosition();
                     player.fallDistance = 0;
                     player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
                 } else {
