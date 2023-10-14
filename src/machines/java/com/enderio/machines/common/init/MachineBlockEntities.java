@@ -19,6 +19,7 @@ import com.enderio.machines.common.blockentity.StirlingGeneratorBlockEntity;
 import com.enderio.machines.common.blockentity.TravelAnchorBlockEntity;
 import com.enderio.machines.common.blockentity.VacuumChestBlockEntity;
 import com.enderio.machines.common.blockentity.WiredChargerBlockEntity;
+import com.enderio.machines.common.blockentity.XPObeliskBlockEntity;
 import com.enderio.machines.common.blockentity.XPVacuumBlockEntity;
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorBankBlockEntity;
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorTier;
@@ -103,6 +104,7 @@ public class MachineBlockEntities {
     });
 
     public static final BlockEntityEntry<SoulEngineBlockEntity> SOUL_ENGINE = register("soul_engine", SoulEngineBlockEntity::new, MachineBlocks.SOUL_ENGINE);
+    public static final BlockEntityEntry<XPObeliskBlockEntity> XP_OBELISK = register("xp_obelisk", XPObeliskBlockEntity::new, MachineBlocks.XP_OBELISK);
 
     @SafeVarargs
     private static <B extends BlockEntity> BlockEntityEntry<B> register(String name, BlockEntityBuilder.BlockEntityFactory<B> beFactory,
