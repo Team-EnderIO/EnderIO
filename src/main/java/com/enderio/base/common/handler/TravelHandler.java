@@ -166,8 +166,9 @@ public class TravelHandler {
             BlockPos newTarget = BlockGetter.traverseBlocks(traverseFrom, toPos, clipCtx, (traverseCtx, traversePos) -> {
                 // check underneath first, since that's more likely to be where the player wants to teleport
                 BlockPos checkBelow = traversalCheck(level, traversePos.below());
-                if (checkBelow != null)
+                if (checkBelow != null) {
                     return checkBelow;
+                }
 
                 return traversalCheck(level, traversePos);
             }, (failCtx) -> failPosition);
@@ -195,8 +196,9 @@ public class TravelHandler {
     private static BlockPos traversalCheck(Level level, BlockPos traversePos) {
         BlockState blockState = level.getBlockState(traversePos);
         var collision = blockState.getCollisionShape(level, traversePos);
-        if (collision.isEmpty() && isTeleportPositionClear(level, traversePos.below()).isPresent())
+        if (collision.isEmpty() && isTeleportPositionClear(level, traversePos.below()).isPresent()) {
             return traversePos;
+        }
         return null;
     }
 
@@ -261,16 +263,16 @@ public class TravelHandler {
             return Optional.empty();
         }
 
-        if (!level.getBlockState(target.above(2)).canOcclude()) {
-            BlockPos above = target.above();
-            double height = level.getBlockState(above).getCollisionShape(level, above).max(Direction.Axis.Y);
-            if (height > 0.2d && !level.getBlockState(target.above(3)).canOcclude() || height <=0.2d) {
-                if (height == Double.NEGATIVE_INFINITY) {
-                    height = 0;
-                }
+        BlockPos above = target.above();
+        double height = level.getBlockState(above).getCollisionShape(level, above).max(Direction.Axis.Y);
+        if (height <= 0.2d) {
+            return Optional.of(Math.max(height, 0));
+        }
 
-                return Optional.of(height);
-            }
+        above = above.above();
+        boolean noCollisionAbove = level.getBlockState(above).getCollisionShape(level, above).isEmpty();
+        if (noCollisionAbove) {
+            return Optional.of(Math.max(height, 0));
         }
 
         return Optional.empty();
