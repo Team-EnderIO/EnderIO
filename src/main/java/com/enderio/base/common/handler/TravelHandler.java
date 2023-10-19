@@ -5,7 +5,9 @@ import com.enderio.api.travel.ITravelTarget;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.item.darksteel.IDarkSteelItem;
+import com.enderio.base.common.network.RequestTravelPacket;
 import com.enderio.base.common.travel.TravelSavedData;
+import com.enderio.core.common.network.CoreNetwork;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -77,32 +79,42 @@ public class TravelHandler {
     }
 
     public static boolean blockTeleport(Level level, Player player) {
-        return blockTeleport(level, player, null);
+        return blockTeleport(level, player, false);
     }
 
-    public static boolean blockTeleport(Level level, Player player, @Nullable Direction direction) {
-        Optional<ITravelTarget> target = getAnchorTarget(player);
-        if (target.isEmpty() && direction != null && direction.getStepY() != 0) {
-            target = getElevatorAnchorTarget(player, direction);
+    public static boolean blockTeleport(Level level, Player player, boolean sendToServer) {
+        return getAnchorTarget(player)
+            .filter(iTravelTarget -> blockTeleportTo(level, player, iTravelTarget, sendToServer)).isPresent();
+    }
+
+    public static boolean blockElevatorTeleport(Level level, Player player, Direction direction, boolean sendToServer) {
+        if (direction.getStepY() != 0) {
+            return getElevatorAnchorTarget(player, direction)
+                .filter(iTravelTarget -> blockTeleportTo(level, player, iTravelTarget, sendToServer)).isPresent();
         }
-        if (target.isPresent()) {
+        return false;
+    }
+
+    public static boolean blockTeleportTo(Level level, Player player, ITravelTarget target, boolean sendToServer) {
+        Optional<Double> height = isTeleportPositionClear(level, target.getPos());
+        if (height.isEmpty()) {
+            return false;
+        }
+        BlockPos blockPos = target.getPos();
+        Vec3 teleportPosition = new Vec3(blockPos.getX() + 0.5f, blockPos.getY() + height.get() + 1, blockPos.getZ() + 0.5f);
+        teleportPosition = teleportEvent(player, teleportPosition).orElse(null);
+        if (teleportPosition != null) {
             if (player instanceof ServerPlayer serverPlayer) {
-                Optional<Double> height = isTeleportPositionClear(level, target.get().getPos());
-                if (height.isEmpty()) {
-                    return false;
-                }
-                BlockPos blockPos = target.get().getPos();
-                Vec3 teleportPosition = new Vec3(blockPos.getX() + 0.5f, blockPos.getY() + height.get() + 1, blockPos.getZ() + 0.5f);
-                teleportPosition = teleportEvent(player, teleportPosition).orElse(null);
-                if (teleportPosition != null) {
-                    player.fallDistance = 0;
-                    player.teleportTo(teleportPosition.x(), teleportPosition.y(), teleportPosition.z());
-                    // Stop "moved too quickly" warnings
-                    serverPlayer.connection.resetPosition();
-                    player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
-                    return true;
-                }
+                player.teleportTo(teleportPosition.x(), teleportPosition.y(), teleportPosition.z());
+                // Stop "moved too quickly" warnings
+                serverPlayer.connection.resetPosition();
+                player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 0.75F, 1F);
+            } else if (sendToServer) {
+                CoreNetwork.sendToServer(new RequestTravelPacket(target.getPos()));
             }
+
+            player.resetFallDistance();
+            return true;
         }
         return false;
     }
