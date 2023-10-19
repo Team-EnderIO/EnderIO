@@ -176,7 +176,7 @@ public abstract class MachineMenu<T extends MachineBlockEntity> extends SyncedMe
     // Overrides the swapping behaviour. Required for ghost slots to prevent duping
     @Override
     public void doClick(int slotId, int button, ClickType clickType, Player player) {
-        if(slotId > 0 && clickType == ClickType.PICKUP && this.slots.get(slotId) instanceof GhostMachineSlot ghostSlot) {
+        if(slotId >= 0 && clickType == ClickType.PICKUP && this.slots.get(slotId) instanceof GhostMachineSlot ghostSlot) {
             ItemStack slotItem = ghostSlot.getItem();
             ItemStack carriedItem = this.getCarried();
             if(!slotItem.isEmpty() && !carriedItem.isEmpty() && ghostSlot.mayPlace(carriedItem)){
