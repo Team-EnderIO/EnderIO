@@ -29,5 +29,6 @@ public class ConduitTags {
         private static void init() {}
 
         public static final TagKey<Block> REDSTONE_CONNECTABLE = BlockTags.create(EnderIO.loc("redstone_connectable"));
+        public static final TagKey<Block> ENERGY_CABLE = BlockTags.create(EnderIO.loc("energy_cable"));
     }
 }

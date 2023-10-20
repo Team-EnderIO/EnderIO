@@ -260,6 +260,9 @@ dependencies {
     // Jade
     runtimeOnly fg.deobf("curse.maven:jade-324717:${jade_cf_id}")
 
+    //fluxnetworks
+    runtimeOnly fg.deobf("curse.maven:fluxnetworks-248020:4651164")
+
     //Flywheel
     compileOnly fg.deobf("com.jozufozu.flywheel:flywheel-forge-1.20.1:0.6.9-5") // REMOVE When crash is fixed
 

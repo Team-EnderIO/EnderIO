@@ -5,6 +5,7 @@ import appeng.api.networking.IInWorldGridNodeHost;
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.IConduitMenuData;
 import com.enderio.api.conduit.IConduitType;
+import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.api.conduit.TieredConduit;
 import com.enderio.api.conduit.ticker.IConduitTicker;
 import com.enderio.api.misc.ColorControl;
@@ -52,7 +53,7 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
     }
 
     @Override
-    public <K> Optional<LazyOptional<K>> proxyCapability(Capability<K> cap, AE2InWorldConduitNodeHost extendedConduitData, @Nullable Direction direction) {
+    public <K> Optional<LazyOptional<K>> proxyCapability(Capability<K> cap, AE2InWorldConduitNodeHost extendedConduitData, Level level, BlockPos pos, @Nullable Direction direction, Optional<NodeIdentifier.IOState> state) {
         if (getCapability() == cap) {
             return Optional.of(extendedConduitData.selfCap.cast());
         }
