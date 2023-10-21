@@ -164,12 +164,16 @@ public class TravelHandler {
             // since we can't return null from the fail condition, instead use an invalid position
             BlockPos failPosition = new BlockPos(0, Integer.MAX_VALUE, 0);
 
+            boolean aimingUp = lookVec.y > 0.5;
+
             // can reuse same toPos and clipCtx because this traversal should be along the same line
             BlockPos newTarget = BlockGetter.traverseBlocks(traverseFrom, toPos, clipCtx, (traverseCtx, traversePos) -> {
-                // check underneath first, since that's more likely to be where the player wants to teleport
-                BlockPos checkBelow = traversalCheck(level, traversePos.below());
-                if (checkBelow != null) {
-                    return checkBelow;
+                if (!aimingUp) {
+                    // check underneath first, since that's more likely to be where the player wants to teleport
+                    BlockPos checkBelow = traversalCheck(level, traversePos.below());
+                    if (checkBelow != null) {
+                        return checkBelow;
+                    }
                 }
 
                 return traversalCheck(level, traversePos);
