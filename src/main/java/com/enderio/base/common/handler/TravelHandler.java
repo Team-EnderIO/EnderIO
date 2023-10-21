@@ -142,6 +142,7 @@ public class TravelHandler {
         } else if (bhr.getType() == HitResult.Type.BLOCK) {
             Direction dir = bhr.getDirection();
             if (dir == Direction.UP) {
+                // teleport the player *inside* the target block, then later push them up by the block's height
                 // warning: relies on the fact that isTeleportClear works with heights >= 1
                 target = bhr.getBlockPos();
             } else if (dir == Direction.DOWN) {
@@ -155,12 +156,13 @@ public class TravelHandler {
         }
 
         // if target block is close, also try to teleport through
+        // eventually this distance should become configurable client-side
         if (playerPos.distanceToSqr(bhr.getLocation()) < 9) {
             // add small amount to make sure it starts at the correct block
             Vec3 traverseFrom = bhr.getLocation().add(lookVec.scale(0.01));
 
             // since we can't return null from the fail condition, instead use an invalid position
-            BlockPos failPosition = new BlockPos(Integer.MAX_VALUE, 0, 0);
+            BlockPos failPosition = new BlockPos(0, Integer.MAX_VALUE, 0);
 
             // can reuse same toPos and clipCtx because this traversal should be along the same line
             BlockPos newTarget = BlockGetter.traverseBlocks(traverseFrom, toPos, clipCtx, (traverseCtx, traversePos) -> {
