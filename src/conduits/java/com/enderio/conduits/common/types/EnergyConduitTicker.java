@@ -43,8 +43,9 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<IEnergySto
                for (Direction dir: Direction.values()) {
                    if (otherNode.getIOState(dir).map(NodeIdentifier.IOState::isInsert).orElse(false)) {
                        BlockEntity be = level.getBlockEntity(otherNode.getPos().relative(dir));
-                       if (be == null)
+                       if (be == null) {
                            continue;
+                       }
                        Optional<IEnergyStorage> capability = be.getCapability(ForgeCapabilities.ENERGY, dir.getOpposite()).resolve();
                        if (capability.isPresent()) {
                            IEnergyStorage insert = capability.get();

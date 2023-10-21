@@ -500,8 +500,9 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         for (IConduitType<?> type : bundle.getTypes()) {
             NodeIdentifier<?> node = bundle.getNodeFor(type);
             Optional<NodeIdentifier.IOState> state = Optional.empty();
-            if (node != null && side != null)
+            if (node != null && side != null) {
                 state = node.getIOState(side);
+            }
             var proxiedCap = type.proxyCapability(cap,
                 node == null ? type.createExtendedConduitData(level, getBlockPos()).cast() : node.getExtendedConduitData().cast(), level, worldPosition, side, state);
 

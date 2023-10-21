@@ -43,9 +43,11 @@ public class EnergyConduitType extends SimpleConduitType<EnergyExtendedData> {
 
     @Override
     public <K> Optional<LazyOptional<K>> proxyCapability(Capability<K> cap, EnergyExtendedData extendedConduitData, Level level, BlockPos pos, @Nullable Direction direction, Optional<NodeIdentifier.IOState> state) {
-        if (ForgeCapabilities.ENERGY == cap && state.map(NodeIdentifier.IOState::isExtract).orElse(true)) {
-            if (direction == null || !level.getBlockState(pos.relative(direction)).is(ConduitTags.Blocks.ENERGY_CABLE))
+        if (ForgeCapabilities.ENERGY == cap
+            && state.map(NodeIdentifier.IOState::isExtract).orElse(true)
+            && (direction == null || !level.getBlockState(pos.relative(direction)).is(ConduitTags.Blocks.ENERGY_CABLE))) {
                 return Optional.of(extendedConduitData.selfCap.cast());
+
         }
         return Optional.empty();
     }
