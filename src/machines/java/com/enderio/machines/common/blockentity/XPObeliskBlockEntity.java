@@ -67,7 +67,7 @@ public class XPObeliskBlockEntity extends MachineBlockEntity {
         int requestedLevel = player.experienceLevel + levelDiff;
         requestedLevel = Math.max(requestedLevel, 0);
         int playerXP = ExperienceUtil.getPlayerTotalXp(player);
-        int requestedXP = ExperienceUtil.getExpFromLevel(requestedLevel) - playerXP;
+        int requestedXP = ExperienceUtil.getTotalXpFromLevel(requestedLevel) - playerXP;
         int storedXP = getFluidTankNN().getFluidAmount() / ExperienceUtil.EXP_TO_FLUID;
 
         int awardXP = levelDiff > 0 ? Math.min(storedXP, requestedXP) : requestedXP;

@@ -1,12 +1,60 @@
 package com.enderio.base.common.util;
 
-import com.enderio.api.misc.Vector2i;
 import net.minecraft.world.entity.player.Player;
 
 public class ExperienceUtil {
 
     // 1 exp = 20 mb
     public static int EXP_TO_FLUID = 20;
+
+    /**
+     * Vanilla way of calculating experience points required for level up.
+     * @param currentLevel - the current level of player. The level up cost depends on currentLevel and not on the level you are trying to reach
+     * @return experience - experience cost to level up
+     */
+
+    public static int getXpNeededForNextLevel(int currentLevel) {
+        if (currentLevel >= 30) {
+            return 112 + (currentLevel - 30) * 9;
+        } else {
+            return currentLevel >= 15 ? 37 + (currentLevel - 15) * 5 : 7 + currentLevel * 2;
+        }
+    }
+
+    /**
+     * Returns the total xp required to reach the target level ( from 0 )
+     * @param level - level to reach
+     * @return experience - total xp cost
+     */
+    public static int getTotalXpFromLevel(int level) {
+        if (level >= 32) {
+            return (int) ((4.5 * Math.pow(level, 2)) - 162.5 * level + 2220);
+        } else if (level >= 17) {
+            return (int) ((2.5 * Math.pow(level, 2)) - 40.5 * level + 360);
+        } else {
+            return (int) (Math.pow(level , 2 ) + 6 * level);
+        }
+    }
+
+    /**
+     * Returns the max level attainable using all of the experience
+     * @param experience - total experience
+     * @return level - max level
+     */
+    public static int getTotalLevelFromXp(int experience) {
+        if (experience >= 1508) {
+            return (int) ((325.0 / 18) + (Math.sqrt(( 2.0 /9) * (experience - (54215.0 / 72)))));
+        } else if (experience >= 353) {
+            return (int) ((81.0 / 10) + (Math.sqrt(( 2.0 /5) * (experience - (7839.0 / 40)))));
+        } else {
+            return (int) (Math.sqrt(experience + 9) - 3);
+        }
+    }
+
+    public static int getPlayerTotalXp(Player player) {
+        return getTotalXpFromLevel(player.experienceLevel) +
+            (int) Math.floor(player.experienceProgress * getXpNeededForNextLevel(player.experienceLevel));
+    }
 
     /**
      * Fills the experience bar just like a player, starting from a certain level, with a possible maximum.
@@ -16,14 +64,13 @@ public class ExperienceUtil {
      * @param stopLevel
      * @return
      */
-    public static Vector2i getLevelForExpWithLeftover(int experience, int startLevel, int stopLevel) {
-        int expNeeded = getXpNeededForNextLevel(startLevel);
-        if (expNeeded < experience && startLevel < stopLevel) {
-            experience -= expNeeded;
-            startLevel +=1;
-            return getLevelForExpWithLeftover(experience, startLevel, stopLevel);
-        }
-        return new Vector2i(startLevel, experience);
+    public static ExperienceLevel getLevelForExpWithLeftover(int experience, int startLevel, int stopLevel) {
+        int startXp = getTotalXpFromLevel(startLevel);
+        int totalXp = startXp + experience;
+        int maxLevel = Math.min(getTotalLevelFromXp(totalXp), stopLevel);
+
+       int remainder =  totalXp - getTotalXpFromLevel(maxLevel);
+        return new ExperienceLevel(maxLevel, remainder);
     }
 
     /**
@@ -31,11 +78,11 @@ public class ExperienceUtil {
      * @param fluidAmount
      * @param startLevel
      * @param stopLevel
-     * @return
+     * @return experienceLevel
      */
-    public static Vector2i getLevelFromFluidWithLeftover(int fluidAmount, int startLevel, int stopLevel) {
-        Vector2i res = getLevelForExpWithLeftover(fluidAmount/ EXP_TO_FLUID, startLevel, stopLevel);
-        return res.add(0, fluidAmount % EXP_TO_FLUID); //add leftover
+    public static ExperienceLevel getLevelFromFluidWithLeftover(int fluidAmount, int startLevel, int stopLevel) {
+        ExperienceLevel res = getLevelForExpWithLeftover(fluidAmount/ EXP_TO_FLUID, startLevel, stopLevel);
+        return new ExperienceLevel(res.level(), res.experience() + (fluidAmount % EXP_TO_FLUID)); //add leftover
     }
 
     /**
@@ -44,7 +91,7 @@ public class ExperienceUtil {
      * @param fluidAmount
      * @return
      */
-    public static Vector2i getLevelFromFluidWithLeftover(int fluidAmount) {
+    public static ExperienceLevel getLevelFromFluidWithLeftover(int fluidAmount) {
         return getLevelFromFluidWithLeftover(fluidAmount, 0, Integer.MAX_VALUE);
     }
 
@@ -55,31 +102,7 @@ public class ExperienceUtil {
      * @return
      */
     public static int getLevelFromFluid(int fluidAmount) {
-        return getLevelFromFluidWithLeftover(fluidAmount).x();
-    }
-
-    /**
-     * Gets the level using a fluid. With start and max level.
-     * Starts from 0
-     * @param fluidAmount
-     * @return
-     */
-    public static int getLevelFromFluid(int fluidAmount, int startLevel, int stopLevel) {
-        return getLevelFromFluidWithLeftover(fluidAmount, startLevel, stopLevel).x();
-    }
-
-    private static int getLevelForExp(int experience, int startLevel, int stopLevel) {
-        return getLevelForExpWithLeftover(experience, startLevel, stopLevel).x();
-    }
-
-    /**
-     * Get the Experience amount from a level.
-     * @param level
-     * @return
-     */
-    public static int getExpFromLevel(int level) {
-        int leftover = getLevelForExpWithLeftover(Integer.MAX_VALUE, 0, level).y();
-        return Integer.MAX_VALUE - leftover;
+        return getLevelFromFluidWithLeftover(fluidAmount).level();
     }
 
     /**
@@ -88,24 +111,9 @@ public class ExperienceUtil {
      * @return
      */
     public static int getFluidFromLevel(int level) {
-        return getExpFromLevel(level)* EXP_TO_FLUID;
+        return getTotalXpFromLevel(level) * EXP_TO_FLUID;
     }
 
-    public static int getPlayerTotalXp(Player player) {
-        return ExperienceUtil.getExpFromLevel(player.experienceLevel) +
-            (int) Math.floor(player.experienceProgress * ExperienceUtil.getXpNeededForNextLevel(player.experienceLevel + 1));
-    }
+    public record ExperienceLevel(int level, int experience){}
 
-    /**
-     * Vanilla way of calculating levels from exp.
-     * @param explevel
-     * @return
-     */
-    public static int getXpNeededForNextLevel(int explevel) {
-        if (explevel >= 30) {
-            return 112 + (explevel - 30) * 9;
-        } else {
-            return explevel >= 15 ? 37 + (explevel - 15) * 5 : 7 + explevel * 2;
-        }
-    }
 }

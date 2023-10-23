@@ -170,7 +170,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
                 INPUT_OTHER.getItemStack(getInventory()).shrink(1);
 
                 var fluidTank = getFluidTankNN();
-                int leftover = ExperienceUtil.getLevelFromFluidWithLeftover(fluidTank.getFluidAmount(), 0, craftingTaskHost.getContainer().getNeededXP()).y();
+                int leftover = ExperienceUtil.getLevelFromFluidWithLeftover(fluidTank.getFluidAmount(), 0, craftingTaskHost.getContainer().getNeededXP()).experience();
                 fluidTank.drain(fluidTank.getFluidAmount() - leftover * EXP_TO_FLUID, IFluidHandler.FluidAction.EXECUTE);
             }
 
