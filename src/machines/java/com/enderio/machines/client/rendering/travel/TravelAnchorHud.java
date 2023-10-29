@@ -27,17 +27,7 @@ public class TravelAnchorHud implements IGuiOverlay {
         Minecraft minecraft = gui.getMinecraft();
         Player player = minecraft.player;
 
-        if (player == null) {
-            return;
-        }
-        if (!TravelHandler.canTeleport(player)) {
-            return;
-        }
-
-        TravelHandler.getAnchorTarget(player)
-            .ifPresent(target -> showElevatorTarget(guiGraphics, minecraft.font, screenWidth, screenHeight, target, Direction.EAST));
-
-        if (!TravelHandler.canBlockTeleport(player)) {
+        if (player == null || !TravelHandler.canBlockTeleport(player)) {
             return;
         }
 
