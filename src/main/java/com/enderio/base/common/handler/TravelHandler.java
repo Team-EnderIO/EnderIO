@@ -148,8 +148,7 @@ public class TravelHandler {
             .getTravelData(player.level())
             .getTravelTargetsInItemRange(player.blockPosition())
             .filter(target -> target.canTravelTo())
-            .filter(
-                target -> target.getPos().distToLowCornerSqr(player.getX(), player.getY(), player.getZ()) > MIN_TELEPORTATION_DISTANCE_SQUARED)
+            .filter(target -> target.getPos().distToCenterSqr(player.position()) > MIN_TELEPORTATION_DISTANCE_SQUARED)
             .filter(target -> Math.abs(getAngleRadians(positionVec, target.getPos(), player.getYRot(), player.getXRot())) <= Math.toRadians(15))
             .filter(target -> isTeleportPositionClear(player.level(), target.getPos()).isPresent())
             .min(Comparator.comparingDouble(target -> Math.abs(getAngleRadians(positionVec, target.getPos(), player.getYRot(), player.getXRot()))));
@@ -198,7 +197,7 @@ public class TravelHandler {
      * @param target
      * @return Optional.empty if it can't teleport and the height where to place the player. This is so you can tp on top of carpets up to a whole block
      */
-    private static Optional<Double> isTeleportPositionClear(BlockGetter level, BlockPos target) {
+    public static Optional<Double> isTeleportPositionClear(BlockGetter level, BlockPos target) {
         if (level.isOutsideBuildHeight(target)) {
             return Optional.empty();
         }
