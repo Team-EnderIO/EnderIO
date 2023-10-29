@@ -27,19 +27,25 @@ public class MachinesClientEvents {
         boolean isNewCrouch = input.shiftKeyDown && !LAST_SNEAKING;
         LAST_SNEAKING = input.shiftKeyDown;
 
-        if (!TravelHandler.canBlockTeleport(player)) {
+        if (!player.onGround() || !TravelHandler.canBlockTeleport(player)) {
             JUMP_COOLDOWN = 0;
             return;
         }
         if (isNewJump) {
             boolean success = TravelHandler.blockElevatorTeleport(player.level(), player, Direction.UP, true);
+            if (!success) {
+                success = TravelHandler.blockTeleport(player.level(), player, true);
+            }
             if (success) {
                 JUMP_COOLDOWN = 7;
             } else {
                 JUMP_COOLDOWN = 0;
             }
         } else if (isNewCrouch) {
-            TravelHandler.blockElevatorTeleport(player.level(), player, Direction.DOWN, true);
+            boolean success = TravelHandler.blockElevatorTeleport(player.level(), player, Direction.DOWN, true);
+            if (!success) {
+                TravelHandler.blockTeleport(player.level(), player, true);
+            }
         }
 
         if (JUMP_COOLDOWN > 0) {
