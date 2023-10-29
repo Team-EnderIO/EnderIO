@@ -6,7 +6,7 @@
       "tag": "forge:gems/diamond"
     },
     "P": {
-      "tag": "forge:ingots/pulsating_alloy"
+      "item": "enderio:pulsating_alloy_nugget"
     }
   },
   "pattern": [

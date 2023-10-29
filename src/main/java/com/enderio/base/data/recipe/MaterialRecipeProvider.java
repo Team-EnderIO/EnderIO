@@ -229,7 +229,7 @@ public class MaterialRecipeProvider extends RecipeProvider {
             .pattern("PPP")
             .pattern("PDP")
             .pattern("PPP")
-            .define('P', EIOTags.Items.INGOTS_PULSATING_ALLOY)
+            .define('P', EIOItems.PULSATING_ALLOY_NUGGET)
             .define('D', Tags.Items.GEMS_DIAMOND)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PULSATING_ALLOY_NUGGET.get()))
             .save(recipeConsumer);
@@ -239,7 +239,7 @@ public class MaterialRecipeProvider extends RecipeProvider {
             .pattern("PPP")
             .pattern("PDP")
             .pattern("PPP")
-            .define('P', EIOTags.Items.INGOTS_VIBRANT_ALLOY)
+            .define('P', EIOItems.VIBRANT_ALLOY_NUGGET)
             .define('D', Tags.Items.GEMS_EMERALD)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.VIBRANT_ALLOY_NUGGET.get()))
             .save(recipeConsumer);
