@@ -202,6 +202,7 @@ public class MachineBlocks {
         .tab(EIOCreativeTabs.MACHINES)
         .build()
         .register();
+
     public static final BlockEntry<ProgressMachineBlock> DRAIN = progressMachine("drain", () -> MachineBlockEntities.DRAIN)
         .register();
 
@@ -216,6 +217,8 @@ public class MachineBlocks {
         .tab(EIOCreativeTabs.MACHINES)
         .build()
         .register();
+
+    public static final BlockEntry<MachineBlock> VAT = machine("vat", () -> MachineBlockEntities.VAT).register();
 
     //used when single methods needs to be overridden in the block class
     private static <T extends MachineBlock> BlockBuilder<T, Registrate> baseMachine(BlockBuilder<T, Registrate> machineBlock,

@@ -18,6 +18,7 @@ import com.enderio.machines.client.gui.screen.SoulEngineScreen;
 import com.enderio.machines.client.gui.screen.StirlingGeneratorScreen;
 import com.enderio.machines.client.gui.screen.TravelAnchorScreen;
 import com.enderio.machines.client.gui.screen.VacuumChestScreen;
+import com.enderio.machines.client.gui.screen.VatScreen;
 import com.enderio.machines.client.gui.screen.WiredChargerScreen;
 import com.enderio.machines.client.gui.screen.XPObeliskScreen;
 import com.enderio.machines.client.gui.screen.XPVacuumScreen;
@@ -38,6 +39,7 @@ import com.enderio.machines.common.menu.SoulEngineMenu;
 import com.enderio.machines.common.menu.StirlingGeneratorMenu;
 import com.enderio.machines.common.menu.TravelAnchorMenu;
 import com.enderio.machines.common.menu.VacuumChestMenu;
+import com.enderio.machines.common.menu.VatMenu;
 import com.enderio.machines.common.menu.WiredChargerMenu;
 import com.enderio.machines.common.menu.XPObeliskMenu;
 import com.enderio.machines.common.menu.XPVacuumMenu;
@@ -69,6 +71,7 @@ public class MachineMenus {
     public static final MenuEntry<SoulEngineMenu> SOUL_ENGINE = REGISTRATE.menu("soul_engine", SoulEngineMenu::factory, () -> SoulEngineScreen::new).register();
     public static final MenuEntry<TravelAnchorMenu> TRAVEL_ANCHOR = REGISTRATE.menu("travel_anchor", TravelAnchorMenu::factory, () -> TravelAnchorScreen::new).register();
     public static final MenuEntry<XPObeliskMenu> XP_OBELISK = REGISTRATE.menu("xp_obelisk", XPObeliskMenu::factory, () -> XPObeliskScreen::new).register();
+    public static final MenuEntry<VatMenu> VAT = REGISTRATE.menu("vat", VatMenu::factory, () -> VatScreen::new).register();
 
     public static void register() {}
 }
