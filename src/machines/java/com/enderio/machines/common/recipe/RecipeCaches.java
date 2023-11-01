@@ -29,6 +29,11 @@ public class RecipeCaches {
     public static final RecipeInputCache<SoulBindingRecipe.Container, SoulBindingRecipe> SOUL_BINDING
         = new RecipeInputCache<>(MachineRecipes.SOUL_BINDING.type());
 
+    public static final RecipeInputCache<VatReagentRecipe.Container, VatReagentRecipe> VAT_REAGENT = new RecipeInputCache<>(MachineRecipes.VAT_REAGENT.type());
+
+    public static final RecipeInputCache<VatFermentingRecipe.Container, VatFermentingRecipe> VAT_FERMENTING = new RecipeInputCache<>(
+        MachineRecipes.VAT_FERMENTING.type());
+
     @SubscribeEvent
     public static void registerReloadListener(AddReloadListenerEvent event) {
         ALLOY_SMELTING.markCacheDirty();
@@ -36,6 +41,8 @@ public class RecipeCaches {
         PAINTING.markCacheDirty();
         SAG_MILLING.markCacheDirty();
         SOUL_BINDING.markCacheDirty();
+        VAT_REAGENT.markCacheDirty();
+        VAT_FERMENTING.markCacheDirty();
     }
 
     @SubscribeEvent
@@ -45,5 +52,7 @@ public class RecipeCaches {
         PAINTING.rebuildCache(event.getRecipeManager());
         SAG_MILLING.rebuildCache(event.getRecipeManager());
         SOUL_BINDING.rebuildCache(event.getRecipeManager());
+        VAT_REAGENT.rebuildCache(event.getRecipeManager());
+        VAT_FERMENTING.rebuildCache(event.getRecipeManager());
     }
 }

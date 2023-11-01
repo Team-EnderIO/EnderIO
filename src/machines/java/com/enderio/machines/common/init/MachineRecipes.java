@@ -9,6 +9,8 @@ import com.enderio.machines.common.recipe.SagMillingRecipe;
 import com.enderio.machines.common.recipe.SlicingRecipe;
 import com.enderio.machines.common.recipe.SoulBindingRecipe;
 import com.enderio.machines.common.recipe.TankRecipe;
+import com.enderio.machines.common.recipe.VatFermentingRecipe;
+import com.enderio.machines.common.recipe.VatReagentRecipe;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -32,6 +34,11 @@ public class MachineRecipes {
     public static final RecipeTypeSerializerPair<SoulBindingRecipe, SoulBindingRecipe.Serializer> SOUL_BINDING = register("soul_binding", SoulBindingRecipe.Serializer::new);
     public static final RecipeTypeSerializerPair<TankRecipe, TankRecipe.Serializer> TANK = register("tank", TankRecipe.Serializer::new);
     public static final RecipeTypeSerializerPair<PaintingRecipe, PaintingRecipe.Serializer> PAINTING = register("painting", PaintingRecipe.Serializer::new);
+    public static final RecipeTypeSerializerPair<VatReagentRecipe, VatReagentRecipe.Serializer> VAT_REAGENT = register("vat_reagent",
+        VatReagentRecipe.Serializer::new);
+
+    public static final RecipeTypeSerializerPair<VatFermentingRecipe, VatFermentingRecipe.Serializer> VAT_FERMENTING = register("vat_fermenting",
+        VatFermentingRecipe.Serializer::new);
 
     private static <I extends Recipe<?>> RegistryObject<RecipeType<I>> registerType(String name) {
         return RECIPE_TYPES.register(name, () -> RecipeType.simple(EnderIO.loc(name)));
