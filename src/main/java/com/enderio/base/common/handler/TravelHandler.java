@@ -5,9 +5,12 @@ import com.enderio.api.travel.ITravelTarget;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.item.darksteel.IDarkSteelItem;
+import com.enderio.base.common.network.RequestTravelPacket;
 import com.enderio.base.common.travel.TravelSavedData;
+import com.enderio.core.common.network.CoreNetwork;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -58,10 +61,11 @@ public class TravelHandler {
     public static boolean shortTeleport(Level level, Player player) {
         Optional<Vec3> pos = teleportPosition(level, player);
         if (pos.isPresent()) {
-            if (!level.isClientSide) {
+            if (player instanceof ServerPlayer serverPlayer) {
                 Optional<Vec3> eventPos = teleportEvent(player, pos.get());
                 if (eventPos.isPresent()) {
                     player.teleportTo(eventPos.get().x(), eventPos.get().y(), eventPos.get().z());
+                    serverPlayer.connection.resetPosition();
                     player.fallDistance = 0;
                     player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
                 } else {
@@ -75,23 +79,42 @@ public class TravelHandler {
     }
 
     public static boolean blockTeleport(Level level, Player player) {
-        Optional<ITravelTarget> target = getAnchorTarget(player);
-        if (target.isPresent()) {
-            if (!player.level().isClientSide) {
-                Optional<Double> height = isTeleportPositionClear(level, target.get().getPos());
-                if (height.isEmpty()) {
-                    return false;
-                }
-                BlockPos blockPos = target.get().getPos();
-                Vec3 teleportPosition = new Vec3(blockPos.getX() + 0.5f, blockPos.getY() + height.get() + 1, blockPos.getZ() + 0.5f);
-                teleportPosition = teleportEvent(player, teleportPosition).orElse(null);
-                if (teleportPosition != null) {
-                    player.fallDistance = 0;
-                    player.teleportTo(teleportPosition.x(), teleportPosition.y(), teleportPosition.z());
-                    player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1F, 1F);
-                    return true;
-                }
+        return blockTeleport(level, player, false);
+    }
+
+    public static boolean blockTeleport(Level level, Player player, boolean sendToServer) {
+        return getAnchorTarget(player)
+            .filter(iTravelTarget -> blockTeleportTo(level, player, iTravelTarget, sendToServer)).isPresent();
+    }
+
+    public static boolean blockElevatorTeleport(Level level, Player player, Direction direction, boolean sendToServer) {
+        if (direction.getStepY() != 0) {
+            return getElevatorAnchorTarget(player, direction)
+                .filter(iTravelTarget -> blockTeleportTo(level, player, iTravelTarget, sendToServer)).isPresent();
+        }
+        return false;
+    }
+
+    public static boolean blockTeleportTo(Level level, Player player, ITravelTarget target, boolean sendToServer) {
+        Optional<Double> height = isTeleportPositionClear(level, target.getPos());
+        if (height.isEmpty()) {
+            return false;
+        }
+        BlockPos blockPos = target.getPos();
+        Vec3 teleportPosition = new Vec3(blockPos.getX() + 0.5f, blockPos.getY() + height.get() + 1, blockPos.getZ() + 0.5f);
+        teleportPosition = teleportEvent(player, teleportPosition).orElse(null);
+        if (teleportPosition != null) {
+            if (player instanceof ServerPlayer serverPlayer) {
+                player.teleportTo(teleportPosition.x(), teleportPosition.y(), teleportPosition.z());
+                // Stop "moved too quickly" warnings
+                serverPlayer.connection.resetPosition();
+                player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 0.75F, 1F);
+            } else if (sendToServer) {
+                CoreNetwork.sendToServer(new RequestTravelPacket(target.getPos()));
             }
+
+            player.resetFallDistance();
+            return true;
         }
         return false;
     }
@@ -125,11 +148,40 @@ public class TravelHandler {
             .getTravelData(player.level())
             .getTravelTargetsInItemRange(player.blockPosition())
             .filter(target -> target.canTravelTo())
-            .filter(
-                target -> target.getPos().distToLowCornerSqr(player.getX(), player.getY(), player.getZ()) > MIN_TELEPORTATION_DISTANCE_SQUARED)
+            .filter(target -> target.getPos().distToCenterSqr(player.position()) > MIN_TELEPORTATION_DISTANCE_SQUARED)
             .filter(target -> Math.abs(getAngleRadians(positionVec, target.getPos(), player.getYRot(), player.getXRot())) <= Math.toRadians(15))
             .filter(target -> isTeleportPositionClear(player.level(), target.getPos()).isPresent())
             .min(Comparator.comparingDouble(target -> Math.abs(getAngleRadians(positionVec, target.getPos(), player.getYRot(), player.getXRot()))));
+    }
+
+    public static Optional<ITravelTarget> getElevatorAnchorTarget(Player player, Direction direction) {
+        int anchorRange = BaseConfig.COMMON.ITEMS.TRAVELLING_BLOCK_TO_BLOCK_RANGE.get();
+        BlockPos anchorPos = player.blockPosition().below();
+
+
+        int anchorX = anchorPos.getX();
+        int anchorY = anchorPos.getY();
+        int anchorZ = anchorPos.getZ();
+
+        int upperY;
+        int lowerY;
+        if (direction == Direction.UP) {
+            upperY = anchorY + anchorRange + 1;
+            lowerY = anchorY + 1;
+        } else {
+            upperY = anchorY - 1;
+            lowerY = anchorY - anchorRange - 1;
+        }
+
+        return TravelSavedData
+            .getTravelData(player.level())
+            .getTravelTargets()
+            .stream()
+            .filter(target -> target.getPos().getX() == anchorX && target.getPos().getZ() == anchorZ)
+            .filter(target -> target.getPos().getY() > lowerY && target.getPos().getY() < upperY)
+            .filter(target -> target.canTravelTo())
+            .filter(target -> isTeleportPositionClear(player.level(), target.getPos()).isPresent())
+            .min(Comparator.comparingDouble(target -> Math.abs(target.getPos().getY() - anchorY)));
     }
 
 
@@ -145,7 +197,7 @@ public class TravelHandler {
      * @param target
      * @return Optional.empty if it can't teleport and the height where to place the player. This is so you can tp on top of carpets up to a whole block
      */
-    private static Optional<Double> isTeleportPositionClear(BlockGetter level, BlockPos target) {
+    public static Optional<Double> isTeleportPositionClear(BlockGetter level, BlockPos target) {
         if (level.isOutsideBuildHeight(target)) {
             return Optional.empty();
         }
