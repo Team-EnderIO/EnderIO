@@ -45,7 +45,8 @@ public interface IConduitType<T extends IExtendedConduitData<T>> {
 
     T createExtendedConduitData(Level level, BlockPos pos);
 
-    default <K> Optional<LazyOptional<K>> proxyCapability(Capability<K> cap, T extendedConduitData, @Nullable Direction direction) {
+    default <K> Optional<LazyOptional<K>> proxyCapability(Capability<K> cap, T extendedConduitData, Level level, BlockPos pos, @Nullable Direction direction,
+        Optional<NodeIdentifier.IOState> state) {
         return Optional.empty();
     }
 

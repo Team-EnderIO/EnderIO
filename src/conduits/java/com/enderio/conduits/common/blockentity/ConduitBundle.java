@@ -94,7 +94,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         }
 
         //some conduit says no (like higher energy conduit)
-        if (types.stream().anyMatch(existingConduit -> !existingConduit.canBeInSameBlock(type))) {
+        if (types.stream().anyMatch(existingConduit -> !existingConduit.canBeInSameBlock(type) || !type.canBeInSameBlock(existingConduit))) {
             return new RightClickAction.Blocked();
         }
 
