@@ -52,8 +52,6 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
             setEntityType(rl);
             EnderIO.LOGGER.info("UPDATED ENTITY TYPE.");
         }));
-        addDataSlot(new EnumNetworkDataSlot<>(SpawnerBlockedReason.class, this::getReason, this::setReason));
-
         range = 4;
 
         taskHost = new MachineTaskHost(this, this::hasEnergy) {
@@ -146,10 +144,6 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
 
     public StoredEntityData getEntityData() {
         return entityData;
-    }
-
-    public SpawnerBlockedReason getReason() {
-        return this.reason;
     }
 
     public void setReason(SpawnerBlockedReason reason) {

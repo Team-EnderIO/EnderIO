@@ -70,9 +70,5 @@ public class PoweredSpawnerScreen extends EIOScreen<PoweredSpawnerMenu> {
                 guiGraphics.drawString(font, rl.get().toString(), imageWidth / 2f - font.width(rl.get().toString()) / 2f, 15, 4210752, false);
             }
         }
-        if (getMenu().getBlockEntity().getReason() != PoweredSpawnerBlockEntity.SpawnerBlockedReason.NONE) {
-            guiGraphics.drawString(font, getMenu().getBlockEntity().getReason().getComponent().getString(),
-                imageWidth / 2f - font.width(getMenu().getBlockEntity().getReason().getComponent().getString()) / 2f, 26, 0, false);
-        }
     }
 }
