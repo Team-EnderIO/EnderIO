@@ -13,8 +13,10 @@ public record ConduitTextureEmissiveQuadTransformer(TextureAtlasSprite newSprite
 
     @Override
     public void processInPlace(BakedQuad quad) {
-        if (lightLevel != 0)
+        if (lightLevel != 0) {
             QuadTransformers.settingEmissivity(lightLevel).processInPlace(quad);
+        }
+
         for (int i = 0; i < 4; i++) {
             float[] uv0 = RenderUtil.unpackVertices(quad.getVertices(), i, IQuadTransformer.UV0, 2);
             uv0[0] = (uv0[0] - quad.getSprite().getU0()) * newSprite.contents().width() / quad.getSprite().contents().width() + newSprite.getU0();

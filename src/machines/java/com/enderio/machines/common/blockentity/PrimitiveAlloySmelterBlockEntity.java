@@ -163,21 +163,25 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
     }
 
     public float getBurnProgress() {
-        if (level.isClientSide)
+        if (level.isClientSide) {
             return clientBurnProgress;
-        if (burnDuration == 0)
+        }
+
+        if (burnDuration == 0) {
             return 0;
+        }
+
         return burnTime / (float) burnDuration;
     }
 
     public int getBurnToFE() {
-        return MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_PRODUCTION.get();
+        return MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_PRODUCTION.get() / 2;
     }
 
     @Override
     protected boolean isActive() {
         // Ignores power.
-        return canAct() && craftingTaskHost.hasTask();
+        return canAct() && isBurning();
     }
 
     @Override

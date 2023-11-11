@@ -93,8 +93,9 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
 
                         // Attempt to add to an existing stack.
                         for (OutputStack stack : outputs) {
-                            if (count <= 0)
+                            if (count <= 0) {
                                 break;
+                            }
 
                             ItemStack itemStack = stack.getItem();
                             if (itemStack.is(item)) {
@@ -151,12 +152,12 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return MachineRecipes.SAGMILLING.serializer().get();
+        return MachineRecipes.SAG_MILLING.serializer().get();
     }
 
     @Override
     public RecipeType<?> getType() {
-        return MachineRecipes.SAGMILLING.type().get();
+        return MachineRecipes.SAG_MILLING.type().get();
     }
 
     public enum BonusType {
@@ -164,7 +165,8 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
         MULTIPLY_OUTPUT(true, true),
         CHANCE_ONLY(false, true);
 
-        private final boolean multiply, chance;
+        private final boolean multiply;
+        private final boolean chance;
 
         BonusType(boolean multiply, boolean chance) {
             this.multiply = multiply;
@@ -217,15 +219,19 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
 
         public ItemStack getItemStack() {
             Item item = getItem();
-            if (item != null)
+            if (item != null) {
                 return new ItemStack(item, count);
+            }
+
             return ItemStack.EMPTY;
         }
 
         @Nullable
         public TagKey<Item> getTag() {
-            if (!isTag())
+            if (!isTag()) {
                 return null;
+            }
+
             return item.right().get();
         }
 

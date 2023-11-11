@@ -11,10 +11,13 @@ import com.enderio.machines.common.integrations.jei.util.MachineRecipeCategory;
 import com.enderio.machines.common.integrations.jei.util.RecipeUtil;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.recipe.SoulBindingRecipe;
+import com.enderio.machines.common.souldata.ISoulData;
+import com.enderio.machines.common.souldata.SoulDataReloadListener;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.recipe.IFocus;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
@@ -28,6 +31,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
 import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
@@ -65,18 +69,22 @@ public class SoulBindingCategory extends MachineRecipeCategory<SoulBindingRecipe
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, SoulBindingRecipe recipe, IFocusGroup focuses) {
-        List<ItemStack> vials;
-        if (recipe.getEntityType() != null) {
+    List<ItemStack> vials = new ArrayList<>();
+        Optional<IFocus<ItemStack>> output = focuses.getItemStackFocuses(OUTPUT).findFirst();
+        Optional<IFocus<ItemStack>> input = focuses.getItemStackFocuses(INPUT).filter(f -> f.getTypedValue().getItemStack().get().is(EIOItems.FILLED_SOUL_VIAL.asItem())).findFirst();
+
+        if (input.isPresent()) {
+            vials.add(input.get().getTypedValue().getIngredient());
+        } else if (recipe.getEntityType() != null) {
             var item = new ItemStack(EIOItems.FILLED_SOUL_VIAL);
             SoulVialItem.setEntityType(item, recipe.getEntityType());
 
-            vials = List.of(item);
+            vials.add(item);
         } else if (recipe.getMobCategory() != null) {
-            vials = new ArrayList<>();
 
             var allEntitiesOfCategory = ForgeRegistries.ENTITY_TYPES.getValues().stream()
                 .filter(e -> e.getCategory().equals(recipe.getMobCategory()))
-                .map(e -> ForgeRegistries.ENTITY_TYPES.getKey(e))
+                .map(ForgeRegistries.ENTITY_TYPES::getKey)
                 .toList();
 
             for (ResourceLocation entity : allEntitiesOfCategory) {
@@ -85,8 +93,38 @@ public class SoulBindingCategory extends MachineRecipeCategory<SoulBindingRecipe
                 vials.add(item);
             }
 
+        } else if (recipe.getSouldata() != null){
+            if (output.isPresent()) {
+                var item = new ItemStack(EIOItems.FILLED_SOUL_VIAL);
+                output.get().getTypedValue().getItemStack().get().getCapability(EIOCapabilities.ENTITY_STORAGE).ifPresent(cap -> {
+                    SoulVialItem.setEntityType(item, cap.getStoredEntityData().getEntityType().get());
+                    vials.add(item);
+                });
+            } else {
+                SoulDataReloadListener<? extends ISoulData> soulDataReloadListener = SoulDataReloadListener.fromString(recipe.getSouldata());
+
+                var allEntitiesOfSoulData = ForgeRegistries.ENTITY_TYPES.getKeys().stream()
+                    .filter(r -> soulDataReloadListener.map.containsKey(r))
+                    .toList();
+
+                for (ResourceLocation entity : allEntitiesOfSoulData) {
+                    var item = new ItemStack(EIOItems.FILLED_SOUL_VIAL);
+                    SoulVialItem.setEntityType(item, entity);
+                    vials.add(item);
+                }
+            }
+
+
         } else {
-            vials = SoulVialItem.getAllFilled();
+            if (output.isPresent()) {
+                var item = new ItemStack(EIOItems.FILLED_SOUL_VIAL);
+                output.get().getTypedValue().getItemStack().get().getCapability(EIOCapabilities.ENTITY_STORAGE).ifPresent(cap -> {
+                    SoulVialItem.setEntityType(item, cap.getStoredEntityData().getEntityType().get());
+                    vials.add(item);
+                });
+            } else {
+                vials.addAll(SoulVialItem.getAllFilled());
+            }
         }
 
         builder.addSlot(INPUT, 3, 4)

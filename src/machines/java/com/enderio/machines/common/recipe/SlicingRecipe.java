@@ -65,8 +65,9 @@ public class SlicingRecipe implements MachineRecipe<Container> {
     @Override
     public boolean matches(Container container, Level level) {
         for (int i = 0; i < inputs.size(); i++) {
-            if (!inputs.get(i).test(container.getItem(i)))
+            if (!inputs.get(i).test(container.getItem(i))) {
                 return false;
+            }
         }
         return true;
     }

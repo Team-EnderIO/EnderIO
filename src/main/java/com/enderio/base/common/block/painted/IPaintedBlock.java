@@ -47,8 +47,9 @@ public interface IPaintedBlock extends IForgeBlock {
     default Block getPaint(BlockGetter level, BlockPos pos) {
         if (level.getExistingBlockEntity(pos) instanceof SinglePaintedBlockEntity paintedBlockEntity) {
             Block paint = paintedBlockEntity.getPaint();
-            if (paint != null && !(paint instanceof IPaintedBlock))
+            if (paint != null && !(paint instanceof IPaintedBlock)) {
                 return paint;
+            }
         }
         //sane default (definitely not air)
         return Blocks.OAK_PLANKS;

@@ -1,0 +1,6 @@
+{
+  "parent": "enderio:block/soul_engine",
+  "textures": {
+    "north": "enderio:block/soul_engine_front_active"
+  }
+}

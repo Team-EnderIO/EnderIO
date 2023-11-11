@@ -7,8 +7,7 @@
         "LivingEntityMixin"
     ],
     "client" : [
-        "GliderRotationMixin",
-        "SkullBlockRendererMixin"
+        "GliderRotationMixin"
     ],
     "minVersion" : "0.8"
 }

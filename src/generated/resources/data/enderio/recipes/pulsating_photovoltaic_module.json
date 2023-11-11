@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "enderio:double_layer_capacitor"
+    },
+    "D": {
+      "tag": "forge:dusts/coal"
+    },
+    "F": {
+      "tag": "enderio:enlighted_fused_quartz"
+    },
+    "I": {
+      "tag": "forge:ingots/pulsating_alloy"
+    },
+    "P": {
+      "item": "enderio:photovoltaic_plate"
+    },
+    "S": {
+      "item": "enderio:energetic_photovoltaic_module"
+    }
+  },
+  "pattern": [
+    "IFI",
+    "PDP",
+    "CSC"
+  ],
+  "result": {
+    "item": "enderio:pulsating_photovoltaic_module"
+  },
+  "show_notification": true
+}

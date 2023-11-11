@@ -82,8 +82,9 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
     @Override
     public void tick() {
         // If the recipe is done, don't let it tick.
-        if (isComplete)
+        if (isComplete) {
             return;
+        }
 
         // If the recipe failed to load somehow, cancel
         if (recipe == null) {
@@ -103,8 +104,8 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
             progressRequired = getProgressRequired(recipe);
         }
 
-        // If we can't input or output, cancel the task. However, if for some reason we can't output after the inputs are collected, don't.
-        if (!placeOutputs(outputs, true) || !recipe.matches(container, level)) {
+        // If we don't have a recipe match, complete the task and wait for a new one.
+        if (!recipe.matches(container, level)) {
             isComplete = true;
             return;
         }
@@ -129,8 +130,10 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
 
     @Override
     public float getProgress() {
-        if (recipe == null)
+        if (recipe == null) {
             return 0.0f;
+        }
+
         return progressMade / (float) progressRequired;
     }
 
@@ -155,8 +158,9 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
             }
 
             // If we fail, say we can't accept these outputs
-            if (!item.isEmpty())
+            if (!item.isEmpty()) {
                 return false;
+            }
         }
 
         // If we're not simulating, go for it

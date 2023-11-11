@@ -1,5 +1,5 @@
 {
   "type": "entitytype",
   "entity": "minecraft:trader_llama",
-  "power": 3000
+  "power": 12000
 }

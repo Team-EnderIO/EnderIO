@@ -4,7 +4,8 @@
 	"textures": {
 		"frame": "enderio:block/hollow_core_frame",
 		"inner": "enderio:block/hollow_core_frame_inner",
-		"core": "enderio:block/vacuum_portal"
+		"core": "enderio:block/vacuum_portal",
+        "particle": "enderio:block/machine_side"
 	},
 	"elements": [
 		{

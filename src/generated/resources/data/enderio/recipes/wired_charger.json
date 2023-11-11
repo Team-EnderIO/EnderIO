@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "C": {
-      "item": "enderio:copper_alloy_ingot"
+      "tag": "forge:ingots/copper_alloy"
     },
     "V": {
       "item": "enderio:void_chassis"

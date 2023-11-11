@@ -5,8 +5,8 @@ import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -32,24 +32,25 @@ public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
         FluidTank tank = blockEntity.getFluidTank();
 
         // Don't waste time if there's no fluid.
-        if (tank.getFluidAmount() > 0) {
+        if (!tank.isEmpty()) {
             FluidStack fluidStack = tank.getFluid();
 
-            // Get the preferred render buffer
-            VertexConsumer buffer = bufferSource.getBuffer(ItemBlockRenderTypes.getRenderLayer(fluidStack.getFluid().defaultFluidState()));
+            // Use entity translucent cull sheet so fluid renders in Fabulous
+            VertexConsumer buffer = bufferSource.getBuffer(Sheets.translucentCullBlockSheet());
 
             // Render the fluid
             PoseStack.Pose last = poseStack.last();
-            renderFluid(last.pose(), last.normal(), buffer, blockEntity, fluidStack.getFluid(), tank.getFluidAmount() / (float) tank.getCapacity());
+            renderFluid(last.pose(), last.normal(), buffer, blockEntity, fluidStack.getFluid(), tank.getFluidAmount() / (float) tank.getCapacity(), packedLight);
         }
     }
 
-    private static void renderFluid(Matrix4f pose, Matrix3f normal, VertexConsumer consumer, BlockEntity entity, Fluid fluid, float fillAmount) {
-        IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluid);
-        renderFluid(pose, normal, consumer, fluid, fillAmount, props.getTintColor(null, entity.getLevel(), entity.getBlockPos()));
+    private static void renderFluid(Matrix4f pose, Matrix3f normal, VertexConsumer consumer, BlockEntity entity, Fluid fluid, float fillAmount, int packedLight) {
+        int color = IClientFluidTypeExtensions.of(fluid).getTintColor(fluid.defaultFluidState(), entity.getLevel(), entity.getBlockPos());
+        //if (color == -1) color = 0xffffff;
+        renderFluid(pose, normal, consumer, fluid, fillAmount, color, packedLight);
     }
 
-    public static void renderFluid(Matrix4f pose, Matrix3f normal, VertexConsumer consumer, Fluid fluid, float fillAmount, int color) {
+    public static void renderFluid(Matrix4f pose, Matrix3f normal, VertexConsumer consumer, Fluid fluid, float fillAmount, int color, int packedLight) {
         // Get fluid texture
         IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluid);
         TextureAtlasSprite texture = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(props.getStillTexture());
@@ -61,12 +62,12 @@ public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
 
 
         // Top
-        RenderUtil.renderFace(Direction.UP, pose, normal, consumer, texture, inset, inset, inset + fluidHeight, faceSize, faceSize, color);
+        RenderUtil.renderFace(Direction.UP, pose, normal, consumer, texture, inset, inset, inset + fluidHeight, faceSize, faceSize, color, packedLight);
 
         // Sides
-        RenderUtil.renderFace(Direction.SOUTH, pose, normal, consumer, texture, inset, inset, inset, faceSize, fluidHeight, color);
-        RenderUtil.renderFace(Direction.NORTH, pose, normal, consumer, texture, inset, inset, inset, faceSize, fluidHeight, color);
-        RenderUtil.renderFace(Direction.EAST, pose, normal, consumer, texture, inset, inset, inset, faceSize, fluidHeight, color);
-        RenderUtil.renderFace(Direction.WEST, pose, normal, consumer, texture, inset, inset, inset, faceSize, fluidHeight, color);
+        RenderUtil.renderFace(Direction.SOUTH, pose, normal, consumer, texture, inset, inset, inset, faceSize, fluidHeight, color, packedLight);
+        RenderUtil.renderFace(Direction.NORTH, pose, normal, consumer, texture, inset, inset, inset, faceSize, fluidHeight, color, packedLight);
+        RenderUtil.renderFace(Direction.EAST, pose, normal, consumer, texture, inset, inset, inset, faceSize, fluidHeight, color, packedLight);
+        RenderUtil.renderFace(Direction.WEST, pose, normal, consumer, texture, inset, inset, inset, faceSize, fluidHeight, color, packedLight);
     }
 }

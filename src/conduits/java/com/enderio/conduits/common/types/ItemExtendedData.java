@@ -86,8 +86,10 @@ public class ItemExtendedData implements IExtendedConduitData<ItemExtendedData> 
             sidedData.roundRobin = nbt.getBoolean(KEY_ROUND_ROBIN);
             sidedData.selfFeed = nbt.getBoolean(KEY_SELF_FEED);
             sidedData.priority= nbt.getInt(KEY_PRIORITY);
-            if (nbt.contains(KEY_ROTATING_INDEX))
+            if (nbt.contains(KEY_ROTATING_INDEX)) {
                 sidedData.rotatingIndex= nbt.getInt(KEY_ROTATING_INDEX);
+            }
+
             return sidedData;
         }
 

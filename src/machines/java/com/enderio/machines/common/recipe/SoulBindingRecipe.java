@@ -6,7 +6,9 @@ import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.recipes.OutputStack;
+import com.enderio.machines.common.blockentity.SoulBinderBlockEntity;
 import com.enderio.machines.common.init.MachineRecipes;
+import com.enderio.machines.common.souldata.SoulDataReloadListener;
 import com.google.gson.JsonObject;
 import net.minecraft.ResourceLocationException;
 import net.minecraft.core.NonNullList;
@@ -35,13 +37,14 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
     private final ResourceLocation id;
     private final Item output;
     private final Ingredient input;
+    private final int energy;
     private final int exp;
     @Nullable private final ResourceLocation entityType;
     @Nullable private final MobCategory mobCategory;
-    private final int energy;
+    @Nullable private final String souldata;
 
     public SoulBindingRecipe(ResourceLocation id, Item output, Ingredient input, int energy, int exp, @Nullable ResourceLocation entityType,
-        @Nullable MobCategory mobCategory) {
+        @Nullable MobCategory mobCategory, @Nullable String souldata) {
         this.id = id;
         this.output = output;
         this.input = input;
@@ -52,8 +55,17 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
             throw new IllegalStateException("entityType and mobCategory are mutually exclusive!");
         }
 
+        if (souldata != null && mobCategory != null) {
+            throw new IllegalStateException("souldata and mobCategory are mutually exclusive!");
+        }
+
+        if (entityType != null && souldata != null) {
+            throw new IllegalStateException("entityType and souldata are mutually exclusive!");
+        }
+
         this.entityType = entityType;
         this.mobCategory = mobCategory;
+        this.souldata = souldata;
     }
 
     public Ingredient getInput() {
@@ -70,6 +82,11 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
         return mobCategory;
     }
 
+    @Nullable
+    public String getSouldata() {
+        return souldata;
+    }
+
     @Override
     public int getBaseEnergyCost() {
         return energy;
@@ -81,22 +98,18 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
 
     @Override
     public List<OutputStack> craft(SoulBindingRecipe.Container container, RegistryAccess registryAccess) {
-        ItemStack vial = container.getItem(0);
+        ItemStack vial = SoulBinderBlockEntity.INPUT_SOUL.getItemStack(container);
         List<OutputStack> results = getResultStacks(registryAccess);
-        results.forEach(o -> {
-            ItemStack result = o.getItem(); //TODO will this auto update since the stack is updated?
-            vial.getCapability(EIOCapabilities.ENTITY_STORAGE).ifPresent(inputEntity -> {
-                result.getCapability(EIOCapabilities.ENTITY_STORAGE).ifPresent(resultEntity -> {
-                    resultEntity.setStoredEntityData(inputEntity.getStoredEntityData());
-                });
-            });
-        });
+        ItemStack result = results.get(0).getItem();
+        vial.getCapability(EIOCapabilities.ENTITY_STORAGE)
+            .ifPresent(inputEntity -> result.getCapability(EIOCapabilities.ENTITY_STORAGE)
+                .ifPresent(resultEntity -> resultEntity.setStoredEntityData(inputEntity.getStoredEntityData())));
         return results;
     }
 
     @Override
     public List<OutputStack> getResultStacks(RegistryAccess registryAccess) {
-        return List.of(OutputStack.of(new ItemStack(output, 1)));
+        return List.of(OutputStack.of(output.getDefaultInstance()), OutputStack.of(EIOItems.EMPTY_SOUL_VIAL.asStack()));
     }
 
     @Override
@@ -106,26 +119,44 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
 
     @Override
     public boolean matches(SoulBindingRecipe.Container container, Level pLevel) {
-        if (!container.getItem(0).is(EIOItems.FILLED_SOUL_VIAL.get()))
-            return false;
-        if (!input.test(container.getItem(1)))
-            return false;
-        LazyOptional<IEntityStorage> capability = container.getItem(0).getCapability(EIOCapabilities.ENTITY_STORAGE);
-        if (!capability.isPresent()) { //vial (or other entity storage
+        if (!container.getItem(0).is(EIOItems.FILLED_SOUL_VIAL.get())) {
             return false;
         }
-        if (entityType == null && mobCategory == null) { //type doesn't matter
+
+        if (!input.test(SoulBinderBlockEntity.INPUT_OTHER.getItemStack(container))) {
+            return false;
+        }
+
+        LazyOptional<IEntityStorage> capability = container.getItem(0).getCapability(EIOCapabilities.ENTITY_STORAGE);
+        if (!capability.isPresent()) { //vial (or other entity storage)
+            return false;
+        }
+
+        if (souldata != null) { //is in the selected souldata
+            if (SoulDataReloadListener.fromString(souldata).matches(
+                container.getItem(0).getCapability(EIOCapabilities.ENTITY_STORAGE).resolve().get()
+                    .getStoredEntityData().getEntityType().get()).isEmpty()) {
+                return false;
+            }
+
             return ExperienceUtil.getLevelFromFluid(container.fluid.get()) >= exp;
         }
+
+        if (mobCategory == null && entityType == null) { //No souldata, entity type or mob category
+            return ExperienceUtil.getLevelFromFluid(container.fluid.get()) >= exp;
+        }
+
         IEntityStorage storage = capability.resolve().get();
         if (storage.hasStoredEntity()) {
             var type = storage.getStoredEntityData().getEntityType();
-            if (!type.isPresent())
+            if (type.isEmpty()) {
                 return false;
+            }
 
             var entityType = ForgeRegistries.ENTITY_TYPES.getValue(type.get());
-            if (entityType == null)
+            if (entityType == null) {
                 return false;
+            }
 
             if (entityType.getCategory().equals(mobCategory)) {
                 return ExperienceUtil.getLevelFromFluid(container.fluid.get()) >= exp;
@@ -135,6 +166,7 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
         if (storage.hasStoredEntity() && storage.getStoredEntityData().getEntityType().get().equals(entityType)) {
             return ExperienceUtil.getLevelFromFluid(container.fluid.get()) >= exp;
         }
+
         return false;
     }
 
@@ -186,7 +218,12 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
                 mobCategory = MobCategory.byName(serializedRecipe.get("mob_category").getAsString());
             }
 
-            return new SoulBindingRecipe(pRecipeId, output, input, energy, exp, entityType, mobCategory);
+            String souldata = null;
+            if (serializedRecipe.has("souldata")) {
+                souldata = serializedRecipe.get("souldata").getAsString();
+            }
+
+            return new SoulBindingRecipe(pRecipeId, output, input, energy, exp, entityType, mobCategory, souldata);
         }
 
         @Nullable
@@ -201,18 +238,24 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
                 Ingredient input = Ingredient.fromNetwork(buffer);
                 int energy = buffer.readInt();
                 int exp = buffer.readInt();
+                int mode = buffer.readInt();
 
                 ResourceLocation entityType = null;
-                if (buffer.readBoolean()) {
+                if (mode == 1) {
                     entityType = buffer.readResourceLocation();
                 }
 
                 MobCategory mobCategory = null;
-                if (buffer.readBoolean()) {
+                if (mode == 2) {
                     mobCategory = MobCategory.byName(buffer.readUtf());
                 }
 
-                return new SoulBindingRecipe(recipeId, output, input, energy, exp, entityType, mobCategory);
+                String souldata = null;
+                if (mode == 3) {
+                    souldata = buffer.readUtf();
+                }
+
+                return new SoulBindingRecipe(recipeId, output, input, energy, exp, entityType, mobCategory, souldata);
             } catch (Exception ex) {
                 EnderIO.LOGGER.error("Error reading soul binding recipe from packet.", ex);
                 throw ex;
@@ -227,14 +270,17 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
                 buffer.writeInt(recipe.energy);
                 buffer.writeInt(recipe.exp);
 
-                buffer.writeBoolean(recipe.entityType != null);
                 if (recipe.entityType != null) { //don't write null
+                    buffer.writeInt(1);
                     buffer.writeResourceLocation(recipe.entityType);
-                }
-
-                buffer.writeBoolean(recipe.mobCategory != null);
-                if (recipe.mobCategory != null) { //don't write null
+                } else if (recipe.mobCategory != null) { //don't write null
+                    buffer.writeInt(2);
                     buffer.writeUtf(recipe.mobCategory.getName());
+                } else if (recipe.souldata != null) { //don't write null
+                    buffer.writeInt(3);
+                    buffer.writeUtf(recipe.souldata);
+                } else {
+                    buffer.writeInt(0);
                 }
             } catch (Exception ex) {
                 EnderIO.LOGGER.error("Error writing soul binding recipe to packet.", ex);

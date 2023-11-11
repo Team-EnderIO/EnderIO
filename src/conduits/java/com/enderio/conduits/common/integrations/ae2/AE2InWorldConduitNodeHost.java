@@ -1,6 +1,10 @@
 package com.enderio.conduits.common.integrations.ae2;
 
-import appeng.api.networking.*;
+import appeng.api.networking.GridFlags;
+import appeng.api.networking.GridHelper;
+import appeng.api.networking.IGridNode;
+import appeng.api.networking.IInWorldGridNodeHost;
+import appeng.api.networking.IManagedGridNode;
 import appeng.api.util.AECableType;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.IExtendedConduitData;
@@ -30,7 +34,7 @@ public class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, IExtende
         if (type.isDense()) {
             mainNode.setFlags(GridFlags.DENSE_CAPACITY);
         }
-        mainNode.setIdlePowerUsage(type.isDense() ? 2 : 0.5d);
+        mainNode.setIdlePowerUsage(type.isDense() ? 0.4d : 0.1d);
     }
 
     @Nullable
@@ -41,8 +45,10 @@ public class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, IExtende
 
     @Override
     public AECableType getCableConnectionType(Direction dir) {
-        if (type.isDense())
+        if (type.isDense()) {
             return AECableType.DENSE_SMART;
+        }
+
         return AECableType.SMART;
     }
 
@@ -64,7 +70,7 @@ public class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, IExtende
             if (player != null) {
                 mainNode.setOwningPlayer(player);
             }
-            mainNode.create(level, pos);
+            GridHelper.onFirstTick(level.getBlockEntity(pos), blockEntity -> mainNode.create(level, pos));
         }
     }
 

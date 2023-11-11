@@ -5,8 +5,11 @@ import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.conduits.common.blockentity.SlotType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.LogicalSide;
 
 import java.util.HashMap;
@@ -14,9 +17,9 @@ import java.util.Map;
 
 public record DynamicConnectionState(boolean isInsert, ColorControl insert, boolean isExtract, ColorControl extract, RedstoneControl control, ColorControl redstoneChannel, @UseOnly(LogicalSide.SERVER) ItemStack filterInsert, @UseOnly(LogicalSide.SERVER) ItemStack filterExtract, @UseOnly(LogicalSide.SERVER) ItemStack upgradeExtract) implements IConnectionState {
 
-    public static DynamicConnectionState defaultConnection(IConduitType<?> type) {
-        IConduitType.ConduitConnectionData defaultConnection = type.getDefaultConnection();
-        return new DynamicConnectionState(defaultConnection.isInsert(), ColorControl.GREEN, defaultConnection.isExtract(), ColorControl.GREEN, RedstoneControl.NEVER_ACTIVE, ColorControl.RED, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY);
+    public static DynamicConnectionState defaultConnection(Level level, BlockPos pos, Direction direction, IConduitType<?> type) {
+        IConduitType.ConduitConnectionData defaultConnection = type.getDefaultConnection(level, pos, direction);
+        return new DynamicConnectionState(defaultConnection.isInsert(), ColorControl.GREEN, defaultConnection.isExtract(), ColorControl.GREEN, defaultConnection.control(), ColorControl.RED, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY);
     }
 
     @Override
@@ -25,10 +28,14 @@ public record DynamicConnectionState(boolean isInsert, ColorControl insert, bool
     }
 
     public ItemStack getItem(SlotType slotType) {
-        if (slotType == SlotType.FILTER_EXTRACT)
+        if (slotType == SlotType.FILTER_EXTRACT) {
             return filterExtract;
-        if (slotType == SlotType.FILTER_INSERT)
+        }
+
+        if (slotType == SlotType.FILTER_INSERT) {
             return filterInsert;
+        }
+
         return upgradeExtract;
     }
 

@@ -1,6 +1,6 @@
 {
   "type": "enderio:alloy_smelting",
-  "energy": 20000,
+  "energy": 6400,
   "experience": 0.3,
   "inputs": [
     {
@@ -12,7 +12,7 @@
     {
       "count": 1,
       "ingredient": {
-        "item": "enderio:dark_steel_ingot"
+        "tag": "forge:ingots/dark_steel"
       }
     },
     {

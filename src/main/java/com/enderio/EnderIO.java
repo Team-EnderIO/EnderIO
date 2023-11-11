@@ -4,7 +4,18 @@ import com.enderio.api.integration.IntegrationManager;
 import com.enderio.base.common.advancement.PaintingTrigger;
 import com.enderio.base.common.advancement.UseGliderTrigger;
 import com.enderio.base.common.config.BaseConfig;
-import com.enderio.base.common.init.*;
+import com.enderio.base.common.init.EIOBlockEntities;
+import com.enderio.base.common.init.EIOBlocks;
+import com.enderio.base.common.init.EIOCreativeTabs;
+import com.enderio.base.common.init.EIOEnchantments;
+import com.enderio.base.common.init.EIOEntities;
+import com.enderio.base.common.init.EIOFluids;
+import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.common.init.EIOLootModifiers;
+import com.enderio.base.common.init.EIOMenus;
+import com.enderio.base.common.init.EIOPackets;
+import com.enderio.base.common.init.EIOParticles;
+import com.enderio.base.common.init.EIORecipes;
 import com.enderio.base.common.integrations.EnderIOSelfIntegration;
 import com.enderio.base.common.item.tool.SoulVialItem;
 import com.enderio.base.common.lang.EIOLang;
@@ -12,10 +23,15 @@ import com.enderio.base.common.network.EIONetwork;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.EIODataProvider;
 import com.enderio.base.data.advancement.EIOAdvancementGenerator;
-import com.enderio.base.data.loot.EIOLootModifiersProvider;
 import com.enderio.base.data.loot.ChestLootProvider;
+import com.enderio.base.data.loot.EIOLootModifiersProvider;
 import com.enderio.base.data.loot.FireCraftingLootProvider;
-import com.enderio.base.data.recipe.*;
+import com.enderio.base.data.recipe.BlockRecipeProvider;
+import com.enderio.base.data.recipe.FireCraftingRecipeProvider;
+import com.enderio.base.data.recipe.GlassRecipeProvider;
+import com.enderio.base.data.recipe.GrindingBallRecipeProvider;
+import com.enderio.base.data.recipe.ItemRecipeProvider;
+import com.enderio.base.data.recipe.MaterialRecipeProvider;
 import com.enderio.base.data.tags.EIOBlockTagsProvider;
 import com.enderio.base.data.tags.EIOEntityTagsProvider;
 import com.enderio.base.data.tags.EIOFluidTagsProvider;
@@ -24,11 +40,13 @@ import com.enderio.core.EnderCore;
 import com.enderio.core.common.network.CoreNetwork;
 import com.tterrag.registrate.Registrate;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.common.data.ForgeAdvancementProvider;
 import net.minecraftforge.common.util.Lazy;
@@ -40,6 +58,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
+import net.minecraftforge.registries.MissingMappingsEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -108,6 +127,9 @@ public class EnderIO {
 
         // Decor
         EIONetwork.register();
+
+        // Remap
+        MinecraftForge.EVENT_BUS.addListener(EnderIO::missingMappings);
     }
 
     public void onGatherData(GatherDataEvent event) {
@@ -118,12 +140,12 @@ public class EnderIO {
 
         EIODataProvider provider = new EIODataProvider("base");
 
-        provider.addSubProvider(event.includeServer(), new MaterialRecipes(packOutput));
-        provider.addSubProvider(event.includeServer(), new BlockRecipes(packOutput));
-        provider.addSubProvider(event.includeServer(), new ItemRecipes(packOutput));
+        provider.addSubProvider(event.includeServer(), new MaterialRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new BlockRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new ItemRecipeProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new GrindingBallRecipeProvider(packOutput));
-        provider.addSubProvider(event.includeServer(), new GlassRecipes(packOutput));
-        provider.addSubProvider(event.includeServer(), new FireCraftingRecipes(packOutput));
+        provider.addSubProvider(event.includeServer(), new GlassRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new FireCraftingRecipeProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new EIOLootModifiersProvider(packOutput));
 
         var b = new EIOBlockTagsProvider(packOutput, lookupProvider, existingFileHelper);
@@ -137,5 +159,18 @@ public class EnderIO {
             List.of(new LootTableProvider.SubProviderEntry(FireCraftingLootProvider::new, LootContextParamSets.EMPTY),
                 new LootTableProvider.SubProviderEntry(ChestLootProvider::new, LootContextParamSets.CHEST))));
         generator.addProvider(true, provider);
+    }
+
+    //TODO Remove later on when during beta/release.
+    public static void missingMappings(MissingMappingsEvent event) {
+        event.getMappings(Registries.ENCHANTMENT, EnderIO.MODID).forEach(mapping -> {
+            if (mapping.getKey().equals(EnderIO.loc("withering_blade"))) {
+                mapping.remap(EIOEnchantments.WITHERING.get());
+            } else if (mapping.getKey().equals(EnderIO.loc("withering_arrow"))) {
+                mapping.remap(EIOEnchantments.WITHERING.get());
+            } else if (mapping.getKey().equals(EnderIO.loc("withering_bold"))) {
+                mapping.remap(EIOEnchantments.WITHERING.get());
+            }
+        });
     }
 }

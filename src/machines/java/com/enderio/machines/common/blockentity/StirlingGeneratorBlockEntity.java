@@ -29,7 +29,7 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_CAPACITY);
 
     // TODO: Capacitor modifiers for efficiency and output rates.
-    public static final LinearScalable BURN_SPEED = new LinearScalable(CapacitorModifier.FIXED, MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_BURN_SPEED);
+    public static final LinearScalable BURN_SPEED = new LinearScalable(CapacitorModifier.FIXED, () -> 1);
     public static final LinearScalable GENERATION_SPEED = new LinearScalable(CapacitorModifier.FIXED, MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_PRODUCTION);
 
     public static final SingleSlotAccess FUEL = new SingleSlotAccess();
@@ -57,7 +57,7 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     @Override
     public MachineInventoryLayout getInventoryLayout() {
         return MachineInventoryLayout.builder()
-            .inputSlot((slot, stack) -> ForgeHooks.getBurnTime(stack, RecipeType.SMELTING) > 0)
+            .inputSlot((slot, stack) -> ForgeHooks.getBurnTime(stack, RecipeType.SMELTING) > 0 && stack.getCraftingRemainingItem().isEmpty())
             .slotAccess(FUEL)
             .capacitor()
             .build();
@@ -84,15 +84,11 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
                     int burningTime = ForgeHooks.getBurnTime(fuel, RecipeType.SMELTING);
 
                     if (burningTime > 0) {
-                        burnTime = burningTime;
+                        burnTime = (int) Math.floor(burningTime * MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_BURN_SPEED.get());
                         burnDuration = burnTime;
 
                         // Remove the fuel
-                        if (fuel.hasCraftingRemainingItem()) {
-                            FUEL.setStackInSlot(this, fuel.getCraftingRemainingItem());
-                        } else {
-                            fuel.shrink(1);
-                        }
+                        fuel.shrink(1);
                     }
                 }
             }
@@ -107,17 +103,23 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     }
 
     public boolean isGenerating() {
-        if (level == null)
+        if (level == null) {
             return false;
+        }
+
         return burnTime > 0;
     }
 
     public float getBurnProgress() {
-        if (level.isClientSide)
+        if (level.isClientSide) {
             return clientBurnProgress;
-        if (burnDuration == 0)
-            return 0;
-        return burnTime / (float) burnDuration;
+        }
+
+        if (burnDuration != 0) {
+            return burnTime / (float) burnDuration;
+        }
+
+        return 0;
     }
 
     @Nullable

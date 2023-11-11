@@ -6,12 +6,14 @@ import com.enderio.base.client.particle.RangeParticle;
 import com.enderio.base.client.renderer.block.EnderSkullRenderer;
 import com.enderio.base.client.renderer.glider.ActiveGliderRenderLayer;
 import com.enderio.base.client.renderer.item.GlassIconDecorator;
+import com.enderio.base.common.block.EnderSkullBlock;
 import com.enderio.base.common.init.EIOBlockEntities;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.init.EIOParticles;
 import com.enderio.core.client.item.FluidBarDecorator;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
@@ -37,12 +39,6 @@ public class ClientSetup {
     public static final Map<Item, BakedModel> GLIDER_MODELS = new HashMap<>();
     @SubscribeEvent
     public static void additionalModels(ModelEvent.RegisterAdditional event) {
-        event.register(EnderIO.loc("item/wood_gear_helper"));
-        event.register(EnderIO.loc("item/stone_gear_helper"));
-        event.register(EnderIO.loc("item/iron_gear_helper"));
-        event.register(EnderIO.loc("item/energized_gear_helper"));
-        event.register(EnderIO.loc("item/vibrant_gear_helper"));
-        event.register(EnderIO.loc("item/dark_bimetal_gear_helper"));
         Set<ResourceLocation> gliderModels = Minecraft
             .getInstance()
             .getResourceManager()
@@ -63,8 +59,8 @@ public class ClientSetup {
     public static void itemDecorators(RegisterItemDecorationsEvent event) {
         // Register tools
         event.register(EIOItems.LEVITATION_STAFF.get(), FluidBarDecorator.INSTANCE);
-//        event.register(EIOItems.DARK_STEEL_AXE.get(), EnergyBarDecorator.INSTANCE);
-//        event.register(EIOItems.DARK_STEEL_PICKAXE.get(), EnergyBarDecorator.INSTANCE);
+        //        event.register(EIOItems.DARK_STEEL_AXE.get(), EnergyBarDecorator.INSTANCE);
+        //        event.register(EIOItems.DARK_STEEL_PICKAXE.get(), EnergyBarDecorator.INSTANCE);
 
         // Register all glass blocks
         EIOBlocks.GLASS_BLOCKS.values().forEach(blocks -> blocks.getAllBlocks().forEach(block -> event.register(block.get(), GlassIconDecorator.INSTANCE)));
@@ -103,6 +99,7 @@ public class ClientSetup {
         String path = rl.getPath().substring("models/enderio_glider/".length(), rl.getPath().length() - 5);
         return Optional.ofNullable(ForgeRegistries.ITEMS.getValue(new ResourceLocation(namespace, path)));
     }
+
     @SubscribeEvent
     public static void modelInit(ModelEvent.RegisterGeometryLoaders event) {
         event.register("painted_block", new PaintedBlockGeometry.Loader());
@@ -116,5 +113,11 @@ public class ClientSetup {
     @SubscribeEvent
     public static void registerModelLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(EnderSkullRenderer.ENDER_SKULL, EnderSkullRenderer.EnderSkullModel::createMobHeadLayer);
+    }
+
+    @SubscribeEvent
+    public static void registerEnderSkulls(EntityRenderersEvent.CreateSkullModels event) {
+        event.registerSkullModel(EnderSkullBlock.EIOSkulls.ENDERMAN, new EnderSkullRenderer.EnderSkullModel(event.getEntityModelSet().bakeLayer(EnderSkullRenderer.ENDER_SKULL)));
+        SkullBlockRenderer.SKIN_BY_TYPE.put(EnderSkullBlock.EIOSkulls.ENDERMAN, new ResourceLocation("textures/entity/enderman/enderman.png"));
     }
 }

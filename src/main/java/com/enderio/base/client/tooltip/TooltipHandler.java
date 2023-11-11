@@ -22,13 +22,17 @@ import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 
 import java.text.NumberFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
 
 // TODO: 1.19: Move to core. Need to work out what to do about the shift lang key. Will now need decoupled from the capacitor and grindingball logic.
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class TooltipHandler {
 
-    private static final Component DETAIL_TOOLTIP = EIOLang.SHOW_DETAIL_TOOLTIP.copy().withStyle(ChatFormatting.WHITE, ChatFormatting.ITALIC);
+    private static final Component DETAIL_TOOLTIP = EIOLang.SHOW_DETAIL_TOOLTIP.copy().withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC);
 
     @SubscribeEvent
     public static void addAdvancedTooltips(ItemTooltipEvent evt) {
@@ -49,15 +53,13 @@ public class TooltipHandler {
 
     private static void addCapacitorTooltips(ItemStack itemStack, List<Component> components, boolean showAdvanced) {
         if (CapacitorUtil.isCapacitor(itemStack)) {
-            if (showAdvanced) {
-                CapacitorUtil.getCapacitorData(itemStack).ifPresent(data -> {
-                    NumberFormat fmt = NumberFormat.getInstance(Locale.ENGLISH);
-                    components.add(TooltipUtil.styledWithArgs(EIOLang.CAPACITOR_TOOLTIP_BASE, fmt.format(data.getBase())));
-                    for (Map.Entry<CapacitorModifier, Float> modifier : data.getAllModifiers().entrySet()) {
-                        components.add(TooltipUtil.styledWithArgs(new ResourceLocation("tooltip", modifier.getKey().id.toLanguageKey()), fmt.format(modifier.getValue())));
-                    }
-                });
-            } else addShowDetailsTooltip(components);
+            CapacitorUtil.getCapacitorData(itemStack).ifPresent(data -> {
+                NumberFormat fmt = NumberFormat.getInstance(Locale.ENGLISH);
+                components.add(TooltipUtil.styledWithArgs(EIOLang.CAPACITOR_TOOLTIP_BASE, fmt.format(data.getBase())));
+                for (Map.Entry<CapacitorModifier, Float> modifier : data.getAllModifiers().entrySet()) {
+                    components.add(TooltipUtil.styledWithArgs(new ResourceLocation("tooltip", modifier.getKey().id.toLanguageKey()), fmt.format(modifier.getValue())));
+                }
+            });
         }
     }
 
@@ -68,7 +70,9 @@ public class TooltipHandler {
                 components.add(TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_MAIN_OUTPUT, (int) (data.getOutputMultiplier() * 100)));
                 components.add(TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_BONUS_OUTPUT, (int) (data.getBonusMultiplier() * 100)));
                 components.add(TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_POWER_USE, (int) (data.getPowerUse() * 100)));
-            } else addShowDetailsTooltip(components);
+            } else {
+                addShowDetailsTooltip(components);
+            }
         }
     }
 
@@ -77,10 +81,14 @@ public class TooltipHandler {
     // region Advanced Tooltips
 
     private static Optional<IAdvancedTooltipProvider> getAdvancedProvider(Item item) {
-        if (item instanceof IAdvancedTooltipProvider provider)
+        if (item instanceof IAdvancedTooltipProvider provider) {
             return Optional.of(provider);
-        if (item instanceof BlockItem blockItem && blockItem.getBlock() instanceof IAdvancedTooltipProvider provider)
+        }
+
+        if (item instanceof BlockItem blockItem && blockItem.getBlock() instanceof IAdvancedTooltipProvider provider) {
             return Optional.of(provider);
+        }
+
         return Optional.empty();
     }
 
@@ -99,8 +107,9 @@ public class TooltipHandler {
     // endregion
 
     private static void addShowDetailsTooltip(List<Component> components) {
-        if (!components.contains(DETAIL_TOOLTIP))
+        if (!components.contains(DETAIL_TOOLTIP)) {
             components.add(DETAIL_TOOLTIP);
+        }
     }
 
     private static boolean hasDetailedTooltip(IAdvancedTooltipProvider tooltipProvider, ItemStack stack, @Nullable Player player) {

@@ -10,6 +10,7 @@ import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.CrafterMenu;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -20,6 +21,7 @@ import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayDeque;
 import java.util.Optional;
@@ -30,17 +32,16 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
 
     public static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.CRAFTER_CAPACITY);
     public static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.CRAFTER_USAGE);
-    private static final int ENERGY_USAGE_PER_ITEM = 10;
-
     public static final MultiSlotAccess INPUT = new MultiSlotAccess();
     public static final SingleSlotAccess OUTPUT = new SingleSlotAccess();
     public static final MultiSlotAccess GHOST = new MultiSlotAccess();
     public static final SingleSlotAccess PREVIEW = new SingleSlotAccess();
 
+    @Nullable
     private CraftingRecipe recipe;
     private final Queue<ItemStack> outputBuffer = new ArrayDeque<>();
 
-    private static final CraftingContainer dummyCContainer = new TransientCraftingContainer(new AbstractContainerMenu(null, -1) {
+    private static final CraftingContainer DUMMY_CRAFTING_CONTAINER = new TransientCraftingContainer(new AbstractContainerMenu(null, -1) {
         @Override
         public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
             return ItemStack.EMPTY;
@@ -55,6 +56,27 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
 
     public CrafterBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE, type, worldPosition, blockState);
+        getInventoryNN().addSlotChangedCallback(this::onSlotChanged);
+    }
+
+    private void onSlotChanged(int slot) {
+        if (GHOST.contains(slot)) {
+            updateRecipe();
+        }
+    }
+
+    private void updateRecipe() {
+        for (int i = 0; i < 9; i++) {
+            DUMMY_CRAFTING_CONTAINER.setItem(i, GHOST.get(i).getItemStack(this).copy());
+        }
+        recipe = getLevel()
+            .getRecipeManager()
+            .getRecipeFor(RecipeType.CRAFTING, DUMMY_CRAFTING_CONTAINER, getLevel()).orElse(null);
+        PREVIEW.setStackInSlot(this, ItemStack.EMPTY);
+
+        if (recipe != null) {
+            PREVIEW.setStackInSlot(this, recipe.getResultItem(getLevel().registryAccess()));
+        }
     }
 
     @Override
@@ -86,6 +108,20 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
+    public void onLoad() {
+        super.onLoad();
+        updateRecipe();
+    }
+
+    @Override
+    public void load(CompoundTag pTag) {
+        super.load(pTag);
+        if (level != null && !level.isClientSide()) {
+            updateRecipe();
+        }
+    }
+
+    @Override
     public void serverTick() {
         tryCraft();
         super.serverTick();
@@ -94,21 +130,15 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
 
     @Override
     protected boolean isActive() {
-        // TODO: How to determine active state beyond power.
         return canAct() && hasEnergy();
     }
 
     private void tryCraft() {
-        Optional<ItemStack> opt = getRecipeResult();
-        if (opt.isPresent()) {
-            ItemStack result = opt.get();
-            PREVIEW.setStackInSlot(this, result);
+        getRecipeResult().ifPresent(result -> {
             if (shouldActTick() && hasPowerToCraft() && canMergeOutput(result) && outputBuffer.isEmpty()) {
                 craftItem();
             }
-        } else {
-            PREVIEW.setStackInSlot(this, ItemStack.EMPTY);
-        }
+        });
     }
 
     private boolean shouldActTick() {
@@ -120,7 +150,7 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
     }
 
     private boolean hasPowerToCraft() {
-        return this.energyStorage.consumeEnergy(ENERGY_USAGE_PER_ITEM, true) > 0;
+        return this.energyStorage.consumeEnergy(MachinesConfig.COMMON.ENERGY.CRAFTING_RECIPE_COST.get(), true) > 0;
     }
 
     private void processOutputBuffer() {
@@ -141,13 +171,8 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
     }
 
     private Optional<ItemStack> getRecipeResult() {
-        for (int i = 0; i < 9; i++) {
-            dummyCContainer.setItem(i, GHOST.get(i).getItemStack(this).copy());
-        }
-        Optional<CraftingRecipe> opt = getLevel().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, dummyCContainer, getLevel());
-        if (opt.isPresent()) {
-            recipe = opt.get();
-            return Optional.of(recipe.assemble(dummyCContainer, getLevel().registryAccess()));
+        if (recipe != null) {
+            return Optional.of(recipe.assemble(DUMMY_CRAFTING_CONTAINER, getLevel().registryAccess()));
         }
         return Optional.empty();
     }
@@ -165,17 +190,20 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
         }
         //copy input items
         for (int i = 0; i < 9; i++) {
-            dummyCContainer.setItem(i, INPUT.get(i).getItemStack(this).copy());
+            DUMMY_CRAFTING_CONTAINER.setItem(i, INPUT.get(i).getItemStack(this).copy());
         }
         //craft
         clearInput();
-        outputBuffer.add(recipe.assemble(dummyCContainer, getLevel().registryAccess()));
-        outputBuffer.addAll(recipe.getRemainingItems(dummyCContainer));
+        outputBuffer.add(recipe.assemble(DUMMY_CRAFTING_CONTAINER, getLevel().registryAccess()));
+        outputBuffer.addAll(recipe.getRemainingItems(DUMMY_CRAFTING_CONTAINER));
         // clean buffer
         outputBuffer.removeIf(ItemStack::isEmpty);
         // consume power
-        this.energyStorage.consumeEnergy(ENERGY_USAGE_PER_ITEM, false);
-
+        this.energyStorage.consumeEnergy(MachinesConfig.COMMON.ENERGY.CRAFTING_RECIPE_COST.get(), false);
+        //check resource reload
+        if (level.getRecipeManager().byKey(recipe.getId()).orElse(null) != recipe) {
+            recipe = null;
+        }
     }
 
     private void clearInput() {

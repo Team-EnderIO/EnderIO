@@ -1,5 +1,5 @@
 {
   "type": "entitytype",
   "entity": "minecraft:creeper",
-  "power": 3000
+  "power": 32000
 }

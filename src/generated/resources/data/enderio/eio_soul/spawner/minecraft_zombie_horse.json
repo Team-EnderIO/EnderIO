@@ -1,5 +1,5 @@
 {
   "type": "entitytype",
   "entity": "minecraft:zombie_horse",
-  "power": 3000
+  "power": 15000
 }

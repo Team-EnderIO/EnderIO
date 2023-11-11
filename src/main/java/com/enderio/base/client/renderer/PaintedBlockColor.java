@@ -33,31 +33,41 @@ public class PaintedBlockColor implements BlockColor, ItemColor {
                         if (paints[0] != null) {
                             BlockState paintState = paints[0].defaultBlockState();
                             int color = Minecraft.getInstance().getBlockColors().getColor(paintState, level, pos, tintIndex);
-                            if (color != -1)
+                            if (color != -1) {
                                 return color;
+                            }
                         }
+
                         return 0;
                     } else {
                         tintIndex = unmoveTintIndex(tintIndex);
                         if (paints[1] != null) {
                             BlockState paintState = paints[1].defaultBlockState();
                             int color = Minecraft.getInstance().getBlockColors().getColor(paintState, level, pos, tintIndex);
-                            if (color != -1)
+                            if (color != -1) {
                                 return color;
+                            }
                         }
+
                         return 0;
                     }
                 }
+
                 for (int i = 0; i < paints.length; i++) {
                     Block paint = paints[i];
-                    if (paint == null)
+                    if (paint == null) {
                         continue;
+                    }
+
                     BlockState paintState = paint.defaultBlockState();
-                    if (paint instanceof IPaintedBlock)
+                    if (paint instanceof IPaintedBlock) {
                         continue;
+                    }
+
                     int color = Minecraft.getInstance().getBlockColors().getColor(paintState, level, pos, i == 1 ? unmoveTintIndex(tintIndex) : tintIndex);
-                    if (color != -1)
+                    if (color != -1) {
                         return color;
+                    }
                 }
             }
         }
@@ -70,11 +80,14 @@ public class PaintedBlockColor implements BlockColor, ItemColor {
             CompoundTag blockEntityTag = itemStack.getTag().getCompound(EIONBTKeys.BLOCK_ENTITY_TAG);
             if (blockEntityTag.contains(EIONBTKeys.PAINT)) {
                 Block paint = PaintUtils.getBlockFromRL(blockEntityTag.getString(EIONBTKeys.PAINT));
-                if (paint == null)
+                if (paint == null) {
                     return 0;
+                }
+
                 return Minecraft.getInstance().getItemColors().getColor(paint.asItem().getDefaultInstance(), tintIndex);
             }
         }
+
         return 0;
     }
 

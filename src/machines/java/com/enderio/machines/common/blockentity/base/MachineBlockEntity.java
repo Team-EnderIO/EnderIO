@@ -7,8 +7,11 @@ import com.enderio.api.io.IOMode;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.base.common.blockentity.IWrenchable;
 import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.base.common.particle.RangeParticleData;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
+import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
 import com.enderio.core.common.network.slot.EnumNetworkDataSlot;
+import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
 import com.enderio.core.common.network.slot.NBTSerializableNetworkDataSlot;
 import com.enderio.core.common.util.PlayerInteractionUtil;
 import com.enderio.machines.common.MachineNBTKeys;
@@ -23,7 +26,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
@@ -40,7 +42,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
-import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -52,7 +53,13 @@ import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
@@ -65,6 +72,15 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     public static final ModelProperty<IIOConfig> IO_CONFIG_PROPERTY = new ModelProperty<>();
 
     private ModelData modelData = ModelData.EMPTY;
+
+    // endregion
+
+    // region range
+
+    protected int range = 3;
+    protected IntegerNetworkDataSlot rangeDataSlot;
+    protected boolean rangeVisible = false;
+    protected BooleanNetworkDataSlot rangeVisibleDataSlot;
 
     // endregion
 
@@ -233,6 +249,72 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     // endregion
 
+    // region range
+
+    public boolean isRangeVisible() {
+        return rangeVisible;
+    }
+
+    public void setIsRangeVisible(boolean visible) {
+        if (level != null && level.isClientSide()) {
+            clientUpdateSlot(rangeVisibleDataSlot, visible);
+        } else {
+            this.rangeVisible = visible;
+        }
+    }
+
+    public int getMaxRange() {
+        return 0;
+    }
+
+    public int getRange() {
+        return range;
+    }
+
+    public void setRange(int range) {
+        if (level != null && level.isClientSide()) {
+            clientUpdateSlot(rangeDataSlot, range);
+        } else {
+            this.range = range;
+        }
+    }
+
+    public void decreaseRange() {
+        if (this.range > 0) {
+            if (level != null && level.isClientSide()) {
+                clientUpdateSlot(rangeDataSlot, range - 1);
+            } else {
+                this.range--;
+            }
+        }
+    }
+
+    public void increaseRange() {
+        if (this.range < getMaxRange()) {
+            if (level != null && level.isClientSide()) {
+                clientUpdateSlot(rangeDataSlot, range + 1);
+            } else {
+                this.range++;
+            }
+        }
+    }
+
+    public BlockPos getParticleLocation() {
+        return getBlockPos();
+    }
+
+    private void generateParticle(RangeParticleData data, BlockPos pos) {
+        if (level != null && level.isClientSide()) {
+            level.addAlwaysVisibleParticle(data, true, pos.getX(), pos.getY(), pos.getZ(), 0, 0, 0);
+        }
+    }
+
+    public String getColor(){
+        return "000000";
+    }
+
+    // endregion
+
     // region Redstone Control
 
     /**
@@ -249,7 +331,9 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     public void setRedstoneControl(RedstoneControl redstoneControl) {
         if (level != null && level.isClientSide()) {
             clientUpdateSlot(redstoneControlDataSlot, redstoneControl);
-        } else this.redstoneControl = redstoneControl;
+        } else {
+            this.redstoneControl = redstoneControl;
+        }
     }
 
     // endregion
@@ -336,6 +420,15 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         }
 
         super.serverTick();
+    }
+
+    @Override
+    public void clientTick() {
+        if (this.isRangeVisible()) {
+            generateParticle(new RangeParticleData(getRange(), this.getColor()), getParticleLocation());
+        }
+
+        super.clientTick();
     }
 
     public boolean canAct() {
@@ -513,8 +606,10 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
      * Add invalidation handler to a capability to be notified if it is removed.
      */
     private <T> LazyOptional<T> addInvalidationListener(LazyOptional<T> capability) {
-        if (capability.isPresent())
+        if (capability.isPresent()) {
             capability.addListener(c -> markCapabilityCacheDirty());
+        }
+
         return capability;
     }
 
@@ -560,6 +655,11 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         if (fluidTank != null) {
             pTag.put(MachineNBTKeys.FLUID, fluidTank.writeToNBT(new CompoundTag()));
         }
+
+        if (getMaxRange() > 0) {
+            pTag.putInt(MachineNBTKeys.RANGE, getRange());
+            pTag.putBoolean(MachineNBTKeys.RANGE_VISIBLE, isRangeVisible());
+        }
     }
 
     @Override
@@ -583,6 +683,15 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         if (this.level != null) {
             onIOConfigChanged();
         }
+
+        if (pTag.contains(MachineNBTKeys.RANGE)) {
+            this.range = pTag.getInt(MachineNBTKeys.RANGE);
+        }
+
+        if (pTag.contains(MachineNBTKeys.RANGE_VISIBLE)) {
+            this.rangeVisible = pTag.getBoolean(MachineNBTKeys.RANGE_VISIBLE);
+        }
+
 
         // Mark capability cache dirty
         isCapabilityCacheDirty = true;
@@ -611,8 +720,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             return false;
         }
 
-        return pPlayer.distanceToSqr(this.worldPosition.getX() + 0.5D, this.worldPosition.getY() + 0.5D, this.worldPosition.getZ() + 0.5D) <=
-            Mth.square(pPlayer.getAttributeValue(ForgeMod.BLOCK_REACH.get()));
+        return pPlayer.canReach(this.worldPosition, 1.5);
     }
 
     @UseOnly(LogicalSide.SERVER)
@@ -644,5 +752,9 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     public boolean canOpenMenu() {
         return true;
+    }
+
+    public int getLightEmission() {
+        return getBlockState().getLightEmission();
     }
 }

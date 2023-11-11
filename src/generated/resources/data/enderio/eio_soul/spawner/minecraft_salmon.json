@@ -1,5 +1,5 @@
 {
   "type": "entitytype",
   "entity": "minecraft:salmon",
-  "power": 1000
+  "power": 10000
 }

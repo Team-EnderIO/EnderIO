@@ -1,9 +1,0 @@
-{
-  "sources": [
-    {
-      "type": "directory",
-      "source": "enderio:block/overlay",
-      "prefix": "enderio:block/overlay/"
-    }
-  ]
-}

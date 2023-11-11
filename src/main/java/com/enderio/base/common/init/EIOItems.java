@@ -5,11 +5,22 @@ import com.enderio.base.common.capacitor.DefaultCapacitorData;
 import com.enderio.base.common.item.capacitors.FixedCapacitorItem;
 import com.enderio.base.common.item.capacitors.LootCapacitorItem;
 import com.enderio.base.common.item.darksteel.DarkSteelSwordItem;
-import com.enderio.base.common.item.misc.*;
-import com.enderio.base.common.item.tool.*;
+import com.enderio.base.common.item.misc.BrokenSpawnerItem;
+import com.enderio.base.common.item.misc.CreativeTabIconItem;
+import com.enderio.base.common.item.misc.EnderiosItem;
+import com.enderio.base.common.item.misc.HangGliderItem;
+import com.enderio.base.common.item.misc.LocationPrintoutItem;
+import com.enderio.base.common.item.misc.MaterialItem;
+import com.enderio.base.common.item.tool.ColdFireIgniter;
+import com.enderio.base.common.item.tool.CoordinateSelectorItem;
+import com.enderio.base.common.item.tool.ElectromagnetItem;
+import com.enderio.base.common.item.tool.ExperienceRodItem;
+import com.enderio.base.common.item.tool.LevitationStaffItem;
+import com.enderio.base.common.item.tool.SoulVialItem;
+import com.enderio.base.common.item.tool.TravelStaffItem;
+import com.enderio.base.common.item.tool.YetaWrenchItem;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.model.item.GliderItemModel;
-import com.enderio.base.data.model.item.RotatingItemModel;
 import com.enderio.core.data.model.EIOModel;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.ItemBuilder;
@@ -17,7 +28,11 @@ import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.ForgeTier;
 import net.minecraftforge.common.Tags;
@@ -31,25 +46,25 @@ public class EIOItems {
 
     // region Alloys
 
-    public static final ItemEntry<MaterialItem> COPPER_ALLOY_INGOT = materialItem("copper_alloy_ingot").register();
-    public static final ItemEntry<MaterialItem> ENERGETIC_ALLOY_INGOT = materialItem("energetic_alloy_ingot").register();
-    public static final ItemEntry<MaterialItem> VIBRANT_ALLOY_INGOT = materialItem("vibrant_alloy_ingot").register();
-    public static final ItemEntry<MaterialItem> REDSTONE_ALLOY_INGOT = materialItem("redstone_alloy_ingot").register();
-    public static final ItemEntry<MaterialItem> CONDUCTIVE_ALLOY_INGOT = materialItem("conductive_alloy_ingot").register();
-    public static final ItemEntry<MaterialItem> PULSATING_ALLOY_INGOT = materialItem("pulsating_alloy_ingot").register();
-    public static final ItemEntry<MaterialItem> DARK_STEEL_INGOT = materialItem("dark_steel_ingot").register();
-    public static final ItemEntry<MaterialItem> SOULARIUM_INGOT = materialItem("soularium_ingot").register();
-    public static final ItemEntry<MaterialItem> END_STEEL_INGOT = materialItem("end_steel_ingot").register();
+    public static final ItemEntry<MaterialItem> COPPER_ALLOY_INGOT = materialItem("copper_alloy_ingot").tag(EIOTags.Items.INGOTS_COPPER_ALLOY).register();
+    public static final ItemEntry<MaterialItem> ENERGETIC_ALLOY_INGOT = materialItem("energetic_alloy_ingot").tag(EIOTags.Items.INGOTS_ENERGETIC_ALLOY).register();
+    public static final ItemEntry<MaterialItem> VIBRANT_ALLOY_INGOT = materialItem("vibrant_alloy_ingot").tag(EIOTags.Items.INGOTS_VIBRANT_ALLOY).register();
+    public static final ItemEntry<MaterialItem> REDSTONE_ALLOY_INGOT = materialItem("redstone_alloy_ingot").tag(EIOTags.Items.INGOTS_REDSTONE_ALLOY).register();
+    public static final ItemEntry<MaterialItem> CONDUCTIVE_ALLOY_INGOT = materialItem("conductive_alloy_ingot").tag(EIOTags.Items.INGOTS_CONDUCTIVE_ALLOY).register();
+    public static final ItemEntry<MaterialItem> PULSATING_ALLOY_INGOT = materialItem("pulsating_alloy_ingot").tag(EIOTags.Items.INGOTS_PULSATING_ALLOY).register();
+    public static final ItemEntry<MaterialItem> DARK_STEEL_INGOT = materialItem("dark_steel_ingot").tag(EIOTags.Items.INGOTS_DARK_STEEL).register();
+    public static final ItemEntry<MaterialItem> SOULARIUM_INGOT = materialItem("soularium_ingot").tag(EIOTags.Items.INGOTS_SOULARIUM).register();
+    public static final ItemEntry<MaterialItem> END_STEEL_INGOT = materialItem("end_steel_ingot").tag(EIOTags.Items.INGOTS_END_STEEL).register();
 
-    public static final ItemEntry<MaterialItem> COPPER_ALLOY_NUGGET = materialItem("copper_alloy_nugget").register();
-    public static final ItemEntry<MaterialItem> ENERGETIC_ALLOY_NUGGET = materialItem("energetic_alloy_nugget").register();
-    public static final ItemEntry<MaterialItem> VIBRANT_ALLOY_NUGGET = materialItem("vibrant_alloy_nugget").register();
-    public static final ItemEntry<MaterialItem> REDSTONE_ALLOY_NUGGET = materialItem("redstone_alloy_nugget").register();
-    public static final ItemEntry<MaterialItem> CONDUCTIVE_ALLOY_NUGGET = materialItem("conductive_alloy_nugget").register();
-    public static final ItemEntry<MaterialItem> PULSATING_ALLOY_NUGGET = materialItem("pulsating_alloy_nugget").register();
-    public static final ItemEntry<MaterialItem> DARK_STEEL_NUGGET = materialItem("dark_steel_nugget").register();
-    public static final ItemEntry<MaterialItem> SOULARIUM_NUGGET = materialItem("soularium_nugget").register();
-    public static final ItemEntry<MaterialItem> END_STEEL_NUGGET = materialItem("end_steel_nugget").register();
+    public static final ItemEntry<MaterialItem> COPPER_ALLOY_NUGGET = materialItem("copper_alloy_nugget").tag(EIOTags.Items.NUGGETS_COPPER_ALLOY).register();
+    public static final ItemEntry<MaterialItem> ENERGETIC_ALLOY_NUGGET = materialItem("energetic_alloy_nugget").tag(EIOTags.Items.NUGGETS_ENERGETIC_ALLOY).register();
+    public static final ItemEntry<MaterialItem> VIBRANT_ALLOY_NUGGET = materialItem("vibrant_alloy_nugget").tag(EIOTags.Items.NUGGETS_VIBRANT_ALLOY).register();
+    public static final ItemEntry<MaterialItem> REDSTONE_ALLOY_NUGGET = materialItem("redstone_alloy_nugget").tag(EIOTags.Items.NUGGETS_REDSTONE_ALLOY).register();
+    public static final ItemEntry<MaterialItem> CONDUCTIVE_ALLOY_NUGGET = materialItem("conductive_alloy_nugget").tag(EIOTags.Items.NUGGETS_CONDUCTIVE_ALLOY).register();
+    public static final ItemEntry<MaterialItem> PULSATING_ALLOY_NUGGET = materialItem("pulsating_alloy_nugget").tag(EIOTags.Items.NUGGETS_PULSATING_ALLOY).register();
+    public static final ItemEntry<MaterialItem> DARK_STEEL_NUGGET = materialItem("dark_steel_nugget").tag(EIOTags.Items.NUGGETS_DARK_STEEL).register();
+    public static final ItemEntry<MaterialItem> SOULARIUM_NUGGET = materialItem("soularium_nugget").tag(EIOTags.Items.NUGGETS_SOULARIUM).register();
+    public static final ItemEntry<MaterialItem> END_STEEL_NUGGET = materialItem("end_steel_nugget").tag(EIOTags.Items.NUGGETS_END_STEEL).register();
 
     // endregion
 
@@ -57,7 +72,7 @@ public class EIOItems {
 
     public static final ItemEntry<MaterialItem> SILICON = materialItem("silicon").tag(EIOTags.Items.SILICON).register();
 
-    public static final ItemEntry<MaterialItem> GRAINS_OF_INFINITY = materialItem("grains_of_infinity").lang("Grains of Infinity").register();
+    public static final ItemEntry<MaterialItem> GRAINS_OF_INFINITY = materialItem("grains_of_infinity").tag(EIOTags.Items.DUSTS_GRAINS_OF_INFINITY).lang("Grains of Infinity").register();
 
     public static final ItemEntry<MaterialItem> INFINITY_ROD = materialItem("infinity_rod").register();
 
@@ -111,12 +126,12 @@ public class EIOItems {
 
     // region Crystals
 
-    public static final ItemEntry<MaterialItem> PULSATING_CRYSTAL = materialItemGlinted("pulsating_crystal").register();
-    public static final ItemEntry<MaterialItem> VIBRANT_CRYSTAL = materialItemGlinted("vibrant_crystal").register();
-    public static final ItemEntry<MaterialItem> ENDER_CRYSTAL = materialItemGlinted("ender_crystal").register();
-    public static final ItemEntry<MaterialItem> ENTICING_CRYSTAL = materialItemGlinted("enticing_crystal").register();
-    public static final ItemEntry<MaterialItem> WEATHER_CRYSTAL = materialItemGlinted("weather_crystal").register();
-    public static final ItemEntry<MaterialItem> PRESCIENT_CRYSTAL = materialItemGlinted("prescient_crystal").register();
+    public static final ItemEntry<MaterialItem> PULSATING_CRYSTAL = materialItemGlinted("pulsating_crystal").tag(EIOTags.Items.GEMS_PULSATING_CRYSTAL).register();
+    public static final ItemEntry<MaterialItem> VIBRANT_CRYSTAL = materialItemGlinted("vibrant_crystal").tag(EIOTags.Items.GEMS_VIBRANT_CRYSTAL).register();
+    public static final ItemEntry<MaterialItem> ENDER_CRYSTAL = materialItemGlinted("ender_crystal").tag(EIOTags.Items.GEMS_ENDER_CRYSTAL).register();
+    public static final ItemEntry<MaterialItem> ENTICING_CRYSTAL = materialItemGlinted("enticing_crystal").tag(EIOTags.Items.GEMS_ENTICING_CRYSTAL).register();
+    public static final ItemEntry<MaterialItem> WEATHER_CRYSTAL = materialItemGlinted("weather_crystal").tag(EIOTags.Items.GEMS_WEATHER_CRYSTAL).register();
+    public static final ItemEntry<MaterialItem> PRESCIENT_CRYSTAL = materialItemGlinted("prescient_crystal").tag(EIOTags.Items.GEMS_PRESCIENT_CRYSTAL).register();
 
     // endregion
 
@@ -127,20 +142,24 @@ public class EIOItems {
     public static final ItemEntry<MaterialItem> POWDERED_IRON = materialItem("powdered_iron").tag(EIOTags.Items.DUSTS_IRON).register();
     public static final ItemEntry<MaterialItem> POWDERED_GOLD = materialItem("powdered_gold").tag(EIOTags.Items.DUSTS_GOLD).register();
     public static final ItemEntry<MaterialItem> POWDERED_COPPER = materialItem("powdered_copper").tag(EIOTags.Items.DUSTS_COPPER).register();
-    public static final ItemEntry<MaterialItem> POWDERED_TIN = materialItem("powdered_tin").tag(EIOTags.Items.DUSTS_TIN).register(); // TODO: hide if tin isn't present
+    public static final ItemEntry<MaterialItem> POWDERED_TIN = materialItem("powdered_tin")
+        .tag(EIOTags.Items.DUSTS_TIN)
+        .register(); // TODO: hide if tin isn't present
     public static final ItemEntry<MaterialItem> POWDERED_ENDER_PEARL = materialItem("powdered_ender_pearl").tag(EIOTags.Items.DUSTS_ENDER).register();
     public static final ItemEntry<MaterialItem> POWDERED_OBSIDIAN = materialItem("powdered_obsidian").tag(EIOTags.Items.DUSTS_OBSIDIAN).register();
-    public static final ItemEntry<MaterialItem> POWDERED_COBALT = materialItem("powdered_cobalt").tag(EIOTags.Items.DUSTS_COBALT).register(); // TODO: hide if cobalt isnt present
+    public static final ItemEntry<MaterialItem> POWDERED_COBALT = materialItem("powdered_cobalt")
+        .tag(EIOTags.Items.DUSTS_COBALT)
+        .register(); // TODO: hide if cobalt isnt present
     public static final ItemEntry<MaterialItem> POWDERED_LAPIS_LAZULI = materialItem("powdered_lapis_lazuli").tag(EIOTags.Items.DUSTS_LAPIS).register();
     public static final ItemEntry<MaterialItem> POWDERED_QUARTZ = materialItem("powdered_quartz").tag(EIOTags.Items.DUSTS_QUARTZ).register();
 
-    public static final ItemEntry<MaterialItem> PRESCIENT_POWDER = materialItemGlinted("prescient_powder").lang("Grains of Prescience").register();
+    public static final ItemEntry<MaterialItem> PRESCIENT_POWDER = materialItemGlinted("prescient_powder").tag(EIOTags.Items.DUSTS_GRAINS_OF_PRESCIENCE).lang("Grains of Prescience").register();
 
-    public static final ItemEntry<MaterialItem> VIBRANT_POWDER = materialItemGlinted("vibrant_powder").lang("Grains of Vibrancy").register();
+    public static final ItemEntry<MaterialItem> VIBRANT_POWDER = materialItemGlinted("vibrant_powder").tag(EIOTags.Items.DUSTS_GRAINS_OF_VIBRANCY).lang("Grains of Vibrancy").register();
 
-    public static final ItemEntry<MaterialItem> PULSATING_POWDER = materialItemGlinted("pulsating_powder").lang("Grains of Piezallity").register();
+    public static final ItemEntry<MaterialItem> PULSATING_POWDER = materialItemGlinted("pulsating_powder").tag(EIOTags.Items.DUSTS_GRAINS_OF_PIZEALLITY).lang("Grains of Piezallity").register();
 
-    public static final ItemEntry<MaterialItem> ENDER_CRYSTAL_POWDER = materialItemGlinted("ender_crystal_powder").lang("Grains of the End").register();
+    public static final ItemEntry<MaterialItem> ENDER_CRYSTAL_POWDER = materialItemGlinted("ender_crystal_powder").tag(EIOTags.Items.DUSTS_GRAINS_OF_THE_END).lang("Grains of the End").register();
 
     public static final ItemEntry<MaterialItem> PHOTOVOLTAIC_COMPOSITE = materialItem("photovoltaic_composite").register();
     public static final ItemEntry<MaterialItem> SOUL_POWDER = materialItem("soul_powder").register();
@@ -153,17 +172,17 @@ public class EIOItems {
 
     // region Gears
 
-    public static final ItemEntry<GearItem> GEAR_WOOD = gearItem("wood_gear", 360).lang("Wooden Gear").tag(EIOTags.Items.GEARS_WOOD).register();
+    public static final ItemEntry<MaterialItem> GEAR_WOOD = materialItem("wood_gear").lang("Wooden Gear").tag(EIOTags.Items.GEARS_WOOD).register();
 
-    public static final ItemEntry<GearItem> GEAR_STONE = gearItem("stone_gear", 300).lang("Stone Compound Gear").tag(EIOTags.Items.GEARS_STONE).register();
+    public static final ItemEntry<MaterialItem> GEAR_STONE = materialItem("stone_gear").lang("Stone Compound Gear").tag(EIOTags.Items.GEARS_STONE).register();
 
-    public static final ItemEntry<GearItem> GEAR_IRON = gearItem("iron_gear", 240).lang("Infinity Bimetal Gear").tag(EIOTags.Items.GEARS_IRON).register();
+    public static final ItemEntry<MaterialItem> GEAR_IRON = materialItem("iron_gear").lang("Infinity Bimetal Gear").tag(EIOTags.Items.GEARS_IRON).register();
 
-    public static final ItemEntry<GearItem> GEAR_ENERGIZED = gearItem("energized_gear", 180).lang("Energized Bimetal Gear").tag(EIOTags.Items.GEARS_ENERGIZED).register();
+    public static final ItemEntry<MaterialItem> GEAR_ENERGIZED = materialItem("energized_gear").lang("Energized Bimetal Gear").tag(EIOTags.Items.GEARS_ENERGIZED).register();
 
-    public static final ItemEntry<GearItem> GEAR_VIBRANT = gearItem("vibrant_gear", 120).lang("Vibrant Bimetal Gear").tag(EIOTags.Items.GEARS_VIBRANT).register();
+    public static final ItemEntry<MaterialItem> GEAR_VIBRANT = materialItem("vibrant_gear").lang("Vibrant Bimetal Gear").tag(EIOTags.Items.GEARS_VIBRANT).register();
 
-    public static final ItemEntry<GearItem> GEAR_DARK_STEEL = gearItem("dark_bimetal_gear", 60).lang("Dark Bimetal Gear").tag(EIOTags.Items.GEARS_DARK_STEEL).register();
+    public static final ItemEntry<MaterialItem> GEAR_DARK_STEEL = materialItem("dark_bimetal_gear").lang("Dark Bimetal Gear").tag(EIOTags.Items.GEARS_DARK_STEEL).register();
 
     // endregion
 
@@ -220,16 +239,16 @@ public class EIOItems {
     public static final ItemEntry<MaterialItem> COPPER_ALLOY_BALL = materialItem("copper_alloy_grinding_ball").register();
     public static final ItemEntry<MaterialItem> DARK_STEEL_BALL = materialItem("dark_steel_grinding_ball").register();
     public static final ItemEntry<MaterialItem> END_STEEL_BALL = materialItem("end_steel_grinding_ball").register();
-//    public static final Map<DyeColor, ItemEntry<HangGliderItem>> COLORED_HANG_GLIDERS = Util.make(() -> {
-//       Map<DyeColor, ItemEntry<HangGliderItem>> tempMap = new EnumMap<>(DyeColor.class);
-//       for (DyeColor color: DyeColor.values()) {
-//           var entry = gliderItem(color.getName() + "_glider");
-//           tempMap.put(color, entry.register());
-//       }
-//       return tempMap;
-//    });
+    //    public static final Map<DyeColor, ItemEntry<HangGliderItem>> COLORED_HANG_GLIDERS = Util.make(() -> {
+    //       Map<DyeColor, ItemEntry<HangGliderItem>> tempMap = new EnumMap<>(DyeColor.class);
+    //       for (DyeColor color: DyeColor.values()) {
+    //           var entry = gliderItem(color.getName() + "_glider");
+    //           tempMap.put(color, entry.register());
+    //       }
+    //       return tempMap;
+    //    });
 
-//    public static final ItemEntry<HangGliderItem> GLIDER = gliderItem("glider").register();
+    //    public static final ItemEntry<HangGliderItem> GLIDER = gliderItem("glider").register();
 
     // endregion
 
@@ -244,13 +263,6 @@ public class EIOItems {
 
     private static ItemBuilder<MaterialItem, Registrate> materialItem(String name) {
         return REGISTRATE.item(name, props -> new MaterialItem(props, false)).tab(EIOCreativeTabs.MAIN);
-    }
-
-    private static ItemBuilder<GearItem, Registrate> gearItem(String name, float tpr) {
-        return REGISTRATE
-            .item(name, props -> new GearItem(props, tpr))
-            .model((ctx, cons) -> RotatingItemModel.create(ctx.get(), cons))
-            .tab(EIOCreativeTabs.MAIN);
     }
 
     //  private static ItemBuilder<MaterialItem, Registrate> dependMaterialItem(String name, Tag<Item> dependency) {
@@ -316,6 +328,12 @@ public class EIOItems {
         .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.LEVITATION_STAFF.get().addAllVariants(modifier))
         .register();
 
+    public static final ItemEntry<TravelStaffItem> TRAVEL_STAFF = REGISTRATE
+        .item("staff_of_travelling", TravelStaffItem::new)
+        .properties(props -> props.stacksTo(1))
+        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.TRAVEL_STAFF.get().addAllVariants(modifier))
+        .register();
+
     public static final ItemEntry<ElectromagnetItem> ELECTROMAGNET = REGISTRATE
         .item("electromagnet", ElectromagnetItem::new)
         .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.ELECTROMAGNET.get().addAllVariants(modifier))
@@ -324,7 +342,8 @@ public class EIOItems {
     public static final ItemEntry<ColdFireIgniter> COLD_FIRE_IGNITER = REGISTRATE
         .item("cold_fire_igniter", ColdFireIgniter::new)
         .defaultModel()
-        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.COLD_FIRE_IGNITER.get().addAllVariants(modifier)) // TODO: Might PR this to Registrate so its nicer, but I like the footprint.
+        .tab(EIOCreativeTabs.GEAR,
+            modifier -> EIOItems.COLD_FIRE_IGNITER.get().addAllVariants(modifier)) // TODO: Might PR this to Registrate so its nicer, but I like the footprint.
         .register();
 
     // endregion
@@ -344,106 +363,106 @@ public class EIOItems {
         .register();
 
     // TODO: Bring these back when they are finished.
-//    public static final ItemEntry<DarkSteelPickaxeItem> DARK_STEEL_PICKAXE = REGISTRATE
-//        .item("dark_steel_pickaxe", DarkSteelPickaxeItem::new)
-//        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_PICKAXE.get().addAllVariants(modifier))
-//        .onRegister(item -> DarkSteelUpgradeRegistry
-//            .instance()
-//            .addUpgradesForItem(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)), EmpoweredUpgrade.NAME, SpoonUpgrade.NAME, DirectUpgrade.NAME,
-//                ExplosiveUpgrade.NAME, ExplosivePenetrationUpgrade.NAME))
-//        .register();
-//
-//    public static final ItemEntry<DarkSteelAxeItem> DARK_STEEL_AXE = REGISTRATE
-//        .item("dark_steel_axe", DarkSteelAxeItem::new)
-//        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_AXE.get().addAllVariants(modifier))
-//        .onRegister(item -> DarkSteelUpgradeRegistry
-//            .instance()
-//            .addUpgradesForItem(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)), EmpoweredUpgrade.NAME, ForkUpgrade.NAME, DirectUpgrade.NAME))
-//        .register();
-//
-//    private static final String UPGRADE_TEXT = " Upgrade";
-//
-//    public static final ItemEntry<MaterialItem> DARK_STEEL_UPGRADE_BLANK = REGISTRATE
-//        .item("dark_steel_upgrade_blank", props -> new MaterialItem(props, false))
-//        .tab(EIOCreativeTabs.GEAR)
-//        .lang("Blank" + UPGRADE_TEXT)
-//        .register();
-//
-//    public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_1 = REGISTRATE
-//        .item("dark_steel_upgrade_empowered_1",
-//            properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgradeTier.ONE.getActivationCost(), EmpoweredUpgradeTier.ONE.getFactory()))
-//        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_EMPOWERED_1.get().addAllVariants(modifier))
-//        .lang("Empowered" + UPGRADE_TEXT)
-//        .register();
-//
-//    public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_2 = REGISTRATE
-//        .item("dark_steel_upgrade_empowered_2",
-//            properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgradeTier.TWO.getActivationCost(), EmpoweredUpgradeTier.TWO.getFactory()))
-//        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_EMPOWERED_2.get().addAllVariants(modifier))
-//        .lang("Empowered II" + UPGRADE_TEXT)
-//        .register();
-//
-//    public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_3 = REGISTRATE
-//        .item("dark_steel_upgrade_empowered_3",
-//            properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgradeTier.THREE.getActivationCost(), EmpoweredUpgradeTier.THREE.getFactory()))
-//        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_EMPOWERED_3.get().addAllVariants(modifier))
-//        .lang("Empowered III" + UPGRADE_TEXT)
-//        .register();
-//
-//    public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_4 = REGISTRATE
-//        .item("dark_steel_upgrade_empowered_4",
-//            properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgradeTier.FOUR.getActivationCost(), EmpoweredUpgradeTier.FOUR.getFactory()))
-//        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_EMPOWERED_4.get().addAllVariants(modifier))
-//        .lang("Empowered IV" + UPGRADE_TEXT)
-//        .register();
-//
-//    public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_SPOON = REGISTRATE
-//        .item("dark_steel_upgrade_spoon", properties -> new DarkSteelUpgradeItem(properties, BaseConfig.COMMON.DARK_STEEL.SPOON_ACTIVATION_COST, SpoonUpgrade::new))
-//        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_SPOON.get().addAllVariants(modifier))
-//        .lang("Spoon" + UPGRADE_TEXT)
-//        .register();
-//
-//    public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_FORK = REGISTRATE
-//        .item("dark_steel_upgrade_fork", properties -> new DarkSteelUpgradeItem(properties, BaseConfig.COMMON.DARK_STEEL.FORK_ACTIVATION_COST, ForkUpgrade::new))
-//        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_FORK.get().addAllVariants(modifier))
-//        .lang("Fork" + UPGRADE_TEXT)
-//        .register();
-//
-//    public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_DIRECT = REGISTRATE
-//        .item("dark_steel_upgrade_direct",
-//            properties -> new DarkSteelUpgradeItem(properties, BaseConfig.COMMON.DARK_STEEL.DIRECT_ACTIVATION_COST, DirectUpgrade::new))
-//        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_DIRECT.get().addAllVariants(modifier))
-//        .lang("Direct" + UPGRADE_TEXT)
-//        .register();
-//
-//    public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_1 = REGISTRATE
-//        .item("dark_steel_upgrade_tnt", properties -> new DarkSteelUpgradeItem(properties, ExplosiveUpgradeTier.ONE.getActivationCost(),
-//            ExplosiveUpgradeTier.ONE.getFactory()))
-//        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_EXPLOSIVE_1.get().addAllVariants(modifier))
-//        .lang("Explosive I" + UPGRADE_TEXT)
-//        .register();
-//
-//    public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_2 = REGISTRATE
-//        .item("dark_steel_upgrade_tnt1", properties -> new DarkSteelUpgradeItem(properties, ExplosiveUpgradeTier.TWO.getActivationCost(),
-//            ExplosiveUpgradeTier.TWO.getFactory()))
-//        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_EXPLOSIVE_2.get().addAllVariants(modifier))
-//        .lang("Explosive II" + UPGRADE_TEXT)
-//        .register();
-//
-//    //TODO: Textures for dark_steel_upgrade_penetration_1 and dark_steel_upgrade_penetration_2 needed
-//    public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_1 = REGISTRATE
-//        .item("dark_steel_upgrade_penetration_1", properties -> new DarkSteelUpgradeItem(properties, ExplosivePenetrationUpgradeTier.ONE.getActivationCost(),
-//            ExplosivePenetrationUpgradeTier.ONE.getFactory()))
-//        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_1.get().addAllVariants(modifier))
-//        .lang("Explosive Penetration I" + UPGRADE_TEXT)
-//        .register();
-//
-//    public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_2 = REGISTRATE
-//        .item("dark_steel_upgrade_penetration_2", properties -> new DarkSteelUpgradeItem(properties, ExplosivePenetrationUpgradeTier.TWO.getActivationCost(),
-//            ExplosivePenetrationUpgradeTier.TWO.getFactory()))
-//        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_2.get().addAllVariants(modifier))
-//        .lang("Explosive Penetration II" + UPGRADE_TEXT)
-//        .register();
+    //    public static final ItemEntry<DarkSteelPickaxeItem> DARK_STEEL_PICKAXE = REGISTRATE
+    //        .item("dark_steel_pickaxe", DarkSteelPickaxeItem::new)
+    //        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_PICKAXE.get().addAllVariants(modifier))
+    //        .onRegister(item -> DarkSteelUpgradeRegistry
+    //            .instance()
+    //            .addUpgradesForItem(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)), EmpoweredUpgrade.NAME, SpoonUpgrade.NAME, DirectUpgrade.NAME,
+    //                ExplosiveUpgrade.NAME, ExplosivePenetrationUpgrade.NAME))
+    //        .register();
+    //
+    //    public static final ItemEntry<DarkSteelAxeItem> DARK_STEEL_AXE = REGISTRATE
+    //        .item("dark_steel_axe", DarkSteelAxeItem::new)
+    //        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_AXE.get().addAllVariants(modifier))
+    //        .onRegister(item -> DarkSteelUpgradeRegistry
+    //            .instance()
+    //            .addUpgradesForItem(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(item)), EmpoweredUpgrade.NAME, ForkUpgrade.NAME, DirectUpgrade.NAME))
+    //        .register();
+    //
+    //    private static final String UPGRADE_TEXT = " Upgrade";
+    //
+    //    public static final ItemEntry<MaterialItem> DARK_STEEL_UPGRADE_BLANK = REGISTRATE
+    //        .item("dark_steel_upgrade_blank", props -> new MaterialItem(props, false))
+    //        .tab(EIOCreativeTabs.GEAR)
+    //        .lang("Blank" + UPGRADE_TEXT)
+    //        .register();
+    //
+    //    public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_1 = REGISTRATE
+    //        .item("dark_steel_upgrade_empowered_1",
+    //            properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgradeTier.ONE.getActivationCost(), EmpoweredUpgradeTier.ONE.getFactory()))
+    //        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_EMPOWERED_1.get().addAllVariants(modifier))
+    //        .lang("Empowered" + UPGRADE_TEXT)
+    //        .register();
+    //
+    //    public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_2 = REGISTRATE
+    //        .item("dark_steel_upgrade_empowered_2",
+    //            properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgradeTier.TWO.getActivationCost(), EmpoweredUpgradeTier.TWO.getFactory()))
+    //        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_EMPOWERED_2.get().addAllVariants(modifier))
+    //        .lang("Empowered II" + UPGRADE_TEXT)
+    //        .register();
+    //
+    //    public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_3 = REGISTRATE
+    //        .item("dark_steel_upgrade_empowered_3",
+    //            properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgradeTier.THREE.getActivationCost(), EmpoweredUpgradeTier.THREE.getFactory()))
+    //        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_EMPOWERED_3.get().addAllVariants(modifier))
+    //        .lang("Empowered III" + UPGRADE_TEXT)
+    //        .register();
+    //
+    //    public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EMPOWERED_4 = REGISTRATE
+    //        .item("dark_steel_upgrade_empowered_4",
+    //            properties -> new DarkSteelUpgradeItem(properties, EmpoweredUpgradeTier.FOUR.getActivationCost(), EmpoweredUpgradeTier.FOUR.getFactory()))
+    //        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_EMPOWERED_4.get().addAllVariants(modifier))
+    //        .lang("Empowered IV" + UPGRADE_TEXT)
+    //        .register();
+    //
+    //    public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_SPOON = REGISTRATE
+    //        .item("dark_steel_upgrade_spoon", properties -> new DarkSteelUpgradeItem(properties, BaseConfig.COMMON.DARK_STEEL.SPOON_ACTIVATION_COST, SpoonUpgrade::new))
+    //        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_SPOON.get().addAllVariants(modifier))
+    //        .lang("Spoon" + UPGRADE_TEXT)
+    //        .register();
+    //
+    //    public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_FORK = REGISTRATE
+    //        .item("dark_steel_upgrade_fork", properties -> new DarkSteelUpgradeItem(properties, BaseConfig.COMMON.DARK_STEEL.FORK_ACTIVATION_COST, ForkUpgrade::new))
+    //        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_FORK.get().addAllVariants(modifier))
+    //        .lang("Fork" + UPGRADE_TEXT)
+    //        .register();
+    //
+    //    public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_DIRECT = REGISTRATE
+    //        .item("dark_steel_upgrade_direct",
+    //            properties -> new DarkSteelUpgradeItem(properties, BaseConfig.COMMON.DARK_STEEL.DIRECT_ACTIVATION_COST, DirectUpgrade::new))
+    //        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_DIRECT.get().addAllVariants(modifier))
+    //        .lang("Direct" + UPGRADE_TEXT)
+    //        .register();
+    //
+    //    public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_1 = REGISTRATE
+    //        .item("dark_steel_upgrade_tnt", properties -> new DarkSteelUpgradeItem(properties, ExplosiveUpgradeTier.ONE.getActivationCost(),
+    //            ExplosiveUpgradeTier.ONE.getFactory()))
+    //        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_EXPLOSIVE_1.get().addAllVariants(modifier))
+    //        .lang("Explosive I" + UPGRADE_TEXT)
+    //        .register();
+    //
+    //    public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_2 = REGISTRATE
+    //        .item("dark_steel_upgrade_tnt1", properties -> new DarkSteelUpgradeItem(properties, ExplosiveUpgradeTier.TWO.getActivationCost(),
+    //            ExplosiveUpgradeTier.TWO.getFactory()))
+    //        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_EXPLOSIVE_2.get().addAllVariants(modifier))
+    //        .lang("Explosive II" + UPGRADE_TEXT)
+    //        .register();
+    //
+    //    //TODO: Textures for dark_steel_upgrade_penetration_1 and dark_steel_upgrade_penetration_2 needed
+    //    public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_1 = REGISTRATE
+    //        .item("dark_steel_upgrade_penetration_1", properties -> new DarkSteelUpgradeItem(properties, ExplosivePenetrationUpgradeTier.ONE.getActivationCost(),
+    //            ExplosivePenetrationUpgradeTier.ONE.getFactory()))
+    //        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_1.get().addAllVariants(modifier))
+    //        .lang("Explosive Penetration I" + UPGRADE_TEXT)
+    //        .register();
+    //
+    //    public static final ItemEntry<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_2 = REGISTRATE
+    //        .item("dark_steel_upgrade_penetration_2", properties -> new DarkSteelUpgradeItem(properties, ExplosivePenetrationUpgradeTier.TWO.getActivationCost(),
+    //            ExplosivePenetrationUpgradeTier.TWO.getFactory()))
+    //        .tab(EIOCreativeTabs.GEAR, modifier -> EIOItems.DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_2.get().addAllVariants(modifier))
+    //        .lang("Explosive Penetration II" + UPGRADE_TEXT)
+    //        .register();
 
     // endregion
 
@@ -472,6 +491,7 @@ public class EIOItems {
     public static <T extends Item> ItemBuilder<T, Registrate> dumbItem(String name, NonNullFunction<Item.Properties, T> factory) {
         return REGISTRATE.item(name, factory).removeTab(CreativeModeTabs.SEARCH);
     }
+
     public static ItemBuilder<Item, Registrate> dumbItem(String name) {
         return REGISTRATE.item(name, Item::new);
     }

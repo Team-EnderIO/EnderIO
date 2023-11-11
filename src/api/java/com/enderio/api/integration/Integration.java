@@ -4,6 +4,7 @@ import com.enderio.api.glider.GliderMovementInfo;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -70,5 +71,22 @@ public interface Integration {
      */
     default Optional<BlockState> getFacadeOf(ItemStack stack) {
         return Optional.empty();
+    }
+
+    /**
+     * @param player The Player that wants to teleport
+     * @return whether the player can teleport to a nearby block
+     */
+    default boolean canBlockTeleport(Player player) {
+        return false;
+    }
+
+    /**
+     * Usage intended for kubejs io, tell us if you need it for something else
+     * @param recipe The smelting recipe that is tried to be used in the AlloySmelter.
+     * @return true if this recipe can be used
+     */
+    default boolean acceptSmeltingRecipe(SmeltingRecipe recipe) {
+        return true;
     }
 }

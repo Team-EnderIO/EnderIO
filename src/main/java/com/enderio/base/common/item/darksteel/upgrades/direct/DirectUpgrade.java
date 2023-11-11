@@ -23,5 +23,7 @@ public class DirectUpgrade implements IDarkSteelUpgrade {
     }
 
     @Override
-    public Collection<Component> getDescription() { return List.of(EIOLang.DS_UPGRADE_DIRECT_DESCRIPTION); }
+    public Collection<Component> getDescription() {
+        return List.of(EIOLang.DS_UPGRADE_DIRECT_DESCRIPTION);
+    }
 }

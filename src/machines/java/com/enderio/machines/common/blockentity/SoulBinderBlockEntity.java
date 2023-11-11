@@ -183,6 +183,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
                 int leftover = ExperienceUtil.getLevelFromFluidWithLeftover(fluidTank.getFluidAmount(), 0, recipe.getExpCost()).y();
                 fluidTank.drain(fluidTank.getFluidAmount() - leftover * EXP_TO_FLUID, IFluidHandler.FluidAction.EXECUTE);
             }
+
         };
     }
 

@@ -3,13 +3,13 @@
   "category": "misc",
   "key": {
     "E": {
-      "item": "enderio:ender_crystal"
+      "tag": "forge:gems/ender_crystal"
     },
     "P": {
-      "item": "enderio:pulsating_crystal"
+      "tag": "forge:gems/pulsating_crystal"
     },
     "V": {
-      "item": "enderio:vibrant_crystal"
+      "tag": "forge:gems/vibrant_crystal"
     }
   },
   "pattern": [

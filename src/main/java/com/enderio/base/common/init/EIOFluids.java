@@ -52,6 +52,7 @@ public class EIOFluids {
 
     public static final FluidEntry<? extends ForgeFlowingFluid> XP_JUICE = fluid("xp_juice")
         .properties(p -> p.lightLevel(10).density(800).viscosity(1500))
+        .lang("XP Juice")
         .tag(EIOTags.Fluids.EXPERIENCE)
         .register();
 

@@ -3,22 +3,22 @@
   "energy": 20000,
   "inputs": [
     {
-      "item": "enderio:soularium_ingot"
+      "tag": "forge:ingots/soularium"
     },
     {
       "item": "minecraft:zombie_head"
     },
     {
-      "item": "enderio:soularium_ingot"
+      "tag": "forge:ingots/soularium"
     },
     {
-      "item": "enderio:silicon"
+      "tag": "forge:silicon"
     },
     {
       "item": "minecraft:redstone"
     },
     {
-      "item": "enderio:silicon"
+      "tag": "forge:silicon"
     }
   ],
   "output": "enderio:z_logic_controller"
