@@ -38,7 +38,9 @@ public class RenderTravelTargets {
         for (ITravelTarget target : data.getTravelTargets()) {
             double range = itemTeleport ? target.getItem2BlockRange() : target.getBlock2BlockRange();
             double distanceSquared = target.getPos().distToCenterSqr(player.position());
-            if (range * range < distanceSquared || distanceSquared < TravelHandler.MIN_TELEPORTATION_DISTANCE_SQUARED) {
+            if (range * range < distanceSquared
+                || distanceSquared < TravelHandler.MIN_TELEPORTATION_DISTANCE_SQUARED
+                || TravelHandler.isTeleportPositionClear(level, target.getPos()).isEmpty()) {
                 continue;
             }
 

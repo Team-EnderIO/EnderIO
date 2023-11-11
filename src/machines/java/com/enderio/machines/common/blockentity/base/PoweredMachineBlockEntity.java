@@ -53,6 +53,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
 
     private ICapacitorData cachedCapacitorData = DefaultCapacitorData.NONE;
     private boolean capacitorCacheDirty;
+    private boolean updateModel = false;
 
     public PoweredMachineBlockEntity(EnergyIOMode energyIOMode, ICapacitorScalable capacity, ICapacitorScalable usageRate, BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
@@ -91,7 +92,12 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
         if (level != null) {
             BlockState blockState = getBlockState();
             if (blockState.hasProperty(ProgressMachineBlock.POWERED) && blockState.getValue(ProgressMachineBlock.POWERED) != isActive()) {
-                level.setBlock(getBlockPos(), blockState.setValue(ProgressMachineBlock.POWERED, isActive()), Block.UPDATE_ALL);
+                if (updateModel) {
+                    level.setBlock(getBlockPos(), blockState.setValue(ProgressMachineBlock.POWERED, isActive()), Block.UPDATE_ALL);
+                }
+                updateModel = true;
+            } else {
+                updateModel = false;
             }
         }
 
