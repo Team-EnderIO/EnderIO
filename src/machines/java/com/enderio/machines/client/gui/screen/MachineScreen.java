@@ -10,6 +10,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 
 public abstract class MachineScreen<T extends MachineMenu> extends EIOScreen<T> {
+    public static final int SLOT_COLOR = -2130706433;
     protected MachineScreen(T pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
     }
@@ -26,7 +27,7 @@ public abstract class MachineScreen<T extends MachineMenu> extends EIOScreen<T> 
             if (slot.hasItem()) {
                 guiGraphics.pose().pushPose();
                 guiGraphics.pose().translate(0.0F, 0.0F, 300F);
-                guiGraphics.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, -2130706433);
+                guiGraphics.fill(slot.x, slot.y, slot.x + 16, slot.y + 16, SLOT_COLOR);
                 guiGraphics.pose().popPose();
             }
         }
