@@ -6,7 +6,7 @@
       "tag": "forge:gems/emerald"
     },
     "P": {
-      "item": "enderio:vibrant_alloy_nugget"
+      "tag": "forge:nuggets/vibrant_alloy"
     }
   },
   "pattern": [
