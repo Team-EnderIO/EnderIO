@@ -229,7 +229,7 @@ public class MaterialRecipeProvider extends RecipeProvider {
             .pattern("PPP")
             .pattern("PDP")
             .pattern("PPP")
-            .define('P', EIOItems.PULSATING_ALLOY_NUGGET)
+            .define('P', EIOTags.Items.NUGGETS_PULSATING_ALLOY)
             .define('D', Tags.Items.GEMS_DIAMOND)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PULSATING_ALLOY_NUGGET.get()))
             .save(recipeConsumer);
