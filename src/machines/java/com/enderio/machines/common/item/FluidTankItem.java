@@ -107,8 +107,9 @@ public class FluidTankItem extends BlockItem implements IAdvancedTooltipProvider
             CompoundTag tagCompound = container.getTag();
             if (tagCompound != null) {
                 CompoundTag blockEntityTag = tagCompound.getCompound(BLOCK_ENTITY_TAG);
-                if (blockEntityTag.contains(MachineNBTKeys.FLUID))
+                if (blockEntityTag.contains(MachineNBTKeys.FLUID)) {
                     blockEntityTag.remove(MachineNBTKeys.FLUID);
+                }
             }
         }
     }

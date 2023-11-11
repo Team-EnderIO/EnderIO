@@ -25,8 +25,10 @@ public class ConduitItemFactory {
      * @return
      */
     public static Item build(Supplier<? extends IConduitType<?>> type, Item.Properties properties) {
-        if (factory != null)
+        if (factory != null) {
             return factory.apply(type, properties);
+        }
+
         return new Item(properties);
     }
 }

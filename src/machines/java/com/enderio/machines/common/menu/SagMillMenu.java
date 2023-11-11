@@ -34,8 +34,10 @@ public class SagMillMenu extends MachineMenu<SagMillBlockEntity> {
 
     public static SagMillMenu factory(@Nullable MenuType<SagMillMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
-        if (entity instanceof SagMillBlockEntity castBlockEntity)
+        if (entity instanceof SagMillBlockEntity castBlockEntity) {
             return new SagMillMenu(castBlockEntity, inventory, pContainerId);
+        }
+
         LogManager.getLogger().warn("couldn't find BlockEntity");
         return new SagMillMenu(null, inventory, pContainerId);
     }

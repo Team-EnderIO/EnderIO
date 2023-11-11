@@ -26,7 +26,7 @@ import java.util.List;
 
 public class PoweredLightBlockEntity extends BlockEntity{
 	private static final int RF_USE_TICK = 1;
-	private static final int spread = 2;
+	private static final int SPREAD = 2;
 	private boolean update = true;
 	private boolean active = false;
 
@@ -137,13 +137,13 @@ public class PoweredLightBlockEntity extends BlockEntity{
 	 * Returns true if the block is inside the zone defined by the spread.
 	 */
 	public static boolean inSpreadZone(BlockPos node, BlockPos center) { 
-		if (Math.abs(node.getX()-center.getX()) > spread) {
+		if (Math.abs(node.getX()-center.getX()) > SPREAD) {
 			return false;
 		}
-		if (Math.abs(node.getY()-center.getY()) > spread) {
+		if (Math.abs(node.getY()-center.getY()) > SPREAD) {
 			return false;
 		}
-		if (Math.abs(node.getZ()-center.getZ()) > spread) {
+		if (Math.abs(node.getZ()-center.getZ()) > SPREAD) {
 			return false;
 		}
 		return true;

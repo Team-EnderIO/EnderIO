@@ -1,7 +1,26 @@
 package com.enderio.machines.common.init;
 
 import com.enderio.EnderIO;
-import com.enderio.machines.common.blockentity.*;
+import com.enderio.machines.common.blockentity.AlloySmelterBlockEntity;
+import com.enderio.machines.common.blockentity.CrafterBlockEntity;
+import com.enderio.machines.common.blockentity.CreativePowerBlockEntity;
+import com.enderio.machines.common.blockentity.DrainBlockEntity;
+import com.enderio.machines.common.blockentity.EnchanterBlockEntity;
+import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
+import com.enderio.machines.common.blockentity.ImpulseHopperBlockEntity;
+import com.enderio.machines.common.blockentity.PaintingMachineBlockEntity;
+import com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity;
+import com.enderio.machines.common.blockentity.PrimitiveAlloySmelterBlockEntity;
+import com.enderio.machines.common.blockentity.SagMillBlockEntity;
+import com.enderio.machines.common.blockentity.SlicerBlockEntity;
+import com.enderio.machines.common.blockentity.SoulBinderBlockEntity;
+import com.enderio.machines.common.blockentity.SoulEngineBlockEntity;
+import com.enderio.machines.common.blockentity.StirlingGeneratorBlockEntity;
+import com.enderio.machines.common.blockentity.TravelAnchorBlockEntity;
+import com.enderio.machines.common.blockentity.VacuumChestBlockEntity;
+import com.enderio.machines.common.blockentity.WiredChargerBlockEntity;
+import com.enderio.machines.common.blockentity.XPObeliskBlockEntity;
+import com.enderio.machines.common.blockentity.XPVacuumBlockEntity;
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorBankBlockEntity;
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorTier;
 import com.enderio.machines.common.blockentity.solar.SolarPanelBlockEntity;
@@ -85,6 +104,7 @@ public class MachineBlockEntities {
     });
 
     public static final BlockEntityEntry<SoulEngineBlockEntity> SOUL_ENGINE = register("soul_engine", SoulEngineBlockEntity::new, MachineBlocks.SOUL_ENGINE);
+    public static final BlockEntityEntry<XPObeliskBlockEntity> XP_OBELISK = register("xp_obelisk", XPObeliskBlockEntity::new, MachineBlocks.XP_OBELISK);
 
     @SafeVarargs
     private static <B extends BlockEntity> BlockEntityEntry<B> register(String name, BlockEntityBuilder.BlockEntityFactory<B> beFactory,

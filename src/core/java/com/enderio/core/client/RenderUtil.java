@@ -31,6 +31,7 @@ public class RenderUtil {
             case SOUTH -> renderFace(pose, normal, consumer, texture, color, light, x, x + w, y, y + h, 1.0f - z, 1.0f - z, 1.0f - z, 1.0f - z, x + w, x, y + h, y, 0, 0, 1);
             case EAST -> renderFace(pose, normal, consumer, texture, color, light, 1.0f - z, 1.0f - z, y + h, y, x, x + w, x + w, x, x, x + w, y, y + h, 1, 0, 0);
             case WEST -> renderFace(pose, normal, consumer, texture, color, light, z, z, y, y + h, x, x + w, x + w, x, x + w, x, y + h, y, -1, 0, 0);
+            default -> throw new IllegalStateException("Unexpected value: " + face);
         }
     }
 
@@ -56,7 +57,10 @@ public class RenderUtil {
     }
 
     public static Vector3f getNormalData(int[] vertices, int vertexIndex) {
-        float x,y,z;
+        float x;
+        float y;
+        float z;
+
         int vertexData = vertices[vertexIndex * STRIDE + IQuadTransformer.NORMAL];
         x = (vertexData & 0x000000FF) / 127f;
         y = ((vertexData & 0x0000FF00) >> 8) / 127f;

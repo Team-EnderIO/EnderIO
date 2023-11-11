@@ -9,10 +9,10 @@
       "item": "minecraft:furnace"
     },
     "G": {
-      "item": "enderio:iron_gear"
+      "tag": "forge:gears/stone"
     },
     "I": {
-      "item": "enderio:dark_steel_ingot"
+      "tag": "forge:ingots/dark_steel"
     },
     "P": {
       "item": "minecraft:piston"

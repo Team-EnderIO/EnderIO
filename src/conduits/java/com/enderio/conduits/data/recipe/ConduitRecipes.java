@@ -29,7 +29,7 @@ public class ConduitRecipes extends RecipeProvider {
             .pattern("PPP")
             .pattern("BBB")
             .define('B', EIOItems.CONDUIT_BINDER)
-            .define('P', EIOItems.PULSATING_ALLOY_NUGGET)
+            .define('P', EIOTags.Items.NUGGETS_PULSATING_ALLOY)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
             .save(pWriter);
 
@@ -67,7 +67,7 @@ public class ConduitRecipes extends RecipeProvider {
             .pattern("BBB")
             .define('B', EIOItems.CONDUIT_BINDER)
             .define('G', EIOTags.Items.FUSED_QUARTZ)
-            .define('I', EIOItems.VIBRANT_ALLOY_INGOT)
+            .define('I', EIOTags.Items.INGOTS_VIBRANT_ALLOY)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ConduitItems.PRESSURIZED_FLUID))
             .save(pWriter);
 
@@ -86,7 +86,7 @@ public class ConduitRecipes extends RecipeProvider {
             .pattern("III")
             .pattern("BBB")
             .define('B', EIOItems.CONDUIT_BINDER)
-            .define('I', EIOItems.CONDUCTIVE_ALLOY_INGOT)
+            .define('I', EIOTags.Items.INGOTS_CONDUCTIVE_ALLOY)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
             .save(pWriter);
 
@@ -95,7 +95,7 @@ public class ConduitRecipes extends RecipeProvider {
             .pattern("III")
             .pattern("BBB")
             .define('B', EIOItems.CONDUIT_BINDER)
-            .define('I', EIOItems.REDSTONE_ALLOY_INGOT)
+            .define('I', EIOTags.Items.INGOTS_REDSTONE_ALLOY)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
             .save(pWriter);
 

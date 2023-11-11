@@ -3,13 +3,13 @@
   "category": "equipment",
   "key": {
     "C": {
-      "item": "enderio:conductive_alloy_ingot"
+      "tag": "forge:ingots/conductive_alloy"
     },
     "E": {
-      "item": "enderio:copper_alloy_ingot"
+      "tag": "forge:ingots/copper_alloy"
     },
     "V": {
-      "item": "enderio:vibrant_crystal"
+      "tag": "forge:gems/vibrant_crystal"
     }
   },
   "pattern": [

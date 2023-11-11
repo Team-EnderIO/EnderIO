@@ -26,8 +26,10 @@ public class VacuumChestMenu extends MachineMenu<VacuumChestBlockEntity> {
 
     public static VacuumChestMenu factory(@Nullable MenuType<VacuumChestMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
-        if (entity instanceof VacuumChestBlockEntity castBlockEntity)
+        if (entity instanceof VacuumChestBlockEntity castBlockEntity) {
             return new VacuumChestMenu(castBlockEntity, inventory, pContainerId);
+        }
+
         LogManager.getLogger().warn("couldn't find BlockEntity");
         return new VacuumChestMenu(null, inventory, pContainerId);
     }

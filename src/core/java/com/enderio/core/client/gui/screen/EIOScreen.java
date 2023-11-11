@@ -16,7 +16,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public abstract class EIOScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> implements IEnderScreen {
 
@@ -62,8 +66,10 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
 
     @Override
     public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
-        if (menu instanceof SyncedMenu menu && menu.getBlockEntity() == null)
+        if (menu instanceof SyncedMenu<?> syncedMenu && syncedMenu.getBlockEntity() == null) {
             return;
+        }
+
         renderBackground(guiGraphics);
         super.render(guiGraphics, pMouseX, pMouseY, pPartialTicks);
         this.renderTooltip(guiGraphics, pMouseX, pMouseY);
@@ -110,7 +116,9 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
     public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
         if (getFocused() instanceof AbstractWidget abstractWidget && abstractWidget.isActive()) {
             return abstractWidget.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
-        } return super.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
+        }
+
+        return super.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
     }
 
     @Override

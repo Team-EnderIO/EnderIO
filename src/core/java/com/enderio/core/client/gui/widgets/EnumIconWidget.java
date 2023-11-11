@@ -19,7 +19,11 @@ import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPosition
 import net.minecraft.network.chat.Component;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -30,7 +34,8 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
 
     private final Map<T, SelectionWidget> icons = new HashMap<>();
 
-    private final Vector2i expandTopLeft, expandBottomRight;
+    private final Vector2i expandTopLeft;
+    private final Vector2i expandBottomRight;
 
     private static final int ELEMENTS_IN_ROW = 5;
     private static final int SPACE_BETWEEN_ELEMENTS = 4;
@@ -240,7 +245,7 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
 
         private final T value;
 
-        public SelectionWidget(Vector2i pos, T value) {
+        SelectionWidget(Vector2i pos, T value) {
             super(pos.x(), pos.y(), value.getRenderSize().x() + 2, value.getRenderSize().y() + 2, value.getTooltip());
             this.value = value;
         }

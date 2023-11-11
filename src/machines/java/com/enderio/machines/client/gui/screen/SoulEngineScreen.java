@@ -3,7 +3,6 @@ package com.enderio.machines.client.gui.screen;
 import com.enderio.EnderIO;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
 import com.enderio.machines.client.gui.widget.FluidStackWidget;
@@ -19,7 +18,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Optional;
 
-public class SoulEngineScreen extends EIOScreen<SoulEngineMenu>{
+public class SoulEngineScreen extends MachineScreen<SoulEngineMenu> {
 
     public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/soul_engine.png");
 
@@ -56,8 +55,10 @@ public class SoulEngineScreen extends EIOScreen<SoulEngineMenu>{
             }
             EngineSoul.SoulData data = EngineSoul.ENGINE.map.get(rl.get());
             if (data != null) {
-                guiGraphics.drawString(font, data.tickpermb() + " t/mb", imageWidth / 2f + 12 , 40, 4210752, false);
-                guiGraphics.drawString(font, data.powerpermb() + " µI/mb", imageWidth / 2f + 12 , 50, 4210752, false);
+                double burnRate = menu.getBlockEntity().getBurnRate();
+                float genRate = menu.getBlockEntity().getGenerationRate();
+                guiGraphics.drawString(font, data.tickpermb()/ burnRate + " t/mb", imageWidth / 2f + 12 , 40, 4210752, false);
+                guiGraphics.drawString(font, (int) (data.powerpermb() * genRate) + " µI/mb", imageWidth / 2f + 12 , 50, 4210752, false);
 
             }
         }

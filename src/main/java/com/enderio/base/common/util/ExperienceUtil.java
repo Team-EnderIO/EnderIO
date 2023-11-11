@@ -35,7 +35,7 @@ public class ExperienceUtil {
      */
     public static Vector2i getLevelFromFluidWithLeftover(int fluidAmount, int startLevel, int stopLevel) {
         Vector2i res = getLevelForExpWithLeftover(fluidAmount/ EXP_TO_FLUID, startLevel, stopLevel);
-        return res.add(fluidAmount % EXP_TO_FLUID, 0); //add leftover
+        return res.add(0, fluidAmount % EXP_TO_FLUID); //add leftover
     }
 
     /**
@@ -45,7 +45,7 @@ public class ExperienceUtil {
      * @return
      */
     public static Vector2i getLevelFromFluidWithLeftover(int fluidAmount) {
-        return getLevelForExpWithLeftover(fluidAmount/ EXP_TO_FLUID, 0, Integer.MAX_VALUE);
+        return getLevelFromFluidWithLeftover(fluidAmount, 0, Integer.MAX_VALUE);
     }
 
     /**

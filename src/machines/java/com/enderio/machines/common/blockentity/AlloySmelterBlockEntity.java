@@ -3,6 +3,7 @@ package com.enderio.machines.common.blockentity;
 import com.enderio.EnderIO;
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
+import com.enderio.api.integration.IntegrationManager;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.core.common.network.slot.EnumNetworkDataSlot;
@@ -263,8 +264,9 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
                     for (int i = 0; i < 3; i++) {
 
                         // If this ingredient has been matched already, continue
-                        if (consumed[i])
+                        if (consumed[i]) {
                             continue;
+                        }
 
                         if (i < inputs.size()) {
                             // If we expect an input, test we have a match for it.
@@ -314,8 +316,9 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
             // Get alloy smelting recipe (Default)
             if (getMode().canAlloy()) {
                 var recipe = super.findRecipe();
-                if (recipe.isPresent())
+                if (recipe.isPresent()) {
                     return recipe;
+                }
             }
 
             // Get vanilla smelting recipe.
@@ -323,8 +326,9 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
                 for (int i = 0; i < AlloySmelterBlockEntity.INPUTS.size(); i++) {
                     var recipe = level.getRecipeManager()
                         .getRecipeFor(RecipeType.SMELTING, new ContainerSubWrapper(getContainer(), i), level);
-                    if (recipe.isPresent())
+                    if (recipe.isPresent() && IntegrationManager.allMatch(integration -> integration.acceptSmeltingRecipe(recipe.get()))) {
                         return Optional.of(new VanillaAlloySmeltingRecipe(recipe.get()));
+                    }
                 }
             }
             return Optional.empty();
@@ -374,8 +378,10 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
 
         @Override
         public ItemStack getItem(int slot) {
-            if (slot != 0)
+            if (slot != 0) {
                 return ItemStack.EMPTY;
+            }
+
             return AlloySmelterBlockEntity.INPUTS.get(index).getItemStack(wrapper);
         }
 

@@ -45,16 +45,22 @@ public class PlayerMovementHandler {
             } else {
                 TICKS_FALLING.put(player, 0);
             }
-            if (player.isSpectator())
+
+            if (player.isSpectator()) {
                 return;
+            }
+
             Optional<GliderMovementInfo> gliderMovementInfoOpt = calculateGliderMovementInfo(player, true);
-            if (gliderMovementInfoOpt.isEmpty())
+            if (gliderMovementInfoOpt.isEmpty()) {
                 return;
+            }
+
             GliderMovementInfo gliderMovementInfo = gliderMovementInfoOpt.get();
             double verticalSpeed = gliderMovementInfo.fallSpeed();
             if (player.isSprinting()) {
                 verticalSpeed *= 3;
             }
+
             double oldHorizontalSpeed = player.getDeltaMovement().horizontalDistance();
             double x = Math.cos(Math.toRadians(player.yHeadRot + 90)) * (gliderMovementInfo.acceleration() + oldHorizontalSpeed * MOVEMENT_CHANGE_EFFECT);
             double z = Math.sin(Math.toRadians(player.yHeadRot + 90)) * (gliderMovementInfo.acceleration() + oldHorizontalSpeed * MOVEMENT_CHANGE_EFFECT);
@@ -65,6 +71,7 @@ public class PlayerMovementHandler {
             if (speed > gliderMovementInfo.maxSpeed()) {
                 newDeltaMovement = newDeltaMovement.scale(gliderMovementInfo.maxSpeed() / newDeltaMovement.length());
             }
+
             newDeltaMovement = newDeltaMovement.scale(AIR_FRICTION_COEFFICIENT);
             player.setDeltaMovement(newDeltaMovement);
             player.fallDistance = 0f;
@@ -74,6 +81,7 @@ public class PlayerMovementHandler {
             } else if (player.level().isClientSide()) {
                 ClientClassLoadingProtection.playSound(player);
             }
+
             gliderMovementInfo.cause().onHangGliderTick(player);
         }
     }
@@ -101,11 +109,14 @@ public class PlayerMovementHandler {
                 Minecraft.getInstance().getSoundManager().play(new WindSoundInstance(localPlayer));
             }
         }
+
         private static boolean isGliderPlaying() {
             for (SoundInstance soundInstance : Minecraft.getInstance().getSoundManager().soundEngine.instanceBySource.get(SoundSource.PLAYERS)) {
-                if (soundInstance instanceof WindSoundInstance)
+                if (soundInstance instanceof WindSoundInstance) {
                     return true;
+                }
             }
+
             return false;
         }
     }
@@ -113,7 +124,7 @@ public class PlayerMovementHandler {
     private static class WindSoundInstance extends AbstractTickableSoundInstance {
         private final LocalPlayer player;
         private int time;
-        public WindSoundInstance(LocalPlayer player) {
+        WindSoundInstance(LocalPlayer player) {
             super(SoundEvents.ELYTRA_FLYING, SoundSource.PLAYERS, SoundInstance.createUnseededRandom());
             this.player = player;
             this.looping = true;

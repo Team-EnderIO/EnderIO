@@ -1,7 +1,11 @@
 package com.enderio.machines.data.recipes;
 
 import com.enderio.EnderIO;
-import com.enderio.base.common.block.glass.*;
+import com.enderio.base.common.block.glass.FusedQuartzBlock;
+import com.enderio.base.common.block.glass.GlassBlocks;
+import com.enderio.base.common.block.glass.GlassCollisionPredicate;
+import com.enderio.base.common.block.glass.GlassIdentifier;
+import com.enderio.base.common.block.glass.GlassLighting;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
@@ -45,13 +49,13 @@ public class AlloyRecipeProvider extends EnderRecipeProvider {
 
         build(new ItemStack(EIOItems.ENERGETIC_ALLOY_INGOT.get()), List.of(CountedIngredient.of(Tags.Items.DUSTS_REDSTONE), CountedIngredient.of(Tags.Items.INGOTS_GOLD), CountedIngredient.of(Tags.Items.DUSTS_GLOWSTONE)), 4800, 0.3f, pFinishedRecipeConsumer);
         build(new ItemStack(EIOItems.COPPER_ALLOY_INGOT.get()), List.of(CountedIngredient.of(Tags.Items.INGOTS_COPPER), CountedIngredient.of(EIOTags.Items.SILICON)), 3200, 0.3f, pFinishedRecipeConsumer);
-        build(new ItemStack(EIOItems.VIBRANT_ALLOY_INGOT.get()), List.of(CountedIngredient.of(EIOItems.ENERGETIC_ALLOY_INGOT.get()), CountedIngredient.of(Tags.Items.ENDER_PEARLS)), 4800, 0.3f, pFinishedRecipeConsumer);
+        build(new ItemStack(EIOItems.VIBRANT_ALLOY_INGOT.get()), List.of(CountedIngredient.of(EIOTags.Items.INGOTS_ENERGETIC_ALLOY), CountedIngredient.of(Tags.Items.ENDER_PEARLS)), 4800, 0.3f, pFinishedRecipeConsumer);
         build(new ItemStack(EIOItems.REDSTONE_ALLOY_INGOT.get()), List.of(CountedIngredient.of(Tags.Items.DUSTS_REDSTONE), CountedIngredient.of(EIOTags.Items.SILICON)), 3200, 0.3f, pFinishedRecipeConsumer);
-        build(new ItemStack(EIOItems.CONDUCTIVE_ALLOY_INGOT.get()), List.of(CountedIngredient.of(EIOItems.COPPER_ALLOY_INGOT.get()), CountedIngredient.of(Tags.Items.INGOTS_IRON), CountedIngredient.of(Tags.Items.DUSTS_REDSTONE)), 4800, 0.3f, pFinishedRecipeConsumer);
+        build(new ItemStack(EIOItems.CONDUCTIVE_ALLOY_INGOT.get()), List.of(CountedIngredient.of(EIOTags.Items.INGOTS_COPPER_ALLOY), CountedIngredient.of(Tags.Items.INGOTS_IRON), CountedIngredient.of(Tags.Items.DUSTS_REDSTONE)), 4800, 0.3f, pFinishedRecipeConsumer);
         build(new ItemStack(EIOItems.PULSATING_ALLOY_INGOT.get()), List.of(CountedIngredient.of(Tags.Items.INGOTS_IRON), CountedIngredient.of(Tags.Items.ENDER_PEARLS)), 4800, 0.3f, pFinishedRecipeConsumer);
         build(new ItemStack(EIOItems.DARK_STEEL_INGOT.get()), List.of(CountedIngredient.of(Tags.Items.INGOTS_IRON), CountedIngredient.of(EIOTags.Items.DUSTS_COAL), CountedIngredient.of(Tags.Items.OBSIDIAN)), 6400, 0.3f, pFinishedRecipeConsumer);
         build(new ItemStack(EIOItems.SOULARIUM_INGOT.get()), List.of(CountedIngredient.of(Items.SOUL_SAND, Items.SOUL_SOIL), CountedIngredient.of(Tags.Items.INGOTS_GOLD)), 5600, 0.3f, pFinishedRecipeConsumer);
-        build(new ItemStack(EIOItems.END_STEEL_INGOT.get()), List.of(CountedIngredient.of(Tags.Items.END_STONES), CountedIngredient.of(EIOItems.DARK_STEEL_INGOT.get()), CountedIngredient.of(Tags.Items.OBSIDIAN)), 6400, 0.3f, pFinishedRecipeConsumer);
+        build(new ItemStack(EIOItems.END_STEEL_INGOT.get()), List.of(CountedIngredient.of(Tags.Items.END_STONES), CountedIngredient.of(EIOTags.Items.INGOTS_DARK_STEEL), CountedIngredient.of(Tags.Items.OBSIDIAN)), 6400, 0.3f, pFinishedRecipeConsumer);
 
         // endregion
 
@@ -88,8 +92,9 @@ public class AlloyRecipeProvider extends EnderRecipeProvider {
                     var composite = identifier.lighting() == GlassLighting.EMITTING ? CountedIngredient.of(4, Tags.Items.DUSTS_GLOWSTONE) : CountedIngredient.of(4, Tags.Items.GEMS_AMETHYST);
                     var compositeB = identifier.lighting() == GlassLighting.EMITTING ? CountedIngredient.of(Blocks.GLOWSTONE) : CountedIngredient.of(Tags.Items.STORAGE_BLOCKS_AMETHYST);
                     compositeGlass(clear, "from_main", mainIngredient, composite, compositeB, energy, 0.3f, pFinishedRecipeConsumer);
-                    if (altIngredient != null)
+                    if (altIngredient != null) {
                         compositeGlass(clear, "from_storage", altIngredient, composite, compositeB, energy, 0.3f, pFinishedRecipeConsumer);
+                    }
 
                     Block withoutLight = EIOBlocks.GLASS_BLOCKS.get(identifier.withoutLight()).CLEAR.get();
                     compositeGlass(clear,"from_base", CountedIngredient.of(withoutLight), composite, compositeB, energy/2, 0.3f, pFinishedRecipeConsumer);
@@ -130,8 +135,9 @@ public class AlloyRecipeProvider extends EnderRecipeProvider {
 
     protected void glass(FusedQuartzBlock block, CountedIngredient input, @Nullable CountedIngredient inputAlt, int energy, float experience, Consumer<FinishedRecipe> recipeConsumer) {
         build(new ItemStack(block), List.of(input), energy, experience, recipeConsumer);
-        if (inputAlt != null)
+        if (inputAlt != null) {
             build(new ItemStack(block), "alt", List.of(inputAlt), energy, experience, recipeConsumer);
+        }
     }
 
     protected void compositeGlass(FusedQuartzBlock block, String suffix, CountedIngredient inputA, CountedIngredient inputB, CountedIngredient inputBAlt, int energy, float experience, Consumer<FinishedRecipe> recipeConsumer) {

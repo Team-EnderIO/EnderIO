@@ -3,13 +3,13 @@
   "energy": 20000,
   "inputs": [
     {
-      "item": "enderio:energetic_alloy_ingot"
+      "tag": "forge:ingots/energetic_alloy"
     },
     {
       "tag": "forge:dusts/prismarine"
     },
     {
-      "item": "enderio:energetic_alloy_ingot"
+      "tag": "forge:ingots/energetic_alloy"
     },
     {
       "tag": "forge:gems/prismarine"

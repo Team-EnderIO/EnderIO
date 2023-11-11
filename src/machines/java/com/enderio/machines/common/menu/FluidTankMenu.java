@@ -24,8 +24,9 @@ public class FluidTankMenu extends MachineMenu<FluidTankBlockEntity> {
 
     public static FluidTankMenu factory(@Nullable MenuType<FluidTankMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
-        if (entity instanceof FluidTankBlockEntity castBlockEntity)
+        if (entity instanceof FluidTankBlockEntity castBlockEntity) {
             return new FluidTankMenu(castBlockEntity, inventory, pContainerId);
+        }
         LogManager.getLogger().warn("couldn't find BlockEntity");
         return new FluidTankMenu(null, inventory, pContainerId);
 

@@ -142,7 +142,11 @@ public class ConduitScreen extends EIOScreen<ConduitMenu> {
             typeSelectionButtons.clear();
             for (int i = 0; i < validConnections.size(); i++) {
                 IConduitType<?> connection = validConnections.get(i);
-                ConduitSelectionButton button = new ConduitSelectionButton(getGuiLeft() + 206, getGuiTop() + 4 + 24*i, connection, menu::getConduitType, type -> {menu.setConduitType(type); recalculateTypedButtons = true;});
+                ConduitSelectionButton button = new ConduitSelectionButton(getGuiLeft() + 206, getGuiTop() + 4 + 24*i, connection, menu::getConduitType, type -> {
+                    menu.setConduitType(type);
+                    recalculateTypedButtons = true;
+                });
+
                 typeSelectionButtons.add(button);
                 addRenderableWidget(button);
             }

@@ -23,7 +23,6 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -31,6 +30,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Container> {
 
@@ -119,48 +119,54 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
 
     @Override
     public boolean matches(SoulBindingRecipe.Container container, Level pLevel) {
-        container.setNeededXP(0);
-        ItemStack inputSoul = SoulBinderBlockEntity.INPUT_SOUL.getItemStack(container);
-        if (!inputSoul.is(EIOItems.FILLED_SOUL_VIAL.get()))
-            return false;
-        if (!input.test(SoulBinderBlockEntity.INPUT_OTHER.getItemStack(container)))
-            return false;
-        LazyOptional<IEntityStorage> capability = inputSoul.getCapability(EIOCapabilities.ENTITY_STORAGE);
-        if (!capability.isPresent()) { //vial (or other entity storage
+        if (!container.getItem(0).is(EIOItems.FILLED_SOUL_VIAL.get())) {
             return false;
         }
+
+        if (!input.test(SoulBinderBlockEntity.INPUT_OTHER.getItemStack(container))) {
+            return false;
+        }
+
+        LazyOptional<IEntityStorage> capability = container.getItem(0).getCapability(EIOCapabilities.ENTITY_STORAGE);
+        if (!capability.isPresent()) { //vial (or other entity storage)
+            return false;
+        }
+
         if (souldata != null) { //is in the selected souldata
             if (SoulDataReloadListener.fromString(souldata).matches(
                 container.getItem(0).getCapability(EIOCapabilities.ENTITY_STORAGE).resolve().get()
                     .getStoredEntityData().getEntityType().get()).isEmpty()) {
                 return false;
-            };
-            container.setNeededXP(exp);
-            return ExperienceUtil.getLevelFromFluid(container.getFluidTank().getFluidAmount()) >= exp;
+            }
+
+            return ExperienceUtil.getLevelFromFluid(container.fluid.get()) >= exp;
         }
+
         if (mobCategory == null && entityType == null) { //No souldata, entity type or mob category
-            container.setNeededXP(exp);
-            return ExperienceUtil.getLevelFromFluid(container.getFluidTank().getFluidAmount()) >= exp;
+            return ExperienceUtil.getLevelFromFluid(container.fluid.get()) >= exp;
         }
+
         IEntityStorage storage = capability.resolve().get();
         if (storage.hasStoredEntity()) {
             var type = storage.getStoredEntityData().getEntityType();
-            if (type.isEmpty())
+            if (type.isEmpty()) {
                 return false;
+            }
 
             var entityType = ForgeRegistries.ENTITY_TYPES.getValue(type.get());
-            if (entityType == null)
+            if (entityType == null) {
                 return false;
+            }
 
             if (entityType.getCategory().equals(mobCategory)) {
-                container.setNeededXP(exp);
-                return ExperienceUtil.getLevelFromFluid(container.getFluidTank().getFluidAmount()) >= exp;
+                return ExperienceUtil.getLevelFromFluid(container.fluid.get()) >= exp;
             }
         }
-        if (storage.hasStoredEntity() && storage.getStoredEntityData().getEntityType().get().equals(entityType)) { //type matters
-            container.setNeededXP(exp);
-            return ExperienceUtil.getLevelFromFluid(container.getFluidTank().getFluidAmount()) >= exp;
+        //type matters
+        if (storage.hasStoredEntity() && storage.getStoredEntityData().getEntityType().get().equals(entityType)) {
+            return ExperienceUtil.getLevelFromFluid(container.fluid.get()) >= exp;
         }
+
         return false;
     }
 
@@ -181,24 +187,11 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
 
     public static class Container extends RecipeWrapper {
 
-        private final FluidTank fluidTank;
-        private int neededXP;
+        private final Supplier<Integer> fluid;
 
-        public Container(IItemHandlerModifiable inv, FluidTank fluidTank) {
+        public Container(IItemHandlerModifiable inv, Supplier<Integer> fluid) {
             super(inv);
-            this.fluidTank = fluidTank;
-        }
-
-        public FluidTank getFluidTank() {
-            return fluidTank;
-        }
-
-        public void setNeededXP(int neededXP) {
-            this.neededXP = neededXP;
-        }
-
-        public int getNeededXP() {
-            return neededXP;
+            this.fluid = fluid;
         }
     }
 

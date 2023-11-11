@@ -4,7 +4,11 @@ import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.core.data.model.EIOModel;
 import com.enderio.machines.common.MachineNBTKeys;
-import com.enderio.machines.common.block.*;
+import com.enderio.machines.common.block.CapacitorBankBlock;
+import com.enderio.machines.common.block.MachineBlock;
+import com.enderio.machines.common.block.ProgressMachineBlock;
+import com.enderio.machines.common.block.SolarPanelBlock;
+import com.enderio.machines.common.block.TravelAnchorBlock;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorBankBlockEntity;
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorTier;
@@ -152,6 +156,7 @@ public class MachineBlocks {
         .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
         .loot(MachinesLootTable::copyNBT)
         .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName()))))
+        .lang("XP Vacuum")
         .item()
         .tab(EIOCreativeTabs.MACHINES)
         .build()
@@ -198,6 +203,18 @@ public class MachineBlocks {
         .build()
         .register();
     public static final BlockEntry<ProgressMachineBlock> DRAIN = progressMachine("drain", () -> MachineBlockEntities.DRAIN)
+        .register();
+
+    public static final BlockEntry<MachineBlock> XP_OBELISK = REGISTRATE
+        .block("xp_obelisk", props -> new MachineBlock(props, MachineBlockEntities.XP_OBELISK))
+        .properties(props -> props.strength(2.5f, 8).isViewBlocking((pState, pLevel, pPos) -> false).noOcclusion())
+        .loot(MachinesLootTable::copyNBT)
+        .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+        .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName()))))
+        .lang("XP Obelisk")
+        .item()
+        .tab(EIOCreativeTabs.MACHINES)
+        .build()
         .register();
 
     //used when single methods needs to be overridden in the block class
