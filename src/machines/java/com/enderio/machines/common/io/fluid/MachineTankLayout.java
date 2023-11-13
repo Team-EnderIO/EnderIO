@@ -44,11 +44,19 @@ public class MachineTankLayout {
         return tanks.get(slot).filter().test(stack);
     }
 
+    public List<MachineTank> createTanks() {
+        List<MachineTank> tankList = new ArrayList<>();
+        tanks.forEach((config -> {
+            tankList.add(new MachineTank(config.capacity, config.filter, config.insert, config.extract));
+        }));
+        return tankList;
+    }
+
     public static class Builder {
         private final ArrayList<TankConfig> tanks = new ArrayList<>();
 
-        public Builder tank(TankAccess access, int capacity, boolean canInsert, boolean canRemove, Predicate<FluidStack> filter) {
-            tanks.add(new TankConfig(capacity, canInsert, canRemove, filter));
+        public Builder tank(TankAccess access, int capacity, boolean canInsert, boolean canExtract, Predicate<FluidStack> filter) {
+            tanks.add(new TankConfig(capacity, canInsert, canExtract, filter));
             access.init(tanks.size() - 1);
             return this;
         }

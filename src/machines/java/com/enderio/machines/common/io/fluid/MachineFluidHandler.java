@@ -13,27 +13,41 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
 import java.util.List;
+import java.util.function.IntConsumer;
 
 /**
  * MachineFluidStorage takes a list of fluid tanks and handles IO for them all.
  */
 public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvider<IFluidHandler> {
     private final IIOConfig config;
-
-    private final List<IFluidTank> tanks;
+    private final MachineTankLayout layout;
+    private final List<MachineTank> tanks;
 
     private final EnumMap<Direction, LazyOptional<Sided>> sideCache = new EnumMap<>(Direction.class);
     private LazyOptional<MachineFluidHandler> selfCache = LazyOptional.empty();
 
-    public MachineFluidHandler(IIOConfig config, IFluidTank... tanks) {
+    // Not sure if we need this but might be useful to update recipe/task if tank is filled.
+    private IntConsumer changeListener = i -> {};
+
+    public MachineFluidHandler(IIOConfig config, MachineTankLayout layout) {
         this.config = config;
-        this.tanks = List.of(tanks);
+        this.layout = layout;
+        this.tanks = layout.createTanks();
+    }
+
+    public void addSlotChangedCallback(IntConsumer callback) {
+        changeListener = changeListener.andThen(callback);
     }
 
     public final IIOConfig getConfig() {
         return config;
     }
 
+    public MachineTankLayout getLayout() {
+        return layout;
+    }
+
+    //Not a good idea to use this method. Tank Access should be the way to access tanks
     public final IFluidTank getTank(int tank) {
         return tanks.get(tank);
     }
@@ -56,6 +70,49 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
     @Override
     public boolean isFluidValid(int tank, FluidStack stack) {
         return tanks.get(tank).isFluidValid(stack);
+    }
+
+    @Override
+    public Capability<IFluidHandler> getCapabilityType() {
+        return ForgeCapabilities.FLUID_HANDLER;
+    }
+
+    @Override
+    public LazyOptional<IFluidHandler> getCapability(@Nullable Direction side) {
+        if (side == null) {
+            // Create own cache if its been invalidated or not created yet.
+            if (!selfCache.isPresent()) {
+                selfCache = LazyOptional.of(() -> this);
+            }
+
+            return selfCache.cast();
+        }
+
+        if (!config.getMode(side).canConnect()) {
+            return LazyOptional.empty();
+        }
+
+        return sideCache.computeIfAbsent(side, dir -> LazyOptional.of(() -> new Sided(this, dir))).cast();
+    }
+
+    @Override
+    public void invalidateSide(@Nullable Direction side) {
+        if (side != null) {
+            if (sideCache.containsKey(side)) {
+                sideCache.get(side).invalidate();
+                sideCache.remove(side);
+            }
+        } else {
+            selfCache.invalidate();
+        }
+    }
+
+    @Override
+    public void invalidateCaps() {
+        for (LazyOptional<Sided> side : sideCache.values()) {
+            side.invalidate();
+        }
+        selfCache.invalidate();
     }
 
     @Override
@@ -104,49 +161,6 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
         }
 
         return FluidStack.EMPTY;
-    }
-
-    @Override
-    public Capability<IFluidHandler> getCapabilityType() {
-        return ForgeCapabilities.FLUID_HANDLER;
-    }
-
-    @Override
-    public LazyOptional<IFluidHandler> getCapability(@Nullable Direction side) {
-        if (side == null) {
-            // Create own cache if its been invalidated or not created yet.
-            if (!selfCache.isPresent()) {
-                selfCache = LazyOptional.of(() -> this);
-            }
-
-            return selfCache.cast();
-        }
-
-        if (!config.getMode(side).canConnect()) {
-            return LazyOptional.empty();
-        }
-
-        return sideCache.computeIfAbsent(side, dir -> LazyOptional.of(() -> new Sided(this, dir))).cast();
-    }
-
-    @Override
-    public void invalidateSide(@Nullable Direction side) {
-        if (side != null) {
-            if (sideCache.containsKey(side)) {
-                sideCache.get(side).invalidate();
-                sideCache.remove(side);
-            }
-        } else {
-            selfCache.invalidate();
-        }
-    }
-
-    @Override
-    public void invalidateCaps() {
-        for (LazyOptional<Sided> side : sideCache.values()) {
-            side.invalidate();
-        }
-        selfCache.invalidate();
     }
 
     // Sided capability access
