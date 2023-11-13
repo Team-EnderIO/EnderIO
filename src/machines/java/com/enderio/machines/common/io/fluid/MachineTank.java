@@ -1,28 +1,37 @@
 package com.enderio.machines.common.io.fluid;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Predicate;
-
 //Replace MachineFluidTank
 public class MachineTank implements IFluidTank {
 
     private final int capacity;
-    private final Predicate<FluidStack> validator;
-
     private boolean canInsert;
-
     private boolean canExtract;
     @NotNull private FluidStack fluid = FluidStack.EMPTY;
+    public static final MachineTank EMPTY = new MachineTank(0, true, true);
 
-    public MachineTank(int capacity, Predicate<FluidStack> validator, boolean canInsert, boolean canExtract) {
+    public MachineTank(int capacity, boolean canInsert, boolean canExtract) {
         this.capacity = capacity;
-        this.validator = validator;
         this.canInsert = canInsert;
         this.canExtract = canExtract;
+    }
+
+    public MachineTank(FluidStack stack, int capacity, boolean canInsert, boolean canExtract) {
+        this(capacity, canInsert, canExtract);
+        this.fluid = stack.copy();
+    }
+
+    public static MachineTank from(CompoundTag tag) {
+        FluidStack stack = FluidStack.loadFluidStackFromNBT(tag);
+        int capacity = tag.getInt("Capacity");
+        boolean canInsert = tag.getBoolean("CanInsert");
+        boolean canExtract = tag.getBoolean("CanExtract");
+        return new MachineTank(stack, capacity, canInsert, canExtract);
     }
 
     @Override
@@ -42,11 +51,11 @@ public class MachineTank implements IFluidTank {
 
     @Override
     public boolean isFluidValid(FluidStack stack) {
-        return validator.test(stack);
+        return true;
     }
 
     public int fill(FluidStack resource, IFluidHandler.FluidAction action) {
-        if (!canInsert || resource.isEmpty() || !isFluidValid(resource)) {
+        if (!canInsert || resource.isEmpty()) {
             return 0;
         }
         if (action.simulate()) {
@@ -103,8 +112,14 @@ public class MachineTank implements IFluidTank {
         return stack;
     }
 
-    protected void onContentsChanged() {
+    protected void onContentsChanged() {}
 
+    public CompoundTag save(CompoundTag compoundTag) {
+        getFluid().writeToNBT(compoundTag);
+        compoundTag.putInt("Capacity", getCapacity());
+        compoundTag.putBoolean("CanInsert", canInsert);
+        compoundTag.putBoolean("CanExtract", canExtract);
+        return compoundTag;
     }
 
 }

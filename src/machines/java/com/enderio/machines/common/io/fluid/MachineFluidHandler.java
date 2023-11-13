@@ -3,8 +3,13 @@ package com.enderio.machines.common.io.fluid;
 import com.enderio.api.capability.IEnderCapabilityProvider;
 import com.enderio.api.io.IIOConfig;
 import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
@@ -18,10 +23,10 @@ import java.util.function.IntConsumer;
 /**
  * MachineFluidStorage takes a list of fluid tanks and handles IO for them all.
  */
-public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvider<IFluidHandler> {
+public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvider<IFluidHandler>, INBTSerializable<CompoundTag> {
     private final IIOConfig config;
     private final MachineTankLayout layout;
-    private final List<MachineTank> tanks;
+    private List<MachineTank> tanks;
 
     private final EnumMap<Direction, LazyOptional<Sided>> sideCache = new EnumMap<>(Direction.class);
     private LazyOptional<MachineFluidHandler> selfCache = LazyOptional.empty();
@@ -69,7 +74,7 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
 
     @Override
     public boolean isFluidValid(int tank, FluidStack stack) {
-        return tanks.get(tank).isFluidValid(stack);
+        return layout.isFluidValid(tank, stack);
     }
 
     @Override
@@ -161,6 +166,35 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
         }
 
         return FluidStack.EMPTY;
+    }
+
+    protected void onContentsChanged(int slot) {}
+
+    @Override
+    public CompoundTag serializeNBT() {
+        ListTag nbtTagList = new ListTag();
+        for (int i = 0; i < tanks.size(); i++) {
+            CompoundTag tankTag = new CompoundTag();
+            tankTag.putInt("Index", i);
+            tanks.get(i).save(tankTag);
+            nbtTagList.add(tankTag);
+        }
+        CompoundTag nbt = new CompoundTag();
+        nbt.put("Tanks", nbtTagList);
+        nbt.putInt("Size", tanks.size());
+        return nbt;
+    }
+
+    @Override
+    public void deserializeNBT(CompoundTag nbt) {
+        int size = nbt.contains("Size", Tag.TAG_INT) ? nbt.getInt("Size") : tanks.size();
+        tanks = NonNullList.withSize(size, MachineTank.EMPTY);
+        ListTag tagList = nbt.getList("Tanks", Tag.TAG_COMPOUND);
+        for (int i = 0; i < tagList.size(); i++) {
+            CompoundTag tankTag = tagList.getCompound(i);
+            int index = tankTag.getInt("Index");
+            tanks.set(index, MachineTank.from(tankTag));
+        }
     }
 
     // Sided capability access
