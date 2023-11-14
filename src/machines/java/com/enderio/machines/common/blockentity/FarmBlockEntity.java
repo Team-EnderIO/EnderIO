@@ -12,28 +12,15 @@ import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.CropBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.loot.LootParams;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.FarmlandWaterManager;
-import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.ticket.AABBTicket;
 import net.minecraftforge.common.util.FakePlayer;
@@ -57,7 +44,6 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity {
     public static final MultiSlotAccess BONEMEAL = new MultiSlotAccess();
     public static final MultiSlotAccess OUTPUT = new MultiSlotAccess();
     public static final FakePlayer FARM_PLAYER = new FakePlayer(ServerLifecycleHooks.getCurrentServer().overworld(), new GameProfile(UUID.fromString(""), "enderio:farm"));
-
     private List<BlockPos> positions;
     private int currentIndex = 0;
     private AABBTicket ticket;
@@ -107,65 +93,32 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity {
     @Override
     public void serverTick() {
         if (isActive()) {
-            makeFarmland();
             //Hydrate
-            this.ticket = FarmlandWaterManager.addAABBTicket(getLevel(), new AABB(getBlockPos()).expandTowards(range, 1, range));
-            plantCrops();
-            harvestCrops();
+            this.ticket = FarmlandWaterManager.addAABBTicket(getLevel(), new AABB(getBlockPos()).expandTowards(range, -1, range));
+            doFarmTask();
         }
 
         super.serverTick();
     }
 
-    private void makeFarmland() {
+    private void doFarmTask() {
         int stop = Math.min(currentIndex + range, positions.size());
         while (currentIndex < stop) {
-            BlockPos pos = positions.get(currentIndex);
-            UseOnContext context = new UseOnContext(FARM_PLAYER, InteractionHand.MAIN_HAND, new BlockHitResult(Vec3.atBottomCenterOf(pos), Direction.UP, pos, false));
-            HOE.getItemStack(this.getInventoryNN()).useOn(context);
-        }
-        if (stop == positions.size()) {
-            currentIndex = 0;
-        }
-    }
-
-    private void plantCrops() {
-        int stop = Math.min(currentIndex + range, positions.size());
-        while (currentIndex < stop) {
-            BlockPos pos = positions.get(currentIndex);
-            ItemStack seeds = getSeedForPos(pos);
-            UseOnContext context = new UseOnContext(FARM_PLAYER, InteractionHand.MAIN_HAND, new BlockHitResult(Vec3.atBottomCenterOf(pos), Direction.UP, pos, false));
-            seeds.useOn(context);
-        }
-        if (stop == positions.size()) {
-            currentIndex = 0;
-        }
-    }
-
-    private ItemStack getSeedForPos(BlockPos pos) {
-        //TODO
-        return NW.getItemStack(getInventoryNN());
-    }
-
-    private void harvestCrops() {
-        int stop = Math.min(currentIndex + range, positions.size());
-        while (currentIndex < stop) {
-            BlockPos pos = positions.get(currentIndex).above();
-            BlockState plant = getLevel().getBlockState(pos);
-            BlockEntity blockEntity = getLevel().getBlockEntity(pos);
-            if (plant.getBlock() instanceof CropBlock crop) {
-                if (crop.isMaxAge(plant)) {
-                    List<ItemStack> drops = Block.getDrops(plant, (ServerLevel) level, pos, blockEntity, FARM_PLAYER, plant.requiresCorrectToolForDrops() ? AXE.getItemStack(getInventoryNN()) : ItemStack.EMPTY);
-                    if (plant.requiresCorrectToolForDrops()) {
-                        AXE.getItemStack(getInventoryNN()).mineBlock(getLevel(), plant, pos, FARM_PLAYER);
-                    }
-                    getLevel().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+            BlockPos soil = positions.get(currentIndex);
+            for (FarmTask task: FarmTask.TASKS) {
+                if (task.farm(soil, this) == FarmInteraction.USED) {
+                    break;
                 }
             }
         }
         if (stop == positions.size()) {
             currentIndex = 0;
         }
+    }
+
+    public ItemStack getSeedForPos(BlockPos soil) {
+        //TODO
+        return NW.getItemStack(getInventoryNN());
     }
 
     @Override
@@ -201,5 +154,17 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity {
         for (BlockPos pos : BlockPos.betweenClosed(worldPosition.offset(-range,-1, -range), worldPosition.offset(range,-1,range))) {
             positions.add(pos.immutable()); //Need to make it immutable
         }
+    }
+
+    @Override
+    public void setRemoved() {
+        super.setRemoved();
+        ticket.invalidate();
+    }
+
+    public enum FarmInteraction {
+        USED,
+        BLOCKED,
+        IGNORED;
     }
 }

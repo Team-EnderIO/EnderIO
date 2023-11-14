@@ -6,6 +6,7 @@ import com.enderio.machines.common.blockentity.CrafterBlockEntity;
 import com.enderio.machines.common.blockentity.CreativePowerBlockEntity;
 import com.enderio.machines.common.blockentity.DrainBlockEntity;
 import com.enderio.machines.common.blockentity.EnchanterBlockEntity;
+import com.enderio.machines.common.blockentity.FarmBlockEntity;
 import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
 import com.enderio.machines.common.blockentity.ImpulseHopperBlockEntity;
 import com.enderio.machines.common.blockentity.PaintingMachineBlockEntity;
@@ -105,6 +106,7 @@ public class MachineBlockEntities {
 
     public static final BlockEntityEntry<SoulEngineBlockEntity> SOUL_ENGINE = register("soul_engine", SoulEngineBlockEntity::new, MachineBlocks.SOUL_ENGINE);
     public static final BlockEntityEntry<XPObeliskBlockEntity> XP_OBELISK = register("xp_obelisk", XPObeliskBlockEntity::new, MachineBlocks.XP_OBELISK);
+    public static final BlockEntityEntry<FarmBlockEntity> FARM = register("farm", FarmBlockEntity::new, MachineBlocks.FARM);
 
     @SafeVarargs
     private static <B extends BlockEntity> BlockEntityEntry<B> register(String name, BlockEntityBuilder.BlockEntityFactory<B> beFactory,

@@ -217,6 +217,9 @@ public class MachineBlocks {
         .build()
         .register();
 
+    public static final BlockEntry<ProgressMachineBlock> FARM = progressMachine("farm", () -> MachineBlockEntities.FARM)
+        .register();
+
     //used when single methods needs to be overridden in the block class
     private static <T extends MachineBlock> BlockBuilder<T, Registrate> baseMachine(BlockBuilder<T, Registrate> machineBlock,
         NonNullBiConsumer<DataGenContext<Block, T>, RegistrateBlockstateProvider> blockStateProvider) {
