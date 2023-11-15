@@ -17,7 +17,11 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityTeleportEvent;
@@ -120,25 +124,88 @@ public class TravelHandler {
     }
 
     public static Optional<Vec3> teleportPosition(Level level, Player player) {
-        Vec3 targetVec = player.position().add(0, player.getEyeHeight(), 0);
-        Vec3 lookVec = player.getLookAngle().normalize();
         @Nullable BlockPos target = null;
         double floorHeight = 0;
-        for (double i = BaseConfig.COMMON.ITEMS.TRAVELLING_BLINK_RANGE.get(); i >= 2; i -= 0.5) {
-            Vec3 v3d = targetVec.add(lookVec.scale(i));
-            target = new BlockPos((int) Math.round(v3d.x), (int) Math.round(v3d.y), (int) Math.round(v3d.z));
+
+        // inspired by Entity#pick
+        Vec3 playerPos = player.getEyePosition();
+        Vec3 lookVec = player.getLookAngle().normalize();
+        int range = BaseConfig.COMMON.ITEMS.TRAVELLING_BLINK_RANGE.get();
+        Vec3 toPos = playerPos.add(lookVec.scale(range));
+
+        ClipContext clipCtx = new ClipContext(playerPos, toPos, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, null);
+        BlockHitResult bhr = level.clip(clipCtx);
+
+        // process the result
+        if (bhr.getType() == HitResult.Type.MISS) {
+            target = bhr.getBlockPos();
+        } else if (bhr.getType() == HitResult.Type.BLOCK) {
+            Direction dir = bhr.getDirection();
+            if (dir == Direction.UP) {
+                // teleport the player *inside* the target block, then later push them up by the block's height
+                // warning: relies on the fact that isTeleportClear works with heights >= 1
+                target = bhr.getBlockPos();
+            } else if (dir == Direction.DOWN) {
+                target = bhr.getBlockPos().below((int) Math.ceil(player.getBbHeight()));
+            } else {
+                target = bhr.getBlockPos().offset(dir.getStepX(), 0, dir.getStepZ());
+                if (level.getBlockState(target).getCollisionShape(level, target).isEmpty()) {
+                    target = target.below();
+                }
+            }
+        }
+
+        // if target block is close, also try to teleport through
+        // eventually this distance should become configurable client-side
+        if (playerPos.distanceToSqr(bhr.getLocation()) < 9) {
+            // add small amount to make sure it starts at the correct block
+            Vec3 traverseFrom = bhr.getLocation().add(lookVec.scale(0.01));
+
+            // since we can't return null from the fail condition, instead use an invalid position
+            BlockPos failPosition = new BlockPos(0, Integer.MAX_VALUE, 0);
+
+            boolean aimingUp = lookVec.y > 0.5;
+
+            // can reuse same toPos and clipCtx because this traversal should be along the same line
+            BlockPos newTarget = BlockGetter.traverseBlocks(traverseFrom, toPos, clipCtx, (traverseCtx, traversePos) -> {
+                if (!aimingUp) {
+                    // check underneath first, since that's more likely to be where the player wants to teleport
+                    BlockPos checkBelow = traversalCheck(level, traversePos.below());
+                    if (checkBelow != null) {
+                        return checkBelow;
+                    }
+                }
+
+                return traversalCheck(level, traversePos);
+            }, (failCtx) -> failPosition);
+            if (newTarget != failPosition) {
+                target = newTarget.immutable();
+            }
+        }
+
+        if (target != null) {
             Optional<Double> ground = isTeleportPositionClear(level, target.below());
             if (ground.isPresent()) { //to use the same check as the anchors use the position below
                 floorHeight = ground.get();
-                break;
             } else {
                 target = null;
             }
         }
-        if (target == null) {
+
+        if (target == null || player.blockPosition().distManhattan(target) < 2) {
             return Optional.empty();
         }
         return Optional.of(Vec3.atBottomCenterOf(target).add(0, floorHeight, 0));
+    }
+
+    @Nullable
+    private static BlockPos traversalCheck(Level level, BlockPos traversePos) {
+        BlockState blockState = level.getBlockState(traversePos);
+        var collision = blockState.getCollisionShape(level, traversePos);
+        if (collision.isEmpty() && isTeleportPositionClear(level, traversePos.below()).isPresent()) {
+            return traversePos;
+        }
+        return null;
     }
 
     public static Optional<ITravelTarget> getAnchorTarget(Player player) {
@@ -202,16 +269,16 @@ public class TravelHandler {
             return Optional.empty();
         }
 
-        if (!level.getBlockState(target.above(2)).canOcclude()) {
-            BlockPos above = target.above();
-            double height = level.getBlockState(above).getCollisionShape(level, above).max(Direction.Axis.Y);
-            if (height > 0.2d && !level.getBlockState(target.above(3)).canOcclude() || height <=0.2d) {
-                if (height == Double.NEGATIVE_INFINITY) {
-                    height = 0;
-                }
+        BlockPos above = target.above();
+        double height = level.getBlockState(above).getCollisionShape(level, above).max(Direction.Axis.Y);
+        if (height <= 0.2d) {
+            return Optional.of(Math.max(height, 0));
+        }
 
-                return Optional.of(height);
-            }
+        above = above.above();
+        boolean noCollisionAbove = level.getBlockState(above).getCollisionShape(level, above).isEmpty();
+        if (noCollisionAbove) {
+            return Optional.of(Math.max(height, 0));
         }
 
         return Optional.empty();
