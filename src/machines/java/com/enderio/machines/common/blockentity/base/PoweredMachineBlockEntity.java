@@ -94,6 +94,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
             if (blockState.hasProperty(ProgressMachineBlock.POWERED) && blockState.getValue(ProgressMachineBlock.POWERED) != isActive()) {
                 if (updateModel) {
                     level.setBlock(getBlockPos(), blockState.setValue(ProgressMachineBlock.POWERED, isActive()), Block.UPDATE_ALL);
+                    updateMachineState(MachineState.ACTIVE, isActive());
                 }
                 updateModel = true;
             } else {
@@ -101,7 +102,6 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
             }
         }
 
-        updateMachineState(MachineState.ACTIVE, isActive());
         super.serverTick();
     }
 
