@@ -10,6 +10,7 @@ import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
+import com.enderio.machines.common.menu.FarmMenu;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.ItemTags;
@@ -43,9 +44,11 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity {
     public static final SingleSlotAccess NW = new SingleSlotAccess();
     public static final MultiSlotAccess BONEMEAL = new MultiSlotAccess();
     public static final MultiSlotAccess OUTPUT = new MultiSlotAccess();
-    public static final FakePlayer FARM_PLAYER = new FakePlayer(ServerLifecycleHooks.getCurrentServer().overworld(), new GameProfile(UUID.fromString(""), "enderio:farm"));
+    //TODO Move cause this isn't a good place imo
+    public static final FakePlayer FARM_PLAYER = new FakePlayer(ServerLifecycleHooks.getCurrentServer().overworld(), new GameProfile(UUID.fromString("7b2621b4-83fb-11ee-b962-0242ac120002"), "enderio:farm"));
     private List<BlockPos> positions;
     private int currentIndex = 0;
+    @Nullable
     private AABBTicket ticket;
 
     public FarmBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
@@ -133,7 +136,7 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity {
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
-        return null;
+        return new FarmMenu(this, playerInventory, containerId);
     }
 
     @Override
@@ -159,7 +162,9 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity {
     @Override
     public void setRemoved() {
         super.setRemoved();
-        ticket.invalidate();
+        if (this.ticket != null) {
+            ticket.invalidate();
+        }
     }
 
     public enum FarmInteraction {
