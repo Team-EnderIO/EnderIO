@@ -59,9 +59,10 @@ public class TravelStaffItem extends Item implements IMultiCapabilityItem, IAdva
     }
 
     private boolean tryPerformAction(Level level, Player player, ItemStack stack) {
-        if (hasResources(stack)) {
+        boolean isCreative = player.isCreative();
+        if (hasResources(stack) || isCreative) {
             if (performAction(level, player,stack)) {
-                if (!level.isClientSide()) {
+                if (!level.isClientSide() && !isCreative) {
                     consumeResources(stack);
                 }
 

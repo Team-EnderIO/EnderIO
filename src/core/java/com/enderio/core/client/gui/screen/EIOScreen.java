@@ -1,11 +1,13 @@
 package com.enderio.core.client.gui.screen;
 
 import com.enderio.api.misc.Vector2i;
+import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.enderio.core.common.menu.SyncedMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -45,9 +47,20 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
             oldEditBoxValues.put(editBox.getMessage().getString(), editBox.getValue());
         }
         editBoxList.clear();
+        Map<String, Boolean> oldEnums = new HashMap<>();
+        for (Renderable renderable: renderables) {
+            if (renderable instanceof EnumIconWidget<?,?> enumIconWidget) {
+                oldEnums.put(enumIconWidget.getOptionName().getString(), enumIconWidget.isExpanded());
+            }
+        }
         super.resize(pMinecraft, pWidth, pHeight);
         for (EditBox editBox : editBoxList) {
             editBox.setValue(oldEditBoxValues.getOrDefault(editBox.getMessage().getString(), ""));
+        }
+        for (Renderable renderable: renderables) {
+            if (renderable instanceof EnumIconWidget<?,?> enumIconWidget) {
+                enumIconWidget.setExpanded(oldEnums.getOrDefault(enumIconWidget.getOptionName().getString(), false));
+            }
         }
     }
 

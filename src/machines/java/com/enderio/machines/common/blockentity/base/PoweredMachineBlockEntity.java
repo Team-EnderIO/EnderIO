@@ -51,6 +51,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
 
     private ICapacitorData cachedCapacitorData = DefaultCapacitorData.NONE;
     private boolean capacitorCacheDirty;
+    private boolean updateModel = false;
 
     public PoweredMachineBlockEntity(EnergyIOMode energyIOMode, ICapacitorScalable capacity, ICapacitorScalable usageRate, BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
@@ -89,7 +90,12 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
         if (level != null) {
             BlockState blockState = getBlockState();
             if (blockState.hasProperty(ProgressMachineBlock.POWERED) && blockState.getValue(ProgressMachineBlock.POWERED) != isActive()) {
-                level.setBlock(getBlockPos(), blockState.setValue(ProgressMachineBlock.POWERED, isActive()), Block.UPDATE_ALL);
+                if (updateModel) {
+                    level.setBlock(getBlockPos(), blockState.setValue(ProgressMachineBlock.POWERED, isActive()), Block.UPDATE_ALL);
+                }
+                updateModel = true;
+            } else {
+                updateModel = false;
             }
         }
 
@@ -306,9 +312,10 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
         capacitorCacheDirty = false;
 
         // Don't do this on client side, client waits for the sync packet.
-        if (level.isClientSide()) {
-            return;
-        }
+        // TODO Do we want to sync with a packet cause right now we don't
+//        if (level.isClientSide()) {
+//            return;
+//        }
 
         MachineInventoryLayout layout = getInventoryLayout();
         if (requiresCapacitor() && layout != null) {
