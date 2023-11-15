@@ -3,6 +3,7 @@ package com.enderio.machines.common.blockentity;
 import com.enderio.api.capability.StoredEntityData;
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.FixedScalable;
+import com.enderio.api.capacitor.LinearScalable;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.network.slot.FluidStackNetworkDataSlot;
@@ -46,6 +47,10 @@ import static com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity.
 public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
 
     private static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.SOUL_ENGINE_CAPACITY);
+    public static final LinearScalable BURN_SPEED = new LinearScalable(CapacitorModifier.FIXED, MachinesConfig.COMMON.ENERGY.SOUL_ENGINE_BURN_SPEED);
+    //TODO capacitor increase efficiency
+    public static final LinearScalable GENERATION_SPEED = new LinearScalable(CapacitorModifier.FIXED, () -> 1);
+
     private static final String BURNED_TICKS = "BurnedTicks";
     private StoredEntityData entityData = StoredEntityData.empty();
     public static final int FLUID_CAPACITY = 2 * FluidType.BUCKET_VOLUME;
@@ -97,15 +102,25 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
     }
 
     public void producePower() {
-        if (burnedTicks == soulData.tickpermb()) {
-            if (!getFluidTankNN().isEmpty() && getEnergyStorage().addEnergy(soulData.powerpermb(), true) == soulData.powerpermb()) {
+        if (burnedTicks >= soulData.tickpermb()) {
+            int energy = (int) (soulData.powerpermb() * getGenerationRate());
+            if (!getFluidTankNN().isEmpty() && getEnergyStorage().addEnergy(energy, true) == energy) {
                 getFluidTankNN().drain(1, IFluidHandler.FluidAction.EXECUTE);
-                getEnergyStorage().addEnergy(soulData.powerpermb());
-                burnedTicks = 0;
+                getEnergyStorage().addEnergy(energy);
+                burnedTicks -= soulData.tickpermb();
             }
         } else {
-            burnedTicks ++;
+            burnedTicks += getBurnRate();
         }
+    }
+
+    public int getBurnRate() {
+        return BURN_SPEED.scaleI(this::getCapacitorData).get();
+    }
+
+    public float getGenerationRate() {
+        //TODO return GENERATION_SPEED.scaleF(this::getCapacitorData).get();
+        return MachinesConfig.COMMON.ENERGY.SOUL_ENGINE_BURN_SPEED.get();
     }
 
     @Override

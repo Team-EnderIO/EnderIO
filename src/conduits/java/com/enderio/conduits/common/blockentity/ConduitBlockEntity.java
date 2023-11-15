@@ -499,8 +499,12 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
         for (IConduitType<?> type : bundle.getTypes()) {
             NodeIdentifier<?> node = bundle.getNodeFor(type);
+            Optional<NodeIdentifier.IOState> state = Optional.empty();
+            if (node != null && side != null) {
+                state = node.getIOState(side);
+            }
             var proxiedCap = type.proxyCapability(cap,
-                node == null ? type.createExtendedConduitData(level, getBlockPos()).cast() : node.getExtendedConduitData().cast(), side);
+                node == null ? type.createExtendedConduitData(level, getBlockPos()).cast() : node.getExtendedConduitData().cast(), level, worldPosition, side, state);
 
             if (proxiedCap.isPresent()) {
                 return proxiedCap.get();

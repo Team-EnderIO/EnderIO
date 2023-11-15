@@ -34,6 +34,8 @@ public class EnergyConfig {
     public final ForgeConfigSpec.ConfigValue<Integer> WIRED_CHARGER_CAPACITY;
     public final ForgeConfigSpec.ConfigValue<Integer> WIRED_CHARGER_USAGE;
     public final ForgeConfigSpec.ConfigValue<Integer> SOUL_ENGINE_CAPACITY;
+    public final ForgeConfigSpec.ConfigValue<Integer> SOUL_ENGINE_BURN_SPEED;
+    public final ForgeConfigSpec.ConfigValue<Double> SOUL_ENGINE_GENERATION;
     public final ForgeConfigSpec.ConfigValue<Integer> DRAIN_CAPACITY;
     public final ForgeConfigSpec.ConfigValue<Integer> DRAIN_USAGE;
 
@@ -93,8 +95,7 @@ public class EnergyConfig {
         builder.push("paintingMachine");
             PAINTING_MACHINE_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 64_000, 1, Integer.MAX_VALUE);
             PAINTING_MACHINE_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage", 30, 1, Integer.MAX_VALUE);
-            PAINTING_MACHINE_ENERGY_COST = builder.comment("The energy required for each painting operation")
-                .defineInRange("energyCost", 2_400, 1, Integer.MAX_VALUE);
+            PAINTING_MACHINE_ENERGY_COST = builder.comment("The energy required for each painting operation").defineInRange("energyCost", 2_400, 1, Integer.MAX_VALUE);
         builder.pop();
 
         builder.push("photovoltaicCellRates");
@@ -116,14 +117,16 @@ public class EnergyConfig {
             WIRED_CHARGER_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage", 64, 1, Integer.MAX_VALUE);
         builder.pop();
 
-        builder.push("mob_generator");
+        builder.push("soul_engine");
             SOUL_ENGINE_CAPACITY = builder.defineInRange("capacity",100000, 1, Integer.MAX_VALUE);
+            SOUL_ENGINE_BURN_SPEED = builder.comment("The base burn-rate the soul engine.").defineInRange("burnSpeed", 1, 1, Integer.MAX_VALUE);
+            SOUL_ENGINE_GENERATION = builder.comment("Percentage increase in uI produced.").defineInRange("generation", 1.0, 0.001, Double.MAX_VALUE);
+
         builder.pop();
 
         builder.push("drain");
             DRAIN_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 64_000, 1, Integer.MAX_VALUE);
             DRAIN_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage",  10, 1, Integer.MAX_VALUE);
-
         builder.pop();
 
         builder.pop();

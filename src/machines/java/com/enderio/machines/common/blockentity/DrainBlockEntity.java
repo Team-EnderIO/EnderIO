@@ -101,44 +101,48 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
     }
 
     public void drainFluids() {
-        if (currentIndex >= positions.size()) {
-            currentIndex--;
-        }
-        BlockPos pos = positions.get(currentIndex);
-
-        //Skip, as this is the last checked block
-        if (pos.equals(worldPosition.below()) && positions.size() != 1) {
-            currentIndex++;
-            return;
-        }
-
-        //Last block, so reset
-        if (currentIndex + 1 == positions.size()) {
-            if (!fluidFound) {
-                pos = worldPosition.below(); //No fluids found, so consume the last block under the drain
-            } else {
-                currentIndex = 0;
-                fluidFound = false;
+        int stop = Math.min(currentIndex + range, positions.size());
+        while (currentIndex < stop) {
+            if (currentIndex >= positions.size()) {
+                currentIndex--;
             }
-        }
+            BlockPos pos = positions.get(currentIndex);
 
-        //Not a valid fluid
-        FluidState fluidState = level.getFluidState(pos);
-        if (fluidState.isEmpty() || !fluidState.isSource() || !getFluidTankNN().isFluidValid(new FluidStack(fluidState.getType(),1))) {
-            currentIndex++;
-            return;
-        }
-
-        //Fluid found, try to consume it
-        fluidFound = true;
-        if (getFluidTankNN().fill(new FluidStack(fluidState.getType(), FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.SIMULATE) == FluidType.BUCKET_VOLUME) {
-            if (consumed >= ENERGY_PER_BUCKET) {
-                level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
-                getFluidTankNN().fill(new FluidStack(fluidState.getType(), FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.EXECUTE);
-                consumed -= ENERGY_PER_BUCKET;
+            //Skip, as this is the last checked block
+            if (pos.equals(worldPosition.below()) && positions.size() != 1) {
                 currentIndex++;
-            } else {
-                consumed += getEnergyStorage().consumeEnergy(ENERGY_PER_BUCKET - consumed, false);
+                continue;
+            }
+
+            //Last block, so reset
+            if (currentIndex + 1 == positions.size()) {
+                if (!fluidFound) {
+                    pos = worldPosition.below(); //No fluids found, so consume the last block under the drain
+                } else {
+                    currentIndex = 0;
+                    fluidFound = false;
+                }
+            }
+
+            //Not a valid fluid
+            FluidState fluidState = level.getFluidState(pos);
+            if (fluidState.isEmpty() || !fluidState.isSource() || !getFluidTankNN().isFluidValid(new FluidStack(fluidState.getType(),1))) {
+                currentIndex++;
+                continue;
+            }
+
+            //Fluid found, try to consume it
+            fluidFound = true;
+            if (getFluidTankNN().fill(new FluidStack(fluidState.getType(), FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.SIMULATE) == FluidType.BUCKET_VOLUME) {
+                if (consumed >= ENERGY_PER_BUCKET) {
+                    level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+                    getFluidTankNN().fill(new FluidStack(fluidState.getType(), FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.EXECUTE);
+                    consumed -= ENERGY_PER_BUCKET;
+                    currentIndex++;
+                } else {
+                    consumed += getEnergyStorage().consumeEnergy(ENERGY_PER_BUCKET - consumed, false);
+                }
+                return;
             }
         }
     }
