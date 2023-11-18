@@ -12,7 +12,6 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
@@ -136,26 +135,34 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
         FluidStack resourceLeft = resource.copy();
         int totalFilled = 0;
 
-        for (IFluidTank tank : tanks) {
+        for (int index = 0; index < tanks.size(); index++) {
             // Attempt to fill the tank
-            int filled = tank.fill(resourceLeft, action);
+            int filled = tanks.get(index).fill(resourceLeft, action);
             resourceLeft.shrink(filled);
             totalFilled += filled;
+
+            if (filled > 0) {
+                onContentsChanged(index);
+            }
 
             // If we used up all the resource, stop trying.
             if (resourceLeft.isEmpty()) {
                 break;
             }
-        }
 
+        }
         return totalFilled;
     }
 
     @Override
     public FluidStack drain(FluidStack resource, FluidAction action) {
-        for (IFluidTank tank : tanks) {
-            if (tank.drain(resource, FluidAction.SIMULATE) != FluidStack.EMPTY) {
-                return tank.drain(resource, action);
+        for (int index = 0; index < tanks.size(); index++) {
+            if (tanks.get(index).drain(resource, FluidAction.SIMULATE) != FluidStack.EMPTY) {
+                FluidStack drained = tanks.get(index).drain(resource, action);
+                if (!drained.isEmpty()) {
+                    onContentsChanged(index);
+                }
+                return drained;
             }
         }
 
@@ -164,9 +171,13 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
 
     @Override
     public FluidStack drain(int maxDrain, FluidAction action) {
-        for (IFluidTank tank : tanks) {
-            if (tank.drain(maxDrain, FluidAction.SIMULATE) != FluidStack.EMPTY) {
-                return tank.drain(maxDrain, action);
+        for (int index = 0; index < tanks.size(); index++) {
+            if (tanks.get(index).drain(maxDrain, FluidAction.SIMULATE) != FluidStack.EMPTY) {
+                FluidStack drained = tanks.get(index).drain(maxDrain, action);
+                if (!drained.isEmpty()) {
+                    onContentsChanged(index);
+                }
+                return drained;
             }
         }
 
