@@ -11,7 +11,9 @@ import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.FixedIOConfig;
-import com.enderio.machines.common.io.fluid.MachineFluidTank;
+import com.enderio.machines.common.io.fluid.MachineTank;
+import com.enderio.machines.common.io.fluid.MachineTankLayout;
+import com.enderio.machines.common.io.fluid.TankAccess;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.menu.DrainMenu;
 import net.minecraft.core.BlockPos;
@@ -29,7 +31,6 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
     public static final String CONSUMED = "Consumed";
     private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.DRAIN_CAPACITY);
     private static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.DRAIN_USAGE);
+    private static final TankAccess TANK = new TankAccess();
     private static final int CAPACITY = 3 * FluidType.BUCKET_VOLUME;
     private static final int ENERGY_PER_BUCKET = 1_500;
     private List<BlockPos> positions;
@@ -50,7 +52,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
     public DrainBlockEntity(BlockEntityType<?> type,
         BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE, type, worldPosition, blockState);
-        addDataSlot(new FluidStackNetworkDataSlot(getFluidTankNN()::getFluid, getFluidTankNN()::setFluid));
+        addDataSlot(new FluidStackNetworkDataSlot(() -> TANK.getFluid(this), fluid -> TANK.setFluid(this, fluid)));
 
         this.range = 5;
 
@@ -71,6 +73,15 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
         return MachineInventoryLayout.builder()
             .capacitor()
             .build();
+    }
+
+    @Override
+    public @Nullable MachineTankLayout getTankLayout() {
+        return MachineTankLayout.builder().tank(TANK, CAPACITY, f -> type.isSame(f.getFluid())).build();
+    }
+
+    public MachineTank getFluidTank() {
+        return getFluidHandler().getTank(TANK.getIndex());
     }
 
     @Override
@@ -97,7 +108,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
             return false;
         }
         type = fluidState.getType();
-        return getFluidTankNN().fill(new FluidStack(type, FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.SIMULATE) == FluidType.BUCKET_VOLUME;
+        return TANK.fill(this, new FluidStack(type, FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.SIMULATE) == FluidType.BUCKET_VOLUME;
     }
 
     public void drainFluids() {
@@ -126,17 +137,17 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
 
             //Not a valid fluid
             FluidState fluidState = level.getFluidState(pos);
-            if (fluidState.isEmpty() || !fluidState.isSource() || !getFluidTankNN().isFluidValid(new FluidStack(fluidState.getType(),1))) {
+            if (fluidState.isEmpty() || !fluidState.isSource() || !TANK.isFluidValid(this, new FluidStack(fluidState.getType(), 1))) {
                 currentIndex++;
                 continue;
             }
 
             //Fluid found, try to consume it
             fluidFound = true;
-            if (getFluidTankNN().fill(new FluidStack(fluidState.getType(), FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.SIMULATE) == FluidType.BUCKET_VOLUME) {
+            if (TANK.fill(this, new FluidStack(fluidState.getType(), FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.SIMULATE) == FluidType.BUCKET_VOLUME) {
                 if (consumed >= ENERGY_PER_BUCKET) {
                     level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
-                    getFluidTankNN().fill(new FluidStack(fluidState.getType(), FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.EXECUTE);
+                    TANK.fill(this, new FluidStack(fluidState.getType(), FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.EXECUTE);
                     consumed -= ENERGY_PER_BUCKET;
                     currentIndex++;
                 } else {
@@ -180,11 +191,6 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
         for (BlockPos pos : BlockPos.betweenClosed(worldPosition.offset(-range,-range*2 - 1,-range), worldPosition.offset(range,-1,range))) {
             positions.add(pos.immutable()); //Need to make it immutable
         }
-    }
-
-    @Override
-    protected @Nullable FluidTank createFluidTank() {
-        return new MachineFluidTank(CAPACITY, f-> type.isSame(f.getFluid()),this);
     }
 
     @Nullable

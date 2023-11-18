@@ -11,7 +11,10 @@ import com.enderio.core.common.network.slot.ResourceLocationNetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
-import com.enderio.machines.common.io.fluid.MachineFluidTank;
+import com.enderio.machines.common.io.fluid.MachineFluidHandler;
+import com.enderio.machines.common.io.fluid.MachineTank;
+import com.enderio.machines.common.io.fluid.MachineTankLayout;
+import com.enderio.machines.common.io.fluid.TankAccess;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.menu.SoulEngineMenu;
 import com.enderio.machines.common.souldata.EngineSoul;
@@ -33,7 +36,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
@@ -54,6 +56,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
     private static final String BURNED_TICKS = "BurnedTicks";
     private StoredEntityData entityData = StoredEntityData.empty();
     public static final int FLUID_CAPACITY = 2 * FluidType.BUCKET_VOLUME;
+    private static final TankAccess TANK = new TankAccess();
     @Nullable
     private EngineSoul.SoulData soulData;
     private int burnedTicks = 0;
@@ -64,7 +67,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
         BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO, type, worldPosition, blockState);
         addDataSlot(new ResourceLocationNetworkDataSlot(() -> this.getEntityType().orElse(NO_MOB),this::setEntityType));
-        addDataSlot(new FluidStackNetworkDataSlot(getFluidTankNN()::getFluid, getFluidTankNN()::setFluid));
+        addDataSlot(new FluidStackNetworkDataSlot(() -> TANK.getFluid(this), f -> TANK.setFluid(this, f)));
     }
 
     @Override
@@ -72,6 +75,11 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
         return MachineInventoryLayout.builder()
             .capacitor()
             .build();
+    }
+
+    @Override
+    public @Nullable MachineTankLayout getTankLayout() {
+        return MachineTankLayout.builder().tank(TANK, FLUID_CAPACITY, isFluidValid()).build();
     }
 
     @Override
@@ -98,14 +106,14 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
 
     @Override
     protected boolean isActive() {
-        return canAct() && getFluidTankNN().getFluidAmount() > 0;
+        return canAct() && TANK.getFluidAmount(this) > 0;
     }
 
     public void producePower() {
         if (burnedTicks >= soulData.tickpermb()) {
             int energy = (int) (soulData.powerpermb() * getGenerationRate());
-            if (!getFluidTankNN().isEmpty() && getEnergyStorage().addEnergy(energy, true) == energy) {
-                getFluidTankNN().drain(1, IFluidHandler.FluidAction.EXECUTE);
+            if (!TANK.getFluid(this).isEmpty() && getEnergyStorage().addEnergy(energy, true) == energy) {
+                TANK.drain(this, 1, IFluidHandler.FluidAction.EXECUTE);
                 getEnergyStorage().addEnergy(energy);
                 burnedTicks -= soulData.tickpermb();
             }
@@ -124,19 +132,19 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
-    protected @Nullable FluidTank createFluidTank() {
-        return new MachineFluidTank(FLUID_CAPACITY, isFluidValid(), this) {
+    protected @Nullable MachineFluidHandler createFluidHandler(MachineTankLayout layout) {
+        return new MachineFluidHandler(getIOConfig(), getTankLayout()) {
             @Override
-            protected void onContentsChanged() {
-                super.onContentsChanged();
+            protected void onContentsChanged(int slot) {
+                super.onContentsChanged(slot);
                 setChanged();
             }
 
             @Override
             public int fill(FluidStack resource, FluidAction action) {
                 // Convert into tagged fluid
-                if (this.isFluidValid(resource)) {
-                    var currentFluid = this.getFluid().getFluid();
+                if (TANK.isFluidValid(this, resource)) {
+                    var currentFluid = TANK.getFluid(this).getFluid();
                     if (currentFluid == Fluids.EMPTY || resource.getFluid().isSame(currentFluid)) {
                         return super.fill(resource, action);
                     } else {
@@ -171,6 +179,10 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
             return false;
         };
 
+    }
+
+    public MachineTank getFluidTank() {
+        return getFluidHandler().getTank(TANK.getIndex());
     }
 
     @Nullable

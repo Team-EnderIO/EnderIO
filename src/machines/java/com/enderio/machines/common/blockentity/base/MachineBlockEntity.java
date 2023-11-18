@@ -400,7 +400,6 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         return new MachineFluidHandler(getIOConfig(), layout) {
             @Override
             protected void onContentsChanged(int slot) {
-                super.onContentsChanged(slot);
                 onTankContentsChanged(slot);
                 setChanged();
             }

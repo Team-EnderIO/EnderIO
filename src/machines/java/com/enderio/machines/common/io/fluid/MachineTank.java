@@ -44,6 +44,10 @@ public class MachineTank implements IFluidTank {
         return fluid;
     }
 
+    public void setFluid(FluidStack fluid) {
+        this.fluid = fluid;
+    }
+
     @Override
     public int getFluidAmount() {
         return fluid.getAmount();
@@ -55,7 +59,7 @@ public class MachineTank implements IFluidTank {
     }
 
     public int fill(FluidStack resource, IFluidHandler.FluidAction action) {
-        if (!canInsert || resource.isEmpty()) {
+        if (!canInsert || resource.isEmpty()) { // TODO: Should canInsert/canExtract be moved to handler?
             return 0;
         }
         if (action.simulate()) {

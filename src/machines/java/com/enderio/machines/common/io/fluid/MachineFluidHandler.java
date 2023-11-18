@@ -53,13 +53,14 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
     }
 
     //Not a good idea to use this method. Tank Access should be the way to access tanks
-    public final IFluidTank getTank(int tank) {
+    @Deprecated
+    public final MachineTank getTank(int tank) {
         return tanks.get(tank);
     }
 
     @Override
     public int getTanks() {
-        return tanks.size();
+        return layout.getTankCount();
     }
 
     @Override
@@ -67,9 +68,13 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
         return tanks.get(tank).getFluid();
     }
 
+    public void setFluidInTank(int tank, FluidStack fluid) {
+        tanks.get(tank).setFluid(fluid);
+    }
+
     @Override
     public int getTankCapacity(int tank) {
-        return tanks.get(tank).getCapacity();
+        return layout.getTankCapacity(tank);
     }
 
     @Override

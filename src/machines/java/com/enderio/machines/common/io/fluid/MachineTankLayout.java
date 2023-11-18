@@ -55,6 +55,13 @@ public class MachineTankLayout {
     public static class Builder {
         private final ArrayList<TankConfig> tanks = new ArrayList<>();
 
+        public Builder tank(TankAccess access, int capacity) {
+            return tank(access, capacity, t -> true);
+        }
+
+        public Builder tank(TankAccess access, int capacity, Predicate<FluidStack> filter) {
+            return tank(access, capacity, true, true, filter);
+        }
         public Builder tank(TankAccess access, int capacity, boolean canInsert, boolean canExtract, Predicate<FluidStack> filter) {
             tanks.add(new TankConfig(capacity, canInsert, canExtract, filter));
             access.init(tanks.size() - 1);

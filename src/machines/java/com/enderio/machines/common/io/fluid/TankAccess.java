@@ -8,12 +8,44 @@ public class TankAccess {
 
     private int index = Integer.MIN_VALUE;
 
-    public FluidStack getFluid(MachineBlockEntity blockEntity) {
-        return getFluid(blockEntity.getFluidHandler());
+    public int getCapacity(MachineBlockEntity machine) {
+        return getCapacity(machine.getFluidHandler());
+    }
+
+    public int getCapacity(MachineFluidHandler fluidHandler) {
+        return fluidHandler.getTankCapacity(index);
+    }
+
+    public FluidStack getFluid(MachineBlockEntity machine) {
+        return getFluid(machine.getFluidHandler());
     }
 
     public FluidStack getFluid(MachineFluidHandler handler) {
         return handler.getFluidInTank(index);
+    }
+
+    public int getFluidAmount(MachineBlockEntity machine) {
+        return getFluid(machine).getAmount();
+    }
+
+    public int getFluidAmount(MachineFluidHandler handler) {
+        return getFluid(handler).getAmount();
+    }
+
+    public void setFluid(MachineBlockEntity machine, FluidStack fluid) {
+        setFluid(machine.getFluidHandler(), fluid);
+    }
+
+    public void setFluid(MachineFluidHandler handler, FluidStack fluid) {
+        handler.setFluidInTank(index, fluid);
+    }
+
+    public boolean isFluidValid(MachineBlockEntity machine, FluidStack fluid) {
+        return isFluidValid(machine.getFluidHandler(), fluid);
+    }
+
+    public boolean isFluidValid(MachineFluidHandler handler, FluidStack fluid) {
+        return handler.isFluidValid(index, fluid);
     }
 
     public int fill(MachineFluidHandler handler, FluidStack stack, IFluidHandler.FluidAction action) {
