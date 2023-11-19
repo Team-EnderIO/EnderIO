@@ -12,7 +12,9 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.PumpkinBlock;
 import net.minecraft.world.level.block.StemBlock;
+import net.minecraft.world.level.block.StemGrownBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -33,10 +35,12 @@ public interface FarmTask {
             return FarmInteraction.BLOCKED;
         }
         if (seeds.getItem() instanceof BlockItem blockItem && (blockItem.getBlock() instanceof CropBlock || blockItem.getBlock() instanceof StemBlock)) {
-            UseOnContext context = new UseOnContext(FARM_PLAYER, InteractionHand.MAIN_HAND, new BlockHitResult(Vec3.atBottomCenterOf(soil), Direction.UP, soil, false));
 
             //Try plant
+            FARM_PLAYER.setItemInHand(InteractionHand.MAIN_HAND, seeds);
+            UseOnContext context = new UseOnContext(FARM_PLAYER, InteractionHand.MAIN_HAND, new BlockHitResult(Vec3.atBottomCenterOf(soil), Direction.UP, soil, false));
             InteractionResult result = seeds.useOn(context);
+            FARM_PLAYER.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
             if (result == InteractionResult.SUCCESS || result == InteractionResult.CONSUME) {
                 //TODO  consume energy
                 return FarmInteraction.USED;
@@ -47,14 +51,20 @@ public interface FarmTask {
             if (itemStack.isEmpty()) {
                 return FarmInteraction.BLOCKED;
             }
+            FARM_PLAYER.setItemInHand(InteractionHand.MAIN_HAND, itemStack);
+            context = new UseOnContext(FARM_PLAYER, InteractionHand.MAIN_HAND, new BlockHitResult(Vec3.atBottomCenterOf(soil), Direction.UP, soil, false));
             result = itemStack.useOn(context);
+            FARM_PLAYER.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
             if (result == InteractionResult.SUCCESS || result == InteractionResult.CONSUME) {
                 //TODO  consume energy
                 return FarmInteraction.USED;
             }
 
             //Try plant again
+            FARM_PLAYER.setItemInHand(InteractionHand.MAIN_HAND, seeds);
+            context = new UseOnContext(FARM_PLAYER, InteractionHand.MAIN_HAND, new BlockHitResult(Vec3.atBottomCenterOf(soil), Direction.UP, soil, false));
             result = seeds.useOn(context);
+            FARM_PLAYER.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
             if (result == InteractionResult.FAIL || result == InteractionResult.PASS) {
                 return FarmInteraction.IGNORED;
             }
@@ -85,11 +95,31 @@ public interface FarmTask {
         return FarmInteraction.IGNORED;
     };
 
+    FarmTask HARVEST_STEMCROPS = (soil, farmBlockEntity) -> {
+        BlockPos pos = soil.above();
+        BlockState plant = farmBlockEntity.getLevel().getBlockState(pos);
+        BlockEntity blockEntity = farmBlockEntity.getLevel().getBlockEntity(pos);
+        if (plant.getBlock() instanceof StemGrownBlock) {
+            List<ItemStack> drops = Block.getDrops(plant, (ServerLevel) farmBlockEntity.getLevel(), pos, blockEntity, FARM_PLAYER, plant.requiresCorrectToolForDrops() ? AXE.getItemStack(farmBlockEntity.getInventory()) : ItemStack.EMPTY);
+            if (plant.requiresCorrectToolForDrops()) {
+                if (AXE.getItemStack(farmBlockEntity.getInventory()).isEmpty()) {
+                    return FarmInteraction.BLOCKED;
+                }
+                AXE.getItemStack(farmBlockEntity.getInventory()).mineBlock(farmBlockEntity.getLevel(), plant, pos, FARM_PLAYER);
+            }
+            farmBlockEntity.getLevel().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+            //TODO  consume energy
+            return FarmInteraction.USED;
+        }
+        return FarmInteraction.IGNORED;
+    };
+
     //TODO Move to api file
     ArrayList<FarmTask> TASKS = Util.make(() -> {
         ArrayList<FarmTask> list = new ArrayList<>();
         list.add(PLANT_CROP);
         list.add(HARVEST_CROP);
+        list.add(HARVEST_STEMCROPS);
         return list;
     });
 }

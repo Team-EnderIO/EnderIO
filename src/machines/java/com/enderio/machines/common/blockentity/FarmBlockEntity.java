@@ -118,9 +118,21 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity {
         }
     }
 
+    //TODO check if the coords actually are these direction
     public ItemStack getSeedForPos(BlockPos soil) {
-        //TODO
-        return NW.getItemStack(getInventoryNN());
+        if (soil.getX() >= getBlockPos().getX() && soil.getZ() > getBlockPos().getZ()){
+            return NW.getItemStack(getInventoryNN());
+        }
+        if (soil.getX() > getBlockPos().getX() && soil.getZ() <= getBlockPos().getZ()){
+            return SW.getItemStack(getInventoryNN());
+        }
+        if (soil.getX() <= getBlockPos().getX() && soil.getZ() < getBlockPos().getZ()){
+            return SE.getItemStack(getInventoryNN());
+        }
+        if (soil.getX() < getBlockPos().getX() && soil.getZ() >= getBlockPos().getZ()){
+            return NE.getItemStack(getInventoryNN());
+        }
+        return ItemStack.EMPTY;
     }
 
     @Override
@@ -164,6 +176,11 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity {
         if (this.ticket != null) {
             ticket.invalidate();
         }
+    }
+
+    public boolean collectDrops(List<ItemStack> drops, @Nullable BlockPos soil) {
+        
+        return true;
     }
 
     public enum FarmInteraction {
