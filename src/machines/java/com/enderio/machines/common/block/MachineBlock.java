@@ -1,5 +1,6 @@
 package com.enderio.machines.common.block;
 
+import com.enderio.base.common.tag.EIOTags;
 import com.enderio.core.common.compat.FlywheelCompat;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
@@ -93,6 +94,13 @@ public class MachineBlock extends BaseEntityBlock {
         BlockEntity entity = level.getBlockEntity(pos);
         if (!(entity instanceof MachineBlockEntity machineBlockEntity)) { // This also covers nulls
             return InteractionResult.PASS;
+        }
+
+        if (player.getItemInHand(hand).is(EIOTags.Items.WRENCH)) {
+            InteractionResult res = machineBlockEntity.onWrenched(player, hit.getDirection());
+            if (res != InteractionResult.PASS) {
+                return res;
+            }
         }
 
         //pass on the use command to corresponding block entity.

@@ -16,6 +16,7 @@ import com.enderio.base.common.init.EIOMenus;
 import com.enderio.base.common.init.EIOPackets;
 import com.enderio.base.common.init.EIOParticles;
 import com.enderio.base.common.init.EIORecipes;
+import com.enderio.base.common.integrations.EnderIOWrenchCompat;
 import com.enderio.base.common.integrations.EnderIOSelfIntegration;
 import com.enderio.base.common.item.tool.SoulVialItem;
 import com.enderio.base.common.lang.EIOLang;
@@ -116,6 +117,8 @@ public class EnderIO {
         EIOLootModifiers.register();
         EIOParticles.register();
         EIOEntities.register();
+
+        MinecraftForge.EVENT_BUS.register(EnderIOWrenchCompat.class);
 
         // Run datagen after registrate is finished.
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
