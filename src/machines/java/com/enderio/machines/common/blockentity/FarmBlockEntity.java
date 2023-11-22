@@ -13,13 +13,16 @@ import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.FarmMenu;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.ticket.AABBTicket;
 import net.minecraftforge.common.util.FakePlayer;
@@ -31,8 +34,9 @@ import java.util.List;
 import java.util.UUID;
 
 public class FarmBlockEntity extends PoweredMachineBlockEntity {
-    private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.DRAIN_CAPACITY);
-    private static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.DRAIN_USAGE);
+    public static final String CONSUMED = "Consumed";
+    private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.FARM_CAPACITY);
+    private static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.FARM_USAGE);
     public static final SingleSlotAccess AXE = new SingleSlotAccess();
     public static final SingleSlotAccess HOE = new SingleSlotAccess();
     public static final SingleSlotAccess SHEAR = new SingleSlotAccess();
@@ -46,6 +50,9 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity {
     public static final FakePlayer FARM_PLAYER = new FakePlayer(ServerLifecycleHooks.getCurrentServer().overworld(), new GameProfile(UUID.fromString("7b2621b4-83fb-11ee-b962-0242ac120002"), "enderio:farm"));
     private List<BlockPos> positions;
     private int currentIndex = 0;
+    private int consumed = 0;
+    @Nullable
+    private FarmTask currentTask = null;
     @Nullable
     private AABBTicket ticket;
 
@@ -106,33 +113,51 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity {
         int stop = Math.min(currentIndex + range, positions.size());
         while (currentIndex < stop) {
             BlockPos soil = positions.get(currentIndex);
+            if (currentTask != null) {
+                if (currentTask.farm(soil, this) != FarmInteraction.POWERED) {
+                    currentTask = null; //Task is done or no longer valid
+                }
+                break;
+            }
+            //Look for a new task
             for (FarmTask task: FarmTask.TASKS) {
-                if (task.farm(soil, this) == FarmInteraction.USED) {
+                FarmInteraction interaction = task.farm(soil, this);
+                if (interaction == FarmInteraction.POWERED) { //new task found
+                    currentTask = task;
+                    break;
+                }
+                if (interaction == FarmInteraction.FINISHED) {//Task found and already done
+                    currentTask = null;
                     break;
                 }
             }
+            //task found
+            if (currentTask != null) {
+                break;
+            }
             currentIndex++;
         }
+        //All positions have been checked, restart
         if (stop == positions.size()) {
             currentIndex = 0;
         }
     }
 
     //TODO check if the coords actually are these direction
-    public ItemStack getSeedForPos(BlockPos soil) {
+    public SingleSlotAccess getSeedForPos(BlockPos soil) {
         if (soil.getX() >= getBlockPos().getX() && soil.getZ() > getBlockPos().getZ()){
-            return NW.getItemStack(getInventoryNN());
+            return NW;
         }
         if (soil.getX() > getBlockPos().getX() && soil.getZ() <= getBlockPos().getZ()){
-            return SW.getItemStack(getInventoryNN());
+            return SW;
         }
         if (soil.getX() <= getBlockPos().getX() && soil.getZ() < getBlockPos().getZ()){
-            return SE.getItemStack(getInventoryNN());
+            return SE;
         }
         if (soil.getX() < getBlockPos().getX() && soil.getZ() >= getBlockPos().getZ()){
-            return NE.getItemStack(getInventoryNN());
+            return NE;
         }
-        return ItemStack.EMPTY;
+        return NW;
     }
 
     @Override
@@ -157,6 +182,11 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
+    public BlockPos getParticleLocation() {
+        return worldPosition.below();
+    }
+
+    @Override
     public void onLoad() {
         super.onLoad();
         updateLocations();
@@ -178,13 +208,64 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity {
         }
     }
 
-    public boolean collectDrops(List<ItemStack> drops, @Nullable BlockPos soil) {
-        
-        return true;
+    //TODO handle inv full
+    public void collectDrops(List<ItemStack> drops, @Nullable BlockPos soil) {
+        for (ItemStack drop : drops) {
+            if (soil != null) {
+                ItemStack seeds = getSeedForPos(soil).getItemStack(this);
+                if (seeds.isEmpty()) {
+                    if (drop.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof IPlantable) {
+                        getSeedForPos(soil).setStackInSlot(this, drop);
+                        continue;
+                    }
+                }
+                if (ItemStack.isSameItem(drop, seeds)) {
+                    int leftOver = seeds.getMaxStackSize() - seeds.getCount();
+                    if (drop.getCount() > leftOver) {
+                        seeds.setCount(seeds.getMaxStackSize());
+                        drop.shrink(leftOver);
+                    } else {
+                        seeds.setCount(seeds.getCount() + drop.getCount());
+                        drop.setCount(0);
+                        continue;
+                    }
+                }
+            }
+            for (int i = 0; i < 6; i++) {
+                ItemStack leftOver = OUTPUT.get(i).insertItem(this, drop.copy(), false);
+                if (leftOver.isEmpty()) {
+                    drop.setCount(0);
+                    break;
+                } else {
+                    drop.setCount(leftOver.getCount());
+                }
+            }
+        }
+    }
+
+    public int getConsumedPower() {
+        return consumed;
+    }
+
+    public int setConsumedPower(int power) {
+        return consumed = power;
+    }
+
+    @Override
+    public void saveAdditional(CompoundTag pTag) {
+        super.saveAdditional(pTag);
+        pTag.putInt(CONSUMED, consumed);
+    }
+
+    @Override
+    public void load(CompoundTag pTag) {
+        super.load(pTag);
+        consumed = pTag.getInt(CONSUMED);
     }
 
     public enum FarmInteraction {
-        USED,
+        FINISHED,
+        POWERED,
         BLOCKED,
         IGNORED;
     }
