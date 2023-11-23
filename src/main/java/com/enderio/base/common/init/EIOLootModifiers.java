@@ -2,8 +2,6 @@ package com.enderio.base.common.init;
 
 import com.enderio.EnderIO;
 import com.enderio.base.common.enchantment.AutoSmeltModifier;
-import com.enderio.base.common.item.darksteel.upgrades.direct.DirectUpgradeLootCondition;
-import com.enderio.base.common.item.darksteel.upgrades.direct.DirectUpgradeLootModifier;
 import com.enderio.base.common.loot.BrokenSpawnerLootModifier;
 import com.enderio.base.common.loot.ChestLootModifier;
 import com.enderio.base.common.loot.SetLootCapacitorFunction;
@@ -27,10 +25,7 @@ public class EIOLootModifiers {
 
     public static RegistryObject<Codec<AutoSmeltModifier>> AUTO_SMELT = SERIALIZERS.register("auto_smelt", AutoSmeltModifier.CODEC);
     public static RegistryObject<Codec<BrokenSpawnerLootModifier>> BROKEN_SPAWNER_SERIALIZER = SERIALIZERS.register("broken_spawner", BrokenSpawnerLootModifier.CODEC);
-    public static RegistryObject<Codec<DirectUpgradeLootModifier>> DIRECT_UPGRADE_SERIALIZER = SERIALIZERS.register("direct_upgrade", DirectUpgradeLootModifier.CODEC);
     public static RegistryObject<Codec<ChestLootModifier>> CHEST_LOOT = SERIALIZERS.register("chest_loot", ChestLootModifier.CODEC);
-
-    public static RegistryObject<LootItemConditionType> DIRECT_UPGRADE_CONDITION = CONDITIONS.register("has_direct_upgrade", () -> DirectUpgradeLootCondition.HAS_DIRECT_UPGRADE);
 
     public static RegistryObject<LootItemFunctionType> SET_LOOT_CAPACITOR = FUNCTIONS.register("set_loot_capacitor", () -> new LootItemFunctionType(new SetLootCapacitorFunction.Serializer()));
 
