@@ -7,14 +7,18 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
-public class EnderIOWrenchCompat {
+@Mod.EventBusSubscriber
+public class WrenchCompat {
     @SubscribeEvent
     public static void onRightClickBlock(RightClickBlock event) {
         ItemStack itemInHand = event.getEntity().getItemInHand(event.getHand());
-        if (itemInHand.is(EIOTags.Items.WRENCH) && !itemInHand.is(EIOItems.YETA_WRENCH.asItem()) && event
-            .getLevel()
-            .getBlockEntity(event.getPos()) instanceof IWrenchable) {
+        // @formatter:off
+        if (itemInHand.is(EIOTags.Items.WRENCH)
+            && !itemInHand.is(EIOItems.YETA_WRENCH.get())
+            && event.getLevel().getBlockEntity(event.getPos()) instanceof IWrenchable) {
+            // @formatter:on
             event.setUseBlock(Event.Result.ALLOW);
             event.setUseItem(Event.Result.DENY);
         }
