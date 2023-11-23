@@ -12,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.CactusBlock;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.StemBlock;
@@ -106,6 +107,20 @@ public interface FarmTask {
         return FarmInteraction.IGNORED;
     };
 
+    FarmTask BONEMEAL = (soil, farmBlockEntity) -> {
+        BlockPos pos = soil.above();
+        BlockState plant = farmBlockEntity.getLevel().getBlockState(pos);
+        if (plant.getBlock() instanceof BonemealableBlock bonemealableBlock) {
+            if (bonemealableBlock.isValidBonemealTarget(farmBlockEntity.getLevel(), pos, plant, false) && farmBlockEntity.consumeBonemeal()) {
+                if (bonemealableBlock.isBonemealSuccess(farmBlockEntity.getLevel(), farmBlockEntity.getLevel().getRandom(), pos, plant)) {
+                    bonemealableBlock.performBonemeal((ServerLevel) farmBlockEntity.getLevel(), farmBlockEntity.getLevel().getRandom(), pos, plant);
+                    return FarmInteraction.FINISHED;
+                }
+            }
+        }
+        return FarmInteraction.IGNORED;
+    };
+
     FarmTask HARVEST_CROP = (soil, farmBlockEntity) -> {
         BlockPos pos = soil.above();
         BlockState plant = farmBlockEntity.getLevel().getBlockState(pos);
@@ -192,6 +207,7 @@ public interface FarmTask {
         ArrayList<FarmTask> list = new ArrayList<>();
         list.add(PLANT_CROP);
         list.add(PLANT_BLOCK);
+        list.add(BONEMEAL);
         list.add(HARVEST_CROP);
         list.add(HARVEST_STEMCROPS);
         list.add(HARVEST_BLOCK);

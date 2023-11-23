@@ -24,7 +24,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.ticket.AABBTicket;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
@@ -53,12 +52,9 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity {
     private int consumed = 0;
     @Nullable
     private FarmTask currentTask = null;
-    @Nullable
-    private AABBTicket ticket;
 
     public FarmBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE, type, worldPosition, blockState);
-
         this.range = 5;
 
         rangeDataSlot = new IntegerNetworkDataSlot(this::getRange, r -> this.range = r) {
@@ -101,8 +97,6 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity {
     @Override
     public void serverTick() {
         if (isActive()) {
-            //Hydrate
-            //this.ticket = FarmlandWaterManager.addAABBTicket(getLevel(), new AABB(getBlockPos()).expandTowards(range, -1, range));
             doFarmTask();
         }
 
@@ -200,14 +194,6 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity {
         }
     }
 
-    @Override
-    public void setRemoved() {
-        super.setRemoved();
-        if (this.ticket != null) {
-            ticket.invalidate();
-        }
-    }
-
     //TODO handle inv full
     public void collectDrops(List<ItemStack> drops, @Nullable BlockPos soil) {
         for (ItemStack drop : drops) {
@@ -261,6 +247,19 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity {
     public void load(CompoundTag pTag) {
         super.load(pTag);
         consumed = pTag.getInt(CONSUMED);
+    }
+
+    public boolean consumeBonemeal() {
+        boolean consumed = false;
+        for (int i = 0; i < 2; i++) {
+            ItemStack itemStack = BONEMEAL.get(i).getItemStack(this);
+            if (!itemStack.isEmpty()) {
+                itemStack.shrink(1);
+                consumed = true;
+                break;
+            }
+        }
+        return consumed;
     }
 
     public enum FarmInteraction {
