@@ -24,15 +24,17 @@ public record MachineState(MachineStateType type, MutableComponent component) {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
+        if (this == o) {
             return true;
-        if (o == null || getClass() != o.getClass())
+        }
+        if (o == null || getClass() != o.getClass()) {
             return false;
-
+        }
         MachineState that = (MachineState) o;
 
-        if (type != that.type)
+        if (type != that.type) {
             return false;
+        }
         return component.equals(that.component);
     }
 

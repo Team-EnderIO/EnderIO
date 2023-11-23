@@ -58,6 +58,7 @@ public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb>
 
             @Override
             protected void onContentsChanged() {
+                super.onContentsChanged();
                 setChanged();
             }
         };

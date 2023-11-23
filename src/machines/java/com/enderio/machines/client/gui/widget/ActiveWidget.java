@@ -41,13 +41,6 @@ public class ActiveWidget extends EIOWidget {
         }
         guiGraphics.blit(WIDGETS, x, y, 0, prio == null ? 16 : prio.type().getPriority()*16, 28*16, width, height, 256, 256);
 
-        //Stopped
-        //guiGraphics.blit(WIDGETS, x, y, 0, 4*16, 28*16, width, height, 256, 256);
-        //error
-        //guiGraphics.blit(WIDGETS, x, y, 0, 16, 28*16, width, height, 256, 256);
-        //active
-        //guiGraphics.blit(WIDGETS, x, y, 0, 0, 28*16, width, height, 256, 256);
-
         RenderSystem.disableDepthTest();
         renderToolTip(guiGraphics, mouseX, mouseY);
     }

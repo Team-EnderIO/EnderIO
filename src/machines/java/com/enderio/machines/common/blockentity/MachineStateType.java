@@ -8,6 +8,7 @@ public enum MachineStateType {
     DISABLED(3);
 
     private final int priority;
+
     MachineStateType(int priority) {
         this.priority = priority;
     }
