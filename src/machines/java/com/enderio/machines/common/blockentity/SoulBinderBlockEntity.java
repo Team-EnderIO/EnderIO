@@ -49,10 +49,8 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
     public static final SingleSlotAccess INPUT_OTHER = new SingleSlotAccess();
     public static final MultiSlotAccess OUTPUT = new MultiSlotAccess();
     private final SoulBindingRecipe.Container fakeContainer = new SoulBindingRecipe.Container(getInventoryNN(), () -> Integer.MAX_VALUE);
-    @Nullable
-    private SoulBindingRecipe recipe;
-    @UseOnly(LogicalSide.CLIENT)
-    private int clientExp = 0;
+    @Nullable private SoulBindingRecipe recipe;
+    @UseOnly(LogicalSide.CLIENT) private int clientExp = 0;
 
     private final CraftingMachineTaskHost<SoulBindingRecipe, SoulBindingRecipe.Container> craftingTaskHost;
 
@@ -66,11 +64,11 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
         ));
 
         // Create the crafting task host
-        craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy,
-            MachineRecipes.SOUL_BINDING.type().get(), new SoulBindingRecipe.Container(getInventoryNN(), getFluidTankNN()::getFluidAmount), this::createTask);
+        craftingTaskHost = new CraftingMachineTaskHost<>(this, this::hasEnergy, MachineRecipes.SOUL_BINDING.type().get(),
+            new SoulBindingRecipe.Container(getInventoryNN(), getFluidTankNN()::getFluidAmount), this::createTask);
 
         // Sync crafting container needed xp
-        addDataSlot(new IntegerNetworkDataSlot(() -> recipe == null ? 0: recipe.getExpCost(), i -> clientExp = i));
+        addDataSlot(new IntegerNetworkDataSlot(() -> recipe == null ? 0 : recipe.getExpCost(), i -> clientExp = i));
     }
 
     @Override
@@ -180,7 +178,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
                 INPUT_OTHER.getItemStack(getInventory()).shrink(1);
 
                 var fluidTank = getFluidTankNN();
-                int leftover = ExperienceUtil.getLevelFromFluidWithLeftover(fluidTank.getFluidAmount(), 0, recipe.getExpCost()).y();
+                int leftover = ExperienceUtil.getLevelFromFluidWithLeftover(fluidTank.getFluidAmount(), 0, recipe.getExpCost()).experience();
                 fluidTank.drain(fluidTank.getFluidAmount() - leftover * EXP_TO_FLUID, IFluidHandler.FluidAction.EXECUTE);
             }
 
