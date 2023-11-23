@@ -3,7 +3,6 @@ package com.enderio.machines.client.gui.screen;
 import com.enderio.EnderIO;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.enderio.core.client.gui.widgets.ToggleImageButton;
 import com.enderio.machines.client.gui.widget.ActiveWidget;
@@ -20,7 +19,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Optional;
 
-public class PoweredSpawnerScreen extends EIOScreen<PoweredSpawnerMenu> {
+public class PoweredSpawnerScreen extends MachineScreen<PoweredSpawnerMenu> {
 
     public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/powered_spawner_spawn.png");
     private static final ResourceLocation RANGE_BUTTON_TEXTURE = EnderIO.loc("textures/gui/icons/range_buttons.png");

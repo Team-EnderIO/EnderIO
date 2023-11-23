@@ -3,7 +3,6 @@ package com.enderio.machines.client.gui.screen;
 import com.enderio.EnderIO;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.enderio.machines.client.gui.widget.ActiveWidget;
 import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
@@ -20,7 +19,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Optional;
 
-public class SoulEngineScreen extends EIOScreen<SoulEngineMenu>{
+public class SoulEngineScreen extends MachineScreen<SoulEngineMenu> {
 
     public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/soul_engine.png");
 

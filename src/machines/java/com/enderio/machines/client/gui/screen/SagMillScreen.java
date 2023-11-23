@@ -4,7 +4,6 @@ import com.enderio.EnderIO;
 import com.enderio.api.grindingball.IGrindingBallData;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.machines.client.gui.widget.ActiveWidget;
@@ -28,7 +27,7 @@ import net.minecraft.world.entity.player.Inventory;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class SagMillScreen extends EIOScreen<SagMillMenu> {
+public class SagMillScreen extends MachineScreen<SagMillMenu> {
     public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/sag_mill.png");
 
     public SagMillScreen(SagMillMenu pMenu, Inventory pPlayerInventory, Component pTitle) {

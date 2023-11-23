@@ -3,7 +3,6 @@ package com.enderio.machines.client.gui.screen;
 import com.enderio.EnderIO;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.enderio.machines.client.gui.widget.ActiveWidget;
 import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
@@ -14,7 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class WiredChargerScreen extends EIOScreen<WiredChargerMenu> {
+public class WiredChargerScreen extends MachineScreen<WiredChargerMenu> {
 
     private static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/wired_charger.png");
     public WiredChargerScreen(WiredChargerMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
