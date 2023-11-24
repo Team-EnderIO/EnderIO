@@ -28,7 +28,6 @@ public class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, IExtende
 
     public AE2InWorldConduitNodeHost(AE2ConduitType type) {
         this.type = type;
-        initMainNode();
     }
 
     private void initMainNode() {
@@ -48,7 +47,7 @@ public class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, IExtende
     @Override
     public IGridNode getGridNode(Direction dir) {
         if (mainNode == null) {
-            initMainNode();
+            return null;
         }
         return mainNode.getNode();
     }
@@ -82,14 +81,12 @@ public class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, IExtende
 
     @Override
     public void onCreated(IConduitType<?> type, Level level, BlockPos pos, @Nullable Player player) {
-        if (mainNode == null) {
-            // required because onCreated() can be called after onRemoved()
-            initMainNode();
-        }
-
-        if (mainNode.isReady()) {
+        if (mainNode != null) {
+            // node is already valid
             return;
         }
+
+        initMainNode();
 
         if (player != null) {
             mainNode.setOwningPlayer(player);
