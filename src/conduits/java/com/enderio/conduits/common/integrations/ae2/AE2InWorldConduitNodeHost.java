@@ -24,7 +24,7 @@ public class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, IExtende
     @Nullable
     private IManagedGridNode mainNode = null;
 
-    final LazyOptional<AE2InWorldConduitNodeHost> selfCap = LazyOptional.of(() -> this);
+    private LazyOptional<AE2InWorldConduitNodeHost> selfCap = LazyOptional.of(() -> this);
 
     public AE2InWorldConduitNodeHost(AE2ConduitType type) {
         this.type = type;
@@ -51,6 +51,12 @@ public class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, IExtende
             initMainNode();
         }
         return mainNode.getNode();
+    }
+
+    public LazyOptional<AE2InWorldConduitNodeHost> getSelfCap() {
+        if (!selfCap.isPresent())
+            selfCap = LazyOptional.of(() -> this);
+        return selfCap;
     }
 
     @Override
