@@ -19,8 +19,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.fml.util.thread.EffectiveSide;
+import net.minecraftforge.forgespi.language.IModInfo;
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -113,7 +116,12 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         } else {
             types.add(type);
             nodes.put(type, node);
-            node.getExtendedConduitData().onCreated(type, level, pos, player);
+            IModInfo forge = ModList.get().getModFileById("forge").getMods().get(0);
+            if (types.size() != 1 || !(forge.getDisplayName().equals("NeoForge") && forge.getVersion().compareTo(new DefaultArtifactVersion("47.1.77")) >= 0)) {
+                //NeoForge contains a patch that calls onLoad after the conduit has been placed if it's the first one, so onCreated would be called twice. it's easier to detect here
+                //TODO, remove neocheck and just keep the size check with an explaining comment on why we have a types.size check at all
+                node.getExtendedConduitData().onCreated(type, level, pos, player);
+            }
         }
 
         scheduleSync.run();

@@ -23,7 +23,7 @@ public class EnergyExtendedData implements IExtendedConduitData<EnergyExtendedDa
     private int capacity = 500;
     private int stored = 0;
 
-    final LazyOptional<IEnergyStorage> selfCap = LazyOptional.of( () -> new ConduitEnergyStorage(this));
+    private LazyOptional<IEnergyStorage> selfCap = LazyOptional.of( () -> new EnergyExtendedData.ConduitEnergyStorage(this));
 
 
     @Override
@@ -80,6 +80,16 @@ public class EnergyExtendedData implements IExtendedConduitData<EnergyExtendedDa
 
     public EnergySidedData compute(Direction direction) {
         return energySidedData.computeIfAbsent(direction, dir -> new EnergySidedData());
+    }
+
+    public void createCap() {
+        selfCap = LazyOptional.of( () -> new EnergyExtendedData.ConduitEnergyStorage(this));
+    }
+
+    LazyOptional<IEnergyStorage> getSelfCap() {
+        if (!selfCap.isPresent())
+            selfCap = LazyOptional.of( () -> new EnergyExtendedData.ConduitEnergyStorage(this));
+        return selfCap;
     }
 
     public static class EnergySidedData {
