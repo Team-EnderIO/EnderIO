@@ -3,12 +3,11 @@ import java.util.function.Consumer
 buildscript {
     repositories {
         // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
-        maven { url = 'https://maven.moddingx.org' }
+        ////maven { url = 'https://maven.moddingx.org' }
         mavenCentral()
     }
     dependencies {
-        classpath 'org.spongepowered:mixingradle:0.7.+'
-        classpath 'org.moddingx:ModGradle:4.0.+'
+        ////classpath 'org.moddingx:ModGradle:4.0.+'
     }
 }
 
@@ -16,13 +15,12 @@ plugins {
     id 'eclipse'
     id 'maven-publish'
     id "com.modrinth.minotaur" version "2.+"
-    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
-    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+    id 'net.neoforged.gradle.userdev' version '7.0.45'
+    ////id 'org.parchmentmc.librarian.forgegradle' version '1.+'
     id "me.hypherionmc.modutils.modpublisher" version "1.+"
 }
 
-apply plugin: 'org.spongepowered.mixin'
-apply plugin: 'org.moddingx.modgradle.mapping'
+////apply plugin: 'org.moddingx.modgradle.mapping'
 
 version = getVersionString()
 group = 'com.enderio'
@@ -70,107 +68,65 @@ for (String set : subsets) {
     setupSourceSet(set)
 }
 
-minecraft {
-    if (mappings_channel == "sugarcane") {
-        mappings channel: 'sugarcane', version: "${mappings_version}-${minecraft_version}"
-    } else if (mappings_channel == "parchment") {
-        mappings channel: 'parchment', version: "${mappings_version}-${minecraft_version}"
-    } else if (mappings_channel == "parchment_previous") {
-        mappings channel: 'parchment', version: "${previous_minecraft_version}-${mappings_version}-${minecraft_version}"
-    } else if (mappings_channel == "official") {
-        mappings channel: 'official', version: "${minecraft_version}"
-    }
+minecraft.accessTransformers.files {
+    file rootProject.file('src/main/resources/META-INF/accesstransformer.cfg')
+}
 
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+runs {
+    configureEach {
+        systemProperty 'forge.logging.markers', 'REGISTRIES'
+        systemProperty 'forge.logging.console.level', 'debug'
 
-    runs {
-        client {
-            workingDirectory project.file('run')
+        modSource sourceSets.api
+        modSource sourceSets.core
+        modSource sourceSets.main
 
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-
-            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
-            property 'forge.enabledGameTestNamespaces', 'enderio'
-
-            mods {
-                enderio {
-                    source sourceSets.api
-                    source sourceSets.core
-                    source sourceSets.main
-
-                    for (String set : subsets) {
-                        source sourceSets.getByName(set)
-                    }
-                }
-            }
-        }
-        clientRandom {
-            parent runs.client
-            args '--username', 'Dev####'
-        }
-
-        server {
-            workingDirectory project.file('run-server')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-
-            property 'forge.enabledGameTestNamespaces', 'enderio'
-
-            mods {
-                enderio {
-                    source sourceSets.api
-                    source sourceSets.core
-                    source sourceSets.main
-
-                    for (String set : subsets) {
-                        source sourceSets.getByName(set)
-                    }
-                }
-            }
-        }
-
-        data {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-
-            // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-            args '--mod', 'enderio', '--server', '--client', '--output', file('src/generated/resources/'),
-                    '--existing', file('src/main/resources/'),
-                    '--existing', file('src/machines/resources/'),
-                    '--existing', file('src/conduits/resources/'),
-                    '--existing', file('src/armory/resources/')
-
-            mods {
-                enderio {
-                    source sourceSets.api
-                    source sourceSets.core
-                    source sourceSets.main
-
-                    for (String set : subsets) {
-                        source sourceSets.getByName(set)
-                    }
-                }
-            }
-        }
-
-        dataProd {
-            parent runs.data
-
-            args '--all'
+        for (String set : subsets) {
+            modSource sourceSets.getByName(set)
         }
     }
+
+    client {
+        workingDirectory project.file('run')
+
+        // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
+        systemProperty 'forge.enabledGameTestNamespaces', 'enderio'
+    }
+
+    /*clientRandom {
+        parent runs.client
+        args '--username', 'Dev####'
+    }*/
+
+    server {
+        workingDirectory project.file('run-server')
+
+        systemProperty 'forge.enabledGameTestNamespaces', 'enderio'
+    }
+
+    data {
+        workingDirectory project.file('run')
+
+        programArguments.addAll '--mod', 'enderio', '--server', '--client', '--output', file('src/generated/resources/').getAbsolutePath(),
+                '--existing', file('src/main/resources/').getAbsolutePath(),
+                '--existing', file('src/machines/resources/').getAbsolutePath(),
+                '--existing', file('src/conduits/resources/').getAbsolutePath(),
+                '--existing', file('src/armory/resources/').getAbsolutePath()
+    }
+
+    /*dataProd {
+        parent runs.data
+
+        args '--all'
+    }*/
 }
 
 def replaceProperties = [
         version       : version, mcversion: minecraft_version_range,
-        forge_version : forge_version_range,
-        loader_version: loader_version_range]
+        neo_version : neo_version_range,
+        loader_version_range: loader_version_range]
 
-processResources {
+tasks.withType(ProcessResources).configureEach {
     inputs.properties replaceProperties
     replaceProperties.put 'project', project
 
@@ -194,7 +150,7 @@ void exclusiveRepo(RepositoryHandler handler, String url, Consumer<InclusiveRepo
     handler.exclusiveContent {
         it.forRepositories(handler.maven {
             setUrl(url)
-        }, fg.repository)//Add FG's repo so we make sure we are able to then find the mapped deps
+        })
         it.filter { f -> filterSetup.accept(f) }
     }
 }
@@ -213,42 +169,45 @@ repositories { RepositoryHandler handler ->
 jarJar.enable()
 
 dependencies {
-    // Forge
-    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    // NeoForge
+    implementation "net.neoforged:neoforge:${neo_version}"
+
     //implementation fg.deobf("blank:Xycraft+Core:0.5.2")
     //runtimeOnly fg.deobf("blank:Xycraft+Override:0.5.2")
     //runtimeOnly fg.deobf("blank:Xycraft+World:0.5.2")
     // Registrate
-    implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
-    jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: "[${registrate_version}]")
+    ////implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
+    ////jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: "[${registrate_version}]")
 
     // GraphLib
-    implementation implementation(fg.deobf("dev.gigaherz.graph:GraphLib3:${graphlib_version}"))
+    implementation implementation("dev.gigaherz.graph:GraphLib3:${graphlib_version}")
     jarJar(group: 'dev.gigaherz.graph', name: 'GraphLib3', version: "${graphlib_version_range}")
+
+    // Mixin annotations
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     // JEI
-    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
-    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
-    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common:${jei_version}")
-    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
+    ////compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
+    ////compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
+    ////runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common:${jei_version}")
+    ////runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
 
     //RFTOOLS
-    runtimeOnly fg.deobf("maven.modrinth:rftools-power:f430rHkA")
-    runtimeOnly fg.deobf("maven.modrinth:mcjtylib:3LlgyvSh")
-    runtimeOnly fg.deobf("maven.modrinth:rftools-base:Uu1IkVMH")
-    runtimeOnly fg.deobf("maven.modrinth:spark:Yp6s4wsw")
+    ////runtimeOnly fg.deobf("maven.modrinth:rftools-power:f430rHkA")
+    ////runtimeOnly fg.deobf("maven.modrinth:mcjtylib:3LlgyvSh")
+    ////runtimeOnly fg.deobf("maven.modrinth:rftools-base:Uu1IkVMH")
+    ////runtimeOnly fg.deobf("maven.modrinth:spark:Yp6s4wsw")
 
     //Athena ctm
-    runtimeOnly fg.deobf("maven.modrinth:athena-ctm:X6GdUrpW")
+    ////runtimeOnly fg.deobf("maven.modrinth:athena-ctm:X6GdUrpW")
 
     // AE2
-    compileOnly "appeng:appliedenergistics2-forge:${ae2_version}:api"
-    runtimeOnly fg.deobf("appeng:appliedenergistics2-forge:${ae2_version}")
+    ////compileOnly "appeng:appliedenergistics2-forge:${ae2_version}:api"
+    ////runtimeOnly fg.deobf("appeng:appliedenergistics2-forge:${ae2_version}")
 
     // Enchantment descriptions
-    runtimeOnly fg.deobf("net.darkhax.bookshelf:Bookshelf-Forge-${minecraft_version}:${bookshelf_version}")
-    runtimeOnly fg.deobf("net.darkhax.enchdesc:EnchantmentDescriptions-Forge-${minecraft_version}:${ench_desc_version}")
+    ////runtimeOnly fg.deobf("net.darkhax.bookshelf:Bookshelf-Forge-${minecraft_version}:${bookshelf_version}")
+    ////runtimeOnly fg.deobf("net.darkhax.enchdesc:EnchantmentDescriptions-Forge-${minecraft_version}:${ench_desc_version}")
 
     // The One Probe https://github.com/McJtyMods/TheOneProbe/issues/548
 //    compileOnly fg.deobf("mcjty.theoneprobe:theoneprobe:${top_version}:api") {
@@ -259,16 +218,16 @@ dependencies {
 //    }
 
     // Jade
-    runtimeOnly fg.deobf("curse.maven:jade-324717:${jade_cf_id}")
+    ////runtimeOnly fg.deobf("curse.maven:jade-324717:${jade_cf_id}")
 
     //fluxnetworks
-    runtimeOnly fg.deobf("curse.maven:fluxnetworks-248020:4651164")
+    ////runtimeOnly fg.deobf("curse.maven:fluxnetworks-248020:4651164")
 
     //Flywheel
-    compileOnly fg.deobf("com.jozufozu.flywheel:flywheel-forge-1.20.1:0.6.9-5") // REMOVE When crash is fixed
+    ////compileOnly fg.deobf("com.jozufozu.flywheel:flywheel-forge-1.20.1:0.6.9-5") // REMOVE When crash is fixed
 
     // Almost Unified
-    compileOnly fg.deobf("com.almostreliable.mods:almostunified-forge:${minecraft_version}-${almostunified_version}")
+    ////compileOnly fg.deobf("com.almostreliable.mods:almostunified-forge:${minecraft_version}-${almostunified_version}")
 
     // Patchouli
 //    compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
@@ -281,13 +240,7 @@ dependencies {
     compileOnly 'org.jetbrains:annotations:23.0.0'
 }
 
-// MixinGradle Settings
-mixin {
-    add sourceSets.main, "mixins.enderio.refmap.json"
-    config "mixins.enderio.json"
-}
-
-reobf.create('jarJar')
+//reobf.create('jarJar')
 
 // Example for how to get properties into the manifest for reading at runtime.
 jar {
@@ -315,7 +268,7 @@ jar {
 
     // TODO: Do we need to bother reobfuscating it?
     //       The real question is does maven need it to be obfuscated? If so then this stays
-    finalizedBy('reobfJar')
+    //finalizedBy('reobfJar')
 }
 
 tasks.register('apiJar', Jar) {
@@ -348,7 +301,7 @@ tasks.jarJar.configure {
         from sourceSets.getByName(set).output
     }
 
-    finalizedBy('reobfJarJar')
+    //finalizedBy('reobfJarJar')
 }
 build.dependsOn tasks.jarJar
 

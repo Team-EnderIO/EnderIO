@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="${loader_version}"
+loaderVersion="${loader_version_range}"
 issueTrackerURL="https://github.com/Team-EnderIO/EnderIO/issues"
 license="CC0"
 
@@ -19,9 +19,9 @@ versionRange="${mcversion}"
 side="BOTH"
 
 [[dependencies.enderio]]
-modId="forge"
+modId="neoforge"
 mandatory=true
-versionRange="${forge_version}"
+versionRange="${neo_version}"
 side="BOTH"
 
 [[dependencies.enderio]]
