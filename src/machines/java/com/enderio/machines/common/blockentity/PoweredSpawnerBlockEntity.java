@@ -30,7 +30,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
-
 // TODO: I want to revisit the powered spawner and task
 //       But there's not enough time before alpha, so just porting as-is.
 public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
@@ -53,8 +52,6 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
             setEntityType(rl);
             EnderIO.LOGGER.info("UPDATED ENTITY TYPE.");
         }));
-        addDataSlot(new EnumNetworkDataSlot<>(SpawnerBlockedReason.class, this::getReason, this::setReason));
-
         range = 4;
 
         taskHost = new MachineTaskHost(this, this::hasEnergy) {
@@ -70,6 +67,8 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
                 return task;
             }
         };
+
+        updateMachineState(new MachineState(MachineStateType.ERROR, this.reason.component), false);
     }
 
     @Nullable
@@ -147,11 +146,9 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
         return entityData;
     }
 
-    public SpawnerBlockedReason getReason() {
-        return this.reason;
-    }
-
     public void setReason(SpawnerBlockedReason reason) {
+        updateMachineState(new MachineState(MachineStateType.ERROR, this.reason.component), false);
+        updateMachineState(new MachineState(MachineStateType.ERROR, reason.component), true);
         this.reason = reason;
     }
 
@@ -172,18 +169,6 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
     }
 
     // endregion
-
-    @Override
-    public MutableComponent getBlockedReason() {
-        MutableComponent superComp = super.getBlockedReason();
-        if (!superComp.equals(MachineLang.TOOLTIP_ACTIVE)) {
-            return superComp;
-        }
-        if (reason != SpawnerBlockedReason.NONE) {
-            return reason.component;
-        }
-        return MachineLang.TOOLTIP_ACTIVE;
-    }
 
     public enum SpawnerBlockedReason {
         TOO_MANY_MOB(MachineLang.TOO_MANY_MOB),

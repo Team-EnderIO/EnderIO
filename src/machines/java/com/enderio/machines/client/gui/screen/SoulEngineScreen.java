@@ -3,7 +3,6 @@ package com.enderio.machines.client.gui.screen;
 import com.enderio.EnderIO;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.enderio.machines.client.gui.widget.ActiveWidget;
 import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
@@ -20,7 +19,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Optional;
 
-public class SoulEngineScreen extends EIOScreen<SoulEngineMenu>{
+public class SoulEngineScreen extends MachineScreen<SoulEngineMenu> {
 
     public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/soul_engine.png");
 
@@ -39,7 +38,7 @@ public class SoulEngineScreen extends EIOScreen<SoulEngineMenu>{
 
         addRenderableOnly(new FluidStackWidget(this, getMenu().getBlockEntity()::getFluidTank, 80 + leftPos, 21 + topPos, 16, 47));
 
-        addRenderableWidget(new ActiveWidget(this, menu.getBlockEntity()::getBlockedReason, leftPos + imageWidth - 6 - 16, topPos + 16*4));
+        addRenderableWidget(new ActiveWidget(this, menu.getBlockEntity()::getMachineStates, leftPos + imageWidth - 6 - 16, topPos + 16*4));
 
         addRenderableWidget(new IOConfigButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 24, 16, 16, menu, this::addRenderableWidget, font));
 
@@ -59,8 +58,10 @@ public class SoulEngineScreen extends EIOScreen<SoulEngineMenu>{
             }
             EngineSoul.SoulData data = EngineSoul.ENGINE.map.get(rl.get());
             if (data != null) {
-                guiGraphics.drawString(font, data.tickpermb() + " t/mb", imageWidth / 2f + 12 , 40, 4210752, false);
-                guiGraphics.drawString(font, data.powerpermb() + " µI/mb", imageWidth / 2f + 12 , 50, 4210752, false);
+                double burnRate = menu.getBlockEntity().getBurnRate();
+                float genRate = menu.getBlockEntity().getGenerationRate();
+                guiGraphics.drawString(font, data.tickpermb()/ burnRate + " t/mb", imageWidth / 2f + 12 , 40, 4210752, false);
+                guiGraphics.drawString(font, (int) (data.powerpermb() * genRate) + " µI/mb", imageWidth / 2f + 12 , 50, 4210752, false);
 
             }
         }

@@ -31,7 +31,11 @@ import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @Mod.EventBusSubscriber
 public class ConduitSavedData extends SavedData {
@@ -127,8 +131,9 @@ public class ConduitSavedData extends SavedData {
         ListTag graphsTag = new ListTag();
         for (IConduitType<?> type : networks.keySet()) {
             List<Graph<Mergeable.Dummy>> graphs = networks.get(type);
-            if (graphs.isEmpty())
+            if (graphs.isEmpty()) {
                 continue;
+            }
 
             CompoundTag typedGraphTag = new CompoundTag();
             typedGraphTag.putString(KEY_TYPE, ConduitTypes.getRegistry().getKey(type).toString());
@@ -136,11 +141,11 @@ public class ConduitSavedData extends SavedData {
             ListTag graphsForTypeTag = new ListTag();
 
             for (Graph<Mergeable.Dummy> graph : graphs) {
-                if (graph.getObjects().isEmpty())
-                    continue;
-
-                graphsForTypeTag.add(serializeGraph(graph));
+                if (!graph.getObjects().isEmpty()) {
+                    graphsForTypeTag.add(serializeGraph(graph));
+                }
             }
+
             if (!graphsForTypeTag.isEmpty()) {
                 typedGraphTag.put(KEY_GRAPHS, graphsForTypeTag);
                 graphsTag.add(typedGraphTag);
@@ -234,10 +239,13 @@ public class ConduitSavedData extends SavedData {
         NodeIdentifier<?> node = chunkMap.get(pos);
 
         chunkMap.remove(pos);
-        if (chunkMap.size() == 0)
+        if (chunkMap.isEmpty()) {
             typeMap.remove(chunkPos);
-        if (typeMap.size() == 0)
+        }
+
+        if (typeMap.isEmpty()) {
             deserializedNodes.remove(type);
+        }
 
         return (NodeIdentifier<T>) node;
     }
@@ -256,8 +264,10 @@ public class ConduitSavedData extends SavedData {
 
     @SubscribeEvent
     public static void onLevelTick(TickEvent.LevelTickEvent event) {
-        if (event.phase == TickEvent.Phase.START)
+        if (event.phase == TickEvent.Phase.START) {
             return;
+        }
+
         if (event.level instanceof ServerLevel serverLevel) {
             get(serverLevel).tick(serverLevel);
         }
@@ -282,12 +292,18 @@ public class ConduitSavedData extends SavedData {
     }
 
     private static boolean isRedstoneActive(ServerLevel serverLevel, BlockPos pos, ColorControl color) {
-        if (!serverLevel.isLoaded(pos) || !serverLevel.shouldTickBlocksAt(pos))
+        if (!serverLevel.isLoaded(pos) || !serverLevel.shouldTickBlocksAt(pos)) {
             return false;
-        if (!(serverLevel.getBlockEntity(pos) instanceof ConduitBlockEntity conduit))
+        }
+
+        if (!(serverLevel.getBlockEntity(pos) instanceof ConduitBlockEntity conduit)) {
             return false;
-        if (!conduit.getBundle().getTypes().contains(EnderConduitTypes.REDSTONE.get()))
+        }
+
+        if (!conduit.getBundle().getTypes().contains(EnderConduitTypes.REDSTONE.get())) {
             return false;
+        }
+
         RedstoneExtendedData data = conduit.getBundle().getNodeFor(EnderConduitTypes.REDSTONE.get()).getExtendedConduitData().cast();
         return data.isActive(color);
     }

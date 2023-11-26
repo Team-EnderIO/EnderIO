@@ -3,7 +3,6 @@ package com.enderio.machines.client.gui.screen;
 import com.enderio.EnderIO;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.enderio.core.client.gui.widgets.ToggleImageButton;
 import com.enderio.machines.client.gui.widget.ActiveWidget;
@@ -20,7 +19,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Optional;
 
-public class PoweredSpawnerScreen extends EIOScreen<PoweredSpawnerMenu> {
+public class PoweredSpawnerScreen extends MachineScreen<PoweredSpawnerMenu> {
 
     public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/powered_spawner_spawn.png");
     private static final ResourceLocation RANGE_BUTTON_TEXTURE = EnderIO.loc("textures/gui/icons/range_buttons.png");
@@ -42,7 +41,7 @@ public class PoweredSpawnerScreen extends EIOScreen<PoweredSpawnerMenu> {
             () -> menu.getBlockEntity().isRangeVisible(), state -> menu.getBlockEntity().setIsRangeVisible(state),
             () -> menu.getBlockEntity().isRangeVisible() ? EIOLang.HIDE_RANGE : EIOLang.SHOW_RANGE));
 
-        addRenderableWidget(new ActiveWidget(this, menu.getBlockEntity()::getBlockedReason, leftPos + imageWidth - 6 - 16, topPos + 16*4));
+        addRenderableWidget(new ActiveWidget(this, menu.getBlockEntity()::getMachineStates, leftPos + imageWidth - 6 - 16, topPos + 16*4));
 
         addRenderableOnly(new ProgressWidget.BottomUp(this, () -> menu.getBlockEntity().getSpawnProgress(), getGuiLeft() + 82, getGuiTop() + 38, 14, 14, 176, 0));
 
@@ -69,10 +68,6 @@ public class PoweredSpawnerScreen extends EIOScreen<PoweredSpawnerMenu> {
             } else {
                 guiGraphics.drawString(font, rl.get().toString(), imageWidth / 2f - font.width(rl.get().toString()) / 2f, 15, 4210752, false);
             }
-        }
-        if (getMenu().getBlockEntity().getReason() != PoweredSpawnerBlockEntity.SpawnerBlockedReason.NONE) {
-            guiGraphics.drawString(font, getMenu().getBlockEntity().getReason().getComponent().getString(),
-                imageWidth / 2f - font.width(getMenu().getBlockEntity().getReason().getComponent().getString()) / 2f, 26, 0, false);
         }
     }
 }

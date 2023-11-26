@@ -1,6 +1,7 @@
 package com.enderio.machines.common.blockentity.task;
 
 import com.enderio.core.common.recipes.OutputStack;
+import com.enderio.machines.common.blockentity.MachineState;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
@@ -46,6 +47,8 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
         this.container = container;
         this.outputSlots = outputSlots;
         this.recipe = recipe;
+        inventory.updateMachineState(MachineState.FULL_OUTPUT, false);
+        inventory.updateMachineState(MachineState.EMPTY_INPUT, true);
     }
 
     public MachineInventory getInventory() {
@@ -82,8 +85,9 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
     @Override
     public void tick() {
         // If the recipe is done, don't let it tick.
-        if (isComplete)
+        if (isComplete) {
             return;
+        }
 
         // If the recipe failed to load somehow, cancel
         if (recipe == null) {
@@ -105,9 +109,11 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
 
         // If we don't have a recipe match, complete the task and wait for a new one.
         if (!recipe.matches(container, level)) {
+            inventory.updateMachineState(MachineState.EMPTY_INPUT, true);
             isComplete = true;
             return;
         }
+        inventory.updateMachineState(MachineState.EMPTY_INPUT, false);
 
         // Try to consume as much energy as possible to finish the craft.
         if (progressMade < progressRequired) {
@@ -117,7 +123,9 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
         // If the recipe has been crafted, attempt to put it into storage
         if (progressMade >= progressRequired) {
             // Attempt to complete the craft
-            if (placeOutputs(outputs, false)) {
+            boolean placeOutputs = placeOutputs(outputs, false);
+            inventory.updateMachineState(MachineState.FULL_OUTPUT, !placeOutputs);
+            if (placeOutputs) {
                 // Take the inputs
                 consumeInputs(recipe);
 
@@ -129,8 +137,10 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
 
     @Override
     public float getProgress() {
-        if (recipe == null)
+        if (recipe == null) {
             return 0.0f;
+        }
+
         return progressMade / (float) progressRequired;
     }
 
@@ -155,8 +165,9 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
             }
 
             // If we fail, say we can't accept these outputs
-            if (!item.isEmpty())
+            if (!item.isEmpty()) {
                 return false;
+            }
         }
 
         // If we're not simulating, go for it

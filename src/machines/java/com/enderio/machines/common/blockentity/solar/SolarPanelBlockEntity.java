@@ -61,37 +61,53 @@ public class SolarPanelBlockEntity extends PoweredMachineBlockEntity {
     }
 
     public boolean isGenerating() {
-        if (level == null || !this.level.canSeeSky(getBlockPos().above()))
+        if (level == null || !this.level.canSeeSky(getBlockPos().above())) {
             return false;
+        }
 
         return getGenerationRate() > 0;
     }
 
     public int getGenerationRate() {
         int minuteInTicks = 20 * 60;
-        if (level == null)
+        if (level == null) {
             return 0;
+        }
+
         int dayTime = (int) (level.getDayTime() % (minuteInTicks * 20));
-        if (dayTime > minuteInTicks * 9)
+        if (dayTime > minuteInTicks * 9) {
             return 0;
-        if (dayTime < minuteInTicks)
+        }
+
+        if (dayTime < minuteInTicks) {
             return 0;
+        }
+
         float progress = dayTime > minuteInTicks * 5 ? 10 * minuteInTicks - dayTime : dayTime;
         progress = (progress - minuteInTicks) / (4 * minuteInTicks);
         double easing = easing(progress);
-        if (level.isRaining() && !level.isThundering())
+
+        if (level.isRaining() && !level.isThundering()) {
             easing -= 0.3f;
-        if (level.isThundering())
+        }
+
+        if (level.isThundering()) {
             easing -= 0.7f;
-        if (easing < 0)
+        }
+
+        if (easing < 0) {
             return 0;
+        }
+
         return (int) (easing * tier.getProductionRate());
     }
 
     @Override
     protected boolean shouldPushEnergyTo(Direction direction) {
-        if (node.getGraph() == null)
+        if (node.getGraph() == null) {
             return true;
+        }
+
         for (GraphObject<Mergeable.Dummy> neighbour : node.getGraph().getNeighbours(node)) {
             if (neighbour instanceof MultiEnergyNode node) {
                 if (node.pos.equals(worldPosition.relative(direction))) {
@@ -99,21 +115,26 @@ public class SolarPanelBlockEntity extends PoweredMachineBlockEntity {
                 }
             }
         }
+
         return true;
     }
 
     @Override
     public void setRemoved() {
-        if (node.getGraph() != null)
+        if (node.getGraph() != null) {
             node.getGraph().remove(node);
+        }
+
         super.setRemoved();
     }
 
     @Override
     public void onLoad() {
         super.onLoad();
-        if (node.getGraph() == null)
+        if (node.getGraph() == null) {
             Graph.integrate(node, List.of());
+        }
+
         for (Direction direction: new Direction[] {Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST}) {
             if (level.getBlockEntity(worldPosition.relative(direction)) instanceof SolarPanelBlockEntity panel && panel.tier == tier) {
                 Graph.connect(node, panel.node);
@@ -123,8 +144,10 @@ public class SolarPanelBlockEntity extends PoweredMachineBlockEntity {
 
     //Reference: EaseInOutQuad Function
     private static double easing(float progress) {
-        if (progress > 0.5f)
+        if (progress > 0.5f) {
             return 1 - Math.pow(-2*progress + 2, 2)/2;
+        }
+
         return 2 * progress * progress;
     }
 

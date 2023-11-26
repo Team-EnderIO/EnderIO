@@ -3,10 +3,10 @@
   "category": "misc",
   "key": {
     "G": {
-      "item": "enderio:grains_of_infinity"
+      "tag": "forge:dusts/grains_of_infinity"
     },
     "N": {
-      "item": "enderio:dark_steel_nugget"
+      "tag": "forge:nuggets/dark_steel"
     },
     "S": {
       "item": "minecraft:stick"

@@ -7,7 +7,12 @@ import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.BufferUploader;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Axis;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.minecraft.client.Minecraft;
@@ -15,7 +20,11 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
@@ -42,7 +51,14 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Thanks XFactHD for help and providing a demo for a preview widget and raycast example
@@ -59,7 +75,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     private static final BlockPos POS = new BlockPos(1, 1, 1);
     private static final int Z_OFFSET = 100;
     private static final ResourceLocation SELECTED_ICON = EnderIO.loc("block/overlay/selected_face");
-    private static final Minecraft minecraft = Minecraft.getInstance();
+    private static final Minecraft MINECRAFT = Minecraft.getInstance();
     private static MultiBufferSource.BufferSource ghostBuffers;
     private final U addedOn;
     private final Vector3f worldOrigin;
@@ -114,10 +130,10 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
             }
 
         });
-        pitch = minecraft.player.getXRot();
-        yaw = minecraft.player.getYRot();
+        pitch = MINECRAFT.player.getXRot();
+        yaw = MINECRAFT.player.getYRot();
 
-        ghostBuffers = initBuffers(minecraft.renderBuffers().bufferSource());
+        ghostBuffers = initBuffers(MINECRAFT.renderBuffers().bufferSource());
     }
 
     private static Vec3 transform(Vec3 vec, Matrix4f transform) {
@@ -166,7 +182,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
             if (pButton == 1) {
                 if (selection.isPresent()) {
                     var selectedFace = selection.get();
-                    BlockEntity entity = minecraft.level.getBlockEntity(selectedFace.blockPos);
+                    BlockEntity entity = MINECRAFT.level.getBlockEntity(selectedFace.blockPos);
                     if (entity instanceof MachineBlockEntity machine) {
                         machine.getIOConfig().cycleMode(selectedFace.side);
                         this.playDownSound(Minecraft.getInstance().getSoundManager());
@@ -245,7 +261,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
             // Ray-cast hit on block shape
             Map<BlockHitResult, BlockPos> hits = new HashMap<>();
             configurable.forEach(blockPos -> {
-                BlockState state = minecraft.level.getBlockState(blockPos);
+                BlockState state = MINECRAFT.level.getBlockState(blockPos);
                 BlockHitResult hit = raycast(blockPos, state, diffX, diffY, rayTransform);
                 if (hit != null && hit.getType() != HitResult.Type.MISS) {
                     hits.put(hit, blockPos);
@@ -285,7 +301,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
         ghostBuffers.endBatch();
 
         // Render configurable
-        MultiBufferSource.BufferSource normalBuffers = minecraft.renderBuffers().bufferSource();
+        MultiBufferSource.BufferSource normalBuffers = MINECRAFT.renderBuffers().bufferSource();
         for (var configurable : configurable) {
             Vector3f pos = new Vector3f(configurable.getX() - worldOrigin.x(), configurable.getY() - worldOrigin.y(), configurable.getZ() - worldOrigin.z());
             renderBlock(guiGraphics, configurable, pos, normalBuffers, partialTick);
@@ -299,15 +315,15 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(renderPos.x(), renderPos.y(), renderPos.z());
 
-        ModelData modelData = Optional.ofNullable(minecraft.level.getModelDataManager().getAt(blockPos)).orElse(ModelData.EMPTY);
+        ModelData modelData = Optional.ofNullable(MINECRAFT.level.getModelDataManager().getAt(blockPos)).orElse(ModelData.EMPTY);
 
-        BlockState blockState = minecraft.level.getBlockState(blockPos);
+        BlockState blockState = MINECRAFT.level.getBlockState(blockPos);
         RenderShape rendershape = blockState.getRenderShape();
         if (rendershape != RenderShape.INVISIBLE) {
-            var renderer = minecraft.getBlockRenderer();
+            var renderer = MINECRAFT.getBlockRenderer();
             BakedModel bakedmodel = renderer.getBlockModel(blockState);
-            modelData = bakedmodel.getModelData(minecraft.level, blockPos, blockState, modelData);
-            int blockColor = minecraft.getBlockColors().getColor(blockState, minecraft.level, blockPos, 0);
+            modelData = bakedmodel.getModelData(MINECRAFT.level, blockPos, blockState, modelData);
+            int blockColor = MINECRAFT.getBlockColors().getColor(blockState, MINECRAFT.level, blockPos, 0);
             float r = FastColor.ARGB32.red(blockColor) / 255F;
             float g = FastColor.ARGB32.green(blockColor) / 255F;
             float b = FastColor.ARGB32.blue(blockColor) / 255F;
@@ -317,9 +333,9 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
                     .renderModel(guiGraphics.pose().last(), buffers.getBuffer(RenderTypeHelper.getEntityRenderType(renderType, false)), blockState, bakedmodel, r, g, b,
                         LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, modelData, renderType);
             }
-            BlockEntity blockEntity = minecraft.level.getBlockEntity(blockPos);
+            BlockEntity blockEntity = MINECRAFT.level.getBlockEntity(blockPos);
             if (blockEntity != null) {
-                var beRenderer = minecraft.getBlockEntityRenderDispatcher().getRenderer(blockEntity);
+                var beRenderer = MINECRAFT.getBlockEntityRenderDispatcher().getRenderer(blockEntity);
                 if (beRenderer != null) {
                     beRenderer.render(blockEntity, partialTick, guiGraphics.pose(), buffers, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
                 }
@@ -341,7 +357,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
         BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
         RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
 
-        TextureAtlasSprite tex = minecraft.getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(SELECTED_ICON);
+        TextureAtlasSprite tex = MINECRAFT.getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(SELECTED_ICON);
         RenderSystem.setShaderTexture(0, tex.atlasLocation());
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -363,7 +379,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     private void renderOverlay(GuiGraphics guiGraphics) {
         if (selection.isPresent()) {
             var selectedFace = selection.get();
-            BlockEntity entity = minecraft.level.getBlockEntity(selectedFace.blockPos);
+            BlockEntity entity = MINECRAFT.level.getBlockEntity(selectedFace.blockPos);
             if (entity instanceof MachineBlockEntity machine) {
                 var ioMode = machine.getIOConfig().getMode(selectedFace.side);
                 IOModeMap map = IOModeMap.getMapFromMode(ioMode);
@@ -396,7 +412,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     }
 
     private static class GhostRenderLayer extends RenderType {
-        private static final Map<RenderType, RenderType> remappedTypes = new IdentityHashMap<>();
+        private static final Map<RenderType, RenderType> REMAPPED_TYPES = new IdentityHashMap<>();
 
         private GhostRenderLayer(RenderType original) {
             super(String.format("%s_%s_ghost", original.toString(), EnderIO.MODID), original.format(), original.mode(), original.bufferSize(),
@@ -420,7 +436,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
             if (in instanceof GhostRenderLayer) {
                 return in;
             } else {
-                return remappedTypes.computeIfAbsent(in, GhostRenderLayer::new);
+                return REMAPPED_TYPES.computeIfAbsent(in, GhostRenderLayer::new);
             }
         }
     }

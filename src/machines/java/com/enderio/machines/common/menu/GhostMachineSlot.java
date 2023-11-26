@@ -19,10 +19,13 @@ public class GhostMachineSlot extends MachineSlot {
 
         // Check config, we need to get this right or bad stuff will happen.
         MachineInventoryLayout layout = itemHandler.getLayout();
-        if (layout.canInsert(index) || layout.canExtract(index))
+        if (layout.canInsert(index) || layout.canExtract(index)) {
             throw new RuntimeException("Ghost slot can be externally modified!!");
-        if (!layout.guiCanInsert(index))
+        }
+
+        if (!layout.guiCanInsert(index)) {
             throw new RuntimeException("Ghost slot cannot be modified by the player!");
+        }
     }
 
     public GhostMachineSlot(MachineInventory itemHandler, SingleSlotAccess access, int xPosition, int yPosition) {

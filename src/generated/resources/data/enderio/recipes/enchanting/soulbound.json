@@ -1,9 +1,11 @@
 {
   "type": "enderio:enchanting",
-  "amount": 1,
   "cost_multiplier": 1,
   "enchantment": "enderio:soulbound",
   "input": {
-    "item": "enderio:ender_crystal"
+    "count": 1,
+    "ingredient": {
+      "tag": "forge:gems/ender_crystal"
+    }
   }
 }

@@ -19,7 +19,11 @@ import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPosition
 import net.minecraft.network.chat.Component;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -30,12 +34,15 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
 
     private final Map<T, SelectionWidget> icons = new HashMap<>();
 
-    private final Vector2i expandTopLeft, expandBottomRight;
+    private final Vector2i expandTopLeft;
+    private final Vector2i expandBottomRight;
 
     private static final int ELEMENTS_IN_ROW = 5;
     private static final int SPACE_BETWEEN_ELEMENTS = 4;
 
     private boolean isExpanded = false;
+
+    private boolean expandNext = false;
 
     private int mouseButton = 0;
 
@@ -120,6 +127,11 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
+        if (expandNext && Minecraft.getInstance().screen == addedOn) {
+            Minecraft.getInstance().pushGuiLayer(selection);
+            expandNext = false;
+            isExpanded = true;
+        }
         if (isHovered && isActive()) {
             // @formatter:off
            addedOn.renderTooltipAfterEverything(guiGraphics, List.of(optionName, getter.get().getTooltip().copy().withStyle(ChatFormatting.GRAY)), pMouseX, pMouseY);
@@ -154,6 +166,19 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
             isExpanded = false;
             Minecraft.getInstance().popGuiLayer();
         }
+    }
+
+    public boolean isExpanded() {
+        return isExpanded;
+    }
+
+    public void setExpanded(Boolean expanded) {
+        expandNext = expanded;
+        isExpanded = expanded;
+    }
+
+    public Component getOptionName() {
+        return optionName;
     }
 
     private class SelectionScreen extends Screen implements IEnderScreen {
@@ -209,13 +234,18 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
             EnumIconWidget.this.isExpanded = false;
             super.onClose();
         }
+
+        @Override
+        public void resize(Minecraft minecraft, int width, int height) {
+            minecraft.popGuiLayer();
+        }
     }
 
     private class SelectionWidget extends AbstractWidget {
 
         private final T value;
 
-        public SelectionWidget(Vector2i pos, T value) {
+        SelectionWidget(Vector2i pos, T value) {
             super(pos.x(), pos.y(), value.getRenderSize().x() + 2, value.getRenderSize().y() + 2, value.getTooltip());
             this.value = value;
         }

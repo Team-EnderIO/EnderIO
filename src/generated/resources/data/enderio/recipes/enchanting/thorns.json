@@ -1,9 +1,11 @@
 {
   "type": "enderio:enchanting",
-  "amount": 4,
   "cost_multiplier": 1,
   "enchantment": "minecraft:thorns",
   "input": {
-    "item": "minecraft:rose_bush"
+    "count": 4,
+    "ingredient": {
+      "item": "minecraft:rose_bush"
+    }
   }
 }

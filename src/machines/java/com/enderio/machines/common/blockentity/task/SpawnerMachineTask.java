@@ -31,8 +31,6 @@ import java.util.Optional;
 
 @Mod.EventBusSubscriber
 public class SpawnerMachineTask implements IPoweredMachineTask {
-
-    public static final int spawnTries = 10;
     private boolean complete;
     private int energyCost;
     private int energyConsumed = 0;
@@ -148,11 +146,12 @@ public class SpawnerMachineTask implements IPoweredMachineTask {
     }
 
     public boolean trySpawnEntity(BlockPos pos, ServerLevel level) {
+        boolean spawned = false;
         if (this.efficiency < level.random.nextFloat()) {
             blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.TOO_MANY_SPAWNER);
             return false;
         }
-        for (int i = 0; i < spawnTries; i++) {
+        for (int i = 0; i < MachinesConfig.COMMON.SPAWN_AMOUNT.get(); i++) {
             RandomSource randomsource = level.getRandom();
             double x = pos.getX() + (randomsource.nextDouble() - randomsource.nextDouble()) * (double)this.blockEntity.getRange() + 0.5D;
             double y = pos.getY() + randomsource.nextInt(3) - 1;
@@ -185,6 +184,7 @@ public class SpawnerMachineTask implements IPoweredMachineTask {
                             entity.moveTo(x, y, z);
                         }
                     }
+                    default -> throw new IllegalStateException("Unexpected value: " + spawnType);
                 }
 
                 if (entity == null) {
@@ -196,7 +196,7 @@ public class SpawnerMachineTask implements IPoweredMachineTask {
                     MobSpawnEvent.FinalizeSpawn event = ForgeEventFactory.onFinalizeSpawnSpawner(mob, level, level.getCurrentDifficultyAt(pos), null,  blockEntity.getEntityData().getEntityTag(), null);
                     if (event == null || event.isSpawnCancelled()) {
                         blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.OTHER_MOD);
-                        return false;
+                        continue;
                     } else {
                         ForgeEventFactory.onFinalizeSpawn(mob, level, event.getDifficulty(), event.getSpawnType(), event.getSpawnData(), event.getSpawnTag());
                     }
@@ -204,7 +204,7 @@ public class SpawnerMachineTask implements IPoweredMachineTask {
 
                 if (!level.tryAddFreshEntityWithPassengers(entity)) {
                     blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.OTHER_MOD);
-                    return false;
+                    continue;
                 }
 
                 level.levelEvent(2004, pos, 0);
@@ -213,13 +213,13 @@ public class SpawnerMachineTask implements IPoweredMachineTask {
                     mob.spawnAnim();
                 }
 
-                //Clear energy after spawn
-                energyConsumed = 0;
+                spawned = true;
                 blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.NONE);
-                return true;
             }
+            //Clear energy after spawn
+            energyConsumed -= energyCost;
         }
-        return false;
+        return spawned;
     }
 
     // region Serialization

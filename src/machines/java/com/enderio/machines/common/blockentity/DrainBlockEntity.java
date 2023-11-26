@@ -13,11 +13,9 @@ import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.FixedIOConfig;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
-import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.menu.DrainMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -96,51 +94,57 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
         }
         FluidState fluidState = level.getFluidState(worldPosition.below());
         if (fluidState.isEmpty() || !fluidState.isSource()) {
+            updateMachineState(MachineState.NO_SOURCE, true);
             return false;
         }
+        updateMachineState(MachineState.NO_SOURCE, false);
         type = fluidState.getType();
         return getFluidTankNN().fill(new FluidStack(type, FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.SIMULATE) == FluidType.BUCKET_VOLUME;
     }
 
     public void drainFluids() {
-        if (currentIndex >= positions.size()) {
-            currentIndex--;
-        }
-        BlockPos pos = positions.get(currentIndex);
-
-        //Skip, as this is the last checked block
-        if (pos.equals(worldPosition.below()) && positions.size() != 1) {
-            currentIndex++;
-            return;
-        }
-
-        //Last block, so reset
-        if (currentIndex + 1 == positions.size()) {
-            if (!fluidFound) {
-                pos = worldPosition.below(); //No fluids found, so consume the last block under the drain
-            } else {
-                currentIndex = 0;
-                fluidFound = false;
+        int stop = Math.min(currentIndex + range, positions.size());
+        while (currentIndex < stop) {
+            if (currentIndex >= positions.size()) {
+                currentIndex--;
             }
-        }
+            BlockPos pos = positions.get(currentIndex);
 
-        //Not a valid fluid
-        FluidState fluidState = level.getFluidState(pos);
-        if (fluidState.isEmpty() || !fluidState.isSource() || !getFluidTankNN().isFluidValid(new FluidStack(fluidState.getType(),1))) {
-            currentIndex++;
-            return;
-        }
-
-        //Fluid found, try to consume it
-        fluidFound = true;
-        if (getFluidTankNN().fill(new FluidStack(fluidState.getType(), FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.SIMULATE) == FluidType.BUCKET_VOLUME) {
-            if (consumed >= ENERGY_PER_BUCKET) {
-                level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
-                getFluidTankNN().fill(new FluidStack(fluidState.getType(), FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.EXECUTE);
-                consumed -= ENERGY_PER_BUCKET;
+            //Skip, as this is the last checked block
+            if (pos.equals(worldPosition.below()) && positions.size() != 1) {
                 currentIndex++;
-            } else {
-                consumed += getEnergyStorage().consumeEnergy(ENERGY_PER_BUCKET - consumed, false);
+                continue;
+            }
+
+            //Last block, so reset
+            if (currentIndex + 1 == positions.size()) {
+                if (!fluidFound) {
+                    pos = worldPosition.below(); //No fluids found, so consume the last block under the drain
+                } else {
+                    currentIndex = 0;
+                    fluidFound = false;
+                }
+            }
+
+            //Not a valid fluid
+            FluidState fluidState = level.getFluidState(pos);
+            if (fluidState.isEmpty() || !fluidState.isSource() || !getFluidTankNN().isFluidValid(new FluidStack(fluidState.getType(),1))) {
+                currentIndex++;
+                continue;
+            }
+
+            //Fluid found, try to consume it
+            fluidFound = true;
+            if (getFluidTankNN().fill(new FluidStack(fluidState.getType(), FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.SIMULATE) == FluidType.BUCKET_VOLUME) {
+                if (consumed >= ENERGY_PER_BUCKET) {
+                    level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+                    getFluidTankNN().fill(new FluidStack(fluidState.getType(), FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.EXECUTE);
+                    consumed -= ENERGY_PER_BUCKET;
+                    currentIndex++;
+                } else {
+                    consumed += getEnergyStorage().consumeEnergy(ENERGY_PER_BUCKET - consumed, false);
+                }
+                return;
             }
         }
     }
@@ -180,9 +184,14 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
         }
     }
 
-    @Override
     protected @Nullable FluidTank createFluidTank() {
-        return new MachineFluidTank(CAPACITY, f-> type.isSame(f.getFluid()),this);
+        return new MachineFluidTank(CAPACITY, f-> type.isSame(f.getFluid()),this) {
+            @Override
+            protected void onContentsChanged() {
+                setChanged();
+                updateMachineState(MachineState.FULL_TANK, getFluidAmount() >= getCapacity());
+            }
+        };
     }
 
     @Nullable
@@ -201,21 +210,5 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
     public void load(CompoundTag pTag) {
         super.load(pTag);
         consumed = pTag.getInt(CONSUMED);
-    }
-
-    @Override
-    public MutableComponent getBlockedReason() {
-        MutableComponent superComp = super.getBlockedReason();
-        if (!superComp.equals(MachineLang.TOOLTIP_ACTIVE)) {
-            return superComp;
-        }
-        if (level == null || level.getFluidState(getBlockPos().below()).isEmpty() || !level.getFluidState(getBlockPos().below()).isSource()) {
-            return MachineLang.TOOLTIP_NO_SOURCE;
-        }
-        if (getFluidTankNN().getFluidAmount() >= getFluidTankNN().getCapacity()) {
-            return MachineLang.TOOLTIP_FULL_TANK;
-
-        }
-        return MachineLang.TOOLTIP_ACTIVE;
     }
 }

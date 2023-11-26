@@ -36,20 +36,28 @@ public interface IIOAwareConduitTicker extends ILoadedAwareConduitTicker {
         for (ColorControl color: ColorControl.values()) {
             List<Connection> extractList = extracts.get(color);
             List<Connection> insertList = inserts.get(color);
-            if (extractList.isEmpty() || insertList.isEmpty())
+            if (extractList.isEmpty() || insertList.isEmpty()) {
                 continue;
+            }
+
             tickColoredGraph(type, insertList, extractList, color, level, graph, isRedstoneActive);
         }
     }
 
     void tickColoredGraph(IConduitType<?> type, List<Connection> inserts, List<Connection> extracts, ColorControl color, ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive);
     default boolean isRedstoneMode(IConduitType<?> type, ServerLevel level, BlockPos pos, NodeIdentifier.IOState state, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
-        if (!type.getMenuData().showRedstoneExtract())
+        if (!type.getMenuData().showRedstoneExtract()) {
             return true;
-        if (state.control() == RedstoneControl.ALWAYS_ACTIVE)
+        }
+
+        if (state.control() == RedstoneControl.ALWAYS_ACTIVE) {
             return true;
-        if (state.control() == RedstoneControl.NEVER_ACTIVE)
+        }
+
+        if (state.control() == RedstoneControl.NEVER_ACTIVE) {
             return false;
+        }
+
         boolean hasRedstone = false;
         for (Direction direction: Direction.values()) {
             if (level.getSignal(pos.relative(direction), direction) > 0) {
@@ -57,6 +65,7 @@ public interface IIOAwareConduitTicker extends ILoadedAwareConduitTicker {
                 break;
             }
         }
+
         return state.control().isActive(hasRedstone || isRedstoneActive.apply(level, pos, state.redstoneChannel()));
     }
     record Connection(BlockPos pos, Direction dir, IExtendedConduitData<?> data) {

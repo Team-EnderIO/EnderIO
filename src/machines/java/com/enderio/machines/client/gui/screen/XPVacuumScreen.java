@@ -3,7 +3,6 @@ package com.enderio.machines.client.gui.screen;
 import com.enderio.EnderIO;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.enderio.core.client.gui.widgets.ToggleImageButton;
 import com.enderio.machines.client.gui.widget.ActiveWidget;
@@ -15,7 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class XPVacuumScreen extends EIOScreen<XPVacuumMenu> {
+public class XPVacuumScreen extends MachineScreen<XPVacuumMenu> {
 
     private static final ResourceLocation XP_VACUUM_BG = EnderIO.loc("textures/gui/xp_vacuum.png");
     private static final ResourceLocation BUTTONS = EnderIO.loc("textures/gui/icons/buttons.png");
@@ -42,7 +41,7 @@ public class XPVacuumScreen extends EIOScreen<XPVacuumMenu> {
         addRenderableWidget(
             new ImageButton(leftPos + imageWidth - 6 - 8 - 2 - 16, topPos + 42, 8, 8, 8, 8, 16, BUTTONS, (b) -> this.menu.getBlockEntity().decreaseRange()));
 
-        addRenderableWidget(new ActiveWidget(this, menu.getBlockEntity()::getBlockedReason, leftPos + imageWidth - 6 - 16, topPos + 52));
+        addRenderableWidget(new ActiveWidget(this, menu.getBlockEntity()::getMachineStates, leftPos + imageWidth - 6 - 16, topPos + 52));
 
     }
 

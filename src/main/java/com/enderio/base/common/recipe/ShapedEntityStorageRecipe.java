@@ -59,8 +59,9 @@ public class ShapedEntityStorageRecipe extends ShapedRecipe {
             ItemStack stack = container.getItem(slot);
 
             LazyOptional<IEntityStorage> storage = stack.getCapability(EIOCapabilities.ENTITY_STORAGE);
-            if (storage.isPresent())
+            if (storage.isPresent()) {
                 return storage;
+            }
         }
 
         return LazyOptional.empty();
@@ -81,8 +82,10 @@ public class ShapedEntityStorageRecipe extends ShapedRecipe {
         @Override
         public @Nullable ShapedEntityStorageRecipe fromNetwork(ResourceLocation pRecipeId, FriendlyByteBuf pBuffer) {
             var shaped = RecipeSerializer.SHAPED_RECIPE.fromNetwork(pRecipeId, pBuffer);
-            if (shaped == null)
+            if (shaped == null) {
                 return null;
+            }
+
             return new ShapedEntityStorageRecipe(shaped);
         }
 

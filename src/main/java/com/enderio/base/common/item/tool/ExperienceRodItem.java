@@ -7,7 +7,6 @@ import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.network.CoreNetwork;
 import com.enderio.core.common.network.EmitParticlePacket;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -31,8 +30,9 @@ public class ExperienceRodItem extends Item {
     @Override
     public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
         Level level = context.getLevel();
-        if (level.isClientSide())
+        if (level.isClientSide()) {
             return InteractionResult.SUCCESS;
+        }
 
         Player player = context.getPlayer();
         BlockPos pos = context.getClickedPos();
@@ -97,8 +97,9 @@ public class ExperienceRodItem extends Item {
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity != null) {
                 return blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER).map(fluidHandler -> {
-                    int fluidVolume = ExperienceUtil.getPlayerTotalXp(player) * ExperienceUtil.EXP_TO_FLUID;
-                    FluidStack fs = new FluidStack(EIOFluids.XP_JUICE.getSource(), fluidVolume);
+                    long fluidVolume = ExperienceUtil.getPlayerTotalXp(player) * ExperienceUtil.EXP_TO_FLUID;
+                    int cappedVolume = (int) Math.min(Integer.MAX_VALUE, fluidVolume);
+                    FluidStack fs = new FluidStack(EIOFluids.XP_JUICE.getSource(), cappedVolume);
                     int takenVolume = fluidHandler.fill(fs, IFluidHandler.FluidAction.EXECUTE);
                     if (takenVolume > 0) {
                         player.giveExperiencePoints(-takenVolume / ExperienceUtil.EXP_TO_FLUID);

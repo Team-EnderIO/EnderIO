@@ -24,8 +24,10 @@ public class SoulEngineMenu extends MachineMenu<SoulEngineBlockEntity>{
 
     public static SoulEngineMenu factory(@Nullable MenuType<SoulEngineMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
-        if (entity instanceof SoulEngineBlockEntity castBlockEntity)
+        if (entity instanceof SoulEngineBlockEntity castBlockEntity) {
             return new SoulEngineMenu(castBlockEntity, inventory, pContainerId);
+        }
+
         LogManager.getLogger().warn("couldn't find BlockEntity");
         return new SoulEngineMenu(null, inventory, pContainerId);
     }

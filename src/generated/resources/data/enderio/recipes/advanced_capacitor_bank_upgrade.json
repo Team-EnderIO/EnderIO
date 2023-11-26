@@ -9,7 +9,7 @@
       "item": "enderio:double_layer_capacitor"
     },
     "E": {
-      "item": "enderio:energetic_alloy_ingot"
+      "tag": "forge:ingots/energetic_alloy"
     }
   },
   "pattern": [

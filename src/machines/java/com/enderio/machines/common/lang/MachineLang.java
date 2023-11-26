@@ -22,6 +22,8 @@ public class MachineLang {
     public static final MutableComponent TOOLTIP_SAG_MILL_CHANCE = REGISTRATE.addLang("gui", EnderIO.loc("sag_mill_chance"), "Chance: %s%%");
     public static final MutableComponent TOOLTIP_NO_SOULBOUND = REGISTRATE.addLang("gui", EnderIO.loc("no_soulbound"), "Bind a soul to the item to be able to use it");
     public static final MutableComponent TOOLTIP_ACTIVE = REGISTRATE.addLang("gui", EnderIO.loc("active"), "The machine is active");
+    public static final MutableComponent TOOLTIP_IDLE = REGISTRATE.addLang("gui", EnderIO.loc("idle"), "The machine is ready to work");
+
     public static final MutableComponent TOOLTIP_NO_CAPACITOR = REGISTRATE.addLang("gui", EnderIO.loc("no_capacitor"), "Install a capacitor to be able to use the machine");
     public static final MutableComponent TOOLTIP_NO_POWER = REGISTRATE.addLang("gui", EnderIO.loc("no_power"), "There is not enough power to use the machine");
     public static final MutableComponent TOOLTIP_FULL_POWER = REGISTRATE.addLang("gui", EnderIO.loc("full_power"), "The energy storage is full");
@@ -29,6 +31,8 @@ public class MachineLang {
     public static final MutableComponent TOOLTIP_EMPTY_TANK = REGISTRATE.addLang("gui", EnderIO.loc("empty_tank"), "The tank is empty");
     public static final MutableComponent TOOLTIP_FULL_TANK = REGISTRATE.addLang("gui", EnderIO.loc("full_tank"), "The tank is full");
     public static final MutableComponent TOOLTIP_BLOCKED_RESTONE = REGISTRATE.addLang("gui", EnderIO.loc("blocked_redstone"), "The machine is blocked by redstone");
+    public static final MutableComponent TOOLTIP_OUTPUT_FULL = REGISTRATE.addLang("gui", EnderIO.loc("output_full"), "There is not enough room for the output");
+    public static final MutableComponent TOOLTIP_INPUT_EMPTY = REGISTRATE.addLang("gui", EnderIO.loc("input_empty"), "There is no item in the input");
 
 
     // region JEI Categories
@@ -56,6 +60,14 @@ public class MachineLang {
     public static final Component PLACE_CAPACITOR_BANK_ADVANCEMENT_TITLE = REGISTRATE.addLang("advancements", EnderIO.loc("place_capacitor_bank.title"), "Modular Power Storage");
     public static final Component PLACE_CAPACITOR_BANK_ADVANCEMENT_DESCRIPTION = REGISTRATE.addLang("advancements", EnderIO.loc("place_capacitor_bank.description"), "Build a Capacitor Bank");
     public static final Component MULTIBLOCK_CONNECTED_TEXTURES = REGISTRATE.addLang("hint", EnderIO.loc("connected_textures.text"), "If you are looking for connected textures on the capacitor bank, you might want to install Athena on your client");
+
+   // GUI BUTTONS
+    public static final Component RETRIEVE_1 = REGISTRATE.addLang("gui", EnderIO.loc("button.retrieve_1_level"), "Retrieve 1 level of XP");
+    public static final Component RETRIEVE_10 = REGISTRATE.addLang("gui", EnderIO.loc("button.retrieve_10_level"), "Retrieve 10 levels of XP");
+    public static final Component RETRIEVE_ALL = REGISTRATE.addLang("gui", EnderIO.loc("button.retrieve_all_level"), "Retrieve all levels of XP");
+    public static final Component STORE_1 = REGISTRATE.addLang("gui", EnderIO.loc("button.store_1_level"), "Store 1 level of XP");
+    public static final Component STORE_10 = REGISTRATE.addLang("gui", EnderIO.loc("button.store_10_level"), "Store 10 levels of XP");
+    public static final Component STORE_ALL = REGISTRATE.addLang("gui", EnderIO.loc("button.store_all_level"), "Store all levels of XP");
 
     public static void register() {}
 }

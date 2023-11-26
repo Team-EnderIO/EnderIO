@@ -10,20 +10,20 @@ import com.enderio.base.common.item.capacitors.BaseCapacitorItem;
 import com.enderio.core.common.network.slot.NetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.ProgressMachineBlock;
+import com.enderio.machines.common.blockentity.MachineState;
 import com.enderio.machines.common.blockentity.sync.MachineEnergyNetworkDataSlot;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.ImmutableMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
-import com.enderio.machines.common.lang.MachineLang;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -53,6 +53,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
 
     private ICapacitorData cachedCapacitorData = DefaultCapacitorData.NONE;
     private boolean capacitorCacheDirty;
+    private boolean updateModel = false;
 
     public PoweredMachineBlockEntity(EnergyIOMode energyIOMode, ICapacitorScalable capacity, ICapacitorScalable usageRate, BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
@@ -91,7 +92,13 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
         if (level != null) {
             BlockState blockState = getBlockState();
             if (blockState.hasProperty(ProgressMachineBlock.POWERED) && blockState.getValue(ProgressMachineBlock.POWERED) != isActive()) {
-                level.setBlock(getBlockPos(), blockState.setValue(ProgressMachineBlock.POWERED, isActive()), Block.UPDATE_ALL);
+                if (updateModel) {
+                    level.setBlock(getBlockPos(), blockState.setValue(ProgressMachineBlock.POWERED, isActive()), Block.UPDATE_ALL);
+                    updateMachineState(MachineState.ACTIVE, isActive());
+                }
+                updateModel = true;
+            } else {
+                updateModel = false;
             }
         }
 
@@ -116,12 +123,15 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
         if (level != null && level.isClientSide()) {
             return clientEnergyStorage;
         }
+
         return energyStorage;
     }
 
     public final boolean hasEnergy() {
-        if (requiresCapacitor() && !isCapacitorInstalled())
+        if (requiresCapacitor() && !isCapacitorInstalled()) {
             return false;
+        }
+
         return getEnergyStorage().getEnergyStored() > 0;
     }
 
@@ -131,8 +141,10 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
      * For example a wrapper for combining photovoltaic cells or capacitor banks
      */
     public final IMachineEnergyStorage getExposedEnergyStorage() {
-        if (exposedEnergyStorage != null)
+        if (exposedEnergyStorage != null) {
             return exposedEnergyStorage;
+        }
+
         return getEnergyStorage();
     }
 
@@ -152,13 +164,16 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
      */
     private void pushEnergy() {
         // Don't bother if our energy storage cannot output ever.
-        if (!getExposedEnergyStorage().getIOMode().canOutput())
+        if (!getExposedEnergyStorage().getIOMode().canOutput()) {
             return;
+        }
 
         // Transmit power out all sides.
         for (Direction side : Direction.values()) {
-            if (!shouldPushEnergyTo(side))
+            if (!shouldPushEnergyTo(side)) {
                 continue;
+            }
+
             // Get our energy handler, this will handle all sidedness tests for us.
             getCapability(ForgeCapabilities.ENERGY, side).resolve().ifPresent(selfHandler -> {
                 // Get the other energy handler
@@ -199,6 +214,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
             @Override
             protected void onContentsChanged() {
                 setChanged();
+                updateMachineState(MachineState.NO_POWER, getEnergyStorage().getEnergyStored() <= 0);
 
             }
         };
@@ -222,6 +238,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
                 return InteractionResult.sidedSuccess(context.getLevel().isClientSide());
             }
         }
+
         return InteractionResult.PASS;
     }
 
@@ -230,15 +247,19 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
      */
     public final boolean requiresCapacitor() {
         MachineInventoryLayout layout = getInventoryLayout();
-        if (layout == null)
+        if (layout == null) {
             return false;
+        }
+
         return layout.supportsCapacitor();
     }
 
     public final int getCapacitorSlot() {
         MachineInventoryLayout layout = getInventoryLayout();
-        if (layout == null)
+        if (layout == null) {
             return -1;
+        }
+
         return layout.getCapacitorSlot();
     }
 
@@ -249,16 +270,21 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
         if (level != null && level.isClientSide) {
             return !getCapacitorItem().isEmpty();
         }
-        if (capacitorCacheDirty)
+
+        if (capacitorCacheDirty) {
             cacheCapacitorData();
+        }
+
         return cachedCapacitorData != DefaultCapacitorData.NONE;
     }
 
     public ItemStack getCapacitorItem() {
         MachineInventory inventory = getInventory();
         MachineInventoryLayout layout = getInventoryLayout();
-        if (inventory == null || layout == null)
+        if (inventory == null || layout == null) {
             return ItemStack.EMPTY;
+        }
+
         return inventory.getStackInSlot(layout.getCapacitorSlot());
     }
 
@@ -266,8 +292,10 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
      * Get the capacitor data for the machine.
      */
     public ICapacitorData getCapacitorData() {
-        if (capacitorCacheDirty)
+        if (capacitorCacheDirty) {
             cacheCapacitorData();
+        }
+
         return cachedCapacitorData;
     }
 
@@ -275,7 +303,10 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
     protected void onInventoryContentsChanged(int slot) {
         MachineInventoryLayout inventoryLayout = getInventoryLayout();
         if (inventoryLayout != null && inventoryLayout.getCapacitorSlot() == slot) {
-            capacitorCacheDirty = true;
+            if (requiresCapacitor()) {
+                updateMachineState(MachineState.NO_CAPACITOR, getCapacitorItem().isEmpty());
+                capacitorCacheDirty = true;
+            }
         }
         super.onInventoryContentsChanged(slot);
     }
@@ -288,9 +319,10 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
         capacitorCacheDirty = false;
 
         // Don't do this on client side, client waits for the sync packet.
-        if (level.isClientSide()) {
-            return;
-        }
+        // TODO Do we want to sync with a packet cause right now we don't
+//        if (level.isClientSide()) {
+//            return;
+//        }
 
         MachineInventoryLayout layout = getInventoryLayout();
         if (requiresCapacitor() && layout != null) {
@@ -312,36 +344,37 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
     @Override
     public void saveAdditional(CompoundTag pTag) {
         var energyStorage = getEnergyStorage();
-        if (energyStorage instanceof MachineEnergyStorage storage)
+        if (energyStorage instanceof MachineEnergyStorage storage) {
             pTag.put(MachineNBTKeys.ENERGY, storage.serializeNBT());
+        }
+
         super.saveAdditional(pTag);
     }
 
     @Override
     public void load(CompoundTag pTag) {
         var energyStorage = getEnergyStorage();
-        if (energyStorage instanceof MachineEnergyStorage storage && pTag.contains(MachineNBTKeys.ENERGY))
+        if (energyStorage instanceof MachineEnergyStorage storage && pTag.contains(MachineNBTKeys.ENERGY)) {
             storage.deserializeNBT(pTag.getCompound(MachineNBTKeys.ENERGY));
+        }
+
         super.load(pTag);
+
+        cacheCapacitorData();
+
+        updateMachineState(MachineState.NO_CAPACITOR, requiresCapacitor() && getCapacitorItem().isEmpty());
+        updateMachineState(MachineState.NO_POWER, energyStorage.getEnergyStored() <= 0);
     }
 
     // endregion
 
     @Override
-    public MutableComponent getBlockedReason() {
-        MutableComponent superComp = super.getBlockedReason();
-        if (!superComp.equals(MachineLang.TOOLTIP_ACTIVE)) {
-            return superComp;
-        }
-        if (isActive()) {
-            return MachineLang.TOOLTIP_ACTIVE;
-        }
-        if (requiresCapacitor() && !isCapacitorInstalled()) {
-            return MachineLang.TOOLTIP_NO_CAPACITOR;
-        }
-        if (getEnergyStorage().getEnergyStored() <= 0) {
-            return MachineLang.TOOLTIP_NO_POWER;
-        }
-        return MachineLang.TOOLTIP_ACTIVE;
+    public void setLevel(Level level) {
+        super.setLevel(level);
+
+        //These are the values before Load is called. In case the machine is placed down without nbt, Load isn't called, so it will use these values.
+        //Ideally I would want to use onLoad, but when placing a block this is called before load is done.
+        updateMachineState(MachineState.NO_CAPACITOR, requiresCapacitor() && getCapacitorItem().isEmpty());
+        updateMachineState(MachineState.NO_POWER, energyStorage.getEnergyStored() <= 0);
     }
 }

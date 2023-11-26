@@ -32,15 +32,17 @@ public class CapacitorBankItem extends BlockItem {
 
         private final ItemStack container;
         private final int capacity;
-        public BlockEntityEnergyStorage(ItemStack container, int capacity) {
+        BlockEntityEnergyStorage(ItemStack container, int capacity) {
             this.container = container;
             this.capacity = capacity;
         }
 
         @Override
         public int receiveEnergy(int maxReceive, boolean simulate) {
-            if (simulate)
+            if (simulate) {
                 return Math.min(maxReceive, getMaxEnergyStored() - getEnergyStored());
+            }
+
             int stored = getEnergyStored();
             int received = Math.min(maxReceive, getMaxEnergyStored() - stored);
             setEnergyStored(stored + received);
@@ -49,8 +51,10 @@ public class CapacitorBankItem extends BlockItem {
 
         @Override
         public int extractEnergy(int maxExtract, boolean simulate) {
-            if (simulate)
+            if (simulate) {
                 return Math.min(maxExtract, getEnergyStored());
+            }
+
             int stored = getEnergyStored();
             int extracted = Math.min(maxExtract, stored);
             setEnergyStored(stored - extracted);
@@ -105,8 +109,10 @@ public class CapacitorBankItem extends BlockItem {
 
         @Override
         public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-            if (cap == ForgeCapabilities.ENERGY)
+            if (cap == ForgeCapabilities.ENERGY) {
                 return LazyOptional.of(() -> this).cast();
+            }
+
             return LazyOptional.empty();
         }
     }

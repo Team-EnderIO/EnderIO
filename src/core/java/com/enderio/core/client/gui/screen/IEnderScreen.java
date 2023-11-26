@@ -16,8 +16,9 @@ public interface IEnderScreen {
     }
 
     static void renderIcon(GuiGraphics guiGraphics, Vector2i pos, IIcon icon) {
-        if (!icon.shouldRender())
+        if (!icon.shouldRender()) {
             return;
+        }
 
         RenderSystem.enableBlend();
         guiGraphics.blit(icon.getTextureLocation(), pos.x(), pos.y(), icon.getRenderSize().x(), icon.getRenderSize().y(), icon.getTexturePosition().x(),

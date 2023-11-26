@@ -22,6 +22,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class PaintUtils {
+    @Nullable
     public static Block getBlockFromRL(String rl) {
         //Not Nullable, as ForgeRegistries usually return a default
         return ForgeRegistries.BLOCKS.getValue(new ResourceLocation(rl));

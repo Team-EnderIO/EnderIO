@@ -3,6 +3,7 @@ package com.enderio.machines.common.blockentity;
 import com.enderio.api.capability.StoredEntityData;
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.FixedScalable;
+import com.enderio.api.capacitor.LinearScalable;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.network.slot.FluidStackNetworkDataSlot;
@@ -10,21 +11,21 @@ import com.enderio.core.common.network.slot.ResourceLocationNetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
+import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
-import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.menu.SoulEngineMenu;
 import com.enderio.machines.common.souldata.EngineSoul;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
@@ -41,6 +42,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import static com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity.NO_MOB;
 
@@ -48,6 +50,10 @@ import static com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity.
 public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
 
     private static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.SOUL_ENGINE_CAPACITY);
+    public static final LinearScalable BURN_SPEED = new LinearScalable(CapacitorModifier.FIXED, MachinesConfig.COMMON.ENERGY.SOUL_ENGINE_BURN_SPEED);
+    //TODO capacitor increase efficiency
+    public static final LinearScalable GENERATION_SPEED = new LinearScalable(CapacitorModifier.FIXED, () -> 1);
+
     private static final String BURNED_TICKS = "BurnedTicks";
     private StoredEntityData entityData = StoredEntityData.empty();
     public static final int FLUID_CAPACITY = 2 * FluidType.BUCKET_VOLUME;
@@ -82,6 +88,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
             producePower();
         }
 
+        updateMachineState(MachineState.NOT_SOULBOUND, soulData == null || entityData.getEntityType().isEmpty());
         super.serverTick();
     }
 
@@ -99,15 +106,25 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
     }
 
     public void producePower() {
-        if (burnedTicks == soulData.tickpermb()) {
-            if (!getFluidTankNN().isEmpty() && getEnergyStorage().addEnergy(soulData.powerpermb(), true) == soulData.powerpermb()) {
+        if (burnedTicks >= soulData.tickpermb()) {
+            int energy = (int) (soulData.powerpermb() * getGenerationRate());
+            if (!getFluidTankNN().isEmpty() && getEnergyStorage().addEnergy(energy, true) == energy) {
                 getFluidTankNN().drain(1, IFluidHandler.FluidAction.EXECUTE);
-                getEnergyStorage().addEnergy(soulData.powerpermb());
-                burnedTicks = 0;
+                getEnergyStorage().addEnergy(energy);
+                burnedTicks -= soulData.tickpermb();
             }
         } else {
-            burnedTicks ++;
+            burnedTicks += getBurnRate();
         }
+    }
+
+    public int getBurnRate() {
+        return BURN_SPEED.scaleI(this::getCapacitorData).get();
+    }
+
+    public float getGenerationRate() {
+        //TODO return GENERATION_SPEED.scaleF(this::getCapacitorData).get();
+        return MachinesConfig.COMMON.ENERGY.SOUL_ENGINE_BURN_SPEED.get();
     }
 
     @Override
@@ -116,6 +133,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
             @Override
             protected void onContentsChanged() {
                 super.onContentsChanged();
+                updateMachineState(MachineState.EMPTY_TANK, getFluidAmount() <= 0);
                 setChanged();
             }
 
@@ -166,6 +184,16 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
         return new SoulEngineMenu(this, playerInventory, containerId);
     }
 
+    protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, Supplier<Integer> capacity, Supplier<Integer> usageRate) {
+        return new MachineEnergyStorage(getIOConfig(), energyIOMode, capacity, usageRate) {
+            @Override
+            protected void onContentsChanged() {
+                setChanged();
+                updateMachineState(MachineState.FULL_POWER, (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored()) && isCapacitorInstalled());
+            }
+        };
+    }
+
     @Override
     public void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
@@ -178,33 +206,21 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
         super.load(pTag);
         burnedTicks = pTag.getInt(BURNED_TICKS);
         entityData.deserializeNBT(pTag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
+
+        updateMachineState(MachineState.NO_POWER, false);
+        updateMachineState(MachineState.FULL_POWER, (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored()) && isCapacitorInstalled());
+    }
+
+    @Override
+    public void setLevel(Level level) {
+        super.setLevel(level);
+
+        updateMachineState(MachineState.NO_POWER, false);
+        updateMachineState(MachineState.FULL_POWER, (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored()) && isCapacitorInstalled());
     }
 
     @SubscribeEvent
     static void onReload(RecipesUpdatedEvent event) {
         reload = !reload;
-    }
-
-    @Override
-    public MutableComponent getBlockedReason() {
-        if (isActive()) {
-            return MachineLang.TOOLTIP_ACTIVE;
-        }
-        if (entityData.equals(StoredEntityData.empty()) || entityData.getEntityType().isEmpty() || entityData.getEntityType().get().equals(NO_MOB)) {
-            return MachineLang.UNKNOWN;
-        }
-        if (supportsRedstoneControl() && !getRedstoneControl().isActive(this.level.hasNeighborSignal(worldPosition))) {
-            return MachineLang.TOOLTIP_BLOCKED_RESTONE;
-        }
-        if (requiresCapacitor() && !isCapacitorInstalled()) {
-            return MachineLang.TOOLTIP_NO_CAPACITOR;
-        }
-        if (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored()) {
-            return MachineLang.TOOLTIP_FULL_POWER;
-        }
-        if (getFluidTankNN().isEmpty()) {
-            return MachineLang.TOOLTIP_EMPTY_TANK;
-        }
-        return MachineLang.TOOLTIP_ACTIVE;
     }
 }

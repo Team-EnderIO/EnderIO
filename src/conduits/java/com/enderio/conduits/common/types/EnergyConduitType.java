@@ -3,16 +3,23 @@ package com.enderio.conduits.common.types;
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.IClientConduitData;
 import com.enderio.api.conduit.IConduitMenuData;
+import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.conduits.common.init.EnderConduitTypes;
+import com.enderio.conduits.common.integrations.ae2.AE2InWorldConduitNodeHost;
+import com.enderio.conduits.common.tag.ConduitTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.IEnergyStorage;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 public class EnergyConduitType extends SimpleConduitType<EnergyExtendedData> {
     public EnergyConduitType() {
@@ -33,4 +40,16 @@ public class EnergyConduitType extends SimpleConduitType<EnergyExtendedData> {
         }
         return super.getDefaultConnection(level, pos, direction);
     }
+
+    @Override
+    public <K> Optional<LazyOptional<K>> proxyCapability(Capability<K> cap, EnergyExtendedData extendedConduitData, Level level, BlockPos pos, @Nullable Direction direction, Optional<NodeIdentifier.IOState> state) {
+        if (ForgeCapabilities.ENERGY == cap
+            && state.map(NodeIdentifier.IOState::isExtract).orElse(true)
+            && (direction == null || !level.getBlockState(pos.relative(direction)).is(ConduitTags.Blocks.ENERGY_CABLE))) {
+                return Optional.of(extendedConduitData.getSelfCap().cast());
+
+        }
+        return Optional.empty();
+    }
+
 }

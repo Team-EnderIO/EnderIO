@@ -46,27 +46,6 @@
           "type": "minecraft:item",
           "conditions": [
             {
-              "chance": 0.1,
-              "condition": "minecraft:random_chance"
-            }
-          ],
-          "functions": [
-            {
-              "add": false,
-              "damage": {
-                "type": "minecraft:uniform",
-                "max": 2000.0,
-                "min": 1.0
-              },
-              "function": "minecraft:set_damage"
-            }
-          ],
-          "name": "enderio:dark_steel_sword"
-        },
-        {
-          "type": "minecraft:item",
-          "conditions": [
-            {
               "chance": 0.5,
               "condition": "minecraft:random_chance"
             }
@@ -92,6 +71,27 @@
             }
           ],
           "name": "enderio:loot_capacitor"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "chance": 0.1,
+              "condition": "minecraft:random_chance"
+            }
+          ],
+          "functions": [
+            {
+              "add": false,
+              "damage": {
+                "type": "minecraft:uniform",
+                "max": 2000.0,
+                "min": 1.0
+              },
+              "function": "minecraft:set_damage"
+            }
+          ],
+          "name": "enderio:dark_steel_sword"
         }
       ],
       "name": "Ender IO",

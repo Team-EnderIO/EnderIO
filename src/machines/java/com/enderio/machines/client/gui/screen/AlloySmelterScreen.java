@@ -3,7 +3,6 @@ package com.enderio.machines.client.gui.screen;
 import com.enderio.EnderIO;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.enderio.machines.client.gui.widget.ActiveWidget;
 import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
@@ -16,7 +15,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class AlloySmelterScreen extends EIOScreen<AlloySmelterMenu> {
+public class AlloySmelterScreen extends MachineScreen<AlloySmelterMenu> {
 
     public static final ResourceLocation BG_TEXTURE_AUTO = EnderIO.loc("textures/gui/alloy_smelter_auto.png");
     private static final ResourceLocation BG_TEXTURE_ALLOY = EnderIO.loc("textures/gui/alloy_smelter_alloy.png");
@@ -36,7 +35,7 @@ public class AlloySmelterScreen extends EIOScreen<AlloySmelterMenu> {
         addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 6 - 16, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
 
-        addRenderableWidget(new ActiveWidget(this, menu.getBlockEntity()::getBlockedReason, leftPos + imageWidth - 6 - 16, topPos + 16*4));
+        addRenderableWidget(new ActiveWidget(this, menu.getBlockEntity()::getMachineStates, leftPos + imageWidth - 6 - 16, topPos + 16*4));
 
         addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 6 - 16, topPos + 6 + 18 * 2, () -> menu.getBlockEntity().getMode(), mode -> menu.getBlockEntity().setMode(mode), MachineLang.ALLOY_SMELTER_MODE));
 

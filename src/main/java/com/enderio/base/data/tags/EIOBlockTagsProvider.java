@@ -19,9 +19,6 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
-        tag(EIOTags.Blocks.DARK_STEEL_EXPLODABLE_ALLOW_LIST);
-        tag(EIOTags.Blocks.DARK_STEEL_EXPLODABLE_DENY_LIST);
-
         tag(Tags.Blocks.STORAGE_BLOCKS)
             .addTag(EIOTags.Blocks.BLOCKS_CONDUCTIVE_ALLOY)
             .addTag(EIOTags.Blocks.BLOCKS_COPPER_ALLOY)

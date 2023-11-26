@@ -4,7 +4,6 @@ import com.enderio.EnderIO;
 import com.enderio.api.grindingball.IGrindingBallData;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.machines.client.gui.widget.ActiveWidget;
@@ -28,8 +27,8 @@ import net.minecraft.world.entity.player.Inventory;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class SagMillScreen extends EIOScreen<SagMillMenu> {
-    public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/sagmill.png");
+public class SagMillScreen extends MachineScreen<SagMillMenu> {
+    public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/sag_mill.png");
 
     public SagMillScreen(SagMillMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -48,7 +47,7 @@ public class SagMillScreen extends EIOScreen<SagMillMenu> {
         addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 6 - 16, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
 
-        addRenderableWidget(new ActiveWidget(this, menu.getBlockEntity()::getBlockedReason, leftPos + imageWidth - 6 - 16, topPos + 16*4));
+        addRenderableWidget(new ActiveWidget(this, menu.getBlockEntity()::getMachineStates, leftPos + imageWidth - 6 - 16, topPos + 16*4));
 
         addRenderableWidget(new IOConfigButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 24, 16, 16, menu, this::addRenderableWidget, font));
     }
@@ -69,7 +68,7 @@ public class SagMillScreen extends EIOScreen<SagMillMenu> {
         private static final int WIDTH = 4;
         private static final int HEIGHT = 16;
 
-        public GrindingBallWidget(int x, int y) {
+        GrindingBallWidget(int x, int y) {
             super(x, y, WIDTH, HEIGHT, Component.empty());
         }
 
@@ -90,8 +89,9 @@ public class SagMillScreen extends EIOScreen<SagMillMenu> {
         @Override
         public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
             SagMillBlockEntity be = SagMillScreen.this.getMenu().getBlockEntity();
-            if (be == null)
+            if (be == null) {
                 return;
+            }
 
             float durability = be.getGrindingBallDamage();
             IGrindingBallData data = be.getGrindingBallData();
@@ -119,8 +119,9 @@ public class SagMillScreen extends EIOScreen<SagMillMenu> {
                 for (int i = 0; i < tooltipComponents.size(); i++) {
                     tooltip.append(tooltipComponents.get(i));
 
-                    if (i + 1 < tooltipComponents.size())
+                    if (i + 1 < tooltipComponents.size()) {
                         tooltip.append("\n");
+                    }
                 }
 
                 // Set for display

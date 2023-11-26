@@ -141,7 +141,8 @@ minecraft {
             args '--mod', 'enderio', '--server', '--client', '--output', file('src/generated/resources/'),
                     '--existing', file('src/main/resources/'),
                     '--existing', file('src/machines/resources/'),
-                    '--existing', file('src/conduits/resources/')
+                    '--existing', file('src/conduits/resources/'),
+                    '--existing', file('src/armory/resources/')
 
             mods {
                 enderio {
@@ -202,7 +203,7 @@ repositories { RepositoryHandler handler ->
     exclusiveRepo(handler, 'https://maven.tterrag.com/', 'com.tterrag.registrate', 'com.jozufozu.flywheel')
     exclusiveRepo(handler, 'https://modmaven.dev/', 'mezz.jei', 'mcjty.theoneprobe', 'appeng')
     exclusiveRepo(handler, 'https://cursemaven.com', 'curse.maven')
-    exclusiveRepo(handler, 'https://maven.blamejared.com', 'vazkii.patchouli', 'net.darkhax.bookshelf', 'net.darkhax.enchdesc')
+    exclusiveRepo(handler, 'https://maven.blamejared.com', 'vazkii.patchouli', 'net.darkhax.bookshelf', 'net.darkhax.enchdesc', 'com.almostreliable.mods')
     exclusiveRepo(handler, 'https://dogforce-games.com/maven', 'dev.gigaherz.graph')
     exclusiveRepo(handler, 'https://api.modrinth.com/maven', 'maven.modrinth')
 
@@ -260,8 +261,14 @@ dependencies {
     // Jade
     runtimeOnly fg.deobf("curse.maven:jade-324717:${jade_cf_id}")
 
+    //fluxnetworks
+    runtimeOnly fg.deobf("curse.maven:fluxnetworks-248020:4651164")
+
     //Flywheel
     compileOnly fg.deobf("com.jozufozu.flywheel:flywheel-forge-1.20.1:0.6.9-5") // REMOVE When crash is fixed
+
+    // Almost Unified
+    compileOnly fg.deobf("com.almostreliable.mods:almostunified-forge:${minecraft_version}-${almostunified_version}")
 
     // Patchouli
 //    compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
