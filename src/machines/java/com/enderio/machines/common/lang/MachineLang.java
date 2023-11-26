@@ -20,6 +20,20 @@ public class MachineLang {
     public static final Component TOOLTIP_ENERGY_EQUIVALENCE = REGISTRATE.addLang("gui", EnderIO.loc("energy_equivalence"), "A unit of energy, equivalent to FE.");
     public static final MutableComponent TOOLTIP_SAG_MILL_CHANCE_BALL = REGISTRATE.addLang("gui", EnderIO.loc("sag_mill_chance_ball"), "Chance: %s%% (modified by grinding ball)");
     public static final MutableComponent TOOLTIP_SAG_MILL_CHANCE = REGISTRATE.addLang("gui", EnderIO.loc("sag_mill_chance"), "Chance: %s%%");
+    public static final MutableComponent TOOLTIP_NO_SOULBOUND = REGISTRATE.addLang("gui", EnderIO.loc("no_soulbound"), "Bind a soul to the item to be able to use it");
+    public static final MutableComponent TOOLTIP_ACTIVE = REGISTRATE.addLang("gui", EnderIO.loc("active"), "The machine is active");
+    public static final MutableComponent TOOLTIP_IDLE = REGISTRATE.addLang("gui", EnderIO.loc("idle"), "The machine is ready to work");
+
+    public static final MutableComponent TOOLTIP_NO_CAPACITOR = REGISTRATE.addLang("gui", EnderIO.loc("no_capacitor"), "Install a capacitor to be able to use the machine");
+    public static final MutableComponent TOOLTIP_NO_POWER = REGISTRATE.addLang("gui", EnderIO.loc("no_power"), "There is not enough power to use the machine");
+    public static final MutableComponent TOOLTIP_FULL_POWER = REGISTRATE.addLang("gui", EnderIO.loc("full_power"), "The energy storage is full");
+    public static final MutableComponent TOOLTIP_NO_SOURCE = REGISTRATE.addLang("gui", EnderIO.loc("no_source"), "The Drain needs a source block under it to work");
+    public static final MutableComponent TOOLTIP_EMPTY_TANK = REGISTRATE.addLang("gui", EnderIO.loc("empty_tank"), "The tank is empty");
+    public static final MutableComponent TOOLTIP_FULL_TANK = REGISTRATE.addLang("gui", EnderIO.loc("full_tank"), "The tank is full");
+    public static final MutableComponent TOOLTIP_BLOCKED_RESTONE = REGISTRATE.addLang("gui", EnderIO.loc("blocked_redstone"), "The machine is blocked by redstone");
+    public static final MutableComponent TOOLTIP_OUTPUT_FULL = REGISTRATE.addLang("gui", EnderIO.loc("output_full"), "There is not enough room for the output");
+    public static final MutableComponent TOOLTIP_INPUT_EMPTY = REGISTRATE.addLang("gui", EnderIO.loc("input_empty"), "There is no item in the input");
+
 
     // region JEI Categories
 
@@ -34,11 +48,11 @@ public class MachineLang {
 
     // endregion
 
-    public static final Component TOO_MANY_MOB = REGISTRATE.addLang("gui", EnderIO.loc("spawner.too_many_mob"), "Too many mobs");
-    public static final Component TOO_MANY_SPAWNER = REGISTRATE.addLang("gui", EnderIO.loc("spawner.too_many_spawner"), "Too many spawners");
-    public static final Component UNKNOWN = REGISTRATE.addLang("gui", EnderIO.loc("spawner.unknown"), "Unknown mob");
-    public static final Component OTHER_MOD = REGISTRATE.addLang("gui", EnderIO.loc("spawner.other_mod"), "Other mod");
-    public static final Component DISABLED = REGISTRATE.addLang("gui", EnderIO.loc("spawner.disabled"), "Disabled by config");
+    public static final MutableComponent TOO_MANY_MOB = REGISTRATE.addLang("gui", EnderIO.loc("spawner.too_many_mob"), "Too many mobs");
+    public static final MutableComponent TOO_MANY_SPAWNER = REGISTRATE.addLang("gui", EnderIO.loc("spawner.too_many_spawner"), "Too many spawners");
+    public static final MutableComponent UNKNOWN = REGISTRATE.addLang("gui", EnderIO.loc("spawner.unknown"), "Unknown mob");
+    public static final MutableComponent OTHER_MOD = REGISTRATE.addLang("gui", EnderIO.loc("spawner.other_mod"), "Blocked by another mod");
+    public static final MutableComponent DISABLED = REGISTRATE.addLang("gui", EnderIO.loc("spawner.disabled"), "Disabled by config");
     public static final Component PHOTOVOLTAIC_CELL = REGISTRATE.addLang("tooltip", EnderIO.loc("photovoltaic_cell/main"), "Solar Power!");
     public static final Component PHOTOVOLTAIC_CELL_ADVANCED = REGISTRATE.addLang("tooltip", EnderIO.loc("photovoltaic_cell/advanced"), "Produces Power during daylight hours");
     public static final Component PHOTOVOLTAIC_CELL_ADVANCED2 = REGISTRATE.addLang("tooltip", EnderIO.loc("photovoltaic_cell/advanced2"), "Must have a clear line of sight to the sky");

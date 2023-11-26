@@ -55,6 +55,7 @@ public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb>
     @Override
     protected @Nullable FluidTank createFluidTank() {
         return new FluidTank(Integer.MAX_VALUE) {
+
             @Override
             protected void onContentsChanged() {
                 super.onContentsChanged();

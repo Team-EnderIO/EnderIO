@@ -11,6 +11,7 @@ import com.enderio.core.common.network.slot.ResourceLocationNetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
+import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.menu.SoulEngineMenu;
@@ -24,6 +25,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
@@ -40,6 +42,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import static com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity.NO_MOB;
 
@@ -85,6 +88,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
             producePower();
         }
 
+        updateMachineState(MachineState.NOT_SOULBOUND, soulData == null || entityData.getEntityType().isEmpty());
         super.serverTick();
     }
 
@@ -129,6 +133,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
             @Override
             protected void onContentsChanged() {
                 super.onContentsChanged();
+                updateMachineState(MachineState.EMPTY_TANK, getFluidAmount() <= 0);
                 setChanged();
             }
 
@@ -179,6 +184,16 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
         return new SoulEngineMenu(this, playerInventory, containerId);
     }
 
+    protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, Supplier<Integer> capacity, Supplier<Integer> usageRate) {
+        return new MachineEnergyStorage(getIOConfig(), energyIOMode, capacity, usageRate) {
+            @Override
+            protected void onContentsChanged() {
+                setChanged();
+                updateMachineState(MachineState.FULL_POWER, (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored()) && isCapacitorInstalled());
+            }
+        };
+    }
+
     @Override
     public void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
@@ -191,6 +206,17 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
         super.load(pTag);
         burnedTicks = pTag.getInt(BURNED_TICKS);
         entityData.deserializeNBT(pTag.getCompound(MachineNBTKeys.ENTITY_STORAGE));
+
+        updateMachineState(MachineState.NO_POWER, false);
+        updateMachineState(MachineState.FULL_POWER, (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored()) && isCapacitorInstalled());
+    }
+
+    @Override
+    public void setLevel(Level level) {
+        super.setLevel(level);
+
+        updateMachineState(MachineState.NO_POWER, false);
+        updateMachineState(MachineState.FULL_POWER, (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored()) && isCapacitorInstalled());
     }
 
     @SubscribeEvent

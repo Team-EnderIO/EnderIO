@@ -94,8 +94,10 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
         }
         FluidState fluidState = level.getFluidState(worldPosition.below());
         if (fluidState.isEmpty() || !fluidState.isSource()) {
+            updateMachineState(MachineState.NO_SOURCE, true);
             return false;
         }
+        updateMachineState(MachineState.NO_SOURCE, false);
         type = fluidState.getType();
         return getFluidTankNN().fill(new FluidStack(type, FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.SIMULATE) == FluidType.BUCKET_VOLUME;
     }
@@ -182,9 +184,14 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
         }
     }
 
-    @Override
     protected @Nullable FluidTank createFluidTank() {
-        return new MachineFluidTank(CAPACITY, f-> type.isSame(f.getFluid()),this);
+        return new MachineFluidTank(CAPACITY, f-> type.isSame(f.getFluid()),this) {
+            @Override
+            protected void onContentsChanged() {
+                setChanged();
+                updateMachineState(MachineState.FULL_TANK, getFluidAmount() >= getCapacity());
+            }
+        };
     }
 
     @Nullable
