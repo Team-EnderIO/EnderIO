@@ -17,7 +17,7 @@ public class PaintingMachineScreen extends MachineScreen<PaintingMachineMenu> {
     private static final ResourceLocation PAINTING_MACHINE_BG = EnderIO.loc("textures/gui/painting_machine.png");
 
     public PaintingMachineScreen(PaintingMachineMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
-        super(pMenu, pPlayerInventory, pTitle, true);
+        super(pMenu, pPlayerInventory, pTitle);
         this.inventoryLabelY = this.imageHeight - 106;
     }
 

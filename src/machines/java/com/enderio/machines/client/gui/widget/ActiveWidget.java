@@ -1,8 +1,6 @@
 package com.enderio.machines.client.gui.widget;
 
 import com.enderio.EnderIO;
-import com.enderio.api.misc.Vector2i;
-import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.client.gui.widgets.EIOWidget;
 import com.enderio.machines.common.blockentity.MachineState;
 import com.enderio.machines.common.blockentity.MachineStateType;
@@ -10,6 +8,7 @@ import com.enderio.machines.common.lang.MachineLang;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -19,12 +18,12 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 public class ActiveWidget extends EIOWidget {
-    protected static final ResourceLocation WIDGETS = EnderIO.loc("textures/gui/40/widgetsv2.png");
+    protected static final ResourceLocation WIDGETS = EnderIO.loc("textures/gui/icons/machine_states.png");
 
-    private final EIOScreen<?> displayOn;
+    private final Screen displayOn;
     private final Supplier<Set<MachineState>> state;
 
-    public ActiveWidget(EIOScreen<?> displayOn, Supplier<Set<MachineState>> state, int x, int y) {
+    public ActiveWidget(Screen displayOn, Supplier<Set<MachineState>> state, int x, int y) {
         super(x, y, 16, 16);
         this.displayOn = displayOn;
         this.state = state;
@@ -32,7 +31,6 @@ public class ActiveWidget extends EIOWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        displayOn.renderSimpleArea(guiGraphics, new Vector2i(getX(), getY()), new Vector2i(getX() + getWidth(), getY() + getHeight()));
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
         MachineState prio = null;
@@ -41,7 +39,7 @@ public class ActiveWidget extends EIOWidget {
                 prio = machineState;
             }
         }
-        guiGraphics.blit(WIDGETS, x, y, 0, prio == null ? 16 : prio.type().getPriority()*16, 28*16, width, height, 256, 256);
+        guiGraphics.blit(WIDGETS, x, y, 0, prio == null ? 16 : prio.type().getPriority() * 16, 0, width, height, 64, 16);
 
         RenderSystem.disableDepthTest();
         renderToolTip(guiGraphics, mouseX, mouseY);

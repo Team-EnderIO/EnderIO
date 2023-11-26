@@ -30,8 +30,7 @@ public class VacuumChestScreen extends MachineScreen<VacuumChestMenu> {
         addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 16, topPos + 105 , () -> menu.getBlockEntity().getRedstoneControl(),
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
 
-        // FIX
-        addRenderableWidget(new ToggleImageButton<>(this, leftPos + imageWidth - 8 - 16 * 2 -2, topPos + 105, 16, 16, 0, 0, 16, 0, RANGE_BUTTON_TEXTURE,
+        addRenderableWidget(new ToggleImageButton<>(this, leftPos + imageWidth - 8 - 16 * 2 - 2, topPos + 105, 16, 16, 0, 0, 16, 0, RANGE_BUTTON_TEXTURE,
             () -> menu.getBlockEntity().isRangeVisible(), state -> menu.getBlockEntity().setIsRangeVisible(state),
             () -> menu.getBlockEntity().isRangeVisible() ? EIOLang.HIDE_RANGE : EIOLang.SHOW_RANGE));
 
