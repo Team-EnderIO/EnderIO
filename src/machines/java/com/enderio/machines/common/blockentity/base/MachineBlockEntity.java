@@ -9,13 +9,11 @@ import com.enderio.base.common.blockentity.IWrenchable;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.particle.RangeParticleData;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
-import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
-import com.enderio.core.common.network.slot.EnumNetworkDataSlot;
-import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
-import com.enderio.core.common.network.slot.NBTSerializableNetworkDataSlot;
+import com.enderio.core.common.network.slot.*;
 import com.enderio.core.common.util.PlayerInteractionUtil;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.MachineBlock;
+import com.enderio.machines.common.blockentity.MachineState;
 import com.enderio.machines.common.io.IOConfig;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.item.MachineInventory;
@@ -53,13 +51,7 @@ import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
@@ -116,6 +108,8 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     // endregion
 
+    private Set<MachineState> states = new HashSet<>();
+
     public MachineBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
 
@@ -158,6 +152,8 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             }
         });
         addDataSlot(ioConfigDataSlot);
+
+        addDataSlot(new SetNetworkDataSlot<>(this::getMachineStates, l -> states = l, MachineState::toNBT , MachineState::fromNBT, MachineState::toBuffer, MachineState::fromBuffer ));
     }
 
     // region IO Config
@@ -370,6 +366,11 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
                 onInventoryContentsChanged(slot);
                 setChanged();
             }
+
+            @Override
+            public void updateMachineState(MachineState state, boolean add) {
+                MachineBlockEntity.this.updateMachineState(state, add);
+            }
         };
     }
 
@@ -437,7 +438,9 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         }
 
         if (supportsRedstoneControl()) {
-            return redstoneControl.isActive(this.level.hasNeighborSignal(worldPosition));
+            boolean active = redstoneControl.isActive(this.level.hasNeighborSignal(worldPosition));
+            updateMachineState(MachineState.REDSTONE, !active);
+            return active;
         }
 
         return true;
@@ -755,5 +758,20 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     public int getLightEmission() {
         return getBlockState().getLightEmission();
+    }
+
+    public Set<MachineState> getMachineStates() {
+        return states;
+    }
+
+    public void updateMachineState(MachineState state, boolean add) {
+        if (level != null && level.isClientSide) {
+            return;
+        }
+        if (add) {
+            states.add(state);
+        } else {
+            states.remove(state);
+        }
     }
 }

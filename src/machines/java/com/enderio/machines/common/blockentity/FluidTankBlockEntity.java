@@ -181,6 +181,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
             @Override
             protected void onContentsChanged() {
                 onTankContentsChanged();
+                updateMachineState(MachineState.EMPTY_TANK, getFluidAmount() <= 0);
                 super.onContentsChanged();
             }
         };
