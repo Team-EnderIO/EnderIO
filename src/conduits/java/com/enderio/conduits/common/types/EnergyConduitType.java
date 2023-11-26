@@ -46,7 +46,7 @@ public class EnergyConduitType extends SimpleConduitType<EnergyExtendedData> {
         if (ForgeCapabilities.ENERGY == cap
             && state.map(NodeIdentifier.IOState::isExtract).orElse(true)
             && (direction == null || !level.getBlockState(pos.relative(direction)).is(ConduitTags.Blocks.ENERGY_CABLE))) {
-                return Optional.of(extendedConduitData.selfCap.cast());
+                return Optional.of(extendedConduitData.getSelfCap().cast());
 
         }
         return Optional.empty();
