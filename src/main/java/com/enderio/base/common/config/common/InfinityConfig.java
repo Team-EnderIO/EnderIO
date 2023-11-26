@@ -1,6 +1,6 @@
 package com.enderio.base.common.config.common;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ForgeConfigSpec;
 
 public class InfinityConfig {
     public final ForgeConfigSpec.ConfigValue<Boolean> MAKES_SOUND;

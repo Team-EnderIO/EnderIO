@@ -2,7 +2,7 @@ package com.enderio.base.data.recipe;
 
 import com.enderio.core.common.recipes.CountedIngredient;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.registries.ForgeRegistries;
 
 import java.util.HashSet;
 import java.util.List;

@@ -1,7 +1,7 @@
 package com.enderio.machines.common.config.common;
 
 import com.enderio.machines.common.blockentity.task.SpawnerMachineTask;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ForgeConfigSpec;
 
 public class MachinesCommonConfig {
     public final EnergyConfig ENERGY;

@@ -2,8 +2,8 @@ package com.enderio.base.common.event;
 
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
-import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.fml.event.IModBusEvent;
+import net.neoforged.bus.api.Event;
+import net.neoforged.fml.event.IModBusEvent;
 
 public class EIOChestLootEvent extends Event implements IModBusEvent {
 

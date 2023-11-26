@@ -3,7 +3,7 @@ package com.enderio.base.common.network;
 import com.enderio.base.common.menu.CoordinateMenu;
 import com.enderio.core.common.network.ClientToServerMenuPacket;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.NetworkEvent;
 
 public class UpdateCoordinateSelectionNameMenuPacket extends ClientToServerMenuPacket<CoordinateMenu> {
 

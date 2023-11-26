@@ -11,11 +11,11 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.client.model.generators.ItemModelBuilder;
-import net.minecraftforge.client.model.generators.loaders.DynamicFluidContainerModelBuilder;
-import net.minecraftforge.fluids.ForgeFlowingFluid;
-import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.versions.forge.ForgeVersion;
+import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
+import net.neoforged.neoforge.client.model.generators.loaders.DynamicFluidContainerModelBuilder;
+import net.neoforged.neoforge.fluids.ForgeFlowingFluid;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.versions.forge.ForgeVersion;
 
 // TODO: Fluid behaviours and some cleaning. https://github.com/SleepyTrousers/EnderIO-Rewrite/issues/34
 

@@ -16,9 +16,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod.EventBusSubscriber;
 
 import java.util.ArrayList;
 import java.util.List;

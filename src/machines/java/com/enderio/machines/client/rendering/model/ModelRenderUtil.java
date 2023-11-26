@@ -5,7 +5,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.model.pipeline.QuadBakingVertexConsumer;
+import net.neoforged.neoforge.client.model.pipeline.QuadBakingVertexConsumer;
 
 public class ModelRenderUtil {
     /**

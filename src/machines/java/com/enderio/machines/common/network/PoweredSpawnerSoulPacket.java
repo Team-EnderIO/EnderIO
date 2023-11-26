@@ -5,8 +5,8 @@ import com.enderio.machines.common.blockentity.task.SpawnerMachineTask;
 import com.enderio.machines.common.souldata.SpawnerSoul;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.NetworkDirection;
+import net.neoforged.neoforge.network.NetworkEvent;
 
 import java.util.Map;
 import java.util.Optional;

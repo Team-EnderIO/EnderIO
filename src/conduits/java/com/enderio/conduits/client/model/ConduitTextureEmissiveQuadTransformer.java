@@ -6,8 +6,8 @@ import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraftforge.client.model.IQuadTransformer;
-import net.minecraftforge.client.model.QuadTransformers;
+import net.neoforged.neoforge.client.model.IQuadTransformer;
+import net.neoforged.neoforge.client.model.QuadTransformers;
 
 public record ConduitTextureEmissiveQuadTransformer(TextureAtlasSprite newSprite, int lightLevel) implements IQuadTransformer {
 

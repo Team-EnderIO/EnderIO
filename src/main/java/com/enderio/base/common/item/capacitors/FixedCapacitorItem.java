@@ -6,7 +6,7 @@ import com.enderio.api.capacitor.ICapacitorData;
 import com.enderio.base.common.init.EIOCapabilities;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.util.LazyOptional;
+import net.neoforged.neoforge.common.util.LazyOptional;
 import org.jetbrains.annotations.Nullable;
 
 /**

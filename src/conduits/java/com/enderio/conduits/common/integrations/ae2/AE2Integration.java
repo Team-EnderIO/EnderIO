@@ -12,10 +12,10 @@ import com.tterrag.registrate.util.entry.ItemEntry;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.CapabilityToken;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.common.capabilities.Capability;
+import net.neoforged.neoforge.common.capabilities.CapabilityManager;
+import net.neoforged.neoforge.common.capabilities.CapabilityToken;
+import net.neoforged.neoforge.registries.RegistryObject;
 
 import java.util.Optional;
 import java.util.function.Supplier;

@@ -3,7 +3,7 @@ package com.enderio.base.common.capability;
 import com.enderio.api.capability.IEntityStorage;
 import com.enderio.api.capability.StoredEntityData;
 import net.minecraft.nbt.Tag;
-import net.minecraftforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.common.util.INBTSerializable;
 
 public class EntityStorage implements IEntityStorage, INBTSerializable<Tag> {
     private StoredEntityData entity = new StoredEntityData();

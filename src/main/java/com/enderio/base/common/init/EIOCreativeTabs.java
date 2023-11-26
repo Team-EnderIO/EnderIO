@@ -9,7 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.fml.common.Mod;
 
 import java.util.function.Consumer;
 

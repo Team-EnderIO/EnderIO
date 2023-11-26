@@ -1,8 +1,10 @@
 package com.enderio.core.common.network;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.INetworkDirection;
+import net.neoforged.neoforge.network.PlayNetworkDirection;
+import net.neoforged.neoforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.simple.MessageFunctions;
 import org.apache.logging.log4j.LogManager;
 
 import java.util.Optional;
@@ -16,28 +18,26 @@ public interface Packet {
     void handle(NetworkEvent.Context context);
 
 
-    abstract class PacketHandler<MSG extends Packet> implements BiConsumer<MSG, Supplier<NetworkEvent.Context>> {
+    abstract class PacketHandler<MSG extends Packet> {
         public abstract MSG fromNetwork(FriendlyByteBuf buf);
 
         public abstract void toNetwork(MSG packet, FriendlyByteBuf buf);
 
-        @Override
-        public void accept(MSG msg, Supplier<NetworkEvent.Context> context) {
-            NetworkEvent.Context ctx = context.get();
-            if (msg.isValid(context.get())) {
-                ctx.enqueueWork(() -> msg.handle(ctx));
+        public void handle(MSG msg, NetworkEvent.Context context) {
+            if (msg.isValid(context)) {
+                context.enqueueWork(() -> msg.handle(context));
             } else {
-                logPacketError(ctx, "didn't pass check and is invalid", msg);
+                logPacketError(context, "didn't pass check and is invalid", msg);
             }
-            context.get().setPacketHandled(true);
+            context.setPacketHandled(true);
         }
 
-        public abstract Optional<NetworkDirection> getDirection();
+        public abstract Optional<INetworkDirection<?>> getDirection();
     }
 
     static void logPacketError(NetworkEvent.Context context, String error, Packet packet) {
         String sender;
-        if (context.getDirection() == NetworkDirection.PLAY_TO_CLIENT) {
+        if (context.getDirection() == PlayNetworkDirection.PLAY_TO_CLIENT) {
             sender = "the server";
         } else {
             sender = context.getSender().getName().getContents() + " with IP-Address " + context.getSender().getIpAddress();

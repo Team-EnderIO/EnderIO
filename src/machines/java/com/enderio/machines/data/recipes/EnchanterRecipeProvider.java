@@ -17,8 +17,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.registries.ForgeRegistries;
 
 import java.util.HashSet;
 import java.util.Set;

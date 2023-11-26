@@ -9,8 +9,8 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraftforge.fml.util.thread.EffectiveSide;
-import net.minecraftforge.server.ServerLifecycleHooks;
+import net.neoforged.fml.util.thread.EffectiveSide;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -22,8 +22,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.EntityTeleportEvent;
+import net.neoforged.neoforge.common.MinecraftForge;
+import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;

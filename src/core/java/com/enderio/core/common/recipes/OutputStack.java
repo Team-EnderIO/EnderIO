@@ -4,7 +4,7 @@ import com.enderio.core.CoreNBTKeys;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 /**
  * An output stack for a recipe.

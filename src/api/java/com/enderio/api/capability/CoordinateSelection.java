@@ -6,8 +6,8 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.server.ServerLifecycleHooks;
+import net.neoforged.fml.LogicalSide;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
 
 /**

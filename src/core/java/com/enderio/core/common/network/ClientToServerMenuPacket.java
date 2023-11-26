@@ -2,8 +2,9 @@ package com.enderio.core.common.network;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.INetworkDirection;
+import net.neoforged.neoforge.network.PlayNetworkDirection;
+import net.neoforged.neoforge.network.NetworkEvent;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -55,8 +56,8 @@ public abstract class ClientToServerMenuPacket<Menu extends AbstractContainerMen
         }
 
         @Override
-        public Optional<NetworkDirection> getDirection() {
-            return Optional.of(NetworkDirection.PLAY_TO_SERVER);
+        public Optional<INetworkDirection<?>> getDirection() {
+            return Optional.of(PlayNetworkDirection.PLAY_TO_SERVER);
         }
 
         @Override

@@ -4,10 +4,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.network.INetworkDirection;
+import net.neoforged.neoforge.network.PlayNetworkDirection;
+import net.neoforged.neoforge.network.NetworkEvent;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -42,7 +43,7 @@ public class EmitParticlePacket implements Packet {
     }
 
     public EmitParticlePacket(FriendlyByteBuf buf) {
-        particleOptions = readParticle(buf, Objects.requireNonNull(ForgeRegistries.PARTICLE_TYPES.getValue(buf.readResourceLocation())));
+        particleOptions = readParticle(buf, Objects.requireNonNull(BuiltInRegistries.PARTICLE_TYPE.get(buf.readResourceLocation())));
         x = buf.readDouble();
         y = buf.readDouble();
         z = buf.readDouble();
@@ -57,11 +58,11 @@ public class EmitParticlePacket implements Packet {
 
     @Override
     public boolean isValid(NetworkEvent.Context context) {
-        return context.getDirection() == NetworkDirection.PLAY_TO_CLIENT;
+        return context.getDirection() == PlayNetworkDirection.PLAY_TO_CLIENT;
     }
 
     protected void write(FriendlyByteBuf writeInto) {
-        writeInto.writeResourceLocation(Objects.requireNonNull(ForgeRegistries.PARTICLE_TYPES.getKey(particleOptions.getType())));
+        writeInto.writeResourceLocation(Objects.requireNonNull(BuiltInRegistries.PARTICLE_TYPE.getKey(particleOptions.getType())));
         writeInto.writeDouble(x);
         writeInto.writeDouble(y);
         writeInto.writeDouble(z);
@@ -84,8 +85,8 @@ public class EmitParticlePacket implements Packet {
         }
 
         @Override
-        public Optional<NetworkDirection> getDirection() {
-            return Optional.of(NetworkDirection.PLAY_TO_CLIENT);
+        public Optional<INetworkDirection<?>> getDirection() {
+            return Optional.of(PlayNetworkDirection.PLAY_TO_CLIENT);
         }
 
         @Override

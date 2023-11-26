@@ -6,7 +6,7 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
-import net.minecraftforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.Nullable;
 
 public class Owner implements IOwner, INBTSerializable<CompoundTag> {

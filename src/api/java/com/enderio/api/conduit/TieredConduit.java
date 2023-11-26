@@ -3,7 +3,7 @@ package com.enderio.api.conduit;
 import com.enderio.api.UseOnly;
 import com.enderio.api.misc.Vector2i;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.LogicalSide;
+import net.neoforged.fml.LogicalSide;
 
 public abstract class TieredConduit<T extends IExtendedConduitData<T>> implements IConduitType<T> {
     private final ResourceLocation texture;

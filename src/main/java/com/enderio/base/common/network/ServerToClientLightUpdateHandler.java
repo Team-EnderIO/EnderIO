@@ -1,7 +1,7 @@
 package com.enderio.base.common.network;
 
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.network.NetworkEvent.Context;
+import net.neoforged.neoforge.network.NetworkEvent.Context;
 
 import java.util.function.Supplier;
 

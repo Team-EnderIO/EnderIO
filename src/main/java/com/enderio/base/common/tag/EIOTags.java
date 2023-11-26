@@ -15,7 +15,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.versions.forge.ForgeVersion;
+import net.neoforged.neoforge.versions.forge.ForgeVersion;
 
 import java.util.HashMap;
 import java.util.Map;

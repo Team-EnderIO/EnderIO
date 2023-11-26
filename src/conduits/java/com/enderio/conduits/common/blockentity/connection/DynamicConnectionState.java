@@ -10,7 +10,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.LogicalSide;
+import net.neoforged.fml.LogicalSide;
 
 import java.util.HashMap;
 import java.util.Map;

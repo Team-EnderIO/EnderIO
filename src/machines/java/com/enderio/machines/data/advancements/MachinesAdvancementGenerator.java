@@ -15,9 +15,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.common.data.ForgeAdvancementProvider;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.common.data.ForgeAdvancementProvider;
+import net.neoforged.neoforge.registries.ForgeRegistries;
 
 import java.util.Comparator;
 import java.util.HashMap;

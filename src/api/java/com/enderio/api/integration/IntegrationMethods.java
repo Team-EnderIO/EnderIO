@@ -2,7 +2,7 @@ package com.enderio.api.integration;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.data.event.GatherDataEvent;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 import java.util.Optional;
 

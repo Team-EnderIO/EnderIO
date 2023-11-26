@@ -1,8 +1,8 @@
 package com.enderio.base.common.network;
 
 import com.enderio.EnderIO;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.simple.SimpleChannel;
+import net.neoforged.neoforge.network.NetworkRegistry;
+import net.neoforged.neoforge.network.simple.SimpleChannel;
 
 public class EIONetwork {
     private static final String PROTOCOL_VERSION = "1";

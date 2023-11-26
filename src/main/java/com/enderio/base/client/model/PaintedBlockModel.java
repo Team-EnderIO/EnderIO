@@ -29,10 +29,10 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.block.state.properties.SlabType;
-import net.minecraftforge.client.ChunkRenderTypeSet;
-import net.minecraftforge.client.model.IDynamicBakedModel;
-import net.minecraftforge.client.model.IQuadTransformer;
-import net.minecraftforge.client.model.data.ModelData;
+import net.neoforged.neoforge.client.ChunkRenderTypeSet;
+import net.neoforged.neoforge.client.model.IDynamicBakedModel;
+import net.neoforged.neoforge.client.model.IQuadTransformer;
+import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;

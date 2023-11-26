@@ -24,12 +24,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraftforge.event.entity.player.AdvancementEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.ConnectionData;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.neoforge.event.entity.player.AdvancementEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.network.ConnectionData;
+import net.neoforged.neoforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;

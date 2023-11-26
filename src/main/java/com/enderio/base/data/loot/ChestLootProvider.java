@@ -15,7 +15,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
-import net.minecraftforge.fml.ModLoader;
+import net.neoforged.fml.ModLoader;
 
 import java.util.function.BiConsumer;
 

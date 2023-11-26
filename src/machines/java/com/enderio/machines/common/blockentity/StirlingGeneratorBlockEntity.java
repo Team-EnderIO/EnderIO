@@ -20,8 +20,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.fml.LogicalSide;
+import net.neoforged.neoforge.common.ForgeHooks;
+import net.neoforged.fml.LogicalSide;
 import org.jetbrains.annotations.Nullable;
 
 public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {

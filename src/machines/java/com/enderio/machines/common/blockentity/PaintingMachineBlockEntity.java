@@ -33,8 +33,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraftforge.items.wrapper.RecipeWrapper;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
+import net.neoforged.neoforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;

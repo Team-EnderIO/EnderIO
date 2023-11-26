@@ -7,7 +7,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.fml.LogicalSide;
+import net.neoforged.fml.LogicalSide;
 
 public class EnderSkullBlockEntity extends BlockEntity {
     private float animationticks = 0;

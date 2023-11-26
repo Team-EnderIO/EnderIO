@@ -4,8 +4,8 @@ import com.enderio.core.common.network.Packet;
 import com.enderio.machines.common.menu.CrafterMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.NetworkDirection;
+import net.neoforged.neoforge.network.NetworkEvent;
 
 import java.util.List;
 import java.util.Optional;

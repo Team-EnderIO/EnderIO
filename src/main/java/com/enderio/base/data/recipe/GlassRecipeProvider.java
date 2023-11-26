@@ -16,7 +16,7 @@ import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.registries.ForgeRegistries;
 
 import java.util.function.Consumer;
 

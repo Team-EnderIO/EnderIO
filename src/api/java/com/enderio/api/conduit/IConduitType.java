@@ -5,13 +5,13 @@ import com.enderio.api.conduit.ticker.IConduitTicker;
 import com.enderio.api.misc.RedstoneControl;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.capabilities.Capability;
+import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.fml.LogicalSide;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -26,7 +26,7 @@ public interface IConduitType<T extends IExtendedConduitData<T>> {
      * @return the conduit item that holds this type
      */
     default Item getConduitItem() {
-        return ForgeRegistries.ITEMS.getValue(ConduitTypes.getRegistry().getKey(this));
+        return BuiltInRegistries.ITEM.get(ConduitTypes.getRegistry().getKey(this));
     }
 
     default boolean canBeInSameBlock(IConduitType<?> other) {

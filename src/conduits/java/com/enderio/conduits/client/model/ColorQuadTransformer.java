@@ -2,7 +2,7 @@ package com.enderio.conduits.client.model;
 
 import com.enderio.api.misc.ColorControl;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraftforge.client.model.IQuadTransformer;
+import net.neoforged.neoforge.client.model.IQuadTransformer;
 import org.jetbrains.annotations.Nullable;
 
 public record ColorQuadTransformer(@Nullable ColorControl insert, @Nullable ColorControl extract) implements IQuadTransformer {

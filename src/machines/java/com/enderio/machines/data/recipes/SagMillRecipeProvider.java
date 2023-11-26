@@ -17,10 +17,10 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.crafting.conditions.NotCondition;
-import net.minecraftforge.common.crafting.conditions.TagEmptyCondition;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.crafting.conditions.NotCondition;
+import net.neoforged.neoforge.common.crafting.conditions.TagEmptyCondition;
+import net.neoforged.neoforge.registries.ForgeRegistries;
 
 import java.util.HashSet;
 import java.util.List;

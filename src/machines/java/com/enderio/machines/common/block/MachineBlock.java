@@ -26,8 +26,8 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.fml.ModList;
+import net.neoforged.neoforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
 public class MachineBlock extends BaseEntityBlock {

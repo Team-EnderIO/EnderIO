@@ -1,6 +1,6 @@
 package com.enderio.machines.common.config.client;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ForgeConfigSpec;
 
 public class MachinesClientBlocksConfig {
 

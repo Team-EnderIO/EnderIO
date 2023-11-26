@@ -1,6 +1,6 @@
 package com.enderio.machines.common.config.common;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ForgeConfigSpec;
 
 public class EnergyConfig {
     public final ForgeConfigSpec.ConfigValue<Integer> ALLOY_SMELTER_CAPACITY;

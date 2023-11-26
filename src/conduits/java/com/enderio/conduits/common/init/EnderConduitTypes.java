@@ -13,7 +13,7 @@ import com.enderio.conduits.common.types.ItemExtendedData;
 import com.enderio.conduits.common.types.RedstoneConduitType;
 import com.enderio.conduits.common.types.SimpleConduitType;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.RegistryObject;
 
 public class EnderConduitTypes {
 

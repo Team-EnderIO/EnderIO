@@ -2,26 +2,28 @@ package com.enderio.core.data.recipes;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.common.crafting.conditions.ICondition;
-import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
+import net.neoforged.neoforge.common.conditions.ICondition;
+import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * A base recipe provider, does nothing but contain {@link EnderFinishedRecipe}.
  */
 public abstract class EnderRecipeProvider extends RecipeProvider {
-    public EnderRecipeProvider(PackOutput packOutput) {
-        super(packOutput);
+    public EnderRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+        super(packOutput, lookupProvider);
     }
 
     /**
@@ -41,7 +43,7 @@ public abstract class EnderRecipeProvider extends RecipeProvider {
         protected abstract Set<String> getModDependencies();
 
         @Override
-        public ResourceLocation getId() {
+        public ResourceLocation id() {
             return id;
         }
 
@@ -55,19 +57,20 @@ public abstract class EnderRecipeProvider extends RecipeProvider {
             Set<String> modDeps = getModDependencies();
             for (String mod : modDeps) {
                 // Exclude always-present mods :)
-                if (!StringUtils.equalsAny(mod, "minecraft", "forge", "enderio", getId().getNamespace())) {
+                if (!StringUtils.equalsAny(mod, "minecraft", "forge", "enderio", id().getNamespace())) {
                     conditions.add(new ModLoadedCondition(mod));
                 }
             }
 
             // Write to json
-            if (!conditions.isEmpty()) {
+            // TODO: 1.20.2 how to handle the new conditions system.
+            /*if (!conditions.isEmpty()) {
                 JsonArray jsonConditions = new JsonArray();
                 for (ICondition condition : conditions) {
                     jsonConditions.add(CraftingHelper.serialize(condition));
                 }
                 json.add("conditions", jsonConditions);
-            }
+            }*/
         }
 
         public void addCondition(ICondition condition) {
@@ -76,13 +79,7 @@ public abstract class EnderRecipeProvider extends RecipeProvider {
 
         @Nullable
         @Override
-        public JsonObject serializeAdvancement() {
-            return null;
-        }
-
-        @Nullable
-        @Override
-        public ResourceLocation getAdvancementId() {
+        public AdvancementHolder advancement() {
             return null;
         }
     }

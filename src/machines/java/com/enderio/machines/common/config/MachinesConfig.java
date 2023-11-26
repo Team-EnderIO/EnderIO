@@ -2,7 +2,7 @@ package com.enderio.machines.common.config;
 
 import com.enderio.machines.common.config.client.MachinesClientConfig;
 import com.enderio.machines.common.config.common.MachinesCommonConfig;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ForgeConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class MachinesConfig {

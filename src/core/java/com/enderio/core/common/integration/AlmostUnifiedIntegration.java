@@ -1,6 +1,6 @@
 package com.enderio.core.common.integration;
 
-import com.almostreliable.unified.api.AlmostUnifiedLookup;
+/*import com.almostreliable.unified.api.AlmostUnifiedLookup;
 import com.enderio.api.integration.Integration;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -12,3 +12,4 @@ public class AlmostUnifiedIntegration implements Integration {
         return AlmostUnifiedLookup.INSTANCE.getPreferredItemForTag(tagKey);
     }
 }
+*/

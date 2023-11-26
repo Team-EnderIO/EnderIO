@@ -3,8 +3,9 @@ package com.enderio.core.common.network;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.INetworkDirection;
+import net.neoforged.neoforge.network.PlayNetworkDirection;
+import net.neoforged.neoforge.network.NetworkEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,8 +68,8 @@ public class EmitParticlesPacket implements Packet {
         }
 
         @Override
-        public Optional<NetworkDirection> getDirection() {
-            return Optional.of(NetworkDirection.PLAY_TO_CLIENT);
+        public Optional<INetworkDirection<?>> getDirection() {
+            return Optional.of(PlayNetworkDirection.PLAY_TO_CLIENT);
         }
 
         @Override

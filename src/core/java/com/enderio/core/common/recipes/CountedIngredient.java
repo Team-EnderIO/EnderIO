@@ -84,12 +84,12 @@ public record CountedIngredient(Ingredient ingredient, int count) implements Pre
     }
 
     public static CountedIngredient fromJson(JsonObject json) {
-        return new CountedIngredient(Ingredient.fromJson(json.get("ingredient")), json.get("count").getAsInt());
+        return new CountedIngredient(Ingredient.fromJson(json.get("ingredient"), true), json.get("count").getAsInt());
     }
 
     public JsonObject toJson() {
         JsonObject json = new JsonObject();
-        json.add("ingredient", ingredient.toJson());
+        json.add("ingredient", ingredient.toJson(true));
         json.addProperty("count", count);
         return json;
     }

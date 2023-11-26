@@ -8,12 +8,12 @@ import com.enderio.api.capability.IOwner;
 import com.enderio.api.capability.ISideConfig;
 import com.enderio.api.capability.IToggled;
 import com.enderio.api.capacitor.ICapacitorData;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.CapabilityToken;
-import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.common.capabilities.Capability;
+import net.neoforged.neoforge.common.capabilities.CapabilityManager;
+import net.neoforged.neoforge.common.capabilities.CapabilityToken;
+import net.neoforged.neoforge.common.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = EnderIO.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class EIOCapabilities {

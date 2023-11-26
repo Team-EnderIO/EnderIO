@@ -15,7 +15,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraftforge.common.extensions.IForgeBlock;
+import net.neoforged.neoforge.common.extensions.IForgeBlock;
 import org.jetbrains.annotations.Nullable;
 
 public interface IPaintedBlock extends IForgeBlock {

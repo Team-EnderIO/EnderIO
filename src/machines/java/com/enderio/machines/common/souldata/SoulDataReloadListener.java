@@ -32,9 +32,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.OnDatapackSyncEvent;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.neoforge.common.MinecraftForge;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.HashMap;
 import java.util.Map;

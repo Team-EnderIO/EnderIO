@@ -4,7 +4,7 @@ import com.enderio.api.UseOnly;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.fml.LogicalSide;
+import net.neoforged.fml.LogicalSide;
 import org.jetbrains.annotations.Nullable;
 
 /**

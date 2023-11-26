@@ -2,7 +2,7 @@ package com.enderio.machines.common.blockentity.capacitorbank;
 
 import com.enderio.machines.common.blockentity.multienergy.ICapacityTier;
 import com.enderio.machines.common.config.MachinesConfig;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ForgeConfigSpec;
 
 public enum CapacitorTier implements ICapacityTier {
 

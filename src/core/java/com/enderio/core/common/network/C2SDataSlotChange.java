@@ -5,8 +5,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.INetworkDirection;
+import net.neoforged.neoforge.network.PlayNetworkDirection;
+import net.neoforged.neoforge.network.NetworkEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -62,8 +63,8 @@ public class C2SDataSlotChange implements Packet {
         }
 
         @Override
-        public Optional<NetworkDirection> getDirection() {
-            return Optional.of(NetworkDirection.PLAY_TO_SERVER);
+        public Optional<INetworkDirection<?>> getDirection() {
+            return Optional.of(PlayNetworkDirection.PLAY_TO_SERVER);
         }
     }
 }

@@ -1,6 +1,6 @@
 package com.enderio.api.capacitor;
 
-import net.minecraftforge.common.util.NonNullSupplier;
+import net.neoforged.neoforge.common.util.NonNullSupplier;
 
 import java.util.function.Supplier;
 

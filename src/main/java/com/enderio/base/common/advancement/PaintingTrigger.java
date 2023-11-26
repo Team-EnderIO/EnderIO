@@ -11,7 +11,7 @@ import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.registries.ForgeRegistries;
 
 public class PaintingTrigger extends SimpleCriterionTrigger<PaintingTrigger.TriggerInstance> {
     static final ResourceLocation ID = EnderIO.loc("create_painted_block");

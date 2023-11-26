@@ -25,9 +25,9 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.TierSortingRegistry;
-import net.minecraftforge.common.ToolActions;
+import net.neoforged.neoforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.TierSortingRegistry;
+import net.neoforged.neoforge.common.ToolActions;
 
 import java.util.List;
 
@@ -83,7 +83,7 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem,
     }
 
     @Override
-    public boolean canPerformAction(ItemStack stack, net.minecraftforge.common.ToolAction toolAction) {
+    public boolean canPerformAction(ItemStack stack, net.neoforged.neoforge.common.ToolAction toolAction) {
         return super.canPerformAction(stack, toolAction) || (hasSpoon(stack) && ToolActions.DEFAULT_SHOVEL_ACTIONS.contains(toolAction));
     }
 

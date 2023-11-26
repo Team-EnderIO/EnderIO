@@ -1,6 +1,6 @@
 package com.enderio.armory.common.config.common;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ForgeConfigSpec;
 
 public class ArmoryCommonConfig {
 

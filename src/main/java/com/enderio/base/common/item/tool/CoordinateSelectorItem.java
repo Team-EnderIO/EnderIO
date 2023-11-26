@@ -22,7 +22,7 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.neoforge.network.NetworkHooks;
 
 public class CoordinateSelectorItem extends Item {
 

@@ -5,13 +5,13 @@ import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
-import net.minecraftforge.client.model.IQuadTransformer;
+import net.neoforged.neoforge.client.model.IQuadTransformer;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
-import static net.minecraftforge.client.model.IQuadTransformer.COLOR;
-import static net.minecraftforge.client.model.IQuadTransformer.STRIDE;
+import static net.neoforged.neoforge.client.model.IQuadTransformer.COLOR;
+import static net.neoforged.neoforge.client.model.IQuadTransformer.STRIDE;
 
 public class RenderUtil {
     /**
@@ -69,7 +69,7 @@ public class RenderUtil {
     }
 
     /**
-     * {@see net.minecraftforge.client.model.pipeline.QuadBakingVertexConsumer}
+     * {@see net.neoforged.neoforge.client.model.pipeline.QuadBakingVertexConsumer}
      * @return packedUV Data
      */
     public static int[] packUV(float u, float v) {

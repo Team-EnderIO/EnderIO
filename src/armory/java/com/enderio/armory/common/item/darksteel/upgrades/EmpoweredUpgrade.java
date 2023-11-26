@@ -6,8 +6,8 @@ import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.energy.EnergyStorage;
+import net.neoforged.neoforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.energy.EnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;

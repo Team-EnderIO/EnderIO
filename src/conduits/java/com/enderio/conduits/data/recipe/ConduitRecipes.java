@@ -12,8 +12,8 @@ import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraftforge.common.crafting.ConditionalRecipe;
-import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
+import net.neoforged.neoforge.common.crafting.ConditionalRecipe;
+import net.neoforged.neoforge.common.crafting.conditions.ModLoadedCondition;
 
 import java.util.function.Consumer;
 

@@ -7,7 +7,7 @@ import com.enderio.base.common.init.EIOCreativeTabs;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.fml.common.Mod;
 
 import java.util.function.Supplier;
 

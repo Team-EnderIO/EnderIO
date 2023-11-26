@@ -4,8 +4,8 @@ import com.enderio.core.common.util.EnergyUtil;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.IItemDecorator;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.neoforged.neoforge.client.IItemDecorator;
+import net.neoforged.neoforge.common.capabilities.Capabilities;
 
 public class EnergyBarDecorator implements IItemDecorator {
     public static final EnergyBarDecorator INSTANCE = new EnergyBarDecorator();
@@ -22,7 +22,7 @@ public class EnergyBarDecorator implements IItemDecorator {
 
         // Determine fill ratio
         float fillRatio = stack
-            .getCapability(ForgeCapabilities.ENERGY)
+            .getCapability(Capabilities.ENERGY)
             .map(energyStorage -> 1.0f - (float) energyStorage.getEnergyStored() / (float) energyStorage.getMaxEnergyStored())
             .orElse(0f);
 

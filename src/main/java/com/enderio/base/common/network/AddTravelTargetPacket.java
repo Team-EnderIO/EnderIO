@@ -6,8 +6,8 @@ import com.enderio.base.common.travel.TravelSavedData;
 import com.enderio.core.common.network.Packet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.NetworkDirection;
+import net.neoforged.neoforge.network.NetworkEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;

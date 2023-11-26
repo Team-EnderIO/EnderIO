@@ -5,7 +5,7 @@ import com.enderio.armory.common.item.darksteel.upgrades.direct.DirectUpgradeLoo
 import com.enderio.armory.common.item.darksteel.upgrades.direct.DirectUpgradeLootModifier;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraftforge.common.data.GlobalLootModifierProvider;
+import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
 
 public class ArmoryLootModifiersProvider extends GlobalLootModifierProvider {
     public ArmoryLootModifiersProvider(PackOutput output) {

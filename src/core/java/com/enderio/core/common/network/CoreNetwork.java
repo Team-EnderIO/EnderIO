@@ -5,9 +5,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.network.simple.SimpleChannel;
+import net.neoforged.neoforge.network.NetworkRegistry;
+import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.simple.SimpleChannel;
 
 public class CoreNetwork {
     private static final String PROTOCOL_VERSION = "1.0";
@@ -55,7 +55,7 @@ public class CoreNetwork {
     }
 
     public static <P extends Packet> void registerPacket(Packet.PacketHandler<P> handler, Class<P> clazz) {
-        CHANNEL.registerMessage(id(), clazz, handler::toNetwork, handler::fromNetwork, handler, handler.getDirection());
+        CHANNEL.registerMessage(id(), clazz, handler::toNetwork, handler::fromNetwork, handler::handle, handler.getDirection());
     }
 
     private static int id() {

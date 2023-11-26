@@ -70,7 +70,7 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
             return;
         }
 
-        renderBackground(guiGraphics);
+        renderBackground(guiGraphics, pMouseX, pMouseY, pPartialTicks);
         super.render(guiGraphics, pMouseX, pMouseY, pPartialTicks);
         this.renderTooltip(guiGraphics, pMouseX, pMouseY);
         for (LateTooltipData tooltip : tooltips) {
@@ -131,9 +131,10 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
     @Override
     protected void containerTick() {
         super.containerTick();
-        for (EditBox editBox : editBoxList) {
+        // TODO: 1.20.2: What was this doing?
+        /*for (EditBox editBox : editBoxList) {
             editBox.tick();
-        }
+        }*/
     }
 
     public abstract ResourceLocation getBackgroundImage();

@@ -6,11 +6,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.LogicalSide;
+import net.neoforged.fml.common.Mod;
 
 @Mod.EventBusSubscriber(Dist.CLIENT)
 public class DarkSteelLadderHandler {

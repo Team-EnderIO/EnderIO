@@ -3,7 +3,7 @@ package com.enderio.core.common.network.slot;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;

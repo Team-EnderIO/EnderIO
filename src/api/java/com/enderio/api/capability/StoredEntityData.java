@@ -6,8 +6,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraftforge.common.extensions.IForgeEntity;
-import net.minecraftforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.common.extensions.IEntityExtension;
+import net.neoforged.neoforge.common.util.INBTSerializable;
 
 import java.util.Optional;
 
@@ -16,7 +16,7 @@ public class StoredEntityData implements INBTSerializable<Tag> {
     private float maxHealth = 0.0f;
 
     /**
-     * Should match key from {@link IForgeEntity#serializeNBT()}.
+     * Should match key from {@link IEntityExtension#serializeNBT()}.
      */
     public static final String KEY_ID = "id";
 

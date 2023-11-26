@@ -5,7 +5,7 @@ import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.item.darksteel.upgrades.IUpgradeTier;
 import com.enderio.armory.common.lang.ArmoryLang;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ForgeConfigSpec;
 
 import java.util.function.Supplier;
 

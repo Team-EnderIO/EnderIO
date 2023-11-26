@@ -31,7 +31,7 @@ import net.minecraft.Util;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.client.model.generators.loaders.CompositeModelBuilder;
+import net.neoforged.neoforge.client.model.generators.loaders.CompositeModelBuilder;
 
 import java.util.HashMap;
 import java.util.Locale;

@@ -1,11 +1,11 @@
 package com.enderio.core.common.util;
 
 import com.enderio.core.EnderCore;
-import com.enderio.core.common.integration.Integrations;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.tags.ITag;
 
 import java.util.Optional;
 
@@ -20,17 +20,26 @@ public class TagUtil {
      * - If we found nothing in our specified lists, we will pick the first present item.
      */
     public static Optional<Item> getOptionalItem(TagKey<Item> tagKey) {
-        if (Integrations.ALMOST_UNIFIED_INTEGRATION.isPresent()) {
+        /*if (Integrations.ALMOST_UNIFIED_INTEGRATION.isPresent()) {
             Item preferredItem = Integrations.ALMOST_UNIFIED_INTEGRATION.expectPresent().getPreferredItemForTag(tagKey);
             if (preferredItem != null) {
                 return Optional.of(preferredItem);
             }
+        }*/
+
+        Optional<HolderSet.Named<Item>> tag = BuiltInRegistries.ITEM.getTag(tagKey);
+
+        if (tag.isEmpty()) {
+            return Optional.empty();
         }
 
-        ITag<Item> tag = ForgeRegistries.ITEMS.tags().getTag(tagKey);
-
         // Search for an EnderIO item
-        Optional<Item> enderItem = tag.stream().filter(item -> ForgeRegistries.ITEMS.getKey(item).getNamespace().equals(EnderCore.MODID)).findFirst();
+        Optional<Item> enderItem = tag.get()
+            .stream()
+            .filter(itemHolder -> BuiltInRegistries.ITEM.getKey(itemHolder.value()).getNamespace().equals(EnderCore.MODID))
+            .map(Holder::value)
+            .findFirst();
+
         if (enderItem.isPresent()) {
             return enderItem;
         }
@@ -38,6 +47,6 @@ public class TagUtil {
         // TODO: Search based on config precedence
 
         // Return the first thing in the stream.
-        return tag.stream().findFirst();
+        return tag.get().stream().map(Holder::value).findFirst();
     }
 }

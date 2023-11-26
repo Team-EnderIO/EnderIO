@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.util.LazyOptional;
+import net.neoforged.neoforge.common.util.LazyOptional;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedHashSet;

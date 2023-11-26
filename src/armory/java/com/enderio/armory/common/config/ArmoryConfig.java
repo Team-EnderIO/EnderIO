@@ -4,7 +4,7 @@ import com.enderio.armory.common.config.client.ArmoryClientConfig;
 import com.enderio.armory.common.config.common.ArmoryCommonConfig;
 import com.enderio.base.common.config.client.BaseClientConfig;
 import com.enderio.base.common.config.common.BaseCommonConfig;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ForgeConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class ArmoryConfig {

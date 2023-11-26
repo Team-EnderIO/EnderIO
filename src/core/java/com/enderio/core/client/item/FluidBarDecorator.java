@@ -3,16 +3,16 @@ package com.enderio.core.client.item;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.IItemDecorator;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.neoforged.neoforge.client.IItemDecorator;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.common.capabilities.Capabilities;
 
 public class FluidBarDecorator implements IItemDecorator {
     public static final FluidBarDecorator INSTANCE = new FluidBarDecorator();
 
     @Override
     public boolean render(GuiGraphics guiGraphics, Font font, ItemStack stack, int xOffset, int yOffset) {
-        stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).ifPresent(handler -> {
+        stack.getCapability(Capabilities.FLUID_HANDLER_ITEM).ifPresent(handler -> {
             if (handler.getFluidInTank(0).getAmount() <= 0) {
                 return;
             }

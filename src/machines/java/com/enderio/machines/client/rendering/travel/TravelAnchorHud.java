@@ -12,8 +12,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
+import net.neoforged.neoforge.client.gui.overlay.ForgeGui;
+import net.neoforged.neoforge.client.gui.overlay.IGuiOverlay;
 
 public class TravelAnchorHud implements IGuiOverlay {
     public static final TravelAnchorHud INSTANCE = new TravelAnchorHud();

@@ -4,8 +4,8 @@ import com.enderio.api.capability.IDarkSteelUpgradable;
 import com.enderio.api.capability.MultiCapabilityProvider;
 import com.enderio.armory.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.base.common.init.EIOCapabilities;
-import net.minecraftforge.energy.EnergyStorage;
-import net.minecraftforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.energy.EnergyStorage;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import java.util.Optional;
 

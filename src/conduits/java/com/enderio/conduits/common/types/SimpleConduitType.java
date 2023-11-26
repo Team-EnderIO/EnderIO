@@ -10,7 +10,7 @@ import com.enderio.api.misc.Vector2i;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.LogicalSide;
+import net.neoforged.fml.LogicalSide;
 
 import java.util.function.Supplier;
 

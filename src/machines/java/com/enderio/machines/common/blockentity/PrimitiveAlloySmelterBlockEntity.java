@@ -20,10 +20,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.fml.LogicalSide;
+import net.neoforged.neoforge.common.ForgeHooks;
+import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.fml.LogicalSide;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;

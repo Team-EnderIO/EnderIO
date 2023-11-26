@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraftforge.common.util.LazyOptional;
+import net.neoforged.neoforge.common.util.LazyOptional;
 
 import java.util.Optional;
 

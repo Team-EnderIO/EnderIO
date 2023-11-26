@@ -9,8 +9,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.fml.common.Mod;
 
 import java.util.List;
 import java.util.Optional;

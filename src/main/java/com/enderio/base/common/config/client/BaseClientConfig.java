@@ -1,6 +1,6 @@
 package com.enderio.base.common.config.client;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ForgeConfigSpec;
 
 public class BaseClientConfig {
     public final ForgeConfigSpec.ConfigValue<Boolean> MACHINE_PARTICLES;

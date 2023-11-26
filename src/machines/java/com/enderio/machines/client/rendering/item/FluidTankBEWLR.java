@@ -22,8 +22,8 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.registries.ForgeRegistries;
 
 // TODO: No longer lights in the inventory/hand like other machines...
 public class FluidTankBEWLR extends BlockEntityWithoutLevelRenderer {
