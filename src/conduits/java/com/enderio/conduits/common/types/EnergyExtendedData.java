@@ -82,13 +82,10 @@ public class EnergyExtendedData implements IExtendedConduitData<EnergyExtendedDa
         return energySidedData.computeIfAbsent(direction, dir -> new EnergySidedData());
     }
 
-    public void createCap() {
-        selfCap = LazyOptional.of( () -> new EnergyExtendedData.ConduitEnergyStorage(this));
-    }
-
     LazyOptional<IEnergyStorage> getSelfCap() {
-        if (!selfCap.isPresent())
-            selfCap = LazyOptional.of( () -> new EnergyExtendedData.ConduitEnergyStorage(this));
+        if (!selfCap.isPresent()) {
+            selfCap = LazyOptional.of(() -> new EnergyExtendedData.ConduitEnergyStorage(this));
+        }
         return selfCap;
     }
 

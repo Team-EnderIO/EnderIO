@@ -54,8 +54,9 @@ public class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, IExtende
     }
 
     public LazyOptional<AE2InWorldConduitNodeHost> getSelfCap() {
-        if (!selfCap.isPresent())
+        if (!selfCap.isPresent()) {
             selfCap = LazyOptional.of(() -> this);
+        }
         return selfCap;
     }
 
