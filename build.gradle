@@ -202,7 +202,7 @@ dependencies {
     ////runtimeOnly fg.deobf("maven.modrinth:athena-ctm:X6GdUrpW")
 
     // AE2
-    ////compileOnly "appeng:appliedenergistics2-forge:${ae2_version}:api"
+    compileOnly "appeng:appliedenergistics2-forge:${ae2_version}:api"
     ////runtimeOnly fg.deobf("appeng:appliedenergistics2-forge:${ae2_version}")
 
     // Enchantment descriptions

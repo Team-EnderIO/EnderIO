@@ -19,16 +19,14 @@ import net.neoforged.fml.common.Mod;
 public class ConduitHighlightEvent {
 
     @SubscribeEvent
-    public static void highlight(RenderHighlightEvent event) {
-        if (event.getTarget() instanceof BlockHitResult blockHit) {
-            if (Minecraft.getInstance().level.getBlockEntity(blockHit.getBlockPos()) instanceof ConduitBlockEntity conduit) {
-                event.setCanceled(true);
-                BlockPos pos = blockHit.getBlockPos();
-                Vec3 camPos = event.getCamera().getPosition();
-                renderShape(event.getPoseStack(), event.getMultiBufferSource().getBuffer(RenderType.lines()),
-                    conduit.getShape().getShapeFromHit(blockHit.getBlockPos(), blockHit), (double) pos.getX() - camPos.x, (double) pos.getY() - camPos.y,
-                    (double) pos.getZ() - camPos.z, 0.0F, 0.0F, 0.0F, 0.4F);
-            }
+    public static void highlight(RenderHighlightEvent.Block event) {
+        if (Minecraft.getInstance().level.getBlockEntity(event.getTarget().getBlockPos()) instanceof ConduitBlockEntity conduit) {
+            event.setCanceled(true);
+            BlockPos pos = event.getTarget().getBlockPos();
+            Vec3 camPos = event.getCamera().getPosition();
+            renderShape(event.getPoseStack(), event.getMultiBufferSource().getBuffer(RenderType.lines()),
+                conduit.getShape().getShapeFromHit(event.getTarget().getBlockPos(), event.getTarget()), (double) pos.getX() - camPos.x, (double) pos.getY() - camPos.y,
+                (double) pos.getZ() - camPos.z, 0.0F, 0.0F, 0.0F, 0.4F);
         }
     }
 

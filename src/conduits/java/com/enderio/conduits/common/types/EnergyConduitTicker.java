@@ -12,14 +12,14 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.neoforged.neoforge.common.capabilities.Capabilities;
 import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.apache.commons.lang3.function.TriFunction;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 
 public class EnergyConduitTicker extends CapabilityAwareConduitTicker<IEnergyStorage> {
 
@@ -46,7 +46,7 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<IEnergySto
                        if (be == null) {
                            continue;
                        }
-                       Optional<IEnergyStorage> capability = be.getCapability(ForgeCapabilities.ENERGY, dir.getOpposite()).resolve();
+                       Optional<IEnergyStorage> capability = be.getCapability(getCapability(), dir.getOpposite()).resolve();
                        if (capability.isPresent()) {
                            IEnergyStorage insert = capability.get();
                            extractEnergy(energy, List.of(insert), 0, i -> {});
@@ -78,7 +78,7 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<IEnergySto
         }
     }
 
-    private void extractEnergy(IEnergyStorage extractHandler, List<IEnergyStorage> inserts, int startingIndex, Consumer<Integer> rotationIndexSetter) {
+    private void extractEnergy(IEnergyStorage extractHandler, List<IEnergyStorage> inserts, int startingIndex, IntConsumer rotationIndexSetter) {
 
         int availableForExtraction = extractHandler.extractEnergy(Integer.MAX_VALUE, true);
         if (availableForExtraction <= 0) {
@@ -117,7 +117,7 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<IEnergySto
 
     @Override
     public Capability<IEnergyStorage> getCapability() {
-        return ForgeCapabilities.ENERGY;
+        return Capabilities.ENERGY;
     }
 
     @Override

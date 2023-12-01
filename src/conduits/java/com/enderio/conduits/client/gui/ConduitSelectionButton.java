@@ -13,10 +13,10 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class ConduitSelectionButton extends AbstractButton {
-    private final IConduitType type;
-    private final Supplier<IConduitType> getter;
-    private final Consumer<IConduitType> setter;
-    public ConduitSelectionButton(int pX, int pY, IConduitType type, Supplier<IConduitType> getter, Consumer<IConduitType> setter) {
+    private final IConduitType<?> type;
+    private final Supplier<IConduitType<?>> getter;
+    private final Consumer<IConduitType<?>> setter;
+    public ConduitSelectionButton(int pX, int pY, IConduitType<?> type, Supplier<IConduitType<?>> getter, Consumer<IConduitType<?>> setter) {
         super(pX, pY, 21, 24, Component.empty());
         this.type = type;
         this.getter = getter;
@@ -52,7 +52,7 @@ public class ConduitSelectionButton extends AbstractButton {
     protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
     }
 
-    public IConduitType getType() {
+    public IConduitType<?> getType() {
         return type;
     }
 }

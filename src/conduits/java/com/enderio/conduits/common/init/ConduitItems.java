@@ -1,6 +1,7 @@
 package com.enderio.conduits.common.init;
 
 import com.enderio.EnderIO;
+import com.enderio.api.conduit.ConduitApi;
 import com.enderio.api.conduit.ConduitItemFactory;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.base.common.init.EIOCreativeTabs;
@@ -24,7 +25,7 @@ public class ConduitItems {
 
     private static ItemEntry<Item> createConduitItem(Supplier<? extends IConduitType<?>> type, String itemName) {
         return REGISTRATE.item(itemName + "_conduit",
-            properties -> ConduitItemFactory.build(type, properties))
+            properties -> ConduitApi.INSTANCE.createConduitItem(type, properties))
             .tab(EIOCreativeTabs.CONDUITS)
             .model((ctx, prov) -> prov.withExistingParent(itemName+"_conduit", EnderIO.loc("item/conduit")).texture("0", type.get().getItemTexture()))
             .register();

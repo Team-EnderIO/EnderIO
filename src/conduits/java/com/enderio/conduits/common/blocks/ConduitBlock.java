@@ -313,7 +313,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
                 NetworkHooks.openScreen(serverPlayer, conduit.menuProvider(openInformation.get().direction(), openInformation.get().type()), buf -> {
                     buf.writeBlockPos(conduit.getBlockPos());
                     buf.writeEnum(openInformation.get().direction());
-                    buf.writeInt(ConduitTypes.getRegistry().getID(openInformation.get().type()));
+                    buf.writeInt(ConduitTypes.getRegistry().getId(openInformation.get().type()));
                 });
             }
 

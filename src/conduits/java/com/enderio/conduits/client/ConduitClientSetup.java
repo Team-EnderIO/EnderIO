@@ -54,7 +54,7 @@ public class ConduitClientSetup {
         for (ResourceLocation model : MODEL_LOCATIONS) {
             event.register(model);
         }
-        ConduitTypes.getRegistry().getValues().stream().flatMap(type -> type.getClientData().modelsToLoad().stream()).forEach(event::register);
+        ConduitTypes.getRegistry().stream().flatMap(type -> type.getClientData().modelsToLoad().stream()).forEach(event::register);
     }
 
     @SubscribeEvent

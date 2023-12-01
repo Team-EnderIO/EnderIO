@@ -24,6 +24,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -46,7 +47,7 @@ public class ConduitSavedData extends SavedData {
     private final Map<IConduitType<?>, Map<ChunkPos, Map<BlockPos, NodeIdentifier<?>>>> deserializedNodes = new HashMap<>();
 
     public static ConduitSavedData get(ServerLevel level) {
-        return level.getDataStorage().computeIfAbsent(nbt -> new ConduitSavedData(level, nbt), ConduitSavedData::new, "enderio_conduit_network");
+        return level.getDataStorage().computeIfAbsent(new Factory<>(ConduitSavedData::new, nbt -> new ConduitSavedData(level, nbt)), "enderio_conduit_network");
     }
 
     private ConduitSavedData() {
@@ -69,7 +70,7 @@ public class ConduitSavedData extends SavedData {
             ResourceLocation type = new ResourceLocation(typedGraphTag.getString(KEY_TYPE));
 
             if (ConduitTypes.getRegistry().containsKey(type)) {
-                IConduitType<?> value = Objects.requireNonNull(ConduitTypes.getRegistry().getValue(type));
+                IConduitType<?> value = Objects.requireNonNull(ConduitTypes.getRegistry().get(type));
                 ListTag graphsForTypeTag = typedGraphTag.getList(KEY_GRAPHS, Tag.TAG_COMPOUND);
                 for (Tag tag1 : graphsForTypeTag) {
                     CompoundTag graphTag = (CompoundTag) tag1;
@@ -82,7 +83,8 @@ public class ConduitSavedData extends SavedData {
 
                     for (Tag tag2 : graphObjectsTag) {
                         CompoundTag nodeTag = (CompoundTag) tag2;
-                        BlockPos pos = BlockPos.of((nodeTag.getLong(ConduitNBTKeys.BLOCK_POS)));
+                        CompoundTag posTag = nodeTag.getCompound(ConduitNBTKeys.BLOCK_POS);
+                        BlockPos pos = BlockEntity.getPosFromTag(posTag);
                         NodeIdentifier<?> node = new NodeIdentifier<>(pos, value.createExtendedConduitData(level, pos));
                         node.getExtendedConduitData().deserializeNBT(nodeTag.getCompound(KEY_DATA));
                         graphObjects.add(node);
@@ -119,7 +121,10 @@ public class ConduitSavedData extends SavedData {
                   ┃   ┃       ┖ 1: [second object's index]
                   ┃   ┖ graphObjects (list)
                   ┃       ┖ [element]
-                  ┃         ┠ pos: long (representing BlockPos.asLong())
+                  ┃         ┠ pos:
+                  ┃         ┃   ┠ x:
+                  ┃         ┃   ┠ y:
+                  ┃         ┃   ┖ z:
                   ┃         ┖ data: Compound based on type
                   ┖ [next element]
                       ┖ ...
@@ -129,8 +134,9 @@ public class ConduitSavedData extends SavedData {
     @Override
     public CompoundTag save(CompoundTag nbt) {
         ListTag graphsTag = new ListTag();
-        for (IConduitType<?> type : networks.keySet()) {
-            List<Graph<Mergeable.Dummy>> graphs = networks.get(type);
+        for (var entry : networks.entrySet()) {
+            IConduitType<?> type = entry.getKey();
+            List<Graph<Mergeable.Dummy>> graphs = entry.getValue();
             if (graphs.isEmpty()) {
                 continue;
             }
@@ -180,7 +186,11 @@ public class ConduitSavedData extends SavedData {
 
             if (graphObject instanceof NodeIdentifier<?> nodeIdentifier) {
                 CompoundTag dataTag = new CompoundTag();
-                dataTag.putLong(ConduitNBTKeys.BLOCK_POS, nodeIdentifier.getPos().asLong());
+                CompoundTag posTag = new CompoundTag();
+                dataTag.put(ConduitNBTKeys.BLOCK_POS, posTag);
+                posTag.putInt("x", nodeIdentifier.getPos().getX());
+                posTag.putInt("y", nodeIdentifier.getPos().getY());
+                posTag.putInt("z", nodeIdentifier.getPos().getZ());
                 dataTag.put(KEY_DATA, nodeIdentifier.getExtendedConduitData().serializeNBT());
                 graphObjectsTag.add(dataTag);
             } else {
@@ -223,6 +233,7 @@ public class ConduitSavedData extends SavedData {
     }
 
     @Nullable
+    @SuppressWarnings("unchecked")
     public <T extends IExtendedConduitData<T>> NodeIdentifier<T> takeUnloadedNodeIdentifier(IConduitType<T> type, BlockPos pos) {
         ChunkPos chunkPos = new ChunkPos(pos);
 
@@ -275,13 +286,12 @@ public class ConduitSavedData extends SavedData {
 
     private void tick(ServerLevel serverLevel) {
         setDirty();
-        for (IConduitType<?> type : networks.keySet()) {
-            List<Graph<Mergeable.Dummy>> graphs = networks.get(type);
-            graphs.removeIf(graph -> graph.getObjects().isEmpty() || graph.getObjects().iterator().next().getGraph() != graph);
+        for (var entry: networks.entrySet()) {
+            entry.getValue().removeIf(graph -> graph.getObjects().isEmpty() || graph.getObjects().iterator().next().getGraph() != graph);
         }
         for (var entry : networks.entrySet()) {
             for (Graph<Mergeable.Dummy> graph : entry.getValue()) {
-                if (serverLevel.getGameTime() % entry.getKey().getTicker().getTickRate() == ConduitTypes.getRegistry().getID(entry.getKey()) % entry
+                if (serverLevel.getGameTime() % entry.getKey().getTicker().getTickRate() == ConduitTypes.getRegistry().getId(entry.getKey()) % entry
                     .getKey()
                     .getTicker()
                     .getTickRate()) {

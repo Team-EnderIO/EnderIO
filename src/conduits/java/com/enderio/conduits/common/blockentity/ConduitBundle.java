@@ -137,8 +137,8 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         if (index == -1) {
             if (!FMLLoader.isProduction()) {
                 throw new IllegalArgumentException(
-                    "Conduit: " + ConduitTypes.REGISTRY.get().getKey(type) + " is not present in conduit bundle " + Arrays.toString(
-                        types.stream().map(existingType -> ConduitTypes.REGISTRY.get().getKey(existingType)).toArray()));
+                    "Conduit: " + ConduitTypes.REGISTRY.getKey(type) + " is not present in conduit bundle " + Arrays.toString(
+                        types.stream().map(ConduitTypes.REGISTRY::getKey).toArray()));
             }
 
             return types.isEmpty();
@@ -232,7 +232,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         List<Integer> invalidTypes = new ArrayList<>();
         for (int i = 0; i < typesTag.size(); i++) {
             StringTag stringTag = (StringTag) typesTag.get(i);
-            IConduitType<?> type = ConduitTypes.getRegistry().getValue(ResourceLocation.tryParse(stringTag.getAsString()));
+            IConduitType<?> type = ConduitTypes.getRegistry().get(ResourceLocation.tryParse(stringTag.getAsString()));
             if (type == null) {
                 invalidTypes.add(i);
                 continue;
@@ -283,7 +283,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
                 for (Tag tag : nodesTag) {
                     CompoundTag cmp = (CompoundTag) tag;
                     nodes
-                        .get(ConduitTypes.getRegistry().getValue(new ResourceLocation(cmp.getString(KEY_NODE_TYPE))))
+                        .get(ConduitTypes.getRegistry().get(new ResourceLocation(cmp.getString(KEY_NODE_TYPE))))
                         .getExtendedConduitData()
                         .deserializeNBT(cmp.getCompound(KEY_NODE_DATA));
                 }

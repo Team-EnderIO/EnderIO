@@ -6,13 +6,13 @@ import com.enderio.api.conduit.IExtendedConduitData;
 import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
 import com.enderio.core.common.network.Packet;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.network.NetworkDirection;
+import net.neoforged.neoforge.network.INetworkDirection;
 import net.neoforged.neoforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.PlayNetworkDirection;
 
 import java.util.Optional;
 
@@ -29,7 +29,7 @@ public class C2SSetConduitExtendedData implements Packet {
 
     public C2SSetConduitExtendedData(FriendlyByteBuf buf) {
         pos = buf.readBlockPos();
-        conduitType = ConduitTypes.getRegistry().getValue(buf.readResourceLocation());
+        conduitType = ConduitTypes.getRegistry().get(buf.readResourceLocation());
         extendedConduitData = buf.readNbt();
     }
 
@@ -67,8 +67,8 @@ public class C2SSetConduitExtendedData implements Packet {
         }
 
         @Override
-        public Optional<NetworkDirection> getDirection() {
-            return Optional.of(NetworkDirection.PLAY_TO_SERVER);
+        public Optional<INetworkDirection<?>> getDirection() {
+            return Optional.of(PlayNetworkDirection.PLAY_TO_SERVER);
         }
     }
 }

@@ -4,12 +4,9 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.neoforged.neoforge.network.INetworkDirection;
 import net.neoforged.neoforge.network.PlayNetworkDirection;
 import net.neoforged.neoforge.network.NetworkEvent;
-import net.neoforged.neoforge.network.simple.MessageFunctions;
 import org.apache.logging.log4j.LogManager;
 
 import java.util.Optional;
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
 
 public interface Packet {
 

@@ -10,8 +10,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.network.NetworkDirection;
+import net.neoforged.neoforge.network.INetworkDirection;
 import net.neoforged.neoforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.PlayNetworkDirection;
 
 import java.util.Optional;
 
@@ -32,7 +33,7 @@ public class C2SSetConduitConnectionState implements Packet {
     public C2SSetConduitConnectionState(FriendlyByteBuf buf) {
         pos = buf.readBlockPos();
         direction = buf.readEnum(Direction.class);
-        conduitType = ConduitTypes.getRegistry().getValue(buf.readResourceLocation());
+        conduitType = ConduitTypes.getRegistry().get(buf.readResourceLocation());
         connectionState = DynamicConnectionState.fromNetwork(buf);
     }
 
@@ -71,8 +72,8 @@ public class C2SSetConduitConnectionState implements Packet {
         }
 
         @Override
-        public Optional<NetworkDirection> getDirection() {
-            return Optional.of(NetworkDirection.PLAY_TO_SERVER);
+        public Optional<INetworkDirection<?>> getDirection() {
+            return Optional.of(PlayNetworkDirection.PLAY_TO_SERVER);
         }
     }
 }

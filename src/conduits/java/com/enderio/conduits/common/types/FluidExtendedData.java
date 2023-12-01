@@ -3,11 +3,11 @@ package com.enderio.conduits.common.types;
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.IExtendedConduitData;
 import com.enderio.conduits.ConduitNBTKeys;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 public class FluidExtendedData implements IExtendedConduitData<FluidExtendedData> {
@@ -48,7 +48,7 @@ public class FluidExtendedData implements IExtendedConduitData<FluidExtendedData
         CompoundTag nbt = new CompoundTag();
         if (!isMultiFluid) {
             if (lockedFluid != null) {
-                nbt.putString(ConduitNBTKeys.FLUID, ForgeRegistries.FLUIDS.getKey(lockedFluid).toString());
+                nbt.putString(ConduitNBTKeys.FLUID, BuiltInRegistries.FLUID.getKey(lockedFluid).toString());
             } else {
                 nbt.putString(ConduitNBTKeys.FLUID, "null");
             }
@@ -71,10 +71,10 @@ public class FluidExtendedData implements IExtendedConduitData<FluidExtendedData
     public void deserializeNBT(CompoundTag nbt) {
         if (nbt.contains(ConduitNBTKeys.FLUID) && !isMultiFluid) {
             String fluid = nbt.getString(ConduitNBTKeys.FLUID);
-            if (fluid.equals("null") || ForgeRegistries.FLUIDS.getValue(new ResourceLocation(fluid)) == Fluids.EMPTY) {
+            if (fluid.equals("null") || BuiltInRegistries.FLUID.get(new ResourceLocation(fluid)) == Fluids.EMPTY) {
                 setLockedFluid(null);
             } else {
-                setLockedFluid(ForgeRegistries.FLUIDS.getValue(new ResourceLocation(fluid)));
+                setLockedFluid(BuiltInRegistries.FLUID.get(new ResourceLocation(fluid)));
             }
         } else {
             setLockedFluid(null);
