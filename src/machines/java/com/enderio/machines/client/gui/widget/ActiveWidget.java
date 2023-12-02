@@ -18,7 +18,7 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 public class ActiveWidget extends EIOWidget {
-    protected static final ResourceLocation WIDGETS = EnderIO.loc("textures/gui/40/widgetsv2.png");
+    protected static final ResourceLocation WIDGETS = EnderIO.loc("textures/gui/icons/machine_states.png");
 
     private final Screen displayOn;
     private final Supplier<Set<MachineState>> state;
@@ -39,7 +39,7 @@ public class ActiveWidget extends EIOWidget {
                 prio = machineState;
             }
         }
-        guiGraphics.blit(WIDGETS, x, y, 0, prio == null ? 16 : prio.type().getPriority()*16, 28*16, width, height, 256, 256);
+        guiGraphics.blit(WIDGETS, x, y, 0, prio == null ? 16 : prio.type().getPriority() * 16, 0, width, height, 64, 16);
 
         RenderSystem.disableDepthTest();
         renderToolTip(guiGraphics, mouseX, mouseY);
