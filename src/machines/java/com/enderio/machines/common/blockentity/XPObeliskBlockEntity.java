@@ -47,7 +47,7 @@ public class XPObeliskBlockEntity extends MachineBlockEntity {
 
     @Override
     protected @Nullable MachineFluidHandler createFluidHandler(MachineTankLayout layout) {
-        return new MachineFluidHandler(getIOConfig(), getTankLayout()) {
+        return new MachineFluidHandler(getIOConfig(), layout) {
             @Override
             protected void onContentsChanged(int slot) {
                 super.onContentsChanged(slot);
@@ -79,16 +79,16 @@ public class XPObeliskBlockEntity extends MachineBlockEntity {
     public void addLevelToPlayer(int levelDiff, Player player) {
         int requestedLevel = player.experienceLevel + levelDiff;
         requestedLevel = Math.max(requestedLevel, 0);
-        int playerXP = ExperienceUtil.getPlayerTotalXp(player);
-        int requestedXP = ExperienceUtil.getExpFromLevel(requestedLevel) - playerXP;
+        long playerXP = ExperienceUtil.getPlayerTotalXp(player);
+        long requestedXP = ExperienceUtil.getTotalXpFromLevel(requestedLevel) - playerXP;
         int storedXP = TANK.getFluidAmount(this) / ExperienceUtil.EXP_TO_FLUID;
 
-        int awardXP = levelDiff > 0 ? Math.min(storedXP, requestedXP) : requestedXP;
+        long awardXP = levelDiff > 0 ? Math.min(storedXP, requestedXP) : requestedXP;
         awardXP(awardXP, player);
     }
 
     public void addAllLevelToPlayer(boolean give, Player player) {
-        int awardXP = 0;
+        long awardXP = 0;
         if (give) {
             awardXP = TANK.getFluidAmount(this) / ExperienceUtil.EXP_TO_FLUID;
         } else {
@@ -97,17 +97,18 @@ public class XPObeliskBlockEntity extends MachineBlockEntity {
         awardXP(awardXP, player);
     }
 
-    public void awardXP(int exp, Player player) {
-        player.giveExperiencePoints(exp);
-        int volumeToRemove = exp * ExperienceUtil.EXP_TO_FLUID;
-        updateTankContents(-volumeToRemove); // negative to perform remove from tank
-    }
+    public void awardXP(long exp, Player player) {
+        long volumeToRemove = exp * ExperienceUtil.EXP_TO_FLUID;
+        // Positive -> Give levels to player ; Negative -> Take levels from player
+        if (volumeToRemove > 0) {
+            int cappedVolume = (int) Math.min(Integer.MAX_VALUE, volumeToRemove);
+            FluidStack drained = TANK.drain(this, new FluidStack(EIOFluids.XP_JUICE.getSource(), cappedVolume), IFluidHandler.FluidAction.EXECUTE);
+            player.giveExperiencePoints(drained.getAmount() / ExperienceUtil.EXP_TO_FLUID);
 
-    private void updateTankContents(int amount) {
-        if (amount > 0) {
-            TANK.fill(this, new FluidStack(EIOFluids.XP_JUICE.getSource(), amount), IFluidHandler.FluidAction.EXECUTE);
         } else {
-            TANK.drain(this, new FluidStack(EIOFluids.XP_JUICE.getSource(), -amount), IFluidHandler.FluidAction.EXECUTE);
+            int cappedVolume = (int) Math.min(Integer.MAX_VALUE, -volumeToRemove); // Invert
+            int filled = TANK.fill(this, new FluidStack(EIOFluids.XP_JUICE.getSource(), cappedVolume), IFluidHandler.FluidAction.EXECUTE);
+            player.giveExperiencePoints(-1 * filled / ExperienceUtil.EXP_TO_FLUID); // Negative -> Take
         }
     }
 

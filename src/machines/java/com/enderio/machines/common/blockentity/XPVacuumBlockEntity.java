@@ -63,7 +63,7 @@ public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb>
 
     @Override
     protected @Nullable MachineFluidHandler createFluidHandler(MachineTankLayout layout) {
-        return new MachineFluidHandler(getIOConfig(), getTankLayout()) {
+        return new MachineFluidHandler(getIOConfig(), layout) {
             @Override
             protected void onContentsChanged(int slot) {
                 super.onContentsChanged(slot);

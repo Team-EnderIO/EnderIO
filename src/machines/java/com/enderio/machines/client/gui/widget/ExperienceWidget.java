@@ -1,6 +1,5 @@
 package com.enderio.machines.client.gui.widget;
 
-import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.client.gui.widgets.EIOWidget;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
@@ -29,8 +28,8 @@ public class ExperienceWidget extends EIOWidget {
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
 
-        Vector2i level = ExperienceUtil.getLevelFromFluidWithLeftover(getFluid.get().getFluidAmount());
-        int fill = (int) ((((float) level.y()) / ExperienceUtil.getXpNeededForNextLevel(level.x())) * this.width) - 1;
+        ExperienceUtil.ExperienceLevel expLevel = ExperienceUtil.getLevelFromFluidWithLeftover(getFluid.get().getFluidAmount());
+        int fill = (int) ((((float) expLevel.experience()) / ExperienceUtil.getXpNeededForNextLevel(expLevel.level())) * this.width) - 1;
 
         guiGraphics.blit(GUI_ICONS_LOCATION, this.x, this.y, 0, 0, 64, this.width-1, this.height, 256, 256);
         guiGraphics.blit(GUI_ICONS_LOCATION, this.x + this.width-1, this.y, 0, 181, 64, 1, this.height, 256, 256);
@@ -38,7 +37,7 @@ public class ExperienceWidget extends EIOWidget {
         guiGraphics.blit(GUI_ICONS_LOCATION, this.x + this.width-1, this.y, 0, 181, 64, fill==this.width-1? 1 : 0, this.height, 256, 256);
 
         var font = Minecraft.getInstance().font;
-        String text = "" + level.x();
+        String text = "" + expLevel.level();
         int xOffset = font.width(text) / 2 ;
         guiGraphics.drawString(font, text, (this.x + this.width/2 + 1) - xOffset, (float)this.y - this.height - 3, 0, false);
         guiGraphics.drawString(font, text, (this.x + this.width/2 - 1) - xOffset, (float)this.y - this.height - 3, 0, false);

@@ -11,6 +11,7 @@ import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.FixedIOConfig;
+import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.machines.common.io.fluid.TankAccess;
@@ -85,6 +86,17 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
+    protected @Nullable MachineFluidHandler createFluidHandler(MachineTankLayout layout) {
+        return new MachineFluidHandler(getIOConfig(), layout) {
+            @Override
+            protected void onContentsChanged(int slot) {
+                super.onContentsChanged(slot);
+                updateMachineState(MachineState.FULL_TANK, TANK.getFluidAmount(this) >= TANK.getCapacity(this));
+            }
+        };
+    }
+
+    @Override
     public void serverTick() {
         if (isActive()) {
             drainFluids();
@@ -105,8 +117,10 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
         }
         FluidState fluidState = level.getFluidState(worldPosition.below());
         if (fluidState.isEmpty() || !fluidState.isSource()) {
+            updateMachineState(MachineState.NO_SOURCE, true);
             return false;
         }
+        updateMachineState(MachineState.NO_SOURCE, false);
         type = fluidState.getType();
         return TANK.fill(this, new FluidStack(type, FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.SIMULATE) == FluidType.BUCKET_VOLUME;
     }
@@ -192,7 +206,6 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
             positions.add(pos.immutable()); //Need to make it immutable
         }
     }
-
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {

@@ -183,11 +183,12 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
     @Override
     protected @Nullable MachineFluidHandler createFluidHandler(MachineTankLayout layout) {
-        return new MachineFluidHandler(getIOConfig(), getTankLayout()) {
+        return new MachineFluidHandler(getIOConfig(), layout) {
             @Override
             protected void onContentsChanged(int slot) {
                 onTankContentsChanged();
                 super.onContentsChanged(slot);
+                updateMachineState(MachineState.EMPTY_TANK, TANK.getFluidAmount(this) <= 0);
             }
         };
     }
