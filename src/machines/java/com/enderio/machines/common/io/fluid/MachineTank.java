@@ -54,6 +54,10 @@ public class MachineTank implements IFluidTank {
         return true;
     }
 
+    public boolean isEmpty() {
+        return getFluid().isEmpty();
+    }
+
     public int fill(FluidStack resource, IFluidHandler.FluidAction action) {
         if (resource.isEmpty())
             return 0;
