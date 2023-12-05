@@ -46,9 +46,9 @@ public class MachineTankLayout {
 
     public List<MachineTank> createTanks() {
         List<MachineTank> tankList = new ArrayList<>();
-        tanks.forEach((config -> {
-            tankList.add(new MachineTank(config.capacity, config.insert, config.extract));
-        }));
+        tanks.forEach(config -> {
+            tankList.add(new MachineTank(config.capacity()));
+        });
         return tankList;
     }
 

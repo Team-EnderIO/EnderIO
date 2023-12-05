@@ -23,6 +23,11 @@ import java.util.function.IntConsumer;
  * MachineFluidStorage takes a list of fluid tanks and handles IO for them all.
  */
 public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvider<IFluidHandler>, INBTSerializable<CompoundTag> {
+
+    public static final String TANK_INDEX = "Index";
+    public static final String TANKS = "Tanks";
+    public static final String TANK_LIST_SIZE = "Size";
+
     private final IIOConfig config;
     private final MachineTankLayout layout;
     private List<MachineTank> tanks;
@@ -136,6 +141,9 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
         int totalFilled = 0;
 
         for (int index = 0; index < tanks.size(); index++) {
+            if (!layout.canInsert(index))
+                continue;
+
             // Attempt to fill the tank
             int filled = tanks.get(index).fill(resourceLeft, action);
             resourceLeft.shrink(filled);
@@ -157,10 +165,14 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
     @Override
     public FluidStack drain(FluidStack resource, FluidAction action) {
         for (int index = 0; index < tanks.size(); index++) {
+            if (!layout.canExtract(index))
+                continue;
+
             if (tanks.get(index).drain(resource, FluidAction.SIMULATE) != FluidStack.EMPTY) {
                 FluidStack drained = tanks.get(index).drain(resource, action);
                 if (!drained.isEmpty()) {
                     onContentsChanged(index);
+                    changeListener.accept(index);
                 }
                 return drained;
             }
@@ -176,6 +188,7 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
                 FluidStack drained = tanks.get(index).drain(maxDrain, action);
                 if (!drained.isEmpty()) {
                     onContentsChanged(index);
+                    changeListener.accept(index);
                 }
                 return drained;
             }
@@ -191,39 +204,30 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
         ListTag nbtTagList = new ListTag();
         for (int i = 0; i < tanks.size(); i++) {
             CompoundTag tankTag = new CompoundTag();
-            tankTag.putInt("Index", i);
+            tankTag.putInt(TANK_INDEX, i);
             tanks.get(i).save(tankTag);
             nbtTagList.add(tankTag);
         }
         CompoundTag nbt = new CompoundTag();
-        nbt.put("Tanks", nbtTagList);
-        nbt.putInt("Size", tanks.size());
+        nbt.put(TANKS, nbtTagList);
+        nbt.putInt(TANK_LIST_SIZE, tanks.size());
         return nbt;
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        int size = nbt.contains("Size", Tag.TAG_INT) ? nbt.getInt("Size") : tanks.size();
+        int size = nbt.contains(TANK_LIST_SIZE, Tag.TAG_INT) ? nbt.getInt(TANK_LIST_SIZE) : tanks.size();
         tanks = NonNullList.withSize(size, MachineTank.EMPTY);
-        ListTag tagList = nbt.getList("Tanks", Tag.TAG_COMPOUND);
+        ListTag tagList = nbt.getList(TANKS, Tag.TAG_COMPOUND);
         for (int i = 0; i < tagList.size(); i++) {
             CompoundTag tankTag = tagList.getCompound(i);
-            int index = tankTag.getInt("Index");
+            int index = tankTag.getInt(TANK_INDEX);
             tanks.set(index, MachineTank.from(tankTag));
         }
     }
 
     // Sided capability access
-    private static class Sided implements IFluidHandler {
-
-        private final MachineFluidHandler master;
-        private final Direction direction;
-
-        Sided(MachineFluidHandler master, Direction direction) {
-            this.master = master;
-            this.direction = direction;
-        }
-
+    private record Sided(MachineFluidHandler master, Direction direction) implements IFluidHandler {
         @Override
         public int getTanks() {
             return master.getTanks();

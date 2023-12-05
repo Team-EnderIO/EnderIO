@@ -9,29 +9,25 @@ import org.jetbrains.annotations.NotNull;
 //Replace MachineFluidTank
 public class MachineTank implements IFluidTank {
 
-    private final int capacity;
-    private boolean canInsert;
-    private boolean canExtract;
-    @NotNull private FluidStack fluid = FluidStack.EMPTY;
-    public static final MachineTank EMPTY = new MachineTank(0, true, true);
+    public static final String Capacity = "Capacity";
 
-    public MachineTank(int capacity, boolean canInsert, boolean canExtract) {
+    private final int capacity;
+    @NotNull private FluidStack fluid = FluidStack.EMPTY;
+    public static final MachineTank EMPTY = new MachineTank(0);
+
+    public MachineTank(int capacity) {
         this.capacity = capacity;
-        this.canInsert = canInsert;
-        this.canExtract = canExtract;
     }
 
-    public MachineTank(FluidStack stack, int capacity, boolean canInsert, boolean canExtract) {
-        this(capacity, canInsert, canExtract);
+    public MachineTank(FluidStack stack, int capacity) {
+        this(capacity);
         this.fluid = stack.copy();
     }
 
     public static MachineTank from(CompoundTag tag) {
         FluidStack stack = FluidStack.loadFluidStackFromNBT(tag);
-        int capacity = tag.getInt("Capacity");
-        boolean canInsert = tag.getBoolean("CanInsert");
-        boolean canExtract = tag.getBoolean("CanExtract");
-        return new MachineTank(stack, capacity, canInsert, canExtract);
+        int capacity = tag.getInt(Capacity);
+        return new MachineTank(stack, capacity);
     }
 
     @Override
@@ -59,9 +55,9 @@ public class MachineTank implements IFluidTank {
     }
 
     public int fill(FluidStack resource, IFluidHandler.FluidAction action) {
-        if (!canInsert || resource.isEmpty()) { // TODO: Should canInsert/canExtract be moved to handler?
+        if (resource.isEmpty())
             return 0;
-        }
+
         if (action.simulate()) {
             if (fluid.isEmpty()) {
                 return Math.min(capacity, resource.getAmount());
@@ -95,9 +91,9 @@ public class MachineTank implements IFluidTank {
     @NotNull
     @Override
     public FluidStack drain(FluidStack resource, IFluidHandler.FluidAction action) {
-        if (!canExtract || resource.isEmpty() || !resource.isFluidEqual(fluid)) {
+        if (resource.isEmpty() || !resource.isFluidEqual(fluid))
             return FluidStack.EMPTY;
-        }
+
         return drain(resource.getAmount(), action);
     }
 
@@ -120,9 +116,7 @@ public class MachineTank implements IFluidTank {
 
     public CompoundTag save(CompoundTag compoundTag) {
         getFluid().writeToNBT(compoundTag);
-        compoundTag.putInt("Capacity", getCapacity());
-        compoundTag.putBoolean("CanInsert", canInsert);
-        compoundTag.putBoolean("CanExtract", canExtract);
+        compoundTag.putInt(Capacity, getCapacity());
         return compoundTag;
     }
 
