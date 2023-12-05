@@ -659,7 +659,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         }
 
         if (this.fluidHandler != null) {
-            pTag.put(MachineNBTKeys.FLUID, fluidHandler.serializeNBT());
+            pTag.put(MachineNBTKeys.FLUIDS, fluidHandler.serializeNBT());
         }
 
         if (getMaxRange() > 0) {
