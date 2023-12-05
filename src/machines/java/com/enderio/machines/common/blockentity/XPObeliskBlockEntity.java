@@ -6,7 +6,7 @@ import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
-import com.enderio.machines.common.io.fluid.MachineTank;
+import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.machines.common.io.fluid.TankAccess;
 import com.enderio.machines.common.menu.XPObeliskMenu;
@@ -72,7 +72,7 @@ public class XPObeliskBlockEntity extends MachineBlockEntity {
         };
     }
 
-    public MachineTank getFluidTank() {
+    public MachineFluidTank getFluidTank() {
         return getFluidHandler().getTank(TANK.getIndex());
     }
 

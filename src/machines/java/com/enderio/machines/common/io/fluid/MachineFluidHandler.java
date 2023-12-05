@@ -30,7 +30,7 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
 
     private final IIOConfig config;
     private final MachineTankLayout layout;
-    private List<MachineTank> tanks;
+    private List<MachineFluidTank> tanks;
 
     private final EnumMap<Direction, LazyOptional<Sided>> sideCache = new EnumMap<>(Direction.class);
     private LazyOptional<MachineFluidHandler> selfCache = LazyOptional.empty();
@@ -58,7 +58,7 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
 
     //Not a good idea to use this method. Tank Access should be the way to access tanks
     @Deprecated
-    public final MachineTank getTank(int tank) {
+    public final MachineFluidTank getTank(int tank) {
         return tanks.get(tank);
     }
 
@@ -217,12 +217,12 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
     @Override
     public void deserializeNBT(CompoundTag nbt) {
         int size = nbt.contains(TANK_LIST_SIZE, Tag.TAG_INT) ? nbt.getInt(TANK_LIST_SIZE) : tanks.size();
-        tanks = NonNullList.withSize(size, MachineTank.EMPTY);
+        tanks = NonNullList.withSize(size, MachineFluidTank.EMPTY);
         ListTag tagList = nbt.getList(TANKS, Tag.TAG_COMPOUND);
         for (int i = 0; i < tagList.size(); i++) {
             CompoundTag tankTag = tagList.getCompound(i);
             int index = tankTag.getInt(TANK_INDEX);
-            tanks.set(index, MachineTank.from(tankTag));
+            tanks.set(index, MachineFluidTank.from(tankTag));
         }
     }
 

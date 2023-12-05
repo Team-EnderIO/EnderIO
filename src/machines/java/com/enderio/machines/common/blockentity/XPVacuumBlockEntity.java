@@ -5,7 +5,7 @@ import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
 import com.enderio.machines.common.blockentity.base.VacuumMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
-import com.enderio.machines.common.io.fluid.MachineTank;
+import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.machines.common.io.fluid.TankAccess;
 import com.enderio.machines.common.menu.XPVacuumMenu;
@@ -72,7 +72,7 @@ public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb>
         };
     }
 
-    public MachineTank getFluidTank() {
+    public MachineFluidTank getFluidTank() {
         return getFluidHandler().getTank(TANK.getIndex());
     }
 

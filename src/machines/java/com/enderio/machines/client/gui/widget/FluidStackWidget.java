@@ -1,7 +1,7 @@
 package com.enderio.machines.client.gui.widget;
 
 import com.enderio.core.client.gui.widgets.EIOWidget;
-import com.enderio.machines.common.io.fluid.MachineTank;
+import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -22,9 +22,9 @@ import java.util.function.Supplier;
 public class FluidStackWidget extends EIOWidget {
 
     private final Screen displayOn;
-    private final Supplier<MachineTank> getFluid;
+    private final Supplier<MachineFluidTank> getFluid;
 
-    public FluidStackWidget(Screen displayOn, Supplier<MachineTank> getFluid, int pX, int pY, int pWidth, int pHeight) {
+    public FluidStackWidget(Screen displayOn, Supplier<MachineFluidTank> getFluid, int pX, int pY, int pWidth, int pHeight) {
         super(pX, pY, pWidth, pHeight);
         this.displayOn = displayOn;
         this.getFluid = getFluid;
@@ -35,7 +35,7 @@ public class FluidStackWidget extends EIOWidget {
         Minecraft minecraft = Minecraft.getInstance();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
-        MachineTank fluidTank = getFluid.get();
+        MachineFluidTank fluidTank = getFluid.get();
         if (!fluidTank.getFluid().isEmpty()) {
             FluidStack fluidStack = fluidTank.getFluid();
             IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluidStack.getFluid());

@@ -11,7 +11,7 @@ import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.FixedIOConfig;
-import com.enderio.machines.common.io.fluid.MachineTank;
+import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.machines.common.io.fluid.TankAccess;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
@@ -80,7 +80,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
         return MachineTankLayout.builder().tank(TANK, CAPACITY, f -> type.isSame(f.getFluid())).build();
     }
 
-    public MachineTank getFluidTank() {
+    public MachineFluidTank getFluidTank() {
         return getFluidHandler().getTank(TANK.getIndex());
     }
 

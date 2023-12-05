@@ -15,7 +15,7 @@ import com.enderio.machines.common.blockentity.task.host.CraftingMachineTaskHost
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
-import com.enderio.machines.common.io.fluid.MachineTank;
+import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.machines.common.io.fluid.TankAccess;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
@@ -165,7 +165,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
         };
     }
 
-    public MachineTank getFluidTank() {
+    public MachineFluidTank getFluidTank() {
         return getFluidHandler().getTank(TANK.getIndex());
     }
 

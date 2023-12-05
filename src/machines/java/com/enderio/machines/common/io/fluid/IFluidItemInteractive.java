@@ -18,7 +18,7 @@ import java.util.Optional;
 public interface IFluidItemInteractive {
 
     // Requires direct tank access which is undesirable. MachineFluidHandler would be better to for multi-tank block.
-    default boolean handleTankInteraction(Player player, InteractionHand hand, ItemStack itemStack, MachineBlockEntity machine, TankAccess tankAccess) {
+    default boolean handleFluidItemInteraction(Player player, InteractionHand hand, ItemStack itemStack, MachineBlockEntity machine, TankAccess tankAccess) {
         ItemStack copyStack = itemStack.copyWithCount(1);
         Optional<IFluidHandlerItem> fluidHandlerItem = FluidUtil.getFluidHandler(copyStack).resolve();
         if (fluidHandlerItem.isPresent()) {

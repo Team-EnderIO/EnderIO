@@ -7,7 +7,7 @@ import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.fluid.IFluidItemInteractive;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
-import com.enderio.machines.common.io.fluid.MachineTank;
+import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.machines.common.io.fluid.TankAccess;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
@@ -192,7 +192,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         };
     }
 
-    public MachineTank getFluidTank() {
+    public MachineFluidTank getFluidTank() {
         return getFluidHandler().getTank(TANK.getIndex());
     }
 
@@ -230,7 +230,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
     @Override
     public InteractionResult onBlockEntityUsed(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         ItemStack stack = player.getItemInHand(hand);
-        if (!stack.isEmpty() && handleTankInteraction(player, hand, stack, this, TANK)) {
+        if (!stack.isEmpty() && handleFluidItemInteraction(player, hand, stack, this, TANK)) {
             player.getInventory().setChanged();
             return InteractionResult.CONSUME;
         }

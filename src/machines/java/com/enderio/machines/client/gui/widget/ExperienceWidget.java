@@ -3,7 +3,7 @@ package com.enderio.machines.client.gui.widget;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.client.gui.widgets.EIOWidget;
-import com.enderio.machines.common.io.fluid.MachineTank;
+import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -16,9 +16,9 @@ import java.util.function.Supplier;
 public class ExperienceWidget extends EIOWidget {
     private static final ResourceLocation GUI_ICONS_LOCATION = new ResourceLocation("textures/gui/icons.png");
     private final Screen displayOn;
-    private final Supplier<MachineTank> getFluid;
+    private final Supplier<MachineFluidTank> getFluid;
 
-    public ExperienceWidget(Screen displayOn, Supplier<MachineTank> getFluid, int pX, int pY, int pWidth, int pHeight) {
+    public ExperienceWidget(Screen displayOn, Supplier<MachineFluidTank> getFluid, int pX, int pY, int pWidth, int pHeight) {
         super(pX, pY, pWidth, pHeight);
         this.displayOn = displayOn;
         this.getFluid = getFluid;
