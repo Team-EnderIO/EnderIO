@@ -165,7 +165,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
     }
 
     public MachineFluidTank getFluidTank() {
-        return getFluidHandler().getTank(TANK.getIndex());
+        return TANK.getTank(this);
     }
 
     // endregion

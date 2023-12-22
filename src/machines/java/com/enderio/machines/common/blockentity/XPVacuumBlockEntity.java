@@ -73,7 +73,7 @@ public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb>
     }
 
     public MachineFluidTank getFluidTank() {
-        return getFluidHandler().getTank(TANK.getIndex());
+        return TANK.getTank(this);
     }
 
     // endregion

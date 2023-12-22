@@ -73,7 +73,7 @@ public class XPObeliskBlockEntity extends MachineBlockEntity {
     }
 
     public MachineFluidTank getFluidTank() {
-        return getFluidHandler().getTank(TANK.getIndex());
+        return TANK.getTank(this);
     }
 
     public void addLevelToPlayer(int levelDiff, Player player) {

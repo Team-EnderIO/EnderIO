@@ -8,6 +8,14 @@ public class TankAccess {
 
     private int index = Integer.MIN_VALUE;
 
+    public MachineFluidTank getTank(MachineBlockEntity machine) {
+        return getTank(machine.getFluidHandler());
+    }
+
+    public MachineFluidTank getTank(MachineFluidHandler fluidHandler) {
+        return fluidHandler.getTank(index);
+    }
+
     public int getCapacity(MachineBlockEntity machine) {
         return getCapacity(machine.getFluidHandler());
     }
@@ -80,12 +88,8 @@ public class TankAccess {
         return drain(machine.getFluidHandler(), maxDrain, action);
     }
 
-    public boolean isSlot(int slot) {
+    public boolean isTank(int slot) {
         return this.index == slot;
-    }
-
-    public int getIndex() {
-        return index;
     }
 
     void init(int i) {

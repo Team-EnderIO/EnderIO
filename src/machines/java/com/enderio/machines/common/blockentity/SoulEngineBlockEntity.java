@@ -187,7 +187,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
     }
 
     public MachineFluidTank getFluidTank() {
-        return getFluidHandler().getTank(TANK.getIndex());
+        return TANK.getTank(this);
     }
 
     @Nullable
