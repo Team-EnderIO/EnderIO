@@ -5,10 +5,13 @@ import com.enderio.base.common.block.light.PoweredLight;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.IronBarsBlock;
 import net.minecraft.world.level.block.state.properties.AttachFace;
+import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.registries.ForgeRegistries;
@@ -32,6 +35,26 @@ public class EIOBlockState {
                 .renderType(prov.mcLoc("cutout_mipped")),
             prov.models()
                 .paneNoSideAlt(ctx.getName().concat("_no_side_alt"), prov.blockTexture(ctx.get()))
+                .renderType(prov.mcLoc("cutout_mipped")));
+    }
+
+    public static <T extends IronBarsBlock> void paneBlock(BlockStateProvider prov, T block) {
+        String name = BuiltInRegistries.BLOCK.getKey(block).getPath();
+        prov.paneBlock(block,
+            prov.models()
+                .panePost(name.concat("_post"), prov.blockTexture(block), prov.blockTexture(block))
+                .renderType(prov.mcLoc("cutout_mipped")),
+            prov.models()
+                .paneSide(name.concat("_side"), prov.blockTexture(block), prov.blockTexture(block))
+                .renderType(prov.mcLoc("cutout_mipped")),
+            prov.models()
+                .paneSideAlt(name.concat("_side_alt"), prov.blockTexture(block), prov.blockTexture(block))
+                .renderType(prov.mcLoc("cutout_mipped")),
+            prov.models()
+                .paneNoSide(name.concat("_no_side"), prov.blockTexture(block))
+                .renderType(prov.mcLoc("cutout_mipped")),
+            prov.models()
+                .paneNoSideAlt(name.concat("_no_side_alt"), prov.blockTexture(block))
                 .renderType(prov.mcLoc("cutout_mipped")));
     }
 

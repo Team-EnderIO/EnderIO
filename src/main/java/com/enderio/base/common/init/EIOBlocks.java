@@ -35,6 +35,11 @@ import com.enderio.base.common.item.misc.EnderSkullBlockItem;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.loot.DecorLootTable;
 import com.enderio.base.data.model.block.EIOBlockState;
+import com.enderio.core.common.registry.EnderBlockRegistry;
+import com.enderio.core.common.registry.EnderDeferredBlock;
+import com.enderio.core.common.registry.EnderItemRegistry;
+import com.enderio.core.data.loot.EnderBlockLootProvider;
+import com.enderio.core.data.model.EnderItemModelProvider;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.BlockBuilder;
 import com.tterrag.registrate.util.entry.BlockEntry;
@@ -42,6 +47,7 @@ import com.tterrag.registrate.util.nullness.NonNullBiFunction;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
@@ -64,9 +70,12 @@ import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.neoforge.client.model.generators.BlockModelProvider;
+import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
+import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.client.model.generators.VariantBlockStateBuilder;
+import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
@@ -83,39 +92,42 @@ import static com.tterrag.registrate.util.nullness.NonNullBiConsumer.noop;
 public class EIOBlocks {
     private static final Registrate REGISTRATE = EnderIO.registrate();
 
+    public static final EnderBlockRegistry BLOCKS = EnderBlockRegistry.createRegistry(EnderIO.MODID);
+    public static final EnderItemRegistry ITEMS = BLOCKS.getItemRegistry();
+
     // region Alloy Blocks
 
-    public static final BlockEntry<Block> COPPER_ALLOY_BLOCK = metalBlock("copper_alloy_block", EIOTags.Blocks.BLOCKS_COPPER_ALLOY,
-        EIOTags.Items.BLOCKS_COPPER_ALLOY).register();
-    public static final BlockEntry<Block> ENERGETIC_ALLOY_BLOCK = metalBlock("energetic_alloy_block", EIOTags.Blocks.BLOCKS_ENERGETIC_ALLOY,
-        EIOTags.Items.BLOCKS_ENERGETIC_ALLOY).register();
-    public static final BlockEntry<Block> VIBRANT_ALLOY_BLOCK = metalBlock("vibrant_alloy_block", EIOTags.Blocks.BLOCKS_VIBRANT_ALLOY,
-        EIOTags.Items.BLOCKS_VIBRANT_ALLOY).register();
-    public static final BlockEntry<Block> REDSTONE_ALLOY_BLOCK = metalBlock("redstone_alloy_block", EIOTags.Blocks.BLOCKS_REDSTONE_ALLOY,
-        EIOTags.Items.BLOCKS_REDSTONE_ALLOY).register();
-    public static final BlockEntry<Block> CONDUCTIVE_ALLOY_BLOCK = metalBlock("conductive_alloy_block", EIOTags.Blocks.BLOCKS_CONDUCTIVE_ALLOY,
-        EIOTags.Items.BLOCKS_CONDUCTIVE_ALLOY).register();
-    public static final BlockEntry<Block> PULSATING_ALLOY_BLOCK = metalBlock("pulsating_alloy_block", EIOTags.Blocks.BLOCKS_PULSATING_ALLOY,
-        EIOTags.Items.BLOCKS_PULSATING_ALLOY).register();
-    public static final BlockEntry<Block> DARK_STEEL_BLOCK = metalBlock("dark_steel_block", EIOTags.Blocks.BLOCKS_DARK_STEEL,
-        EIOTags.Items.BLOCKS_DARK_STEEL).register();
-    public static final BlockEntry<Block> SOULARIUM_BLOCK = metalBlock("soularium_block", EIOTags.Blocks.BLOCKS_SOULARIUM,
-        EIOTags.Items.BLOCKS_SOULARIUM).register();
-    public static final BlockEntry<Block> END_STEEL_BLOCK = metalBlock("end_steel_block", EIOTags.Blocks.BLOCKS_END_STEEL,
-        EIOTags.Items.BLOCKS_END_STEEL).register();
+    public static final EnderDeferredBlock<? extends Block> COPPER_ALLOY_BLOCK = metalBlock("copper_alloy_block", EIOTags.Blocks.BLOCKS_COPPER_ALLOY,
+        EIOTags.Items.BLOCKS_COPPER_ALLOY);
+    public static final EnderDeferredBlock<? extends Block> ENERGETIC_ALLOY_BLOCK = metalBlock("energetic_alloy_block", EIOTags.Blocks.BLOCKS_ENERGETIC_ALLOY,
+        EIOTags.Items.BLOCKS_ENERGETIC_ALLOY);
+    public static final EnderDeferredBlock<? extends Block> VIBRANT_ALLOY_BLOCK = metalBlock("vibrant_alloy_block", EIOTags.Blocks.BLOCKS_VIBRANT_ALLOY,
+        EIOTags.Items.BLOCKS_VIBRANT_ALLOY);
+    public static final EnderDeferredBlock<? extends Block> REDSTONE_ALLOY_BLOCK = metalBlock("redstone_alloy_block", EIOTags.Blocks.BLOCKS_REDSTONE_ALLOY,
+        EIOTags.Items.BLOCKS_REDSTONE_ALLOY);
+    public static final EnderDeferredBlock<? extends Block> CONDUCTIVE_ALLOY_BLOCK = metalBlock("conductive_alloy_block", EIOTags.Blocks.BLOCKS_CONDUCTIVE_ALLOY,
+        EIOTags.Items.BLOCKS_CONDUCTIVE_ALLOY);
+    public static final EnderDeferredBlock<? extends Block> PULSATING_ALLOY_BLOCK = metalBlock("pulsating_alloy_block", EIOTags.Blocks.BLOCKS_PULSATING_ALLOY,
+        EIOTags.Items.BLOCKS_PULSATING_ALLOY);
+    public static final EnderDeferredBlock<? extends Block> DARK_STEEL_BLOCK = metalBlock("dark_steel_block", EIOTags.Blocks.BLOCKS_DARK_STEEL,
+        EIOTags.Items.BLOCKS_DARK_STEEL);
+    public static final EnderDeferredBlock<? extends Block> SOULARIUM_BLOCK = metalBlock("soularium_block", EIOTags.Blocks.BLOCKS_SOULARIUM,
+        EIOTags.Items.BLOCKS_SOULARIUM);
+    public static final EnderDeferredBlock<? extends Block> END_STEEL_BLOCK = metalBlock("end_steel_block", EIOTags.Blocks.BLOCKS_END_STEEL,
+        EIOTags.Items.BLOCKS_END_STEEL);
 
     // endregion
 
     // region Chassis
 
     // Iron tier
-    public static final BlockEntry<Block> VOID_CHASSIS = chassisBlock("void_chassis").register();
+    public static final EnderDeferredBlock<? extends Block> VOID_CHASSIS = chassisBlock("void_chassis");
 
     // Void chassis + some kind of dragons breath derrived process
     //    public static final BlockEntry<Block> REKINDLED_VOID_CHASSIS = chassisBlock("rekindled_void_chassis").register();
 
     // Soularium + soul/nether
-    public static final BlockEntry<Block> ENSOULED_CHASSIS = chassisBlock("ensouled_chassis").register();
+    public static final EnderDeferredBlock<? extends Block> ENSOULED_CHASSIS = chassisBlock("ensouled_chassis");
 
     // Ensnared + Some kind of other material
     // This is for machines that require a bound soul
@@ -130,86 +142,69 @@ public class EIOBlocks {
 
     // region Dark Steel Building Blocks
 
-    public static final BlockEntry<DarkSteelLadderBlock> DARK_STEEL_LADDER = REGISTRATE
-        .block("dark_steel_ladder", DarkSteelLadderBlock::new)
-        .properties(props -> props.strength(0.4f).requiresCorrectToolForDrops().sound(SoundType.METAL).mapColor(MapColor.METAL).noOcclusion())
-        .blockstate((ctx, prov) -> prov.horizontalBlock(ctx.get(), prov
+    public static final EnderDeferredBlock<DarkSteelLadderBlock> DARK_STEEL_LADDER = BLOCKS
+        .register("dark_steel_ladder", () -> new DarkSteelLadderBlock(BlockBehaviour.Properties.of().strength(0.4f).requiresCorrectToolForDrops().sound(SoundType.METAL).mapColor(MapColor.METAL).noOcclusion()))
+        .setBlockStateProvider((blockStateProvider, block) -> blockStateProvider.horizontalBlock(block, blockStateProvider
             .models()
-            .withExistingParent(ctx.getName(), prov.mcLoc("block/ladder"))
-            .renderType(prov.mcLoc("cutout_mipped"))
-            .texture("particle", prov.blockTexture(ctx.get()))
-            .texture("texture", prov.blockTexture(ctx.get()))))
-        .tag(BlockTags.CLIMBABLE, BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
-        .item()
-        .model((ctx, prov) -> prov.generated(ctx, prov.modLoc("block/dark_steel_ladder")))
-        .tab(EIOCreativeTabs.BLOCKS)
-        .build()
-        .register();
+            .withExistingParent("dark_steel_ladder", blockStateProvider.mcLoc("block/ladder"))
+            .renderType(blockStateProvider.mcLoc("cutout_mipped"))
+            .texture("particle", blockStateProvider.blockTexture(block))
+            .texture("texture", blockStateProvider.blockTexture(block))))
+        .addBlockTags(BlockTags.CLIMBABLE, BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+        .setLootTable(EnderBlockLootProvider::dropSelf)
+        .createBlockItem()
+        .setModelProvider(EnderItemModelProvider::basicBlock)
+        .setTab(EIOCreativeTabs.BLOCKS)
+        .finishBlockItem();
 
-    public static final BlockEntry<IronBarsBlock> DARK_STEEL_BARS = REGISTRATE
-        .block("dark_steel_bars", IronBarsBlock::new)
-        .properties(props -> props.strength(5.0f, 1000.0f).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion())
-        .blockstate(EIOBlockState::paneBlock)
-        .tag(BlockTags.NEEDS_IRON_TOOL)
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
-        .item()
-        .tab(EIOCreativeTabs.BLOCKS)
-        .model((ctx, prov) -> prov.generated(ctx, prov.modLoc("block/dark_steel_bars")))
-        .build()
-        .register();
+    public static final EnderDeferredBlock<IronBarsBlock> DARK_STEEL_BARS = BLOCKS
+        .register("dark_steel_bars", () -> new IronBarsBlock(BlockBehaviour.Properties.of().strength(5.0f, 1000.0f).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion()))
+        .setBlockStateProvider((blockStateProvider, block) -> EIOBlockState.paneBlock(block, blockStateProvider, "dark_steel_bars"))
+        .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+        .setLootTable(EnderBlockLootProvider::dropSelf)
+        .createBlockItem()
+        .setTab(EIOCreativeTabs.BLOCKS)
+        .setModelProvider(EnderItemModelProvider::basicBlock)
+        .finishBlockItem();
 
-    public static final BlockEntry<DoorBlock> DARK_STEEL_DOOR = REGISTRATE
-        .block("dark_steel_door", props -> new DoorBlock(props, BlockSetType.IRON))
-        .properties(props -> props.strength(5.0f, 2000.0f).sound(SoundType.METAL).mapColor(MapColor.METAL).noOcclusion())
-        .loot((registrateBlockLootTables, doorBlock) -> registrateBlockLootTables.add(doorBlock, registrateBlockLootTables.createDoorTable(doorBlock)))
-        .blockstate(
-            (ctx, prov) -> prov.doorBlockWithRenderType(ctx.get(), prov.modLoc("block/dark_steel_door_bottom"), prov.modLoc("block/dark_steel_door_top"),
-                prov.mcLoc("cutout")))
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL, BlockTags.DOORS)
-        .item()
-        .model((ctx, prov) -> prov.generated(ctx))
-        .tab(EIOCreativeTabs.BLOCKS)
-        .build()
-        .register();
+    public static final EnderDeferredBlock<DoorBlock> DARK_STEEL_DOOR = BLOCKS
+        .register("dark_steel_door", () -> new DoorBlock(BlockBehaviour.Properties.of().strength(5.0f, 2000.0f).sound(SoundType.METAL).mapColor(MapColor.METAL).noOcclusion(), BlockSetType.IRON))
+        .setLootTable(EnderBlockLootProvider::createDoor)
+        .setBlockStateProvider((blockStateProvider, doorBlock) -> blockStateProvider.doorBlockWithRenderType(doorBlock, blockStateProvider.mcLoc("block/dark_steel_door_bottom"), blockStateProvider.mcLoc("block/dark_steel_door_top"), blockStateProvider.mcLoc("cutout")))
+        .addBlockTags(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL, BlockTags.DOORS)
+        .createBlockItem()
+        .setModelProvider(ItemModelProvider::basicItem)
+        .setTab(EIOCreativeTabs.BLOCKS)
+        .finishBlockItem();
 
-    public static final BlockEntry<TrapDoorBlock> DARK_STEEL_TRAPDOOR = REGISTRATE
-        .block("dark_steel_trapdoor", props -> new TrapDoorBlock(props, BlockSetType.IRON))
-        .properties(props -> props.strength(5.0f, 2000.0f).sound(SoundType.METAL).mapColor(MapColor.METAL).noOcclusion())
-        .blockstate((ctx, prov) -> prov.trapdoorBlockWithRenderType(ctx.get(), prov.modLoc("block/dark_steel_trapdoor"), true, prov.mcLoc("cutout")))
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL, BlockTags.TRAPDOORS)
-        .item()
-        .model((ctx, prov) -> prov.withExistingParent(ctx.getName(), prov.modLoc("block/dark_steel_trapdoor_bottom")))
-        .tab(EIOCreativeTabs.BLOCKS)
-        .build()
-        .register();
+    public static final EnderDeferredBlock<TrapDoorBlock> DARK_STEEL_TRAPDOOR = BLOCKS
+        .register("dark_steel_trapdoor", () -> new TrapDoorBlock(BlockBehaviour.Properties.of().strength(5.0f, 2000.0f).sound(SoundType.METAL).mapColor(MapColor.METAL).noOcclusion(), BlockSetType.IRON))
+        .addBlockTags(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL, BlockTags.TRAPDOORS)
+        .setBlockStateProvider((blockStateProvider, trapDoorBlock) -> blockStateProvider.trapdoorBlockWithRenderType(trapDoorBlock, blockStateProvider.mcLoc("block/dark_steel_trapdoor"), true, blockStateProvider.mcLoc("cutout")))
+        .setLootTable(EnderBlockLootProvider::dropSelf)
+        .createBlockItem()
+        .setModelProvider((enderItemModelProvider, item) -> enderItemModelProvider.withExistingParent("dark_steel_trapdoor", enderItemModelProvider.modLoc("block/dark_steel_trapdoor_bottom")))
+        .setTab(EIOCreativeTabs.BLOCKS)
+        .finishBlockItem();
 
-    public static final BlockEntry<IronBarsBlock> END_STEEL_BARS = REGISTRATE
-        .block("end_steel_bars", IronBarsBlock::new)
-        .blockstate(EIOBlockState::paneBlock)
-        .properties(props -> props.strength(5.0f, 1000.0f).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion())
-        .tag(BlockTags.NEEDS_IRON_TOOL)
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
-        .item()
-        .tab(EIOCreativeTabs.BLOCKS)
-        .model((ctx, prov) -> prov.generated(ctx, prov.modLoc("block/end_steel_bars")))
-        .build()
-        .register();
+    public static final EnderDeferredBlock<IronBarsBlock> END_STEEL_BARS = BLOCKS
+        .register("end_steel_bars", () -> new IronBarsBlock(BlockBehaviour.Properties.of().strength(5.0f, 1000.0f).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion()))
+        .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+        .setLootTable(EnderBlockLootProvider::dropSelf)
+        .setBlockStateProvider(EIOBlockState::paneBlock)
+        .createBlockItem()
+        .setModelProvider(EnderItemModelProvider::basicBlock)
+        .setTab(EIOCreativeTabs.BLOCKS)
+        .finishBlockItem();
 
-    public static final BlockEntry<ReinforcedObsidianBlock> REINFORCED_OBSIDIAN = REGISTRATE
-        .block("reinforced_obsidian_block", ReinforcedObsidianBlock::new)
-        .properties(props -> props
-            .sound(SoundType.STONE)
-            .strength(50, 2000)
-            .requiresCorrectToolForDrops()
-            .mapColor(MapColor.COLOR_BLACK)
-            .instrument(NoteBlockInstrument.BASEDRUM))
-        .tag(BlockTags.WITHER_IMMUNE)
-        .tag(BlockTags.NEEDS_DIAMOND_TOOL)
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
-        .item()
-        .tab(EIOCreativeTabs.BLOCKS)
-        .build()
-        .register();
+    public static final EnderDeferredBlock<ReinforcedObsidianBlock> REINFORCED_OBSIDIAN = BLOCKS
+        .register("reinforced_obsidian_block", () -> new ReinforcedObsidianBlock(BlockBehaviour.Properties.of().sound(SoundType.STONE).strength(50, 2000).requiresCorrectToolForDrops().mapColor(MapColor.COLOR_BLACK).instrument(NoteBlockInstrument.BASEDRUM)))
+        .addBlockTags(BlockTags.WITHER_IMMUNE, BlockTags.NEEDS_DIAMOND_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+        .setLootTable(EnderBlockLootProvider::dropSelf)
+        .setBlockStateProvider(BlockStateProvider::simpleBlock)
+        .createBlockItem()
+        .setTab(EIOCreativeTabs.BLOCKS)
+        .finishBlockItem();
 
     // endregion
 
@@ -280,46 +275,46 @@ public class EIOBlocks {
 
     // region Pressure Plates
 
-    public static final BlockEntry<EIOPressurePlateBlock> DARK_STEEL_PRESSURE_PLATE = pressurePlateBlock("dark_steel_pressure_plate",
+    public static final DeferredBlock<EIOPressurePlateBlock> DARK_STEEL_PRESSURE_PLATE = pressurePlateBlock("dark_steel_pressure_plate",
         EnderIO.loc("block/dark_steel_pressure_plate"), EIOPressurePlateBlock.PLAYER, false);
 
-    public static final BlockEntry<EIOPressurePlateBlock> SILENT_DARK_STEEL_PRESSURE_PLATE = pressurePlateBlock("silent_dark_steel_pressure_plate",
+    public static final DeferredBlock<EIOPressurePlateBlock> SILENT_DARK_STEEL_PRESSURE_PLATE = pressurePlateBlock("silent_dark_steel_pressure_plate",
         EnderIO.loc("block/dark_steel_pressure_plate"), EIOPressurePlateBlock.PLAYER, true);
 
-    public static final BlockEntry<EIOPressurePlateBlock> SOULARIUM_PRESSURE_PLATE = pressurePlateBlock("soularium_pressure_plate",
+    public static final DeferredBlock<EIOPressurePlateBlock> SOULARIUM_PRESSURE_PLATE = pressurePlateBlock("soularium_pressure_plate",
         EnderIO.loc("block/soularium_pressure_plate"), EIOPressurePlateBlock.HOSTILE_MOB, false);
 
-    public static final BlockEntry<EIOPressurePlateBlock> SILENT_SOULARIUM_PRESSURE_PLATE = pressurePlateBlock("silent_soularium_pressure_plate",
+    public static final DeferredBlock<EIOPressurePlateBlock> SILENT_SOULARIUM_PRESSURE_PLATE = pressurePlateBlock("silent_soularium_pressure_plate",
         EnderIO.loc("block/soularium_pressure_plate"), EIOPressurePlateBlock.HOSTILE_MOB, true);
 
-    public static final BlockEntry<SilentPressurePlateBlock> SILENT_OAK_PRESSURE_PLATE = silentPressurePlateBlock(
+    public static final DeferredBlock<SilentPressurePlateBlock> SILENT_OAK_PRESSURE_PLATE = silentPressurePlateBlock(
         (PressurePlateBlock) Blocks.OAK_PRESSURE_PLATE);
 
-    public static final BlockEntry<SilentPressurePlateBlock> SILENT_ACACIA_PRESSURE_PLATE = silentPressurePlateBlock(
+    public static final DeferredBlock<SilentPressurePlateBlock> SILENT_ACACIA_PRESSURE_PLATE = silentPressurePlateBlock(
         (PressurePlateBlock) Blocks.ACACIA_PRESSURE_PLATE);
 
-    public static final BlockEntry<SilentPressurePlateBlock> SILENT_DARK_OAK_PRESSURE_PLATE = silentPressurePlateBlock(
+    public static final DeferredBlock<SilentPressurePlateBlock> SILENT_DARK_OAK_PRESSURE_PLATE = silentPressurePlateBlock(
         (PressurePlateBlock) Blocks.DARK_OAK_PRESSURE_PLATE);
 
-    public static final BlockEntry<SilentPressurePlateBlock> SILENT_SPRUCE_PRESSURE_PLATE = silentPressurePlateBlock(
+    public static final DeferredBlock<SilentPressurePlateBlock> SILENT_SPRUCE_PRESSURE_PLATE = silentPressurePlateBlock(
         (PressurePlateBlock) Blocks.SPRUCE_PRESSURE_PLATE);
 
-    public static final BlockEntry<SilentPressurePlateBlock> SILENT_BIRCH_PRESSURE_PLATE = silentPressurePlateBlock(
+    public static final DeferredBlock<SilentPressurePlateBlock> SILENT_BIRCH_PRESSURE_PLATE = silentPressurePlateBlock(
         (PressurePlateBlock) Blocks.BIRCH_PRESSURE_PLATE);
 
-    public static final BlockEntry<SilentPressurePlateBlock> SILENT_JUNGLE_PRESSURE_PLATE = silentPressurePlateBlock(
+    public static final DeferredBlock<SilentPressurePlateBlock> SILENT_JUNGLE_PRESSURE_PLATE = silentPressurePlateBlock(
         (PressurePlateBlock) Blocks.JUNGLE_PRESSURE_PLATE);
 
-    public static final BlockEntry<SilentPressurePlateBlock> SILENT_CRIMSON_PRESSURE_PLATE = silentPressurePlateBlock(
+    public static final DeferredBlock<SilentPressurePlateBlock> SILENT_CRIMSON_PRESSURE_PLATE = silentPressurePlateBlock(
         (PressurePlateBlock) Blocks.CRIMSON_PRESSURE_PLATE);
 
-    public static final BlockEntry<SilentPressurePlateBlock> SILENT_WARPED_PRESSURE_PLATE = silentPressurePlateBlock(
+    public static final DeferredBlock<SilentPressurePlateBlock> SILENT_WARPED_PRESSURE_PLATE = silentPressurePlateBlock(
         (PressurePlateBlock) Blocks.WARPED_PRESSURE_PLATE);
 
-    public static final BlockEntry<SilentPressurePlateBlock> SILENT_STONE_PRESSURE_PLATE = silentPressurePlateBlock(
+    public static final DeferredBlock<SilentPressurePlateBlock> SILENT_STONE_PRESSURE_PLATE = silentPressurePlateBlock(
         (PressurePlateBlock) Blocks.STONE_PRESSURE_PLATE);
 
-    public static final BlockEntry<SilentPressurePlateBlock> SILENT_POLISHED_BLACKSTONE_PRESSURE_PLATE = silentPressurePlateBlock(
+    public static final DeferredBlock<SilentPressurePlateBlock> SILENT_POLISHED_BLACKSTONE_PRESSURE_PLATE = silentPressurePlateBlock(
         (PressurePlateBlock) Blocks.POLISHED_BLACKSTONE_PRESSURE_PLATE);
 
     public static final BlockEntry<SilentWeightedPressurePlateBlock> SILENT_HEAVY_WEIGHTED_PRESSURE_PLATE = silentWeightedPressurePlateBlock(
@@ -426,72 +421,61 @@ public class EIOBlocks {
         return REGISTRATE.block(name, p -> block).item().tab(EIOCreativeTabs.BLOCKS).build();
     }
 
-    private static BlockBuilder<Block, Registrate> metalBlock(String name, TagKey<Block> blockTag, TagKey<Item> itemTag) {
-        return REGISTRATE
-            .block(name, Block::new)
-            .properties(props -> props.sound(SoundType.METAL).mapColor(MapColor.METAL).strength(5, 6).requiresCorrectToolForDrops())
-            .tag(BlockTags.NEEDS_STONE_TOOL)
-            .tag(BlockTags.MINEABLE_WITH_PICKAXE)
-            .tag(blockTag)
-            .item()
-            .tab(EIOCreativeTabs.BLOCKS)
-            .tag(itemTag)
-            .build();
+    private static EnderDeferredBlock<? extends Block> metalBlock(String name, TagKey<Block> blockTag, TagKey<Item> itemTag) {
+        return BLOCKS.registerBlock(name, BlockBehaviour.Properties.of().sound(SoundType.METAL).mapColor(MapColor.METAL).strength(5, 6).requiresCorrectToolForDrops())
+            .addBlockTags(BlockTags.NEEDS_STONE_TOOL, BlockTags.MINEABLE_WITH_PICKAXE, blockTag)
+            .setLootTable(EnderBlockLootProvider::dropSelf)
+            .createBlockItem()
+            .setTab(EIOCreativeTabs.BLOCKS)
+            .addBlockItemTags(itemTag)
+            .finishBlockItem();
     }
 
-    private static BlockBuilder<Block, Registrate> chassisBlock(String name) {
-        return REGISTRATE
-            .block(name, Block::new)
-            .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(),
-                prov.models().cubeAll(ctx.getName(), prov.blockTexture(ctx.get())).renderType(prov.mcLoc("translucent"))))
-            .properties(props -> props.noOcclusion().sound(SoundType.METAL).mapColor(MapColor.METAL).strength(5, 6))
-            .tag(BlockTags.NEEDS_STONE_TOOL)
-            .tag(BlockTags.MINEABLE_WITH_PICKAXE)
-            .item()
-            .tab(EIOCreativeTabs.BLOCKS)
-            .build();
+    private static EnderDeferredBlock<? extends Block> chassisBlock(String name) {
+        return BLOCKS.registerBlock(name, BlockBehaviour.Properties.of().noOcclusion().sound(SoundType.METAL).mapColor(MapColor.METAL).strength(5, 6))
+            .setBlockStateProvider((blockStateProvider, block) ->
+                blockStateProvider.simpleBlock(block, blockStateProvider.models().cubeAll(name, blockStateProvider.blockTexture(block)).renderType("translucent")))
+            .addBlockTags(BlockTags.NEEDS_STONE_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+            .setLootTable(EnderBlockLootProvider::dropSelf)
+            .createBlockItem()
+            .setTab(EIOCreativeTabs.BLOCKS)
+            .finishBlockItem();
     }
 
-    private static BlockEntry<EIOPressurePlateBlock> pressurePlateBlock(String name, ResourceLocation texture, EIOPressurePlateBlock.Detector type,
+    private static DeferredBlock<EIOPressurePlateBlock> pressurePlateBlock(String name, ResourceLocation texture, EIOPressurePlateBlock.Detector type,
         boolean silent) {
+        return BLOCKS.register(name, () -> new EIOPressurePlateBlock(BlockBehaviour.Properties.of().strength(5, 6).mapColor(MapColor.METAL), type, silent))
+            .setBlockStateProvider((blockStateProvider, block) -> {
+                BlockModelProvider modProv = blockStateProvider.models();
+                ModelFile dm = modProv.withExistingParent(name + "_down", blockStateProvider.mcLoc("block/pressure_plate_down")).texture("texture", texture);
+                ModelFile um = modProv.withExistingParent(name, blockStateProvider.mcLoc("block/pressure_plate_up")).texture("texture", texture);
 
-        BlockBuilder<EIOPressurePlateBlock, Registrate> bb = REGISTRATE.block(name,
-            props -> new EIOPressurePlateBlock(props.strength(5, 6).mapColor(MapColor.METAL), type, silent));
-
-        bb.blockstate((ctx, prov) -> {
-
-            BlockModelProvider modProv = prov.models();
-            ModelFile dm = modProv.withExistingParent(ctx.getName() + "_down", prov.mcLoc("block/pressure_plate_down")).texture("texture", texture);
-            ModelFile um = modProv.withExistingParent(ctx.getName(), prov.mcLoc("block/pressure_plate_up")).texture("texture", texture);
-
-            VariantBlockStateBuilder vb = prov.getVariantBuilder(ctx.get());
-            vb.partialState().with(PressurePlateBlock.POWERED, true).addModels(new ConfiguredModel(dm));
-            vb.partialState().with(PressurePlateBlock.POWERED, false).addModels(new ConfiguredModel(um));
-        });
-        bb.tag(BlockTags.NEEDS_STONE_TOOL, BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.PRESSURE_PLATES).item().tab(EIOCreativeTabs.BLOCKS).build();
-        return bb.register();
+                VariantBlockStateBuilder vb = blockStateProvider.getVariantBuilder(block);
+                vb.partialState().with(PressurePlateBlock.POWERED, true).addModels(new ConfiguredModel(dm));
+                vb.partialState().with(PressurePlateBlock.POWERED, false).addModels(new ConfiguredModel(um));
+            })
+            .addBlockTags(BlockTags.NEEDS_STONE_TOOL, BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.PRESSURE_PLATES)
+            .setLootTable(EnderBlockLootProvider::dropSelf)
+            .createBlockItem()
+            .setTab(EIOCreativeTabs.BLOCKS)
+            .finishBlockItem();
     }
 
-    private static BlockEntry<SilentPressurePlateBlock> silentPressurePlateBlock(final PressurePlateBlock block) {
-        ResourceLocation upModelLoc = Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(block));
+    private static EnderDeferredBlock<SilentPressurePlateBlock> silentPressurePlateBlock(final PressurePlateBlock block) {
+        ResourceLocation upModelLoc = Objects.requireNonNull(BuiltInRegistries.BLOCK.getKey(block));
         ResourceLocation downModelLoc = new ResourceLocation(upModelLoc.getNamespace(), upModelLoc.getPath() + "_down");
-
-        BlockBuilder<SilentPressurePlateBlock, Registrate> bb = REGISTRATE.block("silent_" + upModelLoc.getPath(),
-            props -> new SilentPressurePlateBlock(block));
-        bb.tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.PRESSURE_PLATES);
-
-        bb.blockstate((ctx, prov) -> {
-            VariantBlockStateBuilder vb = prov.getVariantBuilder(ctx.get());
-            vb.partialState().with(PressurePlateBlock.POWERED, true).addModels(new ConfiguredModel(prov.models().getExistingFile(downModelLoc)));
-            vb.partialState().with(PressurePlateBlock.POWERED, false).addModels(new ConfiguredModel(prov.models().getExistingFile(upModelLoc)));
-        });
-
-        var itemBuilder = bb.item();
-        itemBuilder.model((ctx, prov) -> prov.withExistingParent(ctx.getName(), upModelLoc));
-        itemBuilder.tab(EIOCreativeTabs.BLOCKS);
-        bb = itemBuilder.build();
-
-        return bb.register();
+        return BLOCKS.register("silent_" + upModelLoc.getPath(), () -> new SilentPressurePlateBlock(block))
+            .addBlockTags(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.PRESSURE_PLATES)
+            .setBlockStateProvider((blockStateProvider, block1) -> {
+                VariantBlockStateBuilder vb = blockStateProvider.getVariantBuilder(block1);
+                vb.partialState().with(PressurePlateBlock.POWERED, true).addModels(new ConfiguredModel(blockStateProvider.models().getExistingFile(downModelLoc)));
+                vb.partialState().with(PressurePlateBlock.POWERED, false).addModels(new ConfiguredModel(blockStateProvider.models().getExistingFile(upModelLoc)));
+            })
+            .setLootTable(EnderBlockLootProvider::dropSelf)
+            .createBlockItem()
+            .setModelProvider((modelProvider, item) -> modelProvider.withExistingParent("silent_" + upModelLoc.getPath(), upModelLoc))
+            .setTab(EIOCreativeTabs.BLOCKS)
+            .finishBlockItem();
     }
 
     private static BlockEntry<SilentWeightedPressurePlateBlock> silentWeightedPressurePlateBlock(WeightedPressurePlateBlock block) {
