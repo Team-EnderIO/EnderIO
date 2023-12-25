@@ -82,6 +82,5 @@ public class MachineMenus {
     public static final MenuEntry<TravelAnchorMenu> TRAVEL_ANCHOR = REGISTRATE.menu("travel_anchor", TravelAnchorMenu::factory, () -> TravelAnchorScreen::new).register();
     public static final MenuEntry<XPObeliskMenu> XP_OBELISK = REGISTRATE.menu("xp_obelisk", XPObeliskMenu::factory, () -> XPObeliskScreen::new).register();
 
-
     public static void register() {}
 }
