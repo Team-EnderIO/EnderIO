@@ -2,7 +2,6 @@ package com.enderio.machines.common.utility;
 
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
-import com.enderio.machines.common.recipe.MachineRecipe;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -13,7 +12,12 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.fml.util.thread.EffectiveSide;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -69,7 +73,7 @@ public class RecipeInputCache<C extends Container, T extends Recipe<C>> {
                     .collect(Collectors.toSet());
             }
 
-            if (possibleMatches.size() == 0) {
+            if (possibleMatches.isEmpty()) {
                 return false;
             }
 
@@ -81,8 +85,9 @@ public class RecipeInputCache<C extends Container, T extends Recipe<C>> {
 
                 for (Ingredient ingredient : ingredients) {
                     for (int i = 0; i < inputs.size(); i++) {
-                        if (checked[i])
+                        if (checked[i]) {
                             continue;
+                        }
 
                         if (ingredient.test(inputs.get(i))) {
                             checked[i] = true;
@@ -119,9 +124,7 @@ public class RecipeInputCache<C extends Container, T extends Recipe<C>> {
     public void rebuildCache(RecipeManager recipeManager) {
         itemToRecipesCache.clear();
         recipeToIngredientCache.clear();
-
-        var recipeType = this.recipeType.get();
-        recipeManager.getAllRecipesFor(recipeType)
+        recipeManager.getAllRecipesFor(recipeType.get())
             .forEach(recipe -> {
                 var items = recipe.getIngredients().stream()
                     .flatMap(ingredient -> Arrays.stream(ingredient.getItems()))

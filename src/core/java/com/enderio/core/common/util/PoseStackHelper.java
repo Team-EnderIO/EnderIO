@@ -18,8 +18,10 @@ public class PoseStackHelper {
      */
     public static void rotateAroundPivot(PoseStack poseStack, Vector3f pivot, Axis axis, float angle, boolean degrees) {
         poseStack.translate(pivot.x(), pivot.y(), pivot.z());
-        if (degrees)
+        if (degrees) {
             angle = (float) Math.toRadians(angle);
+        }
+
         poseStack.mulPose(axis.rotation(angle));
         poseStack.translate(-pivot.x(), -pivot.y(), -pivot.z());
     }

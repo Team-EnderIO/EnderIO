@@ -9,7 +9,7 @@
       "item": "minecraft:furnace"
     },
     "G": {
-      "item": "enderio:grains_of_infinity"
+      "tag": "forge:dusts/grains_of_infinity"
     }
   },
   "pattern": [

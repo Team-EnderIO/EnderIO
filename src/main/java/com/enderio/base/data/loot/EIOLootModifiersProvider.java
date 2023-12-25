@@ -3,8 +3,6 @@ package com.enderio.base.data.loot;
 import com.enderio.EnderIO;
 import com.enderio.base.common.enchantment.AutoSmeltModifier;
 import com.enderio.base.common.init.EIOEnchantments;
-import com.enderio.base.common.item.darksteel.upgrades.direct.DirectUpgradeLootCondition;
-import com.enderio.base.common.item.darksteel.upgrades.direct.DirectUpgradeLootModifier;
 import com.enderio.base.common.loot.BrokenSpawnerLootModifier;
 import com.enderio.base.common.loot.ChestLootModifier;
 import net.minecraft.advancements.critereon.EnchantmentPredicate;
@@ -13,7 +11,10 @@ import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.storage.loot.predicates.*;
+import net.minecraft.world.level.storage.loot.predicates.AnyOfCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 import net.minecraftforge.common.data.GlobalLootModifierProvider;
 import net.minecraftforge.common.loot.LootTableIdCondition;
 
@@ -75,12 +76,6 @@ public class EIOLootModifiersProvider extends GlobalLootModifierProvider {
             "chests/village/village_armorer",
             "chests/village/village_toolsmith",
             "chests/village/village_weaponsmith"
-        ));
-
-        add("direct_upgrade", new DirectUpgradeLootModifier(
-            new LootItemCondition[]{
-                new DirectUpgradeLootCondition()
-            }
         ));
     }
 

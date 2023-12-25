@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "enderio:conduit_binder"
+    },
+    "C": {
+      "tag": "forge:gems/pulsating_crystal"
+    },
+    "I": {
+      "tag": "forge:ingots/iron"
+    }
+  },
+  "pattern": [
+    "IBI",
+    "BCB",
+    "IBI"
+  ],
+  "result": {
+    "item": "enderio:travel_anchor"
+  },
+  "show_notification": true
+}

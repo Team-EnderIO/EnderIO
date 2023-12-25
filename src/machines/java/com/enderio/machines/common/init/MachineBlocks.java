@@ -3,15 +3,20 @@ package com.enderio.machines.common.init;
 import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.core.data.model.EIOModel;
-import com.enderio.machines.common.block.*;
+import com.enderio.machines.common.MachineNBTKeys;
+import com.enderio.machines.common.block.CapacitorBankBlock;
+import com.enderio.machines.common.block.MachineBlock;
+import com.enderio.machines.common.block.ProgressMachineBlock;
+import com.enderio.machines.common.block.SolarPanelBlock;
+import com.enderio.machines.common.block.TravelAnchorBlock;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorBankBlockEntity;
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorTier;
 import com.enderio.machines.common.blockentity.solar.SolarPanelBlockEntity;
 import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
+import com.enderio.machines.common.item.BoundSoulBlockItem;
 import com.enderio.machines.common.item.CapacitorBankItem;
 import com.enderio.machines.common.item.FluidTankItem;
-import com.enderio.machines.common.item.PoweredSpawnerItem;
 import com.enderio.machines.data.loot.MachinesLootTable;
 import com.enderio.machines.data.model.MachineModelUtil;
 import com.google.common.collect.ImmutableMap;
@@ -133,11 +138,11 @@ public class MachineBlocks {
 
     public static final BlockEntry<ProgressMachineBlock> POWERED_SPAWNER = REGISTRATE
         .block("powered_spawner", properties -> new ProgressMachineBlock(properties, MachineBlockEntities.POWERED_SPAWNER))
-        .loot((l,t) -> MachinesLootTable.copyNBTSingleCap(l, t, "EntityStorage"))
+        .loot((l,t) -> MachinesLootTable.copyNBTSingleCap(l, t, MachineNBTKeys.ENTITY_STORAGE))
         .properties(props -> props.strength(2.5f, 8))
         .blockstate(MachineModelUtil::progressMachineBlock)
         .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
-        .item(PoweredSpawnerItem::new)
+        .item(BoundSoulBlockItem::new)
         .tab(EIOCreativeTabs.MACHINES)
         .build()
         .register();
@@ -159,6 +164,7 @@ public class MachineBlocks {
         .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
         .loot(MachinesLootTable::copyNBT)
         .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName()))))
+        .lang("XP Vacuum")
         .item()
         .tab(EIOCreativeTabs.MACHINES)
         .build()
@@ -182,6 +188,7 @@ public class MachineBlocks {
         }
         return ImmutableMap.copyOf(panels);
     });
+
     public static final Map<CapacitorTier, BlockEntry<CapacitorBankBlock>> CAPACITOR_BANKS = Util.make(() -> {
         Map<CapacitorTier, BlockEntry<CapacitorBankBlock>> banks = new HashMap<>();
         for (CapacitorTier tier: CapacitorTier.values()) {
@@ -189,7 +196,33 @@ public class MachineBlocks {
         }
         return ImmutableMap.copyOf(banks);
     });
+
     public static final BlockEntry<ProgressMachineBlock> CRAFTER = progressMachine("crafter", () -> MachineBlockEntities.CRAFTER)
+        .register();
+
+    public static final BlockEntry<ProgressMachineBlock> SOUL_ENGINE = REGISTRATE
+        .block("soul_engine", p -> new ProgressMachineBlock(p, MachineBlockEntities.SOUL_ENGINE))
+        .properties(props -> props.strength(2.5f, 8).noOcclusion())
+        .loot(MachinesLootTable::copyNBT)
+        .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+        .blockstate(MachineModelUtil::progressMachineBlock)
+        .item(BoundSoulBlockItem::new)
+        .tab(EIOCreativeTabs.MACHINES)
+        .build()
+        .register();
+    public static final BlockEntry<ProgressMachineBlock> DRAIN = progressMachine("drain", () -> MachineBlockEntities.DRAIN)
+        .register();
+
+    public static final BlockEntry<MachineBlock> XP_OBELISK = REGISTRATE
+        .block("xp_obelisk", props -> new MachineBlock(props, MachineBlockEntities.XP_OBELISK))
+        .properties(props -> props.strength(2.5f, 8).isViewBlocking((pState, pLevel, pPos) -> false).noOcclusion())
+        .loot(MachinesLootTable::copyNBT)
+        .tag(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+        .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName()))))
+        .lang("XP Obelisk")
+        .item()
+        .tab(EIOCreativeTabs.MACHINES)
+        .build()
         .register();
 
     //used when single methods needs to be overridden in the block class

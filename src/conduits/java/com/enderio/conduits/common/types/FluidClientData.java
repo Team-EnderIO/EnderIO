@@ -46,16 +46,17 @@ public class FluidClientData extends IClientConduitData.Simple<FluidExtendedData
     @Override
     public List<BakedQuad> createConnectionQuads(FluidExtendedData extendedConduitData, @Nullable Direction facing, Direction connectionDirection,
         RandomSource rand, @Nullable RenderType type) {
-        if (!extendedConduitData.isMultiFluid && extendedConduitData.lockedFluid != null)
+        if (!extendedConduitData.isMultiFluid && extendedConduitData.lockedFluid != null) {
             return new FluidPaintQuadTransformer(extendedConduitData.lockedFluid).process(getModel(MODEL).getQuads(Blocks.COBBLESTONE.defaultBlockState(), facing, rand, ModelData.EMPTY, type));
+        }
+
         return List.of();
     }
 
     @Override
     public List<AbstractWidget> createWidgets(Screen screen, FluidExtendedData extendedConduitData, UpdateExtendedData<FluidExtendedData> updateExtendedConduitData, Supplier<Direction> direction, Vector2i widgetsStart) {
         return List.of(
-            new FluidWidget(
-                screen, widgetsStart.add(0, 20),
+            new FluidWidget(widgetsStart.add(0, 20),
                 () -> extendedConduitData.lockedFluid,
                 () -> updateExtendedConduitData.update(data -> {
                     data.shouldReset = true;
@@ -91,12 +92,10 @@ public class FluidClientData extends IClientConduitData.Simple<FluidExtendedData
     private static class FluidWidget extends AbstractWidget {
         private final Runnable onPress;
         private final Supplier<Fluid> currentFluid;
-        private final Screen addedOn;
-        public FluidWidget(Screen addedOn, Vector2i pos, Supplier<Fluid> fluid, Runnable onPress) {
+        FluidWidget(Vector2i pos, Supplier<Fluid> fluid, Runnable onPress) {
             super(pos.x(), pos.y(), 14, 14, Component.empty());
             this.onPress = onPress;
             this.currentFluid = fluid;
-            this.addedOn = addedOn;
         }
 
         @Override
@@ -118,8 +117,10 @@ public class FluidClientData extends IClientConduitData.Simple<FluidExtendedData
             RenderSystem.defaultBlendFunc();
             RenderSystem.enableDepthTest();
             guiGraphics.blit(WIDGET_TEXTURE, getX(), getY(), 0, 0, this.width, this.height);
-            if (currentFluid.get() == null)
+            if (currentFluid.get() == null) {
                 return;
+            }
+
             IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(currentFluid.get());
             ResourceLocation still = props.getStillTexture();
             AbstractTexture texture = Minecraft.getInstance().getTextureManager().getTexture(TextureAtlas.LOCATION_BLOCKS);

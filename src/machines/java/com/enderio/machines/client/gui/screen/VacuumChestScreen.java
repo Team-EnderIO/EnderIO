@@ -3,9 +3,9 @@ package com.enderio.machines.client.gui.screen;
 import com.enderio.EnderIO;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.enderio.core.client.gui.widgets.ToggleImageButton;
+import com.enderio.machines.client.gui.widget.ActiveWidget;
 import com.enderio.machines.common.menu.VacuumChestMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
@@ -13,7 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class VacuumChestScreen extends EIOScreen<VacuumChestMenu> {
+public class VacuumChestScreen extends MachineScreen<VacuumChestMenu> {
 
     private static final ResourceLocation VACUUM_CHEST_BG = EnderIO.loc("textures/gui/vacuum_chest.png");
     private static final ResourceLocation BUTTONS = EnderIO.loc("textures/gui/icons/buttons.png");
@@ -27,13 +27,18 @@ public class VacuumChestScreen extends EIOScreen<VacuumChestMenu> {
     @Override
     protected void init() {
         super.init();
-        addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 14, topPos + 105 + 2, () -> menu.getBlockEntity().getRedstoneControl(),
+        addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 16, topPos + 105 , () -> menu.getBlockEntity().getRedstoneControl(),
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
-        addRenderableWidget(new ToggleImageButton<>(this, leftPos + imageWidth - 8 - 14 - 2 - 16, topPos + 105, 16, 16, 0, 0, 16, 0, RANGE_BUTTON_TEXTURE,
+
+        addRenderableWidget(new ToggleImageButton<>(this, leftPos + imageWidth - 8 - 16 * 2 - 2, topPos + 105, 16, 16, 0, 0, 16, 0, RANGE_BUTTON_TEXTURE,
             () -> menu.getBlockEntity().isRangeVisible(), state -> menu.getBlockEntity().setIsRangeVisible(state),
             () -> menu.getBlockEntity().isRangeVisible() ? EIOLang.HIDE_RANGE : EIOLang.SHOW_RANGE));
+
         addRenderableWidget(new ImageButton(leftPos + imageWidth - 8 - 8, topPos + 86, 8, 8, 8, 0, 16, BUTTONS, (b) -> menu.getBlockEntity().increaseRange()));
         addRenderableWidget(new ImageButton(leftPos + imageWidth - 8 - 8, topPos + 94, 8, 8, 8, 8, 16, BUTTONS, (b) -> menu.getBlockEntity().decreaseRange()));
+
+        addRenderableWidget(new ActiveWidget(this, menu.getBlockEntity()::getMachineStates, leftPos + imageWidth - 8 - 16 * 3 - 4, topPos + 105));
+
     }
 
     @Override

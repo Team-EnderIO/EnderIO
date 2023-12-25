@@ -4,6 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.init.EIORecipes;
 import com.enderio.base.common.recipe.FireCraftingRecipe;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -28,13 +29,18 @@ import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 @SuppressWarnings("unused")
 @Mod.EventBusSubscriber(modid = EnderIO.MODID)
 public class FireCraftingHandler {
     private static final Random RANDOM = new Random();
-    private static final Map<FireIndex, Long> FIRE_TRACKER = new HashMap<>();
+    private static final ConcurrentMap<FireIndex, Long> FIRE_TRACKER = new ConcurrentHashMap<>();
 
     private static List<FireCraftingRecipe> cachedRecipes;
     private static boolean recipesCached = false;
@@ -77,8 +83,9 @@ public class FireCraftingHandler {
                 }
             }
 
-            if (matchingRecipe == null)
+            if (matchingRecipe == null) {
                 return;
+            }
 
             if (isFire) {
                 // If we're tracking lots of fire, look at culling the herd.
@@ -90,21 +97,27 @@ public class FireCraftingHandler {
                 FIRE_TRACKER.putIfAbsent(fireIndex, gameTime + BaseConfig.COMMON.INFINITY.FIRE_MIN_AGE.get());
             } else if (FIRE_TRACKER.containsKey(fireIndex)) {
                 if (level.getBlockState(pos).isAir() && gameTime > FIRE_TRACKER.get(fireIndex)) {
-                    spawnInfinityDrops(level, pos, matchingRecipe.getLootTable());
+                    spawnInfinityDrops(level, pos, matchingRecipe.getLootTable(), matchingRecipe.getMaxItemDrops());
                 }
                 FIRE_TRACKER.remove(fireIndex);
             }
         }
     }
 
-    public static void spawnInfinityDrops(ServerLevel level, BlockPos pos, ResourceLocation lootTable) {
-        LootParams lootparams = (new LootParams.Builder(level)).withParameter(LootContextParams.ORIGIN, pos.getCenter()).create(
-            LootContextParamSets.COMMAND);
+    public static void spawnInfinityDrops(ServerLevel level, BlockPos pos, ResourceLocation lootTable, int maxItemDrops) {
+        LootParams lootparams = (new LootParams.Builder(level)).withParameter(LootContextParams.ORIGIN, pos.getCenter()).create(LootContextParamSets.COMMAND);
 
         LootTable table = level.getServer().getLootData().getElement(LootDataType.TABLE, lootTable);
 
         if (table != null && table != LootTable.EMPTY) {
-            for (ItemStack item : table.getRandomItems(lootparams)) {
+            ObjectArrayList<ItemStack> randomItems = table.getRandomItems(lootparams);
+            for (int i = 0; i < randomItems.size(); i++) {
+                if (i >= maxItemDrops) {
+                    break;
+                }
+
+                ItemStack item = randomItems.get(i);
+
                 // Get random offset
                 double x = RANDOM.nextFloat() * 0.5f + 0.25f;
                 double y = RANDOM.nextFloat() * 0.5f + 0.25f;
@@ -113,7 +126,7 @@ public class FireCraftingHandler {
                 itemEntity.setDefaultPickUpDelay();
 
                 // Make it survive the fire for a bit
-                itemEntity.hurt(itemEntity.damageSources().inFire(),  -100);
+                itemEntity.hurt(itemEntity.damageSources().inFire(), -100);
 
                 // Actually set it on fire
                 itemEntity.setRemainingFireTicks(10);

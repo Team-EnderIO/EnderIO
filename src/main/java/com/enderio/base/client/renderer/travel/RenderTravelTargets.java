@@ -23,10 +23,14 @@ public class RenderTravelTargets {
     public static void renderLevel(RenderLevelStageEvent event) {
         ClientLevel level = Minecraft.getInstance().level;
         LocalPlayer player = Minecraft.getInstance().player;
-        if (level == null || player == null || event.getStage() != RenderLevelStageEvent.Stage.AFTER_TRIPWIRE_BLOCKS)
+        if (level == null || player == null || event.getStage() != RenderLevelStageEvent.Stage.AFTER_TRIPWIRE_BLOCKS) {
             return;
-        if (!TravelHandler.canTeleport(player))
+        }
+
+        if (!TravelHandler.canTeleport(player)) {
             return;
+        }
+
         boolean itemTeleport = TravelHandler.canItemTeleport(player);
         TravelSavedData data = TravelSavedData.getTravelData(Minecraft.getInstance().level);
         @Nullable
@@ -34,8 +38,12 @@ public class RenderTravelTargets {
         for (ITravelTarget target : data.getTravelTargets()) {
             double range = itemTeleport ? target.getItem2BlockRange() : target.getBlock2BlockRange();
             double distanceSquared = target.getPos().distToCenterSqr(player.position());
-            if (range * range < distanceSquared || distanceSquared < TravelHandler.MIN_TELEPORTATION_DISTANCE_SQUARED)
+            if (range * range < distanceSquared
+                || distanceSquared < TravelHandler.MIN_TELEPORTATION_DISTANCE_SQUARED
+                || TravelHandler.isTeleportPositionClear(level, target.getPos()).isEmpty()) {
                 continue;
+            }
+
             PoseStack poseStack = event.getPoseStack();
             poseStack.pushPose();
             Camera mainCamera = Minecraft.getInstance().gameRenderer.getMainCamera();

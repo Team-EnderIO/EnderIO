@@ -30,8 +30,10 @@ public class AlloySmelterMenu extends MachineMenu<AlloySmelterBlockEntity> {
 
     public static AlloySmelterMenu factory(@Nullable MenuType<AlloySmelterMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
-        if (entity instanceof AlloySmelterBlockEntity castBlockEntity)
+        if (entity instanceof AlloySmelterBlockEntity castBlockEntity) {
             return new AlloySmelterMenu(castBlockEntity, inventory, pContainerId);
+        }
+
         LogManager.getLogger().warn("couldn't find BlockEntity");
         return new AlloySmelterMenu(null, inventory, pContainerId);
     }

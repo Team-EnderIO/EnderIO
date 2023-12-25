@@ -109,6 +109,15 @@ public class LargeImmutableMachineEnergyStorage implements IMachineEnergyStorage
      */
     @Deprecated
     @Override
+    public int addEnergy(int energy, boolean simulate) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * @deprecated This storage is immutable.
+     */
+    @Deprecated
+    @Override
     public int takeEnergy(int energy) {
         throw new UnsupportedOperationException();
     }

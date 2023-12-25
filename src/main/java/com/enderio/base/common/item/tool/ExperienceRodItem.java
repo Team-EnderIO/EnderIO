@@ -7,7 +7,6 @@ import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.network.CoreNetwork;
 import com.enderio.core.common.network.EmitParticlePacket;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -31,18 +30,18 @@ public class ExperienceRodItem extends Item {
     @Override
     public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
         Level level = context.getLevel();
-        if (level.isClientSide())
+        if (level.isClientSide()) {
             return InteractionResult.SUCCESS;
+        }
 
         Player player = context.getPlayer();
         BlockPos pos = context.getClickedPos();
-        Direction side = context.getClickedFace();
 
-        boolean wasSuccess = false;
+        boolean wasSuccess;
         if (player.isShiftKeyDown()) {
-            wasSuccess = transferFromPlayerToBlock(player, level, pos, side);
+            wasSuccess = transferFromPlayerToBlock(player, level, pos);
         } else {
-            wasSuccess = transferFromBlockToPlayer(player, level, pos, side);
+            wasSuccess = transferFromBlockToPlayer(player, level, pos);
         }
 
         if (wasSuccess) {
@@ -60,11 +59,11 @@ public class ExperienceRodItem extends Item {
         return false;
     }
 
-    private static boolean transferFromBlockToPlayer(Player player, Level level, BlockPos pos, Direction side) {
+    private static boolean transferFromBlockToPlayer(Player player, Level level, BlockPos pos) {
         try {
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity != null) {
-                return blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER, side).map(fluidHandler -> {
+                return blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER).map(fluidHandler -> {
 
                     FluidStack availableFluid = fluidHandler.getFluidInTank(0);
                     if (availableFluid.getFluid().is(EIOTags.Fluids.EXPERIENCE) && availableFluid.getAmount() > 0) {
@@ -89,7 +88,7 @@ public class ExperienceRodItem extends Item {
         return false;
     }
 
-    private static boolean transferFromPlayerToBlock(Player player, Level level, BlockPos pos, Direction side) {
+    private static boolean transferFromPlayerToBlock(Player player, Level level, BlockPos pos) {
         try {
             if (player.experienceLevel <= 0 && player.experienceProgress <= 0.0f) {
                 return false;
@@ -97,9 +96,10 @@ public class ExperienceRodItem extends Item {
 
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity != null) {
-                return blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER, side).map(fluidHandler -> {
-                    int fluidVolume = ExperienceUtil.getPlayerTotalXp(player) * ExperienceUtil.EXP_TO_FLUID;
-                    FluidStack fs = new FluidStack(EIOFluids.XP_JUICE.getSource(), fluidVolume);
+                return blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER).map(fluidHandler -> {
+                    long fluidVolume = ExperienceUtil.getPlayerTotalXp(player) * ExperienceUtil.EXP_TO_FLUID;
+                    int cappedVolume = (int) Math.min(Integer.MAX_VALUE, fluidVolume);
+                    FluidStack fs = new FluidStack(EIOFluids.XP_JUICE.getSource(), cappedVolume);
                     int takenVolume = fluidHandler.fill(fs, IFluidHandler.FluidAction.EXECUTE);
                     if (takenVolume > 0) {
                         player.giveExperiencePoints(-takenVolume / ExperienceUtil.EXP_TO_FLUID);

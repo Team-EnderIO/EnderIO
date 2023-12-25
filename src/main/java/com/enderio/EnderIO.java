@@ -4,7 +4,18 @@ import com.enderio.api.integration.IntegrationManager;
 import com.enderio.base.common.advancement.PaintingTrigger;
 import com.enderio.base.common.advancement.UseGliderTrigger;
 import com.enderio.base.common.config.BaseConfig;
-import com.enderio.base.common.init.*;
+import com.enderio.base.common.init.EIOBlockEntities;
+import com.enderio.base.common.init.EIOBlocks;
+import com.enderio.base.common.init.EIOCreativeTabs;
+import com.enderio.base.common.init.EIOEnchantments;
+import com.enderio.base.common.init.EIOEntities;
+import com.enderio.base.common.init.EIOFluids;
+import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.common.init.EIOLootModifiers;
+import com.enderio.base.common.init.EIOMenus;
+import com.enderio.base.common.init.EIOPackets;
+import com.enderio.base.common.init.EIOParticles;
+import com.enderio.base.common.init.EIORecipes;
 import com.enderio.base.common.integrations.EnderIOSelfIntegration;
 import com.enderio.base.common.item.tool.SoulVialItem;
 import com.enderio.base.common.lang.EIOLang;
@@ -12,10 +23,15 @@ import com.enderio.base.common.network.EIONetwork;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.EIODataProvider;
 import com.enderio.base.data.advancement.EIOAdvancementGenerator;
-import com.enderio.base.data.loot.EIOLootModifiersProvider;
 import com.enderio.base.data.loot.ChestLootProvider;
+import com.enderio.base.data.loot.EIOLootModifiersProvider;
 import com.enderio.base.data.loot.FireCraftingLootProvider;
-import com.enderio.base.data.recipe.*;
+import com.enderio.base.data.recipe.BlockRecipeProvider;
+import com.enderio.base.data.recipe.FireCraftingRecipeProvider;
+import com.enderio.base.data.recipe.GlassRecipeProvider;
+import com.enderio.base.data.recipe.GrindingBallRecipeProvider;
+import com.enderio.base.data.recipe.ItemRecipeProvider;
+import com.enderio.base.data.recipe.MaterialRecipeProvider;
 import com.enderio.base.data.tags.EIOBlockTagsProvider;
 import com.enderio.base.data.tags.EIOEntityTagsProvider;
 import com.enderio.base.data.tags.EIOFluidTagsProvider;
@@ -124,12 +140,12 @@ public class EnderIO {
 
         EIODataProvider provider = new EIODataProvider("base");
 
-        provider.addSubProvider(event.includeServer(), new MaterialRecipes(packOutput));
-        provider.addSubProvider(event.includeServer(), new BlockRecipes(packOutput));
-        provider.addSubProvider(event.includeServer(), new ItemRecipes(packOutput));
+        provider.addSubProvider(event.includeServer(), new MaterialRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new BlockRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new ItemRecipeProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new GrindingBallRecipeProvider(packOutput));
-        provider.addSubProvider(event.includeServer(), new GlassRecipes(packOutput));
-        provider.addSubProvider(event.includeServer(), new FireCraftingRecipes(packOutput));
+        provider.addSubProvider(event.includeServer(), new GlassRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new FireCraftingRecipeProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new EIOLootModifiersProvider(packOutput));
 
         var b = new EIOBlockTagsProvider(packOutput, lookupProvider, existingFileHelper);
@@ -139,7 +155,7 @@ public class EnderIO {
         provider.addSubProvider(event.includeServer(), new EIOEntityTagsProvider(packOutput, lookupProvider, existingFileHelper));
         provider.addSubProvider(event.includeServer(),
             new ForgeAdvancementProvider(packOutput, lookupProvider, existingFileHelper, List.of(new EIOAdvancementGenerator())));
-        generator.addProvider(event.includeServer(), new LootTableProvider(packOutput, Collections.emptySet(),
+        provider.addSubProvider(event.includeServer(), new LootTableProvider(packOutput, Collections.emptySet(),
             List.of(new LootTableProvider.SubProviderEntry(FireCraftingLootProvider::new, LootContextParamSets.EMPTY),
                 new LootTableProvider.SubProviderEntry(ChestLootProvider::new, LootContextParamSets.CHEST))));
         generator.addProvider(true, provider);

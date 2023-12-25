@@ -38,8 +38,9 @@ public abstract class TieredConduit<T extends IExtendedConduitData<T>> implement
 
     @Override
     public boolean canBeReplacedBy(IConduitType<?> other) {
-        if (!(other instanceof TieredConduit<?> tieredOther))
+        if (!(other instanceof TieredConduit<?> tieredOther)) {
             return false;
+        }
 
         if (type.equals(tieredOther.getType())) {
             return tier < tieredOther.getTier();
@@ -49,8 +50,10 @@ public abstract class TieredConduit<T extends IExtendedConduitData<T>> implement
 
     @Override
     public boolean canBeInSameBlock(IConduitType<?> other) {
-        if (!(other instanceof TieredConduit<?> tieredOther))
+        if (!(other instanceof TieredConduit<?> tieredOther)) {
             return true;
+        }
+
         // if they have the same type they can't be in the same block, their tier doesn't matter as canBeReplacedBy is checked first
         return !type.equals(tieredOther.getType());
     }

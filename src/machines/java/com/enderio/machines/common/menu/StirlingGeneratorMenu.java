@@ -25,8 +25,10 @@ public class StirlingGeneratorMenu extends MachineMenu<StirlingGeneratorBlockEnt
 
     public static StirlingGeneratorMenu factory(@Nullable MenuType<StirlingGeneratorMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
-        if (entity instanceof StirlingGeneratorBlockEntity castBlockEntity)
+        if (entity instanceof StirlingGeneratorBlockEntity castBlockEntity) {
             return new StirlingGeneratorMenu(castBlockEntity, inventory, pContainerId);
+        }
+
         LogManager.getLogger().warn("couldn't find BlockEntity");
         return new StirlingGeneratorMenu(null, inventory, pContainerId);
     }

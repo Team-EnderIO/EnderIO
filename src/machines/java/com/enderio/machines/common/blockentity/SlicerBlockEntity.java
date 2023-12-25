@@ -56,8 +56,10 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
             @Override
             protected @Nullable CraftingMachineTask<SlicingRecipe, Container> getNewTask() {
                 MachineInventory inv = getInventoryNN();
-                if (AXE.getItemStack(inv).isEmpty() || SHEARS.getItemStack(inv).isEmpty())
+                if (AXE.getItemStack(inv).isEmpty() || SHEARS.getItemStack(inv).isEmpty()) {
                     return null;
+                }
+
                 return super.getNewTask();
             }
         };
@@ -104,7 +106,7 @@ public class SlicerBlockEntity extends PoweredMachineBlockEntity {
     }
 
     private boolean isValidInput(int index, ItemStack stack) {
-        return RecipeCaches.SLICING.hasRecipe(List.of(stack));
+        return SlicerRecipeManager.isSlicerValid(stack, index);
     }
 
     private boolean validAxe(int slot, ItemStack stack) {

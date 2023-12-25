@@ -2,6 +2,7 @@ package com.enderio.machines.common.io.item;
 
 import com.enderio.api.capability.IEnderCapabilityProvider;
 import com.enderio.api.io.IIOConfig;
+import com.enderio.machines.common.blockentity.MachineState;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
@@ -72,13 +73,17 @@ public class MachineInventory extends ItemStackHandler implements IEnderCapabili
     public LazyOptional<IItemHandler> getCapability(@Nullable Direction side) {
         if (side == null) {
             // Create own cache if its been invalidated or not created yet.
-            if (!selfCache.isPresent())
+            if (!selfCache.isPresent()) {
                 selfCache = LazyOptional.of(() -> new Wrapped(this, null));
+            }
+
             return selfCache.cast();
         }
 
-        if (!config.getMode(side).canConnect())
+        if (!config.getMode(side).canConnect()) {
             return LazyOptional.empty();
+        }
+
         return sideCache.computeIfAbsent(side, dir -> LazyOptional.of(() -> new Wrapped(this, dir))).cast();
     }
 
@@ -105,16 +110,20 @@ public class MachineInventory extends ItemStackHandler implements IEnderCapabili
     public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
         boolean wasEmpty = !simulate && getStackInSlot(slot).isEmpty();
         ItemStack itemStack = super.insertItem(slot, stack, simulate);
-        if (wasEmpty && itemStack.getCount() != stack.getCount())
+        if (wasEmpty && itemStack.getCount() != stack.getCount()) {
             changeListener.accept(slot);
+        }
+
         return itemStack;
     }
 
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
         ItemStack itemStack = super.extractItem(slot, amount, simulate);
-        if (!itemStack.isEmpty() && !simulate && getStackInSlot(slot).isEmpty())
+        if (!itemStack.isEmpty() && !simulate && getStackInSlot(slot).isEmpty()) {
             changeListener.accept(slot);
+        }
+
         return itemStack;
     }
 
@@ -122,8 +131,13 @@ public class MachineInventory extends ItemStackHandler implements IEnderCapabili
     public void setStackInSlot(int slot, ItemStack stack) {
         boolean changed = stack.getItem() != getStackInSlot(slot).getItem();
         super.setStackInSlot(slot, stack);
-        if (changed)
+        if (changed) {
             this.changeListener.accept(slot);
+        }
+    }
+
+    public void updateMachineState(MachineState state, boolean add) {
+
     }
 
     private record Wrapped(MachineInventory master, @Nullable Direction side) implements IItemHandler {
@@ -141,12 +155,14 @@ public class MachineInventory extends ItemStackHandler implements IEnderCapabili
         @Override
         public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
             // Check we allow insertion on the slot
-            if (!master.getLayout().canInsert(slot))
+            if (!master.getLayout().canInsert(slot)) {
                 return stack;
+            }
 
             // Check we allow input to the block on this side
-            if (side != null && !master.getConfig().getMode(side).canInput())
+            if (side != null && !master.getConfig().getMode(side).canInput()) {
                 return stack;
+            }
 
             return master.insertItem(slot, stack, simulate);
         }
@@ -154,12 +170,14 @@ public class MachineInventory extends ItemStackHandler implements IEnderCapabili
         @Override
         public ItemStack extractItem(int slot, int amount, boolean simulate) {
             // Check we allow extraction on the slot
-            if (!master.getLayout().canExtract(slot))
+            if (!master.getLayout().canExtract(slot)) {
                 return ItemStack.EMPTY;
+            }
 
             // Check we allow output from the block on this side
-            if (side != null && !master.getConfig().getMode(side).canOutput())
+            if (side != null && !master.getConfig().getMode(side).canOutput()) {
                 return ItemStack.EMPTY;
+            }
 
             return master.extractItem(slot, amount, simulate);
         }

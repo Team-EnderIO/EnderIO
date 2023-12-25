@@ -6,7 +6,7 @@
       "item": "enderio:conduit_binder"
     },
     "P": {
-      "item": "enderio:pulsating_alloy_nugget"
+      "tag": "forge:nuggets/pulsating_alloy"
     }
   },
   "pattern": [

@@ -3,7 +3,12 @@ package com.enderio.machines.common.integrations.jei;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.integrations.jei.util.WrappedEnchanterRecipe;
 import com.enderio.machines.common.integrations.vanilla.VanillaAlloySmeltingRecipe;
-import com.enderio.machines.common.recipe.*;
+import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
+import com.enderio.machines.common.recipe.SagMillingRecipe;
+import com.enderio.machines.common.recipe.SlicingRecipe;
+import com.enderio.machines.common.recipe.SoulBindingRecipe;
+import com.enderio.machines.common.recipe.TankRecipe;
+import com.enderio.machines.common.souldata.EngineSoul;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -53,7 +58,11 @@ public class MachineJEIRecipes {
         }).toList();
     }
 
-    public List<SagMillingRecipe> getSagmillingRecipes() {
-        return recipeManager.getAllRecipesFor(MachineRecipes.SAGMILLING.type().get());
+    public List<SagMillingRecipe> getSagMillingRecipes() {
+        return recipeManager.getAllRecipesFor(MachineRecipes.SAG_MILLING.type().get());
+    }
+
+    public List<EngineSoul.SoulData> getMobGeneratorRecipes() {
+        return EngineSoul.ENGINE.map.values().stream().toList();
     }
 }

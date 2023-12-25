@@ -6,13 +6,13 @@
       "item": "enderio:double_layer_capacitor"
     },
     "D": {
-      "item": "enderio:powdered_coal"
+      "tag": "forge:dusts/coal"
     },
     "F": {
       "tag": "enderio:enlighted_fused_quartz"
     },
     "I": {
-      "item": "enderio:pulsating_alloy_ingot"
+      "tag": "forge:ingots/pulsating_alloy"
     },
     "P": {
       "item": "enderio:photovoltaic_plate"

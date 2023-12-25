@@ -368,7 +368,10 @@ public class MachineInventoryLayout {
         }
 
         public static class SlotBuilder {
-            private boolean insert, extract, guiInsert, guiExtract;
+            private boolean insert;
+            private boolean extract;
+            private boolean guiInsert;
+            private boolean guiExtract;
             private int stackLimit = 64;
 
             private BiPredicate<Integer, ItemStack> filter = (i,s) -> true;

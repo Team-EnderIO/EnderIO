@@ -49,12 +49,18 @@ public class FusedQuartzBlock extends AbstractGlassBlock {
     public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
         super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
 
-        if (explosionResistant)
+        if (explosionResistant) {
             pTooltip.add(EIOLang.BLOCK_BLAST_RESISTANT);
-        if (glassLighting == GlassLighting.EMITTING)
+        }
+
+        if (glassLighting == GlassLighting.EMITTING) {
             pTooltip.add(EIOLang.FUSED_QUARTZ_EMITS_LIGHT);
-        if (glassLighting == GlassLighting.BLOCKING)
+        }
+
+        if (glassLighting == GlassLighting.BLOCKING) {
             pTooltip.add(EIOLang.FUSED_QUARTZ_BLOCKS_LIGHT);
+        }
+
         collisionPredicate.getDescription().ifPresent(pTooltip::add);
     }
 

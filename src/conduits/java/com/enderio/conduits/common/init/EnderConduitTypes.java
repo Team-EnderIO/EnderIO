@@ -1,9 +1,17 @@
 package com.enderio.conduits.common.init;
 
 import com.enderio.EnderIO;
-import com.enderio.api.conduit.*;
+import com.enderio.api.conduit.ConduitTypes;
+import com.enderio.api.conduit.IConduitMenuData;
+import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.misc.Vector2i;
-import com.enderio.conduits.common.types.*;
+import com.enderio.conduits.common.types.EnergyConduitType;
+import com.enderio.conduits.common.types.FluidConduitType;
+import com.enderio.conduits.common.types.ItemClientConduitData;
+import com.enderio.conduits.common.types.ItemConduitTicker;
+import com.enderio.conduits.common.types.ItemExtendedData;
+import com.enderio.conduits.common.types.RedstoneConduitType;
+import com.enderio.conduits.common.types.SimpleConduitType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -11,9 +19,7 @@ public class EnderConduitTypes {
 
     public static final ResourceLocation ICON_TEXTURE = EnderIO.loc("textures/gui/conduit_icon.png");
     public static final RegistryObject<? extends IConduitType<?>> ENERGY = ConduitTypes.CONDUIT_TYPES.register(
-        "energy_conduit",
-        () -> new SimpleConduitType<>(EnderIO.loc("block/conduit/energy"), new EnergyConduitTicker(), EnergyExtendedData::new,
-            new IClientConduitData.Simple<>(ICON_TEXTURE, new Vector2i(0, 24)), IConduitMenuData.ENERGY));
+        "energy_conduit", EnergyConduitType::new);
 
     public static final RegistryObject<FluidConduitType> FLUID = fluidConduit("fluid_conduit", 50, false, new Vector2i(0, 120));
 

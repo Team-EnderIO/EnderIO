@@ -3,7 +3,6 @@ package com.enderio.machines.client.gui.screen;
 import com.enderio.EnderIO;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.client.gui.widgets.ToggleImageButton;
 import com.enderio.machines.common.menu.TravelAnchorMenu;
 import net.minecraft.client.gui.components.EditBox;
@@ -11,7 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class TravelAnchorScreen extends EIOScreen<TravelAnchorMenu> {
+public class TravelAnchorScreen extends MachineScreen<TravelAnchorMenu> {
 
     private static final ResourceLocation TRAVEL_ANCHOR_BG = EnderIO.loc("textures/gui/travel_anchor.png");
     private static final ResourceLocation VISIBILITY_BTNS = EnderIO.loc("textures/gui/icons/visibility_buttons.png");

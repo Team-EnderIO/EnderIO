@@ -17,8 +17,10 @@ public class CapacitorBankMenu extends MachineMenu<CapacitorBankBlockEntity> {
 
     public static CapacitorBankMenu factory(@Nullable MenuType<CapacitorBankMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
-        if (entity instanceof CapacitorBankBlockEntity castBlockEntity)
+        if (entity instanceof CapacitorBankBlockEntity castBlockEntity) {
             return new CapacitorBankMenu(castBlockEntity, inventory, pContainerId);
+        }
+
         LogManager.getLogger().warn("couldn't find BlockEntity");
         return new CapacitorBankMenu(null, inventory, pContainerId);
     }

@@ -59,8 +59,9 @@ public class CapacitorBankBlock extends MachineBlock implements IAdvancedTooltip
         super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
         if (pPlacer != null && pLevel.getBlockEntity(pPos) instanceof CapacitorBankBlockEntity capacitorBankBlock) {
             for (Direction direction: Direction.values()) {
-                if (pLevel.getBlockEntity(pPos.relative(direction)) instanceof CapacitorBankBlockEntity other && other.tier == tier)
+                if (pLevel.getBlockEntity(pPos.relative(direction)) instanceof CapacitorBankBlockEntity other && other.tier == tier) {
                     return;
+                }
             }
             capacitorBankBlock.setDisplayMode(pPlacer.getDirection().getOpposite(), DisplayMode.BAR);
         }
