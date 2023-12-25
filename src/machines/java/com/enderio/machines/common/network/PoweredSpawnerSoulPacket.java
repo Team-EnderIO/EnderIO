@@ -8,13 +8,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 public class PoweredSpawnerSoulPacket implements Packet {
-    public static Map<ResourceLocation, SpawnerSoul.SoulData> SYNCED_DATA = new HashMap<>();
-
     private final Map<ResourceLocation, SpawnerSoul.SoulData> map;
 
     public PoweredSpawnerSoulPacket(Map<ResourceLocation, SpawnerSoul.SoulData> map) {
@@ -22,11 +19,9 @@ public class PoweredSpawnerSoulPacket implements Packet {
     }
 
     public PoweredSpawnerSoulPacket(FriendlyByteBuf buf) {
-        Map<ResourceLocation, SpawnerSoul.SoulData> newMap = new HashMap<>();
-        buf.readMap(FriendlyByteBuf::readResourceLocation, buff ->
+        this.map = buf.readMap(FriendlyByteBuf::readResourceLocation, buff ->
             new SpawnerSoul.SoulData(buff.readResourceLocation(), buff.readInt(), buff.readEnum(SpawnerMachineTask.SpawnType.class))
         );
-        this.map = newMap;
     }
 
     protected void write(FriendlyByteBuf writeInto) {
@@ -44,7 +39,7 @@ public class PoweredSpawnerSoulPacket implements Packet {
 
     @Override
     public void handle(NetworkEvent.Context context) {
-        context.enqueueWork(() -> SYNCED_DATA = this.map);
+        context.enqueueWork(() -> SpawnerSoul.SPAWNER.map = this.map);
         context.setPacketHandled(true);
     }
 

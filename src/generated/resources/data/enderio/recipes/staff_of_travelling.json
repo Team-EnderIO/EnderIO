@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "C": {
+      "tag": "forge:gems/ender_crystal"
+    },
+    "I": {
+      "tag": "forge:ingots/dark_steel"
+    }
+  },
+  "pattern": [
+    "  C",
+    " I ",
+    "I  "
+  ],
+  "result": {
+    "item": "enderio:staff_of_travelling"
+  },
+  "show_notification": true
+}

@@ -1,7 +1,11 @@
 package com.enderio.base.common.init;
 
 import com.enderio.EnderIO;
-import com.enderio.base.common.blockentity.*;
+import com.enderio.base.common.blockentity.DoublePaintedBlockEntity;
+import com.enderio.base.common.blockentity.EnderSkullBlockEntity;
+import com.enderio.base.common.blockentity.LightNodeBlockEntity;
+import com.enderio.base.common.blockentity.PoweredLightBlockEntity;
+import com.enderio.base.common.blockentity.SinglePaintedBlockEntity;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 

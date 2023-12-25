@@ -39,12 +39,6 @@ public class ClientSetup {
     public static final Map<Item, BakedModel> GLIDER_MODELS = new HashMap<>();
     @SubscribeEvent
     public static void additionalModels(ModelEvent.RegisterAdditional event) {
-        event.register(EnderIO.loc("item/wood_gear_helper"));
-        event.register(EnderIO.loc("item/stone_gear_helper"));
-        event.register(EnderIO.loc("item/iron_gear_helper"));
-        event.register(EnderIO.loc("item/energized_gear_helper"));
-        event.register(EnderIO.loc("item/vibrant_gear_helper"));
-        event.register(EnderIO.loc("item/dark_bimetal_gear_helper"));
         Set<ResourceLocation> gliderModels = Minecraft
             .getInstance()
             .getResourceManager()

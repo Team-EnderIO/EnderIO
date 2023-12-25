@@ -1,6 +1,7 @@
 package com.enderio.machines.common.block;
 
-import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
+import com.enderio.base.common.tag.EIOTags;
+import com.enderio.core.common.compat.FlywheelCompat;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import net.minecraft.core.BlockPos;
@@ -25,6 +26,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
@@ -94,6 +96,13 @@ public class MachineBlock extends BaseEntityBlock {
             return InteractionResult.PASS;
         }
 
+        if (player.getItemInHand(hand).is(EIOTags.Items.WRENCH)) {
+            InteractionResult res = machineBlockEntity.onWrenched(player, hit.getDirection());
+            if (res != InteractionResult.PASS) {
+                return res;
+            }
+        }
+
         //pass on the use command to corresponding block entity.
         InteractionResult result = machineBlockEntity.onBlockEntityUsed(state, level, pos, player, hand,hit);
         if (result != InteractionResult.CONSUME) {
@@ -125,8 +134,14 @@ public class MachineBlock extends BaseEntityBlock {
 
     @Override
     public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
-        if (level.getExistingBlockEntity(pos) instanceof FluidTankBlockEntity fluidTank) {
-            return fluidTank.getFluidTank().getFluid().getFluid().getFluidType().getLightLevel();
+        BlockEntity existingBlockEntity;
+        if (ModList.get().isLoaded("flywheel")) {
+            existingBlockEntity =  FlywheelCompat.getExistingBlockEntity(level, pos);
+        } else {
+            existingBlockEntity = level.getExistingBlockEntity(pos);
+        }
+        if (existingBlockEntity instanceof MachineBlockEntity machineBlock) {
+            return machineBlock.getLightEmission();
         }
         return super.getLightEmission(state, level, pos);
     }

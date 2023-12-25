@@ -25,6 +25,9 @@
     "enderio:vacuum_chest",
     "enderio:xp_vacuum",
     "enderio:travel_anchor",
-    "enderio:crafter"
+    "enderio:crafter",
+    "enderio:soul_engine",
+    "enderio:drain",
+    "enderio:xp_obelisk"
   ]
 }

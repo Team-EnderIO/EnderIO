@@ -29,8 +29,10 @@ public class Toggled implements IToggled {
     @Override
     public boolean isEnabled() {
         CompoundTag tag = this.stack.getOrCreateTag();
-        if (tag.contains(EIONBTKeys.TOGGLE_STATE))
+        if (tag.contains(EIONBTKeys.TOGGLE_STATE)) {
             return tag.getBoolean(EIONBTKeys.TOGGLE_STATE);
+        }
+
         return false;
     }
 

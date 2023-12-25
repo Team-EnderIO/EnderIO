@@ -77,15 +77,18 @@ public class IOConfig implements IIOConfig {
      * Get side config as a capability.
      */
     public LazyOptional<ISideConfig> getCapability(@Nullable Direction side) {
-        if (side == null)
+        if (side == null) {
             return LazyOptional.empty();
+        }
+
         return sideAccessCache.computeIfAbsent(side, dir -> LazyOptional.of(() -> new SideAccess(this, dir))).cast();
     }
 
     @Override
     public void invalidateSide(@Nullable Direction side) {
-        if (side == null)
+        if (side == null) {
             return;
+        }
 
         if (sideAccessCache.containsKey(side)) {
             sideAccessCache.get(side).invalidate();
@@ -151,10 +154,13 @@ public class IOConfig implements IIOConfig {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
+        if (this == o) {
             return true;
-        if (o == null || getClass() != o.getClass())
+        }
+
+        if (o == null || getClass() != o.getClass()) {
             return false;
+        }
 
         IOConfig ioConfig = (IOConfig) o;
 

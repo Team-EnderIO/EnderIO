@@ -2,7 +2,16 @@ package com.enderio.base.common.init;
 
 import com.enderio.EnderIO;
 import com.enderio.base.client.renderer.PaintedBlockColor;
-import com.enderio.base.common.block.*;
+import com.enderio.base.common.block.ColdFireBlock;
+import com.enderio.base.common.block.DarkSteelLadderBlock;
+import com.enderio.base.common.block.EIOPressurePlateBlock;
+import com.enderio.base.common.block.EnderSkullBlock;
+import com.enderio.base.common.block.IndustrialInsulationBlock;
+import com.enderio.base.common.block.ReinforcedObsidianBlock;
+import com.enderio.base.common.block.ResettingLeverBlock;
+import com.enderio.base.common.block.SilentPressurePlateBlock;
+import com.enderio.base.common.block.SilentWeightedPressurePlateBlock;
+import com.enderio.base.common.block.WallEnderSkullBlock;
 import com.enderio.base.common.block.glass.GlassBlocks;
 import com.enderio.base.common.block.glass.GlassCollisionPredicate;
 import com.enderio.base.common.block.glass.GlassIdentifier;
@@ -10,10 +19,20 @@ import com.enderio.base.common.block.glass.GlassLighting;
 import com.enderio.base.common.block.light.Light;
 import com.enderio.base.common.block.light.LightNode;
 import com.enderio.base.common.block.light.PoweredLight;
-import com.enderio.base.common.block.painted.*;
+import com.enderio.base.common.block.painted.PaintedCraftingTableBlock;
+import com.enderio.base.common.block.painted.PaintedFenceBlock;
+import com.enderio.base.common.block.painted.PaintedFenceGateBlock;
+import com.enderio.base.common.block.painted.PaintedRedstoneBlock;
+import com.enderio.base.common.block.painted.PaintedSandBlock;
+import com.enderio.base.common.block.painted.PaintedSlabBlock;
+import com.enderio.base.common.block.painted.PaintedStairBlock;
+import com.enderio.base.common.block.painted.PaintedTrapDoorBlock;
+import com.enderio.base.common.block.painted.PaintedWoodenPressurePlateBlock;
+import com.enderio.base.common.block.painted.SinglePaintedBlock;
 import com.enderio.base.common.item.PaintedBlockItem;
 import com.enderio.base.common.item.PaintedSlabBlockItem;
 import com.enderio.base.common.item.misc.EnderSkullBlockItem;
+import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.data.loot.DecorLootTable;
 import com.enderio.base.data.model.block.EIOBlockState;
 import com.tterrag.registrate.Registrate;
@@ -28,7 +47,16 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ChainBlock;
+import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.IronBarsBlock;
+import net.minecraft.world.level.block.LeverBlock;
+import net.minecraft.world.level.block.PressurePlateBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.TrapDoorBlock;
+import net.minecraft.world.level.block.WeightedPressurePlateBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
@@ -42,7 +70,11 @@ import net.minecraftforge.client.model.generators.VariantBlockStateBuilder;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import static com.tterrag.registrate.providers.ProviderType.LANG;
 import static com.tterrag.registrate.util.nullness.NonNullBiConsumer.noop;
@@ -53,15 +85,24 @@ public class EIOBlocks {
 
     // region Alloy Blocks
 
-    public static final BlockEntry<Block> COPPER_ALLOY_BLOCK = metalBlock("copper_alloy_block").register();
-    public static final BlockEntry<Block> ENERGETIC_ALLOY_BLOCK = metalBlock("energetic_alloy_block").register();
-    public static final BlockEntry<Block> VIBRANT_ALLOY_BLOCK = metalBlock("vibrant_alloy_block").register();
-    public static final BlockEntry<Block> REDSTONE_ALLOY_BLOCK = metalBlock("redstone_alloy_block").register();
-    public static final BlockEntry<Block> CONDUCTIVE_ALLOY_BLOCK = metalBlock("conductive_alloy_block").register();
-    public static final BlockEntry<Block> PULSATING_ALLOY_BLOCK = metalBlock("pulsating_alloy_block").register();
-    public static final BlockEntry<Block> DARK_STEEL_BLOCK = metalBlock("dark_steel_block").register();
-    public static final BlockEntry<Block> SOULARIUM_BLOCK = metalBlock("soularium_block").register();
-    public static final BlockEntry<Block> END_STEEL_BLOCK = metalBlock("end_steel_block").register();
+    public static final BlockEntry<Block> COPPER_ALLOY_BLOCK = metalBlock("copper_alloy_block", EIOTags.Blocks.BLOCKS_COPPER_ALLOY,
+        EIOTags.Items.BLOCKS_COPPER_ALLOY).register();
+    public static final BlockEntry<Block> ENERGETIC_ALLOY_BLOCK = metalBlock("energetic_alloy_block", EIOTags.Blocks.BLOCKS_ENERGETIC_ALLOY,
+        EIOTags.Items.BLOCKS_ENERGETIC_ALLOY).register();
+    public static final BlockEntry<Block> VIBRANT_ALLOY_BLOCK = metalBlock("vibrant_alloy_block", EIOTags.Blocks.BLOCKS_VIBRANT_ALLOY,
+        EIOTags.Items.BLOCKS_VIBRANT_ALLOY).register();
+    public static final BlockEntry<Block> REDSTONE_ALLOY_BLOCK = metalBlock("redstone_alloy_block", EIOTags.Blocks.BLOCKS_REDSTONE_ALLOY,
+        EIOTags.Items.BLOCKS_REDSTONE_ALLOY).register();
+    public static final BlockEntry<Block> CONDUCTIVE_ALLOY_BLOCK = metalBlock("conductive_alloy_block", EIOTags.Blocks.BLOCKS_CONDUCTIVE_ALLOY,
+        EIOTags.Items.BLOCKS_CONDUCTIVE_ALLOY).register();
+    public static final BlockEntry<Block> PULSATING_ALLOY_BLOCK = metalBlock("pulsating_alloy_block", EIOTags.Blocks.BLOCKS_PULSATING_ALLOY,
+        EIOTags.Items.BLOCKS_PULSATING_ALLOY).register();
+    public static final BlockEntry<Block> DARK_STEEL_BLOCK = metalBlock("dark_steel_block", EIOTags.Blocks.BLOCKS_DARK_STEEL,
+        EIOTags.Items.BLOCKS_DARK_STEEL).register();
+    public static final BlockEntry<Block> SOULARIUM_BLOCK = metalBlock("soularium_block", EIOTags.Blocks.BLOCKS_SOULARIUM,
+        EIOTags.Items.BLOCKS_SOULARIUM).register();
+    public static final BlockEntry<Block> END_STEEL_BLOCK = metalBlock("end_steel_block", EIOTags.Blocks.BLOCKS_END_STEEL,
+        EIOTags.Items.BLOCKS_END_STEEL).register();
 
     // endregion
 
@@ -71,18 +112,17 @@ public class EIOBlocks {
     public static final BlockEntry<Block> VOID_CHASSIS = chassisBlock("void_chassis").register();
 
     // Void chassis + some kind of dragons breath derrived process
-//    public static final BlockEntry<Block> REKINDLED_VOID_CHASSIS = chassisBlock("rekindled_void_chassis").register();
+    //    public static final BlockEntry<Block> REKINDLED_VOID_CHASSIS = chassisBlock("rekindled_void_chassis").register();
 
     // Soularium + soul/nether
     public static final BlockEntry<Block> ENSOULED_CHASSIS = chassisBlock("ensouled_chassis").register();
 
     // Ensnared + Some kind of other material
     // This is for machines that require a bound soul
-//    public static final BlockEntry<Block> TRAPPED_CHASSIS = chassisBlock("trapped_chassis").register();
+    //    public static final BlockEntry<Block> TRAPPED_CHASSIS = chassisBlock("trapped_chassis").register();
 
     // Dark steel + sculk
-//    public static final BlockEntry<Block> SCULK_CHASSIS = chassisBlock("sculk_chassis").register();
-
+    //    public static final BlockEntry<Block> SCULK_CHASSIS = chassisBlock("sculk_chassis").register();
 
     // endregion
 
@@ -122,7 +162,9 @@ public class EIOBlocks {
         .block("dark_steel_door", props -> new DoorBlock(props, BlockSetType.IRON))
         .properties(props -> props.strength(5.0f, 2000.0f).sound(SoundType.METAL).mapColor(MapColor.METAL).noOcclusion())
         .loot((registrateBlockLootTables, doorBlock) -> registrateBlockLootTables.add(doorBlock, registrateBlockLootTables.createDoorTable(doorBlock)))
-        .blockstate((ctx, prov) -> prov.doorBlockWithRenderType(ctx.get(), prov.modLoc("block/dark_steel_door_bottom"), prov.modLoc("block/dark_steel_door_top"), prov.mcLoc("cutout")))
+        .blockstate(
+            (ctx, prov) -> prov.doorBlockWithRenderType(ctx.get(), prov.modLoc("block/dark_steel_door_bottom"), prov.modLoc("block/dark_steel_door_top"),
+                prov.mcLoc("cutout")))
         .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL, BlockTags.DOORS)
         .item()
         .model((ctx, prov) -> prov.generated(ctx))
@@ -177,9 +219,9 @@ public class EIOBlocks {
 
     private static Map<GlassIdentifier, GlassBlocks> fillGlassMap() {
         Map<GlassIdentifier, GlassBlocks> map = new HashMap<>();
-        for (GlassLighting lighting: GlassLighting.values()) {
-            for (GlassCollisionPredicate collisionPredicate: GlassCollisionPredicate.values()) {
-                for (Boolean isFused: new boolean[]{false, true}) {
+        for (GlassLighting lighting : GlassLighting.values()) {
+            for (GlassCollisionPredicate collisionPredicate : GlassCollisionPredicate.values()) {
+                for (Boolean isFused : new boolean[] { false, true }) {
                     GlassIdentifier identifier = new GlassIdentifier(lighting, collisionPredicate, isFused);
                     map.put(identifier, new GlassBlocks(REGISTRATE, identifier));
                 }
@@ -192,12 +234,21 @@ public class EIOBlocks {
 
     // region Miscellaneous
 
-    public static final BlockEntry<ChainBlock> SOUL_CHAIN = REGISTRATE.block("soul_chain", ChainBlock::new)
-        .properties(props -> props.requiresCorrectToolForDrops().strength(5.0F, 6.0F).sound(SoundType.CHAIN).noOcclusion().sound(SoundType.METAL).mapColor(MapColor.NONE))
+    public static final BlockEntry<ChainBlock> SOUL_CHAIN = REGISTRATE
+        .block("soul_chain", ChainBlock::new)
+        .properties(props -> props
+            .requiresCorrectToolForDrops()
+            .strength(5.0F, 6.0F)
+            .sound(SoundType.CHAIN)
+            .noOcclusion()
+            .sound(SoundType.METAL)
+            .mapColor(MapColor.NONE))
         .tag(BlockTags.NEEDS_IRON_TOOL)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .blockstate((ctx, prov) -> {
-            var model = prov.models().withExistingParent(ctx.getName(), prov.mcLoc("block/chain"))
+            var model = prov
+                .models()
+                .withExistingParent(ctx.getName(), prov.mcLoc("block/chain"))
                 .renderType(prov.mcLoc("cutout_mipped"))
                 .texture("particle", prov.blockTexture(ctx.get()))
                 .texture("all", prov.blockTexture(ctx.get()));
@@ -216,11 +267,8 @@ public class EIOBlocks {
         .blockstate((ctx, prov) -> {
             // This generates the models used for the blockstate in our resources.
             // One day we may bother to datagen that file.
-            String[] toCopy = {
-                "fire_floor0", "fire_floor1",
-                "fire_side0", "fire_side1", "fire_side_alt0", "fire_side_alt1",
-                "fire_up0", "fire_up1", "fire_up_alt0", "fire_up_alt1"
-            };
+            String[] toCopy = { "fire_floor0", "fire_floor1", "fire_side0", "fire_side1", "fire_side_alt0", "fire_side_alt1", "fire_up0", "fire_up1",
+                "fire_up_alt0", "fire_up_alt1" };
 
             for (String name : toCopy) {
                 prov.models().withExistingParent(name, prov.mcLoc(name)).renderType("cutout");
@@ -306,7 +354,7 @@ public class EIOBlocks {
 
     // endregion
 
-    private static final List<NonNullSupplier<? extends Block>> painted = new ArrayList<>();
+    private static final List<NonNullSupplier<? extends Block>> PAINTED = new ArrayList<>();
 
     public static final BlockEntry<PaintedFenceBlock> PAINTED_FENCE = paintedBlock("painted_fence", PaintedFenceBlock::new, Blocks.OAK_FENCE,
         BlockTags.WOODEN_FENCES, BlockTags.MINEABLE_WITH_AXE).register();
@@ -317,8 +365,8 @@ public class EIOBlocks {
     public static final BlockEntry<PaintedSandBlock> PAINTED_SAND = paintedBlock("painted_sand", PaintedSandBlock::new, Blocks.SAND, BlockTags.SAND,
         BlockTags.MINEABLE_WITH_SHOVEL).register();
 
-    public static final BlockEntry<PaintedStairBlock> PAINTED_STAIRS = paintedBlock("painted_stairs", PaintedStairBlock::new, Blocks.OAK_STAIRS,
-        Direction.WEST,BlockTags.WOODEN_STAIRS, BlockTags.MINEABLE_WITH_AXE).register();
+    public static final BlockEntry<PaintedStairBlock> PAINTED_STAIRS = paintedBlock("painted_stairs", PaintedStairBlock::new, Blocks.OAK_STAIRS, Direction.WEST,
+        BlockTags.WOODEN_STAIRS, BlockTags.MINEABLE_WITH_AXE).register();
 
     public static final BlockEntry<PaintedCraftingTableBlock> PAINTED_CRAFTING_TABLE = paintedBlock("painted_crafting_table", PaintedCraftingTableBlock::new,
         Blocks.CRAFTING_TABLE, BlockTags.MINEABLE_WITH_AXE).register();
@@ -332,12 +380,11 @@ public class EIOBlocks {
     public static final BlockEntry<PaintedWoodenPressurePlateBlock> PAINTED_WOODEN_PRESSURE_PLATE = paintedBlock("painted_wooden_pressure_plate",
         PaintedWoodenPressurePlateBlock::new, Blocks.OAK_PRESSURE_PLATE, BlockTags.WOODEN_PRESSURE_PLATES, BlockTags.MINEABLE_WITH_AXE).register();
 
-    public static final BlockEntry<PaintedSlabBlock> PAINTED_SLAB = paintedBlock("painted_slab",
-        PaintedSlabBlock::new, PaintedSlabBlockItem::new, Blocks.OAK_SLAB, BlockTags.WOODEN_SLABS, BlockTags.MINEABLE_WITH_AXE)
-        .loot(DecorLootTable::paintedSlab)
-        .register();
+    public static final BlockEntry<PaintedSlabBlock> PAINTED_SLAB = paintedBlock("painted_slab", PaintedSlabBlock::new, PaintedSlabBlockItem::new,
+        Blocks.OAK_SLAB, BlockTags.WOODEN_SLABS, BlockTags.MINEABLE_WITH_AXE).loot(DecorLootTable::paintedSlab).register();
 
-    public static final BlockEntry<SinglePaintedBlock> PAINTED_GLOWSTONE = paintedBlock("painted_glowstone", SinglePaintedBlock::new, Blocks.GLOWSTONE).register();
+    public static final BlockEntry<SinglePaintedBlock> PAINTED_GLOWSTONE = paintedBlock("painted_glowstone", SinglePaintedBlock::new,
+        Blocks.GLOWSTONE).register();
 
     // endregion
 
@@ -348,7 +395,8 @@ public class EIOBlocks {
     public static final BlockEntry<PoweredLight> POWERED_LIGHT = lightBlock("powered_light", s -> new PoweredLight(s, false, false));
     public static final BlockEntry<PoweredLight> POWERED_LIGHT_INVERTED = lightBlock("powered_light_inverted", s -> new PoweredLight(s, true, false));
     public static final BlockEntry<PoweredLight> POWERED_LIGHT_WIRELESS = lightBlock("powered_light_wireless", s -> new PoweredLight(s, false, true));
-    public static final BlockEntry<PoweredLight> POWERED_LIGHT_INVERTED_WIRELESS = lightBlock("powered_light_inverted_wireless", s -> new PoweredLight(s, true, true));
+    public static final BlockEntry<PoweredLight> POWERED_LIGHT_INVERTED_WIRELESS = lightBlock("powered_light_inverted_wireless",
+        s -> new PoweredLight(s, true, true));
 
     public static final BlockEntry<LightNode> LIGHT_NODE = REGISTRATE
         .block("light_node", LightNode::new)
@@ -378,33 +426,25 @@ public class EIOBlocks {
         return REGISTRATE.block(name, p -> block).item().tab(EIOCreativeTabs.BLOCKS).build();
     }
 
-    private static BlockBuilder<Block, Registrate> metalBlock(String name) {
+    private static BlockBuilder<Block, Registrate> metalBlock(String name, TagKey<Block> blockTag, TagKey<Item> itemTag) {
         return REGISTRATE
             .block(name, Block::new)
-            .properties(props -> props
-                .sound(SoundType.METAL)
-                .mapColor(MapColor.METAL)
-                .strength(5, 6)
-                .requiresCorrectToolForDrops())
+            .properties(props -> props.sound(SoundType.METAL).mapColor(MapColor.METAL).strength(5, 6).requiresCorrectToolForDrops())
             .tag(BlockTags.NEEDS_STONE_TOOL)
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+            .tag(blockTag)
             .item()
             .tab(EIOCreativeTabs.BLOCKS)
+            .tag(itemTag)
             .build();
     }
 
     private static BlockBuilder<Block, Registrate> chassisBlock(String name) {
         return REGISTRATE
             .block(name, Block::new)
-            .blockstate((ctx, prov) ->
-                prov.simpleBlock(ctx.get(), prov.models()
-                    .cubeAll(ctx.getName(), prov.blockTexture(ctx.get()))
-                    .renderType(prov.mcLoc("translucent"))))
-            .properties(props -> props
-                .noOcclusion()
-                .sound(SoundType.METAL)
-                .mapColor(MapColor.METAL)
-                .strength(5, 6))
+            .blockstate((ctx, prov) -> prov.simpleBlock(ctx.get(),
+                prov.models().cubeAll(ctx.getName(), prov.blockTexture(ctx.get())).renderType(prov.mcLoc("translucent"))))
+            .properties(props -> props.noOcclusion().sound(SoundType.METAL).mapColor(MapColor.METAL).strength(5, 6))
             .tag(BlockTags.NEEDS_STONE_TOOL)
             .tag(BlockTags.MINEABLE_WITH_PICKAXE)
             .item()
@@ -428,10 +468,7 @@ public class EIOBlocks {
             vb.partialState().with(PressurePlateBlock.POWERED, true).addModels(new ConfiguredModel(dm));
             vb.partialState().with(PressurePlateBlock.POWERED, false).addModels(new ConfiguredModel(um));
         });
-        bb.tag(BlockTags.NEEDS_STONE_TOOL, BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.PRESSURE_PLATES)
-            .item()
-            .tab(EIOCreativeTabs.BLOCKS)
-            .build();
+        bb.tag(BlockTags.NEEDS_STONE_TOOL, BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.PRESSURE_PLATES).item().tab(EIOCreativeTabs.BLOCKS).build();
         return bb.register();
     }
 
@@ -521,15 +558,16 @@ public class EIOBlocks {
         .tab(EIOCreativeTabs.BLOCKS)
         .build()
         .register();
+
     @SafeVarargs
-    private static <T extends Block> BlockBuilder<T, Registrate> paintedBlock(String name, NonNullFunction<BlockBehaviour.Properties, T> blockFactory, Block copyFrom,
-        TagKey<Block>... tags) {
+    private static <T extends Block> BlockBuilder<T, Registrate> paintedBlock(String name, NonNullFunction<BlockBehaviour.Properties, T> blockFactory,
+        Block copyFrom, TagKey<Block>... tags) {
         return paintedBlock(name, blockFactory, copyFrom, null, tags);
     }
 
     @SafeVarargs
-    private static <T extends Block> BlockBuilder<T, Registrate> paintedBlock(String name, NonNullFunction<BlockBehaviour.Properties, T> blockFactory, Block copyFrom,
-        @Nullable Direction itemTextureRotation, TagKey<Block>... tags) {
+    private static <T extends Block> BlockBuilder<T, Registrate> paintedBlock(String name, NonNullFunction<BlockBehaviour.Properties, T> blockFactory,
+        Block copyFrom, @Nullable Direction itemTextureRotation, TagKey<Block>... tags) {
         return paintedBlock(name, blockFactory, PaintedBlockItem::new, copyFrom, itemTextureRotation, tags);
     }
 
@@ -541,8 +579,8 @@ public class EIOBlocks {
 
     @SafeVarargs
     private static <T extends Block> BlockBuilder<T, Registrate> paintedBlock(String name, NonNullFunction<BlockBehaviour.Properties, T> blockFactory,
-        NonNullBiFunction<? super T, Item.Properties, ? extends BlockItem> itemFactory, Block copyFrom,
-        @Nullable Direction itemTextureRotation, TagKey<Block>... tags) {
+        NonNullBiFunction<? super T, Item.Properties, ? extends BlockItem> itemFactory, Block copyFrom, @Nullable Direction itemTextureRotation,
+        TagKey<Block>... tags) {
         return REGISTRATE
             .block(name, blockFactory)
             .blockstate((ctx, cons) -> EIOBlockState.paintedBlock(ctx, cons, copyFrom, itemTextureRotation))
@@ -560,21 +598,19 @@ public class EIOBlocks {
         return REGISTRATE
             .block(name, blockFactory)
             .blockstate(EIOBlockState::lightBlock)
-            .properties(p -> p
-                .sound(SoundType.METAL)
-                .mapColor(MapColor.METAL)
-                .lightLevel(l -> {
-                    if (l.getValue(Light.ENABLED)) {
-                        return 15;
-                    }
-                    return 0;
-                }))
+            .properties(p -> p.sound(SoundType.METAL).mapColor(MapColor.METAL).lightLevel(l -> {
+                if (l.getValue(Light.ENABLED)) {
+                    return 15;
+                }
+                return 0;
+            }))
             .item()
             .model((ctx, prov) -> prov.withExistingParent(name, "block/button_inventory"))
             .tab(EIOCreativeTabs.BLOCKS)
             .build()
             .register();
     }
+
     public static void register() {}
 
 }

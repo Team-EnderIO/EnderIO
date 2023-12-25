@@ -4,9 +4,11 @@ import com.enderio.api.travel.TravelRenderer;
 import com.enderio.machines.common.travel.AnchorTravelTarget;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Axis;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.RenderType;
@@ -14,10 +16,13 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FastColor;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import org.joml.Math;
 import org.joml.Matrix4f;
 
 public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> {
@@ -26,8 +31,10 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
 
     @Override
     public void render(AnchorTravelTarget travelData, LevelRenderer levelRenderer, PoseStack poseStack, double distanceSquared, boolean active) {
-        if (!travelData.getVisibility())
+        if (!travelData.getVisibility()) {
             return;
+        }
+
         poseStack.pushPose();
         poseStack.translate(travelData.getPos().getX(), travelData.getPos().getY(), travelData.getPos().getZ());
         Minecraft minecraft = Minecraft.getInstance();
@@ -59,23 +66,25 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
         LevelRenderer.renderLineBox(poseStack, lines, 0, 0, 0, 1, 1, 1, FastColor.ARGB32.red(color) / 255F, FastColor.ARGB32.green(color) / 255F,
             FastColor.ARGB32.blue(color) / 255F, 1);
 
-        // Scale for rendering
-        double doubleScale = Math.sqrt(0.0035 * Math.sqrt(distanceSquared));
-        if (doubleScale < 0.1f) {
-            doubleScale = 0.1f;
-        }
-        doubleScale = doubleScale * (Math.sin(Math.toRadians(Minecraft.getInstance().options.fov().get() / 4d)));
-        if (active) {
-            doubleScale *= 1.3;
-        }
-        float scale = (float) doubleScale;
-
+        LocalPlayer player = Minecraft.getInstance().player;
+        Vec3 position = player.position();
+        float f1 = (float) (Mth.atan2(position.z - travelData.getPos().getZ() - 0.5D, position.x - travelData.getPos().getX() - 0.5D) + Math.PI/2D);
         // Render Text
         if (!travelData.getName().trim().isEmpty()) {
+            // Scale for rendering
+            double doubleScale = Math.sqrt(0.0035 * Math.sqrt(distanceSquared));
+            if (doubleScale < 0.1f) {
+                doubleScale = 0.1f;
+            }
+            doubleScale = doubleScale * (Math.sin(Math.toRadians(Minecraft.getInstance().options.fov().get() / 4d)));
+            if (active) {
+                doubleScale *= 1.3;
+            }
+            float scale = (float) doubleScale;
 
             poseStack.pushPose();
             poseStack.translate(0.5, 1.05 + (doubleScale * Minecraft.getInstance().font.lineHeight), 0.5);
-            poseStack.mulPose(Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation());
+            poseStack.mulPose(Axis.YN.rotation(f1));
             poseStack.scale(-scale, -scale, scale);
 
             Matrix4f matrix4f = poseStack.last().pose();
@@ -92,14 +101,23 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
 
         //         Render Icon
         if (travelData.getIcon() != Items.AIR) {
+            // Scale for rendering
+            double doubleScale = Math.sqrt(Math.sqrt(distanceSquared));
+            doubleScale = doubleScale * (Math.sin(Math.toRadians(Minecraft.getInstance().options.fov().get() / 4d)));
+            if (active) {
+                doubleScale *= 1.3;
+            }
+            float scale = (float) doubleScale;
             poseStack.pushPose();
-            poseStack.translate(0.5, 2.5, 0.5);
-            poseStack.mulPose(minecraft.getEntityRenderDispatcher().cameraOrientation());
+            poseStack.translate(0.5, 0.5, 0.5);
+            poseStack.mulPose(Axis.YN.rotation(f1));
+            poseStack.translate(0, 0, -1);
+            poseStack.scale(-scale, scale, -scale);
             ItemStack stack = new ItemStack(travelData.getIcon());
             BakedModel bakedmodel = minecraft.getItemRenderer().getModel(stack, minecraft.level, null, 0);
             minecraft
                 .getItemRenderer()
-                .render(stack, ItemDisplayContext.GUI, false, poseStack, OutlineBuffer.INSTANCE, 15728880, OverlayTexture.NO_OVERLAY, bakedmodel);
+                .render(stack, ItemDisplayContext.GUI, true, poseStack, OutlineBuffer.INSTANCE, 15728880, OverlayTexture.NO_OVERLAY, bakedmodel);
             poseStack.popPose();
         }
 

@@ -1,9 +1,11 @@
 {
   "type": "enderio:enchanting",
-  "amount": 12,
   "cost_multiplier": 1,
   "enchantment": "minecraft:power",
   "input": {
-    "item": "minecraft:flint"
+    "count": 12,
+    "ingredient": {
+      "item": "minecraft:flint"
+    }
   }
 }

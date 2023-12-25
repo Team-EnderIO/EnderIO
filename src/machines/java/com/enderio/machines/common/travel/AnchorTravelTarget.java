@@ -48,14 +48,16 @@ public class AnchorTravelTarget implements ITravelTarget {
         return nbt;
     }
 
-
-
     @Override
     public boolean equals(Object o) {
-        if (this == o)
+        if (this == o) {
             return true;
-        if (!(o instanceof AnchorTravelTarget other))
+        }
+
+        if (!(o instanceof AnchorTravelTarget other)) {
             return false;
+        }
+
         return pos.equals(other.pos) && name.equals(other.name) && visible == (other.visible) && Objects.equals(icon, other.icon);
 
     }

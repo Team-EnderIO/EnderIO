@@ -33,9 +33,7 @@ public class ConduitBundleNetworkDataSlot extends NetworkDataSlot<ConduitBundle>
 
     @Override
     protected int hashCode(ConduitBundle value) {
-        // TODO: This is slow as shit
-        int code = value.serializeNBT().hashCode();
-        return code;
+        return value.getDataVersion();
     }
 
     @Override

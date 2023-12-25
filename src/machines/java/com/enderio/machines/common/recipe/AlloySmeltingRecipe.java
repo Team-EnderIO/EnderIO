@@ -77,8 +77,9 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
             // Iterate over the inputs
             for (int j = 0; j < 3; j++) {
                 // If this ingredient has been matched already, continue
-                if (matched[j])
+                if (matched[j]) {
                     continue;
+                }
 
                 var slotItem = slotAccess.get(i).getItemStack(container);
 
@@ -96,8 +97,9 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
 
         // If we matched all our ingredients, we win!
         for (int i = 0; i < 3; i++) {
-            if (!matched[i])
+            if (!matched[i]) {
                 return false;
+            }
         }
 
         return true;

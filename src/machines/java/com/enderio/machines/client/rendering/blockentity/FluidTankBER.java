@@ -32,7 +32,7 @@ public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
         FluidTank tank = blockEntity.getFluidTank();
 
         // Don't waste time if there's no fluid.
-        if (tank.getFluidAmount() > 0) {
+        if (!tank.isEmpty()) {
             FluidStack fluidStack = tank.getFluid();
 
             // Use entity translucent cull sheet so fluid renders in Fabulous

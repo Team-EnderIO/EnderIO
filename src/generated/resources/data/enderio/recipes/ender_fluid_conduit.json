@@ -9,7 +9,7 @@
       "tag": "enderio:fused_quartz"
     },
     "I": {
-      "item": "enderio:vibrant_alloy_ingot"
+      "tag": "forge:ingots/vibrant_alloy"
     }
   },
   "pattern": [

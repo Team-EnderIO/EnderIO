@@ -35,8 +35,9 @@ public class EnergyWidget extends EIOWidget {
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         // Don't bother if we have no energy capacity, protects from divide by zero's when there's no capacitor.
         IMachineEnergyStorage storage = storageSupplier.get();
-        if (storage.getMaxEnergyStored() <= 0)
+        if (storage.getMaxEnergyStored() <= 0) {
             return;
+        }
 
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
@@ -61,7 +62,6 @@ public class EnergyWidget extends EIOWidget {
 
     @Override
     protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
-
     }
 
     public void renderToolTip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
@@ -75,8 +75,10 @@ public class EnergyWidget extends EIOWidget {
     }
 
     private static long getEnergyStored(IMachineEnergyStorage storage) {
-        if (storage instanceof ILargeMachineEnergyStorage largeStorage)
+        if (storage instanceof ILargeMachineEnergyStorage largeStorage) {
             return largeStorage.getLargeEnergyStored();
+        }
+
         return storage.getEnergyStored();
     }
 
@@ -84,6 +86,7 @@ public class EnergyWidget extends EIOWidget {
         if (storage instanceof ILargeMachineEnergyStorage largeStorage) {
             return largeStorage.getLargeMaxEnergyStored();
         }
+
         return storage.getMaxEnergyStored();
     }
 }

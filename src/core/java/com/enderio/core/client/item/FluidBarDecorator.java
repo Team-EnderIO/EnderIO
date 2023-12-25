@@ -13,8 +13,9 @@ public class FluidBarDecorator implements IItemDecorator {
     @Override
     public boolean render(GuiGraphics guiGraphics, Font font, ItemStack stack, int xOffset, int yOffset) {
         stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).ifPresent(handler -> {
-            if (handler.getFluidInTank(0).getAmount() <= 0)
+            if (handler.getFluidInTank(0).getAmount() <= 0) {
                 return;
+            }
 
             float fillRatio = 1.0F - (float) handler.getFluidInTank(0).getAmount() / (float) handler.getTankCapacity(0);
             IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(handler.getFluidInTank(0).getFluid());

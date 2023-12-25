@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "minecraft:bucket"
+    },
+    "C": {
+      "item": "enderio:ensouled_chassis"
+    },
+    "G": {
+      "tag": "enderio:fused_quartz"
+    },
+    "I": {
+      "tag": "forge:ingots/soularium"
+    },
+    "Z": {
+      "item": "enderio:zombie_electrode"
+    }
+  },
+  "pattern": [
+    "IGI",
+    "BCB",
+    "IZI"
+  ],
+  "result": {
+    "item": "enderio:soul_engine"
+  },
+  "show_notification": true
+}

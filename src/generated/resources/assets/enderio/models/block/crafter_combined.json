@@ -2,7 +2,7 @@
   "parent": "minecraft:block/block",
   "children": {
     "machine": {
-      "parent": "enderio:block/crafter_active"
+      "parent": "enderio:block/crafter"
     },
     "overlay": {
       "parent": "enderio:block/io_overlay"
@@ -12,5 +12,8 @@
     "machine",
     "overlay"
   ],
-  "loader": "forge:composite"
+  "loader": "forge:composite",
+  "textures": {
+    "particle": "enderio:block/crafter_front"
+  }
 }

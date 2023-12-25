@@ -28,8 +28,8 @@ import java.util.Map;
 @Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ConduitClientSetup {
 
-    private static final List<ResourceLocation> modelLocations = new ArrayList<>();
-    private static final Map<ResourceLocation, BakedModel> models = new HashMap<>();
+    private static final List<ResourceLocation> MODEL_LOCATIONS = new ArrayList<>();
+    private static final Map<ResourceLocation, BakedModel> MODELS = new HashMap<>();
 
     public static final ResourceLocation CONDUIT_CONNECTOR = loc("block/conduit_connector");
     public static final ResourceLocation CONDUIT_FACADE = loc("block/conduit_facade");
@@ -51,7 +51,7 @@ public class ConduitClientSetup {
 
     @SubscribeEvent
     public static void registerModels(ModelEvent.RegisterAdditional event) {
-        for (ResourceLocation model : modelLocations) {
+        for (ResourceLocation model : MODEL_LOCATIONS) {
             event.register(model);
         }
         ConduitTypes.getRegistry().getValues().stream().flatMap(type -> type.getClientData().modelsToLoad().stream()).forEach(event::register);
@@ -59,8 +59,8 @@ public class ConduitClientSetup {
 
     @SubscribeEvent
     public static void bakingModelsFinished(ModelEvent.BakingCompleted event) {
-        for (ResourceLocation modelLocation : modelLocations) {
-            models.put(modelLocation, event.getModels().get(modelLocation));
+        for (ResourceLocation modelLocation : MODEL_LOCATIONS) {
+            MODELS.put(modelLocation, event.getModels().get(modelLocation));
         }
     }
 
@@ -79,12 +79,12 @@ public class ConduitClientSetup {
 
     private static ResourceLocation loc(String modelName) {
         ResourceLocation loc = EnderIO.loc(modelName);
-        modelLocations.add(loc);
+        MODEL_LOCATIONS.add(loc);
         return loc;
     }
 
     public static BakedModel modelOf(ResourceLocation location) {
-        return models.get(location);
+        return MODELS.get(location);
     }
 
     public static Level getClientLevel() {

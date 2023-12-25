@@ -9,13 +9,11 @@ import com.enderio.base.common.blockentity.IWrenchable;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.particle.RangeParticleData;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
-import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
-import com.enderio.core.common.network.slot.EnumNetworkDataSlot;
-import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
-import com.enderio.core.common.network.slot.NBTSerializableNetworkDataSlot;
+import com.enderio.core.common.network.slot.*;
 import com.enderio.core.common.util.PlayerInteractionUtil;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.MachineBlock;
+import com.enderio.machines.common.blockentity.MachineState;
 import com.enderio.machines.common.io.IOConfig;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.item.MachineInventory;
@@ -26,7 +24,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
@@ -111,6 +108,8 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     // endregion
 
+    private Set<MachineState> states = new HashSet<>();
+
     public MachineBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
 
@@ -153,6 +152,8 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             }
         });
         addDataSlot(ioConfigDataSlot);
+
+        addDataSlot(new SetNetworkDataSlot<>(this::getMachineStates, l -> states = l, MachineState::toNBT , MachineState::fromNBT, MachineState::toBuffer, MachineState::fromBuffer ));
     }
 
     // region IO Config
@@ -253,7 +254,9 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     public void setIsRangeVisible(boolean visible) {
         if (level != null && level.isClientSide()) {
             clientUpdateSlot(rangeVisibleDataSlot, visible);
-        } else this.rangeVisible = visible;
+        } else {
+            this.rangeVisible = visible;
+        }
     }
 
     public int getMaxRange() {
@@ -267,14 +270,18 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     public void setRange(int range) {
         if (level != null && level.isClientSide()) {
             clientUpdateSlot(rangeDataSlot, range);
-        } else this.range = range;
+        } else {
+            this.range = range;
+        }
     }
 
     public void decreaseRange() {
         if (this.range > 0) {
             if (level != null && level.isClientSide()) {
                 clientUpdateSlot(rangeDataSlot, range - 1);
-            } else this.range--;
+            } else {
+                this.range--;
+            }
         }
     }
 
@@ -282,7 +289,9 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         if (this.range < getMaxRange()) {
             if (level != null && level.isClientSide()) {
                 clientUpdateSlot(rangeDataSlot, range + 1);
-            } else this.range++;
+            } else {
+                this.range++;
+            }
         }
     }
 
@@ -318,7 +327,9 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     public void setRedstoneControl(RedstoneControl redstoneControl) {
         if (level != null && level.isClientSide()) {
             clientUpdateSlot(redstoneControlDataSlot, redstoneControl);
-        } else this.redstoneControl = redstoneControl;
+        } else {
+            this.redstoneControl = redstoneControl;
+        }
     }
 
     // endregion
@@ -354,6 +365,11 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             protected void onContentsChanged(int slot) {
                 onInventoryContentsChanged(slot);
                 setChanged();
+            }
+
+            @Override
+            public void updateMachineState(MachineState state, boolean add) {
+                MachineBlockEntity.this.updateMachineState(state, add);
             }
         };
     }
@@ -422,7 +438,9 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         }
 
         if (supportsRedstoneControl()) {
-            return redstoneControl.isActive(this.level.hasNeighborSignal(worldPosition));
+            boolean active = redstoneControl.isActive(this.level.hasNeighborSignal(worldPosition));
+            updateMachineState(MachineState.REDSTONE, !active);
+            return active;
         }
 
         return true;
@@ -591,8 +609,10 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
      * Add invalidation handler to a capability to be notified if it is removed.
      */
     private <T> LazyOptional<T> addInvalidationListener(LazyOptional<T> capability) {
-        if (capability.isPresent())
+        if (capability.isPresent()) {
             capability.addListener(c -> markCapabilityCacheDirty());
+        }
+
         return capability;
     }
 
@@ -708,8 +728,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     @UseOnly(LogicalSide.SERVER)
     @Override
-    public InteractionResult onWrenched(UseOnContext context) {
-        Player player = context.getPlayer();
+    public InteractionResult onWrenched(@Nullable Player player, @Nullable Direction side) {
         if (player != null && level != null && player.isSecondaryUseActive() && level instanceof ServerLevel serverLevel) {//aka break block
             BlockPos pos = getBlockPos();
             BlockState state = getBlockState();
@@ -723,7 +742,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             return InteractionResult.CONSUME;
         } else {
             // Check for side config capability
-            LazyOptional<ISideConfig> optSideConfig = getCapability(EIOCapabilities.SIDE_CONFIG, context.getClickedFace());
+            LazyOptional<ISideConfig> optSideConfig = getCapability(EIOCapabilities.SIDE_CONFIG, side);
             if (optSideConfig.isPresent()) {
                 // Cycle state.
                 optSideConfig.ifPresent(ISideConfig::cycleMode);
@@ -735,5 +754,24 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     public boolean canOpenMenu() {
         return true;
+    }
+
+    public int getLightEmission() {
+        return getBlockState().getLightEmission();
+    }
+
+    public Set<MachineState> getMachineStates() {
+        return states;
+    }
+
+    public void updateMachineState(MachineState state, boolean add) {
+        if (level != null && level.isClientSide) {
+            return;
+        }
+        if (add) {
+            states.add(state);
+        } else {
+            states.remove(state);
+        }
     }
 }

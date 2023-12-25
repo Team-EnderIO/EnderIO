@@ -1,7 +1,9 @@
 package com.enderio.core.common.network;
 
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
@@ -42,6 +44,10 @@ public class CoreNetwork {
 
     public static <P extends Packet> void sendToTracking(LevelChunk chunk, P packet) {
         send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), packet);
+    }
+
+    public static <P extends Packet> void sendToDimension(ResourceKey<Level> dim, P packet) {
+        send(PacketDistributor.DIMENSION.with(() -> dim), packet);
     }
 
     public static <P extends Packet> void send(PacketDistributor.PacketTarget target, P packet) {

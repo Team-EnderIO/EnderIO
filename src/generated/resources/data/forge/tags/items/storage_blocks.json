@@ -1,0 +1,13 @@
+{
+  "values": [
+    "#forge:storage_blocks/conductive_alloy",
+    "#forge:storage_blocks/copper_alloy",
+    "#forge:storage_blocks/dark_steel",
+    "#forge:storage_blocks/end_steel",
+    "#forge:storage_blocks/energetic_alloy",
+    "#forge:storage_blocks/pulsating_alloy",
+    "#forge:storage_blocks/redstone_alloy",
+    "#forge:storage_blocks/soularium",
+    "#forge:storage_blocks/vibrant_alloy"
+  ]
+}

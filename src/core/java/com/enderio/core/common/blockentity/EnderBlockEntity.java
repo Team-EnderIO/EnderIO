@@ -65,7 +65,7 @@ public class EnderBlockEntity extends BlockEntity {
         // Perform syncing.
         if (level != null && !level.isClientSide) {
             sync();
-            setChanged();
+            level.blockEntityChanged(worldPosition);
         }
     }
 
@@ -89,8 +89,9 @@ public class EnderBlockEntity extends BlockEntity {
         for (int i = 0; i < dataSlots.size(); i++) {
             var slot = dataSlots.get(i);
             var nbt = slot.serializeNBT(true);
-            if (nbt == null)
+            if (nbt == null) {
                 continue;
+            }
 
             CompoundTag slotTag = new CompoundTag();
             slotTag.putInt(INDEX, i);
@@ -205,6 +206,7 @@ public class EnderBlockEntity extends BlockEntity {
             throw new IllegalStateException("Invalid buffer was passed over the network to the server.");
         }
         dataSlots.get(index).fromBuffer(buf);
+        dataSlots.get(index).updateServerCallback();
     }
 
     // endregion

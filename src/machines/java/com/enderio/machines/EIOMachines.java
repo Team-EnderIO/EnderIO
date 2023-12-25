@@ -1,24 +1,34 @@
 package com.enderio.machines;
 
 import com.enderio.EnderIO;
-import com.enderio.base.data.EIODataProvider;
 import com.enderio.api.integration.IntegrationManager;
 import com.enderio.api.travel.TravelRegistry;
+import com.enderio.base.data.EIODataProvider;
 import com.enderio.machines.client.rendering.travel.TravelAnchorRenderer;
 import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
 import com.enderio.machines.common.config.MachinesConfig;
-import com.enderio.machines.common.init.*;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.init.MachineMenus;
+import com.enderio.machines.common.init.MachinePackets;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.integrations.EnderIOMachinesSelfIntegration;
 import com.enderio.machines.common.lang.MachineLang;
-import com.enderio.machines.common.network.MachineNetwork;
+import com.enderio.machines.common.menu.EnchanterMenu;
+import com.enderio.machines.common.menu.GhostMachineSlot;
+import com.enderio.machines.common.menu.MachineSlot;
+import com.enderio.machines.common.menu.PreviewMachineSlot;
 import com.enderio.machines.common.tag.MachineTags;
-import com.enderio.machines.data.advancements.MachinesAdvancementGenerator;
 import com.enderio.machines.common.travel.AnchorTravelTarget;
-import com.enderio.machines.data.recipes.*;
+import com.enderio.machines.data.advancements.MachinesAdvancementGenerator;
+import com.enderio.machines.data.recipes.AlloyRecipeProvider;
+import com.enderio.machines.data.recipes.EnchanterRecipeProvider;
+import com.enderio.machines.data.recipes.MachineRecipeProvider;
+import com.enderio.machines.data.recipes.PaintingRecipeProvider;
+import com.enderio.machines.data.recipes.SagMillRecipeProvider;
+import com.enderio.machines.data.recipes.SlicingRecipeProvider;
+import com.enderio.machines.data.recipes.SoulBindingRecipeProvider;
+import com.enderio.machines.data.recipes.TankRecipeProvider;
 import com.enderio.machines.data.souldata.SoulDataProvider;
 import com.enderio.machines.data.tag.MachineEntityTypeTagsProvider;
 import net.minecraft.Util;
@@ -31,10 +41,12 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.data.ForgeAdvancementProvider;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLConstructModEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.registries.MissingMappingsEvent;
 
 import java.util.List;
@@ -58,13 +70,20 @@ public class EIOMachines {
         MachineLang.register();
         MachineRecipes.register();
         MachineTags.register();
-        MachineNetwork.networkInit();
 
         // Remap
         MinecraftForge.EVENT_BUS.addListener(EIOMachines::missingMappings);
 
         IntegrationManager.addIntegration(EnderIOMachinesSelfIntegration.INSTANCE);
-        TravelRegistry.addTravelEntry(EnderIO.loc("travel_anchor"), AnchorTravelTarget::new, TravelAnchorRenderer::new);
+        TravelRegistry.addTravelEntry(EnderIO.loc("travel_anchor"), AnchorTravelTarget::new, () -> TravelAnchorRenderer::new);
+    }
+
+    @SubscribeEvent
+    public static void sendIMC(InterModEnqueueEvent event) {
+        InterModComms.sendTo("inventorysorter", "slotblacklist", MachineSlot.class::getName);
+        InterModComms.sendTo("inventorysorter", "slotblacklist", GhostMachineSlot.class::getName);
+        InterModComms.sendTo("inventorysorter", "slotblacklist", PreviewMachineSlot.class::getName);
+        InterModComms.sendTo("inventorysorter", "slotblacklist", EnchanterMenu.EnchanterOutputMachineSlot.class::getName);
     }
 
     @SubscribeEvent

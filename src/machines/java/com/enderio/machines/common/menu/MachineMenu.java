@@ -4,6 +4,7 @@ import com.enderio.core.common.menu.SyncedMenu;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -24,16 +25,20 @@ public abstract class MachineMenu<T extends MachineBlockEntity> extends SyncedMe
     // Stop clearing ghost slot when double clicking.
     @Override
     public boolean canTakeItemForPickAll(ItemStack stack, Slot slot) {
-        if (slot instanceof GhostMachineSlot)
+        if (slot instanceof GhostMachineSlot) {
             return false;
+        }
+
         return super.canTakeItemForPickAll(stack, slot);
     }
 
     // Stop drag-splitting into a ghost slot.
     @Override
     public boolean canDragTo(Slot slot) {
-        if (slot instanceof GhostMachineSlot)
+        if (slot instanceof GhostMachineSlot) {
             return false;
+        }
+
         return super.canDragTo(slot);
     }
 
@@ -105,12 +110,12 @@ public abstract class MachineMenu<T extends MachineBlockEntity> extends SyncedMe
                             if (j <= maxSize) {
                                 stack.setCount(0);
                                 itemstack.setCount(j);
-                                slot.setChanged();
+                                slot.set(itemstack);
                                 flag = true;
                             } else if (itemstack.getCount() < maxSize) {
                                 stack.shrink(maxSize - itemstack.getCount());
                                 itemstack.setCount(maxSize);
-                                slot.setChanged();
+                                slot.set(itemstack);
                                 flag = true;
                             }
                         }
@@ -166,5 +171,23 @@ public abstract class MachineMenu<T extends MachineBlockEntity> extends SyncedMe
         }
 
         return flag;
+    }
+
+    // Overrides the swapping behaviour. Required for ghost slots to prevent duping
+    @Override
+    public void doClick(int slotId, int button, ClickType clickType, Player player) {
+        if(slotId >= 0 && clickType == ClickType.PICKUP && this.slots.get(slotId) instanceof GhostMachineSlot ghostSlot) {
+            ItemStack slotItem = ghostSlot.getItem();
+            ItemStack carriedItem = this.getCarried();
+            if(!slotItem.isEmpty() && !carriedItem.isEmpty() && ghostSlot.mayPlace(carriedItem)){
+                if(!ItemStack.isSameItemSameTags(slotItem, carriedItem)){
+                    int count = Math.min(carriedItem.getCount(), ghostSlot.getMaxStackSize(carriedItem));
+                    ghostSlot.setByPlayer(carriedItem.copyWithCount(count));
+                    ghostSlot.setChanged();
+                    return;
+                }
+            }
+        }
+        super.doClick(slotId, button, clickType, player);
     }
 }

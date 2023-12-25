@@ -63,10 +63,14 @@ public record OutputStack(Either<ItemStack, FluidStack> stack) {
      * @return Whether this output is completely empty.
      */
     public boolean isEmpty() {
-        if (isItem())
+        if (isItem()) {
             return stack.left().get().isEmpty();
-        if (isFluid())
+        }
+
+        if (isFluid()) {
             return stack.right().get().isEmpty();
+        }
+
         return true;
     }
 

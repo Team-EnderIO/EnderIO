@@ -6,7 +6,7 @@
       "item": "minecraft:iron_bars"
     },
     "G": {
-      "item": "enderio:grains_of_infinity"
+      "tag": "forge:dusts/grains_of_infinity"
     },
     "I": {
       "tag": "forge:ingots/iron"
