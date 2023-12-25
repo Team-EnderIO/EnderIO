@@ -35,7 +35,7 @@ public class OmniBufferScreen extends EIOScreen<OmniBufferMenu> {
         addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 12, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
 
-        addRenderableWidget(new IOConfigButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 22, 16, 16, menu, this::addRenderableWidget, font));
+        addRenderableWidget(new IOConfigButton<>(this, leftPos + imageWidth - 8 - 12, topPos + 22, 16, 16, menu, this::addRenderableWidget, font));
 
         input = new EnergyTextboxWidget(this, () -> this.getMenu().getBlockEntity().getEnergyStorage().getMaxEnergyUse(), this.font, leftPos + 33, topPos + 18, 49, this.font.lineHeight + 2, Component.literal("PBInputBox"));
         input.setResponder(this.getMenu().getBlockEntity()::setMaxInputText);
