@@ -5,6 +5,7 @@ import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.CoreNBTKeys;
 import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
+import com.enderio.core.common.network.slot.StringNetworkDataSlot;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
@@ -32,6 +33,11 @@ public class PowerBufferBlockEntity extends PoweredMachineBlockEntity {
     int maxOutput = 0;
     protected IntegerNetworkDataSlot outputDataSlot;
 
+    // Stores textbox value beofre being converted to energy value
+    protected StringNetworkDataSlot inputTextDataSlot;
+    String inputTextValue = "0";
+    protected StringNetworkDataSlot outputTextDataSlot;
+    String outputTextValue = "0";
 
     //todo: energy balancing
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.POWER_BUFFER_CAPACITY);
@@ -44,6 +50,11 @@ public class PowerBufferBlockEntity extends PoweredMachineBlockEntity {
         outputDataSlot = new IntegerNetworkDataSlot(this::getMaxOutput, output -> maxOutput = output);
         addDataSlot(inputDataSlot);
         addDataSlot(outputDataSlot);
+
+        inputTextDataSlot = new StringNetworkDataSlot(this::getMaxInputText, input -> inputTextValue = input);
+        outputTextDataSlot = new StringNetworkDataSlot(this::getMaxOutputText, output -> outputTextValue = output);
+        addDataSlot(inputTextDataSlot);
+        addDataSlot(outputTextDataSlot);
     }
 
     @Override
@@ -75,6 +86,26 @@ public class PowerBufferBlockEntity extends PoweredMachineBlockEntity {
         if (level != null && level.isClientSide) {
             clientUpdateSlot(inputDataSlot, pMaxInput);
         } else this.maxInput = pMaxInput;
+    }
+
+    public void setMaxInputText(String maxInputText) {
+        if (level != null && level.isClientSide) {
+            clientUpdateSlot(inputTextDataSlot, maxInputText);
+        } this.inputTextValue = maxInputText;
+    }
+
+    public void setMaxOutputText(String maxOutputText) {
+        if (level != null && level.isClientSide) {
+            clientUpdateSlot(outputTextDataSlot, maxOutputText);
+        } this.outputTextValue = maxOutputText;
+    }
+
+    public String getMaxInputText() {
+        return this.inputTextValue;
+    }
+
+    public String getMaxOutputText() {
+        return this.outputTextValue;
     }
 
     public int getMaxInput() {
@@ -121,8 +152,6 @@ public class PowerBufferBlockEntity extends PoweredMachineBlockEntity {
     @Override
     protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, Supplier<Integer> capacity, Supplier<Integer> usageRate) {
         return new MachineEnergyStorage(getIOConfig(), energyIOMode, capacity, usageRate) {
-
-            //Redstone control should be applied to the buffer
 
             @Override
             public boolean canExtract() {

@@ -37,16 +37,17 @@ public class PowerBufferScreen extends EIOScreen<PowerBufferMenu> {
 
         addRenderableWidget(new IOConfigButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 22, 16, 16, menu, this::addRenderableWidget, font));
 
-        input = new EnergyTextboxWidget(this, () -> this.getMenu().getBlockEntity().getEnergyStorage().getMaxEnergyUse(), this.font, leftPos + 40, topPos + 18, 95, this.font.lineHeight + 2, Component.empty());
-        input.setValue(Integer.toString(this.getMenu().getBlockEntity().getMaxInput()));
+        input = new EnergyTextboxWidget(this, () -> this.getMenu().getBlockEntity().getEnergyStorage().getMaxEnergyUse(), this.font, leftPos + 40, topPos + 18, 95, this.font.lineHeight + 2, Component.literal("PBInputBox"));
+        input.setResponder(this.getMenu().getBlockEntity()::setMaxInputText);
+        input.setValue(getMenu().getBlockEntity().getMaxInputText());
         input.OnFocusStoppedResponder(this::updateInput);
-        addRenderableWidget(input);
+        addRenderableOnly(addRenderableWidget(input));
 
-        output = new EnergyTextboxWidget(this, () -> this.getMenu().getBlockEntity().getEnergyStorage().getMaxEnergyUse(), this.font, leftPos + 40, topPos + 48, 95, this.font.lineHeight + 2, Component.empty());
-        output.setValue(Integer.toString(this.getMenu().getBlockEntity().getMaxOutput()));
+        output = new EnergyTextboxWidget(this, () -> this.getMenu().getBlockEntity().getEnergyStorage().getMaxEnergyUse(), this.font, leftPos + 40, topPos + 48, 95, this.font.lineHeight + 2, Component.literal("PBOutputBox"));
+        output.setResponder(this.getMenu().getBlockEntity()::setMaxOutputText);
+        output.setValue(getMenu().getBlockEntity().getMaxOutputText());
         output.OnFocusStoppedResponder(this::updateOutput);
-        addRenderableWidget(output);
-
+        addRenderableOnly(addRenderableWidget(output));
     }
 
     @Override
@@ -66,7 +67,7 @@ public class PowerBufferScreen extends EIOScreen<PowerBufferMenu> {
         guiGraphics.drawString(font, EIOLang.OUTPUT.getString() +":", leftPos + 40, topPos + 48 - font.lineHeight - 2, 1, false);
     }
 
-    private void updateInput(String val){
+    private void updateInput(String val) {
         int amount = NumberUtils.getInteger(val);
         PowerBufferBlockEntity be = this.getMenu().getBlockEntity();
         if (be != null) {
@@ -74,7 +75,7 @@ public class PowerBufferScreen extends EIOScreen<PowerBufferMenu> {
             be.setMaxInput(amount);
         }
     }
-    private void updateOutput(String val){
+    private void updateOutput(String val) {
         int amount = NumberUtils.getInteger(val);
         PowerBufferBlockEntity be = this.getMenu().getBlockEntity();
         if (be != null) {

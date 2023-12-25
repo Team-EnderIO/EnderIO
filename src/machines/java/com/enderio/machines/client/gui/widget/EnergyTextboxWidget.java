@@ -8,6 +8,8 @@ import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -49,6 +51,8 @@ public class EnergyTextboxWidget extends EditBox {
             moveCursorTo(cursorPos);
         }
 
+        moveCursorTo(getValue().length());
+
         return res;
     }
 
@@ -60,6 +64,7 @@ public class EnergyTextboxWidget extends EditBox {
             //Clear content on right click
             if (button == 1) {
                 moveCursorTo(1);
+                setValue("0");
             }
             return true;
         } else {
@@ -87,7 +92,7 @@ public class EnergyTextboxWidget extends EditBox {
         }
 
         try {
-            DecimalFormat decimalFormat = new DecimalFormat();
+            DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance(Locale.ROOT);
             decimalFormat.applyPattern("#,###");
             return decimalFormat.format(energy);
         } catch (NumberFormatException e) {

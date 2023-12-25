@@ -37,15 +37,17 @@ public class OmniBufferScreen extends EIOScreen<OmniBufferMenu> {
 
         addRenderableWidget(new IOConfigButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 22, 16, 16, menu, this::addRenderableWidget, font));
 
-        input = new EnergyTextboxWidget(this, () -> this.getMenu().getBlockEntity().getEnergyStorage().getMaxEnergyUse(), this.font, leftPos + 33, topPos + 18, 49, this.font.lineHeight + 2, Component.empty());
-        input.setValue(Integer.toString(this.getMenu().getBlockEntity().getMaxInput()));
+        input = new EnergyTextboxWidget(this, () -> this.getMenu().getBlockEntity().getEnergyStorage().getMaxEnergyUse(), this.font, leftPos + 33, topPos + 18, 49, this.font.lineHeight + 2, Component.literal("PBInputBox"));
+        input.setResponder(this.getMenu().getBlockEntity()::setMaxInputText);
+        input.setValue(getMenu().getBlockEntity().getMaxInputText());
         input.OnFocusStoppedResponder(this::updateInput);
-        addRenderableWidget(input);
+        addRenderableOnly(addRenderableWidget(input));
 
-        output = new EnergyTextboxWidget(this, () -> this.getMenu().getBlockEntity().getEnergyStorage().getMaxEnergyUse(), this.font, leftPos + 33, topPos + 48, 49, this.font.lineHeight + 2, Component.empty());
-        output.setValue(Integer.toString(this.getMenu().getBlockEntity().getMaxOutput()));
+        output = new EnergyTextboxWidget(this, () -> this.getMenu().getBlockEntity().getEnergyStorage().getMaxEnergyUse(), this.font, leftPos + 33, topPos + 48, 49, this.font.lineHeight + 2, Component.literal("PBOutputBox"));
+        output.setResponder(this.getMenu().getBlockEntity()::setMaxOutputText);
+        output.setValue(getMenu().getBlockEntity().getMaxOutputText());
         output.OnFocusStoppedResponder(this::updateOutput);
-        addRenderableWidget(output);
+        addRenderableOnly(addRenderableWidget(output));
 
     }
 
