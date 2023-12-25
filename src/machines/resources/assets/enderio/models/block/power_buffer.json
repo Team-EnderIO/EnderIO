@@ -1,12 +1,12 @@
 {
   "parent": "minecraft:block/cube",
   "textures": {
-    "down": "enderio:block/power_buffer",
-    "east": "enderio:block/power_buffer",
-    "north": "enderio:block/power_buffer",
-    "particle": "enderio:block/power_buffer",
-    "south": "enderio:block/power_buffer",
-    "up": "enderio:block/power_buffer",
-    "west": "enderio:block/power_buffer"
+    "down": "enderio:block/power_buffer_front",
+    "east": "enderio:block/power_buffer_front",
+    "north": "enderio:block/power_buffer_front",
+    "particle": "enderio:block/power_buffer_front",
+    "south": "enderio:block/power_buffer_front",
+    "up": "enderio:block/power_buffer_front",
+    "west": "enderio:block/power_buffer_front"
   }
 }
