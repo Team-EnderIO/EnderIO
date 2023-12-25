@@ -6,16 +6,15 @@ import com.enderio.base.common.blockentity.EnderSkullBlockEntity;
 import com.enderio.base.common.blockentity.LightNodeBlockEntity;
 import com.enderio.base.common.blockentity.PoweredLightBlockEntity;
 import com.enderio.base.common.blockentity.SinglePaintedBlockEntity;
-import com.tterrag.registrate.Registrate;
-import com.tterrag.registrate.util.entry.BlockEntityEntry;
+import com.enderio.core.common.registry.EnderBlockEntityRegistry;
+import com.enderio.core.common.registry.EnderDeferredBlockEntity;
+import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 
 public class EIOBlockEntities {
-    private static final Registrate REGISTRATE = EnderIO.registrate();
+    private static final EnderBlockEntityRegistry BLOCK_ENTITIES = EnderBlockEntityRegistry.create(EnderIO.MODID);
 
-    public static final BlockEntityEntry<SinglePaintedBlockEntity> SINGLE_PAINTED = REGISTRATE
-        .blockEntity("single_painted", SinglePaintedBlockEntity::new)
-        .validBlocks(
-            EIOBlocks.PAINTED_FENCE,
+    public static final EnderDeferredBlockEntity<SinglePaintedBlockEntity> SINGLE_PAINTED = BLOCK_ENTITIES
+        .registerBlockEntity("single_painted", SinglePaintedBlockEntity::new, EIOBlocks.PAINTED_FENCE,
             EIOBlocks.PAINTED_FENCE_GATE,
             EIOBlocks.PAINTED_SAND,
             EIOBlocks.PAINTED_STAIRS,
@@ -23,28 +22,24 @@ public class EIOBlockEntities {
             EIOBlocks.PAINTED_REDSTONE_BLOCK,
             EIOBlocks.PAINTED_TRAPDOOR,
             EIOBlocks.PAINTED_WOODEN_PRESSURE_PLATE,
-            EIOBlocks.PAINTED_GLOWSTONE
-        )
-        .register();
+            EIOBlocks.PAINTED_GLOWSTONE);
 
-    public static final BlockEntityEntry<DoublePaintedBlockEntity> DOUBLE_PAINTED = REGISTRATE
-        .blockEntity("double_painted", DoublePaintedBlockEntity::new)
-        .validBlocks(EIOBlocks.PAINTED_SLAB)
-        .register();
+    public static final EnderDeferredBlockEntity<DoublePaintedBlockEntity> DOUBLE_PAINTED = BLOCK_ENTITIES
+        .registerBlockEntity("double_painted", DoublePaintedBlockEntity::new, EIOBlocks.PAINTED_SLAB);
 
-    public static final BlockEntityEntry<PoweredLightBlockEntity> POWERED_LIGHT = REGISTRATE
-        .blockEntity("powered_light", PoweredLightBlockEntity::new)
-        .validBlocks(EIOBlocks.POWERED_LIGHT, EIOBlocks.POWERED_LIGHT_INVERTED, EIOBlocks.POWERED_LIGHT_WIRELESS, EIOBlocks.POWERED_LIGHT_INVERTED_WIRELESS)
-        .register();
+    public static final EnderDeferredBlockEntity<PoweredLightBlockEntity> POWERED_LIGHT = BLOCK_ENTITIES
+        .registerBlockEntity("powered_light", PoweredLightBlockEntity::new, EIOBlocks.POWERED_LIGHT,
+            EIOBlocks.POWERED_LIGHT_INVERTED,
+            EIOBlocks.POWERED_LIGHT_WIRELESS,
+            EIOBlocks.POWERED_LIGHT_INVERTED_WIRELESS);
 
-    public static final BlockEntityEntry<LightNodeBlockEntity> LIGHT_NODE = REGISTRATE
-        .blockEntity("light_node", LightNodeBlockEntity::new)
-        .validBlock(EIOBlocks.LIGHT_NODE)
-        .register();
+    public static final EnderDeferredBlockEntity<LightNodeBlockEntity> LIGHT_NODE = BLOCK_ENTITIES
+        .registerBlockEntity("light_node", LightNodeBlockEntity::new, EIOBlocks.LIGHT_NODE);
 
-    public static final BlockEntityEntry<EnderSkullBlockEntity> ENDER_SKULL = REGISTRATE
-        .blockEntity("ender_skull", EnderSkullBlockEntity::new)
-        .validBlocks(EIOBlocks.WALL_ENDERMAN_HEAD, EIOBlocks.ENDERMAN_HEAD)
-        .register();
-    public static void register() {}
+    public static final EnderDeferredBlockEntity<EnderSkullBlockEntity> ENDER_SKULL = BLOCK_ENTITIES
+        .registerBlockEntity("ender_skull", EnderSkullBlockEntity::new, EIOBlocks.WALL_ENDERMAN_HEAD,
+            EIOBlocks.ENDERMAN_HEAD);
+    public static void register() {
+        BLOCK_ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
+    }
 }

@@ -1,8 +1,10 @@
 package com.enderio.base.common.blockentity;
 
 import com.enderio.base.EIONBTKeys;
+import com.enderio.base.common.init.EIOBlockEntities;
 import com.enderio.base.common.util.PaintUtils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -12,7 +14,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.client.model.data.ModelProperty;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -31,6 +32,10 @@ public class SinglePaintedBlockEntity extends BlockEntity implements IPaintableB
 
     public SinglePaintedBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
         super(pType, pWorldPosition, pBlockState);
+    }
+
+    public SinglePaintedBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
+        super(EIOBlockEntities.SINGLE_PAINTED.get(), pWorldPosition, pBlockState);
     }
 
     @Override
@@ -96,7 +101,7 @@ public class SinglePaintedBlockEntity extends BlockEntity implements IPaintableB
 
     protected void writePaint(CompoundTag tag) {
         if (paint != null) {
-            tag.putString(EIONBTKeys.PAINT, Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(paint)).toString());
+            tag.putString(EIONBTKeys.PAINT, Objects.requireNonNull(BuiltInRegistries.BLOCK.getKey(paint)).toString());
         }
     }
 }

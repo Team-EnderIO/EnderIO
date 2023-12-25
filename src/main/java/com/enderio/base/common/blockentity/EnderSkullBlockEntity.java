@@ -12,7 +12,7 @@ import net.neoforged.fml.LogicalSide;
 public class EnderSkullBlockEntity extends BlockEntity {
     private float animationticks = 0;
 
-    public EnderSkullBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+    public EnderSkullBlockEntity(BlockPos pos, BlockState blockState) {
         super(EIOBlockEntities.ENDER_SKULL.get(), pos, blockState);
     }
 

@@ -3,6 +3,7 @@ package com.enderio.base.common.entity;
 import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.init.EIOEntities;
 import com.enderio.base.common.util.PaintUtils;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
@@ -18,7 +19,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.entity.IEntityAdditionalSpawnData;
 import net.neoforged.neoforge.network.NetworkHooks;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -56,19 +56,19 @@ public class PaintedSandEntity extends FallingBlockEntity implements IEntityAddi
             blockData = new CompoundTag();
         }
 
-        blockData.putString(EIONBTKeys.PAINT, Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(block)).toString());
+        blockData.putString(EIONBTKeys.PAINT, Objects.requireNonNull(BuiltInRegistries.BLOCK.getKey(block)).toString());
     }
 
     @Override
     public void writeSpawnData(FriendlyByteBuf buffer) {
         Block block = getPaint();
-        buffer.writeResourceLocation(block != null ? Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(block)) : new ResourceLocation(""));
+        buffer.writeResourceLocation(block != null ? Objects.requireNonNull(BuiltInRegistries.BLOCK.getKey(block)) : new ResourceLocation(""));
     }
 
     @Override
     public void readSpawnData(FriendlyByteBuf additionalData) {
         ResourceLocation rl = additionalData.readResourceLocation();
-        Block block = ForgeRegistries.BLOCKS.getValue(rl);
+        Block block = BuiltInRegistries.BLOCK.get(rl);
         if (block != null && block != Blocks.AIR) {
             setPaint(block);
         }

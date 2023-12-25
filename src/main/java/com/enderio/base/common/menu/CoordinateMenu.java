@@ -45,8 +45,8 @@ public class CoordinateMenu extends AbstractContainerMenu {
         this.name = name != null ? name : "";
     }
 
-    public static CoordinateMenu factory(@Nullable MenuType<CoordinateMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
-        return new CoordinateMenu(pMenuType, pContainerId, buf);
+    public static CoordinateMenu factory(int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
+        return new CoordinateMenu(EIOMenus.COORDINATE.get(), pContainerId, buf);
     }
 
     /**

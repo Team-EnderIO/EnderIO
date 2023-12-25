@@ -15,15 +15,15 @@ import org.apache.commons.lang3.StringUtils;
 import javax.annotation.Nullable;
 import java.util.Set;
 import java.util.function.BiConsumer;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
-public class EnderDeferredBlock<T extends Block> extends DeferredBlock<T> {
-    private String translation = "";
+public class EnderDeferredBlock<T extends Block> extends DeferredBlock<T> implements ITranslatable{
+    private String translation = StringUtils.capitalize(getId().getPath().replace('_', ' '));
     private Set<TagKey<Block>> blockTags = Set.of();
     @Nullable
-    private BiConsumer<EnderBlockLootProvider, T>  lootTable;
+    private BiConsumer<EnderBlockLootProvider, T>  lootTable = EnderBlockLootProvider::dropSelf;
     @Nullable
-    private BiConsumer<BlockStateProvider, T> blockStateProvider;
+    private BiConsumer<BlockStateProvider, T> blockStateProvider = BlockStateProvider::simpleBlock;
     @Nullable
     private EnderItemRegistry registry;
     protected EnderDeferredBlock(ResourceKey<Block> key) {
@@ -35,8 +35,9 @@ public class EnderDeferredBlock<T extends Block> extends DeferredBlock<T> {
         return this;
     }
 
+    @Override
     public String getTranslation() {
-        return translation.isEmpty() ? StringUtils.capitalize(getId().getPath().replace('_', ' ')) : translation;
+        return translation;
     }
 
     @SafeVarargs
@@ -78,8 +79,8 @@ public class EnderDeferredBlock<T extends Block> extends DeferredBlock<T> {
         return EnderDeferredBlockItem.create(this, item);
     }
 
-    public EnderDeferredBlockItem<? extends BlockItem, T> createItem(Supplier<? extends BlockItem> sup) {
-        EnderDeferredItem<BlockItem> item = registry.register(getId().getPath(), sup);
+    public EnderDeferredBlockItem<? extends BlockItem, T> createBlockItem(Function<T, ? extends BlockItem> function) {
+        EnderDeferredItem<? extends BlockItem> item = registry.register(getId().getPath(), () -> function.apply(this.get()));
         return EnderDeferredBlockItem.create(this, item);
     }
 

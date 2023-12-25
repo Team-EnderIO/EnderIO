@@ -14,14 +14,16 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.annotation.Nullable;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
-public class EnderDeferredItem<T extends Item> extends DeferredItem<T> {
-    protected String translation = "";
+public class EnderDeferredItem<T extends Item> extends DeferredItem<T> implements ITranslatable{
+    protected String translation = StringUtils.capitalize(getId().getPath().replace('_', ' '));
     protected Set<TagKey<Item>> ItemTags = Set.of();
     protected ResourceKey<CreativeModeTab> tab;
-    protected BiConsumer<EnderItemModelProvider, Item> modelProvider;
+    @Nullable
+    protected BiConsumer<EnderItemModelProvider, Item> modelProvider = EnderItemModelProvider::basicItem;
 
     protected EnderDeferredItem(ResourceKey<Item> key) {
         super(key);
@@ -33,7 +35,7 @@ public class EnderDeferredItem<T extends Item> extends DeferredItem<T> {
     }
 
     public String getTranslation() {
-        return translation.isEmpty() ? StringUtils.capitalize(getId().getPath().replace('_', ' ')) : translation;
+        return translation;
     }
 
     @SafeVarargs

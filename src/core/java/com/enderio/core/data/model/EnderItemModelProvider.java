@@ -6,6 +6,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
@@ -42,5 +43,17 @@ public class EnderItemModelProvider extends ItemModelProvider {
             .parent(new ModelFile.UncheckedModelFile("item/generated"))
             .texture("layer0", new ResourceLocation(item.getNamespace(), "block/" + item.getPath()));
     }
+
+    public ItemModelBuilder basicItem(Item item, ResourceLocation texture) {
+        return getBuilder(BuiltInRegistries.ITEM.getKey(item).toString())
+            .parent(new ModelFile.UncheckedModelFile("item/generated"))
+            .texture("layer0", new ResourceLocation(texture.getNamespace(), "item/" + texture.getPath()));
+    }
+
+    public ResourceLocation itemTexture(ItemLike item) {
+        return Objects.requireNonNull(BuiltInRegistries.ITEM.getKey(item.asItem()));
+    }
+
+
 }
 

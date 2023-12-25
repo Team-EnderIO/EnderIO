@@ -3,6 +3,7 @@ package com.enderio.base.common.blockentity;
 import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.block.light.Light;
 import com.enderio.base.common.block.light.PoweredLight;
+import com.enderio.base.common.init.EIOBlockEntities;
 import com.enderio.base.common.init.EIOBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -16,7 +17,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
+import net.neoforged.neoforge.common.capabilities.Capabilities;
 import net.neoforged.neoforge.common.util.LazyOptional;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
@@ -33,6 +34,10 @@ public class PoweredLightBlockEntity extends BlockEntity{
 	public PoweredLightBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
 		super(type, worldPosition, blockState);
 	}
+
+    public PoweredLightBlockEntity(BlockPos worldPosition, BlockState blockState) {
+        super(EIOBlockEntities.POWERED_LIGHT.get(), worldPosition, blockState);
+    }
 	
 	public static void tick(Level level, BlockPos pos, BlockState state, PoweredLightBlockEntity e) {
 		if(((PoweredLight) state.getBlock()).isWireless()){ //check if wireless
@@ -155,7 +160,7 @@ public class PoweredLightBlockEntity extends BlockEntity{
 	private static void consumePower(Level level, BlockPos pos, BlockState state, PoweredLightBlockEntity e) {
 		BlockEntity be = level.getBlockEntity(pos.relative(state.getValue(Light.FACING).getOpposite()));
 		if (be != null) {
-			LazyOptional<IEnergyStorage> energy = be.getCapability(ForgeCapabilities.ENERGY, state.getValue(Light.FACING));
+			LazyOptional<IEnergyStorage> energy = be.getCapability(Capabilities.ENERGY, state.getValue(Light.FACING));
 			if (energy.isPresent()) {
 				if (energy.resolve().get().extractEnergy(RF_USE_TICK, true) == RF_USE_TICK) {
 					boolean powered = level.hasNeighborSignal(pos);

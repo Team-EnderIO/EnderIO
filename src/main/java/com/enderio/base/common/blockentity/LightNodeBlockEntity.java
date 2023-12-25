@@ -2,6 +2,7 @@ package com.enderio.base.common.blockentity;
 
 import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.block.light.LightNode;
+import com.enderio.base.common.init.EIOBlockEntities;
 import com.enderio.base.common.network.EIONetwork;
 import com.enderio.base.common.network.ServerToClientLightUpdate;
 import net.minecraft.core.BlockPos;
@@ -24,6 +25,10 @@ public class LightNodeBlockEntity extends BlockEntity {
 	public LightNodeBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
 		super(type, worldPosition, blockState);
 	}
+
+    public LightNodeBlockEntity(BlockPos worldPosition, BlockState blockState) {
+        super(EIOBlockEntities.LIGHT_NODE.get(), worldPosition, blockState);
+    }
 	
 	public void setMaster(PoweredLightBlockEntity master) {
 		this.masterpos = master.getBlockPos();
@@ -31,7 +36,7 @@ public class LightNodeBlockEntity extends BlockEntity {
 	}
 	
 	/**
-	 * called in {@link LightNode.neighborChanged} when a neighbor changes serverside.
+	 * called in { LightNode.neighborChanged} when a neighbor changes serverside.
 	 * Checks if the this block still has a {@code PoweredLight}, if not it removes itself.
 	 * Checks if the {@code PoweredLight} is still active, if not it removes itself.
 	 * If the block changed inside the range, call the {@code PoweredLightBlockEntity} to update. //TODO make smarter? 

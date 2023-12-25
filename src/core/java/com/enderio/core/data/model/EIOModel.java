@@ -1,11 +1,13 @@
 package com.enderio.core.data.model;
 
+import com.enderio.core.common.registry.EnderDeferredItem;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateItemModelProvider;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.Item;
@@ -22,12 +24,12 @@ public class EIOModel {
 
     // region Item
 
-    public static ItemModelBuilder fakeBlockModel(DataGenContext<Item, ? extends Item> ctx, RegistrateItemModelProvider prov) {
-        return prov.withExistingParent(prov.name(ctx), prov.mcLoc("block/cube_all")).texture("all", prov.itemTexture(ctx));
+    public static ItemModelBuilder fakeBlockModel(EnderItemModelProvider prov, Item item) {
+        return prov.withExistingParent(BuiltInRegistries.ITEM.getKey(item).getPath(), prov.mcLoc("block/cube_all")).texture("all", prov.itemTexture(item));
     }
 
-    public static ItemModelBuilder mimicItem(DataGenContext<Item, ? extends Item> ctx, ItemEntry<? extends Item> item, RegistrateItemModelProvider prov) {
-        return prov.generated(ctx, prov.itemTexture(item));
+    public static ItemModelBuilder mimicItem(Item item, EnderDeferredItem<? extends Item> from, EnderItemModelProvider prov) {
+        return prov.basicItem(item, prov.itemTexture(from));
     }
 
     // endregion
