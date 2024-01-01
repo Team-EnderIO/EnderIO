@@ -23,6 +23,8 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -33,7 +35,7 @@ public class PowerBufferBlockEntity extends PoweredMachineBlockEntity {
     int maxOutput = 0;
     protected IntegerNetworkDataSlot outputDataSlot;
 
-    // Stores textbox value beofre being converted to energy value
+    // Stores textbox value before being converted to energy value
     protected StringNetworkDataSlot inputTextDataSlot;
     String inputTextValue = "0";
     protected StringNetworkDataSlot outputTextDataSlot;
@@ -116,31 +118,66 @@ public class PowerBufferBlockEntity extends PoweredMachineBlockEntity {
         return maxOutput;
     }
 
-    //Override method to be able to configure power output !
-    //By default, it tries to push as much power as it can.
-    @Override
-    public void pushEnergy() {
-        if (!getExposedEnergyStorage().getIOMode().canOutput())
-            return;
+    public List<Direction> getDirections(boolean input) {
+        List<Direction> dirs = new ArrayList<>();
+
+        if (!getExposedEnergyStorage().getIOMode().canOutput() && !input)
+            return new ArrayList<>();
 
         for (Direction side : Direction.values()) {
-            
-            if (!shouldPushEnergyTo(side))
+
+            if (!shouldPushEnergyTo(side) && !input)
                 continue;
 
             getCapability(ForgeCapabilities.ENERGY, side).resolve().ifPresent(selfHandler -> {
                 Optional<IEnergyStorage> otherHandler = getNeighbouringCapability(ForgeCapabilities.ENERGY, side).resolve();
                 if (otherHandler.isPresent()) {
 
-                    // If the other handler can receive power transmit ours and there is enough energy stored
-                    if (otherHandler.get().canReceive() && getExposedEnergyStorage().getEnergyStored() - getMaxOutput() >= 0) {
-
-                        int received = otherHandler.get().receiveEnergy(getMaxOutput(), false);
-                        // Consume that energy from our buffer.
-                        getExposedEnergyStorage().extractEnergy(received, false);
+                    if (input) {
+                        if (otherHandler.get().canExtract()) {
+                            dirs.add(side);
+                        }
+                    } else {
+                        if (otherHandler.get().canReceive()) {
+                            dirs.add(side);
+                        }
                     }
                 }
             });
+        }
+        return dirs;
+    }
+
+    //Distributes energy equally between sides (maxEnergy / number of sides)
+    @Override
+    public void pushEnergy() {
+        if (!getExposedEnergyStorage().getIOMode().canOutput())
+            return;
+
+
+        List<Direction> directions = getDirections(false);
+        int energyPerSide = directions.size() > 0 ? (int)getMaxOutput()/directions.size() : 0;
+
+        for (int i = 0; i < directions.size(); i++) {
+
+            //if last iteration, add remaining energy (for odd number of sides)
+            if (i == directions.size() -1 ) {
+                energyPerSide = energyPerSide + (getMaxOutput() - (energyPerSide * directions.size()));
+            }
+
+            Direction side = directions.get(i);
+            Optional<IEnergyStorage> otherHandler = getNeighbouringCapability(ForgeCapabilities.ENERGY, side).resolve();
+
+            if (otherHandler.isPresent()) {
+
+                // If the other handler can receive power transmit ours
+                if (otherHandler.get().canReceive() && getExposedEnergyStorage().getEnergyStored() >= 0) {
+
+                    int received = otherHandler.get().receiveEnergy(Math.min(energyPerSide, getExposedEnergyStorage().getEnergyStored()), false);
+                    // Consume that energy from our buffer.
+                    getExposedEnergyStorage().extractEnergy(received, false);
+                }
+            }
         }
     }
 
@@ -152,6 +189,9 @@ public class PowerBufferBlockEntity extends PoweredMachineBlockEntity {
     @Override
     protected MachineEnergyStorage createEnergyStorage(EnergyIOMode energyIOMode, Supplier<Integer> capacity, Supplier<Integer> usageRate) {
         return new MachineEnergyStorage(getIOConfig(), energyIOMode, capacity, usageRate) {
+
+            //helps to distribute energy input
+            int sideReceived = 0;
 
             @Override
             public boolean canExtract() {
@@ -165,10 +205,20 @@ public class PowerBufferBlockEntity extends PoweredMachineBlockEntity {
 
             @Override
             public int receiveEnergy(int maxReceive, boolean simulate) {
-                int energyReceived = Math.min(getMaxEnergyStored() - getEnergyStored(), Math.min(getMaxInput(), maxReceive));
+                List<Direction> dirs = getDirections(true);
+                int energyToReceive = getMaxInput() / dirs.size();
+
+                if (sideReceived == 0) {
+                    energyToReceive += getMaxInput() % dirs.size();
+                }
+
+                int energyReceived = Math.min(getMaxEnergyStored() - getEnergyStored(), Math.min(energyToReceive, maxReceive));
+
                 if (!simulate) {
                     addEnergy(energyReceived);
+                    sideReceived = (sideReceived + 1) % dirs.size();
                 }
+
                 return energyReceived;
             }
         };

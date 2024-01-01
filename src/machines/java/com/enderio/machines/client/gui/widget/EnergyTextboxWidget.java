@@ -108,7 +108,7 @@ public class EnergyTextboxWidget extends EditBox {
 
     public void renderToolTip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (mouseX >= getX() && mouseX <= getX() + width && mouseY >= getY() && mouseY <= getY() + height && !isFocused() && maxEnergy.get() != 0) {
-            guiGraphics.renderTooltip(displayOn.getMinecraft().font, Component.literal(getValue() +"/" + maxEnergy.get()  +" µI"), mouseX, mouseY);
+            guiGraphics.renderTooltip(displayOn.getMinecraft().font, Component.literal(getValue() +"/" + maxEnergy.get()  +" µI/t"), mouseX, mouseY);
         }
     }
 

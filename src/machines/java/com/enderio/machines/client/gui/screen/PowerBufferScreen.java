@@ -16,6 +16,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
+import java.util.Objects;
+
 public class PowerBufferScreen extends EIOScreen<PowerBufferMenu> {
 
     private static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/power_buffer.png");
@@ -39,13 +41,13 @@ public class PowerBufferScreen extends EIOScreen<PowerBufferMenu> {
 
         input = new EnergyTextboxWidget(this, () -> this.getMenu().getBlockEntity().getEnergyStorage().getMaxEnergyUse(), this.font, leftPos + 40, topPos + 18, 95, this.font.lineHeight + 2, Component.literal("PBInputBox"));
         input.setResponder(this.getMenu().getBlockEntity()::setMaxInputText);
-        input.setValue(getMenu().getBlockEntity().getMaxInputText());
+        input.setValue(input.formatEnergy(""+getMenu().getBlockEntity().getMaxInput()));
         input.OnFocusStoppedResponder(this::updateInput);
         addRenderableOnly(addRenderableWidget(input));
 
-        output = new EnergyTextboxWidget(this, () -> this.getMenu().getBlockEntity().getEnergyStorage().getMaxEnergyUse(), this.font, leftPos + 40, topPos + 48, 95, this.font.lineHeight + 2, Component.literal("PBOutputBox"));
+        output = new EnergyTextboxWidget(this, () -> this.getMenu().getBlockEntity().getEnergyStorage().getMaxEnergyUse(), this.font, leftPos + 40, topPos + 52, 95, this.font.lineHeight + 2, Component.literal("PBOutputBox"));
         output.setResponder(this.getMenu().getBlockEntity()::setMaxOutputText);
-        output.setValue(getMenu().getBlockEntity().getMaxOutputText());
+        output.setValue(output.formatEnergy(""+getMenu().getBlockEntity().getMaxOutput()));
         output.OnFocusStoppedResponder(this::updateOutput);
         addRenderableOnly(addRenderableWidget(output));
     }
@@ -63,8 +65,18 @@ public class PowerBufferScreen extends EIOScreen<PowerBufferMenu> {
     @Override
     public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
         super.render(guiGraphics, pMouseX, pMouseY, pPartialTicks);
-        guiGraphics.drawString(font, EIOLang.INPUT.getString() +":", leftPos + 40, topPos + 18 - font.lineHeight - 2, 1, false);
-        guiGraphics.drawString(font, EIOLang.OUTPUT.getString() +":", leftPos + 40, topPos + 48 - font.lineHeight - 2, 1, false);
+        guiGraphics.drawString(font, EIOLang.INPUT.getString(), leftPos + 40, topPos + 18 - font.lineHeight - 2, 1, false);
+        guiGraphics.drawString(font, EIOLang.OUTPUT.getString(), leftPos + 40, topPos + 52 - font.lineHeight - 2, 1, false);
+
+        String maxIO = "Max: " + NumberUtils.formatWithPrefix(Objects.requireNonNull(getMenu().getBlockEntity()).getEnergyStorage().getMaxEnergyUse());
+
+        guiGraphics.drawString(font, maxIO, leftPos + 40 + 95 - font.width(maxIO), topPos + 18 + font.lineHeight + 4, 0xff8b8b8b, false);
+        guiGraphics.drawString(font, maxIO, leftPos + 40 + 95 - font.width(maxIO), topPos + 52 + font.lineHeight + 4, 0xff8b8b8b, false);
+
+        if (!this.getMenu().getBlockEntity().isCapacitorInstalled()) {
+            input.setValue("0");
+            output.setValue("0");
+        }
     }
 
     private void updateInput(String val) {

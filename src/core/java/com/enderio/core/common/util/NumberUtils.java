@@ -20,4 +20,16 @@ public class NumberUtils {
             return 0;
         }
     }
+
+    public static String formatWithPrefix(int number) {
+        if (number < 100_000) {
+            return Long.toString(number);
+        } else if (number < 1_000_000) {
+            return String.format("%.1fk", number / 1_000.0);
+        } else if (number < 1_000_000_000) {
+            return String.format("%.3fM", number / 1_000_000.0);
+        } else {
+            return String.format("%.3fB", number / 1_000_000_000.0);
+        }
+    }
 }
