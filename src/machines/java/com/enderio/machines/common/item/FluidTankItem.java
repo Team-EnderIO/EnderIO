@@ -13,7 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
-import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
+import net.neoforged.neoforge.common.capabilities.Capabilities;
 import net.neoforged.neoforge.common.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.common.util.NonNullLazy;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -54,7 +54,7 @@ public class FluidTankItem extends BlockItem implements IAdvancedTooltipProvider
 
     @Override
     public void addCommonTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
-        itemStack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).ifPresent(iFluidHandlerItem -> {
+        itemStack.getCapability(Capabilities.FLUID_HANDLER_ITEM).ifPresent(iFluidHandlerItem -> {
             if (iFluidHandlerItem instanceof FluidItemStack fluidHandler) {
                 if (fluidHandler.getFluid().isEmpty()) {
                     tooltips.add(TooltipUtil.style(EIOLang.TANK_EMPTY_STRING));

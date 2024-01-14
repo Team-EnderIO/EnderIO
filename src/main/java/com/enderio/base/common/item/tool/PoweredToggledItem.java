@@ -21,7 +21,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
+import net.neoforged.neoforge.common.capabilities.Capabilities;
 import net.neoforged.neoforge.common.util.LazyOptional;
 import org.jetbrains.annotations.Nullable;
 
@@ -108,7 +108,7 @@ public abstract class PoweredToggledItem extends Item implements IMultiCapabilit
     @Override
     public MultiCapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt, MultiCapabilityProvider provider) {
         provider.add(EIOCapabilities.TOGGLED, LazyOptional.of(() -> new Toggled(stack)));
-        provider.add(ForgeCapabilities.ENERGY, LazyOptional.of(() -> new EnergyStorageItemStack(stack, getMaxEnergy())));
+        provider.add(Capabilities.ENERGY, LazyOptional.of(() -> new EnergyStorageItemStack(stack, getMaxEnergy())));
         return provider;
     }
 
@@ -128,7 +128,7 @@ public abstract class PoweredToggledItem extends Item implements IMultiCapabilit
     @Override
     public int getBarWidth(ItemStack pStack) {
         return pStack
-            .getCapability(ForgeCapabilities.ENERGY)
+            .getCapability(Capabilities.ENERGY)
             .map(energyStorage -> Math.round(energyStorage.getEnergyStored() * 13.0F / energyStorage.getMaxEnergyStored()))
             .orElse(0);
     }

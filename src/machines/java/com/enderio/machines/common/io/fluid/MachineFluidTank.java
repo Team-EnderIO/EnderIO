@@ -9,7 +9,7 @@ import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
+import net.neoforged.neoforge.common.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
@@ -207,7 +207,7 @@ public class MachineFluidTank extends FluidTank {
     public InteractionResult onClickedWithPotentialFluidItem(Player player, InteractionHand hand) {
         if (!player.level().isClientSide() && player.hasItemInSlot(EquipmentSlot.MAINHAND) && hand == InteractionHand.MAIN_HAND) {
             ItemStack heldStack = player.getMainHandItem();
-            Optional<IFluidHandlerItem> heldItemFH = heldStack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
+            Optional<IFluidHandlerItem> heldItemFH = heldStack.getCapability(Capabilities.FLUID_HANDLER_ITEM).resolve();
             if (heldStack.getItem() == Items.BUCKET && allowOutput) {
                 //Clicked with empty bucket and tank allowed to output fluids
                 if (getFluidAmount() >= FluidType.BUCKET_VOLUME) {

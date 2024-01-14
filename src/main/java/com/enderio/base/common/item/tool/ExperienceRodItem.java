@@ -18,7 +18,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
+import net.neoforged.neoforge.common.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
@@ -63,7 +63,7 @@ public class ExperienceRodItem extends Item {
         try {
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity != null) {
-                return blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER).map(fluidHandler -> {
+                return blockEntity.getCapability(Capabilities.FLUID_HANDLER).map(fluidHandler -> {
 
                     FluidStack availableFluid = fluidHandler.getFluidInTank(0);
                     if (availableFluid.getFluid().is(EIOTags.Fluids.EXPERIENCE) && availableFluid.getAmount() > 0) {
@@ -96,7 +96,7 @@ public class ExperienceRodItem extends Item {
 
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity != null) {
-                return blockEntity.getCapability(ForgeCapabilities.FLUID_HANDLER).map(fluidHandler -> {
+                return blockEntity.getCapability(Capabilities.FLUID_HANDLER).map(fluidHandler -> {
                     long fluidVolume = ExperienceUtil.getPlayerTotalXp(player) * ExperienceUtil.EXP_TO_FLUID;
                     int cappedVolume = (int) Math.min(Integer.MAX_VALUE, fluidVolume);
                     FluidStack fs = new FluidStack(EIOFluids.XP_JUICE.getSource(), cappedVolume);

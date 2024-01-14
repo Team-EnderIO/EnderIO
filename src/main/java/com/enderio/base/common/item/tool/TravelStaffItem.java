@@ -22,7 +22,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
+import net.neoforged.neoforge.common.capabilities.Capabilities;
+import net.neoforged.neoforge.common.capabilities.Capabilities;
 import net.neoforged.neoforge.common.util.LazyOptional;
 import org.jetbrains.annotations.Nullable;
 
@@ -108,7 +109,7 @@ public class TravelStaffItem extends Item implements IMultiCapabilityItem, IAdva
 
     @Override
     public MultiCapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt, MultiCapabilityProvider provider) {
-        provider.add(ForgeCapabilities.ENERGY, LazyOptional.of(() -> new EnergyStorageItemStack(stack, getMaxEnergy())));
+        provider.add(Capabilities.ENERGY, LazyOptional.of(() -> new EnergyStorageItemStack(stack, getMaxEnergy())));
         return provider;
     }
 
@@ -132,7 +133,7 @@ public class TravelStaffItem extends Item implements IMultiCapabilityItem, IAdva
     @Override
     public int getBarWidth(ItemStack stack) {
         return stack
-            .getCapability(ForgeCapabilities.ENERGY)
+            .getCapability(Capabilities.ENERGY)
             .map(energyStorage -> Math.round(energyStorage.getEnergyStored() * 13.0F / energyStorage.getMaxEnergyStored()))
             .orElse(0);
     }

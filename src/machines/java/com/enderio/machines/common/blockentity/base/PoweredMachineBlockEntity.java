@@ -25,7 +25,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
+import net.neoforged.neoforge.common.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
@@ -172,9 +172,9 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
             }
 
             // Get our energy handler, this will handle all sidedness tests for us.
-            getCapability(ForgeCapabilities.ENERGY, side).resolve().ifPresent(selfHandler -> {
+            getCapability(Capabilities.ENERGY, side).resolve().ifPresent(selfHandler -> {
                 // Get the other energy handler
-                Optional<IEnergyStorage> otherHandler = getNeighbouringCapability(ForgeCapabilities.ENERGY, side).resolve();
+                Optional<IEnergyStorage> otherHandler = getNeighbouringCapability(Capabilities.ENERGY, side).resolve();
                 if (otherHandler.isPresent()) {
                     // Don't insert into self. (Solar panels)
                     if (selfHandler == otherHandler.get()) {

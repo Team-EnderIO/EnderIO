@@ -109,31 +109,4 @@ public class EIOMachines {
         provider.addSubProvider(event.includeServer(), new ForgeAdvancementProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper(),
             List.of(new MachinesAdvancementGenerator())));
     }
-
-    //TODO Remove later on when during beta/release.
-    public static void missingMappings(MissingMappingsEvent event) {
-        event.getMappings(Registries.BLOCK, EnderIO.MODID).forEach(mapping -> {
-            if (mapping.getKey().equals(EnderIO.loc("simple_photovoltaic_cell"))) {
-                mapping.remap(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.ENERGETIC).get());
-            } else if (mapping.getKey().equals(EnderIO.loc("basic_photovoltaic_cell"))) {
-                mapping.remap(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.ENERGETIC).get());
-            } else if (mapping.getKey().equals(EnderIO.loc("advanced_photovoltaic_cell"))) {
-                mapping.remap(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING).get());
-            } else if (mapping.getKey().equals(EnderIO.loc("vibrant_photovoltaic_cell"))) {
-                mapping.remap(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.VIBRANT).get());
-            }
-        });
-
-        event.getMappings(Registries.ITEM, EnderIO.MODID).forEach(mapping -> {
-            if (mapping.getKey().equals(EnderIO.loc("simple_photovoltaic_cell"))) {
-                mapping.remap(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.ENERGETIC).get().asItem());
-            } else if (mapping.getKey().equals(EnderIO.loc("basic_photovoltaic_cell"))) {
-                mapping.remap(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.ENERGETIC).get().asItem());
-            } else if (mapping.getKey().equals(EnderIO.loc("advanced_photovoltaic_cell"))) {
-                mapping.remap(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING).get().asItem());
-            } else if (mapping.getKey().equals(EnderIO.loc("vibrant_photovoltaic_cell"))) {
-                mapping.remap(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.VIBRANT).get().asItem());
-            }
-        });
-    }
 }

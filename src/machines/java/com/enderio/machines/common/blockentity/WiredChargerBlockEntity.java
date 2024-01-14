@@ -16,7 +16,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
+import net.neoforged.neoforge.common.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
@@ -71,7 +71,7 @@ public class WiredChargerBlockEntity extends PoweredMachineBlockEntity {
     }
 
     public boolean acceptItem(ItemStack item) {
-        Optional<IEnergyStorage> energyHandlerCap = item.getCapability(ForgeCapabilities.ENERGY).resolve();
+        Optional<IEnergyStorage> energyHandlerCap = item.getCapability(Capabilities.ENERGY).resolve();
         return energyHandlerCap.isPresent();
     }
 	
@@ -84,7 +84,7 @@ public class WiredChargerBlockEntity extends PoweredMachineBlockEntity {
 
     public void chargeItem() {
         ItemStack chargeable = ITEM_TO_CHARGE.getItemStack(this);
-        Optional<IEnergyStorage> energyHandlerCap = chargeable.getCapability(ForgeCapabilities.ENERGY).resolve();
+        Optional<IEnergyStorage> energyHandlerCap = chargeable.getCapability(Capabilities.ENERGY).resolve();
 
         if (energyHandlerCap.isPresent()) {
             IEnergyStorage itemEnergyStorage = energyHandlerCap.get();

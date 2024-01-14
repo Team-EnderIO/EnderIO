@@ -43,7 +43,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.client.model.data.ModelProperty;
 import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
+import net.neoforged.neoforge.common.capabilities.Capabilities;
 import net.neoforged.neoforge.common.util.LazyOptional;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
@@ -473,9 +473,9 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
      */
     private void moveItems(Direction side) {
         // Get our item handler.
-        getCapability(ForgeCapabilities.ITEM_HANDLER, side).resolve().ifPresent(selfHandler -> {
+        getCapability(Capabilities.ITEM_HANDLER, side).resolve().ifPresent(selfHandler -> {
             // Get neighboring item handler.
-            Optional<IItemHandler> otherHandler = getNeighbouringCapability(ForgeCapabilities.ITEM_HANDLER, side).resolve();
+            Optional<IItemHandler> otherHandler = getNeighbouringCapability(Capabilities.ITEM_HANDLER, side).resolve();
 
             if (otherHandler.isPresent()) {
                 // Get side config
@@ -517,9 +517,9 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
      */
     private void moveFluids(Direction side) {
         // Get our fluid handler
-        getCapability(ForgeCapabilities.FLUID_HANDLER, side).resolve().ifPresent(selfHandler -> {
+        getCapability(Capabilities.FLUID_HANDLER, side).resolve().ifPresent(selfHandler -> {
             // Get neighboring fluid handler.
-            Optional<IFluidHandler> otherHandler = getNeighbouringCapability(ForgeCapabilities.FLUID_HANDLER, side).resolve();
+            Optional<IFluidHandler> otherHandler = getNeighbouringCapability(Capabilities.FLUID_HANDLER, side).resolve();
 
             if (otherHandler.isPresent()) {
                 // Get side config

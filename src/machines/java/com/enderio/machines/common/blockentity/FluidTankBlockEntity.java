@@ -25,7 +25,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
+import net.neoforged.neoforge.common.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
@@ -100,7 +100,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
 
     public boolean acceptItemFill(ItemStack item) {
         // bucket types
-        Optional<IFluidHandlerItem> fluidHandlerCap = item.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
+        Optional<IFluidHandlerItem> fluidHandlerCap = item.getCapability(Capabilities.FLUID_HANDLER_ITEM).resolve();
 
         if (fluidHandlerCap.isPresent()) {
             return true;
@@ -119,7 +119,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
 
     public boolean acceptItemDrain(ItemStack item) {
         // bucket types
-        Optional<IFluidHandlerItem> fluidHandlerCap = item.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
+        Optional<IFluidHandlerItem> fluidHandlerCap = item.getCapability(Capabilities.FLUID_HANDLER_ITEM).resolve();
 
         if (fluidHandlerCap.isPresent()) {
             return true;
@@ -204,7 +204,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
                     }
                 }
             } else {
-                Optional<IFluidHandlerItem> fluidHandlerCap = inputItem.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
+                Optional<IFluidHandlerItem> fluidHandlerCap = inputItem.getCapability(Capabilities.FLUID_HANDLER_ITEM).resolve();
                 if (fluidHandlerCap.isPresent() && outputItem.isEmpty()) {
                     IFluidHandlerItem itemFluid = fluidHandlerCap.get();
 
@@ -246,7 +246,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
                     }
                 }
             } else {
-                Optional<IFluidHandlerItem> fluidHandlerCap = inputItem.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
+                Optional<IFluidHandlerItem> fluidHandlerCap = inputItem.getCapability(Capabilities.FLUID_HANDLER_ITEM).resolve();
                 if (fluidHandlerCap.isPresent() && outputItem.isEmpty()) {
                     IFluidHandlerItem itemFluid = fluidHandlerCap.get();
                     int filled = moveFluids(fluidTank, itemFluid, fluidTank.getFluidAmount());

@@ -7,7 +7,7 @@ import com.enderio.machines.common.MachineNBTKeys;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
+import net.neoforged.neoforge.common.capabilities.Capabilities;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.neoforge.common.util.LazyOptional;
 import net.neoforged.neoforge.energy.IEnergyStorage;
@@ -151,7 +151,7 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, IEnderCapabi
 
     @Override
     public Capability<IEnergyStorage> getCapabilityType() {
-        return ForgeCapabilities.ENERGY;
+        return Capabilities.ENERGY;
     }
 
     @Override

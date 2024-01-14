@@ -14,8 +14,8 @@ import com.enderio.core.client.item.IAdvancedTooltipProvider;
 import com.enderio.core.common.util.EntityUtil;
 import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -36,7 +36,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
+import net.neoforged.neoforge.common.capabilities.Capabilities;
 import net.neoforged.neoforge.common.util.LazyOptional;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -257,15 +257,16 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
 
     // region Dispenser
     private static class FillSoulVialDispenseBehavior extends OptionalDispenseItemBehavior {
+        @Override
         protected ItemStack execute(BlockSource source, ItemStack stack) {
-            BlockPos blockpos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
+            BlockPos blockpos = source.pos().relative(source.state().getValue(DispenserBlock.FACING));
             for (LivingEntity livingentity : source
-                .getLevel()
+                .level()
                 .getEntitiesOfClass(LivingEntity.class, new AABB(blockpos), living -> !(living instanceof Player))) {
                 Optional<ItemStack> filledVial = catchEntity(stack, livingentity, component -> {});
                 if (filledVial.isPresent()) {
                     //push filledvial back into dispenser
-                    source.getEntity().getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
+                    source.blockEntity().getCapability(Capabilities.ITEM_HANDLER).ifPresent(handler -> {
                         for (int i = 0; i < handler.getSlots(); i++) {
                             if (handler.insertItem(i, filledVial.get(), true).isEmpty()) {
                                 handler.insertItem(i, filledVial.get(), false);
@@ -283,9 +284,9 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
 
     private static class EmptySoulVialDispenseBehavior extends OptionalDispenseItemBehavior {
         protected ItemStack execute(BlockSource source, ItemStack stack) {
-            Direction dispenserDirection = source.getBlockState().getValue(DispenserBlock.FACING);
+            Direction dispenserDirection = source.state().getValue(DispenserBlock.FACING);
             AtomicReference<ItemStack> emptyVial = new AtomicReference<>();
-            releaseEntity(source.getLevel(), stack, dispenserDirection, source.getPos(), emptyVial::set);
+            releaseEntity(source.level(), stack, dispenserDirection, source.pos(), emptyVial::set);
             if (emptyVial.get() != null) {
                 return emptyVial.get();
             } else {

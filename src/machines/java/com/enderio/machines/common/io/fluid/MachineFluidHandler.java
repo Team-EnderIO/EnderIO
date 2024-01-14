@@ -4,7 +4,7 @@ import com.enderio.api.capability.IEnderCapabilityProvider;
 import com.enderio.api.io.IIOConfig;
 import net.minecraft.core.Direction;
 import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
+import net.neoforged.neoforge.common.capabilities.Capabilities;
 import net.neoforged.neoforge.common.util.LazyOptional;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.IFluidTank;
@@ -108,7 +108,7 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
 
     @Override
     public Capability<IFluidHandler> getCapabilityType() {
-        return ForgeCapabilities.FLUID_HANDLER;
+        return Capabilities.FLUID_HANDLER;
     }
 
     @Override

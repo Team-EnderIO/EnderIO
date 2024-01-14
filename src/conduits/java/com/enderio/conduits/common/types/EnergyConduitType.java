@@ -14,7 +14,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
+import net.neoforged.neoforge.common.capabilities.Capabilities;
 import net.neoforged.neoforge.common.util.LazyOptional;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
@@ -31,7 +31,7 @@ public class EnergyConduitType extends SimpleConduitType<EnergyExtendedData> {
     public ConduitConnectionData getDefaultConnection(Level level, BlockPos pos, Direction direction) {
         BlockEntity blockEntity = level.getBlockEntity(pos.relative(direction));
         if (blockEntity != null) {
-            LazyOptional<IEnergyStorage> capability = blockEntity.getCapability(ForgeCapabilities.ENERGY, direction.getOpposite());
+            LazyOptional<IEnergyStorage> capability = blockEntity.getCapability(Capabilities.ENERGY, direction.getOpposite());
             if (capability.isPresent()) {
                 IEnergyStorage storage = capability.orElseThrow(() -> new RuntimeException("present capability was not found"));
                 return new ConduitConnectionData(storage.canReceive(), storage.canExtract(), RedstoneControl.ALWAYS_ACTIVE);
@@ -43,7 +43,7 @@ public class EnergyConduitType extends SimpleConduitType<EnergyExtendedData> {
 
     @Override
     public <K> Optional<LazyOptional<K>> proxyCapability(Capability<K> cap, EnergyExtendedData extendedConduitData, Level level, BlockPos pos, @Nullable Direction direction, Optional<NodeIdentifier.IOState> state) {
-        if (ForgeCapabilities.ENERGY == cap
+        if (Capabilities.ENERGY == cap
             && state.map(NodeIdentifier.IOState::isExtract).orElse(true)
             && (direction == null || !level.getBlockState(pos.relative(direction)).is(ConduitTags.Blocks.ENERGY_CABLE))) {
                 return Optional.of(extendedConduitData.selfCap.cast());

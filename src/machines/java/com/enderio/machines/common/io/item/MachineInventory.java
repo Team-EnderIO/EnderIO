@@ -5,7 +5,7 @@ import com.enderio.api.io.IIOConfig;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.capabilities.ForgeCapabilities;
+import net.neoforged.neoforge.common.capabilities.Capabilities;
 import net.neoforged.neoforge.common.util.LazyOptional;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
@@ -65,7 +65,7 @@ public class MachineInventory extends ItemStackHandler implements IEnderCapabili
 
     @Override
     public Capability<IItemHandler> getCapabilityType() {
-        return ForgeCapabilities.ITEM_HANDLER;
+        return Capabilities.ITEM_HANDLER;
     }
 
     @Override
