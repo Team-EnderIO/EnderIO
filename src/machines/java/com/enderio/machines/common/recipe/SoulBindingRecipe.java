@@ -9,15 +9,18 @@ import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.blockentity.SoulBinderBlockEntity;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.souldata.SoulDataReloadListener;
-import com.google.gson.JsonObject;
-import net.minecraft.ResourceLocationException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -25,47 +28,43 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.util.LazyOptional;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Container> {
 
-    private final ResourceLocation id;
-    private final Item output;
-    private final Ingredient input;
-    private final int energy;
-    private final int exp;
-    @Nullable private final ResourceLocation entityType;
-    @Nullable private final MobCategory mobCategory;
-    @Nullable private final String souldata;
+    final Item output;
+    final Ingredient input;
+    final int energy;
+    final int exp;
 
-    public SoulBindingRecipe(ResourceLocation id, Item output, Ingredient input, int energy, int exp, @Nullable ResourceLocation entityType,
-        @Nullable MobCategory mobCategory, @Nullable String souldata) {
-        this.id = id;
+
+    @Nullable
+    final ResourceLocation entityType;
+    @Nullable
+    final MobCategory mobCategory;
+    @Nullable
+    final String souldata;
+
+    public SoulBindingRecipe(Item output, Ingredient input, int energy, int exp, Optional<ResourceLocation> entityType,
+        Optional<MobCategory> mobCategory, Optional<String> souldata) {
         this.output = output;
         this.input = input;
         this.energy = energy;
         this.exp = exp;
 
-        if (entityType != null && mobCategory != null) {
-            throw new IllegalStateException("entityType and mobCategory are mutually exclusive!");
-        }
 
-        if (souldata != null && mobCategory != null) {
-            throw new IllegalStateException("souldata and mobCategory are mutually exclusive!");
-        }
 
-        if (entityType != null && souldata != null) {
-            throw new IllegalStateException("entityType and souldata are mutually exclusive!");
+        if (Stream.of(entityType, mobCategory, souldata).filter(Optional::isPresent).count() > 1) {
+            throw new IllegalStateException("entityType, mobCategory and souldata are mutually exclusive! You can only set one");
         }
-
-        this.entityType = entityType;
-        this.mobCategory = mobCategory;
-        this.souldata = souldata;
+        this.entityType = entityType.orElse(null);
+        this.mobCategory = mobCategory.orElse(null);
+        this.souldata = souldata.orElse(null);
     }
 
     public Ingredient getInput() {
@@ -153,7 +152,7 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
                 return false;
             }
 
-            var entityType = ForgeRegistries.ENTITY_TYPES.getValue(type.get());
+            var entityType = BuiltInRegistries.ENTITY_TYPE.get(type.get());
             if (entityType == null) {
                 return false;
             }
@@ -168,11 +167,6 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
         }
 
         return false;
-    }
-
-    @Override
-    public ResourceLocation getId() {
-        return this.id;
     }
 
     @Override
@@ -197,43 +191,28 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
 
     public static class Serializer implements RecipeSerializer<SoulBindingRecipe> {
 
+        private static final Codec<SoulBindingRecipe> CODEC = RecordCodecBuilder.<SoulBindingRecipe>create(instance -> instance.group(
+            BuiltInRegistries.ITEM.byNameCodec().fieldOf("output").forGetter(recipe -> recipe.output),
+            Ingredient.CODEC_NONEMPTY.fieldOf("input").forGetter(recipe -> recipe.input),
+            Codec.INT.fieldOf("energy").forGetter(recipe -> recipe.energy),
+            Codec.INT.fieldOf("exp").forGetter(recipe -> recipe.exp),
+            ExtraCodecs.strictOptionalField(ResourceLocation.CODEC, "entity_type").forGetter(recipe -> Optional.ofNullable(recipe.entityType)),
+            ExtraCodecs.strictOptionalField(MobCategory.CODEC, "mob_category").forGetter(recipe -> Optional.ofNullable(recipe.mobCategory)),
+            ExtraCodecs.strictOptionalField(Codec.STRING, "souldata").forGetter(recipe -> Optional.ofNullable(recipe.souldata))
+        ).apply(instance, SoulBindingRecipe::new));
+
         @Override
-        public SoulBindingRecipe fromJson(ResourceLocation pRecipeId, JsonObject serializedRecipe) {
-
-            ResourceLocation id = new ResourceLocation(serializedRecipe.get("output").getAsString());
-            Item output = ForgeRegistries.ITEMS.getValue(id);
-
-            Ingredient input = Ingredient.fromJson(serializedRecipe.get("input").getAsJsonObject());
-
-            int energy = serializedRecipe.get("energy").getAsInt();
-            int exp = serializedRecipe.get("exp").getAsInt();
-
-            ResourceLocation entityType = null;
-            if (serializedRecipe.has("entity_type")) {
-                entityType = new ResourceLocation(serializedRecipe.get("entity_type").getAsString());
-            }
-
-            MobCategory mobCategory = null;
-            if (serializedRecipe.has("mob_category")) {
-                mobCategory = MobCategory.byName(serializedRecipe.get("mob_category").getAsString());
-            }
-
-            String souldata = null;
-            if (serializedRecipe.has("souldata")) {
-                souldata = serializedRecipe.get("souldata").getAsString();
-            }
-
-            return new SoulBindingRecipe(pRecipeId, output, input, energy, exp, entityType, mobCategory, souldata);
+        public Codec<SoulBindingRecipe> codec() {
+            return CODEC;
         }
 
-        @Nullable
         @Override
-        public SoulBindingRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
+        public @Nullable SoulBindingRecipe fromNetwork(FriendlyByteBuf buffer) {
             try {
                 ResourceLocation outputId = buffer.readResourceLocation();
-                Item output = ForgeRegistries.ITEMS.getValue(outputId);
-                if (output == null) {
-                    throw new ResourceLocationException("The output of recipe " + recipeId + " does not exist.");
+                Item output = BuiltInRegistries.ITEM.get(outputId);
+                if (output == Items.AIR) {
+                    return null;
                 }
                 Ingredient input = Ingredient.fromNetwork(buffer);
                 int energy = buffer.readInt();
@@ -255,17 +234,17 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
                     souldata = buffer.readUtf();
                 }
 
-                return new SoulBindingRecipe(recipeId, output, input, energy, exp, entityType, mobCategory, souldata);
+                return new SoulBindingRecipe(output, input, energy, exp, Optional.ofNullable(entityType), Optional.ofNullable(mobCategory), Optional.ofNullable(souldata));
             } catch (Exception ex) {
                 EnderIO.LOGGER.error("Error reading soul binding recipe from packet.", ex);
-                throw ex;
+                return null;
             }
         }
 
         @Override
         public void toNetwork(FriendlyByteBuf buffer, SoulBindingRecipe recipe) {
             try {
-                buffer.writeResourceLocation(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(recipe.output)));
+                buffer.writeResourceLocation(BuiltInRegistries.ITEM.getKey(recipe.output));
                 recipe.input.toNetwork(buffer);
                 buffer.writeInt(recipe.energy);
                 buffer.writeInt(recipe.exp);

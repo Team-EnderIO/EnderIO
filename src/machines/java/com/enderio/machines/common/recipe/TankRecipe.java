@@ -5,12 +5,16 @@ import com.enderio.core.common.recipes.EnderRecipe;
 import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ResourceLocationException;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -20,21 +24,18 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
 public class TankRecipe implements EnderRecipe<TankRecipe.Container> {
 
-    private final ResourceLocation id;
-    private final Ingredient input;
-    private final Item output;
-    private final FluidStack fluid;
-    private final boolean isEmptying;
+    final Ingredient input;
+    final Item output;
+    final FluidStack fluid;
+    final boolean isEmptying;
 
-    public TankRecipe(ResourceLocation id, Ingredient input, Item output, FluidStack fluid, boolean isEmptying) {
-        this.id = id;
+    public TankRecipe(Ingredient input, Item output, FluidStack fluid, boolean isEmptying) {
         this.input = input;
         this.output = output;
         this.fluid = fluid;
@@ -85,11 +86,6 @@ public class TankRecipe implements EnderRecipe<TankRecipe.Container> {
     }
 
     @Override
-    public ResourceLocation getId() {
-        return id;
-    }
-
-    @Override
     public RecipeSerializer<?> getSerializer() {
         return MachineRecipes.TANK.serializer().get();
     }
@@ -115,41 +111,37 @@ public class TankRecipe implements EnderRecipe<TankRecipe.Container> {
 
     public static class Serializer implements RecipeSerializer<TankRecipe> {
 
+        private static final Codec<TankRecipe> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Ingredient.CODEC_NONEMPTY.fieldOf("input").forGetter(recipe -> recipe.input),
+            BuiltInRegistries.ITEM.byNameCodec().fieldOf("output").forGetter(recipe -> recipe.output),
+            FluidStack.CODEC.fieldOf("fluid").forGetter(recipe -> recipe.fluid),
+            Codec.BOOL.fieldOf("is_emptying").forGetter(recipe -> recipe.isEmptying)
+        ).apply(instance, TankRecipe::new));
+
         @Override
-        public TankRecipe fromJson(ResourceLocation recipeId, JsonObject serializedRecipe) {
-            Ingredient input = Ingredient.fromJson(serializedRecipe.get("input").getAsJsonObject());
-
-            ResourceLocation id = new ResourceLocation(serializedRecipe.get("output").getAsString());
-            Item output = ForgeRegistries.ITEMS.getValue(id);
-
-            JsonObject fluidJson = serializedRecipe.get("fluid").getAsJsonObject();
-            ResourceLocation fluidId = new ResourceLocation(fluidJson.get("fluid").getAsString());
-            FluidStack fluid = new FluidStack(ForgeRegistries.FLUIDS.getValue(fluidId), fluidJson.get("amount").getAsInt());
-
-            boolean isEmptying = serializedRecipe.get("is_emptying").getAsBoolean();
-
-            return new TankRecipe(recipeId, input, output, fluid, isEmptying);
+        public Codec<TankRecipe> codec() {
+            return CODEC;
         }
 
         @Override
-        public @Nullable TankRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
+        public @Nullable TankRecipe fromNetwork(FriendlyByteBuf buffer) {
             try {
                 Ingredient input = Ingredient.fromNetwork(buffer);
 
                 ResourceLocation outputId = buffer.readResourceLocation();
-                Item output = ForgeRegistries.ITEMS.getValue(outputId);
-                if (output == null) {
-                    throw new ResourceLocationException("The output of recipe " + recipeId + " does not exist.");
+                Item output = BuiltInRegistries.ITEM.get(outputId);
+                if (output == Items.AIR) {
+                    return null;
                 }
 
                 FluidStack fluid = FluidStack.readFromPacket(buffer);
 
                 boolean isEmptying = buffer.readBoolean();
 
-                return new TankRecipe(recipeId, input, output, fluid, isEmptying);
+                return new TankRecipe(input, output, fluid, isEmptying);
             } catch (Exception ex) {
                 EnderIO.LOGGER.error("Error reading tank recipe from packet.", ex);
-                throw ex;
+                return null;
             }
         }
 
@@ -157,7 +149,7 @@ public class TankRecipe implements EnderRecipe<TankRecipe.Container> {
         public void toNetwork(FriendlyByteBuf buffer, TankRecipe recipe) {
             try {
                 recipe.input.toNetwork(buffer);
-                buffer.writeResourceLocation(Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(recipe.output)));
+                buffer.writeResourceLocation(Objects.requireNonNull(BuiltInRegistries.ITEM.getKey(recipe.output)));
                 recipe.fluid.writeToPacket(buffer);
                 buffer.writeBoolean(recipe.isEmptying);
             } catch (Exception ex) {

@@ -334,7 +334,7 @@ public class ConduitSavedData extends SavedData {
             // Refined Storage's RSSavedData's system of saving first to a temp file
             // to reduce the odds of corruption if the user's computer crashes while the file is being written
 
-            //Thanks pupnewster
+            //Thanks pupnewfster
             File tempFile = file.toPath().getParent().resolve(file.getName() + ".tmp").toFile();
             super.save(tempFile);
             if (file.exists() && !file.delete()) {

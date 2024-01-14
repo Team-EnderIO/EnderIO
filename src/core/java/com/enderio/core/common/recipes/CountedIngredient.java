@@ -1,6 +1,8 @@
 package com.enderio.core.common.recipes;
 
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -20,6 +22,11 @@ import java.util.stream.Stream;
  * An ingredient with an item count associated with it.
  */
 public record CountedIngredient(Ingredient ingredient, int count) implements Predicate<ItemStack> {
+
+    public static final Codec<CountedIngredient> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+        Ingredient.CODEC.fieldOf("ingredient").forGetter(CountedIngredient::ingredient),
+        Codec.INT.fieldOf("count").forGetter(CountedIngredient::count)
+    ).apply(instance, CountedIngredient::new));
 
     /**
      * An empty ingredient.
@@ -81,17 +88,6 @@ public record CountedIngredient(Ingredient ingredient, int count) implements Pre
     @Override
     public boolean test(@Nullable ItemStack itemStack) {
         return ingredient.test(itemStack) && itemStack.getCount() >= count;
-    }
-
-    public static CountedIngredient fromJson(JsonObject json) {
-        return new CountedIngredient(Ingredient.fromJson(json.get("ingredient"), true), json.get("count").getAsInt());
-    }
-
-    public JsonObject toJson() {
-        JsonObject json = new JsonObject();
-        json.add("ingredient", ingredient.toJson(true));
-        json.addProperty("count", count);
-        return json;
     }
 
     public static CountedIngredient fromNetwork(FriendlyByteBuf buffer) {

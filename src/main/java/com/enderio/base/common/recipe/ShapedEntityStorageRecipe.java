@@ -4,6 +4,8 @@ import com.enderio.api.capability.IEntityStorage;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIORecipes;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -23,13 +25,9 @@ import java.util.Set;
  */
 public class ShapedEntityStorageRecipe extends ShapedRecipe {
 
-    public static final Set<ResourceLocation> REGISTERED_RECIPES = new LinkedHashSet<>();
-
     public ShapedEntityStorageRecipe(ShapedRecipe recipe) {
-        super(recipe.getId(), recipe.getGroup(), recipe.category(), recipe.getRecipeWidth(), recipe.getRecipeHeight(), recipe.getIngredients(),
+        super(recipe.getGroup(), recipe.category(), recipe.getRecipeWidth(), recipe.getRecipeHeight(), recipe.getIngredients(),
             recipe.result); // Gross, but better than always passing null
-
-        REGISTERED_RECIPES.add(recipe.getId());
     }
 
     @Override
@@ -72,16 +70,21 @@ public class ShapedEntityStorageRecipe extends ShapedRecipe {
         return EIORecipes.SHAPED_ENTITY_STORAGE.get();
     }
 
+
     public static class Serializer implements RecipeSerializer<ShapedEntityStorageRecipe> {
 
-        @Override
-        public ShapedEntityStorageRecipe fromJson(ResourceLocation pRecipeId, JsonObject pSerializedRecipe) {
-            return new ShapedEntityStorageRecipe(RecipeSerializer.SHAPED_RECIPE.fromJson(pRecipeId, pSerializedRecipe));
-        }
+        public static final Codec<ShapedEntityStorageRecipe> CODEC = RecordCodecBuilder.create(inst -> inst.group(
+                RecipeSerializer.SHAPED_RECIPE.codec().fieldOf("recipe").forGetter(r -> r)
+            ).apply(inst, ShapedEntityStorageRecipe::new)
+        );
 
         @Override
-        public @Nullable ShapedEntityStorageRecipe fromNetwork(ResourceLocation pRecipeId, FriendlyByteBuf pBuffer) {
-            var shaped = RecipeSerializer.SHAPED_RECIPE.fromNetwork(pRecipeId, pBuffer);
+        public Codec<ShapedEntityStorageRecipe> codec() {
+            return CODEC;
+        }
+        @Override
+        public @Nullable ShapedEntityStorageRecipe fromNetwork(FriendlyByteBuf pBuffer) {
+            var shaped = RecipeSerializer.SHAPED_RECIPE.fromNetwork(pBuffer);
             if (shaped == null) {
                 return null;
             }

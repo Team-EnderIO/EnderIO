@@ -6,6 +6,7 @@ import net.minecraft.Util;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
@@ -81,9 +82,9 @@ public class SlicerRecipeManager {
             nonoptimizableingredient.clear();
         }
 
-        for (SlicingRecipe slicingRecipe : manager.getAllRecipesFor(MachineRecipes.SLICING.type().get())) {
+        for (RecipeHolder<SlicingRecipe> slicingRecipe : manager.getAllRecipesFor(MachineRecipes.SLICING.type().get())) {
             for (int i = 0; i < 6; i++) {
-                Ingredient ingredient = slicingRecipe.getInputs().get(i);
+                Ingredient ingredient = slicingRecipe.value().getInputs().get(i);
                 if (ingredient.isSimple()) {
                     Set<Item> itemset = ITEMS.get(i);
                     Arrays.stream(ingredient.getItems()).map(ItemStack::getItem).forEach(itemset::add);

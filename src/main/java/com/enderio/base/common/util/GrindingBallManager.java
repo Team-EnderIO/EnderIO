@@ -2,6 +2,7 @@ package com.enderio.base.common.util;
 
 import com.enderio.api.grindingball.IGrindingBallData;
 import com.enderio.base.common.init.EIORecipes;
+import com.enderio.base.common.recipe.GrindingBallRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -72,8 +73,10 @@ public class GrindingBallManager {
         // Discover all grindingballs again.
         manager.getAllRecipesFor(EIORecipes.GRINDING_BALL.type().get())
             .forEach(grindingBallRecipe -> {
-                ITEM_TO_DATA.put(grindingBallRecipe.getItem(), grindingBallRecipe);
-                ID_TO_DATA.put(grindingBallRecipe.getGrindingBallId(), grindingBallRecipe);
+                GrindingBallRecipe value = grindingBallRecipe.value();
+                ITEM_TO_DATA.put(value.getItem(), value);
+                ID_TO_DATA.put(grindingBallRecipe.id(), value);
+                value.setGrindingBallId(grindingBallRecipe.id());
             });
     }
 }

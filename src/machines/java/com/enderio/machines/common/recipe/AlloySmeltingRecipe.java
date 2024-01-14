@@ -7,36 +7,30 @@ import com.enderio.machines.common.blockentity.AlloySmelterBlockEntity;
 import com.enderio.machines.common.blockentity.PrimitiveAlloySmelterBlockEntity;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.crafting.CraftingHelper;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.ContainerWrapper> {
 
-    private final ResourceLocation id;
     private final List<CountedIngredient> inputs;
     private final ItemStack output;
     private final int energy;
     private final float experience;
 
-    public AlloySmeltingRecipe(ResourceLocation id, List<CountedIngredient> inputs, ItemStack output, int energy, float experience) {
-        this.id = id;
+    public AlloySmeltingRecipe(List<CountedIngredient> inputs, ItemStack output, int energy, float experience) {
         this.inputs = inputs;
         this.output = output;
         this.energy = energy;
@@ -115,10 +109,6 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
         return List.of(OutputStack.of(output.copy()));
     }
 
-    @Override
-    public ResourceLocation getId() {
-        return id;
-    }
 
     @Override
     public RecipeSerializer<?> getSerializer() {
@@ -159,36 +149,26 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
     }
 
     public static class Serializer implements RecipeSerializer<AlloySmeltingRecipe> {
+        public static final Codec<AlloySmeltingRecipe> CODEC = RecordCodecBuilder.create(inst -> inst.group(
+                CountedIngredient.CODEC.listOf().fieldOf("inputs").forGetter(AlloySmeltingRecipe::getInputs),
+                ItemStack.CODEC.fieldOf("output").forGetter(obj -> obj.output), Codec.INT.fieldOf("energy").forGetter(obj -> obj.energy),
+                Codec.FLOAT.fieldOf("experience").forGetter(AlloySmeltingRecipe::getExperience))
+            .apply(inst, AlloySmeltingRecipe::new));
 
         @Override
-        public AlloySmeltingRecipe fromJson(ResourceLocation recipeId, JsonObject serializedRecipe) {
-            // Load ingredients
-            JsonArray jsonInputs = serializedRecipe.getAsJsonArray("inputs");
-            List<CountedIngredient> inputs = new ArrayList<>(jsonInputs.size());
-            for (int i = 0; i < jsonInputs.size(); i++) {
-                inputs.add(i, CountedIngredient.fromJson(jsonInputs.get(i).getAsJsonObject()));
-            }
-
-            // Load result, energy and experience.
-            ItemStack result = CraftingHelper.getItemStack(serializedRecipe.getAsJsonObject("result"), true);
-            int energy = serializedRecipe.get("energy").getAsInt();
-            float experience = serializedRecipe.get("experience").getAsFloat();
-            return new AlloySmeltingRecipe(recipeId, inputs, result, energy, experience);
+        public Codec<AlloySmeltingRecipe> codec() {
+            return CODEC;
         }
 
-        @Nullable
         @Override
-        public AlloySmeltingRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-            try {
-                List<CountedIngredient> ingredients = buffer.readList(CountedIngredient::fromNetwork);
-                ItemStack result = buffer.readItem();
-                int energy = buffer.readInt();
-                float experience = buffer.readFloat();
-                return new AlloySmeltingRecipe(recipeId, ingredients, result, energy, experience);
-            } catch (Exception ex) {
-                EnderIO.LOGGER.error("Error reading alloy smelting recipe from packet.", ex);
-                throw ex;
-            }
+        @Nullable
+        public AlloySmeltingRecipe fromNetwork(FriendlyByteBuf buffer) {
+            List<CountedIngredient> ingredients = buffer.readList(CountedIngredient::fromNetwork);
+            ItemStack result = buffer.readItem();
+            int energy = buffer.readInt();
+            float experience = buffer.readFloat();
+            return new AlloySmeltingRecipe( ingredients, result, energy, experience);
+
         }
 
         @Override
