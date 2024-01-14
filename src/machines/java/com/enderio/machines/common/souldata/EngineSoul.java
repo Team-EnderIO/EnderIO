@@ -28,7 +28,7 @@ public class EngineSoul {
     public static final SoulDataReloadListener<SoulData> ENGINE = new SoulDataReloadListener<>(NAME, CODEC);
 
     @SubscribeEvent
-    static void addResource(AddReloadListenerEvent event) {
+    public static void addResource(AddReloadListenerEvent event) {
         event.addListener(ENGINE);
     }
 }

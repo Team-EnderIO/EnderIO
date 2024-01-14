@@ -4,8 +4,9 @@ import com.enderio.core.common.network.Packet;
 import com.enderio.machines.common.menu.CrafterMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.NetworkDirection;
+import net.neoforged.neoforge.network.INetworkDirection;
 import net.neoforged.neoforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.PlayNetworkDirection;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,8 +46,8 @@ public class UpdateCrafterTemplatePacket implements Packet {
         }
 
         @Override
-        public Optional<NetworkDirection> getDirection() {
-            return Optional.of(NetworkDirection.PLAY_TO_SERVER);
+        public Optional<INetworkDirection<?>> getDirection() {
+            return Optional.of(PlayNetworkDirection.PLAY_TO_SERVER);
         }
     }
 }

@@ -5,8 +5,9 @@ import com.enderio.machines.common.blockentity.task.SpawnerMachineTask;
 import com.enderio.machines.common.souldata.SpawnerSoul;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.network.NetworkDirection;
+import net.neoforged.neoforge.network.INetworkDirection;
 import net.neoforged.neoforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.PlayNetworkDirection;
 
 import java.util.Map;
 import java.util.Optional;
@@ -34,7 +35,7 @@ public class PoweredSpawnerSoulPacket implements Packet {
 
     @Override
     public boolean isValid(NetworkEvent.Context context) {
-        return context.getDirection() == NetworkDirection.PLAY_TO_CLIENT;
+        return context.getDirection() == PlayNetworkDirection.PLAY_TO_CLIENT;
     }
 
     @Override
@@ -56,8 +57,8 @@ public class PoweredSpawnerSoulPacket implements Packet {
         }
 
         @Override
-        public Optional<NetworkDirection> getDirection() {
-            return Optional.of(NetworkDirection.PLAY_TO_CLIENT);
+        public Optional<INetworkDirection<?>> getDirection() {
+            return Optional.of(PlayNetworkDirection.PLAY_TO_CLIENT);
         }
     }
 }

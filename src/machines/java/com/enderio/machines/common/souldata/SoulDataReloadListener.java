@@ -32,7 +32,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.neoforged.neoforge.common.MinecraftForge;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -106,7 +106,7 @@ public class SoulDataReloadListener<T extends ISoulData> extends SimpleJsonResou
      * @return this manager object
      */
     public <P extends Packet> SoulDataReloadListener<T> subscribeAsSyncable(final Function<Map<ResourceLocation, T>, P> packetFactory) {
-        MinecraftForge.EVENT_BUS.addListener(this.getDatapackSyncListener(packetFactory));
+        NeoForge.EVENT_BUS.addListener(this.getDatapackSyncListener(packetFactory));
         return this;
     }
 
