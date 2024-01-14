@@ -4,7 +4,7 @@ import com.enderio.api.capability.IDarkSteelUpgrade;
 import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.lang.ArmoryLang;
 import net.minecraft.network.chat.Component;
-import net.neoforged.neoforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.function.Supplier;
 
@@ -28,13 +28,13 @@ public enum EmpoweredUpgradeTier implements IUpgradeTier {
         ArmoryLang.DS_UPGRADE_EMPOWERED_IV);
 
     private final Supplier<IDarkSteelUpgrade> factory;
-    private final ForgeConfigSpec.ConfigValue<Integer> maxStorage;
-    private final ForgeConfigSpec.ConfigValue<Float> damageAbsorptionChance;
-    private final ForgeConfigSpec.ConfigValue<Integer> activationCost;
+    private final ModConfigSpec.ConfigValue<Integer> maxStorage;
+    private final ModConfigSpec.ConfigValue<Float> damageAbsorptionChance;
+    private final ModConfigSpec.ConfigValue<Integer> activationCost;
     private final Component displayName;
 
-    EmpoweredUpgradeTier(ForgeConfigSpec.ConfigValue<Integer> maxStorage, ForgeConfigSpec.ConfigValue<Float> damageAbsorptionChance,
-        ForgeConfigSpec.ConfigValue<Integer> activationCost, Component displayName) {
+    EmpoweredUpgradeTier(ModConfigSpec.ConfigValue<Integer> maxStorage, ModConfigSpec.ConfigValue<Float> damageAbsorptionChance,
+        ModConfigSpec.ConfigValue<Integer> activationCost, Component displayName) {
         this.maxStorage = maxStorage;
         this.damageAbsorptionChance = damageAbsorptionChance;
         this.activationCost = activationCost;
@@ -59,7 +59,7 @@ public enum EmpoweredUpgradeTier implements IUpgradeTier {
         return ordinal();
     }
 
-    public ForgeConfigSpec.ConfigValue<Integer> getActivationCost() {
+    public ModConfigSpec.ConfigValue<Integer> getActivationCost() {
         return activationCost;
     }
 

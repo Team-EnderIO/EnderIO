@@ -25,7 +25,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.TierSortingRegistry;
 import net.neoforged.neoforge.common.ToolActions;
 
@@ -33,11 +33,11 @@ import java.util.List;
 
 public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem, ITabVariants {
 
-    private final ForgeConfigSpec.ConfigValue<Integer> obsidianBreakPowerUse = ArmoryConfig.COMMON.DARK_STEEL_PICKAXE_OBSIDIAN_ENERGY_COST;
+    private final ModConfigSpec.ConfigValue<Integer> obsidianBreakPowerUse = ArmoryConfig.COMMON.DARK_STEEL_PICKAXE_OBSIDIAN_ENERGY_COST;
 
-    private final ForgeConfigSpec.ConfigValue<Integer> speedBoostWhenObsidian = ArmoryConfig.COMMON.DARK_STEEL_PICKAXE_OBSIDIAN_SPEED;
+    private final ModConfigSpec.ConfigValue<Integer> speedBoostWhenObsidian = ArmoryConfig.COMMON.DARK_STEEL_PICKAXE_OBSIDIAN_SPEED;
 
-    private final ForgeConfigSpec.ConfigValue<Integer> useObsidianBreakSpeedAtHardness = ArmoryConfig.COMMON.DARK_STEEL_PICKAXE_AS_OBSIDIAN_AT_HARDNESS;
+    private final ModConfigSpec.ConfigValue<Integer> useObsidianBreakSpeedAtHardness = ArmoryConfig.COMMON.DARK_STEEL_PICKAXE_AS_OBSIDIAN_AT_HARDNESS;
 
     public DarkSteelPickaxeItem(Properties pProperties) {
         super(ArmoryItems.DARK_STEEL_TIER, 1, -2.8F, pProperties);

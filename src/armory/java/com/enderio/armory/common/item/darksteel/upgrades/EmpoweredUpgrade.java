@@ -6,7 +6,7 @@ import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.neoforged.neoforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.energy.EnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,9 +23,9 @@ public class EmpoweredUpgrade extends TieredUpgrade<EmpoweredUpgradeTier> {
 
     private static final Random RANDOM = new Random();
 
-    private final ForgeConfigSpec.ConfigValue<Integer> speedBoostWhenPowered = ArmoryConfig.COMMON.EMPOWERED_EFFICIENCY_BOOST;
+    private final ModConfigSpec.ConfigValue<Integer> speedBoostWhenPowered = ArmoryConfig.COMMON.EMPOWERED_EFFICIENCY_BOOST;
 
-    private final ForgeConfigSpec.ConfigValue<Integer> powerUsePerDamagePoint = ArmoryConfig.COMMON.EMPOWERED_ENERGY_PER_DAMAGE;
+    private final ModConfigSpec.ConfigValue<Integer> powerUsePerDamagePoint = ArmoryConfig.COMMON.EMPOWERED_ENERGY_PER_DAMAGE;
 
     @Nullable
     private EnergyStorage storage;

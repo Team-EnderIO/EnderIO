@@ -1,44 +1,44 @@
 package com.enderio.armory.common.config.common;
 
-import net.neoforged.neoforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class ArmoryCommonConfig {
 
-    public final ForgeConfigSpec.ConfigValue<Integer> DARK_STEEL_AXE_ENERGY_PER_FELLED_LOG;
-    public final ForgeConfigSpec.ConfigValue<Integer> DARK_STEEL_PICKAXE_OBSIDIAN_ENERGY_COST;
-    public final ForgeConfigSpec.ConfigValue<Integer> DARK_STEEL_PICKAXE_OBSIDIAN_SPEED;
-    public final ForgeConfigSpec.ConfigValue<Integer> DARK_STEEL_PICKAXE_AS_OBSIDIAN_AT_HARDNESS;
+    public final ModConfigSpec.ConfigValue<Integer> DARK_STEEL_AXE_ENERGY_PER_FELLED_LOG;
+    public final ModConfigSpec.ConfigValue<Integer> DARK_STEEL_PICKAXE_OBSIDIAN_ENERGY_COST;
+    public final ModConfigSpec.ConfigValue<Integer> DARK_STEEL_PICKAXE_OBSIDIAN_SPEED;
+    public final ModConfigSpec.ConfigValue<Integer> DARK_STEEL_PICKAXE_AS_OBSIDIAN_AT_HARDNESS;
 
-    public final ForgeConfigSpec.ConfigValue<Integer> EMPOWERED_EFFICIENCY_BOOST;
-    public final ForgeConfigSpec.ConfigValue<Integer> EMPOWERED_ENERGY_PER_DAMAGE;
-    public final ForgeConfigSpec.ConfigValue<Integer> EMPOWERED_ACTIVATION_COST_I;
-    public final ForgeConfigSpec.ConfigValue<Float> EMPOWERED_DAMAGE_ABSORPTION_CHANCE_I;
-    public final ForgeConfigSpec.ConfigValue<Integer> EMPOWERED_MAX_ENERGY_I;
-    public final ForgeConfigSpec.ConfigValue<Integer> EMPOWERED_ACTIVATION_COST_II;
-    public final ForgeConfigSpec.ConfigValue<Float> EMPOWERED_DAMAGE_ABSORPTION_CHANCE_II;
-    public final ForgeConfigSpec.ConfigValue<Integer> EMPOWERED_MAX_ENERGY_II;
-    public final ForgeConfigSpec.ConfigValue<Integer> EMPOWERED_ACTIVATION_COST_III;
-    public final ForgeConfigSpec.ConfigValue<Float> EMPOWERED_DAMAGE_ABSORPTION_CHANCE_III;
-    public final ForgeConfigSpec.ConfigValue<Integer> EMPOWERED_MAX_ENERGY_III;
-    public final ForgeConfigSpec.ConfigValue<Integer> EMPOWERED_ACTIVATION_COST_IV;
-    public final ForgeConfigSpec.ConfigValue<Float> EMPOWERED_DAMAGE_ABSORPTION_CHANCE_IV;
-    public final ForgeConfigSpec.ConfigValue<Integer> EMPOWERED_MAX_ENERGY_IV;
+    public final ModConfigSpec.ConfigValue<Integer> EMPOWERED_EFFICIENCY_BOOST;
+    public final ModConfigSpec.ConfigValue<Integer> EMPOWERED_ENERGY_PER_DAMAGE;
+    public final ModConfigSpec.ConfigValue<Integer> EMPOWERED_ACTIVATION_COST_I;
+    public final ModConfigSpec.ConfigValue<Float> EMPOWERED_DAMAGE_ABSORPTION_CHANCE_I;
+    public final ModConfigSpec.ConfigValue<Integer> EMPOWERED_MAX_ENERGY_I;
+    public final ModConfigSpec.ConfigValue<Integer> EMPOWERED_ACTIVATION_COST_II;
+    public final ModConfigSpec.ConfigValue<Float> EMPOWERED_DAMAGE_ABSORPTION_CHANCE_II;
+    public final ModConfigSpec.ConfigValue<Integer> EMPOWERED_MAX_ENERGY_II;
+    public final ModConfigSpec.ConfigValue<Integer> EMPOWERED_ACTIVATION_COST_III;
+    public final ModConfigSpec.ConfigValue<Float> EMPOWERED_DAMAGE_ABSORPTION_CHANCE_III;
+    public final ModConfigSpec.ConfigValue<Integer> EMPOWERED_MAX_ENERGY_III;
+    public final ModConfigSpec.ConfigValue<Integer> EMPOWERED_ACTIVATION_COST_IV;
+    public final ModConfigSpec.ConfigValue<Float> EMPOWERED_DAMAGE_ABSORPTION_CHANCE_IV;
+    public final ModConfigSpec.ConfigValue<Integer> EMPOWERED_MAX_ENERGY_IV;
 
-    public final ForgeConfigSpec.ConfigValue<Integer> EXPLOSIVE_RADIUS_ACTIVATION_COST_I;
-    public final ForgeConfigSpec.ConfigValue<Integer> EXPLOSIVE_I;
-    public final ForgeConfigSpec.ConfigValue<Integer> EXPLOSIVE_ACTIVATION_COST_II;
-    public final ForgeConfigSpec.ConfigValue<Integer> EXPLOSIVE_II;
-    public final ForgeConfigSpec.ConfigValue<Integer> EXPLOSIVE_PENETRATION_ACTIVATION_COST_I;
-    public final ForgeConfigSpec.ConfigValue<Integer> EXPLOSIVE_PENETRATION_I;
-    public final ForgeConfigSpec.ConfigValue<Integer> EXPLOSIVE_PENETRATION_ACTIVATION_COST_II;
-    public final ForgeConfigSpec.ConfigValue<Integer> EXPLOSIVE_PENETRATION_II;
-    public final ForgeConfigSpec.ConfigValue<Integer> EXPLOSIVE_ENERGY_PER_EXPLODED_BLOCK;
+    public final ModConfigSpec.ConfigValue<Integer> EXPLOSIVE_RADIUS_ACTIVATION_COST_I;
+    public final ModConfigSpec.ConfigValue<Integer> EXPLOSIVE_I;
+    public final ModConfigSpec.ConfigValue<Integer> EXPLOSIVE_ACTIVATION_COST_II;
+    public final ModConfigSpec.ConfigValue<Integer> EXPLOSIVE_II;
+    public final ModConfigSpec.ConfigValue<Integer> EXPLOSIVE_PENETRATION_ACTIVATION_COST_I;
+    public final ModConfigSpec.ConfigValue<Integer> EXPLOSIVE_PENETRATION_I;
+    public final ModConfigSpec.ConfigValue<Integer> EXPLOSIVE_PENETRATION_ACTIVATION_COST_II;
+    public final ModConfigSpec.ConfigValue<Integer> EXPLOSIVE_PENETRATION_II;
+    public final ModConfigSpec.ConfigValue<Integer> EXPLOSIVE_ENERGY_PER_EXPLODED_BLOCK;
 
-    public final ForgeConfigSpec.ConfigValue<Integer> SPOON_ACTIVATION_COST;
-    public final ForgeConfigSpec.ConfigValue<Integer> FORK_ACTIVATION_COST;
-    public final ForgeConfigSpec.ConfigValue<Integer> DIRECT_ACTIVATION_COST;
+    public final ModConfigSpec.ConfigValue<Integer> SPOON_ACTIVATION_COST;
+    public final ModConfigSpec.ConfigValue<Integer> FORK_ACTIVATION_COST;
+    public final ModConfigSpec.ConfigValue<Integer> DIRECT_ACTIVATION_COST;
 
-    public ArmoryCommonConfig(ForgeConfigSpec.Builder builder) {
+    public ArmoryCommonConfig(ModConfigSpec.Builder builder) {
         builder.push("darksteel");
 
         builder.push("darksteelaxe");

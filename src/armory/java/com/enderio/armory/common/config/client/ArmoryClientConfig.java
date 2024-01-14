@@ -1,9 +1,9 @@
 package com.enderio.armory.common.config.client;
 
-import net.neoforged.neoforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class ArmoryClientConfig {
-    public ArmoryClientConfig(ForgeConfigSpec.Builder builder) {
+    public ArmoryClientConfig(ModConfigSpec.Builder builder) {
 
     }
 }

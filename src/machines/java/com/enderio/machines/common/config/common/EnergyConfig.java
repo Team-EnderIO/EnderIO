@@ -1,45 +1,45 @@
 package com.enderio.machines.common.config.common;
 
-import net.neoforged.neoforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class EnergyConfig {
-    public final ForgeConfigSpec.ConfigValue<Integer> ALLOY_SMELTER_CAPACITY;
-    public final ForgeConfigSpec.ConfigValue<Integer> ALLOY_SMELTER_USAGE;
-    public final ForgeConfigSpec.ConfigValue<Integer> ALLOY_SMELTER_VANILLA_ITEM_ENERGY;
-    public final ForgeConfigSpec.ConfigValue<Integer> CRAFTER_CAPACITY;
-    public final ForgeConfigSpec.ConfigValue<Integer> CRAFTER_USAGE;
-    public final ForgeConfigSpec.ConfigValue<Integer> CRAFTING_RECIPE_COST;
-    public final ForgeConfigSpec.ConfigValue<Integer> IMPULSE_HOPPER_CAPACITY;
-    public final ForgeConfigSpec.ConfigValue<Integer> IMPULSE_HOPPER_USAGE;
-    public final ForgeConfigSpec.ConfigValue<Integer> POWERED_SPAWNER_CAPACITY;
-    public final ForgeConfigSpec.ConfigValue<Integer> POWERED_SPAWNER_USAGE;
-    public final ForgeConfigSpec.ConfigValue<Integer> SAG_MILL_CAPACITY;
-    public final ForgeConfigSpec.ConfigValue<Integer> SAG_MILL_USAGE;
-    public final ForgeConfigSpec.ConfigValue<Integer> SLICER_CAPACITY;
-    public final ForgeConfigSpec.ConfigValue<Integer> SLICER_USAGE;
-    public final ForgeConfigSpec.ConfigValue<Integer> SOUL_BINDER_CAPACITY;
-    public final ForgeConfigSpec.ConfigValue<Integer> SOUL_BINDER_USAGE;
-    public final ForgeConfigSpec.ConfigValue<Integer> STIRLING_GENERATOR_CAPACITY;
-    public final ForgeConfigSpec.ConfigValue<Double> STIRLING_GENERATOR_BURN_SPEED;
-    public final ForgeConfigSpec.ConfigValue<Integer> STIRLING_GENERATOR_PRODUCTION;
-    public final ForgeConfigSpec.ConfigValue<Integer> PAINTING_MACHINE_CAPACITY;
-    public final ForgeConfigSpec.ConfigValue<Integer> PAINTING_MACHINE_USAGE;
-    public final ForgeConfigSpec.ConfigValue<Integer> PAINTING_MACHINE_ENERGY_COST;
-    public final ForgeConfigSpec.ConfigValue<Integer> ENERGETIC_SOLAR_PANEL_MAX_PRODUCTION;
-    public final ForgeConfigSpec.ConfigValue<Integer> PULSATING_SOLAR_PANEL_MAX_PRODUCTION;
-    public final ForgeConfigSpec.ConfigValue<Integer> VIBRANT_SOLAR_PANEL_MAX_PRODUCTION;
-    public final ForgeConfigSpec.ConfigValue<Integer> BASIC_CAPACITOR_BANK_CAPACITY;
-    public final ForgeConfigSpec.ConfigValue<Integer> ADVANCED_CAPACITOR_BANK_CAPACITY;
-    public final ForgeConfigSpec.ConfigValue<Integer> VIBRANT_CAPACITOR_BANK_CAPACITY;
-    public final ForgeConfigSpec.ConfigValue<Integer> WIRED_CHARGER_CAPACITY;
-    public final ForgeConfigSpec.ConfigValue<Integer> WIRED_CHARGER_USAGE;
-    public final ForgeConfigSpec.ConfigValue<Integer> SOUL_ENGINE_CAPACITY;
-    public final ForgeConfigSpec.ConfigValue<Integer> SOUL_ENGINE_BURN_SPEED;
-    public final ForgeConfigSpec.ConfigValue<Double> SOUL_ENGINE_GENERATION;
-    public final ForgeConfigSpec.ConfigValue<Integer> DRAIN_CAPACITY;
-    public final ForgeConfigSpec.ConfigValue<Integer> DRAIN_USAGE;
+    public final ModConfigSpec.ConfigValue<Integer> ALLOY_SMELTER_CAPACITY;
+    public final ModConfigSpec.ConfigValue<Integer> ALLOY_SMELTER_USAGE;
+    public final ModConfigSpec.ConfigValue<Integer> ALLOY_SMELTER_VANILLA_ITEM_ENERGY;
+    public final ModConfigSpec.ConfigValue<Integer> CRAFTER_CAPACITY;
+    public final ModConfigSpec.ConfigValue<Integer> CRAFTER_USAGE;
+    public final ModConfigSpec.ConfigValue<Integer> CRAFTING_RECIPE_COST;
+    public final ModConfigSpec.ConfigValue<Integer> IMPULSE_HOPPER_CAPACITY;
+    public final ModConfigSpec.ConfigValue<Integer> IMPULSE_HOPPER_USAGE;
+    public final ModConfigSpec.ConfigValue<Integer> POWERED_SPAWNER_CAPACITY;
+    public final ModConfigSpec.ConfigValue<Integer> POWERED_SPAWNER_USAGE;
+    public final ModConfigSpec.ConfigValue<Integer> SAG_MILL_CAPACITY;
+    public final ModConfigSpec.ConfigValue<Integer> SAG_MILL_USAGE;
+    public final ModConfigSpec.ConfigValue<Integer> SLICER_CAPACITY;
+    public final ModConfigSpec.ConfigValue<Integer> SLICER_USAGE;
+    public final ModConfigSpec.ConfigValue<Integer> SOUL_BINDER_CAPACITY;
+    public final ModConfigSpec.ConfigValue<Integer> SOUL_BINDER_USAGE;
+    public final ModConfigSpec.ConfigValue<Integer> STIRLING_GENERATOR_CAPACITY;
+    public final ModConfigSpec.ConfigValue<Double> STIRLING_GENERATOR_BURN_SPEED;
+    public final ModConfigSpec.ConfigValue<Integer> STIRLING_GENERATOR_PRODUCTION;
+    public final ModConfigSpec.ConfigValue<Integer> PAINTING_MACHINE_CAPACITY;
+    public final ModConfigSpec.ConfigValue<Integer> PAINTING_MACHINE_USAGE;
+    public final ModConfigSpec.ConfigValue<Integer> PAINTING_MACHINE_ENERGY_COST;
+    public final ModConfigSpec.ConfigValue<Integer> ENERGETIC_SOLAR_PANEL_MAX_PRODUCTION;
+    public final ModConfigSpec.ConfigValue<Integer> PULSATING_SOLAR_PANEL_MAX_PRODUCTION;
+    public final ModConfigSpec.ConfigValue<Integer> VIBRANT_SOLAR_PANEL_MAX_PRODUCTION;
+    public final ModConfigSpec.ConfigValue<Integer> BASIC_CAPACITOR_BANK_CAPACITY;
+    public final ModConfigSpec.ConfigValue<Integer> ADVANCED_CAPACITOR_BANK_CAPACITY;
+    public final ModConfigSpec.ConfigValue<Integer> VIBRANT_CAPACITOR_BANK_CAPACITY;
+    public final ModConfigSpec.ConfigValue<Integer> WIRED_CHARGER_CAPACITY;
+    public final ModConfigSpec.ConfigValue<Integer> WIRED_CHARGER_USAGE;
+    public final ModConfigSpec.ConfigValue<Integer> SOUL_ENGINE_CAPACITY;
+    public final ModConfigSpec.ConfigValue<Integer> SOUL_ENGINE_BURN_SPEED;
+    public final ModConfigSpec.ConfigValue<Double> SOUL_ENGINE_GENERATION;
+    public final ModConfigSpec.ConfigValue<Integer> DRAIN_CAPACITY;
+    public final ModConfigSpec.ConfigValue<Integer> DRAIN_USAGE;
 
-    public EnergyConfig(ForgeConfigSpec.Builder builder) {
+    public EnergyConfig(ModConfigSpec.Builder builder) {
         builder.push("energy");
 
         builder.push("alloySmelter");

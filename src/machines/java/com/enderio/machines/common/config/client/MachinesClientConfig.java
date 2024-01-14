@@ -1,14 +1,14 @@
 package com.enderio.machines.common.config.client;
 
-import net.neoforged.neoforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class MachinesClientConfig {
 
     public final MachinesClientBlocksConfig BLOCKS;
 
-    public final ForgeConfigSpec.ConfigValue<Float> IO_CONFIG_NEIGHBOUR_TRANSPARENCY;
+    public final ModConfigSpec.ConfigValue<Float> IO_CONFIG_NEIGHBOUR_TRANSPARENCY;
 
-    public MachinesClientConfig(ForgeConfigSpec.Builder builder) {
+    public MachinesClientConfig(ModConfigSpec.Builder builder) {
         BLOCKS = new MachinesClientBlocksConfig(builder);
 
         builder.push("ioconfig");

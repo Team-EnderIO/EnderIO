@@ -2,7 +2,7 @@ package com.enderio.machines.common.blockentity.capacitorbank;
 
 import com.enderio.machines.common.blockentity.multienergy.ICapacityTier;
 import com.enderio.machines.common.config.MachinesConfig;
-import net.neoforged.neoforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public enum CapacitorTier implements ICapacityTier {
 
@@ -10,9 +10,9 @@ public enum CapacitorTier implements ICapacityTier {
     ADVANCED(MachinesConfig.COMMON.ENERGY.ADVANCED_CAPACITOR_BANK_CAPACITY),
     VIBRANT(MachinesConfig.COMMON.ENERGY.VIBRANT_CAPACITOR_BANK_CAPACITY);
 
-    private final ForgeConfigSpec.ConfigValue<Integer> capacity;
+    private final ModConfigSpec.ConfigValue<Integer> capacity;
 
-    CapacitorTier(ForgeConfigSpec.ConfigValue<Integer> capacity) {
+    CapacitorTier(ModConfigSpec.ConfigValue<Integer> capacity) {
         this.capacity = capacity;
     }
 

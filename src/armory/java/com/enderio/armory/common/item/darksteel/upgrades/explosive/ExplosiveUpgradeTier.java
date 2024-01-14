@@ -5,7 +5,7 @@ import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.item.darksteel.upgrades.IUpgradeTier;
 import com.enderio.armory.common.lang.ArmoryLang;
 import net.minecraft.network.chat.Component;
-import net.neoforged.neoforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.function.Supplier;
 
@@ -19,11 +19,11 @@ public enum ExplosiveUpgradeTier implements IUpgradeTier {
         ArmoryLang.DS_UPGRADE_EXPLOSIVE_II);
 
     private final Supplier<IDarkSteelUpgrade> factory;
-    private final ForgeConfigSpec.ConfigValue<Integer> magnitude;
-    private final ForgeConfigSpec.ConfigValue<Integer> activationCost;
+    private final ModConfigSpec.ConfigValue<Integer> magnitude;
+    private final ModConfigSpec.ConfigValue<Integer> activationCost;
     private final Component displayName;
 
-    ExplosiveUpgradeTier(ForgeConfigSpec.ConfigValue<Integer> magnitude, ForgeConfigSpec.ConfigValue<Integer> activationCost,
+    ExplosiveUpgradeTier(ModConfigSpec.ConfigValue<Integer> magnitude, ModConfigSpec.ConfigValue<Integer> activationCost,
         Component displayName) {
         this.magnitude = magnitude;
         this.activationCost = activationCost;
@@ -31,7 +31,7 @@ public enum ExplosiveUpgradeTier implements IUpgradeTier {
         factory = () -> new ExplosiveUpgrade(this);
     }
 
-    public ForgeConfigSpec.ConfigValue<Integer> getMagnitude() {
+    public ModConfigSpec.ConfigValue<Integer> getMagnitude() {
         return magnitude;
     }
 
@@ -50,7 +50,7 @@ public enum ExplosiveUpgradeTier implements IUpgradeTier {
         return displayName;
     }
 
-    public ForgeConfigSpec.ConfigValue<Integer> getActivationCost() {
+    public ModConfigSpec.ConfigValue<Integer> getActivationCost() {
         return activationCost;
     }
 }

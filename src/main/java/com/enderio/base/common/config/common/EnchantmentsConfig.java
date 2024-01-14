@@ -1,43 +1,43 @@
 package com.enderio.base.common.config.common;
 
-import net.neoforged.neoforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class EnchantmentsConfig {
-    public final ForgeConfigSpec.ConfigValue<Integer> AUTO_SMELT_MAX_COST;
-    public final ForgeConfigSpec.ConfigValue<Integer> AUTO_SMELT_MIN_COST;
+    public final ModConfigSpec.ConfigValue<Integer> AUTO_SMELT_MAX_COST;
+    public final ModConfigSpec.ConfigValue<Integer> AUTO_SMELT_MIN_COST;
 
-    public final ForgeConfigSpec.ConfigValue<Integer> REPELLENT_MAX_LEVEL;
-    public final ForgeConfigSpec.ConfigValue<Integer> REPELLENT_MAX_COST_BASE;
-    public final ForgeConfigSpec.ConfigValue<Integer> REPELLENT_MAX_COST_MULT;
-    public final ForgeConfigSpec.ConfigValue<Integer> REPELLENT_MIN_COST_BASE;
-    public final ForgeConfigSpec.ConfigValue<Integer> REPELLENT_MIN_COST_MULT;
-    public final ForgeConfigSpec.ConfigValue<Float> REPELLENT_CHANCE_BASE;
-    public final ForgeConfigSpec.ConfigValue<Float> REPELLENT_CHANCE_MULT;
-    public final ForgeConfigSpec.ConfigValue<Double> REPELLENT_RANGE_BASE;
-    public final ForgeConfigSpec.ConfigValue<Double> REPELLENT_RANGE_MULT;
-    public final ForgeConfigSpec.ConfigValue<Float> REPELLENT_NON_PLAYER_CHANCE;
+    public final ModConfigSpec.ConfigValue<Integer> REPELLENT_MAX_LEVEL;
+    public final ModConfigSpec.ConfigValue<Integer> REPELLENT_MAX_COST_BASE;
+    public final ModConfigSpec.ConfigValue<Integer> REPELLENT_MAX_COST_MULT;
+    public final ModConfigSpec.ConfigValue<Integer> REPELLENT_MIN_COST_BASE;
+    public final ModConfigSpec.ConfigValue<Integer> REPELLENT_MIN_COST_MULT;
+    public final ModConfigSpec.ConfigValue<Float> REPELLENT_CHANCE_BASE;
+    public final ModConfigSpec.ConfigValue<Float> REPELLENT_CHANCE_MULT;
+    public final ModConfigSpec.ConfigValue<Double> REPELLENT_RANGE_BASE;
+    public final ModConfigSpec.ConfigValue<Double> REPELLENT_RANGE_MULT;
+    public final ModConfigSpec.ConfigValue<Float> REPELLENT_NON_PLAYER_CHANCE;
 
-    public final ForgeConfigSpec.ConfigValue<Integer> SHIMMER_MAX_COST;
-    public final ForgeConfigSpec.ConfigValue<Integer> SHIMMER_MIN_COST;
+    public final ModConfigSpec.ConfigValue<Integer> SHIMMER_MAX_COST;
+    public final ModConfigSpec.ConfigValue<Integer> SHIMMER_MIN_COST;
 
-    public final ForgeConfigSpec.ConfigValue<Integer> SOUL_BOUND_MAX_COST;
-    public final ForgeConfigSpec.ConfigValue<Integer> SOUL_BOUND_MIN_COST;
+    public final ModConfigSpec.ConfigValue<Integer> SOUL_BOUND_MAX_COST;
+    public final ModConfigSpec.ConfigValue<Integer> SOUL_BOUND_MIN_COST;
 
-    public final ForgeConfigSpec.ConfigValue<Integer> WITHERING_BLADE_MAX_COST;
-    public final ForgeConfigSpec.ConfigValue<Integer> WITHERING_BLADE_MIN_COST;
+    public final ModConfigSpec.ConfigValue<Integer> WITHERING_BLADE_MAX_COST;
+    public final ModConfigSpec.ConfigValue<Integer> WITHERING_BLADE_MIN_COST;
 
-    public final ForgeConfigSpec.ConfigValue<Integer> WITHERING_ARROW_MAX_COST;
-    public final ForgeConfigSpec.ConfigValue<Integer> WITHERING_ARROW_MIN_COST;
+    public final ModConfigSpec.ConfigValue<Integer> WITHERING_ARROW_MAX_COST;
+    public final ModConfigSpec.ConfigValue<Integer> WITHERING_ARROW_MIN_COST;
 
-    public final ForgeConfigSpec.ConfigValue<Integer> WITHERING_BOLT_MAX_COST;
-    public final ForgeConfigSpec.ConfigValue<Integer> WITHERING_BOLT_MIN_COST;
+    public final ModConfigSpec.ConfigValue<Integer> WITHERING_BOLT_MAX_COST;
+    public final ModConfigSpec.ConfigValue<Integer> WITHERING_BOLT_MIN_COST;
 
-    public final ForgeConfigSpec.ConfigValue<Integer> XP_BOOST_MAX_COST_BASE;
-    public final ForgeConfigSpec.ConfigValue<Integer> XP_BOOST_MAX_COST_MULT;
-    public final ForgeConfigSpec.ConfigValue<Integer> XP_BOOST_MIN_COST_BASE;
-    public final ForgeConfigSpec.ConfigValue<Integer> XP_BOOST_MIN_COST_MULT;
+    public final ModConfigSpec.ConfigValue<Integer> XP_BOOST_MAX_COST_BASE;
+    public final ModConfigSpec.ConfigValue<Integer> XP_BOOST_MAX_COST_MULT;
+    public final ModConfigSpec.ConfigValue<Integer> XP_BOOST_MIN_COST_BASE;
+    public final ModConfigSpec.ConfigValue<Integer> XP_BOOST_MIN_COST_MULT;
 
-    public EnchantmentsConfig(ForgeConfigSpec.Builder builder) {
+    public EnchantmentsConfig(ModConfigSpec.Builder builder) {
         builder.push("enchantments");
 
         builder.push("autoSmelt");

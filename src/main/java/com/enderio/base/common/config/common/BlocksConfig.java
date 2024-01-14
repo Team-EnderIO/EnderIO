@@ -1,13 +1,13 @@
 package com.enderio.base.common.config.common;
 
-import net.neoforged.neoforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class BlocksConfig {
-    public final ForgeConfigSpec.ConfigValue<Float> BROKEN_SPAWNER_DROP_CHANCE;
-    public final ForgeConfigSpec.ConfigValue<Float> EXPLOSION_RESISTANCE;
-    public final ForgeConfigSpec.ConfigValue<Float> DARK_STEEL_LADDER_BOOST;
+    public final ModConfigSpec.ConfigValue<Float> BROKEN_SPAWNER_DROP_CHANCE;
+    public final ModConfigSpec.ConfigValue<Float> EXPLOSION_RESISTANCE;
+    public final ModConfigSpec.ConfigValue<Float> DARK_STEEL_LADDER_BOOST;
 
-    public BlocksConfig(ForgeConfigSpec.Builder builder) {
+    public BlocksConfig(ModConfigSpec.Builder builder) {
         builder.push("blocks");
 
         builder.push("brokenSpawner");

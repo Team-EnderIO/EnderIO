@@ -1,19 +1,19 @@
 package com.enderio.machines.common.config.common;
 
 import com.enderio.machines.common.blockentity.task.SpawnerMachineTask;
-import net.neoforged.neoforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class MachinesCommonConfig {
     public final EnergyConfig ENERGY;
-    public final ForgeConfigSpec.ConfigValue<Float> ENCHANTER_LAPIS_COST_FACTOR;
-    public final ForgeConfigSpec.ConfigValue<Float> ENCHANTER_LEVEL_COST_FACTOR;
-    public final ForgeConfigSpec.ConfigValue<Integer> ENCHANTER_BASE_LEVEL_COST;
-    public final ForgeConfigSpec.ConfigValue<Integer> MAX_SPAWNER_ENTITIES;
-    public final ForgeConfigSpec.ConfigValue<Integer> MAX_SPAWNERS;
-    public final ForgeConfigSpec.ConfigValue<SpawnerMachineTask.SpawnType> SPAWN_TYPE;
-    public final ForgeConfigSpec.IntValue SPAWN_AMOUNT;
+    public final ModConfigSpec.ConfigValue<Float> ENCHANTER_LAPIS_COST_FACTOR;
+    public final ModConfigSpec.ConfigValue<Float> ENCHANTER_LEVEL_COST_FACTOR;
+    public final ModConfigSpec.ConfigValue<Integer> ENCHANTER_BASE_LEVEL_COST;
+    public final ModConfigSpec.ConfigValue<Integer> MAX_SPAWNER_ENTITIES;
+    public final ModConfigSpec.ConfigValue<Integer> MAX_SPAWNERS;
+    public final ModConfigSpec.ConfigValue<SpawnerMachineTask.SpawnType> SPAWN_TYPE;
+    public final ModConfigSpec.IntValue SPAWN_AMOUNT;
 
-    public MachinesCommonConfig(ForgeConfigSpec.Builder builder) {
+    public MachinesCommonConfig(ModConfigSpec.Builder builder) {
         ENERGY = new EnergyConfig(builder);
 
         builder.push("enchanter");
