@@ -26,8 +26,8 @@ public class ItemsConfig {
         builder.push("items");
 
         builder.push("food");
-        ENDERIOS_CHANCE = builder.comment("The chance of enderios teleporting the player").define("enderioChance", 0.3f);
-        ENDERIOS_RANGE = builder.comment("The range of an enderio teleport").define("enderioRange", 16.0f);
+        ENDERIOS_CHANCE = builder.comment("The chance of enderios teleporting the player").define("enderioChance", 0.3d);
+        ENDERIOS_RANGE = builder.comment("The range of an enderio teleport").define("enderioRange", 16.0d);
         builder.pop();
 
         builder.push("electromagnet");

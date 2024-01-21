@@ -88,7 +88,7 @@ public class EnergyConfig {
 
         builder.push("stirlingGenerator");
             STIRLING_GENERATOR_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 64_000, 1, Integer.MAX_VALUE);
-            STIRLING_GENERATOR_BURN_SPEED = builder.comment("The base number of 'burn ticks' performed per machine tick.").defineInRange("burnSpeed", 0.375, 0.001, Double.MAX_VALUE);
+            STIRLING_GENERATOR_BURN_SPEED = builder.comment("The base number of 'burn ticks' performed per machine tick.").defineInRange("burnSpeed", 0.375d, 0.001d, Double.MAX_VALUE);
             STIRLING_GENERATOR_PRODUCTION = builder.comment("The base amount of energy produced in uI/t.").defineInRange("generation", 40, 1, Integer.MAX_VALUE);
         builder.pop();
 
@@ -120,7 +120,7 @@ public class EnergyConfig {
         builder.push("soul_engine");
             SOUL_ENGINE_CAPACITY = builder.defineInRange("capacity",100000, 1, Integer.MAX_VALUE);
             SOUL_ENGINE_BURN_SPEED = builder.comment("The base burn-rate the soul engine.").defineInRange("burnSpeed", 1, 1, Integer.MAX_VALUE);
-            SOUL_ENGINE_GENERATION = builder.comment("Percentage increase in uI produced.").defineInRange("generation", 1.0, 0.001, Double.MAX_VALUE);
+            SOUL_ENGINE_GENERATION = builder.comment("Percentage increase in uI produced.").defineInRange("generation", 1.0d, 0.001d, Double.MAX_VALUE);
 
         builder.pop();
 
