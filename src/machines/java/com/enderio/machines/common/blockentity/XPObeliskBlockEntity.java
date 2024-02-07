@@ -89,7 +89,7 @@ public class XPObeliskBlockEntity extends MachineBlockEntity {
         // Positive -> Give levels to player ; Negative -> Take levels from player
         if (volumeToRemove > 0) {
             int cappedVolume = (int) Math.min(Integer.MAX_VALUE, volumeToRemove);
-            FluidStack drained = getFluidTankNN().drain(new FluidStack(EIOFluids.XP_JUICE.getSource(), cappedVolume), IFluidHandler.FluidAction.EXECUTE);
+            FluidStack drained = getFluidTankNN().drain(cappedVolume, IFluidHandler.FluidAction.EXECUTE);
             player.giveExperiencePoints(drained.getAmount() / ExperienceUtil.EXP_TO_FLUID);
 
         } else {
