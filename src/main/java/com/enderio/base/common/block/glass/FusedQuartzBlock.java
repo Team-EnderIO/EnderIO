@@ -1,9 +1,7 @@
 package com.enderio.base.common.block.glass;
 
-import com.enderio.EnderIO;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.lang.EIOLang;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.DyeColor;
@@ -76,7 +74,7 @@ public class FusedQuartzBlock extends AbstractGlassBlock {
 
     @Override
     public float getExplosionResistance() {
-        return explosionResistant ? BaseConfig.COMMON.BLOCKS.EXPLOSION_RESISTANCE.get() : super.getExplosionResistance();
+        return explosionResistant ? BaseConfig.COMMON.BLOCKS.EXPLOSION_RESISTANCE.get().floatValue() : super.getExplosionResistance();
     }
 
     @Override

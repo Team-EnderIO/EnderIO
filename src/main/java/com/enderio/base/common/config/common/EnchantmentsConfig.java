@@ -11,11 +11,11 @@ public class EnchantmentsConfig {
     public final ForgeConfigSpec.ConfigValue<Integer> REPELLENT_MAX_COST_MULT;
     public final ForgeConfigSpec.ConfigValue<Integer> REPELLENT_MIN_COST_BASE;
     public final ForgeConfigSpec.ConfigValue<Integer> REPELLENT_MIN_COST_MULT;
-    public final ForgeConfigSpec.ConfigValue<Float> REPELLENT_CHANCE_BASE;
-    public final ForgeConfigSpec.ConfigValue<Float> REPELLENT_CHANCE_MULT;
+    public final ForgeConfigSpec.ConfigValue<Double> REPELLENT_CHANCE_BASE;
+    public final ForgeConfigSpec.ConfigValue<Double> REPELLENT_CHANCE_MULT;
     public final ForgeConfigSpec.ConfigValue<Double> REPELLENT_RANGE_BASE;
     public final ForgeConfigSpec.ConfigValue<Double> REPELLENT_RANGE_MULT;
-    public final ForgeConfigSpec.ConfigValue<Float> REPELLENT_NON_PLAYER_CHANCE;
+    public final ForgeConfigSpec.ConfigValue<Double> REPELLENT_NON_PLAYER_CHANCE;
 
     public final ForgeConfigSpec.ConfigValue<Integer> SHIMMER_MAX_COST;
     public final ForgeConfigSpec.ConfigValue<Integer> SHIMMER_MIN_COST;
@@ -51,11 +51,11 @@ public class EnchantmentsConfig {
         REPELLENT_MAX_COST_MULT = builder.define("maxCostPerLevel", 10);
         REPELLENT_MIN_COST_BASE = builder.define("minCostBase", 10);
         REPELLENT_MIN_COST_MULT = builder.define("minCostPerLevel", 5);
-        REPELLENT_CHANCE_BASE = builder.define("chanceBase", 0.35f);
-        REPELLENT_CHANCE_MULT = builder.define("chancePerLevel", 0.1f);
+        REPELLENT_CHANCE_BASE = builder.define("chanceBase", 0.35d);
+        REPELLENT_CHANCE_MULT = builder.define("chancePerLevel", 0.1d);
         REPELLENT_RANGE_BASE = builder.define("rangeBase", 8d);
         REPELLENT_RANGE_MULT = builder.define("rangePerLevel", 8d);
-        REPELLENT_NON_PLAYER_CHANCE = builder.define("nonPlayerChance", 0.75f);
+        REPELLENT_NON_PLAYER_CHANCE = builder.define("nonPlayerChance", 0.75d);
         builder.pop();
 
         builder.push("shimmer");
