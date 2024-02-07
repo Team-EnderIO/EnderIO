@@ -421,7 +421,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
 
                     RenderSystem.disableDepthTest();
                     RenderSystem.enableBlend();
-                    RenderSystem.setShaderColor(1, 1, 1, MachinesConfig.CLIENT.IO_CONFIG_NEIGHBOUR_TRANSPARENCY.get());
+                    RenderSystem.setShaderColor(1, 1, 1, MachinesConfig.CLIENT.IO_CONFIG_NEIGHBOUR_TRANSPARENCY.get().floatValue());
                 },
                 () -> {
                     RenderSystem.setShaderColor(1, 1, 1, 1);

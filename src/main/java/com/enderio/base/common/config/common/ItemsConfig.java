@@ -3,8 +3,8 @@ package com.enderio.base.common.config.common;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class ItemsConfig {
-    public final ForgeConfigSpec.ConfigValue<Float> ENDERIOS_CHANCE;
-    public final ForgeConfigSpec.ConfigValue<Float> ENDERIOS_RANGE;
+    public final ForgeConfigSpec.ConfigValue<Double> ENDERIOS_CHANCE;
+    public final ForgeConfigSpec.ConfigValue<Double> ENDERIOS_RANGE;
 
     public final ForgeConfigSpec.ConfigValue<Integer> ELECTROMAGNET_ENERGY_USE;
     public final ForgeConfigSpec.ConfigValue<Integer> ELECTROMAGNET_MAX_ENERGY;
@@ -26,8 +26,8 @@ public class ItemsConfig {
         builder.push("items");
 
         builder.push("food");
-        ENDERIOS_CHANCE = builder.comment("The chance of enderios teleporting the player").define("enderioChance", 0.3f);
-        ENDERIOS_RANGE = builder.comment("The range of an enderio teleport").define("enderioRange", 16.0f);
+        ENDERIOS_CHANCE = builder.comment("The chance of enderios teleporting the player").define("enderioChance", 0.3d);
+        ENDERIOS_RANGE = builder.comment("The range of an enderio teleport").define("enderioRange", 16.0d);
         builder.pop();
 
         builder.push("electromagnet");
