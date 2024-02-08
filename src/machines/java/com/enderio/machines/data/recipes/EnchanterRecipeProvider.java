@@ -77,6 +77,7 @@ public class EnchanterRecipeProvider extends EnderRecipeProvider {
         build(EIOEnchantments.WITHERING.get(), CountedIngredient.of(4, EIOItems.WITHERING_POWDER.get()), 1, pFinishedRecipeConsumer);
         build(EIOEnchantments.REPELLENT.get(), CountedIngredient.of(4, Items.ENDER_PEARL), 2, pFinishedRecipeConsumer);
         build(EIOEnchantments.AUTO_SMELT.get(), CountedIngredient.of(16, Items.BLAZE_POWDER), 1, pFinishedRecipeConsumer); //TODO
+        build(EIOEnchantments.XP_BOOST.get(), CountedIngredient.of(16, Items.EXPERIENCE_BOTTLE), 1, pFinishedRecipeConsumer); //TODO
     }
 
     protected void build(Enchantment enchantment, CountedIngredient input, int levelModifier, Consumer<FinishedRecipe> recipeConsumer) {
