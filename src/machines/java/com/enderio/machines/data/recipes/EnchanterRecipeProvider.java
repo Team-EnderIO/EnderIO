@@ -66,9 +66,9 @@ public class EnchanterRecipeProvider extends EnderRecipeProvider {
         build(Enchantments.IMPALING, CountedIngredient.of(8, Tags.Items.INGOTS_IRON), 1, pFinishedRecipeConsumer);//TODO
         build(Enchantments.LOYALTY, CountedIngredient.of(Items.LEAD), 1, pFinishedRecipeConsumer);
         build(Enchantments.MULTISHOT, CountedIngredient.of(16, ItemTags.ARROWS), 1, pFinishedRecipeConsumer);//TODO
-        build(Enchantments.PIERCING, CountedIngredient.of(8, Tags.Items.INGOTS_IRON), 1, pFinishedRecipeConsumer);//TODO
+        build(Enchantments.PIERCING, CountedIngredient.of(8, Tags.Items.GEMS_PRISMARINE), 1, pFinishedRecipeConsumer);//TODO
         build(Enchantments.QUICK_CHARGE, CountedIngredient.of(16, Items.SUGAR), 1, pFinishedRecipeConsumer);
-        build(Enchantments.RIPTIDE, CountedIngredient.of(8, Tags.Items.INGOTS_IRON), 1, pFinishedRecipeConsumer);//TODO
+        build(Enchantments.RIPTIDE, CountedIngredient.of(8, Items.FIREWORK_ROCKET), 1, pFinishedRecipeConsumer);//TODO
         build(Enchantments.SOUL_SPEED, CountedIngredient.of(16, Items.SOUL_SOIL), 1, pFinishedRecipeConsumer);
 
 
