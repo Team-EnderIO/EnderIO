@@ -11,13 +11,13 @@ import com.enderio.core.client.item.IAdvancedTooltipProvider;
 import com.enderio.core.common.item.ITabVariants;
 import com.enderio.core.common.util.EnergyUtil;
 import com.enderio.core.common.util.TooltipUtil;
-import com.tterrag.registrate.util.CreativeModeTabModifier;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -72,7 +72,7 @@ public abstract class PoweredToggledItem extends Item implements IMultiCapabilit
     }
 
     @Override
-    public void addAllVariants(CreativeModeTabModifier modifier) {
+    public void addAllVariants(CreativeModeTab.Output modifier) {
         modifier.accept(this);
         modifier.accept(getCharged(this));
     }

@@ -16,5 +16,5 @@ public interface ITabVariants {
      */
 
     // TODO: NEO-PORT: This parameter type is a guess.
-    void addAllVariants(Consumer<CreativeModeTab.Output> modifier);
+    void addAllVariants(CreativeModeTab.Output modifier);
 }

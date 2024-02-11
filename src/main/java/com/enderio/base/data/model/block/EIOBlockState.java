@@ -2,6 +2,7 @@ package com.enderio.base.data.model.block;
 
 import com.enderio.EnderIO;
 import com.enderio.base.common.block.light.PoweredLight;
+import com.enderio.regilite.data.DataGenContext;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import net.minecraft.core.Direction;
@@ -18,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class EIOBlockState {
 
-    public static void paneBlock(DataGenContext<Block, ? extends IronBarsBlock> ctx, RegistrateBlockstateProvider prov) {
+    public static void paneBlock(BlockStateProvider prov, DataGenContext<Block, ? extends IronBarsBlock> ctx) {
         prov.paneBlock(ctx.get(),
             prov.models()
                 .panePost(ctx.getName().concat("_post"), prov.blockTexture(ctx.get()), prov.blockTexture(ctx.get()))
@@ -46,15 +47,14 @@ public class EIOBlockState {
         );
     }
 
-    public static <T extends Block> void lightBlock(BlockStateProvider prov, T ctx) {
-        prov.getVariantBuilder(ctx).forAllStates(state -> {
+    public static <T extends Block> void lightBlock(BlockStateProvider prov, DataGenContext<Block, T> ctx) {
+        prov.getVariantBuilder(ctx.get()).forAllStates(state -> {
             Direction facing = state.getValue(PoweredLight.FACING);
             AttachFace face = state.getValue(PoweredLight.FACE);
             boolean powered = state.getValue(PoweredLight.ENABLED);
 
-            ResourceLocation id = BuiltInRegistries.BLOCK.getKey(ctx);
-            ModelFile light = prov.models().withExistingParent(id.getPath(), EnderIO.loc("block/lightblock"));
-            ModelFile light_powered = prov.models().withExistingParent(id.getPath() + "_powered", EnderIO.loc("block/lightblock"));
+            ModelFile light = prov.models().withExistingParent(ctx.getName(), EnderIO.loc("block/lightblock"));
+            ModelFile light_powered = prov.models().withExistingParent(ctx.getName() + "_powered", EnderIO.loc("block/lightblock"));
             return ConfiguredModel.builder()
                 .modelFile(powered ? light : light_powered)
                 .rotationX(face == AttachFace.FLOOR ? 0 : (face == AttachFace.WALL ? 90 : 180))

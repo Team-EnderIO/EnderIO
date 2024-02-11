@@ -38,7 +38,6 @@ import com.enderio.base.data.tags.EIOFluidTagsProvider;
 import com.enderio.base.data.tags.EIOItemTagsProvider;
 import com.enderio.core.EnderCore;
 import com.enderio.core.common.network.CoreNetwork;
-import com.tterrag.registrate.Registrate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
@@ -46,9 +45,9 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
-import net.neoforged.neoforge.common.MinecraftForge;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.data.AdvancementProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import net.neoforged.neoforge.common.data.ForgeAdvancementProvider;
 import net.neoforged.neoforge.common.util.Lazy;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.bus.api.EventPriority;
@@ -58,7 +57,6 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.neoforged.fml.loading.FMLPaths;
-import net.neoforged.neoforge.registries.MissingMappingsEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -73,16 +71,10 @@ public class EnderIO {
     // The Mod ID. This is stored in EnderCore as it's the furthest source away but it ensures that it is constant across all source sets.
     public static final String MODID = EnderCore.MODID;
 
-    private static final Lazy<Registrate> REGISTRATE = Lazy.of(() -> Registrate.create(MODID));
-
     public static final Logger LOGGER = LogManager.getLogger(MODID);
 
     public static ResourceLocation loc(String path) {
         return new ResourceLocation(MODID, path);
-    }
-
-    public static Registrate registrate() {
-        return REGISTRATE.get();
     }
 
     public EnderIO() {
@@ -101,24 +93,26 @@ public class EnderIO {
         // Setup core networking now
         CoreNetwork.networkInit();
 
+        // Get event bus
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
         // Perform initialization and registration for everything so things are registered.
-        EIOCreativeTabs.register();
-        EIOItems.register();
-        EIOBlocks.register();
-        EIOBlockEntities.register();
-        EIOFluids.register();
+        EIOCreativeTabs.register(modEventBus);
+        EIOItems.register(modEventBus);
+        EIOBlocks.register(modEventBus);
+        EIOBlockEntities.register(modEventBus);
+        EIOFluids.register(modEventBus);
         EIOEnchantments.register();
         EIOTags.register();
         EIOMenus.register();
         EIOPackets.register();
         EIOLang.register();
-        EIORecipes.register();
-        EIOLootModifiers.register();
-        EIOParticles.register();
-        EIOEntities.register();
+        EIORecipes.register(modEventBus);
+        EIOLootModifiers.register(modEventBus);
+        EIOParticles.register(modEventBus);
+        EIOEntities.register(modEventBus);
 
         // Run datagen after registrate is finished.
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addListener(EventPriority.LOWEST, this::onGatherData);
         modEventBus.addListener(SoulVialItem::onCommonSetup);
         IntegrationManager.addIntegration(EnderIOSelfIntegration.INSTANCE);
@@ -127,9 +121,6 @@ public class EnderIO {
 
         // Decor
         EIONetwork.register();
-
-        // Remap
-        MinecraftForge.EVENT_BUS.addListener(EnderIO::missingMappings);
     }
 
     public void onGatherData(GatherDataEvent event) {
@@ -154,23 +145,10 @@ public class EnderIO {
         provider.addSubProvider(event.includeServer(), new EIOFluidTagsProvider(packOutput, lookupProvider, existingFileHelper));
         provider.addSubProvider(event.includeServer(), new EIOEntityTagsProvider(packOutput, lookupProvider, existingFileHelper));
         provider.addSubProvider(event.includeServer(),
-            new ForgeAdvancementProvider(packOutput, lookupProvider, existingFileHelper, List.of(new EIOAdvancementGenerator())));
+            new AdvancementProvider(packOutput, lookupProvider, existingFileHelper, List.of(new EIOAdvancementGenerator())));
         provider.addSubProvider(event.includeServer(), new LootTableProvider(packOutput, Collections.emptySet(),
             List.of(new LootTableProvider.SubProviderEntry(FireCraftingLootProvider::new, LootContextParamSets.EMPTY),
                 new LootTableProvider.SubProviderEntry(ChestLootProvider::new, LootContextParamSets.CHEST))));
         generator.addProvider(true, provider);
-    }
-
-    //TODO Remove later on when during beta/release.
-    public static void missingMappings(MissingMappingsEvent event) {
-        event.getMappings(Registries.ENCHANTMENT, EnderIO.MODID).forEach(mapping -> {
-            if (mapping.getKey().equals(EnderIO.loc("withering_blade"))) {
-                mapping.remap(EIOEnchantments.WITHERING.get());
-            } else if (mapping.getKey().equals(EnderIO.loc("withering_arrow"))) {
-                mapping.remap(EIOEnchantments.WITHERING.get());
-            } else if (mapping.getKey().equals(EnderIO.loc("withering_bold"))) {
-                mapping.remap(EIOEnchantments.WITHERING.get());
-            }
-        });
     }
 }

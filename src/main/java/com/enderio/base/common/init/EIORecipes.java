@@ -34,8 +34,7 @@ public class EIORecipes {
         return new RecipeTypeSerializerPair<>(type, serializer);
     }
 
-    public static void register() {
-        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+    public static void register(IEventBus bus) {
         RECIPE_SERIALIZERS.register(bus);
         RECIPE_TYPES.register(bus);
     }

@@ -1,12 +1,20 @@
 package com.enderio.core.data.model;
 
+import com.enderio.regilite.data.DataGenContext;
+import com.enderio.regilite.data.RegiliteItemModelProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.client.model.generators.BlockModelBuilder;
 import net.neoforged.neoforge.client.model.generators.BlockModelProvider;
+import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
+import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+
+import java.util.function.Supplier;
 
 public class EIOModel {
 
@@ -17,13 +25,13 @@ public class EIOModel {
 
     // region Item
 
-    /*public static ItemModelBuilder fakeBlockModel(DataGenContext<Item, ? extends Item> ctx, RegistrateItemModelProvider prov) {
-        return prov.withExistingParent(prov.name(ctx), prov.mcLoc("block/cube_all")).texture("all", prov.itemTexture(ctx));
+    public static ItemModelBuilder fakeBlockModel(RegiliteItemModelProvider prov, DataGenContext<Item, ? extends Item> ctx) {
+        return prov.withExistingParent(ctx.getName(), prov.mcLoc("block/cube_all")).texture("all", prov.itemTexture(ctx.get()));
     }
 
-    public static ItemModelBuilder mimicItem(DataGenContext<Item, ? extends Item> ctx, ItemEntry<? extends Item> item, RegistrateItemModelProvider prov) {
-        return prov.generated(ctx, prov.itemTexture(item));
-    }*/
+    public static ItemModelBuilder mimicItem(RegiliteItemModelProvider prov, DataGenContext<Item, ? extends Item> ctx, Supplier<? extends Item> mimic) {
+        return prov.basicItem(ctx.get(), prov.itemTexture(mimic.get()));
+    }
 
     // endregion
 

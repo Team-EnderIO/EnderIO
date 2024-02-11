@@ -7,7 +7,6 @@ import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.core.common.item.ITabVariants;
-import com.tterrag.registrate.util.CreativeModeTabModifier;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -17,6 +16,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -35,6 +35,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class ColdFireIgniter extends Item implements IMultiCapabilityItem, ITabVariants {
 
@@ -108,7 +109,7 @@ public class ColdFireIgniter extends Item implements IMultiCapabilityItem, ITabV
     }
 
     @Override
-    public void addAllVariants(CreativeModeTabModifier modifier) {
+    public void addAllVariants(CreativeModeTab.Output modifier) {
         modifier.accept(this);
 
         ItemStack is = new ItemStack(this);

@@ -67,7 +67,7 @@ public class GlassBlocks {
      * Register a non-colored glass
      */
     private RegiliteBlock<FusedQuartzBlock> register(BlockRegistry blockRegistry, ItemRegistry itemRegistry, String name) {
-        var builder = blockRegistry
+        var block = blockRegistry
             .registerBlock(name,
                 p -> new FusedQuartzBlock(p, glassIdentifier, null),
                 BlockBehaviour.Properties.of()
@@ -79,39 +79,35 @@ public class GlassBlocks {
                     .isRedstoneConductor(GlassBlocks::never)
                     .isSuffocating(GlassBlocks::never)
                     .isViewBlocking(GlassBlocks::never))
-            .setBlockStateProvider((cons, b) -> cons.simpleBlock(b, cons.models().getExistingFile(getModelFile())))
+            .setBlockStateProvider((cons, ctx) -> cons.simpleBlock(ctx.get(), cons.models().getExistingFile(getModelFile())))
             .addBlockTags(
                 glassIdentifier.explosion_resistance() ? EIOTags.Blocks.FUSED_QUARTZ : EIOTags.Blocks.CLEAR_GLASS
-            )
-            .createBlockItem(itemRegistry)
-            .setTab(EIOCreativeTabs.BLOCKS)
-            .addBlockItemTags(
-                glassIdentifier.explosion_resistance() ? EIOTags.Items.FUSED_QUARTZ : EIOTags.Items.CLEAR_GLASS,
-                EIOTags.Items.GLASS_TAGS.get(glassIdentifier)
             );
 
-        if (glassIdentifier.lighting() == GlassLighting.EMITTING && glassIdentifier.explosion_resistance()) {
-            builder.addBlockItemTags(EIOTags.Items.ENLIGHTENED_FUSED_QUARTZ);
-        }
+        block.createBlockItem(itemRegistry, item -> {
+            item.setTab(EIOCreativeTabs.BLOCKS)
+                .addItemTags(
+                    glassIdentifier.explosion_resistance() ? EIOTags.Items.FUSED_QUARTZ : EIOTags.Items.CLEAR_GLASS,
+                    EIOTags.Items.GLASS_TAGS.get(glassIdentifier)
+                );
 
-        if (glassIdentifier.lighting() == GlassLighting.BLOCKING && glassIdentifier.explosion_resistance()) {
-            builder.addBlockItemTags(EIOTags.Items.DARK_FUSED_QUARTZ);
-        }
+            if (glassIdentifier.lighting() == GlassLighting.EMITTING && glassIdentifier.explosion_resistance()) {
+                item.addItemTags(EIOTags.Items.ENLIGHTENED_FUSED_QUARTZ);
+            }
 
-        // TODO - handle LANG noop in Regilite
-        /*var builder = registrate
-            .block(name, props -> new FusedQuartzBlock(props, glassIdentifier, null))
-            .tag(glassIdentifier.explosion_resistance() ? EIOTags.Blocks.FUSED_QUARTZ : EIOTags.Blocks.CLEAR_GLASS)
-            .setData(LANG, noop());*/
+            if (glassIdentifier.lighting() == GlassLighting.BLOCKING && glassIdentifier.explosion_resistance()) {
+                item.addItemTags(EIOTags.Items.DARK_FUSED_QUARTZ);
+            }
+        });
 
-        return builder.finishBlockItem();
+        return block;
     }
 
     /**
      * Register a colored glass.
      */
     private RegiliteBlock<FusedQuartzBlock> register(BlockRegistry blockRegistry, ItemRegistry itemRegistry, String name, DyeColor color) {
-        var builder = blockRegistry
+        var block = blockRegistry
             .registerBlock(name,
                 p -> new FusedQuartzBlock(p, glassIdentifier, null),
                 BlockBehaviour.Properties.of()
@@ -124,35 +120,28 @@ public class GlassBlocks {
                     .isSuffocating(GlassBlocks::never)
                     .isViewBlocking(GlassBlocks::never)
                     .mapColor(color))
-            .setBlockStateProvider((cons, b) -> cons.simpleBlock(b, cons.models().getExistingFile(getModelFile())))
+            .setBlockStateProvider((cons, ctx) -> cons.simpleBlock(ctx.get(), cons.models().getExistingFile(getModelFile())))
             .setColorSupplier((p_92567_, p_92568_, p_92569_, p_92570_) -> color.getMapColor().col)
             .addBlockTags(
                 glassIdentifier.explosion_resistance() ? EIOTags.Blocks.FUSED_QUARTZ : EIOTags.Blocks.CLEAR_GLASS
-            )
-            .createBlockItem(itemRegistry)
-            .setTab(EIOCreativeTabs.BLOCKS)
-            .addBlockItemTags(
-                glassIdentifier.explosion_resistance() ? EIOTags.Items.FUSED_QUARTZ : EIOTags.Items.CLEAR_GLASS,
-                EIOTags.Items.GLASS_TAGS.get(glassIdentifier)
             );
 
-        if (glassIdentifier.lighting() == GlassLighting.EMITTING && glassIdentifier.explosion_resistance()) {
-            builder.addBlockItemTags(EIOTags.Items.ENLIGHTENED_FUSED_QUARTZ);
-        }
+        block.createBlockItem(itemRegistry, item -> {
+            item.setTab(EIOCreativeTabs.BLOCKS)
+                .setColorSupplier((p_92672_, p_92673_) -> color.getMapColor().col)
+                .addItemTags(
+                    glassIdentifier.explosion_resistance() ? EIOTags.Items.FUSED_QUARTZ : EIOTags.Items.CLEAR_GLASS,
+                    EIOTags.Items.GLASS_TAGS.get(glassIdentifier)
+                );
 
-        if (glassIdentifier.lighting() == GlassLighting.BLOCKING && glassIdentifier.explosion_resistance()) {
-            builder.addBlockItemTags(EIOTags.Items.DARK_FUSED_QUARTZ);
-        }
+            if (glassIdentifier.lighting() == GlassLighting.EMITTING && glassIdentifier.explosion_resistance()) {
+                item.addItemTags(EIOTags.Items.ENLIGHTENED_FUSED_QUARTZ);
+            }
 
-        // TODO - handle LANG noop in Regilite
-        /*var builder = registrate
-            .block(name, props -> new FusedQuartzBlock(props, glassIdentifier, null))
-            .tag(glassIdentifier.explosion_resistance() ? EIOTags.Blocks.FUSED_QUARTZ : EIOTags.Blocks.CLEAR_GLASS)
-            .setData(LANG, noop());*/
-
-        // TODO: Temporary workaround, setColorSupplier returns RegiliteItem, not RegiliteBlockItem.
-        var block = builder.finishBlockItem();
-        builder.setColorSupplier((p_92672_, p_92673_) -> color.getMapColor().col);
+            if (glassIdentifier.lighting() == GlassLighting.BLOCKING && glassIdentifier.explosion_resistance()) {
+                item.addItemTags(EIOTags.Items.DARK_FUSED_QUARTZ);
+            }
+        });
 
         return block;
     }
