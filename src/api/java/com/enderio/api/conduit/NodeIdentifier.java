@@ -26,10 +26,11 @@ public class NodeIdentifier<T extends IExtendedConduitData<?>> implements GraphO
     private final Map<Direction, IOState> ioStates = new EnumMap<>(Direction.class);
     private final T extendedConduitData;
 
-    public static final Codec<NodeIdentifier<?>> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+    /*public static final Codec<NodeIdentifier<?>> CODEC = RecordCodecBuilder.create(instance -> instance.group(
         BlockPos.CODEC.fieldOf("pos").forGetter(NodeIdentifier::getPos),
-        ConduitTypes.REGISTRY.byNameCodec().fieldOf("id").forGetter(node -> node.ge)
-    ).apply(instance, NodeIdentifier::new))
+        ConduitTypes.REGISTRY.byNameCodec().fieldOf("id").forGetter(node -> node.get)
+    ).apply(instance, NodeIdentifier::new));*/
+
     @ApiStatus.Internal
     public NodeIdentifier(BlockPos pos, T extendedConduitData) {
         this.pos = pos;

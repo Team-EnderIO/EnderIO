@@ -5,10 +5,12 @@ import com.enderio.base.common.block.light.PoweredLight;
 import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.IronBarsBlock;
 import net.minecraft.world.level.block.state.properties.AttachFace;
+import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.registries.ForgeRegistries;
@@ -35,8 +37,8 @@ public class EIOBlockState {
                 .renderType(prov.mcLoc("cutout_mipped")));
     }
 
-    public static void paintedBlock(DataGenContext<Block, ? extends Block> ctx, RegistrateBlockstateProvider prov, Block toCopy, @Nullable Direction itemTextureRotation) {
-        prov.simpleBlock(ctx.get(), prov.models().getBuilder(ctx.getName())
+    public static <T extends Block> void paintedBlock(String name, BlockStateProvider prov, T ctx, Block toCopy, @Nullable Direction itemTextureRotation) {
+        prov.simpleBlock(ctx, prov.models().getBuilder(name)
             .customLoader(PaintedBlockModelBuilder::begin)
             .reference(toCopy)
             .itemTextureRotation(itemTextureRotation)
@@ -44,13 +46,13 @@ public class EIOBlockState {
         );
     }
 
-    public static void lightBlock(DataGenContext<Block, ? extends Block> ctx, RegistrateBlockstateProvider prov) {
-        prov.getVariantBuilder(ctx.get()).forAllStates(state -> {
+    public static <T extends Block> void lightBlock(BlockStateProvider prov, T ctx) {
+        prov.getVariantBuilder(ctx).forAllStates(state -> {
             Direction facing = state.getValue(PoweredLight.FACING);
             AttachFace face = state.getValue(PoweredLight.FACE);
             boolean powered = state.getValue(PoweredLight.ENABLED);
 
-            ResourceLocation id = ForgeRegistries.BLOCKS.getKey(ctx.get());
+            ResourceLocation id = BuiltInRegistries.BLOCK.getKey(ctx);
             ModelFile light = prov.models().withExistingParent(id.getPath(), EnderIO.loc("block/lightblock"));
             ModelFile light_powered = prov.models().withExistingParent(id.getPath() + "_powered", EnderIO.loc("block/lightblock"));
             return ConfiguredModel.builder()

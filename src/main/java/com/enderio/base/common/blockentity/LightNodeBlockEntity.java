@@ -2,6 +2,7 @@ package com.enderio.base.common.blockentity;
 
 import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.block.light.LightNode;
+import com.enderio.base.common.init.EIOBlockEntities;
 import com.enderio.base.common.network.EIONetwork;
 import com.enderio.base.common.network.ServerToClientLightUpdate;
 import net.minecraft.core.BlockPos;
@@ -21,8 +22,8 @@ import net.neoforged.neoforge.network.PacketDistributor;
 public class LightNodeBlockEntity extends BlockEntity {
 	public BlockPos masterpos;
 
-	public LightNodeBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
-		super(type, worldPosition, blockState);
+	public LightNodeBlockEntity(BlockPos worldPosition, BlockState blockState) {
+		super(EIOBlockEntities.LIGHT_NODE.get(), worldPosition, blockState);
 	}
 	
 	public void setMaster(PoweredLightBlockEntity master) {

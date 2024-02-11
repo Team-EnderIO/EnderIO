@@ -6,12 +6,11 @@ import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.DeserializationContext;
-import net.minecraft.advancements.critereon.SerializationContext;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 
 public class PaintingTrigger extends SimpleCriterionTrigger<PaintingTrigger.TriggerInstance> {
     static final ResourceLocation ID = EnderIO.loc("create_painted_block");
@@ -23,7 +22,7 @@ public class PaintingTrigger extends SimpleCriterionTrigger<PaintingTrigger.Trig
     @Override
     protected TriggerInstance createInstance(JsonObject pJson, ContextAwarePredicate player, DeserializationContext pContext) {
         var rl = new ResourceLocation(pJson.get("paint").getAsString());
-        return new TriggerInstance(ForgeRegistries.BLOCKS.getValue(rl));
+        return new TriggerInstance(BuiltInRegistries.BLOCK.get(rl));
     }
 
     public void trigger(ServerPlayer pPlayer, Block paint) {
@@ -46,9 +45,9 @@ public class PaintingTrigger extends SimpleCriterionTrigger<PaintingTrigger.Trig
         }
 
         @Override
-        public JsonObject serializeToJson(SerializationContext pConditions) {
-            JsonObject jsonobject = super.serializeToJson(pConditions);
-            jsonobject.addProperty("paint", ForgeRegistries.BLOCKS.getKey(paint).toString());
+        public JsonObject serializeToJson() {
+            JsonObject jsonobject = super.serializeToJson();
+            jsonobject.addProperty("paint", BuiltInRegistries.BLOCK.getKey(paint).toString());
             return jsonobject;
         }
     }

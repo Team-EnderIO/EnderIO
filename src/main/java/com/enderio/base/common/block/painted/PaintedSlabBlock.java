@@ -5,6 +5,7 @@ import com.enderio.base.common.blockentity.DoublePaintedBlockEntity;
 import com.enderio.base.common.init.EIOBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -18,7 +19,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.SlabType;
 import net.minecraft.world.phys.HitResult;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 public class PaintedSlabBlock extends SlabBlock implements EntityBlock, IPaintedBlock {
@@ -52,9 +52,9 @@ public class PaintedSlabBlock extends SlabBlock implements EntityBlock, IPainted
         if (level.getBlockEntity(pos) instanceof DoublePaintedBlockEntity paintedBlockEntity) {
             CompoundTag tag = new CompoundTag();
             if (target.getLocation().y - pos.getY() > 0.5) {
-                tag.putString(EIONBTKeys.PAINT, ForgeRegistries.BLOCKS.getKey(paintedBlockEntity.getPaint2()).toString());
+                tag.putString(EIONBTKeys.PAINT, BuiltInRegistries.BLOCK.getKey(paintedBlockEntity.getPaint2()).toString());
             } else {
-                tag.putString(EIONBTKeys.PAINT, ForgeRegistries.BLOCKS.getKey(paintedBlockEntity.getPaint()).toString());
+                tag.putString(EIONBTKeys.PAINT, BuiltInRegistries.BLOCK.getKey(paintedBlockEntity.getPaint()).toString());
             }
             stack.getOrCreateTag().put(BlockItem.BLOCK_ENTITY_TAG, tag);
         }

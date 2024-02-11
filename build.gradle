@@ -35,9 +35,9 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 // List of all subsets. This is used for dividing the mod into logical components.
 // TODO: 1.19: Tidy the divisions and what goes where.
 def subsets = [
-        'conduits',
-        'machines',
-        'armory'
+        //'conduits',
+        //'machines',
+        //'armory'
 ]
 
 sourceSets {
@@ -128,7 +128,9 @@ def replaceProperties = [
 
 tasks.withType(ProcessResources).configureEach {
     inputs.properties replaceProperties
-    replaceProperties.put 'project', project
+
+    // TODO: NEO-PORT: What this?
+    //replaceProperties.put 'project', project
 
     filesMatching('META-INF/mods.toml') {
         expand replaceProperties
@@ -175,9 +177,10 @@ dependencies {
     //implementation fg.deobf("blank:Xycraft+Core:0.5.2")
     //runtimeOnly fg.deobf("blank:Xycraft+Override:0.5.2")
     //runtimeOnly fg.deobf("blank:Xycraft+World:0.5.2")
-    // Registrate
-    ////implementation fg.deobf("com.tterrag.registrate:Registrate:${registrate_version}")
-    ////jarJar(group: 'com.tterrag.registrate', name: 'Registrate', version: "[${registrate_version}]")
+
+    // Regilite
+    implementation("com.enderio.regilite:Regilite:1.0.0")
+    //jarJar("com.enderio.regilite:Regilite:[1.0,2.0)")
 
     // GraphLib
     implementation implementation("dev.gigaherz.graph:GraphLib3:${graphlib_version}")

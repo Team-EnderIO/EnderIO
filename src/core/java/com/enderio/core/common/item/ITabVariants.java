@@ -1,6 +1,8 @@
 package com.enderio.core.common.item;
 
-import com.tterrag.registrate.util.CreativeModeTabModifier;
+import net.minecraft.world.item.CreativeModeTab;
+
+import java.util.function.Consumer;
 
 /**
  * If an item implements multiple variants that should be displayed, use this.
@@ -13,5 +15,6 @@ public interface ITabVariants {
      * @param modifier The modifier.
      */
 
-    void addAllVariants(CreativeModeTabModifier modifier);
+    // TODO: NEO-PORT: This parameter type is a guess.
+    void addAllVariants(Consumer<CreativeModeTab.Output> modifier);
 }

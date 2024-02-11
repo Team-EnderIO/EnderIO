@@ -7,8 +7,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 
 import java.util.Locale;
 
@@ -47,6 +48,6 @@ public record RangeParticleData(int range, String color) implements ParticleOpti
 
     @Override
     public String writeToString() {
-        return String.format(Locale.ROOT, "%s %d %s ", ForgeRegistries.PARTICLE_TYPES.getKey(getType()), range, color);
+        return String.format(Locale.ROOT, "%s %d %s ", BuiltInRegistries.PARTICLE_TYPE.getKey(getType()), range, color);
     }
 }

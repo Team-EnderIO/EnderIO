@@ -3,6 +3,7 @@ package com.enderio.base.common.blockentity;
 import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.block.light.Light;
 import com.enderio.base.common.block.light.PoweredLight;
+import com.enderio.base.common.init.EIOBlockEntities;
 import com.enderio.base.common.init.EIOBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -30,8 +31,8 @@ public class PoweredLightBlockEntity extends BlockEntity{
 	private boolean update = true;
 	private boolean active = false;
 
-	public PoweredLightBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
-		super(type, worldPosition, blockState);
+	public PoweredLightBlockEntity(BlockPos worldPosition, BlockState blockState) {
+		super(EIOBlockEntities.POWERED_LIGHT.get(), worldPosition, blockState);
 	}
 	
 	public static void tick(Level level, BlockPos pos, BlockState state, PoweredLightBlockEntity e) {

@@ -5,6 +5,7 @@ import com.enderio.base.common.block.painted.IPaintedBlock;
 import com.enderio.base.common.blockentity.DoublePaintedBlockEntity;
 import com.enderio.base.common.blockentity.IPaintableBlockEntity;
 import com.enderio.base.common.util.PaintUtils;
+import com.enderio.regilite.events.IBlockColor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.color.item.ItemColor;
@@ -18,7 +19,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 
-public class PaintedBlockColor implements BlockColor, ItemColor {
+public class PaintedBlockColor implements BlockColor, ItemColor, IBlockColor {
+
+    public static PaintedBlockColor INSTANCE = new PaintedBlockColor();
 
     // TODO: Buggy on the sides of blocks. (Grass)
     @Override

@@ -17,7 +17,7 @@ public class LivingEntityMixin {
      * @param pItem
      * @param cir
      */
-    @Inject(method = "getEquipmentSlotForItem", at = @At(value = "HEAD"), cancellable = true)
+    @Inject(method = "getEquipmentSlotForItem", at = @At(value = "HEAD"), cancellable = true, remap = false)
     private static void enderio$allowTagGlidersInChestplateSlot(ItemStack pItem, CallbackInfoReturnable<EquipmentSlot> cir) {
         if (pItem.is(EIOTags.Items.GLIDER)) {
             cir.setReturnValue(EquipmentSlot.CHEST);
