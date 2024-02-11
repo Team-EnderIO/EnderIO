@@ -27,10 +27,11 @@ public class Owner implements IOwner, INBTSerializable<CompoundTag> {
         }
 
         // Perform update.
-        SkullBlockEntity.updateGameprofile(this.profile, newProfile -> {
+        // TODO: NEO-PORT: What do we do with this...
+        /*SkullBlockEntity.updateGameprofile(this.profile, newProfile -> {
             this.profile = newProfile;
             callback.profileSet(this.profile);
-        });
+        });*/
     }
 
     @Override

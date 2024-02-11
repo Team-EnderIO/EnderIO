@@ -10,16 +10,18 @@ import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
+import java.util.Optional;
+
 public class UseGliderTrigger extends SimpleCriterionTrigger<UseGliderTrigger.TriggerInstance> {
     static final ResourceLocation ID = EnderIO.loc("use_glider");
-    public static final UseGliderTrigger USE_GLIDER = CriteriaTriggers.register(new UseGliderTrigger());
+    public static final UseGliderTrigger USE_GLIDER = CriteriaTriggers.register(EnderIO.loc("use_glider").toString(), new UseGliderTrigger());
     public ResourceLocation getId() {
         return ID;
     }
 
     @Override
-    protected TriggerInstance createInstance(JsonObject pJson, ContextAwarePredicate player, DeserializationContext pContext) {
-        return new TriggerInstance();
+    protected TriggerInstance createInstance(JsonObject pJson, Optional<ContextAwarePredicate> optional, DeserializationContext pContext) {
+        return new TriggerInstance(optional);
     }
 
     public void trigger(ServerPlayer pPlayer) {
@@ -31,8 +33,8 @@ public class UseGliderTrigger extends SimpleCriterionTrigger<UseGliderTrigger.Tr
 
     public static class TriggerInstance extends AbstractCriterionTriggerInstance {
 
-        public TriggerInstance() {
-            super(UseGliderTrigger.ID, ContextAwarePredicate.ANY);
+        public TriggerInstance(Optional<ContextAwarePredicate> optional) {
+            super(optional);
         }
     }
 }

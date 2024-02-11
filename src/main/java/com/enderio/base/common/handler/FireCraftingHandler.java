@@ -13,6 +13,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -42,7 +43,7 @@ public class FireCraftingHandler {
     private static final Random RANDOM = new Random();
     private static final ConcurrentMap<FireIndex, Long> FIRE_TRACKER = new ConcurrentHashMap<>();
 
-    private static List<FireCraftingRecipe> cachedRecipes;
+    private static List<RecipeHolder<FireCraftingRecipe>> cachedRecipes;
     private static boolean recipesCached = false;
 
     private record FireIndex(BlockPos pos, ResourceKey<Level> dimension) {}
@@ -76,7 +77,8 @@ public class FireCraftingHandler {
 
             // Search for this recipe.
             FireCraftingRecipe matchingRecipe = null;
-            for (FireCraftingRecipe recipe : cachedRecipes) {
+            for (var recipeHolder : cachedRecipes) {
+                var recipe = recipeHolder.value();
                 if (recipe.isBaseValid(baseBlock) && recipe.isDimensionValid(level.dimension())) {
                     matchingRecipe = recipe;
                     break;

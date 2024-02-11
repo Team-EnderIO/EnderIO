@@ -3,6 +3,7 @@ package com.enderio.base.common.util;
 import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.block.painted.IPaintedBlock;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -14,7 +15,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -22,10 +22,8 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class PaintUtils {
-    @Nullable
     public static Block getBlockFromRL(String rl) {
-        //Not Nullable, as ForgeRegistries usually return a default
-        return ForgeRegistries.BLOCKS.getValue(new ResourceLocation(rl));
+        return BuiltInRegistries.BLOCK.get(new ResourceLocation(rl));
     }
 
     @Nullable

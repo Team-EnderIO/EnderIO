@@ -1,8 +1,8 @@
 package com.enderio.base.data.recipe;
 
 import com.enderio.core.common.recipes.CountedIngredient;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 
 import java.util.HashSet;
 import java.util.List;
@@ -41,7 +41,7 @@ public class RecipeDataUtil {
         for (Ingredient.Value value : ingredient.values) {
             if (value instanceof Ingredient.ItemValue itemValue) {
                 itemValue.getItems().forEach(item -> {
-                    var itemId = ForgeRegistries.ITEMS.getKey(item.getItem());
+                    var itemId = BuiltInRegistries.ITEM.getKey(item.getItem());
                     if (itemId != null) {
                         mods.add(itemId.getNamespace());
                     }

@@ -2,12 +2,16 @@ package com.enderio.base.data.recipe;
 
 import com.enderio.base.common.init.EIORecipes;
 import com.google.gson.JsonObject;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
+import net.neoforged.neoforge.common.conditions.ICondition;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -27,10 +31,19 @@ public class ShapedEntityStorageRecipeBuilder extends ShapedRecipeBuilder {
     }
 
     @Override
-    public void save(Consumer<FinishedRecipe> pFinishedRecipeConsumer, ResourceLocation pRecipeId) {
-        super.save(recipe -> {
-            pFinishedRecipeConsumer.accept(new Result((ShapedRecipeBuilder.Result) recipe));
-        }, pRecipeId);
+    public void save(RecipeOutput recipeOutput, ResourceLocation pRecipeId) {
+
+        super.save(new RecipeOutput() {
+            @Override
+            public void accept(FinishedRecipe finishedRecipe, ICondition... iConditions) {
+                recipeOutput.accept(new Result((ShapedRecipeBuilder.Result) finishedRecipe));
+            }
+
+            @Override
+            public Advancement.Builder advancement() {
+                return recipeOutput.advancement();
+            }
+        });
     }
 
     public static class Result implements FinishedRecipe {
@@ -43,20 +56,14 @@ public class ShapedEntityStorageRecipeBuilder extends ShapedRecipeBuilder {
         }
 
         @Override
-        public RecipeSerializer<?> getType() {
+        public RecipeSerializer<?> type() {
             return EIORecipes.SHAPED_ENTITY_STORAGE.get();
         }
 
         @Nullable
         @Override
-        public JsonObject serializeAdvancement() {
-            return wrapped.serializeAdvancement();
-        }
-
-        @Nullable
-        @Override
-        public ResourceLocation getAdvancementId() {
-            return wrapped.getAdvancementId();
+        public AdvancementHolder advancement() {
+            return wrapped.advancement();
         }
 
         @Override
@@ -65,8 +72,8 @@ public class ShapedEntityStorageRecipeBuilder extends ShapedRecipeBuilder {
         }
 
         @Override
-        public ResourceLocation getId() {
-            return wrapped.getId();
+        public ResourceLocation id() {
+            return wrapped.id();
         }
     }
 }

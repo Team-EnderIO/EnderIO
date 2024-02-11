@@ -31,7 +31,7 @@ public class AutoSmeltModifier extends LootModifier {
         var recipeManager = level.getRecipeManager();
         return generatedLoot.stream().map(stack ->
             recipeManager.getRecipeFor(RecipeType.SMELTING, new SimpleContainer(stack), level)
-                .map(r -> r.assemble(new SimpleContainer(stack), level.registryAccess()))
+                .map(r -> r.value().assemble(new SimpleContainer(stack), level.registryAccess()))
                 .filter(itemStack -> !itemStack.isEmpty())
                 .map(itemStack -> ItemHandlerHelper.copyStackWithSize(itemStack, stack.getCount() * itemStack.getCount()))
                 .orElse(stack))

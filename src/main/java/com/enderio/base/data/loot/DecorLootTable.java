@@ -2,7 +2,6 @@ package com.enderio.base.data.loot;
 
 import com.enderio.base.EIONBTKeys;
 import com.enderio.regilite.data.RegiliteBlockLootProvider;
-import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SlabBlock;

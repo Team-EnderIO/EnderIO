@@ -1,6 +1,5 @@
 package com.enderio.base.client;
 
-import com.enderio.EnderIO;
 import com.enderio.base.client.model.PaintedBlockGeometry;
 import com.enderio.base.client.particle.RangeParticle;
 import com.enderio.base.client.renderer.block.EnderSkullRenderer;
@@ -16,6 +15,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.neoforged.api.distmarker.Dist;
@@ -67,7 +67,7 @@ public class ClientSetup {
 
     @SubscribeEvent
     public static void addLayers(EntityRenderersEvent.AddLayers event) {
-        for (String skin : event.getSkins()) {
+        for (var skin : event.getSkins()) {
             if (event.getSkin(skin) instanceof PlayerRenderer playerRenderer) {
 
                 playerRenderer.addLayer(new ActiveGliderRenderLayer(playerRenderer));
@@ -96,7 +96,7 @@ public class ClientSetup {
     private static Optional<Item> findGliderForModelRL(ResourceLocation rl) {
         String namespace = rl.getNamespace();
         String path = rl.getPath().substring("models/enderio_glider/".length(), rl.getPath().length() - 5);
-        return Optional.ofNullable(ForgeRegistries.ITEMS.getValue(new ResourceLocation(namespace, path)));
+        return Optional.of(BuiltInRegistries.ITEM.get(new ResourceLocation(namespace, path)));
     }
 
     @SubscribeEvent

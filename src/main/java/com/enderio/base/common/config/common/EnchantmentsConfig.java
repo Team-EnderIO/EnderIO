@@ -11,11 +11,11 @@ public class EnchantmentsConfig {
     public final ModConfigSpec.ConfigValue<Integer> REPELLENT_MAX_COST_MULT;
     public final ModConfigSpec.ConfigValue<Integer> REPELLENT_MIN_COST_BASE;
     public final ModConfigSpec.ConfigValue<Integer> REPELLENT_MIN_COST_MULT;
-    public final ModConfigSpec.ConfigValue<Float> REPELLENT_CHANCE_BASE;
-    public final ModConfigSpec.ConfigValue<Float> REPELLENT_CHANCE_MULT;
+    public final ModConfigSpec.ConfigValue<Double> REPELLENT_CHANCE_BASE;
+    public final ModConfigSpec.ConfigValue<Double> REPELLENT_CHANCE_MULT;
     public final ModConfigSpec.ConfigValue<Double> REPELLENT_RANGE_BASE;
     public final ModConfigSpec.ConfigValue<Double> REPELLENT_RANGE_MULT;
-    public final ModConfigSpec.ConfigValue<Float> REPELLENT_NON_PLAYER_CHANCE;
+    public final ModConfigSpec.ConfigValue<Double> REPELLENT_NON_PLAYER_CHANCE;
 
     public final ModConfigSpec.ConfigValue<Integer> SHIMMER_MAX_COST;
     public final ModConfigSpec.ConfigValue<Integer> SHIMMER_MIN_COST;

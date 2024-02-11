@@ -1,6 +1,7 @@
 package com.enderio.base.common.network;
 
 import net.minecraft.client.Minecraft;
+import net.neoforged.neoforge.network.NetworkEvent;
 import net.neoforged.neoforge.network.NetworkEvent.Context;
 
 import java.util.function.Supplier;
@@ -10,7 +11,7 @@ import java.util.function.Supplier;
  */
 public class ServerToClientLightUpdateHandler {
 
-    public static void handlePacket(ServerToClientLightUpdate message, Supplier<Context> ctx) {
+    public static void handlePacket(ServerToClientLightUpdate message, NetworkEvent.Context ctx) {
         Minecraft.getInstance().level.setBlock(message.pos, message.state, 3);
     }
 

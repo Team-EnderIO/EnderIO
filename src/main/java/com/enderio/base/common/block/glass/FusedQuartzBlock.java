@@ -76,7 +76,7 @@ public class FusedQuartzBlock extends AbstractGlassBlock {
 
     @Override
     public float getExplosionResistance() {
-        return explosionResistant ? BaseConfig.COMMON.BLOCKS.EXPLOSION_RESISTANCE.get() : super.getExplosionResistance();
+        return explosionResistant ? BaseConfig.COMMON.BLOCKS.EXPLOSION_RESISTANCE.get().floatValue() : super.getExplosionResistance();
     }
 
     @Override

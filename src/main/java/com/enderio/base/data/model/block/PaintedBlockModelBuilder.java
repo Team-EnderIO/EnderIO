@@ -3,11 +3,11 @@ package com.enderio.base.data.model.block;
 import com.enderio.EnderIO;
 import com.google.gson.JsonObject;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.client.model.generators.CustomLoaderBuilder;
 import net.neoforged.neoforge.client.model.generators.ModelBuilder;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -39,7 +39,7 @@ public class PaintedBlockModelBuilder<T extends ModelBuilder<T>> extends CustomL
     @Override
     public JsonObject toJson(JsonObject json) {
         json = super.toJson(json);
-        json.addProperty("reference", Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(
+        json.addProperty("reference", Objects.requireNonNull(BuiltInRegistries.BLOCK.getKey(
             Objects.requireNonNull(referenceBlock, "Reference block was null!")
         ), "Reference block resource location was null!").toString());
         if (itemTextureRotation != null && itemTextureRotation != Direction.NORTH) {

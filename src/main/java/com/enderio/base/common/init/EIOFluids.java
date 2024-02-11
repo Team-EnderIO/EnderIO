@@ -6,18 +6,16 @@ import com.enderio.regilite.holder.RegiliteFluid;
 import com.enderio.regilite.registry.BlockRegistry;
 import com.enderio.regilite.registry.FluidRegister;
 import com.enderio.regilite.registry.ItemRegistry;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.Fluid;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
-import net.neoforged.neoforge.client.model.generators.loaders.DynamicFluidContainerModelBuilder;
-import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 // TODO: Fluid behaviours and some cleaning. https://github.com/SleepyTrousers/EnderIO-Rewrite/issues/34
 
@@ -25,7 +23,8 @@ import net.neoforged.neoforge.fluids.FluidType;
 
 @SuppressWarnings("unused")
 public class EIOFluids {
-    private static final FluidRegister FLUID_REGISTRY = FluidRegister.create(EnderIO.MODID);
+    private static final FluidRegister FLUID_TYPE_REGISTRY = FluidRegister.create(EnderIO.MODID);
+    private static final DeferredRegister<Fluid> FLUID_REGISTRY = DeferredRegister.create(Registries.FLUID, EnderIO.MODID);
     private static final ItemRegistry ITEM_REGISTRY = ItemRegistry.createRegistry(EnderIO.MODID);
     private static final BlockRegistry BLOCK_REGISTRY = BlockRegistry.createRegistry(EnderIO.MODID);
 
@@ -82,13 +81,15 @@ public class EIOFluids {
             thing.renderType(RenderType::translucent);
         }*/
 
-        return FLUID_REGISTRY
+        return FLUID_TYPE_REGISTRY
             .registerFluid(name, properties)
+            .createFluid(FLUID_REGISTRY)
             .withBlock(BLOCK_REGISTRY, fluid -> new LiquidBlock(fluid, BlockBehaviour.Properties.copy(Blocks.WATER)))
             .finishLiquidBlock();
     }
 
     public static void register(IEventBus bus) {
+        FLUID_TYPE_REGISTRY.register(bus);
         FLUID_REGISTRY.register(bus);
         BLOCK_REGISTRY.register(bus);
         ITEM_REGISTRY.register(bus);

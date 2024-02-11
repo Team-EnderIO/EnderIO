@@ -102,7 +102,7 @@ public class EnderIO {
         EIOBlocks.register(modEventBus);
         EIOBlockEntities.register(modEventBus);
         EIOFluids.register(modEventBus);
-        EIOEnchantments.register();
+        EIOEnchantments.register(modEventBus);
         EIOTags.register();
         EIOMenus.register();
         EIOPackets.register();
@@ -131,12 +131,12 @@ public class EnderIO {
 
         EIODataProvider provider = new EIODataProvider("base");
 
-        provider.addSubProvider(event.includeServer(), new MaterialRecipeProvider(packOutput));
-        provider.addSubProvider(event.includeServer(), new BlockRecipeProvider(packOutput));
-        provider.addSubProvider(event.includeServer(), new ItemRecipeProvider(packOutput));
-        provider.addSubProvider(event.includeServer(), new GrindingBallRecipeProvider(packOutput));
-        provider.addSubProvider(event.includeServer(), new GlassRecipeProvider(packOutput));
-        provider.addSubProvider(event.includeServer(), new FireCraftingRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new MaterialRecipeProvider(packOutput, lookupProvider));
+        provider.addSubProvider(event.includeServer(), new BlockRecipeProvider(packOutput, lookupProvider));
+        provider.addSubProvider(event.includeServer(), new ItemRecipeProvider(packOutput, lookupProvider));
+        provider.addSubProvider(event.includeServer(), new GrindingBallRecipeProvider(packOutput, lookupProvider));
+        provider.addSubProvider(event.includeServer(), new GlassRecipeProvider(packOutput, lookupProvider));
+        provider.addSubProvider(event.includeServer(), new FireCraftingRecipeProvider(packOutput, lookupProvider));
         provider.addSubProvider(event.includeServer(), new EIOLootModifiersProvider(packOutput));
 
         var b = new EIOBlockTagsProvider(packOutput, lookupProvider, existingFileHelper);

@@ -15,7 +15,6 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Consumer;
 
-@Mod.EventBusSubscriber(modid = EnderIO.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class EIOCreativeTabs {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, EnderIO.MODID);
 

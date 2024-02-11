@@ -19,7 +19,7 @@ public class UseGliderAdvancementBenefit {
 
     @SubscribeEvent
     public static void onEarnAdvancement(AdvancementEvent.AdvancementEarnEvent earnAdvancement) {
-        if (earnAdvancement.getAdvancement().getId().equals(USE_GLIDER_ADVANCEMENT)) {
+        if (earnAdvancement.getAdvancement().id().equals(USE_GLIDER_ADVANCEMENT)) {
             Item item = PLAYER_BOUND_GLIDERS.get(earnAdvancement.getEntity().getUUID().hashCode());
             if (item != null && !earnAdvancement.getEntity().addItem(item.getDefaultInstance())) {
                 earnAdvancement.getEntity().drop(item.getDefaultInstance(), false);

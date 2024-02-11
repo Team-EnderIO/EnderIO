@@ -18,7 +18,6 @@ import net.neoforged.fml.common.Mod;
 
 import java.util.List;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ActiveGliderRenderLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
 
     public ActiveGliderRenderLayer(PlayerRenderer pRenderer) {

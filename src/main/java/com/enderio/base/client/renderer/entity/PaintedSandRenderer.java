@@ -17,7 +17,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.client.event.RenderNameTagEvent;
 import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.common.NeoForge;
 
 public class PaintedSandRenderer extends FallingBlockRenderer {
     public PaintedSandRenderer(EntityRendererProvider.Context ctx) {
@@ -47,9 +49,9 @@ public class PaintedSandRenderer extends FallingBlockRenderer {
                 pMatrixStack.popPose();
 
                 //Super.super.render
-                net.neoforged.neoforge.client.event.RenderNameTagEvent renderNameplateEvent = new net.neoforged.neoforge.client.event.RenderNameTagEvent(pEntity,
+                RenderNameTagEvent renderNameplateEvent = new net.neoforged.neoforge.client.event.RenderNameTagEvent(pEntity,
                     pEntity.getDisplayName(), this, pMatrixStack, pBuffer, pPackedLight, pPartialTicks);
-                net.neoforged.neoforge.common.MinecraftForge.EVENT_BUS.post(renderNameplateEvent);
+                NeoForge.EVENT_BUS.post(renderNameplateEvent);
                 if (renderNameplateEvent.getResult() != net.neoforged.bus.api.Event.Result.DENY && (
                     renderNameplateEvent.getResult() == net.neoforged.bus.api.Event.Result.ALLOW || this.shouldShowName(pEntity))) {
                     this.renderNameTag(pEntity, renderNameplateEvent.getContent(), pMatrixStack, pBuffer, pPackedLight);

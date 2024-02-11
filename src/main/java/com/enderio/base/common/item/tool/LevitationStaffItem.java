@@ -53,7 +53,7 @@ public class LevitationStaffItem extends PoweredToggledItem {
         super.setFullCharge(pStack);
         getTankCap(pStack).ifPresent(handler -> {
             if (handler instanceof AcceptingFluidItemHandler fluidHandler) {
-                fluidHandler.setFluid(new FluidStack(EIOFluids.VAPOR_OF_LEVITY.get(), handler.getTankCapacity(0)));
+                fluidHandler.setFluid(new FluidStack(EIOFluids.VAPOR_OF_LEVITY.getSource(), handler.getTankCapacity(0)));
             }
         });
     }

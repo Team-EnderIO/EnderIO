@@ -3,8 +3,8 @@ package com.enderio.base.common.config.common;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class ItemsConfig {
-    public final ModConfigSpec.ConfigValue<Float> ENDERIOS_CHANCE;
-    public final ModConfigSpec.ConfigValue<Float> ENDERIOS_RANGE;
+    public final ModConfigSpec.ConfigValue<Double> ENDERIOS_CHANCE;
+    public final ModConfigSpec.ConfigValue<Double> ENDERIOS_RANGE;
 
     public final ModConfigSpec.ConfigValue<Integer> ELECTROMAGNET_ENERGY_USE;
     public final ModConfigSpec.ConfigValue<Integer> ELECTROMAGNET_MAX_ENERGY;

@@ -4,8 +4,10 @@ import com.enderio.base.common.travel.TravelSavedData;
 import com.enderio.core.common.network.Packet;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.neoforged.neoforge.network.NetworkDirection;
+import net.neoforged.fml.LogicalSide;
+import net.neoforged.neoforge.network.INetworkDirection;
 import net.neoforged.neoforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.PlayNetworkDirection;
 
 import java.util.Optional;
 
@@ -25,7 +27,7 @@ public class SyncTravelDataPacket implements Packet {
 
     @Override
     public boolean isValid(NetworkEvent.Context context) {
-        return context.getDirection() == NetworkDirection.PLAY_TO_CLIENT;
+        return context.getDirection() == PlayNetworkDirection.PLAY_TO_CLIENT;
     }
 
     @Override
@@ -47,8 +49,8 @@ public class SyncTravelDataPacket implements Packet {
         }
 
         @Override
-        public Optional<NetworkDirection> getDirection() {
-            return Optional.of(NetworkDirection.PLAY_TO_CLIENT);
+        public Optional<INetworkDirection<?>> getDirection() {
+            return Optional.of(PlayNetworkDirection.PLAY_TO_CLIENT);
         }
     }
 }

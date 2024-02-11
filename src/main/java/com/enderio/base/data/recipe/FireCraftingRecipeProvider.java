@@ -5,28 +5,29 @@ import com.enderio.base.common.init.EIORecipes;
 import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 
 import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
+import java.util.concurrent.CompletableFuture;
 
 public class FireCraftingRecipeProvider extends EnderRecipeProvider {
-    public FireCraftingRecipeProvider(PackOutput packOutput) {
-        super(packOutput);
+    public FireCraftingRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+        super(packOutput, lookupProvider);
     }
 
     @Override
-    protected void buildRecipes(Consumer<FinishedRecipe> finishedRecipeConsumer) {
-        finishedRecipeConsumer.accept(new FinishedFireRecipe(
+    protected void buildRecipes(RecipeOutput recipeOutput) {
+        recipeOutput.accept(new FinishedFireRecipe(
             EnderIO.loc("fire_crafting/infinity"),
             EnderIO.loc("fire_crafting/infinity"),
             1,
@@ -63,7 +64,7 @@ public class FireCraftingRecipeProvider extends EnderRecipeProvider {
             JsonArray basesJson = new JsonArray();
             for (Block baseBlock : bases) {
                 JsonObject obj = new JsonObject();
-                obj.addProperty("block", ForgeRegistries.BLOCKS.getKey(baseBlock).toString());
+                obj.addProperty("block", BuiltInRegistries.BLOCK.getKey(baseBlock).toString());
                 basesJson.add(obj);
             }
             for (TagKey<Block> tag : baseTags) {
@@ -86,7 +87,7 @@ public class FireCraftingRecipeProvider extends EnderRecipeProvider {
         }
 
         @Override
-        public RecipeSerializer<?> getType() {
+        public RecipeSerializer<?> type() {
             return EIORecipes.FIRE_CRAFTING.serializer().get();
         }
     }

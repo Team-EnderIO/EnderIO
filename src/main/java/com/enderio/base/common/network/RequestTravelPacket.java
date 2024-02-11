@@ -7,8 +7,9 @@ import com.enderio.core.common.network.Packet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.neoforged.neoforge.network.NetworkDirection;
+import net.neoforged.neoforge.network.INetworkDirection;
 import net.neoforged.neoforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.PlayNetworkDirection;
 
 import java.util.Optional;
 
@@ -30,7 +31,7 @@ public class RequestTravelPacket implements Packet {
 
     @Override
     public boolean isValid(NetworkEvent.Context context) {
-        return context.getDirection() == NetworkDirection.PLAY_TO_SERVER;
+        return context.getDirection() == PlayNetworkDirection.PLAY_TO_SERVER;
     }
 
     @Override
@@ -51,8 +52,8 @@ public class RequestTravelPacket implements Packet {
         }
 
         @Override
-        public Optional<NetworkDirection> getDirection() {
-            return Optional.of(NetworkDirection.PLAY_TO_SERVER);
+        public Optional<INetworkDirection<?>> getDirection() {
+            return Optional.of(PlayNetworkDirection.PLAY_TO_SERVER);
         }
     }
 

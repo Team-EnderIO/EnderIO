@@ -18,7 +18,6 @@ import java.util.Optional;
 /**
  * Helper class for Capacitors
  */
-@Mod.EventBusSubscriber(modid = EnderIO.MODID)
 public class CapacitorUtil {
     /**
      * Adds a tooltip for loot capacitors based on it's stats.

@@ -3,14 +3,14 @@ package com.enderio.base.common.init;
 import com.enderio.EnderIO;
 import com.enderio.base.client.gui.screen.CoordinateMenuScreen;
 import com.enderio.base.common.menu.CoordinateMenu;
-import com.tterrag.registrate.Registrate;
-import com.tterrag.registrate.util.entry.MenuEntry;
+import com.enderio.regilite.holder.RegiliteMenu;
+import com.enderio.regilite.registry.MenuRegistry;
 
 public class EIOMenus {
-    private static final Registrate REGISTRATE = EnderIO.registrate();
+    private static final MenuRegistry MENU_REGISTRY = MenuRegistry.createRegistry(EnderIO.MODID);
 
-    public static final MenuEntry<CoordinateMenu> COORDINATE = REGISTRATE.menu("coordinate",
-        CoordinateMenu::factory, () -> CoordinateMenuScreen::new).register();
+    public static final RegiliteMenu<CoordinateMenu> COORDINATE = MENU_REGISTRY
+        .registerMenu("coordinate", CoordinateMenu::factory, CoordinateMenuScreen::new);
 
     public static void register() {}
 }
