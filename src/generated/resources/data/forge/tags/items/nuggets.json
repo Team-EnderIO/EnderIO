@@ -1,13 +1,13 @@
 {
   "values": [
-    "#forge:nuggets/conductive_alloy",
-    "#forge:nuggets/copper_alloy",
-    "#forge:nuggets/dark_steel",
-    "#forge:nuggets/end_steel",
-    "#forge:nuggets/energetic_alloy",
-    "#forge:nuggets/pulsating_alloy",
-    "#forge:nuggets/redstone_alloy",
-    "#forge:nuggets/soularium",
-    "#forge:nuggets/vibrant_alloy"
+    "#neoforge:nuggets/conductive_alloy",
+    "#neoforge:nuggets/copper_alloy",
+    "#neoforge:nuggets/dark_steel",
+    "#neoforge:nuggets/end_steel",
+    "#neoforge:nuggets/energetic_alloy",
+    "#neoforge:nuggets/pulsating_alloy",
+    "#neoforge:nuggets/redstone_alloy",
+    "#neoforge:nuggets/soularium",
+    "#neoforge:nuggets/vibrant_alloy"
   ]
 }

@@ -3,13 +3,13 @@
   "category": "equipment",
   "key": {
     "C": {
-      "tag": "forge:ingots/conductive_alloy"
+      "tag": "neoforge:ingots/conductive_alloy"
     },
     "E": {
-      "tag": "forge:ingots/copper_alloy"
+      "tag": "neoforge:ingots/copper_alloy"
     },
     "V": {
-      "tag": "forge:gems/vibrant_crystal"
+      "tag": "neoforge:gems/vibrant_crystal"
     }
   },
   "pattern": [

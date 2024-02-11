@@ -9,7 +9,7 @@
       "item": "minecraft:glowstone"
     },
     "I": {
-      "tag": "forge:ingots/vibrant_alloy"
+      "tag": "neoforge:ingots/vibrant_alloy"
     }
   },
   "pattern": [

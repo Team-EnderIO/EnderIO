@@ -19,7 +19,7 @@
               "source": "block_entity"
             }
           ],
-          "name": "enderio:painted_wooden_pressure_plate"
+          "name": "minecraft:air"
         }
       ],
       "rolls": 1.0

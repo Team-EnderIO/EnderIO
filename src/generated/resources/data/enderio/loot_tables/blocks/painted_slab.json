@@ -31,7 +31,7 @@
               "source": "block_entity"
             }
           ],
-          "name": "enderio:painted_slab"
+          "name": "minecraft:air"
         }
       ],
       "rolls": 1.0
@@ -66,7 +66,7 @@
               "source": "block_entity"
             }
           ],
-          "name": "enderio:painted_slab"
+          "name": "minecraft:air"
         }
       ],
       "rolls": 1.0

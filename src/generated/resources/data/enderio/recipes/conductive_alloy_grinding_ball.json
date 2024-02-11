@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "I": {
-      "tag": "forge:ingots/conductive_alloy"
+      "tag": "neoforge:ingots/conductive_alloy"
     }
   },
   "pattern": [

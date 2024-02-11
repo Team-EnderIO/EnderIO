@@ -9,7 +9,7 @@
       "tag": "forge:ender_pearls"
     },
     "I": {
-      "tag": "forge:ingots/copper_alloy"
+      "tag": "neoforge:ingots/copper_alloy"
     }
   },
   "pattern": [

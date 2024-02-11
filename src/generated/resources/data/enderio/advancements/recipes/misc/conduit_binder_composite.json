@@ -46,10 +46,10 @@
   },
   "requirements": [
     [
+      "has_the_recipe",
       "has_ingredient_gravel",
       "has_ingredient_sand",
-      "has_ingredient_clay",
-      "has_the_recipe"
+      "has_ingredient_clay"
     ]
   ],
   "rewards": {

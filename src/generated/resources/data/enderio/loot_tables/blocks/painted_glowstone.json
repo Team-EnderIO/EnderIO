@@ -19,7 +19,7 @@
               "source": "block_entity"
             }
           ],
-          "name": "enderio:painted_glowstone"
+          "name": "minecraft:air"
         }
       ],
       "rolls": 1.0

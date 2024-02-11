@@ -6,6 +6,7 @@ import com.enderio.regilite.holder.RegiliteFluid;
 import com.enderio.regilite.registry.BlockRegistry;
 import com.enderio.regilite.registry.FluidRegister;
 import com.enderio.regilite.registry.ItemRegistry;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
@@ -29,60 +30,58 @@ public class EIOFluids {
     private static final BlockRegistry BLOCK_REGISTRY = BlockRegistry.createRegistry(EnderIO.MODID);
 
     public static final RegiliteFluid<FluidType> NUTRIENT_DISTILLATION =
-        fluid("nutrient_distillation", FluidType.Properties.create().density(1500).viscosity(3000));
+        fluid("nutrient_distillation", "Nutrient Distillation", FluidType.Properties.create().density(1500).viscosity(3000));
 
     public static final RegiliteFluid<FluidType> DEW_OF_THE_VOID =
-        fluid("dew_of_the_void", FluidType.Properties.create().density(200).viscosity(1000).temperature(175))
-        .setTranslation("Fluid of the Void");
+        fluid("dew_of_the_void", "Fluid of the Void", FluidType.Properties.create().density(200).viscosity(1000).temperature(175));
 
     public static final RegiliteFluid<FluidType> VAPOR_OF_LEVITY =
-        gasFluid("vapor_of_levity", FluidType.Properties.create().density(-10).viscosity(100).temperature(5));
+        gasFluid("vapor_of_levity", "Vapor of Levity", FluidType.Properties.create().density(-10).viscosity(100).temperature(5));
 
     public static final RegiliteFluid<FluidType> HOOTCH =
-        fluid("hootch", FluidType.Properties.create().density(900).viscosity(1000));
+        fluid("hootch", "Hootch", FluidType.Properties.create().density(900).viscosity(1000));
 
     public static final RegiliteFluid<FluidType> ROCKET_FUEL =
-        fluid("rocket_fuel", FluidType.Properties.create().density(900).viscosity(1000));
+        fluid("rocket_fuel", "Rocket Fuel", FluidType.Properties.create().density(900).viscosity(1000));
 
     public static final RegiliteFluid<FluidType> FIRE_WATER =
-        fluid("fire_water", FluidType.Properties.create().density(900).viscosity(1000).temperature(2000));
+        fluid("fire_water", "Fire Water", FluidType.Properties.create().density(900).viscosity(1000).temperature(2000));
 
     public static final RegiliteFluid<FluidType> XP_JUICE =
-        fluid("xp_juice", FluidType.Properties.create().lightLevel(10).density(800).viscosity(1500))
-        .setTranslation("XP Juice")
+        fluid("xp_juice", "XP Juice", FluidType.Properties.create().lightLevel(10).density(800).viscosity(1500))
         .addFluidTags(EIOTags.Fluids.EXPERIENCE);
 
     public static final RegiliteFluid<FluidType> LIQUID_SUNSHINE =
-        fluid("liquid_sunshine", FluidType.Properties.create().density(200).viscosity(400));
+        fluid("liquid_sunshine", "Liquid Sunshine", FluidType.Properties.create().density(200).viscosity(400));
 
     public static final RegiliteFluid<FluidType> CLOUD_SEED =
-        fluid("cloud_seed", FluidType.Properties.create().density(500).viscosity(800));
+        fluid("cloud_seed", "Cloud Seed", FluidType.Properties.create().density(500).viscosity(800));
 
     public static final RegiliteFluid<FluidType> CLOUD_SEED_CONCENTRATED =
-        fluid("cloud_seed_concentrated", FluidType.Properties.create().density(1000).viscosity(1200));
+        fluid("cloud_seed_concentrated", "Cloud Seed Concentrated", FluidType.Properties.create().density(1000).viscosity(1200));
 
-    private static RegiliteFluid<FluidType> fluid(String name, FluidType.Properties properties) {
+    private static RegiliteFluid<FluidType> fluid(String name, String translation, FluidType.Properties properties) {
         return baseFluid(name, properties)
+            .setTranslation(translation)
             .withBucket(ITEM_REGISTRY, fluid -> new BucketItem(fluid, new Item.Properties().stacksTo(1)))
             .setTab(EIOCreativeTabs.MAIN)
+            .setTranslation(translation + " Bucket")
             .finishBucket();
     }
 
-    private static RegiliteFluid<FluidType> gasFluid(String name, FluidType.Properties properties) {
+    private static RegiliteFluid<FluidType> gasFluid(String name, String translation, FluidType.Properties properties) {
         return baseFluid(name, properties)
+            .setTranslation(translation)
             .withBucket(ITEM_REGISTRY, fluid -> new BucketItem(fluid, new Item.Properties().stacksTo(1)))
             .setTab(EIOCreativeTabs.MAIN)
+            .setTranslation(translation + " Bucket")
             .finishBucket();
     }
 
     private static RegiliteFluid<FluidType> baseFluid(String name, FluidType.Properties properties) {
-        // TODO: RenderType might be missing.
-        /*if (FMLEnvironment.dist.isClient()) {
-            thing.renderType(RenderType::translucent);
-        }*/
-
         return FLUID_TYPE_REGISTRY
             .registerFluid(name, properties)
+            .setRenderType(() -> RenderType::translucent)
             .createFluid(FLUID_REGISTRY)
             .withBlock(BLOCK_REGISTRY, fluid -> new LiquidBlock(fluid, BlockBehaviour.Properties.copy(Blocks.WATER)))
             .finishLiquidBlock();

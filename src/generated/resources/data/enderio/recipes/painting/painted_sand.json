@@ -1,7 +1,0 @@
-{
-  "type": "enderio:painting",
-  "input": {
-    "tag": "minecraft:sand"
-  },
-  "output": "enderio:painted_sand"
-}
