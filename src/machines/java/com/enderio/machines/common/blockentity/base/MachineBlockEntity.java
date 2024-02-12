@@ -9,7 +9,11 @@ import com.enderio.base.common.blockentity.IWrenchable;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.particle.RangeParticleData;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
-import com.enderio.core.common.network.slot.*;
+import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
+import com.enderio.core.common.network.slot.EnumNetworkDataSlot;
+import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
+import com.enderio.core.common.network.slot.NBTSerializableNetworkDataSlot;
+import com.enderio.core.common.network.slot.SetNetworkDataSlot;
 import com.enderio.core.common.util.PlayerInteractionUtil;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.MachineBlock;
@@ -29,7 +33,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -44,6 +47,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.fml.LogicalSide;
@@ -51,7 +55,15 @@ import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
 import static net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
@@ -545,14 +557,8 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
      * Move fluids from one handler to the other.
      */
     protected int moveFluids(IFluidHandler from, IFluidHandler to, int maxDrain) {
-        FluidStack stack = from.drain(maxDrain, FluidAction.SIMULATE);
-        if(stack.isEmpty()) {
-            return 0;
-        }
-        int filled = to.fill(stack, FluidAction.EXECUTE);
-        stack.setAmount(filled);
-        from.drain(stack, FluidAction.EXECUTE);
-        return filled;
+        FluidStack stack = FluidUtil.tryFluidTransfer(to, from, maxDrain, true);
+        return stack.getAmount();
     }
 
     // endregion
