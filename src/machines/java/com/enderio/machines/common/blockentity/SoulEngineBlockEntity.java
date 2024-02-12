@@ -11,14 +11,17 @@ import com.enderio.core.common.network.slot.ResourceLocationNetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
+import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.menu.SoulEngineMenu;
 import com.enderio.machines.common.souldata.EngineSoul;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Inventory;
@@ -35,7 +38,6 @@ import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -60,9 +62,8 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
     private static boolean reload = false;
     private boolean reloadCache = !reload;
 
-    public SoulEngineBlockEntity(BlockEntityType<?> type,
-        BlockPos worldPosition, BlockState blockState) {
-        super(EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO, type, worldPosition, blockState);
+    public SoulEngineBlockEntity(BlockPos worldPosition, BlockState blockState) {
+        super(EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO, MachineBlockEntities.SOUL_ENGINE.get(), worldPosition, blockState);
         addDataSlot(new ResourceLocationNetworkDataSlot(() -> this.getEntityType().orElse(NO_MOB),this::setEntityType));
         addDataSlot(new FluidStackNetworkDataSlot(getFluidTankNN()::getFluid, getFluidTankNN()::setFluid));
     }
@@ -158,14 +159,19 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
             String fluid = soulData.fluid();
             if (fluid.startsWith("#")) { //We have a fluid tag instead
                 TagKey<Fluid> tag = TagKey.create(Registries.FLUID, new ResourceLocation(fluid.substring(1)));
-                Optional<Fluid> optional = ForgeRegistries.FLUIDS.tags().getTag(tag).stream().findFirst();
-                if (optional.isPresent()) {
-                    return fluidStack.getFluid().isSame(optional.get());
+
+                // TODO: NEO-PORT: https://github.com/neoforged/NeoForge/pull/585 may be applicable
+                var optionalTagContents = BuiltInRegistries.FLUID.getTag(tag);
+                if (optionalTagContents.isPresent()) {
+                    var optionalTag = optionalTagContents.get().stream().findFirst();
+                    if (optionalTag.isPresent()) {
+                        return fluidStack.getFluid().isSame(optionalTag.get().value());
+                    }
                 }
             } else {
-                Optional<Holder.Reference<Fluid>> delegate = ForgeRegistries.FLUIDS.getDelegate(new ResourceLocation(fluid));
+                Optional<Holder.Reference<Fluid>> delegate = BuiltInRegistries.FLUID.getHolder(ResourceKey.create(Registries.FLUID, new ResourceLocation(fluid)));
                 if (delegate.isPresent()) {
-                    return fluidStack.getFluid().isSame(delegate.get().get());
+                    return fluidStack.getFluid().isSame(delegate.get().value());
                 }
             }
             return false;

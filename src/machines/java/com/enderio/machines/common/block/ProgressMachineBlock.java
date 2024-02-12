@@ -1,7 +1,7 @@
 package com.enderio.machines.common.block;
 
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
-import com.tterrag.registrate.util.entry.BlockEntityEntry;
+import com.enderio.regilite.holder.RegiliteBlockEntity;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -16,7 +16,7 @@ public class ProgressMachineBlock extends MachineBlock {
 
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
-    public ProgressMachineBlock(Properties properties, BlockEntityEntry<? extends MachineBlockEntity> blockEntityType) {
+    public ProgressMachineBlock(Properties properties, RegiliteBlockEntity<? extends MachineBlockEntity> blockEntityType) {
         super(properties, blockEntityType);
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(POWERED, false));
     }

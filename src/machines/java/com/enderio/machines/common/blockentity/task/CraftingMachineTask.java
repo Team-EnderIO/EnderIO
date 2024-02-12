@@ -11,6 +11,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,7 +29,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
     protected final MultiSlotAccess outputSlots;
 
     @Nullable
-    private R recipe;
+    private RecipeHolder<R> recipe;
 
     private int progressMade;
     private int progressRequired;
@@ -40,7 +41,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
 
     private boolean isComplete;
 
-    public CraftingMachineTask(@NotNull Level level, MachineInventory inventory, C container, MultiSlotAccess outputSlots, @Nullable R recipe) {
+    public CraftingMachineTask(@NotNull Level level, MachineInventory inventory, C container, MultiSlotAccess outputSlots, @Nullable RecipeHolder<R> recipe) {
         this.level = level;
         this.inventory = inventory;
         this.container = container;
@@ -52,9 +53,10 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
         return inventory;
     }
 
+    // TODO: NEO-PORT: Should this return the holder?
     @Nullable
     public R getRecipe() {
-        return recipe;
+        return recipe.value();
     }
 
     // region Abstract Implementation
@@ -95,17 +97,17 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
         // Get the outputs list.
         if (!hasDeterminedOutputs) {
             hasDeterminedOutputs = true;
-            onDetermineOutputs(recipe);
-            outputs = recipe.craft(container, level.registryAccess());
+            onDetermineOutputs(recipe.value());
+            outputs = recipe.value().craft(container, level.registryAccess());
 
             // TODO: Compact any items that are the same into singular stacks?
 
             // Store the recipe energy cost.
-            progressRequired = getProgressRequired(recipe);
+            progressRequired = getProgressRequired(recipe.value());
         }
 
         // If we don't have a recipe match, complete the task and wait for a new one.
-        if (!recipe.matches(container, level)) {
+        if (!recipe.value().matches(container, level)) {
             isComplete = true;
             return;
         }
@@ -120,7 +122,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
             // Attempt to complete the craft
             if (placeOutputs(outputs, false)) {
                 // Take the inputs
-                consumeInputs(recipe);
+                consumeInputs(recipe.value());
 
                 // The receiver was able to take the outputs, task complete.
                 isComplete = true;
@@ -198,7 +200,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
             return tag;
         }
 
-        tag.putString(KEY_RECIPE_ID, recipe.getId().toString());
+        tag.putString(KEY_RECIPE_ID, recipe.id().toString());
         tag.putInt(KEY_PROGRESS_MADE, progressMade);
         tag.putInt(KEY_PROGRESS_REQUIRED, progressRequired);
         tag.putBoolean(KEY_HAS_COLLECTED_INPUTS, hasConsumedInputs);
@@ -235,9 +237,9 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
     }
 
     @Nullable
-    protected R loadRecipe(ResourceLocation id) {
+    protected RecipeHolder<R> loadRecipe(ResourceLocation id) {
         //noinspection unchecked
-        return (R) level.getRecipeManager().byKey(id).orElse(null);
+        return (RecipeHolder<R>) level.getRecipeManager().byKey(id).orElse(null);
     }
 
     // endregion

@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
@@ -23,7 +24,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 
 // TODO: No longer lights in the inventory/hand like other machines...
 public class FluidTankBEWLR extends BlockEntityWithoutLevelRenderer {
@@ -36,7 +36,7 @@ public class FluidTankBEWLR extends BlockEntityWithoutLevelRenderer {
     @Override
     public void renderByItem(ItemStack stack, ItemDisplayContext transformType, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
         // Get the model for the fluid tank block
-        BakedModel model = Minecraft.getInstance().getModelManager().getModel(new ModelResourceLocation(ForgeRegistries.ITEMS.getKey(stack.getItem()), "facing=north"));
+        BakedModel model = Minecraft.getInstance().getModelManager().getModel(new ModelResourceLocation(BuiltInRegistries.ITEM.getKey(stack.getItem()), "facing=north"));
         poseStack.pushPose();
 
         // Render the main model
@@ -50,7 +50,7 @@ public class FluidTankBEWLR extends BlockEntityWithoutLevelRenderer {
                 CompoundTag tank = blockEntityTag.getCompound(MachineNBTKeys.FLUID);
 
                 if (tank.contains("FluidName") && tank.contains("Amount")) {
-                    Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(tank.getString("FluidName")));
+                    Fluid fluid = BuiltInRegistries.FLUID.get(new ResourceLocation(tank.getString("FluidName")));
                     int amount = tank.getInt("Amount");
 
                     if (fluid != null && fluid != Fluids.EMPTY && amount > 0) {

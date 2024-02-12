@@ -13,6 +13,7 @@ import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingMachineTask;
 import com.enderio.machines.common.blockentity.task.host.CraftingMachineTaskHost;
 import com.enderio.machines.common.config.MachinesConfig;
+import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
@@ -26,6 +27,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -49,18 +51,18 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
     public static final SingleSlotAccess INPUT_OTHER = new SingleSlotAccess();
     public static final MultiSlotAccess OUTPUT = new MultiSlotAccess();
     private final SoulBindingRecipe.Container fakeContainer = new SoulBindingRecipe.Container(getInventoryNN(), () -> Integer.MAX_VALUE);
-    @Nullable private SoulBindingRecipe recipe;
+    @Nullable private RecipeHolder<SoulBindingRecipe> recipe;
     @UseOnly(LogicalSide.CLIENT) private int clientExp = 0;
 
     private final CraftingMachineTaskHost<SoulBindingRecipe, SoulBindingRecipe.Container> craftingTaskHost;
 
-    public SoulBinderBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
-        super(EnergyIOMode.Input, CAPACITY, USAGE, type, worldPosition, blockState);
+    public SoulBinderBlockEntity(BlockPos worldPosition, BlockState blockState) {
+        super(EnergyIOMode.Input, CAPACITY, USAGE, MachineBlockEntities.SOUL_BINDER.get(), worldPosition, blockState);
 
         // Sync fluid amount to client.
         addDataSlot(new IntegerNetworkDataSlot(
             () -> getFluidTankNN().getFluidInTank(0).getAmount(),
-            i -> getFluidTankNN().setFluid(new FluidStack(EIOFluids.XP_JUICE.get(), i))
+            i -> getFluidTankNN().setFluid(new FluidStack(EIOFluids.XP_JUICE.getSource(), i))
         ));
 
         // Create the crafting task host
@@ -68,7 +70,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
             new SoulBindingRecipe.Container(getInventoryNN(), getFluidTankNN()::getFluidAmount), this::createTask);
 
         // Sync crafting container needed xp
-        addDataSlot(new IntegerNetworkDataSlot(() -> recipe == null ? 0 : recipe.getExpCost(), i -> clientExp = i));
+        addDataSlot(new IntegerNetworkDataSlot(() -> recipe == null ? 0 : recipe.value().getExpCost(), i -> clientExp = i));
     }
 
     @Override

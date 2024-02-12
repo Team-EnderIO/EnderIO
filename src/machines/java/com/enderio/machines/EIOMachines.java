@@ -33,12 +33,10 @@ import com.enderio.machines.data.souldata.SoulDataProvider;
 import com.enderio.machines.data.tag.MachineEntityTypeTagsProvider;
 import net.minecraft.Util;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.registries.VanillaRegistries;
-import net.neoforged.neoforge.common.MinecraftForge;
-import net.neoforged.neoforge.common.data.ForgeAdvancementProvider;
+import net.neoforged.neoforge.common.data.AdvancementProvider;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.InterModComms;
@@ -47,7 +45,6 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
 import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
-import net.neoforged.neoforge.registries.MissingMappingsEvent;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -70,9 +67,6 @@ public class EIOMachines {
         MachineLang.register();
         MachineRecipes.register();
         MachineTags.register();
-
-        // Remap
-        MinecraftForge.EVENT_BUS.addListener(EIOMachines::missingMappings);
 
         IntegrationManager.addIntegration(EnderIOMachinesSelfIntegration.INSTANCE);
         TravelRegistry.addTravelEntry(EnderIO.loc("travel_anchor"), AnchorTravelTarget::new, () -> TravelAnchorRenderer::new);
@@ -106,7 +100,7 @@ public class EIOMachines {
         provider.addSubProvider(event.includeServer(), new MachineEntityTypeTagsProvider(packOutput, completablefuture, event.getExistingFileHelper()));
 
         generator.addProvider(true, provider);
-        provider.addSubProvider(event.includeServer(), new ForgeAdvancementProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper(),
+        provider.addSubProvider(event.includeServer(), new AdvancementProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper(),
             List.of(new MachinesAdvancementGenerator())));
     }
 }

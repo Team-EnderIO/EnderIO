@@ -4,6 +4,7 @@ import com.enderio.base.common.init.EIOFluids;
 import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
 import com.enderio.machines.common.blockentity.base.VacuumMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
+import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.menu.XPVacuumMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.ExperienceOrb;
@@ -20,8 +21,8 @@ import org.jetbrains.annotations.Nullable;
 import static com.enderio.base.common.util.ExperienceUtil.EXP_TO_FLUID;
 
 public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb> {
-    public XPVacuumBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-        super(pType, pWorldPosition, pBlockState, ExperienceOrb.class);
+    public XPVacuumBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
+        super(MachineBlockEntities.XP_VACUUM.get(), pWorldPosition, pBlockState, ExperienceOrb.class);
 
         // Sync fluid level.
         addDataSlot(new IntegerNetworkDataSlot(

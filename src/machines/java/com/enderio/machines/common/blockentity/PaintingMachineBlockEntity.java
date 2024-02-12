@@ -11,6 +11,7 @@ import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingMachineTask;
 import com.enderio.machines.common.blockentity.task.host.CraftingMachineTaskHost;
 import com.enderio.machines.common.config.MachinesConfig;
+import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
@@ -18,6 +19,7 @@ import com.enderio.machines.common.menu.PaintingMachineMenu;
 import com.enderio.machines.common.recipe.PaintingRecipe;
 import com.enderio.machines.common.recipe.RecipeCaches;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
@@ -34,9 +36,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
+import javax.crypto.Mac;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,8 +54,8 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
 
     private final CraftingMachineTaskHost<PaintingRecipe, RecipeWrapper> craftingTaskHost;
 
-    public PaintingMachineBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
-        super(EnergyIOMode.Input, CAPACITY, USAGE, type, worldPosition, blockState);
+    public PaintingMachineBlockEntity(BlockPos worldPosition, BlockState blockState) {
+        super(EnergyIOMode.Input, CAPACITY, USAGE, MachineBlockEntities.PAINTING_MACHINE.get(), worldPosition, blockState);
 
         area = AABB.ofSize(worldPosition.getCenter(), 10, 10, 10);
 
@@ -155,7 +157,7 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
                     .filter(nbt -> nbt.contains(EIONBTKeys.PAINT, Tag.TAG_STRING))
                     .map(nbt -> nbt.getString(EIONBTKeys.PAINT));
                 if (s.isPresent()) {
-                    Block paint = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(s.get()));
+                    Block paint = BuiltInRegistries.BLOCK.get(new ResourceLocation(s.get()));
                     for (Player player : getLevel().players()) {
                         if (player instanceof ServerPlayer serverPlayer && area.contains(player.getX(), player.getY(), player.getZ())) {
                             PaintingTrigger.PAINTING_TRIGGER.trigger(serverPlayer, paint);

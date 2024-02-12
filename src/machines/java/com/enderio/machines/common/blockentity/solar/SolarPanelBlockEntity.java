@@ -4,9 +4,11 @@ import com.enderio.api.capacitor.FixedScalable;
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
 import com.enderio.api.io.energy.EnergyIOMode;
+import com.enderio.base.common.init.EIOBlockEntities;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.multienergy.MultiEnergyNode;
 import com.enderio.machines.common.blockentity.multienergy.MultiEnergyStorageWrapper;
+import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.io.SidedFixedIOConfig;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import dev.gigaherz.graph3.Graph;
@@ -29,8 +31,10 @@ public class SolarPanelBlockEntity extends PoweredMachineBlockEntity {
 
     private final MultiEnergyNode node;
 
-    public SolarPanelBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState, ISolarPanelTier tier) {
-        super(EnergyIOMode.Output, new FixedScalable(tier::getStorageCapacity), new FixedScalable(tier::getStorageCapacity), type, worldPosition, blockState);
+    public SolarPanelBlockEntity(BlockPos worldPosition, BlockState blockState, SolarPanelTier tier) {
+        super(EnergyIOMode.Output, new FixedScalable(tier::getStorageCapacity), new FixedScalable(tier::getStorageCapacity),
+            MachineBlockEntities.SOLAR_PANELS.get(tier).get(), worldPosition, blockState);
+
         this.tier = tier;
         this.node = new MultiEnergyNode(() -> energyStorage, () -> (MultiEnergyStorageWrapper) getExposedEnergyStorage(), worldPosition);
     }

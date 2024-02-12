@@ -36,7 +36,7 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 // TODO: 1.19: Tidy the divisions and what goes where.
 def subsets = [
         //'conduits',
-        //'machines',
+        'machines',
         //'armory'
 ]
 

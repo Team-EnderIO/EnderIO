@@ -3,6 +3,7 @@ package com.enderio.machines.common.blockentity;
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
+import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.FixedIOConfig;
 import com.enderio.machines.common.io.item.MachineInventory;
@@ -32,8 +33,8 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
     public static final SingleSlotAccess LAPIS = new SingleSlotAccess();
     public static final SingleSlotAccess OUTPUT = new SingleSlotAccess();
 
-    public EnchanterBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
-        super(type, worldPosition, blockState);
+    public EnchanterBlockEntity(BlockPos worldPosition, BlockState blockState) {
+        super(MachineBlockEntities.ENCHANTER.get(), worldPosition, blockState);
         container = new RecipeWrapper(getInventory());
     }
 

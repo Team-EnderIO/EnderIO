@@ -1,9 +1,11 @@
 package com.enderio.machines.common.blockentity;
 
+import com.enderio.base.common.init.EIOBlockEntities;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.network.slot.FluidStackNetworkDataSlot;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
+import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
@@ -43,8 +45,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     public static class Standard extends FluidTankBlockEntity {
         public static final int CAPACITY = 16 * FluidType.BUCKET_VOLUME;
 
-        public Standard(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
-            super(type, worldPosition, blockState);
+        public Standard(BlockPos worldPosition, BlockState blockState) {
+            super(MachineBlockEntities.FLUID_TANK.get(), worldPosition, blockState);
         }
 
         @Override
@@ -56,8 +58,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     public static class Enhanced extends FluidTankBlockEntity {
         public static final int CAPACITY = 32 * FluidType.BUCKET_VOLUME;
 
-        public Enhanced(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
-            super(type, worldPosition, blockState);
+        public Enhanced(BlockPos worldPosition, BlockState blockState) {
+            super(MachineBlockEntities.PRESSURIZED_FLUID_TANK.get(), worldPosition, blockState);
         }
 
         @Override

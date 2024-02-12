@@ -6,6 +6,7 @@ import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.network.slot.FloatNetworkDataSlot;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
+import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.WiredChargerMenu;
@@ -32,8 +33,8 @@ public class WiredChargerBlockEntity extends PoweredMachineBlockEntity {
 
     private float progress = 0;
 
-    public WiredChargerBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
-        super(EnergyIOMode.Input, CAPACITY, USAGE, type, worldPosition, blockState);
+    public WiredChargerBlockEntity(BlockPos worldPosition, BlockState blockState) {
+        super(EnergyIOMode.Input, CAPACITY, USAGE, MachineBlockEntities.WIRED_CHARGER.get(), worldPosition, blockState);
         addDataSlot(new FloatNetworkDataSlot(this::getProgress, p -> progress = p));
     }
 

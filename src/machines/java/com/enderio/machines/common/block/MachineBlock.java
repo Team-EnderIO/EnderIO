@@ -3,7 +3,7 @@ package com.enderio.machines.common.block;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.core.common.compat.FlywheelCompat;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
-import com.tterrag.registrate.util.entry.BlockEntityEntry;
+import com.enderio.regilite.holder.RegiliteBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -30,11 +30,13 @@ import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Supplier;
+
 public class MachineBlock extends BaseEntityBlock {
-    private final BlockEntityEntry<? extends MachineBlockEntity> blockEntityType;
+    private final RegiliteBlockEntity<? extends MachineBlockEntity> blockEntityType;
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
-    public MachineBlock(Properties properties, BlockEntityEntry<? extends MachineBlockEntity> blockEntityType) {
+    public MachineBlock(Properties properties, RegiliteBlockEntity<? extends MachineBlockEntity> blockEntityType) {
         super(properties);
         this.blockEntityType = blockEntityType;
         BlockState any = this.getStateDefinition().any();
@@ -121,7 +123,7 @@ public class MachineBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return blockEntityType.create(pPos, pState);
+        return blockEntityType.get().create(pPos, pState);
     }
 
     @Override

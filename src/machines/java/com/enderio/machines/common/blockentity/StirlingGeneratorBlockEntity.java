@@ -9,6 +9,7 @@ import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.network.slot.FloatNetworkDataSlot;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
+import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.StirlingGeneratorMenu;
@@ -20,8 +21,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.ForgeHooks;
 import net.neoforged.fml.LogicalSide;
+import net.neoforged.neoforge.common.CommonHooks;
 import org.jetbrains.annotations.Nullable;
 
 public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
@@ -40,9 +41,8 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     @UseOnly(LogicalSide.CLIENT)
     private float clientBurnProgress;
 
-    public StirlingGeneratorBlockEntity(BlockEntityType<?> type, BlockPos worldPosition,
-        BlockState blockState) {
-        super(EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO, type, worldPosition, blockState);
+    public StirlingGeneratorBlockEntity(BlockPos worldPosition, BlockState blockState) {
+        super(EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO, MachineBlockEntities.STIRLING_GENERATOR.get(), worldPosition, blockState);
         addDataSlot(new FloatNetworkDataSlot(this::getBurnProgress, p -> clientBurnProgress = p));
     }
 
@@ -57,7 +57,7 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
     @Override
     public MachineInventoryLayout getInventoryLayout() {
         return MachineInventoryLayout.builder()
-            .inputSlot((slot, stack) -> ForgeHooks.getBurnTime(stack, RecipeType.SMELTING) > 0 && stack.getCraftingRemainingItem().isEmpty())
+            .inputSlot((slot, stack) -> CommonHooks.getBurnTime(stack, RecipeType.SMELTING) > 0 && stack.getCraftingRemainingItem().isEmpty())
             .slotAccess(FUEL)
             .capacitor()
             .build();
@@ -81,7 +81,7 @@ public class StirlingGeneratorBlockEntity extends PoweredMachineBlockEntity {
                 ItemStack fuel = FUEL.getItemStack(this);
                 if (!fuel.isEmpty()) {
                     // Get the burn time.
-                    int burningTime = ForgeHooks.getBurnTime(fuel, RecipeType.SMELTING);
+                    int burningTime = CommonHooks.getBurnTime(fuel, RecipeType.SMELTING);
 
                     if (burningTime > 0) {
                         burnTime = (int) Math.floor(burningTime * MachinesConfig.COMMON.ENERGY.STIRLING_GENERATOR_BURN_SPEED.get());

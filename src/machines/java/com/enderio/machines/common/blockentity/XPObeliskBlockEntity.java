@@ -5,6 +5,7 @@ import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
+import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.menu.XPObeliskMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
@@ -22,8 +23,8 @@ public class XPObeliskBlockEntity extends MachineBlockEntity {
 
     IntegerNetworkDataSlot xpTankDataSlot;
 
-    public XPObeliskBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
-        super(type, worldPosition, blockState);
+    public XPObeliskBlockEntity(BlockPos worldPosition, BlockState blockState) {
+        super(MachineBlockEntities.XP_OBELISK.get(), worldPosition, blockState);
 
         this.xpTankDataSlot = new IntegerNetworkDataSlot(() -> getFluidTankNN().getFluidAmount(),
             amount -> getFluidTankNN().setFluid(new FluidStack(EIOFluids.XP_JUICE.getSource(), amount)));

@@ -6,6 +6,7 @@ import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.lang.MachineLang;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.FrameType;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
@@ -15,6 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.neoforged.neoforge.common.data.AdvancementProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.common.data.ForgeAdvancementProvider;
 import net.neoforged.neoforge.registries.ForgeRegistries;
@@ -23,9 +25,9 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
-public class MachinesAdvancementGenerator implements ForgeAdvancementProvider.AdvancementGenerator {
+public class MachinesAdvancementGenerator implements AdvancementProvider.AdvancementGenerator {
     @Override
-    public void generate(HolderLookup.Provider registries, Consumer<Advancement> saver, ExistingFileHelper existingFileHelper) {
+    public void generate(HolderLookup.Provider registries, Consumer<AdvancementHolder> saver, ExistingFileHelper existingFileHelper) {
         Advancement.Builder builder = Advancement.Builder
             .advancement()
             .parent(new Advancement(new ResourceLocation("adventure/root"), null, null, null, new HashMap<>(), null, false))
