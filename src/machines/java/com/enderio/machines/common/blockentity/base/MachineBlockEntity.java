@@ -559,14 +559,6 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     protected int moveFluids(IFluidHandler from, IFluidHandler to, int maxDrain) {
         FluidStack stack = FluidUtil.tryFluidTransfer(to, from, maxDrain, true);
         return stack.getAmount();
-//        FluidStack stack = from.drain(maxDrain, FluidAction.SIMULATE);
-//        if(stack.isEmpty()) {
-//            return 0;
-//        }
-//        int filled = to.fill(stack, FluidAction.EXECUTE);
-//        stack.setAmount(filled);
-//        from.drain(stack, FluidAction.EXECUTE);
-//        return filled;
     }
 
     // endregion
