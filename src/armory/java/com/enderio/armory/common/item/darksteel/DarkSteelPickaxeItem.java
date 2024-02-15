@@ -12,12 +12,12 @@ import com.enderio.armory.common.lang.ArmoryLang;
 import com.enderio.core.common.item.ITabVariants;
 import com.enderio.core.common.util.EnergyUtil;
 import com.enderio.core.common.util.TooltipUtil;
-import com.tterrag.registrate.util.CreativeModeTabModifier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PickaxeItem;
@@ -88,7 +88,7 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements IDarkSteelItem,
     }
 
     @Override
-    public void addAllVariants(CreativeModeTabModifier modifier) {
+    public void addAllVariants(CreativeModeTab.Output modifier) {
         modifier.accept(this);
         modifier.accept(createFullyUpgradedStack(this));
 

@@ -12,16 +12,16 @@ public class ArmoryCommonConfig {
     public final ModConfigSpec.ConfigValue<Integer> EMPOWERED_EFFICIENCY_BOOST;
     public final ModConfigSpec.ConfigValue<Integer> EMPOWERED_ENERGY_PER_DAMAGE;
     public final ModConfigSpec.ConfigValue<Integer> EMPOWERED_ACTIVATION_COST_I;
-    public final ModConfigSpec.ConfigValue<Float> EMPOWERED_DAMAGE_ABSORPTION_CHANCE_I;
+    public final ModConfigSpec.ConfigValue<Double> EMPOWERED_DAMAGE_ABSORPTION_CHANCE_I;
     public final ModConfigSpec.ConfigValue<Integer> EMPOWERED_MAX_ENERGY_I;
     public final ModConfigSpec.ConfigValue<Integer> EMPOWERED_ACTIVATION_COST_II;
-    public final ModConfigSpec.ConfigValue<Float> EMPOWERED_DAMAGE_ABSORPTION_CHANCE_II;
+    public final ModConfigSpec.ConfigValue<Double> EMPOWERED_DAMAGE_ABSORPTION_CHANCE_II;
     public final ModConfigSpec.ConfigValue<Integer> EMPOWERED_MAX_ENERGY_II;
     public final ModConfigSpec.ConfigValue<Integer> EMPOWERED_ACTIVATION_COST_III;
-    public final ModConfigSpec.ConfigValue<Float> EMPOWERED_DAMAGE_ABSORPTION_CHANCE_III;
+    public final ModConfigSpec.ConfigValue<Double> EMPOWERED_DAMAGE_ABSORPTION_CHANCE_III;
     public final ModConfigSpec.ConfigValue<Integer> EMPOWERED_MAX_ENERGY_III;
     public final ModConfigSpec.ConfigValue<Integer> EMPOWERED_ACTIVATION_COST_IV;
-    public final ModConfigSpec.ConfigValue<Float> EMPOWERED_DAMAGE_ABSORPTION_CHANCE_IV;
+    public final ModConfigSpec.ConfigValue<Double> EMPOWERED_DAMAGE_ABSORPTION_CHANCE_IV;
     public final ModConfigSpec.ConfigValue<Integer> EMPOWERED_MAX_ENERGY_IV;
 
     public final ModConfigSpec.ConfigValue<Integer> EXPLOSIVE_RADIUS_ACTIVATION_COST_I;

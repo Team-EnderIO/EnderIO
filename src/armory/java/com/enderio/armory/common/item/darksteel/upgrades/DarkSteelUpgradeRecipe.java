@@ -7,6 +7,7 @@ import com.enderio.armory.common.init.ArmoryRecipes;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOItems;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -22,8 +23,8 @@ import java.util.Optional;
 
 // TODO: Change this into a anvil recipe.
 public class DarkSteelUpgradeRecipe extends SmithingTransformRecipe {
-    public DarkSteelUpgradeRecipe(ResourceLocation pId) {
-        super(pId, Ingredient.EMPTY, Ingredient.EMPTY, Ingredient.EMPTY, ItemStack.EMPTY);
+    public DarkSteelUpgradeRecipe() {
+        super(Ingredient.EMPTY, Ingredient.EMPTY, Ingredient.EMPTY, ItemStack.EMPTY);
     }
 
     @Override
@@ -88,14 +89,16 @@ public class DarkSteelUpgradeRecipe extends SmithingTransformRecipe {
     }
 
     public static class Serializer implements RecipeSerializer<DarkSteelUpgradeRecipe> {
+        public static final Codec<DarkSteelUpgradeRecipe> CODEC = Codec.unit(new DarkSteelUpgradeRecipe());
+
         @Override
-        public DarkSteelUpgradeRecipe fromJson(ResourceLocation pRecipeId, JsonObject pSerializedRecipe) {
-            return new DarkSteelUpgradeRecipe(pRecipeId);
+        public Codec<DarkSteelUpgradeRecipe> codec() {
+            return CODEC;
         }
 
         @Override
-        public @Nullable DarkSteelUpgradeRecipe fromNetwork(ResourceLocation pRecipeId, FriendlyByteBuf pBuffer) {
-            return new DarkSteelUpgradeRecipe(pRecipeId);
+        public @Nullable DarkSteelUpgradeRecipe fromNetwork(FriendlyByteBuf pBuffer) {
+            return new DarkSteelUpgradeRecipe();
         }
 
         @Override

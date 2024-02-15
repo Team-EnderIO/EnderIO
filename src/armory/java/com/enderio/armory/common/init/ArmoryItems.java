@@ -5,31 +5,31 @@ import com.enderio.armory.common.item.darksteel.DarkSteelSwordItem;
 import com.enderio.armory.common.tag.ArmoryTags;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.base.common.init.EIOItems;
-import com.tterrag.registrate.Registrate;
-import com.tterrag.registrate.util.entry.ItemEntry;
+import com.enderio.regilite.holder.RegiliteItem;
+import com.enderio.regilite.registry.ItemRegistry;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.neoforged.neoforge.common.ForgeTier;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.common.SimpleTier;
 import net.neoforged.neoforge.common.TierSortingRegistry;
 
 import java.util.List;
 
 @SuppressWarnings("unused")
 public class ArmoryItems {
-    private static final Registrate REGISTRATE = EnderIO.registrate();
+    private static final ItemRegistry ITEM_REGISTRY = ItemRegistry.createRegistry(EnderIO.MODID);
 
     public static final Tier DARK_STEEL_TIER = TierSortingRegistry.registerTier(
-        new ForgeTier(3, 2000, 8.0F, 3, 25, ArmoryTags.Blocks.DARK_STEEL_TIER, () -> Ingredient.of(EIOItems.DARK_STEEL_INGOT.get())),
+        new SimpleTier(3, 2000, 8.0F, 3, 25, ArmoryTags.Blocks.DARK_STEEL_TIER, () -> Ingredient.of(EIOItems.DARK_STEEL_INGOT.get())),
         EnderIO.loc("dark_steel_tier"), List.of(Tiers.DIAMOND), List.of(Tiers.NETHERITE));
 
-    public static final ItemEntry<DarkSteelSwordItem> DARK_STEEL_SWORD = REGISTRATE
-        .item("dark_steel_sword", DarkSteelSwordItem::new)
-        .properties(p -> p.durability(2000))
-        .tab(EIOCreativeTabs.GEAR)
-        .lang("The Ender")
-        .model((ctx, prov) -> prov.handheld(ctx))
-        .register();
+    public static final RegiliteItem<DarkSteelSwordItem> DARK_STEEL_SWORD = ITEM_REGISTRY
+        .registerItem("dark_steel_sword", DarkSteelSwordItem::new, new Item.Properties().durability(2000))
+        .setTab(EIOCreativeTabs.GEAR)
+        .setTranslation("The Ender")
+        .setModelProvider((prov, ctx) -> prov.handheld(ctx.get()));
 
     // TODO: Bring these back when they are finished.
 //    public static final ItemEntry<DarkSteelPickaxeItem> DARK_STEEL_PICKAXE = REGISTRATE
@@ -135,6 +135,7 @@ public class ArmoryItems {
 //        .lang("Explosive Penetration II" + UPGRADE_TEXT)
 //        .register();
 
-    public static void register() {
+    public static void register(IEventBus bus) {
+        ITEM_REGISTRY.register(bus);
     }
 }

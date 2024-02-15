@@ -4,30 +4,33 @@ import com.enderio.armory.common.init.ArmoryItems;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.Tags;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class ItemRecipeProvider extends RecipeProvider {
 
-    public ItemRecipeProvider(PackOutput output) {
-        super(output);
+    public ItemRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+        super(packOutput, lookupProvider);
     }
 
     @Override
-    protected void buildRecipes(Consumer<FinishedRecipe> recipeConsumer) {
-        addDarkSteelTools(recipeConsumer);
-        addDarkSteelUpgrades(recipeConsumer);
+    protected void buildRecipes(RecipeOutput recipeOutput) {
+        addDarkSteelTools(recipeOutput);
+        addDarkSteelUpgrades(recipeOutput);
     }
 
-    private void addDarkSteelTools(Consumer<FinishedRecipe> recipeConsumer) {
+    private void addDarkSteelTools(RecipeOutput recipeOutput) {
         ShapedRecipeBuilder
             .shaped(RecipeCategory.TOOLS, ArmoryItems.DARK_STEEL_SWORD.get())
             .define('I', EIOTags.Items.INGOTS_DARK_STEEL)
@@ -36,7 +39,7 @@ public class ItemRecipeProvider extends RecipeProvider {
             .pattern(" I ")
             .pattern(" S ")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DARK_STEEL_INGOT))
-            .save(recipeConsumer);
+            .save(recipeOutput);
 
 //        ShapedRecipeBuilder
 //            .shaped(RecipeCategory.TOOLS, ArmoryItems.DARK_STEEL_PICKAXE.get())
@@ -46,7 +49,7 @@ public class ItemRecipeProvider extends RecipeProvider {
 //            .pattern(" S ")
 //            .pattern(" S ")
 //            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DARK_STEEL_INGOT))
-//            .save(recipeConsumer);
+//            .save(recipeOutput);
 //
 //        ShapedRecipeBuilder
 //            .shaped(RecipeCategory.TOOLS, ArmoryItems.DARK_STEEL_AXE.get())
@@ -56,17 +59,17 @@ public class ItemRecipeProvider extends RecipeProvider {
 //            .pattern("IS")
 //            .pattern(" S")
 //            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DARK_STEEL_INGOT))
-//            .save(recipeConsumer);
+//            .save(recipeOutput);
     }
 
-    private void addDarkSteelUpgrades(Consumer<FinishedRecipe> recipeConsumer) {
-//        addUpgrade(recipeConsumer, ArmoryItems.DARK_STEEL_UPGRADE_EMPOWERED_1, Ingredient.of(EIOItems.VIBRANT_CRYSTAL));
-//        addUpgrade(recipeConsumer, ArmoryItems.DARK_STEEL_UPGRADE_EMPOWERED_2, Ingredient.of(EIOItems.BASIC_CAPACITOR));
-//        addUpgrade(recipeConsumer, ArmoryItems.DARK_STEEL_UPGRADE_EMPOWERED_3, Ingredient.of(EIOItems.DOUBLE_LAYER_CAPACITOR));
-//        addUpgrade(recipeConsumer, ArmoryItems.DARK_STEEL_UPGRADE_EMPOWERED_4, Ingredient.of(EIOItems.OCTADIC_CAPACITOR));
+    private void addDarkSteelUpgrades(RecipeOutput recipeOutput) {
+//        addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_EMPOWERED_1, Ingredient.of(EIOItems.VIBRANT_CRYSTAL));
+//        addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_EMPOWERED_2, Ingredient.of(EIOItems.BASIC_CAPACITOR));
+//        addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_EMPOWERED_3, Ingredient.of(EIOItems.DOUBLE_LAYER_CAPACITOR));
+//        addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_EMPOWERED_4, Ingredient.of(EIOItems.OCTADIC_CAPACITOR));
 //
-//        addUpgrade(recipeConsumer, ArmoryItems.DARK_STEEL_UPGRADE_FORK, Ingredient.of(Items.DIAMOND_HOE));
-//        addUpgrade(recipeConsumer, ArmoryItems.DARK_STEEL_UPGRADE_SPOON, Ingredient.of(Items.DIAMOND_SHOVEL));
+//        addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_FORK, Ingredient.of(Items.DIAMOND_HOE));
+//        addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_SPOON, Ingredient.of(Items.DIAMOND_SHOVEL));
 //
 //        ShapedRecipeBuilder
 //            .shaped(RecipeCategory.MISC, ArmoryItems.DARK_STEEL_UPGRADE_DIRECT.get())
@@ -78,16 +81,16 @@ public class ItemRecipeProvider extends RecipeProvider {
 //            .pattern("IEI")
 //            .pattern("NBN")
 //            .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.DARK_STEEL_UPGRADE_BLANK.get()))
-//            .save(recipeConsumer);
+//            .save(recipeOutput);
 //
 //        // TODO: These are how they are in 1.12. When we redo dark steel upgrades this needs consideration again..
-//        addUpgrade(recipeConsumer, ArmoryItems.DARK_STEEL_UPGRADE_EXPLOSIVE_1, Ingredient.of(Items.TNT), Ingredient.of(EIOTags.Items.GEARS_WOOD));
-//        addUpgrade(recipeConsumer, ArmoryItems.DARK_STEEL_UPGRADE_EXPLOSIVE_2, Ingredient.of(Items.TNT), Ingredient.of(EIOTags.Items.GEARS_STONE));
-//        addUpgrade(recipeConsumer, ArmoryItems.DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_1, Ingredient.of(Items.CREEPER_HEAD));
-//        addUpgrade(recipeConsumer, ArmoryItems.DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_2, Ingredient.of(ItemTags.WOOL_CARPETS));
+//        addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_EXPLOSIVE_1, Ingredient.of(Items.TNT), Ingredient.of(EIOTags.Items.GEARS_WOOD));
+//        addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_EXPLOSIVE_2, Ingredient.of(Items.TNT), Ingredient.of(EIOTags.Items.GEARS_STONE));
+//        addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_1, Ingredient.of(Items.CREEPER_HEAD));
+//        addUpgrade(recipeOutput, ArmoryItems.DARK_STEEL_UPGRADE_EXPLOSIVE_PENETRATION_2, Ingredient.of(ItemTags.WOOL_CARPETS));
     }
 
-    private void addUpgrade(Consumer<FinishedRecipe> recipeConsumer, ItemLike result, Ingredient... upgradeItems) {
+    private void addUpgrade(RecipeOutput recipeOutput, ItemLike result, Ingredient... upgradeItems) {
 //        var builder = ShapelessRecipeBuilder
 //            .shapeless(RecipeCategory.MISC, result)
 //            .requires(EIOItems.DARK_STEEL_UPGRADE_BLANK.get());
@@ -97,6 +100,6 @@ public class ItemRecipeProvider extends RecipeProvider {
 //        }
 //
 //        builder.unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ArmoryItems.DARK_STEEL_UPGRADE_BLANK.get()))
-//            .save(recipeConsumer);
+//            .save(recipeOutput);
     }
 }

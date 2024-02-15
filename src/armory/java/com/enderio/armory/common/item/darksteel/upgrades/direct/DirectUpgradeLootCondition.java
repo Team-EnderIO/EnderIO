@@ -2,19 +2,18 @@ package com.enderio.armory.common.item.darksteel.upgrades.direct;
 
 import com.enderio.api.integration.IntegrationManager;
 import com.enderio.armory.common.capability.DarkSteelUpgradeable;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
+import com.mojang.serialization.Codec;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.Serializer;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 
 public class DirectUpgradeLootCondition implements LootItemCondition {
 
-    public static final LootItemConditionType HAS_DIRECT_UPGRADE = new LootItemConditionType(new InnerSerializer());
+    private static final Codec<DirectUpgradeLootCondition> CODEC = Codec.unit(new DirectUpgradeLootCondition());
+
+    public static final LootItemConditionType HAS_DIRECT_UPGRADE = new LootItemConditionType(CODEC);
 
     @Override
     public LootItemConditionType getType() {
@@ -31,15 +30,4 @@ public class DirectUpgradeLootCondition implements LootItemCondition {
             && context.getParam(LootContextParams.THIS_ENTITY) instanceof Player;
     }
 
-    private static class InnerSerializer implements Serializer<DirectUpgradeLootCondition> {
-
-        @Override
-        public void serialize(JsonObject pJson, DirectUpgradeLootCondition pValue, JsonSerializationContext pSerializationContext) {
-        }
-
-        @Override
-        public DirectUpgradeLootCondition deserialize(JsonObject pJson, JsonDeserializationContext pSerializationContext) {
-            return new DirectUpgradeLootCondition();
-        }
-    }
 }

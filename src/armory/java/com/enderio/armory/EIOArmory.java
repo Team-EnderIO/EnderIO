@@ -13,6 +13,8 @@ import com.enderio.base.data.EIODataProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -32,9 +34,12 @@ public class EIOArmory {
         ctx.registerConfig(ModConfig.Type.COMMON, ArmoryConfig.COMMON_SPEC, "enderio/armory-common.toml");
         ctx.registerConfig(ModConfig.Type.CLIENT, ArmoryConfig.CLIENT_SPEC, "enderio/armory-client.toml");
 
+        // Get event bus
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
         // Perform initialization and registration for everything so things are registered.
-        ArmoryItems.register();
-        ArmoryRecipes.register();
+        ArmoryItems.register(modEventBus);
+        ArmoryRecipes.register(modEventBus);
         ArmoryLootModifiers.register();
         ArmoryTags.register();
     }
@@ -48,7 +53,7 @@ public class EIOArmory {
 
         EIODataProvider provider = new EIODataProvider("armory");
 
-        provider.addSubProvider(event.includeServer(), new ItemRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new ItemRecipeProvider(packOutput, lookupProvider));
         provider.addSubProvider(event.includeServer(), new ArmoryLootModifiersProvider(packOutput));
 
         var b = new ArmoryBlockTagsProvider(packOutput, lookupProvider, existingFileHelper);

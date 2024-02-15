@@ -29,11 +29,11 @@ public enum EmpoweredUpgradeTier implements IUpgradeTier {
 
     private final Supplier<IDarkSteelUpgrade> factory;
     private final ModConfigSpec.ConfigValue<Integer> maxStorage;
-    private final ModConfigSpec.ConfigValue<Float> damageAbsorptionChance;
+    private final ModConfigSpec.ConfigValue<Double> damageAbsorptionChance;
     private final ModConfigSpec.ConfigValue<Integer> activationCost;
     private final Component displayName;
 
-    EmpoweredUpgradeTier(ModConfigSpec.ConfigValue<Integer> maxStorage, ModConfigSpec.ConfigValue<Float> damageAbsorptionChance,
+    EmpoweredUpgradeTier(ModConfigSpec.ConfigValue<Integer> maxStorage, ModConfigSpec.ConfigValue<Double> damageAbsorptionChance,
         ModConfigSpec.ConfigValue<Integer> activationCost, Component displayName) {
         this.maxStorage = maxStorage;
         this.damageAbsorptionChance = damageAbsorptionChance;
@@ -47,7 +47,7 @@ public enum EmpoweredUpgradeTier implements IUpgradeTier {
     }
 
     public float getDamageAbsorptionChance() {
-        return damageAbsorptionChance.get();
+        return damageAbsorptionChance.get().floatValue();
     }
 
     public Supplier<IDarkSteelUpgrade> getFactory() {
