@@ -1,8 +1,8 @@
 {
   "type": "enderio:enchanting",
-  "CostMultiplier": 1,
-  "Enchantment": "minecraft:mending",
-  "Input": {
+  "cost_multiplier": 1,
+  "enchantment": "minecraft:mending",
+  "input": {
     "Count": 1,
     "Ingredient": {
       "item": "enderio:experience_rod"

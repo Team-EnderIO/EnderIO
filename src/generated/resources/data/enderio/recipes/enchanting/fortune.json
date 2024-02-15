@@ -1,8 +1,8 @@
 {
   "type": "enderio:enchanting",
-  "CostMultiplier": 1,
-  "Enchantment": "minecraft:fortune",
-  "Input": {
+  "cost_multiplier": 1,
+  "enchantment": "minecraft:fortune",
+  "input": {
     "Count": 1,
     "Ingredient": {
       "tag": "forge:gems/emerald"

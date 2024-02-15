@@ -170,9 +170,9 @@ public class EnchanterRecipe implements EnderRecipe<Container> {
 
     public static class Serializer implements RecipeSerializer<EnchanterRecipe> {
         public static final Codec<EnchanterRecipe> CODEC = RecordCodecBuilder.create(inst -> inst
-            .group(CountedIngredient.CODEC.fieldOf("Input").forGetter(EnchanterRecipe::getInput),
-                BuiltInRegistries.ENCHANTMENT.byNameCodec().fieldOf("Enchantment").forGetter(EnchanterRecipe::getEnchantment),
-                ExtraCodecs.POSITIVE_INT.fieldOf("CostMultiplier").forGetter(EnchanterRecipe::getCostMultiplier))
+            .group(CountedIngredient.CODEC.fieldOf("input").forGetter(EnchanterRecipe::getInput),
+                BuiltInRegistries.ENCHANTMENT.byNameCodec().fieldOf("enchantment").forGetter(EnchanterRecipe::getEnchantment),
+                ExtraCodecs.POSITIVE_INT.fieldOf("cost_multiplier").forGetter(EnchanterRecipe::getCostMultiplier))
             .apply(inst, EnchanterRecipe::new));
 
         @Override

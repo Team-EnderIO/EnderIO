@@ -82,6 +82,7 @@ public class ShapedEntityStorageRecipe extends ShapedRecipe {
         public Codec<ShapedEntityStorageRecipe> codec() {
             return CODEC;
         }
+
         @Override
         public @Nullable ShapedEntityStorageRecipe fromNetwork(FriendlyByteBuf pBuffer) {
             var shaped = RecipeSerializer.SHAPED_RECIPE.fromNetwork(pBuffer);

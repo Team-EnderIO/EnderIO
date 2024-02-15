@@ -1,8 +1,8 @@
 {
   "type": "enderio:enchanting",
-  "CostMultiplier": 1,
-  "Enchantment": "minecraft:feather_falling",
-  "Input": {
+  "cost_multiplier": 1,
+  "enchantment": "minecraft:feather_falling",
+  "input": {
     "Count": 1,
     "Ingredient": {
       "tag": "forge:feathers"

@@ -1,8 +1,8 @@
 {
   "type": "enderio:enchanting",
-  "CostMultiplier": 1,
-  "Enchantment": "minecraft:multishot",
-  "Input": {
+  "cost_multiplier": 1,
+  "enchantment": "minecraft:multishot",
+  "input": {
     "Count": 16,
     "Ingredient": {
       "tag": "minecraft:arrows"

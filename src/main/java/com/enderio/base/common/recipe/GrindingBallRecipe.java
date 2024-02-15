@@ -111,9 +111,9 @@ public class GrindingBallRecipe implements IGrindingBallData, EnderRecipe<Contai
 
         public static final Codec<GrindingBallRecipe> CODEC = RecordCodecBuilder.create(inst -> inst
             .group(BuiltInRegistries.ITEM.byNameCodec().fieldOf("item").forGetter(GrindingBallRecipe::getItem),
-                ExtraCodecs.POSITIVE_FLOAT.fieldOf("doublingChance").forGetter(obj -> obj.doublingChance),
-                ExtraCodecs.POSITIVE_FLOAT.fieldOf("bonusMultiplier").forGetter(GrindingBallRecipe::getBonusMultiplier),
-                ExtraCodecs.POSITIVE_FLOAT.fieldOf("powerUse").forGetter(GrindingBallRecipe::getPowerUse),
+                ExtraCodecs.POSITIVE_FLOAT.fieldOf("grinding").forGetter(obj -> obj.doublingChance),
+                ExtraCodecs.POSITIVE_FLOAT.fieldOf("chance").forGetter(GrindingBallRecipe::getBonusMultiplier),
+                ExtraCodecs.POSITIVE_FLOAT.fieldOf("power").forGetter(GrindingBallRecipe::getPowerUse),
                 ExtraCodecs.POSITIVE_INT.fieldOf("durability").forGetter(GrindingBallRecipe::getDurability))
             .apply(inst, GrindingBallRecipe::new));
 

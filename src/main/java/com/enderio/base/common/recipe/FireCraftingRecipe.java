@@ -31,6 +31,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class FireCraftingRecipe implements EnderRecipe<Container> {
@@ -115,10 +116,10 @@ public class FireCraftingRecipe implements EnderRecipe<Container> {
     public static class Serializer implements RecipeSerializer<FireCraftingRecipe> {
 
         public static final Codec<FireCraftingRecipe> CODEC = RecordCodecBuilder.create(inst -> inst
-            .group(ResourceLocation.CODEC.fieldOf("lootTable").forGetter(FireCraftingRecipe::getLootTable),
-                Codec.INT.fieldOf("maxItemDrops").forGetter(FireCraftingRecipe::getMaxItemDrops),
-                BuiltInRegistries.BLOCK.byNameCodec().listOf().fieldOf("baseBlocks").forGetter(FireCraftingRecipe::getBases),
-                TagKey.codec(Registries.BLOCK).listOf().fieldOf("baseTags").forGetter(obj -> obj.baseTags),
+            .group(ResourceLocation.CODEC.fieldOf("loot_table").forGetter(FireCraftingRecipe::getLootTable),
+                Codec.INT.fieldOf("max_item_drops").forGetter(FireCraftingRecipe::getMaxItemDrops),
+                BuiltInRegistries.BLOCK.byNameCodec().listOf().optionalFieldOf("base_blocks", List.of()).forGetter(FireCraftingRecipe::getBases),
+                TagKey.codec(Registries.BLOCK).listOf().optionalFieldOf("base_tags", List.of()).forGetter(obj -> obj.baseTags),
                 ResourceLocation.CODEC.listOf().fieldOf("dimensions").forGetter(obj -> obj.dimensions))
             .apply(inst, FireCraftingRecipe::new));
 

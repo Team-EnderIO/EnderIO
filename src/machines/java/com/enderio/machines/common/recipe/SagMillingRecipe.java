@@ -29,6 +29,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Random;
 import java.util.function.Supplier;
@@ -286,7 +287,7 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
             Ingredient.CODEC_NONEMPTY.fieldOf("input").forGetter(recipe -> recipe.input),
             OutputItem.CODEC.listOf().fieldOf("outputs").forGetter(recipe -> recipe.outputs),
             Codec.INT.fieldOf("energy").forGetter(recipe -> recipe.energy),
-            Codec.STRING.xmap(BonusType::valueOf, BonusType::name).optionalFieldOf("bonus", BonusType.MULTIPLY_OUTPUT).forGetter(recipe -> recipe.bonusType)
+            Codec.STRING.xmap(v -> BonusType.valueOf(v.toUpperCase(Locale.ROOT)), e -> e.name().toLowerCase(Locale.ROOT)).optionalFieldOf("bonus", BonusType.MULTIPLY_OUTPUT).forGetter(recipe -> recipe.bonusType)
         ).apply(instance, SagMillingRecipe::new));
 
         @Override

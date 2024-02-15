@@ -1,8 +1,8 @@
 {
   "type": "enderio:enchanting",
-  "CostMultiplier": 1,
-  "Enchantment": "minecraft:punch",
-  "Input": {
+  "cost_multiplier": 1,
+  "enchantment": "minecraft:punch",
+  "input": {
     "Count": 1,
     "Ingredient": {
       "tag": "forge:string"

@@ -1,8 +1,8 @@
 {
   "type": "enderio:enchanting",
-  "CostMultiplier": 1,
-  "Enchantment": "minecraft:frost_walker",
-  "Input": {
+  "cost_multiplier": 1,
+  "enchantment": "minecraft:frost_walker",
+  "input": {
     "Count": 16,
     "Ingredient": {
       "item": "minecraft:ice"

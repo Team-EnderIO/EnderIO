@@ -1,8 +1,8 @@
 {
   "type": "enderio:enchanting",
-  "CostMultiplier": 1,
-  "Enchantment": "minecraft:channeling",
-  "Input": {
+  "cost_multiplier": 1,
+  "enchantment": "minecraft:channeling",
+  "input": {
     "Count": 1,
     "Ingredient": {
       "item": "minecraft:lightning_rod"

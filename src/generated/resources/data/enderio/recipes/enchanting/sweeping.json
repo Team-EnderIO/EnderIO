@@ -1,8 +1,8 @@
 {
   "type": "enderio:enchanting",
-  "CostMultiplier": 1,
-  "Enchantment": "minecraft:sweeping",
-  "Input": {
+  "cost_multiplier": 1,
+  "enchantment": "minecraft:sweeping",
+  "input": {
     "Count": 8,
     "Ingredient": {
       "tag": "forge:ingots/iron"

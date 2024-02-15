@@ -88,8 +88,8 @@ public class TankRecipeProvider extends EnderRecipeProvider {
             json.addProperty("output", BuiltInRegistries.ITEM.getKey(output).toString());
 
             JsonObject fluidJson = new JsonObject();
-            fluidJson.addProperty("fluid", BuiltInRegistries.FLUID.getKey(fluid.getFluid()).toString());
-            fluidJson.addProperty("amount", fluid.getAmount());
+            fluidJson.addProperty("FluidName", BuiltInRegistries.FLUID.getKey(fluid.getFluid()).toString());
+            fluidJson.addProperty("Amount", fluid.getAmount());
 
             json.add("fluid", fluidJson);
             json.addProperty("is_emptying", isEmptying);

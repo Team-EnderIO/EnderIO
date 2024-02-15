@@ -1,8 +1,8 @@
 {
   "type": "enderio:enchanting",
-  "CostMultiplier": 1,
-  "Enchantment": "minecraft:aqua_affinity",
-  "Input": {
+  "cost_multiplier": 1,
+  "enchantment": "minecraft:aqua_affinity",
+  "input": {
     "Count": 1,
     "Ingredient": {
       "item": "minecraft:lily_pad"

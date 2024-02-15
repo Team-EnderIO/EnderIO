@@ -1,8 +1,8 @@
 {
   "type": "enderio:enchanting",
-  "CostMultiplier": 1,
-  "Enchantment": "minecraft:protection",
-  "Input": {
+  "cost_multiplier": 1,
+  "enchantment": "minecraft:protection",
+  "input": {
     "Count": 16,
     "Ingredient": {
       "tag": "neoforge:ingots/dark_steel"

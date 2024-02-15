@@ -1,8 +1,8 @@
 {
   "type": "enderio:enchanting",
-  "CostMultiplier": 1,
-  "Enchantment": "minecraft:smite",
-  "Input": {
+  "cost_multiplier": 1,
+  "enchantment": "minecraft:smite",
+  "input": {
     "Count": 12,
     "Ingredient": {
       "item": "minecraft:rotten_flesh"

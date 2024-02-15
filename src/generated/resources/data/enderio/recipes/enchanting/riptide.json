@@ -1,8 +1,8 @@
 {
   "type": "enderio:enchanting",
-  "CostMultiplier": 1,
-  "Enchantment": "minecraft:riptide",
-  "Input": {
+  "cost_multiplier": 1,
+  "enchantment": "minecraft:riptide",
+  "input": {
     "Count": 8,
     "Ingredient": {
       "tag": "forge:ingots/iron"
