@@ -4,6 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.core.common.recipes.EnderRecipe;
 import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
 import com.enderio.machines.common.init.MachineRecipes;
+import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.google.gson.JsonObject;
 import net.minecraft.ResourceLocationException;
 import net.minecraft.core.RegistryAccess;
@@ -17,7 +18,6 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -101,14 +101,14 @@ public class TankRecipe implements EnderRecipe<TankRecipe.Container> {
 
     public static class Container extends RecipeWrapper {
 
-        private final FluidTank fluidTank;
+        private final MachineFluidTank fluidTank;
 
-        public Container(IItemHandlerModifiable inv, FluidTank fluidTank) {
+        public Container(IItemHandlerModifiable inv, MachineFluidTank fluidTank) {
             super(inv);
             this.fluidTank = fluidTank;
         }
 
-        public FluidTank getFluidTank() {
+        public MachineFluidTank getFluidTank() {
             return fluidTank;
         }
     }
