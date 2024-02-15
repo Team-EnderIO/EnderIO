@@ -1,0 +1,11 @@
+{
+  "type": "enderio:enchanting",
+  "CostMultiplier": 1,
+  "Enchantment": "minecraft:luck_of_the_sea",
+  "Input": {
+    "Count": 1,
+    "Ingredient": {
+      "tag": "forge:gems/lapis"
+    }
+  }
+}

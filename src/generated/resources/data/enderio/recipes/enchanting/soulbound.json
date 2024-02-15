@@ -1,0 +1,11 @@
+{
+  "type": "enderio:enchanting",
+  "CostMultiplier": 1,
+  "Enchantment": "enderio:soulbound",
+  "Input": {
+    "Count": 1,
+    "Ingredient": {
+      "tag": "neoforge:gems/ender_crystal"
+    }
+  }
+}

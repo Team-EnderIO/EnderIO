@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "minecraft:bucket"
+    },
+    "C": {
+      "tag": "enderio:clear_glass"
+    },
+    "G": {
+      "tag": "neoforge:gears/stone"
+    },
+    "I": {
+      "tag": "neoforge:ingots/copper_alloy"
+    },
+    "V": {
+      "item": "enderio:void_chassis"
+    }
+  },
+  "pattern": [
+    "ICI",
+    "IVI",
+    "GBG"
+  ],
+  "result": {
+    "item": "enderio:drain"
+  },
+  "show_notification": true
+}

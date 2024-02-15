@@ -1,0 +1,11 @@
+{
+  "type": "enderio:enchanting",
+  "CostMultiplier": 2,
+  "Enchantment": "enderio:repellent",
+  "Input": {
+    "Count": 4,
+    "Ingredient": {
+      "item": "minecraft:ender_pearl"
+    }
+  }
+}

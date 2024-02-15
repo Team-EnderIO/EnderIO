@@ -1,0 +1,11 @@
+{
+  "type": "enderio:enchanting",
+  "CostMultiplier": 1,
+  "Enchantment": "minecraft:depth_strider",
+  "Input": {
+    "Count": 1,
+    "Ingredient": {
+      "item": "minecraft:prismarine_shard"
+    }
+  }
+}

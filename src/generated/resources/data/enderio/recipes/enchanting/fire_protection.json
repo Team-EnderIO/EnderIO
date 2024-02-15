@@ -1,0 +1,11 @@
+{
+  "type": "enderio:enchanting",
+  "CostMultiplier": 1,
+  "Enchantment": "minecraft:fire_protection",
+  "Input": {
+    "Count": 16,
+    "Ingredient": {
+      "item": "minecraft:magma_cream"
+    }
+  }
+}

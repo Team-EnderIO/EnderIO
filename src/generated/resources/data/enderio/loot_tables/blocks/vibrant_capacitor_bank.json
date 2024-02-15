@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:copy_nbt",
+              "ops": [
+                {
+                  "op": "replace",
+                  "source": "",
+                  "target": "BlockEntityTag"
+                }
+              ],
+              "source": "block_entity"
+            }
+          ],
+          "name": "enderio:vibrant_capacitor_bank"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "enderio:blocks/vibrant_capacitor_bank"
+}

@@ -1,0 +1,19 @@
+{
+  "parent": "minecraft:block/block",
+  "children": {
+    "machine": {
+      "parent": "enderio:block/slice_and_splice_active"
+    },
+    "overlay": {
+      "parent": "enderio:block/io_overlay"
+    }
+  },
+  "item_render_order": [
+    "machine",
+    "overlay"
+  ],
+  "loader": "neoforge:composite",
+  "textures": {
+    "particle": "enderio:block/slice_and_splice_front"
+  }
+}

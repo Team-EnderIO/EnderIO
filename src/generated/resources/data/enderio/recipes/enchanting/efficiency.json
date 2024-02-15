@@ -1,0 +1,11 @@
+{
+  "type": "enderio:enchanting",
+  "CostMultiplier": 1,
+  "Enchantment": "minecraft:efficiency",
+  "Input": {
+    "Count": 12,
+    "Ingredient": {
+      "tag": "forge:dusts/redstone"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "type": "enderio:tank",
+  "fluid": {
+    "amount": 1000,
+    "fluid": "minecraft:water"
+  },
+  "input": {
+    "item": "minecraft:wet_sponge"
+  },
+  "is_emptying": true,
+  "output": "minecraft:sponge"
+}

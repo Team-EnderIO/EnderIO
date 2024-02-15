@@ -1,0 +1,29 @@
+{
+  "type": "enderio:alloy_smelting",
+  "energy": 7600,
+  "experience": 0.3,
+  "inputs": [
+    {
+      "Count": 1,
+      "Ingredient": {
+        "tag": "forge:ingots/nether_brick"
+      }
+    },
+    {
+      "Count": 4,
+      "Ingredient": {
+        "item": "minecraft:nether_wart"
+      }
+    },
+    {
+      "Count": 6,
+      "Ingredient": {
+        "item": "minecraft:clay_ball"
+      }
+    }
+  ],
+  "result": {
+    "Count": 1,
+    "id": "enderio:nethercotta"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "parent": "minecraft:block/block",
+  "children": {
+    "overlay": {
+      "parent": "enderio:block/io_overlay"
+    },
+    "tank": {
+      "parent": "enderio:block/pressurized_fluid_tank_body"
+    }
+  },
+  "item_render_order": [
+    "tank",
+    "overlay"
+  ],
+  "loader": "neoforge:composite",
+  "textures": {
+    "particle": "enderio:block/machine_side"
+  }
+}
