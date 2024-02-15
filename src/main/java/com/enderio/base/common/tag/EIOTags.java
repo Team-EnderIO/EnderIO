@@ -86,7 +86,7 @@ public class EIOTags {
         public static final TagKey<Item> GEARS = ItemTags.create(new ResourceLocation(NeoForgeVersion.MOD_ID, "gears"));
         public static final TagKey<Item> GEARS_WOOD = ItemTags.create(new ResourceLocation(NeoForgeVersion.MOD_ID, "gears/wood"));
         public static final TagKey<Item> GEARS_STONE = ItemTags.create(new ResourceLocation(NeoForgeVersion.MOD_ID, "gears/stone"));
-        public static final TagKey<Item> GEARS_IRON = ItemTags.create(new ResourceLocation(NeoForgeVersion.MOD_ID, "gears/stone"));
+        public static final TagKey<Item> GEARS_IRON = ItemTags.create(new ResourceLocation(NeoForgeVersion.MOD_ID, "gears/iron"));
         public static final TagKey<Item> GEARS_ENERGIZED = ItemTags.create(new ResourceLocation(NeoForgeVersion.MOD_ID, "gears/energized"));
         public static final TagKey<Item> GEARS_VIBRANT = ItemTags.create(new ResourceLocation(NeoForgeVersion.MOD_ID, "gears/vibrant"));
         public static final TagKey<Item> GEARS_DARK_STEEL = ItemTags.create(new ResourceLocation(NeoForgeVersion.MOD_ID, "gears/dark_steel"));

@@ -24,13 +24,13 @@ public enum ColorControl implements IIcon {
     RED(0xFFB3312C, 0xFFD63A34);
 
     private static final ResourceLocation TEXTURE = new ResourceLocation("enderio", "textures/gui/icons/color_control.png");
-    private static final Vector2i SIZE = new Vector2i(12, 12);
+    private static final Vector2i SIZE = new Vector2i(16, 16);
     private final Vector2i pos;
     private final int color;
     private final int colorActive;
 
     ColorControl(int color, int colorActive) {
-        pos = new Vector2i(12 * ordinal(), 0);
+        pos = new Vector2i(16 * ordinal(), 0);
         this.color = color;
         this.colorActive = colorActive;
     }
@@ -61,5 +61,10 @@ public enum ColorControl implements IIcon {
     @Override
     public Vector2i getTexturePosition() {
         return pos;
+    }
+
+    @Override
+    public Vector2i getTextureSize() {
+        return new Vector2i(256, 16);
     }
 }

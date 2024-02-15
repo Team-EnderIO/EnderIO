@@ -21,6 +21,7 @@ import com.enderio.machines.common.menu.PoweredSpawnerMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -30,7 +31,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
-
 // TODO: I want to revisit the powered spawner and task
 //       But there's not enough time before alpha, so just porting as-is.
 public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
@@ -53,8 +53,6 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
             setEntityType(rl);
             EnderIO.LOGGER.info("UPDATED ENTITY TYPE.");
         }));
-        addDataSlot(new EnumNetworkDataSlot<>(SpawnerBlockedReason.class, this::getReason, this::setReason));
-
         range = 4;
 
         taskHost = new MachineTaskHost(this, this::hasEnergy) {
@@ -70,6 +68,8 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
                 return task;
             }
         };
+
+        updateMachineState(new MachineState(MachineStateType.ERROR, this.reason.component), false);
     }
 
     @Nullable
@@ -147,11 +147,9 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
         return entityData;
     }
 
-    public SpawnerBlockedReason getReason() {
-        return this.reason;
-    }
-
     public void setReason(SpawnerBlockedReason reason) {
+        updateMachineState(new MachineState(MachineStateType.ERROR, this.reason.component), false);
+        updateMachineState(new MachineState(MachineStateType.ERROR, reason.component), true);
         this.reason = reason;
     }
 
@@ -176,18 +174,18 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
     public enum SpawnerBlockedReason {
         TOO_MANY_MOB(MachineLang.TOO_MANY_MOB),
         TOO_MANY_SPAWNER(MachineLang.TOO_MANY_SPAWNER),
-        UNKOWN_MOB(MachineLang.UNKNOWN),
+        UNKNOWN_MOB(MachineLang.UNKNOWN),
         OTHER_MOD(MachineLang.OTHER_MOD),
         DISABLED(MachineLang.DISABLED),
         NONE(Component.literal("NONE"));
 
-        private final Component component;
+        private final MutableComponent component;
 
-        SpawnerBlockedReason(Component component) {
+        SpawnerBlockedReason(MutableComponent component) {
             this.component = component;
         }
 
-        public Component getComponent() {
+        public MutableComponent getComponent() {
             return component;
         }
     }

@@ -98,12 +98,12 @@ public class SpawnerMachineTask implements IPoweredMachineTask {
         AABB range = new AABB(blockEntity.getBlockPos()).inflate(blockEntity.getRange());
         Optional<ResourceLocation> rl = blockEntity.getEntityType();
         if (rl.isEmpty()) {
-            blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
+            blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKNOWN_MOB);
             return false;
         }
         EntityType<?> entity = BuiltInRegistries.ENTITY_TYPE.get(rl.get());
         if (!BuiltInRegistries.ENTITY_TYPE.getKey(entity).equals(rl.get())) { // check we don't get the default pig
-            blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
+            blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKNOWN_MOB);
             return false;
         }
         List<? extends Entity> entities = blockEntity.getLevel().getEntities(entity, range, p -> p instanceof LivingEntity);
@@ -120,12 +120,12 @@ public class SpawnerMachineTask implements IPoweredMachineTask {
     
     private void loadSoulData(Optional<ResourceLocation> rl) {
         if (rl.isEmpty()) {
-            blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
+            blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKNOWN_MOB);
             return;
         }
         Optional<Holder.Reference<EntityType<?>>> optionalEntity = BuiltInRegistries.ENTITY_TYPE.getHolder(ResourceKey.create(Registries.ENTITY_TYPE, rl.get()));
         if (optionalEntity.isEmpty() || ! BuiltInRegistries.ENTITY_TYPE.getKey(optionalEntity.get().value()).equals(rl.get())) {
-            blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
+            blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKNOWN_MOB);
             return;
         }
         if (optionalEntity.get().value().is(MachineTags.EntityTypes.SPAWNER_BLACKLIST)) {
@@ -161,12 +161,12 @@ public class SpawnerMachineTask implements IPoweredMachineTask {
 
             Optional<ResourceLocation> rl = blockEntity.getEntityType();
             if (rl.isEmpty()) {
-                blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
+                blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKNOWN_MOB);
                 return false;
             }
             EntityType<?> optionalEntity = BuiltInRegistries.ENTITY_TYPE.get(rl.get());
             if (!BuiltInRegistries.ENTITY_TYPE.getKey(optionalEntity).equals(rl.get())) { // check we don't get the default pig
-                blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
+                blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKNOWN_MOB);
                 return false;
             }
             if (level.noCollision(optionalEntity.getAABB(x, y, z))) {
@@ -190,7 +190,7 @@ public class SpawnerMachineTask implements IPoweredMachineTask {
                 }
 
                 if (entity == null) {
-                    blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
+                    blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKNOWN_MOB);
                     break;
                 }
 

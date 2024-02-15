@@ -7,6 +7,7 @@ import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.core.client.item.IAdvancedTooltipProvider;
 import com.enderio.core.common.util.EntityUtil;
 import com.enderio.core.common.util.TooltipUtil;
+import com.enderio.machines.common.lang.MachineLang;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -31,7 +32,8 @@ public class BoundSoulBlockItem extends BlockItem implements IMultiCapabilityIte
             .ifPresent(entityStorage -> entityStorage
                 .getStoredEntityData()
                 .getEntityType()
-                .ifPresent(entityType -> tooltips.add(TooltipUtil.style(Component.translatable(EntityUtil.getEntityDescriptionId(entityType))))));
+                .ifPresentOrElse(entityType -> tooltips.add(TooltipUtil.style(Component.translatable(EntityUtil.getEntityDescriptionId(entityType)))),
+                    () -> tooltips.add(TooltipUtil.style(MachineLang.TOOLTIP_NO_SOULBOUND))));
     }
 
     @Override

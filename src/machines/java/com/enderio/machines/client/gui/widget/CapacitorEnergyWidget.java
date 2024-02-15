@@ -42,8 +42,9 @@ public class CapacitorEnergyWidget extends EnergyWidget{
         List<Component> list = new ArrayList<>();
         list.add(EIOLang.NOCAP_TITLE.withStyle(ChatFormatting.DARK_AQUA));
         String[] split = EIOLang.NOCAP_DESC.getString().split("\n");
-        list.add(Component.literal(split[0].stripTrailing()));
-        list.add(Component.literal(split[1].stripLeading()));
+        for (String s :split) {
+            list.add(Component.literal(s.stripLeading().stripTrailing()));
+        }
         PoseStack pose = guiGraphics.pose();
         pose.pushPose();
         pose.translate(0,0,1);

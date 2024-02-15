@@ -150,6 +150,10 @@ public class FireCraftingHandler {
             // Search for any fires that are due to spawn drops.
             long gameTime = event.level.getGameTime();
             for (Map.Entry<FireIndex, Long> fire : FIRE_TRACKER.entrySet()) {
+                if (!fire.getKey().dimension().equals(event.level.dimension())) {
+                    continue;
+                }
+
                 BlockPos pos = fire.getKey().pos();
                 if (gameTime > fire.getValue()) {
                     if (event.level.getBlockState(pos).getBlock() instanceof FireBlock) {

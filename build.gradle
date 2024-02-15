@@ -340,7 +340,7 @@ publishing {
         maven(MavenPublication) {
             groupId = 'com.enderio'
             artifactId = 'EnderIO'
-            version = project.version
+            version = "${getVersionString()}"
 
             artifact jar
             artifact sourcesJar
@@ -363,8 +363,19 @@ publishing {
                 }
             }
         }
+    }
 
-        // TODO: Repositories to publish to...
+    repositories {
+        if (System.getenv("RVR_MAVEN_USER") != null) {
+            maven {
+                name = "Rover656"
+                url = "https://maven.rover656.dev/releases"
+                credentials {
+                    username = System.getenv("RVR_MAVEN_USER")
+                    password = System.getenv("RVR_MAVEN_PASSWORD")
+                }
+            }
+        }
     }
 }
 

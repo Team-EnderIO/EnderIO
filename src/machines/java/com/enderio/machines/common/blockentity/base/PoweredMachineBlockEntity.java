@@ -10,6 +10,7 @@ import com.enderio.base.common.item.capacitors.BaseCapacitorItem;
 import com.enderio.core.common.network.slot.NetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.ProgressMachineBlock;
+import com.enderio.machines.common.blockentity.MachineState;
 import com.enderio.machines.common.blockentity.sync.MachineEnergyNetworkDataSlot;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.ImmutableMachineEnergyStorage;
@@ -22,6 +23,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -92,6 +94,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
             if (blockState.hasProperty(ProgressMachineBlock.POWERED) && blockState.getValue(ProgressMachineBlock.POWERED) != isActive()) {
                 if (updateModel) {
                     level.setBlock(getBlockPos(), blockState.setValue(ProgressMachineBlock.POWERED, isActive()), Block.UPDATE_ALL);
+                    updateMachineState(MachineState.ACTIVE, isActive());
                 }
                 updateModel = true;
             } else {
@@ -211,6 +214,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
             @Override
             protected void onContentsChanged() {
                 setChanged();
+                updateMachineState(MachineState.NO_POWER, getEnergyStorage().getEnergyStored() <= 0);
 
             }
         };
@@ -299,7 +303,10 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
     protected void onInventoryContentsChanged(int slot) {
         MachineInventoryLayout inventoryLayout = getInventoryLayout();
         if (inventoryLayout != null && inventoryLayout.getCapacitorSlot() == slot) {
-            capacitorCacheDirty = true;
+            if (requiresCapacitor()) {
+                updateMachineState(MachineState.NO_CAPACITOR, getCapacitorItem().isEmpty());
+                capacitorCacheDirty = true;
+            }
         }
         super.onInventoryContentsChanged(slot);
     }
@@ -352,7 +359,22 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
         }
 
         super.load(pTag);
+
+        cacheCapacitorData();
+
+        updateMachineState(MachineState.NO_CAPACITOR, requiresCapacitor() && getCapacitorItem().isEmpty());
+        updateMachineState(MachineState.NO_POWER, energyStorage.getEnergyStored() <= 0);
     }
 
     // endregion
+
+    @Override
+    public void setLevel(Level level) {
+        super.setLevel(level);
+
+        //These are the values before Load is called. In case the machine is placed down without nbt, Load isn't called, so it will use these values.
+        //Ideally I would want to use onLoad, but when placing a block this is called before load is done.
+        updateMachineState(MachineState.NO_CAPACITOR, requiresCapacitor() && getCapacitorItem().isEmpty());
+        updateMachineState(MachineState.NO_POWER, energyStorage.getEnergyStored() <= 0);
+    }
 }

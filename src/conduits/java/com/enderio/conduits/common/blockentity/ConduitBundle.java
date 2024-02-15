@@ -17,10 +17,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.fml.util.thread.EffectiveSide;
+import net.neoforged.neoforgespi.language.IModInfo;
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -48,6 +51,14 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
     private final Map<Direction, BlockState> facadeTextures = new EnumMap<>(Direction.class);
 
     private int dataVersion = Integer.MIN_VALUE;
+
+    private static final boolean IS_NEO_ENV_AFTER_ON_LOAD_CHANGE;
+
+    static {
+        // TODO: NEO-PORT: Remove Neo detection.
+        IModInfo forge = ModList.get().getModFileById("forge").getMods().get(0);
+        IS_NEO_ENV_AFTER_ON_LOAD_CHANGE = forge.getDisplayName().equals("NeoForge") && forge.getVersion().compareTo(new DefaultArtifactVersion("47.1.77")) >= 0;
+    }
 
     public ConduitBundle(Runnable scheduleSync, BlockPos pos) {
         this.scheduleSync = scheduleSync;
@@ -113,7 +124,11 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         } else {
             types.add(type);
             nodes.put(type, node);
-            node.getExtendedConduitData().onCreated(type, level, pos, player);
+            if (types.size() != 1 || !IS_NEO_ENV_AFTER_ON_LOAD_CHANGE) {
+                //NeoForge contains a patch that calls onLoad after the conduit has been placed if it's the first one, so onCreated would be called twice. it's easier to detect here
+                //TODO, remove neocheck and just keep the size check with an explaining comment on why we have a types.size check at all
+                node.getExtendedConduitData().onCreated(type, level, pos, player);
+            }
         }
 
         scheduleSync.run();

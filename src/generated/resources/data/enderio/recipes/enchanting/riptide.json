@@ -5,7 +5,7 @@
   "input": {
     "Count": 8,
     "Ingredient": {
-      "tag": "forge:ingots/iron"
+      "item": "minecraft:firework_rocket"
     }
   }
 }

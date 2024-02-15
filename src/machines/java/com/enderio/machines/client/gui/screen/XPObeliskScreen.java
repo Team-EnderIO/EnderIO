@@ -3,12 +3,12 @@ package com.enderio.machines.client.gui.screen;
 import com.enderio.EnderIO;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.core.client.gui.widgets.EIOImageButton;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.enderio.machines.client.gui.widget.ExperienceWidget;
 import com.enderio.machines.client.gui.widget.ioconfig.IOConfigButton;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.menu.XPObeliskMenu;
-import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -61,9 +61,9 @@ public class XPObeliskScreen extends MachineScreen<XPObeliskMenu> {
         this.getMinecraft().gameMode.handleInventoryButtonClick(getMenu().containerId, id);
     }
 
-    private ImageButton makeButton(int x, int y, int size,int xTexStart, int yTexStart, int id, Component tooltip){
+    private EIOImageButton makeButton(int x, int y, int size, int xTexStart, int yTexStart, int id, Component tooltip) {
         // TODO: NEO-PORT: ImageButton's
-//        ImageButton button = new ImageButton(x , y, size, size, xTexStart, yTexStart, 0, XP_BTNS, 48,32, (press) -> handlePress(id));
+//        EIOImageButton button = new EIOImageButton(this, x, y, size, size, xTexStart, yTexStart, 0, XP_BTNS, 48, 32, (press) -> handlePress(id));
 //        button.setTooltip(Tooltip.create(tooltip));
 //        return button;
         return null;

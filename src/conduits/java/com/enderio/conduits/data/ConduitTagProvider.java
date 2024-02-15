@@ -1,6 +1,7 @@
 package com.enderio.conduits.data;
 
 import com.enderio.EnderIO;
+import com.enderio.conduits.common.init.ConduitBlocks;
 import com.enderio.conduits.common.tag.ConduitTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -32,5 +33,7 @@ public class ConduitTagProvider extends BlockTagsProvider {
             .addOptional(new ResourceLocation("mekanism", "ultimate_universal_cable"))
             .addOptional(new ResourceLocation("pipez", "energy_pipe"))
             .addOptional(new ResourceLocation("pipez", "universal_pipe"));
+
+        tag(ConduitTags.Blocks.RELOCATION_NOT_SUPPORTED).add(ConduitBlocks.CONDUIT.get());
     }
 }

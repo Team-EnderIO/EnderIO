@@ -2,6 +2,7 @@ package com.enderio.machines.client.rendering.blockentity;
 
 import com.enderio.core.client.RenderUtil;
 import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
+import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
@@ -16,7 +17,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
@@ -29,10 +29,10 @@ public class FluidTankBER implements BlockEntityRenderer<FluidTankBlockEntity> {
     public void render(FluidTankBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight,
         int packedOverlay) {
 
-        FluidTank tank = blockEntity.getFluidTank();
+        MachineFluidTank tank = blockEntity.getFluidTank();
 
         // Don't waste time if there's no fluid.
-        if (!tank.isEmpty()) {
+        if (!tank.getFluid().isEmpty()) {
             FluidStack fluidStack = tank.getFluid();
 
             // Use entity translucent cull sheet so fluid renders in Fabulous

@@ -13,11 +13,14 @@ import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
 import com.enderio.core.common.network.slot.EnumNetworkDataSlot;
 import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
 import com.enderio.core.common.network.slot.NBTSerializableNetworkDataSlot;
+import com.enderio.core.common.network.slot.SetNetworkDataSlot;
 import com.enderio.core.common.util.PlayerInteractionUtil;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.MachineBlock;
+import com.enderio.machines.common.blockentity.MachineState;
 import com.enderio.machines.common.io.IOConfig;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
+import com.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import net.minecraft.core.BlockPos;
@@ -31,7 +34,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -46,8 +48,8 @@ import net.neoforged.neoforge.common.capabilities.Capability;
 import net.neoforged.neoforge.common.capabilities.Capabilities;
 import net.neoforged.neoforge.common.util.LazyOptional;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
@@ -56,10 +58,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 import static net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 
@@ -96,9 +100,6 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     private final MachineInventory inventory;
 
     @Nullable
-    private final FluidTank fluidTank;
-
-    @Nullable
     private final MachineFluidHandler fluidHandler;
 
     // region Caches for external block interaction
@@ -115,6 +116,8 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     private final NBTSerializableNetworkDataSlot<IIOConfig> ioConfigDataSlot;
 
     // endregion
+
+    private Set<MachineState> states = new HashSet<>();
 
     public MachineBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
@@ -133,9 +136,9 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         }
 
         // Create fluid storage
-        fluidTank = createFluidTank();
-        if (fluidTank != null) {
-            fluidHandler = createFluidHandler(fluidTank);
+        MachineTankLayout tankLayout = getTankLayout();
+        if (tankLayout != null) {
+            fluidHandler = createFluidHandler(tankLayout);
             if (fluidHandler != null) {
                 addCapabilityProvider(fluidHandler);
             }
@@ -158,6 +161,8 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             }
         });
         addDataSlot(ioConfigDataSlot);
+
+        addDataSlot(new SetNetworkDataSlot<>(this::getMachineStates, l -> states = l, MachineState::toNBT , MachineState::fromNBT, MachineState::toBuffer, MachineState::fromBuffer ));
     }
 
     // region IO Config
@@ -370,6 +375,11 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
                 onInventoryContentsChanged(slot);
                 setChanged();
             }
+
+            @Override
+            public void updateMachineState(MachineState state, boolean add) {
+                MachineBlockEntity.this.updateMachineState(state, add);
+            }
         };
     }
 
@@ -381,29 +391,38 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     // endregion
 
     // region Fluid Storage
-
     @Nullable
-    protected FluidTank createFluidTank() {
+    public MachineTankLayout getTankLayout() {
         return null;
     }
 
     @Nullable
-    public final FluidTank getFluidTank() {
-        return fluidTank;
+    public final MachineFluidHandler getFluidHandler() {
+        return fluidHandler;
     }
 
     /**
-     * Only call this if you're sure your machine has a fluid tank.
+     * Only call this if you're sure your machine has an tank.
      */
-    protected final FluidTank getFluidTankNN() {
-        return Objects.requireNonNull(fluidTank);
+    protected final MachineFluidHandler getFluidHandlerNN() {
+        return Objects.requireNonNull(fluidHandler);
     }
 
     @Nullable
-    protected MachineFluidHandler createFluidHandler(FluidTank fluidTank) {
-        // We can have a default here, as if createFluidTank returns null, this is never called.
-        return new MachineFluidHandler(getIOConfig(), fluidTank);
+    protected MachineFluidHandler createFluidHandler(MachineTankLayout layout) {
+        return new MachineFluidHandler(getIOConfig(), layout) {
+            @Override
+            protected void onContentsChanged(int slot) {
+                onTankContentsChanged(slot);
+                setChanged();
+            }
+        };
     }
+
+    /**
+     * @apiNote Must call this on custom MachineFluid handlers!
+     */
+    protected void onTankContentsChanged(int slot) {}
 
     // endregion
 
@@ -437,7 +456,9 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         }
 
         if (supportsRedstoneControl()) {
-            return redstoneControl.isActive(this.level.hasNeighborSignal(worldPosition));
+            boolean active = redstoneControl.isActive(this.level.hasNeighborSignal(worldPosition));
+            updateMachineState(MachineState.REDSTONE, !active);
+            return active;
         }
 
         return true;
@@ -542,14 +563,8 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
      * Move fluids from one handler to the other.
      */
     protected int moveFluids(IFluidHandler from, IFluidHandler to, int maxDrain) {
-        FluidStack stack = from.drain(maxDrain, FluidAction.SIMULATE);
-        if(stack.isEmpty()) {
-            return 0;
-        }
-        int filled = to.fill(stack, FluidAction.EXECUTE);
-        stack.setAmount(filled);
-        from.drain(stack, FluidAction.EXECUTE);
-        return filled;
+        FluidStack stack = FluidUtil.tryFluidTransfer(to, from, maxDrain, true);
+        return stack.getAmount();
     }
 
     // endregion
@@ -652,8 +667,8 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             pTag.put(MachineNBTKeys.ITEMS, inventory.serializeNBT());
         }
 
-        if (fluidTank != null) {
-            pTag.put(MachineNBTKeys.FLUID, fluidTank.writeToNBT(new CompoundTag()));
+        if (this.fluidHandler != null) {
+            pTag.put(MachineNBTKeys.FLUIDS, fluidHandler.serializeNBT());
         }
 
         if (getMaxRange() > 0) {
@@ -675,8 +690,8 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             inventory.deserializeNBT(pTag.getCompound(MachineNBTKeys.ITEMS));
         }
 
-        if (fluidTank != null) {
-            fluidTank.readFromNBT(pTag.getCompound(MachineNBTKeys.FLUID));
+        if (this.fluidHandler != null) {
+            fluidHandler.deserializeNBT(pTag.getCompound(MachineNBTKeys.FLUIDS));
         }
 
         // For rendering io overlays after placed by an nbt filled block item
@@ -755,5 +770,20 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     public int getLightEmission() {
         return getBlockState().getLightEmission();
+    }
+
+    public Set<MachineState> getMachineStates() {
+        return states;
+    }
+
+    public void updateMachineState(MachineState state, boolean add) {
+        if (level != null && level.isClientSide) {
+            return;
+        }
+        if (add) {
+            states.add(state);
+        } else {
+            states.remove(state);
+        }
     }
 }

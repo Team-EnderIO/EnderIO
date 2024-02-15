@@ -64,12 +64,12 @@ public class EnchanterRecipeProvider extends EnderRecipeProvider {
         build(Enchantments.SWEEPING_EDGE, CountedIngredient.of(8, Tags.Items.INGOTS_IRON), 1, recipeOutput);
         //new
         build(Enchantments.CHANNELING, CountedIngredient.of(Items.LIGHTNING_ROD), 1, recipeOutput);
-        build(Enchantments.IMPALING, CountedIngredient.of(8, Tags.Items.INGOTS_IRON), 1, recipeOutput);//TODO
+        build(Enchantments.IMPALING, CountedIngredient.of(8, Tags.Items.INGOTS_IRON), 1, recipeOutput);
         build(Enchantments.LOYALTY, CountedIngredient.of(Items.LEAD), 1, recipeOutput);
         build(Enchantments.MULTISHOT, CountedIngredient.of(16, ItemTags.ARROWS), 1, recipeOutput);//TODO
-        build(Enchantments.PIERCING, CountedIngredient.of(8, Tags.Items.INGOTS_IRON), 1, recipeOutput);//TODO
+        build(Enchantments.PIERCING, CountedIngredient.of(8, Tags.Items.GEMS_PRISMARINE), 1, recipeOutput);
         build(Enchantments.QUICK_CHARGE, CountedIngredient.of(16, Items.SUGAR), 1, recipeOutput);
-        build(Enchantments.RIPTIDE, CountedIngredient.of(8, Tags.Items.INGOTS_IRON), 1, recipeOutput);//TODO
+        build(Enchantments.RIPTIDE, CountedIngredient.of(8, Items.FIREWORK_ROCKET), 1, recipeOutput);
         build(Enchantments.SOUL_SPEED, CountedIngredient.of(16, Items.SOUL_SOIL), 1, recipeOutput);
 
 
@@ -78,6 +78,7 @@ public class EnchanterRecipeProvider extends EnderRecipeProvider {
         build(EIOEnchantments.WITHERING.get(), CountedIngredient.of(4, EIOItems.WITHERING_POWDER.get()), 1, recipeOutput);
         build(EIOEnchantments.REPELLENT.get(), CountedIngredient.of(4, Items.ENDER_PEARL), 2, recipeOutput);
         build(EIOEnchantments.AUTO_SMELT.get(), CountedIngredient.of(16, Items.BLAZE_POWDER), 1, recipeOutput); //TODO
+        build(EIOEnchantments.XP_BOOST.get(), CountedIngredient.of(16, Items.EXPERIENCE_BOTTLE), 1, recipeOutput); //TODO
     }
 
     protected void build(Enchantment enchantment, CountedIngredient input, int levelModifier, RecipeOutput recipeOutput) {

@@ -31,7 +31,7 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<IEnergySto
         super.tickGraph(type, loadedNodes, level, graph, isRedstoneActive);
         for (NodeIdentifier<?> node : loadedNodes) {
             EnergyExtendedData energyExtendedData = node.getExtendedConduitData().castTo(EnergyExtendedData.class);
-            IEnergyStorage energy = energyExtendedData.selfCap
+            IEnergyStorage energy = energyExtendedData.getSelfCap()
                 .resolve()
                 .orElseThrow();
             if (energy.getEnergyStored() == 0) {

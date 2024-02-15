@@ -5,7 +5,7 @@
   "input": {
     "Count": 8,
     "Ingredient": {
-      "tag": "forge:ingots/iron"
+      "tag": "forge:gems/prismarine"
     }
   }
 }
