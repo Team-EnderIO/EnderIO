@@ -205,10 +205,14 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
             return new OutputItem(Either.right(tag), count, chance, optional);
         }
         public static OutputItem of(Optional<TagKey<Item>> tag, Optional<Item> item, int count, float chance, boolean optional) {
-            if (tag.isPresent())
+            if (tag.isPresent()) {
                 return new OutputItem(Either.right(tag.get()), count, chance, optional);
-            if (item.isPresent())
+            }
+
+            if (item.isPresent()) {
                 return new OutputItem(Either.left(item.get()), count, chance, optional);
+            }
+
             throw new IllegalStateException("either tag or item need to be present");
         }
 

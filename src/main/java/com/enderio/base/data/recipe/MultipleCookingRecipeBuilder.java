@@ -126,7 +126,7 @@ public class MultipleCookingRecipeBuilder implements RecipeBuilder {
         }
     }
 
-    public static record Result(ResourceLocation id, String group, CookingBookCategory category, Ingredient ingredient, ItemStack result, float experience, int cookingTime, AdvancementHolder advancement, RecipeSerializer<? extends AbstractCookingRecipe> type) implements FinishedRecipe {
+    public record Result(ResourceLocation id, String group, CookingBookCategory category, Ingredient ingredient, ItemStack result, float experience, int cookingTime, AdvancementHolder advancement, RecipeSerializer<? extends AbstractCookingRecipe> type) implements FinishedRecipe {
 
         @Override
         public void serializeRecipeData(JsonObject pJson) {
