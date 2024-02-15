@@ -126,27 +126,27 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
 
     @Override
     protected void buildRecipes(Consumer<FinishedRecipe> finishedRecipeConsumer) {
-        
-        build1toN("iron", Tags.Items.INGOTS_IRON, POWDERED_IRON.get(), 1, finishedRecipeConsumer);
-        build1toN("gold", Tags.Items.INGOTS_GOLD, POWDERED_GOLD.get(), 1, finishedRecipeConsumer);
+
+        build1toN("iron", Tags.Items.INGOTS_IRON, POWDERED_IRON.get(), 1, BonusType.NONE, finishedRecipeConsumer);
+        build1toN("gold", Tags.Items.INGOTS_GOLD, POWDERED_GOLD.get(), 1, BonusType.NONE, finishedRecipeConsumer);
         build1toN("obsidian", Tags.Items.OBSIDIAN, POWDERED_OBSIDIAN.get(), 4, finishedRecipeConsumer);
-        
-        build1toN("precient_crystal", EIOTags.Items.GEMS_PRESCIENT_CRYSTAL, PRESCIENT_POWDER.get(), 1, finishedRecipeConsumer);
-        build1toN("vibrant_crystal", EIOTags.Items.GEMS_VIBRANT_CRYSTAL, VIBRANT_POWDER.get(), 1, finishedRecipeConsumer);
-        build1toN("pulsating_crystal", EIOTags.Items.GEMS_PULSATING_CRYSTAL, PULSATING_POWDER.get(), 1, finishedRecipeConsumer);
-        build1toN("ender_crystal", EIOTags.Items.GEMS_ENDER_CRYSTAL, ENDER_CRYSTAL_POWDER.get(), 1, finishedRecipeConsumer);
-        
-        build1toN("ender_pearl", Tags.Items.ENDER_PEARLS, POWDERED_ENDER_PEARL.get(), 9, finishedRecipeConsumer);
+
+        build1toN("precient_crystal", EIOTags.Items.GEMS_PRESCIENT_CRYSTAL, PRESCIENT_POWDER.get(), 1, BonusType.NONE, finishedRecipeConsumer);
+        build1toN("vibrant_crystal", EIOTags.Items.GEMS_VIBRANT_CRYSTAL, VIBRANT_POWDER.get(), 1, BonusType.NONE, finishedRecipeConsumer);
+        build1toN("pulsating_crystal", EIOTags.Items.GEMS_PULSATING_CRYSTAL, PULSATING_POWDER.get(), 1, BonusType.NONE, finishedRecipeConsumer);
+        build1toN("ender_crystal", EIOTags.Items.GEMS_ENDER_CRYSTAL, ENDER_CRYSTAL_POWDER.get(), 1, BonusType.NONE, finishedRecipeConsumer);
+
+        build1toN("ender_pearl", Tags.Items.ENDER_PEARLS, POWDERED_ENDER_PEARL.get(), 9, BonusType.NONE, finishedRecipeConsumer);
         build1toN("blaze_powder", Tags.Items.RODS_BLAZE, BLAZE_POWDER, 4, finishedRecipeConsumer);
-        build1toN("glass", Tags.Items.GLASS, SAND, 1, finishedRecipeConsumer);
-        build1toN("bone_block", BONE_BLOCK, BONE_MEAL, 9, finishedRecipeConsumer);
-        build1toN("soularium", EIOTags.Items.INGOTS_SOULARIUM, SOUL_POWDER.get(), 1, finishedRecipeConsumer);
+        build1toN("glass", Tags.Items.GLASS, SAND, 1, BonusType.NONE, finishedRecipeConsumer);
+        build1toN("bone_block", BONE_BLOCK, BONE_MEAL, 9, BonusType.NONE, finishedRecipeConsumer);
+        build1toN("soularium", EIOTags.Items.INGOTS_SOULARIUM, SOUL_POWDER.get(), 1, BonusType.NONE, finishedRecipeConsumer);
 
         buildOre("iron_ore", Ingredient.of(Tags.Items.ORES_IRON), POWDERED_IRON.get(), finishedRecipeConsumer);
         buildOre("gold_ore", Ingredient.of(Tags.Items.ORES_GOLD), POWDERED_GOLD.get(), finishedRecipeConsumer);
         buildOre("copper_ore", Ingredient.of(Tags.Items.ORES_COPPER), POWDERED_COPPER.get(), finishedRecipeConsumer);
 
-        build1toN("stone", Tags.Items.STONE, COBBLESTONE, 1, finishedRecipeConsumer);
+        build1toN("stone", Tags.Items.STONE, COBBLESTONE, 1, BonusType.NONE, finishedRecipeConsumer);
 
         build("coal", Ingredient.of(ItemTags.COALS), List.of(
                 output(POWDERED_COAL.get()),
@@ -160,27 +160,27 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
             	output(DIAMOND, 0.005f),
             	output(COBBLESTONE, 0.15f)),
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-        
+
         build("redstone_ore", Ingredient.of(Tags.Items.ORES_REDSTONE), List.of(
         		output(REDSTONE, 8),
             	output(REDSTONE, 0.2f),
             	output(SILICON.get(), 0.8f),
             	output(COBBLESTONE, 0.15f)
             	), BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-        
+
         build("diamond_ore", Ingredient.of(Tags.Items.ORES_DIAMOND), List.of(
         		output(DIAMOND, 2),
             	output(DIAMOND, 0.25f),
             	output(POWDERED_COAL.get(), 0.1f),
         		output(COBBLESTONE, 0.15f)
         		),BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-        
+
         build("emerald_ore", Ingredient.of(Tags.Items.ORES_EMERALD), List.of(
         		output(EMERALD, 2),
             	output(EMERALD, 0.25f),
         		output(COBBLESTONE, 0.15f)
         		),BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-        
+
         build("lapis_ore", Ingredient.of(Tags.Items.ORES_LAPIS), List.of(
         		output(LAPIS_LAZULI, 8),
             	output(LAPIS_LAZULI, 0.2f),
@@ -189,88 +189,88 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
 
         build("lapis", Ingredient.of(Tags.Items.GEMS_LAPIS), List.of(
             output(POWDERED_LAPIS_LAZULI.get(), 1)
-        ),BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-        
+        ),BASE_ENERGY_PER_OPERATION, BonusType.NONE, finishedRecipeConsumer);
+
         build("quartz_ore", Ingredient.of(Tags.Items.ORES_QUARTZ), List.of(
         		output(QUARTZ, 2),
             	output(POWDERED_QUARTZ.get(), 0.1f),
         		output(NETHERRACK, 0.15f)
         		),BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-        
+
         build("quartz", Ingredient.of(Tags.Items.GEMS_QUARTZ), List.of(
         		output(POWDERED_QUARTZ.get(), 1),
             	output(POWDERED_QUARTZ.get(), 0.1f)
-        		),BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-        
+        		),BASE_ENERGY_PER_OPERATION, BonusType.CHANCE_ONLY, finishedRecipeConsumer);
+
         build("wheat", Ingredient.of(Tags.Items.CROPS_WHEAT), List.of(
         		output(FLOUR.get()),
         		output(Tags.Items.SEEDS_WHEAT, 1, 0.2f, true)),
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-        
+
         build("cobblestone", Ingredient.of(Tags.Items.COBBLESTONE), List.of(
-        		output(GRAVEL, 0.7f), 
-        		output(GRAVEL, 0.3f), 
-        		output(SAND, 0.1f), 
-        		output(FLINT, 0.05f)), 
+        		output(GRAVEL, 0.7f),
+        		output(GRAVEL, 0.3f),
+        		output(SAND, 0.1f),
+        		output(FLINT, 0.05f)),
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
 
         build("gravel", Ingredient.of(Tags.Items.GRAVEL), List.of(
-        		output(SAND, 0.7f), 
-        		output(SAND, 0.3f), 
-        		output(FLINT, 0.1f)), 
+        		output(SAND, 0.7f),
+        		output(SAND, 0.3f),
+        		output(FLINT, 0.1f)),
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-        
+
         build("sandstone", Ingredient.of(Tags.Items.SANDSTONE), List.of(
-        		output(SAND, 2), 
-        		output(SAND, 2, 0.4f)), 
-        		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-        
+        		output(SAND, 2),
+        		output(SAND, 2, 0.4f)),
+        		BASE_ENERGY_PER_OPERATION, BonusType.CHANCE_ONLY, finishedRecipeConsumer);
+
         build("sand", Ingredient.of(Tags.Items.SAND), List.of(
         		output(EIOTags.Items.SILICON, 0.5f)
         		),BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-        
+
         build("glowstone", Ingredient.of(GLOWSTONE), List.of(//swap with any:glowstone
-        		output(GLOWSTONE_DUST, 3), 
-        		output(GLOWSTONE_DUST, 0.8f)), 
-        		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-        
+        		output(GLOWSTONE_DUST, 3),
+        		output(GLOWSTONE_DUST, 0.8f)),
+        		BASE_ENERGY_PER_OPERATION, BonusType.CHANCE_ONLY, finishedRecipeConsumer);
+
         build("bone", Ingredient.of(Tags.Items.BONES), List.of(
-        		output(BONE_MEAL, 6), 
-        		output(BONE_MEAL, 2, 0.1f)), 
+        		output(BONE_MEAL, 6),
+        		output(BONE_MEAL, 2, 0.1f)),
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-        
+
         build("clay", Ingredient.of(CLAY), List.of(
-        		output(CLAY_BALL, 2), 
-        		output(CLAY_BALL, 0.1f), 
-        		output(SILICON.get(), 2, 0.8f)), 
+        		output(CLAY_BALL, 2),
+        		output(CLAY_BALL, 0.1f),
+        		output(SILICON.get(), 2, 0.8f)),
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-        
+
         build("wool", Ingredient.of(ItemTags.WOOL), List.of(
-        		output(STRING, 2), 
-        		output(STRING, 0.1f)), 
-        		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-        
+        		output(STRING, 2),
+        		output(STRING, 0.1f)),
+        		BASE_ENERGY_PER_OPERATION, BonusType.CHANCE_ONLY, finishedRecipeConsumer);
+
         build("quartz_block", Ingredient.of(Tags.Items.STORAGE_BLOCKS_QUARTZ), List.of(
-        		output(QUARTZ, 2), 
-        		output(QUARTZ, 2, 0.25f)), 
-        		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-        
+        		output(QUARTZ, 2),
+        		output(QUARTZ, 2, 0.25f)),
+        		BASE_ENERGY_PER_OPERATION, BonusType.CHANCE_ONLY, finishedRecipeConsumer);
+
         build("quartz_stairs", Ingredient.of(QUARTZ_STAIRS), List.of(
-        		output(QUARTZ, 2), 
-        		output(QUARTZ, 2, 0.25f)), 
-        		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-        
+        		output(QUARTZ, 2),
+        		output(QUARTZ, 2, 0.25f)),
+        		BASE_ENERGY_PER_OPERATION, BonusType.CHANCE_ONLY, finishedRecipeConsumer);
+
         build("quartz_slabs", Ingredient.of(QUARTZ_SLAB), List.of(
-        		output(QUARTZ, 1), 
-        		output(QUARTZ, 0.25f)), 
-        		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-        
+        		output(QUARTZ, 1),
+        		output(QUARTZ, 0.25f)),
+        		BASE_ENERGY_PER_OPERATION, BonusType.CHANCE_ONLY, finishedRecipeConsumer);
+
         build("cobweb", Ingredient.of(COBWEB), List.of(
-        		output(STRING, 2), 
+        		output(STRING, 2),
         		output(STRING, 0.6f),
         		output(STRING, 0.3f)),
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-        
+
         buildFlower("dandelion", DANDELION, YELLOW_DYE, finishedRecipeConsumer);
         buildFlower("poppy", POPPY, RED_DYE, finishedRecipeConsumer);
         buildFlower("blue_orchid", BLUE_ORCHID, LIGHT_BLUE_DYE, finishedRecipeConsumer);
@@ -281,102 +281,102 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
         buildFlower("white_tulip", WHITE_TULIP, WHITE_DYE, finishedRecipeConsumer);
         buildFlower("pink_tulip", PINK_TULIP, PINK_DYE, finishedRecipeConsumer);
         buildFlower("oxeye_daisy", OXEYE_DAISY, WHITE_DYE, finishedRecipeConsumer);
-        
+
         build("shrub", Ingredient.of(DEAD_BUSH), List.of(
-        		output(PLANT_MATTER_BROWN.get(), 0.8f), 
+        		output(PLANT_MATTER_BROWN.get(), 0.8f),
         		output(PLANT_MATTER_BROWN.get(), 0.6f),
         		output(PLANT_MATTER_BROWN.get(), 0.3f)),
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-        
+
         build("grass", Ingredient.of(GRASS), List.of(
-        		output(PLANT_MATTER_GREEN.get(), 0.6f), 
+        		output(PLANT_MATTER_GREEN.get(), 0.6f),
         		output(PLANT_MATTER_GREEN.get(), 0.3f),
         		output(PLANT_MATTER_GREEN.get(), 0.1f),
         		output(PLANT_MATTER_BROWN.get(), 0.05f)),
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-        
+
         build("fern", Ingredient.of(FERN), List.of(
-        		output(PLANT_MATTER_GREEN.get(), 0.6f), 
+        		output(PLANT_MATTER_GREEN.get(), 0.6f),
         		output(PLANT_MATTER_GREEN.get(), 0.3f),
         		output(PLANT_MATTER_GREEN.get(), 0.1f),
         		output(PLANT_MATTER_BROWN.get(), 0.05f)),
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-        
+
         build("leaves", Ingredient.of(ItemTags.LEAVES), List.of(
-        		output(PLANT_MATTER_GREEN.get(), 0.3f), 
+        		output(PLANT_MATTER_GREEN.get(), 0.3f),
         		output(PLANT_MATTER_GREEN.get(), 0.1f),
         		output(PLANT_MATTER_GREEN.get(), 0.02f)),
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-        
+
         build("vines", Ingredient.of(VINE), List.of(
-        		output(PLANT_MATTER_GREEN.get(), 0.15f), 
+        		output(PLANT_MATTER_GREEN.get(), 0.15f),
         		output(PLANT_MATTER_GREEN.get(), 0.1f)),
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-        
+
         build("cactus", Ingredient.of(CACTUS), List.of(
-        		output(PLANT_MATTER_GREEN.get(), 3), 
+        		output(PLANT_MATTER_GREEN.get(), 3),
         		output(PLANT_MATTER_GREEN.get(), 3, 0.75f),
         		output(PLANT_MATTER_GREEN.get(), 3, 0.5f),
         		output(PLANT_MATTER_BROWN.get(), 3, 0.25f)
         		),
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-        
+
         build("lily_pad", Ingredient.of(LILY_PAD), List.of(
-        		output(PLANT_MATTER_GREEN.get(), 3, 0.15f), 
+        		output(PLANT_MATTER_GREEN.get(), 3, 0.15f),
         		output(PLANT_MATTER_GREEN.get(), 3, 0.1f)),
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-        
+
         build("sun_flower", Ingredient.of(VINE), List.of(
-        		output(YELLOW_DYE, 2, 0.8f), 
+        		output(YELLOW_DYE, 2, 0.8f),
         		output(YELLOW_DYE, 0.6f),
         		output(YELLOW_DYE, 2, 0.3f),
         		output(PLANT_MATTER_GREEN.get(), 0.2f)),
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-        
+
         build("tall_grass", Ingredient.of(TALL_GRASS), List.of(
-        		output(PLANT_MATTER_GREEN.get(), 2, 0.6f), 
+        		output(PLANT_MATTER_GREEN.get(), 2, 0.6f),
         		output(PLANT_MATTER_GREEN.get(), 0.3f),
         		output(PLANT_MATTER_GREEN.get(), 2, 0.1f),
         		output(PLANT_MATTER_BROWN.get(), 0.15f)),
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-        
+
         build("large_fern", Ingredient.of(LARGE_FERN), List.of(
-        		output(PLANT_MATTER_GREEN.get(), 2, 0.6f), 
+        		output(PLANT_MATTER_GREEN.get(), 2, 0.6f),
         		output(PLANT_MATTER_GREEN.get(), 0.3f),
         		output(PLANT_MATTER_GREEN.get(), 2, 0.1f),
         		output(PLANT_MATTER_BROWN.get(), 0.15f)),
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-        
+
         build("rose_bush", Ingredient.of(ROSE_BUSH), List.of(
-        		output(RED_DYE, 2, 0.8f), 
+        		output(RED_DYE, 2, 0.8f),
         		output(RED_DYE, 0.6f),
         		output(RED_DYE, 2, 0.3f),
         		output(PLANT_MATTER_GREEN.get(), 0.2f)),
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-        
+
         build("poeny", Ingredient.of(PEONY), List.of(
-        		output(PINK_DYE, 2, 0.8f), 
+        		output(PINK_DYE, 2, 0.8f),
         		output(PINK_DYE, 0.6f),
         		output(PINK_DYE, 2, 0.3f),
         		output(PLANT_MATTER_GREEN.get(), 0.2f)),
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-        
+
         build("sugar_canes", Ingredient.of(SUGAR_CANE), List.of(
         		output(SUGAR),
         		output(SUGAR, 0.5f),
         		output(SUGAR, 2, 0.5f),
         		output(PLANT_MATTER_GREEN.get(), 0.2f)),
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-        
+
         build("flower_pot", Ingredient.of(FLOWER_POT), List.of(
-        		output(BRICK, 0.9f), 
+        		output(BRICK, 0.9f),
         		output(BRICK, 0.3f),
         		output(BRICK, 0.1f),
         		output(POWDERED_COAL.get(), 0.05f)),
         		BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
-        
+
         build("prismarine_shard", Ingredient.of(PRISMARINE_SHARD), List.of(
-        		output(PRISMARINE_CRYSTALS), 
+        		output(PRISMARINE_CRYSTALS),
         		output(PRISMARINE_CRYSTALS, 0.1f)),
         		BASE_ENERGY_PER_OPERATION, BonusType.NONE, finishedRecipeConsumer);
 
@@ -389,32 +389,36 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
             output(WITHERING_POWDER.get(), 1, 0.2f)
         ), BASE_ENERGY_PER_OPERATION, finishedRecipeConsumer);
     }
-    
+
     private void buildOre(String name, Ingredient input, Item output, Consumer<FinishedRecipe> recipeConsumer) {
     	build(name, input, List.of(
     			output(output),
     			output(output, 0.33f),
-    			output(COBBLESTONE, 0.15f)), 
+    			output(COBBLESTONE, 0.15f)),
     			BASE_ENERGY_PER_OPERATION, recipeConsumer);
     }
-    
+
     private void buildFlower(String name, Item input, Item output, Consumer<FinishedRecipe> recipeConsumer){
     	build(name, Ingredient.of(input), List.of(
     			output(output, 0.8f),
     			output(output, 0.6f),
     			output(output, 0.3f),
-    			output(PLANT_MATTER_GREEN.get(), 0.1f)), 
+    			output(PLANT_MATTER_GREEN.get(), 0.1f)),
     			BASE_ENERGY_PER_OPERATION, recipeConsumer);
     }
-    
-    private void build1toN(String name, Item input, Item output, int number, Consumer<FinishedRecipe> recipeConsumer) {
-    	build(name, Ingredient.of(input), List.of(output(output, number)), BASE_ENERGY_PER_OPERATION, recipeConsumer);
+
+    private void build1toN(String name, Item input, Item output, int number, BonusType bonusType, Consumer<FinishedRecipe> recipeConsumer) {
+    	build(name, Ingredient.of(input), List.of(output(output, number)), BASE_ENERGY_PER_OPERATION, bonusType, recipeConsumer);
     }
-    
+
     private void build1toN(String name, TagKey<Item> input, Item output, int number, Consumer<FinishedRecipe> recipeConsumer) {
     	build(name, Ingredient.of(input), List.of(output(output, number)), BASE_ENERGY_PER_OPERATION, recipeConsumer);
     }
-    
+
+    private void build1toN(String name, TagKey<Item> input, Item output, int number, BonusType bonusType, Consumer<FinishedRecipe> recipeConsumer) {
+    	build(name, Ingredient.of(input), List.of(output(output, number)), BASE_ENERGY_PER_OPERATION, bonusType, recipeConsumer);
+    }
+
     protected void build(String name, Ingredient input, List<SagMillingRecipe.OutputItem> outputs, int energy, Consumer<FinishedRecipe> recipeConsumer) {
         build(EnderIO.loc("sag_milling/" + name), input, outputs, energy, BonusType.MULTIPLY_OUTPUT, recipeConsumer);
     }
