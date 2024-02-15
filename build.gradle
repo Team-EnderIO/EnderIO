@@ -1,21 +1,10 @@
 import java.util.function.Consumer
 
-buildscript {
-    repositories {
-        // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
-        ////maven { url = 'https://maven.moddingx.org' }
-        mavenCentral()
-    }
-    dependencies {
-        ////classpath 'org.moddingx:ModGradle:4.0.+'
-    }
-}
-
 plugins {
     id 'eclipse'
     id 'maven-publish'
     id "com.modrinth.minotaur" version "2.+"
-    id 'net.neoforged.gradle.userdev' version '7.0.45'
+    id 'net.neoforged.gradle.userdev' version '7.0.80'
     id "me.hypherionmc.modutils.modpublisher" version "1.+"
 }
 
@@ -169,6 +158,7 @@ repositories { RepositoryHandler handler ->
     exclusiveRepo(handler, 'https://maven.blamejared.com', 'vazkii.patchouli', 'net.darkhax.bookshelf', 'net.darkhax.enchdesc', 'com.almostreliable.mods')
     exclusiveRepo(handler, 'https://dogforce-games.com/maven', 'dev.gigaherz.graph')
     exclusiveRepo(handler, 'https://api.modrinth.com/maven', 'maven.modrinth')
+    exclusiveRepo(handler, 'https://maven.parchmentmc.org/', 'org.parchmentmc.data')
 
     mavenLocal()
 }
