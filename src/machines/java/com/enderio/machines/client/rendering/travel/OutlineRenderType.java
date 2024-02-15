@@ -67,7 +67,8 @@ public class OutlineRenderType extends RenderType {
                 .setLayeringState(RenderStateShard.VIEW_OFFSET_Z_LAYERING)
                 .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
                 .setOutputState(RenderStateShard.ITEM_ENTITY_TARGET)
-                .setWriteMaskState(RenderStateShard.COLOR_DEPTH_WRITE)
+                .setDepthTestState(RenderStateShard.NO_DEPTH_TEST)
+                .setWriteMaskState(RenderStateShard.COLOR_WRITE)
                 .setCullState(RenderStateShard.NO_CULL)
                 .createCompositeState(false));
     }

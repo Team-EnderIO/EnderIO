@@ -44,15 +44,6 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             color = ChatFormatting.GOLD.getColor() == null ? 0xFFFFFF : ChatFormatting.GOLD.getColor();
         }
 
-        // Render Model
-        BlockState blockState = minecraft.level.getBlockState(travelData.getPos());
-        BakedModel blockModel = minecraft.getBlockRenderer().getBlockModel(blockState);
-        VertexConsumer solid = buffer.getBuffer(RenderType.solid());
-        minecraft
-            .getBlockRenderer()
-            .getModelRenderer()
-            .renderModel(poseStack.last(), solid, blockState, blockModel, 1, 1, 1, 0xF000F0, OverlayTexture.NO_OVERLAY);
-
         // Render line
         RenderType lineType;
         if (distanceSquared > 85 * 85) {
@@ -95,7 +86,7 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             float halfWidth = (float) (-minecraft.font.width(tc) / 2);
 
             minecraft.font.drawInBatch(tc, halfWidth, 0, color, false, matrix4f, buffer, Font.DisplayMode.SEE_THROUGH, alpha, LightTexture.pack(15, 15));
-            minecraft.font.drawInBatch(tc, halfWidth, 0, color, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, LightTexture.pack(15, 15));
+            //minecraft.font.drawInBatch(tc, halfWidth, 0, color, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, LightTexture.pack(15, 15));
             poseStack.popPose();
         }
 
