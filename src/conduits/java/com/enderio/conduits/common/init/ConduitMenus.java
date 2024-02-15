@@ -3,13 +3,17 @@ package com.enderio.conduits.common.init;
 import com.enderio.EnderIO;
 import com.enderio.conduits.client.gui.ConduitScreen;
 import com.enderio.conduits.common.menu.ConduitMenu;
-import com.tterrag.registrate.Registrate;
-import com.tterrag.registrate.util.entry.MenuEntry;
+import com.enderio.regilite.holder.RegiliteMenu;
+import com.enderio.regilite.registry.MenuRegistry;
+import net.neoforged.bus.api.IEventBus;
 
 public class ConduitMenus {
-    private static final Registrate REGISTRATE = EnderIO.registrate();
+    private static final MenuRegistry MENU_REGISTRY = MenuRegistry.createRegistry(EnderIO.MODID);
 
-    public static final MenuEntry<ConduitMenu> CONDUIT_MENU = REGISTRATE.menu("conduit", ConduitMenu::factory, () -> ConduitScreen::new).register();
+    public static final RegiliteMenu<ConduitMenu> CONDUIT_MENU = MENU_REGISTRY
+        .registerMenu("conduit", ConduitMenu::factory, () -> ConduitScreen::new);
 
-    public static void register() {}
+    public static void register(IEventBus bus) {
+        MENU_REGISTRY.register(bus);
+    }
 }

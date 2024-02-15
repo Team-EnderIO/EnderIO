@@ -22,7 +22,7 @@ public class ConduitTypeSorter {
 
     @SubscribeEvent
     public static void afterRegistryFreeze(FMLCommonSetupEvent event) {
-        DefaultedRegistry<IConduitType<?>> registry = ConduitTypes.getRegistry();
+        var registry = ConduitTypes.getRegistry();
         List<ResourceLocation> tieredTypes = new ArrayList<>();
         for (IConduitType<?> value : registry) {
             if (value instanceof TieredConduit<?> tiered && !tieredTypes.contains(tiered.getType())) {

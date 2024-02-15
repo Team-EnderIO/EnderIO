@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "B": {
+      "item": "enderio:conduit_binder"
+    },
+    "G": {
+      "tag": "enderio:fused_quartz"
+    }
+  },
+  "pattern": [
+    "BBB",
+    "GGG",
+    "BBB"
+  ],
+  "result": {
+    "count": 8,
+    "item": "enderio:pressurized_fluid_conduit"
+  },
+  "show_notification": true
+}

@@ -1,12 +1,11 @@
 package com.enderio.conduits.data.model;
 
-import com.tterrag.registrate.providers.DataGenContext;
-import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
+import com.enderio.regilite.data.DataGenContext;
 import net.minecraft.world.level.block.Block;
+import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 
 public class ConduitBlockState {
-    public static void conduit(
-        DataGenContext<Block, ? extends Block> ctx, RegistrateBlockstateProvider prov) {
+    public static void conduit(BlockStateProvider prov, DataGenContext<Block, ? extends Block> ctx) {
         prov.simpleBlock(ctx.get(), prov.models().getBuilder(ctx.getName())
             .customLoader(ConduitModelBuilder::begin).end()
         );

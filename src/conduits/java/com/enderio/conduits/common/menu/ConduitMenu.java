@@ -96,7 +96,7 @@ public class ConduitMenu extends SyncedMenu<ConduitBlockEntity> {
             && ConduitBlock.canBeOrIsValidConnection(getBlockEntity(), type, direction);
     }
 
-    public static ConduitMenu factory(@Nullable MenuType<ConduitMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
+    public static ConduitMenu factory(int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
         Direction direction = buf.readEnum(Direction.class);
         IConduitType<?> type = ConduitTypes.getRegistry().byIdOrThrow(buf.readInt());
