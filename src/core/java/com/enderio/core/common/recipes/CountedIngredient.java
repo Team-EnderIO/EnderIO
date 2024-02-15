@@ -27,8 +27,8 @@ import java.util.stream.Stream;
 public record CountedIngredient(Ingredient ingredient, int count) implements Predicate<ItemStack> {
 
     public static final Codec<CountedIngredient> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-        Ingredient.CODEC.fieldOf("ingredient").forGetter(CountedIngredient::ingredient),
-        Codec.INT.fieldOf("count").forGetter(CountedIngredient::count)
+        Ingredient.CODEC.fieldOf("Ingredient").forGetter(CountedIngredient::ingredient),
+        Codec.INT.fieldOf("Count").forGetter(CountedIngredient::count)
     ).apply(instance, CountedIngredient::new));
 
     /**

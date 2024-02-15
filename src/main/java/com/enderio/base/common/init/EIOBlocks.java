@@ -568,14 +568,12 @@ public class EIOBlocks {
         var block = BLOCK_REGISTRY
             .registerBlock(name, blockFactory, BlockBehaviour.Properties.copy(copyFrom).noCollission())
             .setBlockStateProvider((prov, ctx) -> EIOBlockState.paintedBlock(name, prov, ctx.get(), copyFrom, itemTextureRotation))
+            // TODO: NEO-PORT: Color things might need supplier?
             .setColorSupplier(PaintedBlockColor.INSTANCE)
             .setLootTable(DecorLootTable::withPaint)
-            .addBlockTags(tags);
-
-        // TODO: NEO-PORT: Create block item with props.
-        /*ITEM_REGISTRY.createBlockItem(itemFactory)
-            .color(() -> PaintedBlockColor::new)
-            .build()*/
+            .addBlockTags(tags)
+            .createBlockItem(ITEM_REGISTRY, item -> item
+                .setColorSupplier(PaintedBlockColor.INSTANCE));
 
         return block;
     }

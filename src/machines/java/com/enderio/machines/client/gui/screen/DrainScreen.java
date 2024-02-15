@@ -38,8 +38,9 @@ public class DrainScreen extends MachineScreen<DrainMenu> {
         addRenderableWidget(new ToggleImageButton<>(this, leftPos + imageWidth - 8 - 14, topPos + 22 + 2 + 16, 16, 16, 0, 0, 16, 0, RANGE_BUTTON_TEXTURE,
             () -> menu.getBlockEntity().isRangeVisible(), state -> menu.getBlockEntity().setIsRangeVisible(state),
             () -> menu.getBlockEntity().isRangeVisible() ? EIOLang.HIDE_RANGE : EIOLang.SHOW_RANGE));
-        addRenderableWidget(new ImageButton(leftPos + imageWidth - 8 - 8, topPos + 66, 8, 8, 8, 0, 16, BUTTONS, (b) -> menu.getBlockEntity().increaseRange()));
-        addRenderableWidget(new ImageButton(leftPos + imageWidth - 8 - 8, topPos + 74, 8, 8, 8, 8, 16, BUTTONS, (b) -> menu.getBlockEntity().decreaseRange()));
+        // TODO: NEO-PORT: ImageButton's
+//        addRenderableWidget(new ImageButton(leftPos + imageWidth - 8 - 8, topPos + 66, 8, 8, 8, 0, 16, BUTTONS, (b) -> menu.getBlockEntity().increaseRange()));
+//        addRenderableWidget(new ImageButton(leftPos + imageWidth - 8 - 8, topPos + 74, 8, 8, 8, 8, 16, BUTTONS, (b) -> menu.getBlockEntity().decreaseRange()));
 
 
         addRenderableWidget(new IOConfigButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 22, 16, 16, menu, this::addRenderableWidget, font));

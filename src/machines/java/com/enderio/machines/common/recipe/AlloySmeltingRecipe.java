@@ -151,7 +151,8 @@ public class AlloySmeltingRecipe implements MachineRecipe<AlloySmeltingRecipe.Co
     public static class Serializer implements RecipeSerializer<AlloySmeltingRecipe> {
         public static final Codec<AlloySmeltingRecipe> CODEC = RecordCodecBuilder.create(inst -> inst.group(
                 CountedIngredient.CODEC.listOf().fieldOf("inputs").forGetter(AlloySmeltingRecipe::getInputs),
-                ItemStack.CODEC.fieldOf("output").forGetter(obj -> obj.output), Codec.INT.fieldOf("energy").forGetter(obj -> obj.energy),
+                ItemStack.CODEC.fieldOf("result").forGetter(obj -> obj.output),
+                Codec.INT.fieldOf("energy").forGetter(obj -> obj.energy),
                 Codec.FLOAT.fieldOf("experience").forGetter(AlloySmeltingRecipe::getExperience))
             .apply(inst, AlloySmeltingRecipe::new));
 

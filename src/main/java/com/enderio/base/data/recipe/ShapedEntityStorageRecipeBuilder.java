@@ -43,7 +43,7 @@ public class ShapedEntityStorageRecipeBuilder extends ShapedRecipeBuilder {
             public Advancement.Builder advancement() {
                 return recipeOutput.advancement();
             }
-        });
+        }, pRecipeId);
     }
 
     public static class Result implements FinishedRecipe {

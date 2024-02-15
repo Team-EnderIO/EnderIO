@@ -31,6 +31,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.loaders.CompositeModelBuilder;
 
@@ -253,5 +254,8 @@ public class MachineBlocks {
             );
     }
 
-    public static void register() {}
+    public static void register(IEventBus bus) {
+        BLOCK_REGISTRY.register(bus);
+        ITEM_REGISTRY.register(bus);
+    }
 }

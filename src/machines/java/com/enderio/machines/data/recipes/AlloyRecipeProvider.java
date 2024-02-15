@@ -15,6 +15,8 @@ import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.JsonOps;
+import net.minecraft.Util;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
@@ -28,6 +30,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.crafting.CraftingHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
@@ -182,10 +185,11 @@ public class AlloyRecipeProvider extends EnderRecipeProvider {
             json.add("inputs", jsonInputs);
 
             JsonObject jsonobject = new JsonObject();
-            jsonobject.addProperty("item", BuiltInRegistries.ITEM.getKey(output.getItem()).toString());
-            if (output.getCount() > 1) {
-                jsonobject.addProperty("count", output.getCount());
-            }
+            jsonobject.addProperty("id", BuiltInRegistries.ITEM.getKey(output.getItem()).toString());
+
+            // TODO: NEO-PORT: Is there a way we can do this without having a forced Count property.
+            //       Also Mojank what are you doing having this a capital
+            jsonobject.addProperty("Count", output.getCount());
 
             json.add("result", jsonobject);
 

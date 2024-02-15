@@ -36,6 +36,8 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.registries.VanillaRegistries;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.neoforged.neoforge.common.data.AdvancementProvider;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -58,14 +60,17 @@ public class EIOMachines {
         ctx.registerConfig(ModConfig.Type.COMMON, MachinesConfig.COMMON_SPEC, "enderio/machines-common.toml");
         ctx.registerConfig(ModConfig.Type.CLIENT, MachinesConfig.CLIENT_SPEC, "enderio/machines-client.toml");
 
+        // Get event bus
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
         // Perform classloads for everything so things are registered.
-        MachineBlocks.register();
-        MachineBlockEntities.register();
-        MachineMenus.register();
+        MachineBlocks.register(modEventBus);
+        MachineBlockEntities.register(modEventBus);
+        MachineMenus.register(modEventBus);
         MachinePackets.register();
 
         MachineLang.register();
-        MachineRecipes.register();
+        MachineRecipes.register(modEventBus);
         MachineTags.register();
 
         IntegrationManager.addIntegration(EnderIOMachinesSelfIntegration.INSTANCE);

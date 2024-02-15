@@ -43,6 +43,7 @@ import com.enderio.machines.common.menu.XPObeliskMenu;
 import com.enderio.machines.common.menu.XPVacuumMenu;
 import com.enderio.regilite.holder.RegiliteMenu;
 import com.enderio.regilite.registry.MenuRegistry;
+import net.neoforged.bus.api.IEventBus;
 
 public class MachineMenus {
     private MachineMenus() {}
@@ -90,5 +91,7 @@ public class MachineMenus {
     public static final RegiliteMenu<XPObeliskMenu> XP_OBELISK = MENU_REGISTRY
         .registerMenu("xp_obelisk", XPObeliskMenu::factory, () -> XPObeliskScreen::new);
 
-    public static void register() {}
+    public static void register(IEventBus bus) {
+        MENU_REGISTRY.register(bus);
+    }
 }

@@ -53,11 +53,13 @@ public class IOConfigButton<U extends EIOScreen<?>, T extends AbstractWidget> ex
         configRenderer.visible = show;
         addRenderableWidget.apply(configRenderer);
 
-        neighbourButton = new ImageButton(addedOn.getGuiLeft() + addedOn.getXSize() - 5 - 16, addedOn.getGuiTop() + addedOn.getYSize() - 5 - 16, 16, 16, 16, 0,
-            0, IOCONFIG, 48, 32, (b) -> configRenderer.toggleNeighbourVisibility(), EIOLang.TOGGLE_NEIGHBOUR);
-        neighbourButton.setTooltip(Tooltip.create(EIOLang.TOGGLE_NEIGHBOUR.copy().withStyle(ChatFormatting.WHITE)));
-        neighbourButton.visible = show;
-        addRenderableWidget.apply(neighbourButton);
+        // TODO: NEO-PORT: ImageButton's
+        neighbourButton = null;
+//        neighbourButton = new ImageButton(addedOn.getGuiLeft() + addedOn.getXSize() - 5 - 16, addedOn.getGuiTop() + addedOn.getYSize() - 5 - 16, 16, 16, 16, 0,
+//            0, IOCONFIG, 48, 32, (b) -> configRenderer.toggleNeighbourVisibility(), EIOLang.TOGGLE_NEIGHBOUR);
+//        neighbourButton.setTooltip(Tooltip.create(EIOLang.TOGGLE_NEIGHBOUR.copy().withStyle(ChatFormatting.WHITE)));
+//        neighbourButton.visible = show;
+//        addRenderableWidget.apply(neighbourButton);
     }
 
     @Override

@@ -106,9 +106,9 @@ public class EnchanterRecipeProvider extends EnderRecipeProvider {
 
         @Override
         public void serializeRecipeData(JsonObject json) {
-            json.addProperty("enchantment", BuiltInRegistries.ENCHANTMENT.getKey(enchantment).toString());
-            json.add("input", input.toJson());
-            json.addProperty("cost_multiplier", costMultiplier);
+            json.addProperty("Enchantment", BuiltInRegistries.ENCHANTMENT.getKey(enchantment).toString());
+            json.add("Input", input.toJson());
+            json.addProperty("CostMultiplier", costMultiplier);
             super.serializeRecipeData(json);
         }
 

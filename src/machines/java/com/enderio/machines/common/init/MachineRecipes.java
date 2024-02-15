@@ -43,8 +43,7 @@ public class MachineRecipes {
         return new RecipeTypeSerializerPair<>(type, serializer);
     }
 
-    public static void register() {
-        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+    public static void register(IEventBus bus) {
         RECIPE_TYPES.register(bus);
         RECIPE_SERIALIZERS.register(bus);
     }

@@ -34,6 +34,7 @@ import net.minecraft.Util;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.neoforged.bus.api.IEventBus;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -134,5 +135,7 @@ public class MachineBlockEntities {
             .registerBlockEntity(name, beFactory, blocks);
     }
 
-    public static void register() {}
+    public static void register(IEventBus bus) {
+        BLOCK_ENTITY_REGISTRY.register(bus);
+    }
 }

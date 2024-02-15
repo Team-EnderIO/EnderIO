@@ -19,7 +19,7 @@
               "source": "block_entity"
             }
           ],
-          "name": "minecraft:air"
+          "name": "enderio:painted_crafting_table"
         }
       ],
       "rolls": 1.0
