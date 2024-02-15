@@ -144,7 +144,7 @@ public class SagMillBlockEntity extends PoweredMachineBlockEntity {
                 INPUT.getItemStack(inv).shrink(1);
 
                 // Claim any available grinding balls.
-                if (grindingBallData == IGrindingBallData.IDENTITY) {
+                if (recipe.getBonusType().useGrindingBall() && grindingBallData == IGrindingBallData.IDENTITY) {
                     ItemStack ball = GRINDING_BALL.getItemStack(inv);
                     if (!ball.isEmpty()) {
                         IGrindingBallData data = GrindingBallManager.getData(ball);

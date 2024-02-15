@@ -1,11 +1,11 @@
 {
   "type": "enderio:enchanting",
   "cost_multiplier": 1,
-  "enchantment": "minecraft:piercing",
+  "enchantment": "enderio:xp_boost",
   "input": {
-    "count": 8,
+    "count": 16,
     "ingredient": {
-      "tag": "forge:gems/prismarine"
+      "item": "minecraft:experience_bottle"
     }
   }
 }

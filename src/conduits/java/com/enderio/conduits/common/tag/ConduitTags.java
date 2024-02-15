@@ -7,6 +7,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.common.ForgeMod;
 
 public class ConduitTags {
 
@@ -30,5 +31,6 @@ public class ConduitTags {
 
         public static final TagKey<Block> REDSTONE_CONNECTABLE = BlockTags.create(EnderIO.loc("redstone_connectable"));
         public static final TagKey<Block> ENERGY_CABLE = BlockTags.create(EnderIO.loc("energy_cable"));
+        public static final TagKey<Block> RELOCATION_NOT_SUPPORTED = BlockTags.create(new ResourceLocation("forge", "relocation_not_supported"));
     }
 }

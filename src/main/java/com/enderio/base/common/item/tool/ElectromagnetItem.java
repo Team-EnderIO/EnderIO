@@ -54,7 +54,10 @@ public class ElectromagnetItem extends PoweredToggledItem {
 
     @Override
     protected void onTickWhenActive(Player player, ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
-
+        if (player.isSpectator()) {
+            return;
+        }
+        
         int range = getRange();
         AABB bounds = new AABB(player.getX() - range, player.getY() - range, player.getZ() - range, player.getX() + range, player.getY() + range,
             player.getZ() + range);
