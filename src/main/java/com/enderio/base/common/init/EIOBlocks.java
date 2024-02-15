@@ -565,17 +565,14 @@ public class EIOBlocks {
         BiFunction<? super T, Item.Properties, ? extends BlockItem> itemFactory, Block copyFrom, @Nullable Direction itemTextureRotation,
         TagKey<Block>... tags) {
 
-        var block = BLOCK_REGISTRY
+        return BLOCK_REGISTRY
             .registerBlock(name, blockFactory, BlockBehaviour.Properties.copy(copyFrom).noCollission())
             .setBlockStateProvider((prov, ctx) -> EIOBlockState.paintedBlock(name, prov, ctx.get(), copyFrom, itemTextureRotation))
-            // TODO: NEO-PORT: Color things might need supplier?
-            .setColorSupplier(PaintedBlockColor.INSTANCE)
+            .setColorSupplier(() -> PaintedBlockColor.INSTANCE)
             .setLootTable(DecorLootTable::withPaint)
             .addBlockTags(tags)
             .createBlockItem(ITEM_REGISTRY, item -> item
-                .setColorSupplier(PaintedBlockColor.INSTANCE));
-
-        return block;
+                .setColorSupplier(() -> PaintedBlockColor.INSTANCE));
     }
 
     public static <T extends Block> RegiliteBlock<T> lightBlock(String name, Function<BlockBehaviour.Properties, T> blockFactory) {

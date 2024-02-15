@@ -124,14 +124,14 @@ public class GlassBlocks {
                     .mapColor(color))
             .setTranslation("")
             .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(getModelFile())))
-            .setColorSupplier((p_92567_, p_92568_, p_92569_, p_92570_) -> color.getMapColor().col)
+            .setColorSupplier(() -> (state, level, pos, tintIndex) -> color.getMapColor().col)
             .addBlockTags(
                 glassIdentifier.explosion_resistance() ? EIOTags.Blocks.FUSED_QUARTZ : EIOTags.Blocks.CLEAR_GLASS
             );
 
         block.createBlockItem(itemRegistry, item -> {
             item.setTab(EIOCreativeTabs.BLOCKS)
-                .setColorSupplier((p_92672_, p_92673_) -> color.getMapColor().col)
+                .setColorSupplier(() -> (stack, tintIndex) -> color.getMapColor().col)
                 .addItemTags(
                     glassIdentifier.explosion_resistance() ? EIOTags.Items.FUSED_QUARTZ : EIOTags.Items.CLEAR_GLASS,
                     EIOTags.Items.GLASS_TAGS.get(glassIdentifier)
