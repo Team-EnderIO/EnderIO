@@ -26,7 +26,7 @@ public class PrimitiveAlloySmelterMenu extends MachineMenu<PrimitiveAlloySmelter
         addInventorySlots(8,84);
     }
 
-    public static PrimitiveAlloySmelterMenu factory(@Nullable MenuType<PrimitiveAlloySmelterMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
+    public static PrimitiveAlloySmelterMenu factory(int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
         if (entity instanceof PrimitiveAlloySmelterBlockEntity castBlockEntity) {
             return new PrimitiveAlloySmelterMenu(castBlockEntity, inventory, pContainerId);

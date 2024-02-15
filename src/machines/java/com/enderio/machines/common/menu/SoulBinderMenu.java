@@ -31,7 +31,7 @@ public class SoulBinderMenu extends MachineMenu<SoulBinderBlockEntity> {
         addInventorySlots(8,84);
     }
 
-    public static SoulBinderMenu factory(@Nullable MenuType<SoulBinderMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
+    public static SoulBinderMenu factory(int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
         if (entity instanceof SoulBinderBlockEntity castBlockEntity) {
             return new SoulBinderMenu(castBlockEntity, inventory, pContainerId);

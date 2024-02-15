@@ -80,7 +80,7 @@ public class EnchanterRecipe implements EnderRecipe<Container> {
      */
     public int getLapisForLevel(int level) {
         int res = getEnchantment().getMaxLevel() == 1 ? 5 : level;
-        return Math.max(1, Math.round(res * MachinesConfig.COMMON.ENCHANTER_LAPIS_COST_FACTOR.get()));
+        return Math.max(1, Math.round(res * MachinesConfig.COMMON.ENCHANTER_LAPIS_COST_FACTOR.get().floatValue()));
     }
 
     /**

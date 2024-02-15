@@ -1,6 +1,7 @@
 package com.enderio.base.common.init;
 
 import com.enderio.EnderIO;
+import com.enderio.base.client.renderer.entity.PaintedSandRenderer;
 import com.enderio.base.common.entity.PaintedSandEntity;
 import com.enderio.regilite.holder.RegiliteEntity;
 import com.enderio.regilite.registry.EntityRegistry;
@@ -14,8 +15,7 @@ public class EIOEntities {
 
     public static final RegiliteEntity<PaintedSandEntity> PAINTED_SAND = ENTITY_REGISTRY
         .registerEntity("painted_sand", (EntityType.EntityFactory<PaintedSandEntity>) PaintedSandEntity::new, MobCategory.MISC)
-        // TODO: NEO-PORT: Regilite needs entity renderers
-        //.renderer(() -> PaintedSandRenderer::new)
+        .setRenderer(() -> PaintedSandRenderer::new)
         .setTranslation("Painted Sand");
 
     public static void register(IEventBus bus) {

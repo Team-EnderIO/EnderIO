@@ -209,7 +209,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         return canAct() && hasEnergy() && craftingTaskHost.hasTask();
     }
 
-    protected AlloySmeltingMachineTask createTask(Level level, AlloySmeltingRecipe.ContainerWrapper container, @Nullable AlloySmeltingRecipe recipe) {
+    protected AlloySmeltingMachineTask createTask(Level level, AlloySmeltingRecipe.ContainerWrapper container, @Nullable RecipeHolder<AlloySmeltingRecipe> recipe) {
         return new AlloySmeltingMachineTask(level, getInventoryNN(), getEnergyStorage(), container, getInputsSlotAccess(), getOutputSlotAccess(), recipe);
     }
 
@@ -217,7 +217,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         private final MultiSlotAccess inputs;
 
         public AlloySmeltingMachineTask(@NotNull Level level, MachineInventory inventory, IMachineEnergyStorage energyStorage,
-            AlloySmeltingRecipe.ContainerWrapper container, MultiSlotAccess inputs, SingleSlotAccess outputSlot, @Nullable AlloySmeltingRecipe recipe) {
+            AlloySmeltingRecipe.ContainerWrapper container, MultiSlotAccess inputs, SingleSlotAccess outputSlot, @Nullable RecipeHolder<AlloySmeltingRecipe> recipe) {
             super(level, inventory, energyStorage, container, outputSlot, recipe);
             this.inputs = inputs;
         }
@@ -313,7 +313,7 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         }
 
         @Override
-        protected Optional<AlloySmeltingRecipe> findRecipe() {
+        protected Optional<RecipeHolder<AlloySmeltingRecipe>> findRecipe() {
             var level = getLevel();
             if (level == null) {
                 return Optional.empty();
@@ -332,8 +332,8 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
                 for (int i = 0; i < AlloySmelterBlockEntity.INPUTS.size(); i++) {
                     var recipe = level.getRecipeManager()
                         .getRecipeFor(RecipeType.SMELTING, new ContainerSubWrapper(getContainer(), i), level);
-                    if (recipe.isPresent() && IntegrationManager.allMatch(integration -> integration.acceptSmeltingRecipe(recipe.get()))) {
-                        return Optional.of(new VanillaAlloySmeltingRecipe(recipe.get()));
+                    if (recipe.isPresent() && IntegrationManager.allMatch(integration -> integration.acceptSmeltingRecipe(recipe.get().value()))) {
+                        return Optional.of(new RecipeHolder<>(recipe.get().id(), new VanillaAlloySmeltingRecipe(recipe.get().value())));
                     }
                 }
             }

@@ -88,14 +88,14 @@ public class EIOMachines {
 
         EIODataProvider provider = new EIODataProvider("machines");
 
-        provider.addSubProvider(event.includeServer(), new MachineRecipeProvider(packOutput));
-        provider.addSubProvider(event.includeServer(), new AlloyRecipeProvider(packOutput));
-        provider.addSubProvider(event.includeServer(), new EnchanterRecipeProvider(packOutput));
-        provider.addSubProvider(event.includeServer(), new SagMillRecipeProvider(packOutput));
-        provider.addSubProvider(event.includeServer(), new SlicingRecipeProvider(packOutput));
-        provider.addSubProvider(event.includeServer(), new SoulBindingRecipeProvider(packOutput));
-        provider.addSubProvider(event.includeServer(), new TankRecipeProvider(packOutput));
-        provider.addSubProvider(event.includeServer(), new PaintingRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new MachineRecipeProvider(packOutput, completablefuture));
+        provider.addSubProvider(event.includeServer(), new AlloyRecipeProvider(packOutput, completablefuture));
+        provider.addSubProvider(event.includeServer(), new EnchanterRecipeProvider(packOutput, completablefuture));
+        provider.addSubProvider(event.includeServer(), new SagMillRecipeProvider(packOutput, completablefuture));
+        provider.addSubProvider(event.includeServer(), new SlicingRecipeProvider(packOutput, completablefuture));
+        provider.addSubProvider(event.includeServer(), new SoulBindingRecipeProvider(packOutput, completablefuture));
+        provider.addSubProvider(event.includeServer(), new TankRecipeProvider(packOutput, completablefuture));
+        provider.addSubProvider(event.includeServer(), new PaintingRecipeProvider(packOutput, completablefuture));
         provider.addSubProvider(event.includeServer(), new SoulDataProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new MachineEntityTypeTagsProvider(packOutput, completablefuture, event.getExistingFileHelper()));
 

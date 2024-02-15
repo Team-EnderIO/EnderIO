@@ -1,8 +1,11 @@
 package com.enderio.core.common.recipes;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.Util;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -88,6 +91,10 @@ public record CountedIngredient(Ingredient ingredient, int count) implements Pre
     @Override
     public boolean test(@Nullable ItemStack itemStack) {
         return ingredient.test(itemStack) && itemStack.getCount() >= count;
+    }
+
+    public JsonElement toJson() {
+        return Util.getOrThrow(CODEC.encodeStart(JsonOps.INSTANCE, this), IllegalStateException::new);
     }
 
     public static CountedIngredient fromNetwork(FriendlyByteBuf buffer) {

@@ -9,60 +9,60 @@ import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.souldata.EngineSoul;
 import com.google.gson.JsonObject;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class SoulBindingRecipeProvider extends EnderRecipeProvider {
 
-    public SoulBindingRecipeProvider(PackOutput packOutput) {
-        super(packOutput);
+    public SoulBindingRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+        super(packOutput, lookupProvider);
     }
 
     @Override
-    protected void buildRecipes(Consumer<FinishedRecipe> pFinishedRecipeConsumer) {
-        build(EIOItems.ENTICING_CRYSTAL, Ingredient.of(Tags.Items.GEMS_EMERALD), 51200, 4, EntityType.VILLAGER, pFinishedRecipeConsumer);
-        build(EIOItems.ENDER_CRYSTAL, Ingredient.of(EIOTags.Items.GEMS_VIBRANT_CRYSTAL), 76800, 6, EntityType.ENDERMAN, pFinishedRecipeConsumer);
-        build(EIOItems.PRESCIENT_CRYSTAL, Ingredient.of(EIOTags.Items.GEMS_VIBRANT_CRYSTAL), 100000, 8, EntityType.SHULKER, pFinishedRecipeConsumer);
-        build(EIOItems.FRANK_N_ZOMBIE, Ingredient.of(EIOItems.Z_LOGIC_CONTROLLER), 51200, 4, EntityType.ZOMBIE, pFinishedRecipeConsumer);
-        build(EIOItems.SENTIENT_ENDER, Ingredient.of(EIOItems.ENDER_RESONATOR), 51200, 4, EntityType.WITCH, pFinishedRecipeConsumer);
-        build(EIOItems.BROKEN_SPAWNER, Ingredient.of(EIOItems.BROKEN_SPAWNER), 288000, 8, pFinishedRecipeConsumer);
-        build(MachineBlocks.SOUL_ENGINE, Ingredient.of(MachineBlocks.SOUL_ENGINE), 188000, 5, EngineSoul.NAME, pFinishedRecipeConsumer);
-        build(EIOItems.PLAYER_TOKEN, Ingredient.of(EIOItems.DARK_STEEL_BALL), 12800, 1, EntityType.VILLAGER, pFinishedRecipeConsumer);
-        build(EIOItems.MONSTER_TOKEN, Ingredient.of(EIOItems.SOULARIUM_BALL), 12800, 1, MobCategory.MONSTER, pFinishedRecipeConsumer);
-        build(EIOItems.ANIMAL_TOKEN, Ingredient.of(EIOItems.SOULARIUM_BALL), 12800, 1, MobCategory.CREATURE, pFinishedRecipeConsumer);
+    protected void buildRecipes(RecipeOutput recipeOutput) {
+        build(EIOItems.ENTICING_CRYSTAL, Ingredient.of(Tags.Items.GEMS_EMERALD), 51200, 4, EntityType.VILLAGER, recipeOutput);
+        build(EIOItems.ENDER_CRYSTAL, Ingredient.of(EIOTags.Items.GEMS_VIBRANT_CRYSTAL), 76800, 6, EntityType.ENDERMAN, recipeOutput);
+        build(EIOItems.PRESCIENT_CRYSTAL, Ingredient.of(EIOTags.Items.GEMS_VIBRANT_CRYSTAL), 100000, 8, EntityType.SHULKER, recipeOutput);
+        build(EIOItems.FRANK_N_ZOMBIE, Ingredient.of(EIOItems.Z_LOGIC_CONTROLLER), 51200, 4, EntityType.ZOMBIE, recipeOutput);
+        build(EIOItems.SENTIENT_ENDER, Ingredient.of(EIOItems.ENDER_RESONATOR), 51200, 4, EntityType.WITCH, recipeOutput);
+        build(EIOItems.BROKEN_SPAWNER, Ingredient.of(EIOItems.BROKEN_SPAWNER), 288000, 8, recipeOutput);
+        build(MachineBlocks.SOUL_ENGINE, Ingredient.of(MachineBlocks.SOUL_ENGINE), 188000, 5, EngineSoul.NAME, recipeOutput);
+        build(EIOItems.PLAYER_TOKEN, Ingredient.of(EIOItems.DARK_STEEL_BALL), 12800, 1, EntityType.VILLAGER, recipeOutput);
+        build(EIOItems.MONSTER_TOKEN, Ingredient.of(EIOItems.SOULARIUM_BALL), 12800, 1, MobCategory.MONSTER, recipeOutput);
+        build(EIOItems.ANIMAL_TOKEN, Ingredient.of(EIOItems.SOULARIUM_BALL), 12800, 1, MobCategory.CREATURE, recipeOutput);
     }
 
-    protected void build(ItemLike output, Ingredient input, int energy, int exp, EntityType<? extends Entity> entityType, Consumer<FinishedRecipe> finishedRecipeConsumer) {
-        finishedRecipeConsumer.accept(new FinishedSoulBindingRecipe(EnderIO.loc("soulbinding/" + ForgeRegistries.ITEMS.getKey(output.asItem()).getPath()), output, input, energy, exp, ForgeRegistries.ENTITY_TYPES.getKey(entityType), null, null));
+    protected void build(ItemLike output, Ingredient input, int energy, int exp, EntityType<? extends Entity> entityType, RecipeOutput recipeOutput) {
+        recipeOutput.accept(new FinishedSoulBindingRecipe(EnderIO.loc("soulbinding/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath()), output, input, energy, exp, BuiltInRegistries.ENTITY_TYPE.getKey(entityType), null, null));
     }
 
-    protected void build(ItemLike output, Ingredient input, int energy, int exp, MobCategory mobCategory, Consumer<FinishedRecipe> finishedRecipeConsumer) {
-        finishedRecipeConsumer.accept(new FinishedSoulBindingRecipe(EnderIO.loc("soulbinding/" + ForgeRegistries.ITEMS.getKey(output.asItem()).getPath()), output, input, energy, exp, null, mobCategory, null));
+    protected void build(ItemLike output, Ingredient input, int energy, int exp, MobCategory mobCategory, RecipeOutput recipeOutput) {
+        recipeOutput.accept(new FinishedSoulBindingRecipe(EnderIO.loc("soulbinding/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath()), output, input, energy, exp, null, mobCategory, null));
     }
 
-    protected void build(ItemLike output, Ingredient input, int energy, int exp, String souldata, Consumer<FinishedRecipe> finishedRecipeConsumer) {
-        finishedRecipeConsumer.accept(new FinishedSoulBindingRecipe(EnderIO.loc("soulbinding/" + ForgeRegistries.ITEMS.getKey(output.asItem()).getPath()), output, input, energy, exp, null, null, souldata));
+    protected void build(ItemLike output, Ingredient input, int energy, int exp, String souldata, RecipeOutput recipeOutput) {
+        recipeOutput.accept(new FinishedSoulBindingRecipe(EnderIO.loc("soulbinding/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath()), output, input, energy, exp, null, null, souldata));
     }
 
-    protected void build(ItemLike output, Ingredient input, int energy, int exp, Consumer<FinishedRecipe> finishedRecipeConsumer) {
-        finishedRecipeConsumer.accept(new FinishedSoulBindingRecipe(EnderIO.loc("soulbinding/" + ForgeRegistries.ITEMS.getKey(output.asItem()).getPath()), output, input, energy, exp, null, null, null));
+    protected void build(ItemLike output, Ingredient input, int energy, int exp, RecipeOutput recipeOutput) {
+        recipeOutput.accept(new FinishedSoulBindingRecipe(EnderIO.loc("soulbinding/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath()), output, input, energy, exp, null, null, null));
     }
 
     protected static class FinishedSoulBindingRecipe extends EnderFinishedRecipe {
@@ -104,8 +104,8 @@ public class SoulBindingRecipeProvider extends EnderRecipeProvider {
 
         @Override
         public void serializeRecipeData(JsonObject json) {
-            json.addProperty("output", ForgeRegistries.ITEMS.getKey(output).toString());
-            json.add("input", input.toJson());
+            json.addProperty("output", BuiltInRegistries.ITEM.getKey(output).toString());
+            json.add("input", input.toJson(false));
 
             json.addProperty("energy", energy);
             json.addProperty("exp", exp);
@@ -128,12 +128,12 @@ public class SoulBindingRecipeProvider extends EnderRecipeProvider {
         @Override
         protected Set<String> getModDependencies() {
             Set<String> mods = new HashSet<>(RecipeDataUtil.getIngredientModIds(input));
-            mods.add(ForgeRegistries.ITEMS.getKey(output).getNamespace());
+            mods.add(BuiltInRegistries.ITEM.getKey(output).getNamespace());
             return mods;
         }
 
         @Override
-        public RecipeSerializer<?> getType() {
+        public RecipeSerializer<?> type() {
             return MachineRecipes.SOUL_BINDING.serializer().get();
         }
     }

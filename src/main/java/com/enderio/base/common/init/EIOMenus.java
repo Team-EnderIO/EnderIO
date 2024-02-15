@@ -10,7 +10,7 @@ public class EIOMenus {
     private static final MenuRegistry MENU_REGISTRY = MenuRegistry.createRegistry(EnderIO.MODID);
 
     public static final RegiliteMenu<CoordinateMenu> COORDINATE = MENU_REGISTRY
-        .registerMenu("coordinate", CoordinateMenu::factory, CoordinateMenuScreen::new);
+        .registerMenu("coordinate", CoordinateMenu::factory, () -> CoordinateMenuScreen::new);
 
     public static void register() {}
 }

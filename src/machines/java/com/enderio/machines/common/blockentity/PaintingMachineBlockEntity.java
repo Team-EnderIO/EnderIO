@@ -29,6 +29,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -134,7 +135,7 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
         return canAct() && hasEnergy() && craftingTaskHost.hasTask();
     }
 
-    protected PoweredCraftingMachineTask<PaintingRecipe, RecipeWrapper> createTask(Level level, RecipeWrapper container, @Nullable PaintingRecipe recipe) {
+    protected PoweredCraftingMachineTask<PaintingRecipe, RecipeWrapper> createTask(Level level, RecipeWrapper container, @Nullable RecipeHolder<PaintingRecipe> recipe) {
         return new PoweredCraftingMachineTask<>(level, getInventoryNN(), getEnergyStorage(), container, OUTPUT, recipe) {
             @Override
             protected void consumeInputs(PaintingRecipe recipe) {

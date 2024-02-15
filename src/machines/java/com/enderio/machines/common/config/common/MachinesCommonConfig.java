@@ -5,8 +5,8 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class MachinesCommonConfig {
     public final EnergyConfig ENERGY;
-    public final ModConfigSpec.ConfigValue<Float> ENCHANTER_LAPIS_COST_FACTOR;
-    public final ModConfigSpec.ConfigValue<Float> ENCHANTER_LEVEL_COST_FACTOR;
+    public final ModConfigSpec.ConfigValue<Double> ENCHANTER_LAPIS_COST_FACTOR;
+    public final ModConfigSpec.ConfigValue<Double> ENCHANTER_LEVEL_COST_FACTOR;
     public final ModConfigSpec.ConfigValue<Integer> ENCHANTER_BASE_LEVEL_COST;
     public final ModConfigSpec.ConfigValue<Integer> MAX_SPAWNER_ENTITIES;
     public final ModConfigSpec.ConfigValue<Integer> MAX_SPAWNERS;

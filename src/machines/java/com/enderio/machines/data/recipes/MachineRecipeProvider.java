@@ -10,26 +10,29 @@ import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
 import com.enderio.machines.common.init.MachineBlocks;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class MachineRecipeProvider extends RecipeProvider {
 
-    public MachineRecipeProvider(PackOutput pOutput) {
-        super(pOutput);
+    public MachineRecipeProvider(PackOutput p_248933_, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+        super(p_248933_, lookupProvider);
     }
 
     @Override
-    protected void buildRecipes(Consumer<FinishedRecipe> finishedRecipeConsumer) {
+    protected void buildRecipes(RecipeOutput recipeOutput) {
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.CAPACITOR_BANKS.get(CapacitorTier.BASIC).get())
             .define('I', Tags.Items.INGOTS_IRON)
@@ -39,7 +42,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("CRC")
             .pattern("ICI")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOItems.BASIC_CAPACITOR).build()))
-            .save(finishedRecipeConsumer);
+            .save(recipeOutput);
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.CAPACITOR_BANKS.get(CapacitorTier.ADVANCED).get())
@@ -50,7 +53,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("CRC")
             .pattern("ACA")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOItems.BASIC_CAPACITOR).build()))
-            .save(finishedRecipeConsumer);
+            .save(recipeOutput);
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.CAPACITOR_BANKS.get(CapacitorTier.ADVANCED).get())
@@ -61,7 +64,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("BCB")
             .pattern("EEE")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOItems.DOUBLE_LAYER_CAPACITOR).build()))
-            .save(finishedRecipeConsumer, EnderIO.loc("advanced_capacitor_bank_upgrade"));
+            .save(recipeOutput, EnderIO.loc("advanced_capacitor_bank_upgrade"));
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.CAPACITOR_BANKS.get(CapacitorTier.VIBRANT).get())
@@ -73,7 +76,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("BCB")
             .pattern("VOV")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOItems.OCTADIC_CAPACITOR).build()))
-            .save(finishedRecipeConsumer);
+            .save(recipeOutput);
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.CAPACITOR_BANKS.get(CapacitorTier.VIBRANT).get())
@@ -84,7 +87,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("OCO")
             .pattern("AOA")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOItems.BASIC_CAPACITOR).build()))
-            .save(finishedRecipeConsumer, EnderIO.loc("vibrant_capacitor_bank_upgrade"));
+            .save(recipeOutput, EnderIO.loc("vibrant_capacitor_bank_upgrade"));
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.FLUID_TANK.get())
@@ -95,7 +98,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("BGB")
             .pattern("IBI")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(Tags.Items.INGOTS_IRON).build()))
-            .save(finishedRecipeConsumer);
+            .save(recipeOutput);
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.PRESSURIZED_FLUID_TANK.get())
@@ -106,7 +109,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("BGB")
             .pattern("IBI")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(Tags.Items.INGOTS_IRON).build()))
-            .save(finishedRecipeConsumer);
+            .save(recipeOutput);
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.ENCHANTER.get())
@@ -117,7 +120,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("III")
             .pattern(" I ")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(Items.BOOK))
-            .save(finishedRecipeConsumer);
+            .save(recipeOutput);
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.PRIMITIVE_ALLOY_SMELTER.get())
@@ -128,7 +131,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("DGD")
             .pattern("DDD")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.GRAINS_OF_INFINITY.get()))
-            .save(finishedRecipeConsumer);
+            .save(recipeOutput);
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.ALLOY_SMELTER.get())
@@ -141,7 +144,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("FVF")
             .pattern("GCG")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.VOID_CHASSIS.get()))
-            .save(finishedRecipeConsumer);
+            .save(recipeOutput);
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.STIRLING_GENERATOR.get())
@@ -155,7 +158,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("IVI")
             .pattern("GPG")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.VOID_CHASSIS.get()))
-            .save(finishedRecipeConsumer);
+            .save(recipeOutput);
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.SAG_MILL.get())
@@ -168,7 +171,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("IVI")
             .pattern("GPG")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.VOID_CHASSIS.get()))
-            .save(finishedRecipeConsumer);
+            .save(recipeOutput);
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.SLICE_AND_SPLICE.get())
@@ -181,7 +184,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("ICI")
             .pattern("GBG")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.ENSOULED_CHASSIS.get()))
-            .save(finishedRecipeConsumer);
+            .save(recipeOutput);
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.IMPULSE_HOPPER.get())
@@ -194,7 +197,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("GCG")
             .pattern("IRI")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.VOID_CHASSIS.get()))
-            .save(finishedRecipeConsumer);
+            .save(recipeOutput);
 
         // TODO: Not a fan, at all...
         ShapedRecipeBuilder
@@ -208,7 +211,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("GCG")
             .pattern("IZI")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.ENSOULED_CHASSIS.get()))
-            .save(finishedRecipeConsumer);
+            .save(recipeOutput);
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.WIRED_CHARGER.get())
@@ -218,7 +221,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("CVC")
             .pattern("CCC")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.VOID_CHASSIS.get()))
-            .save(finishedRecipeConsumer);
+            .save(recipeOutput);
 
         ShapedEntityStorageRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.POWERED_SPAWNER)
@@ -231,7 +234,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("ICI")
             .pattern("VZV")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.ENSOULED_CHASSIS))
-            .save(finishedRecipeConsumer);
+            .save(recipeOutput);
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.SOUL_ENGINE)
@@ -244,7 +247,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("BCB")
             .pattern("IZI")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.ENSOULED_CHASSIS))
-            .save(finishedRecipeConsumer);
+            .save(recipeOutput);
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.VACUUM_CHEST.get())
@@ -255,7 +258,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("ICI")
             .pattern("IPI")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PULSATING_CRYSTAL.get()))
-            .save(finishedRecipeConsumer);
+            .save(recipeOutput);
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.DRAIN.get())
@@ -268,7 +271,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("IVI")
             .pattern("GBG")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOBlocks.VOID_CHASSIS).build()))
-            .save(finishedRecipeConsumer);
+            .save(recipeOutput);
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.XP_VACUUM)
@@ -279,7 +282,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .define('R', EIOItems.EXPERIENCE_ROD)
             .define('P', EIOTags.Items.GEMS_PULSATING_CRYSTAL)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PULSATING_CRYSTAL.get()))
-            .save(finishedRecipeConsumer);
+            .save(recipeOutput);
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.CRAFTER.get())
@@ -292,7 +295,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("ICI")
             .pattern("GTG")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.VOID_CHASSIS.get()))
-            .save(finishedRecipeConsumer);
+            .save(recipeOutput);
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.ENERGETIC))
@@ -305,7 +308,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("PPP")
             .pattern("CDC")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.PHOTOVOLTAIC_PLATE.get()))
-            .save(finishedRecipeConsumer);
+            .save(recipeOutput);
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING))
@@ -319,7 +322,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("PDP")
             .pattern("CSC")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.ENERGETIC)))
-            .save(finishedRecipeConsumer, EnderIO.loc(RecipeBuilder.getDefaultRecipeId(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING)).getPath()));
+            .save(recipeOutput, EnderIO.loc(RecipeBuilder.getDefaultRecipeId(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING)).getPath()));
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.VIBRANT))
@@ -333,7 +336,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("PGP")
             .pattern("CSC")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.PULSATING)))
-            .save(finishedRecipeConsumer, EnderIO.loc(RecipeBuilder.getDefaultRecipeId(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.VIBRANT)).getPath()));
+            .save(recipeOutput, EnderIO.loc(RecipeBuilder.getDefaultRecipeId(MachineBlocks.SOLAR_PANELS.get(SolarPanelTier.VIBRANT)).getPath()));
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.PAINTING_MACHINE.get())
@@ -348,7 +351,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .define('M', EIOTags.Items.GEARS_IRON)
             .define('A', EIOTags.Items.INGOTS_REDSTONE_ALLOY)
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOBlocks.VOID_CHASSIS))
-            .save(finishedRecipeConsumer);
+            .save(recipeOutput);
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.TRAVEL_ANCHOR.get())
@@ -359,7 +362,7 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern("BCB")
             .pattern("IBI")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOItems.PULSATING_CRYSTAL).build()))
-            .save(finishedRecipeConsumer);
+            .save(recipeOutput);
 
         ShapedRecipeBuilder
             .shaped(RecipeCategory.MISC, MachineBlocks.XP_OBELISK.get())
@@ -370,6 +373,6 @@ public class MachineRecipeProvider extends RecipeProvider {
             .pattern(" I ")
             .pattern("ICI")
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(EIOItems.EXPERIENCE_ROD).build()))
-            .save(finishedRecipeConsumer);
+            .save(recipeOutput);
     }
 }

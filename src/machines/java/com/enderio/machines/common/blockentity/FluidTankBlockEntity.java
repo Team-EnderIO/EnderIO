@@ -22,6 +22,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -69,7 +70,9 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
     }
 
     private final TankRecipe.Container container;
-    private Optional<TankRecipe> currentRecipe = Optional.empty();
+
+    // TODO: Swap from optional to nullable?
+    private Optional<RecipeHolder<TankRecipe>> currentRecipe = Optional.empty();
 
     public static final SingleSlotAccess FLUID_FILL_INPUT = new SingleSlotAccess();
     public static final SingleSlotAccess FLUID_FILL_OUTPUT = new SingleSlotAccess();
@@ -110,8 +113,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
 
         // fill recipes
         if (level != null) {
-           List<TankRecipe> allRecipes = level.getRecipeManager().getAllRecipesFor(MachineRecipes.TANK.type().get());
-           if (allRecipes.stream().anyMatch((recipe) -> recipe.isEmptying() && recipe.getInput().test(item))) {
+           List<RecipeHolder<TankRecipe>> allRecipes = level.getRecipeManager().getAllRecipesFor(MachineRecipes.TANK.type().get());
+           if (allRecipes.stream().anyMatch((recipe) -> recipe.value().isEmptying() && recipe.value().getInput().test(item))) {
             return true;
            }
         }
@@ -139,8 +142,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
 
         // drain recipes
         if (level != null) {
-            List<TankRecipe> allRecipes = level.getRecipeManager().getAllRecipesFor(MachineRecipes.TANK.type().get());
-            if (allRecipes.stream().anyMatch((recipe) -> !recipe.isEmptying() && recipe.getInput().test(item))) {
+            List<RecipeHolder<TankRecipe>> allRecipes = level.getRecipeManager().getAllRecipesFor(MachineRecipes.TANK.type().get());
+            if (allRecipes.stream().anyMatch((recipe) -> !recipe.value().isEmptying() && recipe.value().getInput().test(item))) {
                 return true;
             }
         }
@@ -265,16 +268,16 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
         currentRecipe.ifPresent(recipe -> {
             FluidTank fluidTank = getFluidTankNN();
 
-            if (recipe.isEmptying()) {
+            if (recipe.value().isEmptying()) {
                 ItemStack outputStack = FLUID_FILL_OUTPUT.getItemStack(this);
 
-                if (outputStack.isEmpty() || (outputStack.is(recipe.getOutput()) && outputStack.getCount() < outputStack.getMaxStackSize())) {
+                if (outputStack.isEmpty() || (outputStack.is(recipe.value().getOutput()) && outputStack.getCount() < outputStack.getMaxStackSize())) {
                     FLUID_FILL_INPUT.getItemStack(this).shrink(1);
 
-                    fluidTank.fill(recipe.getFluid(), IFluidHandler.FluidAction.EXECUTE);
+                    fluidTank.fill(recipe.value().getFluid(), IFluidHandler.FluidAction.EXECUTE);
 
                     if (outputStack.isEmpty()) {
-                        FLUID_FILL_OUTPUT.setStackInSlot(this, new ItemStack(recipe.getOutput(), 1));
+                        FLUID_FILL_OUTPUT.setStackInSlot(this, new ItemStack(recipe.value().getOutput(), 1));
                     } else {
                         FLUID_FILL_OUTPUT.getItemStack(this).grow(1);
                     }
@@ -282,13 +285,13 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity {
             } else {
                 ItemStack outputStack = FLUID_DRAIN_OUTPUT.getItemStack(this);
 
-                if (outputStack.isEmpty() || (outputStack.is(recipe.getOutput()) && outputStack.getCount() < outputStack.getMaxStackSize())) {
+                if (outputStack.isEmpty() || (outputStack.is(recipe.value().getOutput()) && outputStack.getCount() < outputStack.getMaxStackSize())) {
                     FLUID_DRAIN_INPUT.getItemStack(this).shrink(1);
 
-                    fluidTank.drain(recipe.getFluid(), IFluidHandler.FluidAction.EXECUTE);
+                    fluidTank.drain(recipe.value().getFluid(), IFluidHandler.FluidAction.EXECUTE);
 
                     if (outputStack.isEmpty()) {
-                        FLUID_DRAIN_OUTPUT.setStackInSlot(this, new ItemStack(recipe.getOutput(), 1));
+                        FLUID_DRAIN_OUTPUT.setStackInSlot(this, new ItemStack(recipe.value().getOutput(), 1));
                     } else {
                         FLUID_DRAIN_OUTPUT.getItemStack(this).grow(1);
                     }

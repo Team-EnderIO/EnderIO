@@ -33,7 +33,7 @@ public class WiredChargerMenu extends MachineMenu<WiredChargerBlockEntity> {
             .setBackground(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_SHIELD));
     }
 
-    public static WiredChargerMenu factory(@Nullable MenuType<WiredChargerMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
+    public static WiredChargerMenu factory(int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
 
         if (entity instanceof WiredChargerBlockEntity castBlockEntity) {

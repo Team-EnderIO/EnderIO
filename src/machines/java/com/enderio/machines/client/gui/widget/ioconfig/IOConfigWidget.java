@@ -209,9 +209,9 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     }
 
     @Override
-    public boolean mouseScrolled(double pMouseX, double pMouseY, double pDelta) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
         if (visible) {
-            SCALE -= pDelta;
+            SCALE -= deltaY;
             SCALE = Math.min(40, Math.max(10, SCALE)); //clamp
             return true;
         }
@@ -421,7 +421,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
 
                     RenderSystem.disableDepthTest();
                     RenderSystem.enableBlend();
-                    RenderSystem.setShaderColor(1, 1, 1, MachinesConfig.CLIENT.IO_CONFIG_NEIGHBOUR_TRANSPARENCY.get());
+                    RenderSystem.setShaderColor(1, 1, 1, MachinesConfig.CLIENT.IO_CONFIG_NEIGHBOUR_TRANSPARENCY.get().floatValue());
                 },
                 () -> {
                     RenderSystem.setShaderColor(1, 1, 1, 1);

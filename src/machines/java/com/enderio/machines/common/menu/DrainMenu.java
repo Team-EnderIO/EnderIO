@@ -20,7 +20,7 @@ public class DrainMenu extends MachineMenu<DrainBlockEntity> {
         addInventorySlots(8, 84);
     }
 
-    public static DrainMenu factory(@Nullable MenuType<DrainMenu> pMenuType, int pContainerId, Inventory inventory,
+    public static DrainMenu factory(int pContainerId, Inventory inventory,
         FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
         if (entity instanceof DrainBlockEntity castBlockEntity) {

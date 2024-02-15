@@ -102,7 +102,7 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
             ItemStack fuel = FUEL.getItemStack(this);
             if (!fuel.isEmpty()) {
                 // Get the burn time.
-                int burningTime = ForgeHooks.getBurnTime(fuel, RecipeType.SMELTING);
+                int burningTime = CommonHooks.getBurnTime(fuel, RecipeType.SMELTING);
 
                 // If this item can burn, burn it.
                 if (burningTime > 0) {

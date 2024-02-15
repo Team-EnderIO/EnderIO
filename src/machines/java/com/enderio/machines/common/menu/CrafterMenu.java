@@ -43,7 +43,7 @@ public class CrafterMenu extends MachineMenu<CrafterBlockEntity> {
         }
     }
 
-    public static CrafterMenu factory(@Nullable MenuType<CrafterMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
+    public static CrafterMenu factory(int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
         if (entity instanceof CrafterBlockEntity castBlockEntity) {
             return new CrafterMenu(castBlockEntity, inventory, pContainerId);

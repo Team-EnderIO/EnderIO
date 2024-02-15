@@ -17,6 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.Tags;
@@ -27,7 +28,7 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
 
     private final RecipeWrapper container;
     @Nullable
-    private EnchanterRecipe currentRecipe;
+    private RecipeHolder<EnchanterRecipe> currentRecipe;
     public static final SingleSlotAccess BOOK = new SingleSlotAccess();
     public static final SingleSlotAccess CATALYST = new SingleSlotAccess();
     public static final SingleSlotAccess LAPIS = new SingleSlotAccess();
@@ -88,7 +89,7 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
                 currentRecipe = level.getRecipeManager().getRecipeFor(MachineRecipes.ENCHANTING.type().get(), container, level).orElse(null);
                 if (!OUTPUT.isSlot(slot)) {
                     if (currentRecipe != null) {
-                        OUTPUT.setStackInSlot(this, currentRecipe.assemble(container, level.registryAccess()));
+                        OUTPUT.setStackInSlot(this, currentRecipe.value().assemble(container, level.registryAccess()));
                     } else {
                         OUTPUT.setStackInSlot(this, ItemStack.EMPTY);
                     }
@@ -113,6 +114,10 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
 
     @Nullable
     public EnchanterRecipe getCurrentRecipe() {
-        return currentRecipe;
+        if (currentRecipe == null) {
+            return null;
+        }
+
+        return currentRecipe.value();
     }
 }

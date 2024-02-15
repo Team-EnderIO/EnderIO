@@ -45,13 +45,11 @@ public class MachineBlockEntities {
 
     public static final RegiliteBlockEntity<FluidTankBlockEntity.Standard> FLUID_TANK =
         register("fluid_tank", FluidTankBlockEntity.Standard::new, MachineBlocks.FLUID_TANK)
-            // TODO: NEO-PORT: I think this needs a double supplier
-            .setRenderer(FluidTankBER::new);
+            .setRenderer(() -> FluidTankBER::new);
 
     public static final RegiliteBlockEntity<FluidTankBlockEntity.Enhanced> PRESSURIZED_FLUID_TANK =
         register("pressurized_fluid_tank", FluidTankBlockEntity.Enhanced::new, MachineBlocks.PRESSURIZED_FLUID_TANK)
-            // TODO: NEO-PORT: I think this needs a double supplier
-            .setRenderer(FluidTankBER::new);;
+            .setRenderer(() -> FluidTankBER::new);
 
     public static final RegiliteBlockEntity<EnchanterBlockEntity> ENCHANTER =
         register("enchanter", EnchanterBlockEntity::new, MachineBlocks.ENCHANTER);
@@ -116,8 +114,8 @@ public class MachineBlockEntities {
     public static final Map<CapacitorTier, RegiliteBlockEntity<CapacitorBankBlockEntity>> CAPACITOR_BANKS = Util.make(() -> {
        Map<CapacitorTier, RegiliteBlockEntity<CapacitorBankBlockEntity>> map = new HashMap<>();
        for (CapacitorTier tier : CapacitorTier.values()) {
-           map.put(tier, register(tier.name().toLowerCase(Locale.ROOT) + "_capacitor_bank", (type, worldPosition,
-               blockState) -> new CapacitorBankBlockEntity(type, worldPosition, blockState, tier), () -> MachineBlocks.CAPACITOR_BANKS.get(tier).get()));
+           map.put(tier, register(tier.name().toLowerCase(Locale.ROOT) + "_capacitor_bank", (worldPosition,
+               blockState) -> new CapacitorBankBlockEntity(worldPosition, blockState, tier), () -> MachineBlocks.CAPACITOR_BANKS.get(tier).get()));
        }
        return ImmutableMap.copyOf(map);
     });
@@ -127,8 +125,7 @@ public class MachineBlockEntities {
 
     public static final RegiliteBlockEntity<XPObeliskBlockEntity> XP_OBELISK =
         register("xp_obelisk", XPObeliskBlockEntity::new, MachineBlocks.XP_OBELISK)
-            // TODO: NEO-PORT: I think this needs a double supplier
-            .setRenderer(XPObeliskBER::new);;
+            .setRenderer(() -> XPObeliskBER::new);;
 
     @SafeVarargs
     private static <B extends BlockEntity> RegiliteBlockEntity<B> register(String name, BlockEntityType.BlockEntitySupplier<B> beFactory,

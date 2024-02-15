@@ -89,7 +89,7 @@ public class CapacitorBankBlock extends MachineBlock implements IAdvancedTooltip
 
     @SubscribeEvent
     public static void onAdvancement(AdvancementEvent.AdvancementEarnEvent event) {
-        if (event.getAdvancement().getId().equals(PLACE_ADVANCEMENT_ID) && event.getEntity() instanceof ServerPlayer serverPlayer) {
+        if (event.getAdvancement().id().equals(PLACE_ADVANCEMENT_ID) && event.getEntity() instanceof ServerPlayer serverPlayer) {
             @Nullable
             ConnectionData connectionData = NetworkHooks.getConnectionData(serverPlayer.connection.connection);
             if (connectionData != null && !connectionData.getModList().contains("athena")) {

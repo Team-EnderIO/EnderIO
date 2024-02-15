@@ -6,7 +6,6 @@ import com.enderio.machines.common.block.ProgressMachineBlock;
 import com.enderio.machines.common.block.SolarPanelBlock;
 import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
 import com.enderio.regilite.data.DataGenContext;
-import com.enderio.regilite.data.BlockStateProvider;
 import com.enderio.regilite.data.RegiliteItemModelProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;

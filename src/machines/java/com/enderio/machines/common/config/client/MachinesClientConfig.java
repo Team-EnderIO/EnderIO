@@ -6,7 +6,7 @@ public class MachinesClientConfig {
 
     public final MachinesClientBlocksConfig BLOCKS;
 
-    public final ModConfigSpec.ConfigValue<Float> IO_CONFIG_NEIGHBOUR_TRANSPARENCY;
+    public final ModConfigSpec.ConfigValue<Double> IO_CONFIG_NEIGHBOUR_TRANSPARENCY;
 
     public MachinesClientConfig(ModConfigSpec.Builder builder) {
         BLOCKS = new MachinesClientBlocksConfig(builder);

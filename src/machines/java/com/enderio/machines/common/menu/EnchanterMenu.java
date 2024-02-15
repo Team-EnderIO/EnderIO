@@ -30,7 +30,7 @@ public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
         addInventorySlots(8,84);
     }
 
-    public static EnchanterMenu factory(@Nullable MenuType<EnchanterMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
+    public static EnchanterMenu factory(int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
         if (entity instanceof EnchanterBlockEntity castBlockEntity) {
             return new EnchanterMenu(castBlockEntity, inventory, pContainerId);
