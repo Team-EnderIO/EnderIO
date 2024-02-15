@@ -16,11 +16,16 @@ plugins {
     id 'maven-publish'
     id "com.modrinth.minotaur" version "2.+"
     id 'net.neoforged.gradle.userdev' version '7.0.45'
-    ////id 'org.parchmentmc.librarian.forgegradle' version '1.+'
     id "me.hypherionmc.modutils.modpublisher" version "1.+"
 }
 
-////apply plugin: 'org.moddingx.modgradle.mapping'
+idea {
+    // Tell IDEA to always download sources/javadoc artifacts from maven.
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
 
 version = getVersionString()
 group = 'com.enderio'
