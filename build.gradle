@@ -389,7 +389,7 @@ publishing {
         maven(MavenPublication) {
             groupId = 'com.enderio'
             artifactId = 'EnderIO'
-            version = project.version
+            version = "${getVersionString()}"
 
             artifact jar
             artifact sourcesJar
