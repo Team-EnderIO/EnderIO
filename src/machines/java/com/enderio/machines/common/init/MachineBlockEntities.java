@@ -1,6 +1,7 @@
 package com.enderio.machines.common.init;
 
 import com.enderio.EnderIO;
+import com.enderio.machines.client.rendering.blockentity.CapacitorBankBER;
 import com.enderio.machines.client.rendering.blockentity.FluidTankBER;
 import com.enderio.machines.client.rendering.blockentity.XPObeliskBER;
 import com.enderio.machines.common.blockentity.AlloySmelterBlockEntity;
@@ -115,8 +116,11 @@ public class MachineBlockEntities {
     public static final Map<CapacitorTier, RegiliteBlockEntity<CapacitorBankBlockEntity>> CAPACITOR_BANKS = Util.make(() -> {
        Map<CapacitorTier, RegiliteBlockEntity<CapacitorBankBlockEntity>> map = new HashMap<>();
        for (CapacitorTier tier : CapacitorTier.values()) {
-           map.put(tier, register(tier.name().toLowerCase(Locale.ROOT) + "_capacitor_bank", (worldPosition,
-               blockState) -> new CapacitorBankBlockEntity(worldPosition, blockState, tier), () -> MachineBlocks.CAPACITOR_BANKS.get(tier).get()));
+           map.put(tier, register(
+               tier.name().toLowerCase(Locale.ROOT) + "_capacitor_bank",
+               (worldPosition, blockState) -> new CapacitorBankBlockEntity(worldPosition, blockState, tier),
+               () -> MachineBlocks.CAPACITOR_BANKS.get(tier).get())
+               .setRenderer(() -> CapacitorBankBER::new));
        }
        return ImmutableMap.copyOf(map);
     });

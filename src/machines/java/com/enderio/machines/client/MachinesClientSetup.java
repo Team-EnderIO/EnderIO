@@ -22,14 +22,6 @@ public class MachinesClientSetup {
     }
 
     @SubscribeEvent
-    public static void registerBERs(EntityRenderersEvent.RegisterRenderers event) {
-        // TODO: Move into the creation call.
-        for (var value : MachineBlockEntities.CAPACITOR_BANKS.values()) {
-            event.registerBlockEntityRenderer(value.get(), CapacitorBankBER::new);
-        }
-    }
-
-    @SubscribeEvent
     public static void registerOverlays(RegisterGuiOverlaysEvent event) {
         event.registerAbove(VanillaGuiOverlay.CROSSHAIR.id(), "anchor_hud", TravelAnchorHud.INSTANCE);
     }
