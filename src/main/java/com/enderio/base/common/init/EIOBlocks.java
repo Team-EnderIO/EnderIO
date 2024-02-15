@@ -566,7 +566,7 @@ public class EIOBlocks {
         TagKey<Block>... tags) {
 
         return BLOCK_REGISTRY
-            .registerBlock(name, blockFactory, BlockBehaviour.Properties.copy(copyFrom).noCollission())
+            .registerBlock(name, blockFactory, BlockBehaviour.Properties.copy(copyFrom).noOcclusion())
             .setBlockStateProvider((prov, ctx) -> EIOBlockState.paintedBlock(name, prov, ctx.get(), copyFrom, itemTextureRotation))
             .setColorSupplier(() -> PaintedBlockColor.INSTANCE)
             .setLootTable(DecorLootTable::withPaint)

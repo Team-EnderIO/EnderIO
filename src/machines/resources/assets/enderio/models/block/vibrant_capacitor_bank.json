@@ -19,7 +19,7 @@
         "overlay",
         "block"
     ],
-    "loader": "forge:composite",
+    "loader": "neoforge:composite",
     "textures": {
         "particle": "enderio:block/vibrant_capacitor_bank"
     }

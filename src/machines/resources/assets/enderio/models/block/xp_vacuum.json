@@ -5,6 +5,6 @@
       "particle": "enderio:block/hollow_core_frame",
       "frame": "enderio:block/hollow_core_frame",
       "inner": "enderio:block/hollow_core_frame_inner",
-      "core": "enderio:block/fluid_xp_juice_still"
+      "core": "enderio:block/xp_juice_still"
   }
 }
