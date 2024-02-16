@@ -568,11 +568,11 @@ public class EIOBlocks {
         return BLOCK_REGISTRY
             .registerBlock(name, blockFactory, BlockBehaviour.Properties.copy(copyFrom).noOcclusion())
             .setBlockStateProvider((prov, ctx) -> EIOBlockState.paintedBlock(name, prov, ctx.get(), copyFrom, itemTextureRotation))
-            .setColorSupplier(() -> PaintedBlockColor.INSTANCE)
+            .setColorSupplier(() -> PaintedBlockColor::new)
             .setLootTable(DecorLootTable::withPaint)
             .addBlockTags(tags)
             .createBlockItem(ITEM_REGISTRY, item -> item
-                .setColorSupplier(() -> PaintedBlockColor.INSTANCE));
+                .setColorSupplier(() -> PaintedBlockColor::new));
     }
 
     public static <T extends Block> RegiliteBlock<T> lightBlock(String name, Function<BlockBehaviour.Properties, T> blockFactory) {
