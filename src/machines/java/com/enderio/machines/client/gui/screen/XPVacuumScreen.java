@@ -19,6 +19,8 @@ public class XPVacuumScreen extends MachineScreen<XPVacuumMenu> {
     private static final ResourceLocation XP_VACUUM_BG = EnderIO.loc("textures/gui/xp_vacuum.png");
     private static final ResourceLocation PLUS = EnderIO.loc("buttons/plus_small");
     private static final ResourceLocation MINUS = EnderIO.loc("buttons/minus_small");
+    private static final WidgetSprites PLUS_SPRITES = new WidgetSprites(PLUS, PLUS);
+    private static final WidgetSprites MINUS_SPRITES = new WidgetSprites(MINUS, MINUS);
     private static final ResourceLocation RANGE_BUTTON_TEXTURE = EnderIO.loc("textures/gui/icons/range_buttons.png");
 
     public XPVacuumScreen(XPVacuumMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
@@ -38,9 +40,9 @@ public class XPVacuumScreen extends MachineScreen<XPVacuumMenu> {
             () -> menu.getBlockEntity().isRangeVisible(), state -> menu.getBlockEntity().setIsRangeVisible(state),
             () -> menu.getBlockEntity().isRangeVisible() ? EIOLang.HIDE_RANGE : EIOLang.SHOW_RANGE));
 
-        addRenderableWidget(new EIOImageButton(this, leftPos + imageWidth - 6 - 8 - 2 - 16, topPos + 34, 8, 8, new WidgetSprites(PLUS, PLUS),
+        addRenderableWidget(new EIOImageButton(this, leftPos + imageWidth - 6 - 8 - 2 - 16, topPos + 34, 8, 8, PLUS_SPRITES,
             (b) -> this.menu.getBlockEntity().increaseRange()));
-        addRenderableWidget(new EIOImageButton(this, leftPos + imageWidth - 6 - 8 - 2 - 16, topPos + 42, 8, 8, new WidgetSprites(MINUS, MINUS),
+        addRenderableWidget(new EIOImageButton(this, leftPos + imageWidth - 6 - 8 - 2 - 16, topPos + 42, 8, 8, MINUS_SPRITES,
             (b) -> this.menu.getBlockEntity().decreaseRange()));
 
     }

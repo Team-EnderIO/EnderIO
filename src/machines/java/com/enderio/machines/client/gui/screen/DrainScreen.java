@@ -21,6 +21,8 @@ public class DrainScreen extends MachineScreen<DrainMenu> {
     public static final ResourceLocation BG_TEXTURE = EnderIO.loc("textures/gui/drain.png");
     private static final ResourceLocation PLUS = EnderIO.loc("buttons/plus_small");
     private static final ResourceLocation MINUS = EnderIO.loc("buttons/minus_small");
+    private static final WidgetSprites PLUS_SPRITES = new WidgetSprites(PLUS, PLUS);
+    private static final WidgetSprites MINUS_SPRITES = new WidgetSprites(MINUS, MINUS);
     private static final ResourceLocation RANGE_BUTTON_TEXTURE = EnderIO.loc("textures/gui/icons/range_buttons.png");
     public DrainScreen(DrainMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -41,9 +43,9 @@ public class DrainScreen extends MachineScreen<DrainMenu> {
             () -> menu.getBlockEntity().isRangeVisible(), state -> menu.getBlockEntity().setIsRangeVisible(state),
             () -> menu.getBlockEntity().isRangeVisible() ? EIOLang.HIDE_RANGE : EIOLang.SHOW_RANGE));
 
-        addRenderableWidget(new EIOImageButton(this, leftPos + imageWidth - 2 * 16, topPos + 2 + 16 * 2, 8, 8, new WidgetSprites(PLUS, PLUS),
+        addRenderableWidget(new EIOImageButton(this, leftPos + imageWidth - 2 * 16, topPos + 2 + 16 * 2, 8, 8, PLUS_SPRITES,
             (b) -> menu.getBlockEntity().increaseRange()));
-        addRenderableWidget(new EIOImageButton(this, leftPos + imageWidth - 2 * 16, topPos + 2 + 16 * 2 + 8, 8, 8, new WidgetSprites(MINUS, MINUS),
+        addRenderableWidget(new EIOImageButton(this, leftPos + imageWidth - 2 * 16, topPos + 2 + 16 * 2 + 8, 8, 8, MINUS_SPRITES,
             (b) -> menu.getBlockEntity().decreaseRange()));
 
         addRenderableWidget(new ActiveWidget(this, menu.getBlockEntity()::getMachineStates, leftPos + imageWidth - 6 - 16, topPos + 16*4));
