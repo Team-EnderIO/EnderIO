@@ -3,12 +3,12 @@ package com.enderio.machines.client.gui.screen;
 import com.enderio.EnderIO;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.core.client.gui.widgets.EIOImageButton;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.enderio.core.client.gui.widgets.ToggleImageButton;
 import com.enderio.machines.client.gui.widget.FluidStackStaticWidget;
 import com.enderio.machines.common.menu.XPVacuumMenu;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -38,9 +38,9 @@ public class XPVacuumScreen extends MachineScreen<XPVacuumMenu> {
             () -> menu.getBlockEntity().isRangeVisible(), state -> menu.getBlockEntity().setIsRangeVisible(state),
             () -> menu.getBlockEntity().isRangeVisible() ? EIOLang.HIDE_RANGE : EIOLang.SHOW_RANGE));
 
-        addRenderableWidget(new ImageButton(leftPos + imageWidth - 6 - 8 - 2 - 16, topPos + 34, 8, 8, new WidgetSprites(PLUS, PLUS),
+        addRenderableWidget(new EIOImageButton(this, leftPos + imageWidth - 6 - 8 - 2 - 16, topPos + 34, 8, 8, new WidgetSprites(PLUS, PLUS),
             (b) -> this.menu.getBlockEntity().increaseRange()));
-        addRenderableWidget(new ImageButton(leftPos + imageWidth - 6 - 8 - 2 - 16, topPos + 42, 8, 8, new WidgetSprites(MINUS, MINUS),
+        addRenderableWidget(new EIOImageButton(this, leftPos + imageWidth - 6 - 8 - 2 - 16, topPos + 42, 8, 8, new WidgetSprites(MINUS, MINUS),
             (b) -> this.menu.getBlockEntity().decreaseRange()));
 
     }

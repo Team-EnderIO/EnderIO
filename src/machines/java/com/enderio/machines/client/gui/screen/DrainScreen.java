@@ -3,6 +3,7 @@ package com.enderio.machines.client.gui.screen;
 import com.enderio.EnderIO;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.core.client.gui.widgets.EIOImageButton;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.enderio.core.client.gui.widgets.ToggleImageButton;
 import com.enderio.machines.client.gui.widget.ActiveWidget;
@@ -10,7 +11,6 @@ import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
 import com.enderio.machines.client.gui.widget.FluidStackWidget;
 import com.enderio.machines.common.menu.DrainMenu;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -41,9 +41,9 @@ public class DrainScreen extends MachineScreen<DrainMenu> {
             () -> menu.getBlockEntity().isRangeVisible(), state -> menu.getBlockEntity().setIsRangeVisible(state),
             () -> menu.getBlockEntity().isRangeVisible() ? EIOLang.HIDE_RANGE : EIOLang.SHOW_RANGE));
 
-        addRenderableWidget(new ImageButton(leftPos + imageWidth - 2 * 16, topPos + 2 + 16 * 2, 8, 8, new WidgetSprites(PLUS, PLUS),
+        addRenderableWidget(new EIOImageButton(this, leftPos + imageWidth - 2 * 16, topPos + 2 + 16 * 2, 8, 8, new WidgetSprites(PLUS, PLUS),
             (b) -> menu.getBlockEntity().increaseRange()));
-        addRenderableWidget(new ImageButton(leftPos + imageWidth - 2 * 16, topPos + 2 + 16 * 2 + 8, 8, 8, new WidgetSprites(MINUS, MINUS),
+        addRenderableWidget(new EIOImageButton(this, leftPos + imageWidth - 2 * 16, topPos + 2 + 16 * 2 + 8, 8, 8, new WidgetSprites(MINUS, MINUS),
             (b) -> menu.getBlockEntity().decreaseRange()));
 
         addRenderableWidget(new ActiveWidget(this, menu.getBlockEntity()::getMachineStates, leftPos + imageWidth - 6 - 16, topPos + 16*4));
