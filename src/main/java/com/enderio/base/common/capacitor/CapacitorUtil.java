@@ -9,8 +9,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.util.LazyOptional;
-import net.neoforged.fml.common.Mod;
 
 import java.util.List;
 import java.util.Optional;
@@ -66,17 +64,16 @@ public class CapacitorUtil {
 
     public static Optional<ICapacitorData> getCapacitorData(ItemStack itemStack) {
         // Search for an ICapacitorData capability
-        LazyOptional<ICapacitorData> capacitorDataCap = itemStack.getCapability(EIOCapabilities.CAPACITOR);
-        if (capacitorDataCap.isPresent()) {
-            return Optional.of(capacitorDataCap.orElseThrow(NullPointerException::new));
+        var capacitorCapability = itemStack.getCapability(EIOCapabilities.CapacitorData.ITEM);
+        if (capacitorCapability != null) {
+            return Optional.of(capacitorCapability);
         }
 
         return Optional.empty();
     }
 
     public static boolean isCapacitor(ItemStack itemStack) {
-        LazyOptional<ICapacitorData> capacitorDataCap = itemStack.getCapability(EIOCapabilities.CAPACITOR);
-        return capacitorDataCap.isPresent();
+        return itemStack.getCapability(EIOCapabilities.CapacitorData.ITEM) != null;
     }
 
     public static CapacitorModifier getRandomModifier(RandomSource randomSource) {

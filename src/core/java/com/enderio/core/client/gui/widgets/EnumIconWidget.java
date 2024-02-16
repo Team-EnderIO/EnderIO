@@ -152,11 +152,6 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
     }
 
     @Override
-    protected ClientTooltipPositioner createTooltipPositioner() {
-        return DefaultTooltipPositioner.INSTANCE;
-    }
-
-    @Override
     public void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {}
 
     @Override

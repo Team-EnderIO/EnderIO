@@ -1,11 +1,9 @@
 package com.enderio.core.data.recipes;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.common.conditions.ICondition;
@@ -22,14 +20,15 @@ import java.util.concurrent.CompletableFuture;
  * A base recipe provider, does nothing but contain {@link EnderFinishedRecipe}.
  */
 public abstract class EnderRecipeProvider extends RecipeProvider {
-    public EnderRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
-        super(packOutput, lookupProvider);
+    public EnderRecipeProvider(PackOutput packOutput) {
+        super(packOutput);
     }
 
     /**
      * Base class for a finished recipe.
      */
-    protected abstract static class EnderFinishedRecipe implements FinishedRecipe {
+    // TODO: NEO-PORT: Remove, keeping for reference at the moment
+    protected abstract static class EnderFinishedRecipe {
         private final ResourceLocation id;
         private final List<ICondition> conditions = new ArrayList<>();
 
@@ -42,7 +41,6 @@ public abstract class EnderRecipeProvider extends RecipeProvider {
          */
         protected abstract Set<String> getModDependencies();
 
-        @Override
         public ResourceLocation id() {
             return id;
         }
@@ -51,7 +49,6 @@ public abstract class EnderRecipeProvider extends RecipeProvider {
          * @apiNote Should still be overridden to serialize recipe data.
          * Should match the structure of the deserializer.
          */
-        @Override
         public void serializeRecipeData(JsonObject json) {
             // Build mod loaded conditions
             Set<String> modDeps = getModDependencies();
@@ -78,7 +75,6 @@ public abstract class EnderRecipeProvider extends RecipeProvider {
         }
 
         @Nullable
-        @Override
         public AdvancementHolder advancement() {
             return null;
         }

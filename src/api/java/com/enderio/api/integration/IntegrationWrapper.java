@@ -1,7 +1,6 @@
 package com.enderio.api.integration;
 
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.util.LazyOptional;
 import net.neoforged.neoforge.common.util.NonNullConsumer;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;

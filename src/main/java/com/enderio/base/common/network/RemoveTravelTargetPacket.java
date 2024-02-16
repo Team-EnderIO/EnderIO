@@ -1,64 +1,26 @@
 package com.enderio.base.common.network;
 
-import com.enderio.base.common.travel.TravelSavedData;
-import com.enderio.core.common.network.Packet;
-import net.minecraft.client.Minecraft;
+import com.enderio.EnderIO;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.neoforged.neoforge.network.INetworkDirection;
-import net.neoforged.neoforge.network.NetworkEvent;
-import net.neoforged.neoforge.network.PlayNetworkDirection;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 
-import java.util.Optional;
+public record RemoveTravelTargetPacket(BlockPos pos) implements CustomPacketPayload {
 
-public class RemoveTravelTargetPacket implements Packet {
-    private final BlockPos pos;
-
-    public RemoveTravelTargetPacket(BlockPos pos) {
-        this.pos = pos;
-    }
-
+    public static ResourceLocation ID = EnderIO.loc("remove_travel_target");
 
     public RemoveTravelTargetPacket(FriendlyByteBuf buf) {
-        pos = buf.readBlockPos();
+        this(buf.readBlockPos());
     }
 
-    protected void write(FriendlyByteBuf writeInto) {
+    @Override
+    public void write(FriendlyByteBuf writeInto) {
         writeInto.writeBlockPos(pos);
     }
 
     @Override
-    public boolean isValid(NetworkEvent.Context context) {
-        return context.getDirection() == PlayNetworkDirection.PLAY_TO_CLIENT;
-    }
-
-    @Override
-    public void handle(NetworkEvent.Context context) {
-        ClientHandler.handle(pos);
-    }
-
-    public static class Handler extends Packet.PacketHandler<RemoveTravelTargetPacket> {
-
-        @Override
-        public RemoveTravelTargetPacket fromNetwork(FriendlyByteBuf buf) {
-            return new RemoveTravelTargetPacket(buf);
-        }
-
-        @Override
-        public void toNetwork(RemoveTravelTargetPacket packet, FriendlyByteBuf buf) {
-            packet.write(buf);
-        }
-
-        @Override
-        public Optional<INetworkDirection<?>> getDirection() {
-            return Optional.of(PlayNetworkDirection.PLAY_TO_CLIENT);
-        }
-    }
-
-    public static class ClientHandler {
-        static void handle(BlockPos pos) {
-            TravelSavedData travelData = TravelSavedData.getTravelData(Minecraft.getInstance().level);
-            travelData.removeTravelTargetAt(Minecraft.getInstance().level, pos);
-        }
+    public ResourceLocation id() {
+        return ID;
     }
 }

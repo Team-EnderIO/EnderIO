@@ -1,4 +1,4 @@
-package com.enderio.api.capability;
+package com.enderio.api.attachment;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -11,7 +11,7 @@ import net.neoforged.neoforge.common.util.INBTSerializable;
 
 import java.util.Optional;
 
-public class StoredEntityData implements INBTSerializable<Tag> {
+public class StoredEntityData implements INBTSerializable<CompoundTag> {
     private CompoundTag entityTag = new CompoundTag();
     private float maxHealth = 0.0f;
 
@@ -50,6 +50,10 @@ public class StoredEntityData implements INBTSerializable<Tag> {
         return data;
     }
 
+    public boolean hasEntity() {
+        return getEntityType().isPresent();
+    }
+
     public Optional<ResourceLocation> getEntityType() {
         CompoundTag tag = entityTag;
         if (tag.contains(KEY_ID)) {
@@ -75,7 +79,7 @@ public class StoredEntityData implements INBTSerializable<Tag> {
     }
 
     @Override
-    public Tag serializeNBT() {
+    public CompoundTag serializeNBT() {
         var compound = new CompoundTag();
         compound.put(KEY_ENTITY, entityTag);
         if (maxHealth > 0.0f) {
@@ -85,12 +89,10 @@ public class StoredEntityData implements INBTSerializable<Tag> {
     }
 
     @Override
-    public void deserializeNBT(Tag tag) {
-        if (tag instanceof CompoundTag compoundTag) {
-            entityTag = compoundTag.getCompound(KEY_ENTITY);
-            if (compoundTag.contains(KEY_MAX_HEALTH)) {
-                maxHealth = compoundTag.getFloat(KEY_MAX_HEALTH);
-            }
+    public void deserializeNBT(CompoundTag tag) {
+        entityTag = tag.getCompound(KEY_ENTITY);
+        if (tag.contains(KEY_MAX_HEALTH)) {
+            maxHealth = tag.getFloat(KEY_MAX_HEALTH);
         }
     }
 }

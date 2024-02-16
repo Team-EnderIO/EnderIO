@@ -1,7 +1,6 @@
 package com.enderio.armory.common.capability;
 
 import com.enderio.api.capability.IDarkSteelUpgradable;
-import com.enderio.api.capability.MultiCapabilityProvider;
 import com.enderio.armory.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.base.common.init.EIOCapabilities;
 import net.neoforged.neoforge.energy.EnergyStorage;

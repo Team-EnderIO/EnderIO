@@ -1,6 +1,7 @@
 package com.enderio.base.common.init;
 
 import com.enderio.EnderIO;
+import com.enderio.api.capacitor.ICapacitorData;
 import com.enderio.base.common.capacitor.DefaultCapacitorData;
 import com.enderio.base.common.item.capacitors.FixedCapacitorItem;
 import com.enderio.base.common.item.capacitors.LootCapacitorItem;
@@ -15,6 +16,7 @@ import com.enderio.base.common.item.tool.CoordinateSelectorItem;
 import com.enderio.base.common.item.tool.ElectromagnetItem;
 import com.enderio.base.common.item.tool.ExperienceRodItem;
 import com.enderio.base.common.item.tool.LevitationStaffItem;
+import com.enderio.base.common.item.tool.PoweredToggledItem;
 import com.enderio.base.common.item.tool.SoulVialItem;
 import com.enderio.base.common.item.tool.TravelStaffItem;
 import com.enderio.base.common.item.tool.YetaWrenchItem;
@@ -27,9 +29,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.Tags;
 
 import java.util.function.Function;
@@ -97,20 +99,25 @@ public class EIOItems {
 
     // region Capacitors
 
-    public static final RegiliteItem<FixedCapacitorItem> BASIC_CAPACITOR = ITEM_REGISTRY
-        .registerItem("basic_capacitor", props -> new FixedCapacitorItem(DefaultCapacitorData.BASIC, props))
-        .setTab(EIOCreativeTabs.MAIN);
+    public static final RegiliteItem<FixedCapacitorItem> BASIC_CAPACITOR =
+        fixedCapacitor("basic_capacitor", DefaultCapacitorData.BASIC);
 
-    public static final RegiliteItem<FixedCapacitorItem> DOUBLE_LAYER_CAPACITOR = ITEM_REGISTRY
-        .registerItem("double_layer_capacitor", props -> new FixedCapacitorItem(DefaultCapacitorData.DOUBLE_LAYER, props))
-        .setTab(EIOCreativeTabs.MAIN);
+    public static final RegiliteItem<FixedCapacitorItem> DOUBLE_LAYER_CAPACITOR =
+        fixedCapacitor("double_layer_capacitor", DefaultCapacitorData.DOUBLE_LAYER);
 
-    public static final RegiliteItem<FixedCapacitorItem> OCTADIC_CAPACITOR = ITEM_REGISTRY
-        .registerItem("octadic_capacitor", props -> new FixedCapacitorItem(DefaultCapacitorData.OCTADIC, props))
-        .setTab(EIOCreativeTabs.MAIN);
+    public static final RegiliteItem<FixedCapacitorItem> OCTADIC_CAPACITOR =
+        fixedCapacitor("octadic_capacitor", DefaultCapacitorData.OCTADIC);
 
     public static final RegiliteItem<LootCapacitorItem> LOOT_CAPACITOR = ITEM_REGISTRY
-        .registerItem("loot_capacitor", LootCapacitorItem::new, new Item.Properties().stacksTo(1));
+        .registerItem("loot_capacitor", LootCapacitorItem::new, new Item.Properties().stacksTo(1))
+        .addCapability(EIOCapabilities.CapacitorData.ITEM, LootCapacitorItem.CAPACITOR_DATA_PROVIDER);
+
+    private static RegiliteItem<FixedCapacitorItem> fixedCapacitor(String name, ICapacitorData data) {
+        return ITEM_REGISTRY
+            .registerItem(name, props -> new FixedCapacitorItem(data, props))
+            .setTab(EIOCreativeTabs.MAIN)
+            .addCapability(EIOCapabilities.CapacitorData.ITEM, FixedCapacitorItem.CAPACITOR_DATA_PROVIDER);
+    }
 
     // endregion
 
@@ -343,21 +350,25 @@ public class EIOItems {
 
     public static final RegiliteItem<LevitationStaffItem> LEVITATION_STAFF = ITEM_REGISTRY
         .registerItem("staff_of_levity", LevitationStaffItem::new)
-        .setTab(EIOCreativeTabs.GEAR, modifier -> EIOItems.LEVITATION_STAFF.get().addAllVariants(modifier));
+        .setTab(EIOCreativeTabs.GEAR, modifier -> EIOItems.LEVITATION_STAFF.get().addAllVariants(modifier))
+        .addCapability(Capabilities.FluidHandler.ITEM, LevitationStaffItem.FLUID_HANDLER_PROVIDER)
+        .apply(EIOItems::poweredToggledItemCapabilities);
 
     public static final RegiliteItem<TravelStaffItem> TRAVEL_STAFF = ITEM_REGISTRY
         .registerItem("staff_of_travelling", TravelStaffItem::new, new Item.Properties().stacksTo(1))
-        .setTab(EIOCreativeTabs.GEAR, modifier -> EIOItems.TRAVEL_STAFF.get().addAllVariants(modifier));
+        .setTab(EIOCreativeTabs.GEAR, modifier -> EIOItems.TRAVEL_STAFF.get().addAllVariants(modifier))
+        .addCapability(Capabilities.EnergyStorage.ITEM, TravelStaffItem.ENERGY_STORAGE_PROVIDER);
 
     public static final RegiliteItem<ElectromagnetItem> ELECTROMAGNET = ITEM_REGISTRY
         .registerItem("electromagnet", ElectromagnetItem::new)
-        .setTab(EIOCreativeTabs.GEAR, modifier -> EIOItems.ELECTROMAGNET.get().addAllVariants(modifier));
+        .setTab(EIOCreativeTabs.GEAR, modifier -> EIOItems.ELECTROMAGNET.get().addAllVariants(modifier))
+        .apply(EIOItems::poweredToggledItemCapabilities);
 
     public static final RegiliteItem<ColdFireIgniter> COLD_FIRE_IGNITER = ITEM_REGISTRY
         .registerItem("cold_fire_igniter", ColdFireIgniter::new)
         .setTab(EIOCreativeTabs.GEAR,
             modifier -> EIOItems.COLD_FIRE_IGNITER.get().addAllVariants(modifier)) // TODO: Might PR this to ITEM_REGISTRY so its nicer, but I like the footprint.
-        ;
+        .addCapability(Capabilities.FluidHandler.ITEM, ColdFireIgniter.FLUID_HANDLER_PROVIDER);
 
     // endregion
 
@@ -396,6 +407,11 @@ public class EIOItems {
 
     public static <T extends Item> RegiliteItem<T> groupedItem(String name, Function<Item.Properties, T> factory, ResourceKey<CreativeModeTab> tab) {
         return ITEM_REGISTRY.registerItem(name, factory).setTab(tab);
+    }
+
+    private static <T extends PoweredToggledItem> void poweredToggledItemCapabilities(RegiliteItem<T> item) {
+        item.addCapability(EIOCapabilities.Toggled.ITEM, PoweredToggledItem.TOGGLED_PROVIDER);
+        item.addCapability(Capabilities.EnergyStorage.ITEM, PoweredToggledItem.ENERGY_STORAGE_PROVIDER);
     }
 
     // endregion

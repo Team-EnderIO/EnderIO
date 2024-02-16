@@ -1,35 +1,43 @@
 package com.enderio.core.common.network;
 
+import com.enderio.core.EnderCore;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.FriendlyByteBuf;
-import net.neoforged.neoforge.network.INetworkDirection;
-import net.neoforged.neoforge.network.PlayNetworkDirection;
-import net.neoforged.neoforge.network.NetworkEvent;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-public class EmitParticlesPacket implements Packet {
+// TODO: Not a big fan of this..
+public record EmitParticlesPacket(List<EmitParticlePacket> particles) implements CustomPacketPayload {
 
-    private final List<EmitParticlePacket> particles = new ArrayList<>();
+    public static final ResourceLocation ID = EnderCore.loc("emit_particles");
 
     public EmitParticlesPacket() {
+        this(new ArrayList<>());
     }
 
     public EmitParticlesPacket(FriendlyByteBuf buf) {
+        this(new ArrayList<>());
         int numParticles = buf.readInt();
         for (int i = 0; i < numParticles; i++) {
             particles.add(new EmitParticlePacket(buf));
         }
     }
 
+    @Override
     public void write(FriendlyByteBuf buf) {
         buf.writeInt(particles.size());
         for (EmitParticlePacket particle : particles) {
             particle.write(buf);
         }
+    }
+
+    @Override
+    public ResourceLocation id() {
+        return ID;
     }
 
     public void add(EmitParticlePacket particlePacket) {
@@ -47,35 +55,4 @@ public class EmitParticlesPacket implements Packet {
     public void add(BlockPos pos, ParticleOptions type) {
         add(new EmitParticlePacket(type, pos));
     }
-
-    @Override
-    public boolean isValid(NetworkEvent.Context context) {
-        return true;
-    }
-
-    @Override
-    public void handle(NetworkEvent.Context context) {
-        for (EmitParticlePacket particle : particles) {
-            particle.handle(context);
-        }
-    }
-
-    public static class Handler extends PacketHandler<EmitParticlesPacket> {
-
-        @Override
-        public EmitParticlesPacket fromNetwork(FriendlyByteBuf buf) {
-            return new EmitParticlesPacket(buf);
-        }
-
-        @Override
-        public Optional<INetworkDirection<?>> getDirection() {
-            return Optional.of(PlayNetworkDirection.PLAY_TO_CLIENT);
-        }
-
-        @Override
-        public void toNetwork(EmitParticlesPacket packet, FriendlyByteBuf buf) {
-            packet.write(buf);
-        }
-    }
-
 }

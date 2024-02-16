@@ -83,7 +83,7 @@ public class EIOFluids {
             .registerFluid(name, properties)
             .setRenderType(() -> RenderType::translucent)
             .createFluid(FLUID_REGISTRY)
-            .withBlock(BLOCK_REGISTRY, fluid -> new LiquidBlock(fluid, BlockBehaviour.Properties.copy(Blocks.WATER)))
+            .withBlock(BLOCK_REGISTRY, fluid -> new LiquidBlock(fluid, BlockBehaviour.Properties.ofFullCopy(Blocks.WATER)))
             .finishLiquidBlock();
     }
 

@@ -7,12 +7,14 @@ import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.network.RequestTravelPacket;
 import com.enderio.base.common.travel.TravelSavedData;
 import com.enderio.core.common.network.CoreNetwork;
+import com.enderio.core.common.network.NetworkUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -113,7 +115,7 @@ public class TravelHandler {
                 serverPlayer.connection.resetPosition();
                 player.playNotifySound(SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 0.75F, 1F);
             } else if (sendToServer) {
-                CoreNetwork.sendToServer(new RequestTravelPacket(target.getPos()));
+                NetworkUtil.sendToServer(new RequestTravelPacket(target.getPos()));
             }
 
             player.resetFallDistance();
@@ -132,7 +134,7 @@ public class TravelHandler {
         int range = BaseConfig.COMMON.ITEMS.TRAVELLING_BLINK_RANGE.get();
         Vec3 toPos = playerPos.add(lookVec.scale(range));
 
-        ClipContext clipCtx = new ClipContext(playerPos, toPos, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, null);
+        ClipContext clipCtx = new ClipContext(playerPos, toPos, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, (Entity)null);
         BlockHitResult bhr = level.clip(clipCtx);
 
         // process the result

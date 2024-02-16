@@ -1,11 +1,8 @@
 package com.enderio.base.common.item.tool;
 
 import com.enderio.EnderIO;
-import com.enderio.api.capability.IEntityStorage;
-import com.enderio.api.capability.IMultiCapabilityItem;
-import com.enderio.api.capability.MultiCapabilityProvider;
-import com.enderio.api.capability.StoredEntityData;
-import com.enderio.base.common.capability.EntityStorageItemStack;
+import com.enderio.api.attachment.StoredEntityData;
+import com.enderio.base.common.init.EIOAttachments;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.lang.EIOLang;
@@ -36,8 +33,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.neoforge.common.capabilities.Capabilities;
-import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -51,7 +47,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 @Mod.EventBusSubscriber(modid = EnderIO.MODID)
-public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvancedTooltipProvider {
+public class SoulVialItem extends Item implements IAdvancedTooltipProvider {
     public SoulVialItem(Properties pProperties) {
         super(pProperties);
     }
@@ -60,27 +56,27 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
 
     @Override
     public boolean isFoil(ItemStack pStack) {
-        return pStack.getCapability(EIOCapabilities.ENTITY_STORAGE).map(IEntityStorage::hasStoredEntity).orElse(false);
+        return pStack.hasData(EIOAttachments.STORED_ENTITY) && pStack.getData(EIOAttachments.STORED_ENTITY).hasEntity();
     }
 
     @Override
     public void addCommonTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
-        itemStack
-            .getCapability(EIOCapabilities.ENTITY_STORAGE)
-            .ifPresent(entityStorage -> entityStorage
-                .getStoredEntityData()
+        if (itemStack.hasData(EIOAttachments.STORED_ENTITY)) {
+            itemStack.getData(EIOAttachments.STORED_ENTITY)
                 .getEntityType()
-                .ifPresent(entityType -> tooltips.add(TooltipUtil.style(Component.translatable(EntityUtil.getEntityDescriptionId(entityType))))));
+                .ifPresent(entityType ->
+                    tooltips.add(TooltipUtil.style(Component.translatable(EntityUtil.getEntityDescriptionId(entityType)))));
+        }
     }
 
     @Override
     public void addDetailedTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
-        itemStack
-            .getCapability(EIOCapabilities.ENTITY_STORAGE)
-            .ifPresent(entityStorage -> entityStorage
-                .getStoredEntityData()
+        if (itemStack.hasData(EIOAttachments.STORED_ENTITY)) {
+            itemStack.getData(EIOAttachments.STORED_ENTITY)
                 .getHealthState()
-                .ifPresent(health -> tooltips.add(TooltipUtil.styledWithArgs(EIOLang.SOUL_VIAL_TOOLTIP_HEALTH, health.getA(), health.getB()))));
+                .ifPresent(health ->
+                    tooltips.add(TooltipUtil.styledWithArgs(EIOLang.SOUL_VIAL_TOOLTIP_HEALTH, health.getA(), health.getB())));
+        }
     }
 
     // endregion
@@ -134,6 +130,7 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
             displayCallback.accept(EIOLang.SOUL_VIAL_ERROR_PLAYER);
             return Optional.empty();
         }
+
         EntityCaptureUtils.CapturableStatus status = EntityCaptureUtils.getCapturableStatus((EntityType<? extends LivingEntity>) entity.getType(), entity);
         if (status != EntityCaptureUtils.CapturableStatus.CAPTURABLE) {
             displayCallback.accept(status.errorMessage());
@@ -158,10 +155,10 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
     }
 
     private static InteractionResult releaseEntity(Level level, ItemStack filledVial, Direction face, BlockPos pos, Consumer<ItemStack> emptyVialSetter) {
-        filledVial.getCapability(EIOCapabilities.ENTITY_STORAGE).ifPresent(entityStorage -> {
-            if (entityStorage.hasStoredEntity()) {
-                StoredEntityData entityData = entityStorage.getStoredEntityData();
+        if (filledVial.hasData(EIOAttachments.STORED_ENTITY)) {
+            var storedEntity = filledVial.getData(EIOAttachments.STORED_ENTITY);
 
+            if (storedEntity.hasEntity()) {
                 // Get the spawn location for the mob.
                 double spawnX = pos.getX() + face.getStepX() + 0.5;
                 double spawnY = pos.getY() + face.getStepY();
@@ -171,7 +168,7 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
                 float rotation = Mth.wrapDegrees(level.getRandom().nextFloat() * 360.0f);
 
                 // Try to get the entity NBT from the item.
-                Optional<Entity> entity = EntityType.create(entityData.getEntityTag(), level);
+                Optional<Entity> entity = EntityType.create(storedEntity.getEntityTag(), level);
 
                 // Position the entity and add it.
                 entity.ifPresent(ent -> {
@@ -181,7 +178,8 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
                 });
                 emptyVialSetter.accept(EIOItems.EMPTY_SOUL_VIAL.get().getDefaultInstance());
             }
-        });
+        }
+
         return InteractionResult.SUCCESS;
     }
 
@@ -204,24 +202,15 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
     // region Entity Storage
 
     public static void setEntityType(ItemStack stack, ResourceLocation entityType) {
-        stack.getCapability(EIOCapabilities.ENTITY_STORAGE).ifPresent(storage -> storage.setStoredEntityData(StoredEntityData.of(entityType)));
+        stack.setData(EIOAttachments.STORED_ENTITY, StoredEntityData.of(entityType));
     }
 
     private static void setEntityData(ItemStack stack, LivingEntity entity) {
-        stack.getCapability(EIOCapabilities.ENTITY_STORAGE).ifPresent(storage -> storage.setStoredEntityData(StoredEntityData.of(entity)));
+        stack.setData(EIOAttachments.STORED_ENTITY, StoredEntityData.of(entity));
     }
 
     public static Optional<StoredEntityData> getEntityData(ItemStack stack) {
-        return stack.getCapability(EIOCapabilities.ENTITY_STORAGE).map(IEntityStorage::getStoredEntityData);
-    }
-
-    @Nullable
-    @Override
-    public MultiCapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt, MultiCapabilityProvider provider) {
-        if (this == EIOItems.FILLED_SOUL_VIAL.get()) {
-            provider.add(EIOCapabilities.ENTITY_STORAGE, LazyOptional.of(() -> new EntityStorageItemStack(stack)));
-        }
-        return provider;
+        return stack.hasData(EIOAttachments.STORED_ENTITY) ? Optional.of(stack.getData(EIOAttachments.STORED_ENTITY)) : Optional.empty();
     }
 
     // endregion
@@ -266,17 +255,20 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
                 Optional<ItemStack> filledVial = catchEntity(stack, livingentity, component -> {});
                 if (filledVial.isPresent()) {
                     //push filledvial back into dispenser
-                    source.blockEntity().getCapability(Capabilities.ITEM_HANDLER).ifPresent(handler -> {
-                        for (int i = 0; i < handler.getSlots(); i++) {
-                            if (handler.insertItem(i, filledVial.get(), true).isEmpty()) {
-                                handler.insertItem(i, filledVial.get(), false);
+                    var itemHandler = source.level().getCapability(Capabilities.ItemHandler.BLOCK, source.pos(), null);
+                    if (itemHandler != null) {
+                        for (int i = 0; i < itemHandler.getSlots(); i++) {
+                            if (itemHandler.insertItem(i, filledVial.get(), true).isEmpty()) {
+                                itemHandler.insertItem(i, filledVial.get(), false);
                                 break;
                             }
                         }
-                    });
+                    }
+
                     return stack;
                 }
             }
+
             this.setSuccess(false);
             return stack;
         }

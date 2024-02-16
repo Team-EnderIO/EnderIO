@@ -1,7 +1,6 @@
 package com.enderio.base.common.item.tool;
 
-import com.enderio.api.capability.IMultiCapabilityItem;
-import com.enderio.api.capability.MultiCapabilityProvider;
+import com.enderio.api.capacitor.ICapacitorData;
 import com.enderio.base.common.capability.EnergyStorageItemStack;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.handler.TravelHandler;
@@ -22,13 +21,17 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.capabilities.Capabilities;
-import net.neoforged.neoforge.common.util.LazyOptional;
-import org.jetbrains.annotations.Nullable;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import java.util.List;
 
-public class TravelStaffItem extends Item implements IMultiCapabilityItem, IAdvancedTooltipProvider, ITabVariants {
+public class TravelStaffItem extends Item implements IAdvancedTooltipProvider, ITabVariants {
+
+    public static ICapabilityProvider<ItemStack, Void, IEnergyStorage> ENERGY_STORAGE_PROVIDER =
+        (stack, v) -> new EnergyStorageItemStack(stack, getMaxEnergy());
+
     public TravelStaffItem(Properties properties) {
         super(properties);
     }
@@ -94,7 +97,7 @@ public class TravelStaffItem extends Item implements IMultiCapabilityItem, IAdva
         return false;
     }
 
-    public int getMaxEnergy() {
+    public static int getMaxEnergy() {
         return BaseConfig.COMMON.ITEMS.TRAVELLING_STAFF_MAX_ENERGY.get();
     }
 
@@ -104,12 +107,6 @@ public class TravelStaffItem extends Item implements IMultiCapabilityItem, IAdva
 
     public void consumeResources(ItemStack stack) {
         EnergyUtil.extractEnergy(stack, BaseConfig.COMMON.ITEMS.TRAVELLING_STAFF_ENERGY_USE.get(), false);
-    }
-
-    @Override
-    public MultiCapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt, MultiCapabilityProvider provider) {
-        provider.add(Capabilities.ENERGY, LazyOptional.of(() -> new EnergyStorageItemStack(stack, getMaxEnergy())));
-        return provider;
     }
 
     protected ActivationStatus getActivationStatus(ItemStack stack) {
@@ -131,10 +128,12 @@ public class TravelStaffItem extends Item implements IMultiCapabilityItem, IAdva
 
     @Override
     public int getBarWidth(ItemStack stack) {
-        return stack
-            .getCapability(Capabilities.ENERGY)
-            .map(energyStorage -> Math.round(energyStorage.getEnergyStored() * 13.0F / energyStorage.getMaxEnergyStored()))
-            .orElse(0);
+        var energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+        if (energyStorage != null) {
+            return Math.round(energyStorage.getEnergyStored() * 13.0F / energyStorage.getMaxEnergyStored());
+        }
+
+        return 0;
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.enderio.base.common.loot;
 
-import com.enderio.api.capability.StoredEntityData;
+import com.enderio.api.attachment.StoredEntityData;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.item.misc.BrokenSpawnerItem;
 import com.enderio.base.common.tag.EIOTags;

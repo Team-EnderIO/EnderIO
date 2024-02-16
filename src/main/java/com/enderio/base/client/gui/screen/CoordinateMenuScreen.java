@@ -6,6 +6,7 @@ import com.enderio.base.common.menu.CoordinateMenu;
 import com.enderio.base.common.network.UpdateCoordinateSelectionNameMenuPacket;
 import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.common.network.CoreNetwork;
+import com.enderio.core.common.network.NetworkUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -49,7 +50,7 @@ public class CoordinateMenuScreen extends EIOScreen<CoordinateMenu> {
 
         int midX = this.width / 2;
         int y = topPos + 48;
-        String txt = getMenu().getSelection().pos().toShortString();
+        String txt = getMenu().getSelection().getPos().toShortString();
         int x = midX - font.width(txt) / 2;
         guiGraphics.drawString(this.font, txt, x, y, 0xFFFFFF, true);
         txt = getMenu().getSelection().getLevelName();
@@ -70,6 +71,6 @@ public class CoordinateMenuScreen extends EIOScreen<CoordinateMenu> {
 
 
     private void onNameChanged(String name) {
-        CoreNetwork.sendToServer(new UpdateCoordinateSelectionNameMenuPacket(getMenu().containerId, name));
+        NetworkUtil.sendToServer(new UpdateCoordinateSelectionNameMenuPacket(getMenu().containerId, name));
     }
 }

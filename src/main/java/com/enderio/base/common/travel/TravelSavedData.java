@@ -7,6 +7,7 @@ import com.enderio.base.common.network.AddTravelTargetPacket;
 import com.enderio.base.common.network.RemoveTravelTargetPacket;
 import com.enderio.base.common.network.SyncTravelDataPacket;
 import com.enderio.core.common.network.CoreNetwork;
+import com.enderio.core.common.network.NetworkUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -74,7 +75,7 @@ public class TravelSavedData extends SavedData {
 
     public void addTravelTarget(Level level, ITravelTarget target) {
         if (!level.isClientSide) {
-            CoreNetwork.sendToDimension(level.dimension(), new AddTravelTargetPacket(target));
+            NetworkUtil.sendToDimension(new AddTravelTargetPacket(target), level.dimension());
         }
         if (TravelRegistry.isRegistered(target)) {
             travelTargets.put(target.getPos(), target);
@@ -85,7 +86,7 @@ public class TravelSavedData extends SavedData {
 
     public void removeTravelTargetAt(Level level, BlockPos pos) {
         if (!level.isClientSide) {
-            CoreNetwork.sendToDimension(level.dimension(), new RemoveTravelTargetPacket(pos));
+            NetworkUtil.sendToDimension(new RemoveTravelTargetPacket(pos), level.dimension());
         }
         travelTargets.remove(pos);
     }
@@ -107,7 +108,7 @@ public class TravelSavedData extends SavedData {
     public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         Player player = event.getEntity();
         if (player instanceof ServerPlayer serverPlayer) {
-            CoreNetwork.sendToPlayer(serverPlayer, new SyncTravelDataPacket(TravelSavedData.getTravelData(serverPlayer.level()).save(new CompoundTag())));
+            NetworkUtil.sendTo(new SyncTravelDataPacket(TravelSavedData.getTravelData(serverPlayer.level()).save(new CompoundTag())), serverPlayer);
         }
     }
 
@@ -115,7 +116,7 @@ public class TravelSavedData extends SavedData {
     public static void onDimensionChange(PlayerEvent.PlayerChangedDimensionEvent event) {
         Player player = event.getEntity();
         if (player instanceof ServerPlayer serverPlayer) {
-            CoreNetwork.sendToPlayer(serverPlayer, new SyncTravelDataPacket(TravelSavedData.getTravelData(serverPlayer.level()).save(new CompoundTag())));
+            NetworkUtil.sendTo(new SyncTravelDataPacket(TravelSavedData.getTravelData(serverPlayer.level()).save(new CompoundTag())), serverPlayer);
         }
     }
 }

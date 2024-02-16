@@ -45,7 +45,7 @@ public interface IPaintedBlock extends IBlockExtension {
     }
 
     default Block getPaint(BlockGetter level, BlockPos pos) {
-        if (level.getExistingBlockEntity(pos) instanceof SinglePaintedBlockEntity paintedBlockEntity) {
+        if (level.getBlockEntity(pos) instanceof SinglePaintedBlockEntity paintedBlockEntity) {
             Block paint = paintedBlockEntity.getPaint();
             if (paint != null && !(paint instanceof IPaintedBlock)) {
                 return paint;

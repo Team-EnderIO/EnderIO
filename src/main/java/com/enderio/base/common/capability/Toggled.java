@@ -15,15 +15,22 @@ public class Toggled implements IToggled {
     }
 
     public static boolean isEnabled(ItemStack itemStack) {
-        return itemStack.getCapability(EIOCapabilities.TOGGLED).map(IToggled::isEnabled).orElse(false);
+        var toggledCap = itemStack.getCapability(EIOCapabilities.Toggled.ITEM);
+        return toggledCap != null && toggledCap.isEnabled();
     }
 
     public static void toggleEnabled(ItemStack itemStack) {
-        itemStack.getCapability(EIOCapabilities.TOGGLED).ifPresent(IToggled::toggle);
+        var toggledCap = itemStack.getCapability(EIOCapabilities.Toggled.ITEM);
+        if (toggledCap != null) {
+            toggledCap.toggle();
+        }
     }
 
     public static void setEnabled(ItemStack itemStack, boolean enabled) {
-        itemStack.getCapability(EIOCapabilities.TOGGLED).ifPresent( iToggled -> iToggled.setEnabled(enabled));
+        var toggledCap = itemStack.getCapability(EIOCapabilities.Toggled.ITEM);
+        if (toggledCap != null) {
+            toggledCap.setEnabled(enabled);
+        }
     }
 
     @Override

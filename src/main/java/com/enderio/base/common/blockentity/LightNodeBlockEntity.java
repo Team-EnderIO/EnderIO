@@ -3,8 +3,9 @@ package com.enderio.base.common.blockentity;
 import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.block.light.LightNode;
 import com.enderio.base.common.init.EIOBlockEntities;
-import com.enderio.base.common.network.EIONetwork;
+import com.enderio.base.common.init.EIONetwork;
 import com.enderio.base.common.network.ServerToClientLightUpdate;
+import com.enderio.core.common.network.NetworkUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -15,7 +16,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -32,7 +32,7 @@ public class LightNodeBlockEntity extends BlockEntity {
 	}
 	
 	/**
-	 * called in {@link LightNode.neighborChanged} when a neighbor changes serverside.
+	 * called in {@link LightNode#neighborChanged} when a neighbor changes serverside.
 	 * Checks if the this block still has a {@code PoweredLight}, if not it removes itself.
 	 * Checks if the {@code PoweredLight} is still active, if not it removes itself.
 	 * If the block changed inside the range, call the {@code PoweredLightBlockEntity} to update. //TODO make smarter? 
@@ -43,14 +43,14 @@ public class LightNodeBlockEntity extends BlockEntity {
 		}
 		if (!(level.getBlockEntity(e.masterpos) instanceof PoweredLightBlockEntity)) {
             level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_NEIGHBORS);
-            EIONetwork.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(pos)), new ServerToClientLightUpdate(pos, Blocks.AIR.defaultBlockState())); //custom setblock packet to update light
+            NetworkUtil.sendToAllTracking(new ServerToClientLightUpdate(pos, Blocks.AIR.defaultBlockState()), level, pos);
 			return;
 		}
 		if (PoweredLightBlockEntity.inSpreadZone(fromPos, e.masterpos)) {
 			PoweredLightBlockEntity master = (PoweredLightBlockEntity) level.getBlockEntity(e.masterpos);
 			if (!master.isActive()) {
 				level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_NEIGHBORS);
-				EIONetwork.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(pos)), new ServerToClientLightUpdate(pos, Blocks.AIR.defaultBlockState())); //custom setblock packet to update light
+                NetworkUtil.sendToAllTracking(new ServerToClientLightUpdate(pos, Blocks.AIR.defaultBlockState()), level, pos);
 				return;
 			}
 			if (level.getBlockEntity(fromPos) instanceof LightNodeBlockEntity light) {

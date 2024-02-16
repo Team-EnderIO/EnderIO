@@ -1,6 +1,6 @@
 //package com.enderio.base.common.integrations.jei.extension;
 //
-//import com.enderio.api.capability.StoredEntityData;
+//import com.enderio.api.attachment.StoredEntityData;
 //import com.enderio.base.common.init.EIOCapabilities;
 //import com.enderio.base.common.integrations.jei.EnderIOJEI;
 //import com.enderio.base.common.recipe.ShapedEntityStorageRecipe;

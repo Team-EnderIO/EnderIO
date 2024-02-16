@@ -1,72 +1,27 @@
 package com.enderio.core.common.network;
 
-import com.enderio.core.common.blockentity.EnderBlockEntity;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
+import com.enderio.core.EnderCore;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.network.INetworkDirection;
-import net.neoforged.neoforge.network.PlayNetworkDirection;
-import net.neoforged.neoforge.network.NetworkEvent;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 
-import java.util.Optional;
+public record S2CDataSlotUpdate(BlockPos pos, FriendlyByteBuf slotData) implements CustomPacketPayload {
 
-public class S2CDataSlotUpdate implements Packet {
-
-    private final BlockPos pos;
-
-    // You shouldn't really send null, but its "technically" valid.
-    @Nullable
-    private final FriendlyByteBuf slotData;
-
-    public S2CDataSlotUpdate(BlockPos pos, FriendlyByteBuf buf) {
-        this.pos = pos;
-        this.slotData = buf;
-    }
+    public static final ResourceLocation ID = EnderCore.loc("s2c_data_slot_update");
 
     public S2CDataSlotUpdate(FriendlyByteBuf buf) {
-        pos = buf.readBlockPos();
-        slotData = new FriendlyByteBuf(buf.copy());
+        this(buf.readBlockPos(), new FriendlyByteBuf(buf.copy()));
     }
 
     @Override
-    public boolean isValid(NetworkEvent.Context context) {
-        return slotData != null;
-    }
-
-    @Override
-    public void handle(NetworkEvent.Context context) {
-        ClientLevel level = Minecraft.getInstance().level;
-        if (level != null) {
-            BlockEntity be = level.getBlockEntity(pos);
-            if (be instanceof EnderBlockEntity enderBlockEntity) {
-                enderBlockEntity.clientHandleBufferSync(slotData);
-            }
-        }
-    }
-
-    protected void write(FriendlyByteBuf writeInto) {
+    public void write(FriendlyByteBuf writeInto) {
         writeInto.writeBlockPos(pos);
         writeInto.writeBytes(slotData);
     }
 
-    public static class Handler extends PacketHandler<S2CDataSlotUpdate> {
-
-        @Override
-        public S2CDataSlotUpdate fromNetwork(FriendlyByteBuf buf) {
-            return new S2CDataSlotUpdate(buf);
-        }
-
-        @Override
-        public void toNetwork(S2CDataSlotUpdate packet, FriendlyByteBuf buf) {
-            packet.write(buf);
-        }
-
-        @Override
-        public Optional<INetworkDirection<?>> getDirection() {
-            return Optional.of(PlayNetworkDirection.PLAY_TO_CLIENT);
-        }
+    @Override
+    public ResourceLocation id() {
+        return ID;
     }
 }

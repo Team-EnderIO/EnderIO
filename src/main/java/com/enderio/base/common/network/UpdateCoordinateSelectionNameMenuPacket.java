@@ -1,11 +1,14 @@
 package com.enderio.base.common.network;
 
+import com.enderio.EnderIO;
 import com.enderio.base.common.menu.CoordinateMenu;
 import com.enderio.core.common.network.ClientToServerMenuPacket;
 import net.minecraft.network.FriendlyByteBuf;
-import net.neoforged.neoforge.network.NetworkEvent;
+import net.minecraft.resources.ResourceLocation;
 
 public class UpdateCoordinateSelectionNameMenuPacket extends ClientToServerMenuPacket<CoordinateMenu> {
+
+    public static ResourceLocation ID = EnderIO.loc("update_coordinate_selection_name");
 
     private final String name;
 
@@ -19,14 +22,18 @@ public class UpdateCoordinateSelectionNameMenuPacket extends ClientToServerMenuP
         name = buf.readUtf(50);
     }
 
+    public String getName() {
+        return name;
+    }
+
     @Override
-    protected void write(FriendlyByteBuf writeInto) {
+    public void write(FriendlyByteBuf writeInto) {
         super.write(writeInto);
         writeInto.writeUtf(name, 50);
     }
 
     @Override
-    public void handle(NetworkEvent.Context context) {
-        getMenu(context).updateName(name, context.getSender());
+    public ResourceLocation id() {
+        return ID;
     }
 }

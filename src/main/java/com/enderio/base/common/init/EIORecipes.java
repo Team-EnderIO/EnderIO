@@ -5,6 +5,7 @@ import com.enderio.base.common.recipe.FireCraftingRecipe;
 import com.enderio.base.common.recipe.GrindingBallRecipe;
 import com.enderio.base.common.recipe.ShapedEntityStorageRecipe;
 import com.enderio.core.common.recipes.RecipeTypeSerializerPair;
+import com.enderio.core.common.recipes.WrappedShapedRecipe;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -23,8 +24,8 @@ public class EIORecipes {
 
     public static final RecipeTypeSerializerPair<FireCraftingRecipe, FireCraftingRecipe.Serializer> FIRE_CRAFTING = register("fire_crafting", FireCraftingRecipe.Serializer::new);
 
-    public static final DeferredHolder<RecipeSerializer<?>, ShapedEntityStorageRecipe.Serializer> SHAPED_ENTITY_STORAGE =
-        RECIPE_SERIALIZERS.register("shaped_entity_storage", ShapedEntityStorageRecipe.Serializer::new);
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ShapedEntityStorageRecipe>> SHAPED_ENTITY_STORAGE =
+        RECIPE_SERIALIZERS.register("shaped_entity_storage", () -> new WrappedShapedRecipe.Serializer<>(ShapedEntityStorageRecipe::new));
 
     private static <R extends Recipe<?>, S extends RecipeSerializer<? extends R>> RecipeTypeSerializerPair<R, S> register(String name, Supplier<S> serializerFactory) {
         var type = RECIPE_TYPES.<RecipeType<R>>register(name, () -> RecipeType.simple(EnderIO.loc(name)));

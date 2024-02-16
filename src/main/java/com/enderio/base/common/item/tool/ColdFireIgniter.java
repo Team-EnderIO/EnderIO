@@ -1,7 +1,5 @@
 package com.enderio.base.common.item.tool;
 
-import com.enderio.api.capability.IMultiCapabilityItem;
-import com.enderio.api.capability.MultiCapabilityProvider;
 import com.enderio.base.common.capability.AcceptingFluidItemHandler;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOFluids;
@@ -9,7 +7,6 @@ import com.enderio.base.common.tag.EIOTags;
 import com.enderio.core.common.item.ITabVariants;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -26,7 +23,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.neoforged.neoforge.common.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
@@ -34,10 +32,11 @@ import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Consumer;
 
-public class ColdFireIgniter extends Item implements IMultiCapabilityItem, ITabVariants {
+public class ColdFireIgniter extends Item implements ITabVariants {
+
+    public static ICapabilityProvider<ItemStack, Void, IFluidHandlerItem> FLUID_HANDLER_PROVIDER =
+        (stack, v) -> new AcceptingFluidItemHandler(stack, 1000, EIOTags.Fluids.COLD_FIRE_IGNITER_FUEL);
 
     public ColdFireIgniter(Properties properties) {
         super(properties);
@@ -46,11 +45,11 @@ public class ColdFireIgniter extends Item implements IMultiCapabilityItem, ITabV
     @Override
     public InteractionResult useOn(UseOnContext context) {
         ItemStack itemstack = context.getItemInHand();
-        Optional<IFluidHandlerItem> fluidCap = getTankCap(itemstack);
-        if (fluidCap.isPresent()) {
-            IFluidHandlerItem cap = fluidCap.get();
-            if (cap.drain(10, IFluidHandler.FluidAction.SIMULATE).getAmount() == 10) {
-                cap.drain(10, IFluidHandler.FluidAction.EXECUTE);
+
+        var fluidHandler = itemstack.getCapability(Capabilities.FluidHandler.ITEM);
+        if (fluidHandler != null) {
+            if (fluidHandler.drain(10, IFluidHandler.FluidAction.SIMULATE).getAmount() == 10) {
+                fluidHandler.drain(10, IFluidHandler.FluidAction.EXECUTE);
                 Player player = context.getPlayer();
                 Level level = context.getLevel();
                 BlockPos blockpos = context.getClickedPos().relative(context.getClickedFace());
@@ -67,13 +66,14 @@ public class ColdFireIgniter extends Item implements IMultiCapabilityItem, ITabV
             }
             return InteractionResult.FAIL;
         }
+
         LogManager.getLogger().warn("could not find FluidCapability on ColdFireIgniter");
         return super.useOn(context);
     }
 
     @Override
     public boolean isBarVisible(ItemStack stack) {
-        return getTankCap(stack).isPresent();
+        return stack.getCapability(Capabilities.FluidHandler.ITEM) != null;
     }
 
     @Override
@@ -83,29 +83,31 @@ public class ColdFireIgniter extends Item implements IMultiCapabilityItem, ITabV
 
     @Override
     public int getBarWidth(ItemStack stack) {
-        Optional<IFluidHandlerItem> tankCap = getTankCap(stack);
-        if (tankCap.isPresent()) {
-            IFluidHandlerItem fluidHandler = tankCap.get();
+        var fluidHandler = stack.getCapability(Capabilities.FluidHandler.ITEM);
+        if (fluidHandler != null) {
             return Math.round(fluidHandler.getFluidInTank(0).getAmount() * 13f / fluidHandler.getTankCapacity(0));
         }
-        return super.getBarWidth(stack);
+
+        return 0;
     }
 
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> components, TooltipFlag flag) {
         super.appendHoverText(stack, level, components, flag);
-        getTankCap(stack).ifPresent(handler -> {
-            boolean isOneTank = handler.getTanks() == 1;
+
+        var tankCap = stack.getCapability(Capabilities.FluidHandler.ITEM);
+        if (tankCap != null) {
+            boolean isOneTank = tankCap.getTanks() == 1;
             if (!isOneTank) {
                 components.add(Component.literal("Fluids:"));
             }
-            for (int i = 0; i < handler.getTanks(); i++) {
+            for (int i = 0; i < tankCap.getTanks(); i++) {
                 String prefix = isOneTank ? "" : i + ": ";
-                Component postFix = handler.getFluidInTank(i).isEmpty() ? Component.literal("") : handler.getFluidInTank(i).getDisplayName();
-                components.add(Component.literal(prefix + handler.getFluidInTank(i).getAmount() + " / " + handler.getTankCapacity(i) + " ").append(postFix));
+                Component postFix = tankCap.getFluidInTank(i).isEmpty() ? Component.literal("") : tankCap.getFluidInTank(i).getDisplayName();
+                components.add(Component.literal(prefix + tankCap.getFluidInTank(i).getAmount() + " / " + tankCap.getTankCapacity(i) + " ").append(postFix));
             }
-        });
+        }
     }
 
     @Override
@@ -113,24 +115,13 @@ public class ColdFireIgniter extends Item implements IMultiCapabilityItem, ITabV
         modifier.accept(this);
 
         ItemStack is = new ItemStack(this);
-        getTankCap(is).ifPresent(handler -> {
-            if (handler instanceof AcceptingFluidItemHandler fluidItemHandler) {
-                fluidItemHandler.setFluid(new FluidStack(EIOFluids.VAPOR_OF_LEVITY.getSource(), handler.getTankCapacity(0)));
+
+        var fluidHandler = is.getCapability(Capabilities.FluidHandler.ITEM);
+        if (fluidHandler != null) {
+            if (fluidHandler instanceof AcceptingFluidItemHandler acceptingFluidItemHandler) {
+                acceptingFluidItemHandler.setFluid(new FluidStack(EIOFluids.VAPOR_OF_LEVITY.getSource(), fluidHandler.getTankCapacity(0)));
                 modifier.accept(is);
             }
-        });
-    }
-
-    @Nullable
-    @Override
-    public MultiCapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt, MultiCapabilityProvider provider) {
-        provider.add(Capabilities.FLUID_HANDLER_ITEM,
-            new AcceptingFluidItemHandler(stack, 1000, EIOTags.Fluids.COLD_FIRE_IGNITER_FUEL)
-                .getCapability(Capabilities.FLUID_HANDLER_ITEM));
-        return provider;
-    }
-
-    private Optional<IFluidHandlerItem> getTankCap(ItemStack stack) {
-        return stack.getCapability(Capabilities.FLUID_HANDLER_ITEM).resolve();
+        }
     }
 }

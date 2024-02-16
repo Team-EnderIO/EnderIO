@@ -1,5 +1,8 @@
 package com.enderio.base.common.block.light;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
@@ -19,7 +22,16 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * Handles shape related code.
  * Holds "inverted" property
  */
-public class Light extends FaceAttachedHorizontalDirectionalBlock{
+public class Light extends FaceAttachedHorizontalDirectionalBlock {
+
+    public static final MapCodec<Light> CODEC = RecordCodecBuilder.mapCodec(
+        inst -> inst.group(
+                Codec.BOOL.fieldOf("inverted").forGetter(i -> i.inverted),
+                propertiesCodec()
+            )
+            .apply(inst, Light::new)
+    );
+
 	public static final BooleanProperty ENABLED = BlockStateProperties.ENABLED;
 	protected static final VoxelShape CEILING_AABB_X = Block.box(6.0D, 14.0D, 5.0D, 10.0D, 16.0D, 11.0D);
 	protected static final VoxelShape CEILING_AABB_Z = Block.box(5.0D, 14.0D, 6.0D, 11.0D, 16.0D, 10.0D);
@@ -29,9 +41,9 @@ public class Light extends FaceAttachedHorizontalDirectionalBlock{
 	protected static final VoxelShape SOUTH_AABB = Block.box(5.0D, 6.0D, 0.0D, 11.0D, 10.0D, 2.0D);
 	protected static final VoxelShape WEST_AABB = Block.box(14.0D, 6.0D, 5.0D, 16.0D, 10.0D, 11.0D);
 	protected static final VoxelShape EAST_AABB = Block.box(0.0D, 6.0D, 5.0D, 2.0D, 10.0D, 11.0D);
-	private final boolean inverted;
+	protected final boolean inverted;
 	
-	public Light(Properties properties, boolean inverted) {
+	public Light(boolean inverted, Properties properties) {
 		super(properties);
 		this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(ENABLED, !inverted).setValue(FACE, AttachFace.WALL));
 		this.inverted = inverted;
@@ -101,4 +113,9 @@ public class Light extends FaceAttachedHorizontalDirectionalBlock{
 		}
 		
 	}
+
+    @Override
+    protected MapCodec<? extends FaceAttachedHorizontalDirectionalBlock> codec() {
+        return CODEC;
+    }
 }

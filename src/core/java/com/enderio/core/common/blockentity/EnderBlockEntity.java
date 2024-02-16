@@ -1,14 +1,12 @@
 package com.enderio.core.common.blockentity;
 
 import com.enderio.api.UseOnly;
-import com.enderio.api.capability.IEnderCapabilityProvider;
 import com.enderio.core.common.network.C2SDataSlotChange;
-import com.enderio.core.common.network.CoreNetwork;
+import com.enderio.core.common.network.NetworkUtil;
 import com.enderio.core.common.network.S2CDataSlotUpdate;
 import com.enderio.core.common.network.slot.NetworkDataSlot;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -18,16 +16,12 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.util.LazyOptional;
 import net.neoforged.fml.LogicalSide;
-import org.jetbrains.annotations.NotNull;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Base block entity class for EnderIO.
@@ -38,10 +32,9 @@ public class EnderBlockEntity extends BlockEntity {
     public static final String DATA = "Data";
     public static final String INDEX = "Index";
     private final List<NetworkDataSlot<?>> dataSlots = new ArrayList<>();
-
     private final List<Runnable> afterDataSync = new ArrayList<>();
 
-    private final Map<Capability<?>, IEnderCapabilityProvider<?>> capabilityProviders = new HashMap<>();
+    private final List<ICapabilityProvider<? extends EnderBlockEntity, ?, ?>> capabilityProviders = new ArrayList<>();
 
     public EnderBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
@@ -169,7 +162,7 @@ public class EnderBlockEntity extends BlockEntity {
             FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
             buf.writeInt(dataSlots.indexOf(slot));
             slot.toBuffer(buf, value);
-            CoreNetwork.sendToServer(new C2SDataSlotChange(getBlockPos(), buf));
+            NetworkUtil.sendToServer(new C2SDataSlotChange(getBlockPos(), buf));
             level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_NEIGHBORS);
         }
     }
@@ -181,7 +174,7 @@ public class EnderBlockEntity extends BlockEntity {
     public void sync() {
         var syncData = createBufferSlotUpdate();
         if (syncData != null) {
-            CoreNetwork.sendToTracking(level.getChunkAt(getBlockPos()), new S2CDataSlotUpdate(getBlockPos(), syncData));
+            NetworkUtil.sendToAllTracking(new S2CDataSlotUpdate(getBlockPos(), syncData), level, getBlockPos());
         }
     }
 
@@ -207,50 +200,6 @@ public class EnderBlockEntity extends BlockEntity {
         }
         dataSlots.get(index).fromBuffer(buf);
         dataSlots.get(index).updateServerCallback();
-    }
-
-    // endregion
-
-    // region Capabilities
-
-    /**
-     * Get all capability providers
-     */
-    public Map<Capability<?>, IEnderCapabilityProvider<?>> getCapabilityProviders() {
-        return capabilityProviders;
-    }
-
-    /**
-     * Add a capability provider to the block entity.
-     */
-    public void addCapabilityProvider(IEnderCapabilityProvider<?> provider) {
-        capabilityProviders.put(provider.getCapabilityType(), provider);
-    }
-
-    /**
-     * Invalidate capabilities serving the given side.
-     */
-    public void invalidateCaps(@Nullable Direction side) {
-        for (IEnderCapabilityProvider<?> capProvider : capabilityProviders.values()) {
-            capProvider.invalidateSide(side);
-        }
-    }
-
-    @NotNull
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
-        if (capabilityProviders.containsKey(cap)) {
-            return capabilityProviders.get(cap).getCapability(side).cast();
-        }
-        return super.getCapability(cap, side);
-    }
-
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-        for (IEnderCapabilityProvider<?> provider : capabilityProviders.values()) {
-            provider.invalidateCaps();
-        }
     }
 
     // endregion

@@ -6,8 +6,6 @@ import com.enderio.base.common.util.PaintUtils;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.FallingBlockEntity;
@@ -17,13 +15,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.entity.IEntityAdditionalSpawnData;
-import net.neoforged.neoforge.network.NetworkHooks;
+import net.neoforged.neoforge.entity.IEntityWithComplexSpawn;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class PaintedSandEntity extends FallingBlockEntity implements IEntityAdditionalSpawnData {
+public class PaintedSandEntity extends FallingBlockEntity implements IEntityWithComplexSpawn {
 
     public PaintedSandEntity(EntityType<? extends FallingBlockEntity> type, Level level) {
         super(type, level);
@@ -31,11 +28,6 @@ public class PaintedSandEntity extends FallingBlockEntity implements IEntityAddi
 
     public PaintedSandEntity(Level level, double x, double y, double z, BlockState state) {
         super(level, x, y, z, state);
-    }
-
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override

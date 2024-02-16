@@ -1,14 +1,9 @@
 package com.enderio.base.common.item.misc;
 
-import com.enderio.api.capability.CoordinateSelection;
-import com.enderio.api.capability.ICoordinateSelectionHolder;
-import com.enderio.api.capability.IMultiCapabilityItem;
-import com.enderio.api.capability.MultiCapabilityProvider;
-import com.enderio.base.common.capability.CoordinateSelectionHolder;
-import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.api.attachment.CoordinateSelection;
+import com.enderio.base.common.init.EIOAttachments;
 import com.enderio.base.common.menu.CoordinateMenu;
 import net.minecraft.ChatFormatting;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
@@ -24,14 +19,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.util.LazyOptional;
-import net.neoforged.neoforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
 
-public class LocationPrintoutItem extends Item implements IMultiCapabilityItem {
+public class LocationPrintoutItem extends Item {
 
     public LocationPrintoutItem(Properties pProperties) {
         super(pProperties);
@@ -71,7 +64,7 @@ public class LocationPrintoutItem extends Item implements IMultiCapabilityItem {
 
     private static void openMenu(ServerPlayer player, CoordinateSelection selection, String name) {
 
-        NetworkHooks.openScreen(player,new MenuProvider() {
+        player.openMenu(new MenuProvider() {
             @Override
             public Component getDisplayName() {
                 return Component.empty();
@@ -86,34 +79,27 @@ public class LocationPrintoutItem extends Item implements IMultiCapabilityItem {
     }
 
     public static Optional<CoordinateSelection> getSelection(ItemStack stack) {
-        return stack.getCapability(EIOCapabilities.COORDINATE_SELECTION_HOLDER)
-            .filter(ICoordinateSelectionHolder::hasSelection)
-            .map(ICoordinateSelectionHolder::getSelection);
+        return stack.hasData(EIOAttachments.COORDINATE_SELECTION)
+            ? Optional.of(stack.getData(EIOAttachments.COORDINATE_SELECTION))
+            : Optional.empty();
     }
 
     public static void setSelection(ItemStack stack, CoordinateSelection selection) {
-        stack.getCapability(EIOCapabilities.COORDINATE_SELECTION_HOLDER).ifPresent(selectionHolder -> selectionHolder.setSelection(selection));
+        stack.setData(EIOAttachments.COORDINATE_SELECTION, selection);
     }
 
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> toolTip, TooltipFlag pIsAdvanced) {
         super.appendHoverText(pStack, pLevel, toolTip, pIsAdvanced);
         getSelection(pStack).ifPresent(selection -> {
-                toolTip.add(writeCoordinate('x', selection.pos().getX())
-                    .append(writeCoordinate('y', selection.pos().getY()))
-                    .append(writeCoordinate('z', selection.pos().getZ())));
+                toolTip.add(writeCoordinate('x', selection.getPos().getX())
+                    .append(writeCoordinate('y', selection.getPos().getY()))
+                    .append(writeCoordinate('z', selection.getPos().getZ())));
                 toolTip.add(Component.literal(selection.getLevelName()));
         });
     }
 
     private static MutableComponent writeCoordinate(char character, int number) {
         return Component.literal("" + character).withStyle(ChatFormatting.GRAY).append(Component.literal("" + number).withStyle(ChatFormatting.GREEN));
-    }
-
-    @Nullable
-    @Override
-    public MultiCapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt, MultiCapabilityProvider provider) {
-        provider.add(EIOCapabilities.COORDINATE_SELECTION_HOLDER, LazyOptional.of(()-> new CoordinateSelectionHolder(stack)));
-        return provider;
     }
 }

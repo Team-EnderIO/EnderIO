@@ -157,7 +157,7 @@ public class EIOBlocks {
         );
 
     public static final RegiliteBlock<DoorBlock> DARK_STEEL_DOOR = BLOCK_REGISTRY
-        .registerBlock("dark_steel_door", props -> new DoorBlock(props, BlockSetType.IRON),
+        .registerBlock("dark_steel_door", props -> new DoorBlock(BlockSetType.IRON, props),
             BlockBehaviour.Properties.of().strength(5.0f, 2000.0f).sound(SoundType.METAL).mapColor(MapColor.METAL).noOcclusion())
         .setLootTable(RegiliteBlockLootProvider::createDoor)
         .setBlockStateProvider(
@@ -170,7 +170,7 @@ public class EIOBlocks {
         );
 
     public static final RegiliteBlock<TrapDoorBlock> DARK_STEEL_TRAPDOOR = BLOCK_REGISTRY
-        .registerBlock("dark_steel_trapdoor", props -> new TrapDoorBlock(props, BlockSetType.IRON),
+        .registerBlock("dark_steel_trapdoor", props -> new TrapDoorBlock(BlockSetType.IRON, props),
             BlockBehaviour.Properties.of().strength(5.0f, 2000.0f).sound(SoundType.METAL).mapColor(MapColor.METAL).noOcclusion())
         .setBlockStateProvider((prov, ctx) -> prov.trapdoorBlockWithRenderType(ctx.get(), prov.modLoc("block/dark_steel_trapdoor"), true, prov.mcLoc("cutout")))
         .addBlockTags(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL, BlockTags.TRAPDOORS)
@@ -261,7 +261,7 @@ public class EIOBlocks {
         );
 
     public static final RegiliteBlock<ColdFireBlock> COLD_FIRE = BLOCK_REGISTRY
-        .registerBlock("cold_fire", ColdFireBlock::new, BlockBehaviour.Properties.copy(Blocks.FIRE).noLootTable())
+        .registerBlock("cold_fire", ColdFireBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.FIRE).noLootTable())
         .setBlockStateProvider((prov, ctx) -> {
             // This generates the models used for the blockstate in our resources.
             // One day we may bother to datagen that file.
@@ -387,21 +387,21 @@ public class EIOBlocks {
 
     // region Light
 
-    public static final RegiliteBlock<Light> LIGHT = lightBlock("light", s -> new Light(s, false));
-    public static final RegiliteBlock<Light> LIGHT_INVERTED = lightBlock("light_inverted", s -> new Light(s, true));
-    public static final RegiliteBlock<PoweredLight> POWERED_LIGHT = lightBlock("powered_light", s -> new PoweredLight(s, false, false));
-    public static final RegiliteBlock<PoweredLight> POWERED_LIGHT_INVERTED = lightBlock("powered_light_inverted", s -> new PoweredLight(s, true, false));
-    public static final RegiliteBlock<PoweredLight> POWERED_LIGHT_WIRELESS = lightBlock("powered_light_wireless", s -> new PoweredLight(s, false, true));
+    public static final RegiliteBlock<Light> LIGHT = lightBlock("light", s -> new Light(false, s));
+    public static final RegiliteBlock<Light> LIGHT_INVERTED = lightBlock("light_inverted", s -> new Light(true, s));
+    public static final RegiliteBlock<PoweredLight> POWERED_LIGHT = lightBlock("powered_light", s -> new PoweredLight(false, false, s));
+    public static final RegiliteBlock<PoweredLight> POWERED_LIGHT_INVERTED = lightBlock("powered_light_inverted", s -> new PoweredLight(true, false, s));
+    public static final RegiliteBlock<PoweredLight> POWERED_LIGHT_WIRELESS = lightBlock("powered_light_wireless", s -> new PoweredLight(false, true, s));
     public static final RegiliteBlock<PoweredLight> POWERED_LIGHT_INVERTED_WIRELESS = lightBlock("powered_light_inverted_wireless",
-        s -> new PoweredLight(s, true, true));
+        s -> new PoweredLight(true, true, s));
 
     public static final RegiliteBlock<LightNode> LIGHT_NODE = BLOCK_REGISTRY
-        .registerBlock("light_node", LightNode::new, BlockBehaviour.Properties.copy(Blocks.AIR).lightLevel(l -> 15).noLootTable().noCollission().noOcclusion())
+        .registerBlock("light_node", LightNode::new, BlockBehaviour.Properties.ofFullCopy(Blocks.AIR).lightLevel(l -> 15).noLootTable().noCollission().noOcclusion())
         .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().withExistingParent("light_node", "block/air")));
 
     public static final RegiliteBlock<EnderSkullBlock> ENDERMAN_HEAD = BLOCK_REGISTRY
         .registerBlock("enderman_head", EnderSkullBlock::new,
-            BlockBehaviour.Properties.copy(Blocks.SKELETON_SKULL).instrument(NoteBlockInstrument.SKELETON).strength(1.0F).pushReaction(PushReaction.DESTROY))
+            BlockBehaviour.Properties.ofFullCopy(Blocks.SKELETON_SKULL).instrument(NoteBlockInstrument.SKELETON).strength(1.0F).pushReaction(PushReaction.DESTROY))
         .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(prov.mcLoc("block/skull"))))
         .createBlockItem(ITEM_REGISTRY,
             // TODO: Properties being handled right? Maybe cleaner if we have a factory that takes properties, then a properties arg.
@@ -412,7 +412,7 @@ public class EIOBlocks {
 
     public static final RegiliteBlock<WallEnderSkullBlock> WALL_ENDERMAN_HEAD = BLOCK_REGISTRY
         .registerBlock("wall_enderman_head", WallEnderSkullBlock::new,
-            BlockBehaviour.Properties.copy(Blocks.SKELETON_SKULL).strength(1.0F).lootFrom(ENDERMAN_HEAD).pushReaction(PushReaction.DESTROY))
+            BlockBehaviour.Properties.ofFullCopy(Blocks.SKELETON_SKULL).strength(1.0F).lootFrom(ENDERMAN_HEAD).pushReaction(PushReaction.DESTROY))
         .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(prov.mcLoc("block/skull"))))
         .setTranslation("");
 
@@ -536,7 +536,7 @@ public class EIOBlocks {
     }
 
     public static final RegiliteBlock<IndustrialInsulationBlock> INDUSTRIAL_INSULATION = BLOCK_REGISTRY
-        .registerBlock("industrial_insulation_block", IndustrialInsulationBlock::new, BlockBehaviour.Properties.copy(Blocks.SPONGE))
+        .registerBlock("industrial_insulation_block", IndustrialInsulationBlock::new, BlockBehaviour.Properties.ofFullCopy(Blocks.SPONGE))
         .setTranslation("Industrial Insulation")
         .createBlockItem(ITEM_REGISTRY, item -> item
             .setTab(EIOCreativeTabs.BLOCKS)
@@ -566,7 +566,7 @@ public class EIOBlocks {
         TagKey<Block>... tags) {
 
         return BLOCK_REGISTRY
-            .registerBlock(name, blockFactory, BlockBehaviour.Properties.copy(copyFrom).noOcclusion())
+            .registerBlock(name, blockFactory, BlockBehaviour.Properties.ofFullCopy(copyFrom).noOcclusion())
             .setBlockStateProvider((prov, ctx) -> EIOBlockState.paintedBlock(name, prov, ctx.get(), copyFrom, itemTextureRotation))
             .setColorSupplier(() -> PaintedBlockColor::new)
             .setLootTable(DecorLootTable::withPaint)

@@ -1,8 +1,6 @@
 package com.enderio.armory.common.item.darksteel;
 
 import com.enderio.api.capability.IDarkSteelUpgrade;
-import com.enderio.api.capability.IMultiCapabilityItem;
-import com.enderio.api.capability.MultiCapabilityProvider;
 import com.enderio.armory.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.armory.common.capability.DarkSteelUpgradeable;
 import com.enderio.armory.common.capability.EnergyDelegator;

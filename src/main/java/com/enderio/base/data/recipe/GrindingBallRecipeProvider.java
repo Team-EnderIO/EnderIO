@@ -2,25 +2,18 @@ package com.enderio.base.data.recipe;
 
 import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOItems;
-import com.enderio.base.common.init.EIORecipes;
+import com.enderio.base.common.recipe.GrindingBallRecipe;
 import com.enderio.core.data.recipes.EnderRecipeProvider;
-import com.google.gson.JsonObject;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-
-import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 
 public class GrindingBallRecipeProvider extends EnderRecipeProvider {
 
-    public GrindingBallRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
-        super(packOutput, lookupProvider);
+    public GrindingBallRecipeProvider(PackOutput packOutput) {
+        super(packOutput);
     }
 
     @Override
@@ -38,45 +31,7 @@ public class GrindingBallRecipeProvider extends EnderRecipeProvider {
     }
 
     protected void build(Item item, float grinding, float chance, float power, int durability, RecipeOutput recipeOutput) {
-        recipeOutput.accept(new FinishedGrindingBall(EnderIO.loc("grindingball/" + BuiltInRegistries.ITEM.getKey(item).getPath()), item, grinding, chance, power, durability));
-    }
-
-    protected static class FinishedGrindingBall extends EnderFinishedRecipe {
-
-        private final Item item;
-        private final float mainOutput;
-        private final float bonusOutput;
-        private final float powerUse;
-        private final int durability;
-
-        public FinishedGrindingBall(ResourceLocation id, Item item, float mainOutput, float bonusOutput, float powerUse, int durability) {
-            super(id);
-            this.item = item;
-            this.mainOutput = mainOutput;
-            this.bonusOutput = bonusOutput;
-            this.powerUse = powerUse;
-            this.durability = durability;
-        }
-
-        @Override
-        public void serializeRecipeData(JsonObject json) {
-            json.addProperty("item", BuiltInRegistries.ITEM.getKey(item).toString());
-            json.addProperty("grinding", mainOutput);
-            json.addProperty("chance", bonusOutput);
-            json.addProperty("power", powerUse);
-            json.addProperty("durability", durability);
-
-            super.serializeRecipeData(json);
-        }
-
-        @Override
-        protected Set<String> getModDependencies() {
-            return Set.of(BuiltInRegistries.ITEM.getKey(item).getNamespace());
-        }
-
-        @Override
-        public RecipeSerializer<?> type() {
-            return EIORecipes.GRINDING_BALL.serializer().get();
-        }
+        recipeOutput.accept(EnderIO.loc("grindingball/" + BuiltInRegistries.ITEM.getKey(item).getPath()),
+            new GrindingBallRecipe(item, grinding, chance, power, durability), null);
     }
 }

@@ -1,17 +1,14 @@
 package com.enderio.base.common.item.tool;
 
-import com.enderio.api.capability.IMultiCapabilityItem;
-import com.enderio.api.capability.MultiCapabilityProvider;
+import com.enderio.api.capability.IToggled;
 import com.enderio.base.common.capability.EnergyStorageItemStack;
 import com.enderio.base.common.capability.Toggled;
-import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.item.EnergyBarDecorator;
 import com.enderio.core.client.item.IAdvancedTooltipProvider;
 import com.enderio.core.common.item.ITabVariants;
 import com.enderio.core.common.util.EnergyUtil;
 import com.enderio.core.common.util.TooltipUtil;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -21,13 +18,20 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.capabilities.Capabilities;
-import net.neoforged.neoforge.common.util.LazyOptional;
-import org.jetbrains.annotations.Nullable;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import java.util.List;
 
-public abstract class PoweredToggledItem extends Item implements IMultiCapabilityItem, IAdvancedTooltipProvider, ITabVariants {
+public abstract class PoweredToggledItem extends Item implements IAdvancedTooltipProvider, ITabVariants {
+
+    // TODO: Attachment instead?
+    public static final ICapabilityProvider<ItemStack, Void, IToggled> TOGGLED_PROVIDER =
+        (stack, v) -> new Toggled(stack);
+
+    public static final ICapabilityProvider<ItemStack, Void, IEnergyStorage> ENERGY_STORAGE_PROVIDER =
+        (stack, v) -> new EnergyStorageItemStack(stack, ((PoweredToggledItem)stack.getItem()).getMaxEnergy());
 
     public PoweredToggledItem(Properties pProperties) {
         super(pProperties.stacksTo(1));
@@ -104,14 +108,6 @@ public abstract class PoweredToggledItem extends Item implements IMultiCapabilit
         }
     }
 
-    @Nullable
-    @Override
-    public MultiCapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt, MultiCapabilityProvider provider) {
-        provider.add(EIOCapabilities.TOGGLED, LazyOptional.of(() -> new Toggled(stack)));
-        provider.add(Capabilities.ENERGY, LazyOptional.of(() -> new EnergyStorageItemStack(stack, getMaxEnergy())));
-        return provider;
-    }
-
     @Override
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
         if (slotChanged) {
@@ -127,10 +123,12 @@ public abstract class PoweredToggledItem extends Item implements IMultiCapabilit
 
     @Override
     public int getBarWidth(ItemStack pStack) {
-        return pStack
-            .getCapability(Capabilities.ENERGY)
-            .map(energyStorage -> Math.round(energyStorage.getEnergyStored() * 13.0F / energyStorage.getMaxEnergyStored()))
-            .orElse(0);
+        var energyStorage = pStack.getCapability(Capabilities.EnergyStorage.ITEM);
+        if (energyStorage != null) {
+            return Math.round(energyStorage.getEnergyStored() * 13.0F / energyStorage.getMaxEnergyStored());
+        }
+
+        return 0;
     }
 
     @Override

@@ -1,64 +1,41 @@
 package com.enderio.core.common.network;
 
+import com.enderio.core.EnderCore;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.neoforged.neoforge.network.NetworkRegistry;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.network.PacketDistributor;
-import net.neoforged.neoforge.network.simple.SimpleChannel;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
+import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
 
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class CoreNetwork {
     private static final String PROTOCOL_VERSION = "1.0";
-    private static SimpleChannel CHANNEL;
 
-    private static int packetId = 0;
+    @SubscribeEvent
+    public static void register(final RegisterPayloadHandlerEvent event) {
+        final IPayloadRegistrar registrar = event
+            .registrar(EnderCore.MODID)
+            .versioned(PROTOCOL_VERSION);
 
-    /**
-     * **MUST** be called by EnderIO before any other networking code.
-     */
-    public static void networkInit() {
-        // Create the network channel.
-        CHANNEL = NetworkRegistry.ChannelBuilder
-            .named(new ResourceLocation("enderio", "network"))
-            .networkProtocolVersion(() -> PROTOCOL_VERSION)
-            .clientAcceptedVersions(PROTOCOL_VERSION::equals)
-            .serverAcceptedVersions(PROTOCOL_VERSION::equals)
-            .simpleChannel();
+        registrar.play(EmitParticlePacket.ID, EmitParticlePacket::new,
+            handler -> handler
+                .client(ClientPayloadHandler.getInstance()::handleEmitParticle));
 
-        // Register core packets.
-        registerPacket(new EmitParticlePacket.Handler(), EmitParticlePacket.class);
-        registerPacket(new EmitParticlesPacket.Handler(), EmitParticlesPacket.class);
-        registerPacket(new S2CDataSlotUpdate.Handler(), S2CDataSlotUpdate.class);
-        registerPacket(new C2SDataSlotChange.Handler(), C2SDataSlotChange.class);
-    }
+        registrar.play(EmitParticlesPacket.ID, EmitParticlesPacket::new,
+            handler -> handler
+                .client(ClientPayloadHandler.getInstance()::handleEmitParticles));
 
-    public static <P extends Packet> void sendToServer(P packet) {
-        CHANNEL.sendToServer(packet);
-    }
+        registrar.play(S2CDataSlotUpdate.ID, S2CDataSlotUpdate::new,
+            handler -> handler
+                .client(ClientPayloadHandler.getInstance()::handleDataSlotUpdate));
 
-    public static <P extends Packet> void sendToPlayer(ServerPlayer player, P packet) {
-        send(PacketDistributor.PLAYER.with(() -> player), packet);
-    }
-
-    public static <P extends Packet> void sendToTracking(LevelChunk chunk, P packet) {
-        send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), packet);
-    }
-
-    public static <P extends Packet> void sendToDimension(ResourceKey<Level> dim, P packet) {
-        send(PacketDistributor.DIMENSION.with(() -> dim), packet);
-    }
-
-    public static <P extends Packet> void send(PacketDistributor.PacketTarget target, P packet) {
-        CHANNEL.send(target, packet);
-    }
-
-    public static <P extends Packet> void registerPacket(Packet.PacketHandler<P> handler, Class<P> clazz) {
-        CHANNEL.registerMessage(id(), clazz, handler::toNetwork, handler::fromNetwork, handler::handle, handler.getDirection());
-    }
-
-    private static int id() {
-        return packetId++;
+        registrar.play(C2SDataSlotChange.ID, C2SDataSlotChange::new,
+            handler -> handler
+                .server(ServerPayloadHandler.getInstance()::handleDataSlotChange));
     }
 }

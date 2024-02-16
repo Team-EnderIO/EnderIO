@@ -12,6 +12,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SlabBlock;
@@ -36,7 +37,7 @@ public class PaintedSlabBlock extends SlabBlock implements EntityBlock, IPainted
     @Override
     public Block getPaint(BlockGetter level, BlockPos pos) {
         if (level.getBlockState(pos).getValue(SlabBlock.TYPE) != SlabType.BOTTOM
-            && level.getExistingBlockEntity(pos) instanceof DoublePaintedBlockEntity paintedBlockEntity) {
+            && level.getBlockEntity(pos) instanceof DoublePaintedBlockEntity paintedBlockEntity) {
             Block paint = paintedBlockEntity.getPaint2();
             if (paint != null) {
                 return paint;
@@ -47,7 +48,7 @@ public class PaintedSlabBlock extends SlabBlock implements EntityBlock, IPainted
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
         ItemStack stack = new ItemStack(this);
         if (level.getBlockEntity(pos) instanceof DoublePaintedBlockEntity paintedBlockEntity) {
             CompoundTag tag = new CompoundTag();
