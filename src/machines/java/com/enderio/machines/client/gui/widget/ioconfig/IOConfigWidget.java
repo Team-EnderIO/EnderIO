@@ -385,8 +385,8 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
                 var ioMode = machine.getIOConfig().getMode(selectedFace.side);
                 IOModeMap map = IOModeMap.getMapFromMode(ioMode);
                 Rect2i iconBounds = map.getRect();
-                guiGraphics.blitSprite(IO_CONFIG_OVERLAY, iconBounds.getWidth(), iconBounds.getHeight(), iconBounds.getX(), iconBounds.getY(), getX() + 4,
-                    getY() + height - 4 - screenFont.lineHeight - iconBounds.getHeight(), 48, 16);
+                guiGraphics.blitSprite(IO_CONFIG_OVERLAY, 48, 16, iconBounds.getX(), iconBounds.getY(), getX() + 4,
+                    getY() + height - 4 - screenFont.lineHeight - iconBounds.getHeight(), iconBounds.getWidth(), iconBounds.getHeight());
                 guiGraphics.pose().pushPose();
                 guiGraphics.pose().translate(0, 0, 1000); // to ensure that string is drawn on top
                 guiGraphics.drawString(screenFont, map.getComponent(), getX() + 4, getY() + height - 2 - screenFont.lineHeight, 0xFFFFFFFF);
