@@ -29,8 +29,8 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 // List of all subsets. This is used for dividing the mod into logical components.
 // TODO: 1.19: Tidy the divisions and what goes where.
 def subsets = [
-        'conduits',
-        'machines',
+        //'conduits',
+        //'machines',
         'armory'
 ]
 
@@ -152,7 +152,6 @@ void exclusiveRepo(RepositoryHandler handler, String url, Consumer<InclusiveRepo
 }
 
 repositories { RepositoryHandler handler ->
-    exclusiveRepo(handler, 'https://maven.tterrag.com/', 'com.tterrag.registrate', 'com.jozufozu.flywheel')
     exclusiveRepo(handler, 'https://modmaven.dev/', 'mezz.jei', 'mcjty.theoneprobe', 'appeng')
     exclusiveRepo(handler, 'https://cursemaven.com', 'curse.maven')
     exclusiveRepo(handler, 'https://maven.blamejared.com', 'vazkii.patchouli', 'net.darkhax.bookshelf', 'net.darkhax.enchdesc', 'com.almostreliable.mods')
@@ -174,8 +173,8 @@ dependencies {
     //runtimeOnly fg.deobf("blank:Xycraft+World:0.5.2")
 
     // Regilite
-    implementation("com.enderio.regilite:Regilite:1.0.0")
-    //jarJar("com.enderio.regilite:Regilite:[1.0,2.0)")
+    implementation("com.enderio.regilite:Regilite:${regilite_version}")
+    jarJar("com.enderio.regilite:Regilite:[${regilite_version}]")
 
     // GraphLib
     implementation implementation("dev.gigaherz.graph:GraphLib3:${graphlib_version}")
@@ -185,10 +184,10 @@ dependencies {
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     // JEI
-    ////compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
-    ////compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
-    ////runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common:${jei_version}")
-    ////runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
+    compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
+    compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
+    runtimeOnly "mezz.jei:jei-${minecraft_version}-common:${jei_version}"
+    runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
 
     //RFTOOLS
     ////runtimeOnly fg.deobf("maven.modrinth:rftools-power:f430rHkA")
@@ -200,12 +199,12 @@ dependencies {
     ////runtimeOnly fg.deobf("maven.modrinth:athena-ctm:X6GdUrpW")
 
     // AE2
-    compileOnly "appeng:appliedenergistics2-forge:${ae2_version}:api"
-    ////runtimeOnly fg.deobf("appeng:appliedenergistics2-forge:${ae2_version}")
+    compileOnly "appeng:appliedenergistics2-neoforge:${ae2_version}:api"
+    runtimeOnly "appeng:appliedenergistics2-neoforge:${ae2_version}"
 
     // Enchantment descriptions
-    ////runtimeOnly fg.deobf("net.darkhax.bookshelf:Bookshelf-Forge-${minecraft_version}:${bookshelf_version}")
-    ////runtimeOnly fg.deobf("net.darkhax.enchdesc:EnchantmentDescriptions-Forge-${minecraft_version}:${ench_desc_version}")
+    runtimeOnly "net.darkhax.bookshelf:Bookshelf-NeoForge-${minecraft_version}:${bookshelf_version}"
+    runtimeOnly "net.darkhax.enchdesc:EnchantmentDescriptions-NeoForge-${minecraft_version}:${ench_desc_version}"
 
     // The One Probe https://github.com/McJtyMods/TheOneProbe/issues/548
 //    compileOnly fg.deobf("mcjty.theoneprobe:theoneprobe:${top_version}:api") {
@@ -216,7 +215,7 @@ dependencies {
 //    }
 
     // Jade
-    ////runtimeOnly fg.deobf("curse.maven:jade-324717:${jade_cf_id}")
+    runtimeOnly "curse.maven:jade-324717:${jade_cf_id}"
 
     //fluxnetworks
     ////runtimeOnly fg.deobf("curse.maven:fluxnetworks-248020:4651164")
@@ -231,8 +230,8 @@ dependencies {
 //    compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
 //    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
 
-    // While we don't have conduits etc.
-//    runtimeOnly fg.deobf("curse.maven:mekanism-268560:${mekanism_cf_id}")
+    // Mekanism
+    runtimeOnly "curse.maven:mekanism-268560:${mekanism_cf_id}"
 
     // Jetbrains annotations
     compileOnly 'org.jetbrains:annotations:23.0.0'
