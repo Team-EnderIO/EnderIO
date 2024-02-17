@@ -9,7 +9,6 @@ import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.init.MachineMenus;
-import com.enderio.machines.common.init.MachinePackets;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.integrations.EnderIOMachinesSelfIntegration;
 import com.enderio.machines.common.lang.MachineLang;
@@ -41,6 +40,7 @@ import net.neoforged.fml.InterModComms;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
 import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
 import net.neoforged.neoforge.common.data.AdvancementProvider;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
@@ -50,20 +50,19 @@ import java.util.concurrent.CompletableFuture;
 
 @Mod.EventBusSubscriber(modid = EnderIO.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class EIOMachines {
-    public EIOMachines(IEventBus modEventBus) {
+    @SubscribeEvent
+    public static void onConstruct(FMLConstructModEvent event) {
         // Register machine config
         var ctx = ModLoadingContext.get();
         ctx.registerConfig(ModConfig.Type.COMMON, MachinesConfig.COMMON_SPEC, "enderio/machines-common.toml");
         ctx.registerConfig(ModConfig.Type.CLIENT, MachinesConfig.CLIENT_SPEC, "enderio/machines-client.toml");
 
-        // Perform classloads for everything so things are registered.
-        MachineBlocks.register(modEventBus);
-        MachineBlockEntities.register(modEventBus);
-        MachineMenus.register(modEventBus);
-        MachinePackets.register();
+        MachineBlocks.register(EnderIO.modEventBus);
+        MachineBlockEntities.register(EnderIO.modEventBus);
+        MachineMenus.register(EnderIO.modEventBus);
+        MachineRecipes.register(EnderIO.modEventBus);
 
         MachineLang.register();
-        MachineRecipes.register(modEventBus);
         MachineTags.register();
 
         IntegrationManager.addIntegration(EnderIOMachinesSelfIntegration.INSTANCE);

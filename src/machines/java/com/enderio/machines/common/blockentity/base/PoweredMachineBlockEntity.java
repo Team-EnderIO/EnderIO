@@ -40,7 +40,7 @@ import java.util.function.Supplier;
  */
 public abstract class PoweredMachineBlockEntity extends MachineBlockEntity implements IMachineInstall {
 
-    public static final ICapabilityProvider<? extends PoweredMachineBlockEntity, Direction, IEnergyStorage> ENERGY_STORAGE_PROVIDER =
+    public static final ICapabilityProvider<PoweredMachineBlockEntity, Direction, IEnergyStorage> ENERGY_STORAGE_PROVIDER =
         (be, side) -> be.exposedEnergyStorage != null ? be.exposedEnergyStorage.getForSide(side) : null;
 
     /**
@@ -172,7 +172,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
 
         // Transmit power out all sides.
         for (Direction side : Direction.values()) {
-            if (!shouldPushEnergyTo(side) || !getIOConfig().getMode(side).canPull()) {
+            if (!shouldPushEnergyTo(side) || !getIOConfig().getMode(side).canPush()) {
                 continue;
             }
 
@@ -209,7 +209,6 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
             protected void onContentsChanged() {
                 setChanged();
                 updateMachineState(MachineState.NO_POWER, getEnergyStorage().getEnergyStored() <= 0);
-
             }
         };
     }

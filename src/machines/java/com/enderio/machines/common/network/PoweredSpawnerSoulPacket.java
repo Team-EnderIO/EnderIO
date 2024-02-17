@@ -36,10 +36,4 @@ public record PoweredSpawnerSoulPacket(Map<ResourceLocation, SpawnerSoul.SoulDat
     public ResourceLocation id() {
         return ID;
     }
-
-    @Override
-    public void handle(NetworkEvent.Context context) {
-        context.enqueueWork(() -> SpawnerSoul.SPAWNER.map = this.map);
-        context.setPacketHandled(true);
-    }
 }

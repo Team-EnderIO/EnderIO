@@ -1,6 +1,7 @@
 package com.enderio.machines.common.init;
 
 import com.enderio.EnderIO;
+import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.core.data.model.EIOModel;
 import com.enderio.machines.common.MachineNBTKeys;
@@ -10,6 +11,7 @@ import com.enderio.machines.common.block.ProgressMachineBlock;
 import com.enderio.machines.common.block.SolarPanelBlock;
 import com.enderio.machines.common.block.TravelAnchorBlock;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
+import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorBankBlockEntity;
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorTier;
 import com.enderio.machines.common.blockentity.solar.SolarPanelBlockEntity;
@@ -26,12 +28,14 @@ import com.enderio.regilite.holder.RegiliteBlockEntity;
 import com.enderio.regilite.registry.BlockRegistry;
 import com.enderio.regilite.registry.ItemRegistry;
 import com.google.common.collect.ImmutableMap;
+import com.ibm.icu.impl.CalendarAstronomer;
 import net.minecraft.Util;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.loaders.CompositeModelBuilder;
 
@@ -58,10 +62,12 @@ public class MachineBlocks {
             .end()
             .texture("particle", EnderIO.loc("block/machine_side"))
         ))
-        .createBlockItem(ITEM_REGISTRY, (block) -> new FluidTankItem(block, new Item.Properties(), 16000),
+        .createBlockItem(ITEM_REGISTRY,
+            block -> new FluidTankItem(block, new Item.Properties(), 16000),
             item -> item
                 .setModelProvider((prov, ctx) -> {})
                 .setTab(EIOCreativeTabs.MACHINES)
+                .addCapability(Capabilities.FluidHandler.ITEM, FluidTankItem.FLUID_HANDLER_PROVIDER)
         );
 
     public static final RegiliteBlock<MachineBlock> PRESSURIZED_FLUID_TANK = BLOCK_REGISTRY
@@ -81,6 +87,7 @@ public class MachineBlocks {
             item -> item
                 .setModelProvider((prov, ctx) -> {})
                 .setTab(EIOCreativeTabs.MACHINES)
+                .addCapability(Capabilities.FluidHandler.ITEM, FluidTankItem.FLUID_HANDLER_PROVIDER)
         );
 
     public static final RegiliteBlock<MachineBlock> ENCHANTER = BLOCK_REGISTRY
@@ -252,6 +259,7 @@ public class MachineBlocks {
                 item -> item
                     .setModelProvider((prov, ctx) -> {})
                     .setTab(EIOCreativeTabs.MACHINES)
+                    .addCapability(Capabilities.EnergyStorage.ITEM, CapacitorBankItem.ENERGY_STORAGE_PROVIDER)
             );
     }
 

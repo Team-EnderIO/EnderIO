@@ -71,7 +71,11 @@ public class EnderIO {
         return new ResourceLocation(MODID, path);
     }
 
+    public static IEventBus modEventBus;
+
     public EnderIO(IEventBus modEventBus) {
+        EnderIO.modEventBus = modEventBus;
+
         // Ensure the enderio config subdirectory is present.
         try {
             Files.createDirectories(FMLPaths.CONFIGDIR.get().resolve(MODID));

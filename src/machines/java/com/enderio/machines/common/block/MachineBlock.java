@@ -3,6 +3,8 @@ package com.enderio.machines.common.block;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.regilite.holder.RegiliteBlockEntity;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
@@ -29,27 +31,33 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Supplier;
+
 public class MachineBlock extends BaseEntityBlock {
+    public static final Codec<Supplier<BlockEntityType<? extends MachineBlockEntity>>> BLOCK_ENTITY_TYPE_CODEC = BuiltInRegistries.BLOCK_ENTITY_TYPE
+        .holderByNameCodec()
+        .flatXmap(blockEntityTypeHolder -> DataResult.success(() -> (BlockEntityType<? extends MachineBlockEntity>) blockEntityTypeHolder.value()),
+            sup -> DataResult.success(sup.get().builtInRegistryHolder()));
+
     private static final MapCodec<MachineBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-        BuiltInRegistries.BLOCK_ENTITY_TYPE.byNameCodec().fieldOf("block_entity_type").forGetter(output -> output.blockEntityType),
+        BLOCK_ENTITY_TYPE_CODEC.fieldOf("block_entity_type").forGetter(output -> output.blockEntityType),
         propertiesCodec()
     ).apply(instance, MachineBlock::new));
 
-    private final BlockEntityType<? extends MachineBlockEntity> blockEntityType;
+    private final Supplier<BlockEntityType<? extends MachineBlockEntity>> blockEntityType;
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
-    protected MachineBlock(BlockEntityType<?> blockEntityType, Properties properties) {
+    private MachineBlock(Supplier<BlockEntityType<? extends MachineBlockEntity>> blockEntityType, Properties properties) {
         super(properties);
 
-        // TODO: Can we ensure BlockEntityType is BlockEntityType<? extends MachineBlockEntity> properly from the codec?
-        this.blockEntityType = (BlockEntityType<? extends MachineBlockEntity>) blockEntityType;
+        this.blockEntityType = blockEntityType;
         BlockState any = this.getStateDefinition().any();
         this.registerDefaultState(any.hasProperty(FACING) ? any.setValue(FACING, Direction.NORTH) : any);
     }
 
     public MachineBlock(RegiliteBlockEntity<? extends MachineBlockEntity> blockEntityType, Properties properties) {
         super(properties);
-        this.blockEntityType = blockEntityType.get();
+        this.blockEntityType = blockEntityType::get;
         BlockState any = this.getStateDefinition().any();
         this.registerDefaultState(any.hasProperty(FACING) ? any.setValue(FACING, Direction.NORTH) : any);
     }
@@ -79,7 +87,7 @@ public class MachineBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return createTickerHelper(pBlockEntityType, blockEntityType, MachineBlockEntity::tick);
+        return createTickerHelper(pBlockEntityType, blockEntityType.get(), MachineBlockEntity::tick);
     }
 
     @SuppressWarnings("deprecation")
@@ -119,7 +127,7 @@ public class MachineBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return blockEntityType.create(pPos, pState);
+        return blockEntityType.get().create(pPos, pState);
     }
 
     @Override

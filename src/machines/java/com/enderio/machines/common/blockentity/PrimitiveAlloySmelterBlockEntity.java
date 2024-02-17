@@ -142,13 +142,6 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
                 }
                 return 0;
             }
-
-            // TODO: NEO-PORT, keeping as reminder. Do not give capabilities when registering this block.
-            // Stop things from connecting to the block.
-            @Override
-            public LazyOptional<IEnergyStorage> getCapability(@Nullable Direction side) {
-                return LazyOptional.empty();
-            }
         };
     }
 

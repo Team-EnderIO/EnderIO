@@ -1,7 +1,6 @@
 package com.enderio.machines.common.network;
 
 import com.enderio.EnderIO;
-import com.enderio.machines.common.menu.CrafterMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
@@ -16,15 +15,6 @@ public record UpdateCrafterTemplatePacket(List<ItemStack> recipeInputs) implemen
 
     public UpdateCrafterTemplatePacket(FriendlyByteBuf buf) {
         this(buf.readList(FriendlyByteBuf::readItem));
-    }
-
-    @Override
-    public void handle(NetworkEvent.Context context) {
-        if (context.getSender().containerMenu instanceof CrafterMenu crafterMenu) {
-            for (int i = 0; i < recipeInputs.size(); i++) {
-                crafterMenu.slots.get(CrafterMenu.INPUTS_INDEX + i).set(recipeInputs.get(i));
-            }
-        }
     }
 
     @Override

@@ -1,10 +1,24 @@
 {
   "values": [
-    "enderio:dark_steel_ladder",
-    "enderio:dark_steel_bars",
-    "enderio:dark_steel_door",
-    "enderio:dark_steel_trapdoor",
-    "enderio:end_steel_bars",
-    "enderio:soul_chain"
+    "enderio:fluid_tank",
+    "enderio:pressurized_fluid_tank",
+    "enderio:enchanter",
+    "enderio:primitive_alloy_smelter",
+    "enderio:alloy_smelter",
+    "enderio:painting_machine",
+    "enderio:wired_charger",
+    "enderio:stirling_generator",
+    "enderio:sag_mill",
+    "enderio:slice_and_splice",
+    "enderio:impulse_hopper",
+    "enderio:soul_binder",
+    "enderio:powered_spawner",
+    "enderio:vacuum_chest",
+    "enderio:xp_vacuum",
+    "enderio:travel_anchor",
+    "enderio:crafter",
+    "enderio:soul_engine",
+    "enderio:drain",
+    "enderio:xp_obelisk"
   ]
 }

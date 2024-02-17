@@ -36,10 +36,4 @@ public record SoulEngineSoulPacket(Map<ResourceLocation, EngineSoul.SoulData> ma
         return ID;
     }
 
-    @Override
-    public void handle(NetworkEvent.Context context) {
-        context.enqueueWork(() -> EngineSoul.ENGINE.map = this.map);
-        context.setPacketHandled(true);
-    }
-
 }

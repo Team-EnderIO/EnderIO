@@ -67,13 +67,13 @@ import static net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction
 
 public abstract class MachineBlockEntity extends EnderBlockEntity implements MenuProvider, IWrenchable {
 
-    public static final ICapabilityProvider<? extends MachineBlockEntity, Direction, ISideConfig> SIDE_CONFIG_PROVIDER =
+    public static final ICapabilityProvider<MachineBlockEntity, Direction, ISideConfig> SIDE_CONFIG_PROVIDER =
         (be, side) -> new SidedIOConfig(be.ioConfig, side);
 
-    public static final ICapabilityProvider<? extends MachineBlockEntity, Direction, IItemHandler> ITEM_HANDLER_PROVIDER =
+    public static final ICapabilityProvider<MachineBlockEntity, Direction, IItemHandler> ITEM_HANDLER_PROVIDER =
         (be, side) -> be.inventory != null ? be.inventory.getForSide(side) : null;
 
-    public static final ICapabilityProvider<? extends MachineBlockEntity, Direction, IFluidHandler> FLUID_HANDLER_PROVIDER =
+    public static final ICapabilityProvider<MachineBlockEntity, Direction, IFluidHandler> FLUID_HANDLER_PROVIDER =
         (be, side) -> be.fluidHandler != null ? be.fluidHandler.getForSide(side) : null;
 
     // region IO Configuration

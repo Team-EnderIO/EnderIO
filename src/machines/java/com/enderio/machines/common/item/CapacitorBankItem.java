@@ -2,33 +2,26 @@ package com.enderio.machines.common.item;
 
 import com.enderio.core.CoreNBTKeys;
 import com.enderio.machines.common.block.CapacitorBankBlock;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.capabilities.Capabilities;
-import net.neoforged.neoforge.common.capabilities.ICapabilityProvider;
-import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.energy.IEnergyStorage;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
 public class CapacitorBankItem extends BlockItem {
 
+    // TODO: NEO-PORT: This is gross...
+    public static final ICapabilityProvider<ItemStack, Void, IEnergyStorage> ENERGY_STORAGE_PROVIDER =
+        (stack, v) -> new BlockEntityEnergyStorage(stack, ((CapacitorBankBlock)((BlockItem)stack.getItem()).getBlock()).getTier().getStorageCapacity());
+
     public CapacitorBankItem(CapacitorBankBlock pBlock, Properties pProperties) {
         super(pBlock, pProperties);
     }
 
-    @Override
-    public @Nullable ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
-        return new BlockEntityEnergyStorage(stack, ((CapacitorBankBlock)getBlock()).getTier().getStorageCapacity());
-    }
-
-    private static class BlockEntityEnergyStorage implements IEnergyStorage, ICapabilityProvider {
+    private static class BlockEntityEnergyStorage implements IEnergyStorage {
 
         private final ItemStack container;
         private final int capacity;
@@ -105,15 +98,6 @@ public class CapacitorBankItem extends BlockItem {
         @Override
         public boolean canReceive() {
             return true;
-        }
-
-        @Override
-        public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-            if (cap == Capabilities.ENERGY) {
-                return LazyOptional.of(() -> this).cast();
-            }
-
-            return LazyOptional.empty();
         }
     }
 }
