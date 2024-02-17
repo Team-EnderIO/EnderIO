@@ -1,14 +1,9 @@
 package com.enderio.machines.common.io;
 
-import com.enderio.api.capability.ISideConfig;
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
-import com.enderio.base.common.init.EIOCapabilities;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.util.LazyOptional;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Fixed IO Config.
@@ -53,19 +48,4 @@ public final class FixedIOConfig implements IIOConfig {
         // Not enabled.
     }
 
-    @Override
-    public Capability<ISideConfig> getCapabilityType() {
-        return EIOCapabilities.SIDE_CONFIG;
-    }
-
-    @Override
-    public LazyOptional<ISideConfig> getCapability(@Nullable Direction side) {
-        return LazyOptional.empty();
-    }
-
-    @Override
-    public void invalidateSide(@Nullable Direction side) {}
-
-    @Override
-    public void invalidateCaps() {}
 }

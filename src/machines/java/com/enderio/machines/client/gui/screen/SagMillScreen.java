@@ -128,10 +128,5 @@ public class SagMillScreen extends MachineScreen<SagMillMenu> {
                 setTooltip(Tooltip.create(tooltip));
             }
         }
-
-        @Override
-        protected ClientTooltipPositioner createTooltipPositioner() {
-            return DefaultTooltipPositioner.INSTANCE;
-        }
     }
 }

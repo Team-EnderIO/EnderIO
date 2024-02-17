@@ -1,16 +1,19 @@
 package com.enderio.machines.common.recipe;
 
 import com.enderio.EnderIO;
-import com.enderio.api.capability.IEntityStorage;
+import com.enderio.base.common.init.EIOAttachments;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.blockentity.SoulBinderBlockEntity;
+import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
+import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.souldata.SoulDataReloadListener;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -25,7 +28,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.util.LazyOptional;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 import org.jetbrains.annotations.Nullable;
@@ -56,8 +59,6 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
         this.input = input;
         this.energy = energy;
         this.exp = exp;
-
-
 
         if (Stream.of(entityType, mobCategory, souldata).filter(Optional::isPresent).count() > 1) {
             throw new IllegalStateException("entityType, mobCategory and souldata are mutually exclusive! You can only set one");
@@ -100,9 +101,12 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
         ItemStack vial = SoulBinderBlockEntity.INPUT_SOUL.getItemStack(container);
         List<OutputStack> results = getResultStacks(registryAccess);
         ItemStack result = results.get(0).getItem();
-        vial.getCapability(EIOCapabilities.ENTITY_STORAGE)
-            .ifPresent(inputEntity -> result.getCapability(EIOCapabilities.ENTITY_STORAGE)
-                .ifPresent(resultEntity -> resultEntity.setStoredEntityData(inputEntity.getStoredEntityData())));
+
+        if (vial.hasData(EIOAttachments.STORED_ENTITY)) {
+            var storedEntityData = vial.getData(EIOAttachments.STORED_ENTITY);
+            result.setData(EIOAttachments.STORED_ENTITY, storedEntityData);
+        }
+
         return results;
     }
 
@@ -126,47 +130,47 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
             return false;
         }
 
-        LazyOptional<IEntityStorage> capability = container.getItem(0).getCapability(EIOCapabilities.ENTITY_STORAGE);
-        if (!capability.isPresent()) { //vial (or other entity storage)
+        if (!container.getItem(0).hasData(EIOAttachments.STORED_ENTITY)) {
             return false;
         }
 
+        var storedEntityData = container.getItem(0).getData(EIOAttachments.STORED_ENTITY);
+        if (storedEntityData.getEntityType().isEmpty()) {
+            return false;
+        }
+
+        var storedEntityType = storedEntityData.getEntityType().get();
+
         if (souldata != null) { //is in the selected souldata
             if (SoulDataReloadListener.fromString(souldata).matches(
-                container.getItem(0).getCapability(EIOCapabilities.ENTITY_STORAGE).resolve().get()
-                    .getStoredEntityData().getEntityType().get()).isEmpty()) {
+                storedEntityData.getEntityType().get()).isEmpty()) {
                 return false;
             }
 
             return ExperienceUtil.getLevelFromFluid(container.fluid.get()) >= exp;
         }
 
-        if (mobCategory == null && entityType == null) { //No souldata, entity type or mob category
-            return ExperienceUtil.getLevelFromFluid(container.fluid.get()) >= exp;
-        }
-
-        IEntityStorage storage = capability.resolve().get();
-        if (storage.hasStoredEntity()) {
-            var type = storage.getStoredEntityData().getEntityType();
-            if (type.isEmpty()) {
+        if (mobCategory != null) {
+            // TODO: We can just call get(...) if we don't care about registry defaulting.
+            var entityTypeOptional = BuiltInRegistries.ENTITY_TYPE.getOptional(storedEntityType);
+            if (entityTypeOptional.isEmpty()) {
                 return false;
             }
 
-            var entityType = BuiltInRegistries.ENTITY_TYPE.get(type.get());
-            if (entityType == null) {
+            var entityType = entityTypeOptional.get();
+
+            if (!entityType.getCategory().equals(mobCategory)) {
                 return false;
             }
+        }
 
-            if (entityType.getCategory().equals(mobCategory)) {
-                return ExperienceUtil.getLevelFromFluid(container.fluid.get()) >= exp;
+        if (entityType != null) {
+            if (!storedEntityType.equals(entityType)) {
+                return false;
             }
         }
-        //type matters
-        if (storage.hasStoredEntity() && storage.getStoredEntityData().getEntityType().get().equals(entityType)) {
-            return ExperienceUtil.getLevelFromFluid(container.fluid.get()) >= exp;
-        }
 
-        return false;
+        return ExperienceUtil.getLevelFromFluid(container.fluid.get()) >= exp;
     }
 
     @Override

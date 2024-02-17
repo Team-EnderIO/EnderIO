@@ -1,6 +1,6 @@
 package com.enderio.machines.common.blockentity;
 
-import com.enderio.api.capability.StoredEntityData;
+import com.enderio.api.attachment.StoredEntityData;
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.FixedScalable;
 import com.enderio.api.capacitor.LinearScalable;

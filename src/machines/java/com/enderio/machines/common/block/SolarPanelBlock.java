@@ -38,8 +38,8 @@ public class SolarPanelBlock extends MachineBlock implements IAdvancedTooltipPro
     private static final VoxelShape SHAPE = Block.box(0, 0, 0, 16, 3, 16);
     private final ISolarPanelTier tier;
 
-    public SolarPanelBlock(Properties properties, RegiliteBlockEntity<? extends MachineBlockEntity> blockEntityType, ISolarPanelTier tier) {
-        super(properties, blockEntityType);
+    public SolarPanelBlock(RegiliteBlockEntity<? extends MachineBlockEntity> blockEntityType, Properties properties, ISolarPanelTier tier) {
+        super(blockEntityType, properties);
         registerDefaultState(getStateDefinition().any().setValue(NORTH, true).setValue(NORTH_WEST, true).setValue(NORTH_EAST, true).setValue(WEST, true).setValue(EAST, true).setValue(SOUTH_WEST, true).setValue(SOUTH, true).setValue(SOUTH_EAST, true));
         this.tier = tier;
     }

@@ -15,13 +15,10 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Optional;
 
 public class WiredChargerBlockEntity extends PoweredMachineBlockEntity {
 
@@ -72,8 +69,7 @@ public class WiredChargerBlockEntity extends PoweredMachineBlockEntity {
     }
 
     public boolean acceptItem(ItemStack item) {
-        Optional<IEnergyStorage> energyHandlerCap = item.getCapability(Capabilities.ENERGY).resolve();
-        return energyHandlerCap.isPresent();
+        return item.getCapability(Capabilities.EnergyStorage.ITEM) != null;
     }
 	
 	@Override
@@ -85,22 +81,21 @@ public class WiredChargerBlockEntity extends PoweredMachineBlockEntity {
 
     public void chargeItem() {
         ItemStack chargeable = ITEM_TO_CHARGE.getItemStack(this);
-        Optional<IEnergyStorage> energyHandlerCap = chargeable.getCapability(Capabilities.ENERGY).resolve();
+        IEnergyStorage itemEnergyHandler = chargeable.getCapability(Capabilities.EnergyStorage.ITEM);
 
-        if (energyHandlerCap.isPresent()) {
-            IEnergyStorage itemEnergyStorage = energyHandlerCap.get();
-            if (itemEnergyStorage.getEnergyStored() == itemEnergyStorage.getMaxEnergyStored()) {
+        if (itemEnergyHandler != null) {
+            if (itemEnergyHandler.getEnergyStored() == itemEnergyHandler.getMaxEnergyStored()) {
                 ITEM_CHARGED.setStackInSlot(this, chargeable);
                 ITEM_TO_CHARGE.setStackInSlot(this, ItemStack.EMPTY);
             } else {
                 //todo energy balancing
                 // The energyExtracted per tick should increase if the charged item has more energy and with the tier of the capacitor installed
-                int energyExtracted = itemEnergyStorage.getMaxEnergyStored() / ((int)getCapacitorData().getModifier(CapacitorModifier.ENERGY_USE)*333 -this.energyStorage.getMaxEnergyUse());
+                int energyExtracted = itemEnergyHandler.getMaxEnergyStored() / ((int)getCapacitorData().getModifier(CapacitorModifier.ENERGY_USE)*333 -this.energyStorage.getMaxEnergyUse());
 
                 if (this.energyStorage.getEnergyStored() >= energyExtracted) {
-                    itemEnergyStorage.receiveEnergy(energyExtracted, false);
+                    itemEnergyHandler.receiveEnergy(energyExtracted, false);
                     this.energyStorage.takeEnergy(energyExtracted);
-                    this.progress = (float)itemEnergyStorage.getEnergyStored()/itemEnergyStorage.getMaxEnergyStored();
+                    this.progress = (float)itemEnergyHandler.getEnergyStored() / itemEnergyHandler.getMaxEnergyStored();
                 }
             }
         }

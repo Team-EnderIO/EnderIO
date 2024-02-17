@@ -13,14 +13,12 @@ import com.enderio.base.data.recipe.RecipeDataUtil;
 import com.enderio.core.common.recipes.CountedIngredient;
 import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.enderio.machines.common.init.MachineRecipes;
+import com.enderio.machines.common.recipe.AlloySmeltingRecipe;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.mojang.serialization.JsonOps;
-import net.minecraft.Util;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -30,7 +28,6 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.common.crafting.CraftingHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
@@ -38,12 +35,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 
 public class AlloyRecipeProvider extends EnderRecipeProvider {
 
-    public AlloyRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
-        super(packOutput, lookupProvider);
+    public AlloyRecipeProvider(PackOutput packOutput) {
+        super(packOutput);
     }
 
     @Override
@@ -160,55 +156,7 @@ public class AlloyRecipeProvider extends EnderRecipeProvider {
     }
 
     protected void build(ResourceLocation id, List<CountedIngredient> inputs, ItemStack output, int energy, float experience, RecipeOutput recipeOutput) {
-        recipeOutput.accept(new FinishedAlloyingRecipe(id, inputs, output, energy, experience));
+        recipeOutput.accept(id, new AlloySmeltingRecipe(inputs, output, energy, experience), null);
     }
 
-    protected static class FinishedAlloyingRecipe extends EnderFinishedRecipe {
-        private final List<CountedIngredient> inputs;
-        private final ItemStack output;
-        private final int energy;
-        private final float experience;
-
-        public FinishedAlloyingRecipe(ResourceLocation id, List<CountedIngredient> inputs, ItemStack output, int energy, float experience) {
-            super(id);
-            this.inputs = inputs;
-            this.output = output;
-            this.energy = energy;
-            this.experience = experience;
-        }
-
-        @Override
-        public void serializeRecipeData(JsonObject json) {
-            JsonArray jsonInputs = new JsonArray(inputs.size());
-            inputs.forEach(ing -> jsonInputs.add(ing.toJson()));
-
-            json.add("inputs", jsonInputs);
-
-            JsonObject jsonobject = new JsonObject();
-            jsonobject.addProperty("id", BuiltInRegistries.ITEM.getKey(output.getItem()).toString());
-
-            // TODO: NEO-PORT: Is there a way we can do this without having a forced Count property.
-            //       Also Mojank what are you doing having this a capital
-            jsonobject.addProperty("Count", output.getCount());
-
-            json.add("result", jsonobject);
-
-            json.addProperty("energy", energy);
-            json.addProperty("experience", experience);
-
-            super.serializeRecipeData(json);
-        }
-
-        @Override
-        protected Set<String> getModDependencies() {
-            Set<String> mods = new HashSet<>(RecipeDataUtil.getCountedIngredientsModIds(inputs));
-            mods.add(BuiltInRegistries.ITEM.getKey(output.getItem()).getNamespace());
-            return mods;
-        }
-
-        @Override
-        public RecipeSerializer<?> type() {
-            return MachineRecipes.ALLOY_SMELTING.serializer().get();
-        }
-    }
 }

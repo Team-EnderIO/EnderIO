@@ -299,9 +299,4 @@ public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implemen
     public void setDisplayMode(Direction direction, DisplayMode mode) {
         displayModes.put(direction, mode);
     }
-
-    @Override
-    public AABB getRenderBoundingBox() {
-        return AABB.ofSize(new Vec3(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ()), 32, 32, 32);
-    }
 }

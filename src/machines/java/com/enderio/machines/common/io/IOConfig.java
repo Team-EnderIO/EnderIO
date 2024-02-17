@@ -6,10 +6,7 @@ import com.enderio.api.io.IOMode;
 import com.enderio.base.common.init.EIOCapabilities;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.util.LazyOptional;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
@@ -21,8 +18,6 @@ import java.util.Map;
 public class IOConfig implements IIOConfig {
 
     private final EnumMap<Direction, IOMode> config = new EnumMap<>(Direction.class);
-
-    private final EnumMap<Direction, LazyOptional<SideAccess>> sideAccessCache = new EnumMap<>(Direction.class);
 
     public IOConfig() {
         for (Direction value : Direction.values()) {
@@ -65,47 +60,6 @@ public class IOConfig implements IIOConfig {
         default -> side;
         };
     }
-
-    // region Capability Provider
-
-    @Override
-    public Capability<ISideConfig> getCapabilityType() {
-        return EIOCapabilities.SIDE_CONFIG;
-    }
-
-    /**
-     * Get side config as a capability.
-     */
-    public LazyOptional<ISideConfig> getCapability(@Nullable Direction side) {
-        if (side == null) {
-            return LazyOptional.empty();
-        }
-
-        return sideAccessCache.computeIfAbsent(side, dir -> LazyOptional.of(() -> new SideAccess(this, dir))).cast();
-    }
-
-    @Override
-    public void invalidateSide(@Nullable Direction side) {
-        if (side == null) {
-            return;
-        }
-
-        if (sideAccessCache.containsKey(side)) {
-            sideAccessCache.get(side).invalidate();
-            sideAccessCache.remove(side);
-        }
-    }
-
-    /**
-     * Invalidate any side capabilities.
-     */
-    public void invalidateCaps() {
-        for (LazyOptional<SideAccess> access : sideAccessCache.values()) {
-            access.invalidate();
-        }
-    }
-
-    // endregion
 
     // Override in a BE
     protected void onChanged(Direction side, IOMode oldMode, IOMode newMode) {
@@ -174,21 +128,4 @@ public class IOConfig implements IIOConfig {
 
     // endregion
 
-    // For providing sided access via a capability.
-    private record SideAccess(IOConfig config, Direction side) implements ISideConfig {
-        @Override
-        public IOMode getMode() {
-            return config.getMode(side);
-        }
-
-        @Override
-        public void setMode(IOMode mode) {
-            config.setMode(side, mode);
-        }
-
-        @Override
-        public void cycleMode() {
-            config.cycleMode(side);
-        }
-    }
 }

@@ -7,6 +7,7 @@ import com.enderio.base.data.recipe.RecipeDataUtil;
 import com.enderio.core.data.recipes.EnderRecipeProvider;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.init.MachineRecipes;
+import com.enderio.machines.common.recipe.SoulBindingRecipe;
 import com.enderio.machines.common.souldata.EngineSoul;
 import com.google.gson.JsonObject;
 import net.minecraft.core.HolderLookup;
@@ -25,14 +26,15 @@ import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class SoulBindingRecipeProvider extends EnderRecipeProvider {
 
-    public SoulBindingRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
-        super(packOutput, lookupProvider);
+    public SoulBindingRecipeProvider(PackOutput packOutput) {
+        super(packOutput);
     }
 
     @Override
@@ -50,91 +52,28 @@ public class SoulBindingRecipeProvider extends EnderRecipeProvider {
     }
 
     protected void build(ItemLike output, Ingredient input, int energy, int exp, EntityType<? extends Entity> entityType, RecipeOutput recipeOutput) {
-        recipeOutput.accept(new FinishedSoulBindingRecipe(EnderIO.loc("soulbinding/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath()), output, input, energy, exp, BuiltInRegistries.ENTITY_TYPE.getKey(entityType), null, null));
+        build(output, input, energy, exp, Optional.of(BuiltInRegistries.ENTITY_TYPE.getKey(entityType)),
+            Optional.empty(), Optional.empty(), recipeOutput);
     }
 
     protected void build(ItemLike output, Ingredient input, int energy, int exp, MobCategory mobCategory, RecipeOutput recipeOutput) {
-        recipeOutput.accept(new FinishedSoulBindingRecipe(EnderIO.loc("soulbinding/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath()), output, input, energy, exp, null, mobCategory, null));
+        build(output, input, energy, exp, Optional.empty(), Optional.of(mobCategory), Optional.empty(), recipeOutput);
     }
 
     protected void build(ItemLike output, Ingredient input, int energy, int exp, String souldata, RecipeOutput recipeOutput) {
-        recipeOutput.accept(new FinishedSoulBindingRecipe(EnderIO.loc("soulbinding/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath()), output, input, energy, exp, null, null, souldata));
+        build(output, input, energy, exp, Optional.empty(), Optional.empty(), Optional.of(souldata), recipeOutput);
     }
 
     protected void build(ItemLike output, Ingredient input, int energy, int exp, RecipeOutput recipeOutput) {
-        recipeOutput.accept(new FinishedSoulBindingRecipe(EnderIO.loc("soulbinding/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath()), output, input, energy, exp, null, null, null));
+        build(output, input, energy, exp, Optional.empty(), Optional.empty(), Optional.empty(), recipeOutput);
     }
 
-    protected static class FinishedSoulBindingRecipe extends EnderFinishedRecipe {
-
-        private final Item output;
-        private final Ingredient input;
-        private final int energy;
-        private final int exp;
-        @Nullable
-        private final ResourceLocation entityType;
-        @Nullable
-        private final MobCategory mobCategory;
-        @Nullable
-        private final String souldata;
-
-        public FinishedSoulBindingRecipe(ResourceLocation id, ItemLike output, Ingredient input, int energy, int exp, @Nullable ResourceLocation entityType, @Nullable MobCategory mobCategory, @Nullable String souldata) {
-            super(id);
-            this.output = output.asItem();
-            this.input = input;
-            this.energy = energy;
-            this.exp = exp;
-
-            if (entityType != null && mobCategory != null) {
-                throw new IllegalStateException("entityType and mobCategory are mutually exclusive!");
-            }
-
-            if (souldata != null && mobCategory != null) {
-                throw new IllegalStateException("souldata and mobCategory are mutually exclusive!");
-            }
-
-            if (entityType != null && souldata != null) {
-                throw new IllegalStateException("entityType and souldata are mutually exclusive!");
-            }
-
-            this.entityType = entityType;
-            this.mobCategory = mobCategory;
-            this.souldata = souldata;
-        }
-
-        @Override
-        public void serializeRecipeData(JsonObject json) {
-            json.addProperty("output", BuiltInRegistries.ITEM.getKey(output).toString());
-            json.add("input", input.toJson(false));
-
-            json.addProperty("energy", energy);
-            json.addProperty("exp", exp);
-
-            if (entityType != null) {
-                json.addProperty("entity_type", entityType.toString());
-            }
-
-            if (mobCategory != null) {
-                json.addProperty("mob_category", mobCategory.getName());
-            }
-
-            if (souldata != null) {
-                json.addProperty("souldata", souldata);
-            }
-
-            super.serializeRecipeData(json);
-        }
-
-        @Override
-        protected Set<String> getModDependencies() {
-            Set<String> mods = new HashSet<>(RecipeDataUtil.getIngredientModIds(input));
-            mods.add(BuiltInRegistries.ITEM.getKey(output).getNamespace());
-            return mods;
-        }
-
-        @Override
-        public RecipeSerializer<?> type() {
-            return MachineRecipes.SOUL_BINDING.serializer().get();
-        }
+    protected void build(ItemLike output, Ingredient input, int energy, int exp, Optional<ResourceLocation> entityType, Optional<MobCategory> mobCategory,
+        Optional<String> souldata, RecipeOutput recipeOutput) {
+        recipeOutput.accept(
+            EnderIO.loc("soulbinding/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath()),
+            new SoulBindingRecipe(output.asItem(), input, energy, exp, entityType, mobCategory, souldata),
+            null);
     }
+
 }

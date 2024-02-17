@@ -16,8 +16,8 @@ public class ProgressMachineBlock extends MachineBlock {
 
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
-    public ProgressMachineBlock(Properties properties, RegiliteBlockEntity<? extends MachineBlockEntity> blockEntityType) {
-        super(properties, blockEntityType);
+    public ProgressMachineBlock(RegiliteBlockEntity<? extends MachineBlockEntity> blockEntityType, Properties properties) {
+        super(blockEntityType, properties);
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(POWERED, false));
     }
 

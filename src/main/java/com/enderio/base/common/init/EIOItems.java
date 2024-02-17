@@ -410,7 +410,6 @@ public class EIOItems {
     }
 
     private static <T extends PoweredToggledItem> void poweredToggledItemCapabilities(RegiliteItem<T> item) {
-        item.addCapability(EIOCapabilities.Toggled.ITEM, PoweredToggledItem.TOGGLED_PROVIDER);
         item.addCapability(Capabilities.EnergyStorage.ITEM, PoweredToggledItem.ENERGY_STORAGE_PROVIDER);
     }
 

@@ -127,7 +127,7 @@ public class MachineBlocks {
             .setTranslation("Soul Binder");
 
     public static final RegiliteBlock<ProgressMachineBlock> POWERED_SPAWNER = BLOCK_REGISTRY
-        .registerBlock("powered_spawner", properties -> new ProgressMachineBlock(properties, MachineBlockEntities.POWERED_SPAWNER),
+        .registerBlock("powered_spawner", properties -> new ProgressMachineBlock(MachineBlockEntities.POWERED_SPAWNER, properties),
             BlockBehaviour.Properties.of().strength(2.5f, 8))
         .setLootTable((l,t) -> MachinesLootTable.copyNBTSingleCap(l, t, MachineNBTKeys.ENTITY_STORAGE))
         .setBlockStateProvider(MachineModelUtil::progressMachineBlock)
@@ -180,7 +180,7 @@ public class MachineBlocks {
         progressMachine("crafter", () -> MachineBlockEntities.CRAFTER);
 
     public static final RegiliteBlock<ProgressMachineBlock> SOUL_ENGINE = BLOCK_REGISTRY
-        .registerBlock("soul_engine", p -> new ProgressMachineBlock(p, MachineBlockEntities.SOUL_ENGINE),
+        .registerBlock("soul_engine", p -> new ProgressMachineBlock(MachineBlockEntities.SOUL_ENGINE, p),
             BlockBehaviour.Properties.of().strength(2.5f, 8).noOcclusion())
         .setLootTable(MachinesLootTable::copyNBT)
         .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
@@ -223,13 +223,14 @@ public class MachineBlocks {
     private static RegiliteBlock<ProgressMachineBlock> progressMachine(String name,
         Supplier<RegiliteBlockEntity<? extends MachineBlockEntity>> RegiliteBlockEntity) {
         return baseMachine(
-            BLOCK_REGISTRY.registerBlock(name, props -> new ProgressMachineBlock(props, RegiliteBlockEntity.get()), BlockBehaviour.Properties.of().strength(2.5f, 8)),
+            BLOCK_REGISTRY.registerBlock(name, props -> new ProgressMachineBlock(RegiliteBlockEntity.get(), props),
+                BlockBehaviour.Properties.of().strength(2.5f, 8)),
             MachineModelUtil::progressMachineBlock);
     }
 
     private static RegiliteBlock<SolarPanelBlock> solarPanel(String name, Supplier<RegiliteBlockEntity<? extends SolarPanelBlockEntity>> RegiliteBlockEntity, SolarPanelTier tier) {
         return BLOCK_REGISTRY
-            .registerBlock(name, props -> new SolarPanelBlock(props, RegiliteBlockEntity.get(), tier),
+            .registerBlock(name, props -> new SolarPanelBlock(RegiliteBlockEntity.get(), props, tier),
                 BlockBehaviour.Properties.of().strength(2.5f, 8))
             .setBlockStateProvider((prov, ctx) -> MachineModelUtil.solarPanel(prov, ctx, tier))
             .addBlockTags(BlockTags.MINEABLE_WITH_PICKAXE)

@@ -12,7 +12,6 @@ import com.google.gson.JsonObject;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -80,7 +79,7 @@ import static net.minecraft.world.item.Items.FLOWER_POT;
 import static net.minecraft.world.item.Items.GLASS;
 import static net.minecraft.world.item.Items.GLOWSTONE;
 import static net.minecraft.world.item.Items.GLOWSTONE_DUST;
-import static net.minecraft.world.item.Items.GRASS;
+import static net.minecraft.world.item.Items.GRASS_BLOCK;
 import static net.minecraft.world.item.Items.GRAVEL;
 import static net.minecraft.world.item.Items.LAPIS_LAZULI;
 import static net.minecraft.world.item.Items.LARGE_FERN;
@@ -123,8 +122,8 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
 
     private static final int BASE_ENERGY_PER_OPERATION = 2400;
 
-    public SagMillRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
-        super(packOutput, lookupProvider);
+    public SagMillRecipeProvider(PackOutput packOutput) {
+        super(packOutput);
     }
 
     @Override
@@ -291,7 +290,7 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
         		output(PLANT_MATTER_BROWN.get(), 0.3f)),
         		BASE_ENERGY_PER_OPERATION, recipeOutput);
 
-        build("grass", Ingredient.of(GRASS), List.of(
+        build("grass", Ingredient.of(TALL_GRASS), List.of(
         		output(PLANT_MATTER_GREEN.get(), 0.6f),
         		output(PLANT_MATTER_GREEN.get(), 0.3f),
         		output(PLANT_MATTER_GREEN.get(), 0.1f),
@@ -431,7 +430,7 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
     }
 
     protected void build(ResourceLocation id, Ingredient input, List<SagMillingRecipe.OutputItem> outputs, int energy, BonusType bonusType, RecipeOutput recipeOutput) {
-        recipeOutput.accept(new FinishedSagMillRecipe(id, input, outputs, energy, bonusType));
+        recipeOutput.accept(id, new SagMillingRecipe(input, outputs, energy, bonusType), null);
     }
 
     protected SagMillingRecipe.OutputItem output(Item item) {
@@ -474,79 +473,4 @@ public class SagMillRecipeProvider extends EnderRecipeProvider {
         return SagMillingRecipe.OutputItem.of(tag, count, chance, optional);
     }
 
-    protected static class FinishedSagMillRecipe extends EnderFinishedRecipe {
-
-        private final Ingredient input;
-        private final List<SagMillingRecipe.OutputItem> outputs;
-        private final int energy;
-        private final BonusType bonusType;
-
-        public FinishedSagMillRecipe(ResourceLocation id, Ingredient input, List<SagMillingRecipe.OutputItem> outputs, int energy, BonusType bonusType) {
-            super(id);
-            this.input = input;
-            this.outputs = outputs;
-            this.energy = energy;
-            this.bonusType = bonusType;
-
-            // Make required tags a recipe condition.
-            // TODO: I don't think this is the best way to do this, but it should prevent the issue we were having with tags not being ready at recipe time?
-            for (SagMillingRecipe.OutputItem output : this.outputs) {
-                if (output.isTag() && !output.isOptional()) {
-                    addCondition(new NotCondition(new TagEmptyCondition(output.getTag().location())));
-                }
-            }
-        }
-
-        @Override
-        public void serializeRecipeData(JsonObject json) {
-            json.add("input", input.toJson(false));
-            json.addProperty("energy", energy);
-            if (bonusType != BonusType.MULTIPLY_OUTPUT) {
-                json.addProperty("bonus", bonusType.toString().toLowerCase(Locale.ROOT));
-            }
-
-            JsonArray outputJson = new JsonArray();
-            for (SagMillingRecipe.OutputItem item : outputs) {
-                JsonObject obj = new JsonObject();
-
-                if (item.isTag()) {
-                    obj.addProperty("tag", item.getTag().location().toString());
-                } else {
-                    obj.addProperty("item", BuiltInRegistries.ITEM.getKey(item.getItem()).toString());
-                }
-
-                if (item.getCount() != 1) {
-                    obj.addProperty("count", item.getCount());
-                }
-
-                if (item.getChance() < 1.0f) {
-                    obj.addProperty("chance", item.getChance());
-                }
-
-                if (item.isOptional()) {
-                    obj.addProperty("optional", item.isOptional());
-                }
-
-                outputJson.add(obj);
-            }
-            json.add("outputs", outputJson);
-
-            super.serializeRecipeData(json);
-        }
-
-        @Override
-        protected Set<String> getModDependencies() {
-            Set<String> mods = new HashSet<>(RecipeDataUtil.getIngredientModIds(input));
-            outputs.stream().forEach(outputItem -> {
-                var itemId = BuiltInRegistries.ITEM.getKey(outputItem.getItem());
-                mods.add(itemId.getNamespace());
-            });
-            return mods;
-        }
-
-        @Override
-        public RecipeSerializer<?> type() {
-            return MachineRecipes.SAG_MILLING.serializer().get();
-        }
-    }
 }

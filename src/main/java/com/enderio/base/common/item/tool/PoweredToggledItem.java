@@ -1,8 +1,7 @@
 package com.enderio.base.common.item.tool;
 
-import com.enderio.api.capability.IToggled;
 import com.enderio.base.common.capability.EnergyStorageItemStack;
-import com.enderio.base.common.capability.Toggled;
+import com.enderio.base.common.init.EIOAttachments;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.item.EnergyBarDecorator;
 import com.enderio.core.client.item.IAdvancedTooltipProvider;
@@ -26,10 +25,7 @@ import java.util.List;
 
 public abstract class PoweredToggledItem extends Item implements IAdvancedTooltipProvider, ITabVariants {
 
-    // TODO: Attachment instead?
-    public static final ICapabilityProvider<ItemStack, Void, IToggled> TOGGLED_PROVIDER =
-        (stack, v) -> new Toggled(stack);
-
+    // TODO: Attachment for this; this should have a custom energy storage that somehow determines the capacity.
     public static final ICapabilityProvider<ItemStack, Void, IEnergyStorage> ENERGY_STORAGE_PROVIDER =
         (stack, v) -> new EnergyStorageItemStack(stack, ((PoweredToggledItem)stack.getItem()).getMaxEnergy());
 
@@ -44,12 +40,16 @@ public abstract class PoweredToggledItem extends Item implements IAdvancedToolti
 
     protected abstract int getMaxEnergy();
 
+    protected boolean isEnabled(ItemStack stack) {
+        return stack.getData(EIOAttachments.TOGGLED);
+    }
+
     protected void enable(ItemStack stack) {
-        Toggled.setEnabled(stack, true);
+        stack.setData(EIOAttachments.TOGGLED, true);
     }
 
     protected void disable(ItemStack stack) {
-        Toggled.setEnabled(stack, false);
+        stack.setData(EIOAttachments.TOGGLED, false);
     }
 
     protected boolean hasCharge(ItemStack pStack) {
@@ -66,7 +66,7 @@ public abstract class PoweredToggledItem extends Item implements IAdvancedToolti
 
     @Override
     public boolean isFoil(ItemStack pStack) {
-        return Toggled.isEnabled(pStack);
+        return isEnabled(pStack);
     }
 
     public static ItemStack getCharged(PoweredToggledItem item) {
@@ -85,7 +85,7 @@ public abstract class PoweredToggledItem extends Item implements IAdvancedToolti
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         if (pPlayer.isCrouching()) {
             ItemStack stack = pPlayer.getItemInHand(pUsedHand);
-            if (Toggled.isEnabled(stack)) {
+            if (isEnabled(stack)) {
                 disable(stack);
             } else if (hasCharge(stack)) {
                 enable(stack);
@@ -97,7 +97,7 @@ public abstract class PoweredToggledItem extends Item implements IAdvancedToolti
     @Override
     public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
         if (pEntity instanceof Player player) {
-            if (Toggled.isEnabled(pStack)) {
+            if (isEnabled(pStack)) {
                 if (hasCharge(pStack)) {
                     consumeCharge(pStack);
                     onTickWhenActive(player, pStack, pLevel, pEntity, pSlotId, pIsSelected);
@@ -113,7 +113,7 @@ public abstract class PoweredToggledItem extends Item implements IAdvancedToolti
         if (slotChanged) {
             return super.shouldCauseReequipAnimation(oldStack, newStack, true);
         }
-        return oldStack.getItem() != newStack.getItem() || Toggled.isEnabled(oldStack) != Toggled.isEnabled(newStack);
+        return oldStack.getItem() != newStack.getItem() || isEnabled(oldStack) != isEnabled(newStack);
     }
 
     @Override

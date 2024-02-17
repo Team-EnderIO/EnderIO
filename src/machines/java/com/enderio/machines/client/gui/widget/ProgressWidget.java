@@ -107,11 +107,6 @@ public abstract class ProgressWidget extends AbstractWidget {
         }
     }
 
-    @Override
-    protected ClientTooltipPositioner createTooltipPositioner() {
-        return DefaultTooltipPositioner.INSTANCE;
-    }
-
     protected void render(GuiGraphics guiGraphics, int x, int y, int u, int v, int w, int h) {
         guiGraphics.blit(screen.getBackgroundImage(), x, y, u, v, w, h);
     }

@@ -82,20 +82,20 @@ public class EIOMachines {
     public static void gatherData(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
         PackOutput packOutput = generator.getPackOutput();
-        CompletableFuture<HolderLookup.Provider> completablefuture = CompletableFuture.supplyAsync(VanillaRegistries::createLookup, Util.backgroundExecutor());
+        CompletableFuture<HolderLookup.Provider> lookupProvider = CompletableFuture.supplyAsync(VanillaRegistries::createLookup, Util.backgroundExecutor());
 
         EIODataProvider provider = new EIODataProvider("machines");
 
-        provider.addSubProvider(event.includeServer(), new MachineRecipeProvider(packOutput, completablefuture));
-        provider.addSubProvider(event.includeServer(), new AlloyRecipeProvider(packOutput, completablefuture));
-        provider.addSubProvider(event.includeServer(), new EnchanterRecipeProvider(packOutput, completablefuture));
-        provider.addSubProvider(event.includeServer(), new SagMillRecipeProvider(packOutput, completablefuture));
-        provider.addSubProvider(event.includeServer(), new SlicingRecipeProvider(packOutput, completablefuture));
-        provider.addSubProvider(event.includeServer(), new SoulBindingRecipeProvider(packOutput, completablefuture));
-        provider.addSubProvider(event.includeServer(), new TankRecipeProvider(packOutput, completablefuture));
-        provider.addSubProvider(event.includeServer(), new PaintingRecipeProvider(packOutput, completablefuture));
+        provider.addSubProvider(event.includeServer(), new MachineRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new AlloyRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new EnchanterRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new SagMillRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new SlicingRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new SoulBindingRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new TankRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new PaintingRecipeProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new SoulDataProvider(packOutput));
-        provider.addSubProvider(event.includeServer(), new MachineEntityTypeTagsProvider(packOutput, completablefuture, event.getExistingFileHelper()));
+        provider.addSubProvider(event.includeServer(), new MachineEntityTypeTagsProvider(packOutput, lookupProvider, event.getExistingFileHelper()));
 
         generator.addProvider(true, provider);
         provider.addSubProvider(event.includeServer(), new AdvancementProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper(),

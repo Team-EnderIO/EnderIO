@@ -186,10 +186,8 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
                 // Mark entity as changed.
                 setChanged();
 
-                // Invalidate capabilities for this side as the side has been disabled.
-                if (newMode == IOMode.DISABLED) {
-                    invalidateSide(side);
-                }
+                // Invalidate capabilities
+                level.invalidateCapabilities(getBlockPos());
 
                 // Notify neighbors of update
                 level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
@@ -253,7 +251,6 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         }
 
         this.level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
-        this.level.invalidateCapabilities(getBlockPos());
     }
 
     // TODO: Not a big fan of how this works now.

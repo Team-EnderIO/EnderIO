@@ -22,11 +22,11 @@ package com.enderio.machines.common.souldata;
 
 import com.enderio.EnderIO;
 import com.enderio.core.common.network.CoreNetwork;
-import com.enderio.core.common.network.Packet;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -105,20 +105,21 @@ public class SoulDataReloadListener<T extends ISoulData> extends SimpleJsonResou
      * @param packetFactory  A packet constructor or factory method that converts the given map to a packet object to send on the given channel
      * @return this manager object
      */
-    public <P extends Packet> SoulDataReloadListener<T> subscribeAsSyncable(final Function<Map<ResourceLocation, T>, P> packetFactory) {
+    public <P extends CustomPacketPayload> SoulDataReloadListener<T> subscribeAsSyncable(final Function<Map<ResourceLocation, T>, P> packetFactory) {
         NeoForge.EVENT_BUS.addListener(this.getDatapackSyncListener(packetFactory));
         return this;
     }
 
     /** Generate an event listener function for the on-datapack-sync event **/
-    private <P extends Packet> Consumer<OnDatapackSyncEvent> getDatapackSyncListener(final Function<Map<ResourceLocation, T>, P> packetFactory) {
+    private <P extends CustomPacketPayload> Consumer<OnDatapackSyncEvent> getDatapackSyncListener(final Function<Map<ResourceLocation, T>, P> packetFactory) {
         return event -> {
             ServerPlayer player = event.getPlayer();
             P packet = packetFactory.apply(this.map);
             PacketDistributor.PacketTarget target = player == null
                 ? PacketDistributor.ALL.noArg()
-                : PacketDistributor.PLAYER.with(() -> player);
-            CoreNetwork.send(target, packet);
+                : PacketDistributor.PLAYER.with(player);
+
+            target.send(packet);
         };
     }
 

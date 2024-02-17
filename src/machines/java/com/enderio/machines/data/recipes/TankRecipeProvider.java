@@ -3,31 +3,21 @@ package com.enderio.machines.data.recipes;
 import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.init.EIOItems;
-import com.enderio.base.data.recipe.RecipeDataUtil;
 import com.enderio.core.data.recipes.EnderRecipeProvider;
-import com.enderio.machines.common.init.MachineRecipes;
-import com.google.gson.JsonObject;
-import net.minecraft.core.HolderLookup;
+import com.enderio.machines.common.recipe.TankRecipe;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-
 public class TankRecipeProvider extends EnderRecipeProvider {
 
-    public TankRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
-        super(packOutput, lookupProvider);
+    public TankRecipeProvider(PackOutput packOutput) {
+        super(packOutput);
     }
 
     @Override
@@ -60,54 +50,17 @@ public class TankRecipeProvider extends EnderRecipeProvider {
     }
 
     protected void buildEmptying(Ingredient input, ItemLike output, FluidStack fluid, RecipeOutput recipeOutput) {
-        recipeOutput.accept(new FinishedTankRecipe(EnderIO.loc("tank_empty/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath()), input, output.asItem(), fluid, true));
+        recipeOutput.accept(
+            EnderIO.loc("tank_empty/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath()),
+            new TankRecipe(input, output.asItem(), fluid, true),
+            null);
     }
 
     protected void buildFilling(Ingredient input, ItemLike output, FluidStack fluid, RecipeOutput recipeOutput) {
-        recipeOutput.accept(new FinishedTankRecipe(EnderIO.loc("tank_fill/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath()), input, output.asItem(), fluid, false));
+        recipeOutput.accept(
+            EnderIO.loc("tank_fill/" + BuiltInRegistries.ITEM.getKey(output.asItem()).getPath()),
+            new TankRecipe(input, output.asItem(), fluid, false),
+            null);
     }
 
-    protected static class FinishedTankRecipe extends EnderFinishedRecipe {
-
-        private final Ingredient input;
-        private final Item output;
-        private final FluidStack fluid;
-        private final boolean isEmptying;
-
-        protected FinishedTankRecipe(ResourceLocation id, Ingredient input, Item output, FluidStack fluid, boolean isEmptying) {
-            super(id);
-            this.input = input;
-            this.output = output;
-            this.fluid = fluid;
-            this.isEmptying = isEmptying;
-        }
-
-        @Override
-        public void serializeRecipeData(JsonObject json) {
-            json.add("input", input.toJson(false));
-            json.addProperty("output", BuiltInRegistries.ITEM.getKey(output).toString());
-
-            JsonObject fluidJson = new JsonObject();
-            fluidJson.addProperty("FluidName", BuiltInRegistries.FLUID.getKey(fluid.getFluid()).toString());
-            fluidJson.addProperty("Amount", fluid.getAmount());
-
-            json.add("fluid", fluidJson);
-            json.addProperty("is_emptying", isEmptying);
-
-            super.serializeRecipeData(json);
-        }
-
-        @Override
-        protected Set<String> getModDependencies() {
-            Set<String> mods = new HashSet<>(RecipeDataUtil.getIngredientModIds(input));
-            mods.add(BuiltInRegistries.ITEM.getKey(output).getNamespace());
-            mods.add(BuiltInRegistries.FLUID.getKey(fluid.getFluid()).getNamespace());
-            return mods;
-        }
-
-        @Override
-        public RecipeSerializer<?> type() {
-            return MachineRecipes.TANK.serializer().get();
-        }
-    }
 }

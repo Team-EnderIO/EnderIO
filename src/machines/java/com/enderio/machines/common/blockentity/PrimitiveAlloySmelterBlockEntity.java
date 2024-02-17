@@ -19,12 +19,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.CommonHooks;
-import net.neoforged.neoforge.common.util.LazyOptional;
-import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.fml.LogicalSide;
+import net.neoforged.neoforge.common.CommonHooks;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
@@ -145,6 +143,7 @@ public class PrimitiveAlloySmelterBlockEntity extends AlloySmelterBlockEntity {
                 return 0;
             }
 
+            // TODO: NEO-PORT, keeping as reminder. Do not give capabilities when registering this block.
             // Stop things from connecting to the block.
             @Override
             public LazyOptional<IEnergyStorage> getCapability(@Nullable Direction side) {

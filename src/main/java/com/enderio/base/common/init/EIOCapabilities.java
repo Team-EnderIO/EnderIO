@@ -3,20 +3,12 @@ package com.enderio.base.common.init;
 import com.enderio.EnderIO;
 import com.enderio.api.capability.IDarkSteelUpgradable;
 import com.enderio.api.capability.ISideConfig;
-import com.enderio.api.capability.IToggled;
 import com.enderio.api.capacitor.ICapacitorData;
 import net.minecraft.core.Direction;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.ItemCapability;
 
 public class EIOCapabilities {
-
-    public static final class Toggled {
-        public static final ItemCapability<IToggled, Void> ITEM =
-            ItemCapability.createVoid(
-                EnderIO.loc("toggled"),
-                IToggled.class);
-    }
 
     public static final class CapacitorData {
         public static final ItemCapability<ICapacitorData, Void> ITEM =

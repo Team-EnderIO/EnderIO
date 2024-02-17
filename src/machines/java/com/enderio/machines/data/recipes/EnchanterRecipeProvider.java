@@ -4,31 +4,22 @@ import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOEnchantments;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
-import com.enderio.base.data.recipe.RecipeDataUtil;
 import com.enderio.core.common.recipes.CountedIngredient;
 import com.enderio.core.data.recipes.EnderRecipeProvider;
-import com.enderio.machines.common.init.MachineRecipes;
-import com.google.gson.JsonObject;
-import net.minecraft.core.HolderLookup;
+import com.enderio.machines.common.recipe.EnchanterRecipe;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.neoforged.neoforge.common.Tags;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-
 public class EnchanterRecipeProvider extends EnderRecipeProvider {
 
-    public EnchanterRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
-        super(packOutput, lookupProvider);
+    public EnchanterRecipeProvider(PackOutput packOutput) {
+        super(packOutput);
     }
 
     @Override
@@ -82,41 +73,10 @@ public class EnchanterRecipeProvider extends EnderRecipeProvider {
     }
 
     protected void build(Enchantment enchantment, CountedIngredient input, int levelModifier, RecipeOutput recipeOutput) {
-        recipeOutput.accept(new FinishedEnchantingRecipe(EnderIO.loc("enchanting/" + BuiltInRegistries.ENCHANTMENT.getKey(enchantment).getPath()), enchantment, input, levelModifier));
+        recipeOutput.accept(
+            EnderIO.loc("enchanting/" + BuiltInRegistries.ENCHANTMENT.getKey(enchantment).getPath()),
+            new EnchanterRecipe(input, enchantment, levelModifier),
+            null);
     }
 
-    protected static class FinishedEnchantingRecipe extends EnderFinishedRecipe {
-
-        private final Enchantment enchantment;
-        private final CountedIngredient input;
-        private final int costMultiplier;
-
-        public FinishedEnchantingRecipe(ResourceLocation id, Enchantment enchantment, CountedIngredient input, int costMultiplier) {
-            super(id);
-            this.enchantment = enchantment;
-            this.input = input;
-            this.costMultiplier = costMultiplier;
-        }
-
-        @Override
-        protected Set<String> getModDependencies() {
-            Set<String> mods = new HashSet<>(RecipeDataUtil.getCountedIngredientModIds(input));
-            mods.add(BuiltInRegistries.ENCHANTMENT.getKey(enchantment).getNamespace());
-            return mods;
-        }
-
-        @Override
-        public void serializeRecipeData(JsonObject json) {
-            json.addProperty("enchantment", BuiltInRegistries.ENCHANTMENT.getKey(enchantment).toString());
-            json.add("input", input.toJson());
-            json.addProperty("cost_multiplier", costMultiplier);
-            super.serializeRecipeData(json);
-        }
-
-        @Override
-        public RecipeSerializer<?> type() {
-            return MachineRecipes.ENCHANTING.serializer().get();
-        }
-
-    }
 }

@@ -1,6 +1,5 @@
 package com.enderio.machines.common.blockentity;
 
-import com.enderio.base.common.init.EIOBlockEntities;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.network.slot.FluidStackNetworkDataSlot;
@@ -32,7 +31,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.neoforged.neoforge.common.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
@@ -111,9 +110,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
     public boolean acceptItemFill(ItemStack item) {
         // bucket types
-        Optional<IFluidHandlerItem> fluidHandlerCap = item.getCapability(Capabilities.FLUID_HANDLER_ITEM).resolve();
-
-        if (fluidHandlerCap.isPresent()) {
+        IFluidHandlerItem fluidHandlerCap = item.getCapability(Capabilities.FluidHandler.ITEM);
+        if (fluidHandlerCap != null) {
             return true;
         }
 
@@ -121,7 +119,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         if (level != null) {
            List<RecipeHolder<TankRecipe>> allRecipes = level.getRecipeManager().getAllRecipesFor(MachineRecipes.TANK.type().get());
            if (allRecipes.stream().anyMatch((recipe) -> recipe.value().isEmptying() && recipe.value().getInput().test(item))) {
-            return true;
+               return true;
            }
         }
 
@@ -130,9 +128,8 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
     public boolean acceptItemDrain(ItemStack item) {
         // bucket types
-        Optional<IFluidHandlerItem> fluidHandlerCap = item.getCapability(Capabilities.FLUID_HANDLER_ITEM).resolve();
-
-        if (fluidHandlerCap.isPresent()) {
+        IFluidHandlerItem fluidHandlerCap = item.getCapability(Capabilities.FluidHandler.ITEM);
+        if (fluidHandlerCap != null) {
             return true;
         }
 
@@ -219,13 +216,11 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
                     }
                 }
             } else {
-                Optional<IFluidHandlerItem> fluidHandlerCap = inputItem.getCapability(Capabilities.FLUID_HANDLER_ITEM).resolve();
-                if (fluidHandlerCap.isPresent() && outputItem.isEmpty()) {
-                    IFluidHandlerItem itemFluid = fluidHandlerCap.get();
-
-                    int filled = moveFluids(itemFluid, getFluidHandler(), TANK.getCapacity(this));
+                IFluidHandlerItem fluidHandler = inputItem.getCapability(Capabilities.FluidHandler.ITEM);
+                if (fluidHandler != null && outputItem.isEmpty()) {
+                    int filled = moveFluids(fluidHandler, getFluidHandlerNN(), TANK.getCapacity(this));
                     if (filled > 0) {
-                        FLUID_FILL_OUTPUT.setStackInSlot(this, itemFluid.getContainer());
+                        FLUID_FILL_OUTPUT.setStackInSlot(this, fluidHandler.getContainer());
                         FLUID_FILL_INPUT.setStackInSlot(this, ItemStack.EMPTY);
                     }
                 }
@@ -263,12 +258,11 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
                     }
                 }
             } else {
-                Optional<IFluidHandlerItem> fluidHandlerCap = inputItem.getCapability(Capabilities.FLUID_HANDLER_ITEM).resolve();
-                if (fluidHandlerCap.isPresent() && outputItem.isEmpty()) {
-                    IFluidHandlerItem itemFluid = fluidHandlerCap.get();
-                    int filled = moveFluids(getFluidHandler(), itemFluid, TANK.getFluidAmount(this));
+                IFluidHandlerItem fluidHandler = inputItem.getCapability(Capabilities.FluidHandler.ITEM);
+                if (fluidHandler != null && outputItem.isEmpty()) {
+                    int filled = moveFluids(getFluidHandlerNN(), fluidHandler, TANK.getFluidAmount(this));
                     if (filled > 0) {
-                        FLUID_DRAIN_OUTPUT.setStackInSlot(this, itemFluid.getContainer());
+                        FLUID_DRAIN_OUTPUT.setStackInSlot(this, fluidHandler.getContainer());
                         FLUID_DRAIN_INPUT.setStackInSlot(this, ItemStack.EMPTY);
                     }
                 }
