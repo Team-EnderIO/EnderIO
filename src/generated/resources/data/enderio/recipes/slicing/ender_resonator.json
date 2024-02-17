@@ -1,0 +1,25 @@
+{
+  "type": "enderio:slicing",
+  "energy": 20000,
+  "inputs": [
+    {
+      "tag": "neoforge:ingots/soularium"
+    },
+    {
+      "item": "enderio:enderman_head"
+    },
+    {
+      "tag": "neoforge:ingots/soularium"
+    },
+    {
+      "tag": "neoforge:silicon"
+    },
+    {
+      "item": "enderio:vibrant_alloy_ingot"
+    },
+    {
+      "tag": "neoforge:silicon"
+    }
+  ],
+  "output": "enderio:ender_resonator"
+}

@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "minecraft:iron_bars"
+    },
+    "C": {
+      "item": "enderio:ensouled_chassis"
+    },
+    "G": {
+      "tag": "neoforge:gears/energized"
+    },
+    "H": {
+      "tag": "forge:heads"
+    },
+    "I": {
+      "tag": "neoforge:ingots/soularium"
+    }
+  },
+  "pattern": [
+    "IHI",
+    "ICI",
+    "GBG"
+  ],
+  "result": {
+    "item": "enderio:slice_and_splice"
+  }
+}

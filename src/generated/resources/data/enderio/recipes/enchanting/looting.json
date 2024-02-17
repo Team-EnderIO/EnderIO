@@ -1,0 +1,11 @@
+{
+  "type": "enderio:enchanting",
+  "cost_multiplier": 1,
+  "enchantment": "minecraft:looting",
+  "input": {
+    "Count": 1,
+    "Ingredient": {
+      "item": "minecraft:skeleton_skull"
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "enderio:void_chassis"
+    },
+    "G": {
+      "tag": "neoforge:gears/iron"
+    },
+    "H": {
+      "item": "minecraft:hopper"
+    },
+    "I": {
+      "tag": "neoforge:ingots/copper_alloy"
+    },
+    "R": {
+      "tag": "neoforge:ingots/redstone_alloy"
+    }
+  },
+  "pattern": [
+    "IHI",
+    "GCG",
+    "IRI"
+  ],
+  "result": {
+    "item": "enderio:impulse_hopper"
+  }
+}

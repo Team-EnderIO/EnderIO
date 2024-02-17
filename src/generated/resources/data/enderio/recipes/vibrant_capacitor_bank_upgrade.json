@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "neoforge:ingots/copper_alloy"
+    },
+    "C": {
+      "tag": "neoforge:gems/vibrant_crystal"
+    },
+    "O": {
+      "item": "enderio:octadic_capacitor"
+    }
+  },
+  "pattern": [
+    "AOA",
+    "OCO",
+    "AOA"
+  ],
+  "result": {
+    "item": "enderio:vibrant_capacitor_bank"
+  }
+}

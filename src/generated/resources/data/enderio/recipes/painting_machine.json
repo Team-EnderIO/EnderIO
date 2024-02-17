@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "neoforge:ingots/redstone_alloy"
+    },
+    "B": {
+      "tag": "forge:dyes/black"
+    },
+    "C": {
+      "item": "enderio:void_chassis"
+    },
+    "G": {
+      "tag": "forge:dyes/green"
+    },
+    "I": {
+      "tag": "neoforge:ingots/copper_alloy"
+    },
+    "M": {
+      "tag": "neoforge:gears/iron"
+    },
+    "R": {
+      "tag": "forge:dyes/red"
+    }
+  },
+  "pattern": [
+    "RGB",
+    "ICI",
+    "MAM"
+  ],
+  "result": {
+    "item": "enderio:painting_machine"
+  }
+}

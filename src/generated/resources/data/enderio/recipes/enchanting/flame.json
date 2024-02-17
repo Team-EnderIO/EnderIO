@@ -1,0 +1,11 @@
+{
+  "type": "enderio:enchanting",
+  "cost_multiplier": 1,
+  "enchantment": "minecraft:flame",
+  "input": {
+    "Count": 1,
+    "Ingredient": {
+      "tag": "forge:netherrack"
+    }
+  }
+}

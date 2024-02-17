@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "enderio:block/enchanter_combined",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "enderio:block/enchanter_combined"
+    },
+    "facing=south": {
+      "model": "enderio:block/enchanter_combined",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "enderio:block/enchanter_combined",
+      "y": 270
+    }
+  }
+}
