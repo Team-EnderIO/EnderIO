@@ -6,7 +6,6 @@ import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.base.common.blockentity.IWrenchable;
-import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.particle.RangeParticleData;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
@@ -38,19 +37,19 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.neoforged.fml.LogicalSide;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.client.model.data.ModelProperty;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.capabilities.Capabilities;
-import net.neoforged.neoforge.common.util.LazyOptional;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -62,12 +61,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 
 import static net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
 
 public abstract class MachineBlockEntity extends EnderBlockEntity implements MenuProvider, IWrenchable {
+
+    public static final ICapabilityProvider<? extends MachineBlockEntity, Direction, ISideConfig> SIDE_CONFIG_PROVIDER =
+        (be, side) -> new SidedIOConfig(be.ioConfig, side);
+
+    public static final ICapabilityProvider<? extends MachineBlockEntity, Direction, IItemHandler> ITEM_HANDLER_PROVIDER =
+        (be, side) -> be.inventory != null ? be.inventory.getForSide(side) : null;
+
+    public static final ICapabilityProvider<? extends MachineBlockEntity, Direction, IFluidHandler> FLUID_HANDLER_PROVIDER =
+        (be, side) -> be.fluidHandler != null ? be.fluidHandler.getForSide(side) : null;
 
     // region IO Configuration
 
@@ -102,11 +109,12 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     @Nullable
     private final MachineFluidHandler fluidHandler;
 
-    // region Caches for external block interaction
+    // endregion
 
-    private final List<Capability<?>> cachedCapabilityTypes = new ArrayList<>();
-    private final Map<Capability<?>, EnumMap<Direction, LazyOptional<?>>> cachedCapabilities = new HashMap<>();
-    private boolean isCapabilityCacheDirty = false;
+    // region External Capability Caches
+
+    private final List<BlockCapability<?, ?>> cachedCapabilityTypes = new ArrayList<>();
+    private final Map<BlockCapability<?, ?>, EnumMap<Direction, BlockCapabilityCache<?, ?>>> cachedCapabilities = new HashMap<>();
 
     // endregion
 
@@ -124,13 +132,11 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
         // Create IO Config.
         this.ioConfig = createIOConfig();
-        addCapabilityProvider(ioConfig);
 
         // If the machine declares an inventory layout, use it to create a handler
         MachineInventoryLayout slotLayout = getInventoryLayout();
         if (slotLayout != null) {
             inventory = createMachineInventory(slotLayout);
-            addCapabilityProvider(inventory);
         } else {
             inventory = null;
         }
@@ -139,9 +145,6 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         MachineTankLayout tankLayout = getTankLayout();
         if (tankLayout != null) {
             fluidHandler = createFluidHandler(tankLayout);
-            if (fluidHandler != null) {
-                addCapabilityProvider(fluidHandler);
-            }
         } else {
             fluidHandler = null;
         }
@@ -250,6 +253,26 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         }
 
         this.level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+        this.level.invalidateCapabilities(getBlockPos());
+    }
+
+    // TODO: Not a big fan of how this works now.
+    //       Might rework IIOConfig to serve ISideConfig through getSide(...) in future.
+    private record SidedIOConfig(IIOConfig config, Direction side) implements ISideConfig {
+        @Override
+        public IOMode getMode() {
+            return config.getMode(side);
+        }
+
+        @Override
+        public void setMode(IOMode mode) {
+            config.setMode(side, mode);
+        }
+
+        @Override
+        public void cycleMode() {
+            config.cycleMode(side);
+        }
     }
 
     // endregion
@@ -391,6 +414,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     // endregion
 
     // region Fluid Storage
+
     @Nullable
     public MachineTankLayout getTankLayout() {
         return null;
@@ -430,10 +454,6 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     @Override
     public void serverTick() {
-        if (isCapabilityCacheDirty) {
-            updateCapabilityCache();
-        }
-
         if (canActSlow()) {
             forceResources();
         }
@@ -493,26 +513,28 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
      * Move items to and fro via the given side.
      */
     private void moveItems(Direction side) {
-        // Get our item handler.
-        getCapability(Capabilities.ITEM_HANDLER, side).resolve().ifPresent(selfHandler -> {
-            // Get neighboring item handler.
-            Optional<IItemHandler> otherHandler = getNeighbouringCapability(Capabilities.ITEM_HANDLER, side).resolve();
+        var selfHandler = getInventory();
+        if (selfHandler == null) {
+            return;
+        }
 
-            if (otherHandler.isPresent()) {
-                // Get side config
-                IOMode mode = ioConfig.getMode(side);
+        // Get neighboring item handler.
+        IItemHandler otherHandler = getNeighbouringCapability(Capabilities.ItemHandler.BLOCK, side);
 
-                // Output items to the other provider if enabled.
-                if (mode.canPush()) {
-                    moveItems(selfHandler, otherHandler.get());
-                }
+        if (otherHandler != null) {
+            // Get side config
+            IOMode mode = ioConfig.getMode(side);
 
-                // Insert items from the other provider if enabled.
-                if (mode.canPull()) {
-                    moveItems(otherHandler.get(), selfHandler);
-                }
+            // Output items to the other provider if enabled.
+            if (mode.canPush()) {
+                moveItems(selfHandler, otherHandler);
             }
-        });
+
+            // Insert items from the other provider if enabled.
+            if (mode.canPull()) {
+                moveItems(otherHandler, selfHandler);
+            }
+        }
     }
 
     /**
@@ -537,26 +559,28 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
      * Move fluids to and fro via the given side.
      */
     private void moveFluids(Direction side) {
-        // Get our fluid handler
-        getCapability(Capabilities.FLUID_HANDLER, side).resolve().ifPresent(selfHandler -> {
-            // Get neighboring fluid handler.
-            Optional<IFluidHandler> otherHandler = getNeighbouringCapability(Capabilities.FLUID_HANDLER, side).resolve();
+        var selfHandler = getFluidHandler();
+        if (selfHandler == null) {
+            return;
+        }
 
-            if (otherHandler.isPresent()) {
-                // Get side config
-                IOMode mode = ioConfig.getMode(side);
+        // Get neighboring fluid handler.
+        IFluidHandler otherHandler = getNeighbouringCapability(Capabilities.FluidHandler.BLOCK, side);
 
-                // Test if we have fluid.
-                FluidStack stack = selfHandler.drain(100, FluidAction.SIMULATE);
+        if (otherHandler != null) {
+            // Get side config
+            IOMode mode = ioConfig.getMode(side);
 
-                // If we have no fluids, see if we can pull. Otherwise, push.
-                if (stack.isEmpty() && mode.canPull()) {
-                    moveFluids(otherHandler.get(), selfHandler, 100);
-                } else if (mode.canPush()) {
-                    moveFluids(selfHandler, otherHandler.get(), 100);
-                }
+            // Test if we have fluid.
+            FluidStack stack = selfHandler.drain(100, FluidAction.SIMULATE);
+
+            // If we have no fluids, see if we can pull. Otherwise, push.
+            if (stack.isEmpty() && mode.canPull()) {
+                moveFluids(otherHandler, selfHandler, 100);
+            } else if (mode.canPush()) {
+                moveFluids(selfHandler, otherHandler, 100);
             }
-        });
+        }
     }
 
     /**
@@ -571,9 +595,13 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     // region Neighboring Capabilities
 
-    protected <T> LazyOptional<T> getNeighbouringCapability(Capability<T> capability, Direction side) {
+    // TODO: NEO-PORT: We might want handling for Void contexts.
+    //                 However cannot have two methods with same method name and different context type params :(
+
+    @Nullable
+    protected <T> T getNeighbouringCapability(BlockCapability<T, Direction> capability, Direction side) {
         if (level == null) {
-            return LazyOptional.empty();
+            return null;
         }
 
         if (!cachedCapabilityTypes.contains(capability)) {
@@ -582,69 +610,22 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             cachedCapabilities.put(capability, new EnumMap<>(Direction.class));
 
             for (Direction direction : Direction.values()) {
-                BlockEntity neighbor = this.level.getBlockEntity(worldPosition.relative(direction));
-                populateCachesFor(direction, neighbor, capability);
+                populateCachesFor(direction, capability);
             }
         }
 
         if (!cachedCapabilities.get(capability).containsKey(side)) {
-            return LazyOptional.empty();
+            return null;
         }
 
-        return cachedCapabilities.get(capability).get(side).cast();
+        //noinspection unchecked
+        return (T)cachedCapabilities.get(capability).get(side).getCapability();
     }
 
-    /**
-     * Mark the capability cache as dirty. Will be updated next tick.
-     */
-    public void markCapabilityCacheDirty() {
-        isCapabilityCacheDirty = true;
-    }
-
-    /**
-     * Update capability cache
-     */
-    private void updateCapabilityCache() {
-        if (this.level != null) {
-            clearCaches();
-
-            for (Direction direction : Direction.values()) {
-                BlockEntity neighbor = this.level.getBlockEntity(worldPosition.relative(direction));
-                populateCaches(direction, neighbor);
-            }
-
-            isCapabilityCacheDirty = false;
-        }
-    }
-
-    /**
-     * Add invalidation handler to a capability to be notified if it is removed.
-     */
-    private <T> LazyOptional<T> addInvalidationListener(LazyOptional<T> capability) {
-        if (capability.isPresent()) {
-            capability.addListener(c -> markCapabilityCacheDirty());
-        }
-
-        return capability;
-    }
-
-    private void clearCaches() {
-        for (Capability<?> capability : cachedCapabilityTypes) {
-            cachedCapabilities.get(capability).clear();
-        }
-    }
-
-    private void populateCaches(Direction direction, @Nullable BlockEntity neighbor) {
-        for (Capability<?> capability : cachedCapabilityTypes) {
-            populateCachesFor(direction, neighbor, capability);
-        }
-    }
-
-    private void populateCachesFor(Direction direction, @Nullable BlockEntity neighbor, Capability<?> capability) {
-        if (neighbor != null) {
-            cachedCapabilities.get(capability).put(direction, addInvalidationListener(neighbor.getCapability(capability, direction.getOpposite())));
-        } else {
-            cachedCapabilities.get(capability).put(direction, LazyOptional.empty());
+    private void populateCachesFor(Direction direction, BlockCapability<?, Direction> capability) {
+        if (level instanceof ServerLevel serverLevel) {
+            BlockPos neighbourPos = getBlockPos().relative(direction);
+            cachedCapabilities.get(capability).put(direction, BlockCapabilityCache.create(capability, serverLevel, neighbourPos, direction.getOpposite()));
         }
     }
 
@@ -707,10 +688,6 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             this.rangeVisible = pTag.getBoolean(MachineNBTKeys.RANGE_VISIBLE);
         }
 
-
-        // Mark capability cache dirty
-        isCapabilityCacheDirty = true;
-
         super.load(pTag);
     }
 
@@ -753,11 +730,9 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             PlayerInteractionUtil.putStacksInInventoryFromWorldInteraction(player,pos, drops);
             return InteractionResult.CONSUME;
         } else {
-            // Check for side config capability
-            LazyOptional<ISideConfig> optSideConfig = getCapability(EIOCapabilities.SIDE_CONFIG, side);
-            if (optSideConfig.isPresent()) {
-                // Cycle state.
-                optSideConfig.ifPresent(ISideConfig::cycleMode);
+            // Cycle side config
+            if (side != null) {
+                ioConfig.cycleMode(side); // TODO: Maybe a check to see if we can cycle?
                 return InteractionResult.CONSUME;
             }
         }

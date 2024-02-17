@@ -1,7 +1,5 @@
 package com.enderio.api.capacitor;
 
-import net.neoforged.neoforge.common.util.NonNullSupplier;
-
 import java.util.function.Supplier;
 
 /**
@@ -12,12 +10,12 @@ public record FixedScalable(Supplier<Integer> value) implements ICapacitorScalab
     public static final FixedScalable ZERO = new FixedScalable(() -> 0);
 
     @Override
-    public Supplier<Float> scaleF(NonNullSupplier<ICapacitorData> data) {
+    public Supplier<Float> scaleF(Supplier<ICapacitorData> data) {
         return () -> (float) value.get();
     }
 
     @Override
-    public Supplier<Integer> scaleI(NonNullSupplier<ICapacitorData> data) {
+    public Supplier<Integer> scaleI(Supplier<ICapacitorData> data) {
         return value;
     }
 }

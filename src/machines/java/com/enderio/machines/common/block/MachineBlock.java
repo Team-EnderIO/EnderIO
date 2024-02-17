@@ -1,11 +1,13 @@
 package com.enderio.machines.common.block;
 
 import com.enderio.base.common.tag.EIOTags;
-import com.enderio.core.common.compat.FlywheelCompat;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.regilite.holder.RegiliteBlockEntity;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -26,19 +28,29 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import net.neoforged.fml.ModList;
-import net.neoforged.neoforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Supplier;
-
 public class MachineBlock extends BaseEntityBlock {
-    private final RegiliteBlockEntity<? extends MachineBlockEntity> blockEntityType;
+    private static final MapCodec<MachineBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+        BuiltInRegistries.BLOCK_ENTITY_TYPE.byNameCodec().fieldOf("block_entity_type").forGetter(output -> output.blockEntityType),
+        propertiesCodec()
+    ).apply(instance, MachineBlock::new));
+
+    private final BlockEntityType<? extends MachineBlockEntity> blockEntityType;
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
-    public MachineBlock(Properties properties, RegiliteBlockEntity<? extends MachineBlockEntity> blockEntityType) {
+    protected MachineBlock(BlockEntityType<?> blockEntityType, Properties properties) {
         super(properties);
-        this.blockEntityType = blockEntityType;
+
+        // TODO: Can we ensure BlockEntityType is BlockEntityType<? extends MachineBlockEntity> properly from the codec?
+        this.blockEntityType = (BlockEntityType<? extends MachineBlockEntity>) blockEntityType;
+        BlockState any = this.getStateDefinition().any();
+        this.registerDefaultState(any.hasProperty(FACING) ? any.setValue(FACING, Direction.NORTH) : any);
+    }
+
+    public MachineBlock(RegiliteBlockEntity<? extends MachineBlockEntity> blockEntityType, Properties properties) {
+        super(properties);
+        this.blockEntityType = blockEntityType.get();
         BlockState any = this.getStateDefinition().any();
         this.registerDefaultState(any.hasProperty(FACING) ? any.setValue(FACING, Direction.NORTH) : any);
     }
@@ -54,6 +66,11 @@ public class MachineBlock extends BaseEntityBlock {
         return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
+    @Override
+    protected MapCodec<? extends MachineBlock> codec() {
+        return CODEC;
+    }
+
     @SuppressWarnings("deprecation")
     @Override
     public RenderShape getRenderShape(BlockState pState) {
@@ -63,7 +80,7 @@ public class MachineBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return createTickerHelper(pBlockEntityType, blockEntityType.get(), MachineBlockEntity::tick);
+        return createTickerHelper(pBlockEntityType, blockEntityType, MachineBlockEntity::tick);
     }
 
     @SuppressWarnings("deprecation")
@@ -114,7 +131,7 @@ public class MachineBlock extends BaseEntityBlock {
 
             MenuProvider menuprovider = this.getMenuProvider(state, level, pos);
             if (menuprovider != null && player instanceof ServerPlayer serverPlayer) {
-                NetworkHooks.openScreen(serverPlayer, menuprovider, buf -> buf.writeBlockPos(pos));
+                serverPlayer.openMenu(menuprovider, buf -> buf.writeBlockPos(pos));
             }
         }
         return InteractionResult.CONSUME;
@@ -123,7 +140,7 @@ public class MachineBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return blockEntityType.get().create(pPos, pState);
+        return blockEntityType.create(pPos, pState);
     }
 
     @Override
@@ -136,13 +153,8 @@ public class MachineBlock extends BaseEntityBlock {
 
     @Override
     public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
-        BlockEntity existingBlockEntity;
-        if (ModList.get().isLoaded("flywheel")) {
-            existingBlockEntity =  FlywheelCompat.getExistingBlockEntity(level, pos);
-        } else {
-            existingBlockEntity = level.getExistingBlockEntity(pos);
-        }
-        if (existingBlockEntity instanceof MachineBlockEntity machineBlock) {
+        var blockEntity = level.getBlockEntity(pos);
+        if (blockEntity instanceof MachineBlockEntity machineBlock) {
             return machineBlock.getLightEmission();
         }
         return super.getLightEmission(state, level, pos);

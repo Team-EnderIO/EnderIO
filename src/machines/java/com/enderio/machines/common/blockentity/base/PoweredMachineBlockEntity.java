@@ -27,7 +27,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,6 +39,10 @@ import java.util.function.Supplier;
  * A machine that stores energy.
  */
 public abstract class PoweredMachineBlockEntity extends MachineBlockEntity implements IMachineInstall {
+
+    public static final ICapabilityProvider<? extends PoweredMachineBlockEntity, Direction, IEnergyStorage> ENERGY_STORAGE_PROVIDER =
+        (be, side) -> be.exposedEnergyStorage != null ? be.exposedEnergyStorage.getForSide(side) : null;
+
     /**
      * The energy storage medium for the block entity.
      * This will be a mutable energy storage.
@@ -66,9 +71,6 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
         // Create exposed energy storage.
         // Default is that createExposedEnergyStorage returns the existing energy storage.
         this.exposedEnergyStorage = createExposedEnergyStorage();
-        if (exposedEnergyStorage != null) {
-            addCapabilityProvider(exposedEnergyStorage);
-        }
 
         // Mark capacitor cache as dirty
         capacitorCacheDirty = true;
@@ -170,29 +172,21 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
 
         // Transmit power out all sides.
         for (Direction side : Direction.values()) {
-            if (!shouldPushEnergyTo(side)) {
+            if (!shouldPushEnergyTo(side) || !getIOConfig().getMode(side).canPull()) {
                 continue;
             }
 
-            // Get our energy handler, this will handle all sidedness tests for us.
-            getCapability(Capabilities.ENERGY, side).resolve().ifPresent(selfHandler -> {
-                // Get the other energy handler
-                Optional<IEnergyStorage> otherHandler = getNeighbouringCapability(Capabilities.ENERGY, side).resolve();
-                if (otherHandler.isPresent()) {
-                    // Don't insert into self. (Solar panels)
-                    if (selfHandler == otherHandler.get()) {
-                        return;
-                    }
+            // Get the other energy handler
+            IEnergyStorage otherHandler = getNeighbouringCapability(Capabilities.EnergyStorage.BLOCK, side);
+            if (otherHandler != null) {
+                // If the other handler can receive power transmit ours
+                if (otherHandler.canReceive()) {
+                    int received = otherHandler.receiveEnergy(getExposedEnergyStorage().getEnergyStored(), false);
 
-                    // If the other handler can receive power transmit ours
-                    if (otherHandler.get().canReceive()) {
-                        int received = otherHandler.get().receiveEnergy(selfHandler.getEnergyStored(), false);
-
-                        // Consume that energy from our buffer.
-                        getExposedEnergyStorage().takeEnergy(received);
-                    }
+                    // Consume that energy from our buffer.
+                    getExposedEnergyStorage().takeEnergy(received);
                 }
-            });
+            }
         }
     }
 

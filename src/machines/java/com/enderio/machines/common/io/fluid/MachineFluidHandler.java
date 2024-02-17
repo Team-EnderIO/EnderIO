@@ -1,29 +1,23 @@
 package com.enderio.machines.common.io.fluid;
 
-import com.enderio.api.capability.IEnderCapabilityProvider;
 import com.enderio.api.io.IIOConfig;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.capabilities.Capabilities;
 import net.neoforged.neoforge.common.util.INBTSerializable;
-import net.neoforged.neoforge.common.util.LazyOptional;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.IFluidTank;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.EnumMap;
 import java.util.List;
 import java.util.function.IntConsumer;
 
 /**
  * MachineFluidStorage takes a list of fluid tanks and handles IO for them all.
  */
-public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvider<IFluidHandler>, INBTSerializable<CompoundTag> {
+public class MachineFluidHandler implements IFluidHandler, INBTSerializable<CompoundTag> {
 
     public static final String TANK_INDEX = "Index";
     public static final String TANKS = "Tanks";
@@ -32,9 +26,6 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
     private final IIOConfig config;
     private final MachineTankLayout layout;
     private List<MachineFluidTank> tanks;
-
-    private final EnumMap<Direction, LazyOptional<Sided>> sideCache = new EnumMap<>(Direction.class);
-    private LazyOptional<MachineFluidHandler> selfCache = LazyOptional.empty();
 
     // Not sure if we need this but might be useful to update recipe/task if tank is filled.
     private IntConsumer changeListener = i -> {};
@@ -87,47 +78,17 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
         return layout.isFluidValid(tank, stack);
     }
 
-    @Override
-    public Capability<IFluidHandler> getCapabilityType() {
-        return Capabilities.FLUID_HANDLER;
-    }
-
-    @Override
-    public LazyOptional<IFluidHandler> getCapability(@Nullable Direction side) {
+    @Nullable
+    public IFluidHandler getForSide(@Nullable Direction side) {
         if (side == null) {
-            // Create own cache if its been invalidated or not created yet.
-            if (!selfCache.isPresent()) {
-                selfCache = LazyOptional.of(() -> this);
-            }
-
-            return selfCache.cast();
+            return this;
         }
 
-        if (!config.getMode(side).canConnect()) {
-            return LazyOptional.empty();
+        if (config.getMode(side).canConnect()) {
+            return new Sided(this, side);
         }
 
-        return sideCache.computeIfAbsent(side, dir -> LazyOptional.of(() -> new Sided(this, dir))).cast();
-    }
-
-    @Override
-    public void invalidateSide(@Nullable Direction side) {
-        if (side != null) {
-            if (sideCache.containsKey(side)) {
-                sideCache.get(side).invalidate();
-                sideCache.remove(side);
-            }
-        } else {
-            selfCache.invalidate();
-        }
-    }
-
-    @Override
-    public void invalidateCaps() {
-        for (LazyOptional<Sided> side : sideCache.values()) {
-            side.invalidate();
-        }
-        selfCache.invalidate();
+        return null;
     }
 
     @Override

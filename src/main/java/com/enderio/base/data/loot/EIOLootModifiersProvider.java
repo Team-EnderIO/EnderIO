@@ -27,6 +27,8 @@ public class EIOLootModifiersProvider extends GlobalLootModifierProvider {
 
     @Override
     protected void start() {
+        // TODO: NEO-PORT: neoforge:global_loot_modifiers file gets overwritten when armory is enabled.
+
         add("auto_smelt", new AutoSmeltModifier(
             new LootItemCondition[]{
                 MatchTool.toolMatches(ItemPredicate.Builder.item().hasEnchantment(

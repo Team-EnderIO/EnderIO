@@ -46,7 +46,7 @@ public class MachineBlocks {
     private static final ItemRegistry ITEM_REGISTRY = ItemRegistry.createRegistry(EnderIO.MODID);
 
     public static final RegiliteBlock<MachineBlock> FLUID_TANK = BLOCK_REGISTRY
-        .registerBlock("fluid_tank", props -> new MachineBlock(props, MachineBlockEntities.FLUID_TANK),
+        .registerBlock("fluid_tank", props -> new MachineBlock(MachineBlockEntities.FLUID_TANK, props),
             BlockBehaviour.Properties.of().strength(2.5f, 8).isViewBlocking((pState, pLevel, pPos) -> false).noOcclusion())
         .setLootTable(MachinesLootTable::copyNBT)
         .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
@@ -65,7 +65,7 @@ public class MachineBlocks {
         );
 
     public static final RegiliteBlock<MachineBlock> PRESSURIZED_FLUID_TANK = BLOCK_REGISTRY
-        .registerBlock("pressurized_fluid_tank", props -> new MachineBlock(props, MachineBlockEntities.PRESSURIZED_FLUID_TANK),
+        .registerBlock("pressurized_fluid_tank", props -> new MachineBlock(MachineBlockEntities.PRESSURIZED_FLUID_TANK, props),
             BlockBehaviour.Properties.of().strength(2.5f, 8).isViewBlocking((pState, pLevel, pPos) -> false).noOcclusion())
         .setLootTable(MachinesLootTable::copyNBT)
         .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
@@ -84,7 +84,7 @@ public class MachineBlocks {
         );
 
     public static final RegiliteBlock<MachineBlock> ENCHANTER = BLOCK_REGISTRY
-        .registerBlock("enchanter", props -> new MachineBlock(props, MachineBlockEntities.ENCHANTER),
+        .registerBlock("enchanter", props -> new MachineBlock(MachineBlockEntities.ENCHANTER, props),
             BlockBehaviour.Properties.of().strength(2.5f, 8).noOcclusion().isViewBlocking((pState, pLevel, pPos) -> false))
         .setLootTable(MachinesLootTable::copyNBT)
         .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
@@ -104,7 +104,7 @@ public class MachineBlocks {
         machine("wired_charger", () -> MachineBlockEntities.WIRED_CHARGER);
 
     public static final RegiliteBlock<MachineBlock> CREATIVE_POWER = BLOCK_REGISTRY
-        .registerBlock("creative_power", props -> new MachineBlock(props, MachineBlockEntities.CREATIVE_POWER), BlockBehaviour.Properties.of())
+        .registerBlock("creative_power", props -> new MachineBlock(MachineBlockEntities.CREATIVE_POWER, props), BlockBehaviour.Properties.of())
         .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MACHINES));
 
     public static final RegiliteBlock<ProgressMachineBlock> STIRLING_GENERATOR =
@@ -137,7 +137,7 @@ public class MachineBlocks {
             item -> item.setTab(EIOCreativeTabs.MACHINES));
 
     public static final RegiliteBlock<MachineBlock> VACUUM_CHEST = BLOCK_REGISTRY
-        .registerBlock("vacuum_chest", p -> new MachineBlock(p, MachineBlockEntities.VACUUM_CHEST),
+        .registerBlock("vacuum_chest", p -> new MachineBlock(MachineBlockEntities.VACUUM_CHEST, p),
             BlockBehaviour.Properties.of().strength(2.5f, 8).noOcclusion())
         .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
         .setLootTable(MachinesLootTable::copyNBT)
@@ -145,7 +145,7 @@ public class MachineBlocks {
         .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MACHINES));
 
     public static final RegiliteBlock<MachineBlock> XP_VACUUM = BLOCK_REGISTRY
-        .registerBlock("xp_vacuum", p -> new MachineBlock(p, MachineBlockEntities.XP_VACUUM),
+        .registerBlock("xp_vacuum", p -> new MachineBlock(MachineBlockEntities.XP_VACUUM, p),
             BlockBehaviour.Properties.of().strength(2.5f, 8).noOcclusion())
         .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
         .setLootTable(MachinesLootTable::copyNBT)
@@ -193,7 +193,7 @@ public class MachineBlocks {
         progressMachine("drain", () -> MachineBlockEntities.DRAIN);
 
     public static final RegiliteBlock<MachineBlock> XP_OBELISK = BLOCK_REGISTRY
-        .registerBlock("xp_obelisk", props -> new MachineBlock(props, MachineBlockEntities.XP_OBELISK),
+        .registerBlock("xp_obelisk", props -> new MachineBlock(MachineBlockEntities.XP_OBELISK, props),
             BlockBehaviour.Properties.of().strength(2.5f, 8).isViewBlocking((pState, pLevel, pPos) -> false).noOcclusion())
         .setLootTable(MachinesLootTable::copyNBT)
         .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
@@ -216,7 +216,7 @@ public class MachineBlocks {
     private static RegiliteBlock<MachineBlock> machine(String name,
         Supplier<RegiliteBlockEntity<? extends MachineBlockEntity>> RegiliteBlockEntity) {
         return baseMachine(
-            BLOCK_REGISTRY.registerBlock(name, props -> new MachineBlock(props, RegiliteBlockEntity.get()), BlockBehaviour.Properties.of().strength(2.5f, 8)),
+            BLOCK_REGISTRY.registerBlock(name, props -> new MachineBlock(RegiliteBlockEntity.get(), props), BlockBehaviour.Properties.of().strength(2.5f, 8)),
             MachineModelUtil::machineBlock);
     }
 
