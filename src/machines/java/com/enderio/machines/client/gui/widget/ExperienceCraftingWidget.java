@@ -15,7 +15,8 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.function.Supplier;
 
 public class ExperienceCraftingWidget extends EIOWidget {
-    private static final ResourceLocation GUI_ICONS_LOCATION = new ResourceLocation("textures/gui/icons.png");
+    protected static final ResourceLocation EXPERIENCE_BAR_BACKGROUND_SPRITE = new ResourceLocation("hud/experience_bar_background");
+    protected static final ResourceLocation EXPERIENCE_BAR_PROGRESS_SPRITE = new ResourceLocation("hud/experience_bar_progress");
     private final Screen displayOn;
     private final Supplier<MachineFluidTank> getFluid;
     private final Supplier<Integer> maxXP;
@@ -39,10 +40,9 @@ public class ExperienceCraftingWidget extends EIOWidget {
                 k = this.width-1;
             }
         }
-        guiGraphics.blit(GUI_ICONS_LOCATION, this.x, this.y, 0, 0, 64, this.width-1, this.height, 256, 256);
-        guiGraphics.blit(GUI_ICONS_LOCATION, this.x + this.width-1, this.y, 0, 181, 64, 1, this.height, 256, 256);
-        guiGraphics.blit(GUI_ICONS_LOCATION, this.x, this.y, 0, 0, 69, k, this.height, 256, 256);
-        guiGraphics.blit(GUI_ICONS_LOCATION, this.x + this.width-1, this.y, 0, 181, 64, k==this.width-1? 1 : 0, this.height, 256, 256);
+
+        guiGraphics.blitSprite(EXPERIENCE_BAR_BACKGROUND_SPRITE, this.x, this.y, this.width, this.height);
+        guiGraphics.blitSprite(EXPERIENCE_BAR_PROGRESS_SPRITE, 182, 5, 0, 0, this.x, this.y, k, 5);
 
         var font = Minecraft.getInstance().font;
         String s = "" + maxXP.get();

@@ -3,12 +3,12 @@ package com.enderio.machines.client.gui.screen;
 import com.enderio.EnderIO;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.core.client.gui.widgets.EIOImageButton;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.enderio.core.client.gui.widgets.ToggleImageButton;
 import com.enderio.machines.client.gui.widget.ActiveWidget;
 import com.enderio.machines.common.menu.VacuumChestMenu;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -17,7 +17,10 @@ import net.minecraft.world.entity.player.Inventory;
 public class VacuumChestScreen extends MachineScreen<VacuumChestMenu> {
 
     private static final ResourceLocation VACUUM_CHEST_BG = EnderIO.loc("textures/gui/vacuum_chest.png");
-    private static final ResourceLocation BUTTONS = EnderIO.loc("textures/gui/icons/buttons.png");
+    private static final ResourceLocation PLUS = EnderIO.loc("buttons/plus_small");
+    private static final ResourceLocation MINUS = EnderIO.loc("buttons/minus_small");
+    private static final WidgetSprites PLUS_SPRITES = new WidgetSprites(PLUS, PLUS);
+    private static final WidgetSprites MINUS_SPRITES = new WidgetSprites(MINUS, MINUS);
     private static final ResourceLocation RANGE_BUTTON_TEXTURE = EnderIO.loc("textures/gui/icons/range_buttons.png");
 
     public VacuumChestScreen(VacuumChestMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
@@ -35,9 +38,10 @@ public class VacuumChestScreen extends MachineScreen<VacuumChestMenu> {
             () -> menu.getBlockEntity().isRangeVisible(), state -> menu.getBlockEntity().setIsRangeVisible(state),
             () -> menu.getBlockEntity().isRangeVisible() ? EIOLang.HIDE_RANGE : EIOLang.SHOW_RANGE));
 
-        // TODO: NEO-PORT: ImageButton's
-//        addRenderableWidget(new ImageButton(leftPos + imageWidth - 8 - 8, topPos + 86, 8, 8, 8, 0, 16, BUTTONS, (b) -> menu.getBlockEntity().increaseRange()));
-//        addRenderableWidget(new ImageButton(leftPos + imageWidth - 8 - 8, topPos + 94, 8, 8, 8, 8, 16, BUTTONS, (b) -> menu.getBlockEntity().decreaseRange()));
+        addRenderableWidget(new EIOImageButton(this, leftPos + imageWidth - 8 - 8, topPos + 86, 8, 8, PLUS_SPRITES,
+            (b) -> menu.getBlockEntity().increaseRange()));
+        addRenderableWidget(new EIOImageButton(this, leftPos + imageWidth - 8 - 8, topPos + 94, 8, 8, MINUS_SPRITES,
+            (b) -> menu.getBlockEntity().decreaseRange()));
 
         addRenderableWidget(new ActiveWidget(this, menu.getBlockEntity()::getMachineStates, leftPos + imageWidth - 8 - 16 * 3 - 4, topPos + 105));
 

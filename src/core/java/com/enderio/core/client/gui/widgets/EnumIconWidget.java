@@ -219,6 +219,11 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
         }
 
         @Override
+        public void renderTransparentBackground(GuiGraphics pGuiGraphics) {
+            //Don't make it dark
+        }
+
+        @Override
         public void addTooltip(LateTooltipData data) {
             tooltips.add(data);
         }
