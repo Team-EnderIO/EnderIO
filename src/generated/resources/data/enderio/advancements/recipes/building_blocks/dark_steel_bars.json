@@ -30,6 +30,5 @@
     "recipes": [
       "enderio:dark_steel_bars"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

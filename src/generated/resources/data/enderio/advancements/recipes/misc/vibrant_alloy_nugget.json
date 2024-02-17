@@ -30,6 +30,5 @@
     "recipes": [
       "enderio:vibrant_alloy_nugget"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

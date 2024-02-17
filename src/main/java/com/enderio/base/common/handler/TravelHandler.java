@@ -24,6 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
 import org.jetbrains.annotations.Nullable;
@@ -134,7 +135,7 @@ public class TravelHandler {
         int range = BaseConfig.COMMON.ITEMS.TRAVELLING_BLINK_RANGE.get();
         Vec3 toPos = playerPos.add(lookVec.scale(range));
 
-        ClipContext clipCtx = new ClipContext(playerPos, toPos, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, (Entity)null);
+        ClipContext clipCtx = new ClipContext(playerPos, toPos, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, CollisionContext.empty());
         BlockHitResult bhr = level.clip(clipCtx);
 
         // process the result

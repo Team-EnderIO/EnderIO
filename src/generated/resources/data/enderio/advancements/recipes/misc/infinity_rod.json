@@ -30,6 +30,5 @@
     "recipes": [
       "enderio:infinity_rod"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

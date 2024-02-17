@@ -30,6 +30,5 @@
     "recipes": [
       "enderio:cake"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

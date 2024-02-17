@@ -30,6 +30,5 @@
     "recipes": [
       "enderio:recolor_fused_quartz_dna_light_gray"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

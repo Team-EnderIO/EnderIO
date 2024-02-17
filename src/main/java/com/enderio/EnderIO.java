@@ -4,6 +4,7 @@ import com.enderio.api.integration.IntegrationManager;
 import com.enderio.base.common.advancement.PaintingTrigger;
 import com.enderio.base.common.advancement.UseGliderTrigger;
 import com.enderio.base.common.config.BaseConfig;
+import com.enderio.base.common.init.EIOAttachments;
 import com.enderio.base.common.init.EIOBlockEntities;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOCreativeTabs;
@@ -97,6 +98,7 @@ public class EnderIO {
         EIOLootModifiers.register(modEventBus);
         EIOParticles.register(modEventBus);
         EIOEntities.register(modEventBus);
+        EIOAttachments.register(modEventBus);
 
         // Run datagen after registrate is finished.
         modEventBus.addListener(EventPriority.LOWEST, this::onGatherData);

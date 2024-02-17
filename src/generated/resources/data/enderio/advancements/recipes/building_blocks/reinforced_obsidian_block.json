@@ -30,6 +30,5 @@
     "recipes": [
       "enderio:reinforced_obsidian_block"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

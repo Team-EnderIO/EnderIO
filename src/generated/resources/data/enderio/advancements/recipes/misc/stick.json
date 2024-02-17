@@ -28,6 +28,5 @@
     "recipes": [
       "enderio:stick"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

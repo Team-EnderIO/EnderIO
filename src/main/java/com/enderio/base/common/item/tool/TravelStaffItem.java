@@ -1,6 +1,5 @@
 package com.enderio.base.common.item.tool;
 
-import com.enderio.api.capacitor.ICapacitorData;
 import com.enderio.base.common.capability.EnergyStorageItemStack;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.handler.TravelHandler;
@@ -10,7 +9,6 @@ import com.enderio.core.client.item.IAdvancedTooltipProvider;
 import com.enderio.core.common.item.ITabVariants;
 import com.enderio.core.common.util.EnergyUtil;
 import com.enderio.core.common.util.TooltipUtil;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;

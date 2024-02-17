@@ -30,6 +30,5 @@
     "recipes": [
       "enderio:item.enderio.dark_steel_nugget_to_ingot"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

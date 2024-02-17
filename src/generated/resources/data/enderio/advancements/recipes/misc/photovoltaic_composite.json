@@ -30,6 +30,5 @@
     "recipes": [
       "enderio:photovoltaic_composite"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

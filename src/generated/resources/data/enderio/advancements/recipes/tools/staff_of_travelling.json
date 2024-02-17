@@ -30,6 +30,5 @@
     "recipes": [
       "enderio:staff_of_travelling"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

@@ -30,6 +30,5 @@
     "recipes": [
       "enderio:resetting_lever_five_from_inv"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

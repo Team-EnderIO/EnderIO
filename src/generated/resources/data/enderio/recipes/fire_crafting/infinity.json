@@ -1,9 +1,7 @@
 {
   "type": "enderio:fire_crafting",
   "base_blocks": [
-    {
-      "block": "minecraft:bedrock"
-    }
+    "minecraft:bedrock"
   ],
   "dimensions": [
     "minecraft:overworld"

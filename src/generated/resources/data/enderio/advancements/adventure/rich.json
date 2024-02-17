@@ -1,0 +1,28 @@
+{
+  "parent": "minecraft:adventure/root",
+  "criteria": {
+    "paint": {
+      "conditions": {
+        "paint": "minecraft:diamond_block"
+      },
+      "trigger": "enderio:painting"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.enderio.rich.description"
+    },
+    "icon": {
+      "item": "minecraft:diamond_block"
+    },
+    "title": {
+      "translate": "advancements.enderio.rich.title"
+    }
+  },
+  "requirements": [
+    [
+      "paint"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

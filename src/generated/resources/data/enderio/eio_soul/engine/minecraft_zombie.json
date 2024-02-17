@@ -1,6 +1,0 @@
-{
-  "entity": "minecraft:zombie",
-  "fluid": "enderio:fluid_nutrient_distillation_still",
-  "power/mb": 500,
-  "tick/mb": 15
-}

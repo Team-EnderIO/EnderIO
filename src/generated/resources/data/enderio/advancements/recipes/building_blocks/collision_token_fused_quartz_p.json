@@ -30,6 +30,5 @@
     "recipes": [
       "enderio:collision_token_fused_quartz_p"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

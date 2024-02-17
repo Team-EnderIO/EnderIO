@@ -30,6 +30,5 @@
     "recipes": [
       "enderio:energetic_alloy_grinding_ball"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

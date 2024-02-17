@@ -30,6 +30,5 @@
     "recipes": [
       "enderio:conduit_binder_from_smelting"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

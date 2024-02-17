@@ -30,6 +30,5 @@
     "recipes": [
       "enderio:resetting_lever_sixty"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

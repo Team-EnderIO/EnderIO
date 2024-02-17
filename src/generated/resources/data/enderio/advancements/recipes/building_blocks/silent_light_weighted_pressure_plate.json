@@ -30,6 +30,5 @@
     "recipes": [
       "enderio:silent_light_weighted_pressure_plate"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

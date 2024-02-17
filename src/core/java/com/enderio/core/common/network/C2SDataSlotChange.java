@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 public record C2SDataSlotChange(BlockPos pos, @Nullable FriendlyByteBuf updateData)
     implements CustomPacketPayload {
 
-    public static final ResourceLocation ID = EnderCore.loc("s2c_data_slot_update");
+    public static final ResourceLocation ID = EnderCore.loc("c2s_data_slot_update");
 
     public C2SDataSlotChange(FriendlyByteBuf buf) {
         this(buf.readBlockPos(), new FriendlyByteBuf(buf.copy()));

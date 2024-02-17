@@ -30,6 +30,5 @@
     "recipes": [
       "enderio:recolor_fused_quartz_d_pink"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

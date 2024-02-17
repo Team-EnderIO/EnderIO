@@ -30,6 +30,5 @@
     "recipes": [
       "enderio:end_steel_ingot"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

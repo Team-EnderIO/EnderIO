@@ -30,6 +30,5 @@
     "recipes": [
       "enderio:invert_fused_quartz_dna"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

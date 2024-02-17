@@ -30,6 +30,5 @@
     "recipes": [
       "enderio:empty_soul_vial"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

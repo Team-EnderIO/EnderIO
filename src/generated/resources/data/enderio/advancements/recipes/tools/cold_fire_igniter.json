@@ -30,6 +30,5 @@
     "recipes": [
       "enderio:cold_fire_igniter"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

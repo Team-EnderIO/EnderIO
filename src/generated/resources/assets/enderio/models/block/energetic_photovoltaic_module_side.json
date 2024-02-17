@@ -1,6 +1,0 @@
-{
-  "parent": "enderio:block/photovoltaic_cell_side",
-  "textures": {
-    "side": "enderio:block/energetic_side"
-  }
-}

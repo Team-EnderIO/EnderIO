@@ -14,18 +14,18 @@ logoFile="logo.png"
 
 [[dependencies.enderio]]
 modId="minecraft"
-mandatory=true
+type="required"
 versionRange="${mcversion}"
 side="BOTH"
 
 [[dependencies.enderio]]
 modId="neoforge"
-mandatory=true
+type="required"
 versionRange="${neo_version}"
 side="BOTH"
 
 [[dependencies.enderio]]
 modId="ae2"
-mandatory=false
+type="optional"
 versionRange="[12.7.0,)"
 side="BOTH"

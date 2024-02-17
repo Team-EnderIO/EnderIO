@@ -30,6 +30,5 @@
     "recipes": [
       "enderio:recolor_fused_quartz_m_lime"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

@@ -30,6 +30,5 @@
     "recipes": [
       "enderio:silent_warped_pressure_plate"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

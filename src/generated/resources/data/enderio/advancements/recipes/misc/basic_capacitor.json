@@ -30,6 +30,5 @@
     "recipes": [
       "enderio:basic_capacitor"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

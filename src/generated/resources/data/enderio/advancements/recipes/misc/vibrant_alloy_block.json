@@ -30,6 +30,5 @@
     "recipes": [
       "enderio:vibrant_alloy_block"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

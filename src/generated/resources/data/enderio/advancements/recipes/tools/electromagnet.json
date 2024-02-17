@@ -30,6 +30,5 @@
     "recipes": [
       "enderio:electromagnet"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

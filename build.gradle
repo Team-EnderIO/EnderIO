@@ -231,7 +231,7 @@ dependencies {
 //    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
 
     // Mekanism
-    runtimeOnly "curse.maven:mekanism-268560:${mekanism_cf_id}"
+    //runtimeOnly "curse.maven:mekanism-268560:${mekanism_cf_id}"
 
     // Jetbrains annotations
     compileOnly 'org.jetbrains:annotations:23.0.0'

@@ -30,6 +30,5 @@
     "recipes": [
       "enderio:collision_token_clear_glass_em"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

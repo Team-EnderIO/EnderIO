@@ -30,6 +30,5 @@
     "recipes": [
       "enderio:dark_bimetal_gear"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

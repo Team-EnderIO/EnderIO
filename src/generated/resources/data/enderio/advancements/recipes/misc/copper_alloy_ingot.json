@@ -30,6 +30,5 @@
     "recipes": [
       "enderio:copper_alloy_ingot"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

@@ -30,6 +30,5 @@
     "recipes": [
       "enderio:end_steel_block"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

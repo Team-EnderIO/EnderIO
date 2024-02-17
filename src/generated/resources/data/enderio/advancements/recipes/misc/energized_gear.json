@@ -30,6 +30,5 @@
     "recipes": [
       "enderio:energized_gear"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

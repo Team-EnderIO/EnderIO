@@ -1,7 +1,0 @@
-{
-  "type": "enderio:painting",
-  "input": {
-    "tag": "minecraft:fence_gates"
-  },
-  "output": "enderio:painted_fence_gate"
-}

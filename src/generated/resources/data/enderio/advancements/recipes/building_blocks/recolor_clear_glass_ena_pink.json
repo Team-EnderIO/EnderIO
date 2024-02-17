@@ -30,6 +30,5 @@
     "recipes": [
       "enderio:recolor_clear_glass_ena_pink"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

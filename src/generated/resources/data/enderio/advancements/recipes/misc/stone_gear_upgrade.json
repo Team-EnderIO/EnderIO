@@ -30,6 +30,5 @@
     "recipes": [
       "enderio:stone_gear_upgrade"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

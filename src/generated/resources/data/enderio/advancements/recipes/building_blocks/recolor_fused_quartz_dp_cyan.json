@@ -30,6 +30,5 @@
     "recipes": [
       "enderio:recolor_fused_quartz_dp_cyan"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }
