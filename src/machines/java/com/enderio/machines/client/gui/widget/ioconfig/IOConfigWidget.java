@@ -74,6 +74,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     private static final Vec3 RAY_END = new Vec3(1.5, 1.5, 3);
     private static final BlockPos POS = new BlockPos(1, 1, 1);
     private static final int Z_OFFSET = 100;
+    private static final ResourceLocation IO_CONFIG_OVERLAY = EnderIO.loc("buttons/io_config_overlay");
     private static final ResourceLocation SELECTED_ICON = EnderIO.loc("block/overlay/selected_face");
     private static final Minecraft MINECRAFT = Minecraft.getInstance();
     private static MultiBufferSource.BufferSource ghostBuffers;
@@ -384,8 +385,8 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
                 var ioMode = machine.getIOConfig().getMode(selectedFace.side);
                 IOModeMap map = IOModeMap.getMapFromMode(ioMode);
                 Rect2i iconBounds = map.getRect();
-                guiGraphics.blit(IOConfigButton.IOCONFIG, getX() + 4, getY() + height - 4 - screenFont.lineHeight - iconBounds.getHeight(), iconBounds.getX(), iconBounds.getY(),
-                    iconBounds.getWidth(), iconBounds.getHeight(), 48, 32);
+                guiGraphics.blitSprite(IO_CONFIG_OVERLAY, 48, 16, iconBounds.getX(), iconBounds.getY(), getX() + 4,
+                    getY() + height - 4 - screenFont.lineHeight - iconBounds.getHeight(), iconBounds.getWidth(), iconBounds.getHeight());
                 guiGraphics.pose().pushPose();
                 guiGraphics.pose().translate(0, 0, 1000); // to ensure that string is drawn on top
                 guiGraphics.drawString(screenFont, map.getComponent(), getX() + 4, getY() + height - 2 - screenFont.lineHeight, 0xFFFFFFFF);
