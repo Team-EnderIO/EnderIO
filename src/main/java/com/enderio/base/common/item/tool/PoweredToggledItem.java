@@ -5,6 +5,7 @@ import com.enderio.base.common.init.EIOAttachments;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.item.EnergyBarDecorator;
 import com.enderio.core.client.item.IAdvancedTooltipProvider;
+import com.enderio.core.common.attachment.IEnergyStorageConfig;
 import com.enderio.core.common.item.ITabVariants;
 import com.enderio.core.common.util.EnergyUtil;
 import com.enderio.core.common.util.TooltipUtil;
@@ -23,11 +24,10 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import java.util.List;
 
-public abstract class PoweredToggledItem extends Item implements IAdvancedTooltipProvider, ITabVariants {
+public abstract class PoweredToggledItem extends Item implements IAdvancedTooltipProvider, ITabVariants, IEnergyStorageConfig {
 
-    // TODO: Attachment for this; this should have a custom energy storage that somehow determines the capacity.
     public static final ICapabilityProvider<ItemStack, Void, IEnergyStorage> ENERGY_STORAGE_PROVIDER =
-        (stack, v) -> new EnergyStorageItemStack(stack, ((PoweredToggledItem)stack.getItem()).getMaxEnergy());
+        (stack, v) -> stack.getData(EIOAttachments.ITEM_ENERGY_STORAGE);
 
     public PoweredToggledItem(Properties pProperties) {
         super(pProperties.stacksTo(1));
@@ -37,8 +37,6 @@ public abstract class PoweredToggledItem extends Item implements IAdvancedToolti
         boolean pIsSelected);
 
     protected abstract int getEnergyUse();
-
-    protected abstract int getMaxEnergy();
 
     protected boolean isEnabled(ItemStack stack) {
         return stack.getData(EIOAttachments.TOGGLED);

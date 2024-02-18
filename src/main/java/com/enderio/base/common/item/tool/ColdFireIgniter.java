@@ -130,7 +130,7 @@ public class ColdFireIgniter extends Item implements ITabVariants, IStrictItemFl
     }
 
     @Override
-    public int getCapacity() {
+    public int getFluidCapacity() {
         // TODO: Config
         return 1000;
     }

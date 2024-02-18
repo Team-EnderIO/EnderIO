@@ -9,6 +9,7 @@ import com.enderio.core.common.capability.StrictFluidHandlerItemStack;
 import com.mojang.serialization.Codec;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
+import net.neoforged.neoforge.energy.EnergyStorage;
 import net.neoforged.neoforge.fluids.capability.templates.FluidHandlerItemStack;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -36,6 +37,9 @@ public class EIOAttachments {
 
     public static final Supplier<AttachmentType<StrictFluidHandlerItemStack>> ITEM_STRICT_FLUID
         = ATTACHMENT_TYPES.register("item_strict_fluid", AttachmentUtil.strictItemFluidHandlerAttachment());
+
+    public static final Supplier<AttachmentType<EnergyStorage>> ITEM_ENERGY_STORAGE
+        = ATTACHMENT_TYPES.register("item_energy_storage", AttachmentUtil.itemEnergyStorageAttachment());
 
     public static void register(IEventBus bus) {
         ATTACHMENT_TYPES.register(bus);

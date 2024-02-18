@@ -29,7 +29,7 @@ public class ElectromagnetItem extends PoweredToggledItem {
     }
 
     @Override
-    protected int getMaxEnergy() {
+    public int getMaxEnergy() {
         return BaseConfig.COMMON.ITEMS.ELECTROMAGNET_MAX_ENERGY.get();
     }
 

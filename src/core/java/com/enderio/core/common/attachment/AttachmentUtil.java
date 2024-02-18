@@ -4,6 +4,7 @@ import com.enderio.core.common.capability.StrictFluidHandlerItemStack;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.attachment.AttachmentType;
+import net.neoforged.neoforge.energy.EnergyStorage;
 import net.neoforged.neoforge.fluids.capability.templates.FluidHandlerItemStack;
 
 import java.util.function.Predicate;
@@ -16,7 +17,7 @@ public class AttachmentUtil {
             if (holder instanceof ItemStack itemStack) {
                 int capacity = 1000;
                 if (itemStack.getItem() instanceof IItemFluidHandlerConfig attachedFluidTank) {
-                    capacity = attachedFluidTank.getCapacity();
+                    capacity = attachedFluidTank.getFluidCapacity();
                 }
 
                 return new FluidHandlerItemStack(itemStack, capacity);
@@ -32,12 +33,28 @@ public class AttachmentUtil {
                 Predicate<Fluid> filter = f -> true;
                 int capacity = 1000;
                 if (itemStack.getItem() instanceof IStrictItemFluidHandlerConfig attachedFluidTank) {
-                    capacity = attachedFluidTank.getCapacity();
+                    capacity = attachedFluidTank.getFluidCapacity();
                     filter = attachedFluidTank.getFluidFilter();
                 }
 
                 return new StrictFluidHandlerItemStack(itemStack, capacity, filter);
             } else {
+                throw new IllegalStateException("Cannot attach fluid handler item to a non-item.");
+            }
+        }).build();
+    }
+
+    public static Supplier<AttachmentType<EnergyStorage>> itemEnergyStorageAttachment() {
+        return () -> AttachmentType.serializable(holder -> {
+            if (holder instanceof ItemStack itemStack) {
+                int capacity = 1000;
+                if (itemStack.getItem() instanceof IEnergyStorageConfig energyStorageConfig) {
+                    capacity = energyStorageConfig.getMaxEnergy();
+                }
+
+                return new EnergyStorage(capacity);
+            } else {
+                // TODO: Add block support for machines?
                 throw new IllegalStateException("Cannot attach fluid handler item to a non-item.");
             }
         }).build();

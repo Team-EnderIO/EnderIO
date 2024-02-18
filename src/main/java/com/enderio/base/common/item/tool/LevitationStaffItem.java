@@ -1,5 +1,7 @@
 package com.enderio.base.common.item.tool;
 
+import com.enderio.base.common.init.EIOAttachments;
+import com.enderio.core.common.attachment.IStrictItemFluidHandlerConfig;
 import com.enderio.core.common.capability.StrictFluidHandlerItemStack;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.init.EIOFluids;
@@ -10,16 +12,19 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
-public class LevitationStaffItem extends PoweredToggledItem {
+import java.util.function.Predicate;
+
+public class LevitationStaffItem extends PoweredToggledItem implements IStrictItemFluidHandlerConfig {
 
     public static final ICapabilityProvider<ItemStack, Void, IFluidHandlerItem> FLUID_HANDLER_PROVIDER
-        = (stack, v) -> new StrictFluidHandlerItemStack(stack, 1000, EIOTags.Fluids.STAFF_OF_LEVITY_FUEL);
+        = (stack, v) -> stack.getData(EIOAttachments.ITEM_STRICT_FLUID);
 
     public LevitationStaffItem(Properties pProperties) {
         super(pProperties);
@@ -31,7 +36,7 @@ public class LevitationStaffItem extends PoweredToggledItem {
     }
 
     @Override
-    protected int getMaxEnergy() {
+    public int getMaxEnergy() {
         return BaseConfig.COMMON.ITEMS.LEVITATION_STAFF_MAX_ENERGY.get();
     }
 
@@ -76,5 +81,16 @@ public class LevitationStaffItem extends PoweredToggledItem {
     @Override
     protected void onTickWhenActive(Player player, ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
         player.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 1));
+    }
+
+    @Override
+    public int getFluidCapacity() {
+        // TODO: Config
+        return 1000;
+    }
+
+    @Override
+    public Predicate<Fluid> getFluidFilter() {
+        return f -> f.is(EIOTags.Fluids.STAFF_OF_LEVITY_FUEL);
     }
 }
