@@ -710,8 +710,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         super.copyFromStack(stack);
         if (stack.hasData(EIOAttachments.NBT_ATTACHMENT)) {
             CompoundTag tag = stack.getData(EIOAttachments.NBT_ATTACHMENT).getTag();
-            //TODO get inv since it's not an attachment?
-            //TODO get fluid since it's not an attachment?
+            this.load(tag); //Handles data transfer of anything stored in the BE
         }
     }
 }

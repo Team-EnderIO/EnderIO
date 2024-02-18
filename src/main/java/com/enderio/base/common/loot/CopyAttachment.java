@@ -30,6 +30,7 @@ public class CopyAttachment extends LootItemConditionalFunction {
         .forGetter(function -> function.attachments))
         .apply(instance, CopyAttachment::new)
     );
+
     private final List<AttachmentType<?>> attachments;
 
     protected CopyAttachment(List<LootItemCondition> pPredicates, List<AttachmentType<?>> attachments) {
@@ -46,16 +47,18 @@ public class CopyAttachment extends LootItemConditionalFunction {
     protected ItemStack run(ItemStack pStack, LootContext pContext) {
         BlockEntity blockEntity = pContext.getParamOrNull(LootContextParams.BLOCK_ENTITY);
         CompoundTag tag = new CompoundTag();
+        if (pStack.hasData(EIOAttachments.NBT_ATTACHMENT)) {
+            tag = pStack.getData(EIOAttachments.NBT_ATTACHMENT).getTag();
+        }
         for (AttachmentType<?> type : attachments) {
             if (blockEntity.hasData(type)) {
                 if (blockEntity.getData(type) instanceof INBTSerializable serializable) {
                     tag.put(NeoForgeRegistries.ATTACHMENT_TYPES.getKey(type).toString(),serializable.serializeNBT());
                 }
             }
-            if (pStack.hasData(EIOAttachments.NBT_ATTACHMENT)) {
-                pStack.setData(EIOAttachments.NBT_ATTACHMENT, new NBTAttachment(tag));
-            }
         }
+        pStack.setData(EIOAttachments.NBT_ATTACHMENT, new NBTAttachment(tag));
+
         return pStack;
     }
 
