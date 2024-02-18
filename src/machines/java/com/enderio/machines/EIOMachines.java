@@ -6,6 +6,7 @@ import com.enderio.api.travel.TravelRegistry;
 import com.enderio.base.data.EIODataProvider;
 import com.enderio.machines.client.rendering.travel.TravelAnchorRenderer;
 import com.enderio.machines.common.config.MachinesConfig;
+import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.init.MachineMenus;
@@ -61,6 +62,7 @@ public class EIOMachines {
         MachineBlockEntities.register(EnderIO.modEventBus);
         MachineMenus.register(EnderIO.modEventBus);
         MachineRecipes.register(EnderIO.modEventBus);
+        MachineAttachments.register(EnderIO.modEventBus);
 
         MachineLang.register();
         MachineTags.register();

@@ -6,6 +6,7 @@ import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.base.common.blockentity.IWrenchable;
+import com.enderio.base.common.init.EIOAttachments;
 import com.enderio.base.common.particle.RangeParticleData;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
@@ -16,6 +17,7 @@ import com.enderio.core.common.network.slot.SetNetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.blockentity.MachineState;
+import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.io.IOConfig;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.fluid.MachineTankLayout;
@@ -86,12 +88,6 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     // endregion
 
-    // region Redstone Control
-
-    private RedstoneControl redstoneControl = RedstoneControl.ALWAYS_ACTIVE;
-
-    // endregion
-
     // region Items and Fluids
 
     @Nullable
@@ -135,7 +131,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
         if (supportsRedstoneControl()) {
             redstoneControlDataSlot = new EnumNetworkDataSlot<>(RedstoneControl.class,
-                this::getRedstoneControl, e -> redstoneControl = e);
+                this::getRedstoneControl, e -> setData(MachineAttachments.REDSTONE_CONTROL, e));
             addDataSlot(redstoneControlDataSlot);
         } else {
             redstoneControlDataSlot = null;
@@ -334,14 +330,14 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     }
 
     public RedstoneControl getRedstoneControl() {
-        return redstoneControl;
+        return getData(MachineAttachments.REDSTONE_CONTROL);
     }
 
     public void setRedstoneControl(RedstoneControl redstoneControl) {
         if (level != null && level.isClientSide()) {
             clientUpdateSlot(redstoneControlDataSlot, redstoneControl);
         } else {
-            this.redstoneControl = redstoneControl;
+            setData(MachineAttachments.REDSTONE_CONTROL, redstoneControl);
         }
     }
 
@@ -457,7 +453,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         }
 
         if (supportsRedstoneControl()) {
-            boolean active = redstoneControl.isActive(this.level.hasNeighborSignal(worldPosition));
+            boolean active = getRedstoneControl().isActive(this.level.hasNeighborSignal(worldPosition));
             updateMachineState(MachineState.REDSTONE, !active);
             return active;
         }
@@ -583,10 +579,6 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         // Save io config.
         pTag.put(MachineNBTKeys.IO_CONFIG, getIOConfig().serializeNBT());
 
-        if (supportsRedstoneControl()) {
-            pTag.putInt(MachineNBTKeys.REDSTONE_CONTROL, redstoneControl.ordinal());
-        }
-
         if (this.inventory != null) {
             pTag.put(MachineNBTKeys.ITEMS, inventory.serializeNBT());
         }
@@ -605,10 +597,6 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     public void load(CompoundTag pTag) {
         // Load io config.
         ioConfig.deserializeNBT(pTag.getCompound(MachineNBTKeys.IO_CONFIG));
-
-        if (supportsRedstoneControl()) {
-            redstoneControl = RedstoneControl.values()[pTag.getInt(MachineNBTKeys.REDSTONE_CONTROL)];
-        }
 
         if (this.inventory != null) {
             inventory.deserializeNBT(pTag.getCompound(MachineNBTKeys.ITEMS));
