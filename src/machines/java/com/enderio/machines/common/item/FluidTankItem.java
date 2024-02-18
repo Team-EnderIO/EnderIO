@@ -38,6 +38,10 @@ public class FluidTankItem extends BlockItem implements IAdvancedTooltipProvider
         this.capacity = capacity;
     }
 
+    public int getCapacity() {
+        return capacity;
+    }
+
     @Override
     public int getMaxStackSize(ItemStack stack) {
         return 1;//TODO: when fluid tank entity accepts item stacks of more than 1 in the internalDrain/fill. Remove this method to allow fluid tank items to stack to 64.

@@ -4,6 +4,7 @@ import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
@@ -46,6 +47,15 @@ public interface IFluidItemInteractive {
                         } else {
                             player.drop(container, false, true);
                             itemStack.shrink(1);
+                        }
+                        if (player.isCreative()) {
+                            ItemStack copy = itemStack.copyWithCount(1);
+                            Optional<IFluidHandlerItem> newHandler = FluidUtil.getFluidHandler(copy);
+                            newHandler.get().fill(tankAccess.getFluid(machine), IFluidHandler.FluidAction.EXECUTE);
+                            container = newHandler.get().getContainer();
+                            if (!player.getInventory().add(container)) {
+                                player.drop(container, false, true);
+                            }
                         }
                         tankAccess.drain(machine, filled, IFluidHandler.FluidAction.EXECUTE);
                         return true;
