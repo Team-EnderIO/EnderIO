@@ -83,6 +83,7 @@ public abstract class ProgressWidget extends AbstractWidget {
         this.u = u;
         this.v = v;
         this.tooltip = tooltip;
+        this.setFocused(true);
     }
 
     protected ProgressWidget(EIOScreen screen, Supplier<Float> progressSupplier, int x, int y, int width, int height, int u, int v) {
@@ -104,6 +105,10 @@ public abstract class ProgressWidget extends AbstractWidget {
         // Should also mean when tooltip is false it never gets populated
         if (this.isHoveredOrFocused() && tooltip) {
             setTooltip(Tooltip.create(TooltipUtil.withArgs(MachineLang.PROGRESS_TOOLTIP, (int) (progressSupplier.get() * 100))));
+        }
+        //TODO: NEO-PORT: figure out why normal tooltip doesn't work
+        if (this.isHovered()) {
+            guiGraphics.renderTooltip(this.screen.getMinecraft().font, getTooltip().toCharSequence(this.screen.getMinecraft()), mouseX, mouseY);
         }
     }
 
