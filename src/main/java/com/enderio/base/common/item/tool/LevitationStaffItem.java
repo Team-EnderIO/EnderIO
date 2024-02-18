@@ -1,6 +1,6 @@
 package com.enderio.base.common.item.tool;
 
-import com.enderio.base.common.capability.AcceptingFluidItemHandler;
+import com.enderio.core.common.capability.StrictFluidHandlerItemStack;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.tag.EIOTags;
@@ -19,7 +19,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 public class LevitationStaffItem extends PoweredToggledItem {
 
     public static final ICapabilityProvider<ItemStack, Void, IFluidHandlerItem> FLUID_HANDLER_PROVIDER
-        = (stack, v) -> new AcceptingFluidItemHandler(stack, 1000, EIOTags.Fluids.STAFF_OF_LEVITY_FUEL);
+        = (stack, v) -> new StrictFluidHandlerItemStack(stack, 1000, EIOTags.Fluids.STAFF_OF_LEVITY_FUEL);
 
     public LevitationStaffItem(Properties pProperties) {
         super(pProperties);
@@ -67,8 +67,8 @@ public class LevitationStaffItem extends PoweredToggledItem {
 
         var fluidHandler = pStack.getCapability(Capabilities.FluidHandler.ITEM);
         if (fluidHandler != null) {
-            if (fluidHandler instanceof AcceptingFluidItemHandler acceptingFluidItemHandler) {
-                acceptingFluidItemHandler.setFluid(new FluidStack(EIOFluids.VAPOR_OF_LEVITY.getSource(), fluidHandler.getTankCapacity(0)));
+            if (fluidHandler instanceof StrictFluidHandlerItemStack strictFluidHandlerItemStack) {
+                strictFluidHandlerItemStack.setFluid(new FluidStack(EIOFluids.VAPOR_OF_LEVITY.getSource(), fluidHandler.getTankCapacity(0)));
             }
         }
     }

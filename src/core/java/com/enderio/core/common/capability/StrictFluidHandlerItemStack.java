@@ -1,4 +1,4 @@
-package com.enderio.base.common.capability;
+package com.enderio.core.common.capability;
 
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
@@ -11,19 +11,19 @@ import java.util.function.Predicate;
 /**
  * FluidHandler for Items which only accept specific fluids
  */
-public class AcceptingFluidItemHandler extends FluidHandlerItemStack {
+public class StrictFluidHandlerItemStack extends FluidHandlerItemStack {
 
     private final Predicate<Fluid> fluidPredicate;
 
-    public AcceptingFluidItemHandler(ItemStack container, int capacity, Fluid validFluid) {
+    public StrictFluidHandlerItemStack(ItemStack container, int capacity, Fluid validFluid) {
         this(container, capacity, fluid -> fluid == validFluid);
     }
 
-    public AcceptingFluidItemHandler(ItemStack container, int capacity, TagKey<Fluid> validFluid) {
+    public StrictFluidHandlerItemStack(ItemStack container, int capacity, TagKey<Fluid> validFluid) {
         this(container, capacity, fluid -> fluid.is(validFluid));
     }
 
-    public AcceptingFluidItemHandler(ItemStack container, int capacity, Predicate<Fluid> isFluidValid) {
+    public StrictFluidHandlerItemStack(ItemStack container, int capacity, Predicate<Fluid> isFluidValid) {
         super(container, capacity);
         fluidPredicate = isFluidValid;
     }

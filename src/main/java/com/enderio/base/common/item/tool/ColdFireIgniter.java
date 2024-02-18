@@ -1,6 +1,8 @@
 package com.enderio.base.common.item.tool;
 
-import com.enderio.base.common.capability.AcceptingFluidItemHandler;
+import com.enderio.base.common.init.EIOAttachments;
+import com.enderio.core.common.attachment.IStrictItemFluidHandlerConfig;
+import com.enderio.core.common.capability.StrictFluidHandlerItemStack;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.tag.EIOTags;
@@ -23,6 +25,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -32,11 +35,12 @@ import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Predicate;
 
-public class ColdFireIgniter extends Item implements ITabVariants {
+public class ColdFireIgniter extends Item implements ITabVariants, IStrictItemFluidHandlerConfig {
 
     public static ICapabilityProvider<ItemStack, Void, IFluidHandlerItem> FLUID_HANDLER_PROVIDER =
-        (stack, v) -> new AcceptingFluidItemHandler(stack, 1000, EIOTags.Fluids.COLD_FIRE_IGNITER_FUEL);
+        (stack, v) -> stack.getData(EIOAttachments.ITEM_STRICT_FLUID);
 
     public ColdFireIgniter(Properties properties) {
         super(properties);
@@ -118,10 +122,21 @@ public class ColdFireIgniter extends Item implements ITabVariants {
 
         var fluidHandler = is.getCapability(Capabilities.FluidHandler.ITEM);
         if (fluidHandler != null) {
-            if (fluidHandler instanceof AcceptingFluidItemHandler acceptingFluidItemHandler) {
-                acceptingFluidItemHandler.setFluid(new FluidStack(EIOFluids.VAPOR_OF_LEVITY.getSource(), fluidHandler.getTankCapacity(0)));
+            if (fluidHandler instanceof StrictFluidHandlerItemStack strictFluidHandlerItemStack) {
+                strictFluidHandlerItemStack.setFluid(new FluidStack(EIOFluids.VAPOR_OF_LEVITY.getSource(), fluidHandler.getTankCapacity(0)));
                 modifier.accept(is);
             }
         }
+    }
+
+    @Override
+    public int getCapacity() {
+        // TODO: Config
+        return 1000;
+    }
+
+    @Override
+    public Predicate<Fluid> getFluidFilter() {
+        return f -> f.is(EIOTags.Fluids.COLD_FIRE_IGNITER_FUEL);
     }
 }
