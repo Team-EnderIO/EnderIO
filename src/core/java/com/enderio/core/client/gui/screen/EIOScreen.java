@@ -73,9 +73,10 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
         renderBackground(guiGraphics, pMouseX, pMouseY, pPartialTicks);
         super.render(guiGraphics, pMouseX, pMouseY, pPartialTicks);
         this.renderTooltip(guiGraphics, pMouseX, pMouseY);
-        for (LateTooltipData tooltip : tooltips) {
-            tooltip.getGuiGraphics().renderTooltip(this.font, tooltip.getText(), Optional.empty(), tooltip.getMouseX(), tooltip.getMouseY());
-        }
+        //TODO: NEO-PORT: Remove all LateTooltipData, vanilla has deferred tooltips now
+//        for (LateTooltipData tooltip : tooltips) {
+//            tooltip.getGuiGraphics().renderTooltip(this.font, tooltip.getText(), Optional.empty(), tooltip.getMouseX(), tooltip.getMouseY());
+//        }
     }
 
     @Override
