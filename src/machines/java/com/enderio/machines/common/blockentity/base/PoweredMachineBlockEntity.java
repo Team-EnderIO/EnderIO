@@ -172,7 +172,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
 
         // Transmit power out all sides.
         for (Direction side : Direction.values()) {
-            if (!shouldPushEnergyTo(side) || !getIOConfig().getMode(side).canPush()) {
+            if (!shouldPushEnergyTo(side) || !getIOConfig().getMode(side).canOutput()) {
                 continue;
             }
 
