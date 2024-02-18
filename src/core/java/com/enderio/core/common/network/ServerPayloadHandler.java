@@ -18,7 +18,7 @@ public class ServerPayloadHandler {
                 context.level().ifPresent(level -> {
                     BlockEntity be = level.getBlockEntity(change.pos());
                     if (be instanceof EnderBlockEntity enderBlockEntity) {
-                        enderBlockEntity.clientHandleBufferSync(change.updateData());
+                        enderBlockEntity.serverHandleBufferChange(change.updateData());
                     }
                 });
             });

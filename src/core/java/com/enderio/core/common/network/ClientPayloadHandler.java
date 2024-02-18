@@ -44,7 +44,7 @@ public class ClientPayloadHandler {
                     BlockEntity be = level.getBlockEntity(update.pos());
                     if (be instanceof EnderBlockEntity enderBlockEntity) {
                         // TODO: Handle nullability
-                        enderBlockEntity.serverHandleBufferChange(update.slotData());
+                        enderBlockEntity.clientHandleBufferSync(update.slotData());
                     }
                 });
             });
