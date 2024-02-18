@@ -54,7 +54,6 @@ import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -108,13 +107,6 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     @Nullable
     private final MachineFluidHandler fluidHandler;
-
-    // endregion
-
-    // region External Capability Caches
-
-    private final List<BlockCapability<?, ?>> cachedCapabilityTypes = new ArrayList<>();
-    private final Map<BlockCapability<?, ?>, EnumMap<Direction, BlockCapabilityCache<?, ?>>> cachedCapabilities = new HashMap<>();
 
     // endregion
 
@@ -510,7 +502,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
      * Move items to and fro via the given side.
      */
     private void moveItems(Direction side) {
-        var selfHandler = getInventory();
+        var selfHandler = getSelfCapability(Capabilities.ItemHandler.BLOCK, side);
         if (selfHandler == null) {
             return;
         }
@@ -556,7 +548,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
      * Move fluids to and fro via the given side.
      */
     private void moveFluids(Direction side) {
-        var selfHandler = getFluidHandler();
+        var selfHandler = getSelfCapability(Capabilities.FluidHandler.BLOCK, side);
         if (selfHandler == null) {
             return;
         }
@@ -586,44 +578,6 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     protected int moveFluids(IFluidHandler from, IFluidHandler to, int maxDrain) {
         FluidStack stack = FluidUtil.tryFluidTransfer(to, from, maxDrain, true);
         return stack.getAmount();
-    }
-
-    // endregion
-
-    // region Neighboring Capabilities
-
-    // TODO: NEO-PORT: We might want handling for Void contexts.
-    //                 However cannot have two methods with same method name and different context type params :(
-
-    @Nullable
-    protected <T> T getNeighbouringCapability(BlockCapability<T, Direction> capability, Direction side) {
-        if (level == null) {
-            return null;
-        }
-
-        if (!cachedCapabilityTypes.contains(capability)) {
-            // We've not seen this capability before, time to register it!
-            cachedCapabilityTypes.add(capability);
-            cachedCapabilities.put(capability, new EnumMap<>(Direction.class));
-
-            for (Direction direction : Direction.values()) {
-                populateCachesFor(direction, capability);
-            }
-        }
-
-        if (!cachedCapabilities.get(capability).containsKey(side)) {
-            return null;
-        }
-
-        //noinspection unchecked
-        return (T)cachedCapabilities.get(capability).get(side).getCapability();
-    }
-
-    private void populateCachesFor(Direction direction, BlockCapability<?, Direction> capability) {
-        if (level instanceof ServerLevel serverLevel) {
-            BlockPos neighbourPos = getBlockPos().relative(direction);
-            cachedCapabilities.get(capability).put(direction, BlockCapabilityCache.create(capability, serverLevel, neighbourPos, direction.getOpposite()));
-        }
     }
 
     // endregion

@@ -172,7 +172,12 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
 
         // Transmit power out all sides.
         for (Direction side : Direction.values()) {
-            if (!shouldPushEnergyTo(side) || !getIOConfig().getMode(side).canOutput()) {
+            if (!shouldPushEnergyTo(side)) {
+                continue;
+            }
+
+            var selfHandler = getSelfCapability(Capabilities.EnergyStorage.BLOCK, side);
+            if (selfHandler == null) {
                 continue;
             }
 
@@ -181,10 +186,9 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
             if (otherHandler != null) {
                 // If the other handler can receive power transmit ours
                 if (otherHandler.canReceive()) {
-                    int received = otherHandler.receiveEnergy(getExposedEnergyStorage().getEnergyStored(), false);
-
-                    // Consume that energy from our buffer.
-                    getExposedEnergyStorage().takeEnergy(received);
+                    int energyToReceive = selfHandler.extractEnergy(selfHandler.getEnergyStored(), true);
+                    int received = otherHandler.receiveEnergy(energyToReceive, false);
+                    selfHandler.extractEnergy(received, false);
                 }
             }
         }
