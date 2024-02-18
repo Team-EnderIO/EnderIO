@@ -6,6 +6,7 @@ import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.base.common.blockentity.IMachineInstall;
 import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.base.common.capacitor.DefaultCapacitorData;
+import com.enderio.base.common.init.EIOAttachments;
 import com.enderio.base.common.item.capacitors.BaseCapacitorItem;
 import com.enderio.core.common.network.slot.NetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
@@ -32,7 +33,6 @@ import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
@@ -373,5 +373,14 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
         //Ideally I would want to use onLoad, but when placing a block this is called before load is done.
         updateMachineState(MachineState.NO_CAPACITOR, requiresCapacitor() && getCapacitorItem().isEmpty());
         updateMachineState(MachineState.NO_POWER, energyStorage.getEnergyStored() <= 0);
+    }
+
+    @Override
+    public void copyFromStack(ItemStack stack) {
+        super.copyFromStack(stack);
+        if (stack.hasData(EIOAttachments.NBT_ATTACHMENT)) {
+            CompoundTag tag = stack.getData(EIOAttachments.NBT_ATTACHMENT).getTag();
+            //TODO get energy since it's not an attachment?
+        }
     }
 }

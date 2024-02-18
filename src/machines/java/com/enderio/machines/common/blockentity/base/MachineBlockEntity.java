@@ -704,4 +704,14 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             states.remove(state);
         }
     }
+
+    @Override
+    public void copyFromStack(ItemStack stack) {
+        super.copyFromStack(stack);
+        if (stack.hasData(EIOAttachments.NBT_ATTACHMENT)) {
+            CompoundTag tag = stack.getData(EIOAttachments.NBT_ATTACHMENT).getTag();
+            //TODO get inv since it's not an attachment?
+            //TODO get fluid since it's not an attachment?
+        }
+    }
 }

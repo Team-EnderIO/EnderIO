@@ -1,6 +1,7 @@
 package com.enderio.machines.common.block;
 
 import com.enderio.base.common.tag.EIOTags;
+import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.regilite.holder.RegiliteBlockEntity;
 import com.mojang.serialization.Codec;
@@ -14,7 +15,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -145,5 +148,14 @@ public class MachineBlock extends BaseEntityBlock {
             return machineBlock.getLightEmission();
         }
         return super.getLightEmission(state, level, pos);
+    }
+
+    @Override
+    public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
+        BlockEntity be = pLevel.getBlockEntity(pPos);
+        if (be instanceof EnderBlockEntity enderBlockEntity) {
+            enderBlockEntity.copyFromStack(pStack);
+        }
+        super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
     }
 }

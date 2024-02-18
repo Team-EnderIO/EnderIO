@@ -12,6 +12,7 @@ import com.enderio.base.common.init.EIOEnchantments;
 import com.enderio.base.common.init.EIOEntities;
 import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.common.init.EIOLootFunctions;
 import com.enderio.base.common.init.EIOLootModifiers;
 import com.enderio.base.common.init.EIOMenus;
 import com.enderio.base.common.init.EIOParticles;
@@ -103,6 +104,7 @@ public class EnderIO {
         EIOParticles.register(modEventBus);
         EIOEntities.register(modEventBus);
         EIOAttachments.register(modEventBus);
+        EIOLootFunctions.register(modEventBus);
 
         // Run datagen after registrate is finished.
         modEventBus.addListener(EventPriority.LOWEST, this::onGatherData);
