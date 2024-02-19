@@ -60,8 +60,7 @@ public class MachineBlockEntities {
             .apply(MachineBlockEntities::machineBlockEntityCapabilities);
 
     public static final RegiliteBlockEntity<EnchanterBlockEntity> ENCHANTER =
-        register("enchanter", EnchanterBlockEntity::new, MachineBlocks.ENCHANTER)
-            .apply(MachineBlockEntities::machineBlockEntityCapabilities);
+        register("enchanter", EnchanterBlockEntity::new, MachineBlocks.ENCHANTER);
 
     public static final RegiliteBlockEntity<PrimitiveAlloySmelterBlockEntity> PRIMITIVE_ALLOY_SMELTER =
         register("primitive_alloy_smelter", PrimitiveAlloySmelterBlockEntity::new, MachineBlocks.PRIMITIVE_ALLOY_SMELTER)

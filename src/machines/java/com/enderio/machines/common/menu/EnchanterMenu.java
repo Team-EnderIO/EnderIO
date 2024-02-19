@@ -7,7 +7,6 @@ import com.enderio.machines.common.recipe.EnchanterRecipe;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
@@ -59,14 +58,15 @@ public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
 
         @Override
         public void onTake(Player pPlayer, ItemStack pStack) {
+            var inventory = blockEntity.getInventory();
             EnchanterRecipe recipe = blockEntity.getCurrentRecipe();
             if (recipe != null && (pPlayer.experienceLevel >= recipe.getXPCost(blockEntity.getContainer()) || pPlayer.isCreative())) {
                 int amount = recipe.getInputAmountConsumed(blockEntity.getContainer());
-                int lapizForLevel = recipe.getLapisForLevel(recipe.getEnchantmentLevel(EnchanterBlockEntity.CATALYST.getItemStack(blockEntity).getCount()));
+                int lapizForLevel = recipe.getLapisForLevel(recipe.getEnchantmentLevel(EnchanterBlockEntity.CATALYST.getItemStack(inventory).getCount()));
                 pPlayer.giveExperienceLevels(-recipe.getXPCost(blockEntity.getContainer()));
-                EnchanterBlockEntity.BOOK.getItemStack(blockEntity).shrink(1);
-                EnchanterBlockEntity.CATALYST.getItemStack(blockEntity).shrink(amount);
-                EnchanterBlockEntity.LAPIS.getItemStack(blockEntity).shrink(lapizForLevel);
+                EnchanterBlockEntity.BOOK.getItemStack(inventory).shrink(1);
+                EnchanterBlockEntity.CATALYST.getItemStack(inventory).shrink(amount);
+                EnchanterBlockEntity.LAPIS.getItemStack(inventory).shrink(lapizForLevel);
                 super.onTake(pPlayer, pStack);
             }
         }
@@ -74,7 +74,7 @@ public class EnchanterMenu extends MachineMenu<EnchanterBlockEntity> {
         @Override
         public boolean mayPickup(Player playerIn) {
             EnchanterRecipe recipe = blockEntity.getCurrentRecipe();
-            if (recipe != null && (playerIn.experienceLevel >= recipe.getXPCost(blockEntity.getContainer()) || playerIn.isCreative()) && blockEntity.canAct()) {
+            if (recipe != null && (playerIn.experienceLevel >= recipe.getXPCost(blockEntity.getContainer()) || playerIn.isCreative())) {
                 return super.mayPickup(playerIn);
             }
             return false;

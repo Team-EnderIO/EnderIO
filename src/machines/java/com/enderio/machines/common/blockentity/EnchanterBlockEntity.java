@@ -2,6 +2,8 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
+import com.enderio.core.common.blockentity.EnderBlockEntity;
+import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineRecipes;
@@ -12,6 +14,9 @@ import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.EnchanterMenu;
 import com.enderio.machines.common.recipe.EnchanterRecipe;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -24,7 +29,7 @@ import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 import org.jetbrains.annotations.Nullable;
 
-public class EnchanterBlockEntity extends MachineBlockEntity {
+public class EnchanterBlockEntity extends EnderBlockEntity implements MenuProvider {
 
     private final RecipeWrapper container;
     @Nullable
@@ -34,17 +39,40 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
     public static final SingleSlotAccess LAPIS = new SingleSlotAccess();
     public static final SingleSlotAccess OUTPUT = new SingleSlotAccess();
 
+    private final MachineInventory inventory;
+
     public EnchanterBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(MachineBlockEntities.ENCHANTER.get(), worldPosition, blockState);
-        container = new RecipeWrapper(getInventory());
+
+        inventory = createInventory();
+        container = new RecipeWrapper(inventory);
     }
 
     public RecipeWrapper getContainer() {
         return container;
     }
 
+    // region MenuProvider
+
     @Override
-    public MachineInventoryLayout getInventoryLayout() {
+    public Component getDisplayName() {
+        return getBlockState().getBlock().getName();
+    }
+
+    @Override
+    public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
+        return new EnchanterMenu(this, pInventory, pContainerId);
+    }
+
+    // endregion
+
+    // region Inventory & Recipe
+
+    public MachineInventory getInventory() {
+        return inventory;
+    }
+
+    private MachineInventoryLayout getInventoryLayout() {
         return MachineInventoryLayout.builder()
             .inputSlot((slot, stack) -> stack.getItem() == Items.WRITABLE_BOOK)
             .slotAccess(BOOK)
@@ -57,30 +85,9 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
             .build();
     }
 
-    // region Machine config
-
-    @Override
-    public boolean supportsRedstoneControl() {
-        return false;
-    }
-
-    @Override
-    protected IIOConfig createIOConfig() {
-        // No IO support for this block.
-        return new FixedIOConfig(IOMode.DISABLED);
-    }
-
-    // endregion
-
-    @Override
-    public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
-        return new EnchanterMenu(this, pInventory, pContainerId);
-    }
-
-    @Override
-    protected MachineInventory createMachineInventory(MachineInventoryLayout layout) {
+    private MachineInventory createInventory() {
         // Custom behaviour as this works more like a crafting table than a machine.
-        return new MachineInventory(getIOConfig(), layout) {
+        return new MachineInventory(FixedIOConfig.DISABLED, getInventoryLayout()) {
 
             protected void onContentsChanged(int slot) {
                 if (level == null) {
@@ -95,7 +102,6 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
                     }
                 }
 
-                onInventoryContentsChanged(slot);
                 setChanged();
             }
 
@@ -120,4 +126,22 @@ public class EnchanterBlockEntity extends MachineBlockEntity {
 
         return currentRecipe.value();
     }
+
+    // endregion
+
+    // region Serialization
+
+    @Override
+    public void load(CompoundTag tag) {
+        super.load(tag);
+        inventory.deserializeNBT(tag.getCompound(MachineNBTKeys.ITEMS));
+    }
+
+    @Override
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        tag.put(MachineNBTKeys.ITEMS, inventory.serializeNBT());
+    }
+
+    // endregion
 }

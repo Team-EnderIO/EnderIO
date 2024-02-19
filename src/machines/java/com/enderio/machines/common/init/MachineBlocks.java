@@ -6,6 +6,7 @@ import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.core.data.model.EIOModel;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.CapacitorBankBlock;
+import com.enderio.machines.common.block.EnchanterBlock;
 import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.block.ProgressMachineBlock;
 import com.enderio.machines.common.block.SolarPanelBlock;
@@ -90,8 +91,8 @@ public class MachineBlocks {
                 .addCapability(Capabilities.FluidHandler.ITEM, FluidTankItem.FLUID_HANDLER_PROVIDER)
         );
 
-    public static final RegiliteBlock<MachineBlock> ENCHANTER = BLOCK_REGISTRY
-        .registerBlock("enchanter", props -> new MachineBlock(MachineBlockEntities.ENCHANTER, props),
+    public static final RegiliteBlock<EnchanterBlock> ENCHANTER = BLOCK_REGISTRY
+        .registerBlock("enchanter", EnchanterBlock::new,
             BlockBehaviour.Properties.of().strength(2.5f, 8).noOcclusion().isViewBlocking((pState, pLevel, pPos) -> false))
         .setLootTable(MachinesLootTable::copyNBT)
         .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
