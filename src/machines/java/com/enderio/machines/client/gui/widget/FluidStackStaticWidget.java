@@ -21,12 +21,12 @@ import java.util.function.Supplier;
 
 public class FluidStackStaticWidget extends EIOWidget {
 
-    private final Screen displayOn;
+    private final Screen screen;
     private final Supplier<MachineFluidTank> getFluid;
 
-    public FluidStackStaticWidget(Screen displayOn, Supplier<MachineFluidTank> getFluid, int pX, int pY, int pWidth, int pHeight) {
+    public FluidStackStaticWidget(Screen screen, Supplier<MachineFluidTank> getFluid, int pX, int pY, int pWidth, int pHeight) {
         super(pX, pY, pWidth, pHeight);
-        this.displayOn = displayOn;
+        this.screen = screen;
         this.getFluid = getFluid;
     }
 
@@ -71,7 +71,7 @@ public class FluidStackStaticWidget extends EIOWidget {
 
     public void renderToolTip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (isHovered(mouseX, mouseY)) {
-            guiGraphics.renderTooltip(displayOn.getMinecraft().font, Arrays.asList(getFluid.get().getFluid().getDisplayName().getVisualOrderText(),
+            guiGraphics.renderTooltip(screen.getMinecraft().font, Arrays.asList(getFluid.get().getFluid().getDisplayName().getVisualOrderText(),
                 Component.literal(getFluid.get().getFluidAmount() + "mB").getVisualOrderText()), mouseX, mouseY);
         }
     }

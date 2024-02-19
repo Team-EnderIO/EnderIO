@@ -20,8 +20,8 @@ public class CapacitorEnergyWidget extends EnergyWidget{
     public static final ItemStack CAPACITOR = new ItemStack(EIOItems.BASIC_CAPACITOR.get());
     private final Supplier<Boolean> cap;
 
-    public CapacitorEnergyWidget(Screen displayOn, Supplier<IMachineEnergyStorage> storageSupplier, Supplier<Boolean> cap, int x, int y, int width, int height) {
-        super(displayOn, storageSupplier, x, y, width, height);
+    public CapacitorEnergyWidget(Screen screen, Supplier<IMachineEnergyStorage> storageSupplier, Supplier<Boolean> cap, int x, int y, int width, int height) {
+        super(screen, storageSupplier, x, y, width, height);
         this.cap = cap;
     }
 
@@ -48,7 +48,7 @@ public class CapacitorEnergyWidget extends EnergyWidget{
         PoseStack pose = guiGraphics.pose();
         pose.pushPose();
         pose.translate(0,0,1);
-        guiGraphics.renderComponentTooltip(displayOn.getMinecraft().font, list, mouseX, mouseY);
+        guiGraphics.renderComponentTooltip(screen.getMinecraft().font, list, mouseX, mouseY);
         pose.popPose();
     }
 

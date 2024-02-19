@@ -41,14 +41,14 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
 
     private int mouseButton = 0;
 
-    private final U addedOn;
+    private final U screen;
 
     private final SelectionScreen selection;
 
     // TODO: I don't like that this is separate, maybe we need an IOptionIcon for holding the option name?
     private final Component optionName;
 
-    public EnumIconWidget(U addedOn, int pX, int pY, Supplier<T> getter, Consumer<T> setter, Component optionName) {
+    public EnumIconWidget(U screen, int pX, int pY, Supplier<T> getter, Consumer<T> setter, Component optionName) {
         super(pX, pY, getter.get().getRenderSize().x(), getter.get().getRenderSize().y(), Component.empty());
         this.getter = getter;
         this.setter = setter;
@@ -73,7 +73,7 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
         }
         expandTopLeft = topLeft.expand(-SPACE_BETWEEN_ELEMENTS);
         expandBottomRight = bottomRight.expand(SPACE_BETWEEN_ELEMENTS);
-        this.addedOn = addedOn;
+        this.screen = screen;
         this.selection = new SelectionScreen();
     }
 
@@ -122,13 +122,13 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
-        if (expandNext && Minecraft.getInstance().screen == addedOn) {
+        if (expandNext && Minecraft.getInstance().screen == screen) {
             Minecraft.getInstance().pushGuiLayer(selection);
             expandNext = false;
             isExpanded = true;
         }
         T icon = getter.get();
-        addedOn.renderIconBackground(guiGraphics, new Vector2i(getX(), getY()), icon);
+        screen.renderIconBackground(guiGraphics, new Vector2i(getX(), getY()), icon);
         IEnderScreen.renderIcon(guiGraphics, new Vector2i(getX(), getY()), icon);
 
         if (isHovered() && tooltipDisplayCache != getter.get()) {

@@ -4,7 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
-import com.enderio.machines.client.gui.widget.ActiveWidget;
+import com.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
 import com.enderio.machines.client.gui.widget.ExperienceCraftingWidget;
 import com.enderio.machines.client.gui.widget.ProgressWidget;
@@ -35,7 +35,7 @@ public class SoulBinderScreen extends MachineScreen<SoulBinderMenu> {
 
         addRenderableOnly(new ExperienceCraftingWidget(this, getMenu().getBlockEntity()::getFluidTank, () -> getMenu().getBlockEntity().getClientExp(), 56 + leftPos, 68 + topPos, 65, 5));
 
-        addRenderableWidget(new ActiveWidget(this, menu.getBlockEntity()::getMachineStates, leftPos + imageWidth - 6 - 16, topPos + 16*4));
+        addRenderableWidget(new ActivityWidget(this, menu.getBlockEntity()::getMachineStates, leftPos + imageWidth - 6 - 16, topPos + 16 * 4));
 
         addRenderableWidget(new IOConfigButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 24, 16, 16, menu, this::addRenderableWidget, font));
     }

@@ -6,7 +6,7 @@ import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.gui.widgets.EIOImageButton;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.enderio.core.client.gui.widgets.ToggleImageButton;
-import com.enderio.machines.client.gui.widget.ActiveWidget;
+import com.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.machines.common.menu.VacuumChestMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.WidgetSprites;
@@ -43,7 +43,7 @@ public class VacuumChestScreen extends MachineScreen<VacuumChestMenu> {
         addRenderableWidget(new EIOImageButton(this, leftPos + imageWidth - 8 - 8, topPos + 94, 8, 8, MINUS_SPRITES,
             (b) -> menu.getBlockEntity().decreaseRange()));
 
-        addRenderableWidget(new ActiveWidget(this, menu.getBlockEntity()::getMachineStates, leftPos + imageWidth - 8 - 16 * 3 - 4, topPos + 105));
+        addRenderableWidget(new ActivityWidget(this, menu.getBlockEntity()::getMachineStates, leftPos + imageWidth - 8 - 16 * 3 - 4, topPos + 105));
 
     }
 

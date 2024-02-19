@@ -17,16 +17,22 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
-public class ActiveWidget extends EIOWidget {
+public class ActivityWidget extends EIOWidget {
     protected static final ResourceLocation WIDGETS = EnderIO.loc("textures/gui/icons/machine_states.png");
 
-    private final Screen displayOn;
+    private final Screen screen;
     private final Supplier<Set<MachineState>> state;
 
-    public ActiveWidget(Screen displayOn, Supplier<Set<MachineState>> state, int x, int y) {
+    public ActivityWidget(Screen screen, Supplier<Set<MachineState>> state, int x, int y) {
         super(x, y, 16, 16);
-        this.displayOn = displayOn;
+        this.screen = screen;
         this.state = state;
+    }
+
+    //stop the click sound
+    @Override
+    public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
+        return false;
     }
 
     @Override
@@ -51,7 +57,7 @@ public class ActiveWidget extends EIOWidget {
             if (list.isEmpty()){
                 list = List.of(MachineLang.TOOLTIP_IDLE);
             }
-            guiGraphics.renderTooltip(displayOn.getMinecraft().font, list, Optional.empty(), mouseX, mouseY);
+            guiGraphics.renderTooltip(screen.getMinecraft().font, list, Optional.empty(), mouseX, mouseY);
         }
     }
 

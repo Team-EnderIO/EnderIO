@@ -6,7 +6,7 @@ import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.gui.widgets.EIOImageButton;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.enderio.core.client.gui.widgets.ToggleImageButton;
-import com.enderio.machines.client.gui.widget.ActiveWidget;
+import com.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.machines.client.gui.widget.CapacitorEnergyWidget;
 import com.enderio.machines.client.gui.widget.FluidStackWidget;
 import com.enderio.machines.common.menu.DrainMenu;
@@ -48,7 +48,7 @@ public class DrainScreen extends MachineScreen<DrainMenu> {
         addRenderableWidget(new EIOImageButton(this, leftPos + imageWidth - 2 * 16, topPos + 2 + 16 * 2 + 8, 8, 8, MINUS_SPRITES,
             (b) -> menu.getBlockEntity().decreaseRange()));
 
-        addRenderableWidget(new ActiveWidget(this, menu.getBlockEntity()::getMachineStates, leftPos + imageWidth - 6 - 16, topPos + 16*4));
+        addRenderableWidget(new ActivityWidget(this, menu.getBlockEntity()::getMachineStates, leftPos + imageWidth - 6 - 16, topPos + 16 * 4));
     }
 
     @Override

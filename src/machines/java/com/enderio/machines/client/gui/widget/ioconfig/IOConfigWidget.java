@@ -78,7 +78,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     private static final ResourceLocation SELECTED_ICON = EnderIO.loc("block/overlay/selected_face");
     private static final Minecraft MINECRAFT = Minecraft.getInstance();
     private static MultiBufferSource.BufferSource ghostBuffers;
-    private final U addedOn;
+    private final U screen;
     private final Vector3f worldOrigin;
     private final Vector3f multiblockSize;
     private final List<BlockPos> configurable = new ArrayList<>();
@@ -90,13 +90,13 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     private boolean neighbourVisible = true;
     private Optional<SelectedFace> selection = Optional.empty();
 
-    public IOConfigWidget(U addedOn, int x, int y, int width, int height, BlockPos configurable, Font font) {
-        this(addedOn, x, y, width, height, List.of(configurable), font);
+    public IOConfigWidget(U screen, int x, int y, int width, int height, BlockPos configurable, Font font) {
+        this(screen, x, y, width, height, List.of(configurable), font);
     }
 
-    public IOConfigWidget(U addedOn, int x, int y, int width, int height, List<BlockPos> _configurable, Font font) {
+    public IOConfigWidget(U screen, int x, int y, int width, int height, List<BlockPos> _configurable, Font font) {
         super(x, y, width, height, Component.empty());
-        this.addedOn = addedOn;
+        this.screen = screen;
         this.configurable.addAll(_configurable);
         this.screenFont = font;
 
@@ -198,8 +198,8 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     @Override
     public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
         if (visible && isValidClickButton(pButton) && isMouseOver(pMouseX, pMouseY)) {
-            double dx = pDragX / (double) addedOn.width;
-            double dy = pDragY / (double) addedOn.height;
+            double dx = pDragX / (double) screen.width;
+            double dy = pDragY / (double) screen.height;
             yaw += 4 * dx * 180;
             pitch += 2 * dy * 180;
 
@@ -224,7 +224,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
         if (visible) {
             // render black bg
             if (isMouseOver(mouseX, mouseY)) {
-                addedOn.setFocused(this);
+                screen.setFocused(this);
             }
             guiGraphics.enableScissor(getX(), getY(), getX() + width, getY() + height);
             guiGraphics.fill(getX(), getY(), getX() + width, getY() + height, 0xFF000000);
