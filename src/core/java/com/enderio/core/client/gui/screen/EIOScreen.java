@@ -20,14 +20,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 public abstract class EIOScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> implements IEnderScreen {
 
     private final boolean renderLabels;
     private final List<EditBox> editBoxList = new ArrayList<>();
-
-    private final List<LateTooltipData> tooltips = new ArrayList<>();
 
     protected EIOScreen(T pMenu, Inventory pPlayerInventory, Component pTitle) {
         this(pMenu, pPlayerInventory, pTitle, false);
@@ -73,15 +70,10 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
         renderBackground(guiGraphics, pMouseX, pMouseY, pPartialTicks);
         super.render(guiGraphics, pMouseX, pMouseY, pPartialTicks);
         this.renderTooltip(guiGraphics, pMouseX, pMouseY);
-        //TODO: NEO-PORT: Remove all LateTooltipData, vanilla has deferred tooltips now
-//        for (LateTooltipData tooltip : tooltips) {
-//            tooltip.getGuiGraphics().renderTooltip(this.font, tooltip.getText(), Optional.empty(), tooltip.getMouseX(), tooltip.getMouseY());
-//        }
     }
 
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
-        tooltips.clear();
         guiGraphics.blit(getBackgroundImage(), getGuiLeft(), getGuiTop(), 0, 0, imageWidth, imageHeight);
     }
 
@@ -96,11 +88,6 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
             }
         }
         return super.keyPressed(pKeyCode, pScanCode, pModifiers);
-    }
-
-    @Override
-    public void removed() {
-        super.removed();
     }
 
     @Override
@@ -129,15 +116,6 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
         }
     }
 
-    @Override
-    protected void containerTick() {
-        super.containerTick();
-        // TODO: 1.20.2: What was this doing?
-        /*for (EditBox editBox : editBoxList) {
-            editBox.tick();
-        }*/
-    }
-
     public abstract ResourceLocation getBackgroundImage();
 
     protected abstract Vector2i getBackgroundImageSize();
@@ -158,8 +136,11 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
         }
     }
 
+    /**
+     * makes this public instead of protected
+     */
     @Override
-    public void addTooltip(LateTooltipData data) {
-        tooltips.add(data);
+    public void setTooltipForNextRenderPass(Component pTooltip) {
+        super.setTooltipForNextRenderPass(pTooltip);
     }
 }
