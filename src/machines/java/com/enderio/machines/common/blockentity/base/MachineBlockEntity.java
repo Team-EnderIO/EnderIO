@@ -16,6 +16,7 @@ import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.blockentity.MachineState;
 import com.enderio.machines.common.io.IOConfig;
+import com.enderio.machines.common.io.TransferUtil;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.machines.common.io.item.MachineInventory;
@@ -491,41 +492,10 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         // Get our item handler.
         getCapability(ForgeCapabilities.ITEM_HANDLER, side).resolve().ifPresent(selfHandler -> {
             // Get neighboring item handler.
-            Optional<IItemHandler> otherHandler = getNeighbouringCapability(ForgeCapabilities.ITEM_HANDLER, side).resolve();
+            Optional<IItemHandler> otherHandlerOpt = getNeighbouringCapability(ForgeCapabilities.ITEM_HANDLER, side).resolve();
 
-            if (otherHandler.isPresent()) {
-                // Get side config
-                IOMode mode = ioConfig.getMode(side);
-
-                // Output items to the other provider if enabled.
-                if (mode.canPush()) {
-                    moveItems(selfHandler, otherHandler.get());
-                }
-
-                // Insert items from the other provider if enabled.
-                if (mode.canPull()) {
-                    moveItems(otherHandler.get(), selfHandler);
-                }
-            }
+            otherHandlerOpt.ifPresent(otherHandler -> TransferUtil.distributeItems(ioConfig.getMode(side), selfHandler, otherHandler));
         });
-    }
-
-    /**
-     * Move items from one item handler to the other.
-     */
-    protected void moveItems(IItemHandler from, IItemHandler to) {
-        for (int i = 0; i < from.getSlots(); i++) {
-            ItemStack extracted = from.extractItem(i, 1, true);
-            if (!extracted.isEmpty()) {
-                for (int j = 0; j < to.getSlots(); j++) {
-                    ItemStack inserted = to.insertItem(j, extracted, false);
-                    if (inserted.isEmpty()) {
-                        from.extractItem(i, 1, false);
-                        return;
-                    }
-                }
-            }
-        }
     }
 
     /**
@@ -535,28 +505,16 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         // Get our fluid handler
         getCapability(ForgeCapabilities.FLUID_HANDLER, side).resolve().ifPresent(selfHandler -> {
             // Get neighboring fluid handler.
-            Optional<IFluidHandler> otherHandler = getNeighbouringCapability(ForgeCapabilities.FLUID_HANDLER, side).resolve();
+            Optional<IFluidHandler> otherHandlerOpt = getNeighbouringCapability(ForgeCapabilities.FLUID_HANDLER, side).resolve();
 
-            if (otherHandler.isPresent()) {
-                // Get side config
-                IOMode mode = ioConfig.getMode(side);
-
-                // Test if we have fluid.
-                FluidStack stack = selfHandler.drain(100, FluidAction.SIMULATE);
-
-                // If we have no fluids, see if we can pull. Otherwise, push.
-                if (stack.isEmpty() && mode.canPull()) {
-                    moveFluids(otherHandler.get(), selfHandler, 100);
-                } else if (mode.canPush()) {
-                    moveFluids(selfHandler, otherHandler.get(), 100);
-                }
-            }
+            otherHandlerOpt.ifPresent(otherHandler -> TransferUtil.distributeFluids(ioConfig.getMode(side), selfHandler, otherHandler));
         });
     }
 
     /**
      * Move fluids from one handler to the other.
      */
+    @Deprecated(forRemoval = true)
     protected int moveFluids(IFluidHandler from, IFluidHandler to, int maxDrain) {
         FluidStack stack = FluidUtil.tryFluidTransfer(to, from, maxDrain, true);
         return stack.getAmount();
