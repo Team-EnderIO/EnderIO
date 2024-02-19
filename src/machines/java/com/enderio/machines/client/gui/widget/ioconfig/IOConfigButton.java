@@ -86,8 +86,9 @@ public class IOConfigButton<U extends EIOScreen<?>, T extends AbstractWidget> ex
         var state = !setPlayerInvVisible.apply(!playerInvVisible.get()); // toggle the variable and set state to opposite of it
         configRenderer.visible = state;
         neighbourButton.visible = state;
-        if (callback != null)
+        if (callback != null) {
             callback.accept(state);
+        }
     }
 
     @Override
