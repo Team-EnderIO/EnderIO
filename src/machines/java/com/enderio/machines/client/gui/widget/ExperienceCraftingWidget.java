@@ -6,7 +6,6 @@ import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -17,13 +16,13 @@ import java.util.function.Supplier;
 public class ExperienceCraftingWidget extends EIOWidget {
     protected static final ResourceLocation EXPERIENCE_BAR_BACKGROUND_SPRITE = new ResourceLocation("hud/experience_bar_background");
     protected static final ResourceLocation EXPERIENCE_BAR_PROGRESS_SPRITE = new ResourceLocation("hud/experience_bar_progress");
-    private final Screen displayOn;
+    private final Screen screen;
     private final Supplier<MachineFluidTank> getFluid;
     private final Supplier<Integer> maxXP;
 
-    public ExperienceCraftingWidget(Screen displayOn, Supplier<MachineFluidTank> getFluid, Supplier<Integer> maxXP, int pX, int pY, int pWidth, int pHeight) {
+    public ExperienceCraftingWidget(Screen screen, Supplier<MachineFluidTank> getFluid, Supplier<Integer> maxXP, int pX, int pY, int pWidth, int pHeight) {
         super(pX, pY, pWidth, pHeight);
-        this.displayOn = displayOn;
+        this.screen = screen;
         this.getFluid = getFluid;
         this.maxXP = maxXP;
     }
@@ -53,7 +52,8 @@ public class ExperienceCraftingWidget extends EIOWidget {
         guiGraphics.drawString(font, s, this.x + this.width/2, (float)this.y - this.height - 3, 8453920, false);
 
         if (isHovered(pMouseX, pMouseY)) {
-            setTooltip(Tooltip.create(Component.literal(getFluid.get().getFluidAmount() + " mb / " + ExperienceUtil.getFluidFromLevel(maxXP.get()) + " mb")));
+            guiGraphics.renderTooltip(screen.getMinecraft().font,
+                Component.literal(getFluid.get().getFluidAmount() + " mb / " + ExperienceUtil.getFluidFromLevel(maxXP.get()) + " mb"), pMouseX, pMouseY);
         }
     }
 

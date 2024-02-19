@@ -5,10 +5,7 @@ import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.machines.common.lang.MachineLang;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
-import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.network.chat.Component;
 
 import java.util.function.Supplier;
@@ -83,7 +80,6 @@ public abstract class ProgressWidget extends AbstractWidget {
         this.u = u;
         this.v = v;
         this.tooltip = tooltip;
-        this.setFocused(true);
     }
 
     protected ProgressWidget(EIOScreen screen, Supplier<Float> progressSupplier, int x, int y, int width, int height, int u, int v) {
@@ -103,13 +99,11 @@ public abstract class ProgressWidget extends AbstractWidget {
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         // Update the contents of the tooltip whenever its hovered, don't waste any time doing it when not hovered.
         // Should also mean when tooltip is false it never gets populated
-        if (this.isHoveredOrFocused() && tooltip) {
-            setTooltip(Tooltip.create(TooltipUtil.withArgs(MachineLang.PROGRESS_TOOLTIP, (int) (progressSupplier.get() * 100))));
+        if (this.isHovered() && tooltip) {
+            guiGraphics.renderTooltip(screen.getMinecraft().font, TooltipUtil.withArgs(MachineLang.PROGRESS_TOOLTIP, (int) (progressSupplier.get() * 100)),
+                mouseX, mouseY);
         }
-        //TODO: NEO-PORT: figure out why normal tooltip doesn't work
-        if (this.isHovered()) {
-            guiGraphics.renderTooltip(this.screen.getMinecraft().font, getTooltip().toCharSequence(this.screen.getMinecraft()), mouseX, mouseY);
-        }
+
     }
 
     protected void render(GuiGraphics guiGraphics, int x, int y, int u, int v, int w, int h) {
