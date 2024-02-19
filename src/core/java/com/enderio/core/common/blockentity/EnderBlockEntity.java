@@ -149,8 +149,9 @@ public class EnderBlockEntity extends BlockEntity {
         return result;
     }
 
-    public void addDataSlot(NetworkDataSlot<?> slot) {
+    public <T extends NetworkDataSlot<?>> T addDataSlot(T slot) {
         dataSlots.add(slot);
+        return slot;
     }
 
     public void addAfterSyncRunnable(Runnable runnable) {

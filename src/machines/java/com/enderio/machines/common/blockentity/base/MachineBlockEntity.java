@@ -130,20 +130,18 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         }
 
         if (supportsRedstoneControl()) {
-            redstoneControlDataSlot = new EnumNetworkDataSlot<>(RedstoneControl.class,
-                this::getRedstoneControl, e -> setData(MachineAttachments.REDSTONE_CONTROL, e));
-            addDataSlot(redstoneControlDataSlot);
+            redstoneControlDataSlot = addDataSlot(new EnumNetworkDataSlot<>(RedstoneControl.class,
+                this::getRedstoneControl, this::internalSetRedstoneControl));
         } else {
             redstoneControlDataSlot = null;
         }
 
         // Register sync slot for ioConfig and setup model data.
-        ioConfigDataSlot = new NBTSerializableNetworkDataSlot<>(this::getIOConfig, () -> {
+        ioConfigDataSlot = addDataSlot(new NBTSerializableNetworkDataSlot<>(this::getIOConfig, () -> {
             if (level != null && level.isClientSide()) {
                 onIOConfigChanged();
             }
-        });
-        addDataSlot(ioConfigDataSlot);
+        }));
 
         addDataSlot(new SetNetworkDataSlot<>(this::getMachineStates, l -> states = l, MachineState::toNBT , MachineState::fromNBT, MachineState::toBuffer, MachineState::fromBuffer ));
     }
@@ -337,8 +335,13 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         if (level != null && level.isClientSide()) {
             clientUpdateSlot(redstoneControlDataSlot, redstoneControl);
         } else {
-            setData(MachineAttachments.REDSTONE_CONTROL, redstoneControl);
+            internalSetRedstoneControl(redstoneControl);
         }
+    }
+
+    private void internalSetRedstoneControl(RedstoneControl redstoneControl) {
+        setData(MachineAttachments.REDSTONE_CONTROL, redstoneControl);
+        setChanged();
     }
 
     // endregion
