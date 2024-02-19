@@ -490,79 +490,32 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
      * Move items to and fro via the given side.
      */
     private void moveItems(Direction side) {
-        var selfHandler = getSelfCapability(Capabilities.ItemHandler.BLOCK, side);
-        if (selfHandler == null) {
+        IItemHandler selfHandler = getSelfCapability(Capabilities.ItemHandler.BLOCK, side);
+        IItemHandler otherHandler = getNeighbouringCapability(Capabilities.ItemHandler.BLOCK, side);
+        if (selfHandler == null || otherHandler == null) {
             return;
         }
 
-        // Get neighboring item handler.
-        IItemHandler otherHandler = getNeighbouringCapability(Capabilities.ItemHandler.BLOCK, side);
-
-        if (otherHandler != null) {
-            // Get side config
-            IOMode mode = ioConfig.getMode(side);
-
-            // Output items to the other provider if enabled.
-            if (mode.canPush()) {
-                moveItems(selfHandler, otherHandler);
-            }
-
-            // Insert items from the other provider if enabled.
-            if (mode.canPull()) {
-                moveItems(otherHandler, selfHandler);
-            }
-        }
-    }
-
-    /**
-     * Move items from one item handler to the other.
-     */
-    protected void moveItems(IItemHandler from, IItemHandler to) {
-        for (int i = 0; i < from.getSlots(); i++) {
-            ItemStack extracted = from.extractItem(i, 1, true);
-            if (!extracted.isEmpty()) {
-                for (int j = 0; j < to.getSlots(); j++) {
-                    ItemStack inserted = to.insertItem(j, extracted, false);
-                    if (inserted.isEmpty()) {
-                        from.extractItem(i, 1, false);
-                        return;
-                    }
-                }
-            }
-        }
+        TransferUtil.distributeItems(ioConfig.getMode(side), selfHandler, otherHandler);
     }
 
     /**
      * Move fluids to and fro via the given side.
      */
     private void moveFluids(Direction side) {
-        var selfHandler = getSelfCapability(Capabilities.FluidHandler.BLOCK, side);
-        if (selfHandler == null) {
+        IFluidHandler selfHandler = getSelfCapability(Capabilities.FluidHandler.BLOCK, side);
+        IFluidHandler otherHandler = getNeighbouringCapability(Capabilities.FluidHandler.BLOCK, side);
+        if (selfHandler == null || otherHandler == null) {
             return;
         }
 
-        // Get neighboring fluid handler.
-        IFluidHandler otherHandler = getNeighbouringCapability(Capabilities.FluidHandler.BLOCK, side);
-
-        if (otherHandler != null) {
-            // Get side config
-            IOMode mode = ioConfig.getMode(side);
-
-            // Test if we have fluid.
-            FluidStack stack = selfHandler.drain(100, FluidAction.SIMULATE);
-
-            // If we have no fluids, see if we can pull. Otherwise, push.
-            if (stack.isEmpty() && mode.canPull()) {
-                moveFluids(otherHandler, selfHandler, 100);
-            } else if (mode.canPush()) {
-                moveFluids(selfHandler, otherHandler, 100);
-            }
-        }
+        TransferUtil.distributeFluids(ioConfig.getMode(side), selfHandler, otherHandler);
     }
 
     /**
      * Move fluids from one handler to the other.
      */
+    @Deprecated(forRemoval = true)
     protected int moveFluids(IFluidHandler from, IFluidHandler to, int maxDrain) {
         FluidStack stack = FluidUtil.tryFluidTransfer(to, from, maxDrain, true);
         return stack.getAmount();
