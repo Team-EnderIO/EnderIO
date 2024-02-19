@@ -6,12 +6,8 @@ import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.base.common.blockentity.IWrenchable;
-import com.enderio.base.common.init.EIOAttachments;
-import com.enderio.base.common.particle.RangeParticleData;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
-import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
 import com.enderio.core.common.network.slot.EnumNetworkDataSlot;
-import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
 import com.enderio.core.common.network.slot.NBTSerializableNetworkDataSlot;
 import com.enderio.core.common.network.slot.SetNetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
@@ -19,10 +15,12 @@ import com.enderio.machines.common.block.MachineBlock;
 import com.enderio.machines.common.blockentity.MachineState;
 import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.io.IOConfig;
+import com.enderio.machines.common.io.TransferUtil;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -56,8 +54,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import static net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction;
-
 public abstract class MachineBlockEntity extends EnderBlockEntity implements MenuProvider, IWrenchable {
 
     public static final ICapabilityProvider<MachineBlockEntity, Direction, ISideConfig> SIDE_CONFIG_PROVIDER =
@@ -76,15 +72,6 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     public static final ModelProperty<IIOConfig> IO_CONFIG_PROPERTY = new ModelProperty<>();
 
     private ModelData modelData = ModelData.EMPTY;
-
-    // endregion
-
-    // region range
-
-    protected int range = 3;
-    protected IntegerNetworkDataSlot rangeDataSlot;
-    protected boolean rangeVisible = false;
-    protected BooleanNetworkDataSlot rangeVisibleDataSlot;
 
     // endregion
 
@@ -252,72 +239,6 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     // endregion
 
-    // region range
-
-    public boolean isRangeVisible() {
-        return rangeVisible;
-    }
-
-    public void setIsRangeVisible(boolean visible) {
-        if (level != null && level.isClientSide()) {
-            clientUpdateSlot(rangeVisibleDataSlot, visible);
-        } else {
-            this.rangeVisible = visible;
-        }
-    }
-
-    public int getMaxRange() {
-        return 0;
-    }
-
-    public int getRange() {
-        return range;
-    }
-
-    public void setRange(int range) {
-        if (level != null && level.isClientSide()) {
-            clientUpdateSlot(rangeDataSlot, range);
-        } else {
-            this.range = range;
-        }
-    }
-
-    public void decreaseRange() {
-        if (this.range > 0) {
-            if (level != null && level.isClientSide()) {
-                clientUpdateSlot(rangeDataSlot, range - 1);
-            } else {
-                this.range--;
-            }
-        }
-    }
-
-    public void increaseRange() {
-        if (this.range < getMaxRange()) {
-            if (level != null && level.isClientSide()) {
-                clientUpdateSlot(rangeDataSlot, range + 1);
-            } else {
-                this.range++;
-            }
-        }
-    }
-
-    public BlockPos getParticleLocation() {
-        return getBlockPos();
-    }
-
-    private void generateParticle(RangeParticleData data, BlockPos pos) {
-        if (level != null && level.isClientSide()) {
-            level.addAlwaysVisibleParticle(data, true, pos.getX(), pos.getY(), pos.getZ(), 0, 0, 0);
-        }
-    }
-
-    public String getColor(){
-        return "000000";
-    }
-
-    // endregion
-
     // region Redstone Control
 
     /**
@@ -441,15 +362,6 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         super.serverTick();
     }
 
-    @Override
-    public void clientTick() {
-        if (this.isRangeVisible()) {
-            generateParticle(new RangeParticleData(getRange(), this.getColor()), getParticleLocation());
-        }
-
-        super.clientTick();
-    }
-
     public boolean canAct() {
         if (this.level == null) {
             return false;
@@ -542,11 +454,6 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         if (this.fluidHandler != null) {
             pTag.put(MachineNBTKeys.FLUIDS, fluidHandler.serializeNBT());
         }
-
-        if (getMaxRange() > 0) {
-            pTag.putInt(MachineNBTKeys.RANGE, getRange());
-            pTag.putBoolean(MachineNBTKeys.RANGE_VISIBLE, isRangeVisible());
-        }
     }
 
     @Override
@@ -565,14 +472,6 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         // For rendering io overlays after placed by an nbt filled block item
         if (this.level != null) {
             onIOConfigChanged();
-        }
-
-        if (pTag.contains(MachineNBTKeys.RANGE)) {
-            this.range = pTag.getInt(MachineNBTKeys.RANGE);
-        }
-
-        if (pTag.contains(MachineNBTKeys.RANGE_VISIBLE)) {
-            this.rangeVisible = pTag.getBoolean(MachineNBTKeys.RANGE_VISIBLE);
         }
 
         super.load(pTag);

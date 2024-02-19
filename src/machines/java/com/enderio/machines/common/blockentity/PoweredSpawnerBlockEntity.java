@@ -6,17 +6,22 @@ import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
+import com.enderio.core.common.network.slot.CodecNetworkDataSlot;
 import com.enderio.core.common.network.slot.ResourceLocationNetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
+import com.enderio.machines.common.attachment.ActionRange;
+import com.enderio.machines.common.attachment.IRangedActor;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.task.IMachineTask;
 import com.enderio.machines.common.blockentity.task.SpawnerMachineTask;
 import com.enderio.machines.common.blockentity.task.host.MachineTaskHost;
 import com.enderio.machines.common.config.MachinesConfig;
+import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.menu.PoweredSpawnerMenu;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -32,7 +37,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 // TODO: I want to revisit the powered spawner and task
 //       But there's not enough time before alpha, so just porting as-is.
-public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
+public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity implements IRangedActor {
 
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.POWERED_SPAWNER_CAPACITY);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.POWERED_SPAWNER_USAGE);
@@ -41,18 +46,22 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
     private SpawnerBlockedReason reason = SpawnerBlockedReason.NONE;
     private final MachineTaskHost taskHost;
 
+    private CodecNetworkDataSlot<ActionRange> actionRangeDataSlot;
 
     public PoweredSpawnerBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Input, CAPACITY, USAGE, MachineBlockEntities.POWERED_SPAWNER.get(), worldPosition, blockState);
 
-        rangeVisibleDataSlot = new BooleanNetworkDataSlot(this::isRangeVisible, b -> this.rangeVisible = b);
-        addDataSlot(rangeVisibleDataSlot);
+        // TODO: rubbish way of having a default. use an interface instead?
+        if (!hasData(MachineAttachments.ACTION_RANGE)) {
+            setData(MachineAttachments.ACTION_RANGE, new ActionRange(4, false));
+        }
+
+        actionRangeDataSlot = addDataSlot(new CodecNetworkDataSlot<>(this::getActionRange, this::internalSetActionRange, ActionRange.CODEC));
 
         addDataSlot(new ResourceLocationNetworkDataSlot(() -> this.getEntityType().orElse(NO_MOB), rl -> {
             setEntityType(rl);
             EnderIO.LOGGER.info("UPDATED ENTITY TYPE.");
         }));
-        range = 4;
 
         taskHost = new MachineTaskHost(this, this::hasEnergy) {
             @Override
@@ -77,6 +86,29 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
         return new PoweredSpawnerMenu(this, pPlayerInventory, pContainerId);
     }
 
+    public int getMaxRange() {
+        return 3;
+    }
+
+    @Override
+    public ActionRange getActionRange() {
+        return getData(MachineAttachments.ACTION_RANGE);
+    }
+
+    @Override
+    public void setActionRange(ActionRange actionRange) {
+        if (level != null && level.isClientSide) {
+            clientUpdateSlot(actionRangeDataSlot, actionRange);
+        } else {
+            internalSetActionRange(actionRange);
+        }
+    }
+
+    private void internalSetActionRange(ActionRange actionRange) {
+        setData(MachineAttachments.ACTION_RANGE, actionRange);
+        setChanged();
+    }
+
     @Override
     public void serverTick() {
         super.serverTick();
@@ -84,6 +116,15 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
         if (canAct()) {
             taskHost.tick();
         }
+    }
+
+    @Override
+    public void clientTick() {
+        if (level.isClientSide && level instanceof ClientLevel clientLevel) {
+            getActionRange().addClientParticle(clientLevel, getBlockPos(), MachinesConfig.CLIENT.BLOCKS.POWERED_SPAWNER_RANGE_COLOR.get());
+        }
+
+        super.clientTick();
     }
 
     @Override
@@ -106,16 +147,6 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
     }
 
     // endregion
-
-    @Override
-    public String getColor() {
-        return MachinesConfig.CLIENT.BLOCKS.POWERED_SPAWNER_RANGE_COLOR.get();
-    }
-
-    @Override
-    public int getMaxRange() {
-        return 3;
-    }
 
     // region Task
 

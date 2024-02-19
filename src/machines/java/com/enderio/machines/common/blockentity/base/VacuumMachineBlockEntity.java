@@ -4,8 +4,13 @@ import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
 import com.enderio.base.common.util.AttractionUtil;
 import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
+import com.enderio.core.common.network.slot.CodecNetworkDataSlot;
 import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
+import com.enderio.machines.common.attachment.ActionRange;
+import com.enderio.machines.common.attachment.IRangedActor;
+import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.io.FixedIOConfig;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -20,28 +25,32 @@ import java.util.List;
 import java.util.function.Predicate;
 
 // TODO: I want to review the vacuum stuff too.
-public abstract class VacuumMachineBlockEntity<T extends Entity> extends MachineBlockEntity {
+public abstract class VacuumMachineBlockEntity<T extends Entity> extends MachineBlockEntity implements IRangedActor {
     private static final double COLLISION_DISTANCE_SQ = 1 * 1;
     protected static final double SPEED = 0.025;
     protected static final double SPEED_4 = SPEED * 4;
     private List<WeakReference<T>> entities = new ArrayList<>();
     private Class<T> targetClass;
 
+    private CodecNetworkDataSlot<ActionRange> actionRangeDataSlot;
+
     public VacuumMachineBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState, Class<T> targetClass) {
         super(pType, pWorldPosition, pBlockState);
         this.targetClass = targetClass;
 
-        rangeDataSlot = new IntegerNetworkDataSlot(this::getRange, r -> this.range = r);
-        addDataSlot(rangeDataSlot);
-
-        rangeVisibleDataSlot = new BooleanNetworkDataSlot(this::isRangeVisible, b -> this.rangeVisible = b);
-        addDataSlot(rangeVisibleDataSlot);
+        actionRangeDataSlot = addDataSlot(new CodecNetworkDataSlot<>(this::getActionRange, this::internalSetActionRange, ActionRange.CODEC));
     }
+
+    public abstract String getColor();
 
     @Override
     public void serverTick() {
         if (this.getRedstoneControl().isActive(level.hasNeighborSignal(worldPosition))) {
             this.attractEntities(this.getLevel(), this.getBlockPos(), this.getRange());
+        }
+
+        if (level.isClientSide && level instanceof ClientLevel clientLevel) {
+            getActionRange().addClientParticle(clientLevel, getBlockPos(), getColor());
         }
 
         super.serverTick();
@@ -100,6 +109,25 @@ public abstract class VacuumMachineBlockEntity<T extends Entity> extends Machine
     @Override
     public int getMaxRange() {
         return 6;
+    }
+
+    @Override
+    public ActionRange getActionRange() {
+        return getData(MachineAttachments.ACTION_RANGE);
+    }
+
+    @Override
+    public void setActionRange(ActionRange actionRange) {
+        if (level != null && level.isClientSide) {
+            clientUpdateSlot(actionRangeDataSlot, actionRange);
+        } else {
+            internalSetActionRange(actionRange);
+        }
+    }
+
+    private void internalSetActionRange(ActionRange actionRange) {
+        setData(MachineAttachments.ACTION_RANGE, actionRange);
+        setChanged();
     }
 
     @Override

@@ -6,10 +6,14 @@ import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
+import com.enderio.core.common.network.slot.CodecNetworkDataSlot;
 import com.enderio.core.common.network.slot.FluidStackNetworkDataSlot;
 import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
+import com.enderio.machines.common.attachment.ActionRange;
+import com.enderio.machines.common.attachment.IRangedActor;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
+import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.io.FixedIOConfig;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
@@ -18,6 +22,7 @@ import com.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.machines.common.io.fluid.TankAccess;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.menu.DrainMenu;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
@@ -38,7 +43,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DrainBlockEntity extends PoweredMachineBlockEntity {
+public class DrainBlockEntity extends PoweredMachineBlockEntity implements IRangedActor {
     public static final String CONSUMED = "Consumed";
     private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.DRAIN_CAPACITY);
     private static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.DRAIN_USAGE);
@@ -51,22 +56,43 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
     private int consumed = 0;
     private Fluid type = Fluids.EMPTY;
 
+    private CodecNetworkDataSlot<ActionRange> actionRangeDataSlot;
+
     public DrainBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE, MachineBlockEntities.DRAIN.get(), worldPosition, blockState);
         addDataSlot(new FluidStackNetworkDataSlot(() -> TANK.getFluid(this), fluid -> TANK.setFluid(this, fluid)));
 
-        this.range = 5;
+        // TODO: rubbish way of having a default. use an interface instead?
+        if (!hasData(MachineAttachments.ACTION_RANGE)) {
+            setData(MachineAttachments.ACTION_RANGE, new ActionRange(5, false));
+        }
 
-        rangeDataSlot = new IntegerNetworkDataSlot(this::getRange, r -> this.range = r) {
-            @Override
-            public void updateServerCallback() {
-                updateLocations();
-            }
-        };
-        addDataSlot(rangeDataSlot);
+        actionRangeDataSlot = addDataSlot(new CodecNetworkDataSlot<>(this::getActionRange, this::internalSetActionRange, ActionRange.CODEC));
+    }
 
-        rangeVisibleDataSlot = new BooleanNetworkDataSlot(this::isRangeVisible, b -> this.rangeVisible = b);
-        addDataSlot(rangeVisibleDataSlot);
+    @Override
+    public int getMaxRange() {
+        return 10;
+    }
+
+    @Override
+    public ActionRange getActionRange() {
+        return getData(MachineAttachments.ACTION_RANGE);
+    }
+
+    @Override
+    public void setActionRange(ActionRange actionRange) {
+        if (level != null && level.isClientSide) {
+            clientUpdateSlot(actionRangeDataSlot, actionRange);
+        } else {
+            internalSetActionRange(actionRange);
+        }
+    }
+
+    private void internalSetActionRange(ActionRange actionRange) {
+        setData(MachineAttachments.ACTION_RANGE, actionRange);
+        updateLocations();
+        setChanged();
     }
 
     @Override
@@ -126,7 +152,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
     }
 
     public void drainFluids() {
-        int stop = Math.min(currentIndex + range, positions.size());
+        int stop = Math.min(currentIndex + getRange(), positions.size());
         while (currentIndex < stop) {
             if (currentIndex >= positions.size()) {
                 currentIndex--;
@@ -172,25 +198,17 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
         }
     }
 
-    @Override
-    public int getMaxRange() {
-        return 10;
-    }
-
-    @Override
-    public String getColor() {
-        return MachinesConfig.CLIENT.BLOCKS.DRAIN_RANGE_COLOR.get();
-    }
-
-    @Override
     public BlockPos getParticleLocation() {
-        return worldPosition.below(range + 1);
+        return worldPosition.below(getRange() + 1);
     }
 
     @Override
-    public void setRange(int range) {
-        super.setRange(range);
-        updateLocations();
+    public void clientTick() {
+        if (level.isClientSide && level instanceof ClientLevel clientLevel) {
+            getActionRange().addClientParticle(clientLevel, getParticleLocation(), MachinesConfig.CLIENT.BLOCKS.DRAIN_RANGE_COLOR.get());
+        }
+
+        super.clientTick();
     }
 
     @Override
@@ -202,6 +220,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
     private void updateLocations() {
         positions = new ArrayList<>();
         currentIndex = 0;
+        int range = getRange();
         for (BlockPos pos : BlockPos.betweenClosed(worldPosition.offset(-range,-range*2 - 1,-range), worldPosition.offset(range,-1,range))) {
             positions.add(pos.immutable()); //Need to make it immutable
         }
