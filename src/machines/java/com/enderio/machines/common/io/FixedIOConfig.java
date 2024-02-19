@@ -10,6 +10,9 @@ import net.minecraft.nbt.CompoundTag;
  * Used when a block only has a single mode for all sides (or even wants to disable external IO altogether).
  */
 public final class FixedIOConfig implements IIOConfig {
+
+    public static final FixedIOConfig DISABLED = new FixedIOConfig(IOMode.DISABLED);
+
     private final IOMode mode;
 
     public FixedIOConfig(IOMode mode) {
