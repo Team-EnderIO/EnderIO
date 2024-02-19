@@ -5,9 +5,6 @@ import com.enderio.api.misc.Vector2i;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.Component;
-
-import java.util.List;
 
 public interface IEnderScreen {
 
@@ -37,39 +34,4 @@ public interface IEnderScreen {
         renderSimpleArea(guiGraphics, pos, pos.add(icon.getRenderSize()));
     }
 
-    default void renderTooltipAfterEverything(GuiGraphics guiGraphics, List<Component> pText, int pMouseX, int pMouseY) {
-        addTooltip(new LateTooltipData(guiGraphics, pText, pMouseX, pMouseY));
-    }
-
-    void addTooltip(LateTooltipData data);
-
-    class LateTooltipData {
-        private final GuiGraphics guiGraphics;
-        private final List<Component> text;
-        private final int mouseX;
-        private final int mouseY;
-
-        LateTooltipData(GuiGraphics guiGraphics, List<Component> text, int mouseX, int mouseY) {
-            this.guiGraphics = guiGraphics;
-            this.text = text;
-            this.mouseX = mouseX;
-            this.mouseY = mouseY;
-        }
-
-        public GuiGraphics getGuiGraphics() {
-            return guiGraphics;
-        }
-
-        public List<Component> getText() {
-            return text;
-        }
-
-        public int getMouseX() {
-            return mouseX;
-        }
-
-        public int getMouseY() {
-            return mouseY;
-        }
-    }
 }

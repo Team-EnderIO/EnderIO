@@ -15,12 +15,12 @@ import java.util.function.Supplier;
 public class ExperienceWidget extends EIOWidget {
     protected static final ResourceLocation EXPERIENCE_BAR_BACKGROUND_SPRITE = new ResourceLocation("hud/experience_bar_background");
     protected static final ResourceLocation EXPERIENCE_BAR_PROGRESS_SPRITE = new ResourceLocation("hud/experience_bar_progress");
-    private final Screen displayOn;
+    private final Screen screen;
     private final Supplier<MachineFluidTank> getFluid;
 
-    public ExperienceWidget(Screen displayOn, Supplier<MachineFluidTank> getFluid, int pX, int pY, int pWidth, int pHeight) {
+    public ExperienceWidget(Screen screen, Supplier<MachineFluidTank> getFluid, int pX, int pY, int pWidth, int pHeight) {
         super(pX, pY, pWidth, pHeight);
-        this.displayOn = displayOn;
+        this.screen = screen;
         this.getFluid = getFluid;
     }
 

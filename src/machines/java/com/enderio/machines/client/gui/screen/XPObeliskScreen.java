@@ -15,6 +15,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class XPObeliskScreen extends MachineScreen<XPObeliskMenu> {
     private static final ResourceLocation BG = EnderIO.loc("textures/gui/xp_obelisk.png");
     private static final ResourceLocation XP_ADD_ONE = EnderIO.loc("buttons/xp_add_one");
@@ -23,6 +26,8 @@ public class XPObeliskScreen extends MachineScreen<XPObeliskMenu> {
     private static final ResourceLocation XP_REMOVE_ONE = EnderIO.loc("buttons/xp_remove_one");
     private static final ResourceLocation XP_REMOVE_MULTI = EnderIO.loc("buttons/xp_remove_multi");
     private static final ResourceLocation XP_REMOVE_ALL = EnderIO.loc("buttons/xp_remove_all");
+
+    private final List<EIOImageButton> xpButtons = new ArrayList<>();
 
     public XPObeliskScreen(XPObeliskMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -50,7 +55,8 @@ public class XPObeliskScreen extends MachineScreen<XPObeliskMenu> {
         addRenderableWidget(makeButton(midLeft.x(), midLeft.y() + padding, size, 5, XP_REMOVE_ALL, MachineLang.STORE_ALL));
 
         IOConfigButton.Inset insets = new IOConfigButton.Inset(0, 22, -26,0);
-        addRenderableWidget(new IOConfigButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 24, 16, 16, menu, this::addRenderableWidget, font, insets));
+        addRenderableWidget(new IOConfigButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 24, 16, 16, menu, this::addRenderableWidget, font, insets,
+            this::ioConfigCallback));
 
     }
 
@@ -70,7 +76,12 @@ public class XPObeliskScreen extends MachineScreen<XPObeliskMenu> {
     private EIOImageButton makeButton(int x, int y, int size, int id, ResourceLocation SPRITE, Component tooltip) {
         EIOImageButton button = new EIOImageButton(this, x, y, size, size, new WidgetSprites(SPRITE, SPRITE), (press) -> handlePress(id));
         button.setTooltip(Tooltip.create(tooltip));
+        xpButtons.add(button);
         return button;
+    }
+
+    private void ioConfigCallback(boolean ioconfigVisible) {
+        xpButtons.forEach(button -> button.visible = !ioconfigVisible);
     }
 
 }

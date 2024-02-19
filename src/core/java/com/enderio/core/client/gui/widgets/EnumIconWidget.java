@@ -14,16 +14,11 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
-import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.network.chat.Component;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -46,14 +41,14 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
 
     private int mouseButton = 0;
 
-    private final U addedOn;
+    private final U screen;
 
     private final SelectionScreen selection;
 
     // TODO: I don't like that this is separate, maybe we need an IOptionIcon for holding the option name?
     private final Component optionName;
 
-    public EnumIconWidget(U addedOn, int pX, int pY, Supplier<T> getter, Consumer<T> setter, Component optionName) {
+    public EnumIconWidget(U screen, int pX, int pY, Supplier<T> getter, Consumer<T> setter, Component optionName) {
         super(pX, pY, getter.get().getRenderSize().x(), getter.get().getRenderSize().y(), Component.empty());
         this.getter = getter;
         this.setter = setter;
@@ -78,7 +73,7 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
         }
         expandTopLeft = topLeft.expand(-SPACE_BETWEEN_ELEMENTS);
         expandBottomRight = bottomRight.expand(SPACE_BETWEEN_ELEMENTS);
-        this.addedOn = addedOn;
+        this.screen = screen;
         this.selection = new SelectionScreen();
     }
 
@@ -127,22 +122,16 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
-        if (expandNext && Minecraft.getInstance().screen == addedOn) {
+        if (expandNext && Minecraft.getInstance().screen == screen) {
             Minecraft.getInstance().pushGuiLayer(selection);
             expandNext = false;
             isExpanded = true;
         }
-        if (isHovered && isActive()) {
-            // @formatter:off
-           addedOn.renderTooltipAfterEverything(guiGraphics, List.of(optionName, getter.get().getTooltip().copy().withStyle(ChatFormatting.GRAY)), pMouseX, pMouseY);
-            // @formatter:on
-        }
-
         T icon = getter.get();
-        addedOn.renderIconBackground(guiGraphics, new Vector2i(getX(), getY()), icon);
+        screen.renderIconBackground(guiGraphics, new Vector2i(getX(), getY()), icon);
         IEnderScreen.renderIcon(guiGraphics, new Vector2i(getX(), getY()), icon);
 
-        if (isHoveredOrFocused() && tooltipDisplayCache != getter.get()) {
+        if (isHovered() && tooltipDisplayCache != getter.get()) {
             // Cache the last value of the tooltip so we don't append strings over and over.
             tooltipDisplayCache = getter.get();
 
@@ -178,8 +167,6 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
 
     private class SelectionScreen extends Screen implements IEnderScreen {
 
-        private final List<LateTooltipData> tooltips = new ArrayList<>();
-
         protected SelectionScreen() {
             super(Component.empty());
         }
@@ -193,13 +180,9 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
         @Override
         public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
             RenderSystem.disableDepthTest();
-            tooltips.clear();
             renderSimpleArea(guiGraphics, expandTopLeft, expandBottomRight);
             super.render(guiGraphics, pMouseX, pMouseY, pPartialTicks);
 
-            for (LateTooltipData tooltip : tooltips) {
-                guiGraphics.renderTooltip(this.font, tooltip.getText(), Optional.empty(), tooltip.getMouseX(), tooltip.getMouseY());
-            }
             RenderSystem.enableDepthTest();
         }
 
@@ -214,19 +197,17 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
         }
 
         @Override
+        public void setTooltipForNextRenderPass(Component pTooltip) {
+            super.setTooltipForNextRenderPass(pTooltip);
+        }
+
+        @Override
         public boolean isPauseScreen() {
             return false;
         }
 
         @Override
-        public void renderTransparentBackground(GuiGraphics pGuiGraphics) {
-            //Don't make it dark
-        }
-
-        @Override
-        public void addTooltip(LateTooltipData data) {
-            tooltips.add(data);
-        }
+        public void renderTransparentBackground(GuiGraphics pGuiGraphics) {} //Don't make background dark
 
         @Override
         public void onClose() {
@@ -272,7 +253,7 @@ public class EnumIconWidget<T extends Enum<T> & IIcon, U extends Screen & IEnder
             if (isMouseOver(pMouseX, pMouseY)) {
                 Component tooltip = value.getTooltip();
                 if (tooltip != null && !Component.empty().equals(tooltip)) {
-                    selection.renderTooltipAfterEverything(guiGraphics, List.of(tooltip), pMouseX, pMouseY);
+                    selection.setTooltipForNextRenderPass(tooltip);
                 }
             }
         }
