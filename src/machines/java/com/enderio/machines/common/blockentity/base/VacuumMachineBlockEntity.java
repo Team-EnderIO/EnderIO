@@ -3,9 +3,7 @@ package com.enderio.machines.common.blockentity.base;
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
 import com.enderio.base.common.util.AttractionUtil;
-import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
 import com.enderio.core.common.network.slot.CodecNetworkDataSlot;
-import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
 import com.enderio.machines.common.attachment.ActionRange;
 import com.enderio.machines.common.attachment.IRangedActor;
 import com.enderio.machines.common.init.MachineAttachments;
@@ -49,10 +47,6 @@ public abstract class VacuumMachineBlockEntity<T extends Entity> extends Machine
             this.attractEntities(this.getLevel(), this.getBlockPos(), this.getRange());
         }
 
-        if (level.isClientSide && level instanceof ClientLevel clientLevel) {
-            getActionRange().addClientParticle(clientLevel, getBlockPos(), getColor());
-        }
-
         super.serverTick();
     }
 
@@ -60,6 +54,10 @@ public abstract class VacuumMachineBlockEntity<T extends Entity> extends Machine
     public void clientTick() {
         if (this.getRedstoneControl().isActive(level.hasNeighborSignal(worldPosition))) {
             this.attractEntities(this.getLevel(), this.getBlockPos(), this.getRange());
+        }
+
+        if (level.isClientSide && level instanceof ClientLevel clientLevel) {
+            getActionRange().addClientParticle(clientLevel, getBlockPos(), getColor());
         }
 
         super.clientTick();
