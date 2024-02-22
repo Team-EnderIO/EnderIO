@@ -26,7 +26,7 @@ public interface IFluidTankUser {
     ICapabilityProvider<MachineBlockEntity, Direction, IFluidHandler> FLUID_HANDLER_PROVIDER =
         (be, side) ->{
             if (be instanceof IFluidTankUser user) {
-                return user.getFluidHandler() != null ? user.getFluidHandler().getForSide(side) : null;
+                return user.getFluidHandler().getForSide(side);
             }
             return null;
         };

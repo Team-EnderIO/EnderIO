@@ -57,7 +57,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         }
 
         @Override
-        public @Nullable MachineTankLayout getTankLayout() {
+        public MachineTankLayout getTankLayout() {
             return new MachineTankLayout.Builder().tank(TANK, CAPACITY).build();
         }
     }
@@ -70,7 +70,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
         }
 
         @Override
-        public @Nullable MachineTankLayout getTankLayout() {
+        public MachineTankLayout getTankLayout() {
             return new MachineTankLayout.Builder().tank(TANK, CAPACITY).build();
         }
 
