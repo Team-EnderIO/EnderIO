@@ -9,12 +9,14 @@ import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
+import com.enderio.machines.common.attachment.IFluidTankUser;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingMachineTask;
 import com.enderio.machines.common.blockentity.task.host.CraftingMachineTaskHost;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineRecipes;
+import com.enderio.machines.common.io.TransferUtil;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.fluid.MachineTankLayout;
@@ -26,6 +28,7 @@ import com.enderio.machines.common.menu.SoulBinderMenu;
 import com.enderio.machines.common.recipe.RecipeCaches;
 import com.enderio.machines.common.recipe.SoulBindingRecipe;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -33,19 +36,19 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
+import net.neoforged.fml.LogicalSide;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.fml.LogicalSide;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 import static com.enderio.base.common.util.ExperienceUtil.EXP_TO_FLUID;
 
-public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
+public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements IFluidTankUser {
 
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.SOUL_BINDER_CAPACITY);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.SOUL_BINDER_USAGE);
@@ -54,6 +57,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
     public static final SingleSlotAccess INPUT_OTHER = new SingleSlotAccess();
     public static final MultiSlotAccess OUTPUT = new MultiSlotAccess();
     private final SoulBindingRecipe.Container fakeContainer = new SoulBindingRecipe.Container(getInventoryNN(), () -> Integer.MAX_VALUE);
+    private final MachineFluidHandler fluidHandler;
     private static final TankAccess TANK = new TankAccess();
     @Nullable private RecipeHolder<SoulBindingRecipe> recipe;
     @UseOnly(LogicalSide.CLIENT) private int clientExp = 0;
@@ -62,6 +66,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
 
     public SoulBinderBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Input, CAPACITY, USAGE, MachineBlockEntities.SOUL_BINDER.get(), worldPosition, blockState);
+        fluidHandler = createFluidTank();
 
         // Sync fluid amount to client.
         addDataSlot(new IntegerNetworkDataSlot(() -> TANK.getFluidAmount(this), i -> TANK.setFluid(this, new FluidStack(EIOFluids.XP_JUICE.getSource(), i))
@@ -112,11 +117,6 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
             .build();
     }
 
-    @Override
-    public @Nullable MachineTankLayout getTankLayout() {
-        return MachineTankLayout.builder().tank(TANK, 10000, f -> f.getFluid().is(EIOTags.Fluids.EXPERIENCE)).build();
-    }
-
     private boolean isValidInput(int index, ItemStack stack) {
         return RecipeCaches.SOUL_BINDING.hasRecipe(List.of(stack));
     }
@@ -136,10 +136,14 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
     }
 
     // region Fluid Storage
+    @Override
+    public @Nullable MachineTankLayout getTankLayout() {
+        return MachineTankLayout.builder().tank(TANK, 10000, f -> f.getFluid().is(EIOTags.Fluids.EXPERIENCE)).build();
+    }
 
     @Override
-    protected @Nullable MachineFluidHandler createFluidHandler(MachineTankLayout layout) {
-        return new MachineFluidHandler(getIOConfig(), layout) {
+    public MachineFluidHandler createFluidTank() {
+        return new MachineFluidHandler(getIOConfig(), getTankLayout()) {
             @Override
             protected void onContentsChanged(int slot) {
                 craftingTaskHost.newTaskAvailable();
@@ -164,6 +168,11 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
                 return 0;
             }
         };
+    }
+
+    @Override
+    public MachineFluidHandler getFluidHandler() {
+        return fluidHandler;
     }
 
     public MachineFluidTank getFluidTank() {
@@ -192,7 +201,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
                 INPUT_SOUL.getItemStack(getInventory()).shrink(1);
                 INPUT_OTHER.getItemStack(getInventory()).shrink(1);
 
-                MachineFluidHandler handler = getFluidHandlerNN();
+                MachineFluidHandler handler = getFluidHandler();
                 int leftover = ExperienceUtil.getLevelFromFluidWithLeftover(TANK.getFluidAmount(handler), 0, recipe.getExpCost()).experience();
                 TANK.drain(handler, TANK.getFluidAmount(handler) - leftover * EXP_TO_FLUID, IFluidHandler.FluidAction.EXECUTE);
             }
@@ -208,14 +217,34 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
     public void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
         craftingTaskHost.save(pTag);
+        saveTank(pTag);
     }
 
     @Override
     public void load(CompoundTag pTag) {
         super.load(pTag);
         craftingTaskHost.load(pTag);
+        loadTank(pTag);
     }
 
     // endregion
 
+    /**
+     * Move fluids to and fro via the given side.
+     */
+    private void moveFluids(Direction side) {
+        IFluidHandler selfHandler = getSelfCapability(Capabilities.FluidHandler.BLOCK, side);
+        IFluidHandler otherHandler = getNeighbouringCapability(Capabilities.FluidHandler.BLOCK, side);
+        if (selfHandler == null || otherHandler == null) {
+            return;
+        }
+
+        TransferUtil.distributeFluids(getIOConfig().getMode(side), selfHandler, otherHandler);
+    }
+
+    @Override
+    public void moveResource(Direction direction) {
+        super.moveResource(direction);
+        moveFluids(direction);
+    }
 }

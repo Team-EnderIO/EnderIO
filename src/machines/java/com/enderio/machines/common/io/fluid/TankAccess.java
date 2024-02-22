@@ -1,6 +1,6 @@
 package com.enderio.machines.common.io.fluid;
 
-import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
+import com.enderio.machines.common.attachment.IFluidTankUser;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 
@@ -8,7 +8,7 @@ public class TankAccess {
 
     private int index = Integer.MIN_VALUE;
 
-    public MachineFluidTank getTank(MachineBlockEntity machine) {
+    public MachineFluidTank getTank(IFluidTankUser machine) {
         return getTank(machine.getFluidHandler());
     }
 
@@ -16,7 +16,7 @@ public class TankAccess {
         return fluidHandler.getTank(index);
     }
 
-    public int getCapacity(MachineBlockEntity machine) {
+    public int getCapacity(IFluidTankUser machine) {
         return getCapacity(machine.getFluidHandler());
     }
 
@@ -24,7 +24,7 @@ public class TankAccess {
         return fluidHandler.getTankCapacity(index);
     }
 
-    public FluidStack getFluid(MachineBlockEntity machine) {
+    public FluidStack getFluid(IFluidTankUser machine) {
         return getFluid(machine.getFluidHandler());
     }
 
@@ -32,7 +32,7 @@ public class TankAccess {
         return handler.getFluidInTank(index);
     }
 
-    public int getFluidAmount(MachineBlockEntity machine) {
+    public int getFluidAmount(IFluidTankUser machine) {
         return getFluid(machine).getAmount();
     }
 
@@ -40,7 +40,7 @@ public class TankAccess {
         return getFluid(handler).getAmount();
     }
 
-    public void setFluid(MachineBlockEntity machine, FluidStack fluid) {
+    public void setFluid(IFluidTankUser machine, FluidStack fluid) {
         setFluid(machine.getFluidHandler(), fluid);
     }
 
@@ -48,7 +48,7 @@ public class TankAccess {
         handler.setFluidInTank(index, fluid);
     }
 
-    public boolean isFluidValid(MachineBlockEntity machine, FluidStack fluid) {
+    public boolean isFluidValid(IFluidTankUser machine, FluidStack fluid) {
         return isFluidValid(machine.getFluidHandler(), fluid);
     }
 
@@ -56,7 +56,7 @@ public class TankAccess {
         return handler.isFluidValid(index, fluid);
     }
 
-    public boolean isEmpty(MachineBlockEntity machine) {
+    public boolean isEmpty(IFluidTankUser machine) {
         return isEmpty(machine.getFluidHandler());
     }
 
@@ -68,7 +68,7 @@ public class TankAccess {
         return handler.fill(stack, action);
     }
 
-    public int fill(MachineBlockEntity machine, FluidStack stack, IFluidHandler.FluidAction action) {
+    public int fill(IFluidTankUser machine, FluidStack stack, IFluidHandler.FluidAction action) {
         return fill(machine.getFluidHandler(), stack, action);
     }
 
@@ -76,7 +76,7 @@ public class TankAccess {
         return handler.drain(resource, action);
     }
 
-    public FluidStack drain(MachineBlockEntity machine, FluidStack resource, IFluidHandler.FluidAction action) {
+    public FluidStack drain(IFluidTankUser machine, FluidStack resource, IFluidHandler.FluidAction action) {
         return drain(machine.getFluidHandler(), resource, action);
     }
 
@@ -84,7 +84,7 @@ public class TankAccess {
         return handler.drain(maxDrain, action);
     }
 
-    public FluidStack drain(MachineBlockEntity machine, int maxDrain, IFluidHandler.FluidAction action) {
+    public FluidStack drain(IFluidTankUser machine, int maxDrain, IFluidHandler.FluidAction action) {
         return drain(machine.getFluidHandler(), maxDrain, action);
     }
 

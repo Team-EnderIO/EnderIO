@@ -5,17 +5,17 @@ import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
 import com.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
 import com.enderio.core.common.network.slot.CodecNetworkDataSlot;
 import com.enderio.core.common.network.slot.FluidStackNetworkDataSlot;
-import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
 import com.enderio.machines.common.attachment.ActionRange;
+import com.enderio.machines.common.attachment.IFluidTankUser;
 import com.enderio.machines.common.attachment.IRangedActor;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.io.FixedIOConfig;
+import com.enderio.machines.common.io.TransferUtil;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.fluid.MachineTankLayout;
@@ -24,17 +24,18 @@ import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.menu.DrainMenu;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
@@ -43,10 +44,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DrainBlockEntity extends PoweredMachineBlockEntity implements IRangedActor {
+public class DrainBlockEntity extends PoweredMachineBlockEntity implements IRangedActor, IFluidTankUser {
     public static final String CONSUMED = "Consumed";
     private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.DRAIN_CAPACITY);
     private static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.DRAIN_USAGE);
+    private final MachineFluidHandler fluidHandler;
     private static final TankAccess TANK = new TankAccess();
     private static final int CAPACITY = 3 * FluidType.BUCKET_VOLUME;
     private static final int ENERGY_PER_BUCKET = 1_500;
@@ -60,6 +62,8 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements IRang
 
     public DrainBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE, MachineBlockEntities.DRAIN.get(), worldPosition, blockState);
+        fluidHandler = createFluidTank();
+
         addDataSlot(new FluidStackNetworkDataSlot(() -> TANK.getFluid(this), fluid -> TANK.setFluid(this, fluid)));
 
         // TODO: rubbish way of having a default. use an interface instead?
@@ -112,8 +116,13 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements IRang
     }
 
     @Override
-    protected @Nullable MachineFluidHandler createFluidHandler(MachineTankLayout layout) {
-        return new MachineFluidHandler(getIOConfig(), layout) {
+    public MachineFluidHandler getFluidHandler() {
+        return fluidHandler;
+    }
+
+    @Override
+    public MachineFluidHandler createFluidTank() {
+        return new MachineFluidHandler(getIOConfig(), getTankLayout()) {
             @Override
             protected void onContentsChanged(int slot) {
                 super.onContentsChanged(slot);
@@ -235,11 +244,32 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements IRang
     public void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
         pTag.putInt(CONSUMED, consumed);
+        saveTank(pTag);
     }
 
     @Override
     public void load(CompoundTag pTag) {
         super.load(pTag);
         consumed = pTag.getInt(CONSUMED);
+        loadTank(pTag);
+    }
+
+    /**
+     * Move fluids to and fro via the given side.
+     */
+    private void moveFluids(Direction side) {
+        IFluidHandler selfHandler = getSelfCapability(Capabilities.FluidHandler.BLOCK, side);
+        IFluidHandler otherHandler = getNeighbouringCapability(Capabilities.FluidHandler.BLOCK, side);
+        if (selfHandler == null || otherHandler == null) {
+            return;
+        }
+
+        TransferUtil.distributeFluids(getIOConfig().getMode(side), selfHandler, otherHandler);
+    }
+
+    @Override
+    public void moveResource(Direction direction) {
+        super.moveResource(direction);
+        moveFluids(direction);
     }
 }

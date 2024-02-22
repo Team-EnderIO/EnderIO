@@ -4,31 +4,37 @@ import com.enderio.base.common.init.EIOFluids;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
+import com.enderio.machines.common.attachment.IFluidTankUser;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.init.MachineBlockEntities;
+import com.enderio.machines.common.io.TransferUtil;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.machines.common.io.fluid.TankAccess;
 import com.enderio.machines.common.menu.XPObeliskMenu;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
-public class XPObeliskBlockEntity extends MachineBlockEntity {
+public class XPObeliskBlockEntity extends MachineBlockEntity implements IFluidTankUser {
 
     IntegerNetworkDataSlot xpTankDataSlot;
+    private final MachineFluidHandler fluidHandler;
     private static final TankAccess TANK = new TankAccess();
 
     public XPObeliskBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(MachineBlockEntities.XP_OBELISK.get(), worldPosition, blockState);
+        fluidHandler = createFluidTank();
 
         this.xpTankDataSlot = new IntegerNetworkDataSlot(() -> TANK.getFluidAmount(this),
             amount -> TANK.setFluid(this, new FluidStack(EIOFluids.XP_JUICE.getSource(), amount)));
@@ -42,13 +48,13 @@ public class XPObeliskBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public @Nullable MachineTankLayout getTankLayout() {
+    public MachineTankLayout getTankLayout() {
         return new MachineTankLayout.Builder().tank(TANK, Integer.MAX_VALUE, fluidStack -> fluidStack.getFluid().is(EIOTags.Fluids.EXPERIENCE)).build();
     }
 
     @Override
-    protected @Nullable MachineFluidHandler createFluidHandler(MachineTankLayout layout) {
-        return new MachineFluidHandler(getIOConfig(), layout) {
+    public MachineFluidHandler createFluidTank() {
+        return new MachineFluidHandler(getIOConfig(), getTankLayout()) {
             @Override
             protected void onContentsChanged(int slot) {
                 super.onContentsChanged(slot);
@@ -75,6 +81,11 @@ public class XPObeliskBlockEntity extends MachineBlockEntity {
 
     public MachineFluidTank getFluidTank() {
         return TANK.getTank(this);
+    }
+
+    @Override
+    public MachineFluidHandler getFluidHandler() {
+        return fluidHandler;
     }
 
     public void addLevelToPlayer(int levelDiff, Player player) {
@@ -113,4 +124,38 @@ public class XPObeliskBlockEntity extends MachineBlockEntity {
         }
     }
 
+    // region Serialization
+
+    @Override
+    public void saveAdditional(CompoundTag pTag) {
+        super.saveAdditional(pTag);
+        saveTank(pTag);
+    }
+
+    @Override
+    public void load(CompoundTag pTag) {
+        super.load(pTag);
+        loadTank(pTag);
+    }
+
+    // endregion
+
+    /**
+     * Move fluids to and fro via the given side.
+     */
+    private void moveFluids(Direction side) {
+        IFluidHandler selfHandler = getSelfCapability(Capabilities.FluidHandler.BLOCK, side);
+        IFluidHandler otherHandler = getNeighbouringCapability(Capabilities.FluidHandler.BLOCK, side);
+        if (selfHandler == null || otherHandler == null) {
+            return;
+        }
+
+        TransferUtil.distributeFluids(getIOConfig().getMode(side), selfHandler, otherHandler);
+    }
+
+    @Override
+    public void moveResource(Direction direction) {
+        super.moveResource(direction);
+        moveFluids(direction);
+    }
 }

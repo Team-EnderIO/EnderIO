@@ -16,11 +16,8 @@ import com.enderio.machines.common.blockentity.MachineState;
 import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.io.IOConfig;
 import com.enderio.machines.common.io.TransferUtil;
-import com.enderio.machines.common.io.fluid.MachineFluidHandler;
-import com.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -42,9 +39,6 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.client.model.data.ModelProperty;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -62,9 +56,6 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
     public static final ICapabilityProvider<MachineBlockEntity, Direction, IItemHandler> ITEM_HANDLER_PROVIDER =
         (be, side) -> be.inventory != null ? be.inventory.getForSide(side) : null;
 
-    public static final ICapabilityProvider<MachineBlockEntity, Direction, IFluidHandler> FLUID_HANDLER_PROVIDER =
-        (be, side) -> be.fluidHandler != null ? be.fluidHandler.getForSide(side) : null;
-
     // region IO Configuration
 
     private final IIOConfig ioConfig;
@@ -75,13 +66,10 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     // endregion
 
-    // region Items and Fluids
+    // region Items
 
     @Nullable
     private final MachineInventory inventory;
-
-    @Nullable
-    private final MachineFluidHandler fluidHandler;
 
     // endregion
 
@@ -106,14 +94,6 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             inventory = createMachineInventory(slotLayout);
         } else {
             inventory = null;
-        }
-
-        // Create fluid storage
-        MachineTankLayout tankLayout = getTankLayout();
-        if (tankLayout != null) {
-            fluidHandler = createFluidHandler(tankLayout);
-        } else {
-            fluidHandler = null;
         }
 
         if (supportsRedstoneControl()) {
@@ -314,43 +294,6 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
     // endregion
 
-    // region Fluid Storage
-
-    @Nullable
-    public MachineTankLayout getTankLayout() {
-        return null;
-    }
-
-    @Nullable
-    public final MachineFluidHandler getFluidHandler() {
-        return fluidHandler;
-    }
-
-    /**
-     * Only call this if you're sure your machine has an tank.
-     */
-    protected final MachineFluidHandler getFluidHandlerNN() {
-        return Objects.requireNonNull(fluidHandler);
-    }
-
-    @Nullable
-    protected MachineFluidHandler createFluidHandler(MachineTankLayout layout) {
-        return new MachineFluidHandler(getIOConfig(), layout) {
-            @Override
-            protected void onContentsChanged(int slot) {
-                onTankContentsChanged(slot);
-                setChanged();
-            }
-        };
-    }
-
-    /**
-     * @apiNote Must call this on custom MachineFluid handlers!
-     */
-    protected void onTankContentsChanged(int slot) {}
-
-    // endregion
-
     // region Block Entity ticking
 
     @Override
@@ -395,10 +338,13 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         for (Direction direction : Direction.values()) {
             if (ioConfig.getMode(direction).canForce()) {
                 // TODO: Maybe some kind of resource distributor so that items are transmitted evenly around? rather than taking the order of Direction.values()
-                moveItems(direction);
-                moveFluids(direction);
+                moveResource(direction);
             }
         }
+    }
+
+    public void moveResource(Direction direction) {
+        moveItems(direction);
     }
 
     /**
@@ -412,28 +358,6 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         }
 
         TransferUtil.distributeItems(ioConfig.getMode(side), selfHandler, otherHandler);
-    }
-
-    /**
-     * Move fluids to and fro via the given side.
-     */
-    private void moveFluids(Direction side) {
-        IFluidHandler selfHandler = getSelfCapability(Capabilities.FluidHandler.BLOCK, side);
-        IFluidHandler otherHandler = getNeighbouringCapability(Capabilities.FluidHandler.BLOCK, side);
-        if (selfHandler == null || otherHandler == null) {
-            return;
-        }
-
-        TransferUtil.distributeFluids(ioConfig.getMode(side), selfHandler, otherHandler);
-    }
-
-    /**
-     * Move fluids from one handler to the other.
-     */
-    @Deprecated(forRemoval = true)
-    protected int moveFluids(IFluidHandler from, IFluidHandler to, int maxDrain) {
-        FluidStack stack = FluidUtil.tryFluidTransfer(to, from, maxDrain, true);
-        return stack.getAmount();
     }
 
     // endregion
@@ -450,10 +374,6 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         if (this.inventory != null) {
             pTag.put(MachineNBTKeys.ITEMS, inventory.serializeNBT());
         }
-
-        if (this.fluidHandler != null) {
-            pTag.put(MachineNBTKeys.FLUIDS, fluidHandler.serializeNBT());
-        }
     }
 
     @Override
@@ -463,10 +383,6 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
 
         if (this.inventory != null) {
             inventory.deserializeNBT(pTag.getCompound(MachineNBTKeys.ITEMS));
-        }
-
-        if (this.fluidHandler != null) {
-            fluidHandler.deserializeNBT(pTag.getCompound(MachineNBTKeys.FLUIDS));
         }
 
         // For rendering io overlays after placed by an nbt filled block item
