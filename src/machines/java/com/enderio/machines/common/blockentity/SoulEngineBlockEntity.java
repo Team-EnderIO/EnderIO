@@ -74,7 +74,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
 
     public SoulEngineBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO, MachineBlockEntities.SOUL_ENGINE.get(), worldPosition, blockState);
-        fluidHandler = createFluidTank();
+        fluidHandler = createFluidHandler();
 
         addDataSlot(new ResourceLocationNetworkDataSlot(() -> this.getEntityType().orElse(NO_MOB),this::setEntityType));
         addDataSlot(new FluidStackNetworkDataSlot(() -> TANK.getFluid(this), f -> TANK.setFluid(this, f)));
@@ -143,7 +143,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
         return MachineTankLayout.builder().tank(TANK, FLUID_CAPACITY, isFluidValid()).build();
     }
 
-    public MachineFluidHandler createFluidTank() {
+    public MachineFluidHandler createFluidHandler() {
         return new MachineFluidHandler(getIOConfig(), getTankLayout()) {
             @Override
             protected void onContentsChanged(int slot) {

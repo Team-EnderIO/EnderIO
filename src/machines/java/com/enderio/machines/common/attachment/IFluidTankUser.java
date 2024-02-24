@@ -13,7 +13,7 @@ public interface IFluidTankUser {
 
     MachineTankLayout getTankLayout();
     MachineFluidHandler getFluidHandler();
-    MachineFluidHandler createFluidTank();
+    MachineFluidHandler createFluidHandler();
 
     default void saveTank(CompoundTag pTag) {
         pTag.put(MachineNBTKeys.FLUIDS, getFluidHandler().serializeNBT());

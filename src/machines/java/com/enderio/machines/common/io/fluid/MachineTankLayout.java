@@ -44,10 +44,10 @@ public class MachineTankLayout {
         return tanks.get(slot).filter().test(stack);
     }
 
-    public List<MachineFluidTank> createTanks() {
+    public List<MachineFluidTank> createTanks(MachineFluidHandler handler) {
         List<MachineFluidTank> tankList = new ArrayList<>();
         tanks.forEach(config -> {
-            tankList.add(new MachineFluidTank(config.capacity()));
+            tankList.add(new MachineFluidTank(tanks.indexOf(config), handler));
         });
         return tankList;
     }

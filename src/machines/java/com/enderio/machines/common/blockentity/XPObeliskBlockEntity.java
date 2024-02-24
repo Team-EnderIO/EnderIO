@@ -34,7 +34,7 @@ public class XPObeliskBlockEntity extends MachineBlockEntity implements IFluidTa
 
     public XPObeliskBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(MachineBlockEntities.XP_OBELISK.get(), worldPosition, blockState);
-        fluidHandler = createFluidTank();
+        fluidHandler = createFluidHandler();
 
         this.xpTankDataSlot = new IntegerNetworkDataSlot(() -> TANK.getFluidAmount(this),
             amount -> TANK.setFluid(this, new FluidStack(EIOFluids.XP_JUICE.getSource(), amount)));
@@ -53,7 +53,7 @@ public class XPObeliskBlockEntity extends MachineBlockEntity implements IFluidTa
     }
 
     @Override
-    public MachineFluidHandler createFluidTank() {
+    public MachineFluidHandler createFluidHandler() {
         return new MachineFluidHandler(getIOConfig(), getTankLayout()) {
             @Override
             protected void onContentsChanged(int slot) {

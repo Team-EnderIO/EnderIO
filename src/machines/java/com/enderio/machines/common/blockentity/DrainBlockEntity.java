@@ -62,7 +62,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements IRang
 
     public DrainBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE, MachineBlockEntities.DRAIN.get(), worldPosition, blockState);
-        fluidHandler = createFluidTank();
+        fluidHandler = createFluidHandler();
 
         addDataSlot(new FluidStackNetworkDataSlot(() -> TANK.getFluid(this), fluid -> TANK.setFluid(this, fluid)));
 
@@ -121,7 +121,7 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements IRang
     }
 
     @Override
-    public MachineFluidHandler createFluidTank() {
+    public MachineFluidHandler createFluidHandler() {
         return new MachineFluidHandler(getIOConfig(), getTankLayout()) {
             @Override
             protected void onContentsChanged(int slot) {

@@ -90,7 +90,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
 
     public FluidTankBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState);
-        fluidHandler = createFluidTank();
+        fluidHandler = createFluidHandler();
 
         // Sync fluid for model
         addDataSlot(new FluidStackNetworkDataSlot(() -> TANK.getFluid(this), f -> TANK.setFluid(this, f)));
@@ -192,7 +192,7 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
     }
 
     @Override
-    public MachineFluidHandler createFluidTank() {
+    public MachineFluidHandler createFluidHandler() {
         return new MachineFluidHandler(getIOConfig(), getTankLayout()) {
             @Override
             protected void onContentsChanged(int slot) {

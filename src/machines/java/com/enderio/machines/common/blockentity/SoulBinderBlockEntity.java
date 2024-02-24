@@ -66,7 +66,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
 
     public SoulBinderBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Input, CAPACITY, USAGE, MachineBlockEntities.SOUL_BINDER.get(), worldPosition, blockState);
-        fluidHandler = createFluidTank();
+        fluidHandler = createFluidHandler();
 
         // Sync fluid amount to client.
         addDataSlot(new IntegerNetworkDataSlot(() -> TANK.getFluidAmount(this), i -> TANK.setFluid(this, new FluidStack(EIOFluids.XP_JUICE.getSource(), i))
@@ -142,7 +142,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity implements 
     }
 
     @Override
-    public MachineFluidHandler createFluidTank() {
+    public MachineFluidHandler createFluidHandler() {
         return new MachineFluidHandler(getIOConfig(), getTankLayout()) {
             @Override
             protected void onContentsChanged(int slot) {
