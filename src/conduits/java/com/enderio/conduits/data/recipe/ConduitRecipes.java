@@ -5,7 +5,6 @@ import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.conduits.common.init.ConduitItems;
 import com.enderio.conduits.common.integrations.Integrations;
-import com.enderio.conduits.common.integrations.ae2.AE2Integration;
 import com.enderio.conduits.common.tag.ConduitTags;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
@@ -101,35 +100,35 @@ public class ConduitRecipes extends RecipeProvider {
             .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
             .save(recipeOutput);
 
-        if (Integrations.AE2_INTEGRATION.isPresent()) {
-            var ae2RecipeOutput = recipeOutput.withConditions(new ModLoadedCondition("ae2"));
-
-            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, AE2Integration.NORMAL_ITEM, 3)
-                .pattern("BBB")
-                .pattern("III")
-                .pattern("BBB")
-                .define('B', EIOItems.CONDUIT_BINDER)
-                .define('I', ConduitTags.Items.COVERED_CABLE)
-                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
-                .save(ae2RecipeOutput, EnderIO.loc("ae_covered_cable"));
-
-            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, AE2Integration.NORMAL_ITEM, 3)
-                .pattern("BBB")
-                .pattern("III")
-                .pattern("BBB")
-                .define('B', EIOItems.CONDUIT_BINDER)
-                .define('I', ConduitTags.Items.GLASS_CABLE)
-                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
-                .save(ae2RecipeOutput, EnderIO.loc("ae_glass_cable"));
-
-            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, AE2Integration.DENSE_ITEM, 3)
-                .pattern("BBB")
-                .pattern("III")
-                .pattern("BBB")
-                .define('B', EIOItems.CONDUIT_BINDER)
-                .define('I', ConduitTags.Items.COVERED_DENSE_CABLE)
-                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
-                .save(ae2RecipeOutput, EnderIO.loc("ae_covered_dense_cable"));
-        }
+//        if (Integrations.AE2_INTEGRATION.isPresent()) { TODO: NEO-PORT:
+//            var ae2RecipeOutput = recipeOutput.withConditions(new ModLoadedCondition("ae2"));
+//
+//            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, AE2Integration.NORMAL_ITEM, 3)
+//                .pattern("BBB")
+//                .pattern("III")
+//                .pattern("BBB")
+//                .define('B', EIOItems.CONDUIT_BINDER)
+//                .define('I', ConduitTags.Items.COVERED_CABLE)
+//                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
+//                .save(ae2RecipeOutput, EnderIO.loc("ae_covered_cable"));
+//
+//            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, AE2Integration.NORMAL_ITEM, 3)
+//                .pattern("BBB")
+//                .pattern("III")
+//                .pattern("BBB")
+//                .define('B', EIOItems.CONDUIT_BINDER)
+//                .define('I', ConduitTags.Items.GLASS_CABLE)
+//                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
+//                .save(ae2RecipeOutput, EnderIO.loc("ae_glass_cable"));
+//
+//            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, AE2Integration.DENSE_ITEM, 3)
+//                .pattern("BBB")
+//                .pattern("III")
+//                .pattern("BBB")
+//                .define('B', EIOItems.CONDUIT_BINDER)
+//                .define('I', ConduitTags.Items.COVERED_DENSE_CABLE)
+//                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
+//                .save(ae2RecipeOutput, EnderIO.loc("ae_covered_dense_cable"));
+//        }
     }
 }

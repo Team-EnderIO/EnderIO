@@ -12,8 +12,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.common.capabilities.Capabilities;
-import net.neoforged.neoforge.common.capabilities.Capability;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.apache.commons.lang3.function.TriFunction;
 
@@ -31,9 +31,7 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<IEnergySto
         super.tickGraph(type, loadedNodes, level, graph, isRedstoneActive);
         for (NodeIdentifier<?> node : loadedNodes) {
             EnergyExtendedData energyExtendedData = node.getExtendedConduitData().castTo(EnergyExtendedData.class);
-            IEnergyStorage energy = energyExtendedData.getSelfCap()
-                .resolve()
-                .orElseThrow();
+            IEnergyStorage energy = energyExtendedData.getSelfCap(); //TODO throw on null?
             if (energy.getEnergyStored() == 0) {
                 energyExtendedData.setCapacity(500);
                 continue;
@@ -46,9 +44,9 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<IEnergySto
                        if (be == null) {
                            continue;
                        }
-                       Optional<IEnergyStorage> capability = be.getCapability(getCapability(), dir.getOpposite()).resolve();
-                       if (capability.isPresent()) {
-                           IEnergyStorage insert = capability.get();
+                       IEnergyStorage capability = level.getCapability(getCapability(), be.getBlockPos(), be.getBlockState(), be, dir.getOpposite());
+                       if (capability != null) {
+                           IEnergyStorage insert = capability;
                            extractEnergy(energy, List.of(insert), 0, i -> {});
                        }
                    }
@@ -116,8 +114,8 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<IEnergySto
     }
 
     @Override
-    public Capability<IEnergyStorage> getCapability() {
-        return Capabilities.ENERGY;
+    public BlockCapability<IEnergyStorage, Direction> getCapability() {
+        return Capabilities.EnergyStorage.BLOCK;
     }
 
     @Override
