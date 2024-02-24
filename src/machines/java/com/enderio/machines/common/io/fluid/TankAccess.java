@@ -65,7 +65,7 @@ public class TankAccess {
     }
 
     public int fill(MachineFluidHandler handler, FluidStack stack, IFluidHandler.FluidAction action) {
-        return handler.fill(stack, action);
+        return handler.fill(index, stack, action);
     }
 
     public int fill(IFluidTankUser machine, FluidStack stack, IFluidHandler.FluidAction action) {
@@ -73,7 +73,7 @@ public class TankAccess {
     }
 
     public FluidStack drain(MachineFluidHandler handler, FluidStack resource, IFluidHandler.FluidAction action) {
-        return handler.drain(resource, action);
+        return handler.drain(index, resource, action);
     }
 
     public FluidStack drain(IFluidTankUser machine, FluidStack resource, IFluidHandler.FluidAction action) {
@@ -81,7 +81,7 @@ public class TankAccess {
     }
 
     public FluidStack drain(MachineFluidHandler handler, int maxDrain, IFluidHandler.FluidAction action) {
-        return handler.drain(maxDrain, action);
+        return handler.drain(index, maxDrain, action);
     }
 
     public FluidStack drain(IFluidTankUser machine, int maxDrain, IFluidHandler.FluidAction action) {

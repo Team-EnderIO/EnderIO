@@ -12,7 +12,9 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.IntConsumer;
 
 /**
@@ -24,7 +26,8 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
     public static final String TANKS = "Tanks";
     private final IIOConfig config;
     private final MachineTankLayout layout;
-    private List<MachineFluidTank> tanks;
+    private Map<Integer, MachineFluidTank> tanks =  new HashMap<>();
+    private List<FluidStack> stacks;
 
     // Not sure if we need this but might be useful to update recipe/task if tank is filled.
     private IntConsumer changeListener = i -> {};
@@ -32,7 +35,7 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
     public MachineFluidHandler(IIOConfig config, MachineTankLayout layout) {
         this.config = config;
         this.layout = layout;
-        this.tanks = layout.createTanks(this);
+        this.stacks = NonNullList.withSize(getTanks(), FluidStack.EMPTY);
     }
 
     public void addSlotChangedCallback(IntConsumer callback) {
@@ -50,12 +53,10 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
     //Not a good idea to use this method. Tank Access should be the way to access tanks
     @Deprecated
     public final MachineFluidTank getTank(int tank) {
-        MachineFluidTank machineFluidTank = tanks.get(tank);
-        if (machineFluidTank == null) {
-            throw new IllegalArgumentException("No tank found for index " + tank + ".");
-
+        if (tank > getTanks()) {
+            throw new IndexOutOfBoundsException("No tank found for index " + tank + " in range" + getTanks() + ".");
         }
-        return machineFluidTank;
+        return tanks.computeIfAbsent(tank, i -> new MachineFluidTank(i, this));
     }
 
     @Override
@@ -65,11 +66,11 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
 
     @Override
     public FluidStack getFluidInTank(int tank) {
-        return tanks.get(tank).getFluid();
+        return stacks.get(tank);
     }
 
     public void setFluidInTank(int tank, FluidStack fluid) {
-        tanks.get(tank).setFluid(fluid);
+        stacks.set(tank, fluid);
     }
 
     @Override
@@ -112,6 +113,7 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
         }
         if (fluid.isEmpty()) {
             fluid = new FluidStack(resource, Math.min(capacity, resource.getAmount()));
+            setFluidInTank(tank, fluid);
             onContentsChanged(tank);
             return fluid.getAmount();
         }
@@ -142,7 +144,7 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
         FluidStack resourceLeft = resource.copy();
         int totalFilled = 0;
 
-        for (int index = 0; index < tanks.size(); index++) {
+        for (int index = 0; index < getTanks(); index++) {
             if (!layout.canInsert(index))
                 continue;
 
@@ -191,7 +193,7 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
 
     @Override
     public FluidStack drain(int maxDrain, FluidAction action) {
-        for (int index = 0; index < tanks.size(); index++) {
+        for (int index = 0; index < getTanks(); index++) {
             if (drain(index, maxDrain, FluidAction.SIMULATE) != FluidStack.EMPTY) {
                 FluidStack drained = drain(index, maxDrain, action);
                 if (!drained.isEmpty()) {
@@ -213,7 +215,7 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
         for (int i = 0; i < getTanks(); i++) {
             CompoundTag tankTag = new CompoundTag();
             tankTag.putInt(TANK_INDEX, i);
-            tanks.get(i).save(tankTag);
+            stacks.get(i).writeToNBT(tankTag);
             nbtTagList.add(tankTag);
         }
         CompoundTag nbt = new CompoundTag();
@@ -223,12 +225,11 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        tanks = layout.createTanks(this);
         ListTag tagList = nbt.getList(TANKS, Tag.TAG_COMPOUND);
         for (int i = 0; i < tagList.size(); i++) {
             CompoundTag tankTag = tagList.getCompound(i);
             int index = tankTag.getInt(TANK_INDEX);
-            tanks.set(index, MachineFluidTank.from(tankTag, index, this));
+            stacks.set(index, FluidStack.loadFluidStackFromNBT(tankTag));
         }
     }
 

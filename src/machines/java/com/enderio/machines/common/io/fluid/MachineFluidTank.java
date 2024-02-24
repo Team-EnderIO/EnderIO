@@ -10,19 +10,10 @@ import org.jetbrains.annotations.NotNull;
 public class MachineFluidTank implements IFluidTank {
     private final int index;
     private final MachineFluidHandler handler;
-    @NotNull
-    private FluidStack fluid = FluidStack.EMPTY;
 
     public MachineFluidTank(int index, MachineFluidHandler handler) {
         this.index = index;
         this.handler = handler;
-    }
-
-    public static MachineFluidTank from(CompoundTag tag, int index, MachineFluidHandler handler) {
-        FluidStack stack = FluidStack.loadFluidStackFromNBT(tag);
-        MachineFluidTank machineFluidTank = new MachineFluidTank(index, handler);
-        machineFluidTank.setFluid(stack);
-        return machineFluidTank;
     }
 
     @Override
@@ -32,16 +23,16 @@ public class MachineFluidTank implements IFluidTank {
 
     @Override
     public @NotNull FluidStack getFluid() {
-        return fluid;
+        return handler.getFluidInTank(index);
     }
 
     public void setFluid(FluidStack fluid) {
-        this.fluid = fluid;
+        handler.setFluidInTank(index, fluid);
     }
 
     @Override
     public int getFluidAmount() {
-        return fluid.getAmount();
+        return getFluid().getAmount();
     }
 
     @Override
@@ -68,12 +59,4 @@ public class MachineFluidTank implements IFluidTank {
     public FluidStack drain(int maxDrain, IFluidHandler.FluidAction action) {
         return handler.drain(index, maxDrain, action);
     }
-
-    protected void onContentsChanged() {}
-
-    public CompoundTag save(CompoundTag compoundTag) {
-        getFluid().writeToNBT(compoundTag);
-        return compoundTag;
-    }
-
 }
