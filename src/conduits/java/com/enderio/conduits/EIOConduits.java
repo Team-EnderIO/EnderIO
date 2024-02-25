@@ -10,7 +10,6 @@ import com.enderio.conduits.common.init.ConduitLang;
 import com.enderio.conduits.common.init.ConduitMenus;
 import com.enderio.conduits.common.init.EnderConduitTypes;
 import com.enderio.conduits.common.integrations.Integrations;
-import com.enderio.conduits.common.network.ConduitNetwork;
 import com.enderio.conduits.data.ConduitTagProvider;
 import com.enderio.conduits.data.recipe.ConduitRecipes;
 import net.minecraft.data.PackOutput;
@@ -18,7 +17,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLConstructModEvent;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 @Mod.EventBusSubscriber(modid = EnderIO.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -26,7 +24,7 @@ public class EIOConduits {
     @SubscribeEvent
     public static void onConstruct(FMLConstructModEvent event) {
         System.out.println("================ Conduits construct ==================");
-        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+        IEventBus bus = EnderIO.modEventBus;
 
         ConduitTypes.register(bus);
         EnderConduitTypes.register();
@@ -35,7 +33,6 @@ public class EIOConduits {
         ConduitBlocks.register(bus);
         ConduitItems.register(bus);
         Integrations.register();
-        ConduitNetwork.register();
         ConduitLang.register();
     }
 

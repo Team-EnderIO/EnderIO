@@ -2,78 +2,33 @@ package com.enderio.conduits.common.network;
 
 import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.IConduitType;
-import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
 import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
-import com.enderio.core.common.network.Packet;
+import com.enderio.core.EnderCore;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.network.INetworkDirection;
-import net.neoforged.neoforge.network.NetworkEvent;
-import net.neoforged.neoforge.network.PlayNetworkDirection;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 
-import java.util.Optional;
 
-public class C2SSetConduitConnectionState implements Packet {
+public record C2SSetConduitConnectionState(BlockPos pos, Direction direction, IConduitType<?> conduitType, DynamicConnectionState connectionState) implements
+    CustomPacketPayload {
 
-    private final BlockPos pos;
-    private final Direction direction;
-    private final IConduitType<?> conduitType;
-    private final DynamicConnectionState connectionState;
-
-    public C2SSetConduitConnectionState(BlockPos pos, Direction direction, IConduitType<?> conduitType, DynamicConnectionState connectionState) {
-        this.pos = pos;
-        this.direction = direction;
-        this.conduitType = conduitType;
-        this.connectionState = connectionState;
-    }
+    public static final ResourceLocation ID = EnderCore.loc("c2s_conduit_connection_state");
 
     public C2SSetConduitConnectionState(FriendlyByteBuf buf) {
-        pos = buf.readBlockPos();
-        direction = buf.readEnum(Direction.class);
-        conduitType = ConduitTypes.getRegistry().get(buf.readResourceLocation());
-        connectionState = DynamicConnectionState.fromNetwork(buf);
+        this(buf.readBlockPos(), buf.readEnum(Direction.class), ConduitTypes.getRegistry().get(buf.readResourceLocation()), DynamicConnectionState.fromNetwork(buf));
     }
 
-    @Override
-    public boolean isValid(NetworkEvent.Context context) {
-        return context.getSender() != null && conduitType != null;
-    }
-
-    @Override
-    public void handle(NetworkEvent.Context context) {
-        ServerLevel level = context.getSender().serverLevel();
-
-        BlockEntity be = level.getBlockEntity(pos);
-        if (be instanceof ConduitBlockEntity conduitBlockEntity) {
-            conduitBlockEntity.handleConnectionStateUpdate(direction, conduitType, connectionState);
-        }
-    }
-
-    protected void write(FriendlyByteBuf writeInto) {
+    public void write(FriendlyByteBuf writeInto) {
         writeInto.writeBlockPos(pos);
         writeInto.writeEnum(direction);
         writeInto.writeResourceLocation(ConduitTypes.getRegistry().getKey(conduitType));
         connectionState.toNetwork(writeInto);
     }
 
-    public static class Handler extends PacketHandler<C2SSetConduitConnectionState> {
-
-        @Override
-        public C2SSetConduitConnectionState fromNetwork(FriendlyByteBuf buf) {
-            return new C2SSetConduitConnectionState(buf);
-        }
-
-        @Override
-        public void toNetwork(C2SSetConduitConnectionState packet, FriendlyByteBuf buf) {
-            packet.write(buf);
-        }
-
-        @Override
-        public Optional<INetworkDirection<?>> getDirection() {
-            return Optional.of(PlayNetworkDirection.PLAY_TO_SERVER);
-        }
+    @Override
+    public ResourceLocation id() {
+        return ID;
     }
 }

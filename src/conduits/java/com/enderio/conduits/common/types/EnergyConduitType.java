@@ -27,14 +27,14 @@ public class EnergyConduitType extends SimpleConduitType<EnergyExtendedData> {
 
     @Override
     public ConduitConnectionData getDefaultConnection(Level level, BlockPos pos, Direction direction) {
-        BlockEntity blockEntity = level.getBlockEntity(pos.relative(direction));
-        if (blockEntity != null) {
-            IEnergyStorage capability = level.getCapability(Capabilities.EnergyStorage.BLOCK, blockEntity.getBlockPos(), blockEntity.getBlockState(), blockEntity, direction.getOpposite());
+//        BlockEntity blockEntity = level.getBlockEntity(pos.relative(direction));
+//        if (blockEntity != null) { TODO: NEO-PORT: non be caps
+            IEnergyStorage capability = level.getCapability(Capabilities.EnergyStorage.BLOCK, pos.relative(direction), direction.getOpposite());
             if (capability != null) {
                 return new ConduitConnectionData(capability.canReceive(), capability.canExtract(), RedstoneControl.ALWAYS_ACTIVE);
 
             }
-        }
+//        }
         return super.getDefaultConnection(level, pos, direction);
     }
 

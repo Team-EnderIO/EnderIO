@@ -40,11 +40,11 @@ public class EnergyConduitTicker extends CapabilityAwareConduitTicker<IEnergySto
             for (NodeIdentifier<?> otherNode : loadedNodes) {
                for (Direction dir: Direction.values()) {
                    if (otherNode.getIOState(dir).map(NodeIdentifier.IOState::isInsert).orElse(false)) {
-                       BlockEntity be = level.getBlockEntity(otherNode.getPos().relative(dir));
-                       if (be == null) {
-                           continue;
-                       }
-                       IEnergyStorage capability = level.getCapability(getCapability(), be.getBlockPos(), be.getBlockState(), be, dir.getOpposite());
+//                       BlockEntity be = level.getBlockEntity(otherNode.getPos().relative(dir));
+//                       if (be == null) { TODO: NEO-PORT: NON BE CAPS
+//                           continue;
+//                       }
+                       IEnergyStorage capability = level.getCapability(getCapability(), otherNode.getPos().relative(dir), dir.getOpposite());
                        if (capability != null) {
                            IEnergyStorage insert = capability;
                            extractEnergy(energy, List.of(insert), 0, i -> {});

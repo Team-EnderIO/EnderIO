@@ -74,7 +74,7 @@ public class EnergyExtendedData implements IExtendedConduitData<EnergyExtendedDa
 
     @Override
     public void onRemoved(IConduitType<?> type, Level level, BlockPos pos) {
-        //selfCap.invalidate(); TODO invalidation?
+        level.invalidateCapabilities(pos);
     }
 
     public EnergySidedData compute(Direction direction) {
