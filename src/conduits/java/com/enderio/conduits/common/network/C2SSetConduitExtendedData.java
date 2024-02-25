@@ -9,8 +9,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.Optional;
-
 public record C2SSetConduitExtendedData(BlockPos pos, IConduitType<?> conduitType, CompoundTag extendedConduitData)
     implements CustomPacketPayload {
 

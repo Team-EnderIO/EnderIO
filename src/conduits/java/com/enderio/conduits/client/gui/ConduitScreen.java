@@ -20,7 +20,6 @@ import com.enderio.conduits.common.network.C2SSetConduitExtendedData;
 import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.client.gui.widgets.CheckBox;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
-import com.enderio.core.common.network.CoreNetwork;
 import com.enderio.core.common.network.NetworkUtil;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;

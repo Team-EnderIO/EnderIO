@@ -1,7 +1,6 @@
 package com.enderio.machines.common.init;
 
 import com.enderio.core.EnderCore;
-import com.enderio.core.common.network.CoreNetwork;
 import com.enderio.machines.common.network.MachinePayloadHandler;
 import com.enderio.machines.common.network.PoweredSpawnerSoulPacket;
 import com.enderio.machines.common.network.SoulEngineSoulPacket;
