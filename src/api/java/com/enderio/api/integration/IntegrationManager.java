@@ -1,5 +1,7 @@
 package com.enderio.api.integration;
 
+import net.neoforged.bus.api.IEventBus;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -13,8 +15,8 @@ public class IntegrationManager {
 
     private static final List<Integration> ALL_INTEGRATIONS = new ArrayList<>();
 
-    public static <T extends Integration> IntegrationWrapper<T> wrapper(String modid, Supplier<T> integration) {
-        return new IntegrationWrapper<>(modid, integration);
+    public static <T extends Integration> IntegrationWrapper<T> wrapper(String modid, Supplier<T> integration, IEventBus modEventBus) {
+        return new IntegrationWrapper<>(modid, integration, modEventBus);
     }
 
     public static void addIntegration(Integration integration) {

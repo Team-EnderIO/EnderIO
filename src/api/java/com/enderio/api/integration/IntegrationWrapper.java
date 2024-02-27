@@ -1,9 +1,9 @@
 package com.enderio.api.integration;
 
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.NonNullConsumer;
-import net.neoforged.fml.ModList;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -16,12 +16,12 @@ public class IntegrationWrapper<T extends Integration> {
     @Nullable
     private final T value;
 
-    public IntegrationWrapper(String modid, Supplier<T> supplier) {
+    public IntegrationWrapper(String modid, Supplier<T> supplier, IEventBus modEventBus) {
         this.modid = modid;
         value = ModList.get().isLoaded(modid) ? supplier.get() : null;
         ifPresent(integration -> {
             IntegrationManager.addIntegration(integration);
-            integration.addEventListener(FMLJavaModLoadingContext.get().getModEventBus(), NeoForge.EVENT_BUS);
+            integration.addEventListener(modEventBus, NeoForge.EVENT_BUS);
         });
     }
 
