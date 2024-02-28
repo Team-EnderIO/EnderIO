@@ -39,6 +39,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.client.model.data.ModelProperty;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -338,17 +339,14 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         for (Direction direction : Direction.values()) {
             if (ioConfig.getMode(direction).canForce()) {
                 // TODO: Maybe some kind of resource distributor so that items are transmitted evenly around? rather than taking the order of Direction.values()
-                moveResource(direction);
+                moveItems(direction);
+                moveFluids(direction);
             }
         }
     }
 
-    public void moveResource(Direction direction) {
-        moveItems(direction);
-    }
-
     /**
-     * Move items to and fro via the given side.
+     * Move items to and from via the given side.
      */
     private void moveItems(Direction side) {
         IItemHandler selfHandler = getSelfCapability(Capabilities.ItemHandler.BLOCK, side);
@@ -358,6 +356,19 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
         }
 
         TransferUtil.distributeItems(ioConfig.getMode(side), selfHandler, otherHandler);
+    }
+
+    /**
+     * Move fluids to and from via the given side.
+     */
+    private void moveFluids(Direction side) {
+        IFluidHandler selfHandler = getSelfCapability(Capabilities.FluidHandler.BLOCK, side);
+        IFluidHandler otherHandler = getNeighbouringCapability(Capabilities.FluidHandler.BLOCK, side);
+        if (selfHandler == null || otherHandler == null) {
+            return;
+        }
+
+        TransferUtil.distributeFluids(getIOConfig().getMode(side), selfHandler, otherHandler);
     }
 
     // endregion

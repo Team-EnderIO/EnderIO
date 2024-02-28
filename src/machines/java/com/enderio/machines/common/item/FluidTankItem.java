@@ -1,6 +1,7 @@
 package com.enderio.machines.common.item;
 
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.core.CoreNBTKeys;
 import com.enderio.core.client.item.IAdvancedTooltipProvider;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.machines.client.rendering.item.FluidTankBEWLR;
@@ -93,7 +94,7 @@ public class FluidTankItem extends BlockItem implements IAdvancedTooltipProvider
             return tagCompoundOptional
                 .map(tagCompound -> tagCompound.getCompound(BLOCK_ENTITY_TAG))
                 .map(blockEntityTag -> blockEntityTag.getCompound(MachineNBTKeys.FLUIDS))
-                .map(fluidTag -> fluidTag.getList("Tanks", Tag.TAG_COMPOUND))
+                .map(fluidTag -> fluidTag.getList(CoreNBTKeys.TANKS, Tag.TAG_COMPOUND))
                 .map(tank -> tank.getCompound(0))
                 .map(FluidStack::loadFluidStackFromNBT)
                 .orElse(FluidStack.EMPTY);
@@ -109,7 +110,7 @@ public class FluidTankItem extends BlockItem implements IAdvancedTooltipProvider
             ListTag listTag = new ListTag();
             listTag.add(0, fluidTag);
             CompoundTag tanks = new CompoundTag();
-            tanks.put("Tanks", listTag);
+            tanks.put(CoreNBTKeys.TANKS, listTag);
             blockEntityTag.put(MachineNBTKeys.FLUIDS, tanks);
         }
 
@@ -118,8 +119,8 @@ public class FluidTankItem extends BlockItem implements IAdvancedTooltipProvider
             CompoundTag tagCompound = container.getTag();
             if (tagCompound != null) {
                 CompoundTag blockEntityTag = tagCompound.getCompound(BLOCK_ENTITY_TAG);
-                if (blockEntityTag.contains("Tanks")) {
-                    blockEntityTag.remove("Tanks");
+                if (blockEntityTag.contains(CoreNBTKeys.TANKS)) {
+                    blockEntityTag.remove(CoreNBTKeys.TANKS);
                 }
             }
         }

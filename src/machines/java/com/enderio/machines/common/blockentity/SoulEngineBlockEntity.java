@@ -13,7 +13,6 @@ import com.enderio.machines.common.attachment.IFluidTankUser;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
-import com.enderio.machines.common.io.TransferUtil;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
@@ -23,7 +22,6 @@ import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.menu.SoulEngineMenu;
 import com.enderio.machines.common.souldata.EngineSoul;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -40,7 +38,6 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
@@ -256,24 +253,5 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     @SubscribeEvent
     static void onReload(RecipesUpdatedEvent event) {
         reload = !reload;
-    }
-
-    /**
-     * Move fluids to and fro via the given side.
-     */
-    private void moveFluids(Direction side) {
-        IFluidHandler selfHandler = getSelfCapability(Capabilities.FluidHandler.BLOCK, side);
-        IFluidHandler otherHandler = getNeighbouringCapability(Capabilities.FluidHandler.BLOCK, side);
-        if (selfHandler == null || otherHandler == null) {
-            return;
-        }
-
-        TransferUtil.distributeFluids(getIOConfig().getMode(side), selfHandler, otherHandler);
-    }
-
-    @Override
-    public void moveResource(Direction direction) {
-        super.moveResource(direction);
-        moveFluids(direction);
     }
 }

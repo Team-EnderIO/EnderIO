@@ -7,7 +7,6 @@ import com.enderio.machines.common.attachment.IFluidTankUser;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineRecipes;
-import com.enderio.machines.common.io.TransferUtil;
 import com.enderio.machines.common.io.fluid.IFluidItemInteractive;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
@@ -18,7 +17,6 @@ import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.FluidTankMenu;
 import com.enderio.machines.common.recipe.TankRecipe;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -371,23 +369,4 @@ public abstract class FluidTankBlockEntity extends MachineBlockEntity implements
     }
 
     // endregion
-
-    /**
-     * Move fluids to and fro via the given side.
-     */
-    private void moveFluids(Direction side) {
-        IFluidHandler selfHandler = getSelfCapability(Capabilities.FluidHandler.BLOCK, side);
-        IFluidHandler otherHandler = getNeighbouringCapability(Capabilities.FluidHandler.BLOCK, side);
-        if (selfHandler == null || otherHandler == null) {
-            return;
-        }
-
-        TransferUtil.distributeFluids(getIOConfig().getMode(side), selfHandler, otherHandler);
-    }
-
-    @Override
-    public void moveResource(Direction direction) {
-        super.moveResource(direction);
-        moveFluids(direction);
-    }
 }

@@ -1,6 +1,7 @@
 package com.enderio.machines.common.io.fluid;
 
 import com.enderio.api.io.IIOConfig;
+import com.enderio.core.CoreNBTKeys;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -11,7 +12,6 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +23,6 @@ import java.util.function.IntConsumer;
 public class MachineFluidHandler implements IFluidHandler, INBTSerializable<CompoundTag> {
 
     public static final String TANK_INDEX = "Index";
-    public static final String TANKS = "Tanks";
     private final IIOConfig config;
     private final MachineTankLayout layout;
     private Map<Integer, MachineFluidTank> tanks =  new HashMap<>();
@@ -219,13 +218,13 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
             nbtTagList.add(tankTag);
         }
         CompoundTag nbt = new CompoundTag();
-        nbt.put(TANKS, nbtTagList);
+        nbt.put(CoreNBTKeys.TANKS, nbtTagList);
         return nbt;
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        ListTag tagList = nbt.getList(TANKS, Tag.TAG_COMPOUND);
+        ListTag tagList = nbt.getList(CoreNBTKeys.TANKS, Tag.TAG_COMPOUND);
         for (int i = 0; i < tagList.size(); i++) {
             CompoundTag tankTag = tagList.getCompound(i);
             int index = tankTag.getInt(TANK_INDEX);

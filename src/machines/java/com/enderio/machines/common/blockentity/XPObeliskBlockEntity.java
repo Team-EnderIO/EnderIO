@@ -7,21 +7,18 @@ import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
 import com.enderio.machines.common.attachment.IFluidTankUser;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.init.MachineBlockEntities;
-import com.enderio.machines.common.io.TransferUtil;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.machines.common.io.fluid.TankAccess;
 import com.enderio.machines.common.menu.XPObeliskMenu;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
@@ -139,23 +136,4 @@ public class XPObeliskBlockEntity extends MachineBlockEntity implements IFluidTa
     }
 
     // endregion
-
-    /**
-     * Move fluids to and fro via the given side.
-     */
-    private void moveFluids(Direction side) {
-        IFluidHandler selfHandler = getSelfCapability(Capabilities.FluidHandler.BLOCK, side);
-        IFluidHandler otherHandler = getNeighbouringCapability(Capabilities.FluidHandler.BLOCK, side);
-        if (selfHandler == null || otherHandler == null) {
-            return;
-        }
-
-        TransferUtil.distributeFluids(getIOConfig().getMode(side), selfHandler, otherHandler);
-    }
-
-    @Override
-    public void moveResource(Direction direction) {
-        super.moveResource(direction);
-        moveFluids(direction);
-    }
 }
