@@ -2,7 +2,7 @@ package com.enderio.base.common.hangglider;
 
 import com.enderio.api.glider.GliderMovementInfo;
 import com.enderio.api.integration.IntegrationManager;
-import com.enderio.base.common.advancement.UseGliderTrigger;
+import com.enderio.base.common.init.EIOCriterions;
 import com.enderio.base.common.lang.EIOLang;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -15,9 +15,9 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.TickEvent;
 
 import java.util.Map;
 import java.util.Optional;
@@ -76,7 +76,7 @@ public class PlayerMovementHandler {
             player.setDeltaMovement(newDeltaMovement);
             player.fallDistance = 0f;
             if (player instanceof ServerPlayer serverPlayer) {
-                UseGliderTrigger.USE_GLIDER.trigger(serverPlayer);
+                EIOCriterions.USE_GLIDER.get().trigger(serverPlayer);
                 player.hurtMarked = true;
             } else if (player.level().isClientSide()) {
                 ClientClassLoadingProtection.playSound(player);

@@ -4,8 +4,8 @@ import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.base.EIONBTKeys;
-import com.enderio.base.common.advancement.PaintingTrigger;
 import com.enderio.base.common.block.painted.IPaintedBlock;
+import com.enderio.base.common.init.EIOCriterions;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.task.PoweredCraftingMachineTask;
@@ -32,14 +32,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 import org.jetbrains.annotations.Nullable;
 
-import javax.crypto.Mac;
 import java.util.List;
 import java.util.Optional;
 
@@ -161,7 +159,7 @@ public class PaintingMachineBlockEntity extends PoweredMachineBlockEntity {
                     Block paint = BuiltInRegistries.BLOCK.get(new ResourceLocation(s.get()));
                     for (Player player : getLevel().players()) {
                         if (player instanceof ServerPlayer serverPlayer && area.contains(player.getX(), player.getY(), player.getZ())) {
-                            PaintingTrigger.PAINTING_TRIGGER.trigger(serverPlayer, paint);
+                            EIOCriterions.PAINTING_TRIGGER.get().trigger(serverPlayer, paint);
                         }
                     }
                 }

@@ -1,9 +1,9 @@
 package com.enderio.base.common.advancement;
 
 import com.enderio.EnderIO;
+import com.enderio.base.common.init.EIOCriterions;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
@@ -19,16 +19,12 @@ import java.util.Optional;
 public class PaintingTrigger extends SimpleCriterionTrigger<PaintingTrigger.TriggerInstance> {
 
     static final ResourceLocation ID = EnderIO.loc("create_painted_block");
-    public static final PaintingTrigger PAINTING_TRIGGER = CriteriaTriggers.register(EnderIO.loc("painting").toString(), new PaintingTrigger());
     public ResourceLocation getId() {
         return ID;
     }
 
     public void trigger(ServerPlayer pPlayer, Block paint) {
         super.trigger(pPlayer, triggerInstance -> triggerInstance.matches(paint));
-    }
-
-    public void register() {
     }
 
     @Override
@@ -49,7 +45,7 @@ public class PaintingTrigger extends SimpleCriterionTrigger<PaintingTrigger.Trig
         }
 
         public static Criterion<TriggerInstance> painted(Block paint) {
-            return PAINTING_TRIGGER.createCriterion(new TriggerInstance(Optional.empty(), paint));
+            return EIOCriterions.PAINTING_TRIGGER.get().createCriterion(new TriggerInstance(Optional.empty(), paint));
         }
     }
 }

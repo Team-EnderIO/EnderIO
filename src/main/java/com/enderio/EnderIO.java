@@ -1,13 +1,12 @@
 package com.enderio;
 
 import com.enderio.api.integration.IntegrationManager;
-import com.enderio.base.common.advancement.PaintingTrigger;
-import com.enderio.base.common.advancement.UseGliderTrigger;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.init.EIOAttachments;
 import com.enderio.base.common.init.EIOBlockEntities;
 import com.enderio.base.common.init.EIOBlocks;
 import com.enderio.base.common.init.EIOCreativeTabs;
+import com.enderio.base.common.init.EIOCriterions;
 import com.enderio.base.common.init.EIOEnchantments;
 import com.enderio.base.common.init.EIOEntities;
 import com.enderio.base.common.init.EIOFluids;
@@ -103,13 +102,12 @@ public class EnderIO {
         EIOParticles.register(modEventBus);
         EIOEntities.register(modEventBus);
         EIOAttachments.register(modEventBus);
+        EIOCriterions.register(modEventBus);
 
         // Run datagen after registrate is finished.
         modEventBus.addListener(EventPriority.LOWEST, this::onGatherData);
         modEventBus.addListener(SoulVialItem::onCommonSetup);
         IntegrationManager.addIntegration(EnderIOSelfIntegration.INSTANCE);
-        new UseGliderTrigger().register();
-        new PaintingTrigger().register();
     }
 
     public void onGatherData(GatherDataEvent event) {

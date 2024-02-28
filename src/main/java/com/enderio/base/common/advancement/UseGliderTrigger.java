@@ -3,7 +3,6 @@ package com.enderio.base.common.advancement;
 import com.enderio.EnderIO;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
@@ -15,16 +14,12 @@ import java.util.Optional;
 
 public class UseGliderTrigger extends SimpleCriterionTrigger<UseGliderTrigger.TriggerInstance> {
     static final ResourceLocation ID = EnderIO.loc("use_glider");
-    public static final UseGliderTrigger USE_GLIDER = CriteriaTriggers.register(EnderIO.loc("use_glider").toString(), new UseGliderTrigger());
     public ResourceLocation getId() {
         return ID;
     }
 
     public void trigger(ServerPlayer pPlayer) {
         super.trigger(pPlayer, triggerInstance -> true);
-    }
-
-    public void register() {
     }
 
     @Override
