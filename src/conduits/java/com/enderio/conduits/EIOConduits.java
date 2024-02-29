@@ -43,7 +43,7 @@ public class EIOConduits {
         EIODataProvider provider = new EIODataProvider("conduits");
 
         provider.addSubProvider(event.includeServer(), new ConduitTagProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper()));
-        provider.addSubProvider(event.includeServer(), new ConduitRecipes(packOutput, event.getLookupProvider()));
+        provider.addSubProvider(event.includeServer(), new ConduitRecipes(packOutput));
 
         event.getGenerator().addProvider(true, provider);
     }

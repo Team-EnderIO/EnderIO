@@ -7,9 +7,8 @@ import com.mojang.serialization.Codec;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
-import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
@@ -27,8 +26,7 @@ public class ArmoryLootModifiers {
     public static DeferredHolder<LootItemConditionType, LootItemConditionType> DIRECT_UPGRADE_CONDITION =
         CONDITIONS.register("has_direct_upgrade", () -> DirectUpgradeLootCondition.HAS_DIRECT_UPGRADE);
 
-    public static void register() {
-        IEventBus eventbus = FMLJavaModLoadingContext.get().getModEventBus();
+    public static void register(IEventBus eventbus) {
         SERIALIZERS.register(eventbus);
         CONDITIONS.register(eventbus);
         FUNCTIONS.register(eventbus);

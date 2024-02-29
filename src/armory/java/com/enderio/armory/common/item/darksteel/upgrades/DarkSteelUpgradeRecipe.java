@@ -6,11 +6,9 @@ import com.enderio.armory.common.capability.DarkSteelUpgradeable;
 import com.enderio.armory.common.init.ArmoryRecipes;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOItems;
-import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -39,7 +37,7 @@ public class DarkSteelUpgradeRecipe extends SmithingTransformRecipe {
 
     @Override
     public boolean isBaseIngredient(ItemStack pItemStack) {
-        return pItemStack.getCapability(EIOCapabilities.DARK_STEEL_UPGRADABLE).resolve().isPresent();
+        return pItemStack.getCapability(EIOCapabilities.DarkSteelUpgradable.ITEM) != null;
     }
 
     @Override
@@ -56,8 +54,11 @@ public class DarkSteelUpgradeRecipe extends SmithingTransformRecipe {
 
         // Check the upgrade can be applied to this item.
         Optional<IDarkSteelUpgrade> upgrade = getUpgradeFromItem(pContainer.getItem(0));
-        Optional<IDarkSteelUpgradable> target = getUpgradableFromItem(pContainer.getItem(1));
-        return target.map(upgradable -> upgrade.map(upgradable::canApplyUpgrade).orElse(false)).orElse(false);
+        IDarkSteelUpgradable target = getUpgradableFromItem(pContainer.getItem(1));
+        if (target != null) {
+            return upgrade.map(target::canApplyUpgrade).orElse(false);
+        }
+        return false;
     }
 
     @Override
@@ -65,13 +66,16 @@ public class DarkSteelUpgradeRecipe extends SmithingTransformRecipe {
         Optional<IDarkSteelUpgrade> upgrade = getUpgradeFromItem(pContainer.getItem(0));
 
         ItemStack resultItem = pContainer.getItem(1).copy();
-        Optional<IDarkSteelUpgradable> target = getUpgradableFromItem(resultItem);
-
-        return target.map(upgradable -> upgrade.map(up -> DarkSteelUpgradeable.addUpgrade(resultItem, up)).orElse(ItemStack.EMPTY)).orElse(ItemStack.EMPTY);
+        IDarkSteelUpgradable target = getUpgradableFromItem(resultItem);
+        if (target != null) {
+            return upgrade.map(up -> DarkSteelUpgradeable.addUpgrade(resultItem, up)).orElse(ItemStack.EMPTY);
+        }
+        return ItemStack.EMPTY;
     }
 
-    private Optional<IDarkSteelUpgradable> getUpgradableFromItem(ItemStack item) {
-        return item.getCapability(EIOCapabilities.DARK_STEEL_UPGRADABLE).resolve();
+    @Nullable
+    private IDarkSteelUpgradable getUpgradableFromItem(ItemStack item) {
+        return item.getCapability(EIOCapabilities.DarkSteelUpgradable.ITEM);
     }
 
     private Optional<IDarkSteelUpgrade> getUpgradeFromItem(ItemStack item) {
