@@ -1,7 +1,6 @@
 package com.enderio.armory.common.lang;
 
 import com.enderio.EnderIO;
-import com.enderio.regilite.data.RegiliteDataProvider;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -62,11 +61,11 @@ public class ArmoryLang {
     // endregion
 
     private static MutableComponent addTranslation(String prefix, ResourceLocation id, String translation) {
-        return RegiliteDataProvider.addTranslation(prefix, id, translation);
+        return EnderIO.getRegilite().addTranslation(prefix, id, translation);
     }
 
     private static MutableComponent addTranslation(String prefix, ResourceLocation path, String name, String translation) {
-        return RegiliteDataProvider.addTranslation(prefix, new ResourceLocation(path.getNamespace(), path.getPath() + "/" + name), translation);
+        return EnderIO.getRegilite().addTranslation(prefix, new ResourceLocation(path.getNamespace(), path.getPath() + "/" + name), translation);
     }
 
     public static void register() {}

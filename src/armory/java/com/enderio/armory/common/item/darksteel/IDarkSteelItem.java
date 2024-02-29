@@ -1,48 +1,30 @@
 package com.enderio.armory.common.item.darksteel;
 
 import com.enderio.api.capability.IDarkSteelUpgrade;
-import com.enderio.armory.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.armory.common.capability.DarkSteelUpgradeable;
-import com.enderio.armory.common.capability.EnergyDelegator;
+import com.enderio.armory.common.item.darksteel.upgrades.EmpoweredUpgrade;
 import com.enderio.armory.common.lang.ArmoryLang;
-import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.item.IAdvancedTooltipProvider;
 import com.enderio.core.common.item.ITabVariants;
 import com.enderio.core.common.util.EnergyUtil;
 import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.capabilities.Capabilities;
-import net.neoforged.neoforge.common.util.LazyOptional;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
-public interface IDarkSteelItem extends IMultiCapabilityItem, IAdvancedTooltipProvider, ITabVariants {
+public interface IDarkSteelItem extends IAdvancedTooltipProvider, ITabVariants {
 
     default Optional<EmpoweredUpgrade> getEmpoweredUpgrade(ItemStack stack) {
         return DarkSteelUpgradeable.getUpgradeAs(stack, EmpoweredUpgrade.NAME, EmpoweredUpgrade.class);
-    }
-
-    default MultiCapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt, MultiCapabilityProvider provider) {
-        return initDarkSteelCapabilities(provider, Objects.requireNonNull(BuiltInRegistries.ITEM.getKey(stack.getItem())));
-    }
-
-    default MultiCapabilityProvider initDarkSteelCapabilities(MultiCapabilityProvider provider, ResourceLocation forItem) {
-        provider.add(EIOCapabilities.DARK_STEEL_UPGRADABLE, LazyOptional.of(() -> new DarkSteelUpgradeable(forItem))); //TODO This cap is probably broken now
-        provider.add(Capabilities.ENERGY, LazyOptional.of(() -> new EnergyDelegator(provider)));
-        return provider;
     }
 
     default ItemStack createFullyUpgradedStack(Item item) {

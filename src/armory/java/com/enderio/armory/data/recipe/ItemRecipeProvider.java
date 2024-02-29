@@ -4,9 +4,7 @@ import com.enderio.armory.common.init.ArmoryItems;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
@@ -15,13 +13,10 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.Tags;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
-
 public class ItemRecipeProvider extends RecipeProvider {
 
-    public ItemRecipeProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
-        super(packOutput, lookupProvider);
+    public ItemRecipeProvider(PackOutput packOutput) {
+        super(packOutput);
     }
 
     @Override

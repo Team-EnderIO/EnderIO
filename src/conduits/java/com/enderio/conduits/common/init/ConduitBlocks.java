@@ -11,7 +11,7 @@ import net.minecraft.world.level.material.MapColor;
 import net.neoforged.bus.api.IEventBus;
 
 public class ConduitBlocks {
-    private static final BlockRegistry BLOCK_REGISTRY = BlockRegistry.createRegistry(EnderIO.MODID);
+    private static final BlockRegistry BLOCK_REGISTRY = EnderIO.getRegilite().blockRegistry();
 
     public static final RegiliteBlock<ConduitBlock> CONDUIT = BLOCK_REGISTRY
         .registerBlock("conduit", ConduitBlock::new,

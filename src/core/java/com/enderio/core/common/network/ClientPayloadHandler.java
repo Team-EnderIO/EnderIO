@@ -1,7 +1,9 @@
 package com.enderio.core.common.network;
 
 import com.enderio.core.common.blockentity.EnderBlockEntity;
+import io.netty.buffer.Unpooled;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 
@@ -44,7 +46,7 @@ public class ClientPayloadHandler {
                     BlockEntity be = level.getBlockEntity(update.pos());
                     if (be instanceof EnderBlockEntity enderBlockEntity) {
                         // TODO: Handle nullability
-                        enderBlockEntity.clientHandleBufferSync(update.slotData());
+                        enderBlockEntity.clientHandleBufferSync(new FriendlyByteBuf(Unpooled.wrappedBuffer(update.slotData())));
                     }
                 });
             });

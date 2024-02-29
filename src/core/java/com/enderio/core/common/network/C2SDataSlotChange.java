@@ -5,21 +5,20 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.Nullable;
 
-public record C2SDataSlotChange(BlockPos pos, @Nullable FriendlyByteBuf updateData)
+public record C2SDataSlotChange(BlockPos pos, byte[] updateData)
     implements CustomPacketPayload {
 
     public static final ResourceLocation ID = EnderCore.loc("c2s_data_slot_update");
 
     public C2SDataSlotChange(FriendlyByteBuf buf) {
-        this(buf.readBlockPos(), new FriendlyByteBuf(buf.copy()));
+        this(buf.readBlockPos(), buf.readByteArray());
     }
 
     @Override
     public void write(FriendlyByteBuf writeInto) {
         writeInto.writeBlockPos(pos);
-        writeInto.writeBytes(updateData);
+        writeInto.writeByteArray(updateData);
     }
 
     @Override

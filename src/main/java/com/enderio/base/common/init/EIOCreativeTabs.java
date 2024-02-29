@@ -1,7 +1,6 @@
 package com.enderio.base.common.init;
 
 import com.enderio.EnderIO;
-import com.enderio.regilite.data.RegiliteDataProvider;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -9,7 +8,6 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -46,7 +44,7 @@ public class EIOCreativeTabs {
     private static DeferredHolder<CreativeModeTab, CreativeModeTab> createTab(ResourceKey<CreativeModeTab> key, String name, String translation, Consumer<CreativeModeTab.Builder> builder) {
         return CREATIVE_MODE_TABS.register(name, () -> {
             CreativeModeTab.Builder config = CreativeModeTab.builder()
-                .title(RegiliteDataProvider.addTranslation("itemGroup", key.location(), translation));
+                .title(EnderIO.getRegilite().addTranslation("itemGroup", key.location(), translation));
             builder.accept(config);
             return config.build();
         });

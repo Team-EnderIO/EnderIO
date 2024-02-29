@@ -1,7 +1,6 @@
 package com.enderio.machines.common.init;
 
 import com.enderio.EnderIO;
-import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.core.data.model.EIOModel;
 import com.enderio.machines.common.MachineNBTKeys;
@@ -12,7 +11,6 @@ import com.enderio.machines.common.block.ProgressMachineBlock;
 import com.enderio.machines.common.block.SolarPanelBlock;
 import com.enderio.machines.common.block.TravelAnchorBlock;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
-import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorBankBlockEntity;
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorTier;
 import com.enderio.machines.common.blockentity.solar.SolarPanelBlockEntity;
@@ -23,13 +21,11 @@ import com.enderio.machines.common.item.FluidTankItem;
 import com.enderio.machines.data.loot.MachinesLootTable;
 import com.enderio.machines.data.model.MachineModelUtil;
 import com.enderio.regilite.data.DataGenContext;
-import com.enderio.regilite.data.RegiliteBlockStateProvider;
 import com.enderio.regilite.holder.RegiliteBlock;
 import com.enderio.regilite.holder.RegiliteBlockEntity;
 import com.enderio.regilite.registry.BlockRegistry;
 import com.enderio.regilite.registry.ItemRegistry;
 import com.google.common.collect.ImmutableMap;
-import com.ibm.icu.impl.CalendarAstronomer;
 import net.minecraft.Util;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.Item;
@@ -47,8 +43,8 @@ import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 public class MachineBlocks {
-    private static final BlockRegistry BLOCK_REGISTRY = BlockRegistry.createRegistry(EnderIO.MODID);
-    private static final ItemRegistry ITEM_REGISTRY = ItemRegistry.createRegistry(EnderIO.MODID);
+    private static final BlockRegistry BLOCK_REGISTRY = EnderIO.getRegilite().blockRegistry();
+    private static final ItemRegistry ITEM_REGISTRY = EnderIO.getRegilite().itemRegistry();
 
     public static final RegiliteBlock<MachineBlock> FLUID_TANK = BLOCK_REGISTRY
         .registerBlock("fluid_tank", props -> new MachineBlock(MachineBlockEntities.FLUID_TANK, props),

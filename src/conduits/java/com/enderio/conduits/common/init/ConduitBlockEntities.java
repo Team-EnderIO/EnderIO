@@ -8,7 +8,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.Capabilities;
 
 public class ConduitBlockEntities {
-    private static final BlockEntityRegistry BLOCK_ENTITY_REGISTRY = BlockEntityRegistry.create(EnderIO.MODID);
+    private static final BlockEntityRegistry BLOCK_ENTITY_REGISTRY = EnderIO.getRegilite().blockEntityRegistry();
 
     public static final RegiliteBlockEntity<ConduitBlockEntity> CONDUIT = BLOCK_ENTITY_REGISTRY
         .registerBlockEntity("conduit", ConduitBlockEntity::new, ConduitBlocks.CONDUIT)

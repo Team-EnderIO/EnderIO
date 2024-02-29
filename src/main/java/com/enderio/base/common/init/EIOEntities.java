@@ -11,7 +11,7 @@ import net.neoforged.bus.api.IEventBus;
 
 public class EIOEntities {
 
-    private static final EntityRegistry ENTITY_REGISTRY = EntityRegistry.create(EnderIO.MODID);
+    private static final EntityRegistry ENTITY_REGISTRY = EnderIO.getRegilite().entityRegistry();
 
     public static final RegiliteEntity<PaintedSandEntity> PAINTED_SAND = ENTITY_REGISTRY
         .registerEntity("painted_sand", (EntityType.EntityFactory<PaintedSandEntity>) PaintedSandEntity::new, MobCategory.MISC)

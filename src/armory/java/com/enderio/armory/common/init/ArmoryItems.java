@@ -19,7 +19,7 @@ import java.util.List;
 
 @SuppressWarnings("unused")
 public class ArmoryItems {
-    private static final ItemRegistry ITEM_REGISTRY = ItemRegistry.createRegistry(EnderIO.MODID);
+    private static final ItemRegistry ITEM_REGISTRY = EnderIO.getRegilite().itemRegistry();
 
     public static final Tier DARK_STEEL_TIER = TierSortingRegistry.registerTier(
         new SimpleTier(3, 2000, 8.0F, 3, 25, ArmoryTags.Blocks.DARK_STEEL_TIER, () -> Ingredient.of(EIOItems.DARK_STEEL_INGOT.get())),

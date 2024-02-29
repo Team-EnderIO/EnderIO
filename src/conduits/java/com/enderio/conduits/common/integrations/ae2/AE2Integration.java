@@ -29,7 +29,7 @@ import java.util.function.Supplier;
 
 public class AE2Integration implements Integration {
 
-    private static final ItemRegistry ITEM_REGISTRY = ItemRegistry.createRegistry(EnderIO.MODID);
+    private static final ItemRegistry ITEM_REGISTRY = EnderIO.getRegilite().itemRegistry();
 
     //TODO use cap when moved to api by ea2
     public static BlockCapability<IInWorldGridNodeHost, @Nullable Direction> IN_WORLD_GRID_NODE_HOST = BlockCapability

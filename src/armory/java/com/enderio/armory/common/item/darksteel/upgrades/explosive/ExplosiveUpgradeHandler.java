@@ -1,11 +1,11 @@
 package com.enderio.armory.common.item.darksteel.upgrades.explosive;
 
+import com.enderio.armory.common.capability.DarkSteelUpgradeable;
 import com.enderio.armory.common.config.ArmoryConfig;
 import com.enderio.armory.common.item.darksteel.upgrades.SpoonUpgrade;
-import com.enderio.armory.common.capability.DarkSteelUpgradeable;
 import com.enderio.armory.common.tag.ArmoryTags;
-import com.enderio.core.common.network.CoreNetwork;
 import com.enderio.core.common.network.EmitParticlesPacket;
+import com.enderio.core.common.network.NetworkUtil;
 import com.enderio.core.common.util.BlockUtil;
 import com.enderio.core.common.util.EnergyUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -35,10 +35,10 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.neoforge.client.event.RenderHighlightEvent;
-import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.event.RenderHighlightEvent;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3d;
 import org.joml.Vector4f;
@@ -64,7 +64,7 @@ public class ExplosiveUpgradeHandler {
             if (pPos.equals(hit.getBlockPos())) {
                 EmitParticlesPacket particles = new EmitParticlesPacket();
                 if (explodeArea(pStack, pLevel, player, hit, particles)) {
-                    CoreNetwork.sendToTracking(pLevel.getChunkAt(pPos), particles);
+                    NetworkUtil.sendToAllTracking(particles, pLevel, pPos);
                 }
             }
         }
