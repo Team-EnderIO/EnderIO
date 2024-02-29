@@ -43,25 +43,58 @@ public class GasTicker extends CapabilityAwareConduitTicker<IGasHandler> {
             }
 
             int transferred = 0;
-//            for (CapabilityAwareConduitTicker<IGasHandler>.CapabilityConnection insert : inserts) {
-//                GasStack transferredGas = gasExtendedData.lockedGas != null ?
-//                    FluidUtil.tryFluidTransfer(insert.cap, extractHandler, new GasStack(gasExtendedData.lockedGas, gasRate - transferred),
-//                        true) :
-//                    FluidUtil.tryFluidTransfer(insert.cap, extractHandler, gasRate - transferred, true);
-//
-//                if (!transferredGas.isEmpty()) {
-//                    transferred += transferredGas.getAmount();
-//
-//                    if (transferred > gasRate) {
-//                        break;
-//                    }
-//                }
-//            }
+            for (CapabilityAwareConduitTicker<IGasHandler>.CapabilityConnection insert : inserts) {
+                GasStack transferredGas = gasExtendedData.lockedGas != null ?
+                    tryFluidTransfer(insert.cap, extractHandler, new GasStack(gasExtendedData.lockedGas, gasRate - transferred),
+                        true) :
+                    tryFluidTransfer(insert.cap, extractHandler, gasRate - transferred, true);
+
+                if (!transferredGas.isEmpty()) {
+                    transferred += transferredGas.getAmount();
+
+                    if (transferred > gasRate) {
+                        break;
+                    }
+                }
+            }
         }
     }
 
     @Override
     protected BlockCapability<IGasHandler, Direction> getCapability() {
         return Capabilities.GAS.block();
+    }
+
+    private static GasStack tryFluidTransfer(IGasHandler fluidDestination, IGasHandler fluidSource, int maxAmount, boolean doTransfer) {
+        GasStack drainable = fluidSource.extractChemical(maxAmount, Action.SIMULATE);
+        if (!drainable.isEmpty()) {
+            return tryFluidTransfer_Internal(fluidDestination, fluidSource, drainable, doTransfer);
+        }
+        return GasStack.EMPTY;
+    }
+
+    private static GasStack tryFluidTransfer(IGasHandler fluidDestination, IGasHandler fluidSource, GasStack resource, boolean doTransfer) {
+        GasStack drainable = fluidSource.extractChemical(resource, Action.SIMULATE);
+        if (!drainable.isEmpty() && resource.isStackIdentical(drainable)) {
+            return tryFluidTransfer_Internal(fluidDestination, fluidSource, drainable, doTransfer);
+        }
+        return GasStack.EMPTY;
+    }
+
+    private static GasStack tryFluidTransfer_Internal(IGasHandler fluidDestination, IGasHandler fluidSource, GasStack drainable, boolean doTransfer) {
+        long fillableAmount = drainable.getAmount() - fluidDestination.insertChemical(drainable, Action.SIMULATE).getAmount();
+        if (fillableAmount > 0) {
+            drainable.setAmount(fillableAmount);
+            if (doTransfer) {
+                GasStack drained = fluidSource.extractChemical(drainable, Action.EXECUTE);
+                if (!drained.isEmpty()) {
+                    drained.setAmount(fluidDestination.insertChemical(drained, Action.EXECUTE).getAmount());
+                    return drained;
+                }
+            } else {
+                return drainable;
+            }
+        }
+        return GasStack.EMPTY;
     }
 }

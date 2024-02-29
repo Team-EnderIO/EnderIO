@@ -9,13 +9,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import org.apache.commons.lang3.function.TriFunction;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public abstract class CapabilityAwareConduitTicker<T> implements IIOAwareConduitTicker {
 
@@ -36,7 +34,7 @@ public abstract class CapabilityAwareConduitTicker<T> implements IIOAwareConduit
             for (Connection extract : extracts) {
                 T capability = level.getCapability(getCapability(), extract.move(), extract.dir().getOpposite());
                 if (capability != null) {
-                    insertCaps.add(new CapabilityConnection(capability, extract.data(), extract.dir()));
+                    extractCaps.add(new CapabilityConnection(capability, extract.data(), extract.dir()));
                 }
             }
             if (!extractCaps.isEmpty()) {
