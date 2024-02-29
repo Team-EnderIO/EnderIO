@@ -152,7 +152,7 @@ void exclusiveRepo(RepositoryHandler handler, String url, Consumer<InclusiveRepo
 }
 
 repositories { RepositoryHandler handler ->
-    exclusiveRepo(handler, 'https://modmaven.dev/', 'mezz.jei', 'mcjty.theoneprobe', 'appeng')
+    exclusiveRepo(handler, 'https://modmaven.dev/', 'mezz.jei', 'mcjty.theoneprobe', 'appeng', 'mekanism')
     exclusiveRepo(handler, 'https://cursemaven.com', 'curse.maven')
     exclusiveRepo(handler, 'https://maven.blamejared.com', 'vazkii.patchouli', 'net.darkhax.bookshelf', 'net.darkhax.enchdesc', 'com.almostreliable.mods')
     exclusiveRepo(handler, 'https://dogforce-games.com/maven', 'dev.gigaherz.graph')
@@ -231,7 +231,8 @@ dependencies {
 //    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
 
     // Mekanism
-    //runtimeOnly "curse.maven:mekanism-268560:${mekanism_cf_id}"
+    compileOnly "mekanism:Mekanism:${minecraft_version}-${mekanism}" //TODO make sure :api has all we need
+    runtimeOnly "mekanism:Mekanism:${minecraft_version}-${mekanism}"
 
     // Jetbrains annotations
     compileOnly 'org.jetbrains:annotations:23.0.0'
