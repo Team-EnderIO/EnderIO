@@ -2,18 +2,21 @@ package com.enderio.conduits.common.integrations.mekanism;
 
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.IExtendedConduitData;
-import com.enderio.conduits.ConduitNBTKeys;
 import mekanism.api.MekanismAPI;
+import mekanism.api.chemical.Chemical;
+import mekanism.api.chemical.ChemicalType;
 import mekanism.api.chemical.gas.Gas;
+import mekanism.api.chemical.infuse.InfuseType;
+import mekanism.api.chemical.pigment.Pigment;
+import mekanism.api.chemical.slurry.Slurry;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 public class GasExtendedData implements IExtendedConduitData<GasExtendedData> {
 
     public final boolean isMultiFluid;
 
-    @Nullable Gas lockedGas = null;
+    @Nullable Chemical<?> lockedGas = null;
     boolean shouldReset = false;
 
     public GasExtendedData(boolean isMultiFluid) {this.isMultiFluid = isMultiFluid;}
@@ -44,9 +47,8 @@ public class GasExtendedData implements IExtendedConduitData<GasExtendedData> {
         CompoundTag nbt = new CompoundTag();
         if (!isMultiFluid) {
             if (lockedGas != null) {
-                nbt.putString(ConduitNBTKeys.FLUID, lockedGas.getRegistryName().toString());
-            } else {
-                nbt.putString(ConduitNBTKeys.FLUID, "null");
+                ChemicalType.getTypeFor(lockedGas).write(nbt);
+                lockedGas.write(nbt);
             }
         }
         return nbt;
@@ -65,12 +67,19 @@ public class GasExtendedData implements IExtendedConduitData<GasExtendedData> {
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        if (nbt.contains(ConduitNBTKeys.FLUID) && !isMultiFluid) {
-            String fluid = nbt.getString(ConduitNBTKeys.FLUID);
-            if (fluid.equals("null") || Gas.getFromRegistry(new ResourceLocation(fluid)) == MekanismAPI.EMPTY_GAS) {
+        ChemicalType chemicalType = ChemicalType.fromNBT(nbt);
+        if (chemicalType != null) {
+            Chemical<?> chem = switch (chemicalType) {
+                case GAS -> Gas.readFromNBT(nbt);
+                case INFUSION -> InfuseType.readFromNBT(nbt);
+                case PIGMENT -> Pigment.readFromNBT(nbt);
+                case SLURRY -> Slurry.readFromNBT(nbt);
+            };
+            if (chem != MekanismAPI.EMPTY_INFUSE_TYPE && chem != MekanismAPI.EMPTY_GAS && chem != MekanismAPI.EMPTY_PIGMENT && chem != MekanismAPI.EMPTY_SLURRY) {
+                setlockedGas(chem);
+            }
+            else {
                 setlockedGas(null);
-            } else {
-                setlockedGas(Gas.getFromRegistry(new ResourceLocation(fluid)));
             }
         } else {
             setlockedGas(null);
@@ -82,7 +91,7 @@ public class GasExtendedData implements IExtendedConduitData<GasExtendedData> {
 
     // endregion
 
-    private void setlockedGas(@Nullable Gas lockedGas) {
+    private void setlockedGas(@Nullable Chemical<?> lockedGas) {
         this.lockedGas = lockedGas;
     }
 }

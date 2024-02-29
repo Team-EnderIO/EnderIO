@@ -20,7 +20,7 @@ import java.util.function.Supplier;
 
 public class MekanismIntegration implements Integration {
 
-    private static final ItemRegistry ITEM_REGISTRY = ItemRegistry.createRegistry(EnderIO.MODID);
+    private static final ItemRegistry ITEM_REGISTRY = EnderIO.getRegilite().itemRegistry();
     private static final DeferredHolder<IConduitType<?>, GasConduitType> GAS = ConduitTypes.CONDUIT_TYPES.register("gas", GasConduitType::new);
     public static final RegiliteItem<Item> GAS_ITEM = createConduitItem(GAS, "gas", "Gas Conduit");
 
@@ -41,5 +41,7 @@ public class MekanismIntegration implements Integration {
 
     public void addCapability(RegisterCapabilitiesEvent event) {
         event.registerBlockEntity(Capabilities.GAS.block(), ConduitBlockEntities.CONDUIT.get(), ConduitBlockEntity.createConduitCap(Capabilities.GAS.block()));
+        event.registerBlockEntity(Capabilities.SLURRY.block(), ConduitBlockEntities.CONDUIT.get(), ConduitBlockEntity.createConduitCap(Capabilities.SLURRY.block()));
+
     }
 }
