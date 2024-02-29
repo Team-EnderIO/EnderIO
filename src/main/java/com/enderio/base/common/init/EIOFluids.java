@@ -4,7 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.regilite.holder.RegiliteFluid;
 import com.enderio.regilite.registry.BlockRegistry;
-import com.enderio.regilite.registry.FluidRegister;
+import com.enderio.regilite.registry.FluidRegistry;
 import com.enderio.regilite.registry.ItemRegistry;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.registries.Registries;
@@ -24,10 +24,10 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 @SuppressWarnings("unused")
 public class EIOFluids {
-    private static final FluidRegister FLUID_TYPE_REGISTRY = FluidRegister.create(EnderIO.MODID);
+    private static final FluidRegistry FLUID_TYPE_REGISTRY = EnderIO.getRegilite().fluidRegistry();
     private static final DeferredRegister<Fluid> FLUID_REGISTRY = DeferredRegister.create(Registries.FLUID, EnderIO.MODID);
-    private static final ItemRegistry ITEM_REGISTRY = ItemRegistry.createRegistry(EnderIO.MODID);
-    private static final BlockRegistry BLOCK_REGISTRY = BlockRegistry.createRegistry(EnderIO.MODID);
+    private static final ItemRegistry ITEM_REGISTRY = EnderIO.getRegilite().itemRegistry();
+    private static final BlockRegistry BLOCK_REGISTRY = EnderIO.getRegilite().blockRegistry();
 
     public static final RegiliteFluid<FluidType> NUTRIENT_DISTILLATION =
         fluid("nutrient_distillation", "Nutrient Distillation", FluidType.Properties.create().density(1500).viscosity(3000));

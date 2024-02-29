@@ -80,8 +80,8 @@ import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
 public class EIOBlocks {
-    private static final BlockRegistry BLOCK_REGISTRY = BlockRegistry.createRegistry(EnderIO.MODID);
-    private static final ItemRegistry ITEM_REGISTRY = ItemRegistry.createRegistry(EnderIO.MODID);
+    private static final BlockRegistry BLOCK_REGISTRY = EnderIO.getRegilite().blockRegistry();
+    private static final ItemRegistry ITEM_REGISTRY = EnderIO.getRegilite().itemRegistry();
 
     // region Alloy Blocks
 

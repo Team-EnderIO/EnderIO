@@ -11,7 +11,7 @@ import com.enderio.regilite.registry.BlockEntityRegistry;
 import net.neoforged.bus.api.IEventBus;
 
 public class EIOBlockEntities {
-    private static final BlockEntityRegistry BLOCK_ENTITY_REGISTRY = BlockEntityRegistry.create(EnderIO.MODID);
+    private static final BlockEntityRegistry BLOCK_ENTITY_REGISTRY = EnderIO.getRegilite().blockEntityRegistry();
 
     public static final RegiliteBlockEntity<SinglePaintedBlockEntity> SINGLE_PAINTED = BLOCK_ENTITY_REGISTRY
         .registerBlockEntity("single_painted",

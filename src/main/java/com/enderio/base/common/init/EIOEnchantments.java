@@ -9,7 +9,6 @@ import com.enderio.base.common.enchantment.SoulBoundEnchantment;
 import com.enderio.base.common.enchantment.WitherEnchantment;
 import com.enderio.base.common.enchantment.XPBoostEnchantment;
 import com.enderio.base.common.lang.EIOLang;
-import com.enderio.regilite.data.RegiliteDataProvider;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -17,9 +16,9 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -64,7 +63,7 @@ public class EIOEnchantments {
     }
 
     private static void addTranslation(String name, String translation) {
-        RegiliteDataProvider.addTranslation("enchantment", new ResourceLocation(EnderIO.MODID, name), translation);
+        EnderIO.getRegilite().addTranslation("enchantment", new ResourceLocation(EnderIO.MODID, name), translation);
     }
     
     private static void addTooltip(ItemTooltipEvent event, Map<Enchantment, Integer> enchantments, List<Component> toolTip, Enchantment enchantment, Component... components) {

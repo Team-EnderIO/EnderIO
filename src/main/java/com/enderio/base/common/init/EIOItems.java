@@ -38,7 +38,7 @@ import java.util.function.Function;
 
 @SuppressWarnings("unused")
 public class EIOItems {
-    private static final ItemRegistry ITEM_REGISTRY = ItemRegistry.createRegistry(EnderIO.MODID);
+    private static final ItemRegistry ITEM_REGISTRY = EnderIO.getRegilite().itemRegistry();
 
     // region Alloys
 

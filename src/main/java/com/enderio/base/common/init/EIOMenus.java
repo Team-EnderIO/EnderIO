@@ -7,7 +7,7 @@ import com.enderio.regilite.holder.RegiliteMenu;
 import com.enderio.regilite.registry.MenuRegistry;
 
 public class EIOMenus {
-    private static final MenuRegistry MENU_REGISTRY = MenuRegistry.createRegistry(EnderIO.MODID);
+    private static final MenuRegistry MENU_REGISTRY = EnderIO.getRegilite().menuRegistry();
 
     public static final RegiliteMenu<CoordinateMenu> COORDINATE = MENU_REGISTRY
         .registerMenu("coordinate", CoordinateMenu::factory, () -> CoordinateMenuScreen::new);

@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public class MachineBlockEntities {
-    private static final BlockEntityRegistry BLOCK_ENTITY_REGISTRY = BlockEntityRegistry.create(EnderIO.MODID);
+    private static final BlockEntityRegistry BLOCK_ENTITY_REGISTRY = EnderIO.getRegilite().blockEntityRegistry();
 
     public static final RegiliteBlockEntity<FluidTankBlockEntity.Standard> FLUID_TANK =
         register("fluid_tank", FluidTankBlockEntity.Standard::new, MachineBlocks.FLUID_TANK)

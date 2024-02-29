@@ -8,12 +8,11 @@ import com.enderio.regilite.holder.RegiliteItem;
 import com.enderio.regilite.registry.ItemRegistry;
 import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.common.Mod;
 
 import java.util.function.Supplier;
 
 public class ConduitItems {
-    private static final ItemRegistry ITEM_REGISTRY = ItemRegistry.createRegistry(EnderIO.MODID);
+    private static final ItemRegistry ITEM_REGISTRY = EnderIO.getRegilite().itemRegistry();
 
     public static final RegiliteItem<Item> ENERGY = createConduitItem(EnderConduitTypes.ENERGY, "energy");
     public static final RegiliteItem<Item> FLUID = createConduitItem(EnderConduitTypes.FLUID, "fluid");

@@ -35,6 +35,7 @@ import com.enderio.base.data.tags.EIOEntityTagsProvider;
 import com.enderio.base.data.tags.EIOFluidTagsProvider;
 import com.enderio.base.data.tags.EIOItemTagsProvider;
 import com.enderio.core.EnderCore;
+import com.enderio.regilite.Regilite;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
@@ -65,6 +66,7 @@ public class EnderIO {
     public static final String MODID = EnderCore.MODID;
 
     public static final Logger LOGGER = LogManager.getLogger(MODID);
+    public static Regilite regilite = new Regilite(MODID);
 
     public static ResourceLocation loc(String path) {
         return new ResourceLocation(MODID, path);
@@ -103,6 +105,7 @@ public class EnderIO {
         EIOEntities.register(modEventBus);
         EIOAttachments.register(modEventBus);
         EIOCriterions.register(modEventBus);
+        regilite.register(modEventBus);
 
         // Run datagen after registrate is finished.
         modEventBus.addListener(EventPriority.LOWEST, this::onGatherData);
@@ -137,5 +140,9 @@ public class EnderIO {
             List.of(new LootTableProvider.SubProviderEntry(FireCraftingLootProvider::new, LootContextParamSets.EMPTY),
                 new LootTableProvider.SubProviderEntry(ChestLootProvider::new, LootContextParamSets.CHEST))));
         generator.addProvider(true, provider);
+    }
+
+    public static Regilite getRegilite() {
+        return regilite;
     }
 }

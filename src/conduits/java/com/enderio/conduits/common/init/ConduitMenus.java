@@ -8,7 +8,7 @@ import com.enderio.regilite.registry.MenuRegistry;
 import net.neoforged.bus.api.IEventBus;
 
 public class ConduitMenus {
-    private static final MenuRegistry MENU_REGISTRY = MenuRegistry.createRegistry(EnderIO.MODID);
+    private static final MenuRegistry MENU_REGISTRY = EnderIO.getRegilite().menuRegistry();
 
     public static final RegiliteMenu<ConduitMenu> CONDUIT_MENU = MENU_REGISTRY
         .registerMenu("conduit", ConduitMenu::factory, () -> ConduitScreen::new);

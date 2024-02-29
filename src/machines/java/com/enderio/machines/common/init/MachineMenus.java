@@ -48,7 +48,7 @@ import net.neoforged.bus.api.IEventBus;
 public class MachineMenus {
     private MachineMenus() {}
 
-    private static final MenuRegistry MENU_REGISTRY = MenuRegistry.createRegistry(EnderIO.MODID);
+    private static final MenuRegistry MENU_REGISTRY = EnderIO.getRegilite().menuRegistry();
 
     public static final RegiliteMenu<FluidTankMenu> FLUID_TANK = MENU_REGISTRY
         .registerMenu("fluid_tank", FluidTankMenu::factory, () -> FluidTankScreen::new);
