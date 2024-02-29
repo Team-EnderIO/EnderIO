@@ -5,11 +5,10 @@ import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
 import com.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
 import com.enderio.core.common.network.slot.CodecNetworkDataSlot;
 import com.enderio.core.common.network.slot.FluidStackNetworkDataSlot;
-import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
 import com.enderio.machines.common.attachment.ActionRange;
+import com.enderio.machines.common.attachment.IFluidTankUser;
 import com.enderio.machines.common.attachment.IRangedActor;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
@@ -30,7 +29,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
@@ -43,10 +41,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DrainBlockEntity extends PoweredMachineBlockEntity implements IRangedActor {
+public class DrainBlockEntity extends PoweredMachineBlockEntity implements IRangedActor, IFluidTankUser {
     public static final String CONSUMED = "Consumed";
     private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.DRAIN_CAPACITY);
     private static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.DRAIN_USAGE);
+    private final MachineFluidHandler fluidHandler;
     private static final TankAccess TANK = new TankAccess();
     private static final int CAPACITY = 3 * FluidType.BUCKET_VOLUME;
     private static final int ENERGY_PER_BUCKET = 1_500;
@@ -60,6 +59,8 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements IRang
 
     public DrainBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE, MachineBlockEntities.DRAIN.get(), worldPosition, blockState);
+        fluidHandler = createFluidHandler();
+
         addDataSlot(new FluidStackNetworkDataSlot(() -> TANK.getFluid(this), fluid -> TANK.setFluid(this, fluid)));
 
         // TODO: rubbish way of having a default. use an interface instead?
@@ -112,8 +113,13 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements IRang
     }
 
     @Override
-    protected @Nullable MachineFluidHandler createFluidHandler(MachineTankLayout layout) {
-        return new MachineFluidHandler(getIOConfig(), layout) {
+    public MachineFluidHandler getFluidHandler() {
+        return fluidHandler;
+    }
+
+    @Override
+    public MachineFluidHandler createFluidHandler() {
+        return new MachineFluidHandler(getIOConfig(), getTankLayout()) {
             @Override
             protected void onContentsChanged(int slot) {
                 super.onContentsChanged(slot);
@@ -235,11 +241,13 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements IRang
     public void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
         pTag.putInt(CONSUMED, consumed);
+        saveTank(pTag);
     }
 
     @Override
     public void load(CompoundTag pTag) {
         super.load(pTag);
         consumed = pTag.getInt(CONSUMED);
+        loadTank(pTag);
     }
 }

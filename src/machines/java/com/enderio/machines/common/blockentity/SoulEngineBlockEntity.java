@@ -9,6 +9,7 @@ import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.network.slot.FluidStackNetworkDataSlot;
 import com.enderio.core.common.network.slot.ResourceLocationNetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
+import com.enderio.machines.common.attachment.IFluidTankUser;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineBlockEntities;
@@ -32,16 +33,15 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -51,7 +51,7 @@ import java.util.function.Supplier;
 import static com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity.NO_MOB;
 
 @Mod.EventBusSubscriber
-public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
+public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements IFluidTankUser {
 
     private static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.SOUL_ENGINE_CAPACITY);
     public static final LinearScalable BURN_SPEED = new LinearScalable(CapacitorModifier.FIXED, MachinesConfig.COMMON.ENERGY.SOUL_ENGINE_BURN_SPEED);
@@ -61,6 +61,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
     private static final String BURNED_TICKS = "BurnedTicks";
     private StoredEntityData entityData = StoredEntityData.empty();
     public static final int FLUID_CAPACITY = 2 * FluidType.BUCKET_VOLUME;
+    private final MachineFluidHandler fluidHandler;
     private static final TankAccess TANK = new TankAccess();
     @Nullable
     private EngineSoul.SoulData soulData;
@@ -70,8 +71,11 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
 
     public SoulEngineBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO, MachineBlockEntities.SOUL_ENGINE.get(), worldPosition, blockState);
+        fluidHandler = createFluidHandler();
+
         addDataSlot(new ResourceLocationNetworkDataSlot(() -> this.getEntityType().orElse(NO_MOB),this::setEntityType));
         addDataSlot(new FluidStackNetworkDataSlot(() -> TANK.getFluid(this), f -> TANK.setFluid(this, f)));
+
     }
 
     @Override
@@ -79,11 +83,6 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
         return MachineInventoryLayout.builder()
             .capacitor()
             .build();
-    }
-
-    @Override
-    public @Nullable MachineTankLayout getTankLayout() {
-        return MachineTankLayout.builder().tank(TANK, FLUID_CAPACITY, isFluidValid()).build();
     }
 
     @Override
@@ -137,8 +136,12 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
-    protected @Nullable MachineFluidHandler createFluidHandler(MachineTankLayout layout) {
-        return new MachineFluidHandler(getIOConfig(), layout) {
+    public MachineTankLayout getTankLayout() {
+        return MachineTankLayout.builder().tank(TANK, FLUID_CAPACITY, isFluidValid()).build();
+    }
+
+    public MachineFluidHandler createFluidHandler() {
+        return new MachineFluidHandler(getIOConfig(), getTankLayout()) {
             @Override
             protected void onContentsChanged(int slot) {
                 super.onContentsChanged(slot);
@@ -162,6 +165,15 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
                 return 0;
             }
         };
+    }
+
+    public MachineFluidTank getFluidTank() {
+        return TANK.getTank(this);
+    }
+
+    @Override
+    public MachineFluidHandler getFluidHandler() {
+        return fluidHandler;
     }
 
     private Predicate<FluidStack> isFluidValid() {
@@ -192,10 +204,6 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
 
     }
 
-    public MachineFluidTank getFluidTank() {
-        return TANK.getTank(this);
-    }
-
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
@@ -218,6 +226,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
         super.saveAdditional(pTag);
         pTag.putInt(BURNED_TICKS, burnedTicks);
         pTag.put(MachineNBTKeys.ENTITY_STORAGE, entityData.serializeNBT());
+        saveTank(pTag);
     }
 
     @Override
@@ -229,6 +238,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity {
         updateMachineState(MachineState.NO_POWER, false);
         updateMachineState(MachineState.FULL_POWER,
             (getEnergyStorage().getEnergyStored() >= getEnergyStorage().getMaxEnergyStored()) && isCapacitorInstalled());
+        loadTank(pTag);
     }
 
     @Override

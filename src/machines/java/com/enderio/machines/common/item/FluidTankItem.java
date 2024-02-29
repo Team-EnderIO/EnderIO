@@ -1,6 +1,7 @@
 package com.enderio.machines.common.item;
 
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.core.CoreNBTKeys;
 import com.enderio.core.client.item.IAdvancedTooltipProvider;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.machines.client.rendering.item.FluidTankBEWLR;
@@ -8,6 +9,8 @@ import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.MachineBlock;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -90,7 +93,9 @@ public class FluidTankItem extends BlockItem implements IAdvancedTooltipProvider
             Optional<CompoundTag> tagCompoundOptional = Optional.ofNullable(container.getTag());
             return tagCompoundOptional
                 .map(tagCompound -> tagCompound.getCompound(BLOCK_ENTITY_TAG))
-                .map(blockEntityTag -> blockEntityTag.getCompound(MachineNBTKeys.FLUID))
+                .map(blockEntityTag -> blockEntityTag.getCompound(MachineNBTKeys.FLUIDS))
+                .map(fluidTag -> fluidTag.getList(CoreNBTKeys.TANKS, Tag.TAG_COMPOUND))
+                .map(tank -> tank.getCompound(0))
                 .map(FluidStack::loadFluidStackFromNBT)
                 .orElse(FluidStack.EMPTY);
         }
@@ -102,7 +107,11 @@ public class FluidTankItem extends BlockItem implements IAdvancedTooltipProvider
 
             CompoundTag fluidTag = new CompoundTag();
             fluid.writeToNBT(fluidTag);//rewrites the old value
-            blockEntityTag.put(MachineNBTKeys.FLUID, fluidTag);
+            ListTag listTag = new ListTag();
+            listTag.add(0, fluidTag);
+            CompoundTag tanks = new CompoundTag();
+            tanks.put(CoreNBTKeys.TANKS, listTag);
+            blockEntityTag.put(MachineNBTKeys.FLUIDS, tanks);
         }
 
         @Override
@@ -110,8 +119,8 @@ public class FluidTankItem extends BlockItem implements IAdvancedTooltipProvider
             CompoundTag tagCompound = container.getTag();
             if (tagCompound != null) {
                 CompoundTag blockEntityTag = tagCompound.getCompound(BLOCK_ENTITY_TAG);
-                if (blockEntityTag.contains(MachineNBTKeys.FLUID)) {
-                    blockEntityTag.remove(MachineNBTKeys.FLUID);
+                if (blockEntityTag.contains(CoreNBTKeys.TANKS)) {
+                    blockEntityTag.remove(CoreNBTKeys.TANKS);
                 }
             }
         }
