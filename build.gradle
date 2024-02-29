@@ -158,6 +158,7 @@ repositories { RepositoryHandler handler ->
     exclusiveRepo(handler, 'https://dogforce-games.com/maven', 'dev.gigaherz.graph')
     exclusiveRepo(handler, 'https://api.modrinth.com/maven', 'maven.modrinth')
     exclusiveRepo(handler, 'https://maven.parchmentmc.org/', 'org.parchmentmc.data')
+    exclusiveRepo(handler, 'https://maven.rover656.dev/releases', 'com.enderio')
 
     mavenLocal()
 }
@@ -173,8 +174,8 @@ dependencies {
     //runtimeOnly fg.deobf("blank:Xycraft+World:0.5.2")
 
     // Regilite
-    implementation("com.enderio.regilite:Regilite:${regilite_version}")
-    jarJar("com.enderio.regilite:Regilite:[${regilite_version}]")
+    implementation("com.enderio:Regilite:${regilite_version}")
+    jarJar("com.enderio:Regilite:[${regilite_version}]")
 
     // GraphLib
     implementation implementation("dev.gigaherz.graph:GraphLib3:${graphlib_version}")
@@ -253,7 +254,7 @@ jar {
                 "Implementation-Version"  : project.jar.archiveVersion,
                 "Implementation-Vendor"   : "SleepyTrousers",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                "MixinConfigs"            : "enderio.mixins.json"
+                "MixinConfigs"            : "mixins.enderio.json"
         ])
     }
 
