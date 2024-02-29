@@ -21,7 +21,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
-import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -171,7 +170,7 @@ public class EnderBlockEntity extends BlockEntity {
             FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
             buf.writeInt(dataSlots.indexOf(slot));
             slot.toBuffer(buf, value);
-            NetworkUtil.sendToServer(new C2SDataSlotChange(getBlockPos(), buf));
+            NetworkUtil.sendToServer(new C2SDataSlotChange(getBlockPos(), buf.array()));
             level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_NEIGHBORS);
         }
     }
@@ -183,7 +182,7 @@ public class EnderBlockEntity extends BlockEntity {
     public void sync() {
         var syncData = createBufferSlotUpdate();
         if (syncData != null) {
-            NetworkUtil.sendToAllTracking(new S2CDataSlotUpdate(getBlockPos(), syncData), level, getBlockPos());
+            NetworkUtil.sendToAllTracking(new S2CDataSlotUpdate(getBlockPos(), syncData.array()), level, getBlockPos());
         }
     }
 
