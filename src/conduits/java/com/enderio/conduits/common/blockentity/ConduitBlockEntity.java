@@ -1,6 +1,7 @@
 package com.enderio.conduits.common.blockentity;
 
 import com.enderio.api.UseOnly;
+import com.enderio.api.capability.ISideConfig;
 import com.enderio.api.conduit.IConduitMenuData;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.IExtendedConduitData;
@@ -34,12 +35,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.client.model.data.ModelProperty;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.util.LazyOptional;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
@@ -496,23 +497,26 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         }
     }
 
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
-        for (IConduitType<?> type : bundle.getTypes()) {
-            NodeIdentifier<?> node = bundle.getNodeFor(type);
-            Optional<NodeIdentifier.IOState> state = Optional.empty();
-            if (node != null && side != null) {
-                state = node.getIOState(side);
-            }
-            var proxiedCap = type.proxyCapability(cap,
-                node == null ? type.createExtendedConduitData(level, getBlockPos()).cast() : node.getExtendedConduitData().cast(), level, worldPosition, side, state);
+    //TODO: NEO-PORT: auto add caps?
+    public static <T> ICapabilityProvider<ConduitBlockEntity, Direction, T> createConduitCap(BlockCapability<T, Direction> cap) {
+         return (be, side) -> {
+            for (IConduitType<?> type : be.bundle.getTypes()) {
+                NodeIdentifier<?> node = be.bundle.getNodeFor(type);
+                Optional<NodeIdentifier.IOState> state = Optional.empty();
+                if (node != null && side != null) {
+                    state = node.getIOState(side);
+                }
+                var proxiedCap = type.proxyCapability(cap,
+                    node == null ? type.createExtendedConduitData(be.level, be.getBlockPos()).cast() : node.getExtendedConduitData().cast(), be.level, be.getBlockPos(), side, state);
 
-            if (proxiedCap.isPresent()) {
-                return proxiedCap.get();
+                if (proxiedCap.isPresent()) {
+                    return proxiedCap.get();
+                }
             }
-        }
-        return super.getCapability(cap, side);
+            return null;
+        };
     }
+
 
     public IItemHandler getConduitItemHandler() {
         return new ConduitItemHandler();

@@ -7,15 +7,13 @@ import com.enderio.api.conduit.NodeIdentifier;
 import com.enderio.api.misc.RedstoneControl;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.conduits.common.init.EnderConduitTypes;
-import com.enderio.conduits.common.integrations.ae2.AE2InWorldConduitNodeHost;
 import com.enderio.conduits.common.tag.ConduitTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.capabilities.Capabilities;
-import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,24 +27,23 @@ public class EnergyConduitType extends SimpleConduitType<EnergyExtendedData> {
 
     @Override
     public ConduitConnectionData getDefaultConnection(Level level, BlockPos pos, Direction direction) {
-        BlockEntity blockEntity = level.getBlockEntity(pos.relative(direction));
-        if (blockEntity != null) {
-            LazyOptional<IEnergyStorage> capability = blockEntity.getCapability(Capabilities.ENERGY, direction.getOpposite());
-            if (capability.isPresent()) {
-                IEnergyStorage storage = capability.orElseThrow(() -> new RuntimeException("present capability was not found"));
-                return new ConduitConnectionData(storage.canReceive(), storage.canExtract(), RedstoneControl.ALWAYS_ACTIVE);
+//        BlockEntity blockEntity = level.getBlockEntity(pos.relative(direction));
+//        if (blockEntity != null) { TODO: NEO-PORT: non be caps
+            IEnergyStorage capability = level.getCapability(Capabilities.EnergyStorage.BLOCK, pos.relative(direction), direction.getOpposite());
+            if (capability != null) {
+                return new ConduitConnectionData(capability.canReceive(), capability.canExtract(), RedstoneControl.ALWAYS_ACTIVE);
 
             }
-        }
+//        }
         return super.getDefaultConnection(level, pos, direction);
     }
 
     @Override
-    public <K> Optional<LazyOptional<K>> proxyCapability(Capability<K> cap, EnergyExtendedData extendedConduitData, Level level, BlockPos pos, @Nullable Direction direction, Optional<NodeIdentifier.IOState> state) {
-        if (Capabilities.ENERGY == cap
+    public <K> Optional<K> proxyCapability(BlockCapability<K, Direction> cap, EnergyExtendedData extendedConduitData, Level level, BlockPos pos, @Nullable Direction direction, Optional<NodeIdentifier.IOState> state) {
+        if (Capabilities.EnergyStorage.BLOCK == cap
             && state.map(NodeIdentifier.IOState::isExtract).orElse(true)
             && (direction == null || !level.getBlockState(pos.relative(direction)).is(ConduitTags.Blocks.ENERGY_CABLE))) {
-                return Optional.of(extendedConduitData.getSelfCap().cast());
+                return (Optional<K>) Optional.ofNullable(extendedConduitData.getSelfCap()); //TODO remove optional?
 
         }
         return Optional.empty();

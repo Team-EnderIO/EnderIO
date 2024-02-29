@@ -1,5 +1,6 @@
 package com.enderio.conduits.common.integrations.ae2;
 
+import appeng.api.ids.AEConstants;
 import appeng.api.implementations.items.IFacadeItem;
 import appeng.api.networking.IInWorldGridNodeHost;
 import com.enderio.EnderIO;
@@ -8,16 +9,20 @@ import com.enderio.api.conduit.ConduitTypes;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.integration.Integration;
 import com.enderio.base.common.init.EIOCreativeTabs;
+import com.enderio.conduits.common.blockentity.ConduitBlockEntity;
+import com.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.regilite.holder.RegiliteItem;
 import com.enderio.regilite.registry.ItemRegistry;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.capabilities.CapabilityManager;
-import net.neoforged.neoforge.common.capabilities.CapabilityToken;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -26,8 +31,9 @@ public class AE2Integration implements Integration {
 
     private static final ItemRegistry ITEM_REGISTRY = ItemRegistry.createRegistry(EnderIO.MODID);
 
-    private final Capability<IInWorldGridNodeHost> IN_WORLD_GRID_NODE_HOST = CapabilityManager.get(new CapabilityToken<>() {});
-
+    //TODO use cap when moved to api by ea2
+    public static BlockCapability<IInWorldGridNodeHost, @Nullable Direction> IN_WORLD_GRID_NODE_HOST = BlockCapability
+        .createSided(new ResourceLocation(AEConstants.MOD_ID, "inworld_gridnode_host"), IInWorldGridNodeHost.class);
     private static final DeferredHolder<IConduitType<?>, AE2ConduitType> DENSE = ConduitTypes.CONDUIT_TYPES.register("dense_me", () -> new AE2ConduitType(true));
     private static final DeferredHolder<IConduitType<?>, AE2ConduitType> NORMAL = ConduitTypes.CONDUIT_TYPES.register("me", () -> new AE2ConduitType(false));
     public static final RegiliteItem<Item> DENSE_ITEM = createConduitItem(DENSE, "dense_me", "Dense ME Conduit");
@@ -40,6 +46,7 @@ public class AE2Integration implements Integration {
     @Override
     public void addEventListener(IEventBus modEventBus, IEventBus forgeEventBus) {
         ITEM_REGISTRY.register(modEventBus);
+        modEventBus.addListener(this::addCapability);
     }
 
     public Optional<BlockState> getFacadeOf(ItemStack stack) {
@@ -49,7 +56,7 @@ public class AE2Integration implements Integration {
         return Optional.empty();
     }
 
-    public Capability<IInWorldGridNodeHost> getInWorldGridNodeHost() {
+    public BlockCapability<IInWorldGridNodeHost, Direction> getInWorldGridNodeHost() {
         return IN_WORLD_GRID_NODE_HOST;
     }
 
@@ -60,5 +67,9 @@ public class AE2Integration implements Integration {
             .setTab(EIOCreativeTabs.CONDUITS)
             .setTranslation(english)
             .setModelProvider((prov, ctx) -> prov.withExistingParent(itemName+"_conduit", EnderIO.loc("item/conduit")).texture("0", type.get().getItemTexture()));
+    }
+
+    public void addCapability(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(IN_WORLD_GRID_NODE_HOST, ConduitBlockEntities.CONDUIT.get(), ConduitBlockEntity.createConduitCap(IN_WORLD_GRID_NODE_HOST));
     }
 }

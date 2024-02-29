@@ -13,7 +13,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.util.LazyOptional;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
@@ -24,7 +23,7 @@ public class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, IExtende
     @Nullable
     private IManagedGridNode mainNode = null;
 
-    private LazyOptional<AE2InWorldConduitNodeHost> selfCap = LazyOptional.of(() -> this);
+    private AE2InWorldConduitNodeHost selfCap =  this;
 
     public AE2InWorldConduitNodeHost(AE2ConduitType type) {
         this.type = type;
@@ -53,9 +52,9 @@ public class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, IExtende
         return mainNode.getNode();
     }
 
-    public LazyOptional<AE2InWorldConduitNodeHost> getSelfCap() {
-        if (!selfCap.isPresent()) {
-            selfCap = LazyOptional.of(() -> this);
+    public AE2InWorldConduitNodeHost getSelfCap() {
+        if (selfCap != null) {
+            selfCap = this;
         }
         return selfCap;
     }
@@ -122,7 +121,7 @@ public class AE2InWorldConduitNodeHost implements IInWorldGridNodeHost, IExtende
             // required because onCreated() can be called after onRemoved()
             mainNode = null;
         }
-        selfCap.invalidate();
+        level.invalidateCapabilities(pos);
     }
 
 }

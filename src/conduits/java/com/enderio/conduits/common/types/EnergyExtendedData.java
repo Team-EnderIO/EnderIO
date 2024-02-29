@@ -8,7 +8,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.util.LazyOptional;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,7 +22,7 @@ public class EnergyExtendedData implements IExtendedConduitData<EnergyExtendedDa
     private int capacity = 500;
     private int stored = 0;
 
-    private LazyOptional<IEnergyStorage> selfCap = LazyOptional.of( () -> new EnergyExtendedData.ConduitEnergyStorage(this));
+    private IEnergyStorage selfCap = new EnergyExtendedData.ConduitEnergyStorage(this);
 
 
     @Override
@@ -75,16 +74,16 @@ public class EnergyExtendedData implements IExtendedConduitData<EnergyExtendedDa
 
     @Override
     public void onRemoved(IConduitType<?> type, Level level, BlockPos pos) {
-        selfCap.invalidate();
+        level.invalidateCapabilities(pos);
     }
 
     public EnergySidedData compute(Direction direction) {
         return energySidedData.computeIfAbsent(direction, dir -> new EnergySidedData());
     }
 
-    LazyOptional<IEnergyStorage> getSelfCap() {
-        if (!selfCap.isPresent()) {
-            selfCap = LazyOptional.of(() -> new EnergyExtendedData.ConduitEnergyStorage(this));
+    IEnergyStorage getSelfCap() {
+        if (selfCap == null) {
+            selfCap = new EnergyExtendedData.ConduitEnergyStorage(this);
         }
         return selfCap;
     }
