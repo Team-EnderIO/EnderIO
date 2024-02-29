@@ -1,6 +1,7 @@
 package com.enderio.machines.common.io.fluid;
 
 import com.enderio.api.io.IIOConfig;
+import com.enderio.core.CoreNBTKeys;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -11,7 +12,9 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.IntConsumer;
 
 /**
@@ -20,12 +23,10 @@ import java.util.function.IntConsumer;
 public class MachineFluidHandler implements IFluidHandler, INBTSerializable<CompoundTag> {
 
     public static final String TANK_INDEX = "Index";
-    public static final String TANKS = "Tanks";
-    public static final String TANK_LIST_SIZE = "Size";
-
     private final IIOConfig config;
     private final MachineTankLayout layout;
-    private List<MachineFluidTank> tanks;
+    private Map<Integer, MachineFluidTank> tanks =  new HashMap<>();
+    private List<FluidStack> stacks;
 
     // Not sure if we need this but might be useful to update recipe/task if tank is filled.
     private IntConsumer changeListener = i -> {};
@@ -33,7 +34,7 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
     public MachineFluidHandler(IIOConfig config, MachineTankLayout layout) {
         this.config = config;
         this.layout = layout;
-        this.tanks = layout.createTanks();
+        this.stacks = NonNullList.withSize(getTanks(), FluidStack.EMPTY);
     }
 
     public void addSlotChangedCallback(IntConsumer callback) {
@@ -51,7 +52,10 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
     //Not a good idea to use this method. Tank Access should be the way to access tanks
     @Deprecated
     public final MachineFluidTank getTank(int tank) {
-        return tanks.get(tank);
+        if (tank > getTanks()) {
+            throw new IndexOutOfBoundsException("No tank found for index " + tank + " in range" + getTanks() + ".");
+        }
+        return tanks.computeIfAbsent(tank, i -> new MachineFluidTank(i, this));
     }
 
     @Override
@@ -61,11 +65,11 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
 
     @Override
     public FluidStack getFluidInTank(int tank) {
-        return tanks.get(tank).getFluid();
+        return stacks.get(tank);
     }
 
     public void setFluidInTank(int tank, FluidStack fluid) {
-        tanks.get(tank).setFluid(fluid);
+        stacks.set(tank, fluid);
     }
 
     @Override
@@ -91,6 +95,43 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
         return null;
     }
 
+    public int fill(int tank, FluidStack resource, IFluidHandler.FluidAction action) {
+        FluidStack fluid = getFluidInTank(tank);
+        int capacity = getTankCapacity(tank);
+        if (resource.isEmpty())
+            return 0;
+
+        if (action.simulate()) {
+            if (fluid.isEmpty()) {
+                return Math.min(capacity, resource.getAmount());
+            }
+            if (!fluid.isFluidEqual(resource)) {
+                return 0;
+            }
+            return Math.min(capacity - fluid.getAmount(), resource.getAmount());
+        }
+        if (fluid.isEmpty()) {
+            fluid = new FluidStack(resource, Math.min(capacity, resource.getAmount()));
+            setFluidInTank(tank, fluid);
+            onContentsChanged(tank);
+            return fluid.getAmount();
+        }
+        if (!fluid.isFluidEqual(resource)) {
+            return 0;
+        }
+        int filled = capacity - fluid.getAmount();
+
+        if (resource.getAmount() < filled) {
+            fluid.grow(resource.getAmount());
+            filled = resource.getAmount();
+        } else {
+            fluid.setAmount(capacity);
+        }
+        if (filled > 0)
+            onContentsChanged(tank);
+        return filled;
+    }
+
     @Override
     public int fill(FluidStack resource, FluidAction action) {
         // Don't waste any time.
@@ -102,12 +143,12 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
         FluidStack resourceLeft = resource.copy();
         int totalFilled = 0;
 
-        for (int index = 0; index < tanks.size(); index++) {
+        for (int index = 0; index < getTanks(); index++) {
             if (!layout.canInsert(index))
                 continue;
 
             // Attempt to fill the tank
-            int filled = tanks.get(index).fill(resourceLeft, action);
+            int filled = fill(index, resourceLeft, action);
             resourceLeft.shrink(filled);
             totalFilled += filled;
 
@@ -124,30 +165,36 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
         return totalFilled;
     }
 
+    public FluidStack drain(int tank, int maxDrain, IFluidHandler.FluidAction action) {
+        FluidStack fluid = getFluidInTank(tank);
+        int drained = maxDrain;
+        if (fluid.getAmount() < drained) {
+            drained = fluid.getAmount();
+        }
+        FluidStack stack = new FluidStack(fluid, drained);
+        if (action.execute() && drained > 0) {
+            fluid.shrink(drained);
+            onContentsChanged(tank);
+        }
+        return stack;
+    }
+
+    public FluidStack drain(int tank, FluidStack resource, IFluidHandler.FluidAction action) {
+        if (resource.isEmpty() || !isFluidValid(tank, resource))
+            return FluidStack.EMPTY;
+        return drain(tank, resource.getAmount(), action);
+    }
+
     @Override
     public FluidStack drain(FluidStack resource, FluidAction action) {
-        for (int index = 0; index < tanks.size(); index++) {
-            if (!layout.canExtract(index))
-                continue;
-
-            if (tanks.get(index).drain(resource, FluidAction.SIMULATE) != FluidStack.EMPTY) {
-                FluidStack drained = tanks.get(index).drain(resource, action);
-                if (!drained.isEmpty()) {
-                    onContentsChanged(index);
-                    changeListener.accept(index);
-                }
-                return drained;
-            }
-        }
-
-        return FluidStack.EMPTY;
+        return drain(resource.getAmount(), action);
     }
 
     @Override
     public FluidStack drain(int maxDrain, FluidAction action) {
-        for (int index = 0; index < tanks.size(); index++) {
-            if (tanks.get(index).drain(maxDrain, FluidAction.SIMULATE) != FluidStack.EMPTY) {
-                FluidStack drained = tanks.get(index).drain(maxDrain, action);
+        for (int index = 0; index < getTanks(); index++) {
+            if (drain(index, maxDrain, FluidAction.SIMULATE) != FluidStack.EMPTY) {
+                FluidStack drained = drain(index, maxDrain, action);
                 if (!drained.isEmpty()) {
                     onContentsChanged(index);
                     changeListener.accept(index);
@@ -164,27 +211,24 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
     @Override
     public CompoundTag serializeNBT() {
         ListTag nbtTagList = new ListTag();
-        for (int i = 0; i < tanks.size(); i++) {
+        for (int i = 0; i < getTanks(); i++) {
             CompoundTag tankTag = new CompoundTag();
             tankTag.putInt(TANK_INDEX, i);
-            tanks.get(i).save(tankTag);
+            stacks.get(i).writeToNBT(tankTag);
             nbtTagList.add(tankTag);
         }
         CompoundTag nbt = new CompoundTag();
-        nbt.put(TANKS, nbtTagList);
-        nbt.putInt(TANK_LIST_SIZE, tanks.size());
+        nbt.put(CoreNBTKeys.TANKS, nbtTagList);
         return nbt;
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        int size = nbt.contains(TANK_LIST_SIZE, Tag.TAG_INT) ? nbt.getInt(TANK_LIST_SIZE) : tanks.size();
-        tanks = NonNullList.withSize(size, MachineFluidTank.EMPTY);
-        ListTag tagList = nbt.getList(TANKS, Tag.TAG_COMPOUND);
+        ListTag tagList = nbt.getList(CoreNBTKeys.TANKS, Tag.TAG_COMPOUND);
         for (int i = 0; i < tagList.size(); i++) {
             CompoundTag tankTag = tagList.getCompound(i);
             int index = tankTag.getInt(TANK_INDEX);
-            tanks.set(index, MachineFluidTank.from(tankTag));
+            stacks.set(index, FluidStack.loadFluidStackFromNBT(tankTag));
         }
     }
 

@@ -1,10 +1,9 @@
 package com.enderio.machines.common.io.fluid;
 
-import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
+import com.enderio.machines.common.attachment.IFluidTankUser;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
@@ -19,7 +18,7 @@ import java.util.Optional;
 public interface IFluidItemInteractive {
 
     // Requires direct tank access which is undesirable. MachineFluidHandler would be better to for multi-tank block.
-    default boolean handleFluidItemInteraction(Player player, InteractionHand hand, ItemStack itemStack, MachineBlockEntity machine, TankAccess tankAccess) {
+    default boolean handleFluidItemInteraction(Player player, InteractionHand hand, ItemStack itemStack, IFluidTankUser machine, TankAccess tankAccess) {
         ItemStack copyStack = itemStack.copyWithCount(1);
         Optional<IFluidHandlerItem> fluidHandlerItem = FluidUtil.getFluidHandler(copyStack);
         if (fluidHandlerItem.isPresent()) {
