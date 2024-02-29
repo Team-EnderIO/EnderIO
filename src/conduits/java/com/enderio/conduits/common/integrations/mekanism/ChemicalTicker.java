@@ -66,7 +66,7 @@ public class ChemicalTicker extends MultiCapabilityAwareConduitTicker<IChemicalH
     }
 
     private static ChemicalStack<? extends Chemical<?>> tryFluidTransfer(IChemicalHandler fluidDestination, IChemicalHandler fluidSource, int maxAmount, boolean doTransfer) {
-        if (fluidSource.getEmptyStack() == fluidDestination.getEmptyStack()) {
+        if (fluidSource.getEmptyStack().isStackIdentical(fluidDestination.getEmptyStack())) {
             var drainable = fluidSource.extractChemical(maxAmount, Action.SIMULATE);
             if (!drainable.isEmpty()) {
                 return tryFluidTransfer_Internal(fluidDestination, fluidSource, drainable, doTransfer);
