@@ -29,9 +29,10 @@ import java.util.function.Supplier;
 public class MekanismIntegration implements Integration {
 
     private static final ItemRegistry ITEM_REGISTRY = EnderIO.getRegilite().itemRegistry();
-    private static final DeferredHolder<IConduitType<?>, ChemicalConduitType> CHEMICAL = chemicalConduit("chemical", 100, false, new Vector2i(0,192));
-    private static final DeferredHolder<IConduitType<?>, ChemicalConduitType> CHEMICAL2 = chemicalConduit("pressurized_chemical", 800, true, new Vector2i(0,216));
-    private static final DeferredHolder<IConduitType<?>, ChemicalConduitType> CHEMICAL3 = chemicalConduit("ender_chemical", 1600, true, new Vector2i(24,0));
+    private static final DeferredHolder<IConduitType<?>, ChemicalConduitType> CHEMICAL = chemicalConduit("chemical", 750, false, new Vector2i(0,192));
+    private static final DeferredHolder<IConduitType<?>, ChemicalConduitType> CHEMICAL2 = chemicalConduit("pressurized_chemical", 2000, true, new Vector2i(0,216));
+    private static final DeferredHolder<IConduitType<?>, ChemicalConduitType> CHEMICAL3 = chemicalConduit("ender_chemical", 64000, true, new Vector2i(24,0));
+
     public static final RegiliteItem<Item> CHEMICAL_ITEM = createConduitItem(CHEMICAL, "chemical", "Chemical Conduit");
     public static final RegiliteItem<Item> PRESSURIZED_CHEMICAL_ITEM = createConduitItem(CHEMICAL2, "pressurized_chemical", "Pressurized Chemical Conduit");
     public static final RegiliteItem<Item> ENDER_CHEMICAL_ITEM = createConduitItem(CHEMICAL3, "ender_chemical", "Ender Chemical Conduit");
