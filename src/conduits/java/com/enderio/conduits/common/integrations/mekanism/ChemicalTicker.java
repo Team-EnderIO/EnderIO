@@ -18,12 +18,12 @@ import java.util.List;
 
 public class ChemicalTicker extends MultiCapabilityAwareConduitTicker<IChemicalHandler> {
 
-    private final int gasRate;
+    private final int rate;
 
     @SafeVarargs
-    public ChemicalTicker(int gasRate, BlockCapability<? extends IChemicalHandler, Direction>... capabilities) {
-        super((BlockCapability<IChemicalHandler, Direction>[]) capabilities);
-        this.gasRate = gasRate;
+    public ChemicalTicker(int rate, BlockCapability<? extends IChemicalHandler, Direction>... capabilities) {
+        super(capabilities);
+        this.rate = rate;
     }
 
     @Override
@@ -32,15 +32,17 @@ public class ChemicalTicker extends MultiCapabilityAwareConduitTicker<IChemicalH
 
         for (CapabilityConnection extract : extractCaps) {
             var extractHandler = extract.cap;
-            GasExtendedData gasExtendedData = extract.data.castTo(GasExtendedData.class);
+            ChemicalExtendedData chemicalExtendedData = extract.data.castTo(ChemicalExtendedData.class);
             ChemicalStack<? extends Chemical<?>> result = null;
-            if (gasExtendedData.lockedGas != null) {
-                ChemicalStack<? extends Chemical<?>> chemicalStack = extractHandler.extractChemical(gasExtendedData.lockedGas.getStack(gasRate), Action.SIMULATE);
-                if (chemicalStack.isEmpty())
+            if (chemicalExtendedData.lockedChemical != null) {
+                ChemicalStack<? extends Chemical<?>> chemicalStack = extractHandler.extractChemical(chemicalExtendedData.lockedChemical.getStack(rate), Action.SIMULATE);
+                if (!chemicalStack.isEmpty()) {
                     result = chemicalStack;
+                }
             }
-            if (result == null)
-                result = extractHandler.extractChemical(gasRate, Action.SIMULATE);
+            if (result == null) {
+                result = extractHandler.extractChemical(rate, Action.SIMULATE);
+            }
             var extractedGas = result;
 
             if (extractedGas.isEmpty()) {
@@ -49,15 +51,15 @@ public class ChemicalTicker extends MultiCapabilityAwareConduitTicker<IChemicalH
 
             int transferred = 0;
             for (CapabilityConnection insert : insertCaps) {
-                var transferredGas = gasExtendedData.lockedGas != null ?
-                    tryFluidTransfer(insert.cap, extractHandler, gasExtendedData.lockedGas.getStack(gasRate - transferred),
+                var transferredGas = chemicalExtendedData.lockedChemical != null ?
+                    tryChemicalTransfer(insert.cap, extractHandler, chemicalExtendedData.lockedChemical.getStack(rate - transferred),
                         true) :
-                    tryFluidTransfer(insert.cap, extractHandler, gasRate - transferred, true);
+                    tryChemicalTransfer(insert.cap, extractHandler, rate - transferred, true);
 
                 if (!transferredGas.isEmpty()) {
                     transferred += transferredGas.getAmount();
 
-                    if (transferred > gasRate) {
+                    if (transferred > rate) {
                         break;
                     }
                 }
@@ -65,38 +67,38 @@ public class ChemicalTicker extends MultiCapabilityAwareConduitTicker<IChemicalH
         }
     }
 
-    private static ChemicalStack<? extends Chemical<?>> tryFluidTransfer(IChemicalHandler fluidDestination, IChemicalHandler fluidSource, int maxAmount, boolean doTransfer) {
-        if (fluidSource.getEmptyStack().isStackIdentical(fluidDestination.getEmptyStack())) {
-            var drainable = fluidSource.extractChemical(maxAmount, Action.SIMULATE);
+    private static ChemicalStack<? extends Chemical<?>> tryChemicalTransfer(IChemicalHandler chemicalDestination, IChemicalHandler chemicalSource, int maxAmount, boolean doTransfer) {
+        if (chemicalSource.getEmptyStack().isStackIdentical(chemicalDestination.getEmptyStack())) {
+            var drainable = chemicalSource.extractChemical(maxAmount, Action.SIMULATE);
             if (!drainable.isEmpty()) {
-                return tryFluidTransfer_Internal(fluidDestination, fluidSource, drainable, doTransfer);
+                return tryChemicalTransfer_Internal(chemicalDestination, chemicalSource, drainable, doTransfer);
             }
         }
-        return fluidSource.getEmptyStack();
+        return chemicalSource.getEmptyStack();
     }
 
-    private static ChemicalStack<? extends Chemical<?>> tryFluidTransfer(IChemicalHandler fluidDestination, IChemicalHandler fluidSource, ChemicalStack<? extends Chemical<?>> resource, boolean doTransfer) {
-        var drainable = fluidSource.extractChemical(resource, Action.SIMULATE);
+    private static ChemicalStack<? extends Chemical<?>> tryChemicalTransfer(IChemicalHandler chemicalDestination, IChemicalHandler chemicalSource, ChemicalStack<? extends Chemical<?>> resource, boolean doTransfer) {
+        var drainable = chemicalSource.extractChemical(resource, Action.SIMULATE);
         if (!drainable.isEmpty() && resource.isStackIdentical(drainable)) {
-            return tryFluidTransfer_Internal(fluidDestination, fluidSource, drainable, doTransfer);
+            return tryChemicalTransfer_Internal(chemicalDestination, chemicalSource, drainable, doTransfer);
         }
-        return fluidSource.getEmptyStack();
+        return chemicalSource.getEmptyStack();
     }
 
-    private static ChemicalStack<? extends Chemical<?>> tryFluidTransfer_Internal(IChemicalHandler fluidDestination, IChemicalHandler fluidSource, ChemicalStack<? extends Chemical<?>> drainable, boolean doTransfer) {
-        long fillableAmount = drainable.getAmount() - fluidDestination.insertChemical(drainable, Action.SIMULATE).getAmount();
+    private static ChemicalStack<? extends Chemical<?>> tryChemicalTransfer_Internal(IChemicalHandler chemicalDestination, IChemicalHandler chemicalSource, ChemicalStack<? extends Chemical<?>> drainable, boolean doTransfer) {
+        long fillableAmount = drainable.getAmount() - chemicalDestination.insertChemical(drainable, Action.SIMULATE).getAmount();
         if (fillableAmount > 0) {
             drainable.setAmount(fillableAmount);
             if (doTransfer) {
-                var drained = fluidSource.extractChemical(drainable, Action.EXECUTE);
+                var drained = chemicalSource.extractChemical(drainable, Action.EXECUTE);
                 if (!drained.isEmpty()) {
-                    drained.setAmount(fluidDestination.insertChemical(drained, Action.EXECUTE).getAmount());
+                    drained.setAmount(chemicalDestination.insertChemical(drained, Action.EXECUTE).getAmount());
                     return drained;
                 }
             } else {
                 return drainable;
             }
         }
-        return fluidSource.getEmptyStack();
+        return chemicalSource.getEmptyStack();
     }
 }

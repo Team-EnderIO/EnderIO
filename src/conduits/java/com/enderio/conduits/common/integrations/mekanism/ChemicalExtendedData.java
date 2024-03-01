@@ -12,30 +12,30 @@ import mekanism.api.chemical.slurry.Slurry;
 import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.Nullable;
 
-public class GasExtendedData implements IExtendedConduitData<GasExtendedData> {
+public class ChemicalExtendedData implements IExtendedConduitData<ChemicalExtendedData> {
 
-    public final boolean isMultiFluid;
+    public final boolean isMultiChemical;
 
-    @Nullable Chemical<?> lockedGas = null;
+    @Nullable Chemical<?> lockedChemical = null;
     boolean shouldReset = false;
 
-    public GasExtendedData(boolean isMultiFluid) {this.isMultiFluid = isMultiFluid;}
+    public ChemicalExtendedData(boolean isMultiChemical) {this.isMultiChemical = isMultiChemical;}
 
     @Override
-    public void onConnectTo(GasExtendedData otherData) {
-        if (lockedGas != null) {
-            if (otherData.lockedGas != null && lockedGas != otherData.lockedGas) {
-                EnderIO.LOGGER.warn("incompatible fluid conduits merged");
+    public void onConnectTo(ChemicalExtendedData otherData) {
+        if (lockedChemical != null) {
+            if (otherData.lockedChemical != null && lockedChemical != otherData.lockedChemical) {
+                EnderIO.LOGGER.warn("incompatible chemical conduits merged");
             }
-            otherData.setlockedGas(lockedGas);
-        } else if (otherData.lockedGas != null) {
-            setlockedGas(otherData.lockedGas);
+            otherData.setlockedChemical(lockedChemical);
+        } else if (otherData.lockedChemical != null) {
+            setlockedChemical(otherData.lockedChemical);
         }
     }
 
     @Override
-    public boolean canConnectTo(GasExtendedData otherData) {
-        return lockedGas == null || otherData.lockedGas == null || lockedGas == otherData.lockedGas;
+    public boolean canConnectTo(ChemicalExtendedData otherData) {
+        return lockedChemical == null || otherData.lockedChemical == null || lockedChemical == otherData.lockedChemical;
     }
 
     // region Serialization
@@ -45,10 +45,10 @@ public class GasExtendedData implements IExtendedConduitData<GasExtendedData> {
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
-        if (!isMultiFluid) {
-            if (lockedGas != null) {
-                ChemicalType.getTypeFor(lockedGas).write(nbt);
-                lockedGas.write(nbt);
+        if (!isMultiChemical) {
+            if (lockedChemical != null) {
+                ChemicalType.getTypeFor(lockedChemical).write(nbt);
+                lockedChemical.write(nbt);
             }
         }
         return nbt;
@@ -76,13 +76,13 @@ public class GasExtendedData implements IExtendedConduitData<GasExtendedData> {
                 case SLURRY -> Slurry.readFromNBT(nbt);
             };
             if (chem != MekanismAPI.EMPTY_INFUSE_TYPE && chem != MekanismAPI.EMPTY_GAS && chem != MekanismAPI.EMPTY_PIGMENT && chem != MekanismAPI.EMPTY_SLURRY) {
-                setlockedGas(chem);
+                setlockedChemical(chem);
             }
             else {
-                setlockedGas(null);
+                setlockedChemical(null);
             }
         } else {
-            setlockedGas(null);
+            setlockedChemical(null);
         }
         if (nbt.contains(SHOULD_RESET)) {
             shouldReset = nbt.getBoolean(SHOULD_RESET);
@@ -91,7 +91,7 @@ public class GasExtendedData implements IExtendedConduitData<GasExtendedData> {
 
     // endregion
 
-    private void setlockedGas(@Nullable Chemical<?> lockedGas) {
-        this.lockedGas = lockedGas;
+    private void setlockedChemical(@Nullable Chemical<?> lockedChemical) {
+        this.lockedChemical = lockedChemical;
     }
 }

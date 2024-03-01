@@ -7,11 +7,11 @@ import com.enderio.conduits.common.init.EnderConduitTypes;
 import com.enderio.conduits.common.types.SimpleConduitType;
 import mekanism.common.capabilities.Capabilities;
 
-public class GasConduitType extends SimpleConduitType<GasExtendedData> {
+public class ChemicalConduitType extends SimpleConduitType<ChemicalExtendedData> {
     public static final IConduitMenuData MENU_DATA = new IConduitMenuData.Simple(false, false, false, true, true, true);
 
-    public GasConduitType() {
-        super(EnderIO.loc("block/conduit/gas"), new ChemicalTicker(1000, Capabilities.GAS.block(), Capabilities.SLURRY.block()), () -> new GasExtendedData(false),
-            EnderConduitTypes.ICON_TEXTURE, new Vector2i(0, 48), MENU_DATA);
+    public ChemicalConduitType() {
+        super(EnderIO.loc("block/conduit/chemical"), new ChemicalTicker(1000, Capabilities.GAS.block(), Capabilities.SLURRY.block(), Capabilities.INFUSION.block(), Capabilities.PIGMENT.block()),
+            () -> new ChemicalExtendedData(false), EnderConduitTypes.ICON_TEXTURE, new Vector2i(0, 120), MENU_DATA);
     }
 }

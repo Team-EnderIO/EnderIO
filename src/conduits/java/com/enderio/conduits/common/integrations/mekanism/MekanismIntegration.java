@@ -21,8 +21,8 @@ import java.util.function.Supplier;
 public class MekanismIntegration implements Integration {
 
     private static final ItemRegistry ITEM_REGISTRY = EnderIO.getRegilite().itemRegistry();
-    private static final DeferredHolder<IConduitType<?>, GasConduitType> GAS = ConduitTypes.CONDUIT_TYPES.register("gas", GasConduitType::new);
-    public static final RegiliteItem<Item> GAS_ITEM = createConduitItem(GAS, "gas", "Gas Conduit");
+    private static final DeferredHolder<IConduitType<?>, ChemicalConduitType> CHEMICAL = ConduitTypes.CONDUIT_TYPES.register("chemical", ChemicalConduitType::new);
+    public static final RegiliteItem<Item> CHEMICAL_ITEM = createConduitItem(CHEMICAL, "chemical", "Chemical Conduit");
 
     @Override
     public void addEventListener(IEventBus modEventBus, IEventBus forgeEventBus) {
@@ -42,6 +42,7 @@ public class MekanismIntegration implements Integration {
     public void addCapability(RegisterCapabilitiesEvent event) {
         event.registerBlockEntity(Capabilities.GAS.block(), ConduitBlockEntities.CONDUIT.get(), ConduitBlockEntity.createConduitCap(Capabilities.GAS.block()));
         event.registerBlockEntity(Capabilities.SLURRY.block(), ConduitBlockEntities.CONDUIT.get(), ConduitBlockEntity.createConduitCap(Capabilities.SLURRY.block()));
-
+        event.registerBlockEntity(Capabilities.INFUSION.block(), ConduitBlockEntities.CONDUIT.get(), ConduitBlockEntity.createConduitCap(Capabilities.INFUSION.block()));
+        event.registerBlockEntity(Capabilities.PIGMENT.block(), ConduitBlockEntities.CONDUIT.get(), ConduitBlockEntity.createConduitCap(Capabilities.PIGMENT.block()));
     }
 }
