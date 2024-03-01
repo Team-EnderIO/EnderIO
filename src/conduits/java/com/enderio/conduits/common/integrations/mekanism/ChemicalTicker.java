@@ -35,7 +35,7 @@ public class ChemicalTicker extends MultiCapabilityAwareConduitTicker<IChemicalH
             ChemicalExtendedData chemicalExtendedData = extract.data.castTo(ChemicalExtendedData.class);
             ChemicalStack<? extends Chemical<?>> result = null;
             if (chemicalExtendedData.lockedChemical != null) {
-                ChemicalStack<? extends Chemical<?>> chemicalStack = extractHandler.extractChemical(chemicalExtendedData.lockedChemical.getStack(rate), Action.SIMULATE);
+                ChemicalStack<? extends Chemical<?>> chemicalStack = extractHandler.extractChemical(chemicalExtendedData.lockedChemical.getChemical().getStack(rate), Action.SIMULATE);
                 if (!chemicalStack.isEmpty()) {
                     result = chemicalStack;
                 }
@@ -52,7 +52,7 @@ public class ChemicalTicker extends MultiCapabilityAwareConduitTicker<IChemicalH
             int transferred = 0;
             for (CapabilityConnection insert : insertCaps) {
                 var transferredGas = chemicalExtendedData.lockedChemical != null ?
-                    tryChemicalTransfer(insert.cap, extractHandler, chemicalExtendedData.lockedChemical.getStack(rate - transferred),
+                    tryChemicalTransfer(insert.cap, extractHandler, chemicalExtendedData.lockedChemical.getChemical().getStack(rate - transferred),
                         true) :
                     tryChemicalTransfer(insert.cap, extractHandler, rate - transferred, true);
 

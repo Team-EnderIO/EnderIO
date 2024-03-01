@@ -7,6 +7,7 @@ import mekanism.api.chemical.Chemical;
 import mekanism.api.chemical.ChemicalType;
 import mekanism.api.chemical.gas.Gas;
 import mekanism.api.chemical.infuse.InfuseType;
+import mekanism.api.chemical.merged.BoxedChemical;
 import mekanism.api.chemical.pigment.Pigment;
 import mekanism.api.chemical.slurry.Slurry;
 import net.minecraft.nbt.CompoundTag;
@@ -16,7 +17,7 @@ public class ChemicalExtendedData implements IExtendedConduitData<ChemicalExtend
 
     public final boolean isMultiChemical;
 
-    @Nullable Chemical<?> lockedChemical = null;
+    @Nullable BoxedChemical lockedChemical = null;
     boolean shouldReset = false;
 
     public ChemicalExtendedData(boolean isMultiChemical) {this.isMultiChemical = isMultiChemical;}
@@ -47,7 +48,6 @@ public class ChemicalExtendedData implements IExtendedConduitData<ChemicalExtend
         CompoundTag nbt = new CompoundTag();
         if (!isMultiChemical) {
             if (lockedChemical != null) {
-                ChemicalType.getTypeFor(lockedChemical).write(nbt);
                 lockedChemical.write(nbt);
             }
         }
@@ -67,20 +67,9 @@ public class ChemicalExtendedData implements IExtendedConduitData<ChemicalExtend
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        ChemicalType chemicalType = ChemicalType.fromNBT(nbt);
-        if (chemicalType != null) {
-            Chemical<?> chem = switch (chemicalType) {
-                case GAS -> Gas.readFromNBT(nbt);
-                case INFUSION -> InfuseType.readFromNBT(nbt);
-                case PIGMENT -> Pigment.readFromNBT(nbt);
-                case SLURRY -> Slurry.readFromNBT(nbt);
-            };
-            if (chem != MekanismAPI.EMPTY_INFUSE_TYPE && chem != MekanismAPI.EMPTY_GAS && chem != MekanismAPI.EMPTY_PIGMENT && chem != MekanismAPI.EMPTY_SLURRY) {
-                setlockedChemical(chem);
-            }
-            else {
-                setlockedChemical(null);
-            }
+        BoxedChemical chemical = BoxedChemical.read(nbt);
+        if (!chemical.isEmpty()) {
+            setlockedChemical(chemical);
         } else {
             setlockedChemical(null);
         }
@@ -91,7 +80,7 @@ public class ChemicalExtendedData implements IExtendedConduitData<ChemicalExtend
 
     // endregion
 
-    private void setlockedChemical(@Nullable Chemical<?> lockedChemical) {
+    private void setlockedChemical(@Nullable BoxedChemical lockedChemical) {
         this.lockedChemical = lockedChemical;
     }
 }
