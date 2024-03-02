@@ -2,6 +2,8 @@ package com.enderio.machines.common.item;
 
 import com.enderio.base.common.init.EIOAttachments;
 import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.common.tag.EIOTags;
 import com.enderio.core.client.item.IAdvancedTooltipProvider;
 import com.enderio.core.common.util.EntityUtil;
 import com.enderio.core.common.util.TooltipUtil;
@@ -25,7 +27,7 @@ public class BoundSoulBlockItem extends BlockItem implements IAdvancedTooltipPro
     public void addCommonTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
         // TODO: NEO-PORT: Instead of having an item class, have a tooltip event for anything with stored entity data?
 
-        if (itemStack.getCapability(EIOCapabilities.StoredEntity.ITEM) != null) {
+        if (itemStack.is(EIOTags.Items.STORED_ENTITY)) {
             var storedEntityData = itemStack.getData(EIOAttachments.STORED_ENTITY);
             if (storedEntityData.getEntityType().isPresent()) {
                 tooltips.add(TooltipUtil.style(Component.translatable(EntityUtil.getEntityDescriptionId(storedEntityData.getEntityType().get()))));

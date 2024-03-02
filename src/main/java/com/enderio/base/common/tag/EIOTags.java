@@ -109,6 +109,8 @@ public class EIOTags {
         public static final TagKey<Item> BLOCKS_SOULARIUM = ItemTags.create(new ResourceLocation(NeoForgeVersion.MOD_ID, "storage_blocks/soularium"));
         public static final TagKey<Item> BLOCKS_VIBRANT_ALLOY = ItemTags.create(new ResourceLocation(NeoForgeVersion.MOD_ID, "storage_blocks/vibrant_alloy"));
 
+        public static final TagKey<Item> STORED_ENTITY = ItemTags.create(EnderIO.loc("stored_entity"));
+
         public static final Map<GlassIdentifier, TagKey<Item>> GLASS_TAGS = createGlassTags();
 
         public static Map<GlassIdentifier, TagKey<Item>> createGlassTags() {

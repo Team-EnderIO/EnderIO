@@ -6,6 +6,7 @@ import com.enderio.base.common.init.EIOAttachments;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.EntityCaptureUtils;
 import com.enderio.core.client.item.IAdvancedTooltipProvider;
 import com.enderio.core.common.util.EntityUtil;
@@ -61,12 +62,12 @@ public class SoulVialItem extends Item implements IAdvancedTooltipProvider {
 
     @Override
     public boolean isFoil(ItemStack pStack) {
-        return pStack.getCapability(EIOCapabilities.StoredEntity.ITEM) != null && pStack.getData(EIOAttachments.STORED_ENTITY).hasEntity();
+        return pStack.is(EIOTags.Items.STORED_ENTITY) && pStack.getData(EIOAttachments.STORED_ENTITY).hasEntity();
     }
 
     @Override
     public void addCommonTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
-        if (itemStack.getCapability(EIOCapabilities.StoredEntity.ITEM) != null) {
+        if (itemStack.is(EIOTags.Items.STORED_ENTITY)) {
             itemStack.getData(EIOAttachments.STORED_ENTITY)
                 .getEntityType()
                 .ifPresent(entityType ->
@@ -76,7 +77,7 @@ public class SoulVialItem extends Item implements IAdvancedTooltipProvider {
 
     @Override
     public void addDetailedTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
-        if (itemStack.getCapability(EIOCapabilities.StoredEntity.ITEM) != null) {
+        if (itemStack.is(EIOTags.Items.STORED_ENTITY)) {
             itemStack.getData(EIOAttachments.STORED_ENTITY)
                 .getHealthState()
                 .ifPresent(health ->
@@ -160,7 +161,7 @@ public class SoulVialItem extends Item implements IAdvancedTooltipProvider {
     }
 
     private static InteractionResult releaseEntity(Level level, ItemStack filledVial, Direction face, BlockPos pos, Consumer<ItemStack> emptyVialSetter) {
-        if (filledVial.getCapability(EIOCapabilities.StoredEntity.ITEM) != null) {
+        if (filledVial.is(EIOTags.Items.STORED_ENTITY)) {
             var storedEntity = filledVial.getData(EIOAttachments.STORED_ENTITY);
 
             if (storedEntity.hasEntity()) {
@@ -215,7 +216,7 @@ public class SoulVialItem extends Item implements IAdvancedTooltipProvider {
     }
 
     public static Optional<StoredEntityData> getEntityData(ItemStack stack) {
-        return stack.getCapability(EIOCapabilities.StoredEntity.ITEM) != null ? Optional.of(stack.getData(EIOAttachments.STORED_ENTITY)) : Optional.empty();
+        return stack.is(EIOTags.Items.STORED_ENTITY) ? Optional.of(stack.getData(EIOAttachments.STORED_ENTITY)) : Optional.empty();
     }
 
     // endregion

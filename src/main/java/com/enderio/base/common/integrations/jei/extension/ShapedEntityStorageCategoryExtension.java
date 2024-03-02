@@ -5,6 +5,7 @@ import com.enderio.base.common.init.EIOAttachments;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.integrations.jei.EnderIOJEI;
 import com.enderio.base.common.recipe.ShapedEntityStorageRecipe;
+import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.EntityCaptureUtils;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.ICraftingGridHelper;
@@ -32,7 +33,7 @@ public class ShapedEntityStorageCategoryExtension implements ICraftingCategoryEx
         List<ItemStack> results = allCapturableEntities.stream().map(e -> {
             ItemStack result = resultItem.copy();
 
-            if (result.getCapability(EIOCapabilities.StoredEntity.ITEM) != null) {
+            if (result.is(EIOTags.Items.STORED_ENTITY)) {
                 result.setData(EIOAttachments.STORED_ENTITY, StoredEntityData.of(e));
             }
 
@@ -42,11 +43,11 @@ public class ShapedEntityStorageCategoryExtension implements ICraftingCategoryEx
         List<List<ItemStack>> inputs = recipe.getIngredients().stream()
             .map(ingredient ->
                 Arrays.stream(ingredient.getItems()).<ItemStack>mapMulti((ingredientItem, consumer) -> {
-                    boolean hasStorage = ingredientItem.getCapability(EIOCapabilities.StoredEntity.ITEM) != null;
+                    boolean hasStorage = ingredientItem.is(EIOTags.Items.STORED_ENTITY);
                     if (hasStorage) {
                         for (ResourceLocation entity : allCapturableEntities) {
                             ItemStack item = ingredientItem.copy();
-                            if (item.getCapability(EIOCapabilities.StoredEntity.ITEM) != null) {
+                            if (item.is(EIOTags.Items.STORED_ENTITY)) {
                                 item.setData(EIOAttachments.STORED_ENTITY, StoredEntityData.of(entity));
                             }
                             consumer.accept(item);

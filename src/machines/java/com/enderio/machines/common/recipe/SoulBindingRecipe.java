@@ -4,6 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOAttachments;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOItems;
+import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.blockentity.SoulBinderBlockEntity;
@@ -102,7 +103,7 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
         List<OutputStack> results = getResultStacks(registryAccess);
         ItemStack result = results.get(0).getItem();
 
-        if (vial.getCapability(EIOCapabilities.StoredEntity.ITEM) != null) {
+        if (vial.is(EIOTags.Items.STORED_ENTITY)) {
             var storedEntityData = vial.getData(EIOAttachments.STORED_ENTITY);
             result.setData(EIOAttachments.STORED_ENTITY, storedEntityData);
         }
@@ -130,7 +131,7 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
             return false;
         }
 
-        if (container.getItem(0).getCapability(EIOCapabilities.StoredEntity.ITEM) == null) {
+        if (!container.getItem(0).is(EIOTags.Items.STORED_ENTITY)) {
             return false;
         }
 

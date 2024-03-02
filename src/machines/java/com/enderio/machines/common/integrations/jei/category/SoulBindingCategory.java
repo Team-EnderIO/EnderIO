@@ -6,6 +6,7 @@ import com.enderio.base.common.init.EIOAttachments;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.item.tool.SoulVialItem;
+import com.enderio.base.common.tag.EIOTags;
 import com.enderio.machines.client.gui.screen.SoulBinderScreen;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.integrations.jei.util.MachineRecipeCategory;
@@ -97,7 +98,7 @@ public class SoulBindingCategory extends MachineRecipeCategory<SoulBindingRecipe
         } else if (recipe.getSouldata() != null){
             if (output.isPresent()) {
                 var item = new ItemStack(EIOItems.FILLED_SOUL_VIAL.get());
-                if (output.get().getTypedValue().getItemStack().get().getCapability(EIOCapabilities.StoredEntity.ITEM) != null) {
+                if (output.get().getTypedValue().getItemStack().get().is(EIOTags.Items.STORED_ENTITY)) {
                     StoredEntityData data = output.get().getTypedValue().getItemStack().get().getData(EIOAttachments.STORED_ENTITY);
                     SoulVialItem.setEntityType(item, data.getEntityType().get());
                     vials.add(item);
@@ -120,7 +121,7 @@ public class SoulBindingCategory extends MachineRecipeCategory<SoulBindingRecipe
         } else {
             if (output.isPresent()) {
                 var item = new ItemStack(EIOItems.FILLED_SOUL_VIAL.get());
-                if (output.get().getTypedValue().getItemStack().get().getCapability(EIOCapabilities.StoredEntity.ITEM) != null) {
+                if (output.get().getTypedValue().getItemStack().get().is(EIOTags.Items.STORED_ENTITY)) {
                     StoredEntityData data = output.get().getTypedValue().getItemStack().get().getData(EIOAttachments.STORED_ENTITY);
                     SoulVialItem.setEntityType(item, data.getEntityType().get());
                     vials.add(item);
@@ -143,11 +144,11 @@ public class SoulBindingCategory extends MachineRecipeCategory<SoulBindingRecipe
         var results = new ArrayList<ItemStack>();
 
         // If the output can take an entity type, then we add it
-        if (resultStack.getCapability(EIOCapabilities.StoredEntity.ITEM) != null) {
+        if (resultStack.is(EIOTags.Items.STORED_ENTITY)) {
             for (ItemStack vial : vials) {
                 SoulVialItem.getEntityData(vial).flatMap(StoredEntityData::getEntityType).ifPresent(entityType -> {
                     var result = resultStack.copy();
-                    if (result.getCapability(EIOCapabilities.StoredEntity.ITEM) != null) {
+                    if (result.is(EIOTags.Items.STORED_ENTITY)) {
                         result.setData(EIOAttachments.STORED_ENTITY, StoredEntityData.of(entityType));
                         results.add(result);
                     }

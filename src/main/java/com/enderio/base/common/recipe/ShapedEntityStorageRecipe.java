@@ -3,6 +3,7 @@ package com.enderio.base.common.recipe;
 import com.enderio.base.common.init.EIOAttachments;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIORecipes;
+import com.enderio.base.common.tag.EIOTags;
 import com.enderio.core.common.recipes.WrappedShapedRecipe;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
@@ -48,7 +49,7 @@ public class ShapedEntityStorageRecipe extends WrappedShapedRecipe {
         for (int slot = 0; slot < container.getContainerSize(); slot++) {
             ItemStack stack = container.getItem(slot);
 
-            if (stack.getCapability(EIOCapabilities.StoredEntity.ITEM) != null) {
+            if (stack.is(EIOTags.Items.STORED_ENTITY)) {
                 var data = stack.getData(EIOAttachments.STORED_ENTITY);
                 if (data.hasEntity()) {
                     return Optional.of(stack);

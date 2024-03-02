@@ -4,6 +4,7 @@ import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.base.common.item.tool.SoulVialItem;
+import com.enderio.base.common.tag.EIOTags;
 import com.enderio.core.data.model.EIOModel;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.CapacitorBankBlock;
@@ -140,7 +141,7 @@ public class MachineBlocks {
         .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
         .createBlockItem(ITEM_REGISTRY,block -> new BoundSoulBlockItem(block, new Item.Properties()),
             item -> item.setTab(EIOCreativeTabs.MACHINES)
-                .addCapability(EIOCapabilities.StoredEntity.ITEM, SoulVialItem.STORED_ENTITY_PROVIDER)
+                .addItemTags(EIOTags.Items.STORED_ENTITY)
         );
 
     public static final RegiliteBlock<MachineBlock> VACUUM_CHEST = BLOCK_REGISTRY
@@ -194,7 +195,7 @@ public class MachineBlocks {
         .setBlockStateProvider(MachineModelUtil::progressMachineBlock)
         .createBlockItem(ITEM_REGISTRY,block -> new BoundSoulBlockItem(block, new Item.Properties()),
             item -> item.setTab(EIOCreativeTabs.MACHINES)
-                .addCapability(EIOCapabilities.StoredEntity.ITEM, SoulVialItem.STORED_ENTITY_PROVIDER)
+                .addItemTags(EIOTags.Items.STORED_ENTITY)
         );
 
     public static final RegiliteBlock<ProgressMachineBlock> DRAIN =

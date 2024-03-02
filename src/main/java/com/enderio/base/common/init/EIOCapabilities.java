@@ -31,12 +31,4 @@ public class EIOCapabilities {
                 EnderIO.loc("side_config"),
                 ISideConfig.class);
     }
-
-    public static final class StoredEntity {
-        public static final ItemCapability<StoredEntityData, Void> ITEM =
-            ItemCapability.createVoid(
-                EnderIO.loc("stored_entity"),
-                StoredEntityData.class
-            );
-    }
 }
