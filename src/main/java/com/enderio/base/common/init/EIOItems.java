@@ -260,7 +260,8 @@ public class EIOItems {
         .registerItem("broken_spawner", BrokenSpawnerItem::new)
         .setModelProvider(EIOModel::fakeBlockModel)
         .setTab(EIOCreativeTabs.MAIN)
-        .setTab(EIOCreativeTabs.SOULS, modifier -> modifier.acceptAll(BrokenSpawnerItem.gePossibleStacks()));
+        .setTab(EIOCreativeTabs.SOULS, modifier -> modifier.acceptAll(BrokenSpawnerItem.gePossibleStacks()))
+        .addCapability(EIOCapabilities.StoredEntity.ITEM, SoulVialItem.STORED_ENTITY_PROVIDER);
 
     // endregion
 
@@ -320,6 +321,7 @@ public class EIOItems {
     public static final RegiliteItem<SoulVialItem> FILLED_SOUL_VIAL = ITEM_REGISTRY
         .registerItem("filled_soul_vial", SoulVialItem::new, new Item.Properties().stacksTo(1))
         .setTab(EIOCreativeTabs.SOULS, modifier -> modifier.acceptAll(SoulVialItem.getAllFilled()))
+        .addCapability(EIOCapabilities.StoredEntity.ITEM, SoulVialItem.STORED_ENTITY_PROVIDER)
         //.removeTab(CreativeModeTabs.SEARCH)
         ;
 

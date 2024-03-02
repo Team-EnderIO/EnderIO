@@ -102,7 +102,7 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
         List<OutputStack> results = getResultStacks(registryAccess);
         ItemStack result = results.get(0).getItem();
 
-        if (vial.hasData(EIOAttachments.STORED_ENTITY)) {
+        if (vial.getCapability(EIOCapabilities.StoredEntity.ITEM) != null) {
             var storedEntityData = vial.getData(EIOAttachments.STORED_ENTITY);
             result.setData(EIOAttachments.STORED_ENTITY, storedEntityData);
         }
@@ -130,7 +130,7 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
             return false;
         }
 
-        if (!container.getItem(0).hasData(EIOAttachments.STORED_ENTITY)) {
+        if (container.getItem(0).getCapability(EIOCapabilities.StoredEntity.ITEM) == null) {
             return false;
         }
 

@@ -1,6 +1,7 @@
 package com.enderio.base.common.init;
 
 import com.enderio.EnderIO;
+import com.enderio.api.attachment.StoredEntityData;
 import com.enderio.api.capability.IDarkSteelUpgradable;
 import com.enderio.api.capability.ISideConfig;
 import com.enderio.api.capacitor.ICapacitorData;
@@ -29,5 +30,13 @@ public class EIOCapabilities {
             BlockCapability.createSided(
                 EnderIO.loc("side_config"),
                 ISideConfig.class);
+    }
+
+    public static final class StoredEntity {
+        public static final ItemCapability<StoredEntityData, Void> ITEM =
+            ItemCapability.createVoid(
+                EnderIO.loc("stored_entity"),
+                StoredEntityData.class
+            );
     }
 }
