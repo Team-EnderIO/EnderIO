@@ -180,6 +180,15 @@ public class ConduitRecipes extends RecipeProvider {
                 .define('U', BuiltInRegistries.ITEM.get(new ResourceLocation(MekanismAPI.MEKANISM_MODID, "alloy_reinforced")))
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(MekanismIntegration.PRESSURIZED_CHEMICAL_ITEM))
                 .save(mekRecipeOutput, EnderIO.loc("mek_advanced_pressurized_tube_upgrade"));
+
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, MekanismIntegration.HEAT_ITEM, 3)
+                .pattern("BBB")
+                .pattern("III")
+                .pattern("BBB")
+                .define('B', EIOItems.CONDUIT_BINDER)
+                .define('I', BuiltInRegistries.ITEM.get(new ResourceLocation(MekanismAPI.MEKANISM_MODID, "advanced_thermodynamic_conductor")))
+                .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
+                .save(mekRecipeOutput, EnderIO.loc("mek_advanced_thermodynamic_conductor"));
         }
     }
 }
