@@ -1,6 +1,7 @@
 package com.enderio.base.common.init;
 
 import com.enderio.EnderIO;
+import com.enderio.api.attachment.StoredEntityData;
 import com.enderio.api.capability.IDarkSteelUpgradable;
 import com.enderio.api.capability.ISideConfig;
 import com.enderio.api.capacitor.ICapacitorData;

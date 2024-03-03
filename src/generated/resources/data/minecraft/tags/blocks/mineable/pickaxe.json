@@ -35,6 +35,7 @@
     "enderio:silent_heavy_weighted_pressure_plate",
     "enderio:silent_light_weighted_pressure_plate",
     "enderio:painted_redstone_block",
+    "enderio:conduit",
     "enderio:fluid_tank",
     "enderio:pressurized_fluid_tank",
     "enderio:enchanter",
@@ -60,7 +61,6 @@
     "enderio:crafter",
     "enderio:soul_engine",
     "enderio:drain",
-    "enderio:xp_obelisk",
-    "enderio:conduit"
+    "enderio:xp_obelisk"
   ]
 }

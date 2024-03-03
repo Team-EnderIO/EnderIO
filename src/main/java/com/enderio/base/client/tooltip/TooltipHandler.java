@@ -3,9 +3,12 @@ package com.enderio.base.client.tooltip;
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.grindingball.IGrindingBallData;
 import com.enderio.base.common.capacitor.CapacitorUtil;
+import com.enderio.base.common.init.EIOAttachments;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.GrindingBallManager;
 import com.enderio.core.client.item.IAdvancedTooltipProvider;
+import com.enderio.core.common.util.EntityUtil;
 import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
@@ -42,6 +45,7 @@ public class TooltipHandler {
         // Misc tooltips.
         addCapacitorTooltips(forItem, evt.getToolTip(), advanced);
         addGrindingBallTooltips(forItem, evt.getToolTip(), advanced);
+        addEntityDataTooltips(forItem, evt.getToolTip(), advanced);
 
         // Advanced tooltip system
         getAdvancedProvider(forItem.getItem()).ifPresent(provider ->
@@ -72,6 +76,21 @@ public class TooltipHandler {
                 components.add(TooltipUtil.styledWithArgs(EIOLang.GRINDINGBALL_POWER_USE, (int) (data.getPowerUse() * 100)));
             } else {
                 addShowDetailsTooltip(components);
+            }
+        }
+    }
+
+    // endregion
+
+    // region Entity Storage
+
+    private static void addEntityDataTooltips(ItemStack itemStack, List<Component> components, boolean showAdvanced) {
+        if (itemStack.is(EIOTags.Items.ENTITY_STORAGE)) {
+            var storedEntityData = itemStack.getData(EIOAttachments.STORED_ENTITY);
+            if (storedEntityData.getEntityType().isPresent()) {
+                components.add(TooltipUtil.style(Component.translatable(EntityUtil.getEntityDescriptionId(storedEntityData.getEntityType().get()))));
+            } else {
+                components.add(TooltipUtil.style(EIOLang.TOOLTIP_NO_SOULBOUND));
             }
         }
     }
