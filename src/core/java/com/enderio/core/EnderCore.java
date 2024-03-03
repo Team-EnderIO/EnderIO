@@ -22,7 +22,7 @@ public class EnderCore {
 
     @SubscribeEvent
     public static void onConstruct(FMLConstructModEvent event) {
-        System.out.println("================ Core construct ==================");
+        LOGGER.atDebug().log("================ Core construct ==================");
         Integrations.register();
     }
 

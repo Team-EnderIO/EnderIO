@@ -27,7 +27,7 @@ jobs:
       - name: Run data generator
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: runDataProd
+          arguments: runData
       - name: Check data generated successfully # So we do this to ensure something was done, .cache will always be written
         id: check_files
         uses: andstor/file-existence-action@v1

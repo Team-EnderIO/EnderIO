@@ -109,6 +109,7 @@ public abstract class MachineBlockEntity extends EnderBlockEntity implements Men
             if (level != null && level.isClientSide()) {
                 onIOConfigChanged();
             }
+            level.invalidateCapabilities(getBlockPos()); //TODO: NEO-PORT:
         }));
 
         addDataSlot(new SetNetworkDataSlot<>(this::getMachineStates, l -> states = l, MachineState::toNBT , MachineState::fromNBT, MachineState::toBuffer, MachineState::fromBuffer ));

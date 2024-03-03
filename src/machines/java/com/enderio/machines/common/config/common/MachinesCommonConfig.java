@@ -24,9 +24,9 @@ public class MachinesCommonConfig {
 
         builder.push("poweredSpawner");
             SPAWN_AMOUNT = builder.comment("The amount of mobs that spawn from the spawner").defineInRange("spawn_amount", 4, 0, Integer.MAX_VALUE);
-            MAX_SPAWNER_ENTITIES = builder.comment("The amount of entities that will turn off powered spawner if in range.").defineInRange("maxentities", 2, 0, Integer.MAX_VALUE);
-            SPAWN_TYPE = builder.comment("The way a powered spawner spawns an entity. Possible options: 'ENTITYPE' Spawns the same entity types as the soul vial. 'COPY' Spawns an exact copy of the mob in the soul vial").define("Spawn Type", SpawnerMachineTask.SpawnType.ENTITYTYPE);
-            MAX_SPAWNERS = builder.comment("The maximum amount of spawners before the spawners suffers a loss of efficiency").defineInRange("maxspawners", 10, 0, Integer.MAX_VALUE);
+            MAX_SPAWNER_ENTITIES = builder.comment("The amount of entities that will turn off powered spawner if in range.").defineInRange("maxEntities", 2, 0, Integer.MAX_VALUE);
+            SPAWN_TYPE = builder.comment("The way a powered spawner spawns an entity. Possible options: 'ENTITY_TYPE' Spawns the same entity types as the soul vial. 'COPY' Spawns an exact copy of the mob in the soul vial").defineEnum("spawnType", SpawnerMachineTask.SpawnType.ENTITY_TYPE);
+            MAX_SPAWNERS = builder.comment("The maximum amount of spawners before the spawners suffers a loss of efficiency").defineInRange("maxSpawners", 10, 0, Integer.MAX_VALUE);
         builder.pop();
     }
 }

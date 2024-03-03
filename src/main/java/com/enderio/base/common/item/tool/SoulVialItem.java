@@ -3,9 +3,9 @@ package com.enderio.base.common.item.tool;
 import com.enderio.EnderIO;
 import com.enderio.api.attachment.StoredEntityData;
 import com.enderio.base.common.init.EIOAttachments;
-import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.EntityCaptureUtils;
 import com.enderio.core.client.item.IAdvancedTooltipProvider;
 import com.enderio.core.common.util.EntityUtil;
@@ -14,7 +14,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -34,6 +33,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -48,6 +48,10 @@ import java.util.function.Consumer;
 
 @Mod.EventBusSubscriber(modid = EnderIO.MODID)
 public class SoulVialItem extends Item implements IAdvancedTooltipProvider {
+
+    public static final ICapabilityProvider<ItemStack, Void, StoredEntityData> STORED_ENTITY_PROVIDER
+        = (stack, ctx) -> stack.getData(EIOAttachments.STORED_ENTITY);
+
     public SoulVialItem(Properties pProperties) {
         super(pProperties);
     }
@@ -56,22 +60,12 @@ public class SoulVialItem extends Item implements IAdvancedTooltipProvider {
 
     @Override
     public boolean isFoil(ItemStack pStack) {
-        return pStack.hasData(EIOAttachments.STORED_ENTITY) && pStack.getData(EIOAttachments.STORED_ENTITY).hasEntity();
-    }
-
-    @Override
-    public void addCommonTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
-        if (itemStack.hasData(EIOAttachments.STORED_ENTITY)) {
-            itemStack.getData(EIOAttachments.STORED_ENTITY)
-                .getEntityType()
-                .ifPresent(entityType ->
-                    tooltips.add(TooltipUtil.style(Component.translatable(EntityUtil.getEntityDescriptionId(entityType)))));
-        }
+        return pStack.is(EIOTags.Items.ENTITY_STORAGE) && pStack.getData(EIOAttachments.STORED_ENTITY).hasEntity();
     }
 
     @Override
     public void addDetailedTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
-        if (itemStack.hasData(EIOAttachments.STORED_ENTITY)) {
+        if (itemStack.is(EIOTags.Items.ENTITY_STORAGE)) {
             itemStack.getData(EIOAttachments.STORED_ENTITY)
                 .getHealthState()
                 .ifPresent(health ->
@@ -155,7 +149,7 @@ public class SoulVialItem extends Item implements IAdvancedTooltipProvider {
     }
 
     private static InteractionResult releaseEntity(Level level, ItemStack filledVial, Direction face, BlockPos pos, Consumer<ItemStack> emptyVialSetter) {
-        if (filledVial.hasData(EIOAttachments.STORED_ENTITY)) {
+        if (filledVial.is(EIOTags.Items.ENTITY_STORAGE)) {
             var storedEntity = filledVial.getData(EIOAttachments.STORED_ENTITY);
 
             if (storedEntity.hasEntity()) {
@@ -210,7 +204,7 @@ public class SoulVialItem extends Item implements IAdvancedTooltipProvider {
     }
 
     public static Optional<StoredEntityData> getEntityData(ItemStack stack) {
-        return stack.hasData(EIOAttachments.STORED_ENTITY) ? Optional.of(stack.getData(EIOAttachments.STORED_ENTITY)) : Optional.empty();
+        return stack.is(EIOTags.Items.ENTITY_STORAGE) ? Optional.of(stack.getData(EIOAttachments.STORED_ENTITY)) : Optional.empty();
     }
 
     // endregion

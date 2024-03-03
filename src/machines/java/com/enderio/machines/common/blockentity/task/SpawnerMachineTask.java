@@ -179,7 +179,7 @@ public class SpawnerMachineTask implements IPoweredMachineTask {
                             return entity1;
                         });
                     }
-                    case ENTITYTYPE -> {
+                    case ENTITY_TYPE -> {
                         EntityType<?> id = BuiltInRegistries.ENTITY_TYPE.get(new ResourceLocation(blockEntity.getEntityData().getEntityTag().getString("id")));
                         if (id != null) {
                             entity = id.create(level);
@@ -249,7 +249,7 @@ public class SpawnerMachineTask implements IPoweredMachineTask {
 
     // TODO: Might want to move this to its own file in future.
     public enum SpawnType {
-        ENTITYTYPE("entitytype"),
+        ENTITY_TYPE("entity_type"),
         COPY("copy");
 
         private final String name;
