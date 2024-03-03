@@ -102,6 +102,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
             connection.setConnectionState(conduitType, connectionState);
 
             pushIOState(direction, bundle.getNodeFor(conduitType), connectionState);
+            level.invalidateCapabilities(worldPosition); //TODO: NEO-PORT:
         }
         updateClient();
         updateConnectionToData(conduitType);
