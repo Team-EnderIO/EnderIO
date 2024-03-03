@@ -1,5 +1,5 @@
 {
-  "type": "entitytype",
+  "type": "entity_type",
   "entity": "minecraft:giant",
   "power": 60000
 }

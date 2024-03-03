@@ -1,5 +1,5 @@
 {
-  "type": "entitytype",
+  "type": "entity_type",
   "entity": "minecraft:warden",
   "power": 1000000
 }

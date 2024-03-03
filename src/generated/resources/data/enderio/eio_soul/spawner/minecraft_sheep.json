@@ -1,5 +1,5 @@
 {
-  "type": "entitytype",
+  "type": "entity_type",
   "entity": "minecraft:sheep",
   "power": 10000
 }

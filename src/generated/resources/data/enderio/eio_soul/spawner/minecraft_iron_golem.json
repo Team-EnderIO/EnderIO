@@ -1,5 +1,5 @@
 {
-  "type": "entitytype",
+  "type": "entity_type",
   "entity": "minecraft:iron_golem",
   "power": 80000
 }

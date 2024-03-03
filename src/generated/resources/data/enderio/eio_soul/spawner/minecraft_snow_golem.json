@@ -1,5 +1,5 @@
 {
-  "type": "entitytype",
+  "type": "entity_type",
   "entity": "minecraft:snow_golem",
   "power": 15000
 }

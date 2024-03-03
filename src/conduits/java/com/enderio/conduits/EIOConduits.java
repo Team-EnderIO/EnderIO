@@ -23,7 +23,7 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 public class EIOConduits {
     @SubscribeEvent
     public static void onConstruct(FMLConstructModEvent event) {
-        System.out.println("================ Conduits construct ==================");
+        EnderIO.LOGGER.atDebug().log("================ Conduits construct ==================");
         IEventBus bus = EnderIO.modEventBus;
 
         ConduitTypes.register(bus);
