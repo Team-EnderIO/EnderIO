@@ -16,6 +16,7 @@ import mekanism.api.chemical.gas.IGasHandler;
 import mekanism.api.chemical.infuse.IInfusionHandler;
 import mekanism.api.chemical.pigment.IPigmentHandler;
 import mekanism.api.chemical.slurry.ISlurryHandler;
+import mekanism.api.heat.IHeatHandler;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -33,14 +34,19 @@ public class MekanismIntegration implements Integration {
     private static final DeferredHolder<IConduitType<?>, ChemicalConduitType> CHEMICAL2 = chemicalConduit("pressurized_chemical", 2000, true, new Vector2i(0,216));
     private static final DeferredHolder<IConduitType<?>, ChemicalConduitType> CHEMICAL3 = chemicalConduit("ender_chemical", 64000, true, new Vector2i(24,0));
 
+    private static final DeferredHolder<IConduitType<?>, HeatConduitType> HEAT_TYPE = heatConduit("heat", new Vector2i(24,24));
+
     public static final RegiliteItem<Item> CHEMICAL_ITEM = createConduitItem(CHEMICAL, "chemical", "Chemical Conduit");
     public static final RegiliteItem<Item> PRESSURIZED_CHEMICAL_ITEM = createConduitItem(CHEMICAL2, "pressurized_chemical", "Pressurized Chemical Conduit");
     public static final RegiliteItem<Item> ENDER_CHEMICAL_ITEM = createConduitItem(CHEMICAL3, "ender_chemical", "Ender Chemical Conduit");
+
+    public static final RegiliteItem<Item> HEAT_ITEM = createConduitItem(HEAT_TYPE, "heat", "Heat Conduit");
 
     public static final BlockCapability<IGasHandler, Direction> GAS = BlockCapability.createSided(new ResourceLocation(MekanismAPI.MEKANISM_MODID, "gas_handler"), IGasHandler.class);
     public static final BlockCapability<ISlurryHandler, Direction> SLURRY = BlockCapability.createSided(new ResourceLocation(MekanismAPI.MEKANISM_MODID, "slurry_handler"), ISlurryHandler.class);
     public static final BlockCapability<IInfusionHandler, Direction> INFUSION = BlockCapability.createSided(new ResourceLocation(MekanismAPI.MEKANISM_MODID, "infusion_handler"), IInfusionHandler.class);
     public static final BlockCapability<IPigmentHandler, Direction> PIGMENT = BlockCapability.createSided(new ResourceLocation(MekanismAPI.MEKANISM_MODID, "pigment_handler"), IPigmentHandler.class);
+    public static final BlockCapability<IHeatHandler, Direction> HEAT = BlockCapability.createSided(new ResourceLocation(MekanismAPI.MEKANISM_MODID, "heat_handler"), IHeatHandler.class);
 
     @Override
     public void addEventListener(IEventBus modEventBus, IEventBus forgeEventBus) {
@@ -51,6 +57,11 @@ public class MekanismIntegration implements Integration {
     private static DeferredHolder<IConduitType<?>, ChemicalConduitType> chemicalConduit(String name, int tier, boolean isMultiFluid, Vector2i iconPos) {
         return ConduitTypes.CONDUIT_TYPES.register(name,
             () -> new ChemicalConduitType(EnderIO.loc("block/conduit/" + name), tier, isMultiFluid, iconPos));
+    }
+
+    private static DeferredHolder<IConduitType<?>, HeatConduitType> heatConduit(String name, Vector2i iconPos) {
+        return ConduitTypes.CONDUIT_TYPES.register(name,
+            () -> new HeatConduitType(EnderIO.loc("block/conduit/" + name), iconPos));
     }
 
     private static RegiliteItem<Item> createConduitItem(Supplier<? extends IConduitType<?>> type, String itemName, String english) {
@@ -67,5 +78,7 @@ public class MekanismIntegration implements Integration {
         event.registerBlockEntity(MekanismIntegration.SLURRY, ConduitBlockEntities.CONDUIT.get(), ConduitBlockEntity.createConduitCap(MekanismIntegration.SLURRY));
         event.registerBlockEntity(MekanismIntegration.INFUSION, ConduitBlockEntities.CONDUIT.get(), ConduitBlockEntity.createConduitCap(MekanismIntegration.INFUSION));
         event.registerBlockEntity(MekanismIntegration.PIGMENT, ConduitBlockEntities.CONDUIT.get(), ConduitBlockEntity.createConduitCap(MekanismIntegration.PIGMENT));
+        event.registerBlockEntity(MekanismIntegration.HEAT, ConduitBlockEntities.CONDUIT.get(), ConduitBlockEntity.createConduitCap(MekanismIntegration.HEAT));
+
     }
 }
