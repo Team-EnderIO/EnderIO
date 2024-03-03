@@ -3,7 +3,6 @@ package com.enderio.machines.common.integrations.jei.category;
 import com.enderio.EnderIO;
 import com.enderio.api.attachment.StoredEntityData;
 import com.enderio.base.common.init.EIOAttachments;
-import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.machines.client.gui.screen.SoulEngineScreen;
@@ -94,7 +93,7 @@ public class SoulEngineCategory implements IRecipeCategory<EngineSoul.SoulData> 
             }
 
             ItemStack stack = new ItemStack(EIOItems.FILLED_SOUL_VIAL.get());
-            if (stack.is(EIOTags.Items.STORED_ENTITY)) {
+            if (stack.is(EIOTags.Items.ENTITY_STORAGE)) {
                 stack.setData(EIOAttachments.STORED_ENTITY, StoredEntityData.of(recipe.entitytype()));
             }
             builder.addInvisibleIngredients(RecipeIngredientRole.INPUT)

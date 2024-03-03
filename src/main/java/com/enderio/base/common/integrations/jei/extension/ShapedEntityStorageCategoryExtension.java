@@ -2,7 +2,6 @@ package com.enderio.base.common.integrations.jei.extension;
 
 import com.enderio.api.attachment.StoredEntityData;
 import com.enderio.base.common.init.EIOAttachments;
-import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.integrations.jei.EnderIOJEI;
 import com.enderio.base.common.recipe.ShapedEntityStorageRecipe;
 import com.enderio.base.common.tag.EIOTags;
@@ -14,7 +13,6 @@ import mezz.jei.api.recipe.category.extensions.vanilla.crafting.ICraftingCategor
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.ShapedRecipe;
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,7 +31,7 @@ public class ShapedEntityStorageCategoryExtension implements ICraftingCategoryEx
         List<ItemStack> results = allCapturableEntities.stream().map(e -> {
             ItemStack result = resultItem.copy();
 
-            if (result.is(EIOTags.Items.STORED_ENTITY)) {
+            if (result.is(EIOTags.Items.ENTITY_STORAGE)) {
                 result.setData(EIOAttachments.STORED_ENTITY, StoredEntityData.of(e));
             }
 
@@ -43,11 +41,11 @@ public class ShapedEntityStorageCategoryExtension implements ICraftingCategoryEx
         List<List<ItemStack>> inputs = recipe.getIngredients().stream()
             .map(ingredient ->
                 Arrays.stream(ingredient.getItems()).<ItemStack>mapMulti((ingredientItem, consumer) -> {
-                    boolean hasStorage = ingredientItem.is(EIOTags.Items.STORED_ENTITY);
+                    boolean hasStorage = ingredientItem.is(EIOTags.Items.ENTITY_STORAGE);
                     if (hasStorage) {
                         for (ResourceLocation entity : allCapturableEntities) {
                             ItemStack item = ingredientItem.copy();
-                            if (item.is(EIOTags.Items.STORED_ENTITY)) {
+                            if (item.is(EIOTags.Items.ENTITY_STORAGE)) {
                                 item.setData(EIOAttachments.STORED_ENTITY, StoredEntityData.of(entity));
                             }
                             consumer.accept(item);

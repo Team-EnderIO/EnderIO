@@ -2,7 +2,6 @@ package com.enderio.base.common.item.misc;
 
 import com.enderio.api.attachment.StoredEntityData;
 import com.enderio.base.common.init.EIOAttachments;
-import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.EntityCaptureUtils;
@@ -40,16 +39,10 @@ public class BrokenSpawnerItem extends Item {
         return items;
     }
 
-    @Override
-    public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        super.appendHoverText(pStack, pLevel, pTooltipComponents, pIsAdvanced);
-        getEntityType(pStack).ifPresent(type -> pTooltipComponents.add(TooltipUtil.style(Component.translatable(EntityUtil.getEntityDescriptionId(type)))));
-    }
-
     // region Entity Storage
 
     public static Optional<ResourceLocation> getEntityType(ItemStack stack) {
-        return stack.is(EIOTags.Items.STORED_ENTITY)? stack.getData(EIOAttachments.STORED_ENTITY).getEntityType()
+        return stack.is(EIOTags.Items.ENTITY_STORAGE)? stack.getData(EIOAttachments.STORED_ENTITY).getEntityType()
             : Optional.empty();
     }
 

@@ -1,9 +1,7 @@
 package com.enderio.machines.common.init;
 
 import com.enderio.EnderIO;
-import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOCreativeTabs;
-import com.enderio.base.common.item.tool.SoulVialItem;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.core.data.model.EIOModel;
 import com.enderio.machines.common.MachineNBTKeys;
@@ -18,7 +16,6 @@ import com.enderio.machines.common.blockentity.capacitorbank.CapacitorBankBlockE
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorTier;
 import com.enderio.machines.common.blockentity.solar.SolarPanelBlockEntity;
 import com.enderio.machines.common.blockentity.solar.SolarPanelTier;
-import com.enderio.machines.common.item.BoundSoulBlockItem;
 import com.enderio.machines.common.item.CapacitorBankItem;
 import com.enderio.machines.common.item.FluidTankItem;
 import com.enderio.machines.data.loot.MachinesLootTable;
@@ -139,9 +136,9 @@ public class MachineBlocks {
         .setLootTable((l,t) -> MachinesLootTable.copyNBTSingleCap(l, t, MachineNBTKeys.ENTITY_STORAGE))
         .setBlockStateProvider(MachineModelUtil::progressMachineBlock)
         .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
-        .createBlockItem(ITEM_REGISTRY,block -> new BoundSoulBlockItem(block, new Item.Properties()),
+        .createBlockItem(ITEM_REGISTRY,
             item -> item.setTab(EIOCreativeTabs.MACHINES)
-                .addItemTags(EIOTags.Items.STORED_ENTITY)
+                .addItemTags(EIOTags.Items.ENTITY_STORAGE)
         );
 
     public static final RegiliteBlock<MachineBlock> VACUUM_CHEST = BLOCK_REGISTRY
@@ -193,9 +190,9 @@ public class MachineBlocks {
         .setLootTable(MachinesLootTable::copyNBT)
         .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
         .setBlockStateProvider(MachineModelUtil::progressMachineBlock)
-        .createBlockItem(ITEM_REGISTRY,block -> new BoundSoulBlockItem(block, new Item.Properties()),
+        .createBlockItem(ITEM_REGISTRY,
             item -> item.setTab(EIOCreativeTabs.MACHINES)
-                .addItemTags(EIOTags.Items.STORED_ENTITY)
+                .addItemTags(EIOTags.Items.ENTITY_STORAGE)
         );
 
     public static final RegiliteBlock<ProgressMachineBlock> DRAIN =

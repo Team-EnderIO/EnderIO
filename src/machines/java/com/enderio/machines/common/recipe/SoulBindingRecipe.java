@@ -2,19 +2,15 @@ package com.enderio.machines.common.recipe;
 
 import com.enderio.EnderIO;
 import com.enderio.base.common.init.EIOAttachments;
-import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.ExperienceUtil;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.blockentity.SoulBinderBlockEntity;
-import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
-import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.enderio.machines.common.souldata.SoulDataReloadListener;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -29,7 +25,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 import org.jetbrains.annotations.Nullable;
@@ -103,7 +98,7 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
         List<OutputStack> results = getResultStacks(registryAccess);
         ItemStack result = results.get(0).getItem();
 
-        if (vial.is(EIOTags.Items.STORED_ENTITY)) {
+        if (vial.is(EIOTags.Items.ENTITY_STORAGE)) {
             var storedEntityData = vial.getData(EIOAttachments.STORED_ENTITY);
             result.setData(EIOAttachments.STORED_ENTITY, storedEntityData);
         }
@@ -131,7 +126,7 @@ public class SoulBindingRecipe implements MachineRecipe<SoulBindingRecipe.Contai
             return false;
         }
 
-        if (!container.getItem(0).is(EIOTags.Items.STORED_ENTITY)) {
+        if (!container.getItem(0).is(EIOTags.Items.ENTITY_STORAGE)) {
             return false;
         }
 

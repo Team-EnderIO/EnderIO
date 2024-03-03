@@ -1,5 +1,6 @@
 package com.enderio.machines.common.blockentity;
 
+import com.enderio.base.common.lang.EIOLang;
 import com.enderio.machines.common.lang.MachineLang;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -17,7 +18,7 @@ public record MachineState(MachineStateType type, MutableComponent component) {
     public static final MachineState NO_POWER = new MachineState(MachineStateType.ERROR, MachineLang.TOOLTIP_NO_POWER);
     public static final MachineState FULL_POWER = new MachineState(MachineStateType.ERROR, MachineLang.TOOLTIP_FULL_POWER);
     public static final MachineState NO_CAPACITOR = new MachineState(MachineStateType.ERROR, MachineLang.TOOLTIP_NO_CAPACITOR);
-    public static final MachineState NOT_SOULBOUND = new MachineState(MachineStateType.ERROR, MachineLang.TOOLTIP_NO_SOULBOUND);
+    public static final MachineState NOT_SOULBOUND = new MachineState(MachineStateType.ERROR, EIOLang.TOOLTIP_NO_SOULBOUND);
     public static final MachineState FULL_OUTPUT = new MachineState(MachineStateType.ERROR, MachineLang.TOOLTIP_OUTPUT_FULL);
     public static final MachineState REDSTONE = new MachineState(MachineStateType.DISABLED, MachineLang.TOOLTIP_BLOCKED_RESTONE);
 

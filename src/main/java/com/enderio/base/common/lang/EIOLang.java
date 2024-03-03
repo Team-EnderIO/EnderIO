@@ -150,6 +150,12 @@ public class EIOLang {
 
     // endregion
 
+    // region Entity Storage
+
+    public static final MutableComponent TOOLTIP_NO_SOULBOUND = addTranslation("gui", EnderIO.loc("no_soulbound"), "Bind a soul to the item to be able to use it");
+
+    // endregion
+
     // region Glider
 
     public static final Component USE_GLIDER_ADVANCEMENT_TITLE = addTranslation("advancements", EnderIO.loc("use_glider.title"), "Majestic");
