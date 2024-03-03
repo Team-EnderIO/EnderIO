@@ -2,22 +2,14 @@ package com.enderio.conduits.common.integrations.mekanism;
 
 import com.enderio.EnderIO;
 import com.enderio.api.conduit.IExtendedConduitData;
-import mekanism.api.MekanismAPI;
-import mekanism.api.chemical.Chemical;
-import mekanism.api.chemical.ChemicalType;
-import mekanism.api.chemical.gas.Gas;
-import mekanism.api.chemical.infuse.InfuseType;
 import mekanism.api.chemical.merged.BoxedChemical;
-import mekanism.api.chemical.pigment.Pigment;
-import mekanism.api.chemical.slurry.Slurry;
 import net.minecraft.nbt.CompoundTag;
-import org.jetbrains.annotations.Nullable;
 
 public class ChemicalExtendedData implements IExtendedConduitData<ChemicalExtendedData> {
 
     public final boolean isMultiChemical;
 
-    @Nullable BoxedChemical lockedChemical = null;
+    BoxedChemical lockedChemical = BoxedChemical.EMPTY;
     boolean shouldReset = false;
 
     public ChemicalExtendedData(boolean isMultiChemical) {this.isMultiChemical = isMultiChemical;}
@@ -25,18 +17,18 @@ public class ChemicalExtendedData implements IExtendedConduitData<ChemicalExtend
     @Override
     public void onConnectTo(ChemicalExtendedData otherData) {
         if (lockedChemical != null) {
-            if (otherData.lockedChemical != null && lockedChemical != otherData.lockedChemical) {
+            if (!otherData.lockedChemical.isEmpty() && !lockedChemical.equals(otherData.lockedChemical)) {
                 EnderIO.LOGGER.warn("incompatible chemical conduits merged");
             }
             otherData.setlockedChemical(lockedChemical);
-        } else if (otherData.lockedChemical != null) {
+        } else if (!otherData.lockedChemical.isEmpty()) {
             setlockedChemical(otherData.lockedChemical);
         }
     }
 
     @Override
     public boolean canConnectTo(ChemicalExtendedData otherData) {
-        return lockedChemical == null || otherData.lockedChemical == null || lockedChemical == otherData.lockedChemical;
+        return lockedChemical.isEmpty() || otherData.lockedChemical.isEmpty() || lockedChemical.equals(otherData.lockedChemical);
     }
 
     // region Serialization
@@ -47,7 +39,7 @@ public class ChemicalExtendedData implements IExtendedConduitData<ChemicalExtend
     public CompoundTag serializeNBT() {
         CompoundTag nbt = new CompoundTag();
         if (!isMultiChemical) {
-            if (lockedChemical != null) {
+            if (lockedChemical.isEmpty()) {
                 lockedChemical.write(nbt);
             }
         }
@@ -67,12 +59,7 @@ public class ChemicalExtendedData implements IExtendedConduitData<ChemicalExtend
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        BoxedChemical chemical = BoxedChemical.read(nbt);
-        if (!chemical.isEmpty()) {
-            setlockedChemical(chemical);
-        } else {
-            setlockedChemical(null);
-        }
+        setlockedChemical(BoxedChemical.read(nbt));
         if (nbt.contains(SHOULD_RESET)) {
             shouldReset = nbt.getBoolean(SHOULD_RESET);
         }
@@ -80,7 +67,7 @@ public class ChemicalExtendedData implements IExtendedConduitData<ChemicalExtend
 
     // endregion
 
-    private void setlockedChemical(@Nullable BoxedChemical lockedChemical) {
+    private void setlockedChemical(BoxedChemical lockedChemical) {
         this.lockedChemical = lockedChemical;
     }
 }

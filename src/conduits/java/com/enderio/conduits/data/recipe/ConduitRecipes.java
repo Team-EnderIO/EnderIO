@@ -134,7 +134,7 @@ public class ConduitRecipes extends RecipeProvider {
         }
 
         if (Integrations.MEKANISM_INTEGRATION.isPresent()) {
-            var mekRecipeOutput = recipeOutput.withConditions(new ModLoadedCondition(MekanismAPI.MEKANISM_MODID));
+            var mekRecipeOutput = recipeOutput.withConditions(new ModLoadedCondition("mekanism"));
 
             ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, MekanismIntegration.CHEMICAL_ITEM, 3)
                 .pattern("BBB")
