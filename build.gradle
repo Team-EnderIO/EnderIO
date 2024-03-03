@@ -232,7 +232,7 @@ dependencies {
 //    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
 
     // Mekanism
-    compileOnly "mekanism:Mekanism:${minecraft_version}-${mekanism}" //TODO make sure :api has all we need
+    compileOnly "mekanism:Mekanism:${minecraft_version}-${mekanism}:api"
     runtimeOnly "mekanism:Mekanism:${minecraft_version}-${mekanism}"
 
     // Jetbrains annotations
