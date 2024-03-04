@@ -22,7 +22,7 @@ public class ResettingLeverBlock extends LeverBlock {
     private final boolean inverted;
 
     public ResettingLeverBlock(int delaySeconds, boolean inverted) {
-        super(Properties.copy(Blocks.LEVER));
+        super(Properties.ofFullCopy(Blocks.LEVER));
         this.delay = delaySeconds * 20;
         this.inverted = inverted;
     }

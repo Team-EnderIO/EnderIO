@@ -10,6 +10,7 @@ import com.enderio.base.common.item.capacitors.BaseCapacitorItem;
 import com.enderio.core.common.network.slot.NetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.ProgressMachineBlock;
+import com.enderio.machines.common.blockentity.MachineState;
 import com.enderio.machines.common.blockentity.sync.MachineEnergyNetworkDataSlot;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.ImmutableMachineEnergyStorage;
@@ -22,11 +23,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -36,6 +39,10 @@ import java.util.function.Supplier;
  * A machine that stores energy.
  */
 public abstract class PoweredMachineBlockEntity extends MachineBlockEntity implements IMachineInstall {
+
+    public static final ICapabilityProvider<PoweredMachineBlockEntity, Direction, IEnergyStorage> ENERGY_STORAGE_PROVIDER =
+        (be, side) -> be.exposedEnergyStorage != null ? be.exposedEnergyStorage.getForSide(side) : null;
+
     /**
      * The energy storage medium for the block entity.
      * This will be a mutable energy storage.
@@ -64,9 +71,6 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
         // Create exposed energy storage.
         // Default is that createExposedEnergyStorage returns the existing energy storage.
         this.exposedEnergyStorage = createExposedEnergyStorage();
-        if (exposedEnergyStorage != null) {
-            addCapabilityProvider(exposedEnergyStorage);
-        }
 
         // Mark capacitor cache as dirty
         capacitorCacheDirty = true;
@@ -92,6 +96,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
             if (blockState.hasProperty(ProgressMachineBlock.POWERED) && blockState.getValue(ProgressMachineBlock.POWERED) != isActive()) {
                 if (updateModel) {
                     level.setBlock(getBlockPos(), blockState.setValue(ProgressMachineBlock.POWERED, isActive()), Block.UPDATE_ALL);
+                    updateMachineState(MachineState.ACTIVE, isActive());
                 }
                 updateModel = true;
             } else {
@@ -171,25 +176,21 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
                 continue;
             }
 
-            // Get our energy handler, this will handle all sidedness tests for us.
-            getCapability(ForgeCapabilities.ENERGY, side).resolve().ifPresent(selfHandler -> {
-                // Get the other energy handler
-                Optional<IEnergyStorage> otherHandler = getNeighbouringCapability(ForgeCapabilities.ENERGY, side).resolve();
-                if (otherHandler.isPresent()) {
-                    // Don't insert into self. (Solar panels)
-                    if (selfHandler == otherHandler.get()) {
-                        return;
-                    }
+            var selfHandler = getSelfCapability(Capabilities.EnergyStorage.BLOCK, side);
+            if (selfHandler == null) {
+                continue;
+            }
 
-                    // If the other handler can receive power transmit ours
-                    if (otherHandler.get().canReceive()) {
-                        int received = otherHandler.get().receiveEnergy(selfHandler.getEnergyStored(), false);
-
-                        // Consume that energy from our buffer.
-                        getExposedEnergyStorage().takeEnergy(received);
-                    }
+            // Get the other energy handler
+            IEnergyStorage otherHandler = getNeighbouringCapability(Capabilities.EnergyStorage.BLOCK, side);
+            if (otherHandler != null) {
+                // If the other handler can receive power transmit ours
+                if (otherHandler.canReceive()) {
+                    int energyToReceive = selfHandler.extractEnergy(selfHandler.getEnergyStored(), true);
+                    int received = otherHandler.receiveEnergy(energyToReceive, false);
+                    selfHandler.extractEnergy(received, false);
                 }
-            });
+            }
         }
     }
 
@@ -211,7 +212,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
             @Override
             protected void onContentsChanged() {
                 setChanged();
-
+                updateMachineState(MachineState.NO_POWER, getEnergyStorage().getEnergyStored() <= 0);
             }
         };
     }
@@ -299,7 +300,10 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
     protected void onInventoryContentsChanged(int slot) {
         MachineInventoryLayout inventoryLayout = getInventoryLayout();
         if (inventoryLayout != null && inventoryLayout.getCapacitorSlot() == slot) {
-            capacitorCacheDirty = true;
+            if (requiresCapacitor()) {
+                updateMachineState(MachineState.NO_CAPACITOR, getCapacitorItem().isEmpty());
+                capacitorCacheDirty = true;
+            }
         }
         super.onInventoryContentsChanged(slot);
     }
@@ -352,7 +356,22 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
         }
 
         super.load(pTag);
+
+        cacheCapacitorData();
+
+        updateMachineState(MachineState.NO_CAPACITOR, requiresCapacitor() && getCapacitorItem().isEmpty());
+        updateMachineState(MachineState.NO_POWER, energyStorage.getEnergyStored() <= 0);
     }
 
     // endregion
+
+    @Override
+    public void setLevel(Level level) {
+        super.setLevel(level);
+
+        //These are the values before Load is called. In case the machine is placed down without nbt, Load isn't called, so it will use these values.
+        //Ideally I would want to use onLoad, but when placing a block this is called before load is done.
+        updateMachineState(MachineState.NO_CAPACITOR, requiresCapacitor() && getCapacitorItem().isEmpty());
+        updateMachineState(MachineState.NO_POWER, energyStorage.getEnergyStored() <= 0);
+    }
 }

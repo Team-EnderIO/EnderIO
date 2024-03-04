@@ -3,8 +3,8 @@
   "cost_multiplier": 1,
   "enchantment": "minecraft:multishot",
   "input": {
-    "count": 16,
-    "ingredient": {
+    "Count": 16,
+    "Ingredient": {
       "tag": "minecraft:arrows"
     }
   }

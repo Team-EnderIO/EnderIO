@@ -2,17 +2,22 @@ package com.enderio.api.misc;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.StringRepresentable;
 
+import java.util.Locale;
 import java.util.function.UnaryOperator;
-public enum RedstoneControl implements IIcon {
+
+public enum RedstoneControl implements IIcon, StringRepresentable {
 
     ALWAYS_ACTIVE(bool -> true, ApiLang.REDSTONE_ALWAYS_ACTIVE),
     ACTIVE_WITH_SIGNAL(bool -> bool, ApiLang.REDSTONE_ACTIVE_WITH_SIGNAL),
     ACTIVE_WITHOUT_SIGNAL(bool -> !bool, ApiLang.REDSTONE_ACTIVE_WITHOUT_SIGNAL),
     NEVER_ACTIVE(bool -> false, ApiLang.REDSTONE_NEVER_ACTIVE);
 
+    public static final EnumCodec<RedstoneControl> CODEC = StringRepresentable.fromEnum(RedstoneControl::values);
+
     private static final ResourceLocation TEXTURE = new ResourceLocation("enderio", "textures/gui/icons/redstone_control.png");
-    private static final Vector2i SIZE = new Vector2i(12, 12);
+    private static final Vector2i SIZE = new Vector2i(16, 16);
 
     private final UnaryOperator<Boolean> isActive;
 
@@ -21,7 +26,7 @@ public enum RedstoneControl implements IIcon {
 
     RedstoneControl(UnaryOperator<Boolean> isActive, Component tooltip) {
         this.isActive = isActive;
-        pos = new Vector2i(12*ordinal(), 0);
+        pos = new Vector2i(16*ordinal(), 0);
         this.tooltip = tooltip;
     }
 
@@ -45,7 +50,17 @@ public enum RedstoneControl implements IIcon {
     }
 
     @Override
+    public Vector2i getTextureSize() {
+        return new Vector2i(64, 16);
+    }
+
+    @Override
     public Component getTooltip() {
         return tooltip;
+    }
+
+    @Override
+    public String getSerializedName() {
+        return name().toLowerCase(Locale.ROOT);
     }
 }

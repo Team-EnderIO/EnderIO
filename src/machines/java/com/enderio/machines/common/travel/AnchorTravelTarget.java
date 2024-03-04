@@ -5,12 +5,12 @@ import com.enderio.api.travel.ITravelTarget;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.core.CoreNBTKeys;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Objects;
 
@@ -34,7 +34,7 @@ public class AnchorTravelTarget implements ITravelTarget {
         pos = NbtUtils.readBlockPos(tag.getCompound(CoreNBTKeys.BLOCK_POS));
         name = tag.getString(CoreNBTKeys.ANCHOR_NAME);
         String iconName = tag.getString(CoreNBTKeys.ANCHOR_ICON);
-        icon = iconName.equals("") ? Items.AIR : ForgeRegistries.ITEMS.getValue(new ResourceLocation(iconName));
+        icon = iconName.equals("") ? Items.AIR : BuiltInRegistries.ITEM.get(new ResourceLocation(iconName));
         visible = tag.getBoolean(CoreNBTKeys.ANCHOR_VISIBILITY);
     }
 
@@ -43,7 +43,7 @@ public class AnchorTravelTarget implements ITravelTarget {
         CompoundTag nbt = new CompoundTag();
         nbt.put(CoreNBTKeys.BLOCK_POS, NbtUtils.writeBlockPos(pos));
         nbt.putString(CoreNBTKeys.ANCHOR_NAME, name);
-        nbt.putString(CoreNBTKeys.ANCHOR_ICON, String.valueOf(ForgeRegistries.ITEMS.getKey(icon)));
+        nbt.putString(CoreNBTKeys.ANCHOR_ICON, String.valueOf(BuiltInRegistries.ITEM.getKey(icon)));
         nbt.putBoolean(CoreNBTKeys.ANCHOR_VISIBILITY, visible);
         return nbt;
     }

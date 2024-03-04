@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_ingredient",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_ingredient"
     ]
   ],
   "rewards": {
     "recipes": [
       "enderio:recolor_clear_glass_dp_purple"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

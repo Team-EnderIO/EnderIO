@@ -3,6 +3,7 @@ package com.enderio.machines.common.blockentity;
 import com.enderio.api.capacitor.FixedScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
+import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
@@ -19,8 +20,8 @@ public class CreativePowerBlockEntity extends PoweredMachineBlockEntity {
 
     public static final FixedScalable CAPACITY = new FixedScalable(() -> Integer.MAX_VALUE);
 
-    public CreativePowerBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
-        super(EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO, type, worldPosition, blockState);
+    public CreativePowerBlockEntity(BlockPos worldPosition, BlockState blockState) {
+        super(EnergyIOMode.Output, CAPACITY, FixedScalable.ZERO, MachineBlockEntities.CREATIVE_POWER.get(), worldPosition, blockState);
     }
 
     @Override

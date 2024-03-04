@@ -9,7 +9,7 @@
       "tag": "enderio:fused_quartz"
     },
     "I": {
-      "tag": "forge:ingots/vibrant_alloy"
+      "tag": "neoforge:ingots/vibrant_alloy"
     }
   },
   "pattern": [
@@ -20,6 +20,5 @@
   "result": {
     "count": 8,
     "item": "enderio:ender_fluid_conduit"
-  },
-  "show_notification": true
+  }
 }

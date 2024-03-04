@@ -4,19 +4,20 @@
   "experience": 0.3,
   "inputs": [
     {
-      "count": 1,
-      "ingredient": {
-        "tag": "forge:dusts/coal"
+      "Count": 1,
+      "Ingredient": {
+        "tag": "neoforge:dusts/coal"
       }
     },
     {
-      "count": 1,
-      "ingredient": {
+      "Count": 1,
+      "Ingredient": {
         "item": "minecraft:egg"
       }
     }
   ],
   "result": {
-    "item": "enderio:organic_black_dye"
+    "Count": 1,
+    "id": "enderio:organic_black_dye"
   }
 }

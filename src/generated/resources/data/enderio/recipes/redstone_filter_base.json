@@ -14,7 +14,7 @@
       }
     ],
     "R": {
-      "tag": "forge:ingots/redstone_alloy"
+      "tag": "neoforge:ingots/redstone_alloy"
     }
   },
   "pattern": [
@@ -24,6 +24,5 @@
   ],
   "result": {
     "item": "enderio:redstone_filter_base"
-  },
-  "show_notification": true
+  }
 }

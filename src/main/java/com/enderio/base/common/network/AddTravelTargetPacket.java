@@ -1,68 +1,28 @@
 package com.enderio.base.common.network;
 
+import com.enderio.EnderIO;
 import com.enderio.api.travel.ITravelTarget;
 import com.enderio.api.travel.TravelRegistry;
-import com.enderio.base.common.travel.TravelSavedData;
-import com.enderio.core.common.network.Packet;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
+public record AddTravelTargetPacket(@Nullable ITravelTarget target) implements CustomPacketPayload {
 
-public class AddTravelTargetPacket implements Packet {
-
-    @Nullable
-    private final ITravelTarget target;
-
-    public AddTravelTargetPacket(ITravelTarget target) {
-        this.target = target;
-    }
-
+    public static ResourceLocation ID = EnderIO.loc("add_travel_target");
 
     public AddTravelTargetPacket(FriendlyByteBuf buf) {
-        target = TravelRegistry.deserialize(buf.readNbt()).orElse(null);
+        this(TravelRegistry.deserialize(buf.readNbt()).orElse(null));
     }
 
-    protected void write(FriendlyByteBuf writeInto) {
+    @Override
+    public void write(FriendlyByteBuf writeInto) {
         writeInto.writeNbt(target.save());
     }
 
     @Override
-    public boolean isValid(NetworkEvent.Context context) {
-        return context.getDirection() == NetworkDirection.PLAY_TO_CLIENT;
+    public ResourceLocation id() {
+        return ID;
     }
-
-    @Override
-    public void handle(NetworkEvent.Context context) {
-        ClientHandler.handle(target);
-    }
-
-    public static class Handler extends Packet.PacketHandler<AddTravelTargetPacket> {
-
-        @Override
-        public AddTravelTargetPacket fromNetwork(FriendlyByteBuf buf) {
-            return new AddTravelTargetPacket(buf);
-        }
-
-        @Override
-        public void toNetwork(AddTravelTargetPacket packet, FriendlyByteBuf buf) {
-            packet.write(buf);
-        }
-
-        @Override
-        public Optional<NetworkDirection> getDirection() {
-            return Optional.of(NetworkDirection.PLAY_TO_CLIENT);
-        }
-    }
-
-    public static class ClientHandler {
-        static void handle(ITravelTarget target) {
-            TravelSavedData travelData = TravelSavedData.getTravelData(Minecraft.getInstance().level);
-            travelData.addTravelTarget(Minecraft.getInstance().level, target);
-        }
-    }
-
 }

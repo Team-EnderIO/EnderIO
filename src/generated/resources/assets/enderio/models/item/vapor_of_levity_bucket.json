@@ -1,6 +1,5 @@
 {
-  "parent": "forge:item/bucket",
-  "flip_gas": true,
-  "fluid": "enderio:vapor_of_levity",
-  "loader": "forge:fluid_container"
+  "parent": "neoforge:item/bucket",
+  "fluid": "enderio:fluid_vapor_of_levity_still",
+  "loader": "neoforge:fluid_container"
 }

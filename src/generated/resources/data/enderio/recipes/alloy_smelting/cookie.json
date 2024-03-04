@@ -4,20 +4,20 @@
   "experience": 0.3,
   "inputs": [
     {
-      "count": 1,
-      "ingredient": {
+      "Count": 1,
+      "Ingredient": {
         "item": "enderio:flour"
       }
     },
     {
-      "count": 1,
-      "ingredient": {
+      "Count": 1,
+      "Ingredient": {
         "item": "minecraft:cocoa_beans"
       }
     }
   ],
   "result": {
-    "count": 8,
-    "item": "minecraft:cookie"
+    "Count": 8,
+    "id": "minecraft:cookie"
   }
 }

@@ -6,13 +6,13 @@
       "item": "enderio:void_chassis"
     },
     "G": {
-      "tag": "forge:gears/stone"
+      "tag": "neoforge:gears/iron"
     },
     "I": {
       "tag": "forge:ingots/iron"
     },
     "S": {
-      "tag": "forge:silicon"
+      "tag": "neoforge:silicon"
     },
     "T": {
       "item": "minecraft:crafting_table"
@@ -25,6 +25,5 @@
   ],
   "result": {
     "item": "enderio:crafter"
-  },
-  "show_notification": true
+  }
 }

@@ -6,10 +6,10 @@
       "item": "enderio:basic_capacitor"
     },
     "D": {
-      "tag": "forge:dusts/coal"
+      "tag": "neoforge:dusts/coal"
     },
     "I": {
-      "tag": "forge:ingots/energetic_alloy"
+      "tag": "neoforge:ingots/energetic_alloy"
     }
   },
   "pattern": [
@@ -19,6 +19,5 @@
   ],
   "result": {
     "item": "enderio:double_layer_capacitor"
-  },
-  "show_notification": true
+  }
 }

@@ -10,7 +10,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.LogicalSide;
+import net.neoforged.fml.LogicalSide;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -71,9 +71,9 @@ public record DynamicConnectionState(boolean isInsert, ColorControl insert, bool
         buf.writeEnum(extract);
         buf.writeEnum(control);
         buf.writeEnum(redstoneChannel);
-        buf.writeItemStack(filterInsert, false);
-        buf.writeItemStack(filterExtract, false);
-        buf.writeItemStack(upgradeExtract, false);
+        buf.writeItem(filterInsert);
+        buf.writeItem(filterExtract);
+        buf.writeItem(upgradeExtract);
     }
 
     public static DynamicConnectionState fromNetwork(FriendlyByteBuf buf) {

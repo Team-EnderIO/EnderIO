@@ -2,6 +2,7 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.machines.common.blockentity.base.VacuumMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
+import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.MachineInventoryLayout.Builder;
 import com.enderio.machines.common.menu.VacuumChestMenu;
@@ -18,8 +19,8 @@ import java.util.function.Predicate;
 
 public class VacuumChestBlockEntity extends VacuumMachineBlockEntity<ItemEntity> {
 
-    public VacuumChestBlockEntity(BlockEntityType<?> pType, BlockPos pWorldPosition, BlockState pBlockState) {
-        super(pType, pWorldPosition, pBlockState, ItemEntity.class);
+    public VacuumChestBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
+        super(MachineBlockEntities.VACUUM_CHEST.get(), pWorldPosition, pBlockState, ItemEntity.class);
     }
 
     @Override

@@ -9,56 +9,61 @@ import com.enderio.base.common.enchantment.SoulBoundEnchantment;
 import com.enderio.base.common.enchantment.WitherEnchantment;
 import com.enderio.base.common.enchantment.XPBoostEnchantment;
 import com.enderio.base.common.lang.EIOLang;
-import com.tterrag.registrate.Registrate;
-import com.tterrag.registrate.builders.EnchantmentBuilder;
-import com.tterrag.registrate.util.entry.RegistryEntry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
 @EventBusSubscriber
 public class EIOEnchantments {
-    private static final Registrate REGISTRATE = EnderIO.registrate();
+    private static final DeferredRegister<Enchantment> ENCHANTMENT_REGISTRY = DeferredRegister.create(Registries.ENCHANTMENT, EnderIO.MODID);
 
     // region enchantments
 
-    public static final RegistryEntry<AutoSmeltEnchantment> AUTO_SMELT = enchantmentBuilder("auto_smelt", new AutoSmeltEnchantment())
-        .lang("Auto Smelt")
-        .register();
+    public static final DeferredHolder<Enchantment, AutoSmeltEnchantment> AUTO_SMELT =
+        enchantmentBuilder("auto_smelt", "Auto Smelt", AutoSmeltEnchantment::new);
 
-    public static final RegistryEntry<RepellentEnchantment> REPELLENT = enchantmentBuilder("repellent", new RepellentEnchantment())
-        .lang("Repellent")
-        .register();
+    public static final DeferredHolder<Enchantment, RepellentEnchantment> REPELLENT =
+        enchantmentBuilder("repellent", "Repellent", RepellentEnchantment::new);
 
-    public static final RegistryEntry<ShimmerEnchantment> SHIMMER = enchantmentBuilder("shimmer", new ShimmerEnchantment())
-        .lang("Shimmer")
-        .register();
+    public static final DeferredHolder<Enchantment, ShimmerEnchantment> SHIMMER =
+        enchantmentBuilder("shimmer", "Shimmer", ShimmerEnchantment::new);
 
-    public static final RegistryEntry<SoulBoundEnchantment> SOULBOUND = enchantmentBuilder("soulbound", new SoulBoundEnchantment())
-        .lang("Soulbound")
-        .register();
+    public static final DeferredHolder<Enchantment, SoulBoundEnchantment> SOULBOUND =
+        enchantmentBuilder("soulbound", "Soulbound", SoulBoundEnchantment::new);
 
-    public static final RegistryEntry<WitherEnchantment> WITHERING = enchantmentBuilder("withering", new WitherEnchantment())
-        .lang("Withering")
-        .register();
+    public static final DeferredHolder<Enchantment, WitherEnchantment> WITHERING =
+        enchantmentBuilder("withering", "Withering", WitherEnchantment::new);
 
-    public static final RegistryEntry<XPBoostEnchantment> XP_BOOST = enchantmentBuilder("xp_boost", new XPBoostEnchantment()).lang("XP Boost").register();
+    public static final DeferredHolder<Enchantment, XPBoostEnchantment> XP_BOOST =
+        enchantmentBuilder("xp_boost", "XP Boost", XPBoostEnchantment::new);
 
     // endregion
 
     // region builders
 
-    private static <T extends EIOBaseEnchantment> EnchantmentBuilder<T, Registrate> enchantmentBuilder(String name, T enchantment) {
-        return REGISTRATE.enchantment(name, enchantment.getCategory(), (r, c, s) -> enchantment);
+    private static <T extends EIOBaseEnchantment> DeferredHolder<Enchantment, T> enchantmentBuilder(String name, String translation, Supplier<T> enchantment) {
+        var holder = ENCHANTMENT_REGISTRY.register(name, enchantment);
+        addTranslation(name, translation);
+        return holder;
+    }
+
+    private static void addTranslation(String name, String translation) {
+        EnderIO.getRegilite().addTranslation("enchantment", new ResourceLocation(EnderIO.MODID, name), translation);
     }
     
     private static void addTooltip(ItemTooltipEvent event, Map<Enchantment, Integer> enchantments, List<Component> toolTip, Enchantment enchantment, Component... components) {
@@ -87,6 +92,8 @@ public class EIOEnchantments {
         }
     }
 
-    public static void register() {}
+    public static void register(IEventBus bus) {
+        ENCHANTMENT_REGISTRY.register(bus);
+    }
 
 }

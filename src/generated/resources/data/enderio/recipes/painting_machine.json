@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "A": {
-      "tag": "forge:ingots/redstone_alloy"
+      "tag": "neoforge:ingots/redstone_alloy"
     },
     "B": {
       "tag": "forge:dyes/black"
@@ -15,10 +15,10 @@
       "tag": "forge:dyes/green"
     },
     "I": {
-      "tag": "forge:ingots/copper_alloy"
+      "tag": "neoforge:ingots/copper_alloy"
     },
     "M": {
-      "tag": "forge:gears/stone"
+      "tag": "neoforge:gears/iron"
     },
     "R": {
       "tag": "forge:dyes/red"
@@ -31,6 +31,5 @@
   ],
   "result": {
     "item": "enderio:painting_machine"
-  },
-  "show_notification": true
+  }
 }

@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "enderio:block/cloud_seed"
+      "model": "minecraft:block/water"
     }
   }
 }

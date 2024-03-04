@@ -4,25 +4,26 @@
   "experience": 0.3,
   "inputs": [
     {
-      "count": 1,
-      "ingredient": {
+      "Count": 1,
+      "Ingredient": {
         "tag": "forge:end_stones"
       }
     },
     {
-      "count": 1,
-      "ingredient": {
-        "tag": "forge:ingots/dark_steel"
+      "Count": 1,
+      "Ingredient": {
+        "tag": "neoforge:ingots/dark_steel"
       }
     },
     {
-      "count": 1,
-      "ingredient": {
+      "Count": 1,
+      "Ingredient": {
         "tag": "forge:obsidian"
       }
     }
   ],
   "result": {
-    "item": "enderio:end_steel_ingot"
+    "Count": 1,
+    "id": "enderio:end_steel_ingot"
   }
 }

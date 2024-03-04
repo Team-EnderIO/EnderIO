@@ -1,12 +1,12 @@
 package com.enderio.base.common.config.common;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class InfinityConfig {
-    public final ForgeConfigSpec.ConfigValue<Boolean> MAKES_SOUND;
-    public final ForgeConfigSpec.ConfigValue<Integer> FIRE_MIN_AGE;
+    public final ModConfigSpec.ConfigValue<Boolean> MAKES_SOUND;
+    public final ModConfigSpec.ConfigValue<Integer> FIRE_MIN_AGE;
 
-    public InfinityConfig(ForgeConfigSpec.Builder builder) {
+    public InfinityConfig(ModConfigSpec.Builder builder) {
         builder.push("grainsOfInfinity");
 
         MAKES_SOUND = builder.comment("Should it make a sound when Grains of Infinity drops from a fire?").define("makesSound", true);

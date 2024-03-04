@@ -17,7 +17,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandler;
 import org.apache.logging.log4j.LogManager;
 import org.jetbrains.annotations.Nullable;
 
@@ -96,10 +96,10 @@ public class ConduitMenu extends SyncedMenu<ConduitBlockEntity> {
             && ConduitBlock.canBeOrIsValidConnection(getBlockEntity(), type, direction);
     }
 
-    public static ConduitMenu factory(@Nullable MenuType<ConduitMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
+    public static ConduitMenu factory(int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
         Direction direction = buf.readEnum(Direction.class);
-        IConduitType<?> type = ConduitTypes.getRegistry().getValue(buf.readInt());
+        IConduitType<?> type = ConduitTypes.getRegistry().byIdOrThrow(buf.readInt());
         if (entity instanceof ConduitBlockEntity castBlockEntity) {
             return new ConduitMenu(castBlockEntity, inventory, pContainerId, direction, type);
         }

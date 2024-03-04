@@ -8,7 +8,10 @@ import com.enderio.machines.common.tag.MachineTags;
 import com.mojang.serialization.DataResult;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -18,12 +21,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.event.TagsUpdatedEvent;
-import net.minecraftforge.event.entity.living.MobSpawnEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.event.EventHooks;
+import net.neoforged.neoforge.event.TagsUpdatedEvent;
+import net.neoforged.neoforge.event.entity.living.MobSpawnEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -96,12 +98,12 @@ public class SpawnerMachineTask implements IPoweredMachineTask {
         AABB range = new AABB(blockEntity.getBlockPos()).inflate(blockEntity.getRange());
         Optional<ResourceLocation> rl = blockEntity.getEntityType();
         if (rl.isEmpty()) {
-            blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
+            blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKNOWN_MOB);
             return false;
         }
-        EntityType<?> entity = ForgeRegistries.ENTITY_TYPES.getValue(rl.get());
-        if (entity == null || !ForgeRegistries.ENTITY_TYPES.getKey(entity).equals(rl.get())) { // check we don't get the default pig
-            blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
+        EntityType<?> entity = BuiltInRegistries.ENTITY_TYPE.get(rl.get());
+        if (!BuiltInRegistries.ENTITY_TYPE.getKey(entity).equals(rl.get())) { // check we don't get the default pig
+            blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKNOWN_MOB);
             return false;
         }
         List<? extends Entity> entities = blockEntity.getLevel().getEntities(entity, range, p -> p instanceof LivingEntity);
@@ -118,21 +120,21 @@ public class SpawnerMachineTask implements IPoweredMachineTask {
     
     private void loadSoulData(Optional<ResourceLocation> rl) {
         if (rl.isEmpty()) {
-            blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
+            blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKNOWN_MOB);
             return;
         }
-        Optional<Holder.Reference<EntityType<?>>> optionalEntity = ForgeRegistries.ENTITY_TYPES.getDelegate(rl.get());
-        if (optionalEntity.isEmpty() || ! ForgeRegistries.ENTITY_TYPES.getKey(optionalEntity.get().get()).equals(rl.get())) {
-            blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
+        Optional<Holder.Reference<EntityType<?>>> optionalEntity = BuiltInRegistries.ENTITY_TYPE.getHolder(ResourceKey.create(Registries.ENTITY_TYPE, rl.get()));
+        if (optionalEntity.isEmpty() || ! BuiltInRegistries.ENTITY_TYPE.getKey(optionalEntity.get().value()).equals(rl.get())) {
+            blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKNOWN_MOB);
             return;
         }
-        if (optionalEntity.get().get().is(MachineTags.EntityTypes.SPAWNER_BLACKLIST)) {
+        if (optionalEntity.get().value().is(MachineTags.EntityTypes.SPAWNER_BLACKLIST)) {
             blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.DISABLED);
             return;
         }
         Optional<SpawnerSoul.SoulData> opData = SpawnerSoul.SPAWNER.matches(rl.get());
         if (opData.isEmpty()) { //Fallback
-            this.entityType = optionalEntity.get().get();
+            this.entityType = optionalEntity.get().value();
             this.energyCost = 50000;
             if (entityType.create(this.blockEntity.getLevel()) instanceof LivingEntity entity) { //Are we 100% guaranteed this is a living entity?
                 this.energyCost += entity.getMaxHealth()*50; //TODO actually balance based on health
@@ -140,7 +142,7 @@ public class SpawnerMachineTask implements IPoweredMachineTask {
             return;
         }
         SpawnerSoul.SoulData data = opData.get();
-        this.entityType = optionalEntity.get().get();
+        this.entityType = optionalEntity.get().value();
         this.energyCost = data.power();
         this.spawnType = data.spawnType();
     }
@@ -159,12 +161,12 @@ public class SpawnerMachineTask implements IPoweredMachineTask {
 
             Optional<ResourceLocation> rl = blockEntity.getEntityType();
             if (rl.isEmpty()) {
-                blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
+                blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKNOWN_MOB);
                 return false;
             }
-            EntityType<?> optionalEntity = ForgeRegistries.ENTITY_TYPES.getValue(rl.get());
-            if (optionalEntity == null || !ForgeRegistries.ENTITY_TYPES.getKey(optionalEntity).equals(rl.get())) { // check we don't get the default pig
-                blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
+            EntityType<?> optionalEntity = BuiltInRegistries.ENTITY_TYPE.get(rl.get());
+            if (!BuiltInRegistries.ENTITY_TYPE.getKey(optionalEntity).equals(rl.get())) { // check we don't get the default pig
+                blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKNOWN_MOB);
                 return false;
             }
             if (level.noCollision(optionalEntity.getAABB(x, y, z))) {
@@ -177,8 +179,8 @@ public class SpawnerMachineTask implements IPoweredMachineTask {
                             return entity1;
                         });
                     }
-                    case ENTITYTYPE -> {
-                        EntityType<?> id = ForgeRegistries.ENTITY_TYPES.getValue(new ResourceLocation(blockEntity.getEntityData().getEntityTag().getString("id")));
+                    case ENTITY_TYPE -> {
+                        EntityType<?> id = BuiltInRegistries.ENTITY_TYPE.get(new ResourceLocation(blockEntity.getEntityData().getEntityTag().getString("id")));
                         if (id != null) {
                             entity = id.create(level);
                             entity.moveTo(x, y, z);
@@ -188,17 +190,17 @@ public class SpawnerMachineTask implements IPoweredMachineTask {
                 }
 
                 if (entity == null) {
-                    blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKOWN_MOB);
+                    blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.UNKNOWN_MOB);
                     break;
                 }
 
                 if (entity instanceof Mob mob) { // based on vanilla spawner
-                    MobSpawnEvent.FinalizeSpawn event = ForgeEventFactory.onFinalizeSpawnSpawner(mob, level, level.getCurrentDifficultyAt(pos), null,  blockEntity.getEntityData().getEntityTag(), null);
+                    MobSpawnEvent.FinalizeSpawn event = EventHooks.onFinalizeSpawnSpawner(mob, level, level.getCurrentDifficultyAt(pos), null,  blockEntity.getEntityData().getEntityTag(), null);
                     if (event == null || event.isSpawnCancelled()) {
                         blockEntity.setReason(PoweredSpawnerBlockEntity.SpawnerBlockedReason.OTHER_MOD);
                         continue;
                     } else {
-                        ForgeEventFactory.onFinalizeSpawn(mob, level, event.getDifficulty(), event.getSpawnType(), event.getSpawnData(), event.getSpawnTag());
+                        EventHooks.onFinalizeSpawn(mob, level, event.getDifficulty(), event.getSpawnType(), event.getSpawnData(), event.getSpawnTag());
                     }
                 }
 
@@ -247,7 +249,7 @@ public class SpawnerMachineTask implements IPoweredMachineTask {
 
     // TODO: Might want to move this to its own file in future.
     public enum SpawnType {
-        ENTITYTYPE("entitytype"),
+        ENTITY_TYPE("entity_type"),
         COPY("copy");
 
         private final String name;

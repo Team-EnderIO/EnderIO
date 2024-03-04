@@ -17,10 +17,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.loading.FMLLoader;
-import net.minecraftforge.fml.util.thread.EffectiveSide;
+import net.neoforged.fml.ModList;
+import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.neoforged.fml.LogicalSide;
+import net.neoforged.fml.loading.FMLLoader;
+import net.neoforged.fml.util.thread.EffectiveSide;
+import net.neoforged.neoforgespi.language.IModInfo;
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -113,7 +116,10 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         } else {
             types.add(type);
             nodes.put(type, node);
-            node.getExtendedConduitData().onCreated(type, level, pos, player);
+            if (types.size() != 1) {
+                //NeoForge contains a patch that calls onLoad after the conduit has been placed if it's the first one, so onCreated would be called twice. it's easier to detect here
+                node.getExtendedConduitData().onCreated(type, level, pos, player);
+            }
         }
 
         scheduleSync.run();
@@ -137,8 +143,8 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         if (index == -1) {
             if (!FMLLoader.isProduction()) {
                 throw new IllegalArgumentException(
-                    "Conduit: " + ConduitTypes.REGISTRY.get().getKey(type) + " is not present in conduit bundle " + Arrays.toString(
-                        types.stream().map(existingType -> ConduitTypes.REGISTRY.get().getKey(existingType)).toArray()));
+                    "Conduit: " + ConduitTypes.REGISTRY.getKey(type) + " is not present in conduit bundle " + Arrays.toString(
+                        types.stream().map(ConduitTypes.REGISTRY::getKey).toArray()));
             }
 
             return types.isEmpty();
@@ -232,7 +238,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
         List<Integer> invalidTypes = new ArrayList<>();
         for (int i = 0; i < typesTag.size(); i++) {
             StringTag stringTag = (StringTag) typesTag.get(i);
-            IConduitType<?> type = ConduitTypes.getRegistry().getValue(ResourceLocation.tryParse(stringTag.getAsString()));
+            IConduitType<?> type = ConduitTypes.getRegistry().get(ResourceLocation.tryParse(stringTag.getAsString()));
             if (type == null) {
                 invalidTypes.add(i);
                 continue;
@@ -283,7 +289,7 @@ public final class ConduitBundle implements INBTSerializable<CompoundTag> {
                 for (Tag tag : nodesTag) {
                     CompoundTag cmp = (CompoundTag) tag;
                     nodes
-                        .get(ConduitTypes.getRegistry().getValue(new ResourceLocation(cmp.getString(KEY_NODE_TYPE))))
+                        .get(ConduitTypes.getRegistry().get(new ResourceLocation(cmp.getString(KEY_NODE_TYPE))))
                         .getExtendedConduitData()
                         .deserializeNBT(cmp.getCompound(KEY_NODE_DATA));
                 }

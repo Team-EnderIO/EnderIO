@@ -5,6 +5,7 @@ import com.enderio.machines.common.blockentity.task.CraftingMachineTask;
 import com.enderio.machines.common.recipe.MachineRecipe;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -15,7 +16,7 @@ import java.util.function.Supplier;
 public class CraftingMachineTaskHost<R extends MachineRecipe<C>, C extends Container> extends MachineTaskHost {
 
     public interface ICraftingMachineTaskFactory<T extends CraftingMachineTask<R, C>, R extends MachineRecipe<C>, C extends Container> {
-        T createTask(Level level, C container, @Nullable R recipe);
+        T createTask(Level level, C container, @Nullable RecipeHolder<R> recipe);
     }
 
     private final RecipeType<R> recipeType;
@@ -78,7 +79,7 @@ public class CraftingMachineTaskHost<R extends MachineRecipe<C>, C extends Conta
 
     // endregion
 
-    protected Optional<R> findRecipe() {
+    protected Optional<RecipeHolder<R>> findRecipe() {
         Level level = getLevel();
         if (level == null) {
             return Optional.empty();

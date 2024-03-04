@@ -10,9 +10,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraftforge.common.loot.IGlobalLootModifier;
-import net.minecraftforge.common.loot.LootModifier;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
+import net.neoforged.neoforge.common.loot.LootModifier;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.stream.Collectors;
@@ -31,7 +31,7 @@ public class AutoSmeltModifier extends LootModifier {
         var recipeManager = level.getRecipeManager();
         return generatedLoot.stream().map(stack ->
             recipeManager.getRecipeFor(RecipeType.SMELTING, new SimpleContainer(stack), level)
-                .map(r -> r.assemble(new SimpleContainer(stack), level.registryAccess()))
+                .map(r -> r.value().assemble(new SimpleContainer(stack), level.registryAccess()))
                 .filter(itemStack -> !itemStack.isEmpty())
                 .map(itemStack -> ItemHandlerHelper.copyStackWithSize(itemStack, stack.getCount() * itemStack.getCount()))
                 .orElse(stack))

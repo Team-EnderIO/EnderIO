@@ -11,6 +11,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Locale;
+
 public class EnderSkullBlock extends SkullBlock {
 
     public EnderSkullBlock(Properties properties) {
@@ -18,7 +20,12 @@ public class EnderSkullBlock extends SkullBlock {
     }
 
     public enum EIOSkulls implements SkullBlock.Type {
-        ENDERMAN
+        ENDERMAN;
+
+        @Override
+        public String getSerializedName() {
+            return name().toLowerCase(Locale.ROOT);
+        }
     }
 
     @Override

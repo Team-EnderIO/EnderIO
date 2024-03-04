@@ -43,8 +43,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.client.RenderTypeHelper;
-import net.minecraftforge.client.model.data.ModelData;
+import net.neoforged.neoforge.client.RenderTypeHelper;
+import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
@@ -74,10 +74,11 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     private static final Vec3 RAY_END = new Vec3(1.5, 1.5, 3);
     private static final BlockPos POS = new BlockPos(1, 1, 1);
     private static final int Z_OFFSET = 100;
+    private static final ResourceLocation IO_CONFIG_OVERLAY = EnderIO.loc("buttons/io_config_overlay");
     private static final ResourceLocation SELECTED_ICON = EnderIO.loc("block/overlay/selected_face");
     private static final Minecraft MINECRAFT = Minecraft.getInstance();
     private static MultiBufferSource.BufferSource ghostBuffers;
-    private final U addedOn;
+    private final U screen;
     private final Vector3f worldOrigin;
     private final Vector3f multiblockSize;
     private final List<BlockPos> configurable = new ArrayList<>();
@@ -89,13 +90,13 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     private boolean neighbourVisible = true;
     private Optional<SelectedFace> selection = Optional.empty();
 
-    public IOConfigWidget(U addedOn, int x, int y, int width, int height, BlockPos configurable, Font font) {
-        this(addedOn, x, y, width, height, List.of(configurable), font);
+    public IOConfigWidget(U screen, int x, int y, int width, int height, BlockPos configurable, Font font) {
+        this(screen, x, y, width, height, List.of(configurable), font);
     }
 
-    public IOConfigWidget(U addedOn, int x, int y, int width, int height, List<BlockPos> _configurable, Font font) {
+    public IOConfigWidget(U screen, int x, int y, int width, int height, List<BlockPos> _configurable, Font font) {
         super(x, y, width, height, Component.empty());
-        this.addedOn = addedOn;
+        this.screen = screen;
         this.configurable.addAll(_configurable);
         this.screenFont = font;
 
@@ -197,8 +198,8 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     @Override
     public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
         if (visible && isValidClickButton(pButton) && isMouseOver(pMouseX, pMouseY)) {
-            double dx = pDragX / (double) addedOn.width;
-            double dy = pDragY / (double) addedOn.height;
+            double dx = pDragX / (double) screen.width;
+            double dy = pDragY / (double) screen.height;
             yaw += 4 * dx * 180;
             pitch += 2 * dy * 180;
 
@@ -209,9 +210,9 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
     }
 
     @Override
-    public boolean mouseScrolled(double pMouseX, double pMouseY, double pDelta) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
         if (visible) {
-            SCALE -= pDelta;
+            SCALE -= deltaY;
             SCALE = Math.min(40, Math.max(10, SCALE)); //clamp
             return true;
         }
@@ -223,7 +224,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
         if (visible) {
             // render black bg
             if (isMouseOver(mouseX, mouseY)) {
-                addedOn.setFocused(this);
+                screen.setFocused(this);
             }
             guiGraphics.enableScissor(getX(), getY(), getX() + width, getY() + height);
             guiGraphics.fill(getX(), getY(), getX() + width, getY() + height, 0xFF000000);
@@ -384,8 +385,8 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
                 var ioMode = machine.getIOConfig().getMode(selectedFace.side);
                 IOModeMap map = IOModeMap.getMapFromMode(ioMode);
                 Rect2i iconBounds = map.getRect();
-                guiGraphics.blit(IOConfigButton.IOCONFIG, getX() + 4, getY() + height - 4 - screenFont.lineHeight - iconBounds.getHeight(), iconBounds.getX(), iconBounds.getY(),
-                    iconBounds.getWidth(), iconBounds.getHeight(), 48, 32);
+                guiGraphics.blitSprite(IO_CONFIG_OVERLAY, 48, 16, iconBounds.getX(), iconBounds.getY(), getX() + 4,
+                    getY() + height - 4 - screenFont.lineHeight - iconBounds.getHeight(), iconBounds.getWidth(), iconBounds.getHeight());
                 guiGraphics.pose().pushPose();
                 guiGraphics.pose().translate(0, 0, 1000); // to ensure that string is drawn on top
                 guiGraphics.drawString(screenFont, map.getComponent(), getX() + 4, getY() + height - 2 - screenFont.lineHeight, 0xFFFFFFFF);
@@ -421,7 +422,7 @@ public class IOConfigWidget<U extends EIOScreen<?>> extends AbstractWidget {
 
                     RenderSystem.disableDepthTest();
                     RenderSystem.enableBlend();
-                    RenderSystem.setShaderColor(1, 1, 1, MachinesConfig.CLIENT.IO_CONFIG_NEIGHBOUR_TRANSPARENCY.get());
+                    RenderSystem.setShaderColor(1, 1, 1, MachinesConfig.CLIENT.IO_CONFIG_NEIGHBOUR_TRANSPARENCY.get().floatValue());
                 },
                 () -> {
                     RenderSystem.setShaderColor(1, 1, 1, 1);

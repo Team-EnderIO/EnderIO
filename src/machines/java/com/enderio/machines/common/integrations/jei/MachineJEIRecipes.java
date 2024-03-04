@@ -11,6 +11,7 @@ import com.enderio.machines.common.recipe.TankRecipe;
 import com.enderio.machines.common.souldata.EngineSoul;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 
@@ -28,38 +29,38 @@ public class MachineJEIRecipes {
     }
 
     public List<AlloySmeltingRecipe> getAlloySmeltingRecipes() {
-        return new ArrayList<>(recipeManager.getAllRecipesFor(MachineRecipes.ALLOY_SMELTING.type().get()));
+        return new ArrayList<>(recipeManager.getAllRecipesFor(MachineRecipes.ALLOY_SMELTING.type().get()).stream().map(RecipeHolder::value).toList());
     }
 
     public List<AlloySmeltingRecipe> getAlloySmeltingRecipesWithSmelting() {
         List<AlloySmeltingRecipe> recipes = new ArrayList<>();
-        recipes.addAll(recipeManager.getAllRecipesFor(MachineRecipes.ALLOY_SMELTING.type().get()));
-        recipes.addAll(recipeManager.getAllRecipesFor(RecipeType.SMELTING).stream().map(VanillaAlloySmeltingRecipe::new).toList());
+        recipes.addAll(recipeManager.getAllRecipesFor(MachineRecipes.ALLOY_SMELTING.type().get()).stream().map(RecipeHolder::value).toList());
+        recipes.addAll(recipeManager.getAllRecipesFor(RecipeType.SMELTING).stream().map(h -> new VanillaAlloySmeltingRecipe(h.value())).toList());
         return recipes;
     }
 
     public List<SlicingRecipe> getSlicingRecipes() {
-        return recipeManager.getAllRecipesFor(MachineRecipes.SLICING.type().get());
+        return recipeManager.getAllRecipesFor(MachineRecipes.SLICING.type().get()).stream().map(RecipeHolder::value).toList();
     }
 
     public List<SoulBindingRecipe> getSoulBindingRecipes() {
-        return recipeManager.getAllRecipesFor(MachineRecipes.SOUL_BINDING.type().get());
+        return recipeManager.getAllRecipesFor(MachineRecipes.SOUL_BINDING.type().get()).stream().map(RecipeHolder::value).toList();
     }
 
     public List<TankRecipe> getTankRecipes() {
-        return recipeManager.getAllRecipesFor(MachineRecipes.TANK.type().get());
+        return recipeManager.getAllRecipesFor(MachineRecipes.TANK.type().get()).stream().map(RecipeHolder::value).toList();
     }
 
     public List<WrappedEnchanterRecipe> getEnchanterRecipes() {
         return recipeManager.getAllRecipesFor(MachineRecipes.ENCHANTING.type().get()).stream().<WrappedEnchanterRecipe>mapMulti((recipe, consumer) -> {
-            for (int i = 1; i <= recipe.getEnchantment().getMaxLevel(); i++) {
-                consumer.accept(new WrappedEnchanterRecipe(recipe, i));
+            for (int i = 1; i <= recipe.value().getEnchantment().getMaxLevel(); i++) {
+                consumer.accept(new WrappedEnchanterRecipe(recipe.value(), i));
             }
         }).toList();
     }
 
     public List<SagMillingRecipe> getSagMillingRecipes() {
-        return recipeManager.getAllRecipesFor(MachineRecipes.SAG_MILLING.type().get());
+        return recipeManager.getAllRecipesFor(MachineRecipes.SAG_MILLING.type().get()).stream().map(RecipeHolder::value).toList();
     }
 
     public List<EngineSoul.SoulData> getMobGeneratorRecipes() {

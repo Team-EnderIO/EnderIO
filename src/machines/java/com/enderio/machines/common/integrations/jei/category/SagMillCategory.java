@@ -11,6 +11,7 @@ import com.enderio.machines.common.integrations.jei.util.MachineRecipeCategory;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.recipe.SagMillingRecipe;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotTooltipCallback;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -67,9 +68,11 @@ public class SagMillCategory extends MachineRecipeCategory<SagMillingRecipe> {
         builder.addSlot(INPUT, 32, 1)
             .addItemStacks(List.of(recipe.getInput().getItems()));
 
-        builder.addSlot(CATALYST, 74, 12)
-            .addItemStack(new ItemStack(Items.AIR))
-            .addItemStacks(GrindingBallManager.getGrindingBalls().stream().map(ItemStack::new).toList());
+        IRecipeSlotBuilder gridingBallSlot = builder.addSlot(CATALYST, 74, 12)
+            .addItemStack(new ItemStack(Items.AIR));
+        if (recipe.getBonusType().useGrindingBall()) {
+            gridingBallSlot.addItemStacks(GrindingBallManager.getGrindingBalls().stream().map(ItemStack::new).toList());
+        }
 
         List<SagMillingRecipe.OutputItem> results = recipe.getOutputs();
         if (!results.isEmpty()) {

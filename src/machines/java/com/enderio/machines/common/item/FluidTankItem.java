@@ -1,6 +1,7 @@
 package com.enderio.machines.common.item;
 
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.core.CoreNBTKeys;
 import com.enderio.core.client.item.IAdvancedTooltipProvider;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.machines.client.rendering.item.FluidTankBEWLR;
@@ -8,16 +9,19 @@ import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.MachineBlock;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.NonNullLazy;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.common.util.NonNullLazy;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.fluids.capability.templates.FluidHandlerItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,11 +31,18 @@ import java.util.function.Consumer;
 
 public class FluidTankItem extends BlockItem implements IAdvancedTooltipProvider {
 
+    public static final ICapabilityProvider<ItemStack, Void, IFluidHandlerItem> FLUID_HANDLER_PROVIDER =
+        (stack, v) -> new FluidItemStack(stack, ((FluidTankItem)stack.getItem()).capacity);
+
     protected final int capacity;
 
     public FluidTankItem(MachineBlock block, Properties properties, int capacity) {
         super(block, properties);
         this.capacity = capacity;
+    }
+
+    public int getCapacity() {
+        return capacity;
     }
 
     @Override
@@ -54,25 +65,20 @@ public class FluidTankItem extends BlockItem implements IAdvancedTooltipProvider
 
     @Override
     public void addCommonTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
-        itemStack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).ifPresent(iFluidHandlerItem -> {
-            if (iFluidHandlerItem instanceof FluidItemStack fluidHandler) {
-                if (fluidHandler.getFluid().isEmpty()) {
+        var fluidHandler = itemStack.getCapability(Capabilities.FluidHandler.ITEM);
+        if (fluidHandler != null) {
+            if (fluidHandler instanceof FluidItemStack itemFluidHandler) {
+                if (itemFluidHandler.getFluid().isEmpty()) {
                     tooltips.add(TooltipUtil.style(EIOLang.TANK_EMPTY_STRING));
                 } else {
-                    tooltips.add(TooltipUtil.styledWithArgs(EIOLang.FLUID_TANK_TOOLTIP, fluidHandler.getFluid().getAmount(), capacity,
-                        fluidHandler.getFluid().getFluid().getFluidType().getDescription().getString()));
+                    tooltips.add(TooltipUtil.styledWithArgs(EIOLang.FLUID_TANK_TOOLTIP, itemFluidHandler.getFluid().getAmount(), capacity,
+                        itemFluidHandler.getFluid().getFluid().getFluidType().getDescription().getString()));
                 }
             }
-        });
+        }
     }
 
-    @Nullable
-    @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
-        return new FluidItemStack(stack, capacity);
-    }
-
-    public class FluidItemStack extends FluidHandlerItemStack {
+    public static class FluidItemStack extends FluidHandlerItemStack {
 
         /**
          * @param container The container itemStack, data is stored on it directly as NBT.
@@ -87,7 +93,9 @@ public class FluidTankItem extends BlockItem implements IAdvancedTooltipProvider
             Optional<CompoundTag> tagCompoundOptional = Optional.ofNullable(container.getTag());
             return tagCompoundOptional
                 .map(tagCompound -> tagCompound.getCompound(BLOCK_ENTITY_TAG))
-                .map(blockEntityTag -> blockEntityTag.getCompound(MachineNBTKeys.FLUID))
+                .map(blockEntityTag -> blockEntityTag.getCompound(MachineNBTKeys.FLUIDS))
+                .map(fluidTag -> fluidTag.getList(CoreNBTKeys.TANKS, Tag.TAG_COMPOUND))
+                .map(tank -> tank.getCompound(0))
                 .map(FluidStack::loadFluidStackFromNBT)
                 .orElse(FluidStack.EMPTY);
         }
@@ -99,7 +107,11 @@ public class FluidTankItem extends BlockItem implements IAdvancedTooltipProvider
 
             CompoundTag fluidTag = new CompoundTag();
             fluid.writeToNBT(fluidTag);//rewrites the old value
-            blockEntityTag.put(MachineNBTKeys.FLUID, fluidTag);
+            ListTag listTag = new ListTag();
+            listTag.add(0, fluidTag);
+            CompoundTag tanks = new CompoundTag();
+            tanks.put(CoreNBTKeys.TANKS, listTag);
+            blockEntityTag.put(MachineNBTKeys.FLUIDS, tanks);
         }
 
         @Override
@@ -107,8 +119,8 @@ public class FluidTankItem extends BlockItem implements IAdvancedTooltipProvider
             CompoundTag tagCompound = container.getTag();
             if (tagCompound != null) {
                 CompoundTag blockEntityTag = tagCompound.getCompound(BLOCK_ENTITY_TAG);
-                if (blockEntityTag.contains(MachineNBTKeys.FLUID)) {
-                    blockEntityTag.remove(MachineNBTKeys.FLUID);
+                if (blockEntityTag.contains(CoreNBTKeys.TANKS)) {
+                    blockEntityTag.remove(CoreNBTKeys.TANKS);
                 }
             }
         }

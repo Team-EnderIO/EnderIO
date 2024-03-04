@@ -1,34 +1,36 @@
 package com.enderio.base.common.item.tool;
 
-import com.enderio.api.capability.IMultiCapabilityItem;
-import com.enderio.api.capability.MultiCapabilityProvider;
-import com.enderio.base.common.capability.EnergyStorageItemStack;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.handler.TravelHandler;
+import com.enderio.base.common.init.EIOAttachments;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.item.EnergyBarDecorator;
 import com.enderio.core.client.item.IAdvancedTooltipProvider;
+import com.enderio.core.common.attachment.IEnergyStorageConfig;
 import com.enderio.core.common.item.ITabVariants;
 import com.enderio.core.common.util.EnergyUtil;
 import com.enderio.core.common.util.TooltipUtil;
-import com.tterrag.registrate.util.CreativeModeTabModifier;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import org.jetbrains.annotations.Nullable;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import java.util.List;
 
-public class TravelStaffItem extends Item implements IMultiCapabilityItem, IAdvancedTooltipProvider, ITabVariants {
+public class TravelStaffItem extends Item implements IAdvancedTooltipProvider, ITabVariants, IEnergyStorageConfig {
+
+    public static ICapabilityProvider<ItemStack, Void, IEnergyStorage> ENERGY_STORAGE_PROVIDER =
+        (stack, v) -> stack.getData(EIOAttachments.ITEM_ENERGY_STORAGE);
+
     public TravelStaffItem(Properties properties) {
         super(properties);
     }
@@ -59,9 +61,10 @@ public class TravelStaffItem extends Item implements IMultiCapabilityItem, IAdva
     }
 
     private boolean tryPerformAction(Level level, Player player, ItemStack stack) {
-        if (hasResources(stack)) {
+        boolean isCreative = player.isCreative();
+        if (hasResources(stack) || isCreative) {
             if (performAction(level, player,stack)) {
-                if (!level.isClientSide()) {
+                if (!level.isClientSide() && !isCreative) {
                     consumeResources(stack);
                 }
 
@@ -93,6 +96,7 @@ public class TravelStaffItem extends Item implements IMultiCapabilityItem, IAdva
         return false;
     }
 
+    @Override
     public int getMaxEnergy() {
         return BaseConfig.COMMON.ITEMS.TRAVELLING_STAFF_MAX_ENERGY.get();
     }
@@ -105,18 +109,12 @@ public class TravelStaffItem extends Item implements IMultiCapabilityItem, IAdva
         EnergyUtil.extractEnergy(stack, BaseConfig.COMMON.ITEMS.TRAVELLING_STAFF_ENERGY_USE.get(), false);
     }
 
-    @Override
-    public MultiCapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt, MultiCapabilityProvider provider) {
-        provider.add(ForgeCapabilities.ENERGY, LazyOptional.of(() -> new EnergyStorageItemStack(stack, getMaxEnergy())));
-        return provider;
-    }
-
     protected ActivationStatus getActivationStatus(ItemStack stack) {
         return ActivationStatus.ALL;
     }
 
     @Override
-    public void addAllVariants(CreativeModeTabModifier modifier) {
+    public void addAllVariants(CreativeModeTab.Output modifier) {
         modifier.accept(this);
         ItemStack is = new ItemStack(this);
         EnergyUtil.setFull(is);
@@ -130,10 +128,12 @@ public class TravelStaffItem extends Item implements IMultiCapabilityItem, IAdva
 
     @Override
     public int getBarWidth(ItemStack stack) {
-        return stack
-            .getCapability(ForgeCapabilities.ENERGY)
-            .map(energyStorage -> Math.round(energyStorage.getEnergyStored() * 13.0F / energyStorage.getMaxEnergyStored()))
-            .orElse(0);
+        var energyStorage = stack.getCapability(Capabilities.EnergyStorage.ITEM);
+        if (energyStorage != null) {
+            return Math.round(energyStorage.getEnergyStored() * 13.0F / energyStorage.getMaxEnergyStored());
+        }
+
+        return 0;
     }
 
     @Override

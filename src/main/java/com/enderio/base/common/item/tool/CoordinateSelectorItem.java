@@ -1,6 +1,6 @@
 package com.enderio.base.common.item.tool;
 
-import com.enderio.api.capability.CoordinateSelection;
+import com.enderio.api.attachment.CoordinateSelection;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.menu.CoordinateMenu;
 import net.minecraft.client.player.LocalPlayer;
@@ -22,7 +22,6 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraftforge.network.NetworkHooks;
 
 public class CoordinateSelectorItem extends Item {
 
@@ -75,9 +74,9 @@ public class CoordinateSelectorItem extends Item {
     }
 
     private static void openMenu(ServerPlayer player, Level level, BlockPos pos) {
-        CoordinateSelection selection = CoordinateSelection.of(level, pos);
+        CoordinateSelection selection = new CoordinateSelection(level, pos);
 
-        NetworkHooks.openScreen(player,new MenuProvider() {
+        player.openMenu(new MenuProvider() {
             @Override
             public Component getDisplayName() {
                 return Component.literal("");

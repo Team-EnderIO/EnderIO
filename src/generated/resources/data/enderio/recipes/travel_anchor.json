@@ -6,7 +6,7 @@
       "item": "enderio:conduit_binder"
     },
     "C": {
-      "tag": "forge:gems/pulsating_crystal"
+      "tag": "neoforge:gems/pulsating_crystal"
     },
     "I": {
       "tag": "forge:ingots/iron"
@@ -19,6 +19,5 @@
   ],
   "result": {
     "item": "enderio:travel_anchor"
-  },
-  "show_notification": true
+  }
 }

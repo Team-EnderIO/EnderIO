@@ -1,20 +1,18 @@
 package com.enderio.machines.common.io;
 
-import com.enderio.api.capability.ISideConfig;
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
-import com.enderio.base.common.init.EIOCapabilities;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Fixed IO Config.
  * Used when a block only has a single mode for all sides (or even wants to disable external IO altogether).
  */
 public final class FixedIOConfig implements IIOConfig {
+
+    public static final FixedIOConfig DISABLED = new FixedIOConfig(IOMode.DISABLED);
+
     private final IOMode mode;
 
     public FixedIOConfig(IOMode mode) {
@@ -53,19 +51,4 @@ public final class FixedIOConfig implements IIOConfig {
         // Not enabled.
     }
 
-    @Override
-    public Capability<ISideConfig> getCapabilityType() {
-        return EIOCapabilities.SIDE_CONFIG;
-    }
-
-    @Override
-    public LazyOptional<ISideConfig> getCapability(@Nullable Direction side) {
-        return LazyOptional.empty();
-    }
-
-    @Override
-    public void invalidateSide(@Nullable Direction side) {}
-
-    @Override
-    public void invalidateCaps() {}
 }

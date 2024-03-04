@@ -6,11 +6,13 @@ import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.core.common.util.TagUtil;
 import com.enderio.machines.common.blockentity.SagMillBlockEntity;
 import com.enderio.machines.common.init.MachineRecipes;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Either;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -21,27 +23,26 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.wrapper.RecipeWrapper;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 import java.util.Random;
 import java.util.function.Supplier;
 
 public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Container> {
     private static final Random RANDOM = new Random();
 
-    private final ResourceLocation id;
-    private final Ingredient input;
-    private final List<OutputItem> outputs;
-    private final int energy;
-    private final BonusType bonusType;
+    final Ingredient input;
+    final List<OutputItem> outputs;
+    final int energy;
+    final BonusType bonusType;
 
-    public SagMillingRecipe(ResourceLocation id, Ingredient input, List<OutputItem> outputs, int energy, BonusType bonusType) {
-        this.id = id;
+    public SagMillingRecipe(Ingredient input, List<OutputItem> outputs, int energy, BonusType bonusType) {
         this.input = input;
         this.outputs = outputs;
         this.energy = energy;
@@ -145,10 +146,6 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
         return input.test(SagMillBlockEntity.INPUT.getItemStack(container));
     }
 
-    @Override
-    public ResourceLocation getId() {
-        return id;
-    }
 
     @Override
     public RecipeSerializer<?> getSerializer() {
@@ -188,6 +185,13 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
 
     public static class OutputItem {
 
+        private static final Codec<OutputItem> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            TagKey.codec(Registries.ITEM).optionalFieldOf("tag").forGetter(output -> output.item.right()),
+            BuiltInRegistries.ITEM.byNameCodec().optionalFieldOf("item").forGetter(output -> output.item.left()),
+            Codec.INT.optionalFieldOf("count", 1).forGetter(output -> output.count),
+            Codec.FLOAT.optionalFieldOf("chance", 1f).forGetter(output -> output.chance),
+            Codec.BOOL.optionalFieldOf("optional", false).forGetter(output -> output.optional)
+        ).apply(instance, OutputItem::of));
         private final Either<Item, TagKey<Item>> item;
         private final int count;
         private final float chance;
@@ -199,6 +203,17 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
 
         public static OutputItem of(TagKey<Item> tag, int count, float chance, boolean optional) {
             return new OutputItem(Either.right(tag), count, chance, optional);
+        }
+        public static OutputItem of(Optional<TagKey<Item>> tag, Optional<Item> item, int count, float chance, boolean optional) {
+            if (tag.isPresent()) {
+                return new OutputItem(Either.right(tag.get()), count, chance, optional);
+            }
+
+            if (item.isPresent()) {
+                return new OutputItem(Either.left(item.get()), count, chance, optional);
+            }
+
+            throw new IllegalStateException("either tag or item need to be present");
         }
 
         public OutputItem(Either<Item, TagKey<Item>> item, int count, float chance, boolean optional) {
@@ -272,65 +287,21 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
 
     public static class Serializer implements RecipeSerializer<SagMillingRecipe> {
 
+        Codec<SagMillingRecipe> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Ingredient.CODEC_NONEMPTY.fieldOf("input").forGetter(recipe -> recipe.input),
+            OutputItem.CODEC.listOf().fieldOf("outputs").forGetter(recipe -> recipe.outputs),
+            Codec.INT.fieldOf("energy").forGetter(recipe -> recipe.energy),
+            Codec.STRING.xmap(v -> BonusType.valueOf(v.toUpperCase(Locale.ROOT)), e -> e.name().toLowerCase(Locale.ROOT)).optionalFieldOf("bonus", BonusType.MULTIPLY_OUTPUT).forGetter(recipe -> recipe.bonusType)
+        ).apply(instance, SagMillingRecipe::new));
+
         @Override
-        public SagMillingRecipe fromJson(ResourceLocation recipeId, JsonObject serializedRecipe) {
-            // Load ingredient
-            Ingredient input = Ingredient.fromJson(serializedRecipe.get("input"));
-
-            // Load energy
-            int energy = serializedRecipe.get("energy").getAsInt();
-
-            // Get the bonus type.
-            BonusType bonusType = BonusType.MULTIPLY_OUTPUT;
-            if (serializedRecipe.has("bonus")) {
-                bonusType = BonusType.valueOf(serializedRecipe.get("bonus").getAsString().toUpperCase());
-            }
-
-            // Load outputs
-            JsonArray jsonOutputs = serializedRecipe.getAsJsonArray("outputs");
-            List<OutputItem> outputs = new ArrayList<>();
-            for (int i = 0; i < jsonOutputs.size(); i++) {
-                JsonObject obj = jsonOutputs.get(i).getAsJsonObject();
-
-                // Load misc properties
-                int count = obj.has("count") ? obj.get("count").getAsInt() : 1;
-                float chance = obj.has("chance") ? obj.get("chance").getAsFloat() : 1.0f;
-                boolean optional = obj.has("optional") && obj.get("optional").getAsBoolean();
-
-                // Load item/tag and create output element
-                if (obj.has("tag")) {
-                    // Get tag
-                    ResourceLocation id = new ResourceLocation(obj.get("tag").getAsString());
-                    TagKey<Item> tag = ItemTags.create(id);
-
-                    // TODO: move these tests into OutputItem instead..
-                    // Check tag has entries if its required (although the point of a tag is generally this will be optional, its just in case
-                    //if (!optional) {
-                    //    EnderIO.LOGGER.error("Sag milling recipe {} is missing a required output tag {}", recipeId, id);
-                    //    throw new RuntimeException("Sag milling recipe is missing a required output tag.");
-                    //}
-
-                    outputs.add(OutputItem.of(tag, count, chance, optional));
-                } else {
-                    ResourceLocation id = new ResourceLocation(obj.get("item").getAsString());
-                    Item item = ForgeRegistries.ITEMS.getValue(id);
-
-                    // Check that the required item exists.
-                    if (item == null && !optional) {
-                        EnderIO.LOGGER.error("Sag milling recipe {} is missing a required output item {}", recipeId, id);
-                        throw new RuntimeException("Sag milling recipe is missing a required output item.");
-                    }
-
-                    outputs.add(OutputItem.of(item, count, chance, optional));
-                }
-            }
-
-            return new SagMillingRecipe(recipeId, input, outputs, energy, bonusType);
+        public Codec<SagMillingRecipe> codec() {
+            return CODEC;
         }
 
-        @Nullable
         @Override
-        public SagMillingRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
+        @Nullable
+        public SagMillingRecipe fromNetwork(FriendlyByteBuf buffer) {
             try {
                 Ingredient input = Ingredient.fromNetwork(buffer);
                 int energy = buffer.readInt();
@@ -359,22 +330,22 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
 
                         outputs.add(OutputItem.of(tag, count, chance, optional));
                     } else {
-                        Item item = ForgeRegistries.ITEMS.getValue(id);
+                        Item item = BuiltInRegistries.ITEM.get(id);
 
                         // Check the required items are present.
                         if (item == null && !optional) {
-                            EnderIO.LOGGER.error("Sag milling recipe {} is missing a required output item {}", recipeId, id);
-                            throw new RuntimeException("Sag milling recipe is missing a required output item.");
+                            EnderIO.LOGGER.error("Sag milling recipe is missing a required output item {}", id);
+                            return null;
                         }
 
                         outputs.add(OutputItem.of(item, count, chance, optional));
                     }
                 }
 
-                return new SagMillingRecipe(recipeId, input, outputs, energy, bonusType);
+                return new SagMillingRecipe(input, outputs, energy, bonusType);
             } catch (Exception ex) {
                 EnderIO.LOGGER.error("Error reading sag milling recipe to packet.", ex);
-                throw ex;
+                return null;
             }
         }
 
@@ -393,7 +364,7 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
                     if (item.isTag()) {
                         buffer.writeResourceLocation(item.getTag().location());
                     } else {
-                        buffer.writeResourceLocation(ForgeRegistries.ITEMS.getKey(item.getItem()));
+                        buffer.writeResourceLocation(BuiltInRegistries.ITEM.getKey(item.getItem()));
                     }
 
                     buffer.writeInt(item.count);

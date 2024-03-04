@@ -2,8 +2,9 @@ package com.enderio.api.travel;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.util.Lazy;
+import net.neoforged.neoforge.common.util.Lazy;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +35,10 @@ public class TravelRegistry {
         return Optional.ofNullable(REGISTRY.get(new ResourceLocation(nbt.getString("name")))).map(entry -> entry.constructor().apply(nbt.getCompound("data")));
     }
 
-    public static boolean isRegistered(ITravelTarget target) {
+    public static boolean isRegistered(@Nullable ITravelTarget target) {
+        if (target == null) { //TODO why null?
+            return false;
+        }
         return REGISTRY.containsKey(target.getSerializationName());
     }
 

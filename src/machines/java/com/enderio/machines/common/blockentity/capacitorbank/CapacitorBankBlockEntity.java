@@ -14,6 +14,7 @@ import com.enderio.machines.common.blockentity.multienergy.ICapacityTier;
 import com.enderio.machines.common.blockentity.multienergy.MultiEnergyNode;
 import com.enderio.machines.common.blockentity.multienergy.MultiEnergyStorageWrapper;
 import com.enderio.machines.common.blockentity.sync.LargeMachineEnergyDataSlot;
+import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.io.energy.ILargeMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.IMachineEnergyStorage;
 import com.enderio.machines.common.io.energy.MachineEnergyStorage;
@@ -64,8 +65,8 @@ public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implemen
        return map;
     });
 
-    public CapacitorBankBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState, ICapacityTier tier) {
-        super(EnergyIOMode.Both, new FixedScalable(tier::getStorageCapacity), new FixedScalable(tier::getStorageCapacity), type, worldPosition, blockState);
+    public CapacitorBankBlockEntity(BlockPos worldPosition, BlockState blockState, CapacitorTier tier) {
+        super(EnergyIOMode.Both, new FixedScalable(tier::getStorageCapacity), new FixedScalable(tier::getStorageCapacity), MachineBlockEntities.CAPACITOR_BANKS.get(tier).get(), worldPosition, blockState);
         this.tier = tier;
         this.node = new MultiEnergyNode(() -> energyStorage, () -> (MultiEnergyStorageWrapper) getExposedEnergyStorage(), worldPosition);
         addDataSlot(new LongNetworkDataSlot(() -> addedEnergy, syncAddedEnergy -> addedEnergy = syncAddedEnergy));
@@ -297,10 +298,5 @@ public class CapacitorBankBlockEntity extends PoweredMachineBlockEntity implemen
     }
     public void setDisplayMode(Direction direction, DisplayMode mode) {
         displayModes.put(direction, mode);
-    }
-
-    @Override
-    public AABB getRenderBoundingBox() {
-        return AABB.ofSize(new Vec3(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ()), 32, 32, 32);
     }
 }

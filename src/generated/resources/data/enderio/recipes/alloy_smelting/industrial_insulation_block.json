@@ -4,25 +4,26 @@
   "experience": 0.5,
   "inputs": [
     {
-      "count": 1,
-      "ingredient": {
-        "tag": "forge:dusts/lapis"
+      "Count": 1,
+      "Ingredient": {
+        "tag": "neoforge:dusts/lapis"
       }
     },
     {
-      "count": 1,
-      "ingredient": {
+      "Count": 1,
+      "Ingredient": {
         "tag": "minecraft:wool"
       }
     },
     {
-      "count": 1,
-      "ingredient": {
+      "Count": 1,
+      "Ingredient": {
         "tag": "enderio:insulation_metals"
       }
     }
   ],
   "result": {
-    "item": "enderio:industrial_insulation_block"
+    "Count": 1,
+    "id": "enderio:industrial_insulation_block"
   }
 }

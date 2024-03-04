@@ -3,12 +3,13 @@ package com.enderio.machines.client.gui.screen;
 import com.enderio.EnderIO;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.core.client.gui.widgets.EIOImageButton;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.enderio.core.client.gui.widgets.ToggleImageButton;
 import com.enderio.machines.client.gui.widget.FluidStackStaticWidget;
 import com.enderio.machines.common.menu.XPVacuumMenu;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -16,7 +17,10 @@ import net.minecraft.world.entity.player.Inventory;
 public class XPVacuumScreen extends MachineScreen<XPVacuumMenu> {
 
     private static final ResourceLocation XP_VACUUM_BG = EnderIO.loc("textures/gui/xp_vacuum.png");
-    private static final ResourceLocation BUTTONS = EnderIO.loc("textures/gui/icons/buttons.png");
+    private static final ResourceLocation PLUS = EnderIO.loc("buttons/plus_small");
+    private static final ResourceLocation MINUS = EnderIO.loc("buttons/minus_small");
+    private static final WidgetSprites PLUS_SPRITES = new WidgetSprites(PLUS, PLUS);
+    private static final WidgetSprites MINUS_SPRITES = new WidgetSprites(MINUS, MINUS);
     private static final ResourceLocation RANGE_BUTTON_TEXTURE = EnderIO.loc("textures/gui/icons/range_buttons.png");
 
     public XPVacuumScreen(XPVacuumMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
@@ -28,15 +32,19 @@ public class XPVacuumScreen extends MachineScreen<XPVacuumMenu> {
     protected void init() {
         super.init();
         addRenderableOnly(new FluidStackStaticWidget(this, getMenu().getBlockEntity()::getFluidTank, leftPos + 27, topPos + 22, 32, 32));
-        addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 8 - 14, topPos + 52, () -> menu.getBlockEntity().getRedstoneControl(),
+
+        addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 6 - 16, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
-        addRenderableWidget(new ToggleImageButton<>(this, leftPos + imageWidth - 8 - 16, topPos + 34, 16, 16, 0, 0, 16, 0, RANGE_BUTTON_TEXTURE,
-            () -> menu.getBlockEntity().isRangeVisible(), state -> menu.getBlockEntity().setIsRangeVisible(state),
+
+        addRenderableWidget(new ToggleImageButton<>(this, leftPos + imageWidth - 6 - 16, topPos + 34, 16, 16, 0, 0, 16, 0, RANGE_BUTTON_TEXTURE,
+            () -> menu.getBlockEntity().isRangeVisible(), state -> menu.getBlockEntity().setRangeVisible(state),
             () -> menu.getBlockEntity().isRangeVisible() ? EIOLang.HIDE_RANGE : EIOLang.SHOW_RANGE));
-        addRenderableWidget(
-            new ImageButton(leftPos + imageWidth - 8 - 8 - 2 - 16, topPos + 34, 8, 8, 8, 0, 16, BUTTONS, (b) -> this.menu.getBlockEntity().increaseRange()));
-        addRenderableWidget(
-            new ImageButton(leftPos + imageWidth - 8 - 8 - 2 - 16, topPos + 42, 8, 8, 8, 8, 16, BUTTONS, (b) -> this.menu.getBlockEntity().decreaseRange()));
+
+        addRenderableWidget(new EIOImageButton(this, leftPos + imageWidth - 6 - 8 - 2 - 16, topPos + 34, 8, 8, PLUS_SPRITES,
+            (b) -> this.menu.getBlockEntity().increaseRange()));
+        addRenderableWidget(new EIOImageButton(this, leftPos + imageWidth - 6 - 8 - 2 - 16, topPos + 42, 8, 8, MINUS_SPRITES,
+            (b) -> this.menu.getBlockEntity().decreaseRange()));
+
     }
 
     @Override
@@ -51,14 +59,14 @@ public class XPVacuumScreen extends MachineScreen<XPVacuumMenu> {
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
-        guiGraphics.drawString(font, EIOLang.RANGE, this.imageWidth - 8 - this.font.width(EIOLang.RANGE), 21, 4210752, false);
+        guiGraphics.drawString(font, EIOLang.RANGE, this.imageWidth - 6 - this.font.width(EIOLang.RANGE), 24, 4210752, false);
         super.renderLabels(guiGraphics, pMouseX, pMouseY);
     }
 
     @Override
     public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
         super.render(guiGraphics, pMouseX, pMouseY, pPartialTicks);
-        guiGraphics.drawString(font, this.getMenu().getBlockEntity().getRange() + "", leftPos + imageWidth - 8 - 16 - 2 - 8 - 10, topPos + 38, 0, false);
+        guiGraphics.drawString(font, this.getMenu().getBlockEntity().getRange() + "", leftPos + imageWidth - 6 - 16 - 2 - 8 - 10, topPos + 38, 0, false);
     }
 
 }

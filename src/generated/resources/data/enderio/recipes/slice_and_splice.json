@@ -9,13 +9,13 @@
       "item": "enderio:ensouled_chassis"
     },
     "G": {
-      "tag": "forge:gears/energized"
+      "tag": "neoforge:gears/energized"
     },
     "H": {
       "tag": "forge:heads"
     },
     "I": {
-      "tag": "forge:ingots/soularium"
+      "tag": "neoforge:ingots/soularium"
     }
   },
   "pattern": [
@@ -25,6 +25,5 @@
   ],
   "result": {
     "item": "enderio:slice_and_splice"
-  },
-  "show_notification": true
+  }
 }

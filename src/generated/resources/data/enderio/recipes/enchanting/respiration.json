@@ -3,8 +3,8 @@
   "cost_multiplier": 1,
   "enchantment": "minecraft:respiration",
   "input": {
-    "count": 1,
-    "ingredient": {
+    "Count": 1,
+    "Ingredient": {
       "item": "minecraft:glass_bottle"
     }
   }

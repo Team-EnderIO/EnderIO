@@ -9,8 +9,7 @@ import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.blockentity.capacitorbank.CapacitorBankBlockEntity;
 import com.enderio.machines.common.blockentity.capacitorbank.DisplayMode;
 import com.enderio.machines.common.blockentity.multienergy.ICapacityTier;
-import com.enderio.machines.common.lang.MachineLang;
-import com.tterrag.registrate.util.entry.BlockEntityEntry;
+import com.enderio.regilite.holder.RegiliteBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -24,12 +23,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraftforge.event.entity.player.AdvancementEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.ConnectionData;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.entity.player.AdvancementEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -45,8 +42,8 @@ public class CapacitorBankBlock extends MachineBlock implements IAdvancedTooltip
 
     public static final ResourceLocation PLACE_ADVANCEMENT_ID = EnderIO.loc("place_capacitor_bank");
 
-    public CapacitorBankBlock(Properties properties, BlockEntityEntry<? extends MachineBlockEntity> blockEntityType, ICapacityTier tier) {
-        super(properties, blockEntityType);
+    public CapacitorBankBlock(Properties properties, RegiliteBlockEntity<? extends MachineBlockEntity> blockEntityType, ICapacityTier tier) {
+        super(blockEntityType, properties);
         this.tier = tier;
     }
 
@@ -89,12 +86,12 @@ public class CapacitorBankBlock extends MachineBlock implements IAdvancedTooltip
 
     @SubscribeEvent
     public static void onAdvancement(AdvancementEvent.AdvancementEarnEvent event) {
-        if (event.getAdvancement().getId().equals(PLACE_ADVANCEMENT_ID) && event.getEntity() instanceof ServerPlayer serverPlayer) {
-            @Nullable
-            ConnectionData connectionData = NetworkHooks.getConnectionData(serverPlayer.connection.connection);
-            if (connectionData != null && !connectionData.getModList().contains("athena")) {
-                serverPlayer.sendSystemMessage(MachineLang.MULTIBLOCK_CONNECTED_TEXTURES);
-            }
+        if (event.getAdvancement().id().equals(PLACE_ADVANCEMENT_ID) && event.getEntity() instanceof ServerPlayer serverPlayer) {
+//            @Nullable
+//            ConnectionData connectionData = NetworkHooks.getConnectionData(serverPlayer.connection.connection);
+//            if (connectionData != null && !connectionData.getModList().contains("athena")) {
+//                serverPlayer.sendSystemMessage(MachineLang.MULTIBLOCK_CONNECTED_TEXTURES);
+//            }
         }
     }
 }

@@ -3,7 +3,7 @@ package com.enderio.api.misc;
 import com.enderio.api.UseOnly;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.LogicalSide;
+import net.neoforged.fml.LogicalSide;
 
 public interface IIcon {
     Vector2i DEFAULT_TEXTURE_SIZE = new Vector2i(256, 256);

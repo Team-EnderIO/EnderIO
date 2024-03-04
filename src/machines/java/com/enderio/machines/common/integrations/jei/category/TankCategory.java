@@ -6,10 +6,10 @@ import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.recipe.TankRecipe;
-import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.helpers.IGuiHelper;
+import mezz.jei.api.neoforge.NeoForgeTypes;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
@@ -54,7 +54,7 @@ public class TankCategory implements IRecipeCategory<TankRecipe> {
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, TankRecipe recipe, IFocusGroup focuses) {
         builder.addSlot(RecipeIngredientRole.INPUT, 39, 3)
-            .addIngredients(ForgeTypes.FLUID_STACK, List.of(recipe.getFluid()))
+            .addIngredients(NeoForgeTypes.FLUID_STACK, List.of(recipe.getFluid()))
             .setFluidRenderer(FluidTankBlockEntity.Standard.CAPACITY, false, 16, 47);
 
         if (recipe.isEmptying()) {

@@ -6,7 +6,7 @@
       "item": "enderio:dark_steel_bars"
     },
     "G": {
-      "tag": "forge:dusts/grains_of_infinity"
+      "tag": "neoforge:dusts/grains_of_infinity"
     },
     "O": {
       "tag": "forge:obsidian"
@@ -19,6 +19,5 @@
   ],
   "result": {
     "item": "enderio:reinforced_obsidian_block"
-  },
-  "show_notification": true
+  }
 }

@@ -1,8 +1,9 @@
 {
   "type": "enderio:sag_milling",
+  "bonus": "none",
   "energy": 2400,
   "input": {
-    "tag": "forge:gems/vibrant_crystal"
+    "tag": "neoforge:gems/vibrant_crystal"
   },
   "outputs": [
     {

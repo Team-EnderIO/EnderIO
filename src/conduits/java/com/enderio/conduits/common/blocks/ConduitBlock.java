@@ -16,7 +16,6 @@ import com.enderio.conduits.common.init.EnderConduitTypes;
 import com.enderio.conduits.common.items.ConduitBlockItem;
 import com.enderio.conduits.common.network.ConduitSavedData;
 import com.enderio.conduits.common.types.RedstoneExtendedData;
-import com.enderio.core.common.util.PlayerInteractionUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -26,6 +25,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -35,6 +35,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
@@ -56,10 +57,9 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.NetworkHooks;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -282,7 +282,10 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
             @Nullable IConduitType<?> type = conduit.getShape().getConduit(event.getPos(), event.getHitVec());
             if (type != null) {
                 conduit.removeTypeAndDelete(type);
-                PlayerInteractionUtil.putItemInInventoryFromWorldInteraction(event.getEntity(), event.getPos(), new ItemStack(type.getConduitItem()));
+                if (event.getLevel() instanceof ServerLevel serverLevel) {
+                    Inventory inventory = event.getEntity().getInventory();
+                    inventory.placeItemBackInInventory(new ItemStack(type.getConduitItem()));
+                }
                 event.setCanceled(true);
             }
         }
@@ -310,10 +313,10 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
         Optional<OpenInformation> openInformation = getOpenInformation(conduit, hit);
         if (openInformation.isPresent()) {
             if (player instanceof ServerPlayer serverPlayer) {
-                NetworkHooks.openScreen(serverPlayer, conduit.menuProvider(openInformation.get().direction(), openInformation.get().type()), buf -> {
+                serverPlayer.openMenu(conduit.menuProvider(openInformation.get().direction(), openInformation.get().type()), buf -> {
                     buf.writeBlockPos(conduit.getBlockPos());
                     buf.writeEnum(openInformation.get().direction());
-                    buf.writeInt(ConduitTypes.getRegistry().getID(openInformation.get().type()));
+                    buf.writeInt(ConduitTypes.getRegistry().getId(openInformation.get().type()));
                 });
             }
 
@@ -386,7 +389,7 @@ public class ConduitBlock extends Block implements EntityBlock, SimpleWaterlogge
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
         if (level instanceof Level realLevel && state.getOptionalValue(BlockStateProperties.WATERLOGGED).orElse(false)) {
             var hitResult = Item.getPlayerPOVHitResult(realLevel, player, ClipContext.Fluid.NONE);
             if (hitResult.getType() == HitResult.Type.MISS) {

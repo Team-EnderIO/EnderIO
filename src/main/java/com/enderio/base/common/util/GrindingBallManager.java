@@ -2,16 +2,17 @@ package com.enderio.base.common.util;
 
 import com.enderio.api.grindingball.IGrindingBallData;
 import com.enderio.base.common.init.EIORecipes;
+import com.enderio.base.common.recipe.GrindingBallRecipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraftforge.client.event.RecipesUpdatedEvent;
-import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.util.thread.EffectiveSide;
-import net.minecraftforge.server.ServerLifecycleHooks;
+import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.util.thread.EffectiveSide;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 import java.util.HashMap;
 import java.util.List;
@@ -72,8 +73,10 @@ public class GrindingBallManager {
         // Discover all grindingballs again.
         manager.getAllRecipesFor(EIORecipes.GRINDING_BALL.type().get())
             .forEach(grindingBallRecipe -> {
-                ITEM_TO_DATA.put(grindingBallRecipe.getItem(), grindingBallRecipe);
-                ID_TO_DATA.put(grindingBallRecipe.getGrindingBallId(), grindingBallRecipe);
+                GrindingBallRecipe value = grindingBallRecipe.value();
+                ITEM_TO_DATA.put(value.getItem(), value);
+                ID_TO_DATA.put(grindingBallRecipe.id(), value);
+                value.setGrindingBallId(grindingBallRecipe.id());
             });
     }
 }

@@ -1,9 +1,9 @@
 package com.enderio.core.common.util;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Optional;
 
@@ -19,7 +19,7 @@ public class EntityUtil {
      * @return The description ID.
      */
     public static String getEntityDescriptionId(ResourceLocation entityType) {
-        EntityType<?> type = ForgeRegistries.ENTITY_TYPES.getValue(entityType);
+        EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(entityType);
         if (type == null) {
             return "error"; // TODO: Proper key
         }
@@ -44,6 +44,6 @@ public class EntityUtil {
      * @return The resource location of the entity type.
      */
     public static Optional<ResourceLocation> getEntityTypeRL(Entity entity) {
-        return Optional.ofNullable(ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()));
+        return Optional.of(BuiltInRegistries.ENTITY_TYPE.getKey(entity.getType()));
     }
 }

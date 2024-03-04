@@ -4,13 +4,14 @@
   "experience": 0.3,
   "inputs": [
     {
-      "count": 9,
-      "ingredient": {
-        "tag": "forge:dusts/ender"
+      "Count": 9,
+      "Ingredient": {
+        "tag": "neoforge:dusts/ender"
       }
     }
   ],
   "result": {
-    "item": "minecraft:ender_pearl"
+    "Count": 1,
+    "id": "minecraft:ender_pearl"
   }
 }

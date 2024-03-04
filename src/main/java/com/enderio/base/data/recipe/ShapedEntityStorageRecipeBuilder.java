@@ -1,16 +1,17 @@
 package com.enderio.base.data.recipe;
 
-import com.enderio.base.common.init.EIORecipes;
-import com.google.gson.JsonObject;
-import net.minecraft.data.recipes.FinishedRecipe;
+import com.enderio.base.common.recipe.ShapedEntityStorageRecipe;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.ItemLike;
+import net.neoforged.neoforge.common.conditions.ICondition;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.Consumer;
 
 public class ShapedEntityStorageRecipeBuilder extends ShapedRecipeBuilder {
 
@@ -27,46 +28,20 @@ public class ShapedEntityStorageRecipeBuilder extends ShapedRecipeBuilder {
     }
 
     @Override
-    public void save(Consumer<FinishedRecipe> pFinishedRecipeConsumer, ResourceLocation pRecipeId) {
-        super.save(recipe -> {
-            pFinishedRecipeConsumer.accept(new Result((ShapedRecipeBuilder.Result) recipe));
+    public void save(RecipeOutput recipeOutput, ResourceLocation pRecipeId) {
+
+        super.save(new RecipeOutput() {
+            @Override
+            public void accept(ResourceLocation id, Recipe<?> recipe, @Nullable AdvancementHolder advancement, ICondition... conditions) {
+                if (recipe instanceof ShapedRecipe shapedRecipe) {
+                    recipeOutput.accept(id, new ShapedEntityStorageRecipe(shapedRecipe), advancement, conditions);
+                }
+            }
+
+            @Override
+            public Advancement.Builder advancement() {
+                return recipeOutput.advancement();
+            }
         }, pRecipeId);
-    }
-
-    public static class Result implements FinishedRecipe {
-
-        private ShapedRecipeBuilder.Result wrapped;
-
-        public Result(ShapedRecipeBuilder.Result wrapped) {
-            super();
-            this.wrapped = wrapped;
-        }
-
-        @Override
-        public RecipeSerializer<?> getType() {
-            return EIORecipes.SHAPED_ENTITY_STORAGE.get();
-        }
-
-        @Nullable
-        @Override
-        public JsonObject serializeAdvancement() {
-            return wrapped.serializeAdvancement();
-        }
-
-        @Nullable
-        @Override
-        public ResourceLocation getAdvancementId() {
-            return wrapped.getAdvancementId();
-        }
-
-        @Override
-        public void serializeRecipeData(JsonObject json) {
-            wrapped.serializeRecipeData(json);
-        }
-
-        @Override
-        public ResourceLocation getId() {
-            return wrapped.getId();
-        }
     }
 }

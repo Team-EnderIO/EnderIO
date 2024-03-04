@@ -1,10 +1,11 @@
 package com.enderio.machines.common.integrations.jei.category;
 
 import com.enderio.EnderIO;
-import com.enderio.api.capability.StoredEntityData;
-import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.api.attachment.StoredEntityData;
+import com.enderio.base.common.init.EIOAttachments;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.item.tool.SoulVialItem;
+import com.enderio.base.common.tag.EIOTags;
 import com.enderio.machines.client.gui.screen.SoulBinderScreen;
 import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.integrations.jei.util.MachineRecipeCategory;
@@ -24,10 +25,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,39 +77,40 @@ public class SoulBindingCategory extends MachineRecipeCategory<SoulBindingRecipe
         if (input.isPresent()) {
             vials.add(input.get().getTypedValue().getIngredient());
         } else if (recipe.getEntityType() != null) {
-            var item = new ItemStack(EIOItems.FILLED_SOUL_VIAL);
+            var item = new ItemStack(EIOItems.FILLED_SOUL_VIAL.get());
             SoulVialItem.setEntityType(item, recipe.getEntityType());
 
             vials.add(item);
         } else if (recipe.getMobCategory() != null) {
 
-            var allEntitiesOfCategory = ForgeRegistries.ENTITY_TYPES.getValues().stream()
+            var allEntitiesOfCategory = BuiltInRegistries.ENTITY_TYPE.stream()
                 .filter(e -> e.getCategory().equals(recipe.getMobCategory()))
-                .map(ForgeRegistries.ENTITY_TYPES::getKey)
+                .map(BuiltInRegistries.ENTITY_TYPE::getKey)
                 .toList();
 
             for (ResourceLocation entity : allEntitiesOfCategory) {
-                var item = new ItemStack(EIOItems.FILLED_SOUL_VIAL);
+                var item = new ItemStack(EIOItems.FILLED_SOUL_VIAL.get());
                 SoulVialItem.setEntityType(item, entity);
                 vials.add(item);
             }
 
         } else if (recipe.getSouldata() != null){
             if (output.isPresent()) {
-                var item = new ItemStack(EIOItems.FILLED_SOUL_VIAL);
-                output.get().getTypedValue().getItemStack().get().getCapability(EIOCapabilities.ENTITY_STORAGE).ifPresent(cap -> {
-                    SoulVialItem.setEntityType(item, cap.getStoredEntityData().getEntityType().get());
+                var item = new ItemStack(EIOItems.FILLED_SOUL_VIAL.get());
+                if (output.get().getTypedValue().getItemStack().get().is(EIOTags.Items.ENTITY_STORAGE)) {
+                    StoredEntityData data = output.get().getTypedValue().getItemStack().get().getData(EIOAttachments.STORED_ENTITY);
+                    SoulVialItem.setEntityType(item, data.getEntityType().get());
                     vials.add(item);
-                });
+                }
             } else {
                 SoulDataReloadListener<? extends ISoulData> soulDataReloadListener = SoulDataReloadListener.fromString(recipe.getSouldata());
 
-                var allEntitiesOfSoulData = ForgeRegistries.ENTITY_TYPES.getKeys().stream()
+                var allEntitiesOfSoulData = BuiltInRegistries.ENTITY_TYPE.keySet().stream()
                     .filter(r -> soulDataReloadListener.map.containsKey(r))
                     .toList();
 
                 for (ResourceLocation entity : allEntitiesOfSoulData) {
-                    var item = new ItemStack(EIOItems.FILLED_SOUL_VIAL);
+                    var item = new ItemStack(EIOItems.FILLED_SOUL_VIAL.get());
                     SoulVialItem.setEntityType(item, entity);
                     vials.add(item);
                 }
@@ -117,11 +119,12 @@ public class SoulBindingCategory extends MachineRecipeCategory<SoulBindingRecipe
 
         } else {
             if (output.isPresent()) {
-                var item = new ItemStack(EIOItems.FILLED_SOUL_VIAL);
-                output.get().getTypedValue().getItemStack().get().getCapability(EIOCapabilities.ENTITY_STORAGE).ifPresent(cap -> {
-                    SoulVialItem.setEntityType(item, cap.getStoredEntityData().getEntityType().get());
+                var item = new ItemStack(EIOItems.FILLED_SOUL_VIAL.get());
+                if (output.get().getTypedValue().getItemStack().get().is(EIOTags.Items.ENTITY_STORAGE)) {
+                    StoredEntityData data = output.get().getTypedValue().getItemStack().get().getData(EIOAttachments.STORED_ENTITY);
+                    SoulVialItem.setEntityType(item, data.getEntityType().get());
                     vials.add(item);
-                });
+                }
             } else {
                 vials.addAll(SoulVialItem.getAllFilled());
             }
@@ -134,20 +137,20 @@ public class SoulBindingCategory extends MachineRecipeCategory<SoulBindingRecipe
             .addIngredients(recipe.getInput());
 
         builder.addSlot(OUTPUT, 77, 4)
-            .addItemStack(new ItemStack(EIOItems.EMPTY_SOUL_VIAL));
+            .addItemStack(new ItemStack(EIOItems.EMPTY_SOUL_VIAL.get()));
 
         var resultStack = RecipeUtil.getResultStacks(recipe).get(0).getItem();
         var results = new ArrayList<ItemStack>();
 
         // If the output can take an entity type, then we add it
-        if (resultStack.getCapability(EIOCapabilities.ENTITY_STORAGE).isPresent()) {
+        if (resultStack.is(EIOTags.Items.ENTITY_STORAGE)) {
             for (ItemStack vial : vials) {
                 SoulVialItem.getEntityData(vial).flatMap(StoredEntityData::getEntityType).ifPresent(entityType -> {
                     var result = resultStack.copy();
-                    result.getCapability(EIOCapabilities.ENTITY_STORAGE).ifPresent(storage -> {
-                        storage.setStoredEntityData(StoredEntityData.of(entityType));
+                    if (result.is(EIOTags.Items.ENTITY_STORAGE)) {
+                        result.setData(EIOAttachments.STORED_ENTITY, StoredEntityData.of(entityType));
                         results.add(result);
-                    });
+                    }
                 });
             }
         }

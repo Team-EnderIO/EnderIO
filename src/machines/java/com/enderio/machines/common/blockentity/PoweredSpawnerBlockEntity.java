@@ -1,25 +1,31 @@
 package com.enderio.machines.common.blockentity;
 
 import com.enderio.EnderIO;
-import com.enderio.api.capability.StoredEntityData;
+import com.enderio.api.attachment.StoredEntityData;
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
-import com.enderio.core.common.network.slot.EnumNetworkDataSlot;
+import com.enderio.core.common.network.slot.CodecNetworkDataSlot;
 import com.enderio.core.common.network.slot.ResourceLocationNetworkDataSlot;
 import com.enderio.machines.common.MachineNBTKeys;
+import com.enderio.machines.common.attachment.ActionRange;
+import com.enderio.machines.common.attachment.IRangedActor;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.task.IMachineTask;
 import com.enderio.machines.common.blockentity.task.SpawnerMachineTask;
 import com.enderio.machines.common.blockentity.task.host.MachineTaskHost;
 import com.enderio.machines.common.config.MachinesConfig;
+import com.enderio.machines.common.init.MachineAttachments;
+import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.lang.MachineLang;
 import com.enderio.machines.common.menu.PoweredSpawnerMenu;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -29,10 +35,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
-
 // TODO: I want to revisit the powered spawner and task
 //       But there's not enough time before alpha, so just porting as-is.
-public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
+public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity implements IRangedActor {
 
     public static final QuadraticScalable CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.POWERED_SPAWNER_CAPACITY);
     public static final QuadraticScalable USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.POWERED_SPAWNER_USAGE);
@@ -41,20 +46,22 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
     private SpawnerBlockedReason reason = SpawnerBlockedReason.NONE;
     private final MachineTaskHost taskHost;
 
+    private CodecNetworkDataSlot<ActionRange> actionRangeDataSlot;
 
-    public PoweredSpawnerBlockEntity(BlockEntityType type, BlockPos worldPosition, BlockState blockState) {
-        super(EnergyIOMode.Input, CAPACITY, USAGE, type, worldPosition, blockState);
+    public PoweredSpawnerBlockEntity(BlockPos worldPosition, BlockState blockState) {
+        super(EnergyIOMode.Input, CAPACITY, USAGE, MachineBlockEntities.POWERED_SPAWNER.get(), worldPosition, blockState);
 
-        rangeVisibleDataSlot = new BooleanNetworkDataSlot(this::isRangeVisible, b -> this.rangeVisible = b);
-        addDataSlot(rangeVisibleDataSlot);
+        // TODO: rubbish way of having a default. use an interface instead?
+        if (!hasData(MachineAttachments.ACTION_RANGE)) {
+            setData(MachineAttachments.ACTION_RANGE, new ActionRange(4, false));
+        }
+
+        actionRangeDataSlot = addDataSlot(new CodecNetworkDataSlot<>(this::getActionRange, this::internalSetActionRange, ActionRange.CODEC));
 
         addDataSlot(new ResourceLocationNetworkDataSlot(() -> this.getEntityType().orElse(NO_MOB), rl -> {
             setEntityType(rl);
             EnderIO.LOGGER.info("UPDATED ENTITY TYPE.");
         }));
-        addDataSlot(new EnumNetworkDataSlot<>(SpawnerBlockedReason.class, this::getReason, this::setReason));
-
-        range = 4;
 
         taskHost = new MachineTaskHost(this, this::hasEnergy) {
             @Override
@@ -69,12 +76,37 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
                 return task;
             }
         };
+
+        updateMachineState(new MachineState(MachineStateType.ERROR, this.reason.component), false);
     }
 
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
         return new PoweredSpawnerMenu(this, pPlayerInventory, pContainerId);
+    }
+
+    public int getMaxRange() {
+        return 3;
+    }
+
+    @Override
+    public ActionRange getActionRange() {
+        return getData(MachineAttachments.ACTION_RANGE);
+    }
+
+    @Override
+    public void setActionRange(ActionRange actionRange) {
+        if (level != null && level.isClientSide) {
+            clientUpdateSlot(actionRangeDataSlot, actionRange);
+        } else {
+            internalSetActionRange(actionRange);
+        }
+    }
+
+    private void internalSetActionRange(ActionRange actionRange) {
+        setData(MachineAttachments.ACTION_RANGE, actionRange);
+        setChanged();
     }
 
     @Override
@@ -84,6 +116,15 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
         if (canAct()) {
             taskHost.tick();
         }
+    }
+
+    @Override
+    public void clientTick() {
+        if (level.isClientSide && level instanceof ClientLevel clientLevel) {
+            getActionRange().addClientParticle(clientLevel, getBlockPos(), MachinesConfig.CLIENT.BLOCKS.POWERED_SPAWNER_RANGE_COLOR.get());
+        }
+
+        super.clientTick();
     }
 
     @Override
@@ -106,16 +147,6 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
     }
 
     // endregion
-
-    @Override
-    public String getColor() {
-        return MachinesConfig.CLIENT.BLOCKS.POWERED_SPAWNER_RANGE_COLOR.get();
-    }
-
-    @Override
-    public int getMaxRange() {
-        return 3;
-    }
 
     // region Task
 
@@ -146,11 +177,9 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
         return entityData;
     }
 
-    public SpawnerBlockedReason getReason() {
-        return this.reason;
-    }
-
     public void setReason(SpawnerBlockedReason reason) {
+        updateMachineState(new MachineState(MachineStateType.ERROR, this.reason.component), false);
+        updateMachineState(new MachineState(MachineStateType.ERROR, reason.component), true);
         this.reason = reason;
     }
 
@@ -175,18 +204,18 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity {
     public enum SpawnerBlockedReason {
         TOO_MANY_MOB(MachineLang.TOO_MANY_MOB),
         TOO_MANY_SPAWNER(MachineLang.TOO_MANY_SPAWNER),
-        UNKOWN_MOB(MachineLang.UNKNOWN),
+        UNKNOWN_MOB(MachineLang.UNKNOWN),
         OTHER_MOD(MachineLang.OTHER_MOD),
         DISABLED(MachineLang.DISABLED),
         NONE(Component.literal("NONE"));
 
-        private final Component component;
+        private final MutableComponent component;
 
-        SpawnerBlockedReason(Component component) {
+        SpawnerBlockedReason(MutableComponent component) {
             this.component = component;
         }
 
-        public Component getComponent() {
+        public MutableComponent getComponent() {
             return component;
         }
     }

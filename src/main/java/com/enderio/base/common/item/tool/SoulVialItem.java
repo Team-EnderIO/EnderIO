@@ -1,23 +1,19 @@
 package com.enderio.base.common.item.tool;
 
 import com.enderio.EnderIO;
-import com.enderio.api.capability.IEntityStorage;
-import com.enderio.api.capability.IMultiCapabilityItem;
-import com.enderio.api.capability.MultiCapabilityProvider;
-import com.enderio.api.capability.StoredEntityData;
-import com.enderio.base.common.capability.EntityStorageItemStack;
-import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.api.attachment.StoredEntityData;
+import com.enderio.base.common.init.EIOAttachments;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.lang.EIOLang;
+import com.enderio.base.common.tag.EIOTags;
 import com.enderio.base.common.util.EntityCaptureUtils;
 import com.enderio.core.client.item.IAdvancedTooltipProvider;
 import com.enderio.core.common.util.EntityUtil;
 import com.enderio.core.common.util.TooltipUtil;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockSource;
 import net.minecraft.core.Direction;
+import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -36,12 +32,12 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -51,7 +47,11 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 @Mod.EventBusSubscriber(modid = EnderIO.MODID)
-public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvancedTooltipProvider {
+public class SoulVialItem extends Item implements IAdvancedTooltipProvider {
+
+    public static final ICapabilityProvider<ItemStack, Void, StoredEntityData> STORED_ENTITY_PROVIDER
+        = (stack, ctx) -> stack.getData(EIOAttachments.STORED_ENTITY);
+
     public SoulVialItem(Properties pProperties) {
         super(pProperties);
     }
@@ -60,27 +60,17 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
 
     @Override
     public boolean isFoil(ItemStack pStack) {
-        return pStack.getCapability(EIOCapabilities.ENTITY_STORAGE).map(IEntityStorage::hasStoredEntity).orElse(false);
-    }
-
-    @Override
-    public void addCommonTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
-        itemStack
-            .getCapability(EIOCapabilities.ENTITY_STORAGE)
-            .ifPresent(entityStorage -> entityStorage
-                .getStoredEntityData()
-                .getEntityType()
-                .ifPresent(entityType -> tooltips.add(TooltipUtil.style(Component.translatable(EntityUtil.getEntityDescriptionId(entityType))))));
+        return pStack.is(EIOTags.Items.ENTITY_STORAGE) && pStack.getData(EIOAttachments.STORED_ENTITY).hasEntity();
     }
 
     @Override
     public void addDetailedTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
-        itemStack
-            .getCapability(EIOCapabilities.ENTITY_STORAGE)
-            .ifPresent(entityStorage -> entityStorage
-                .getStoredEntityData()
+        if (itemStack.is(EIOTags.Items.ENTITY_STORAGE)) {
+            itemStack.getData(EIOAttachments.STORED_ENTITY)
                 .getHealthState()
-                .ifPresent(health -> tooltips.add(TooltipUtil.styledWithArgs(EIOLang.SOUL_VIAL_TOOLTIP_HEALTH, health.getA(), health.getB()))));
+                .ifPresent(health ->
+                    tooltips.add(TooltipUtil.styledWithArgs(EIOLang.SOUL_VIAL_TOOLTIP_HEALTH, health.getA(), health.getB())));
+        }
     }
 
     // endregion
@@ -134,6 +124,7 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
             displayCallback.accept(EIOLang.SOUL_VIAL_ERROR_PLAYER);
             return Optional.empty();
         }
+
         EntityCaptureUtils.CapturableStatus status = EntityCaptureUtils.getCapturableStatus((EntityType<? extends LivingEntity>) entity.getType(), entity);
         if (status != EntityCaptureUtils.CapturableStatus.CAPTURABLE) {
             displayCallback.accept(status.errorMessage());
@@ -158,10 +149,10 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
     }
 
     private static InteractionResult releaseEntity(Level level, ItemStack filledVial, Direction face, BlockPos pos, Consumer<ItemStack> emptyVialSetter) {
-        filledVial.getCapability(EIOCapabilities.ENTITY_STORAGE).ifPresent(entityStorage -> {
-            if (entityStorage.hasStoredEntity()) {
-                StoredEntityData entityData = entityStorage.getStoredEntityData();
+        if (filledVial.is(EIOTags.Items.ENTITY_STORAGE)) {
+            var storedEntity = filledVial.getData(EIOAttachments.STORED_ENTITY);
 
+            if (storedEntity.hasEntity()) {
                 // Get the spawn location for the mob.
                 double spawnX = pos.getX() + face.getStepX() + 0.5;
                 double spawnY = pos.getY() + face.getStepY();
@@ -171,7 +162,7 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
                 float rotation = Mth.wrapDegrees(level.getRandom().nextFloat() * 360.0f);
 
                 // Try to get the entity NBT from the item.
-                Optional<Entity> entity = EntityType.create(entityData.getEntityTag(), level);
+                Optional<Entity> entity = EntityType.create(storedEntity.getEntityTag(), level);
 
                 // Position the entity and add it.
                 entity.ifPresent(ent -> {
@@ -181,7 +172,8 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
                 });
                 emptyVialSetter.accept(EIOItems.EMPTY_SOUL_VIAL.get().getDefaultInstance());
             }
-        });
+        }
+
         return InteractionResult.SUCCESS;
     }
 
@@ -204,24 +196,15 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
     // region Entity Storage
 
     public static void setEntityType(ItemStack stack, ResourceLocation entityType) {
-        stack.getCapability(EIOCapabilities.ENTITY_STORAGE).ifPresent(storage -> storage.setStoredEntityData(StoredEntityData.of(entityType)));
+        stack.setData(EIOAttachments.STORED_ENTITY, StoredEntityData.of(entityType));
     }
 
     private static void setEntityData(ItemStack stack, LivingEntity entity) {
-        stack.getCapability(EIOCapabilities.ENTITY_STORAGE).ifPresent(storage -> storage.setStoredEntityData(StoredEntityData.of(entity)));
+        stack.setData(EIOAttachments.STORED_ENTITY, StoredEntityData.of(entity));
     }
 
     public static Optional<StoredEntityData> getEntityData(ItemStack stack) {
-        return stack.getCapability(EIOCapabilities.ENTITY_STORAGE).map(IEntityStorage::getStoredEntityData);
-    }
-
-    @Nullable
-    @Override
-    public MultiCapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt, MultiCapabilityProvider provider) {
-        if (this == EIOItems.FILLED_SOUL_VIAL.get()) {
-            provider.add(EIOCapabilities.ENTITY_STORAGE, LazyOptional.of(() -> new EntityStorageItemStack(stack)));
-        }
-        return provider;
+        return stack.is(EIOTags.Items.ENTITY_STORAGE) ? Optional.of(stack.getData(EIOAttachments.STORED_ENTITY)) : Optional.empty();
     }
 
     // endregion
@@ -257,25 +240,29 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
 
     // region Dispenser
     private static class FillSoulVialDispenseBehavior extends OptionalDispenseItemBehavior {
+        @Override
         protected ItemStack execute(BlockSource source, ItemStack stack) {
-            BlockPos blockpos = source.getPos().relative(source.getBlockState().getValue(DispenserBlock.FACING));
+            BlockPos blockpos = source.pos().relative(source.state().getValue(DispenserBlock.FACING));
             for (LivingEntity livingentity : source
-                .getLevel()
+                .level()
                 .getEntitiesOfClass(LivingEntity.class, new AABB(blockpos), living -> !(living instanceof Player))) {
                 Optional<ItemStack> filledVial = catchEntity(stack, livingentity, component -> {});
                 if (filledVial.isPresent()) {
                     //push filledvial back into dispenser
-                    source.getEntity().getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
-                        for (int i = 0; i < handler.getSlots(); i++) {
-                            if (handler.insertItem(i, filledVial.get(), true).isEmpty()) {
-                                handler.insertItem(i, filledVial.get(), false);
+                    var itemHandler = source.level().getCapability(Capabilities.ItemHandler.BLOCK, source.pos(), null);
+                    if (itemHandler != null) {
+                        for (int i = 0; i < itemHandler.getSlots(); i++) {
+                            if (itemHandler.insertItem(i, filledVial.get(), true).isEmpty()) {
+                                itemHandler.insertItem(i, filledVial.get(), false);
                                 break;
                             }
                         }
-                    });
+                    }
+
                     return stack;
                 }
             }
+
             this.setSuccess(false);
             return stack;
         }
@@ -283,9 +270,9 @@ public class SoulVialItem extends Item implements IMultiCapabilityItem, IAdvance
 
     private static class EmptySoulVialDispenseBehavior extends OptionalDispenseItemBehavior {
         protected ItemStack execute(BlockSource source, ItemStack stack) {
-            Direction dispenserDirection = source.getBlockState().getValue(DispenserBlock.FACING);
+            Direction dispenserDirection = source.state().getValue(DispenserBlock.FACING);
             AtomicReference<ItemStack> emptyVial = new AtomicReference<>();
-            releaseEntity(source.getLevel(), stack, dispenserDirection, source.getPos(), emptyVial::set);
+            releaseEntity(source.level(), stack, dispenserDirection, source.pos(), emptyVial::set);
             if (emptyVial.get() != null) {
                 return emptyVial.get();
             } else {

@@ -8,14 +8,15 @@ import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
 import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.apache.commons.lang3.function.TriFunction;
 
 import java.util.List;
@@ -96,7 +97,7 @@ public class FluidConduitTicker extends CapabilityAwareConduitTicker<IFluidHandl
     }
 
     @Override
-    protected Capability<IFluidHandler> getCapability() {
-        return ForgeCapabilities.FLUID_HANDLER;
+    protected BlockCapability<IFluidHandler, Direction> getCapability() {
+        return Capabilities.FluidHandler.BLOCK;
     }
 }

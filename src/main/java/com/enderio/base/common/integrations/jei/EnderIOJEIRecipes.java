@@ -9,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class EnderIOJEIRecipes {
     }
 
     public List<FireCraftingRecipe> getAllFireCraftingRecipes() {
-        return recipeManager.getAllRecipesFor(EIORecipes.FIRE_CRAFTING.type().get());
+        return recipeManager.getAllRecipesFor(EIORecipes.FIRE_CRAFTING.type().get()).stream().map(RecipeHolder::value).toList();
     }
 
     public List<FakeGrindingRecipe> getAllGrindingRecipes() {
@@ -33,11 +34,11 @@ public class EnderIOJEIRecipes {
             new FakeGrindingRecipe(
                 CountedIngredient.of(Items.DEEPSLATE, Items.COBBLED_DEEPSLATE),
                 CountedIngredient.of(Items.FLINT),
-                new ItemStack(EIOItems.GRAINS_OF_INFINITY)),
+                new ItemStack(EIOItems.GRAINS_OF_INFINITY.get())),
             new FakeGrindingRecipe(
                 CountedIngredient.of(3, Items.COAL),
                 CountedIngredient.of(Items.FLINT),
-                new ItemStack(EIOItems.POWDERED_COAL))
+                new ItemStack(EIOItems.POWDERED_COAL.get()))
         );
     }
 }

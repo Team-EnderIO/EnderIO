@@ -6,7 +6,7 @@
       "tag": "forge:gems/diamond"
     },
     "P": {
-      "tag": "forge:nuggets/pulsating_alloy"
+      "tag": "neoforge:nuggets/pulsating_alloy"
     }
   },
   "pattern": [
@@ -16,6 +16,5 @@
   ],
   "result": {
     "item": "enderio:pulsating_crystal"
-  },
-  "show_notification": true
+  }
 }

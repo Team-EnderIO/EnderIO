@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "enderio:block/xp_juice"
+      "model": "minecraft:block/water"
     }
   }
 }

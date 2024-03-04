@@ -5,6 +5,7 @@ import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
+import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.menu.ImpulseHopperMenu;
@@ -25,8 +26,8 @@ public class ImpulseHopperBlockEntity extends PoweredMachineBlockEntity {
     public static final MultiSlotAccess OUTPUT = new MultiSlotAccess();
     public static final MultiSlotAccess GHOST = new MultiSlotAccess();
 
-    public ImpulseHopperBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
-        super(EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE, type, worldPosition, blockState);
+    public ImpulseHopperBlockEntity(BlockPos worldPosition, BlockState blockState) {
+        super(EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE, MachineBlockEntities.IMPULSE_HOPPER.get(), worldPosition, blockState);
     }
 
     @Override

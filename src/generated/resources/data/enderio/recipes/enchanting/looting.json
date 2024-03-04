@@ -3,8 +3,8 @@
   "cost_multiplier": 1,
   "enchantment": "minecraft:looting",
   "input": {
-    "count": 1,
-    "ingredient": {
+    "Count": 1,
+    "Ingredient": {
       "item": "minecraft:skeleton_skull"
     }
   }

@@ -1,6 +1,6 @@
 {
   "values": [
-    "#forge:dusts/iron",
-    "#forge:dusts/tin"
+    "#neoforge:dusts/iron",
+    "#neoforge:dusts/tin"
   ]
 }

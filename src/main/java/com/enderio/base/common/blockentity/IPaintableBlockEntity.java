@@ -1,7 +1,7 @@
 package com.enderio.base.common.blockentity;
 
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.client.model.data.ModelProperty;
+import net.neoforged.neoforge.client.model.data.ModelProperty;
 
 import java.util.HashSet;
 import java.util.Set;

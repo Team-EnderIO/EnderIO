@@ -2,7 +2,7 @@ package com.enderio.api.travel;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.util.Lazy;
+import net.neoforged.neoforge.common.util.Lazy;
 
 import java.util.function.Function;
 import java.util.function.Supplier;

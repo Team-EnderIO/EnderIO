@@ -6,7 +6,7 @@ import com.enderio.core.common.network.slot.FloatNetworkDataSlot;
 import com.enderio.machines.common.blockentity.task.IMachineTask;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.LogicalSide;
+import net.neoforged.fml.LogicalSide;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;

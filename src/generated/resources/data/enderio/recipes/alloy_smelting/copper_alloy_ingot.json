@@ -4,19 +4,20 @@
   "experience": 0.3,
   "inputs": [
     {
-      "count": 1,
-      "ingredient": {
+      "Count": 1,
+      "Ingredient": {
         "tag": "forge:ingots/copper"
       }
     },
     {
-      "count": 1,
-      "ingredient": {
-        "tag": "forge:silicon"
+      "Count": 1,
+      "Ingredient": {
+        "tag": "neoforge:silicon"
       }
     }
   ],
   "result": {
-    "item": "enderio:copper_alloy_ingot"
+    "Count": 1,
+    "id": "enderio:copper_alloy_ingot"
   }
 }

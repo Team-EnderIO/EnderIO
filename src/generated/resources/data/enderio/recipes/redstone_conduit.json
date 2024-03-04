@@ -6,7 +6,7 @@
       "item": "enderio:conduit_binder"
     },
     "I": {
-      "tag": "forge:ingots/redstone_alloy"
+      "tag": "neoforge:ingots/redstone_alloy"
     }
   },
   "pattern": [
@@ -17,6 +17,5 @@
   "result": {
     "count": 8,
     "item": "enderio:redstone_conduit"
-  },
-  "show_notification": true
+  }
 }

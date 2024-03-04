@@ -6,7 +6,7 @@ import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.blockentity.solar.ISolarPanelTier;
 import com.enderio.machines.common.lang.MachineLang;
-import com.tterrag.registrate.util.entry.BlockEntityEntry;
+import com.enderio.regilite.holder.RegiliteBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -38,8 +38,8 @@ public class SolarPanelBlock extends MachineBlock implements IAdvancedTooltipPro
     private static final VoxelShape SHAPE = Block.box(0, 0, 0, 16, 3, 16);
     private final ISolarPanelTier tier;
 
-    public SolarPanelBlock(Properties properties, BlockEntityEntry<? extends MachineBlockEntity> blockEntityType, ISolarPanelTier tier) {
-        super(properties, blockEntityType);
+    public SolarPanelBlock(RegiliteBlockEntity<? extends MachineBlockEntity> blockEntityType, Properties properties, ISolarPanelTier tier) {
+        super(blockEntityType, properties);
         registerDefaultState(getStateDefinition().any().setValue(NORTH, true).setValue(NORTH_WEST, true).setValue(NORTH_EAST, true).setValue(WEST, true).setValue(EAST, true).setValue(SOUTH_WEST, true).setValue(SOUTH, true).setValue(SOUTH_EAST, true));
         this.tier = tier;
     }

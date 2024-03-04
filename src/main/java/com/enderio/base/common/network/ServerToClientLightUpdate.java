@@ -1,38 +1,35 @@
 package com.enderio.base.common.network;
 
+import com.enderio.EnderIO;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.network.NetworkEvent.Context;
-
-import java.util.function.Supplier;
 
 /**
  * Custom setblock packet to update light
  */
-public class ServerToClientLightUpdate {
-    public final BlockPos pos;
-    public final BlockState state;
-    
-    public ServerToClientLightUpdate(BlockPos pos, BlockState state) {
-        this.pos = pos;
-        this.state = state;
-    }
-    
+public record ServerToClientLightUpdate(BlockPos pos, BlockState state) implements CustomPacketPayload {
+
+    public static ResourceLocation ID = EnderIO.loc("light_update");
+
     public ServerToClientLightUpdate(FriendlyByteBuf buf) {
-        this.pos = buf.readBlockPos();
-        this.state = Block.stateById(buf.readVarInt());
-    }
-    
-    public void write(FriendlyByteBuf buffer) {
-        buffer.writeBlockPos(this.pos);
-        buffer.writeVarInt(Block.getId(this.state));
-    }
-    
-    static void handle(final ServerToClientLightUpdate message, Supplier<Context> ctx) {
-        ctx.get().enqueueWork(() -> ServerToClientLightUpdateHandler.handlePacket(message, ctx));
-        ctx.get().setPacketHandled(true);
+        this(
+            buf.readBlockPos(),
+            Block.stateById(buf.readVarInt())
+        );
     }
 
+    @Override
+    public void write(FriendlyByteBuf buffer) {
+        buffer.writeBlockPos(pos);
+        buffer.writeVarInt(Block.getId(state));
+    }
+
+    @Override
+    public ResourceLocation id() {
+        return ID;
+    }
 }

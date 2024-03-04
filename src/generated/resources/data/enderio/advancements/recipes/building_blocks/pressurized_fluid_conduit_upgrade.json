@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_ingredient",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_ingredient"
     ]
   ],
   "rewards": {
     "recipes": [
       "enderio:pressurized_fluid_conduit_upgrade"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

@@ -4,20 +4,20 @@
   "experience": 0.3,
   "inputs": [
     {
-      "count": 1,
-      "ingredient": {
+      "Count": 1,
+      "Ingredient": {
         "tag": "forge:dusts/glowstone"
       }
     },
     {
-      "count": 1,
-      "ingredient": {
+      "Count": 1,
+      "Ingredient": {
         "item": "minecraft:clay_ball"
       }
     }
   ],
   "result": {
-    "count": 2,
-    "item": "enderio:clayed_glowstone"
+    "Count": 2,
+    "id": "enderio:clayed_glowstone"
   }
 }

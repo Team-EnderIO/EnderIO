@@ -23,6 +23,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector2i;
@@ -209,6 +211,12 @@ public class CapacitorBankBER implements BlockEntityRenderer<CapacitorBankBlockE
     @Override
     public int getViewDistance() {
         return 92;
+    }
+
+    @Override
+    public AABB getRenderBoundingBox(CapacitorBankBlockEntity blockEntity) {
+        var pos = blockEntity.getBlockPos();
+        return AABB.ofSize(new Vec3(pos.getX(), pos.getY(), pos.getZ()), 32, 32, 32);
     }
 
     //TODO test performance, potentially try to cache

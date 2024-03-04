@@ -3,8 +3,6 @@ package com.enderio.base.data.loot;
 import com.enderio.EnderIO;
 import com.enderio.base.common.enchantment.AutoSmeltModifier;
 import com.enderio.base.common.init.EIOEnchantments;
-import com.enderio.base.common.item.darksteel.upgrades.direct.DirectUpgradeLootCondition;
-import com.enderio.base.common.item.darksteel.upgrades.direct.DirectUpgradeLootModifier;
 import com.enderio.base.common.loot.BrokenSpawnerLootModifier;
 import com.enderio.base.common.loot.ChestLootModifier;
 import net.minecraft.advancements.critereon.EnchantmentPredicate;
@@ -17,8 +15,8 @@ import net.minecraft.world.level.storage.loot.predicates.AnyOfCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.MatchTool;
-import net.minecraftforge.common.data.GlobalLootModifierProvider;
-import net.minecraftforge.common.loot.LootTableIdCondition;
+import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
+import net.neoforged.neoforge.common.loot.LootTableIdCondition;
 
 import java.util.stream.Stream;
 
@@ -29,6 +27,8 @@ public class EIOLootModifiersProvider extends GlobalLootModifierProvider {
 
     @Override
     protected void start() {
+        // TODO: NEO-PORT: neoforge:global_loot_modifiers file gets overwritten when armory is enabled.
+
         add("auto_smelt", new AutoSmeltModifier(
             new LootItemCondition[]{
                 MatchTool.toolMatches(ItemPredicate.Builder.item().hasEnchantment(
@@ -78,12 +78,6 @@ public class EIOLootModifiersProvider extends GlobalLootModifierProvider {
             "chests/village/village_armorer",
             "chests/village/village_toolsmith",
             "chests/village/village_weaponsmith"
-        ));
-
-        add("direct_upgrade", new DirectUpgradeLootModifier(
-            new LootItemCondition[]{
-                new DirectUpgradeLootCondition()
-            }
         ));
     }
 

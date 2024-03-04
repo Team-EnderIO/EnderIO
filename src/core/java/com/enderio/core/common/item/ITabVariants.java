@@ -1,10 +1,11 @@
 package com.enderio.core.common.item;
 
-import com.tterrag.registrate.util.CreativeModeTabModifier;
+import net.minecraft.world.item.CreativeModeTab;
+
+import java.util.function.Consumer;
 
 /**
  * If an item implements multiple variants that should be displayed, use this.
- * TODO: Might PR this into Registrate
  */
 @FunctionalInterface
 public interface ITabVariants {
@@ -13,5 +14,5 @@ public interface ITabVariants {
      * @param modifier The modifier.
      */
 
-    void addAllVariants(CreativeModeTabModifier modifier);
+    void addAllVariants(CreativeModeTab.Output modifier);
 }

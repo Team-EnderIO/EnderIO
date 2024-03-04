@@ -1,7 +1,7 @@
 package com.enderio.machines.data.loot;
 
 import com.enderio.machines.common.MachineNBTKeys;
-import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
+import com.enderio.regilite.data.RegiliteBlockLootProvider;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootPool;
@@ -12,14 +12,14 @@ import net.minecraft.world.level.storage.loot.providers.nbt.ContextNbtProvider;
 
 public class MachinesLootTable {
 
-    public static <T extends Block> void copyNBT(RegistrateBlockLootTables loot, T block) {
+    public static <T extends Block> void copyNBT(RegiliteBlockLootProvider loot, T block) {
         loot.add(block, LootTable
             .lootTable()
             .withPool(new LootPool.Builder().add(
                 LootItem.lootTableItem(block).apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY).copy("", BlockItem.BLOCK_ENTITY_TAG)))));
     }
 
-    public static <T extends Block> void copyNBTSingleCap(RegistrateBlockLootTables loot, T block, String name) {
+    public static <T extends Block> void copyNBTSingleCap(RegiliteBlockLootProvider loot, T block, String name) {
         loot.add(block, LootTable
             .lootTable()
             .withPool(new LootPool.Builder().add(

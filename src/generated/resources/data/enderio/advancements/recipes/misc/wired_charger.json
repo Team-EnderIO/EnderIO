@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_ingredient",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_ingredient"
     ]
   ],
   "rewards": {
     "recipes": [
       "enderio:wired_charger"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

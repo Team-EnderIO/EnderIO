@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_ingredient",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_ingredient"
     ]
   ],
   "rewards": {
     "recipes": [
       "enderio:redstone_alloy_grinding_ball"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

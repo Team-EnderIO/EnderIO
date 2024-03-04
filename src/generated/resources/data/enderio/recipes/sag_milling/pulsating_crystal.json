@@ -1,8 +1,9 @@
 {
   "type": "enderio:sag_milling",
+  "bonus": "none",
   "energy": 2400,
   "input": {
-    "tag": "forge:gems/pulsating_crystal"
+    "tag": "neoforge:gems/pulsating_crystal"
   },
   "outputs": [
     {

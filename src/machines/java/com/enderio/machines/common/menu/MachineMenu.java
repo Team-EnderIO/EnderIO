@@ -1,7 +1,9 @@
 package com.enderio.machines.common.menu;
 
+import com.enderio.core.common.blockentity.EnderBlockEntity;
 import com.enderio.core.common.menu.SyncedMenu;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
@@ -10,7 +12,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class MachineMenu<T extends MachineBlockEntity> extends SyncedMenu<T> {
+public abstract class MachineMenu<T extends EnderBlockEntity> extends SyncedMenu<T> {
 
     protected MachineMenu(@Nullable T blockEntity, Inventory inventory, @Nullable MenuType<?> pMenuType, int pContainerId) {
         super(blockEntity, inventory, pMenuType, pContainerId);
@@ -18,8 +20,7 @@ public abstract class MachineMenu<T extends MachineBlockEntity> extends SyncedMe
 
     @Override
     public boolean stillValid(Player pPlayer) {
-        return getBlockEntity() != null
-            && getBlockEntity().stillValid(pPlayer);
+        return getBlockEntity() != null && Container.stillValidBlockEntity(getBlockEntity(), pPlayer);
     }
 
     // Stop clearing ghost slot when double clicking.

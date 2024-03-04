@@ -4,13 +4,14 @@
   "experience": 0.3,
   "inputs": [
     {
-      "count": 1,
-      "ingredient": {
+      "Count": 1,
+      "Ingredient": {
         "tag": "minecraft:saplings"
       }
     }
   ],
   "result": {
-    "item": "minecraft:dead_bush"
+    "Count": 1,
+    "id": "minecraft:dead_bush"
   }
 }

@@ -22,7 +22,7 @@ public class PaintingMachineMenu extends MachineMenu<PaintingMachineBlockEntity>
         addInventorySlots(8,84);
     }
 
-    public static PaintingMachineMenu factory(@Nullable MenuType<PaintingMachineMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
+    public static PaintingMachineMenu factory(int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
         if (entity instanceof PaintingMachineBlockEntity castBlockEntity) {
             return new PaintingMachineMenu(castBlockEntity, inventory, pContainerId);

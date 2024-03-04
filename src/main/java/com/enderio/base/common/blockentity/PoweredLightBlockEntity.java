@@ -3,6 +3,7 @@ package com.enderio.base.common.blockentity;
 import com.enderio.base.EIONBTKeys;
 import com.enderio.base.common.block.light.Light;
 import com.enderio.base.common.block.light.PoweredLight;
+import com.enderio.base.common.init.EIOBlockEntities;
 import com.enderio.base.common.init.EIOBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -14,11 +15,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.capabilities.Capabilities;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -30,8 +28,8 @@ public class PoweredLightBlockEntity extends BlockEntity{
 	private boolean update = true;
 	private boolean active = false;
 
-	public PoweredLightBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
-		super(type, worldPosition, blockState);
+	public PoweredLightBlockEntity(BlockPos worldPosition, BlockState blockState) {
+		super(EIOBlockEntities.POWERED_LIGHT.get(), worldPosition, blockState);
 	}
 	
 	public static void tick(Level level, BlockPos pos, BlockState state, PoweredLightBlockEntity e) {
@@ -140,12 +138,15 @@ public class PoweredLightBlockEntity extends BlockEntity{
 		if (Math.abs(node.getX()-center.getX()) > SPREAD) {
 			return false;
 		}
+
 		if (Math.abs(node.getY()-center.getY()) > SPREAD) {
 			return false;
 		}
+
 		if (Math.abs(node.getZ()-center.getZ()) > SPREAD) {
 			return false;
 		}
+
 		return true;
 	}
 	
@@ -153,22 +154,21 @@ public class PoweredLightBlockEntity extends BlockEntity{
 	 * Consumes power from the block entity below, if possible.
 	 */
 	private static void consumePower(Level level, BlockPos pos, BlockState state, PoweredLightBlockEntity e) {
-		BlockEntity be = level.getBlockEntity(pos.relative(state.getValue(Light.FACING).getOpposite()));
-		if (be != null) {
-			LazyOptional<IEnergyStorage> energy = be.getCapability(ForgeCapabilities.ENERGY, state.getValue(Light.FACING));
-			if (energy.isPresent()) {
-				if (energy.resolve().get().extractEnergy(RF_USE_TICK, true) == RF_USE_TICK) {
-					boolean powered = level.hasNeighborSignal(pos);
-					if (powered == ((Light) state.getBlock()).isInverted() ? state.getValue(Light.ENABLED) : !state.getValue(Light.ENABLED)) {
-					    e.active = false;
-						return;
-					}
-			        level.setBlock(pos, state.setValue(Light.ENABLED, false), Block.UPDATE_ALL);
-					e.active = true;
-					energy.resolve().get().extractEnergy(RF_USE_TICK, false);
+        var entityStorage = level.getCapability(Capabilities.EnergyStorage.BLOCK,
+            pos.relative(state.getValue(Light.FACING).getOpposite()), state.getValue(Light.FACING));
+
+        if (entityStorage != null) {
+            if (entityStorage.extractEnergy(RF_USE_TICK, true) == RF_USE_TICK) {
+                boolean powered = level.hasNeighborSignal(pos);
+                if ((powered == ((Light) state.getBlock()).isInverted()) == state.getValue(Light.ENABLED)) {
+                    e.active = false;
+                    return;
                 }
-			}
-		}
+                level.setBlock(pos, state.setValue(Light.ENABLED, false), Block.UPDATE_ALL);
+                e.active = true;
+                entityStorage.extractEnergy(RF_USE_TICK, false);
+            }
+        }
 	}
 	
 	/**
@@ -177,7 +177,7 @@ public class PoweredLightBlockEntity extends BlockEntity{
 	//TODO add wireless power capability
 	private static void consumePowerWireless(Level level, BlockPos pos, BlockState state, PoweredLightBlockEntity e) {
 	    boolean powered = level.hasNeighborSignal(pos);
-	    if (powered != ((Light) state.getBlock()).isInverted() ? state.getValue(Light.ENABLED) : !state.getValue(Light.ENABLED)) {
+	    if ((powered != ((Light) state.getBlock()).isInverted()) == state.getValue(Light.ENABLED)) {
 	        level.setBlock(pos, state.setValue(Light.ENABLED, false), Block.UPDATE_ALL);
 	        e.active = true;
 	    }

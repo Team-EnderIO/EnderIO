@@ -4,19 +4,20 @@
   "experience": 0.3,
   "inputs": [
     {
-      "count": 1,
-      "ingredient": {
+      "Count": 1,
+      "Ingredient": {
         "item": "enderio:clear_glass"
       }
     },
     {
-      "count": 4,
-      "ingredient": {
+      "Count": 4,
+      "Ingredient": {
         "tag": "forge:gems/amethyst"
       }
     }
   ],
   "result": {
-    "item": "enderio:clear_glass_d"
+    "Count": 1,
+    "id": "enderio:clear_glass_d"
   }
 }

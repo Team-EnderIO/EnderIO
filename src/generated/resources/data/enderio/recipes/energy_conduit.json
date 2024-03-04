@@ -6,7 +6,7 @@
       "item": "enderio:conduit_binder"
     },
     "I": {
-      "tag": "forge:ingots/conductive_alloy"
+      "tag": "neoforge:ingots/conductive_alloy"
     }
   },
   "pattern": [
@@ -17,6 +17,5 @@
   "result": {
     "count": 8,
     "item": "enderio:energy_conduit"
-  },
-  "show_notification": true
+  }
 }

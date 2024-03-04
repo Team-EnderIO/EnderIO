@@ -21,7 +21,7 @@ public class PoweredSpawnerMenu extends MachineMenu<PoweredSpawnerBlockEntity> {
         addInventorySlots(8,84);
     }
 
-    public static PoweredSpawnerMenu factory(@Nullable MenuType<PoweredSpawnerMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
+    public static PoweredSpawnerMenu factory(int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
         if (entity instanceof PoweredSpawnerBlockEntity castBlockEntity) {
             return new PoweredSpawnerMenu(castBlockEntity, inventory, pContainerId);

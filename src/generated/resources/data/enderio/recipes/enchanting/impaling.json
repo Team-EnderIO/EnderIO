@@ -3,8 +3,8 @@
   "cost_multiplier": 1,
   "enchantment": "minecraft:impaling",
   "input": {
-    "count": 8,
-    "ingredient": {
+    "Count": 8,
+    "Ingredient": {
       "tag": "forge:ingots/iron"
     }
   }

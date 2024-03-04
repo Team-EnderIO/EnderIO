@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_ingredient",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_ingredient"
     ]
   ],
   "rewards": {
     "recipes": [
       "enderio:cold_fire_igniter"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

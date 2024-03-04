@@ -3,9 +3,9 @@ package com.enderio.machines.common.souldata;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.event.AddReloadListenerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class EngineSoul {
@@ -28,7 +28,7 @@ public class EngineSoul {
     public static final SoulDataReloadListener<SoulData> ENGINE = new SoulDataReloadListener<>(NAME, CODEC);
 
     @SubscribeEvent
-    static void addResource(AddReloadListenerEvent event) {
+    public static void addResource(AddReloadListenerEvent event) {
         event.addListener(ENGINE);
     }
 }

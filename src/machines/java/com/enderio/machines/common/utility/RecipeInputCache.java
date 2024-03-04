@@ -7,10 +7,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraftforge.fml.util.thread.EffectiveSide;
-import net.minecraftforge.server.ServerLifecycleHooks;
+import net.neoforged.fml.util.thread.EffectiveSide;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,8 +24,8 @@ import java.util.stream.Collectors;
 
 public class RecipeInputCache<C extends Container, T extends Recipe<C>> {
     private final Supplier<RecipeType<T>> recipeType;
-    private final HashMap<Item, HashSet<T>> itemToRecipesCache;
-    private final HashMap<T, List<Ingredient>> recipeToIngredientCache;
+    private final HashMap<Item, HashSet<RecipeHolder<T>>> itemToRecipesCache;
+    private final HashMap<RecipeHolder<T>, List<Ingredient>> recipeToIngredientCache;
     private boolean isDirty;
 
     public RecipeInputCache(Supplier<RecipeType<T>> recipeType) {
@@ -57,7 +58,7 @@ public class RecipeInputCache<C extends Container, T extends Recipe<C>> {
     public boolean hasRecipe(List<ItemStack> inputs) {
         checkCacheRebuild();
 
-        Set<T> possibleMatches = null;
+        Set<RecipeHolder<T>> possibleMatches = null;
 
         for (var input : inputs) {
             var matches = itemToRecipesCache.get(input.getItem());
@@ -126,14 +127,14 @@ public class RecipeInputCache<C extends Container, T extends Recipe<C>> {
         recipeToIngredientCache.clear();
         recipeManager.getAllRecipesFor(recipeType.get())
             .forEach(recipe -> {
-                var items = recipe.getIngredients().stream()
+                var items = recipe.value().getIngredients().stream()
                     .flatMap(ingredient -> Arrays.stream(ingredient.getItems()))
                     .map(ItemStack::getItem)
                     .toList();
 
-                recipeToIngredientCache.put(recipe, recipe.getIngredients());
+                recipeToIngredientCache.put(recipe, recipe.value().getIngredients());
                 for (Item item : items) {
-                    itemToRecipesCache.computeIfAbsent(item, (i) -> new HashSet<>())
+                    itemToRecipesCache.computeIfAbsent(item, i -> new HashSet<>())
                         .add(recipe);
                 }
             });

@@ -3,8 +3,8 @@
   "cost_multiplier": 1,
   "enchantment": "minecraft:bane_of_arthropods",
   "input": {
-    "count": 12,
-    "ingredient": {
+    "Count": 12,
+    "Ingredient": {
       "item": "minecraft:spider_eye"
     }
   }

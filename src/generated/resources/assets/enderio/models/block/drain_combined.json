@@ -12,7 +12,7 @@
     "machine",
     "overlay"
   ],
-  "loader": "forge:composite",
+  "loader": "neoforge:composite",
   "textures": {
     "particle": "enderio:block/drain_front"
   }

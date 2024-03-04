@@ -1,33 +1,33 @@
 package com.enderio.base.common.item.tool;
 
-import com.enderio.api.capability.IMultiCapabilityItem;
-import com.enderio.api.capability.MultiCapabilityProvider;
 import com.enderio.base.common.capability.EnergyStorageItemStack;
-import com.enderio.base.common.capability.Toggled;
-import com.enderio.base.common.init.EIOCapabilities;
+import com.enderio.base.common.init.EIOAttachments;
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.core.client.item.EnergyBarDecorator;
 import com.enderio.core.client.item.IAdvancedTooltipProvider;
+import com.enderio.core.common.attachment.IEnergyStorageConfig;
 import com.enderio.core.common.item.ITabVariants;
 import com.enderio.core.common.util.EnergyUtil;
 import com.enderio.core.common.util.TooltipUtil;
-import com.tterrag.registrate.util.CreativeModeTabModifier;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import org.jetbrains.annotations.Nullable;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 
 import java.util.List;
 
-public abstract class PoweredToggledItem extends Item implements IMultiCapabilityItem, IAdvancedTooltipProvider, ITabVariants {
+public abstract class PoweredToggledItem extends Item implements IAdvancedTooltipProvider, ITabVariants, IEnergyStorageConfig {
+
+    public static final ICapabilityProvider<ItemStack, Void, IEnergyStorage> ENERGY_STORAGE_PROVIDER =
+        (stack, v) -> stack.getData(EIOAttachments.ITEM_ENERGY_STORAGE);
 
     public PoweredToggledItem(Properties pProperties) {
         super(pProperties.stacksTo(1));
@@ -38,14 +38,16 @@ public abstract class PoweredToggledItem extends Item implements IMultiCapabilit
 
     protected abstract int getEnergyUse();
 
-    protected abstract int getMaxEnergy();
+    protected boolean isEnabled(ItemStack stack) {
+        return stack.getData(EIOAttachments.TOGGLED);
+    }
 
     protected void enable(ItemStack stack) {
-        Toggled.setEnabled(stack, true);
+        stack.setData(EIOAttachments.TOGGLED, true);
     }
 
     protected void disable(ItemStack stack) {
-        Toggled.setEnabled(stack, false);
+        stack.setData(EIOAttachments.TOGGLED, false);
     }
 
     protected boolean hasCharge(ItemStack pStack) {
@@ -62,7 +64,7 @@ public abstract class PoweredToggledItem extends Item implements IMultiCapabilit
 
     @Override
     public boolean isFoil(ItemStack pStack) {
-        return Toggled.isEnabled(pStack);
+        return isEnabled(pStack);
     }
 
     public static ItemStack getCharged(PoweredToggledItem item) {
@@ -72,7 +74,7 @@ public abstract class PoweredToggledItem extends Item implements IMultiCapabilit
     }
 
     @Override
-    public void addAllVariants(CreativeModeTabModifier modifier) {
+    public void addAllVariants(CreativeModeTab.Output modifier) {
         modifier.accept(this);
         modifier.accept(getCharged(this));
     }
@@ -81,7 +83,7 @@ public abstract class PoweredToggledItem extends Item implements IMultiCapabilit
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         if (pPlayer.isCrouching()) {
             ItemStack stack = pPlayer.getItemInHand(pUsedHand);
-            if (Toggled.isEnabled(stack)) {
+            if (isEnabled(stack)) {
                 disable(stack);
             } else if (hasCharge(stack)) {
                 enable(stack);
@@ -93,7 +95,7 @@ public abstract class PoweredToggledItem extends Item implements IMultiCapabilit
     @Override
     public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
         if (pEntity instanceof Player player) {
-            if (Toggled.isEnabled(pStack)) {
+            if (isEnabled(pStack)) {
                 if (hasCharge(pStack)) {
                     consumeCharge(pStack);
                     onTickWhenActive(player, pStack, pLevel, pEntity, pSlotId, pIsSelected);
@@ -104,20 +106,12 @@ public abstract class PoweredToggledItem extends Item implements IMultiCapabilit
         }
     }
 
-    @Nullable
-    @Override
-    public MultiCapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt, MultiCapabilityProvider provider) {
-        provider.add(EIOCapabilities.TOGGLED, LazyOptional.of(() -> new Toggled(stack)));
-        provider.add(ForgeCapabilities.ENERGY, LazyOptional.of(() -> new EnergyStorageItemStack(stack, getMaxEnergy())));
-        return provider;
-    }
-
     @Override
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
         if (slotChanged) {
             return super.shouldCauseReequipAnimation(oldStack, newStack, true);
         }
-        return oldStack.getItem() != newStack.getItem() || Toggled.isEnabled(oldStack) != Toggled.isEnabled(newStack);
+        return oldStack.getItem() != newStack.getItem() || isEnabled(oldStack) != isEnabled(newStack);
     }
 
     @Override
@@ -127,10 +121,12 @@ public abstract class PoweredToggledItem extends Item implements IMultiCapabilit
 
     @Override
     public int getBarWidth(ItemStack pStack) {
-        return pStack
-            .getCapability(ForgeCapabilities.ENERGY)
-            .map(energyStorage -> Math.round(energyStorage.getEnergyStored() * 13.0F / energyStorage.getMaxEnergyStored()))
-            .orElse(0);
+        var energyStorage = pStack.getCapability(Capabilities.EnergyStorage.ITEM);
+        if (energyStorage != null) {
+            return Math.round(energyStorage.getEnergyStored() * 13.0F / energyStorage.getMaxEnergyStored());
+        }
+
+        return 0;
     }
 
     @Override

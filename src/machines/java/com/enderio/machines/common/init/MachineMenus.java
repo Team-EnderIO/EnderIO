@@ -43,35 +43,59 @@ import com.enderio.machines.common.menu.VacuumChestMenu;
 import com.enderio.machines.common.menu.WiredChargerMenu;
 import com.enderio.machines.common.menu.XPObeliskMenu;
 import com.enderio.machines.common.menu.XPVacuumMenu;
-import com.tterrag.registrate.Registrate;
-import com.tterrag.registrate.util.entry.MenuEntry;
+import com.enderio.regilite.holder.RegiliteMenu;
+import com.enderio.regilite.registry.MenuRegistry;
+import net.neoforged.bus.api.IEventBus;
 
 public class MachineMenus {
     private MachineMenus() {}
 
-    private static final Registrate REGISTRATE = EnderIO.registrate();
+    private static final MenuRegistry MENU_REGISTRY = EnderIO.getRegilite().menuRegistry();
 
-    public static final MenuEntry<FluidTankMenu> FLUID_TANK = REGISTRATE.menu("fluid_tank", FluidTankMenu::factory, () -> FluidTankScreen::new).register();
-    public static final MenuEntry<EnchanterMenu> ENCHANTER = REGISTRATE.menu("enchanter", EnchanterMenu::factory, () -> EnchanterScreen::new).register();
-    public static final MenuEntry<PrimitiveAlloySmelterMenu> PRIMITIVE_ALLOY_SMELTER = REGISTRATE.menu("primitive_alloy_smelter", PrimitiveAlloySmelterMenu::factory, () -> PrimitiveAlloySmelterScreen::new).register();
-    public static final MenuEntry<AlloySmelterMenu> ALLOY_SMELTER = REGISTRATE.menu("alloy_smelter", AlloySmelterMenu::factory, () -> AlloySmelterScreen::new).register();
-    public static final MenuEntry<SagMillMenu> SAG_MILL = REGISTRATE.menu("sag_mill", SagMillMenu::factory, () -> SagMillScreen::new).register();
-    public static final MenuEntry<StirlingGeneratorMenu> STIRLING_GENERATOR = REGISTRATE.menu("stirling_generator", StirlingGeneratorMenu::factory, () -> StirlingGeneratorScreen::new).register();
-    public static final MenuEntry<SlicerMenu> SLICE_N_SPLICE = REGISTRATE.menu("slice_n_splice", SlicerMenu::factory, () -> SlicerScreen::new).register();
-    public static final MenuEntry<ImpulseHopperMenu> IMPULSE_HOPPER = REGISTRATE.menu("impulse_hopper", ImpulseHopperMenu::factory, () -> ImpulseHopperScreen::new).register();
-    public static final MenuEntry<SoulBinderMenu> SOUL_BINDER = REGISTRATE.menu("soul_binder", SoulBinderMenu::factory, () -> SoulBinderScreen::new).register();
-    public static final MenuEntry<PoweredSpawnerMenu> POWERED_SPAWNER = REGISTRATE.menu("powered_spawner", PoweredSpawnerMenu::factory, () -> PoweredSpawnerScreen::new).register();
-    public static final MenuEntry<VacuumChestMenu> VACUUM_CHEST = REGISTRATE.menu("vacuum_chest", VacuumChestMenu::factory, () -> VacuumChestScreen::new).register();
-    public static final MenuEntry<XPVacuumMenu> XP_VACUUM = REGISTRATE.menu("xp_vacuum", XPVacuumMenu::factory, () -> XPVacuumScreen::new).register();
-    public static final MenuEntry<CrafterMenu> CRAFTER = REGISTRATE.menu("crafter", CrafterMenu::factory, () -> CrafterScreen::new).register();
-    public static final MenuEntry<DrainMenu> DRAIN = REGISTRATE.menu("drain", DrainMenu::factory, () -> DrainScreen::new).register();
-    public static final MenuEntry<WiredChargerMenu> WIRED_CHARGER = REGISTRATE.menu("wired_charger", WiredChargerMenu::factory, () -> WiredChargerScreen::new).register();
-    public static final MenuEntry<PaintingMachineMenu> PAINTING_MACHINE = REGISTRATE.menu("painting_machine", PaintingMachineMenu::factory, () -> PaintingMachineScreen::new).register();
-    public static final MenuEntry<CapacitorBankMenu> CAPACITOR_BANK = REGISTRATE.menu("capacitor_bank", CapacitorBankMenu::factory, () -> CapacitorBankScreen::new).register();
-    public static final MenuEntry<SoulEngineMenu> SOUL_ENGINE = REGISTRATE.menu("soul_engine", SoulEngineMenu::factory, () -> SoulEngineScreen::new).register();
-    public static final MenuEntry<TravelAnchorMenu> TRAVEL_ANCHOR = REGISTRATE.menu("travel_anchor", TravelAnchorMenu::factory, () -> TravelAnchorScreen::new).register();
-    public static final MenuEntry<XPObeliskMenu> XP_OBELISK = REGISTRATE.menu("xp_obelisk", XPObeliskMenu::factory, () -> XPObeliskScreen::new).register();
-    public static final MenuEntry<FarmMenu> FARM = REGISTRATE.menu("farm", FarmMenu::factory, () -> FarmScreen::new).register();
+    public static final RegiliteMenu<FluidTankMenu> FLUID_TANK = MENU_REGISTRY
+        .registerMenu("fluid_tank", FluidTankMenu::factory, () -> FluidTankScreen::new);
+    public static final RegiliteMenu<EnchanterMenu> ENCHANTER = MENU_REGISTRY
+        .registerMenu("enchanter", EnchanterMenu::factory, () -> EnchanterScreen::new);
+    public static final RegiliteMenu<PrimitiveAlloySmelterMenu> PRIMITIVE_ALLOY_SMELTER = MENU_REGISTRY
+        .registerMenu("primitive_alloy_smelter", PrimitiveAlloySmelterMenu::factory, () -> PrimitiveAlloySmelterScreen::new);
+    public static final RegiliteMenu<AlloySmelterMenu> ALLOY_SMELTER = MENU_REGISTRY
+        .registerMenu("alloy_smelter", AlloySmelterMenu::factory, () -> AlloySmelterScreen::new);
+    public static final RegiliteMenu<SagMillMenu> SAG_MILL = MENU_REGISTRY
+        .registerMenu("sag_mill", SagMillMenu::factory, () -> SagMillScreen::new);
+    public static final RegiliteMenu<StirlingGeneratorMenu> STIRLING_GENERATOR = MENU_REGISTRY
+        .registerMenu("stirling_generator", StirlingGeneratorMenu::factory, () -> StirlingGeneratorScreen::new);
+    public static final RegiliteMenu<SlicerMenu> SLICE_N_SPLICE = MENU_REGISTRY
+        .registerMenu("slice_n_splice", SlicerMenu::factory, () -> SlicerScreen::new);
+    public static final RegiliteMenu<ImpulseHopperMenu> IMPULSE_HOPPER = MENU_REGISTRY
+        .registerMenu("impulse_hopper", ImpulseHopperMenu::factory, () -> ImpulseHopperScreen::new);
+    public static final RegiliteMenu<SoulBinderMenu> SOUL_BINDER = MENU_REGISTRY
+        .registerMenu("soul_binder", SoulBinderMenu::factory, () -> SoulBinderScreen::new);
+    public static final RegiliteMenu<PoweredSpawnerMenu> POWERED_SPAWNER = MENU_REGISTRY
+        .registerMenu("powered_spawner", PoweredSpawnerMenu::factory, () -> PoweredSpawnerScreen::new);
+    public static final RegiliteMenu<VacuumChestMenu> VACUUM_CHEST = MENU_REGISTRY
+        .registerMenu("vacuum_chest", VacuumChestMenu::factory, () -> VacuumChestScreen::new);
+    public static final RegiliteMenu<XPVacuumMenu> XP_VACUUM = MENU_REGISTRY
+        .registerMenu("xp_vacuum", XPVacuumMenu::factory, () -> XPVacuumScreen::new);
+    public static final RegiliteMenu<CrafterMenu> CRAFTER = MENU_REGISTRY
+        .registerMenu("crafter", CrafterMenu::factory, () -> CrafterScreen::new);
+    public static final RegiliteMenu<DrainMenu> DRAIN = MENU_REGISTRY
+        .registerMenu("drain", DrainMenu::factory, () -> DrainScreen::new);
+    public static final RegiliteMenu<WiredChargerMenu> WIRED_CHARGER = MENU_REGISTRY
+        .registerMenu("wired_charger", WiredChargerMenu::factory, () -> WiredChargerScreen::new);
+    public static final RegiliteMenu<PaintingMachineMenu> PAINTING_MACHINE = MENU_REGISTRY
+        .registerMenu("painting_machine", PaintingMachineMenu::factory, () -> PaintingMachineScreen::new);
+    public static final RegiliteMenu<CapacitorBankMenu> CAPACITOR_BANK = MENU_REGISTRY
+        .registerMenu("capacitor_bank", CapacitorBankMenu::factory, () -> CapacitorBankScreen::new);
+    public static final RegiliteMenu<SoulEngineMenu> SOUL_ENGINE = MENU_REGISTRY
+        .registerMenu("soul_engine", SoulEngineMenu::factory, () -> SoulEngineScreen::new);
+    public static final RegiliteMenu<TravelAnchorMenu> TRAVEL_ANCHOR = MENU_REGISTRY
+        .registerMenu("travel_anchor", TravelAnchorMenu::factory, () -> TravelAnchorScreen::new);
+    public static final RegiliteMenu<XPObeliskMenu> XP_OBELISK = MENU_REGISTRY
+        .registerMenu("xp_obelisk", XPObeliskMenu::factory, () -> XPObeliskScreen::new);
+    public static final RegiliteMenu<FarmMenu> FARMING_STATION = MENU_REGISTRY
+        .registerMenu("farming_station", FarmMenu::factory, () -> FarmScreen::new);
 
-    public static void register() {}
+    public static void register(IEventBus bus) {
+        MENU_REGISTRY.register(bus);
+    }
 }

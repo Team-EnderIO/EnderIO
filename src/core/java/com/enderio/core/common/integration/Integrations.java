@@ -5,7 +5,8 @@ import com.enderio.api.integration.IntegrationWrapper;
 
 public class Integrations {
 
-    public static final IntegrationWrapper<AlmostUnifiedIntegration> ALMOST_UNIFIED_INTEGRATION = IntegrationManager.wrapper("almostunified", AlmostUnifiedIntegration::new);
+    // TODO: 1.20.2 once ported.
+    //public static final IntegrationWrapper<AlmostUnifiedIntegration> ALMOST_UNIFIED_INTEGRATION = IntegrationManager.wrapper("almostunified", AlmostUnifiedIntegration::new);
 
     public static void register() {
     }

@@ -15,10 +15,10 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraftforge.common.extensions.IForgeBlock;
+import net.neoforged.neoforge.common.extensions.IBlockExtension;
 import org.jetbrains.annotations.Nullable;
 
-public interface IPaintedBlock extends IForgeBlock {
+public interface IPaintedBlock extends IBlockExtension {
 
     @Override
     default float getFriction(BlockState state, LevelReader level, BlockPos pos, @Nullable Entity entity) {
@@ -45,7 +45,7 @@ public interface IPaintedBlock extends IForgeBlock {
     }
 
     default Block getPaint(BlockGetter level, BlockPos pos) {
-        if (level.getExistingBlockEntity(pos) instanceof SinglePaintedBlockEntity paintedBlockEntity) {
+        if (level.getBlockEntity(pos) instanceof SinglePaintedBlockEntity paintedBlockEntity) {
             Block paint = paintedBlockEntity.getPaint();
             if (paint != null && !(paint instanceof IPaintedBlock)) {
                 return paint;

@@ -12,12 +12,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraftforge.common.util.LazyOptional;
 
 import java.util.Optional;
 
@@ -30,28 +28,21 @@ public class YetaWrenchItem extends Item {
     @Override
     public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext pContext) {
         Level level = pContext.getLevel();
+        BlockPos pos = pContext.getClickedPos();
+
+        if(level.getBlockEntity(pos) instanceof IWrenchable wrenchable) {
+            return wrenchable.onWrenched(pContext.getPlayer(), pContext.getClickedFace());
+        }
+
+        // Check for side config capability
+        ISideConfig sideConfig = level.getCapability(EIOCapabilities.SideConfig.BLOCK, pos, pContext.getClickedFace());
+        if (sideConfig != null) {
+            sideConfig.cycleMode();
+            return InteractionResult.sidedSuccess(level.isClientSide());
+        }
+
         if (level.isClientSide()) {
             return InteractionResult.SUCCESS;
-        }
-
-        BlockPos pos = pContext.getClickedPos();
-        if(level.getBlockEntity(pos) instanceof IWrenchable wrenchable) {
-            return wrenchable.onWrenched(pContext);
-        }
-        
-        // Check for side config capability
-        BlockEntity be = level.getBlockEntity(pos);
-        if (be != null) {
-            LazyOptional<ISideConfig> optSideConfig = be.getCapability(EIOCapabilities.SIDE_CONFIG, pContext.getClickedFace());
-            if (optSideConfig.isPresent()) {
-                if (level.isClientSide()) {
-                    return InteractionResult.sidedSuccess(true);
-                }
-
-                // Cycle state.
-                optSideConfig.ifPresent(ISideConfig::cycleMode);
-                return InteractionResult.SUCCESS;
-            }
         }
 
         // Look for rotation property

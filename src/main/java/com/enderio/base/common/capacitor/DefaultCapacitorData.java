@@ -5,7 +5,7 @@ import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.ICapacitorData;
 import net.minecraft.nbt.FloatTag;
 import net.minecraft.nbt.Tag;
-import net.minecraftforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.common.util.INBTSerializable;
 
 import java.util.Map;
 

@@ -9,7 +9,7 @@
       "tag": "forge:gems/diamond"
     },
     "I": {
-      "tag": "forge:ingots/dark_steel"
+      "tag": "neoforge:ingots/dark_steel"
     }
   },
   "pattern": [
@@ -19,6 +19,5 @@
   ],
   "result": {
     "item": "enderio:enchanter"
-  },
-  "show_notification": true
+  }
 }

@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "enderio:block/nutrient_distillation"
+      "model": "minecraft:block/water"
     }
   }
 }

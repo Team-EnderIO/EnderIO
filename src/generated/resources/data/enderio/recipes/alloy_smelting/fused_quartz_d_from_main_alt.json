@@ -4,19 +4,20 @@
   "experience": 0.3,
   "inputs": [
     {
-      "count": 4,
-      "ingredient": {
+      "Count": 4,
+      "Ingredient": {
         "tag": "forge:gems/quartz"
       }
     },
     {
-      "count": 1,
-      "ingredient": {
+      "Count": 1,
+      "Ingredient": {
         "tag": "forge:storage_blocks/amethyst"
       }
     }
   ],
   "result": {
-    "item": "enderio:fused_quartz_d"
+    "Count": 1,
+    "id": "enderio:fused_quartz_d"
   }
 }

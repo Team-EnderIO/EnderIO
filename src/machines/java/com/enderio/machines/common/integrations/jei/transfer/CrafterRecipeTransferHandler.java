@@ -1,7 +1,7 @@
 package com.enderio.machines.common.integrations.jei.transfer;
 
 import com.enderio.EnderIO;
-import com.enderio.core.common.network.CoreNetwork;
+import com.enderio.core.common.network.NetworkUtil;
 import com.enderio.machines.common.init.MachineMenus;
 import com.enderio.machines.common.menu.CrafterMenu;
 import com.enderio.machines.common.network.UpdateCrafterTemplatePacket;
@@ -16,6 +16,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
 import org.jetbrains.annotations.Nullable;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class CrafterRecipeTransferHandler implements IRecipeTransferHandler<CrafterMenu, CraftingRecipe> {
+public class CrafterRecipeTransferHandler implements IRecipeTransferHandler<CrafterMenu, RecipeHolder<CraftingRecipe>> {
     private final IRecipeTransferHandlerHelper handlerHelper;
 
     public CrafterRecipeTransferHandler(IRecipeTransferHandlerHelper handlerHelper) {
@@ -42,17 +43,17 @@ public class CrafterRecipeTransferHandler implements IRecipeTransferHandler<Craf
     }
 
     @Override
-    public RecipeType<CraftingRecipe> getRecipeType() {
+    public RecipeType<RecipeHolder<CraftingRecipe>> getRecipeType() {
         return RecipeTypes.CRAFTING;
     }
 
     @Override
-    public @Nullable IRecipeTransferError transferRecipe(CrafterMenu container, CraftingRecipe recipe, IRecipeSlotsView recipeSlots, Player player,
+    public @Nullable IRecipeTransferError transferRecipe(CrafterMenu container, RecipeHolder<CraftingRecipe> recipe, IRecipeSlotsView recipeSlots, Player player,
         boolean maxTransfer, boolean doTransfer) {
 
         List<ItemStack> placedStacks = new ArrayList<>();
-        var ingredients = recipe.getIngredients();
-        if (recipe instanceof ShapedRecipe shapedRecipe) {
+        var ingredients = recipe.value().getIngredients();
+        if (recipe.value() instanceof ShapedRecipe shapedRecipe) {
             // Order matters, this makes indices go in 1,2,3 order.
             for (int y = 0; y < 3; y++) {
                 for (int x = 0; x < 3; x++) {
@@ -72,7 +73,7 @@ public class CrafterRecipeTransferHandler implements IRecipeTransferHandler<Craf
                     }
                 }
             }
-        } else if (recipe instanceof ShapelessRecipe) {
+        } else if (recipe.value() instanceof ShapelessRecipe) {
             // order still matters
             for (int y = 0; y < 3; y++) {
                 for (int x = 0; x < 3; x++) {
@@ -91,7 +92,7 @@ public class CrafterRecipeTransferHandler implements IRecipeTransferHandler<Craf
         }
 
         if (doTransfer) {
-            CoreNetwork.sendToServer(new UpdateCrafterTemplatePacket(placedStacks));
+            NetworkUtil.sendToServer(new UpdateCrafterTemplatePacket(placedStacks));
         }
 
         return null;

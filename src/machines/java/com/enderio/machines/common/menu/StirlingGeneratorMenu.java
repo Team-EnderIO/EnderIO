@@ -23,7 +23,7 @@ public class StirlingGeneratorMenu extends MachineMenu<StirlingGeneratorBlockEnt
         addInventorySlots(8, 84);
     }
 
-    public static StirlingGeneratorMenu factory(@Nullable MenuType<StirlingGeneratorMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
+    public static StirlingGeneratorMenu factory(int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
         if (entity instanceof StirlingGeneratorBlockEntity castBlockEntity) {
             return new StirlingGeneratorMenu(castBlockEntity, inventory, pContainerId);

@@ -1,6 +1,7 @@
 package com.enderio.conduits.common.blockentity;
 
 import com.enderio.api.UseOnly;
+import com.enderio.api.capability.ISideConfig;
 import com.enderio.api.conduit.IConduitMenuData;
 import com.enderio.api.conduit.IConduitType;
 import com.enderio.api.conduit.IExtendedConduitData;
@@ -10,6 +11,7 @@ import com.enderio.conduits.common.ConduitShape;
 import com.enderio.conduits.common.blockentity.connection.DynamicConnectionState;
 import com.enderio.conduits.common.blockentity.connection.IConnectionState;
 import com.enderio.conduits.common.blockentity.connection.StaticConnectionStates;
+import com.enderio.conduits.common.init.ConduitBlockEntities;
 import com.enderio.conduits.common.menu.ConduitMenu;
 import com.enderio.conduits.common.network.ConduitSavedData;
 import com.enderio.core.common.blockentity.EnderBlockEntity;
@@ -33,16 +35,16 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.ModelData;
-import net.minecraftforge.client.model.data.ModelProperty;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.client.model.data.ModelData;
+import net.neoforged.neoforge.client.model.data.ModelProperty;
+import net.neoforged.fml.LogicalSide;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -70,8 +72,8 @@ public class ConduitBlockEntity extends EnderBlockEntity {
     private final Map<IConduitType<?>,NodeIdentifier<?>> lazyNodes = new HashMap<>();
     private ListTag lazyNodeNBT = new ListTag();
 
-    public ConduitBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
-        super(type, worldPosition, blockState);
+    public ConduitBlockEntity(BlockPos worldPosition, BlockState blockState) {
+        super(ConduitBlockEntities.CONDUIT.get(), worldPosition, blockState);
         bundle = new ConduitBundle(this::scheduleTick, worldPosition);
         clientBundle = bundle.deepCopy();
 
@@ -100,6 +102,7 @@ public class ConduitBlockEntity extends EnderBlockEntity {
             connection.setConnectionState(conduitType, connectionState);
 
             pushIOState(direction, bundle.getNodeFor(conduitType), connectionState);
+            level.invalidateCapabilities(worldPosition); //TODO: NEO-PORT:
         }
         updateClient();
         updateConnectionToData(conduitType);
@@ -495,23 +498,26 @@ public class ConduitBlockEntity extends EnderBlockEntity {
         }
     }
 
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
-        for (IConduitType<?> type : bundle.getTypes()) {
-            NodeIdentifier<?> node = bundle.getNodeFor(type);
-            Optional<NodeIdentifier.IOState> state = Optional.empty();
-            if (node != null && side != null) {
-                state = node.getIOState(side);
-            }
-            var proxiedCap = type.proxyCapability(cap,
-                node == null ? type.createExtendedConduitData(level, getBlockPos()).cast() : node.getExtendedConduitData().cast(), level, worldPosition, side, state);
+    //TODO: NEO-PORT: auto add caps?
+    public static <T> ICapabilityProvider<ConduitBlockEntity, Direction, T> createConduitCap(BlockCapability<T, Direction> cap) {
+         return (be, side) -> {
+            for (IConduitType<?> type : be.bundle.getTypes()) {
+                NodeIdentifier<?> node = be.bundle.getNodeFor(type);
+                Optional<NodeIdentifier.IOState> state = Optional.empty();
+                if (node != null && side != null) {
+                    state = node.getIOState(side);
+                }
+                var proxiedCap = type.proxyCapability(cap,
+                    node == null ? type.createExtendedConduitData(be.level, be.getBlockPos()).cast() : node.getExtendedConduitData().cast(), be.level, be.getBlockPos(), side, state);
 
-            if (proxiedCap.isPresent()) {
-                return proxiedCap.get();
+                if (proxiedCap.isPresent()) {
+                    return proxiedCap.get();
+                }
             }
-        }
-        return super.getCapability(cap, side);
+            return null;
+        };
     }
+
 
     public IItemHandler getConduitItemHandler() {
         return new ConduitItemHandler();

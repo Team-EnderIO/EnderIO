@@ -1,7 +1,5 @@
 package com.enderio.api.capacitor;
 
-import net.minecraftforge.common.util.NonNullSupplier;
-
 import java.util.function.Supplier;
 
 /**
@@ -11,12 +9,12 @@ import java.util.function.Supplier;
 public record QuadraticScalable(CapacitorModifier modifier, Supplier<Integer> base) implements ICapacitorScalable {
 
     @Override
-    public Supplier<Float> scaleF(NonNullSupplier<ICapacitorData> data) {
+    public Supplier<Float> scaleF(Supplier<ICapacitorData> data) {
         return () -> scale(base.get(), data.get().getModifier(modifier));
     }
 
     @Override
-    public Supplier<Integer> scaleI(NonNullSupplier<ICapacitorData> data) {
+    public Supplier<Integer> scaleI(Supplier<ICapacitorData> data) {
         return () -> Math.round(scale(base.get(), data.get().getModifier(modifier)));
     }
 

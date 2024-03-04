@@ -22,12 +22,12 @@ public class EnergyWidget extends EIOWidget {
 
     protected static final ResourceLocation WIDGETS = EnderIO.loc("textures/gui/widgets.png");
 
-    protected final Screen displayOn;
+    protected final Screen screen;
     private final Supplier<IMachineEnergyStorage> storageSupplier;
 
-    public EnergyWidget(Screen displayOn, Supplier<IMachineEnergyStorage> storageSupplier, int x, int y, int width, int height) {
+    public EnergyWidget(Screen screen, Supplier<IMachineEnergyStorage> storageSupplier, int x, int y, int width, int height) {
         super(x, y, width, height);
-        this.displayOn = displayOn;
+        this.screen = screen;
         this.storageSupplier = storageSupplier;
     }
 
@@ -69,7 +69,8 @@ public class EnergyWidget extends EIOWidget {
             IMachineEnergyStorage storage = storageSupplier.get();
 
             NumberFormat fmt = NumberFormat.getInstance(Locale.ENGLISH);
-            guiGraphics.renderTooltip(displayOn.getMinecraft().font, TooltipUtil.withArgs(EIOLang.ENERGY_AMOUNT, fmt.format(getEnergyStored(storage)) + "/" + fmt.format(
+            guiGraphics.renderTooltip(screen.getMinecraft().font,
+                TooltipUtil.withArgs(EIOLang.ENERGY_AMOUNT, fmt.format(getEnergyStored(storage)) + "/" + fmt.format(
                getMaxEnergyStored(storage))), mouseX, mouseY);
         }
     }

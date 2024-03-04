@@ -3,7 +3,7 @@ package com.enderio.core.common.network.slot;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.common.util.INBTSerializable;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;

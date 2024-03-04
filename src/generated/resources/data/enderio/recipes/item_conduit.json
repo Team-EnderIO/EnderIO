@@ -6,7 +6,7 @@
       "item": "enderio:conduit_binder"
     },
     "P": {
-      "tag": "forge:nuggets/pulsating_alloy"
+      "tag": "neoforge:nuggets/pulsating_alloy"
     }
   },
   "pattern": [
@@ -17,6 +17,5 @@
   "result": {
     "count": 8,
     "item": "enderio:item_conduit"
-  },
-  "show_notification": true
+  }
 }

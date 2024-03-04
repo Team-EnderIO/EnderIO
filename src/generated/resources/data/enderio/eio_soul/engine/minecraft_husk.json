@@ -1,6 +1,6 @@
 {
   "entity": "minecraft:husk",
-  "fluid": "enderio:flowing_nutrient_distillation",
+  "fluid": "enderio:fluid_nutrient_distillation_still",
   "power/mb": 500,
   "tick/mb": 15
 }

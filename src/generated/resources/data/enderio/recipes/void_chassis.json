@@ -6,7 +6,7 @@
       "item": "minecraft:iron_bars"
     },
     "G": {
-      "tag": "forge:dusts/grains_of_infinity"
+      "tag": "neoforge:dusts/grains_of_infinity"
     },
     "I": {
       "tag": "forge:ingots/iron"
@@ -19,6 +19,5 @@
   ],
   "result": {
     "item": "enderio:void_chassis"
-  },
-  "show_notification": true
+  }
 }

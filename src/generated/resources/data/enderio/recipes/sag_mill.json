@@ -6,10 +6,10 @@
       "item": "minecraft:flint"
     },
     "G": {
-      "tag": "forge:gears/stone"
+      "tag": "neoforge:gears/iron"
     },
     "I": {
-      "tag": "forge:ingots/dark_steel"
+      "tag": "neoforge:ingots/dark_steel"
     },
     "P": {
       "item": "minecraft:piston"
@@ -25,6 +25,5 @@
   ],
   "result": {
     "item": "enderio:sag_mill"
-  },
-  "show_notification": true
+  }
 }

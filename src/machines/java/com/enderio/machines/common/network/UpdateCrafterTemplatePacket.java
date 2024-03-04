@@ -1,52 +1,29 @@
 package com.enderio.machines.common.network;
 
-import com.enderio.core.common.network.Packet;
-import com.enderio.machines.common.menu.CrafterMenu;
+import com.enderio.EnderIO;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkEvent;
 
 import java.util.List;
-import java.util.Optional;
 
-public class UpdateCrafterTemplatePacket implements Packet {
-    public final List<ItemStack> recipeInputs;
+// Serverbound
+public record UpdateCrafterTemplatePacket(List<ItemStack> recipeInputs) implements CustomPacketPayload {
 
-    public UpdateCrafterTemplatePacket(List<ItemStack> recipeInputs) {
-        this.recipeInputs = recipeInputs;
+    public static final ResourceLocation ID = EnderIO.loc("update_crafter_template");
+
+    public UpdateCrafterTemplatePacket(FriendlyByteBuf buf) {
+        this(buf.readList(FriendlyByteBuf::readItem));
     }
 
     @Override
-    public boolean isValid(NetworkEvent.Context context) {
-        return context.getSender() != null && recipeInputs.size() <= 9;
+    public void write(FriendlyByteBuf buf) {
+        buf.writeCollection(recipeInputs, FriendlyByteBuf::writeItem);
     }
 
     @Override
-    public void handle(NetworkEvent.Context context) {
-        if (context.getSender().containerMenu instanceof CrafterMenu crafterMenu) {
-            for (int i = 0; i < recipeInputs.size(); i++) {
-                crafterMenu.slots.get(CrafterMenu.INPUTS_INDEX + i).set(recipeInputs.get(i));
-            }
-        }
-    }
-
-    public static class Handler extends Packet.PacketHandler<UpdateCrafterTemplatePacket> {
-
-        @Override
-        public UpdateCrafterTemplatePacket fromNetwork(FriendlyByteBuf buf) {
-            List<ItemStack> inputs = buf.readList(FriendlyByteBuf::readItem);
-            return new UpdateCrafterTemplatePacket(inputs);
-        }
-
-        @Override
-        public void toNetwork(UpdateCrafterTemplatePacket packet, FriendlyByteBuf buf) {
-            buf.writeCollection(packet.recipeInputs, (b, s) -> b.writeItemStack(s, false));
-        }
-
-        @Override
-        public Optional<NetworkDirection> getDirection() {
-            return Optional.of(NetworkDirection.PLAY_TO_SERVER);
-        }
+    public ResourceLocation id() {
+        return ID;
     }
 }

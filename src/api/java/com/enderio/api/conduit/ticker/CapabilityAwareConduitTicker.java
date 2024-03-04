@@ -9,12 +9,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.capabilities.Capability;
+import net.neoforged.neoforge.capabilities.BlockCapability;
 import org.apache.commons.lang3.function.TriFunction;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public abstract class CapabilityAwareConduitTicker<T> implements IIOAwareConduitTicker {
 
@@ -23,19 +22,20 @@ public abstract class CapabilityAwareConduitTicker<T> implements IIOAwareConduit
         Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive) {
         List<CapabilityConnection> insertCaps = new ArrayList<>();
         for (Connection insert : inserts) {
-            Optional
-                .ofNullable(level.getBlockEntity(insert.move()))
-                .flatMap(b -> b.getCapability(getCapability(), insert.dir().getOpposite()).resolve())
-                .ifPresent(cap -> insertCaps.add(new CapabilityConnection(cap, insert.data(), insert.dir())));
+            T capability = level.getCapability(getCapability(), insert.move(), insert.dir().getOpposite());
+            if (capability != null) {
+                insertCaps.add(new CapabilityConnection(capability, insert.data(), insert.dir()));
+            }
+
         }
         if (!insertCaps.isEmpty()) {
             List<CapabilityConnection> extractCaps = new ArrayList<>();
 
             for (Connection extract : extracts) {
-                Optional
-                    .ofNullable(level.getBlockEntity(extract.move()))
-                    .flatMap(b -> b.getCapability(getCapability(), extract.dir().getOpposite()).resolve())
-                    .ifPresent(cap -> extractCaps.add(new CapabilityConnection(cap, extract.data(), extract.dir())));
+                T capability = level.getCapability(getCapability(), extract.move(), extract.dir().getOpposite());
+                if (capability != null) {
+                    extractCaps.add(new CapabilityConnection(capability, extract.data(), extract.dir()));
+                }
             }
             if (!extractCaps.isEmpty()) {
                 tickCapabilityGraph(type, insertCaps, extractCaps, level, graph, isRedstoneActive);
@@ -45,16 +45,14 @@ public abstract class CapabilityAwareConduitTicker<T> implements IIOAwareConduit
 
     @Override
     public boolean canConnectTo(Level level, BlockPos conduitPos, Direction direction) {
-        return Optional
-            .ofNullable(level.getBlockEntity(conduitPos.relative(direction)))
-            .flatMap(be -> be.getCapability(getCapability(), direction.getOpposite()).resolve())
-            .isPresent();
+        T capability = level.getCapability(getCapability(), conduitPos.relative(direction), direction.getOpposite());
+        return capability != null;
     }
 
     protected abstract void tickCapabilityGraph(IConduitType<?> type, List<CapabilityConnection> inserts, List<CapabilityConnection> extracts,
         ServerLevel level, Graph<Mergeable.Dummy> graph, TriFunction<ServerLevel, BlockPos, ColorControl, Boolean> isRedstoneActive );
 
-    protected abstract Capability<T> getCapability();
+    protected abstract BlockCapability<T,Direction> getCapability();
 
     public class CapabilityConnection {
         public final T cap;

@@ -1,61 +1,135 @@
 package com.enderio.machines.common.io.fluid;
 
-import com.enderio.api.capability.IEnderCapabilityProvider;
 import com.enderio.api.io.IIOConfig;
+import com.enderio.core.CoreNBTKeys;
 import net.minecraft.core.Direction;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidTank;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.IntConsumer;
 
 /**
  * MachineFluidStorage takes a list of fluid tanks and handles IO for them all.
  */
-public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvider<IFluidHandler> {
+public class MachineFluidHandler implements IFluidHandler, INBTSerializable<CompoundTag> {
+
+    public static final String TANK_INDEX = "Index";
     private final IIOConfig config;
+    private final MachineTankLayout layout;
+    private Map<Integer, MachineFluidTank> tanks =  new HashMap<>();
+    private List<FluidStack> stacks;
 
-    private final List<IFluidTank> tanks;
+    // Not sure if we need this but might be useful to update recipe/task if tank is filled.
+    private IntConsumer changeListener = i -> {};
 
-    private final EnumMap<Direction, LazyOptional<Sided>> sideCache = new EnumMap<>(Direction.class);
-    private LazyOptional<MachineFluidHandler> selfCache = LazyOptional.empty();
-
-    public MachineFluidHandler(IIOConfig config, IFluidTank... tanks) {
+    public MachineFluidHandler(IIOConfig config, MachineTankLayout layout) {
         this.config = config;
-        this.tanks = List.of(tanks);
+        this.layout = layout;
+        this.stacks = NonNullList.withSize(getTanks(), FluidStack.EMPTY);
+    }
+
+    public void addSlotChangedCallback(IntConsumer callback) {
+        changeListener = changeListener.andThen(callback);
     }
 
     public final IIOConfig getConfig() {
         return config;
     }
 
-    public final IFluidTank getTank(int tank) {
-        return tanks.get(tank);
+    public MachineTankLayout getLayout() {
+        return layout;
+    }
+
+    //Not a good idea to use this method. Tank Access should be the way to access tanks
+    @Deprecated
+    public final MachineFluidTank getTank(int tank) {
+        if (tank > getTanks()) {
+            throw new IndexOutOfBoundsException("No tank found for index " + tank + " in range" + getTanks() + ".");
+        }
+        return tanks.computeIfAbsent(tank, i -> new MachineFluidTank(i, this));
     }
 
     @Override
     public int getTanks() {
-        return tanks.size();
+        return layout.getTankCount();
     }
 
     @Override
     public FluidStack getFluidInTank(int tank) {
-        return tanks.get(tank).getFluid();
+        return stacks.get(tank);
+    }
+
+    public void setFluidInTank(int tank, FluidStack fluid) {
+        stacks.set(tank, fluid);
     }
 
     @Override
     public int getTankCapacity(int tank) {
-        return tanks.get(tank).getCapacity();
+        return layout.getTankCapacity(tank);
     }
 
     @Override
     public boolean isFluidValid(int tank, FluidStack stack) {
-        return tanks.get(tank).isFluidValid(stack);
+        return layout.isFluidValid(tank, stack);
+    }
+
+    @Nullable
+    public IFluidHandler getForSide(@Nullable Direction side) {
+        if (side == null) {
+            return this;
+        }
+
+        if (config.getMode(side).canConnect()) {
+            return new Sided(this, side);
+        }
+
+        return null;
+    }
+
+    public int fill(int tank, FluidStack resource, IFluidHandler.FluidAction action) {
+        FluidStack fluid = getFluidInTank(tank);
+        int capacity = getTankCapacity(tank);
+        if (resource.isEmpty())
+            return 0;
+
+        if (action.simulate()) {
+            if (fluid.isEmpty()) {
+                return Math.min(capacity, resource.getAmount());
+            }
+            if (!fluid.isFluidEqual(resource)) {
+                return 0;
+            }
+            return Math.min(capacity - fluid.getAmount(), resource.getAmount());
+        }
+        if (fluid.isEmpty()) {
+            fluid = new FluidStack(resource, Math.min(capacity, resource.getAmount()));
+            setFluidInTank(tank, fluid);
+            onContentsChanged(tank);
+            return fluid.getAmount();
+        }
+        if (!fluid.isFluidEqual(resource)) {
+            return 0;
+        }
+        int filled = capacity - fluid.getAmount();
+
+        if (resource.getAmount() < filled) {
+            fluid.grow(resource.getAmount());
+            filled = resource.getAmount();
+        } else {
+            fluid.setAmount(capacity);
+        }
+        if (filled > 0)
+            onContentsChanged(tank);
+        return filled;
     }
 
     @Override
@@ -69,97 +143,97 @@ public class MachineFluidHandler implements IFluidHandler, IEnderCapabilityProvi
         FluidStack resourceLeft = resource.copy();
         int totalFilled = 0;
 
-        for (IFluidTank tank : tanks) {
+        for (int index = 0; index < getTanks(); index++) {
+            if (!layout.canInsert(index))
+                continue;
+
             // Attempt to fill the tank
-            int filled = tank.fill(resourceLeft, action);
+            int filled = fill(index, resourceLeft, action);
             resourceLeft.shrink(filled);
             totalFilled += filled;
+
+            if (filled > 0) {
+                onContentsChanged(index);
+            }
 
             // If we used up all the resource, stop trying.
             if (resourceLeft.isEmpty()) {
                 break;
             }
-        }
 
+        }
         return totalFilled;
+    }
+
+    public FluidStack drain(int tank, int maxDrain, IFluidHandler.FluidAction action) {
+        FluidStack fluid = getFluidInTank(tank);
+        int drained = maxDrain;
+        if (fluid.getAmount() < drained) {
+            drained = fluid.getAmount();
+        }
+        FluidStack stack = new FluidStack(fluid, drained);
+        if (action.execute() && drained > 0) {
+            fluid.shrink(drained);
+            onContentsChanged(tank);
+        }
+        return stack;
+    }
+
+    public FluidStack drain(int tank, FluidStack resource, IFluidHandler.FluidAction action) {
+        if (resource.isEmpty() || !isFluidValid(tank, resource))
+            return FluidStack.EMPTY;
+        return drain(tank, resource.getAmount(), action);
     }
 
     @Override
     public FluidStack drain(FluidStack resource, FluidAction action) {
-        for (IFluidTank tank : tanks) {
-            if (tank.drain(resource, FluidAction.SIMULATE) != FluidStack.EMPTY) {
-                return tank.drain(resource, action);
-            }
-        }
-
-        return FluidStack.EMPTY;
+        return drain(resource.getAmount(), action);
     }
 
     @Override
     public FluidStack drain(int maxDrain, FluidAction action) {
-        for (IFluidTank tank : tanks) {
-            if (tank.drain(maxDrain, FluidAction.SIMULATE) != FluidStack.EMPTY) {
-                return tank.drain(maxDrain, action);
+        for (int index = 0; index < getTanks(); index++) {
+            if (drain(index, maxDrain, FluidAction.SIMULATE) != FluidStack.EMPTY) {
+                FluidStack drained = drain(index, maxDrain, action);
+                if (!drained.isEmpty()) {
+                    onContentsChanged(index);
+                    changeListener.accept(index);
+                }
+                return drained;
             }
         }
 
         return FluidStack.EMPTY;
     }
 
+    protected void onContentsChanged(int slot) {}
+
     @Override
-    public Capability<IFluidHandler> getCapabilityType() {
-        return ForgeCapabilities.FLUID_HANDLER;
+    public CompoundTag serializeNBT() {
+        ListTag nbtTagList = new ListTag();
+        for (int i = 0; i < getTanks(); i++) {
+            CompoundTag tankTag = new CompoundTag();
+            tankTag.putInt(TANK_INDEX, i);
+            stacks.get(i).writeToNBT(tankTag);
+            nbtTagList.add(tankTag);
+        }
+        CompoundTag nbt = new CompoundTag();
+        nbt.put(CoreNBTKeys.TANKS, nbtTagList);
+        return nbt;
     }
 
     @Override
-    public LazyOptional<IFluidHandler> getCapability(@Nullable Direction side) {
-        if (side == null) {
-            // Create own cache if its been invalidated or not created yet.
-            if (!selfCache.isPresent()) {
-                selfCache = LazyOptional.of(() -> this);
-            }
-
-            return selfCache.cast();
+    public void deserializeNBT(CompoundTag nbt) {
+        ListTag tagList = nbt.getList(CoreNBTKeys.TANKS, Tag.TAG_COMPOUND);
+        for (int i = 0; i < tagList.size(); i++) {
+            CompoundTag tankTag = tagList.getCompound(i);
+            int index = tankTag.getInt(TANK_INDEX);
+            stacks.set(index, FluidStack.loadFluidStackFromNBT(tankTag));
         }
-
-        if (!config.getMode(side).canConnect()) {
-            return LazyOptional.empty();
-        }
-
-        return sideCache.computeIfAbsent(side, dir -> LazyOptional.of(() -> new Sided(this, dir))).cast();
-    }
-
-    @Override
-    public void invalidateSide(@Nullable Direction side) {
-        if (side != null) {
-            if (sideCache.containsKey(side)) {
-                sideCache.get(side).invalidate();
-                sideCache.remove(side);
-            }
-        } else {
-            selfCache.invalidate();
-        }
-    }
-
-    @Override
-    public void invalidateCaps() {
-        for (LazyOptional<Sided> side : sideCache.values()) {
-            side.invalidate();
-        }
-        selfCache.invalidate();
     }
 
     // Sided capability access
-    private static class Sided implements IFluidHandler {
-
-        private final MachineFluidHandler master;
-        private final Direction direction;
-
-        Sided(MachineFluidHandler master, Direction direction) {
-            this.master = master;
-            this.direction = direction;
-        }
-
+    private record Sided(MachineFluidHandler master, Direction direction) implements IFluidHandler {
         @Override
         public int getTanks() {
             return master.getTanks();

@@ -6,16 +6,16 @@
       "item": "enderio:void_chassis"
     },
     "G": {
-      "tag": "forge:gears/stone"
+      "tag": "neoforge:gears/iron"
     },
     "H": {
       "item": "minecraft:hopper"
     },
     "I": {
-      "tag": "forge:ingots/copper_alloy"
+      "tag": "neoforge:ingots/copper_alloy"
     },
     "R": {
-      "tag": "forge:ingots/redstone_alloy"
+      "tag": "neoforge:ingots/redstone_alloy"
     }
   },
   "pattern": [
@@ -25,6 +25,5 @@
   ],
   "result": {
     "item": "enderio:impulse_hopper"
-  },
-  "show_notification": true
+  }
 }

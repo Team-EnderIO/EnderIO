@@ -13,48 +13,59 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 
+import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class IOConfigButton<U extends EIOScreen<?>, T extends AbstractWidget> extends AbstractWidget {
     private static final int RENDERER_HEIGHT = 80;
-    public static final ResourceLocation IOCONFIG = EnderIO.loc("textures/gui/icons/io_config.png");
+    public static final ResourceLocation IO_CONFIG = EnderIO.loc("buttons/io_config");
+    public static final ResourceLocation NEIGHBOURS = EnderIO.loc("buttons/neighbour");
     private static final Inset INSET_ZERO = new Inset(0, 0, 0, 0);
     private final IOConfigWidget<U> configRenderer;
     private final ImageButton neighbourButton;
     private final Supplier<Boolean> playerInvVisible;
     private final Function<Boolean, Boolean> setPlayerInvVisible;
-    private final U addedOn;
+    private final U screen;
+    @Nullable private final Consumer<Boolean> callback;
 
-    public IOConfigButton(U addedOn, int x, int y, int width, int height, MachineMenu<?> menu, Function<AbstractWidget, T> addRenderableWidget, Font font) {
-        this(addedOn, x, y, width, height, menu, addRenderableWidget, font, INSET_ZERO);
+    public IOConfigButton(U screen, int x, int y, int width, int height, MachineMenu<?> menu, Function<AbstractWidget, T> addRenderableWidget, Font font) {
+        this(screen, x, y, width, height, menu, addRenderableWidget, font, INSET_ZERO);
     }
 
-    public IOConfigButton(U addedOn, int x, int y, int width, int height, MachineMenu<?> menu, Function<AbstractWidget, T> addRenderableWidget, Font font,
+    public IOConfigButton(U screen, int x, int y, int width, int height, MachineMenu<?> menu, Function<AbstractWidget, T> addRenderableWidget, Font font,
         Inset inset) {
+        this(screen, x, y, width, height, menu, addRenderableWidget, font, inset, null);
+    }
+
+    public IOConfigButton(U screen, int x, int y, int width, int height, MachineMenu<?> menu, Function<AbstractWidget, T> addRenderableWidget, Font font,
+        Inset inset, @Nullable Consumer<Boolean> callback) {
         super(x, y, width, height, EIOLang.IOCONFIG);
-        this.addedOn = addedOn;
+        this.screen = screen;
         this.playerInvVisible = menu::getPlayerInvVisible;
         this.setPlayerInvVisible = menu::setPlayerInvVisible;
+        this.callback = callback;
         setTooltip(Tooltip.create(EIOLang.IOCONFIG.copy().withStyle(ChatFormatting.WHITE)));
 
         var show = !playerInvVisible.get();
         List<BlockPos> configurables = menu.getBlockEntity() instanceof MultiConfigurable multiConfigurable ?
             multiConfigurable.getConfigurables() :
             List.of(menu.getBlockEntity().getBlockPos());
-        configRenderer = new IOConfigWidget<>(addedOn, addedOn.getGuiLeft() + 5 + inset.left,
-            addedOn.getGuiTop() + addedOn.getYSize() - RENDERER_HEIGHT - 5 + inset.top, addedOn.getXSize() - 10 - inset.left - inset.right,
+        configRenderer = new IOConfigWidget<>(screen, screen.getGuiLeft() + 5 + inset.left,
+            screen.getGuiTop() + screen.getYSize() - RENDERER_HEIGHT - 5 + inset.top, screen.getXSize() - 10 - inset.left - inset.right,
             RENDERER_HEIGHT - inset.top - inset.bottom, configurables, font);
         configRenderer.visible = show;
         addRenderableWidget.apply(configRenderer);
 
-        neighbourButton = new ImageButton(addedOn.getGuiLeft() + addedOn.getXSize() - 5 - 16, addedOn.getGuiTop() + addedOn.getYSize() - 5 - 16, 16, 16, 16, 0,
-            0, IOCONFIG, 48, 32, (b) -> configRenderer.toggleNeighbourVisibility(), EIOLang.TOGGLE_NEIGHBOUR);
+        neighbourButton = new ImageButton(screen.getGuiLeft() + screen.getXSize() - 5 - 16, screen.getGuiTop() + screen.getYSize() - 5 - 16, 16, 16,
+            new WidgetSprites(NEIGHBOURS, NEIGHBOURS), (b) -> configRenderer.toggleNeighbourVisibility(), EIOLang.TOGGLE_NEIGHBOUR);
         neighbourButton.setTooltip(Tooltip.create(EIOLang.TOGGLE_NEIGHBOUR.copy().withStyle(ChatFormatting.WHITE)));
         neighbourButton.visible = show;
         addRenderableWidget.apply(neighbourButton);
@@ -63,10 +74,10 @@ public class IOConfigButton<U extends EIOScreen<?>, T extends AbstractWidget> ex
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         Vector2i pos = new Vector2i(getX(), getY());
-        addedOn.renderSimpleArea(guiGraphics, pos, pos.add(new Vector2i(width, height)));
+        screen.renderSimpleArea(guiGraphics, pos, pos.add(new Vector2i(width, height)));
 
         RenderSystem.enableDepthTest();
-        guiGraphics.blit(IOCONFIG, this.getX(), this.getY(), 0, 0, this.width, this.height, 48, 32);
+        guiGraphics.blitSprite(IO_CONFIG, this.getX(), this.getY(), this.width, this.height);
         RenderSystem.disableDepthTest();
     }
 
@@ -75,6 +86,9 @@ public class IOConfigButton<U extends EIOScreen<?>, T extends AbstractWidget> ex
         var state = !setPlayerInvVisible.apply(!playerInvVisible.get()); // toggle the variable and set state to opposite of it
         configRenderer.visible = state;
         neighbourButton.visible = state;
+        if (callback != null) {
+            callback.accept(state);
+        }
     }
 
     @Override

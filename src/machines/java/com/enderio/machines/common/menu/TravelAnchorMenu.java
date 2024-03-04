@@ -18,7 +18,7 @@ public class TravelAnchorMenu extends MachineMenu<TravelAnchorBlockEntity> {
         addInventorySlots(8, 103);
     }
 
-    public static TravelAnchorMenu factory(@Nullable MenuType<TravelAnchorMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
+    public static TravelAnchorMenu factory(int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
         if (entity instanceof TravelAnchorBlockEntity castBlockEntity) {
             return new TravelAnchorMenu(castBlockEntity, inventory, pContainerId);

@@ -3,7 +3,7 @@
   "category": "equipment",
   "key": {
     "C": {
-      "tag": "forge:gems/prescient_crystal"
+      "tag": "neoforge:gems/prescient_crystal"
     },
     "R": {
       "item": "enderio:infinity_rod"
@@ -16,6 +16,5 @@
   ],
   "result": {
     "item": "enderio:staff_of_levity"
-  },
-  "show_notification": true
+  }
 }

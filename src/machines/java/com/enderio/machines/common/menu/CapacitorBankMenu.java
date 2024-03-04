@@ -15,7 +15,7 @@ public class CapacitorBankMenu extends MachineMenu<CapacitorBankBlockEntity> {
         addInventorySlots(8,84);
     }
 
-    public static CapacitorBankMenu factory(@Nullable MenuType<CapacitorBankMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
+    public static CapacitorBankMenu factory(int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
         if (entity instanceof CapacitorBankBlockEntity castBlockEntity) {
             return new CapacitorBankMenu(castBlockEntity, inventory, pContainerId);

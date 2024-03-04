@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class TravelAnchorBlock extends MachineBlock {
     public TravelAnchorBlock(Properties props) {
-        super(props, MachineBlockEntities.TRAVEL_ANCHOR);
+        super(MachineBlockEntities.TRAVEL_ANCHOR, props);
     }
 
     @Nullable
@@ -20,6 +20,7 @@ public class TravelAnchorBlock extends MachineBlock {
         return MachineBlockEntities.TRAVEL_ANCHOR.create(pPos, pState);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         if (level.getBlockEntity(pos) instanceof TravelAnchorBlockEntity anchorBlock) {

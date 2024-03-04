@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "enderio:block/hootch"
+      "model": "minecraft:block/water"
     }
   }
 }

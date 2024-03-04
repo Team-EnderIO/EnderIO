@@ -4,20 +4,20 @@
   "experience": 0.3,
   "inputs": [
     {
-      "count": 12,
-      "ingredient": {
+      "Count": 12,
+      "Ingredient": {
         "item": "enderio:plant_matter_green"
       }
     },
     {
-      "count": 1,
-      "ingredient": {
+      "Count": 1,
+      "Ingredient": {
         "tag": "forge:slimeballs"
       }
     }
   ],
   "result": {
-    "count": 2,
-    "item": "enderio:organic_green_dye"
+    "Count": 2,
+    "id": "enderio:organic_green_dye"
   }
 }

@@ -4,7 +4,7 @@ import com.enderio.core.CoreNBTKeys;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 /**
  * An output stack for a recipe.
@@ -85,7 +85,7 @@ public record OutputStack(Either<ItemStack, FluidStack> stack) {
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
         if (isItem()) {
-            tag.put(CoreNBTKeys.ITEM, stack.left().get().serializeNBT());
+            tag.put(CoreNBTKeys.ITEM, stack.left().get().save(new CompoundTag()));
         } else if (isFluid()) {
             tag.put(CoreNBTKeys.FLUID, stack.right().get().writeToNBT(new CompoundTag()));
         }

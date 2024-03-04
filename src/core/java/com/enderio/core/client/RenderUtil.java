@@ -5,13 +5,13 @@ import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
-import net.minecraftforge.client.model.IQuadTransformer;
+import net.neoforged.neoforge.client.model.IQuadTransformer;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
-import static net.minecraftforge.client.model.IQuadTransformer.COLOR;
-import static net.minecraftforge.client.model.IQuadTransformer.STRIDE;
+import static net.neoforged.neoforge.client.model.IQuadTransformer.COLOR;
+import static net.neoforged.neoforge.client.model.IQuadTransformer.STRIDE;
 
 public class RenderUtil {
     /**
@@ -36,10 +36,10 @@ public class RenderUtil {
     }
 
     private static void renderFace(Matrix4f pose, Matrix3f normal, VertexConsumer consumer, TextureAtlasSprite texture, int color, int light, float x0, float x1, float y0, float y1, float z0, float z1, float z2, float z3, float u0, float u1, float v0, float v1, float normalX, float normalY, float normalZ) {
-        float minU = u0 * texture.contents().width();
-        float maxU = u1 * texture.contents().width();
-        float minV = v0 * texture.contents().height();
-        float maxV = v1 * texture.contents().height();
+        float minU = u0 * texture.contents().width() / 16f;
+        float maxU = u1 * texture.contents().width() / 16f;
+        float minV = v0 * texture.contents().height() / 16f;
+        float maxV = v1 * texture.contents().height() / 16f;
 
         consumer.vertex(pose, x0, y0, z0).color(color).uv(texture.getU(minU), texture.getV(minV)).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normal, normalX, normalY, normalZ).endVertex();
         consumer.vertex(pose, x1, y0, z1).color(color).uv(texture.getU(maxU), texture.getV(minV)).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(light).normal(normal, normalX, normalY, normalZ).endVertex();
@@ -69,7 +69,7 @@ public class RenderUtil {
     }
 
     /**
-     * {@see net.minecraftforge.client.model.pipeline.QuadBakingVertexConsumer}
+     * {@see net.neoforged.neoforge.client.model.pipeline.QuadBakingVertexConsumer}
      * @return packedUV Data
      */
     public static int[] packUV(float u, float v) {

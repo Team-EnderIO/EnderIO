@@ -3,7 +3,7 @@
   "category": "equipment",
   "key": {
     "I": {
-      "tag": "forge:ingots/dark_steel"
+      "tag": "neoforge:ingots/dark_steel"
     },
     "S": {
       "tag": "forge:rods/wooden"
@@ -16,6 +16,5 @@
   ],
   "result": {
     "item": "enderio:dark_steel_sword"
-  },
-  "show_notification": true
+  }
 }

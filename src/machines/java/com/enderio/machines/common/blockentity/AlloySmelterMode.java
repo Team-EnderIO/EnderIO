@@ -27,8 +27,8 @@ public enum AlloySmelterMode implements IIcon {
      */
     ALLOYS(true, false, MachineLang.ALLOY_SMELTER_MODE_ALLOY);
 
-    private static final ResourceLocation TEXTURE = EnderIO.loc("textures/gui/icons.png"); // TODO: Redo widgets
-    private static final Vector2i SIZE = new Vector2i(12, 12);
+    private static final ResourceLocation TEXTURE = EnderIO.loc("textures/gui/icons/alloy_modes.png"); // TODO: Redo widgets
+    private static final Vector2i SIZE = new Vector2i(16, 16);
 
     private final boolean canAlloy;
     private final boolean canSmelt;
@@ -38,7 +38,7 @@ public enum AlloySmelterMode implements IIcon {
     AlloySmelterMode(boolean canAlloy, boolean canSmelt, Component tooltip) {
         this.canAlloy = canAlloy;
         this.canSmelt = canSmelt;
-        pos = new Vector2i( 48 + 12 * ordinal(), 0);
+        pos = new Vector2i( 48 + 16 * ordinal(), 0);
         this.tooltip = tooltip;
     }
 
@@ -72,7 +72,7 @@ public enum AlloySmelterMode implements IIcon {
 
     @Override
     public Vector2i getTextureSize() {
-        return new Vector2i(256, 256);
+        return new Vector2i(48, 16);
     }
 
 }

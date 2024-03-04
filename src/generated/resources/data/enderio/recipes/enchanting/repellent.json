@@ -3,8 +3,8 @@
   "cost_multiplier": 2,
   "enchantment": "enderio:repellent",
   "input": {
-    "count": 4,
-    "ingredient": {
+    "Count": 4,
+    "Ingredient": {
       "item": "minecraft:ender_pearl"
     }
   }

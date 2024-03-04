@@ -6,7 +6,7 @@
       "tag": "enderio:fused_quartz"
     },
     "S": {
-      "tag": "forge:ingots/soularium"
+      "tag": "neoforge:ingots/soularium"
     }
   },
   "pattern": [
@@ -16,6 +16,5 @@
   ],
   "result": {
     "item": "enderio:empty_soul_vial"
-  },
-  "show_notification": true
+  }
 }

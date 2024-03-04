@@ -1,8 +1,8 @@
 {
   "type": "enderio:tank",
   "fluid": {
-    "amount": 1000,
-    "fluid": "minecraft:water"
+    "Amount": 1000,
+    "FluidName": "minecraft:water"
   },
   "input": {
     "item": "minecraft:light_blue_concrete_powder"

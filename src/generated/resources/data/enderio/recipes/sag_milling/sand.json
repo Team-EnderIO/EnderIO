@@ -1,14 +1,5 @@
 {
   "type": "enderio:sag_milling",
-  "conditions": [
-    {
-      "type": "forge:not",
-      "value": {
-        "type": "forge:tag_empty",
-        "tag": "forge:silicon"
-      }
-    }
-  ],
   "energy": 2400,
   "input": {
     "tag": "forge:sand"
@@ -16,7 +7,7 @@
   "outputs": [
     {
       "chance": 0.5,
-      "tag": "forge:silicon"
+      "tag": "neoforge:silicon"
     }
   ]
 }

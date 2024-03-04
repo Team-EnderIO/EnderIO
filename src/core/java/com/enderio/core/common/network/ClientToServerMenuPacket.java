@@ -1,14 +1,12 @@
 package com.enderio.core.common.network;
 
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraftforge.network.NetworkDirection;
-import net.minecraftforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.PlayPayloadContext;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
-import java.util.function.Function;
-
-public abstract class ClientToServerMenuPacket<Menu extends AbstractContainerMenu> implements Packet {
+public abstract class ClientToServerMenuPacket<Menu extends AbstractContainerMenu> implements CustomPacketPayload {
 
     private final int containerID;
     private final Class<Menu> menuClass;
@@ -22,50 +20,29 @@ public abstract class ClientToServerMenuPacket<Menu extends AbstractContainerMen
         this.menuClass = menuClass;
     }
 
-    protected void write(FriendlyByteBuf writeInto) {
+    @Override
+    public void write(FriendlyByteBuf writeInto) {
         writeInto.writeInt(containerID);
     }
 
-    @Override
-    public boolean isValid(NetworkEvent.Context context) {
-        if (context.getSender() != null) {
-            AbstractContainerMenu menu = context.getSender().containerMenu;
+    public boolean isValid(PlayPayloadContext context) {
+        return context.player().map(player -> {
+            AbstractContainerMenu menu = player.containerMenu;
             if (menu != null) {
                 return menu.containerId == containerID
                     && menuClass.isAssignableFrom(menu.getClass());
             }
-        }
-        return false;
+
+            return false;
+        }).orElse(false);
     }
 
-    protected Menu getMenu(NetworkEvent.Context context) {
-        return menuClass.cast(context.getSender().containerMenu);
+    @Nullable
+    public Menu getMenu(PlayPayloadContext context) {
+        return context.player().map(player -> menuClass.cast(player.containerMenu)).orElse(null);
     }
 
-    public static class Handler<MSG extends ClientToServerMenuPacket<?>> extends PacketHandler<MSG> {
-
-        private final Function<FriendlyByteBuf, MSG> constructor;
-        public Handler(Function<FriendlyByteBuf, MSG> constructor) {
-            this.constructor = constructor;
-        }
-
-        @Override
-        public MSG fromNetwork(FriendlyByteBuf buf) {
-            return constructor.apply(buf);
-        }
-
-        @Override
-        public Optional<NetworkDirection> getDirection() {
-            return Optional.of(NetworkDirection.PLAY_TO_SERVER);
-        }
-
-        @Override
-        public void toNetwork(MSG packet, FriendlyByteBuf buf) {
-            packet.write(buf);
-        }
-    }
-
-    protected void handleWrongPlayer(NetworkEvent.Context context) {
+    public void handleWrongPlayer(PlayPayloadContext context) {
         //TODO: This method is called when a ClientPlayer sent invalid data to the server which can not be explained by a desync, but could be malicious intend or a version difference.
         // Currently there is no procedure to kick the player, or log that the player has sent invalid data. This should never happen using a unmodified mod on server or client
     }

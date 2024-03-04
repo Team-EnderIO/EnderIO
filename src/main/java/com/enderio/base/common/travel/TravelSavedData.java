@@ -7,6 +7,7 @@ import com.enderio.base.common.network.AddTravelTargetPacket;
 import com.enderio.base.common.network.RemoveTravelTargetPacket;
 import com.enderio.base.common.network.SyncTravelDataPacket;
 import com.enderio.core.common.network.CoreNetwork;
+import com.enderio.core.common.network.NetworkUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -16,9 +17,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -43,7 +44,7 @@ public class TravelSavedData extends SavedData {
 
     public static TravelSavedData getTravelData(Level level) {
         if (level instanceof ServerLevel serverLevel) {
-            return serverLevel.getDataStorage().computeIfAbsent(TravelSavedData::new, TravelSavedData::new, "enderio_traveldata");
+            return serverLevel.getDataStorage().computeIfAbsent(new Factory<>(TravelSavedData::new, TravelSavedData::new), "enderio_traveldata");
         } else {
             return CLIENT_INSTANCE;
         }
@@ -74,7 +75,7 @@ public class TravelSavedData extends SavedData {
 
     public void addTravelTarget(Level level, ITravelTarget target) {
         if (!level.isClientSide) {
-            CoreNetwork.sendToDimension(level.dimension(), new AddTravelTargetPacket(target));
+            NetworkUtil.sendToDimension(new AddTravelTargetPacket(target), level.dimension());
         }
         if (TravelRegistry.isRegistered(target)) {
             travelTargets.put(target.getPos(), target);
@@ -85,7 +86,7 @@ public class TravelSavedData extends SavedData {
 
     public void removeTravelTargetAt(Level level, BlockPos pos) {
         if (!level.isClientSide) {
-            CoreNetwork.sendToDimension(level.dimension(), new RemoveTravelTargetPacket(pos));
+            NetworkUtil.sendToDimension(new RemoveTravelTargetPacket(pos), level.dimension());
         }
         travelTargets.remove(pos);
     }
@@ -107,7 +108,7 @@ public class TravelSavedData extends SavedData {
     public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         Player player = event.getEntity();
         if (player instanceof ServerPlayer serverPlayer) {
-            CoreNetwork.sendToPlayer(serverPlayer, new SyncTravelDataPacket(TravelSavedData.getTravelData(serverPlayer.level()).save(new CompoundTag())));
+            NetworkUtil.sendTo(new SyncTravelDataPacket(TravelSavedData.getTravelData(serverPlayer.level()).save(new CompoundTag())), serverPlayer);
         }
     }
 
@@ -115,7 +116,7 @@ public class TravelSavedData extends SavedData {
     public static void onDimensionChange(PlayerEvent.PlayerChangedDimensionEvent event) {
         Player player = event.getEntity();
         if (player instanceof ServerPlayer serverPlayer) {
-            CoreNetwork.sendToPlayer(serverPlayer, new SyncTravelDataPacket(TravelSavedData.getTravelData(serverPlayer.level()).save(new CompoundTag())));
+            NetworkUtil.sendTo(new SyncTravelDataPacket(TravelSavedData.getTravelData(serverPlayer.level()).save(new CompoundTag())), serverPlayer);
         }
     }
 }

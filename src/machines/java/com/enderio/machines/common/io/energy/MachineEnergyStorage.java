@@ -1,19 +1,14 @@
 package com.enderio.machines.common.io.energy;
 
-import com.enderio.api.capability.IEnderCapabilityProvider;
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.machines.common.MachineNBTKeys;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.EnumMap;
 import java.util.function.Supplier;
 
 /**
@@ -21,7 +16,7 @@ import java.util.function.Supplier;
  * Uses capacitor keys to determine maximum capacity and transfer rate.
  * Also provides sided access through capabilities.
  */
-public class MachineEnergyStorage implements IMachineEnergyStorage, IEnderCapabilityProvider<IEnergyStorage>, INBTSerializable<CompoundTag> {
+public class MachineEnergyStorage implements IMachineEnergyStorage, INBTSerializable<CompoundTag> {
     private final IIOConfig config;
     private final EnergyIOMode ioMode;
 
@@ -29,9 +24,6 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, IEnderCapabi
 
     private final Supplier<Integer> capacity;
     private final Supplier<Integer> usageRate;
-
-    private final EnumMap<Direction, LazyOptional<Sided>> sideCache = new EnumMap<>(Direction.class);
-    private LazyOptional<MachineEnergyStorage> selfCache = LazyOptional.empty();
 
     public MachineEnergyStorage(IIOConfig config, EnergyIOMode ioMode, Supplier<Integer> capacity, Supplier<Integer> usageRate) {
         this.config = config;
@@ -65,6 +57,7 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, IEnderCapabi
      */
     public void setEnergyStored(int energy) {
         energyStored = Math.min(energy, getMaxEnergyStored());
+        onContentsChanged();
     }
 
     @Override
@@ -74,10 +67,10 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, IEnderCapabi
 
     @Override
     public int addEnergy(int energy, boolean simulate) {
-        int energyBefore = energyStored;
-        int newEnergyStored = Math.min(energyStored + energy, getMaxEnergyStored());
+        int energyBefore = getEnergyStored();
+        int newEnergyStored = Math.min(getEnergyStored() + energy, getMaxEnergyStored());
         if (!simulate) {
-            energyStored = newEnergyStored;
+            setEnergyStored(newEnergyStored);
             onContentsChanged();
         }
         return newEnergyStored - energyBefore;
@@ -85,10 +78,10 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, IEnderCapabi
 
     @Override
     public int takeEnergy(int energy) {
-        int energyBefore = energyStored;
-        energyStored = Math.max(energyStored - energy, 0);
+        int energyBefore = getEnergyStored();
+        setEnergyStored(Math.max(getEnergyStored() - energy, 0));
         onContentsChanged();
-        return energyBefore - energyStored;
+        return energyBefore - getEnergyStored();
     }
 
     @Override
@@ -149,59 +142,29 @@ public class MachineEnergyStorage implements IMachineEnergyStorage, IEnderCapabi
         return energyExtracted;
     }
 
-    @Override
-    public Capability<IEnergyStorage> getCapabilityType() {
-        return ForgeCapabilities.ENERGY;
-    }
-
-    @Override
-    public LazyOptional<IEnergyStorage> getCapability(@Nullable Direction side) {
+    @Nullable
+    public IEnergyStorage getForSide(@Nullable Direction side) {
         if (side == null) {
-            // Create own cache if it has been invalidated or not created yet.
-            if (!selfCache.isPresent()) {
-                selfCache = LazyOptional.of(() -> this);
-            }
-
-            return selfCache.cast();
+            return this;
         }
 
-        if (!config.getMode(side).canConnect()) {
-            return LazyOptional.empty();
+        if (config.getMode(side).canConnect()) {
+            return new Sided(this, side);
         }
 
-        return sideCache.computeIfAbsent(side, dir -> LazyOptional.of(() -> new Sided(this, dir))).cast();
-    }
-
-    @Override
-    public void invalidateSide(@Nullable Direction side) {
-        if (side != null) {
-            if (sideCache.containsKey(side)) {
-                sideCache.get(side).invalidate();
-                sideCache.remove(side);
-            }
-        } else {
-            selfCache.invalidate();
-        }
-    }
-
-    @Override
-    public void invalidateCaps() {
-        for (LazyOptional<Sided> side : sideCache.values()) {
-            side.invalidate();
-        }
-        selfCache.invalidate();
+        return null;
     }
 
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
-        tag.putInt(MachineNBTKeys.ENERGY_STORED, energyStored);
+        tag.putInt(MachineNBTKeys.ENERGY_STORED, getEnergyStored());
         return tag;
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        energyStored = nbt.getInt(MachineNBTKeys.ENERGY_STORED);
+        setEnergyStored(nbt.getInt(MachineNBTKeys.ENERGY_STORED));
     }
 
     private static class Sided implements IEnergyStorage {

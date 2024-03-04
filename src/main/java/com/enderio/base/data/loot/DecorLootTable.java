@@ -1,7 +1,7 @@
 package com.enderio.base.data.loot;
 
 import com.enderio.base.EIONBTKeys;
-import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
+import com.enderio.regilite.data.RegiliteBlockLootProvider;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SlabBlock;
@@ -16,14 +16,14 @@ import net.minecraft.world.level.storage.loot.providers.nbt.ContextNbtProvider;
 
 public class DecorLootTable {
 
-    public static <T extends Block> void withPaint(RegistrateBlockLootTables loot, T block) {
+    public static <T extends Block> void withPaint(RegiliteBlockLootProvider loot, T block) {
         loot.add(block, LootTable
             .lootTable()
             .withPool(new LootPool.Builder().add(
                 LootItem.lootTableItem(block).apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY).copy(EIONBTKeys.PAINT, EIONBTKeys.BLOCK_ENTITY_TAG + "." + EIONBTKeys.PAINT)))));
     }
 
-    public static <T extends Block> void paintedSlab(RegistrateBlockLootTables loot, T block) {
+    public static <T extends Block> void paintedSlab(RegiliteBlockLootProvider loot, T block) {
         loot.add(block, LootTable
             .lootTable()
             .withPool(new LootPool.Builder().add(LootItem

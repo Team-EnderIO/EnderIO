@@ -1,5 +1,5 @@
 {
-  "parent": "forge:item/bucket",
-  "fluid": "enderio:nutrient_distillation",
-  "loader": "forge:fluid_container"
+  "parent": "neoforge:item/bucket",
+  "fluid": "enderio:fluid_nutrient_distillation_still",
+  "loader": "neoforge:fluid_container"
 }

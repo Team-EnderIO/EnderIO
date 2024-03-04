@@ -1,16 +1,14 @@
 package com.enderio.base.common.block.glass;
 
-import com.enderio.EnderIO;
 import com.enderio.base.common.config.BaseConfig;
 import com.enderio.base.common.lang.EIOLang;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.block.AbstractGlassBlock;
+import net.minecraft.world.level.block.TransparentBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
@@ -20,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class FusedQuartzBlock extends AbstractGlassBlock {
+public class FusedQuartzBlock extends TransparentBlock {
     // TODO: Connected textures
 
     private final GlassCollisionPredicate collisionPredicate;
@@ -76,7 +74,7 @@ public class FusedQuartzBlock extends AbstractGlassBlock {
 
     @Override
     public float getExplosionResistance() {
-        return explosionResistant ? BaseConfig.COMMON.BLOCKS.EXPLOSION_RESISTANCE.get() : super.getExplosionResistance();
+        return explosionResistant ? BaseConfig.COMMON.BLOCKS.EXPLOSION_RESISTANCE.get().floatValue() : super.getExplosionResistance();
     }
 
     @Override

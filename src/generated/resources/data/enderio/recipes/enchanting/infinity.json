@@ -3,9 +3,9 @@
   "cost_multiplier": 1,
   "enchantment": "minecraft:infinity",
   "input": {
-    "count": 1,
-    "ingredient": {
-      "tag": "forge:dusts/grains_of_infinity"
+    "Count": 1,
+    "Ingredient": {
+      "tag": "neoforge:dusts/grains_of_infinity"
     }
   }
 }

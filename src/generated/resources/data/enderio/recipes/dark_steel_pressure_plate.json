@@ -3,7 +3,7 @@
   "category": "building",
   "key": {
     "#": {
-      "tag": "forge:ingots/dark_steel"
+      "tag": "neoforge:ingots/dark_steel"
     }
   },
   "pattern": [
@@ -11,6 +11,5 @@
   ],
   "result": {
     "item": "enderio:dark_steel_pressure_plate"
-  },
-  "show_notification": true
+  }
 }

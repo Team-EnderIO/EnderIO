@@ -16,10 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.minecraft.world.inventory.InventoryMenu.EMPTY_ARMOR_SLOT_BOOTS;
-import static net.minecraft.world.inventory.InventoryMenu.EMPTY_ARMOR_SLOT_CHESTPLATE;
-import static net.minecraft.world.inventory.InventoryMenu.EMPTY_ARMOR_SLOT_HELMET;
-import static net.minecraft.world.inventory.InventoryMenu.EMPTY_ARMOR_SLOT_LEGGINGS;
+import static net.minecraft.world.inventory.InventoryMenu.*;
 
 public abstract class SyncedMenu<T extends EnderBlockEntity> extends AbstractContainerMenu {
 
@@ -47,7 +44,12 @@ public abstract class SyncedMenu<T extends EnderBlockEntity> extends AbstractCon
 
         // Hotbar
         for (int x = 0; x < 9; x++) {
-            Slot ref = new Slot(inventory, x, xPos + x * 18, yPos + 58);
+            Slot ref = new Slot(inventory, x, xPos + x * 18, yPos + 58) {
+                @Override
+                public boolean isActive() {
+                    return playerInvVisible;
+                }
+            };
             playerInventorySlots.add(ref);
             this.addSlot(ref);
         }
@@ -55,7 +57,12 @@ public abstract class SyncedMenu<T extends EnderBlockEntity> extends AbstractCon
         // Inventory
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 9; x++) {
-                Slot ref = new Slot(inventory, x + y * 9 + 9, xPos + x * 18, yPos + y * 18);
+                Slot ref = new Slot(inventory, x + y * 9 + 9, xPos + x * 18, yPos + y * 18) {
+                    @Override
+                    public boolean isActive() {
+                        return playerInvVisible;
+                    }
+                };
                 playerInventorySlots.add(ref);
                 this.addSlot(ref);
             }
@@ -92,10 +99,6 @@ public abstract class SyncedMenu<T extends EnderBlockEntity> extends AbstractCon
     public boolean setPlayerInvVisible(boolean visible) {
         if (playerInvVisible != visible) {
             playerInvVisible = visible;
-            int offset = playerInvVisible ? 1000 : -1000;
-            // use `forEach` instead of `for-loop` to make sure to avoid cases where screen
-            // has no Player Inventory and slot references are not stored.
-            playerInventorySlots.forEach(slot -> slot.y += offset);
         }
         return visible;
     }

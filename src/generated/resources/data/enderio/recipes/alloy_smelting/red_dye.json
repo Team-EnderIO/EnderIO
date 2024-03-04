@@ -4,26 +4,26 @@
   "experience": 0.3,
   "inputs": [
     {
-      "count": 1,
-      "ingredient": {
+      "Count": 1,
+      "Ingredient": {
         "item": "minecraft:beetroot"
       }
     },
     {
-      "count": 3,
-      "ingredient": {
+      "Count": 3,
+      "Ingredient": {
         "item": "minecraft:clay_ball"
       }
     },
     {
-      "count": 6,
-      "ingredient": {
+      "Count": 6,
+      "Ingredient": {
         "item": "minecraft:egg"
       }
     }
   ],
   "result": {
-    "count": 12,
-    "item": "minecraft:red_dye"
+    "Count": 12,
+    "id": "minecraft:red_dye"
   }
 }

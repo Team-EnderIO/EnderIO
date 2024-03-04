@@ -22,14 +22,13 @@
   },
   "requirements": [
     [
-      "has_ingredient",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_ingredient"
     ]
   ],
   "rewards": {
     "recipes": [
       "enderio:recolor_fused_quartz_ep_gray"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

@@ -11,7 +11,6 @@ import com.enderio.api.conduit.ticker.IConduitTicker;
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.Vector2i;
 import com.enderio.conduits.common.init.EnderConduitTypes;
-import com.enderio.conduits.common.integrations.Integrations;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
@@ -20,8 +19,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
+import net.neoforged.neoforge.capabilities.BlockCapability;
 import org.apache.commons.lang3.function.TriFunction;
 import org.jetbrains.annotations.Nullable;
 
@@ -53,9 +51,9 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
     }
 
     @Override
-    public <K> Optional<LazyOptional<K>> proxyCapability(Capability<K> cap, AE2InWorldConduitNodeHost extendedConduitData, Level level, BlockPos pos, @Nullable Direction direction, Optional<NodeIdentifier.IOState> state) {
+    public <K> Optional<K> proxyCapability(BlockCapability<K, Direction> cap, AE2InWorldConduitNodeHost extendedConduitData, Level level, BlockPos pos, @Nullable Direction direction, Optional<NodeIdentifier.IOState> state) {
         if (getCapability() == cap) {
-            return Optional.of(extendedConduitData.selfCap.cast());
+            return (Optional<K>) Optional.ofNullable(extendedConduitData.getSelfCap());
         }
         return Optional.empty();
     }
@@ -73,8 +71,8 @@ public class AE2ConduitType extends TieredConduit<AE2InWorldConduitNodeHost> {
         return dense;
     }
 
-    protected final Capability<IInWorldGridNodeHost> getCapability() {
-        return Integrations.AE2_INTEGRATION.expectPresent().getInWorldGridNodeHost();
+    protected final BlockCapability<IInWorldGridNodeHost, Direction> getCapability() {
+        return AE2Integration.IN_WORLD_GRID_NODE_HOST;
     }
 
     private static final class ConduitMenuData implements IConduitMenuData {

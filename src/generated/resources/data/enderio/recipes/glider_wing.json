@@ -3,7 +3,7 @@
   "category": "equipment",
   "key": {
     "D": {
-      "tag": "forge:ingots/dark_steel"
+      "tag": "neoforge:ingots/dark_steel"
     },
     "L": {
       "tag": "forge:leather"
@@ -16,6 +16,5 @@
   ],
   "result": {
     "item": "enderio:glider_wing"
-  },
-  "show_notification": true
+  }
 }

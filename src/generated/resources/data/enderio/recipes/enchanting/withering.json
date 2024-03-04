@@ -3,8 +3,8 @@
   "cost_multiplier": 1,
   "enchantment": "enderio:withering",
   "input": {
-    "count": 4,
-    "ingredient": {
+    "Count": 4,
+    "Ingredient": {
       "item": "enderio:withering_powder"
     }
   }

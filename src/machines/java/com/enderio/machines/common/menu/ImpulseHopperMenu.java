@@ -24,7 +24,7 @@ public class ImpulseHopperMenu extends MachineMenu<ImpulseHopperBlockEntity> {
         addInventorySlots(8, 84);
     }
 
-    public static ImpulseHopperMenu factory(@Nullable MenuType<ImpulseHopperMenu> pMenuType, int pContainerId, Inventory inventory,
+    public static ImpulseHopperMenu factory(int pContainerId, Inventory inventory,
         FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
         if (entity instanceof ImpulseHopperBlockEntity castBlockEntity) {

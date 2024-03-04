@@ -24,7 +24,7 @@ public class VacuumChestMenu extends MachineMenu<VacuumChestBlockEntity> {
         addInventorySlots(8, 124);
     }
 
-    public static VacuumChestMenu factory(@Nullable MenuType<VacuumChestMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
+    public static VacuumChestMenu factory(int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
         if (entity instanceof VacuumChestBlockEntity castBlockEntity) {
             return new VacuumChestMenu(castBlockEntity, inventory, pContainerId);

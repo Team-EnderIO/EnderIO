@@ -1,33 +1,33 @@
 package com.enderio.base.common.config.common;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class ItemsConfig {
-    public final ForgeConfigSpec.ConfigValue<Float> ENDERIOS_CHANCE;
-    public final ForgeConfigSpec.ConfigValue<Float> ENDERIOS_RANGE;
+    public final ModConfigSpec.ConfigValue<Double> ENDERIOS_CHANCE;
+    public final ModConfigSpec.ConfigValue<Double> ENDERIOS_RANGE;
 
-    public final ForgeConfigSpec.ConfigValue<Integer> ELECTROMAGNET_ENERGY_USE;
-    public final ForgeConfigSpec.ConfigValue<Integer> ELECTROMAGNET_MAX_ENERGY;
-    public final ForgeConfigSpec.ConfigValue<Integer> ELECTROMAGNET_RANGE;
-    public final ForgeConfigSpec.ConfigValue<Integer> ELECTROMAGNET_MAX_ITEMS;
+    public final ModConfigSpec.ConfigValue<Integer> ELECTROMAGNET_ENERGY_USE;
+    public final ModConfigSpec.ConfigValue<Integer> ELECTROMAGNET_MAX_ENERGY;
+    public final ModConfigSpec.ConfigValue<Integer> ELECTROMAGNET_RANGE;
+    public final ModConfigSpec.ConfigValue<Integer> ELECTROMAGNET_MAX_ITEMS;
 
-    public final ForgeConfigSpec.ConfigValue<Integer> LEVITATION_STAFF_ENERGY_USE;
-    public final ForgeConfigSpec.ConfigValue<Integer> LEVITATION_STAFF_MAX_ENERGY;
+    public final ModConfigSpec.ConfigValue<Integer> LEVITATION_STAFF_ENERGY_USE;
+    public final ModConfigSpec.ConfigValue<Integer> LEVITATION_STAFF_MAX_ENERGY;
 
-    public final ForgeConfigSpec.ConfigValue<Integer> TRAVELLING_BLINK_RANGE;
-    public final ForgeConfigSpec.ConfigValue<Integer> TRAVELLING_BLINK_DISABLED_TIME;
-    public final ForgeConfigSpec.ConfigValue<Integer> TRAVELLING_STAFF_ENERGY_USE;
-    public final ForgeConfigSpec.ConfigValue<Integer> TRAVELLING_STAFF_MAX_ENERGY;
+    public final ModConfigSpec.ConfigValue<Integer> TRAVELLING_BLINK_RANGE;
+    public final ModConfigSpec.ConfigValue<Integer> TRAVELLING_BLINK_DISABLED_TIME;
+    public final ModConfigSpec.ConfigValue<Integer> TRAVELLING_STAFF_ENERGY_USE;
+    public final ModConfigSpec.ConfigValue<Integer> TRAVELLING_STAFF_MAX_ENERGY;
 
-    public final ForgeConfigSpec.ConfigValue<Integer> TRAVELLING_TO_BLOCK_RANGE;
-    public final ForgeConfigSpec.ConfigValue<Integer> TRAVELLING_BLOCK_TO_BLOCK_RANGE;
+    public final ModConfigSpec.ConfigValue<Integer> TRAVELLING_TO_BLOCK_RANGE;
+    public final ModConfigSpec.ConfigValue<Integer> TRAVELLING_BLOCK_TO_BLOCK_RANGE;
 
-    public ItemsConfig(ForgeConfigSpec.Builder builder) {
+    public ItemsConfig(ModConfigSpec.Builder builder) {
         builder.push("items");
 
         builder.push("food");
-        ENDERIOS_CHANCE = builder.comment("The chance of enderios teleporting the player").define("enderioChance", 0.3f);
-        ENDERIOS_RANGE = builder.comment("The range of an enderio teleport").define("enderioRange", 16.0f);
+        ENDERIOS_CHANCE = builder.comment("The chance of enderios teleporting the player").define("enderioChance", 0.3d);
+        ENDERIOS_RANGE = builder.comment("The range of an enderio teleport").define("enderioRange", 16.0d);
         builder.pop();
 
         builder.push("electromagnet");

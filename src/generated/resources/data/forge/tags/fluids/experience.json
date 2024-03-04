@@ -1,6 +1,5 @@
 {
   "values": [
-    "enderio:flowing_xp_juice",
-    "enderio:xp_juice"
+    "enderio:fluid_xp_juice_still"
   ]
 }

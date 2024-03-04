@@ -4,13 +4,14 @@
   "experience": 0.3,
   "inputs": [
     {
-      "count": 1,
-      "ingredient": {
+      "Count": 1,
+      "Ingredient": {
         "tag": "forge:glass/colorless"
       }
     }
   ],
   "result": {
-    "item": "enderio:clear_glass"
+    "Count": 1,
+    "id": "enderio:clear_glass"
   }
 }

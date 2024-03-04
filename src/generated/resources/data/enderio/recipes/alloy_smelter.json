@@ -9,10 +9,10 @@
       "item": "minecraft:furnace"
     },
     "G": {
-      "tag": "forge:gears/stone"
+      "tag": "neoforge:gears/iron"
     },
     "I": {
-      "tag": "forge:ingots/dark_steel"
+      "tag": "neoforge:ingots/dark_steel"
     },
     "V": {
       "item": "enderio:void_chassis"
@@ -25,6 +25,5 @@
   ],
   "result": {
     "item": "enderio:alloy_smelter"
-  },
-  "show_notification": true
+  }
 }

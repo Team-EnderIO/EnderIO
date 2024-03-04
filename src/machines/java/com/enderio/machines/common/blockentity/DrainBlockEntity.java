@@ -5,15 +5,23 @@ import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.IIOConfig;
 import com.enderio.api.io.IOMode;
 import com.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
+import com.enderio.core.common.network.slot.CodecNetworkDataSlot;
 import com.enderio.core.common.network.slot.FluidStackNetworkDataSlot;
-import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
+import com.enderio.machines.common.attachment.ActionRange;
+import com.enderio.machines.common.attachment.IFluidTankUser;
+import com.enderio.machines.common.attachment.IRangedActor;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
+import com.enderio.machines.common.init.MachineAttachments;
+import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.io.FixedIOConfig;
+import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
+import com.enderio.machines.common.io.fluid.MachineTankLayout;
+import com.enderio.machines.common.io.fluid.TankAccess;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.menu.DrainMenu;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
@@ -21,24 +29,24 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidType;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DrainBlockEntity extends PoweredMachineBlockEntity {
+public class DrainBlockEntity extends PoweredMachineBlockEntity implements IRangedActor, IFluidTankUser {
     public static final String CONSUMED = "Consumed";
     private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.DRAIN_CAPACITY);
     private static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.DRAIN_USAGE);
+    private final MachineFluidHandler fluidHandler;
+    private static final TankAccess TANK = new TankAccess();
     private static final int CAPACITY = 3 * FluidType.BUCKET_VOLUME;
     private static final int ENERGY_PER_BUCKET = 1_500;
     private List<BlockPos> positions;
@@ -47,23 +55,45 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
     private int consumed = 0;
     private Fluid type = Fluids.EMPTY;
 
-    public DrainBlockEntity(BlockEntityType<?> type,
-        BlockPos worldPosition, BlockState blockState) {
-        super(EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE, type, worldPosition, blockState);
-        addDataSlot(new FluidStackNetworkDataSlot(getFluidTankNN()::getFluid, getFluidTankNN()::setFluid));
+    private CodecNetworkDataSlot<ActionRange> actionRangeDataSlot;
 
-        this.range = 5;
+    public DrainBlockEntity(BlockPos worldPosition, BlockState blockState) {
+        super(EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE, MachineBlockEntities.DRAIN.get(), worldPosition, blockState);
+        fluidHandler = createFluidHandler();
 
-        rangeDataSlot = new IntegerNetworkDataSlot(this::getRange, r -> this.range = r) {
-            @Override
-            public void updateServerCallback() {
-                updateLocations();
-            }
-        };
-        addDataSlot(rangeDataSlot);
+        addDataSlot(new FluidStackNetworkDataSlot(() -> TANK.getFluid(this), fluid -> TANK.setFluid(this, fluid)));
 
-        rangeVisibleDataSlot = new BooleanNetworkDataSlot(this::isRangeVisible, b -> this.rangeVisible = b);
-        addDataSlot(rangeVisibleDataSlot);
+        // TODO: rubbish way of having a default. use an interface instead?
+        if (!hasData(MachineAttachments.ACTION_RANGE)) {
+            setData(MachineAttachments.ACTION_RANGE, new ActionRange(5, false));
+        }
+
+        actionRangeDataSlot = addDataSlot(new CodecNetworkDataSlot<>(this::getActionRange, this::internalSetActionRange, ActionRange.CODEC));
+    }
+
+    @Override
+    public int getMaxRange() {
+        return 10;
+    }
+
+    @Override
+    public ActionRange getActionRange() {
+        return getData(MachineAttachments.ACTION_RANGE);
+    }
+
+    @Override
+    public void setActionRange(ActionRange actionRange) {
+        if (level != null && level.isClientSide) {
+            clientUpdateSlot(actionRangeDataSlot, actionRange);
+        } else {
+            internalSetActionRange(actionRange);
+        }
+    }
+
+    private void internalSetActionRange(ActionRange actionRange) {
+        setData(MachineAttachments.ACTION_RANGE, actionRange);
+        updateLocations();
+        setChanged();
     }
 
     @Override
@@ -71,6 +101,31 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
         return MachineInventoryLayout.builder()
             .capacitor()
             .build();
+    }
+
+    @Override
+    public @Nullable MachineTankLayout getTankLayout() {
+        return MachineTankLayout.builder().tank(TANK, CAPACITY, f -> type.isSame(f.getFluid())).build();
+    }
+
+    public MachineFluidTank getFluidTank() {
+        return TANK.getTank(this);
+    }
+
+    @Override
+    public MachineFluidHandler getFluidHandler() {
+        return fluidHandler;
+    }
+
+    @Override
+    public MachineFluidHandler createFluidHandler() {
+        return new MachineFluidHandler(getIOConfig(), getTankLayout()) {
+            @Override
+            protected void onContentsChanged(int slot) {
+                super.onContentsChanged(slot);
+                updateMachineState(MachineState.FULL_TANK, TANK.getFluidAmount(this) >= TANK.getCapacity(this));
+            }
+        };
     }
 
     @Override
@@ -94,14 +149,16 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
         }
         FluidState fluidState = level.getFluidState(worldPosition.below());
         if (fluidState.isEmpty() || !fluidState.isSource()) {
+            updateMachineState(MachineState.NO_SOURCE, true);
             return false;
         }
+        updateMachineState(MachineState.NO_SOURCE, false);
         type = fluidState.getType();
-        return getFluidTankNN().fill(new FluidStack(type, FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.SIMULATE) == FluidType.BUCKET_VOLUME;
+        return TANK.fill(this, new FluidStack(type, FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.SIMULATE) == FluidType.BUCKET_VOLUME;
     }
 
     public void drainFluids() {
-        int stop = Math.min(currentIndex + range, positions.size());
+        int stop = Math.min(currentIndex + getRange(), positions.size());
         while (currentIndex < stop) {
             if (currentIndex >= positions.size()) {
                 currentIndex--;
@@ -126,17 +183,17 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
 
             //Not a valid fluid
             FluidState fluidState = level.getFluidState(pos);
-            if (fluidState.isEmpty() || !fluidState.isSource() || !getFluidTankNN().isFluidValid(new FluidStack(fluidState.getType(),1))) {
+            if (fluidState.isEmpty() || !fluidState.isSource() || !TANK.isFluidValid(this, new FluidStack(fluidState.getType(), 1))) {
                 currentIndex++;
                 continue;
             }
 
             //Fluid found, try to consume it
             fluidFound = true;
-            if (getFluidTankNN().fill(new FluidStack(fluidState.getType(), FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.SIMULATE) == FluidType.BUCKET_VOLUME) {
+            if (TANK.fill(this, new FluidStack(fluidState.getType(), FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.SIMULATE) == FluidType.BUCKET_VOLUME) {
                 if (consumed >= ENERGY_PER_BUCKET) {
                     level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
-                    getFluidTankNN().fill(new FluidStack(fluidState.getType(), FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.EXECUTE);
+                    TANK.fill(this, new FluidStack(fluidState.getType(), FluidType.BUCKET_VOLUME), IFluidHandler.FluidAction.EXECUTE);
                     consumed -= ENERGY_PER_BUCKET;
                     currentIndex++;
                 } else {
@@ -147,25 +204,17 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
         }
     }
 
-    @Override
-    public int getMaxRange() {
-        return 10;
-    }
-
-    @Override
-    public String getColor() {
-        return MachinesConfig.CLIENT.BLOCKS.DRAIN_RANGE_COLOR.get();
-    }
-
-    @Override
     public BlockPos getParticleLocation() {
-        return worldPosition.below(range + 1);
+        return worldPosition.below(getRange() + 1);
     }
 
     @Override
-    public void setRange(int range) {
-        super.setRange(range);
-        updateLocations();
+    public void clientTick() {
+        if (level.isClientSide && level instanceof ClientLevel clientLevel) {
+            getActionRange().addClientParticle(clientLevel, getParticleLocation(), MachinesConfig.CLIENT.BLOCKS.DRAIN_RANGE_COLOR.get());
+        }
+
+        super.clientTick();
     }
 
     @Override
@@ -177,16 +226,11 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
     private void updateLocations() {
         positions = new ArrayList<>();
         currentIndex = 0;
+        int range = getRange();
         for (BlockPos pos : BlockPos.betweenClosed(worldPosition.offset(-range,-range*2 - 1,-range), worldPosition.offset(range,-1,range))) {
             positions.add(pos.immutable()); //Need to make it immutable
         }
     }
-
-    @Override
-    protected @Nullable FluidTank createFluidTank() {
-        return new MachineFluidTank(CAPACITY, f-> type.isSame(f.getFluid()),this);
-    }
-
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player) {
@@ -197,11 +241,13 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity {
     public void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
         pTag.putInt(CONSUMED, consumed);
+        saveTank(pTag);
     }
 
     @Override
     public void load(CompoundTag pTag) {
         super.load(pTag);
         consumed = pTag.getInt(CONSUMED);
+        loadTank(pTag);
     }
 }

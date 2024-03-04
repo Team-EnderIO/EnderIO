@@ -34,7 +34,7 @@ public class SlicerMenu extends MachineMenu<SlicerBlockEntity> {
         addInventorySlots(8,84);
     }
 
-    public static SlicerMenu factory(@Nullable MenuType<SlicerMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
+    public static SlicerMenu factory(int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
         if (entity instanceof SlicerBlockEntity castBlockEntity) {
             return new SlicerMenu(castBlockEntity, inventory, pContainerId);

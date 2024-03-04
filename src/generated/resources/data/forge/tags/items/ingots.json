@@ -1,13 +1,13 @@
 {
   "values": [
-    "#forge:ingots/conductive_alloy",
-    "#forge:ingots/copper_alloy",
-    "#forge:ingots/dark_steel",
-    "#forge:ingots/end_steel",
-    "#forge:ingots/energetic_alloy",
-    "#forge:ingots/pulsating_alloy",
-    "#forge:ingots/redstone_alloy",
-    "#forge:ingots/soularium",
-    "#forge:ingots/vibrant_alloy"
+    "#neoforge:ingots/conductive_alloy",
+    "#neoforge:ingots/copper_alloy",
+    "#neoforge:ingots/dark_steel",
+    "#neoforge:ingots/end_steel",
+    "#neoforge:ingots/energetic_alloy",
+    "#neoforge:ingots/pulsating_alloy",
+    "#neoforge:ingots/redstone_alloy",
+    "#neoforge:ingots/soularium",
+    "#neoforge:ingots/vibrant_alloy"
   ]
 }

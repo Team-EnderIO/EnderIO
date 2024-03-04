@@ -4,19 +4,20 @@
   "experience": 0.3,
   "inputs": [
     {
-      "count": 6,
-      "ingredient": {
+      "Count": 6,
+      "Ingredient": {
         "item": "enderio:plant_matter_green"
       }
     },
     {
-      "count": 1,
-      "ingredient": {
+      "Count": 1,
+      "Ingredient": {
         "item": "minecraft:egg"
       }
     }
   ],
   "result": {
-    "item": "enderio:organic_green_dye"
+    "Count": 1,
+    "id": "enderio:organic_green_dye"
   }
 }

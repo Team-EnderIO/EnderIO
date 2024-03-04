@@ -7,8 +7,14 @@ import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ResourceLocationException;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -20,29 +26,29 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.tags.ITag;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 public class FireCraftingRecipe implements EnderRecipe<Container> {
-    private final ResourceLocation id;
     private final ResourceLocation lootTable;
     private final int maxItemDrops;
     private final List<Block> bases;
     private final List<TagKey<Block>> baseTags;
     private final List<ResourceLocation> dimensions;
 
-    public FireCraftingRecipe(ResourceLocation id, ResourceLocation lootTable, int maxItemDrops, List<Block> bases, List<TagKey<Block>> baseTags, List<ResourceLocation> dimensions) {
-        this.id = id;
+    public FireCraftingRecipe(ResourceLocation lootTable, int maxItemDrops, List<Block> bases, List<TagKey<Block>> baseTags, List<ResourceLocation> dimensions) {
         this.lootTable = lootTable;
         this.maxItemDrops = maxItemDrops;
         this.bases = bases;
         this.baseTags = baseTags;
         this.dimensions = dimensions;
     }
+
 
     public ResourceLocation getLootTable() {
         return lootTable;
@@ -56,8 +62,10 @@ public class FireCraftingRecipe implements EnderRecipe<Container> {
     public List<Block> getBases() {
         List<Block> blocks = new ArrayList<>(bases);
         for (TagKey<Block> blockTagKey : baseTags) {
-            ITag<Block> tag = ForgeRegistries.BLOCKS.tags().getTag(blockTagKey);
-            blocks.addAll(tag.stream().toList());
+            BuiltInRegistries.BLOCK.getTag(blockTagKey).map(HolderSet.ListBacked::stream)
+                .orElse(Stream.empty())
+                .map(Holder::value)
+                .forEach(blocks::add);
         }
         return blocks;
     }
@@ -94,10 +102,6 @@ public class FireCraftingRecipe implements EnderRecipe<Container> {
         return ItemStack.EMPTY;
     }
 
-    @Override
-    public ResourceLocation getId() {
-        return id;
-    }
 
     @Override
     public RecipeSerializer<FireCraftingRecipe> getSerializer() {
@@ -111,68 +115,37 @@ public class FireCraftingRecipe implements EnderRecipe<Container> {
 
     public static class Serializer implements RecipeSerializer<FireCraftingRecipe> {
 
+        public static final Codec<FireCraftingRecipe> CODEC = RecordCodecBuilder.create(inst -> inst
+            .group(ResourceLocation.CODEC.fieldOf("loot_table").forGetter(FireCraftingRecipe::getLootTable),
+                Codec.INT.fieldOf("max_item_drops").forGetter(FireCraftingRecipe::getMaxItemDrops),
+                BuiltInRegistries.BLOCK.byNameCodec().listOf().optionalFieldOf("base_blocks", List.of()).forGetter(FireCraftingRecipe::getBases),
+                TagKey.codec(Registries.BLOCK).listOf().optionalFieldOf("base_tags", List.of()).forGetter(obj -> obj.baseTags),
+                ResourceLocation.CODEC.listOf().fieldOf("dimensions").forGetter(obj -> obj.dimensions))
+            .apply(inst, FireCraftingRecipe::new));
+
         @Override
-        public FireCraftingRecipe fromJson(ResourceLocation recipeId, JsonObject serializedRecipe) {
-            ResourceLocation lootTable = new ResourceLocation(serializedRecipe.get("loot_table").getAsString());
-            int maxItemDrops = serializedRecipe.get("max_item_drops").getAsInt();
-
-            List<Block> baseBlocks = new ArrayList<>();
-            List<TagKey<Block>> baseTags = new ArrayList<>();
-            JsonArray baseBlocksJson = serializedRecipe.getAsJsonArray("base_blocks");
-            for (JsonElement baseBlock : baseBlocksJson) {
-                if (baseBlock instanceof JsonObject obj) {
-                    if (obj.has("block")) {
-                        String id = obj.get("block").getAsString();
-                        Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(id));
-                        if (block == null) {
-                            throw new ResourceLocationException("Missing block " + id + " for fire crafting recipe " + recipeId);
-                        } else {
-                            baseBlocks.add(block);
-                        }
-                    } else if (obj.has("tag")) {
-                        baseTags.add(BlockTags.create(new ResourceLocation(obj.get("tag").getAsString())));
-                    } else {
-                        throw new UnsupportedOperationException("Unknown block entry for fire crafting recipe " + recipeId);
-                    }
-                }
-            }
-
-            List<ResourceLocation> dimensions = new ArrayList<>();
-            JsonArray dimensionsJson = serializedRecipe.getAsJsonArray("dimensions");
-            for (JsonElement dimension : dimensionsJson) {
-                dimensions.add(new ResourceLocation(dimension.getAsString()));
-            }
-
-            return new FireCraftingRecipe(recipeId, lootTable, maxItemDrops, baseBlocks, baseTags, dimensions);
+        public Codec<FireCraftingRecipe> codec() {
+            return CODEC;
         }
 
         @Override
-        public FireCraftingRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-            try {
-                ResourceLocation lootTable = buffer.readResourceLocation();
-                int maxItemDrops = buffer.readInt();
-                List<Block> baseBlocks = buffer.readList(buf -> ForgeRegistries.BLOCKS.getValue(buf.readResourceLocation()));
-                List<TagKey<Block>> baseTags = buffer.readList(buf -> BlockTags.create(buf.readResourceLocation()));
-                List<ResourceLocation> dimensions = buffer.readList(FriendlyByteBuf::readResourceLocation);
-                return new FireCraftingRecipe(recipeId, lootTable, maxItemDrops, baseBlocks, baseTags, dimensions);
-            } catch (Exception e) {
-                EnderIO.LOGGER.error("Error reading fire crafting recipe from packet.", e);
-                throw e;
-            }
+        public @Nullable FireCraftingRecipe fromNetwork(FriendlyByteBuf buffer) {
+            ResourceLocation lootTable = buffer.readResourceLocation();
+            int maxItemDrops = buffer.readInt();
+            List<Block> baseBlocks = buffer.readList(buf -> BuiltInRegistries.BLOCK.get(buf.readResourceLocation()));
+            List<TagKey<Block>> baseTags = buffer.readList(buf -> BlockTags.create(buf.readResourceLocation()));
+            List<ResourceLocation> dimensions = buffer.readList(FriendlyByteBuf::readResourceLocation);
+            return new FireCraftingRecipe(lootTable, maxItemDrops, baseBlocks, baseTags, dimensions);
+
         }
 
         @Override
         public void toNetwork(FriendlyByteBuf buffer, FireCraftingRecipe recipe) {
-            try {
-                buffer.writeResourceLocation(recipe.lootTable);
-                buffer.writeInt(recipe.maxItemDrops);
-                buffer.writeCollection(recipe.bases, (buf, block) -> buf.writeResourceLocation(Objects.requireNonNull(ForgeRegistries.BLOCKS.getKey(block))));
-                buffer.writeCollection(recipe.baseTags, (buf, tag) -> buf.writeResourceLocation(tag.location()));
-                buffer.writeCollection(recipe.dimensions, FriendlyByteBuf::writeResourceLocation);
-            } catch (Exception ex) {
-                EnderIO.LOGGER.error("Error writing fire crafting recipe to packet.", ex);
-                throw ex;
-            }
+            buffer.writeResourceLocation(recipe.lootTable);
+            buffer.writeInt(recipe.maxItemDrops);
+            buffer.writeCollection(recipe.bases, (buf, block) -> buf.writeResourceLocation(Objects.requireNonNull(BuiltInRegistries.BLOCK.getKey(block))));
+            buffer.writeCollection(recipe.baseTags, (buf, tag) -> buf.writeResourceLocation(tag.location()));
+            buffer.writeCollection(recipe.dimensions, FriendlyByteBuf::writeResourceLocation);
         }
 
     }

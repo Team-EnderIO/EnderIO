@@ -39,7 +39,7 @@ public class EnderIOJEI implements IModPlugin {
 
     @Override
     public void registerVanillaCategoryExtensions(IVanillaCategoryExtensionRegistration registration) {
-        registration.getCraftingCategory().addCategoryExtension(ShapedEntityStorageRecipe.class, r -> ShapedEntityStorageRecipe.REGISTERED_RECIPES.contains(r.getId()), ShapedEntityStorageCategoryExtension::new);
+        registration.getCraftingCategory().addExtension(ShapedEntityStorageRecipe.class, new ShapedEntityStorageCategoryExtension());
     }
 
     @Override
@@ -47,8 +47,8 @@ public class EnderIOJEI implements IModPlugin {
         EnderIOJEIRecipes recipes = new EnderIOJEIRecipes();
         registration.addRecipes(FireCraftingCategory.TYPE, recipes.getAllFireCraftingRecipes());
 
-        registration.addIngredientInfo(EIOItems.GRAINS_OF_INFINITY.asStack(), VanillaTypes.ITEM_STACK, EIOLang.JEI_GRAINS_HAND_GRIND);
-        registration.addIngredientInfo(EIOItems.POWDERED_COAL.asStack(), VanillaTypes.ITEM_STACK, EIOLang.JEI_COAL_HAND_GRIND);
+        registration.addIngredientInfo(new ItemStack(EIOItems.GRAINS_OF_INFINITY.get()), VanillaTypes.ITEM_STACK, EIOLang.JEI_GRAINS_HAND_GRIND);
+        registration.addIngredientInfo(new ItemStack(EIOItems.POWDERED_COAL.get()), VanillaTypes.ITEM_STACK, EIOLang.JEI_COAL_HAND_GRIND);
     }
 
     @Override

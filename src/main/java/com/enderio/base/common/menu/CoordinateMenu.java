@@ -1,6 +1,6 @@
 package com.enderio.base.common.menu;
 
-import com.enderio.api.capability.CoordinateSelection;
+import com.enderio.api.attachment.CoordinateSelection;
 import com.enderio.base.common.init.EIOItems;
 import com.enderio.base.common.init.EIOMenus;
 import com.enderio.base.common.item.misc.LocationPrintoutItem;
@@ -45,16 +45,16 @@ public class CoordinateMenu extends AbstractContainerMenu {
         this.name = name != null ? name : "";
     }
 
-    public static CoordinateMenu factory(@Nullable MenuType<CoordinateMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
-        return new CoordinateMenu(pMenuType, pContainerId, buf);
+    public static CoordinateMenu factory(int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
+        return new CoordinateMenu(EIOMenus.COORDINATE.get(), pContainerId, buf);
     }
 
     /**
      * @param name is null when you used the coordinate selector, if it's the printout use the ItemStack name
      */
     public static FriendlyByteBuf writeAdditionalData(FriendlyByteBuf buf, CoordinateSelection selection, @Nullable String name) {
-        buf.writeResourceLocation(selection.level());
-        buf.writeBlockPos(selection.pos());
+        buf.writeResourceLocation(selection.getLevel());
+        buf.writeBlockPos(selection.getPos());
         buf.writeBoolean(name == null);
         buf.writeUtf(name == null ? "" : name, 50);
         return buf;

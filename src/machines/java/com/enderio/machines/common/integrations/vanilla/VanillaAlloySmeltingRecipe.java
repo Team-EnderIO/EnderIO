@@ -19,7 +19,7 @@ public class VanillaAlloySmeltingRecipe extends AlloySmeltingRecipe {
 
     public VanillaAlloySmeltingRecipe(SmeltingRecipe vanillaRecipe) {
         // Provide some dummy values.
-        super(vanillaRecipe.getId(), List.of(), ItemStack.EMPTY, 0, 0);
+        super(List.of(), ItemStack.EMPTY, 0, 0);
         this.vanillaRecipe = vanillaRecipe;
     }
 

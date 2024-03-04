@@ -1,30 +1,22 @@
 package com.enderio.machines.common.io.item;
 
-import com.enderio.api.capability.IEnderCapabilityProvider;
 import com.enderio.api.io.IIOConfig;
+import com.enderio.machines.common.blockentity.MachineState;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.EnumMap;
 import java.util.function.IntConsumer;
 
 /**
  * A machine inventory.
  * Configured and controlled by a machine's {@link IIOConfig} and a {@link MachineInventoryLayout}.
  */
-public class MachineInventory extends ItemStackHandler implements IEnderCapabilityProvider<IItemHandler> {
+public class MachineInventory extends ItemStackHandler {
     private final IIOConfig config;
     private final MachineInventoryLayout layout;
-
-    private final EnumMap<Direction, LazyOptional<Wrapped>> sideCache = new EnumMap<>(Direction.class);
-    private LazyOptional<Wrapped> selfCache = LazyOptional.empty();
-
     private IntConsumer changeListener = i -> {};
 
     /**
@@ -63,46 +55,17 @@ public class MachineInventory extends ItemStackHandler implements IEnderCapabili
         return layout.getStackLimit(slot);
     }
 
-    @Override
-    public Capability<IItemHandler> getCapabilityType() {
-        return ForgeCapabilities.ITEM_HANDLER;
-    }
-
-    @Override
-    public LazyOptional<IItemHandler> getCapability(@Nullable Direction side) {
+    @Nullable
+    public IItemHandler getForSide(@Nullable Direction side) {
         if (side == null) {
-            // Create own cache if its been invalidated or not created yet.
-            if (!selfCache.isPresent()) {
-                selfCache = LazyOptional.of(() -> new Wrapped(this, null));
-            }
-
-            return selfCache.cast();
+            return new Wrapped(this, null);
         }
 
-        if (!config.getMode(side).canConnect()) {
-            return LazyOptional.empty();
+        if (config.getMode(side).canConnect()) {
+            return new Wrapped(this, side);
         }
 
-        return sideCache.computeIfAbsent(side, dir -> LazyOptional.of(() -> new Wrapped(this, dir))).cast();
-    }
-
-    @Override
-    public void invalidateSide(@Nullable Direction side) {
-        if (side != null) {
-            if (sideCache.containsKey(side)) {
-                sideCache.get(side).invalidate();
-                sideCache.remove(side);
-            }
-        } else {
-            selfCache.invalidate();
-        }
-    }
-
-    @Override
-    public void invalidateCaps() {
-        for (LazyOptional<Wrapped> access : sideCache.values()) {
-            access.invalidate();
-        }
+        return null;
     }
 
     @Override
@@ -133,6 +96,10 @@ public class MachineInventory extends ItemStackHandler implements IEnderCapabili
         if (changed) {
             this.changeListener.accept(slot);
         }
+    }
+
+    public void updateMachineState(MachineState state, boolean add) {
+
     }
 
     private record Wrapped(MachineInventory master, @Nullable Direction side) implements IItemHandler {

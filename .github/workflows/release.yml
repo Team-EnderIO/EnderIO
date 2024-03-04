@@ -49,8 +49,6 @@ jobs:
         with:
           arguments: publishMod
 
-      # TODO: Publish to maven.
-
       - name: Upload to GitHub Releases
         uses: softprops/action-gh-release@v1
         with:
@@ -88,6 +86,15 @@ jobs:
           embed-footer-text: ${{ github.event.release.tag_name }}
           embed-url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           embed-color: 15548997
+
+      # Publish to Rover's maven last. Failure email will still be sent, but it'll still release elsewhere
+      - name: Rover656 Maven Publish
+        uses: gradle/gradle-build-action@v2
+        env:
+          RVR_MAVEN_USER: ${{ secrets.RVR_MAVEN_USER }}
+          RVR_MAVEN_PASSWORD: ${{ secrets.RVR_MAVEN_PASSWORD }}
+        with:
+          arguments: publishAllPublicationsToRover656Repository
 
   updateReleaseBranch:
     needs: [release]

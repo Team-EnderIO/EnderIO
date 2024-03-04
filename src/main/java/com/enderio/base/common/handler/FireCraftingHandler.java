@@ -13,6 +13,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -23,11 +24,11 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import net.minecraftforge.client.event.RecipesUpdatedEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.level.BlockEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.client.event.RecipesUpdatedEvent;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +43,7 @@ public class FireCraftingHandler {
     private static final Random RANDOM = new Random();
     private static final ConcurrentMap<FireIndex, Long> FIRE_TRACKER = new ConcurrentHashMap<>();
 
-    private static List<FireCraftingRecipe> cachedRecipes;
+    private static List<RecipeHolder<FireCraftingRecipe>> cachedRecipes;
     private static boolean recipesCached = false;
 
     private record FireIndex(BlockPos pos, ResourceKey<Level> dimension) {}
@@ -76,7 +77,8 @@ public class FireCraftingHandler {
 
             // Search for this recipe.
             FireCraftingRecipe matchingRecipe = null;
-            for (FireCraftingRecipe recipe : cachedRecipes) {
+            for (var recipeHolder : cachedRecipes) {
+                var recipe = recipeHolder.value();
                 if (recipe.isBaseValid(baseBlock) && recipe.isDimensionValid(level.dimension())) {
                     matchingRecipe = recipe;
                     break;
@@ -148,6 +150,10 @@ public class FireCraftingHandler {
             // Search for any fires that are due to spawn drops.
             long gameTime = event.level.getGameTime();
             for (Map.Entry<FireIndex, Long> fire : FIRE_TRACKER.entrySet()) {
+                if (!fire.getKey().dimension().equals(event.level.dimension())) {
+                    continue;
+                }
+
                 BlockPos pos = fire.getKey().pos();
                 if (gameTime > fire.getValue()) {
                     if (event.level.getBlockState(pos).getBlock() instanceof FireBlock) {

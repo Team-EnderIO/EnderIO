@@ -2,11 +2,14 @@ package com.enderio.api.conduit;
 
 import com.enderio.api.misc.ColorControl;
 import com.enderio.api.misc.RedstoneControl;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.GraphObject;
 import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,6 +25,11 @@ public class NodeIdentifier<T extends IExtendedConduitData<?>> implements GraphO
 
     private final Map<Direction, IOState> ioStates = new EnumMap<>(Direction.class);
     private final T extendedConduitData;
+
+    /*public static final Codec<NodeIdentifier<?>> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+        BlockPos.CODEC.fieldOf("pos").forGetter(NodeIdentifier::getPos),
+        ConduitTypes.REGISTRY.byNameCodec().fieldOf("id").forGetter(node -> node.get)
+    ).apply(instance, NodeIdentifier::new));*/
 
     @ApiStatus.Internal
     public NodeIdentifier(BlockPos pos, T extendedConduitData) {

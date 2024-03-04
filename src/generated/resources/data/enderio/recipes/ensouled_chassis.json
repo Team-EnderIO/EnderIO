@@ -6,7 +6,7 @@
       "item": "enderio:soul_chain"
     },
     "I": {
-      "tag": "forge:ingots/soularium"
+      "tag": "neoforge:ingots/soularium"
     },
     "Q": {
       "tag": "forge:gems/quartz"
@@ -19,6 +19,5 @@
   ],
   "result": {
     "item": "enderio:ensouled_chassis"
-  },
-  "show_notification": true
+  }
 }

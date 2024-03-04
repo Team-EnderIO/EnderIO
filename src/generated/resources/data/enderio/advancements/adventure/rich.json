@@ -5,20 +5,16 @@
       "conditions": {
         "paint": "minecraft:diamond_block"
       },
-      "trigger": "enderio:create_painted_block"
+      "trigger": "enderio:painting"
     }
   },
   "display": {
-    "announce_to_chat": true,
     "description": {
       "translate": "advancements.enderio.rich.description"
     },
-    "frame": "task",
-    "hidden": false,
     "icon": {
       "item": "minecraft:diamond_block"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancements.enderio.rich.title"
     }

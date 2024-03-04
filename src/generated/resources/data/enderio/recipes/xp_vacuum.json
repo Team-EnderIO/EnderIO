@@ -6,7 +6,7 @@
       "tag": "forge:ingots/iron"
     },
     "P": {
-      "tag": "forge:gems/pulsating_crystal"
+      "tag": "neoforge:gems/pulsating_crystal"
     },
     "R": {
       "item": "enderio:experience_rod"
@@ -19,6 +19,5 @@
   ],
   "result": {
     "item": "enderio:xp_vacuum"
-  },
-  "show_notification": true
+  }
 }

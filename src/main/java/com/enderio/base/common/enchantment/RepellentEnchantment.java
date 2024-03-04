@@ -29,7 +29,7 @@ public class RepellentEnchantment extends EIOBaseEnchantment {
     }
 
     private float getChance(int level) {
-        return BaseConfig.COMMON.ENCHANTMENTS.REPELLENT_CHANCE_BASE.get() + BaseConfig.COMMON.ENCHANTMENTS.REPELLENT_CHANCE_MULT.get() * level;
+        return BaseConfig.COMMON.ENCHANTMENTS.REPELLENT_CHANCE_BASE.get().floatValue() + BaseConfig.COMMON.ENCHANTMENTS.REPELLENT_CHANCE_MULT.get().floatValue() * level;
     }
 
     private double getRange(int level) {

@@ -12,7 +12,7 @@
       "item": "minecraft:glowstone"
     },
     "I": {
-      "tag": "forge:ingots/vibrant_alloy"
+      "tag": "neoforge:ingots/vibrant_alloy"
     },
     "P": {
       "item": "enderio:photovoltaic_plate"
@@ -28,6 +28,5 @@
   ],
   "result": {
     "item": "enderio:vibrant_photovoltaic_module"
-  },
-  "show_notification": true
+  }
 }

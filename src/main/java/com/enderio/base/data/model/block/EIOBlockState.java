@@ -2,21 +2,19 @@ package com.enderio.base.data.model.block;
 
 import com.enderio.EnderIO;
 import com.enderio.base.common.block.light.PoweredLight;
-import com.tterrag.registrate.providers.DataGenContext;
-import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
+import com.enderio.regilite.data.DataGenContext;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.IronBarsBlock;
 import net.minecraft.world.level.block.state.properties.AttachFace;
-import net.minecraftforge.client.model.generators.ConfiguredModel;
-import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
+import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
 import org.jetbrains.annotations.Nullable;
 
 public class EIOBlockState {
 
-    public static void paneBlock(DataGenContext<Block, ? extends IronBarsBlock> ctx, RegistrateBlockstateProvider prov) {
+    public static void paneBlock(BlockStateProvider prov, DataGenContext<Block, ? extends IronBarsBlock> ctx) {
         prov.paneBlock(ctx.get(),
             prov.models()
                 .panePost(ctx.getName().concat("_post"), prov.blockTexture(ctx.get()), prov.blockTexture(ctx.get()))
@@ -35,8 +33,8 @@ public class EIOBlockState {
                 .renderType(prov.mcLoc("cutout_mipped")));
     }
 
-    public static void paintedBlock(DataGenContext<Block, ? extends Block> ctx, RegistrateBlockstateProvider prov, Block toCopy, @Nullable Direction itemTextureRotation) {
-        prov.simpleBlock(ctx.get(), prov.models().getBuilder(ctx.getName())
+    public static <T extends Block> void paintedBlock(String name, BlockStateProvider prov, T ctx, Block toCopy, @Nullable Direction itemTextureRotation) {
+        prov.simpleBlock(ctx, prov.models().getBuilder(name)
             .customLoader(PaintedBlockModelBuilder::begin)
             .reference(toCopy)
             .itemTextureRotation(itemTextureRotation)
@@ -44,15 +42,14 @@ public class EIOBlockState {
         );
     }
 
-    public static void lightBlock(DataGenContext<Block, ? extends Block> ctx, RegistrateBlockstateProvider prov) {
+    public static <T extends Block> void lightBlock(BlockStateProvider prov, DataGenContext<Block, T> ctx) {
         prov.getVariantBuilder(ctx.get()).forAllStates(state -> {
             Direction facing = state.getValue(PoweredLight.FACING);
             AttachFace face = state.getValue(PoweredLight.FACE);
             boolean powered = state.getValue(PoweredLight.ENABLED);
 
-            ResourceLocation id = ForgeRegistries.BLOCKS.getKey(ctx.get());
-            ModelFile light = prov.models().withExistingParent(id.getPath(), EnderIO.loc("block/lightblock"));
-            ModelFile light_powered = prov.models().withExistingParent(id.getPath() + "_powered", EnderIO.loc("block/lightblock"));
+            ModelFile light = prov.models().withExistingParent(ctx.getName(), EnderIO.loc("block/lightblock"));
+            ModelFile light_powered = prov.models().withExistingParent(ctx.getName() + "_powered", EnderIO.loc("block/lightblock"));
             return ConfiguredModel.builder()
                 .modelFile(powered ? light : light_powered)
                 .rotationX(face == AttachFace.FLOOR ? 0 : (face == AttachFace.WALL ? 90 : 180))

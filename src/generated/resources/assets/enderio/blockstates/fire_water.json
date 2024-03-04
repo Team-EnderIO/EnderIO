@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "enderio:block/fire_water"
+      "model": "minecraft:block/water"
     }
   }
 }

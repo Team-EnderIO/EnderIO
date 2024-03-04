@@ -3,8 +3,8 @@
   "cost_multiplier": 1,
   "enchantment": "enderio:auto_smelt",
   "input": {
-    "count": 16,
-    "ingredient": {
+    "Count": 16,
+    "Ingredient": {
       "item": "minecraft:blaze_powder"
     }
   }

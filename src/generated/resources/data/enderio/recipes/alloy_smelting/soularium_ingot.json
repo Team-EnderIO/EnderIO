@@ -4,8 +4,8 @@
   "experience": 0.3,
   "inputs": [
     {
-      "count": 1,
-      "ingredient": [
+      "Count": 1,
+      "Ingredient": [
         {
           "item": "minecraft:soul_sand"
         },
@@ -15,13 +15,14 @@
       ]
     },
     {
-      "count": 1,
-      "ingredient": {
+      "Count": 1,
+      "Ingredient": {
         "tag": "forge:ingots/gold"
       }
     }
   ],
   "result": {
-    "item": "enderio:soularium_ingot"
+    "Count": 1,
+    "id": "enderio:soularium_ingot"
   }
 }

@@ -22,7 +22,7 @@ public class FluidTankMenu extends MachineMenu<FluidTankBlockEntity> {
         addInventorySlots(8,84);
     }
 
-    public static FluidTankMenu factory(@Nullable MenuType<FluidTankMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
+    public static FluidTankMenu factory(int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
         if (entity instanceof FluidTankBlockEntity castBlockEntity) {
             return new FluidTankMenu(castBlockEntity, inventory, pContainerId);

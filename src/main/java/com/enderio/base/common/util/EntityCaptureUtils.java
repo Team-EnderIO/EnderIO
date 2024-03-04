@@ -2,16 +2,15 @@ package com.enderio.base.common.util;
 
 import com.enderio.base.common.lang.EIOLang;
 import com.enderio.base.common.tag.EIOTags;
-import com.enderio.core.common.util.EntityUtil;
 import com.google.common.collect.ImmutableList;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -29,7 +28,7 @@ public class EntityCaptureUtils {
         if (capturableEntities == null) {
             //noinspection unchecked
             var livingEntities = ImmutableList.copyOf(
-                ForgeRegistries.ENTITY_TYPES.getValues().stream()
+                BuiltInRegistries.ENTITY_TYPE.stream()
                     .filter(DefaultAttributes::hasSupplier)
                     .map(entityType -> (EntityType<? extends LivingEntity>) entityType)
                     .collect(Collectors.toList()));
@@ -37,8 +36,8 @@ public class EntityCaptureUtils {
             List<ResourceLocation> entities = new ArrayList<>();
             for (EntityType<? extends LivingEntity> type : livingEntities) {
                 if (getCapturableStatus(type, null) == CapturableStatus.CAPTURABLE) {
-                    ResourceLocation key = ForgeRegistries.ENTITY_TYPES.getKey(type);
-                    if (key != null && !key.equals(DRAGON)) {
+                    ResourceLocation key = BuiltInRegistries.ENTITY_TYPE.getKey(type);
+                    if (!key.equals(DRAGON)) {
                         entities.add(key);
                     }
                 }

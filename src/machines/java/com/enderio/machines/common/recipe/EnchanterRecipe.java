@@ -6,11 +6,12 @@ import com.enderio.core.common.recipes.EnderRecipe;
 import com.enderio.machines.common.blockentity.EnchanterBlockEntity;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineRecipes;
-import com.google.gson.JsonObject;
-import net.minecraft.ResourceLocationException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
@@ -20,8 +21,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -31,13 +31,11 @@ import java.util.Objects;
  */
 public class EnchanterRecipe implements EnderRecipe<Container> {
 
-    private final ResourceLocation id;
     private final Enchantment enchantment;
     private final int costMultiplier;
     private final CountedIngredient input;
 
-    public EnchanterRecipe(ResourceLocation id, CountedIngredient input, Enchantment enchantment, int costMultiplier) {
-        this.id = id;
+    public EnchanterRecipe(CountedIngredient input, Enchantment enchantment, int costMultiplier) {
         this.input = input;
         this.enchantment = enchantment;
         this.costMultiplier = costMultiplier;
@@ -82,7 +80,7 @@ public class EnchanterRecipe implements EnderRecipe<Container> {
      */
     public int getLapisForLevel(int level) {
         int res = getEnchantment().getMaxLevel() == 1 ? 5 : level;
-        return Math.max(1, Math.round(res * MachinesConfig.COMMON.ENCHANTER_LAPIS_COST_FACTOR.get()));
+        return Math.max(1, Math.round(res * MachinesConfig.COMMON.ENCHANTER_LAPIS_COST_FACTOR.get().floatValue()));
     }
 
     /**
@@ -161,11 +159,6 @@ public class EnchanterRecipe implements EnderRecipe<Container> {
     }
 
     @Override
-    public ResourceLocation getId() {
-        return id;
-    }
-
-    @Override
     public RecipeSerializer<?> getSerializer() {
         return MachineRecipes.ENCHANTING.serializer().get();
     }
@@ -176,29 +169,24 @@ public class EnchanterRecipe implements EnderRecipe<Container> {
     }
 
     public static class Serializer implements RecipeSerializer<EnchanterRecipe> {
+        public static final Codec<EnchanterRecipe> CODEC = RecordCodecBuilder.create(inst -> inst
+            .group(CountedIngredient.CODEC.fieldOf("input").forGetter(EnchanterRecipe::getInput),
+                BuiltInRegistries.ENCHANTMENT.byNameCodec().fieldOf("enchantment").forGetter(EnchanterRecipe::getEnchantment),
+                ExtraCodecs.POSITIVE_INT.fieldOf("cost_multiplier").forGetter(EnchanterRecipe::getCostMultiplier))
+            .apply(inst, EnchanterRecipe::new));
 
         @Override
-        public EnchanterRecipe fromJson(ResourceLocation recipeId, JsonObject serializedRecipe) {
-            CountedIngredient input = CountedIngredient.fromJson(serializedRecipe.get("input").getAsJsonObject());
-            Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(serializedRecipe.get("enchantment").getAsString()));
-            if (enchantment == null) {
-                throw new ResourceLocationException("The enchantment in " + recipeId + " does not exist");
-            }
-            int costMultiplier = serializedRecipe.get("cost_multiplier").getAsInt();
-            return new EnchanterRecipe(recipeId, input, enchantment, costMultiplier);
+        public Codec<EnchanterRecipe> codec() {
+            return CODEC;
         }
 
-        @Nullable
         @Override
-        public EnchanterRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
+        public @Nullable EnchanterRecipe fromNetwork(FriendlyByteBuf buffer) {
             try {
                 CountedIngredient input = CountedIngredient.fromNetwork(buffer);
-                Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(buffer.readResourceLocation());
-                if (enchantment == null) {
-                    throw new ResourceLocationException("The enchantment in " + recipeId + " does not exist");
-                }
+                Enchantment enchantment = BuiltInRegistries.ENCHANTMENT.get(buffer.readResourceLocation());
                 int level = buffer.readInt();
-                return new EnchanterRecipe(recipeId, input, enchantment, level);
+                return new EnchanterRecipe(input, Objects.requireNonNull(enchantment), level);
             } catch (Exception ex) {
                 EnderIO.LOGGER.error("Error reading enchanter recipe from packet.", ex);
                 throw ex;
@@ -209,7 +197,7 @@ public class EnchanterRecipe implements EnderRecipe<Container> {
         public void toNetwork(FriendlyByteBuf buffer, EnchanterRecipe recipe) {
             try {
                 recipe.getInput().toNetwork(buffer);
-                buffer.writeResourceLocation(Objects.requireNonNull(ForgeRegistries.ENCHANTMENTS.getKey(recipe.getEnchantment())));
+                buffer.writeResourceLocation(Objects.requireNonNull(BuiltInRegistries.ENCHANTMENT.getKey(recipe.getEnchantment())));
                 buffer.writeInt(recipe.getCostMultiplier());
             } catch (Exception ex) {
                 EnderIO.LOGGER.error("Error writing enchanter recipe to packet.", ex);

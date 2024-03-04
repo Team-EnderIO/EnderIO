@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.FenceGateBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -16,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 public class PaintedFenceGateBlock extends FenceGateBlock implements EntityBlock, IPaintedBlock {
 
     public PaintedFenceGateBlock(Properties properties) {
-        super(properties, WoodType.OAK);
+        super(WoodType.OAK, properties);
     }
 
     @Nullable
@@ -26,7 +27,7 @@ public class PaintedFenceGateBlock extends FenceGateBlock implements EntityBlock
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter level, BlockPos pos, Player player) {
+    public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
         return getPaintedStack(level, pos, this);
     }
 

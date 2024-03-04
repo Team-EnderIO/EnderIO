@@ -3,11 +3,15 @@ package com.enderio.base.common.block.light;
 import com.enderio.base.common.blockentity.PoweredLightBlockEntity;
 import com.enderio.base.common.init.EIOBlockEntities;
 import com.enderio.base.common.init.EIOBlocks;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -21,10 +25,19 @@ import org.jetbrains.annotations.Nullable;
  * Handles "Wireless" subtype.
  */
 public class PoweredLight extends Light implements EntityBlock{
+    public static final MapCodec<PoweredLight> CODEC = RecordCodecBuilder.mapCodec(
+        inst -> inst.group(
+                Codec.BOOL.fieldOf("inverted").forGetter(i -> i.inverted),
+                Codec.BOOL.fieldOf("wireless").forGetter(i -> i.wireless),
+                propertiesCodec()
+            )
+            .apply(inst, PoweredLight::new)
+    );
+
 	public final boolean wireless;
 
-	public PoweredLight(Properties properties, boolean inverted, boolean wireless) {
-		super(properties, inverted);
+	public PoweredLight(boolean inverted, boolean wireless, Properties properties) {
+		super(inverted, properties);
 		this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(ENABLED, false).setValue(FACE, AttachFace.WALL));
 		this.wireless = wireless;
 	}
@@ -68,4 +81,9 @@ public class PoweredLight extends Light implements EntityBlock{
 		}
 		level.setBlock(pos, state.setValue(ENABLED, false), 3);
 	}
+
+    @Override
+    protected MapCodec<? extends FaceAttachedHorizontalDirectionalBlock> codec() {
+        return CODEC;
+    }
 }

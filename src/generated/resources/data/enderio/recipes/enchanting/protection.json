@@ -3,9 +3,9 @@
   "cost_multiplier": 1,
   "enchantment": "minecraft:protection",
   "input": {
-    "count": 16,
-    "ingredient": {
-      "tag": "forge:ingots/dark_steel"
+    "Count": 16,
+    "Ingredient": {
+      "tag": "neoforge:ingots/dark_steel"
     }
   }
 }

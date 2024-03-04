@@ -20,6 +20,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class PaintedBlockColor implements BlockColor, ItemColor {
 
+    public static PaintedBlockColor INSTANCE = new PaintedBlockColor();
+
     // TODO: Buggy on the sides of blocks. (Grass)
     @Override
     public int getColor(BlockState state, @Nullable BlockAndTintGetter level, @Nullable BlockPos pos, int tintIndex) {

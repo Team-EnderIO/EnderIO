@@ -6,12 +6,13 @@ import com.enderio.api.misc.ColorControl;
 import dev.gigaherz.graph3.Graph;
 import dev.gigaherz.graph3.Mergeable;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.apache.commons.lang3.function.TriFunction;
 
 import java.util.List;
@@ -62,8 +63,8 @@ public class ItemConduitTicker extends CapabilityAwareConduitTicker<IItemHandler
     }
 
     @Override
-    protected Capability<IItemHandler> getCapability() {
-        return ForgeCapabilities.ITEM_HANDLER;
+    protected BlockCapability<IItemHandler, Direction> getCapability() {
+        return Capabilities.ItemHandler.BLOCK;
     }
 
     @Override

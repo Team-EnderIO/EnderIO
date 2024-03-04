@@ -20,14 +20,13 @@
   },
   "requirements": [
     [
-      "has_ingredient",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_ingredient"
     ]
   ],
   "rewards": {
     "recipes": [
       "enderio:fluid_tank"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

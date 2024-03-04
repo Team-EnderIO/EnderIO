@@ -4,25 +4,26 @@
   "experience": 0.3,
   "inputs": [
     {
-      "count": 1,
-      "ingredient": {
+      "Count": 1,
+      "Ingredient": {
         "tag": "forge:ingots/iron"
       }
     },
     {
-      "count": 1,
-      "ingredient": {
-        "tag": "forge:dusts/coal"
+      "Count": 1,
+      "Ingredient": {
+        "tag": "neoforge:dusts/coal"
       }
     },
     {
-      "count": 1,
-      "ingredient": {
+      "Count": 1,
+      "Ingredient": {
         "tag": "forge:obsidian"
       }
     }
   ],
   "result": {
-    "item": "enderio:dark_steel_ingot"
+    "Count": 1,
+    "id": "enderio:dark_steel_ingot"
   }
 }

@@ -27,16 +27,12 @@
     }
   },
   "display": {
-    "announce_to_chat": true,
     "description": {
       "translate": "advancements.enderio.place_capacitor_bank.description"
     },
-    "frame": "task",
-    "hidden": false,
     "icon": {
       "item": "enderio:basic_capacitor_bank"
     },
-    "show_toast": true,
     "title": {
       "translate": "advancements.enderio.place_capacitor_bank.title"
     }

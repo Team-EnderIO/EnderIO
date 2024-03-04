@@ -3,16 +3,20 @@ package com.enderio.machines.common.blockentity;
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.io.energy.EnergyIOMode;
-import com.enderio.core.common.network.slot.BooleanNetworkDataSlot;
-import com.enderio.core.common.network.slot.IntegerNetworkDataSlot;
+import com.enderio.core.common.network.slot.CodecNetworkDataSlot;
+import com.enderio.machines.common.attachment.ActionRange;
+import com.enderio.machines.common.attachment.IRangedActor;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
 import com.enderio.machines.common.blockentity.task.FarmTask;
 import com.enderio.machines.common.config.MachinesConfig;
+import com.enderio.machines.common.init.MachineAttachments;
+import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
 import com.enderio.machines.common.menu.FarmMenu;
 import com.mojang.authlib.GameProfile;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.ItemTags;
@@ -21,19 +25,18 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.server.ServerLifecycleHooks;
+import net.neoforged.neoforge.common.IPlantable;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.util.FakePlayer;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class FarmBlockEntity extends PoweredMachineBlockEntity {
+public class FarmBlockEntity extends PoweredMachineBlockEntity implements IRangedActor {
     public static final String CONSUMED = "Consumed";
     private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.FARM_CAPACITY);
     private static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.FARM_USAGE);
@@ -47,27 +50,24 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity {
     public static final MultiSlotAccess BONEMEAL = new MultiSlotAccess();
     public static final MultiSlotAccess OUTPUT = new MultiSlotAccess();
     //TODO Move cause this isn't a good place imo
-    public static final FakePlayer FARM_PLAYER = new FakePlayer(ServerLifecycleHooks.getCurrentServer().overworld(), new GameProfile(UUID.fromString("7b2621b4-83fb-11ee-b962-0242ac120002"), "enderio:farm"));
+    public static final FakePlayer FARM_PLAYER = new FakePlayer(
+        ServerLifecycleHooks.getCurrentServer().overworld(), new GameProfile(UUID.fromString("7b2621b4-83fb-11ee-b962-0242ac120002"), "enderio:farm"));
     private List<BlockPos> positions;
     private int currentIndex = 0;
     private int consumed = 0;
     @Nullable
     private FarmTask currentTask = null;
+    private CodecNetworkDataSlot<ActionRange> actionRangeDataSlot;
 
-    public FarmBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
-        super(EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE, type, worldPosition, blockState);
-        this.range = 5;
+    public FarmBlockEntity(BlockPos worldPosition, BlockState blockState) {
+        super(EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE, MachineBlockEntities.FARMING_STATION.get(), worldPosition, blockState);
 
-        rangeDataSlot = new IntegerNetworkDataSlot(this::getRange, r -> this.range = r) {
-            @Override
-            public void updateServerCallback() {
-                updateLocations();
-            }
-        };
-        addDataSlot(rangeDataSlot);
+        // TODO: rubbish way of having a default. use an interface instead?
+        if (!hasData(MachineAttachments.ACTION_RANGE)) {
+            setData(MachineAttachments.ACTION_RANGE, new ActionRange(5, false));
+        }
 
-        rangeVisibleDataSlot = new BooleanNetworkDataSlot(this::isRangeVisible, b -> this.rangeVisible = b);
-        addDataSlot(rangeVisibleDataSlot);
+        actionRangeDataSlot = addDataSlot(new CodecNetworkDataSlot<>(this::getActionRange, this::internalSetActionRange, ActionRange.CODEC));
     }
 
     @Override
@@ -104,8 +104,17 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity {
         super.serverTick();
     }
 
+    @Override
+    public void clientTick() {
+        if (level.isClientSide && level instanceof ClientLevel clientLevel) {
+            getActionRange().addClientParticle(clientLevel, getParticleLocation(), MachinesConfig.CLIENT.BLOCKS.DRAIN_RANGE_COLOR.get());
+        }
+
+        super.clientTick();
+    }
+
     private void doFarmTask() {
-        int stop = Math.min(currentIndex + range, positions.size());
+        int stop = Math.min(currentIndex + getRange(), positions.size());
         while (currentIndex < stop) {
             BlockPos soil = positions.get(currentIndex);
             if (currentTask != null) {
@@ -171,12 +180,30 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity {
     }
 
     @Override
-    public void setRange(int range) {
-        super.setRange(range);
-        updateLocations();
+    public int getMaxRange() {
+        return 5;
     }
 
     @Override
+    public ActionRange getActionRange() {
+        return getData(MachineAttachments.ACTION_RANGE);
+    }
+
+    @Override
+    public void setActionRange(ActionRange actionRange) {
+        if (level != null && level.isClientSide) {
+            clientUpdateSlot(actionRangeDataSlot, actionRange);
+        } else {
+            internalSetActionRange(actionRange);
+        }
+    }
+
+    private void internalSetActionRange(ActionRange actionRange) {
+        setData(MachineAttachments.ACTION_RANGE, actionRange);
+        updateLocations();
+        setChanged();
+    }
+
     public BlockPos getParticleLocation() {
         return worldPosition.below();
     }
@@ -190,7 +217,7 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity {
     private void updateLocations() {
         positions = new ArrayList<>();
         currentIndex = 0;
-        for (BlockPos pos : BlockPos.betweenClosed(worldPosition.offset(-range,-1, -range), worldPosition.offset(range,-1,range))) {
+        for (BlockPos pos : BlockPos.betweenClosed(worldPosition.offset(-getRange(),-1, -getRange()), worldPosition.offset(getRange(),-1,getRange()))) {
             positions.add(pos.immutable()); //Need to make it immutable
         }
     }

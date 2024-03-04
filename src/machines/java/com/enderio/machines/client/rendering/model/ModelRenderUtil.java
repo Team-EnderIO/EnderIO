@@ -5,7 +5,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.model.pipeline.QuadBakingVertexConsumer;
+import net.neoforged.neoforge.client.model.pipeline.QuadBakingVertexConsumer;
 
 public class ModelRenderUtil {
     /**
@@ -75,8 +75,8 @@ public class ModelRenderUtil {
         float ny = (float) normal.y;
         float nz = (float) normal.z;
 
-        int tw = sprite.contents().width();
-        int th = sprite.contents().height();
+        float tw = sprite.contents().width() / 16f;
+        float th = sprite.contents().height() / 16f;
 
         float r = FastColor.ARGB32.red(color) / 255.0f;
         float g = FastColor.ARGB32.green(color) / 255.0f;

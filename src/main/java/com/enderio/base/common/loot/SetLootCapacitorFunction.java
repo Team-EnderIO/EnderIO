@@ -4,21 +4,30 @@ import com.enderio.base.common.capacitor.CapacitorUtil;
 import com.enderio.base.common.capacitor.LootCapacitorData;
 import com.enderio.base.common.init.EIOCapabilities;
 import com.enderio.base.common.init.EIOLootModifiers;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
-import net.minecraft.util.GsonHelper;
+import com.google.common.base.Suppliers;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
+import net.minecraft.world.level.storage.loot.providers.number.NumberProviders;
+
+import java.util.List;
+import java.util.function.Supplier;
 
 public class SetLootCapacitorFunction extends LootItemConditionalFunction {
+
+    public static final Supplier<Codec<SetLootCapacitorFunction>> CODEC = Suppliers.memoize(() ->
+        RecordCodecBuilder.create(inst -> commonFields(inst)
+            .and(NumberProviders.CODEC.fieldOf("range").forGetter(m -> m.range))
+            .apply(inst, SetLootCapacitorFunction::new)));
+
     private final NumberProvider range;
 
-    SetLootCapacitorFunction(LootItemCondition[] conditions, NumberProvider range) {
+    SetLootCapacitorFunction(List<LootItemCondition> conditions, NumberProvider range) {
         super(conditions);
         this.range = range;
     }
@@ -30,8 +39,9 @@ public class SetLootCapacitorFunction extends LootItemConditionalFunction {
 
     @Override
     protected ItemStack run(ItemStack stack, LootContext context) {
-        stack.getCapability(EIOCapabilities.CAPACITOR).ifPresent(cap -> {
-            if (cap instanceof LootCapacitorData lootCap) {
+        var capacitorCap = stack.getCapability(EIOCapabilities.CapacitorData.ITEM);
+        if (capacitorCap != null) {
+            if (capacitorCap instanceof LootCapacitorData lootCap) {
                 lootCap.setBase(range.getFloat(context));
                 lootCap.addNewModifier(CapacitorUtil.getRandomModifier(context.getRandom()), range.getFloat(context));
 
@@ -45,26 +55,12 @@ public class SetLootCapacitorFunction extends LootItemConditionalFunction {
                     lootCap.addModifier(CapacitorUtil.getRandomModifier(context.getRandom()), range.getFloat(context));
                 }
             }
-        });
+        }
+
         return stack;
     }
 
     public static LootItemConditionalFunction.Builder<?> setLootCapacitor(NumberProvider range) {
         return simpleBuilder((conditions) -> new SetLootCapacitorFunction(conditions, range));
-    }
-
-    public static class Serializer extends LootItemConditionalFunction.Serializer<SetLootCapacitorFunction> {
-
-        @Override
-        public void serialize(JsonObject json, SetLootCapacitorFunction value, JsonSerializationContext serializationContext) {
-            super.serialize(json, value, serializationContext);
-            json.add("range", serializationContext.serialize(value.range));
-        }
-
-        @Override
-        public SetLootCapacitorFunction deserialize(JsonObject object, JsonDeserializationContext deserializationContext, LootItemCondition[] conditions) {
-            NumberProvider range = GsonHelper.getAsObject(object, "range", deserializationContext, NumberProvider.class);
-            return new SetLootCapacitorFunction(conditions, range);
-        }
     }
 }

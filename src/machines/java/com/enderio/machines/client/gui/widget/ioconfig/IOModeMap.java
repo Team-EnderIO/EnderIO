@@ -12,13 +12,13 @@ public enum IOModeMap {
 
     NONE(IOMode.NONE, EIOLang.NONE, new Rect2i(0, 0, 0, 0)),
 
-    PUSH(IOMode.PUSH, EIOLang.PUSH, new Rect2i(16, 16, 16, 8)),
+    PUSH(IOMode.PUSH, EIOLang.PUSH, new Rect2i(16, 0, 16, 8)),
 
-    PULL(IOMode.PULL, EIOLang.PULL, new Rect2i(0, 16, 16, 8)),
+    PULL(IOMode.PULL, EIOLang.PULL, new Rect2i(0, 0, 16, 8)),
 
-    BOTH(IOMode.BOTH, EIOLang.BOTH, new Rect2i(0, 16, 32, 8)),
+    BOTH(IOMode.BOTH, EIOLang.BOTH, new Rect2i(0, 0, 32, 8)),
 
-    DISABLED(IOMode.DISABLED, EIOLang.DISABLED, new Rect2i(32, 16, 16, 16));
+    DISABLED(IOMode.DISABLED, EIOLang.DISABLED, new Rect2i(32, 0, 16, 16));
 
     private static final IOModeMap[] BY_MODE = Arrays.stream(values()).sorted(Comparator.comparingInt(m -> m.mode.ordinal())).toArray(IOModeMap[]::new);
 

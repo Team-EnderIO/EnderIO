@@ -20,6 +20,5 @@
   "result": {
     "count": 8,
     "item": "enderio:ender_fluid_conduit"
-  },
-  "show_notification": true
+  }
 }

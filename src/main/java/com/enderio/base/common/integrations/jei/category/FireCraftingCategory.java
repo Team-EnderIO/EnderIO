@@ -28,12 +28,13 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.ModelData;
+import net.neoforged.neoforge.client.model.data.ModelData;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
@@ -130,10 +131,10 @@ public class FireCraftingCategory implements IRecipeCategory<FireCraftingRecipe>
             tooltip.add(lootTableComponent);
             tooltip.add(maxDropsComponent);
         });
-        output.addItemStack(EIOItems.GRAINS_OF_INFINITY.asStack()); // TODO: Fetch the output from the loot table instead...
+        output.addItemStack(new ItemStack(EIOItems.GRAINS_OF_INFINITY.get())); // TODO: Fetch the output from the loot table instead...
 
         IRecipeSlotBuilder catalyst = builder.addSlot(RecipeIngredientRole.CATALYST, 88, 8).setSlotName("catalyst");
-        catalyst.addIngredients(Ingredient.of(Items.FLINT_AND_STEEL, EIOFluids.FIRE_WATER.getBucket().get()));
+        catalyst.addIngredients(Ingredient.of(Items.FLINT_AND_STEEL, EIOFluids.FIRE_WATER.getBucket()));
     }
 
     @Override
@@ -194,7 +195,7 @@ public class FireCraftingCategory implements IRecipeCategory<FireCraftingRecipe>
 
         guiGraphics.pose().popPose();
         // TODO: Fire Water has no block. I think this is a registrate bug?
-        BlockState fireState = !alternateFire ? Blocks.FIRE.defaultBlockState() : EIOFluids.FIRE_WATER.getBlock().orElse(Blocks.FIRE).defaultBlockState();
+        BlockState fireState = !alternateFire ? Blocks.FIRE.defaultBlockState() : EIOFluids.FIRE_WATER.getBlock().defaultBlockState();
 //        BlockState fireState = Blocks.FIRE.defaultBlockState();
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(0, -0.5, 0);

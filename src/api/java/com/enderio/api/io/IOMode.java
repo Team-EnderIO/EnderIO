@@ -1,6 +1,10 @@
 package com.enderio.api.io;
 
-public enum IOMode {
+import net.minecraft.util.StringRepresentable;
+
+import java.util.Locale;
+
+public enum IOMode implements StringRepresentable {
     /**
      * No specific configuration, allows external input and output but doesn't pull or push itself.
      */
@@ -37,6 +41,8 @@ public enum IOMode {
      * @apiNote All machines will disallow power access for this side.
      */
     DISABLED(false, false, false, false);
+
+    public static final EnumCodec<IOMode> CODEC = StringRepresentable.fromEnum(IOMode::values);
 
     private final boolean input;
     private final boolean output;
@@ -95,5 +101,10 @@ public enum IOMode {
      */
     public boolean canForce() {
         return force;
+    }
+
+    @Override
+    public String getSerializedName() {
+        return name().toLowerCase(Locale.ROOT);
     }
 }

@@ -1,6 +1,7 @@
 package com.enderio.machines.client.gui.widget;
 
 import com.enderio.core.client.gui.widgets.EIOWidget;
+import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -12,21 +13,20 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.Arrays;
 import java.util.function.Supplier;
 
 public class FluidStackWidget extends EIOWidget {
 
-    private final Screen displayOn;
-    private final Supplier<FluidTank> getFluid;
+    private final Screen screen;
+    private final Supplier<MachineFluidTank> getFluid;
 
-    public FluidStackWidget(Screen displayOn, Supplier<FluidTank> getFluid, int pX, int pY, int pWidth, int pHeight) {
+    public FluidStackWidget(Screen screen, Supplier<MachineFluidTank> getFluid, int pX, int pY, int pWidth, int pHeight) {
         super(pX, pY, pWidth, pHeight);
-        this.displayOn = displayOn;
+        this.screen = screen;
         this.getFluid = getFluid;
     }
 
@@ -35,8 +35,8 @@ public class FluidStackWidget extends EIOWidget {
         Minecraft minecraft = Minecraft.getInstance();
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
-        FluidTank fluidTank = getFluid.get();
-        if (!fluidTank.isEmpty()) {
+        MachineFluidTank fluidTank = getFluid.get();
+        if (!fluidTank.getFluid().isEmpty()) {
             FluidStack fluidStack = fluidTank.getFluid();
             IClientFluidTypeExtensions props = IClientFluidTypeExtensions.of(fluidStack.getFluid());
             ResourceLocation still = props.getStillTexture(fluidStack);
@@ -88,7 +88,7 @@ public class FluidStackWidget extends EIOWidget {
 
     public void renderToolTip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         if (isHovered(mouseX, mouseY)) {
-            guiGraphics.renderTooltip(displayOn.getMinecraft().font, Arrays.asList(getFluid.get().getFluid().getDisplayName().getVisualOrderText(),
+            guiGraphics.renderTooltip(screen.getMinecraft().font, Arrays.asList(getFluid.get().getFluid().getDisplayName().getVisualOrderText(),
                 Component.literal(getFluid.get().getFluidAmount() + "mB").getVisualOrderText()), mouseX, mouseY);
         }
     }

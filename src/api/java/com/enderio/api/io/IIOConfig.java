@@ -1,17 +1,15 @@
 package com.enderio.api.io;
 
 import com.enderio.api.UseOnly;
-import com.enderio.api.capability.IEnderCapabilityProvider;
-import com.enderio.api.capability.ISideConfig;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.fml.LogicalSide;
+import net.neoforged.neoforge.common.util.INBTSerializable;
+import net.neoforged.fml.LogicalSide;
 
 /**
  * IO Config defines how each side of a block interacts with other blocks.
  */
-public interface IIOConfig extends INBTSerializable<CompoundTag>, IEnderCapabilityProvider<ISideConfig> {
+public interface IIOConfig extends INBTSerializable<CompoundTag> {
     /**
      * Get the current IO mode for the given side.
      */

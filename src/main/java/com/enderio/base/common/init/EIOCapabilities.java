@@ -1,44 +1,34 @@
 package com.enderio.base.common.init;
 
 import com.enderio.EnderIO;
-import com.enderio.api.capability.ICoordinateSelectionHolder;
+import com.enderio.api.attachment.StoredEntityData;
 import com.enderio.api.capability.IDarkSteelUpgradable;
-import com.enderio.api.capability.IEntityStorage;
-import com.enderio.api.capability.IOwner;
 import com.enderio.api.capability.ISideConfig;
-import com.enderio.api.capability.IToggled;
 import com.enderio.api.capacitor.ICapacitorData;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.CapabilityToken;
-import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.minecraft.core.Direction;
+import net.neoforged.neoforge.capabilities.BlockCapability;
+import net.neoforged.neoforge.capabilities.ItemCapability;
 
-@Mod.EventBusSubscriber(modid = EnderIO.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class EIOCapabilities {
-    public static final Capability<IEntityStorage> ENTITY_STORAGE = CapabilityManager.get(new CapabilityToken<>() {});
 
-    public static final Capability<IToggled> TOGGLED = CapabilityManager.get(new CapabilityToken<>() {});
+    public static final class CapacitorData {
+        public static final ItemCapability<ICapacitorData, Void> ITEM =
+            ItemCapability.createVoid(
+                EnderIO.loc("capacitor_data"),
+                ICapacitorData.class);
+    }
 
-    public static final Capability<IOwner> OWNER = CapabilityManager.get(new CapabilityToken<>() {});
+    public static final class DarkSteelUpgradable {
+        public static final ItemCapability<IDarkSteelUpgradable, Void> ITEM =
+            ItemCapability.createVoid(
+                EnderIO.loc("dark_steel_upgradable"),
+                IDarkSteelUpgradable.class);
+    }
 
-    public static final Capability<ICapacitorData> CAPACITOR = CapabilityManager.get(new CapabilityToken<>() {});
-
-    public static final Capability<ICoordinateSelectionHolder> COORDINATE_SELECTION_HOLDER = CapabilityManager.get(new CapabilityToken<>() {});
-
-    public static final Capability<IDarkSteelUpgradable> DARK_STEEL_UPGRADABLE = CapabilityManager.get(new CapabilityToken<>() {});
-
-    public static final Capability<ISideConfig> SIDE_CONFIG = CapabilityManager.get(new CapabilityToken<>() {});
-
-    @SubscribeEvent
-    public static void register(RegisterCapabilitiesEvent event) {
-        event.register(IEntityStorage.class);
-        event.register(IToggled.class);
-        event.register(IOwner.class);
-        event.register(ICapacitorData.class);
-        event.register(IDarkSteelUpgradable.class);
-        event.register(ICoordinateSelectionHolder.class);
-        event.register(ISideConfig.class);
+    public static final class SideConfig {
+        public static final BlockCapability<ISideConfig, Direction> BLOCK =
+            BlockCapability.createSided(
+                EnderIO.loc("side_config"),
+                ISideConfig.class);
     }
 }

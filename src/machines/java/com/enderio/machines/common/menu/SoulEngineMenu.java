@@ -22,7 +22,7 @@ public class SoulEngineMenu extends MachineMenu<SoulEngineBlockEntity>{
         addInventorySlots(8, 84);
     }
 
-    public static SoulEngineMenu factory(@Nullable MenuType<SoulEngineMenu> pMenuType, int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
+    public static SoulEngineMenu factory(int pContainerId, Inventory inventory, FriendlyByteBuf buf) {
         BlockEntity entity = inventory.player.level().getBlockEntity(buf.readBlockPos());
         if (entity instanceof SoulEngineBlockEntity castBlockEntity) {
             return new SoulEngineMenu(castBlockEntity, inventory, pContainerId);
