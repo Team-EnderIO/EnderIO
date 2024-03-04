@@ -19,11 +19,11 @@
               "source": "block_entity"
             }
           ],
-          "name": "enderio:farm"
+          "name": "enderio:farming_station"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "enderio:blocks/farm"
+  "random_sequence": "enderio:blocks/farming_station"
 }

@@ -17,7 +17,6 @@ import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.CactusBlock;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.StemBlock;
-import net.minecraft.world.level.block.StemGrownBlock;
 import net.minecraft.world.level.block.SugarCaneBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -112,7 +111,7 @@ public interface FarmTask {
         BlockPos pos = soil.above();
         BlockState plant = farmBlockEntity.getLevel().getBlockState(pos);
         if (plant.getBlock() instanceof BonemealableBlock bonemealableBlock) {
-            if (bonemealableBlock.isValidBonemealTarget(farmBlockEntity.getLevel(), pos, plant, false) && farmBlockEntity.consumeBonemeal()) {
+            if (bonemealableBlock.isValidBonemealTarget(farmBlockEntity.getLevel(), pos, plant) && farmBlockEntity.consumeBonemeal()) {
                 if (bonemealableBlock.isBonemealSuccess(farmBlockEntity.getLevel(), farmBlockEntity.getLevel().getRandom(), pos, plant)) {
                     bonemealableBlock.performBonemeal((ServerLevel) farmBlockEntity.getLevel(), farmBlockEntity.getLevel().getRandom(), pos, plant);
                     return FarmInteraction.FINISHED;
@@ -148,11 +147,11 @@ public interface FarmTask {
         return FarmInteraction.IGNORED;
     };
 
-    FarmTask HARVEST_STEMCROPS = (soil, farmBlockEntity) -> {
+    FarmTask HARVEST_STEM_CROPS = (soil, farmBlockEntity) -> {
         BlockPos pos = soil.above();
         BlockState plant = farmBlockEntity.getLevel().getBlockState(pos);
         BlockEntity blockEntity = farmBlockEntity.getLevel().getBlockEntity(pos);
-        if (plant.getBlock() instanceof StemGrownBlock) {
+        if (plant.is(Blocks.PUMPKIN) || plant.is(Blocks.PUMPKIN)) { //TODO I think this is now harder, used to be a block type...
             if (farmBlockEntity.getConsumedPower() >= 40) {
                 farmBlockEntity.setConsumedPower(farmBlockEntity.getConsumedPower() - 40);
                 List<ItemStack> drops = Block.getDrops(plant, (ServerLevel) farmBlockEntity.getLevel(), pos, blockEntity, FARM_PLAYER, plant.requiresCorrectToolForDrops() ? AXE.getItemStack(farmBlockEntity.getInventory()) : ItemStack.EMPTY);
@@ -210,7 +209,7 @@ public interface FarmTask {
         list.add(PLANT_BLOCK);
         list.add(BONEMEAL);
         list.add(HARVEST_CROP);
-        list.add(HARVEST_STEMCROPS);
+        list.add(HARVEST_STEM_CROPS);
         list.add(HARVEST_BLOCK);
         return list;
     });

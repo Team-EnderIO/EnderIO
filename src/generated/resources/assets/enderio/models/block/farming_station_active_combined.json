@@ -2,7 +2,7 @@
   "parent": "minecraft:block/block",
   "children": {
     "machine": {
-      "parent": "enderio:block/farm_active"
+      "parent": "enderio:block/farming_station_active"
     },
     "overlay": {
       "parent": "enderio:block/io_overlay"
@@ -12,8 +12,8 @@
     "machine",
     "overlay"
   ],
-  "loader": "forge:composite",
+  "loader": "neoforge:composite",
   "textures": {
-    "particle": "enderio:block/farm_front"
+    "particle": "enderio:block/farming_station_front"
   }
 }

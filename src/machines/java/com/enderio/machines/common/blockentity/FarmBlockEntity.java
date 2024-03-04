@@ -57,7 +57,7 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity implements IRange
     private int consumed = 0;
     @Nullable
     private FarmTask currentTask = null;
-    private CodecNetworkDataSlot<ActionRange> actionRangeDataSlot;
+    private final CodecNetworkDataSlot<ActionRange> actionRangeDataSlot;
 
     public FarmBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(EnergyIOMode.Input, ENERGY_CAPACITY, ENERGY_USAGE, MachineBlockEntities.FARMING_STATION.get(), worldPosition, blockState);

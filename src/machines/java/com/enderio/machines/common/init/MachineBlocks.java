@@ -207,7 +207,7 @@ public class MachineBlocks {
         .setTranslation("XP Obelisk")
         .createBlockItem(ITEM_REGISTRY, item -> item.setTab((EIOCreativeTabs.MACHINES)));
 
-    public static final RegiliteBlock<ProgressMachineBlock> FARM = progressMachine("farm", () -> MachineBlockEntities.FARMING_STATION);
+    public static final RegiliteBlock<ProgressMachineBlock> FARMING_STATION = progressMachine("farming_station", () -> MachineBlockEntities.FARMING_STATION);
 
     //used when single methods needs to be overridden in the block class
     private static <T extends MachineBlock> RegiliteBlock<T> baseMachine(RegiliteBlock<T> machineBlock,
