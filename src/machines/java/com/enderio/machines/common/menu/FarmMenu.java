@@ -16,7 +16,7 @@ public class FarmMenu extends MachineMenu<FarmBlockEntity> {
         
         if (blockEntity != null) {
             // Capacitor slot
-            addSlot(new MachineSlot(blockEntity.getInventory(), blockEntity.getCapacitorSlot(), 12, 60));
+            addSlot(new MachineSlot(blockEntity.getInventory(), blockEntity.getCapacitorSlot(), 12, 63));
 
             // Tool inputs TODO: Shadow slots to show compatible tools?
             addSlot(new MachineSlot(blockEntity.getInventory(), FarmBlockEntity.AXE, 44, 19));
