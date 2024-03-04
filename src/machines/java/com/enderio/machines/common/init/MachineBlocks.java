@@ -198,6 +198,8 @@ public class MachineBlocks {
     public static final RegiliteBlock<ProgressMachineBlock> DRAIN =
         progressMachine("drain", () -> MachineBlockEntities.DRAIN);
 
+    public static final RegiliteBlock<MachineBlock> VAT = machine("vat", () -> MachineBlockEntities.VAT).setTranslation("VAT");
+
     public static final RegiliteBlock<MachineBlock> XP_OBELISK = BLOCK_REGISTRY
         .registerBlock("xp_obelisk", props -> new MachineBlock(MachineBlockEntities.XP_OBELISK, props),
             BlockBehaviour.Properties.of().strength(2.5f, 8).isViewBlocking((pState, pLevel, pPos) -> false).noOcclusion())
