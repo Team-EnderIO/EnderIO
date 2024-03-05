@@ -20,6 +20,7 @@ import com.enderio.machines.common.menu.PreviewMachineSlot;
 import com.enderio.machines.common.tag.MachineTags;
 import com.enderio.machines.common.travel.AnchorTravelTarget;
 import com.enderio.machines.data.advancements.MachinesAdvancementGenerator;
+import com.enderio.machines.data.datamaps.DataMapsProvider;
 import com.enderio.machines.data.recipes.AlloyRecipeProvider;
 import com.enderio.machines.data.recipes.EnchanterRecipeProvider;
 import com.enderio.machines.data.recipes.MachineRecipeProvider;
@@ -35,7 +36,6 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.registries.VanillaRegistries;
-import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.InterModComms;
 import net.neoforged.fml.ModLoadingContext;
@@ -97,6 +97,7 @@ public class EIOMachines {
         provider.addSubProvider(event.includeServer(), new PaintingRecipeProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new SoulDataProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new MachineEntityTypeTagsProvider(packOutput, lookupProvider, event.getExistingFileHelper()));
+        provider.addSubProvider(event.includeServer(), new DataMapsProvider(packOutput, lookupProvider));
 
         generator.addProvider(true, provider);
         provider.addSubProvider(event.includeServer(), new AdvancementProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper(),
