@@ -2,12 +2,14 @@ package com.enderio.machines.common.blockentity;
 
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
+import com.enderio.api.farm.FarmInteraction;
+import com.enderio.api.farm.IFarmingStation;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.network.slot.CodecNetworkDataSlot;
 import com.enderio.machines.common.attachment.ActionRange;
 import com.enderio.machines.common.attachment.IRangedActor;
 import com.enderio.machines.common.blockentity.base.PoweredMachineBlockEntity;
-import com.enderio.machines.common.blockentity.task.FarmTask;
+import com.enderio.api.farm.FarmTask;
 import com.enderio.machines.common.config.MachinesConfig;
 import com.enderio.machines.common.init.MachineAttachments;
 import com.enderio.machines.common.init.MachineBlockEntities;
@@ -36,7 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class FarmBlockEntity extends PoweredMachineBlockEntity implements IRangedActor {
+public class FarmBlockEntity extends PoweredMachineBlockEntity implements IRangedActor, IFarmingStation {
     public static final String CONSUMED = "Consumed";
     private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY, MachinesConfig.COMMON.ENERGY.FARM_CAPACITY);
     private static final QuadraticScalable ENERGY_USAGE = new QuadraticScalable(CapacitorModifier.ENERGY_USE, MachinesConfig.COMMON.ENERGY.FARM_USAGE);
@@ -261,8 +263,8 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity implements IRange
         return consumed;
     }
 
-    public int setConsumedPower(int power) {
-        return consumed = power;
+    public void setConsumedPower(int power) {
+        consumed = power;
     }
 
     @Override
@@ -290,10 +292,33 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity implements IRange
         return consumed;
     }
 
-    public enum FarmInteraction {
-        FINISHED,
-        POWERED,
-        BLOCKED,
-        IGNORED;
+    @Override
+    public ItemStack getSeedsForPos(BlockPos pos) {
+        return getSeedForPos(pos).getItemStack(this);
+    }
+
+    @Override
+    public ItemStack getAxe() {
+        return AXE.getItemStack(this);
+    }
+
+    @Override
+    public ItemStack getHoe() {
+        return HOE.getItemStack(this);
+    }
+
+    @Override
+    public ItemStack getShears() {
+        return SHEAR.getItemStack(this);
+    }
+
+    @Override
+    public FakePlayer getPlayer() {
+        return FARM_PLAYER;
+    }
+
+    @Override
+    public int consumeEnergy(int energy, boolean simulate) {
+        return getEnergyStorage().consumeEnergy(energy, simulate);
     }
 }

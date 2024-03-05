@@ -1,16 +1,13 @@
-package com.enderio.machines.common.blockentity.task;
+package com.enderio.api.farm;
 
-import com.enderio.machines.common.blockentity.FarmBlockEntity;
 import net.minecraft.BlockUtil;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BonemealableBlock;
@@ -20,63 +17,51 @@ import net.minecraft.world.level.block.StemBlock;
 import net.minecraft.world.level.block.SugarCaneBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.enderio.machines.common.blockentity.FarmBlockEntity.*;
-
 public interface FarmTask {
 
-    FarmInteraction farm(BlockPos soil, FarmBlockEntity farmBlockEntity);
+    FarmInteraction farm(BlockPos soil, IFarmingStation farmBlockEntity);
 
     FarmTask PLANT_CROP = (soil, farmBlockEntity) -> {
-        ItemStack seeds = farmBlockEntity.getSeedForPos(soil).getItemStack(farmBlockEntity);
+        ItemStack seeds = farmBlockEntity.getSeedsForPos(soil);
         if (seeds.isEmpty()) {
             return FarmInteraction.BLOCKED;
         }
         if (seeds.getItem() instanceof BlockItem blockItem && (blockItem.getBlock() instanceof CropBlock || blockItem.getBlock() instanceof StemBlock)) {
 
             //Try plant
-            FARM_PLAYER.setItemInHand(InteractionHand.MAIN_HAND, seeds);
-            UseOnContext context = new UseOnContext(FARM_PLAYER, InteractionHand.MAIN_HAND, new BlockHitResult(Vec3.atBottomCenterOf(soil), Direction.UP, soil, false));
-            InteractionResult result = seeds.useOn(context);
-            FARM_PLAYER.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+            InteractionResult result = farmBlockEntity.useStack(soil, seeds);
             if (result == InteractionResult.SUCCESS || result == InteractionResult.CONSUME) {
                 if (farmBlockEntity.getConsumedPower() >= 40) {
                     farmBlockEntity.setConsumedPower(farmBlockEntity.getConsumedPower() - 40);
                     return FarmInteraction.FINISHED;
                 }
-                farmBlockEntity.setConsumedPower(farmBlockEntity.getConsumedPower() + farmBlockEntity.getEnergyStorage().consumeEnergy(40 - farmBlockEntity.getConsumedPower(), false));
+                farmBlockEntity.setConsumedPower(farmBlockEntity.getConsumedPower() + farmBlockEntity.consumeEnergy(40 - farmBlockEntity.getConsumedPower(), false));
                 return FarmInteraction.POWERED;
             }
 
             //Try hoe
-            ItemStack itemStack = HOE.getItemStack(farmBlockEntity.getInventory());
+            ItemStack itemStack = farmBlockEntity.getHoe();
             if (itemStack.isEmpty()) {
                 return FarmInteraction.BLOCKED;
             }
-            FARM_PLAYER.setItemInHand(InteractionHand.MAIN_HAND, itemStack);
-            context = new UseOnContext(FARM_PLAYER, InteractionHand.MAIN_HAND, new BlockHitResult(Vec3.atBottomCenterOf(soil), Direction.UP, soil, false));
-            result = itemStack.useOn(context);
-            FARM_PLAYER.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+
+            result = farmBlockEntity.useStack(soil, itemStack);
             if (result == InteractionResult.SUCCESS || result == InteractionResult.CONSUME) {
                 if (farmBlockEntity.getConsumedPower() >= 40) {
                     farmBlockEntity.setConsumedPower(farmBlockEntity.getConsumedPower() - 40);
                     return FarmInteraction.FINISHED;
                 }
-                farmBlockEntity.setConsumedPower(farmBlockEntity.getConsumedPower() + farmBlockEntity.getEnergyStorage().consumeEnergy(40 - farmBlockEntity.getConsumedPower(), false));
+                farmBlockEntity.setConsumedPower(farmBlockEntity.getConsumedPower() + farmBlockEntity.consumeEnergy(40 - farmBlockEntity.getConsumedPower(), false));
                 return FarmInteraction.POWERED;
             }
 
             //Try plant again
-            FARM_PLAYER.setItemInHand(InteractionHand.MAIN_HAND, seeds);
-            context = new UseOnContext(FARM_PLAYER, InteractionHand.MAIN_HAND, new BlockHitResult(Vec3.atBottomCenterOf(soil), Direction.UP, soil, false));
-            result = seeds.useOn(context);
-            FARM_PLAYER.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+            result = farmBlockEntity.useStack(soil, seeds);
             if (result == InteractionResult.FAIL || result == InteractionResult.PASS) {
                 return FarmInteraction.IGNORED;
             }
@@ -86,21 +71,18 @@ public interface FarmTask {
     };
 
     FarmTask PLANT_BLOCK = (soil, farmBlockEntity) -> {
-        ItemStack seeds = farmBlockEntity.getSeedForPos(soil).getItemStack(farmBlockEntity);
+        ItemStack seeds = farmBlockEntity.getSeedsForPos(soil);
         if (seeds.isEmpty()) {
             return FarmInteraction.BLOCKED;
         }
         if (seeds.getItem() instanceof BlockItem blockItem && (blockItem.getBlock() instanceof CactusBlock || blockItem.getBlock() instanceof SugarCaneBlock)) {
-            FARM_PLAYER.setItemInHand(InteractionHand.MAIN_HAND, seeds);
-            UseOnContext context = new UseOnContext(FARM_PLAYER, InteractionHand.MAIN_HAND, new BlockHitResult(Vec3.atBottomCenterOf(soil), Direction.UP, soil, false));
-            InteractionResult result = seeds.useOn(context);
-            FARM_PLAYER.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+            InteractionResult result = farmBlockEntity.useStack(soil, seeds);
             if (result == InteractionResult.SUCCESS || result == InteractionResult.CONSUME) {
                 if (farmBlockEntity.getConsumedPower() >= 40) {
                     farmBlockEntity.setConsumedPower(farmBlockEntity.getConsumedPower() - 40);
                     return FarmInteraction.FINISHED;
                 }
-                farmBlockEntity.setConsumedPower(farmBlockEntity.getConsumedPower() + farmBlockEntity.getEnergyStorage().consumeEnergy(40 - farmBlockEntity.getConsumedPower(), false));
+                farmBlockEntity.setConsumedPower(farmBlockEntity.getConsumedPower() + farmBlockEntity.consumeEnergy(40 - farmBlockEntity.getConsumedPower(), false));
                 return FarmInteraction.POWERED;
             }
         }
@@ -129,18 +111,18 @@ public interface FarmTask {
             if (crop.isMaxAge(plant)) {
                 if (farmBlockEntity.getConsumedPower() >= 40) {
                     farmBlockEntity.setConsumedPower(farmBlockEntity.getConsumedPower() - 40);
-                    List<ItemStack> drops = Block.getDrops(plant, (ServerLevel) farmBlockEntity.getLevel(), pos, blockEntity, FARM_PLAYER, plant.requiresCorrectToolForDrops() ? AXE.getItemStack(farmBlockEntity.getInventory()) : ItemStack.EMPTY);
+                    List<ItemStack> drops = Block.getDrops(plant, (ServerLevel) farmBlockEntity.getLevel(), pos, blockEntity, farmBlockEntity.getPlayer(), plant.requiresCorrectToolForDrops() ? farmBlockEntity.getAxe() : ItemStack.EMPTY);
                     farmBlockEntity.collectDrops(drops, soil);
                     if (plant.requiresCorrectToolForDrops()) {
-                        if (AXE.getItemStack(farmBlockEntity.getInventory()).isEmpty()) {
+                        if (farmBlockEntity.getAxe().isEmpty()) {
                             return FarmInteraction.BLOCKED;
                         }
-                        AXE.getItemStack(farmBlockEntity.getInventory()).mineBlock(farmBlockEntity.getLevel(), plant, pos, FARM_PLAYER);
+                        farmBlockEntity.getAxe().mineBlock(farmBlockEntity.getLevel(), plant, pos, farmBlockEntity.getPlayer());
                     }
                     farmBlockEntity.getLevel().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
                     return FarmInteraction.FINISHED;
                 }
-                farmBlockEntity.setConsumedPower(farmBlockEntity.getConsumedPower() + farmBlockEntity.getEnergyStorage().consumeEnergy(40 - farmBlockEntity.getConsumedPower(), false));
+                farmBlockEntity.setConsumedPower(farmBlockEntity.getConsumedPower() + farmBlockEntity.consumeEnergy(40 - farmBlockEntity.getConsumedPower(), false));
                 return FarmInteraction.POWERED;
             }
         }
@@ -151,21 +133,21 @@ public interface FarmTask {
         BlockPos pos = soil.above();
         BlockState plant = farmBlockEntity.getLevel().getBlockState(pos);
         BlockEntity blockEntity = farmBlockEntity.getLevel().getBlockEntity(pos);
-        if (plant.is(Blocks.PUMPKIN) || plant.is(Blocks.PUMPKIN)) { //TODO I think this is now harder, used to be a block type...
+        if (plant.is(Blocks.PUMPKIN) || plant.is(Blocks.PUMPKIN)) { //TODO I think this is now harder, used to be a block class...
             if (farmBlockEntity.getConsumedPower() >= 40) {
                 farmBlockEntity.setConsumedPower(farmBlockEntity.getConsumedPower() - 40);
-                List<ItemStack> drops = Block.getDrops(plant, (ServerLevel) farmBlockEntity.getLevel(), pos, blockEntity, FARM_PLAYER, plant.requiresCorrectToolForDrops() ? AXE.getItemStack(farmBlockEntity.getInventory()) : ItemStack.EMPTY);
+                List<ItemStack> drops = Block.getDrops(plant, (ServerLevel) farmBlockEntity.getLevel(), pos, blockEntity, farmBlockEntity.getPlayer(), plant.requiresCorrectToolForDrops() ? farmBlockEntity.getAxe() : ItemStack.EMPTY);
                 farmBlockEntity.collectDrops(drops, soil);
                 if (plant.requiresCorrectToolForDrops()) {
-                    if (AXE.getItemStack(farmBlockEntity.getInventory()).isEmpty()) {
+                    if (farmBlockEntity.getAxe().isEmpty()) {
                         return FarmInteraction.BLOCKED;
                     }
-                    AXE.getItemStack(farmBlockEntity.getInventory()).mineBlock(farmBlockEntity.getLevel(), plant, pos, FARM_PLAYER);
+                    farmBlockEntity.getAxe().mineBlock(farmBlockEntity.getLevel(), plant, pos, farmBlockEntity.getPlayer());
                 }
                 farmBlockEntity.getLevel().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
                 return FarmInteraction.FINISHED;
             }
-            farmBlockEntity.setConsumedPower(farmBlockEntity.getConsumedPower() + farmBlockEntity.getEnergyStorage().consumeEnergy(40 - farmBlockEntity.getConsumedPower(), false));
+            farmBlockEntity.setConsumedPower(farmBlockEntity.getConsumedPower() + farmBlockEntity.consumeEnergy(40 - farmBlockEntity.getConsumedPower(), false));
             return FarmInteraction.POWERED;
         }
         return FarmInteraction.IGNORED;
@@ -183,19 +165,19 @@ public interface FarmTask {
                     List<ItemStack> drops = new ArrayList<>();
                     for (int i = top.get().below().getY(); i > pos.getY(); i--) {
                         BlockPos blockPos = new BlockPos(pos.getX(), i, pos.getZ());
-                        drops.addAll(Block.getDrops(plant, (ServerLevel) farmBlockEntity.getLevel(), blockPos, blockEntity, FARM_PLAYER, plant.requiresCorrectToolForDrops() ? AXE.getItemStack(farmBlockEntity.getInventory()) : ItemStack.EMPTY));
+                        drops.addAll(Block.getDrops(plant, (ServerLevel) farmBlockEntity.getLevel(), blockPos, blockEntity, farmBlockEntity.getPlayer(), plant.requiresCorrectToolForDrops() ? farmBlockEntity.getAxe() : ItemStack.EMPTY));
                         if (plant.requiresCorrectToolForDrops()) {
-                            if (AXE.getItemStack(farmBlockEntity.getInventory()).isEmpty()) {
+                            if (farmBlockEntity.getAxe().isEmpty()) {
                                 return FarmInteraction.BLOCKED;
                             }
-                            AXE.getItemStack(farmBlockEntity.getInventory()).mineBlock(farmBlockEntity.getLevel(), plant, blockPos, FARM_PLAYER);
+                            farmBlockEntity.getAxe().mineBlock(farmBlockEntity.getLevel(), plant, blockPos, farmBlockEntity.getPlayer());
                         }
                         farmBlockEntity.getLevel().setBlockAndUpdate(blockPos, Blocks.AIR.defaultBlockState());
                     }
                     farmBlockEntity.collectDrops(drops, soil);
                     return FarmInteraction.FINISHED;
                 }
-                farmBlockEntity.setConsumedPower(farmBlockEntity.getConsumedPower() + farmBlockEntity.getEnergyStorage().consumeEnergy(40 - farmBlockEntity.getConsumedPower(), false));
+                farmBlockEntity.setConsumedPower(farmBlockEntity.getConsumedPower() + farmBlockEntity.consumeEnergy(40 - farmBlockEntity.getConsumedPower(), false));
                 return FarmInteraction.POWERED;
             }
         }

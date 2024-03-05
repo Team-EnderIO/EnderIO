@@ -175,7 +175,7 @@ public class MachineBlockEntities {
 
     public static final RegiliteBlockEntity<FarmBlockEntity> FARMING_STATION =
         register("farming_station", FarmBlockEntity::new, MachineBlocks.FARMING_STATION)
-            .apply(MachineBlockEntities::machineBlockEntityCapabilities)
+            .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities)
             .addCapability(Capabilities.FluidHandler.BLOCK, IFluidTankUser.FLUID_HANDLER_PROVIDER);
 
     @SafeVarargs
