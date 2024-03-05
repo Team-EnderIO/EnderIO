@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "A": {
-      "tag": "neoforge:ingots/copper_alloy"
+      "tag": "forge:ingots/copper_alloy"
     },
     "C": {
       "item": "enderio:double_layer_capacitor"

@@ -3,10 +3,10 @@
   "category": "equipment",
   "key": {
     "C": {
-      "tag": "neoforge:gems/ender_crystal"
+      "tag": "forge:gems/ender_crystal"
     },
     "I": {
-      "tag": "neoforge:ingots/dark_steel"
+      "tag": "forge:ingots/dark_steel"
     }
   },
   "pattern": [

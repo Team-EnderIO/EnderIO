@@ -1,19 +1,19 @@
 {
   "values": [
-    "#neoforge:dusts/coal",
-    "#neoforge:dusts/lapis",
-    "#neoforge:dusts/quartz",
-    "#neoforge:dusts/iron",
-    "#neoforge:dusts/gold",
-    "#neoforge:dusts/copper",
-    "#neoforge:dusts/tin",
-    "#neoforge:dusts/ender",
-    "#neoforge:dusts/obsidian",
-    "#neoforge:dusts/cobalt",
-    "#neoforge:dusts/grains_of_infinity",
-    "#neoforge:dusts/grains_of_prescience",
-    "#neoforge:dusts/grains_of_vibrancy",
-    "#neoforge:dusts/grains_of_pizeallity",
-    "#neoforge:dusts/grains_of_the_end"
+    "#forge:dusts/coal",
+    "#forge:dusts/lapis",
+    "#forge:dusts/quartz",
+    "#forge:dusts/iron",
+    "#forge:dusts/gold",
+    "#forge:dusts/copper",
+    "#forge:dusts/tin",
+    "#forge:dusts/ender",
+    "#forge:dusts/obsidian",
+    "#forge:dusts/cobalt",
+    "#forge:dusts/grains_of_infinity",
+    "#forge:dusts/grains_of_prescience",
+    "#forge:dusts/grains_of_vibrancy",
+    "#forge:dusts/grains_of_pizeallity",
+    "#forge:dusts/grains_of_the_end"
   ]
 }

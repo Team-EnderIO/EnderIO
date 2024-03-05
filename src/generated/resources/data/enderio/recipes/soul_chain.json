@@ -3,13 +3,13 @@
   "category": "building",
   "key": {
     "I": {
-      "tag": "neoforge:ingots/soularium"
+      "tag": "forge:ingots/soularium"
     },
     "N": {
-      "tag": "neoforge:nuggets/soularium"
+      "tag": "forge:nuggets/soularium"
     },
     "Q": {
-      "tag": "neoforge:dusts/quartz"
+      "tag": "forge:dusts/quartz"
     }
   },
   "pattern": [

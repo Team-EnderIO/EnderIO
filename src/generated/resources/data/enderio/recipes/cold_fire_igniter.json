@@ -3,7 +3,7 @@
   "category": "equipment",
   "ingredients": [
     {
-      "tag": "neoforge:ingots/dark_steel"
+      "tag": "forge:ingots/dark_steel"
     },
     {
       "item": "minecraft:flint"

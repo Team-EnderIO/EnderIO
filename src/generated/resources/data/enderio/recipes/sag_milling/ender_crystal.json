@@ -3,7 +3,7 @@
   "bonus": "none",
   "energy": 2400,
   "input": {
-    "tag": "neoforge:gems/ender_crystal"
+    "tag": "forge:gems/ender_crystal"
   },
   "outputs": [
     {

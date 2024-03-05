@@ -3,13 +3,13 @@
   "category": "misc",
   "key": {
     "E": {
-      "tag": "neoforge:gems/ender_crystal"
+      "tag": "forge:gems/ender_crystal"
     },
     "P": {
-      "tag": "neoforge:gems/pulsating_crystal"
+      "tag": "forge:gems/pulsating_crystal"
     },
     "V": {
-      "tag": "neoforge:gems/vibrant_crystal"
+      "tag": "forge:gems/vibrant_crystal"
     }
   },
   "pattern": [

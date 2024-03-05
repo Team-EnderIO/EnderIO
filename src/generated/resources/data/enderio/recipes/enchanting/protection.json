@@ -5,7 +5,7 @@
   "input": {
     "Count": 16,
     "Ingredient": {
-      "tag": "neoforge:ingots/dark_steel"
+      "tag": "forge:ingots/dark_steel"
     }
   }
 }

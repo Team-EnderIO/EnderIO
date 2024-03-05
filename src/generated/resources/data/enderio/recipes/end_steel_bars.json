@@ -3,7 +3,7 @@
   "category": "building",
   "key": {
     "I": {
-      "tag": "neoforge:ingots/end_steel"
+      "tag": "forge:ingots/end_steel"
     }
   },
   "pattern": [

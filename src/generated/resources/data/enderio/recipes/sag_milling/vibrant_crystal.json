@@ -3,7 +3,7 @@
   "bonus": "none",
   "energy": 2400,
   "input": {
-    "tag": "neoforge:gems/vibrant_crystal"
+    "tag": "forge:gems/vibrant_crystal"
   },
   "outputs": [
     {

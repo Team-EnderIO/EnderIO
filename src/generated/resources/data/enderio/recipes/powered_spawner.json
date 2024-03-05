@@ -9,10 +9,10 @@
       "item": "enderio:ensouled_chassis"
     },
     "I": {
-      "tag": "neoforge:ingots/soularium"
+      "tag": "forge:ingots/soularium"
     },
     "V": {
-      "tag": "neoforge:gems/vibrant_crystal"
+      "tag": "forge:gems/vibrant_crystal"
     },
     "Z": {
       "item": "enderio:z_logic_controller"

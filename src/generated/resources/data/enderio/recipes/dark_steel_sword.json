@@ -3,7 +3,7 @@
   "category": "equipment",
   "key": {
     "I": {
-      "tag": "neoforge:ingots/dark_steel"
+      "tag": "forge:ingots/dark_steel"
     },
     "S": {
       "tag": "forge:rods/wooden"
