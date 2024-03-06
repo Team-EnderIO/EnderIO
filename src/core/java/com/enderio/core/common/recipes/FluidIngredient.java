@@ -1,12 +1,14 @@
-package com.enderio.core.common.fluid;
+package com.enderio.core.common.recipes;
 
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.level.material.Fluid;
@@ -16,12 +18,30 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public class FluidIngredient implements Predicate<Fluid> {
     public static final FluidIngredient EMPTY = new FluidIngredient(Stream.empty());
+    private static final Codec<Value[]> CODEC_LIST = Codec
+        .list(Value.CODEC)
+        .comapFlatMap(list -> list.isEmpty() ?
+            DataResult.error(() -> "Fluid array cannot be empty, at least one fluid must be defined") :
+            DataResult.success(list.toArray(new Value[0])), List::of);
+
+    public static final Codec<FluidIngredient> CODEC = ExtraCodecs
+        .either(CODEC_LIST, Value.CODEC)
+        .flatComapMap(either -> either.map(FluidIngredient::new, value -> new FluidIngredient(new Value[] { value })), fluidIngredient -> {
+            if (fluidIngredient.values.length == 1) {
+                return DataResult.success(Either.right(fluidIngredient.values[0]));
+            } else {
+                return fluidIngredient.values.length == 0 ?
+                    DataResult.error(() -> "Fluid array cannot be empty, at least one fluid must be defined") :
+                    DataResult.success(Either.left(fluidIngredient.values));
+            }
+        });
 
     private final Value[] values;
     @Nullable private Fluid[] fluids;
@@ -85,14 +105,24 @@ public class FluidIngredient implements Predicate<Fluid> {
         return fromValues(Stream.of(new TagValue(tag)));
     }
 
+    public final void toNetwork(FriendlyByteBuf pBuffer) {
+        BiConsumer<FriendlyByteBuf, Fluid> writer = (buf, fluid) -> buf.writeId(BuiltInRegistries.FLUID, fluid);
+        pBuffer.writeCollection(Arrays.asList(this.getFluids()), writer::accept);
+    }
+
+    public static FluidIngredient fromNetwork(FriendlyByteBuf buf) {
+        var size = buf.readVarInt();
+        return new FluidIngredient(Stream.generate(() -> new FluidValue(buf.readById(BuiltInRegistries.FLUID))).limit(size));
+    }
+
     public record FluidValue(Fluid fluid, BiFunction<Fluid, Fluid, Boolean> comparator) implements Value {
         public FluidValue(Fluid fluid) {
             this(fluid, FluidValue::areFluidsEqual);
         }
 
-        static final Codec<FluidValue> CODEC = RecordCodecBuilder.create(p_311727_ -> p_311727_
-            .group(BuiltInRegistries.FLUID.byNameCodec().fieldOf("fluid").forGetter(FluidValue::fluid))
-            .apply(p_311727_, FluidValue::new));
+        static final Codec<FluidValue> CODEC = RecordCodecBuilder.create(instance -> instance
+            .group(BuiltInRegistries.FLUID.byNameCodec().fieldOf("fluid_name").forGetter(FluidValue::fluid))
+            .apply(instance, FluidValue::new));
 
         @Override
         public boolean equals(Object other) {
@@ -100,6 +130,11 @@ public class FluidIngredient implements Predicate<Fluid> {
                 return comparator().apply(fluid(), otherFluid.fluid());
             }
             return false;
+        }
+
+        @Override
+        public Codec<FluidValue> getCodec() {
+            return CODEC;
         }
 
         @Override
@@ -113,12 +148,18 @@ public class FluidIngredient implements Predicate<Fluid> {
     }
 
     public record TagValue(TagKey<Fluid> tag) implements Value {
+
         static final Codec<TagValue> CODEC = RecordCodecBuilder.create(
-            p_301118_ -> p_301118_.group(TagKey.codec(Registries.FLUID).fieldOf("tag").forGetter(p_301154_ -> p_301154_.tag)).apply(p_301118_, TagValue::new));
+            instance -> instance.group(TagKey.codec(Registries.FLUID).fieldOf("fluid_tag").forGetter(TagValue::tag)).apply(instance, TagValue::new));
 
         @Override
         public boolean equals(Object other) {
             return other instanceof TagValue otherTag && otherTag.tag.location().equals(this.tag.location());
+        }
+
+        @Override
+        public Codec<TagValue> getCodec() {
+            return CODEC;
         }
 
         @Override
@@ -133,19 +174,19 @@ public class FluidIngredient implements Predicate<Fluid> {
         }
     }
 
-    protected interface Value {
+    protected sealed interface Value {
         Codec<Value> CODEC = ExtraCodecs
-            .xor(FluidValue.CODEC, TagValue.CODEC)
-            .xmap(p_300956_ -> p_300956_.map(p_300932_ -> p_300932_, p_301313_ -> p_301313_), p_301304_ -> {
-                if (p_301304_ instanceof TagValue fluidTag) {
-                    return Either.right(fluidTag);
-                } else if (p_301304_ instanceof FluidValue fluidValue) {
+            .xor(FluidValue.CODEC, TagValue.CODEC).xmap(either -> either.map(fluidValue -> fluidValue, tagValue -> tagValue), value -> {
+                if (value instanceof TagValue tagValue) {
+                    return Either.right(tagValue);
+                } else if (value instanceof FluidValue fluidValue) {
                     return Either.left(fluidValue);
                 } else {
                     throw new UnsupportedOperationException("This is neither an fluid value nor a tag value.");
                 }
             });
 
+        Codec<? extends Value> getCodec();
         Collection<Fluid> getFluids();
     }
 }
