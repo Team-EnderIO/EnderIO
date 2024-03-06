@@ -67,7 +67,6 @@ public abstract class EIOScreen<T extends AbstractContainerMenu> extends Abstrac
             return;
         }
 
-        renderBackground(guiGraphics, pMouseX, pMouseY, pPartialTicks);
         super.render(guiGraphics, pMouseX, pMouseY, pPartialTicks);
         this.renderTooltip(guiGraphics, pMouseX, pMouseY);
     }
