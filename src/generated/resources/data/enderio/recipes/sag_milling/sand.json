@@ -7,7 +7,7 @@
   "outputs": [
     {
       "chance": 0.5,
-      "tag": "neoforge:silicon"
+      "tag": "forge:silicon"
     }
   ]
 }

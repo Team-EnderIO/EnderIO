@@ -1,10 +1,10 @@
 {
   "values": [
-    "#neoforge:gems/pulsating_crystal",
-    "#neoforge:gems/vibrant_crystal",
-    "#neoforge:gems/ender_crystal",
-    "#neoforge:gems/enticing_crystal",
-    "#neoforge:gems/weather_crystal",
-    "#neoforge:gems/prescient_crystal"
+    "#forge:gems/pulsating_crystal",
+    "#forge:gems/vibrant_crystal",
+    "#forge:gems/ender_crystal",
+    "#forge:gems/enticing_crystal",
+    "#forge:gems/weather_crystal",
+    "#forge:gems/prescient_crystal"
   ]
 }

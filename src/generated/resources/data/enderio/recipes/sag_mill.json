@@ -6,10 +6,10 @@
       "item": "minecraft:flint"
     },
     "G": {
-      "tag": "neoforge:gears/iron"
+      "tag": "forge:gears/iron"
     },
     "I": {
-      "tag": "neoforge:ingots/dark_steel"
+      "tag": "forge:ingots/dark_steel"
     },
     "P": {
       "item": "minecraft:piston"

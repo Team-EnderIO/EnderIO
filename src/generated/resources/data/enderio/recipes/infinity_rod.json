@@ -3,10 +3,10 @@
   "category": "misc",
   "key": {
     "G": {
-      "tag": "neoforge:dusts/grains_of_infinity"
+      "tag": "forge:dusts/grains_of_infinity"
     },
     "N": {
-      "tag": "neoforge:nuggets/dark_steel"
+      "tag": "forge:nuggets/dark_steel"
     },
     "S": {
       "item": "minecraft:stick"

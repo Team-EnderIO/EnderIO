@@ -6,7 +6,7 @@
       "item": "enderio:conduit_binder"
     },
     "I": {
-      "tag": "neoforge:ingots/redstone_alloy"
+      "tag": "forge:ingots/redstone_alloy"
     }
   },
   "pattern": [

@@ -3,13 +3,13 @@
   "category": "misc",
   "ingredients": [
     {
-      "tag": "neoforge:dusts/lapis"
+      "tag": "forge:dusts/lapis"
     },
     {
-      "tag": "neoforge:dusts/coal"
+      "tag": "forge:dusts/coal"
     },
     {
-      "tag": "neoforge:silicon"
+      "tag": "forge:silicon"
     }
   ],
   "result": {

@@ -1,13 +1,13 @@
 {
   "values": [
-    "#neoforge:storage_blocks/conductive_alloy",
-    "#neoforge:storage_blocks/copper_alloy",
-    "#neoforge:storage_blocks/dark_steel",
-    "#neoforge:storage_blocks/end_steel",
-    "#neoforge:storage_blocks/energetic_alloy",
-    "#neoforge:storage_blocks/pulsating_alloy",
-    "#neoforge:storage_blocks/redstone_alloy",
-    "#neoforge:storage_blocks/soularium",
-    "#neoforge:storage_blocks/vibrant_alloy"
+    "#forge:storage_blocks/conductive_alloy",
+    "#forge:storage_blocks/copper_alloy",
+    "#forge:storage_blocks/dark_steel",
+    "#forge:storage_blocks/end_steel",
+    "#forge:storage_blocks/energetic_alloy",
+    "#forge:storage_blocks/pulsating_alloy",
+    "#forge:storage_blocks/redstone_alloy",
+    "#forge:storage_blocks/soularium",
+    "#forge:storage_blocks/vibrant_alloy"
   ]
 }

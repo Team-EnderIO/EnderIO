@@ -3,13 +3,13 @@
   "energy": 20000,
   "inputs": [
     {
-      "tag": "neoforge:ingots/energetic_alloy"
+      "tag": "forge:ingots/energetic_alloy"
     },
     {
       "tag": "forge:dusts/prismarine"
     },
     {
-      "tag": "neoforge:ingots/energetic_alloy"
+      "tag": "forge:ingots/energetic_alloy"
     },
     {
       "tag": "forge:gems/prismarine"

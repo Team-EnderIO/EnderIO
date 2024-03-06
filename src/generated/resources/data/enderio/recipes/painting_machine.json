@@ -3,10 +3,10 @@
   "category": "misc",
   "key": {
     "A": {
-      "tag": "neoforge:ingots/redstone_alloy"
+      "tag": "forge:ingots/redstone_alloy"
     },
     "B": {
-      "tag": "forge:dyes/black"
+      "tag": "forge:dyes/blue"
     },
     "C": {
       "item": "enderio:void_chassis"
@@ -15,10 +15,10 @@
       "tag": "forge:dyes/green"
     },
     "I": {
-      "tag": "neoforge:ingots/copper_alloy"
+      "tag": "forge:ingots/copper_alloy"
     },
     "M": {
-      "tag": "neoforge:gears/iron"
+      "tag": "forge:gears/iron"
     },
     "R": {
       "tag": "forge:dyes/red"

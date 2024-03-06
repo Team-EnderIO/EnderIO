@@ -9,10 +9,10 @@
       "tag": "enderio:clear_glass"
     },
     "G": {
-      "tag": "neoforge:gears/iron"
+      "tag": "forge:gears/iron"
     },
     "I": {
-      "tag": "neoforge:ingots/copper_alloy"
+      "tag": "forge:ingots/copper_alloy"
     },
     "V": {
       "item": "enderio:void_chassis"

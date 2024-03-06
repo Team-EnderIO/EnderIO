@@ -5,7 +5,7 @@
   "input": {
     "Count": 1,
     "Ingredient": {
-      "tag": "neoforge:gems/ender_crystal"
+      "tag": "forge:gems/ender_crystal"
     }
   }
 }

@@ -3,10 +3,10 @@
   "category": "equipment",
   "key": {
     "E": {
-      "tag": "neoforge:ingots/energetic_alloy"
+      "tag": "forge:ingots/energetic_alloy"
     },
     "I": {
-      "tag": "neoforge:ingots/soularium"
+      "tag": "forge:ingots/soularium"
     }
   },
   "pattern": [
