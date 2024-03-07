@@ -1,6 +1,8 @@
 package com.enderio.machines.client.rendering.travel;
 
 import com.enderio.api.travel.TravelRenderer;
+import com.enderio.machines.common.blockentity.PaintedTravelAnchorBlockEntity;
+import com.enderio.machines.common.init.MachineBlocks;
 import com.enderio.machines.common.travel.AnchorTravelTarget;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -46,6 +48,9 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
 
         // Render Model
         BlockState blockState = minecraft.level.getBlockState(travelData.getPos());
+        if (blockState.is(MachineBlocks.PAINTED_TRAVEL_ANCHOR)) {
+            blockState = ((PaintedTravelAnchorBlockEntity) minecraft.level.getBlockEntity(travelData.getPos())).getPaint().defaultBlockState();
+        }
         BakedModel blockModel = minecraft.getBlockRenderer().getBlockModel(blockState);
         VertexConsumer solid = buffer.getBuffer(RenderType.solid());
         minecraft

@@ -22,17 +22,18 @@ public class PaintedTravelAnchorBlockEntity extends TravelAnchorBlockEntity impl
     @Nullable
     private Block paint;
 
+    @Nullable
+    public Block getPaint() {
+        return paint;
+    }
+
     public PaintedTravelAnchorBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
         super(MachineBlockEntities.PAINTED_TRAVEL_ANCHOR.get(), pWorldPosition, pBlockState);
     }
 
-    public ModelData getModelData() {
-        return ModelData.builder().with(SinglePaintedBlockEntity.PAINT, getPaint()).build();
-    }
-
     @Override
-    public Block getPaint() {
-        return paint;
+    public ModelData getModelData() {
+        return ModelData.builder().with(SinglePaintedBlockEntity.PAINT, paint).build();
     }
 
     @Nullable
@@ -56,6 +57,12 @@ public class PaintedTravelAnchorBlockEntity extends TravelAnchorBlockEntity impl
                 level.setBlock(getBlockPos(), level.getBlockState(getBlockPos()), 9);
             }
         }
+    }
+
+    @Override
+    public void handleUpdateTag(CompoundTag syncData) {
+        readPaint(syncData);
+        super.handleUpdateTag(syncData);
     }
 
     @Override
