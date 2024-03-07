@@ -1,13 +1,17 @@
 package com.enderio.machines.common.init;
 
 import com.enderio.EnderIO;
+import com.enderio.base.client.renderer.PaintedBlockColor;
 import com.enderio.base.common.init.EIOCreativeTabs;
 import com.enderio.base.common.tag.EIOTags;
+import com.enderio.base.data.loot.DecorLootTable;
+import com.enderio.base.data.model.block.EIOBlockState;
 import com.enderio.core.data.model.EIOModel;
 import com.enderio.machines.common.MachineNBTKeys;
 import com.enderio.machines.common.block.CapacitorBankBlock;
 import com.enderio.machines.common.block.EnchanterBlock;
 import com.enderio.machines.common.block.MachineBlock;
+import com.enderio.machines.common.block.PaintedTravelAnchorBlock;
 import com.enderio.machines.common.block.ProgressMachineBlock;
 import com.enderio.machines.common.block.SolarPanelBlock;
 import com.enderio.machines.common.block.TravelAnchorBlock;
@@ -30,6 +34,7 @@ import net.minecraft.Util;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -164,6 +169,14 @@ public class MachineBlocks {
         .setLootTable(MachinesLootTable::copyNBT)
         .setBlockStateProvider((prov, ctx) -> prov.simpleBlock(ctx.get(), prov.models().getExistingFile(EnderIO.loc("block/" + ctx.getName()))))
         .createBlockItem(ITEM_REGISTRY, item -> item.setTab(EIOCreativeTabs.MACHINES));
+
+    public static final RegiliteBlock<PaintedTravelAnchorBlock> PAINTED_TRAVEL_ANCHOR = BLOCK_REGISTRY
+        .registerBlock("painted_travel_anchor", PaintedTravelAnchorBlock::new, BlockBehaviour.Properties.of().strength(2.5f, 8).noOcclusion())
+        .addBlockTags(BlockTags.NEEDS_IRON_TOOL, BlockTags.MINEABLE_WITH_PICKAXE)
+        .setColorSupplier(() -> PaintedBlockColor::new)
+        .setLootTable(DecorLootTable::withPaint)
+        .setBlockStateProvider((prov, ctx) -> EIOBlockState.paintedBlock("painted_travel_anchor", prov, ctx.get(), Blocks.DIRT, null)) //Any cube will do
+        .createBlockItem(ITEM_REGISTRY, item -> item.setColorSupplier(() -> PaintedBlockColor::new));
 
     public static final Map<SolarPanelTier, RegiliteBlock<SolarPanelBlock>> SOLAR_PANELS = Util.make(() -> {
         Map<SolarPanelTier, RegiliteBlock<SolarPanelBlock>> panels = new HashMap<>();
