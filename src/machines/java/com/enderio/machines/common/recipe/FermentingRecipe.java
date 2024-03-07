@@ -2,6 +2,7 @@ package com.enderio.machines.common.recipe;
 
 import com.enderio.core.common.recipes.FluidIngredient;
 import com.enderio.core.common.recipes.OutputStack;
+import com.enderio.machines.common.datamap.VatReagent;
 import com.enderio.machines.common.init.MachineRecipes;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -11,6 +12,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -22,18 +24,18 @@ import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 
 import java.util.List;
 
-public class VatFermentingRecipe implements MachineRecipe<VatFermentingRecipe.Container> {
+public class FermentingRecipe implements MachineRecipe<FermentingRecipe.Container> {
 
     private final FluidIngredient inputFluid;
     private final int inputFluidAmount;
     private final TagKey<Item> leftReagent;
     private final TagKey<Item> rightReagent;
-    private final int outputModifier;
+    private final double outputModifier;
     private final Fluid outputFluid;
     private final int ticks;
 
-    public VatFermentingRecipe(FluidIngredient inputFluid, int inputFluidAmount, TagKey<Item> leftReagent, TagKey<Item> rightReagent, Fluid outputFluid,
-        int outputModifier, int ticks) {
+    public FermentingRecipe(FluidIngredient inputFluid, int inputFluidAmount, TagKey<Item> leftReagent, TagKey<Item> rightReagent, Fluid outputFluid,
+        double outputModifier, int ticks) {
         this.inputFluid = inputFluid;
         this.inputFluidAmount = inputFluidAmount;
         this.leftReagent = leftReagent;
@@ -50,8 +52,12 @@ public class VatFermentingRecipe implements MachineRecipe<VatFermentingRecipe.Co
 
     @Override
     public List<OutputStack> craft(Container container, RegistryAccess registryAccess) {
-        //Todo: get reagent modifiers
-        return List.of(OutputStack.of(new FluidStack(outputFluid, inputFluidAmount * outputModifier)));
+
+        double totalModifier = outputModifier;
+        totalModifier *= getReagentModifier(container.getItem(0), leftReagent);
+        totalModifier *= getReagentModifier(container.getItem(1), rightReagent);
+
+        return List.of(OutputStack.of(new FluidStack(outputFluid, (int) (inputFluidAmount * totalModifier))));
     }
 
     @Override
@@ -75,6 +81,14 @@ public class VatFermentingRecipe implements MachineRecipe<VatFermentingRecipe.Co
         return true;
     }
 
+    public double getReagentModifier(ItemStack stack, TagKey<Item> reagent) {
+        var map = stack.getItemHolder().getData(VatReagent.DATA_MAP);
+        if (map != null) {
+            return map.getOrDefault(reagent, 1D);
+        }
+        return 1;
+    }
+
     public FluidIngredient getInputFluid() {
         return inputFluid;
     }
@@ -91,7 +105,7 @@ public class VatFermentingRecipe implements MachineRecipe<VatFermentingRecipe.Co
         return rightReagent;
     }
 
-    public int getOutputModifier() {
+    public double getOutputModifier() {
         return outputModifier;
     }
 
@@ -135,25 +149,25 @@ public class VatFermentingRecipe implements MachineRecipe<VatFermentingRecipe.Co
 
     }
 
-    public static class Serializer implements RecipeSerializer<VatFermentingRecipe> {
+    public static class Serializer implements RecipeSerializer<FermentingRecipe> {
 
-        Codec<VatFermentingRecipe> CODEC = RecordCodecBuilder.create(instance -> instance
-            .group(FluidIngredient.CODEC.fieldOf("inputFluid").forGetter(VatFermentingRecipe::getInputFluid),
-                Codec.INT.fieldOf("inputFluidAmount").forGetter(VatFermentingRecipe::getInputFluidAmount),
-                TagKey.codec(Registries.ITEM).fieldOf("leftReagent").forGetter(VatFermentingRecipe::getLeftReagent),
-                TagKey.codec(Registries.ITEM).fieldOf("rightReagent").forGetter(VatFermentingRecipe::getRightReagent),
-                BuiltInRegistries.FLUID.byNameCodec().fieldOf("FluidName").forGetter(VatFermentingRecipe::getOutputFluid),
-                Codec.INT.fieldOf("outputModifier").forGetter(VatFermentingRecipe::getOutputModifier),
-                Codec.INT.fieldOf("ticks").forGetter(VatFermentingRecipe::getTicks))
-            .apply(instance, VatFermentingRecipe::new));
+        Codec<FermentingRecipe> CODEC = RecordCodecBuilder.create(instance -> instance
+            .group(FluidIngredient.CODEC.fieldOf("input_fluid").forGetter(FermentingRecipe::getInputFluid),
+                Codec.INT.fieldOf("input_amount").forGetter(FermentingRecipe::getInputFluidAmount),
+                TagKey.codec(Registries.ITEM).fieldOf("left_reagent").forGetter(FermentingRecipe::getLeftReagent),
+                TagKey.codec(Registries.ITEM).fieldOf("right_reagent").forGetter(FermentingRecipe::getRightReagent),
+                BuiltInRegistries.FLUID.byNameCodec().fieldOf("output_fluid").forGetter(FermentingRecipe::getOutputFluid),
+                Codec.DOUBLE.fieldOf("output_modifier").forGetter(FermentingRecipe::getOutputModifier),
+                Codec.INT.fieldOf("ticks").forGetter(FermentingRecipe::getTicks))
+            .apply(instance, FermentingRecipe::new));
 
         @Override
-        public Codec<VatFermentingRecipe> codec() {
+        public Codec<FermentingRecipe> codec() {
             return CODEC;
         }
 
         @Override
-        public VatFermentingRecipe fromNetwork(FriendlyByteBuf buffer) {
+        public FermentingRecipe fromNetwork(FriendlyByteBuf buffer) {
             //TODO : NETWORK
             //            try {
             //                FluidStack inputFluid = FluidStack.readFromPacket(buffer);
@@ -171,7 +185,7 @@ public class VatFermentingRecipe implements MachineRecipe<VatFermentingRecipe.Co
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf buffer, VatFermentingRecipe recipe) {
+        public void toNetwork(FriendlyByteBuf buffer, FermentingRecipe recipe) {
             //TODO : NETWORK
             //            try {
             //                recipe.inputFluid.toNetwork(buffer);

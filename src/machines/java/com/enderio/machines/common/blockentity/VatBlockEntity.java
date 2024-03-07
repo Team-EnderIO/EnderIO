@@ -1,9 +1,11 @@
 package com.enderio.machines.common.blockentity;
 
+import com.enderio.core.common.network.slot.FluidStackNetworkDataSlot;
 import com.enderio.machines.common.attachment.IFluidTankUser;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
+import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.fluid.MachineTankLayout;
 import com.enderio.machines.common.io.fluid.TankAccess;
 import com.enderio.machines.common.io.item.MachineInventoryLayout;
@@ -31,6 +33,8 @@ public class VatBlockEntity extends MachineBlockEntity implements IFluidTankUser
         super(MachineBlockEntities.VAT.get(), worldPosition, blockState);
         fluidHandler = createFluidHandler();
 
+        addDataSlot(new FluidStackNetworkDataSlot(() -> INPUT_TANK.getFluid(this), f -> INPUT_TANK.setFluid(this, f)));
+        addDataSlot(new FluidStackNetworkDataSlot(() -> OUTPUT_TANK.getFluid(this), f -> OUTPUT_TANK.setFluid(this, f)));
         //        craftingTaskHost = new CraftingMachineTaskHost<>(this, () -> true, MachineRecipes.VAT_FERMENTING.type().get(),
         //            new VatFermentingRecipe.Container(getInventoryNN(), getFluidTankNN()), this::createTask);
     }
@@ -91,6 +95,14 @@ public class VatBlockEntity extends MachineBlockEntity implements IFluidTankUser
         };
     }
 
+    public MachineFluidTank getInputTank() {
+        return INPUT_TANK.getTank(this);
+    }
+
+    public MachineFluidTank getOutputTank() {
+        return OUTPUT_TANK.getTank(this);
+    }
+
     //    protected static class VatCraftingMachineTask extends CraftingMachineTask<VatFermentingRecipe, VatFermentingRecipe.Container> {
     //
     //        public VatCraftingMachineTask(@NotNull Level level, MachineInventory inventory, VatFermentingRecipe.Container container, MultiSlotAccess outputSlots,
@@ -127,12 +139,14 @@ public class VatBlockEntity extends MachineBlockEntity implements IFluidTankUser
     @Override
     public void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
+        saveTank(pTag);
         //        craftingTaskHost.save(pTag);
     }
 
     @Override
     public void load(CompoundTag pTag) {
         super.load(pTag);
+        loadTank(pTag);
         //        craftingTaskHost.load(pTag);
     }
 }

@@ -11,6 +11,10 @@ import org.jetbrains.annotations.Nullable;
 public class VatMenu extends MachineMenu<VatBlockEntity> {
     public VatMenu(@Nullable VatBlockEntity blockEntity, Inventory inventory, int pContainerId) {
         super(blockEntity, inventory, MachineMenus.VAT.get(), pContainerId);
+        if (blockEntity != null) {
+            addSlot(new MachineSlot(blockEntity.getInventory(), VatBlockEntity.REAGENTS.get(0), 56, 12));
+            addSlot(new MachineSlot(blockEntity.getInventory(), VatBlockEntity.REAGENTS.get(1), 105, 12));
+        }
         addInventorySlots(8, 84);
     }
 

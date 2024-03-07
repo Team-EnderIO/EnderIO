@@ -20,7 +20,7 @@ public class DataMapsProvider extends DataMapProvider {
     @Override
     protected void gather() {
         builder(VatReagent.DATA_MAP)
-            .add(Tags.Items.CROPS, Map.of(Tags.Items.CROPS, new VatReagent.ReagentType(0.5)), false)
-            .add(Items.WHEAT.builtInRegistryHolder(), Map.of(Tags.Items.CROPS, new VatReagent.ReagentType(0.8)), false);
+            .add(Tags.Items.CROPS, Map.of(Tags.Items.CROPS, 0.5), false)
+            .add(Items.WHEAT.builtInRegistryHolder(), Map.of(Tags.Items.CROPS, 0.8), false);
     }
 }
