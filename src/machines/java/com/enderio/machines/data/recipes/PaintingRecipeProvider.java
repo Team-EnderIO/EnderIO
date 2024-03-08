@@ -43,6 +43,8 @@ public class PaintingRecipeProvider extends EnderRecipeProvider {
         build(EIOBlocks.PAINTED_WOODEN_PRESSURE_PLATE, Ingredient.of(EIOBlocks.PAINTED_WOODEN_PRESSURE_PLATE), "_frompainted", recipeOutput);
         build(EIOBlocks.PAINTED_SLAB, Ingredient.of(EIOBlocks.PAINTED_SLAB), "_frompainted", recipeOutput);
         build(EIOBlocks.PAINTED_GLOWSTONE, Ingredient.of(EIOBlocks.PAINTED_GLOWSTONE), "_frompainted", recipeOutput);
+        build(MachineBlocks.PAINTED_TRAVEL_ANCHOR, Ingredient.of(MachineBlocks.PAINTED_TRAVEL_ANCHOR), "_frompainted", recipeOutput);
+
     }
 
 
