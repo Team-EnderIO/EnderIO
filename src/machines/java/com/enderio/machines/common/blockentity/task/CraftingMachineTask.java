@@ -2,6 +2,7 @@ package com.enderio.machines.common.blockentity.task;
 
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.blockentity.MachineState;
+import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.item.MachineInventory;
 import com.enderio.machines.common.io.item.MultiSlotAccess;
 import com.enderio.machines.common.io.item.SingleSlotAccess;
@@ -26,7 +27,9 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
 
     protected final Level level;
     protected final MachineInventory inventory;
+    @Nullable protected final MachineFluidHandler fluidHandler;
     protected final C container;
+    @Nullable
     protected final MultiSlotAccess outputSlots;
 
     @Nullable
@@ -42,9 +45,21 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
 
     private boolean isComplete;
 
-    public CraftingMachineTask(@NotNull Level level, MachineInventory inventory, C container, MultiSlotAccess outputSlots, @Nullable RecipeHolder<R> recipe) {
+    public CraftingMachineTask(@NotNull Level level, MachineInventory inventory, C container, @Nullable MultiSlotAccess outputSlots,
+        @Nullable RecipeHolder<R> recipe) {
+        this(level, inventory, null, container, outputSlots, recipe);
+    }
+
+    public CraftingMachineTask(@NotNull Level level, MachineInventory inventory, @Nullable MachineFluidHandler fluidHandler, C container,
+        @Nullable RecipeHolder<R> recipe) {
+        this(level, inventory, fluidHandler, container, null, recipe);
+    }
+
+    public CraftingMachineTask(@NotNull Level level, MachineInventory inventory, @Nullable MachineFluidHandler fluidHandler, C container,
+        @Nullable MultiSlotAccess outputSlots, @Nullable RecipeHolder<R> recipe) {
         this.level = level;
         this.inventory = inventory;
+        this.fluidHandler = fluidHandler;
         this.container = container;
         this.outputSlots = outputSlots;
         this.recipe = recipe;
@@ -157,6 +172,11 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
 
     protected boolean placeOutputs(List<OutputStack> outputs, boolean simulate) {
         // TODO: Handle fluids too.
+
+        //return early if there are no output slots
+        if (outputSlots == null) {
+            return false;
+        }
 
         // See that we can add all the outputs
         for (OutputStack output : outputs) {

@@ -19,8 +19,6 @@ public class DataMapsProvider extends DataMapProvider {
     @SuppressWarnings("deprecation")
     @Override
     protected void gather() {
-        builder(VatReagent.DATA_MAP)
-            .add(Tags.Items.CROPS, Map.of(Tags.Items.CROPS, 0.5), false)
-            .add(Items.WHEAT.builtInRegistryHolder(), Map.of(Tags.Items.CROPS, 0.8), false);
+        builder(VatReagent.DATA_MAP).add(Items.WHEAT.builtInRegistryHolder(), Map.of(Tags.Items.CROPS, 2D), false);
     }
 }

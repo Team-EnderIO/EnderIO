@@ -1,6 +1,6 @@
 {
   "type": "enderio:vat_fermenting",
-  "input_amount": 100,
+  "input_amount": 1000,
   "input_fluid": {
     "fluid_name": "minecraft:water"
   },

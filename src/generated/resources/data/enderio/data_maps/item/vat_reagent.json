@@ -1,10 +1,7 @@
 {
   "values": {
-    "#forge:crops": {
-      "#forge:crops": 0.5
-    },
     "minecraft:wheat": {
-      "#forge:crops": 0.8
+      "#forge:crops": 2.0
     }
   }
 }

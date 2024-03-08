@@ -1,9 +1,11 @@
 package com.enderio.machines.common.recipe;
 
+import com.enderio.EnderIO;
 import com.enderio.core.common.recipes.FluidIngredient;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.datamap.VatReagent;
 import com.enderio.machines.common.init.MachineRecipes;
+import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.RegistryAccess;
@@ -18,7 +20,6 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 
@@ -68,7 +69,7 @@ public class FermentingRecipe implements MachineRecipe<FermentingRecipe.Containe
     @Override
     public boolean matches(Container container, Level level) {
         FluidStack inputTank = container.getInputTank().getFluid();
-        if (!inputFluid.test(inputTank.getFluid()) || !(inputTank.getAmount() < inputFluidAmount)) {
+        if (!inputFluid.test(inputTank.getFluid()) || inputTank.getAmount() < inputFluidAmount) {
             return false;
         }
         if (!container.getItem(0).is(leftReagent)) {
@@ -84,7 +85,9 @@ public class FermentingRecipe implements MachineRecipe<FermentingRecipe.Containe
     public double getReagentModifier(ItemStack stack, TagKey<Item> reagent) {
         var map = stack.getItemHolder().getData(VatReagent.DATA_MAP);
         if (map != null) {
-            return map.getOrDefault(reagent, 1D);
+            var a = map.getOrDefault(reagent, 1D);
+            EnderIO.LOGGER.info(reagent.location().getPath() + ": " + a);
+            return a;
         }
         return 1;
     }
@@ -129,22 +132,15 @@ public class FermentingRecipe implements MachineRecipe<FermentingRecipe.Containe
 
     public static class Container extends RecipeWrapper {
 
-        private final FluidTank inputTank;
+        private final MachineFluidTank inputTank;
 
-        private final FluidTank outputTank;
-
-        public Container(IItemHandlerModifiable inv, FluidTank inputTank, FluidTank outputTank) {
+        public Container(IItemHandlerModifiable inv, MachineFluidTank inputTank) {
             super(inv);
             this.inputTank = inputTank;
-            this.outputTank = outputTank;
         }
 
-        public FluidTank getInputTank() {
+        public MachineFluidTank getInputTank() {
             return inputTank;
-        }
-
-        public FluidTank getOutputTank() {
-            return outputTank;
         }
 
     }
