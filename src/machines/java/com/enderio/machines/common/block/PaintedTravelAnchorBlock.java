@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 public class PaintedTravelAnchorBlock extends TravelAnchorBlock implements IPaintedBlock {
 
     public PaintedTravelAnchorBlock(Properties props) {
-        super(props);
+        super(MachineBlockEntities.PAINTED_TRAVEL_ANCHOR, props);
     }
 
     @Nullable

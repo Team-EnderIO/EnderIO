@@ -2,7 +2,9 @@ package com.enderio.machines.common.block;
 
 import com.enderio.base.common.travel.TravelSavedData;
 import com.enderio.machines.common.blockentity.TravelAnchorBlockEntity;
+import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
 import com.enderio.machines.common.init.MachineBlockEntities;
+import com.enderio.regilite.holder.RegiliteBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -10,8 +12,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 public class TravelAnchorBlock extends MachineBlock {
+    public TravelAnchorBlock(RegiliteBlockEntity<? extends MachineBlockEntity> blockEntityType, Properties props) {
+        super(blockEntityType, props);
+    }
+
     public TravelAnchorBlock(Properties props) {
-        super(MachineBlockEntities.TRAVEL_ANCHOR, props);
+        this(MachineBlockEntities.TRAVEL_ANCHOR, props);
     }
 
     @Nullable

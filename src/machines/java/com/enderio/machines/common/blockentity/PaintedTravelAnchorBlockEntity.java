@@ -44,6 +44,7 @@ public class PaintedTravelAnchorBlockEntity extends TravelAnchorBlockEntity impl
 
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+        super.onDataPacket(net, pkt);
         Block oldPaint = paint;
         CompoundTag tag = pkt.getTag();
         if (tag == null) {
@@ -60,15 +61,15 @@ public class PaintedTravelAnchorBlockEntity extends TravelAnchorBlockEntity impl
     }
 
     @Override
-    public void handleUpdateTag(CompoundTag syncData) {
-        readPaint(syncData);
-        super.handleUpdateTag(syncData);
-    }
-
-    @Override
     public void load(CompoundTag tag) {
         super.load(tag);
         readPaint(tag);
+    }
+
+    @Override
+    public void handleUpdateTag(CompoundTag syncData) {
+        super.handleUpdateTag(syncData);
+        readPaint(syncData);
     }
 
     @Override
