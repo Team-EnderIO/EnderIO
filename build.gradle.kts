@@ -181,7 +181,7 @@ fun RepositoryHandler.exclusiveRepo(url: String, filterSetup: (InclusiveReposito
 }
 
 repositories {
-    exclusiveRepo("https://modmaven.dev/", "mezz.jei", "mcjty.theoneprobe", "appeng")
+    exclusiveRepo("https://modmaven.dev/", "mezz.jei", "mcjty.theoneprobe", "appeng", "mekanism")
     exclusiveRepo("https://cursemaven.com", "curse.maven")
     exclusiveRepo("https://maven.blamejared.com", "vazkii.patchouli", "net.darkhax.bookshelf", "net.darkhax.enchdesc", "com.almostreliable.mods")
     exclusiveRepo("https://dogforce-games.com/maven", "dev.gigaherz.graph")
@@ -203,7 +203,7 @@ val ae2_version: String by project
 val bookshelf_version: String by project
 val ench_desc_version: String by project
 val jade_cf_id: String by project
-val mekanism_cf_id: String by project
+val mekanism_version: String by project
 
 dependencies {
     // NeoForge
@@ -219,7 +219,9 @@ dependencies {
 
     // GraphLib
     implementation("dev.gigaherz.graph:GraphLib3:${graphlib_version}")
-    //TODO jarJar(group: "dev.gigaherz.graph", name: "GraphLib3", version: "${graphlib_version_range}")
+    jarJar("dev.gigaherz.graph:GraphLib3:${graphlib_version}") {
+        jarJar.ranged(this, graphlib_version_range)
+    }
 
     // Mixin annotations
     annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
@@ -272,7 +274,8 @@ dependencies {
     //runtimeOnly("vazkii.patchouli:Patchouli:${patchouli_version}")
 
     // Mekanism
-    runtimeOnly("curse.maven:mekanism-268560:${mekanism_cf_id}")
+    compileOnly("mekanism:Mekanism:${minecraft_version}-${mekanism_version}:api")
+    runtimeOnly("mekanism:Mekanism:${minecraft_version}-${mekanism_version}")
 
     // Jetbrains annotations
     compileOnly("org.jetbrains:annotations:23.0.0")
