@@ -22,7 +22,7 @@ public class FermentingRecipeProvider extends EnderRecipeProvider {
 
     @Override
     protected void buildRecipes(RecipeOutput recipeOutput) {
-        build(EIOFluids.HOOTCH.getSource(), FluidIngredient.of(Fluids.WATER), 1000, Tags.Items.SEEDS, Tags.Items.CROPS, 0.25, 20, recipeOutput);
+        build(EIOFluids.HOOTCH.getSource(), FluidIngredient.of(Fluids.WATER), 1000, Tags.Items.SEEDS, Tags.Items.CROPS, 0.25, 100, recipeOutput);
     }
 
     protected void build(Fluid output, FluidIngredient input, int inputFluidAmount, TagKey<Item> leftReagent, TagKey<Item> rightReagent, double outputModifier,

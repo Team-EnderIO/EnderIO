@@ -82,6 +82,14 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
         return layout.isFluidValid(tank, stack);
     }
 
+    public boolean canInsert(int tank) {
+        return layout.canInsert(tank);
+    }
+
+    public boolean canExtract(int tank) {
+        return layout.canExtract(tank);
+    }
+
     @Nullable
     public IFluidHandler getForSide(@Nullable Direction side) {
         if (side == null) {
@@ -144,7 +152,7 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
         int totalFilled = 0;
 
         for (int index = 0; index < getTanks(); index++) {
-            if (!layout.canInsert(index))
+            if (!canInsert(index))
                 continue;
 
             // Attempt to fill the tank
@@ -193,7 +201,7 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
     @Override
     public FluidStack drain(int maxDrain, FluidAction action) {
         for (int index = 0; index < getTanks(); index++) {
-            if (layout.canExtract(index)) {
+            if (canExtract(index)) {
                 if (drain(index, maxDrain, FluidAction.SIMULATE) != FluidStack.EMPTY) {
                     FluidStack drained = drain(index, maxDrain, action);
                     if (!drained.isEmpty()) {

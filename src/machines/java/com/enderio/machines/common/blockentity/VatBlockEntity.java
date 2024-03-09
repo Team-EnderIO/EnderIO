@@ -8,6 +8,7 @@ import com.enderio.machines.common.blockentity.task.CraftingMachineTask;
 import com.enderio.machines.common.blockentity.task.host.CraftingMachineTaskHost;
 import com.enderio.machines.common.init.MachineBlockEntities;
 import com.enderio.machines.common.init.MachineRecipes;
+import com.enderio.machines.common.io.fluid.IFluidItemInteractive;
 import com.enderio.machines.common.io.fluid.MachineFluidHandler;
 import com.enderio.machines.common.io.fluid.MachineFluidTank;
 import com.enderio.machines.common.io.fluid.MachineTankLayout;
@@ -19,12 +20,16 @@ import com.enderio.machines.common.menu.VatMenu;
 import com.enderio.machines.common.recipe.FermentingRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
@@ -33,7 +38,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class VatBlockEntity extends MachineBlockEntity implements IFluidTankUser {
+public class VatBlockEntity extends MachineBlockEntity implements IFluidTankUser, IFluidItemInteractive {
 
     public static final int TANK_CAPACITY_COMMON = 8 * FluidType.BUCKET_VOLUME;
     private static final TankAccess INPUT_TANK = new TankAccess();
@@ -71,6 +76,18 @@ public class VatBlockEntity extends MachineBlockEntity implements IFluidTankUser
     public void onLoad() {
         super.onLoad();
         craftingTaskHost.onLevelReady();
+    }
+
+    @Override
+    public InteractionResult onBlockEntityUsed(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (!stack.isEmpty()) {
+            if (handleFluidItemInteraction(player, hand, stack, this, INPUT_TANK) || handleFluidItemInteraction(player, hand, stack, this, OUTPUT_TANK)) {
+                player.getInventory().setChanged();
+                return InteractionResult.CONSUME;
+            }
+        }
+        return super.onBlockEntityUsed(state, level, pos, player, hand, hit);
     }
 
     protected VatBlockEntity.VatCraftingMachineTask createTask(Level level, FermentingRecipe.Container container,
@@ -121,6 +138,10 @@ public class VatBlockEntity extends MachineBlockEntity implements IFluidTankUser
 
     public MachineFluidTank getOutputTank() {
         return OUTPUT_TANK.getTank(this);
+    }
+
+    public float getProgress() {
+        return craftingTaskHost.getProgress();
     }
 
     protected static class VatCraftingMachineTask extends CraftingMachineTask<FermentingRecipe, FermentingRecipe.Container> {

@@ -8,5 +8,5 @@
   "output_fluid": "enderio:fluid_hootch_still",
   "output_modifier": 0.25,
   "right_reagent": "forge:crops",
-  "ticks": 20
+  "ticks": 100
 }

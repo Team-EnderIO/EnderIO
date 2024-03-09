@@ -7,6 +7,7 @@ import com.enderio.core.client.gui.screen.EIOScreen;
 import com.enderio.core.client.gui.widgets.EnumIconWidget;
 import com.enderio.machines.client.gui.widget.ActivityWidget;
 import com.enderio.machines.client.gui.widget.FluidStackWidget;
+import com.enderio.machines.client.gui.widget.ProgressWidget;
 import com.enderio.machines.client.gui.widget.ioconfig.IOConfigButton;
 import com.enderio.machines.common.menu.VatMenu;
 import net.minecraft.network.chat.Component;
@@ -26,6 +27,7 @@ public class VatScreen extends EIOScreen<VatMenu> {
         super.init();
         addRenderableOnly(new FluidStackWidget(this, getMenu().getBlockEntity()::getInputTank, 30 + leftPos, 12 + topPos, 15, 47));
         addRenderableOnly(new FluidStackWidget(this, getMenu().getBlockEntity()::getOutputTank, 132 + leftPos, 12 + topPos, 15, 47));
+        addRenderableOnly(new ProgressWidget.BottomUp(this, () -> menu.getBlockEntity().getProgress(), getGuiLeft() + 82, getGuiTop() + 64, 14, 14, 176, 0));
 
         addRenderableWidget(new EnumIconWidget<>(this, leftPos + imageWidth - 6 - 16, topPos + 6, () -> menu.getBlockEntity().getRedstoneControl(),
             control -> menu.getBlockEntity().setRedstoneControl(control), EIOLang.REDSTONE_MODE));
