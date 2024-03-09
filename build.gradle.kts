@@ -7,7 +7,7 @@ plugins {
     id("maven-publish")
     id("com.modrinth.minotaur") version "2.+"
     id("net.neoforged.gradle.userdev") version "7.0.80"
-    id("me.hypherionmc.modutils.modpublisher") version "1.+"
+    id("com.hypherionmc.modutils.modpublisher") version "2.+"
 }
 
 val mod_version_series: String by project
@@ -344,22 +344,34 @@ tasks.build {
 if (getReleaseType() != null) {
     if (System.getenv("CHANGELOG") != null) {
         publisher {
-            apiKeys.curseforge = System.getenv("CURSEFORGE_TOKEN")
-            apiKeys.modrinth = System.getenv("MODRINTH_TOKEN")
 
-            debug = System.getenv("PUBLISH") != "true"
-            curseID = curseforge_projectId
-            modrinthID = modrinth_projectId
-            versionType = getReleaseType()
-            version = "$mod_version"
-            displayName = "Ender IO - $mod_version"
-            changelog = System.getenv("CHANGELOG")
-            gameVersions = listOf(minecraft_version)
-            loaders = listOf("neoforge")
-            artifact = tasks.jarJar
+            apiKeys {
+                curseforge(System.getenv("CURSEFORGE_TOKEN"))
+                modrinth(System.getenv("MODRINTH_TOKEN"))
+            }
 
-            curseDepends.optional = listOf("jei", /*"patchouli",*/ "athena", "applied-energistics-2")
-            modrinthDepends.optional = listOf(/*modrinth_dep_patchouli, */ modrinth_dep_jei, modrinth_dep_athena, modrinth_dep_ae2)
+            debug.set(System.getenv("PUBLISH") != "true")
+
+            curseID.set(curseforge_projectId)
+            modrinthID.set(modrinth_projectId)
+            versionType.set(getReleaseType())
+            version.set(mod_version)
+            displayName.set("Ender IO - $mod_version")
+            changelog.set(System.getenv("CHANGELOG"))
+            gameVersions.set(listOf(minecraft_version))
+            loaders.set(listOf("neoforge"))
+            curseEnvironment.set("both")
+            artifact.set(tasks.jarJar)
+
+            setJavaVersions("Java 17")
+
+            curseDepends {
+                optional("jei", /*"patchouli",*/ "athena", "applied-energistics-2")
+            }
+
+            modrinthDepends {
+                optional(/*modrinth_dep_patchouli, */ modrinth_dep_jei, modrinth_dep_athena, modrinth_dep_ae2)
+            }
         }
     } else {
         println("Release disabled, no changelog found in environment");
@@ -372,7 +384,7 @@ publishing {
         create<MavenPublication>("enderio") {
             groupId = "com.enderio"
             artifactId = "EnderIO"
-            version = "${getVersionString()}"
+            version = mod_version
 
             artifact(tasks.getByName("jar"))
             artifact(tasks.getByName("sourcesJar"))
