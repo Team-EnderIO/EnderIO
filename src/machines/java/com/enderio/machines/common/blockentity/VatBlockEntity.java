@@ -1,6 +1,8 @@
 package com.enderio.machines.common.blockentity;
 
+import com.enderio.EnderIO;
 import com.enderio.core.common.network.slot.FluidStackNetworkDataSlot;
+import com.enderio.core.common.network.slot.ResourceLocationNetworkDataSlot;
 import com.enderio.core.common.recipes.OutputStack;
 import com.enderio.machines.common.attachment.IFluidTankUser;
 import com.enderio.machines.common.blockentity.base.MachineBlockEntity;
@@ -20,6 +22,7 @@ import com.enderio.machines.common.menu.VatMenu;
 import com.enderio.machines.common.recipe.FermentingRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Inventory;
@@ -46,6 +49,8 @@ public class VatBlockEntity extends MachineBlockEntity implements IFluidTankUser
     public static final MultiSlotAccess REAGENTS = new MultiSlotAccess();
     private final MachineFluidHandler fluidHandler;
     private final CraftingMachineTaskHost<FermentingRecipe, FermentingRecipe.Container> craftingTaskHost;
+    private ResourceLocation recipeId;
+    private static final ResourceLocation EMPTY = EnderIO.loc("");
 
     public VatBlockEntity(BlockPos worldPosition, BlockState blockState) {
         super(MachineBlockEntities.VAT.get(), worldPosition, blockState);
@@ -53,6 +58,9 @@ public class VatBlockEntity extends MachineBlockEntity implements IFluidTankUser
 
         addDataSlot(new FluidStackNetworkDataSlot(() -> INPUT_TANK.getFluid(this), f -> INPUT_TANK.setFluid(this, f)));
         addDataSlot(new FluidStackNetworkDataSlot(() -> OUTPUT_TANK.getFluid(this), f -> OUTPUT_TANK.setFluid(this, f)));
+
+        addDataSlot(new ResourceLocationNetworkDataSlot(() -> getRecipeId(), id -> recipeId = id));
+
         craftingTaskHost = new CraftingMachineTaskHost<>(this, () -> true, MachineRecipes.VAT_FERMENTING.type().get(),
             new FermentingRecipe.Container(getInventoryNN(), getInputTank()), this::createTask);
     }
@@ -142,6 +150,22 @@ public class VatBlockEntity extends MachineBlockEntity implements IFluidTankUser
 
     public float getProgress() {
         return craftingTaskHost.getProgress();
+    }
+
+    public ResourceLocation getRecipeId() {
+        if (level.isClientSide) {
+            return recipeId;
+        }
+
+        if (craftingTaskHost.getCurrentTask() != null) {
+            ResourceLocation id = craftingTaskHost.getCurrentTask().getRecipeId();
+            return id != null ? id : EMPTY;
+        }
+        return EMPTY;
+    }
+
+    public CraftingMachineTaskHost<FermentingRecipe, FermentingRecipe.Container> getCraftingHost() {
+        return craftingTaskHost;
     }
 
     protected static class VatCraftingMachineTask extends CraftingMachineTask<FermentingRecipe, FermentingRecipe.Container> {

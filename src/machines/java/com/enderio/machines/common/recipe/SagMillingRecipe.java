@@ -372,7 +372,7 @@ public class SagMillingRecipe implements MachineRecipe<SagMillingRecipe.Containe
                     buffer.writeBoolean(item.optional);
                 }
             } catch (Exception ex) {
-                EnderIO.LOGGER.error("Error writing allow smelting recipe to packet.", ex);
+                EnderIO.LOGGER.error("Error writing sag milling recipe to packet.", ex);
                 throw ex;
             }
         }

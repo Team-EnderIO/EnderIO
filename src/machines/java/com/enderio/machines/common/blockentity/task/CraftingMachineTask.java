@@ -77,6 +77,11 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<C>, C extends 
         return recipe.value();
     }
 
+    @Nullable
+    public ResourceLocation getRecipeId() {
+        return recipe.id();
+    }
+
     // region Abstract Implementation
 
     protected abstract void consumeInputs(R recipe);

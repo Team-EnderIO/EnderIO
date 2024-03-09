@@ -12,6 +12,7 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -22,8 +23,10 @@ import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 
 public class FermentingRecipe implements MachineRecipe<FermentingRecipe.Container> {
 
@@ -85,9 +88,7 @@ public class FermentingRecipe implements MachineRecipe<FermentingRecipe.Containe
     public double getReagentModifier(ItemStack stack, TagKey<Item> reagent) {
         var map = stack.getItemHolder().getData(VatReagent.DATA_MAP);
         if (map != null) {
-            var a = map.getOrDefault(reagent, 1D);
-            EnderIO.LOGGER.info(reagent.location().getPath() + ": " + a);
-            return a;
+            return map.getOrDefault(reagent, 1D);
         }
         return 1;
     }
@@ -163,39 +164,38 @@ public class FermentingRecipe implements MachineRecipe<FermentingRecipe.Containe
         }
 
         @Override
+        @Nullable
         public FermentingRecipe fromNetwork(FriendlyByteBuf buffer) {
-            //TODO : NETWORK
-            //            try {
-            //                FluidStack inputFluid = FluidStack.readFromPacket(buffer);
-            //                FluidStack outputFluid = FluidStack.readFromPacket(buffer);
-            //                int baseModifier = buffer.readInt();
-            //                ResourceLocation leftReagent = buffer.readResourceLocation();
-            //                ResourceLocation rightReagent = buffer.readResourceLocation();
-            //                int ticks = buffer.readInt();
-            //                return new VatFermentingRecipe(inputFluid, outputFluid, baseModifier, leftReagent, rightReagent, ticks);
-            //            } catch (Exception ex) {
-            //                EnderIO.LOGGER.error("Error reading Vat recipe for packet.", ex);
-            //                throw ex;
-            //            }
-            return null;
+            try {
+                FluidIngredient inputFluid = FluidIngredient.fromNetwork(buffer);
+                int inputFluidAmount = buffer.readInt();
+                TagKey<Item> left = ItemTags.create(buffer.readResourceLocation());
+                TagKey<Item> right = ItemTags.create(buffer.readResourceLocation());
+                Fluid fluid = Objects.requireNonNull(buffer.readById(BuiltInRegistries.FLUID));
+                double outputModifier = buffer.readDouble();
+                int ticks = buffer.readInt();
+
+                return new FermentingRecipe(inputFluid, inputFluidAmount, left, right, fluid, outputModifier, ticks);
+            } catch (Exception ex) {
+                EnderIO.LOGGER.error("Error reading fermenting recipe to packet.", ex);
+                return null;
+            }
         }
 
         @Override
         public void toNetwork(FriendlyByteBuf buffer, FermentingRecipe recipe) {
-            //TODO : NETWORK
-            //            try {
-            //                recipe.inputFluid.toNetwork(buffer);
-            //                buffer.writeInt(recipe.inputFluidAmount);
-            //                buffer.;
-            //                buffer.ta(recipe.leftReagent);
-            //                buffer.writeResourceLocation(recipe.rightReagent);
-            //                buffer.writeId(BuiltInRegistries.FLUID, recipe.outputFluid);
-            //                buffer.writeInt(recipe.outputModifier);
-            //                buffer.writeInt(recipe.ticks);
-            //            } catch (Exception ex) {
-            //                EnderIO.LOGGER.error("Error reading Vat recipe for packet.", ex);
-            //                throw ex;
-            //            }
+            try {
+                recipe.inputFluid.toNetwork(buffer);
+                buffer.writeInt(recipe.inputFluidAmount);
+                buffer.writeResourceLocation(recipe.leftReagent.location());
+                buffer.writeResourceLocation(recipe.rightReagent.location());
+                buffer.writeId(BuiltInRegistries.FLUID, recipe.outputFluid);
+                buffer.writeDouble(recipe.outputModifier);
+                buffer.writeInt(recipe.ticks);
+            } catch (Exception ex) {
+                EnderIO.LOGGER.error("Error writing fermenting recipe to packet.", ex);
+                throw ex;
+            }
 
         }
     }
