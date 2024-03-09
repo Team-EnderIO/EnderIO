@@ -12,6 +12,7 @@ plugins {
     id("com.hypherionmc.modutils.modpublisher") version "2.+"
 }
 
+val mod_version_series: String by project
 val mod_id: String by project
 val minecraft_version: String by project
 val minecraft_version_range: String by project
@@ -38,7 +39,7 @@ version = mod_version
 group = "com.enderio"
 
 base {
-    archivesName.set("EnderIO")
+    archivesName.set("EnderIO-$minecraft_version")
 }
 
 println("Building Ender IO version $version")
@@ -357,7 +358,7 @@ if (getReleaseType() != null) {
             modrinthID.set(modrinth_projectId)
             versionType.set(getReleaseType())
             version.set(mod_version)
-            displayName.set("Ender IO - ${getVersionString(false)}")
+            displayName.set("Ender IO - $mod_version")
             changelog.set(System.getenv("CHANGELOG"))
             gameVersions.set(listOf(minecraft_version))
             loaders.set(listOf("neoforge"))
@@ -436,10 +437,8 @@ tasks.withType<JavaCompile> {
 //   * enderio-1.19.1-6.0.1-alpha.jar :: release version 6.0.1-alpha for mc 1.19.1
 //   * enderio-1.19.1-nightly-4       :: nightly build no. 4 for mc 1.19.1
 //   * enderio-1.19.1-dev-c91c8ee6e   :: dev (local) build for commit c91c8ee6e
-fun getVersionString(includeMinecraftVersion: Boolean = true): String {
+fun getVersionString(): String {
     val build_server = System.getenv("CI") != null || System.getenv("BUILD_NUMBER") != null
-
-    val prefix = if (includeMinecraftVersion) "${minecraft_version}-" else ""
 
     if (System.getenv("BUILD_VERSION") != null) {
         var version_number = System.getenv("BUILD_VERSION")
@@ -447,7 +446,7 @@ fun getVersionString(includeMinecraftVersion: Boolean = true): String {
             version_number = version_number.substring(1)
         }
 
-        return "${prefix}${version_number}"
+        return "${version_number}"
     }
 
     if (System.getenv("NIGHTLY") != null) {
@@ -456,7 +455,7 @@ fun getVersionString(includeMinecraftVersion: Boolean = true): String {
             version_patch_lc = System.getenv("BUILD_NUMBER")
         }
 
-        return "${prefix}nightly-${version_patch_lc}"
+        return "${mod_version_series}-nightly-${version_patch_lc}"
     }
 
     var version_hash = ""
@@ -474,7 +473,7 @@ fun getVersionString(includeMinecraftVersion: Boolean = true): String {
         }
     }
 
-    return "${prefix}dev${branch_name}${version_hash}"
+    return "${mod_version_series}-dev${branch_name}${version_hash}"
 }
 
 fun shellRunAndRead(command: String): String {
