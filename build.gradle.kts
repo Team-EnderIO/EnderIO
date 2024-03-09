@@ -1,5 +1,7 @@
 import org.gradle.plugins.ide.idea.model.IdeaModule
 import java.net.URI
+import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.function.Consumer
 
 plugins {
@@ -293,7 +295,7 @@ tasks.withType<Jar> {
                 "Implementation-Title" to project.name,
                 "Implementation-Version" to mod_version,
                 "Implementation-Vendor" to "SleepyTrousers",
-                //TODO "Implementation-Timestamp" to new Date().format("yyyy-MM-dd"T"HH:mm:ssZ"),
+                "Implementation-Timestamp" to SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(Date()),
                 "MixinConfigs" to "enderio.mixins.json"
         ))
     }
