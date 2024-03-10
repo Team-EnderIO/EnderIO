@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "enderio:power_buffer"
+    },
+    {
+      "item": "enderio:item_buffer"
+    }
+  ],
+  "result": {
+    "item": "enderio:omni_buffer"
+  }
+}

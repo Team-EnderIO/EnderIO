@@ -162,7 +162,7 @@ public abstract class PoweredMachineBlockEntity extends MachineBlockEntity imple
     /**
      * Push energy out to neighboring blocks.
      */
-    private void pushEnergy() {
+    protected void pushEnergy() {
         // Don't bother if our energy storage cannot output ever.
         if (!getExposedEnergyStorage().getIOMode().canOutput()) {
             return;

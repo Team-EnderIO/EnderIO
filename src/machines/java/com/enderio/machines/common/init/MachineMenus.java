@@ -8,7 +8,10 @@ import com.enderio.machines.client.gui.screen.DrainScreen;
 import com.enderio.machines.client.gui.screen.EnchanterScreen;
 import com.enderio.machines.client.gui.screen.FluidTankScreen;
 import com.enderio.machines.client.gui.screen.ImpulseHopperScreen;
+import com.enderio.machines.client.gui.screen.ItemBufferScreen;
+import com.enderio.machines.client.gui.screen.OmniBufferScreen;
 import com.enderio.machines.client.gui.screen.PaintingMachineScreen;
+import com.enderio.machines.client.gui.screen.PowerBufferScreen;
 import com.enderio.machines.client.gui.screen.PoweredSpawnerScreen;
 import com.enderio.machines.client.gui.screen.PrimitiveAlloySmelterScreen;
 import com.enderio.machines.client.gui.screen.SagMillScreen;
@@ -28,7 +31,10 @@ import com.enderio.machines.common.menu.DrainMenu;
 import com.enderio.machines.common.menu.EnchanterMenu;
 import com.enderio.machines.common.menu.FluidTankMenu;
 import com.enderio.machines.common.menu.ImpulseHopperMenu;
+import com.enderio.machines.common.menu.ItemBufferMenu;
+import com.enderio.machines.common.menu.OmniBufferMenu;
 import com.enderio.machines.common.menu.PaintingMachineMenu;
+import com.enderio.machines.common.menu.PowerBufferMenu;
 import com.enderio.machines.common.menu.PoweredSpawnerMenu;
 import com.enderio.machines.common.menu.PrimitiveAlloySmelterMenu;
 import com.enderio.machines.common.menu.SagMillMenu;
@@ -65,6 +71,12 @@ public class MachineMenus {
     public static final MenuEntry<DrainMenu> DRAIN = REGISTRATE.menu("drain", DrainMenu::factory, () -> DrainScreen::new).register();
     public static final MenuEntry<WiredChargerMenu> WIRED_CHARGER = REGISTRATE.menu("wired_charger", WiredChargerMenu::factory, () -> WiredChargerScreen::new).register();
     public static final MenuEntry<PaintingMachineMenu> PAINTING_MACHINE = REGISTRATE.menu("painting_machine", PaintingMachineMenu::factory, () -> PaintingMachineScreen::new).register();
+
+    public static final MenuEntry<ItemBufferMenu> ITEM_BUFFER = REGISTRATE.menu("item_buffer", ItemBufferMenu::factory, () -> ItemBufferScreen::new).register();
+
+    public static final MenuEntry<PowerBufferMenu> POWER_BUFFER = REGISTRATE.menu("power_buffer", PowerBufferMenu::factory, () -> PowerBufferScreen::new).register();
+
+    public static final MenuEntry<OmniBufferMenu> OMNI_BUFFER = REGISTRATE.menu("omni_buffer", OmniBufferMenu::factory, () -> OmniBufferScreen::new).register();
     public static final MenuEntry<CapacitorBankMenu> CAPACITOR_BANK = REGISTRATE.menu("capacitor_bank", CapacitorBankMenu::factory, () -> CapacitorBankScreen::new).register();
     public static final MenuEntry<SoulEngineMenu> SOUL_ENGINE = REGISTRATE.menu("soul_engine", SoulEngineMenu::factory, () -> SoulEngineScreen::new).register();
     public static final MenuEntry<TravelAnchorMenu> TRAVEL_ANCHOR = REGISTRATE.menu("travel_anchor", TravelAnchorMenu::factory, () -> TravelAnchorScreen::new).register();

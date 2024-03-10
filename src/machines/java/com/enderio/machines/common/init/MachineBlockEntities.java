@@ -1,6 +1,9 @@
 package com.enderio.machines.common.init;
 
 import com.enderio.EnderIO;
+import com.enderio.machines.common.blockentity.ItemBufferBlockEntity;
+import com.enderio.machines.common.blockentity.OmniBufferBlockEntity;
+import com.enderio.machines.common.blockentity.PowerBufferBlockEntity;
 import com.enderio.machines.common.blockentity.AlloySmelterBlockEntity;
 import com.enderio.machines.common.blockentity.CrafterBlockEntity;
 import com.enderio.machines.common.blockentity.CreativePowerBlockEntity;
@@ -84,6 +87,10 @@ public class MachineBlockEntities {
     public static final BlockEntityEntry<PaintingMachineBlockEntity> PAINTING_MACHINE = register("painting_machine", PaintingMachineBlockEntity::new, MachineBlocks.PAINTING_MACHINE);
 
     public static final BlockEntityEntry<PoweredSpawnerBlockEntity> POWERED_SPAWNER = register("powered_spawner", PoweredSpawnerBlockEntity::new, MachineBlocks.POWERED_SPAWNER);
+
+    public static final BlockEntityEntry<ItemBufferBlockEntity> ITEM_BUFFER = register("item_buffer", ItemBufferBlockEntity::new, MachineBlocks.ITEM_BUFFER);
+    public static final BlockEntityEntry<PowerBufferBlockEntity> POWER_BUFFER = register("power_buffer", PowerBufferBlockEntity::new, MachineBlocks.POWER_BUFFER);
+    public static final BlockEntityEntry<OmniBufferBlockEntity> OMNI_BUFFER = register("omni_buffer", OmniBufferBlockEntity::new, MachineBlocks.OMNI_BUFFER);
 
     public static final Map<SolarPanelTier, BlockEntityEntry<SolarPanelBlockEntity>> SOLAR_PANELS = Util.make(() -> {
        Map<SolarPanelTier, BlockEntityEntry<SolarPanelBlockEntity>> map = new HashMap<>();

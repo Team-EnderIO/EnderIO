@@ -39,4 +39,12 @@ public class CoreNBTKeys {
     public static final String ANCHOR_VISIBILITY = "AnchorVisibility";
 
     //endregion
+
+    //region Buffer data
+
+    public static final String BUFFER_MAX_INPUT = "BufferMaxInput";
+
+    public static final String BUFFER_MAX_OUTPUT = "BufferMaxOutput";
+
+    //endregion
 }

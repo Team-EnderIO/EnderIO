@@ -33,6 +33,8 @@ public class EnergyConfig {
     public final ForgeConfigSpec.ConfigValue<Integer> VIBRANT_CAPACITOR_BANK_CAPACITY;
     public final ForgeConfigSpec.ConfigValue<Integer> WIRED_CHARGER_CAPACITY;
     public final ForgeConfigSpec.ConfigValue<Integer> WIRED_CHARGER_USAGE;
+    public final ForgeConfigSpec.ConfigValue<Integer> POWER_BUFFER_CAPACITY;
+    public final ForgeConfigSpec.ConfigValue<Integer> POWER_BUFFER_USAGE;
     public final ForgeConfigSpec.ConfigValue<Integer> SOUL_ENGINE_CAPACITY;
     public final ForgeConfigSpec.ConfigValue<Integer> SOUL_ENGINE_BURN_SPEED;
     public final ForgeConfigSpec.ConfigValue<Double> SOUL_ENGINE_GENERATION;
@@ -117,6 +119,11 @@ public class EnergyConfig {
             WIRED_CHARGER_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage", 64, 1, Integer.MAX_VALUE);
         builder.pop();
 
+
+        builder.push("powerBuffer");
+            POWER_BUFFER_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 100_000, 1, Integer.MAX_VALUE);
+            POWER_BUFFER_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage", 1_000, 1, Integer.MAX_VALUE);
+
         builder.push("soul_engine");
             SOUL_ENGINE_CAPACITY = builder.defineInRange("capacity",100000, 1, Integer.MAX_VALUE);
             SOUL_ENGINE_BURN_SPEED = builder.comment("The base burn-rate the soul engine.").defineInRange("burnSpeed", 1, 1, Integer.MAX_VALUE);
@@ -127,6 +134,7 @@ public class EnergyConfig {
         builder.push("drain");
             DRAIN_CAPACITY = builder.comment("The base energy capacity in uI.").defineInRange("capacity", 64_000, 1, Integer.MAX_VALUE);
             DRAIN_USAGE = builder.comment("The base energy consumption in uI/t.").defineInRange("usage",  10, 1, Integer.MAX_VALUE);
+
         builder.pop();
 
         builder.pop();
