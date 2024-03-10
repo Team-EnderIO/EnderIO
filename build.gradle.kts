@@ -12,7 +12,6 @@ plugins {
     id("com.hypherionmc.modutils.modpublisher") version "2.+"
 }
 
-val mod_version_series: String by project
 val mod_id: String by project
 val minecraft_version: String by project
 val minecraft_version_range: String by project
@@ -35,11 +34,11 @@ idea {
 
 val mod_version = getVersionString()
 
-version = mod_version
+version = "${minecraft_version}-${mod_version}"
 group = "com.enderio"
 
 base {
-    archivesName.set("EnderIO-$minecraft_version")
+    archivesName.set("EnderIO")
 }
 
 println("Building Ender IO version $version")
@@ -147,7 +146,7 @@ runs {
 }
 
 val replaceProperties = mapOf(
-        "version" to version,
+        "version" to mod_version,
         "mcversion" to minecraft_version_range,
         "neo_version" to neo_version_range,
         "loader_version_range" to loader_version_range
@@ -435,8 +434,8 @@ tasks.withType<JavaCompile> {
 // ============
 
 //   * enderio-1.19.1-6.0.1-alpha.jar :: release version 6.0.1-alpha for mc 1.19.1
-//   * enderio-1.19.1-nightly-4       :: nightly build no. 4 for mc 1.19.1
-//   * enderio-1.19.1-dev-c91c8ee6e   :: dev (local) build for commit c91c8ee6e
+//   * enderio-1.19.1-6.0.1.349-nightly       :: nightly build no. 349 for mc 1.19.1, based after 6.0.1.
+//   * enderio-1.19.1-6.0-dev-feature-c91c8ee6e   :: dev (local) build for commit c91c8ee6e on "feature" branch for version set 6.0.
 fun getVersionString(): String {
     val build_server = System.getenv("CI") != null || System.getenv("BUILD_NUMBER") != null
 
@@ -446,16 +445,19 @@ fun getVersionString(): String {
             version_number = version_number.substring(1)
         }
 
-        return "${version_number}"
+        return version_number
     }
 
     if (System.getenv("NIGHTLY") != null) {
+        val lastVersion = getPreviousVersion()
+        val lastVersionNumber = extractVersionNumber(lastVersion)
+
         var version_patch_lc = "0"
         if (System.getenv("BUILD_NUMBER") != null) {
             version_patch_lc = System.getenv("BUILD_NUMBER")
         }
 
-        return "${mod_version_series}-nightly-${version_patch_lc}"
+        return "${lastVersionNumber}.${version_patch_lc}-nightly"
     }
 
     var version_hash = ""
@@ -463,17 +465,50 @@ fun getVersionString(): String {
     if (!build_server) {
         try {
             version_hash = "-" + shellRunAndRead("git rev-parse --short HEAD").trim()
-        } catch (ignored: Exception) {
+        } catch (_: Exception) {
         }
 
         try {
             branch_name = shellRunAndRead("git rev-parse --abbrev-ref HEAD").trim()
             branch_name = "-" + branch_name.substring(branch_name.lastIndexOf("/") + 1)
-        } catch (ignored: Exception) {
+        } catch (_: Exception) {
         }
     }
 
-    return "${mod_version_series}-dev${branch_name}${version_hash}"
+    return "dev${branch_name}${version_hash}"
+}
+
+fun getPreviousVersion(): String {
+    var previous_version: String? = null
+    try {
+        previous_version = shellRunAndRead("git describe --abbrev=0").trim()
+
+        if (previous_version.startsWith("v")) {
+            previous_version = previous_version.substring(1)
+        } else {
+            previous_version = null;
+        }
+    } catch (_: Exception) {
+    }
+
+    if (previous_version != null) {
+        return previous_version
+    }
+
+    return "1.0.0"
+}
+
+// Strips any non-numeric versioning.
+fun extractVersionNumber(currentVersion: String): String {
+    val getVersion = Regex("[0-9]+.[0-9]+.[0-9](?=-*)")
+
+    val versionString = getVersion.find(currentVersion)
+
+    if (versionString != null) {
+        return versionString.value;
+    }
+
+    return "1.0.0"
 }
 
 fun shellRunAndRead(command: String): String {
