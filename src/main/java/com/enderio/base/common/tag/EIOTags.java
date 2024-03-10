@@ -42,7 +42,7 @@ public class EIOTags {
         public static final TagKey<Item> DUSTS_GOLD = ItemTags.create(new ResourceLocation(COMMON, "dusts/gold"));
         public static final TagKey<Item> DUSTS_COPPER = ItemTags.create(new ResourceLocation(COMMON, "dusts/copper"));
         public static final TagKey<Item> DUSTS_TIN = ItemTags.create(new ResourceLocation(COMMON, "dusts/tin"));
-        public static final TagKey<Item> DUSTS_ENDER = ItemTags.create(new ResourceLocation(COMMON, "dusts/ender"));
+        public static final TagKey<Item> DUSTS_ENDER = ItemTags.create(new ResourceLocation(COMMON, "dusts/ender_pearl"));
         public static final TagKey<Item> DUSTS_OBSIDIAN = ItemTags.create(new ResourceLocation(COMMON, "dusts/obsidian"));
         public static final TagKey<Item> DUSTS_COBALT = ItemTags.create(new ResourceLocation(COMMON, "dusts/cobalt"));
         public static final TagKey<Item> DUSTS_QUARTZ = ItemTags.create(new ResourceLocation(COMMON, "dusts/quartz"));
