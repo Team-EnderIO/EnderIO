@@ -48,8 +48,8 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
 
         // Render Model
         BlockState blockState = minecraft.level.getBlockState(travelData.getPos());
-        if (blockState.is(MachineBlocks.PAINTED_TRAVEL_ANCHOR)) {
-            blockState = ((PaintedTravelAnchorBlockEntity) minecraft.level.getBlockEntity(travelData.getPos())).getPaint().defaultBlockState();
+        if (minecraft.level.getBlockEntity(travelData.getPos()) instanceof PaintedTravelAnchorBlockEntity paintedTravelAnchorBlock) {
+            blockState = paintedTravelAnchorBlock.getPaint().defaultBlockState();
         }
         BakedModel blockModel = minecraft.getBlockRenderer().getBlockModel(blockState);
         VertexConsumer solid = buffer.getBuffer(RenderType.solid());
