@@ -389,7 +389,7 @@ publishing {
         maven(MavenPublication) {
             groupId = 'com.enderio'
             artifactId = 'EnderIO'
-            version = "${getVersionString()}"
+            version = "${minecraft_version}-${version}"
 
             artifact jar
             artifact sourcesJar
