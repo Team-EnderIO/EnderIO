@@ -21,7 +21,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+        with:
+          fetch-tags: 'true'
 
       - name: Get Minecraft Version
         uses: madhead/read-java-properties@latest
