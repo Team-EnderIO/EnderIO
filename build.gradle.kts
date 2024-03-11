@@ -475,7 +475,7 @@ fun getVersionString(): String {
         }
     }
 
-    return "dev${branch_name}${version_hash}"
+    return "1-dev${branch_name}${version_hash}"
 }
 
 fun getPreviousVersion(): String {
