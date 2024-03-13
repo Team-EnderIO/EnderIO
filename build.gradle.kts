@@ -295,7 +295,7 @@ tasks.withType<Jar> {
                 "Implementation-Version" to mod_version,
                 "Implementation-Vendor" to "SleepyTrousers",
                 "Implementation-Timestamp" to SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(Date()),
-                "MixinConfigs" to "enderio.mixins.json"
+                "MixinConfigs" to "mixins.enderio.json"
         ))
     }
 
