@@ -18,6 +18,11 @@ public class AutoSmeltEnchantment extends EIOBaseEnchantment {
     }
 
     @Override
+    public boolean isTreasureOnly() {
+        return true;
+    }
+
+    @Override
     public int getMaxCost(int pLevel) {
         return BaseConfig.COMMON.ENCHANTMENTS.AUTO_SMELT_MAX_COST.get();
     }

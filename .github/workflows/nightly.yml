@@ -21,7 +21,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: '0'
+
+      - name: Get Minecraft Version
+        uses: madhead/read-java-properties@latest
+        id: mc_version
+        with:
+          file: gradle.properties
+          property: minecraft_version
 
       - name: Set up JDK
         uses: actions/setup-java@v2
@@ -48,11 +57,11 @@ jobs:
         uses: tsickert/discord-webhook@v5.3.0
         with:
           webhook-url: ${{ secrets.NIGHTLY_DISCORD_WEBHOOK }}
-          embed-title: New Nightly Build
+          embed-title: New Nightly Build for ${{ steps.mc_version.outputs.value }}
           embed-description: A new nightly build of Ender IO has been built from the following commit. If you play with this, please remember to report issues! ```${{ github.event.head_commit.message }}```
           avatar-url: https://raw.githubusercontent.com/Team-EnderIO/EnderIO/dev/1.20.1/doc/img/enderface.png
           username: Ender IO Nightowl
-          embed-footer-text: Build number ${{ github.run_number }}
+          embed-footer-text: Build number ${{ github.run_number }} for MC ${{ steps.mc_version.outputs.value }}
           embed-url: https://nightly.link/${{ github.repository }}/actions/runs/${{ github.run_id }}/nightly-build.zip # NOTE: Must match "name" of the artifact as set above.
           embed-color: 5763719
 
@@ -61,10 +70,10 @@ jobs:
         uses: tsickert/discord-webhook@v5.3.0
         with:
           webhook-url: ${{ secrets.NIGHTLY_DISCORD_WEBHOOK }}
-          embed-title: Nightly Build Failed
+          embed-title: Nightly Build Failed for ${{ steps.mc_version.outputs.value }}
           embed-description: The nightly build failed to compile at this commit. ```${{ github.event.head_commit.message }}```
           avatar-url: https://raw.githubusercontent.com/Team-EnderIO/EnderIO/dev/1.20.1/doc/img/gray-enderface.png
           username: Ender IO Nightowl
-          embed-footer-text: Build number ${{ github.run_number }}
+          embed-footer-text: Build number ${{ github.run_number }} for MC ${{ steps.mc_version.outputs.value }}
           embed-url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           embed-color: 15548997

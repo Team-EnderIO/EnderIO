@@ -88,6 +88,10 @@ public class MachineBlockEntities {
         register("travel_anchor", TravelAnchorBlockEntity::new, MachineBlocks.TRAVEL_ANCHOR)
             .apply(MachineBlockEntities::machineBlockEntityCapabilities);
 
+    public static final RegiliteBlockEntity<PaintedTravelAnchorBlockEntity> PAINTED_TRAVEL_ANCHOR =
+        register("painted_travel_anchor", PaintedTravelAnchorBlockEntity::new, MachineBlocks.PAINTED_TRAVEL_ANCHOR)
+            .apply(MachineBlockEntities::machineBlockEntityCapabilities);
+
     public static final RegiliteBlockEntity<CrafterBlockEntity> CRAFTER =
         register("crafter", CrafterBlockEntity::new, MachineBlocks.CRAFTER)
             .apply(MachineBlockEntities::poweredMachineBlockEntityCapabilities);
