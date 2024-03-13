@@ -8,6 +8,7 @@ import com.enderio.machines.common.blockentity.DrainBlockEntity;
 import com.enderio.machines.common.blockentity.EnchanterBlockEntity;
 import com.enderio.machines.common.blockentity.FluidTankBlockEntity;
 import com.enderio.machines.common.blockentity.ImpulseHopperBlockEntity;
+import com.enderio.machines.common.blockentity.PaintedTravelAnchorBlockEntity;
 import com.enderio.machines.common.blockentity.PaintingMachineBlockEntity;
 import com.enderio.machines.common.blockentity.PoweredSpawnerBlockEntity;
 import com.enderio.machines.common.blockentity.PrimitiveAlloySmelterBlockEntity;
@@ -71,6 +72,9 @@ public class MachineBlockEntities {
     public static final BlockEntityEntry<XPVacuumBlockEntity> XP_VACUUM = register("xp_vacuum", XPVacuumBlockEntity::new, MachineBlocks.XP_VACUUM);
     public static final BlockEntityEntry<TravelAnchorBlockEntity> TRAVEL_ANCHOR = register("travel_anchor", TravelAnchorBlockEntity::new,
         MachineBlocks.TRAVEL_ANCHOR);
+
+    public static final BlockEntityEntry<PaintedTravelAnchorBlockEntity> PAINTED_TRAVEL_ANCHOR = register("painted_travel_anchor", PaintedTravelAnchorBlockEntity::new,
+        MachineBlocks.PAINTED_TRAVEL_ANCHOR);
 
     public static final BlockEntityEntry<CrafterBlockEntity> CRAFTER = register("crafter", CrafterBlockEntity::new, MachineBlocks.CRAFTER);
 
