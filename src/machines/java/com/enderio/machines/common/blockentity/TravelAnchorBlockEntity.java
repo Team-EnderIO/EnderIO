@@ -32,7 +32,11 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
     private final BooleanNetworkDataSlot visibilityDataSlot;
     private final ResourceLocationNetworkDataSlot iconDataSlot;
     public TravelAnchorBlockEntity(BlockPos pWorldPosition, BlockState pBlockState) {
-        super(MachineBlockEntities.TRAVEL_ANCHOR.get(), pWorldPosition, pBlockState);
+        this(MachineBlockEntities.TRAVEL_ANCHOR.get(), pWorldPosition, pBlockState);
+    }
+
+    public TravelAnchorBlockEntity(BlockEntityType<?> type, BlockPos pWorldPosition, BlockState pBlockState) {
+        super(type, pWorldPosition, pBlockState);
         nameDataSlot = new StringNetworkDataSlot(this::getName, name -> getOrCreateTravelTarget().setName(name));
         visibilityDataSlot = new BooleanNetworkDataSlot(this::getVisibility, vis -> getOrCreateTravelTarget().setVisibility(vis));
         iconDataSlot = new ResourceLocationNetworkDataSlot(() -> BuiltInRegistries.ITEM.getKey(getIcon()),
