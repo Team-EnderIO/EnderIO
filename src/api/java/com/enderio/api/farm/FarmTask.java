@@ -13,8 +13,12 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.CactusBlock;
 import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.DoublePlantBlock;
+import net.minecraft.world.level.block.FlowerBlock;
+import net.minecraft.world.level.block.PitcherCropBlock;
 import net.minecraft.world.level.block.StemBlock;
 import net.minecraft.world.level.block.SugarCaneBlock;
+import net.minecraft.world.level.block.TallFlowerBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -128,6 +132,55 @@ public interface FarmTask {
         return FarmInteraction.IGNORED;
     };
 
+    FarmTask HARVEST_PITCHER = (soil, farmBlockEntity) -> { //TODO no general 2 block crop?
+        BlockPos pos = soil.above();
+        BlockState plant = farmBlockEntity.getLevel().getBlockState(pos);
+        BlockEntity blockEntity = farmBlockEntity.getLevel().getBlockEntity(pos);
+        if (plant.getBlock() instanceof PitcherCropBlock crop) {
+            if (plant.getValue(PitcherCropBlock.AGE) >= PitcherCropBlock.MAX_AGE) { //isMaxAge is private
+                pos = pos.above();
+                if (farmBlockEntity.getConsumedPower() >= 40) {
+                    farmBlockEntity.addConsumedPower(-40);
+                    if (plant.requiresCorrectToolForDrops()) {
+                        if (farmBlockEntity.getAxe().isEmpty()) {
+                            return FarmInteraction.BLOCKED;
+                        }
+                        farmBlockEntity.getAxe().mineBlock(farmBlockEntity.getLevel(), plant, pos, farmBlockEntity.getPlayer());
+                    }
+                    farmBlockEntity.handleDrops(plant, pos, soil, blockEntity, plant.requiresCorrectToolForDrops() ? farmBlockEntity.getAxe() : ItemStack.EMPTY);
+                    farmBlockEntity.getLevel().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+                    return FarmInteraction.FINISHED;
+                }
+                farmBlockEntity.addConsumedPower(farmBlockEntity.consumeEnergy(40 - farmBlockEntity.getConsumedPower(), false));
+                return FarmInteraction.POWERED;
+            }
+        }
+        return FarmInteraction.IGNORED;
+    };
+
+    FarmTask HARVEST_FLOWER = (soil, farmBlockEntity) -> { //TorchFlower
+        BlockPos pos = soil.above();
+        BlockState plant = farmBlockEntity.getLevel().getBlockState(pos);
+        BlockEntity blockEntity = farmBlockEntity.getLevel().getBlockEntity(pos);
+        if (plant.getBlock() instanceof FlowerBlock flower) {
+            if (farmBlockEntity.getConsumedPower() >= 40) {
+                farmBlockEntity.addConsumedPower(-40);
+                if (plant.requiresCorrectToolForDrops()) {
+                    if (farmBlockEntity.getAxe().isEmpty()) {
+                        return FarmInteraction.BLOCKED;
+                    }
+                    farmBlockEntity.getAxe().mineBlock(farmBlockEntity.getLevel(), plant, pos, farmBlockEntity.getPlayer());
+                }
+                farmBlockEntity.handleDrops(plant, pos, soil, blockEntity, plant.requiresCorrectToolForDrops() ? farmBlockEntity.getAxe() : ItemStack.EMPTY);
+                farmBlockEntity.getLevel().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+                return FarmInteraction.FINISHED;
+            }
+            farmBlockEntity.addConsumedPower(farmBlockEntity.consumeEnergy(40 - farmBlockEntity.getConsumedPower(), false));
+            return FarmInteraction.POWERED;
+        }
+        return FarmInteraction.IGNORED;
+    };
+
     FarmTask HARVEST_STEM_CROPS = (soil, farmBlockEntity) -> {
         BlockPos pos = soil.above();
         BlockState plant = farmBlockEntity.getLevel().getBlockState(pos);
@@ -187,7 +240,9 @@ public interface FarmTask {
         list.add(PLANT_BLOCK);
         list.add(BONEMEAL);
         list.add(HARVEST_CROP);
+        list.add(HARVEST_FLOWER);
         list.add(HARVEST_STEM_CROPS);
+        list.add(HARVEST_PITCHER);
         list.add(HARVEST_BLOCK);
         return list;
     });
