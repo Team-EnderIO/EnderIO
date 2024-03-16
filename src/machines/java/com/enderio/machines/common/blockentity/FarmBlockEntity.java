@@ -4,6 +4,7 @@ import com.enderio.api.attachment.StoredEntityData;
 import com.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.api.farm.FarmInteraction;
+import com.enderio.api.farm.FarmTaskManager;
 import com.enderio.api.farm.IFarmingStation;
 import com.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.core.common.network.slot.CodecNetworkDataSlot;
@@ -171,7 +172,7 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity implements IRange
                 break;
             }
             //Look for a new task
-            for (FarmTask task: FarmTask.TASKS) {
+            for (FarmTask task: FarmTaskManager.getTasks()) {
                 FarmInteraction interaction = task.farm(soil, this);
                 if (interaction == FarmInteraction.POWERED) { //new task found
                     currentTask = task;
@@ -197,10 +198,10 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity implements IRange
     //TODO check if the coords actually are these direction
     public SingleSlotAccess getSeedForPos(BlockPos soil) {
         if (soil.getX() >= getBlockPos().getX() && soil.getZ() > getBlockPos().getZ()){
-            return NW;
+            return SW;
         }
         if (soil.getX() > getBlockPos().getX() && soil.getZ() <= getBlockPos().getZ()){
-            return SW;
+            return NW;
         }
         if (soil.getX() <= getBlockPos().getX() && soil.getZ() < getBlockPos().getZ()){
             return SE;
@@ -259,6 +260,7 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity implements IRange
     public void onLoad() {
         super.onLoad();
         updateLocations();
+        onTankContentsChanged(); //Refresh the ticket
     }
 
     private void updateLocations() {

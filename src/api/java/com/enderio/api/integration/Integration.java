@@ -1,5 +1,6 @@
 package com.enderio.api.integration;
 
+import com.enderio.api.farm.FarmTaskManager;
 import com.enderio.api.glider.GliderMovementInfo;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -89,4 +90,6 @@ public interface Integration {
     default boolean acceptSmeltingRecipe(SmeltingRecipe recipe) {
         return true;
     }
+
+    default void registerFarmTasks(FarmTaskManager manager) {}
 }
