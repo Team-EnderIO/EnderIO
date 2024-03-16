@@ -8,6 +8,8 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.FakePlayer;
@@ -38,7 +40,7 @@ public interface IFarmingStation {
 
     Level getLevel();
 
-    void collectDrops(List<ItemStack> drops, @Nullable BlockPos soil);
+    void handleDrops(BlockState plant, BlockPos pos, BlockPos soil, BlockEntity blockEntity, ItemStack stack);
 
     Optional<ResourceLocation> getEntityType();
 
@@ -49,4 +51,5 @@ public interface IFarmingStation {
         getPlayer().setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
         return result;
     }
+
 }

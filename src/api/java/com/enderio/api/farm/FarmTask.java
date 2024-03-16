@@ -111,14 +111,13 @@ public interface FarmTask {
             if (crop.isMaxAge(plant)) {
                 if (farmBlockEntity.getConsumedPower() >= 40) {
                     farmBlockEntity.addConsumedPower(-40);
-                    List<ItemStack> drops = Block.getDrops(plant, (ServerLevel) farmBlockEntity.getLevel(), pos, blockEntity, farmBlockEntity.getPlayer(), plant.requiresCorrectToolForDrops() ? farmBlockEntity.getAxe() : ItemStack.EMPTY);
-                    farmBlockEntity.collectDrops(drops, soil);
                     if (plant.requiresCorrectToolForDrops()) {
                         if (farmBlockEntity.getAxe().isEmpty()) {
                             return FarmInteraction.BLOCKED;
                         }
                         farmBlockEntity.getAxe().mineBlock(farmBlockEntity.getLevel(), plant, pos, farmBlockEntity.getPlayer());
                     }
+                    farmBlockEntity.handleDrops(plant, pos, soil, blockEntity, plant.requiresCorrectToolForDrops() ? farmBlockEntity.getAxe() : ItemStack.EMPTY);
                     farmBlockEntity.getLevel().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
                     return FarmInteraction.FINISHED;
                 }
@@ -136,14 +135,13 @@ public interface FarmTask {
         if (plant.is(Blocks.PUMPKIN) || plant.is(Blocks.PUMPKIN)) { //TODO I think this is now harder, used to be a block class...
             if (farmBlockEntity.getConsumedPower() >= 40) {
                 farmBlockEntity.addConsumedPower(-40);
-                List<ItemStack> drops = Block.getDrops(plant, (ServerLevel) farmBlockEntity.getLevel(), pos, blockEntity, farmBlockEntity.getPlayer(), plant.requiresCorrectToolForDrops() ? farmBlockEntity.getAxe() : ItemStack.EMPTY);
-                farmBlockEntity.collectDrops(drops, soil);
                 if (plant.requiresCorrectToolForDrops()) {
                     if (farmBlockEntity.getAxe().isEmpty()) {
                         return FarmInteraction.BLOCKED;
                     }
                     farmBlockEntity.getAxe().mineBlock(farmBlockEntity.getLevel(), plant, pos, farmBlockEntity.getPlayer());
                 }
+                farmBlockEntity.handleDrops(plant, pos, soil, blockEntity, plant.requiresCorrectToolForDrops() ? farmBlockEntity.getAxe() : ItemStack.EMPTY);
                 farmBlockEntity.getLevel().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
                 return FarmInteraction.FINISHED;
             }
@@ -162,19 +160,17 @@ public interface FarmTask {
             if (top.isPresent() && !top.get().below().equals(pos)) {
                 if (farmBlockEntity.getConsumedPower() >= 40) {
                     farmBlockEntity.addConsumedPower(-40);
-                    List<ItemStack> drops = new ArrayList<>();
                     for (int i = top.get().below().getY(); i > pos.getY(); i--) {
                         BlockPos blockPos = new BlockPos(pos.getX(), i, pos.getZ());
-                        drops.addAll(Block.getDrops(plant, (ServerLevel) farmBlockEntity.getLevel(), blockPos, blockEntity, farmBlockEntity.getPlayer(), plant.requiresCorrectToolForDrops() ? farmBlockEntity.getAxe() : ItemStack.EMPTY));
                         if (plant.requiresCorrectToolForDrops()) {
                             if (farmBlockEntity.getAxe().isEmpty()) {
                                 return FarmInteraction.BLOCKED;
                             }
                             farmBlockEntity.getAxe().mineBlock(farmBlockEntity.getLevel(), plant, blockPos, farmBlockEntity.getPlayer());
                         }
+                        farmBlockEntity.handleDrops(plant, pos, soil, blockEntity, plant.requiresCorrectToolForDrops() ? farmBlockEntity.getAxe() : ItemStack.EMPTY);
                         farmBlockEntity.getLevel().setBlockAndUpdate(blockPos, Blocks.AIR.defaultBlockState());
                     }
-                    farmBlockEntity.collectDrops(drops, soil);
                     return FarmInteraction.FINISHED;
                 }
                 farmBlockEntity.addConsumedPower(farmBlockEntity.consumeEnergy(40 - farmBlockEntity.getConsumedPower(), false));

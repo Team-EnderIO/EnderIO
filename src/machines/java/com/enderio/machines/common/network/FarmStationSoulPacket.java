@@ -16,7 +16,7 @@ public record FarmStationSoulPacket(Map<ResourceLocation, FarmSoul.SoulData> map
     public FarmStationSoulPacket(FriendlyByteBuf buf) {
         this(
             buf.readMap(FriendlyByteBuf::readResourceLocation, buff ->
-                new FarmSoul.SoulData(buff.readResourceLocation(), buff.readFloat(), buff.readFloat(), buff.readFloat())
+                new FarmSoul.SoulData(buff.readResourceLocation(), buff.readFloat(), buff.readInt(), buff.readFloat())
             )
         );
     }
@@ -26,7 +26,7 @@ public record FarmStationSoulPacket(Map<ResourceLocation, FarmSoul.SoulData> map
         writeInto.writeMap(map, FriendlyByteBuf::writeResourceLocation, (buf, soulData) -> {
             buf.writeResourceLocation(soulData.entitytype());
             buf.writeFloat(soulData.bonemeal());
-            buf.writeFloat(soulData.seeds());
+            buf.writeInt(soulData.seeds());
             buf.writeFloat(soulData.power());
         });
     }

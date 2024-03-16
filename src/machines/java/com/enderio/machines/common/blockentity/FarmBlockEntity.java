@@ -31,6 +31,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.player.Inventory;
@@ -38,6 +39,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.functions.LootingEnchantFunction;
 import net.minecraft.world.phys.AABB;
@@ -264,14 +269,18 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity implements IRange
         }
     }
 
+    public void handleDrops(BlockState plant, BlockPos pos, BlockPos soil, BlockEntity blockEntity, ItemStack stack) {
+        ItemStack dummy = stack.copy();
+        if (soulData != null) {
+            dummy.enchant(Enchantments.BLOCK_FORTUNE, dummy.getEnchantmentLevel(Enchantments.BLOCK_FORTUNE) + soulData.seeds());
+        }
+        List<ItemStack> drops = Block.getDrops(plant, (ServerLevel) this.level, pos, blockEntity, getPlayer(), dummy);
+        collectDrops(drops, soil);
+    }
+
     //TODO handle inv full
     public void collectDrops(List<ItemStack> drops, @Nullable BlockPos soil) {
         for (ItemStack drop : drops) {
-            if (soulData != null) { //TODO do this properly, how do we want this to work?
-                if (level.random.nextFloat() > soulData.seeds()) {
-                    drop.grow(2);
-                }
-            }
             if (soil != null) {
                 ItemStack seeds = getSeedForPos(soil).getItemStack(this);
                 if (seeds.isEmpty()) {
