@@ -2,6 +2,7 @@ package com.enderio.api.farm;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
@@ -13,6 +14,7 @@ import net.neoforged.neoforge.common.util.FakePlayer;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IFarmingStation {
 
@@ -20,7 +22,7 @@ public interface IFarmingStation {
 
     int getConsumedPower();
 
-    void setConsumedPower(int power);
+    void addConsumedPower(int i);
 
     int consumeEnergy(int energy, boolean simulate);
 
@@ -36,7 +38,9 @@ public interface IFarmingStation {
 
     Level getLevel();
 
-    public void collectDrops(List<ItemStack> drops, @Nullable BlockPos soil);
+    void collectDrops(List<ItemStack> drops, @Nullable BlockPos soil);
+
+    Optional<ResourceLocation> getEntityType();
 
     default InteractionResult useStack(BlockPos soil, ItemStack stack) {
         getPlayer().setItemInHand(InteractionHand.MAIN_HAND, stack);

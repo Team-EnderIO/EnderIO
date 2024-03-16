@@ -37,10 +37,10 @@ public interface FarmTask {
             InteractionResult result = farmBlockEntity.useStack(soil, seeds);
             if (result == InteractionResult.SUCCESS || result == InteractionResult.CONSUME) {
                 if (farmBlockEntity.getConsumedPower() >= 40) {
-                    farmBlockEntity.setConsumedPower(farmBlockEntity.getConsumedPower() - 40);
+                    farmBlockEntity.addConsumedPower(-40);
                     return FarmInteraction.FINISHED;
                 }
-                farmBlockEntity.setConsumedPower(farmBlockEntity.getConsumedPower() + farmBlockEntity.consumeEnergy(40 - farmBlockEntity.getConsumedPower(), false));
+                farmBlockEntity.addConsumedPower(farmBlockEntity.consumeEnergy(40 - farmBlockEntity.getConsumedPower(), false));
                 return FarmInteraction.POWERED;
             }
 
@@ -53,10 +53,10 @@ public interface FarmTask {
             result = farmBlockEntity.useStack(soil, itemStack);
             if (result == InteractionResult.SUCCESS || result == InteractionResult.CONSUME) {
                 if (farmBlockEntity.getConsumedPower() >= 40) {
-                    farmBlockEntity.setConsumedPower(farmBlockEntity.getConsumedPower() - 40);
+                    farmBlockEntity.addConsumedPower(-40);
                     return FarmInteraction.FINISHED;
                 }
-                farmBlockEntity.setConsumedPower(farmBlockEntity.getConsumedPower() + farmBlockEntity.consumeEnergy(40 - farmBlockEntity.getConsumedPower(), false));
+                farmBlockEntity.addConsumedPower(farmBlockEntity.consumeEnergy(40 - farmBlockEntity.getConsumedPower(), false));
                 return FarmInteraction.POWERED;
             }
 
@@ -79,10 +79,10 @@ public interface FarmTask {
             InteractionResult result = farmBlockEntity.useStack(soil, seeds);
             if (result == InteractionResult.SUCCESS || result == InteractionResult.CONSUME) {
                 if (farmBlockEntity.getConsumedPower() >= 40) {
-                    farmBlockEntity.setConsumedPower(farmBlockEntity.getConsumedPower() - 40);
+                    farmBlockEntity.addConsumedPower(-40);
                     return FarmInteraction.FINISHED;
                 }
-                farmBlockEntity.setConsumedPower(farmBlockEntity.getConsumedPower() + farmBlockEntity.consumeEnergy(40 - farmBlockEntity.getConsumedPower(), false));
+                farmBlockEntity.addConsumedPower(farmBlockEntity.consumeEnergy(40 - farmBlockEntity.getConsumedPower(), false));
                 return FarmInteraction.POWERED;
             }
         }
@@ -110,7 +110,7 @@ public interface FarmTask {
         if (plant.getBlock() instanceof CropBlock crop) {
             if (crop.isMaxAge(plant)) {
                 if (farmBlockEntity.getConsumedPower() >= 40) {
-                    farmBlockEntity.setConsumedPower(farmBlockEntity.getConsumedPower() - 40);
+                    farmBlockEntity.addConsumedPower(-40);
                     List<ItemStack> drops = Block.getDrops(plant, (ServerLevel) farmBlockEntity.getLevel(), pos, blockEntity, farmBlockEntity.getPlayer(), plant.requiresCorrectToolForDrops() ? farmBlockEntity.getAxe() : ItemStack.EMPTY);
                     farmBlockEntity.collectDrops(drops, soil);
                     if (plant.requiresCorrectToolForDrops()) {
@@ -122,7 +122,7 @@ public interface FarmTask {
                     farmBlockEntity.getLevel().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
                     return FarmInteraction.FINISHED;
                 }
-                farmBlockEntity.setConsumedPower(farmBlockEntity.getConsumedPower() + farmBlockEntity.consumeEnergy(40 - farmBlockEntity.getConsumedPower(), false));
+                farmBlockEntity.addConsumedPower(farmBlockEntity.consumeEnergy(40 - farmBlockEntity.getConsumedPower(), false));
                 return FarmInteraction.POWERED;
             }
         }
@@ -135,7 +135,7 @@ public interface FarmTask {
         BlockEntity blockEntity = farmBlockEntity.getLevel().getBlockEntity(pos);
         if (plant.is(Blocks.PUMPKIN) || plant.is(Blocks.PUMPKIN)) { //TODO I think this is now harder, used to be a block class...
             if (farmBlockEntity.getConsumedPower() >= 40) {
-                farmBlockEntity.setConsumedPower(farmBlockEntity.getConsumedPower() - 40);
+                farmBlockEntity.addConsumedPower(-40);
                 List<ItemStack> drops = Block.getDrops(plant, (ServerLevel) farmBlockEntity.getLevel(), pos, blockEntity, farmBlockEntity.getPlayer(), plant.requiresCorrectToolForDrops() ? farmBlockEntity.getAxe() : ItemStack.EMPTY);
                 farmBlockEntity.collectDrops(drops, soil);
                 if (plant.requiresCorrectToolForDrops()) {
@@ -147,7 +147,7 @@ public interface FarmTask {
                 farmBlockEntity.getLevel().setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
                 return FarmInteraction.FINISHED;
             }
-            farmBlockEntity.setConsumedPower(farmBlockEntity.getConsumedPower() + farmBlockEntity.consumeEnergy(40 - farmBlockEntity.getConsumedPower(), false));
+            farmBlockEntity.addConsumedPower(farmBlockEntity.consumeEnergy(40 - farmBlockEntity.getConsumedPower(), false));
             return FarmInteraction.POWERED;
         }
         return FarmInteraction.IGNORED;
@@ -161,7 +161,7 @@ public interface FarmTask {
             Optional<BlockPos> top = BlockUtil.getTopConnectedBlock(farmBlockEntity.getLevel(), pos, plant.getBlock(), Direction.UP, Blocks.AIR);
             if (top.isPresent() && !top.get().below().equals(pos)) {
                 if (farmBlockEntity.getConsumedPower() >= 40) {
-                    farmBlockEntity.setConsumedPower(farmBlockEntity.getConsumedPower() - 40);
+                    farmBlockEntity.addConsumedPower(-40);
                     List<ItemStack> drops = new ArrayList<>();
                     for (int i = top.get().below().getY(); i > pos.getY(); i--) {
                         BlockPos blockPos = new BlockPos(pos.getX(), i, pos.getZ());
@@ -177,7 +177,7 @@ public interface FarmTask {
                     farmBlockEntity.collectDrops(drops, soil);
                     return FarmInteraction.FINISHED;
                 }
-                farmBlockEntity.setConsumedPower(farmBlockEntity.getConsumedPower() + farmBlockEntity.consumeEnergy(40 - farmBlockEntity.getConsumedPower(), false));
+                farmBlockEntity.addConsumedPower(farmBlockEntity.consumeEnergy(40 - farmBlockEntity.getConsumedPower(), false));
                 return FarmInteraction.POWERED;
             }
         }

@@ -1,11 +1,13 @@
 package com.enderio.machines.common.init;
 
 import com.enderio.core.EnderCore;
+import com.enderio.machines.common.network.FarmStationSoulPacket;
 import com.enderio.machines.common.network.MachinePayloadHandler;
 import com.enderio.machines.common.network.PoweredSpawnerSoulPacket;
 import com.enderio.machines.common.network.SoulEngineSoulPacket;
 import com.enderio.machines.common.network.UpdateCrafterTemplatePacket;
 import com.enderio.machines.common.souldata.EngineSoul;
+import com.enderio.machines.common.souldata.FarmSoul;
 import com.enderio.machines.common.souldata.SpawnerSoul;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -26,12 +28,16 @@ public class MachineNetwork {
         //Sync soul data (optional)
         SpawnerSoul.SPAWNER.subscribeAsSyncable(PoweredSpawnerSoulPacket::new);
         EngineSoul.ENGINE.subscribeAsSyncable(SoulEngineSoulPacket::new);
+        FarmSoul.FARM.subscribeAsSyncable(FarmStationSoulPacket::new);
 
         registrar.play(PoweredSpawnerSoulPacket.ID, PoweredSpawnerSoulPacket::new,
             handler -> handler.client(MachinePayloadHandler.Client.getInstance()::handlePoweredSpawnerSoul));
 
         registrar.play(SoulEngineSoulPacket.ID, SoulEngineSoulPacket::new,
             handler -> handler.client(MachinePayloadHandler.Client.getInstance()::handleSoulEngineSoul));
+
+        registrar.play(FarmStationSoulPacket.ID, FarmStationSoulPacket::new,
+            handler -> handler.client(MachinePayloadHandler.Client.getInstance()::handleFarmingStationSoul));
 
         registrar.play(UpdateCrafterTemplatePacket.ID, UpdateCrafterTemplatePacket::new,
             handler -> handler.server(MachinePayloadHandler.Server.getInstance()::updateCrafterTemplate));
