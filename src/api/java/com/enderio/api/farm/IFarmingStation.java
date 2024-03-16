@@ -40,7 +40,7 @@ public interface IFarmingStation {
 
     Level getLevel();
 
-    void handleDrops(BlockState plant, BlockPos pos, BlockPos soil, BlockEntity blockEntity, ItemStack stack);
+    boolean handleDrops(BlockState plant, BlockPos pos, BlockPos soil, BlockEntity blockEntity, ItemStack stack);
 
     Optional<ResourceLocation> getEntityType();
 

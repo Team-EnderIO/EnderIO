@@ -271,17 +271,18 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity implements IRange
         }
     }
 
-    public void handleDrops(BlockState plant, BlockPos pos, BlockPos soil, BlockEntity blockEntity, ItemStack stack) {
+    public boolean handleDrops(BlockState plant, BlockPos pos, BlockPos soil, BlockEntity blockEntity, ItemStack stack) {
         ItemStack dummy = stack.copy();
         if (soulData != null) {
             dummy.enchant(Enchantments.BLOCK_FORTUNE, dummy.getEnchantmentLevel(Enchantments.BLOCK_FORTUNE) + soulData.seeds());
         }
         List<ItemStack> drops = Block.getDrops(plant, (ServerLevel) this.level, pos, blockEntity, getPlayer(), dummy);
-        collectDrops(drops, soil);
+        return collectDrops(drops, soil);
     }
 
     //TODO handle inv full
-    public void collectDrops(List<ItemStack> drops, @Nullable BlockPos soil) {
+    public boolean collectDrops(List<ItemStack> drops, @Nullable BlockPos soil) {
+        ArrayList<ItemStack> list = new ArrayList<>();
         for (ItemStack drop : drops) {
             if (soil != null) {
                 ItemStack seeds = getSeedForPos(soil).getItemStack(this);
@@ -303,16 +304,33 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity implements IRange
                     }
                 }
             }
+            ItemStack temp = drop.copy();
+            list.add(temp);
             for (int i = 0; i < 6; i++) {
-                ItemStack leftOver = OUTPUT.get(i).insertItem(this, drop.copy(), false);
+                ItemStack leftOver = OUTPUT.get(i).insertItem(this, temp, true);
                 if (leftOver.isEmpty()) {
-                    drop.setCount(0);
+                    temp.setCount(0);
                     break;
                 } else {
-                    drop.setCount(leftOver.getCount());
+                    temp.setCount(leftOver.getCount());
                 }
             }
         }
+        boolean empty = list.stream().filter(d -> !d.isEmpty()).findAny().isEmpty();
+        if (empty) {
+            for (ItemStack drop : drops) {
+                for (int i = 0; i < 6; i++) {
+                    ItemStack leftOver = OUTPUT.get(i).insertItem(this, drop.copy(), false);
+                    if (leftOver.isEmpty()) {
+                        drop.setCount(0);
+                        break;
+                    } else {
+                        drop.setCount(leftOver.getCount());
+                    }
+                }
+            }
+        }
+        return empty;
     }
 
     public int getConsumedPower() {
