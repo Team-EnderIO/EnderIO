@@ -145,9 +145,10 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity implements IRange
             op.ifPresent(data -> soulData = data);
             reloadCache = reload;
         }
-        if (isActive()) {
+        if (canAct()) {
             doFarmTask();
         }
+        updateMachineState(MachineState.IDLE, currentTask == null);
 
         super.serverTick();
     }
@@ -189,6 +190,7 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity implements IRange
             }
             currentIndex++;
         }
+
         //All positions have been checked, restart
         if (stop == positions.size()) {
             currentIndex = 0;
@@ -218,7 +220,7 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity implements IRange
             return false;
         }
         //Check tool
-        return true;
+        return currentTask != null;
     }
 
     @Nullable
@@ -330,6 +332,7 @@ public class FarmBlockEntity extends PoweredMachineBlockEntity implements IRange
                 }
             }
         }
+        updateMachineState(MachineState.FULL_OUTPUT, !empty);
         return empty;
     }
 
