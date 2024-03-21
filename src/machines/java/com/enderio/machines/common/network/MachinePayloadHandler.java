@@ -2,6 +2,7 @@ package com.enderio.machines.common.network;
 
 import com.enderio.machines.common.menu.CrafterMenu;
 import com.enderio.machines.common.souldata.EngineSoul;
+import com.enderio.machines.common.souldata.FarmSoul;
 import com.enderio.machines.common.souldata.SpawnerSoul;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.PlayPayloadContext;
@@ -22,6 +23,11 @@ public class MachinePayloadHandler {
         public void handleSoulEngineSoul(SoulEngineSoulPacket packet, PlayPayloadContext context) {
             context.workHandler()
                 .submitAsync(() -> EngineSoul.ENGINE.map = packet.map());
+        }
+
+        public void handleFarmingStationSoul(FarmStationSoulPacket packet, PlayPayloadContext context) {
+            context.workHandler()
+                .submitAsync(() -> FarmSoul.FARM.map = packet.map());
         }
     }
 

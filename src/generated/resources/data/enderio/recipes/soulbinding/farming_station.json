@@ -1,0 +1,10 @@
+{
+  "type": "enderio:soul_binding",
+  "energy": 188000,
+  "exp": 5,
+  "input": {
+    "item": "enderio:farming_station"
+  },
+  "output": "enderio:farming_station",
+  "souldata": "farm"
+}
