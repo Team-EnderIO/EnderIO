@@ -2,6 +2,7 @@ package com.enderio.machines.common.io;
 
 import com.enderio.api.io.IOMode;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -61,14 +62,19 @@ public class TransferUtil {
         // TODO: Do we want to imitate old behaviour where if we have no fluid, we pull by default?
 
         if (canPush) {
-            int filled = FluidUtil.tryFluidTransfer(otherItemHandler, selfItemHandler, maxDrain, true).getAmount();
+            int filled = 0;
+            for (int i = 0; i < selfItemHandler.getTanks(); i++) {
+                filled += FluidUtil.tryFluidTransfer(otherItemHandler, selfItemHandler, new FluidStack(selfItemHandler.getFluidInTank(i), maxDrain), true).getAmount();
+            }
             if (filled > 0) {
                 return;
             }
         }
 
         if (canPull) {
-            FluidUtil.tryFluidTransfer(selfItemHandler, otherItemHandler, maxDrain, true);
+            for (int i = 0; i < selfItemHandler.getTanks(); i++) {
+                FluidUtil.tryFluidTransfer(selfItemHandler, otherItemHandler, new FluidStack(selfItemHandler.getFluidInTank(i), maxDrain), true).getAmount();
+            }
         }
     }
 
