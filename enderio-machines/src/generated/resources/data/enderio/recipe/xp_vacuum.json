@@ -8,13 +8,13 @@
     "P": {
       "tag": "c:gems/pulsating_crystal"
     },
-    "R": {
-      "item": "enderio:experience_rod"
+    "S": {
+      "item": "enderio:void_seed"
     }
   },
   "pattern": [
     "III",
-    "IRI",
+    "ISI",
     "IPI"
   ],
   "result": {
