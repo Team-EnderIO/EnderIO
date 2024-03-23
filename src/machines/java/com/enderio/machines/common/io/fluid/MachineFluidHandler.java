@@ -101,6 +101,10 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
         if (resource.isEmpty())
             return 0;
 
+        if (!isFluidValid(tank, resource)) {
+            return 0;
+        }
+
         if (action.simulate()) {
             if (fluid.isEmpty()) {
                 return Math.min(capacity, resource.getAmount());
@@ -182,12 +186,26 @@ public class MachineFluidHandler implements IFluidHandler, INBTSerializable<Comp
     public FluidStack drain(int tank, FluidStack resource, IFluidHandler.FluidAction action) {
         if (resource.isEmpty() || !isFluidValid(tank, resource))
             return FluidStack.EMPTY;
+        if (!getFluidInTank(tank).isEmpty() && !getFluidInTank(tank).isFluidEqual(resource)) {
+            return FluidStack.EMPTY;
+        }
         return drain(tank, resource.getAmount(), action);
     }
 
     @Override
     public FluidStack drain(FluidStack resource, FluidAction action) {
-        return drain(resource.getAmount(), action);
+        for (int index = 0; index < getTanks(); index++) {
+            if (drain(index, resource, FluidAction.SIMULATE) != FluidStack.EMPTY) {
+                FluidStack drained = drain(index, resource, action);
+                if (!drained.isEmpty()) {
+                    onContentsChanged(index);
+                    changeListener.accept(index);
+                }
+                return drained;
+            }
+        }
+
+        return FluidStack.EMPTY;
     }
 
     @Override
