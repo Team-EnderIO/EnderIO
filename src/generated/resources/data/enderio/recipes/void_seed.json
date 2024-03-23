@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "enderio:empty_soul_vial"
+    },
+    {
+      "item": "enderio:grains_of_infinity"
+    },
+    {
+      "tag": "forge:seeds"
+    }
+  ],
+  "result": {
+    "item": "enderio:void_seed"
+  }
+}
