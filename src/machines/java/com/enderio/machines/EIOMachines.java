@@ -20,8 +20,10 @@ import com.enderio.machines.common.menu.PreviewMachineSlot;
 import com.enderio.machines.common.tag.MachineTags;
 import com.enderio.machines.common.travel.AnchorTravelTarget;
 import com.enderio.machines.data.advancements.MachinesAdvancementGenerator;
+import com.enderio.machines.data.reagentdata.ReagentDataProvider;
 import com.enderio.machines.data.recipes.AlloyRecipeProvider;
 import com.enderio.machines.data.recipes.EnchanterRecipeProvider;
+import com.enderio.machines.data.recipes.FermentingRecipeProvider;
 import com.enderio.machines.data.recipes.MachineRecipeProvider;
 import com.enderio.machines.data.recipes.PaintingRecipeProvider;
 import com.enderio.machines.data.recipes.SagMillRecipeProvider;
@@ -94,8 +96,10 @@ public class EIOMachines {
         provider.addSubProvider(event.includeServer(), new SoulBindingRecipeProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new TankRecipeProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new PaintingRecipeProvider(packOutput));
+        provider.addSubProvider(event.includeServer(), new FermentingRecipeProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new SoulDataProvider(packOutput));
         provider.addSubProvider(event.includeServer(), new MachineEntityTypeTagsProvider(packOutput, lookupProvider, event.getExistingFileHelper()));
+        provider.addSubProvider(event.includeServer(), new ReagentDataProvider(packOutput, lookupProvider, event.getExistingFileHelper()));
 
         generator.addProvider(true, provider);
         provider.addSubProvider(event.includeServer(), new AdvancementProvider(packOutput, event.getLookupProvider(), event.getExistingFileHelper(),

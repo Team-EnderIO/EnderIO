@@ -1,0 +1,7 @@
+{
+  "values": {
+    "minecraft:wheat": {
+      "#forge:crops": 3.0
+    }
+  }
+}
