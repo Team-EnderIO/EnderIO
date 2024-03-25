@@ -57,8 +57,8 @@ public class VatScreen extends EIOScreen<VatMenu> {
 
     @Override
     public void render(GuiGraphics guiGraphics, int pMouseX, int pMouseY, float pPartialTicks) {
-        super.render(guiGraphics, pMouseX, pMouseY, pPartialTicks);
         updateRecipeCache();
+        super.render(guiGraphics, pMouseX, pMouseY, pPartialTicks);
 
         guiGraphics.blitSprite(VAT_COVER, 76 + leftPos, 34 + topPos, 26, 28);
     }

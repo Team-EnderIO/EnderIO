@@ -1,4 +1,4 @@
 @javax.annotation.ParametersAreNonnullByDefault
 @net.minecraft.MethodsReturnNonnullByDefault
 
-package com.enderio.machines.data.datamaps;
+package com.enderio.machines.data.reagentdata;
