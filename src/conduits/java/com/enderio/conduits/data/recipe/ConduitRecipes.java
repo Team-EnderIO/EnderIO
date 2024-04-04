@@ -7,12 +7,14 @@ import com.enderio.conduits.common.init.ConduitItems;
 import com.enderio.conduits.common.integrations.ae2.AE2Integration;
 import com.enderio.conduits.common.integrations.refinedstorage.RSIntegration;
 import com.enderio.conduits.common.tag.ConduitTags;
+import com.refinedmods.refinedstorage.RSItems;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.common.crafting.ConditionalRecipe;
 import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 
@@ -143,7 +145,7 @@ public class ConduitRecipes extends RecipeProvider {
                 .pattern("III")
                 .pattern("BBB")
                 .define('B', EIOItems.CONDUIT_BINDER)
-                .define('I', ConduitTags.Items.RS_CABLE)
+                .define('I', RSItems.CABLE.get())
                 .unlockedBy("has_ingredient", InventoryChangeTrigger.TriggerInstance.hasItems(EIOItems.CONDUIT_BINDER))
                 ::save)
             .build(pWriter, EnderIO.loc("rs_cable"));
